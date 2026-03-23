@@ -1,11 +1,5 @@
-// @ts-ignore no decl -prf
-import * as findLast from 'array.prototype.findlast'
-/// <reference lib="dom" />
-
-findLast.shim()
-
-// @ts-ignore whatever typescript wants to complain about here, I dont care about -prf
-window.setImmediate = (cb: () => void) => setTimeout(cb, 0)
+import 'array.prototype.findlast/auto'
+import 'setimmediate'
 
 if (process.env.NODE_ENV !== 'production') {
   // In development, react-native-web's <View> tries to validate that
@@ -35,3 +29,5 @@ if (process.env.NODE_ENV !== 'production') {
     }
   }
 }
+
+export {}

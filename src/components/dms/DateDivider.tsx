@@ -1,7 +1,8 @@
-import React from 'react'
+import {memo} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {subDays} from 'date-fns'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -67,7 +68,8 @@ let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
           a.px_md,
         ]}>
         <Trans>
-          <Text style={[a.text_xs, t.atoms.text_contrast_medium, a.font_bold]}>
+          <Text
+            style={[a.text_xs, t.atoms.text_contrast_medium, a.font_semi_bold]}>
             {date}
           </Text>{' '}
           at {time}
@@ -76,5 +78,5 @@ let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
     </View>
   )
 }
-DateDivider = React.memo(DateDivider)
+DateDivider = memo(DateDivider)
 export {DateDivider}

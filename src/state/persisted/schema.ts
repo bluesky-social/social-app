@@ -71,15 +71,15 @@ const schema = z.object({
     contentLanguages: z.array(z.string()),
     /**
      * The language(s) the user is currently posting in, configured within the
-     * composer. Multiple languages are psearate by commas.
+     * composer. Multiple languages are separated by commas.
      *
      * BCP-47 2-letter language code without region.
      */
     postLanguage: z.string(),
     /**
      * The user's post language history, used to pre-populate the post language
-     * selector in the composer. Within each value, multiple languages are
-     * separated by values.
+     * selector in the composer. Within each value, multiple languages are separated
+     * by commas.
      *
      * BCP-47 2-letter language codes without region.
      */
@@ -106,6 +106,7 @@ const schema = z.object({
       appleMusic: z.enum(externalEmbedOptions).optional(),
       soundcloud: z.enum(externalEmbedOptions).optional(),
       flickr: z.enum(externalEmbedOptions).optional(),
+      bandcamp: z.enum(externalEmbedOptions).optional(),
     })
     .optional(),
   invites: z.object({
@@ -116,6 +117,7 @@ const schema = z.object({
   }),
   hiddenPosts: z.array(z.string()).optional(), // should move to server
   useInAppBrowser: z.boolean().optional(),
+  /** @deprecated */
   lastSelectedHomeFeed: z.string().optional(),
   pdsAddressHistory: z.array(z.string()).optional(),
   disableHaptics: z.boolean().optional(),

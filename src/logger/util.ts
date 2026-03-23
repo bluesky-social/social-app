@@ -1,4 +1,4 @@
-import {LogLevel, Metadata, Serializable} from '#/logger/types'
+import {LogLevel, type Metadata, type Serializable} from '#/logger/types'
 
 export const enabledLogLevels: {
   [key in LogLevel]: LogLevel[]
@@ -23,6 +23,14 @@ export function prepareMetadata(
     let value = metadata[key]
     if (value instanceof Error) {
       value = value.toString()
+    }
+    if (
+      typeof value === 'object' &&
+      value !== null &&
+      Object.keys(value).length === 0 &&
+      value.constructor === Object
+    ) {
+      return acc
     }
     return {...acc, [key]: value}
   }, {})

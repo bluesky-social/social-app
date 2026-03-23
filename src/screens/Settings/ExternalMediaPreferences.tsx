@@ -1,10 +1,13 @@
 import {Fragment} from 'react'
 import {View} from 'react-native'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {
-  EmbedPlayerSource,
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
+import {
+  type EmbedPlayerSource,
   externalEmbedLabels,
 } from '#/lib/strings/embed-player'
 import {

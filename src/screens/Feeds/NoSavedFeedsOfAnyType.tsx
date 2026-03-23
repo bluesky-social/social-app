@@ -1,8 +1,8 @@
-import React from 'react'
 import {View} from 'react-native'
 import {TID} from '@atproto/common-web'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {RECOMMENDED_SAVED_FEEDS} from '#/lib/constants'
 import {useOverwriteSavedFeedsMutation} from '#/state/queries/preferences'
@@ -16,20 +16,25 @@ import {Text} from '#/components/Typography'
  * feeds if pressed. It should only be presented to the user if they actually
  * have no other feeds saved.
  */
-export function NoSavedFeedsOfAnyType() {
+export function NoSavedFeedsOfAnyType({
+  onAddRecommendedFeeds,
+}: {
+  onAddRecommendedFeeds?: () => void
+}) {
   const t = useTheme()
   const {_} = useLingui()
   const {isPending, mutateAsync: overwriteSavedFeeds} =
     useOverwriteSavedFeedsMutation()
 
-  const addRecommendedFeeds = React.useCallback(async () => {
+  const addRecommendedFeeds = async () => {
+    onAddRecommendedFeeds?.()
     await overwriteSavedFeeds(
       RECOMMENDED_SAVED_FEEDS.map(f => ({
         ...f,
         id: TID.nextStr(),
       })),
     )
-  }, [overwriteSavedFeeds])
+  }
 
   return (
     <View
@@ -46,10 +51,9 @@ export function NoSavedFeedsOfAnyType() {
         disabled={isPending}
         label={_(msg`Apply default recommended feeds`)}
         size="small"
-        variant="solid"
-        color="primary"
+        color="primary_subtle"
         onPress={addRecommendedFeeds}>
-        <ButtonIcon icon={Plus} position="left" />
+        <ButtonIcon icon={Plus} />
         <ButtonText>{_(msg`Use recommended`)}</ButtonText>
       </Button>
     </View>

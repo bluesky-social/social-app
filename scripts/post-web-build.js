@@ -9,10 +9,9 @@ const templateFile = path.join(
   'scripts.html',
 )
 
-const {entrypoints} = require(path.join(
-  projectRoot,
-  'web-build/asset-manifest.json',
-))
+const {entrypoints} = require(
+  path.join(projectRoot, 'web-build/asset-manifest.json'),
+)
 
 console.log(`Found ${entrypoints.length} entrypoints`)
 console.log(`Writing ${templateFile}`)

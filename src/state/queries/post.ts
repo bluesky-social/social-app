@@ -1,13 +1,14 @@
 import {useCallback} from 'react'
-import {AppBskyActorDefs, AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {type AppBskyActorDefs, type AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
-import {logEvent, LogEvents, toClout} from '#/lib/statsig/statsig'
 import {updatePostShadow} from '#/state/cache/post-shadow'
-import {Shadow} from '#/state/cache/types'
+import {type Shadow} from '#/state/cache/types'
 import {useAgent, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
+import {useAnalytics} from '#/analytics'
+import {type Metrics, toClout} from '#/analytics/metrics'
 import {useIsThreadMuted, useSetThreadMute} from '../cache/thread-mutes'
 import {findProfileQueryData} from './profile'
 
@@ -18,13 +19,16 @@ export function usePostQuery(uri: string | undefined) {
   const agent = useAgent()
   return useQuery<AppBskyFeedDefs.PostView>({
     queryKey: RQKEY(uri || ''),
-    async queryFn() {
-      const urip = new AtUri(uri!)
+    queryFn: async () => {
+      if (!uri) throw new Error('[unreachable] No URI provided')
+
+      const urip = new AtUri(uri)
 
       if (!urip.host.startsWith('did:')) {
         const res = await agent.resolveHandle({
           handle: urip.host,
         })
+        // @ts-expect-error TODO new-sdk-migration
         urip.host = res.data.did
       }
 
@@ -53,6 +57,7 @@ export function useGetPost() {
             const res = await agent.resolveHandle({
               handle: urip.host,
             })
+            // @ts-expect-error TODO new-sdk-migration
             urip.host = res.data.did
           }
 
@@ -98,15 +103,16 @@ export function useGetPosts() {
 
 export function usePostLikeMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
-  logContext: LogEvents['post:like']['logContext'] &
-    LogEvents['post:unlike']['logContext'],
+  viaRepost: {uri: string; cid: string} | undefined,
+  feedDescriptor: string | undefined,
+  logContext: Metrics['post:like']['logContext'],
 ) {
   const queryClient = useQueryClient()
   const postUri = post.uri
   const postCid = post.cid
   const initialLikeUri = post.viewer?.like
-  const likeMutation = usePostLikeMutation(logContext, post)
-  const unlikeMutation = usePostUnlikeMutation(logContext)
+  const likeMutation = usePostLikeMutation(feedDescriptor, logContext, post)
+  const unlikeMutation = usePostUnlikeMutation(feedDescriptor, logContext, post)
 
   const queueToggle = useToggleMutationQueue({
     initialState: initialLikeUri,
@@ -115,6 +121,7 @@ export function usePostLikeMutationQueue(
         const {uri: likeUri} = await likeMutation.mutateAsync({
           uri: postUri,
           cid: postCid,
+          via: viaRepost,
         })
         userActionHistory.like([postUri])
         return likeUri
@@ -153,28 +160,32 @@ export function usePostLikeMutationQueue(
     return queueToggle(false)
   }, [queryClient, postUri, queueToggle])
 
-  return [queueLike, queueUnlike]
+  return [queueLike, queueUnlike] as const
 }
 
 function usePostLikeMutation(
-  logContext: LogEvents['post:like']['logContext'],
+  feedDescriptor: string | undefined,
+  logContext: Metrics['post:like']['logContext'],
   post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   const postAuthor = post.author
   const agent = useAgent()
+  const ax = useAnalytics()
   return useMutation<
     {uri: string}, // responds with the uri of the like
     Error,
-    {uri: string; cid: string} // the post's uri and cid
+    {uri: string; cid: string; via?: {uri: string; cid: string}} // the post's uri and cid, and the repost uri/cid if present
   >({
-    mutationFn: ({uri, cid}) => {
+    mutationFn: ({uri, cid, via}) => {
       let ownProfile: AppBskyActorDefs.ProfileViewDetailed | undefined
       if (currentAccount) {
         ownProfile = findProfileQueryData(queryClient, currentAccount.did)
       }
-      logEvent('post:like', {
+      ax.metric('post:like', {
+        uri,
+        authorDid: postAuthor.did,
         logContext,
         doesPosterFollowLiker: postAuthor.viewer
           ? Boolean(postAuthor.viewer.followedBy)
@@ -189,19 +200,28 @@ function usePostLikeMutation(
           post.replyCount != null
             ? toClout(post.likeCount + post.repostCount + post.replyCount)
             : undefined,
+        feedDescriptor: feedDescriptor,
       })
-      return agent.like(uri, cid)
+      return agent.like(uri, cid, via)
     },
   })
 }
 
 function usePostUnlikeMutation(
-  logContext: LogEvents['post:unlike']['logContext'],
+  feedDescriptor: string | undefined,
+  logContext: Metrics['post:unlike']['logContext'],
+  post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const agent = useAgent()
+  const ax = useAnalytics()
   return useMutation<void, Error, {postUri: string; likeUri: string}>({
-    mutationFn: ({likeUri}) => {
-      logEvent('post:unlike', {logContext})
+    mutationFn: ({postUri, likeUri}) => {
+      ax.metric('post:unlike', {
+        uri: postUri,
+        authorDid: post.author.did,
+        logContext,
+        feedDescriptor,
+      })
       return agent.deleteLike(likeUri)
     },
   })
@@ -209,15 +229,20 @@ function usePostUnlikeMutation(
 
 export function usePostRepostMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
-  logContext: LogEvents['post:repost']['logContext'] &
-    LogEvents['post:unrepost']['logContext'],
+  viaRepost: {uri: string; cid: string} | undefined,
+  feedDescriptor: string | undefined,
+  logContext: Metrics['post:repost']['logContext'],
 ) {
   const queryClient = useQueryClient()
   const postUri = post.uri
   const postCid = post.cid
   const initialRepostUri = post.viewer?.repost
-  const repostMutation = usePostRepostMutation(logContext)
-  const unrepostMutation = usePostUnrepostMutation(logContext)
+  const repostMutation = usePostRepostMutation(feedDescriptor, logContext, post)
+  const unrepostMutation = usePostUnrepostMutation(
+    feedDescriptor,
+    logContext,
+    post,
+  )
 
   const queueToggle = useToggleMutationQueue({
     initialState: initialRepostUri,
@@ -226,6 +251,7 @@ export function usePostRepostMutationQueue(
         const {uri: repostUri} = await repostMutation.mutateAsync({
           uri: postUri,
           cid: postCid,
+          via: viaRepost,
         })
         return repostUri
       } else {
@@ -262,32 +288,48 @@ export function usePostRepostMutationQueue(
     return queueToggle(false)
   }, [queryClient, postUri, queueToggle])
 
-  return [queueRepost, queueUnrepost]
+  return [queueRepost, queueUnrepost] as const
 }
 
 function usePostRepostMutation(
-  logContext: LogEvents['post:repost']['logContext'],
+  feedDescriptor: string | undefined,
+  logContext: Metrics['post:repost']['logContext'],
+  post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const agent = useAgent()
+  const ax = useAnalytics()
   return useMutation<
     {uri: string}, // responds with the uri of the repost
     Error,
-    {uri: string; cid: string} // the post's uri and cid
+    {uri: string; cid: string; via?: {uri: string; cid: string}} // the post's uri and cid, and the repost uri/cid if present
   >({
-    mutationFn: post => {
-      logEvent('post:repost', {logContext})
-      return agent.repost(post.uri, post.cid)
+    mutationFn: ({uri, cid, via}) => {
+      ax.metric('post:repost', {
+        uri,
+        authorDid: post.author.did,
+        logContext,
+        feedDescriptor,
+      })
+      return agent.repost(uri, cid, via)
     },
   })
 }
 
 function usePostUnrepostMutation(
-  logContext: LogEvents['post:unrepost']['logContext'],
+  feedDescriptor: string | undefined,
+  logContext: Metrics['post:unrepost']['logContext'],
+  post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const agent = useAgent()
+  const ax = useAnalytics()
   return useMutation<void, Error, {postUri: string; repostUri: string}>({
-    mutationFn: ({repostUri}) => {
-      logEvent('post:unrepost', {logContext})
+    mutationFn: ({postUri, repostUri}) => {
+      ax.metric('post:unrepost', {
+        uri: postUri,
+        authorDid: post.author.did,
+        logContext,
+        feedDescriptor,
+      })
       return agent.deleteRepost(repostUri)
     },
   })
@@ -359,7 +401,6 @@ function useThreadMuteMutation() {
     {uri: string} // the root post's uri
   >({
     mutationFn: ({uri}) => {
-      logEvent('post:mute', {})
       return agent.api.app.bsky.graph.muteThread({root: uri})
     },
   })
@@ -369,7 +410,6 @@ function useThreadUnmuteMutation() {
   const agent = useAgent()
   return useMutation<{}, Error, {uri: string}>({
     mutationFn: ({uri}) => {
-      logEvent('post:unmute', {})
       return agent.api.app.bsky.graph.unmuteThread({root: uri})
     },
   })

@@ -1,4 +1,3 @@
-import React from 'react'
 import {View} from 'react-native'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'

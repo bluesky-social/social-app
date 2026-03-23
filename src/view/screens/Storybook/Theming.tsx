@@ -11,20 +11,20 @@ export function Theming() {
     <View style={[t.atoms.bg, a.gap_lg, a.p_xl]}>
       <Palette />
 
-      <Text style={[a.font_bold, a.pt_xl, a.px_md]}>theme.atoms.text</Text>
+      <Text style={[a.font_semi_bold, a.pt_xl, a.px_md]}>theme.atoms.text</Text>
 
       <View style={[a.flex_1, t.atoms.border_contrast_high, a.border_t]} />
-      <Text style={[a.font_bold, t.atoms.text_contrast_high, a.px_md]}>
+      <Text style={[a.font_semi_bold, t.atoms.text_contrast_high, a.px_md]}>
         theme.atoms.text_contrast_high
       </Text>
 
       <View style={[a.flex_1, t.atoms.border_contrast_medium, a.border_t]} />
-      <Text style={[a.font_bold, t.atoms.text_contrast_medium, a.px_md]}>
+      <Text style={[a.font_semi_bold, t.atoms.text_contrast_medium, a.px_md]}>
         theme.atoms.text_contrast_medium
       </Text>
 
       <View style={[a.flex_1, t.atoms.border_contrast_low, a.border_t]} />
-      <Text style={[a.font_bold, t.atoms.text_contrast_low, a.px_md]}>
+      <Text style={[a.font_semi_bold, t.atoms.text_contrast_low, a.px_md]}>
         theme.atoms.text_contrast_low
       </Text>
 

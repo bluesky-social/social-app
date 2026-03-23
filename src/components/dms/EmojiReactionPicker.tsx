@@ -1,7 +1,7 @@
 import {useMemo, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import {type ChatBskyConvoDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useSession} from '#/state/session'
@@ -98,8 +98,8 @@ export function EmojiReactionPicker({
                           : t.palette.primary_500,
                       }
                     : alreadyReacted
-                    ? {backgroundColor: t.palette.primary_200}
-                    : bgColor,
+                      ? {backgroundColor: t.palette.primary_200}
+                      : bgColor,
                   {height: 40, width: 40},
                   a.justify_center,
                   a.align_center,

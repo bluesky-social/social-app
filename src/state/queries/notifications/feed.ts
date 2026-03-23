@@ -18,30 +18,30 @@
 
 import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {
-  AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
   moderatePost,
 } from '@atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
 import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
-import {useModerationOpts} from '../../preferences/moderation-opts'
-import {STALE} from '..'
+import type * as bsky from '#/types/bsky'
 import {
   didOrHandleUriMatches,
   embedViewRecordToPostView,
   getEmbeddedPost,
 } from '../util'
-import {FeedPage} from './types'
+import {type FeedPage} from './types'
 import {useUnreadNotificationsApi} from './unread'
 import {fetchPage} from './util'
 
@@ -309,7 +309,7 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
+): Generator<bsky.profile.AnyProfileView, void> {
   const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
     queryKey: [RQKEY_ROOT],
   })
@@ -320,6 +320,11 @@ export function* findAllProfilesInQueryData(
     for (const page of queryData?.pages) {
       for (const item of page.items) {
         if (
+          (item.type === 'follow' || item.type === 'contact-match') &&
+          item.notification.author.did === did
+        ) {
+          yield item.notification.author
+        } else if (
           item.type !== 'starterpack-joined' &&
           item.subject?.author.did === did
         ) {

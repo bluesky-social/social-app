@@ -1,6 +1,21 @@
-import React, {isValidElement, memo, startTransition, useRef} from 'react'
-import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
-import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
+import {
+  forwardRef,
+  isValidElement,
+  memo,
+  startTransition,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
+import {
+  type FlatListProps,
+  StyleSheet,
+  View,
+  type ViewProps,
+} from 'react-native'
+import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -28,7 +43,7 @@ export type ListProps<ItemT> = Omit<
    */
   sideBorders?: boolean
 }
-export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
+export type ListRef = React.RefObject<View>
 
 const ON_ITEM_SEEN_WAIT_DURATION = 0.5e3 // when we consider post to  be "seen"
 const ON_ITEM_SEEN_INTERSECTION_OPTS = {
@@ -66,7 +81,7 @@ function ListImpl<ItemT>(
 
   const isEmpty = !data || data.length === 0
 
-  let headerComponent: JSX.Element | null = null
+  let headerComponent: React.JSX.Element | null = null
   if (ListHeaderComponent != null) {
     if (isValidElement(ListHeaderComponent)) {
       headerComponent = ListHeaderComponent
@@ -76,7 +91,7 @@ function ListImpl<ItemT>(
     }
   }
 
-  let footerComponent: JSX.Element | null = null
+  let footerComponent: React.JSX.Element | null = null
   if (ListFooterComponent != null) {
     if (isValidElement(ListFooterComponent)) {
       footerComponent = ListFooterComponent
@@ -86,7 +101,7 @@ function ListImpl<ItemT>(
     }
   }
 
-  let emptyComponent: JSX.Element | null = null
+  let emptyComponent: React.JSX.Element | null = null
   if (ListEmptyComponent != null) {
     if (isValidElement(ListEmptyComponent)) {
       emptyComponent = ListEmptyComponent
@@ -102,9 +117,9 @@ function ListImpl<ItemT>(
     })
   }
 
-  const getScrollableNode = React.useCallback(() => {
+  const getScrollableNode = useCallback(() => {
     if (disableFullWindowScroll) {
-      const element = nativeRef.current as HTMLDivElement | null
+      const element = nativeRef.current
       if (!element) return
 
       return {
@@ -175,8 +190,8 @@ function ListImpl<ItemT>(
     }
   }, [disableFullWindowScroll])
 
-  const nativeRef = React.useRef<HTMLDivElement>(null)
-  React.useImperativeHandle(
+  const nativeRef = useRef<HTMLDivElement>(null)
+  useImperativeHandle(
     ref,
     () =>
       ({
@@ -197,6 +212,7 @@ function ListImpl<ItemT>(
             behavior: animated ? 'smooth' : 'instant',
           })
         },
+
         scrollToEnd({animated = true}: {animated?: boolean}) {
           const element = getScrollableNode()
           element?.scrollTo({
@@ -205,7 +221,7 @@ function ListImpl<ItemT>(
             behavior: animated ? 'smooth' : 'instant',
           })
         },
-      } as any), // TODO: Better types.
+      }) as any, // TODO: Better types.
     [getScrollableNode],
   )
 
@@ -214,7 +230,7 @@ function ListImpl<ItemT>(
   useResizeObserver(containerRef, onContentSizeChange)
 
   // --- onScroll ---
-  const [isInsideVisibleTree, setIsInsideVisibleTree] = React.useState(false)
+  const [isInsideVisibleTree, setIsInsideVisibleTree] = useState(false)
   const handleScroll = useNonReactiveCallback(() => {
     if (!isInsideVisibleTree) return
 
@@ -245,7 +261,7 @@ function ListImpl<ItemT>(
     )
   })
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isInsideVisibleTree) {
       // Prevents hidden tabs from firing scroll events.
       // Only one list is expected to be firing these at a time.
@@ -377,13 +393,13 @@ function EdgeVisibility({
   containerRef,
   onVisibleChange,
 }: {
-  root?: React.RefObject<HTMLDivElement> | null
+  root?: React.RefObject<HTMLDivElement | null> | null
   topMargin?: string
   bottomMargin?: string
-  containerRef: React.RefObject<Element>
+  containerRef: React.RefObject<Element | null>
   onVisibleChange: (isVisible: boolean) => void
 }) {
-  const [containerHeight, setContainerHeight] = React.useState(0)
+  const [containerHeight, setContainerHeight] = useState(0)
   useResizeObserver(containerRef, (w, h) => {
     setContainerHeight(h)
   })
@@ -399,12 +415,12 @@ function EdgeVisibility({
 }
 
 function useResizeObserver(
-  ref: React.RefObject<Element>,
+  ref: React.RefObject<Element | null>,
   onResize: undefined | ((w: number, h: number) => void),
 ) {
   const handleResize = useNonReactiveCallback(onResize ?? (() => {}))
   const isActive = !!onResize
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isActive) {
       return
     }
@@ -440,10 +456,10 @@ let Row = function RowImpl<ItemT>({
   extraData: any
   onItemSeen: ((item: any) => void) | undefined
 }): React.ReactNode {
-  const rowRef = React.useRef(null)
-  const intersectionTimeout = React.useRef<
-    ReturnType<typeof setTimeout> | undefined
-  >(undefined)
+  const rowRef = useRef(null)
+  const intersectionTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  )
 
   const handleIntersection = useNonReactiveCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -456,12 +472,12 @@ let Row = function RowImpl<ItemT>({
             if (!intersectionTimeout.current) {
               intersectionTimeout.current = setTimeout(() => {
                 intersectionTimeout.current = undefined
-                onItemSeen!(item)
+                onItemSeen(item)
               }, ON_ITEM_SEEN_WAIT_DURATION)
             }
           } else {
             if (intersectionTimeout.current) {
-              clearTimeout(intersectionTimeout.current as NodeJS.Timeout)
+              clearTimeout(intersectionTimeout.current)
               intersectionTimeout.current = undefined
             }
           }
@@ -470,7 +486,7 @@ let Row = function RowImpl<ItemT>({
     },
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!onItemSeen) {
       return
     }
@@ -478,10 +494,14 @@ let Row = function RowImpl<ItemT>({
       handleIntersection,
       ON_ITEM_SEEN_INTERSECTION_OPTS,
     )
-    const row: Element | null = rowRef.current!
-    observer.observe(row)
+    const row: Element | null = rowRef.current
+    if (row) {
+      observer.observe(row)
+    }
     return () => {
-      observer.unobserve(row)
+      if (row) {
+        observer.unobserve(row)
+      }
     }
   }, [handleIntersection, onItemSeen])
 
@@ -495,7 +515,7 @@ let Row = function RowImpl<ItemT>({
     </View>
   )
 }
-Row = React.memo(Row)
+Row = memo(Row)
 
 let Visibility = ({
   root,
@@ -504,14 +524,14 @@ let Visibility = ({
   onVisibleChange,
   style,
 }: {
-  root?: React.RefObject<HTMLDivElement> | null
+  root?: React.RefObject<HTMLDivElement | null> | null
   topMargin?: string
   bottomMargin?: string
   onVisibleChange: (isVisible: boolean) => void
   style?: ViewProps['style']
 }): React.ReactNode => {
-  const tailRef = React.useRef(null)
-  const isIntersecting = React.useRef(false)
+  const tailRef = useRef(null)
+  const isIntersecting = useRef(false)
 
   const handleIntersection = useNonReactiveCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -526,15 +546,19 @@ let Visibility = ({
     },
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     const observer = new IntersectionObserver(handleIntersection, {
       root: root?.current ?? null,
       rootMargin: `${topMargin} 0px ${bottomMargin} 0px`,
     })
-    const tail: Element | null = tailRef.current!
-    observer.observe(tail)
+    const tail: Element | null = tailRef.current
+    if (tail) {
+      observer.observe(tail)
+    }
     return () => {
-      observer.unobserve(tail)
+      if (tail) {
+        observer.unobserve(tail)
+      }
     }
   }, [bottomMargin, handleIntersection, topMargin, root])
 
@@ -542,11 +566,11 @@ let Visibility = ({
     <View ref={tailRef} style={addStyle(styles.visibilityDetector, style)} />
   )
 }
-Visibility = React.memo(Visibility)
+Visibility = memo(Visibility)
 
-export const List = memo(React.forwardRef(ListImpl)) as <ItemT>(
+export const List = memo(forwardRef(ListImpl)) as <ItemT>(
   props: ListProps<ItemT> & {ref?: React.Ref<ListMethods>},
-) => React.ReactElement
+) => React.ReactElement<any>
 
 // https://stackoverflow.com/questions/7944460/detect-safari-browser
 

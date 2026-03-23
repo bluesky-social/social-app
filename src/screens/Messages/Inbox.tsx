@@ -1,21 +1,27 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {ChatBskyConvoDefs, ChatBskyConvoListConvos} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {
+  type ChatBskyConvoDefs,
+  type ChatBskyConvoListConvos,
+} from '@atproto/api'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
+import {
+  type InfiniteData,
+  type UseInfiniteQueryResult,
+} from '@tanstack/react-query'
 
-import {useAppState} from '#/lib/hooks/useAppState'
+import {useAppState} from '#/lib/appState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {
-  CommonNavigatorParams,
-  NativeStackScreenProps,
-  NavigationProp,
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+  type NavigationProp,
 } from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
@@ -24,22 +30,38 @@ import {useUpdateAllRead} from '#/state/queries/messages/update-all-read'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {List} from '#/view/com/util/List'
 import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
+import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotateCounterClockwise'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotate'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons/Message'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 import {RequestListItem} from './components/RequestListItem'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesInbox'>
-export function MessagesInboxScreen({}: Props) {
+
+export function MessagesInboxScreen(props: Props) {
+  const {_} = useLingui()
+  const aaCopy = useAgeAssuranceCopy()
+  return (
+    <AgeRestrictedScreen
+      screenTitle={_(msg`Chat requests`)}
+      infoText={aaCopy.chatsInfoText}>
+      <MessagesInboxScreenInner {...props} />
+    </AgeRestrictedScreen>
+  )
+}
+
+export function MessagesInboxScreenInner({}: Props) {
   const {gtTablet} = useBreakpoints()
 
   const listConvosQuery = useListConvosQuery({status: 'request'})
@@ -172,7 +194,8 @@ function RequestList({
                     width={48}
                     fill={t.atoms.text_contrast_low.color}
                   />
-                  <Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_bold]}>
+                  <Text
+                    style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_semi_bold]}>
                     <Trans>Whoops!</Trans>
                   </Text>
                   <Text
@@ -204,7 +227,8 @@ function RequestList({
               <>
                 <View style={[a.pt_3xl, a.align_center]}>
                   <MessageIcon width={48} fill={t.palette.primary_500} />
-                  <Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_bold]}>
+                  <Text
+                    style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_semi_bold]}>
                     <Trans comment="Title message shown in chat requests inbox when it's empty">
                       Inbox zero!
                     </Trans>
@@ -265,7 +289,7 @@ function RequestList({
             hasNextPage={hasNextPage}
           />
         }
-        onEndReachedThreshold={isNative ? 1.5 : 0}
+        onEndReachedThreshold={IS_NATIVE ? 1.5 : 0}
         initialNumToRender={initialNumToRender}
         windowSize={11}
         desktopFixedHeight
@@ -289,10 +313,14 @@ function MarkAllReadFAB() {
   const t = useTheme()
   const {mutate: markAllRead} = useUpdateAllRead('request', {
     onMutate: () => {
-      Toast.show(_(msg`Marked all as read`), 'check')
+      Toast.show(_(msg`Marked all as read`), {
+        type: 'success',
+      })
     },
     onError: () => {
-      Toast.show(_(msg`Failed to mark all requests as read`), 'xmark')
+      Toast.show(_(msg`Failed to mark all requests as read`), {
+        type: 'error',
+      })
     },
   })
 
@@ -312,10 +340,14 @@ function MarkAsReadHeaderButton() {
   const {_} = useLingui()
   const {mutate: markAllRead} = useUpdateAllRead('request', {
     onMutate: () => {
-      Toast.show(_(msg`Marked all as read`), 'check')
+      Toast.show(_(msg`Marked all as read`), {
+        type: 'success',
+      })
     },
     onError: () => {
-      Toast.show(_(msg`Failed to mark all requests as read`), 'xmark')
+      Toast.show(_(msg`Failed to mark all requests as read`), {
+        type: 'error',
+      })
     },
   })
 

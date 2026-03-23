@@ -1,12 +1,11 @@
-import React from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {useCallback, useEffect, useRef, useState} from 'react'
+import {Pressable, View} from 'react-native'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import Graphemer from 'graphemer'
 import {flushSync} from 'react-dom'
 import TextareaAutosize from 'react-textarea-autosize'
+import {countGraphemes} from 'unicode-segmenter/grapheme'
 
-import {isSafari, isTouchDevice} from '#/lib/browser'
 import {MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {
@@ -15,15 +14,16 @@ import {
 } from '#/state/messages/message-drafts'
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {
-  Emoji,
-  EmojiPickerPosition,
-} from '#/view/com/composer/text-input/web/EmojiPicker.web'
-import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
+  type Emoji,
+  type EmojiPickerPosition,
+} from '#/view/com/composer/text-input/web/EmojiPicker'
+import {atoms as a, flatten, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
+import * as Toast from '#/components/Toast'
+import {IS_WEB_SAFARI, IS_WEB_TOUCH_DEVICE} from '#/env'
 import {useExtractEmbedFromFacets} from './MessageInputEmbed'
 
 export function MessageInput({
@@ -43,21 +43,23 @@ export function MessageInput({
   const {_} = useLingui()
   const t = useTheme()
   const {getDraft, clearDraft} = useMessageDraft()
-  const [message, setMessage] = React.useState(getDraft)
+  const [message, setMessage] = useState(getDraft)
 
   const inputStyles = useSharedInputStyles()
-  const isComposing = React.useRef(false)
-  const [isFocused, setIsFocused] = React.useState(false)
-  const [isHovered, setIsHovered] = React.useState(false)
-  const [textAreaHeight, setTextAreaHeight] = React.useState(38)
-  const textAreaRef = React.useRef<HTMLTextAreaElement>(null)
+  const isComposing = useRef(false)
+  const [isFocused, setIsFocused] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
+  const [textAreaHeight, setTextAreaHeight] = useState(38)
+  const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
-  const onSubmit = React.useCallback(() => {
+  const onSubmit = useCallback(() => {
     if (!hasEmbed && message.trim() === '') {
       return
     }
-    if (new Graphemer().countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
-      Toast.show(_(msg`Message is too long`), 'xmark')
+    if (countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
+      Toast.show(_(msg`Message is too long`), {
+        type: 'error',
+      })
       return
     }
     clearDraft()
@@ -66,7 +68,7 @@ export function MessageInput({
     setEmbed(undefined)
   }, [message, onSendMessage, _, clearDraft, hasEmbed, setEmbed])
 
-  const onKeyDown = React.useCallback(
+  const onKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       // Don't submit the form when the Japanese or any other IME is composing
       if (isComposing.current) return
@@ -85,7 +87,7 @@ export function MessageInput({
       // far too long of a delay, and a subsequent enter press would often just end up doing nothing. A shorter time
       // frame was also not great, since it was too short to be reliable (i.e. an older system might have a larger
       // time gap between the two events firing.
-      if (isSafari && e.key === 'Enter' && e.keyCode === 229) {
+      if (IS_WEB_SAFARI && e.key === 'Enter' && e.keyCode === 229) {
         return
       }
 
@@ -98,14 +100,11 @@ export function MessageInput({
     [onSubmit],
   )
 
-  const onChange = React.useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setMessage(e.target.value)
-    },
-    [],
-  )
+  const onChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setMessage(e.target.value)
+  }, [])
 
-  const onEmojiInserted = React.useCallback(
+  const onEmojiInserted = useCallback(
     (emoji: Emoji) => {
       if (!textAreaRef.current) {
         return
@@ -123,7 +122,7 @@ export function MessageInput({
     },
     [setMessage],
   )
-  React.useEffect(() => {
+  useEffect(() => {
     textInputWebEmitter.addListener('emoji-inserted', onEmojiInserted)
     return () => {
       textInputWebEmitter.removeListener('emoji-inserted', onEmojiInserted)
@@ -199,7 +198,7 @@ export function MessageInput({
         </Button>
         <TextareaAutosize
           ref={textAreaRef}
-          style={StyleSheet.flatten([
+          style={flatten([
             a.flex_1,
             a.px_sm,
             a.border_0,
@@ -228,7 +227,7 @@ export function MessageInput({
           onChange={onChange}
           // On mobile web phones, we want to keep the same behavior as the native app. Do not submit the message
           // in these cases.
-          onKeyDown={isTouchDevice && isMobile ? undefined : onKeyDown}
+          onKeyDown={IS_WEB_TOUCH_DEVICE && isMobile ? undefined : onKeyDown}
         />
         <Pressable
           accessibilityRole="button"

@@ -1,18 +1,16 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
-import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
-import {useFocusGuards} from '@radix-ui/react-focus-guards'
-import {FocusScope} from '@radix-ui/react-focus-scope'
+import {DismissableLayer, FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {useA11y} from '#/state/a11y'
 import {useModals} from '#/state/modals'
-import {ComposerOpts, useComposerState} from '#/state/shell/composer'
+import {type ComposerOpts, useComposerState} from '#/state/shell/composer'
 import {
   EmojiPicker,
-  EmojiPickerPosition,
-  EmojiPickerState,
-} from '#/view/com/composer/text-input/web/EmojiPicker.web'
+  type EmojiPickerPosition,
+  type EmojiPickerState,
+} from '#/view/com/composer/text-input/web/EmojiPicker'
 import {atoms as a, flatten, useBreakpoints, useTheme} from '#/alf'
 import {ComposePost, useComposerCancelRef} from '../com/composer/Composer'
 
@@ -43,34 +41,31 @@ function Inner({state}: {state: ComposerOpts}) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {reduceMotionEnabled} = useA11y()
-  const [pickerState, setPickerState] = React.useState<EmojiPickerState>({
+  const [pickerState, setPickerState] = useState<EmojiPickerState>({
     isOpen: false,
     pos: {top: 0, left: 0, right: 0, bottom: 0, nextFocusRef: null},
   })
 
-  const onOpenPicker = React.useCallback(
-    (pos: EmojiPickerPosition | undefined) => {
-      if (!pos) return
-      setPickerState({
-        isOpen: true,
-        pos,
-      })
-    },
-    [],
-  )
+  const onOpenPicker = useCallback((pos: EmojiPickerPosition | undefined) => {
+    if (!pos) return
+    setPickerState({
+      isOpen: true,
+      pos,
+    })
+  }, [])
 
-  const onClosePicker = React.useCallback(() => {
+  const onClosePicker = useCallback(() => {
     setPickerState(prev => ({
       ...prev,
       isOpen: false,
     }))
   }, [])
 
-  useFocusGuards()
+  FocusGuards.useFocusGuards()
 
   return (
-    <FocusScope loop trapped asChild>
-      <DismissableLayer
+    <FocusScope.FocusScope loop trapped asChild>
+      <DismissableLayer.DismissableLayer
         role="dialog"
         aria-modal
         style={flatten([
@@ -107,15 +102,17 @@ function Inner({state}: {state: ComposerOpts}) {
             replyTo={state.replyTo}
             quote={state.quote}
             onPost={state.onPost}
+            onPostSuccess={state.onPostSuccess}
             mention={state.mention}
             openEmojiPicker={onOpenPicker}
             text={state.text}
             imageUris={state.imageUris}
+            openGallery={state.openGallery}
           />
         </View>
         <EmojiPicker state={pickerState} close={onClosePicker} />
-      </DismissableLayer>
-    </FocusScope>
+      </DismissableLayer.DismissableLayer>
+    </FocusScope.FocusScope>
   )
 }
 

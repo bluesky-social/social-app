@@ -1,76 +1,64 @@
-import React, {useCallback} from 'react'
+import {useCallback} from 'react'
 import Animated, {
   FadeInUp,
   FadeOutUp,
   LayoutAnimationConfig,
   LinearTransition,
 } from 'react-native-reanimated'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
-import {IS_INTERNAL} from '#/lib/app-info'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
-import {isNative} from '#/platform/detection'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
 import {SettingsListItem as AppIconSettingsListItem} from '#/screens/Settings/AppIconSettings/SettingsListItem'
-import {atoms as a, native, useAlf, useTheme} from '#/alf'
-import * as ToggleButton from '#/components/forms/ToggleButton'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {type Alf, atoms as a, native, useAlf, useTheme} from '#/alf'
+import * as SegmentedControl from '#/components/forms/SegmentedControl'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Moon_Stroke2_Corner0_Rounded as MoonIcon} from '#/components/icons/Moon'
 import {Phone_Stroke2_Corner0_Rounded as PhoneIcon} from '#/components/icons/Phone'
 import {TextSize_Stroke2_Corner0_Rounded as TextSize} from '#/components/icons/TextSize'
 import {TitleCase_Stroke2_Corner0_Rounded as Aa} from '#/components/icons/TitleCase'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {IS_INTERNAL, IS_NATIVE} from '#/env'
 import * as SettingsList from './components/SettingsList'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>
 export function AppearanceSettingsScreen({}: Props) {
   const {_} = useLingui()
   const {fonts} = useAlf()
-  const gate = useGate()
 
   const {colorMode, darkTheme} = useThemePrefs()
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
 
   const onChangeAppearance = useCallback(
-    (keys: string[]) => {
-      const appearance = keys.find(key => key !== colorMode) as
-        | 'system'
-        | 'light'
-        | 'dark'
-        | undefined
-      if (!appearance) return
-      setColorMode(appearance)
+    (value: 'light' | 'system' | 'dark') => {
+      setColorMode(value)
     },
-    [setColorMode, colorMode],
+    [setColorMode],
   )
 
   const onChangeDarkTheme = useCallback(
-    (keys: string[]) => {
-      const theme = keys.find(key => key !== darkTheme) as
-        | 'dim'
-        | 'dark'
-        | undefined
-      if (!theme) return
-      setDarkTheme(theme)
+    (value: 'dim' | 'dark') => {
+      setDarkTheme(value)
     },
-    [setDarkTheme, darkTheme],
+    [setDarkTheme],
   )
 
   const onChangeFontFamily = useCallback(
-    (values: string[]) => {
-      const next = values[0] === 'system' ? 'system' : 'theme'
-      fonts.setFontFamily(next)
+    (value: 'system' | 'theme') => {
+      fonts.setFontFamily(value)
     },
     [fonts],
   )
 
   const onChangeFontScale = useCallback(
-    (values: string[]) => {
-      const next = values[0] || ('0' as any)
-      fonts.setFontScale(next)
+    (value: Alf['fonts']['scale']) => {
+      fonts.setFontScale(value)
     },
     [fonts],
   )
@@ -106,7 +94,7 @@ export function AppearanceSettingsScreen({}: Props) {
                   name: 'dark',
                 },
               ]}
-              values={[colorMode]}
+              value={colorMode}
               onChange={onChangeAppearance}
             />
 
@@ -127,7 +115,7 @@ export function AppearanceSettingsScreen({}: Props) {
                       name: 'dark',
                     },
                   ]}
-                  values={[darkTheme ?? 'dim']}
+                  value={darkTheme ?? 'dim'}
                   onChange={onChangeDarkTheme}
                 />
               </Animated.View>
@@ -152,7 +140,7 @@ export function AppearanceSettingsScreen({}: Props) {
                     name: 'theme',
                   },
                 ]}
-                values={[fonts.family]}
+                value={fonts.family}
                 onChange={onChangeFontFamily}
               />
 
@@ -173,11 +161,11 @@ export function AppearanceSettingsScreen({}: Props) {
                     name: '1',
                   },
                 ]}
-                values={[fonts.scale]}
+                value={fonts.scale}
                 onChange={onChangeFontScale}
               />
 
-              {isNative && IS_INTERNAL && gate('debug_subscriptions') && (
+              {IS_NATIVE && IS_INTERNAL && (
                 <>
                   <SettingsList.Divider />
                   <AppIconSettingsListItem />
@@ -191,12 +179,12 @@ export function AppearanceSettingsScreen({}: Props) {
   )
 }
 
-export function AppearanceToggleButtonGroup({
+export function AppearanceToggleButtonGroup<T extends string>({
   title,
   description,
   icon: Icon,
   items,
-  values,
+  value,
   onChange,
 }: {
   title: string
@@ -204,10 +192,10 @@ export function AppearanceToggleButtonGroup({
   icon: React.ComponentType<SVGIconProps>
   items: {
     label: string
-    name: string
+    name: T
   }[]
-  values: string[]
-  onChange: (values: string[]) => void
+  value: T
+  onChange: (value: T) => void
 }) {
   const t = useTheme()
   return (
@@ -226,16 +214,22 @@ export function AppearanceToggleButtonGroup({
             {description}
           </Text>
         )}
-        <ToggleButton.Group label={title} values={values} onChange={onChange}>
+        <SegmentedControl.Root
+          type="radio"
+          label={title}
+          value={value}
+          onChange={onChange}>
           {items.map(item => (
-            <ToggleButton.Button
+            <SegmentedControl.Item
               key={item.name}
               label={item.label}
-              name={item.name}>
-              <ToggleButton.ButtonText>{item.label}</ToggleButton.ButtonText>
-            </ToggleButton.Button>
+              value={item.name}>
+              <SegmentedControl.ItemText>
+                {item.label}
+              </SegmentedControl.ItemText>
+            </SegmentedControl.Item>
           ))}
-        </ToggleButton.Group>
+        </SegmentedControl.Root>
       </SettingsList.Group>
     </>
   )

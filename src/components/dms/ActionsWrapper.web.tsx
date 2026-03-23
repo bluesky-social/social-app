@@ -1,17 +1,16 @@
 import {useCallback, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {type ChatBskyConvoDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
 
 import {useConvoActive} from '#/state/messages/convo'
 import {useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {MessageContextMenu} from '#/components/dms/MessageContextMenu'
-import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
 import {EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
+import * as Toast from '#/components/Toast'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
 import {hasReachedReactionLimit} from './util'
 
@@ -61,11 +60,11 @@ export function ActionsWrapper({
           .catch(() => Toast.show(_(msg`Failed to remove emoji reaction`)))
       } else {
         if (hasReachedReactionLimit(message, currentAccount?.did)) return
-        convo
-          .addReaction(message.id, emoji)
-          .catch(() =>
-            Toast.show(_(msg`Failed to add emoji reaction`), 'xmark'),
-          )
+        convo.addReaction(message.id, emoji).catch(() =>
+          Toast.show(_(msg`Failed to add emoji reaction`), {
+            type: 'error',
+          }),
+        )
       }
     },
     [_, convo, message, currentAccount?.did],
@@ -73,9 +72,9 @@ export function ActionsWrapper({
 
   return (
     <View
-      // @ts-expect-error web only
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      // @ts-expect-error web only
       onFocus={onFocus}
       onBlur={onMouseLeave}
       style={[a.flex_1, isFromSelf ? a.flex_row : a.flex_row_reverse]}
@@ -90,9 +89,9 @@ export function ActionsWrapper({
             : [a.ml_xs, {marginRight: 'auto'}],
         ]}>
         <EmojiReactionPicker message={message} onEmojiSelect={onEmojiSelect}>
-          {({props, state, isNative, control}) => {
+          {({props, state, IS_NATIVE, control}) => {
             // always false, file is platform split
-            if (isNative) return null
+            if (IS_NATIVE) return null
             const showMenuTrigger = showActions || control.isOpen ? 1 : 0
             return (
               <Pressable
@@ -112,9 +111,9 @@ export function ActionsWrapper({
           }}
         </EmojiReactionPicker>
         <MessageContextMenu message={message}>
-          {({props, state, isNative, control}) => {
+          {({props, state, IS_NATIVE, control}) => {
             // always false, file is platform split
-            if (isNative) return null
+            if (IS_NATIVE) return null
             const showMenuTrigger = showActions || control.isOpen ? 1 : 0
             return (
               <Pressable

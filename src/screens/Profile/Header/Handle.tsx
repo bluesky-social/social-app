@@ -1,14 +1,15 @@
 import {View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {type AppBskyActorDefs} from '@atproto/api'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
-import {isInvalidHandle} from '#/lib/strings/handles'
-import {isIOS} from '#/platform/detection'
-import {Shadow} from '#/state/cache/types'
+import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
+import {type Shadow} from '#/state/cache/types'
 import {atoms as a, useTheme, web} from '#/alf'
 import {NewskieDialog} from '#/components/NewskieDialog'
 import {Text} from '#/components/Typography'
+import {IS_IOS, IS_NATIVE} from '#/env'
 
 export function ProfileHeaderHandle({
   profile,
@@ -23,11 +24,11 @@ export function ProfileHeaderHandle({
   const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy
   return (
     <View
-      style={[a.flex_row, a.gap_xs, a.align_center, {maxWidth: '100%'}]}
-      pointerEvents={disableTaps ? 'none' : isIOS ? 'auto' : 'box-none'}>
+      style={[a.flex_row, a.gap_sm, a.align_center, {maxWidth: '100%'}]}
+      pointerEvents={disableTaps ? 'none' : IS_IOS ? 'auto' : 'box-none'}>
       <NewskieDialog profile={profile} disabled={disableTaps} />
       {profile.viewer?.followedBy && !blockHide ? (
-        <View style={[t.atoms.bg_contrast_25, a.rounded_xs, a.px_sm, a.py_xs]}>
+        <View style={[t.atoms.bg_contrast_50, a.rounded_xs, a.px_sm, a.py_xs]}>
           <Text style={[t.atoms.text, a.text_sm]}>
             <Trans>Follows you</Trans>
           </Text>
@@ -47,9 +48,20 @@ export function ProfileHeaderHandle({
                 {borderColor: t.palette.contrast_200},
               ]
             : [a.text_md, a.leading_snug, t.atoms.text_contrast_medium],
-          web({wordBreak: 'break-all'}),
+          web({
+            wordBreak: 'break-all',
+            direction: 'ltr',
+            unicodeBidi: 'isolate',
+          }),
         ]}>
-        {invalidHandle ? _(msg`⚠Invalid Handle`) : `@${profile.handle}`}
+        {invalidHandle
+          ? _(msg`⚠Invalid Handle`)
+          : sanitizeHandle(
+              profile.handle,
+              '@',
+              // forceLTR handled by CSS above on web
+              IS_NATIVE,
+            )}
       </Text>
     </View>
   )

@@ -1,6 +1,7 @@
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -8,7 +9,7 @@ import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
 import {StarterPack} from '#/components/icons/StarterPack'
-import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
+import {ScreenTransition} from '#/components/ScreenTransition'
 import {Text} from '#/components/Typography'
 
 export function StepDetails() {
@@ -19,15 +20,17 @@ export function StepDetails() {
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({
     did: currentAccount?.did,
-    staleTime: 300,
+    staleTime: Infinity,
   })
 
+  const name = currentProfile?.displayName || currentProfile?.handle
+
   return (
-    <ScreenTransition direction={state.transitionDirection}>
+    <ScreenTransition direction={state.transitionDirection} enabledWeb>
       <View style={[a.px_xl, a.gap_xl, a.mt_4xl]}>
         <View style={[a.gap_md, a.align_center, a.px_md, a.mb_md]}>
           <StarterPack width={90} gradient="sky" />
-          <Text style={[a.font_bold, a.text_3xl]}>
+          <Text style={[a.font_semi_bold, a.text_3xl]}>
             <Trans>Invites, but personal</Trans>
           </Text>
           <Text style={[a.text_center, a.text_md, a.px_md]}>
@@ -42,11 +45,9 @@ export function StepDetails() {
           </TextField.LabelText>
           <TextField.Root>
             <TextField.Input
-              label={_(
-                msg`${
-                  currentProfile?.displayName || currentProfile?.handle
-                }'s starter pack`,
-              )}
+              label={
+                name ? _(msg`${name}'s starter pack`) : _(msg`My starter pack`)
+              }
               value={state.name}
               onChangeText={text => dispatch({type: 'SetName', name: text})}
             />
@@ -70,11 +71,11 @@ export function StepDetails() {
           </TextField.LabelText>
           <TextField.Root>
             <TextField.Input
-              label={_(
-                msg`${
-                  currentProfile?.displayName || currentProfile?.handle
-                }'s favorite feeds and people - join me!`,
-              )}
+              label={
+                name
+                  ? _(msg`${name}'s favorite feeds and people - join me!`)
+                  : _(msg`My favorite feeds and people - join me!`)
+              }
               value={state.description}
               onChangeText={text =>
                 dispatch({type: 'SetDescription', description: text})

@@ -1,14 +1,16 @@
 import {memo} from 'react'
 import {ActivityIndicator, View} from 'react-native'
-import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {type AppBskyActorDefs} from '@atproto/api'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {isNative} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
+import {SearchLinkCard} from '#/view/shell/desktop/Search'
+import {SearchProfileCard} from '#/screens/Search/components/SearchProfileCard'
 import {atoms as a, native} from '#/alf'
 import * as Layout from '#/components/Layout'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 
 let AutocompleteResults = ({
   isAutocompleteFetching,
@@ -25,8 +27,9 @@ let AutocompleteResults = ({
   onResultPress: () => void
   onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
 }): React.ReactNode => {
-  const moderationOpts = useModerationOpts()
+  const ax = useAnalytics()
   const {_} = useLingui()
+  const moderationOpts = useModerationOpts()
   return (
     <>
       {(isAutocompleteFetching && !autocompleteData?.length) ||
@@ -44,18 +47,22 @@ let AutocompleteResults = ({
             label={_(msg`Search for "${searchText}"`)}
             onPress={native(onSubmit)}
             to={
-              isNative
+              IS_NATIVE
                 ? undefined
                 : `/search?q=${encodeURIComponent(searchText)}`
             }
-            style={{borderBottomWidth: 1}}
+            style={a.border_b}
           />
-          {autocompleteData?.map(item => (
+          {autocompleteData?.map((item, index) => (
             <SearchProfileCard
               key={item.did}
               profile={item}
-              moderation={moderateProfile(item, moderationOpts)}
+              moderationOpts={moderationOpts}
               onPress={() => {
+                ax.metric('search:autocomplete:press', {
+                  profileDid: item.did,
+                  position: index,
+                })
                 onProfileClick(item)
                 onResultPress()
               }}

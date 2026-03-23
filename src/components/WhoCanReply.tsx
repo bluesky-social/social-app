@@ -1,36 +1,44 @@
-import React from 'react'
-import {Keyboard, Platform, StyleProp, View, ViewStyle} from 'react-native'
+import {Fragment, useMemo, useRef} from 'react'
 import {
-  AppBskyFeedDefs,
+  Keyboard,
+  Platform,
+  type StyleProp,
+  View,
+  type ViewStyle,
+} from 'react-native'
+import {
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
-  AppBskyGraphDefs,
+  type AppBskyGraphDefs,
   AtUri,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {makeListLink, makeProfileLink} from '#/lib/routes/links'
-import {isNative} from '#/platform/detection'
 import {
-  ThreadgateAllowUISetting,
+  type ThreadgateAllowUISetting,
   threadgateViewToAllowUISetting,
 } from '#/state/queries/threadgate'
-import {atoms as a, useTheme} from '#/alf'
-import {Button} from '#/components/Button'
+import {atoms as a, native, useTheme, web} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
 import {
   PostInteractionSettingsDialog,
   usePrefetchPostInteractionSettings,
 } from '#/components/dialogs/PostInteractionSettingsDialog'
-import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
-import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
-import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
+import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronDownIcon} from '#/components/icons/Chevron'
+import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSignIcon} from '#/components/icons/CircleBanSign'
+import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Globe'
+import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Group'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 import * as bsky from '#/types/bsky'
-import {PencilLine_Stroke2_Corner0_Rounded as PencilLine} from './icons/Pencil'
 
 interface WhoCanReplyProps {
   post: AppBskyFeedDefs.PostView
@@ -39,8 +47,9 @@ interface WhoCanReplyProps {
 }
 
 export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
-  const {_} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
+  const {_} = useLingui()
   const infoDialogControl = useDialogControl()
   const editDialogControl = useDialogControl()
 
@@ -55,7 +64,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
     ) && post.record.reply?.root
       ? post.record.reply.root.uri
       : post.uri
-  const settings = React.useMemo(() => {
+  const settings = useMemo(() => {
     return threadgateViewToAllowUISetting(post.threadgate)
   }, [post.threadgate])
 
@@ -63,6 +72,11 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
     postUri: post.uri,
     rootPostUri: rootUri,
   })
+  const prefetchPromise = useRef<Promise<void>>(Promise.resolve())
+
+  const prefetch = () => {
+    prefetchPromise.current = prefetchPostInteractionSettings()
+  }
 
   const anyoneCanReply =
     settings.length === 1 && settings[0].type === 'everybody'
@@ -70,16 +84,27 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
   const description = anyoneCanReply
     ? _(msg`Everybody can reply`)
     : noOneCanReply
-    ? _(msg`Replies disabled`)
-    : _(msg`Some people can reply`)
+      ? _(msg`Replies disabled`)
+      : _(msg`Some people can reply`)
 
   const onPressOpen = () => {
-    if (isNative && Keyboard.isVisible()) {
+    if (IS_NATIVE && Keyboard.isVisible()) {
       Keyboard.dismiss()
     }
     if (isThreadAuthor) {
-      editDialogControl.open()
+      ax.metric('thread:click:editOwnThreadgate', {})
+
+      // wait on prefetch if it manages to resolve in under 200ms
+      // otherwise, proceed immediately and show the spinner -sfn
+      Promise.race([
+        prefetchPromise.current,
+        new Promise(res => setTimeout(res, 200)),
+      ]).finally(() => {
+        editDialogControl.open()
+      })
     } else {
+      ax.metric('thread:click:viewSomeoneElsesThreadgate', {})
+
       infoDialogControl.open()
     }
   }
@@ -94,18 +119,27 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
         {...(isThreadAuthor
           ? Platform.select({
               web: {
-                onHoverIn: prefetchPostInteractionSettings,
+                onHoverIn: prefetch,
               },
               native: {
-                onPressIn: prefetchPostInteractionSettings,
+                onPressIn: prefetch,
               },
             })
           : {})}
         hitSlop={HITSLOP_10}>
-        {({hovered}) => (
-          <View style={[a.flex_row, a.align_center, a.gap_xs, style]}>
+        {({hovered, focused, pressed}) => (
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.gap_xs,
+              (hovered || focused || pressed) && native({opacity: 0.5}),
+              style,
+            ]}>
             <Icon
-              color={t.palette.contrast_400}
+              color={
+                isThreadAuthor ? t.palette.primary_500 : t.palette.contrast_400
+              }
               width={16}
               settings={settings}
             />
@@ -113,14 +147,16 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
               style={[
                 a.text_sm,
                 a.leading_tight,
-                t.atoms.text_contrast_medium,
-                hovered && a.underline,
+                isThreadAuthor
+                  ? {color: t.palette.primary_500}
+                  : t.atoms.text_contrast_medium,
+                (hovered || focused || pressed) && web(a.underline),
               ]}>
               {description}
             </Text>
 
             {isThreadAuthor && (
-              <PencilLine width={12} fill={t.palette.primary_500} />
+              <TinyChevronDownIcon width={8} fill={t.palette.primary_500} />
             )}
           </View>
         )}
@@ -154,9 +190,15 @@ function Icon({
   width?: number
   settings: ThreadgateAllowUISetting[]
 }) {
-  const isEverybody = settings.length === 0
+  const isEverybody =
+    settings.length === 0 ||
+    settings.every(setting => setting.type === 'everybody')
   const isNobody = !!settings.find(gate => gate.type === 'nobody')
-  const IconComponent = isEverybody ? Earth : isNobody ? CircleBanSign : Group
+  const IconComponent = isEverybody
+    ? EarthIcon
+    : isNobody
+      ? CircleBanSignIcon
+      : GroupIcon
   return <IconComponent fill={color} width={width} />
 }
 
@@ -172,14 +214,15 @@ function WhoCanReplyDialog({
   embeddingDisabled: boolean
 }) {
   const {_} = useLingui()
+
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={_(msg`Dialog: adjust who can interact with this post`)}
-        style={[{width: 'auto', maxWidth: 400, minWidth: 200}]}>
+        style={web({maxWidth: 400})}>
         <View style={[a.gap_sm]}>
-          <Text style={[a.font_bold, a.text_xl, a.pb_sm]}>
+          <Text style={[a.font_semi_bold, a.text_xl, a.pb_sm]}>
             <Trans>Who can interact with this post?</Trans>
           </Text>
           <Rules
@@ -188,6 +231,20 @@ function WhoCanReplyDialog({
             embeddingDisabled={embeddingDisabled}
           />
         </View>
+        {IS_NATIVE && (
+          <Button
+            label={_(msg`Close`)}
+            onPress={() => control.close()}
+            size="small"
+            variant="solid"
+            color="secondary"
+            style={[a.mt_5xl]}>
+            <ButtonText>
+              <Trans>Close</Trans>
+            </ButtonText>
+          </Button>
+        )}
+        <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
   )
@@ -226,10 +283,10 @@ function Rules({
           <Trans>
             Only{' '}
             {settings.map((rule, i) => (
-              <React.Fragment key={`rule-${i}`}>
+              <Fragment key={`rule-${i}`}>
                 <Rule rule={rule} post={post} lists={post.threadgate!.lists} />
                 <Separator i={i} length={settings.length} />
-              </React.Fragment>
+              </Fragment>
             ))}{' '}
             can reply.
           </Trans>

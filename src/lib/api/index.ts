@@ -1,23 +1,23 @@
 import {
-  $Typed,
-  AppBskyEmbedExternal,
-  AppBskyEmbedImages,
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  AppBskyEmbedVideo,
-  AppBskyFeedPost,
+  type $Typed,
+  type AppBskyEmbedExternal,
+  type AppBskyEmbedImages,
+  type AppBskyEmbedRecord,
+  type AppBskyEmbedRecordWithMedia,
+  type AppBskyEmbedVideo,
+  type AppBskyFeedPost,
   AtUri,
   BlobRef,
-  BskyAgent,
-  ComAtprotoLabelDefs,
-  ComAtprotoRepoApplyWrites,
-  ComAtprotoRepoStrongRef,
+  type BskyAgent,
+  type ComAtprotoLabelDefs,
+  type ComAtprotoRepoApplyWrites,
+  type ComAtprotoRepoStrongRef,
   RichText,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import * as dcbor from '@ipld/dag-cbor'
-import {t} from '@lingui/macro'
-import {QueryClient} from '@tanstack/react-query'
+import {t} from '@lingui/core/macro'
+import {type QueryClient} from '@tanstack/react-query'
 import {sha256} from 'js-sha256'
 import {CID} from 'multiformats/cid'
 import * as Hasher from 'multiformats/hashes/hasher'
@@ -35,9 +35,9 @@ import {
   threadgateAllowUISettingToAllowRecordValue,
 } from '#/state/queries/threadgate'
 import {
-  EmbedDraft,
-  PostDraft,
-  ThreadDraft,
+  type EmbedDraft,
+  type PostDraft,
+  type ThreadDraft,
 } from '#/view/com/composer/state/composer'
 import {createGIFDescription} from '../gif-alt-text'
 import {uploadBlob} from './upload-blob'
@@ -51,10 +51,15 @@ interface PostOpts {
   langs?: string[]
 }
 
+type FeatureFlags = {
+  highResolutionImages?: boolean
+}
+
 export async function post(
   agent: BskyAgent,
   queryClient: QueryClient,
   opts: PostOpts,
+  featureFlags?: FeatureFlags,
 ) {
   const thread = opts.thread
   opts.onStateChange?.(t`Processing...`)
@@ -91,6 +96,7 @@ export async function post(
       queryClient,
       draft,
       opts.onStateChange,
+      featureFlags,
     )
     let labels: $Typed<ComAtprotoLabelDefs.SelfLabels> | undefined
     if (draft.labels.length) {
@@ -230,6 +236,7 @@ async function resolveEmbed(
   queryClient: QueryClient,
   draft: PostDraft,
   onStateChange: ((state: string) => void) | undefined,
+  featureFlags?: FeatureFlags,
 ): Promise<
   | $Typed<AppBskyEmbedImages.Main>
   | $Typed<AppBskyEmbedVideo.Main>
@@ -240,7 +247,13 @@ async function resolveEmbed(
 > {
   if (draft.embed.quote) {
     const [resolvedMedia, resolvedQuote] = await Promise.all([
-      resolveMedia(agent, queryClient, draft.embed, onStateChange),
+      resolveMedia(
+        agent,
+        queryClient,
+        draft.embed,
+        onStateChange,
+        featureFlags,
+      ),
       resolveRecord(agent, queryClient, draft.embed.quote.uri),
     ])
     if (resolvedMedia) {
@@ -263,6 +276,7 @@ async function resolveEmbed(
     queryClient,
     draft.embed,
     onStateChange,
+    featureFlags,
   )
   if (resolvedMedia) {
     return resolvedMedia
@@ -288,6 +302,7 @@ async function resolveMedia(
   queryClient: QueryClient,
   embedDraft: EmbedDraft,
   onStateChange: ((state: string) => void) | undefined,
+  featureFlags?: FeatureFlags,
 ): Promise<
   | $Typed<AppBskyEmbedExternal.Main>
   | $Typed<AppBskyEmbedImages.Main>
@@ -303,7 +318,9 @@ async function resolveMedia(
     const images: AppBskyEmbedImages.Image[] = await Promise.all(
       imagesDraft.map(async (image, i) => {
         logger.debug(`Compressing image #${i}`)
-        const {path, width, height, mime} = await compressImage(image)
+        const {path, width, height, mime} = await compressImage(image, {
+          highResolution: featureFlags?.highResolutionImages,
+        })
         logger.debug(`Uploading image #${i}`)
         const res = await uploadBlob(agent, path, mime)
         return {
@@ -333,15 +350,29 @@ async function resolveMedia(
           return {lang: caption.lang, file: data.blob}
         }),
     )
+
+    // lexicon numbers must be floats
+    const width = Math.round(videoDraft.asset.width)
+    const height = Math.round(videoDraft.asset.height)
+
+    // aspect ratio values must be >0 - better to leave as unset otherwise
+    // posting will fail if aspect ratio is set to 0
+    const aspectRatio = width > 0 && height > 0 ? {width, height} : undefined
+
+    if (!aspectRatio) {
+      logger.error(
+        `Invalid aspect ratio - got { width: ${videoDraft.asset.width}, height: ${videoDraft.asset.height} }`,
+      )
+    }
+
     return {
       $type: 'app.bsky.embed.video',
       video: videoDraft.pendingPublish.blobRef,
       alt: videoDraft.altText || undefined,
       captions: captions.length === 0 ? undefined : captions,
-      aspectRatio: {
-        width: videoDraft.asset.width,
-        height: videoDraft.asset.height,
-      },
+      aspectRatio,
+      presentation:
+        videoDraft.video.mimeType === 'image/gif' ? 'gif' : 'default',
     }
   }
   if (embedDraft.media?.type === 'gif') {

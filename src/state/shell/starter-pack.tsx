@@ -1,4 +1,4 @@
-import React from 'react'
+import {createContext, useContext, useState} from 'react'
 
 type StateContext =
   | {
@@ -8,11 +8,13 @@ type StateContext =
   | undefined
 type SetContext = (v: StateContext) => void
 
-const stateContext = React.createContext<StateContext>(undefined)
-const setContext = React.createContext<SetContext>((_: StateContext) => {})
+const stateContext = createContext<StateContext>(undefined)
+stateContext.displayName = 'ActiveStarterPackStateContext'
+const setContext = createContext<SetContext>((_: StateContext) => {})
+setContext.displayName = 'ActiveStarterPackSetContext'
 
 export function Provider({children}: {children: React.ReactNode}) {
-  const [state, setState] = React.useState<StateContext>()
+  const [state, setState] = useState<StateContext>()
 
   return (
     <stateContext.Provider value={state}>
@@ -21,5 +23,5 @@ export function Provider({children}: {children: React.ReactNode}) {
   )
 }
 
-export const useActiveStarterPack = () => React.useContext(stateContext)
-export const useSetActiveStarterPack = () => React.useContext(setContext)
+export const useActiveStarterPack = () => useContext(stateContext)
+export const useSetActiveStarterPack = () => useContext(setContext)

@@ -1,0 +1,71 @@
+diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
+index e9b330f..5fbb2e0 100644
+--- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
++++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
+@@ -15,5 +15,6 @@
+ @property (nonatomic, copy) NSString *title;
+ @property (nonatomic, copy) RCTDirectEventBlock onRefresh;
+ @property (nonatomic, weak) UIScrollView *scrollView;
++@property (nonatomic, copy) UIColor *customTintColor;
+ 
+ @end
+diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
+index 53bfd04..e2e0c9f 100644
+--- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
++++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
+@@ -23,6 +23,7 @@ @implementation RCTRefreshControl {
+   UIColor *_titleColor;
+   CGFloat _progressViewOffset;
+   BOOL _hasMovedToWindow;
++  UIColor *_customTintColor;
+ }
+ 
+ - (instancetype)init
+@@ -58,6 +59,12 @@ - (void)layoutSubviews
+   _isInitialRender = false;
+ }
+ 
++- (void)didMoveToSuperview
++{
++  [super didMoveToSuperview];
++  [self setTintColor:_customTintColor];
++}
++
+ - (void)didMoveToWindow
+ {
+   [super didMoveToWindow];
+@@ -221,4 +228,16 @@ - (void)refreshControlValueChanged
+   }
+ }
+ 
++// Fix for https://github.com/facebook/react-native/issues/43388
++// A bug in iOS 17.4 causes the haptic to not play when refreshing if the tintColor
++// is set before the refresh control gets added to the scrollview. We'll call this
++// function whenever the superview changes. We'll also call it if the value of customTintColor
++// changes.
++- (void)setTintColor:(UIColor *)tintColor
++{
++  if ([self.superview isKindOfClass:[UIScrollView class]] && self.tintColor != tintColor) {
++    [super setTintColor:tintColor];
++  }
++}
++
+ @end
+diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m
+index 40aaf9c..1c60164 100644
+--- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m
++++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m
+@@ -22,11 +22,12 @@ - (UIView *)view
+ 
+ RCT_EXPORT_VIEW_PROPERTY(onRefresh, RCTDirectEventBlock)
+ RCT_EXPORT_VIEW_PROPERTY(refreshing, BOOL)
+-RCT_EXPORT_VIEW_PROPERTY(tintColor, UIColor)
+ RCT_EXPORT_VIEW_PROPERTY(title, NSString)
+ RCT_EXPORT_VIEW_PROPERTY(titleColor, UIColor)
+ RCT_EXPORT_VIEW_PROPERTY(progressViewOffset, CGFloat)
+ 
++RCT_REMAP_VIEW_PROPERTY(tintColor, customTintColor, UIColor)
++
+ RCT_EXPORT_METHOD(setNativeRefreshing : (nonnull NSNumber *)viewTag toRefreshing : (BOOL)refreshing)
+ {
+   [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {

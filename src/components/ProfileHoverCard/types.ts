@@ -1,8 +1,8 @@
-import React from 'react'
+import {type ViewStyleProp} from '#/alf'
 
-export type ProfileHoverCardProps = {
-  children: React.ReactElement
+export type ProfileHoverCardProps = ViewStyleProp & {
+  children: React.ReactNode
   did: string
-  inline?: boolean
   disable?: boolean
+  inline?: boolean
 }

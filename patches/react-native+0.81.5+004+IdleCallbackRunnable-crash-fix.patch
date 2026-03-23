@@ -1,0 +1,16 @@
+diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/core/JavaTimerManager.kt b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/core/JavaTimerManager.kt
+index 8b65716..27c97bf 100644
+--- a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/core/JavaTimerManager.kt
++++ b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/core/JavaTimerManager.kt
+@@ -313,8 +313,9 @@ public open class JavaTimerManager(
+       // We also capture the idleCallbackRunnable to tentatively fix:
+       // https://github.com/facebook/react-native/issues/44842
+       currentIdleCallbackRunnable?.cancel()
+-      currentIdleCallbackRunnable = IdleCallbackRunnable(frameTimeNanos)
+-      reactApplicationContext.runOnJSQueueThread(currentIdleCallbackRunnable)
++      val idleCallbackRunnable = IdleCallbackRunnable(frameTimeNanos)
++      currentIdleCallbackRunnable = idleCallbackRunnable
++      reactApplicationContext.runOnJSQueueThread(idleCallbackRunnable)
+       reactChoreographer.postFrameCallback(ReactChoreographer.CallbackType.IDLE_EVENT, this)
+     }
+   }

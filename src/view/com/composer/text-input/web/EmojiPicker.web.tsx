@@ -1,10 +1,9 @@
-import React from 'react'
+import {useEffect, useMemo, useRef} from 'react'
 import {Pressable, useWindowDimensions, View} from 'react-native'
 import Picker from '@emoji-mart/react'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
-import {FocusScope} from '@radix-ui/react-focus-scope'
+import {DismissableLayer, FocusScope} from 'radix-ui/internal'
 
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {atoms as a, flatten} from '#/alf'
@@ -53,9 +52,9 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
   const {_} = useLingui()
   const {height, width} = useWindowDimensions()
 
-  const isShiftDown = React.useRef(false)
+  const isShiftDown = useRef(false)
 
-  const position = React.useMemo(() => {
+  const position = useMemo(() => {
     if (pinToTop) {
       return {
         top: state.pos.top - PICKER_HEIGHT + HEIGHT_OFFSET - 10,
@@ -87,7 +86,7 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
     }
   }, [state.pos, height, width, pinToTop])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!state.isOpen) return
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -121,7 +120,7 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
 
   return (
     <Portal>
-      <FocusScope
+      <FocusScope.FocusScope
         loop
         trapped
         onUnmountAutoFocus={e => {
@@ -154,17 +153,17 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
             },
           ])}>
           <View style={[{position: 'absolute'}, position]}>
-            <DismissableLayer
+            <DismissableLayer.DismissableLayer
               onFocusOutside={evt => evt.preventDefault()}
               onDismiss={close}>
               <Picker
                 data={async () => {
-                  return (await import('./EmojiPickerData.json')).default
+                  return (await import('@emoji-mart/data')).default
                 }}
                 onEmojiSelect={onInsert}
                 autoFocus={true}
               />
-            </DismissableLayer>
+            </DismissableLayer.DismissableLayer>
           </View>
         </View>
 
@@ -175,7 +174,7 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
           onPress={close}
           style={[a.fixed, a.inset_0]}
         />
-      </FocusScope>
+      </FocusScope.FocusScope>
     </Portal>
   )
 }

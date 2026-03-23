@@ -1,22 +1,30 @@
-import React, {useCallback} from 'react'
-import {Dimensions, type StyleProp, View, type ViewStyle} from 'react-native'
+import {type JSX, useCallback, useMemo, useState} from 'react'
+import {
+  Dimensions,
+  type GestureResponderEvent,
+  type StyleProp,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {type AppBskyGraphDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useListMembersQuery} from '#/state/queries/list-members'
 import {useSession} from '#/state/session'
-import {ProfileCard} from '#/view/com/profile/ProfileCard'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {Button} from '#/view/com/util/forms/Button'
 import {List, type ListRef} from '#/view/com/util/List'
 import {ProfileCardFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {ListFooter} from '#/components/Lists'
+import * as ProfileCard from '#/components/ProfileCard'
 import type * as bsky from '#/types/bsky'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
@@ -47,11 +55,12 @@ export function ListMembers({
   headerOffset?: number
   desktopFixedHeightOffset?: number
 }) {
+  const t = useTheme()
   const {_} = useLingui()
-  const [isRefreshing, setIsRefreshing] = React.useState(false)
-  const {isMobile} = useWebMediaQueries()
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const {openModal} = useModalControls()
   const {currentAccount} = useSession()
+  const moderationOpts = useModerationOpts()
 
   const {
     data,
@@ -68,7 +77,7 @@ export function ListMembers({
   const isOwner =
     currentAccount && data?.pages[0].list.creator.did === currentAccount.did
 
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     let items: any[] = []
     if (isFetched) {
       if (isEmpty && isError) {
@@ -93,7 +102,7 @@ export function ListMembers({
   // events
   // =
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsRefreshing(true)
     try {
       await refetch()
@@ -103,7 +112,7 @@ export function ListMembers({
     setIsRefreshing(false)
   }, [refetch, setIsRefreshing])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
     try {
       await fetchNextPage()
@@ -112,12 +121,13 @@ export function ListMembers({
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 
-  const onPressRetryLoadMore = React.useCallback(() => {
+  const onPressRetryLoadMore = useCallback(() => {
     fetchNextPage()
   }, [fetchNextPage])
 
-  const onPressEditMembership = React.useCallback(
-    (profile: bsky.profile.AnyProfileView) => {
+  const onPressEditMembership = useCallback(
+    (e: GestureResponderEvent, profile: bsky.profile.AnyProfileView) => {
+      e.preventDefault()
       openModal({
         name: 'user-add-remove-lists',
         subject: profile.did,
@@ -131,24 +141,7 @@ export function ListMembers({
   // rendering
   // =
 
-  const renderMemberButton = React.useCallback(
-    (profile: bsky.profile.AnyProfileView) => {
-      if (!isOwner) {
-        return null
-      }
-      return (
-        <Button
-          testID={`user-${profile.handle}-editBtn`}
-          type="default"
-          label={_(msg({message: 'Edit', context: 'action'}))}
-          onPress={() => onPressEditMembership(profile)}
-        />
-      )
-    },
-    [isOwner, onPressEditMembership, _],
-  )
-
-  const renderItem = React.useCallback(
+  const renderItem = useCallback(
     ({item}: {item: any}) => {
       if (item === EMPTY_ITEM) {
         return renderEmptyState()
@@ -171,26 +164,60 @@ export function ListMembers({
       } else if (item === LOADING_ITEM) {
         return <ProfileCardFeedLoadingPlaceholder />
       }
+
+      const profile = (item as AppBskyGraphDefs.ListItemView).subject
+      if (!moderationOpts) return null
+
       return (
-        <ProfileCard
-          testID={`user-${
-            (item as AppBskyGraphDefs.ListItemView).subject.handle
-          }`}
-          profile={(item as AppBskyGraphDefs.ListItemView).subject}
-          renderButton={renderMemberButton}
-          style={{paddingHorizontal: isMobile ? 8 : 14, paddingVertical: 4}}
-          noModFilter
-        />
+        <View
+          style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}>
+          <ProfileCard.Link profile={profile}>
+            <ProfileCard.Outer>
+              <ProfileCard.Header>
+                <ProfileCard.Avatar
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                />
+                <ProfileCard.NameAndHandle
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                />
+                {isOwner && (
+                  <Button
+                    testID={`user-${profile.handle}-editBtn`}
+                    label={_(msg({message: 'Edit', context: 'action'}))}
+                    onPress={e => onPressEditMembership(e, profile)}
+                    size="small"
+                    variant="solid"
+                    color="secondary">
+                    <ButtonText>
+                      <Trans context="action">Edit</Trans>
+                    </ButtonText>
+                  </Button>
+                )}
+              </ProfileCard.Header>
+
+              <ProfileCard.Labels
+                profile={profile}
+                moderationOpts={moderationOpts}
+              />
+
+              <ProfileCard.Description profile={profile} />
+            </ProfileCard.Outer>
+          </ProfileCard.Link>
+        </View>
       )
     },
     [
-      renderMemberButton,
       renderEmptyState,
       error,
       onPressTryAgain,
       onPressRetryLoadMore,
-      isMobile,
+      moderationOpts,
+      isOwner,
+      onPressEditMembership,
       _,
+      t,
     ],
   )
 

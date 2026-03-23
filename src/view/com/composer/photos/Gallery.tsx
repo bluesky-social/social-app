@@ -1,27 +1,33 @@
-import React from 'react'
+import {memo, useMemo, useState} from 'react'
 import {
-  ImageStyle,
+  findNodeHandle,
+  type ImageStyle,
   Keyboard,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {Image} from 'expo-image'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {Dimensions} from '#/lib/media/types'
-import {colors, s} from '#/lib/styles'
-import {isNative} from '#/platform/detection'
-import {ComposerImage, cropImage} from '#/state/gallery'
-import {Text} from '#/view/com/util/text/Text'
-import {useTheme} from '#/alf'
+import {type Dimensions} from '#/lib/media/types'
+import {colors} from '#/lib/styles'
+import {type ComposerImage, cropImage} from '#/state/gallery'
+import {atoms as a, tokens, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import * as Dialog from '#/components/Dialog'
-import {PostAction} from '../state/composer'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_IOS, IS_NATIVE} from '#/env'
+import {type PostAction} from '../state/composer'
 import {EditImageDialog} from './EditImageDialog'
 import {ImageAltTextDialog} from './ImageAltTextDialog'
 
@@ -33,7 +39,7 @@ interface GalleryProps {
 }
 
 export let Gallery = (props: GalleryProps): React.ReactNode => {
-  const [containerInfo, setContainerInfo] = React.useState<Dimensions>()
+  const [containerInfo, setContainerInfo] = useState<Dimensions>()
 
   const onLayout = (evt: LayoutChangeEvent) => {
     const {width, height} = evt.nativeEvent.layout
@@ -51,7 +57,7 @@ export let Gallery = (props: GalleryProps): React.ReactNode => {
     </View>
   )
 }
-Gallery = React.memo(Gallery)
+Gallery = memo(Gallery)
 
 interface GalleryInnerProps extends GalleryProps {
   containerInfo: Dimensions
@@ -60,39 +66,38 @@ interface GalleryInnerProps extends GalleryProps {
 const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
   const {isMobile} = useWebMediaQueries()
 
-  const {altTextControlStyle, imageControlsStyle, imageStyle} =
-    React.useMemo(() => {
-      const side =
-        images.length === 1
-          ? 250
-          : (containerInfo.width - IMAGE_GAP * (images.length - 1)) /
-            images.length
+  const {altTextControlStyle, imageControlsStyle, imageStyle} = useMemo(() => {
+    const side =
+      images.length === 1
+        ? 250
+        : (containerInfo.width - IMAGE_GAP * (images.length - 1)) /
+          images.length
 
-      const isOverflow = isMobile && images.length > 2
+    const isOverflow = isMobile && images.length > 2
 
-      return {
-        altTextControlStyle: isOverflow
-          ? {left: 4, bottom: 4}
-          : !isMobile && images.length < 3
+    return {
+      altTextControlStyle: isOverflow
+        ? {left: 4, bottom: 4}
+        : !isMobile && images.length < 3
           ? {left: 8, top: 8}
           : {left: 4, top: 4},
-        imageControlsStyle: {
-          display: 'flex' as const,
-          flexDirection: 'row' as const,
-          position: 'absolute' as const,
-          ...(isOverflow
-            ? {top: 4, right: 4, gap: 4}
-            : !isMobile && images.length < 3
+      imageControlsStyle: {
+        display: 'flex' as const,
+        flexDirection: 'row' as const,
+        position: 'absolute' as const,
+        ...(isOverflow
+          ? {top: 4, right: 4, gap: 4}
+          : !isMobile && images.length < 3
             ? {top: 8, right: 8, gap: 8}
             : {top: 4, right: 4, gap: 4}),
-          zIndex: 1,
-        },
-        imageStyle: {
-          height: side,
-          width: side,
-        },
-      }
-    }, [images.length, containerInfo, isMobile])
+        zIndex: 1,
+      },
+      imageStyle: {
+        height: side,
+        width: side,
+      },
+    }
+  }, [images.length, containerInfo, isMobile])
 
   return images.length !== 0 ? (
     <>
@@ -115,7 +120,12 @@ const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
           )
         })}
       </View>
-      <AltTextReminder />
+      <Admonition type="tip" style={[a.mt_sm]}>
+        <Trans>
+          Alt text describes images for blind and low-vision users, and helps
+          give context to everyone.
+        </Trans>
+      </Admonition>
     </>
   ) : null
 }
@@ -139,12 +149,26 @@ const GalleryItem = ({
 }: GalleryItemProps): React.ReactNode => {
   const {_} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
 
   const altTextControl = Dialog.useDialogControl()
   const editControl = Dialog.useDialogControl()
+  const [altBtnViewTag, setAltBtnViewTag] = useState<number>()
+
+  const altBtnRef = (node: View | null) => {
+    // for iOS 26 fluid transition
+    if (IS_IOS && node) {
+      const tag = findNodeHandle(node)
+      if (tag != null) setAltBtnViewTag(tag)
+    }
+  }
 
   const onImageEdit = () => {
-    if (isNative) {
+    ax.metric('composer:image:edit', {
+      platform: Platform.OS,
+    })
+
+    if (IS_NATIVE) {
       cropImage(image).then(next => {
         onChange(next)
       })
@@ -160,6 +184,7 @@ const GalleryItem = ({
 
   return (
     <View
+      ref={altBtnRef}
       style={imageStyle as ViewStyle}
       // Fixes ALT and icons appearing with half opacity when the post is inactive
       renderToHardwareTextureAndroid>
@@ -227,12 +252,18 @@ const GalleryItem = ({
         }}
         accessible={true}
         accessibilityIgnoresInvertColors
+        cachePolicy="none"
+        autoplay={false}
+        contentFit="cover"
       />
+
+      <MediaInsetBorder />
 
       <ImageAltTextDialog
         control={altTextControl}
         image={image}
         onChange={onChange}
+        sourceViewTag={altBtnViewTag}
       />
 
       <EditImageDialog
@@ -240,23 +271,6 @@ const GalleryItem = ({
         image={image}
         onChange={onChange}
       />
-    </View>
-  )
-}
-
-export function AltTextReminder() {
-  const t = useTheme()
-  return (
-    <View style={[styles.reminder]}>
-      <View style={[styles.infoIcon, t.atoms.bg_contrast_25]}>
-        <FontAwesomeIcon icon="info" size={12} color={t.atoms.text.color} />
-      </View>
-      <Text type="sm" style={[t.atoms.text_contrast_medium, s.flex1]}>
-        <Trans>
-          Alt text describes images for blind and low-vision users, and helps
-          give context to everyone.
-        </Trans>
-      </Text>
     </View>
   )
 }
@@ -269,13 +283,12 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   image: {
-    resizeMode: 'cover',
-    borderRadius: 8,
+    borderRadius: tokens.borderRadius.md,
   },
   imageControl: {
     width: 24,
     height: 24,
-    borderRadius: 12,
+    borderRadius: tokens.borderRadius.md,
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     alignItems: 'center',
     justifyContent: 'center',
@@ -304,20 +317,5 @@ const styles = StyleSheet.create({
     bottom: 4,
     top: 30,
     zIndex: 1,
-  },
-
-  reminder: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    borderRadius: 8,
-    paddingVertical: 14,
-  },
-  infoIcon: {
-    width: 22,
-    height: 22,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 })

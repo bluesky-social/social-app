@@ -1,7 +1,7 @@
-import React from 'react'
+import {createContext, useContext, useMemo, useState} from 'react'
 
 import * as Dialog from '#/components/Dialog'
-import {DialogControlProps} from '#/components/Dialog'
+import {type DialogControlProps} from '#/components/Dialog'
 import {VerifyEmailIntentDialog} from '#/components/intents/VerifyEmailIntentDialog'
 
 interface Context {
@@ -10,16 +10,17 @@ interface Context {
   setVerifyEmailState: (state: {code: string} | undefined) => void
 }
 
-const Context = React.createContext({} as Context)
-export const useIntentDialogs = () => React.useContext(Context)
+const Context = createContext({} as Context)
+Context.displayName = 'IntentDialogsContext'
+export const useIntentDialogs = () => useContext(Context)
 
 export function Provider({children}: {children: React.ReactNode}) {
   const verifyEmailDialogControl = Dialog.useDialogControl()
-  const [verifyEmailState, setVerifyEmailState] = React.useState<
+  const [verifyEmailState, setVerifyEmailState] = useState<
     {code: string} | undefined
   >()
 
-  const value = React.useMemo(
+  const value = useMemo(
     () => ({
       verifyEmailDialogControl,
       verifyEmailState,

@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react'
+import {memo, useCallback, useMemo} from 'react'
 import {
   type GestureResponderEvent,
   type StyleProp,
@@ -17,11 +17,10 @@ import {
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {type I18n} from '@lingui/core'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {isNative} from '#/platform/detection'
 import {useConvoActive} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useSession} from '#/state/session'
@@ -32,6 +31,7 @@ import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {InlineLinkText} from '#/components/Link'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 import {DateDivider} from './DateDivider'
 import {MessageItemEmbed} from './MessageItemEmbed'
 import {localDateString} from './util'
@@ -213,14 +213,15 @@ let MessageItem = ({
                 interactiveStyle={a.underline}
                 enableTags
                 emojiMultiplier={3}
+                shouldProxyLinks={true}
               />
             </View>
           )}
 
-          {isNative && appliedReactions}
+          {IS_NATIVE && appliedReactions}
         </ActionsWrapper>
 
-        {!isNative && appliedReactions}
+        {!IS_NATIVE && appliedReactions}
 
         {isLastInGroup && (
           <MessageItemMetadata
@@ -232,7 +233,7 @@ let MessageItem = ({
     </>
   )
 }
-MessageItem = React.memo(MessageItem)
+MessageItem = memo(MessageItem)
 export {MessageItem}
 
 let MessageItemMetadata = ({
@@ -327,5 +328,5 @@ let MessageItemMetadata = ({
     </Text>
   )
 }
-MessageItemMetadata = React.memo(MessageItemMetadata)
+MessageItemMetadata = memo(MessageItemMetadata)
 export {MessageItemMetadata}

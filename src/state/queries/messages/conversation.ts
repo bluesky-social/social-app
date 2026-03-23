@@ -1,17 +1,17 @@
-import {ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatBskyConvoDefs} from '@atproto/api'
 import {
-  QueryClient,
+  type QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {STALE} from '#/state/queries'
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useOnMarkAsRead} from '#/state/queries/messages/list-conversations'
 import {useAgent} from '#/state/session'
 import {
-  ConvoListQueryData,
+  type ConvoListQueryData,
   getConvoFromQueryData,
   RQKEY_ROOT as LIST_CONVOS_KEY,
 } from './list-conversations'

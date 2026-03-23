@@ -6,6 +6,10 @@ import {useAgent} from '#/state/session'
 type ServiceConfig = {
   checkEmailConfirmed: boolean
   topicsEnabled: boolean
+  liveNow: {
+    did: string
+    domains: string[]
+  }[]
 }
 
 export function useServiceConfigQuery() {
@@ -21,11 +25,13 @@ export function useServiceConfigQuery() {
           checkEmailConfirmed: Boolean(data.checkEmailConfirmed),
           // @ts-expect-error not included in types atm
           topicsEnabled: Boolean(data.topicsEnabled),
+          liveNow: data.liveNow ?? [],
         }
       } catch (e) {
         return {
           checkEmailConfirmed: false,
           topicsEnabled: false,
+          liveNow: [],
         }
       }
     },

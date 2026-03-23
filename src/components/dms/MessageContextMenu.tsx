@@ -1,27 +1,30 @@
 import {memo, useCallback} from 'react'
-import {LayoutAnimation} from 'react-native'
+import {LayoutAnimation, Platform} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {type ChatBskyConvoDefs, RichText} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
-import {useOpenLink} from '#/lib/hooks/useOpenLink'
+import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
-import {getTranslatorLink} from '#/locale/helpers'
-import {isNative} from '#/platform/detection'
 import {useConvoActive} from '#/state/messages/convo'
 import {useLanguagePrefs} from '#/state/preferences'
+import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import * as ContextMenu from '#/components/ContextMenu'
 import {type TriggerProps} from '#/components/ContextMenu/types'
-import {ReportDialog} from '#/components/dms/ReportDialog'
+import {AfterReportDialog} from '#/components/dms/AfterReportDialog'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
+import {ReportDialog} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
+import * as Toast from '#/components/Toast'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
 import {hasReachedReactionLimit} from './util'
 
@@ -33,12 +36,15 @@ export let MessageContextMenu = ({
   children: TriggerProps['children']
 }): React.ReactNode => {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
+  const queryClient = useQueryClient()
   const convo = useConvoActive()
   const deleteControl = usePromptControl()
   const reportControl = usePromptControl()
+  const blockOrDeleteControl = usePromptControl()
   const langPrefs = useLanguagePrefs()
-  const openLink = useOpenLink()
+  const translate = useGoogleTranslate()
 
   const isFromSelf = message.sender?.did === currentAccount?.did
 
@@ -51,17 +57,23 @@ export let MessageContextMenu = ({
       true,
     )
 
-    Clipboard.setStringAsync(str)
-    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
+    void Clipboard.setStringAsync(str)
+    Toast.show(_(msg`Copied to clipboard`), {
+      type: 'success',
+    })
   }, [_, message.text, message.facets])
 
   const onPressTranslateMessage = useCallback(() => {
-    const translatorUrl = getTranslatorLink(
-      message.text,
-      langPrefs.primaryLanguage,
-    )
-    openLink(translatorUrl, true)
-  }, [langPrefs.primaryLanguage, message.text, openLink])
+    void translate(message.text, langPrefs.primaryLanguage)
+
+    ax.metric('translate', {
+      os: Platform.OS,
+      possibleSourceLanguages: [], // N/A for chats
+      expectedTargetLanguage: langPrefs.primaryLanguage,
+      textLength: message.text.length,
+      googleTranslate: true,
+    })
+  }, [ax, langPrefs.primaryLanguage, message.text, translate])
 
   const onDelete = useCallback(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -87,11 +99,11 @@ export let MessageContextMenu = ({
           .catch(() => Toast.show(_(msg`Failed to remove emoji reaction`)))
       } else {
         if (hasReachedReactionLimit(message, currentAccount?.did)) return
-        convo
-          .addReaction(message.id, emoji)
-          .catch(() =>
-            Toast.show(_(msg`Failed to add emoji reaction`), 'xmark'),
-          )
+        convo.addReaction(message.id, emoji).catch(() =>
+          Toast.show(_(msg`Failed to add emoji reaction`), {
+            type: 'error',
+          }),
+        )
       }
     },
     [_, convo, message, currentAccount?.did],
@@ -104,7 +116,7 @@ export let MessageContextMenu = ({
   return (
     <>
       <ContextMenu.Root>
-        {isNative && (
+        {IS_NATIVE && (
           <ContextMenu.AuxiliaryView align={isFromSelf ? 'right' : 'left'}>
             <EmojiReactionPicker
               message={message}
@@ -117,8 +129,7 @@ export let MessageContextMenu = ({
           label={_(msg`Message options`)}
           contentLabel={_(
             msg`Message from @${
-              sender?.handle ?? // should always be defined
-              'unknown'
+              sender?.handle ?? 'unknown' // should always be defined
             }: ${message.text}`,
           )}>
           {children}
@@ -166,9 +177,26 @@ export let MessageContextMenu = ({
       </ContextMenu.Root>
 
       <ReportDialog
-        currentScreen="conversation"
-        params={{type: 'convoMessage', convoId: convo.convo.id, message}}
         control={reportControl}
+        subject={{
+          view: 'message',
+          convoId: convo.convo.id,
+          message,
+        }}
+        onAfterSubmit={() => {
+          if (sender) {
+            unstableCacheProfileView(queryClient, sender)
+          }
+          blockOrDeleteControl.open()
+        }}
+      />
+      <AfterReportDialog
+        control={blockOrDeleteControl}
+        currentScreen="conversation"
+        params={{
+          convoId: convo.convo.id,
+          message,
+        }}
       />
 
       <Prompt.Basic

@@ -1,4 +1,4 @@
-import {getLocales as defaultGetLocales, Locale} from 'expo-localization'
+import {getLocales as defaultGetLocales, type Locale} from 'expo-localization'
 
 import {dedupArray} from '#/lib/functions'
 

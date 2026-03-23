@@ -1,29 +1,29 @@
 import {useState} from 'react'
 import {TouchableOpacity, View} from 'react-native'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {HITSLOP_10, MAX_ALT_TEXT} from '#/lib/constants'
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {
-  EmbedPlayerParams,
+  type EmbedPlayerParams,
   parseEmbedPlayerFromUrl,
 } from '#/lib/strings/embed-player'
-import {isAndroid} from '#/platform/detection'
 import {useResolveGifQuery} from '#/state/queries/resolve-link'
-import {Gif} from '#/state/queries/tenor'
+import {type Gif} from '#/state/queries/tenor'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {DialogControlProps} from '#/components/Dialog'
+import {type DialogControlProps} from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {GifEmbed} from '#/components/Post/Embed/ExternalEmbed/Gif'
 import {Text} from '#/components/Typography'
-import {GifEmbed} from '../util/post-embeds/GifEmbed'
-import {AltTextReminder} from './photos/Gallery'
 
 export function GifAltTextDialog({
   gif,
@@ -95,19 +95,25 @@ export function GifAltTextDialogLoaded({
           <Plus size="sm" fill={t.palette.white} />
         )}
         <Text
-          style={[a.font_bold, {color: t.palette.white}]}
+          style={[a.font_semi_bold, {color: t.palette.white}]}
           accessible={false}>
           <Trans>ALT</Trans>
         </Text>
       </TouchableOpacity>
 
-      <AltTextReminder />
+      <Admonition type="tip" style={[a.mt_sm]}>
+        <Trans>
+          Alt text describes images for blind and low-vision users, and helps
+          give context to everyone.
+        </Trans>
+      </Admonition>
 
       <Dialog.Outer
         control={control}
         onClose={() => {
           onSubmit(altTextDraft)
-        }}>
+        }}
+        nativeOptions={{fullHeight: true}}>
         <Dialog.Handle />
         <AltTextInner
           vendorAltText={vendorAltText}
@@ -206,7 +212,8 @@ function AltTextInner({
         </View>
         {/* below the text input to force tab order */}
         <View>
-          <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_sm]}>
+          <Text
+            style={[a.text_2xl, a.font_semi_bold, a.leading_tight, a.pb_sm]}>
             <Trans>Add alt text</Trans>
           </Text>
           <View style={[a.align_center]}>
@@ -222,8 +229,6 @@ function AltTextInner({
         </View>
       </View>
       <Dialog.Close />
-      {/* Maybe fix this later -h */}
-      {isAndroid ? <View style={{height: 300}} /> : null}
     </Dialog.ScrollableInner>
   )
 }

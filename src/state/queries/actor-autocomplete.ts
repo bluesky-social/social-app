@@ -1,5 +1,9 @@
-import React from 'react'
-import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
+import {useCallback} from 'react'
+import {
+  type AppBskyActorDefs,
+  moderateProfile,
+  type ModerationOpts,
+} from '@atproto/api'
 import {keepPreviousData, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {isJustAMute, moduiContainsHideableOffense} from '#/lib/moderation'
@@ -43,7 +47,7 @@ export function useActorAutocompleteQuery(
         : undefined
       return res?.data.actors || []
     },
-    select: React.useCallback(
+    select: useCallback(
       (data: AppBskyActorDefs.ProfileViewBasic[]) => {
         return computeSuggestions({
           q: prefix,
@@ -63,7 +67,7 @@ export function useActorAutocompleteFn() {
   const moderationOpts = useModerationOpts()
   const agent = useAgent()
 
-  return React.useCallback(
+  return useCallback(
     async ({query, limit = 8}: {query: string; limit?: number}) => {
       query = query.toLowerCase()
       let res

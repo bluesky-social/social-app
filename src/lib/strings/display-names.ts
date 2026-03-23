@@ -1,4 +1,4 @@
-import {ModerationUI} from '@atproto/api'
+import {type ModerationUI} from '@atproto/api'
 
 // \u2705 = ✅
 // \u2713 = ✓

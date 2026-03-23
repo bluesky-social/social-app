@@ -1,8 +1,9 @@
-import React from 'react'
+import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {ModerationDecision} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {type ModerationDecision} from '@atproto/api'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileBlockMutationQueue} from '#/state/queries/profile'
@@ -14,7 +15,7 @@ import {BlockedByListDialog} from '#/components/dms/BlockedByListDialog'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
 export function MessagesListBlockedFooter({
   recipient: initialRecipient,
@@ -37,7 +38,7 @@ export function MessagesListBlockedFooter({
   const reportControl = useDialogControl()
   const blockedByListControl = useDialogControl()
 
-  const {listBlocks, userBlock} = React.useMemo(() => {
+  const {listBlocks, userBlock} = useMemo(() => {
     const modui = moderation.ui('profileView')
     const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
     const listBlocks = blocks.filter(alert => alert.source.type === 'list')
@@ -50,7 +51,7 @@ export function MessagesListBlockedFooter({
 
   const isBlocking = !!userBlock || !!listBlocks.length
 
-  const onUnblockPress = React.useCallback(() => {
+  const onUnblockPress = useCallback(() => {
     if (listBlocks.length) {
       blockedByListControl.open()
     } else {
@@ -61,7 +62,7 @@ export function MessagesListBlockedFooter({
   return (
     <View style={[hasMessages && a.pt_md, a.pb_xl, a.gap_lg]}>
       <Divider />
-      <Text style={[a.text_md, a.font_bold, a.text_center]}>
+      <Text style={[a.text_md, a.font_semi_bold, a.text_center]}>
         {isBlocking ? (
           <Trans>You have blocked this user</Trans>
         ) : (

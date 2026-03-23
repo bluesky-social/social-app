@@ -1,33 +1,21 @@
-import React from 'react'
+import {memo, useCallback, useState} from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
-import {
-  AppBskyActorDefs,
-  moderateProfile,
-  ModerationDecision,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
 
 import {usePalette} from '#/lib/hooks/usePalette'
-import {makeProfileLink} from '#/lib/routes/links'
-import {NavigationProp} from '#/lib/routes/types'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {s} from '#/lib/styles'
+import {type NavigationProp} from '#/lib/routes/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {precacheProfile} from '#/state/queries/profile'
 import {Link} from '#/view/com/util/Link'
 import {Text} from '#/view/com/util/text/Text'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {SearchProfileCard} from '#/screens/Search/components/SearchProfileCard'
 import {atoms as a} from '#/alf'
 import {SearchInput} from '#/components/forms/SearchInput'
 
@@ -79,80 +67,15 @@ let SearchLinkCard = ({
     </Link>
   )
 }
-SearchLinkCard = React.memo(SearchLinkCard)
+SearchLinkCard = memo(SearchLinkCard)
 export {SearchLinkCard}
 
-let SearchProfileCard = ({
-  profile,
-  moderation,
-  onPress: onPressInner,
-}: {
-  profile: AppBskyActorDefs.ProfileViewBasic
-  moderation: ModerationDecision
-  onPress: () => void
-}): React.ReactNode => {
-  const pal = usePalette('default')
-  const queryClient = useQueryClient()
-
-  const onPress = React.useCallback(() => {
-    precacheProfile(queryClient, profile)
-    onPressInner()
-  }, [queryClient, profile, onPressInner])
-
-  return (
-    <Link
-      testID={`searchAutoCompleteResult-${profile.handle}`}
-      href={makeProfileLink(profile)}
-      title={profile.handle}
-      asAnchor
-      anchorNoUnderline
-      onBeforePress={onPress}>
-      <View
-        style={[
-          pal.border,
-          {
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 12,
-            paddingVertical: 8,
-            paddingHorizontal: 12,
-          },
-        ]}>
-        <UserAvatar
-          size={40}
-          avatar={profile.avatar}
-          moderation={moderation.ui('avatar')}
-          type={profile.associated?.labeler ? 'labeler' : 'user'}
-        />
-        <View style={{flex: 1}}>
-          <Text
-            emoji
-            type="lg"
-            style={[s.bold, pal.text, a.self_start]}
-            numberOfLines={1}
-            lineHeight={1.2}>
-            {sanitizeDisplayName(
-              profile.displayName || sanitizeHandle(profile.handle),
-              moderation.ui('displayName'),
-            )}
-          </Text>
-          <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-            {sanitizeHandle(profile.handle, '@')}
-          </Text>
-        </View>
-      </View>
-    </Link>
-  )
-}
-SearchProfileCard = React.memo(SearchProfileCard)
-export {SearchProfileCard}
-
 export function DesktopSearch() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
-  const [isActive, setIsActive] = React.useState<boolean>(false)
-  const [query, setQuery] = React.useState<string>('')
+  const [isActive, setIsActive] = useState<boolean>(false)
+  const [query, setQuery] = useState<string>('')
   const {data: autocompleteData, isFetching} = useActorAutocompleteQuery(
     query,
     true,
@@ -160,23 +83,23 @@ export function DesktopSearch() {
 
   const moderationOpts = useModerationOpts()
 
-  const onChangeText = React.useCallback((text: string) => {
+  const onChangeText = useCallback((text: string) => {
     setQuery(text)
     setIsActive(text.length > 0)
   }, [])
 
-  const onPressCancelSearch = React.useCallback(() => {
+  const onPressCancelSearch = useCallback(() => {
     setQuery('')
     setIsActive(false)
   }, [setQuery])
 
-  const onSubmit = React.useCallback(() => {
+  const onSubmit = useCallback(() => {
     setIsActive(false)
     if (!query.length) return
     navigation.dispatch(StackActions.push('Search', {q: query}))
   }, [query, navigation])
 
-  const onSearchProfileCardPress = React.useCallback(() => {
+  const onSearchProfileCardPress = useCallback(() => {
     setQuery('')
     setIsActive(false)
   }, [])
@@ -190,7 +113,13 @@ export function DesktopSearch() {
         onSubmitEditing={onSubmit}
       />
       {query !== '' && isActive && moderationOpts && (
-        <View style={[pal.view, pal.borderDark, styles.resultsContainer]}>
+        <View
+          style={[
+            pal.view,
+            pal.borderDark,
+            styles.resultsContainer,
+            a.overflow_hidden,
+          ]}>
           {isFetching && !autocompleteData?.length ? (
             <View style={{padding: 8}}>
               <ActivityIndicator />
@@ -198,7 +127,7 @@ export function DesktopSearch() {
           ) : (
             <>
               <SearchLinkCard
-                label={_(msg`Search for "${query}"`)}
+                label={l`Search for "${query}"`}
                 to={`/search?q=${encodeURIComponent(query)}`}
                 style={
                   (autocompleteData?.length ?? 0) > 0
@@ -210,7 +139,7 @@ export function DesktopSearch() {
                 <SearchProfileCard
                   key={item.did}
                   profile={item}
-                  moderation={moderateProfile(item, moderationOpts)}
+                  moderationOpts={moderationOpts}
                   onPress={onSearchProfileCardPress}
                 />
               ))}

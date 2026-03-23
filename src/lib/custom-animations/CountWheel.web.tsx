@@ -1,13 +1,12 @@
-import React from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
-import {i18n} from '@lingui/core'
 
 import {decideShouldRoll} from '#/lib/custom-animations/util'
 import {s} from '#/lib/styles'
-import {formatCount} from '#/view/com/util/numeric/format'
 import {Text} from '#/view/com/util/text/Text'
 import {atoms as a, useTheme} from '#/alf'
+import {useFormatPostStatCount} from '#/components/PostControls/util'
 
 const animationConfig = {
   duration: 400,
@@ -50,15 +49,16 @@ export function CountWheel({
   const shouldAnimate = !useReducedMotion() && hasBeenToggled
   const shouldRoll = decideShouldRoll(isLiked, likeCount)
 
-  const countView = React.useRef<HTMLDivElement>(null)
-  const prevCountView = React.useRef<HTMLDivElement>(null)
+  const countView = useRef<HTMLDivElement>(null)
+  const prevCountView = useRef<HTMLDivElement>(null)
 
-  const [prevCount, setPrevCount] = React.useState(likeCount)
-  const prevIsLiked = React.useRef(isLiked)
-  const formattedCount = formatCount(i18n, likeCount)
-  const formattedPrevCount = formatCount(i18n, prevCount)
+  const [prevCount, setPrevCount] = useState(likeCount)
+  const prevIsLiked = useRef(isLiked)
+  const formatPostStatCount = useFormatPostStatCount()
+  const formattedCount = formatPostStatCount(likeCount)
+  const formattedPrevCount = formatPostStatCount(prevCount)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isLiked === prevIsLiked.current) {
       return
     }
@@ -90,10 +90,10 @@ export function CountWheel({
         <Text
           testID="likeCount"
           style={[
-            big ? a.text_md : {fontSize: 15},
+            big ? a.text_md : a.text_sm,
             a.user_select_none,
             isLiked
-              ? [a.font_bold, s.likeColor]
+              ? [a.font_semi_bold, s.likeColor]
               : {color: t.palette.contrast_500},
           ]}>
           {formattedCount}
@@ -107,10 +107,10 @@ export function CountWheel({
           ref={prevCountView}>
           <Text
             style={[
-              big ? a.text_md : {fontSize: 15},
+              big ? a.text_md : a.text_sm,
               a.user_select_none,
               isLiked
-                ? [a.font_bold, s.likeColor]
+                ? [a.font_semi_bold, s.likeColor]
                 : {color: t.palette.contrast_500},
             ]}>
             {formattedPrevCount}

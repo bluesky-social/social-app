@@ -17,8 +17,11 @@ import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
 import playIcon from '../../assets/play_filled_corner2_rounded.svg'
 import starterPackIcon from '../../assets/starterPack.svg'
 import {CONTENT_LABELS, labelsToInfo} from '../labels'
-import {getRkey} from '../utils'
+import * as bsky from '../types/bsky'
+import {getRkey} from '../util/rkey'
+import {getVerificationState} from '../util/verification-state'
 import {Link} from './link'
+import {VerificationCheck} from './verification-check'
 
 export function Embed({
   content,
@@ -75,23 +78,35 @@ export function Embed({
           CONTENT_LABELS.includes(label.val),
         )
 
+        const verification = getVerificationState({profile: record.author})
+
         return (
           <Link
             href={`/profile/${record.author.did}/post/${getRkey(record)}`}
-            className="transition-colors hover:bg-neutral-100 dark:hover:bg-slate-700 border dark:border-slate-600 rounded-lg p-2 gap-1.5 w-full flex flex-col">
+            className="transition-colors hover:bg-blue-50 dark:hover:bg-slate-900 border dark:border-slate-600 rounded-xl p-2 gap-1.5 w-full flex flex-col">
             <div className="flex gap-1.5 items-center">
-              <div className="w-4 h-4 overflow-hidden rounded-full bg-neutral-300 dark:bg-slate-700 shrink-0">
+              <div className="w-4 h-4 rounded-full bg-neutral-300 dark:bg-slate-900 shrink-0">
                 <img
+                  className="rounded-full"
                   src={record.author.avatar}
                   style={isAuthorLabeled ? {filter: 'blur(1.5px)'} : undefined}
                 />
               </div>
-              <p className="line-clamp-1 text-sm">
-                <span className="font-bold">{record.author.displayName}</span>
-                <span className="text-textLight dark:text-textDimmed ml-1">
+              <div className="flex flex-1 items-center shrink min-w-0 min-h-0">
+                <p className="block text-sm shrink-0 font-bold max-w-[70%] line-clamp-1">
+                  {record.author.displayName?.trim() || record.author.handle}
+                </p>
+                {verification.isVerified && (
+                  <VerificationCheck
+                    className="ml-[3px] mt-px shrink-0 self-center"
+                    verifier={verification.role === 'verifier'}
+                    size={12}
+                  />
+                )}
+                <p className="block line-clamp-1 text-sm text-textLight dark:text-textDimmed shrink-[10] ml-1">
                   @{record.author.handle}
-                </span>
-              </p>
+                </p>
+              </div>
             </div>
             {text && <p className="text-sm">{text}</p>}
             {record.embeds?.map(embed => (
@@ -207,7 +222,7 @@ export function Embed({
 
 function Info({children}: {children: ComponentChildren}) {
   return (
-    <div className="w-full rounded-lg border py-2 px-2.5 flex-row flex gap-2 bg-neutral-50">
+    <div className="w-full rounded-xl border py-2 px-2.5 flex-row flex gap-2 hover:bg-blue-50 dark:border-slate-600 dark:hover:bg-slate-900">
       <img src={infoIcon} className="w-4 h-4 shrink-0 mt-0.5" />
       <p className="text-sm text-textLight dark:text-textDimmed">{children}</p>
     </div>
@@ -231,12 +246,12 @@ function ImageEmbed({
         <img
           src={content.images[0].thumb}
           alt={content.images[0].alt}
-          className="w-full rounded-lg overflow-hidden object-cover h-auto max-h-[1000px]"
+          className="w-full rounded-xl overflow-hidden object-cover h-auto max-h-[1000px]"
         />
       )
     case 2:
       return (
-        <div className="flex gap-1 rounded-lg overflow-hidden w-full aspect-[2/1]">
+        <div className="flex gap-1 rounded-xl overflow-hidden w-full aspect-[2/1]">
           {content.images.map((image, i) => (
             <img
               key={i}
@@ -249,19 +264,21 @@ function ImageEmbed({
       )
     case 3:
       return (
-        <div className="flex gap-1 rounded-lg overflow-hidden w-full aspect-[2/1]">
-          <img
-            src={content.images[0].thumb}
-            alt={content.images[0].alt}
-            className="flex-[3] object-cover rounded-sm"
-          />
-          <div className="flex flex-col gap-1 flex-[2]">
+        <div className="flex gap-1 rounded-xl overflow-hidden w-full aspect-[2/1]">
+          <div className="flex-1 aspect-square">
+            <img
+              src={content.images[0].thumb}
+              alt={content.images[0].alt}
+              className="w-full h-full object-cover rounded-sm"
+            />
+          </div>
+          <div className="flex flex-col gap-1 flex-1">
             {content.images.slice(1).map((image, i) => (
               <img
                 key={i}
                 src={image.thumb}
                 alt={image.alt}
-                className="w-full h-full object-cover rounded-sm"
+                className="flex-1 object-cover rounded-sm min-h-0"
               />
             ))}
           </div>
@@ -269,13 +286,13 @@ function ImageEmbed({
       )
     case 4:
       return (
-        <div className="grid grid-cols-2 gap-1 rounded-lg overflow-hidden">
+        <div className="grid grid-cols-2 gap-1 rounded-xl overflow-hidden">
           {content.images.map((image, i) => (
             <img
               key={i}
               src={image.thumb}
               alt={image.alt}
-              className="aspect-square w-full object-cover rounded-sm"
+              className="aspect-[3/2] w-full object-cover rounded-sm"
             />
           ))}
         </div>
@@ -308,12 +325,12 @@ function ExternalEmbed({
   return (
     <Link
       href={content.external.uri}
-      className="w-full rounded-lg overflow-hidden border dark:border-slate-600 flex flex-col items-stretch"
+      className="w-full rounded-xl overflow-hidden border dark:border-slate-600 flex flex-col items-stretch"
       disableTracking>
       {content.external.thumb && (
         <img
           src={content.external.thumb}
-          className="aspect-[1.91/1] object-cover"
+          className="aspect-[1200/630] object-cover"
         />
       )}
       <div className="py-3 px-4">
@@ -345,7 +362,7 @@ function GenericWithImageEmbed({
   return (
     <Link
       href={href}
-      className="w-full rounded-lg border dark:border-slate-600 py-2 px-3 flex flex-col gap-2">
+      className="w-full rounded-xl border dark:border-slate-600 py-2 px-3 flex flex-col gap-2">
       <div className="flex gap-2.5 items-center">
         {image ? (
           <img
@@ -383,7 +400,7 @@ function VideoEmbed({content}: {content: AppBskyEmbedVideo.View}) {
 
   return (
     <div
-      className="w-full overflow-hidden rounded-lg aspect-square relative"
+      className="w-full overflow-hidden rounded-xl aspect-square relative"
       style={{aspectRatio: `${aspectRatio} / 1`}}>
       <img
         src={content.thumbnail}
@@ -402,7 +419,12 @@ function StarterPackEmbed({
 }: {
   content: AppBskyGraphDefs.StarterPackViewBasic
 }) {
-  if (!AppBskyGraphStarterpack.isRecord(content.record)) {
+  if (
+    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+      content.record,
+      AppBskyGraphStarterpack.isRecord,
+    )
+  ) {
     return null
   }
 
@@ -412,8 +434,8 @@ function StarterPackEmbed({
   return (
     <Link
       href={starterPackHref}
-      className="w-full rounded-lg overflow-hidden border dark:border-slate-600 flex flex-col items-stretch">
-      <img src={imageUri} className="aspect-[1.91/1] object-cover" />
+      className="w-full rounded-xl overflow-hidden border dark:border-slate-600 flex flex-col items-stretch">
+      <img src={imageUri} className="aspect-[1200/630] object-cover" />
       <div className="py-3 px-4">
         <div className="flex space-x-2 items-center">
           <img src={starterPackIcon} className="w-10 h-10" />
@@ -441,7 +463,9 @@ function StarterPackEmbed({
 }
 
 // from #/lib/strings/starter-pack.ts
-function getStarterPackImage(starterPack: AppBskyGraphDefs.StarterPackView) {
+function getStarterPackImage(
+  starterPack: AppBskyGraphDefs.StarterPackViewBasic,
+) {
   const rkey = getRkey({uri: starterPack.uri})
   return `https://ogcard.cdn.bsky.app/start/${starterPack.creator.did}/${rkey}`
 }

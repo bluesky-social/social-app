@@ -1,13 +1,13 @@
 import {
-  AppBskyActorDefs,
-  AppBskyGraphDefs,
-  AppBskyGraphGetList,
-  BskyAgent,
+  type AppBskyActorDefs,
+  type AppBskyGraphDefs,
+  type AppBskyGraphGetList,
+  type BskyAgent,
 } from '@atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
   useQuery,
 } from '@tanstack/react-query'
@@ -100,21 +100,16 @@ export function* findAllProfilesInQueryData(
     queryKey: [RQKEY_ROOT],
   })
   for (const [_queryKey, queryData] of queryDatas) {
-    if (!queryData) {
+    if (!queryData?.pages) {
       continue
     }
-    for (const [_queryKey, queryData] of queryDatas) {
-      if (!queryData?.pages) {
-        continue
+    for (const page of queryData?.pages) {
+      if (page.list.creator.did === did) {
+        yield page.list.creator
       }
-      for (const page of queryData?.pages) {
-        if (page.list.creator.did === did) {
-          yield page.list.creator
-        }
-        for (const item of page.items) {
-          if (item.subject.did === did) {
-            yield item.subject
-          }
+      for (const item of page.items) {
+        if (item.subject.did === did) {
+          yield item.subject
         }
       }
     }

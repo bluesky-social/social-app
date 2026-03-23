@@ -1,15 +1,15 @@
-import React from 'react'
+import {memo} from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import {AppBskyEmbedRecord} from '@atproto/api'
+import {type $Typed, type AppBskyEmbedRecord} from '@atproto/api'
 
-import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {atoms as a, native, tokens, useTheme, web} from '#/alf'
+import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {MessageContextProvider} from './MessageContext'
 
 let MessageItemEmbed = ({
   embed,
 }: {
-  embed: AppBskyEmbedRecord.View
+  embed: $Typed<AppBskyEmbedRecord.View>
 }): React.ReactNode => {
   const t = useTheme()
   const screen = useWindowDimensions()
@@ -32,7 +32,7 @@ let MessageItemEmbed = ({
           }),
         ]}>
         <View style={{marginTop: tokens.space.sm * -1}}>
-          <PostEmbeds
+          <Embed
             embed={embed}
             allowNestedQuotes
             viewContext={PostEmbedViewContext.Feed}
@@ -42,5 +42,5 @@ let MessageItemEmbed = ({
     </MessageContextProvider>
   )
 }
-MessageItemEmbed = React.memo(MessageItemEmbed)
+MessageItemEmbed = memo(MessageItemEmbed)
 export {MessageItemEmbed}

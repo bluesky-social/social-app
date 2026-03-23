@@ -1,5 +1,5 @@
-import React, {createContext, useContext, useMemo} from 'react'
-import {BskyAgent, ModerationOpts} from '@atproto/api'
+import {createContext, useContext, useMemo} from 'react'
+import {BskyAgent, type ModerationOpts} from '@atproto/api'
 
 import {useHiddenPosts, useLabelDefinitions} from '#/state/preferences'
 import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
@@ -9,11 +9,13 @@ import {usePreferencesQuery} from '../queries/preferences'
 export const moderationOptsContext = createContext<ModerationOpts | undefined>(
   undefined,
 )
+moderationOptsContext.displayName = 'ModerationOptsContext'
 
 // used in the moderation state devtool
 export const moderationOptsOverrideContext = createContext<
   ModerationOpts | undefined
 >(undefined)
+moderationOptsOverrideContext.displayName = 'ModerationOptsOverrideContext'
 
 export function useModerationOpts() {
   return useContext(moderationOptsContext)

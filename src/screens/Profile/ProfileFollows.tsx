@@ -1,8 +1,11 @@
-import React from 'react'
-import {Plural} from '@lingui/macro'
+import {useCallback} from 'react'
+import {Plural} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
@@ -21,7 +24,7 @@ export const ProfileFollowsScreen = ({route}: Props) => {
   })
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )

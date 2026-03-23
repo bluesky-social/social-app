@@ -1,11 +1,11 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {View} from 'react-native'
-import {BSKY_LABELER_DID, ModerationCause} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {BSKY_LABELER_DID, type ModerationCause} from '@atproto/api'
+import {Trans} from '@lingui/react/macro'
 
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
+import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
 import {
   ModerationDetailsDialog,
@@ -32,7 +32,7 @@ export function Row({
   size = 'sm',
 }: {children: React.ReactNode | React.ReactNode[]} & CommonProps &
   ViewStyleProp) {
-  const styles = React.useMemo(() => {
+  const styles = useMemo(() => {
     switch (size) {
       case 'lg':
         return [{gap: 5}]
@@ -67,7 +67,7 @@ export function Label({
   const isBlueskyLabel =
     desc.sourceType === 'labeler' && desc.sourceDid === BSKY_LABELER_DID
 
-  const {outer, avi, text} = React.useMemo(() => {
+  const {outer, avi, text} = useMemo(() => {
     switch (size) {
       case 'lg': {
         return {
@@ -133,7 +133,7 @@ export function Label({
               emoji
               style={[
                 text,
-                a.font_bold,
+                a.font_semi_bold,
                 a.leading_tight,
                 t.atoms.text_contrast_medium,
                 {paddingRight: 3},
@@ -154,7 +154,7 @@ export function Label({
 export function FollowsYou({size = 'sm'}: CommonProps) {
   const t = useTheme()
 
-  const variantStyles = React.useMemo(() => {
+  const variantStyles = useMemo(() => {
     switch (size) {
       case 'sm':
       case 'lg':
@@ -170,7 +170,7 @@ export function FollowsYou({size = 'sm'}: CommonProps) {
   }, [size])
 
   return (
-    <View style={[variantStyles, a.justify_center, t.atoms.bg_contrast_25]}>
+    <View style={[variantStyles, a.justify_center, t.atoms.bg_contrast_50]}>
       <Text style={[a.text_xs, a.leading_tight]}>
         <Trans>Follows You</Trans>
       </Text>

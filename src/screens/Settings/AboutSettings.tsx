@@ -1,29 +1,69 @@
-import {useMemo} from 'react'
 import {Platform} from 'react-native'
 import {setStringAsync} from 'expo-clipboard'
-import {msg, Trans} from '@lingui/macro'
+import * as FileSystem from 'expo-file-system/legacy'
+import {Image} from 'expo-image'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {Statsig} from 'statsig-react-native-expo'
+import {Trans} from '@lingui/react/macro'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
+import {useMutation} from '@tanstack/react-query'
 
-import {appVersion, BUNDLE_DATE, bundleInfo} from '#/lib/app-info'
 import {STATUS_PAGE_URL} from '#/lib/constants'
-import {CommonNavigatorParams} from '#/lib/routes/types'
-import {useDevModeEnabled} from '#/state/preferences/dev-mode'
-import * as Toast from '#/view/com/util/Toast'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
+import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
+import {BroomSparkle_Stroke2_Corner2_Rounded as BroomSparkleIcon} from '#/components/icons/BroomSparkle'
 import {CodeLines_Stroke2_Corner2_Rounded as CodeLinesIcon} from '#/components/icons/CodeLines'
 import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
 import {Newspaper_Stroke2_Corner2_Rounded as NewspaperIcon} from '#/components/icons/Newspaper'
 import {Wrench_Stroke2_Corner2_Rounded as WrenchIcon} from '#/components/icons/Wrench'
 import * as Layout from '#/components/Layout'
+import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
+import {getDeviceId} from '#/analytics/identifiers'
+import {IS_ANDROID, IS_IOS, IS_NATIVE} from '#/env'
+import * as env from '#/env'
+import {useDemoMode} from '#/storage/hooks/demo-mode'
+import {useDevMode} from '#/storage/hooks/dev-mode'
 import {OTAInfo} from './components/OTAInfo'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AboutSettings'>
 export function AboutSettingsScreen({}: Props) {
-  const {_} = useLingui()
-  const [devModeEnabled, setDevModeEnabled] = useDevModeEnabled()
-  const stableID = useMemo(() => Statsig.getStableID(), [])
+  const {_, i18n} = useLingui()
+  const [devModeEnabled, setDevModeEnabled] = useDevMode()
+  const [demoModeEnabled, setDemoModeEnabled] = useDemoMode()
+
+  const {mutate: onClearImageCache, isPending: isClearingImageCache} =
+    useMutation({
+      mutationFn: async () => {
+        const freeSpaceBefore = await FileSystem.getFreeDiskStorageAsync()
+        await Image.clearDiskCache()
+        const freeSpaceAfter = await FileSystem.getFreeDiskStorageAsync()
+        const spaceDiff = freeSpaceBefore - freeSpaceAfter
+        return spaceDiff * -1
+      },
+      onSuccess: sizeDiffBytes => {
+        if (IS_ANDROID) {
+          Toast.show(
+            _(
+              msg({
+                message: `Image cache cleared, freed ${i18n.number(
+                  Math.abs(sizeDiffBytes / 1024 / 1024),
+                  {
+                    notation: 'compact',
+                    style: 'unit',
+                    unit: 'megabyte',
+                  },
+                )}`,
+                comment: `Android-only toast message which includes amount of space freed using localized number formatting`,
+              }),
+            ),
+          )
+        } else {
+          Toast.show(_(msg`Image cache cleared`))
+        }
+      },
+    })
 
   return (
     <Layout.Screen>
@@ -69,8 +109,20 @@ export function AboutSettingsScreen({}: Props) {
               <Trans>System log</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
+          {IS_NATIVE && (
+            <SettingsList.PressableItem
+              onPress={() => onClearImageCache()}
+              label={_(msg`Clear image cache`)}
+              disabled={isClearingImageCache}>
+              <SettingsList.ItemIcon icon={BroomSparkleIcon} />
+              <SettingsList.ItemText>
+                <Trans>Clear image cache</Trans>
+              </SettingsList.ItemText>
+              {isClearingImageCache && <SettingsList.ItemIcon icon={Loader} />}
+            </SettingsList.PressableItem>
+          )}
           <SettingsList.PressableItem
-            label={_(msg`Version ${appVersion}`)}
+            label={_(msg`Version ${env.APP_VERSION}`)}
             accessibilityHint={_(msg`Copies build version to clipboard`)}
             onLongPress={() => {
               const newDevModeEnabled = !devModeEnabled
@@ -93,17 +145,41 @@ export function AboutSettingsScreen({}: Props) {
             }}
             onPress={() => {
               setStringAsync(
-                `Build version: ${appVersion}; Bundle info: ${bundleInfo}; Bundle date: ${BUNDLE_DATE}; Platform: ${Platform.OS}; Platform version: ${Platform.Version}; Anonymous ID: ${stableID}`,
+                `Build version: ${env.APP_VERSION}; Bundle info: ${env.APP_METADATA}; Bundle date: ${env.BUNDLE_DATE}; Platform: ${Platform.OS}; Platform version: ${Platform.Version}; Device ID: ${getDeviceId() ?? 'N/A'}`,
               )
               Toast.show(_(msg`Copied build version to clipboard`))
             }}>
             <SettingsList.ItemIcon icon={WrenchIcon} />
             <SettingsList.ItemText>
-              <Trans>Version {appVersion}</Trans>
+              <Trans>Version {env.APP_VERSION}</Trans>
             </SettingsList.ItemText>
-            <SettingsList.BadgeText>{bundleInfo}</SettingsList.BadgeText>
+            <SettingsList.BadgeText>{env.APP_METADATA}</SettingsList.BadgeText>
           </SettingsList.PressableItem>
-          {devModeEnabled && <OTAInfo />}
+          {devModeEnabled && (
+            <>
+              <OTAInfo />
+              {IS_IOS && (
+                <SettingsList.PressableItem
+                  onPress={() => {
+                    const newDemoModeEnabled = !demoModeEnabled
+                    setDemoModeEnabled(newDemoModeEnabled)
+                    Toast.show(
+                      'Demo mode ' +
+                        (newDemoModeEnabled ? 'enabled' : 'disabled'),
+                    )
+                  }}
+                  label={
+                    demoModeEnabled ? 'Disable demo mode' : 'Enable demo mode'
+                  }
+                  disabled={isClearingImageCache}>
+                  <SettingsList.ItemIcon icon={AtomIcon} />
+                  <SettingsList.ItemText>
+                    {demoModeEnabled ? 'Disable demo mode' : 'Enable demo mode'}
+                  </SettingsList.ItemText>
+                </SettingsList.PressableItem>
+              )}
+            </>
+          )}
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>

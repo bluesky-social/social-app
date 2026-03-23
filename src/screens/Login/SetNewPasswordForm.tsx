@@ -1,21 +1,23 @@
 import {useState} from 'react'
-import {ActivityIndicator, View} from 'react-native'
-import {BskyAgent} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {View} from 'react-native'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
-import {logEvent} from '#/lib/statsig/statsig'
-import {isNetworkError} from '#/lib/strings/errors'
-import {cleanError} from '#/lib/strings/errors'
+import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {logger} from '#/logger'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Agent} from '#/state/session/agent'
+import {atoms as a, web} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
 import * as TextField from '#/components/forms/TextField'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import {FormContainer} from './FormContainer'
 
 export const SetNewPasswordForm = ({
@@ -32,7 +34,7 @@ export const SetNewPasswordForm = ({
   onPasswordSet: () => void
 }) => {
   const {_} = useLingui()
-  const t = useTheme()
+  const ax = useAnalytics()
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [resetCode, setResetCode] = useState<string>('')
@@ -49,7 +51,7 @@ export const SetNewPasswordForm = ({
           msg`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
         ),
       )
-      logEvent('signin:passwordResetFailure', {})
+      ax.metric('signin:passwordResetFailure', {})
       return
     }
 
@@ -63,17 +65,17 @@ export const SetNewPasswordForm = ({
     setIsProcessing(true)
 
     try {
-      const agent = new BskyAgent({service: serviceUrl})
+      const agent = new Agent(null, {service: serviceUrl})
       await agent.com.atproto.server.resetPassword({
         token: formattedCode,
         password,
       })
       onPasswordSet()
-      logEvent('signin:passwordResetSuccess', {})
+      ax.metric('signin:passwordResetSuccess', {})
     } catch (e: any) {
       const errMsg = e.toString()
       logger.warn('Failed to set new password', {error: e})
-      logEvent('signin:passwordResetFailure', {})
+      ax.metric('signin:passwordResetFailure', {})
       setIsProcessing(false)
       if (isNetworkError(e)) {
         setError(
@@ -112,7 +114,9 @@ export const SetNewPasswordForm = ({
       </Text>
 
       <View>
-        <TextField.LabelText>Reset code</TextField.LabelText>
+        <TextField.LabelText>
+          <Trans>Reset code</Trans>
+        </TextField.LabelText>
         <TextField.Root>
           <TextField.Icon icon={Ticket} />
           <TextField.Input
@@ -135,7 +139,9 @@ export const SetNewPasswordForm = ({
       </View>
 
       <View>
-        <TextField.LabelText>New password</TextField.LabelText>
+        <TextField.LabelText>
+          <Trans>New password</Trans>
+        </TextField.LabelText>
         <TextField.Root>
           <TextField.Icon icon={Lock} />
           <TextField.Input
@@ -143,10 +149,10 @@ export const SetNewPasswordForm = ({
             label={_(msg`Enter a password`)}
             autoCapitalize="none"
             autoCorrect={false}
-            autoComplete="password"
             returnKeyType="done"
             secureTextEntry={true}
-            textContentType="password"
+            autoComplete="new-password"
+            passwordRules="minlength: 8;"
             clearButtonMode="while-editing"
             value={password}
             onChangeText={setPassword}
@@ -159,37 +165,34 @@ export const SetNewPasswordForm = ({
 
       <FormError error={error} />
 
-      <View style={[a.flex_row, a.align_center, a.pt_lg]}>
-        <Button
-          label={_(msg`Back`)}
-          variant="solid"
-          color="secondary"
-          size="large"
-          onPress={onPressBack}>
-          <ButtonText>
-            <Trans>Back</Trans>
-          </ButtonText>
-        </Button>
-        <View style={a.flex_1} />
-        {isProcessing ? (
-          <ActivityIndicator />
-        ) : (
-          <Button
-            label={_(msg`Next`)}
-            variant="solid"
-            color="primary"
-            size="large"
-            onPress={onPressNext}>
-            <ButtonText>
-              <Trans>Next</Trans>
-            </ButtonText>
-          </Button>
+      <View style={[web([a.flex_row, a.align_center]), a.pt_lg]}>
+        {IS_WEB && (
+          <>
+            <Button
+              label={_(msg`Back`)}
+              variant="solid"
+              color="secondary"
+              size="large"
+              onPress={onPressBack}>
+              <ButtonText>
+                <Trans>Back</Trans>
+              </ButtonText>
+            </Button>
+            <View style={a.flex_1} />
+          </>
         )}
-        {isProcessing ? (
-          <Text style={[t.atoms.text_contrast_high, a.pl_md]}>
-            <Trans>Updating...</Trans>
-          </Text>
-        ) : undefined}
+
+        <Button
+          label={_(msg`Next`)}
+          color="primary"
+          size="large"
+          onPress={onPressNext}
+          disabled={isProcessing}>
+          <ButtonText>
+            <Trans>Next</Trans>
+          </ButtonText>
+          {isProcessing && <ButtonIcon icon={Loader} />}
+        </Button>
       </View>
     </FormContainer>
   )

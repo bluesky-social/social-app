@@ -1,4 +1,4 @@
-import {AppBskyFeedDefs} from '@atproto/api'
+import {type AppBskyFeedDefs} from '@atproto/api'
 
 export interface FeedAPIResponse {
   cursor?: string

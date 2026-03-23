@@ -1,16 +1,16 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {
   ActivityIndicator,
-  GestureResponderEvent,
-  NativeSyntheticEvent,
-  NativeTouchEvent,
+  type GestureResponderEvent,
+  type NativeSyntheticEvent,
+  type NativeTouchEvent,
   Pressable,
-  PressableStateCallbackType,
-  StyleProp,
+  type PressableStateCallbackType,
+  type StyleProp,
   StyleSheet,
-  TextStyle,
+  type TextStyle,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 
 import {choose} from '#/lib/functions'
@@ -37,7 +37,9 @@ declare module 'react-native' {
   }
 }
 
-// TODO: Enforce that button always has a label
+/**
+ * @deprecated use Button from `#/components/Button.tsx` instead
+ */
 export function Button({
   type = 'primary',
   label,
@@ -146,19 +148,19 @@ export function Button({
     },
   )
 
-  const [isLoading, setIsLoading] = React.useState(false)
-  const onPressWrapped = React.useCallback(
+  const [isLoading, setIsLoading] = useState(false)
+  const onPressWrapped = useCallback(
     async (event: GestureResponderEvent) => {
       event.stopPropagation()
       event.preventDefault()
-      withLoading && setIsLoading(true)
+      if (withLoading) setIsLoading(true)
       await onPress?.(event)
-      withLoading && setIsLoading(false)
+      if (withLoading) setIsLoading(false)
     },
     [onPress, withLoading],
   )
 
-  const getStyle = React.useCallback(
+  const getStyle = useCallback(
     (state: PressableStateCallbackType) => {
       const arr = [typeOuterStyle, styles.outer, style]
       if (state.pressed) {
@@ -171,7 +173,7 @@ export function Button({
     [typeOuterStyle, style],
   )
 
-  const renderChildern = React.useCallback(() => {
+  const renderChildern = useCallback(() => {
     if (!label) {
       return children
     }

@@ -7,7 +7,7 @@ export function getMentionAt(
   text: string,
   cursorPos: number,
 ): FoundMention | undefined {
-  let re = /(^|\s)@([a-z0-9.]*)/gi
+  let re = /(^|\s)@([a-z0-9.-]*)/gi
   let match
   while ((match = re.exec(text))) {
     const spaceOffset = match[1].length

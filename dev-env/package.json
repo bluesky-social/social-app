@@ -1,0 +1,12 @@
+{
+  "name": "dev-env",
+  "version": "0.0.0",
+  "scripts": {
+    "start": "NODE_ENV=development ./dev-infra/with-test-redis-and-db.sh ts-node ./mock-server.ts"
+  },
+  "dependencies": {
+    "@atproto/dev-env": "^0.3.213",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

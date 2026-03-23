@@ -1,6 +1,6 @@
-import {Component, ErrorInfo, ReactNode} from 'react'
-import {StyleProp, ViewStyle} from 'react-native'
-import {msg} from '@lingui/macro'
+import {Component, type ErrorInfo, type ReactNode} from 'react'
+import {type StyleProp, type ViewStyle} from 'react-native'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'

@@ -1,0 +1,1054 @@
+<!doctype html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/svbstrate@5.1.0/svbstrate.css" />
+    <style>
+      body {
+        padding: 2rem;
+      }
+      section {
+        margin-bottom: 4rem;
+      }
+      h1 {
+        margin-bottom: 1rem;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 2rem;
+      }
+      .item {
+        text-align: center;
+      }
+      .item img {
+        width: 100%;
+        max-width: 400px;
+        display: block;
+        margin: 0 auto 0.5rem;
+        transition: opacity 0.2s ease-in-out;
+      }
+    </style>
+    <script>
+      // This overrides the default embed URL that the script uses
+      // (https://embed.bsky.app)
+      window.BSKY_DEV_EMBED_URL = 'http://localhost:5173'
+    </script>
+    <script
+      async
+      src="http://localhost:3000/embed.js"
+      charset="utf-8"></script>
+  </head>
+  <body class="p12">
+    <!-- Base embeds -->
+    <section>
+      <h1>Base embeds test</h1>
+      <div class="grid">
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:yaqf6zpqlko6hkm5zukoilix/app.bsky.feed.post/3lkcj4xgmdc2l"
+            data-bluesky-cid="bafyreicsat53vek22bcwiciquqdffd7dyrpnink6dhf2nfdlvt5olvb5hm"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              <br /><br /><a
+                href="https://bsky.app/profile/did:plc:yaqf6zpqlko6hkm5zukoilix/post/3lkcj4xgmdc2l?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; test-all-embeds-b.bsky.social (<a
+              href="https://bsky.app/profile/did:plc:yaqf6zpqlko6hkm5zukoilix?ref_src=embed"
+              >@test-all-embeds-b.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:yaqf6zpqlko6hkm5zukoilix/post/3lkcj4xgmdc2l?ref_src=embed"
+              >Mar 13, 2025 at 6:58 PM</a
+            >
+          </blockquote>
+          <div>Image</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkchac5lbs23"
+            data-bluesky-cid="bafyreihcgknwgp7kgph3w3mmqqa7mrw4f2rw2e7chrjsuy6viruajiw7di"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Test with self-label<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchac5lbs23?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchac5lbs23?ref_src=embed"
+              >Mar 13, 2025 at 6:24 PM</a
+            >
+          </blockquote>
+          <div>Image w/ label</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:yaqf6zpqlko6hkm5zukoilix/app.bsky.feed.post/3lkcj64e3x22l"
+            data-bluesky-cid="bafyreidafwmfabuo2fkz445of7pwetbud7vc4u4mcdjrflv46iivx4dmni"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              <br /><br /><a
+                href="https://bsky.app/profile/did:plc:yaqf6zpqlko6hkm5zukoilix/post/3lkcj64e3x22l?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; test-all-embeds-b.bsky.social (<a
+              href="https://bsky.app/profile/did:plc:yaqf6zpqlko6hkm5zukoilix?ref_src=embed"
+              >@test-all-embeds-b.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:yaqf6zpqlko6hkm5zukoilix/post/3lkcj64e3x22l?ref_src=embed"
+              >Mar 13, 2025 at 6:59 PM</a
+            >
+          </blockquote>
+          <div>Image</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:5veiziiwyjpv5qmrlovrq2go/app.bsky.feed.post/3lwrv45dgzc2p"
+            data-bluesky-cid="bafyreiaik27g4gu5egf7k3gd3ut6lfbvjeggwavsvw6g3e2rtrsmhqwikq"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              De Reclame, 11e Jaargang, No 8, 1932
+              designreviewed.com/artefacts/de...<br /><br /><a
+                href="https://bsky.app/profile/did:plc:5veiziiwyjpv5qmrlovrq2go/post/3lwrv45dgzc2p?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Design Reviewed (<a
+              href="https://bsky.app/profile/did:plc:5veiziiwyjpv5qmrlovrq2go?ref_src=embed"
+              >@designreviewed.com</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:5veiziiwyjpv5qmrlovrq2go/post/3lwrv45dgzc2p?ref_src=embed"
+              >Aug 19, 2025 at 2:45 PM</a
+            >
+          </blockquote>
+          <div>Image x2</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkjhqtunc22v"
+            data-bluesky-cid="bafyreiflpcym2ggfoyaj7rppnx3sds3vxw6oz3735a3tpmqmm7oupeatra"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Test with 3 images<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkjhqtunc22v?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkjhqtunc22v?ref_src=embed"
+              >Mar 16, 2025 at 1:22 PM</a
+            >
+          </blockquote>
+          <div>Image x3</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkjhsgb4vk2z"
+            data-bluesky-cid="bafyreiafnxubhqmidi7tppgqepddcwcdarbpsobrccoihwdqkrcat4dpxy"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Test with 4 images<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkjhsgb4vk2z?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkjhsgb4vk2z?ref_src=embed"
+              >Mar 16, 2025 at 1:23 PM</a
+            >
+          </blockquote>
+          <div>Image x4</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:yaqf6zpqlko6hkm5zukoilix/app.bsky.feed.post/3lkcj5shusk2l"
+            data-bluesky-cid="bafyreif74k7knls6upxuxwl2e6jn7m2us7tn6t5rcx63zipujwqyioibi4"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              <br /><br /><a
+                href="https://bsky.app/profile/did:plc:yaqf6zpqlko6hkm5zukoilix/post/3lkcj5shusk2l?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; test-all-embeds-b.bsky.social (<a
+              href="https://bsky.app/profile/did:plc:yaqf6zpqlko6hkm5zukoilix?ref_src=embed"
+              >@test-all-embeds-b.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:yaqf6zpqlko6hkm5zukoilix/post/3lkcj5shusk2l?ref_src=embed"
+              >Mar 13, 2025 at 6:58 PM</a
+            >
+          </blockquote>
+          <div>Video</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkchdnqmzc23"
+            data-bluesky-cid="bafyreiaegqfmhl63vxm3uuipkdn2dqivyrqy65gyygqib4upse7djnauqy"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Test video with self-label<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchdnqmzc23?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchdnqmzc23?ref_src=embed"
+              >Mar 13, 2025 at 6:26 PM</a
+            >
+          </blockquote>
+          <div>Video w/ label</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkchef5c2c23"
+            data-bluesky-cid="bafyreigua3qzj7qjgygwsyl325l6za3rrmkohc467ozaf7pdpd33trn3pu"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Test gif<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchef5c2c23?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchef5c2c23?ref_src=embed"
+              >Mar 13, 2025 at 6:26 PM</a
+            >
+          </blockquote>
+          <div>GIF</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkchgiinq22h"
+            data-bluesky-cid="bafyreiau42wvwdzikxev26hpogwmzaox7lxqygfkisoxfjlsl7epcldxa4"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Test with list<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchgiinq22h?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchgiinq22h?ref_src=embed"
+              >Mar 13, 2025 at 6:27 PM</a
+            >
+          </blockquote>
+          <div>List</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkchgwpy222h"
+            data-bluesky-cid="bafyreibnfmqwydsi7bfrcxjcafhvajo53n52uiwdpb4kvyksz2ffsa53ua"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Test list with self-label<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchgwpy222h?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchgwpy222h?ref_src=embed"
+              >Mar 13, 2025 at 6:28 PM</a
+            >
+          </blockquote>
+          <div>List w/ label</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkchhfft722h"
+            data-bluesky-cid="bafyreiangyijdechqaapd2obxxvyby6c6dwhrlva4qiwhdxji3yjdlrcby"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Test with moderated list<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchhfft722h?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchhfft722h?ref_src=embed"
+              >Mar 13, 2025 at 6:28 PM</a
+            >
+          </blockquote>
+          <div>List (takendown)</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkchj6t27k2h"
+            data-bluesky-cid="bafyreidzyg3tpx5widxfhjvz3hcyrqozxj2nsnep3u652a3qzlljsc5if4"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Test feed<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchj6t27k2h?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchj6t27k2h?ref_src=embed"
+              >Mar 13, 2025 at 6:29 PM</a
+            >
+          </blockquote>
+          <div>Feed</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkjid3khps2r"
+            data-bluesky-cid="bafyreiadznx3fxyzc5dw76uydxvrz6vn2ccfh7i5nzaa5o6fmiwrcyie5m"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Test adult content feed<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkjid3khps2r?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkjid3khps2r?ref_src=embed"
+              >Mar 16, 2025 at 1:32 PM</a
+            >
+          </blockquote>
+          <div>Feed w/ label</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:yaqf6zpqlko6hkm5zukoilix/app.bsky.feed.post/3lkcja4gxus2i"
+            data-bluesky-cid="bafyreicf6jrpv2it74re5ce7o6nvxcs24qg3s7blb2vy4vdoaaaunbuhru"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              <br /><br /><a
+                href="https://bsky.app/profile/did:plc:yaqf6zpqlko6hkm5zukoilix/post/3lkcja4gxus2i?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; test-all-embeds-b.bsky.social (<a
+              href="https://bsky.app/profile/did:plc:yaqf6zpqlko6hkm5zukoilix?ref_src=embed"
+              >@test-all-embeds-b.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:yaqf6zpqlko6hkm5zukoilix/post/3lkcja4gxus2i?ref_src=embed"
+              >Mar 13, 2025 at 7:00 PM</a
+            >
+          </blockquote>
+          <div>Link</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkcinqa4t22o"
+            data-bluesky-cid="bafyreicinqmddgw6ccmmbo3q4exz6phmekbwwyxn5jklycvfsq3aknw7gy"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Quote post of self-labeled moderated image<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkcinqa4t22o?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkcinqa4t22o?ref_src=embed"
+              >Mar 13, 2025 at 6:49 PM</a
+            >
+          </blockquote>
+          <div>Link w/ label</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkchnlwlbs2h"
+            data-bluesky-cid="bafyreigyilbttv6kasvf2gdciju56xofmwvnls2angvur4y3c5m2lc4byi"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Test starter pack<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchnlwlbs2h?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchnlwlbs2h?ref_src=embed"
+              >Mar 13, 2025 at 6:31 PM</a
+            >
+          </blockquote>
+          <div>Starter pack</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkchnwmycs2h"
+            data-bluesky-cid="bafyreibdxzxyldghjvzahpceasx7wkzwmycx2zdyak2c3cx2ouaivls2da"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Test starter pack with self-label<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchnwmycs2h?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchnwmycs2h?ref_src=embed"
+              >Mar 13, 2025 at 6:32 PM</a
+            >
+          </blockquote>
+          <div>Starter pack w/ self label</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:ykoz7xgzdig674y6k4723vzf/app.bsky.feed.post/3lxdwwigues2y"
+            data-bluesky-cid="bafyreibpgpvyx6vozaxn557ngffzbvvucdrpflfnjw73tr3qi5e7tfitpy"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              go.bsky.app/FVMZBTc test<br /><br /><a
+                href="https://bsky.app/profile/did:plc:ykoz7xgzdig674y6k4723vzf/post/3lxdwwigues2y?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; h 🪽 partner @ INTDEV (<a
+              href="https://bsky.app/profile/did:plc:ykoz7xgzdig674y6k4723vzf?ref_src=embed"
+              >@hannah-final.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:ykoz7xgzdig674y6k4723vzf/post/3lxdwwigues2y?ref_src=embed"
+              >Aug 26, 2025 at 7:05 PM</a
+            >
+          </blockquote>
+          <div>Starter pack w/ signups</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quote posts -->
+    <section>
+      <h1>Quote posts</h1>
+      <div class="grid">
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkchp7oaq22h"
+            data-bluesky-cid="bafyreidq6y2zee36am3xdt3lfb4yhgn3u5pil7ljgkdx74biluw424ck3m"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Quote post<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchp7oaq22h?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchp7oaq22h?ref_src=embed"
+              >Mar 13, 2025 at 6:32 PM</a
+            >
+          </blockquote>
+          <div>Image</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkchpijwu22h"
+            data-bluesky-cid="bafyreifblfh6mhb4zrhjzkfwa2ytgzrr7jueukhzwj2nfifmy77h7v74ji"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Quote post with moderated embed<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchpijwu22h?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchpijwu22h?ref_src=embed"
+              >Mar 13, 2025 at 6:32 PM</a
+            >
+          </blockquote>
+          <div>Image w/ label</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkchpvu6is2h"
+            data-bluesky-cid="bafyreidm573hmhxt65d6xvoxki4omvoaltkta7s3efoydrxxod37bdhree"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Quote post of video<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchpvu6is2h?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchpvu6is2h?ref_src=embed"
+              >Mar 13, 2025 at 6:33 PM</a
+            >
+          </blockquote>
+          <div>Video</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkchq5dfrk2h"
+            data-bluesky-cid="bafyreiba4sabzwtomrhede6tnhmgddj2q4m4ksxhud3g7flldrbwritlzq"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Quote post of moderated video<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchq5dfrk2h?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchq5dfrk2h?ref_src=embed"
+              >Mar 13, 2025 at 6:33 PM</a
+            >
+          </blockquote>
+          <div>Moderated Video</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkjip5qduk2l"
+            data-bluesky-cid="bafyreib4ddu6imsar7hjm6bsunrrumts4b3pftmr23qlrnytcthkingilu"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Quote post of gif<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkjip5qduk2l?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkjip5qduk2l?ref_src=embed"
+              >Mar 16, 2025 at 1:39 PM</a
+            >
+          </blockquote>
+          <div>GIF</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkjip5qduk2l"
+            data-bluesky-cid="bafyreib4ddu6imsar7hjm6bsunrrumts4b3pftmr23qlrnytcthkingilu"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Quote post of gif<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkjip5qduk2l?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkjip5qduk2l?ref_src=embed"
+              >Mar 16, 2025 at 1:39 PM</a
+            >
+          </blockquote>
+          <div>List</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkchqmp2722h"
+            data-bluesky-cid="bafyreicwzdm3qlx567fznroqija6rryl4ghjwn7hz2o47ygy2kd6bsmsou"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Quote post of moderated list<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchqmp2722h?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchqmp2722h?ref_src=embed"
+              >Mar 13, 2025 at 6:33 PM</a
+            >
+          </blockquote>
+          <div>List (takedown)</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkchqrrigs2h"
+            data-bluesky-cid="bafyreiakfe2qer733rl5ncq2auwoay3zc5qeiepiwzz3yuvds6acbdnjti"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Quote post of feed<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchqrrigs2h?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchqrrigs2h?ref_src=embed"
+              >Mar 13, 2025 at 6:33 PM</a
+            >
+          </blockquote>
+          <div>Feed</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkchqyf6u22h"
+            data-bluesky-cid="bafyreicbaf4h437o656jsuygqsyv2z4ff5wu46gjiw7z7rwnhaiwjpa2ia"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Quote post of link<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchqyf6u22h?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchqyf6u22h?ref_src=embed"
+              >Mar 13, 2025 at 6:33 PM</a
+            >
+          </blockquote>
+          <div>Link</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkchremdhc2h"
+            data-bluesky-cid="bafyreifexo35hh6x7cfmxzyewfqoufyidaz6ko5dtycwrezspidph3ydnu"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Quote post of moderated link<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchremdhc2h?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchremdhc2h?ref_src=embed"
+              >Mar 13, 2025 at 6:33 PM</a
+            >
+          </blockquote>
+          <div>Link w/label</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkchrlw4vk2h"
+            data-bluesky-cid="bafyreihcwafgvujqkzts3spunit6ku6mpix76m2s2iz3gbxhyw33b4k3uq"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Quote post of starter pack<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchrlw4vk2h?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkchrlw4vk2h?ref_src=embed"
+              >Mar 13, 2025 at 6:34 PM</a
+            >
+          </blockquote>
+          <div>Starter pack</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quote post states -->
+    <section>
+      <h1>Quote post states</h1>
+      <div class="grid">
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkcieaeil22a"
+            data-bluesky-cid="bafyreihsujirmypaycahu2dqc7oxcrhohgtqclljudc2s2drqqxmvpgrem"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Quoted post of deleted post<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkcieaeil22a?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkcieaeil22a?ref_src=embed"
+              >Mar 13, 2025 at 6:44 PM</a
+            >
+          </blockquote>
+          <div>Deleted</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkciefiepk2a"
+            data-bluesky-cid="bafyreihvgdhd65s3e2e2uhkcyet2apdfo6zfmbbkf6jvn5v6holejae2ya"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Quoted post of detached post<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkciefiepk2a?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkciefiepk2a?ref_src=embed"
+              >Mar 13, 2025 at 6:44 PM</a
+            >
+          </blockquote>
+          <div>Detached quoted post</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:2b5zvgrtdw5mlariyuvgd7tv/app.bsky.feed.post/3lkcikkheys2c"
+            data-bluesky-cid="bafyreibez43l4k4yxm6472igwosrzeefyn2xmjgxtpezj2ktzx66zi6gyy"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Quoted post of user who blocks me<br /><br /><a
+                href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkcikkheys2c?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Embed Tester (<a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv?ref_src=embed"
+              >@test-all-embeds-a.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:2b5zvgrtdw5mlariyuvgd7tv/post/3lkcikkheys2c?ref_src=embed"
+              >Mar 13, 2025 at 6:48 PM</a
+            >
+          </blockquote>
+          <div>Blocked</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Default avatars -->
+    <section>
+      <h1>Default avatars</h1>
+      <div class="grid">
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:yaqf6zpqlko6hkm5zukoilix/app.bsky.feed.post/3lkcivbqv522o"
+            data-bluesky-cid="bafyreicekaiu4nqpdlltvbohbuslw4g4xs5sqk4d6bngfrn3y3e5web63i"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">test</p>
+            &mdash; test-all-embeds-b.bsky.social (<a
+              href="https://bsky.app/profile/did:plc:yaqf6zpqlko6hkm5zukoilix?ref_src=embed"
+              >@test-all-embeds-b.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:yaqf6zpqlko6hkm5zukoilix/post/3lkcivbqv522o?ref_src=embed"
+              >Mar 13, 2025 at 6:54 PM</a
+            >
+          </blockquote>
+          <div>Default avatar</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:464y3vjt35kayax3f3fhk2to/app.bsky.feed.post/3lr6qrk74rc2o"
+            data-bluesky-cid="bafyreihtxhy56u2im7hki3bgiesll7ofv63glev3xtf677bdnygzaooaq4"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              quote<br /><br /><a
+                href="https://bsky.app/profile/did:plc:464y3vjt35kayax3f3fhk2to/post/3lr6qrk74rc2o?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; beep boop 2 (<a
+              href="https://bsky.app/profile/did:plc:464y3vjt35kayax3f3fhk2to?ref_src=embed"
+              >@bleh-5.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:464y3vjt35kayax3f3fhk2to/post/3lr6qrk74rc2o?ref_src=embed"
+              >Jun 9, 2025 at 9:00 AM</a
+            >
+          </blockquote>
+          <div>Default avi quote</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:464y3vjt35kayax3f3fhk2to/app.bsky.feed.post/3lr6qsegoy22o"
+            data-bluesky-cid="bafyreig3btwlldbmhkfygczijtexpsvxjcisseldiwlnoc3ovgdejoashm"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              bsky.app/profile/did:...<br /><br /><a
+                href="https://bsky.app/profile/did:plc:464y3vjt35kayax3f3fhk2to/post/3lr6qsegoy22o?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; beep boop 2 (<a
+              href="https://bsky.app/profile/did:plc:464y3vjt35kayax3f3fhk2to?ref_src=embed"
+              >@bleh-5.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:464y3vjt35kayax3f3fhk2to/post/3lr6qsegoy22o?ref_src=embed"
+              >Jun 9, 2025 at 9:01 AM</a
+            >
+          </blockquote>
+          <div>Default avi list</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:464y3vjt35kayax3f3fhk2to/app.bsky.feed.post/3lr6qy3dpu22o"
+            data-bluesky-cid="bafyreihdd7kzpnqr73bvpbvwwxv6fcwr7oyi7tveylozj3psiyppfv7bku"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              feed bsky.app/profile/why....<br /><br /><a
+                href="https://bsky.app/profile/did:plc:464y3vjt35kayax3f3fhk2to/post/3lr6qy3dpu22o?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; beep boop 2 (<a
+              href="https://bsky.app/profile/did:plc:464y3vjt35kayax3f3fhk2to?ref_src=embed"
+              >@bleh-5.bsky.social</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:464y3vjt35kayax3f3fhk2to/post/3lr6qy3dpu22o?ref_src=embed"
+              >Jun 9, 2025 at 9:04 AM</a
+            >
+          </blockquote>
+          <div>Default avi feed</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Verification -->
+    <section>
+      <h1>Verification</h1>
+      <div class="grid">
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:inz4fkbbp7ms3ixufw6xuvdi/app.bsky.feed.post/3lxjdltb4ts27"
+            data-bluesky-cid="bafyreiaybsdmauo65e7sz5jmpfh4xnuho5lsurwpeunxxrzec5kesb6v5y"
+            data-bluesky-embed-color-mode="system">
+            <p lang="">
+              Viewers in Africa, Asia, and Australia will be able to see the
+              blood moon in the sky—but those in the Americas will have to
+              settle for a live feed this time around.
+              www.wired.com/story/how-to...<br /><br /><a
+                href="https://bsky.app/profile/did:plc:inz4fkbbp7ms3ixufw6xuvdi/post/3lxjdltb4ts27?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; WIRED (<a
+              href="https://bsky.app/profile/did:plc:inz4fkbbp7ms3ixufw6xuvdi?ref_src=embed"
+              >@wired.com</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:inz4fkbbp7ms3ixufw6xuvdi/post/3lxjdltb4ts27?ref_src=embed"
+              >Aug 28, 2025 at 10:35 PM</a
+            >
+          </blockquote>
+          <div>Trusted verifier</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:idd5adskstkxy3fzsmer6dtn/app.bsky.feed.post/3lx7j264p7s25"
+            data-bluesky-cid="bafyreih2kxdfmpvtrfhudho6untfityh3bw3mvlialhvbzcfpdqbuhtrdi"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              Wired is one of the few US media organisations which fully
+              appreciates what&#x27;s happening.<br /><br /><a
+                href="https://bsky.app/profile/did:plc:idd5adskstkxy3fzsmer6dtn/post/3lx7j264p7s25?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; TJ McIntyre (<a
+              href="https://bsky.app/profile/did:plc:idd5adskstkxy3fzsmer6dtn?ref_src=embed"
+              >@tjmcintyre.com</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:idd5adskstkxy3fzsmer6dtn/post/3lx7j264p7s25?ref_src=embed"
+              >Aug 25, 2025 at 12:46 AM</a
+            >
+          </blockquote>
+          <div>Trusted verifier quoted</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:p2cp5gopk7mgjegy6wadk3ep/app.bsky.feed.post/3lxciw4rf4c2p"
+            data-bluesky-cid="bafyreicctppfb44vitkn73rx546wvvybs7e7ftkc3dhsz56vm7a6my5fdq"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">test</p>
+            &mdash; Samuel (<a
+              href="https://bsky.app/profile/did:plc:p2cp5gopk7mgjegy6wadk3ep?ref_src=embed"
+              >@samuel.bsky.team</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:p2cp5gopk7mgjegy6wadk3ep/post/3lxciw4rf4c2p?ref_src=embed"
+              >Aug 26, 2025 at 5:22 AM</a
+            >
+          </blockquote>
+          <div>Verified</div>
+        </div>
+
+        <div class="item">
+          <blockquote
+            class="bluesky-embed"
+            data-bluesky-uri="at://did:plc:p2cp5gopk7mgjegy6wadk3ep/app.bsky.feed.post/3lxdeaccemk2j"
+            data-bluesky-cid="bafyreibmveixwjpcc2a4va2c5wihztsgdlysxvi4bz4xe7ilxe7uvuzn3u"
+            data-bluesky-embed-color-mode="system">
+            <p lang="en">
+              atproto in one post<br /><br /><a
+                href="https://bsky.app/profile/did:plc:p2cp5gopk7mgjegy6wadk3ep/post/3lxdeaccemk2j?ref_src=embed"
+                >[image or embed]</a
+              >
+            </p>
+            &mdash; Samuel (<a
+              href="https://bsky.app/profile/did:plc:p2cp5gopk7mgjegy6wadk3ep?ref_src=embed"
+              >@samuel.bsky.team</a
+            >)
+            <a
+              href="https://bsky.app/profile/did:plc:p2cp5gopk7mgjegy6wadk3ep/post/3lxdeaccemk2j?ref_src=embed"
+              >Aug 26, 2025 at 1:30 PM</a
+            >
+          </blockquote>
+
+          <div>Verified quoted</div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

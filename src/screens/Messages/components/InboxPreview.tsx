@@ -1,7 +1,8 @@
 import {View} from 'react-native'
-import {ChatBskyActorDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {type ChatBskyActorDefs} from '@atproto/api'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
@@ -12,10 +13,8 @@ import {Link} from '#/components/Link'
 
 export function InboxPreview({
   profiles,
-}: // count,
-{
+}: {
   profiles: ChatBskyActorDefs.ProfileViewBasic[]
-  count: number
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -59,7 +58,7 @@ export function InboxPreview({
         )}
       </View>
       <ButtonText
-        style={[a.flex_1, a.font_bold, a.text_left]}
+        style={[a.flex_1, a.font_semi_bold, a.text_left]}
         numberOfLines={1}>
         <Trans>Chat requests</Trans>
       </ButtonText>

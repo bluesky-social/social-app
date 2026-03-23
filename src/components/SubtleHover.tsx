@@ -1,8 +1,14 @@
 import {View} from 'react-native'
 
 import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
+import {IS_NATIVE, IS_WEB, IS_WEB_TOUCH_DEVICE} from '#/env'
 
-export function SubtleHover({style, hover}: ViewStyleProp & {hover: boolean}) {
+export function SubtleHover({
+  style,
+  hover,
+  web = true,
+  native = false,
+}: ViewStyleProp & {hover: boolean; web?: boolean; native?: boolean}) {
   const t = useTheme()
 
   let opacity: number
@@ -18,17 +24,25 @@ export function SubtleHover({style, hover}: ViewStyleProp & {hover: boolean}) {
       break
   }
 
-  return (
+  const el = (
     <View
       style={[
         a.absolute,
         a.inset_0,
         a.pointer_events_none,
         a.transition_opacity,
-        t.atoms.bg_contrast_25,
+        t.atoms.bg_contrast_50,
         style,
         {opacity: hover ? opacity : 0},
       ]}
     />
   )
+
+  if (IS_WEB && web) {
+    return IS_WEB_TOUCH_DEVICE ? null : el
+  } else if (IS_NATIVE && native) {
+    return el
+  }
+
+  return null
 }

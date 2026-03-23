@@ -1,6 +1,6 @@
 import {View} from 'react-native'
-import {ChatBskyConvoDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {type ChatBskyConvoDefs} from '@atproto/api'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a} from '#/alf'
@@ -21,7 +21,7 @@ export function ActionsWrapper({
     <MessageContextMenu message={message}>
       {trigger =>
         // will always be true, since this file is platform split
-        trigger.isNative && (
+        trigger.IS_NATIVE && (
           <View style={[a.flex_1, a.relative]}>
             <View
               style={[

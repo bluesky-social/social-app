@@ -3,6 +3,7 @@ import {getLocales} from 'expo-localization'
 import {keepPreviousData, useInfiniteQuery} from '@tanstack/react-query'
 
 import {GIF_FEATURED, GIF_SEARCH} from '#/lib/constants'
+import {logger} from '#/logger'
 
 export const RQKEY_ROOT = 'gif-service'
 export const RQKEY_FEATURED = [RQKEY_ROOT, 'featured']
@@ -84,6 +85,18 @@ function createTenorApi<Input extends object>(
     }
     return res.json()
   }
+}
+
+export function tenorUrlToBskyGifUrl(tenorUrl: string) {
+  let url
+  try {
+    url = new URL(tenorUrl)
+  } catch (e) {
+    logger.debug('invalid url passed to tenorUrlToBskyGifUrl()')
+    return ''
+  }
+  url.hostname = 't.gifs.bsky.app'
+  return url.href
 }
 
 export type Gif = {

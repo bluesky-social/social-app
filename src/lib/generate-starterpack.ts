@@ -1,12 +1,12 @@
 import {
-  $Typed,
-  AppBskyActorDefs,
-  AppBskyGraphGetStarterPack,
-  BskyAgent,
-  ComAtprotoRepoApplyWrites,
-  Facet,
+  type $Typed,
+  type AppBskyActorDefs,
+  type AppBskyGraphGetStarterPack,
+  type BskyAgent,
+  type ComAtprotoRepoApplyWrites,
+  type Facet,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
@@ -15,7 +15,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {enforceLen} from '#/lib/strings/helpers'
 import {useAgent} from '#/state/session'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
 export const createStarterPackList = async ({
   name,
@@ -46,14 +46,7 @@ export const createStarterPackList = async ({
   if (!list) throw new Error('List creation failed')
   await agent.com.atproto.repo.applyWrites({
     repo: agent.session!.did,
-    writes: [
-      createListItem({did: agent.session!.did, listUri: list.uri}),
-    ].concat(
-      profiles
-        // Ensure we don't have ourselves in this list twice
-        .filter(p => p.did !== agent.session!.did)
-        .map(p => createListItem({did: p.did, listUri: list.uri})),
-    ),
+    writes: profiles.map(p => createListItem({did: p.did, listUri: list.uri})),
   })
 
   return list

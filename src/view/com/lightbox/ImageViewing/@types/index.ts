@@ -6,8 +6,8 @@
  *
  */
 
-import {TransformsStyle} from 'react-native'
-import {MeasuredDimensions} from 'react-native-reanimated'
+import {type TransformsStyle} from 'react-native'
+import {type MeasuredDimensions} from 'react-native-reanimated'
 
 export type Dimensions = {
   width: number

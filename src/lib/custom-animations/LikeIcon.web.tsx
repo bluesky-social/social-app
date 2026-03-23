@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useRef} from 'react'
 import {View} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
 
@@ -50,13 +50,13 @@ export function AnimatedLikeIcon({
   const t = useTheme()
   const size = big ? 22 : 18
   const shouldAnimate = !useReducedMotion() && hasBeenToggled
-  const prevIsLiked = React.useRef(isLiked)
+  const prevIsLiked = useRef(isLiked)
 
-  const likeIconRef = React.useRef<HTMLDivElement>(null)
-  const circle1Ref = React.useRef<HTMLDivElement>(null)
-  const circle2Ref = React.useRef<HTMLDivElement>(null)
+  const likeIconRef = useRef<HTMLDivElement>(null)
+  const circle1Ref = useRef<HTMLDivElement>(null)
+  const circle2Ref = useRef<HTMLDivElement>(null)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (prevIsLiked.current === isLiked) {
       return
     }

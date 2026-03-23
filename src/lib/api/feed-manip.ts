@@ -1,5 +1,5 @@
 import {
-  AppBskyActorDefs,
+  type AppBskyActorDefs,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
@@ -9,7 +9,7 @@ import {
 import * as bsky from '#/types/bsky'
 import {isPostInLanguage} from '../../locale/helpers'
 import {FALLBACK_MARKER_POST} from './feed/home'
-import {ReasonFeedSource} from './feed/types'
+import {type ReasonFeedSource} from './feed/types'
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 
@@ -41,6 +41,7 @@ export class FeedViewPostsSlice {
   isIncompleteThread: boolean
   isFallbackMarker: boolean
   isOrphan: boolean
+  isThreadMuted: boolean
   rootUri: string
   feedPostUri: string
 
@@ -50,6 +51,7 @@ export class FeedViewPostsSlice {
     this.isIncompleteThread = false
     this.isFallbackMarker = false
     this.isOrphan = false
+    this.isThreadMuted = post.viewer?.threadMuted ?? false
     this.feedPostUri = post.uri
     if (AppBskyFeedDefs.isPostView(reply?.root)) {
       this.rootUri = reply.root.uri
@@ -185,6 +187,10 @@ export class FeedViewPostsSlice {
 
   get feedContext() {
     return this._feedPost.feedContext
+  }
+
+  get reqId() {
+    return this._feedPost.reqId
   }
 
   get isRepost() {
@@ -350,6 +356,20 @@ export class FeedTuner {
   ) {
     for (let i = 0; i < slices.length; i++) {
       if (slices[i].isOrphan) {
+        slices.splice(i, 1)
+        i--
+      }
+    }
+    return slices
+  }
+
+  static removeMutedThreads(
+    tuner: FeedTuner,
+    slices: FeedViewPostsSlice[],
+    _dryRun: boolean,
+  ) {
+    for (let i = 0; i < slices.length; i++) {
+      if (slices[i].isThreadMuted) {
         slices.splice(i, 1)
         i--
       }

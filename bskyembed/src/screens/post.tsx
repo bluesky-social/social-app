@@ -8,7 +8,7 @@ import {applyTheme, initSystemColorMode} from '../color-mode'
 import {Container} from '../components/container'
 import {Link} from '../components/link'
 import {Post} from '../components/post'
-import {getRkey} from '../utils'
+import {getRkey} from '../util/rkey'
 
 const root = document.getElementById('app')
 if (!root) throw new Error('No root element')

@@ -1,9 +1,9 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {ConvoItem, ConvoItemError} from '#/state/messages/convo/types'
+import {type ConvoItem, ConvoItemError} from '#/state/messages/convo/types'
 import {atoms as a, useTheme} from '#/alf'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {InlineLinkText} from '#/components/Link'
@@ -12,7 +12,7 @@ import {Text} from '#/components/Typography'
 export function MessageListError({item}: {item: ConvoItem & {type: 'error'}}) {
   const t = useTheme()
   const {_} = useLingui()
-  const {description, help, cta} = React.useMemo(() => {
+  const {description, help, cta} = useMemo(() => {
     return {
       [ConvoItemError.FirehoseFailed]: {
         description: _(msg`This chat was disconnected`),

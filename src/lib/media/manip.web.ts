@@ -1,12 +1,11 @@
-import {Image as RNImage} from 'react-native-image-crop-picker'
-
-import {Dimensions} from './types'
-import {blobToDataUri, getDataUriSize} from './util'
+import {type PickerImage} from './picker.shared'
+import {type Dimensions} from './types'
+import {blobToDataUri, convertCdnPreset, getDataUriSize} from './util'
 
 export async function compressIfNeeded(
-  img: RNImage,
+  img: PickerImage,
   maxSize: number,
-): Promise<RNImage> {
+): Promise<PickerImage> {
   if (img.size < maxSize) {
     return img
   }
@@ -43,9 +42,17 @@ export async function shareImageModal(_opts: {uri: string}) {
   throw new Error('TODO')
 }
 
-export async function saveImageToAlbum(_opts: {uri: string; album: string}) {
-  // TODO
-  throw new Error('TODO')
+/**
+ * Saves an image to the user's device. Uses the CDN's `download` preset
+ * which uses the JPEG version with the Content-Disposition header set to
+ * `attachment; filename=<filename>`. On native this saves to the media library;
+ * on web it triggers a browser download.
+ */
+export async function saveImageToMediaLibrary({uri}: {uri: string}) {
+  const downloadUri = convertCdnPreset(uri, 'download')
+  const segments = downloadUri.split('/')
+  const filename = `bluesky-${segments.at(-1)}.jpg`
+  downloadUrl(downloadUri, filename)
 }
 
 export async function getImageDim(path: string): Promise<Dimensions> {
@@ -69,20 +76,34 @@ interface DoResizeOpts {
   maxSize: number
 }
 
-async function doResize(dataUri: string, opts: DoResizeOpts): Promise<RNImage> {
+async function doResize(
+  dataUri: string,
+  opts: DoResizeOpts,
+): Promise<PickerImage> {
   let newDataUri
 
-  for (let i = 0; i <= 10; i++) {
-    newDataUri = await createResizedImage(dataUri, {
+  let minQualityPercentage = 0
+  let maxQualityPercentage = 101 //exclusive
+
+  while (maxQualityPercentage - minQualityPercentage > 1) {
+    const qualityPercentage = Math.round(
+      (maxQualityPercentage + minQualityPercentage) / 2,
+    )
+    const tempDataUri = await createResizedImage(dataUri, {
       width: opts.width,
       height: opts.height,
-      quality: 1 - i * 0.1,
+      quality: qualityPercentage / 100,
       mode: opts.mode,
     })
-    if (getDataUriSize(newDataUri) < opts.maxSize) {
-      break
+
+    if (getDataUriSize(tempDataUri) < opts.maxSize) {
+      minQualityPercentage = qualityPercentage
+      newDataUri = tempDataUri
+    } else {
+      maxQualityPercentage = qualityPercentage
     }
   }
+
   if (!newDataUri) {
     throw new Error('Failed to compress image')
   }
@@ -142,22 +163,25 @@ function createResizedImage(
 
 export async function saveBytesToDisk(
   filename: string,
-  bytes: Uint8Array,
+  bytes: Uint8Array<ArrayBuffer>,
   type: string,
 ) {
   const blob = new Blob([bytes], {type})
   const url = URL.createObjectURL(blob)
-  await downloadUrl(url, filename)
+  downloadUrl(url, filename)
   // Firefox requires a small delay
   setTimeout(() => URL.revokeObjectURL(url), 100)
   return true
 }
 
-async function downloadUrl(href: string, filename: string) {
+function downloadUrl(href: string, filename: string) {
   const a = document.createElement('a')
   a.href = href
   a.download = filename
+  a.style.display = 'none'
+  document.body.appendChild(a)
   a.click()
+  document.body.removeChild(a)
 }
 
 export async function safeDeleteAsync() {

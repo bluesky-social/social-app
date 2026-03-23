@@ -1,4 +1,5 @@
 import ExpoModulesCore
+import React
 import UIKit
 
 class SheetView: ExpoView, UISheetPresentationControllerDelegate {
@@ -6,6 +7,9 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   private var sheetVc: SheetViewController?
   private var innerView: UIView?
   private var touchHandler: RCTTouchHandler?
+
+  // Native content height observation (eliminates JS bridge round-trip)
+  private var contentHeightObservation: NSKeyValueObservation?
 
   // Events
   private let onAttemptDismiss = EventDispatcher()
@@ -22,9 +26,11 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   }
 
   // React view props
+  var fullHeight = false
   var preventDismiss = false
   var preventExpansion = false
   var cornerRadius: CGFloat?
+  var sourceViewTag: Int?
   var minHeight = 0.0
   var maxHeight: CGFloat! {
     didSet {
@@ -66,7 +72,6 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
       }
     }
   }
-  private var prevLayoutDetentIdentifier: UISheetPresentationController.Detent.Identifier?
 
   // MARK: - Lifecycle
 
@@ -104,6 +109,8 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   }
 
   private func destroy() {
+    self.contentHeightObservation?.invalidate()
+    self.contentHeightObservation = nil
     self.isClosing = false
     self.isOpen = false
     self.sheetVc = nil
@@ -126,7 +133,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     }
 
     let sheetVc = SheetViewController()
-    sheetVc.setDetents(contentHeight: self.clampHeight(contentHeight), preventExpansion: self.preventExpansion)
+    sheetVc.setDetents(contentHeight: self.clampHeight(contentHeight), preventExpansion: self.preventExpansion, fullHeight: self.fullHeight)
     if let sheet = sheetVc.sheetPresentationController {
       sheet.delegate = self
       sheet.preferredCornerRadius = self.cornerRadius
@@ -134,8 +141,20 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     }
     sheetVc.view.addSubview(innerView)
 
+    if #available(iOS 26.0, *),
+       let tag = self.sourceViewTag,
+       let bridge = self.appContext?.reactBridge,
+       let sourceView = bridge.uiManager.view(forReactTag: NSNumber(value: tag)) {
+      sheetVc.preferredTransition = .zoom { _ in
+        return sourceView
+      }
+    }
+
     self.sheetVc = sheetVc
     self.isOpening = true
+    if !self.fullHeight {
+      self.startObservingContentHeight()
+    }
 
     rvc.present(sheetVc, animated: true) { [weak self] in
       self?.isOpening = false
@@ -143,20 +162,42 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     }
   }
 
-  func updateLayout() {
-    if self.prevLayoutDetentIdentifier == self.selectedDetentIdentifier,
-       let contentHeight = self.innerView?.subviews.first?.frame.size.height {
-      self.sheetVc?.updateDetents(contentHeight: self.clampHeight(contentHeight),
-                                  preventExpansion: self.preventExpansion)
+  // Observe the content view's bounds via KVO so that height changes are detected
+  // purely on the native side, without a JS bridge round-trip through onLayout.
+  // Calls updateDetents directly with the observed height rather than going through
+  // updateLayout(), which has a prevLayoutDetentIdentifier guard that can block
+  // legitimate content-driven updates when detent identifiers drift during animations.
+  private func startObservingContentHeight() {
+    self.contentHeightObservation?.invalidate()
+
+    guard let contentView = self.innerView?.subviews.first else { return }
+
+    self.contentHeightObservation = contentView.observe(
+      \.bounds,
+      options: [.old, .new]
+    ) { [weak self] _, change in
+      guard let self = self,
+            (self.isOpen || self.isOpening) && !self.isClosing,
+            let oldBounds = change.oldValue,
+            let newBounds = change.newValue,
+            oldBounds.height != newBounds.height,
+            newBounds.height > 0 else { return }
+      let clampedHeight = self.clampHeight(newBounds.height)
+      self.sheetVc?.updateDetents(contentHeight: clampedHeight, preventExpansion: self.preventExpansion)
       self.selectedDetentIdentifier = self.sheetVc?.getCurrentDetentIdentifier()
     }
-    self.prevLayoutDetentIdentifier = self.selectedDetentIdentifier
   }
 
   func dismiss() {
+    guard let sheetVc = self.sheetVc else {
+      return
+    }
+
     self.isClosing = true
-    self.sheetVc?.dismiss(animated: true) { [weak self] in
-      self?.destroy()
+    DispatchQueue.main.async {
+      sheetVc.dismiss(animated: true) { [weak self] in
+        self?.destroy()
+      }
     }
   }
 

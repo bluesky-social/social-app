@@ -1,9 +1,17 @@
-import {Dimensions, StyleProp, StyleSheet, TextStyle} from 'react-native'
+import {
+  Dimensions,
+  type StyleProp,
+  StyleSheet,
+  type TextStyle,
+} from 'react-native'
 
-import {isWeb} from '#/platform/detection'
-import {Theme, TypographyVariant} from './ThemeContext'
+import {IS_WEB} from '#/env'
+import {type Theme, type TypographyVariant} from './ThemeContext'
 
 // 1 is lightest, 2 is light, 3 is mid, 4 is dark, 5 is darkest
+/**
+ * @deprecated use ALF colors instead
+ */
 export const colors = {
   white: '#ffffff',
   black: '#000000',
@@ -63,6 +71,9 @@ export const gradients = {
   blueDark: {start: '#5F45E0', end: colors.blue3}, // avis, banner
 }
 
+/**
+ * @deprecated use atoms from `#/alf`
+ */
 export const s = StyleSheet.create({
   // helpers
   footerSpacer: {height: 100},
@@ -175,7 +186,7 @@ export const s = StyleSheet.create({
   // dimensions
   w100pct: {width: '100%'},
   h100pct: {height: '100%'},
-  hContentRegion: isWeb ? {minHeight: '100%'} : {height: '100%'},
+  hContentRegion: IS_WEB ? {minHeight: '100%'} : {height: '100%'},
   window: {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,

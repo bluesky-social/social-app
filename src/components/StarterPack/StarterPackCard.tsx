@@ -1,9 +1,10 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyGraphStarterpack, AtUri} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -77,7 +78,7 @@ export function Card({
         <View style={[a.flex_1]}>
           <Text
             emoji
-            style={[a.text_md, a.font_bold, a.leading_snug]}
+            style={[a.text_md, a.font_semi_bold, a.leading_snug]}
             numberOfLines={2}>
             {record.name}
           </Text>
@@ -97,7 +98,7 @@ export function Card({
         </Text>
       ) : null}
       {!!joinedAllTimeCount && joinedAllTimeCount >= 50 && (
-        <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+        <Text style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>
           <Trans comment="Number of users (always at least 50) who have joined Bluesky using a specific starter pack">
             <Plural value={joinedAllTimeCount} other="# users have" /> joined!
           </Trans>
@@ -114,7 +115,7 @@ export function useStarterPackLink({
 }) {
   const {_} = useLingui()
   const qc = useQueryClient()
-  const {rkey, handleOrDid} = React.useMemo(() => {
+  const {rkey, handleOrDid} = useMemo(() => {
     const rkey = new AtUri(view.uri).rkey
     const {creator} = view
     return {rkey, handleOrDid: creator.handle || creator.did}
@@ -126,7 +127,10 @@ export function useStarterPackLink({
 
   return {
     to: `/starter-pack/${handleOrDid}/${rkey}`,
-    label: AppBskyGraphStarterpack.isRecord(view.record)
+    label: bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+      view.record,
+      AppBskyGraphStarterpack.isRecord,
+    )
       ? _(msg`Navigate to ${view.record.name}`)
       : _(msg`Navigate to starter pack`),
     precache,
@@ -144,19 +148,23 @@ export function Link({
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const {record} = starterPack
-  const {rkey, handleOrDid} = React.useMemo(() => {
+  const {rkey, handleOrDid} = useMemo(() => {
     const rkey = new AtUri(starterPack.uri).rkey
     const {creator} = starterPack
     return {rkey, handleOrDid: creator.handle || creator.did}
   }, [starterPack])
 
-  if (!AppBskyGraphStarterpack.isRecord(record)) {
+  if (
+    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+      record,
+      AppBskyGraphStarterpack.isRecord,
+    )
+  ) {
     return null
   }
 
   return (
     <BaseLink
-      action="push"
       to={`/starter-pack/${handleOrDid}/${rkey}`}
       label={_(msg`Navigate to ${record.name}`)}
       onPress={() => {
@@ -192,7 +200,7 @@ export function Embed({
       <Link starterPack={starterPack}>
         <Image
           source={imageUri}
-          style={[a.w_full, {aspectRatio: 1.91}]}
+          style={[a.w_full, a.aspect_card]}
           accessibilityIgnoresInvertColors={true}
         />
         <View style={[a.px_sm, a.py_md]}>
