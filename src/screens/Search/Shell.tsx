@@ -12,7 +12,11 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import Animated, {FadeInUp, FadeOutDown} from 'react-native-reanimated'
+import Animated, {
+  Easing,
+  FadeInDown,
+  FadeOutDown,
+} from 'react-native-reanimated'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -432,8 +436,8 @@ export function SearchScreenShell({
 
         {showAutocomplete && !fixedParams && (
           <Animated.View
-            entering={native(FadeInUp.duration(200))}
-            exiting={native(FadeOutDown.duration(150))}
+            entering={native(FadeInDown.easing(Easing.out(Easing.cubic)))}
+            exiting={native(FadeOutDown.easing(Easing.out(Easing.cubic)))}
             style={[a.absolute, a.inset_0, t.atoms.bg]}
             accessibilityViewIsModal
             accessibilityRole="list"
