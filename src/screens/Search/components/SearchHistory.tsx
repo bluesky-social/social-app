@@ -1,15 +1,15 @@
-import {Pressable, ScrollView, View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import {moderateProfile, type ModerationOpts} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {createHitslop, HITSLOP_10} from '#/lib/constants'
+import {createHitslop} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import * as Layout from '#/components/Layout'
@@ -35,7 +35,6 @@ export function SearchHistory({
   onRemoveProfileClick: (profile: bsky.profile.AnyProfileView) => void
 }) {
   const ax = useAnalytics()
-  const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
 
   return (
@@ -86,31 +85,19 @@ export function SearchHistory({
         )}
 
         {searchHistory.length > 0 && (
-          <View style={[a.px_lg, a.pt_sm]}>
+          <View style={[a.pt_sm]}>
             {searchHistory.slice(0, 5).map((historyItem, index) => (
-              <View key={index} style={[a.flex_row, a.align_center]}>
-                <Pressable
-                  accessibilityRole="button"
-                  onPress={() => {
-                    ax.metric('search:query', {
-                      source: 'history',
-                    })
-                    onItemClick(historyItem)
-                  }}
-                  hitSlop={HITSLOP_10}
-                  style={[a.flex_1, a.py_sm]}>
-                  <Text style={[a.text_md]}>{historyItem}</Text>
-                </Pressable>
-                <Button
-                  label={l`Remove ${historyItem}`}
-                  onPress={() => onRemoveItemClick(historyItem)}
-                  size="small"
-                  variant="ghost"
-                  color="secondary"
-                  shape="round">
-                  <ButtonIcon icon={XIcon} />
-                </Button>
-              </View>
+              <RecentSearchItem
+                key={index}
+                historyItem={historyItem}
+                onPress={() => {
+                  ax.metric('search:query', {
+                    source: 'history',
+                  })
+                  onItemClick(historyItem)
+                }}
+                onRemove={() => onRemoveItemClick(historyItem)}
+              />
             ))}
           </View>
         )}
@@ -183,6 +170,52 @@ function RecentProfileItem({
             width: 18,
           },
         ]}>
+        <ButtonIcon icon={XIcon} />
+      </Button>
+    </View>
+  )
+}
+
+function RecentSearchItem({
+  onPress,
+  onRemove,
+  historyItem,
+}: {
+  onPress: () => void
+  onRemove: () => void
+  historyItem: string
+}) {
+  const {t: l} = useLingui()
+  const t = useTheme()
+
+  return (
+    <View style={[a.flex_row, a.align_center]}>
+      <Button
+        label={l`Search for ${historyItem}`}
+        onPress={onPress}
+        style={[a.flex_1]}>
+        {({hovered, focused, pressed}) => (
+          <View
+            style={[
+              a.flex_1,
+              a.px_xl,
+              a.py_md,
+              (hovered || focused || pressed) && t.atoms.bg_contrast_25,
+            ]}>
+            <Text emoji style={[a.text_md, a.leading_snug]}>
+              {historyItem}
+            </Text>
+          </View>
+        )}
+      </Button>
+      <Button
+        label={l`Remove ${historyItem}`}
+        onPress={() => onRemove}
+        size="small"
+        variant="ghost"
+        color="secondary"
+        shape="round"
+        style={[a.absolute, {right: 16}, a.bg_transparent]}>
         <ButtonIcon icon={XIcon} />
       </Button>
     </View>
