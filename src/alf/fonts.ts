@@ -1,4 +1,5 @@
 import {type TextStyle} from 'react-native'
+import {web} from '@bsky.app/alf'
 
 import {IS_ANDROID, IS_WEB} from '#/env'
 import {type Device, device} from '#/storage'
@@ -77,10 +78,13 @@ export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
     }
 
     /**
-     * Disable contextual alternates in Inter
+     * Disable contextual alternates and emoji overrides in Inter
      * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant}
      */
-    style.fontVariant = (style.fontVariant || []).concat('no-contextual')
+    style.fontVariant = (style.fontVariant || []).concat(
+      'no-contextual',
+      web('unicode'),
+    )
   } else {
     // fallback families only supported on web
     if (IS_WEB) {
