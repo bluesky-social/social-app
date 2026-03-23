@@ -1,8 +1,7 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -91,7 +90,7 @@ function ListsContent({
   onRemove,
 }: Omit<UserAddRemoveListsDialogProps, 'control'>) {
   const control = Dialog.useDialogContext()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const {
     data,
@@ -144,7 +143,7 @@ function ListsContent({
         <Trans>Update {sanitizeDisplayName(displayName)} in Lists</Trans>
       </Text>
       <Button
-        label={_(msg`Close`)}
+        label={l`Close`}
         onPress={onClose}
         variant="ghost"
         color="secondary"
@@ -200,7 +199,7 @@ function ListItem({
   onAdd?: (listUri: string) => void
   onRemove?: (listUri: string) => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const queryClient = useQueryClient()
   const {currentAccount} = useSession()
@@ -212,7 +211,7 @@ function ListItem({
   const {mutate: addMembership, isPending: isPendingAdd} =
     useListMembershipAddMutation({
       onSuccess: data => {
-        Toast.show(_(msg`Added to list`))
+        Toast.show(l`Added to list`)
         onAdd?.(list.uri)
         updateListMembershipOptimistically({
           queryClient,
@@ -230,14 +229,14 @@ function ListItem({
         if (!isNetworkError(err)) {
           logger.error('Failed to add to list', {safeMessage: err})
         }
-        Toast.show(_(msg`Failed to add to list`), {type: 'error'})
+        Toast.show(l`Failed to add to list`, {type: 'error'})
       },
     })
 
   const {mutate: removeMembership, isPending: isPendingRemove} =
     useListMembershipRemoveMutation({
       onSuccess: () => {
-        Toast.show(_(msg`Removed from list`))
+        Toast.show(l`Removed from list`)
         onRemove?.(list.uri)
         removeListMembershipOptimistically({
           queryClient,
@@ -249,7 +248,7 @@ function ListItem({
         if (!isNetworkError(err)) {
           logger.error('Failed to remove from list', {safeMessage: err})
         }
-        Toast.show(_(msg`Failed to remove from list`), {type: 'error'})
+        Toast.show(l`Failed to remove from list`, {type: 'error'})
       },
     })
 
@@ -318,7 +317,7 @@ function ListItem({
       </View>
       <Button
         testID={`user-${handle}-addBtn`}
-        label={isMember ? _(msg`Remove`) : _(msg`Add`)}
+        label={isMember ? l`Remove` : l`Add`}
         onPress={handleToggleMembership}
         disabled={isPending}
         size="tiny"
