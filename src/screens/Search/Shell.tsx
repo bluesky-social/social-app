@@ -37,13 +37,21 @@ import {
   type Params,
   parseSearchQuery,
 } from '#/screens/Search/utils'
-import {atoms as a, native, tokens, useBreakpoints, useTheme, web} from '#/alf'
+import {
+  atoms as a,
+  native,
+  platform,
+  tokens,
+  useBreakpoints,
+  useTheme,
+  web,
+} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {SearchInput} from '#/components/forms/SearchInput'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_WEB} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {account, useStorage} from '#/storage'
 import type * as bsky from '#/types/bsky'
 import {AutocompleteResults} from './components/AutocompleteResults'
@@ -307,6 +315,15 @@ export function SearchScreenShell({
     }
   }, [setShowAutocomplete])
 
+  const onSearchInputBlur = useCallback(() => {
+    // bind to focus state on native
+    // on web this doesn't work because of focus management
+    // which would render the autocomplete results uninteractable
+    if (IS_NATIVE) {
+      setShowAutocomplete(false)
+    }
+  }, [])
+
   const focusSearchInput = useCallback(
     (tab?: TabParam) => {
       textInput.current?.focus()
@@ -377,6 +394,7 @@ export function SearchScreenShell({
                     ref={textInput}
                     value={searchText}
                     onFocus={onSearchInputFocus}
+                    onBlur={onSearchInputBlur}
                     onChangeText={onChangeText}
                     onClearText={onPressClearQuery}
                     onSubmitEditing={onSubmit('typed')}
@@ -424,24 +442,30 @@ export function SearchScreenShell({
       </View>
 
       <View style={[a.flex_1, a.relative]}>
-        <SearchScreenInner
-          key={params.lang}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          query={query}
-          queryWithParams={queryWithParams}
-          headerHeight={headerHeight}
-          focusSearchInput={focusSearchInput}
-        />
+        <View style={[web(showAutocomplete && a.hidden)]}>
+          <SearchScreenInner
+            key={params.lang}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            query={query}
+            queryWithParams={queryWithParams}
+            headerHeight={headerHeight}
+            focusSearchInput={focusSearchInput}
+          />
+        </View>
 
         {showAutocomplete && !fixedParams && (
           <Animated.View
             entering={native(FadeInDown.easing(Easing.out(Easing.cubic)))}
             exiting={native(FadeOutDown.easing(Easing.out(Easing.cubic)))}
-            style={[a.absolute, a.inset_0, t.atoms.bg]}
-            accessibilityViewIsModal
-            accessibilityRole="list"
-            aria-modal>
+            style={[
+              t.atoms.bg,
+              platform({
+                web: [a.flex_1],
+                native: [a.absolute, a.inset_0],
+              }),
+            ]}
+            accessibilityViewIsModal>
             {searchText.length > 0 ? (
               <AutocompleteResults
                 isAutocompleteFetching={isAutocompleteFetching}

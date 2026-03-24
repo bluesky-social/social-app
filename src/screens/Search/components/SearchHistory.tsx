@@ -198,7 +198,7 @@ function RecentSearchItem({
           <View
             style={[
               a.flex_1,
-              a.px_xl,
+              a.px_lg,
               a.py_md,
               (hovered || focused || pressed) && t.atoms.bg_contrast_25,
             ]}>
