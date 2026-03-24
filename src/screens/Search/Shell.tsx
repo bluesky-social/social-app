@@ -268,6 +268,7 @@ export function SearchScreenShell({
 
   const handleProfileClick = useCallback(
     (profile: bsky.profile.AnyProfileView) => {
+      setSearchText('')
       unstableCacheProfileView(queryClient, profile)
       // Slight delay to avoid updating during push nav animation.
       setTimeout(() => {
@@ -442,7 +443,7 @@ export function SearchScreenShell({
       </View>
 
       <View style={[a.flex_1, a.relative]}>
-        <View style={[web(showAutocomplete && a.hidden)]}>
+        <View style={[a.flex_1, web(showAutocomplete && a.hidden)]}>
           <SearchScreenInner
             key={params.lang}
             activeTab={activeTab}
@@ -458,13 +459,10 @@ export function SearchScreenShell({
           <Animated.View
             entering={native(FadeInDown.easing(Easing.out(Easing.cubic)))}
             exiting={native(FadeOutDown.easing(Easing.out(Easing.cubic)))}
-            style={[
-              t.atoms.bg,
-              platform({
-                web: [a.flex_1],
-                native: [a.absolute, a.inset_0],
-              }),
-            ]}
+            style={platform({
+              web: [a.flex_1],
+              native: [t.atoms.bg, a.absolute, a.inset_0],
+            })}
             accessibilityViewIsModal>
             {searchText.length > 0 ? (
               <AutocompleteResults
