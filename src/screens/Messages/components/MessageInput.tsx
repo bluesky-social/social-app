@@ -157,7 +157,7 @@ export function MessageInput({
           a.pb_lg,
           IS_LIQUID_GLASS
             ? [animatedContainerStyle]
-            : [a.px_sm, a.pt_xs, t.atoms.bg],
+            : [a.px_sm, a.pt_xs, !IS_IOS && t.atoms.bg],
         ]}>
         {children}
         <GlassContainer style={[a.flex_row, a.align_end, a.gap_sm]}>
