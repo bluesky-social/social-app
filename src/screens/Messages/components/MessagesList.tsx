@@ -359,26 +359,6 @@ export function MessagesList({
     [agent, convoState, embedUri, getPost, hasScrolled, setHasScrolled],
   )
 
-  // -- List layout changes (opening emoji keyboard, etc.)
-  // const onListLayout = useCallback(
-  //   (e: LayoutChangeEvent) => {
-  //     layoutHeight.set(e.nativeEvent.layout.height)
-
-  //     if (IS_WEB || !keyboardIsOpening.get()) {
-  //       flatListRef.current?.scrollToEnd({
-  //         animated: !layoutScrollWithoutAnimation.get(),
-  //       })
-  //       layoutScrollWithoutAnimation.set(false)
-  //     }
-  //   },
-  //   [
-  //     flatListRef,
-  //     keyboardIsOpening,
-  //     layoutScrollWithoutAnimation,
-  //     layoutHeight,
-  //   ],
-  // )
-
   const scrollToEndOnPress = useCallback(() => {
     flatListRef.current?.scrollToOffset({
       offset: prevContentHeight.current,
