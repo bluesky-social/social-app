@@ -55,7 +55,7 @@ import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
 import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
-import {atoms as a} from '#/alf'
+import {android, atoms as a, native, platform, tokens} from '#/alf'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
@@ -432,13 +432,18 @@ export function MessagesList({
               <MaybeLoader isLoading={convoState.isFetchingHistory} />
             }
             renderScrollComponent={renderScrollComponent}
+            style={android({marginBottom: bottomInset})}
           />
         </ScrollProvider>
         <KeyboardStickyView
-          style={[a.absolute, a.bottom_0, a.left_0, a.right_0]}
+          style={native([a.absolute, a.bottom_0, a.left_0, a.right_0])}
           onLayout={onInputLayout}
           offset={{
-            closed: -bottomInset,
+            closed: platform({
+              native: tokens.space.lg - bottomInset,
+              android: -bottomInset,
+              default: 0,
+            }),
             opened: 0,
           }}>
           <ScrollEdgeEffect edge="bottom">
@@ -505,8 +510,19 @@ function ChatScrollComponent({
   const scrollEdgeRef = useScrollEdgeEffectRef()
   const {bottom: bottomInset} = useSafeAreaInsets()
 
+  const offset = platform({
+    ios: bottomInset - tokens.space.lg,
+    android: bottomInset,
+    default: 0,
+  })
+
+  const inputOffset = platform({
+    ios: bottomInset - tokens.space.lg,
+    default: 0,
+  })
+
   const extraContentPadding = useDerivedValue(
-    () => inputHeight.get() + bottomInset,
+    () => inputHeight.get() + inputOffset,
   )
 
   return (
@@ -516,7 +532,7 @@ function ChatScrollComponent({
       keyboardDismissMode="interactive"
       keyboardLiftBehavior="always"
       extraContentPadding={extraContentPadding}
-      offset={bottomInset}
+      offset={offset}
       {...props}
     />
   )

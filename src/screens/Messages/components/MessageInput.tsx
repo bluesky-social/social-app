@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react'
-import {Pressable, TextInput, useWindowDimensions} from 'react-native'
+import {Pressable, TextInput, useWindowDimensions, View} from 'react-native'
 import {
   useFocusedInputHandler,
   useReanimatedKeyboardAnimation,
@@ -31,7 +31,7 @@ import {atoms as a, platform, tokens, useTheme} from '#/alf'
 import {GlassView} from '#/components/GlassView'
 import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import * as Toast from '#/components/Toast'
-import {IS_IOS, IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_WEB} from '#/env'
 import {useExtractEmbedFromFacets} from './MessageInputEmbed'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
@@ -58,7 +58,7 @@ export function MessageInput({
   const {getDraft, clearDraft} = useMessageDraft()
 
   // Input layout
-  const {top: topInset} = useSafeAreaInsets()
+  const {top: topInset, bottom: bottomInset} = useSafeAreaInsets()
   const {height: windowHeight} = useWindowDimensions()
   const {height: keyboardHeight, progress} = useReanimatedKeyboardAnimation()
   const maxHeight = useSharedValue<undefined | number>(undefined)
@@ -143,108 +143,126 @@ export function MessageInput({
     paddingHorizontal: interpolate(
       progress.get(),
       [0, 1],
-      [tokens.space.xl, tokens.space.sm],
+      [bottomInset, tokens.space.sm],
     ),
   }))
 
   const submitDisabled = needsEmailVerification || message.trim().length === 0
 
   return (
-    <Animated.View
-      style={[
-        a.w_full,
-        a.pb_sm,
-        IS_LIQUID_GLASS ? [animatedContainerStyle] : [a.px_md],
-      ]}>
-      {children}
-      <GlassContainer style={[a.flex_row, a.align_end, a.gap_sm]}>
-        <GlassView
-          glassEffectStyle="regular"
-          isInteractive
-          style={[a.flex_1, a.rounded_xl, {minHeight: MIN_HEIGHT}]}
-          tintColor={t.palette.contrast_50}
-          fallbackStyle={[t.atoms.bg_contrast_50]}>
-          <AnimatedTextInput
-            nativeID={textInputId}
-            accessibilityLabel={_(msg`Message input field`)}
-            accessibilityHint={_(msg`Type your message here`)}
-            placeholder={_(msg`Message`)}
-            placeholderTextColor={t.palette.contrast_500}
-            value={message}
-            onChange={evt => {
-              // bit of a hack: iOS automatically accepts autocomplete suggestions when you tap anywhere on the screen
-              // including the button we just pressed - and this overrides clearing the input! so we watch for the
-              // next change and double make sure the input is cleared. It should *always* send an onChange event after
-              // clearing via setMessage('') that happens in onSubmit()
-              // -sfn
-              if (IS_IOS && shouldEnforceClear) {
-                setShouldEnforceClear(false)
-                setMessage('')
-                return
-              }
-              const text = evt.nativeEvent.text
-              setMessage(text)
-            }}
-            multiline={true}
-            style={[
-              {flexBasis: 'auto', minHeight: MIN_HEIGHT},
-              a.flex_shrink_0,
-              a.flex_grow,
-              a.text_md,
-              a.px_lg,
-              t.atoms.text,
-              platform({
-                android: {paddingTop: 2, paddingBottom: 3},
-                ios: {paddingTop: 10, paddingBottom: 5},
-              }),
-              animatedStyle,
-            ]}
-            verticalAlign="middle"
-            keyboardAppearance={t.scheme}
-            submitBehavior="newline"
-            ref={inputRef}
-            hitSlop={HITSLOP_10}
-            animatedProps={animatedProps}
-            editable={!needsEmailVerification}
-          />
-        </GlassView>
-        {isKeyboardVisible && (
+    <View>
+      <Animated.View
+        style={[
+          a.w_full,
+          a.pb_lg,
+          IS_LIQUID_GLASS
+            ? [animatedContainerStyle]
+            : [a.px_sm, a.pt_xs, t.atoms.bg],
+        ]}>
+        {children}
+        <GlassContainer style={[a.flex_row, a.align_end, a.gap_sm]}>
           <GlassView
+            isInteractive
             glassEffectStyle="regular"
-            style={[a.rounded_full]}
-            tintColor={
-              submitDisabled ? t.palette.contrast_100 : t.palette.primary_500
-            }
-            fallbackStyle={{
-              backgroundColor: submitDisabled
-                ? t.palette.contrast_100
-                : t.palette.primary_500,
-            }}>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Send message`)}
-              accessibilityHint=""
-              hitSlop={HITSLOP_10}
+            style={[a.flex_1, a.rounded_xl, {minHeight: MIN_HEIGHT}]}
+            tintColor={t.palette.contrast_50}
+            fallbackStyle={[t.atoms.bg_contrast_50]}>
+            <AnimatedTextInput
+              nativeID={textInputId}
+              accessibilityLabel={_(msg`Message input field`)}
+              accessibilityHint={_(msg`Type your message here`)}
+              placeholder={_(msg`Message`)}
+              placeholderTextColor={t.palette.contrast_500}
+              value={message}
+              onChange={evt => {
+                // bit of a hack: iOS automatically accepts autocomplete suggestions when you tap anywhere on the screen
+                // including the button we just pressed - and this overrides clearing the input! so we watch for the
+                // next change and double make sure the input is cleared. It should *always* send an onChange event after
+                // clearing via setMessage('') that happens in onSubmit()
+                // -sfn
+                if (IS_IOS && shouldEnforceClear) {
+                  setShouldEnforceClear(false)
+                  setMessage('')
+                  return
+                }
+                const text = evt.nativeEvent.text
+                setMessage(text)
+              }}
+              multiline={true}
               style={[
-                a.rounded_full,
-                a.align_center,
-                a.justify_center,
-                {
-                  height: MIN_HEIGHT,
-                  width: MIN_HEIGHT,
-                },
+                {flexBasis: 'auto', minHeight: MIN_HEIGHT},
+                a.flex_shrink_0,
+                a.flex_grow,
+                a.text_md,
+                a.px_lg,
+                t.atoms.text,
+                platform({
+                  android: {paddingTop: 2, paddingBottom: 3},
+                  ios: {paddingTop: 10, paddingBottom: 5},
+                }),
+                animatedStyle,
               ]}
-              onPress={onSubmit}
-              disabled={submitDisabled}>
-              <PaperPlaneIcon
-                size="md"
-                fill={t.palette.white}
-                style={[a.mb_2xs]}
-              />
-            </Pressable>
+              verticalAlign="middle"
+              keyboardAppearance={t.scheme}
+              submitBehavior="newline"
+              ref={inputRef}
+              hitSlop={HITSLOP_10}
+              animatedProps={animatedProps}
+              editable={!needsEmailVerification}
+            />
           </GlassView>
-        )}
-      </GlassContainer>
-    </Animated.View>
+          {isKeyboardVisible && (
+            <GlassView
+              isInteractive
+              glassEffectStyle="regular"
+              style={[a.rounded_full]}
+              tintColor={
+                submitDisabled ? t.palette.contrast_100 : t.palette.primary_500
+              }
+              fallbackStyle={{
+                backgroundColor: submitDisabled
+                  ? t.palette.contrast_100
+                  : t.palette.primary_500,
+              }}>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={_(msg`Send message`)}
+                accessibilityHint=""
+                hitSlop={HITSLOP_10}
+                style={[
+                  a.rounded_full,
+                  a.align_center,
+                  a.justify_center,
+                  {
+                    height: MIN_HEIGHT,
+                    width: MIN_HEIGHT,
+                  },
+                ]}
+                onPress={onSubmit}
+                disabled={submitDisabled}>
+                <PaperPlaneIcon
+                  size="md"
+                  fill={t.palette.white}
+                  style={[a.mb_2xs]}
+                />
+              </Pressable>
+            </GlassView>
+          )}
+        </GlassContainer>
+      </Animated.View>
+
+      {/* covers the gap between the keyboard and the input during keyboard animation on Android */}
+      {IS_ANDROID && (
+        <View
+          style={[
+            t.atoms.bg,
+            a.absolute,
+            a.left_0,
+            a.right_0,
+            {top: '100%', height: 200},
+          ]}
+        />
+      )}
+    </View>
   )
 }
