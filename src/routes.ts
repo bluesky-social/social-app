@@ -69,6 +69,7 @@ export const router = new Router<AllNavigatableRoutes>({
   RepostsOnRepostsNotificationSettings:
     '/settings/notifications/reposts-on-reposts',
   ActivityNotificationSettings: '/settings/notifications/activity',
+  MessageNotificationSettings: '/settings/notifications/messages',
   MiscellaneousNotificationSettings: '/settings/notifications/miscellaneous',
   FindContactsSettings: '/settings/find-contacts',
   // support

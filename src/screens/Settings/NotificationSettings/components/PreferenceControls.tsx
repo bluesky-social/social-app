@@ -13,6 +13,137 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {Divider} from '../../components/SettingsList'
 
+export function ChatPreferenceControls({
+  preference,
+}: {
+  preference?: AppBskyNotificationDefs.ChatPreference
+}) {
+  if (!preference)
+    return (
+      <View style={[a.w_full, a.pt_5xl, a.align_center]}>
+        <Loader size="xl" />
+      </View>
+    )
+
+  return <ChatInner preference={preference} />
+}
+
+function ChatInner({
+  preference,
+}: {
+  preference: AppBskyNotificationDefs.ChatPreference
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const ax = useAnalytics()
+  const {mutate} = useNotificationSettingsUpdateMutation()
+
+  const channels = useMemo(() => {
+    const arr = []
+    if (preference.push) arr.push('push')
+    return arr
+  }, [preference])
+
+  const onChangeChannels = (change: string[]) => {
+    const newPreference = {
+      ...preference,
+      push: change.includes('push'),
+    } satisfies typeof preference
+
+    ax.metric('activityPreference:changeChannels', {
+      name: 'chat',
+      push: newPreference.push,
+      list: false,
+    })
+
+    mutate({chat: newPreference})
+  }
+
+  const onChangeFilter = ([change]: string[]) => {
+    if (change !== 'all' && change !== 'accepted')
+      throw new Error('Invalid filter')
+
+    const newPreference = {
+      ...preference,
+      include: change,
+    } satisfies typeof preference
+
+    ax.metric('activityPreference:changeFilter', {name: 'chat', value: change})
+
+    mutate({chat: newPreference})
+  }
+
+  return (
+    <View style={[a.px_xl, a.pt_md, a.gap_sm]}>
+      <Toggle.Group
+        type="checkbox"
+        label={_(msg`Select your preferred notification channels`)}
+        values={channels}
+        onChange={onChangeChannels}>
+        <View style={[a.gap_sm]}>
+          <Toggle.Item
+            label={_(msg`Receive push notifications`)}
+            name="push"
+            style={[
+              a.py_xs,
+              platform({
+                native: [a.justify_between],
+                web: [a.flex_row_reverse, a.gap_sm],
+              }),
+            ]}>
+            <Toggle.LabelText
+              style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
+              <Trans>Push notifications</Trans>
+            </Toggle.LabelText>
+            <Toggle.Platform />
+          </Toggle.Item>
+        </View>
+      </Toggle.Group>
+      <Divider />
+      <Text style={[a.font_semi_bold, a.text_md]}>
+        <Trans>From</Trans>
+      </Text>
+      <Toggle.Group
+        type="radio"
+        label={_(msg`Filter who you receive notifications from`)}
+        values={[preference.include]}
+        onChange={onChangeFilter}
+        disabled={channels.length === 0}>
+        <View style={[a.gap_sm]}>
+          <Toggle.Item
+            label={_(msg`Everyone`)}
+            name="all"
+            style={[a.flex_row, a.py_xs, a.gap_sm]}>
+            <Toggle.Radio />
+            <Toggle.LabelText
+              style={[
+                channels.length > 0 && t.atoms.text,
+                a.font_normal,
+                a.text_md,
+              ]}>
+              <Trans>Everyone</Trans>
+            </Toggle.LabelText>
+          </Toggle.Item>
+          <Toggle.Item
+            label={_(msg`Accepted conversations`)}
+            name="accepted"
+            style={[a.flex_row, a.py_xs, a.gap_sm]}>
+            <Toggle.Radio />
+            <Toggle.LabelText
+              style={[
+                channels.length > 0 && t.atoms.text,
+                a.font_normal,
+                a.text_md,
+              ]}>
+              <Trans>Accepted conversations</Trans>
+            </Toggle.LabelText>
+          </Toggle.Item>
+        </View>
+      </Toggle.Group>
+    </View>
+  )
+}
+
 export function PreferenceControls({
   name,
   syncOthers,

@@ -145,6 +145,7 @@ import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import {renderMessagesSplitViewLayout} from './screens/Messages/components/splitView/MessagesSplitViewLayout'
+import {MessageNotificationSettingsScreen} from './screens/Settings/NotificationSettings/MessageNotificationSettings'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -505,6 +506,14 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => RepostsOnRepostsNotificationSettingsScreen}
         options={{
           title: title(msg`Reposts of your reposts notifications`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="MessageNotificationSettings"
+        getComponent={() => MessageNotificationSettingsScreen}
+        options={{
+          title: title(msg`Activity notifications`),
           requireAuth: true,
         }}
       />

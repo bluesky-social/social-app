@@ -64,6 +64,7 @@ export type CommonNavigatorParams = {
   LikesOnRepostsNotificationSettings: undefined
   RepostsOnRepostsNotificationSettings: undefined
   ActivityNotificationSettings: undefined
+  MessageNotificationSettings: undefined
   MiscellaneousNotificationSettings: undefined
   InterestsSettings: undefined
   AboutSettings: undefined
