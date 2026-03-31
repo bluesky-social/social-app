@@ -2,11 +2,13 @@ import {useCallback, useState} from 'react'
 import {Pressable, TextInput, useWindowDimensions, View} from 'react-native'
 import {
   useFocusedInputHandler,
+  useKeyboardHandler,
   useReanimatedKeyboardAnimation,
 } from 'react-native-keyboard-controller'
 import Animated, {
   interpolate,
   measure,
+  runOnJS,
   useAnimatedProps,
   useAnimatedRef,
   useAnimatedStyle,
@@ -20,7 +22,6 @@ import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
-import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useEmail} from '#/state/email-verification'
 import {
   useMessageDraft,
@@ -63,7 +64,6 @@ export function MessageInput({
   const {height: keyboardHeight, progress} = useReanimatedKeyboardAnimation()
   const maxHeight = useSharedValue<undefined | number>(undefined)
   const isInputScrollable = useSharedValue(false)
-  const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
 
   const [message, setMessage] = useState(getDraft)
   const inputRef = useAnimatedRef<TextInput>()
@@ -149,18 +149,33 @@ export function MessageInput({
 
   const submitDisabled = needsEmailVerification || message.trim().length === 0
 
+  const blur = useCallback(() => {
+    inputRef.current?.blur()
+  }, [inputRef])
+
+  useKeyboardHandler({
+    onEnd: evt => {
+      'worklet'
+      // small hack: interactive dismiss on Android sometimes doesn't blur the input
+      if (IS_ANDROID && evt.progress === 0) {
+        runOnJS(blur)()
+      }
+    },
+  })
+
   return (
     <View>
       <Animated.View
         style={[
           a.w_full,
-          a.pb_lg,
           IS_LIQUID_GLASS
-            ? [animatedContainerStyle]
-            : [a.px_sm, a.pt_xs, !IS_IOS && t.atoms.bg],
+            ? [animatedContainerStyle, a.pb_lg]
+            : [a.px_md, a.pt_xs, a.pb_md, !IS_IOS && t.atoms.bg],
         ]}>
         {children}
-        <GlassContainer style={[a.flex_row, a.align_end, a.gap_sm]}>
+        <GlassContainer
+          style={[a.flex_row, a.align_end, a.gap_sm]}
+          spacing={tokens.space.xs}>
           <GlassView
             isInteractive
             glassEffectStyle="regular"
@@ -211,43 +226,41 @@ export function MessageInput({
               editable={!needsEmailVerification}
             />
           </GlassView>
-          {isKeyboardVisible && (
-            <GlassView
-              isInteractive
-              glassEffectStyle="regular"
-              style={[a.rounded_full]}
-              tintColor={
-                submitDisabled ? t.palette.contrast_100 : t.palette.primary_500
-              }
-              fallbackStyle={{
-                backgroundColor: submitDisabled
-                  ? t.palette.contrast_100
-                  : t.palette.primary_500,
-              }}>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={_(msg`Send message`)}
-                accessibilityHint=""
-                hitSlop={HITSLOP_10}
-                style={[
-                  a.rounded_full,
-                  a.align_center,
-                  a.justify_center,
-                  {
-                    height: MIN_HEIGHT,
-                    width: MIN_HEIGHT,
-                  },
-                ]}
-                onPress={onSubmit}
-                disabled={submitDisabled}>
-                <PaperPlaneIcon
-                  size="md"
-                  fill={t.palette.white}
-                  style={[a.mb_2xs]}
-                />
-              </Pressable>
-            </GlassView>
-          )}
+          <GlassView
+            isInteractive
+            glassEffectStyle="regular"
+            style={[a.rounded_full]}
+            tintColor={
+              submitDisabled ? t.palette.contrast_100 : t.palette.primary_500
+            }
+            fallbackStyle={{
+              backgroundColor: submitDisabled
+                ? t.palette.contrast_100
+                : t.palette.primary_500,
+            }}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Send message`)}
+              accessibilityHint=""
+              hitSlop={HITSLOP_10}
+              style={[
+                a.rounded_full,
+                a.align_center,
+                a.justify_center,
+                {
+                  height: MIN_HEIGHT,
+                  width: MIN_HEIGHT,
+                },
+              ]}
+              onPress={onSubmit}
+              disabled={submitDisabled}>
+              <PaperPlaneIcon
+                size="md"
+                fill={t.palette.white}
+                style={[a.mb_2xs]}
+              />
+            </Pressable>
+          </GlassView>
         </GlassContainer>
       </Animated.View>
 
@@ -259,7 +272,7 @@ export function MessageInput({
             a.absolute,
             a.left_0,
             a.right_0,
-            {top: '100%', height: 200},
+            {top: '99%', height: 200},
           ]}
         />
       )}
