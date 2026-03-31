@@ -1,4 +1,4 @@
-import {useCallback, useImperativeHandle} from 'react'
+import {useCallback, useImperativeHandle, useState} from 'react'
 import {Keyboard, View} from 'react-native'
 import DatePicker from 'react-native-date-picker'
 import {msg} from '@lingui/core/macro'
@@ -28,6 +28,8 @@ export function DateField({
   value,
   inputRef,
   onChangeDate,
+  onConfirm,
+  placeholder,
   testID,
   label,
   isInvalid,
@@ -38,10 +40,21 @@ export function DateField({
   const t = useTheme()
   const control = Dialog.useDialogControl()
 
+  // The picker requires a valid date, so when value is empty we fall back to
+  // maximumDate (if set) or today. Draft state lets the picker scroll even when
+  // the parent does not echo value back (e.g. a clearable field).
+  const fallbackDate = maximumDate
+    ? toSimpleDateString(maximumDate)
+    : toSimpleDateString(new Date())
+  const [draft, setDraft] = useState(() =>
+    value === '' ? fallbackDate : toSimpleDateString(value),
+  )
+
   const onChangeInternal = useCallback(
     (date: Date | undefined) => {
       if (date) {
         const formatted = toSimpleDateString(date)
+        setDraft(formatted)
         onChangeDate(formatted)
       }
     },
@@ -53,13 +66,14 @@ export function DateField({
     () => ({
       focus: () => {
         Keyboard.dismiss()
+        setDraft(value === '' ? fallbackDate : toSimpleDateString(value))
         control.open()
       },
       blur: () => {
         control.close()
       },
     }),
-    [control],
+    [control, value, fallbackDate],
   )
 
   return (
@@ -67,8 +81,10 @@ export function DateField({
       <DateFieldButton
         label={label}
         value={value}
+        placeholder={placeholder}
         onPress={() => {
           Keyboard.dismiss()
+          setDraft(value === '' ? fallbackDate : toSimpleDateString(value))
           control.open()
         }}
         isInvalid={isInvalid}
@@ -85,7 +101,7 @@ export function DateField({
               <DatePicker
                 timeZoneOffsetInMinutes={0}
                 theme={t.scheme}
-                date={new Date(toSimpleDateString(value))}
+                date={new Date(draft)}
                 onDateChange={onChangeInternal}
                 mode="date"
                 locale={i18n.locale}
@@ -102,7 +118,10 @@ export function DateField({
             </View>
             <Button
               label={_(msg`Done`)}
-              onPress={() => control.close()}
+              onPress={() => {
+                onConfirm?.(draft)
+                control.close()
+              }}
               size="large"
               color="primary"
               variant="solid">

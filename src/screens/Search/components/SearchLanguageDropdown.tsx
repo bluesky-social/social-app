@@ -14,16 +14,24 @@ import {
 } from '#/components/icons/Chevron'
 import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Globe'
 import * as Menu from '#/components/Menu'
+import {useAnalytics} from '#/analytics'
 
 export function SearchLanguageDropdown({
+  showIcon = false,
   value,
   onChange,
 }: {
+  showIcon?: boolean
   value: string
   onChange(value: string): void
 }) {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const {appLanguage, contentLanguages, primaryLanguage} = useLanguagePrefs()
+
+  const searchV2Enabled = ax.features.enabled(ax.features.SearchV2Enable)
+  const advancedSearchV2Enabled =
+    searchV2Enabled && ax.features.enabled(ax.features.AdvancedSearchV2Enable)
 
   const languages = useMemo(() => {
     return LANGUAGES.filter(
@@ -75,14 +83,24 @@ export function SearchLanguageDropdown({
             {...props}
             label={props.accessibilityLabel}
             size="small"
-            color={platform({native: 'primary', default: 'secondary'})}
-            variant={platform({native: 'ghost', default: 'solid'})}
+            color={
+              advancedSearchV2Enabled
+                ? 'secondary'
+                : platform({native: 'primary', default: 'secondary'})
+            }
+            variant={
+              advancedSearchV2Enabled
+                ? 'solid'
+                : platform({native: 'ghost', default: 'solid'})
+            }
             style={native([
               a.py_sm,
               a.px_sm,
-              {marginRight: tokens.space.sm * -1},
+              advancedSearchV2Enabled
+                ? null
+                : {marginRight: tokens.space.sm * -1},
             ])}>
-            <ButtonIcon icon={EarthIcon} />
+            {showIcon ? <ButtonIcon icon={EarthIcon} /> : null}
             <ButtonText>{currentLanguageLabel}</ButtonText>
             <ButtonIcon
               icon={platform({

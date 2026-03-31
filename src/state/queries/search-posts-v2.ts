@@ -1,71 +1,84 @@
 import {useCallback, useMemo, useRef} from 'react'
-import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  type AppBskyFeedSearchPosts,
-  AtUri,
-  moderatePost,
-} from '@atproto/api'
+import {type AppBskyFeedSearchPostsV2, moderatePost} from '@atproto/api'
 import {
   type InfiniteData,
-  type QueryClient,
   type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent} from '#/state/session'
+import {type SearchFilters} from '#/screens/Search/searchParams'
 import {
-  didOrHandleUriMatches,
-  embedViewRecordToPostView,
-  getEmbeddedPost,
-} from './util'
+  buildSearchPostsV2Filters,
+  extractSearchPostsParams,
+} from './search-posts-params'
 
+// V2 search shares the `'search-posts'` query-key root with the original hook
+// (src/state/queries/search-posts.ts) so the shadow-cache generators there -
+// findAllPostsInQueryData / findAllProfilesInQueryData - discover V2 results
+// too. This module is only used behind the AdvancedSearchV2Enable gate; the
+// original hook is unchanged.
 const searchPostsQueryKeyRoot = 'search-posts'
-const searchPostsQueryKey = ({query, sort}: {query: string; sort?: string}) => [
-  searchPostsQueryKeyRoot,
+const searchPostsV2QueryKey = ({
   query,
   sort,
-]
+  filters,
+}: {
+  query: string
+  sort?: string
+  filters?: SearchFilters
+}) => [searchPostsQueryKeyRoot, query, sort, filters]
 
-export function useSearchPostsQuery({
+export function useSearchPostsV2Query({
   query,
   sort,
   enabled,
+  filters,
 }: {
   query: string
   sort?: 'top' | 'latest'
   enabled?: boolean
+  filters?: SearchFilters
 }) {
   const agent = useAgent()
   const moderationOpts = useModerationOpts()
   const selectArgs = useMemo(
     () => ({
-      isSearchingSpecificUser: /from:(\w+)/.test(query),
+      isSearchingSpecificUser: /from:(\w+)/.test(query) || !!filters?.author,
       moderationOpts,
     }),
-    [query, moderationOpts],
+    [query, filters?.author, moderationOpts],
   )
   const lastRun = useRef<{
-    data: InfiniteData<AppBskyFeedSearchPosts.OutputSchema>
+    data: InfiniteData<AppBskyFeedSearchPostsV2.OutputSchema>
     args: typeof selectArgs
-    result: InfiniteData<AppBskyFeedSearchPosts.OutputSchema>
+    result: InfiniteData<AppBskyFeedSearchPostsV2.OutputSchema>
   } | null>(null)
 
   return useInfiniteQuery<
-    AppBskyFeedSearchPosts.OutputSchema,
+    AppBskyFeedSearchPostsV2.OutputSchema,
     Error,
-    InfiniteData<AppBskyFeedSearchPosts.OutputSchema>,
+    InfiniteData<AppBskyFeedSearchPostsV2.OutputSchema>,
     QueryKey,
     string | undefined
   >({
-    queryKey: searchPostsQueryKey({query, sort}),
+    queryKey: searchPostsV2QueryKey({query, sort, filters}),
     queryFn: async ({pageParam}) => {
-      const res = await agent.app.bsky.feed.searchPosts({
-        q: query,
+      // Operators embedded in the query string (e.g. for back-compat links) are
+      // merged with the explicit structured filters from the advanced search
+      // dialog; see buildSearchPostsV2Filters for how the two sources combine.
+      const {q, ...embedded} = extractSearchPostsParams(query)
+      const res = await agent.app.bsky.feed.searchPostsV2({
+        ...buildSearchPostsV2Filters(embedded, filters),
+        query: q,
         limit: 25,
         cursor: pageParam,
-        sort,
+        // v2 calls the recency sort 'recent'; the rest of the app still uses the
+        // v1 'latest' label.
+        sort: sort === 'latest' ? 'recent' : sort,
+        // v2 defaults to the last 30 days.
+        allTime: sort !== 'latest',
       })
       return res.data
     },
@@ -73,7 +86,7 @@ export function useSearchPostsQuery({
     getNextPageParam: lastPage => lastPage.cursor,
     enabled: enabled ?? !!moderationOpts,
     select: useCallback(
-      (data: InfiniteData<AppBskyFeedSearchPosts.OutputSchema>) => {
+      (data: InfiniteData<AppBskyFeedSearchPostsV2.OutputSchema>) => {
         const {moderationOpts, isSearchingSpecificUser} = selectArgs
 
         /*
@@ -142,61 +155,4 @@ export function useSearchPostsQuery({
       [selectArgs],
     ),
   })
-}
-
-export function* findAllPostsInQueryData(
-  queryClient: QueryClient,
-  uri: string,
-): Generator<AppBskyFeedDefs.PostView, undefined> {
-  const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyFeedSearchPosts.OutputSchema>
-  >({
-    queryKey: [searchPostsQueryKeyRoot],
-  })
-  const atUri = new AtUri(uri)
-
-  for (const [_queryKey, queryData] of queryDatas) {
-    if (!queryData?.pages) {
-      continue
-    }
-    for (const page of queryData?.pages) {
-      for (const post of page.posts) {
-        if (didOrHandleUriMatches(atUri, post)) {
-          yield post
-        }
-
-        const quotedPost = getEmbeddedPost(post.embed)
-        if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
-          yield embedViewRecordToPostView(quotedPost)
-        }
-      }
-    }
-  }
-}
-
-export function* findAllProfilesInQueryData(
-  queryClient: QueryClient,
-  did: string,
-): Generator<AppBskyActorDefs.ProfileViewBasic, undefined> {
-  const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyFeedSearchPosts.OutputSchema>
-  >({
-    queryKey: [searchPostsQueryKeyRoot],
-  })
-  for (const [_queryKey, queryData] of queryDatas) {
-    if (!queryData?.pages) {
-      continue
-    }
-    for (const page of queryData?.pages) {
-      for (const post of page.posts) {
-        if (post.author.did === did) {
-          yield post.author
-        }
-        const quotedPost = getEmbeddedPost(post.embed)
-        if (quotedPost?.author.did === did) {
-          yield quotedPost.author
-        }
-      }
-    }
-  }
 }
