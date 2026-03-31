@@ -170,7 +170,7 @@ export function MessageInput({
           a.w_full,
           IS_LIQUID_GLASS
             ? [animatedContainerStyle, a.pb_lg]
-            : [a.px_md, a.pt_xs, a.pb_md, !IS_IOS && t.atoms.bg],
+            : [a.px_md, a.pt_sm, a.pb_md, t.atoms.bg],
         ]}>
         {children}
         <GlassContainer
@@ -264,15 +264,15 @@ export function MessageInput({
         </GlassContainer>
       </Animated.View>
 
-      {/* covers the gap between the keyboard and the input during keyboard animation on Android */}
-      {IS_ANDROID && (
+      {/* covers the gap between the keyboard and the input during keyboard animation on non-liquid glass */}
+      {!IS_LIQUID_GLASS && (
         <View
           style={[
             t.atoms.bg,
             a.absolute,
             a.left_0,
             a.right_0,
-            {top: '99%', height: 200},
+            {top: '100%', height: bottomInset + 1, marginTop: -1},
           ]}
         />
       )}
