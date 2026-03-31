@@ -6,6 +6,7 @@ import {
   useReanimatedKeyboardAnimation,
 } from 'react-native-keyboard-controller'
 import Animated, {
+  Extrapolation,
   interpolate,
   measure,
   runOnJS,
@@ -144,6 +145,10 @@ export function MessageInput({
       progress.get(),
       [0, 1],
       [bottomInset, tokens.space.sm],
+      {
+        extrapolateRight: Extrapolation.CLAMP,
+        extrapolateLeft: Extrapolation.CLAMP,
+      },
     ),
   }))
 
