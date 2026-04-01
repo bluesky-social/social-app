@@ -111,7 +111,7 @@ export function getPostLanguage(
     let results = guessLanguageSync(postText)
 
     // filter down using declared languages
-    if (candidates?.length) {
+    if (candidates.length) {
       results = results.filter(r => candidates.includes(r.language))
     }
 
