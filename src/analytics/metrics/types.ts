@@ -801,6 +801,60 @@ export type Events = {
     resultSourceLanguage: string
   }
 
+  'translate:suggestLanguage': {
+    os: Platform['OS']
+    /**
+     * The language we detected and suggested to the user as an override for the
+     * expected target language.
+     */
+    suggestedLanguage: string | undefined
+    /**
+     * This is the user's configured primary language, which is always defined.
+     */
+    expectedTargetLanguage: string
+    /**
+     * The length of the text being translated. We assume shorter texts are
+     * more likely to have inaccurate translations.
+     */
+    textLength: number
+  }
+
+  'translate:acceptSuggestion': {
+    os: Platform['OS']
+    /**
+     * The language we detected and suggested to the user as an override for the
+     * expected target language.
+     */
+    suggestedLanguage: string | undefined
+    /**
+     * This is the user's configured primary language, which is always defined.
+     */
+    expectedTargetLanguage: string
+    /**
+     * The length of the text being translated. We assume shorter texts are
+     * more likely to have inaccurate translations.
+     */
+    textLength: number
+  }
+
+  'translate:declineSuggestion': {
+    os: Platform['OS']
+    /**
+     * The language we detected and suggested to the user as an override for the
+     * expected target language.
+     */
+    suggestedLanguage: string | undefined
+    /**
+     * This is the user's configured primary language, which is always defined.
+     */
+    expectedTargetLanguage: string
+    /**
+     * The length of the text being translated. We assume shorter texts are
+     * more likely to have inaccurate translations.
+     */
+    textLength: number
+  }
+
   'postMenu:openMuteWordsDialog': {
     uri: string
     authorDid: string

@@ -88,8 +88,12 @@ export function codeToLanguageName(lang2or3: string, appLang: string): string {
 
 export function getPostLanguage(
   post: AppBskyFeedDefs.PostView,
-  enableNativeDetection?: boolean,
+  options?: {
+    enableNativeDetection?: boolean
+  },
 ): string | undefined {
+  const enableNativeDetection = options?.enableNativeDetection ?? false
+
   let candidates: string[] = getPostLanguageTags(post)
   let postText: string = ''
   if (hasProp(post.record, 'text') && typeof post.record.text === 'string') {
@@ -139,9 +143,12 @@ export function getPostLanguage(
 export function isPostInLanguage(
   post: AppBskyFeedDefs.PostView,
   targetLangs: string[],
-  enableNativeDetection?: boolean,
+  options?: {
+    enableNativeDetection?: boolean
+  },
 ): boolean {
-  const lang = getPostLanguage(post, enableNativeDetection)
+  const enableNativeDetection = options?.enableNativeDetection ?? false
+  const lang = getPostLanguage(post, {enableNativeDetection})
   if (!lang) {
     // the post has no text, so we just say "yes" for now
     return true

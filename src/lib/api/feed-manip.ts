@@ -438,7 +438,11 @@ export class FeedTuner {
       const candidateSlices = slices.filter(slice => {
         for (const item of slice.items) {
           // hard to thread feature flags down here, so just disable native detection
-          if (isPostInLanguage(item.post, preferredLangsCode2, false)) {
+          if (
+            isPostInLanguage(item.post, preferredLangsCode2, {
+              enableNativeDetection: false,
+            })
+          ) {
             return true
           }
         }

@@ -1,18 +1,18 @@
 import {useEffect, useState} from 'react'
-import {Text as RNText, View} from 'react-native'
+import {Platform, Text as RNText, View} from 'react-native'
 import {parseLanguageString} from '@atproto/syntax'
 import {guessLanguageAsync} from '@bsky.app/expo-guess-language'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import lande from 'lande'
 
 import {deviceLanguageCodes} from '#/locale/deviceLocales'
 import {code3ToCode2Strict, codeToLanguageName} from '#/locale/helpers'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {atoms as a, platform, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon} from '#/components/Button'
+import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
+import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
@@ -79,10 +79,34 @@ export function SuggestedLanguage({
   const [suggestedLanguage, setSuggestedLanguage] = useState<
     string | undefined
   >(undefined)
+  const [declined, setHasDeclined] = useState(false)
+
+  const onAccept = (language: string | null) => {
+    const textTrimmed = text.trim()
+    ax.metric('translate:acceptSuggestion', {
+      os: Platform.OS,
+      suggestedLanguage: language ?? undefined,
+      expectedTargetLanguage: langPrefs.primaryLanguage,
+      textLength: textTrimmed.length,
+    })
+    onAcceptSuggestedLanguage(language)
+  }
+
+  const onDecline = () => {
+    const textTrimmed = text.trim()
+    ax.metric('translate:declineSuggestion', {
+      os: Platform.OS,
+      suggestedLanguage,
+      expectedTargetLanguage: langPrefs.primaryLanguage,
+      textLength: textTrimmed.length,
+    })
+    setHasDeclined(true)
+  }
 
   useEffect(() => {
     // show reply prompt if there's not enough text to start using the model
     if (text.length > MIN_TEXT_LENGTH && !hasInteracted) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHasInteracted(true)
     }
   }, [text, hasInteracted])
@@ -90,26 +114,35 @@ export function SuggestedLanguage({
   useEffect(() => {
     const textTrimmed = text.trim()
 
-    const enableNativeDetection = !ax.features.enabled(
-      ax.features.NativeLanguageDetectionDisable,
+    const enableNativeDetection = ax.features.enabled(
+      ax.features.NativeLanguageDetectionEnable,
     )
 
     // Don't run the language model on small posts, the results are likely
     // to be inaccurate anyway.
     if (textTrimmed.length < MIN_TEXT_LENGTH) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSuggestedLanguage(undefined)
       return
     }
 
     const idle = onIdle(
       () =>
-        void guessLanguage(textTrimmed, enableNativeDetection).then(language =>
-          setSuggestedLanguage(language),
+        void guessLanguage(textTrimmed, enableNativeDetection).then(
+          language => {
+            ax.metric('translate:suggestLanguage', {
+              os: Platform.OS,
+              suggestedLanguage: language,
+              expectedTargetLanguage: langPrefs.primaryLanguage,
+              textLength: textTrimmed.length,
+            })
+            setSuggestedLanguage(language)
+          },
         ),
     )
 
     return () => cancelIdle(idle)
-  }, [text])
+  }, [ax, ax.features, langPrefs.primaryLanguage, suggestedLanguage, text])
 
   /*
    * We've detected a language, and the user hasn't already selected it.
@@ -126,6 +159,10 @@ export function SuggestedLanguage({
     !suggestedLanguage &&
     replyToLanguages.length &&
     !replyToLanguages.some(l => currentLanguages.includes(l))
+
+  if (declined) {
+    return null
+  }
 
   if (hasLanguageSuggestion) {
     const suggestedLanguageName = codeToLanguageName(
@@ -144,7 +181,8 @@ export function SuggestedLanguage({
           </RNText>
         }
         value={suggestedLanguage}
-        onAccept={onAcceptSuggestedLanguage}
+        onAccept={onAccept}
+        onDecline={onDecline}
       />
     )
   } else if (hasSuggestedReplyLanguage) {
@@ -165,7 +203,8 @@ export function SuggestedLanguage({
           </RNText>
         }
         value={replyToLanguages[0]}
-        onAccept={onAcceptSuggestedLanguage}
+        onAccept={onAccept}
+        onDecline={onDecline}
       />
     )
   } else {
@@ -177,13 +216,15 @@ function LanguageSuggestionButton({
   label,
   value,
   onAccept,
+  onDecline,
 }: {
   label: React.ReactNode
   value: string
   onAccept: (language: string | null) => void
+  onDecline: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <View style={[a.px_lg, a.py_sm]}>
@@ -214,12 +255,18 @@ function LanguageSuggestionButton({
 
         <Button
           size="small"
-          color="secondary"
+          color="primary_subtle"
           onPress={() => onAccept(value)}
-          label={_(msg`Accept this language suggestion`)}>
-          <ButtonText>
-            <Trans>Yes</Trans>
-          </ButtonText>
+          label={l`Accept this language suggestion`}>
+          <ButtonIcon icon={CheckIcon} size="sm" />
+        </Button>
+
+        <Button
+          size="small"
+          color="secondary"
+          onPress={() => onDecline()}
+          label={l`Reject this language suggestion`}>
+          <ButtonIcon icon={XIcon} size="sm" />
         </Button>
       </View>
     </View>

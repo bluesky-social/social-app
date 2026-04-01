@@ -16,7 +16,7 @@ export enum Features {
   DmsNewMessageComposerEnable = 'dms:new_message_composer:enable',
   KlipyGifProviderEnable = 'klipy_gif_provider:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
-  NativeLanguageDetectionDisable = 'native_language_detection:disable',
+  NativeLanguageDetectionEnable = 'native_language_detection:enable',
 
   AATest = 'aa-test',
 }
