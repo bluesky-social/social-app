@@ -265,7 +265,7 @@ function LanguageSuggestionButton({
           size="small"
           color="secondary"
           onPress={() => onDecline()}
-          label={l`Reject this language suggestion`}>
+          label={l`Decline this language suggestion`}>
           <ButtonIcon icon={XIcon} size="sm" />
         </Button>
       </View>
