@@ -137,8 +137,9 @@ export function MessagesList({
 
   const onInputLayout = useCallback(
     (event: LayoutChangeEvent) => {
-      inputHeightUI.set(event.nativeEvent.layout.height)
-      setInputHeightJS(event.nativeEvent.layout.height)
+      const inputHeight = event.nativeEvent.layout.height
+      inputHeightUI.set(inputHeight)
+      setInputHeightJS(inputHeight)
     },
     [inputHeightUI],
   )
@@ -381,7 +382,8 @@ export function MessagesList({
     <>
       <KeyboardGestureArea
         interpolator="ios"
-        offset={inputHeightJS}
+        // HACKFIX: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1419
+        offset={Math.round(inputHeightJS)}
         textInputNativeID={textInputId}
         style={[a.flex_1]}>
         {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
