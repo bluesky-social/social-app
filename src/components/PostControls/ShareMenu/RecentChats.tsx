@@ -22,7 +22,13 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
-export function RecentChats({postUri}: {postUri: string}) {
+export function RecentChats({
+  postUri,
+  onBeforePress,
+}: {
+  postUri: string
+  onBeforePress?: () => void
+}) {
   const ax = useAnalytics()
   const control = useDialogContext()
   const {currentAccount} = useSession()
@@ -32,6 +38,7 @@ export function RecentChats({postUri}: {postUri: string}) {
   const navigation = useNavigation<NavigationProp>()
 
   const onSelectChat = (convoId: string) => {
+    onBeforePress?.()
     control.close(() => {
       ax.metric('share:press:recentDm', {})
       navigation.navigate('MessagesConversation', {
