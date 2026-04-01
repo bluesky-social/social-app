@@ -183,6 +183,7 @@ export function MessageInput({
           spacing={tokens.space.xs}>
           <GlassView
             isInteractive
+            glassEffectStyle="regular"
             style={[a.flex_1, a.rounded_xl, {minHeight: MIN_HEIGHT}]}
             tintColor={t.palette.contrast_50}
             fallbackStyle={[t.atoms.bg_contrast_50]}>
@@ -232,6 +233,7 @@ export function MessageInput({
           </GlassView>
           <GlassView
             isInteractive
+            glassEffectStyle="regular"
             style={[a.rounded_full]}
             tintColor={
               submitDisabled ? t.palette.contrast_100 : t.palette.primary_500
