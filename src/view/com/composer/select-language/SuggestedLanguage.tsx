@@ -176,7 +176,7 @@ export function SuggestedLanguage({
           <RNText>
             <Trans>
               Are you writing in{' '}
-              <Text style={[a.font_bold]}>{suggestedLanguageName}</Text>?
+              <Text style={[a.font_semi_bold]}>{suggestedLanguageName}</Text>?
             </Trans>
           </RNText>
         }
@@ -196,9 +196,9 @@ export function SuggestedLanguage({
         label={
           <RNText>
             <Trans>
-              The post you're replying to was marked as being written in{' '}
+              The post you’re replying to was marked as being written in{' '}
               {suggestedLanguageName} by its author. Would you like to reply in{' '}
-              <Text style={[a.font_bold]}>{suggestedLanguageName}</Text>?
+              <Text style={[a.font_semi_bold]}>{suggestedLanguageName}</Text>?
             </Trans>
           </RNText>
         }
