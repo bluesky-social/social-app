@@ -86,7 +86,7 @@ export function SuggestedLanguage({
     ax.metric('translate:acceptSuggestion', {
       os: Platform.OS,
       suggestedLanguage: language ?? undefined,
-      expectedTargetLanguage: langPrefs.primaryLanguage,
+      currentTargetLanguages: currentLanguages,
       textLength: textTrimmed.length,
     })
     onAcceptSuggestedLanguage(language)
@@ -97,7 +97,7 @@ export function SuggestedLanguage({
     ax.metric('translate:declineSuggestion', {
       os: Platform.OS,
       suggestedLanguage,
-      expectedTargetLanguage: langPrefs.primaryLanguage,
+      currentTargetLanguages: currentLanguages,
       textLength: textTrimmed.length,
     })
     setHasDeclined(true)
@@ -133,7 +133,7 @@ export function SuggestedLanguage({
             ax.metric('translate:suggestLanguage', {
               os: Platform.OS,
               suggestedLanguage: language,
-              expectedTargetLanguage: langPrefs.primaryLanguage,
+              currentTargetLanguages: currentLanguages,
               textLength: textTrimmed.length,
             })
             setSuggestedLanguage(language)
@@ -256,6 +256,7 @@ function LanguageSuggestionButton({
         <Button
           size="small"
           color="primary_subtle"
+          shape="round"
           onPress={() => onAccept(value)}
           label={l`Accept this language suggestion`}>
           <ButtonIcon icon={CheckIcon} size="sm" />
@@ -264,6 +265,7 @@ function LanguageSuggestionButton({
         <Button
           size="small"
           color="secondary"
+          shape="round"
           onPress={() => onDecline()}
           label={l`Decline this language suggestion`}>
           <ButtonIcon icon={XIcon} size="sm" />

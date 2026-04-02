@@ -809,9 +809,9 @@ export type Events = {
      */
     suggestedLanguage: string | undefined
     /**
-     * This is the user's configured primary language, which is always defined.
+     * This is the user's current composer languages, which are always defined.
      */
-    expectedTargetLanguage: string
+    currentTargetLanguages: string[]
     /**
      * The length of the text being translated. We assume shorter texts are
      * more likely to have inaccurate translations.
@@ -827,9 +827,9 @@ export type Events = {
      */
     suggestedLanguage: string | undefined
     /**
-     * This is the user's configured primary language, which is always defined.
+     * This is the user's current composer languages, which are always defined.
      */
-    expectedTargetLanguage: string
+    currentTargetLanguages: string[]
     /**
      * The length of the text being translated. We assume shorter texts are
      * more likely to have inaccurate translations.
@@ -845,9 +845,9 @@ export type Events = {
      */
     suggestedLanguage: string | undefined
     /**
-     * This is the user's configured primary language, which is always defined.
+     * This is the user's current composer languages, which are always defined.
      */
-    expectedTargetLanguage: string
+    currentTargetLanguages: string[]
     /**
      * The length of the text being translated. We assume shorter texts are
      * more likely to have inaccurate translations.
