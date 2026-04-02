@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react'
 import {Platform, Text as RNText, View} from 'react-native'
-import {parseLanguageString} from '@atproto/syntax'
 import {guessLanguageAsync} from '@bsky.app/expo-guess-language'
 import {Trans, useLingui} from '@lingui/react/macro'
 import lande from 'lande'
