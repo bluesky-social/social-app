@@ -142,7 +142,7 @@ export function SuggestedLanguage({
     )
 
     return () => cancelIdle(idle)
-  }, [ax, ax.features, langPrefs.primaryLanguage, suggestedLanguage, text])
+  }, [ax, ax.features, currentLanguages, suggestedLanguage, text])
 
   /*
    * We've detected a language, and the user hasn't already selected it.
