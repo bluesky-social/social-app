@@ -79,7 +79,7 @@ export function SuggestedLanguage({
   const [suggestedLanguage, setSuggestedLanguage] = useState<
     string | undefined
   >(undefined)
-  const [declined, setHasDeclined] = useState(false)
+  const [hasDeclined, setHasDeclined] = useState(false)
 
   const onAccept = (language: string | null) => {
     const textTrimmed = text.trim()
@@ -126,23 +126,21 @@ export function SuggestedLanguage({
       return
     }
 
-    const idle = onIdle(
-      () =>
-        void guessLanguage(textTrimmed, enableNativeDetection).then(
-          language => {
-            ax.metric('translate:suggestLanguage', {
-              os: Platform.OS,
-              suggestedLanguage: language,
-              currentTargetLanguages: currentLanguages,
-              textLength: textTrimmed.length,
-            })
-            setSuggestedLanguage(language)
-          },
-        ),
-    )
+    const idle = onIdle(() => {
+      if (hasDeclined) return
+      void guessLanguage(textTrimmed, enableNativeDetection).then(language => {
+        ax.metric('translate:suggestLanguage', {
+          os: Platform.OS,
+          suggestedLanguage: language,
+          currentTargetLanguages: currentLanguages,
+          textLength: textTrimmed.length,
+        })
+        setSuggestedLanguage(language)
+      })
+    })
 
     return () => cancelIdle(idle)
-  }, [ax, ax.features, currentLanguages, suggestedLanguage, text])
+  }, [ax, ax.features, currentLanguages, hasDeclined, suggestedLanguage, text])
 
   /*
    * We've detected a language, and the user hasn't already selected it.
@@ -160,7 +158,7 @@ export function SuggestedLanguage({
     replyToLanguages.length &&
     !replyToLanguages.some(l => currentLanguages.includes(l))
 
-  if (declined) {
+  if (hasDeclined) {
     return null
   }
 
