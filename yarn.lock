@@ -101,17 +101,10 @@
     multiformats "^9.9.0"
     zod "^3.23.8"
 
-"@atproto/syntax@0.5.2", "@atproto/syntax@^0.5.1":
+"@atproto/syntax@0.5.2", "@atproto/syntax@^0.5.0", "@atproto/syntax@^0.5.1":
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.5.2.tgz#d4b32c9feb421ceeb5ade1fa80bc42764d51e52e"
   integrity sha512-W41szOnkppoHr0iCUrzL8gy3OD6qmDyp1UvUgmTx2oFQfgbudpz51T/gznesiCcqiUT5obfHdx4PJ+WdlEOE7Q==
-  dependencies:
-    tslib "^2.8.1"
-
-"@atproto/syntax@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.5.0.tgz#061ef538aee784f8e5fa1ea50a7f5beb4c276c9b"
-  integrity sha512-UA2DSpGdOQzUQ4gi5SH+NEJz/YR3a3Fg3y2oh+xETDSiTRmA4VhHRCojhXAVsBxUT6EnItw190C/KN+DWW90kw==
   dependencies:
     tslib "^2.8.1"
 
