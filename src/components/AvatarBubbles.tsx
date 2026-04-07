@@ -1,10 +1,12 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Person_Filled_Corner2_Rounded as PersonIcon} from '#/components/icons/Person'
+import type * as bsky from '#/types/bsky'
 
 type Props = {
-  profiles: number[]
+  profiles: bsky.profile.AnyProfileView[]
   size?: 'small' | 'medium' | 'large'
 }
 
@@ -18,17 +20,29 @@ export function AvatarBubbles({profiles, size = 'large'}: Props) {
 
   let avatars = (
     <>
-      <AvatarBubble size={76} x={-2} y={-2} style={[a.z_20]} />
-      <AvatarBubble size={76} x={42} y={42} style={[a.z_10]} />
+      <AvatarBubble
+        profile={profiles.length > 0 ? profiles[0] : undefined}
+        size={76}
+        x={-2}
+        y={-2}
+        style={[a.z_20]}
+      />
+      <AvatarBubble
+        profile={profiles.length >= 1 ? profiles[1] : undefined}
+        size={76}
+        x={42}
+        y={42}
+        style={[a.z_10]}
+      />
     </>
   )
 
   if (profiles.length === 3) {
     avatars = (
       <>
-        <AvatarBubble size={68} x={-2} y={-2} />
-        <AvatarBubble size={56} x={38} y={62} />
-        <AvatarBubble size={46} x={71} y={18} />
+        <AvatarBubble profile={profiles[0]} size={68} x={-2} y={-2} />
+        <AvatarBubble profile={profiles[1]} size={56} x={38} y={62} />
+        <AvatarBubble profile={profiles[2]} size={46} x={71} y={18} />
       </>
     )
   }
@@ -36,10 +50,10 @@ export function AvatarBubbles({profiles, size = 'large'}: Props) {
   if (profiles.length >= 4) {
     avatars = (
       <>
-        <AvatarBubble size={68} x={-2} y={-2} />
-        <AvatarBubble size={56} x={60} y={49} />
-        <AvatarBubble size={42} x={14} y={74} />
-        <AvatarBubble size={32} x={72} y={9} />
+        <AvatarBubble profile={profiles[0]} size={68} x={-2} y={-2} />
+        <AvatarBubble profile={profiles[1]} size={56} x={60} y={49} />
+        <AvatarBubble profile={profiles[2]} size={42} x={14} y={74} />
+        <AvatarBubble profile={profiles[3]} size={32} x={72} y={9} />
       </>
     )
   }
@@ -68,14 +82,19 @@ export function AvatarBubbles({profiles, size = 'large'}: Props) {
   )
 }
 
-type AvatarBubbleProps = {
+function AvatarBubble({
+  profile,
+  size,
+  style,
+  x,
+  y,
+}: {
+  profile?: bsky.profile.AnyProfileView
   size: number
   style?: StyleProp<ViewStyle>
   x: number
   y: number
-}
-
-function AvatarBubble({size, style, x, y}: AvatarBubbleProps) {
+}) {
   const t = useTheme()
 
   return (
@@ -91,16 +110,28 @@ function AvatarBubble({size, style, x, y}: AvatarBubbleProps) {
         },
         style,
       ]}>
-      <AvatarPlaceholder size={size} />
+      {profile ? (
+        <Avatar profile={profile} size={size} />
+      ) : (
+        <AvatarPlaceholder size={size} />
+      )}
     </View>
   )
 }
 
-type AvatarProps = {
+function Avatar({
+  profile,
+  size = 76,
+}: {
+  profile: bsky.profile.AnyProfileView
   size?: number
+}) {
+  return (
+    <UserAvatar avatar={profile.avatar} size={size} type="user" hideLiveBadge />
+  )
 }
 
-function AvatarPlaceholder({size = 76}: AvatarProps) {
+function AvatarPlaceholder({size = 76}: {size?: number}) {
   const t = useTheme()
 
   return (

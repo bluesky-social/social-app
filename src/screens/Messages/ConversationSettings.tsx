@@ -500,7 +500,7 @@ function SettingsHeading() {
       <View
         style={[a.px_xl, a.py_4xl, a.border_b, t.atoms.border_contrast_low]}>
         <View style={[a.align_center, a.justify_center]}>
-          <AvatarBubbles profiles={[1, 2, 3, 4]} />
+          <AvatarBubbles profiles={[]} />
         </View>
         <Text
           style={[
