@@ -1,23 +1,65 @@
-import React, {useState} from 'react'
-import {View} from 'react-native'
+import {useMemo, useState} from 'react'
+import {Pressable, View} from 'react-native'
+import {moderateProfile} from '@atproto/api'
+import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {useNavigation} from '@react-navigation/native'
 
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
+import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {type NavigationProp} from '#/lib/routes/types'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {List} from '#/view/com/util/List'
+import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button, type ButtonColor, ButtonIcon} from '#/components/Button'
 import type * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon} from '#/components/icons/ArrowBoxLeft'
 import {
   Bell2_Stroke2_Corner0_Rounded as BellIcon,
   Bell2Off_Stroke2_Corner0_Rounded as BellOffIcon,
 } from '#/components/icons/Bell2'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon} from '#/components/icons/Chevron'
 import {type Props as SVGIconProps} from '#/components/icons/common'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {EditBig_Stroke2_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
 import {Lock_Stroke2_Corner0_Rounded as LockIcon} from '#/components/icons/Lock'
+import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons/Message'
+import {
+  Person_Stroke2_Corner2_Rounded as PersonIcon,
+  PersonX_Stroke2_Corner0_Rounded as PersonXIcon,
+} from '#/components/icons/Person'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Layout from '#/components/Layout'
+import {InlineLinkText} from '#/components/Link'
+import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
+import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
+import type * as bsky from '#/types/bsky'
+
+const MEMBER_LIMIT = 50
+const ROW_SPACING = 10
+
+type Item =
+  | {
+      type: 'MEMBERS_AND_REQUESTS'
+    }
+  | {
+      type: 'ADD_MEMBERS_LINK'
+    }
+  | {
+      type: 'CHAT_MEMBER'
+      profile: bsky.profile.AnyProfileView
+      status: 'admin' | 'member' | 'invited'
+    }
 
 /**
  * TODO This is just layout for now.
@@ -36,15 +78,375 @@ export function MessagesConversationSettingsScreen() {
         </Layout.Header.Content>
         <Layout.Header.Slot />
       </Layout.Header.Outer>
-      <Layout.Center>
-        <SettingsInner />
-      </Layout.Center>
+      <SettingsInner />
     </Layout.Screen>
   )
 }
 
+function keyExtractor(item: Item) {
+  return item.type === 'CHAT_MEMBER' ? item.profile.did : item.type
+}
+
 function SettingsInner() {
-  return <SettingsHeading />
+  const initialNumToRender = useInitialNumToRender({minItemHeight: 68})
+  const bottomBarOffset = useBottomBarOffset()
+
+  const data: bsky.profile.AnyProfileView[] = []
+  const invites: string[] = []
+
+  const items = [
+    {
+      type: 'MEMBERS_AND_REQUESTS',
+    },
+    {
+      type: 'ADD_MEMBERS_LINK',
+    },
+    ...data.map((profile, index) => ({
+      type: 'CHAT_MEMBER',
+      profile,
+      status:
+        index === 0
+          ? 'admin'
+          : invites.includes(profile.did)
+            ? 'invited'
+            : 'member',
+    })),
+  ]
+
+  function renderItem({item}: {item: Item}) {
+    switch (item.type) {
+      case 'MEMBERS_AND_REQUESTS':
+        return <MembersAndRequests memberCount={data.length} requestCount={5} />
+      case 'ADD_MEMBERS_LINK':
+        return <AddMembersLink />
+      case 'CHAT_MEMBER':
+        return <Member profile={item.profile} status={item.status} />
+      default:
+        return null
+    }
+  }
+
+  return (
+    <List
+      data={items}
+      contentContainerStyle={
+        IS_NATIVE && {paddingBottom: bottomBarOffset + ROW_SPACING}
+      }
+      desktopFixedHeight
+      initialNumToRender={initialNumToRender}
+      keyExtractor={keyExtractor}
+      ListHeaderComponent={<SettingsHeading />}
+      renderItem={renderItem}
+      sideBorders={false}
+      windowSize={11}
+      onEndReachedThreshold={IS_NATIVE ? 1.5 : 0}
+    />
+  )
+}
+
+function MembersAndRequests({
+  memberCount,
+  requestCount,
+}: {
+  memberCount: number
+  requestCount: number
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  return (
+    <View style={[a.flex_row, a.justify_between, a.mx_xl, a.mt_lg, a.mb_sm]}>
+      <View style={[a.flex_row, a.align_center]}>
+        <Text style={[a.text_lg, a.font_semi_bold, t.atoms.text]}>
+          <Trans>Members</Trans>{' '}
+        </Text>
+        <Text
+          style={[
+            a.text_xs,
+            a.font_medium,
+            {color: t.palette.contrast_500},
+          ]}>{l`${memberCount}/${MEMBER_LIMIT}`}</Text>
+      </View>
+      <InlineLinkText
+        label={l`View incoming group chat requests`}
+        style={[a.text_sm, a.text_right, a.font_semi_bold]}
+        to="#">
+        {l`${plural(requestCount, {
+          one: '# request',
+          other: '# requests',
+        })}`}
+      </InlineLinkText>
+    </View>
+  )
+}
+
+function AddMembersLink() {
+  const t = useTheme()
+
+  return (
+    <SubtleHoverWrapper>
+      <View
+        style={[
+          a.mx_xl,
+          {
+            marginTop: ROW_SPACING,
+            marginBottom: ROW_SPACING,
+          },
+        ]}>
+        <Pressable
+          accessibilityRole="button"
+          style={({pressed}) => [
+            a.flex_row,
+            a.align_center,
+            a.justify_between,
+            pressed && web({outline: 'none'}),
+          ]}>
+          {({pressed}) => (
+            <>
+              <View>
+                <View style={[a.flex_row, a.align_center]}>
+                  <View
+                    style={[
+                      a.flex_row,
+                      a.align_center,
+                      a.justify_center,
+                      a.p_lg,
+                      a.rounded_full,
+                      pressed
+                        ? t.atoms.bg_contrast_100
+                        : t.atoms.bg_contrast_50,
+                      {
+                        height: 48,
+                        width: 48,
+                      },
+                    ]}>
+                    <PlusIcon style={[t.atoms.text_contrast_high]} size="sm" />
+                  </View>
+                  <Text
+                    style={[
+                      a.text_md,
+                      a.font_semi_bold,
+                      a.pl_sm,
+                      t.atoms.text,
+                    ]}>
+                    <Trans>Add members</Trans>
+                  </Text>
+                </View>
+              </View>
+              <ChevronIcon style={[t.atoms.text_contrast_medium]} size="md" />
+            </>
+          )}
+        </Pressable>
+      </View>
+    </SubtleHoverWrapper>
+  )
+}
+
+function Member({
+  profile,
+  status,
+}: {
+  profile: bsky.profile.AnyProfileView
+  status: 'admin' | 'member' | 'invited'
+}) {
+  const navigation = useNavigation<NavigationProp>()
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  const moderationOpts = useModerationOpts()
+  const moderation = useMemo(
+    () =>
+      moderationOpts ? moderateProfile(profile, moderationOpts) : undefined,
+    [profile, moderationOpts],
+  )
+
+  if (!moderation) return null
+
+  const invitedByDisplayName = 'Darrin Loeliger'
+
+  const isDeletedAccount = profile.handle === 'missing.invalid'
+  const displayName = isDeletedAccount
+    ? l`Deleted Account`
+    : sanitizeDisplayName(
+        profile.displayName || profile.handle,
+        moderation.ui('displayName'),
+      )
+
+  let invitedBy: React.ReactNode | null = (
+    <Text style={[a.text_xs, {color: t.palette.contrast_500}]}>
+      {l`Added by ${invitedByDisplayName}`}
+    </Text>
+  )
+  let statusBadge: React.ReactNode | null = <MemberMenu profile={profile} />
+  switch (status) {
+    case 'admin':
+      invitedBy = null
+      statusBadge = <StatusBadge label={l`Admin`} />
+      break
+    case 'invited':
+      invitedBy = (
+        <Text style={[a.text_xs, {color: t.palette.contrast_500}]}>
+          {l`Invited by ${invitedByDisplayName}`}
+        </Text>
+      )
+      statusBadge = <StatusBadge label={l`Invite sent`} />
+      break
+  }
+
+  return (
+    <SubtleHoverWrapper>
+      <Pressable
+        accessibilityRole="button"
+        style={[
+          a.mx_xl,
+          {
+            marginTop: ROW_SPACING,
+            marginBottom: ROW_SPACING,
+          },
+        ]}
+        onPress={() => {
+          navigation.navigate('Profile', {name: profile.did})
+        }}>
+        <View style={[a.flex_row, a.align_center, a.justify_between]}>
+          <View style={[a.flex_row, a.align_center]}>
+            <PreviewableUserAvatar
+              profile={profile}
+              size={48}
+              moderation={moderation.ui('avatar')}
+            />
+            <View style={[a.mx_sm]}>
+              <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                {displayName}
+              </Text>
+              <Text
+                style={[
+                  a.text_xs,
+                  {color: t.palette.contrast_500},
+                  web(a.pt_2xs),
+                ]}>
+                {sanitizeHandle(profile.handle, '@')}
+              </Text>
+              {invitedBy ? (
+                <Text
+                  style={[
+                    a.text_xs,
+                    {color: t.palette.contrast_500},
+                    web(a.pt_2xs),
+                  ]}>
+                  {invitedBy}
+                </Text>
+              ) : null}
+            </View>
+          </View>
+          <View>{statusBadge}</View>
+        </View>
+      </Pressable>
+    </SubtleHoverWrapper>
+  )
+}
+
+function StatusBadge({label}: {label: string}) {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.rounded_xs,
+        t.atoms.bg_contrast_50,
+        {
+          paddingTop: 3,
+          paddingBottom: 3,
+          paddingLeft: 6,
+          paddingRight: 6,
+        },
+      ]}>
+      <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
+        {label}
+      </Text>
+    </View>
+  )
+}
+
+function MemberMenu({profile}: {profile: bsky.profile.AnyProfileView}) {
+  const navigation = useNavigation<NavigationProp>()
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  const moderationOpts = useModerationOpts()
+  const moderation = useMemo(
+    () =>
+      moderationOpts ? moderateProfile(profile, moderationOpts) : undefined,
+    [profile, moderationOpts],
+  )
+
+  if (!moderation) return null
+
+  const isDeletedAccount = profile.handle === 'missing.invalid'
+  const displayName = isDeletedAccount
+    ? l`Deleted Account`
+    : sanitizeDisplayName(
+        profile.displayName || profile.handle,
+        moderation.ui('displayName'),
+      )
+
+  return (
+    <Menu.Root>
+      <Menu.Trigger label={l`Open chat member options for ${displayName}`}>
+        {({props, state}) => (
+          <Pressable
+            {...props}
+            style={[
+              a.rounded_full,
+              a.p_sm,
+              state.hovered
+                ? {
+                    backgroundColor: t.palette.contrast_0,
+                  }
+                : null,
+            ]}>
+            <EllipsisIcon style={[t.atoms.text_contrast_medium]} size="md" />
+          </Pressable>
+        )}
+      </Menu.Trigger>
+      <Menu.Outer>
+        <Menu.Group>
+          <Menu.Item
+            label={l`View ${displayName}’s profile`}
+            onPress={() => {
+              navigation.navigate('Profile', {name: profile.did})
+            }}>
+            <Menu.ItemText>
+              <Trans>Go to profile</Trans>
+            </Menu.ItemText>
+            <Menu.ItemIcon icon={PersonIcon} />
+          </Menu.Item>
+          <Menu.Item label={l`Message ${displayName}`} onPress={() => {}}>
+            <Menu.ItemText>
+              <Trans>Message</Trans>
+            </Menu.ItemText>
+            <Menu.ItemIcon icon={MessageIcon} />
+          </Menu.Item>
+        </Menu.Group>
+        <Menu.Divider />
+        <Menu.Group>
+          <Menu.Item label={l`Block ${displayName}`} onPress={() => {}}>
+            <Menu.ItemText>
+              <Trans>Block</Trans>
+            </Menu.ItemText>
+            <Menu.ItemIcon icon={PersonXIcon} />
+          </Menu.Item>
+          <Menu.Item
+            label={l`Remove ${displayName} from this group chat`}
+            onPress={() => {}}>
+            <Menu.ItemText>
+              <Trans>Remove from chat</Trans>
+            </Menu.ItemText>
+            <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
+          </Menu.Item>
+        </Menu.Group>
+      </Menu.Outer>
+    </Menu.Root>
+  )
 }
 
 function SettingsHeading() {
@@ -175,21 +577,19 @@ function SettingsHeading() {
   )
 }
 
-type SettingsButtonProps = {
-  color?: ButtonColor
-  icon: React.ComponentType<SVGIconProps>
-  label: string
-  text: string
-  onPress: () => void
-}
-
 function SettingsButton({
   color = 'secondary',
   icon,
   label,
   text,
   onPress,
-}: SettingsButtonProps) {
+}: {
+  color?: ButtonColor
+  icon: React.ComponentType<SVGIconProps>
+  label: string
+  text: string
+  onPress: () => void
+}) {
   const t = useTheme()
 
   return (
@@ -267,12 +667,13 @@ function EditNamePrompt({
   )
 }
 
-type InviteLinkPromptProps = {
+function InviteLinkPrompt({
+  control,
+  onConfirm,
+}: {
   control: Dialog.DialogOuterProps['control']
   onConfirm: () => void
-}
-
-function InviteLinkPrompt({control, onConfirm}: InviteLinkPromptProps) {
+}) {
   const {t: l} = useLingui()
 
   return (
@@ -287,12 +688,13 @@ function InviteLinkPrompt({control, onConfirm}: InviteLinkPromptProps) {
   )
 }
 
-type LockChatPromptProps = {
+function LockChatPrompt({
+  control,
+  onConfirm,
+}: {
   control: Dialog.DialogOuterProps['control']
   onConfirm: () => void
-}
-
-function LockChatPrompt({control, onConfirm}: LockChatPromptProps) {
+}) {
   const {t: l} = useLingui()
 
   return (
@@ -304,5 +706,23 @@ function LockChatPrompt({control, onConfirm}: LockChatPromptProps) {
       cancelButtonCta={l`Cancel`}
       onConfirm={onConfirm}
     />
+  )
+}
+
+function SubtleHoverWrapper({children}: React.PropsWithChildren<unknown>) {
+  const {
+    state: hover,
+    onIn: onHoverIn,
+    onOut: onHoverOut,
+  } = useInteractionState()
+
+  return (
+    <View
+      onPointerEnter={onHoverIn}
+      onPointerLeave={onHoverOut}
+      style={a.pointer}>
+      <SubtleHover hover={hover} />
+      {children}
+    </View>
   )
 }
