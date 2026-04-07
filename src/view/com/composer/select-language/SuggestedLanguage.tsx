@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {Platform, Text as RNText, View} from 'react-native'
 import {parseLanguageString} from '@atproto/syntax'
 import {guessLanguageAsync} from '@bsky.app/expo-guess-language'
@@ -76,10 +76,21 @@ export function SuggestedLanguage({
     .map(lang => cleanUpLanguage(lang))
     .filter(Boolean) as string[]
   const [hasInteracted, setHasInteracted] = useState(false)
-  const [suggestedLanguage, setSuggestedLanguage] = useState<
+
+  const [currentlySuggestedLanguage, setCurrentlySuggestedLanguage] = useState<
     string | undefined
   >(undefined)
-  const [hasDeclined, setHasDeclined] = useState(false)
+  const prevSuggLangsRef = useRef<string[]>([])
+  const declinedSuggLangsRef = useRef<string[]>([])
+
+  /*
+   * This is intentionally computed based on a ref. Since we set and clear
+   * `currentlySuggestedLanguage` this derivation is safe, but be aware of it
+   * when making changes.
+   */
+  const hasDeclined = currentlySuggestedLanguage
+    ? declinedSuggLangsRef.current.includes(currentlySuggestedLanguage)
+    : false
 
   const onAccept = (language: string | null) => {
     const textTrimmed = text.trim()
@@ -90,23 +101,28 @@ export function SuggestedLanguage({
       textLength: textTrimmed.length,
     })
     onAcceptSuggestedLanguage(language)
+    // clear
+    setCurrentlySuggestedLanguage(undefined)
   }
 
   const onDecline = () => {
     const textTrimmed = text.trim()
     ax.metric('translate:declineSuggestion', {
       os: Platform.OS,
-      suggestedLanguage,
+      suggestedLanguage: currentlySuggestedLanguage,
       currentTargetLanguages: currentLanguages,
       textLength: textTrimmed.length,
     })
-    setHasDeclined(true)
+    if (currentlySuggestedLanguage) {
+      declinedSuggLangsRef.current.push(currentlySuggestedLanguage)
+      // clear
+      setCurrentlySuggestedLanguage(undefined)
+    }
   }
 
   useEffect(() => {
     // show reply prompt if there's not enough text to start using the model
     if (text.length > MIN_TEXT_LENGTH && !hasInteracted) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHasInteracted(true)
     }
   }, [text, hasInteracted])
@@ -118,35 +134,52 @@ export function SuggestedLanguage({
       ax.features.NativeLanguageDetectionEnable,
     )
 
-    // Don't run the language model on small posts, the results are likely
-    // to be inaccurate anyway.
+    /*
+     * If text drops under the min length requirement, reset suggestions state
+     * objects.
+     *
+     * And we don't run the language model on small posts, the results are
+     * likely to be inaccurate.
+     */
     if (textTrimmed.length < MIN_TEXT_LENGTH) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setSuggestedLanguage(undefined)
+      setCurrentlySuggestedLanguage(undefined)
+      prevSuggLangsRef.current = []
+      declinedSuggLangsRef.current = []
       return
     }
 
     const idle = onIdle(() => {
-      if (hasDeclined) return
       void guessLanguage(textTrimmed, enableNativeDetection).then(language => {
+        // no result, ignore
+        if (!language) return
+        // matches the lang user has selected, do nothing
+        if (currentLanguages.includes(language)) return
+        // already suggested this language, don't emit or update state again
+        if (prevSuggLangsRef.current.includes(language)) return
+        // already declined this language, don't suggest again
+        if (declinedSuggLangsRef.current.includes(language)) return
+
         ax.metric('translate:suggestLanguage', {
           os: Platform.OS,
           suggestedLanguage: language,
           currentTargetLanguages: currentLanguages,
           textLength: textTrimmed.length,
         })
-        setSuggestedLanguage(language)
+
+        setCurrentlySuggestedLanguage(language)
+        prevSuggLangsRef.current.push(language)
       })
     })
 
     return () => cancelIdle(idle)
-  }, [ax, ax.features, currentLanguages, hasDeclined, suggestedLanguage, text])
+  }, [ax, currentLanguages, setCurrentlySuggestedLanguage, text])
 
   /*
    * We've detected a language, and the user hasn't already selected it.
    */
   const hasLanguageSuggestion =
-    suggestedLanguage && !currentLanguages.includes(suggestedLanguage)
+    currentlySuggestedLanguage &&
+    !currentLanguages.includes(currentlySuggestedLanguage)
   /*
    * We have not detected a different language, and the user is not already
    * using or has not already selected one of the languages of the post they
@@ -154,7 +187,7 @@ export function SuggestedLanguage({
    */
   const hasSuggestedReplyLanguage =
     !hasInteracted &&
-    !suggestedLanguage &&
+    !currentlySuggestedLanguage &&
     replyToLanguages.length &&
     !replyToLanguages.some(l => currentLanguages.includes(l))
 
@@ -164,7 +197,7 @@ export function SuggestedLanguage({
 
   if (hasLanguageSuggestion) {
     const suggestedLanguageName = codeToLanguageName(
-      suggestedLanguage,
+      currentlySuggestedLanguage,
       langPrefs.appLanguage,
     )
 
@@ -178,7 +211,7 @@ export function SuggestedLanguage({
             </Trans>
           </RNText>
         }
-        value={suggestedLanguage}
+        value={currentlySuggestedLanguage}
         onAccept={onAccept}
         onDecline={onDecline}
       />
