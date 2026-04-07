@@ -3,6 +3,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {logger} from '#/logger'
+import {useCreateGroupChat} from '#/state/queries/messages/create-group-chat'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {useTheme} from '#/alf'
@@ -38,9 +39,25 @@ export function NewChat({
     },
     onError: error => {
       logger.error('Failed to create chat', {safeMessage: error})
-      Toast.show(l`An issue occurred starting the chat`, {
+      Toast.show(l`An issue occurred starting the chat, please try again`, {
         type: 'error',
       })
+    },
+  })
+
+  const {mutate: createGroupChat} = useCreateGroupChat({
+    onSuccess: data => {
+      onNewChat(data.convo.id)
+      ax.metric('groupchat:create', {logContext: 'NewChatDialog'})
+    },
+    onError: error => {
+      logger.error('Failed to create groupchat', {safeMessage: error})
+      Toast.show(
+        l`An issue occurred creating the group chat, please try again`,
+        {
+          type: 'error',
+        },
+      )
     },
   })
 
@@ -52,10 +69,12 @@ export function NewChat({
   )
 
   const onCreateGroupChat = useCallback(
-    (_dids: string[], _groupName: string) => {
-      control.close()
+    (members: string[], name: string) => {
+      control.close(() => {
+        createGroupChat({members, name})
+      })
     },
-    [control],
+    [control, createGroupChat],
   )
 
   const onPress = useCallback(() => {

@@ -563,6 +563,9 @@ export type Events = {
       | 'ChatsList'
       | 'SendViaChatDialog'
   }
+  'groupchat:create': {
+    logContext: 'NewChatDialog'
+  }
   'starterPack:addUser': {
     starterPack?: string
   }
