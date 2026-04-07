@@ -24,6 +24,10 @@ const cancelIdle = globalThis.cancelIdleCallback || clearTimeout
 
 // harsher threshold for web as the model is worse
 const MIN_TEXT_LENGTH = IS_WEB ? 40 : 10
+
+// Reduce how often we attempt to guess
+const DEBOUNCE_TEXT_MS = 500
+
 // Noise floor for candidates. Device locales get a lower bar so they
 // survive into the candidate list more easily. since we discard if
 // multiple candidates are above the noise floor, we want to allow more
@@ -32,7 +36,7 @@ const MIN_CANDIDATE_CONFIDENCE = IS_WEB ? 0.0002 : 0.1
 const MIN_CANDIDATE_CONFIDENCE_DEVICE_LOCALE = IS_WEB ? 0.0002 : 0.001
 
 // Confidence required to accept the top candidate.
-// Lower bar for device locales — the user is more likely writing
+// Lower bar for device locales - the user is more likely writing
 // in a language they have installed on their device.
 const CONFIDENCE_THRESHOLD = platform({
   web: 0.97,
@@ -77,6 +81,7 @@ export function SuggestedLanguage({
     .filter(Boolean) as string[]
   const [hasInteracted, setHasInteracted] = useState(false)
 
+  const [debouncedText, setDebouncedText] = useState(text)
   const [currentlySuggestedLanguage, setCurrentlySuggestedLanguage] = useState<
     string | undefined
   >(undefined)
@@ -89,7 +94,8 @@ export function SuggestedLanguage({
    * when making changes.
    */
   const hasDeclined = currentlySuggestedLanguage
-    ? declinedSuggLangsRef.current.includes(currentlySuggestedLanguage)
+    ? // eslint-disable-next-line react-hooks/refs
+      declinedSuggLangsRef.current.includes(currentlySuggestedLanguage)
     : false
 
   const onAccept = (language: string | null) => {
@@ -121,6 +127,11 @@ export function SuggestedLanguage({
   }
 
   useEffect(() => {
+    const timer = setTimeout(() => setDebouncedText(text), DEBOUNCE_TEXT_MS)
+    return () => clearTimeout(timer)
+  }, [text])
+
+  useEffect(() => {
     // show reply prompt if there's not enough text to start using the model
     if (text.length > MIN_TEXT_LENGTH && !hasInteracted) {
       setHasInteracted(true)
@@ -128,7 +139,10 @@ export function SuggestedLanguage({
   }, [text, hasInteracted])
 
   useEffect(() => {
-    const textTrimmed = text.trim()
+    const textTrimmed = debouncedText.trim()
+
+    // Already showing a suggestion - no need to re-detect until it's resolved
+    if (currentlySuggestedLanguage) return
 
     const enableNativeDetection = ax.features.enabled(
       ax.features.NativeLanguageDetectionEnable,
@@ -172,7 +186,7 @@ export function SuggestedLanguage({
     })
 
     return () => cancelIdle(idle)
-  }, [ax, currentLanguages, setCurrentlySuggestedLanguage, text])
+  }, [ax, currentLanguages, currentlySuggestedLanguage, debouncedText])
 
   /*
    * We've detected a language, and the user hasn't already selected it.
