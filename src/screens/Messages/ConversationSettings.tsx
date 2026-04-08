@@ -1,5 +1,5 @@
 import {useMemo, useState} from 'react'
-import {Pressable, View} from 'react-native'
+import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import {moderateProfile} from '@atproto/api'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -7,10 +7,13 @@ import {useNavigation} from '@react-navigation/native'
 
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useGetConvoAvailabilityQuery} from '#/state/queries/messages/get-convo-availability'
+import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import {List} from '#/view/com/util/List'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
@@ -39,9 +42,12 @@ import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import * as Menu from '#/components/Menu'
+import {type TriggerChildProps} from '#/components/Menu/types'
 import * as Prompt from '#/components/Prompt'
 import {SubtleHover} from '#/components/SubtleHover'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
 
@@ -135,7 +141,7 @@ function SettingsInner() {
       desktopFixedHeight
       initialNumToRender={initialNumToRender}
       keyExtractor={keyExtractor}
-      ListHeaderComponent={<SettingsHeading />}
+      ListHeaderComponent={<SettingsHeader profiles={data} />}
       renderItem={renderItem}
       sideBorders={false}
       windowSize={11}
@@ -277,7 +283,9 @@ function Member({
       {l`Added by ${invitedByDisplayName}`}
     </Text>
   )
-  let statusBadge: React.ReactNode | null = <MemberMenu profile={profile} />
+  let statusBadge: React.ReactNode | null = (
+    <MemberMenu profile={profile} type="member" />
+  )
   switch (status) {
     case 'admin':
       invitedBy = null
@@ -289,7 +297,7 @@ function Member({
           {l`Invited by ${invitedByDisplayName}`}
         </Text>
       )
-      statusBadge = <StatusBadge label={l`Invite sent`} />
+      statusBadge = <MemberMenu profile={profile} type="invited" />
       break
   }
 
@@ -367,10 +375,84 @@ function StatusBadge({label}: {label: string}) {
   )
 }
 
-function MemberMenu({profile}: {profile: bsky.profile.AnyProfileView}) {
+function StatusButton({
+  label,
+  style,
+  ...rest
+}: {
+  label: string
+  style?: StyleProp<ViewStyle>
+} & TriggerChildProps['props']) {
+  const t = useTheme()
+
+  return (
+    <Pressable
+      style={[
+        a.rounded_xs,
+        t.atoms.bg_contrast_50,
+        {
+          paddingTop: 3,
+          paddingBottom: 3,
+          paddingLeft: 6,
+          paddingRight: 6,
+        },
+        style,
+      ]}
+      {...rest}>
+      <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
+        {label}
+      </Text>
+    </Pressable>
+  )
+}
+
+function MemberMenu({
+  profile,
+  type,
+}: {
+  profile: bsky.profile.AnyProfileView
+  type: 'member' | 'invited'
+}) {
   const navigation = useNavigation<NavigationProp>()
   const t = useTheme()
   const {t: l} = useLingui()
+  const ax = useAnalytics()
+  const requireEmailVerification = useRequireEmailVerification()
+
+  const {data: convoAvailability} = useGetConvoAvailabilityQuery(profile.did)
+  const {mutate: initiateConvo} = useGetConvoForMembers({
+    onSuccess: ({convo}) => {
+      ax.metric('chat:open', {logContext: 'ProfileHeader'})
+      navigation.navigate('MessagesConversation', {conversation: convo.id})
+    },
+    onError: () => {
+      Toast.show(l`Failed to create conversation`)
+    },
+  })
+
+  const onPress = () => {
+    if (!convoAvailability?.canChat) {
+      return
+    }
+
+    if (convoAvailability.convo) {
+      ax.metric('chat:open', {logContext: 'ProfileHeader'})
+      navigation.navigate('MessagesConversation', {
+        conversation: convoAvailability.convo.id,
+      })
+    } else {
+      ax.metric('chat:create', {logContext: 'ProfileHeader'})
+      initiateConvo([profile.did])
+    }
+  }
+
+  const wrappedOnPress = requireEmailVerification(onPress, {
+    instructions: [
+      <Trans key="message">
+        Before you can message another user, you must first verify your email.
+      </Trans>,
+    ],
+  })
 
   const moderationOpts = useModerationOpts()
   const moderation = useMemo(
@@ -392,21 +474,35 @@ function MemberMenu({profile}: {profile: bsky.profile.AnyProfileView}) {
   return (
     <Menu.Root>
       <Menu.Trigger label={l`Open chat member options for ${displayName}`}>
-        {({props, state}) => (
-          <Pressable
-            {...props}
-            style={[
-              a.rounded_full,
-              a.p_sm,
-              state.hovered
-                ? {
-                    backgroundColor: t.palette.contrast_0,
-                  }
-                : null,
-            ]}>
-            <EllipsisIcon style={[t.atoms.text_contrast_medium]} size="md" />
-          </Pressable>
-        )}
+        {({props, state}) =>
+          type === 'invited' ? (
+            <StatusButton
+              {...props}
+              label={l`Invited`}
+              style={[
+                state.hovered
+                  ? {
+                      backgroundColor: t.palette.contrast_0,
+                    }
+                  : null,
+              ]}
+            />
+          ) : (
+            <Pressable
+              {...props}
+              style={[
+                a.rounded_full,
+                a.p_sm,
+                state.hovered
+                  ? {
+                      backgroundColor: t.palette.contrast_0,
+                    }
+                  : null,
+              ]}>
+              <EllipsisIcon style={[t.atoms.text_contrast_medium]} size="md" />
+            </Pressable>
+          )
+        }
       </Menu.Trigger>
       <Menu.Outer>
         <Menu.Group>
@@ -420,7 +516,7 @@ function MemberMenu({profile}: {profile: bsky.profile.AnyProfileView}) {
             </Menu.ItemText>
             <Menu.ItemIcon icon={PersonIcon} />
           </Menu.Item>
-          <Menu.Item label={l`Message ${displayName}`} onPress={() => {}}>
+          <Menu.Item label={l`Message ${displayName}`} onPress={wrappedOnPress}>
             <Menu.ItemText>
               <Trans>Message</Trans>
             </Menu.ItemText>
@@ -429,27 +525,41 @@ function MemberMenu({profile}: {profile: bsky.profile.AnyProfileView}) {
         </Menu.Group>
         <Menu.Divider />
         <Menu.Group>
-          <Menu.Item label={l`Block ${displayName}`} onPress={() => {}}>
-            <Menu.ItemText>
-              <Trans>Block</Trans>
-            </Menu.ItemText>
-            <Menu.ItemIcon icon={PersonXIcon} />
-          </Menu.Item>
-          <Menu.Item
-            label={l`Remove ${displayName} from this group chat`}
-            onPress={() => {}}>
-            <Menu.ItemText>
-              <Trans>Remove from chat</Trans>
-            </Menu.ItemText>
-            <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
-          </Menu.Item>
+          {type === 'member' ? (
+            <>
+              <Menu.Item label={l`Block ${displayName}`} onPress={() => {}}>
+                <Menu.ItemText>
+                  <Trans>Block</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={PersonXIcon} />
+              </Menu.Item>
+              <Menu.Item
+                label={l`Remove ${displayName} from this group chat`}
+                onPress={() => {}}>
+                <Menu.ItemText>
+                  <Trans>Remove from chat</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
+              </Menu.Item>
+            </>
+          ) : null}
+          {type === 'invited' ? (
+            <Menu.Item
+              label={l`Uninvite ${displayName} from this group chat`}
+              onPress={() => {}}>
+              <Menu.ItemText>
+                <Trans>Uninvite</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
+            </Menu.Item>
+          ) : null}
         </Menu.Group>
       </Menu.Outer>
     </Menu.Root>
   )
 }
 
-function SettingsHeading() {
+function SettingsHeader({profiles}: {profiles: bsky.profile.AnyProfileView[]}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const editNamePrompt = Prompt.usePromptControl()
@@ -457,7 +567,7 @@ function SettingsHeading() {
   const lockChatPrompt = Prompt.usePromptControl()
 
   const [groupName, setGroupName] = useState('Work in Progress')
-  const [newGroupName, setNewGroupName] = useState('Work in Progress')
+  const [newGroupName, setNewGroupName] = useState(groupName)
 
   const [isMuted, setIsMuted] = useState(false)
   const [isLocked, setIsLocked] = useState(false)
@@ -500,7 +610,7 @@ function SettingsHeading() {
       <View
         style={[a.px_xl, a.py_4xl, a.border_b, t.atoms.border_contrast_low]}>
         <View style={[a.align_center, a.justify_center]}>
-          <AvatarBubbles profiles={[]} />
+          <AvatarBubbles profiles={profiles} />
         </View>
         <Text
           style={[
