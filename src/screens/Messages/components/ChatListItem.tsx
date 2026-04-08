@@ -6,12 +6,13 @@ import {
   moderateProfile,
   type ModerationOpts,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {GestureActionView} from '#/lib/custom-animations/GestureActionView'
 import {useHaptics} from '#/lib/haptics'
+import {getModerationCauseKey, unique} from '#/lib/moderation'
 import {decrementBadgeCount} from '#/lib/notifications/notifications'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {
@@ -31,15 +32,21 @@ import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import * as tokens from '#/alf/tokens'
+import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
+import {
+  ChevronBottom_Stroke2_Corner0_Rounded as ChevronBottom,
+  ChevronTop_Stroke2_Corner0_Rounded as ChevronTop,
+} from '#/components/icons/Chevron'
 import {Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen} from '#/components/icons/EnveopeOpen'
 import {Trash_Stroke2_Corner0_Rounded} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
+import * as Pills from '#/components/Pills'
 import {createPortalGroup} from '#/components/Portal'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
@@ -48,6 +55,9 @@ import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
 
 export const ChatListItemPortal = createPortalGroup()
+
+const LABEL_COLLAPSE_THRESHOLD_MOBILE = 4
+const LABEL_COLLAPSE_THRESHOLD_DESKTOP = 8
 
 export let ChatListItem = ({
   convo,
@@ -122,6 +132,18 @@ function ChatListItemReady({
       userBlock,
     }
   }, [moderation])
+
+  const labelModui = moderation.ui('contentList')
+  const allLabelCauses = [
+    ...labelModui.alerts.filter(unique),
+    ...labelModui.informs.filter(unique),
+  ]
+  const labelCollapseThreshold = gtMobile
+    ? LABEL_COLLAPSE_THRESHOLD_DESKTOP
+    : LABEL_COLLAPSE_THRESHOLD_MOBILE
+  const shouldCollapseLabels = allLabelCauses.length > labelCollapseThreshold
+  const [labelsExpanded, setLabelsExpanded] = useState(!shouldCollapseLabels)
+  const labelOverflowCount = allLabelCauses.length - labelCollapseThreshold
 
   const isDeletedAccount = profile.handle === 'missing.invalid'
   const displayName = isDeletedAccount
@@ -474,11 +496,101 @@ function ChatListItemReady({
                     {lastMessage}
                   </Text>
 
-                  <PostAlerts
-                    modui={moderation.ui('contentList')}
-                    size="lg"
-                    style={[a.pt_xs]}
-                  />
+                  {(labelModui.alert || labelModui.inform) && (
+                    <View style={[a.pt_xs]}>
+                      {shouldCollapseLabels && !labelsExpanded ? (
+                        <Pills.Row size="lg">
+                          {allLabelCauses
+                            .slice(0, labelCollapseThreshold)
+                            .map(cause => (
+                              <Pills.Label
+                                key={getModerationCauseKey(cause)}
+                                cause={cause}
+                                size="lg"
+                              />
+                            ))}
+                          <Button
+                            label={_(
+                              plural(labelOverflowCount, {
+                                one: 'Show # more label',
+                                other: 'Show # more labels',
+                              }),
+                            )}
+                            onPress={e => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              setLabelsExpanded(true)
+                            }}>
+                            {({hovered, pressed}) => (
+                              <View
+                                style={[
+                                  a.flex_row,
+                                  a.align_center,
+                                  a.rounded_full,
+                                  t.atoms.bg_contrast_25,
+                                  (hovered || pressed) &&
+                                    t.atoms.bg_contrast_50,
+                                  {
+                                    gap: 5,
+                                    paddingHorizontal: 5,
+                                    paddingVertical: 5,
+                                  },
+                                ]}>
+                                <Text
+                                  style={[
+                                    a.text_sm,
+                                    a.font_semi_bold,
+                                    t.atoms.text_contrast_medium,
+                                    {paddingRight: 3},
+                                  ]}>
+                                  {_(
+                                    plural(labelOverflowCount, {
+                                      one: '+# more',
+                                      other: '+# more',
+                                    }),
+                                  )}
+                                </Text>
+                                <ChevronBottom
+                                  width={14}
+                                  fill={t.atoms.text_contrast_medium.color}
+                                />
+                              </View>
+                            )}
+                          </Button>
+                        </Pills.Row>
+                      ) : (
+                        <>
+                          <PostAlerts modui={labelModui} size="lg" />
+                          {shouldCollapseLabels && (
+                            <Button
+                              label={_(msg`Collapse labels`)}
+                              onPress={e => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                setLabelsExpanded(false)
+                              }}
+                              style={[a.mt_xs, a.self_start]}>
+                              {({hovered, pressed}) => (
+                                <View
+                                  style={[
+                                    a.rounded_full,
+                                    t.atoms.bg_contrast_25,
+                                    (hovered || pressed) &&
+                                      t.atoms.bg_contrast_50,
+                                    {paddingHorizontal: 5, paddingVertical: 5},
+                                  ]}>
+                                  <ChevronTop
+                                    width={14}
+                                    fill={t.atoms.text_contrast_medium.color}
+                                  />
+                                </View>
+                              )}
+                            </Button>
+                          )}
+                        </>
+                      )}
+                    </View>
+                  )}
 
                   {children}
                 </View>
