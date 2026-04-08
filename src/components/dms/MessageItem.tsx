@@ -108,13 +108,10 @@ let MessageItem = ({
   const prevIsMessage = ChatBskyConvoDefs.isMessageView(prevMessage)
   const nextIsMessage = ChatBskyConvoDefs.isMessageView(nextMessage)
 
-  const isPrevFromSelf =
-    prevIsMessage && prevMessage.sender?.did === currentAccount?.did
-  const isNextFromSelf =
-    nextIsMessage && nextMessage.sender?.did === currentAccount?.did
-
-  const isPrevFromSameSender = isPrevFromSelf === isFromSelf
-  const isNextFromSameSender = isNextFromSelf === isFromSelf
+  const isPrevFromSameSender =
+    prevIsMessage && prevMessage.sender?.did === message.sender?.did
+  const isNextFromSameSender =
+    nextIsMessage && nextMessage.sender?.did === message.sender?.did
 
   const isFirstInCluster = useMemo(
     () =>
