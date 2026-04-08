@@ -268,13 +268,14 @@ let MessageItem = ({
                 </Text>
               </Animated.View>
             ))}
-            {reactions.length > 1 && (
+            {groupedReactions.length !== reactions.length &&
+            reactions.length > 1 ? (
               <View style={[a.p_2xs, a.justify_center]}>
                 <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
                   {reactions.length}
                 </Text>
               </View>
-            )}
+            ) : null}
           </View>
         </View>
       ) : null}
