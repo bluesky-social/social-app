@@ -1,13 +1,14 @@
-import {useMemo} from 'react'
+import {useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyActorDefs,
   type ModerationCause,
   type ModerationDecision,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {getModerationCauseKey, unique} from '#/lib/moderation'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {type Shadow} from '#/state/cache/profile-shadow'
@@ -15,16 +16,23 @@ import {isConvoActive, useConvo} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
+import {Button} from '#/components/Button'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
+import {
+  ChevronBottom_Stroke2_Corner0_Rounded as ChevronBottom,
+  ChevronTop_Stroke2_Corner0_Rounded as ChevronTop,
+} from '#/components/icons/Chevron'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
+import * as Pills from '#/components/Pills'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
 
 const PFP_SIZE = IS_WEB ? 40 : Layout.HEADER_SLOT_SIZE
+const LABEL_COLLAPSE_THRESHOLD = 2
 
 export function MessagesListHeader({
   profile,
@@ -112,6 +120,16 @@ function HeaderReady({
   const t = useTheme()
   const convoState = useConvo()
 
+  const modui = moderation.ui('contentList')
+  const allCauses = [
+    ...modui.alerts.filter(unique),
+    ...modui.informs.filter(unique),
+  ]
+  const labelCount = allCauses.length
+  const shouldCollapse = labelCount > LABEL_COLLAPSE_THRESHOLD
+  const [isExpanded, setIsExpanded] = useState(!shouldCollapse)
+  const overflowCount = labelCount - LABEL_COLLAPSE_THRESHOLD
+
   const isDeletedAccount = profile?.handle === 'missing.invalid'
   const displayName = isDeletedAccount
     ? _(msg`Deleted Account`)
@@ -198,18 +216,91 @@ function HeaderReady({
         </View>
       </View>
 
-      <View
-        style={[
-          {
-            paddingLeft: PFP_SIZE + a.gap_md.gap,
-          },
-        ]}>
-        <PostAlerts
-          modui={moderation.ui('contentList')}
-          size="lg"
-          style={[a.pt_xs]}
-        />
-      </View>
+      {(modui.alert || modui.inform) && (
+        <View
+          style={[
+            a.pt_xs,
+            {
+              paddingLeft: PFP_SIZE + a.gap_md.gap,
+            },
+          ]}>
+          {shouldCollapse && !isExpanded ? (
+            <Pills.Row size="lg">
+              {allCauses.slice(0, LABEL_COLLAPSE_THRESHOLD).map(cause => (
+                <Pills.Label
+                  key={getModerationCauseKey(cause)}
+                  cause={cause}
+                  size="lg"
+                />
+              ))}
+              <Button
+                label={_(
+                  plural(overflowCount, {
+                    one: 'Show # more label',
+                    other: 'Show # more labels',
+                  }),
+                )}
+                onPress={() => setIsExpanded(true)}>
+                {({hovered, pressed}) => (
+                  <View
+                    style={[
+                      a.flex_row,
+                      a.align_center,
+                      a.rounded_full,
+                      t.atoms.bg_contrast_25,
+                      (hovered || pressed) && t.atoms.bg_contrast_50,
+                      {gap: 5, paddingHorizontal: 5, paddingVertical: 5},
+                    ]}>
+                    <Text
+                      style={[
+                        a.text_sm,
+                        a.font_semi_bold,
+                        t.atoms.text_contrast_medium,
+                        {paddingRight: 3},
+                      ]}>
+                      {_(
+                        plural(overflowCount, {
+                          one: '+# more',
+                          other: '+# more',
+                        }),
+                      )}
+                    </Text>
+                    <ChevronBottom
+                      width={14}
+                      fill={t.atoms.text_contrast_medium.color}
+                    />
+                  </View>
+                )}
+              </Button>
+            </Pills.Row>
+          ) : (
+            <>
+              <PostAlerts modui={modui} size="lg" />
+              {shouldCollapse && (
+                <Button
+                  label={_(msg`Collapse labels`)}
+                  onPress={() => setIsExpanded(false)}
+                  style={[a.mt_xs, a.self_start]}>
+                  {({hovered, pressed}) => (
+                    <View
+                      style={[
+                        a.rounded_full,
+                        t.atoms.bg_contrast_25,
+                        (hovered || pressed) && t.atoms.bg_contrast_50,
+                        {paddingHorizontal: 5, paddingVertical: 5},
+                      ]}>
+                      <ChevronTop
+                        width={14}
+                        fill={t.atoms.text_contrast_medium.color}
+                      />
+                    </View>
+                  )}
+                </Button>
+              )}
+            </>
+          )}
+        </View>
+      )}
     </View>
   )
 }
