@@ -26,8 +26,6 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {useConvoActive} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {STALE} from '#/state/queries'
-import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {atoms as a, native, useTheme} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
@@ -36,7 +34,7 @@ import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
+import type * as bsky from '#/types/bsky'
 import {DateDivider} from './DateDivider'
 import {MessageItemEmbed} from './MessageItemEmbed'
 
@@ -82,9 +80,11 @@ function isWithinCluster({
 let MessageItem = ({
   item,
   isGroupChat = false,
+  profile,
 }: {
   item: ConvoItem & {type: 'message' | 'pending-message'}
   isGroupChat?: boolean
+  profile?: bsky.profile.AnyProfileView
 }): React.ReactNode => {
   const t = useTheme()
   const {currentAccount} = useSession()
@@ -95,10 +95,6 @@ let MessageItem = ({
   const {message, nextMessage, prevMessage} = item
   const isPending = item.type === 'pending-message'
 
-  const {data: profile, isError} = useProfileQuery({
-    did: message.sender?.did,
-    staleTime: STALE.INFINITY,
-  })
   const displayName = sanitizeDisplayName(
     profile?.displayName || sanitizeHandle(profile?.handle ?? ''),
   )
@@ -164,17 +160,16 @@ let MessageItem = ({
   const hasEmbedAndText =
     AppBskyEmbedRecord.isView(message.embed) && rt.text.length > 0
 
-  const avatar =
-    profile && !isError ? (
-      <ProfileCard.Avatar
-        profile={profile}
-        size={AVATAR_SIZE}
-        moderationOpts={moderationOpts!}
-        disabledPreview
-      />
-    ) : (
-      <ProfileCard.AvatarPlaceholder size={AVATAR_SIZE} />
-    )
+  const avatar = profile ? (
+    <ProfileCard.Avatar
+      profile={profile}
+      size={AVATAR_SIZE}
+      moderationOpts={moderationOpts!}
+      disabledPreview
+    />
+  ) : (
+    <ProfileCard.AvatarPlaceholder size={AVATAR_SIZE} />
+  )
 
   const groupedReactions = useMemo(() => {
     const reactions = message.reactions ?? []
@@ -231,9 +226,14 @@ let MessageItem = ({
 
   const appliedReactions = (
     <LayoutAnimationConfig skipEntering skipExiting>
-      {message.reactions && message.reactions.length > 0 && (
+      {hasReactions ? (
         <View
-          style={[isFromSelf ? a.align_end : a.align_start, a.px_sm, a.pb_2xs]}>
+          style={[
+            isFromSelf ? a.align_end : a.align_start,
+            a.px_sm,
+            a.pb_2xs,
+            !isFromSelf && isGroupChat && {paddingLeft: AVATAR_SIZE},
+          ]}>
           <View
             accessible={true}
             accessibilityLabel={reactionsLabel}
@@ -277,12 +277,9 @@ let MessageItem = ({
             )}
           </View>
         </View>
-      )}
+      ) : null}
     </LayoutAnimationConfig>
   )
-
-  const outerMarginOther = isGroupChat ? a.ml_md : a.ml_sm
-  const outerMarginSelf = isGroupChat ? a.mr_md : a.mr_sm
 
   return (
     <>
@@ -293,106 +290,104 @@ let MessageItem = ({
       )}
       <View
         style={[
-          a.relative,
-          isFromSelf ? outerMarginSelf : outerMarginOther,
+          isFromSelf ? a.mr_sm : a.ml_sm,
           isFirstInCluster && !showDateDivider && a.mt_sm,
         ]}>
-        {isGroupChat && !isFromSelf && isLastInCluster ? (
-          <View style={[a.absolute, a.bottom_0]}>{avatar}</View>
-        ) : null}
-        <View
-          style={[
-            a.flex_grow,
-            !isFromSelf &&
-              isGroupChat && {
-                paddingLeft: AVATAR_SIZE,
-              },
-          ]}>
-          {isGroupChat &&
-          !isFromSelf &&
-          isFirstInCluster &&
-          !isOnlyEmoji(message.text) ? (
-            <Text
-              style={[
-                a.text_xs,
-                t.atoms.text_contrast_medium,
-                a.pb_2xs,
-                {
-                  paddingLeft: DISPLAY_NAME_INSET,
-                },
-              ]}>
-              {displayName}
-            </Text>
+        <View style={[a.relative]}>
+          {isGroupChat && !isFromSelf && isLastInCluster ? (
+            <View style={[a.absolute, a.bottom_0]}>{avatar}</View>
           ) : null}
-          <ActionsWrapper isFromSelf={isFromSelf} message={message}>
-            {rt.text.length > 0 && (
-              <View
+          <View
+            style={[
+              a.flex_grow,
+              !isFromSelf &&
+                isGroupChat && {
+                  paddingLeft: AVATAR_SIZE,
+                },
+            ]}>
+            {isGroupChat &&
+            !isFromSelf &&
+            isFirstInCluster &&
+            !isOnlyEmoji(message.text) ? (
+              <Text
                 style={[
-                  isFromSelf ? a.mr_sm : a.ml_sm,
-                  ...(isOnlyEmoji(message.text)
-                    ? []
-                    : [
-                        a.rounded_md,
-                        a.rounded_xl,
-                        a.py_sm,
-                        a.px_md,
-                        {
-                          marginTop: isFirstInCluster
-                            ? 0
-                            : CLUSTERED_MESSAGE_GAP,
-                          backgroundColor: isFromSelf
-                            ? isPending
-                              ? pendingColor
-                              : t.palette.primary_500
-                            : t.palette.contrast_50,
-                        },
-                        isFromSelf ? a.self_end : a.self_start,
-                        isFromSelf
-                          ? {
-                              borderBottomRightRadius:
-                                squaredBottomCorner || hasEmbedAndText
-                                  ? SQUARED_BORDER_RADIUS
-                                  : BORDER_RADIUS,
-                              borderTopRightRadius: squaredTopCorner
-                                ? SQUARED_BORDER_RADIUS
-                                : BORDER_RADIUS,
-                            }
-                          : {
-                              borderBottomLeftRadius:
-                                squaredBottomCorner || hasEmbedAndText
-                                  ? SQUARED_BORDER_RADIUS
-                                  : BORDER_RADIUS,
-                              borderTopLeftRadius: squaredTopCorner
-                                ? SQUARED_BORDER_RADIUS
-                                : BORDER_RADIUS,
-                            },
-                      ]),
+                  a.text_xs,
+                  t.atoms.text_contrast_medium,
+                  a.pt_xs,
+                  a.pb_2xs,
+                  {
+                    paddingLeft: DISPLAY_NAME_INSET,
+                  },
                 ]}>
-                <RichText
-                  value={rt}
-                  style={[a.text_md, isFromSelf && {color: t.palette.white}]}
-                  interactiveStyle={a.underline}
-                  enableTags
-                  emojiMultiplier={3}
-                  shouldProxyLinks={true}
+                {displayName}
+              </Text>
+            ) : null}
+            <ActionsWrapper isFromSelf={isFromSelf} message={message}>
+              {rt.text.length > 0 && (
+                <View
+                  style={[
+                    !isFromSelf && a.ml_sm,
+                    ...(isOnlyEmoji(message.text)
+                      ? []
+                      : [
+                          a.rounded_md,
+                          a.rounded_xl,
+                          a.py_sm,
+                          a.px_md,
+                          {
+                            marginTop: isFirstInCluster
+                              ? 0
+                              : CLUSTERED_MESSAGE_GAP,
+                            backgroundColor: isFromSelf
+                              ? isPending
+                                ? pendingColor
+                                : t.palette.primary_500
+                              : t.palette.contrast_50,
+                          },
+                          isFromSelf ? a.self_end : a.self_start,
+                          isFromSelf
+                            ? {
+                                borderBottomRightRadius:
+                                  squaredBottomCorner || hasEmbedAndText
+                                    ? SQUARED_BORDER_RADIUS
+                                    : BORDER_RADIUS,
+                                borderTopRightRadius: squaredTopCorner
+                                  ? SQUARED_BORDER_RADIUS
+                                  : BORDER_RADIUS,
+                              }
+                            : {
+                                borderBottomLeftRadius:
+                                  squaredBottomCorner || hasEmbedAndText
+                                    ? SQUARED_BORDER_RADIUS
+                                    : BORDER_RADIUS,
+                                borderTopLeftRadius: squaredTopCorner
+                                  ? SQUARED_BORDER_RADIUS
+                                  : BORDER_RADIUS,
+                              },
+                        ]),
+                  ]}>
+                  <RichText
+                    value={rt}
+                    style={[a.text_md, isFromSelf && {color: t.palette.white}]}
+                    interactiveStyle={a.underline}
+                    enableTags
+                    emojiMultiplier={3}
+                    shouldProxyLinks={true}
+                  />
+                </View>
+              )}
+              {AppBskyEmbedRecord.isView(message.embed) && (
+                <MessageItemEmbed
+                  embed={message.embed}
+                  isFromSelf={isFromSelf}
+                  squaredBottomCorner={squaredBottomCorner}
+                  squaredTopCorner={squaredTopCorner || hasEmbedAndText}
                 />
-              </View>
-            )}
-            {AppBskyEmbedRecord.isView(message.embed) && (
-              <MessageItemEmbed
-                embed={message.embed}
-                isFromSelf={isFromSelf}
-                squaredBottomCorner={squaredBottomCorner}
-                squaredTopCorner={squaredTopCorner || hasEmbedAndText}
-              />
-            )}
-
-            {IS_NATIVE && appliedReactions}
-          </ActionsWrapper>
+              )}
+            </ActionsWrapper>
+          </View>
         </View>
-
-        {!IS_NATIVE && appliedReactions}
-
+        {appliedReactions}
         {isLastInCluster && (
           <MessageItemMetadata
             item={item}

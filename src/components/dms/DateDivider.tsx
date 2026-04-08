@@ -56,7 +56,7 @@ let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
   }
 
   return (
-    <View style={[a.w_full, a.my_md]}>
+    <View style={[a.w_full, a.my_sm]}>
       <Text
         style={[
           a.text_xs,
