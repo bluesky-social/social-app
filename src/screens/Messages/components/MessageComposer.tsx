@@ -26,11 +26,13 @@ import * as Toast from '#/components/Toast'
 import {IS_WEB} from '#/env'
 
 export function MessageComposer({
+  textInputId,
   onSendMessage,
   hasEmbed,
   setEmbed,
   children,
 }: {
+  textInputId?: string
   onSendMessage: (message: string) => void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
@@ -163,6 +165,7 @@ export function MessageComposer({
           )}
 
           <Composer
+            nativeID={textInputId}
             label={l`Message input field`}
             placeholder={l`Write a message`}
             autocompletePlacement="top-start"

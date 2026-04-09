@@ -441,6 +441,7 @@ export function MessagesList({
                   ax.features.DmsNewMessageComposerEnable,
                 ) ? (
                   <MessageComposer
+                    textInputId={textInputId}
                     onSendMessage={onSendMessage}
                     hasEmbed={!!embedUri}
                     setEmbed={setEmbed}>
