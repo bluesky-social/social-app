@@ -71,5 +71,6 @@ function useKeyboardShortcuts() {
     scopes: ['global'],
     preventDefault: true,
     description: l`Focus the search field`,
+    useKey: true, // Support international and alternate keyboard layouts
   })
 }
