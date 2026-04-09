@@ -8,7 +8,6 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useSift, type UseSiftReturn} from '@bsky.app/sift'
 import {
   facets,
@@ -121,7 +120,6 @@ export function Composer({
   ...rest
 }: ComposerProps) {
   const {theme: t, fonts} = useAlf()
-  const insets = useSafeAreaInsets()
 
   /*
    * Meat and potatoes
@@ -140,7 +138,6 @@ export function Composer({
     offset: a.p_sm.padding,
     placement: autocompletePlacement,
     dynamicWidth: IS_WEB,
-    insets,
   })
 
   /*
