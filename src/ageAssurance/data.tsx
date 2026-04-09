@@ -53,7 +53,7 @@ const [, cacheHydrationPromise] = persistQueryClient({
   persister,
 })
 
-function getDidFromAgentSession(agent: AtpAgent) {
+export function getDidFromAgentSession(agent: AtpAgent) {
   const sessionManager = agent.sessionManager
   if (!sessionManager || !sessionManager.did) return
   return sessionManager.did
@@ -323,21 +323,42 @@ export function useServerStateQuery() {
  * Other required data
  */
 
+type AllowIncoming = 'all' | 'none' | 'following'
+type ActorDeclaration = {
+  allowIncoming: AllowIncoming
+}
 export type OtherRequiredData = {
   birthdate: string | undefined
+  actorDeclaration?: ActorDeclaration | undefined
 }
 export function createOtherRequiredDataQueryKey({did}: {did: string}) {
   return ['otherRequiredData', did]
 }
-export async function getOtherRequiredData({
+async function getOtherRequiredData({
   agent,
 }: {
   agent: AtpAgent
 }): Promise<OtherRequiredData> {
   if (debug.enabled) return debug.resolve(debug.otherRequiredData)
-  const [prefs] = await Promise.all([agent.getPreferences()])
+  const did = getDidFromAgentSession(agent)
+  const [prefs, declaration] = await Promise.all([
+    agent.getPreferences(),
+    did
+      ? agent.com.atproto.repo
+          .getRecord({
+            repo: did,
+            collection: 'chat.bsky.actor.declaration',
+            rkey: 'self',
+          })
+          .catch(_e => undefined)
+      : undefined,
+  ])
+  const actorDeclaration = declaration?.data.value as
+    | ActorDeclaration
+    | undefined
   const data: OtherRequiredData = {
     birthdate: prefs.birthDate ? prefs.birthDate.toISOString() : undefined,
+    actorDeclaration,
   }
 
   /**
@@ -355,7 +376,6 @@ export async function getOtherRequiredData({
     }
   }
 
-  const did = getDidFromAgentSession(agent)
   if (data && did && birthdateCache.has(did)) {
     /*
      * If birthdate was just set, use the local cache value. On subsequent

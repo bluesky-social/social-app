@@ -1,9 +1,13 @@
 import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
 
 import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
+import {restrictChatSettings} from '#/state/queries/messages/actor-declaration'
+import {useAgent} from '#/state/session'
 import {Provider as RedirectOverlayProvider} from '#/ageAssurance/components/RedirectOverlay'
 import {
   AgeAssuranceDataProvider,
+  getDidFromAgentSession,
+  getOtherRequiredDataFromCache,
   useAgeAssuranceDataContext,
 } from '#/ageAssurance/data'
 import {logger} from '#/ageAssurance/logger'
@@ -78,6 +82,8 @@ export function Provider({children}: {children: React.ReactNode}) {
 }
 
 function InnerProvider({children}: {children: React.ReactNode}) {
+  const agent = useAgent()
+  const {flags} = useAgeAssurance()
   const state = useAgeAssuranceState()
   const {data} = useAgeAssuranceDataContext()
   const config = useAgeAssuranceRegionConfigWithFallback()
@@ -97,33 +103,51 @@ function InnerProvider({children}: {children: React.ReactNode}) {
     logger.debug(`useAgeAssuranceState`, {state})
   }, [state])
 
-  return (
-    <AgeAssuranceStateContext.Provider
-      value={useMemo(() => {
-        const chatDisabled = state.access !== AgeAssuranceAccess.Full
-        const isUnderAdultAge = data?.birthdate
-          ? isUnderAge(data.birthdate, 18)
-          : true
-        const isOverRegionMinAccessAge = data?.birthdate
-          ? !isUnderAge(data.birthdate, config.minAccessAge)
-          : false
-        const isOverAppMinAccessAge = data?.birthdate
-          ? !isUnderAge(data.birthdate, MIN_ACCESS_AGE)
-          : false
-        const adultContentDisabled =
-          state.access !== AgeAssuranceAccess.Full || isUnderAdultAge
-        return {
-          Access: AgeAssuranceAccess,
-          Status: AgeAssuranceStatus,
-          state,
-          flags: {
-            adultContentDisabled,
-            chatDisabled,
-            isOverRegionMinAccessAge,
-            isOverAppMinAccessAge,
-          },
+  const ctx = useMemo(() => {
+    const chatDisabled = state.access !== AgeAssuranceAccess.Full
+    const isUnderAdultAge = data?.birthdate
+      ? isUnderAge(data.birthdate, 18)
+      : true
+    const isOverRegionMinAccessAge = data?.birthdate
+      ? !isUnderAge(data.birthdate, config.minAccessAge)
+      : false
+    const isOverAppMinAccessAge = data?.birthdate
+      ? !isUnderAge(data.birthdate, MIN_ACCESS_AGE)
+      : false
+    const adultContentDisabled =
+      state.access !== AgeAssuranceAccess.Full || isUnderAdultAge
+    return {
+      Access: AgeAssuranceAccess,
+      Status: AgeAssuranceStatus,
+      state,
+      flags: {
+        adultContentDisabled,
+        chatDisabled,
+        isOverRegionMinAccessAge,
+        isOverAppMinAccessAge,
+      },
+    }
+  }, [state, data, config])
+
+  useEffect(() => {
+    const updateChatRecord = async () => {
+      const did = getDidFromAgentSession(agent)
+      // If chat is disabled...
+      if (did && flags.chatDisabled) {
+        const data = getOtherRequiredDataFromCache({did})
+        const allowIncoming = data?.actorDeclaration?.allowIncoming
+        // ...update the chat setting record if allowIncoming is not already 'none'.
+        if (allowIncoming === 'none') {
+          return
         }
-      }, [state, data, config])}>
+        await restrictChatSettings({agent, did})
+      }
+    }
+    void updateChatRecord()
+  }, [agent, flags.chatDisabled])
+
+  return (
+    <AgeAssuranceStateContext.Provider value={ctx}>
       {children}
     </AgeAssuranceStateContext.Provider>
   )

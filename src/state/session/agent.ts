@@ -22,7 +22,6 @@ import {
   PUBLIC_BSKY_SERVICE,
   TIMELINE_SAVED_FEED,
 } from '#/lib/constants'
-import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {snoozeBirthdateUpdateAllowedForDid} from '#/state/birthdate'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
@@ -31,6 +30,8 @@ import {
   setBirthdateForDid,
   setCreatedAtForDid,
 } from '#/ageAssurance/data'
+import {getAndComputeAgeAssuranceState} from '#/ageAssurance/state'
+import {AgeAssuranceAccess} from '#/ageAssurance/types'
 import {features} from '#/analytics'
 import {emitNetworkConfirmed, emitNetworkLost} from '../events'
 import {addSessionErrorLog} from './logging'
@@ -218,26 +219,28 @@ export async function createAgentAndCreateAccount(
         logger.info(`createAgentAndCreateAccount: failed to set initial feeds`)
         throw e
       }),
-      ...(getAge(birthDate) < 18
-        ? [
-            networkRetry(3, () => {
-              return agent.com.atproto.repo.putRecord({
-                repo: account.did,
-                collection: 'chat.bsky.actor.declaration',
-                rkey: 'self',
-                record: {
-                  $type: 'chat.bsky.actor.declaration',
-                  allowIncoming: 'none',
-                },
-              })
-            }).catch(e => {
-              logger.info(
-                `createAgentAndCreateAccount: failed to set chat declaration`,
-              )
-              throw e
-            }),
-          ]
-        : []),
+      aa.then(async () => {
+        const state = getAndComputeAgeAssuranceState({did: account.did})
+        const chatDisabled = state.access !== AgeAssuranceAccess.Full
+        if (chatDisabled) {
+          await networkRetry(3, () => {
+            return agent.com.atproto.repo.putRecord({
+              repo: account.did,
+              collection: 'chat.bsky.actor.declaration',
+              rkey: 'self',
+              record: {
+                $type: 'chat.bsky.actor.declaration',
+                allowIncoming: 'none',
+              },
+            })
+          }).catch(e => {
+            logger.info(
+              `createAgentAndCreateAccount: failed to set chat declaration`,
+            )
+            throw e
+          })
+        }
+      }),
     ]).then(promises => {
       const rejected = promises.filter(p => p.status === 'rejected')
       if (rejected.length > 0) {

@@ -1,3 +1,4 @@
+import type AtpAgent from '@atproto/api'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
@@ -77,4 +78,29 @@ export function useDeleteActorDeclaration() {
       return result
     },
   })
+}
+
+/**
+ * Helper to update the chat settings record.
+ */
+export async function restrictChatSettings({
+  agent,
+  did,
+}: {
+  agent: AtpAgent
+  did: string
+}): Promise<void> {
+  try {
+    await agent.com.atproto.repo.putRecord({
+      repo: did,
+      collection: 'chat.bsky.actor.declaration',
+      rkey: 'self',
+      record: {
+        $type: 'chat.bsky.actor.declaration',
+        allowIncoming: 'none',
+      },
+    })
+  } catch {
+    logger.error(`restrictChatSettings: failed to set chat declaration`)
+  }
 }
