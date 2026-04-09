@@ -8,7 +8,7 @@ msgstr ""
 "Language: nl\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-08 18:50\n"
+"PO-Revision-Date: 2026-04-09 20:53\n"
 "Last-Translator: \n"
 "Language-Team: Dutch\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -178,7 +178,7 @@ msgid "{0} following"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(profile.handle)
-#: src/features/liveNow/components/LiveStatusDialog.tsx:80
+#: src/features/liveNow/components/LiveStatusDialog.tsx:84
 msgid "{0} is live"
 msgstr "{0} is live"
 
@@ -880,11 +880,11 @@ msgstr "Optioneel alt-tekst toevoegen"
 msgid "Add another account"
 msgstr "Nog een account toevoegen"
 
-#: src/view/com/composer/Composer.tsx:1328
+#: src/view/com/composer/Composer.tsx:1331
 msgid "Add another post"
 msgstr "Nog een bericht toevoegen"
 
-#: src/view/com/composer/Composer.tsx:1994
+#: src/view/com/composer/Composer.tsx:1997
 msgid "Add another post to thread"
 msgstr ""
 
@@ -1501,7 +1501,7 @@ msgstr "Weet je zeker dat je dit gesprek wilt verlaten? Je privéberichten worde
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Weet je zeker dat je dit uit jouw feeds wilt verwijderen?"
 
-#: src/view/com/composer/Composer.tsx:1467
+#: src/view/com/composer/Composer.tsx:1470
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Weet je zeker dat je dit bericht wilt weggooien?"
 
@@ -1968,8 +1968,8 @@ msgstr "Camera"
 #: src/screens/Settings/Settings.tsx:302
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
-#: src/view/com/composer/Composer.tsx:1544
-#: src/view/com/composer/Composer.tsx:1556
+#: src/view/com/composer/Composer.tsx:1547
+#: src/view/com/composer/Composer.tsx:1559
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:215
@@ -2383,7 +2383,7 @@ msgstr ""
 msgid "Closes password update alert"
 msgstr "Sluit waarschuwing voor bijwerken wachtwoord"
 
-#: src/view/com/composer/Composer.tsx:1553
+#: src/view/com/composer/Composer.tsx:1556
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -2442,7 +2442,7 @@ msgid "Compose new post"
 msgstr "Nieuw bericht opstellen"
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1431
+#: src/view/com/composer/Composer.tsx:1434
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr "Je kunt berichten opstellen met een lengte van maximaal {0, plural, other {# tekens}}"
 
@@ -2450,11 +2450,11 @@ msgstr "Je kunt berichten opstellen met een lengte van maximaal {0, plural, othe
 msgid "Compose reply"
 msgstr "Reactie opstellen"
 
-#: src/view/com/composer/Composer.tsx:2390
+#: src/view/com/composer/Composer.tsx:2393
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2392
+#: src/view/com/composer/Composer.tsx:2395
 msgid "Compressing video..."
 msgstr "Video comprimeren..."
 
@@ -2873,7 +2873,7 @@ msgstr "Registreren"
 
 #: src/screens/Signup/index.tsx:136
 msgid "Create Account"
-msgstr "Account aanmaken"
+msgstr ""
 
 #: src/components/dialogs/Signin.tsx:87
 #: src/components/dialogs/Signin.tsx:89
@@ -3094,7 +3094,7 @@ msgstr "Mijn account verwijderen"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:787
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:789
-#: src/view/com/composer/Composer.tsx:1441
+#: src/view/com/composer/Composer.tsx:1444
 msgid "Delete post"
 msgstr "Bericht verwijderen"
 
@@ -3223,9 +3223,9 @@ msgstr "Uitgeschakeld"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:101
 #: src/screens/Profile/Header/EditProfileDialog.tsx:79
-#: src/view/com/composer/Composer.tsx:1226
-#: src/view/com/composer/Composer.tsx:1274
-#: src/view/com/composer/Composer.tsx:1474
+#: src/view/com/composer/Composer.tsx:1229
+#: src/view/com/composer/Composer.tsx:1277
+#: src/view/com/composer/Composer.tsx:1477
 #: src/view/com/composer/drafts/DraftItem.tsx:242
 #: src/view/com/composer/drafts/DraftsButton.tsx:131
 msgid "Discard"
@@ -3236,14 +3236,14 @@ msgstr "Weggooien"
 msgid "Discard changes?"
 msgstr "Wijzigingen weggooien?"
 
-#: src/view/com/composer/Composer.tsx:1224
+#: src/view/com/composer/Composer.tsx:1227
 #: src/view/com/composer/drafts/DraftItem.tsx:239
 #: src/view/com/composer/drafts/DraftsButton.tsx:98
 msgid "Discard draft?"
 msgstr "Concept weggooien?"
 
-#: src/view/com/composer/Composer.tsx:1241
-#: src/view/com/composer/Composer.tsx:1466
+#: src/view/com/composer/Composer.tsx:1244
+#: src/view/com/composer/Composer.tsx:1469
 msgid "Discard post?"
 msgstr "Bericht weggooien?"
 
@@ -3278,7 +3278,7 @@ msgstr "Sluiten"
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2311
+#: src/view/com/composer/Composer.tsx:2314
 msgid "Dismiss error"
 msgstr "Fout negeren"
 
@@ -3779,7 +3779,7 @@ msgstr "Opent volledig scherm"
 msgid "Entertainment"
 msgstr "Entertainment"
 
-#: src/view/com/composer/Composer.tsx:2410
+#: src/view/com/composer/Composer.tsx:2413
 #: src/view/com/util/error/ErrorScreen.tsx:43
 msgid "Error"
 msgstr "Fout"
@@ -3865,7 +3865,7 @@ msgstr ""
 msgid "Expands or collapses post text"
 msgstr "Klapt berichttekst uit of in"
 
-#: src/lib/api/index.ts:437
+#: src/lib/api/index.ts:439
 msgid "Expected uri to resolve to a record"
 msgstr "Verwacht werd dat uri omgezet kon worden naar een record"
 
@@ -4724,7 +4724,7 @@ msgstr "Aan de slag"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2415
+#: src/view/com/composer/Composer.tsx:2418
 msgid "GIF uploaded"
 msgstr ""
 
@@ -5270,6 +5270,16 @@ msgstr "Afbeeldingencache gewist"
 msgid "Image cache cleared, freed {0}"
 msgstr "Afbeeldingencache gewist, {0} vrijgemaakt"
 
+#. Image has been moderated and user has the option of showing it temporarily
+#: src/features/liveNow/components/LiveStatusDialog.tsx:298
+msgid "Image is hidden due to your moderation settings."
+msgstr ""
+
+#. Image has been moderated and is not visible to the user
+#: src/features/liveNow/components/LiveStatusDialog.tsx:308
+msgid "Image is unavailable."
+msgstr ""
+
 #: src/view/com/lightbox/Lightbox.web.tsx:252
 #: src/view/com/lightbox/Lightbox.web.tsx:265
 msgid "Image options"
@@ -5479,7 +5489,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Jij bent nu nog de enige! Voeg meer personen toe aan je startpakket door hierboven te zoeken."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2330
+#: src/view/com/composer/Composer.tsx:2333
 msgid "Job ID: {0}"
 msgstr "Taak-ID: {0}"
 
@@ -5504,7 +5514,7 @@ msgstr "Aan het gesprek deelnemen"
 msgid "Journalism"
 msgstr "Journalistiek"
 
-#: src/view/com/composer/Composer.tsx:1278
+#: src/view/com/composer/Composer.tsx:1281
 #: src/view/com/composer/drafts/DraftsButton.tsx:135
 msgid "Keep editing"
 msgstr ""
@@ -5924,7 +5934,7 @@ msgstr ""
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
 msgstr ""
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:229
+#: src/features/liveNow/components/LiveStatusDialog.tsx:243
 msgid "Live feature is in beta"
 msgstr ""
 
@@ -6989,7 +6999,7 @@ msgstr "Menu openen"
 
 #: src/screens/Messages/components/MessageComposer.tsx:143
 #: src/screens/Messages/components/MessageInput.web.tsx:180
-#: src/view/com/composer/Composer.tsx:1979
+#: src/view/com/composer/Composer.tsx:1982
 msgid "Open emoji picker"
 msgstr "Emoji-kiezer openen"
 
@@ -7034,8 +7044,8 @@ msgstr ""
 msgid "Open post options menu"
 msgstr "Menu met berichtopties openen"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:203
-#: src/features/liveNow/components/LiveStatusDialog.tsx:213
+#: src/features/liveNow/components/LiveStatusDialog.tsx:217
+#: src/features/liveNow/components/LiveStatusDialog.tsx:227
 msgid "Open profile"
 msgstr ""
 
@@ -7107,7 +7117,7 @@ msgstr ""
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1980
+#: src/view/com/composer/Composer.tsx:1983
 msgid "Opens emoji picker"
 msgstr "Opent de emoji-kiezer"
 
@@ -7598,7 +7608,7 @@ msgstr "Politiek"
 msgid "Porn"
 msgstr "Porno"
 
-#: src/view/com/composer/Composer.tsx:1628
+#: src/view/com/composer/Composer.tsx:1631
 msgctxt "action"
 msgid "Post"
 msgstr "Plaatsen"
@@ -7618,7 +7628,7 @@ msgstr ""
 msgid "Post a video"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1626
+#: src/view/com/composer/Composer.tsx:1629
 msgctxt "action"
 msgid "Post All"
 msgstr "Alles plaatsen"
@@ -7640,7 +7650,7 @@ msgctxt "toast"
 msgid "Post deleted"
 msgstr "Bericht verwijderd"
 
-#: src/lib/api/index.ts:192
+#: src/lib/api/index.ts:193
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr "Bericht kan niet worden geüpload. Controleer je internetverbinding en probeer het opnieuw."
 
@@ -7792,15 +7802,15 @@ msgstr "Privacybeleid"
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2404
+#: src/view/com/composer/Composer.tsx:2407
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2406
+#: src/view/com/composer/Composer.tsx:2409
 msgid "Processing video..."
 msgstr "Video verwerken..."
 
-#: src/lib/api/index.ts:65
+#: src/lib/api/index.ts:66
 msgid "Processing..."
 msgstr "Verwerken..."
 
@@ -7842,22 +7852,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr ""
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1611
+#: src/view/com/composer/Composer.tsx:1614
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1604
+#: src/view/com/composer/Composer.tsx:1607
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1589
+#: src/view/com/composer/Composer.tsx:1592
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1596
+#: src/view/com/composer/Composer.tsx:1599
 msgid "Publish reply"
 msgstr ""
 
@@ -8284,7 +8294,7 @@ msgstr "Antwoorden uitgeschakeld"
 msgid "Replies to this post are disabled."
 msgstr "Antwoorden op dit bericht zijn uitgeschakeld."
 
-#: src/view/com/composer/Composer.tsx:1624
+#: src/view/com/composer/Composer.tsx:1627
 msgctxt "action"
 msgid "Reply"
 msgstr "Reageren"
@@ -8329,7 +8339,7 @@ msgstr "Reactie is succesvol verborgen"
 #: src/components/dms/MessageContextMenu.tsx:172
 #: src/components/dms/MessagesListBlockedFooter.tsx:86
 #: src/components/dms/MessagesListBlockedFooter.tsx:93
-#: src/features/liveNow/components/LiveStatusDialog.tsx:251
+#: src/features/liveNow/components/LiveStatusDialog.tsx:265
 msgid "Report"
 msgstr "Melden"
 
@@ -8393,7 +8403,7 @@ msgid "Report this list"
 msgstr "Deze lijst melden"
 
 #: src/components/moderation/ReportDialog/copy.ts:19
-#: src/features/liveNow/components/LiveStatusDialog.tsx:234
+#: src/features/liveNow/components/LiveStatusDialog.tsx:248
 msgid "Report this livestream"
 msgstr ""
 
@@ -8647,22 +8657,22 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:132
 #: src/screens/SavedFeeds.tsx:326
 #: src/screens/SavedFeeds.tsx:330
-#: src/view/com/composer/Composer.tsx:1266
+#: src/view/com/composer/Composer.tsx:1269
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save changes"
 msgstr "Wijzigingen opslaan"
 
-#: src/view/com/composer/Composer.tsx:1236
+#: src/view/com/composer/Composer.tsx:1239
 #: src/view/com/composer/drafts/DraftsButton.tsx:93
 msgid "Save changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1267
+#: src/view/com/composer/Composer.tsx:1270
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save draft"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1238
+#: src/view/com/composer/Composer.tsx:1241
 #: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Save draft?"
 msgstr ""
@@ -9324,6 +9334,8 @@ msgstr "Toon alt-tekst"
 
 #: src/components/moderation/ScreenHider.tsx:179
 #: src/components/moderation/ScreenHider.tsx:182
+#: src/features/liveNow/components/LiveStatusDialog.tsx:316
+#: src/features/liveNow/components/LiveStatusDialog.tsx:320
 #: src/screens/List/ListHiddenScreen.tsx:194
 #: src/screens/VideoFeed/index.tsx:650
 #: src/screens/VideoFeed/index.tsx:656
@@ -10477,7 +10489,7 @@ msgstr ""
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Dit bericht wordt verborgen voor feeds en gesprekken. Dit kan niet ongedaan worden gemaakt."
 
-#: src/view/com/composer/Composer.tsx:899
+#: src/view/com/composer/Composer.tsx:902
 msgid "This post's author has disabled quote posts."
 msgstr "De auteur van dit bericht heeft het plaatsen van citaten uitgeschakeld."
 
@@ -10493,7 +10505,7 @@ msgstr "Deze reactie wordt gesorteerd in een verborgen sectie onderaan het gespr
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Deze service heeft geen servicevoorwaarden of een privacybeleid."
 
-#: src/features/liveNow/index.tsx:182
+#: src/features/liveNow/index.tsx:199
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr ""
 
@@ -11004,7 +11016,7 @@ msgstr "Uitgeschreven voor lijst"
 msgid "Unsupported clipboard content"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1369
+#: src/view/com/composer/Composer.tsx:1372
 msgid "Unsupported video type: {mimeType}"
 msgstr ""
 
@@ -11070,20 +11082,20 @@ msgstr "Uploaden vanuit bestanden"
 msgid "Upload from Library"
 msgstr "Uploaden vanuit bibliotheek"
 
-#: src/view/com/composer/Composer.tsx:2397
+#: src/view/com/composer/Composer.tsx:2400
 msgid "Uploading GIF..."
 msgstr ""
 
-#: src/lib/api/index.ts:317
+#: src/lib/api/index.ts:318
 msgid "Uploading images..."
 msgstr "Afbeeldingen uploaden..."
 
-#: src/lib/api/index.ts:387
-#: src/lib/api/index.ts:411
+#: src/lib/api/index.ts:389
+#: src/lib/api/index.ts:413
 msgid "Uploading link thumbnail..."
 msgstr "Linkminiatuur uploaden..."
 
-#: src/view/com/composer/Composer.tsx:2399
+#: src/view/com/composer/Composer.tsx:2402
 msgid "Uploading video..."
 msgstr "Video uploaden..."
 
@@ -11362,7 +11374,7 @@ msgstr "Video niet gevonden."
 msgid "Video settings"
 msgstr "Video-instellingen"
 
-#: src/view/com/composer/Composer.tsx:2417
+#: src/view/com/composer/Composer.tsx:2420
 msgid "Video uploaded"
 msgstr "Video geüpload"
 
@@ -11379,7 +11391,7 @@ msgstr ""
 msgid "Videos must be less than 3 minutes long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:991
+#: src/view/com/composer/Composer.tsx:994
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr ""
@@ -11444,7 +11456,7 @@ msgstr ""
 msgid "View more trending videos"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:986
+#: src/view/com/composer/Composer.tsx:989
 msgid "View post"
 msgstr ""
 
@@ -11551,8 +11563,8 @@ msgstr "Waarschuwen over inhoud"
 msgid "Warn content and filter from feeds"
 msgstr "Waarschuwen over inhoud en filteren uit feeds"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:174
-#: src/features/liveNow/components/LiveStatusDialog.tsx:183
+#: src/features/liveNow/components/LiveStatusDialog.tsx:188
+#: src/features/liveNow/components/LiveStatusDialog.tsx:197
 msgid "Watch now"
 msgstr ""
 
@@ -11696,7 +11708,7 @@ msgstr ""
 
 #: src/screens/Signup/index.tsx:137
 msgid "We're so excited to have you join us!"
-msgstr "We zijn zo blij dat je bij ons bent!"
+msgstr ""
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:416
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:135
@@ -11720,7 +11732,7 @@ msgstr ""
 msgid "We're sorry, you cannot access this screen at this time."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:896
+#: src/view/com/composer/Composer.tsx:899
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "Het spijt ons! Het bericht waarop je reageert is verwijderd."
 
@@ -11771,7 +11783,7 @@ msgid "What do you want to call your starter pack?"
 msgstr "Hoe wil je jouw startpakket noemen?"
 
 #: src/view/com/auth/SplashScreen.web.tsx:104
-#: src/view/com/composer/Composer.tsx:1329
+#: src/view/com/composer/Composer.tsx:1332
 #: src/view/com/feeds/ComposerPrompt.tsx:193
 msgid "What's up?"
 msgstr "Hoe gaat het?"
@@ -11848,7 +11860,7 @@ msgstr ""
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1252
+#: src/view/com/composer/Composer.tsx:1255
 msgid "Would you like to save this as a draft to edit later?"
 msgstr ""
 
@@ -11863,12 +11875,12 @@ msgstr "Schrijf een privébericht"
 msgid "Write a post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1429
+#: src/view/com/composer/Composer.tsx:1432
 msgid "Write post"
 msgstr "Bericht schrijven"
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:91
-#: src/view/com/composer/Composer.tsx:1327
+#: src/view/com/composer/Composer.tsx:1330
 msgid "Write your reply"
 msgstr "Schrijf je reactie"
 
@@ -11949,7 +11961,7 @@ msgstr "Je staat in de rij."
 msgid "You are Live"
 msgstr ""
 
-#: src/features/liveNow/index.tsx:350
+#: src/features/liveNow/index.tsx:367
 msgid "You are no longer live"
 msgstr ""
 
@@ -11961,7 +11973,7 @@ msgstr "Het is niet toegestaan om video's te uploaden."
 msgid "You are not following anyone yet"
 msgstr ""
 
-#: src/features/liveNow/index.tsx:294
+#: src/features/liveNow/index.tsx:311
 msgid "You are now live!"
 msgstr ""
 
@@ -12015,7 +12027,7 @@ msgstr ""
 msgid "You can now sign in with your new password."
 msgstr "Je kunt je nu aanmelden met je nieuwe wachtwoord."
 
-#: src/view/com/composer/Composer.tsx:1257
+#: src/view/com/composer/Composer.tsx:1260
 msgid "You can only save drafts up to 1000 characters."
 msgstr ""
 
@@ -12154,7 +12166,7 @@ msgstr ""
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "Je hebt tijdelijk de limiet voor video-uploads bereikt. Probeer het later opnieuw."
 
-#: src/view/com/composer/Composer.tsx:1247
+#: src/view/com/composer/Composer.tsx:1250
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr ""
 
@@ -12516,11 +12528,11 @@ msgstr ""
 msgid "Your password must be at least 8 characters long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:982
+#: src/view/com/composer/Composer.tsx:985
 msgid "Your post was sent"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:979
+#: src/view/com/composer/Composer.tsx:982
 msgid "Your posts were sent"
 msgstr ""
 
@@ -12541,7 +12553,7 @@ msgstr ""
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "Jouw profiel, berichten, feeds en lijsten zijn niet langer zichtbaar voor andere Bluesky-gebruikers. Je kunt je account op elk moment opnieuw activeren door aan te melden."
 
-#: src/view/com/composer/Composer.tsx:981
+#: src/view/com/composer/Composer.tsx:984
 msgid "Your reply was sent"
 msgstr ""
 

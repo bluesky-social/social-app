@@ -8,7 +8,7 @@ msgstr ""
 "Language: lt\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-08 18:50\n"
+"PO-Revision-Date: 2026-04-09 20:53\n"
 "Last-Translator: \n"
 "Language-Team: Lithuanian\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && (n%100>19 || n%100<11) ? 0 : (n%10>=2 && n%10<=9) && (n%100>19 || n%100<11) ? 1 : n%1!=0 ? 2: 3);\n"
@@ -144,7 +144,7 @@ msgid "{0, plural, other {+# more}}"
 msgstr ""
 
 #. placeholder {0}: aaRegionConfig.minAccessAge
-#: src/screens/Signup/StepInfo/index.tsx:321
+#: src/screens/Signup/StepInfo/index.tsx:317
 msgid "{0, plural, other {You must be # years of age or older to create an account in your region.}}"
 msgstr ""
 
@@ -478,7 +478,7 @@ msgstr ""
 msgid "{MAX_HIDDEN_REPLIES, plural, other {You can hide a maximum of # replies.}}"
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:316
+#: src/screens/Signup/StepInfo/index.tsx:312
 msgid "{MIN_ACCESS_AGE, plural, other {You must be # years of age or older to create an account.}}"
 msgstr ""
 
@@ -699,8 +699,8 @@ msgstr ""
 
 #: src/Navigation.tsx:544
 #: src/screens/Settings/AboutSettings.tsx:74
-#: src/screens/Settings/Settings.tsx:257
-#: src/screens/Settings/Settings.tsx:260
+#: src/screens/Settings/Settings.tsx:259
+#: src/screens/Settings/Settings.tsx:262
 msgid "About"
 msgstr ""
 
@@ -727,8 +727,8 @@ msgid "Accept this language suggestion"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:45
-#: src/screens/Settings/Settings.tsx:233
-#: src/screens/Settings/Settings.tsx:236
+#: src/screens/Settings/Settings.tsx:235
+#: src/screens/Settings/Settings.tsx:238
 msgid "Accessibility"
 msgstr ""
 
@@ -739,8 +739,8 @@ msgstr ""
 #: src/Navigation.tsx:403
 #: src/screens/Login/LoginForm.tsx:192
 #: src/screens/Settings/AccountSettings.tsx:56
-#: src/screens/Settings/Settings.tsx:175
-#: src/screens/Settings/Settings.tsx:178
+#: src/screens/Settings/Settings.tsx:177
+#: src/screens/Settings/Settings.tsx:180
 msgid "Account"
 msgstr ""
 
@@ -779,7 +779,7 @@ msgstr ""
 msgid "Account Muted by List"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:639
+#: src/screens/Settings/Settings.tsx:641
 msgid "Account options"
 msgstr ""
 
@@ -787,7 +787,7 @@ msgstr ""
 msgid "Account provider"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:675
+#: src/screens/Settings/Settings.tsx:677
 msgid "Account removed from quick access"
 msgstr ""
 
@@ -873,8 +873,8 @@ msgstr ""
 msgid "Add alt text (optional)"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:577
-#: src/screens/Settings/Settings.tsx:580
+#: src/screens/Settings/Settings.tsx:579
+#: src/screens/Settings/Settings.tsx:582
 #: src/view/shell/desktop/LeftNav.tsx:264
 #: src/view/shell/desktop/LeftNav.tsx:268
 msgid "Add another account"
@@ -1442,8 +1442,8 @@ msgstr ""
 
 #: src/Navigation.tsx:395
 #: src/screens/Settings/AppearanceSettings.tsx:73
-#: src/screens/Settings/Settings.tsx:225
-#: src/screens/Settings/Settings.tsx:228
+#: src/screens/Settings/Settings.tsx:227
+#: src/screens/Settings/Settings.tsx:230
 msgid "Appearance"
 msgstr ""
 
@@ -1452,8 +1452,8 @@ msgstr ""
 msgid "Apply default recommended feeds"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:508
 #: src/screens/Settings/Settings.tsx:510
+#: src/screens/Settings/Settings.tsx:512
 msgid "Apply Pull Request"
 msgstr ""
 
@@ -1965,7 +1965,7 @@ msgstr ""
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:87
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:248
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:254
-#: src/screens/Settings/Settings.tsx:302
+#: src/screens/Settings/Settings.tsx:304
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
 #: src/view/com/composer/Composer.tsx:1544
@@ -2202,19 +2202,19 @@ msgstr ""
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:272
+#: src/screens/Signup/StepInfo/index.tsx:268
 msgid "Choose your password"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:193
+#: src/screens/Signup/index.tsx:192
 msgid "Choose your username"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:500
+#: src/screens/Settings/Settings.tsx:502
 msgid "Clear all storage data"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:502
+#: src/screens/Settings/Settings.tsx:504
 msgid "Clear all storage data (restart after this)"
 msgstr ""
 
@@ -2431,7 +2431,7 @@ msgstr ""
 msgid "Complete onboarding and start using your account"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:195
+#: src/screens/Signup/index.tsx:194
 msgid "Complete the challenge"
 msgstr ""
 
@@ -2515,8 +2515,8 @@ msgid "Contact our support team"
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:156
-#: src/screens/Signup/index.tsx:234
-#: src/screens/Signup/index.tsx:237
+#: src/screens/Signup/index.tsx:233
+#: src/screens/Signup/index.tsx:236
 msgid "Contact support"
 msgstr ""
 
@@ -2541,8 +2541,8 @@ msgstr ""
 msgid "Content & Media"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:205
-#: src/screens/Settings/Settings.tsx:208
+#: src/screens/Settings/Settings.tsx:207
+#: src/screens/Settings/Settings.tsx:210
 msgid "Content and media"
 msgstr ""
 
@@ -2860,6 +2860,7 @@ msgstr ""
 
 #: src/components/WelcomeModal.tsx:158
 #: src/components/WelcomeModal.tsx:166
+#: src/screens/Signup/index.tsx:135
 #: src/view/com/auth/SplashScreen.tsx:107
 #: src/view/com/auth/SplashScreen.web.tsx:122
 #: src/view/shell/bottom-bar/BottomBar.tsx:327
@@ -2869,10 +2870,6 @@ msgstr ""
 #: src/view/shell/NavSignupCard.tsx:48
 #: src/view/shell/NavSignupCard.tsx:53
 msgid "Create account"
-msgstr ""
-
-#: src/screens/Signup/index.tsx:136
-msgid "Create Account"
 msgstr ""
 
 #: src/components/dialogs/Signin.tsx:87
@@ -2988,7 +2985,7 @@ msgstr ""
 msgid "Dark theme"
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:300
+#: src/screens/Signup/StepInfo/index.tsx:296
 msgid "Date of birth"
 msgstr ""
 
@@ -2998,7 +2995,7 @@ msgstr ""
 msgid "Deactivate account"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:465
+#: src/screens/Settings/Settings.tsx:467
 msgid "Debug Moderation"
 msgstr ""
 
@@ -3052,7 +3049,7 @@ msgstr ""
 msgid "Delete chat"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:472
+#: src/screens/Settings/Settings.tsx:474
 msgid "Delete chat declaration record"
 msgstr ""
 
@@ -3165,8 +3162,8 @@ msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:284
-#: src/screens/Settings/Settings.tsx:287
+#: src/screens/Settings/Settings.tsx:286
+#: src/screens/Settings/Settings.tsx:289
 msgid "Developer options"
 msgstr ""
 
@@ -3584,7 +3581,7 @@ msgid "Either the creator of this list has blocked you or you have blocked the c
 msgstr ""
 
 #: src/screens/Settings/AccountSettings.tsx:71
-#: src/screens/Signup/StepInfo/index.tsx:224
+#: src/screens/Signup/StepInfo/index.tsx:220
 msgid "Email"
 msgstr ""
 
@@ -3758,7 +3755,7 @@ msgid "Enter your birthdate"
 msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:101
-#: src/screens/Signup/StepInfo/index.tsx:244
+#: src/screens/Signup/StepInfo/index.tsx:240
 msgid "Enter your email address"
 msgstr ""
 
@@ -3805,7 +3802,7 @@ msgstr ""
 msgid "Error occurred while saving file"
 msgstr ""
 
-#: src/screens/Signup/StepCaptcha/index.tsx:126
+#: src/screens/Signup/StepCaptcha/index.tsx:127
 msgid "Error receiving captcha response."
 msgstr ""
 
@@ -4337,8 +4334,8 @@ msgstr ""
 msgid "Find Friends"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:216
-#: src/screens/Settings/Settings.tsx:219
+#: src/screens/Settings/Settings.tsx:218
+#: src/screens/Settings/Settings.tsx:221
 msgid "Find friends from contacts"
 msgstr ""
 
@@ -4934,11 +4931,11 @@ msgstr ""
 msgid "Have a code? <0>Click here.</0>"
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:331
+#: src/screens/Signup/StepInfo/index.tsx:327
 msgid "Have we got your location wrong? <0>Tap here to confirm your location with GPS.</0>"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:232
+#: src/screens/Signup/index.tsx:231
 msgid "Having trouble?"
 msgstr ""
 
@@ -4946,8 +4943,8 @@ msgstr ""
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:249
-#: src/screens/Settings/Settings.tsx:253
+#: src/screens/Settings/Settings.tsx:251
+#: src/screens/Settings/Settings.tsx:255
 #: src/view/shell/desktop/RightNav.tsx:129
 #: src/view/shell/desktop/RightNav.tsx:132
 #: src/view/shell/Drawer.tsx:369
@@ -5197,7 +5194,7 @@ msgstr ""
 msgid "If you are 18 years of age or older and want to try again, click the button below and use a different verification method if one is available in your region. If you have questions or concerns, <0>our support team can help.</0>"
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:350
+#: src/screens/Signup/StepInfo/index.tsx:344
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr ""
 
@@ -5427,11 +5424,11 @@ msgstr ""
 msgid "Invite {name} to join Bluesky"
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:194
+#: src/screens/Signup/StepInfo/index.tsx:190
 msgid "Invite code"
 msgstr ""
 
-#: src/screens/Signup/state.ts:346
+#: src/screens/Signup/state.ts:347
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr ""
 
@@ -5465,7 +5462,7 @@ msgstr ""
 msgid "It looks like some of your contacts have not tried to find you here yet. You can personally invite them by customizing a draft message we will provide."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:383
+#: src/screens/Signup/StepInfo/index.tsx:377
 msgid "It's correct"
 msgstr ""
 
@@ -5552,8 +5549,8 @@ msgid "Language Settings"
 msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:81
-#: src/screens/Settings/Settings.tsx:241
-#: src/screens/Settings/Settings.tsx:244
+#: src/screens/Settings/Settings.tsx:243
+#: src/screens/Settings/Settings.tsx:246
 msgid "Languages"
 msgstr ""
 
@@ -6159,8 +6156,8 @@ msgstr ""
 
 #: src/Navigation.tsx:181
 #: src/screens/Moderation/index.tsx:102
-#: src/screens/Settings/Settings.tsx:189
-#: src/screens/Settings/Settings.tsx:192
+#: src/screens/Settings/Settings.tsx:191
+#: src/screens/Settings/Settings.tsx:194
 msgid "Moderation"
 msgstr ""
 
@@ -6833,8 +6830,8 @@ msgstr ""
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:30
-#: src/screens/Settings/Settings.tsx:197
-#: src/screens/Settings/Settings.tsx:200
+#: src/screens/Settings/Settings.tsx:199
+#: src/screens/Settings/Settings.tsx:202
 #: src/view/screens/Notifications.tsx:130
 #: src/view/shell/bottom-bar/BottomBar.tsx:255
 #: src/view/shell/desktop/LeftNav.tsx:710
@@ -6906,7 +6903,7 @@ msgstr ""
 msgid "on<0><1/><2><3/></2></0>"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:398
+#: src/screens/Settings/Settings.tsx:400
 msgid "Onboarding reset"
 msgstr ""
 
@@ -7018,7 +7015,7 @@ msgstr ""
 msgid "Open message options"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:463
+#: src/screens/Settings/Settings.tsx:465
 msgid "Open moderation debug page"
 msgstr ""
 
@@ -7052,12 +7049,12 @@ msgstr ""
 msgid "Open starter pack menu"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:456
-#: src/screens/Settings/Settings.tsx:470
+#: src/screens/Settings/Settings.tsx:458
+#: src/screens/Settings/Settings.tsx:472
 msgid "Open storybook page"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:449
+#: src/screens/Settings/Settings.tsx:451
 msgid "Open system log"
 msgstr ""
 
@@ -7125,7 +7122,7 @@ msgstr ""
 msgid "Opens GIF select dialog"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:250
+#: src/screens/Settings/Settings.tsx:252
 msgid "Opens helpdesk in browser"
 msgstr ""
 
@@ -7260,7 +7257,7 @@ msgstr ""
 #: src/screens/Settings/AccountSettings.tsx:126
 #: src/screens/Settings/AccountSettings.tsx:130
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:291
-#: src/screens/Signup/StepInfo/index.tsx:259
+#: src/screens/Signup/StepInfo/index.tsx:255
 msgid "Password"
 msgstr ""
 
@@ -7442,12 +7439,12 @@ msgstr ""
 msgid "Please check your email inbox for further instructions. It may take a minute or two to arrive."
 msgstr ""
 
-#: src/screens/Signup/state.ts:293
+#: src/screens/Signup/state.ts:294
 msgid "Please choose your handle."
 msgstr ""
 
-#: src/screens/Signup/state.ts:285
-#: src/screens/Signup/StepInfo/index.tsx:154
+#: src/screens/Signup/state.ts:286
+#: src/screens/Signup/StepInfo/index.tsx:150
 msgid "Please choose your password."
 msgstr ""
 
@@ -7455,7 +7452,7 @@ msgstr ""
 msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
 msgstr ""
 
-#: src/screens/Signup/state.ts:308
+#: src/screens/Signup/state.ts:309
 msgid "Please complete the verification captcha."
 msgstr ""
 
@@ -7464,7 +7461,7 @@ msgid "Please confirm your email address to upload videos."
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:102
-#: src/screens/Signup/StepInfo/index.tsx:143
+#: src/screens/Signup/StepInfo/index.tsx:140
 msgid "Please double-check that you have entered your email address correctly."
 msgstr ""
 
@@ -7512,12 +7509,12 @@ msgstr ""
 msgid "Please enter the security code we sent to your previous email address."
 msgstr ""
 
-#: src/screens/Signup/state.ts:269
-#: src/screens/Signup/StepInfo/index.tsx:125
+#: src/screens/Signup/state.ts:270
+#: src/screens/Signup/StepInfo/index.tsx:123
 msgid "Please enter your email."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:118
+#: src/screens/Signup/StepInfo/index.tsx:116
 msgid "Please enter your invite code."
 msgstr ""
 
@@ -7760,8 +7757,8 @@ msgstr ""
 msgid "Privacy"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:183
-#: src/screens/Settings/Settings.tsx:186
+#: src/screens/Settings/Settings.tsx:185
+#: src/screens/Settings/Settings.tsx:188
 msgid "Privacy and security"
 msgstr ""
 
@@ -8053,7 +8050,7 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:113
 #: src/screens/Bookmarks/index.tsx:268
 #: src/screens/Moderation/index.tsx:486
-#: src/screens/Settings/Settings.tsx:677
+#: src/screens/Settings/Settings.tsx:679
 #: src/view/com/modals/UserAddRemoveLists.tsx:236
 #: src/view/com/posts/PostFeedErrorMessage.tsx:221
 msgid "Remove"
@@ -8071,8 +8068,8 @@ msgstr ""
 msgid "Remove {historyItem}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:656
-#: src/screens/Settings/Settings.tsx:659
+#: src/screens/Settings/Settings.tsx:658
+#: src/screens/Settings/Settings.tsx:661
 msgid "Remove account"
 msgstr ""
 
@@ -8121,7 +8118,7 @@ msgstr ""
 msgid "Remove from my feeds"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:669
+#: src/screens/Settings/Settings.tsx:671
 msgid "Remove from quick access?"
 msgstr ""
 
@@ -8486,7 +8483,7 @@ msgstr ""
 msgid "Require an email code to sign in to your account."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:208
+#: src/screens/Signup/StepInfo/index.tsx:204
 msgid "Required for this provider"
 msgstr ""
 
@@ -8523,8 +8520,8 @@ msgstr ""
 msgid "Resend Verification Email"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:492
 #: src/screens/Settings/Settings.tsx:494
+#: src/screens/Settings/Settings.tsx:496
 msgid "Reset activity subscription nudge"
 msgstr ""
 
@@ -8532,8 +8529,8 @@ msgstr ""
 msgid "Reset code"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:477
 #: src/screens/Settings/Settings.tsx:479
+#: src/screens/Settings/Settings.tsx:481
 msgid "Reset onboarding state"
 msgstr ""
 
@@ -9046,7 +9043,7 @@ msgstr ""
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:301
+#: src/screens/Signup/StepInfo/index.tsx:297
 msgid "Select your date of birth"
 msgstr ""
 
@@ -9493,9 +9490,9 @@ msgstr ""
 msgid "Sign in to view post"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:267
 #: src/screens/Settings/Settings.tsx:269
-#: src/screens/Settings/Settings.tsx:301
+#: src/screens/Settings/Settings.tsx:271
+#: src/screens/Settings/Settings.tsx:303
 #: src/screens/SignupQueued.tsx:94
 #: src/screens/SignupQueued.tsx:97
 #: src/screens/Takendown.tsx:88
@@ -9509,7 +9506,7 @@ msgstr ""
 msgid "Sign Out"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:298
+#: src/screens/Settings/Settings.tsx:300
 #: src/view/shell/desktop/LeftNav.tsx:211
 msgid "Sign out?"
 msgstr ""
@@ -9753,11 +9750,11 @@ msgstr ""
 #. placeholder {1}: state.serviceDescription && !state.serviceDescription.phoneVerificationRequired ? '2' : '3'
 #. placeholder {1}: state.totalSteps
 #: src/screens/Onboarding/Layout.tsx:226
-#: src/screens/Signup/index.tsx:181
+#: src/screens/Signup/index.tsx:180
 msgid "Step {0} of {1}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:403
+#: src/screens/Settings/Settings.tsx:405
 msgid "Storage cleared, you need to restart the app now."
 msgstr ""
 
@@ -9766,7 +9763,7 @@ msgid "Stored as part of a secure code for matching with others"
 msgstr ""
 
 #: src/Navigation.tsx:310
-#: src/screens/Settings/Settings.tsx:458
+#: src/screens/Settings/Settings.tsx:460
 msgid "Storybook"
 msgstr ""
 
@@ -9881,7 +9878,7 @@ msgstr ""
 #: src/components/dialogs/SwitchAccount.tsx:50
 #: src/screens/Settings/Settings.tsx:124
 #: src/screens/Settings/Settings.tsx:138
-#: src/screens/Settings/Settings.tsx:617
+#: src/screens/Settings/Settings.tsx:619
 #: src/view/shell/desktop/LeftNav.tsx:249
 msgid "Switch account"
 msgstr ""
@@ -9905,7 +9902,7 @@ msgstr ""
 #: src/screens/Log.tsx:57
 #: src/screens/Settings/AboutSettings.tsx:106
 #: src/screens/Settings/AboutSettings.tsx:109
-#: src/screens/Settings/Settings.tsx:451
+#: src/screens/Settings/Settings.tsx:453
 msgid "System log"
 msgstr ""
 
@@ -9925,7 +9922,7 @@ msgstr ""
 msgid "Tap for more information"
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:335
+#: src/screens/Signup/StepInfo/index.tsx:330
 msgid "Tap here to confirm your location with GPS."
 msgstr ""
 
@@ -10558,7 +10555,7 @@ msgid "This will irreversibly delete your Bluesky account <0>{currentHandle}</0>
 msgstr ""
 
 #. placeholder {0}: account.handle
-#: src/screens/Settings/Settings.tsx:671
+#: src/screens/Settings/Settings.tsx:673
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 
@@ -10757,7 +10754,7 @@ msgstr ""
 #: src/screens/Login/index.tsx:96
 #: src/screens/Login/LoginForm.tsx:167
 #: src/screens/Login/SetNewPasswordForm.tsx:83
-#: src/screens/Signup/index.tsx:89
+#: src/screens/Signup/index.tsx:87
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr ""
 
@@ -10769,11 +10766,11 @@ msgstr ""
 msgid "Unable to resolve handle"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:517
+#: src/screens/Settings/Settings.tsx:519
 msgid "Unapply Pull Request"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:519
+#: src/screens/Settings/Settings.tsx:521
 msgid "Unapply Pull Request {currentChannel}"
 msgstr ""
 
@@ -10978,8 +10975,8 @@ msgstr ""
 msgid "Unpinned list"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:484
 #: src/screens/Settings/Settings.tsx:486
+#: src/screens/Settings/Settings.tsx:488
 msgid "Unsnooze email reminder"
 msgstr ""
 
@@ -11694,8 +11691,8 @@ msgstr ""
 msgid "We’re introducing a new layer of verification on Bluesky — an easy-to-see checkmark."
 msgstr ""
 
-#: src/screens/Signup/index.tsx:137
-msgid "We're so excited to have you join us!"
+#: src/screens/Signup/index.tsx:136
+msgid "We’re so excited to have you join us!"
 msgstr ""
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:416
@@ -12237,7 +12234,7 @@ msgstr ""
 msgid "You previously deactivated @{0}."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:414
+#: src/screens/Settings/Settings.tsx:416
 msgid "You probably want to restart the app now."
 msgstr ""
 
@@ -12257,7 +12254,7 @@ msgstr ""
 msgid "You recently changed your birthdate"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:299
+#: src/screens/Settings/Settings.tsx:301
 #: src/view/shell/desktop/LeftNav.tsx:212
 msgid "You will be signed out of all your accounts."
 msgstr ""
@@ -12292,11 +12289,11 @@ msgstr ""
 msgid "You: {short}"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:153
+#: src/screens/Signup/index.tsx:152
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:158
+#: src/screens/Signup/index.tsx:157
 msgid "You'll follow the suggested users once you finish creating your account!"
 msgstr ""
 
@@ -12380,7 +12377,7 @@ msgstr ""
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:191
+#: src/screens/Signup/index.tsx:190
 msgid "Your account"
 msgstr ""
 
@@ -12408,7 +12405,7 @@ msgstr ""
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:288
+#: src/screens/Signup/StepInfo/index.tsx:284
 msgid "Your birth date"
 msgstr ""
 
@@ -12453,8 +12450,8 @@ msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:53
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:82
-#: src/screens/Signup/state.ts:277
-#: src/screens/Signup/StepInfo/index.tsx:132
+#: src/screens/Signup/state.ts:278
+#: src/screens/Signup/StepInfo/index.tsx:130
 msgid "Your email appears to be invalid."
 msgstr ""
 
@@ -12500,7 +12497,7 @@ msgstr ""
 msgid "Your live event preferences have been updated."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:366
+#: src/screens/Signup/StepInfo/index.tsx:360
 msgid "Your location has been updated."
 msgstr ""
 
@@ -12512,7 +12509,7 @@ msgstr ""
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:161
+#: src/screens/Signup/StepInfo/index.tsx:157
 msgid "Your password must be at least 8 characters long."
 msgstr ""
 
