@@ -6,6 +6,8 @@ module.exports = {
     extend: {
       colors: {
         brand: 'rgb(0,106,255)',
+        brandHover: 'rgb(245,249,255)',
+        brandHoverDark: 'rgb(17,24,34)',
         brandLighten: 'rgb(32,139,254)',
         textLight: 'rgb(63,82,104)',
         textDimmed: 'rgb(164,179,197)',
