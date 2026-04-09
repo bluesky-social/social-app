@@ -10,11 +10,14 @@ export function applyTheme(theme: 'light' | 'dark') {
 }
 
 export function initSystemColorMode() {
-  const mql = window.matchMedia('(prefers-color-scheme: dark)')
-  const handler = (e: MediaQueryListEvent | MediaQueryList) => {
-    applyTheme(e.matches ? 'dark' : 'light')
-  }
-  handler(mql)
-  mql.addEventListener('change', handler)
-  return () => mql.removeEventListener('change', handler)
+  applyTheme(
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light',
+  )
+  window
+    .matchMedia('(prefers-color-scheme: dark)')
+    .addEventListener('change', mql => {
+      applyTheme(mql.matches ? 'dark' : 'light')
+    })
 }
