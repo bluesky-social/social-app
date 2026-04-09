@@ -369,7 +369,6 @@ export function MessagesList({
           profile={convoState.convo.members.find(
             member => member.did === item.message.sender.did,
           )}
-          // TODO This is placeholder for now, just to test the group chat UI.
           isGroupChat={convoState.convo.kind === 'group'}
         />
       ) : (
