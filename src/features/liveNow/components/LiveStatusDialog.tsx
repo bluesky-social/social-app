@@ -279,7 +279,6 @@ function ModeratedImage() {
   return (
     <View
       style={[
-        a.flex_1,
         a.p_lg,
         a.py_xl,
         a.align_center,
