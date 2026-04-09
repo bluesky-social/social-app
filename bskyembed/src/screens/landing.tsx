@@ -7,6 +7,7 @@ import {useEffect, useMemo, useRef, useState} from 'preact/hooks'
 import arrowBottom from '../../assets/arrowBottom_stroke2_corner0_rounded.svg'
 import logo from '../../assets/logo.svg'
 import {
+  applyTheme,
   assertColorModeValues,
   ColorModeValues,
   initSystemColorMode,
@@ -28,8 +29,6 @@ export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 const root = document.getElementById('app')
 if (!root) throw new Error('No root element')
 
-initSystemColorMode()
-
 const agent = new AtpAgent({
   service: 'https://public.api.bsky.app',
 })
@@ -39,6 +38,15 @@ render(<LandingPage />, root)
 function LandingPage() {
   const [uri, setUri] = useState('')
   const [colorMode, setColorMode] = useState<ColorModeValues>('system')
+
+  useEffect(() => {
+    if (colorMode === 'system') {
+      return initSystemColorMode()
+    } else {
+      applyTheme(colorMode)
+    }
+  }, [colorMode])
+
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [thread, setThread] = useState<AppBskyFeedDefs.ThreadViewPost | null>(
@@ -132,7 +140,7 @@ function LandingPage() {
           type="text"
           value={uri}
           onInput={e => setUri(e.currentTarget.value)}
-          className="border rounded-lg py-3 px-4 dark:bg-dimmedBg dark:border-slate-500"
+          className="bg-white border rounded-lg py-3 px-4 dark:bg-dimmedBg dark:border-slate-500"
           placeholder={DEFAULT_POST}
         />
 
@@ -271,7 +279,7 @@ function Snippet({
         ref={ref}
         type="text"
         value={snippet}
-        className="border rounded-lg py-3 w-full px-4 dark:bg-dimmedBg dark:border-slate-500"
+        className="bg-white border rounded-lg py-3 w-full px-4 dark:bg-dimmedBg dark:border-slate-500"
         readOnly
         autoFocus
         onFocus={() => {
