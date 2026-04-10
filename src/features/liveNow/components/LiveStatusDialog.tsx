@@ -117,13 +117,14 @@ export function LiveStatus({
   const reportDialogControl = useGlobalReportDialogControl()
   const dialogContext = Dialog.useDialogContext()
   const moderation = useMemo(() => {
-    return moderateStatus(profile, moderationOpts!)
+    if (!moderationOpts) return undefined
+    return moderateStatus(profile, moderationOpts)
   }, [profile, moderationOpts])
 
   return (
     <>
       {embed.external.thumb && (
-        <Hider.Outer modui={moderation.ui('contentMedia')}>
+        <Hider.Outer modui={moderation?.ui('contentMedia')}>
           <Hider.Mask>
             <ModeratedImage />
           </Hider.Mask>
