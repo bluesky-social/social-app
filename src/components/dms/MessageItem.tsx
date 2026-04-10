@@ -334,7 +334,9 @@ let MessageItem = ({
         ]}>
         <View style={[a.relative]}>
           {isGroupChat && !isFromSelf && isLastInCluster ? (
-            <View style={[a.absolute, a.bottom_0]}>{avatar}</View>
+            <View style={[a.absolute, {bottom: hasReactions ? 10 : 0}]}>
+              {avatar}
+            </View>
           ) : null}
           <View
             style={[
