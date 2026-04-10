@@ -101,7 +101,7 @@ function Inner() {
 
   const moderationOpts = useModerationOpts()
   const {data: recipientUnshadowed} = useProfileQuery({
-    did: convoState.recipients?.[0].did,
+    did: convoState.getPrimaryMember?.()?.did,
   })
   const recipient = useMaybeProfileShadow(recipientUnshadowed)
 
@@ -135,7 +135,7 @@ function Inner() {
       <>
         <Layout.Center style={[a.flex_1]}>
           {moderation ? (
-            <MessagesListHeader moderation={moderation} profile={recipient} />
+            <MessagesListHeader profile={recipient} moderation={moderation} />
           ) : (
             <MessagesListHeader />
           )}
@@ -156,7 +156,7 @@ function Inner() {
       {isFocused && IS_WEB && <RemoveScrollBar />}
       {!readyToShow &&
         (moderation ? (
-          <MessagesListHeader moderation={moderation} profile={recipient} />
+          <MessagesListHeader profile={recipient} moderation={moderation} />
         ) : (
           <MessagesListHeader />
         ))}
