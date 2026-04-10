@@ -1,5 +1,6 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 
+import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Person_Filled_Corner2_Rounded as PersonIcon} from '#/components/icons/Person'
@@ -10,10 +11,9 @@ type Props = {
   size?: 'small' | 'medium' | 'large'
 }
 
-/**
- * TODO This is just layout for now.
- */
-export function AvatarBubbles({profiles, size = 'large'}: Props) {
+export function AvatarBubbles({profiles: allProfiles, size = 'large'}: Props) {
+  const {currentAccount} = useSession()
+  const profiles = allProfiles.filter(p => p.did !== currentAccount?.did)
   const containerSize = size === 'small' ? 40 : size === 'medium' ? 56 : 120
   const scale = size === 'small' ? 40 / 120 : size === 'medium' ? 56 / 120 : 1
   const marginOffset = size === 'small' || size === 'medium' ? -2 : 0
@@ -21,14 +21,14 @@ export function AvatarBubbles({profiles, size = 'large'}: Props) {
   let avatars = (
     <>
       <AvatarBubble
-        profile={profiles.length > 0 ? profiles[0] : undefined}
+        profile={profiles[0] ?? allProfiles[0]}
         size={76}
         x={-2}
         y={-2}
         style={[a.z_20]}
       />
       <AvatarBubble
-        profile={profiles.length >= 1 ? profiles[1] : undefined}
+        profile={profiles[1]}
         size={76}
         x={42}
         y={42}
