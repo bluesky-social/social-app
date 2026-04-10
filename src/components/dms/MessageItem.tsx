@@ -679,7 +679,7 @@ function ReactionTabs({
             contentSize.set(e.nativeEvent.layout.width)
           }}>
           {tabs?.map((reaction, index) => (
-            <Tab
+            <ReactionTab
               key={reaction.value}
               index={index}
               reaction={reaction}
@@ -694,7 +694,7 @@ function ReactionTabs({
   )
 }
 
-function Tab({
+function ReactionTab({
   index,
   reaction,
   selected,
