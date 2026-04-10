@@ -15,6 +15,7 @@ import {Trans} from '@lingui/react/macro'
 import {cleanError} from '#/lib/strings/errors'
 import {
   type Gif,
+<<<<<<< Updated upstream
   klipyStaticUrl,
   useFeaturedGifsQuery as useKlipyFeaturedGifsQuery,
   useGifSearchQuery as useKlipyGifSearchQuery,
@@ -22,6 +23,11 @@ import {
 import {
   useTenorFeaturedGifsQuery,
   useTenorGifSearchQuery,
+=======
+  gifPreviewUrl,
+  useFeaturedGifsQuery,
+  useGifSearchQuery,
+>>>>>>> Stashed changes
 } from '#/state/queries/tenor'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
@@ -98,6 +104,7 @@ function GifList({
   const [undeferredSearch, setSearch] = useState('')
   const search = useThrottledValue(undeferredSearch, 500)
   const {height} = useWindowDimensions()
+  const useKlipy = ax.features.enabled(ax.features.KlipyGifProviderEnable)
 
   const isSearching = search.length > 0
   const useKlipy = ax.features.enabled(ax.features.KlipyGifProviderEnable)
@@ -332,7 +339,11 @@ export function GifPreview({
             t.atoms.bg_contrast_25,
           ]}
           source={{
+<<<<<<< Updated upstream
             uri: klipyStaticUrl(gif.file.sm.gif.url),
+=======
+            uri: gifPreviewUrl(gif.media_formats.tinygif.url),
+>>>>>>> Stashed changes
           }}
           contentFit="cover"
           accessibilityLabel={gif.title}

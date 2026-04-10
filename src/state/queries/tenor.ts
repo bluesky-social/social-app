@@ -2,7 +2,10 @@ import {Platform} from 'react-native'
 import {getLocales} from 'expo-localization'
 import {keepPreviousData, useInfiniteQuery} from '@tanstack/react-query'
 
+<<<<<<< Updated upstream
 import {useAnalytics} from '#/analytics'
+=======
+>>>>>>> Stashed changes
 import {
   GIF_FEATURED,
   GIF_KLIPY_FEATURED,
@@ -10,6 +13,7 @@ import {
   GIF_SEARCH,
 } from '#/lib/constants'
 import {logger} from '#/logger'
+import {useAnalytics} from '#/analytics'
 
 export const RQKEY_ROOT = 'gif-service'
 export const RQKEY_FEATURED = (provider: string) => [
@@ -130,9 +134,14 @@ export function tenorUrlToBskyGifUrl(tenorUrl: string) {
 }
 
 /**
+<<<<<<< Updated upstream
  * Returns the appropriate static URL for a GIF preview image.
  * For Tenor URLs, rewrites through the bsky proxy.
  * For KLIPY URLs, returns as-is (no proxy yet).
+=======
+ * Returns the appropriate URL for a GIF preview image.
+ * Rewrites Tenor URLs through the bsky proxy; KLIPY URLs pass through directly.
+>>>>>>> Stashed changes
  */
 export function gifPreviewUrl(gifUrl: string) {
   try {
@@ -140,7 +149,10 @@ export function gifPreviewUrl(gifUrl: string) {
     if (url.hostname === 'media.tenor.com') {
       return tenorUrlToBskyGifUrl(gifUrl)
     }
+<<<<<<< Updated upstream
     // KLIPY static URLs and others pass through directly
+=======
+>>>>>>> Stashed changes
     return gifUrl
   } catch (e) {
     logger.debug('invalid url passed to gifPreviewUrl()')

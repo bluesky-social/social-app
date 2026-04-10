@@ -191,11 +191,12 @@ export async function resolveGif(
   gif: Gif,
 ): Promise<ResolvedExternalLink> {
   const uri = `${gif.media_formats.gif.url}?hh=${gif.media_formats.gif.dims[1]}&ww=${gif.media_formats.gif.dims[0]}`
+  const altText = gif.content_description || gif.title
   return {
     type: 'external',
     uri,
-    title: gif.content_description,
-    description: createGIFDescription(gif.content_description),
+    title: altText,
+    description: createGIFDescription(altText),
     thumb: await imageToThumb(gif.media_formats.preview.url),
   }
 }
