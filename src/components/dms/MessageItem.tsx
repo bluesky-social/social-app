@@ -254,8 +254,6 @@ let MessageItem = ({
               isFromSelf ? a.align_end : a.align_start,
               a.px_sm,
               a.pb_2xs,
-              !isFromSelf &&
-                isGroupChat && {paddingLeft: AVATAR_SIZE + a.ml_sm.marginLeft},
             ]}>
             <Pressable
               accessible={true}
