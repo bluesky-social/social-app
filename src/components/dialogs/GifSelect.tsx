@@ -15,9 +15,13 @@ import {Trans} from '@lingui/react/macro'
 import {cleanError} from '#/lib/strings/errors'
 import {
   type Gif,
-  tenorUrlToBskyGifUrl,
-  useFeaturedGifsQuery,
-  useGifSearchQuery,
+  klipyStaticUrl,
+  useFeaturedGifsQuery as useKlipyFeaturedGifsQuery,
+  useGifSearchQuery as useKlipyGifSearchQuery,
+} from '#/state/queries/klipy'
+import {
+  useTenorFeaturedGifsQuery,
+  useTenorGifSearchQuery,
 } from '#/state/queries/tenor'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
@@ -85,6 +89,7 @@ function GifList({
   control: Dialog.DialogControlProps
   onSelectGif: (gif: Gif) => void
 }) {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
@@ -95,9 +100,12 @@ function GifList({
   const {height} = useWindowDimensions()
 
   const isSearching = search.length > 0
+  const useKlipy = ax.features.enabled(ax.features.KlipyGifProviderEnable)
 
-  const trendingQuery = useFeaturedGifsQuery()
-  const searchQuery = useGifSearchQuery(search)
+  const klipyTrending = useKlipyFeaturedGifsQuery({enabled: useKlipy})
+  const klipySearch = useKlipyGifSearchQuery(search, {enabled: useKlipy})
+  const tenorTrending = useTenorFeaturedGifsQuery({enabled: !useKlipy})
+  const tenorSearch = useTenorGifSearchQuery(search, {enabled: !useKlipy})
 
   const {
     data,
@@ -108,10 +116,16 @@ function GifList({
     isPending,
     isError,
     refetch,
-  } = isSearching ? searchQuery : trendingQuery
+  } = useKlipy
+    ? isSearching
+      ? klipySearch
+      : klipyTrending
+    : isSearching
+      ? tenorSearch
+      : tenorTrending
 
   const flattenedData = useMemo(() => {
-    return data?.pages.flatMap(page => page.results) || []
+    return data?.pages.flatMap(page => page.data) || []
   }, [data])
 
   const renderItem = useCallback(
@@ -167,7 +181,9 @@ function GifList({
           <TextField.Icon icon={Search} />
           <TextField.Input
             label={_(msg`Search GIFs`)}
-            placeholder={_(msg`Search Tenor`)}
+            placeholder={
+              useKlipy ? _(msg`Search KLIPY`) : _(msg`Search Tenor`)
+            }
             onChangeText={text => {
               setSearch(text)
               listRef.current?.scrollToOffset({offset: 0, animated: false})
@@ -185,7 +201,7 @@ function GifList({
         </TextField.Root>
       </View>
     )
-  }, [gtMobile, t.atoms.bg, _, control])
+  }, [gtMobile, t.atoms.bg, _, control, useKlipy])
 
   return (
     <>
@@ -213,13 +229,21 @@ function GifList({
                 sideBorders={false}
                 topBorder={false}
                 errorTitle={_(msg`Failed to load GIFs`)}
-                errorMessage={_(msg`There was an issue connecting to Tenor.`)}
+                errorMessage={
+                  useKlipy
+                    ? _(msg`There was an issue connecting to KLIPY.`)
+                    : _(msg`There was an issue connecting to Tenor.`)
+                }
                 emptyMessage={
                   isSearching
                     ? _(msg`No search results found for "${search}".`)
-                    : _(
-                        msg`No featured GIFs found. There may be an issue with Tenor.`,
-                      )
+                    : useKlipy
+                      ? _(
+                          msg`No featured GIFs found. There may be an issue with KLIPY.`,
+                        )
+                      : _(
+                          msg`No featured GIFs found. There may be an issue with Tenor.`,
+                        )
                 }
               />
             )}
@@ -228,7 +252,7 @@ function GifList({
         stickyHeaderIndices={[0]}
         onEndReached={onEndReached}
         onEndReachedThreshold={4}
-        keyExtractor={(item: Gif) => item.id}
+        keyExtractor={(item: Gif) => item.slug}
         keyboardDismissMode="on-drag"
         ListFooterComponent={
           hasData ? (
@@ -308,7 +332,7 @@ export function GifPreview({
             t.atoms.bg_contrast_25,
           ]}
           source={{
-            uri: tenorUrlToBskyGifUrl(gif.media_formats.tinygif.url),
+            uri: klipyStaticUrl(gif.file.sm.gif.url),
           }}
           contentFit="cover"
           accessibilityLabel={gif.title}

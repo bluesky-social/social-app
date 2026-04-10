@@ -2,30 +2,60 @@ import {Platform} from 'react-native'
 import {getLocales} from 'expo-localization'
 import {keepPreviousData, useInfiniteQuery} from '@tanstack/react-query'
 
-import {GIF_FEATURED, GIF_SEARCH} from '#/lib/constants'
+import {useAnalytics} from '#/analytics'
+import {
+  GIF_FEATURED,
+  GIF_KLIPY_FEATURED,
+  GIF_KLIPY_SEARCH,
+  GIF_SEARCH,
+} from '#/lib/constants'
 import {logger} from '#/logger'
 
 export const RQKEY_ROOT = 'gif-service'
-export const RQKEY_FEATURED = [RQKEY_ROOT, 'featured']
-export const RQKEY_SEARCH = (query: string) => [RQKEY_ROOT, 'search', query]
+export const RQKEY_FEATURED = (provider: string) => [
+  RQKEY_ROOT,
+  'featured',
+  provider,
+]
+export const RQKEY_SEARCH = (query: string, provider: string) => [
+  RQKEY_ROOT,
+  'search',
+  query,
+  provider,
+]
 
-const getTrendingGifs = createTenorApi(GIF_FEATURED)
-
-const searchGifs = createTenorApi<{q: string}>(GIF_SEARCH)
+const getTenorTrendingGifs = createTenorApi(GIF_FEATURED)
+const searchTenorGifs = createTenorApi<{q: string}>(GIF_SEARCH)
+const getKlipyTrendingGifs = createTenorApi(GIF_KLIPY_FEATURED)
+const searchKlipyGifs = createTenorApi<{q: string}>(GIF_KLIPY_SEARCH)
 
 export function useFeaturedGifsQuery() {
+  const ax = useAnalytics()
+  const useKlipy = ax.features.enabled(ax.features.KlipyGifProviderEnable)
+  const provider = useKlipy ? 'klipy' : 'tenor'
+
   return useInfiniteQuery({
-    queryKey: RQKEY_FEATURED,
-    queryFn: ({pageParam}) => getTrendingGifs({pos: pageParam}),
+    queryKey: RQKEY_FEATURED(provider),
+    queryFn: ({pageParam}) =>
+      useKlipy
+        ? getKlipyTrendingGifs({pos: pageParam})
+        : getTenorTrendingGifs({pos: pageParam}),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.next,
   })
 }
 
 export function useGifSearchQuery(query: string) {
+  const ax = useAnalytics()
+  const useKlipy = ax.features.enabled(ax.features.KlipyGifProviderEnable)
+  const provider = useKlipy ? 'klipy' : 'tenor'
+
   return useInfiniteQuery({
-    queryKey: RQKEY_SEARCH(query),
-    queryFn: ({pageParam}) => searchGifs({q: query, pos: pageParam}),
+    queryKey: RQKEY_SEARCH(query, provider),
+    queryFn: ({pageParam}) =>
+      useKlipy
+        ? searchKlipyGifs({q: query, pos: pageParam})
+        : searchTenorGifs({q: query, pos: pageParam}),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.next,
     enabled: !!query,
@@ -81,7 +111,7 @@ function createTenorApi<Input extends object>(
       },
     })
     if (!res.ok) {
-      throw new Error('Failed to fetch Tenor API')
+      throw new Error('Failed to fetch GIF API')
     }
     return res.json()
   }
@@ -97,6 +127,25 @@ export function tenorUrlToBskyGifUrl(tenorUrl: string) {
   }
   url.hostname = 't.gifs.bsky.app'
   return url.href
+}
+
+/**
+ * Returns the appropriate static URL for a GIF preview image.
+ * For Tenor URLs, rewrites through the bsky proxy.
+ * For KLIPY URLs, returns as-is (no proxy yet).
+ */
+export function gifPreviewUrl(gifUrl: string) {
+  try {
+    const url = new URL(gifUrl)
+    if (url.hostname === 'media.tenor.com') {
+      return tenorUrlToBskyGifUrl(gifUrl)
+    }
+    // KLIPY static URLs and others pass through directly
+    return gifUrl
+  } catch (e) {
+    logger.debug('invalid url passed to gifPreviewUrl()')
+    return ''
+  }
 }
 
 export type Gif = {

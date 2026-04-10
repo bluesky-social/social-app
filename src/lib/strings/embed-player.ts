@@ -23,6 +23,7 @@ export const embedPlayerSources = [
   'vimeo',
   'giphy',
   'tenor',
+  'klipy',
   'flickr',
   'bandcamp',
 ] as const
@@ -44,6 +45,7 @@ export type EmbedPlayerType =
   | 'vimeo_video'
   | 'giphy_gif'
   | 'tenor_gif'
+  | 'klipy_gif'
   | 'flickr_album'
   | 'bandcamp_album'
   | 'bandcamp_track'
@@ -55,6 +57,7 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   twitch: 'Twitch',
   giphy: 'GIPHY',
   tenor: 'Tenor',
+  klipy: 'KLIPY',
   spotify: 'Spotify',
   appleMusic: 'Apple Music',
   soundcloud: 'SoundCloud',
@@ -391,6 +394,20 @@ export function parseEmbedPlayerFromUrl(
     }
   }
 
+  const klipyGif = parseKlipyGif(urlp)
+  if (klipyGif.success) {
+    const {playerUri, dimensions} = klipyGif
+
+    return {
+      type: 'klipy_gif',
+      source: 'klipy',
+      isGif: true,
+      hideDetails: true,
+      playerUri,
+      dimensions,
+    }
+  }
+
   // this is a standard flickr path! we can use the embedder for albums and groups, so validate the path
   if (urlp.hostname === 'www.flickr.com' || urlp.hostname === 'flickr.com') {
     let i = urlp.pathname.length - 1
@@ -627,4 +644,66 @@ export function isTenorGifUri(url: URL | string) {
     // Invalid URL
     return false
   }
+}
+
+export function parseKlipyGif(urlp: URL):
+  | {success: false}
+  | {
+      success: true
+      playerUri: string
+      dimensions: {height: number; width: number}
+    } {
+  if (urlp.hostname !== 'static.klipy.com') {
+    return {success: false}
+  }
+
+  if (!urlp.pathname.startsWith('/ii/')) {
+    return {success: false}
+  }
+
+  const h = urlp.searchParams.get('hh')
+  const w = urlp.searchParams.get('ww')
+
+  if (!h || !w) {
+    return {success: false}
+  }
+
+  const dimensions = {
+    height: Number(h),
+    width: Number(w),
+  }
+
+  // Validate dimensions are valid positive numbers
+  if (
+    isNaN(dimensions.height) ||
+    isNaN(dimensions.width) ||
+    dimensions.height <= 0 ||
+    dimensions.width <= 0
+  ) {
+    return {success: false}
+  }
+
+  // Use the base URL without dimension params as the player URI
+  const playerUrl = new URL(urlp.href)
+  playerUrl.searchParams.delete('hh')
+  playerUrl.searchParams.delete('ww')
+
+  return {
+    success: true,
+    playerUri: playerUrl.href,
+    dimensions,
+  }
+}
+
+export function isKlipyGifUri(url: URL | string) {
+  try {
+    return parseKlipyGif(typeof url === 'string' ? new URL(url) : url).success
+  } catch {
+    // Invalid URL
+    return false
+  }
+}
+
+export function isGifEmbed(url: URL | string) {
+  return isTenorGifUri(url) || isKlipyGifUri(url)
 }

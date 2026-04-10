@@ -8,6 +8,7 @@ import {
   parseStarterPackUri,
 } from '#/lib/strings/starter-pack'
 import {messages} from '#/locale/locales/en/messages'
+import {klipyStaticUrl} from '#/state/queries/klipy'
 import {tenorUrlToBskyGifUrl} from '#/state/queries/tenor'
 import {cleanError} from '../../src/lib/strings/errors'
 import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
@@ -450,6 +451,12 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://sufjanstevens.bandcamp.com',
     'https://bandcamp.com/',
     'https://bandcamp.com',
+
+    'https://static.klipy.com/ii/abc123/73/ac/someFile.gif?hh=200&ww=300',
+    'https://static.klipy.com/ii/abc123/73/ac/someFile.gif?hh=200',
+    'https://static.klipy.com/ii/abc123/73/ac/someFile.gif',
+    'https://static.klipy.com/other/path.gif?hh=200&ww=300',
+    'https://static.klipy.com',
   ]
 
   const outputs = [
@@ -845,6 +852,22 @@ describe('parseEmbedPlayerFromUrl', () => {
     undefined,
     undefined,
     undefined,
+
+    {
+      type: 'klipy_gif',
+      source: 'klipy',
+      isGif: true,
+      hideDetails: true,
+      playerUri: 'https://static.klipy.com/ii/abc123/73/ac/someFile.gif',
+      dimensions: {
+        width: 300,
+        height: 200,
+      },
+    },
+    undefined,
+    undefined,
+    undefined,
+    undefined,
   ]
 
   it('correctly grabs the correct id from uri', () => {
@@ -1048,4 +1071,15 @@ describe('tenorUrlToBskyGifUrl', () => {
       expect(out.startsWith('https://t.gifs.bsky.app/')).toEqual(true)
     },
   )
+})
+
+describe('klipyStaticUrl', () => {
+  it('returns the URL as-is for valid KLIPY static URLs', () => {
+    const input = 'https://static.klipy.com/ii/abc123/73/ac/someFile.gif'
+    expect(klipyStaticUrl(input)).toEqual(input)
+  })
+
+  it('returns empty string for invalid URLs', () => {
+    expect(klipyStaticUrl('not-a-url')).toEqual('')
+  })
 })

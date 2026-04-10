@@ -13,6 +13,7 @@ export enum Features {
   ImageUploadsBlobSize2mbEnabled = 'image_uploads:blob_size_2mb:enabled',
   GroupChatsEnable = 'group_chats:enable',
   DmsNewMessageComposerEnable = 'dms:new_message_composer:enable',
+  KlipyGifProviderEnable = 'klipy_gif_provider:enable',
 
   AATest = 'aa-test',
 }
