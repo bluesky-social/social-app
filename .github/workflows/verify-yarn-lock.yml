@@ -35,7 +35,9 @@ jobs:
         uses: Wandalen/wretry.action@master
         with:
           # Fine to skip scripts since we don't run any code
-          command: yarn install --ignore-scripts
+          # PATCH_PACKAGE_INTEGRATION_TEST=1 disables --error-on-fail in patchpackage, which can happen
+          # if we're adding a new dependency + a patch file in the same PR
+          command: PATCH_PACKAGE_INTEGRATION_TEST=1 yarn install --ignore-scripts
           attempt_limit: 3
           attempt_delay: 2000
 
