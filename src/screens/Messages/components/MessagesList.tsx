@@ -5,7 +5,7 @@ import {
   type KeyboardChatScrollViewProps,
   KeyboardGestureArea,
 } from 'react-native-keyboard-controller'
-import Animated, {
+import {
   runOnJS,
   type ScrollEvent,
   type SharedValue,
@@ -429,9 +429,18 @@ export function MessagesList({
             }
             // native only (prop is not supported on web)
             renderScrollComponent={renderScrollComponent}
-            // pushes up the content under the input on web (renderScrollComponent handles it on native)
+            contentContainerStyle={{
+              paddingBottom: platform({
+                // ios is slightly larger as the input has no top padding
+                ios: tokens.space.lg,
+                android: tokens.space.md,
+                web: 0, // web uses ListFooterComponent instead for scroll reasons
+              }),
+            }}
+            // adds extra space underneath the absolutely positioned input on web
+            // as renderScrollComponent isn't available here (luckily we don't need the fancy behaviour)
             ListFooterComponent={web(
-              <WebInputSpacer inputHeight={inputHeightJS} />,
+              <View style={{height: tokens.space.md + inputHeightJS}} />,
             )}
             style={web({
               scrollbarWidth: 'thin',
@@ -534,12 +543,6 @@ function ChatScrollComponent({
       {...props}
     />
   )
-}
-
-function WebInputSpacer({inputHeight}: {inputHeight: number}) {
-  if (!IS_WEB) return null
-
-  return <Animated.View style={{height: inputHeight}} />
 }
 
 type FooterState = 'loading' | 'new-chat' | 'request' | 'standard'
