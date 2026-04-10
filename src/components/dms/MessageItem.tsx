@@ -426,10 +426,10 @@ let MessageItem = ({
                   squaredTopCorner={squaredTopCorner || hasEmbedAndText}
                 />
               )}
+              {appliedReactions}
             </ActionsWrapper>
           </View>
         </View>
-        {appliedReactions}
         {isLastInCluster && (
           <MessageItemMetadata
             item={item}
