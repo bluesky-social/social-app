@@ -263,9 +263,7 @@ let MessageItem = ({
               accessible={true}
               accessibilityLabel={reactionsLabel}
               accessibilityHint={
-                isGroupChat && reactions.length > 1
-                  ? l`Tap to view reactions`
-                  : undefined
+                isGroupChat ? l`Tap to view reactions` : undefined
               }
               style={[
                 a.flex_row,
@@ -284,9 +282,7 @@ let MessageItem = ({
                 },
               ]}
               onPress={() =>
-                isGroupChat && reactions.length > 1
-                  ? reactionsControl.open()
-                  : undefined
+                isGroupChat ? reactionsControl.open() : undefined
               }>
               {groupedReactions.map(group => (
                 <Animated.View
