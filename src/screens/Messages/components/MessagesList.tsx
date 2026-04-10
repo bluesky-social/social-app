@@ -471,7 +471,9 @@ export function MessagesList({
               {ax.features.enabled(ax.features.DmsNewMessageComposerEnable) ? (
                 <MessageComposer
                   textInputId={textInputId}
-                  onSendMessage={onSendMessage}
+                  onSendMessage={(message: string) =>
+                    void onSendMessage(message)
+                  }
                   hasEmbed={!!embedUri}
                   setEmbed={setEmbed}>
                   <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />

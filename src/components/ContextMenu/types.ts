@@ -21,6 +21,7 @@ export type {
 export type AuxiliaryViewProps = {
   children?: React.ReactNode
   align?: 'left' | 'right'
+  style?: StyleProp<ViewStyle>
 }
 
 export type ItemProps = Omit<MenuItemProps, 'onPress' | 'children'> & {
