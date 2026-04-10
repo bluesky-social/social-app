@@ -12,10 +12,12 @@ import {Trans} from '@lingui/react/macro'
 import {
   type RouteProp,
   useFocusEffect,
+  useIsFocused,
   useNavigation,
   useRoute,
 } from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
+import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {
@@ -43,6 +45,7 @@ import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
 import {Error} from '#/components/Error'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import {IS_WEB} from '#/env'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -94,6 +97,7 @@ function Inner() {
   const t = useTheme()
   const convoState = useConvo()
   const {_} = useLingui()
+  const isFocused = useIsFocused()
 
   const moderationOpts = useModerationOpts()
   const {data: recipientUnshadowed} = useProfileQuery({
@@ -148,6 +152,8 @@ function Inner() {
 
   return (
     <Layout.Center style={[a.flex_1]}>
+      {/* MessagesList does not use the body scroll */}
+      {isFocused && IS_WEB && <RemoveScrollBar />}
       {!readyToShow &&
         (moderation ? (
           <MessagesListHeader moderation={moderation} profile={recipient} />

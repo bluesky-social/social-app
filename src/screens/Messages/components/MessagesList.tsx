@@ -6,7 +6,7 @@ import {
   KeyboardGestureArea,
   KeyboardStickyView,
 } from 'react-native-keyboard-controller'
-import {
+import Animated, {
   runOnJS,
   type ScrollEvent,
   type SharedValue,
@@ -21,10 +21,7 @@ import {
   AppBskyRichtextFacet,
   RichText,
 } from '@atproto/api'
-import {
-  ScrollEdgeEffect,
-  useScrollEdgeEffectRef,
-} from '@bsky.app/expo-scroll-edge-effect'
+import {useScrollEdgeEffectRef} from '@bsky.app/expo-scroll-edge-effect'
 
 import {mergeRefs} from '#/lib/merge-refs'
 import {ScrollProvider} from '#/lib/ScrollContext'
@@ -55,7 +52,7 @@ import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
 import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
-import {android, atoms as a, native, platform, tokens} from '#/alf'
+import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
@@ -118,6 +115,7 @@ export function MessagesList({
   const agent = useAgent()
   const getPost = useGetPost()
   const {embedUri, setEmbed} = useMessageEmbed()
+  const t = useTheme()
 
   const textInputId = 'chat-input-' + useId()
   const flatListRef = useAnimatedRef<ListMethods>()
@@ -400,9 +398,7 @@ export function MessagesList({
             maxToRenderPerBatch={IS_WEB ? 32 : 62}
             keyboardDismissMode="interactive"
             keyboardShouldPersistTaps="handled"
-            maintainVisibleContentPosition={{
-              minIndexForVisible: 0,
-            }}
+            maintainVisibleContentPosition={{minIndexForVisible: 0}}
             removeClippedSubviews={false}
             sideBorders={false}
             onContentSizeChange={onContentSizeChange}
@@ -413,59 +409,58 @@ export function MessagesList({
             ListHeaderComponent={
               <MaybeLoader isLoading={convoState.isFetchingHistory} />
             }
+            // native only (prop is not supported on web)
             renderScrollComponent={renderScrollComponent}
-            style={android({marginBottom: bottomInset})}
+            // pushes up the content under the input on web (renderScrollComponent handles it on native)
+            ListFooterComponent={web(
+              <WebInputSpacer inputHeight={inputHeightJS} />,
+            )}
+            style={web({
+              scrollbarWidth: 'thin',
+              scrollbarColor: `${t.palette.contrast_100} transparent`,
+              scrollbarGutter: 'stable both-edges',
+            })}
           />
         </ScrollProvider>
         <KeyboardStickyView
-          style={native([a.absolute, a.bottom_0, a.left_0, a.right_0])}
+          style={[a.absolute, a.bottom_0, a.left_0, a.right_0]}
           onLayout={onInputLayout}
           offset={{
             closed: platform({
-              native: tokens.space.lg - bottomInset,
+              ios: tokens.space.lg - bottomInset,
               android: -bottomInset,
               default: 0,
             }),
             opened: 0,
           }}>
-          <ScrollEdgeEffect edge="bottom">
-            {convoState.status === ConvoStatus.Disabled ? (
-              <ChatDisabled />
-            ) : blocked ? (
-              footer
-            ) : (
-              <ConversationFooter
-                convoState={convoState}
-                hasAcceptOverride={hasAcceptOverride}>
-                {ax.features.enabled(
-                  ax.features.DmsNewMessageComposerEnable,
-                ) ? (
-                  <MessageComposer
-                    textInputId={textInputId}
-                    onSendMessage={onSendMessage}
-                    hasEmbed={!!embedUri}
-                    setEmbed={setEmbed}>
-                    <MessageInputEmbed
-                      embedUri={embedUri}
-                      setEmbed={setEmbed}
-                    />
-                  </MessageComposer>
-                ) : (
-                  <MessageInput
-                    textInputId={textInputId}
-                    onSendMessage={onSendMessage}
-                    hasEmbed={!!embedUri}
-                    setEmbed={setEmbed}
-                    openEmojiPicker={onOpenEmojiPicker}>
-                    <MessageInputEmbed
-                      embedUri={embedUri}
-                      setEmbed={setEmbed}
-                    />
-                  </MessageInput>
-                )}
-              </ConversationFooter>
-            )}
-          </ScrollEdgeEffect>
+          {convoState.status === ConvoStatus.Disabled ? (
+            <ChatDisabled />
+          ) : blocked ? (
+            footer
+          ) : (
+            <ConversationFooter
+              convoState={convoState}
+              hasAcceptOverride={hasAcceptOverride}>
+              {ax.features.enabled(ax.features.DmsNewMessageComposerEnable) ? (
+                <MessageComposer
+                  textInputId={textInputId}
+                  onSendMessage={onSendMessage}
+                  hasEmbed={!!embedUri}
+                  setEmbed={setEmbed}>
+                  <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+                </MessageComposer>
+              ) : (
+                <MessageInput
+                  textInputId={textInputId}
+                  onSendMessage={onSendMessage}
+                  hasEmbed={!!embedUri}
+                  setEmbed={setEmbed}
+                  openEmojiPicker={onOpenEmojiPicker}>
+                  <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+                </MessageInput>
+              )}
+            </ConversationFooter>
+          )}
         </KeyboardStickyView>
       </KeyboardGestureArea>
 
@@ -482,6 +477,7 @@ export function MessagesList({
   )
 }
 
+/** Note: native only */
 function ChatScrollComponent({
   ref,
   inputHeight,
@@ -501,6 +497,7 @@ function ChatScrollComponent({
 
   const inputOffset = platform({
     ios: bottomInset - tokens.space.lg,
+    android: bottomInset,
     default: 0,
   })
 
@@ -519,6 +516,12 @@ function ChatScrollComponent({
       {...props}
     />
   )
+}
+
+function WebInputSpacer({inputHeight}: {inputHeight: number}) {
+  if (!IS_WEB) return null
+
+  return <Animated.View style={{height: inputHeight}} />
 }
 
 type FooterState = 'loading' | 'new-chat' | 'request' | 'standard'

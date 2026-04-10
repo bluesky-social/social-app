@@ -338,6 +338,8 @@ export function Composer({
             web({
               caretColor: textStyle.color ?? 'black',
               overscrollBehavior: 'none',
+              scrollbarWidth: 'thin',
+              scrollbarColor: `${t.palette.contrast_200} transparent`,
             }),
           ]}
           {...rest}
