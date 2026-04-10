@@ -8,7 +8,7 @@ msgstr ""
 "Language: eu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-09 20:53\n"
+"PO-Revision-Date: 2026-04-10 15:27\n"
 "Last-Translator: \n"
 "Language-Team: Basque\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -5271,12 +5271,12 @@ msgid "Image cache cleared, freed {0}"
 msgstr "Irudien cachea garbituta, {0} askatuta"
 
 #. Image has been moderated and user has the option of showing it temporarily
-#: src/features/liveNow/components/LiveStatusDialog.tsx:298
+#: src/features/liveNow/components/LiveStatusDialog.tsx:299
 msgid "Image is hidden due to your moderation settings."
 msgstr ""
 
 #. Image has been moderated and is not visible to the user
-#: src/features/liveNow/components/LiveStatusDialog.tsx:308
+#: src/features/liveNow/components/LiveStatusDialog.tsx:309
 msgid "Image is unavailable."
 msgstr ""
 
@@ -5934,7 +5934,7 @@ msgstr "Zuzeneko gertaera ez ezkutatua"
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
 msgstr "Zuzeneko gertaerak noizean behin agertzen dira zerbait zirraragarria gertatzen ari denean. Nahi izanez gero, gertaera zehatz hau edo kokapen honetako gertaera guztiak ezkutatu ditzakezu zure aplikazioaren interfazean."
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:243
+#: src/features/liveNow/components/LiveStatusDialog.tsx:244
 msgid "Live feature is in beta"
 msgstr "Zuzeneko funtzioa betan dago"
 
@@ -7044,8 +7044,8 @@ msgstr "Ireki multzoa"
 msgid "Open post options menu"
 msgstr "Ireki post aukeren menua"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:217
-#: src/features/liveNow/components/LiveStatusDialog.tsx:227
+#: src/features/liveNow/components/LiveStatusDialog.tsx:218
+#: src/features/liveNow/components/LiveStatusDialog.tsx:228
 msgid "Open profile"
 msgstr "Ireki profila"
 
@@ -8339,7 +8339,7 @@ msgstr "Erantzuna behar bezala ezkutatu da"
 #: src/components/dms/MessageContextMenu.tsx:172
 #: src/components/dms/MessagesListBlockedFooter.tsx:86
 #: src/components/dms/MessagesListBlockedFooter.tsx:93
-#: src/features/liveNow/components/LiveStatusDialog.tsx:265
+#: src/features/liveNow/components/LiveStatusDialog.tsx:266
 msgid "Report"
 msgstr "Salatu"
 
@@ -8403,7 +8403,7 @@ msgid "Report this list"
 msgstr "Salatu zerrenda hau"
 
 #: src/components/moderation/ReportDialog/copy.ts:19
-#: src/features/liveNow/components/LiveStatusDialog.tsx:248
+#: src/features/liveNow/components/LiveStatusDialog.tsx:249
 msgid "Report this livestream"
 msgstr "Salatu zuzeneko emankizun hau"
 
@@ -9334,8 +9334,8 @@ msgstr "Erakutsi aukerazko testua"
 
 #: src/components/moderation/ScreenHider.tsx:179
 #: src/components/moderation/ScreenHider.tsx:182
-#: src/features/liveNow/components/LiveStatusDialog.tsx:316
-#: src/features/liveNow/components/LiveStatusDialog.tsx:320
+#: src/features/liveNow/components/LiveStatusDialog.tsx:317
+#: src/features/liveNow/components/LiveStatusDialog.tsx:321
 #: src/screens/List/ListHiddenScreen.tsx:194
 #: src/screens/VideoFeed/index.tsx:650
 #: src/screens/VideoFeed/index.tsx:656
@@ -10505,7 +10505,7 @@ msgstr "Erantzun hau zure hariaren beheko aldean ezkutuko atal batean ordenatuko
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Zerbitzu honek ez du zerbitzu-baldintzarik edo pribatutasun-politikarik eman."
 
-#: src/features/liveNow/index.tsx:199
+#: src/features/liveNow/index.tsx:200
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "Zerbitzu hau ez da onartzen Zuzeneko funtzioa beta bertsioan dagoen bitartean. Onartutako zerbitzuak: {formatted}."
 
@@ -11563,8 +11563,8 @@ msgstr "Edukia ohartarazi"
 msgid "Warn content and filter from feeds"
 msgstr "Edukia ohartarazi eta iragazi feedetatik"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:188
-#: src/features/liveNow/components/LiveStatusDialog.tsx:197
+#: src/features/liveNow/components/LiveStatusDialog.tsx:189
+#: src/features/liveNow/components/LiveStatusDialog.tsx:198
 msgid "Watch now"
 msgstr "Ikusi orain"
 
@@ -11961,7 +11961,7 @@ msgstr "Ilaran zaude."
 msgid "You are Live"
 msgstr "Zuzenean zaude"
 
-#: src/features/liveNow/index.tsx:367
+#: src/features/liveNow/index.tsx:368
 msgid "You are no longer live"
 msgstr "Jada ez zaude zuzenean"
 
@@ -11973,7 +11973,7 @@ msgstr "Ezin dituzu bideoak kargatu."
 msgid "You are not following anyone yet"
 msgstr "Ez zara inor jarraitzen ari oraindik"
 
-#: src/features/liveNow/index.tsx:311
+#: src/features/liveNow/index.tsx:312
 msgid "You are now live!"
 msgstr "Orain zuzenean zaude!"
 

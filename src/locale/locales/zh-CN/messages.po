@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-09 20:53\n"
+"PO-Revision-Date: 2026-04-10 15:27\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -5271,12 +5271,12 @@ msgid "Image cache cleared, freed {0}"
 msgstr "已清除图片缓存，释放了{0}"
 
 #. Image has been moderated and user has the option of showing it temporarily
-#: src/features/liveNow/components/LiveStatusDialog.tsx:298
+#: src/features/liveNow/components/LiveStatusDialog.tsx:299
 msgid "Image is hidden due to your moderation settings."
 msgstr ""
 
 #. Image has been moderated and is not visible to the user
-#: src/features/liveNow/components/LiveStatusDialog.tsx:308
+#: src/features/liveNow/components/LiveStatusDialog.tsx:309
 msgid "Image is unavailable."
 msgstr ""
 
@@ -5934,7 +5934,7 @@ msgstr "已取消隐藏直播活动"
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
 msgstr "每逢发生精彩活动时，我们会在这里及时呈现给你。你可以隐藏这则活动，或直接隐藏今后所有直播活动的显示。"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:243
+#: src/features/liveNow/components/LiveStatusDialog.tsx:244
 msgid "Live feature is in beta"
 msgstr "直播功能正在测试阶段"
 
@@ -7044,8 +7044,8 @@ msgstr "开启新手包"
 msgid "Open post options menu"
 msgstr "开启帖文选项菜单"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:217
-#: src/features/liveNow/components/LiveStatusDialog.tsx:227
+#: src/features/liveNow/components/LiveStatusDialog.tsx:218
+#: src/features/liveNow/components/LiveStatusDialog.tsx:228
 msgid "Open profile"
 msgstr "打开个人资料"
 
@@ -8339,7 +8339,7 @@ msgstr "已成功隐藏回复"
 #: src/components/dms/MessageContextMenu.tsx:172
 #: src/components/dms/MessagesListBlockedFooter.tsx:86
 #: src/components/dms/MessagesListBlockedFooter.tsx:93
-#: src/features/liveNow/components/LiveStatusDialog.tsx:265
+#: src/features/liveNow/components/LiveStatusDialog.tsx:266
 msgid "Report"
 msgstr "举报"
 
@@ -8403,7 +8403,7 @@ msgid "Report this list"
 msgstr "举报此列表"
 
 #: src/components/moderation/ReportDialog/copy.ts:19
-#: src/features/liveNow/components/LiveStatusDialog.tsx:248
+#: src/features/liveNow/components/LiveStatusDialog.tsx:249
 msgid "Report this livestream"
 msgstr "举报这场直播"
 
@@ -9334,8 +9334,8 @@ msgstr "显示替代文本"
 
 #: src/components/moderation/ScreenHider.tsx:179
 #: src/components/moderation/ScreenHider.tsx:182
-#: src/features/liveNow/components/LiveStatusDialog.tsx:316
-#: src/features/liveNow/components/LiveStatusDialog.tsx:320
+#: src/features/liveNow/components/LiveStatusDialog.tsx:317
+#: src/features/liveNow/components/LiveStatusDialog.tsx:321
 #: src/screens/List/ListHiddenScreen.tsx:194
 #: src/screens/VideoFeed/index.tsx:650
 #: src/screens/VideoFeed/index.tsx:656
@@ -10505,7 +10505,7 @@ msgstr "这则回复将被折叠到你讨论串底部的隐藏部分，并且会
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "该服务没有提供服务条款或隐私政策。"
 
-#: src/features/liveNow/index.tsx:199
+#: src/features/liveNow/index.tsx:200
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "直播功能仍处于测试阶段，此服务暂不可用。可用的服务包括：{formatted}。"
 
@@ -11563,8 +11563,8 @@ msgstr "警告内容"
 msgid "Warn content and filter from feeds"
 msgstr "警告内容并从动态源中过滤"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:188
-#: src/features/liveNow/components/LiveStatusDialog.tsx:197
+#: src/features/liveNow/components/LiveStatusDialog.tsx:189
+#: src/features/liveNow/components/LiveStatusDialog.tsx:198
 msgid "Watch now"
 msgstr "立即观看"
 
@@ -11961,7 +11961,7 @@ msgstr "你已在等待名单中。"
 msgid "You are Live"
 msgstr "你已开始直播"
 
-#: src/features/liveNow/index.tsx:367
+#: src/features/liveNow/index.tsx:368
 msgid "You are no longer live"
 msgstr "你已停止直播"
 
@@ -11973,7 +11973,7 @@ msgstr "你目前无法上传视频。"
 msgid "You are not following anyone yet"
 msgstr "你还没有关注任何账户"
 
-#: src/features/liveNow/index.tsx:311
+#: src/features/liveNow/index.tsx:312
 msgid "You are now live!"
 msgstr "你正在直播中！"
 

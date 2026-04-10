@@ -8,7 +8,7 @@ msgstr ""
 "Language: cy\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-09 20:53\n"
+"PO-Revision-Date: 2026-04-10 15:27\n"
 "Last-Translator: \n"
 "Language-Team: Welsh\n"
 "Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n == 3) ? 3 : ((n == 6) ? 4 : 5))));\n"
@@ -5271,12 +5271,12 @@ msgid "Image cache cleared, freed {0}"
 msgstr "Wedi gwagio'r storfa delweddau, rhyddhawyd {0}"
 
 #. Image has been moderated and user has the option of showing it temporarily
-#: src/features/liveNow/components/LiveStatusDialog.tsx:298
+#: src/features/liveNow/components/LiveStatusDialog.tsx:299
 msgid "Image is hidden due to your moderation settings."
 msgstr ""
 
 #. Image has been moderated and is not visible to the user
-#: src/features/liveNow/components/LiveStatusDialog.tsx:308
+#: src/features/liveNow/components/LiveStatusDialog.tsx:309
 msgid "Image is unavailable."
 msgstr ""
 
@@ -5934,7 +5934,7 @@ msgstr "Amlygu digwyddiad cudd"
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
 msgstr "Mae digwyddiadau byw'n ymddangos o bryd i'w gilydd pan fydd rhywbeth cyffroes yn digwydd. Os hoffech chi, gallwch guddio'r digwyddiad hwn neu bob digwyddiad ar gyfer y lleoliad yn rhyngwyneb eich ap."
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:243
+#: src/features/liveNow/components/LiveStatusDialog.tsx:244
 msgid "Live feature is in beta"
 msgstr "Mae nodwedd byw yn y cyflwr beta"
 
@@ -7044,8 +7044,8 @@ msgstr "Agor pecyn"
 msgid "Open post options menu"
 msgstr "Agor dewislen dewisiadau ffrydiau"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:217
-#: src/features/liveNow/components/LiveStatusDialog.tsx:227
+#: src/features/liveNow/components/LiveStatusDialog.tsx:218
+#: src/features/liveNow/components/LiveStatusDialog.tsx:228
 msgid "Open profile"
 msgstr "Agor proffil"
 
@@ -8339,7 +8339,7 @@ msgstr "Cafodd yr ateb ei guddio'n llwyddiannus"
 #: src/components/dms/MessageContextMenu.tsx:172
 #: src/components/dms/MessagesListBlockedFooter.tsx:86
 #: src/components/dms/MessagesListBlockedFooter.tsx:93
-#: src/features/liveNow/components/LiveStatusDialog.tsx:265
+#: src/features/liveNow/components/LiveStatusDialog.tsx:266
 msgid "Report"
 msgstr "Adroddiadau"
 
@@ -8403,7 +8403,7 @@ msgid "Report this list"
 msgstr "Adrodd ar y rhestr hon"
 
 #: src/components/moderation/ReportDialog/copy.ts:19
-#: src/features/liveNow/components/LiveStatusDialog.tsx:248
+#: src/features/liveNow/components/LiveStatusDialog.tsx:249
 msgid "Report this livestream"
 msgstr "Adrodd am y ffrwd byw yma"
 
@@ -9334,8 +9334,8 @@ msgstr "Dangos testun amgen"
 
 #: src/components/moderation/ScreenHider.tsx:179
 #: src/components/moderation/ScreenHider.tsx:182
-#: src/features/liveNow/components/LiveStatusDialog.tsx:316
-#: src/features/liveNow/components/LiveStatusDialog.tsx:320
+#: src/features/liveNow/components/LiveStatusDialog.tsx:317
+#: src/features/liveNow/components/LiveStatusDialog.tsx:321
 #: src/screens/List/ListHiddenScreen.tsx:194
 #: src/screens/VideoFeed/index.tsx:650
 #: src/screens/VideoFeed/index.tsx:656
@@ -10505,7 +10505,7 @@ msgstr "Bydd yr ateb hwn yn cael ei drefnu mewn adran gudd ar waelod eich edefyn
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Dyw'r gwasanaeth hwn heb ddarparu telerau gwasanaeth na pholisi preifatrwydd."
 
-#: src/features/liveNow/index.tsx:199
+#: src/features/liveNow/index.tsx:200
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "Dyw'r gwasanaeth yma ddim yn cael ei gefnogi tra bod y nodwedd Byw yn y cyflwr beta. Gwasanaethu sy'n cael eu caniatáu: {formatted}."
 
@@ -11563,8 +11563,8 @@ msgstr "Rhybudd cynnwys"
 msgid "Warn content and filter from feeds"
 msgstr "Rhybudd cynnwys a hidlydd o ffrydiau"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:188
-#: src/features/liveNow/components/LiveStatusDialog.tsx:197
+#: src/features/liveNow/components/LiveStatusDialog.tsx:189
+#: src/features/liveNow/components/LiveStatusDialog.tsx:198
 msgid "Watch now"
 msgstr "Gwyliwch nawr"
 
@@ -11961,7 +11961,7 @@ msgstr "Rydych mewn llinell."
 msgid "You are Live"
 msgstr "Rydych chi'n Fyw"
 
-#: src/features/liveNow/index.tsx:367
+#: src/features/liveNow/index.tsx:368
 msgid "You are no longer live"
 msgstr "Dydych chi ddim yn fyw mwyach"
 
@@ -11973,7 +11973,7 @@ msgstr "Does dim caniatâd i chi lwytho fideos i fyny."
 msgid "You are not following anyone yet"
 msgstr "Dydych chi ddim yn dilyn neb eto"
 
-#: src/features/liveNow/index.tsx:311
+#: src/features/liveNow/index.tsx:312
 msgid "You are now live!"
 msgstr "Rydych chi nawr yn fyw!"
 

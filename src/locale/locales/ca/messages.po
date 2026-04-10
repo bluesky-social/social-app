@@ -8,7 +8,7 @@ msgstr ""
 "Language: ca\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-09 20:53\n"
+"PO-Revision-Date: 2026-04-10 15:27\n"
 "Last-Translator: \n"
 "Language-Team: Catalan\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -4401,7 +4401,7 @@ msgstr "Entrada de codi"
 
 #: src/lib/hotkeys/index.tsx:73
 msgid "Focus the search field"
-msgstr ""
+msgstr "Centra el camp de cerca"
 
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:546
@@ -5271,14 +5271,14 @@ msgid "Image cache cleared, freed {0}"
 msgstr "S'ha esborrat la memòria cau d'imatges, s'ha alliberat {0}"
 
 #. Image has been moderated and user has the option of showing it temporarily
-#: src/features/liveNow/components/LiveStatusDialog.tsx:298
+#: src/features/liveNow/components/LiveStatusDialog.tsx:299
 msgid "Image is hidden due to your moderation settings."
-msgstr ""
+msgstr "La imatge està oculta a causa de la teva configuració de moderació."
 
 #. Image has been moderated and is not visible to the user
-#: src/features/liveNow/components/LiveStatusDialog.tsx:308
+#: src/features/liveNow/components/LiveStatusDialog.tsx:309
 msgid "Image is unavailable."
-msgstr ""
+msgstr "La imatge no està disponible."
 
 #: src/view/com/lightbox/Lightbox.web.tsx:252
 #: src/view/com/lightbox/Lightbox.web.tsx:265
@@ -5934,7 +5934,7 @@ msgstr "Esdeveniment en directe mostrat"
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
 msgstr "Els esdeveniments en directe apareixen ocasionalment quan passa alguna cosa interessant. Si voleu, podeu amagar aquest esdeveniment en particular o tots els esdeveniments d'aquesta ubicació a la interfície de l'aplicació."
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:243
+#: src/features/liveNow/components/LiveStatusDialog.tsx:244
 msgid "Live feature is in beta"
 msgstr "La funció en directe està en fase beta"
 
@@ -7044,8 +7044,8 @@ msgstr "Obre el pack"
 msgid "Open post options menu"
 msgstr "Obre el menú de les opcions de publicació"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:217
-#: src/features/liveNow/components/LiveStatusDialog.tsx:227
+#: src/features/liveNow/components/LiveStatusDialog.tsx:218
+#: src/features/liveNow/components/LiveStatusDialog.tsx:228
 msgid "Open profile"
 msgstr "Obre el perfil"
 
@@ -8339,7 +8339,7 @@ msgstr "La resposta s'ha amagat amb èxit"
 #: src/components/dms/MessageContextMenu.tsx:172
 #: src/components/dms/MessagesListBlockedFooter.tsx:86
 #: src/components/dms/MessagesListBlockedFooter.tsx:93
-#: src/features/liveNow/components/LiveStatusDialog.tsx:265
+#: src/features/liveNow/components/LiveStatusDialog.tsx:266
 msgid "Report"
 msgstr "Informa"
 
@@ -8403,7 +8403,7 @@ msgid "Report this list"
 msgstr "Informa d'aquesta llista"
 
 #: src/components/moderation/ReportDialog/copy.ts:19
-#: src/features/liveNow/components/LiveStatusDialog.tsx:248
+#: src/features/liveNow/components/LiveStatusDialog.tsx:249
 msgid "Report this livestream"
 msgstr "Informa d'aquesta emissió en directe"
 
@@ -9334,8 +9334,8 @@ msgstr "Mostra el text alternatiu"
 
 #: src/components/moderation/ScreenHider.tsx:179
 #: src/components/moderation/ScreenHider.tsx:182
-#: src/features/liveNow/components/LiveStatusDialog.tsx:316
-#: src/features/liveNow/components/LiveStatusDialog.tsx:320
+#: src/features/liveNow/components/LiveStatusDialog.tsx:317
+#: src/features/liveNow/components/LiveStatusDialog.tsx:321
 #: src/screens/List/ListHiddenScreen.tsx:194
 #: src/screens/VideoFeed/index.tsx:650
 #: src/screens/VideoFeed/index.tsx:656
@@ -10505,7 +10505,7 @@ msgstr "Aquesta resposta s'ordenarà en una secció oculta a la part inferior de
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Aquest servei no ha proporcionat termes de servei ni una política de privadesa."
 
-#: src/features/liveNow/index.tsx:199
+#: src/features/liveNow/index.tsx:200
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "Aquest servei no és compatible mentre la funció Live està en versió beta. Serveis permesos: {formatted}."
 
@@ -11563,8 +11563,8 @@ msgstr "Adverteix del contingut"
 msgid "Warn content and filter from feeds"
 msgstr "Adverteix del contingut i filtra-ho dels canals"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:188
-#: src/features/liveNow/components/LiveStatusDialog.tsx:197
+#: src/features/liveNow/components/LiveStatusDialog.tsx:189
+#: src/features/liveNow/components/LiveStatusDialog.tsx:198
 msgid "Watch now"
 msgstr "Mira ara"
 
@@ -11574,7 +11574,7 @@ msgstr "Apliquem els estàndards de privadesa més alts i mai compartim ni venem
 
 #: src/view/com/feeds/MissingFeed.tsx:141
 msgid "We could not connect to the service that provides this custom feed. It may be temporarily experiencing issues, or permanently unavailable."
-msgstr ""
+msgstr "No ens hem pogut connectar al servei que proporciona aquest canal personalitzat. Pot ser que tingui problemes temporalment o que no estigui disponible permanentment."
 
 #: src/view/com/feeds/MissingFeed.tsx:147
 msgid "We could not find this list. It was probably deleted."
@@ -11961,7 +11961,7 @@ msgstr "Estàs a la cua."
 msgid "You are Live"
 msgstr "Estàs emetent en directe"
 
-#: src/features/liveNow/index.tsx:367
+#: src/features/liveNow/index.tsx:368
 msgid "You are no longer live"
 msgstr "Ja no estàs emetent en directe"
 
@@ -11973,7 +11973,7 @@ msgstr "No t'és permès pujar vídeos."
 msgid "You are not following anyone yet"
 msgstr "Encara no segueixes a ningú"
 
-#: src/features/liveNow/index.tsx:311
+#: src/features/liveNow/index.tsx:312
 msgid "You are now live!"
 msgstr "Estàs emetent en directe!"
 

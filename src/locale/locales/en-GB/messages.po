@@ -8,7 +8,7 @@ msgstr ""
 "Language: en_GB\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-09 20:53\n"
+"PO-Revision-Date: 2026-04-10 15:27\n"
 "Last-Translator: \n"
 "Language-Team: English, United Kingdom\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -5271,14 +5271,14 @@ msgid "Image cache cleared, freed {0}"
 msgstr "Image cache cleared, freed {0}"
 
 #. Image has been moderated and user has the option of showing it temporarily
-#: src/features/liveNow/components/LiveStatusDialog.tsx:298
+#: src/features/liveNow/components/LiveStatusDialog.tsx:299
 msgid "Image is hidden due to your moderation settings."
-msgstr ""
+msgstr "Image is hidden due to your moderation settings."
 
 #. Image has been moderated and is not visible to the user
-#: src/features/liveNow/components/LiveStatusDialog.tsx:308
+#: src/features/liveNow/components/LiveStatusDialog.tsx:309
 msgid "Image is unavailable."
-msgstr ""
+msgstr "Image is unavailable."
 
 #: src/view/com/lightbox/Lightbox.web.tsx:252
 #: src/view/com/lightbox/Lightbox.web.tsx:265
@@ -5934,7 +5934,7 @@ msgstr "Live event unhidden"
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
 msgstr "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:243
+#: src/features/liveNow/components/LiveStatusDialog.tsx:244
 msgid "Live feature is in beta"
 msgstr "Live feature is in beta"
 
@@ -7044,8 +7044,8 @@ msgstr "Open pack"
 msgid "Open post options menu"
 msgstr "Open post options menu"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:217
-#: src/features/liveNow/components/LiveStatusDialog.tsx:227
+#: src/features/liveNow/components/LiveStatusDialog.tsx:218
+#: src/features/liveNow/components/LiveStatusDialog.tsx:228
 msgid "Open profile"
 msgstr "Open profile"
 
@@ -8339,7 +8339,7 @@ msgstr "Reply was successfully hidden"
 #: src/components/dms/MessageContextMenu.tsx:172
 #: src/components/dms/MessagesListBlockedFooter.tsx:86
 #: src/components/dms/MessagesListBlockedFooter.tsx:93
-#: src/features/liveNow/components/LiveStatusDialog.tsx:265
+#: src/features/liveNow/components/LiveStatusDialog.tsx:266
 msgid "Report"
 msgstr "Report"
 
@@ -8403,7 +8403,7 @@ msgid "Report this list"
 msgstr "Report this list"
 
 #: src/components/moderation/ReportDialog/copy.ts:19
-#: src/features/liveNow/components/LiveStatusDialog.tsx:248
+#: src/features/liveNow/components/LiveStatusDialog.tsx:249
 msgid "Report this livestream"
 msgstr "Report this livestream"
 
@@ -9334,8 +9334,8 @@ msgstr "Show alt text"
 
 #: src/components/moderation/ScreenHider.tsx:179
 #: src/components/moderation/ScreenHider.tsx:182
-#: src/features/liveNow/components/LiveStatusDialog.tsx:316
-#: src/features/liveNow/components/LiveStatusDialog.tsx:320
+#: src/features/liveNow/components/LiveStatusDialog.tsx:317
+#: src/features/liveNow/components/LiveStatusDialog.tsx:321
 #: src/screens/List/ListHiddenScreen.tsx:194
 #: src/screens/VideoFeed/index.tsx:650
 #: src/screens/VideoFeed/index.tsx:656
@@ -10505,7 +10505,7 @@ msgstr "This reply will be sorted into a hidden section at the bottom of your th
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "This service has not provided terms of service or a privacy policy."
 
-#: src/features/liveNow/index.tsx:199
+#: src/features/liveNow/index.tsx:200
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 
@@ -11563,8 +11563,8 @@ msgstr "Warn content"
 msgid "Warn content and filter from feeds"
 msgstr "Warn content and filter from feeds"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:188
-#: src/features/liveNow/components/LiveStatusDialog.tsx:197
+#: src/features/liveNow/components/LiveStatusDialog.tsx:189
+#: src/features/liveNow/components/LiveStatusDialog.tsx:198
 msgid "Watch now"
 msgstr "Watch now"
 
@@ -11574,7 +11574,7 @@ msgstr "We apply the highest privacy standards, and never share or sell your con
 
 #: src/view/com/feeds/MissingFeed.tsx:141
 msgid "We could not connect to the service that provides this custom feed. It may be temporarily experiencing issues, or permanently unavailable."
-msgstr ""
+msgstr "We could not connect to the service that provides this custom feed. It may be temporarily experiencing issues, or permanently unavailable."
 
 #: src/view/com/feeds/MissingFeed.tsx:147
 msgid "We could not find this list. It was probably deleted."
@@ -11961,7 +11961,7 @@ msgstr "You are in line."
 msgid "You are Live"
 msgstr "You are Live"
 
-#: src/features/liveNow/index.tsx:367
+#: src/features/liveNow/index.tsx:368
 msgid "You are no longer live"
 msgstr "You are no longer live"
 
@@ -11973,7 +11973,7 @@ msgstr "You are not allowed to upload videos."
 msgid "You are not following anyone yet"
 msgstr "You are not following anyone yet"
 
-#: src/features/liveNow/index.tsx:311
+#: src/features/liveNow/index.tsx:312
 msgid "You are now live!"
 msgstr "You are now live!"
 

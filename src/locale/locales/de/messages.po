@@ -8,7 +8,7 @@ msgstr ""
 "Language: de\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-09 20:53\n"
+"PO-Revision-Date: 2026-04-10 15:27\n"
 "Last-Translator: \n"
 "Language-Team: German\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -5271,14 +5271,14 @@ msgid "Image cache cleared, freed {0}"
 msgstr "Bildcache geleert, {0} freigegeben"
 
 #. Image has been moderated and user has the option of showing it temporarily
-#: src/features/liveNow/components/LiveStatusDialog.tsx:298
+#: src/features/liveNow/components/LiveStatusDialog.tsx:299
 msgid "Image is hidden due to your moderation settings."
-msgstr ""
+msgstr "Bild ist aufgrund deiner Moderationseinstellungen ausgeblendet."
 
 #. Image has been moderated and is not visible to the user
-#: src/features/liveNow/components/LiveStatusDialog.tsx:308
+#: src/features/liveNow/components/LiveStatusDialog.tsx:309
 msgid "Image is unavailable."
-msgstr ""
+msgstr "Bild nicht verfügbar."
 
 #: src/view/com/lightbox/Lightbox.web.tsx:252
 #: src/view/com/lightbox/Lightbox.web.tsx:265
@@ -5934,7 +5934,7 @@ msgstr "Live-Event wieder eingeblendet"
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
 msgstr "Live-Events werden gelegentlich angezeigt, wenn etwas Spannendes passiert. Wenn du möchtest, kannst du dieses Event ausblenden oder alle Events an dieser Stelle in deiner App-Oberfläche ausblenden."
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:243
+#: src/features/liveNow/components/LiveStatusDialog.tsx:244
 msgid "Live feature is in beta"
 msgstr "Die Live-Funktion befindet sich in der Beta-Phase"
 
@@ -7044,8 +7044,8 @@ msgstr "Paket öffnen"
 msgid "Open post options menu"
 msgstr "Post-Optionen-Menü öffnen"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:217
-#: src/features/liveNow/components/LiveStatusDialog.tsx:227
+#: src/features/liveNow/components/LiveStatusDialog.tsx:218
+#: src/features/liveNow/components/LiveStatusDialog.tsx:228
 msgid "Open profile"
 msgstr "Profil öffnen"
 
@@ -8339,7 +8339,7 @@ msgstr "Antwort wurde erfolgreich ausgeblendet"
 #: src/components/dms/MessageContextMenu.tsx:172
 #: src/components/dms/MessagesListBlockedFooter.tsx:86
 #: src/components/dms/MessagesListBlockedFooter.tsx:93
-#: src/features/liveNow/components/LiveStatusDialog.tsx:265
+#: src/features/liveNow/components/LiveStatusDialog.tsx:266
 msgid "Report"
 msgstr "Melden"
 
@@ -8403,7 +8403,7 @@ msgid "Report this list"
 msgstr "Melde diese Liste"
 
 #: src/components/moderation/ReportDialog/copy.ts:19
-#: src/features/liveNow/components/LiveStatusDialog.tsx:248
+#: src/features/liveNow/components/LiveStatusDialog.tsx:249
 msgid "Report this livestream"
 msgstr "Diesen Livestream melden"
 
@@ -9334,8 +9334,8 @@ msgstr "Alt-Text anzeigen"
 
 #: src/components/moderation/ScreenHider.tsx:179
 #: src/components/moderation/ScreenHider.tsx:182
-#: src/features/liveNow/components/LiveStatusDialog.tsx:316
-#: src/features/liveNow/components/LiveStatusDialog.tsx:320
+#: src/features/liveNow/components/LiveStatusDialog.tsx:317
+#: src/features/liveNow/components/LiveStatusDialog.tsx:321
 #: src/screens/List/ListHiddenScreen.tsx:194
 #: src/screens/VideoFeed/index.tsx:650
 #: src/screens/VideoFeed/index.tsx:656
@@ -10505,7 +10505,7 @@ msgstr "Diese Antwort wird in einen ausgeblendeten Bereich am Ende deines Thread
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Dieser Dienst hat keine Nutzungsbedingungen oder Datenschutzerklärung bereitgestellt."
 
-#: src/features/liveNow/index.tsx:199
+#: src/features/liveNow/index.tsx:200
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "Dieser Service wird nicht unterstützt, solange die Live-Funktion in der Beta ist. Erlaubte Services: {formatted}."
 
@@ -11563,8 +11563,8 @@ msgstr "Inhaltswarnung anzeigen"
 msgid "Warn content and filter from feeds"
 msgstr "Inhaltswarnung anzeigen und in Feeds ausblenden"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:188
-#: src/features/liveNow/components/LiveStatusDialog.tsx:197
+#: src/features/liveNow/components/LiveStatusDialog.tsx:189
+#: src/features/liveNow/components/LiveStatusDialog.tsx:198
 msgid "Watch now"
 msgstr "Jetzt ansehen"
 
@@ -11574,7 +11574,7 @@ msgstr "Wir wenden die höchsten Datenschutzstandards an und geben deine Kontakt
 
 #: src/view/com/feeds/MissingFeed.tsx:141
 msgid "We could not connect to the service that provides this custom feed. It may be temporarily experiencing issues, or permanently unavailable."
-msgstr ""
+msgstr "Es konnte keine Verbindung zu dem Dienst hergestellt werden, der diesen benutzerdefinierten Feed bereitstellt. Möglicherweise treten dort vorübergehend Probleme auf oder der Dienst ist dauerhaft nicht verfügbar."
 
 #: src/view/com/feeds/MissingFeed.tsx:147
 msgid "We could not find this list. It was probably deleted."
@@ -11961,7 +11961,7 @@ msgstr "Du befindest dich in der Warteschlange."
 msgid "You are Live"
 msgstr "Du bist live"
 
-#: src/features/liveNow/index.tsx:367
+#: src/features/liveNow/index.tsx:368
 msgid "You are no longer live"
 msgstr "Du bist nicht mehr live"
 
@@ -11973,7 +11973,7 @@ msgstr "Du darfst keine Videos hochladen."
 msgid "You are not following anyone yet"
 msgstr "Du folgst noch niemandem"
 
-#: src/features/liveNow/index.tsx:311
+#: src/features/liveNow/index.tsx:312
 msgid "You are now live!"
 msgstr "Du bist jetzt live!"
 

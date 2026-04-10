@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-09 20:53\n"
+"PO-Revision-Date: 2026-04-10 15:27\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -5271,14 +5271,14 @@ msgid "Image cache cleared, freed {0}"
 msgstr "이미지 캐시를 지우고 {0}를 확보했습니다"
 
 #. Image has been moderated and user has the option of showing it temporarily
-#: src/features/liveNow/components/LiveStatusDialog.tsx:298
+#: src/features/liveNow/components/LiveStatusDialog.tsx:299
 msgid "Image is hidden due to your moderation settings."
-msgstr ""
+msgstr "내 검토 설정에 따라 숨겨진 이미지입니다."
 
 #. Image has been moderated and is not visible to the user
-#: src/features/liveNow/components/LiveStatusDialog.tsx:308
+#: src/features/liveNow/components/LiveStatusDialog.tsx:309
 msgid "Image is unavailable."
-msgstr ""
+msgstr "이미지를 사용할 수 없습니다."
 
 #: src/view/com/lightbox/Lightbox.web.tsx:252
 #: src/view/com/lightbox/Lightbox.web.tsx:265
@@ -5934,7 +5934,7 @@ msgstr "라이브 이벤트를 숨김 해제했습니다"
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
 msgstr "라이브 이벤트는 흥미로운 일이 일어날 때 가끔 나타납니다. 원한다면 이 특정 이벤트를 숨기거나 앱 인터페이스의 이 위치에 표시되는 모든 이벤트를 숨길 수 있습니다."
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:243
+#: src/features/liveNow/components/LiveStatusDialog.tsx:244
 msgid "Live feature is in beta"
 msgstr "라이브 기능은 베타 테스트 중입니다"
 
@@ -7044,8 +7044,8 @@ msgstr "팩 열기"
 msgid "Open post options menu"
 msgstr "게시물 옵션 메뉴 열기"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:217
-#: src/features/liveNow/components/LiveStatusDialog.tsx:227
+#: src/features/liveNow/components/LiveStatusDialog.tsx:218
+#: src/features/liveNow/components/LiveStatusDialog.tsx:228
 msgid "Open profile"
 msgstr "프로필 열기"
 
@@ -8339,7 +8339,7 @@ msgstr "답글을 성공적으로 숨겼습니다"
 #: src/components/dms/MessageContextMenu.tsx:172
 #: src/components/dms/MessagesListBlockedFooter.tsx:86
 #: src/components/dms/MessagesListBlockedFooter.tsx:93
-#: src/features/liveNow/components/LiveStatusDialog.tsx:265
+#: src/features/liveNow/components/LiveStatusDialog.tsx:266
 msgid "Report"
 msgstr "신고"
 
@@ -8403,7 +8403,7 @@ msgid "Report this list"
 msgstr "이 리스트 신고하기"
 
 #: src/components/moderation/ReportDialog/copy.ts:19
-#: src/features/liveNow/components/LiveStatusDialog.tsx:248
+#: src/features/liveNow/components/LiveStatusDialog.tsx:249
 msgid "Report this livestream"
 msgstr "이 라이브 스트리밍 신고하기"
 
@@ -9334,8 +9334,8 @@ msgstr "대체 텍스트 표시"
 
 #: src/components/moderation/ScreenHider.tsx:179
 #: src/components/moderation/ScreenHider.tsx:182
-#: src/features/liveNow/components/LiveStatusDialog.tsx:316
-#: src/features/liveNow/components/LiveStatusDialog.tsx:320
+#: src/features/liveNow/components/LiveStatusDialog.tsx:317
+#: src/features/liveNow/components/LiveStatusDialog.tsx:321
 #: src/screens/List/ListHiddenScreen.tsx:194
 #: src/screens/VideoFeed/index.tsx:650
 #: src/screens/VideoFeed/index.tsx:656
@@ -10505,7 +10505,7 @@ msgstr "이 답글은 스레드 하단의 숨겨진 위치에 정렬되며 자�
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "이 서비스는 서비스 이용약관이나 개인정보 처리방침을 제공하지 않습니다."
 
-#: src/features/liveNow/index.tsx:199
+#: src/features/liveNow/index.tsx:200
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "라이브 기능이 베타 버전인 동안에는 이 서비스가 지원되지 않습니다. 사용할 수 있는 서비스: {formatted}"
 
@@ -11563,8 +11563,8 @@ msgstr "콘텐츠 경고"
 msgid "Warn content and filter from feeds"
 msgstr "콘텐츠 경고 및 피드에서 필터링"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:188
-#: src/features/liveNow/components/LiveStatusDialog.tsx:197
+#: src/features/liveNow/components/LiveStatusDialog.tsx:189
+#: src/features/liveNow/components/LiveStatusDialog.tsx:198
 msgid "Watch now"
 msgstr "시청하기"
 
@@ -11961,7 +11961,7 @@ msgstr "대기 중입니다."
 msgid "You are Live"
 msgstr "라이브 중"
 
-#: src/features/liveNow/index.tsx:367
+#: src/features/liveNow/index.tsx:368
 msgid "You are no longer live"
 msgstr "더 이상 라이브 중이 아닙니다"
 
@@ -11973,7 +11973,7 @@ msgstr "동영상을 업로드할 수 없습니다."
 msgid "You are not following anyone yet"
 msgstr "아직 아무도 팔로우하지 않았습니다"
 
-#: src/features/liveNow/index.tsx:311
+#: src/features/liveNow/index.tsx:312
 msgid "You are now live!"
 msgstr "라이브 중입니다!"
 

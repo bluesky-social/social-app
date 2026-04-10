@@ -8,7 +8,7 @@ msgstr ""
 "Language: gd\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-09 20:53\n"
+"PO-Revision-Date: 2026-04-10 15:27\n"
 "Last-Translator: \n"
 "Language-Team: Scottish Gaelic\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n>2 && n<20) ? 2 : 3;\n"
@@ -5271,12 +5271,12 @@ msgid "Image cache cleared, freed {0}"
 msgstr "Chaidh tasgadan nan dealbhan fhalamhachadh, shaor sinn {0}"
 
 #. Image has been moderated and user has the option of showing it temporarily
-#: src/features/liveNow/components/LiveStatusDialog.tsx:298
+#: src/features/liveNow/components/LiveStatusDialog.tsx:299
 msgid "Image is hidden due to your moderation settings."
 msgstr ""
 
 #. Image has been moderated and is not visible to the user
-#: src/features/liveNow/components/LiveStatusDialog.tsx:308
+#: src/features/liveNow/components/LiveStatusDialog.tsx:309
 msgid "Image is unavailable."
 msgstr ""
 
@@ -5934,7 +5934,7 @@ msgstr "Chaidh an tachartas beò a leigeil ris as ùr"
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
 msgstr "Nochdaidh tachartasan beòtha uaireannan nuair a bhios rudeigin inntinneach a’ dol. Ma thogras tu, ’s urrainn dhut an tachartas seo fhèin a chur am falach no gach tachartas a nochdadh san ionad seo ann an eadar-aghaidh na h-aplacaid."
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:243
+#: src/features/liveNow/components/LiveStatusDialog.tsx:244
 msgid "Live feature is in beta"
 msgstr "Tha gleus nan tachartasan beòtha na ghleus beta"
 
@@ -7044,8 +7044,8 @@ msgstr "Fosgail a’ phacaid"
 msgid "Open post options menu"
 msgstr "Fosgail clàr-taice roghainnean a’ phuist"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:217
-#: src/features/liveNow/components/LiveStatusDialog.tsx:227
+#: src/features/liveNow/components/LiveStatusDialog.tsx:218
+#: src/features/liveNow/components/LiveStatusDialog.tsx:228
 msgid "Open profile"
 msgstr "Fosgail a’ phròifil"
 
@@ -8339,7 +8339,7 @@ msgstr "Chaidh an fhreagairt a chur am falach"
 #: src/components/dms/MessageContextMenu.tsx:172
 #: src/components/dms/MessagesListBlockedFooter.tsx:86
 #: src/components/dms/MessagesListBlockedFooter.tsx:93
-#: src/features/liveNow/components/LiveStatusDialog.tsx:265
+#: src/features/liveNow/components/LiveStatusDialog.tsx:266
 msgid "Report"
 msgstr "Dèan aithris"
 
@@ -8403,7 +8403,7 @@ msgid "Report this list"
 msgstr "Dèan aithris air an liosta seo"
 
 #: src/components/moderation/ReportDialog/copy.ts:19
-#: src/features/liveNow/components/LiveStatusDialog.tsx:248
+#: src/features/liveNow/components/LiveStatusDialog.tsx:249
 msgid "Report this livestream"
 msgstr "Dèan aithris air an t-sruth bheò seo"
 
@@ -9334,8 +9334,8 @@ msgstr "Seall an roghainn teacsa"
 
 #: src/components/moderation/ScreenHider.tsx:179
 #: src/components/moderation/ScreenHider.tsx:182
-#: src/features/liveNow/components/LiveStatusDialog.tsx:316
-#: src/features/liveNow/components/LiveStatusDialog.tsx:320
+#: src/features/liveNow/components/LiveStatusDialog.tsx:317
+#: src/features/liveNow/components/LiveStatusDialog.tsx:321
 #: src/screens/List/ListHiddenScreen.tsx:194
 #: src/screens/VideoFeed/index.tsx:650
 #: src/screens/VideoFeed/index.tsx:656
@@ -10505,7 +10505,7 @@ msgstr "Thèid an fhreagairt seo a chur ann an earrann fhalaichte aig bonn an t-
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Cha tug an t-seirbheis seo seachad teirmichean seirbheise no poileasaidh prìobhaideachd."
 
-#: src/features/liveNow/index.tsx:199
+#: src/features/liveNow/index.tsx:200
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr "Cha bhi an t-seirbheis seo ri làimh fhad ’s a bhios gleus a’ chraolaidh bheò na ghleus beta. Seirbheisean a tha ceadaichte: {formatted}."
 
@@ -11563,8 +11563,8 @@ msgstr "Rabhadh ron t-susbaint"
 msgid "Warn content and filter from feeds"
 msgstr "Thoir rabhadh ron t-susbaint is criathraich às na h-inbhirean e"
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:188
-#: src/features/liveNow/components/LiveStatusDialog.tsx:197
+#: src/features/liveNow/components/LiveStatusDialog.tsx:189
+#: src/features/liveNow/components/LiveStatusDialog.tsx:198
 msgid "Watch now"
 msgstr "Coimhead an-dràsta"
 
@@ -11961,7 +11961,7 @@ msgstr "Tha thu sa chiutha."
 msgid "You are Live"
 msgstr "Tha thu ri sruthadh beò"
 
-#: src/features/liveNow/index.tsx:367
+#: src/features/liveNow/index.tsx:368
 msgid "You are no longer live"
 msgstr "Chan eil thu ri sruthadh beò tuilleadh"
 
@@ -11973,7 +11973,7 @@ msgstr "Chan eil cead agad videothan a luchdadh."
 msgid "You are not following anyone yet"
 msgstr "Chan eil thu a’ leantainn duine sam bith fhathast"
 
-#: src/features/liveNow/index.tsx:311
+#: src/features/liveNow/index.tsx:312
 msgid "You are now live!"
 msgstr "Tha thu ri sruthadh beò a-nis!"
 
