@@ -5,7 +5,7 @@ import {
   type KeyboardChatScrollViewProps,
   KeyboardGestureArea,
 } from 'react-native-keyboard-controller'
-import Animated, {
+import {
   runOnJS,
   type ScrollEvent,
   type SharedValue,
@@ -51,9 +51,11 @@ import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
 import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
+import {MessageListError as MessageListErrorDeprecated} from '#/screens/Messages/components/MessageListError_DEPRECATED'
 import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {MessageItem} from '#/components/dms/MessageItem'
+import {MessageItem as MessageItemDeprecated} from '#/components/dms/MessageItem_DEPRECATED'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -75,18 +77,6 @@ function MaybeLoader({isLoading}: {isLoading: boolean}) {
       {isLoading && <Loader size="xl" />}
     </View>
   )
-}
-
-function renderItem({item}: {item: ConvoItem}) {
-  if (item.type === 'message' || item.type === 'pending-message') {
-    return <MessageItem item={item} />
-  } else if (item.type === 'deleted-message') {
-    return <Text>Deleted message</Text>
-  } else if (item.type === 'error') {
-    return <MessageListError item={item} />
-  }
-
-  return null
 }
 
 function keyExtractor(item: ConvoItem) {
@@ -116,6 +106,8 @@ export function MessagesList({
   const getPost = useGetPost()
   const {embedUri, setEmbed} = useMessageEmbed()
   const t = useTheme()
+
+  const isGroupChatEnabled = ax.features.enabled(ax.features.GroupChatsEnable)
 
   const textInputId = 'chat-input-' + useId()
   const flatListRef = useAnimatedRef<ListMethods>()
@@ -369,6 +361,32 @@ export function MessagesList({
     setEmojiPickerState({isOpen: true, pos})
   }, [])
 
+  const renderItem = ({item}: {item: ConvoItem}) => {
+    if (item.type === 'message' || item.type === 'pending-message') {
+      return isGroupChatEnabled ? (
+        <MessageItem
+          item={item}
+          profile={convoState.convo.members.find(
+            member => member.did === item.message.sender.did,
+          )}
+          isGroupChat={convoState.convo.kind === 'group'}
+        />
+      ) : (
+        <MessageItemDeprecated item={item} />
+      )
+    } else if (item.type === 'deleted-message') {
+      return <Text>Deleted message</Text>
+    } else if (item.type === 'error') {
+      return isGroupChatEnabled ? (
+        <MessageListError item={item} />
+      ) : (
+        <MessageListErrorDeprecated item={item} />
+      )
+    }
+
+    return null
+  }
+
   const renderScrollComponent = useCallback(
     (props: ScrollViewProps) => (
       <ChatScrollComponent {...props} inputHeight={inputHeightUI} />
@@ -411,9 +429,18 @@ export function MessagesList({
             }
             // native only (prop is not supported on web)
             renderScrollComponent={renderScrollComponent}
-            // pushes up the content under the input on web (renderScrollComponent handles it on native)
+            contentContainerStyle={{
+              paddingBottom: platform({
+                // ios is slightly larger as the input has no top padding
+                ios: tokens.space.lg,
+                android: tokens.space.md,
+                web: 0, // web uses ListFooterComponent instead for scroll reasons
+              }),
+            }}
+            // adds extra space underneath the absolutely positioned input on web
+            // as renderScrollComponent isn't available here (luckily we don't need the fancy behaviour)
             ListFooterComponent={web(
-              <WebInputSpacer inputHeight={inputHeightJS} />,
+              <View style={{height: tokens.space.md + inputHeightJS}} />,
             )}
             style={web({
               scrollbarWidth: 'thin',
@@ -516,12 +543,6 @@ function ChatScrollComponent({
       {...props}
     />
   )
-}
-
-function WebInputSpacer({inputHeight}: {inputHeight: number}) {
-  if (!IS_WEB) return null
-
-  return <Animated.View style={{height: inputHeight}} />
 }
 
 type FooterState = 'loading' | 'new-chat' | 'request' | 'standard'
