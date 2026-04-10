@@ -100,7 +100,8 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
 
   const moderation = useMemo(() => {
     if (!actor || !('status' in actor && actor.status)) return undefined
-    return moderateStatus(actor, moderationOpts!)
+    if (!moderationOpts) return undefined
+    return moderateStatus(actor, moderationOpts)
   }, [actor, moderationOpts])
 
   return useMemo(() => {
