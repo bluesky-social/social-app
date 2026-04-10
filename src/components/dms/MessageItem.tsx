@@ -1,6 +1,8 @@
-import {memo, useCallback, useMemo} from 'react'
+import {memo, useCallback, useEffect, useMemo, useState} from 'react'
 import {
   type GestureResponderEvent,
+  Pressable,
+  type ScrollView,
   type StyleProp,
   type TextStyle,
   View,
@@ -10,6 +12,8 @@ import Animated, {
   FadeOut,
   LayoutAnimationConfig,
   LinearTransition,
+  useAnimatedRef,
+  useSharedValue,
   ZoomIn,
   ZoomOut,
 } from 'react-native-reanimated'
@@ -19,16 +23,21 @@ import {
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
+import {HITSLOP_10} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useConvoActive} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
-import {atoms as a, native, useTheme} from '#/alf'
+import {DraggableScrollView} from '#/view/com/pager/DraggableScrollView'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {atoms as a, native, useTheme, web} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
+import * as Dialog from '#/components/Dialog'
+import {useDialogControl} from '#/components/Dialog'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -44,8 +53,18 @@ const BORDER_RADIUS = 18
 const SQUARED_BORDER_RADIUS = 4
 const DISPLAY_NAME_INSET = 22
 
+// 42px avatar + 2 * 8px my_sm margins
+const ROW_HEIGHT = 58
+
 const CLUSTERED_MESSAGE_THRESHOLD_MS = 5 * 60 * 1000
 const MESSAGE_GAP_THRESHOLD_MS = 60 * 60 * 1000
+
+type Reaction = {
+  key: string
+  value: string
+  senders: ChatBskyConvoDefs.ReactionViewSender[]
+  count: number
+}
 
 function isWithinCluster({
   isPending,
@@ -91,6 +110,8 @@ let MessageItem = ({
   const {t: l} = useLingui()
   const {convo} = useConvoActive()
   const moderationOpts = useModerationOpts()
+
+  const reactionsControl = useDialogControl()
 
   const {message, nextMessage, prevMessage} = item
   const isPending = item.type === 'pending-message'
@@ -176,21 +197,23 @@ let MessageItem = ({
     const grouped = new Map<
       string,
       {
+        key: string
         value: string
         senders: ChatBskyConvoDefs.ReactionViewSender[]
         count: number
       }
     >()
-    for (const react of reactions) {
-      if (!react) continue
-      const existing = grouped.get(react.value)
+    for (const reaction of reactions) {
+      if (!reaction) continue
+      const existing = grouped.get(reaction.value)
       if (existing) {
-        existing.senders.push(react.sender)
+        existing.senders.push(reaction.sender)
         existing.count++
       } else {
-        grouped.set(react.value, {
-          value: react.value,
-          senders: [react.sender],
+        grouped.set(reaction.value, {
+          key: reaction.value,
+          value: reaction.value,
+          senders: [reaction.sender],
           count: 1,
         })
       }
@@ -227,62 +250,80 @@ let MessageItem = ({
   const appliedReactions = (
     <LayoutAnimationConfig skipEntering skipExiting>
       {hasReactions ? (
-        <View
-          style={[
-            isFromSelf ? a.align_end : a.align_start,
-            a.px_sm,
-            a.pb_2xs,
-            !isFromSelf && isGroupChat && {paddingLeft: AVATAR_SIZE},
-          ]}>
+        <>
           <View
-            accessible={true}
-            accessibilityLabel={reactionsLabel}
-            accessibilityHint={l`Double tap or long press the message to add a reaction`}
             style={[
-              a.flex_row,
-              a.gap_2xs,
-              a.py_xs,
-              a.px_xs,
-              isFromSelf ? a.justify_end : a.justify_start,
-              a.flex_wrap,
-              a.rounded_lg,
-              a.border,
-              t.atoms.border_contrast_low,
-              t.atoms.bg_contrast_25,
-              t.atoms.shadow_sm,
-              {
-                transform: [{translateY: -8}],
-              },
+              isFromSelf ? a.align_end : a.align_start,
+              a.px_sm,
+              a.pb_2xs,
+              !isFromSelf &&
+                isGroupChat && {paddingLeft: AVATAR_SIZE + a.ml_sm.marginLeft},
             ]}>
-            {groupedReactions.map(group => (
-              <Animated.View
-                entering={native(ZoomIn.springify(200).delay(400))}
-                exiting={
-                  groupedReactions.length > 1 && native(ZoomOut.delay(200))
-                }
-                layout={native(LinearTransition.delay(300))}
-                key={group.value}
-                style={[a.p_2xs]}>
-                <Text emoji style={[a.text_sm]}>
-                  {group.value}
-                </Text>
-              </Animated.View>
-            ))}
-            {groupedReactions.length !== reactions.length &&
-            reactions.length > 1 ? (
-              <View style={[a.p_2xs, a.justify_center]}>
-                <Text
-                  style={[
-                    a.text_xs,
-                    t.atoms.text_contrast_medium,
-                    {includeFontPadding: false},
-                  ]}>
-                  {reactions.length}
-                </Text>
-              </View>
-            ) : null}
+            <Pressable
+              accessible={true}
+              accessibilityLabel={reactionsLabel}
+              accessibilityHint={
+                isGroupChat && reactions.length > 1
+                  ? l`Tap to view reactions`
+                  : undefined
+              }
+              style={[
+                a.flex_row,
+                a.gap_2xs,
+                a.py_xs,
+                a.px_xs,
+                isFromSelf ? a.justify_end : a.justify_start,
+                a.flex_wrap,
+                a.rounded_lg,
+                a.border,
+                t.atoms.border_contrast_low,
+                t.atoms.bg_contrast_25,
+                t.atoms.shadow_sm,
+                {
+                  transform: [{translateY: -8}],
+                },
+              ]}
+              onPress={() =>
+                isGroupChat && reactions.length > 1
+                  ? reactionsControl.open()
+                  : undefined
+              }>
+              {groupedReactions.map(group => (
+                <Animated.View
+                  entering={native(ZoomIn.springify(200).delay(400))}
+                  exiting={
+                    groupedReactions.length > 1 && native(ZoomOut.delay(200))
+                  }
+                  layout={native(LinearTransition.delay(300))}
+                  key={group.value}
+                  style={[a.p_2xs]}>
+                  <Text emoji style={[a.text_sm]}>
+                    {group.value}
+                  </Text>
+                </Animated.View>
+              ))}
+              {groupedReactions.length !== reactions.length &&
+              reactions.length > 1 ? (
+                <View style={[a.p_2xs, a.justify_center]}>
+                  <Text
+                    style={[
+                      a.text_xs,
+                      t.atoms.text_contrast_medium,
+                      {includeFontPadding: false},
+                    ]}>
+                    {reactions.length}
+                  </Text>
+                </View>
+              ) : null}
+            </Pressable>
           </View>
-        </View>
+          <ReactionsDialog
+            control={reactionsControl}
+            members={convo.members}
+            reactions={message.reactions}
+            groupedReactions={groupedReactions}
+          />
+        </>
       ) : null}
     </LayoutAnimationConfig>
   )
@@ -331,6 +372,7 @@ let MessageItem = ({
             <ActionsWrapper isFromSelf={isFromSelf} message={message}>
               {rt.text.length > 0 && (
                 <View
+                  accessibilityHint={l`Double tap or long press the message to add a reaction`}
                   style={[
                     !isFromSelf && a.ml_sm,
                     ...(isOnlyEmoji(message.text)
@@ -485,3 +527,226 @@ let MessageItemMetadata = ({
 }
 MessageItemMetadata = memo(MessageItemMetadata)
 export {MessageItemMetadata}
+
+function ReactionsDialog({
+  control,
+  members,
+  reactions,
+  groupedReactions,
+}: {
+  control: Dialog.DialogControlProps
+  members: bsky.profile.AnyProfileView[]
+  reactions?: ChatBskyConvoDefs.ReactionView[]
+  groupedReactions?: Reaction[]
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  const [selected, setSelected] = useState('all')
+
+  const handleFilter = (value: string) => {
+    setSelected(value)
+  }
+
+  const filteredMembers =
+    selected === 'all'
+      ? members
+      : members.filter(m =>
+          reactions?.some(r => r.sender.did === m.did && r.value === selected),
+        )
+
+  const minHeight = members.length * ROW_HEIGHT
+
+  return (
+    <Dialog.Outer
+      control={control}
+      onClose={() => setSelected('all')}
+      nativeOptions={{preventExpansion: true, minHeight}}>
+      <Dialog.Handle />
+      <View style={[a.px_2xl, a.pt_3xl, t.atoms.bg]}>
+        <Text style={[a.font_bold, a.text_2xl, a.mb_sm]}>
+          <Trans>Reactions</Trans>
+        </Text>
+      </View>
+      <ReactionTabs
+        groupedReactions={groupedReactions}
+        selected={selected}
+        totalReactions={reactions?.length ?? 0}
+        onFilter={handleFilter}
+      />
+      <Dialog.ScrollableInner
+        label={l`Reactions`}
+        contentContainerStyle={[a.pt_0]}
+        style={[web({maxWidth: 400})]}>
+        {filteredMembers.map(profile => {
+          const displayName = sanitizeDisplayName(
+            profile?.displayName || sanitizeHandle(profile?.handle ?? ''),
+          )
+          const handle = sanitizeHandle(profile?.handle ?? '', '@')
+          const reaction = reactions?.find(
+            ({sender}) => sender.did === profile.did,
+          )
+          const rt = reaction
+            ? new RichTextAPI({text: reaction.value})
+            : undefined
+
+          return rt ? (
+            <View
+              key={profile.did}
+              style={[
+                a.flex_row,
+                a.gap_sm,
+                a.align_center,
+                a.justify_between,
+                a.my_sm,
+              ]}>
+              <View style={[a.flex_row, a.gap_sm]}>
+                <UserAvatar
+                  avatar={profile.avatar}
+                  size={42}
+                  type="user"
+                  hideLiveBadge
+                />
+                <View>
+                  <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                    {displayName}
+                  </Text>
+                  <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+                    {handle}
+                  </Text>
+                </View>
+              </View>
+              <View>
+                <RichText
+                  value={rt}
+                  style={[a.text_md]}
+                  interactiveStyle={a.underline}
+                  enableTags
+                  emojiMultiplier={2}
+                  shouldProxyLinks={true}
+                />
+              </View>
+            </View>
+          ) : null
+        })}
+      </Dialog.ScrollableInner>
+    </Dialog.Outer>
+  )
+}
+
+function ReactionTabs({
+  groupedReactions,
+  selected,
+  totalReactions,
+  onFilter,
+}: {
+  groupedReactions?: Reaction[]
+  selected: string
+  totalReactions: number
+  onFilter: (value: string) => void
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  const scrollElRef = useAnimatedRef<ScrollView>()
+  const contentSize = useSharedValue(0)
+  const scrollX = useSharedValue(0)
+
+  const handlePress = (value: string) => {
+    onFilter(value)
+  }
+
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      // Scroll to the end of the list when `groupedReactions` changes.
+      scrollElRef.current?.scrollToEnd({animated: true})
+    })
+  }, [groupedReactions, scrollElRef])
+
+  const tabs = [
+    {
+      key: 'all',
+      value: l`All`,
+      senders: [],
+      count: totalReactions,
+    } as Reaction,
+    ...(groupedReactions ?? []),
+  ]
+
+  return (
+    <View accessibilityRole="list" style={[t.atoms.bg]}>
+      <DraggableScrollView
+        ref={scrollElRef}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        onScroll={e => {
+          scrollX.set(Math.round(e.nativeEvent.contentOffset.x))
+        }}>
+        <Animated.View
+          style={[
+            a.flex_row,
+            a.flex_grow,
+            a.gap_sm,
+            a.align_center,
+            a.justify_start,
+          ]}
+          onLayout={e => {
+            contentSize.set(e.nativeEvent.layout.width)
+          }}>
+          {tabs?.map((reaction, index) => (
+            <Tab
+              key={reaction.value}
+              index={index}
+              reaction={reaction}
+              selected={selected}
+              total={tabs.length}
+              onPress={handlePress}
+            />
+          ))}
+        </Animated.View>
+      </DraggableScrollView>
+    </View>
+  )
+}
+
+function Tab({
+  index,
+  reaction,
+  selected,
+  total,
+  onPress,
+}: {
+  index: number
+  reaction: Reaction
+  selected: string
+  total: number
+  onPress: (value: string) => void
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityHint={l`Tap to show ${reaction.value} reactions`}
+      hitSlop={HITSLOP_10}
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.border,
+        a.justify_center,
+        a.rounded_lg,
+        a.px_md,
+        a.py_sm,
+        a.mb_sm,
+        t.atoms.border_contrast_low,
+        selected === reaction.key ? t.atoms.bg_contrast_50 : t.atoms.bg,
+        index === 0 ? a.ml_2xl : index === total - 1 ? a.mr_2xl : null,
+      ]}
+      onPress={() => onPress(reaction.key)}>
+      <Text emoji style={[a.text_sm]}>
+        {reaction.value} {reaction.count}
+      </Text>
+    </Pressable>
+  )
+}

@@ -11,6 +11,7 @@ import {useConvoActive} from '#/state/messages/convo'
 import {useLanguagePrefs} from '#/state/preferences'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
+import {atoms as a} from '#/alf'
 import * as ContextMenu from '#/components/ContextMenu'
 import {type TriggerProps} from '#/components/ContextMenu/types'
 import {AfterReportDialog} from '#/components/dms/AfterReportDialog'
@@ -114,7 +115,9 @@ export let MessageContextMenu = ({
     <>
       <ContextMenu.Root>
         {IS_NATIVE && (
-          <ContextMenu.AuxiliaryView align={isFromSelf ? 'right' : 'left'}>
+          <ContextMenu.AuxiliaryView
+            align={isFromSelf ? 'right' : 'left'}
+            style={[isFromSelf ? null : a.ml_sm]}>
             <EmojiReactionPicker
               message={message}
               onEmojiSelect={onEmojiSelect}
@@ -130,7 +133,9 @@ export let MessageContextMenu = ({
           {children}
         </ContextMenu.Trigger>
 
-        <ContextMenu.Outer align={isFromSelf ? 'right' : 'left'}>
+        <ContextMenu.Outer
+          align={isFromSelf ? 'right' : 'left'}
+          style={[isFromSelf ? null : a.ml_sm]}>
           {message.text.length > 0 && (
             <>
               <ContextMenu.Item
