@@ -482,7 +482,11 @@ function TriggerClone({
   )
 }
 
-export function AuxiliaryView({children, align = 'left'}: AuxiliaryViewProps) {
+export function AuxiliaryView({
+  children,
+  align = 'left',
+  style,
+}: AuxiliaryViewProps) {
   const context = useContextMenuContext()
   const {width: screenWidth} = useWindowDimensions()
   const {top: topInset} = useSafeAreaInsets()
@@ -556,6 +560,7 @@ export function AuxiliaryView({children, align = 'left'}: AuxiliaryViewProps) {
                 : {right: screenWidth - measurement.x - measurement.width},
               animatedStyle,
               a.z_20,
+              style,
             ]}>
             {children}
           </Animated.View>
