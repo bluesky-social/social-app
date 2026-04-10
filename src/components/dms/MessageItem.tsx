@@ -1,8 +1,7 @@
-import {memo, useCallback, useEffect, useMemo, useState} from 'react'
+import {memo, useCallback, useMemo, useState} from 'react'
 import {
   type GestureResponderEvent,
   Pressable,
-  type ScrollView,
   type StyleProp,
   type TextStyle,
   View,
@@ -12,7 +11,6 @@ import Animated, {
   FadeOut,
   LayoutAnimationConfig,
   LinearTransition,
-  useAnimatedRef,
   useSharedValue,
   ZoomIn,
   ZoomOut,
@@ -644,20 +642,12 @@ function ReactionTabs({
   const t = useTheme()
   const {t: l} = useLingui()
 
-  const scrollElRef = useAnimatedRef<ScrollView>()
   const contentSize = useSharedValue(0)
   const scrollX = useSharedValue(0)
 
   const handlePress = (value: string) => {
     onFilter(value)
   }
-
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      // Scroll to the end of the list when `groupedReactions` changes.
-      scrollElRef.current?.scrollToEnd({animated: true})
-    })
-  }, [groupedReactions, scrollElRef])
 
   const tabs = [
     {
@@ -672,7 +662,6 @@ function ReactionTabs({
   return (
     <View accessibilityRole="list" style={[t.atoms.bg]}>
       <DraggableScrollView
-        ref={scrollElRef}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         onScroll={e => {
