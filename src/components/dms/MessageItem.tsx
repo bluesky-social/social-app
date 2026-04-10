@@ -713,7 +713,11 @@ function Tab({
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityHint={l`Tap to show ${reaction.value} reactions`}
+      accessibilityHint={
+        reaction.key === 'all'
+          ? l`Tap to show all reactions `
+          : l`Tap to show ${reaction.value} reactions`
+      }
       hitSlop={HITSLOP_10}
       style={[
         a.flex_row,
