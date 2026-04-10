@@ -1,7 +1,6 @@
 import {View} from 'react-native'
 import {type ChatBskyConvoDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
 import {MessageContextMenu} from '#/components/dms/MessageContextMenu'
@@ -15,7 +14,7 @@ export function ActionsWrapper({
   isFromSelf: boolean
   children: React.ReactNode
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <MessageContextMenu message={message}>
@@ -32,7 +31,7 @@ export function ActionsWrapper({
               ]}
               accessible={true}
               accessibilityActions={[
-                {name: 'activate', label: _(msg`Open message options`)},
+                {name: 'activate', label: l`Open message options`},
               ]}
               onAccessibilityAction={() => trigger.control.open('full')}>
               {children}

@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {flushSync} from 'react-dom'
 import TextareaAutosize from 'react-textarea-autosize'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
@@ -40,7 +39,7 @@ export function MessageInput({
   openEmojiPicker?: (pos: EmojiPickerPosition) => void
 }) {
   const {isMobile} = useWebMediaQueries()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {getDraft, clearDraft} = useMessageDraft()
   const [message, setMessage] = useState(getDraft)
@@ -57,7 +56,7 @@ export function MessageInput({
       return
     }
     if (countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
-      Toast.show(_(msg`Message is too long`), {
+      Toast.show(l`Message is too long`, {
         type: 'error',
       })
       return
@@ -66,7 +65,7 @@ export function MessageInput({
     onSendMessage(message)
     setMessage('')
     setEmbed(undefined)
-  }, [message, onSendMessage, _, clearDraft, hasEmbed, setEmbed])
+  }, [message, onSendMessage, l, clearDraft, hasEmbed, setEmbed])
 
   const onKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -177,7 +176,7 @@ export function MessageInput({
               width: 30,
             },
           ]}
-          label={_(msg`Open emoji picker`)}>
+          label={l`Open emoji picker`}>
           {state => (
             <View
               style={[
@@ -210,7 +209,7 @@ export function MessageInput({
             },
           ])}
           maxRows={12}
-          placeholder={_(msg`Write a message`)}
+          placeholder={l`Message`}
           defaultValue=""
           value={message}
           dirName="ltr"
@@ -231,7 +230,7 @@ export function MessageInput({
         />
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={_(msg`Send message`)}
+          accessibilityLabel={l`Send message`}
           accessibilityHint=""
           style={[
             a.rounded_full,
