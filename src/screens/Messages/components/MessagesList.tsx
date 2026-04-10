@@ -4,7 +4,6 @@ import {
   KeyboardChatScrollView,
   type KeyboardChatScrollViewProps,
   KeyboardGestureArea,
-  KeyboardStickyView,
 } from 'react-native-keyboard-controller'
 import Animated, {
   runOnJS,
@@ -62,6 +61,7 @@ import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
+import {KeyboardStickyView} from './vendor/KeyboardStickyView'
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
   return (
@@ -425,10 +425,10 @@ export function MessagesList({
         <KeyboardStickyView
           style={[a.absolute, a.bottom_0, a.left_0, a.right_0]}
           onLayout={onInputLayout}
+          minimumOffset={bottomInset}
           offset={{
             closed: platform({
-              ios: tokens.space.lg - bottomInset,
-              android: -bottomInset,
+              ios: tokens.space.lg, // hide bottom padding when closed
               default: 0,
             }),
             opened: 0,
