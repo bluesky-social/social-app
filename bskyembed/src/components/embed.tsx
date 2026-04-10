@@ -16,6 +16,7 @@ import {useMemo} from 'preact/hooks'
 import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
 import playIcon from '../../assets/play_filled_corner0_rounded.svg'
 import starterPackIcon from '../../assets/starterPack.svg'
+import {Globe} from '../icons/Globe'
 import {CONTENT_LABELS, labelsToInfo} from '../labels'
 import * as bsky from '../types/bsky'
 import {getRkey} from '../util/rkey'
@@ -93,7 +94,7 @@ export function Embed({
                 />
               </div>
               <div className="flex flex-1 items-center shrink min-w-0 min-h-0">
-                <p className="block text-sm shrink-0 font-bold max-w-[70%] line-clamp-1">
+                <p className="block text-sm shrink-0 font-semibold max-w-[70%] line-clamp-1">
                   {record.author.displayName?.trim() || record.author.handle}
                 </p>
                 {verification.isVerified && (
@@ -334,13 +335,18 @@ function ExternalEmbed({
         />
       )}
       <div className="py-3 px-4">
-        <p className="text-sm text-textLight dark:text-textDimmed line-clamp-1">
-          {toNiceDomain(content.external.uri)}
+        <p className="font-semibold leading-tight line-clamp-3">
+          {content.external.title}
         </p>
-        <p className="font-semibold line-clamp-3">{content.external.title}</p>
-        <p className="text-sm text-textLight dark:text-textDimmed line-clamp-2 mt-0.5">
+        <p className="text-sm leading-snug text-textLight dark:text-textDimmed line-clamp-2 mt-0.5">
           {content.external.description}
         </p>
+        <div className="flex flex-row items-center gap-1 border-t dark:border-slate-600 mt-1 pt-1.5">
+          <Globe size={12} className="text-textLight dark:text-textDimmed" />
+          <p className="text-sm leading-none text-textLight dark:text-textDimmed line-clamp-1">
+            {toNiceDomain(content.external.uri)}
+          </p>
+        </div>
       </div>
     </Link>
   )
@@ -374,7 +380,7 @@ function GenericWithImageEmbed({
           <div className="w-8 h-8 rounded-md bg-brand shrink-0" />
         )}
         <div className="flex-1">
-          <p className="font-bold text-sm">{title}</p>
+          <p className="font-semibold text-sm">{title}</p>
           <p className="text-textLight dark:text-textDimmed text-sm">
             {subtitle}
           </p>

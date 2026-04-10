@@ -70,7 +70,7 @@ export function Post({thread}: Props) {
             <div className="flex flex-1 items-center">
               <Link
                 href={`/profile/${post.author.did}`}
-                className="block font-bold text-[15px] min-[400px]:text-[17px] leading-5 line-clamp-1 hover:underline underline-offset-2 text-ellipsis decoration-2">
+                className="block font-semibold text-[15px] min-[400px]:text-[17px] leading-5 line-clamp-1 hover:underline underline-offset-2 text-ellipsis decoration-2">
                 {post.author.displayName?.trim() || post.author.handle}
               </Link>
               {verification.isVerified && (
@@ -213,7 +213,7 @@ function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
   }
 
   return (
-    <p className="text-md min-[400px]:text-lg leading-6 min-[300px]:leading-6 break-word break-words whitespace-pre-wrap">
+    <p className="text-md min-[400px]:text-lg leading-snug min-[400px]:leading-snug break-word break-words whitespace-pre-wrap">
       {richText}
     </p>
   )
