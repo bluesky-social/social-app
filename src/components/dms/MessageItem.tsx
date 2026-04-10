@@ -730,7 +730,7 @@ function Tab({
       ]}
       onPress={() => onPress(reaction.key)}>
       <Text emoji style={[a.text_sm]}>
-        {reaction.value} {reaction.count}
+        {l`${reaction.value} ${reaction.count}`}
       </Text>
     </Pressable>
   )
