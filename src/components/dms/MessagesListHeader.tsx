@@ -5,18 +5,19 @@ import {
   type ModerationCause,
   type ModerationDecision,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {type Shadow} from '#/state/cache/profile-shadow'
 import {isConvoActive, useConvo} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
+import {useSession} from '#/state/session'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
-import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
+import {Bell2Off_Filled_Corner0_Rounded as BellOffIcon} from '#/components/icons/Bell2'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -34,6 +35,7 @@ export function MessagesListHeader({
   moderation?: ModerationDecision
 }) {
   const t = useTheme()
+  const convoState = useConvo()
 
   const blockInfo = useMemo(() => {
     if (!moderation) return
@@ -78,13 +80,15 @@ export function MessagesListHeader({
                     a.mt_xs,
                   ]}
                 />
-                <View
-                  style={[
-                    {width: 175, height: 12},
-                    a.rounded_xs,
-                    t.atoms.bg_contrast_25,
-                  ]}
-                />
+                {!convoState.isGroup?.() && (
+                  <View
+                    style={[
+                      {width: 175, height: 12},
+                      a.rounded_xs,
+                      t.atoms.bg_contrast_25,
+                    ]}
+                  />
+                )}
               </View>
             </View>
 
@@ -108,22 +112,28 @@ function HeaderReady({
     userBlock?: ModerationCause
   }
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const convoState = useConvo()
+  const {currentAccount} = useSession()
+
+  const groupInfo = convoState.getGroupInfo?.()
+  const isGroupChat = groupInfo != null
 
   const isDeletedAccount = profile?.handle === 'missing.invalid'
-  const displayName = isDeletedAccount
-    ? _(msg`Deleted Account`)
-    : sanitizeDisplayName(
-        profile.displayName || profile.handle,
-        moderation.ui('displayName'),
-      )
+  const displayName = isGroupChat
+    ? (groupInfo.name ?? l`${profile.handle}'s group chat`)
+    : isDeletedAccount
+      ? l`Deleted Account`
+      : sanitizeDisplayName(
+          profile.displayName || profile.handle,
+          moderation.ui('displayName'),
+        )
 
-  // @ts-ignore findLast is polyfilled - esb
   const latestMessageFromOther = convoState.items.findLast(
     (item: ConvoItem) =>
-      item.type === 'message' && item.message.sender.did === profile.did,
+      item.type === 'message' &&
+      item.message.sender.did !== currentAccount?.did,
   )
 
   const latestReportableMessage =
@@ -134,54 +144,58 @@ function HeaderReady({
   return (
     <View style={[a.flex_1]}>
       <View style={[a.w_full, a.flex_row, a.align_center, a.justify_between]}>
-        <Link
-          label={_(msg`View ${displayName}'s profile`)}
-          style={[a.flex_row, a.align_start, a.gap_md, a.flex_1, a.pr_md]}
-          to={makeProfileLink(profile)}>
-          <PreviewableUserAvatar
-            size={PFP_SIZE}
-            profile={profile}
-            moderation={moderation.ui('avatar')}
-            disableHoverCard={moderation.blocked}
-          />
-          <View style={[a.flex_1]}>
-            <View style={[a.flex_row, a.align_center]}>
-              <Text
-                emoji
-                style={[
-                  a.text_md,
-                  a.font_semi_bold,
-                  a.self_start,
-                  web(a.leading_normal),
-                ]}
-                numberOfLines={1}>
-                {displayName}
-              </Text>
-              <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
-            </View>
-            {!isDeletedAccount && (
-              <Text
-                style={[
-                  t.atoms.text_contrast_medium,
-                  a.text_xs,
-                  web([a.leading_normal, {marginTop: -2}]),
-                ]}
-                numberOfLines={1}>
-                @{profile.handle}
-                {convoState.convo?.muted && (
-                  <>
-                    {' '}
-                    &middot;{' '}
-                    <BellStroke
-                      size="xs"
-                      style={t.atoms.text_contrast_medium}
-                    />
-                  </>
-                )}
-              </Text>
-            )}
+        {isGroupChat ? (
+          <View
+            style={[a.flex_row, a.align_center, a.gap_md, a.flex_1, a.pr_md]}>
+            <AvatarBubbles
+              size="small"
+              profiles={convoState.recipients ?? []}
+            />
+            <Text style={[a.text_md, a.font_semi_bold]} numberOfLines={1}>
+              {displayName}
+            </Text>
           </View>
-        </Link>
+        ) : (
+          <Link
+            label={l`View ${displayName}'s profile`}
+            style={[a.flex_row, a.align_start, a.gap_md, a.flex_1, a.pr_md]}
+            to={makeProfileLink(profile)}>
+            <PreviewableUserAvatar
+              size={PFP_SIZE}
+              profile={profile}
+              moderation={moderation.ui('avatar')}
+              disableHoverCard={moderation.blocked}
+            />
+            <View style={[a.flex_1]}>
+              <View style={[a.flex_row, a.align_center]}>
+                <Text
+                  emoji
+                  style={[a.text_md, a.font_semi_bold, a.self_start]}
+                  numberOfLines={1}>
+                  {displayName}
+                </Text>
+                <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
+              </View>
+              {!isDeletedAccount && (
+                <Text
+                  style={[t.atoms.text_contrast_medium, a.text_xs]}
+                  numberOfLines={1}>
+                  @{profile.handle}
+                  {convoState.convo?.muted && (
+                    <>
+                      {' '}
+                      &middot;{' '}
+                      <BellOffIcon
+                        size="xs"
+                        style={t.atoms.text_contrast_medium}
+                      />
+                    </>
+                  )}
+                </Text>
+              )}
+            </View>
+          </Link>
+        )}
 
         <View style={[{minHeight: PFP_SIZE}, a.justify_center]}>
           <Layout.Header.Slot>

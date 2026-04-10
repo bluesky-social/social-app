@@ -37,6 +37,7 @@ import {
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type MessagesEventBusError} from '#/state/messages/events/types'
 import {IS_NATIVE} from '#/env'
+import * as bsky from '#/types/bsky'
 
 const logger = Logger.create(Logger.Context.ConversationAgent)
 
@@ -112,6 +113,9 @@ export class Convo {
     this.markConvoAccepted = this.markConvoAccepted.bind(this)
     this.addReaction = this.addReaction.bind(this)
     this.removeReaction = this.removeReaction.bind(this)
+    this.isGroup = this.isGroup.bind(this)
+    this.getGroupInfo = this.getGroupInfo.bind(this)
+    this.getPrimaryMember = this.getPrimaryMember.bind(this)
   }
 
   private commit() {
@@ -155,6 +159,9 @@ export class Convo {
           markConvoAccepted: undefined,
           addReaction: undefined,
           removeReaction: undefined,
+          isGroup: this.isGroup,
+          getGroupInfo: this.getGroupInfo,
+          getPrimaryMember: this.getPrimaryMember,
         }
       }
       case ConvoStatus.Disabled:
@@ -175,6 +182,9 @@ export class Convo {
           markConvoAccepted: this.markConvoAccepted,
           addReaction: this.addReaction,
           removeReaction: this.removeReaction,
+          isGroup: this.isGroup,
+          getGroupInfo: this.getGroupInfo,
+          getPrimaryMember: this.getPrimaryMember,
         }
       }
       case ConvoStatus.Error: {
@@ -192,6 +202,9 @@ export class Convo {
           markConvoAccepted: undefined,
           addReaction: undefined,
           removeReaction: undefined,
+          isGroup: undefined,
+          getGroupInfo: undefined,
+          getPrimaryMember: undefined,
         }
       }
       default: {
@@ -209,6 +222,9 @@ export class Convo {
           markConvoAccepted: undefined,
           addReaction: undefined,
           removeReaction: undefined,
+          isGroup: this.isGroup,
+          getGroupInfo: this.getGroupInfo,
+          getPrimaryMember: this.getPrimaryMember,
         }
       }
     }
@@ -1330,6 +1346,36 @@ export class Convo {
     } catch (error) {
       if (restore) restore()
       throw error
+    }
+  }
+
+  // Group utilities
+
+  isGroup(): boolean | undefined {
+    if (!this.convo) return undefined
+    return this.convo.kind === 'group'
+  }
+
+  getGroupInfo(): ChatBskyConvoDefs.GroupConvoData | undefined {
+    if (
+      this.convo &&
+      bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvoData>(
+        this.convo.kindData,
+        ChatBskyConvoDefs.isGroupConvoData,
+      )
+    ) {
+      return this.convo.kindData
+    }
+    return undefined
+  }
+
+  getPrimaryMember(): ChatBskyActorDefs.ProfileViewBasic | undefined {
+    if (this.convo?.kind === 'group') {
+      return (
+        this.recipients?.find(r => r.role === 'owner') ?? this.recipients?.[0]
+      )
+    } else {
+      return this.recipients?.find(r => r.did !== this.senderUserDid)
     }
   }
 }
