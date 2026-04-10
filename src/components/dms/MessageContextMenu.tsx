@@ -47,6 +47,7 @@ export let MessageContextMenu = ({
   const translate = useGoogleTranslate()
 
   const isFromSelf = message.sender?.did === currentAccount?.did
+  const isGroupChatEnabled = ax.features.enabled(ax.features.GroupChatsEnable)
 
   const onCopyMessage = useCallback(() => {
     const str = richTextToString(
@@ -117,7 +118,7 @@ export let MessageContextMenu = ({
         {IS_NATIVE && (
           <ContextMenu.AuxiliaryView
             align={isFromSelf ? 'right' : 'left'}
-            style={[isFromSelf ? null : a.ml_sm]}>
+            style={[isFromSelf && isGroupChatEnabled ? null : a.ml_sm]}>
             <EmojiReactionPicker
               message={message}
               onEmojiSelect={onEmojiSelect}
@@ -135,7 +136,7 @@ export let MessageContextMenu = ({
 
         <ContextMenu.Outer
           align={isFromSelf ? 'right' : 'left'}
-          style={[isFromSelf ? null : a.ml_sm]}>
+          style={[isFromSelf && isGroupChatEnabled ? null : a.ml_sm]}>
           {message.text.length > 0 && (
             <>
               <ContextMenu.Item
