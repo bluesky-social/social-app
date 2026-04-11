@@ -183,7 +183,7 @@ export async function getServerState({agent}: {agent: AtpAgent}) {
   const geolocation = device.get(['mergedGeolocation'])
   if (!geolocation || !geolocation.countryCode) {
     logger.error(`getServerState: missing geolocation countryCode`)
-    return
+    return null
   }
   const {data} = await agent.app.bsky.ageassurance.getState({
     countryCode: geolocation.countryCode,
