@@ -541,7 +541,13 @@ function DialogInner({
             <Divider />
 
             <View
-              style={[a.flex_row, a.align_center, a.gap_sm, a.justify_between]}>
+              style={[
+                a.flex_row,
+                a.align_center,
+                a.gap_sm,
+                a.justify_between,
+                a.flex_wrap,
+              ]}>
               <Text style={[a.italic, t.atoms.text_contrast_medium]}>
                 <Trans>Something wrong? Let us know.</Trans>
               </Text>
