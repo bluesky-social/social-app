@@ -469,23 +469,9 @@ let MessageItemMetadata = ({
   switch (item.type) {
     case 'pending-message':
       return item.failed ? (
-        <Text
-          style={[
-            a.text_xs,
-            a.my_2xs,
-            {
-              color: errorColor,
-            },
-            style,
-          ]}>
-          <Text
-            style={[
-              a.text_xs,
-              {
-                color: errorColor,
-              },
-            ]}>
-            {l`Message failed to send.`}
+        <Text style={[a.text_xs, a.my_2xs, {color: errorColor}, style]}>
+          <Text style={[a.text_xs, {color: errorColor}]}>
+            <Trans>Message failed to send.</Trans>
           </Text>
           {item.retry && (
             <>
@@ -494,27 +480,14 @@ let MessageItemMetadata = ({
                 label={l`Click to retry failed message`}
                 to="#"
                 onPress={handleRetry}
-                style={[
-                  a.text_xs,
-                  {
-                    color: errorColor,
-                  },
-                ]}>
-                {l`Tap to retry`}
+                style={[a.text_xs, {color: errorColor}]}>
+                <Trans>Tap to retry</Trans>
               </InlineLinkText>
               .
             </>
           )}
         </Text>
-      ) : (
-        <Text
-          style={[
-            a.text_xs,
-            a.my_2xs,
-            style,
-            t.atoms.text_contrast_high,
-          ]}>{l`Sending…`}</Text>
-      )
+      ) : null
     default:
       return null
   }
