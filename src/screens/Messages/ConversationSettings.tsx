@@ -905,6 +905,7 @@ function SettingsButton({
         <ButtonIcon icon={icon} size="md" />
       </Button>
       <Text
+        numberOfLines={1}
         style={[
           a.text_2xs,
           a.font_medium,
@@ -928,6 +929,7 @@ function SettingsButtonPlaceholder() {
         <ButtonIcon icon={EllipsisIcon} size="md" />
       </Button>
       <Text
+        numberOfLines={1}
         style={[
           a.text_2xs,
           a.font_medium,
