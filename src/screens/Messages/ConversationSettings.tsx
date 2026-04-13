@@ -309,8 +309,6 @@ function Member({
 
   if (!moderation) return null
 
-  const invitedByDisplayName = 'Darrin Loeliger'
-
   const isDeletedAccount = profile.handle === 'missing.invalid'
   const displayName = isDeletedAccount
     ? l`Deleted Account`
@@ -319,25 +317,14 @@ function Member({
         moderation.ui('displayName'),
       )
 
-  let invitedBy: React.ReactNode | null = (
-    <Text style={[a.text_xs, {color: t.palette.contrast_500}]}>
-      {l`Added by ${invitedByDisplayName}`}
-    </Text>
-  )
   let statusBadge: React.ReactNode | null = (
     <MemberMenu profile={profile} type="member" />
   )
   switch (status) {
     case 'admin':
-      invitedBy = null
       statusBadge = <StatusBadge label={l`Admin`} />
       break
     case 'invited':
-      invitedBy = (
-        <Text style={[a.text_xs, {color: t.palette.contrast_500}]}>
-          {l`Invited by ${invitedByDisplayName}`}
-        </Text>
-      )
       statusBadge = <MemberMenu profile={profile} type="invited" />
       break
   }
@@ -375,16 +362,6 @@ function Member({
                 ]}>
                 {sanitizeHandle(profile.handle, '@')}
               </Text>
-              {invitedBy ? (
-                <Text
-                  style={[
-                    a.text_xs,
-                    {color: t.palette.contrast_500},
-                    web(a.pt_2xs),
-                  ]}>
-                  {invitedBy}
-                </Text>
-              ) : null}
             </View>
           </View>
           <View>{statusBadge}</View>
