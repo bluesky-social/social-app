@@ -1,8 +1,9 @@
-import React, {memo, useCallback, useMemo, useState} from 'react'
+import React, {memo, useCallback, useMemo, useRef, useState} from 'react'
 import {
   type GestureResponderEvent,
   LayoutAnimation,
   Pressable,
+  type ScrollView,
   type StyleProp,
   type TextStyle,
   View,
@@ -12,7 +13,6 @@ import Animated, {
   FadeOut,
   LayoutAnimationConfig,
   LinearTransition,
-  useSharedValue,
   ZoomIn,
   ZoomOut,
 } from 'react-native-reanimated'
@@ -722,11 +722,37 @@ function ReactionTabs({
   const t = useTheme()
   const {t: l} = useLingui()
 
-  const contentSize = useSharedValue(0)
-  const scrollX = useSharedValue(0)
+  const scrollViewRef = useRef<ScrollView>(null)
+  const scrollState = useRef({x: 0, width: 0})
+  const tabLayouts = useRef<Map<string, {x: number; width: number}>>(new Map())
 
   const handlePress = (value: string) => {
     onFilter(value)
+
+    // Scroll a partially-visible tab fully into view.
+    const layout = tabLayouts.current.get(value)
+    if (layout && scrollViewRef.current && scrollState.current.width > 0) {
+      const tabLeft = layout.x
+      const tabRight = layout.x + layout.width
+      const viewLeft = scrollState.current.x
+      const viewRight = viewLeft + scrollState.current.width
+
+      if (tabLeft < viewLeft) {
+        scrollViewRef.current.scrollTo({
+          x: Math.max(0, tabLeft - 24),
+          animated: true,
+        })
+      } else if (tabRight > viewRight) {
+        scrollViewRef.current.scrollTo({
+          x: tabRight - scrollState.current.width + 24,
+          animated: true,
+        })
+      }
+    }
+  }
+
+  const handleTabLayout = (key: string, layout: {x: number; width: number}) => {
+    tabLayouts.current.set(key, layout)
   }
 
   const tabs = [
@@ -742,10 +768,14 @@ function ReactionTabs({
   return (
     <View accessibilityRole="list" style={[t.atoms.bg]}>
       <DraggableScrollView
+        ref={scrollViewRef}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         onScroll={e => {
-          scrollX.set(Math.round(e.nativeEvent.contentOffset.x))
+          scrollState.current = {
+            x: e.nativeEvent.contentOffset.x,
+            width: e.nativeEvent.layoutMeasurement.width,
+          }
         }}>
         <Animated.View
           style={[
@@ -754,10 +784,7 @@ function ReactionTabs({
             a.gap_sm,
             a.align_center,
             a.justify_start,
-          ]}
-          onLayout={e => {
-            contentSize.set(e.nativeEvent.layout.width)
-          }}>
+          ]}>
           {tabs?.map((reaction, index) => (
             <ReactionTab
               key={reaction.value}
@@ -766,6 +793,7 @@ function ReactionTabs({
               selected={selected}
               total={tabs.length}
               onPress={handlePress}
+              onTabLayout={handleTabLayout}
             />
           ))}
         </Animated.View>
@@ -780,12 +808,14 @@ function ReactionTab({
   selected,
   total,
   onPress,
+  onTabLayout,
 }: {
   index: number
   reaction: Reaction
   selected: string
   total: number
   onPress: (value: string) => void
+  onTabLayout: (key: string, layout: {x: number; width: number}) => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -814,6 +844,12 @@ function ReactionTab({
         selected === reaction.key ? t.atoms.bg_contrast_50 : t.atoms.bg,
         index === 0 ? a.ml_2xl : index === total - 1 ? a.mr_2xl : null,
       ]}
+      onLayout={e => {
+        onTabLayout(reaction.key, {
+          x: e.nativeEvent.layout.x,
+          width: e.nativeEvent.layout.width,
+        })
+      }}
       onPress={() => onPress(reaction.key)}>
       <Text emoji style={[a.text_sm]}>
         {l`${reaction.value} ${reaction.count}`}
