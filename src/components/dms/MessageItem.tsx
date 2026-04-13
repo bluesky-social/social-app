@@ -533,7 +533,7 @@ function ReactionsDialog({
 
   const header = (
     <>
-      <View style={[a.px_2xl, a.pt_3xl]}>
+      <View style={[a.px_2xl, IS_WEB ? [a.pt_xl, a.pb_md] : a.pt_3xl]}>
         <Text style={[a.font_bold, a.text_2xl, a.mb_sm]}>
           <Trans>Reactions</Trans>
         </Text>
