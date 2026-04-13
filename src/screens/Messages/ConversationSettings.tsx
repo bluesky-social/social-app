@@ -44,6 +44,7 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon} from '#/components/
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {EditBig_Stroke2_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
+import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
 import {Lock_Stroke2_Corner0_Rounded as LockIcon} from '#/components/icons/Lock'
 import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons/Message'
 import {
@@ -803,6 +804,24 @@ function SettingsHeader({
               onPress={isLocked ? handleUnlock : handlePromptLock}
             />
           ) : null}
+          {isAdmin ? null : (
+            <SettingsButton
+              color="secondary"
+              icon={FlagIcon}
+              label={l`Report this group chat`}
+              text={l`Report`}
+              onPress={() => {}}
+            />
+          )}
+          {isAdmin ? null : (
+            <SettingsButton
+              color="secondary"
+              icon={ArrowBoxLeftIcon}
+              label={l`Leave this group chat`}
+              text={l`Leave`}
+              onPress={() => {}}
+            />
+          )}
         </View>
       </View>
       <EditNamePrompt
