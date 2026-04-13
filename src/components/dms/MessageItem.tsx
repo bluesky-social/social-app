@@ -656,13 +656,13 @@ function ReactionRow({
   const handle = sanitizeHandle(profile?.handle ?? '', '@')
 
   const handleOnPress = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     if (
       (reactions?.filter(r => r.sender.did !== currentAccount?.did)?.length ??
         0) < 1
     ) {
       control.close()
     }
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     convo
       .removeReaction(message.id, reaction.value)
       .then(() => {
