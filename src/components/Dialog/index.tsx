@@ -274,14 +274,6 @@ export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
     const {nativeSnapPoint, disableDrag, setDisableDrag, type} =
       useDialogContext()
 
-    if (type === 'alert') {
-      return (
-        <View style={[a.p_2xl, contentContainerStyle]} {...props}>
-          {header}
-          {children}
-        </View>
-      )
-    }
     const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
     const insets = useSafeAreaInsets()
     const [keyboardHeight, setKeyboardHeight] = useState(() =>
@@ -293,6 +285,15 @@ export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
     }, [])
     useOnKeyboard('keyboardDidShow', keyboardEventHandler)
     useOnKeyboard('keyboardDidHide', keyboardEventHandler)
+
+    if (type === 'alert') {
+      return (
+        <View style={[a.p_2xl, contentContainerStyle]} {...props}>
+          {header}
+          {children}
+        </View>
+      )
+    }
 
     const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       if (!IS_ANDROID) {
