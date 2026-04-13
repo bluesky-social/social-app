@@ -24,6 +24,7 @@ import {useGetConvoAvailabilityQuery} from '#/state/queries/messages/get-convo-a
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
 import {useProfileBlockMutationQueue} from '#/state/queries/profile'
+import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
@@ -303,6 +304,7 @@ function Member({
   const t = useTheme()
   const {t: l} = useLingui()
 
+  const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
   const moderation = useMemo(
     () =>
@@ -320,16 +322,15 @@ function Member({
         moderation.ui('displayName'),
       )
 
-  let statusBadge: React.ReactNode | null = (
-    <MemberMenu profile={profile} type="member" />
-  )
-  switch (status) {
-    case 'admin':
-      statusBadge = <MemberMenu profile={profile} type="admin" />
-      break
-    case 'invited':
-      statusBadge = <MemberMenu profile={profile} type="invited" />
-      break
+  let statusBadge: React.ReactNode | null = null
+  if (currentAccount?.did === profile.did) {
+    switch (status) {
+      case 'admin':
+        statusBadge = <StatusBadge label={l`Admin`} />
+        break
+    }
+  } else {
+    statusBadge = <MemberMenu profile={profile} type={status} />
   }
 
   return (
@@ -371,6 +372,35 @@ function Member({
         </View>
       </Pressable>
     </SubtleHoverWrapper>
+  )
+}
+
+function StatusBadge({
+  label,
+  style,
+}: {
+  label: string
+  style?: StyleProp<ViewStyle>
+}) {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.rounded_xs,
+        t.atoms.bg_contrast_50,
+        {
+          paddingTop: 3,
+          paddingBottom: 3,
+          paddingLeft: 6,
+          paddingRight: 6,
+        },
+        style,
+      ]}>
+      <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
+        {label}
+      </Text>
+    </View>
   )
 }
 
