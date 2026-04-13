@@ -15,12 +15,15 @@ import {
 } from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {logger} from '#/logger'
+import {type Shadow} from '#/state/cache/types'
 import {ConvoProvider, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetConvoAvailabilityQuery} from '#/state/queries/messages/get-convo-availability'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
+import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import {List} from '#/view/com/util/List'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
@@ -71,7 +74,7 @@ type Item =
     }
   | {
       type: 'CHAT_MEMBER'
-      profile: bsky.profile.AnyProfileView
+      profile: Shadow<bsky.profile.AnyProfileView>
       status: 'admin' | 'member' | 'invited'
     }
 
@@ -293,7 +296,7 @@ function Member({
   profile,
   status,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: Shadow<bsky.profile.AnyProfileView>
   status: 'admin' | 'member' | 'invited'
 }) {
   const navigation = useNavigation<NavigationProp>()
@@ -428,7 +431,7 @@ function MemberMenu({
   profile,
   type,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: Shadow<bsky.profile.AnyProfileView>
   type: 'member' | 'invited'
 }) {
   const navigation = useNavigation<NavigationProp>()
@@ -436,6 +439,8 @@ function MemberMenu({
   const {t: l} = useLingui()
   const ax = useAnalytics()
   const requireEmailVerification = useRequireEmailVerification()
+
+  const blockMemberPrompt = Prompt.usePromptControl()
 
   const {data: convoAvailability} = useGetConvoAvailabilityQuery(profile.did)
   const {mutate: initiateConvo} = useGetConvoForMembers({
@@ -447,8 +452,9 @@ function MemberMenu({
       Toast.show(l`Failed to create conversation`)
     },
   })
+  const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
 
-  const onPress = () => {
+  const messageMember = () => {
     if (!convoAvailability?.canChat) {
       return
     }
@@ -464,13 +470,43 @@ function MemberMenu({
     }
   }
 
-  const wrappedOnPress = requireEmailVerification(onPress, {
+  const handleMessageMember = requireEmailVerification(messageMember, {
     instructions: [
       <Trans key="message">
         Before you can message another user, you must first verify your email.
       </Trans>,
     ],
   })
+
+  const handleBlockMember = async () => {
+    if (profile.viewer?.blocking) {
+      try {
+        await queueUnblock()
+        Toast.show(l({message: 'Account unblocked', context: 'toast'}))
+      } catch (err) {
+        const e = err as Error
+        if (e?.name !== 'AbortError') {
+          ax.logger.error('Failed to unblock account', {message: e})
+          Toast.show(l`There was an issue! ${e.toString()}`, {
+            type: 'error',
+          })
+        }
+      }
+    } else {
+      try {
+        await queueBlock()
+        Toast.show(l({message: 'Account blocked', context: 'toast'}))
+      } catch (err) {
+        const e = err as Error
+        if (e?.name !== 'AbortError') {
+          ax.logger.error('Failed to block account', {message: e})
+          Toast.show(l`There was an issue! ${e.toString()}`, {
+            type: 'error',
+          })
+        }
+      }
+    }
+  }
 
   const moderationOpts = useModerationOpts()
   const moderation = useMemo(
@@ -490,90 +526,107 @@ function MemberMenu({
       )
 
   return (
-    <Menu.Root>
-      <Menu.Trigger label={l`Open chat member options for ${displayName}`}>
-        {({props, state}) =>
-          type === 'invited' ? (
-            <StatusButton
-              {...props}
-              label={l`Invited`}
-              style={[
-                state.hovered
-                  ? {
-                      backgroundColor: t.palette.contrast_0,
-                    }
-                  : null,
-              ]}
-            />
-          ) : (
-            <Pressable
-              {...props}
-              style={[
-                a.rounded_full,
-                a.p_sm,
-                state.hovered
-                  ? {
-                      backgroundColor: t.palette.contrast_0,
-                    }
-                  : null,
-              ]}>
-              <EllipsisIcon style={[t.atoms.text_contrast_medium]} size="md" />
-            </Pressable>
-          )
-        }
-      </Menu.Trigger>
-      <Menu.Outer>
-        <Menu.Group>
-          <Menu.Item
-            label={l`View ${displayName}’s profile`}
-            onPress={() => {
-              navigation.navigate('Profile', {name: profile.did})
-            }}>
-            <Menu.ItemText>
-              <Trans>Go to profile</Trans>
-            </Menu.ItemText>
-            <Menu.ItemIcon icon={PersonIcon} />
-          </Menu.Item>
-          <Menu.Item label={l`Message ${displayName}`} onPress={wrappedOnPress}>
-            <Menu.ItemText>
-              <Trans>Message</Trans>
-            </Menu.ItemText>
-            <Menu.ItemIcon icon={MessageIcon} />
-          </Menu.Item>
-        </Menu.Group>
-        <Menu.Divider />
-        <Menu.Group>
-          {type === 'member' ? (
-            <>
-              <Menu.Item label={l`Block ${displayName}`} onPress={() => {}}>
-                <Menu.ItemText>
-                  <Trans>Block</Trans>
-                </Menu.ItemText>
-                <Menu.ItemIcon icon={PersonXIcon} />
-              </Menu.Item>
+    <>
+      <Menu.Root>
+        <Menu.Trigger label={l`Open chat member options for ${displayName}`}>
+          {({props, state}) =>
+            type === 'invited' ? (
+              <StatusButton
+                {...props}
+                label={l`Invited`}
+                style={[
+                  state.hovered
+                    ? {
+                        backgroundColor: t.palette.contrast_0,
+                      }
+                    : null,
+                ]}
+              />
+            ) : (
+              <Pressable
+                {...props}
+                style={[
+                  a.rounded_full,
+                  a.p_sm,
+                  state.hovered
+                    ? {
+                        backgroundColor: t.palette.contrast_0,
+                      }
+                    : null,
+                ]}>
+                <EllipsisIcon
+                  style={[t.atoms.text_contrast_medium]}
+                  size="md"
+                />
+              </Pressable>
+            )
+          }
+        </Menu.Trigger>
+        <Menu.Outer>
+          <Menu.Group>
+            <Menu.Item
+              label={l`View ${displayName}’s profile`}
+              onPress={() => {
+                navigation.navigate('Profile', {name: profile.did})
+              }}>
+              <Menu.ItemText>
+                <Trans>Go to profile</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={PersonIcon} />
+            </Menu.Item>
+            <Menu.Item
+              label={l`Message ${displayName}`}
+              onPress={handleMessageMember}>
+              <Menu.ItemText>
+                <Trans>Message</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={MessageIcon} />
+            </Menu.Item>
+          </Menu.Group>
+          <Menu.Divider />
+          <Menu.Group>
+            {type === 'member' ? (
+              <>
+                <Menu.Item
+                  label={
+                    profile.viewer?.blocking
+                      ? l`Unblock ${displayName}`
+                      : l`Block ${displayName}`
+                  }
+                  onPress={() => blockMemberPrompt.open()}>
+                  <Menu.ItemText>
+                    <Trans>Block</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={PersonXIcon} />
+                </Menu.Item>
+                <Menu.Item
+                  label={l`Remove ${displayName} from this group chat`}
+                  onPress={() => {}}>
+                  <Menu.ItemText>
+                    <Trans>Remove from chat</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
+                </Menu.Item>
+              </>
+            ) : null}
+            {type === 'invited' ? (
               <Menu.Item
-                label={l`Remove ${displayName} from this group chat`}
+                label={l`Uninvite ${displayName} from this group chat`}
                 onPress={() => {}}>
                 <Menu.ItemText>
-                  <Trans>Remove from chat</Trans>
+                  <Trans>Uninvite</Trans>
                 </Menu.ItemText>
                 <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
               </Menu.Item>
-            </>
-          ) : null}
-          {type === 'invited' ? (
-            <Menu.Item
-              label={l`Uninvite ${displayName} from this group chat`}
-              onPress={() => {}}>
-              <Menu.ItemText>
-                <Trans>Uninvite</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
-            </Menu.Item>
-          ) : null}
-        </Menu.Group>
-      </Menu.Outer>
-    </Menu.Root>
+            ) : null}
+          </Menu.Group>
+        </Menu.Outer>
+      </Menu.Root>
+      <BlockMemberPrompt
+        control={blockMemberPrompt}
+        onConfirm={() => void handleBlockMember()}
+      />
+    </>
   )
 }
 
@@ -612,7 +665,13 @@ function SettingsHeader({
   const [isLocked, setIsLocked] = useState(false)
 
   const handleToggleMute = () => {
-    muteConvo({mute: !convo?.muted})
+    try {
+      muteConvo({mute: !convo?.muted})
+    } catch (err) {
+      const e = err as Error
+      logger.error('Failed to mute group chat', {message: e})
+      Toast.show(l`There was an issue! ${e.toString()}`, {type: 'error'})
+    }
   }
 
   const handlePromptName = () => {
@@ -765,19 +824,17 @@ function SettingsButton({
   )
 }
 
-type EditNamePromptProps = {
-  control: Dialog.DialogOuterProps['control']
-  value: string
-  onChangeText: (value: string) => void
-  onConfirm: () => void
-}
-
 function EditNamePrompt({
   control,
   value,
   onChangeText,
   onConfirm,
-}: EditNamePromptProps) {
+}: {
+  control: Dialog.DialogOuterProps['control']
+  value: string
+  onChangeText: (value: string) => void
+  onConfirm: () => void
+}) {
   const {t: l} = useLingui()
 
   return (
@@ -854,6 +911,27 @@ function LockChatPrompt({
       confirmButtonCta={l`Lock group chat`}
       cancelButtonCta={l`Cancel`}
       onConfirm={onConfirm}
+    />
+  )
+}
+
+function BlockMemberPrompt({
+  control,
+  onConfirm,
+}: {
+  control: Dialog.DialogOuterProps['control']
+  onConfirm: () => void
+}) {
+  const {t: l} = useLingui()
+
+  return (
+    <Prompt.Basic
+      control={control}
+      title={l`Block account?`}
+      description={l`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`}
+      onConfirm={onConfirm}
+      confirmButtonCta={l`Block`}
+      confirmButtonColor="negative"
     />
   )
 }
