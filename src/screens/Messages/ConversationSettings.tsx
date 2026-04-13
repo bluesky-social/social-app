@@ -194,7 +194,9 @@ function SettingsInner() {
       ListHeaderComponent={
         convoState.convo ? (
           <SettingsHeader convo={convoState.convo} profiles={data} />
-        ) : null
+        ) : (
+          <SettingsHeaderPlaceholder />
+        )
       }
       renderItem={renderItem}
       sideBorders={false}
@@ -818,6 +820,46 @@ function SettingsHeader({
   )
 }
 
+function SettingsHeaderPlaceholder() {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  return (
+    <View style={[a.px_xl, a.py_4xl, a.border_b, t.atoms.border_contrast_low]}>
+      <View style={[a.align_center, a.justify_center]}>
+        <AvatarBubbles profiles={[]} />
+      </View>
+      <Text
+        style={[a.text_2xl, a.font_bold, a.text_center, a.pt_lg, t.atoms.text]}>
+        {l`…`}
+      </Text>
+      <Text
+        style={[
+          a.text_sm,
+          a.text_center,
+          a.pt_xs,
+          a.px_xl,
+          t.atoms.text_contrast_high,
+        ]}>
+        <Trans>…</Trans>
+      </Text>
+      <View
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.justify_center,
+          a.gap_2xl,
+          a.pt_2xl,
+        ]}>
+        <SettingsButtonPlaceholder />
+        <SettingsButtonPlaceholder />
+        <SettingsButtonPlaceholder />
+        <SettingsButtonPlaceholder />
+      </View>
+    </View>
+  )
+}
+
 function SettingsButton({
   color = 'secondary',
   icon,
@@ -852,6 +894,29 @@ function SettingsButton({
           t.atoms.text,
         ]}>
         {text}
+      </Text>
+    </View>
+  )
+}
+
+function SettingsButtonPlaceholder() {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  return (
+    <View>
+      <Button color="secondary" size="large" shape="round" label={l`Loading…`}>
+        <ButtonIcon icon={EllipsisIcon} size="md" />
+      </Button>
+      <Text
+        style={[
+          a.text_2xs,
+          a.font_medium,
+          a.text_center,
+          a.pt_xs,
+          t.atoms.text,
+        ]}>
+        {l`…`}
       </Text>
     </View>
   )
