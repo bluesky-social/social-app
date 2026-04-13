@@ -776,6 +776,9 @@ function ReactionTabs({
             x: e.nativeEvent.contentOffset.x,
             width: e.nativeEvent.layoutMeasurement.width,
           }
+        }}
+        onLayout={e => {
+          scrollState.current.width = e.nativeEvent.layout.width
         }}>
         <Animated.View
           style={[
