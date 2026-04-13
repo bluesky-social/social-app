@@ -467,7 +467,15 @@ let MessageItem = ({
                   squaredTopCorner={squaredTopCorner || hasEmbedAndText}
                 />
               )}
-              {appliedReactions}
+              <View
+                style={[
+                  !isFromSelf &&
+                    isGroupChat && {
+                      paddingLeft: AVATAR_SIZE,
+                    },
+                ]}>
+                {appliedReactions}
+              </View>
             </ActionsWrapper>
           </View>
         </View>
