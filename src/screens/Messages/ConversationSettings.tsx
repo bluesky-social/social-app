@@ -660,6 +660,12 @@ function SettingsHeader({
   const {t: l} = useLingui()
 
   const convoState = useConvo()
+  const {currentAccount} = useSession()
+
+  const isAdmin =
+    currentAccount?.did == null
+      ? false
+      : convoState.getPrimaryMember?.()?.did === currentAccount.did
 
   const {mutate: muteConvo} = useMuteConvo(convo.id, {
     onSuccess: data => {
@@ -770,27 +776,31 @@ function SettingsHeader({
             text={convo?.muted ? l`Muted` : l`Mute`}
             onPress={handleToggleMute}
           />
-          <SettingsButton
-            icon={EditIcon}
-            label={l`Edit this group chat’s name`}
-            text={l`Edit name`}
-            onPress={handlePromptName}
-          />
+          {isAdmin ? (
+            <SettingsButton
+              icon={EditIcon}
+              label={l`Edit this group chat’s name`}
+              text={l`Edit name`}
+              onPress={handlePromptName}
+            />
+          ) : null}
           <SettingsButton
             icon={ChainLinkIcon}
             label={l`Create an invite link for this group chat`}
             text={l`Invite link`}
             onPress={handlePromptInviteLink}
           />
-          <SettingsButton
-            color={isLocked ? 'negative_subtle' : 'secondary'}
-            icon={LockIcon}
-            label={
-              isLocked ? l`Unlock this group chat` : l`Lock this group chat`
-            }
-            text={isLocked ? l`Locked` : l`Lock`}
-            onPress={isLocked ? handleUnlock : handlePromptLock}
-          />
+          {isAdmin ? (
+            <SettingsButton
+              color={isLocked ? 'negative_subtle' : 'secondary'}
+              icon={LockIcon}
+              label={
+                isLocked ? l`Unlock this group chat` : l`Lock this group chat`
+              }
+              text={isLocked ? l`Locked` : l`Lock`}
+              onPress={isLocked ? handleUnlock : handlePromptLock}
+            />
+          ) : null}
         </View>
       </View>
       <EditNamePrompt
