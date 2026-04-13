@@ -618,7 +618,7 @@ function MemberMenu({
                 <Menu.ItemIcon icon={PersonXIcon} />
               </Menu.Item>
             ) : null}
-            {type === 'member' ? (
+            {type === 'admin' ? (
               <Menu.Item
                 label={l`Remove ${displayName} from this group chat`}
                 onPress={() => {}}>
