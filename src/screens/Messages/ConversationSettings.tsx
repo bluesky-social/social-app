@@ -548,13 +548,13 @@ function MemberMenu({
     <>
       <Menu.Root>
         <Menu.Trigger label={l`Open chat member options for ${displayName}`}>
-          {({props, state}) =>
+          {({props, state, control: menuControl}) =>
             type === 'admin' || type === 'invited' ? (
               <StatusButton
                 {...props}
                 label={type === 'admin' ? l`Admin` : l`Invited`}
                 style={[
-                  state.hovered
+                  state.hovered || state.pressed || menuControl.isOpen
                     ? {
                         backgroundColor: t.palette.contrast_0,
                       }
@@ -567,7 +567,7 @@ function MemberMenu({
                 style={[
                   a.rounded_full,
                   a.p_sm,
-                  state.hovered
+                  state.hovered || state.pressed || menuControl.isOpen
                     ? {
                         backgroundColor: t.palette.contrast_0,
                       }
