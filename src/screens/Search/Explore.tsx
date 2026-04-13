@@ -9,6 +9,7 @@ import {
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
+
 import {useFeedKeyboardNav, useHotkeysContext} from '#/lib/hotkeys'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {cleanError} from '#/lib/strings/errors'

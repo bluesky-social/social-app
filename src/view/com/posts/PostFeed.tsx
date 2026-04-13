@@ -20,6 +20,7 @@ import {
 } from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
+
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'

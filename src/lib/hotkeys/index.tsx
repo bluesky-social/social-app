@@ -18,7 +18,6 @@ import {
   listenOpenFocusedPost,
 } from '#/state/events'
 import {useSession} from '#/state/session'
-import {IS_WEB} from '#/env'
 
 const FEED_SCROLL_DEBOUNCE_MS = 250
 
@@ -158,7 +157,6 @@ export function useFeedKeyboardNav({
 
   // Scroll focused item into view
   useEffect(() => {
-    if (!IS_WEB || focusedIndex < 0) return
     const el = itemElsRef.current.get(focusedIndex)
     el?.scrollIntoView({behavior: 'smooth', block: 'center'})
     scrollingRef.current = true
@@ -171,7 +169,6 @@ export function useFeedKeyboardNav({
 
   // Listen for keyboard events
   useEffect(() => {
-    if (!IS_WEB || !active) return
     const unlistenNext = listenFocusNextPost(() => {
       if (scrollingRef.current) return
       setFocusedIndex(prev => {

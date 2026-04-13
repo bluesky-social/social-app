@@ -2,6 +2,7 @@ import {memo, useCallback, useEffect, useMemo, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
+
 import {urls} from '#/lib/constants'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {useFeedKeyboardNav, useHotkeysContext} from '#/lib/hotkeys'
