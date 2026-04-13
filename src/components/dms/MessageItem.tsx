@@ -544,6 +544,7 @@ function ReactionsDialog({
         totalReactions={reactions?.length ?? 0}
         onFilter={handleFilter}
       />
+      <Dialog.Close />
     </>
   )
 
