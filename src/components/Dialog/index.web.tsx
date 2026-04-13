@@ -196,6 +196,7 @@ export function Inner({
           a.w_full,
           a.border,
           t.atoms.bg,
+          web({cursor: 'default'}), // The overlay applies `cursor: 'pointer'` to all children.
           {
             maxWidth: 600,
             borderColor: t.palette.contrast_200,
