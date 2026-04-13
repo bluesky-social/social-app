@@ -325,7 +325,7 @@ function Member({
   )
   switch (status) {
     case 'admin':
-      statusBadge = <StatusBadge label={l`Admin`} />
+      statusBadge = <MemberMenu profile={profile} type="admin" />
       break
     case 'invited':
       statusBadge = <MemberMenu profile={profile} type="invited" />
@@ -374,28 +374,6 @@ function Member({
   )
 }
 
-function StatusBadge({label}: {label: string}) {
-  const t = useTheme()
-
-  return (
-    <View
-      style={[
-        a.rounded_xs,
-        t.atoms.bg_contrast_50,
-        {
-          paddingTop: 3,
-          paddingBottom: 3,
-          paddingLeft: 6,
-          paddingRight: 6,
-        },
-      ]}>
-      <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
-        {label}
-      </Text>
-    </View>
-  )
-}
-
 function StatusButton({
   label,
   style,
@@ -432,7 +410,7 @@ function MemberMenu({
   type,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
-  type: 'member' | 'invited'
+  type: 'admin' | 'member' | 'invited'
 }) {
   const navigation = useNavigation<NavigationProp>()
   const t = useTheme()
@@ -530,10 +508,10 @@ function MemberMenu({
       <Menu.Root>
         <Menu.Trigger label={l`Open chat member options for ${displayName}`}>
           {({props, state}) =>
-            type === 'invited' ? (
+            type === 'admin' || type === 'invited' ? (
               <StatusButton
                 {...props}
-                label={l`Invited`}
+                label={type === 'admin' ? l`Admin` : l`Invited`}
                 style={[
                   state.hovered
                     ? {
@@ -585,29 +563,29 @@ function MemberMenu({
           </Menu.Group>
           <Menu.Divider />
           <Menu.Group>
+            {type === 'admin' || type === 'member' ? (
+              <Menu.Item
+                label={
+                  profile.viewer?.blocking
+                    ? l`Unblock ${displayName}`
+                    : l`Block ${displayName}`
+                }
+                onPress={() => blockMemberPrompt.open()}>
+                <Menu.ItemText>
+                  <Trans>Block</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={PersonXIcon} />
+              </Menu.Item>
+            ) : null}
             {type === 'member' ? (
-              <>
-                <Menu.Item
-                  label={
-                    profile.viewer?.blocking
-                      ? l`Unblock ${displayName}`
-                      : l`Block ${displayName}`
-                  }
-                  onPress={() => blockMemberPrompt.open()}>
-                  <Menu.ItemText>
-                    <Trans>Block</Trans>
-                  </Menu.ItemText>
-                  <Menu.ItemIcon icon={PersonXIcon} />
-                </Menu.Item>
-                <Menu.Item
-                  label={l`Remove ${displayName} from this group chat`}
-                  onPress={() => {}}>
-                  <Menu.ItemText>
-                    <Trans>Remove from chat</Trans>
-                  </Menu.ItemText>
-                  <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
-                </Menu.Item>
-              </>
+              <Menu.Item
+                label={l`Remove ${displayName} from this group chat`}
+                onPress={() => {}}>
+                <Menu.ItemText>
+                  <Trans>Remove from chat</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
+              </Menu.Item>
             ) : null}
             {type === 'invited' ? (
               <Menu.Item
