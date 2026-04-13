@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo, useState} from 'react'
+import React, {memo, useCallback, useMemo, useState} from 'react'
 import {
   type GestureResponderEvent,
   Pressable,
@@ -24,9 +24,10 @@ import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
+import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {useConvoActive} from '#/state/messages/convo'
+import {type ActiveConvoStates, useConvoActive} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
@@ -248,7 +249,11 @@ let MessageItem = ({
     <LayoutAnimationConfig skipEntering skipExiting>
       {hasReactions ? (
         <View
-          style={[isFromSelf ? a.align_end : a.align_start, a.px_sm, a.pb_2xs]}>
+          style={[
+            isFromSelf ? [a.align_end] : [a.ml_sm, a.align_start],
+            a.px_sm,
+            a.pb_2xs,
+          ]}>
           <Pressable
             accessible={true}
             accessibilityLabel={reactionsLabel}
@@ -258,7 +263,6 @@ let MessageItem = ({
             style={[
               a.flex_row,
               a.gap_2xs,
-              a.py_xs,
               a.px_xs,
               isFromSelf ? a.justify_end : a.justify_start,
               a.flex_wrap,
@@ -268,6 +272,8 @@ let MessageItem = ({
               t.atoms.bg_contrast_25,
               t.atoms.shadow_sm,
               {
+                paddingTop: 3,
+                paddingBottom: 3,
                 transform: [{translateY: -8}],
               },
             ]}
@@ -280,15 +286,15 @@ let MessageItem = ({
                 }
                 layout={native(LinearTransition.delay(300))}
                 key={group.value}
-                style={[a.p_2xs]}>
-                <Text emoji style={[a.text_sm]}>
+                style={[a.py_2xs]}>
+                <Text emoji style={[a.text_xs]}>
                   {group.value}
                 </Text>
               </Animated.View>
             ))}
             {groupedReactions.length !== reactions.length &&
             reactions.length > 1 ? (
-              <View style={[a.p_2xs, a.justify_center]}>
+              <View style={[a.p_2xs, a.pl_0, a.justify_center]}>
                 <Text
                   style={[
                     a.text_xs,
@@ -500,7 +506,6 @@ function ReactionsDialog({
   reactions?: ChatBskyConvoDefs.ReactionView[]
   groupedReactions?: Reaction[]
 }) {
-  const t = useTheme()
   const {t: l} = useLingui()
 
   const {currentAccount} = useSession()
@@ -539,7 +544,7 @@ function ReactionsDialog({
     <Dialog.Outer
       control={control}
       onClose={() => setSelected('all')}
-      nativeOptions={{preventExpansion: true, minHeight: 380, maxHeight: 380}}>
+      nativeOptions={{preventExpansion: true, maxHeight: 380}}>
       <Dialog.Handle />
       {IS_NATIVE ? header : null}
       <Dialog.ScrollableInner
@@ -547,91 +552,150 @@ function ReactionsDialog({
         contentContainerStyle={[a.pt_0]}
         header={IS_WEB ? header : null}
         style={[web({maxWidth: 400})]}>
-        {filteredMembers.map(profile => {
-          const isFromSelf = currentAccount?.did === profile.did
-
-          const displayName = sanitizeDisplayName(
-            profile?.displayName || sanitizeHandle(profile?.handle ?? ''),
-          )
-          const handle = sanitizeHandle(profile?.handle ?? '', '@')
-          const reaction = reactions?.find(
-            ({sender}) => sender.did === profile.did,
-          )
-          const rt = reaction
-            ? new RichTextAPI({text: reaction.value})
-            : undefined
-
-          return reaction && rt ? (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityHint={l`Tap to remove your ${reaction.value} reaction`}
-              key={profile.did}
-              style={[
-                a.flex_row,
-                a.gap_sm,
-                a.align_center,
-                a.justify_between,
-                a.my_sm,
-              ]}
-              onPress={
-                isFromSelf
-                  ? () => {
-                      convo
-                        .removeReaction(message.id, reaction.value)
-                        .then(() => {
-                          const remaining = reactions?.filter(
-                            r =>
-                              r.value === selected &&
-                              r.sender.did !== currentAccount?.did,
-                          )
-                          if (!remaining?.length) {
-                            setSelected('all')
-                          }
-                          if (
-                            (reactions?.filter(
-                              r => r.sender.did !== currentAccount?.did,
-                            )?.length ?? 0) < 1
-                          ) {
-                            control.close()
-                          }
-                        })
-                        .catch(() =>
-                          Toast.show(l`Failed to remove emoji reaction`),
-                        )
-                    }
-                  : undefined
-              }>
-              <View style={[a.flex_row, a.gap_sm]}>
-                <UserAvatar
-                  avatar={profile.avatar}
-                  size={42}
-                  type="user"
-                  hideLiveBadge
-                />
-                <View>
-                  <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                    {displayName}
-                  </Text>
-                  <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-                    {isFromSelf ? l`Tap to remove` : handle}
-                  </Text>
-                </View>
-              </View>
-              <View>
-                <RichText
-                  value={rt}
-                  style={[a.text_md]}
-                  interactiveStyle={a.underline}
-                  enableTags
-                  emojiMultiplier={2}
-                  shouldProxyLinks={true}
-                />
-              </View>
-            </Pressable>
-          ) : null
-        })}
+        {filteredMembers
+          .sort((a, b) => {
+            if (a.did === currentAccount?.did) return -1
+            if (b.did === currentAccount?.did) return 1
+            return 0
+          })
+          .map(profile => {
+            return (
+              <ReactionRow
+                key={profile.did}
+                control={control}
+                convo={convo}
+                currentAccount={currentAccount}
+                message={message}
+                profile={profile}
+                reactions={reactions}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            )
+          })}
       </Dialog.ScrollableInner>
     </Dialog.Outer>
+  )
+}
+
+function ReactionRow({
+  control,
+  convo,
+  currentAccount,
+  message,
+  profile,
+  reactions,
+  selected,
+  setSelected,
+}: {
+  control: Dialog.DialogControlProps
+  convo: ActiveConvoStates
+  currentAccount?: bsky.profile.AnyProfileView
+  message: ChatBskyConvoDefs.MessageView
+  profile: bsky.profile.AnyProfileView
+  reactions?: ChatBskyConvoDefs.ReactionView[]
+  selected: string
+  setSelected: React.Dispatch<React.SetStateAction<string>>
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  const reaction = reactions?.find(({sender}) => sender.did === profile.did)
+  const rt = reaction ? new RichTextAPI({text: reaction.value}) : undefined
+
+  if (!reaction || !rt) {
+    return null
+  }
+
+  const isFromSelf = currentAccount?.did === profile.did
+
+  const displayName = createSanitizedDisplayName(profile, true)
+  const handle = sanitizeHandle(profile?.handle ?? '', '@')
+
+  const handleOnPress = () => {
+    if (
+      (reactions?.filter(r => r.sender.did !== currentAccount?.did)?.length ??
+        0) < 1
+    ) {
+      control.close()
+    }
+    convo
+      .removeReaction(message.id, reaction.value)
+      .then(() => {
+        const remaining = reactions?.filter(
+          r => r.value === selected && r.sender.did !== currentAccount?.did,
+        )
+        if (!remaining?.length) {
+          setSelected('all')
+        }
+      })
+      .catch(() => Toast.show(l`Failed to remove emoji reaction`))
+  }
+
+  const inner = (
+    <>
+      <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+        <UserAvatar
+          avatar={profile.avatar}
+          size={42}
+          type="user"
+          hideLiveBadge
+        />
+        <View>
+          <Text
+            numberOfLines={1}
+            style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+            {displayName}
+          </Text>
+          <Text
+            numberOfLines={1}
+            style={[a.text_xs, t.atoms.text_contrast_medium, web([a.mt_xs])]}>
+            {isFromSelf ? l`Tap to remove` : handle}
+          </Text>
+        </View>
+      </View>
+      <View>
+        <RichText
+          value={rt}
+          style={[a.text_md]}
+          interactiveStyle={a.underline}
+          enableTags
+          emojiMultiplier={2}
+          shouldProxyLinks={true}
+        />
+      </View>
+    </>
+  )
+
+  if (isFromSelf) {
+    return (
+      <Pressable
+        accessibilityRole="button"
+        accessibilityHint={l`Tap to remove your ${reaction.value} reaction`}
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.gap_sm,
+          a.justify_between,
+          a.my_sm,
+        ]}
+        onPress={handleOnPress}>
+        {inner}
+      </Pressable>
+    )
+  }
+
+  return (
+    <View
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.gap_sm,
+        a.justify_between,
+        a.my_sm,
+      ]}>
+      {inner}
+    </View>
   )
 }
 
@@ -735,7 +799,9 @@ function ReactionTab({
         a.px_md,
         a.py_sm,
         a.mb_sm,
-        t.atoms.border_contrast_low,
+        selected === reaction.key
+          ? t.atoms.border_contrast_low
+          : {borderColor: t.palette.contrast_50},
         selected === reaction.key ? t.atoms.bg_contrast_50 : t.atoms.bg,
         index === 0 ? a.ml_2xl : index === total - 1 ? a.mr_2xl : null,
       ]}

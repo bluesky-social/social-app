@@ -111,6 +111,7 @@ export function Outer({
       disableDrag: false,
       setDisableDrag: () => {},
       isWithinDialog: true,
+      isHeightConstrained: false,
     }),
     [close],
   )
