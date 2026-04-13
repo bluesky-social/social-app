@@ -1,6 +1,6 @@
 import {useMemo, useState} from 'react'
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
-import {moderateProfile} from '@atproto/api'
+import {type ChatBskyConvoDefs, moderateProfile} from '@atproto/api'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -8,18 +8,26 @@ import {useNavigation} from '@react-navigation/native'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
-import {type NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {ConvoProvider, useConvo} from '#/state/messages/convo'
+import {ConvoStatus} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetConvoAvailabilityQuery} from '#/state/queries/messages/get-convo-availability'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
+import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
 import {List} from '#/view/com/util/List'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button, type ButtonColor, ButtonIcon} from '#/components/Button'
 import type * as Dialog from '#/components/Dialog'
+import {Error} from '#/components/Error'
 import * as TextField from '#/components/forms/TextField'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon} from '#/components/icons/ArrowBoxLeft'
@@ -67,11 +75,18 @@ type Item =
       status: 'admin' | 'member' | 'invited'
     }
 
+type Props = NativeStackScreenProps<
+  CommonNavigatorParams,
+  'MessagesConversationSettings'
+>
+
 /**
  * TODO This is just layout for now.
  */
-export function MessagesConversationSettingsScreen() {
+export function MessagesConversationSettingsScreen({route}: Props) {
   const {gtTablet} = useBreakpoints()
+
+  const convoId = route.params.conversation
 
   return (
     <Layout.Screen>
@@ -84,7 +99,9 @@ export function MessagesConversationSettingsScreen() {
         </Layout.Header.Content>
         <Layout.Header.Slot />
       </Layout.Header.Outer>
-      <SettingsInner />
+      <ConvoProvider key={convoId} convoId={convoId}>
+        <SettingsInner />
+      </ConvoProvider>
     </Layout.Screen>
   )
 }
@@ -94,10 +111,14 @@ function keyExtractor(item: Item) {
 }
 
 function SettingsInner() {
+  const {t: l} = useLingui()
+
   const initialNumToRender = useInitialNumToRender({minItemHeight: 68})
   const bottomBarOffset = useBottomBarOffset()
 
-  const data: bsky.profile.AnyProfileView[] = []
+  const convoState = useConvo()
+
+  const data: bsky.profile.AnyProfileView[] = convoState.convo?.members ?? []
   const invites: string[] = []
 
   const items = [
@@ -111,6 +132,7 @@ function SettingsInner() {
       type: 'CHAT_MEMBER',
       profile,
       status:
+        // TODO Need to check actual status here
         index === 0
           ? 'admin'
           : invites.includes(profile.did)
@@ -132,6 +154,19 @@ function SettingsInner() {
     }
   }
 
+  if (convoState.status === ConvoStatus.Error) {
+    return (
+      <>
+        <Error
+          title={l`Something went wrong`}
+          message={l`We couldn’t load this conversation’s settings`}
+          onRetry={() => convoState.error.retry()}
+          sideBorders={false}
+        />
+      </>
+    )
+  }
+
   return (
     <List
       data={items}
@@ -141,7 +176,11 @@ function SettingsInner() {
       desktopFixedHeight
       initialNumToRender={initialNumToRender}
       keyExtractor={keyExtractor}
-      ListHeaderComponent={<SettingsHeader profiles={data} />}
+      ListHeaderComponent={
+        convoState.convo ? (
+          <SettingsHeader convo={convoState.convo} profiles={data} />
+        ) : null
+      }
       renderItem={renderItem}
       sideBorders={false}
       windowSize={11}
@@ -173,15 +212,17 @@ function MembersAndRequests({
             {color: t.palette.contrast_500},
           ]}>{l`${memberCount}/${MEMBER_LIMIT}`}</Text>
       </View>
-      <InlineLinkText
-        label={l`View incoming group chat requests`}
-        style={[a.text_sm, a.text_right, a.font_semi_bold]}
-        to="#">
-        {l`${plural(requestCount, {
-          one: '# request',
-          other: '# requests',
-        })}`}
-      </InlineLinkText>
+      {requestCount > 0 ? (
+        <InlineLinkText
+          label={l`View incoming group chat requests`}
+          style={[a.text_sm, a.text_right, a.font_semi_bold]}
+          to="#">
+          {l`${plural(requestCount, {
+            one: '# request',
+            other: '# requests',
+          })}`}
+        </InlineLinkText>
+      ) : null}
     </View>
   )
 }
@@ -559,9 +600,31 @@ function MemberMenu({
   )
 }
 
-function SettingsHeader({profiles}: {profiles: bsky.profile.AnyProfileView[]}) {
+function SettingsHeader({
+  convo,
+  profiles,
+}: {
+  convo: ChatBskyConvoDefs.ConvoView
+  profiles: bsky.profile.AnyProfileView[]
+}) {
   const t = useTheme()
   const {t: l} = useLingui()
+
+  const {mutate: muteConvo} = useMuteConvo(convo.id, {
+    onSuccess: data => {
+      if (data.convo.muted) {
+        Toast.show(l({message: 'Group chat muted', context: 'toast'}))
+      } else {
+        Toast.show(l({message: 'Group chat unmuted', context: 'toast'}))
+      }
+    },
+    onError: () => {
+      Toast.show(l`Could not mute group chat`, {
+        type: 'error',
+      })
+    },
+  })
+
   const editNamePrompt = Prompt.usePromptControl()
   const inviteLinkPrompt = Prompt.usePromptControl()
   const lockChatPrompt = Prompt.usePromptControl()
@@ -569,11 +632,10 @@ function SettingsHeader({profiles}: {profiles: bsky.profile.AnyProfileView[]}) {
   const [groupName, setGroupName] = useState('Work in Progress')
   const [newGroupName, setNewGroupName] = useState(groupName)
 
-  const [isMuted, setIsMuted] = useState(false)
   const [isLocked, setIsLocked] = useState(false)
 
   const handleToggleMute = () => {
-    setIsMuted(prev => !prev)
+    muteConvo({mute: !convo?.muted})
   }
 
   const handlePromptName = () => {
@@ -641,12 +703,12 @@ function SettingsHeader({profiles}: {profiles: bsky.profile.AnyProfileView[]}) {
             a.pt_2xl,
           ]}>
           <SettingsButton
-            color={isMuted ? 'negative_subtle' : 'secondary'}
-            icon={isMuted ? BellOffIcon : BellIcon}
+            color={convo?.muted ? 'negative_subtle' : 'secondary'}
+            icon={convo?.muted ? BellOffIcon : BellIcon}
             label={
-              isMuted ? l`Unmute this group chat` : l`Mute this group chat`
+              convo?.muted ? l`Unmute this group chat` : l`Mute this group chat`
             }
-            text={isMuted ? l`Muted` : l`Mute`}
+            text={convo?.muted ? l`Muted` : l`Mute`}
             onPress={handleToggleMute}
           />
           <SettingsButton
