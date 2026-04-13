@@ -121,6 +121,7 @@ function SettingsInner() {
   const bottomBarOffset = useBottomBarOffset()
 
   const convoState = useConvo()
+  const {currentAccount} = useSession()
   const primaryMember = convoState?.getPrimaryMember?.()
 
   const data: bsky.profile.AnyProfileView[] = convoState.convo?.members ?? []
@@ -133,16 +134,26 @@ function SettingsInner() {
     {
       type: 'ADD_MEMBERS_LINK',
     },
-    ...data.map(profile => ({
-      type: 'CHAT_MEMBER',
-      profile,
-      status:
-        primaryMember?.did === profile.did
-          ? 'admin'
-          : invites.includes(profile.did)
-            ? 'invited'
-            : 'member',
-    })),
+    ...[...data]
+      .sort((a, b) => {
+        const aIsAdmin = a.did === primaryMember?.did
+        const bIsAdmin = b.did === primaryMember?.did
+        const aIsSelf = a.did === currentAccount?.did
+        const bIsSelf = b.did === currentAccount?.did
+        if (aIsAdmin !== bIsAdmin) return aIsAdmin ? -1 : 1
+        if (aIsSelf !== bIsSelf) return aIsSelf ? -1 : 1
+        return 0
+      })
+      .map(profile => ({
+        type: 'CHAT_MEMBER',
+        profile,
+        status:
+          primaryMember?.did === profile.did
+            ? 'admin'
+            : invites.includes(profile.did)
+              ? 'invited'
+              : 'member',
+      })),
   ]
 
   function renderItem({item}: {item: Item}) {
