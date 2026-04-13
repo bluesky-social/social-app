@@ -333,9 +333,7 @@ let MessageItem = ({
         ]}>
         <View style={[a.relative]}>
           {isGroupChat && !isFromSelf && isLastInCluster ? (
-            <View style={[a.absolute, {bottom: hasReactions ? 10 : 0}]}>
-              {avatar}
-            </View>
+            <View style={[a.absolute, a.bottom_0]}>{avatar}</View>
           ) : null}
           <View
             style={[
@@ -425,9 +423,17 @@ let MessageItem = ({
                   squaredTopCorner={squaredTopCorner || hasEmbedAndText}
                 />
               )}
-              {appliedReactions}
             </ActionsWrapper>
           </View>
+        </View>
+        <View
+          style={[
+            !isFromSelf &&
+              isGroupChat && {
+                paddingLeft: AVATAR_SIZE,
+              },
+          ]}>
+          {appliedReactions}
         </View>
         {isLastInCluster && (
           <MessageItemMetadata
