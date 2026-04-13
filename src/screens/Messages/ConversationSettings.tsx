@@ -659,6 +659,8 @@ function SettingsHeader({
   const t = useTheme()
   const {t: l} = useLingui()
 
+  const convoState = useConvo()
+
   const {mutate: muteConvo} = useMuteConvo(convo.id, {
     onSuccess: data => {
       if (data.convo.muted) {
@@ -678,7 +680,9 @@ function SettingsHeader({
   const inviteLinkPrompt = Prompt.usePromptControl()
   const lockChatPrompt = Prompt.usePromptControl()
 
-  const [groupName, setGroupName] = useState('Work in Progress')
+  const [groupName, setGroupName] = useState(
+    convoState.getGroupInfo?.()?.name ?? '',
+  )
   const [newGroupName, setNewGroupName] = useState(groupName)
 
   const [isLocked, setIsLocked] = useState(false)
