@@ -1,6 +1,7 @@
 import React, {memo, useCallback, useMemo, useState} from 'react'
 import {
   type GestureResponderEvent,
+  LayoutAnimation,
   Pressable,
   type StyleProp,
   type TextStyle,
@@ -613,6 +614,7 @@ function ReactionRow({
   const handle = sanitizeHandle(profile?.handle ?? '', '@')
 
   const handleOnPress = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     if (
       (reactions?.filter(r => r.sender.did !== currentAccount?.did)?.length ??
         0) < 1
