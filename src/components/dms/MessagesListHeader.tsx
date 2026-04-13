@@ -6,9 +6,12 @@ import {
   type ModerationDecision,
 } from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
+import {useNavigation} from '@react-navigation/native'
 
 import {makeProfileLink} from '#/lib/routes/links'
+import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/profile-shadow'
 import {isConvoActive, useConvo} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
@@ -16,8 +19,10 @@ import {useSession} from '#/state/session'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
+import {Button, ButtonIcon} from '#/components/Button'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Bell2Off_Filled_Corner0_Rounded as BellOffIcon} from '#/components/icons/Bell2'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -117,6 +122,8 @@ function HeaderReady({
   const convoState = useConvo()
   const {currentAccount} = useSession()
 
+  const navigation = useNavigation<NavigationProp>()
+
   const groupInfo = convoState.getGroupInfo?.()
   const isGroupChat = groupInfo != null
 
@@ -140,6 +147,17 @@ function HeaderReady({
     latestMessageFromOther?.type === 'message'
       ? latestMessageFromOther.message
       : undefined
+
+  const handleNavigateToSettings = () => {
+    const convoId = convoState.convo?.id
+    if (convoId) {
+      navigation.navigate('MessagesConversationSettings', {
+        conversation: convoId,
+      })
+    } else {
+      logger.error(`handleNavigateToSettings: missing convo ID`)
+    }
+  }
 
   return (
     <View style={[a.flex_1]}>
@@ -199,15 +217,28 @@ function HeaderReady({
 
         <View style={[{minHeight: PFP_SIZE}, a.justify_center]}>
           <Layout.Header.Slot>
-            {isConvoActive(convoState) && (
-              <ConvoMenu
-                convo={convoState.convo}
-                profile={profile}
-                currentScreen="conversation"
-                blockInfo={blockInfo}
-                latestReportableMessage={latestReportableMessage}
-              />
-            )}
+            {isConvoActive(convoState) ? (
+              isGroupChat ? (
+                <Button
+                  label={l`Open group chat settings`}
+                  size="small"
+                  color="secondary"
+                  shape="round"
+                  variant="ghost"
+                  style={[a.bg_transparent]}
+                  onPress={handleNavigateToSettings}>
+                  <ButtonIcon icon={DotsHorizontalIcon} size="md" />
+                </Button>
+              ) : (
+                <ConvoMenu
+                  convo={convoState.convo}
+                  profile={profile}
+                  currentScreen="conversation"
+                  blockInfo={blockInfo}
+                  latestReportableMessage={latestReportableMessage}
+                />
+              )
+            ) : null}
           </Layout.Header.Slot>
         </View>
       </View>

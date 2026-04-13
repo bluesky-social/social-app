@@ -365,7 +365,7 @@ export function MessagesList({
           profile={convoState.convo.members.find(
             member => member.did === item.message.sender.did,
           )}
-          isGroupChat={convoState.convo.kind === 'group'}
+          isGroupChat={convoState.getGroupInfo?.() != null}
         />
       )
     } else if (item.type === 'deleted-message') {
