@@ -121,6 +121,7 @@ function SettingsInner() {
   const bottomBarOffset = useBottomBarOffset()
 
   const convoState = useConvo()
+  const primaryMember = convoState?.getPrimaryMember?.()
 
   const data: bsky.profile.AnyProfileView[] = convoState.convo?.members ?? []
   const invites: string[] = []
@@ -132,12 +133,11 @@ function SettingsInner() {
     {
       type: 'ADD_MEMBERS_LINK',
     },
-    ...data.map((profile, index) => ({
+    ...data.map(profile => ({
       type: 'CHAT_MEMBER',
       profile,
       status:
-        // TODO Need to check actual status here
-        index === 0
+        primaryMember?.did === profile.did
           ? 'admin'
           : invites.includes(profile.did)
             ? 'invited'
