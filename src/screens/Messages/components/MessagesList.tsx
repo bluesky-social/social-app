@@ -51,11 +51,9 @@ import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
 import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
-import {MessageListError as MessageListErrorDeprecated} from '#/screens/Messages/components/MessageListError_DEPRECATED'
 import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {MessageItem} from '#/components/dms/MessageItem'
-import {MessageItem as MessageItemDeprecated} from '#/components/dms/MessageItem_DEPRECATED'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -106,8 +104,6 @@ export function MessagesList({
   const getPost = useGetPost()
   const {embedUri, setEmbed} = useMessageEmbed()
   const t = useTheme()
-
-  const isGroupChatEnabled = ax.features.enabled(ax.features.GroupChatsEnable)
 
   const textInputId = 'chat-input-' + useId()
   const flatListRef = useAnimatedRef<ListMethods>()
@@ -363,7 +359,7 @@ export function MessagesList({
 
   const renderItem = ({item}: {item: ConvoItem}) => {
     if (item.type === 'message' || item.type === 'pending-message') {
-      return isGroupChatEnabled ? (
+      return (
         <MessageItem
           item={item}
           profile={convoState.convo.members.find(
@@ -371,17 +367,11 @@ export function MessagesList({
           )}
           isGroupChat={convoState.convo.kind === 'group'}
         />
-      ) : (
-        <MessageItemDeprecated item={item} />
       )
     } else if (item.type === 'deleted-message') {
       return <Text>Deleted message</Text>
     } else if (item.type === 'error') {
-      return isGroupChatEnabled ? (
-        <MessageListError item={item} />
-      ) : (
-        <MessageListErrorDeprecated item={item} />
-      )
+      return <MessageListError item={item} />
     }
 
     return null
