@@ -5,16 +5,19 @@ import {
   moderateProfile,
   type ModerationDecision,
 } from '@atproto/api'
+import {ScrollEdgeEffectProvider} from '@bsky.app/expo-scroll-edge-effect'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {
   type RouteProp,
   useFocusEffect,
+  useIsFocused,
   useNavigation,
   useRoute,
 } from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
+import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {
@@ -30,7 +33,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {
@@ -62,7 +65,6 @@ export function MessagesConversationScreen(props: Props) {
 }
 
 export function MessagesConversationScreenInner({route}: Props) {
-  const {gtMobile} = useBreakpoints()
   const setMinimalShellMode = useSetMinimalShellMode()
 
   const convoId = route.params.conversation
@@ -71,25 +73,22 @@ export function MessagesConversationScreenInner({route}: Props) {
   useFocusEffect(
     useCallback(() => {
       setCurrentConvoId(convoId)
-
-      if (IS_WEB && !gtMobile) {
-        setMinimalShellMode(true)
-      } else {
-        setMinimalShellMode(false)
-      }
+      setMinimalShellMode(true)
 
       return () => {
         setCurrentConvoId(undefined)
         setMinimalShellMode(false)
       }
-    }, [gtMobile, convoId, setCurrentConvoId, setMinimalShellMode]),
+    }, [convoId, setCurrentConvoId, setMinimalShellMode]),
   )
 
   return (
     <Layout.Screen testID="convoScreen" style={web([{minHeight: 0}, a.flex_1])}>
-      <ConvoProvider key={convoId} convoId={convoId}>
-        <Inner />
-      </ConvoProvider>
+      <ScrollEdgeEffectProvider>
+        <ConvoProvider key={convoId} convoId={convoId}>
+          <Inner />
+        </ConvoProvider>
+      </ScrollEdgeEffectProvider>
     </Layout.Screen>
   )
 }
@@ -98,6 +97,7 @@ function Inner() {
   const t = useTheme()
   const convoState = useConvo()
   const {_} = useLingui()
+  const isFocused = useIsFocused()
 
   const moderationOpts = useModerationOpts()
   const {data: recipientUnshadowed} = useProfileQuery({
@@ -122,11 +122,13 @@ function Inner() {
 
   // Any time that we re-render the `Initializing` state, we have to reset `hasScrolled` to false. After entering this
   // state, we know that we're resetting the list of messages and need to re-scroll to the bottom when they get added.
-  useEffect(() => {
+  const [prevState, setPrevState] = useState(convoState.status)
+  if (prevState !== convoState.status) {
+    setPrevState(convoState.status)
     if (convoState.status === ConvoStatus.Initializing) {
       setHasScrolled(false)
     }
-  }, [convoState.status])
+  }
 
   if (convoState.status === ConvoStatus.Error) {
     return (
@@ -150,6 +152,8 @@ function Inner() {
 
   return (
     <Layout.Center style={[a.flex_1]}>
+      {/* MessagesList does not use the body scroll */}
+      {isFocused && IS_WEB && <RemoveScrollBar />}
       {!readyToShow &&
         (moderation ? (
           <MessagesListHeader moderation={moderation} profile={recipient} />

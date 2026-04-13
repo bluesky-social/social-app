@@ -303,7 +303,7 @@ let PostControls = ({
               isToggled={Boolean(post.viewer?.like)}
               hasBeenToggled={hasLikeIconBeenToggled}
               renderCount={({count}) => (
-                <PostControlButtonText>
+                <PostControlButtonText testID="likeCount">
                   {formatPostStatCount(count)}
                 </PostControlButtonText>
               )}

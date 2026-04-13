@@ -2429,6 +2429,11 @@
   resolved "https://registry.yarnpkg.com/@bsky.app/expo-image-crop-tool/-/expo-image-crop-tool-0.5.0.tgz#4308fbde5c15e6be9122601797bc3d9549c95e31"
   integrity sha512-gmhQr2HWTRFyPO00fn5OmtiEVtikXusHMrN5Zoq26pu1VZX3zVE+aoc668etTqrvsQcm2Qu8fo96k5F3Wu+6wg==
 
+"@bsky.app/expo-scroll-edge-effect@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@bsky.app/expo-scroll-edge-effect/-/expo-scroll-edge-effect-0.1.4.tgz#8b785b606c3078b3f8d1ec200adaf13bc59c2fec"
+  integrity sha512-P94YcYBqZfuUy7ewTrWulPTxTbs6Yvjg2xS5WX4I/F3R3cSQU9fc8vEzb2Pnn4Ieg2wukJdAywqzt+AnyWgJbw==
+
 "@bsky.app/expo-translate-text@^0.2.9":
   version "0.2.9"
   resolved "https://registry.yarnpkg.com/@bsky.app/expo-translate-text/-/expo-translate-text-0.2.9.tgz#4ed4552cd50bca7d02d14e706e419bd728d4ab51"
@@ -9013,6 +9018,11 @@ expo-font@~14.0.11:
   dependencies:
     fontfaceobserver "^2.1.0"
 
+expo-glass-effect@55.0.8:
+  version "55.0.8"
+  resolved "https://registry.yarnpkg.com/expo-glass-effect/-/expo-glass-effect-55.0.8.tgz#ace0e662d7c8fc2935c9d1260e8303eb2fde0bc3"
+  integrity sha512-IvUjHb/4t6r2H/LXDjcQ4uDoHrmO2cLOvEb9leLavQ4HX5+P4LRtQrMDMlkWAn5Wo5DkLcG8+1CrQU2nqgogTA==
+
 expo-haptics@~15.0.8:
   version "15.0.8"
   resolved "https://registry.yarnpkg.com/expo-haptics/-/expo-haptics-15.0.8.tgz#f93f895ac5d76fe0c5ac26b3644e1dbb097833f3"
@@ -13980,10 +13990,10 @@ react-native-is-edge-to-edge@^1.2.1:
   resolved "https://registry.yarnpkg.com/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.2.1.tgz#64e10851abd9d176cbf2b40562f751622bde3358"
   integrity sha512-FLbPWl/MyYQWz+KwqOZsSyj2JmLKglHatd3xLZWskXOpRaio4LfEDEz8E/A6uD8QoTHW6Aobw1jbEwK7KMgR7Q==
 
-react-native-keyboard-controller@^1.21.0:
-  version "1.21.0"
-  resolved "https://registry.yarnpkg.com/react-native-keyboard-controller/-/react-native-keyboard-controller-1.21.0.tgz#79ad48c67e6f5ec572b7dc896c7b05a98662a2a2"
-  integrity sha512-mLHJysehhSzYoM8BAD2DSjVZEcF69t16ZCJrCAos6sfVtbB3tL+kgGZFX+jNVz/f9BEhqnBFO0EA1tc/V6Hkgw==
+react-native-keyboard-controller@^1.21.5:
+  version "1.21.5"
+  resolved "https://registry.yarnpkg.com/react-native-keyboard-controller/-/react-native-keyboard-controller-1.21.5.tgz#563aabb7e9ce8dbe2a0dd5f949883ba81620b6c0"
+  integrity sha512-wxR+vpJ+2g6QMQCP1mRQKySDUietf5xLntZ76cUNHOGsjyqk6LtznXwHBG9YsR9E/b2IrHXISylwqPnIit6Y6A==
   dependencies:
     react-native-is-edge-to-edge "^1.2.1"
 

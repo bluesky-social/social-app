@@ -1,4 +1,4 @@
-FROM golang:1.25-bookworm AS build-env
+FROM golang:1.26-bookworm AS build-env
 
 WORKDIR /usr/src/social-app
 

@@ -1,5 +1,19 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
+import {
+  useKeyboardHandler,
+  useReanimatedKeyboardAnimation,
+} from 'react-native-keyboard-controller'
+import Animated, {
+  Extrapolation,
+  interpolate,
+  runOnJS,
+  useAnimatedStyle,
+} from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {GlassContainer} from 'expo-glass-effect'
+import {LinearGradient} from 'expo-linear-gradient'
+import {ScrollEdgeEffect} from '@bsky.app/expo-scroll-edge-effect'
 import {useLingui} from '@lingui/react/macro'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
@@ -17,20 +31,24 @@ import {
   EmojiPicker,
   type EmojiPickerState,
 } from '#/view/com/composer/text-input/web/EmojiPicker'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, platform, tokens, useTheme, utils} from '#/alf'
 import {Composer, useComposerInternalApiRef} from '#/components/Composer'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
-import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
+import {GlassView} from '#/components/GlassView'
+import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
+import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import * as Toast from '#/components/Toast'
-import {IS_WEB} from '#/env'
+import {IS_ANDROID, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+
+const MIN_HEIGHT = 40
 
 export function MessageComposer({
+  textInputId,
   onSendMessage,
   hasEmbed,
   setEmbed,
   children,
 }: {
+  textInputId?: string
   onSendMessage: (message: string) => void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
@@ -48,15 +66,24 @@ export function MessageComposer({
   })
   const composerInternalApiRef = useComposerInternalApiRef()
 
-  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
-  const {
-    state: hovered,
-    onIn: onHoverIn,
-    onOut: onHoverOut,
-  } = useInteractionState()
-
   const [text, setText] = useState(getDraft)
   useSaveMessageDraft(text)
+
+  // Android interactive dismiss sometimes doesn't blur the input
+  const blur = () => {
+    composerInternalApiRef.current?.input?.blur()
+  }
+
+  useKeyboardHandler({
+    onEnd: evt => {
+      'worklet'
+      if (IS_ANDROID && evt.progress === 0) {
+        runOnJS(blur)()
+      }
+    },
+  })
+
+  const submitDisabled = !editable || (!hasEmbed && text.trim().length === 0)
 
   const openEmojiPicker = (pos: any) => {
     setEmojiPickerState({isOpen: true, pos})
@@ -65,10 +92,12 @@ export function MessageComposer({
   const onSubmit = () => {
     if (!editable) return
     if (!hasEmbed && text.trim() === '') return
-    if (countGraphemes(text) > MAX_DM_GRAPHEME_LENGTH) {
-      Toast.show(l`Message is too long`, {
-        type: 'error',
-      })
+    const graphemeCount = countGraphemes(text)
+    if (graphemeCount > MAX_DM_GRAPHEME_LENGTH) {
+      Toast.show(
+        l`Message is too long (${graphemeCount}/${MAX_DM_GRAPHEME_LENGTH})`,
+        {type: 'error'},
+      )
       return
     }
 
@@ -91,152 +120,111 @@ export function MessageComposer({
     return () => {
       textInputWebEmitter.removeListener('emoji-inserted', onEmojiInserted)
     }
-  }, [])
+  }, [composerInternalApiRef])
 
   return (
-    <>
-      <View style={[a.px_md, a.pb_sm, a.pt_xs]}>
-        {children}
+    <ComposerContainer>
+      {children}
 
-        <View
-          collapsable={false}
-          ref={
-            IS_WEB
-              ? undefined
-              : node => {
-                  composerInternalApiRef.current?.setAutocompleteAnchor(node)
-                }
-          }
-          // @ts-expect-error web only
-          onMouseEnter={onHoverIn}
-          onMouseLeave={onHoverOut}
-          style={[a.w_full, a.flex_row, a.gap_sm]}>
-          {IS_WEB && (
-            <Pressable
-              onPress={e => {
-                e.currentTarget.measure((_fx, _fy, _width, _height, px, py) => {
-                  openEmojiPicker?.({
-                    top: py,
-                    left: px,
-                    right: px,
-                    bottom: py,
-                    nextFocusRef: {
-                      current: composerInternalApiRef.current?.input?.element,
+      <View
+        collapsable={false}
+        ref={native(
+          (node: View) =>
+            void composerInternalApiRef.current?.setAutocompleteAnchor(node),
+        )}>
+        <GlassContainer
+          style={[a.w_full, a.flex_row, a.gap_sm, a.align_end]}
+          spacing={tokens.space.sm}>
+          <GlassView
+            isInteractive
+            glassEffectStyle="regular"
+            style={[a.flex_1, a.rounded_xl, {minHeight: MIN_HEIGHT}]}
+            tintColor={t.palette.contrast_50}
+            fallbackStyle={[t.atoms.bg_contrast_50]}>
+            {IS_WEB && (
+              <Pressable
+                onPress={e => {
+                  e.currentTarget.measure(
+                    (_fx, _fy, _width, _height, px, py) => {
+                      // TODO: rip this horrible system out
+                      openEmojiPicker?.({
+                        top: py,
+                        left: px - 400,
+                        right: px - 400,
+                        bottom: py,
+                        nextFocusRef: {
+                          current:
+                            composerInternalApiRef.current?.input?.element,
+                        },
+                      })
                     },
-                  })
-                })
+                  )
+                }}
+                style={[
+                  a.overflow_hidden,
+                  a.absolute,
+                  a.rounded_full,
+                  a.align_center,
+                  a.justify_center,
+                  a.z_30,
+                  {
+                    height: 20,
+                    width: 20,
+                    top: 10,
+                    right: 10,
+                  },
+                ]}
+                accessibilityLabel={l`Open emoji picker`}
+                accessibilityHint="">
+                {state => (
+                  <EmojiSmileIcon
+                    size="md"
+                    style={
+                      state.hovered ||
+                      state.focused ||
+                      state.pressed ||
+                      emojiPickerState.isOpen
+                        ? {color: t.palette.primary_500}
+                        : t.atoms.text_contrast_high
+                    }
+                  />
+                )}
+              </Pressable>
+            )}
+
+            <Composer
+              nativeID={textInputId}
+              label={l`Message input field`}
+              placeholder={l`Message`}
+              autocompletePlacement="top-start"
+              internalApiRef={composerInternalApiRef}
+              defaultValue={text}
+              editable={editable}
+              autoFocus={IS_WEB}
+              maxRows={12}
+              outerStyle={[a.flex_1]}
+              contentTextStyle={[a.text_md, a.leading_snug]}
+              contentPaddingStyle={{
+                paddingLeft: 16,
+                paddingTop: 10,
+                paddingBottom: 10,
+                paddingRight: 16 + platform({web: 20, default: 0}),
               }}
-              style={[
-                a.overflow_hidden,
-                a.absolute,
-                a.rounded_full,
-                a.align_center,
-                a.justify_center,
-                a.z_30,
-                {
-                  height: 30,
-                  width: 30,
-                  top: 8,
-                  left: 8,
-                },
-              ]}
-              accessibilityLabel={l`Open emoji picker`}
-              accessibilityHint="">
-              {state => (
-                <View
-                  style={[
-                    a.absolute,
-                    a.inset_0,
-                    a.align_center,
-                    a.justify_center,
-                    {
-                      backgroundColor:
-                        state.hovered || state.focused || state.pressed
-                          ? t.atoms.bg.backgroundColor
-                          : undefined,
-                    },
-                  ]}>
-                  <EmojiSmile size="lg" />
-                </View>
-              )}
-            </Pressable>
-          )}
-
-          <Composer
-            label={l`Message input field`}
-            placeholder={l`Write a message`}
-            autocompletePlacement="top-start"
-            internalApiRef={composerInternalApiRef}
-            defaultValue={text}
-            editable={editable}
-            autoFocus={IS_WEB}
-            maxRows={12}
-            outerStyle={[
-              a.flex_1,
-              t.atoms.bg_contrast_25,
-              {
-                borderWidth: 1,
-                borderColor: 'transparent',
-                borderRadius: 22,
-              },
-              editable &&
-                hovered && {
-                  borderColor: t.atoms.border_contrast_medium.borderColor,
-                },
-              editable &&
-                focused && {
-                  borderColor: t.palette.primary_500,
-                },
-            ]}
-            contentTextStyle={[a.text_md, a.leading_snug]}
-            contentPaddingStyle={{
-              paddingLeft: IS_WEB ? 30 + 12 : 12,
-              paddingTop: 12,
-              paddingBottom: 12,
-              paddingRight: 12,
-            }}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            onChange={setText}
-            onFacetCommitted={facet => {
-              if (facet.type === 'url' && isBskyPostUrl(facet.value)) {
-                setEmbed(facet.value)
-              }
-            }}
-            onRequestSubmit={req => {
-              if (req.platform === 'web' && req.shiftKey) return
-              req.nativeEvent.preventDefault()
-              onSubmit()
-            }}
-          />
-
-          {focused || text.length ? (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={l`Send message`}
-              accessibilityHint=""
-              hitSlop={HITSLOP_10}
-              style={[
-                a.rounded_full,
-                a.align_center,
-                a.justify_center,
-                a.self_end,
-                a.z_30,
-                {
-                  height: 44,
-                  width: 44,
-                  backgroundColor: t.palette.primary_500,
-                },
-              ]}
-              onPress={onSubmit}
-              disabled={!editable}>
-              <PaperPlane
-                fill={t.palette.white}
-                style={[a.relative, {left: 1}]}
-              />
-            </Pressable>
-          ) : null}
-        </View>
+              onChange={setText}
+              onFacetCommitted={facet => {
+                if (facet.type === 'url' && isBskyPostUrl(facet.value)) {
+                  setEmbed(facet.value)
+                }
+              }}
+              onRequestSubmit={req => {
+                if (req.platform === 'web' && req.shiftKey) return
+                req.nativeEvent.preventDefault()
+                onSubmit()
+              }}
+            />
+          </GlassView>
+          <SubmitButton onPress={onSubmit} disabled={submitDisabled} />
+        </GlassContainer>
       </View>
 
       {IS_WEB && (
@@ -246,6 +234,114 @@ export function MessageComposer({
           close={() => setEmojiPickerState(prev => ({...prev, isOpen: false}))}
         />
       )}
-    </>
+    </ComposerContainer>
   )
+}
+
+function SubmitButton({
+  onPress,
+  disabled,
+}: {
+  onPress: () => void
+  disabled: boolean
+}) {
+  const {t: l} = useLingui()
+  const t = useTheme()
+
+  return (
+    <GlassView
+      isInteractive
+      glassEffectStyle="regular"
+      style={[a.rounded_full]}
+      tintColor={disabled ? t.palette.contrast_100 : t.palette.primary_500}
+      fallbackStyle={{
+        backgroundColor: disabled
+          ? t.palette.contrast_100
+          : t.palette.primary_500,
+      }}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={l`Send message`}
+        accessibilityHint=""
+        hitSlop={HITSLOP_10}
+        style={[
+          a.rounded_full,
+          a.align_center,
+          a.justify_center,
+          {height: MIN_HEIGHT, width: MIN_HEIGHT},
+        ]}
+        onPress={onPress}
+        disabled={disabled}>
+        <PaperPlaneIcon size="md" fill={t.palette.white} style={[a.mb_2xs]} />
+      </Pressable>
+    </GlassView>
+  )
+}
+
+// TODO: remove export when MessageInput is deleted
+export function ComposerContainer({children}: {children: React.ReactNode}) {
+  const {bottom: bottomInset} = useSafeAreaInsets()
+  const {progress} = useReanimatedKeyboardAnimation()
+  const t = useTheme()
+
+  const animatedContainerStyle = useAnimatedStyle(() => ({
+    paddingHorizontal: interpolate(
+      progress.get(),
+      [0, 1],
+      [bottomInset, tokens.space.sm],
+      {
+        extrapolateRight: Extrapolation.CLAMP,
+        extrapolateLeft: Extrapolation.CLAMP,
+      },
+    ),
+  }))
+
+  if (IS_LIQUID_GLASS) {
+    return (
+      <ScrollEdgeEffect edge="bottom">
+        <Animated.View style={[a.w_full, animatedContainerStyle, a.pb_lg]}>
+          {children}
+        </Animated.View>
+      </ScrollEdgeEffect>
+    )
+  } else {
+    return (
+      <>
+        <LinearGradient
+          style={platform({
+            native: [a.pt_sm, a.px_lg, , a.pb_lg, a.w_full],
+            web: [
+              a.pt_xs,
+              a.pl_lg,
+              a.pb_lg,
+              // prevent overlap with the scrollbar, which looks ugly
+              a.pr_xs, // xs + md = lg
+              {width: `calc(100% - ${tokens.space.md}px)` as '100%'},
+            ],
+          })}
+          key={t.name} // android does not update when you change the colors. sigh.
+          start={[0.5, 0]}
+          end={[0.5, 1]}
+          colors={[
+            utils.alpha(t.atoms.bg.backgroundColor, 0),
+            utils.alpha(t.atoms.bg.backgroundColor, 0.8),
+            t.atoms.bg.backgroundColor,
+          ]}>
+          {children}
+        </LinearGradient>
+        {/* covers the gap between the keyboard and the input during keyboard animation */}
+        {IS_NATIVE && (
+          <View
+            style={[
+              t.atoms.bg,
+              a.absolute,
+              a.left_0,
+              a.right_0,
+              {top: '100%', height: bottomInset + 1, marginTop: -1},
+            ]}
+          />
+        )}
+      </>
+    )
+  }
 }

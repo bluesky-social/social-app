@@ -1,10 +1,9 @@
-const {withInfoPlist} = require('@expo/config-plugins')
+const {withInfoPlist} = require('expo/config-plugins')
 const plist = require('@expo/plist')
 const path = require('path')
 const fs = require('fs')
 
 const withClipInfoPlist = (config, {targetName}) => {
-  // eslint-disable-next-line no-shadow
   return withInfoPlist(config, config => {
     const targetPath = path.join(
       config.modRequest.platformProjectRoot,

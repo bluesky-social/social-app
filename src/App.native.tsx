@@ -235,7 +235,7 @@ function App() {
     <Geo.Provider>
       <AppConfigProvider>
         <A11yProvider>
-          <KeyboardControllerProvider>
+          <KeyboardControllerProvider preload={false}>
             <OnboardingProvider>
               <AnalyticsContext>
                 <SessionProvider>

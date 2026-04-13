@@ -39,6 +39,7 @@ render(<LandingPage />, root)
 function LandingPage() {
   const [uri, setUri] = useState('')
   const [colorMode, setColorMode] = useState<ColorModeValues>('system')
+
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [thread, setThread] = useState<AppBskyFeedDefs.ThreadViewPost | null>(

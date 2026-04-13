@@ -5,12 +5,14 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {precachePost} from '#/state/queries/post'
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -40,6 +42,7 @@ let ShareMenuItems = ({
   const sendViaChatControl = useDialogControl()
   const [devModeEnabled] = useDevMode()
   const aa = useAgeAssurance()
+  const queryClient = useQueryClient()
 
   const postUri = post.uri
   const postAuthor = useProfileShadow(post.author)
@@ -77,7 +80,12 @@ let ShareMenuItems = ({
     onShareProp()
   }
 
+  const onBeforeShareViaChat = () => {
+    precachePost(queryClient, postUri, post)
+  }
+
   const onSelectChatToShareTo = (conversation: string) => {
+    onBeforeShareViaChat()
     navigation.navigate('MessagesConversation', {
       conversation,
       embed: postUri,
@@ -98,7 +106,10 @@ let ShareMenuItems = ({
         {hasSession && aa.state.access === aa.Access.Full && (
           <Menu.Group>
             <Menu.ContainerItem>
-              <RecentChats postUri={postUri} />
+              <RecentChats
+                postUri={postUri}
+                onBeforePress={onBeforeShareViaChat}
+              />
             </Menu.ContainerItem>
             <Menu.Item
               testID="postDropdownSendViaDMBtn"
