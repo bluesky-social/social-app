@@ -129,6 +129,7 @@ export class BottomSheetNativeComponent extends React.Component<
 function BottomSheetNativeComponentInner({
   children,
   backgroundColor,
+  maxHeight,
   onLayout,
   onStateChange,
   nativeViewRef,
@@ -156,6 +157,7 @@ function BottomSheetNativeComponentInner({
   return (
     <NativeView
       {...rest}
+      maxHeight={maxHeight}
       onStateChange={onStateChange}
       ref={nativeViewRef}
       style={{
@@ -170,6 +172,7 @@ function BottomSheetNativeComponentInner({
             flex: 1,
             backgroundColor,
           },
+          maxHeight != null && {maxHeight},
           Platform.OS === 'android' && {
             borderTopLeftRadius: cornerRadius,
             borderTopRightRadius: cornerRadius,
@@ -177,7 +180,9 @@ function BottomSheetNativeComponentInner({
           },
           extraStyles,
         ]}>
-        <View onLayout={onLayout}>
+        <View
+          onLayout={onLayout}
+          style={maxHeight != null ? {flex: 1} : undefined}>
           <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
         </View>
       </View>
