@@ -42,6 +42,7 @@ import {
   QuoteEmbedViewContext,
 } from './types'
 import {VideoEmbed} from './VideoEmbed'
+import {GalleryBleed} from '#/components/images/Gallery'
 
 export {PostEmbedViewContext, QuoteEmbedViewContext} from './types'
 
@@ -320,43 +321,45 @@ export function QuoteEmbed({
   )
 
   return (
-    <View
-      style={[a.mt_sm]}
-      onPointerEnter={linkDisabled ? undefined : onPointerEnter}
-      onPointerLeave={linkDisabled ? undefined : onPointerLeave}>
-      <ContentHider
-        modui={moderation?.ui('contentList')}
-        style={[a.rounded_md, a.border, t.atoms.border_contrast_low, style]}
-        activeStyle={[a.p_md, a.pt_sm]}
-        childContainerStyle={[a.pt_sm]}>
-        {({active}) => (
-          <>
-            {!active && !linkDisabled && (
-              <SubtleHover
-                native
-                hover={hover || pressed}
-                style={[a.rounded_md]}
-              />
-            )}
-            {linkDisabled ? (
-              <View style={[!active && a.p_md]} pointerEvents="none">
-                {contents}
-              </View>
-            ) : (
-              <Link
-                style={[!active && a.p_md]}
-                hoverStyle={t.atoms.border_contrast_high}
-                href={itemHref}
-                title={itemTitle}
-                onBeforePress={onBeforePress}
-                onPressIn={onPressIn}
-                onPressOut={onPressOut}>
-                {contents}
-              </Link>
-            )}
-          </>
-        )}
-      </ContentHider>
-    </View>
+    <GalleryBleed>
+      <View
+        style={[a.mt_sm]}
+        onPointerEnter={linkDisabled ? undefined : onPointerEnter}
+        onPointerLeave={linkDisabled ? undefined : onPointerLeave}>
+        <ContentHider
+          modui={moderation?.ui('contentList')}
+          style={[a.rounded_md, a.border, t.atoms.border_contrast_low, style]}
+          activeStyle={[a.p_md, a.pt_sm]}
+          childContainerStyle={[a.pt_sm]}>
+          {({active}) => (
+            <>
+              {!active && !linkDisabled && (
+                <SubtleHover
+                  native
+                  hover={hover || pressed}
+                  style={[a.rounded_md]}
+                />
+              )}
+              {linkDisabled ? (
+                <View style={[!active && a.p_md]} pointerEvents="none">
+                  {contents}
+                </View>
+              ) : (
+                <Link
+                  style={[!active && a.p_md]}
+                  hoverStyle={t.atoms.border_contrast_high}
+                  href={itemHref}
+                  title={itemTitle}
+                  onBeforePress={onBeforePress}
+                  onPressIn={onPressIn}
+                  onPressOut={onPressOut}>
+                  {contents}
+                </Link>
+              )}
+            </>
+          )}
+        </ContentHider>
+      </View>
+    </GalleryBleed>
   )
 }

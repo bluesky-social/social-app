@@ -45,6 +45,7 @@ import * as Skele from '#/components/Skeleton'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import {useActorStatus} from '#/features/liveNow'
+import {GalleryBleed} from '#/components/images/Gallery'
 
 export type ThreadItemPostProps = {
   item: Extract<ThreadItem, {type: 'threadPost'}>
@@ -131,18 +132,20 @@ const ThreadItemPostOuterWrapper = memo(function ThreadItemPostOuterWrapper({
     !item.ui.showParentReplyLine && overrides?.topBorder !== true
 
   return (
-    <View
-      style={[
-        showTopBorder && [a.border_t, t.atoms.border_contrast_low],
-        {paddingHorizontal: OUTER_SPACE},
-        // If there's no next child, add a little padding to bottom
-        !item.ui.showChildReplyLine &&
-          !item.ui.precedesChildReadMore && {
-            paddingBottom: OUTER_SPACE / 2,
-          },
-      ]}>
-      {children}
-    </View>
+    <GalleryBleed>
+      <View
+        style={[
+          showTopBorder && [a.border_t, t.atoms.border_contrast_low],
+          {paddingHorizontal: OUTER_SPACE},
+          // If there's no next child, add a little padding to bottom
+          !item.ui.showChildReplyLine &&
+            !item.ui.precedesChildReadMore && {
+              paddingBottom: OUTER_SPACE / 2,
+            },
+        ]}>
+        {children}
+      </View>
+    </GalleryBleed>
   )
 })
 

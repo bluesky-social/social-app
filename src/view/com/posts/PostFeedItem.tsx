@@ -51,6 +51,7 @@ import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
 import * as bsky from '#/types/bsky'
 import {PostFeedReason} from './PostFeedReason'
+import {GalleryBleed} from '#/components/images/Gallery'
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
@@ -294,118 +295,120 @@ let FeedItemInner = ({
   }, [reason])
 
   return (
-    <Link
-      testID={`feedItem-by-${post.author.handle}`}
-      style={outerStyles}
-      href={href}
-      noFeedback
-      accessible={false}
-      onBeforePress={onBeforePress}
-      dataSet={{feedContext}}
-      onPointerEnter={() => {
-        setHover(true)
-      }}
-      onPointerLeave={() => {
-        setHover(false)
-      }}>
-      <SubtleHover hover={hover} />
-      <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
-        <View style={{width: 42}}>
-          {isThreadChild && (
-            <View
-              style={[
-                styles.replyLine,
-                {
-                  flexGrow: 1,
-                  backgroundColor: pal.colors.replyLine,
-                  marginBottom: 4,
-                },
-              ]}
-            />
-          )}
-        </View>
-
-        <View style={[a.pt_sm, a.flex_shrink]}>
-          {reason && (
-            <PostFeedReason
-              reason={reason}
-              moderation={moderation}
-              onOpenReposter={onOpenReposter}
-            />
-          )}
-        </View>
-      </View>
-
-      <View style={styles.layout}>
-        <View style={styles.layoutAvi}>
-          <PreviewableUserAvatar
-            size={42}
-            profile={post.author}
-            moderation={moderation.ui('avatar')}
-            type={post.author.associated?.labeler ? 'labeler' : 'user'}
-            onBeforePress={onOpenAuthor}
-            live={live}
-          />
-          {isThreadParent && (
-            <View
-              style={[
-                styles.replyLine,
-                {
-                  flexGrow: 1,
-                  backgroundColor: pal.colors.replyLine,
-                  marginTop: live ? 8 : 4,
-                },
-              ]}
-            />
-          )}
-        </View>
-        <View
-          style={[
-            styles.layoutContent,
-            !richText.text && styles.layoutContentNoText,
-          ]}>
-          <PostMeta
-            author={post.author}
-            moderation={moderation}
-            timestamp={post.indexedAt}
-            postHref={href}
-            onOpenAuthor={onOpenAuthor}
-          />
-          {showReplyTo &&
-            (parentAuthor || isParentBlocked || isParentNotFound) && (
-              <PostRepliedTo
-                parentAuthor={parentAuthor}
-                isParentBlocked={isParentBlocked}
-                isParentNotFound={isParentNotFound}
+    <GalleryBleed>
+      <Link
+        testID={`feedItem-by-${post.author.handle}`}
+        style={outerStyles}
+        href={href}
+        noFeedback
+        accessible={false}
+        onBeforePress={onBeforePress}
+        dataSet={{feedContext}}
+        onPointerEnter={() => {
+          setHover(true)
+        }}
+        onPointerLeave={() => {
+          setHover(false)
+        }}>
+        <SubtleHover hover={hover} />
+        <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
+          <View style={{width: 42}}>
+            {isThreadChild && (
+              <View
+                style={[
+                  styles.replyLine,
+                  {
+                    flexGrow: 1,
+                    backgroundColor: pal.colors.replyLine,
+                    marginBottom: 4,
+                  },
+                ]}
               />
             )}
-          <LabelsOnMyPost post={post} />
-          <PostContent
-            moderation={moderation}
-            richText={richText}
-            postEmbed={post.embed}
-            postAuthor={post.author}
-            onOpenEmbed={onOpenEmbed}
-            post={post}
-            threadgateRecord={threadgateRecord}
-          />
-          <PostControls
-            post={post}
-            record={record}
-            richText={richText}
-            onPressReply={onPressReply}
-            logContext="FeedItem"
-            feedContext={feedContext}
-            reqId={reqId}
-            threadgateRecord={threadgateRecord}
-            onShowLess={onShowLess}
-            viaRepost={viaRepost}
-          />
+          </View>
+
+          <View style={[a.pt_sm, a.flex_shrink]}>
+            {reason && (
+              <PostFeedReason
+                reason={reason}
+                moderation={moderation}
+                onOpenReposter={onOpenReposter}
+              />
+            )}
+          </View>
         </View>
 
-        <DiscoverDebug feedContext={feedContext} />
-      </View>
-    </Link>
+        <View style={styles.layout}>
+          <View style={styles.layoutAvi}>
+            <PreviewableUserAvatar
+              size={42}
+              profile={post.author}
+              moderation={moderation.ui('avatar')}
+              type={post.author.associated?.labeler ? 'labeler' : 'user'}
+              onBeforePress={onOpenAuthor}
+              live={live}
+            />
+            {isThreadParent && (
+              <View
+                style={[
+                  styles.replyLine,
+                  {
+                    flexGrow: 1,
+                    backgroundColor: pal.colors.replyLine,
+                    marginTop: live ? 8 : 4,
+                  },
+                ]}
+              />
+            )}
+          </View>
+          <View
+            style={[
+              styles.layoutContent,
+              !richText.text && styles.layoutContentNoText,
+            ]}>
+            <PostMeta
+              author={post.author}
+              moderation={moderation}
+              timestamp={post.indexedAt}
+              postHref={href}
+              onOpenAuthor={onOpenAuthor}
+            />
+            {showReplyTo &&
+              (parentAuthor || isParentBlocked || isParentNotFound) && (
+                <PostRepliedTo
+                  parentAuthor={parentAuthor}
+                  isParentBlocked={isParentBlocked}
+                  isParentNotFound={isParentNotFound}
+                />
+              )}
+            <LabelsOnMyPost post={post} />
+            <PostContent
+              moderation={moderation}
+              richText={richText}
+              postEmbed={post.embed}
+              postAuthor={post.author}
+              onOpenEmbed={onOpenEmbed}
+              post={post}
+              threadgateRecord={threadgateRecord}
+            />
+            <PostControls
+              post={post}
+              record={record}
+              richText={richText}
+              onPressReply={onPressReply}
+              logContext="FeedItem"
+              feedContext={feedContext}
+              reqId={reqId}
+              threadgateRecord={threadgateRecord}
+              onShowLess={onShowLess}
+              viaRepost={viaRepost}
+            />
+          </View>
+
+          <DiscoverDebug feedContext={feedContext} />
+        </View>
+      </Link>
+    </GalleryBleed>
   )
 }
 FeedItemInner = memo(FeedItemInner)
