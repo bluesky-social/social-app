@@ -14,20 +14,14 @@ import {Trans} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
 import {
-  type Gif,
-<<<<<<< Updated upstream
-  klipyStaticUrl,
   useFeaturedGifsQuery as useKlipyFeaturedGifsQuery,
   useGifSearchQuery as useKlipyGifSearchQuery,
 } from '#/state/queries/klipy'
 import {
+  type Gif,
+  gifPreviewUrl,
   useTenorFeaturedGifsQuery,
   useTenorGifSearchQuery,
-=======
-  gifPreviewUrl,
-  useFeaturedGifsQuery,
-  useGifSearchQuery,
->>>>>>> Stashed changes
 } from '#/state/queries/tenor'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
@@ -107,7 +101,6 @@ function GifList({
   const useKlipy = ax.features.enabled(ax.features.KlipyGifProviderEnable)
 
   const isSearching = search.length > 0
-  const useKlipy = ax.features.enabled(ax.features.KlipyGifProviderEnable)
 
   const klipyTrending = useKlipyFeaturedGifsQuery({enabled: useKlipy})
   const klipySearch = useKlipyGifSearchQuery(search, {enabled: useKlipy})
@@ -132,7 +125,7 @@ function GifList({
       : tenorTrending
 
   const flattenedData = useMemo(() => {
-    return data?.pages.flatMap(page => page.data) || []
+    return data?.pages.flatMap(page => page.results) || []
   }, [data])
 
   const renderItem = useCallback(
@@ -188,9 +181,7 @@ function GifList({
           <TextField.Icon icon={Search} />
           <TextField.Input
             label={_(msg`Search GIFs`)}
-            placeholder={
-              useKlipy ? _(msg`Search KLIPY`) : _(msg`Search Tenor`)
-            }
+            placeholder={useKlipy ? _(msg`Search KLIPY`) : _(msg`Search Tenor`)}
             onChangeText={text => {
               setSearch(text)
               listRef.current?.scrollToOffset({offset: 0, animated: false})
@@ -259,7 +250,7 @@ function GifList({
         stickyHeaderIndices={[0]}
         onEndReached={onEndReached}
         onEndReachedThreshold={4}
-        keyExtractor={(item: Gif) => item.slug}
+        keyExtractor={(item: Gif) => item.id}
         keyboardDismissMode="on-drag"
         ListFooterComponent={
           hasData ? (
@@ -339,11 +330,7 @@ export function GifPreview({
             t.atoms.bg_contrast_25,
           ]}
           source={{
-<<<<<<< Updated upstream
-            uri: klipyStaticUrl(gif.file.sm.gif.url),
-=======
             uri: gifPreviewUrl(gif.media_formats.tinygif.url),
->>>>>>> Stashed changes
           }}
           contentFit="cover"
           accessibilityLabel={gif.title}

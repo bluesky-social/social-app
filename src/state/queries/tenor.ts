@@ -2,67 +2,37 @@ import {Platform} from 'react-native'
 import {getLocales} from 'expo-localization'
 import {keepPreviousData, useInfiniteQuery} from '@tanstack/react-query'
 
-<<<<<<< Updated upstream
-import {useAnalytics} from '#/analytics'
-=======
->>>>>>> Stashed changes
-import {
-  GIF_FEATURED,
-  GIF_KLIPY_FEATURED,
-  GIF_KLIPY_SEARCH,
-  GIF_SEARCH,
-} from '#/lib/constants'
+import {GIF_FEATURED, GIF_SEARCH} from '#/lib/constants'
 import {logger} from '#/logger'
-import {useAnalytics} from '#/analytics'
 
 export const RQKEY_ROOT = 'gif-service'
-export const RQKEY_FEATURED = (provider: string) => [
-  RQKEY_ROOT,
-  'featured',
-  provider,
-]
-export const RQKEY_SEARCH = (query: string, provider: string) => [
-  RQKEY_ROOT,
-  'search',
-  query,
-  provider,
-]
+export const RQKEY_FEATURED = [RQKEY_ROOT, 'featured']
+export const RQKEY_SEARCH = (query: string) => [RQKEY_ROOT, 'search', query]
 
-const getTenorTrendingGifs = createTenorApi(GIF_FEATURED)
-const searchTenorGifs = createTenorApi<{q: string}>(GIF_SEARCH)
-const getKlipyTrendingGifs = createTenorApi(GIF_KLIPY_FEATURED)
-const searchKlipyGifs = createTenorApi<{q: string}>(GIF_KLIPY_SEARCH)
+const getTrendingGifs = createTenorApi(GIF_FEATURED)
 
-export function useFeaturedGifsQuery() {
-  const ax = useAnalytics()
-  const useKlipy = ax.features.enabled(ax.features.KlipyGifProviderEnable)
-  const provider = useKlipy ? 'klipy' : 'tenor'
+const searchGifs = createTenorApi<{q: string}>(GIF_SEARCH)
 
+export function useTenorFeaturedGifsQuery(options?: {enabled?: boolean}) {
   return useInfiniteQuery({
-    queryKey: RQKEY_FEATURED(provider),
-    queryFn: ({pageParam}) =>
-      useKlipy
-        ? getKlipyTrendingGifs({pos: pageParam})
-        : getTenorTrendingGifs({pos: pageParam}),
+    queryKey: RQKEY_FEATURED,
+    queryFn: ({pageParam}) => getTrendingGifs({pos: pageParam}),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.next,
+    enabled: options?.enabled,
   })
 }
 
-export function useGifSearchQuery(query: string) {
-  const ax = useAnalytics()
-  const useKlipy = ax.features.enabled(ax.features.KlipyGifProviderEnable)
-  const provider = useKlipy ? 'klipy' : 'tenor'
-
+export function useTenorGifSearchQuery(
+  query: string,
+  options?: {enabled?: boolean},
+) {
   return useInfiniteQuery({
-    queryKey: RQKEY_SEARCH(query, provider),
-    queryFn: ({pageParam}) =>
-      useKlipy
-        ? searchKlipyGifs({q: query, pos: pageParam})
-        : searchTenorGifs({q: query, pos: pageParam}),
+    queryKey: RQKEY_SEARCH(query),
+    queryFn: ({pageParam}) => searchGifs({q: query, pos: pageParam}),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.next,
-    enabled: !!query,
+    enabled: !!query && options?.enabled !== false,
     placeholderData: keepPreviousData,
   })
 }
@@ -115,7 +85,7 @@ function createTenorApi<Input extends object>(
       },
     })
     if (!res.ok) {
-      throw new Error('Failed to fetch GIF API')
+      throw new Error('Failed to fetch Tenor API')
     }
     return res.json()
   }
@@ -134,14 +104,10 @@ export function tenorUrlToBskyGifUrl(tenorUrl: string) {
 }
 
 /**
-<<<<<<< Updated upstream
- * Returns the appropriate static URL for a GIF preview image.
- * For Tenor URLs, rewrites through the bsky proxy.
- * For KLIPY URLs, returns as-is (no proxy yet).
-=======
  * Returns the appropriate URL for a GIF preview image.
- * Rewrites Tenor URLs through the bsky proxy; KLIPY URLs pass through directly.
->>>>>>> Stashed changes
+ * Rewrites Tenor URLs through the bsky proxy; KLIPY URLs pass through
+ * directly (will route through the bsky proxy once the tango backend-proxy
+ * PR is deployed).
  */
 export function gifPreviewUrl(gifUrl: string) {
   try {
@@ -149,10 +115,6 @@ export function gifPreviewUrl(gifUrl: string) {
     if (url.hostname === 'media.tenor.com') {
       return tenorUrlToBskyGifUrl(gifUrl)
     }
-<<<<<<< Updated upstream
-    // KLIPY static URLs and others pass through directly
-=======
->>>>>>> Stashed changes
     return gifUrl
   } catch (e) {
     logger.debug('invalid url passed to gifPreviewUrl()')
