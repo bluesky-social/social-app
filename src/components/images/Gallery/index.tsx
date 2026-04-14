@@ -27,6 +27,7 @@ import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
+import {useKeyboardHandlers} from '#/components/images/Gallery/useKeyboardHandlers'
 
 const CONTAINER_ASPECT_RATIO = 3 / 2
 const ITEM_GAP = 8 // tokens.space.sm
@@ -127,6 +128,30 @@ export function Gallery({
   const width = bleedWidth || Math.min(600, window.width)
   /* End container overflow styles */
 
+  const flatListRef = useRef<FlatList>(null)
+  const itemWidthsRef = useRef<Map<number, number>>(new Map())
+  const itemRefsRef = useRef<Map<number, View>>(new Map())
+  const currentIndexRef = useRef(0)
+
+  const scrollToIndex = (index: number, animated = true) => {
+    let offset = 0
+    for (let i = 0; i < index; i++) {
+      offset += (itemWidthsRef.current.get(i) ?? 0) + ITEM_GAP
+    }
+    flatListRef.current?.scrollToOffset({offset, animated})
+  }
+
+  useKeyboardHandlers({
+    flatListRef,
+    currentIndexRef,
+    scrollToIndex(index: number) {
+      scrollToIndex(index)
+      const el = itemRefsRef.current.get(index) as unknown as HTMLElement | null
+      el?.focus({preventScroll: true})
+    },
+    imageCount: images.length,
+  })
+
   return (
     <View
       ref={contentRef}
@@ -140,6 +165,7 @@ export function Gallery({
       onLayout={measure}>
       <BlockDrawerGesture>
         <FlatList
+          ref={flatListRef}
           horizontal
           pagingEnabled={false}
           showsHorizontalScrollIndicator={false}
@@ -150,8 +176,39 @@ export function Gallery({
           scrollEventThrottle={16}
           data={images}
           keyExtractor={item => item.thumb}
-          renderItem={({item}) => {
-            return <GalleryImage image={item} contentHeight={contentHeight} />
+          renderItem={({item, index}) => {
+            return (
+              <GalleryImage
+                image={item}
+                contentHeight={contentHeight}
+                index={index}
+                onWidthChange={(i, w) => {
+                  itemWidthsRef.current.set(i, w)
+                }}
+                itemRef={node => {
+                  if (node) {
+                    itemRefsRef.current.set(index, node)
+                  } else {
+                    itemRefsRef.current.delete(index)
+                  }
+                }}
+              />
+            )
+          }}
+          onScroll={e => {
+            const offsetX = e.nativeEvent.contentOffset.x
+            let accumulated = 0
+            for (let i = 0; i < images.length; i++) {
+              const w = (itemWidthsRef.current.get(i) ?? 0) + ITEM_GAP
+              if (offsetX < accumulated + w / 2) {
+                currentIndexRef.current = i
+                break
+              }
+              accumulated += w
+              if (i === images.length - 1) {
+                currentIndexRef.current = i
+              }
+            }
           }}
           style={[
             {
@@ -200,9 +257,15 @@ function computeDims({
 function GalleryImage({
   contentHeight: height,
   image,
+  index,
+  onWidthChange,
+  itemRef,
 }: {
   contentHeight: number
   image: AppBskyEmbedImages.ViewImage
+  index: number
+  onWidthChange: (index: number, width: number) => void
+  itemRef: (node: View | null) => void
 }) {
   const t = useTheme()
   const [aspectRatio, setAspectRatio] = useState(() =>
@@ -210,8 +273,11 @@ function GalleryImage({
   )
   const dims = computeDims({height, aspectRatio})
 
+  onWidthChange(index, dims.width)
+
   return (
     <Pressable
+      ref={itemRef}
       style={[a.rounded_md, a.overflow_hidden, t.atoms.bg_contrast_25]}>
       <Image
         source={{uri: image.thumb}}
