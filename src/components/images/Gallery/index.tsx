@@ -94,7 +94,6 @@ export function Gallery({
   onPressIn,
   viewContext,
 }: GalleryProps) {
-  // images = images.concat(images)
   const ax = useAnalytics()
   const {screenReaderEnabled} = useA11y()
   const largeAltBadge = useLargeAltBadgeEnabled()
