@@ -338,10 +338,7 @@ let MessageItem = ({
           <View
             style={[
               a.flex_grow,
-              !isFromSelf &&
-                isGroupChat && {
-                  paddingLeft: AVATAR_SIZE,
-                },
+              !isFromSelf && isGroupChat && {paddingLeft: AVATAR_SIZE},
             ]}>
             {isGroupChat &&
             !isFromSelf &&
