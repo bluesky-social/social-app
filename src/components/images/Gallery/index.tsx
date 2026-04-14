@@ -109,23 +109,21 @@ export function Gallery({
    */
   const {bleedRef, bleedWidth} = useGalleryBleed()
   const contentRef = useRef<View>(null)
-  const [insets, setInsets] = useState<{left: number; right: number}>()
+  const [contentDims, setContentDims] = useState<{x: number; width: number}>()
   const measure = () => {
-    if (contentRef.current && bleedRef.current && bleedWidth > 0) {
+    if (contentRef.current && bleedRef.current) {
       contentRef.current.measureLayout(
         bleedRef.current,
         (x, _y, w) => {
-          setInsets({
-            left: x,
-            right: Math.max(0, bleedWidth - x - w),
-          })
+          setContentDims({x, width: w})
         },
         () => {},
       )
     }
   }
-  const insetLeft = insets?.left ?? 0
-  const insetRight = insets?.right ?? 0
+  const insetLeft = contentDims?.x ?? 0
+  const insetRight =
+    bleedWidth - (contentDims?.x || 0) - (contentDims?.width || 0) || 0
   const width = bleedWidth || Math.min(600, window.width)
   /* End container overflow styles */
 
@@ -151,15 +149,17 @@ export function Gallery({
           alwaysBounceVertical={false}
           scrollEventThrottle={16}
           data={images}
-          keyExtractor={(item) => item.thumb}
+          keyExtractor={item => item.thumb}
           renderItem={({item}) => {
             return <GalleryImage image={item} contentHeight={contentHeight} />
           }}
-          style={[{
-            height: contentHeight,
-            marginLeft: -insetLeft,
-            width,
-          }]}
+          style={[
+            {
+              height: contentHeight,
+              marginLeft: -insetLeft,
+              width,
+            },
+          ]}
           contentContainerStyle={{
             gap: ITEM_GAP,
             paddingLeft: insetLeft,
@@ -211,7 +211,8 @@ function GalleryImage({
   const dims = computeDims({height, aspectRatio})
 
   return (
-    <Pressable style={[a.rounded_md, a.overflow_hidden, t.atoms.bg_contrast_25]}>
+    <Pressable
+      style={[a.rounded_md, a.overflow_hidden, t.atoms.bg_contrast_25]}>
       <Image
         source={{uri: image.thumb}}
         contentFit="cover"
