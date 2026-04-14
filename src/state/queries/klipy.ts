@@ -81,10 +81,10 @@ function createKlipyApi<Input extends object>(
     if (!res.ok) {
       throw new Error('Failed to fetch KLIPY API')
     }
-    const body: KlipyResponse = await res.json()
+    const body: {next: string; results: Gif[]} = await res.json()
     return {
       next: body.next,
-      results: body.data.map(normalizeKlipyGif),
+      results: body.results,
     }
   }
 }
@@ -102,72 +102,4 @@ export function klipyStaticUrl(gifUrl: string) {
     logger.debug('invalid url passed to klipyStaticUrl()')
     return ''
   }
-}
-
-/**
- * Maps a native KLIPY gif object onto the Tenor-shaped `Gif` type so
- * downstream consumers (resolveGif, composer drafts, ExternalEmbed, etc.)
- * continue to work unchanged.
- */
-function normalizeKlipyGif(k: KlipyGif): Gif {
-  const toMediaObject = (v: KlipyFileVariant) => ({
-    url: v.url,
-    dims: [v.width, v.height] as [number, number],
-    duration: 0,
-    size: 0,
-  })
-
-  return {
-    id: k.slug,
-    title: k.title ?? '',
-    content_description: k.content_description ?? k.title ?? '',
-    tags: k.tags ?? [],
-    media_formats: {
-      gif: toMediaObject(k.file.hd.gif),
-      tinygif: toMediaObject(k.file.sm.gif),
-      preview: toMediaObject(k.file.sm.gif),
-    },
-    // Tenor-only fields; stub sensibly for KLIPY.
-    created: 0,
-    hasaudio: false,
-    hascaption: false,
-    flags: '',
-    itemurl: k.url ?? '',
-    url: k.url ?? '',
-  }
-}
-
-type KlipyFileVariant = {
-  url: string
-  width: number
-  height: number
-}
-
-type KlipyFileFormats = {
-  gif: KlipyFileVariant
-  webp?: KlipyFileVariant
-  mp4?: KlipyFileVariant
-}
-
-type KlipyFile = {
-  /** Small/thumbnail size, used in the picker grid */
-  sm: KlipyFileFormats
-  /** Medium size */
-  md: KlipyFileFormats
-  /** Full/large size, used when posting */
-  hd: KlipyFileFormats
-}
-
-type KlipyGif = {
-  slug: string
-  title?: string
-  content_description?: string
-  tags?: string[]
-  url?: string
-  file: KlipyFile
-}
-
-type KlipyResponse = {
-  next: string
-  data: KlipyGif[]
 }
