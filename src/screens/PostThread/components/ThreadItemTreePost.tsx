@@ -30,6 +30,7 @@ import {
 } from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
+import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
@@ -44,6 +45,13 @@ import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
+import {
+  QuickReactBarTrigger,
+  useQuickReactA11yAction,
+  useQuickReactController,
+  useViewerReaction,
+} from '#/features/quickReact'
+import {QuickReactPicker} from '#/features/quickReact/components/QuickReactPicker'
 
 /**
  * Mimic the space in PostMeta
@@ -311,6 +319,14 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
     setLimitLines(false)
   }, [setLimitLines])
 
+  // Quick-react integration
+  const quickReactPickerControl = Dialog.useDialogControl()
+  const quickReactController = useQuickReactController()
+  const {emoji: currentReactionEmoji} = useViewerReaction({postUri: post.uri})
+  const quickReactA11y = useQuickReactA11yAction({
+    onReact: () => quickReactPickerControl.open(),
+  })
+
   return (
     <ThreadItemTreePostOuterWrapper item={item}>
       <SubtleHoverWrapper>
@@ -322,7 +338,9 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
           iconSize={42}
           iconStyles={{marginLeft: 2, marginRight: 2}}
           profile={post.author}
-          interpretFilterAsBlur>
+          interpretFilterAsBlur
+          accessibilityActions={quickReactA11y.accessibilityActions}
+          onAccessibilityAction={quickReactA11y.onAccessibilityAction}>
           <ThreadItemTreePostInnerWrapper item={item}>
             <View style={[a.flex_1]}>
               <PostMeta
@@ -338,39 +356,46 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                 <ThreadItemTreeReplyChildReplyLine item={item} />
                 <View style={[a.flex_1, a.pl_2xs]}>
                   <LabelsOnMyPost post={post} style={[a.pb_2xs]} />
-                  <PostAlerts
-                    modui={moderation.ui('contentList')}
-                    style={[a.pb_2xs]}
-                    additionalCauses={additionalPostAlerts}
-                  />
-                  {richText?.text ? (
-                    <View style={[a.mb_2xs]}>
-                      <RichText
-                        enableTags
-                        value={richText}
-                        style={[a.flex_1, a.text_md]}
-                        numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-                        authorHandle={post.author.handle}
-                        shouldProxyLinks={true}
-                      />
-                      {limitLines && (
-                        <ShowMoreTextButton
-                          style={[a.text_md]}
-                          onPress={onPressShowMore}
+                  <QuickReactBarTrigger
+                    postUri={post.uri}
+                    surface="thread"
+                    logContext="PostThreadItem">
+                    <PostAlerts
+                      modui={moderation.ui('contentList')}
+                      style={[a.pb_2xs]}
+                      additionalCauses={additionalPostAlerts}
+                    />
+                    {richText?.text ? (
+                      <View style={[a.mb_2xs]}>
+                        <RichText
+                          enableTags
+                          value={richText}
+                          style={[a.flex_1, a.text_md]}
+                          numberOfLines={
+                            limitLines ? MAX_POST_LINES : undefined
+                          }
+                          authorHandle={post.author.handle}
+                          shouldProxyLinks={true}
                         />
-                      )}
-                    </View>
-                  ) : null}
-                  <TranslatedPost hideTranslateLink post={post} />
-                  {post.embed && (
-                    <View style={[a.pb_xs]}>
-                      <Embed
-                        embed={post.embed}
-                        moderation={moderation}
-                        viewContext={PostEmbedViewContext.Feed}
-                      />
-                    </View>
-                  )}
+                        {limitLines && (
+                          <ShowMoreTextButton
+                            style={[a.text_md]}
+                            onPress={onPressShowMore}
+                          />
+                        )}
+                      </View>
+                    ) : null}
+                    <TranslatedPost hideTranslateLink post={post} />
+                    {post.embed && (
+                      <View style={[a.pb_xs]}>
+                        <Embed
+                          embed={post.embed}
+                          moderation={moderation}
+                          viewContext={PostEmbedViewContext.Feed}
+                        />
+                      </View>
+                    )}
+                  </QuickReactBarTrigger>
                   <PostControls
                     variant="compact"
                     post={postShadow}
@@ -379,6 +404,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                     onPressReply={onPressReply}
                     logContext="PostThreadItem"
                     threadgateRecord={threadgateRecord}
+                    quickReactSurface="thread"
                   />
                   <DebugFieldDisplay subject={post} />
                 </View>
@@ -387,6 +413,12 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
           </ThreadItemTreePostInnerWrapper>
         </PostHider>
       </SubtleHoverWrapper>
+      <QuickReactPicker
+        control={quickReactPickerControl}
+        currentEmoji={currentReactionEmoji}
+        onSelect={e => quickReactController.schedule(post.uri, e)}
+        onRemove={() => quickReactController.schedule(post.uri, null)}
+      />
     </ThreadItemTreePostOuterWrapper>
   )
 })

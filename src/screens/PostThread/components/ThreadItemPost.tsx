@@ -30,6 +30,7 @@ import {
 } from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
+import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
@@ -45,6 +46,13 @@ import * as Skele from '#/components/Skeleton'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import {useActorStatus} from '#/features/liveNow'
+import {
+  QuickReactBarTrigger,
+  useQuickReactA11yAction,
+  useQuickReactController,
+  useViewerReaction,
+} from '#/features/quickReact'
+import {QuickReactPicker} from '#/features/quickReact/components/QuickReactPicker'
 
 export type ThreadItemPostProps = {
   item: Extract<ThreadItem, {type: 'threadPost'}>
@@ -248,6 +256,14 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 
   const {isActive: live} = useActorStatus(post.author)
 
+  // Quick-react integration
+  const quickReactPickerControl = Dialog.useDialogControl()
+  const quickReactController = useQuickReactController()
+  const {emoji: currentReactionEmoji} = useViewerReaction({postUri: post.uri})
+  const quickReactA11y = useQuickReactA11yAction({
+    onReact: () => quickReactPickerControl.open(),
+  })
+
   return (
     <SubtleHoverWrapper>
       <ThreadItemPostOuterWrapper item={item} overrides={overrides}>
@@ -260,7 +276,9 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
           iconSize={LINEAR_AVI_WIDTH}
           iconStyles={[a.mr_xs]}
           profile={post.author}
-          interpretFilterAsBlur>
+          interpretFilterAsBlur
+          accessibilityActions={quickReactA11y.accessibilityActions}
+          onAccessibilityAction={quickReactA11y.onAccessibilityAction}>
           <ThreadItemPostParentReplyLine item={item} />
 
           <View style={[a.flex_row, a.gap_md]}>
@@ -298,39 +316,44 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                 style={[a.pb_xs]}
               />
               <LabelsOnMyPost post={post} style={[a.pb_xs]} />
-              <PostAlerts
-                modui={moderation.ui('contentList')}
-                style={[a.pb_2xs]}
-                additionalCauses={additionalPostAlerts}
-              />
-              {richText?.text ? (
-                <View style={[a.mb_2xs]}>
-                  <RichText
-                    enableTags
-                    value={richText}
-                    style={[a.flex_1, a.text_md]}
-                    numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-                    authorHandle={post.author.handle}
-                    shouldProxyLinks={true}
-                  />
-                  {limitLines && (
-                    <ShowMoreTextButton
-                      style={[a.text_md]}
-                      onPress={onPressShowMore}
+              <QuickReactBarTrigger
+                postUri={post.uri}
+                surface="thread"
+                logContext="PostThreadItem">
+                <PostAlerts
+                  modui={moderation.ui('contentList')}
+                  style={[a.pb_2xs]}
+                  additionalCauses={additionalPostAlerts}
+                />
+                {richText?.text ? (
+                  <View style={[a.mb_2xs]}>
+                    <RichText
+                      enableTags
+                      value={richText}
+                      style={[a.flex_1, a.text_md]}
+                      numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+                      authorHandle={post.author.handle}
+                      shouldProxyLinks={true}
                     />
-                  )}
-                </View>
-              ) : undefined}
-              <TranslatedPost hideTranslateLink post={post} />
-              {post.embed && (
-                <View style={[a.pb_xs]}>
-                  <Embed
-                    embed={post.embed}
-                    moderation={moderation}
-                    viewContext={PostEmbedViewContext.Feed}
-                  />
-                </View>
-              )}
+                    {limitLines && (
+                      <ShowMoreTextButton
+                        style={[a.text_md]}
+                        onPress={onPressShowMore}
+                      />
+                    )}
+                  </View>
+                ) : undefined}
+                <TranslatedPost hideTranslateLink post={post} />
+                {post.embed && (
+                  <View style={[a.pb_xs]}>
+                    <Embed
+                      embed={post.embed}
+                      moderation={moderation}
+                      viewContext={PostEmbedViewContext.Feed}
+                    />
+                  </View>
+                )}
+              </QuickReactBarTrigger>
               <PostControls
                 post={postShadow}
                 record={record}
@@ -338,12 +361,19 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                 onPressReply={onPressReply}
                 logContext="PostThreadItem"
                 threadgateRecord={threadgateRecord}
+                quickReactSurface="thread"
               />
               <DebugFieldDisplay subject={post} />
             </View>
           </View>
         </PostHider>
       </ThreadItemPostOuterWrapper>
+      <QuickReactPicker
+        control={quickReactPickerControl}
+        currentEmoji={currentReactionEmoji}
+        onSelect={e => quickReactController.schedule(post.uri, e)}
+        onRemove={() => quickReactController.schedule(post.uri, null)}
+      />
     </SubtleHoverWrapper>
   )
 })

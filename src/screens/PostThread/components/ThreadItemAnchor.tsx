@@ -37,6 +37,7 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
+import * as Dialog from '#/components/Dialog'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
@@ -57,6 +58,13 @@ import {Text} from '#/components/Typography'
 import {WhoCanReply} from '#/components/WhoCanReply'
 import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
+import {
+  QuickReactBarTrigger,
+  useQuickReactA11yAction,
+  useQuickReactController,
+  useViewerReaction,
+} from '#/features/quickReact'
+import {QuickReactPicker} from '#/features/quickReact/components/QuickReactPicker'
 import * as bsky from '#/types/bsky'
 
 export function ThreadItemAnchor({
@@ -305,11 +313,21 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     }
   }
 
+  // Quick-react integration
+  const quickReactPickerControl = Dialog.useDialogControl()
+  const quickReactController = useQuickReactController()
+  const {emoji: currentReactionEmoji} = useViewerReaction({postUri: post.uri})
+  const quickReactA11y = useQuickReactA11yAction({
+    onReact: () => quickReactPickerControl.open(),
+  })
+
   return (
     <>
       <ThreadItemAnchorParentReplyLine isRoot={isRoot} />
       <View
         testID={`postThreadItem-by-${post.author.handle}`}
+        accessibilityActions={quickReactA11y.accessibilityActions}
+        onAccessibilityAction={quickReactA11y.onAccessibilityAction}
         style={[
           {
             paddingHorizontal: OUTER_SPACE,
@@ -383,39 +401,44 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
         </View>
         <View style={[a.pb_sm]}>
           <LabelsOnMyPost post={post} style={[a.pb_sm]} />
-          <ContentHider
-            modui={moderation.ui('contentView')}
-            ignoreMute
-            childContainerStyle={[a.pt_sm]}>
-            <PostAlerts
+          <QuickReactBarTrigger
+            postUri={post.uri}
+            surface="thread"
+            logContext="PostThreadItem">
+            <ContentHider
               modui={moderation.ui('contentView')}
-              size="lg"
-              includeMute
-              style={[a.pb_sm]}
-              additionalCauses={additionalPostAlerts}
-            />
-            {richText?.text ? (
-              <RichText
-                enableTags
-                selectable
-                value={richText}
-                style={[a.flex_1, a.text_lg]}
-                authorHandle={post.author.handle}
-                shouldProxyLinks={true}
+              ignoreMute
+              childContainerStyle={[a.pt_sm]}>
+              <PostAlerts
+                modui={moderation.ui('contentView')}
+                size="lg"
+                includeMute
+                style={[a.pb_sm]}
+                additionalCauses={additionalPostAlerts}
               />
-            ) : undefined}
-            <TranslatedPost post={post} postTextStyle={[a.text_lg]} />
-            {post.embed && (
-              <View style={[a.py_xs]}>
-                <Embed
-                  embed={post.embed}
-                  moderation={moderation}
-                  viewContext={PostEmbedViewContext.ThreadHighlighted}
-                  onOpen={onOpenEmbed}
+              {richText?.text ? (
+                <RichText
+                  enableTags
+                  selectable
+                  value={richText}
+                  style={[a.flex_1, a.text_lg]}
+                  authorHandle={post.author.handle}
+                  shouldProxyLinks={true}
                 />
-              </View>
-            )}
-          </ContentHider>
+              ) : undefined}
+              <TranslatedPost post={post} postTextStyle={[a.text_lg]} />
+              {post.embed && (
+                <View style={[a.py_xs]}>
+                  <Embed
+                    embed={post.embed}
+                    moderation={moderation}
+                    viewContext={PostEmbedViewContext.ThreadHighlighted}
+                    onOpen={onOpenEmbed}
+                  />
+                </View>
+              )}
+            </ContentHider>
+          </QuickReactBarTrigger>
           <ExpandedPostDetails
             post={item.value.post}
             isThreadAuthor={isThreadAuthor}
@@ -530,12 +553,19 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 feedContext={postSource?.post?.feedContext}
                 reqId={postSource?.post?.reqId}
                 viaRepost={viaRepost}
+                quickReactSurface="thread"
               />
             </FeedFeedbackProvider>
           </View>
           <DebugFieldDisplay subject={post} />
         </View>
       </View>
+      <QuickReactPicker
+        control={quickReactPickerControl}
+        currentEmoji={currentReactionEmoji}
+        onSelect={e => quickReactController.schedule(post.uri, e)}
+        onRemove={() => quickReactController.schedule(post.uri, null)}
+      />
     </>
   )
 })
