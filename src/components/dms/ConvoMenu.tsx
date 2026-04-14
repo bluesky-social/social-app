@@ -35,13 +35,11 @@ import {
   PersonCheck_Stroke2_Corner0_Rounded as PersonCheck,
   PersonX_Stroke2_Corner0_Rounded as PersonX,
 } from '#/components/icons/Person'
-import {SettingsGear2_Stroke2_Corner0_Rounded as GearIcon} from '#/components/icons/SettingsGear2'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import * as Menu from '#/components/Menu'
 import {ReportDialog} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
-import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 let ConvoMenu = ({
@@ -183,7 +181,6 @@ function MenuContent({
   reportControl: Prompt.PromptControlProps
   blockedByListControl: Prompt.PromptControlProps
 }) {
-  const ax = useAnalytics()
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const {mutate: markAsRead} = useMarkAsReadMutation()
@@ -194,12 +191,6 @@ function MenuContent({
 
   const convoId = initialConvo.id
   const {data: convo} = useConvoQuery(initialConvo)
-
-  const onNavigateToSettings = useCallback(() => {
-    navigation.navigate('MessagesConversationSettings', {
-      conversation: convoId,
-    })
-  }, [convoId, navigation])
 
   const onNavigateToProfile = useCallback(() => {
     navigation.navigate('Profile', {name: profile.did})
@@ -229,13 +220,11 @@ function MenuContent({
     }
 
     if (userBlock) {
-      queueUnblock()
+      void queueUnblock()
     } else {
-      queueBlock()
+      void queueBlock()
     }
   }, [userBlock, listBlocks, blockedByListControl, queueBlock, queueUnblock])
-
-  const isGroupChatEnabled = ax.features.enabled(ax.features.GroupChatsEnable)
 
   return isDeletedAccount ? (
     <Menu.Item
@@ -248,16 +237,6 @@ function MenuContent({
     </Menu.Item>
   ) : (
     <>
-      {isGroupChatEnabled ? (
-        <Menu.Group>
-          <Menu.Item label={_(msg`Settings`)} onPress={onNavigateToSettings}>
-            <Menu.ItemText>
-              <Trans>Settings</Trans>
-            </Menu.ItemText>
-            <Menu.ItemIcon icon={GearIcon} />
-          </Menu.Item>
-        </Menu.Group>
-      ) : null}
       <Menu.Group>
         {showMarkAsRead && (
           <Menu.Item

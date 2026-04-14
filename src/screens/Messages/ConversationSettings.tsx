@@ -1,6 +1,6 @@
 import {useMemo, useState} from 'react'
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
-import {moderateProfile} from '@atproto/api'
+import {type ChatBskyConvoDefs, moderateProfile} from '@atproto/api'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -8,18 +8,30 @@ import {useNavigation} from '@react-navigation/native'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
-import {type NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {logger} from '#/logger'
+import {type Shadow} from '#/state/cache/types'
+import {ConvoProvider, useConvo} from '#/state/messages/convo'
+import {ConvoStatus} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetConvoAvailabilityQuery} from '#/state/queries/messages/get-convo-availability'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
+import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
+import {useProfileBlockMutationQueue} from '#/state/queries/profile'
+import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button, type ButtonColor, ButtonIcon} from '#/components/Button'
 import type * as Dialog from '#/components/Dialog'
+import {Error} from '#/components/Error'
 import * as TextField from '#/components/forms/TextField'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon} from '#/components/icons/ArrowBoxLeft'
@@ -32,6 +44,7 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon} from '#/components/
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {EditBig_Stroke2_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
+import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
 import {Lock_Stroke2_Corner0_Rounded as LockIcon} from '#/components/icons/Lock'
 import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons/Message'
 import {
@@ -63,15 +76,22 @@ type Item =
     }
   | {
       type: 'CHAT_MEMBER'
-      profile: bsky.profile.AnyProfileView
-      status: 'admin' | 'member' | 'invited'
+      profile: Shadow<bsky.profile.AnyProfileView>
+      status: 'owner' | 'member' | 'invited'
     }
+
+type Props = NativeStackScreenProps<
+  CommonNavigatorParams,
+  'MessagesConversationSettings'
+>
 
 /**
  * TODO This is just layout for now.
  */
-export function MessagesConversationSettingsScreen() {
+export function MessagesConversationSettingsScreen({route}: Props) {
   const {gtTablet} = useBreakpoints()
+
+  const convoId = route.params.conversation
 
   return (
     <Layout.Screen>
@@ -84,7 +104,9 @@ export function MessagesConversationSettingsScreen() {
         </Layout.Header.Content>
         <Layout.Header.Slot />
       </Layout.Header.Outer>
-      <SettingsInner />
+      <ConvoProvider key={convoId} convoId={convoId}>
+        <SettingsInner />
+      </ConvoProvider>
     </Layout.Screen>
   )
 }
@@ -94,10 +116,16 @@ function keyExtractor(item: Item) {
 }
 
 function SettingsInner() {
+  const {t: l} = useLingui()
+
   const initialNumToRender = useInitialNumToRender({minItemHeight: 68})
   const bottomBarOffset = useBottomBarOffset()
 
-  const data: bsky.profile.AnyProfileView[] = []
+  const convoState = useConvo()
+  const {currentAccount} = useSession()
+  const primaryMember = convoState?.getPrimaryMember?.()
+
+  const data: bsky.profile.AnyProfileView[] = convoState.convo?.members ?? []
   const invites: string[] = []
 
   const items = [
@@ -107,16 +135,26 @@ function SettingsInner() {
     {
       type: 'ADD_MEMBERS_LINK',
     },
-    ...data.map((profile, index) => ({
-      type: 'CHAT_MEMBER',
-      profile,
-      status:
-        index === 0
-          ? 'admin'
-          : invites.includes(profile.did)
-            ? 'invited'
-            : 'member',
-    })),
+    ...[...data]
+      .sort((a, b) => {
+        const aIsAdmin = a.did === primaryMember?.did
+        const bIsAdmin = b.did === primaryMember?.did
+        const aIsSelf = a.did === currentAccount?.did
+        const bIsSelf = b.did === currentAccount?.did
+        if (aIsAdmin !== bIsAdmin) return aIsAdmin ? -1 : 1
+        if (aIsSelf !== bIsSelf) return aIsSelf ? -1 : 1
+        return 0
+      })
+      .map(profile => ({
+        type: 'CHAT_MEMBER',
+        profile,
+        status:
+          primaryMember?.did === profile.did
+            ? 'owner'
+            : invites.includes(profile.did)
+              ? 'invited'
+              : 'member',
+      })),
   ]
 
   function renderItem({item}: {item: Item}) {
@@ -132,6 +170,19 @@ function SettingsInner() {
     }
   }
 
+  if (convoState.status === ConvoStatus.Error) {
+    return (
+      <>
+        <Error
+          title={l`Something went wrong`}
+          message={l`We couldn’t load this conversation’s settings`}
+          onRetry={() => convoState.error.retry()}
+          sideBorders={false}
+        />
+      </>
+    )
+  }
+
   return (
     <List
       data={items}
@@ -141,7 +192,13 @@ function SettingsInner() {
       desktopFixedHeight
       initialNumToRender={initialNumToRender}
       keyExtractor={keyExtractor}
-      ListHeaderComponent={<SettingsHeader profiles={data} />}
+      ListHeaderComponent={
+        convoState.convo ? (
+          <SettingsHeader convo={convoState.convo} profiles={data} />
+        ) : (
+          <SettingsHeaderPlaceholder />
+        )
+      }
       renderItem={renderItem}
       sideBorders={false}
       windowSize={11}
@@ -173,15 +230,17 @@ function MembersAndRequests({
             {color: t.palette.contrast_500},
           ]}>{l`${memberCount}/${MEMBER_LIMIT}`}</Text>
       </View>
-      <InlineLinkText
-        label={l`View incoming group chat requests`}
-        style={[a.text_sm, a.text_right, a.font_semi_bold]}
-        to="#">
-        {l`${plural(requestCount, {
-          one: '# request',
-          other: '# requests',
-        })}`}
-      </InlineLinkText>
+      {requestCount > 0 ? (
+        <InlineLinkText
+          label={l`View incoming group chat requests`}
+          style={[a.text_sm, a.text_right, a.font_semi_bold]}
+          to="#">
+          {l`${plural(requestCount, {
+            one: '# request',
+            other: '# requests',
+          })}`}
+        </InlineLinkText>
+      ) : null}
     </View>
   )
 }
@@ -252,13 +311,14 @@ function Member({
   profile,
   status,
 }: {
-  profile: bsky.profile.AnyProfileView
-  status: 'admin' | 'member' | 'invited'
+  profile: Shadow<bsky.profile.AnyProfileView>
+  status: 'owner' | 'member' | 'invited'
 }) {
   const navigation = useNavigation<NavigationProp>()
   const t = useTheme()
   const {t: l} = useLingui()
 
+  const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
   const moderation = useMemo(
     () =>
@@ -268,8 +328,6 @@ function Member({
 
   if (!moderation) return null
 
-  const invitedByDisplayName = 'Darrin Loeliger'
-
   const isDeletedAccount = profile.handle === 'missing.invalid'
   const displayName = isDeletedAccount
     ? l`Deleted Account`
@@ -278,27 +336,15 @@ function Member({
         moderation.ui('displayName'),
       )
 
-  let invitedBy: React.ReactNode | null = (
-    <Text style={[a.text_xs, {color: t.palette.contrast_500}]}>
-      {l`Added by ${invitedByDisplayName}`}
-    </Text>
-  )
-  let statusBadge: React.ReactNode | null = (
-    <MemberMenu profile={profile} type="member" />
-  )
-  switch (status) {
-    case 'admin':
-      invitedBy = null
-      statusBadge = <StatusBadge label={l`Admin`} />
-      break
-    case 'invited':
-      invitedBy = (
-        <Text style={[a.text_xs, {color: t.palette.contrast_500}]}>
-          {l`Invited by ${invitedByDisplayName}`}
-        </Text>
-      )
-      statusBadge = <MemberMenu profile={profile} type="invited" />
-      break
+  let statusBadge: React.ReactNode | null = null
+  if (currentAccount?.did === profile.did) {
+    switch (status) {
+      case 'owner':
+        statusBadge = <StatusBadge label={l`Admin`} />
+        break
+    }
+  } else {
+    statusBadge = <MemberMenu profile={profile} type={status} />
   }
 
   return (
@@ -334,16 +380,6 @@ function Member({
                 ]}>
                 {sanitizeHandle(profile.handle, '@')}
               </Text>
-              {invitedBy ? (
-                <Text
-                  style={[
-                    a.text_xs,
-                    {color: t.palette.contrast_500},
-                    web(a.pt_2xs),
-                  ]}>
-                  {invitedBy}
-                </Text>
-              ) : null}
             </View>
           </View>
           <View>{statusBadge}</View>
@@ -353,7 +389,13 @@ function Member({
   )
 }
 
-function StatusBadge({label}: {label: string}) {
+function StatusBadge({
+  label,
+  style,
+}: {
+  label: string
+  style?: StyleProp<ViewStyle>
+}) {
   const t = useTheme()
 
   return (
@@ -367,6 +409,7 @@ function StatusBadge({label}: {label: string}) {
           paddingLeft: 6,
           paddingRight: 6,
         },
+        style,
       ]}>
       <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
         {label}
@@ -410,14 +453,24 @@ function MemberMenu({
   profile,
   type,
 }: {
-  profile: bsky.profile.AnyProfileView
-  type: 'member' | 'invited'
+  profile: Shadow<bsky.profile.AnyProfileView>
+  type: 'owner' | 'member' | 'invited'
 }) {
   const navigation = useNavigation<NavigationProp>()
   const t = useTheme()
   const {t: l} = useLingui()
   const ax = useAnalytics()
+
   const requireEmailVerification = useRequireEmailVerification()
+  const convoState = useConvo()
+  const {currentAccount} = useSession()
+
+  const blockMemberPrompt = Prompt.usePromptControl()
+
+  const isOwner =
+    currentAccount?.did == null
+      ? false
+      : convoState.getPrimaryMember?.()?.did === currentAccount.did
 
   const {data: convoAvailability} = useGetConvoAvailabilityQuery(profile.did)
   const {mutate: initiateConvo} = useGetConvoForMembers({
@@ -429,8 +482,9 @@ function MemberMenu({
       Toast.show(l`Failed to create conversation`)
     },
   })
+  const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
 
-  const onPress = () => {
+  const messageMember = () => {
     if (!convoAvailability?.canChat) {
       return
     }
@@ -446,13 +500,43 @@ function MemberMenu({
     }
   }
 
-  const wrappedOnPress = requireEmailVerification(onPress, {
+  const handleMessageMember = requireEmailVerification(messageMember, {
     instructions: [
       <Trans key="message">
         Before you can message another user, you must first verify your email.
       </Trans>,
     ],
   })
+
+  const handleBlockMember = async () => {
+    if (profile.viewer?.blocking) {
+      try {
+        await queueUnblock()
+        Toast.show(l({message: 'Account unblocked', context: 'toast'}))
+      } catch (err) {
+        const e = err as Error
+        if (e?.name !== 'AbortError') {
+          ax.logger.error('Failed to unblock account', {message: e})
+          Toast.show(l`There was an issue! ${e.toString()}`, {
+            type: 'error',
+          })
+        }
+      }
+    } else {
+      try {
+        await queueBlock()
+        Toast.show(l({message: 'Account blocked', context: 'toast'}))
+      } catch (err) {
+        const e = err as Error
+        if (e?.name !== 'AbortError') {
+          ax.logger.error('Failed to block account', {message: e})
+          Toast.show(l`There was an issue! ${e.toString()}`, {
+            type: 'error',
+          })
+        }
+      }
+    }
+  }
 
   const moderationOpts = useModerationOpts()
   const moderation = useMemo(
@@ -472,67 +556,80 @@ function MemberMenu({
       )
 
   return (
-    <Menu.Root>
-      <Menu.Trigger label={l`Open chat member options for ${displayName}`}>
-        {({props, state}) =>
-          type === 'invited' ? (
-            <StatusButton
-              {...props}
-              label={l`Invited`}
-              style={[
-                state.hovered
-                  ? {
-                      backgroundColor: t.palette.contrast_0,
-                    }
-                  : null,
-              ]}
-            />
-          ) : (
-            <Pressable
-              {...props}
-              style={[
-                a.rounded_full,
-                a.p_sm,
-                state.hovered
-                  ? {
-                      backgroundColor: t.palette.contrast_0,
-                    }
-                  : null,
-              ]}>
-              <EllipsisIcon style={[t.atoms.text_contrast_medium]} size="md" />
-            </Pressable>
-          )
-        }
-      </Menu.Trigger>
-      <Menu.Outer>
-        <Menu.Group>
-          <Menu.Item
-            label={l`View ${displayName}’s profile`}
-            onPress={() => {
-              navigation.navigate('Profile', {name: profile.did})
-            }}>
-            <Menu.ItemText>
-              <Trans>Go to profile</Trans>
-            </Menu.ItemText>
-            <Menu.ItemIcon icon={PersonIcon} />
-          </Menu.Item>
-          <Menu.Item label={l`Message ${displayName}`} onPress={wrappedOnPress}>
-            <Menu.ItemText>
-              <Trans>Message</Trans>
-            </Menu.ItemText>
-            <Menu.ItemIcon icon={MessageIcon} />
-          </Menu.Item>
-        </Menu.Group>
-        <Menu.Divider />
-        <Menu.Group>
-          {type === 'member' ? (
-            <>
-              <Menu.Item label={l`Block ${displayName}`} onPress={() => {}}>
+    <>
+      <Menu.Root>
+        <Menu.Trigger label={l`Open chat member options for ${displayName}`}>
+          {({props, state, control: menuControl}) =>
+            type === 'owner' || type === 'invited' ? (
+              <StatusButton
+                {...props}
+                label={type === 'owner' ? l`Admin` : l`Invited`}
+                style={[
+                  state.hovered || state.pressed || menuControl.isOpen
+                    ? {
+                        backgroundColor: t.palette.contrast_0,
+                      }
+                    : null,
+                ]}
+              />
+            ) : (
+              <Pressable
+                {...props}
+                style={[
+                  a.rounded_full,
+                  a.p_sm,
+                  state.hovered || state.pressed || menuControl.isOpen
+                    ? {
+                        backgroundColor: t.palette.contrast_0,
+                      }
+                    : null,
+                ]}>
+                <EllipsisIcon
+                  style={[t.atoms.text_contrast_medium]}
+                  size="md"
+                />
+              </Pressable>
+            )
+          }
+        </Menu.Trigger>
+        <Menu.Outer>
+          <Menu.Group>
+            <Menu.Item
+              label={l`View ${displayName}’s profile`}
+              onPress={() => {
+                navigation.navigate('Profile', {name: profile.did})
+              }}>
+              <Menu.ItemText>
+                <Trans>Go to profile</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={PersonIcon} />
+            </Menu.Item>
+            <Menu.Item
+              label={l`Message ${displayName}`}
+              onPress={handleMessageMember}>
+              <Menu.ItemText>
+                <Trans>Message</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={MessageIcon} />
+            </Menu.Item>
+          </Menu.Group>
+          <Menu.Divider />
+          <Menu.Group>
+            {type === 'owner' || type === 'member' ? (
+              <Menu.Item
+                label={
+                  profile.viewer?.blocking
+                    ? l`Unblock ${displayName}`
+                    : l`Block ${displayName}`
+                }
+                onPress={() => blockMemberPrompt.open()}>
                 <Menu.ItemText>
                   <Trans>Block</Trans>
                 </Menu.ItemText>
                 <Menu.ItemIcon icon={PersonXIcon} />
               </Menu.Item>
+            ) : null}
+            {isOwner ? (
               <Menu.Item
                 label={l`Remove ${displayName} from this group chat`}
                 onPress={() => {}}>
@@ -541,39 +638,80 @@ function MemberMenu({
                 </Menu.ItemText>
                 <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
               </Menu.Item>
-            </>
-          ) : null}
-          {type === 'invited' ? (
-            <Menu.Item
-              label={l`Uninvite ${displayName} from this group chat`}
-              onPress={() => {}}>
-              <Menu.ItemText>
-                <Trans>Uninvite</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
-            </Menu.Item>
-          ) : null}
-        </Menu.Group>
-      </Menu.Outer>
-    </Menu.Root>
+            ) : null}
+            {isOwner && type === 'invited' ? (
+              <Menu.Item
+                label={l`Uninvite ${displayName} from this group chat`}
+                onPress={() => {}}>
+                <Menu.ItemText>
+                  <Trans>Uninvite</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
+              </Menu.Item>
+            ) : null}
+          </Menu.Group>
+        </Menu.Outer>
+      </Menu.Root>
+      <BlockMemberPrompt
+        control={blockMemberPrompt}
+        onConfirm={() => void handleBlockMember()}
+      />
+    </>
   )
 }
 
-function SettingsHeader({profiles}: {profiles: bsky.profile.AnyProfileView[]}) {
+function SettingsHeader({
+  convo,
+  profiles,
+}: {
+  convo: ChatBskyConvoDefs.ConvoView
+  profiles: bsky.profile.AnyProfileView[]
+}) {
   const t = useTheme()
   const {t: l} = useLingui()
+
+  const convoState = useConvo()
+  const {currentAccount} = useSession()
+
+  const isOwner =
+    currentAccount?.did == null
+      ? false
+      : convoState.getPrimaryMember?.()?.did === currentAccount.did
+
+  const {mutate: muteConvo} = useMuteConvo(convo.id, {
+    onSuccess: data => {
+      if (data.convo.muted) {
+        Toast.show(l({message: 'Group chat muted', context: 'toast'}))
+      } else {
+        Toast.show(l({message: 'Group chat unmuted', context: 'toast'}))
+      }
+    },
+    onError: () => {
+      Toast.show(l`Could not mute group chat`, {
+        type: 'error',
+      })
+    },
+  })
+
   const editNamePrompt = Prompt.usePromptControl()
   const inviteLinkPrompt = Prompt.usePromptControl()
   const lockChatPrompt = Prompt.usePromptControl()
 
-  const [groupName, setGroupName] = useState('Work in Progress')
+  const [groupName, setGroupName] = useState(
+    convoState.getGroupInfo?.()?.name ?? '',
+  )
   const [newGroupName, setNewGroupName] = useState(groupName)
 
-  const [isMuted, setIsMuted] = useState(false)
   const [isLocked, setIsLocked] = useState(false)
 
   const handleToggleMute = () => {
-    setIsMuted(prev => !prev)
+    try {
+      muteConvo({mute: !convo?.muted})
+    } catch (err) {
+      const e = err as Error
+      logger.error('Failed to mute group chat', {message: e})
+      Toast.show(l`There was an issue! ${e.toString()}`, {type: 'error'})
+    }
   }
 
   const handlePromptName = () => {
@@ -641,35 +779,57 @@ function SettingsHeader({profiles}: {profiles: bsky.profile.AnyProfileView[]}) {
             a.pt_2xl,
           ]}>
           <SettingsButton
-            color={isMuted ? 'negative_subtle' : 'secondary'}
-            icon={isMuted ? BellOffIcon : BellIcon}
+            color={convo?.muted ? 'negative_subtle' : 'secondary'}
+            icon={convo?.muted ? BellOffIcon : BellIcon}
             label={
-              isMuted ? l`Unmute this group chat` : l`Mute this group chat`
+              convo?.muted ? l`Unmute this group chat` : l`Mute this group chat`
             }
-            text={isMuted ? l`Muted` : l`Mute`}
+            text={convo?.muted ? l`Muted` : l`Mute`}
             onPress={handleToggleMute}
           />
-          <SettingsButton
-            icon={EditIcon}
-            label={l`Edit this group chat’s name`}
-            text={l`Edit name`}
-            onPress={handlePromptName}
-          />
+          {isOwner ? (
+            <SettingsButton
+              icon={EditIcon}
+              label={l`Edit this group chat’s name`}
+              text={l`Edit name`}
+              onPress={handlePromptName}
+            />
+          ) : null}
           <SettingsButton
             icon={ChainLinkIcon}
             label={l`Create an invite link for this group chat`}
             text={l`Invite link`}
             onPress={handlePromptInviteLink}
           />
-          <SettingsButton
-            color={isLocked ? 'negative_subtle' : 'secondary'}
-            icon={LockIcon}
-            label={
-              isLocked ? l`Unlock this group chat` : l`Lock this group chat`
-            }
-            text={isLocked ? l`Locked` : l`Lock`}
-            onPress={isLocked ? handleUnlock : handlePromptLock}
-          />
+          {isOwner ? (
+            <SettingsButton
+              color={isLocked ? 'negative_subtle' : 'secondary'}
+              icon={LockIcon}
+              label={
+                isLocked ? l`Unlock this group chat` : l`Lock this group chat`
+              }
+              text={isLocked ? l`Locked` : l`Lock`}
+              onPress={isLocked ? handleUnlock : handlePromptLock}
+            />
+          ) : null}
+          {isOwner ? null : (
+            <SettingsButton
+              color="secondary"
+              icon={FlagIcon}
+              label={l`Report this group chat`}
+              text={l`Report`}
+              onPress={() => {}}
+            />
+          )}
+          {isOwner ? null : (
+            <SettingsButton
+              color="secondary"
+              icon={ArrowBoxLeftIcon}
+              label={l`Leave this group chat`}
+              text={l`Leave`}
+              onPress={() => {}}
+            />
+          )}
         </View>
       </View>
       <EditNamePrompt
@@ -684,6 +844,46 @@ function SettingsHeader({profiles}: {profiles: bsky.profile.AnyProfileView[]}) {
       />
       <LockChatPrompt control={lockChatPrompt} onConfirm={handleConfirmLock} />
     </>
+  )
+}
+
+function SettingsHeaderPlaceholder() {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  return (
+    <View style={[a.px_xl, a.py_4xl, a.border_b, t.atoms.border_contrast_low]}>
+      <View style={[a.align_center, a.justify_center]}>
+        <AvatarBubbles profiles={[]} />
+      </View>
+      <Text
+        style={[a.text_2xl, a.font_bold, a.text_center, a.pt_lg, t.atoms.text]}>
+        {l`…`}
+      </Text>
+      <Text
+        style={[
+          a.text_sm,
+          a.text_center,
+          a.pt_xs,
+          a.px_xl,
+          t.atoms.text_contrast_high,
+        ]}>
+        <Trans>…</Trans>
+      </Text>
+      <View
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.justify_center,
+          a.gap_2xl,
+          a.pt_2xl,
+        ]}>
+        <SettingsButtonPlaceholder />
+        <SettingsButtonPlaceholder />
+        <SettingsButtonPlaceholder />
+        <SettingsButtonPlaceholder />
+      </View>
+    </View>
   )
 }
 
@@ -713,6 +913,7 @@ function SettingsButton({
         <ButtonIcon icon={icon} size="md" />
       </Button>
       <Text
+        numberOfLines={1}
         style={[
           a.text_2xs,
           a.font_medium,
@@ -726,11 +927,28 @@ function SettingsButton({
   )
 }
 
-type EditNamePromptProps = {
-  control: Dialog.DialogOuterProps['control']
-  value: string
-  onChangeText: (value: string) => void
-  onConfirm: () => void
+function SettingsButtonPlaceholder() {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  return (
+    <View>
+      <Button color="secondary" size="large" shape="round" label={l`Loading…`}>
+        <ButtonIcon icon={EllipsisIcon} size="md" />
+      </Button>
+      <Text
+        numberOfLines={1}
+        style={[
+          a.text_2xs,
+          a.font_medium,
+          a.text_center,
+          a.pt_xs,
+          t.atoms.text,
+        ]}>
+        {l`…`}
+      </Text>
+    </View>
+  )
 }
 
 function EditNamePrompt({
@@ -738,7 +956,12 @@ function EditNamePrompt({
   value,
   onChangeText,
   onConfirm,
-}: EditNamePromptProps) {
+}: {
+  control: Dialog.DialogOuterProps['control']
+  value: string
+  onChangeText: (value: string) => void
+  onConfirm: () => void
+}) {
   const {t: l} = useLingui()
 
   return (
@@ -815,6 +1038,27 @@ function LockChatPrompt({
       confirmButtonCta={l`Lock group chat`}
       cancelButtonCta={l`Cancel`}
       onConfirm={onConfirm}
+    />
+  )
+}
+
+function BlockMemberPrompt({
+  control,
+  onConfirm,
+}: {
+  control: Dialog.DialogOuterProps['control']
+  onConfirm: () => void
+}) {
+  const {t: l} = useLingui()
+
+  return (
+    <Prompt.Basic
+      control={control}
+      title={l`Block account?`}
+      description={l`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`}
+      onConfirm={onConfirm}
+      confirmButtonCta={l`Block`}
+      confirmButtonColor="negative"
     />
   )
 }
