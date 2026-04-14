@@ -11,6 +11,32 @@ export const REACTION_EMOJIS: readonly ReactionEmoji[] = [
   'joy',
 ] as const
 
+/**
+ * Display glyph for a given reaction emoji. Pure so it can be imported from
+ * tests without pulling in the React/react-native tree.
+ */
+export function getEmojiGlyph(emoji: ReactionEmoji): string {
+  switch (emoji) {
+    case 'heart':
+      return '\u2764\uFE0F' // ❤️
+    case 'fire':
+      return '\uD83D\uDD25' // 🔥
+    case 'eyes':
+      return '\uD83D\uDC40' // 👀
+    case 'joy':
+      return '\uD83D\uDE02' // 😂
+  }
+}
+
+/** Stable identifier for each picker row — used for testIDs and a11y keys. */
+export function getPickerRowLabelKey(emoji: ReactionEmoji): string {
+  return `quickReact.picker.row.${emoji}`
+}
+
+export function getRemoveRowLabelKey(): string {
+  return 'quickReact.picker.row.remove'
+}
+
 export type ReactionSurface = 'feed' | 'thread'
 
 export type ReactionEntryPoint =
