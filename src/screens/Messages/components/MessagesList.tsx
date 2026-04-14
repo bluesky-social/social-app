@@ -390,7 +390,8 @@ export function MessagesList({
         interpolator="ios"
         // HACKFIX: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1419
         offset={Math.round(inputHeightJS)}
-        textInputNativeID={textInputId}
+        // slightly too buggy unfortunately, enable when possible
+        // textInputNativeID={textInputId}
         style={[a.flex_1]}>
         {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
         <ScrollProvider onScroll={onScroll}>
