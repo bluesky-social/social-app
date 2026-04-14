@@ -28,7 +28,7 @@ import {useAnalytics} from '#/analytics'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {useKeyboardHandlers} from '#/components/images/Gallery/useKeyboardHandlers'
 import {usePointerHandlers} from '#/components/images/Gallery/usePointerHandlers'
-import {CONTAINER_ASPECT_RATIO, ITEM_GAP, MIN_PEEK} from '#/components/images/Gallery/const'
+import {ITEM_GAP} from '#/components/images/Gallery/const'
 import {IS_WEB} from '#/env'
 
 interface GalleryProps {
@@ -84,8 +84,6 @@ export function Gallery({
   onPressIn,
   viewContext,
 }: GalleryProps) {
-  const t = useTheme()
-  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {screenReaderEnabled} = useA11y()
   const largeAltBadge = useLargeAltBadgeEnabled()
@@ -178,6 +176,33 @@ export function Gallery({
     onSettle,
     imageCount: images.length,
   })
+
+  if (screenReaderEnabled) {
+    return (
+      <View style={[a.relative, a.gap_sm]}>
+        {images.map((image, index) => (
+          <AutoSizedImage
+            key={image.thumb}
+            crop={
+              viewContext === PostEmbedViewContext.ThreadHighlighted
+                ? 'none'
+                : viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
+                  ? 'square'
+                  : 'constrained'
+            }
+            image={image}
+            onPress={(containerRef, dims) =>
+              onPress?.(index, [containerRef], [dims])
+            }
+            onPressIn={() => onPressIn?.(index)}
+            hideBadge={
+              viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
+            }
+          />
+        ))}
+      </View>
+    )
+  }
 
   return (
     <View
