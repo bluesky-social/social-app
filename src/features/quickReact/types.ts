@@ -37,6 +37,28 @@ export function getRemoveRowLabelKey(): string {
   return 'quickReact.picker.row.remove'
 }
 
+/**
+ * Pure gate for whether QuickReactChip should render anything. Centralized
+ * so tests can assert zero-footprint behavior (AC-15, AC-9).
+ */
+export function shouldRenderChip(args: {
+  enabled: boolean
+  emoji: ReactionEmoji | undefined
+}): boolean {
+  if (!args.enabled) return false
+  if (!args.emoji) return false
+  return true
+}
+
+/**
+ * Build a stable non-localized label string for the chip. The real user-
+ * facing label is produced via Lingui inside the component; this helper is
+ * only used as a testable default + for accessibility fallback keys.
+ */
+export function buildChipAccessibilityLabel(emoji: ReactionEmoji): string {
+  return `Reacted with ${emoji}. Double tap to change or remove.`
+}
+
 export type ReactionSurface = 'feed' | 'thread'
 
 export type ReactionEntryPoint =
