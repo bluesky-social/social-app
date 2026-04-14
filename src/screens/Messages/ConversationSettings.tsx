@@ -77,7 +77,7 @@ type Item =
   | {
       type: 'CHAT_MEMBER'
       profile: Shadow<bsky.profile.AnyProfileView>
-      status: 'admin' | 'member' | 'invited'
+      status: 'owner' | 'member' | 'invited'
     }
 
 type Props = NativeStackScreenProps<
@@ -150,7 +150,7 @@ function SettingsInner() {
         profile,
         status:
           primaryMember?.did === profile.did
-            ? 'admin'
+            ? 'owner'
             : invites.includes(profile.did)
               ? 'invited'
               : 'member',
@@ -312,7 +312,7 @@ function Member({
   status,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
-  status: 'admin' | 'member' | 'invited'
+  status: 'owner' | 'member' | 'invited'
 }) {
   const navigation = useNavigation<NavigationProp>()
   const t = useTheme()
@@ -339,7 +339,7 @@ function Member({
   let statusBadge: React.ReactNode | null = null
   if (currentAccount?.did === profile.did) {
     switch (status) {
-      case 'admin':
+      case 'owner':
         statusBadge = <StatusBadge label={l`Admin`} />
         break
     }
@@ -454,7 +454,7 @@ function MemberMenu({
   type,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
-  type: 'admin' | 'member' | 'invited'
+  type: 'owner' | 'member' | 'invited'
 }) {
   const navigation = useNavigation<NavigationProp>()
   const t = useTheme()
@@ -552,10 +552,10 @@ function MemberMenu({
       <Menu.Root>
         <Menu.Trigger label={l`Open chat member options for ${displayName}`}>
           {({props, state, control: menuControl}) =>
-            type === 'admin' || type === 'invited' ? (
+            type === 'owner' || type === 'invited' ? (
               <StatusButton
                 {...props}
-                label={type === 'admin' ? l`Admin` : l`Invited`}
+                label={type === 'owner' ? l`Admin` : l`Invited`}
                 style={[
                   state.hovered || state.pressed || menuControl.isOpen
                     ? {
@@ -607,7 +607,7 @@ function MemberMenu({
           </Menu.Group>
           <Menu.Divider />
           <Menu.Group>
-            {type === 'admin' || type === 'member' ? (
+            {type === 'owner' || type === 'member' ? (
               <Menu.Item
                 label={
                   profile.viewer?.blocking
@@ -621,7 +621,7 @@ function MemberMenu({
                 <Menu.ItemIcon icon={PersonXIcon} />
               </Menu.Item>
             ) : null}
-            {type === 'admin' ? (
+            {type === 'owner' ? (
               <Menu.Item
                 label={l`Remove ${displayName} from this group chat`}
                 onPress={() => {}}>
@@ -665,7 +665,7 @@ function SettingsHeader({
   const convoState = useConvo()
   const {currentAccount} = useSession()
 
-  const isAdmin =
+  const isOwner =
     currentAccount?.did == null
       ? false
       : convoState.getPrimaryMember?.()?.did === currentAccount.did
@@ -779,7 +779,7 @@ function SettingsHeader({
             text={convo?.muted ? l`Muted` : l`Mute`}
             onPress={handleToggleMute}
           />
-          {isAdmin ? (
+          {isOwner ? (
             <SettingsButton
               icon={EditIcon}
               label={l`Edit this group chat’s name`}
@@ -793,7 +793,7 @@ function SettingsHeader({
             text={l`Invite link`}
             onPress={handlePromptInviteLink}
           />
-          {isAdmin ? (
+          {isOwner ? (
             <SettingsButton
               color={isLocked ? 'negative_subtle' : 'secondary'}
               icon={LockIcon}
@@ -804,7 +804,7 @@ function SettingsHeader({
               onPress={isLocked ? handleUnlock : handlePromptLock}
             />
           ) : null}
-          {isAdmin ? null : (
+          {isOwner ? null : (
             <SettingsButton
               color="secondary"
               icon={FlagIcon}
@@ -813,7 +813,7 @@ function SettingsHeader({
               onPress={() => {}}
             />
           )}
-          {isAdmin ? null : (
+          {isOwner ? null : (
             <SettingsButton
               color="secondary"
               icon={ArrowBoxLeftIcon}
