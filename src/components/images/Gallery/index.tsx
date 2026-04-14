@@ -44,13 +44,16 @@ interface GalleryProps {
 }
 
 const Context = createContext<{
-  ref: React.RefObject<View | null>
+  bleedRef: React.RefObject<View | null>
+  bleedWidth: number
 }>({
-  ref: {current: null},
+  bleedRef: {current: null},
+  bleedWidth: 0,
 })
 
 export function GalleryBleed({children}: {children: React.ReactNode}) {
   const ref = useRef<View>(null)
+  const [bleedWidth, setBleedWidth] = useState(0)
 
   if (!isValidElement(children)) {
     throw new Error('GalleryBleed children must be a single React element')
@@ -59,18 +62,19 @@ export function GalleryBleed({children}: {children: React.ReactNode}) {
   const node = children as React.ReactElement<any>
 
   return (
-    <Context.Provider value={{ref}}>
+    <Context.Provider value={{bleedRef: ref, bleedWidth}}>
       {cloneElement(node, {
         ref: mergeRefs([ref, node?.props?.ref]),
+        onLayout: (e: {nativeEvent: {layout: {width: number}}}) => {
+          setBleedWidth(e.nativeEvent.layout.width)
+        },
       })}
     </Context.Provider>
   )
 }
 
-export function useGalleryBleedRef() {
-  const {ref} = useContext(Context)
-  // TODO throw?
-  return ref
+export function useGalleryBleed() {
+  return useContext(Context)
 }
 
 export function Gallery({
@@ -98,38 +102,31 @@ export function Gallery({
 
   /*
    * Container overflow styles
+   *
+   * Uses measureLayout to get the Gallery's offset relative to the GalleryBleed
+   * ancestor. This is a layout-relative measurement that doesn't depend on
+   * scroll position, so it works correctly for off-screen FlatList items.
    */
-  const bleedRef = useGalleryBleedRef()
-  const [bleedDims, setBleedDims] = useState<{
-    left: number
-    right: number
-    width: number
-  }>()
-  const measureBleed = () => {
-    bleedRef?.current?.measureInWindow((x, _y, width) => {
-      setBleedDims({left: x, right: x + width, width})
-    })
-  }
+  const {bleedRef, bleedWidth} = useGalleryBleed()
   const contentRef = useRef<View>(null)
-  const [contentDims, setContentDims] = useState<{
-    left: number
-    right: number
-    width: number
-  }>()
-  const measureContent = () => {
-    contentRef?.current?.measureInWindow((x, _y, width) => {
-      setContentDims({left: x, right: x + width, width})
-    })
+  const [insets, setInsets] = useState<{left: number; right: number}>()
+  const measure = () => {
+    if (contentRef.current && bleedRef.current && bleedWidth > 0) {
+      contentRef.current.measureLayout(
+        bleedRef.current,
+        (x, _y, w) => {
+          setInsets({
+            left: x,
+            right: Math.max(0, bleedWidth - x - w),
+          })
+        },
+        () => {},
+      )
+    }
   }
-  const insetLeft =
-    bleedDims && contentDims
-      ? Math.max(0, contentDims.left - bleedDims.left)
-      : 999
-  const insetRight =
-    bleedDims && contentDims
-      ? Math.max(0, bleedDims.right - contentDims.right)
-      : 999
-  const width = bleedDims ? bleedDims.width : Math.min(600, window.width)
+  const insetLeft = insets?.left ?? 0
+  const insetRight = insets?.right ?? 0
+  const width = bleedWidth || Math.min(600, window.width)
   /* End container overflow styles */
 
   return (
@@ -142,10 +139,7 @@ export function Gallery({
           overflow: 'visible',
         },
       ]}
-      onLayout={() => {
-        measureBleed()
-        measureContent()
-      }}>
+      onLayout={measure}>
       <BlockDrawerGesture>
         <FlatList
           horizontal
@@ -165,7 +159,7 @@ export function Gallery({
             height: contentHeight,
             marginLeft: -insetLeft,
             width,
-          }, a.debug]}
+          }]}
           contentContainerStyle={{
             gap: ITEM_GAP,
             paddingLeft: insetLeft,
