@@ -25,7 +25,6 @@ import {Bell2Off_Filled_Corner0_Rounded as BellOffIcon} from '#/components/icons
 import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
-import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
@@ -40,7 +39,6 @@ export function MessagesListHeader({
   moderation?: ModerationDecision
 }) {
   const t = useTheme()
-  const convoState = useConvo()
 
   const blockInfo = useMemo(() => {
     if (!moderation) return
@@ -79,21 +77,12 @@ export function MessagesListHeader({
               <View style={a.gap_xs}>
                 <View
                   style={[
-                    {width: 120, height: 16},
+                    {width: 150, height: 16},
                     a.rounded_xs,
                     t.atoms.bg_contrast_25,
                     a.mt_xs,
                   ]}
                 />
-                {!convoState.isGroup?.() && (
-                  <View
-                    style={[
-                      {width: 175, height: 12},
-                      a.rounded_xs,
-                      t.atoms.bg_contrast_25,
-                    ]}
-                  />
-                )}
               </View>
             </View>
 
@@ -176,7 +165,7 @@ function HeaderReady({
         ) : (
           <Link
             label={l`View ${displayName}'s profile`}
-            style={[a.flex_row, a.align_start, a.gap_md, a.flex_1, a.pr_md]}
+            style={[a.flex_row, a.gap_md, a.flex_1, a.pr_md]}
             to={makeProfileLink(profile)}>
             <PreviewableUserAvatar
               size={PFP_SIZE}
@@ -193,24 +182,19 @@ function HeaderReady({
                   {displayName}
                 </Text>
                 <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
-              </View>
-              {!isDeletedAccount && (
-                <Text
-                  style={[t.atoms.text_contrast_medium, a.text_xs]}
-                  numberOfLines={1}>
-                  @{profile.handle}
-                  {convoState.convo?.muted && (
-                    <>
+                {convoState.convo?.muted && (
+                  <>
+                    <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
                       {' '}
                       &middot;{' '}
-                      <BellOffIcon
-                        size="xs"
-                        style={t.atoms.text_contrast_medium}
-                      />
-                    </>
-                  )}
-                </Text>
-              )}
+                    </Text>
+                    <BellOffIcon
+                      size="sm"
+                      style={t.atoms.text_contrast_medium}
+                    />
+                  </>
+                )}
+              </View>
             </View>
           </Link>
         )}
@@ -241,19 +225,6 @@ function HeaderReady({
             ) : null}
           </Layout.Header.Slot>
         </View>
-      </View>
-
-      <View
-        style={[
-          {
-            paddingLeft: PFP_SIZE + a.gap_md.gap,
-          },
-        ]}>
-        <PostAlerts
-          modui={moderation.ui('contentList')}
-          size="lg"
-          style={[a.pt_xs]}
-        />
       </View>
     </View>
   )
