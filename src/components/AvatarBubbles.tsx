@@ -1,4 +1,13 @@
+import {useCallback, useEffect} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
+import Animated, {
+  Easing,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withTiming,
+} from 'react-native-reanimated'
 
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -7,21 +16,58 @@ import {Person_Filled_Corner2_Rounded as PersonIcon} from '#/components/icons/Pe
 import type * as bsky from '#/types/bsky'
 
 type Props = {
+  animate?: boolean
   profiles: bsky.profile.AnyProfileView[]
   size?: 'small' | 'medium' | 'large'
 }
 
-export function AvatarBubbles({profiles: allProfiles, size = 'large'}: Props) {
+export function AvatarBubbles({
+  animate = false,
+  profiles: allProfiles,
+  size = 'large',
+}: Props) {
   const {currentAccount} = useSession()
   const profiles = allProfiles.filter(p => p.did !== currentAccount?.did)
   const containerSize = size === 'small' ? 40 : size === 'medium' ? 56 : 120
   const scale = size === 'small' ? 40 / 120 : size === 'medium' ? 56 / 120 : 1
   const marginOffset = size === 'small' || size === 'medium' ? -2 : 0
 
+  const initialValue = animate ? 0 : 1
+  const p0 = useSharedValue(initialValue)
+  const p1 = useSharedValue(initialValue)
+  const p2 = useSharedValue(initialValue)
+  const p3 = useSharedValue(initialValue)
+
+  const animateScale = (p: Animated.SharedValue<number>, index: number) => {
+    p.set(0)
+    p.set(() =>
+      withDelay(
+        500 + index * 100,
+        withTiming(1, {
+          duration: 250,
+          easing: Easing.out(Easing.back(1.75)),
+        }),
+      ),
+    )
+  }
+
+  const playScaleAnimation = useCallback(() => {
+    animateScale(p0, 0)
+    animateScale(p1, 1)
+    animateScale(p2, 2)
+    animateScale(p3, 3)
+  }, [p0, p1, p2, p3])
+
+  useEffect(() => {
+    if (!animate) return
+    playScaleAnimation()
+  }, [animate, playScaleAnimation])
+
   let avatars = (
     <>
       <AvatarBubble
         profile={profiles[0] ?? allProfiles[0]}
+        scale={p0}
         size={76}
         x={-2}
         y={-2}
@@ -30,6 +76,7 @@ export function AvatarBubbles({profiles: allProfiles, size = 'large'}: Props) {
       />
       <AvatarBubble
         profile={profiles[1]}
+        scale={p1}
         size={76}
         x={42}
         y={42}
@@ -42,9 +89,27 @@ export function AvatarBubbles({profiles: allProfiles, size = 'large'}: Props) {
   if (profiles.length === 3) {
     avatars = (
       <>
-        <AvatarBubble profile={profiles[0]} size={68} x={-2} y={-2} />
-        <AvatarBubble profile={profiles[1]} size={56} x={38} y={62} />
-        <AvatarBubble profile={profiles[2]} size={46} x={71} y={18} />
+        <AvatarBubble
+          profile={profiles[0]}
+          scale={p0}
+          size={68}
+          x={-2}
+          y={-2}
+        />
+        <AvatarBubble
+          profile={profiles[1]}
+          scale={p1}
+          size={56}
+          x={38}
+          y={62}
+        />
+        <AvatarBubble
+          profile={profiles[2]}
+          scale={p2}
+          size={46}
+          x={71}
+          y={18}
+        />
       </>
     )
   }
@@ -52,16 +117,34 @@ export function AvatarBubbles({profiles: allProfiles, size = 'large'}: Props) {
   if (profiles.length >= 4) {
     avatars = (
       <>
-        <AvatarBubble profile={profiles[0]} size={68} x={-2} y={-2} />
-        <AvatarBubble profile={profiles[1]} size={56} x={60} y={49} />
-        <AvatarBubble profile={profiles[2]} size={42} x={14} y={74} />
-        <AvatarBubble profile={profiles[3]} size={32} x={72} y={9} />
+        <AvatarBubble
+          profile={profiles[0]}
+          scale={p0}
+          size={68}
+          x={-2}
+          y={-2}
+        />
+        <AvatarBubble
+          profile={profiles[1]}
+          scale={p1}
+          size={56}
+          x={60}
+          y={49}
+        />
+        <AvatarBubble
+          profile={profiles[2]}
+          scale={p2}
+          size={42}
+          x={14}
+          y={74}
+        />
+        <AvatarBubble profile={profiles[3]} scale={p3} size={32} x={72} y={9} />
       </>
     )
   }
 
   return (
-    <View
+    <Animated.View
       style={[
         a.p_2xs,
         {
@@ -80,12 +163,13 @@ export function AvatarBubbles({profiles: allProfiles, size = 'large'}: Props) {
         ]}>
         {avatars}
       </View>
-    </View>
+    </Animated.View>
   )
 }
 
 function AvatarBubble({
   profile,
+  scale,
   size,
   style,
   x,
@@ -93,6 +177,7 @@ function AvatarBubble({
   includeProfileBorder,
 }: {
   profile?: bsky.profile.AnyProfileView
+  scale: Animated.SharedValue<number>
   size: number
   style?: StyleProp<ViewStyle>
   x: number
@@ -101,8 +186,16 @@ function AvatarBubble({
 }) {
   const t = useTheme()
 
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      {translateX: x},
+      {translateY: y},
+      {scale: interpolate(scale.get(), [0, 1], [0, 1])},
+    ],
+  }))
+
   return (
-    <View
+    <Animated.View
       style={[
         a.absolute,
         a.rounded_full,
@@ -113,13 +206,14 @@ function AvatarBubble({
           borderWidth: 2,
         },
         style,
+        animatedStyle,
       ]}>
       {profile ? (
         <Avatar profile={profile} size={size} />
       ) : (
         <AvatarPlaceholder size={size} />
       )}
-    </View>
+    </Animated.View>
   )
 }
 
