@@ -91,12 +91,14 @@ export function MessagesList({
   blocked,
   footer,
   hasAcceptOverride,
+  transparentHeaderHeight,
 }: {
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
   blocked?: boolean
   footer?: React.ReactNode
   hasAcceptOverride?: boolean
+  transparentHeaderHeight?: number
 }) {
   const ax = useAnalytics()
   const convoState = useConvoActive()
@@ -438,6 +440,8 @@ export function MessagesList({
               scrollbarColor: `${t.palette.contrast_100} transparent`,
               scrollbarGutter: 'stable both-edges',
             })}
+            contentInset={{top: transparentHeaderHeight}}
+            scrollIndicatorInsets={{top: transparentHeaderHeight}}
           />
         </ScrollProvider>
         <KeyboardStickyView

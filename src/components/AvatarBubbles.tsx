@@ -26,6 +26,7 @@ export function AvatarBubbles({profiles: allProfiles, size = 'large'}: Props) {
         x={-2}
         y={-2}
         style={[a.z_20]}
+        includeProfileBorder
       />
       <AvatarBubble
         profile={profiles[1]}
@@ -33,6 +34,7 @@ export function AvatarBubbles({profiles: allProfiles, size = 'large'}: Props) {
         x={42}
         y={42}
         style={[a.z_10]}
+        includeProfileBorder
       />
     </>
   )
@@ -88,12 +90,14 @@ function AvatarBubble({
   style,
   x,
   y,
+  includeProfileBorder,
 }: {
   profile?: bsky.profile.AnyProfileView
   size: number
   style?: StyleProp<ViewStyle>
   x: number
   y: number
+  includeProfileBorder?: boolean
 }) {
   const t = useTheme()
 
@@ -103,10 +107,10 @@ function AvatarBubble({
         a.absolute,
         a.rounded_full,
         a.flex_grow_0,
-        {
+        {transform: [{translateX: x}, {translateY: y}]},
+        includeProfileBorder && {
           borderColor: t.atoms.text_inverted.color,
           borderWidth: 2,
-          transform: [{translateX: x}, {translateY: y}],
         },
         style,
       ]}>
@@ -127,7 +131,13 @@ function Avatar({
   size?: number
 }) {
   return (
-    <UserAvatar avatar={profile.avatar} size={size} type="user" hideLiveBadge />
+    <UserAvatar
+      avatar={profile.avatar}
+      size={size}
+      type="user"
+      hideLiveBadge
+      noBorder
+    />
   )
 }
 

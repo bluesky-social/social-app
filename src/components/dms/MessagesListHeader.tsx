@@ -27,7 +27,7 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
+import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
 const PFP_SIZE = IS_WEB ? 40 : Layout.HEADER_SLOT_SIZE
 
@@ -53,7 +53,7 @@ export function MessagesListHeader({
   }, [moderation])
 
   return (
-    <Layout.Header.Outer>
+    <Layout.Header.Outer noBottomBorder={IS_LIQUID_GLASS}>
       <View style={[a.w_full, a.flex_row, a.gap_xs, a.align_start]}>
         <View style={[{minHeight: PFP_SIZE}, a.justify_center]}>
           <Layout.Header.BackButton />
