@@ -61,6 +61,7 @@ import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
+import {MessagesListHeader} from './MessagesListHeader'
 import {KeyboardStickyView} from './vendor/KeyboardStickyView'
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
@@ -383,7 +384,7 @@ export function MessagesList({
           profile={convoState.convo.members.find(
             member => member.did === item.message.sender.did,
           )}
-          isGroupChat={convoState.getGroupInfo?.() != null}
+          isGroupChat={convoState.isGroup()}
         />
       )
     } else if (item.type === 'deleted-message') {
@@ -448,7 +449,12 @@ export function MessagesList({
             showsVerticalScrollIndicator={!IS_ANDROID}
             scrollEventThrottle={100}
             ListHeaderComponent={
-              <MaybeLoader isLoading={convoState.isFetchingHistory} />
+              <>
+                <MaybeLoader isLoading={convoState.isFetchingHistory} />
+                {convoState.isGroup() ? (
+                  <MessagesListHeader convoState={convoState} />
+                ) : null}
+              </>
             }
             // native only (prop is not supported on web)
             renderScrollComponent={renderScrollComponent}
