@@ -190,7 +190,7 @@ export function MessagesList({
 
       // Initial scroll to bottom — unconditional, not gated on isAtBottom. This is separated because contentInset
       // can cause an early onScroll with a negative offset that sets isAtBottom to false before we get here.
-      if (!hasInitiallyScrolled.current) {
+      if (!hasInitiallyScrolled.current && convoState.items.length > 0) {
         hasInitiallyScrolled.current = true
         flatListRef.current?.scrollToOffset({offset: height, animated: false})
         // If history is already done loading, mark ready after a frame for the scroll to settle.
