@@ -51,12 +51,14 @@ export function usePointerHandlers({
   flatListRef,
   itemWidthsRef,
   currentIndexRef,
+  scrollTo,
   onSettle,
   imageCount,
 }: {
   flatListRef: React.RefObject<FlatList | null>
   itemWidthsRef: React.RefObject<Map<number, number>>
   currentIndexRef: React.RefObject<number>
+  scrollTo: (offset: number) => void
   onSettle: (index: number) => void
   imageCount: number
 }) {
@@ -126,10 +128,10 @@ export function usePointerHandlers({
       velo = (delta - prevDelta) / (elapsed * FRAME_MS)
       t = e.timeStamp
 
-      el.scrollLeft = dragScrollLeft - delta
+      scrollTo(dragScrollLeft - delta)
 
       // Update current index from scroll position
-      const offsetX = el.scrollLeft
+      const offsetX = dragScrollLeft - delta
       let accumulated = 0
       for (let i = 0; i < imageCount; i++) {
         const w = (itemWidthsRef.current.get(i) ?? 0) + ITEM_GAP
@@ -184,7 +186,7 @@ export function usePointerHandlers({
 
         stopTween = tween(from, to, SETTLE_DURATION)(
           v => {
-            el.scrollLeft = v
+            scrollTo(v)
           },
           () => {
             stopTween = null
@@ -207,5 +209,5 @@ export function usePointerHandlers({
       el.style.cursor = ''
       el.style.userSelect = ''
     }
-  }, [flatListRef, itemWidthsRef, currentIndexRef, onSettle, imageCount])
+  }, [flatListRef, itemWidthsRef, currentIndexRef, scrollTo, onSettle, imageCount])
 }

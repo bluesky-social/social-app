@@ -30,6 +30,7 @@ import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {useKeyboardHandlers} from '#/components/images/Gallery/useKeyboardHandlers'
 import {usePointerHandlers} from '#/components/images/Gallery/usePointerHandlers'
 import {CONTAINER_ASPECT_RATIO, ITEM_GAP, MIN_PEEK} from '#/components/images/Gallery/const'
+import {IS_WEB} from '#/env'
 
 interface GalleryProps {
   images: AppBskyEmbedImages.ViewImage[]
@@ -55,6 +56,7 @@ export function GalleryBleed({children}: {children: React.ReactNode}) {
   const [bleedWidth, setBleedWidth] = useState(0)
 
   if (!isValidElement(children)) {
+
     throw new Error('GalleryBleed children must be a single React element')
   }
 
@@ -132,22 +134,22 @@ export function Gallery({
   const itemRefsRef = useRef<Map<number, View>>(new Map())
   const currentIndexRef = useRef(0)
 
-  const scrollToIndex = (index: number, animated = true) => {
-    let offset = 0
-    for (let i = 0; i < index; i++) {
-      offset += (itemWidthsRef.current.get(i) ?? 0) + ITEM_GAP
-    }
-    flatListRef.current?.scrollToOffset({offset, animated})
+  const scrollTo = (offset: number) => {
+    flatListRef.current?.scrollToOffset({offset, animated: false})
+  }
+
+  const onSettle = (index: number) => {
+    if (!IS_WEB) return
+    const el = itemRefsRef.current.get(index) as unknown as HTMLElement | null
+    el?.focus({preventScroll: true})
   }
 
   useKeyboardHandlers({
     flatListRef,
+    itemWidthsRef,
     currentIndexRef,
-    scrollToIndex(index: number) {
-      scrollToIndex(index)
-      const el = itemRefsRef.current.get(index) as unknown as HTMLElement | null
-      el?.focus({preventScroll: true})
-    },
+    scrollTo,
+    onSettle,
     imageCount: images.length,
   })
 
@@ -155,10 +157,8 @@ export function Gallery({
     flatListRef,
     itemWidthsRef,
     currentIndexRef,
-    onSettle(index: number) {
-      const el = itemRefsRef.current.get(index) as unknown as HTMLElement | null
-      el?.focus({preventScroll: true})
-    },
+    scrollTo,
+    onSettle,
     imageCount: images.length,
   })
 

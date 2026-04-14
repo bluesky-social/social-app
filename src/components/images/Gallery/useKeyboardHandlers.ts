@@ -1,6 +1,8 @@
 export function useKeyboardHandlers(_args: {
   flatListRef: any
+  itemWidthsRef: any
   currentIndexRef: any
-  scrollToIndex: any
+  scrollTo: any
+  onSettle: any
   imageCount: any
 }) {}
