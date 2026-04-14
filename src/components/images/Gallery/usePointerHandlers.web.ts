@@ -175,7 +175,16 @@ export function usePointerHandlers({
         const from = el.scrollLeft
         const to = getOffsetForIndex(itemWidthsRef.current, targetIndex)
 
-        stopTween = tween(from, to, SETTLE_DURATION)(
+        if (from === to) {
+          currentIndexRef.current = targetIndex
+          return
+        }
+
+        stopTween = tween(
+          from,
+          to,
+          SETTLE_DURATION,
+        )(
           v => {
             scrollTo(v)
           },
@@ -200,5 +209,12 @@ export function usePointerHandlers({
       el.style.cursor = ''
       el.style.userSelect = ''
     }
-  }, [flatListRef, itemWidthsRef, currentIndexRef, scrollTo, onSettle, imageCount])
+  }, [
+    flatListRef,
+    itemWidthsRef,
+    currentIndexRef,
+    scrollTo,
+    onSettle,
+    imageCount,
+  ])
 }
