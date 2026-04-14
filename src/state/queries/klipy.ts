@@ -91,8 +91,8 @@ function createKlipyApi<Input extends object>(
 
 /**
  * Returns the static URL for a KLIPY GIF preview image.
- * Currently a pass-through; will route through the bsky proxy once the
- * backend proxy PR (tango) is deployed.
+ * KLIPY images are served directly from their CDN (static.klipy.com),
+ * unlike Tenor which routes through t.gifs.bsky.app.
  */
 export function klipyStaticUrl(gifUrl: string) {
   try {
@@ -108,10 +108,6 @@ export function klipyStaticUrl(gifUrl: string) {
  * Maps a native KLIPY gif object onto the Tenor-shaped `Gif` type so
  * downstream consumers (resolveGif, composer drafts, ExternalEmbed, etc.)
  * continue to work unchanged.
- *
- * NOTE: the exact KLIPY response shape needs to be verified against the
- * backend proxy once the tango PR is deployed — some fields here are
- * best-effort based on what's documented today.
  */
 function normalizeKlipyGif(k: KlipyGif): Gif {
   const toMediaObject = (v: KlipyFileVariant) => ({
