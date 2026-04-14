@@ -3,7 +3,7 @@ import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import {type ChatBskyConvoDefs, moderateProfile} from '@atproto/api'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
+import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -22,6 +22,7 @@ import {ConvoStatus} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetConvoAvailabilityQuery} from '#/state/queries/messages/get-convo-availability'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
+import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
 import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -670,6 +671,7 @@ function SettingsHeader({
   const t = useTheme()
   const {t: l} = useLingui()
 
+  const navigation = useNavigation<NavigationProp>()
   const convoState = useConvo()
   const {currentAccount} = useSession()
 
@@ -686,8 +688,21 @@ function SettingsHeader({
         Toast.show(l({message: 'Group chat unmuted', context: 'toast'}))
       }
     },
-    onError: () => {
-      Toast.show(l`Could not mute group chat`, {
+    onError: e => {
+      logger.error('Failed to mute group chat', {message: e})
+      Toast.show(l`Failed to mute group chat`, {
+        type: 'error',
+      })
+    },
+  })
+
+  const {mutate: leaveConvo} = useLeaveConvo(convo.id, {
+    onMutate: () => {
+      navigation.dispatch(StackActions.pop(2))
+    },
+    onError: e => {
+      logger.error('Failed to leave group chat', {message: e})
+      Toast.show(l({message: 'Failed to leave group chat', context: 'toast'}), {
         type: 'error',
       })
     },
@@ -696,6 +711,7 @@ function SettingsHeader({
   const editNamePrompt = Prompt.usePromptControl()
   const inviteLinkPrompt = Prompt.usePromptControl()
   const lockChatPrompt = Prompt.usePromptControl()
+  const leaveChatPrompt = Prompt.usePromptControl()
 
   const [groupName, setGroupName] = useState(
     convoState.getGroupInfo?.()?.name ?? '',
@@ -705,14 +721,14 @@ function SettingsHeader({
   const [isLocked, setIsLocked] = useState(false)
 
   const handleToggleMute = () => {
-    try {
-      muteConvo({mute: !convo?.muted})
-    } catch (err) {
-      const e = err as Error
-      logger.error('Failed to mute group chat', {message: e})
-      Toast.show(l`There was an issue! ${e.toString()}`, {type: 'error'})
-    }
+    muteConvo({mute: !convo?.muted})
   }
+
+  const handleLeaveChat = () => {
+    leaveChatPrompt.open()
+  }
+
+  const handleReportChat = () => {}
 
   const handlePromptName = () => {
     editNamePrompt.open()
@@ -818,7 +834,7 @@ function SettingsHeader({
               icon={FlagIcon}
               label={l`Report this group chat`}
               text={l`Report`}
-              onPress={() => {}}
+              onPress={handleReportChat}
             />
           )}
           {isOwner ? null : (
@@ -827,7 +843,7 @@ function SettingsHeader({
               icon={ArrowBoxLeftIcon}
               label={l`Leave this group chat`}
               text={l`Leave`}
-              onPress={() => {}}
+              onPress={handleLeaveChat}
             />
           )}
         </View>
@@ -843,6 +859,11 @@ function SettingsHeader({
         onConfirm={handleConfirmInviteLink}
       />
       <LockChatPrompt control={lockChatPrompt} onConfirm={handleConfirmLock} />
+      <LeaveChatPrompt
+        control={leaveChatPrompt}
+        groupName={groupName}
+        onConfirm={leaveConvo}
+      />
     </>
   )
 }
@@ -1036,6 +1057,30 @@ function LockChatPrompt({
       title={l`Lock group chat?`}
       description={l`Members can still read chat history but can’t send new messages.`}
       confirmButtonCta={l`Lock group chat`}
+      cancelButtonCta={l`Cancel`}
+      onConfirm={onConfirm}
+    />
+  )
+}
+
+function LeaveChatPrompt({
+  control,
+  groupName,
+  onConfirm,
+}: {
+  control: Dialog.DialogOuterProps['control']
+  groupName: string
+  onConfirm: () => void
+}) {
+  const {t: l} = useLingui()
+
+  return (
+    <Prompt.Basic
+      control={control}
+      title={l`Are you sure you want to leave ${groupName}?`}
+      description={l`You won’t be able to rejoin unless you’re invited.`}
+      confirmButtonCta={l`Leave group chat`}
+      confirmButtonColor="negative"
       cancelButtonCta={l`Cancel`}
       onConfirm={onConfirm}
     />
