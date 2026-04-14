@@ -1,0 +1,173 @@
+<h2>GIF Autocomplete — Full Design</h2>
+<p class="subtitle">Inline search suggestions powered by Klipy's autocomplete endpoint</p>
+
+<div class="section">
+  <h3>Architecture Overview</h3>
+  <div class="mockup">
+    <div class="mockup-header">Component & Data Flow</div>
+    <div class="mockup-body" style="padding:24px;font-family:system-ui;font-size:14px;line-height:1.6">
+      <div style="display:flex;gap:32px;flex-wrap:wrap">
+        <!-- Left: component tree -->
+        <div style="flex:1;min-width:300px">
+          <div style="font-weight:600;margin-bottom:12px;color:#7c7cff;text-transform:uppercase;font-size:11px;letter-spacing:1px">Component Tree</div>
+          <div style="font-family:monospace;font-size:13px;line-height:2">
+            <div>GifPickerDialog</div>
+            <div style="padding-left:20px;opacity:0.6">└─ GifPickerBody</div>
+            <div style="padding-left:40px">├─ <span style="color:#7c7cff">GifPickerHeader</span></div>
+            <div style="padding-left:60px">│  ├─ TextField.Input <span style="opacity:0.5">(search box)</span></div>
+            <div style="padding-left:60px">│  └─ <span style="color:#5cdb5c;font-weight:600">GifAutocompleteSuggestions</span> <span style="color:#5cdb5c;opacity:0.7">← NEW</span></div>
+            <div style="padding-left:40px">├─ GifPickerPlaceholder</div>
+            <div style="padding-left:40px">└─ GifPickerGrid</div>
+          </div>
+        </div>
+        <!-- Right: data flow -->
+        <div style="flex:1;min-width:300px">
+          <div style="font-weight:600;margin-bottom:12px;color:#ff7c7c;text-transform:uppercase;font-size:11px;letter-spacing:1px">Data Flow</div>
+          <div style="font-family:monospace;font-size:13px;line-height:2">
+            <div><span style="opacity:0.5">1.</span> User types → rawSearch state</div>
+            <div><span style="opacity:0.5">2.</span> rawSearch throttled @ <span style="color:#5cdb5c">200ms</span> → autocomplete query</div>
+            <div><span style="opacity:0.5">3.</span> rawSearch throttled @ 500ms → GIF search query</div>
+            <div><span style="opacity:0.5">4.</span> Autocomplete response → suggestion strings</div>
+            <div><span style="opacity:0.5">5.</span> User taps suggestion → fills input + fires search</div>
+            <div><span style="opacity:0.5">6.</span> Suggestions hide when input matches a selected term</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>New Files</h3>
+  <div style="font-family:monospace;font-size:13px;line-height:2.2;padding:0 8px">
+    <div><span style="color:#5cdb5c">+</span> <strong>src/lib/constants.ts</strong> — add <code>GIF_KLIPY_AUTOCOMPLETE</code> endpoint</div>
+    <div><span style="color:#5cdb5c">+</span> <strong>src/state/queries/klipy.ts</strong> — add <code>useKlipyAutocompleteQuery</code> hook</div>
+    <div><span style="color:#5cdb5c">+</span> <strong>src/features/gifPicker/hooks/useGifAutocomplete.ts</strong> — orchestration hook (throttle + query + keyboard state)</div>
+    <div><span style="color:#5cdb5c">+</span> <strong>src/features/gifPicker/components/GifAutocompleteSuggestions.tsx</strong> — inline suggestion list UI</div>
+    <div><span style="color:#ffcc00">~</span> <strong>src/features/gifPicker/components/GifPickerHeader.tsx</strong> — render suggestions below input</div>
+    <div><span style="color:#ffcc00">~</span> <strong>src/features/gifPicker/GifPickerDialog.tsx</strong> — wire up autocomplete state</div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Interaction Flow</h3>
+  <div style="display:flex;gap:16px;flex-wrap:wrap">
+    <!-- State 1: Idle -->
+    <div style="flex:1;min-width:220px">
+      <div class="mockup">
+        <div class="mockup-header">1. Idle — no suggestions</div>
+        <div class="mockup-body" style="padding:12px;font-family:system-ui;background:#1a1a2e;color:#e0e0e0;font-size:13px">
+          <div style="background:#2a2a4a;border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px;margin-bottom:12px">
+            <span style="opacity:0.4">&#128269;</span>
+            <span style="opacity:0.4">Search GIFs</span>
+          </div>
+          <div style="display:flex;gap:6px">
+            <div style="flex:1;background:#333;border-radius:6px;height:50px;opacity:0.4"></div>
+            <div style="flex:1;background:#333;border-radius:6px;height:40px;opacity:0.4"></div>
+          </div>
+          <div style="text-align:center;margin-top:8px;font-size:11px;opacity:0.5">Featured GIFs</div>
+        </div>
+      </div>
+    </div>
+    <!-- State 2: Typing, suggestions visible -->
+    <div style="flex:1;min-width:220px">
+      <div class="mockup">
+        <div class="mockup-header">2. Typing — suggestions appear</div>
+        <div class="mockup-body" style="padding:12px;font-family:system-ui;background:#1a1a2e;color:#e0e0e0;font-size:13px">
+          <div style="background:#2a2a4a;border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px;margin-bottom:8px">
+            <span style="opacity:0.4">&#128269;</span>
+            <span>hap<span style="opacity:0.3">|</span></span>
+          </div>
+          <div style="background:#22223a;border-radius:6px;margin-bottom:8px;overflow:hidden;border:1px solid #333">
+            <div style="padding:7px 10px;background:#2a2a5a;display:flex;align-items:center;gap:6px;font-size:12px">
+              <span style="opacity:0.3">&#128269;</span> happy birthday
+            </div>
+            <div style="padding:7px 10px;display:flex;align-items:center;gap:6px;font-size:12px;border-top:1px solid #2a2a3a">
+              <span style="opacity:0.3">&#128269;</span> happy
+            </div>
+            <div style="padding:7px 10px;display:flex;align-items:center;gap:6px;font-size:12px;border-top:1px solid #2a2a3a">
+              <span style="opacity:0.3">&#128269;</span> happy easter
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;opacity:0.3">
+            <div style="flex:1;background:#333;border-radius:6px;height:30px"></div>
+            <div style="flex:1;background:#333;border-radius:6px;height:30px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- State 3: Selected, search fires -->
+    <div style="flex:1;min-width:220px">
+      <div class="mockup">
+        <div class="mockup-header">3. Selected — GIFs load</div>
+        <div class="mockup-body" style="padding:12px;font-family:system-ui;background:#1a1a2e;color:#e0e0e0;font-size:13px">
+          <div style="background:#2a2a4a;border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px;margin-bottom:12px">
+            <span style="opacity:0.4">&#128269;</span>
+            <span>happy birthday</span>
+            <span style="margin-left:auto;opacity:0.4;font-size:11px">&#10005;</span>
+          </div>
+          <div style="display:flex;gap:6px">
+            <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+              <div style="background:#444;border-radius:6px;height:50px"></div>
+              <div style="background:#444;border-radius:6px;height:40px"></div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+              <div style="background:#444;border-radius:6px;height:40px"></div>
+              <div style="background:#444;border-radius:6px;height:50px"></div>
+            </div>
+          </div>
+          <div style="text-align:center;margin-top:8px;font-size:11px;opacity:0.5">Results for "happy birthday"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Keyboard Navigation (Web)</h3>
+  <div style="font-family:monospace;font-size:13px;line-height:2;padding:0 8px">
+    <div><strong>ArrowDown / ArrowUp</strong> — move active highlight through suggestions</div>
+    <div><strong>Enter</strong> — select highlighted suggestion (fills input, fires search)</div>
+    <div><strong>Escape</strong> — dismiss suggestions (existing behavior closes dialog)</div>
+    <div><strong>Continue typing</strong> — resets active index to 0, re-fetches suggestions</div>
+  </div>
+  <p style="margin-top:8px;font-size:13px;opacity:0.7">
+    ARIA: input gets <code>role="combobox"</code> + <code>aria-controls</code>, list gets <code>role="listbox"</code>,
+    items get <code>role="option"</code> + <code>aria-selected</code>. ~30 lines of <code>onKeyDown</code> handling on web only.
+  </p>
+</div>
+
+<div class="section">
+  <h3>Visibility Rules</h3>
+  <div style="font-family:monospace;font-size:13px;line-height:2;padding:0 8px">
+    <div><span style="color:#5cdb5c">SHOW</span> when: rawSearch.length ≥ 1 AND suggestions.length > 0 AND user hasn't just selected a suggestion</div>
+    <div><span style="color:#ff7c7c">HIDE</span> when: rawSearch is empty OR user selected a suggestion OR user clears input</div>
+    <div><span style="color:#ffcc00">RE-SHOW</span> when: user edits the input after a selection (e.g., backspace to modify)</div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Scope Boundaries</h3>
+  <div class="pros-cons">
+    <div class="pros">
+      <h4>In Scope</h4>
+      <ul>
+        <li>Klipy autocomplete endpoint integration</li>
+        <li>Inline suggestion list in GifPickerHeader</li>
+        <li>200ms throttle for autocomplete, independent of 500ms search throttle</li>
+        <li>Keyboard navigation on web (arrow keys, enter, escape)</li>
+        <li>ARIA accessibility attributes</li>
+        <li>Tap-to-select on native</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <h4>Out of Scope</h4>
+      <ul>
+        <li>Tenor autocomplete (Klipy only)</li>
+        <li>Trending/popular suggestions on empty input</li>
+        <li>Search history / recents</li>
+        <li>Categories or tag browsing</li>
+      </ul>
+    </div>
+  </div>
+</div>

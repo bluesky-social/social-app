@@ -1,0 +1,5 @@
+{"type":"server-started","port":49342,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:49342","screen_dir":"/Users/pope/dev/bsky/social-app/.superpowers/brainstorm/86663-1776187526/content","state_dir":"/Users/pope/dev/bsky/social-app/.superpowers/brainstorm/86663-1776187526/state"}
+{"type":"screen-added","file":"/Users/pope/dev/bsky/social-app/.superpowers/brainstorm/86663-1776187526/content/suggestion-placement.html"}
+{"type":"screen-added","file":"/Users/pope/dev/bsky/social-app/.superpowers/brainstorm/86663-1776187526/content/waiting.html"}
+{"type":"screen-added","file":"/Users/pope/dev/bsky/social-app/.superpowers/brainstorm/86663-1776187526/content/design-overview.html"}
+{"type":"server-stopped","reason":"idle timeout"}
