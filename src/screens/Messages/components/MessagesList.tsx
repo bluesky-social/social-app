@@ -147,7 +147,13 @@ export function MessagesList({
 
   // Tracks whether the initial scroll-to-bottom has been triggered. Separated from isAtBottom so that contentInset
   // (which causes an early onScroll with negative offset) can't prevent the first scroll.
+  // Reset when hasScrolled goes back to false (e.g. convo re-initialization after backgrounding).
   const hasInitiallyScrolled = useRef(false)
+  const prevHasScrolled = useRef(hasScrolled)
+  if (prevHasScrolled.current && !hasScrolled) {
+    hasInitiallyScrolled.current = false
+  }
+  prevHasScrolled.current = hasScrolled
 
   // -- Keep track of background state and positioning for new pill
   const layoutHeight = useSharedValue(0)
