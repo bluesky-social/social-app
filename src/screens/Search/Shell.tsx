@@ -97,6 +97,8 @@ export function SearchScreenShell({
 
   // Query terms
   const [searchText, setSearchText] = useState<string>(queryParam)
+  const searchTextRef = useRef(searchText)
+  searchTextRef.current = searchText
   const {data: autocompleteData, isFetching: isAutocompleteFetching} =
     useActorAutocompleteQuery(searchText, true)
 
@@ -227,15 +229,12 @@ export function SearchScreenShell({
     }
   }, [setShowAutocomplete, setSearchText, navigation, route.params, route.name])
 
-  const onSubmit = useCallback(
-    (source: 'typed' | 'autocomplete') => () => {
-      ax.metric('search:query', {
-        source,
-      })
-      navigateToItem(searchText)
-    },
-    [ax, navigateToItem, searchText],
-  )
+  const onSubmit = (source: 'typed' | 'autocomplete') => () => {
+    ax.metric('search:query', {
+      source,
+    })
+    navigateToItem(searchTextRef.current)
+  }
 
   const onAutocompleteResultPress = useCallback(() => {
     if (IS_WEB) {
