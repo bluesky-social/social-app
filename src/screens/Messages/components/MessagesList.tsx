@@ -42,10 +42,6 @@ import {
 } from '#/state/messages/convo/types'
 import {useGetPost} from '#/state/queries/post'
 import {useAgent} from '#/state/session'
-import {
-  EmojiPicker,
-  type EmojiPickerState,
-} from '#/view/com/composer/text-input/web/EmojiPicker'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
 import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
@@ -114,11 +110,6 @@ export function MessagesList({
   const [newMessagesPill, setNewMessagesPill] = useState({
     show: false,
     startContentOffset: 0,
-  })
-
-  const [emojiPickerState, setEmojiPickerState] = useState<EmojiPickerState>({
-    isOpen: false,
-    pos: {top: 0, left: 0, right: 0, bottom: 0, nextFocusRef: null},
   })
 
   const inputHeightUI = useSharedValue(0)
@@ -372,10 +363,6 @@ export function MessagesList({
     })
   }, [flatListRef])
 
-  const onOpenEmojiPicker = useCallback((pos: any) => {
-    setEmojiPickerState({isOpen: true, pos})
-  }, [])
-
   const renderItem = ({item}: {item: ConvoItem}) => {
     if (item.type === 'message' || item.type === 'pending-message') {
       return (
@@ -510,8 +497,7 @@ export function MessagesList({
                   textInputId={textInputId}
                   onSendMessage={onSendMessage}
                   hasEmbed={!!embedUri}
-                  setEmbed={setEmbed}
-                  openEmojiPicker={onOpenEmojiPicker}>
+                  setEmbed={setEmbed}>
                   <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
                 </MessageInput>
               )}
@@ -519,14 +505,6 @@ export function MessagesList({
           )}
         </KeyboardStickyView>
       </KeyboardGestureArea>
-
-      {IS_WEB && (
-        <EmojiPicker
-          pinToTop
-          state={emojiPickerState}
-          close={() => setEmojiPickerState(prev => ({...prev, isOpen: false}))}
-        />
-      )}
 
       {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
     </DateDividerToggleProvider>
