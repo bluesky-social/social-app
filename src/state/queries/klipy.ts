@@ -94,6 +94,7 @@ export function useKlipyAutocompleteQuery(
     queryFn: () => fetchKlipyAutocomplete(query),
     enabled: query.length > 0 && options?.enabled !== false,
     staleTime: STALE.HOURS.ONE,
+    placeholderData: keepPreviousData,
   })
 }
 
