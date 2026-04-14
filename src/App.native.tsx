@@ -82,6 +82,7 @@ import {
   prefetchLiveEvents,
   Provider as LiveEventsProvider,
 } from '#/features/liveEvents/context'
+import {QuickReactProvider} from '#/features/quickReact/context'
 import * as Geo from '#/geolocation'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
@@ -178,9 +179,11 @@ function InnerApp() {
                                                           <GlobalGestureEventsProvider>
                                                             <IntentDialogProvider>
                                                               <TranslateOnDeviceProvider>
-                                                                <TestCtrls />
-                                                                <Shell />
-                                                                <ToastOutlet />
+                                                                <QuickReactProvider>
+                                                                  <TestCtrls />
+                                                                  <Shell />
+                                                                  <ToastOutlet />
+                                                                </QuickReactProvider>
                                                               </TranslateOnDeviceProvider>
                                                             </IntentDialogProvider>
                                                           </GlobalGestureEventsProvider>

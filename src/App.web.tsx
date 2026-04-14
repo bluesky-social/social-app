@@ -74,6 +74,7 @@ import {
   prefetchLiveEvents,
   Provider as LiveEventsProvider,
 } from '#/features/liveEvents/context'
+import {QuickReactProvider} from '#/features/quickReact/context'
 import * as Geo from '#/geolocation'
 import {Splash} from '#/Splash'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -157,8 +158,10 @@ function InnerApp() {
                                                             <IntentDialogProvider>
                                                               <TranslateOnDeviceProvider>
                                                                 <HotkeysProvider>
-                                                                  <Shell />
-                                                                  <ToastOutlet />
+                                                                  <QuickReactProvider>
+                                                                    <Shell />
+                                                                    <ToastOutlet />
+                                                                  </QuickReactProvider>
                                                                 </HotkeysProvider>
                                                               </TranslateOnDeviceProvider>
                                                             </IntentDialogProvider>
