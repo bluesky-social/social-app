@@ -541,7 +541,7 @@ export function FeedsScreen(_props: Props) {
             <Link
               testID="editFeedsBtn"
               to="/settings/saved-feeds"
-              label={l`Edit My Feeds`}
+              label={l`Edit my feeds`}
               size="small"
               variant="ghost"
               color="secondary"
