@@ -20,6 +20,13 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
 
   const {currentAccount} = useSession()
 
+  const isOwner =
+    currentAccount?.did == null
+      ? false
+      : convoState.getPrimaryMember?.()?.did === currentAccount.did
+  // TODO Get this from @api/atproto - dsb
+  const isLinkEnabled = false
+
   const groupName = convoState.getGroupInfo?.()?.name
 
   const members = (convoState?.convo?.members ?? []).filter(
@@ -50,6 +57,9 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
       </Trans>
     )
   }
+
+  const showButtons = isOwner || isLinkEnabled
+
   return (
     <>
       <View style={[a.align_center, a.justify_center]}>
@@ -60,40 +70,52 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
           </Text>
         ) : null}
         {names ? (
-          <Text style={[a.text_sm, a.mt_xs, t.atoms.text_contrast_high]}>
+          <Text
+            style={[
+              a.text_sm,
+              a.mt_xs,
+              t.atoms.text_contrast_high,
+              showButtons ? null : a.mb_4xl,
+            ]}>
             {names}
           </Text>
         ) : null}
-        <View
-          style={[
-            a.flex_row,
-            a.align_center,
-            a.justify_center,
-            a.gap_sm,
-            a.mt_lg,
-            a.mb_4xl,
-          ]}>
-          <Button
-            color="secondary"
-            size="small"
-            label={l`Click here to add people to this group chat`}
-            onPress={() => addMembersControl.open()}>
-            <ButtonIcon icon={PersonPlusIcon} />
-            <ButtonText>
-              <Trans>Add people</Trans>
-            </ButtonText>
-          </Button>
-          <Button
-            color="secondary"
-            size="small"
-            label={l`Click here to view or create an invite link for this group chat`}
-            onPress={() => {}}>
-            <ButtonIcon icon={ChainLinkIcon} />
-            <ButtonText>
-              <Trans>Invite link</Trans>
-            </ButtonText>
-          </Button>
-        </View>
+        {showButtons ? (
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.justify_center,
+              a.gap_sm,
+              a.mt_lg,
+              a.mb_4xl,
+            ]}>
+            {isOwner ? (
+              <Button
+                color="secondary"
+                size="small"
+                label={l`Click here to add people to this group chat`}
+                onPress={() => addMembersControl.open()}>
+                <ButtonIcon icon={PersonPlusIcon} />
+                <ButtonText>
+                  <Trans>Add people</Trans>
+                </ButtonText>
+              </Button>
+            ) : null}
+            {isOwner || isLinkEnabled ? (
+              <Button
+                color="secondary"
+                size="small"
+                label={l`Click here to view or create an invite link for this group chat`}
+                onPress={() => {}}>
+                <ButtonIcon icon={ChainLinkIcon} />
+                <ButtonText>
+                  <Trans>Invite link</Trans>
+                </ButtonText>
+              </Button>
+            ) : null}
+          </View>
+        ) : null}
       </View>
       <Dialog.Outer
         control={addMembersControl}
