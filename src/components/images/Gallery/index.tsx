@@ -10,7 +10,7 @@ import {
 import {FlatList, Pressable, useWindowDimensions, View} from 'react-native'
 import {DrawerGestureContext} from 'react-native-drawer-layout'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
-import {type AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
+import Animated, {type AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
@@ -132,6 +132,8 @@ export function Gallery({
   const flatListRef = useRef<FlatList>(null)
   const itemWidthsRef = useRef<Map<number, number>>(new Map())
   const itemRefsRef = useRef<Map<number, View>>(new Map())
+  const containerRefsRef = useRef<Map<number, AnimatedRef<any>>>(new Map())
+  const thumbDimsRef = useRef<Map<number, Dimensions>>(new Map())
   const currentIndexRef = useRef(0)
 
   const setCurrentIndex = (index: number) => {
@@ -215,6 +217,30 @@ export function Gallery({
                     itemRefsRef.current.delete(index)
                   }
                 }}
+                onContainerRef={(i, ref) => {
+                  containerRefsRef.current.set(i, ref)
+                }}
+                onThumbDims={(i, dims) => {
+                  thumbDimsRef.current.set(i, dims)
+                }}
+                onPress={
+                  onPress
+                    ? () => {
+                        ax.metric('post:gallery:openLightbox', {
+                          imageIndex: index,
+                          totalImages: images.length,
+                        })
+                        const refs: AnimatedRef<any>[] = []
+                        const dims: (Dimensions | null)[] = []
+                        for (let i = 0; i < images.length; i++) {
+                          refs.push(containerRefsRef.current.get(i)!)
+                          dims.push(thumbDimsRef.current.get(i) ?? null)
+                        }
+                        onPress(index, refs, dims)
+                      }
+                    : undefined
+                }
+                onPressIn={onPressIn ? () => onPressIn(index) : undefined}
               />
             )
           }}
@@ -283,42 +309,62 @@ function GalleryImage({
   index,
   onWidthChange,
   itemRef,
+  onContainerRef,
+  onThumbDims,
+  onPress,
+  onPressIn,
 }: {
   contentHeight: number
   image: AppBskyEmbedImages.ViewImage
   index: number
   onWidthChange: (index: number, width: number) => void
   itemRef: (node: View | null) => void
+  onContainerRef: (index: number, ref: AnimatedRef<any>) => void
+  onThumbDims: (index: number, dims: Dimensions) => void
+  onPress?: () => void
+  onPressIn?: () => void
 }) {
   const t = useTheme()
+  const containerRef = useAnimatedRef()
   const [aspectRatio, setAspectRatio] = useState(() =>
     getAspectRatio(image.aspectRatio),
   )
   const dims = computeDims({height, aspectRatio})
 
   onWidthChange(index, dims.width)
+  onContainerRef(index, containerRef)
 
   return (
-    <Pressable
-      ref={itemRef}
-      style={[a.rounded_md, a.overflow_hidden, t.atoms.bg_contrast_25]}>
-      <Image
-        source={{uri: image.thumb}}
-        contentFit="cover"
-        accessible={true}
-        accessibilityLabel={image.alt}
+    <Animated.View ref={containerRef} collapsable={false}>
+      <Pressable
+        ref={itemRef}
+        onPress={onPress}
+        onPressIn={onPressIn}
+        accessibilityRole="button"
+        accessibilityLabel={image.alt || undefined}
         accessibilityHint=""
-        accessibilityIgnoresInvertColors
-        loading="eager"
-        // loading={index === 0 ? 'eager' : 'lazy'}
-        style={[dims]}
-        onLoad={e => {
-          const ar = getAspectRatio(e.source)
-          if (ar && ar !== aspectRatio) {
-            setAspectRatio(ar)
-          }
-        }}
-      />
-    </Pressable>
+        style={[a.rounded_md, a.overflow_hidden, t.atoms.bg_contrast_25]}>
+        <Image
+          source={{uri: image.thumb}}
+          contentFit="cover"
+          accessible={true}
+          accessibilityLabel={image.alt}
+          accessibilityHint=""
+          accessibilityIgnoresInvertColors
+          loading="eager"
+          style={[dims]}
+          onLoad={e => {
+            const ar = getAspectRatio(e.source)
+            if (ar && ar !== aspectRatio) {
+              setAspectRatio(ar)
+            }
+            onThumbDims(index, {
+              width: e.source.width,
+              height: e.source.height,
+            })
+          }}
+        />
+      </Pressable>
+    </Animated.View>
   )
 }
