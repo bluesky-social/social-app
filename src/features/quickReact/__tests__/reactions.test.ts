@@ -52,7 +52,7 @@ describe('quickReact queries', () => {
   test('optimistic setQueryData reflects new emoji synchronously', () => {
     const qc = makeClient()
     applyOptimisticWrite(DID, 'at://a/1', 'heart', qc)
-    const data = qc.getQueryData(createViewerReactionsQueryKey({did: DID}))
+    const data: any = qc.getQueryData(createViewerReactionsQueryKey({did: DID}))
     expect(data['at://a/1'].emoji).toBe('heart')
   })
 

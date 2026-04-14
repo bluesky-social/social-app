@@ -200,7 +200,7 @@ describe('quickReact debounce scheduler', () => {
     const mutate = jest.fn(async () => {})
     const s = makeScheduler(qc, mutate as any)
     s.schedule('at://a/1', 'heart')
-    const data = qc.getQueryData(createViewerReactionsQueryKey({did: DID}))
+    const data: any = qc.getQueryData(createViewerReactionsQueryKey({did: DID}))
     expect(data['at://a/1'].emoji).toBe('heart')
   })
 })
