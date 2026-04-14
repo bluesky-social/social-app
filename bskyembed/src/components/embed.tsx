@@ -94,7 +94,7 @@ export function Embed({
                 />
               </div>
               <div className="flex flex-1 items-center shrink min-w-0 min-h-0">
-                <p className="block text-sm shrink-0 font-semibold max-w-[70%] line-clamp-1">
+                <p className="text-sm shrink-0 font-semibold max-w-[70%] truncate">
                   {record.author.displayName?.trim() || record.author.handle}
                 </p>
                 {verification.isVerified && (
@@ -104,7 +104,7 @@ export function Embed({
                     size={12}
                   />
                 )}
-                <p className="block line-clamp-1 text-sm text-textLight dark:text-textDimmed shrink-[10] ml-1">
+                <p className="text-sm text-textLight dark:text-textDimmed min-w-0 truncate ml-1">
                   @{record.author.handle}
                 </p>
               </div>

@@ -186,7 +186,7 @@ function LandingPage() {
 function Skeleton() {
   return (
     <Container>
-      <div className="flex-1 flex-col flex gap-2 pb-8">
+      <div className="flex-1 flex-col flex gap-2 p-5 pb-8">
         <div className="flex gap-2.5 items-center">
           <div className="w-10 h-10 overflow-hidden rounded-full bg-neutral-100 dark:bg-slate-700 shrink-0 animate-pulse" />
           <div className="flex-1">
