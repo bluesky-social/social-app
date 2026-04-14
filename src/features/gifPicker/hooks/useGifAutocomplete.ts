@@ -1,7 +1,7 @@
 import {useRef, useState} from 'react'
 
-import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {useKlipyAutocompleteQuery} from '#/state/queries/klipy'
+import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 
@@ -77,9 +77,7 @@ export function useGifAutocomplete({
         return true
       }
       case 'ArrowUp': {
-        setActiveIndex(i =>
-          i <= 0 ? suggestions.length - 1 : i - 1,
-        )
+        setActiveIndex(i => (i <= 0 ? suggestions.length - 1 : i - 1))
         return true
       }
       case 'Enter': {
