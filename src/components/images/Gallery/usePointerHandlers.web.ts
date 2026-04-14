@@ -3,23 +3,14 @@ import {type FlatList} from 'react-native'
 
 import {ITEM_GAP} from '#/components/images/Gallery/const'
 import {tween} from '#/components/images/Gallery/tween'
+import {getOffsetForIndex} from '#/components/images/Gallery/utils'
+
 const DRAG_THRESHOLD = 3
 const FLICK_DECAY = 0.85
 const FLICK_MIN_VELOCITY = 0.1
 const ADVANCE_THRESHOLD = 0.15
 const FRAME_MS = 1000 / 60
 const SETTLE_DURATION = 600
-
-function getOffsetForIndex(
-  itemWidths: Map<number, number>,
-  index: number,
-): number {
-  let offset = 0
-  for (let i = 0; i < index; i++) {
-    offset += (itemWidths.get(i) ?? 0) + ITEM_GAP
-  }
-  return offset
-}
 
 function whichByDistance(
   itemWidths: Map<number, number>,

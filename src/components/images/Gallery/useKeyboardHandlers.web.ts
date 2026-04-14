@@ -1,21 +1,10 @@
 import {useEffect} from 'react'
 import {type FlatList} from 'react-native'
 
-import {ITEM_GAP} from '#/components/images/Gallery/const'
 import {tween} from '#/components/images/Gallery/tween'
+import {getOffsetForIndex} from '#/components/images/Gallery/utils'
 
 const SETTLE_DURATION = 600
-
-function getOffsetForIndex(
-  itemWidths: Map<number, number>,
-  index: number,
-): number {
-  let offset = 0
-  for (let i = 0; i < index; i++) {
-    offset += (itemWidths.get(i) ?? 0) + ITEM_GAP
-  }
-  return offset
-}
 
 export function useKeyboardHandlers({
   flatListRef,
