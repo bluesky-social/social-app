@@ -25,13 +25,14 @@ export function useKeyboardHandlers({
     if (imageCount <= 1) return
 
     let stopTween: (() => void) | null = null
+    let pendingIndex: number | null = null
 
     const onKeyDown = (e: KeyboardEvent) => {
       const el =
         flatListRef.current?.getScrollableNode() as unknown as HTMLElement | null
       if (!el || !el.contains(document.activeElement)) return
 
-      const current = currentIndexRef.current
+      const current = pendingIndex ?? currentIndexRef.current
       let targetIndex: number | undefined
 
       if (e.key === 'ArrowRight' || (e.key === 'Tab' && !e.shiftKey)) {
@@ -47,22 +48,27 @@ export function useKeyboardHandlers({
       if (targetIndex != null) {
         e.preventDefault()
 
-        console.log('targetIndex', targetIndex)
         if (stopTween) {
           stopTween()
           stopTween = null
         }
 
+        pendingIndex = targetIndex
         const from = el.scrollLeft
         const to = getOffsetForIndex(itemWidthsRef.current, targetIndex)
         const idx = targetIndex
 
-        stopTween = tween(from, to, SETTLE_DURATION)(
+        stopTween = tween(
+          from,
+          to,
+          SETTLE_DURATION,
+        )(
           v => {
             scrollTo(v)
           },
           () => {
             stopTween = null
+            pendingIndex = null
             onSettle(idx)
           },
         )
@@ -74,5 +80,12 @@ export function useKeyboardHandlers({
       window.removeEventListener('keydown', onKeyDown)
       if (stopTween) stopTween()
     }
-  }, [flatListRef, itemWidthsRef, currentIndexRef, scrollTo, onSettle, imageCount])
+  }, [
+    flatListRef,
+    itemWidthsRef,
+    currentIndexRef,
+    scrollTo,
+    onSettle,
+    imageCount,
+  ])
 }
