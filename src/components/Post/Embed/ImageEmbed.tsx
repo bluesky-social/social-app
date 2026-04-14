@@ -57,7 +57,11 @@ export function ImageEmbed({
         'worklet'
         const rects: (MeasuredDimensions | null)[] = []
         for (const r of refs) {
-          rects.push(measure(r))
+          try {
+            rects.push(measure(r))
+          } catch {
+            rects.push(null)
+          }
         }
         runOnJS(_openLightbox)(index, rects, fetchedDims)
       })()
