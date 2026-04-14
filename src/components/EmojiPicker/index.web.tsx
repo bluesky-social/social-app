@@ -2,7 +2,9 @@ import {createContext, useContext, useEffect, useMemo, useRef} from 'react'
 import EmojiPicker from '@emoji-mart/react'
 import {DropdownMenu} from 'radix-ui'
 
+import {useA11y} from '#/state/a11y'
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
+import {atoms as a, flatten} from '#/alf'
 import * as Menu from '../Menu'
 import {useWebPreloadEmoji} from './preload'
 import {
@@ -79,6 +81,7 @@ export function Trigger(props: TriggerProps) {
 export function Picker({keepOpenWhenShiftHeld = true}: PickerProps) {
   const {onEmojiSelect, nextFocusRef} = useEmojiPickerContext()
   const {control} = Menu.useMenuContext()
+  const {reduceMotionEnabled} = useA11y()
   const isShiftDown = useRef(false)
 
   useEffect(() => {
@@ -118,7 +121,9 @@ export function Picker({keepOpenWhenShiftHeld = true}: PickerProps) {
             element.focus()
           }
         }}>
-        <div onWheel={evt => evt.stopPropagation()}>
+        <div
+          onWheel={evt => evt.stopPropagation()}
+          style={flatten([!reduceMotionEnabled && a.zoom_fade_in])}>
           <EmojiPicker
             autoFocus
             onEmojiSelect={(emoji: Emoji) => {
