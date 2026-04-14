@@ -28,6 +28,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {useKeyboardHandlers} from '#/components/images/Gallery/useKeyboardHandlers'
+import {usePointerHandlers} from '#/components/images/Gallery/usePointerHandlers'
 
 const CONTAINER_ASPECT_RATIO = 3 / 2
 const ITEM_GAP = 8 // tokens.space.sm
@@ -146,6 +147,17 @@ export function Gallery({
     currentIndexRef,
     scrollToIndex(index: number) {
       scrollToIndex(index)
+      const el = itemRefsRef.current.get(index) as unknown as HTMLElement | null
+      el?.focus({preventScroll: true})
+    },
+    imageCount: images.length,
+  })
+
+  usePointerHandlers({
+    flatListRef,
+    itemWidthsRef,
+    currentIndexRef,
+    onSettle(index: number) {
       const el = itemRefsRef.current.get(index) as unknown as HTMLElement | null
       el?.focus({preventScroll: true})
     },
