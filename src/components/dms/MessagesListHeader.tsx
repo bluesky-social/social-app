@@ -8,9 +8,9 @@ import {
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/profile-shadow'
 import {isConvoActive, useConvo} from '#/state/messages/convo'
@@ -121,10 +121,7 @@ function HeaderReady({
     ? (groupInfo.name ?? l`${profile.handle}'s group chat`)
     : isDeletedAccount
       ? l`Deleted Account`
-      : sanitizeDisplayName(
-          profile.displayName || profile.handle,
-          moderation.ui('displayName'),
-        )
+      : createSanitizedDisplayName(profile, true, moderation.ui('displayName'))
 
   const latestMessageFromOther = convoState.items.findLast(
     (item: ConvoItem) =>
