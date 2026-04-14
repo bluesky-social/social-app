@@ -29,10 +29,7 @@ import {useAnalytics} from '#/analytics'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {useKeyboardHandlers} from '#/components/images/Gallery/useKeyboardHandlers'
 import {usePointerHandlers} from '#/components/images/Gallery/usePointerHandlers'
-
-const CONTAINER_ASPECT_RATIO = 3 / 2
-const ITEM_GAP = 8 // tokens.space.sm
-const MIN_PEEK = 40
+import {CONTAINER_ASPECT_RATIO, ITEM_GAP, MIN_PEEK} from '#/components/images/Gallery/const'
 
 interface GalleryProps {
   images: AppBskyEmbedImages.ViewImage[]
@@ -69,6 +66,7 @@ export function GalleryBleed({children}: {children: React.ReactNode}) {
         ref: mergeRefs([ref, node?.props?.ref]),
         onLayout: (e: {nativeEvent: {layout: {width: number}}}) => {
           setBleedWidth(e.nativeEvent.layout.width)
+          node.props.onLayout?.(e)
         },
       })}
     </Context.Provider>
@@ -125,7 +123,7 @@ export function Gallery({
   }
   const insetLeft = contentDims?.x ?? 0
   const insetRight =
-    bleedWidth - (contentDims?.x || 0) - (contentDims?.width || 0) || 0
+    bleedWidth - (contentDims?.x ?? 0) - (contentDims?.width ?? 0) || 0
   const width = bleedWidth || Math.min(600, window.width)
   /* End container overflow styles */
 

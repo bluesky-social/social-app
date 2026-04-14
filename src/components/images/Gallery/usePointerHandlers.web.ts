@@ -1,9 +1,8 @@
 import {useEffect} from 'react'
 import {type FlatList} from 'react-native'
 
+import {ITEM_GAP} from '#/components/images/Gallery/const'
 import {tween} from '#/components/images/Gallery/tween'
-
-const ITEM_GAP = 8
 const DRAG_THRESHOLD = 3
 const FLICK_DECAY = 0.85
 const FLICK_MIN_VELOCITY = 0.1
