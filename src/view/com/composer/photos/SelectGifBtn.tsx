@@ -3,12 +3,12 @@ import {Keyboard} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {type Gif} from '#/state/queries/tenor'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
-import {GifSelectDialog} from '#/components/dialogs/GifSelect'
 import {GifSquare_Stroke2_Corner0_Rounded as GifIcon} from '#/components/icons/Gif'
 import {useAnalytics} from '#/analytics'
+import {GifPickerDialog} from '#/features/gifPicker/GifPickerDialog'
+import {type Gif} from '#/features/gifPicker/types'
 
 type Props = {
   onClose?: () => void
@@ -43,7 +43,7 @@ export function SelectGifBtn({onClose, onSelectGif, disabled}: Props) {
         <GifIcon size="lg" style={disabled && t.atoms.text_contrast_low} />
       </Button>
 
-      <GifSelectDialog
+      <GifPickerDialog
         controlRef={ref}
         onClose={onClose}
         onSelectGif={onSelectGif}

@@ -1,0 +1,73 @@
+import {type Ref} from 'react'
+import {type TextInput, View} from 'react-native'
+import {msg} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react'
+
+import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
+import {Button, ButtonIcon} from '#/components/Button'
+import * as TextField from '#/components/forms/TextField'
+import {ArrowLeft_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
+import {MagnifyingGlass_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass'
+import {IS_WEB} from '#/env'
+
+export function GifPickerHeader({
+  inputRef,
+  onChangeText,
+  onClose,
+  onEscape,
+}: {
+  inputRef: Ref<TextInput>
+  onChangeText: (text: string) => void
+  onClose: () => void
+  onEscape: () => void
+}) {
+  const {_} = useLingui()
+  const t = useTheme()
+  const {gtMobile} = useBreakpoints()
+
+  return (
+    <View
+      style={[
+        native(a.pt_4xl),
+        a.relative,
+        a.mb_lg,
+        a.flex_row,
+        a.align_center,
+        !gtMobile && web(a.gap_md),
+        a.pb_sm,
+        t.atoms.bg,
+      ]}>
+      {!gtMobile && IS_WEB && (
+        <Button
+          size="small"
+          variant="ghost"
+          color="secondary"
+          shape="round"
+          onPress={onClose}
+          label={_(msg`Close GIF dialog`)}>
+          <ButtonIcon icon={Arrow} size="md" />
+        </Button>
+      )}
+
+      <TextField.Root style={[!gtMobile && IS_WEB && a.flex_1]}>
+        <TextField.Icon icon={Search} />
+        <TextField.Input
+          label={_(msg`Search GIFs`)}
+          placeholder={_(msg`Search GIFs`)}
+          onChangeText={onChangeText}
+          returnKeyType="search"
+          clearButtonMode="while-editing"
+          inputRef={inputRef}
+          maxLength={50}
+          onKeyPress={({nativeEvent}) => {
+            if (nativeEvent.key === 'Escape') {
+              onEscape()
+            }
+          }}
+        />
+      </TextField.Root>
+
+      {/* future: tabs (Trending / Recents / Categories) render here */}
+    </View>
+  )
+}
