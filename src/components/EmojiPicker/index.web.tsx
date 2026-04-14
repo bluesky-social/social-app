@@ -19,8 +19,18 @@ const EmojiPickerContext = createContext<{
   nextFocusRef: RootProps['nextFocusRef']
 } | null>(null)
 
+/**
+ * Provides emoji picker context and wraps children in a {@link Menu.Root}.
+ *
+ * On emoji select, fires a `textInputWebEmitter` event (for web text inputs
+ * that listen for emoji insertions) and forwards to the optional
+ * `onEmojiSelect` callback.
+ *
+ * @platform web
+ */
 export function Root({
   children,
+  control,
   onEmojiSelect,
   preloadOnMount = true,
   nextFocusRef,
@@ -41,16 +51,32 @@ export function Root({
 
   return (
     <EmojiPickerContext value={value}>
-      <Menu.Root>{children}</Menu.Root>
+      <Menu.Root control={control}>{children}</Menu.Root>
     </EmojiPickerContext>
   )
 }
 
+/**
+ * Passthrough to {@link Menu.Trigger}. Accepts the same render-prop children
+ * pattern.
+ *
+ * @platform web
+ */
 export function Trigger(props: TriggerProps) {
   return <Menu.Trigger {...props} />
 }
 
-export function Picker({}: PickerProps) {
+/**
+ * Renders the emoji picker inside a Radix `DropdownMenu.Portal`.
+ *
+ * Holding Shift while selecting an emoji keeps the picker open for
+ * multi-select. Otherwise the menu closes after each selection.
+ *
+ * Must be rendered inside a {@link Root}.
+ *
+ * @platform web
+ */
+export function Picker({keepOpenWhenShiftHeld = true}: PickerProps) {
   const {onEmojiSelect, nextFocusRef} = useEmojiPickerContext()
   const {control} = Menu.useMenuContext()
   const isShiftDown = useRef(false)
@@ -98,7 +124,7 @@ export function Picker({}: PickerProps) {
             onEmojiSelect={(emoji: Emoji) => {
               onEmojiSelect(emoji)
 
-              if (!isShiftDown.current) {
+              if (!keepOpenWhenShiftHeld || !isShiftDown.current) {
                 control.close()
               }
             }}

@@ -64,7 +64,7 @@ function MenuInner({
   const limitReacted = hasReachedReactionLimit(message, currentAccount?.did)
 
   return expanded ? (
-    <EmojiPicker.Picker />
+    <EmojiPicker.Picker keepOpenWhenShiftHeld={false} />
   ) : (
     <Menu.Outer style={[a.rounded_full]}>
       <View style={[a.flex_row, a.gap_xs]}>
