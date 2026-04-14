@@ -34,6 +34,7 @@ import {Link} from '#/view/com/util/Link'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a} from '#/alf'
+import {GalleryBleed} from '#/components/images/Gallery'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -51,7 +52,6 @@ import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
 import * as bsky from '#/types/bsky'
 import {PostFeedReason} from './PostFeedReason'
-import {GalleryBleed} from '#/components/images/Gallery'
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
@@ -531,13 +531,9 @@ const styles = StyleSheet.create({
   layoutAvi: {
     paddingLeft: 8,
     paddingRight: 10,
-    position: 'relative',
-    zIndex: 999,
   },
   layoutContent: {
-    position: 'relative',
     flex: 1,
-    zIndex: 0,
   },
   layoutContentNoText: {
     paddingTop: 10,
