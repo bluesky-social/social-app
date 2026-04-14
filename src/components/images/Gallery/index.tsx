@@ -41,6 +41,8 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 
+export * from './const'
+
 interface GalleryProps {
   images: AppBskyEmbedImages.ViewImage[]
   onPress?: (

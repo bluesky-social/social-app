@@ -34,7 +34,11 @@ import {Link} from '#/view/com/util/Link'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a} from '#/alf'
-import {GalleryBleed} from '#/components/images/Gallery'
+import {
+  GalleryBleed,
+  POST_EMBED_NO_CONTENT_OFFSET,
+  POST_META_NO_CONTENT_OFFSET,
+} from '#/components/images/Gallery'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -364,7 +368,7 @@ let FeedItemInner = ({
           <View
             style={[
               styles.layoutContent,
-              !richText.text && styles.layoutContentNoText,
+              !richText.text && POST_META_NO_CONTENT_OFFSET,
             ]}>
             <PostMeta
               author={post.author}
@@ -499,7 +503,7 @@ let PostContent = ({
       ) : undefined}
       {record && <TranslatedPost hideTranslateLink post={post} />}
       {postEmbed ? (
-        <View style={[a.pb_xs, !richText.text && {marginTop: 6}]}>
+        <View style={[a.pb_xs, !richText.text && POST_EMBED_NO_CONTENT_OFFSET]}>
           <Embed
             embed={postEmbed}
             moderation={moderation}
@@ -534,9 +538,6 @@ const styles = StyleSheet.create({
   },
   layoutContent: {
     flex: 1,
-  },
-  layoutContentNoText: {
-    paddingTop: 10,
   },
   alert: {
     marginTop: 6,

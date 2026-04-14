@@ -408,7 +408,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               ) : undefined}
               <TranslatedPost post={post} postTextStyle={[a.text_lg]} />
               {post.embed && (
-                <View style={[a.py_xs]}>
+                <View style={[richText?.text ? a.py_xs : []]}>
                   <Embed
                     embed={post.embed}
                     moderation={moderation}
