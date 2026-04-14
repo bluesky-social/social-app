@@ -10,7 +10,6 @@ import {GifPickerErrorBoundary} from '#/features/gifPicker/components/GifPickerE
 import {GifPickerGrid} from '#/features/gifPicker/components/GifPickerGrid'
 import {GifPickerHeader} from '#/features/gifPicker/components/GifPickerHeader'
 import {GifPickerPlaceholder} from '#/features/gifPicker/components/GifPickerPlaceholder'
-import {useGifAutocomplete} from '#/features/gifPicker/hooks/useGifAutocomplete'
 import {useGifPickerData} from '#/features/gifPicker/hooks/useGifPickerData'
 import {type Gif} from '#/features/gifPicker/types'
 
@@ -65,16 +64,7 @@ function GifPickerBody({
   const textInputRef = useRef<TextInput>(null)
   const listRef = useRef<ListMethods>(null)
   const [rawSearch, setRawSearch] = useState('')
-  const search = useThrottledValue(rawSearch, 500)
-
-  const autocomplete = useGifAutocomplete({
-    onSelectSuggestion: text => {
-      setRawSearch(text)
-      // Set the TextInput's displayed value to match
-      textInputRef.current?.setNativeProps({text})
-      listRef.current?.scrollToOffset({offset: 0, animated: false})
-    },
-  })
+  const search = useThrottledValue(rawSearch, 750)
 
   const {
     data,
@@ -107,7 +97,6 @@ function GifPickerBody({
 
   const onChangeSearch = (text: string) => {
     setRawSearch(text)
-    autocomplete.handleTextChange(text)
     listRef.current?.scrollToOffset({offset: 0, animated: false})
   }
 
@@ -118,7 +107,6 @@ function GifPickerBody({
         onChangeText={onChangeSearch}
         onClose={() => control.close()}
         onEscape={() => control.close()}
-        autocomplete={autocomplete}
       />
       {!hasData && (
         <GifPickerPlaceholder
