@@ -34,7 +34,7 @@ export function StepCaptchaNative() {
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    ;(async () => {
+    void (async () => {
       logger.debug('trying to generate attestation token...')
       try {
         if (IS_IOS) {
@@ -48,7 +48,8 @@ export function StepCaptchaNative() {
           setToken(token)
           setPayload(base64UrlEncode(payload))
         }
-      } catch (e: any) {
+      } catch (err) {
+        const e = err as Error
         logger.error(e)
       } finally {
         setReady(true)

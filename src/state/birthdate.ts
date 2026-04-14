@@ -14,7 +14,7 @@ const BIRTHDATE_DELAY_HOURS = IS_DEV ? 0.001 : 48
  * Stores the timestamp of the birthday update locally. This is used to
  * debounce birthday updates globally.
  *
- * Use {@link useIsBirthDateUpdateAllowed} to check if an update is allowed.
+ * Use {@link useIsBirthdateUpdateAllowed} to check if an update is allowed.
  */
 export function snoozeBirthdateUpdateAllowedForDid(did: string) {
   account.set([did, 'birthdateLastUpdatedAt'], new Date().toISOString())

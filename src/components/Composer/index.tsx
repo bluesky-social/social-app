@@ -8,7 +8,6 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useSift, type UseSiftReturn} from '@bsky.app/sift'
 import {
   facets,
@@ -121,7 +120,6 @@ export function Composer({
   ...rest
 }: ComposerProps) {
   const {theme: t, fonts} = useAlf()
-  const insets = useSafeAreaInsets()
 
   /*
    * Meat and potatoes
@@ -140,7 +138,6 @@ export function Composer({
     offset: a.p_sm.padding,
     placement: autocompletePlacement,
     dynamicWidth: IS_WEB,
-    insets,
   })
 
   /*
@@ -306,7 +303,13 @@ export function Composer({
         {IS_WEB && (
           <View
             pointerEvents="none"
-            style={[a.absolute, a.inset_0, a.z_10, {overflow: 'hidden'}]}>
+            style={[a.absolute, a.inset_0, a.z_10, {overflow: 'hidden'}]}
+            ref={node => {
+              if (IS_WEB && node) {
+                // @ts-ignore web only a11y
+                node.setAttribute('inert', '')
+              }
+            }}>
             <Animated.View
               style={[
                 contentPaddingStyle,
@@ -335,6 +338,8 @@ export function Composer({
             web({
               caretColor: textStyle.color ?? 'black',
               overscrollBehavior: 'none',
+              scrollbarWidth: 'thin',
+              scrollbarColor: `${t.palette.contrast_200} transparent`,
             }),
           ]}
           {...rest}
@@ -368,6 +373,7 @@ export function Composer({
 
       {activeFacet && activeFacet.type !== 'url' && (
         <AutocompleteInner
+          inverted={autocompletePlacement?.startsWith('top')}
           sift={sift}
           activeFacet={activeFacet}
           onDismiss={() => setActiveFacet(null)}
@@ -382,10 +388,12 @@ export function Composer({
  */
 
 function AutocompleteInner({
+  inverted,
   sift,
   activeFacet,
   onDismiss,
 }: {
+  inverted?: boolean
   sift: UseSiftReturn
   activeFacet: TapperActiveFacet
   onDismiss: () => void
@@ -410,7 +418,7 @@ function AutocompleteInner({
 
   return items && items.length ? (
     <AutocompleteBase
-      inverted={!IS_WEB}
+      inverted={inverted}
       sift={sift}
       data={items}
       render={props => {

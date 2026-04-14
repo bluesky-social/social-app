@@ -53,6 +53,7 @@ interface PostOpts {
 
 type FeatureFlags = {
   highResolutionImages?: boolean
+  increasedBlobSizeLimit?: boolean
 }
 
 export async function post(
@@ -320,6 +321,7 @@ async function resolveMedia(
         logger.debug(`Compressing image #${i}`)
         const {path, width, height, mime} = await compressImage(image, {
           highResolution: featureFlags?.highResolutionImages,
+          increasedBlobSizeLimit: featureFlags?.increasedBlobSizeLimit,
         })
         logger.debug(`Uploading image #${i}`)
         const res = await uploadBlob(agent, path, mime)

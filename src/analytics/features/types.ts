@@ -10,6 +10,7 @@ export enum Features {
   ImportContactsSettingsDisable = 'import_contacts:settings:disable',
   LiveNowBetaDisable = 'live_now_beta:disable',
   ImageUploadsHighResolution = 'image_uploads:high_resolution',
+  ImageUploadsBlobSize2mbEnabled = 'image_uploads:blob_size_2mb:enabled',
   GroupChatsEnable = 'group_chats:enable',
   DmsNewMessageComposerEnable = 'dms:new_message_composer:enable',
 

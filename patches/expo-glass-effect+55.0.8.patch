@@ -1,0 +1,60 @@
+diff --git a/node_modules/expo-glass-effect/ios/GlassContainer.swift b/node_modules/expo-glass-effect/ios/GlassContainer.swift
+index 61fb67c..b2d111e 100644
+--- a/node_modules/expo-glass-effect/ios/GlassContainer.swift
++++ b/node_modules/expo-glass-effect/ios/GlassContainer.swift
+@@ -1,6 +1,7 @@
+ // Copyright 2022-present 650 Industries. All rights reserved.
+ 
+ import ExpoModulesCore
++import React
+ 
+ public final class GlassContainer: ExpoView {
+   private var containerEffect: Any?
+@@ -46,11 +47,19 @@ public final class GlassContainer: ExpoView {
+     }
+   }
+ 
+-  public override func mountChildComponentView(_ childComponentView: UIView, index: Int) {
++  // Paper: redirect children into the container effect's contentView
++  public override func didUpdateReactSubviews() {
++    for subview in self.reactSubviews() {
++      containerEffectView.contentView.addSubview(subview)
++    }
++  }
++
++  // Fabric: redirect children into the container effect's contentView
++  @objc public func mountChildComponentView(_ childComponentView: UIView, index: Int) {
+     containerEffectView.contentView.insertSubview(childComponentView, at: index)
+   }
+ 
+-  public override func unmountChildComponentView(_ childComponentView: UIView, index: Int) {
++  @objc public func unmountChildComponentView(_ childComponentView: UIView, index: Int) {
+     childComponentView.removeFromSuperview()
+   }
+ }
+diff --git a/node_modules/expo-glass-effect/ios/GlassView.swift b/node_modules/expo-glass-effect/ios/GlassView.swift
+index 35cd8f3..9587306 100644
+--- a/node_modules/expo-glass-effect/ios/GlassView.swift
++++ b/node_modules/expo-glass-effect/ios/GlassView.swift
+@@ -271,11 +271,19 @@ public final class GlassView: ExpoView {
+       #endif
+     }
+   }
+-  public override func mountChildComponentView(_ childComponentView: UIView, index: Int) {
++  // Paper: redirect children into the glass effect's contentView
++  public override func didUpdateReactSubviews() {
++    for subview in self.reactSubviews() {
++      glassEffectView.contentView.addSubview(subview)
++    }
++  }
++
++  // Fabric: redirect children into the glass effect's contentView
++  @objc public func mountChildComponentView(_ childComponentView: UIView, index: Int) {
+     glassEffectView.contentView.insertSubview(childComponentView, at: index)
+   }
+ 
+-  public override func unmountChildComponentView(_ childComponentView: UIView, index: Int) {
++  @objc public func unmountChildComponentView(_ childComponentView: UIView, index: Int) {
+     childComponentView.removeFromSuperview()
+   }
+ }

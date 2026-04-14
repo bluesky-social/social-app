@@ -2,9 +2,7 @@ import {useState} from 'react'
 import {Alert, LayoutAnimation, Linking, Pressable, View} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -73,7 +71,7 @@ import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscript
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const reducedMotion = useReducedMotion()
   const {logoutEveryAccount} = useSessionApi()
   const {accounts, currentAccount} = useSession()
@@ -121,10 +119,8 @@ export function SettingsScreen({}: Props) {
           {accounts.length > 1 ? (
             <>
               <SettingsList.PressableItem
-                label={_(msg`Switch account`)}
-                accessibilityHint={_(
-                  msg`Shows other accounts you can switch to`,
-                )}
+                label={l`Switch account`}
+                accessibilityHint={l`Shows other accounts you can switch to`}
                 onPress={() => {
                   if (!reducedMotion) {
                     LayoutAnimation.configureNext(
@@ -161,7 +157,9 @@ export function SettingsScreen({}: Props) {
                           p => p.did === account.did,
                         )}
                         pendingDid={pendingDid}
-                        onPressSwitchAccount={onPressSwitchAccount}
+                        onPressSwitchAccount={(account, logContext) =>
+                          void onPressSwitchAccount(account, logContext)
+                        }
                       />
                     ))}
                   <AddAccountRow />
@@ -172,7 +170,7 @@ export function SettingsScreen({}: Props) {
             <AddAccountRow />
           )}
           <SettingsList.Divider />
-          <SettingsList.LinkItem to="/settings/account" label={_(msg`Account`)}>
+          <SettingsList.LinkItem to="/settings/account" label={l`Account`}>
             <SettingsList.ItemIcon icon={PersonIcon} />
             <SettingsList.ItemText>
               <Trans>Account</Trans>
@@ -180,21 +178,23 @@ export function SettingsScreen({}: Props) {
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
             to="/settings/privacy-and-security"
-            label={_(msg`Privacy and security`)}>
+            label={l`Privacy and security`}>
             <SettingsList.ItemIcon icon={LockIcon} />
             <SettingsList.ItemText>
               <Trans>Privacy and security</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
-          <SettingsList.LinkItem to="/moderation" label={_(msg`Moderation`)}>
+          <SettingsList.LinkItem
+            to="/moderation"
+            label={l`Moderation and content filters`}>
             <SettingsList.ItemIcon icon={HandIcon} />
             <SettingsList.ItemText>
-              <Trans>Moderation</Trans>
+              <Trans>Moderation and content filters</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
             to="/settings/notifications"
-            label={_(msg`Notifications`)}>
+            label={l`Notifications`}>
             <SettingsList.ItemIcon icon={NotificationIcon} />
             <SettingsList.ItemText>
               <Trans>Notifications</Trans>
@@ -202,7 +202,7 @@ export function SettingsScreen({}: Props) {
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
             to="/settings/content-and-media"
-            label={_(msg`Content and media`)}>
+            label={l`Content and media`}>
             <SettingsList.ItemIcon icon={WindowIcon} />
             <SettingsList.ItemText>
               <Trans>Content and media</Trans>
@@ -213,7 +213,7 @@ export function SettingsScreen({}: Props) {
             !ax.features.enabled(ax.features.ImportContactsSettingsDisable) && (
               <SettingsList.LinkItem
                 to="/settings/find-contacts"
-                label={_(msg`Find friends from contacts`)}>
+                label={l`Find friends from contacts`}>
                 <SettingsList.ItemIcon icon={ContactsIcon} />
                 <SettingsList.ItemText>
                   <Trans>Find friends from contacts</Trans>
@@ -222,7 +222,7 @@ export function SettingsScreen({}: Props) {
             )}
           <SettingsList.LinkItem
             to="/settings/appearance"
-            label={_(msg`Appearance`)}>
+            label={l`Appearance`}>
             <SettingsList.ItemIcon icon={PaintRollerIcon} />
             <SettingsList.ItemText>
               <Trans>Appearance</Trans>
@@ -230,31 +230,29 @@ export function SettingsScreen({}: Props) {
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
             to="/settings/accessibility"
-            label={_(msg`Accessibility`)}>
+            label={l`Accessibility`}>
             <SettingsList.ItemIcon icon={AccessibilityIcon} />
             <SettingsList.ItemText>
               <Trans>Accessibility</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
-          <SettingsList.LinkItem
-            to="/settings/language"
-            label={_(msg`Languages`)}>
+          <SettingsList.LinkItem to="/settings/language" label={l`Languages`}>
             <SettingsList.ItemIcon icon={EarthIcon} />
             <SettingsList.ItemText>
               <Trans>Languages</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.PressableItem
-            onPress={() => Linking.openURL(HELP_DESK_URL)}
-            label={_(msg`Help`)}
-            accessibilityHint={_(msg`Opens helpdesk in browser`)}>
+            onPress={() => void Linking.openURL(HELP_DESK_URL)}
+            label={l`Help`}
+            accessibilityHint={l`Opens helpdesk in browser`}>
             <SettingsList.ItemIcon icon={CircleQuestionIcon} />
             <SettingsList.ItemText>
               <Trans>Help</Trans>
             </SettingsList.ItemText>
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
-          <SettingsList.LinkItem to="/settings/about" label={_(msg`About`)}>
+          <SettingsList.LinkItem to="/settings/about" label={l`About`}>
             <SettingsList.ItemIcon icon={BubbleInfoIcon} />
             <SettingsList.ItemText>
               <Trans>About</Trans>
@@ -264,7 +262,7 @@ export function SettingsScreen({}: Props) {
           <SettingsList.PressableItem
             destructive
             onPress={() => signOutPromptControl.open()}
-            label={_(msg`Sign out`)}>
+            label={l`Sign out`}>
             <SettingsList.ItemText>
               <Trans>Sign out</Trans>
             </SettingsList.ItemText>
@@ -281,7 +279,7 @@ export function SettingsScreen({}: Props) {
                   }
                   setShowDevOptions(d => !d)
                 }}
-                label={_(msg`Developer options`)}>
+                label={l`Developer options`}>
                 <SettingsList.ItemIcon icon={CodeBracketsIcon} />
                 <SettingsList.ItemText>
                   <Trans>Developer options</Trans>
@@ -295,11 +293,11 @@ export function SettingsScreen({}: Props) {
 
       <Prompt.Basic
         control={signOutPromptControl}
-        title={_(msg`Sign out?`)}
-        description={_(msg`You will be signed out of all your accounts.`)}
+        title={l`Sign out?`}
+        description={l`You will be signed out of all your accounts.`}
         onConfirm={() => logoutEveryAccount('Settings')}
-        confirmButtonCta={_(msg`Sign out`)}
-        cancelButtonCta={_(msg`Cancel`)}
+        confirmButtonCta={l`Sign out`}
+        cancelButtonCta={l`Cancel`}
         confirmButtonColor="negative"
       />
 
@@ -376,7 +374,7 @@ function ProfilePreview({
 }
 
 function DevOptions() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const agent = useAgent()
   const [override, setOverride] = useStorage(device, [
     'policyUpdateDebugOverride',
@@ -392,26 +390,26 @@ function DevOptions() {
   } = useApplyPullRequestOTAUpdate()
   const [actyNotifNudged, setActyNotifNudged] = useActivitySubscriptionsNudged()
 
-  const resetOnboarding = async () => {
+  const resetOnboarding = () => {
     navigation.navigate('Home')
     onboardingDispatch({type: 'start'})
-    Toast.show(_(msg`Onboarding reset`))
+    Toast.show(l`Onboarding reset`)
   }
 
   const clearAllStorage = async () => {
     await clearStorage()
-    Toast.show(_(msg`Storage cleared, you need to restart the app now.`))
+    Toast.show(l`Storage cleared, you need to restart the app now.`)
   }
 
   const onPressUnsnoozeReminder = () => {
     const lastEmailConfirm = new Date()
     // wind back 3 days
     lastEmailConfirm.setDate(lastEmailConfirm.getDate() - 3)
-    persisted.write('reminders', {
+    void persisted.write('reminders', {
       ...persisted.get('reminders'),
       lastEmailConfirm: lastEmailConfirm.toISOString(),
     })
-    Toast.show(_(msg`You probably want to restart the app now.`))
+    Toast.show(l`You probably want to restart the app now.`)
   }
 
   const onPressActySubsUnNudge = () => {
@@ -431,7 +429,7 @@ function DevOptions() {
           style: 'default',
           text: 'Apply',
           onPress: (channel?: string) => {
-            tryApplyUpdate(channel ?? '')
+            void tryApplyUpdate(channel ?? '')
           },
         },
       ],
@@ -446,42 +444,42 @@ function DevOptions() {
     <>
       <SettingsList.PressableItem
         onPress={() => navigation.navigate('Log')}
-        label={_(msg`Open system log`)}>
+        label={l`Open system log`}>
         <SettingsList.ItemText>
           <Trans>System log</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
       <SettingsList.PressableItem
         onPress={() => navigation.navigate('Debug')}
-        label={_(msg`Open storybook page`)}>
+        label={l`Open storybook page`}>
         <SettingsList.ItemText>
           <Trans>Storybook</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
       <SettingsList.PressableItem
         onPress={() => navigation.navigate('DebugMod')}
-        label={_(msg`Open moderation debug page`)}>
+        label={l`Open moderation debug page`}>
         <SettingsList.ItemText>
           <Trans>Debug Moderation</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
       <SettingsList.PressableItem
         onPress={() => deleteChatDeclarationRecord()}
-        label={_(msg`Open storybook page`)}>
+        label={l`Open storybook page`}>
         <SettingsList.ItemText>
           <Trans>Delete chat declaration record</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
       <SettingsList.PressableItem
-        onPress={() => resetOnboarding()}
-        label={_(msg`Reset onboarding state`)}>
+        onPress={() => void resetOnboarding()}
+        label={l`Reset onboarding state`}>
         <SettingsList.ItemText>
           <Trans>Reset onboarding state</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
       <SettingsList.PressableItem
         onPress={onPressUnsnoozeReminder}
-        label={_(msg`Unsnooze email reminder`)}>
+        label={l`Unsnooze email reminder`}>
         <SettingsList.ItemText>
           <Trans>Unsnooze email reminder</Trans>
         </SettingsList.ItemText>
@@ -489,15 +487,15 @@ function DevOptions() {
       {actyNotifNudged && (
         <SettingsList.PressableItem
           onPress={onPressActySubsUnNudge}
-          label={_(msg`Reset activity subscription nudge`)}>
+          label={l`Reset activity subscription nudge`}>
           <SettingsList.ItemText>
             <Trans>Reset activity subscription nudge</Trans>
           </SettingsList.ItemText>
         </SettingsList.PressableItem>
       )}
       <SettingsList.PressableItem
-        onPress={() => clearAllStorage()}
-        label={_(msg`Clear all storage data`)}>
+        onPress={() => void clearAllStorage()}
+        label={l`Clear all storage data`}>
         <SettingsList.ItemText>
           <Trans>Clear all storage data (restart after this)</Trans>
         </SettingsList.ItemText>
@@ -505,7 +503,7 @@ function DevOptions() {
       {IS_IOS ? (
         <SettingsList.PressableItem
           onPress={onPressApplyOta}
-          label={_(msg`Apply Pull Request`)}>
+          label={l`Apply Pull Request`}>
           <SettingsList.ItemText>
             <Trans>Apply Pull Request</Trans>
           </SettingsList.ItemText>
@@ -513,8 +511,8 @@ function DevOptions() {
       ) : null}
       {IS_NATIVE && isCurrentlyRunningPullRequestDeployment ? (
         <SettingsList.PressableItem
-          onPress={revertToEmbedded}
-          label={_(msg`Unapply Pull Request`)}>
+          onPress={() => void revertToEmbedded()}
+          label={l`Unapply Pull Request`}>
           <SettingsList.ItemText>
             <Trans>Unapply Pull Request {currentChannel}</Trans>
           </SettingsList.ItemText>
@@ -543,7 +541,7 @@ function DevOptions() {
           <Button
             onPress={() => {
               device.set([PolicyUpdate202508], false)
-              agent.bskyAppRemoveNuxs([PolicyUpdate202508])
+              void agent.bskyAppRemoveNuxs([PolicyUpdate202508])
               Toast.show(`Done`, {
                 type: 'info',
               })
@@ -562,7 +560,7 @@ function DevOptions() {
 }
 
 function AddAccountRow() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeEverything = useCloseAllActiveElements()
 
@@ -574,7 +572,7 @@ function AddAccountRow() {
   return (
     <SettingsList.PressableItem
       onPress={onAddAnotherAccount}
-      label={_(msg`Add another account`)}>
+      label={l`Add another account`}>
       <SettingsList.ItemIcon icon={PersonPlusIcon} />
       <SettingsList.ItemText>
         <Trans>Add another account</Trans>
@@ -597,7 +595,7 @@ function AccountRow({
     logContext: 'Settings',
   ) => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   const moderationOpts = useModerationOpts()
@@ -614,7 +612,7 @@ function AccountRow({
     <View style={[a.relative]}>
       <SettingsList.PressableItem
         onPress={onSwitchAccount}
-        label={_(msg`Switch account`)}>
+        label={l`Switch account`}>
         {moderationOpts && profile ? (
           <UserAvatar
             size={28}
@@ -636,7 +634,7 @@ function AccountRow({
       </SettingsList.PressableItem>
       {!pendingDid && (
         <Menu.Root>
-          <Menu.Trigger label={_(msg`Account options`)}>
+          <Menu.Trigger label={l`Account options`}>
             {({props, state}) => (
               <Pressable
                 {...props}
@@ -653,7 +651,7 @@ function AccountRow({
           </Menu.Trigger>
           <Menu.Outer showCancel>
             <Menu.Item
-              label={_(msg`Remove account`)}
+              label={l`Remove account`}
               onPress={() => removePromptControl.open()}>
               <Menu.ItemText>
                 <Trans>Remove account</Trans>
@@ -666,15 +664,13 @@ function AccountRow({
 
       <Prompt.Basic
         control={removePromptControl}
-        title={_(msg`Remove from quick access?`)}
-        description={_(
-          msg`This will remove @${account.handle} from the quick access list.`,
-        )}
+        title={l`Remove from quick access?`}
+        description={l`This will remove @${account.handle} from the quick access list.`}
         onConfirm={() => {
           removeAccount(account)
-          Toast.show(_(msg`Account removed from quick access`))
+          Toast.show(l`Account removed from quick access`)
         }}
-        confirmButtonCta={_(msg`Remove`)}
+        confirmButtonCta={l`Remove`}
         confirmButtonColor="negative"
       />
     </View>

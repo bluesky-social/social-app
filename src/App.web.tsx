@@ -194,11 +194,11 @@ function InnerApp() {
 }
 
 function App() {
-  const [isReady, setReady] = useState(false)
+  const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
     void Promise.all([initPersistedState(), Geo.resolve(), setupDeviceId]).then(
-      () => setReady(true),
+      () => setIsReady(true),
     )
   }, [])
 

@@ -105,19 +105,18 @@ export function getConfigFromCache():
   )
 }
 let configPrefetchPromise: Promise<void> | undefined
-export async function prefetchConfig() {
+export function prefetchConfig() {
   if (configPrefetchPromise) {
     logger.debug(`prefetchAgeAssuranceConfig: already in progress`)
     return
   }
 
-  configPrefetchPromise = new Promise(async resolve => {
+  configPrefetchPromise = (async () => {
     await cacheHydrationPromise
     const cached = getConfigFromCache()
 
     if (cached) {
       logger.debug(`prefetchAgeAssuranceConfig: using cache`)
-      resolve()
     } else {
       try {
         logger.debug(`prefetchAgeAssuranceConfig: resolving...`)
@@ -126,15 +125,14 @@ export async function prefetchConfig() {
           configQueryKey,
           res,
         )
-      } catch (e: any) {
+      } catch (err) {
+        const e = err as Error
         logger.warn(`prefetchAgeAssuranceConfig: failed`, {
           safeMessage: e.message,
         })
-      } finally {
-        resolve()
       }
     }
-  })
+  })()
 }
 export async function refetchConfig() {
   logger.debug(`refetchConfig: fetching...`)
@@ -185,7 +183,7 @@ export async function getServerState({agent}: {agent: AtpAgent}) {
   const geolocation = device.get(['mergedGeolocation'])
   if (!geolocation || !geolocation.countryCode) {
     logger.error(`getServerState: missing geolocation countryCode`)
-    return
+    return null
   }
   const {data} = await agent.app.bsky.ageassurance.getState({
     countryCode: geolocation.countryCode,
@@ -227,8 +225,11 @@ export async function prefetchServerState({agent}: {agent: AtpAgent}) {
   try {
     logger.debug(`prefetchServerState: resolving...`)
     const res = await networkRetry(3, () => getServerState({agent}))
-    qc.setQueryData<AppBskyAgeassuranceGetState.OutputSchema>(qk, res)
-  } catch (e: any) {
+    if (res) {
+      qc.setQueryData<AppBskyAgeassuranceGetState.OutputSchema>(qk, res)
+    }
+  } catch (err) {
+    const e = err as Error
     logger.warn(`prefetchServerState: failed`, {
       safeMessage: e.message,
     })
@@ -239,16 +240,18 @@ export async function refetchServerState({agent}: {agent: AtpAgent}) {
   if (!did) return
   logger.debug(`refetchServerState: fetching...`)
   const res = await networkRetry(3, () => getServerState({agent}))
-  qc.setQueryData<AppBskyAgeassuranceGetState.OutputSchema>(
-    createServerStateQueryKey({did}),
-    res,
-  )
+  if (res) {
+    qc.setQueryData<AppBskyAgeassuranceGetState.OutputSchema>(
+      createServerStateQueryKey({did}),
+      res,
+    )
+  }
   return res
 }
 export function usePatchServerState() {
   const {currentAccount} = useSession()
   return useCallback(
-    async (next: AppBskyAgeassuranceDefs.State) => {
+    (next: AppBskyAgeassuranceDefs.State) => {
       if (!currentAccount) return
       const did = currentAccount.did
       const prev = getServerStateFromCache({did})
@@ -313,7 +316,7 @@ export function useServerStateQuery() {
       // only refetch when needed
       if (isAssured || !isAArequired) return
 
-      refetch()
+      void refetch()
     })
   }, [did, refetch, isAssured])
 
@@ -409,7 +412,8 @@ export async function prefetchOtherRequiredData({agent}: {agent: AtpAgent}) {
     logger.debug(`prefetchOtherRequiredData: resolving...`)
     const res = await networkRetry(3, () => getOtherRequiredData({agent}))
     qc.setQueryData<OtherRequiredData>(qk, res)
-  } catch (e: any) {
+  } catch (err) {
+    const e = err as Error
     logger.warn(`prefetchOtherRequiredData: failed`, {
       safeMessage: e.message,
     })
@@ -418,7 +422,7 @@ export async function prefetchOtherRequiredData({agent}: {agent: AtpAgent}) {
 export function usePatchOtherRequiredData() {
   const {currentAccount} = useSession()
   return useCallback(
-    async (next: OtherRequiredData) => {
+    (next: OtherRequiredData) => {
       if (!currentAccount) return
       const did = currentAccount.did
       const prev = getOtherRequiredDataFromCache({did})

@@ -85,7 +85,7 @@ function InnerProvider({children}: {children: React.ReactNode}) {
 
   const handleAccessUpdate = useCallback(
     (s: AgeAssuranceState) => {
-      getAndRegisterPushToken({
+      void getAndRegisterPushToken({
         isAgeRestricted: s.access !== AgeAssuranceAccess.Full,
       })
     },

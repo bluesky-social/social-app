@@ -1,22 +1,28 @@
-import {useCallback, useEffect, useRef, useState} from 'react'
-import {type LayoutChangeEvent, View} from 'react-native'
-import {useKeyboardHandler} from 'react-native-keyboard-controller'
+import {useCallback, useEffect, useId, useRef, useState} from 'react'
+import {type LayoutChangeEvent, type ScrollViewProps, View} from 'react-native'
+import {
+  KeyboardChatScrollView,
+  type KeyboardChatScrollViewProps,
+  KeyboardGestureArea,
+} from 'react-native-keyboard-controller'
 import Animated, {
   runOnJS,
-  scrollTo,
+  type ScrollEvent,
+  type SharedValue,
   useAnimatedRef,
-  useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated'
-import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   type $Typed,
   type AppBskyEmbedRecord,
   AppBskyRichtextFacet,
   RichText,
 } from '@atproto/api'
+import {useScrollEdgeEffectRef} from '@bsky.app/expo-scroll-edge-effect'
 
-import {useHideBottomBarBorderForScreen} from '#/lib/hooks/useHideBottomBarBorder'
+import {mergeRefs} from '#/lib/merge-refs'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {
@@ -36,7 +42,6 @@ import {
 } from '#/state/messages/convo/types'
 import {useGetPost} from '#/state/queries/post'
 import {useAgent} from '#/state/session'
-import {useShellLayout} from '#/state/shell/shell-layout'
 import {
   EmojiPicker,
   type EmojiPickerState,
@@ -46,15 +51,17 @@ import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
 import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
+import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_NATIVE, IS_WEB} from '#/env'
+import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
+import {KeyboardStickyView} from './vendor/KeyboardStickyView'
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
   return (
@@ -108,9 +115,9 @@ export function MessagesList({
   const agent = useAgent()
   const getPost = useGetPost()
   const {embedUri, setEmbed} = useMessageEmbed()
+  const t = useTheme()
 
-  useHideBottomBarBorderForScreen()
-
+  const textInputId = 'chat-input-' + useId()
   const flatListRef = useAnimatedRef<ListMethods>()
 
   const [newMessagesPill, setNewMessagesPill] = useState({
@@ -122,6 +129,18 @@ export function MessagesList({
     isOpen: false,
     pos: {top: 0, left: 0, right: 0, bottom: 0, nextFocusRef: null},
   })
+
+  const inputHeightUI = useSharedValue(0)
+  const [inputHeightJS, setInputHeightJS] = useState(0)
+
+  const onInputLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      const inputHeight = event.nativeEvent.layout.height
+      inputHeightUI.set(inputHeight)
+      setInputHeightJS(inputHeight)
+    },
+    [inputHeightUI],
+  )
 
   // We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
   // are added to the list. For example, if the user is scrolled up to 1iew older messages, we don't want to scroll to
@@ -226,12 +245,12 @@ export function MessagesList({
 
   const onStartReached = useCallback(() => {
     if (hasScrolled && prevContentHeight.current > layoutHeight.get()) {
-      convoState.fetchMessageHistory()
+      void convoState.fetchMessageHistory()
     }
   }, [convoState, hasScrolled, layoutHeight])
 
   const onScroll = useCallback(
-    (e: ReanimatedScrollEvent) => {
+    (e: ScrollEvent) => {
       'worklet'
       layoutHeight.set(e.layoutMeasurement.height)
       const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height
@@ -256,56 +275,8 @@ export function MessagesList({
   )
 
   // -- Keyboard animation handling
-  const {footerHeight} = useShellLayout()
 
-  const keyboardHeight = useSharedValue(0)
-  const keyboardIsOpening = useSharedValue(false)
-
-  // In some cases - like when the emoji piker opens - we don't want to animate the scroll in the list onLayout event.
-  // We use this value to keep track of when we want to disable the animation.
-  const layoutScrollWithoutAnimation = useSharedValue(false)
-
-  useKeyboardHandler(
-    {
-      onStart: e => {
-        'worklet'
-        // Immediate updates - like opening the emoji picker - will have a duration of zero. In those cases, we should
-        // just update the height here instead of having the `onMove` event do it (that event will not fire!)
-        if (e.duration === 0) {
-          layoutScrollWithoutAnimation.set(true)
-          keyboardHeight.set(e.height)
-        } else {
-          keyboardIsOpening.set(true)
-        }
-      },
-      onMove: e => {
-        'worklet'
-        keyboardHeight.set(e.height)
-        if (e.height > footerHeight.get()) {
-          scrollTo(flatListRef, 0, 1e7, false)
-        }
-      },
-      onEnd: e => {
-        'worklet'
-        keyboardHeight.set(e.height)
-        if (e.height > footerHeight.get()) {
-          scrollTo(flatListRef, 0, 1e7, false)
-        }
-        keyboardIsOpening.set(false)
-      },
-    },
-    [footerHeight],
-  )
-
-  const animatedListStyle = useAnimatedStyle(() => ({
-    marginBottom: Math.max(keyboardHeight.get(), footerHeight.get()),
-  }))
-
-  const animatedStickyViewStyle = useAnimatedStyle(() => ({
-    transform: [
-      {translateY: -Math.max(keyboardHeight.get(), footerHeight.get())},
-    ],
-  }))
+  const {bottom: bottomInset} = useSafeAreaInsets()
 
   // -- Message sending
   const onSendMessage = useCallback(
@@ -387,26 +358,6 @@ export function MessagesList({
     [agent, convoState, embedUri, getPost, hasScrolled, setHasScrolled],
   )
 
-  // -- List layout changes (opening emoji keyboard, etc.)
-  const onListLayout = useCallback(
-    (e: LayoutChangeEvent) => {
-      layoutHeight.set(e.nativeEvent.layout.height)
-
-      if (IS_WEB || !keyboardIsOpening.get()) {
-        flatListRef.current?.scrollToEnd({
-          animated: !layoutScrollWithoutAnimation.get(),
-        })
-        layoutScrollWithoutAnimation.set(false)
-      }
-    },
-    [
-      flatListRef,
-      keyboardIsOpening,
-      layoutScrollWithoutAnimation,
-      layoutHeight,
-    ],
-  )
-
   const scrollToEndOnPress = useCallback(() => {
     flatListRef.current?.scrollToOffset({
       offset: prevContentHeight.current,
@@ -418,66 +369,100 @@ export function MessagesList({
     setEmojiPickerState({isOpen: true, pos})
   }, [])
 
+  const renderScrollComponent = useCallback(
+    (props: ScrollViewProps) => (
+      <ChatScrollComponent {...props} inputHeight={inputHeightUI} />
+    ),
+    [inputHeightUI],
+  )
+
   return (
     <>
-      {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
-      <ScrollProvider onScroll={onScroll}>
-        <List
-          ref={flatListRef}
-          data={convoState.items}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          disableFullWindowScroll={true}
-          disableVirtualization={true}
-          style={animatedListStyle}
-          // The extra two items account for the header and the footer components
-          initialNumToRender={IS_NATIVE ? 32 : 62}
-          maxToRenderPerBatch={IS_WEB ? 32 : 62}
-          keyboardDismissMode="on-drag"
-          keyboardShouldPersistTaps="handled"
-          maintainVisibleContentPosition={{
-            minIndexForVisible: 0,
-          }}
-          removeClippedSubviews={false}
-          sideBorders={false}
-          onContentSizeChange={onContentSizeChange}
-          onLayout={onListLayout}
-          onStartReached={onStartReached}
-          onScrollToIndexFailed={onScrollToIndexFailed}
-          scrollEventThrottle={100}
-          ListHeaderComponent={
-            <MaybeLoader isLoading={convoState.isFetchingHistory} />
-          }
-        />
-      </ScrollProvider>
-      <Animated.View style={animatedStickyViewStyle}>
-        {convoState.status === ConvoStatus.Disabled ? (
-          <ChatDisabled />
-        ) : blocked ? (
-          footer
-        ) : (
-          <ConversationFooter
-            convoState={convoState}
-            hasAcceptOverride={hasAcceptOverride}>
-            {ax.features.enabled(ax.features.DmsNewMessageComposerEnable) ? (
-              <MessageComposer
-                onSendMessage={onSendMessage}
-                hasEmbed={!!embedUri}
-                setEmbed={setEmbed}>
-                <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
-              </MessageComposer>
-            ) : (
-              <MessageInput
-                onSendMessage={onSendMessage}
-                hasEmbed={!!embedUri}
-                setEmbed={setEmbed}
-                openEmojiPicker={onOpenEmojiPicker}>
-                <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
-              </MessageInput>
+      <KeyboardGestureArea
+        interpolator="ios"
+        // HACKFIX: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1419
+        offset={Math.round(inputHeightJS)}
+        textInputNativeID={textInputId}
+        style={[a.flex_1]}>
+        {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
+        <ScrollProvider onScroll={onScroll}>
+          <List
+            ref={flatListRef}
+            data={convoState.items}
+            renderItem={renderItem}
+            keyExtractor={keyExtractor}
+            disableFullWindowScroll={true}
+            disableVirtualization={true}
+            // The extra two items account for the header and the footer components
+            initialNumToRender={IS_NATIVE ? 32 : 62}
+            maxToRenderPerBatch={IS_WEB ? 32 : 62}
+            keyboardDismissMode="interactive"
+            keyboardShouldPersistTaps="handled"
+            maintainVisibleContentPosition={{minIndexForVisible: 0}}
+            removeClippedSubviews={false}
+            sideBorders={false}
+            onContentSizeChange={onContentSizeChange}
+            onStartReached={onStartReached}
+            onScrollToIndexFailed={onScrollToIndexFailed}
+            showsVerticalScrollIndicator={!IS_ANDROID}
+            scrollEventThrottle={100}
+            ListHeaderComponent={
+              <MaybeLoader isLoading={convoState.isFetchingHistory} />
+            }
+            // native only (prop is not supported on web)
+            renderScrollComponent={renderScrollComponent}
+            // pushes up the content under the input on web (renderScrollComponent handles it on native)
+            ListFooterComponent={web(
+              <WebInputSpacer inputHeight={inputHeightJS} />,
             )}
-          </ConversationFooter>
-        )}
-      </Animated.View>
+            style={web({
+              scrollbarWidth: 'thin',
+              scrollbarColor: `${t.palette.contrast_100} transparent`,
+              scrollbarGutter: 'stable both-edges',
+            })}
+          />
+        </ScrollProvider>
+        <KeyboardStickyView
+          style={[a.absolute, a.bottom_0, a.left_0, a.right_0]}
+          onLayout={onInputLayout}
+          minimumOffset={bottomInset}
+          offset={{
+            closed: platform({
+              ios: tokens.space.lg, // hide bottom padding when closed
+              default: 0,
+            }),
+            opened: 0,
+          }}>
+          {convoState.status === ConvoStatus.Disabled ? (
+            <ChatDisabled />
+          ) : blocked ? (
+            footer
+          ) : (
+            <ConversationFooter
+              convoState={convoState}
+              hasAcceptOverride={hasAcceptOverride}>
+              {ax.features.enabled(ax.features.DmsNewMessageComposerEnable) ? (
+                <MessageComposer
+                  textInputId={textInputId}
+                  onSendMessage={onSendMessage}
+                  hasEmbed={!!embedUri}
+                  setEmbed={setEmbed}>
+                  <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+                </MessageComposer>
+              ) : (
+                <MessageInput
+                  textInputId={textInputId}
+                  onSendMessage={onSendMessage}
+                  hasEmbed={!!embedUri}
+                  setEmbed={setEmbed}
+                  openEmojiPicker={onOpenEmojiPicker}>
+                  <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+                </MessageInput>
+              )}
+            </ConversationFooter>
+          )}
+        </KeyboardStickyView>
+      </KeyboardGestureArea>
 
       {IS_WEB && (
         <EmojiPicker
@@ -490,6 +475,53 @@ export function MessagesList({
       {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
     </>
   )
+}
+
+/** Note: native only */
+function ChatScrollComponent({
+  ref,
+  inputHeight,
+  ...props
+}: ScrollViewProps & {
+  ref?: React.RefObject<KeyboardChatScrollViewProps>
+  inputHeight: SharedValue<number>
+}) {
+  const scrollEdgeRef = useScrollEdgeEffectRef()
+  const {bottom: bottomInset} = useSafeAreaInsets()
+
+  const offset = platform({
+    ios: bottomInset - tokens.space.lg,
+    android: bottomInset,
+    default: 0,
+  })
+
+  const inputOffset = platform({
+    ios: bottomInset - tokens.space.lg,
+    android: bottomInset,
+    default: 0,
+  })
+
+  const extraContentPadding = useDerivedValue(
+    () => inputHeight.get() + inputOffset,
+  )
+
+  return (
+    <KeyboardChatScrollView
+      ref={mergeRefs([scrollEdgeRef, ref])}
+      automaticallyAdjustContentInsets={false}
+      keyboardDismissMode="interactive"
+      keyboardLiftBehavior="always"
+      extraContentPadding={extraContentPadding}
+      offset={offset}
+      {...props}
+    />
+  )
+}
+
+function WebInputSpacer({inputHeight}: {inputHeight: number}) {
+  if (!IS_WEB) return null
+
+  return <Animated.View style={{height: inputHeight}} />
 }
 
 type FooterState = 'loading' | 'new-chat' | 'request' | 'standard'

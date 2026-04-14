@@ -99,6 +99,7 @@ export function useOnAgeAssuranceAccessUpdate(
 
   useEffect(() => {
     if (prevAccess !== state.access) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPrevAccess(state.access)
       cb(state)
       logger.debug(`useOnAgeAssuranceAccessUpdate`, {state})

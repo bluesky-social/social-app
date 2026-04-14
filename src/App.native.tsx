@@ -215,11 +215,11 @@ function InnerApp() {
 }
 
 function App() {
-  const [isReady, setReady] = useState(false)
+  const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
     void Promise.all([initPersistedState(), Geo.resolve(), setupDeviceId]).then(
-      () => setReady(true),
+      () => setIsReady(true),
     )
   }, [])
 
@@ -235,7 +235,7 @@ function App() {
     <Geo.Provider>
       <AppConfigProvider>
         <A11yProvider>
-          <KeyboardControllerProvider>
+          <KeyboardControllerProvider preload={false}>
             <OnboardingProvider>
               <AnalyticsContext>
                 <SessionProvider>
