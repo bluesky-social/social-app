@@ -2,6 +2,7 @@ import {
   cloneElement,
   createContext,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -331,8 +332,13 @@ function GalleryImage({
   )
   const dims = computeDims({height, aspectRatio})
 
-  onWidthChange(index, dims.width)
-  onContainerRef(index, containerRef)
+  useEffect(() => {
+    onWidthChange(index, dims.width)
+  }, [index, dims.width, onWidthChange])
+
+  useEffect(() => {
+    onContainerRef(index, containerRef)
+  }, [index, containerRef, onContainerRef])
 
   return (
     <Animated.View ref={containerRef} collapsable={false}>
