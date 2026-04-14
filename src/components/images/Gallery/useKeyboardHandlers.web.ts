@@ -47,6 +47,7 @@ export function useKeyboardHandlers({
       if (targetIndex != null) {
         e.preventDefault()
 
+        console.log('targetIndex', targetIndex)
         if (stopTween) {
           stopTween()
           stopTween = null
@@ -62,7 +63,6 @@ export function useKeyboardHandlers({
           },
           () => {
             stopTween = null
-            currentIndexRef.current = idx
             onSettle(idx)
           },
         )

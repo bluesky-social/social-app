@@ -69,6 +69,7 @@ export function usePointerHandlers({
     let velo = 0
     let t = 0
     let stopTween: (() => void) | null = null
+    let localIndex = currentIndexRef.current
 
     el.style.cursor = 'grab'
 
@@ -83,6 +84,7 @@ export function usePointerHandlers({
 
       isMouseDown = true
       isDragging = false
+      localIndex = currentIndexRef.current
       startX = e.pageX
       dragScrollLeft = el.scrollLeft
       delta = 0
@@ -121,17 +123,17 @@ export function usePointerHandlers({
 
       scrollTo(dragScrollLeft - delta)
 
-      // Update current index from scroll position
+      // Update local index from scroll position
       const offsetX = dragScrollLeft - delta
       let accumulated = 0
       for (let i = 0; i < imageCount; i++) {
         const w = (itemWidthsRef.current.get(i) ?? 0) + ITEM_GAP
         if (offsetX < accumulated + w / 2) {
-          currentIndexRef.current = i
+          localIndex = i
           break
         }
         accumulated += w
-        if (i === imageCount - 1) currentIndexRef.current = i
+        if (i === imageCount - 1) localIndex = i
       }
     }
 
@@ -165,7 +167,7 @@ export function usePointerHandlers({
 
         const targetIndex = whichByDistance(
           itemWidthsRef.current,
-          currentIndexRef.current,
+          localIndex,
           totalDistance,
           direction,
           imageCount,
@@ -176,7 +178,7 @@ export function usePointerHandlers({
         const to = getOffsetForIndex(itemWidthsRef.current, targetIndex)
 
         if (from === to) {
-          currentIndexRef.current = targetIndex
+          onSettle(targetIndex)
           return
         }
 
@@ -190,7 +192,6 @@ export function usePointerHandlers({
           },
           () => {
             stopTween = null
-            currentIndexRef.current = targetIndex
             onSettle(targetIndex)
           },
         )

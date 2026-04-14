@@ -134,11 +134,24 @@ export function Gallery({
   const itemRefsRef = useRef<Map<number, View>>(new Map())
   const currentIndexRef = useRef(0)
 
+  const setCurrentIndex = (index: number) => {
+    const prev = currentIndexRef.current
+    if (prev !== index) {
+      currentIndexRef.current = index
+      ax.metric('post:gallery:swipe', {
+        fromIndex: prev,
+        toIndex: index,
+        totalImages: images.length,
+      })
+    }
+  }
+
   const scrollTo = (offset: number) => {
     flatListRef.current?.scrollToOffset({offset, animated: false})
   }
 
   const onSettle = (index: number) => {
+    setCurrentIndex(index)
     if (!IS_WEB) return
     const el = itemRefsRef.current.get(index) as unknown as HTMLElement | null
     el?.focus({preventScroll: true})
@@ -211,12 +224,12 @@ export function Gallery({
             for (let i = 0; i < images.length; i++) {
               const w = (itemWidthsRef.current.get(i) ?? 0) + ITEM_GAP
               if (offsetX < accumulated + w / 2) {
-                currentIndexRef.current = i
+                setCurrentIndex(i)
                 break
               }
               accumulated += w
               if (i === images.length - 1) {
-                currentIndexRef.current = i
+                setCurrentIndex(i)
               }
             }
           }}
