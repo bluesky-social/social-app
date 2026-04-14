@@ -28,7 +28,9 @@ export function EmojiReactionPicker({
 
   return (
     <EmojiPicker.Root onEmojiSelect={emoji => onEmojiSelect(emoji.native)}>
-      <Menu.Trigger label={l`Add emoji reaction`}>{children}</Menu.Trigger>
+      <EmojiPicker.Trigger label={l`Add emoji reaction`}>
+        {children}
+      </EmojiPicker.Trigger>
       <MenuInner message={message} onEmojiSelect={onEmojiSelect} />
     </EmojiPicker.Root>
   )
