@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {
   useKeyboardHandler,
@@ -25,14 +25,9 @@ import {
   useMessageDraft,
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
-import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
-import {
-  type Emoji,
-  EmojiPicker,
-  type EmojiPickerState,
-} from '#/view/com/composer/text-input/web/EmojiPicker'
 import {atoms as a, native, platform, tokens, useTheme, utils} from '#/alf'
 import {Composer, useComposerInternalApiRef} from '#/components/Composer'
+import * as EmojiPicker from '#/components/EmojiPicker'
 import {GlassView} from '#/components/GlassView'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
@@ -60,10 +55,6 @@ export function MessageComposer({
   const {needsEmailVerification} = useEmail()
   const editable = !needsEmailVerification
   const {getDraft, clearDraft} = useMessageDraft()
-  const [emojiPickerState, setEmojiPickerState] = useState<EmojiPickerState>({
-    isOpen: false,
-    pos: {top: 0, left: 0, right: 0, bottom: 0, nextFocusRef: null},
-  })
   const composerInternalApiRef = useComposerInternalApiRef()
 
   const [text, setText] = useState(getDraft)
@@ -84,10 +75,6 @@ export function MessageComposer({
   })
 
   const submitDisabled = !editable || (!hasEmbed && text.trim().length === 0)
-
-  const openEmojiPicker = (pos: any) => {
-    setEmojiPickerState({isOpen: true, pos})
-  }
 
   const onSubmit = () => {
     if (!editable) return
@@ -112,16 +99,6 @@ export function MessageComposer({
     }
   }
 
-  useEffect(() => {
-    function onEmojiInserted(emoji: Emoji) {
-      composerInternalApiRef.current?.insert(emoji.native)
-    }
-    textInputWebEmitter.addListener('emoji-inserted', onEmojiInserted)
-    return () => {
-      textInputWebEmitter.removeListener('emoji-inserted', onEmojiInserted)
-    }
-  }, [composerInternalApiRef])
-
   return (
     <ComposerContainer>
       {children}
@@ -142,54 +119,47 @@ export function MessageComposer({
             tintColor={t.palette.contrast_50}
             fallbackStyle={[t.atoms.bg_contrast_50]}>
             {IS_WEB && (
-              <Pressable
-                onPress={e => {
-                  e.currentTarget.measure(
-                    (_fx, _fy, _width, _height, px, py) => {
-                      // TODO: rip this horrible system out
-                      openEmojiPicker?.({
-                        top: py,
-                        left: px - 400,
-                        right: px - 400,
-                        bottom: py,
-                        nextFocusRef: {
-                          current:
-                            composerInternalApiRef.current?.input?.element,
+              <EmojiPicker.Root
+                onEmojiSelect={emoji =>
+                  composerInternalApiRef.current?.insert(emoji.native)
+                }
+                nextFocusRef={() =>
+                  composerInternalApiRef.current?.input?.element
+                }>
+                <EmojiPicker.Trigger label={l`Open emoji picker`}>
+                  {({props, state, control}) => (
+                    <Pressable
+                      {...props}
+                      style={[
+                        a.overflow_hidden,
+                        a.absolute,
+                        a.rounded_full,
+                        a.align_center,
+                        a.justify_center,
+                        a.z_30,
+                        {
+                          height: 20,
+                          width: 20,
+                          top: 10,
+                          right: 10,
                         },
-                      })
-                    },
-                  )
-                }}
-                style={[
-                  a.overflow_hidden,
-                  a.absolute,
-                  a.rounded_full,
-                  a.align_center,
-                  a.justify_center,
-                  a.z_30,
-                  {
-                    height: 20,
-                    width: 20,
-                    top: 10,
-                    right: 10,
-                  },
-                ]}
-                accessibilityLabel={l`Open emoji picker`}
-                accessibilityHint="">
-                {state => (
-                  <EmojiSmileIcon
-                    size="md"
-                    style={
-                      state.hovered ||
-                      state.focused ||
-                      state.pressed ||
-                      emojiPickerState.isOpen
-                        ? {color: t.palette.primary_500}
-                        : t.atoms.text_contrast_high
-                    }
-                  />
-                )}
-              </Pressable>
+                      ]}>
+                      <EmojiSmileIcon
+                        size="md"
+                        style={
+                          state.hovered ||
+                          state.focused ||
+                          state.pressed ||
+                          control.isOpen
+                            ? {color: t.palette.primary_500}
+                            : t.atoms.text_contrast_high
+                        }
+                      />
+                    </Pressable>
+                  )}
+                </EmojiPicker.Trigger>
+                <EmojiPicker.Picker />
+              </EmojiPicker.Root>
             )}
 
             <Composer
@@ -226,14 +196,6 @@ export function MessageComposer({
           <SubmitButton onPress={onSubmit} disabled={submitDisabled} />
         </GlassContainer>
       </View>
-
-      {IS_WEB && (
-        <EmojiPicker
-          pinToTop
-          state={emojiPickerState}
-          close={() => setEmojiPickerState(prev => ({...prev, isOpen: false}))}
-        />
-      )}
     </ComposerContainer>
   )
 }
