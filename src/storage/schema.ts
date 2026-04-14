@@ -79,4 +79,10 @@ export type Account = {
   birthdateLastUpdatedAt?: string
 
   lastSelectedHomeFeed?: string
+
+  /**
+   * Recently selected GIFs in the GIF picker, stored as serialized Gif objects.
+   * Most recent first, capped at 20.
+   */
+  recentGifs?: string[]
 }

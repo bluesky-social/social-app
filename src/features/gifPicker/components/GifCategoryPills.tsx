@@ -10,10 +10,11 @@ export type GifCategory = {
   id: string
   emoji: string
   label: MessageDescriptor
-  searchterm: string | null // null = trending (uses featured endpoint)
+  searchterm: string | null // null = trending/recents (handled by consumer)
 }
 
 export const GIF_CATEGORIES: readonly GifCategory[] = [
+  {id: 'recents', emoji: '🕐', label: msg`Recents`, searchterm: null},
   {id: 'trending', emoji: '🔥', label: msg`Trending`, searchterm: null},
   {id: 'love', emoji: '❤️', label: msg`Love`, searchterm: 'love'},
   {id: 'happy', emoji: '😄', label: msg`Happy`, searchterm: 'happy'},
@@ -27,9 +28,11 @@ export const GIF_CATEGORIES: readonly GifCategory[] = [
 export function GifCategoryPills({
   activeId,
   onSelect,
+  hasRecents,
 }: {
   activeId: string
   onSelect: (category: GifCategory) => void
+  hasRecents: boolean
 }) {
   // useLingui() is called to re-render when the locale changes, even though we
   // translate via i18n._() below to satisfy the lingui-msg-rule lint constraint.
@@ -42,6 +45,7 @@ export function GifCategoryPills({
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={[a.flex_row, a.gap_xs, a.px_xl]}>
         {GIF_CATEGORIES.map(category => {
+          if (category.id === 'recents' && !hasRecents) return null
           const isActive = category.id === activeId
           const label = i18n._(category.label)
           return (
@@ -52,10 +56,8 @@ export function GifCategoryPills({
               size="small"
               variant={isActive ? 'solid' : 'outline'}
               color={isActive ? 'primary' : 'secondary'}
-              shape="default">
-              <ButtonText emoji>
-                {category.emoji} {label}
-              </ButtonText>
+              shape="round">
+              <ButtonText emoji>{category.emoji}</ButtonText>
             </Button>
           )
         })}

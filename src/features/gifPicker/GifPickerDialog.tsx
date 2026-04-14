@@ -16,6 +16,7 @@ import {GifPickerGrid} from '#/features/gifPicker/components/GifPickerGrid'
 import {GifPickerHeader} from '#/features/gifPicker/components/GifPickerHeader'
 import {GifPickerPlaceholder} from '#/features/gifPicker/components/GifPickerPlaceholder'
 import {useGifPickerData} from '#/features/gifPicker/hooks/useGifPickerData'
+import {useRecentGifs} from '#/features/gifPicker/hooks/useRecentGifs'
 import {type Gif} from '#/features/gifPicker/types'
 
 export function GifPickerDialog({
@@ -71,14 +72,17 @@ function GifPickerBody({
   const [rawSearch, setRawSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState<string>('trending')
   const search = useThrottledValue(rawSearch, 750)
+  const {getRecents, addRecent, hasRecents} = useRecentGifs()
 
   // Determine the effective search query:
   // - If user is typing, use the typed text
   // - If a non-trending category is active, use its searchterm
-  // - Otherwise (trending), empty string triggers the featured endpoint
+  // - Otherwise (trending/recents), empty string triggers the featured endpoint
   const activeCategorySearchterm =
     GIF_CATEGORIES.find(c => c.id === activeCategory)?.searchterm ?? ''
   const effectiveSearch = search.length > 0 ? search : activeCategorySearchterm
+
+  const isRecentsActive = activeCategory === 'recents' && rawSearch.length === 0
 
   const {
     data,
@@ -90,18 +94,20 @@ function GifPickerBody({
     isError,
     isSearching,
     refetch,
-  } = useGifPickerData(effectiveSearch)
+  } = useGifPickerData(effectiveSearch, {enabled: !isRecentsActive})
 
-  const items = data?.pages.flatMap(page => page.results) ?? []
+  const networkItems = data?.pages.flatMap(page => page.results) ?? []
+  const items = isRecentsActive ? getRecents() : networkItems
   const hasData = items.length > 0
 
   const onEndReached = () => {
+    if (isRecentsActive) return
     if (isFetchingNextPage || !hasNextPage || error) return
     void fetchNextPage()
   }
 
   const onGoBack = () => {
-    if (isSearching) {
+    if (isSearching || activeCategory !== 'trending') {
       textInputRef.current?.clear()
       setRawSearch('')
       setActiveCategory('trending')
@@ -120,6 +126,11 @@ function GifPickerBody({
     listRef.current?.scrollToOffset({offset: 0, animated: false})
   }
 
+  const handleSelectGif = (gif: Gif) => {
+    addRecent(gif)
+    onSelectGif(gif)
+  }
+
   const showPills = rawSearch.length === 0
 
   const header = (
@@ -134,12 +145,13 @@ function GifPickerBody({
         <GifCategoryPills
           activeId={activeCategory}
           onSelect={onSelectCategory}
+          hasRecents={hasRecents}
         />
       )}
       {!hasData && (
         <GifPickerPlaceholder
-          isLoading={isPending}
-          isError={isError}
+          isLoading={!isRecentsActive && isPending}
+          isError={!isRecentsActive && isError}
           isSearching={isSearching}
           query={effectiveSearch}
           onRetry={refetch}
@@ -157,11 +169,11 @@ function GifPickerBody({
         items={items}
         header={header}
         hasData={hasData}
-        isFetchingNextPage={isFetchingNextPage}
-        error={error}
+        isFetchingNextPage={!isRecentsActive && isFetchingNextPage}
+        error={isRecentsActive ? null : error}
         fetchNextPage={fetchNextPage}
         onEndReached={onEndReached}
-        onSelectGif={onSelectGif}
+        onSelectGif={handleSelectGif}
       />
     </>
   )
