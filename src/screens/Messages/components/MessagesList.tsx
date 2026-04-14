@@ -181,13 +181,6 @@ export function MessagesList({
         })
       }
 
-      // This number _must_ be the height of the MaybeLoader component
-      if (height <= 50) {
-        prevContentHeight.current = height
-        prevItemCount.current = convoState.items.length
-        return
-      }
-
       // Initial scroll to bottom — unconditional, not gated on isAtBottom. This is separated because contentInset
       // can cause an early onScroll with a negative offset that sets isAtBottom to false before we get here.
       if (!hasInitiallyScrolled.current && convoState.items.length > 0) {
