@@ -268,7 +268,7 @@ export function Inner({children, style, header}: DialogInnerProps) {
 
 export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
   function ScrollableInner(
-    {children, contentContainerStyle, header, ...props},
+    {children, contentContainerStyle, header, style: _style, ...props},
     ref,
   ) {
     const {nativeSnapPoint, disableDrag, setDisableDrag, type} =

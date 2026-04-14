@@ -100,7 +100,7 @@ export function Icon({
   }
 
   return (
-    <View style={[a.pb_sm]}>
+    <View style={[a.pb_sm, a.align_center]}>
       <Comp size="xl" style={{color: iconColor}} />
     </View>
   )
