@@ -34,6 +34,7 @@ import {Link} from '#/view/com/util/Link'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a} from '#/alf'
+import * as Dialog from '#/components/Dialog'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -49,6 +50,13 @@ import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
 import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
+import {
+  QuickReactBarTrigger,
+  useQuickReactA11yAction,
+  useQuickReactController,
+  useViewerReaction,
+} from '#/features/quickReact'
+import {QuickReactPicker} from '#/features/quickReact/components/QuickReactPicker'
 import * as bsky from '#/types/bsky'
 import {PostFeedReason} from './PostFeedReason'
 
@@ -293,9 +301,21 @@ let FeedItemInner = ({
     }
   }, [reason])
 
+  // Quick-react integration. The picker acts as the a11y-action surface and
+  // as a universal keyboard-accessible entry point. Chip/overlay live inside
+  // PostControls and QuickReactBarTrigger respectively.
+  const quickReactPickerControl = Dialog.useDialogControl()
+  const quickReactController = useQuickReactController()
+  const {emoji: currentReactionEmoji} = useViewerReaction({postUri: post.uri})
+  const quickReactA11y = useQuickReactA11yAction({
+    onReact: () => quickReactPickerControl.open(),
+  })
+
   return (
     <Link
       testID={`feedItem-by-${post.author.handle}`}
+      accessibilityActions={quickReactA11y.accessibilityActions}
+      onAccessibilityAction={quickReactA11y.onAccessibilityAction}
       style={outerStyles}
       href={href}
       noFeedback
@@ -376,15 +396,20 @@ let FeedItemInner = ({
               />
             )}
           <LabelsOnMyPost post={post} />
-          <PostContent
-            moderation={moderation}
-            richText={richText}
-            postEmbed={post.embed}
-            postAuthor={post.author}
-            onOpenEmbed={onOpenEmbed}
-            post={post}
-            threadgateRecord={threadgateRecord}
-          />
+          <QuickReactBarTrigger
+            postUri={post.uri}
+            surface="feed"
+            logContext="FeedItem">
+            <PostContent
+              moderation={moderation}
+              richText={richText}
+              postEmbed={post.embed}
+              postAuthor={post.author}
+              onOpenEmbed={onOpenEmbed}
+              post={post}
+              threadgateRecord={threadgateRecord}
+            />
+          </QuickReactBarTrigger>
           <PostControls
             post={post}
             record={record}
@@ -396,11 +421,18 @@ let FeedItemInner = ({
             threadgateRecord={threadgateRecord}
             onShowLess={onShowLess}
             viaRepost={viaRepost}
+            quickReactSurface="feed"
           />
         </View>
 
         <DiscoverDebug feedContext={feedContext} />
       </View>
+      <QuickReactPicker
+        control={quickReactPickerControl}
+        currentEmoji={currentReactionEmoji}
+        onSelect={e => quickReactController.schedule(post.uri, e)}
+        onRemove={() => quickReactController.schedule(post.uri, null)}
+      />
     </Link>
   )
 }
