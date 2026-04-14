@@ -1,4 +1,5 @@
 import {type ID as PolicyUpdate202508} from '#/components/PolicyUpdateOverlay/updates/202508/config'
+import {type ReactionsStore} from '#/features/quickReact/types'
 import {type Geolocation} from '#/geolocation/types'
 
 /**
@@ -79,4 +80,10 @@ export type Account = {
   birthdateLastUpdatedAt?: string
 
   lastSelectedHomeFeed?: string
+
+  /**
+   * Quick-react feature (PRI2pI7l) — viewer's own reactions, device-local.
+   * v0 is client-only; v1 may swap to a server-backed store.
+   */
+  quickReactions?: ReactionsStore
 }

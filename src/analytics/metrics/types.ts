@@ -7,6 +7,11 @@ import {type Platform} from 'react-native'
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
+import {
+  type BarOpenPayload as QuickReactBarOpenPayload,
+  type RemovePayload as QuickReactRemovePayload,
+  type SelectPayload as QuickReactSelectPayload,
+} from '#/features/quickReact/types'
 
 export type Events = {
   // App events
@@ -1043,4 +1048,9 @@ export type Events = {
   'profile:associated:germ:click-self-info': {}
   'profile:associated:germ:self-disconnect': {}
   'profile:associated:germ:self-reconnect': {}
+
+  // Quick-react (PRI2pI7l)
+  'quickReaction:barOpen': QuickReactBarOpenPayload
+  'quickReaction:select': QuickReactSelectPayload
+  'quickReaction:remove': QuickReactRemovePayload
 }
