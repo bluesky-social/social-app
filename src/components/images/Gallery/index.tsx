@@ -24,6 +24,7 @@ import {useA11y} from '#/state/a11y'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
 import {
   ITEM_GAP,
@@ -331,12 +332,10 @@ function computeDims({
    * Clamp between MIN_ASPECT_RATIO (portrait) and MAX_ASPECT_RATIO
    * (landscape) so items stay a reasonable size in the carousel.
    */
-  const clamped = Math.max(
-    MIN_ASPECT_RATIO,
-    Math.min(aspectRatio ?? 1, MAX_ASPECT_RATIO),
-  )
+  const raw = aspectRatio ?? 1
+  const clamped = Math.max(MIN_ASPECT_RATIO, Math.min(raw, MAX_ASPECT_RATIO))
   const width = Math.floor(height * clamped)
-  return {width, height, aspectRatio: clamped}
+  return {width, height, aspectRatio: clamped, isCropped: raw !== clamped}
 }
 
 function GalleryImage({
@@ -370,7 +369,8 @@ function GalleryImage({
   const [aspectRatio, setAspectRatio] = useState(() =>
     getAspectRatio(image.aspectRatio),
   )
-  const dims = computeDims({height, aspectRatio})
+  const {isCropped, ...dims} = computeDims({height, aspectRatio})
+  const hasAlt = !!image.alt
 
   useEffect(() => {
     onWidthChange(index, dims.width)
@@ -415,31 +415,63 @@ function GalleryImage({
           }}
         />
 
-        {image.alt && !hideBadges ? (
+        {(hasAlt || isCropped) && !hideBadges ? (
           <View
             accessible={false}
             style={[
               a.absolute,
               a.flex_row,
-              a.align_center,
-              a.rounded_xs,
-              t.atoms.bg_contrast_25,
               {
-                gap: 3,
-                padding: 3,
                 bottom: a.p_xs.padding,
                 right: a.p_xs.padding,
-                opacity: 0.8,
+                gap: 3,
               },
               largeAltBadge && {
                 gap: 4,
-                padding: 5,
               },
             ]}>
-            <Text
-              style={[a.font_bold, largeAltBadge ? a.text_xs : {fontSize: 8}]}>
-              <Trans>ALT</Trans>
-            </Text>
+            {isCropped && (
+              <View
+                style={[
+                  a.rounded_sm,
+                  a.p_xs,
+                  t.atoms.bg_contrast_25,
+                  {
+                    opacity: 0.8,
+                  },
+                  largeAltBadge && {
+                    padding: 6,
+                  },
+                ]}>
+                <Fullscreen
+                  fill={t.atoms.text_contrast_high.color}
+                  width={largeAltBadge ? 18 : 12}
+                />
+              </View>
+            )}
+            {hasAlt && (
+              <View
+                style={[
+                  a.justify_center,
+                  a.rounded_sm,
+                  a.p_xs,
+                  t.atoms.bg_contrast_25,
+                  {
+                    opacity: 0.8,
+                  },
+                  largeAltBadge && {
+                    padding: 6,
+                  },
+                ]}>
+                <Text
+                  style={[
+                    a.font_bold,
+                    largeAltBadge ? a.text_xs : {fontSize: 8},
+                  ]}>
+                  <Trans>ALT</Trans>
+                </Text>
+              </View>
+            )}
           </View>
         ) : null}
 
