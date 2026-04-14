@@ -2,17 +2,12 @@ import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {TextInput, View, type ViewToken} from 'react-native'
 import {type ModerationOpts} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useQueryClient} from '@tanstack/react-query'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {
-  getAllDidsInDiscoverCache,
-  useGetSuggestedUsersForDiscoverQuery,
-} from '#/state/queries/trending/useGetSuggestedUsersForDiscoverQuery'
 import {useGetSuggestedUsersForSeeMoreQuery} from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery'
 import {useSession} from '#/state/session'
 import {type Follow10ProgressGuide} from '#/state/shell/progress-guide'
@@ -119,7 +114,6 @@ const FOR_YOU_TAB = 'all'
 function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
   const {t: l} = useLingui()
   const ax = useAnalytics()
-  const queryClient = useQueryClient()
   const rawInterestsDisplayNames = useInterestsDisplayNames()
   const {data: preferences} = usePreferencesQuery()
   const personalizedInterests = preferences?.interests?.tags
@@ -156,29 +150,13 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
 
   const isForYou = selectedInterest === FOR_YOU_TAB
 
-  // Snapshot the DIDs already shown by the home-feed Discover interstitial at
-  // dialog open time. The endpoint has no cursor; we dedup client-side so the
-  // For You tab doesn't re-show profiles the viewer just saw. Snapshotting
-  // once (lazy init) prevents our own `limit: 50` fetch from excluding itself
-  // after it lands in the shared cache.
-  const [alreadyShownDids] = useState(() =>
-    getAllDidsInDiscoverCache(queryClient),
-  )
-
-  const discoverQuery = useGetSuggestedUsersForDiscoverQuery({
-    limit: 50,
-    enabled: isForYou,
-  })
   const seeMoreQuery = useGetSuggestedUsersForSeeMoreQuery({
     category: isForYou ? undefined : selectedInterest,
     limit: 50,
-    enabled: !isForYou,
   })
-  const suggestions = isForYou ? discoverQuery.data : seeMoreQuery.data
-  const isFetchingSuggestions = isForYou
-    ? discoverQuery.isFetching
-    : seeMoreQuery.isFetching
-  const suggestionsError = isForYou ? discoverQuery.error : seeMoreQuery.error
+  const suggestions = seeMoreQuery.data
+  const isFetchingSuggestions = seeMoreQuery.isFetching
+  const suggestionsError = seeMoreQuery.error
   const {
     data: searchResults,
     isFetching: isFetchingSearchResults,
@@ -222,10 +200,6 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
         if (seen.has(profile.did)) continue
         if (profile.did === currentAccount?.did) continue
         if (profile.viewer?.following) continue
-        // On the For You tab, skip profiles the viewer was already shown by
-        // the home-feed Discover interstitial.
-        if (isForYou && !hasSearchText && alreadyShownDids.has(profile.did))
-          continue
 
         seen.add(profile.did)
 
@@ -260,8 +234,6 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
     hasSearchText,
     resultsKey,
     isSearchResultsError,
-    isForYou,
-    alreadyShownDids,
   ])
 
   const isGuide = Boolean(guide)
