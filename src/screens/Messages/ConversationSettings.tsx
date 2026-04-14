@@ -460,9 +460,17 @@ function MemberMenu({
   const t = useTheme()
   const {t: l} = useLingui()
   const ax = useAnalytics()
+
   const requireEmailVerification = useRequireEmailVerification()
+  const convoState = useConvo()
+  const {currentAccount} = useSession()
 
   const blockMemberPrompt = Prompt.usePromptControl()
+
+  const isOwner =
+    currentAccount?.did == null
+      ? false
+      : convoState.getPrimaryMember?.()?.did === currentAccount.did
 
   const {data: convoAvailability} = useGetConvoAvailabilityQuery(profile.did)
   const {mutate: initiateConvo} = useGetConvoForMembers({
@@ -621,7 +629,7 @@ function MemberMenu({
                 <Menu.ItemIcon icon={PersonXIcon} />
               </Menu.Item>
             ) : null}
-            {type === 'owner' ? (
+            {isOwner ? (
               <Menu.Item
                 label={l`Remove ${displayName} from this group chat`}
                 onPress={() => {}}>
@@ -631,7 +639,7 @@ function MemberMenu({
                 <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
               </Menu.Item>
             ) : null}
-            {type === 'invited' ? (
+            {isOwner && type === 'invited' ? (
               <Menu.Item
                 label={l`Uninvite ${displayName} from this group chat`}
                 onPress={() => {}}>
