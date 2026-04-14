@@ -1,34 +1,42 @@
 import {
   cloneElement,
   createContext,
+  isValidElement,
   useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
-  isValidElement,
 } from 'react'
 import {FlatList, Pressable, useWindowDimensions, View} from 'react-native'
-import Animated, {type AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
+import Animated, {
+  type AnimatedRef,
+  useAnimatedRef,
+} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {mergeRefs} from '#/lib/merge-refs'
 import {type Dimensions} from '#/lib/media/types'
+import {mergeRefs} from '#/lib/merge-refs'
 import {useA11y} from '#/state/a11y'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
-import {atoms as a, useTheme, useBreakpoints} from '#/alf'
+import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
+import {
+  ITEM_GAP,
+  MAX_ASPECT_RATIO,
+  MIN_ASPECT_RATIO,
+} from '#/components/images/Gallery/const'
+import {useKeyboardHandlers} from '#/components/images/Gallery/useKeyboardHandlers'
+import {usePointerHandlers} from '#/components/images/Gallery/usePointerHandlers'
+import {getAspectRatio} from '#/components/images/Gallery/utils'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {useKeyboardHandlers} from '#/components/images/Gallery/useKeyboardHandlers'
-import {usePointerHandlers} from '#/components/images/Gallery/usePointerHandlers'
-import {ITEM_GAP} from '#/components/images/Gallery/const'
 import {IS_WEB} from '#/env'
 
 interface GalleryProps {
@@ -55,7 +63,6 @@ export function GalleryBleed({children}: {children: React.ReactNode}) {
   const [bleedWidth, setBleedWidth] = useState(0)
 
   if (!isValidElement(children)) {
-
     throw new Error('GalleryBleed children must be a single React element')
   }
 
@@ -69,6 +76,7 @@ export function GalleryBleed({children}: {children: React.ReactNode}) {
           setBleedWidth(e.nativeEvent.layout.width)
           node.props.onLayout?.(e)
         },
+        style: [node.props.style, a.overflow_hidden],
       })}
     </Context.Provider>
   )
@@ -123,10 +131,12 @@ export function Gallery({
       )
     }
   }
+  const width = bleedWidth || Math.min(600, window.width)
   const insetLeft = contentDims?.x ?? 0
   const insetRight =
-    bleedWidth - (contentDims?.x ?? 0) - (contentDims?.width ?? 0) || 0
-  const width = bleedWidth || Math.min(600, window.width)
+    bleedWidth > 0
+      ? bleedWidth - (contentDims?.x ?? 0) - (contentDims?.width ?? 0)
+      : 0
   /* End container overflow styles */
 
   const flatListRef = useRef<FlatList>(null)
@@ -306,16 +316,6 @@ export function Gallery({
   )
 }
 
-function getAspectRatio({
-  width,
-  height,
-}: {width?: number; height?: number} = {}) {
-  if (width && width > 0 && height && height > 0) {
-    return width / height
-  }
-  return undefined
-}
-
 function computeDims({
   height,
   aspectRatio,
@@ -327,9 +327,16 @@ function computeDims({
    * Old images, or images from other clients can sometimes not have
    * aspectRatio populated. In these cases, default to square and we'll
    * resize once the image loads.
+   *
+   * Clamp between MIN_ASPECT_RATIO (portrait) and MAX_ASPECT_RATIO
+   * (landscape) so items stay a reasonable size in the carousel.
    */
-  const width = Math.floor(height * (aspectRatio ?? 1))
-  return {width, height, aspectRatio}
+  const clamped = Math.max(
+    MIN_ASPECT_RATIO,
+    Math.min(aspectRatio ?? 1, MAX_ASPECT_RATIO),
+  )
+  const width = Math.floor(height * clamped)
+  return {width, height, aspectRatio: clamped}
 }
 
 function GalleryImage({
@@ -380,9 +387,7 @@ function GalleryImage({
         onPress={onPress}
         onPressIn={onPressIn}
         accessibilityRole="button"
-        accessibilityLabel={
-          image.alt || l`Image ${index + 1}`
-        }
+        accessibilityLabel={image.alt || l`Image ${index + 1}`}
         accessibilityHint={l`Opens full image`}
         android_ripple={{
           color: utils.alpha(t.atoms.bg.backgroundColor, 0.2),
@@ -432,10 +437,7 @@ function GalleryImage({
               },
             ]}>
             <Text
-              style={[
-                a.font_bold,
-                largeAltBadge ? a.text_xs : {fontSize: 8},
-              ]}>
+              style={[a.font_bold, largeAltBadge ? a.text_xs : {fontSize: 8}]}>
               <Trans>ALT</Trans>
             </Text>
           </View>

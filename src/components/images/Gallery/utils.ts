@@ -10,3 +10,13 @@ export function getOffsetForIndex(
   }
   return offset
 }
+
+export function getAspectRatio({
+  width,
+  height,
+}: {width?: number; height?: number} = {}) {
+  if (width && width > 0 && height && height > 0) {
+    return width / height
+  }
+  return undefined
+}
