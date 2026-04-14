@@ -1046,12 +1046,12 @@ export type Events = {
 
   // Gallery carousel events
   'post:gallery:swipe': {
-    fromIndex: number
-    toIndex: number
+    fromImage: number
+    toImage: number
     totalImages: number
   }
   'post:gallery:openLightbox': {
-    imageIndex: number
+    fromImage: number
     totalImages: number
   }
   'post:gallery:impression': {

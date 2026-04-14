@@ -17,6 +17,7 @@ import {Image} from 'expo-image'
 import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
+import debounce from 'lodash.debounce'
 
 import {type Dimensions} from '#/lib/media/types'
 import {mergeRefs} from '#/lib/merge-refs'
@@ -93,6 +94,7 @@ export function Gallery({
   onPressIn,
   viewContext,
 }: GalleryProps) {
+  // images = images.concat(images)
   const ax = useAnalytics()
   const {screenReaderEnabled} = useA11y()
   const largeAltBadge = useLargeAltBadgeEnabled()
@@ -147,15 +149,23 @@ export function Gallery({
   const thumbDimsRef = useRef<Map<number, Dimensions>>(new Map())
   const currentIndexRef = useRef(0)
 
+  const emitSwipeMetric = useMemo(
+    () =>
+      debounce((fromIndex: number, toIndex: number) => {
+        ax.metric('post:gallery:swipe', {
+          fromImage: fromIndex + 1, // convert to 1-based index for easier analysis
+          toImage: toIndex + 1, // convert to 1-based index for easier analysis
+          totalImages: images.length,
+        })
+      }, 200),
+    [ax, images.length],
+  )
+
   const setCurrentIndex = (index: number) => {
     const prev = currentIndexRef.current
     if (prev !== index) {
       currentIndexRef.current = index
-      ax.metric('post:gallery:swipe', {
-        fromIndex: prev,
-        toIndex: index,
-        totalImages: images.length,
-      })
+      emitSwipeMetric(prev, index)
     }
   }
 
@@ -193,7 +203,7 @@ export function Gallery({
       <View style={[a.relative, a.gap_sm]}>
         {images.map((image, index) => (
           <AutoSizedImage
-            key={image.thumb}
+            key={image.thumb + index}
             crop={
               viewContext === PostEmbedViewContext.ThreadHighlighted
                 ? 'none'
@@ -238,7 +248,7 @@ export function Gallery({
           alwaysBounceVertical={false}
           scrollEventThrottle={16}
           data={images}
-          keyExtractor={item => item.thumb}
+          keyExtractor={(item, index) => item.thumb + index}
           renderItem={({item, index}) => {
             return (
               <GalleryImage
@@ -267,7 +277,7 @@ export function Gallery({
                   onPress
                     ? () => {
                         ax.metric('post:gallery:openLightbox', {
-                          imageIndex: index,
+                          fromImage: index + 1, // convert to 1-based index for easier analysis
                           totalImages: images.length,
                         })
                         const refs: AnimatedRef<any>[] = []
