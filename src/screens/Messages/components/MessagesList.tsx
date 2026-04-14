@@ -145,6 +145,10 @@ export function MessagesList({
   const prevContentHeight = useRef(0)
   const prevItemCount = useRef(0)
 
+  // Tracks whether the initial scroll-to-bottom has been triggered. Separated from isAtBottom so that contentInset
+  // (which causes an early onScroll with negative offset) can't prevent the first scroll.
+  const hasInitiallyScrolled = useRef(false)
+
   // -- Keep track of background state and positioning for new pill
   const layoutHeight = useSharedValue(0)
   const didBackground = useRef(false)
@@ -178,7 +182,31 @@ export function MessagesList({
       }
 
       // This number _must_ be the height of the MaybeLoader component
-      if (height > 50 && isAtBottom.get()) {
+      if (height <= 50) {
+        prevContentHeight.current = height
+        prevItemCount.current = convoState.items.length
+        return
+      }
+
+      // Initial scroll to bottom — unconditional, not gated on isAtBottom. This is separated because contentInset
+      // can cause an early onScroll with a negative offset that sets isAtBottom to false before we get here.
+      if (!hasInitiallyScrolled.current) {
+        hasInitiallyScrolled.current = true
+        flatListRef.current?.scrollToOffset({offset: height, animated: false})
+        // If history is already done loading, mark ready after a frame for the scroll to settle.
+        // Otherwise, the footer sentinel's onLayout will handle it when history finishes.
+        if (!convoState.isFetchingHistory) {
+          requestAnimationFrame(() => {
+            setHasScrolled(true)
+          })
+        }
+        prevContentHeight.current = height
+        prevItemCount.current = convoState.items.length
+        return
+      }
+
+      // Subsequent: auto-scroll only if user is at the bottom
+      if (isAtBottom.get()) {
         // If the size of the content is changing by more than the height of the screen, then we don't
         // want to scroll further than the start of all the new content. Since we are storing the previous offset,
         // we can just scroll the user to that offset and add a little bit of padding. We'll also show the pill
@@ -202,17 +230,6 @@ export function MessagesList({
             offset: height,
             animated: hasScrolled && height > prevContentHeight.current,
           })
-
-          // HACK Unfortunately, we need to call `setHasScrolled` after a brief delay,
-          // because otherwise there is too much of a delay between the time the content
-          // scrolls and the time the screen appears, causing a flicker.
-          // We cannot actually use a synchronous scroll here, because `onContentSizeChange`
-          // is actually async itself - all the info has to come across the bridge first.
-          if (!hasScrolled && !convoState.isFetchingHistory) {
-            setTimeout(() => {
-              setHasScrolled(true)
-            }, 100)
-          }
         }
       }
 
@@ -379,6 +396,20 @@ export function MessagesList({
     return null
   }
 
+  // Footer sentinel: when history is still loading during the initial scroll, the footer's onLayout fires each time
+  // new items are prepended (shifting its position). Once history finishes, this triggers setHasScrolled.
+  const onFooterLayout = useCallback(() => {
+    if (
+      hasInitiallyScrolled.current &&
+      !hasScrolled &&
+      !convoState.isFetchingHistory
+    ) {
+      requestAnimationFrame(() => {
+        setHasScrolled(true)
+      })
+    }
+  }, [hasScrolled, setHasScrolled, convoState.isFetchingHistory])
+
   const renderScrollComponent = useCallback(
     (props: ScrollViewProps) => (
       <ChatScrollComponent {...props} inputHeight={inputHeightUI} />
@@ -430,11 +461,12 @@ export function MessagesList({
                 web: 0, // web uses ListFooterComponent instead for scroll reasons
               }),
             }}
-            // adds extra space underneath the absolutely positioned input on web
-            // as renderScrollComponent isn't available here (luckily we don't need the fancy behaviour)
-            ListFooterComponent={web(
-              <View style={{height: tokens.space.md + inputHeightJS}} />,
-            )}
+            ListFooterComponent={
+              <View
+                style={web({height: tokens.space.md + inputHeightJS})}
+                onLayout={onFooterLayout}
+              />
+            }
             style={web({
               scrollbarWidth: 'thin',
               scrollbarColor: `${t.palette.contrast_100} transparent`,
