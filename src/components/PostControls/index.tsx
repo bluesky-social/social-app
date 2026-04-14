@@ -30,6 +30,8 @@ import {useFormatPostStatCount} from '#/components/PostControls/util'
 import * as Skele from '#/components/Skeleton'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
+import {QuickReactChip} from '#/features/quickReact'
+import {type ReactionSurface} from '#/features/quickReact'
 import {BookmarkButton} from './BookmarkButton'
 import {
   PostControlButton,
@@ -56,6 +58,7 @@ let PostControls = ({
   viaRepost,
   variant,
   forceGoogleTranslate = false,
+  quickReactSurface,
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -72,6 +75,11 @@ let PostControls = ({
   viaRepost?: {uri: string; cid: string}
   variant?: 'compact' | 'normal' | 'large'
   forceGoogleTranslate?: boolean
+  /**
+   * When set, renders a QuickReactChip inline when the viewer has reacted.
+   * Undefined (default) keeps the component entirely inert re: quick-react.
+   */
+  quickReactSurface?: ReactionSurface
 }): React.ReactNode => {
   const ax = useAnalytics()
   const t = useTheme()
@@ -310,6 +318,11 @@ let PostControls = ({
             />
           </PostControlButton>
         </View>
+        {quickReactSurface ? (
+          <View style={[a.align_start, a.justify_center, a.pr_xs]}>
+            <QuickReactChip postUri={post.uri} surface={quickReactSurface} />
+          </View>
+        ) : null}
         {/* Spacer! */}
         <View />
       </View>
