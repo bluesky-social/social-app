@@ -1,4 +1,13 @@
-import {forwardRef, useCallback, useId, useMemo, useState} from 'react'
+import {
+  createContext,
+  forwardRef,
+  useCallback,
+  useContext,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   Pressable,
   type StyleProp,
@@ -32,6 +41,8 @@ import {
 import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
+const ContentRefContext = createContext<React.RefObject<any> | null>(null)
+
 export {useMenuContext}
 
 export function useMenuControl(): Dialog.DialogControlProps {
@@ -62,12 +73,50 @@ export function Root({
 }>) {
   const {_} = useLingui()
   const defaultControl = useMenuControl()
+  const {reduceMotionEnabled} = useA11y()
+  const contentRef = useRef<any>(null)
+  const animRef = useRef<Animation | null>(null)
+
+  const rawControl = control || defaultControl
+
+  const close = (cb?: () => void) => {
+    // If already animating, cancel and close immediately
+    if (animRef.current) {
+      animRef.current.cancel()
+      animRef.current = null
+      rawControl.close()
+      if (cb) setTimeout(cb)
+      return
+    }
+
+    const el = contentRef.current as HTMLElement | null
+    if (el && !reduceMotionEnabled) {
+      const anim = el.animate(
+        [
+          {opacity: 1, transform: 'scale(1)'},
+          {opacity: 0, transform: 'scale(0.95)'},
+        ],
+        {duration: 100, easing: 'ease-out', fill: 'forwards'},
+      )
+      animRef.current = anim
+      anim.onfinish = () => {
+        animRef.current = null
+        rawControl.close()
+        if (cb) setTimeout(cb)
+      }
+    } else {
+      rawControl.close()
+      if (cb) setTimeout(cb)
+    }
+  }
+
   const context = useMemo<ContextType>(
     () => ({
-      control: control || defaultControl,
+      control: {...rawControl, close},
     }),
-    [control, defaultControl],
+    [rawControl, close],
   )
+
   const onOpenChange = useCallback(
     (open: boolean) => {
       if (context.control.isOpen && !open) {
@@ -81,23 +130,25 @@ export function Root({
 
   return (
     <Context.Provider value={context}>
-      {context.control.isOpen && (
-        <Portal>
-          <Pressable
-            style={[a.fixed, a.inset_0, a.z_50]}
-            onPress={() => context.control.close()}
-            accessibilityHint=""
-            accessibilityLabel={_(
-              msg`Context menu backdrop, click to close the menu.`,
-            )}
-          />
-        </Portal>
-      )}
-      <DropdownMenu.Root
-        open={context.control.isOpen}
-        onOpenChange={onOpenChange}>
-        {children}
-      </DropdownMenu.Root>
+      <ContentRefContext.Provider value={contentRef}>
+        {context.control.isOpen && (
+          <Portal>
+            <Pressable
+              style={[a.fixed, a.inset_0, a.z_50]}
+              onPress={() => context.control.close()}
+              accessibilityHint=""
+              accessibilityLabel={_(
+                msg`Context menu backdrop, click to close the menu.`,
+              )}
+            />
+          </Portal>
+        )}
+        <DropdownMenu.Root
+          open={context.control.isOpen}
+          onOpenChange={onOpenChange}>
+          {children}
+        </DropdownMenu.Root>
+      </ContentRefContext.Provider>
     </Context.Provider>
   )
 }
@@ -187,6 +238,7 @@ export function Outer({
 }>) {
   const t = useTheme()
   const {reduceMotionEnabled} = useA11y()
+  const contentRef = useContext(ContentRefContext)
 
   return (
     <DropdownMenu.Portal>
@@ -194,9 +246,9 @@ export function Outer({
         sideOffset={5}
         collisionPadding={{left: 5, right: 5, bottom: 5}}
         loop
-        aria-label="Test"
         className="dropdown-menu-transform-origin dropdown-menu-constrain-size">
         <View
+          ref={contentRef}
           style={[
             a.rounded_sm,
             a.p_xs,
@@ -243,14 +295,14 @@ export function Item({children, label, onPress, style, ...rest}: ItemProps) {
         accessibilityHint=""
         accessibilityLabel={label}
         onPress={e => {
-          onPress(e)
-
           /**
            * Ported forward from Radix
            * @see https://www.radix-ui.com/primitives/docs/components/dropdown-menu#item
            */
           if (!e.defaultPrevented) {
-            control.close()
+            control.close(() => {
+              onPress(e)
+            })
           }
         }}
         onFocus={onFocus}
