@@ -1,12 +1,14 @@
-import {memo, useState} from 'react'
+import {memo, useMemo, useState} from 'react'
 import {
   findNodeHandle,
+  type ImageStyle,
   Keyboard,
   type LayoutChangeEvent,
   Platform,
   StyleSheet,
   TouchableOpacity,
   View,
+  type ViewStyle,
 } from 'react-native'
 import {Image} from 'expo-image'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -14,10 +16,10 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type Dimensions} from '#/lib/media/types'
 import {colors} from '#/lib/styles'
 import {type ComposerImage, cropImage} from '#/state/gallery'
-import {DraggableScrollView} from '#/view/com/pager/DraggableScrollView'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import * as Dialog from '#/components/Dialog'
@@ -30,7 +32,6 @@ import {EditImageDialog} from './EditImageDialog'
 import {ImageAltTextDialog} from './ImageAltTextDialog'
 
 const IMAGE_GAP = 8
-const CONTAINER_HEIGHT = 200
 
 interface GalleryProps {
   images: ComposerImage[]
@@ -62,32 +63,53 @@ interface GalleryInnerProps extends GalleryProps {
   containerInfo: Dimensions
 }
 
-const getItemWidth = (image: ComposerImage, height: number) => {
-  const source = image.transformed ?? image.source
-  if (source.width > 0 && source.height > 0) {
-    const ratio = source.width / source.height
-    const w = height * ratio
-    // Clamp: at least 60% of height, at most 1.5x height
-    return Math.max(height * 0.6, Math.min(w, height * 1.5))
-  }
-  return height
-}
+const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
+  const {isMobile} = useWebMediaQueries()
 
-const GalleryInner = ({images, dispatch}: GalleryInnerProps) => {
+  const {altTextControlStyle, imageControlsStyle, imageStyle} = useMemo(() => {
+    const side =
+      images.length === 1
+        ? 250
+        : (containerInfo.width - IMAGE_GAP * (images.length - 1)) /
+          images.length
+
+    const isOverflow = isMobile && images.length > 2
+
+    return {
+      altTextControlStyle: isOverflow
+        ? {left: 4, bottom: 4}
+        : !isMobile && images.length < 3
+          ? {left: 8, top: 8}
+          : {left: 4, top: 4},
+      imageControlsStyle: {
+        display: 'flex' as const,
+        flexDirection: 'row' as const,
+        position: 'absolute' as const,
+        ...(isOverflow
+          ? {top: 4, right: 4, gap: 4}
+          : !isMobile && images.length < 3
+            ? {top: 8, right: 8, gap: 8}
+            : {top: 4, right: 4, gap: 4}),
+        zIndex: 1,
+      },
+      imageStyle: {
+        height: side,
+        width: side,
+      },
+    }
+  }, [images.length, containerInfo, isMobile])
+
   return images.length !== 0 ? (
     <>
-      <DraggableScrollView
-        testID="selectedPhotosView"
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{gap: IMAGE_GAP, paddingTop: 16}}
-        style={{height: CONTAINER_HEIGHT + 16}}>
+      <View testID="selectedPhotosView" style={styles.gallery}>
         {images.map(image => {
           return (
             <GalleryItem
               key={image.source.id}
               image={image}
-              itemWidth={getItemWidth(image, CONTAINER_HEIGHT)}
-              itemHeight={CONTAINER_HEIGHT}
+              altTextControlStyle={altTextControlStyle}
+              imageControlsStyle={imageControlsStyle}
+              imageStyle={imageStyle}
               onChange={next => {
                 dispatch({type: 'embed_update_image', image: next})
               }}
@@ -97,7 +119,7 @@ const GalleryInner = ({images, dispatch}: GalleryInnerProps) => {
             />
           )
         })}
-      </DraggableScrollView>
+      </View>
       {images.some(image => !image.alt) && (
         <Admonition type="info" style={[a.mt_sm]}>
           <Trans>
@@ -112,16 +134,18 @@ const GalleryInner = ({images, dispatch}: GalleryInnerProps) => {
 
 type GalleryItemProps = {
   image: ComposerImage
-  itemWidth: number
-  itemHeight: number
+  altTextControlStyle?: ViewStyle
+  imageControlsStyle?: ViewStyle
+  imageStyle?: ImageStyle
   onChange: (next: ComposerImage) => void
   onRemove: () => void
 }
 
 const GalleryItem = ({
   image,
-  itemWidth,
-  itemHeight,
+  altTextControlStyle,
+  imageControlsStyle,
+  imageStyle,
   onChange,
   onRemove,
 }: GalleryItemProps): React.ReactNode => {
@@ -134,6 +158,7 @@ const GalleryItem = ({
   const [altBtnViewTag, setAltBtnViewTag] = useState<number>()
 
   const altBtnRef = (node: View | null) => {
+    // for iOS 26 fluid transition
     if (IS_IOS && node) {
       const tag = findNodeHandle(node)
       if (tag != null) setAltBtnViewTag(tag)
@@ -162,8 +187,33 @@ const GalleryItem = ({
   return (
     <View
       ref={altBtnRef}
-      style={{width: itemWidth, height: itemHeight}}
+      style={imageStyle as ViewStyle}
+      // Fixes ALT and icons appearing with half opacity when the post is inactive
       renderToHardwareTextureAndroid>
+      <TouchableOpacity
+        testID="altTextButton"
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`Add alt text`)}
+        accessibilityHint=""
+        onPress={onAltTextEdit}
+        style={[styles.altTextControl, altTextControlStyle]}>
+        {image.alt.length !== 0 ? (
+          <FontAwesomeIcon
+            icon="check"
+            size={10}
+            style={{color: t.palette.white}}
+          />
+        ) : (
+          <FontAwesomeIcon
+            icon="plus"
+            size={10}
+            style={{color: t.palette.white}}
+          />
+        )}
+        <Text style={styles.altTextControlLabel} accessible={false}>
+          <Trans>ALT</Trans>
+        </Text>
+      </TouchableOpacity>
       <View style={imageControlsStyle}>
         <TouchableOpacity
           testID="editPhotoButton"
@@ -188,32 +238,6 @@ const GalleryItem = ({
           />
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity
-        testID="altTextButton"
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`Add alt text`)}
-        accessibilityHint=""
-        onPress={onAltTextEdit}
-        style={[styles.altTextControl, {left: 4, bottom: 4}]}>
-        {image.alt.length !== 0 ? (
-          <FontAwesomeIcon
-            icon="check"
-            size={10}
-            style={{color: t.palette.white}}
-          />
-        ) : (
-          <FontAwesomeIcon
-            icon="plus"
-            size={10}
-            style={{color: t.palette.white}}
-          />
-        )}
-        <Text style={styles.altTextControlLabel} accessible={false}>
-          <Trans>ALT</Trans>
-        </Text>
-      </TouchableOpacity>
-
       <TouchableOpacity
         accessibilityRole="button"
         accessibilityLabel={_(msg`Add alt text`)}
@@ -224,7 +248,7 @@ const GalleryItem = ({
 
       <Image
         testID="selectedPhotoImage"
-        style={[styles.image, {width: itemWidth, height: itemHeight}]}
+        style={[styles.image, imageStyle]}
         source={{
           uri: (image.transformed ?? image.source).path,
         }}
@@ -253,17 +277,13 @@ const GalleryItem = ({
   )
 }
 
-const imageControlsStyle = {
-  display: 'flex' as const,
-  flexDirection: 'row' as const,
-  position: 'absolute' as const,
-  top: 4,
-  right: 4,
-  gap: 4,
-  zIndex: 1,
-}
-
 const styles = StyleSheet.create({
+  gallery: {
+    flex: 1,
+    flexDirection: 'row',
+    gap: IMAGE_GAP,
+    marginTop: 16,
+  },
   image: {
     borderRadius: tokens.borderRadius.md,
   },
