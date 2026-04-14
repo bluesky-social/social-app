@@ -2399,12 +2399,12 @@ msgstr ""
 msgid "Collapses list of users for a given notification"
 msgstr ""
 
-#: src/components/dialogs/Embed.tsx:155
+#: src/components/dialogs/Embed.tsx:150
 #: src/screens/Settings/AppearanceSettings.tsx:81
 msgid "Color mode"
 msgstr ""
 
-#: src/components/dialogs/Embed.tsx:152
+#: src/components/dialogs/Embed.tsx:147
 msgid "Color theme"
 msgstr ""
 
@@ -2646,7 +2646,7 @@ msgstr ""
 msgid "Copied to clipboard"
 msgstr ""
 
-#: src/components/dialogs/Embed.tsx:203
+#: src/components/dialogs/Embed.tsx:197
 #: src/screens/Settings/components/CopyButton.tsx:66
 msgid "Copied!"
 msgstr ""
@@ -2673,8 +2673,8 @@ msgstr ""
 msgid "Copy author DID"
 msgstr ""
 
-#: src/components/dialogs/Embed.tsx:191
-#: src/components/dialogs/Embed.tsx:208
+#: src/components/dialogs/Embed.tsx:186
+#: src/components/dialogs/Embed.tsx:202
 msgid "Copy code"
 msgstr ""
 
@@ -2948,7 +2948,7 @@ msgstr ""
 msgid "Custom"
 msgstr ""
 
-#: src/components/dialogs/Embed.tsx:145
+#: src/components/dialogs/Embed.tsx:140
 msgid "Customization options"
 msgstr ""
 
@@ -2964,8 +2964,8 @@ msgstr ""
 msgid "Dangerous substances or drug abuse"
 msgstr ""
 
-#: src/components/dialogs/Embed.tsx:169
-#: src/components/dialogs/Embed.tsx:171
+#: src/components/dialogs/Embed.tsx:164
+#: src/components/dialogs/Embed.tsx:166
 #: src/screens/Settings/AppearanceSettings.tsx:93
 #: src/screens/Settings/AppearanceSettings.tsx:114
 msgid "Dark"
@@ -3613,7 +3613,7 @@ msgstr ""
 msgid "Email Verified"
 msgstr ""
 
-#: src/components/dialogs/Embed.tsx:183
+#: src/components/dialogs/Embed.tsx:178
 msgid "Embed HTML code"
 msgstr ""
 
@@ -5004,7 +5004,7 @@ msgstr ""
 msgid "Hide all events"
 msgstr ""
 
-#: src/components/dialogs/Embed.tsx:129
+#: src/components/dialogs/Embed.tsx:124
 msgid "Hide customization options"
 msgstr ""
 
@@ -5701,8 +5701,8 @@ msgstr ""
 msgid "Let's go!"
 msgstr ""
 
-#: src/components/dialogs/Embed.tsx:164
-#: src/components/dialogs/Embed.tsx:166
+#: src/components/dialogs/Embed.tsx:159
+#: src/components/dialogs/Embed.tsx:161
 #: src/screens/Settings/AppearanceSettings.tsx:89
 msgid "Light"
 msgstr ""
@@ -9359,7 +9359,7 @@ msgstr ""
 msgid "Show badge and filter from feeds"
 msgstr ""
 
-#: src/components/dialogs/Embed.tsx:130
+#: src/components/dialogs/Embed.tsx:125
 msgid "Show customization options"
 msgstr ""
 
@@ -9910,8 +9910,8 @@ msgstr ""
 msgid "Switch to {0}"
 msgstr ""
 
-#: src/components/dialogs/Embed.tsx:159
-#: src/components/dialogs/Embed.tsx:161
+#: src/components/dialogs/Embed.tsx:154
+#: src/components/dialogs/Embed.tsx:156
 #: src/screens/Settings/AppearanceSettings.tsx:85
 #: src/screens/Settings/AppearanceSettings.tsx:135
 msgid "System"

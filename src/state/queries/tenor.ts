@@ -105,9 +105,8 @@ export function tenorUrlToBskyGifUrl(tenorUrl: string) {
 
 /**
  * Returns the appropriate URL for a GIF preview image.
- * Rewrites Tenor URLs through the bsky proxy; KLIPY URLs pass through
- * directly (will route through the bsky proxy once the tango backend-proxy
- * PR is deployed).
+ * Rewrites Tenor URLs through the bsky proxy (t.gifs.bsky.app);
+ * KLIPY URLs pass through directly to their CDN.
  */
 export function gifPreviewUrl(gifUrl: string) {
   try {
