@@ -96,9 +96,12 @@ export function SearchScreenShell({
   const [activeTab, setActiveTab] = useState(() => getTabIndex(tabParam))
 
   // Query terms
-  const [searchText, setSearchText] = useState<string>(queryParam)
+  const [searchText, _setSearchText] = useState<string>(queryParam)
   const searchTextRef = useRef(searchText)
-  searchTextRef.current = searchText
+  const setSearchText = (text: string) => {
+    searchTextRef.current = text
+    _setSearchText(text)
+  }
   const {data: autocompleteData, isFetching: isAutocompleteFetching} =
     useActorAutocompleteQuery(searchText, true)
 
