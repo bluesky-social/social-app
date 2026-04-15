@@ -1,8 +1,10 @@
 import {View} from 'react-native'
 import {type ScreenLayoutArgs, useIsFocused} from '@react-navigation/native'
+import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
-import {type AllNavigatorParams, type NavigationProp} from '#/lib/routes/types'
+import {type FlatNavigatorParams} from '#/lib/routes/types'
+import {type NativeStackNavigationOptionsWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
 import {atoms as a, useLayoutBreakpoints, useTheme, web} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
@@ -18,11 +20,21 @@ const LEFT_NAV_MINIMAL_WIDTH = 86
 const RIGHT_NAV_FULL_WIDTH = 330 + 28
 const RIGHT_NAV_MINIMAL_WIDTH = 280 + 28
 
+type MessageScreens =
+  | 'Messages'
+  | 'MessagesConversation'
+  | 'MessagesInbox'
+  | 'MessagesSettings'
+
 type LayoutProps = ScreenLayoutArgs<
-  AllNavigatorParams,
-  'Messages' | 'MessagesConversation' | 'MessagesInbox' | 'MessagesSettings',
-  {},
-  NavigationProp
+  FlatNavigatorParams,
+  MessageScreens,
+  NativeStackNavigationOptionsWithAuth,
+  NativeStackNavigationProp<
+    FlatNavigatorParams,
+    MessageScreens,
+    string | undefined
+  >
 >
 export function renderMessagesSplitViewLayout(props: LayoutProps) {
   return <MessagesSplitViewLayout {...props} />
