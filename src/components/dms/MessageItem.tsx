@@ -5,6 +5,7 @@ import {
   type StyleProp,
   type TextStyle,
   View,
+  type ViewStyle,
 } from 'react-native'
 import Animated, {
   FadeIn,
@@ -28,7 +29,7 @@ import {useConvoActive} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
-import {atoms as a, native, useTheme} from '#/alf'
+import {atoms as a, native, platform, useTheme} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {useDialogControl} from '#/components/Dialog'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
@@ -304,6 +305,12 @@ let MessageItem = ({
     </LayoutAnimationConfig>
   )
 
+  const messageInset = platform<ViewStyle | undefined>({
+    ios: isFromSelf ? a.mr_md : isGroupChat ? a.ml_md : a.ml_sm,
+    android: isFromSelf ? a.mr_sm : isGroupChat ? a.ml_sm : undefined,
+    web: isFromSelf ? a.mr_sm : isGroupChat ? a.ml_sm : undefined,
+  })
+
   return (
     <>
       {showDateDivider && (
@@ -312,10 +319,7 @@ let MessageItem = ({
         </Animated.View>
       )}
       <View
-        style={[
-          isFromSelf ? a.mr_sm : a.ml_sm,
-          isFirstInCluster && !showDateDivider && a.mt_sm,
-        ]}>
+        style={[messageInset, isFirstInCluster && !showDateDivider && a.mt_sm]}>
         <View style={[a.relative]}>
           {isGroupChat && !isFromSelf && isLastInCluster ? (
             <View style={[a.absolute, a.bottom_0]}>{avatar}</View>
