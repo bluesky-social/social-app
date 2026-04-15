@@ -4,25 +4,37 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon} from '#/components/Button'
+import {Celebrate_Stroke2_Corner0_Rounded as Celebrate} from '#/components/icons/Celebrate'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
+import {type Props as SVGIconProps} from '#/components/icons/common'
+import {
+  EmojiArc_Stroke2_Corner0_Rounded as EmojiArc,
+  EmojiHeartEyes_Stroke2_Corner0_Rounded as EmojiHeartEyes,
+  EmojiSad_Stroke2_Corner0_Rounded as EmojiSad,
+  EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmile,
+} from '#/components/icons/Emoji'
+import {Flame_Stroke2_Corner1_Rounded as Flame} from '#/components/icons/Flame'
+import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled} from '#/components/icons/Heart2'
 
 export type GifCategory = {
   id: string
-  emoji: string
+  icon: React.ComponentType<SVGIconProps>
   label: MessageDescriptor
   searchterm: string | null // null = trending/recents (handled by consumer)
 }
 
 export const GIF_CATEGORIES: readonly GifCategory[] = [
-  {id: 'recents', emoji: '🕐', label: msg`Recents`, searchterm: null},
-  {id: 'trending', emoji: '🔥', label: msg`Trending`, searchterm: null},
-  {id: 'love', emoji: '❤️', label: msg`Love`, searchterm: 'love'},
-  {id: 'happy', emoji: '😄', label: msg`Happy`, searchterm: 'happy'},
-  {id: 'sad', emoji: '😢', label: msg`Sad`, searchterm: 'cry'},
-  {id: 'party', emoji: '🎉', label: msg`Party`, searchterm: 'congratulations'},
-  {id: 'yes', emoji: '👍', label: msg`Yes`, searchterm: 'yes'},
-  {id: 'lol', emoji: '😂', label: msg`LOL`, searchterm: 'lol'},
-  {id: 'excited', emoji: '🤩', label: msg`Excited`, searchterm: 'excited'},
+  {id: 'recents', icon: Clock, label: msg`Recents`, searchterm: null},
+  {id: 'trending', icon: Flame, label: msg`Trending`, searchterm: null},
+  {id: 'love', icon: HeartFilled, label: msg`Love`, searchterm: 'love'},
+  {id: 'happy', icon: EmojiSmile, label: msg`Happy`, searchterm: 'happy'},
+  {id: 'sad', icon: EmojiSad, label: msg`Sad`, searchterm: 'cry'},
+  {id: 'party', icon: Celebrate, label: msg`Party`, searchterm: 'congratulations'},
+  {id: 'yes', icon: Check, label: msg`Yes`, searchterm: 'yes'},
+  {id: 'lol', icon: EmojiArc, label: msg`LOL`, searchterm: 'lol'},
+  {id: 'excited', icon: EmojiHeartEyes, label: msg`Excited`, searchterm: 'excited'},
 ] as const
 
 export function GifCategoryPills({
@@ -57,7 +69,7 @@ export function GifCategoryPills({
               variant={isActive ? 'solid' : 'outline'}
               color={isActive ? 'primary' : 'secondary'}
               shape="round">
-              <ButtonText emoji>{category.emoji}</ButtonText>
+              <ButtonIcon icon={category.icon} />
             </Button>
           )
         })}
