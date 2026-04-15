@@ -21,7 +21,8 @@ export function useGifPickerData(
   {enabled = true}: {enabled?: boolean} = {},
 ) {
   const ax = useAnalytics()
-  const useKlipy = ax.features.enabled(ax.features.KlipyGifProviderEnable)
+  // TODO: revert — hardcoded for local Klipy testing
+  const useKlipy = true // ax.features.enabled(ax.features.KlipyGifProviderEnable)
   const isSearching = query.length > 0
   const provider: GifPickerProvider = useKlipy ? 'klipy' : 'tenor'
 

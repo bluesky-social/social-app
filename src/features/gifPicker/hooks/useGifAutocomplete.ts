@@ -28,7 +28,8 @@ export function useGifAutocomplete({
   onSelectSuggestion: (text: string) => void
 }): GifAutocompleteState {
   const ax = useAnalytics()
-  const useKlipy = ax.features.enabled(ax.features.KlipyGifProviderEnable)
+  // TODO: revert — hardcoded for local Klipy testing
+  const useKlipy = true // ax.features.enabled(ax.features.KlipyGifProviderEnable)
 
   const [rawText, setRawText] = useState('')
   const [dismissed, setDismissed] = useState(false)
