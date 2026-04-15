@@ -1,4 +1,11 @@
-import {useCallback, useEffect, useId, useRef, useState} from 'react'
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import {type LayoutChangeEvent, type ScrollViewProps, View} from 'react-native'
 import {
   KeyboardChatScrollView,
@@ -151,10 +158,12 @@ export function MessagesList({
   // Reset when hasScrolled goes back to false (e.g. convo re-initialization after backgrounding).
   const hasInitiallyScrolled = useRef(false)
   const prevHasScrolled = useRef(hasScrolled)
-  if (prevHasScrolled.current && !hasScrolled) {
-    hasInitiallyScrolled.current = false
-  }
-  prevHasScrolled.current = hasScrolled
+  useLayoutEffect(() => {
+    if (prevHasScrolled.current && !hasScrolled) {
+      hasInitiallyScrolled.current = false
+    }
+    prevHasScrolled.current = hasScrolled
+  }, [hasScrolled])
 
   // -- Keep track of background state and positioning for new pill
   const layoutHeight = useSharedValue(0)
