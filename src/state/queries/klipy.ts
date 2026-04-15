@@ -90,16 +90,17 @@ function createKlipyApi<Input extends object>(
 }
 
 /**
- * Returns the static URL for a KLIPY GIF preview image.
- * KLIPY images are served directly from their CDN (static.klipy.com),
- * unlike Tenor which routes through t.gifs.bsky.app.
+ * Rewrites a KLIPY static CDN URL through the bsky proxy
+ * (t.gifs.bsky.app), matching the behavior of `tenorUrlToBskyGifUrl`.
  */
-export function klipyStaticUrl(gifUrl: string) {
+export function klipyUrlToBskyGifUrl(klipyUrl: string) {
+  let url
   try {
-    new URL(gifUrl)
-    return gifUrl
+    url = new URL(klipyUrl)
   } catch (e) {
-    logger.debug('invalid url passed to klipyStaticUrl()')
+    logger.debug('invalid url passed to klipyUrlToBskyGifUrl()')
     return ''
   }
+  url.hostname = 't.gifs.bsky.app'
+  return url.href
 }
