@@ -22,18 +22,21 @@ import {
 } from '@atproto/api'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {useQueryClient} from '@tanstack/react-query'
 
+import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useConvoActive} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import {atoms as a, native, platform, useTheme} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {useDialogControl} from '#/components/Dialog'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
-import {InlineLinkText} from '#/components/Link'
+import {InlineLinkText, Link} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
@@ -95,6 +98,7 @@ let MessageItem = ({
   const {t: l} = useLingui()
   const {convo} = useConvoActive()
   const moderationOpts = useModerationOpts()
+  const queryClient = useQueryClient()
 
   const reactionsControl = useDialogControl()
 
@@ -167,12 +171,23 @@ let MessageItem = ({
     AppBskyEmbedRecord.isView(message.embed) && rt.text.length > 0
 
   const avatar = profile ? (
-    <ProfileCard.Avatar
-      profile={profile}
-      size={AVATAR_SIZE}
-      moderationOpts={moderationOpts!}
-      disabledPreview
-    />
+    <Link
+      label={l`${sanitizeDisplayName(
+        profile.displayName || sanitizeHandle(profile.handle),
+      )}’s avatar`}
+      accessibilityHint={l`Opens this profile`}
+      to={makeProfileLink({
+        did: profile.did,
+        handle: profile.handle,
+      })}
+      onPress={() => unstableCacheProfileView(queryClient, profile)}>
+      <ProfileCard.Avatar
+        profile={profile}
+        size={AVATAR_SIZE}
+        moderationOpts={moderationOpts!}
+        disabledPreview
+      />
+    </Link>
   ) : (
     <ProfileCard.AvatarPlaceholder size={AVATAR_SIZE} />
   )
@@ -322,7 +337,7 @@ let MessageItem = ({
         style={[messageInset, isFirstInCluster && !showDateDivider && a.mt_sm]}>
         <View style={[a.relative]}>
           {isGroupChat && !isFromSelf && isLastInCluster ? (
-            <View style={[a.absolute, a.bottom_0]}>{avatar}</View>
+            <View style={[a.absolute, a.bottom_0, a.z_50]}>{avatar}</View>
           ) : null}
           <View
             style={[
