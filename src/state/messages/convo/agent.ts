@@ -153,6 +153,8 @@ export class Convo {
           sender: this.sender,
           recipients: this.recipients,
           isFetchingHistory: this.isFetchingHistory,
+          // Explicit null check since the value is initially undefined.
+          hasAllHistory: this.oldestRev === null,
           deleteMessage: undefined,
           sendMessage: undefined,
           fetchMessageHistory: undefined,
@@ -176,6 +178,8 @@ export class Convo {
           sender: this.sender!,
           recipients: this.recipients!,
           isFetchingHistory: this.isFetchingHistory,
+          // Explicit null check since the value is initially undefined.
+          hasAllHistory: this.oldestRev === null,
           deleteMessage: this.deleteMessage,
           sendMessage: this.sendMessage,
           fetchMessageHistory: this.fetchMessageHistory,
@@ -196,6 +200,7 @@ export class Convo {
           sender: undefined,
           recipients: undefined,
           isFetchingHistory: false,
+          hasAllHistory: false,
           deleteMessage: undefined,
           sendMessage: undefined,
           fetchMessageHistory: undefined,
@@ -216,6 +221,8 @@ export class Convo {
           sender: this.sender,
           recipients: this.recipients,
           isFetchingHistory: false,
+          // Explicit null check since the value is initially undefined.
+          hasAllHistory: this.oldestRev === null,
           deleteMessage: undefined,
           sendMessage: undefined,
           fetchMessageHistory: undefined,
@@ -627,6 +634,7 @@ export class Convo {
 
     /*
      * If oldestRev is null, we've fetched all history.
+     * Needs to explicitly check for `null` since this is initially `undefined`.
      */
     if (this.oldestRev === null) return
 
@@ -659,6 +667,14 @@ export class Convo {
       const {cursor, messages} = response.data
 
       this.oldestRev = cursor ?? null
+
+      /*
+       * If the response contained fewer messages than the limit, we know
+       * there are no more pages, regardless of whether a cursor was returned.
+       */
+      if (messages.length < (IS_NATIVE ? 30 : 60)) {
+        this.oldestRev = null
+      }
 
       for (const message of messages) {
         if (

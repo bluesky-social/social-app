@@ -426,6 +426,8 @@ export function MessagesList({
     [inputHeightUI],
   )
 
+  console.log('DEBUG >>>', 'convoState.hasAllHistory', convoState.hasAllHistory)
+
   return (
     <>
       <KeyboardGestureArea
@@ -460,7 +462,7 @@ export function MessagesList({
             ListHeaderComponent={
               <>
                 <MaybeLoader isLoading={convoState.isFetchingHistory} />
-                {convoState.isGroup() ? (
+                {convoState.isGroup() && convoState.hasAllHistory ? (
                   <MessagesListInfoPanel convoState={convoState} />
                 ) : null}
               </>

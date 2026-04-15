@@ -156,6 +156,7 @@ export type ConvoStateUninitialized = {
   sender: ChatBskyActorDefs.ProfileViewBasic | undefined
   recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
   isFetchingHistory: false
+  hasAllHistory: boolean
   deleteMessage: undefined
   sendMessage: undefined
   fetchMessageHistory: undefined
@@ -174,6 +175,7 @@ export type ConvoStateInitializing = {
   sender: ChatBskyActorDefs.ProfileViewBasic | undefined
   recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
   isFetchingHistory: boolean
+  hasAllHistory: boolean
   deleteMessage: undefined
   sendMessage: undefined
   fetchMessageHistory: undefined
@@ -192,6 +194,7 @@ export type ConvoStateReady = {
   sender: ChatBskyActorDefs.ProfileViewBasic
   recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
+  hasAllHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
@@ -210,6 +213,7 @@ export type ConvoStateBackgrounded = {
   sender: ChatBskyActorDefs.ProfileViewBasic
   recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
+  hasAllHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
@@ -228,6 +232,7 @@ export type ConvoStateSuspended = {
   sender: ChatBskyActorDefs.ProfileViewBasic
   recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
+  hasAllHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
@@ -246,6 +251,7 @@ export type ConvoStateError = {
   sender: undefined
   recipients: undefined
   isFetchingHistory: false
+  hasAllHistory: false
   deleteMessage: undefined
   sendMessage: undefined
   fetchMessageHistory: undefined
@@ -264,6 +270,7 @@ export type ConvoStateDisabled = {
   sender: ChatBskyActorDefs.ProfileViewBasic
   recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
+  hasAllHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
