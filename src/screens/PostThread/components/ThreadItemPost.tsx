@@ -34,8 +34,7 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {
   GalleryBleed,
-  POST_EMBED_NO_CONTENT_OFFSET,
-  POST_META_NO_CONTENT_OFFSET,
+  maybeApplyGalleryOffsetStyles,
 } from '#/components/images/Gallery'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -304,7 +303,11 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                 postHref={postHref}
                 style={[
                   a.pb_xs,
-                  !richText?.text && POST_META_NO_CONTENT_OFFSET,
+                  maybeApplyGalleryOffsetStyles('meta', {
+                    post,
+                    modui: moderation.ui('contentList'),
+                    additionalCauses: additionalPostAlerts,
+                  }),
                 ]}
               />
               <LabelsOnMyPost post={post} style={[a.pb_xs]} />
@@ -335,7 +338,11 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
               {post.embed && (
                 <View
                   style={[
-                    !richText?.text ? POST_EMBED_NO_CONTENT_OFFSET : [],
+                    maybeApplyGalleryOffsetStyles('embed', {
+                      post,
+                      modui: moderation.ui('contentList'),
+                      additionalCauses: additionalPostAlerts,
+                    }),
                     a.pb_xs,
                   ]}>
                   <Embed

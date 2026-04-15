@@ -36,8 +36,7 @@ import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a} from '#/alf'
 import {
   GalleryBleed,
-  POST_EMBED_NO_CONTENT_OFFSET,
-  POST_META_NO_CONTENT_OFFSET,
+  maybeApplyGalleryOffsetStyles,
 } from '#/components/images/Gallery'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
@@ -168,6 +167,7 @@ let FeedItemInner = ({
   const queryClient = useQueryClient()
   const {openComposer} = useOpenComposer()
   const pal = usePalette('default')
+  const {currentAccount} = useSession()
 
   const [hover, setHover] = useState(false)
 
@@ -298,6 +298,30 @@ let FeedItemInner = ({
     }
   }, [reason])
 
+  const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
+    threadgateRecord,
+  })
+  const additionalPostAlerts: AppModerationCause[] = useMemo(() => {
+    const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri)
+    const rootPostUri = bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      post.record,
+      AppBskyFeedPost.isRecord,
+    )
+      ? post.record?.reply?.root?.uri || post.uri
+      : undefined
+    const isControlledByViewer =
+      rootPostUri && new AtUri(rootPostUri).host === currentAccount?.did
+    return isControlledByViewer && isPostHiddenByThreadgate
+      ? [
+          {
+            type: 'reply-hidden',
+            source: {type: 'user', did: currentAccount?.did},
+            priority: 6,
+          },
+        ]
+      : []
+  }, [post, currentAccount?.did, threadgateHiddenReplies])
+
   return (
     <GalleryBleed>
       <Link
@@ -368,7 +392,11 @@ let FeedItemInner = ({
           <View
             style={[
               styles.layoutContent,
-              !richText.text && POST_META_NO_CONTENT_OFFSET,
+              maybeApplyGalleryOffsetStyles('meta', {
+                post,
+                modui: moderation.ui('contentList'),
+                additionalCauses: additionalPostAlerts,
+              }),
             ]}>
             <PostMeta
               author={post.author}
@@ -393,7 +421,7 @@ let FeedItemInner = ({
               postAuthor={post.author}
               onOpenEmbed={onOpenEmbed}
               post={post}
-              threadgateRecord={threadgateRecord}
+              additionalPostAlerts={additionalPostAlerts}
             />
             <PostControls
               post={post}
@@ -424,7 +452,7 @@ let PostContent = ({
   postEmbed,
   postAuthor,
   onOpenEmbed,
-  threadgateRecord,
+  additionalPostAlerts,
 }: {
   moderation: ModerationDecision
   richText: RichTextAPI
@@ -432,35 +460,11 @@ let PostContent = ({
   postAuthor: AppBskyFeedDefs.PostView['author']
   onOpenEmbed: () => void
   post: AppBskyFeedDefs.PostView
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  additionalPostAlerts?: AppModerationCause[]
 }): React.ReactNode => {
-  const {currentAccount} = useSession()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
   )
-  const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
-    threadgateRecord,
-  })
-  const additionalPostAlerts: AppModerationCause[] = useMemo(() => {
-    const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri)
-    const rootPostUri = bsky.dangerousIsType<AppBskyFeedPost.Record>(
-      post.record,
-      AppBskyFeedPost.isRecord,
-    )
-      ? post.record?.reply?.root?.uri || post.uri
-      : undefined
-    const isControlledByViewer =
-      rootPostUri && new AtUri(rootPostUri).host === currentAccount?.did
-    return isControlledByViewer && isPostHiddenByThreadgate
-      ? [
-          {
-            type: 'reply-hidden',
-            source: {type: 'user', did: currentAccount?.did},
-            priority: 6,
-          },
-        ]
-      : []
-  }, [post, currentAccount?.did, threadgateHiddenReplies])
 
   const record = useMemo<AppBskyFeedPost.Record | undefined>(
     () =>
@@ -503,7 +507,15 @@ let PostContent = ({
       ) : undefined}
       {record && <TranslatedPost hideTranslateLink post={post} />}
       {postEmbed ? (
-        <View style={[a.pb_xs, !richText.text && POST_EMBED_NO_CONTENT_OFFSET]}>
+        <View
+          style={[
+            a.pb_xs,
+            maybeApplyGalleryOffsetStyles('embed', {
+              post,
+              modui: moderation.ui('contentList'),
+              additionalCauses: additionalPostAlerts,
+            }),
+          ]}>
           <Embed
             embed={postEmbed}
             moderation={moderation}

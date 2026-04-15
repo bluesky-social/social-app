@@ -29,8 +29,7 @@ import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a} from '#/alf'
 import {
   GalleryBleed,
-  POST_EMBED_NO_CONTENT_OFFSET,
-  POST_META_NO_CONTENT_OFFSET,
+  maybeApplyGalleryOffsetStyles,
 } from '#/components/images/Gallery'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
@@ -190,7 +189,11 @@ function PostInner({
           <View
             style={[
               styles.layoutContent,
-              !richText.text && POST_META_NO_CONTENT_OFFSET,
+              maybeApplyGalleryOffsetStyles('meta', {
+                post,
+                modui: moderation.ui('contentList'),
+                additionalCauses: [],
+              }),
             ]}>
             <PostMeta
               author={post.author}
@@ -232,9 +235,11 @@ function PostInner({
               <TranslatedPost hideTranslateLink post={post} />
               {post.embed ? (
                 <View
-                  style={
-                    !richText.text ? POST_EMBED_NO_CONTENT_OFFSET : undefined
-                  }>
+                  style={maybeApplyGalleryOffsetStyles('embed', {
+                    post,
+                    modui: moderation.ui('contentList'),
+                    additionalCauses: [],
+                  })}>
                   <Embed
                     embed={post.embed}
                     moderation={moderation}

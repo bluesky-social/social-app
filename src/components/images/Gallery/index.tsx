@@ -42,6 +42,7 @@ import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 
 export * from './const'
+export * from './maybeApplyGalleryOffsetStyles'
 
 interface GalleryProps {
   images: AppBskyEmbedImages.ViewImage[]
