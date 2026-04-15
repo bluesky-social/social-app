@@ -11,6 +11,8 @@ const FLICK_MIN_VELOCITY = 0.1
 const ADVANCE_THRESHOLD = 0.15
 const FRAME_MS = 1000 / 60
 const SETTLE_DURATION = 600
+const OVERSCROLL_RESISTANCE = 0.3
+const BOUNCE_DURATION = 400
 
 function whichByDistance(
   itemWidths: Map<number, number>,
@@ -70,8 +72,14 @@ export function usePointerHandlers({
     let t = 0
     let stopTween: (() => void) | null = null
     let localIndex = currentIndexRef.current
+    let overscrollX = 0
 
     el.style.cursor = 'grab'
+
+    const clearOverscroll = () => {
+      overscrollX = 0
+      el.style.transform = ''
+    }
 
     const onMouseDown = (e: MouseEvent) => {
       e.preventDefault() // prevent native image drag
@@ -81,6 +89,7 @@ export function usePointerHandlers({
         stopTween()
         stopTween = null
       }
+      clearOverscroll()
 
       isMouseDown = true
       isDragging = false
@@ -121,19 +130,38 @@ export function usePointerHandlers({
       velo = (delta - prevDelta) / (elapsed * FRAME_MS)
       t = e.timeStamp
 
-      scrollTo(dragScrollLeft - delta)
+      const desiredScroll = dragScrollLeft - delta
+      const maxScroll = el.scrollWidth - el.clientWidth
 
-      // Update local index from scroll position
-      const offsetX = dragScrollLeft - delta
-      let accumulated = 0
-      for (let i = 0; i < imageCount; i++) {
-        const w = (itemWidthsRef.current.get(i) ?? 0) + ITEM_GAP
-        if (offsetX < accumulated + w / 2) {
-          localIndex = i
-          break
+      if (desiredScroll < 0) {
+        // Overscroll at start — rubber band
+        scrollTo(0)
+        overscrollX = desiredScroll * OVERSCROLL_RESISTANCE
+        el.style.transform = `translateX(${-overscrollX}px)`
+      } else if (desiredScroll > maxScroll) {
+        // Overscroll at end — rubber band
+        scrollTo(maxScroll)
+        overscrollX = (desiredScroll - maxScroll) * OVERSCROLL_RESISTANCE
+        el.style.transform = `translateX(${-overscrollX}px)`
+      } else {
+        // Normal scroll range
+        scrollTo(desiredScroll)
+        if (overscrollX !== 0) clearOverscroll()
+      }
+
+      // Update local index from scroll position (only in normal range)
+      if (overscrollX === 0) {
+        const offsetX = desiredScroll
+        let accumulated = 0
+        for (let i = 0; i < imageCount; i++) {
+          const w = (itemWidthsRef.current.get(i) ?? 0) + ITEM_GAP
+          if (offsetX < accumulated + w / 2) {
+            localIndex = i
+            break
+          }
+          accumulated += w
+          if (i === imageCount - 1) localIndex = i
         }
-        accumulated += w
-        if (i === imageCount - 1) localIndex = i
       }
     }
 
@@ -154,47 +182,67 @@ export function usePointerHandlers({
           capture: true,
         })
 
-        // Estimate resting distance from velocity
-        let v = Math.abs(velo)
-        let restingDistance = 0
-        while (v > FLICK_MIN_VELOCITY) {
-          v *= FLICK_DECAY
-          restingDistance += v
-        }
+        if (overscrollX !== 0) {
+          // Bounce back from overscroll
+          const targetIndex = overscrollX > 0 ? imageCount - 1 : 0
+          const fromOverscroll = overscrollX
 
-        const direction: -1 | 1 = delta < 0 ? -1 : 1
-        const totalDistance = Math.abs(delta) + restingDistance
+          stopTween = tween(
+            fromOverscroll,
+            0,
+            BOUNCE_DURATION,
+          )(
+            v => {
+              el.style.transform = `translateX(${-v}px)`
+            },
+            () => {
+              stopTween = null
+              clearOverscroll()
+              onSettle(targetIndex)
+            },
+          )
+        } else {
+          // Normal flick settle
+          let v = Math.abs(velo)
+          let restingDistance = 0
+          while (v > FLICK_MIN_VELOCITY) {
+            v *= FLICK_DECAY
+            restingDistance += v
+          }
 
-        const targetIndex = whichByDistance(
-          itemWidthsRef.current,
-          localIndex,
-          totalDistance,
-          direction,
-          imageCount,
-        )
+          const direction: -1 | 1 = delta < 0 ? -1 : 1
+          const totalDistance = Math.abs(delta) + restingDistance
 
-        // Tween from current scroll position to target
-        const from = el.scrollLeft
-        const to = getOffsetForIndex(itemWidthsRef.current, targetIndex)
+          const targetIndex = whichByDistance(
+            itemWidthsRef.current,
+            localIndex,
+            totalDistance,
+            direction,
+            imageCount,
+          )
 
-        if (from === to) {
-          onSettle(targetIndex)
-          return
-        }
+          const from = el.scrollLeft
+          const to = getOffsetForIndex(itemWidthsRef.current, targetIndex)
 
-        stopTween = tween(
-          from,
-          to,
-          SETTLE_DURATION,
-        )(
-          v => {
-            scrollTo(v)
-          },
-          () => {
-            stopTween = null
+          if (from === to) {
             onSettle(targetIndex)
-          },
-        )
+            return
+          }
+
+          stopTween = tween(
+            from,
+            to,
+            SETTLE_DURATION,
+          )(
+            v => {
+              scrollTo(v)
+            },
+            () => {
+              stopTween = null
+              onSettle(targetIndex)
+            },
+          )
+        }
       }
     }
 
@@ -207,6 +255,7 @@ export function usePointerHandlers({
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('mouseup', onMouseUp)
       if (stopTween) stopTween()
+      clearOverscroll()
       el.style.cursor = ''
       el.style.userSelect = ''
     }
