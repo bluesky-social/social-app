@@ -1,7 +1,6 @@
 import {View} from 'react-native'
 import {type ScreenLayoutArgs, useIsFocused} from '@react-navigation/native'
 import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
-import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {type FlatNavigatorParams} from '#/lib/routes/types'
 import {type NativeStackNavigationOptionsWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
@@ -9,6 +8,7 @@ import {atoms as a, useLayoutBreakpoints, useTheme, web} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
 import {SCROLLBAR_OFFSET} from '#/components/Layout'
+import {LockScroll} from '#/components/LockScroll'
 import {useAgeAssurance} from '#/ageAssurance'
 import {IS_WEB} from '#/env'
 import {ChatList, Header as ChatListHeader} from '../../ChatList'
@@ -85,7 +85,7 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
           ],
         },
       ]}>
-      {isFocused && <RemoveScrollBar />}
+      {isFocused && <LockScroll />}
       <SplitViewProvider side="left">
         <View
           style={[
