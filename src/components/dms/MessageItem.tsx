@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo, useState} from 'react'
+import {memo, useCallback, useEffect, useMemo, useState} from 'react'
 import {
   type GestureResponderEvent,
   LayoutAnimation,
@@ -12,7 +12,9 @@ import Animated, {
   FadeOut,
   LayoutAnimationConfig,
   LinearTransition,
+  useAnimatedStyle,
   useSharedValue,
+  withTiming,
   ZoomIn,
   ZoomOut,
 } from 'react-native-reanimated'
@@ -188,6 +190,37 @@ let MessageItem = ({
 
   const hasEmbedAndText =
     AppBskyEmbedRecord.isView(message.embed) && rt.text.length > 0
+
+  const targetBottomRadius =
+    squaredBottomCorner || hasEmbedAndText
+      ? SQUARED_BORDER_RADIUS
+      : BORDER_RADIUS
+  const targetTopRadius = squaredTopCorner
+    ? SQUARED_BORDER_RADIUS
+    : BORDER_RADIUS
+
+  const bottomRadiusSV = useSharedValue(targetBottomRadius)
+  const topRadiusSV = useSharedValue(targetTopRadius)
+
+  useEffect(() => {
+    bottomRadiusSV.set(withTiming(targetBottomRadius, {duration: 300}))
+  }, [targetBottomRadius, bottomRadiusSV])
+
+  useEffect(() => {
+    topRadiusSV.set(withTiming(targetTopRadius, {duration: 300}))
+  }, [targetTopRadius, topRadiusSV])
+
+  const borderRadiusStyle = useAnimatedStyle(() =>
+    isFromSelf
+      ? {
+          borderBottomRightRadius: bottomRadiusSV.get(),
+          borderTopRightRadius: topRadiusSV.get(),
+        }
+      : {
+          borderBottomLeftRadius: bottomRadiusSV.get(),
+          borderTopLeftRadius: topRadiusSV.get(),
+        },
+  )
 
   const avatar = profile ? (
     <ProfileCard.Avatar
@@ -385,7 +418,7 @@ let MessageItem = ({
                 }
               }}>
               {rt.text.length > 0 && (
-                <View
+                <Animated.View
                   accessibilityHint={l`Double tap or long press the message to add a reaction`}
                   style={[
                     !isFromSelf && a.ml_sm,
@@ -407,25 +440,7 @@ let MessageItem = ({
                               : t.palette.contrast_50,
                           },
                           isFromSelf ? a.self_end : a.self_start,
-                          isFromSelf
-                            ? {
-                                borderBottomRightRadius:
-                                  squaredBottomCorner || hasEmbedAndText
-                                    ? SQUARED_BORDER_RADIUS
-                                    : BORDER_RADIUS,
-                                borderTopRightRadius: squaredTopCorner
-                                  ? SQUARED_BORDER_RADIUS
-                                  : BORDER_RADIUS,
-                              }
-                            : {
-                                borderBottomLeftRadius:
-                                  squaredBottomCorner || hasEmbedAndText
-                                    ? SQUARED_BORDER_RADIUS
-                                    : BORDER_RADIUS,
-                                borderTopLeftRadius: squaredTopCorner
-                                  ? SQUARED_BORDER_RADIUS
-                                  : BORDER_RADIUS,
-                              },
+                          borderRadiusStyle,
                         ]),
                   ]}>
                   <RichText
@@ -436,7 +451,7 @@ let MessageItem = ({
                     emojiMultiplier={3}
                     shouldProxyLinks={true}
                   />
-                </View>
+                </Animated.View>
               )}
               {AppBskyEmbedRecord.isView(message.embed) && (
                 <MessageItemEmbed
