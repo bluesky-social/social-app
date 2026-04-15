@@ -4,7 +4,7 @@ import {type FlatList} from 'react-native'
 import {tween} from '#/components/images/Gallery/tween'
 import {getOffsetForIndex} from '#/components/images/Gallery/utils'
 
-const SETTLE_DURATION = 600
+const SETTLE_DURATION = 700
 
 export function useKeyboardHandlers({
   flatListRef,
