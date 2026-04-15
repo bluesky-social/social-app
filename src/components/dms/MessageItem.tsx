@@ -1,4 +1,4 @@
-import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {memo, useCallback, useEffect, useMemo} from 'react'
 import {
   type GestureResponderEvent,
   LayoutAnimation,
@@ -6,6 +6,7 @@ import {
   type StyleProp,
   type TextStyle,
   View,
+  type ViewStyle,
 } from 'react-native'
 import Animated, {
   FadeIn,
@@ -32,7 +33,7 @@ import {useConvoActive} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
-import {atoms as a, native, useTheme} from '#/alf'
+import {atoms as a, native, platform, useTheme} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {useDialogControl} from '#/components/Dialog'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
@@ -356,6 +357,12 @@ let MessageItem = ({
     </LayoutAnimationConfig>
   )
 
+  const messageInset = platform<ViewStyle | undefined>({
+    ios: isFromSelf ? a.mr_md : isGroupChat ? a.ml_md : a.ml_sm,
+    android: isFromSelf ? a.mr_sm : isGroupChat ? a.ml_sm : undefined,
+    web: isFromSelf ? a.mr_sm : isGroupChat ? a.ml_sm : undefined,
+  })
+
   return (
     <>
       {(showDateDivider || isDateDividerToggled) && (
@@ -364,12 +371,7 @@ let MessageItem = ({
         </Animated.View>
       )}
       <View
-        style={[
-          isFromSelf ? a.mr_sm : a.ml_sm,
-          effectiveFirstInCluster &&
-            !(showDateDivider || isDateDividerToggled) &&
-            a.mt_sm,
-        ]}>
+        style={[messageInset, isFirstInCluster && !showDateDivider && a.mt_sm]}>
         <View style={[a.relative]}>
           {showAvatar ? (
             <View style={[a.absolute, {bottom: hasReactions ? 10 : 0}]}>
