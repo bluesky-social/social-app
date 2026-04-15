@@ -304,9 +304,10 @@ let MessageItem = ({
       {hasReactions ? (
         <View
           style={[
+            a.relative,
+            a.bottom_0,
             isFromSelf ? [a.align_end] : [a.ml_sm, a.align_start],
             a.px_sm,
-            a.pb_2xs,
           ]}>
           <Pressable
             accessible={true}
@@ -389,7 +390,15 @@ let MessageItem = ({
         style={[messageInset, isFirstInCluster && !showDateDivider && a.mt_sm]}>
         <View style={[a.relative]}>
           {showAvatar ? (
-            <View style={[a.absolute, a.z_50, {bottom: hasReactions ? 24 : 0}]}>
+            <View
+              style={[
+                a.absolute,
+                a.bottom_0,
+                a.z_50,
+                {
+                  transform: [{translateY: hasReactions ? -24 : 0}],
+                },
+              ]}>
               {avatar}
             </View>
           ) : null}
