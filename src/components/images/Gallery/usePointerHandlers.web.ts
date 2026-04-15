@@ -11,8 +11,8 @@ const FLICK_MIN_VELOCITY = 0.1
 const ADVANCE_THRESHOLD = 0.15
 const FRAME_MS = 1000 / 60
 const SETTLE_DURATION = 600
-const OVERSCROLL_RESISTANCE = 0.3
-const BOUNCE_DURATION = 400
+const OVERSCROLL_RESISTANCE = 0.4
+const BOUNCE_DURATION = 700
 
 function whichByDistance(
   itemWidths: Map<number, number>,

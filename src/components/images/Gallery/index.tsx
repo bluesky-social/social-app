@@ -24,7 +24,7 @@ import {mergeRefs} from '#/lib/merge-refs'
 import {useA11y} from '#/state/a11y'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
 import {
@@ -376,6 +376,7 @@ function GalleryImage({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const [focused, setFocused] = useState(false)
   const containerRef = useAnimatedRef()
   const [aspectRatio, setAspectRatio] = useState(() =>
     getAspectRatio(image.aspectRatio),
@@ -397,6 +398,8 @@ function GalleryImage({
         ref={itemRef}
         onPress={onPress}
         onPressIn={onPressIn}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         accessibilityRole="button"
         accessibilityLabel={image.alt || l`Image ${index + 1}`}
         accessibilityHint={l`Opens full image`}
@@ -404,7 +407,16 @@ function GalleryImage({
           color: utils.alpha(t.atoms.bg.backgroundColor, 0.2),
           foreground: true,
         }}
-        style={[a.rounded_md, a.overflow_hidden, t.atoms.bg_contrast_25]}>
+        style={[
+          a.rounded_md,
+          a.overflow_hidden,
+          t.atoms.bg_contrast_25,
+          web({
+            cursor: 'inherit',
+            outline: 0,
+            border: 0,
+          }),
+        ]}>
         <Image
           source={{uri: image.thumb}}
           contentFit="cover"
@@ -486,7 +498,13 @@ function GalleryImage({
           </View>
         ) : null}
 
-        <MediaInsetBorder />
+        <MediaInsetBorder
+          style={
+            focused && {
+              borderWidth: 2,
+            }
+          }
+        />
       </Pressable>
     </Animated.View>
   )
