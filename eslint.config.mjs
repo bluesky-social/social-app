@@ -250,7 +250,7 @@ export default defineConfig(
       '@typescript-eslint/prefer-promise-reject-errors': 'warn',
       '@typescript-eslint/await-thenable': 'warn',
 
-      "no-restricted-imports": ["warn", {
+      "no-restricted-imports": ["error", {
         "paths": [{
           "name": "react",
           "importNames": ["React", "default"],
