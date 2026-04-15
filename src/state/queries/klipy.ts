@@ -140,7 +140,7 @@ function createKlipyApi<Input extends object>(
       },
     })
     if (!res.ok) {
-      throw new Error('Failed to fetch KLIPY API')
+      throw new Error(`Failed to fetch KLIPY API (status ${res.status})`)
     }
     const body: {next: string; results: Gif[]} = await res.json()
     return {
@@ -151,18 +151,21 @@ function createKlipyApi<Input extends object>(
 }
 
 /**
- * Returns the static URL for a KLIPY GIF preview image.
- * KLIPY images are served directly from their CDN (static.klipy.com),
- * unlike Tenor which routes through t.gifs.bsky.app.
+ * Rewrites a KLIPY static CDN URL through the bsky proxy
+ * (k.gifs.bsky.app). Mirrors `tenorUrlToBskyGifUrl`, but uses a
+ * separate hostname from Tenor's t.gifs.bsky.app so the two
+ * upstreams can be routed independently.
  */
-export function klipyStaticUrl(gifUrl: string) {
+export function klipyUrlToBskyGifUrl(klipyUrl: string) {
+  let url
   try {
-    new URL(gifUrl)
-    return gifUrl
+    url = new URL(klipyUrl)
   } catch (e) {
-    logger.debug('invalid url passed to klipyStaticUrl()')
+    logger.debug('invalid url passed to klipyUrlToBskyGifUrl()')
     return ''
   }
+  url.hostname = 'k.gifs.bsky.app'
+  return url.href
 }
 
 type KlipyAutocompleteResponse = {

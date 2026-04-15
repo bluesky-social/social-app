@@ -105,14 +105,19 @@ export function tenorUrlToBskyGifUrl(tenorUrl: string) {
 
 /**
  * Returns the appropriate URL for a GIF preview image.
- * Rewrites Tenor URLs through the bsky proxy (t.gifs.bsky.app);
- * KLIPY URLs pass through directly to their CDN.
+ * Tenor URLs (media.tenor.com) are routed through t.gifs.bsky.app;
+ * KLIPY URLs (static.klipy.com) are routed through k.gifs.bsky.app.
  */
 export function gifPreviewUrl(gifUrl: string) {
   try {
     const url = new URL(gifUrl)
     if (url.hostname === 'media.tenor.com') {
-      return tenorUrlToBskyGifUrl(gifUrl)
+      url.hostname = 't.gifs.bsky.app'
+      return url.href
+    }
+    if (url.hostname === 'static.klipy.com') {
+      url.hostname = 'k.gifs.bsky.app'
+      return url.href
     }
     return gifUrl
   } catch (e) {

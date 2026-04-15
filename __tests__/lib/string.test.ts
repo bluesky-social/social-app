@@ -8,7 +8,7 @@ import {
   parseStarterPackUri,
 } from '#/lib/strings/starter-pack'
 import {messages} from '#/locale/locales/en/messages'
-import {klipyStaticUrl} from '#/state/queries/klipy'
+import {klipyUrlToBskyGifUrl} from '#/state/queries/klipy'
 import {tenorUrlToBskyGifUrl} from '#/state/queries/tenor'
 import {cleanError} from '../../src/lib/strings/errors'
 import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
@@ -858,7 +858,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       source: 'klipy',
       isGif: true,
       hideDetails: true,
-      playerUri: 'https://static.klipy.com/ii/abc123/73/ac/someFile.gif',
+      playerUri: 'https://k.gifs.bsky.app/ii/abc123/73/ac/someFile.gif',
       dimensions: {
         width: 300,
         height: 200,
@@ -1073,13 +1073,30 @@ describe('tenorUrlToBskyGifUrl', () => {
   )
 })
 
-describe('klipyStaticUrl', () => {
-  it('returns the URL as-is for valid KLIPY static URLs', () => {
-    const input = 'https://static.klipy.com/ii/abc123/73/ac/someFile.gif'
-    expect(klipyStaticUrl(input)).toEqual(input)
+describe('klipyUrlToBskyGifUrl', () => {
+  const inputs = [
+    'https://static.klipy.com/ii/abc123/73/ac/someFile.gif',
+    'https://static.klipy.com/ii/abc123/73/ac/someFile.gif?hh=200&ww=300',
+  ]
+
+  it.each(inputs)(
+    'returns url with k.gifs.bsky.app as hostname for input url',
+    input => {
+      const out = klipyUrlToBskyGifUrl(input)
+      expect(out.startsWith('https://k.gifs.bsky.app/')).toEqual(true)
+    },
+  )
+
+  it('preserves the path and query params when rewriting', () => {
+    const out = klipyUrlToBskyGifUrl(
+      'https://static.klipy.com/ii/abc123/73/ac/someFile.gif?hh=200&ww=300',
+    )
+    expect(out).toEqual(
+      'https://k.gifs.bsky.app/ii/abc123/73/ac/someFile.gif?hh=200&ww=300',
+    )
   })
 
   it('returns empty string for invalid URLs', () => {
-    expect(klipyStaticUrl('not-a-url')).toEqual('')
+    expect(klipyUrlToBskyGifUrl('not-a-url')).toEqual('')
   })
 })
