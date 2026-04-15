@@ -20,7 +20,7 @@ const RIGHT_NAV_MINIMAL_WIDTH = 280 + 28
 
 type LayoutProps = ScreenLayoutArgs<
   AllNavigatorParams,
-  'MessagesConversation',
+  'Messages' | 'MessagesConversation' | 'MessagesInbox' | 'MessagesSettings',
   {},
   NavigationProp
 >
@@ -43,7 +43,9 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
     navigation.navigate('MessagesConversation', {conversation})
 
   const selectedChat =
-    route.name === 'MessagesConversation'
+    route.name === 'MessagesConversation' &&
+    route.params &&
+    'conversation' in route?.params
       ? route?.params?.conversation
       : undefined
 
