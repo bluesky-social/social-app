@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {Trans, useLingui} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {type ConvoState} from '#/state/messages/convo/types'
 import {useSession} from '#/state/session'
@@ -37,7 +37,12 @@ export function MessagesListHeader({convoState}: {convoState: ConvoState}) {
     names = (
       <Trans>
         New chat with {members[0].displayName}, {members[1].displayName}, and{' '}
-        {members.length - 2} more.
+        <Plural
+          value={members.length - 2}
+          one={`${members.length - 2} more`}
+          other={`${members.length - 2} more`}
+        />
+        .
       </Trans>
     )
   }
