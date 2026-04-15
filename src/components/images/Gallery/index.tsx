@@ -296,6 +296,8 @@ export function Gallery({
             )
           }}
           onScroll={e => {
+            // web handles via onSettle in the web hooks
+            if (IS_WEB) return
             const offsetX = e.nativeEvent.contentOffset.x
             let accumulated = 0
             for (let i = 0; i < images.length; i++) {
