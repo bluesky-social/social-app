@@ -21,6 +21,8 @@ import {batchedUpdates} from '#/lib/batchedUpdates'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
+import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
+import {useTheme, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 
 export type ListMethods = any // TODO: Better types.
@@ -55,7 +57,7 @@ function ListImpl<ItemT>(
     ListHeaderComponent,
     ListFooterComponent,
     ListEmptyComponent,
-    disableFullWindowScroll,
+    disableFullWindowScroll: disableFullWindowScrollProp,
     contentContainerStyle,
     data,
     desktopFixedHeight,
@@ -78,6 +80,12 @@ function ListImpl<ItemT>(
   ref: React.Ref<ListMethods>,
 ) {
   const contextScrollHandlers = useScrollHandlers()
+  const {isWithinSplitView} = useIsWithinSplitView()
+  const t = useTheme()
+
+  // automatically disable full window scroll when within split view
+  const disableFullWindowScroll =
+    disableFullWindowScrollProp ?? isWithinSplitView
 
   const isEmpty = !data || data.length === 0
 
@@ -319,11 +327,15 @@ function ListImpl<ItemT>(
     <View
       {...props}
       style={[
+        isWithinSplitView &&
+          web({
+            scrollbarWidth: 'thin',
+            scrollbarColor: `${t.palette.contrast_100} transparent`,
+          }),
         style,
         disableFullWindowScroll && {
           flex: 1,
-          // @ts-expect-error web only
-          'overflow-y': 'scroll',
+          overflowY: 'scroll',
         },
       ]}
       ref={nativeRef as any}>

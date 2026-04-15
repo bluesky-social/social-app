@@ -20,7 +20,7 @@ import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
 import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -326,16 +326,6 @@ export function ChatList({selectedChat}: {selectedChat?: string}) {
       windowSize={11}
       desktopFixedHeight
       sideBorders={false}
-      disableFullWindowScroll={isWithinSplitView}
-      style={
-        isWithinSplitView && [
-          a.w_full,
-          web({
-            scrollbarWidth: 'thin',
-            scrollbarColor: `${t.palette.contrast_100} transparent`,
-          }),
-        ]
-      }
     />
   )
 }

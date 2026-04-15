@@ -1,15 +1,10 @@
 import {forwardRef, memo, useContext, useMemo} from 'react'
 import {
   type StyleProp,
-  StyleSheet,
   View,
   type ViewProps,
   type ViewStyle,
 } from 'react-native'
-import {
-  KeyboardAwareScrollView,
-  type KeyboardAwareScrollViewProps,
-} from 'react-native-keyboard-controller'
 import Animated, {
   type AnimatedScrollViewProps,
   useAnimatedProps,
@@ -58,7 +53,12 @@ export const Screen = memo(function Screen({
     <>
       {IS_WEB && !isWithinSplitView && <WebCenterBorders />}
       <View
-        style={[a.util_screen_outer, {paddingTop: noInsetTop ? 0 : top}, style]}
+        style={[
+          a.util_screen_outer,
+          {paddingTop: noInsetTop ? 0 : top},
+          isWithinSplitView && {maxHeight: '100%'},
+          style,
+        ]}
         {...props}
       />
     </>
@@ -87,6 +87,7 @@ export const Content = memo(
   ) {
     const t = useTheme()
     const {footerHeight} = useShellLayout()
+    const {isWithinSplitView} = useIsWithinSplitView()
     const animatedProps = useAnimatedProps(() => {
       return {
         scrollIndicatorInsets: {
@@ -105,11 +106,18 @@ export const Content = memo(
         indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
         // sets the scroll inset to the height of the footer
         animatedProps={animatedProps}
-        style={[scrollViewStyles.common, style]}
-        contentContainerStyle={[
-          scrollViewStyles.contentContainer,
-          contentContainerStyle,
+        style={[
+          a.w_full,
+          isWithinSplitView &&
+            web({
+              flex: 1,
+              overflowY: 'scroll',
+              scrollbarWidth: 'thin',
+              scrollbarColor: `${t.palette.contrast_100} transparent`,
+            }),
+          style,
         ]}
+        contentContainerStyle={[contentContainerStyle]}
         {...props}>
         {IS_WEB ? (
           <Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>
@@ -123,45 +131,6 @@ export const Content = memo(
     )
   }),
 )
-
-const scrollViewStyles = StyleSheet.create({
-  common: {
-    width: '100%',
-  },
-  contentContainer: {
-    paddingBottom: 100,
-  },
-})
-
-export type KeyboardAwareContentProps = KeyboardAwareScrollViewProps & {
-  children: React.ReactNode
-  contentContainerStyle?: StyleProp<ViewStyle>
-}
-
-/**
- * Default scroll view for simple pages.
- *
- * BE SURE TO TEST THIS WHEN USING, it's untested as of writing this comment.
- */
-export const KeyboardAwareContent = memo(function LayoutKeyboardAwareContent({
-  children,
-  style,
-  contentContainerStyle,
-  ...props
-}: KeyboardAwareContentProps) {
-  return (
-    <KeyboardAwareScrollView
-      style={[scrollViewStyles.common, style]}
-      contentContainerStyle={[
-        scrollViewStyles.contentContainer,
-        contentContainerStyle,
-      ]}
-      keyboardShouldPersistTaps="handled"
-      {...props}>
-      {IS_WEB ? <Center>{children}</Center> : children}
-    </KeyboardAwareScrollView>
-  )
-})
 
 /**
  * Utility component to center content within the screen
