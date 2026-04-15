@@ -12,7 +12,7 @@ import {useLightboxControls} from '#/state/lightbox'
 import {type Dimensions} from '#/view/com/lightbox/ImageViewing/@types'
 import {atoms as a} from '#/alf'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
-import {Gallery} from '#/components/images/Gallery'
+import {ImageLayoutGrid} from '#/components/images/ImageLayoutGrid'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {type EmbedType} from '#/types/bsky/post'
 import {type CommonProps} from './types'
@@ -57,11 +57,7 @@ export function ImageEmbed({
         'worklet'
         const rects: (MeasuredDimensions | null)[] = []
         for (const r of refs) {
-          try {
-            rects.push(measure(r))
-          } catch {
-            rects.push(null)
-          }
+          rects.push(measure(r))
         }
         runOnJS(_openLightbox)(index, rects, fetchedDims)
       })()
@@ -101,7 +97,7 @@ export function ImageEmbed({
 
     return (
       <View style={[a.mt_sm, rest.style]}>
-        <Gallery
+        <ImageLayoutGrid
           images={images}
           onPress={onPress}
           onPressIn={onPressIn}
