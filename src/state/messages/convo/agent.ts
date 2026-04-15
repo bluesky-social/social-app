@@ -1,6 +1,6 @@
 import {
   type AtpAgent,
-  type ChatBskyActorDefs,
+  ChatBskyActorDefs,
   ChatBskyConvoDefs,
   type ChatBskyConvoGetLog,
   type ChatBskyConvoSendMessage,
@@ -1353,27 +1353,39 @@ export class Convo {
 
   isGroup(): boolean | undefined {
     if (!this.convo) return undefined
-    return this.convo.kind === 'group'
+    const info = this.getGroupInfo()
+    return !!info
   }
 
-  getGroupInfo(): ChatBskyConvoDefs.GroupConvoData | undefined {
+  getGroupInfo(): ChatBskyConvoDefs.GroupConvo | undefined {
     if (
       this.convo &&
-      bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvoData>(
-        this.convo.kindData,
-        ChatBskyConvoDefs.isGroupConvoData,
+      bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvo>(
+        this.convo.kind,
+        ChatBskyConvoDefs.isGroupConvo,
       )
     ) {
-      return this.convo.kindData
+      return this.convo.kind
     }
     return undefined
   }
 
   getPrimaryMember(): ChatBskyActorDefs.ProfileViewBasic | undefined {
-    if (this.convo?.kind === 'group') {
-      return (
-        this.recipients?.find(r => r.role === 'owner') ?? this.recipients?.[0]
-      )
+    if (this.isGroup()) {
+      return this.recipients?.find(r => {
+        if (
+          bsky.dangerousIsType<ChatBskyActorDefs.GroupConvoMember>(
+            r.kind,
+            ChatBskyActorDefs.isGroupConvoMember,
+          )
+        ) {
+          return r.kind.role === 'owner'
+        } else {
+          throw new Error(
+            'Expected a GroupConvoMember, got an unknown kind of member',
+          )
+        }
+      })
     } else {
       return this.recipients?.find(r => r.did !== this.senderUserDid)
     }
