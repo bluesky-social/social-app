@@ -8,9 +8,7 @@ import {
 import {type TextInput, View} from 'react-native'
 import {useWindowDimensions} from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
 import {
@@ -90,7 +88,7 @@ function GifList({
   onSelectGif: (gif: Gif) => void
 }) {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const textInputRef = useRef<TextInput>(null)
@@ -98,14 +96,14 @@ function GifList({
   const [undeferredSearch, setSearch] = useState('')
   const search = useThrottledValue(undeferredSearch, 500)
   const {height} = useWindowDimensions()
-  const useKlipy = ax.features.enabled(ax.features.KlipyGifProviderEnable)
+  const klipyEnabled = ax.features.enabled(ax.features.KlipyGifProviderEnable)
 
   const isSearching = search.length > 0
 
-  const klipyTrending = useKlipyFeaturedGifsQuery({enabled: useKlipy})
-  const klipySearch = useKlipyGifSearchQuery(search, {enabled: useKlipy})
-  const tenorTrending = useTenorFeaturedGifsQuery({enabled: !useKlipy})
-  const tenorSearch = useTenorGifSearchQuery(search, {enabled: !useKlipy})
+  const klipyTrending = useKlipyFeaturedGifsQuery({enabled: klipyEnabled})
+  const klipySearch = useKlipyGifSearchQuery(search, {enabled: klipyEnabled})
+  const tenorTrending = useTenorFeaturedGifsQuery({enabled: !klipyEnabled})
+  const tenorSearch = useTenorGifSearchQuery(search, {enabled: !klipyEnabled})
 
   const {
     data,
@@ -116,7 +114,7 @@ function GifList({
     isPending,
     isError,
     refetch,
-  } = useKlipy
+  } = klipyEnabled
     ? isSearching
       ? klipySearch
       : klipyTrending
@@ -172,7 +170,7 @@ function GifList({
             color="secondary"
             shape="round"
             onPress={() => control.close()}
-            label={_(msg`Close GIF dialog`)}>
+            label={l`Close GIF dialog`}>
             <ButtonIcon icon={Arrow} size="md" />
           </Button>
         )}
@@ -180,8 +178,8 @@ function GifList({
         <TextField.Root style={[!gtMobile && IS_WEB && a.flex_1]}>
           <TextField.Icon icon={Search} />
           <TextField.Input
-            label={_(msg`Search GIFs`)}
-            placeholder={useKlipy ? _(msg`Search KLIPY`) : _(msg`Search Tenor`)}
+            label={l`Search GIFs`}
+            placeholder={klipyEnabled ? l`Search KLIPY` : l`Search Tenor`}
             onChangeText={text => {
               setSearch(text)
               listRef.current?.scrollToOffset({offset: 0, animated: false})
@@ -199,7 +197,7 @@ function GifList({
         </TextField.Root>
       </View>
     )
-  }, [gtMobile, t.atoms.bg, _, control, useKlipy])
+  }, [gtMobile, t.atoms.bg, l, control, klipyEnabled])
 
   return (
     <>
@@ -226,22 +224,18 @@ function GifList({
                 emptyType="results"
                 sideBorders={false}
                 topBorder={false}
-                errorTitle={_(msg`Failed to load GIFs`)}
+                errorTitle={l`Failed to load GIFs`}
                 errorMessage={
-                  useKlipy
-                    ? _(msg`There was an issue connecting to KLIPY.`)
-                    : _(msg`There was an issue connecting to Tenor.`)
+                  klipyEnabled
+                    ? l`There was an issue connecting to KLIPY.`
+                    : l`There was an issue connecting to Tenor.`
                 }
                 emptyMessage={
                   isSearching
-                    ? _(msg`No search results found for "${search}".`)
-                    : useKlipy
-                      ? _(
-                          msg`No featured GIFs found. There may be an issue with KLIPY.`,
-                        )
-                      : _(
-                          msg`No featured GIFs found. There may be an issue with Tenor.`,
-                        )
+                    ? l`No search results found for "${search}".`
+                    : klipyEnabled
+                      ? l`No featured GIFs found. There may be an issue with KLIPY.`
+                      : l`No featured GIFs found. There may be an issue with Tenor.`
                 }
               />
             )}
@@ -268,23 +262,19 @@ function GifList({
 }
 
 function DialogError({details}: {details?: string}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const control = Dialog.useDialogContext()
 
   return (
-    <Dialog.ScrollableInner
-      style={a.gap_md}
-      label={_(msg`An error has occurred`)}>
+    <Dialog.ScrollableInner style={a.gap_md} label={l`An error has occurred`}>
       <Dialog.Close />
       <ErrorScreen
-        title={_(msg`Oh no!`)}
-        message={_(
-          msg`There was an unexpected issue in the application. Please let us know if this happened to you!`,
-        )}
+        title={l`Oh no!`}
+        message={l`There was an unexpected issue in the application. Please let us know if this happened to you!`}
         details={details}
       />
       <Button
-        label={_(msg`Close dialog`)}
+        label={l`Close dialog`}
         onPress={() => control.close()}
         color="primary"
         size="large"
@@ -306,7 +296,7 @@ export function GifPreview({
 }) {
   const ax = useAnalytics()
   const {gtTablet} = useBreakpoints()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   const onPress = useCallback(() => {
@@ -316,7 +306,7 @@ export function GifPreview({
 
   return (
     <Button
-      label={_(msg`Select GIF "${gif.title}"`)}
+      label={l`Select GIF "${gif.title}"`}
       style={[a.flex_1, gtTablet ? {maxWidth: '33%'} : {maxWidth: '50%'}]}
       onPress={onPress}>
       {({pressed}) => (

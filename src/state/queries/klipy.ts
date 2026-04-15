@@ -79,7 +79,7 @@ function createKlipyApi<Input extends object>(
       },
     })
     if (!res.ok) {
-      throw new Error('Failed to fetch KLIPY API')
+      throw new Error(`Failed to fetch KLIPY API (status ${res.status})`)
     }
     const body: {next: string; results: Gif[]} = await res.json()
     return {
