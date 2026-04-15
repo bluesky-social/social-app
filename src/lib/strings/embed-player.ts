@@ -684,9 +684,11 @@ export function parseKlipyGif(urlp: URL):
   }
 
   // Use the base URL without dimension params as the player URI,
-  // routed through the bsky proxy (t.gifs.bsky.app) — matching Tenor.
+  // routed through the bsky KLIPY proxy (k.gifs.bsky.app). Mirrors
+  // Tenor's t.gifs.bsky.app rewrite, but on a separate hostname so
+  // the two upstreams can be routed independently.
   const playerUrl = new URL(urlp.href)
-  playerUrl.hostname = 't.gifs.bsky.app'
+  playerUrl.hostname = 'k.gifs.bsky.app'
   playerUrl.searchParams.delete('hh')
   playerUrl.searchParams.delete('ww')
 

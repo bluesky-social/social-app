@@ -858,7 +858,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       source: 'klipy',
       isGif: true,
       hideDetails: true,
-      playerUri: 'https://t.gifs.bsky.app/ii/abc123/73/ac/someFile.gif',
+      playerUri: 'https://k.gifs.bsky.app/ii/abc123/73/ac/someFile.gif',
       dimensions: {
         width: 300,
         height: 200,
@@ -1080,10 +1080,10 @@ describe('klipyUrlToBskyGifUrl', () => {
   ]
 
   it.each(inputs)(
-    'returns url with t.gifs.bsky.app as hostname for input url',
+    'returns url with k.gifs.bsky.app as hostname for input url',
     input => {
       const out = klipyUrlToBskyGifUrl(input)
-      expect(out.startsWith('https://t.gifs.bsky.app/')).toEqual(true)
+      expect(out.startsWith('https://k.gifs.bsky.app/')).toEqual(true)
     },
   )
 
@@ -1092,7 +1092,7 @@ describe('klipyUrlToBskyGifUrl', () => {
       'https://static.klipy.com/ii/abc123/73/ac/someFile.gif?hh=200&ww=300',
     )
     expect(out).toEqual(
-      'https://t.gifs.bsky.app/ii/abc123/73/ac/someFile.gif?hh=200&ww=300',
+      'https://k.gifs.bsky.app/ii/abc123/73/ac/someFile.gif?hh=200&ww=300',
     )
   })
 

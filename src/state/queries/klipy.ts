@@ -91,7 +91,9 @@ function createKlipyApi<Input extends object>(
 
 /**
  * Rewrites a KLIPY static CDN URL through the bsky proxy
- * (t.gifs.bsky.app), matching the behavior of `tenorUrlToBskyGifUrl`.
+ * (k.gifs.bsky.app). Mirrors `tenorUrlToBskyGifUrl`, but uses a
+ * separate hostname from Tenor's t.gifs.bsky.app so the two
+ * upstreams can be routed independently.
  */
 export function klipyUrlToBskyGifUrl(klipyUrl: string) {
   let url
@@ -101,6 +103,6 @@ export function klipyUrlToBskyGifUrl(klipyUrl: string) {
     logger.debug('invalid url passed to klipyUrlToBskyGifUrl()')
     return ''
   }
-  url.hostname = 't.gifs.bsky.app'
+  url.hostname = 'k.gifs.bsky.app'
   return url.href
 }
