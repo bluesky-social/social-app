@@ -187,9 +187,7 @@ function SettingsInner() {
   return (
     <List
       data={items}
-      contentContainerStyle={
-        IS_NATIVE && {paddingBottom: bottomBarOffset + ROW_SPACING}
-      }
+      contentContainerStyle={{paddingBottom: bottomBarOffset + ROW_SPACING}}
       desktopFixedHeight
       initialNumToRender={initialNumToRender}
       keyExtractor={keyExtractor}
