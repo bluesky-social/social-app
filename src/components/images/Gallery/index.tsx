@@ -178,6 +178,11 @@ export function Gallery({
   const onSettle = (index: number) => {
     setCurrentIndex(index)
     if (!IS_WEB) return
+    // Update tabIndex: only the active image is tab-focusable
+    itemRefsRef.current.forEach((node, i) => {
+      const el = node as unknown as HTMLElement
+      el.tabIndex = i === index ? 0 : -1
+    })
     const el = itemRefsRef.current.get(index) as unknown as HTMLElement | null
     el?.focus({preventScroll: true})
   }
@@ -409,6 +414,7 @@ function GalleryImage({
       aria-label={image.alt || l`Image ${index + 1} of ${imageCount}`}>
       <Pressable
         ref={itemRef}
+        tabIndex={index === 0 ? 0 : -1}
         onPress={onPress}
         onPressIn={onPressIn}
         onFocus={() => setFocused(true)}

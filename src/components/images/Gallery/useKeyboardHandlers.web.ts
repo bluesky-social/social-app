@@ -35,11 +35,11 @@ export function useKeyboardHandlers({
       const current = pendingIndex ?? currentIndexRef.current
       let targetIndex: number | undefined
 
-      if (e.key === 'ArrowRight' || (e.key === 'Tab' && !e.shiftKey)) {
+      if (e.key === 'ArrowRight') {
         if (current < imageCount - 1) {
           targetIndex = current + 1
         }
-      } else if (e.key === 'ArrowLeft' || (e.key === 'Tab' && e.shiftKey)) {
+      } else if (e.key === 'ArrowLeft') {
         if (current > 0) {
           targetIndex = current - 1
         }
