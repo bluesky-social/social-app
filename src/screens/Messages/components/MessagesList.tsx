@@ -61,7 +61,7 @@ import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
-import {MessagesListHeader} from './MessagesListHeader'
+import {MessagesListInfoPanel} from './MessagesListInfoPanel'
 import {KeyboardStickyView} from './vendor/KeyboardStickyView'
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
@@ -452,7 +452,7 @@ export function MessagesList({
               <>
                 <MaybeLoader isLoading={convoState.isFetchingHistory} />
                 {convoState.isGroup() ? (
-                  <MessagesListHeader convoState={convoState} />
+                  <MessagesListInfoPanel convoState={convoState} />
                 ) : null}
               </>
             }

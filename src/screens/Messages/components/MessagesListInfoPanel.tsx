@@ -10,7 +10,7 @@ import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/i
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import {Text} from '#/components/Typography'
 
-export function MessagesListHeader({convoState}: {convoState: ConvoState}) {
+export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
   const t = useTheme()
   const {t: l} = useLingui()
 
