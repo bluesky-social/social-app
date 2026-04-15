@@ -13,6 +13,7 @@ export enum Features {
   ImageUploadsBlobSize2mbEnabled = 'image_uploads:blob_size_2mb:enabled',
   GroupChatsEnable = 'group_chats:enable',
   DmsNewMessageComposerEnable = 'dms:new_message_composer:enable',
+  PostGalleryEmbedEnable = 'post_gallery_embed:enable',
 
   AATest = 'aa-test',
 }
