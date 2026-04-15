@@ -36,6 +36,10 @@ export const features = new GrowthBook({
   clientKey: env.GROWTHBOOK_CLIENT_KEY,
 })
 
+if (__DEV__) {
+  features.setForcedFeatures(new Map([['quick_reactions_v0', true]]))
+}
+
 /**
  * Initializer promise that must be awaited before using the GrowthBook
  * instance or rendering the `AnalyticsFeaturesContext`. Note: this may not be
