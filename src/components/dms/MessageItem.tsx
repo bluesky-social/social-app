@@ -373,7 +373,9 @@ let MessageItem = ({
       <View
         style={[
           isFromSelf ? a.mr_sm : a.ml_sm,
-          effectiveFirstInCluster && !showDateDivider && a.mt_sm,
+          effectiveFirstInCluster &&
+            !(showDateDivider || isDateDividerToggled) &&
+            a.mt_sm,
         ]}>
         <View style={[a.relative]}>
           {isGroupChat && !isFromSelf && effectiveLastInCluster ? (
