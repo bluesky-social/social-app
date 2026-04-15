@@ -30,7 +30,7 @@ export async function getServiceAuthToken({
   return serviceAuth.token
 }
 
-export async function getVideoUploadLimits(agent: BskyAgent, _: I18n['_']) {
+export async function getVideoUploadLimits(agent: BskyAgent, i18n: I18n) {
   const token = await getServiceAuthToken({
     agent,
     lxm: 'app.bsky.video.getUploadLimits',
@@ -52,7 +52,7 @@ export async function getVideoUploadLimits(agent: BskyAgent, _: I18n['_']) {
       throw new UploadLimitError(limits.message)
     } else {
       throw new UploadLimitError(
-        _(
+        i18n._(
           msg`You have temporarily reached the limit for video uploads. Please try again later.`,
         ),
       )
