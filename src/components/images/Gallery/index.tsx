@@ -96,6 +96,7 @@ export function Gallery({
   onPressIn,
   viewContext,
 }: GalleryProps) {
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {screenReaderEnabled} = useA11y()
   const largeAltBadge = useLargeAltBadgeEnabled()
@@ -240,6 +241,9 @@ export function Gallery({
       <BlockDrawerGesture>
         <FlatList
           ref={flatListRef}
+          role="group"
+          aria-roledescription={l`carousel`}
+          aria-label={l`Image gallery, ${images.length} images`}
           horizontal
           pagingEnabled={false}
           showsHorizontalScrollIndicator={false}
@@ -258,6 +262,7 @@ export function Gallery({
                 image={item}
                 contentHeight={contentHeight}
                 index={index}
+                imageCount={images.length}
                 onWidthChange={(i, w) => {
                   itemWidthsRef.current.set(i, w)
                 }}
@@ -355,6 +360,7 @@ function GalleryImage({
   contentHeight: height,
   image,
   index,
+  imageCount,
   onWidthChange,
   itemRef,
   hideBadges,
@@ -367,6 +373,7 @@ function GalleryImage({
   contentHeight: number
   image: AppBskyEmbedImages.ViewImage
   index: number
+  imageCount: number
   onWidthChange: (index: number, width: number) => void
   itemRef: (node: View | null) => void
   hideBadges?: boolean
@@ -395,7 +402,11 @@ function GalleryImage({
   }, [index, containerRef, onContainerRef])
 
   return (
-    <Animated.View ref={containerRef} collapsable={false}>
+    <Animated.View
+      ref={containerRef}
+      collapsable={false}
+      aria-roledescription={l`slide`}
+      aria-label={image.alt || l`Image ${index + 1} of ${imageCount}`}>
       <Pressable
         ref={itemRef}
         onPress={onPress}
