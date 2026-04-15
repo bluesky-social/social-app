@@ -1,4 +1,4 @@
-import * as React from 'react'
+import {Component, createRef} from 'react'
 import {
   Dimensions,
   type LayoutChangeEvent,
@@ -39,14 +39,14 @@ const IS_IOS15 =
 const IS_NON_E2E_ANDROID =
   Platform.OS === 'android' && Number(Platform.Version) < 35
 
-export class BottomSheetNativeComponent extends React.Component<
+export class BottomSheetNativeComponent extends Component<
   BottomSheetViewProps,
   {
     open: boolean
     viewHeight?: number
   }
 > {
-  ref = React.createRef<any>()
+  ref = createRef<any>()
 
   static contextType = PortalContext
 
@@ -182,7 +182,7 @@ function BottomSheetNativeComponentInner({
         ]}>
         <View
           onLayout={onLayout}
-          style={maxHeight != null ? {flex: 1} : undefined}>
+          style={maxHeight == null ? undefined : {flex: 1}}>
           <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
         </View>
       </View>
