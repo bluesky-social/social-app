@@ -2,6 +2,7 @@ import {useCallback, useMemo, useState} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {
   AppBskyEmbedRecord,
+  ChatBskyActorDefs,
   ChatBskyConvoDefs,
   moderateProfile,
   type ModerationDecision,
@@ -74,49 +75,65 @@ export function ChatListItem({
     return null
   }
 
-  switch (convo.kind) {
-    case 'group': {
-      const groupInfo = convo.kindData
-      // TODO: members are missing the role property - find out if intentional
-      // const owner = convo.members.find(member => member.role === 'owner')
-      const owner = convo.members[0] // owner will always be the first member
+  if (
+    bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvo>(
+      convo.kind,
+      ChatBskyConvoDefs.isGroupConvo,
+    )
+  ) {
+    const owner = convo.members.find(r => {
       if (
-        !bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvoData>(
-          groupInfo,
-          ChatBskyConvoDefs.isGroupConvoData,
-        ) ||
-        !owner
+        bsky.dangerousIsType<ChatBskyActorDefs.GroupConvoMember>(
+          r.kind,
+          ChatBskyActorDefs.isGroupConvoMember,
+        )
       ) {
-        return null
+        return r.kind.role === 'owner'
+      } else {
+        throw new Error(
+          'Expected a GroupConvoMember, got an unknown kind of member',
+        )
       }
-      return (
-        <GroupChatItem
-          convo={convo}
-          groupOwner={owner}
-          groupInfo={groupInfo}
-          moderationOpts={moderationOpts}
-          showMenu={showMenu}
-        />
-      )
+    })
+    if (!owner) {
+      // TODO: Determine if this is the right thing to do here. Throwing here so that
+      // if it turns out to be wrong it'll be very visible
+      throw new Error('Could not find the group owner in the group members')
     }
-    case 'direct': {
-      const otherMember = convo.members.find(
-        member => member.did !== currentAccount?.did,
-      )
 
-      if (!otherMember) {
-        return null
-      }
-      return (
-        <DirectChatItem
-          convo={convo}
-          profile={otherMember}
-          moderationOpts={moderationOpts}
-          showMenu={showMenu}>
-          {children}
-        </DirectChatItem>
-      )
+    return (
+      <GroupChatItem
+        convo={convo}
+        groupOwner={owner}
+        groupInfo={convo.kind}
+        moderationOpts={moderationOpts}
+        showMenu={showMenu}
+      />
+    )
+  } else if (
+    bsky.dangerousIsType<ChatBskyConvoDefs.DirectConvo>(
+      convo.kind,
+      ChatBskyConvoDefs.isDirectConvo,
+    )
+  ) {
+    const otherMember = convo.members.find(
+      member => member.did !== currentAccount?.did,
+    )
+
+    if (!otherMember) {
+      return null
     }
+    return (
+      <DirectChatItem
+        convo={convo}
+        profile={otherMember}
+        moderationOpts={moderationOpts}
+        showMenu={showMenu}>
+        {children}
+      </DirectChatItem>
+    )
+  } else {
+    return null
   }
 }
 
@@ -191,7 +208,7 @@ function GroupChatItem({
 }: {
   convo: ChatBskyConvoDefs.ConvoView
   groupOwner: bsky.profile.AnyProfileView
-  groupInfo: ChatBskyConvoDefs.GroupConvoData
+  groupInfo: ChatBskyConvoDefs.GroupConvo
   moderationOpts: ModerationOpts
   showMenu?: boolean
   children?: React.ReactNode
