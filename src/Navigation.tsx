@@ -143,6 +143,7 @@ import {setNavigationMetadata} from '#/analytics/metadata'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {renderMessagesSplitViewLayout} from './screens/Messages/components/splitView/MessagesSplitViewLayout'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -564,26 +565,28 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => TopicScreen}
         options={{title: title(msg`Topic`)}}
       />
-      <Stack.Screen
-        name="MessagesConversation"
-        getComponent={() => MessagesConversationScreen}
-        options={{title: title(msg`Chat`), requireAuth: true}}
-      />
-      <Stack.Screen
-        name="MessagesConversationSettings"
-        getComponent={() => MessagesConversationSettingsScreen}
-        options={{title: title(msg`Group chat settings`), requireAuth: true}}
-      />
-      <Stack.Screen
-        name="MessagesSettings"
-        getComponent={() => MessagesSettingsScreen}
-        options={{title: title(msg`Chat settings`), requireAuth: true}}
-      />
-      <Stack.Screen
-        name="MessagesInbox"
-        getComponent={() => MessagesInboxScreen}
-        options={{title: title(msg`Chat request inbox`), requireAuth: true}}
-      />
+      <Stack.Group screenLayout={renderMessagesSplitViewLayout}>
+        <Stack.Screen
+          name="MessagesConversation"
+          getComponent={() => MessagesConversationScreen}
+          options={{title: title(msg`Chat`), requireAuth: true}}
+        />
+        <Stack.Screen
+          name="MessagesConversationSettings"
+          getComponent={() => MessagesConversationSettingsScreen}
+          options={{title: title(msg`Group chat settings`), requireAuth: true}}
+        />
+        <Stack.Screen
+          name="MessagesSettings"
+          getComponent={() => MessagesSettingsScreen}
+          options={{title: title(msg`Chat settings`), requireAuth: true}}
+        />
+        <Stack.Screen
+          name="MessagesInbox"
+          getComponent={() => MessagesInboxScreen}
+          options={{title: title(msg`Chat request inbox`), requireAuth: true}}
+        />
+      </Stack.Group>
       <Stack.Screen
         name="NotificationsActivityList"
         getComponent={() => NotificationsActivityListScreen}
@@ -832,6 +835,7 @@ const FlatNavigator = ({
         name="Messages"
         getComponent={() => MessagesScreen}
         options={{title: title(msg`Messages`), requireAuth: true}}
+        layout={renderMessagesSplitViewLayout}
       />
       <Flat.Screen
         name="Start"

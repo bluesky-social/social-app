@@ -44,6 +44,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 import {RequestListItem} from './components/RequestListItem'
+import {useIsWithinSplitView} from './components/splitView/context'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesInbox'>
 
@@ -127,6 +128,7 @@ function RequestList({
   const {t: l} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
+  const {isWithinSplitView} = useIsWithinSplitView()
 
   // Request the poll interval to be 10s (or whatever the MESSAGE_SCREEN_POLL_INTERVAL is set to in the future)
   // but only when the screen is active
@@ -217,7 +219,7 @@ function RequestList({
                     <ButtonText>
                       <Trans>Retry</Trans>
                     </ButtonText>
-                    <ButtonIcon icon={RetryIcon} position="right" />
+                    <ButtonIcon icon={RetryIcon} />
                   </Button>
                 </View>
               </>
@@ -243,23 +245,25 @@ function RequestList({
                       You don't have any chat requests at the moment.
                     </Trans>
                   </Text>
-                  <Button
-                    variant="solid"
-                    color="secondary"
-                    size="small"
-                    label={l`Go back`}
-                    onPress={() => {
-                      if (navigation.canGoBack()) {
-                        navigation.goBack()
-                      } else {
-                        navigation.navigate('Messages', {animation: 'pop'})
-                      }
-                    }}>
-                    <ButtonIcon icon={ArrowLeftIcon} />
-                    <ButtonText>
-                      <Trans>Back to Chats</Trans>
-                    </ButtonText>
-                  </Button>
+                  {!isWithinSplitView && (
+                    <Button
+                      variant="solid"
+                      color="secondary"
+                      size="small"
+                      label={l`Go back`}
+                      onPress={() => {
+                        if (navigation.canGoBack()) {
+                          navigation.goBack()
+                        } else {
+                          navigation.navigate('Messages', {animation: 'pop'})
+                        }
+                      }}>
+                      <ButtonIcon icon={ArrowLeftIcon} />
+                      <ButtonText>
+                        <Trans>Back to Chats</Trans>
+                      </ButtonText>
+                    </Button>
+                  )}
                 </View>
               </>
             )}

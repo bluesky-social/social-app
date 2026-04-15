@@ -7,6 +7,7 @@ import {useNavigation} from '@react-navigation/native'
 import {HITSLOP_30} from '#/lib/constants'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useSetDrawerOpen} from '#/state/shell'
+import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
 import {
   atoms as a,
   platform,
@@ -46,6 +47,7 @@ export function Outer({
   const {gtMobile} = useBreakpoints()
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
   const {centerColumnOffset} = useLayoutBreakpoints()
+  const {isWithinSplitView} = useIsWithinSplitView()
 
   return (
     <View
@@ -64,12 +66,13 @@ export function Outer({
         }),
         t.atoms.border_contrast_low,
         gtMobile && [a.mx_auto, {maxWidth: 600}],
-        !isWithinOffsetView && {
-          transform: [
-            {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
-            {translateX: web(SCROLLBAR_OFFSET) ?? 0},
-          ],
-        },
+        !isWithinOffsetView &&
+          !isWithinSplitView && {
+            transform: [
+              {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
+              {translateX: web(SCROLLBAR_OFFSET) ?? 0},
+            ],
+          },
       ]}>
       {children}
     </View>
@@ -108,6 +111,7 @@ export function Slot({children}: {children?: React.ReactNode}) {
 export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
+  const {isWithinRightPanel} = useIsWithinSplitView()
 
   const onPressBack = useCallback(
     (evt: GestureResponderEvent) => {
@@ -121,6 +125,10 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
     },
     [onPress, navigation],
   )
+
+  if (isWithinRightPanel) {
+    return null
+  }
 
   return (
     <Slot>

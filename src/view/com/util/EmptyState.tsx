@@ -2,8 +2,6 @@ import {isValidElement} from 'react'
 import {type StyleProp, type TextStyle, type ViewStyle} from 'react-native'
 import {View} from 'react-native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, type ButtonProps, ButtonText} from '#/components/Button'
 import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
@@ -24,23 +22,25 @@ export function EmptyState({
   button,
 }: {
   testID?: string
-  icon?: React.ComponentType<any> | React.ReactElement
+  icon?: React.ComponentType<any> | React.ReactElement | null
   iconSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
   message: string
   style?: StyleProp<ViewStyle>
   textStyle?: StyleProp<TextStyle>
   button?: EmptyStateButtonProps
 }) {
-  const pal = usePalette('default')
-  const {isTabletOrDesktop} = useWebMediaQueries()
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
+  const {gtMobile, gtTablet} = useBreakpoints()
 
   const placeholderIcon = (
     <EditIcon size="2xl" fill={t.atoms.text_contrast_medium.color} />
   )
 
   const renderIcon = () => {
+    if (icon === null) {
+      return null
+    }
+
     if (!icon) {
       return placeholderIcon
     }
@@ -79,16 +79,14 @@ export function EmptyState({
           {height: 64, width: 64},
           isValidElement(icon)
             ? a.bg_transparent
-            : [isTabletOrDesktop && {marginTop: 50}],
+            : [gtTablet && {marginTop: 50}],
         ]}>
         {renderIcon()}
       </View>
       <Text
         style={[
-          {
-            color: pal.colors.textLight,
-            maxWidth: gtMobile ? '40%' : '60%',
-          },
+          t.atoms.text_contrast_high,
+          {maxWidth: gtMobile ? '40%' : '60%'},
           a.pt_xs,
           a.font_medium,
           a.text_md,

@@ -49,6 +49,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   const kawaii = useKawaiiMode()
   const gutters = useGutters(['base', 0, 'base', 'wide'])
   const isSearchScreen = routeName === 'Search'
+  const isMessagesRelatedScreen = routeName.startsWith('Messages')
   const webqueryParams = useWebQueryParams()
   const searchQuery = webqueryParams?.q
   const showExploreScreenDuplicatedContent =
@@ -56,7 +57,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   const {rightNavVisible, centerColumnOffset, leftNavMinimal} =
     useLayoutBreakpoints()
 
-  if (!rightNavVisible) {
+  if (!rightNavVisible || isMessagesRelatedScreen) {
     return null
   }
 

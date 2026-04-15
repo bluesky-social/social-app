@@ -139,7 +139,7 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   Notifications: undefined
   MyProfileTab: undefined
   MessagesTab: undefined
-  Messages: {animation?: 'push' | 'pop'}
+  Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
 }
 
 // NOTE

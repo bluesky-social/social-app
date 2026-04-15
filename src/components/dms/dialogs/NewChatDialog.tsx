@@ -6,6 +6,7 @@ import {logger} from '#/logger'
 import {useCreateGroupChat} from '#/state/queries/messages/create-group-chat'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import {FAB} from '#/view/com/util/fab/FAB'
+import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
 import {useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {SearchablePeopleList} from '#/components/dialogs/SearchablePeopleList'
@@ -25,6 +26,7 @@ export function NewChat({
   const {t: l} = useLingui()
   const ax = useAnalytics()
   const requireEmailVerification = useRequireEmailVerification()
+  const {isWithinSplitView} = useIsWithinSplitView()
 
   const isGroupChatEnabled = ax.features.enabled(ax.features.GroupChatsEnable)
 
@@ -99,14 +101,17 @@ export function NewChat({
 
   return (
     <>
-      <FAB
-        testID="newChatFAB"
-        onPress={wrappedOnPress}
-        icon={<NewChatIcon size="lg" fill={t.palette.white} />}
-        accessibilityRole="button"
-        accessibilityLabel={l`New chat`}
-        accessibilityHint=""
-      />
+      {/* in split view, header button is always available, so no need for FAB */}
+      {!isWithinSplitView && (
+        <FAB
+          testID="newChatFAB"
+          onPress={wrappedOnPress}
+          icon={<NewChatIcon size="lg" fill={t.palette.white} />}
+          accessibilityRole="button"
+          accessibilityLabel={l`New chat`}
+          accessibilityHint=""
+        />
+      )}
       <Dialog.Outer
         control={control}
         testID="newChatDialog"
