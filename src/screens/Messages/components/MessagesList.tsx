@@ -53,6 +53,7 @@ import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
 import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
+import {DateDividerToggleProvider} from '#/components/dms/DateDividerToggle'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
@@ -417,7 +418,7 @@ export function MessagesList({
   )
 
   return (
-    <>
+    <DateDividerToggleProvider>
       <KeyboardGestureArea
         interpolator="ios"
         // HACKFIX: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1419
@@ -528,7 +529,7 @@ export function MessagesList({
       )}
 
       {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
-    </>
+    </DateDividerToggleProvider>
   )
 }
 

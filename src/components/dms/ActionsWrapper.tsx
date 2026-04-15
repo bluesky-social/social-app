@@ -9,15 +9,17 @@ export function ActionsWrapper({
   message,
   isFromSelf,
   children,
+  onTap,
 }: {
   message: ChatBskyConvoDefs.MessageView
   isFromSelf: boolean
   children: React.ReactNode
+  onTap?: () => void
 }) {
   const {t: l} = useLingui()
 
   return (
-    <MessageContextMenu message={message}>
+    <MessageContextMenu message={message} onTap={onTap}>
       {trigger =>
         // will always be true, since this file is platform split
         trigger.IS_NATIVE && (

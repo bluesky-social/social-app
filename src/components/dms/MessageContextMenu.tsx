@@ -31,9 +31,11 @@ import {hasReachedReactionLimit} from './util'
 export let MessageContextMenu = ({
   message,
   children,
+  onTap,
 }: {
   message: ChatBskyConvoDefs.MessageView
   children: TriggerProps['children']
+  onTap?: () => void
 }): React.ReactNode => {
   const {t: l} = useLingui()
   const ax = useAnalytics()
@@ -130,7 +132,8 @@ export let MessageContextMenu = ({
           label={l`Message options`}
           contentLabel={l`Message from @${
             sender?.handle ?? 'unknown' // should always be defined
-          }: ${message.text}`}>
+          }: ${message.text}`}
+          onTap={onTap}>
           {children}
         </ContextMenu.Trigger>
 

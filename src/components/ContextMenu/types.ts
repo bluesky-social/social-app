@@ -84,6 +84,14 @@ export type TriggerProps = {
   hint?: string
   role?: AccessibilityRole
   style?: StyleProp<ViewStyle>
+  /**
+   * Callback for single taps. Composed with the double-tap and
+   * press-and-hold gestures via `Gesture.Exclusive`, so a double tap
+   * does not also fire this handler.
+   *
+   * @platform ios, android
+   */
+  onTap?: () => void
 }
 export type TriggerChildProps =
   | {
