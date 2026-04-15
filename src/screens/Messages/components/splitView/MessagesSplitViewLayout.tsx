@@ -12,8 +12,11 @@ import {IS_WEB} from '#/env'
 import {ChatList, Header as ChatListHeader} from '../../ChatList'
 import {SplitViewProvider} from './context'
 
+const CENTER_COLUMN_WIDTH = 600
+const LEFT_NAV_FULL_WIDTH = 245
 const LEFT_NAV_MINIMAL_WIDTH = 86
-const RIGHT_NAV_WIDTH = 330 + 28
+const RIGHT_NAV_FULL_WIDTH = 330 + 28
+const RIGHT_NAV_MINIMAL_WIDTH = 280 + 28
 
 type LayoutProps = ScreenLayoutArgs<
   AllNavigatorParams,
@@ -44,20 +47,26 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
       ? route?.params?.conversation
       : undefined
 
+  const leftNavWidth = centerColumnOffset
+    ? LEFT_NAV_MINIMAL_WIDTH
+    : LEFT_NAV_FULL_WIDTH
+  const rightNavWidth = centerColumnOffset
+    ? RIGHT_NAV_MINIMAL_WIDTH
+    : RIGHT_NAV_FULL_WIDTH
+
+  const containerWidth =
+    leftNavWidth - LEFT_NAV_MINIMAL_WIDTH + CENTER_COLUMN_WIDTH + rightNavWidth
+
   return (
     <View
       style={[
         a.flex_1,
         a.flex_row,
         a.mx_auto,
-        {maxWidth: centerColumnOffset ? 900 : 950},
+        {maxWidth: containerWidth},
         {
           transform: [
-            {
-              translateX: centerColumnOffset
-                ? LEFT_NAV_MINIMAL_WIDTH / 2
-                : RIGHT_NAV_WIDTH / 2,
-            },
+            {translateX: LEFT_NAV_MINIMAL_WIDTH / 2},
             {translateX: web(SCROLLBAR_OFFSET) ?? 0},
           ],
         },
