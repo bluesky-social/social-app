@@ -32,11 +32,7 @@ import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
-import {
-  useHiddenPosts,
-  useHiddenPostsApi,
-  useLanguagePrefs,
-} from '#/state/preferences'
+import {useHiddenPosts, useLanguagePrefs} from '#/state/preferences'
 import {usePinnedPostMutation} from '#/state/queries/pinned-post'
 import {
   usePostDeleteMutation,
@@ -130,7 +126,6 @@ let PostMenuItems = ({
     usePinnedPostMutation()
   const requireSignIn = useRequireAuth()
   const hiddenPosts = useHiddenPosts()
-  const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
   const openLink = useOpenLink()
   const translate = useTranslate()
@@ -139,7 +134,6 @@ let PostMenuItems = ({
   const blockPromptControl = useDialogControl()
   const reportDialogControl = useReportDialogControl()
   const deletePromptControl = useDialogControl()
-  const hidePromptControl = useDialogControl()
   const postInteractionSettingsDialogControl = useDialogControl()
   const quotePostDetachConfirmControl = useDialogControl()
   const hideReplyConfirmControl = useDialogControl()
@@ -274,11 +268,6 @@ let PostMenuItems = ({
     }
   }
 
-  const onHidePost = () => {
-    hidePost({uri: postUri})
-    ax.metric('thread:click:hideReplyForMe', {})
-  }
-
   const hideInPWI = !!postAuthor.labels?.find(
     label => label.val === '!no-unauthenticated',
   )
@@ -351,7 +340,6 @@ let PostMenuItems = ({
     }
   }
 
-  const canHidePostForMe = !isAuthor && !isPostHidden
   const canHideReplyForEveryone =
     !isAuthor && isRootPostAuthor && !isPostHidden && isReply
   const canDetachQuote = quoteEmbed && quoteEmbed.isOwnedByViewer
@@ -593,87 +581,69 @@ let PostMenuItems = ({
           </>
         )}
 
-        {hasSession &&
-          (canHideReplyForEveryone || canDetachQuote || canHidePostForMe) && (
-            <>
-              <Menu.Divider />
-              <Menu.Group>
-                {canHidePostForMe && (
-                  <Menu.Item
-                    testID="postDropdownHideBtn"
-                    label={
-                      isReply
-                        ? _(msg`Hide reply for me`)
-                        : _(msg`Hide post for me`)
-                    }
-                    onPress={() => hidePromptControl.open()}>
-                    <Menu.ItemText>
-                      {isReply
-                        ? _(msg`Hide reply for me`)
-                        : _(msg`Hide post for me`)}
-                    </Menu.ItemText>
-                    <Menu.ItemIcon icon={EyeSlash} position="right" />
-                  </Menu.Item>
-                )}
-                {canHideReplyForEveryone && (
-                  <Menu.Item
-                    testID="postDropdownHideBtn"
-                    label={
-                      isReplyHiddenByThreadgate
-                        ? _(msg`Show reply for everyone`)
-                        : _(msg`Hide reply for everyone`)
-                    }
-                    onPress={
-                      isReplyHiddenByThreadgate
-                        ? onToggleReplyVisibility
-                        : () => hideReplyConfirmControl.open()
-                    }>
-                    <Menu.ItemText>
-                      {isReplyHiddenByThreadgate
-                        ? _(msg`Show reply for everyone`)
-                        : _(msg`Hide reply for everyone`)}
-                    </Menu.ItemText>
-                    <Menu.ItemIcon
-                      icon={isReplyHiddenByThreadgate ? Eye : EyeSlash}
-                      position="right"
-                    />
-                  </Menu.Item>
-                )}
+        {hasSession && (canHideReplyForEveryone || canDetachQuote) && (
+          <>
+            <Menu.Divider />
+            <Menu.Group>
+              {canHideReplyForEveryone && (
+                <Menu.Item
+                  testID="postDropdownHideBtn"
+                  label={
+                    isReplyHiddenByThreadgate
+                      ? _(msg`Show reply for everyone`)
+                      : _(msg`Hide reply for everyone`)
+                  }
+                  onPress={
+                    isReplyHiddenByThreadgate
+                      ? onToggleReplyVisibility
+                      : () => hideReplyConfirmControl.open()
+                  }>
+                  <Menu.ItemText>
+                    {isReplyHiddenByThreadgate
+                      ? _(msg`Show reply for everyone`)
+                      : _(msg`Hide reply for everyone`)}
+                  </Menu.ItemText>
+                  <Menu.ItemIcon
+                    icon={isReplyHiddenByThreadgate ? Eye : EyeSlash}
+                    position="right"
+                  />
+                </Menu.Item>
+              )}
 
-                {canDetachQuote && (
-                  <Menu.Item
-                    disabled={isDetachPending}
-                    testID="postDropdownHideBtn"
-                    label={
-                      quoteEmbed.isDetached
-                        ? _(msg`Re-attach quote`)
-                        : _(msg`Detach quote`)
+              {canDetachQuote && (
+                <Menu.Item
+                  disabled={isDetachPending}
+                  testID="postDropdownHideBtn"
+                  label={
+                    quoteEmbed.isDetached
+                      ? _(msg`Re-attach quote`)
+                      : _(msg`Detach quote`)
+                  }
+                  onPress={
+                    quoteEmbed.isDetached
+                      ? onToggleQuotePostAttachment
+                      : () => quotePostDetachConfirmControl.open()
+                  }>
+                  <Menu.ItemText>
+                    {quoteEmbed.isDetached
+                      ? _(msg`Re-attach quote`)
+                      : _(msg`Detach quote`)}
+                  </Menu.ItemText>
+                  <Menu.ItemIcon
+                    icon={
+                      isDetachPending
+                        ? Loader
+                        : quoteEmbed.isDetached
+                          ? Eye
+                          : EyeSlash
                     }
-                    onPress={
-                      quoteEmbed.isDetached
-                        ? onToggleQuotePostAttachment
-                        : () => quotePostDetachConfirmControl.open()
-                    }>
-                    <Menu.ItemText>
-                      {quoteEmbed.isDetached
-                        ? _(msg`Re-attach quote`)
-                        : _(msg`Detach quote`)}
-                    </Menu.ItemText>
-                    <Menu.ItemIcon
-                      icon={
-                        isDetachPending
-                          ? Loader
-                          : quoteEmbed.isDetached
-                            ? Eye
-                            : EyeSlash
-                      }
-                      position="right"
-                    />
-                  </Menu.Item>
-                )}
-              </Menu.Group>
-            </>
-          )}
+                    position="right"
+                  />
+                </Menu.Item>
+              )}
+            </Menu.Group>
+          </>
+        )}
 
         {hasSession && (
           <>
@@ -764,16 +734,6 @@ let PostMenuItems = ({
         onConfirm={onDeletePost}
         confirmButtonCta={_(msg`Delete`)}
         confirmButtonColor="negative"
-      />
-
-      <Prompt.Basic
-        control={hidePromptControl}
-        title={isReply ? _(msg`Hide this reply?`) : _(msg`Hide this post?`)}
-        description={_(
-          msg`This post will be hidden from feeds and threads. This cannot be undone.`,
-        )}
-        onConfirm={onHidePost}
-        confirmButtonCta={_(msg`Hide`)}
       />
 
       <ReportDialog
