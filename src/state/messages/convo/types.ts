@@ -145,7 +145,7 @@ type MarkConvoAccepted = () => void
 type AddReaction = (messageId: string, reaction: string) => Promise<void>
 type RemoveReaction = (messageId: string, reaction: string) => Promise<void>
 type IsGroup = () => boolean | undefined
-type GetGroupInfo = () => ChatBskyConvoDefs.GroupConvoData | undefined
+type GetGroupInfo = () => ChatBskyConvoDefs.GroupConvo | undefined
 type GetPrimaryMember = () => ChatBskyActorDefs.ProfileViewBasic | undefined
 
 export type ConvoStateUninitialized = {
