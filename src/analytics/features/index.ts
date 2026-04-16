@@ -2,11 +2,13 @@ import {MMKV} from '@bsky.app/react-native-mmkv'
 import {setPolyfills} from '@growthbook/growthbook'
 import {GrowthBook} from '@growthbook/growthbook-react'
 
+import {Logger} from '#/logger'
 import {getNavigationMetadata, type Metadata} from '#/analytics/metadata'
 import * as env from '#/env'
 
 export {Features} from '#/analytics/features/types'
 
+const logger = Logger.create(Logger.Context.Growthbook)
 const CACHE = new MMKV({id: 'bsky_features_cache'})
 
 setPolyfills({
@@ -44,7 +46,13 @@ export const features = new GrowthBook({
  * initialization completes.
  */
 export const init = new Promise<void>(async y => {
-  await features.init({timeout: TIMEOUT_INIT})
+  const res = await features.init({timeout: TIMEOUT_INIT})
+  if (!res.success) {
+    logger.warn('GrowthBook initialization failed or timed out', {
+      source: res.source,
+      safeMessage: res.error?.toString(),
+    })
+  }
   y()
 })
 
