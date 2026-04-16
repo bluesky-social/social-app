@@ -52,7 +52,11 @@ import {useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {IS_IOS} from '#/env'
 import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
-import {type ImageSource, type Transform} from './@types'
+import {
+  type ImageSource,
+  type LightboxTransforms,
+  type Transform,
+} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 
@@ -494,8 +498,8 @@ function LightboxImage({
     return safeArea
   }, [safeAreaRef, heightDelayedForJSThreadOnly, widthDelayedForJSThreadOnly])
 
-  const {thumbRect: thumbRectJS} = imageSrc
-  const transforms = useDerivedValue(() => {
+  const {thumbRect: thumbRectJS, thumbBorderRadius} = imageSrc
+  const transforms = useDerivedValue<LightboxTransforms>(() => {
     'worklet'
     const safeArea = measureSafeArea()
     const openProgressValue = openProgress.get()
@@ -506,6 +510,7 @@ function LightboxImage({
       return {
         isHidden: true,
         isResting: false,
+        borderRadius: 0,
         scaleAndMoveTransform: [],
         cropFrameTransform: [],
         cropContentTransform: [],
@@ -525,12 +530,14 @@ function LightboxImage({
           thumbRect,
           safeArea,
           imageAspect,
+          thumbBorderRadius,
         )
       }
     }
     return {
       isHidden: false,
       isResting: dismissTranslateY === 0,
+      borderRadius: 0,
       scaleAndMoveTransform: [{translateY: dismissTranslateY}],
       cropFrameTransform: [],
       cropContentTransform: [],
@@ -772,10 +779,12 @@ function interpolateTransform(
   },
   safeArea: {width: number; height: number; x: number; y: number},
   imageAspect: number,
+  thumbBorderRadius?: number,
 ): {
   scaleAndMoveTransform: Transform
   cropFrameTransform: Transform
   cropContentTransform: Transform
+  borderRadius: number
   isResting: boolean
   isHidden: boolean
 } {
@@ -827,12 +836,23 @@ function interpolateTransform(
     [0, 1],
     [croppedFinalHeight / finalHeight, 1],
   )
+  // The border radius in the source thumbnail needs to be scaled to account
+  // for the crop frame and overall scale so it visually matches at progress=0.
+  const sourceBorderRadius = thumbBorderRadius ?? 0
+  const initialCropScaleX = croppedFinalWidth / finalWidth
+  const borderRadius = interpolate(
+    progress,
+    [0, 1],
+    [sourceBorderRadius / (initialScale * initialCropScaleX), 0],
+  )
+
   return {
     isHidden: false,
     isResting: progress === 1,
     scaleAndMoveTransform: [{translateX}, {translateY}, {scale}],
     cropFrameTransform: [{scaleX: cropScaleX}, {scaleY: cropScaleY}],
     cropContentTransform: [{scaleX: 1 / cropScaleX}, {scaleY: 1 / cropScaleY}],
+    borderRadius,
   }
 }
 
