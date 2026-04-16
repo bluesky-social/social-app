@@ -272,7 +272,6 @@ export function AddMembersFlow({
               borderTopRightRadius: a.rounded_md.borderRadius,
             }),
             a.px_lg,
-            a.pb_lg,
             a.border_b,
             t.atoms.border_contrast_low,
             t.atoms.bg,

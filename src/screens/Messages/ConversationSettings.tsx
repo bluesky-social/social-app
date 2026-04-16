@@ -139,11 +139,11 @@ function SettingsInner() {
     },
     ...[...data]
       .sort((a, b) => {
-        const aIsAdmin = a.did === primaryMember?.did
-        const bIsAdmin = b.did === primaryMember?.did
+        const aIsOwner = a.did === primaryMember?.did
+        const bIsOwner = b.did === primaryMember?.did
         const aIsSelf = a.did === currentAccount?.did
         const bIsSelf = b.did === currentAccount?.did
-        if (aIsAdmin !== bIsAdmin) return aIsAdmin ? -1 : 1
+        if (aIsOwner !== bIsOwner) return aIsOwner ? -1 : 1
         if (aIsSelf !== bIsSelf) return aIsSelf ? -1 : 1
         return 0
       })
@@ -267,7 +267,7 @@ function AddMembersLink() {
       ? false
       : convoState.getPrimaryMember?.()?.did === currentAccount.did
 
-  if (!isOwner) {
+  if (isOwner) {
     return null
   }
 
