@@ -82,6 +82,7 @@ export type ConvoWithDetails = {view: ChatBskyConvoDefs.ConvoView} & (
 
 /**
  * Converts a raw convoView into something easier to use (i.e. extracts chat owner)
+ * and enforces the correct type for convo members.
  */
 export function parseConvoView(
   convoView: ChatBskyConvoDefs.ConvoView,
