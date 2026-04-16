@@ -57,7 +57,8 @@ export function hasReachedReactionLimit(
 }
 
 type GroupConvoMember = ChatBskyActorDefs.ProfileViewBasic & {
-  kind: $Typed<ChatBskyActorDefs.GroupConvoMember>
+  // can be missing if account deleted
+  kind?: $Typed<ChatBskyActorDefs.GroupConvoMember>
 }
 
 type DirectConvoMember = ChatBskyActorDefs.ProfileViewBasic & {
@@ -133,12 +134,7 @@ export function parseConvoView(
   ) {
     const otherUser = convoView.members.find(m => m.did !== ownDid)
 
-    if (
-      !bsky.dangerousIsType<ChatBskyActorDefs.DirectConvoMember>(
-        otherUser?.kind,
-        ChatBskyActorDefs.isDirectConvoMember,
-      )
-    ) {
+    if (!otherUser) {
       throw new Error('No other user found in direct convo')
     }
 
