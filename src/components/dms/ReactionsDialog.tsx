@@ -197,7 +197,7 @@ function ReactionRow({
         </View>
       </View>
       <View>
-        <Text style={[a.text_5xl]} emoji>
+        <Text style={[a.text_5xl, {includeFontPadding: false}]} emoji>
           {reaction.value}
         </Text>
       </View>
