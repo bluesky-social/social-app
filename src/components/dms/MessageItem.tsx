@@ -1,4 +1,4 @@
-import {memo, useCallback, useEffect, useMemo} from 'react'
+import {memo, useCallback, useEffect, useMemo, useRef} from 'react'
 import {
   type GestureResponderEvent,
   LayoutAnimation,
@@ -106,6 +106,7 @@ let MessageItem = ({
   const queryClient = useQueryClient()
 
   const reactionsControl = useDialogControl()
+  const reactionTapRef = useRef(false)
 
   const {message, nextMessage, prevMessage} = item
   const isPending = item.type === 'pending-message'
@@ -328,6 +329,16 @@ let MessageItem = ({
                 transform: [{translateY: -8}],
               },
             ]}
+            onPressIn={() => {
+              // Don't toggle the date divider when tapping a reaction.
+              reactionTapRef.current = true
+            }}
+            onPressOut={() => {
+              // Include a delay here to account for tap-and-drag before release.
+              setTimeout(() => {
+                reactionTapRef.current = false
+              }, 100)
+            }}
             onPress={() => (isGroupChat ? reactionsControl.open() : undefined)}>
             {groupedReactions.map(group => (
               <Animated.View
@@ -427,6 +438,7 @@ let MessageItem = ({
               isFromSelf={isFromSelf}
               message={message}
               onTap={() => {
+                if (reactionTapRef.current) return
                 if (!hasLargeGapFromPrev) {
                   LayoutAnimation.configureNext(
                     LayoutAnimation.Presets.easeInEaseOut,
