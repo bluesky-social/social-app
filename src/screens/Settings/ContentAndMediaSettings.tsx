@@ -18,6 +18,7 @@ import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import * as Toggle from '#/components/forms/Toggle'
 import {Bubbles_Stroke2_Corner2_Rounded as BubblesIcon} from '#/components/icons/Bubble'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {Flame_Stroke2_Corner1_Rounded as FlameIcon} from '#/components/icons/Flame'
 import {Hashtag_Stroke2_Corner0_Rounded as HashtagIcon} from '#/components/icons/Hashtag'
 import {Home_Stroke2_Corner2_Rounded as HomeIcon} from '#/components/icons/Home'
 import {Macintosh_Stroke2_Corner2_Rounded as MacintoshIcon} from '#/components/icons/Macintosh'
@@ -27,6 +28,7 @@ import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/W
 import * as Layout from '#/components/Layout'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {useStreaksAndRecapEnabled} from '#/features/activityAndRecap/hooks/useStreaksAndRecapEnabled'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -43,6 +45,8 @@ export function ContentAndMediaSettingsScreen({}: Props) {
   const {trendingDisabled, trendingVideoDisabled} = useTrendingSettings()
   const {setTrendingDisabled, setTrendingVideoDisabled} =
     useTrendingSettingsApi()
+  // G_settings: Activity & Recap entry hidden when feature flag off (X6).
+  const streaksAndRecapEnabled = useStreaksAndRecapEnabled()
 
   return (
     <Layout.Screen>
@@ -97,6 +101,16 @@ export function ContentAndMediaSettingsScreen({}: Props) {
               <Trans>Your interests</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
+          {streaksAndRecapEnabled ? (
+            <SettingsList.LinkItem
+              to="/settings/activity-and-recap"
+              label={_(msg`Activity & Recap`)}>
+              <SettingsList.ItemIcon icon={FlameIcon} />
+              <SettingsList.ItemText>
+                <Trans>Activity & Recap</Trans>
+              </SettingsList.ItemText>
+            </SettingsList.LinkItem>
+          ) : null}
           <SettingsList.Divider />
           {IS_NATIVE && (
             <Toggle.Item

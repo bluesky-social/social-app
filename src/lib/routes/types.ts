@@ -90,6 +90,10 @@ export type CommonNavigatorParams = {
   VideoFeed: VideoFeedSourceContext
   Bookmarks: undefined
   FindContactsFlow: undefined
+  // Activity & Recap (ticket i9KLo7kw)
+  Recap: {weekId: string}
+  PastRecaps: undefined
+  ActivityAndRecap: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {

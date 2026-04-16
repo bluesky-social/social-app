@@ -94,4 +94,8 @@ export const router = new Router<AllNavigatableRoutes>({
   VideoFeed: '/video-feed',
   Bookmarks: '/saved',
   FindContactsFlow: '/find-contacts',
+  // Activity & Recap (ticket i9KLo7kw)
+  Recap: '/recap/:weekId',
+  PastRecaps: '/recaps',
+  ActivityAndRecap: '/settings/activity-and-recap',
 })

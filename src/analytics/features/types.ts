@@ -15,4 +15,7 @@ export enum Features {
   DmsNewMessageComposerEnable = 'dms:new_message_composer:enable',
 
   AATest = 'aa-test',
+
+  // owner: @growth, remove by: 2026-10-01 (post-KPI readout) — ticket i9KLo7kw
+  StreaksAndRecapEnable = 'streaks_and_recap:enable',
 }

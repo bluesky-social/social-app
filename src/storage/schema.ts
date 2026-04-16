@@ -1,4 +1,9 @@
 import {type ID as PolicyUpdate202508} from '#/components/PolicyUpdateOverlay/updates/202508/config'
+import {
+  type ActivityAndRecapPrefs,
+  type FollowerSnapshot,
+  type StreakStore,
+} from '#/features/activityAndRecap/types'
 import {type Geolocation} from '#/geolocation/types'
 
 /**
@@ -79,4 +84,22 @@ export type Account = {
   birthdateLastUpdatedAt?: string
 
   lastSelectedHomeFeed?: string
+
+  /**
+   * Activity & Recap (ticket i9KLo7kw) — daily-visit streak state.
+   * Missing = never visited. See `src/features/activityAndRecap/types.ts`.
+   */
+  streak?: StreakStore
+
+  /**
+   * Activity & Recap — per-day follower-count snapshots used to compute
+   * "new followers this week" (R2). Ring-buffered; max 35 entries.
+   */
+  followerSnapshots?: FollowerSnapshot[]
+
+  /**
+   * Activity & Recap — per-account preferences and dismissals.
+   * Default-on toggles (AC-X1) handled at the read hook boundary.
+   */
+  activityAndRecap?: ActivityAndRecapPrefs
 }

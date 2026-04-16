@@ -1043,4 +1043,21 @@ export type Events = {
   'profile:associated:germ:click-self-info': {}
   'profile:associated:germ:self-disconnect': {}
   'profile:associated:germ:self-reconnect': {}
+
+  // Activity & Recap (ticket i9KLo7kw) — booleans only (AC-B12).
+  'streak:indicatorShown': {
+    has_streak: boolean
+  }
+  'streak:explainerOpened': {}
+  'streak:optIn': {}
+  'streak:optOut': {}
+  'recap:cardShown': {
+    has_posts: boolean
+    has_top_post: boolean
+    has_follower_delta: boolean
+  }
+  'recap:cardTapped': {}
+  'recap:cardDismissed': {}
+  'recap:optIn': {}
+  'recap:optOut': {}
 }

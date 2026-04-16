@@ -39,6 +39,7 @@ import * as Layout from '#/components/Layout'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {IS_NATIVE} from '#/env'
+import {WeeklyRecapCard} from '#/features/activityAndRecap/components/WeeklyRecapCard'
 
 // We don't currently persist this across reloads since
 // you gotta visit All to clear the badge anyway.
@@ -268,7 +269,11 @@ function NotificationsTab({
           ListHeaderComponent={
             filter === 'mentions' ? (
               <DisabledNotificationsWarning active={isFocusedAndActive} />
-            ) : null
+            ) : (
+              // S19: weekly recap card auto-hides when invisibility predicate
+              // (B1/B5/B6/G7) returns null. Card lives only on the All tab.
+              <WeeklyRecapCard />
+            )
           }
         />
       </MainScrollProvider>

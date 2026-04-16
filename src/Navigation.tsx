@@ -84,6 +84,7 @@ import {ModerationScreen} from '#/screens/Moderation'
 import {Screen as ModerationVerificationSettings} from '#/screens/Moderation/VerificationSettings'
 import {Screen as ModerationInteractionSettings} from '#/screens/ModerationInteractionSettings'
 import {NotificationsActivityListScreen} from '#/screens/Notifications/ActivityList'
+import {PastRecapsScreen} from '#/screens/PastRecaps'
 import {PostLikedByScreen} from '#/screens/Post/PostLikedBy'
 import {PostQuotesScreen} from '#/screens/Post/PostQuotes'
 import {PostRepostedByScreen} from '#/screens/Post/PostRepostedBy'
@@ -94,11 +95,13 @@ import {ProfileFollowsScreen} from '#/screens/Profile/ProfileFollows'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
 import {ProfileSearchScreen} from '#/screens/Profile/ProfileSearch'
 import {ProfileListScreen} from '#/screens/ProfileList'
+import {RecapScreen} from '#/screens/Recap'
 import {SavedFeeds} from '#/screens/SavedFeeds'
 import {SearchScreen} from '#/screens/Search'
 import {AboutSettingsScreen} from '#/screens/Settings/AboutSettings'
 import {AccessibilitySettingsScreen} from '#/screens/Settings/AccessibilitySettings'
 import {AccountSettingsScreen} from '#/screens/Settings/AccountSettings'
+import {ActivityAndRecapSettingsScreen} from '#/screens/Settings/ActivityAndRecap'
 import {ActivityPrivacySettingsScreen} from '#/screens/Settings/ActivityPrivacySettings'
 import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
 import {AppIconSettingsScreen} from '#/screens/Settings/AppIconSettings'
@@ -526,6 +529,30 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => ContentAndMediaSettingsScreen}
         options={{
           title: title(msg`Content and Media`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="ActivityAndRecap"
+        getComponent={() => ActivityAndRecapSettingsScreen}
+        options={{
+          title: title(msg`Activity & Recap`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="Recap"
+        getComponent={() => RecapScreen}
+        options={{
+          title: title(msg`Your week on Bluesky`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="PastRecaps"
+        getComponent={() => PastRecapsScreen}
+        options={{
+          title: title(msg`Past recaps`),
           requireAuth: true,
         }}
       />

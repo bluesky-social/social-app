@@ -14,6 +14,8 @@ import {ButtonIcon} from '#/components/Button'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
+import {ActivityAndRecapProvider} from '#/features/activityAndRecap'
+import {StreakIndicator} from '#/features/activityAndRecap/components/StreakIndicator'
 
 export function HomeHeaderLayout(props: {
   children: React.ReactNode
@@ -51,17 +53,21 @@ function HomeHeaderLayoutDesktopAndTablet({
             <View style={[a.flex_1, a.align_center, a.justify_center]}>
               <Logo width={kawaii ? 60 : 28} />
             </View>
-            <Link
-              to="/feeds"
-              hitSlop={HITSLOP_10}
-              label={_(msg`View your feeds and explore more`)}
-              size="small"
-              variant="ghost"
-              color="secondary"
-              shape="square"
-              style={[a.justify_center]}>
-              <ButtonIcon icon={FeedsIcon} size="lg" />
-            </Link>
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+              {/* S18: streak flame visible only on Home tab. */}
+              <StreakIndicator />
+              <Link
+                to="/feeds"
+                hitSlop={HITSLOP_10}
+                label={_(msg`View your feeds and explore more`)}
+                size="small"
+                variant="ghost"
+                color="secondary"
+                shape="square"
+                style={[a.justify_center]}>
+                <ButtonIcon icon={FeedsIcon} size="lg" />
+              </Link>
+            </View>
           </View>
         </Layout.Center>
       )}
@@ -73,6 +79,12 @@ function HomeHeaderLayoutDesktopAndTablet({
         }}>
         {children}
       </Layout.Center>
+      {/*
+        S20: web tracker mount site (mirrors HomeHeaderLayoutMobile). The
+        provider renders null and only invokes useStreakTracker. The hook
+        gates internally on flag + showStreak preference.
+      */}
+      <ActivityAndRecapProvider />
     </>
   )
 }

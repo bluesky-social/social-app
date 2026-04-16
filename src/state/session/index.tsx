@@ -39,6 +39,7 @@ import {
   clearAgeAssuranceData,
   clearAgeAssuranceDataForDid,
 } from '#/ageAssurance/data'
+import {clearActivityAndRecapDataForDid} from '#/features/activityAndRecap/clearActivityAndRecapDataForDid'
 
 const StateContext = createContext<SessionStateContext>({
   accounts: [],
@@ -305,6 +306,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       })
       addSessionDebugLog({type: 'method:end', method: 'removeAccount', account})
       clearAgeAssuranceDataForDid({did: account.did})
+      // S21 (A10): wipe streak + follower snapshots + recap prefs/dismissals
+      // for this DID. Account-scoped MMKV cleanup mirrors age-assurance.
+      clearActivityAndRecapDataForDid({did: account.did})
     },
     [store, cancelPendingTask],
   )

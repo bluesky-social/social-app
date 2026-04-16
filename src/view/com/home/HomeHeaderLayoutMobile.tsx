@@ -20,6 +20,8 @@ import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/H
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {IS_DEV, IS_LIQUID_GLASS} from '#/env'
+import {ActivityAndRecapProvider} from '#/features/activityAndRecap'
+import {StreakIndicator} from '#/features/activityAndRecap/components/StreakIndicator'
 
 export function HomeHeaderLayoutMobile({
   children,
@@ -75,26 +77,38 @@ export function HomeHeaderLayoutMobile({
 
         <Layout.Header.Slot>
           {hasSession && (
-            <Link
-              testID="viewHeaderHomeFeedPrefsBtn"
-              to={{screen: 'Feeds'}}
-              hitSlop={HITSLOP_10}
-              label={_(msg`View your feeds and explore more`)}
-              size="small"
-              variant="ghost"
-              color="secondary"
-              shape="square"
-              style={[
-                a.justify_center,
-                {marginRight: -Layout.BUTTON_VISUAL_ALIGNMENT_OFFSET},
-                a.bg_transparent,
-              ]}>
-              <ButtonIcon icon={FeedsIcon} size="lg" />
-            </Link>
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+              {/* S18: streak flame visible only on Home tab. */}
+              <StreakIndicator />
+              <Link
+                testID="viewHeaderHomeFeedPrefsBtn"
+                to={{screen: 'Feeds'}}
+                hitSlop={HITSLOP_10}
+                label={_(msg`View your feeds and explore more`)}
+                size="small"
+                variant="ghost"
+                color="secondary"
+                shape="square"
+                style={[
+                  a.justify_center,
+                  {marginRight: -Layout.BUTTON_VISUAL_ALIGNMENT_OFFSET},
+                  a.bg_transparent,
+                ]}>
+                <ButtonIcon icon={FeedsIcon} size="lg" />
+              </Link>
+            </View>
           )}
         </Layout.Header.Slot>
       </Layout.Header.Outer>
       {children}
+      {/*
+        S20: tracker mount site. Provider renders null and only invokes
+        useStreakTracker. Lives in HomeHeaderLayoutMobile because the Home
+        tab is the only surface where qualifying-visit detection makes
+        sense (A1, A6); the hook itself short-circuits when feature flag
+        or showStreak preference is off (X6).
+      */}
+      <ActivityAndRecapProvider />
     </Animated.View>
   )
 }
