@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {type ChatBskyConvoDefs} from '@atproto/api'
+import {ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -7,6 +7,7 @@ import {useSession} from '#/state/session'
 import {atoms as a, tokens} from '#/alf'
 import {KnownFollowers} from '#/components/KnownFollowers'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 import {ChatListItem, ChatListItemPortal} from './ChatListItem'
 import {AcceptChatButton, DeleteChatButton, RejectMenu} from './RequestButtons'
 
@@ -14,15 +15,43 @@ export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
 
-  const otherUser = convo.members.find(
-    member => member.did !== currentAccount?.did,
-  )
+  let primaryProfile: ChatBskyActorDefs.ProfileViewBasic | undefined
+  if (
+    bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvo>(
+      convo.kind,
+      ChatBskyConvoDefs.isGroupConvo,
+    )
+  ) {
+    primaryProfile = convo.members.find(r => {
+      if (
+        bsky.dangerousIsType<ChatBskyActorDefs.GroupConvoMember>(
+          r.kind,
+          ChatBskyActorDefs.isGroupConvoMember,
+        )
+      ) {
+        return r.kind.role === 'owner'
+      } else {
+        throw new Error(
+          'Expected a GroupConvoMember, got an unknown kind of member',
+        )
+      }
+    })
+  } else if (
+    bsky.dangerousIsType<ChatBskyConvoDefs.DirectConvo>(
+      convo.kind,
+      ChatBskyConvoDefs.isDirectConvo,
+    )
+  ) {
+    primaryProfile = convo.members.find(
+      member => member.did !== currentAccount?.did,
+    )
+  }
 
-  if (!otherUser || !moderationOpts) {
+  if (!primaryProfile || !moderationOpts) {
     return null
   }
 
-  const isDeletedAccount = otherUser.handle === 'missing.invalid'
+  const isDeletedAccount = primaryProfile.handle === 'missing.invalid'
 
   return (
     <View style={[a.relative, a.flex_1]}>
