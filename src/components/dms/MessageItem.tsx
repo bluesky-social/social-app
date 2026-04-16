@@ -327,8 +327,8 @@ let MessageItem = ({
               t.atoms.bg_contrast_25,
               t.atoms.shadow_sm,
               {
-                paddingTop: 3,
-                paddingBottom: 3,
+                paddingTop: platform({android: 2, default: 3}),
+                paddingBottom: platform({android: 2, default: 3}),
                 transform: [{translateY: -8}],
               },
             ]}
@@ -342,7 +342,12 @@ let MessageItem = ({
                 layout={native(LinearTransition.delay(300))}
                 key={group.value}
                 style={[a.py_2xs]}>
-                <Text emoji style={[a.text_xs]}>
+                <Text
+                  emoji
+                  style={[
+                    a.text_xs,
+                    {textAlignVertical: 'center', includeFontPadding: false},
+                  ]}>
                   {group.value}
                 </Text>
               </Animated.View>
@@ -354,7 +359,7 @@ let MessageItem = ({
                   style={[
                     a.text_xs,
                     t.atoms.text_contrast_medium,
-                    {includeFontPadding: false},
+                    {textAlignVertical: 'center', includeFontPadding: false},
                   ]}>
                   {reactions.length}
                 </Text>
