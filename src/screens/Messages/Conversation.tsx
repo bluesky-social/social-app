@@ -142,7 +142,7 @@ function Inner() {
     return (
       <>
         <Layout.Center
-          style={[a.flex_1, IS_LIQUID_GLASS && {paddingTop: topInset}]}>
+          style={[a.w_full, IS_LIQUID_GLASS && {paddingTop: topInset}]}>
           {moderation ? (
             <MessagesListHeader profile={recipient} moderation={moderation} />
           ) : (
