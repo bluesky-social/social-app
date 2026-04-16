@@ -267,7 +267,7 @@ function AddMembersLink() {
       ? false
       : convoState.getPrimaryMember?.()?.did === currentAccount.did
 
-  if (isOwner) {
+  if (!isOwner) {
     return null
   }
 
