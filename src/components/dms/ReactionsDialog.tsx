@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native'
 import Animated from 'react-native-reanimated'
-import {type ChatBskyConvoDefs, RichText as RichTextAPI} from '@atproto/api'
+import {type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -19,7 +19,6 @@ import {DraggableScrollView} from '#/view/com/pager/DraggableScrollView'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
-import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE, IS_WEB} from '#/env'
@@ -57,12 +56,9 @@ export function ReactionsDialog({
     setSelected(value)
   }
 
-  const filteredMembers =
-    selected === 'all'
-      ? members
-      : members.filter(m =>
-          reactions?.some(r => r.sender.did === m.did && r.value === selected),
-        )
+  const filteredReactions = reactions?.filter(
+    r => selected === 'all' || r.value === selected,
+  )
 
   const header = (
     <>
@@ -97,22 +93,25 @@ export function ReactionsDialog({
         contentContainerStyle={[a.pt_0]}
         header={IS_WEB ? header : null}
         style={[web({maxWidth: 400})]}>
-        {filteredMembers
-          .sort((a, b) => {
-            if (a.did === currentAccount?.did) return -1
-            if (b.did === currentAccount?.did) return 1
+        {filteredReactions
+          ?.sort((a, b) => {
+            if (a.sender.did === currentAccount?.did) return -1
+            if (b.sender.did === currentAccount?.did) return 1
             return 0
           })
-          .map(profile => {
+          .map(reaction => {
+            const sender = members.find(m => m.did === reaction.sender.did)
+            if (!sender) return null
             return (
               <ReactionRow
-                key={profile.did}
+                key={reaction.sender.did + '-' + reaction.value}
                 control={control}
                 convo={convo}
                 currentAccount={currentAccount}
                 message={message}
-                profile={profile}
-                reactions={reactions}
+                profile={sender}
+                reaction={reaction}
+                allReactions={reactions ?? []}
                 selected={selected}
                 setSelected={setSelected}
               />
@@ -129,7 +128,8 @@ function ReactionRow({
   currentAccount,
   message,
   profile,
-  reactions,
+  reaction,
+  allReactions,
   selected,
   setSelected,
 }: {
@@ -138,19 +138,13 @@ function ReactionRow({
   currentAccount?: bsky.profile.AnyProfileView
   message: ChatBskyConvoDefs.MessageView
   profile: bsky.profile.AnyProfileView
-  reactions?: ChatBskyConvoDefs.ReactionView[]
+  reaction: ChatBskyConvoDefs.ReactionView
+  allReactions: ChatBskyConvoDefs.ReactionView[]
   selected: string
   setSelected: React.Dispatch<React.SetStateAction<string>>
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-
-  const reaction = reactions?.find(({sender}) => sender.did === profile.did)
-  const rt = reaction ? new RichTextAPI({text: reaction.value}) : undefined
-
-  if (!reaction || !rt) {
-    return null
-  }
 
   const isFromSelf = currentAccount?.did === profile.did
 
@@ -158,20 +152,22 @@ function ReactionRow({
   const handle = sanitizeHandle(profile?.handle ?? '', '@')
 
   const handleOnPress = () => {
-    if (
-      (reactions?.filter(r => r.sender.did !== currentAccount?.did)?.length ??
-        0) < 1
-    ) {
-      control.close()
-    }
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    const remainingReactions =
+      allReactions?.filter(
+        r =>
+          !(r.value === reaction.value && r.sender.did === currentAccount?.did),
+      ) ?? []
     convo
       .removeReaction(message.id, reaction.value)
       .then(() => {
-        const remaining = reactions?.filter(
-          r => r.value === selected && r.sender.did !== currentAccount?.did,
-        )
-        if (!remaining?.length) {
+        if (remainingReactions.length === 0) {
+          control.close()
+        } else if (
+          selected !== 'all' &&
+          !remainingReactions.some(r => r.value === reaction.value)
+        ) {
+          // tab no longer exists
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
           setSelected('all')
         }
       })
@@ -201,14 +197,9 @@ function ReactionRow({
         </View>
       </View>
       <View>
-        <RichText
-          value={rt}
-          style={[a.text_md]}
-          interactiveStyle={a.underline}
-          enableTags
-          emojiMultiplier={2}
-          shouldProxyLinks={true}
-        />
+        <Text style={[a.text_5xl]} emoji>
+          {reaction.value}
+        </Text>
       </View>
     </>
   )
