@@ -83,7 +83,7 @@ export type ConvoWithDetails = {view: ChatBskyConvoDefs.ConvoView} & (
  */
 export function parseConvoView(
   convo: ChatBskyConvoDefs.ConvoView,
-  ownDid?: string,
+  ownDid: string | undefined,
 ): ConvoWithDetails {
   if (
     bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvo>(

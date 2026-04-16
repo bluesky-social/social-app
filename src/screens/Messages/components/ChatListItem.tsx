@@ -2,7 +2,6 @@ import {useCallback, useMemo, useState} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {
   AppBskyEmbedRecord,
-  ChatBskyActorDefs,
   ChatBskyConvoDefs,
   moderateProfile,
   type ModerationDecision,
@@ -38,6 +37,7 @@ import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {useDialogControl} from '#/components/Dialog'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
+import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
 import {Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen} from '#/components/icons/EnveopeOpen'
 import {Trash_Stroke2_Corner0_Rounded} from '#/components/icons/Trash'
@@ -49,7 +49,7 @@ import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
 export const ChatListItemPortal = createPortalGroup()
 
@@ -60,7 +60,7 @@ export const ChatListItemPortal = createPortalGroup()
  */
 
 export function ChatListItem({
-  convo,
+  convo: convoView,
   showMenu = true,
   children,
 }: {
@@ -75,83 +75,44 @@ export function ChatListItem({
     return null
   }
 
-  if (
-    bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvo>(
-      convo.kind,
-      ChatBskyConvoDefs.isGroupConvo,
-    )
-  ) {
-    const owner = convo.members.find(r => {
-      if (
-        bsky.dangerousIsType<ChatBskyActorDefs.GroupConvoMember>(
-          r.kind,
-          ChatBskyActorDefs.isGroupConvoMember,
-        )
-      ) {
-        return r.kind.role === 'owner'
-      } else {
-        throw new Error(
-          'Expected a GroupConvoMember, got an unknown kind of member',
-        )
-      }
-    })
-    if (!owner) {
-      // TODO: Determine if this is the right thing to do here. Throwing here so that
-      // if it turns out to be wrong it'll be very visible
-      throw new Error('Could not find the group owner in the group members')
-    }
+  const convo = parseConvoView(convoView, currentAccount?.did)
 
-    return (
-      <GroupChatItem
-        convo={convo}
-        groupOwner={owner}
-        groupInfo={convo.kind}
-        moderationOpts={moderationOpts}
-        showMenu={showMenu}
-      />
-    )
-  } else if (
-    bsky.dangerousIsType<ChatBskyConvoDefs.DirectConvo>(
-      convo.kind,
-      ChatBskyConvoDefs.isDirectConvo,
-    )
-  ) {
-    const otherMember = convo.members.find(
-      member => member.did !== currentAccount?.did,
-    )
-
-    if (!otherMember) {
-      return null
+  switch (convo.kind) {
+    case 'direct': {
+      return (
+        <DirectChatItem
+          convo={convo}
+          moderationOpts={moderationOpts}
+          showMenu={showMenu}>
+          {children}
+        </DirectChatItem>
+      )
     }
-    return (
-      <DirectChatItem
-        convo={convo}
-        profile={otherMember}
-        moderationOpts={moderationOpts}
-        showMenu={showMenu}>
-        {children}
-      </DirectChatItem>
-    )
-  } else {
-    return null
+    case 'group': {
+      return (
+        <GroupChatItem
+          convo={convo}
+          moderationOpts={moderationOpts}
+          showMenu={showMenu}
+        />
+      )
+    }
   }
 }
 
 function DirectChatItem({
   convo,
-  profile: profileUnshadowed,
   moderationOpts,
   showMenu,
   children,
 }: {
-  convo: ChatBskyConvoDefs.ConvoView
-  profile: bsky.profile.AnyProfileView
+  convo: Extract<ConvoWithDetails, {kind: 'direct'}>
   moderationOpts: ModerationOpts
   showMenu?: boolean
   children?: React.ReactNode
 }) {
   const {t: l} = useLingui()
-  const profile = useProfileShadow(profileUnshadowed)
+  const profile = useProfileShadow(convo.primaryMember)
 
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
@@ -165,7 +126,7 @@ function DirectChatItem({
 
   return (
     <BaseChatItem
-      convo={convo}
+      convo={convo.view}
       avatar={
         <PreviewableUserAvatar
           profile={profile}
@@ -202,32 +163,28 @@ function DirectChatItem({
 
 function GroupChatItem({
   convo,
-  groupOwner: groupOwnerUnshadowed,
-  groupInfo,
   moderationOpts,
   showMenu,
   children,
 }: {
-  convo: ChatBskyConvoDefs.ConvoView
-  groupOwner: bsky.profile.AnyProfileView
-  groupInfo: ChatBskyConvoDefs.GroupConvo
+  convo: Extract<ConvoWithDetails, {kind: 'group'}>
   moderationOpts: ModerationOpts
   showMenu?: boolean
   children?: React.ReactNode
 }) {
   const {t: l} = useLingui()
-  const groupOwner = useProfileShadow(groupOwnerUnshadowed)
+  const groupOwner = useProfileShadow(convo.primaryMember)
 
   const moderation = useMemo(
     () => moderateProfile(groupOwner, moderationOpts),
     [groupOwner, moderationOpts],
   )
 
-  const chatName = groupInfo.name ?? l`${groupOwner.handle}'s group chat`
+  const chatName = convo.details.name
 
   return (
     <BaseChatItem
-      convo={convo}
+      convo={convo.view}
       avatar={<AvatarBubbles profiles={convo.members} size="medium" />}
       title={chatName}
       accessibilityHint={l`Go to the group chat named "${chatName}"`}
@@ -509,7 +466,7 @@ function BaseChatItem({
             label={title}
             accessibilityHint={accessibilityHint}
             accessibilityActions={
-              IS_NATIVE
+              showMenu && IS_NATIVE
                 ? [
                     {
                       name: 'magicTap',
@@ -523,8 +480,8 @@ function BaseChatItem({
                 : undefined
             }
             onPress={onPress}
-            onLongPress={IS_NATIVE ? onLongPress : undefined}
-            onAccessibilityAction={onLongPress}>
+            onLongPress={showMenu && IS_NATIVE ? onLongPress : undefined}
+            onAccessibilityAction={showMenu ? onLongPress : undefined}>
             {({hovered, pressed, focused}) => (
               <View
                 style={[
