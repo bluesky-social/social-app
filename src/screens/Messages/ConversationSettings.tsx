@@ -217,6 +217,14 @@ function MembersAndRequests({
   const t = useTheme()
   const {t: l} = useLingui()
 
+  const convoState = useConvo()
+  const {currentAccount} = useSession()
+
+  const isOwner =
+    currentAccount?.did == null
+      ? false
+      : convoState.getPrimaryMember?.()?.did === currentAccount.did
+
   return (
     <View style={[a.flex_row, a.justify_between, a.mx_xl, a.mt_lg, a.mb_sm]}>
       <View style={[a.flex_row, a.align_center]}>
@@ -230,7 +238,7 @@ function MembersAndRequests({
             {color: t.palette.contrast_500},
           ]}>{l`${memberCount}/${MEMBER_LIMIT}`}</Text>
       </View>
-      {requestCount > 0 ? (
+      {isOwner && requestCount > 0 ? (
         <InlineLinkText
           label={l`View incoming group chat requests`}
           style={[a.text_sm, a.text_right, a.font_semi_bold]}
@@ -249,7 +257,19 @@ function AddMembersLink() {
   const t = useTheme()
   const {t: l} = useLingui()
 
+  const convoState = useConvo()
+  const {currentAccount} = useSession()
+
   const addMembersControl = Dialog.useDialogControl()
+
+  const isOwner =
+    currentAccount?.did == null
+      ? false
+      : convoState.getPrimaryMember?.()?.did === currentAccount.did
+
+  if (!isOwner) {
+    return null
+  }
 
   return (
     <>
