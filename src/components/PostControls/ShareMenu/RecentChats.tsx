@@ -63,12 +63,15 @@ export function RecentChats({
           convos.map(c => {
             const convo = parseConvoView(c, currentAccount?.did)
 
+            if (!convo) return null
+
             if (
               (convo.kind === 'direct' &&
                 convo.primaryMember.handle === 'missing.invalid') ||
               convo.view.muted
-            )
+            ) {
               return null
+            }
 
             return (
               <RecentChatItem

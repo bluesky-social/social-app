@@ -21,7 +21,7 @@ export function RequestListItem({
 
   const convo = parseConvoView(convoView, currentAccount?.did)
 
-  if (!moderationOpts) {
+  if (!convo || !moderationOpts) {
     return null
   }
 

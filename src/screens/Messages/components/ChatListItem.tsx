@@ -77,7 +77,7 @@ export function ChatListItem({
 
   const convo = parseConvoView(convoView, currentAccount?.did)
 
-  switch (convo.kind) {
+  switch (convo?.kind) {
     case 'direct': {
       return (
         <DirectChatItem
@@ -96,6 +96,9 @@ export function ChatListItem({
           showMenu={showMenu}
         />
       )
+    }
+    default: {
+      return null
     }
   }
 }

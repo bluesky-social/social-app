@@ -1,6 +1,7 @@
 import {type $Typed, ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
 
 import {EMOJI_REACTION_LIMIT} from '#/lib/constants'
+import {logger} from '#/logger'
 import * as bsky from '#/types/bsky'
 
 export function canBeMessaged(profile: bsky.profile.AnyProfileView) {
@@ -82,18 +83,18 @@ export type ConvoWithDetails = {view: ChatBskyConvoDefs.ConvoView} & (
  * Converts a raw convoView into something easier to use (i.e. extracts chat owner)
  */
 export function parseConvoView(
-  convo: ChatBskyConvoDefs.ConvoView,
+  convoView: ChatBskyConvoDefs.ConvoView,
   ownDid: string | undefined,
-): ConvoWithDetails {
+): ConvoWithDetails | null {
   if (
     bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvo>(
-      convo.kind,
+      convoView.kind,
       ChatBskyConvoDefs.isGroupConvo,
     )
   ) {
     let owner: GroupConvoMember | undefined = undefined
 
-    for (const member of convo.members) {
+    for (const member of convoView.members) {
       if (
         bsky.dangerousIsType<ChatBskyActorDefs.GroupConvoMember>(
           member.kind,
@@ -118,19 +119,19 @@ export function parseConvoView(
     }
 
     return {
-      convo,
+      view: convoView,
       kind: 'group',
-      details: convo.kind,
+      details: convoView.kind,
       primaryMember: owner,
-      members: convo.members as Array<GroupConvoMember>,
+      members: convoView.members as Array<GroupConvoMember>,
     }
   } else if (
     bsky.dangerousIsType<ChatBskyConvoDefs.DirectConvo>(
-      convo.kind,
+      convoView.kind,
       ChatBskyConvoDefs.isDirectConvo,
     )
   ) {
-    const otherUser = convo.members.find(m => m.did !== ownDid)
+    const otherUser = convoView.members.find(m => m.did !== ownDid)
 
     if (
       !bsky.dangerousIsType<ChatBskyActorDefs.DirectConvoMember>(
@@ -142,12 +143,14 @@ export function parseConvoView(
     }
 
     return {
-      convo,
+      view: convoView,
       kind: 'direct',
-      details: convo.kind,
+      details: convoView.kind,
       primaryMember: otherUser as DirectConvoMember,
-      members: convo.members as Array<DirectConvoMember>,
+      members: convoView.members as Array<DirectConvoMember>,
     }
+  } else {
+    logger.warn('Unknown convo kind: ' + JSON.stringify(convoView.kind))
+    return null
   }
-  throw new Error(`Unknown convo kind: ${JSON.stringify(convo.kind)}`)
 }
