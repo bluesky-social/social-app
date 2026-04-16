@@ -202,6 +202,14 @@ let MessageItem = ({
   const bottomRadiusSV = useSharedValue(targetBottomRadius)
   const topRadiusSV = useSharedValue(targetTopRadius)
 
+  const showDisplayName =
+    isGroupChat &&
+    !isFromSelf &&
+    effectiveFirstInCluster &&
+    !isDateDividerToggled &&
+    !isOnlyEmoji(message.text)
+  const showAvatar = isGroupChat && !isFromSelf && isLastInCluster
+
   useEffect(() => {
     bottomRadiusSV.set(withTiming(targetBottomRadius, {duration: 300}))
   }, [targetBottomRadius, bottomRadiusSV])
@@ -378,7 +386,7 @@ let MessageItem = ({
             a.mt_sm,
         ]}>
         <View style={[a.relative]}>
-          {isGroupChat && !isFromSelf && isLastInCluster ? (
+          {showAvatar ? (
             <View style={[a.absolute, {bottom: hasReactions ? 10 : 0}]}>
               {avatar}
             </View>
@@ -391,11 +399,7 @@ let MessageItem = ({
                   paddingLeft: AVATAR_SIZE,
                 },
             ]}>
-            {isGroupChat &&
-            !isFromSelf &&
-            effectiveFirstInCluster &&
-            !isDateDividerToggled &&
-            !isOnlyEmoji(message.text) ? (
+            {showDisplayName ? (
               <Text
                 style={[
                   a.text_xs,
