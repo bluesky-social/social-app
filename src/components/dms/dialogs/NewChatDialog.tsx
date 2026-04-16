@@ -77,6 +77,15 @@ export function NewChat({
     [control, createGroupChat],
   )
 
+  const onSelectExistingChat = useCallback(
+    (chatId: string) => {
+      control.close(() => {
+        onNewChat(chatId)
+      })
+    },
+    [control, onNewChat],
+  )
+
   const onPress = useCallback(() => {
     control.open()
   }, [control])
@@ -112,7 +121,13 @@ export function NewChat({
         ) : (
           <SearchablePeopleList
             title={l`Start a new chat`}
-            onSelectChat={onCreateChat}
+            onSelectChat={chat => {
+              if (chat.kind === 'user') {
+                onCreateChat(chat.did)
+              } else {
+                onSelectExistingChat(chat.id)
+              }
+            }}
             sortByMessageDeclaration
           />
         )}

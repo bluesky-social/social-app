@@ -53,6 +53,13 @@ function SendViaChatDialogInner({
     },
   })
 
+  const onSelectExistingChat = useCallback(
+    (chatId: string) => {
+      control.close(() => onSelectChat(chatId))
+    },
+    [control, onSelectChat],
+  )
+
   const onCreateChat = useCallback(
     (did: string) => {
       control.close(() => createChat([did]))
@@ -63,7 +70,13 @@ function SendViaChatDialogInner({
   return (
     <SearchablePeopleList
       title={_(msg`Send post to...`)}
-      onSelectChat={onCreateChat}
+      onSelectChat={chat => {
+        if (chat.kind === 'user') {
+          onCreateChat(chat.did)
+        } else {
+          onSelectExistingChat(chat.id)
+        }
+      }}
       showRecentConvos
       sortByMessageDeclaration
     />

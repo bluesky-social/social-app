@@ -24,17 +24,20 @@ export const RQKEY_ROOT = 'convo-list'
 export const RQKEY = (
   status: 'accepted' | 'request' | 'all',
   readState: 'all' | 'unread' = 'all',
-) => [RQKEY_ROOT, status, readState]
+  kind: 'all' | 'group' | 'direct' = 'all',
+) => [RQKEY_ROOT, status, readState, kind]
 type RQPageParam = string | undefined
 
 export function useListConvosQuery({
   enabled,
   status,
   readState = 'all',
+  kind = 'all',
 }: {
   enabled?: boolean
   status?: 'request' | 'accepted'
   readState?: 'all' | 'unread'
+  kind?: 'all' | 'group' | 'direct'
 } = {}) {
   const agent = useAgent()
 
@@ -47,6 +50,7 @@ export function useListConvosQuery({
           limit: 20,
           cursor: pageParam,
           readState: readState === 'unread' ? 'unread' : undefined,
+          kind: kind === 'all' ? undefined : kind,
           status,
         },
         {headers: DM_SERVICE_HEADERS},
