@@ -58,7 +58,7 @@ export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
       <ChatListItem convo={convo} showMenu={false}>
         <View style={[a.pt_xs, a.pb_2xs]}>
           <KnownFollowers
-            profile={otherUser}
+            profile={primaryProfile}
             moderationOpts={moderationOpts}
             minimal
             showIfEmpty
@@ -91,7 +91,7 @@ export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
                 <AcceptChatButton convo={convo} currentScreen="list" />
                 <RejectMenu
                   convo={convo}
-                  profile={otherUser}
+                  profile={primaryProfile}
                   showDeleteConvo
                   currentScreen="list"
                 />
