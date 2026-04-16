@@ -378,7 +378,7 @@ let MessageItem = ({
             a.mt_sm,
         ]}>
         <View style={[a.relative]}>
-          {isGroupChat && !isFromSelf && effectiveLastInCluster ? (
+          {isGroupChat && !isFromSelf && isLastInCluster ? (
             <View style={[a.absolute, {bottom: hasReactions ? 10 : 0}]}>
               {avatar}
             </View>
@@ -394,6 +394,7 @@ let MessageItem = ({
             {isGroupChat &&
             !isFromSelf &&
             effectiveFirstInCluster &&
+            !isDateDividerToggled &&
             !isOnlyEmoji(message.text) ? (
               <Text
                 style={[
