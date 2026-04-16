@@ -46,7 +46,7 @@ function createWebOAuthClient() {
         application_type: 'web',
         dpop_bound_access_tokens: true,
       },
-      handleResolver: 'https://bsky.social',
+      handleResolver: 'https://blacksky.app',
     })
   }
 
@@ -63,7 +63,7 @@ function createWebOAuthClient() {
       application_type: 'web',
       dpop_bound_access_tokens: true,
     },
-    handleResolver: 'https://bsky.social',
+    handleResolver: 'https://blacksky.app',
   })
 }
 
