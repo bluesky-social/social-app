@@ -409,6 +409,7 @@ let MessageItem = ({
               </Text>
             ) : null}
             <ActionsWrapper
+              hasReactions={hasReactions}
               isFromSelf={isFromSelf}
               message={message}
               onTap={() => {

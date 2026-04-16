@@ -12,6 +12,7 @@ export function ActionsWrapper({
   onTap,
 }: {
   message: ChatBskyConvoDefs.MessageView
+  hasReactions?: boolean
   isFromSelf: boolean
   children: React.ReactNode
   onTap?: () => void

@@ -16,10 +16,12 @@ import {hasReachedReactionLimit} from './util'
 
 export function ActionsWrapper({
   message,
+  hasReactions,
   isFromSelf,
   children,
 }: {
   message: ChatBskyConvoDefs.MessageView
+  hasReactions?: boolean
   isFromSelf: boolean
   children: React.ReactNode
 }) {
@@ -87,6 +89,7 @@ export function ActionsWrapper({
           isFromSelf
             ? [a.mr_xs, {marginLeft: 'auto'}, a.flex_row_reverse]
             : [a.ml_xs, {marginRight: 'auto'}],
+          hasReactions ? [a.mb_2xl] : undefined,
         ]}>
         <EmojiReactionPicker message={message} onEmojiSelect={onEmojiSelect}>
           {({props, state, IS_NATIVE, control}) => {
