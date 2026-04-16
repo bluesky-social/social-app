@@ -176,7 +176,9 @@ function DirectChatItem({
       primaryProfile={profile}
       primaryProfileModeration={moderation}
       title={displayName}
-      subtitle={isDeletedAccount ? undefined : sanitizeHandle(profile.handle)}
+      subtitle={
+        isDeletedAccount ? undefined : sanitizeHandle(profile.handle, '@')
+      }
       accessibilityHint={
         !isDeletedAccount
           ? l`Go to conversation with ${profile.handle}`
