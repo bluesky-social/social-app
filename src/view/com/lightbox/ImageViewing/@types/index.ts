@@ -7,7 +7,10 @@
  */
 
 import {type TransformsStyle} from 'react-native'
-import {type MeasuredDimensions} from 'react-native-reanimated'
+import {
+  type AnimatedRef,
+  type MeasuredDimensions,
+} from 'react-native-reanimated'
 
 export type Dimensions = {
   width: number
@@ -25,6 +28,7 @@ export type ImageSource = {
   thumbUri: string
   thumbDimensions: Dimensions | null
   thumbRect: MeasuredDimensions | null
+  thumbRef?: AnimatedRef<any> | null
   alt?: string
   type: 'image' | 'circle-avi' | 'rect-avi'
 }

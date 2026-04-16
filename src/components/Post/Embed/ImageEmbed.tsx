@@ -1,11 +1,5 @@
 import {InteractionManager, View} from 'react-native'
-import {
-  type AnimatedRef,
-  measure,
-  type MeasuredDimensions,
-  runOnJS,
-  runOnUI,
-} from 'react-native-reanimated'
+import {type AnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 
 import {useLightboxControls} from '#/state/lightbox'
@@ -37,34 +31,21 @@ export function ImageEmbed({
       alt: img.alt,
       dimensions: img.aspectRatio ?? null,
     }))
-    const _openLightbox = (
-      index: number,
-      thumbRects: (MeasuredDimensions | null)[],
-      fetchedDims: (Dimensions | null)[],
-    ) => {
-      openLightbox({
-        images: items.map((item, i) => ({
-          ...item,
-          thumbRect: thumbRects[i] ?? null,
-          thumbDimensions: fetchedDims[i] ?? null,
-          type: 'image',
-        })),
-        index,
-      })
-    }
     const onPress = (
       index: number,
       refs: AnimatedRef<any>[],
       fetchedDims: (Dimensions | null)[],
     ) => {
-      runOnUI(() => {
-        'worklet'
-        const rects: (MeasuredDimensions | null)[] = []
-        for (const r of refs) {
-          rects.push(measure(r))
-        }
-        runOnJS(_openLightbox)(index, rects, fetchedDims)
-      })()
+      openLightbox({
+        images: items.map((item, i) => ({
+          ...item,
+          thumbRect: null,
+          thumbRef: refs[i] ?? null,
+          thumbDimensions: fetchedDims[i] ?? null,
+          type: 'image',
+        })),
+        index,
+      })
     }
     const onPressIn = (_: number) => {
       InteractionManager.runAfterInteractions(() => {
