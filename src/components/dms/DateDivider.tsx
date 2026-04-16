@@ -1,6 +1,6 @@
 import {memo} from 'react'
 import {View} from 'react-native'
-import {Trans, useLingui} from '@lingui/react/macro'
+import {useLingui} from '@lingui/react/macro'
 import {subDays} from 'date-fns'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -26,9 +26,14 @@ const longDateFormatterWithYear = new Intl.DateTimeFormat(undefined, {
   year: 'numeric',
 })
 
-let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
+export function useDateTimeString({
+  date: dateStr,
+  onlyTime = false,
+}: {
+  date: string
+  onlyTime?: boolean
+}) {
   const {t: l} = useLingui()
-  const t = useTheme()
 
   let date: string
   const time = timeFormatter.format(new Date(dateStr))
@@ -55,6 +60,16 @@ let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
     }
   }
 
+  if (onlyTime) return time
+
+  return l`${date} at ${time}`
+}
+
+let DateDivider = ({date}: {date: string}): React.ReactNode => {
+  const t = useTheme()
+
+  const datetime = useDateTimeString({date})
+
   return (
     <View style={[a.w_full, a.my_sm]}>
       <Text
@@ -65,9 +80,7 @@ let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
           t.atoms.text_contrast_medium,
           a.px_md,
         ]}>
-        <Trans>
-          {date} at {time}
-        </Trans>
+        {datetime}
       </Text>
     </View>
   )
