@@ -2449,10 +2449,10 @@
   resolved "https://registry.yarnpkg.com/@bsky.app/sift/-/sift-0.3.2.tgz#04122bf665fad3a7eb90e1d689028ec9a209c56f"
   integrity sha512-u48gzcA5QNkvfWzH+gnouXxLulrgA6yIc7NwSBnEZt9XwZfClLfvEDjRk/VxU4AJlEwQRhY2ZC593H0oo+5/bQ==
 
-"@bsky.app/tapper@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@bsky.app/tapper/-/tapper-0.5.0.tgz#39f3814a063cc0e8ee58c05e09be3d5cb8638f22"
-  integrity sha512-Fb7L2CruOA/k/FgKDOGChr+JKXsf+geAOTZXDevs9oqbSYTrXuI8KrRgaDwPS+FVCp1vAYHC/3esuVv+lbUtnw==
+"@bsky.app/tapper@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@bsky.app/tapper/-/tapper-0.5.1.tgz#7c72e1903435290a29be9f33fe0fcba95bbfa554"
+  integrity sha512-roGmW6Fk9qE8N0u9d74XzX9+MUIr04PElOhfIg0pXtZ1buaORpasLBBC+i6WytxDP2p29CuFdzBXDaBhmcI/ow==
 
 "@crowdin/cli@^4.14.1":
   version "4.14.1"
