@@ -453,6 +453,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://bandcamp.com',
 
     'https://static.klipy.com/ii/abc123/73/ac/someFile.gif?hh=200&ww=300',
+    'https://static.klipy.com/ii/abc123/73/ac/someFile.gif?hh=200&ww=300&mp4=videoSlugMp4&webm=videoSlugWebm',
     'https://static.klipy.com/ii/abc123/73/ac/someFile.gif?hh=200',
     'https://static.klipy.com/ii/abc123/73/ac/someFile.gif',
     'https://static.klipy.com/other/path.gif?hh=200&ww=300',
@@ -853,6 +854,19 @@ describe('parseEmbedPlayerFromUrl', () => {
     undefined,
     undefined,
 
+    {
+      type: 'klipy_gif',
+      source: 'klipy',
+      isGif: true,
+      hideDetails: true,
+      playerUri: 'https://k.gifs.bsky.app/ii/abc123/73/ac/someFile.gif',
+      dimensions: {
+        width: 300,
+        height: 200,
+      },
+    },
+    // With video slug params — on native (test env), keeps gif filename,
+    // strips mp4/webm params. On web, would swap to video filename.
     {
       type: 'klipy_gif',
       source: 'klipy',
