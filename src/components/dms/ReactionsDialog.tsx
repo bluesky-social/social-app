@@ -157,20 +157,20 @@ function ReactionRow({
         r =>
           !(r.value === reaction.value && r.sender.did === currentAccount?.did),
       ) ?? []
+
+    if (remainingReactions.length === 0) {
+      control.close()
+    } else if (
+      selected !== 'all' &&
+      !remainingReactions.some(r => r.value === reaction.value)
+    ) {
+      // tab no longer exists
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+      setSelected('all')
+    }
+
     convo
       .removeReaction(message.id, reaction.value)
-      .then(() => {
-        if (remainingReactions.length === 0) {
-          control.close()
-        } else if (
-          selected !== 'all' &&
-          !remainingReactions.some(r => r.value === reaction.value)
-        ) {
-          // tab no longer exists
-          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-          setSelected('all')
-        }
-      })
       .catch(() => Toast.show(l`Failed to remove emoji reaction`))
   }
 
