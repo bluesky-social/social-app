@@ -427,8 +427,6 @@ export function MessagesList({
     [inputHeightUI],
   )
 
-  console.log('DEBUG >>>', 'convoState.hasAllHistory', convoState.hasAllHistory)
-
   return (
     <DateDividerToggleProvider>
       <KeyboardGestureArea
