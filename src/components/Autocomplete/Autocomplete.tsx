@@ -58,7 +58,17 @@ export function Autocomplete({
         data={data}
         onSelect={onSelect}
         onDismiss={onDismiss}
-        style={[
+        outerStyle={[
+          a.rounded_md,
+          a.w_full,
+          t.atoms.shadow_lg,
+          IS_WEB
+            ? {
+                maxWidth: 300,
+              }
+            : {},
+        ]}
+        innerStyle={[
           a.overflow_hidden,
           a.rounded_md,
           a.border,
