@@ -195,11 +195,7 @@ let MessageItem = ({
   const topRadiusSV = useSharedValue(targetTopRadius)
 
   const showDisplayName =
-    isGroupChat &&
-    !isFromSelf &&
-    effectiveFirstInCluster &&
-    !isDateDividerToggled &&
-    !isOnlyEmoji(message.text)
+    isGroupChat && !isFromSelf && isFirstInCluster && !isOnlyEmoji(message.text)
   const showAvatar = isGroupChat && !isFromSelf && isLastInCluster
 
   useEffect(() => {
