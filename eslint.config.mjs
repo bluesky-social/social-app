@@ -250,6 +250,14 @@ export default defineConfig(
       '@typescript-eslint/prefer-promise-reject-errors': 'warn',
       '@typescript-eslint/await-thenable': 'warn',
 
+      "no-restricted-imports": ["error", {
+        "paths": [{
+          "name": "react",
+          "importNames": ["React", "default"],
+          "message": "React is already in the global type namespace. Use named imports for runtime modules."
+        }]
+      }],
+
       /**
        * Turn off rules that we haven't enforced thus far
        */

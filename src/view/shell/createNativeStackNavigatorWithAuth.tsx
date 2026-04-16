@@ -1,4 +1,4 @@
-import * as React from 'react'
+import {useEffect, useRef} from 'react'
 import {View} from 'react-native'
 // Based on @react-navigation/native-stack/src/navigators/createNativeStackNavigator.ts
 // MIT License
@@ -82,7 +82,7 @@ function NativeStackNavigator({
       UNSTABLE_router,
     })
 
-  React.useEffect(
+  useEffect(
     () =>
       // @ts-expect-error: there may not be a tab navigator in parent
       navigation?.addListener?.('tabPress', (e: any) => {
@@ -110,7 +110,7 @@ function NativeStackNavigator({
 
   // --- our custom logic starts here ---
   // Web LRU: tracks route keys in most-recently-focused order
-  const lruKeysRef = React.useRef<string[]>([])
+  const lruKeysRef = useRef<string[]>([])
   const {hasSession, currentAccount} = useSession()
   const activeRoute = state.routes[state.index]
   const activeDescriptor = descriptors[activeRoute.key]

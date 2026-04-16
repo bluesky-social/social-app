@@ -144,6 +144,9 @@ type FetchMessageHistory = () => Promise<void>
 type MarkConvoAccepted = () => void
 type AddReaction = (messageId: string, reaction: string) => Promise<void>
 type RemoveReaction = (messageId: string, reaction: string) => Promise<void>
+type IsGroup = () => boolean | undefined
+type GetGroupInfo = () => ChatBskyConvoDefs.GroupConvo | undefined
+type GetPrimaryMember = () => ChatBskyActorDefs.ProfileViewBasic | undefined
 
 export type ConvoStateUninitialized = {
   status: ConvoStatus.Uninitialized
@@ -159,6 +162,9 @@ export type ConvoStateUninitialized = {
   markConvoAccepted: undefined
   addReaction: undefined
   removeReaction: undefined
+  isGroup: IsGroup
+  getGroupInfo: GetGroupInfo
+  getPrimaryMember: GetPrimaryMember
 }
 export type ConvoStateInitializing = {
   status: ConvoStatus.Initializing
@@ -174,6 +180,9 @@ export type ConvoStateInitializing = {
   markConvoAccepted: undefined
   addReaction: undefined
   removeReaction: undefined
+  isGroup: IsGroup
+  getGroupInfo: GetGroupInfo
+  getPrimaryMember: GetPrimaryMember
 }
 export type ConvoStateReady = {
   status: ConvoStatus.Ready
@@ -189,6 +198,9 @@ export type ConvoStateReady = {
   markConvoAccepted: MarkConvoAccepted
   addReaction: AddReaction
   removeReaction: RemoveReaction
+  isGroup: IsGroup
+  getGroupInfo: GetGroupInfo
+  getPrimaryMember: GetPrimaryMember
 }
 export type ConvoStateBackgrounded = {
   status: ConvoStatus.Backgrounded
@@ -204,6 +216,9 @@ export type ConvoStateBackgrounded = {
   markConvoAccepted: MarkConvoAccepted
   addReaction: AddReaction
   removeReaction: RemoveReaction
+  isGroup: IsGroup
+  getGroupInfo: GetGroupInfo
+  getPrimaryMember: GetPrimaryMember
 }
 export type ConvoStateSuspended = {
   status: ConvoStatus.Suspended
@@ -219,6 +234,9 @@ export type ConvoStateSuspended = {
   markConvoAccepted: MarkConvoAccepted
   addReaction: AddReaction
   removeReaction: RemoveReaction
+  isGroup: IsGroup
+  getGroupInfo: GetGroupInfo
+  getPrimaryMember: GetPrimaryMember
 }
 export type ConvoStateError = {
   status: ConvoStatus.Error
@@ -234,6 +252,9 @@ export type ConvoStateError = {
   markConvoAccepted: undefined
   addReaction: undefined
   removeReaction: undefined
+  isGroup: undefined
+  getGroupInfo: undefined
+  getPrimaryMember: undefined
 }
 export type ConvoStateDisabled = {
   status: ConvoStatus.Disabled
@@ -249,6 +270,9 @@ export type ConvoStateDisabled = {
   markConvoAccepted: MarkConvoAccepted
   addReaction: AddReaction
   removeReaction: RemoveReaction
+  isGroup: IsGroup
+  getGroupInfo: GetGroupInfo
+  getPrimaryMember: GetPrimaryMember
 }
 export type ConvoState =
   | ConvoStateUninitialized

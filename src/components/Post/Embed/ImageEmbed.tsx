@@ -12,8 +12,10 @@ import {useLightboxControls} from '#/state/lightbox'
 import {type Dimensions} from '#/view/com/lightbox/ImageViewing/@types'
 import {atoms as a} from '#/alf'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
+import {Gallery} from '#/components/images/Gallery'
 import {ImageLayoutGrid} from '#/components/images/ImageLayoutGrid'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
+import {useAnalytics} from '#/analytics'
 import {type EmbedType} from '#/types/bsky/post'
 import {type CommonProps} from './types'
 
@@ -23,8 +25,10 @@ export function ImageEmbed({
 }: CommonProps & {
   embed: EmbedType<'images'>
 }) {
+  const ax = useAnalytics()
   const {openLightbox} = useLightboxControls()
   const {images} = embed.view
+  const galleryEnabled = ax.features.enabled(ax.features.PostGalleryEmbedEnable)
 
   if (images.length > 0) {
     const items = images.map(img => ({
@@ -90,6 +94,19 @@ export function ImageEmbed({
             hideBadge={
               rest.viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
             }
+          />
+        </View>
+      )
+    }
+
+    if (galleryEnabled) {
+      return (
+        <View style={[a.mt_sm, rest.style]}>
+          <Gallery
+            images={images}
+            onPress={onPress}
+            onPressIn={onPressIn}
+            viewContext={rest.viewContext}
           />
         </View>
       )

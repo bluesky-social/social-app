@@ -1,8 +1,6 @@
 import {memo} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {subDays} from 'date-fns'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -29,7 +27,7 @@ const longDateFormatterWithYear = new Intl.DateTimeFormat(undefined, {
 })
 
 let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   let date: string
@@ -42,9 +40,9 @@ let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
   const oneWeekAgo = subDays(today, 7)
 
   if (localDateString(today) === localDateString(timestamp)) {
-    date = _(msg`Today`)
+    date = l`Today`
   } else if (localDateString(yesterday) === localDateString(timestamp)) {
-    date = _(msg`Yesterday`)
+    date = l`Yesterday`
   } else {
     if (timestamp < oneWeekAgo) {
       if (timestamp.getFullYear() === today.getFullYear()) {
@@ -58,7 +56,7 @@ let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
   }
 
   return (
-    <View style={[a.w_full, a.my_lg]}>
+    <View style={[a.w_full, a.my_sm]}>
       <Text
         style={[
           a.text_xs,
@@ -68,11 +66,7 @@ let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
           a.px_md,
         ]}>
         <Trans>
-          <Text
-            style={[a.text_xs, t.atoms.text_contrast_medium, a.font_semi_bold]}>
-            {date}
-          </Text>{' '}
-          at {time}
+          {date} at {time}
         </Trans>
       </Text>
     </View>

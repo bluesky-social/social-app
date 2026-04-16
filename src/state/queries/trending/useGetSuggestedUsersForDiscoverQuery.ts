@@ -19,9 +19,9 @@ export type QueryProps = {
 
 export const getSuggestedUsersForDiscoverQueryKeyRoot =
   'unspecced-suggested-users-for-explore'
-export const createGetSuggestedUsersForDiscoverQueryKey = (
-  props: QueryProps,
-) => [getSuggestedUsersForDiscoverQueryKeyRoot, props.limit]
+export const createGetSuggestedUsersForDiscoverQueryKey = (props: {
+  limit?: number
+}) => [getSuggestedUsersForDiscoverQueryKeyRoot, props.limit]
 
 export function useGetSuggestedUsersForDiscoverQuery(props: QueryProps = {}) {
   const agent = useAgent()
@@ -29,7 +29,7 @@ export function useGetSuggestedUsersForDiscoverQuery(props: QueryProps = {}) {
 
   return useQuery({
     staleTime: STALE.MINUTES.THREE,
-    queryKey: createGetSuggestedUsersForDiscoverQueryKey(props),
+    queryKey: createGetSuggestedUsersForDiscoverQueryKey({limit: props.limit}),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
       const userInterests = aggregateUserInterests(preferences)
