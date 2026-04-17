@@ -6,11 +6,10 @@ import {Trans} from '@lingui/react/macro'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {useCleanError} from '#/lib/hooks/useCleanError'
-import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {type DialogOuterProps} from '#/components/Dialog'
 import {
@@ -20,6 +19,7 @@ import {
 import * as TextField from '#/components/forms/TextField'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
+import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import * as toast from '#/components/Toast'
@@ -72,7 +72,6 @@ function DeleteAccountDialogInner({
   const t = useTheme()
   const {_} = useLingui()
   const cleanError = useCleanError()
-  const openLink = useOpenLink()
   const agent = useAgent()
   const {currentAccount} = useSession()
   const {removeAccount} = useSessionApi()
@@ -211,11 +210,11 @@ function DeleteAccountDialogInner({
           <Admonition style={[a.mt_lg]} type="tip">
             <Trans>
               You can also{' '}
-              <Span
-                style={[{color: t.palette.primary_500}, web(a.underline)]}
-                onPress={handleDeactivate}>
+              <SimpleInlineLinkText
+                label={_(msg`Temporarily deactivate your account`)}
+                {...createStaticClick(handleDeactivate)}>
                 temporarily deactivate
-              </Span>{' '}
+              </SimpleInlineLinkText>{' '}
               your account instead. Your profile, posts, feeds, and lists will
               no longer be visible to other Bluesky users. You can reactivate
               your account at any time by logging in.
@@ -260,24 +259,20 @@ function DeleteAccountDialogInner({
             {emailSentCount > 1 ? (
               <Trans>
                 Email sent!{' '}
-                <Span
-                  style={[{color: t.palette.primary_500}, web(a.underline)]}
-                  onPress={() => {
-                    void handleSendEmail()
-                  }}>
+                <SimpleInlineLinkText
+                  label={_(msg`Click here to resend the email`)}
+                  {...createStaticClick(handleSendEmail)}>
                   Click here to resend.
-                </Span>
+                </SimpleInlineLinkText>
               </Trans>
             ) : (
               <Trans>
                 Don’t see a code?{' '}
-                <Span
-                  style={[{color: t.palette.primary_500}, web(a.underline)]}
-                  onPress={() => {
-                    void handleSendEmail()
-                  }}>
+                <SimpleInlineLinkText
+                  label={_(msg`Click here to resend the email`)}
+                  {...createStaticClick(handleSendEmail)}>
                   Click here to resend.
-                </Span>
+                </SimpleInlineLinkText>
               </Trans>
             )}{' '}
             <Span style={{top: 1}}>
@@ -338,13 +333,11 @@ function DeleteAccountDialogInner({
                   {currentHandle}
                 </Span>{' '}
                 and all associated data. Note that this will affect any other{' '}
-                <Span
-                  style={[{color: t.palette.primary_500}, web(a.underline)]}
-                  onPress={() => {
-                    void openLink('https://bsky.social/about/faq')
-                  }}>
+                <SimpleInlineLinkText
+                  to="https://bsky.social/about/faq"
+                  label={_(msg`AT Protocol FAQ`)}>
                   AT Protocol
-                </Span>{' '}
+                </SimpleInlineLinkText>{' '}
                 services you use with this account.
               </Trans>
             </Prompt.DescriptionText>
