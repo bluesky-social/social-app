@@ -103,7 +103,14 @@ export function Gallery({
   const largeAltBadge = useLargeAltBadgeEnabled()
   const bps = useBreakpoints()
   const window = useWindowDimensions()
+  const isWithinQuote =
+    viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
+  const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage
+  const hideBadges = isWithinQuote
   const contentHeight = useMemo(() => {
+    if (isWithinChat) {
+      return 120
+    }
     if (bps.gtMobile) {
       return 300
     } else if (bps.gtPhone) {
@@ -111,10 +118,7 @@ export function Gallery({
     } else {
       return 200
     }
-  }, [bps])
-  const isWithinQuote =
-    viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
-  const hideBadges = isWithinQuote
+  }, [bps, isWithinChat])
 
   /*
    * Container overflow styles
