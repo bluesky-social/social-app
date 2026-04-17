@@ -6,6 +6,7 @@ import {Trans} from '@lingui/react/macro'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {useCleanError} from '#/lib/hooks/useCleanError'
+import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
@@ -19,7 +20,6 @@ import {
 import * as TextField from '#/components/forms/TextField'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
-import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import * as toast from '#/components/Toast'
@@ -72,6 +72,7 @@ function DeleteAccountDialogInner({
   const t = useTheme()
   const {_} = useLingui()
   const cleanError = useCleanError()
+  const openLink = useOpenLink()
   const agent = useAgent()
   const {currentAccount} = useSession()
   const {removeAccount} = useSessionApi()
@@ -113,12 +114,9 @@ function DeleteAccountDialogInner({
       }
       const token = confirmCode.replace(WHITESPACE_RE, '')
       // Inform chat service of intent to delete account.
-      const {success} = await agent.api.chat.bsky.actor.deleteAccount(
-        undefined,
-        {
-          headers: DM_SERVICE_HEADERS,
-        },
-      )
+      const {success} = await agent.chat.bsky.actor.deleteAccount(undefined, {
+        headers: DM_SERVICE_HEADERS,
+      })
       if (!success) {
         throw new Error('Failed to inform chat service of account deletion')
       }
@@ -262,24 +260,24 @@ function DeleteAccountDialogInner({
             {emailSentCount > 1 ? (
               <Trans>
                 Email sent!{' '}
-                <InlineLinkText
-                  label={_(msg`Resend`)}
-                  {...createStaticClick(() => {
+                <Span
+                  style={[{color: t.palette.primary_500}, web(a.underline)]}
+                  onPress={() => {
                     void handleSendEmail()
-                  })}>
+                  }}>
                   Click here to resend.
-                </InlineLinkText>
+                </Span>
               </Trans>
             ) : (
               <Trans>
                 Don’t see a code?{' '}
-                <InlineLinkText
-                  label={_(msg`Resend`)}
-                  {...createStaticClick(() => {
+                <Span
+                  style={[{color: t.palette.primary_500}, web(a.underline)]}
+                  onPress={() => {
                     void handleSendEmail()
-                  })}>
+                  }}>
                   Click here to resend.
-                </InlineLinkText>
+                </Span>
               </Trans>
             )}{' '}
             <Span style={{top: 1}}>
@@ -340,12 +338,13 @@ function DeleteAccountDialogInner({
                   {currentHandle}
                 </Span>{' '}
                 and all associated data. Note that this will affect any other{' '}
-                <InlineLinkText
-                  label={_(msg`Learn more about the AT Protocol.`)}
-                  style={[a.text_md]}
-                  to="https://bsky.social/about/faq">
+                <Span
+                  style={[{color: t.palette.primary_500}, web(a.underline)]}
+                  onPress={() => {
+                    void openLink('https://bsky.social/about/faq')
+                  }}>
                   AT Protocol
-                </InlineLinkText>{' '}
+                </Span>{' '}
                 services you use with this account.
               </Trans>
             </Prompt.DescriptionText>
