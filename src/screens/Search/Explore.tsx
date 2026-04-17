@@ -162,7 +162,7 @@ type ExploreScreenItems =
       type: 'profile'
       key: string
       profile: AppBskyActorDefs.ProfileView
-      recId?: number
+      recId?: string
     }
   | {
       type: 'profileEmpty'
@@ -406,6 +406,7 @@ export function Explore({
                 type: 'profile',
                 key: actor.did,
                 profile: actor,
+                recId: suggestedUsers.recId,
               })
             }
           }
