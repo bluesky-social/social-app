@@ -101,6 +101,7 @@ export type ComposerProps = Omit<
     undefined
   >['placement']
   disableEmojiFacets?: boolean
+  caretColor?: string
 }
 
 export function Composer({
@@ -117,6 +118,7 @@ export function Composer({
   autocompletePlacement,
   defaultValue,
   disableEmojiFacets = !IS_WEB,
+  caretColor,
   ...rest
 }: ComposerProps) {
   const {theme: t, fonts} = useAlf()
@@ -336,7 +338,7 @@ export function Composer({
               background: 'transparent',
             },
             web({
-              caretColor: textStyle.color ?? 'black',
+              caretColor: caretColor ?? textStyle.color ?? 'black',
               overscrollBehavior: 'none',
               scrollbarWidth: 'thin',
               scrollbarColor: `${t.palette.contrast_200} transparent`,

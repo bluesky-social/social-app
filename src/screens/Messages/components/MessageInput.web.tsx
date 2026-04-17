@@ -11,7 +11,7 @@ import {
   useMessageDraft,
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
-import {atoms as a, flatten, useTheme} from '#/alf'
+import {atoms as a, flatten, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import * as EmojiPicker from '#/components/EmojiPicker'
 import {useSharedInputStyles} from '#/components/forms/TextField'
@@ -190,6 +190,7 @@ export function MessageInput({
               backgroundColor: 'transparent',
               resize: 'none',
             },
+            web({caretColor: t.palette.primary_500}),
           ])}
           maxRows={12}
           placeholder={l`Message`}

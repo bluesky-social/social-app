@@ -173,6 +173,7 @@ export function MessageComposer({
               autoFocus={IS_WEB}
               maxRows={12}
               outerStyle={[a.flex_1]}
+              caretColor={t.palette.primary_500}
               contentTextStyle={[a.text_md, a.leading_snug]}
               contentPaddingStyle={{
                 paddingLeft: 16,
