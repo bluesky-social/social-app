@@ -26,22 +26,20 @@ import {Link} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
-import {type ConvoWithDetails, parseConvoView} from './util'
+import {type ConvoWithDetails} from './util'
 
 const PFP_SIZE = IS_WEB ? 40 : Layout.HEADER_SLOT_SIZE
 
 export function MessagesListHeader({
-  convo: convoView,
+  convo,
   profile,
   moderation,
 }: {
-  convo?: ChatBskyConvoDefs.ConvoView
+  convo?: ConvoWithDetails | null
   profile?: Shadow<AppBskyActorDefs.ProfileViewDetailed>
   moderation?: ModerationDecision | null
 }) {
   const t = useTheme()
-
-  const convo = convoView ? parseConvoView(convoView, profile?.did) : null
 
   const isGroupChat = convo?.kind === 'group'
 

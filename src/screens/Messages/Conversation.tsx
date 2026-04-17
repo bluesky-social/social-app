@@ -3,7 +3,6 @@ import {type LayoutChangeEvent, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   type AppBskyActorDefs,
-  type ChatBskyConvoDefs,
   moderateProfile,
   type ModerationDecision,
 } from '@atproto/api'
@@ -36,6 +35,7 @@ import {ConvoStatus} from '#/state/messages/convo/types'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
+import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -47,6 +47,7 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {MessagesListBlockedFooter} from '#/components/dms/MessagesListBlockedFooter'
 import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
+import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {Error} from '#/components/Error'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
@@ -105,8 +106,13 @@ function Inner() {
   const t = useTheme()
   const convoState = useConvo()
   const {_} = useLingui()
+  const {currentAccount} = useSession()
   const isFocused = useIsFocused()
   const {top: topInset} = useSafeAreaInsets()
+
+  const convo = convoState.convo
+    ? parseConvoView(convoState.convo, currentAccount?.did)
+    : null
 
   const moderationOpts = useModerationOpts()
   const {data: recipientUnshadowed} = useProfileQuery({
@@ -146,12 +152,12 @@ function Inner() {
           style={[a.w_full, IS_LIQUID_GLASS && {paddingTop: topInset}]}>
           {moderation ? (
             <MessagesListHeader
-              convo={convoState.convo}
+              convo={convo}
               profile={recipient}
               moderation={moderation}
             />
           ) : (
-            <MessagesListHeader convo={convoState.convo} />
+            <MessagesListHeader convo={convo} />
           )}
         </Layout.Center>
         <Error
@@ -172,12 +178,12 @@ function Inner() {
         <View style={IS_LIQUID_GLASS && {paddingTop: topInset}}>
           {moderation ? (
             <MessagesListHeader
-              convo={convoState.convo}
+              convo={convo}
               profile={recipient}
               moderation={moderation}
             />
           ) : (
-            <MessagesListHeader convo={convoState.convo} />
+            <MessagesListHeader convo={convo} />
           )}
         </View>
       )}
@@ -187,7 +193,7 @@ function Inner() {
           recipient={recipient}
           hasScrolled={hasScrolled}
           setHasScrolled={setHasScrolled}
-          convo={convoState.convo}
+          convo={convo}
           isActive={isConvoActive(convoState)}
           hasMessages={isConvoActive(convoState) && convoState.items.length > 0}
         />
@@ -225,7 +231,7 @@ function InnerReady({
   recipient: Shadow<AppBskyActorDefs.ProfileViewDetailed> | undefined
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
-  convo: ChatBskyConvoDefs.ConvoView | undefined
+  convo: ConvoWithDetails | null
   isActive: boolean
   hasMessages: boolean
 }) {
@@ -309,7 +315,7 @@ function InnerReady({
             moderation && recipient && convo ? (
               <MessagesListBlockedFooter
                 recipient={recipient}
-                convoId={convo.id}
+                convoId={convo.view.id}
                 hasMessages={hasMessages}
                 moderation={moderation}
               />
