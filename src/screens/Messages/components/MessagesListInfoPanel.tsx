@@ -1,7 +1,9 @@
 import {View} from 'react-native'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
+import {logger} from '#/logger'
 import {type ConvoState} from '#/state/messages/convo/types'
+import {useAddGroupMembers} from '#/state/queries/messages/add-group-members'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
@@ -10,6 +12,7 @@ import * as Dialog from '#/components/Dialog'
 import {AddMembersFlow} from '#/components/dms/AddMembersFlow'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 
 export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
@@ -19,6 +22,14 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
   const addMembersControl = Dialog.useDialogControl()
 
   const {currentAccount} = useSession()
+
+  const convoId = convoState.convo?.id
+  const {mutate: addGroupMembers} = useAddGroupMembers(convoId, {
+    onError: e => {
+      logger.error('Failed to add group chat members', {message: e})
+      Toast.show(l`Failed to add members`, {type: 'error'})
+    },
+  })
 
   const isOwner =
     currentAccount?.did == null
@@ -124,8 +135,8 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
         <Dialog.Handle />
         <AddMembersFlow
           title={l`Add people`}
-          onAddMembers={(_dids: string[]) => {
-            // TODO Add members here
+          onAddMembers={(members: string[]) => {
+            addGroupMembers({members})
             addMembersControl.close()
           }}
         />
