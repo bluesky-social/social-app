@@ -54,6 +54,11 @@ export function getAndComputeAgeAssuranceState({did}: {did: string}) {
   })
 }
 
+/**
+ * Get final evaluated age assurance state. Handles fallbacks and defers to
+ * server state before computing access based on AA config from the server +
+ * geolocation and other data.
+ */
 export function computeAgeAssuranceState({
   hasSession,
   config,
