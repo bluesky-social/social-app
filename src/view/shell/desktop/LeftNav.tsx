@@ -295,12 +295,17 @@ function SwitcherMenuProfileLink() {
     }
     return getCurrentRoute(state)
   })
-  let isCurrent =
-    currentRouteInfo.name === 'Profile'
-      ? isTab(currentRouteInfo.name, pathName) &&
+  const isCurrent = useMemo(() => {
+    if (currentRouteInfo.name === 'Profile') {
+      return (
+        isTab(currentRouteInfo.name, pathName) &&
         (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
           currentAccount?.handle
-      : isTab(currentRouteInfo.name, pathName)
+      )
+    } else {
+      return isTab(currentRouteInfo.name, pathName)
+    }
+  }, [currentAccount?.handle, currentRouteInfo, pathName])
   const onProfilePress = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
       if (e.ctrlKey || e.metaKey || e.altKey) {
