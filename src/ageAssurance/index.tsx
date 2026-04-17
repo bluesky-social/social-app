@@ -98,9 +98,9 @@ function InnerProvider({children}: {children: React.ReactNode}) {
       // disable incoming chats
       const did = getDidFromAgentSession(agent)
       if (did && s.access !== AgeAssuranceAccess.Full) {
-        const _data = getOtherRequiredDataFromCache({did})
+        const d = getOtherRequiredDataFromCache({did})
         // ...update the chat setting record if allowIncoming is not already 'none'.
-        if (_data?.actorDeclaration?.allowIncoming === 'none') return
+        if (d?.actorDeclaration?.allowIncoming === 'none') return
         restrictChatSettings({agent, did})
       }
     },

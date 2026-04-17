@@ -4,6 +4,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
+import {setOtherRequireDataActorDeclarationForDid} from '#/ageAssurance/data'
 import {RQKEY as PROFILE_RKEY} from '../profile'
 
 export function useUpdateActorDeclaration({
@@ -97,6 +98,12 @@ export async function restrictChatSettings({
       rkey: 'self',
       record: {
         $type: 'chat.bsky.actor.declaration',
+        allowIncoming: 'none',
+      },
+    })
+    setOtherRequireDataActorDeclarationForDid({
+      did,
+      actorDeclaration: {
         allowIncoming: 'none',
       },
     })

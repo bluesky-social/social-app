@@ -1,4 +1,11 @@
-import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import {
   type AppBskyAgeassuranceDefs,
   type AppBskyAgeassuranceGetConfig,
@@ -410,6 +417,23 @@ export function getOtherRequiredDataFromCache({
     createOtherRequiredDataQueryKey({did}),
   )
 }
+export function setOtherRequireDataActorDeclarationForDid({
+  did,
+  actorDeclaration,
+}: {
+  did: string
+  actorDeclaration: ActorDeclaration
+}) {
+  const prev = getOtherRequiredDataFromCache({did})
+  const next: OtherRequiredData = {
+    birthdate: prev?.birthdate,
+    actorDeclaration,
+  }
+  qc.setQueryData<OtherRequiredData>(
+    createOtherRequiredDataQueryKey({did}),
+    next,
+  )
+}
 export async function prefetchOtherRequiredData({agent}: {agent: AtpAgent}) {
   const did = getDidFromAgentSession(agent)
 
@@ -535,10 +559,28 @@ export function AgeAssuranceDataProvider({
   const serverState = useServerStateQuery()
   const {state, metadata} = serverState.data || {}
   const {data} = useOtherRequiredDataQuery()
+
+  const [s, setS] = useState<any>()
+  if (!s && state && state !== s) {
+    setS(state)
+  }
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      console.log('Simulating server state update...')
+      setS({
+        lastInitiatedAt: new Date(2025, 1, 1).toISOString(),
+        status: 'assured',
+        access: 'safe',
+      })
+    }, 5e3)
+    return () => clearTimeout(t)
+  }, [setS])
+
   const ctx = useMemo(
     () => ({
       config,
-      state,
+      state: s,
       data: {
         accountCreatedAt: metadata?.accountCreatedAt,
         declaredAge: data?.birthdate
@@ -547,7 +589,7 @@ export function AgeAssuranceDataProvider({
         birthdate: data?.birthdate,
       },
     }),
-    [config, state, data, metadata],
+    [config, s, data, metadata],
   )
   return (
     <AgeAssuranceDataContext.Provider value={ctx}>
