@@ -306,6 +306,7 @@ function SwitcherMenuProfileLink() {
       return isTab(currentRouteInfo.name, pathName)
     }
   }, [currentAccount?.handle, currentRouteInfo, pathName])
+
   const onProfilePress = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
       if (e.ctrlKey || e.metaKey || e.altKey) {
@@ -411,6 +412,7 @@ function NavItem({
         (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
           currentAccount?.handle
       : isTab(currentRouteInfo.name, pathName)
+  const isRelated = currentRouteInfo.name.startsWith(pathName)
   const navigation = useNavigation<NavigationProp>()
   const onPressWrapped = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -461,7 +463,7 @@ function NavItem({
             height: 30,
           },
         ]}>
-        {isCurrent ? iconFilled : icon}
+        {isCurrent || isRelated ? iconFilled : icon}
         {typeof count === 'string' && count ? (
           <View
             style={[

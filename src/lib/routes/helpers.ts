@@ -46,7 +46,11 @@ export function isTab(current: string, route: string) {
   // our tab routes can be variously referenced by 3 different names
   // this helper deals with that weirdness
   // -prf
-  return current.startsWith(route)
+  return (
+    current === route ||
+    current === `${route}Tab` ||
+    current === `${route}Inner`
+  )
 }
 
 export enum TabState {
