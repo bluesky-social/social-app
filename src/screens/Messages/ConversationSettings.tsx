@@ -20,6 +20,7 @@ import {type Shadow} from '#/state/cache/types'
 import {ConvoProvider, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useEditGroupName} from '#/state/queries/messages/edit-group-name'
 import {useGetConvoAvailabilityQuery} from '#/state/queries/messages/get-convo-availability'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
@@ -717,10 +718,25 @@ function SettingsHeader({
   const convoState = useConvo()
   const {currentAccount} = useSession()
 
+  const groupName = convoState.getGroupInfo?.()?.name ?? ''
+  const [newGroupName, setNewGroupName] = useState(groupName)
+
+  const [isLocked, setIsLocked] = useState(false)
+
   const isOwner =
     currentAccount?.did == null
       ? false
       : convoState.getPrimaryMember?.()?.did === currentAccount.did
+
+  const {mutate: editGroupName} = useEditGroupName(convo.id, {
+    onError: e => {
+      setNewGroupName(groupName)
+      logger.error('Failed to edit group chat name', {message: e})
+      Toast.show(l`Failed to edit group chat name`, {
+        type: 'error',
+      })
+    },
+  })
 
   const {mutate: muteConvo} = useMuteConvo(convo.id, {
     onSuccess: data => {
@@ -755,13 +771,6 @@ function SettingsHeader({
   const lockChatPrompt = Prompt.usePromptControl()
   const leaveChatPrompt = Prompt.usePromptControl()
 
-  const [groupName, setGroupName] = useState(
-    convoState.getGroupInfo?.()?.name ?? '',
-  )
-  const [newGroupName, setNewGroupName] = useState(groupName)
-
-  const [isLocked, setIsLocked] = useState(false)
-
   const handleToggleMute = () => {
     muteConvo({mute: !convo?.muted})
   }
@@ -777,7 +786,7 @@ function SettingsHeader({
   }
 
   const handleEditName = () => {
-    setGroupName(newGroupName)
+    editGroupName({name: newGroupName})
     editNamePrompt.close()
   }
 
@@ -1045,6 +1054,7 @@ function EditNamePrompt({
                 autoCapitalize="none"
                 autoComplete="off"
                 autoCorrect={false}
+                autoFocus
                 onSubmitEditing={onConfirm}
               />
             </TextField.Root>

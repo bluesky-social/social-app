@@ -116,6 +116,7 @@ export class Convo {
     this.isGroup = this.isGroup.bind(this)
     this.getGroupInfo = this.getGroupInfo.bind(this)
     this.getPrimaryMember = this.getPrimaryMember.bind(this)
+    this.updateGroupName = this.updateGroupName.bind(this)
   }
 
   private commit() {
@@ -655,7 +656,7 @@ export class Convo {
 
       const nextCursor = this.oldestRev // for TS
       const response = await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.getMessages(
+        return this.agent.chat.bsky.convo.getMessages(
           {
             cursor: nextCursor,
             convoId: this.convoId,
@@ -884,6 +885,25 @@ export class Convo {
       this.convo = {
         ...this.convo,
         muted,
+      }
+    }
+    this.commit()
+  }
+
+  updateGroupName(name: string) {
+    if (
+      this.convo &&
+      bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvo>(
+        this.convo.kind,
+        ChatBskyConvoDefs.isGroupConvo,
+      )
+    ) {
+      this.convo = {
+        ...this.convo,
+        kind: {
+          ...this.convo.kind,
+          name,
+        },
       }
     }
     this.commit()
@@ -1388,14 +1408,14 @@ export class Convo {
 
   getPrimaryMember(): ChatBskyActorDefs.ProfileViewBasic | undefined {
     if (this.isGroup()) {
-      return this.recipients?.find(r => {
+      return this.convo?.members.find(m => {
         if (
           bsky.dangerousIsType<ChatBskyActorDefs.GroupConvoMember>(
-            r.kind,
+            m.kind,
             ChatBskyActorDefs.isGroupConvoMember,
           )
         ) {
-          return r.kind.role === 'owner'
+          return m.kind.role === 'owner'
         } else {
           throw new Error(
             'Expected a GroupConvoMember, got an unknown kind of member',

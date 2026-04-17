@@ -141,18 +141,18 @@ export function useLink({
         })
       } else {
         if (isExternal) {
-          openLink(href, overridePresentation, shouldProxy)
+          void openLink(href, overridePresentation, shouldProxy)
         } else {
           const shouldOpenInNewTab = shouldClickOpenNewTab(e)
 
           if (isBskyDownloadUrl(href)) {
-            shareUrl(BSKY_DOWNLOAD_URL)
+            void shareUrl(BSKY_DOWNLOAD_URL)
           } else if (
             shouldOpenInNewTab ||
             href.startsWith('http') ||
             href.startsWith('mailto')
           ) {
-            openLink(href)
+            void openLink(href)
           } else {
             closeModal() // close any active modals
 
@@ -232,7 +232,7 @@ export function useLink({
         share: true,
       })
     } else {
-      shareUrl(href)
+      void shareUrl(href)
     }
   }, [
     disableMismatchWarning,
@@ -451,7 +451,7 @@ export function SimpleInlineLinkText({
   const onPress = (e: GestureResponderEvent) => {
     const exitEarlyIfFalse = outerOnPress?.(e)
     if (exitEarlyIfFalse === false) return
-    Linking.openURL(href)
+    void Linking.openURL(href)
   }
 
   return (
