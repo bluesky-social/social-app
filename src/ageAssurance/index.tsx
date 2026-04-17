@@ -107,34 +107,33 @@ function InnerProvider({children}: {children: React.ReactNode}) {
     logger.debug(`useAgeAssuranceState`, {state})
   }, [state])
 
-  const ctx = useMemo(() => {
-    const chatDisabled = state.access !== AgeAssuranceAccess.Full
-    const isUnderAdultAge = data?.birthdate
-      ? isUnderAge(data.birthdate, 18)
-      : true
-    const isOverRegionMinAccessAge = data?.birthdate
-      ? !isUnderAge(data.birthdate, config.minAccessAge)
-      : false
-    const isOverAppMinAccessAge = data?.birthdate
-      ? !isUnderAge(data.birthdate, MIN_ACCESS_AGE)
-      : false
-    const adultContentDisabled =
-      state.access !== AgeAssuranceAccess.Full || isUnderAdultAge
-    return {
-      Access: AgeAssuranceAccess,
-      Status: AgeAssuranceStatus,
-      state,
-      flags: {
-        adultContentDisabled,
-        chatDisabled,
-        isOverRegionMinAccessAge,
-        isOverAppMinAccessAge,
-      },
-    }
-  }, [state, data, config])
-
   return (
-    <AgeAssuranceStateContext.Provider value={ctx}>
+    <AgeAssuranceStateContext.Provider
+      value={useMemo(() => {
+        const chatDisabled = state.access !== AgeAssuranceAccess.Full
+        const isUnderAdultAge = data?.birthdate
+          ? isUnderAge(data.birthdate, 18)
+          : true
+        const isOverRegionMinAccessAge = data?.birthdate
+          ? !isUnderAge(data.birthdate, config.minAccessAge)
+          : false
+        const isOverAppMinAccessAge = data?.birthdate
+          ? !isUnderAge(data.birthdate, MIN_ACCESS_AGE)
+          : false
+        const adultContentDisabled =
+          state.access !== AgeAssuranceAccess.Full || isUnderAdultAge
+        return {
+          Access: AgeAssuranceAccess,
+          Status: AgeAssuranceStatus,
+          state,
+          flags: {
+            adultContentDisabled,
+            chatDisabled,
+            isOverRegionMinAccessAge,
+            isOverAppMinAccessAge,
+          },
+        }
+      }, [state, data, config])}>
       {children}
     </AgeAssuranceStateContext.Provider>
   )
