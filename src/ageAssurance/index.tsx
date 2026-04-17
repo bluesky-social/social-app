@@ -88,15 +88,22 @@ function InnerProvider({children}: {children: React.ReactNode}) {
 
   const handleAccessUpdate = useCallback(
     (s: AgeAssuranceState) => {
+      const hasCompletedAA = s.status === AgeAssuranceStatus.Assured
       const isAgeRestricted = s.access !== AgeAssuranceAccess.Full
-      // disable chat notifications
-      void getAndRegisterPushToken({
-        isAgeRestricted,
-      })
-      // disable incoming chats
-      if (isAgeRestricted) {
-        maybeRestrictChatSettings({agent})
-      }
+      /*
+       * If they haven't completed AA, we don't definitively know their age or
+       * access level.
+       */
+      if (!hasCompletedAA) return
+      /*
+       * If theyre' not age-restricted, then we don't need to do anything.
+       */
+      if (!isAgeRestricted) return
+      /*
+       * Ok we have to restrict access
+       */
+      void getAndRegisterPushToken({isAgeRestricted})
+      maybeRestrictChatSettings({agent})
     },
     [agent, getAndRegisterPushToken],
   )

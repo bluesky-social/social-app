@@ -65,11 +65,7 @@ export function useBirthdateMutation() {
         queryKey: preferencesQueryKey,
       })
 
-      const isUnderAdultAge = birthDate
-        ? isUnderAge(birthDate.toISOString(), 18)
-        : false
-
-      if (isUnderAdultAge) {
+      if (isUnderAge(birthDate.toISOString(), 18)) {
         maybeRestrictChatSettings({agent})
       }
 
