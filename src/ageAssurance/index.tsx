@@ -93,7 +93,6 @@ function InnerProvider({children}: {children: React.ReactNode}) {
       void getAndRegisterPushToken({
         isAgeRestricted,
       })
-
       // disable incoming chats
       if (isAgeRestricted) {
         maybeRestrictChatSettings({agent})

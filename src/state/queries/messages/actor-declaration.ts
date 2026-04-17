@@ -5,9 +5,10 @@ import {
 } from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
+import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
-import {setOtherRequireDataActorDeclarationForDid} from '#/ageAssurance/data'
+import {setOtherRequiredDataActorDeclarationCache} from '#/ageAssurance/data'
 import {RQKEY as PROFILE_RKEY} from '../profile'
 
 export function useUpdateActorDeclaration({
@@ -99,14 +100,16 @@ export async function restrictChatSettings({
       $type: 'chat.bsky.actor.declaration',
       allowIncoming: 'none',
     }
-    await agent.com.atproto.repo.putRecord({
-      repo: did,
-      collection: 'chat.bsky.actor.declaration',
-      rkey: 'self',
-      record,
-    })
+    await networkRetry(3, () =>
+      agent.com.atproto.repo.putRecord({
+        repo: did,
+        collection: 'chat.bsky.actor.declaration',
+        rkey: 'self',
+        record,
+      }),
+    )
     // important, update local cache to avoid running this again
-    setOtherRequireDataActorDeclarationForDid({
+    setOtherRequiredDataActorDeclarationCache({
       did,
       actorDeclaration: record,
     })

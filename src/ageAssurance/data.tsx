@@ -397,7 +397,7 @@ export function getOtherRequiredDataFromCache({
     createOtherRequiredDataQueryKey({did}),
   )
 }
-export function setOtherRequireDataActorDeclarationForDid({
+export function setOtherRequiredDataActorDeclarationCache({
   did,
   actorDeclaration,
 }: {
@@ -542,7 +542,6 @@ export function AgeAssuranceDataProvider({
   const serverState = useServerStateQuery()
   const {state, metadata} = serverState.data || {}
   const {data} = useOtherRequiredDataQuery()
-
   const ctx = useMemo(
     () => ({
       config,

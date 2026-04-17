@@ -123,8 +123,8 @@ export const makeAgeRestrictedModerationPrefs = (
 export function maybeRestrictChatSettings({agent}: {agent: AtpAgent}) {
   const did = getDidFromAgentSession(agent)
   if (!did) return
-  const d = getOtherRequiredDataFromCache({did})
+  const data = getOtherRequiredDataFromCache({did})
   // ...update the chat setting record if allowIncoming is not already 'none'.
-  if (d?.actorDeclaration?.allowIncoming === 'none') return
+  if (data?.actorDeclaration?.allowIncoming === 'none') return
   restrictChatSettings({agent, did})
 }
