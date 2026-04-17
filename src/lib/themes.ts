@@ -21,7 +21,6 @@ export const defaultTheme: Theme = {
       icon: lightPalette.contrast_500,
 
       // non-standard
-      brandText: lightPalette.primary_500,
       emptyStateIcon: lightPalette.contrast_300,
       borderLinkHover: lightPalette.contrast_300,
     },
@@ -301,7 +300,6 @@ export const darkTheme: Theme = {
       icon: darkPalette.contrast_500,
 
       // non-standard
-      brandText: darkPalette.primary_500,
       emptyStateIcon: darkPalette.contrast_300,
       borderLinkHover: darkPalette.contrast_300,
     },
@@ -344,7 +342,6 @@ export const dimTheme: Theme = {
       icon: dimPalette.contrast_500,
 
       // non-standard
-      brandText: dimPalette.primary_500,
       emptyStateIcon: dimPalette.contrast_300,
       borderLinkHover: dimPalette.contrast_300,
     },
