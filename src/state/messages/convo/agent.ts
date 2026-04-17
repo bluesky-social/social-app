@@ -1408,14 +1408,14 @@ export class Convo {
 
   getPrimaryMember(): ChatBskyActorDefs.ProfileViewBasic | undefined {
     if (this.isGroup()) {
-      return this.recipients?.find(r => {
+      return this.convo?.members.find(m => {
         if (
           bsky.dangerousIsType<ChatBskyActorDefs.GroupConvoMember>(
-            r.kind,
+            m.kind,
             ChatBskyActorDefs.isGroupConvoMember,
           )
         ) {
-          return r.kind.role === 'owner'
+          return m.kind.role === 'owner'
         } else {
           throw new Error(
             'Expected a GroupConvoMember, got an unknown kind of member',
