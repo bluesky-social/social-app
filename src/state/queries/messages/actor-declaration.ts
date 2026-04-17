@@ -1,5 +1,8 @@
 import type AtpAgent from '@atproto/api'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {
+  type AppBskyActorDefs,
+  type ChatBskyActorDeclaration,
+} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
@@ -92,23 +95,40 @@ export async function restrictChatSettings({
   did: string
 }): Promise<void> {
   try {
+    const record: ChatBskyActorDeclaration.Main = {
+      $type: 'chat.bsky.actor.declaration',
+      allowIncoming: 'none',
+    }
     await agent.com.atproto.repo.putRecord({
       repo: did,
       collection: 'chat.bsky.actor.declaration',
       rkey: 'self',
-      record: {
-        $type: 'chat.bsky.actor.declaration',
-        allowIncoming: 'none',
-      },
+      record,
     })
     // important, update local cache to avoid running this again
     setOtherRequireDataActorDeclarationForDid({
       did,
-      actorDeclaration: {
-        allowIncoming: 'none',
-      },
+      actorDeclaration: record,
     })
   } catch {
     logger.error(`restrictChatSettings: failed to set chat declaration`)
   }
+}
+
+export async function fetchActorDeclarationRecord({
+  agent,
+  did,
+}: {
+  agent: AtpAgent
+  did?: string
+}) {
+  if (!did) return
+  const res = await agent.com.atproto.repo
+    .getRecord({
+      repo: did,
+      collection: 'chat.bsky.actor.declaration',
+      rkey: 'self',
+    })
+    .catch(_e => undefined)
+  return res?.data.value as ChatBskyActorDeclaration.Main
 }

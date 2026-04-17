@@ -4,6 +4,7 @@ import {
   type AppBskyAgeassuranceGetConfig,
   type AppBskyAgeassuranceGetState,
   AtpAgent,
+  type ChatBskyActorDeclaration,
   getAgeAssuranceRegionConfig,
 } from '@atproto/api'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
@@ -19,6 +20,7 @@ import {
   hasSnoozedBirthdateUpdateForDid,
   snoozeBirthdateUpdateAllowedForDid,
 } from '#/state/birthdate'
+import {fetchActorDeclarationRecord} from '#/state/queries/messages/actor-declaration'
 import {useAgent, useSession} from '#/state/session'
 import * as debug from '#/ageAssurance/debug'
 import {logger} from '#/ageAssurance/logger'
@@ -323,13 +325,9 @@ export function useServerStateQuery() {
  * Other required data
  */
 
-type AllowIncoming = 'all' | 'none' | 'following'
-type ActorDeclaration = {
-  allowIncoming: AllowIncoming
-}
 export type OtherRequiredData = {
   birthdate: string | undefined
-  actorDeclaration?: ActorDeclaration | undefined
+  actorDeclaration?: ChatBskyActorDeclaration.Main
 }
 export function createOtherRequiredDataQueryKey({did}: {did: string}) {
   return ['otherRequiredData', did]
@@ -341,21 +339,10 @@ async function getOtherRequiredData({
 }): Promise<OtherRequiredData> {
   if (debug.enabled) return debug.resolve(debug.otherRequiredData)
   const did = getDidFromAgentSession(agent)
-  const [prefs, declaration] = await Promise.all([
+  const [prefs, actorDeclaration] = await Promise.all([
     agent.getPreferences(),
-    did
-      ? agent.com.atproto.repo
-          .getRecord({
-            repo: did,
-            collection: 'chat.bsky.actor.declaration',
-            rkey: 'self',
-          })
-          .catch(_e => undefined)
-      : undefined,
+    fetchActorDeclarationRecord({did, agent}),
   ])
-  const actorDeclaration = declaration?.data.value as
-    | ActorDeclaration
-    | undefined
   const data: OtherRequiredData = {
     birthdate: prefs.birthDate ? prefs.birthDate.toISOString() : undefined,
     actorDeclaration,
@@ -415,12 +402,15 @@ export function setOtherRequireDataActorDeclarationForDid({
   actorDeclaration,
 }: {
   did: string
-  actorDeclaration: ActorDeclaration
+  actorDeclaration: ChatBskyActorDeclaration.Main
 }) {
   const prev = getOtherRequiredDataFromCache({did})
   const next: OtherRequiredData = {
     birthdate: prev?.birthdate,
-    actorDeclaration,
+    actorDeclaration: {
+      ...(prev?.actorDeclaration || {}),
+      ...actorDeclaration,
+    },
   }
   qc.setQueryData<OtherRequiredData>(
     createOtherRequiredDataQueryKey({did}),
