@@ -3,6 +3,7 @@ import {type StyleProp, View, type ViewStyle} from 'react-native'
 import Animated, {
   Easing,
   interpolate,
+  type SharedValue,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -191,7 +192,7 @@ function AvatarBubble({
   includeProfileBorder,
 }: {
   profile?: bsky.profile.AnyProfileView
-  scale: Animated.SharedValue<number>
+  scale: SharedValue<number>
   size: number
   style?: StyleProp<ViewStyle>
   x: number
@@ -214,7 +215,6 @@ function AvatarBubble({
         a.absolute,
         a.rounded_full,
         a.flex_grow_0,
-        {transform: [{translateX: x}, {translateY: y}]},
         includeProfileBorder && {
           borderColor: t.atoms.text_inverted.color,
           borderWidth: 2,
