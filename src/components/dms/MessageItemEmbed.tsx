@@ -28,6 +28,7 @@ let MessageItemEmbed = ({
     <MessageContextProvider>
       <View
         style={[
+          !isFromSelf && a.ml_sm,
           t.atoms.bg,
           a.rounded_md,
           native({
