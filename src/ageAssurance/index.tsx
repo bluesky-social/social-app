@@ -83,7 +83,6 @@ export function Provider({children}: {children: React.ReactNode}) {
 
 function InnerProvider({children}: {children: React.ReactNode}) {
   const agent = useAgent()
-  const {flags} = useAgeAssurance()
   const state = useAgeAssuranceState()
   const {data} = useAgeAssuranceDataContext()
   const config = useAgeAssuranceRegionConfigWithFallback()
@@ -91,11 +90,21 @@ function InnerProvider({children}: {children: React.ReactNode}) {
 
   const handleAccessUpdate = useCallback(
     (s: AgeAssuranceState) => {
+      // disable chat notifications
       void getAndRegisterPushToken({
         isAgeRestricted: s.access !== AgeAssuranceAccess.Full,
       })
+
+      // disable incoming chats
+      const did = getDidFromAgentSession(agent)
+      if (did && s.access !== AgeAssuranceAccess.Full) {
+        const _data = getOtherRequiredDataFromCache({did})
+        // ...update the chat setting record if allowIncoming is not already 'none'.
+        if (_data?.actorDeclaration?.allowIncoming === 'none') return
+        restrictChatSettings({agent, did})
+      }
     },
-    [getAndRegisterPushToken],
+    [agent, getAndRegisterPushToken],
   )
   useOnAgeAssuranceAccessUpdate(handleAccessUpdate)
 
@@ -128,23 +137,6 @@ function InnerProvider({children}: {children: React.ReactNode}) {
       },
     }
   }, [state, data, config])
-
-  useEffect(() => {
-    const updateChatRecord = async () => {
-      const did = getDidFromAgentSession(agent)
-      // If chat is disabled...
-      if (did && flags.chatDisabled) {
-        const data = getOtherRequiredDataFromCache({did})
-        const allowIncoming = data?.actorDeclaration?.allowIncoming
-        // ...update the chat setting record if allowIncoming is not already 'none'.
-        if (allowIncoming === 'none') {
-          return
-        }
-        await restrictChatSettings({agent, did})
-      }
-    }
-    void updateChatRecord()
-  }, [agent, flags.chatDisabled])
 
   return (
     <AgeAssuranceStateContext.Provider value={ctx}>
