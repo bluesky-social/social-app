@@ -17,8 +17,6 @@ export const defaultTheme: Theme = {
       textInverted: lightPalette.white,
       link: lightPalette.primary_500,
       border: lightPalette.contrast_100,
-      borderDark: lightPalette.contrast_200,
-      icon: lightPalette.contrast_500,
     },
     primary: {
       background: colors.blue3,
@@ -28,8 +26,6 @@ export const defaultTheme: Theme = {
       textInverted: colors.blue3,
       link: colors.blue0,
       border: colors.blue4,
-      borderDark: colors.blue5,
-      icon: colors.blue4,
     },
     secondary: {
       background: colors.green3,
@@ -39,8 +35,6 @@ export const defaultTheme: Theme = {
       textInverted: colors.green4,
       link: colors.green1,
       border: colors.green4,
-      borderDark: colors.green5,
-      icon: colors.green4,
     },
     inverted: {
       background: darkPalette.black,
@@ -50,8 +44,6 @@ export const defaultTheme: Theme = {
       textInverted: darkPalette.black,
       link: darkPalette.primary_500,
       border: darkPalette.contrast_100,
-      borderDark: darkPalette.contrast_200,
-      icon: darkPalette.contrast_500,
     },
     error: {
       background: colors.red3,
@@ -61,8 +53,6 @@ export const defaultTheme: Theme = {
       textInverted: colors.red3,
       link: colors.red1,
       border: colors.red4,
-      borderDark: colors.red5,
-      icon: colors.red4,
     },
   },
   shapes: {
@@ -292,8 +282,6 @@ export const darkTheme: Theme = {
       textInverted: darkPalette.black,
       link: darkPalette.primary_500,
       border: darkPalette.contrast_100,
-      borderDark: darkPalette.contrast_200,
-      icon: darkPalette.contrast_500,
     },
     primary: {
       ...defaultTheme.palette.primary,
@@ -311,8 +299,6 @@ export const darkTheme: Theme = {
       textInverted: darkPalette.white,
       link: lightPalette.primary_500,
       border: lightPalette.contrast_100,
-      borderDark: lightPalette.contrast_200,
-      icon: lightPalette.contrast_500,
     },
   },
 }
@@ -330,8 +316,6 @@ export const dimTheme: Theme = {
       textInverted: dimPalette.black,
       link: dimPalette.primary_500,
       border: dimPalette.contrast_100,
-      borderDark: dimPalette.contrast_200,
-      icon: dimPalette.contrast_500,
     },
   },
 }
