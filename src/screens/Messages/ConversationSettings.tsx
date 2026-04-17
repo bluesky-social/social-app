@@ -21,12 +21,13 @@ import {ConvoProvider, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAddGroupMembers} from '#/state/queries/messages/add-group-members'
-import {useEditGroupName} from '#/state/queries/messages/edit-group-name'
+import {useEditGroupChatName} from '#/state/queries/messages/edit-group-chat-name'
 import {useGetConvoAvailabilityQuery} from '#/state/queries/messages/get-convo-availability'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {useListJoinRequestsQuery} from '#/state/queries/messages/list-join-requests'
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
+import {useRemoveFromGroupChat} from '#/state/queries/messages/remove-from-group'
 import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
@@ -189,6 +190,7 @@ function SettingsInner({convoId}: {convoId: string}) {
       case 'CHAT_MEMBER':
         return (
           <Member
+            convo={convo}
             profile={item.profile}
             status={item.status}
             isOwner={isOwner}
@@ -391,10 +393,12 @@ function AddMembersLink({
 }
 
 function Member({
+  convo,
   profile,
   status,
   isOwner,
 }: {
+  convo: ConvoWithDetails | null
   profile: Shadow<bsky.profile.AnyProfileView>
   status: 'owner' | 'standard' | 'invited'
   isOwner: boolean
@@ -430,7 +434,12 @@ function Member({
     }
   } else {
     statusBadge = (
-      <MemberMenu profile={profile} type={status} isOwner={isOwner} />
+      <MemberMenu
+        convo={convo}
+        profile={profile}
+        type={status}
+        isOwner={isOwner}
+      />
     )
   }
 
@@ -537,10 +546,12 @@ function StatusButton({
 }
 
 function MemberMenu({
+  convo,
   profile,
   type,
   isOwner,
 }: {
+  convo: ConvoWithDetails | null
   profile: Shadow<bsky.profile.AnyProfileView>
   type: 'owner' | 'standard' | 'invited'
   isOwner: boolean
@@ -562,6 +573,13 @@ function MemberMenu({
     },
     onError: () => {
       Toast.show(l`Failed to create conversation`)
+    },
+  })
+  const convoId = convo?.view.id
+  const {mutate: removeMembers} = useRemoveFromGroupChat(convoId, {
+    onError: e => {
+      logger.error('Failed to remove group chat member', {message: e})
+      Toast.show(l`Failed to remove group chat member`)
     },
   })
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
@@ -714,7 +732,7 @@ function MemberMenu({
             {isOwner ? (
               <Menu.Item
                 label={l`Remove ${displayName} from this group chat`}
-                onPress={() => {}}>
+                onPress={() => removeMembers({members: [profile.did]})}>
                 <Menu.ItemText>
                   <Trans>Remove from chat</Trans>
                 </Menu.ItemText>
@@ -759,7 +777,7 @@ function SettingsHeader({
 
   const [isLocked, setIsLocked] = useState(false)
 
-  const {mutate: editGroupName} = useEditGroupName(convo.view.id, {
+  const {mutate: editGroupName} = useEditGroupChatName(convo.view.id, {
     onError: e => {
       setNewGroupName(groupName)
       logger.error('Failed to edit group chat name', {message: e})
