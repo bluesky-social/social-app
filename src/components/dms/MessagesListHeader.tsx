@@ -156,7 +156,12 @@ function ProfileHeaderReady({
             moderation={moderation.ui('avatar')}
             disableHoverCard={moderation.blocked}
           />
-          <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
+          <View style={[a.flex_row, a.align_center, a.flex_1]}>
+            <Text style={[a.text_md, a.font_semi_bold]} numberOfLines={1}>
+              {displayName}
+            </Text>
+            <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
+          </View>
         </Link>
       }
       muted={convoState.convo?.muted}
