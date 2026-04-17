@@ -1,4 +1,4 @@
-import {ScrollView, View} from 'react-native'
+import {View} from 'react-native'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -51,29 +51,32 @@ export function GifCategoryPills({
   useLingui()
 
   return (
-    <View style={[a.mb_sm]}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={[a.flex_row, a.gap_xs, a.px_xl]}>
-        {GIF_CATEGORIES.map(category => {
-          if (category.id === 'recents' && !hasRecents) return null
-          const isActive = category.id === activeId
-          const label = i18n._(category.label)
-          return (
-            <Button
-              key={category.id}
-              label={label}
-              onPress={() => onSelect(category)}
-              size="small"
-              variant={isActive ? 'solid' : 'outline'}
-              color={isActive ? 'primary' : 'secondary'}
-              shape="round">
-              <ButtonIcon icon={category.icon} />
-            </Button>
-          )
-        })}
-      </ScrollView>
+    <View
+      style={[
+        a.flex_row,
+        a.justify_between,
+        a.align_center,
+        a.gap_xs,
+        a.px_xl,
+        a.mb_sm,
+      ]}>
+      {GIF_CATEGORIES.map(category => {
+        if (category.id === 'recents' && !hasRecents) return null
+        const isActive = category.id === activeId
+        const label = i18n._(category.label)
+        return (
+          <Button
+            key={category.id}
+            label={label}
+            onPress={() => onSelect(category)}
+            size="small"
+            variant={isActive ? 'solid' : 'outline'}
+            color={isActive ? 'primary' : 'secondary'}
+            shape="round">
+            <ButtonIcon icon={category.icon} />
+          </Button>
+        )
+      })}
     </View>
   )
 }
