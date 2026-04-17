@@ -3,6 +3,7 @@ import {type LayoutChangeEvent, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   type AppBskyActorDefs,
+  type ChatBskyConvoDefs,
   moderateProfile,
   type ModerationDecision,
 } from '@atproto/api'
@@ -144,9 +145,13 @@ function Inner() {
         <Layout.Center
           style={[a.w_full, IS_LIQUID_GLASS && {paddingTop: topInset}]}>
           {moderation ? (
-            <MessagesListHeader profile={recipient} moderation={moderation} />
+            <MessagesListHeader
+              convo={convoState.convo}
+              profile={recipient}
+              moderation={moderation}
+            />
           ) : (
-            <MessagesListHeader />
+            <MessagesListHeader convo={convoState.convo} />
           )}
         </Layout.Center>
         <Error
@@ -166,9 +171,13 @@ function Inner() {
       {!readyToShow && (
         <View style={IS_LIQUID_GLASS && {paddingTop: topInset}}>
           {moderation ? (
-            <MessagesListHeader profile={recipient} moderation={moderation} />
+            <MessagesListHeader
+              convo={convoState.convo}
+              profile={recipient}
+              moderation={moderation}
+            />
           ) : (
-            <MessagesListHeader />
+            <MessagesListHeader convo={convoState.convo} />
           )}
         </View>
       )}
@@ -178,6 +187,9 @@ function Inner() {
           recipient={recipient}
           hasScrolled={hasScrolled}
           setHasScrolled={setHasScrolled}
+          convo={convoState.convo}
+          isActive={isConvoActive(convoState)}
+          hasMessages={isConvoActive(convoState) && convoState.items.length > 0}
         />
         {!readyToShow && (
           <View
@@ -205,13 +217,18 @@ function InnerReady({
   recipient,
   hasScrolled,
   setHasScrolled,
+  convo,
+  isActive,
+  hasMessages,
 }: {
   moderation: ModerationDecision | null
   recipient: Shadow<AppBskyActorDefs.ProfileViewDetailed> | undefined
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
+  convo: ChatBskyConvoDefs.ConvoView | undefined
+  isActive: boolean
+  hasMessages: boolean
 }) {
-  const convoState = useConvo()
   const navigation = useNavigation<NavigationProp>()
   const {top: topInset} = useSafeAreaInsets()
   const [headerHeight, setHeaderHeight] = useState(0)
@@ -262,7 +279,11 @@ function InnerReady({
   }, [maybeBlockForEmailVerification])
 
   const header = (
-    <MessagesListHeader profile={recipient} moderation={moderation} />
+    <MessagesListHeader
+      convo={convo}
+      profile={recipient}
+      moderation={moderation}
+    />
   )
 
   return (
@@ -277,7 +298,7 @@ function InnerReady({
       ) : (
         header
       )}
-      {isConvoActive(convoState) && (
+      {isActive && (
         <MessagesList
           hasScrolled={hasScrolled}
           setHasScrolled={setHasScrolled}
@@ -285,11 +306,11 @@ function InnerReady({
           hasAcceptOverride={!!params.accept}
           transparentHeaderHeight={IS_LIQUID_GLASS ? headerHeight : 0}
           footer={
-            moderation && recipient ? (
+            moderation && recipient && convo ? (
               <MessagesListBlockedFooter
                 recipient={recipient}
-                convoId={convoState.convo.id}
-                hasMessages={convoState.items.length > 0}
+                convoId={convo.id}
+                hasMessages={hasMessages}
                 moderation={moderation}
               />
             ) : null

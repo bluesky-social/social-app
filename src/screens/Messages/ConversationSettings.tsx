@@ -1,6 +1,6 @@
 import {useMemo, useState} from 'react'
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
-import {type ChatBskyConvoDefs, moderateProfile} from '@atproto/api'
+import {moderateProfile} from '@atproto/api'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
@@ -34,6 +34,7 @@ import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button, type ButtonColor, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {AddMembersFlow} from '#/components/dms/AddMembersFlow'
+import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {Error} from '#/components/Error'
 import * as TextField from '#/components/forms/TextField'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -126,9 +127,14 @@ function SettingsInner() {
 
   const convoState = useConvo()
   const {currentAccount} = useSession()
-  const primaryMember = convoState?.getPrimaryMember?.()
 
-  const data: bsky.profile.AnyProfileView[] = convoState.convo?.members ?? []
+  const convo = convoState.convo
+    ? parseConvoView(convoState.convo, currentAccount?.did)
+    : null
+  const primaryMember = convo?.primaryMember
+  const isOwner = !!primaryMember && primaryMember.did === currentAccount?.did
+
+  const data: bsky.profile.AnyProfileView[] = convo?.members ?? []
   const invites: string[] = []
 
   const items = [
@@ -163,11 +169,23 @@ function SettingsInner() {
   function renderItem({item}: {item: Item}) {
     switch (item.type) {
       case 'MEMBERS_AND_REQUESTS':
-        return <MembersAndRequests memberCount={data.length} requestCount={5} />
+        return (
+          <MembersAndRequests
+            memberCount={data.length}
+            requestCount={5}
+            isOwner={isOwner}
+          />
+        )
       case 'ADD_MEMBERS_LINK':
-        return <AddMembersLink />
+        return <AddMembersLink isOwner={isOwner} />
       case 'CHAT_MEMBER':
-        return <Member profile={item.profile} status={item.status} />
+        return (
+          <Member
+            profile={item.profile}
+            status={item.status}
+            isOwner={isOwner}
+          />
+        )
       default:
         return null
     }
@@ -194,8 +212,8 @@ function SettingsInner() {
       initialNumToRender={initialNumToRender}
       keyExtractor={keyExtractor}
       ListHeaderComponent={
-        convoState.convo ? (
-          <SettingsHeader convo={convoState.convo} profiles={data} />
+        convo ? (
+          <SettingsHeader convo={convo} isOwner={isOwner} />
         ) : (
           <SettingsHeaderPlaceholder />
         )
@@ -211,20 +229,14 @@ function SettingsInner() {
 function MembersAndRequests({
   memberCount,
   requestCount,
+  isOwner,
 }: {
   memberCount: number
   requestCount: number
+  isOwner: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-
-  const convoState = useConvo()
-  const {currentAccount} = useSession()
-
-  const isOwner =
-    currentAccount?.did == null
-      ? false
-      : convoState.getPrimaryMember?.()?.did === currentAccount.did
 
   return (
     <View style={[a.flex_row, a.justify_between, a.mx_xl, a.mt_lg, a.mb_sm]}>
@@ -254,19 +266,11 @@ function MembersAndRequests({
   )
 }
 
-function AddMembersLink() {
+function AddMembersLink({isOwner}: {isOwner: boolean}) {
   const t = useTheme()
   const {t: l} = useLingui()
 
-  const convoState = useConvo()
-  const {currentAccount} = useSession()
-
   const addMembersControl = Dialog.useDialogControl()
-
-  const isOwner =
-    currentAccount?.did == null
-      ? false
-      : convoState.getPrimaryMember?.()?.did === currentAccount.did
 
   if (!isOwner) {
     return null
@@ -354,9 +358,11 @@ function AddMembersLink() {
 function Member({
   profile,
   status,
+  isOwner,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
   status: 'owner' | 'member' | 'invited'
+  isOwner: boolean
 }) {
   const navigation = useNavigation<NavigationProp>()
   const t = useTheme()
@@ -388,7 +394,9 @@ function Member({
         break
     }
   } else {
-    statusBadge = <MemberMenu profile={profile} type={status} />
+    statusBadge = (
+      <MemberMenu profile={profile} type={status} isOwner={isOwner} />
+    )
   }
 
   return (
@@ -496,9 +504,11 @@ function StatusButton({
 function MemberMenu({
   profile,
   type,
+  isOwner,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
   type: 'owner' | 'member' | 'invited'
+  isOwner: boolean
 }) {
   const navigation = useNavigation<NavigationProp>()
   const t = useTheme()
@@ -506,15 +516,8 @@ function MemberMenu({
   const ax = useAnalytics()
 
   const requireEmailVerification = useRequireEmailVerification()
-  const convoState = useConvo()
-  const {currentAccount} = useSession()
 
   const blockMemberPrompt = Prompt.usePromptControl()
-
-  const isOwner =
-    currentAccount?.did == null
-      ? false
-      : convoState.getPrimaryMember?.()?.did === currentAccount.did
 
   const {data: convoAvailability} = useGetConvoAvailabilityQuery(profile.did)
   const {mutate: initiateConvo} = useGetConvoForMembers({
@@ -706,29 +709,22 @@ function MemberMenu({
 
 function SettingsHeader({
   convo,
-  profiles,
+  isOwner,
 }: {
-  convo: ChatBskyConvoDefs.ConvoView
-  profiles: bsky.profile.AnyProfileView[]
+  convo: ConvoWithDetails
+  isOwner: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
 
   const navigation = useNavigation<NavigationProp>()
-  const convoState = useConvo()
-  const {currentAccount} = useSession()
 
-  const groupName = convoState.getGroupInfo?.()?.name ?? ''
+  const groupName = convo.kind === 'group' ? convo.details.name : ''
   const [newGroupName, setNewGroupName] = useState(groupName)
 
   const [isLocked, setIsLocked] = useState(false)
 
-  const isOwner =
-    currentAccount?.did == null
-      ? false
-      : convoState.getPrimaryMember?.()?.did === currentAccount.did
-
-  const {mutate: editGroupName} = useEditGroupName(convo.id, {
+  const {mutate: editGroupName} = useEditGroupName(convo.view.id, {
     onError: e => {
       setNewGroupName(groupName)
       logger.error('Failed to edit group chat name', {message: e})
@@ -738,7 +734,7 @@ function SettingsHeader({
     },
   })
 
-  const {mutate: muteConvo} = useMuteConvo(convo.id, {
+  const {mutate: muteConvo} = useMuteConvo(convo.view.id, {
     onSuccess: data => {
       if (data.convo.muted) {
         Toast.show(l({message: 'Group chat muted', context: 'toast'}))
@@ -754,7 +750,7 @@ function SettingsHeader({
     },
   })
 
-  const {mutate: leaveConvo} = useLeaveConvo(convo.id, {
+  const {mutate: leaveConvo} = useLeaveConvo(convo.view.id, {
     onMutate: () => {
       navigation.dispatch(StackActions.pop(2))
     },
@@ -772,7 +768,7 @@ function SettingsHeader({
   const leaveChatPrompt = Prompt.usePromptControl()
 
   const handleToggleMute = () => {
-    muteConvo({mute: !convo?.muted})
+    muteConvo({mute: !convo.view.muted})
   }
 
   const handleLeaveChat = () => {
@@ -815,7 +811,7 @@ function SettingsHeader({
       <View
         style={[a.px_xl, a.py_4xl, a.border_b, t.atoms.border_contrast_low]}>
         <View style={[a.align_center, a.justify_center]}>
-          <AvatarBubbles profiles={profiles} />
+          <AvatarBubbles profiles={convo.members} />
         </View>
         <Text
           style={[
@@ -846,12 +842,14 @@ function SettingsHeader({
             a.pt_2xl,
           ]}>
           <SettingsButton
-            color={convo?.muted ? 'negative_subtle' : 'secondary'}
-            icon={convo?.muted ? BellOffIcon : BellIcon}
+            color={convo.view.muted ? 'negative_subtle' : 'secondary'}
+            icon={convo.view.muted ? BellOffIcon : BellIcon}
             label={
-              convo?.muted ? l`Unmute this group chat` : l`Mute this group chat`
+              convo.view.muted
+                ? l`Unmute this group chat`
+                : l`Mute this group chat`
             }
-            text={convo?.muted ? l`Muted` : l`Mute`}
+            text={convo.view.muted ? l`Muted` : l`Mute`}
             onPress={handleToggleMute}
           />
           {isOwner ? (
