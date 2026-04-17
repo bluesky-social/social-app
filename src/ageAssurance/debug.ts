@@ -8,7 +8,7 @@ import {type OtherRequiredData} from '#/ageAssurance/data'
 import {IS_DEV, IS_E2E} from '#/env'
 import {type Geolocation} from '#/geolocation'
 
-export const enabled = (IS_DEV && true) || IS_E2E
+export const enabled = (IS_DEV && false) || IS_E2E
 
 export const geolocation: Geolocation | undefined = enabled
   ? {
@@ -57,7 +57,7 @@ export const otherRequiredData: OtherRequiredData = {
   birthdate: new Date(2000, 1, 1).toISOString(),
 }
 
-const serverStateEnabled = true || IS_E2E
+const serverStateEnabled = false || IS_E2E
 export const serverState: AppBskyAgeassuranceGetState.OutputSchema | undefined =
   serverStateEnabled
     ? {

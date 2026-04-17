@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
 import {
   type AppBskyAgeassuranceDefs,
   type AppBskyAgeassuranceGetConfig,
@@ -560,27 +553,10 @@ export function AgeAssuranceDataProvider({
   const {state, metadata} = serverState.data || {}
   const {data} = useOtherRequiredDataQuery()
 
-  const [s, setS] = useState<any>()
-  if (!s && state && state !== s) {
-    setS(state)
-  }
-
-  useEffect(() => {
-    const t = setTimeout(() => {
-      console.log('Simulating server state update...')
-      setS({
-        lastInitiatedAt: new Date(2025, 1, 1).toISOString(),
-        status: 'assured',
-        access: 'safe',
-      })
-    }, 5e3)
-    return () => clearTimeout(t)
-  }, [setS])
-
   const ctx = useMemo(
     () => ({
       config,
-      state: s,
+      state,
       data: {
         accountCreatedAt: metadata?.accountCreatedAt,
         declaredAge: data?.birthdate
@@ -589,7 +565,7 @@ export function AgeAssuranceDataProvider({
         birthdate: data?.birthdate,
       },
     }),
-    [config, s, data, metadata],
+    [config, state, data, metadata],
   )
   return (
     <AgeAssuranceDataContext.Provider value={ctx}>
