@@ -15,19 +15,19 @@ export async function uploadVideo({
   did,
   setProgress,
   signal,
-  _,
+  i18n,
 }: {
   video: CompressedVideo
   agent: BskyAgent
   did: string
   setProgress: (progress: number) => void
   signal: AbortSignal
-  _: I18n['_']
+  i18n: I18n
 }) {
   if (signal.aborted) {
     throw new AbortError()
   }
-  await getVideoUploadLimits(agent, _)
+  await getVideoUploadLimits(agent, i18n)
 
   const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
     did,
@@ -70,11 +70,11 @@ export async function uploadVideo({
           ) as AppBskyVideoDefs.JobStatus
           resolve(uploadRes)
         } else {
-          reject(new ServerError(_(msg`Failed to upload video`)))
+          reject(new ServerError(i18n._(msg`Failed to upload video`)))
         }
       }
       xhr.onerror = () => {
-        reject(new ServerError(_(msg`Failed to upload video`)))
+        reject(new ServerError(i18n._(msg`Failed to upload video`)))
       }
       xhr.open('POST', uri)
       xhr.setRequestHeader('Content-Type', video.mimeType)
@@ -84,7 +84,7 @@ export async function uploadVideo({
   )
 
   if (!res.jobId) {
-    throw new ServerError(res.error || _(msg`Failed to upload video`))
+    throw new ServerError(res.error || i18n._(msg`Failed to upload video`))
   }
 
   if (signal.aborted) {

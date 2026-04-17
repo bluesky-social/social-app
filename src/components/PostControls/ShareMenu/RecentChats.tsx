@@ -6,21 +6,21 @@ import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
+import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {type NavigationProp} from '#/lib/routes/types'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, tokens, useTheme} from '#/alf'
+import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button} from '#/components/Button'
 import {useDialogContext} from '#/components/Dialog'
+import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import type * as bsky from '#/types/bsky'
 
 export function RecentChats({
   postUri,
@@ -60,23 +60,24 @@ export function RecentChats({
         showsHorizontalScrollIndicator={false}
         nestedScrollEnabled>
         {convos && convos.length > 0 ? (
-          convos.map(convo => {
-            const otherMember = convo.members.find(
-              member => member.did !== currentAccount?.did,
-            )
+          convos.map(c => {
+            const convo = parseConvoView(c, currentAccount?.did)
+
+            if (!convo) return null
 
             if (
-              !otherMember ||
-              otherMember.handle === 'missing.invalid' ||
-              convo.muted
-            )
+              (convo.kind === 'direct' &&
+                convo.primaryMember.handle === 'missing.invalid') ||
+              convo.view.muted
+            ) {
               return null
+            }
 
             return (
               <RecentChatItem
-                key={convo.id}
-                profile={otherMember}
-                onPress={() => onSelectChat(convo.id)}
+                key={convo.view.id}
+                convo={convo}
+                onPress={() => onSelectChat(convo.view.id)}
                 moderationOpts={moderationOpts}
               />
             )
@@ -99,26 +100,33 @@ export function RecentChats({
 const WIDTH = 80
 
 function RecentChatItem({
-  profile: profileUnshadowed,
   onPress,
   moderationOpts,
+  convo,
 }: {
-  profile: bsky.profile.AnyProfileView
   onPress: () => void
   moderationOpts: ModerationOpts
+  convo: ConvoWithDetails
 }) {
   const {_} = useLingui()
   const t = useTheme()
 
-  const profile = useProfileShadow(profileUnshadowed)
+  const primaryProfile = useProfileShadow(convo.primaryMember)
 
-  const moderation = moderateProfile(profile, moderationOpts)
-  const name = sanitizeDisplayName(
-    profile.displayName || sanitizeHandle(profile.handle),
-    moderation.ui('displayName'),
-  )
+  const moderation = moderateProfile(primaryProfile, moderationOpts)
+  const name =
+    convo.kind === 'group'
+      ? convo.details.name
+      : createSanitizedDisplayName(
+          primaryProfile,
+          true,
+          moderation.ui('displayName'),
+        )
 
-  if (isBlockedOrBlocking(profile) || isMuted(profile)) {
+  if (
+    convo.kind === 'direct' &&
+    (isBlockedOrBlocking(primaryProfile) || isMuted(primaryProfile))
+  ) {
     return null
   }
 
@@ -133,12 +141,16 @@ function RecentChatItem({
         a.justify_start,
         a.align_center,
       ]}>
-      <UserAvatar
-        avatar={profile.avatar}
-        size={WIDTH - 8}
-        type={profile.associated?.labeler ? 'labeler' : 'user'}
-        moderation={moderation.ui('avatar')}
-      />
+      {convo.kind === 'group' ? (
+        <AvatarBubbles profiles={convo.members} size={WIDTH - 8} />
+      ) : (
+        <UserAvatar
+          avatar={primaryProfile.avatar}
+          size={WIDTH - 8}
+          type={primaryProfile.associated?.labeler ? 'labeler' : 'user'}
+          moderation={moderation.ui('avatar')}
+        />
+      )}
       <View style={[a.flex_row, a.align_center, a.justify_center, a.w_full]}>
         <Text
           emoji
@@ -146,7 +158,13 @@ function RecentChatItem({
           numberOfLines={1}>
           {name}
         </Text>
-        <ProfileBadges profile={profile} size="xs" style={[a.pl_2xs]} />
+        {convo.kind === 'direct' && (
+          <ProfileBadges
+            profile={primaryProfile}
+            size="xs"
+            style={[a.pl_2xs]}
+          />
+        )}
       </View>
     </Button>
   )

@@ -143,7 +143,8 @@ export type Gif = {
   /**
    * A dictionary with a content format as the key and a Media Object as the value.
    */
-  media_formats: Record<ContentFormats, MediaObject>
+  media_formats: Record<BaseContentFormats, MediaObject> &
+    Partial<Record<VideoContentFormats, MediaObject>>
   /**
    * An array of tags for the post
    */
@@ -198,16 +199,20 @@ type MediaObject = {
   size: number
 }
 
-type ContentFormats =
+type BaseContentFormats =
   | 'preview'
   | 'gif'
   // | 'mediumgif'
   | 'tinygif'
 // | 'nanogif'
-// | 'mp4'
-// | 'loopedmp4'
-// | 'tinymp4'
-// | 'nanomp4'
-// | 'webm'
+
+type VideoContentFormats =
+  | 'mp4'
+  // | 'loopedmp4'
+  // | 'tinymp4'
+  // | 'nanomp4'
+  | 'webm'
 // | 'tinywebm'
 // | 'nanowebm'
+
+type ContentFormats = BaseContentFormats | VideoContentFormats

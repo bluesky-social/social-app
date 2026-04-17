@@ -1,18 +1,14 @@
 import {useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {type ChatBskyConvoDefs} from '@atproto/api'
-import EmojiPicker from '@emoji-mart/react'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {DropdownMenu} from 'radix-ui'
 
 import {useSession} from '#/state/session'
-import {type Emoji} from '#/view/com/composer/text-input/web/EmojiPicker'
-import {useWebPreloadEmoji} from '#/view/com/composer/text-input/web/useWebPreloadEmoji'
 import {atoms as a, flatten, useTheme} from '#/alf'
+import * as EmojiPicker from '#/components/EmojiPicker'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as DotGridIcon} from '#/components/icons/DotGrid'
 import * as Menu from '#/components/Menu'
-import {type TriggerProps} from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
 import {hasAlreadyReacted, hasReachedReactionLimit} from './util'
 
@@ -22,19 +18,21 @@ export function EmojiReactionPicker({
   onEmojiSelect,
 }: {
   message: ChatBskyConvoDefs.MessageView
-  children?: TriggerProps['children']
+  children?: EmojiPicker.TriggerProps['children']
   onEmojiSelect: (emoji: string) => void
 }) {
   if (!children)
     throw new Error('EmojiReactionPicker requires the children prop on web')
 
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
-    <Menu.Root>
-      <Menu.Trigger label={_(msg`Add emoji reaction`)}>{children}</Menu.Trigger>
+    <EmojiPicker.Root onEmojiSelect={emoji => onEmojiSelect(emoji.native)}>
+      <EmojiPicker.Trigger label={l`Add emoji reaction`}>
+        {children}
+      </EmojiPicker.Trigger>
       <MenuInner message={message} onEmojiSelect={onEmojiSelect} />
-    </Menu.Root>
+    </EmojiPicker.Root>
   )
 }
 
@@ -49,8 +47,6 @@ function MenuInner({
   const {control} = Menu.useMenuContext()
   const {currentAccount} = useSession()
 
-  useWebPreloadEmoji({immediate: true})
-
   const [expanded, setExpanded] = useState(false)
 
   const [prevOpen, setPrevOpen] = useState(control.isOpen)
@@ -62,10 +58,6 @@ function MenuInner({
     }
   }
 
-  const handleEmojiPickerResponse = (emoji: Emoji) => {
-    handleEmojiSelect(emoji.native)
-  }
-
   const handleEmojiSelect = (emoji: string) => {
     control.close()
     onEmojiSelect(emoji)
@@ -74,18 +66,7 @@ function MenuInner({
   const limitReacted = hasReachedReactionLimit(message, currentAccount?.did)
 
   return expanded ? (
-    <DropdownMenu.Portal>
-      <DropdownMenu.Content
-        sideOffset={5}
-        collisionPadding={{left: 5, right: 5, bottom: 5}}>
-        <div onWheel={evt => evt.stopPropagation()}>
-          <EmojiPicker
-            onEmojiSelect={handleEmojiPickerResponse}
-            autoFocus={true}
-          />
-        </div>
-      </DropdownMenu.Content>
-    </DropdownMenu.Portal>
+    <EmojiPicker.Picker keepOpenWhenShiftHeld={false} />
   ) : (
     <Menu.Outer style={[a.rounded_full]}>
       <View style={[a.flex_row, a.gap_xs]}>

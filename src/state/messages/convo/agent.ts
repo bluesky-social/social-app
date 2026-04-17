@@ -1,6 +1,6 @@
 import {
   type AtpAgent,
-  type ChatBskyActorDefs,
+  ChatBskyActorDefs,
   ChatBskyConvoDefs,
   type ChatBskyConvoGetLog,
   type ChatBskyConvoSendMessage,
@@ -37,6 +37,7 @@ import {
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type MessagesEventBusError} from '#/state/messages/events/types'
 import {IS_NATIVE} from '#/env'
+import * as bsky from '#/types/bsky'
 
 const logger = Logger.create(Logger.Context.ConversationAgent)
 
@@ -112,6 +113,9 @@ export class Convo {
     this.markConvoAccepted = this.markConvoAccepted.bind(this)
     this.addReaction = this.addReaction.bind(this)
     this.removeReaction = this.removeReaction.bind(this)
+    this.isGroup = this.isGroup.bind(this)
+    this.getGroupInfo = this.getGroupInfo.bind(this)
+    this.getPrimaryMember = this.getPrimaryMember.bind(this)
   }
 
   private commit() {
@@ -149,12 +153,17 @@ export class Convo {
           sender: this.sender,
           recipients: this.recipients,
           isFetchingHistory: this.isFetchingHistory,
+          // Explicit null check since the value is initially undefined.
+          hasAllHistory: this.oldestRev === null,
           deleteMessage: undefined,
           sendMessage: undefined,
           fetchMessageHistory: undefined,
           markConvoAccepted: undefined,
           addReaction: undefined,
           removeReaction: undefined,
+          isGroup: this.isGroup,
+          getGroupInfo: this.getGroupInfo,
+          getPrimaryMember: this.getPrimaryMember,
         }
       }
       case ConvoStatus.Disabled:
@@ -169,12 +178,17 @@ export class Convo {
           sender: this.sender!,
           recipients: this.recipients!,
           isFetchingHistory: this.isFetchingHistory,
+          // Explicit null check since the value is initially undefined.
+          hasAllHistory: this.oldestRev === null,
           deleteMessage: this.deleteMessage,
           sendMessage: this.sendMessage,
           fetchMessageHistory: this.fetchMessageHistory,
           markConvoAccepted: this.markConvoAccepted,
           addReaction: this.addReaction,
           removeReaction: this.removeReaction,
+          isGroup: this.isGroup,
+          getGroupInfo: this.getGroupInfo,
+          getPrimaryMember: this.getPrimaryMember,
         }
       }
       case ConvoStatus.Error: {
@@ -186,12 +200,16 @@ export class Convo {
           sender: undefined,
           recipients: undefined,
           isFetchingHistory: false,
+          hasAllHistory: false,
           deleteMessage: undefined,
           sendMessage: undefined,
           fetchMessageHistory: undefined,
           markConvoAccepted: undefined,
           addReaction: undefined,
           removeReaction: undefined,
+          isGroup: undefined,
+          getGroupInfo: undefined,
+          getPrimaryMember: undefined,
         }
       }
       default: {
@@ -203,12 +221,17 @@ export class Convo {
           sender: this.sender,
           recipients: this.recipients,
           isFetchingHistory: false,
+          // Explicit null check since the value is initially undefined.
+          hasAllHistory: this.oldestRev === null,
           deleteMessage: undefined,
           sendMessage: undefined,
           fetchMessageHistory: undefined,
           markConvoAccepted: undefined,
           addReaction: undefined,
           removeReaction: undefined,
+          isGroup: this.isGroup,
+          getGroupInfo: this.getGroupInfo,
+          getPrimaryMember: this.getPrimaryMember,
         }
       }
     }
@@ -222,7 +245,7 @@ export class Convo {
         switch (action.event) {
           case ConvoDispatchEvent.Init: {
             this.status = ConvoStatus.Initializing
-            this.setup()
+            void this.setup()
             this.setupFirehose()
             this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             break
@@ -234,12 +257,12 @@ export class Convo {
         switch (action.event) {
           case ConvoDispatchEvent.Ready: {
             this.status = ConvoStatus.Ready
-            this.fetchMessageHistory()
+            void this.fetchMessageHistory()
             break
           }
           case ConvoDispatchEvent.Background: {
             this.status = ConvoStatus.Backgrounded
-            this.fetchMessageHistory()
+            void this.fetchMessageHistory()
             this.requestPollInterval(BACKGROUND_POLL_INTERVAL)
             break
           }
@@ -258,7 +281,7 @@ export class Convo {
           }
           case ConvoDispatchEvent.Disable: {
             this.status = ConvoStatus.Disabled
-            this.fetchMessageHistory() // finish init
+            void this.fetchMessageHistory() // finish init
             this.cleanupFirehoseConnection?.()
             this.withdrawRequestedPollInterval()
             break
@@ -269,7 +292,7 @@ export class Convo {
       case ConvoStatus.Ready: {
         switch (action.event) {
           case ConvoDispatchEvent.Resume: {
-            this.refreshConvo()
+            void this.refreshConvo()
             this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             break
           }
@@ -308,11 +331,11 @@ export class Convo {
             } else {
               if (this.convo) {
                 this.status = ConvoStatus.Ready
-                this.refreshConvo()
+                void this.refreshConvo()
                 this.maybeRecoverFromNetworkError()
               } else {
                 this.status = ConvoStatus.Initializing
-                this.setup()
+                void this.setup()
               }
               this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             }
@@ -435,7 +458,7 @@ export class Convo {
       this.firehoseError = undefined
       this.commit()
     } else {
-      this.batchRetryPendingMessages()
+      void this.batchRetryPendingMessages()
     }
 
     if (this.fetchMessageHistoryError) {
@@ -487,7 +510,8 @@ export class Convo {
       } else {
         this.dispatch({event: ConvoDispatchEvent.Ready})
       }
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error('setup failed', {
           safeMessage: e.message,
@@ -557,11 +581,7 @@ export class Convo {
   async fetchConvo() {
     if (this.pendingFetchConvo) return this.pendingFetchConvo
 
-    this.pendingFetchConvo = new Promise<{
-      convo: ChatBskyConvoDefs.ConvoView
-      sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-      recipients: ChatBskyActorDefs.ProfileViewBasic[]
-    }>(async (resolve, reject) => {
+    this.pendingFetchConvo = (async () => {
       try {
         const response = await networkRetry(2, () => {
           return this.agent.api.chat.bsky.convo.getConvo(
@@ -574,17 +594,15 @@ export class Convo {
 
         const convo = response.data.convo
 
-        resolve({
+        return {
           convo,
           sender: convo.members.find(m => m.did === this.senderUserDid),
           recipients: convo.members.filter(m => m.did !== this.senderUserDid),
-        })
-      } catch (e) {
-        reject(e)
+        }
       } finally {
         this.pendingFetchConvo = undefined
       }
-    })
+    })()
 
     return this.pendingFetchConvo
   }
@@ -596,7 +614,8 @@ export class Convo {
       this.convo = convo || this.convo
       this.sender = sender || this.sender
       this.recipients = recipients || this.recipients
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error(`failed to refresh convo`, {
           safeMessage: e.message,
@@ -615,6 +634,7 @@ export class Convo {
 
     /*
      * If oldestRev is null, we've fetched all history.
+     * Needs to explicitly check for `null` since this is initially `undefined`.
      */
     if (this.oldestRev === null) return
 
@@ -648,6 +668,14 @@ export class Convo {
 
       this.oldestRev = cursor ?? null
 
+      /*
+       * If the response contained fewer messages than the limit, we know
+       * there are no more pages, regardless of whether a cursor was returned.
+       */
+      if (messages.length < (IS_NATIVE ? 30 : 60)) {
+        this.oldestRev = null
+      }
+
       for (const message of messages) {
         if (
           ChatBskyConvoDefs.isMessageView(message) ||
@@ -664,7 +692,8 @@ export class Convo {
           this.pastMessages.set(message.id, message)
         }
       }
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error('failed to fetch message history', {
           safeMessage: e.message,
@@ -673,7 +702,7 @@ export class Convo {
 
       this.fetchMessageHistoryError = {
         retry: () => {
-          this.fetchMessageHistory()
+          void this.fetchMessageHistory()
         },
       }
     } finally {
@@ -716,7 +745,7 @@ export class Convo {
 
   onFirehoseConnect() {
     this.firehoseError = undefined
-    this.batchRetryPendingMessages()
+    void this.batchRetryPendingMessages()
     this.commit()
   }
 
@@ -761,8 +790,8 @@ export class Convo {
             /**
              * If this message is already in new messages, it was added by our
              * sending logic, and is based on client-ordering. When we receive
-             * the "commited" event from the log, we should replace this
-             * reference and re-insert in order to respect the order we receied
+             * the "committed" event from the log, we should replace this
+             * reference and re-insert in order to respect the order we received
              * from the log.
              */
             if (this.newMessages.has(ev.message.id)) {
@@ -836,7 +865,7 @@ export class Convo {
     this.commit()
 
     if (!this.isProcessingPendingMessages && !this.pendingMessageFailure) {
-      this.processPendingMessages()
+      void this.processPendingMessages()
     }
   }
 
@@ -912,7 +941,7 @@ export class Convo {
     }
   }
 
-  private handleSendMessageFailure(e: any) {
+  private handleSendMessageFailure(e: Error | XRPCError) {
     if (e instanceof XRPCError) {
       if (NETWORK_FAILURE_STATUSES.includes(e.status)) {
         this.pendingMessageFailure = 'recoverable'
@@ -1026,7 +1055,8 @@ export class Convo {
           {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
         )
       })
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error(`failed to delete message`, {
           safeMessage: e.message,
@@ -1332,6 +1362,48 @@ export class Convo {
     } catch (error) {
       if (restore) restore()
       throw error
+    }
+  }
+
+  // Group utilities
+
+  isGroup(): boolean | undefined {
+    if (!this.convo) return undefined
+    const info = this.getGroupInfo()
+    return !!info
+  }
+
+  getGroupInfo(): ChatBskyConvoDefs.GroupConvo | undefined {
+    if (
+      this.convo &&
+      bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvo>(
+        this.convo.kind,
+        ChatBskyConvoDefs.isGroupConvo,
+      )
+    ) {
+      return this.convo.kind
+    }
+    return undefined
+  }
+
+  getPrimaryMember(): ChatBskyActorDefs.ProfileViewBasic | undefined {
+    if (this.isGroup()) {
+      return this.recipients?.find(r => {
+        if (
+          bsky.dangerousIsType<ChatBskyActorDefs.GroupConvoMember>(
+            r.kind,
+            ChatBskyActorDefs.isGroupConvoMember,
+          )
+        ) {
+          return r.kind.role === 'owner'
+        } else {
+          throw new Error(
+            'Expected a GroupConvoMember, got an unknown kind of member',
+          )
+        }
+      })
+    } else {
+      return this.recipients?.find(r => r.did !== this.senderUserDid)
     }
   }
 }

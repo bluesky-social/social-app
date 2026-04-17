@@ -5,31 +5,34 @@ import {Trans} from '@lingui/react/macro'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
 import {atoms as a, tokens} from '#/alf'
+import {parseConvoView} from '#/components/dms/util'
 import {KnownFollowers} from '#/components/KnownFollowers'
 import {Text} from '#/components/Typography'
 import {ChatListItem, ChatListItemPortal} from './ChatListItem'
 import {AcceptChatButton, DeleteChatButton, RejectMenu} from './RequestButtons'
 
-export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
+export function RequestListItem({
+  convo: convoView,
+}: {
+  convo: ChatBskyConvoDefs.ConvoView
+}) {
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
 
-  const otherUser = convo.members.find(
-    member => member.did !== currentAccount?.did,
-  )
+  const convo = parseConvoView(convoView, currentAccount?.did)
 
-  if (!otherUser || !moderationOpts) {
+  if (!convo || !moderationOpts) {
     return null
   }
 
-  const isDeletedAccount = otherUser.handle === 'missing.invalid'
+  const isDeletedAccount = convo.primaryMember.handle === 'missing.invalid'
 
   return (
     <View style={[a.relative, a.flex_1]}>
-      <ChatListItem convo={convo} showMenu={false}>
+      <ChatListItem convo={convo.view} showMenu={false}>
         <View style={[a.pt_xs, a.pb_2xs]}>
           <KnownFollowers
-            profile={otherUser}
+            profile={convo.primaryMember}
             moderationOpts={moderationOpts}
             minimal
             showIfEmpty
@@ -59,17 +62,17 @@ export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
             ]}>
             {!isDeletedAccount ? (
               <>
-                <AcceptChatButton convo={convo} currentScreen="list" />
+                <AcceptChatButton convo={convo.view} currentScreen="list" />
                 <RejectMenu
-                  convo={convo}
-                  profile={otherUser}
+                  convo={convo.view}
+                  profile={convo.primaryMember}
                   showDeleteConvo
                   currentScreen="list"
                 />
               </>
             ) : (
               <>
-                <DeleteChatButton convo={convo} currentScreen="list" />
+                <DeleteChatButton convo={convo.view} currentScreen="list" />
                 <View style={a.flex_1} />
               </>
             )}

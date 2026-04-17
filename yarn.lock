@@ -20,14 +20,14 @@
     "@jridgewell/gen-mapping" "^0.3.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@atproto/api@^0.19.8":
-  version "0.19.8"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.19.8.tgz#ae847abece43f0108535c6305780079e8782ab29"
-  integrity sha512-b79kuI3AzEmpLLi9afRNq6T0KFEEVL4d+vHFAtWxeDwS7lfwUOIIngMjAVvwmwC5nJRZIrK8L9d4y7LD8zdvsg==
+"@atproto/api@^0.19.9":
+  version "0.19.9"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.19.9.tgz#f09ed8412159d6878eeaf25a0a8b4445c62fa9eb"
+  integrity sha512-+sUYNuiA1Rv8HemMCURHwRkMp2D7cq6nNquefjosu6UB54IzkD0MLK3YY383poLRShiApouOxRse2OKK25dbQw==
   dependencies:
-    "@atproto/common-web" "^0.4.20"
+    "@atproto/common-web" "^0.4.21"
     "@atproto/lexicon" "^0.6.2"
-    "@atproto/syntax" "^0.5.3"
+    "@atproto/syntax" "^0.5.4"
     "@atproto/xrpc" "^0.7.7"
     await-lock "^2.2.2"
     multiformats "^9.9.0"
@@ -44,14 +44,14 @@
     "@atproto/syntax" "^0.5.1"
     zod "^3.23.8"
 
-"@atproto/common-web@^0.4.20":
-  version "0.4.20"
-  resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.4.20.tgz#bb455868e674d45ed1044c68ccccae3c08168d47"
-  integrity sha512-RcsYT28yQgVi/Glb/hHPGpqpzIlKrbMLeldEd7PmmMLWDaJL2j3lb92qytvxjl1yhi2Ssq2TEuMZ2NlWaAbpow==
+"@atproto/common-web@^0.4.21":
+  version "0.4.21"
+  resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.4.21.tgz#2198583f842a000f495f1caec6f7e4eda207191b"
+  integrity sha512-Odq+wdk3YNasGCjjlpl3bCIPvqYHige5DLfMkIffNv/2PI/iIj5ZvAvMvJlJ59OhReKSxtpI0invx5UQPc3+fw==
   dependencies:
     "@atproto/lex-data" "^0.0.15"
-    "@atproto/lex-json" "^0.0.15"
-    "@atproto/syntax" "^0.5.3"
+    "@atproto/lex-json" "^0.0.16"
+    "@atproto/syntax" "^0.5.4"
     zod "^3.23.8"
 
 "@atproto/lex-data@^0.0.14":
@@ -82,10 +82,10 @@
     "@atproto/lex-data" "^0.0.14"
     tslib "^2.8.1"
 
-"@atproto/lex-json@^0.0.15":
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/@atproto/lex-json/-/lex-json-0.0.15.tgz#34d300e5dfd8a0ec76ca7363f264a488e17c1bd9"
-  integrity sha512-kCLdP629H6GhgPjBTpZibUoqlpmW0hnVfZVwcD4s4Jch1KAqY/QcfL24Ih8wrW0Ok1YvtMIhjk98evdTA2OJcw==
+"@atproto/lex-json@^0.0.16":
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/@atproto/lex-json/-/lex-json-0.0.16.tgz#c99b5147560310f9f7f74405c57858a12c3e365a"
+  integrity sha512-IgLgQ0krshVlrIYZ+heTBDbCnM3LmAgWvsaYn5MxvKA3LcBot3PG3ptdO8VOweVZ+WgCLuo39cz9EbUmIbqdtg==
   dependencies:
     "@atproto/lex-data" "^0.0.15"
     tslib "^2.8.1"
@@ -108,10 +108,10 @@
   dependencies:
     tslib "^2.8.1"
 
-"@atproto/syntax@^0.5.3":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.5.3.tgz#4331d01f63fe56c374dcf95d4432a22b62271a17"
-  integrity sha512-gzhlHOJHm5KXdCc17fXi1fXM81ccs5jJfNgCui84ay9JGvczxegpYHNqdMlv+iBuhtBzFIjgx6ChjRxN/kO8kQ==
+"@atproto/syntax@^0.5.4":
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.5.4.tgz#89842eb8b8ab181752b04ed840cc6b100e296b00"
+  integrity sha512-9XJOpMAgsGFxMEIp8nJ8AIWv+krrY1xQMj+wULbbXhQztQV+9aZ0TbG9Jtn3Op2or8Kr6OqyWR4ga9Z189kKDw==
   dependencies:
     tslib "^2.8.1"
 
@@ -2444,15 +2444,15 @@
   resolved "https://registry.yarnpkg.com/@bsky.app/react-native-mmkv/-/react-native-mmkv-2.12.5.tgz#eb17d31a6158c74393f617a1763ac223ff3f83a6"
   integrity sha512-3vUz1nQY1DiKIPAWRkpp5ZGxH5f2G6Ui0UuQuEYjYv81xx1qFcSzS9KQ2sHcOKYdkOM9amWV2Q8TQCxt1lrAHg==
 
-"@bsky.app/sift@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@bsky.app/sift/-/sift-0.3.2.tgz#04122bf665fad3a7eb90e1d689028ec9a209c56f"
-  integrity sha512-u48gzcA5QNkvfWzH+gnouXxLulrgA6yIc7NwSBnEZt9XwZfClLfvEDjRk/VxU4AJlEwQRhY2ZC593H0oo+5/bQ==
+"@bsky.app/sift@^0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@bsky.app/sift/-/sift-0.3.3.tgz#71e7e34b2c6a6ef681b045575bf1aa94ece40783"
+  integrity sha512-EhBg6KR+G67gnXZDzDTAXhuMez/Xok5l1Q3FwWkSw4HXZ5uDy1vrwb86F6YvalTMUZ9bys7b5Lo3rOF5jNXdRQ==
 
-"@bsky.app/tapper@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@bsky.app/tapper/-/tapper-0.5.0.tgz#39f3814a063cc0e8ee58c05e09be3d5cb8638f22"
-  integrity sha512-Fb7L2CruOA/k/FgKDOGChr+JKXsf+geAOTZXDevs9oqbSYTrXuI8KrRgaDwPS+FVCp1vAYHC/3esuVv+lbUtnw==
+"@bsky.app/tapper@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@bsky.app/tapper/-/tapper-0.5.1.tgz#7c72e1903435290a29be9f33fe0fcba95bbfa554"
+  integrity sha512-roGmW6Fk9qE8N0u9d74XzX9+MUIr04PElOhfIg0pXtZ1buaORpasLBBC+i6WytxDP2p29CuFdzBXDaBhmcI/ow==
 
 "@crowdin/cli@^4.14.1":
   version "4.14.1"
@@ -8700,10 +8700,10 @@ eslint-plugin-react@^7.37.5:
     string.prototype.matchall "^4.0.12"
     string.prototype.repeat "^1.0.0"
 
-eslint-plugin-simple-import-sort@^12.1.1:
-  version "12.1.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-simple-import-sort/-/eslint-plugin-simple-import-sort-12.1.1.tgz#e64bfdaf91c5b98a298619aa634a9f7aa43b709e"
-  integrity sha512-6nuzu4xwQtE3332Uz0to+TxDQYRLTKRESSc2hefVT48Zc8JthmN23Gx9lnYhu0FtkRSL1oxny3kJ2aveVhmOVA==
+eslint-plugin-simple-import-sort@^13.0.0:
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-simple-import-sort/-/eslint-plugin-simple-import-sort-13.0.0.tgz#93936354367d8bb42c1b9b4c13c92eb29fffd2a5"
+  integrity sha512-McAc+/Nlvcg4byY/CABGH8kqnefWBj8s3JA2okEtz8ixbECQgU46p0HkTUKa4YS7wvgGceimlc34p1nXqbWqtA==
 
 eslint-scope@5.1.1:
   version "5.1.1"

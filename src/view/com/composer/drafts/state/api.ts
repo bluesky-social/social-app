@@ -397,6 +397,8 @@ function parseGifFromUrl(
     url.searchParams.delete('ww')
     url.searchParams.delete('hh')
     url.searchParams.delete('alt')
+    url.searchParams.delete('mp4')
+    url.searchParams.delete('webm')
 
     return {url: url.toString(), width, height, alt}
   } catch {

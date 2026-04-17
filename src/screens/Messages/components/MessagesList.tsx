@@ -1,11 +1,18 @@
-import {useCallback, useEffect, useId, useRef, useState} from 'react'
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import {type LayoutChangeEvent, type ScrollViewProps, View} from 'react-native'
 import {
   KeyboardChatScrollView,
   type KeyboardChatScrollViewProps,
   KeyboardGestureArea,
 } from 'react-native-keyboard-controller'
-import Animated, {
+import {
   runOnJS,
   type ScrollEvent,
   type SharedValue,
@@ -42,10 +49,6 @@ import {
 } from '#/state/messages/convo/types'
 import {useGetPost} from '#/state/queries/post'
 import {useAgent} from '#/state/session'
-import {
-  EmojiPicker,
-  type EmojiPickerState,
-} from '#/view/com/composer/text-input/web/EmojiPicker'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
 import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
@@ -53,6 +56,7 @@ import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
 import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
+import {DateDividerToggleProvider} from '#/components/dms/DateDividerToggle'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
@@ -61,6 +65,7 @@ import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
+import {MessagesListInfoPanel} from './MessagesListInfoPanel'
 import {KeyboardStickyView} from './vendor/KeyboardStickyView'
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
@@ -77,18 +82,6 @@ function MaybeLoader({isLoading}: {isLoading: boolean}) {
   )
 }
 
-function renderItem({item}: {item: ConvoItem}) {
-  if (item.type === 'message' || item.type === 'pending-message') {
-    return <MessageItem item={item} />
-  } else if (item.type === 'deleted-message') {
-    return <Text>Deleted message</Text>
-  } else if (item.type === 'error') {
-    return <MessageListError item={item} />
-  }
-
-  return null
-}
-
 function keyExtractor(item: ConvoItem) {
   return item.key
 }
@@ -103,12 +96,14 @@ export function MessagesList({
   blocked,
   footer,
   hasAcceptOverride,
+  transparentHeaderHeight,
 }: {
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
   blocked?: boolean
   footer?: React.ReactNode
   hasAcceptOverride?: boolean
+  transparentHeaderHeight?: number
 }) {
   const ax = useAnalytics()
   const convoState = useConvoActive()
@@ -123,11 +118,6 @@ export function MessagesList({
   const [newMessagesPill, setNewMessagesPill] = useState({
     show: false,
     startContentOffset: 0,
-  })
-
-  const [emojiPickerState, setEmojiPickerState] = useState<EmojiPickerState>({
-    isOpen: false,
-    pos: {top: 0, left: 0, right: 0, bottom: 0, nextFocusRef: null},
   })
 
   const inputHeightUI = useSharedValue(0)
@@ -154,6 +144,18 @@ export function MessagesList({
   // onStartReached to fire.
   const prevContentHeight = useRef(0)
   const prevItemCount = useRef(0)
+
+  // Tracks whether the initial scroll-to-bottom has been triggered. Separated from isAtBottom so that contentInset
+  // (which causes an early onScroll with negative offset) can't prevent the first scroll.
+  // Reset when hasScrolled goes back to false (e.g. convo re-initialization after backgrounding).
+  const hasInitiallyScrolled = useRef(false)
+  const prevHasScrolled = useRef(hasScrolled)
+  useLayoutEffect(() => {
+    if (prevHasScrolled.current && !hasScrolled) {
+      hasInitiallyScrolled.current = false
+    }
+    prevHasScrolled.current = hasScrolled
+  }, [hasScrolled])
 
   // -- Keep track of background state and positioning for new pill
   const layoutHeight = useSharedValue(0)
@@ -187,8 +189,25 @@ export function MessagesList({
         })
       }
 
-      // This number _must_ be the height of the MaybeLoader component
-      if (height > 50 && isAtBottom.get()) {
+      // Initial scroll to bottom — unconditional, not gated on isAtBottom. This is separated because contentInset
+      // can cause an early onScroll with a negative offset that sets isAtBottom to false before we get here.
+      if (!hasInitiallyScrolled.current && convoState.items.length > 0) {
+        hasInitiallyScrolled.current = true
+        flatListRef.current?.scrollToOffset({offset: height, animated: false})
+        // If history is already done loading, mark ready after a frame for the scroll to settle.
+        // Otherwise, the footer sentinel's onLayout will handle it when history finishes.
+        if (!convoState.isFetchingHistory) {
+          requestAnimationFrame(() => {
+            setHasScrolled(true)
+          })
+        }
+        prevContentHeight.current = height
+        prevItemCount.current = convoState.items.length
+        return
+      }
+
+      // Subsequent: auto-scroll only if user is at the bottom
+      if (isAtBottom.get()) {
         // If the size of the content is changing by more than the height of the screen, then we don't
         // want to scroll further than the start of all the new content. Since we are storing the previous offset,
         // we can just scroll the user to that offset and add a little bit of padding. We'll also show the pill
@@ -212,17 +231,6 @@ export function MessagesList({
             offset: height,
             animated: hasScrolled && height > prevContentHeight.current,
           })
-
-          // HACK Unfortunately, we need to call `setHasScrolled` after a brief delay,
-          // because otherwise there is too much of a delay between the time the content
-          // scrolls and the time the screen appears, causing a flicker.
-          // We cannot actually use a synchronous scroll here, because `onContentSizeChange`
-          // is actually async itself - all the info has to come across the bridge first.
-          if (!hasScrolled && !convoState.isFetchingHistory) {
-            setTimeout(() => {
-              setHasScrolled(true)
-            }, 100)
-          }
         }
       }
 
@@ -365,9 +373,39 @@ export function MessagesList({
     })
   }, [flatListRef])
 
-  const onOpenEmojiPicker = useCallback((pos: any) => {
-    setEmojiPickerState({isOpen: true, pos})
-  }, [])
+  const renderItem = ({item}: {item: ConvoItem}) => {
+    if (item.type === 'message' || item.type === 'pending-message') {
+      return (
+        <MessageItem
+          item={item}
+          profile={convoState.convo.members.find(
+            member => member.did === item.message.sender.did,
+          )}
+          isGroupChat={convoState.isGroup()}
+        />
+      )
+    } else if (item.type === 'deleted-message') {
+      return <Text>Deleted message</Text>
+    } else if (item.type === 'error') {
+      return <MessageListError item={item} />
+    }
+
+    return null
+  }
+
+  // Footer sentinel: when history is still loading during the initial scroll, the footer's onLayout fires each time
+  // new items are prepended (shifting its position). Once history finishes, this triggers setHasScrolled.
+  const onFooterLayout = useCallback(() => {
+    if (
+      hasInitiallyScrolled.current &&
+      !hasScrolled &&
+      !convoState.isFetchingHistory
+    ) {
+      requestAnimationFrame(() => {
+        setHasScrolled(true)
+      })
+    }
+  }, [hasScrolled, setHasScrolled, convoState.isFetchingHistory])
 
   const renderScrollComponent = useCallback(
     (props: ScrollViewProps) => (
@@ -377,12 +415,13 @@ export function MessagesList({
   )
 
   return (
-    <>
+    <DateDividerToggleProvider>
       <KeyboardGestureArea
         interpolator="ios"
         // HACKFIX: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1419
         offset={Math.round(inputHeightJS)}
-        textInputNativeID={textInputId}
+        // slightly too buggy unfortunately, enable when possible
+        // textInputNativeID={textInputId}
         style={[a.flex_1]}>
         {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
         <ScrollProvider onScroll={onScroll}>
@@ -407,19 +446,36 @@ export function MessagesList({
             showsVerticalScrollIndicator={!IS_ANDROID}
             scrollEventThrottle={100}
             ListHeaderComponent={
-              <MaybeLoader isLoading={convoState.isFetchingHistory} />
+              <>
+                <MaybeLoader isLoading={convoState.isFetchingHistory} />
+                {convoState.isGroup() && convoState.hasAllHistory ? (
+                  <MessagesListInfoPanel convoState={convoState} />
+                ) : null}
+              </>
             }
             // native only (prop is not supported on web)
             renderScrollComponent={renderScrollComponent}
-            // pushes up the content under the input on web (renderScrollComponent handles it on native)
-            ListFooterComponent={web(
-              <WebInputSpacer inputHeight={inputHeightJS} />,
-            )}
+            contentContainerStyle={{
+              paddingBottom: platform({
+                // ios is slightly larger as the input has no top padding
+                ios: tokens.space.lg,
+                android: tokens.space.md,
+                web: 0, // web uses ListFooterComponent instead for scroll reasons
+              }),
+            }}
+            ListFooterComponent={
+              <View
+                style={web({height: tokens.space.md + inputHeightJS})}
+                onLayout={onFooterLayout}
+              />
+            }
             style={web({
               scrollbarWidth: 'thin',
               scrollbarColor: `${t.palette.contrast_100} transparent`,
               scrollbarGutter: 'stable both-edges',
             })}
+            contentInset={{top: transparentHeaderHeight}}
+            scrollIndicatorInsets={{top: transparentHeaderHeight}}
           />
         </ScrollProvider>
         <KeyboardStickyView
@@ -444,7 +500,9 @@ export function MessagesList({
               {ax.features.enabled(ax.features.DmsNewMessageComposerEnable) ? (
                 <MessageComposer
                   textInputId={textInputId}
-                  onSendMessage={onSendMessage}
+                  onSendMessage={(message: string) =>
+                    void onSendMessage(message)
+                  }
                   hasEmbed={!!embedUri}
                   setEmbed={setEmbed}>
                   <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
@@ -454,8 +512,7 @@ export function MessagesList({
                   textInputId={textInputId}
                   onSendMessage={onSendMessage}
                   hasEmbed={!!embedUri}
-                  setEmbed={setEmbed}
-                  openEmojiPicker={onOpenEmojiPicker}>
+                  setEmbed={setEmbed}>
                   <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
                 </MessageInput>
               )}
@@ -464,16 +521,8 @@ export function MessagesList({
         </KeyboardStickyView>
       </KeyboardGestureArea>
 
-      {IS_WEB && (
-        <EmojiPicker
-          pinToTop
-          state={emojiPickerState}
-          close={() => setEmojiPickerState(prev => ({...prev, isOpen: false}))}
-        />
-      )}
-
       {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
-    </>
+    </DateDividerToggleProvider>
   )
 }
 
@@ -516,12 +565,6 @@ function ChatScrollComponent({
       {...props}
     />
   )
-}
-
-function WebInputSpacer({inputHeight}: {inputHeight: number}) {
-  if (!IS_WEB) return null
-
-  return <Animated.View style={{height: inputHeight}} />
 }
 
 type FooterState = 'loading' | 'new-chat' | 'request' | 'standard'

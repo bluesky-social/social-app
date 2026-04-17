@@ -1,7 +1,6 @@
 import {View} from 'react-native'
 import {type ChatBskyConvoDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
 import {MessageContextMenu} from '#/components/dms/MessageContextMenu'
@@ -10,15 +9,18 @@ export function ActionsWrapper({
   message,
   isFromSelf,
   children,
+  onTap,
 }: {
   message: ChatBskyConvoDefs.MessageView
+  hasReactions?: boolean
   isFromSelf: boolean
   children: React.ReactNode
+  onTap?: () => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
-    <MessageContextMenu message={message}>
+    <MessageContextMenu message={message} onTap={onTap}>
       {trigger =>
         // will always be true, since this file is platform split
         trigger.IS_NATIVE && (
@@ -32,7 +34,7 @@ export function ActionsWrapper({
               ]}
               accessible={true}
               accessibilityActions={[
-                {name: 'activate', label: _(msg`Open message options`)},
+                {name: 'activate', label: l`Open message options`},
               ]}
               onAccessibilityAction={() => trigger.control.open('full')}>
               {children}

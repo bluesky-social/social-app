@@ -8,8 +8,8 @@ import {
 } from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 import {useAnalytics} from '#/analytics'
-import {IS_WEB} from '#/env'
 import * as env from '#/env'
+import {IS_WEB} from '#/env'
 import {
   type LiveEventFeed,
   type LiveEventFeedMetricContext,

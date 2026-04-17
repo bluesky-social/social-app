@@ -81,7 +81,7 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.19.8",
+    "@atproto/api": "^0.19.9",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.7",
@@ -89,8 +89,8 @@
     "@bsky.app/expo-scroll-edge-effect": "^0.1.4",
     "@bsky.app/expo-translate-text": "^0.2.9",
     "@bsky.app/react-native-mmkv": "2.12.5",
-    "@bsky.app/sift": "^0.3.2",
-    "@bsky.app/tapper": "^0.5.0",
+    "@bsky.app/sift": "^0.3.3",
+    "@bsky.app/tapper": "^0.5.1",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",
@@ -275,7 +275,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-native": "^5.0.0",
     "eslint-plugin-react-native-a11y": "^3.5.1",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint-plugin-simple-import-sort": "^13.0.0",
     "file-loader": "6.2.0",
     "globals": "^17.0.0",
     "husky": "^8.0.3",

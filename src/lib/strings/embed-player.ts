@@ -683,14 +683,35 @@ export function parseKlipyGif(urlp: URL):
     return {success: false}
   }
 
-  // Use the base URL without dimension params as the player URI,
-  // routed through the bsky KLIPY proxy (k.gifs.bsky.app). Mirrors
-  // Tenor's t.gifs.bsky.app rewrite, but on a separate hostname so
-  // the two upstreams can be routed independently.
   const playerUrl = new URL(urlp.href)
   playerUrl.hostname = 'k.gifs.bsky.app'
+
+  // On web, swap the gif filename for a video format so the <video>
+  // element can play it. Klipy uses different filename slugs per
+  // format (unlike Tenor's ID-based scheme), so the slugs are
+  // embedded as query params at composition time by resolveGif().
+  if (IS_WEB) {
+    const webmSlug = playerUrl.searchParams.get('webm')
+    const mp4Slug = playerUrl.searchParams.get('mp4')
+    const slug = IS_WEB_SAFARI ? mp4Slug : webmSlug
+    const ext = IS_WEB_SAFARI ? 'mp4' : 'webm'
+
+    // Without a slug we can't produce a playable video URL on web,
+    // so fall back to the link card instead of returning a broken player.
+    if (!slug) {
+      return {success: false}
+    }
+
+    const parts = playerUrl.pathname.split('/')
+    parts[parts.length - 1] = `${slug}.${ext}`
+    playerUrl.pathname = parts.join('/')
+  }
+
+  // Strip all metadata params — only the path matters for the CDN
   playerUrl.searchParams.delete('hh')
   playerUrl.searchParams.delete('ww')
+  playerUrl.searchParams.delete('mp4')
+  playerUrl.searchParams.delete('webm')
 
   return {
     success: true,

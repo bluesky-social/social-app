@@ -1,19 +1,15 @@
 import {InteractionManager, View} from 'react-native'
-import {
-  type AnimatedRef,
-  measure,
-  type MeasuredDimensions,
-  runOnJS,
-  runOnUI,
-} from 'react-native-reanimated'
+import {type AnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 
 import {useLightboxControls} from '#/state/lightbox'
 import {type Dimensions} from '#/view/com/lightbox/ImageViewing/@types'
 import {atoms as a} from '#/alf'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
+import {Gallery} from '#/components/images/Gallery'
 import {ImageLayoutGrid} from '#/components/images/ImageLayoutGrid'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
+import {useAnalytics} from '#/analytics'
 import {type EmbedType} from '#/types/bsky/post'
 import {type CommonProps} from './types'
 
@@ -23,8 +19,10 @@ export function ImageEmbed({
 }: CommonProps & {
   embed: EmbedType<'images'>
 }) {
+  const ax = useAnalytics()
   const {openLightbox} = useLightboxControls()
   const {images} = embed.view
+  const galleryEnabled = ax.features.enabled(ax.features.PostGalleryEmbedEnable)
 
   if (images.length > 0) {
     const items = images.map(img => ({
@@ -33,34 +31,21 @@ export function ImageEmbed({
       alt: img.alt,
       dimensions: img.aspectRatio ?? null,
     }))
-    const _openLightbox = (
-      index: number,
-      thumbRects: (MeasuredDimensions | null)[],
-      fetchedDims: (Dimensions | null)[],
-    ) => {
-      openLightbox({
-        images: items.map((item, i) => ({
-          ...item,
-          thumbRect: thumbRects[i] ?? null,
-          thumbDimensions: fetchedDims[i] ?? null,
-          type: 'image',
-        })),
-        index,
-      })
-    }
     const onPress = (
       index: number,
       refs: AnimatedRef<any>[],
       fetchedDims: (Dimensions | null)[],
     ) => {
-      runOnUI(() => {
-        'worklet'
-        const rects: (MeasuredDimensions | null)[] = []
-        for (const r of refs) {
-          rects.push(measure(r))
-        }
-        runOnJS(_openLightbox)(index, rects, fetchedDims)
-      })()
+      openLightbox({
+        images: items.map((item, i) => ({
+          ...item,
+          thumbRect: null,
+          thumbRef: refs[i] ?? null,
+          thumbDimensions: fetchedDims[i] ?? null,
+          type: 'image',
+        })),
+        index,
+      })
     }
     const onPressIn = (_: number) => {
       InteractionManager.runAfterInteractions(() => {
@@ -90,6 +75,19 @@ export function ImageEmbed({
             hideBadge={
               rest.viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
             }
+          />
+        </View>
+      )
+    }
+
+    if (galleryEnabled) {
+      return (
+        <View style={[a.mt_sm, rest.style]}>
+          <Gallery
+            images={images}
+            onPress={onPress}
+            onPressIn={onPressIn}
+            viewContext={rest.viewContext}
           />
         </View>
       )
