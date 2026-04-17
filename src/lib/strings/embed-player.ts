@@ -696,11 +696,15 @@ export function parseKlipyGif(urlp: URL):
     const slug = IS_WEB_SAFARI ? mp4Slug : webmSlug
     const ext = IS_WEB_SAFARI ? 'mp4' : 'webm'
 
-    if (slug) {
-      const parts = playerUrl.pathname.split('/')
-      parts[parts.length - 1] = `${slug}.${ext}`
-      playerUrl.pathname = parts.join('/')
+    // Without a slug we can't produce a playable video URL on web,
+    // so fall back to the link card instead of returning a broken player.
+    if (!slug) {
+      return {success: false}
     }
+
+    const parts = playerUrl.pathname.split('/')
+    parts[parts.length - 1] = `${slug}.${ext}`
+    playerUrl.pathname = parts.join('/')
   }
 
   // Strip all metadata params — only the path matters for the CDN
