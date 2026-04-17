@@ -651,7 +651,7 @@ function MemberMenu({
               label={l`Message ${displayName}`}
               onPress={handleMessageMember}>
               <Menu.ItemText>
-                <Trans>Message</Trans>
+                <Trans context="action">Message</Trans>
               </Menu.ItemText>
               <Menu.ItemIcon icon={MessageIcon} />
             </Menu.Item>
