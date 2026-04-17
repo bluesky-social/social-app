@@ -70,8 +70,8 @@ export function GifCategoryPills({
             label={label}
             onPress={() => onSelect(category)}
             size="small"
-            variant={isActive ? 'solid' : 'outline'}
-            color={isActive ? 'primary' : 'secondary'}
+            variant={isActive ? 'solid' : 'ghost'}
+            color="secondary"
             shape="round">
             <ButtonIcon icon={category.icon} />
           </Button>
