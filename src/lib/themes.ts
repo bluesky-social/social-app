@@ -21,7 +21,6 @@ export const defaultTheme: Theme = {
       icon: lightPalette.contrast_500,
 
       // non-standard
-      textVeryLight: lightPalette.contrast_400,
       replyLine: lightPalette.contrast_100,
       replyLineDot: lightPalette.contrast_200,
       postCtrl: lightPalette.contrast_500,
@@ -305,7 +304,6 @@ export const darkTheme: Theme = {
       icon: darkPalette.contrast_500,
 
       // non-standard
-      textVeryLight: darkPalette.contrast_400,
       replyLine: darkPalette.contrast_200,
       replyLineDot: darkPalette.contrast_200,
       postCtrl: darkPalette.contrast_500,
@@ -352,7 +350,6 @@ export const dimTheme: Theme = {
       icon: dimPalette.contrast_500,
 
       // non-standard
-      textVeryLight: dimPalette.contrast_400,
       replyLine: dimPalette.contrast_200,
       replyLineDot: dimPalette.contrast_200,
       postCtrl: dimPalette.contrast_500,
