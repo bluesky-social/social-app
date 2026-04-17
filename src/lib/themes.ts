@@ -19,9 +19,6 @@ export const defaultTheme: Theme = {
       border: lightPalette.contrast_100,
       borderDark: lightPalette.contrast_200,
       icon: lightPalette.contrast_500,
-
-      // non-standard
-      borderLinkHover: lightPalette.contrast_300,
     },
     primary: {
       background: colors.blue3,
@@ -297,9 +294,6 @@ export const darkTheme: Theme = {
       border: darkPalette.contrast_100,
       borderDark: darkPalette.contrast_200,
       icon: darkPalette.contrast_500,
-
-      // non-standard
-      borderLinkHover: darkPalette.contrast_300,
     },
     primary: {
       ...defaultTheme.palette.primary,
@@ -338,9 +332,6 @@ export const dimTheme: Theme = {
       border: dimPalette.contrast_100,
       borderDark: dimPalette.contrast_200,
       icon: dimPalette.contrast_500,
-
-      // non-standard
-      borderLinkHover: dimPalette.contrast_300,
     },
   },
 }
