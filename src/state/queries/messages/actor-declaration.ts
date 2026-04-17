@@ -101,6 +101,7 @@ export async function restrictChatSettings({
         allowIncoming: 'none',
       },
     })
+    // important, update local cache to avoid running this again
     setOtherRequireDataActorDeclarationForDid({
       did,
       actorDeclaration: {

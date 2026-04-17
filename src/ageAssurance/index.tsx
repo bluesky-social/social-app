@@ -1,13 +1,10 @@
 import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
 
 import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
-import {restrictChatSettings} from '#/state/queries/messages/actor-declaration'
 import {useAgent} from '#/state/session'
 import {Provider as RedirectOverlayProvider} from '#/ageAssurance/components/RedirectOverlay'
 import {
   AgeAssuranceDataProvider,
-  getDidFromAgentSession,
-  getOtherRequiredDataFromCache,
   useAgeAssuranceDataContext,
 } from '#/ageAssurance/data'
 import {logger} from '#/ageAssurance/logger'
@@ -22,6 +19,7 @@ import {
 } from '#/ageAssurance/types'
 import {
   isUnderAge,
+  maybeRestrictChatSettings,
   MIN_ACCESS_AGE,
   useAgeAssuranceRegionConfigWithFallback,
 } from '#/ageAssurance/util'
@@ -90,18 +88,15 @@ function InnerProvider({children}: {children: React.ReactNode}) {
 
   const handleAccessUpdate = useCallback(
     (s: AgeAssuranceState) => {
+      const isAgeRestricted = s.access !== AgeAssuranceAccess.Full
       // disable chat notifications
       void getAndRegisterPushToken({
-        isAgeRestricted: s.access !== AgeAssuranceAccess.Full,
+        isAgeRestricted,
       })
 
       // disable incoming chats
-      const did = getDidFromAgentSession(agent)
-      if (did && s.access !== AgeAssuranceAccess.Full) {
-        const d = getOtherRequiredDataFromCache({did})
-        // ...update the chat setting record if allowIncoming is not already 'none'.
-        if (d?.actorDeclaration?.allowIncoming === 'none') return
-        restrictChatSettings({agent, did})
+      if (isAgeRestricted) {
+        maybeRestrictChatSettings({agent})
       }
     },
     [agent, getAndRegisterPushToken],

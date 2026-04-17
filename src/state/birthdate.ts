@@ -4,11 +4,9 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {preferencesQueryKey} from '#/state/queries/preferences'
 import {useAgent, useSession} from '#/state/session'
 import {usePatchAgeAssuranceOtherRequiredData} from '#/ageAssurance'
-import {getDidFromAgentSession} from '#/ageAssurance/data'
-import {isUnderAge} from '#/ageAssurance/util'
+import {isUnderAge, maybeRestrictChatSettings} from '#/ageAssurance/util'
 import {IS_DEV} from '#/env'
 import {account} from '#/storage'
-import {restrictChatSettings} from './queries/messages/actor-declaration'
 
 // 6s in dev, 48h in prod
 const BIRTHDATE_DELAY_HOURS = IS_DEV ? 0.001 : 48
@@ -66,31 +64,15 @@ export function useBirthdateMutation() {
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
       })
-      const did = getDidFromAgentSession(agent)
-      const result = did
-        ? await agent.com.atproto.repo
-            .getRecord({
-              repo: did ?? '',
-              collection: 'chat.bsky.actor.declaration',
-              rkey: 'self',
-            })
-            .catch(_e => undefined)
-        : undefined
-      const allowIncoming = result?.data.value.allowIncoming as
-        | 'all'
-        | 'none'
-        | 'following'
-        | undefined
+
       const isUnderAdultAge = birthDate
         ? isUnderAge(birthDate.toISOString(), 18)
         : false
-      /**
-       * If the user is under adult age, update the chat setting record if
-       * allowIncoming is not already 'none'.
-       */
-      if (did && isUnderAdultAge && allowIncoming !== 'none') {
-        await restrictChatSettings({agent, did})
+
+      if (isUnderAdultAge) {
+        maybeRestrictChatSettings({agent})
       }
+
       /**
        * Also patch the age assurance other required data with the new
        * birthdate, which may change the user's age assurance access level.
