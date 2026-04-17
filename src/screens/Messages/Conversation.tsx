@@ -173,16 +173,12 @@ function Inner() {
         </View>
       )}
       <View style={[a.flex_1]}>
-        {moderation && recipient ? (
-          <InnerReady
-            moderation={moderation}
-            recipient={recipient}
-            hasScrolled={hasScrolled}
-            setHasScrolled={setHasScrolled}
-          />
-        ) : (
-          <View style={[a.align_center, a.gap_sm, a.flex_1]} />
-        )}
+        <InnerReady
+          moderation={moderation}
+          recipient={recipient}
+          hasScrolled={hasScrolled}
+          setHasScrolled={setHasScrolled}
+        />
         {!readyToShow && (
           <View
             style={[
@@ -210,8 +206,8 @@ function InnerReady({
   hasScrolled,
   setHasScrolled,
 }: {
-  moderation: ModerationDecision
-  recipient: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  moderation: ModerationDecision | null
+  recipient: Shadow<AppBskyActorDefs.ProfileViewDetailed> | undefined
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
 }) {
@@ -289,12 +285,14 @@ function InnerReady({
           hasAcceptOverride={!!params.accept}
           transparentHeaderHeight={IS_LIQUID_GLASS ? headerHeight : 0}
           footer={
-            <MessagesListBlockedFooter
-              recipient={recipient}
-              convoId={convoState.convo.id}
-              hasMessages={convoState.items.length > 0}
-              moderation={moderation}
-            />
+            moderation && recipient ? (
+              <MessagesListBlockedFooter
+                recipient={recipient}
+                convoId={convoState.convo.id}
+                hasMessages={convoState.items.length > 0}
+                moderation={moderation}
+              />
+            ) : null
           }
         />
       )}

@@ -13,7 +13,11 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/profile-shadow'
-import {isConvoActive, useConvo} from '#/state/messages/convo'
+import {
+  type ActiveConvoStates,
+  isConvoActive,
+  useConvo,
+} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useSession} from '#/state/session'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
@@ -36,9 +40,12 @@ export function MessagesListHeader({
   moderation,
 }: {
   profile?: Shadow<AppBskyActorDefs.ProfileViewDetailed>
-  moderation?: ModerationDecision
+  moderation?: ModerationDecision | null
 }) {
   const t = useTheme()
+
+  const convoState = useConvo()
+  const isGroupChat = convoState?.isGroup?.()
 
   const blockInfo = useMemo(() => {
     if (!moderation) return
@@ -58,12 +65,21 @@ export function MessagesListHeader({
         <View style={[{minHeight: PFP_SIZE}, a.justify_center]}>
           <Layout.Header.BackButton />
         </View>
-        {profile && moderation && blockInfo ? (
-          <HeaderReady
-            profile={profile}
-            moderation={moderation}
-            blockInfo={blockInfo}
-          />
+        {isConvoActive(convoState) ? (
+          moderation && blockInfo && profile && !isGroupChat ? (
+            <ProfileHeaderReady
+              convoState={convoState}
+              profile={profile}
+              moderation={moderation}
+              blockInfo={blockInfo}
+            />
+          ) : (
+            <GroupHeaderReady
+              convoState={convoState}
+              profile={profile}
+              moderation={moderation}
+            />
+          )
         ) : (
           <>
             <View style={[a.flex_row, a.align_center, a.gap_md, a.flex_1]}>
@@ -94,11 +110,13 @@ export function MessagesListHeader({
   )
 }
 
-function HeaderReady({
+function ProfileHeaderReady({
+  convoState,
   profile,
   moderation,
   blockInfo,
 }: {
+  convoState: ActiveConvoStates
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
   moderation: ModerationDecision
   blockInfo: {
@@ -107,21 +125,12 @@ function HeaderReady({
   }
 }) {
   const {t: l} = useLingui()
-  const t = useTheme()
-  const convoState = useConvo()
   const {currentAccount} = useSession()
 
-  const navigation = useNavigation<NavigationProp>()
-
-  const groupInfo = convoState.getGroupInfo?.()
-  const isGroupChat = groupInfo != null
-
   const isDeletedAccount = profile?.handle === 'missing.invalid'
-  const displayName = isGroupChat
-    ? (groupInfo.name ?? l`${profile.handle}'s group chat`)
-    : isDeletedAccount
-      ? l`Deleted Account`
-      : createSanitizedDisplayName(profile, true, moderation.ui('displayName'))
+  const displayName = isDeletedAccount
+    ? l`Deleted Account`
+    : createSanitizedDisplayName(profile, true, moderation.ui('displayName'))
 
   const latestMessageFromOther = convoState.items.findLast(
     (item: ConvoItem) =>
@@ -133,6 +142,63 @@ function HeaderReady({
     latestMessageFromOther?.type === 'message'
       ? latestMessageFromOther.message
       : undefined
+
+  return (
+    <Wrapper
+      heading={
+        <Link
+          label={l`View ${displayName}’s profile`}
+          style={[a.flex_row, a.gap_md, a.flex_1, a.pr_md]}
+          to={makeProfileLink(profile)}>
+          <PreviewableUserAvatar
+            size={PFP_SIZE}
+            profile={profile}
+            moderation={moderation.ui('avatar')}
+            disableHoverCard={moderation.blocked}
+          />
+          <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
+        </Link>
+      }
+      muted={convoState.convo?.muted}
+      settings={
+        isConvoActive(convoState) ? (
+          <ConvoMenu
+            convo={convoState.convo}
+            profile={profile}
+            currentScreen="conversation"
+            blockInfo={blockInfo}
+            latestReportableMessage={latestReportableMessage}
+          />
+        ) : null
+      }
+    />
+  )
+}
+
+function GroupHeaderReady({
+  convoState,
+  profile,
+  moderation,
+}: {
+  convoState: ActiveConvoStates
+  profile?: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  moderation?: ModerationDecision | null
+}) {
+  const {t: l} = useLingui()
+
+  const navigation = useNavigation<NavigationProp>()
+
+  const groupInfo = convoState.getGroupInfo?.()
+
+  const isDeletedAccount = profile?.handle === 'missing.invalid'
+  const displayName = isDeletedAccount
+    ? l`Deleted Account`
+    : profile
+      ? createSanitizedDisplayName(profile, true, moderation?.ui('displayName'))
+      : undefined
+  const groupName =
+    groupInfo?.name ??
+    (displayName ? l`${displayName}’s group chat` : l`Group chat`)
 
   const handleNavigateToSettings = () => {
     const convoId = convoState.convo?.id
@@ -146,83 +212,66 @@ function HeaderReady({
   }
 
   return (
+    <Wrapper
+      heading={
+        <>
+          <AvatarBubbles size="small" profiles={convoState.recipients ?? []} />
+          <Text style={[a.text_md, a.font_semi_bold]} numberOfLines={1}>
+            {groupName}
+          </Text>
+        </>
+      }
+      muted={convoState.convo?.muted}
+      settings={
+        isConvoActive(convoState) ? (
+          <Button
+            label={l`Open group chat settings`}
+            size="small"
+            color="secondary"
+            shape="round"
+            variant="ghost"
+            style={[a.bg_transparent]}
+            onPress={handleNavigateToSettings}>
+            <ButtonIcon icon={DotsHorizontalIcon} size="md" />
+          </Button>
+        ) : null
+      }
+    />
+  )
+}
+
+function Wrapper({
+  heading,
+  muted,
+  settings,
+}: {
+  heading: React.ReactNode
+  muted: boolean
+  settings: React.ReactNode
+}) {
+  return (
     <View style={[a.flex_1]}>
       <View style={[a.w_full, a.flex_row, a.align_center, a.justify_between]}>
-        {isGroupChat ? (
-          <View
-            style={[a.flex_row, a.align_center, a.gap_md, a.flex_1, a.pr_md]}>
-            <AvatarBubbles
-              size="small"
-              profiles={convoState.recipients ?? []}
-            />
-            <Text style={[a.text_md, a.font_semi_bold]} numberOfLines={1}>
-              {displayName}
-            </Text>
-          </View>
-        ) : (
-          <Link
-            label={l`View ${displayName}'s profile`}
-            style={[a.flex_row, a.gap_md, a.flex_1, a.pr_md]}
-            to={makeProfileLink(profile)}>
-            <PreviewableUserAvatar
-              size={PFP_SIZE}
-              profile={profile}
-              moderation={moderation.ui('avatar')}
-              disableHoverCard={moderation.blocked}
-            />
-            <View style={[a.flex_1]}>
-              <View style={[a.flex_row, a.align_center]}>
-                <Text
-                  emoji
-                  style={[a.text_md, a.font_semi_bold, a.self_start]}
-                  numberOfLines={1}>
-                  {displayName}
-                </Text>
-                <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
-                {convoState.convo?.muted && (
-                  <>
-                    <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-                      {' '}
-                      &middot;{' '}
-                    </Text>
-                    <BellOffIcon
-                      size="sm"
-                      style={t.atoms.text_contrast_medium}
-                    />
-                  </>
-                )}
-              </View>
-            </View>
-          </Link>
-        )}
+        <View style={[a.flex_row, a.align_center, a.gap_md, a.flex_1, a.pr_md]}>
+          {heading}
+          <MuteStatus muted={muted} />
+        </View>
 
         <View style={[{minHeight: PFP_SIZE}, a.justify_center]}>
-          <Layout.Header.Slot>
-            {isConvoActive(convoState) ? (
-              isGroupChat ? (
-                <Button
-                  label={l`Open group chat settings`}
-                  size="small"
-                  color="secondary"
-                  shape="round"
-                  variant="ghost"
-                  style={[a.bg_transparent]}
-                  onPress={handleNavigateToSettings}>
-                  <ButtonIcon icon={DotsHorizontalIcon} size="md" />
-                </Button>
-              ) : (
-                <ConvoMenu
-                  convo={convoState.convo}
-                  profile={profile}
-                  currentScreen="conversation"
-                  blockInfo={blockInfo}
-                  latestReportableMessage={latestReportableMessage}
-                />
-              )
-            ) : null}
-          </Layout.Header.Slot>
+          <Layout.Header.Slot>{settings}</Layout.Header.Slot>
         </View>
       </View>
     </View>
   )
+}
+
+function MuteStatus({muted}: {muted: boolean}) {
+  const t = useTheme()
+
+  return muted ? (
+    <>
+      <Text style={[a.text_md, t.atoms.text_contrast_medium]}> &middot; </Text>
+      <BellOffIcon size="sm" style={t.atoms.text_contrast_medium} />
+    </>
+  ) : undefined
 }
