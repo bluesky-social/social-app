@@ -18,7 +18,6 @@ export interface UsePaletteValue {
   textLight: TextStyle
   textInverted: TextStyle
   link: TextStyle
-  icon: TextStyle
 }
 
 /**
@@ -56,9 +55,6 @@ export function usePalette(color: PaletteColorName): UsePaletteValue {
       },
       link: {
         color: palette.link,
-      },
-      icon: {
-        color: palette.icon,
       },
     }
   }, [theme, color])
