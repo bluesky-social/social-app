@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -6,7 +6,7 @@ import {
   EmbeddedCheckout,
   EmbeddedCheckoutProvider,
 } from '@stripe/react-stripe-js'
-import {loadStripe} from '@stripe/stripe-js'
+import {loadStripe} from '@stripe/stripe-js/pure'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -14,10 +14,6 @@ import * as SegmentedControl from '#/components/forms/SegmentedControl'
 import * as TextField from '#/components/forms/TextField'
 import {Text} from '#/components/Typography'
 import {STRIPE_API_URL, STRIPE_PUBLISHABLE_KEY} from '#/env/common'
-
-const stripePromise = STRIPE_PUBLISHABLE_KEY
-  ? loadStripe(STRIPE_PUBLISHABLE_KEY)
-  : null
 
 const PRESET_AMOUNTS = [5, 10, 25, 50]
 
@@ -29,6 +25,13 @@ export function SupportStripeCheckout() {
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+
+  // Defer Stripe.js loading until this component actually mounts, so visitors
+  // who never open the Support page don't trigger requests to js.stripe.com.
+  const stripePromise = useMemo(
+    () => (STRIPE_PUBLISHABLE_KEY ? loadStripe(STRIPE_PUBLISHABLE_KEY) : null),
+    [],
+  )
 
   const parsedAmount = useMemo(() => {
     const num = parseFloat(amount)
@@ -192,3 +195,5 @@ export function SupportStripeCheckout() {
     </View>
   )
 }
+
+export default SupportStripeCheckout

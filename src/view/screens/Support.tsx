@@ -13,7 +13,12 @@ import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {SupportStripeCheckout} from './SupportStripeCheckout'
+
+// Lazy-loaded so the Stripe SDK (and the js.stripe.com script it injects) are
+// only fetched when the user actually navigates to this screen.
+const SupportStripeCheckout = React.lazy(
+  () => import('./SupportStripeCheckout'),
+)
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Support'>
 export const SupportScreen = (_props: Props) => {
@@ -66,7 +71,9 @@ export const SupportScreen = (_props: Props) => {
             </View>
           </View>
 
-          <SupportStripeCheckout />
+          <React.Suspense fallback={null}>
+            <SupportStripeCheckout />
+          </React.Suspense>
         </View>
       </Layout.Content>
     </Layout.Screen>
