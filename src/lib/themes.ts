@@ -21,7 +21,6 @@ export const defaultTheme: Theme = {
       icon: lightPalette.contrast_500,
 
       // non-standard
-      emptyStateIcon: lightPalette.contrast_300,
       borderLinkHover: lightPalette.contrast_300,
     },
     primary: {
@@ -300,7 +299,6 @@ export const darkTheme: Theme = {
       icon: darkPalette.contrast_500,
 
       // non-standard
-      emptyStateIcon: darkPalette.contrast_300,
       borderLinkHover: darkPalette.contrast_300,
     },
     primary: {
@@ -342,7 +340,6 @@ export const dimTheme: Theme = {
       icon: dimPalette.contrast_500,
 
       // non-standard
-      emptyStateIcon: dimPalette.contrast_300,
       borderLinkHover: dimPalette.contrast_300,
     },
   },
