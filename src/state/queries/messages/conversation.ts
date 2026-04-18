@@ -31,7 +31,8 @@ export function useConvoQuery({convoId}: {convoId: string}) {
       )
       return data.convo
     },
-    staleTime: STALE.INFINITY,
+    staleTime: STALE.MINUTES.THIRTY,
+    retry: 2,
   })
 }
 

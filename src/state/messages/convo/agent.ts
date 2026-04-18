@@ -86,9 +86,10 @@ export class Convo {
   private emitter = new EventEmitter<{event: [ConvoEvent]}>()
 
   convoId: string
-  convo: ChatBskyConvoDefs.ConvoView | undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-  recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
+  data: {
+    convoView: ChatBskyConvoDefs.ConvoView | undefined
+    memberList: ChatBskyActorDefs.ProfileViewBasic[]
+  }
   snapshot: ConvoState | undefined
 
   constructor(params: ConvoParams) {
@@ -97,10 +98,7 @@ export class Convo {
     this.agent = params.agent
     this.events = params.events
     this.senderUserDid = params.agent.assertDid
-
-    if (params.placeholderData) {
-      this.setupPlaceholderData(params.placeholderData)
-    }
+    this.data = params.data
 
     this.subscribe = this.subscribe.bind(this)
     this.getSnapshot = this.getSnapshot.bind(this)
@@ -572,42 +570,6 @@ export class Convo {
     }
   }
 
-  private pendingFetchConvo:
-    | Promise<{
-        convo: ChatBskyConvoDefs.ConvoView
-        sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-        recipients: ChatBskyActorDefs.ProfileViewBasic[]
-      }>
-    | undefined
-  async fetchConvo() {
-    if (this.pendingFetchConvo) return this.pendingFetchConvo
-
-    this.pendingFetchConvo = (async () => {
-      try {
-        const response = await networkRetry(2, () => {
-          return this.agent.api.chat.bsky.convo.getConvo(
-            {
-              convoId: this.convoId,
-            },
-            {headers: DM_SERVICE_HEADERS},
-          )
-        })
-
-        const convo = response.data.convo
-
-        return {
-          convo,
-          sender: convo.members.find(m => m.did === this.senderUserDid),
-          recipients: convo.members.filter(m => m.did !== this.senderUserDid),
-        }
-      } finally {
-        this.pendingFetchConvo = undefined
-      }
-    })()
-
-    return this.pendingFetchConvo
-  }
-
   async refreshConvo() {
     try {
       const {convo, sender, recipients} = await this.fetchConvo()
@@ -930,7 +892,7 @@ export class Convo {
 
       const {id, message} = pendingMessage
 
-      const response = await this.agent.api.chat.bsky.convo.sendMessage(
+      const response = await this.agent.chat.bsky.convo.sendMessage(
         {
           convoId: this.convoId,
           message,
@@ -1025,7 +987,7 @@ export class Convo {
     )
 
     try {
-      const {data} = await this.agent.api.chat.bsky.convo.sendMessageBatch(
+      const {data} = await this.agent.chat.bsky.convo.sendMessageBatch(
         {
           items: messageArray.map(({message}) => ({
             convoId: this.convoId,
@@ -1067,7 +1029,7 @@ export class Convo {
 
     try {
       await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.deleteMessageForSelf(
+        return this.agent.chat.bsky.convo.deleteMessageForSelf(
           {
             convoId: this.convoId,
             messageId,
