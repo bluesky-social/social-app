@@ -35,6 +35,18 @@ cfg.resolver.resolveRequest = (context, moduleName, platform) => {
   if (moduleName === '@ipld/dag-cbor') {
     return context.resolveRequest(context, '@ipld/dag-cbor/src', platform)
   }
+  // web-streams-polyfill exposes ./polyfill only via package "exports"; Metro skips
+  // exports when unstable_enablePackageExports is false (see note above).
+  if (
+    moduleName === 'web-streams-polyfill/polyfill' ||
+    moduleName === 'web-streams-polyfill/polyfill.js'
+  ) {
+    return context.resolveRequest(
+      context,
+      'web-streams-polyfill/dist/polyfill',
+      platform,
+    )
+  }
   if (process.env.BSKY_PROFILE) {
     if (moduleName.endsWith('ReactNativeRenderer-prod')) {
       return context.resolveRequest(
