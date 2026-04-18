@@ -24,6 +24,7 @@ import {isConvoActive} from '#/state/messages/convo/util'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {
   RQKEY as getConvoKey,
+  useConvoQuery,
   useMarkAsReadMutation,
 } from '#/state/queries/messages/conversation'
 import {RQKEY_ROOT as ListConvosQueryKeyRoot} from '#/state/queries/messages/list-conversations'
@@ -72,19 +73,29 @@ export function ConvoProvider({
   const queryClient = useQueryClient()
   const agent = useAgent()
   const events = useMessagesEventBus()
+  const {data: convoView} = useConvoQuery({convoId})
+  // const {data: convoMembers} = useListConvoMembersQuery({convoId})
+
+  // eslint-disable-next-line react/hook-use-state
   const [convo] = useState(() => {
-    const placeholder = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(
-      getConvoKey(convoId),
-    )
     return new Convo({
       convoId,
       agent,
       events,
-      placeholderData: placeholder ? {convo: placeholder} : undefined,
+      data: {
+        convoView,
+        // convoMembers,
+      },
     })
   })
   const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)
   const {mutate: markAsRead} = useMarkAsReadMutation()
+
+  useEffect(() => {
+    if (convoView) {
+      service.updateData({convoView})
+    }
+  }, [service, convoView])
 
   const appState = useAppState()
   const isActive = appState === 'active'
@@ -107,11 +118,11 @@ export function ConvoProvider({
       switch (event.type) {
         case 'invalidate-block-state': {
           for (const did of event.accountDids) {
-            queryClient.invalidateQueries({
+            void queryClient.invalidateQueries({
               queryKey: createProfileQueryKey(did),
             })
           }
-          queryClient.invalidateQueries({
+          void queryClient.invalidateQueries({
             queryKey: [ListConvosQueryKeyRoot],
           })
         }

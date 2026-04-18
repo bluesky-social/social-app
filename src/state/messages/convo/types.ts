@@ -6,13 +6,15 @@ import {
 } from '@atproto/api'
 
 import {type MessagesEventBus} from '#/state/messages/events/agent'
+import {type ConvoWithDetails} from '#/components/dms/util'
 
 export type ConvoParams = {
   convoId: string
   agent: BskyAgent
   events: MessagesEventBus
-  placeholderData?: {
-    convo: ChatBskyConvoDefs.ConvoView
+  data: {
+    convoView?: ChatBskyConvoDefs.ConvoView
+    memberList?: ChatBskyActorDefs.ProfileViewBasic[]
   }
 }
 
@@ -136,6 +138,7 @@ export type ConvoItem =
       retry?: () => void
     }
 
+type UpdateConvoData = (data: ConvoParams['data']) => void
 type DeleteMessage = (messageId: string) => Promise<void>
 type SendMessage = (
   message: ChatBskyConvoSendMessage.InputSchema['message'],
@@ -144,17 +147,13 @@ type FetchMessageHistory = () => Promise<void>
 type MarkConvoAccepted = () => void
 type AddReaction = (messageId: string, reaction: string) => Promise<void>
 type RemoveReaction = (messageId: string, reaction: string) => Promise<void>
-type IsGroup = () => boolean | undefined
-type GetGroupInfo = () => ChatBskyConvoDefs.GroupConvo | undefined
-type GetPrimaryMember = () => ChatBskyActorDefs.ProfileViewBasic | undefined
 
 export type ConvoStateUninitialized = {
   status: ConvoStatus.Uninitialized
   items: []
-  convo: ChatBskyConvoDefs.ConvoView | undefined
+  convo: ConvoWithDetails | undefined
+  updateData: UpdateConvoData
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-  recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
   isFetchingHistory: false
   hasAllHistory: boolean
   deleteMessage: undefined
@@ -163,17 +162,13 @@ export type ConvoStateUninitialized = {
   markConvoAccepted: undefined
   addReaction: undefined
   removeReaction: undefined
-  isGroup: IsGroup
-  getGroupInfo: GetGroupInfo
-  getPrimaryMember: GetPrimaryMember
 }
 export type ConvoStateInitializing = {
   status: ConvoStatus.Initializing
   items: []
-  convo: ChatBskyConvoDefs.ConvoView | undefined
+  convo: ConvoWithDetails | undefined
+  updateData: UpdateConvoData
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-  recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
   isFetchingHistory: boolean
   hasAllHistory: boolean
   deleteMessage: undefined
@@ -182,17 +177,13 @@ export type ConvoStateInitializing = {
   markConvoAccepted: undefined
   addReaction: undefined
   removeReaction: undefined
-  isGroup: IsGroup
-  getGroupInfo: GetGroupInfo
-  getPrimaryMember: GetPrimaryMember
 }
 export type ConvoStateReady = {
   status: ConvoStatus.Ready
   items: ConvoItem[]
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: ConvoWithDetails
+  updateData: UpdateConvoData
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic
-  recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   hasAllHistory: boolean
   deleteMessage: DeleteMessage
@@ -201,17 +192,13 @@ export type ConvoStateReady = {
   markConvoAccepted: MarkConvoAccepted
   addReaction: AddReaction
   removeReaction: RemoveReaction
-  isGroup: IsGroup
-  getGroupInfo: GetGroupInfo
-  getPrimaryMember: GetPrimaryMember
 }
 export type ConvoStateBackgrounded = {
   status: ConvoStatus.Backgrounded
   items: ConvoItem[]
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: ConvoWithDetails
+  updateData: UpdateConvoData
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic
-  recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   hasAllHistory: boolean
   deleteMessage: DeleteMessage
@@ -220,17 +207,13 @@ export type ConvoStateBackgrounded = {
   markConvoAccepted: MarkConvoAccepted
   addReaction: AddReaction
   removeReaction: RemoveReaction
-  isGroup: IsGroup
-  getGroupInfo: GetGroupInfo
-  getPrimaryMember: GetPrimaryMember
 }
 export type ConvoStateSuspended = {
   status: ConvoStatus.Suspended
   items: ConvoItem[]
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: ConvoWithDetails
+  updateData: UpdateConvoData
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic
-  recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   hasAllHistory: boolean
   deleteMessage: DeleteMessage
@@ -239,17 +222,13 @@ export type ConvoStateSuspended = {
   markConvoAccepted: MarkConvoAccepted
   addReaction: AddReaction
   removeReaction: RemoveReaction
-  isGroup: IsGroup
-  getGroupInfo: GetGroupInfo
-  getPrimaryMember: GetPrimaryMember
 }
 export type ConvoStateError = {
   status: ConvoStatus.Error
-  items: []
-  convo: undefined
+  items: ConvoItem[]
+  convo: ConvoWithDetails | undefined
+  updateData: UpdateConvoData
   error: ConvoError
-  sender: undefined
-  recipients: undefined
   isFetchingHistory: false
   hasAllHistory: false
   deleteMessage: undefined
@@ -258,17 +237,13 @@ export type ConvoStateError = {
   markConvoAccepted: undefined
   addReaction: undefined
   removeReaction: undefined
-  isGroup: undefined
-  getGroupInfo: undefined
-  getPrimaryMember: undefined
 }
 export type ConvoStateDisabled = {
   status: ConvoStatus.Disabled
   items: ConvoItem[]
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: ConvoWithDetails
+  updateData: UpdateConvoData
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic
-  recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   hasAllHistory: boolean
   deleteMessage: DeleteMessage
@@ -277,9 +252,6 @@ export type ConvoStateDisabled = {
   markConvoAccepted: MarkConvoAccepted
   addReaction: AddReaction
   removeReaction: RemoveReaction
-  isGroup: IsGroup
-  getGroupInfo: GetGroupInfo
-  getPrimaryMember: GetPrimaryMember
 }
 export type ConvoState =
   | ConvoStateUninitialized
