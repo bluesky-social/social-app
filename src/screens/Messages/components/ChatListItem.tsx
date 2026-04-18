@@ -482,6 +482,7 @@ function BaseChatItem({
                   ]
                 : undefined
             }
+            onPressIn={() => precacheConvoQuery(queryClient, convo)}
             onPress={onPress}
             onLongPress={showMenu && IS_NATIVE ? onLongPress : undefined}
             onAccessibilityAction={showMenu ? onLongPress : undefined}>

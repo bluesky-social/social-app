@@ -1,11 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {type LayoutChangeEvent, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {
-  type AppBskyActorDefs,
-  moderateProfile,
-  type ModerationDecision,
-} from '@atproto/api'
+import {moderateProfile} from '@atproto/api'
 import {
   ScrollEdgeEffect,
   ScrollEdgeEffectProvider,
@@ -28,13 +24,13 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {type Shadow, useMaybeProfileShadow} from '#/state/cache/profile-shadow'
+import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
 import {useEmail} from '#/state/email-verification'
 import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useProfileQuery} from '#/state/queries/profile'
+import {useConvoQuery} from '#/state/queries/messages/conversation'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
@@ -52,6 +48,7 @@ import {Error} from '#/components/Error'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {ChatDisabled} from './components/ChatDisabled'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -95,35 +92,25 @@ export function MessagesConversationScreenInner({route}: Props) {
       style={web([{minHeight: 0}, a.flex_1])}>
       <ScrollEdgeEffectProvider>
         <ConvoProvider key={convoId} convoId={convoId}>
-          <Inner />
+          <Inner convoId={convoId} />
         </ConvoProvider>
       </ScrollEdgeEffectProvider>
     </Layout.Screen>
   )
 }
 
-function Inner() {
+function Inner({convoId}: {convoId: string}) {
   const t = useTheme()
   const convoState = useConvo()
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const isFocused = useIsFocused()
   const {top: topInset} = useSafeAreaInsets()
+  const {data: convoData} = useConvoQuery({convoId})
 
-  const convo = convoState.convo
-    ? parseConvoView(convoState.convo, currentAccount?.did)
+  const convo = convoData
+    ? parseConvoView(convoData, currentAccount?.did)
     : null
-
-  const moderationOpts = useModerationOpts()
-  const {data: recipientUnshadowed} = useProfileQuery({
-    did: convoState.getPrimaryMember?.()?.did,
-  })
-  const recipient = useMaybeProfileShadow(recipientUnshadowed)
-
-  const moderation = useMemo(() => {
-    if (!recipient || !moderationOpts) return null
-    return moderateProfile(recipient, moderationOpts)
-  }, [recipient, moderationOpts])
 
   // Because we want to give the list a chance to asynchronously scroll to the end before it is visible to the user,
   // we use `hasScrolled` to determine when to render. With that said however, there is a chance that the chat will be
@@ -150,15 +137,7 @@ function Inner() {
       <>
         <Layout.Center
           style={[a.w_full, IS_LIQUID_GLASS && {paddingTop: topInset}]}>
-          {moderation ? (
-            <MessagesListHeader
-              convo={convo}
-              profile={recipient}
-              moderation={moderation}
-            />
-          ) : (
-            <MessagesListHeader convo={convo} />
-          )}
+          <MessagesListHeader convo={convo} />
         </Layout.Center>
         <Error
           title={_(msg`Something went wrong`)}
@@ -176,25 +155,16 @@ function Inner() {
       {isFocused && IS_WEB && <RemoveScrollBar />}
       {!readyToShow && (
         <View style={IS_LIQUID_GLASS && {paddingTop: topInset}}>
-          {moderation ? (
-            <MessagesListHeader
-              convo={convo}
-              profile={recipient}
-              moderation={moderation}
-            />
-          ) : (
-            <MessagesListHeader convo={convo} />
-          )}
+          <MessagesListHeader convo={convo} />
         </View>
       )}
       <View style={[a.flex_1]}>
         <InnerReady
-          moderation={moderation}
-          recipient={recipient}
+          convo={convo}
           hasScrolled={hasScrolled}
           setHasScrolled={setHasScrolled}
-          convo={convo}
           isActive={isConvoActive(convoState)}
+          isDisabled={convoState.status === ConvoStatus.Disabled}
           hasMessages={isConvoActive(convoState) && convoState.items.length > 0}
         />
         {!readyToShow && (
@@ -219,20 +189,18 @@ function Inner() {
 }
 
 function InnerReady({
-  moderation,
-  recipient,
   hasScrolled,
   setHasScrolled,
   convo,
   isActive,
+  isDisabled,
   hasMessages,
 }: {
-  moderation: ModerationDecision | null
-  recipient: Shadow<AppBskyActorDefs.ProfileViewDetailed> | undefined
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
   convo: ConvoWithDetails | null
   isActive: boolean
+  isDisabled: boolean
   hasMessages: boolean
 }) {
   const navigation = useNavigation<NavigationProp>()
@@ -284,13 +252,14 @@ function InnerReady({
     maybeBlockForEmailVerification()
   }, [maybeBlockForEmailVerification])
 
-  const header = (
-    <MessagesListHeader
-      convo={convo}
-      profile={recipient}
-      moderation={moderation}
-    />
-  )
+  const primaryMember = useMaybeProfileShadow(convo?.primaryMember)
+  const moderationOpts = useModerationOpts()
+  const primaryMemberModeration = useMemo(() => {
+    if (!primaryMember || !moderationOpts) return null
+    return moderateProfile(primaryMember, moderationOpts)
+  }, [primaryMember, moderationOpts])
+
+  const header = <MessagesListHeader convo={convo} />
 
   return (
     <>
@@ -308,16 +277,17 @@ function InnerReady({
         <MessagesList
           hasScrolled={hasScrolled}
           setHasScrolled={setHasScrolled}
-          blocked={moderation?.blocked}
           hasAcceptOverride={!!params.accept}
           transparentHeaderHeight={IS_LIQUID_GLASS ? headerHeight : 0}
           footer={
-            moderation && recipient && convo ? (
+            isDisabled ? (
+              <ChatDisabled />
+            ) : convo && primaryMember && primaryMemberModeration?.blocked ? (
               <MessagesListBlockedFooter
-                recipient={recipient}
+                recipient={primaryMember}
                 convoId={convo.view.id}
                 hasMessages={hasMessages}
-                moderation={moderation}
+                moderation={primaryMemberModeration}
               />
             ) : null
           }

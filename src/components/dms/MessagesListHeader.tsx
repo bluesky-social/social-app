@@ -1,10 +1,9 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import {
-  type AppBskyActorDefs,
   ChatBskyConvoDefs,
-  type ModerationCause,
-  type ModerationDecision,
+  moderateProfile,
+  type ModerationOpts,
 } from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -12,7 +11,8 @@ import {useNavigation} from '@react-navigation/native'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
-import {type Shadow} from '#/state/cache/profile-shadow'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
@@ -30,30 +30,9 @@ import {type ConvoWithDetails} from './util'
 
 const PFP_SIZE = IS_WEB ? 40 : Layout.HEADER_SLOT_SIZE
 
-export function MessagesListHeader({
-  convo,
-  profile,
-  moderation,
-}: {
-  convo?: ConvoWithDetails | null
-  profile?: Shadow<AppBskyActorDefs.ProfileViewDetailed>
-  moderation?: ModerationDecision | null
-}) {
+export function MessagesListHeader({convo}: {convo?: ConvoWithDetails | null}) {
   const t = useTheme()
-
-  const isGroupChat = convo?.kind === 'group'
-
-  const blockInfo = useMemo(() => {
-    if (!moderation) return
-    const modui = moderation.ui('profileView')
-    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
-    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
-    const userBlock = blocks.find(alert => alert.source.type === 'user')
-    return {
-      listBlocks,
-      userBlock,
-    }
-  }, [moderation])
+  const moderationOpts = useModerationOpts()
 
   return (
     <Layout.Header.Outer noBottomBorder={IS_LIQUID_GLASS}>
@@ -61,20 +40,11 @@ export function MessagesListHeader({
         <View style={[{minHeight: PFP_SIZE}, a.justify_center]}>
           <Layout.Header.BackButton />
         </View>
-        {convo ? (
-          moderation && blockInfo && profile && !isGroupChat ? (
-            <ProfileHeaderReady
-              convo={convo}
-              profile={profile}
-              moderation={moderation}
-              blockInfo={blockInfo}
-            />
+        {convo && moderationOpts ? (
+          convo.kind === 'direct' ? (
+            <ProfileHeaderReady convo={convo} moderationOpts={moderationOpts} />
           ) : (
-            <GroupHeaderReady
-              convo={convo}
-              profile={profile}
-              moderation={moderation}
-            />
+            <GroupHeaderReady convo={convo} />
           )
         ) : (
           <>
@@ -108,20 +78,27 @@ export function MessagesListHeader({
 
 function ProfileHeaderReady({
   convo,
-  profile,
-  moderation,
-  blockInfo,
+  moderationOpts,
 }: {
-  convo: ConvoWithDetails
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
-  moderation: ModerationDecision
-  blockInfo: {
-    listBlocks: ModerationCause[]
-    userBlock?: ModerationCause
-  }
+  convo: Extract<ConvoWithDetails, {kind: 'direct'}>
+  moderationOpts: ModerationOpts
 }) {
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
+  const profile = useProfileShadow(convo.primaryMember)
+
+  const moderation = moderateProfile(profile, moderationOpts)
+
+  const blockInfo = useMemo(() => {
+    const modui = moderation.ui('profileView')
+    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
+    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
+    const userBlock = blocks.find(alert => alert.source.type === 'user')
+    return {
+      listBlocks,
+      userBlock,
+    }
+  }, [moderation])
 
   const isDeletedAccount = profile?.handle === 'missing.invalid'
   const displayName = isDeletedAccount
@@ -171,28 +148,12 @@ function ProfileHeaderReady({
 
 function GroupHeaderReady({
   convo,
-  profile,
-  moderation,
 }: {
-  convo: ConvoWithDetails
-  profile?: Shadow<AppBskyActorDefs.ProfileViewDetailed>
-  moderation?: ModerationDecision | null
+  convo: Extract<ConvoWithDetails, {kind: 'group'}>
 }) {
   const {t: l} = useLingui()
 
   const navigation = useNavigation<NavigationProp>()
-
-  const groupInfo = convo.kind === 'group' ? convo.details : undefined
-
-  const isDeletedAccount = profile?.handle === 'missing.invalid'
-  const displayName = isDeletedAccount
-    ? l`Deleted Account`
-    : profile
-      ? createSanitizedDisplayName(profile, true, moderation?.ui('displayName'))
-      : undefined
-  const groupName =
-    groupInfo?.name ??
-    (displayName ? l`${displayName}’s group chat` : l`Group chat`)
 
   const handleNavigateToSettings = () => {
     navigation.navigate('MessagesConversationSettings', {
@@ -206,7 +167,7 @@ function GroupHeaderReady({
         <>
           <AvatarBubbles size="small" profiles={convo.members} />
           <Text style={[a.text_md, a.font_semi_bold]} numberOfLines={1}>
-            {groupName}
+            {convo.details.name}
           </Text>
         </>
       }
