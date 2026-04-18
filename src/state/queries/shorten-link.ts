@@ -1,3 +1,4 @@
+import {fetch} from '#/lib/fetch'
 import {logger} from '#/logger'
 
 export function useShortenLink() {

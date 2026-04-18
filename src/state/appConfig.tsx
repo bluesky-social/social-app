@@ -1,6 +1,7 @@
 import {createContext, useContext} from 'react'
 import {QueryClient, useQuery} from '@tanstack/react-query'
 
+import {fetch} from '#/lib/fetch'
 import {APP_CONFIG_URL} from '#/env'
 
 const qc = new QueryClient()

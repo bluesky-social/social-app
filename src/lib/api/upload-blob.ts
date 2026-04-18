@@ -1,6 +1,7 @@
 import {copyAsync} from 'expo-file-system/legacy'
 import {type BskyAgent, type ComAtprotoRepoUploadBlob} from '@atproto/api'
 
+import {fetch} from '#/lib/fetch'
 import {safeDeleteAsync} from '#/lib/media/manip'
 
 /**

@@ -13997,6 +13997,25 @@ react-native-keyboard-controller@^1.21.5:
   dependencies:
     react-native-is-edge-to-edge "^1.2.1"
 
+react-native-nitro-fetch@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-nitro-fetch/-/react-native-nitro-fetch-1.0.3.tgz#146608e22527a6a18b6c2b334a1dfefb9d527237"
+  integrity sha512-APWBw8g1ZyvkVZMkwqcjCpiuHlgHMmKrBXqgdYyJ/j4bPhfavnCx79BPfjBtxQ/ymp91Vm6ToHb+XDFZom7XaQ==
+  dependencies:
+    web-streams-polyfill "^4.2.0"
+
+react-native-nitro-modules@^0.35.4:
+  version "0.35.4"
+  resolved "https://registry.yarnpkg.com/react-native-nitro-modules/-/react-native-nitro-modules-0.35.4.tgz#eff7f3e1e279b44568850300e9789af3fc30facd"
+  integrity sha512-4qZa+1kgR/sPRNZv+UShxyArEPpovWxw76Dfd/DtCVtkQ92wOOxGIzdYvndprabd+t+r8zNYgYEPYE74gzkuVQ==
+
+react-native-nitro-text-decoder@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-nitro-text-decoder/-/react-native-nitro-text-decoder-0.1.0.tgz#8deec66eea86e82ac263c0f6c5a79aedef3a4b7c"
+  integrity sha512-waIw4X7fAHiG6rUUkU2KmkK0OzKjjoHXljM4HHL3gZFDZ0hfsBqD0Erz8hwS7yiW4PJBnL/h+x03xJK9KrvWQg==
+  dependencies:
+    web-streams-polyfill "^4.2.0"
+
 react-native-pager-view@6.8.0:
   version "6.8.0"
   resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-6.8.0.tgz#5bac05203d911bf9bf039d47db41b1313dbd1a7a"
@@ -16308,6 +16327,11 @@ wcwidth@^1.0.1:
   integrity sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg==
   dependencies:
     defaults "^1.0.3"
+
+web-streams-polyfill@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-4.2.0.tgz#93295e67af95889a1e044a6beff1366c82720650"
+  integrity sha512-0rYDzGOh9EZpig92umN5g5D/9A1Kff7k0/mzPSSCY8jEQeYkgRMoY7LhbXtUCWzLCMX0TUE9aoHkjFNB7D9pfA==
 
 webidl-conversions@^3.0.0:
   version "3.0.1"

@@ -3,6 +3,7 @@ import {getLocales} from 'expo-localization'
 import {keepPreviousData, useInfiniteQuery} from '@tanstack/react-query'
 
 import {GIF_KLIPY_FEATURED, GIF_KLIPY_SEARCH} from '#/lib/constants'
+import {fetch} from '#/lib/fetch'
 import {logger} from '#/logger'
 import {type Gif} from '#/state/queries/tenor'
 
