@@ -75,6 +75,7 @@ import {BookmarksScreen} from '#/screens/Bookmarks'
 import {SharedPreferencesTesterScreen} from '#/screens/E2E/SharedPreferencesTesterScreen'
 import {FindContactsFlowScreen} from '#/screens/FindContactsFlowScreen'
 import HashtagScreen from '#/screens/Hashtag'
+import {LightboxScreen} from '#/screens/Lightbox'
 import {LogScreen} from '#/screens/Log'
 import {MessagesScreen} from '#/screens/Messages/ChatList'
 import {MessagesConversationScreen} from '#/screens/Messages/Conversation'
@@ -644,6 +645,20 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           gestureEnabled: false,
         }}
       />
+      {IS_NATIVE && (
+        <Stack.Screen
+          name="Lightbox"
+          getComponent={() => LightboxScreen}
+          options={{
+            headerShown: false,
+            presentation: 'transparentModal',
+            animation: 'none',
+            orientation: 'all',
+            gestureEnabled: false,
+            contentStyle: {backgroundColor: 'transparent'},
+          }}
+        />
+      )}
     </>
   )
 }

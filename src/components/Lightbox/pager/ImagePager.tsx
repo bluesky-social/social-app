@@ -32,7 +32,6 @@ import Animated, {
   withSpring,
   type WithSpringConfig,
 } from 'react-native-reanimated'
-import * as ScreenOrientation from 'expo-screen-orientation'
 
 import {type Dimensions} from '#/lib/media/types'
 import {useTheme} from '#/alf'
@@ -51,7 +50,6 @@ import ImageItem from './ImageItem/ImageItem'
 
 type Rect = {x: number; y: number; width: number; height: number}
 
-const PORTRAIT_UP = ScreenOrientation.OrientationLock.PORTRAIT_UP
 const PIXEL_RATIO = PixelRatio.get()
 
 const SLOW_SPRING: WithSpringConfig = {
@@ -80,11 +78,13 @@ export default function ImageViewRoot({
   onRequestClose,
   onPressSave,
   onPressShare,
+  onAnimationEnd,
 }: {
   lightbox: Lightbox | null
   onRequestClose: () => void
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
+  onAnimationEnd?: () => void
 }) {
   'use no memo'
   const ref = useAnimatedRef<View>()
@@ -136,27 +136,14 @@ export default function ImageViewRoot({
       'worklet'
       thumbRects.set({})
     })()
-  }, [thumbRects])
+    onAnimationEnd?.()
+  }, [thumbRects, onAnimationEnd])
 
   useAnimatedReaction(
     () => openProgress.get() === 0,
     (isGone, wasGone) => {
       if (isGone && !wasGone) {
         runOnJS(onFullyClosed)()
-      }
-    },
-  )
-
-  // Delay the unlock until after we've finished the scale up animation.
-  // It's complicated to do the same for locking it back so we don't attempt that.
-  useAnimatedReaction(
-    () => openProgress.get() === 1,
-    (isOpen, wasOpen) => {
-      if (isOpen && !wasOpen) {
-        runOnJS(ScreenOrientation.unlockAsync)()
-      } else if (!isOpen && wasOpen) {
-        // default is PORTRAIT_UP - set via config plugin in app.config.js -sfn
-        runOnJS(ScreenOrientation.lockAsync)(PORTRAIT_UP)
       }
     },
   )

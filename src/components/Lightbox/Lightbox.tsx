@@ -1,26 +1,7 @@
-import {useCallback} from 'react'
-
-import {shareImageModal} from '#/lib/media/manip'
-import {useSaveImageToMediaLibrary} from '#/lib/media/save-image'
-import ImageView from '#/components/Lightbox/pager/ImagePager'
-import {useLightbox, useLightboxControls} from '#/components/Lightbox/state'
-
+// On native the lightbox is presented as a transparentModal screen
+// (see src/screens/Lightbox/index.tsx) so that react-native-screens can
+// allow per-screen orientation. The shell-level <Lightbox /> therefore
+// renders nothing on native — the route handles mounting the viewer.
 export function Lightbox() {
-  const {activeLightbox} = useLightbox()
-  const {closeLightbox} = useLightboxControls()
-
-  const onClose = useCallback(() => {
-    closeLightbox()
-  }, [closeLightbox])
-
-  const saveImageToAlbum = useSaveImageToMediaLibrary()
-
-  return (
-    <ImageView
-      lightbox={activeLightbox}
-      onRequestClose={onClose}
-      onPressSave={saveImageToAlbum}
-      onPressShare={uri => shareImageModal({uri})}
-    />
-  )
+  return null
 }

@@ -10,6 +10,8 @@ import {nanoid} from 'nanoid/non-secure'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useHotkeysContext} from '#/lib/hotkeys'
 import {type ImageSource} from '#/components/Lightbox/types'
+import {IS_NATIVE} from '#/env'
+import {navigate} from '#/Navigation'
 
 export type Lightbox = {
   id: string
@@ -46,15 +48,24 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   }, [activeLightbox, disableScope, enableScope])
 
   const doOpen = useNonReactiveCallback((lightbox: Omit<Lightbox, 'id'>) => {
+    let didOpen = false
     setActiveLightbox(prevLightbox => {
       if (prevLightbox) {
         // Ignore duplicate open requests. If it's already open,
         // the user has to explicitly close the previous one first.
         return prevLightbox
       } else {
+        didOpen = true
         return {...lightbox, id: nanoid()}
       }
     })
+    // On native the lightbox is a transparentModal screen so that
+    // react-native-screens can allow per-screen orientation. State is set
+    // synchronously above, so the screen mounts with activeLightbox already
+    // populated and the opening spring runs from the first frame.
+    if (didOpen && IS_NATIVE) {
+      navigate('Lightbox')
+    }
   })
 
   const openLightbox = useNonReactiveCallback(
