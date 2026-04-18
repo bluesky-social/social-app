@@ -36,6 +36,11 @@ import {
 } from '#/state/messages/convo/types'
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type MessagesEventBusError} from '#/state/messages/events/types'
+import {
+  type ConvoWithDetails,
+  type GroupConvoMember,
+  parseConvoView,
+} from '#/components/dms/util'
 import {IS_NATIVE} from '#/env'
 import * as bsky from '#/types/bsky'
 
@@ -87,8 +92,8 @@ export class Convo {
 
   convoId: string
   data: {
-    convoView: ChatBskyConvoDefs.ConvoView | undefined
-    memberList: ChatBskyActorDefs.ProfileViewBasic[]
+    convoView?: ChatBskyConvoDefs.ConvoView
+    memberList?: ChatBskyActorDefs.ProfileViewBasic[]
   }
   snapshot: ConvoState | undefined
 
@@ -100,6 +105,7 @@ export class Convo {
     this.senderUserDid = params.agent.assertDid
     this.data = params.data
 
+    this.updateData = this.updateData.bind(this)
     this.subscribe = this.subscribe.bind(this)
     this.getSnapshot = this.getSnapshot.bind(this)
     this.sendMessage = this.sendMessage.bind(this)
@@ -115,6 +121,35 @@ export class Convo {
     this.getGroupInfo = this.getGroupInfo.bind(this)
     this.getPrimaryMember = this.getPrimaryMember.bind(this)
     this.updateGroupName = this.updateGroupName.bind(this)
+  }
+
+  get convo(): ConvoWithDetails | undefined {
+    if (!this.data.convoView) return undefined
+    const convoWithDetails = parseConvoView(
+      this.data.convoView,
+      this.senderUserDid,
+    )
+    if (!convoWithDetails) throw new Error('Unknown group kind')
+    if (convoWithDetails.kind === 'group' && this.data.memberList) {
+      return {
+        ...convoWithDetails,
+        members: this.data.memberList as GroupConvoMember[],
+      }
+    }
+    return convoWithDetails
+  }
+
+  updateData({convoView, memberList}: ConvoParams['data']) {
+    let changed = false
+    if (convoView && this.data.convoView !== convoView) {
+      this.data.convoView = convoView
+      changed = true
+    }
+    if (memberList && this.data.memberList !== memberList) {
+      this.data.memberList = memberList
+      changed = true
+    }
+    if (changed) this.commit()
   }
 
   private commit() {
@@ -149,9 +184,8 @@ export class Convo {
           items: [],
           convo: this.convo,
           error: undefined,
-          sender: this.sender,
-          recipients: this.recipients,
           isFetchingHistory: this.isFetchingHistory,
+          updateData: this.updateData,
           // Explicit null check since the value is initially undefined.
           hasAllHistory: this.oldestRev === null,
           deleteMessage: undefined,
@@ -160,9 +194,6 @@ export class Convo {
           markConvoAccepted: undefined,
           addReaction: undefined,
           removeReaction: undefined,
-          isGroup: this.isGroup,
-          getGroupInfo: this.getGroupInfo,
-          getPrimaryMember: this.getPrimaryMember,
         }
       }
       case ConvoStatus.Disabled:
@@ -174,9 +205,8 @@ export class Convo {
           items: this.getItems(),
           convo: this.convo!,
           error: undefined,
-          sender: this.sender!,
-          recipients: this.recipients!,
           isFetchingHistory: this.isFetchingHistory,
+          updateData: this.updateData,
           // Explicit null check since the value is initially undefined.
           hasAllHistory: this.oldestRev === null,
           deleteMessage: this.deleteMessage,
@@ -185,20 +215,16 @@ export class Convo {
           markConvoAccepted: this.markConvoAccepted,
           addReaction: this.addReaction,
           removeReaction: this.removeReaction,
-          isGroup: this.isGroup,
-          getGroupInfo: this.getGroupInfo,
-          getPrimaryMember: this.getPrimaryMember,
         }
       }
       case ConvoStatus.Error: {
         return {
           status: ConvoStatus.Error,
           items: [],
-          convo: undefined,
+          convo: this.convo,
           error: this.error!,
-          sender: undefined,
-          recipients: undefined,
           isFetchingHistory: false,
+          updateData: this.updateData,
           hasAllHistory: false,
           deleteMessage: undefined,
           sendMessage: undefined,
@@ -206,9 +232,6 @@ export class Convo {
           markConvoAccepted: undefined,
           addReaction: undefined,
           removeReaction: undefined,
-          isGroup: undefined,
-          getGroupInfo: undefined,
-          getPrimaryMember: undefined,
         }
       }
       default: {
@@ -217,9 +240,8 @@ export class Convo {
           items: [],
           convo: this.convo,
           error: undefined,
-          sender: this.sender,
-          recipients: this.recipients,
           isFetchingHistory: false,
+          updateData: this.updateData,
           // Explicit null check since the value is initially undefined.
           hasAllHistory: this.oldestRev === null,
           deleteMessage: undefined,
@@ -228,9 +250,6 @@ export class Convo {
           markConvoAccepted: undefined,
           addReaction: undefined,
           removeReaction: undefined,
-          isGroup: this.isGroup,
-          getGroupInfo: this.getGroupInfo,
-          getPrimaryMember: this.getPrimaryMember,
         }
       }
     }
@@ -465,20 +484,6 @@ export class Convo {
       this.fetchMessageHistoryError = undefined
       this.commit()
     }
-  }
-
-  /**
-   * Initialises the convo with placeholder data, if provided. We still refetch it before rendering the convo,
-   * but this allows us to render the convo header immediately.
-   */
-  private setupPlaceholderData(
-    data: NonNullable<ConvoParams['placeholderData']>,
-  ) {
-    this.convo = data.convo
-    this.sender = data.convo.members.find(m => m.did === this.senderUserDid)
-    this.recipients = data.convo.members.filter(
-      m => m.did !== this.senderUserDid,
-    )
   }
 
   private async setup() {
