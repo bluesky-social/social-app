@@ -10,6 +10,8 @@ Pod::Spec.new do |s|
   s.static_framework = true
 
   s.dependency 'ExpoModulesCore'
+  # Must match the version pinned by expo-image so we share SDImageCache.shared.
+  s.dependency 'SDWebImage', '~> 5.21.0'
 
   s.pod_target_xcconfig = {
     'DEFINES_MODULE' => 'YES',

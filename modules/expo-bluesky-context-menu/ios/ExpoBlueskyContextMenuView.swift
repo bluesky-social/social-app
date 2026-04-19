@@ -59,12 +59,11 @@ class ExpoBlueskyContextMenuView: ExpoView, UIContextMenuInteractionDelegate {
     return makeTargetedPreview()
   }
 
-  func contextMenuInteraction(
-    _ interaction: UIContextMenuInteraction,
-    previewForDismissingMenuWithConfiguration configuration: UIContextMenuConfiguration
-  ) -> UITargetedPreview? {
-    return makeTargetedPreview()
-  }
+  // NOTE: Intentionally not implementing
+  // `previewForDismissingMenuWithConfiguration`. iOS reverses the highlight
+  // animation by default, which interpolates size + position together. Supplying
+  // a separate dismiss preview tends to produce a two-stage animation on
+  // aspect-mismatched thumbnails (snap to original size, then translate).
 
   func contextMenuInteraction(
     _ interaction: UIContextMenuInteraction,

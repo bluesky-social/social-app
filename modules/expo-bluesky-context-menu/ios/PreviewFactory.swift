@@ -11,9 +11,15 @@ enum PreviewFactory {
     switch type {
     case "image":
       let uri = spec["uri"] as? String
+      let thumbUri = spec["thumbUri"] as? String
       let url = uri.flatMap(URL.init(string:))
+      let thumbURL = thumbUri.flatMap(URL.init(string:))
       let aspect = CGFloat((spec["aspectRatio"] as? Double) ?? 1)
-      return ImagePreviewController(imageURL: url, aspectRatio: aspect)
+      return ImagePreviewController(
+        imageURL: url,
+        thumbURL: thumbURL,
+        aspectRatio: aspect
+      )
     default:
       return nil
     }

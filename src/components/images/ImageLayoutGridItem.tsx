@@ -66,6 +66,7 @@ export function GalleryItem({
     <View style={a.flex_1} ref={containerRefs[index]} collapsable={false}>
       <ImageContextMenu
         fullsizeUri={image.fullsize}
+        thumbUri={image.thumb}
         aspectRatio={aspect}
         onPreviewPress={
           onPreviewPress ? () => onPreviewPress(index) : undefined

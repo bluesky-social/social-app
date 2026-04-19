@@ -20,6 +20,7 @@ import * as ContextMenu from '../../../../modules/expo-bluesky-context-menu'
  */
 export function ImageContextMenu({
   fullsizeUri,
+  thumbUri,
   aspectRatio,
   borderRadius,
   onPreviewPress,
@@ -27,6 +28,9 @@ export function ImageContextMenu({
   children,
 }: {
   fullsizeUri: string
+  /** Thumbnail URL. Used as an instant placeholder in the native preview
+   *  while the fullsize loads, so there's no black flash on first peek. */
+  thumbUri?: string
   /** width / height; defaults to 1 if missing. */
   aspectRatio: number | undefined
   borderRadius?: number
@@ -54,6 +58,7 @@ export function ImageContextMenu({
         preview={{
           type: 'image',
           uri: fullsizeUri,
+          thumbUri,
           aspectRatio: aspectRatio && aspectRatio > 0 ? aspectRatio : 1,
         }}
         borderRadius={borderRadius}

@@ -14,6 +14,10 @@ export type PreviewContent =
   | {
       type: 'image'
       uri: string
+      /** Thumb URL. When present, the native side paints it in as an instant
+       *  placeholder (reading from the shared SDWebImage cache) while the
+       *  fullsize loads — avoids the black flash on first peek. */
+      thumbUri?: string
       /** Aspect ratio as width / height. */
       aspectRatio: number
     }

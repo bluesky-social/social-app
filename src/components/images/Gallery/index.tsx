@@ -426,6 +426,7 @@ function GalleryImage({
       aria-label={image.alt || l`Image ${index + 1} of ${imageCount}`}>
       <ImageContextMenu
         fullsizeUri={image.fullsize}
+        thumbUri={image.thumb}
         aspectRatio={aspectRatio}
         borderRadius={tokens.borderRadius.md}
         onPreviewPress={onPreviewPress}>

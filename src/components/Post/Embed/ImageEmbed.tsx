@@ -80,6 +80,7 @@ export function ImageEmbed({
         <View style={[a.mt_sm, rest.style]}>
           <ImageContextMenu
             fullsizeUri={image.fullsize}
+            thumbUri={image.thumb}
             aspectRatio={aspect}
             borderRadius={tokens.borderRadius.md}
             onPreviewPress={() => onPreviewPress(0)}>
