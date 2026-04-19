@@ -8,6 +8,7 @@ import {Gallery} from '#/components/images/Gallery'
 import {ImageLayoutGrid} from '#/components/images/ImageLayoutGrid'
 import {useLightboxControls} from '#/components/Lightbox/state'
 import {type Dimensions} from '#/components/Lightbox/types'
+import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {useAnalytics} from '#/analytics'
 import {type EmbedType} from '#/types/bsky/post'
@@ -59,24 +60,49 @@ export function ImageEmbed({
 
     if (images.length === 1) {
       const image = images[0]
+      const aspect =
+        image.aspectRatio && image.aspectRatio.height > 0
+          ? image.aspectRatio.width / image.aspectRatio.height
+          : undefined
       return (
         <View style={[a.mt_sm, rest.style]}>
-          <AutoSizedImage
-            crop={
-              rest.viewContext === PostEmbedViewContext.ThreadHighlighted
-                ? 'none'
-                : rest.viewContext ===
-                    PostEmbedViewContext.FeedEmbedRecordWithMedia
-                  ? 'square'
-                  : 'constrained'
-            }
-            image={image}
-            onPress={(containerRef, dims) => onPress(0, [containerRef], [dims])}
-            onPressIn={() => onPressIn(0)}
-            hideBadge={
-              rest.viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
-            }
-          />
+          <ImageContextMenu
+            fullsizeUri={image.fullsize}
+            aspectRatio={aspect}
+            borderRadius={tokens.borderRadius.md}
+            onPreviewPress={() =>
+              openLightbox({
+                images: items.map(item => ({
+                  ...item,
+                  thumbRect: null,
+                  thumbRef: null,
+                  thumbDimensions: null,
+                  thumbBorderRadius: tokens.borderRadius.md,
+                  type: 'image',
+                })),
+                index: 0,
+              })
+            }>
+            <AutoSizedImage
+              crop={
+                rest.viewContext === PostEmbedViewContext.ThreadHighlighted
+                  ? 'none'
+                  : rest.viewContext ===
+                      PostEmbedViewContext.FeedEmbedRecordWithMedia
+                    ? 'square'
+                    : 'constrained'
+              }
+              image={image}
+              onPress={(containerRef, dims) =>
+                onPress(0, [containerRef], [dims])
+              }
+              onPressIn={() => onPressIn(0)}
+              hideBadge={
+                rest.viewContext ===
+                PostEmbedViewContext.FeedEmbedRecordWithMedia
+              }
+            />
+          </ImageContextMenu>
         </View>
       )
     }

@@ -1,0 +1,6 @@
+{
+  "platforms": ["ios", "android", "web"],
+  "ios": {
+    "modules": ["ExpoBlueskyContextMenuModule"]
+  }
+}
