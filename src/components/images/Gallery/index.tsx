@@ -53,7 +53,6 @@ interface GalleryProps {
     fetchedDims: (Dimensions | null)[],
   ) => void
   onPressIn?: (index: number) => void
-  onPreviewPress?: (index: number) => void
   viewContext?: PostEmbedViewContext
 }
 
@@ -97,7 +96,6 @@ export function Gallery({
   images,
   onPress,
   onPressIn,
-  onPreviewPress,
   viewContext,
 }: GalleryProps) {
   const {t: l} = useLingui()
@@ -267,6 +265,21 @@ export function Gallery({
           data={images}
           keyExtractor={(item, index) => item.thumb + index}
           renderItem={({item, index}) => {
+            const openLightboxAtIndex = onPress
+              ? () => {
+                  ax.metric('post:gallery:openLightbox', {
+                    fromImage: index + 1, // convert to 1-based index for easier analysis
+                    totalImages: images.length,
+                  })
+                  const refs: AnimatedRef<any>[] = []
+                  const dims: (Dimensions | null)[] = []
+                  for (let i = 0; i < images.length; i++) {
+                    refs.push(containerRefsRef.current.get(i)!)
+                    dims.push(thumbDimsRef.current.get(i) ?? null)
+                  }
+                  onPress(index, refs, dims)
+                }
+              : undefined
             return (
               <GalleryImage
                 hideBadges={hideBadges}
@@ -291,27 +304,9 @@ export function Gallery({
                 onThumbDims={(i, dims) => {
                   thumbDimsRef.current.set(i, dims)
                 }}
-                onPress={
-                  onPress
-                    ? () => {
-                        ax.metric('post:gallery:openLightbox', {
-                          fromImage: index + 1, // convert to 1-based index for easier analysis
-                          totalImages: images.length,
-                        })
-                        const refs: AnimatedRef<any>[] = []
-                        const dims: (Dimensions | null)[] = []
-                        for (let i = 0; i < images.length; i++) {
-                          refs.push(containerRefsRef.current.get(i)!)
-                          dims.push(thumbDimsRef.current.get(i) ?? null)
-                        }
-                        onPress(index, refs, dims)
-                      }
-                    : undefined
-                }
+                onPress={openLightboxAtIndex}
                 onPressIn={onPressIn ? () => onPressIn(index) : undefined}
-                onPreviewPress={
-                  onPreviewPress ? () => onPreviewPress(index) : undefined
-                }
+                onPreviewPress={openLightboxAtIndex}
               />
             )
           }}

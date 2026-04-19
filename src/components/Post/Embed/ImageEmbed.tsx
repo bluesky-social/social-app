@@ -1,3 +1,4 @@
+import {useRef} from 'react'
 import {InteractionManager, View} from 'react-native'
 import {type AnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
@@ -24,6 +25,11 @@ export function ImageEmbed({
   const {openLightbox} = useLightboxControls()
   const {images} = embed.view
   const galleryEnabled = ax.features.enabled(ax.features.PostGalleryEmbedEnable)
+
+  // Captured from AutoSizedImage so the peek-commit handler can reuse the same
+  // ref + dims that a tap would — keeps the lightbox's return animation intact.
+  const singleContainerRef = useRef<AnimatedRef<any> | null>(null)
+  const singleDimsRef = useRef<Dimensions | null>(null)
 
   if (images.length > 0) {
     const items = images.map(img => ({
@@ -57,18 +63,6 @@ export function ImageEmbed({
         )
       })
     }
-    const onPreviewPress = (index: number) =>
-      openLightbox({
-        images: items.map(item => ({
-          ...item,
-          thumbRect: null,
-          thumbRef: null,
-          thumbDimensions: null,
-          thumbBorderRadius: tokens.borderRadius.md,
-          type: 'image',
-        })),
-        index,
-      })
 
     if (images.length === 1) {
       const image = images[0]
@@ -76,6 +70,11 @@ export function ImageEmbed({
         image.aspectRatio && image.aspectRatio.height > 0
           ? image.aspectRatio.width / image.aspectRatio.height
           : undefined
+      const openFromSingle = () => {
+        if (singleContainerRef.current) {
+          onPress(0, [singleContainerRef.current], [singleDimsRef.current])
+        }
+      }
       return (
         <View style={[a.mt_sm, rest.style]}>
           <ImageContextMenu
@@ -83,7 +82,7 @@ export function ImageEmbed({
             thumbUri={image.thumb}
             aspectRatio={aspect}
             borderRadius={tokens.borderRadius.md}
-            onPreviewPress={() => onPreviewPress(0)}>
+            onPreviewPress={openFromSingle}>
             <AutoSizedImage
               crop={
                 rest.viewContext === PostEmbedViewContext.ThreadHighlighted
@@ -94,6 +93,12 @@ export function ImageEmbed({
                     : 'constrained'
               }
               image={image}
+              onContainerRef={ref => {
+                singleContainerRef.current = ref
+              }}
+              onDimsChange={dims => {
+                singleDimsRef.current = dims
+              }}
               onPress={(containerRef, dims) =>
                 onPress(0, [containerRef], [dims])
               }
@@ -115,7 +120,6 @@ export function ImageEmbed({
             images={images}
             onPress={onPress}
             onPressIn={onPressIn}
-            onPreviewPress={onPreviewPress}
             viewContext={rest.viewContext}
           />
         </View>
@@ -128,7 +132,6 @@ export function ImageEmbed({
           images={images}
           onPress={onPress}
           onPressIn={onPressIn}
-          onPreviewPress={onPreviewPress}
           viewContext={rest.viewContext}
         />
       </View>

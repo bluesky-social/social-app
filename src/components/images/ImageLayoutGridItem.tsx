@@ -27,8 +27,6 @@ interface Props {
   ) => void
   onLongPress?: EventFunction
   onPressIn?: EventFunction
-  /** Fired from the native iOS peek preview tap. */
-  onPreviewPress?: EventFunction
   imageStyle?: StyleProp<ImageStyle>
   viewContext?: PostEmbedViewContext
   insetBorderStyle?: StyleProp<ViewStyle>
@@ -43,7 +41,6 @@ export function GalleryItem({
   onPress,
   onPressIn,
   onLongPress,
-  onPreviewPress,
   viewContext,
   insetBorderStyle,
   containerRefs,
@@ -62,22 +59,23 @@ export function GalleryItem({
       ? image.aspectRatio.width / image.aspectRatio.height
       : undefined
 
+  // The tap handler and the peek-commit handler do the same thing: open the
+  // lightbox with this cell's ref + dims so the lightbox's return animation
+  // can target the original thumbnail.
+  const openLightboxAtIndex = onPress
+    ? () => onPress(index, containerRefs, thumbDimsRef.current.slice())
+    : undefined
+
   return (
     <View style={a.flex_1} ref={containerRefs[index]} collapsable={false}>
       <ImageContextMenu
         fullsizeUri={image.fullsize}
         thumbUri={image.thumb}
         aspectRatio={aspect}
-        onPreviewPress={
-          onPreviewPress ? () => onPreviewPress(index) : undefined
-        }
+        onPreviewPress={openLightboxAtIndex}
         style={a.flex_1}>
         <Pressable
-          onPress={
-            onPress
-              ? () => onPress(index, containerRefs, thumbDimsRef.current.slice())
-              : undefined
-          }
+          onPress={openLightboxAtIndex}
           onPressIn={onPressIn ? () => onPressIn(index) : undefined}
           onLongPress={onLongPress ? () => onLongPress(index) : undefined}
           android_ripple={{
