@@ -11,6 +11,7 @@ import {type Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useTheme} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {Text} from '#/components/Typography'
 
@@ -26,6 +27,8 @@ interface Props {
   ) => void
   onLongPress?: EventFunction
   onPressIn?: EventFunction
+  /** Fired from the native iOS peek preview tap. */
+  onPreviewPress?: EventFunction
   imageStyle?: StyleProp<ImageStyle>
   viewContext?: PostEmbedViewContext
   insetBorderStyle?: StyleProp<ViewStyle>
@@ -40,6 +43,7 @@ export function GalleryItem({
   onPress,
   onPressIn,
   onLongPress,
+  onPreviewPress,
   viewContext,
   insetBorderStyle,
   containerRefs,
@@ -52,46 +56,60 @@ export function GalleryItem({
   const hasAlt = !!image.alt
   const hideBadges =
     viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
+
+  const aspect =
+    image.aspectRatio && image.aspectRatio.height > 0
+      ? image.aspectRatio.width / image.aspectRatio.height
+      : undefined
+
   return (
     <View style={a.flex_1} ref={containerRefs[index]} collapsable={false}>
-      <Pressable
-        onPress={
-          onPress
-            ? () => onPress(index, containerRefs, thumbDimsRef.current.slice())
-            : undefined
+      <ImageContextMenu
+        fullsizeUri={image.fullsize}
+        aspectRatio={aspect}
+        onPreviewPress={
+          onPreviewPress ? () => onPreviewPress(index) : undefined
         }
-        onPressIn={onPressIn ? () => onPressIn(index) : undefined}
-        onLongPress={onLongPress ? () => onLongPress(index) : undefined}
-        android_ripple={{
-          color: utils.alpha(t.atoms.bg.backgroundColor, 0.2),
-          foreground: true,
-        }}
-        style={[
-          a.flex_1,
-          a.overflow_hidden,
-          t.atoms.bg_contrast_25,
-          imageStyle,
-        ]}
-        accessibilityRole="button"
-        accessibilityLabel={image.alt || _(msg`Image`)}
-        accessibilityHint="">
-        <Image
-          source={{uri: image.thumb}}
-          style={[a.flex_1]}
-          accessible={true}
-          accessibilityLabel={image.alt}
-          accessibilityHint=""
-          accessibilityIgnoresInvertColors
-          onLoad={e => {
-            thumbDimsRef.current[index] = {
-              width: e.source.width,
-              height: e.source.height,
-            }
+        style={a.flex_1}>
+        <Pressable
+          onPress={
+            onPress
+              ? () => onPress(index, containerRefs, thumbDimsRef.current.slice())
+              : undefined
+          }
+          onPressIn={onPressIn ? () => onPressIn(index) : undefined}
+          onLongPress={onLongPress ? () => onLongPress(index) : undefined}
+          android_ripple={{
+            color: utils.alpha(t.atoms.bg.backgroundColor, 0.2),
+            foreground: true,
           }}
-          loading="lazy"
-        />
-        <MediaInsetBorder style={insetBorderStyle} />
-      </Pressable>
+          style={[
+            a.flex_1,
+            a.overflow_hidden,
+            t.atoms.bg_contrast_25,
+            imageStyle,
+          ]}
+          accessibilityRole="button"
+          accessibilityLabel={image.alt || _(msg`Image`)}
+          accessibilityHint="">
+          <Image
+            source={{uri: image.thumb}}
+            style={[a.flex_1]}
+            accessible={true}
+            accessibilityLabel={image.alt}
+            accessibilityHint=""
+            accessibilityIgnoresInvertColors
+            onLoad={e => {
+              thumbDimsRef.current[index] = {
+                width: e.source.width,
+                height: e.source.height,
+              }
+            }}
+            loading="lazy"
+          />
+          <MediaInsetBorder style={insetBorderStyle} />
+        </Pressable>
+      </ImageContextMenu>
       {hasAlt && !hideBadges ? (
         <View
           accessible={false}

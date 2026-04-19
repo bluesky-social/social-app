@@ -57,6 +57,18 @@ export function ImageEmbed({
         )
       })
     }
+    const onPreviewPress = (index: number) =>
+      openLightbox({
+        images: items.map(item => ({
+          ...item,
+          thumbRect: null,
+          thumbRef: null,
+          thumbDimensions: null,
+          thumbBorderRadius: tokens.borderRadius.md,
+          type: 'image',
+        })),
+        index,
+      })
 
     if (images.length === 1) {
       const image = images[0]
@@ -70,19 +82,7 @@ export function ImageEmbed({
             fullsizeUri={image.fullsize}
             aspectRatio={aspect}
             borderRadius={tokens.borderRadius.md}
-            onPreviewPress={() =>
-              openLightbox({
-                images: items.map(item => ({
-                  ...item,
-                  thumbRect: null,
-                  thumbRef: null,
-                  thumbDimensions: null,
-                  thumbBorderRadius: tokens.borderRadius.md,
-                  type: 'image',
-                })),
-                index: 0,
-              })
-            }>
+            onPreviewPress={() => onPreviewPress(0)}>
             <AutoSizedImage
               crop={
                 rest.viewContext === PostEmbedViewContext.ThreadHighlighted
@@ -114,6 +114,7 @@ export function ImageEmbed({
             images={images}
             onPress={onPress}
             onPressIn={onPressIn}
+            onPreviewPress={onPreviewPress}
             viewContext={rest.viewContext}
           />
         </View>
@@ -126,6 +127,7 @@ export function ImageEmbed({
           images={images}
           onPress={onPress}
           onPressIn={onPressIn}
+          onPreviewPress={onPreviewPress}
           viewContext={rest.viewContext}
         />
       </View>

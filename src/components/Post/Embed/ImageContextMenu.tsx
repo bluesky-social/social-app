@@ -1,4 +1,5 @@
 import {type ReactNode} from 'react'
+import {type StyleProp, type ViewStyle} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -22,6 +23,7 @@ export function ImageContextMenu({
   aspectRatio,
   borderRadius,
   onPreviewPress,
+  style,
   children,
 }: {
   fullsizeUri: string
@@ -29,6 +31,7 @@ export function ImageContextMenu({
   aspectRatio: number | undefined
   borderRadius?: number
   onPreviewPress?: () => void
+  style?: StyleProp<ViewStyle>
   children: ReactNode
 }) {
   const {_} = useLingui()
@@ -46,7 +49,7 @@ export function ImageContextMenu({
   }
 
   return (
-    <ContextMenu.Root>
+    <ContextMenu.Root style={style}>
       <ContextMenu.Trigger
         preview={{
           type: 'image',

@@ -17,6 +17,7 @@ interface ImageLayoutGridProps {
   ) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
+  onPreviewPress?: (index: number) => void
   style?: StyleProp<ViewStyle>
   viewContext?: PostEmbedViewContext
 }
@@ -48,6 +49,7 @@ interface ImageLayoutGridInnerProps {
   ) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
+  onPreviewPress?: (index: number) => void
   viewContext?: PostEmbedViewContext
   gap: {gap: number}
 }
