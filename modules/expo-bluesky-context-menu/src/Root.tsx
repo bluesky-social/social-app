@@ -61,7 +61,7 @@ export function Root({children, style}: RootProps) {
     <NativeView
       preview={trigger.props.preview}
       menuItems={menuItems}
-      borderRadius={trigger.props.borderRadius ?? 0}
+      previewCornerRadius={trigger.props.borderRadius ?? 0}
       onItemPress={handleItemPress}
       onPreviewPress={handlePreviewPress}
       style={[style, trigger.props.style]}>

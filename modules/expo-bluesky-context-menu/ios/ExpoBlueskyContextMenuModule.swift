@@ -15,8 +15,9 @@ public class ExpoBlueskyContextMenuModule: Module {
         view.setMenuItems(value)
       }
 
-      Prop("borderRadius") { (view: ExpoBlueskyContextMenuView, value: Double) in
-        view.setBorderRadius(value)
+      Prop("previewCornerRadius") {
+        (view: ExpoBlueskyContextMenuView, value: Double) in
+        view.setPreviewCornerRadius(value)
       }
     }
   }

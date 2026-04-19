@@ -169,7 +169,7 @@ private struct Tokenizer {
 
   mutating func readNumber() -> CGFloat {
     skipSeparators()
-    var start = index
+    let start = index
     var sawDot = false
     var sawE = false
     while index < chars.count {

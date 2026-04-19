@@ -48,7 +48,8 @@ export type MenuItemIconSource = IconWithSvgMeta
 export type NativeViewProps = {
   preview?: PreviewContent
   menuItems: MenuItemSpec[]
-  borderRadius: number
+  /** Named distinctly from `borderRadius`, which RN owns as a style prop. */
+  previewCornerRadius: number
   onItemPress: (e: {nativeEvent: {id: string}}) => void
   onPreviewPress: (e: {nativeEvent: {}}) => void
   style?: StyleProp<ViewStyle>

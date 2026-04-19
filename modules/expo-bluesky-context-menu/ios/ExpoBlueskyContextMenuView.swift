@@ -2,20 +2,19 @@ import ExpoModulesCore
 import UIKit
 
 /// Native view that hosts the children and attaches a
-/// `UIContextMenuInteraction`. Two JS-shipped props drive behaviour:
-/// - `preview`:  discriminated union describing what to show during peek
+/// `UIContextMenuInteraction`. JS-shipped props drive behaviour:
+/// - `preview`: discriminated union describing what to show during peek
 /// - `menuItems`: array of menu item specs (see `MenuBuilder`)
-/// - `borderRadius`: used for the targeted preview's visible path so the lift
-///   animation matches the thumbnail's clipping
+/// - `previewCornerRadius`: used for the targeted preview's visible path so the
+///   lift animation matches the thumbnail's clipping. (Named distinctly from
+///   the RN-owned `borderRadius` style prop on UIView.)
 class ExpoBlueskyContextMenuView: ExpoView, UIContextMenuInteractionDelegate {
   private var preview: [String: Any]?
   private var menuItems: [[String: Any]] = []
-  private var borderRadius: CGFloat = 0
+  private var previewCornerRadius: CGFloat = 0
 
   private let onItemPress = EventDispatcher()
   private let onPreviewPress = EventDispatcher()
-
-  private var pendingCommitId: String?
 
   required init(appContext: AppContext? = nil) {
     super.init(appContext: appContext)
@@ -25,7 +24,9 @@ class ExpoBlueskyContextMenuView: ExpoView, UIContextMenuInteractionDelegate {
 
   func setPreview(_ value: [String: Any]?) { self.preview = value }
   func setMenuItems(_ value: [[String: Any]]) { self.menuItems = value }
-  func setBorderRadius(_ value: Double) { self.borderRadius = CGFloat(value) }
+  func setPreviewCornerRadius(_ value: Double) {
+    self.previewCornerRadius = CGFloat(value)
+  }
 
   // MARK: - UIContextMenuInteractionDelegate
 
@@ -83,10 +84,10 @@ class ExpoBlueskyContextMenuView: ExpoView, UIContextMenuInteractionDelegate {
   private func makeTargetedPreview() -> UITargetedPreview {
     let parameters = UIPreviewParameters()
     parameters.backgroundColor = .clear
-    if borderRadius > 0 {
+    if previewCornerRadius > 0 {
       parameters.visiblePath = UIBezierPath(
         roundedRect: self.bounds,
-        cornerRadius: borderRadius
+        cornerRadius: previewCornerRadius
       )
     }
     return UITargetedPreview(view: self, parameters: parameters)
