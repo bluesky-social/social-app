@@ -28,48 +28,37 @@ let SystemMessageItem = ({
   if (ChatBskyConvoDefs.isSystemMessageDataAddMember(data)) {
     Icon = ArrowBoxLeftIcon
     message = l`${createSanitizedDisplayName(data.member)} added to the group`
-  }
-  if (ChatBskyConvoDefs.isSystemMessageDataRemoveMember(data)) {
+  } else if (ChatBskyConvoDefs.isSystemMessageDataRemoveMember(data)) {
     Icon = ArrowBoxLeftIcon
     message = l`${createSanitizedDisplayName(data.member)} removed from the group`
-  }
-  if (ChatBskyConvoDefs.isSystemMessageDataMemberJoin(data)) {
+  } else if (ChatBskyConvoDefs.isSystemMessageDataMemberJoin(data)) {
     Icon = ArrowBoxLeftIcon
     message = l`${createSanitizedDisplayName(data.member)} joined the group`
-  }
-  if (ChatBskyConvoDefs.isSystemMessageDataMemberLeave(data)) {
+  } else if (ChatBskyConvoDefs.isSystemMessageDataMemberLeave(data)) {
     Icon = ArrowBoxLeftIcon
     message = l`${createSanitizedDisplayName(data.member)} left the group`
-  }
-  if (ChatBskyConvoDefs.isSystemMessageDataLockConvo(data)) {
+  } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvo(data)) {
     Icon = LockIcon
     message = l`Chat locked`
-  }
-  if (ChatBskyConvoDefs.isSystemMessageDataUnlockConvo(data)) {
+  } else if (ChatBskyConvoDefs.isSystemMessageDataUnlockConvo(data)) {
     Icon = LockIcon
     message = l`Chat unlocked`
-  }
-  if (ChatBskyConvoDefs.isSystemMessageDataLockConvoPermanently(data)) {
+  } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvoPermanently(data)) {
     Icon = LockIcon
     message = l`Chat locked permanently`
-  }
-  if (ChatBskyConvoDefs.isSystemMessageDataEditGroup(data)) {
+  } else if (ChatBskyConvoDefs.isSystemMessageDataEditGroup(data)) {
     Icon = PencilIcon
     message = l`Chat title changed to ${data.newName}`
-  }
-  if (ChatBskyConvoDefs.isSystemMessageDataCreateJoinLink(data)) {
+  } else if (ChatBskyConvoDefs.isSystemMessageDataCreateJoinLink(data)) {
     Icon = ChainLinkIcon
     message = l`Invite link created`
-  }
-  if (ChatBskyConvoDefs.isSystemMessageDataEditJoinLink(data)) {
+  } else if (ChatBskyConvoDefs.isSystemMessageDataEditJoinLink(data)) {
     Icon = ChainLinkIcon
     message = l`Invite link edited`
-  }
-  if (ChatBskyConvoDefs.isSystemMessageDataEnableJoinLink(data)) {
+  } else if (ChatBskyConvoDefs.isSystemMessageDataEnableJoinLink(data)) {
     Icon = ChainLinkIcon
     message = l`Invite link enabled`
-  }
-  if (ChatBskyConvoDefs.isSystemMessageDataDisableJoinLink(data)) {
+  } else if (ChatBskyConvoDefs.isSystemMessageDataDisableJoinLink(data)) {
     Icon = ChainLinkIcon
     message = l`Invite link disabled`
   }
