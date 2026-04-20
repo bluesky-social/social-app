@@ -22,6 +22,7 @@ import {
   PUBLIC_BSKY_SERVICE,
   TIMELINE_SAVED_FEED,
 } from '#/lib/constants'
+import {fetch} from '#/lib/fetch'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {snoozeBirthdateUpdateAllowedForDid} from '#/state/birthdate'
@@ -360,7 +361,6 @@ export class Agent extends BaseAgent {
 // WARN: In the factories above, we _manually set a proxy header_ for the agent after we do whatever it is we are supposed to do.
 // Ideally, we wouldn't be doing this. However, since there is so much logic that requires making calls to the PDS right now, it
 // feels safer to just let those run as-is and set the header afterward.
-let realFetch = globalThis.fetch
 class BskyAppAgent extends BskyAgent {
   persistSessionHandler: ((event: AtpSessionEvent) => void) | undefined =
     undefined
@@ -371,7 +371,7 @@ class BskyAppAgent extends BskyAgent {
       async fetch(...args) {
         let success = false
         try {
-          const result = await realFetch(...args)
+          const result = await fetch(...args)
           success = true
           return result
         } catch (e) {

@@ -1,4 +1,5 @@
 import {onAppStateChange} from '#/lib/appState'
+import {fetch} from '#/lib/fetch'
 import {isNetworkError} from '#/lib/strings/errors'
 import {Logger} from '#/logger'
 import * as env from '#/env'

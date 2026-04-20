@@ -3,6 +3,7 @@ import {getLocales} from 'expo-localization'
 import {keepPreviousData, useInfiniteQuery} from '@tanstack/react-query'
 
 import {GIF_FEATURED, GIF_SEARCH} from '#/lib/constants'
+import {fetch} from '#/lib/fetch'
 import {logger} from '#/logger'
 
 export const RQKEY_ROOT = 'gif-service'

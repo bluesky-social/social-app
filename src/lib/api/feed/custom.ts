@@ -5,6 +5,7 @@ import {
   jsonStringToLex,
 } from '@atproto/api'
 
+import {fetch} from '#/lib/fetch'
 import {
   getAppLanguageAsContentLanguage,
   getContentLanguages,

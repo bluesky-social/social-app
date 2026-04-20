@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react'
 import {EventEmitter} from 'eventemitter3'
 
 import {networkRetry} from '#/lib/async/retry'
+import {fetch} from '#/lib/fetch'
 import {
   FALLBACK_GEOLOCATION_SERVICE_RESPONSE,
   GEOLOCATION_SERVICE_URL,

@@ -3,6 +3,7 @@ import {hasMutedWord} from '@atproto/api'
 import {QueryClient, useQuery} from '@tanstack/react-query'
 
 import {useOnAppStateChange} from '#/lib/appState'
+import {fetch} from '#/lib/fetch'
 import {useIsBskyTeam} from '#/lib/hooks/useIsBskyTeam'
 import {
   convertBskyAppUrlIfNeeded,
