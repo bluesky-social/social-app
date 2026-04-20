@@ -80,7 +80,14 @@ let SystemMessageItem = ({
 
   return (
     <View
-      style={[a.w_full, a.flex_row, a.align_center, a.justify_center, a.px_md]}>
+      style={[
+        a.w_full,
+        a.flex_row,
+        a.align_center,
+        a.justify_center,
+        a.px_md,
+        a.mt_md,
+      ]}>
       {Icon ? (
         <Icon size="sm" style={[a.mr_2xs, t.atoms.text_contrast_medium]} />
       ) : null}

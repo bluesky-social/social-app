@@ -371,7 +371,7 @@ export function MessagesList({
     })
   }, [flatListRef])
 
-  const renderItem = ({item, index}: {item: ConvoItem; index: number}) => {
+  const renderItem = ({item}: {item: ConvoItem}) => {
     if (item.type === 'message' || item.type === 'pending-message') {
       return (
         <MessageItem
@@ -385,12 +385,7 @@ export function MessagesList({
     } else if (item.type === 'deleted-message') {
       return <Text>Deleted message</Text>
     } else if (item.type === 'system-message') {
-      const hasPrev = index > 0
-      return (
-        <View style={[hasPrev && a.mt_md]}>
-          <SystemMessageItem item={item} />
-        </View>
-      )
+      return <SystemMessageItem item={item} />
     } else if (item.type === 'error') {
       return <MessageListError item={item} />
     }
