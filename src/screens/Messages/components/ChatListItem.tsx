@@ -265,6 +265,7 @@ function BaseChatItem({
 
       let latestReportableMessage: ChatBskyConvoDefs.MessageView | undefined
 
+      // Message
       if (ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
         const isFromMe = convo.lastMessage.sender?.did === currentAccount?.did
 
@@ -310,6 +311,8 @@ function BaseChatItem({
 
         lastMessageSentAt = convo.lastMessage.sentAt
       }
+
+      // Deleted message
       if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
         lastMessageSentAt = convo.lastMessage.sentAt
 
@@ -318,6 +321,7 @@ function BaseChatItem({
           : l`Message deleted`
       }
 
+      // Reaction
       if (ChatBskyConvoDefs.isMessageAndReactionView(convo.lastReaction)) {
         if (
           !lastMessageSentAt ||
@@ -359,6 +363,93 @@ function BaseChatItem({
               }`
             }
           }
+        }
+      }
+
+      // System message
+      if (ChatBskyConvoDefs.isSystemMessageView(convo.lastMessage)) {
+        if (
+          ChatBskyConvoDefs.isSystemMessageDataAddMember(convo.lastMessage.data)
+        ) {
+          const {member} = convo.lastMessage.data
+          lastMessage = l`${createSanitizedDisplayName(member)} added to the group`
+        }
+        if (
+          ChatBskyConvoDefs.isSystemMessageDataRemoveMember(
+            convo.lastMessage.data,
+          )
+        ) {
+          const {member} = convo.lastMessage.data
+          lastMessage = l`${createSanitizedDisplayName(member)} removed from the group`
+        }
+        if (
+          ChatBskyConvoDefs.isSystemMessageDataMemberJoin(
+            convo.lastMessage.data,
+          )
+        ) {
+          const {member} = convo.lastMessage.data
+          lastMessage = l`${createSanitizedDisplayName(member)} joined the group`
+        }
+        if (
+          ChatBskyConvoDefs.isSystemMessageDataMemberLeave(
+            convo.lastMessage.data,
+          )
+        ) {
+          const {member} = convo.lastMessage.data
+          lastMessage = l`${createSanitizedDisplayName(member)} left the group`
+        }
+        if (
+          ChatBskyConvoDefs.isSystemMessageDataLockConvo(convo.lastMessage.data)
+        ) {
+          lastMessage = l`Chat locked`
+        }
+        if (
+          ChatBskyConvoDefs.isSystemMessageDataUnlockConvo(
+            convo.lastMessage.data,
+          )
+        ) {
+          lastMessage = l`Chat unlocked`
+        }
+        if (
+          ChatBskyConvoDefs.isSystemMessageDataLockConvoPermanently(
+            convo.lastMessage.data,
+          )
+        ) {
+          lastMessage = l`Chat locked permanently`
+        }
+        if (
+          ChatBskyConvoDefs.isSystemMessageDataEditGroup(convo.lastMessage.data)
+        ) {
+          const {newName} = convo.lastMessage.data
+          lastMessage = l`Chat title changed to ${newName}`
+        }
+        if (
+          ChatBskyConvoDefs.isSystemMessageDataCreateJoinLink(
+            convo.lastMessage.data,
+          )
+        ) {
+          lastMessage = l`Invite link created`
+        }
+        if (
+          ChatBskyConvoDefs.isSystemMessageDataEditJoinLink(
+            convo.lastMessage.data,
+          )
+        ) {
+          lastMessage = l`Invite link edited`
+        }
+        if (
+          ChatBskyConvoDefs.isSystemMessageDataEnableJoinLink(
+            convo.lastMessage.data,
+          )
+        ) {
+          lastMessage = l`Invite link enabled`
+        }
+        if (
+          ChatBskyConvoDefs.isSystemMessageDataDisableJoinLink(
+            convo.lastMessage.data,
+          )
+        ) {
+          lastMessage = l`Invite link disabled`
         }
       }
 

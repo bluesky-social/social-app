@@ -52,6 +52,37 @@ export function isConvoItemMessage(
   )
 }
 
+/**
+ * TODO This should return `ev.message` once `@atproto/api` supports it. - dsb
+ * Firehose events for system messages only carry
+ * `{rev, convoId, message: SystemMessageData*}` - no id or sentAt.
+ */
+function toSystemMessageView(
+  ev: ChatBskyConvoGetLog.OutputSchema['logs'][number],
+): ChatBskyConvoDefs.SystemMessageView | null {
+  const isSystem =
+    ChatBskyConvoDefs.isLogAddMember(ev) ||
+    ChatBskyConvoDefs.isLogRemoveMember(ev) ||
+    ChatBskyConvoDefs.isLogMemberJoin(ev) ||
+    ChatBskyConvoDefs.isLogMemberLeave(ev) ||
+    ChatBskyConvoDefs.isLogLockConvo(ev) ||
+    ChatBskyConvoDefs.isLogUnlockConvo(ev) ||
+    ChatBskyConvoDefs.isLogLockConvoPermanently(ev) ||
+    ChatBskyConvoDefs.isLogEditGroup(ev) ||
+    ChatBskyConvoDefs.isLogCreateJoinLink(ev) ||
+    ChatBskyConvoDefs.isLogEditJoinLink(ev) ||
+    ChatBskyConvoDefs.isLogEnableJoinLink(ev) ||
+    ChatBskyConvoDefs.isLogDisableJoinLink(ev)
+  if (!isSystem) return null
+  return {
+    $type: 'chat.bsky.convo.defs#systemMessageView',
+    id: ev.rev,
+    rev: ev.rev,
+    sentAt: new Date().toISOString(),
+    data: ev.message as ChatBskyConvoDefs.SystemMessageView['data'],
+  }
+}
+
 export class Convo {
   private id: string
 
@@ -67,11 +98,15 @@ export class Convo {
 
   private pastMessages: Map<
     string,
-    ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
+    | ChatBskyConvoDefs.MessageView
+    | ChatBskyConvoDefs.DeletedMessageView
+    | ChatBskyConvoDefs.SystemMessageView
   > = new Map()
   private newMessages: Map<
     string,
-    ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
+    | ChatBskyConvoDefs.MessageView
+    | ChatBskyConvoDefs.DeletedMessageView
+    | ChatBskyConvoDefs.SystemMessageView
   > = new Map()
   private pendingMessages: Map<
     string,
@@ -680,7 +715,8 @@ export class Convo {
       for (const message of messages) {
         if (
           ChatBskyConvoDefs.isMessageView(message) ||
-          ChatBskyConvoDefs.isDeletedMessageView(message)
+          ChatBskyConvoDefs.isDeletedMessageView(message) ||
+          ChatBskyConvoDefs.isSystemMessageView(message)
         ) {
           /*
            * If this message is already in new messages, it was added by the
@@ -830,6 +866,12 @@ export class Convo {
             }
             if (this.newMessages.has(ev.message.id)) {
               this.newMessages.set(ev.message.id, ev.message)
+              needsCommit = true
+            }
+          } else {
+            const systemView = toSystemMessageView(ev)
+            if (systemView) {
+              this.newMessages.set(systemView.id, systemView)
               needsCommit = true
             }
           }
@@ -1119,6 +1161,12 @@ export class Convo {
           nextMessage: null,
           prevMessage: null,
         })
+      } else if (ChatBskyConvoDefs.isSystemMessageView(m)) {
+        items.unshift({
+          type: 'system-message',
+          key: m.id,
+          message: m,
+        })
       }
     })
 
@@ -1149,6 +1197,12 @@ export class Convo {
           message: m,
           nextMessage: null,
           prevMessage: null,
+        })
+      } else if (ChatBskyConvoDefs.isSystemMessageView(m)) {
+        items.push({
+          type: 'system-message',
+          key: m.id,
+          message: m,
         })
       }
     })

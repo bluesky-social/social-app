@@ -58,6 +58,7 @@ import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {DateDividerToggleProvider} from '#/components/dms/DateDividerToggle'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
+import {SystemMessageItem} from '#/components/dms/SytemMessageItem'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -370,7 +371,7 @@ export function MessagesList({
     })
   }, [flatListRef])
 
-  const renderItem = ({item}: {item: ConvoItem}) => {
+  const renderItem = ({item, index}: {item: ConvoItem; index: number}) => {
     if (item.type === 'message' || item.type === 'pending-message') {
       return (
         <MessageItem
@@ -383,6 +384,18 @@ export function MessagesList({
       )
     } else if (item.type === 'deleted-message') {
       return <Text>Deleted message</Text>
+    } else if (item.type === 'system-message') {
+      const hasPrev = index > 0
+      const next = convoState.items[index + 1]
+      const nextIsBubble =
+        next?.type === 'message' ||
+        next?.type === 'pending-message' ||
+        next?.type === 'deleted-message'
+      return (
+        <View style={[hasPrev && a.mt_md, nextIsBubble && a.mb_xs]}>
+          <SystemMessageItem item={item} />
+        </View>
+      )
     } else if (item.type === 'error') {
       return <MessageListError item={item} />
     }
