@@ -477,7 +477,19 @@ let MessageItem = ({
                     style={[
                       a.text_md,
                       isFromSelf && {color: t.palette.white},
-                      isOnlyEmoji(message.text) && [a.mt_2xs, a.leading_tight],
+                      // Emoji-only: add top leading to avoid clipping the
+                      // glyph, then pull the bottom up by the same amount so
+                      // the glyph bottom-aligns with the avatar instead of
+                      // sitting above its line-box baseline.
+                      isOnlyEmoji(message.text) && [
+                        a.leading_tight,
+                        // Visually align bottom of the emoji with the avatar
+                        !isFromSelf &&
+                          platform({
+                            android: {marginTop: a.mt_2xs.marginTop},
+                            default: {marginBottom: -a.mb_sm.marginBottom},
+                          }),
+                      ],
                     ]}
                     interactiveStyle={a.underline}
                     enableTags
