@@ -10,16 +10,19 @@ import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {AddMembersFlow} from '#/components/dms/AddMembersFlow'
+import {parseConvoView} from '#/components/dms/util'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {InviteLinkDialog} from './InviteLinkDialog'
 
 export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
   const t = useTheme()
   const {t: l} = useLingui()
 
   const addMembersControl = Dialog.useDialogControl()
+  const inviteLinkControl = Dialog.useDialogControl()
 
   const {currentAccount} = useSession()
 
@@ -30,12 +33,21 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
       Toast.show(l`Failed to add members`, {type: 'error'})
     },
   })
+  const convo = convoState.convo
+    ? parseConvoView(convoState.convo, currentAccount?.did)
+    : null
+  const groupConvo = convo?.kind === 'group' ? convo : null
+  // TODO Enable this once the feature is working end-to-end. -dsb
+  // const joinLink = groupConvo?.details.joinLink
+  const isJoinLinkEnabled = false
+  //   (isOwner && groupConvo) ||
+  //   (!isOwner && groupConvo && joinLink?.enabledStatus === 'enabled')
 
   const isOwner =
     currentAccount?.did == null
       ? false
       : convoState.getPrimaryMember?.()?.did === currentAccount.did
-  // TODO Get this from @api/atproto - dsb
+  // TODO Get this from @api/atproto -dsb
   const isLinkEnabled = false
 
   const groupName = convoState.getGroupInfo?.()?.name
@@ -113,12 +125,16 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
                 </ButtonText>
               </Button>
             ) : null}
-            {isOwner || isLinkEnabled ? (
+            {isJoinLinkEnabled ? (
               <Button
                 color="secondary"
                 size="small"
-                label={l`Click here to view or create an invite link for this group chat`}
-                onPress={() => {}}>
+                label={
+                  isOwner
+                    ? l`Click here to create or manage an invite link for this group chat`
+                    : l`Click here to view the invite link for this group chat`
+                }
+                onPress={inviteLinkControl.open}>
                 <ButtonIcon icon={ChainLinkIcon} />
                 <ButtonText>
                   <Trans>Invite link</Trans>
@@ -128,6 +144,13 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
           </View>
         ) : null}
       </View>
+      {groupConvo ? (
+        <InviteLinkDialog
+          isOwner={isOwner}
+          convo={groupConvo}
+          control={inviteLinkControl}
+        />
+      ) : null}
       <Dialog.Outer
         control={addMembersControl}
         testID="addChatMembersDialog"

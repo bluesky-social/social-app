@@ -1,4 +1,7 @@
-import {ChatBskyConvoDefs, type ChatBskyGroupEditGroup} from '@atproto/api'
+import {
+  ChatBskyConvoDefs,
+  type ChatBskyGroupDisableJoinLink,
+} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
@@ -9,13 +12,13 @@ import {
   updateConvoOptimistic,
 } from './utils/convo-cache'
 
-export function useEditGroupChatName(
+export function useDisableJoinLink(
   convoId: string | undefined,
   {
     onSuccess,
     onError,
   }: {
-    onSuccess?: (data: ChatBskyGroupEditGroup.OutputSchema) => void
+    onSuccess?: (data: ChatBskyGroupDisableJoinLink.OutputSchema) => void
     onError?: (error: Error) => void
   },
 ) {
@@ -23,25 +26,39 @@ export function useEditGroupChatName(
   const agent = useAgent()
 
   return useMutation({
-    mutationFn: async ({name: groupName}: {name: string}) => {
+    mutationFn: async () => {
       if (!convoId) throw new Error('No convoId provided')
-      const {data} = await agent.chat.bsky.group.editGroup(
-        {convoId, name: groupName},
+      const {data} = await agent.chat.bsky.group.disableJoinLink(
+        {convoId},
         {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
       )
       return data
     },
-    onMutate: ({name: groupName}) => {
+    onMutate: () => {
       if (!convoId) return
       return updateConvoOptimistic(queryClient, convoId, prev => {
-        if (!ChatBskyConvoDefs.isGroupConvo(prev.kind)) return undefined
+        if (!ChatBskyConvoDefs.isGroupConvo(prev.kind) || !prev.kind.joinLink) {
+          return undefined
+        }
         return {
           ...prev,
-          kind: {...prev.kind, name: groupName},
+          kind: {
+            ...prev.kind,
+            joinLink: {...prev.kind.joinLink, enabledStatus: 'disabled'},
+          },
         }
       })
     },
     onSuccess: data => {
+      if (convoId) {
+        updateConvoOptimistic(queryClient, convoId, prev => {
+          if (!ChatBskyConvoDefs.isGroupConvo(prev.kind)) return undefined
+          return {
+            ...prev,
+            kind: {...prev.kind, joinLink: data.joinLink},
+          }
+        })
+      }
       onSuccess?.(data)
     },
     onError: (e, _variables, context) => {
