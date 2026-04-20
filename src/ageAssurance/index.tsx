@@ -94,7 +94,7 @@ function InnerProvider({children}: {children: React.ReactNode}) {
         maybeRestrictChatSettings({agent})
       }
     },
-    [agent, data, getAndRegisterPushToken],
+    [agent, getAndRegisterPushToken],
   )
   useOnAgeAssuranceAccessUpdate(handleAccessUpdate)
 
