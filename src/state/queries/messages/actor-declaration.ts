@@ -5,10 +5,8 @@ import {
 } from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
-import {setOtherRequiredDataActorDeclarationCache} from '#/ageAssurance/data'
 import {RQKEY as PROFILE_RKEY} from '../profile'
 
 export function useUpdateActorDeclaration({
@@ -83,39 +81,6 @@ export function useDeleteActorDeclaration() {
       return result
     },
   })
-}
-
-/**
- * Helper to update the chat settings record.
- */
-export async function restrictChatSettings({
-  agent,
-  did,
-}: {
-  agent: AtpAgent
-  did: string
-}): Promise<void> {
-  try {
-    const record: ChatBskyActorDeclaration.Main = {
-      $type: 'chat.bsky.actor.declaration',
-      allowIncoming: 'none',
-    }
-    await networkRetry(3, () =>
-      agent.com.atproto.repo.putRecord({
-        repo: did,
-        collection: 'chat.bsky.actor.declaration',
-        rkey: 'self',
-        record,
-      }),
-    )
-    // important, update local cache to avoid running this again
-    setOtherRequiredDataActorDeclarationCache({
-      did,
-      actorDeclaration: record,
-    })
-  } catch {
-    logger.error(`restrictChatSettings: failed to set chat declaration`)
-  }
 }
 
 export async function fetchActorDeclarationRecord({

@@ -24,7 +24,7 @@ import {
 } from '#/lib/constants'
 import {logger} from '#/logger'
 import {snoozeBirthdateUpdateAllowedForDid} from '#/state/birthdate'
-import {restrictChatSettings} from '#/state/queries/messages/actor-declaration'
+import {restrictChatSettings} from '#/state/queries/messages/restrictChatSettings'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
 import {
   prefetchAgeAssuranceData,

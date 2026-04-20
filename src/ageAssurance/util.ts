@@ -8,7 +8,7 @@ import {
 } from '@atproto/api'
 
 import {getAge} from '#/lib/strings/time'
-import {restrictChatSettings} from '#/state/queries/messages/actor-declaration'
+import {restrictChatSettings} from '#/state/queries/messages/restrictChatSettings'
 import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
 import {
   getDidFromAgentSession,
