@@ -41,11 +41,14 @@ class BottomSheetView(
   private val screenHeight: Float =
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.VANILLA_ICE_CREAM) {
       // API 35+: edge-to-edge is mandatory, heightPixels is the full display
-      context.resources.displayMetrics.heightPixels.toFloat()
+      context.resources.displayMetrics.heightPixels
+        .toFloat()
     } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
       // API 30-34: heightPixels may exclude nav bar, use currentWindowMetrics
       val wm = context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
-      wm.currentWindowMetrics.bounds.height().toFloat()
+      wm.currentWindowMetrics.bounds
+        .height()
+        .toFloat()
     } else {
       // API < 30: currentWindowMetrics not available, use getRealSize
       // which includes system bars (heightPixels may exclude them)
@@ -166,6 +169,7 @@ class BottomSheetView(
     when {
       // Full height sheets
       contentHeight >= screenHeight -> 0.99f
+
       else -> this.clampRatio(this.getTargetHeight() / screenHeight)
     }
 
@@ -271,8 +275,9 @@ class BottomSheetView(
             }
             // Apply deferred layout update after gesture completes
             if (newState != BottomSheetBehavior.STATE_DRAGGING &&
-                newState != BottomSheetBehavior.STATE_SETTLING &&
-                pendingLayoutUpdate) {
+              newState != BottomSheetBehavior.STATE_SETTLING &&
+              pendingLayoutUpdate
+            ) {
               pendingLayoutUpdate = false
               updateLayout()
             }
@@ -292,7 +297,6 @@ class BottomSheetView(
     if (!fullHeight) {
       this.startObservingContentHeight()
     }
-
   }
 
   fun updateLayout() {
@@ -365,17 +369,18 @@ class BottomSheetView(
 
     val innerViewGroup = this.innerView as? ViewGroup ?: return
 
-    val listener = OnLayoutChangeListener { _, _, top, _, bottom, _, _, oldTop, oldBottom ->
-      val newHeight = bottom - top
-      val oldHeight = oldBottom - oldTop
-      if (newHeight != oldHeight) {
-        val contentHeight = getContentHeight()
-        if (contentHeight != lastObservedContentHeight && contentHeight > 0 && (isOpen || isOpening) && !isClosing) {
-          lastObservedContentHeight = contentHeight
-          updateLayout()
+    val listener =
+      OnLayoutChangeListener { _, _, top, _, bottom, _, _, oldTop, oldBottom ->
+        val newHeight = bottom - top
+        val oldHeight = oldBottom - oldTop
+        if (newHeight != oldHeight) {
+          val contentHeight = getContentHeight()
+          if (contentHeight != lastObservedContentHeight && contentHeight > 0 && (isOpen || isOpening) && !isClosing) {
+            lastObservedContentHeight = contentHeight
+            updateLayout()
+          }
         }
       }
-    }
 
     val children = mutableListOf<View>()
     for (i in 0 until innerViewGroup.childCount) {
