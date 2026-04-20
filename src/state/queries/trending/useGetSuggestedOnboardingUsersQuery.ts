@@ -54,7 +54,7 @@ export function useGetSuggestedOnboardingUsersQuery(props: QueryProps) {
         },
       )
 
-      return {...data, recId: data.recIdStr ?? data.recId}
+      return {...data, recId: data.recIdStr}
     },
   })
 }
