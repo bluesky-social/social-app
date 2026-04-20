@@ -386,13 +386,8 @@ export function MessagesList({
       return <Text>Deleted message</Text>
     } else if (item.type === 'system-message') {
       const hasPrev = index > 0
-      const next = convoState.items[index + 1]
-      const nextIsBubble =
-        next?.type === 'message' ||
-        next?.type === 'pending-message' ||
-        next?.type === 'deleted-message'
       return (
-        <View style={[hasPrev && a.mt_md, nextIsBubble && a.mb_xs]}>
+        <View style={[hasPrev && a.mt_md]}>
           <SystemMessageItem item={item} />
         </View>
       )
