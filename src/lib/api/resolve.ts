@@ -85,7 +85,7 @@ export async function resolveLink(
     uri = await resolveShortLink(uri)
   }
   if (isBskyPostUrl(uri)) {
-    uri = convertBskyAppUrlIfNeeded(uri)
+    uri = convertBskyAppUrlIfNeeded(uri, {stripSearch: true})
     const [_0, user, _1, rkey] = uri.split('/').filter(Boolean)
     const recordUri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
     const post = await getPost({uri: recordUri})
@@ -103,7 +103,7 @@ export async function resolveLink(
     }
   }
   if (isBskyCustomFeedUrl(uri)) {
-    uri = convertBskyAppUrlIfNeeded(uri)
+    uri = convertBskyAppUrlIfNeeded(uri, {stripSearch: true})
     const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean)
     const did = await fetchDid(handleOrDid)
     const feed = makeRecordUri(did, 'app.bsky.feed.generator', rkey)
@@ -119,7 +119,7 @@ export async function resolveLink(
     }
   }
   if (isBskyListUrl(uri)) {
-    uri = convertBskyAppUrlIfNeeded(uri)
+    uri = convertBskyAppUrlIfNeeded(uri, {stripSearch: true})
     const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean)
     const did = await fetchDid(handleOrDid)
     const list = makeRecordUri(did, 'app.bsky.graph.list', rkey)
