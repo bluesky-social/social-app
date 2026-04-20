@@ -265,7 +265,7 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
           return null
       }
     },
-    [moderationOpts, recIdForLogging, isGuide],
+    [moderationOpts, hasSearchText, recIdForLogging, isGuide],
   )
 
   // Track seen profiles
