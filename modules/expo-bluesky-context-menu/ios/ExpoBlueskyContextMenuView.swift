@@ -70,9 +70,7 @@ class ExpoBlueskyContextMenuView: ExpoView, UIContextMenuInteractionDelegate {
     willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration,
     animator: UIContextMenuInteractionCommitAnimating
   ) {
-    animator.addCompletion { [weak self] in
-      self?.onPreviewPress([:])
-    }
+    self.onPreviewPress([:])
   }
 
   // MARK: - Targeted preview

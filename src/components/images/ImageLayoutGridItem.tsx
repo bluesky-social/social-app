@@ -9,7 +9,7 @@ import {Trans} from '@lingui/react/macro'
 
 import {type Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
@@ -72,6 +72,7 @@ export function GalleryItem({
         fullsizeUri={image.fullsize}
         thumbUri={image.thumb}
         aspectRatio={aspect}
+        borderRadius={tokens.borderRadius.md}
         onPreviewPress={openLightboxAtIndex}
         style={a.flex_1}>
         <Pressable
