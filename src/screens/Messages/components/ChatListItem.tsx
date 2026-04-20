@@ -37,6 +37,7 @@ import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {useDialogControl} from '#/components/Dialog'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
+import {getSystemMessageInfo} from '#/components/dms/systemMessage'
 import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
 import {Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen} from '#/components/icons/EnveopeOpen'
@@ -233,7 +234,7 @@ function BaseChatItem({
 }) {
   const ax = useAnalytics()
   const t = useTheme()
-  const {t: l} = useLingui()
+  const {t: l, i18n} = useLingui()
   const {currentAccount} = useSession()
   const menuControl = useMenuControl()
   const leaveConvoControl = useDialogControl()
@@ -368,88 +369,9 @@ function BaseChatItem({
 
       // System message
       if (ChatBskyConvoDefs.isSystemMessageView(convo.lastMessage)) {
-        if (
-          ChatBskyConvoDefs.isSystemMessageDataAddMember(convo.lastMessage.data)
-        ) {
-          const {member} = convo.lastMessage.data
-          lastMessage = l`${createSanitizedDisplayName(member)} added to the group`
-        }
-        if (
-          ChatBskyConvoDefs.isSystemMessageDataRemoveMember(
-            convo.lastMessage.data,
-          )
-        ) {
-          const {member} = convo.lastMessage.data
-          lastMessage = l`${createSanitizedDisplayName(member)} removed from the group`
-        }
-        if (
-          ChatBskyConvoDefs.isSystemMessageDataMemberJoin(
-            convo.lastMessage.data,
-          )
-        ) {
-          const {member} = convo.lastMessage.data
-          lastMessage = l`${createSanitizedDisplayName(member)} joined the group`
-        }
-        if (
-          ChatBskyConvoDefs.isSystemMessageDataMemberLeave(
-            convo.lastMessage.data,
-          )
-        ) {
-          const {member} = convo.lastMessage.data
-          lastMessage = l`${createSanitizedDisplayName(member)} left the group`
-        }
-        if (
-          ChatBskyConvoDefs.isSystemMessageDataLockConvo(convo.lastMessage.data)
-        ) {
-          lastMessage = l`Chat locked`
-        }
-        if (
-          ChatBskyConvoDefs.isSystemMessageDataUnlockConvo(
-            convo.lastMessage.data,
-          )
-        ) {
-          lastMessage = l`Chat unlocked`
-        }
-        if (
-          ChatBskyConvoDefs.isSystemMessageDataLockConvoPermanently(
-            convo.lastMessage.data,
-          )
-        ) {
-          lastMessage = l`Chat locked permanently`
-        }
-        if (
-          ChatBskyConvoDefs.isSystemMessageDataEditGroup(convo.lastMessage.data)
-        ) {
-          const {newName} = convo.lastMessage.data
-          lastMessage = l`Chat title changed to ${newName}`
-        }
-        if (
-          ChatBskyConvoDefs.isSystemMessageDataCreateJoinLink(
-            convo.lastMessage.data,
-          )
-        ) {
-          lastMessage = l`Invite link created`
-        }
-        if (
-          ChatBskyConvoDefs.isSystemMessageDataEditJoinLink(
-            convo.lastMessage.data,
-          )
-        ) {
-          lastMessage = l`Invite link edited`
-        }
-        if (
-          ChatBskyConvoDefs.isSystemMessageDataEnableJoinLink(
-            convo.lastMessage.data,
-          )
-        ) {
-          lastMessage = l`Invite link enabled`
-        }
-        if (
-          ChatBskyConvoDefs.isSystemMessageDataDisableJoinLink(
-            convo.lastMessage.data,
-          )
-        ) {
-          lastMessage = l`Invite link disabled`
+        const info = getSystemMessageInfo(convo.lastMessage.data)
+        if (info) {
+          lastMessage = i18n._(info.message)
         }
       }
 
@@ -460,6 +382,7 @@ function BaseChatItem({
       }
     }, [
       l,
+      i18n,
       convo.lastMessage,
       convo.lastReaction,
       currentAccount?.did,

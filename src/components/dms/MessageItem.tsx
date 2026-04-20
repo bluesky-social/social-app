@@ -477,7 +477,7 @@ let MessageItem = ({
                     style={[
                       a.text_md,
                       isFromSelf && {color: t.palette.white},
-                      isOnlyEmoji(message.text) && [a.mt_sm, {lineHeight: 1}],
+                      isOnlyEmoji(message.text) && [a.mt_2xs, a.leading_tight],
                     ]}
                     interactiveStyle={a.underline}
                     enableTags

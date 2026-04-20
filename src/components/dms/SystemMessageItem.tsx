@@ -1,16 +1,10 @@
 import {memo} from 'react'
 import {View} from 'react-native'
-import {ChatBskyConvoDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
-import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {atoms as a, useTheme} from '#/alf'
-import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon} from '#/components/icons/ArrowBoxLeft'
-import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
-import {Lock_Stroke2_Corner0_Rounded as LockIcon} from '#/components/icons/Lock'
-import {PencilLine_Stroke2_Corner0_Rounded as PencilIcon} from '#/components/icons/Pencil'
-import {type Props as SVGIconProps} from '../icons/common'
+import {getSystemMessageInfo} from '#/components/dms/systemMessage'
 import {Text} from '../Typography'
 
 let SystemMessageItem = ({
@@ -19,53 +13,12 @@ let SystemMessageItem = ({
   item: ConvoItem & {type: 'system-message'}
 }): React.ReactNode => {
   const t = useTheme()
-  const {t: l} = useLingui()
+  const {i18n} = useLingui()
 
-  const {data} = item.message
+  const info = getSystemMessageInfo(item.message.data)
+  if (!info) return null
 
-  let message: string | null = null
-  let Icon: React.ComponentType<SVGIconProps> | null = null
-  if (ChatBskyConvoDefs.isSystemMessageDataAddMember(data)) {
-    Icon = ArrowBoxLeftIcon
-    message = l`${createSanitizedDisplayName(data.member)} added to the group`
-  } else if (ChatBskyConvoDefs.isSystemMessageDataRemoveMember(data)) {
-    Icon = ArrowBoxLeftIcon
-    message = l`${createSanitizedDisplayName(data.member)} removed from the group`
-  } else if (ChatBskyConvoDefs.isSystemMessageDataMemberJoin(data)) {
-    Icon = ArrowBoxLeftIcon
-    message = l`${createSanitizedDisplayName(data.member)} joined the group`
-  } else if (ChatBskyConvoDefs.isSystemMessageDataMemberLeave(data)) {
-    Icon = ArrowBoxLeftIcon
-    message = l`${createSanitizedDisplayName(data.member)} left the group`
-  } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvo(data)) {
-    Icon = LockIcon
-    message = l`Chat locked`
-  } else if (ChatBskyConvoDefs.isSystemMessageDataUnlockConvo(data)) {
-    Icon = LockIcon
-    message = l`Chat unlocked`
-  } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvoPermanently(data)) {
-    Icon = LockIcon
-    message = l`Chat locked permanently`
-  } else if (ChatBskyConvoDefs.isSystemMessageDataEditGroup(data)) {
-    Icon = PencilIcon
-    message = l`Chat title changed to ${data.newName}`
-  } else if (ChatBskyConvoDefs.isSystemMessageDataCreateJoinLink(data)) {
-    Icon = ChainLinkIcon
-    message = l`Invite link created`
-  } else if (ChatBskyConvoDefs.isSystemMessageDataEditJoinLink(data)) {
-    Icon = ChainLinkIcon
-    message = l`Invite link edited`
-  } else if (ChatBskyConvoDefs.isSystemMessageDataEnableJoinLink(data)) {
-    Icon = ChainLinkIcon
-    message = l`Invite link enabled`
-  } else if (ChatBskyConvoDefs.isSystemMessageDataDisableJoinLink(data)) {
-    Icon = ChainLinkIcon
-    message = l`Invite link disabled`
-  }
-
-  if (!message) {
-    return null
-  }
+  const {Icon, message} = info
 
   return (
     <View
@@ -76,18 +29,11 @@ let SystemMessageItem = ({
         a.justify_center,
         a.px_md,
         a.mt_md,
+        t.atoms.bg,
       ]}>
-      {Icon ? (
-        <Icon size="sm" style={[a.mr_2xs, t.atoms.text_contrast_medium]} />
-      ) : null}
-      <Text
-        style={[
-          a.text_xs,
-          a.text_center,
-          t.atoms.bg,
-          t.atoms.text_contrast_medium,
-        ]}>
-        {message}
+      <Icon size="sm" style={[a.mr_2xs, t.atoms.text_contrast_medium]} />
+      <Text style={[a.text_xs, a.text_center, t.atoms.text_contrast_medium]}>
+        {i18n._(message)}
       </Text>
     </View>
   )
