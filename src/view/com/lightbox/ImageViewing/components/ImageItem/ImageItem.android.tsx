@@ -19,7 +19,7 @@ import {Image} from 'expo-image'
 import {
   type Dimensions as ImageDimensions,
   type ImageSource,
-  type Transform,
+  type LightboxTransforms,
 } from '../../@types'
 import {
   applyRounding,
@@ -53,15 +53,7 @@ type Props = {
   imageAspect: number | undefined
   imageDimensions: ImageDimensions | undefined
   dismissSwipePan: PanGesture
-  transforms: Readonly<
-    SharedValue<{
-      scaleAndMoveTransform: Transform
-      cropFrameTransform: Transform
-      cropContentTransform: Transform
-      isResting: boolean
-      isHidden: boolean
-    }>
-  >
+  transforms: Readonly<SharedValue<LightboxTransforms>>
 }
 const ImageItem = ({
   imageSrc,
@@ -339,11 +331,12 @@ const ImageItem = ({
   })
 
   const imageCropStyle = useAnimatedStyle(() => {
-    const {cropFrameTransform} = transforms.get()
+    const {cropFrameTransform, borderRadius: br} = transforms.get()
     return {
       flex: 1,
       overflow: 'hidden',
       transform: cropFrameTransform,
+      borderRadius: br,
     }
   })
 

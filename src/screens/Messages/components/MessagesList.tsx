@@ -50,7 +50,6 @@ import {
 import {useGetPost} from '#/state/queries/post'
 import {useAgent} from '#/state/session'
 import {List, type ListMethods} from '#/view/com/util/List'
-import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
 import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
@@ -93,14 +92,12 @@ function onScrollToIndexFailed() {
 export function MessagesList({
   hasScrolled,
   setHasScrolled,
-  blocked,
   footer,
   hasAcceptOverride,
   transparentHeaderHeight,
 }: {
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
-  blocked?: boolean
   footer?: React.ReactNode
   hasAcceptOverride?: boolean
   transparentHeaderHeight?: number
@@ -489,11 +486,7 @@ export function MessagesList({
             }),
             opened: 0,
           }}>
-          {convoState.status === ConvoStatus.Disabled ? (
-            <ChatDisabled />
-          ) : blocked ? (
-            footer
-          ) : (
+          {footer ?? (
             <ConversationFooter
               convoState={convoState}
               hasAcceptOverride={hasAcceptOverride}>

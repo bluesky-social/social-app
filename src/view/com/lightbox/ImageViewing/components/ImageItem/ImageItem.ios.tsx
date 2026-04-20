@@ -29,7 +29,7 @@ import {Image} from 'expo-image'
 import {
   type Dimensions as ImageDimensions,
   type ImageSource,
-  type Transform,
+  type LightboxTransforms,
 } from '../../@types'
 
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
@@ -52,15 +52,7 @@ type Props = {
   imageAspect: number | undefined
   imageDimensions: ImageDimensions | undefined
   dismissSwipePan: PanGesture
-  transforms: Readonly<
-    SharedValue<{
-      scaleAndMoveTransform: Transform
-      cropFrameTransform: Transform
-      cropContentTransform: Transform
-      isResting: boolean
-      isHidden: boolean
-    }>
-  >
+  transforms: Readonly<SharedValue<LightboxTransforms>>
 }
 
 const ImageItem = ({
@@ -170,10 +162,11 @@ const ImageItem = ({
 
   const imageCropStyle = useAnimatedStyle(() => {
     const screenSize = measureSafeArea()
-    const {cropFrameTransform} = transforms.get()
+    const {cropFrameTransform, borderRadius: br} = transforms.get()
     return {
       overflow: 'hidden',
       transform: cropFrameTransform,
+      borderRadius: br,
       width: screenSize.width,
       maxHeight: screenSize.height,
       alignSelf: 'center',

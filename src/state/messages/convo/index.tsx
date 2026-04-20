@@ -6,7 +6,7 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react'
-import {type ChatBskyConvoDefs} from '@atproto/api'
+import {ChatBskyConvoDefs} from '@atproto/api'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -129,6 +129,15 @@ export function ConvoProvider({
           | undefined
         if (data && convo.convo && data.muted !== convo.convo.muted) {
           convo.updateMuted(data.muted)
+        }
+        if (
+          data &&
+          convo.convo &&
+          ChatBskyConvoDefs.isGroupConvo(data.kind) &&
+          ChatBskyConvoDefs.isGroupConvo(convo.convo.kind) &&
+          data.kind.name !== convo.convo.kind.name
+        ) {
+          convo.updateGroupName(data.kind.name)
         }
       }
     })

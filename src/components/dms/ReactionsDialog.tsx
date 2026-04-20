@@ -357,7 +357,7 @@ function ReactionTab({
       accessibilityRole="button"
       accessibilityHint={
         reaction.key === 'all'
-          ? l`Tap to show all reactions `
+          ? l`Tap to show all reactions`
           : l`Tap to show ${reaction.value} reactions`
       }
       hitSlop={HITSLOP_10}

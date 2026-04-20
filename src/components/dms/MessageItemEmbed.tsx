@@ -28,9 +28,8 @@ let MessageItemEmbed = ({
     <MessageContextProvider>
       <View
         style={[
-          isFromSelf ? a.mr_sm : a.ml_sm,
+          !isFromSelf && a.ml_sm,
           t.atoms.bg,
-          a.rounded_md,
           native({
             flexBasis: 0,
             width: Math.min(screen.width, 600) / 1.4,
@@ -48,9 +47,10 @@ let MessageItemEmbed = ({
           <Embed
             embed={embed}
             allowNestedQuotes
-            viewContext={PostEmbedViewContext.Feed}
+            viewContext={PostEmbedViewContext.ChatMessage}
             style={[
               a.rounded_xl,
+              a.overflow_hidden,
               a.border_0,
               isFromSelf
                 ? {

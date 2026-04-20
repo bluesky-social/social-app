@@ -4,7 +4,7 @@ import {Image} from 'expo-image'
 
 import {useLightboxControls} from '#/state/lightbox'
 import {type Dimensions} from '#/view/com/lightbox/ImageViewing/@types'
-import {atoms as a} from '#/alf'
+import {atoms as a, tokens} from '#/alf'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
 import {Gallery} from '#/components/images/Gallery'
 import {ImageLayoutGrid} from '#/components/images/ImageLayoutGrid'
@@ -42,6 +42,7 @@ export function ImageEmbed({
           thumbRect: null,
           thumbRef: refs[i] ?? null,
           thumbDimensions: fetchedDims[i] ?? null,
+          thumbBorderRadius: tokens.borderRadius.md,
           type: 'image',
         })),
         index,

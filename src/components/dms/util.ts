@@ -56,12 +56,12 @@ export function hasReachedReactionLimit(
   return myReactions.length >= EMOJI_REACTION_LIMIT
 }
 
-type GroupConvoMember = ChatBskyActorDefs.ProfileViewBasic & {
+export type GroupConvoMember = ChatBskyActorDefs.ProfileViewBasic & {
   // can be missing if account deleted
   kind?: $Typed<ChatBskyActorDefs.GroupConvoMember>
 }
 
-type DirectConvoMember = ChatBskyActorDefs.ProfileViewBasic & {
+export type DirectConvoMember = ChatBskyActorDefs.ProfileViewBasic & {
   kind: $Typed<ChatBskyActorDefs.DirectConvoMember>
 }
 

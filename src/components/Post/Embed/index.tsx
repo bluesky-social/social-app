@@ -39,12 +39,11 @@ import {PostPlaceholder as PostPlaceholderText} from './PostPlaceholder'
 import {
   type CommonProps,
   type EmbedProps,
-  PostEmbedViewContext,
-  QuoteEmbedViewContext,
+  type PostEmbedViewContext,
 } from './types'
 import {VideoEmbed} from './VideoEmbed'
 
-export {PostEmbedViewContext, QuoteEmbedViewContext} from './types'
+export {PostEmbedViewContext} from './types'
 
 export function Embed({embed: rawEmbed, ...rest}: EmbedProps) {
   const embed = parseEmbed(rawEmbed)
@@ -164,11 +163,7 @@ function RecordEmbed({
         <QuoteEmbed
           {...rest}
           embed={embed}
-          viewContext={
-            rest.viewContext === PostEmbedViewContext.Feed
-              ? QuoteEmbedViewContext.FeedEmbedRecordWithMedia
-              : undefined
-          }
+          viewContext={rest.viewContext}
           isWithinQuote={rest.isWithinQuote}
           allowNestedQuotes={rest.allowNestedQuotes}
         />
@@ -229,9 +224,10 @@ export function QuoteEmbed({
   linkDisabled,
   isWithinQuote: parentIsWithinQuote,
   allowNestedQuotes: parentAllowNestedQuotes,
+  viewContext,
 }: Omit<CommonProps, 'viewContext'> & {
   embed: EmbedType<'post'>
-  viewContext?: QuoteEmbedViewContext
+  viewContext?: PostEmbedViewContext
   linkDisabled?: boolean
 }) {
   const moderationOpts = useModerationOpts()
@@ -309,7 +305,7 @@ export function QuoteEmbed({
         <Embed
           embed={quote.embed}
           moderation={moderation}
-          viewContext={PostEmbedViewContext.FeedEmbedRecordWithMedia}
+          viewContext={viewContext}
           isWithinQuote={parentIsWithinQuote ?? true}
           // already within quote? override nested
           allowNestedQuotes={
