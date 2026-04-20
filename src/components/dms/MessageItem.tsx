@@ -474,7 +474,11 @@ let MessageItem = ({
                   ]}>
                   <RichText
                     value={rt}
-                    style={[a.text_md, isFromSelf && {color: t.palette.white}]}
+                    style={[
+                      a.text_md,
+                      isFromSelf && {color: t.palette.white},
+                      isOnlyEmoji(message.text) && [a.mt_sm, {lineHeight: 1}],
+                    ]}
                     interactiveStyle={a.underline}
                     enableTags
                     emojiMultiplier={3}
