@@ -101,7 +101,7 @@
     multiformats "^9.9.0"
     zod "^3.23.8"
 
-"@atproto/syntax@0.5.2", "@atproto/syntax@^0.5.0", "@atproto/syntax@^0.5.1":
+"@atproto/syntax@^0.5.0", "@atproto/syntax@^0.5.1":
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.5.2.tgz#d4b32c9feb421ceeb5ade1fa80bc42764d51e52e"
   integrity sha512-W41szOnkppoHr0iCUrzL8gy3OD6qmDyp1UvUgmTx2oFQfgbudpz51T/gznesiCcqiUT5obfHdx4PJ+WdlEOE7Q==
