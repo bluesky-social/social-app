@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import {View} from 'react-native'
+import {type DimensionValue, View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -15,7 +15,6 @@ import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
-import {ConstrainedImage} from '#/components/images/AutoSizedImage'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {
   HLSUnsupportedError,
@@ -74,20 +73,12 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     [key],
   )
 
-  let aspectRatio: number | undefined
   const dims = embed.aspectRatio
-  if (dims) {
-    aspectRatio = dims.width / dims.height
-    if (Number.isNaN(aspectRatio)) {
-      aspectRatio = undefined
-    }
-  }
+  // Clamp to minimum 1:2 so very tall videos don't get too narrow
+  const aspectRatio = dims ? Math.max(dims.width / dims.height, 0.5) || 1 : 1
 
-  let constrained: number | undefined
-  if (aspectRatio !== undefined) {
-    const ratio = 1 / 2 // max of 1:2 ratio in feeds
-    constrained = Math.max(aspectRatio, ratio)
-  }
+  // Portrait videos are narrower than full width; landscape fills it
+  const widthPercent: DimensionValue = `${Math.min(aspectRatio, 1) * 100}%`
 
   const contents = (
     <div
@@ -98,7 +89,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
         cursor: 'default',
         backgroundColor: t.palette.black,
         backgroundImage: `url(${embed.thumbnail})`,
-        backgroundSize: 'contain',
+        backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
       }}
@@ -122,15 +113,15 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
       <ViewportObserver
         sendPosition={isGif ? noop : sendPosition}
         isAnyViewActive={currentActiveView !== null}>
-        <ConstrainedImage
-          fullBleed
-          aspectRatio={constrained || 1}
-          // slightly smaller max height than images
-          // images use 16 / 9, for reference
-          minMobileAspectRatio={14 / 9}>
+        <View
+          style={[
+            a.rounded_md,
+            a.overflow_hidden,
+            {width: widthPercent, aspectRatio},
+          ]}>
           {contents}
           <MediaInsetBorder />
-        </ConstrainedImage>
+        </View>
       </ViewportObserver>
     </View>
   )
