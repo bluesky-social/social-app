@@ -9,8 +9,8 @@ const noop = () => {}
 export function useHotkeysContext() {
   return useMemo(
     () => ({
-      registerHotkey: noop,
-      unregisterHotkey: noop,
+      enableScope: noop,
+      disableScope: noop,
     }),
     [],
   )
