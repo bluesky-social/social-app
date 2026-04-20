@@ -11,12 +11,14 @@ import {AddMembersFlow} from '#/components/dms/AddMembersFlow'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import {Text} from '#/components/Typography'
+import {InviteLinkDialog} from './InviteLinkDialog'
 
 export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
   const t = useTheme()
   const {t: l} = useLingui()
 
   const addMembersControl = Dialog.useDialogControl()
+  const inviteLinkPrompt = Dialog.useDialogControl()
 
   const {currentAccount} = useSession()
 
@@ -24,7 +26,7 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
     currentAccount?.did == null
       ? false
       : convoState.getPrimaryMember?.()?.did === currentAccount.did
-  // TODO Get this from @api/atproto - dsb
+  // TODO Get this from @api/atproto -dsb
   const isLinkEnabled = false
 
   const groupName = convoState.getGroupInfo?.()?.name
@@ -107,7 +109,7 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
                 color="secondary"
                 size="small"
                 label={l`Click here to view or create an invite link for this group chat`}
-                onPress={() => {}}>
+                onPress={() => inviteLinkPrompt.open()}>
                 <ButtonIcon icon={ChainLinkIcon} />
                 <ButtonText>
                   <Trans>Invite link</Trans>
@@ -117,6 +119,7 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
           </View>
         ) : null}
       </View>
+      <InviteLinkDialog control={inviteLinkPrompt} />
       <Dialog.Outer
         control={addMembersControl}
         testID="addChatMembersDialog"

@@ -81,6 +81,7 @@ export type ItemProps = ViewStyleProp & {
   isInvalid?: boolean
   children: ((props: ItemState) => React.ReactNode) | React.ReactNode
   hitSlop?: PressableProps['hitSlop']
+  highlightRow?: boolean
 }
 
 export function useItemContext() {
@@ -160,8 +161,11 @@ export function Item({
   style,
   type = 'checkbox',
   label,
+  highlightRow,
   ...rest
 }: ItemProps) {
+  const t = useTheme()
+
   const {
     values: selectedValues,
     type: groupType,
@@ -207,6 +211,12 @@ export function Item({
     [name, selected, disabled, hovered, pressed, focused, isInvalid],
   )
 
+  const highlightStyle = highlightRow
+    ? selected
+      ? [a.rounded_full, a.p_md, {backgroundColor: t.palette.primary_50}]
+      : [a.rounded_full, a.p_md]
+    : null
+
   return (
     <ItemContext.Provider value={state}>
       <Pressable
@@ -232,7 +242,7 @@ export function Item({
         onPressOut={onPressOut}
         onFocus={onFocus}
         onBlur={onBlur}
-        style={[a.flex_row, a.align_center, a.gap_sm, style]}>
+        style={[a.flex_row, a.align_center, a.gap_sm, highlightStyle, style]}>
         {typeof children === 'function' ? children(state) : children}
       </Pressable>
     </ItemContext.Provider>

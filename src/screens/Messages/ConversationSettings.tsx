@@ -1,4 +1,4 @@
-import {useMemo, useState} from 'react'
+import {useState} from 'react'
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import {moderateProfile} from '@atproto/api'
 import {plural} from '@lingui/core/macro'
@@ -8,14 +8,15 @@ import {StackActions, useNavigation} from '@react-navigation/native'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
+import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {type Shadow} from '#/state/cache/types'
 import {ConvoProvider, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
@@ -68,6 +69,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
+import {InviteLinkDialog} from './components/InviteLinkDialog'
 
 const MEMBER_LIMIT = 50
 const ROW_SPACING = 10
@@ -81,7 +83,7 @@ type Item =
     }
   | {
       type: 'CHAT_MEMBER'
-      profile: Shadow<bsky.profile.AnyProfileView>
+      profile: bsky.profile.AnyProfileView
       status: 'owner' | 'member' | 'invited'
     }
 
@@ -90,9 +92,6 @@ type Props = NativeStackScreenProps<
   'MessagesConversationSettings'
 >
 
-/**
- * TODO This is just layout for now.
- */
 export function MessagesConversationSettingsScreen({route}: Props) {
   const {gtTablet} = useBreakpoints()
 
@@ -136,6 +135,7 @@ function SettingsInner({convoId}: {convoId: string}) {
   const isOwner = !!primaryMember && primaryMember.did === currentAccount?.did
 
   const data: bsky.profile.AnyProfileView[] = convo?.members ?? []
+  // TODO Need this data in order to populate this array. -dsb
   const invites: string[] = []
 
   const {data: joinRequestsData, hasNextPage: hasMoreRequests} =
@@ -149,7 +149,7 @@ function SettingsInner({convoId}: {convoId: string}) {
       0,
     ) ?? 0
 
-  const items = [
+  const items: Item[] = [
     {
       type: 'MEMBERS_AND_REQUESTS',
     },
@@ -166,16 +166,18 @@ function SettingsInner({convoId}: {convoId: string}) {
         if (aIsSelf !== bIsSelf) return aIsSelf ? -1 : 1
         return 0
       })
-      .map(profile => ({
-        type: 'CHAT_MEMBER',
-        profile,
-        status:
-          primaryMember?.did === profile.did
-            ? 'owner'
-            : invites.includes(profile.did)
-              ? 'invited'
-              : 'member',
-      })),
+      .map(
+        (profile): Item => ({
+          type: 'CHAT_MEMBER',
+          profile,
+          status:
+            primaryMember?.did === profile.did
+              ? 'owner'
+              : invites.includes(profile.did)
+                ? 'invited'
+                : 'member',
+        }),
+      ),
   ]
 
   function renderItem({item}: {item: Item}) {
@@ -206,14 +208,12 @@ function SettingsInner({convoId}: {convoId: string}) {
 
   if (convoState.status === ConvoStatus.Error) {
     return (
-      <>
-        <Error
-          title={l`Something went wrong`}
-          message={l`We couldn’t load this conversation’s settings`}
-          onRetry={() => convoState.error.retry()}
-          sideBorders={false}
-        />
-      </>
+      <Error
+        title={l`Something went wrong`}
+        message={l`We couldn’t load this conversation’s settings`}
+        onRetry={() => convoState.error.retry()}
+        sideBorders={false}
+      />
     )
   }
 
@@ -255,9 +255,9 @@ function MembersAndRequests({
 
   return (
     <View style={[a.flex_row, a.justify_between, a.mx_xl, a.mt_lg, a.mb_sm]}>
-      <View style={[a.flex_row, a.align_center]}>
+      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
         <Text style={[a.text_lg, a.font_semi_bold, t.atoms.text]}>
-          <Trans>Members</Trans>{' '}
+          <Trans>Members</Trans>
         </Text>
         <Text
           style={[a.text_xs, a.font_medium, {color: t.palette.contrast_500}]}>
@@ -272,6 +272,7 @@ function MembersAndRequests({
         <InlineLinkText
           label={l`View incoming group chat requests`}
           style={[a.text_sm, a.text_right, a.font_semi_bold]}
+          // TODO Need to implement this. -dsb
           to="#">
           {hasMoreRequests
             ? l({
@@ -372,8 +373,9 @@ function AddMembersLink({isOwner}: {isOwner: boolean}) {
         <AddMembersFlow
           title={l`Add members`}
           onAddMembers={(_dids: string[]) => {
-            // TODO Add members here
-            addMembersControl.close()
+            addMembersControl.close(() => {
+              // TODO Add members here
+            })
           }}
         />
       </Dialog.Outer>
@@ -382,11 +384,11 @@ function AddMembersLink({isOwner}: {isOwner: boolean}) {
 }
 
 function Member({
-  profile,
+  profile: profileUnshadowed,
   status,
   isOwner,
 }: {
-  profile: Shadow<bsky.profile.AnyProfileView>
+  profile: bsky.profile.AnyProfileView
   status: 'owner' | 'member' | 'invited'
   isOwner: boolean
 }) {
@@ -394,34 +396,34 @@ function Member({
   const t = useTheme()
   const {t: l} = useLingui()
 
+  const profile = useProfileShadow(profileUnshadowed)
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
-  const moderation = useMemo(
-    () =>
-      moderationOpts ? moderateProfile(profile, moderationOpts) : undefined,
-    [profile, moderationOpts],
-  )
+  const moderation = moderationOpts
+    ? moderateProfile(profile, moderationOpts)
+    : undefined
 
   if (!moderation) return null
 
   const isDeletedAccount = profile.handle === 'missing.invalid'
   const displayName = isDeletedAccount
     ? l`Deleted Account`
-    : sanitizeDisplayName(
-        profile.displayName || profile.handle,
-        moderation.ui('displayName'),
-      )
+    : createSanitizedDisplayName(profile, true, moderation.ui('displayName'))
 
+  const isSelf = currentAccount?.did === profile.did
   let statusBadge: React.ReactNode | null = null
-  if (currentAccount?.did === profile.did) {
-    switch (status) {
-      case 'owner':
-        statusBadge = <StatusBadge label={l`Admin`} />
-        break
+  if (isSelf) {
+    if (status === 'owner') {
+      statusBadge = <StatusBadge label={l`Admin`} />
     }
   } else {
     statusBadge = (
-      <MemberMenu profile={profile} type={status} isOwner={isOwner} />
+      <MemberMenu
+        profile={profile}
+        displayName={displayName}
+        type={status}
+        isOwner={isOwner}
+      />
     )
   }
 
@@ -470,69 +472,50 @@ function Member({
 function StatusBadge({
   label,
   style,
+  pressableProps,
 }: {
   label: string
   style?: StyleProp<ViewStyle>
+  pressableProps?: TriggerChildProps['props']
 }) {
   const t = useTheme()
 
-  return (
-    <View
-      style={[
-        a.rounded_xs,
-        t.atoms.bg_contrast_50,
-        {
-          paddingTop: 3,
-          paddingBottom: 3,
-          paddingLeft: 6,
-          paddingRight: 6,
-        },
-        style,
-      ]}>
-      <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
-        {label}
-      </Text>
-    </View>
-  )
-}
+  const badgeStyle = [
+    a.rounded_xs,
+    t.atoms.bg_contrast_50,
+    {
+      paddingTop: 3,
+      paddingBottom: 3,
+      paddingLeft: 6,
+      paddingRight: 6,
+    },
+    style,
+  ]
 
-function StatusButton({
-  label,
-  style,
-  ...rest
-}: {
-  label: string
-  style?: StyleProp<ViewStyle>
-} & TriggerChildProps['props']) {
-  const t = useTheme()
-
-  return (
-    <Pressable
-      style={[
-        a.rounded_xs,
-        t.atoms.bg_contrast_50,
-        {
-          paddingTop: 3,
-          paddingBottom: 3,
-          paddingLeft: 6,
-          paddingRight: 6,
-        },
-        style,
-      ]}
-      {...rest}>
-      <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
-        {label}
-      </Text>
-    </Pressable>
+  const labelText = (
+    <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
+      {label}
+    </Text>
   )
+
+  if (pressableProps) {
+    return (
+      <Pressable style={badgeStyle} {...pressableProps}>
+        {labelText}
+      </Pressable>
+    )
+  }
+  return <View style={badgeStyle}>{labelText}</View>
 }
 
 function MemberMenu({
   profile,
+  displayName,
   type,
   isOwner,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
+  displayName: string
   type: 'owner' | 'member' | 'invited'
   isOwner: boolean
 }) {
@@ -589,7 +572,7 @@ function MemberMenu({
       } catch (err) {
         const e = err as Error
         if (e?.name !== 'AbortError') {
-          ax.logger.error('Failed to unblock account', {message: e})
+          logger.error('Failed to unblock account', {message: e})
           Toast.show(l`There was an issue! ${e.toString()}`, {
             type: 'error',
           })
@@ -602,7 +585,7 @@ function MemberMenu({
       } catch (err) {
         const e = err as Error
         if (e?.name !== 'AbortError') {
-          ax.logger.error('Failed to block account', {message: e})
+          logger.error('Failed to block account', {message: e})
           Toast.show(l`There was an issue! ${e.toString()}`, {
             type: 'error',
           })
@@ -611,32 +594,15 @@ function MemberMenu({
     }
   }
 
-  const moderationOpts = useModerationOpts()
-  const moderation = useMemo(
-    () =>
-      moderationOpts ? moderateProfile(profile, moderationOpts) : undefined,
-    [profile, moderationOpts],
-  )
-
-  if (!moderation) return null
-
-  const isDeletedAccount = profile.handle === 'missing.invalid'
-  const displayName = isDeletedAccount
-    ? l`Deleted Account`
-    : sanitizeDisplayName(
-        profile.displayName || profile.handle,
-        moderation.ui('displayName'),
-      )
-
   return (
     <>
       <Menu.Root>
         <Menu.Trigger label={l`Open chat member options for ${displayName}`}>
           {({props, state, control: menuControl}) =>
             type === 'owner' || type === 'invited' ? (
-              <StatusButton
-                {...props}
+              <StatusBadge
                 label={type === 'owner' ? l`Admin` : l`Invited`}
+                pressableProps={props}
                 style={[
                   state.hovered || state.pressed || menuControl.isOpen
                     ? {
@@ -715,6 +681,7 @@ function MemberMenu({
             {isOwner && type === 'invited' ? (
               <Menu.Item
                 label={l`Uninvite ${displayName} from this group chat`}
+                // TODO Need to wire up the uninvite flow. -dsb
                 onPress={() => {}}>
                 <Menu.ItemText>
                   <Trans>Uninvite</Trans>
@@ -788,8 +755,8 @@ function SettingsHeader({
     },
   })
 
+  const inviteLinkPrompt = Dialog.useDialogControl()
   const editNamePrompt = Prompt.usePromptControl()
-  const inviteLinkPrompt = Prompt.usePromptControl()
   const lockChatPrompt = Prompt.usePromptControl()
   const leaveChatPrompt = Prompt.usePromptControl()
 
@@ -801,6 +768,7 @@ function SettingsHeader({
     leaveChatPrompt.open()
   }
 
+  // TODO Need to implement this when the backend is ready. -dsb
   const handleReportChat = () => {}
 
   const handlePromptName = () => {
@@ -814,10 +782,6 @@ function SettingsHeader({
 
   const handlePromptInviteLink = () => {
     inviteLinkPrompt.open()
-  }
-
-  const handleConfirmInviteLink = () => {
-    inviteLinkPrompt.close()
   }
 
   const handlePromptLock = () => {
@@ -857,6 +821,7 @@ function SettingsHeader({
             a.px_xl,
             t.atoms.text_contrast_high,
           ]}>
+          {/* TODO The creation date doesn't exist yet. -dsb */}
           Created April 2, 2026
         </Text>
         <View
@@ -929,10 +894,7 @@ function SettingsHeader({
         onChangeText={setNewGroupName}
         onConfirm={handleEditName}
       />
-      <InviteLinkPrompt
-        control={inviteLinkPrompt}
-        onConfirm={handleConfirmInviteLink}
-      />
+      <InviteLinkDialog control={inviteLinkPrompt} />
       <LockChatPrompt control={lockChatPrompt} onConfirm={handleConfirmLock} />
       <LeaveChatPrompt
         control={leaveChatPrompt}
@@ -1093,27 +1055,6 @@ function EditNamePrompt({
         </Prompt.Actions>
       </>
     </Prompt.Outer>
-  )
-}
-
-function InviteLinkPrompt({
-  control,
-  onConfirm,
-}: {
-  control: Dialog.DialogOuterProps['control']
-  onConfirm: () => void
-}) {
-  const {t: l} = useLingui()
-
-  return (
-    <Prompt.Basic
-      control={control}
-      title={l`Invite link`}
-      description={l`An invite link lets people join this group chat without being added directly. You control who can use the link and whether they need your approval. You can disable the link at any time. Your name, avatar, and the name of the group chat will be visible to everyone.`}
-      confirmButtonCta={l`Get started`}
-      cancelButtonCta={l`Cancel`}
-      onConfirm={onConfirm}
-    />
   )
 }
 
