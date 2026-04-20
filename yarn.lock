@@ -2454,6 +2454,11 @@
   resolved "https://registry.yarnpkg.com/@bsky.app/tapper/-/tapper-0.5.1.tgz#7c72e1903435290a29be9f33fe0fcba95bbfa554"
   integrity sha512-roGmW6Fk9qE8N0u9d74XzX9+MUIr04PElOhfIg0pXtZ1buaORpasLBBC+i6WytxDP2p29CuFdzBXDaBhmcI/ow==
 
+"@bsky.app/video@0.3.4":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@bsky.app/video/-/video-0.3.4.tgz#68c626d025f0005313a8320120540f51bed58da7"
+  integrity sha512-BTHfdS5hWlpBvMSNhYhsAoBnWtu4BCXYyK/DZ1wA/akXquJP3SuzEGL6B2V0Xdtg2E0rhjJD2njlTj69E64reg==
+
 "@crowdin/cli@^4.14.1":
   version "4.14.1"
   resolved "https://registry.yarnpkg.com/@crowdin/cli/-/cli-4.14.1.tgz#1239922681235b6b14bcacd4fd622bc2217dd6c5"
@@ -3371,11 +3376,6 @@
   integrity sha512-mUaMsgeUTpRIUOTn33EUXHRK6j7pxBjwqH4WpQyq+pukjd1AIzWlEa6w7i6bInJUcweGgP2beXZmaP6b6UPn7A==
   dependencies:
     dom-mutator "^0.6.0"
-
-"@haileyok/bluesky-video@0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@haileyok/bluesky-video/-/bluesky-video-0.3.2.tgz#44dc3974750a9619a4d72e97a0f1678f335028cd"
-  integrity sha512-CJIS/4HW+x6xqONDZaUljQgMqaaZQnlFjt0afdCSO6VtFk5Fd/ocW+Tc4UulQ6zcCNiL6Y8HJR8sl/EIWHgPDw==
 
 "@humanfs/core@^0.19.1":
   version "0.19.1"

@@ -257,7 +257,6 @@ export function Gallery({
           horizontal
           pagingEnabled={false}
           showsHorizontalScrollIndicator={false}
-          decelerationRate={0.993}
           directionalLockEnabled
           nestedScrollEnabled
           alwaysBounceVertical={false}

@@ -1,9 +1,9 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import {
-  type AppBskyActorDefs,
-  type ModerationCause,
-  type ModerationDecision,
+  ChatBskyConvoDefs,
+  moderateProfile,
+  type ModerationOpts,
 } from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -11,14 +11,8 @@ import {useNavigation} from '@react-navigation/native'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
-import {logger} from '#/logger'
-import {type Shadow} from '#/state/cache/profile-shadow'
-import {
-  type ActiveConvoStates,
-  isConvoActive,
-  useConvo,
-} from '#/state/messages/convo'
-import {type ConvoItem} from '#/state/messages/convo/types'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
@@ -32,32 +26,13 @@ import {Link} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {type ConvoWithDetails} from './util'
 
 const PFP_SIZE = IS_WEB ? 40 : Layout.HEADER_SLOT_SIZE
 
-export function MessagesListHeader({
-  profile,
-  moderation,
-}: {
-  profile?: Shadow<AppBskyActorDefs.ProfileViewDetailed>
-  moderation?: ModerationDecision | null
-}) {
+export function MessagesListHeader({convo}: {convo?: ConvoWithDetails | null}) {
   const t = useTheme()
-
-  const convoState = useConvo()
-  const isGroupChat = convoState?.isGroup?.()
-
-  const blockInfo = useMemo(() => {
-    if (!moderation) return
-    const modui = moderation.ui('profileView')
-    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
-    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
-    const userBlock = blocks.find(alert => alert.source.type === 'user')
-    return {
-      listBlocks,
-      userBlock,
-    }
-  }, [moderation])
+  const moderationOpts = useModerationOpts()
 
   return (
     <Layout.Header.Outer noBottomBorder={IS_LIQUID_GLASS}>
@@ -65,20 +40,11 @@ export function MessagesListHeader({
         <View style={[{minHeight: PFP_SIZE}, a.justify_center]}>
           <Layout.Header.BackButton />
         </View>
-        {isConvoActive(convoState) ? (
-          moderation && blockInfo && profile && !isGroupChat ? (
-            <ProfileHeaderReady
-              convoState={convoState}
-              profile={profile}
-              moderation={moderation}
-              blockInfo={blockInfo}
-            />
+        {convo && moderationOpts ? (
+          convo.kind === 'direct' ? (
+            <ProfileHeaderReady convo={convo} moderationOpts={moderationOpts} />
           ) : (
-            <GroupHeaderReady
-              convoState={convoState}
-              profile={profile}
-              moderation={moderation}
-            />
+            <GroupHeaderReady convo={convo} />
           )
         ) : (
           <>
@@ -111,36 +77,38 @@ export function MessagesListHeader({
 }
 
 function ProfileHeaderReady({
-  convoState,
-  profile,
-  moderation,
-  blockInfo,
+  convo,
+  moderationOpts,
 }: {
-  convoState: ActiveConvoStates
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
-  moderation: ModerationDecision
-  blockInfo: {
-    listBlocks: ModerationCause[]
-    userBlock?: ModerationCause
-  }
+  convo: Extract<ConvoWithDetails, {kind: 'direct'}>
+  moderationOpts: ModerationOpts
 }) {
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
+  const profile = useProfileShadow(convo.primaryMember)
+
+  const moderation = moderateProfile(profile, moderationOpts)
+
+  const blockInfo = useMemo(() => {
+    const modui = moderation.ui('profileView')
+    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
+    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
+    const userBlock = blocks.find(alert => alert.source.type === 'user')
+    return {
+      listBlocks,
+      userBlock,
+    }
+  }, [moderation])
 
   const isDeletedAccount = profile?.handle === 'missing.invalid'
   const displayName = isDeletedAccount
     ? l`Deleted Account`
     : createSanitizedDisplayName(profile, true, moderation.ui('displayName'))
 
-  const latestMessageFromOther = convoState.items.findLast(
-    (item: ConvoItem) =>
-      item.type === 'message' &&
-      item.message.sender.did !== currentAccount?.did,
-  )
-
   const latestReportableMessage =
-    latestMessageFromOther?.type === 'message'
-      ? latestMessageFromOther.message
+    ChatBskyConvoDefs.isMessageView(convo.view.lastMessage) &&
+    convo.view.lastMessage.sender?.did !== currentAccount?.did
+      ? convo.view.lastMessage
       : undefined
 
   return (
@@ -164,82 +132,57 @@ function ProfileHeaderReady({
           </View>
         </Link>
       }
-      muted={convoState.convo?.muted}
+      muted={convo.view.muted}
       settings={
-        isConvoActive(convoState) ? (
-          <ConvoMenu
-            convo={convoState.convo}
-            profile={profile}
-            currentScreen="conversation"
-            blockInfo={blockInfo}
-            latestReportableMessage={latestReportableMessage}
-          />
-        ) : null
+        <ConvoMenu
+          convo={convo.view}
+          profile={profile}
+          currentScreen="conversation"
+          blockInfo={blockInfo}
+          latestReportableMessage={latestReportableMessage}
+        />
       }
     />
   )
 }
 
 function GroupHeaderReady({
-  convoState,
-  profile,
-  moderation,
+  convo,
 }: {
-  convoState: ActiveConvoStates
-  profile?: Shadow<AppBskyActorDefs.ProfileViewDetailed>
-  moderation?: ModerationDecision | null
+  convo: Extract<ConvoWithDetails, {kind: 'group'}>
 }) {
   const {t: l} = useLingui()
 
   const navigation = useNavigation<NavigationProp>()
 
-  const groupInfo = convoState.getGroupInfo?.()
-
-  const isDeletedAccount = profile?.handle === 'missing.invalid'
-  const displayName = isDeletedAccount
-    ? l`Deleted Account`
-    : profile
-      ? createSanitizedDisplayName(profile, true, moderation?.ui('displayName'))
-      : undefined
-  const groupName =
-    groupInfo?.name ??
-    (displayName ? l`${displayName}’s group chat` : l`Group chat`)
-
   const handleNavigateToSettings = () => {
-    const convoId = convoState.convo?.id
-    if (convoId) {
-      navigation.navigate('MessagesConversationSettings', {
-        conversation: convoId,
-      })
-    } else {
-      logger.error(`handleNavigateToSettings: missing convo ID`)
-    }
+    navigation.navigate('MessagesConversationSettings', {
+      conversation: convo.view.id,
+    })
   }
 
   return (
     <Wrapper
       heading={
         <>
-          <AvatarBubbles size="small" profiles={convoState.recipients ?? []} />
+          <AvatarBubbles size="small" profiles={convo.members} />
           <Text style={[a.text_md, a.font_semi_bold]} numberOfLines={1}>
-            {groupName}
+            {convo.details.name}
           </Text>
         </>
       }
-      muted={convoState.convo?.muted}
+      muted={convo.view.muted}
       settings={
-        isConvoActive(convoState) ? (
-          <Button
-            label={l`Open group chat settings`}
-            size="small"
-            color="secondary"
-            shape="round"
-            variant="ghost"
-            style={[a.bg_transparent]}
-            onPress={handleNavigateToSettings}>
-            <ButtonIcon icon={DotsHorizontalIcon} size="md" />
-          </Button>
-        ) : null
+        <Button
+          label={l`Open group chat settings`}
+          size="small"
+          color="secondary"
+          shape="round"
+          variant="ghost"
+          style={[a.bg_transparent]}
+          onPress={handleNavigateToSettings}>
+          <ButtonIcon icon={DotsHorizontalIcon} size="md" />
+        </Button>
       }
     />
   )

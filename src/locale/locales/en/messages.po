@@ -13,9 +13,9 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/screens/Messages/ConversationSettings.tsx:924
-#: src/screens/Messages/ConversationSettings.tsx:934
-#: src/screens/Messages/ConversationSettings.tsx:1011
+#: src/screens/Messages/ConversationSettings.tsx:931
+#: src/screens/Messages/ConversationSettings.tsx:941
+#: src/screens/Messages/ConversationSettings.tsx:1018
 msgid "…"
 msgstr "…"
 
@@ -265,11 +265,6 @@ msgstr ""
 msgid "{0}’s avatar"
 msgstr "{0}’s avatar"
 
-#. placeholder {0}: profile.handle
-#: src/components/dms/MessagesListHeader.tsx:121
-msgid "{0}'s group chat"
-msgstr "{0}'s group chat"
-
 #. How many days have passed, displayed in a narrow form
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:171
@@ -510,7 +505,7 @@ msgstr "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum 
 msgid "{MAX_HIDDEN_REPLIES, plural, other {You can hide a maximum of # replies.}}"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:239
+#: src/screens/Messages/ConversationSettings.tsx:252
 msgid "{memberCount}/{MEMBER_LIMIT}"
 msgstr "{memberCount}/{MEMBER_LIMIT}"
 
@@ -551,7 +546,7 @@ msgstr ""
 msgid "{rank}."
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:246
+#: src/screens/Messages/ConversationSettings.tsx:259
 msgid "{requestCount, plural, one {# request} other {# requests}}"
 msgstr "{requestCount, plural, one {# request} other {# requests}}"
 
@@ -782,7 +777,7 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:426
 #: src/screens/Messages/components/RequestButtons.tsx:101
-#: src/screens/Messages/ConversationSettings.tsx:571
+#: src/screens/Messages/ConversationSettings.tsx:575
 #: src/view/com/profile/ProfileMenu.tsx:188
 msgctxt "toast"
 msgid "Account blocked"
@@ -828,7 +823,7 @@ msgstr ""
 msgid "Account removed from quick access"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:558
+#: src/screens/Messages/ConversationSettings.tsx:562
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:88
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:310
 #: src/view/com/profile/ProfileMenu.tsx:176
@@ -919,11 +914,11 @@ msgstr ""
 msgid "Add another account"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1329
+#: src/view/com/composer/Composer.tsx:1317
 msgid "Add another post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1987
+#: src/view/com/composer/Composer.tsx:1981
 msgid "Add another post to thread"
 msgstr ""
 
@@ -941,7 +936,7 @@ msgstr ""
 msgid "Add automation label to account"
 msgstr "Add automation label to account"
 
-#: src/components/dms/EmojiReactionPicker.web.tsx:35
+#: src/components/dms/EmojiReactionPicker.web.tsx:31
 msgid "Add emoji reaction"
 msgstr ""
 
@@ -958,8 +953,8 @@ msgstr ""
 msgid "Add media to post"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:325
-#: src/screens/Messages/ConversationSettings.tsx:342
+#: src/screens/Messages/ConversationSettings.tsx:330
+#: src/screens/Messages/ConversationSettings.tsx:347
 msgid "Add members"
 msgstr "Add members"
 
@@ -1061,8 +1056,8 @@ msgstr ""
 msgid "Additional details (limit 300 characters)"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:386
-#: src/screens/Messages/ConversationSettings.tsx:609
+#: src/screens/Messages/ConversationSettings.tsx:393
+#: src/screens/Messages/ConversationSettings.tsx:613
 msgid "Admin"
 msgstr "Admin"
 
@@ -1220,7 +1215,7 @@ msgid "Already signed in as @{0}"
 msgstr ""
 
 #: src/components/images/AutoSizedImage.tsx:190
-#: src/components/images/Gallery/index.tsx:514
+#: src/components/images/Gallery/index.tsx:518
 #: src/components/images/ImageLayoutGridItem.tsx:120
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
 #: src/view/com/composer/GifAltText.tsx:100
@@ -1258,7 +1253,7 @@ msgstr ""
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:255
+#: src/components/dialogs/GifSelect.tsx:269
 #: src/components/dialogs/LanguageSelectDialog.tsx:344
 msgid "An error has occurred"
 msgstr ""
@@ -1341,7 +1336,7 @@ msgstr ""
 msgid "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:1079
+#: src/screens/Messages/ConversationSettings.tsx:1087
 msgid "An invite link lets people join this group chat without being added directly. You control who can use the link and whether they need your approval. You can disable the link at any time. Your name, avatar, and the name of the group chat will be visible to everyone"
 msgstr "An invite link lets people join this group chat without being added directly. You control who can use the link and whether they need your approval. You can disable the link at any time. Your name, avatar, and the name of the group chat will be visible to everyone"
 
@@ -1532,7 +1527,7 @@ msgstr ""
 msgid "Archived post"
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:334
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:327
 msgid "Are you really, really sure?"
 msgstr ""
 
@@ -1554,7 +1549,7 @@ msgstr ""
 msgid "Are you sure you want to discard your changes?"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:1122
+#: src/screens/Messages/ConversationSettings.tsx:1130
 msgid "Are you sure you want to leave {groupName}?"
 msgstr "Are you sure you want to leave {groupName}?"
 
@@ -1570,7 +1565,7 @@ msgstr ""
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1469
+#: src/view/com/composer/Composer.tsx:1457
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
@@ -1598,6 +1593,10 @@ msgstr ""
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:209
 msgid "At least 8 characters"
 msgstr ""
+
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:338
+msgid "AT Protocol FAQ"
+msgstr "AT Protocol FAQ"
 
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:48
 msgctxt "Name of app icon variant"
@@ -1696,8 +1695,8 @@ msgstr ""
 #: src/components/dms/dialogs/NewChatDialog.tsx:94
 #: src/components/dms/MessageProfileButton.tsx:60
 #: src/screens/Messages/ChatList.tsx:376
-#: src/screens/Messages/Conversation.tsx:247
-#: src/screens/Messages/ConversationSettings.tsx:548
+#: src/screens/Messages/Conversation.tsx:234
+#: src/screens/Messages/ConversationSettings.tsx:552
 msgid "Before you can message another user, you must first verify your email."
 msgstr ""
 
@@ -1726,14 +1725,14 @@ msgid "Birthday"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:853
-#: src/screens/Messages/ConversationSettings.tsx:670
-#: src/screens/Messages/ConversationSettings.tsx:1147
+#: src/screens/Messages/ConversationSettings.tsx:674
+#: src/screens/Messages/ConversationSettings.tsx:1155
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:207
 #: src/view/com/profile/ProfileMenu.tsx:563
 msgid "Block"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:666
+#: src/screens/Messages/ConversationSettings.tsx:670
 msgid "Block {displayName}"
 msgstr "Block {displayName}"
 
@@ -1748,7 +1747,7 @@ msgstr "Block {displayName}"
 msgid "Block account"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:1144
+#: src/screens/Messages/ConversationSettings.tsx:1152
 msgid "Block account?"
 msgstr "Block account?"
 
@@ -1791,7 +1790,7 @@ msgstr ""
 msgid "Block user and/or delete this conversation"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:187
+#: src/components/Post/Embed/index.tsx:182
 msgid "Blocked"
 msgstr ""
 
@@ -1805,7 +1804,7 @@ msgid "Blocked Accounts"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:851
-#: src/screens/Messages/ConversationSettings.tsx:1145
+#: src/screens/Messages/ConversationSettings.tsx:1153
 #: src/view/com/profile/ProfileMenu.tsx:558
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr ""
@@ -2040,9 +2039,9 @@ msgstr ""
 #: src/features/liveNow/components/GoLiveDialog.tsx:254
 #: src/lib/media/picker.tsx:38
 #: src/screens/Deactivated.tsx:150
-#: src/screens/Messages/ConversationSettings.tsx:1081
-#: src/screens/Messages/ConversationSettings.tsx:1102
-#: src/screens/Messages/ConversationSettings.tsx:1126
+#: src/screens/Messages/ConversationSettings.tsx:1089
+#: src/screens/Messages/ConversationSettings.tsx:1110
+#: src/screens/Messages/ConversationSettings.tsx:1134
 #: src/screens/Profile/Header/EditProfileDialog.tsx:215
 #: src/screens/Profile/Header/EditProfileDialog.tsx:223
 #: src/screens/Search/Shell.tsx:399
@@ -2055,8 +2054,8 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:300
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
-#: src/view/com/composer/Composer.tsx:1547
-#: src/view/com/composer/Composer.tsx:1557
+#: src/view/com/composer/Composer.tsx:1535
+#: src/view/com/composer/Composer.tsx:1545
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:215
@@ -2078,7 +2077,7 @@ msgstr ""
 #: src/components/PostControls/index.tsx:110
 #: src/components/PostControls/index.tsx:141
 #: src/components/PostControls/index.tsx:169
-#: src/state/shell/composer/index.tsx:107
+#: src/state/shell/composer/index.tsx:105
 msgid "Cannot interact with a blocked user"
 msgstr ""
 
@@ -2091,7 +2090,7 @@ msgstr ""
 msgid "Captions & alt text"
 msgstr ""
 
-#: src/components/images/Gallery/index.tsx:251
+#: src/components/images/Gallery/index.tsx:255
 msgid "carousel"
 msgstr "carousel"
 
@@ -2231,7 +2230,7 @@ msgstr ""
 msgid "Chats"
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:236
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:233
 msgid "Check <0>{currentEmail}</0> for an email with the confirmation code to enter below:"
 msgstr ""
 
@@ -2342,6 +2341,11 @@ msgstr "Click here to delete your account"
 msgid "Click here to log out"
 msgstr ""
 
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:263
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:272
+msgid "Click here to resend the email"
+msgstr "Click here to resend the email"
+
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:384
 msgid "Click here to restart the verification process."
 msgstr ""
@@ -2384,7 +2388,7 @@ msgstr ""
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:180
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:233
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:239
-#: src/components/dialogs/GifSelect.tsx:271
+#: src/components/dialogs/GifSelect.tsx:283
 #: src/components/dialogs/LanguageSelectDialog.tsx:359
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:159
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:168
@@ -2438,7 +2442,7 @@ msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:223
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:229
-#: src/components/dialogs/GifSelect.tsx:265
+#: src/components/dialogs/GifSelect.tsx:277
 #: src/components/dialogs/LanguageSelectDialog.tsx:221
 #: src/components/dialogs/LanguageSelectDialog.tsx:322
 #: src/components/dialogs/LanguageSelectDialog.tsx:354
@@ -2451,12 +2455,7 @@ msgstr ""
 msgid "Close drawer menu"
 msgstr ""
 
-#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:136
-#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:172
-msgid "Close emoji picker"
-msgstr ""
-
-#: src/components/dialogs/GifSelect.tsx:161
+#: src/components/dialogs/GifSelect.tsx:173
 msgid "Close GIF dialog"
 msgstr ""
 
@@ -2487,13 +2486,8 @@ msgstr ""
 msgid "Closes password update alert"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1555
+#: src/view/com/composer/Composer.tsx:1543
 msgid "Closes post composer and discards post draft"
-msgstr ""
-
-#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
-#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
-msgid "Closes the emoji picker"
 msgstr ""
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:32
@@ -2546,7 +2540,7 @@ msgid "Compose new post"
 msgstr ""
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1431
+#: src/view/com/composer/Composer.tsx:1419
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -2554,11 +2548,11 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2383
+#: src/view/com/composer/Composer.tsx:2377
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2385
+#: src/view/com/composer/Composer.tsx:2379
 msgid "Compressing video..."
 msgstr ""
 
@@ -2592,7 +2586,7 @@ msgstr ""
 #: src/screens/Login/LoginForm.tsx:284
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:187
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:191
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:247
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:244
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:145
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:151
 msgid "Confirmation code"
@@ -2729,7 +2723,7 @@ msgstr "Continue to group name"
 msgid "Continue to next step"
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:64
+#: src/screens/Messages/Conversation.tsx:63
 msgid "Conversation"
 msgstr ""
 
@@ -2993,7 +2987,7 @@ msgstr ""
 msgid "Create an avatar instead"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:858
+#: src/screens/Messages/ConversationSettings.tsx:865
 msgid "Create an invite link for this group chat"
 msgstr "Create an invite link for this group chat"
 
@@ -3140,8 +3134,8 @@ msgstr ""
 msgid "Delete account"
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:186
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:233
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:183
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:230
 msgid "Delete account “{currentHandle}”"
 msgstr ""
 
@@ -3194,13 +3188,13 @@ msgstr ""
 msgid "Delete message for me"
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:316
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:309
 msgid "Delete my account"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:787
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:789
-#: src/view/com/composer/Composer.tsx:1443
+#: src/view/com/composer/Composer.tsx:1431
 msgid "Delete post"
 msgstr ""
 
@@ -3221,14 +3215,14 @@ msgstr ""
 msgid "Delete this post?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:180
+#: src/components/Post/Embed/index.tsx:175
 msgid "Deleted"
 msgstr ""
 
-#: src/components/dms/MessagesListHeader.tsx:123
+#: src/components/dms/MessagesListHeader.tsx:105
 #: src/screens/Messages/components/ChatListItem.tsx:127
-#: src/screens/Messages/ConversationSettings.tsx:376
-#: src/screens/Messages/ConversationSettings.tsx:595
+#: src/screens/Messages/ConversationSettings.tsx:383
+#: src/screens/Messages/ConversationSettings.tsx:599
 msgid "Deleted Account"
 msgstr ""
 
@@ -3331,9 +3325,9 @@ msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:101
 #: src/screens/Profile/Header/EditProfileDialog.tsx:79
-#: src/view/com/composer/Composer.tsx:1231
-#: src/view/com/composer/Composer.tsx:1275
-#: src/view/com/composer/Composer.tsx:1476
+#: src/view/com/composer/Composer.tsx:1219
+#: src/view/com/composer/Composer.tsx:1263
+#: src/view/com/composer/Composer.tsx:1464
 #: src/view/com/composer/drafts/DraftItem.tsx:242
 #: src/view/com/composer/drafts/DraftsButton.tsx:131
 msgid "Discard"
@@ -3344,14 +3338,14 @@ msgstr ""
 msgid "Discard changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1229
+#: src/view/com/composer/Composer.tsx:1217
 #: src/view/com/composer/drafts/DraftItem.tsx:239
 #: src/view/com/composer/drafts/DraftsButton.tsx:98
 msgid "Discard draft?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1246
-#: src/view/com/composer/Composer.tsx:1468
+#: src/view/com/composer/Composer.tsx:1234
+#: src/view/com/composer/Composer.tsx:1456
 msgid "Discard post?"
 msgstr ""
 
@@ -3386,7 +3380,7 @@ msgstr ""
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2304
+#: src/view/com/composer/Composer.tsx:2298
 msgid "Dismiss error"
 msgstr ""
 
@@ -3446,7 +3440,7 @@ msgstr ""
 msgid "Don't have a code or need a new one? <0>Click here.</0>"
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:274
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:269
 msgid "Don’t see a code? <0>Click here to resend.</0>"
 msgstr ""
 
@@ -3606,8 +3600,8 @@ msgstr ""
 msgid "Edit Feeds"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:1035
-#: src/screens/Messages/ConversationSettings.tsx:1040
+#: src/screens/Messages/ConversationSettings.tsx:1042
+#: src/screens/Messages/ConversationSettings.tsx:1047
 msgid "Edit group name"
 msgstr "Edit group name"
 
@@ -3646,7 +3640,7 @@ msgstr ""
 msgid "Edit My Feeds"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:852
+#: src/screens/Messages/ConversationSettings.tsx:859
 msgid "Edit name"
 msgstr "Edit name"
 
@@ -3680,7 +3674,7 @@ msgstr ""
 msgid "Edit starter pack"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:851
+#: src/screens/Messages/ConversationSettings.tsx:858
 msgid "Edit this group chat’s name"
 msgstr "Edit this group chat’s name"
 
@@ -3730,7 +3724,7 @@ msgstr ""
 msgid "Email sent!"
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:263
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:260
 msgid "Email sent! <0>Click here to resend.</0>"
 msgstr ""
 
@@ -3884,7 +3878,7 @@ msgid "Enter your email address"
 msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:243
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:298
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:291
 msgid "Enter your password"
 msgstr ""
 
@@ -3900,7 +3894,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2403
+#: src/view/com/composer/Composer.tsx:2397
 #: src/view/com/util/error/ErrorScreen.tsx:43
 msgid "Error"
 msgstr ""
@@ -4093,7 +4087,7 @@ msgid "Failed to create app password. Please try again."
 msgstr ""
 
 #: src/components/dms/MessageProfileButton.tsx:38
-#: src/screens/Messages/ConversationSettings.tsx:525
+#: src/screens/Messages/ConversationSettings.tsx:529
 msgid "Failed to create conversation"
 msgstr ""
 
@@ -4125,6 +4119,10 @@ msgstr ""
 msgid "Failed to disconnect Germ DM. Error: {0}"
 msgstr ""
 
+#: src/screens/Messages/ConversationSettings.tsx:731
+msgid "Failed to edit group chat name"
+msgstr "Failed to edit group chat name"
+
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:142
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr ""
@@ -4141,7 +4139,7 @@ msgstr ""
 msgid "Failed to launch SMS app"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:747
+#: src/screens/Messages/ConversationSettings.tsx:759
 msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "Failed to leave group chat"
@@ -4164,7 +4162,7 @@ msgstr ""
 msgid "Failed to load feeds preferences"
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:215
+#: src/components/dialogs/GifSelect.tsx:227
 msgid "Failed to load GIFs"
 msgstr ""
 
@@ -4210,7 +4208,7 @@ msgstr ""
 msgid "Failed to mark all requests as read"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:735
+#: src/screens/Messages/ConversationSettings.tsx:747
 msgid "Failed to mute group chat"
 msgstr "Failed to mute group chat"
 
@@ -4250,7 +4248,7 @@ msgstr ""
 msgid "Failed to resolve location. Please try again."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:563
+#: src/view/com/composer/Composer.tsx:562
 msgid "Failed to save draft"
 msgstr ""
 
@@ -4707,7 +4705,7 @@ msgstr ""
 msgid "For organizational accounts, use the birthdate of the person who is responsible for the account."
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:189
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:186
 msgid "For security reasons, we’ll need to send a confirmation code to your email address <0>{currentEmail}</0>."
 msgstr ""
 
@@ -4849,7 +4847,7 @@ msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:77
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:87
-#: src/screens/Messages/ConversationSettings.tsx:1080
+#: src/screens/Messages/ConversationSettings.tsx:1088
 msgid "Get started"
 msgstr ""
 
@@ -4858,7 +4856,7 @@ msgstr ""
 msgid "GIF"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2408
+#: src/view/com/composer/Composer.tsx:2402
 msgid "GIF uploaded"
 msgstr ""
 
@@ -4965,7 +4963,7 @@ msgid "Go to next"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:255
-#: src/screens/Messages/ConversationSettings.tsx:646
+#: src/screens/Messages/ConversationSettings.tsx:650
 #: src/view/shell/desktop/LeftNav.tsx:319
 #: src/view/shell/desktop/LeftNav.tsx:325
 msgid "Go to profile"
@@ -5003,17 +5001,17 @@ msgstr ""
 msgid "Grooming or predatory behavior"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:728
+#: src/screens/Messages/ConversationSettings.tsx:740
 msgctxt "toast"
 msgid "Group chat muted"
 msgstr "Group chat muted"
 
 #: src/Navigation.tsx:575
-#: src/screens/Messages/ConversationSettings.tsx:104
+#: src/screens/Messages/ConversationSettings.tsx:106
 msgid "Group chat settings"
 msgstr "Group chat settings"
 
-#: src/screens/Messages/ConversationSettings.tsx:730
+#: src/screens/Messages/ConversationSettings.tsx:742
 msgctxt "toast"
 msgid "Group chat unmuted"
 msgstr "Group chat unmuted"
@@ -5024,7 +5022,7 @@ msgstr "Group is locked"
 
 #: src/components/dms/InitiateChatFlow.tsx:231
 #: src/components/dms/InitiateChatFlow.tsx:549
-#: src/screens/Messages/ConversationSettings.tsx:1041
+#: src/screens/Messages/ConversationSettings.tsx:1048
 msgid "Group name"
 msgstr "Group name"
 
@@ -5414,7 +5412,7 @@ msgid "Image"
 msgstr ""
 
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:424
+#: src/components/images/Gallery/index.tsx:428
 msgid "Image {0}"
 msgstr "Image {0}"
 
@@ -5425,7 +5423,7 @@ msgid "Image {0} of {1}"
 msgstr ""
 
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:415
+#: src/components/images/Gallery/index.tsx:419
 msgid "Image {0} of {imageCount}"
 msgstr "Image {0} of {imageCount}"
 
@@ -5440,7 +5438,7 @@ msgid "Image cache cleared, freed {0}"
 msgstr ""
 
 #. placeholder {0}: images.length
-#: src/components/images/Gallery/index.tsx:252
+#: src/components/images/Gallery/index.tsx:256
 msgid "Image gallery, {0} images"
 msgstr "Image gallery, {0} images"
 
@@ -5629,8 +5627,8 @@ msgid "Invite friends <0/>"
 msgstr ""
 
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:113
-#: src/screens/Messages/ConversationSettings.tsx:859
-#: src/screens/Messages/ConversationSettings.tsx:1078
+#: src/screens/Messages/ConversationSettings.tsx:866
+#: src/screens/Messages/ConversationSettings.tsx:1086
 msgid "Invite link"
 msgstr "Invite link"
 
@@ -5642,7 +5640,7 @@ msgstr ""
 msgid "Invite your friends to follow your favorite feeds and people"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:609
+#: src/screens/Messages/ConversationSettings.tsx:613
 msgid "Invited"
 msgstr "Invited"
 
@@ -5673,7 +5671,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr ""
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2323
+#: src/view/com/composer/Composer.tsx:2317
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -5698,7 +5696,7 @@ msgstr ""
 msgid "Journalism"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1279
+#: src/view/com/composer/Composer.tsx:1267
 #: src/view/com/composer/drafts/DraftsButton.tsx:135
 msgid "Keep editing"
 msgstr ""
@@ -5808,10 +5806,6 @@ msgstr ""
 msgid "Learn more about self hosting your PDS."
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:344
-msgid "Learn more about the AT Protocol."
-msgstr ""
-
 #: src/components/moderation/ContentHider.tsx:169
 #: src/components/moderation/ContentHider.tsx:235
 msgid "Learn more about the moderation applied to this content"
@@ -5855,7 +5849,7 @@ msgid "Learn more."
 msgstr ""
 
 #: src/components/dms/LeaveConvoPrompt.tsx:52
-#: src/screens/Messages/ConversationSettings.tsx:887
+#: src/screens/Messages/ConversationSettings.tsx:894
 msgid "Leave"
 msgstr ""
 
@@ -5872,11 +5866,11 @@ msgstr ""
 msgid "Leave conversation"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:1124
+#: src/screens/Messages/ConversationSettings.tsx:1132
 msgid "Leave group chat"
 msgstr "Leave group chat"
 
-#: src/screens/Messages/ConversationSettings.tsx:886
+#: src/screens/Messages/ConversationSettings.tsx:893
 msgid "Leave this group chat"
 msgstr "Leave this group chat"
 
@@ -6170,27 +6164,27 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:999
+#: src/screens/Messages/ConversationSettings.tsx:1006
 msgid "Loading…"
 msgstr "Loading…"
 
-#: src/screens/Messages/ConversationSettings.tsx:869
+#: src/screens/Messages/ConversationSettings.tsx:876
 msgid "Lock"
 msgstr "Lock"
 
-#: src/screens/Messages/ConversationSettings.tsx:1101
+#: src/screens/Messages/ConversationSettings.tsx:1109
 msgid "Lock group chat"
 msgstr "Lock group chat"
 
-#: src/screens/Messages/ConversationSettings.tsx:1099
+#: src/screens/Messages/ConversationSettings.tsx:1107
 msgid "Lock group chat?"
 msgstr "Lock group chat?"
 
-#: src/screens/Messages/ConversationSettings.tsx:867
+#: src/screens/Messages/ConversationSettings.tsx:874
 msgid "Lock this group chat"
 msgstr "Lock this group chat"
 
-#: src/screens/Messages/ConversationSettings.tsx:869
+#: src/screens/Messages/ConversationSettings.tsx:876
 msgid "Locked"
 msgstr "Locked"
 
@@ -6300,11 +6294,11 @@ msgstr ""
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:232
+#: src/screens/Messages/ConversationSettings.tsx:245
 msgid "Members"
 msgstr "Members"
 
-#: src/screens/Messages/ConversationSettings.tsx:1100
+#: src/screens/Messages/ConversationSettings.tsx:1108
 msgid "Members can still read chat history but can’t send new messages."
 msgstr "Members can still read chat history but can’t send new messages."
 
@@ -6327,10 +6321,10 @@ msgstr ""
 msgid "Menu"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:198
-#: src/screens/Messages/components/MessageInput.tsx:173
-#: src/screens/Messages/components/MessageInput.web.tsx:212
-#: src/screens/Messages/ConversationSettings.tsx:654
+#: src/screens/Messages/components/MessageComposer.tsx:168
+#: src/screens/Messages/components/MessageInput.tsx:171
+#: src/screens/Messages/components/MessageInput.web.tsx:195
+#: src/screens/Messages/ConversationSettings.tsx:658
 msgid "Message"
 msgstr "Message"
 
@@ -6339,7 +6333,7 @@ msgstr "Message"
 msgid "Message {0}"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:651
+#: src/screens/Messages/ConversationSettings.tsx:655
 msgid "Message {displayName}"
 msgstr "Message {displayName}"
 
@@ -6367,17 +6361,17 @@ msgstr ""
 msgid "Message from server: {0}"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:197
-#: src/screens/Messages/components/MessageInput.tsx:171
+#: src/screens/Messages/components/MessageComposer.tsx:167
+#: src/screens/Messages/components/MessageInput.tsx:169
 msgid "Message input field"
 msgstr ""
 
-#: src/screens/Messages/components/MessageInput.tsx:84
-#: src/screens/Messages/components/MessageInput.web.tsx:59
+#: src/screens/Messages/components/MessageInput.tsx:82
+#: src/screens/Messages/components/MessageInput.web.tsx:53
 msgid "Message is too long"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:98
+#: src/screens/Messages/components/MessageComposer.tsx:85
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgstr "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 
@@ -6509,7 +6503,7 @@ msgstr ""
 msgid "Music"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:845
+#: src/screens/Messages/ConversationSettings.tsx:852
 msgid "Mute"
 msgstr "Mute"
 
@@ -6554,7 +6548,7 @@ msgstr ""
 msgid "Mute these accounts?"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:843
+#: src/screens/Messages/ConversationSettings.tsx:850
 msgid "Mute this group chat"
 msgstr "Mute this group chat"
 
@@ -6592,7 +6586,7 @@ msgstr ""
 msgid "Mute words & tags"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:845
+#: src/screens/Messages/ConversationSettings.tsx:852
 msgid "Muted"
 msgstr "Muted"
 
@@ -6875,7 +6869,11 @@ msgstr ""
 msgid "No expiry set"
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:221
+#: src/components/dialogs/GifSelect.tsx:237
+msgid "No featured GIFs found. There may be an issue with KLIPY."
+msgstr "No featured GIFs found. There may be an issue with KLIPY."
+
+#: src/components/dialogs/GifSelect.tsx:238
 msgid "No featured GIFs found. There may be an issue with Tenor."
 msgstr ""
 
@@ -7002,7 +7000,7 @@ msgstr "No results found for “<0>{query}</0>”."
 msgid "No results."
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:219
+#: src/components/dialogs/GifSelect.tsx:235
 msgid "No search results found for \"{search}\"."
 msgstr ""
 
@@ -7155,7 +7153,7 @@ msgstr ""
 msgid "Off"
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:258
+#: src/components/dialogs/GifSelect.tsx:272
 #: src/components/dialogs/LanguageSelectDialog.tsx:347
 #: src/view/com/util/ErrorBoundary.tsx:57
 msgid "Oh no!"
@@ -7196,11 +7194,11 @@ msgstr ""
 msgid "Onboarding reset"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:772
+#: src/view/com/composer/Composer.tsx:771
 msgid "One or more GIFs is missing alt text."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:769
+#: src/view/com/composer/Composer.tsx:768
 msgid "One or more images is missing alt text."
 msgstr ""
 
@@ -7212,11 +7210,11 @@ msgstr ""
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:574
+#: src/view/com/composer/Composer.tsx:573
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:779
+#: src/view/com/composer/Composer.tsx:778
 msgid "One or more videos is missing alt text."
 msgstr ""
 
@@ -7260,7 +7258,7 @@ msgstr ""
 msgid "Open camera"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:604
+#: src/screens/Messages/ConversationSettings.tsx:608
 msgid "Open chat member options for {displayName}"
 msgstr "Open chat member options for {displayName}"
 
@@ -7277,9 +7275,9 @@ msgstr ""
 msgid "Open drawer menu"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:177
-#: src/screens/Messages/components/MessageInput.web.tsx:179
-#: src/view/com/composer/Composer.tsx:1972
+#: src/screens/Messages/components/MessageComposer.tsx:129
+#: src/screens/Messages/components/MessageInput.web.tsx:145
+#: src/view/com/composer/Composer.tsx:1958
 msgid "Open emoji picker"
 msgstr ""
 
@@ -7300,11 +7298,11 @@ msgstr ""
 msgid "Open Germ DM"
 msgstr ""
 
-#: src/components/dms/MessagesListHeader.tsx:204
+#: src/components/dms/MessagesListHeader.tsx:177
 msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
-#: src/components/Post/Embed/ExternalEmbed/index.tsx:79
+#: src/components/Post/Embed/ExternalEmbed/index.tsx:82
 msgid "Open link to {niceUrl}"
 msgstr ""
 
@@ -7401,10 +7399,6 @@ msgstr ""
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1973
-msgid "Opens emoji picker"
-msgstr ""
-
 #: src/view/com/auth/SplashScreen.tsx:102
 #: src/view/com/auth/SplashScreen.web.tsx:116
 msgid "Opens flow to create a new Bluesky account"
@@ -7415,7 +7409,7 @@ msgstr ""
 msgid "Opens flow to sign in to your existing Bluesky account"
 msgstr ""
 
-#: src/components/images/Gallery/index.tsx:425
+#: src/components/images/Gallery/index.tsx:429
 msgid "Opens full image"
 msgstr "Opens full image"
 
@@ -7558,7 +7552,7 @@ msgstr ""
 #: src/screens/Login/LoginForm.tsx:228
 #: src/screens/Settings/AccountSettings.tsx:126
 #: src/screens/Settings/AccountSettings.tsx:130
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:291
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:284
 #: src/screens/Signup/StepInfo/index.tsx:255
 msgid "Password"
 msgstr ""
@@ -7897,7 +7891,7 @@ msgstr ""
 msgid "Porn"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1621
+#: src/view/com/composer/Composer.tsx:1609
 msgctxt "action"
 msgid "Post"
 msgstr ""
@@ -7917,7 +7911,7 @@ msgstr ""
 msgid "Post a video"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1619
+#: src/view/com/composer/Composer.tsx:1607
 msgctxt "action"
 msgid "Post All"
 msgstr ""
@@ -8091,11 +8085,11 @@ msgstr ""
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2397
+#: src/view/com/composer/Composer.tsx:2391
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2399
+#: src/view/com/composer/Composer.tsx:2393
 msgid "Processing video..."
 msgstr ""
 
@@ -8141,22 +8135,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr ""
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1605
+#: src/view/com/composer/Composer.tsx:1593
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1600
+#: src/view/com/composer/Composer.tsx:1588
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1589
+#: src/view/com/composer/Composer.tsx:1577
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1594
+#: src/view/com/composer/Composer.tsx:1582
 msgid "Publish reply"
 msgstr ""
 
@@ -8371,7 +8365,7 @@ msgstr "Remove {displayName} from group chat"
 msgid "Remove {displayName} from starter pack"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:677
+#: src/screens/Messages/ConversationSettings.tsx:681
 msgid "Remove {displayName} from this group chat"
 msgstr "Remove {displayName} from this group chat"
 
@@ -8421,7 +8415,7 @@ msgstr ""
 msgid "Remove feed?"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:680
+#: src/screens/Messages/ConversationSettings.tsx:684
 msgid "Remove from chat"
 msgstr "Remove from chat"
 
@@ -8501,11 +8495,11 @@ msgstr ""
 msgid "Remove your verification for this account?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:215
+#: src/components/Post/Embed/index.tsx:210
 msgid "Removed by author"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:213
+#: src/components/Post/Embed/index.tsx:208
 msgid "Removed by you"
 msgstr ""
 
@@ -8596,7 +8590,7 @@ msgstr ""
 msgid "Replies to this post are disabled."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1617
+#: src/view/com/composer/Composer.tsx:1605
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -8642,7 +8636,7 @@ msgstr ""
 #: src/components/dms/MessagesListBlockedFooter.tsx:86
 #: src/components/dms/MessagesListBlockedFooter.tsx:93
 #: src/features/liveNow/components/LiveStatusDialog.tsx:266
-#: src/screens/Messages/ConversationSettings.tsx:878
+#: src/screens/Messages/ConversationSettings.tsx:885
 msgid "Report"
 msgstr ""
 
@@ -8701,7 +8695,7 @@ msgstr ""
 msgid "Report this feed"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:877
+#: src/screens/Messages/ConversationSettings.tsx:884
 msgid "Report this group chat"
 msgstr "Report this group chat"
 
@@ -8812,8 +8806,6 @@ msgid "Required in your region"
 msgstr ""
 
 #: src/components/dialogs/EmailDialog/components/ResendEmailText.tsx:41
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:266
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:277
 msgid "Resend"
 msgstr ""
 
@@ -8934,7 +8926,7 @@ msgstr ""
 #: src/components/StarterPack/QrCodeDialog.tsx:207
 #: src/features/liveNow/components/EditLiveDialog.tsx:204
 #: src/features/liveNow/components/EditLiveDialog.tsx:211
-#: src/screens/Messages/ConversationSettings.tsx:1055
+#: src/screens/Messages/ConversationSettings.tsx:1063
 #: src/screens/Profile/Header/EditProfileDialog.tsx:233
 #: src/screens/Profile/Header/EditProfileDialog.tsx:247
 #: src/screens/SavedFeeds.tsx:132
@@ -8949,7 +8941,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:664
+#: src/view/com/lightbox/ImageViewing/index.tsx:671
 msgctxt "action"
 msgid "Save"
 msgstr ""
@@ -8964,22 +8956,22 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:132
 #: src/screens/SavedFeeds.tsx:326
 #: src/screens/SavedFeeds.tsx:330
-#: src/view/com/composer/Composer.tsx:1269
+#: src/view/com/composer/Composer.tsx:1257
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save changes"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1241
+#: src/view/com/composer/Composer.tsx:1229
 #: src/view/com/composer/drafts/DraftsButton.tsx:93
 msgid "Save changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1269
+#: src/view/com/composer/Composer.tsx:1257
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save draft"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1243
+#: src/view/com/composer/Composer.tsx:1231
 #: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Save draft?"
 msgstr ""
@@ -9118,7 +9110,7 @@ msgstr "Search for people"
 msgid "Search for posts, users, or feeds"
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:169
+#: src/components/dialogs/GifSelect.tsx:181
 msgid "Search GIFs"
 msgstr ""
 
@@ -9126,6 +9118,10 @@ msgstr ""
 #: src/screens/Search/SearchResults.tsx:313
 msgid "Search is currently unavailable when logged out"
 msgstr ""
+
+#: src/components/dialogs/GifSelect.tsx:182
+msgid "Search KLIPY"
+msgstr "Search KLIPY"
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:232
 #: src/components/dialogs/LanguageSelectDialog.tsx:233
@@ -9147,7 +9143,7 @@ msgstr ""
 msgid "Search profiles"
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:170
+#: src/components/dialogs/GifSelect.tsx:182
 msgid "Search Tenor"
 msgstr ""
 
@@ -9300,7 +9296,7 @@ msgid "Select GIF"
 msgstr ""
 
 #. placeholder {0}: gif.title
-#: src/components/dialogs/GifSelect.tsx:297
+#: src/components/dialogs/GifSelect.tsx:309
 msgid "Select GIF \"{0}\""
 msgstr ""
 
@@ -9404,7 +9400,7 @@ msgstr ""
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:175
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:182
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:303
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:202
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:199
 msgid "Send email"
 msgstr ""
 
@@ -9412,9 +9408,9 @@ msgstr ""
 msgid "Send feedback"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:264
-#: src/screens/Messages/components/MessageInput.tsx:227
-#: src/screens/Messages/components/MessageInput.web.tsx:233
+#: src/screens/Messages/components/MessageComposer.tsx:226
+#: src/screens/Messages/components/MessageInput.tsx:225
+#: src/screens/Messages/components/MessageInput.web.tsx:216
 msgid "Send message"
 msgstr ""
 
@@ -9555,7 +9551,7 @@ msgstr ""
 msgid "Share"
 msgstr ""
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:673
+#: src/view/com/lightbox/ImageViewing/index.tsx:680
 msgctxt "action"
 msgid "Share"
 msgstr ""
@@ -9875,7 +9871,7 @@ msgstr ""
 msgid "Skip to next step"
 msgstr ""
 
-#: src/components/images/Gallery/index.tsx:414
+#: src/components/images/Gallery/index.tsx:418
 msgid "slide"
 msgstr "slide"
 
@@ -9930,8 +9926,8 @@ msgstr ""
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:153
-#: src/screens/Messages/ConversationSettings.tsx:179
+#: src/screens/Messages/Conversation.tsx:143
+#: src/screens/Messages/ConversationSettings.tsx:198
 msgid "Something went wrong"
 msgstr ""
 
@@ -10330,6 +10326,10 @@ msgstr ""
 msgid "Tell us a little more"
 msgstr ""
 
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:214
+msgid "Temporarily deactivate your account"
+msgstr "Temporarily deactivate your account"
+
 #: src/view/shell/desktop/RightNav.tsx:124
 #: src/view/shell/desktop/RightNav.tsx:125
 msgid "Terms"
@@ -10523,7 +10523,11 @@ msgstr ""
 msgid "There was a problem with your internet connection, please try again"
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:216
+#: src/components/dialogs/GifSelect.tsx:230
+msgid "There was an issue connecting to KLIPY."
+msgstr "There was an issue connecting to KLIPY."
+
+#: src/components/dialogs/GifSelect.tsx:231
 msgid "There was an issue connecting to Tenor."
 msgstr ""
 
@@ -10580,8 +10584,8 @@ msgstr ""
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:431
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:454
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:474
-#: src/screens/Messages/ConversationSettings.tsx:563
-#: src/screens/Messages/ConversationSettings.tsx:576
+#: src/screens/Messages/ConversationSettings.tsx:567
+#: src/screens/Messages/ConversationSettings.tsx:580
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:117
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:130
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:93
@@ -10610,7 +10614,7 @@ msgstr ""
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:260
+#: src/components/dialogs/GifSelect.tsx:273
 #: src/components/dialogs/LanguageSelectDialog.tsx:349
 #: src/view/com/util/ErrorBoundary.tsx:59
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
@@ -10834,7 +10838,7 @@ msgstr ""
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:898
+#: src/view/com/composer/Composer.tsx:897
 msgid "This post's author has disabled quote posts."
 msgstr ""
 
@@ -10910,7 +10914,7 @@ msgstr ""
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:337
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:330
 msgid "This will irreversibly delete your Bluesky account <0>{currentHandle}</0> and all associated data. Note that this will affect any other <1>AT Protocol</1> services you use with this account."
 msgstr ""
 
@@ -11088,7 +11092,7 @@ msgstr ""
 msgid "Two-factor authentication (2FA)"
 msgstr ""
 
-#: src/screens/Messages/components/MessageInput.tsx:172
+#: src/screens/Messages/components/MessageInput.tsx:170
 msgid "Type your message here"
 msgstr ""
 
@@ -11160,7 +11164,7 @@ msgctxt "action"
 msgid "Unblock"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:665
+#: src/screens/Messages/ConversationSettings.tsx:669
 msgid "Unblock {displayName}"
 msgstr "Unblock {displayName}"
 
@@ -11235,11 +11239,11 @@ msgstr ""
 msgid "Unfortunately, your declared age indicates that you are not old enough to access Bluesky in your region."
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:690
+#: src/screens/Messages/ConversationSettings.tsx:694
 msgid "Uninvite"
 msgstr "Uninvite"
 
-#: src/screens/Messages/ConversationSettings.tsx:687
+#: src/screens/Messages/ConversationSettings.tsx:691
 msgid "Uninvite {displayName} from this group chat"
 msgstr "Uninvite {displayName} from this group chat"
 
@@ -11265,7 +11269,7 @@ msgstr ""
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:867
+#: src/screens/Messages/ConversationSettings.tsx:874
 msgid "Unlock this group chat"
 msgstr "Unlock this group chat"
 
@@ -11302,7 +11306,7 @@ msgstr ""
 msgid "Unmute list"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:843
+#: src/screens/Messages/ConversationSettings.tsx:849
 msgid "Unmute this group chat"
 msgstr "Unmute this group chat"
 
@@ -11381,7 +11385,7 @@ msgstr ""
 msgid "Unsupported clipboard content"
 msgstr "Unsupported clipboard content"
 
-#: src/view/com/composer/Composer.tsx:1370
+#: src/view/com/composer/Composer.tsx:1358
 msgid "Unsupported video type: {mimeType}"
 msgstr ""
 
@@ -11447,7 +11451,7 @@ msgstr ""
 msgid "Upload from Library"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2390
+#: src/view/com/composer/Composer.tsx:2384
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -11460,7 +11464,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2392
+#: src/view/com/composer/Composer.tsx:2386
 msgid "Uploading video..."
 msgstr ""
 
@@ -11739,7 +11743,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2410
+#: src/view/com/composer/Composer.tsx:2404
 msgid "Video uploaded"
 msgstr ""
 
@@ -11756,7 +11760,7 @@ msgstr ""
 msgid "Videos must be less than 3 minutes long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:990
+#: src/view/com/composer/Composer.tsx:989
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr ""
@@ -11781,11 +11785,8 @@ msgstr ""
 msgid "View {0}’s profile"
 msgstr "View {0}’s profile"
 
-#: src/components/dms/MessagesListHeader.tsx:164
-msgid "View {displayName}'s profile"
-msgstr ""
-
-#: src/screens/Messages/ConversationSettings.tsx:641
+#: src/components/dms/MessagesListHeader.tsx:118
+#: src/screens/Messages/ConversationSettings.tsx:645
 msgid "View {displayName}’s profile"
 msgstr "View {displayName}’s profile"
 
@@ -11810,7 +11811,7 @@ msgstr ""
 msgid "View full thread"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:243
+#: src/screens/Messages/ConversationSettings.tsx:256
 msgid "View incoming group chat requests"
 msgstr "View incoming group chat requests"
 
@@ -11829,7 +11830,7 @@ msgstr ""
 msgid "View more trending videos"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:985
+#: src/view/com/composer/Composer.tsx:984
 msgid "View post"
 msgstr ""
 
@@ -11961,11 +11962,11 @@ msgstr ""
 msgid "We couldn't find any results for that topic."
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:154
+#: src/screens/Messages/Conversation.tsx:144
 msgid "We couldn't load this conversation"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:180
+#: src/screens/Messages/ConversationSettings.tsx:199
 msgid "We couldn’t load this conversation’s settings"
 msgstr "We couldn’t load this conversation’s settings"
 
@@ -12110,7 +12111,7 @@ msgstr "We’re sorry, but your search could not be completed. Please try again 
 msgid "We're sorry, you cannot access this screen at this time."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:896
+#: src/view/com/composer/Composer.tsx:895
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr ""
 
@@ -12161,7 +12162,7 @@ msgid "What do you want to call your starter pack?"
 msgstr ""
 
 #: src/view/com/auth/SplashScreen.web.tsx:104
-#: src/view/com/composer/Composer.tsx:1330
+#: src/view/com/composer/Composer.tsx:1318
 #: src/view/com/feeds/ComposerPrompt.tsx:193
 msgid "What's up?"
 msgstr ""
@@ -12238,7 +12239,7 @@ msgstr ""
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1257
+#: src/view/com/composer/Composer.tsx:1245
 msgid "Would you like to save this as a draft to edit later?"
 msgstr ""
 
@@ -12247,12 +12248,12 @@ msgstr ""
 msgid "Write a post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1430
+#: src/view/com/composer/Composer.tsx:1418
 msgid "Write post"
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:91
-#: src/view/com/composer/Composer.tsx:1328
+#: src/view/com/composer/Composer.tsx:1316
 msgid "Write your reply"
 msgstr ""
 
@@ -12279,7 +12280,7 @@ msgstr ""
 msgid "Yes, deactivate"
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:356
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:348
 msgid "Yes, delete my account"
 msgstr ""
 
@@ -12365,7 +12366,7 @@ msgstr ""
 msgid "You can adjust your interests at any time from \"Content and media\" settings."
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:214
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:211
 msgid "You can also <0>temporarily deactivate</0> your account instead. Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr ""
 
@@ -12399,7 +12400,7 @@ msgstr ""
 msgid "You can now sign in with your new password."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1262
+#: src/view/com/composer/Composer.tsx:1250
 msgid "You can only save drafts up to 1000 characters."
 msgstr ""
 
@@ -12538,7 +12539,7 @@ msgstr ""
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1252
+#: src/view/com/composer/Composer.tsx:1240
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr ""
 
@@ -12663,7 +12664,7 @@ msgstr ""
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:1123
+#: src/screens/Messages/ConversationSettings.tsx:1131
 msgid "You won’t be able to rejoin unless you’re invited."
 msgstr "You won’t be able to rejoin unless you’re invited."
 
@@ -12744,7 +12745,7 @@ msgstr ""
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:561
+#: src/view/com/composer/Composer.tsx:560
 msgid "You've reached the maximum number of drafts"
 msgstr ""
 
@@ -12772,7 +12773,7 @@ msgstr ""
 msgid "Your account"
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:131
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:128
 msgid "Your account has been deleted, see ya! ✌️"
 msgstr ""
 
@@ -12904,11 +12905,11 @@ msgstr ""
 msgid "Your password must be at least 8 characters long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:981
+#: src/view/com/composer/Composer.tsx:980
 msgid "Your post was sent"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:978
+#: src/view/com/composer/Composer.tsx:977
 msgid "Your posts were sent"
 msgstr ""
 
@@ -12929,7 +12930,7 @@ msgstr ""
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:980
+#: src/view/com/composer/Composer.tsx:979
 msgid "Your reply was sent"
 msgstr ""
 
