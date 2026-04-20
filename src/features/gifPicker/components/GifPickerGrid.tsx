@@ -1,4 +1,4 @@
-import {forwardRef, useMemo} from 'react'
+import {forwardRef} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 
 import {cleanError} from '#/lib/strings/errors'
@@ -38,10 +38,7 @@ export const GifPickerGrid = forwardRef<ListMethods, Props>(
     const {height} = useWindowDimensions()
     const numColumns = gtMobile ? 3 : 2
 
-    const columns = useMemo(
-      () => distributeIntoColumns(items, numColumns),
-      [items, numColumns],
-    )
+    const columns = distributeIntoColumns(items, numColumns)
 
     /**
      * The grid is a single FlatList row because the tiles are distributed
@@ -49,7 +46,7 @@ export const GifPickerGrid = forwardRef<ListMethods, Props>(
      * the outer FlatList's scroll position, so pagination behaves the same
      * as a conventional grid.
      */
-    const data = useMemo(() => (hasData ? [columns] : []), [hasData, columns])
+    const data = hasData ? [columns] : []
 
     return (
       <Dialog.InnerFlatList

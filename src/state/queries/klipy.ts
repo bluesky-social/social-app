@@ -1,65 +1,17 @@
 import {Platform} from 'react-native'
 import {getLocales} from 'expo-localization'
-import {
-  keepPreviousData,
-  useInfiniteQuery,
-  useQuery,
-} from '@tanstack/react-query'
+import {keepPreviousData, useInfiniteQuery} from '@tanstack/react-query'
 
-import {
-  GIF_KLIPY_AUTOCOMPLETE,
-  GIF_KLIPY_FEATURED,
-  GIF_KLIPY_SEARCH,
-} from '#/lib/constants'
+import {GIF_KLIPY_FEATURED, GIF_KLIPY_SEARCH} from '#/lib/constants'
 import {logger} from '#/logger'
-import {STALE} from '#/state/queries'
-import {type Gif} from '#/state/queries/tenor'
+import {type Gif} from '#/state/queries/gif'
 
 export const RQKEY_ROOT = 'klipy-gif-service'
 export const RQKEY_FEATURED = [RQKEY_ROOT, 'featured']
 export const RQKEY_SEARCH = (query: string) => [RQKEY_ROOT, 'search', query]
-export const RQKEY_AUTOCOMPLETE = (query: string) => [
-  RQKEY_ROOT,
-  'autocomplete',
-  query,
-]
 
 const getTrendingGifs = createKlipyApi(GIF_KLIPY_FEATURED)
 const searchGifs = createKlipyApi<{q: string}>(GIF_KLIPY_SEARCH)
-
-async function fetchKlipyAutocomplete(query: string): Promise<string[]> {
-  const params = new URLSearchParams()
-
-  params.set(
-    'client_key',
-    Platform.select({
-      ios: 'bluesky-ios',
-      android: 'bluesky-android',
-      default: 'bluesky-web',
-    }),
-  )
-
-  params.set('limit', '8')
-
-  const locale = getLocales?.()?.[0]
-  if (locale) {
-    params.set('locale', locale.languageTag.replace('-', '_'))
-  }
-
-  params.set('q', query)
-
-  const res = await fetch(GIF_KLIPY_AUTOCOMPLETE(params.toString()), {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  if (!res.ok) {
-    throw new Error('Failed to fetch KLIPY autocomplete API')
-  }
-  const body: KlipyAutocompleteResponse = await res.json()
-  return body.results
-}
 
 export function useFeaturedGifsQuery(options?: {enabled?: boolean}) {
   return useInfiniteQuery({
@@ -81,19 +33,6 @@ export function useGifSearchQuery(
     initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.next,
     enabled: !!query && options?.enabled !== false,
-    placeholderData: keepPreviousData,
-  })
-}
-
-export function useKlipyAutocompleteQuery(
-  query: string,
-  options?: {enabled?: boolean},
-) {
-  return useQuery({
-    queryKey: RQKEY_AUTOCOMPLETE(query),
-    queryFn: () => fetchKlipyAutocomplete(query),
-    enabled: query.length > 0 && options?.enabled !== false,
-    staleTime: STALE.HOURS.ONE,
     placeholderData: keepPreviousData,
   })
 }
@@ -166,9 +105,4 @@ export function klipyUrlToBskyGifUrl(klipyUrl: string) {
   }
   url.hostname = 'k.gifs.bsky.app'
   return url.href
-}
-
-type KlipyAutocompleteResponse = {
-  locale: string
-  results: string[]
 }

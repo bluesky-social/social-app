@@ -7,6 +7,7 @@ export function GifPickerPlaceholder({
   isLoading,
   isError,
   isSearching,
+  isRecentsEmpty,
   query,
   onRetry,
   onGoBack,
@@ -14,11 +15,18 @@ export function GifPickerPlaceholder({
   isLoading: boolean
   isError: boolean
   isSearching: boolean
+  isRecentsEmpty: boolean
   query: string
   onRetry: () => Promise<unknown>
   onGoBack: () => void
 }) {
   const {_} = useLingui()
+
+  const emptyMessage = isSearching
+    ? _(msg`No GIFs found for "${query}".`)
+    : isRecentsEmpty
+      ? _(msg`No recent GIFs yet. Pick one to see it here.`)
+      : _(msg`No GIFs to show right now. Try again in a moment.`)
 
   return (
     <ListMaybePlaceholder
@@ -33,11 +41,7 @@ export function GifPickerPlaceholder({
       errorMessage={_(
         msg`There was a problem loading GIFs. Check your connection and try again.`,
       )}
-      emptyMessage={
-        isSearching
-          ? _(msg`No GIFs found for "${query}".`)
-          : _(msg`No GIFs to show right now. Try again in a moment.`)
-      }
+      emptyMessage={emptyMessage}
     />
   )
 }

@@ -4,19 +4,19 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
+import {Button, useSharedButtonTextStyles} from '#/components/Button'
 import {Celebrate_Stroke2_Corner0_Rounded as Celebrate} from '#/components/icons/Celebrate'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {
-  EmojiArc_Stroke2_Corner0_Rounded as EmojiArc,
-  EmojiHeartEyes_Stroke2_Corner0_Rounded as EmojiHeartEyes,
   EmojiSad_Stroke2_Corner0_Rounded as EmojiSad,
   EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmile,
 } from '#/components/icons/Emoji'
-import {Flame_Stroke2_Corner1_Rounded as Flame} from '#/components/icons/Flame'
-import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled} from '#/components/icons/Heart2'
+import {Heart2_Stroke2_Corner0_Rounded as Heart} from '#/components/icons/Heart2'
+import {Shaka_Stroke2_Corner0_Rounded as Shaka} from '#/components/icons/Shaka'
+import {Trending3_Stroke2_Corner1_Rounded as Trending} from '#/components/icons/Trending'
+
+const ICON_SIZE = 20
 
 export type GifCategory = {
   id: string
@@ -27,14 +27,12 @@ export type GifCategory = {
 
 export const GIF_CATEGORIES: readonly GifCategory[] = [
   {id: 'recents', icon: Clock, label: msg`Recents`, searchterm: null},
-  {id: 'trending', icon: Flame, label: msg`Trending`, searchterm: null},
-  {id: 'love', icon: HeartFilled, label: msg`Love`, searchterm: 'love'},
+  {id: 'trending', icon: Trending, label: msg`Trending`, searchterm: null},
+  {id: 'love', icon: Heart, label: msg`Love`, searchterm: 'love'},
   {id: 'happy', icon: EmojiSmile, label: msg`Happy`, searchterm: 'happy'},
   {id: 'sad', icon: EmojiSad, label: msg`Sad`, searchterm: 'cry'},
   {id: 'party', icon: Celebrate, label: msg`Party`, searchterm: 'congratulations'},
-  {id: 'yes', icon: Check, label: msg`Yes`, searchterm: 'yes'},
-  {id: 'lol', icon: EmojiArc, label: msg`LOL`, searchterm: 'lol'},
-  {id: 'excited', icon: EmojiHeartEyes, label: msg`Excited`, searchterm: 'excited'},
+  {id: 'yes', icon: Shaka, label: msg`Yes`, searchterm: 'yes'},
 ] as const
 
 export function GifCategoryPills({
@@ -46,8 +44,9 @@ export function GifCategoryPills({
   onSelect: (category: GifCategory) => void
   hasRecents: boolean
 }) {
-  // useLingui() is called to re-render when the locale changes, even though we
-  // translate via i18n._() below to satisfy the lingui-msg-rule lint constraint.
+  // Subscribe to locale changes so i18n._() returns the current translation.
+  // The lingui-msg-rule lint rule forbids _() with variables, so we use
+  // i18n._() directly to translate the MessageDescriptor from GIF_CATEGORIES.
   useLingui()
 
   return (
@@ -57,26 +56,36 @@ export function GifCategoryPills({
         a.justify_between,
         a.align_center,
         a.gap_xs,
-        a.px_xl,
-        a.mb_sm,
+        a.mb_md,
       ]}>
       {GIF_CATEGORIES.map(category => {
         if (category.id === 'recents' && !hasRecents) return null
         const isActive = category.id === activeId
-        const label = i18n._(category.label)
         return (
           <Button
             key={category.id}
-            label={label}
+            label={i18n._(category.label)}
+            aria-current={isActive ? 'true' : undefined}
             onPress={() => onSelect(category)}
             size="small"
             variant={isActive ? 'solid' : 'ghost'}
             color="secondary"
             shape="round">
-            <ButtonIcon icon={category.icon} />
+            <PillIcon icon={category.icon} />
           </Button>
         )
       })}
     </View>
+  )
+}
+
+function PillIcon({icon: Icon}: {icon: React.ComponentType<SVGIconProps>}) {
+  const textStyles = useSharedButtonTextStyles()
+  return (
+    <Icon
+      width={ICON_SIZE}
+      height={ICON_SIZE}
+      style={{color: textStyles.color}}
+    />
   )
 }

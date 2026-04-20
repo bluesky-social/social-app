@@ -30,11 +30,10 @@ export function GifPickerHeader({
       style={[
         native(a.pt_4xl),
         a.relative,
-        a.mb_lg,
+        a.mb_md,
         a.flex_row,
         a.align_center,
         !gtMobile && web(a.gap_md),
-        a.pb_sm,
         t.atoms.bg,
       ]}>
       {!gtMobile && IS_WEB && (
@@ -66,8 +65,6 @@ export function GifPickerHeader({
           }}
         />
       </TextField.Root>
-
-      {/* future: tabs (Trending / Recents / Categories) render here */}
     </View>
   )
 }

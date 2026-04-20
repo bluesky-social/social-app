@@ -10,8 +10,8 @@ import {
   type EmbedPlayerParams,
   parseEmbedPlayerFromUrl,
 } from '#/lib/strings/embed-player'
+import {type Gif} from '#/state/queries/gif'
 import {useResolveGifQuery} from '#/state/queries/resolve-link'
-import {type Gif} from '#/state/queries/tenor'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'

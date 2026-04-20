@@ -1,3 +1,4 @@
+import {type Gif} from '#/state/queries/gif'
 import {type ID as PolicyUpdate202508} from '#/components/PolicyUpdateOverlay/updates/202508/config'
 import {type Geolocation} from '#/geolocation/types'
 
@@ -81,8 +82,7 @@ export type Account = {
   lastSelectedHomeFeed?: string
 
   /**
-   * Recently selected GIFs in the GIF picker, stored as serialized Gif objects.
-   * Most recent first, capped at 20.
+   * Recently selected GIFs in the GIF picker. Most recent first, capped at 20.
    */
-  recentGifs?: string[]
+  recentGifs?: Gif[]
 }

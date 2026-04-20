@@ -17,8 +17,8 @@ import {
   toBskyAppUrl,
 } from '#/lib/strings/url-helpers'
 import {type ComposerImage, createInitialImages} from '#/state/gallery'
+import {type Gif} from '#/state/queries/gif'
 import {createPostgateRecord} from '#/state/queries/postgate/util'
-import {type Gif} from '#/state/queries/tenor'
 import {threadgateRecordToAllowUISetting} from '#/state/queries/threadgate'
 import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {type ComposerOpts} from '#/state/shell/composer'

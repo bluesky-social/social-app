@@ -153,6 +153,7 @@ function GifPickerBody({
           isLoading={!isRecentsActive && isPending}
           isError={!isRecentsActive && isError}
           isSearching={isSearching}
+          isRecentsEmpty={isRecentsActive}
           query={effectiveSearch}
           onRetry={refetch}
           onGoBack={onGoBack}

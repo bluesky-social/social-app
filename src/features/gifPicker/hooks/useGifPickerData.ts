@@ -7,7 +7,6 @@ import {
   useTenorGifSearchQuery,
 } from '#/state/queries/tenor'
 import {useAnalytics} from '#/analytics'
-import {type GifPickerProvider} from '#/features/gifPicker/types'
 
 /**
  * Single entry point for the GIF picker's data layer. Wraps the Klipy/Tenor
@@ -24,7 +23,6 @@ export function useGifPickerData(
   // TODO: revert — hardcoded for local Klipy testing
   const useKlipy = true // ax.features.enabled(ax.features.KlipyGifProviderEnable)
   const isSearching = query.length > 0
-  const provider: GifPickerProvider = useKlipy ? 'klipy' : 'tenor'
 
   const klipyFeatured = useKlipyFeaturedGifsQuery({
     enabled: enabled && useKlipy && !isSearching,
@@ -49,7 +47,6 @@ export function useGifPickerData(
 
   return {
     ...active,
-    provider,
     isSearching,
   }
 }

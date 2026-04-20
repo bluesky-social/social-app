@@ -2,7 +2,7 @@ import {Image} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {gifPreviewUrl} from '#/state/queries/tenor'
+import {gifPreviewUrl} from '#/state/queries/gif'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useAnalytics} from '#/analytics'
