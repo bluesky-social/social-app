@@ -433,14 +433,14 @@ function Member({
         break
     }
   } else {
-    statusBadge = (
+    statusBadge = convo ? (
       <MemberMenu
         convo={convo}
         profile={profile}
         type={status}
         isOwner={isOwner}
       />
-    )
+    ) : null
   }
 
   return (
@@ -551,7 +551,7 @@ function MemberMenu({
   type,
   isOwner,
 }: {
-  convo: ConvoWithDetails | null
+  convo: ConvoWithDetails
   profile: Shadow<bsky.profile.AnyProfileView>
   type: 'owner' | 'standard' | 'invited'
   isOwner: boolean
