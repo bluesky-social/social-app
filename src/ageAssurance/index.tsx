@@ -88,26 +88,11 @@ function InnerProvider({children}: {children: React.ReactNode}) {
 
   const handleAccessUpdate = useCallback(
     (s: AgeAssuranceState) => {
-      const hasCompletedAA = s.status === AgeAssuranceStatus.Assured
       const isAgeRestricted = s.access !== AgeAssuranceAccess.Full
-      const isDeclaredAdult = data?.birthdate
-        ? !isUnderAge(data.birthdate, 18)
-        : false
-      /*
-       * If they haven't completed AA and they've self-declared to be an adult,
-       * we don't definitively know their age or access level.
-       */
-      if (!hasCompletedAA && isDeclaredAdult) return
-      /*
-       * If they're not age-restricted, then we don't need to do anything.
-       */
-      if (!isAgeRestricted) return
-      /*
-       * They either haven't proven their an adult OR we don't know but they've
-       * self-declared to be <18, so we have to restrict access
-       */
-      void getAndRegisterPushToken({isAgeRestricted})
-      maybeRestrictChatSettings({agent})
+      if (isAgeRestricted) {
+        void getAndRegisterPushToken({isAgeRestricted})
+        maybeRestrictChatSettings({agent})
+      }
     },
     [agent, data, getAndRegisterPushToken],
   )
