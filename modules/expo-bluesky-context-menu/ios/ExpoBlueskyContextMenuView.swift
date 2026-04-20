@@ -22,6 +22,20 @@ class ExpoBlueskyContextMenuView: ExpoView, UIContextMenuInteractionDelegate {
     self.addInteraction(interaction)
   }
 
+  override var bounds: CGRect {
+    get {
+      let b = super.bounds
+      let s = UIScreen.main.scale
+      return CGRect(
+        x: b.origin.x,
+        y: b.origin.y,
+        width: round(b.width * s) / s,
+        height: round(b.height * s) / s
+      )
+    }
+    set { super.bounds = newValue }
+  }
+
   func setPreview(_ value: [String: Any]?) { self.preview = value }
   func setMenuItems(_ value: [[String: Any]]) { self.menuItems = value }
   func setPreviewCornerRadius(_ value: Double) {
@@ -59,11 +73,12 @@ class ExpoBlueskyContextMenuView: ExpoView, UIContextMenuInteractionDelegate {
     return makeTargetedPreview()
   }
 
-  // NOTE: Intentionally not implementing
-  // `previewForDismissingMenuWithConfiguration`. iOS reverses the highlight
-  // animation by default, which interpolates size + position together. Supplying
-  // a separate dismiss preview tends to produce a two-stage animation on
-  // aspect-mismatched thumbnails (snap to original size, then translate).
+  func contextMenuInteraction(
+    _ interaction: UIContextMenuInteraction,
+    previewForDismissingMenuWithConfiguration configuration: UIContextMenuConfiguration
+  ) -> UITargetedPreview? {
+    return makeTargetedPreview()
+  }
 
   func contextMenuInteraction(
     _ interaction: UIContextMenuInteraction,
