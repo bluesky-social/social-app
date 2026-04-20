@@ -31,7 +31,12 @@ export const GIF_CATEGORIES: readonly GifCategory[] = [
   {id: 'love', icon: Heart, label: msg`Love`, searchterm: 'love'},
   {id: 'happy', icon: EmojiSmile, label: msg`Happy`, searchterm: 'happy'},
   {id: 'sad', icon: EmojiSad, label: msg`Sad`, searchterm: 'cry'},
-  {id: 'party', icon: Celebrate, label: msg`Party`, searchterm: 'congratulations'},
+  {
+    id: 'party',
+    icon: Celebrate,
+    label: msg`Party`,
+    searchterm: 'congratulations',
+  },
   {id: 'yes', icon: Shaka, label: msg`Yes`, searchterm: 'yes'},
 ] as const
 
