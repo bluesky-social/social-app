@@ -86,9 +86,11 @@ final class ImagePreviewController: UIViewController {
 
   /// Caps the preview to a comfortable size within the current key window.
   private static func sizeForAspect(_ aspect: CGFloat) -> CGSize {
-    let screen = UIScreen.main.bounds
-    let maxW = screen.width - 32
-    let maxH = screen.height * 0.7
+    let screenBounds = UIApplication.shared.connectedScenes
+      .compactMap { $0 as? UIWindowScene }
+      .first?.screen.bounds ?? UIScreen.main.bounds
+    let maxW = screenBounds.width - 32
+    let maxH = screenBounds.height * 0.7
     var w = maxW
     var h = w / aspect
     if h > maxH {

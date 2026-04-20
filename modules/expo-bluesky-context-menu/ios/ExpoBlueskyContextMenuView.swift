@@ -29,7 +29,7 @@ class ExpoBlueskyContextMenuView: ExpoView, UIContextMenuInteractionDelegate {
   override var bounds: CGRect {
     get {
       let b = super.bounds
-      let s = UIScreen.main.scale
+      let s = self.window?.screen.scale ?? UIScreen.main.scale
       return CGRect(
         x: b.origin.x,
         y: b.origin.y,
