@@ -155,6 +155,7 @@ export function StepSuggestedAccounts() {
         seenProfilesRef.current.add(did)
         ax.metric('suggestedUser:seen', {
           logContext: 'Onboarding',
+          recSource: !useFullExperience ? 'Search' : undefined,
           recId: suggestedUsers?.recId,
           position,
           suggestedDid: did,
@@ -162,7 +163,7 @@ export function StepSuggestedAccounts() {
         })
       }
     },
-    [ax, selectedInterest, suggestedUsers?.recId],
+    [ax, selectedInterest, suggestedUsers?.recId, useFullExperience],
   )
 
   useEffect(() => {

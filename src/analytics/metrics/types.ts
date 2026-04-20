@@ -514,6 +514,7 @@ export type Events = {
       | 'Onboarding'
       | 'SeeMoreSuggestedUsers'
       | 'ProgressGuide'
+    recSource?: 'Search'
     recId?: number | string
     position: number
     suggestedDid: string

@@ -286,6 +286,7 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
             )
             ax.metric('suggestedUser:seen', {
               logContext: isGuide ? 'ProgressGuide' : 'SeeMoreSuggestedUsers',
+              recSource: hasSearchText ? 'Search' : undefined,
               recId: recIdForLogging,
               position: position !== -1 ? position : 0,
               suggestedDid: item.profile.did,
