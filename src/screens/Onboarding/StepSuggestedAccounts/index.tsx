@@ -105,6 +105,7 @@ export function StepSuggestedAccounts() {
         ax.metric('suggestedUser:follow', {
           logContext: 'Onboarding',
           location: 'FollowAll',
+          recSource: !useFullExperience ? 'Search' : undefined,
           recId: suggestedUsers?.recId,
           position: i,
           suggestedDid: did,
@@ -249,6 +250,7 @@ export function StepSuggestedAccounts() {
                 position={index}
                 category={selectedInterest}
                 onSeen={onProfileSeen}
+                recSource={!useFullExperience ? 'Search' : undefined}
                 recId={suggestedUsers.recId}
               />
             ))}
@@ -359,6 +361,7 @@ function SuggestedProfileCard({
   position,
   category,
   onSeen,
+  recSource,
   recId,
 }: {
   profile: bsky.profile.AnyProfileView
@@ -366,6 +369,7 @@ function SuggestedProfileCard({
   position: number
   category: string | null
   onSeen: (did: string, position: number) => void
+  recSource?: 'Search'
   recId?: number | string
 }) {
   const t = useTheme()
@@ -433,6 +437,7 @@ function SuggestedProfileCard({
               ax.metric('suggestedUser:follow', {
                 logContext: 'Onboarding',
                 location: 'Card',
+                recSource,
                 recId,
                 position,
                 suggestedDid: profile.did,
