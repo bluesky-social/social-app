@@ -77,15 +77,11 @@ final class ImagePreviewController: UIViewController {
     }
   }
 
-  /// Synchronous cache lookup across memory + disk. Memory hits are instant;
-  /// disk hits incur a small read but remain on-thread (matches what SDWebImage
-  /// does when the cache policy permits).
+  /// Memory-only cache lookup. Disk reads are left to the async SDWebImage
+  /// load to avoid blocking the main thread during the peek animation.
   private func cachedImage(for url: URL) -> UIImage? {
     let key = SDWebImageManager.shared.cacheKey(for: url) ?? url.absoluteString
-    if let memory = SDImageCache.shared.imageFromMemoryCache(forKey: key) {
-      return memory
-    }
-    return SDImageCache.shared.imageFromDiskCache(forKey: key)
+    return SDImageCache.shared.imageFromMemoryCache(forKey: key)
   }
 
   /// Caps the preview to a comfortable size within the current key window.
