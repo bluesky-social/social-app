@@ -3,7 +3,8 @@ import {requireNativeViewManager} from 'expo-modules-core'
 
 import {type NativeViewProps} from './types'
 
-const NativeView: ComponentType<NativeViewProps> =
-  requireNativeViewManager('ExpoBlueskyContextMenu')
+const NativeView: ComponentType<NativeViewProps> = requireNativeViewManager(
+  'ExpoBlueskyContextMenu',
+)
 
 export default NativeView
