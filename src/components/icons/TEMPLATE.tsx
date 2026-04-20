@@ -1,4 +1,8 @@
-import {forwardRef, type ForwardRefExoticComponent, type RefAttributes} from 'react'
+import {
+  forwardRef,
+  type ForwardRefExoticComponent,
+  type RefAttributes,
+} from 'react'
 import Svg, {Path} from 'react-native-svg'
 
 import {type Props, useCommonSVGProps} from '#/components/icons/common'
@@ -120,4 +124,3 @@ export function createMultiPathSVG({
   Icon.svgStrokeWidth = 0
   return Icon
 }
-

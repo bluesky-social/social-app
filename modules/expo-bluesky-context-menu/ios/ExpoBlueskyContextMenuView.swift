@@ -22,6 +22,10 @@ class ExpoBlueskyContextMenuView: ExpoView, UIContextMenuInteractionDelegate {
     self.addInteraction(interaction)
   }
 
+  // RN layout can leave bounds at fractional-pixel values. The targeted preview
+  // snapshots this view's bounds for its return animation, and subpixel mismatches
+  // cause a visible glitch when the preview shrinks back into the thumbnail.
+  // Snapping to whole-pixel values prevents that.
   override var bounds: CGRect {
     get {
       let b = super.bounds

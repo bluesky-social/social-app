@@ -2,14 +2,15 @@ import UIKit
 
 /// Minimal SVG path `d` parser. Handles the subset used by Bluesky's icon set:
 /// M m L l H h V v C c S s Q q T t A a Z z.
+/// Assumes well-formed input from the app's own compiled-in icon paths.
 enum SVGPathParser {
   static func parse(_ d: String) -> UIBezierPath {
     let path = UIBezierPath()
     var tokens = Tokenizer(d)
     var currentPoint = CGPoint.zero
     var subpathStart = CGPoint.zero
-    var lastControl: CGPoint? = nil
-    var lastQuadControl: CGPoint? = nil
+    var lastControl: CGPoint?
+    var lastQuadControl: CGPoint?
     var command: Character = "M"
 
     while let next = tokens.peek() {

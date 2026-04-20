@@ -67,4 +67,3 @@ enum IconRenderer {
     return CGRect(x: parts[0], y: parts[1], width: parts[2], height: parts[3])
   }
 }
-
