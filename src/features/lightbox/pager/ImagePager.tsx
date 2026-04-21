@@ -7,14 +7,8 @@
  */
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {
-  LayoutAnimation,
-  PixelRatio,
-  StyleSheet,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import {useCallback, useEffect, useMemo, useState} from 'react'
+import {PixelRatio, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {Gesture} from 'react-native-gesture-handler'
 import PagerView from 'react-native-pager-view'
@@ -37,22 +31,16 @@ import Animated, {
   withSpring,
   type WithSpringConfig,
 } from 'react-native-reanimated'
-import {SafeAreaView} from 'react-native-safe-area-context'
 import * as ScreenOrientation from 'expo-screen-orientation'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Trans} from '@lingui/react/macro'
 
 import {type Dimensions} from '#/lib/media/types'
-import {colors, s} from '#/lib/styles'
-import {Button} from '#/view/com/util/forms/Button'
-import {Text} from '#/view/com/util/text/Text'
-import {ScrollView} from '#/view/com/util/Views'
 import {useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {IS_IOS} from '#/env'
 import {type Lightbox} from '#/features/lightbox/state'
 import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
-import ImageDefaultHeader from '../../../view/com/lightbox/ImageViewing/components/ImageDefaultHeader'
+import {Footer} from '../chrome/Footer'
+import {Header} from '../chrome/Header'
 import {
   type ImageSource,
   type LightboxTransforms,
@@ -413,22 +401,27 @@ function ImageView({
           </View>
         ))}
       </PagerView>
-      <View style={styles.controls}>
+      <View style={styles.controls} pointerEvents="box-none">
         <Animated.View
           style={animatedHeaderStyle}
+          pointerEvents="box-none"
           renderToHardwareTextureAndroid>
-          <ImageDefaultHeader onRequestClose={handleRequestClose} />
+          <Header
+            onRequestClose={handleRequestClose}
+            onPressShare={() => onPressShare(images[imageIndex].uri)}
+            onPressSave={() => onPressSave(images[imageIndex].uri)}
+          />
         </Animated.View>
         <Animated.View
           style={animatedFooterStyle}
+          pointerEvents="box-none"
           renderToHardwareTextureAndroid={!isAltExpanded}>
-          <LightboxFooter
-            images={images}
-            index={imageIndex}
+          <Footer
+            altText={images[imageIndex].alt}
             isAltExpanded={isAltExpanded}
-            toggleAltExpanded={() => setIsAltExpanded(e => !e)}
-            onPressSave={onPressSave}
-            onPressShare={onPressShare}
+            onToggleAltExpanded={() => setIsAltExpanded(e => !e)}
+            imageCount={images.length}
+            activeIndex={imageIndex}
           />
         </Animated.View>
       </View>
@@ -607,85 +600,6 @@ function LightboxImage({
   )
 }
 
-function LightboxFooter({
-  images,
-  index,
-  isAltExpanded,
-  toggleAltExpanded,
-  onPressSave,
-  onPressShare,
-}: {
-  images: ImageSource[]
-  index: number
-  isAltExpanded: boolean
-  toggleAltExpanded: () => void
-  onPressSave: (uri: string) => void
-  onPressShare: (uri: string) => void
-}) {
-  const {alt: altText, uri} = images[index]
-  const isMomentumScrolling = useRef(false)
-  return (
-    <ScrollView
-      style={styles.footerScrollView}
-      scrollEnabled={isAltExpanded}
-      onMomentumScrollBegin={() => {
-        isMomentumScrolling.current = true
-      }}
-      onMomentumScrollEnd={() => {
-        isMomentumScrolling.current = false
-      }}
-      contentContainerStyle={{
-        paddingVertical: 12,
-        paddingHorizontal: 24,
-      }}>
-      <SafeAreaView edges={['bottom']}>
-        {altText ? (
-          <View accessibilityRole="button" style={styles.footerText}>
-            <Text
-              style={{color: colors.gray3}}
-              numberOfLines={isAltExpanded ? undefined : 3}
-              selectable
-              onPress={() => {
-                if (isMomentumScrolling.current) {
-                  return
-                }
-                LayoutAnimation.configureNext({
-                  duration: 450,
-                  update: {type: 'spring', springDamping: 1},
-                })
-                toggleAltExpanded()
-              }}
-              onLongPress={() => {}}
-              emoji>
-              {altText}
-            </Text>
-          </View>
-        ) : null}
-        <View style={styles.footerBtns}>
-          <Button
-            type="primary-outline"
-            style={styles.footerBtn}
-            onPress={() => onPressSave(uri)}>
-            <FontAwesomeIcon icon={['far', 'floppy-disk']} style={s.white} />
-            <Text type="xl" style={s.white}>
-              <Trans context="action">Save</Trans>
-            </Text>
-          </Button>
-          <Button
-            type="primary-outline"
-            style={styles.footerBtn}
-            onPress={() => onPressShare(uri)}>
-            <FontAwesomeIcon icon="arrow-up-from-bracket" style={s.white} />
-            <Text type="xl" style={s.white}>
-              <Trans context="action">Share</Trans>
-            </Text>
-          </Button>
-        </View>
-      </SafeAreaView>
-    </ScrollView>
-  )
-}
-
 const styles = StyleSheet.create({
   screen: {
     position: 'absolute',
@@ -721,41 +635,6 @@ const styles = StyleSheet.create({
   },
   pager: {
     flex: 1,
-  },
-  header: {
-    position: 'absolute',
-    width: '100%',
-    top: 0,
-    pointerEvents: 'box-none',
-  },
-  footer: {
-    position: 'absolute',
-    width: '100%',
-    maxHeight: '100%',
-    bottom: 0,
-  },
-  footerScrollView: {
-    backgroundColor: '#000d',
-    flex: 1,
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    maxHeight: '100%',
-  },
-  footerText: {
-    paddingBottom: IS_IOS ? 20 : 16,
-  },
-  footerBtns: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 8,
-  },
-  footerBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    backgroundColor: 'transparent',
-    borderColor: colors.white,
   },
 })
 
