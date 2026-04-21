@@ -2,7 +2,6 @@ import {useEffect} from 'react'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
   withSequence,
   withTiming,
 } from 'react-native-reanimated'
@@ -145,8 +144,8 @@ export function PostLanguageSelect({
   )
 }
 
-const NUDGE_FADE_MS = 150
-const NUDGE_HOLD_MS = 1700
+const PULSE_FADE_MS = 100
+const PULSE_TAIL_FADE_MS = 400
 
 function LanguageBtn({
   currentLanguages: currentLanguagesProp,
@@ -165,16 +164,19 @@ function LanguageBtn({
   const currentLanguages = currentLanguagesProp ?? postLanguagesPref
 
   /*
-   * Stays at 0 when idle; each nudge runs fade-in → hold → fade-out as a
-   * single reanimated sequence. Reassigning `value` cancels any prior
-   * sequence, so rapid re-nudges cleanly restart the flash.
+   * Stays at 0 when idle; each nudge runs a double-pulse: two quick
+   * up/down flashes, with the second fade-out slowed down to feel like
+   * the animation is settling. Reassigning `value` cancels any prior
+   * sequence, so rapid re-nudges cleanly restart.
    */
   const nudgePulse = useSharedValue(0)
   useEffect(() => {
     if (nudgeCount === 0) return
     nudgePulse.value = withSequence(
-      withTiming(1, {duration: NUDGE_FADE_MS}),
-      withDelay(NUDGE_HOLD_MS, withTiming(0, {duration: NUDGE_FADE_MS})),
+      withTiming(1, {duration: PULSE_FADE_MS}),
+      withTiming(0, {duration: PULSE_FADE_MS}),
+      withTiming(1, {duration: PULSE_FADE_MS}),
+      withTiming(0, {duration: PULSE_TAIL_FADE_MS}),
     )
   }, [nudgeCount, nudgePulse])
   const pulseStyle = useAnimatedStyle(() => ({
