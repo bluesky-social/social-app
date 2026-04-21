@@ -800,7 +800,6 @@ export type Events = {
      */
     resultSourceLanguage: string
   }
-
   'translate:suggestLanguage': {
     os: Platform['OS']
     /**
@@ -818,7 +817,6 @@ export type Events = {
      */
     textLength: number
   }
-
   'translate:acceptSuggestion': {
     os: Platform['OS']
     /**
@@ -836,7 +834,6 @@ export type Events = {
      */
     textLength: number
   }
-
   'translate:declineSuggestion': {
     os: Platform['OS']
     /**
@@ -854,6 +851,17 @@ export type Events = {
      */
     textLength: number
   }
+  'composer:language:replyNudgeAccept': {
+    /**
+     * The language of the post the user is replying to.
+     */
+    replyToLanguage: string
+    /**
+     * This is the user's current composer languages, which are always defined.
+     */
+    currentTargetLanguages: string[]
+  }
+  'composer:language:replyNudgeDecline': {}
 
   'postMenu:openMuteWordsDialog': {
     uri: string
