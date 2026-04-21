@@ -12,6 +12,7 @@ export enum Features {
   ImageUploadsHighResolution = 'image_uploads:high_resolution',
   ImageUploadsBlobSize2mbEnabled = 'image_uploads:blob_size_2mb:enabled',
   GroupChatsEnable = 'group_chats:enable',
+  GroupChatsHasBeenReleased = 'group_chats:has_been_released',
   DmsNewMessageComposerEnable = 'dms:new_message_composer:enable',
   KlipyGifProviderEnable = 'klipy_gif_provider:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
