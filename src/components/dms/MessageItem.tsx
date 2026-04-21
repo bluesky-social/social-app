@@ -168,12 +168,18 @@ let MessageItem = ({
     isInCluster && !effectiveFirstInCluster && !effectiveLastInCluster
 
   const hasReactions = message.reactions && message.reactions.length > 0
+  const prevHasReactions =
+    prevIsMessage &&
+    prevMessage.reactions != null &&
+    prevMessage.reactions.length > 0
   const squaredBottomCorner =
     !hasReactions &&
     isInCluster &&
     (isInMiddleOfCluster || effectiveFirstInCluster)
   const squaredTopCorner =
-    isInCluster && (isInMiddleOfCluster || effectiveLastInCluster)
+    !prevHasReactions &&
+    isInCluster &&
+    (isInMiddleOfCluster || effectiveLastInCluster)
 
   const pendingColor = t.palette.primary_300
 
