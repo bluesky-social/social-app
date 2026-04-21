@@ -5,9 +5,15 @@ import {msg} from '@lingui/core/macro'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
 import {ArrowBoxRight_Stroke2_Corner3_Rounded as JoinIcon} from '#/components/icons/ArrowBoxRight'
-import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
+import {
+  ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon,
+  ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon,
+} from '#/components/icons/ChainLink'
 import {type Props as SVGIconProps} from '#/components/icons/common'
-import {Lock_Stroke2_Corner0_Rounded as LockIcon} from '#/components/icons/Lock'
+import {
+  Lock_Stroke2_Corner0_Rounded as LockIcon,
+  Unlock_Stroke2_Corner2_Rounded as UnlockIcon,
+} from '#/components/icons/Lock'
 import {PencilLine_Stroke2_Corner0_Rounded as PencilIcon} from '#/components/icons/Pencil'
 
 export type SystemMessageInfo = {
@@ -41,7 +47,7 @@ export function getSystemMessageInfo(
   } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvo(data)) {
     return {Icon: LockIcon, message: msg`Chat locked`}
   } else if (ChatBskyConvoDefs.isSystemMessageDataUnlockConvo(data)) {
-    return {Icon: LockIcon, message: msg`Chat unlocked`}
+    return {Icon: UnlockIcon, message: msg`Chat unlocked`}
   } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvoPermanently(data)) {
     return {Icon: LockIcon, message: msg`Chat locked permanently`}
   } else if (ChatBskyConvoDefs.isSystemMessageDataEditGroup(data)) {
@@ -56,7 +62,7 @@ export function getSystemMessageInfo(
   } else if (ChatBskyConvoDefs.isSystemMessageDataEnableJoinLink(data)) {
     return {Icon: ChainLinkIcon, message: msg`Invite link enabled`}
   } else if (ChatBskyConvoDefs.isSystemMessageDataDisableJoinLink(data)) {
-    return {Icon: ChainLinkIcon, message: msg`Invite link disabled`}
+    return {Icon: ChainLinkBrokenIcon, message: msg`Invite link disabled`}
   }
   return null
 }
