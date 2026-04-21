@@ -4,6 +4,7 @@ import {
   ChatBskyConvoDefs,
   type ChatBskyConvoGetLog,
   type ChatBskyConvoSendMessage,
+  type ChatBskyGroupDefs,
 } from '@atproto/api'
 import {XRPCError} from '@atproto/api'
 import {EventEmitter} from 'eventemitter3'
@@ -145,6 +146,7 @@ export class Convo {
     this.getGroupInfo = this.getGroupInfo.bind(this)
     this.getPrimaryMember = this.getPrimaryMember.bind(this)
     this.updateGroupName = this.updateGroupName.bind(this)
+    this.updateJoinLink = this.updateJoinLink.bind(this)
   }
 
   private commit() {
@@ -953,6 +955,25 @@ export class Convo {
         kind: {
           ...this.convo.kind,
           name,
+        },
+      }
+    }
+    this.commit()
+  }
+
+  updateJoinLink(joinLink: ChatBskyGroupDefs.JoinLinkView | undefined) {
+    if (
+      this.convo &&
+      bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvo>(
+        this.convo.kind,
+        ChatBskyConvoDefs.isGroupConvo,
+      )
+    ) {
+      this.convo = {
+        ...this.convo,
+        kind: {
+          ...this.convo.kind,
+          joinLink,
         },
       }
     }
