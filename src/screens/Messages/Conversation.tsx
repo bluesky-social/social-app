@@ -32,7 +32,6 @@ import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useConvoQuery} from '#/state/queries/messages/conversation'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, useTheme, web} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
@@ -68,25 +67,22 @@ export function MessagesConversationScreen(props: Props) {
 }
 
 export function MessagesConversationScreenInner({route}: Props) {
-  const setMinimalShellMode = useSetMinimalShellMode()
-
   const convoId = route.params.conversation
   const {setCurrentConvoId} = useCurrentConvoId()
 
   useFocusEffect(
     useCallback(() => {
       setCurrentConvoId(convoId)
-      setMinimalShellMode(true)
 
       return () => {
         setCurrentConvoId(undefined)
-        setMinimalShellMode(false)
       }
-    }, [convoId, setCurrentConvoId, setMinimalShellMode]),
+    }, [convoId, setCurrentConvoId]),
   )
 
   return (
     <Layout.Screen
+      minimalShell
       testID="convoScreen"
       noInsetTop={IS_LIQUID_GLASS}
       style={web([{minHeight: 0}, a.flex_1])}>

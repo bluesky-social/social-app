@@ -23,7 +23,6 @@ import {
 } from '#/lib/routes/types'
 import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation'
 import {useBookmarksQuery} from '#/state/queries/bookmarks/useBookmarksQuery'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {Post} from '#/view/com/post/Post'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List} from '#/view/com/util/List'
@@ -43,14 +42,12 @@ import {IS_IOS} from '#/env'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Bookmarks'>
 
 export function BookmarksScreen({}: Props) {
-  const setMinimalShellMode = useSetMinimalShellMode()
   const ax = useAnalytics()
 
   useFocusEffect(
     useCallback(() => {
-      setMinimalShellMode(false)
       ax.metric('bookmarks:view', {})
-    }, [setMinimalShellMode, ax]),
+    }, [ax]),
   )
 
   return (

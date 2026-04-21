@@ -20,7 +20,7 @@ import {type FeedDescriptor, type FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
+import {useDangerouslyImperativelySetMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {FeedPage} from '#/view/com/feeds/FeedPage'
@@ -138,12 +138,7 @@ function HomeScreenReady({
   }, [selectedIndex])
 
   const {hasSession} = useSession()
-  const setMinimalShellMode = useSetMinimalShellMode()
-  useFocusEffect(
-    useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
+  const setMinimalShellMode = useDangerouslyImperativelySetMinimalShellMode()
 
   useFocusEffect(
     useNonReactiveCallback(() => {
@@ -247,7 +242,6 @@ function HomeScreenReady({
         ref={pagerRef}
         testID="homeScreen"
         onPageSelected={onPageSelected}
-        onPageScrollStateChanged={onPageScrollStateChanged}
         renderTabBar={renderTabBar}
         initialPage={selectedIndex}>
         <FeedPage

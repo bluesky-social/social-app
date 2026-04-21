@@ -27,7 +27,6 @@ import {
   useProfilesQuery,
 } from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {
   makeSearchQuery,
   type Params,
@@ -87,7 +86,6 @@ export function SearchScreenShell({
   const route = useRoute()
   const textInput = useRef<TextInput>(null)
   const {t: l} = useLingui()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
 
@@ -288,9 +286,8 @@ export function SearchScreenShell({
 
   useFocusEffect(
     useCallback(() => {
-      setMinimalShellMode(false)
       return listenSoftReset(onSoftReset)
-    }, [onSoftReset, setMinimalShellMode]),
+    }, [onSoftReset]),
   )
 
   const onSearchInputFocus = useCallback(() => {
@@ -481,17 +478,12 @@ let SearchScreenInner = ({
   focusSearchInput: (tab?: TabParam) => void
 }): React.ReactNode => {
   const t = useTheme()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {hasSession} = useSession()
   const {gtTablet} = useBreakpoints()
 
-  const onPageSelected = useCallback(
-    (index: number) => {
-      setMinimalShellMode(false)
-      setActiveTab(index)
-    },
-    [setActiveTab, setMinimalShellMode],
-  )
+  const onPageSelected = (index: number) => {
+    setActiveTab(index)
+  }
 
   return queryWithParams ? (
     <SearchResults
