@@ -13,7 +13,7 @@ import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon} from '#/components/icons/ArrowShareRight'
-import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
+import {ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon} from '#/components/icons/ChainLink'
 import {EditBig_Stroke2_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
@@ -184,7 +184,7 @@ export function InviteLinkDialog({
           <View style={[a.flex_row, a.justify_between, a.gap_sm, a.mt_lg]}>
             <StackedButton
               label={l`Disable`}
-              icon={ChainLinkIcon}
+              icon={ChainLinkBrokenIcon}
               color="negative_subtle"
               style={[a.flex_1, a.rounded_full]}
               onPress={() => {}}>

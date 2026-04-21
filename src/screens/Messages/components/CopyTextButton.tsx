@@ -10,7 +10,7 @@ import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, type ButtonProps} from '#/components/Button'
-import {SquareBehindSquare4_Stroke2_Corner0_Rounded as CopyIcon} from '#/components/icons/SquareBehindSquare4'
+import {SquareBehindSquare_stroke2_corner0_rounded as CopyIcon} from '#/components/icons/SquareBehindSquare4'
 import {Text} from '#/components/Typography'
 
 export function CopyTextButton({
@@ -79,7 +79,7 @@ export function CopyTextButton({
         {context => (
           <View style={[a.flex_1, a.flex_row, a.justify_between, a.p_md]}>
             {typeof children === 'function' ? children(context) : children}
-            <ButtonIcon icon={CopyIcon} size="sm" />
+            <ButtonIcon icon={CopyIcon} size="lg" />
           </View>
         )}
       </Button>
