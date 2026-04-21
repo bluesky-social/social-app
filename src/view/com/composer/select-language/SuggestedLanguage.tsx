@@ -533,8 +533,6 @@ async function guessLanguage(
   const certain: LanguageResult[] = []
   const uncertain: LanguageResult[] = []
 
-  console.log(suggestions)
-
   for (const suggestion of suggestions) {
     const isDeviceLocale = deviceLanguageCodes.includes(suggestion.language)
     const override = config.overrides[suggestion.language]
