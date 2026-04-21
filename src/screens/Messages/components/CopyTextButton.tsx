@@ -15,6 +15,7 @@ import {Text} from '#/components/Typography'
 
 export function CopyTextButton({
   children,
+  disabled,
   style,
   value,
   onPress: onPressProp,
@@ -73,13 +74,14 @@ export function CopyTextButton({
       )}
       <Button
         color="secondary"
+        disabled={disabled}
         style={[a.flex_1, a.justify_between, {borderRadius: 10}, style]}
         onPress={onPress}
         {...props}>
         {context => (
           <View style={[a.flex_1, a.flex_row, a.justify_between, a.p_md]}>
             {typeof children === 'function' ? children(context) : children}
-            <ButtonIcon icon={CopyIcon} size="lg" />
+            {disabled ? null : <ButtonIcon icon={CopyIcon} size="lg" />}
           </View>
         )}
       </Button>

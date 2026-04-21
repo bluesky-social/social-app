@@ -18,10 +18,7 @@ import {type ConvoWithDetails} from '#/components/dms/util'
 import * as Toggle from '#/components/forms/Toggle'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon} from '#/components/icons/ArrowShareRight'
-import {
-  ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon,
-  ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon,
-} from '#/components/icons/ChainLink'
+import {ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon} from '#/components/icons/ChainLink'
 import {EditBig_Stroke2_Corner2_Rounded as EditIcon} from '#/components/icons/EditBig'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
@@ -192,7 +189,7 @@ export function InviteLinkDialog({
                 const parts = whoCanJoin[0].split(':')
                 const joinRule = parts[0]
                 const requireApproval = parts[1] === 'requireApproval'
-                if (joinLink) {
+                if (joinLink && enabledStatus === 'enabled') {
                   editJoinLink({
                     joinRule,
                     requireApproval,
@@ -205,7 +202,9 @@ export function InviteLinkDialog({
                 }
               }}>
               <ButtonText>
-                {joinLink ? l`Update invite link` : l`Generate invite link`}
+                {joinLink && enabledStatus === 'enabled'
+                  ? l`Update invite link`
+                  : l`Generate invite link`}
               </ButtonText>
               <ButtonIcon icon={ArrowRightIcon} />
             </Button>
@@ -222,61 +221,52 @@ export function InviteLinkDialog({
       const value =
         whoCanJoinOptions.find(o => o.name === whoCanJoin[0])?.label ??
         whoCanJoinOptions[0].label
-      header = l`Invite link`
+      header =
+        enabledStatus === 'enabled' ? l`Invite link` : l`Invite link disabled`
       content = (
         <>
+          <View style={[a.mt_lg]}>
+            <CopyTextButton
+              disabled={enabledStatus === 'disabled'}
+              label={l`Invite link`}
+              value={joinLinkURI}>
+              <Text
+                numberOfLines={1}
+                style={[
+                  a.mr_xs,
+                  a.text_md,
+                  enabledStatus === 'disabled'
+                    ? t.atoms.text_contrast_low
+                    : t.atoms.text,
+                ]}>
+                {joinLinkURI}
+              </Text>
+            </CopyTextButton>
+            {createdAt ? (
+              <Text style={[a.mt_xs, a.text_xs, t.atoms.text_contrast_medium]}>
+                <Trans>
+                  Created {timeFormatter.format(createdAt)}{' '}
+                  {dateFormatter.format(createdAt)}
+                </Trans>
+              </Text>
+            ) : null}
+          </View>
           {enabledStatus === 'enabled' ? (
-            <>
-              <View style={[a.mt_lg]}>
-                <CopyTextButton label={l`Invite link`} value={joinLinkURI}>
-                  <Text
-                    numberOfLines={1}
-                    style={[a.mr_xs, a.text_md, t.atoms.text]}>
-                    {joinLinkURI}
-                  </Text>
-                </CopyTextButton>
-                {createdAt ? (
-                  <Text
-                    style={[a.mt_xs, a.text_xs, t.atoms.text_contrast_medium]}>
-                    <Trans>
-                      Created {timeFormatter.format(createdAt)}{' '}
-                      {dateFormatter.format(createdAt)}
-                    </Trans>
-                  </Text>
-                ) : null}
-              </View>
-              <View style={[a.mt_lg]}>
-                <EditTextButton
-                  label={l`Edit link settings`}
-                  value={value}
-                  onPress={() => setStep(Step.GENERATE)}>
-                  <Text
-                    numberOfLines={1}
-                    style={[
-                      a.mr_xs,
-                      a.text_md,
-                      t.atoms.text,
-                      {maxWidth: '80%'},
-                    ]}>
-                    {value}
-                  </Text>
-                </EditTextButton>
-              </View>
-            </>
+            <View style={[a.mt_lg]}>
+              <EditTextButton
+                label={l`Edit link settings`}
+                value={value}
+                onPress={() => setStep(Step.GENERATE)}>
+                <Text
+                  numberOfLines={1}
+                  style={[a.mr_xs, a.text_md, t.atoms.text, {maxWidth: '80%'}]}>
+                  {value}
+                </Text>
+              </EditTextButton>
+            </View>
           ) : null}
-          <View style={[a.flex_row, a.justify_between, a.gap_sm, a.mt_lg]}>
-            {enabledStatus === 'disabled' ? (
-              <StackedButton
-                label={l`Enable`}
-                icon={ChainLinkIcon}
-                color="primary_subtle"
-                style={[a.flex_1, a.rounded_full]}
-                onPress={() => {
-                  enableJoinLink()
-                }}>
-                Enable
-              </StackedButton>
-            ) : (
+          {enabledStatus === 'enabled' ? (
+            <View style={[a.flex_row, a.justify_between, a.gap_sm, a.mt_lg]}>
               <StackedButton
                 label={l`Disable`}
                 icon={ChainLinkBrokenIcon}
@@ -287,32 +277,55 @@ export function InviteLinkDialog({
                 }}>
                 Disable
               </StackedButton>
-            )}
-            <StackedButton
-              disabled={enabledStatus === 'disabled'}
-              label={l`Post link`}
-              icon={EditIcon}
-              color={
-                enabledStatus === 'enabled' ? 'primary_subtle' : 'secondary'
-              }
-              style={[a.flex_1, a.rounded_full]}
-              // TODO Implement this. -dsb
-              onPress={() => {}}>
-              Post link
-            </StackedButton>
-            <StackedButton
-              disabled={enabledStatus === 'disabled'}
-              label={l`Share`}
-              icon={ArrowShareRightIcon}
-              color={
-                enabledStatus === 'enabled' ? 'primary_subtle' : 'secondary'
-              }
-              style={[a.flex_1, a.rounded_full]}
-              // TODO Implement this. -dsb
-              onPress={() => {}}>
-              Share
-            </StackedButton>
-          </View>
+              <StackedButton
+                disabled={enabledStatus === 'disabled'}
+                label={l`Post link`}
+                icon={EditIcon}
+                color={
+                  enabledStatus === 'enabled' ? 'primary_subtle' : 'secondary'
+                }
+                style={[a.flex_1, a.rounded_full]}
+                // TODO Implement this. -dsb
+                onPress={() => {}}>
+                Post link
+              </StackedButton>
+              <StackedButton
+                disabled={enabledStatus === 'disabled'}
+                label={l`Share`}
+                icon={ArrowShareRightIcon}
+                color={
+                  enabledStatus === 'enabled' ? 'primary_subtle' : 'secondary'
+                }
+                style={[a.flex_1, a.rounded_full]}
+                // TODO Implement this. -dsb
+                onPress={() => {}}>
+                Share
+              </StackedButton>
+            </View>
+          ) : (
+            <View style={[a.gap_md, a.mt_lg]}>
+              <Button
+                label={l`Re-enable invite link`}
+                color="primary"
+                size="large"
+                onPress={() => {
+                  enableJoinLink()
+                }}>
+                <ButtonText>
+                  <Trans>Re-enable link</Trans>
+                </ButtonText>
+              </Button>
+              <Button
+                label={l`Generate new invite link`}
+                color="secondary"
+                size="large"
+                onPress={() => setStep(Step.GENERATE)}>
+                <ButtonText>
+                  <Trans>Generate new link</Trans>
+                </ButtonText>
+              </Button>
+            </View>
+          )}
         </>
       )
       break
