@@ -45,10 +45,10 @@ const NOISE_FLOOR = 0.1
  */
 const DEFAULT_CONFIG: LanguageDetectionConfig = {
   acceptanceThreshold: platform({
-    web: 0.95,
+    web: 0.97,
     ios: 0.9,
     android: 0.9,
-    default: 0.95,
+    default: 0.97,
   }),
   /*
    * Device locales are an independent prior — the OS tells us which
