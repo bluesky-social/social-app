@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef} from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
+import {withSpring} from 'react-native-reanimated'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
@@ -20,7 +21,7 @@ import {type FeedDescriptor, type FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
-import {useDangerouslyImperativelySetMinimalShellMode} from '#/state/shell'
+import {useMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {FeedPage} from '#/view/com/feeds/FeedPage'
@@ -138,7 +139,17 @@ function HomeScreenReady({
   }, [selectedIndex])
 
   const {hasSession} = useSession()
-  const setMinimalShellMode = useDangerouslyImperativelySetMinimalShellMode()
+  const {headerMode} = useMinimalShellMode()
+  const showHeader = useCallback(() => {
+    'worklet'
+    headerMode.set(() => withSpring(0, {overshootClamping: true}))
+  }, [headerMode])
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => showHeader()
+    }, [showHeader]),
+  )
 
   useFocusEffect(
     useNonReactiveCallback(() => {
@@ -155,7 +166,7 @@ function HomeScreenReady({
 
   const onPageSelected = useCallback(
     (index: number) => {
-      setMinimalShellMode(false)
+      showHeader()
       const maybeFeed = allFeeds[index]
 
       // Mutate the ref before setting state to avoid the imperative syncing effect
@@ -171,7 +182,7 @@ function HomeScreenReady({
         })
       }
     },
-    [ax, setSelectedFeed, setMinimalShellMode, allFeeds],
+    [ax, setSelectedFeed, showHeader, allFeeds],
   )
 
   const onPressSelected = useCallback(() => {
@@ -182,10 +193,10 @@ function HomeScreenReady({
     (state: 'idle' | 'dragging' | 'settling') => {
       'worklet'
       if (state === 'dragging') {
-        setMinimalShellMode(false)
+        showHeader()
       }
     },
-    [setMinimalShellMode],
+    [showHeader],
   )
 
   const [demoMode] = useDemoMode()

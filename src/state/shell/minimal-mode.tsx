@@ -104,41 +104,6 @@ export function useMinimalShellModeSetters() {
   return context
 }
 
-/**
- * Bypasses the refcount and directly animates the shell. Only for use in
- * scroll/pager callbacks where the refcount is 0 but MainScrollProvider has
- * hidden the header via direct shared-value manipulation.
- * @deprecated Prefer `useEnableMinimalShellMode` or the `minimalShell` prop.
- */
-export function useDangerouslyImperativelySetMinimalShellMode() {
-  const {headerMode, footerMode} = useMinimalShellMode()
-
-  const setMode = useCallback(
-    (v: boolean) => {
-      'worklet'
-      headerMode.set(() =>
-        withSpring(v ? 1 : 0, {
-          overshootClamping: true,
-        }),
-      )
-      footerMode.set(() =>
-        withSpring(v ? 1 : 0, {
-          overshootClamping: true,
-        }),
-      )
-    },
-    [headerMode, footerMode],
-  )
-
-  useFocusEffect(
-    useCallback(() => {
-      return () => setMode(false)
-    }, [setMode]),
-  )
-
-  return setMode
-}
-
 export function useEnableMinimalShellMode({enabled} = {enabled: true}) {
   const setters = useMinimalShellModeSetters()
   useEffect(() => {

@@ -12,7 +12,6 @@ export {
   useSetDrawerSwipeDisabled,
 } from './drawer-swipe-disabled'
 export {
-  useDangerouslyImperativelySetMinimalShellMode,
   useEnableMinimalShellMode,
   useEnableMinimalShellModeForScreen,
   useMinimalShellMode,
