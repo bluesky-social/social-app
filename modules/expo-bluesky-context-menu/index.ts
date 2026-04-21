@@ -1,7 +1,0 @@
-export {Menu} from './src/Menu'
-export {MenuItem} from './src/MenuItem'
-export {MenuItemIcon} from './src/MenuItemIcon'
-export {MenuItemText} from './src/MenuItemText'
-export {Root} from './src/Root'
-export {Trigger} from './src/Trigger'
-export type {MenuItemSpec, PreviewContent} from './src/types'
