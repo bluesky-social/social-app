@@ -1,0 +1,136 @@
+diff --git a/node_modules/expo-paste-input/ios/ExpoPasteInputView.swift b/node_modules/expo-paste-input/ios/ExpoPasteInputView.swift
+index 2164aec4ec1d..d216db6d2927 100644
+--- a/node_modules/expo-paste-input/ios/ExpoPasteInputView.swift
++++ b/node_modules/expo-paste-input/ios/ExpoPasteInputView.swift
+@@ -511,14 +511,17 @@ class ExpoPasteInputView: ExpoView {
+     var attachmentRanges: [NSRange] = []
+     var mediaPayloads: [MediaPayload] = []
+ 
++    // Only track ranges for attachments we successfully extract a real payload
++    // from. Attachments without a payload (e.g. iOS dictation placeholders)
++    // are left alone — sanitizing them would delete characters the system
++    // manages itself, and emitting "unsupported" would raise a spurious error.
+     attributedText.enumerateAttribute(.attachment, in: NSRange(location: 0, length: attributedText.length), options: []) { value, range, _ in
+       guard let attachment = value as? NSTextAttachment else {
+         return
+       }
+ 
+-      attachmentRanges.append(range)
+-
+       if let payload = self.extractMediaPayload(from: attachment, textView: textView, range: range) {
++        attachmentRanges.append(range)
+         mediaPayloads.append(payload)
+       }
+     }
+@@ -529,9 +532,8 @@ class ExpoPasteInputView: ExpoView {
+           return
+         }
+ 
+-        attachmentRanges.append(range)
+-
+         if let payload = self.extractMediaPayload(from: adaptiveGlyph) {
++          attachmentRanges.append(range)
+           mediaPayloads.append(payload)
+         }
+       }
+@@ -539,17 +541,12 @@ class ExpoPasteInputView: ExpoView {
+ 
+     attachmentRanges = uniqueRanges(attachmentRanges)
+ 
+-    guard !attachmentRanges.isEmpty else {
+-      return
+-    }
+-
+-    sanitizeAttachments(in: textView, ranges: attachmentRanges)
+-
+     guard !mediaPayloads.isEmpty else {
+-      handleUnsupportedPaste()
+       return
+     }
+ 
++    sanitizeAttachments(in: textView, ranges: attachmentRanges)
++
+     emitImagesAsync(for: mediaPayloads)
+   }
+ 
+@@ -651,6 +648,11 @@ class ExpoPasteInputView: ExpoView {
+   }
+ 
+   private func extractMediaPayload(from attachment: NSTextAttachment, textView: UITextView, range: NSRange) -> MediaPayload? {
++    // Only accept attachments that carry real image payloads. We intentionally
++    // do not fall back to `image(forBounds:)` or rendering the text view's
++    // hierarchy, because system-inserted attachments (e.g. the iOS dictation
++    // placeholder) draw themselves via those paths and would cause us to
++    // emit a screenshot of the composer as a "pasted image".
+     if let fileWrapperData = attachment.fileWrapper?.regularFileContents,
+        let payload = extractMediaPayload(fromData: fileWrapperData) {
+       return payload
+@@ -667,20 +669,6 @@ class ExpoPasteInputView: ExpoView {
+       return .image(image)
+     }
+ 
+-    let attachmentBounds = attachment.bounds.size.width > 0 && attachment.bounds.size.height > 0
+-      ? attachment.bounds
+-      : CGRect(origin: .zero, size: CGSize(width: 128, height: 128))
+-
+-    if let image = attachment.image(forBounds: attachmentBounds, textContainer: textView.textContainer, characterIndex: range.location),
+-       image.size.width > 0,
+-       image.size.height > 0 {
+-      return .image(image)
+-    }
+-
+-    if let renderedImage = renderTextAttachment(in: textView, range: range) {
+-      return .image(renderedImage)
+-    }
+-
+     return nil
+   }
+ 
+@@ -701,47 +689,6 @@ class ExpoPasteInputView: ExpoView {
+     return .imageData(data)
+   }
+ 
+-  private func renderTextAttachment(in textView: UITextView, range: NSRange) -> UIImage? {
+-    let glyphRange = textView.layoutManager.glyphRange(forCharacterRange: range, actualCharacterRange: nil)
+-    var rect = textView.layoutManager.boundingRect(forGlyphRange: glyphRange, in: textView.textContainer)
+-
+-    rect.origin.x += textView.textContainerInset.left - textView.contentOffset.x
+-    rect.origin.y += textView.textContainerInset.top - textView.contentOffset.y
+-    rect = rect.integral
+-
+-    guard rect.width > 1, rect.height > 1 else {
+-      return nil
+-    }
+-
+-    let format = UIGraphicsImageRendererFormat.default()
+-    format.scale = textView.window?.screen.scale ?? UIScreen.main.scale
+-    format.opaque = false
+-
+-    let image = UIGraphicsImageRenderer(size: rect.size, format: format).image { _ in
+-      let drawRect = CGRect(
+-        origin: CGPoint(x: -rect.origin.x, y: -rect.origin.y),
+-        size: textView.bounds.size
+-      )
+-
+-      if textView.window != nil {
+-        textView.drawHierarchy(in: drawRect, afterScreenUpdates: false)
+-      } else {
+-        guard let context = UIGraphicsGetCurrentContext() else {
+-          return
+-        }
+-
+-        context.translateBy(x: -rect.origin.x, y: -rect.origin.y)
+-        textView.layer.render(in: context)
+-      }
+-    }
+-
+-    guard image.size.width > 0, image.size.height > 0 else {
+-      return nil
+-    }
+-
+-    return image
+-  }
+-
+   @available(iOS 18.0, *)
+   private func handleAdaptiveImageGlyphInsertion(_ adaptiveGlyph: NSAdaptiveImageGlyph) -> Bool {
+     guard let payload = extractMediaPayload(from: adaptiveGlyph) else {

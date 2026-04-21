@@ -38,6 +38,7 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {Text} from '#/components/Typography'
+import {useAgeAssurance} from '#/ageAssurance'
 import {IS_NATIVE} from '#/env'
 import {ChatListItem} from './components/ChatListItem'
 import {InboxPreview} from './components/InboxPreview'
@@ -71,21 +72,24 @@ type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
 export function MessagesScreen(props: Props) {
   const {_} = useLingui()
   const aaCopy = useAgeAssuranceCopy()
+  const aa = useAgeAssurance()
 
   return (
     <AgeRestrictedScreen
       screenTitle={_(msg`Chats`)}
       infoText={aaCopy.chatsInfoText}
       rightHeaderSlot={
-        <Link
-          to="/messages/settings"
-          label={_(msg`Chat settings`)}
-          size="small"
-          color="secondary">
-          <ButtonText>
-            <Trans>Chat settings</Trans>
-          </ButtonText>
-        </Link>
+        aa.flags.chatDisabled ? null : (
+          <Link
+            to="/messages/settings"
+            label={_(msg`Chat settings`)}
+            size="small"
+            color="secondary">
+            <ButtonText>
+              <Trans>Chat settings</Trans>
+            </ButtonText>
+          </Link>
+        )
       }>
       <MessagesScreenInner {...props} />
     </AgeRestrictedScreen>
