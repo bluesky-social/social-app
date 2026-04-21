@@ -183,7 +183,6 @@ export function SuggestedLanguage({
   const ax = useAnalytics()
   const [hasInteracted, setHasInteracted] = useState(false)
   const [suggLang, setSuggLang] = useState<string | undefined>(undefined)
-  const prevSuggLangsRef = useRef<string[]>([])
   const declinedSuggLangsRef = useRef<string[]>([])
 
   /*
@@ -230,6 +229,7 @@ export function SuggestedLanguage({
           // selected, nudge the user
           if (!currentLanguages.includes(topCandidate)) {
             onNudgeRef.current?.()
+            setSuggLang(undefined)
             ax.metric('composer:language:nudgeUser', {
               os: Platform.OS,
               suggestedLanguage: topCandidate,
@@ -246,7 +246,7 @@ export function SuggestedLanguage({
 
   useEffect(() => {
     // show reply prompt if there's not enough text to start using the model
-    if (text.length > MIN_TEXT_LENGTH && !hasInteracted) {
+    if (text.length > 0 && !hasInteracted) {
       setHasInteracted(true)
     }
 
@@ -262,7 +262,6 @@ export function SuggestedLanguage({
        */
       if (textTrimmed.length < MIN_TEXT_LENGTH) {
         setSuggLang(undefined)
-        prevSuggLangsRef.current = []
         declinedSuggLangsRef.current = []
         return
       }
