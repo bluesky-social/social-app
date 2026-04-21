@@ -29,6 +29,7 @@ import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {CircleChromeButton} from '#/features/lightbox/chrome/CircleChromeButton'
 import {useLightbox, useLightboxControls} from '#/features/lightbox/state'
 import {type ImageSource} from '#/features/lightbox/types'
 
@@ -251,25 +252,16 @@ function LightboxGallery({
       <Menu.Root>
         <Menu.Trigger label={_(msg`Image options`)}>
           {({props}) => (
-            <Button
+            <Pressable
               {...props}
-              style={[
-                a.absolute,
-                styles.menuBtn,
-                styles.blurredBackdrop,
-                a.transition_color,
-                delayedFadeInAnim,
-              ]}
-              hoverStyle={styles.blurredBackdropHover}
-              color="secondary"
-              label={_(msg`Image options`)}
-              shape="round"
-              size={gtPhone ? 'large' : 'small'}>
-              <EllipsisIcon
-                size={gtPhone ? 'md' : 'sm'}
-                style={{color: t.palette.white}}
+              style={[a.absolute, styles.menuBtn, delayedFadeInAnim]}
+              accessibilityLabel={_(msg`Image options`)}
+              accessibilityHint="">
+              <CircleChromeButton
+                icon={EllipsisIcon}
+                label={_(msg`Image options`)}
               />
-            </Button>
+            </Pressable>
           )}
         </Menu.Trigger>
         <Menu.Outer>
@@ -294,22 +286,13 @@ function LightboxGallery({
           </Menu.Group>
         </Menu.Outer>
       </Menu.Root>
-      <Button
-        onPress={onClose}
-        style={[
-          a.absolute,
-          styles.closeBtn,
-          styles.blurredBackdrop,
-          a.transition_color,
-          delayedFadeInAnim,
-        ]}
-        hoverStyle={styles.blurredBackdropHover}
-        color="secondary"
-        label={_(msg`Close image viewer`)}
-        shape="round"
-        size={gtPhone ? 'large' : 'small'}>
-        <XIcon size={gtPhone ? 'md' : 'sm'} style={{color: t.palette.white}} />
-      </Button>
+      <View style={[a.absolute, styles.closeBtn, delayedFadeInAnim]}>
+        <CircleChromeButton
+          icon={XIcon}
+          label={_(msg`Close image viewer`)}
+          onPress={onClose}
+        />
+      </View>
     </View>
   )
 }
