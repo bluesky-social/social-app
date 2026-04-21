@@ -1,8 +1,6 @@
-import {Pressable} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {atoms as a} from '#/alf'
 import * as ContextMenu from '#/components/ContextMenu'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ShareIcon} from '#/components/icons/ArrowOutOfBox'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsIcon} from '#/components/icons/DotGrid'
@@ -28,15 +26,11 @@ export function ImageMenu({onPressShare, onPressSave}: Props) {
             return null
           }
           return (
-            <Pressable
-              accessible={false}
+            <CircleChromeButton
+              icon={DotsIcon}
+              label={_(msg`Image options`)}
               onPress={() => triggerProps.control.open('full')}
-              style={a.self_start}>
-              <CircleChromeButton
-                icon={DotsIcon}
-                label={_(msg`Image options`)}
-              />
-            </Pressable>
+            />
           )
         }}
       </ContextMenu.Trigger>
