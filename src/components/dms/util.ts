@@ -110,14 +110,16 @@ export function parseConvoView(
           owner = member as GroupConvoMember
         }
       } else {
-        throw new Error(
+        logger.warn(
           'Expected a GroupConvoMember, got an unknown kind of member',
         )
+        return null
       }
     }
 
     if (!owner) {
-      throw new Error('No owner found in group convo')
+      logger.warn('No owner found in group convo')
+      return null
     }
 
     return {
@@ -136,7 +138,8 @@ export function parseConvoView(
     const otherUser = convoView.members.find(m => m.did !== ownDid)
 
     if (!otherUser) {
-      throw new Error('No other user found in direct convo')
+      logger.warn('No other user found in direct convo')
+      return null
     }
 
     return {

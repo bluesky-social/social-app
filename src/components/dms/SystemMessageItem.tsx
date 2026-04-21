@@ -3,7 +3,7 @@ import {useLingui} from '@lingui/react/macro'
 
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {atoms as a, useTheme} from '#/alf'
-import {getSystemMessageInfo} from '#/components/dms/systemMessage'
+import {getSystemMessageInfo} from '#/components/dms/getSystemMessageInfo'
 import {Text} from '#/components/Typography'
 
 export function SystemMessageItem({
