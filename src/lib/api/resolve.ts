@@ -26,7 +26,7 @@ import {
 } from '#/lib/strings/url-helpers'
 import {type ComposerImage} from '#/state/gallery'
 import {createComposerImage} from '#/state/gallery'
-import {type Gif} from '#/state/queries/gif'
+import {type Gif} from '#/features/gifPicker/types'
 import {createGIFDescription} from '../gif-alt-text'
 
 type ResolvedExternalLink = {

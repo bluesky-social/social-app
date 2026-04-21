@@ -2,7 +2,6 @@ import {useMemo} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 
 import {cleanError} from '#/lib/strings/errors'
-import {type Gif} from '#/state/queries/gif'
 import {
   useResolveGifQuery,
   useResolveLinkQuery,
@@ -15,6 +14,7 @@ import {ModeratedFeedEmbed} from '#/components/Post/Embed/FeedEmbed'
 import {ModeratedListEmbed} from '#/components/Post/Embed/ListEmbed'
 import {Embed as StarterPackEmbed} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
+import {type Gif} from '#/features/gifPicker/types'
 
 export const ExternalEmbedGif = ({
   onRemove,

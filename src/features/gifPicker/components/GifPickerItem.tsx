@@ -1,12 +1,11 @@
 import {Image} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
-import {gifPreviewUrl} from '#/state/queries/gif'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useAnalytics} from '#/analytics'
 import {type Gif} from '#/features/gifPicker/types'
+import {gifPreviewUrl} from '#/features/gifPicker/utils'
 
 export function GifPickerItem({
   gif,
@@ -16,7 +15,7 @@ export function GifPickerItem({
   onSelectGif: (gif: Gif) => void
 }) {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   const [width, height] = gif.media_formats.tinygif.dims
@@ -29,7 +28,7 @@ export function GifPickerItem({
 
   return (
     <Button
-      label={_(msg`Select GIF "${gif.title}"`)}
+      label={l`Select GIF "${gif.title}"`}
       onPress={onPress}
       style={a.w_full}>
       {({pressed}) => (

@@ -100,6 +100,10 @@ function GifPickerBody({
   const items = isRecentsActive ? getRecents() : networkItems
   const hasData = items.length > 0
 
+  // Remount the grid when the data source changes so FlatList doesn't carry
+  // stale virtualized cells between e.g. a search and the recents list.
+  const viewKey = isRecentsActive ? 'recents' : `network:${effectiveSearch}`
+
   const onEndReached = () => {
     if (isRecentsActive) return
     if (isFetchingNextPage || !hasNextPage || error) return
@@ -172,6 +176,7 @@ function GifPickerBody({
         hasData={hasData}
         isFetchingNextPage={!isRecentsActive && isFetchingNextPage}
         error={isRecentsActive ? null : error}
+        viewKey={viewKey}
         fetchNextPage={fetchNextPage}
         onEndReached={onEndReached}
         onSelectGif={handleSelectGif}

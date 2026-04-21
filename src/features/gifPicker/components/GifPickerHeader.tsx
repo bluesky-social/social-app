@@ -1,7 +1,6 @@
 import {type Ref} from 'react'
 import {type TextInput, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
@@ -21,7 +20,7 @@ export function GifPickerHeader({
   onClose: () => void
   onEscape: () => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
 
@@ -39,11 +38,10 @@ export function GifPickerHeader({
       {!gtMobile && IS_WEB && (
         <Button
           size="small"
-          variant="ghost"
           color="secondary"
           shape="round"
           onPress={onClose}
-          label={_(msg`Close GIF dialog`)}>
+          label={l`Close GIF dialog`}>
           <ButtonIcon icon={Arrow} size="md" />
         </Button>
       )}
@@ -51,8 +49,8 @@ export function GifPickerHeader({
       <TextField.Root style={[!gtMobile && IS_WEB && a.flex_1]}>
         <TextField.Icon icon={Search} />
         <TextField.Input
-          label={_(msg`Search GIFs`)}
-          placeholder={_(msg`Search GIFs`)}
+          label={l`Search GIFs`}
+          placeholder={l`Search GIFs`}
           onChangeText={onChangeText}
           returnKeyType="search"
           clearButtonMode="while-editing"

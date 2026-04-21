@@ -173,11 +173,6 @@ export const KNOWN_SHUTDOWN_FEEDS = [
 
 export const GIF_SERVICE = 'https://gifs.bsky.app'
 
-export const GIF_SEARCH = (params: string) =>
-  `${GIF_SERVICE}/tenor/v2/search?${params}`
-export const GIF_FEATURED = (params: string) =>
-  `${GIF_SERVICE}/tenor/v2/featured?${params}`
-
 export const GIF_KLIPY_SEARCH = (params: string) =>
   `${GIF_SERVICE}/klipy/v2/search?${params}`
 export const GIF_KLIPY_FEATURED = (params: string) =>

@@ -17,7 +17,6 @@ import {
   toBskyAppUrl,
 } from '#/lib/strings/url-helpers'
 import {type ComposerImage, createInitialImages} from '#/state/gallery'
-import {type Gif} from '#/state/queries/gif'
 import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {threadgateRecordToAllowUISetting} from '#/state/queries/threadgate'
 import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate'
@@ -26,6 +25,7 @@ import {
   type LinkFacetMatch,
   suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util'
+import {type Gif} from '#/features/gifPicker/types'
 import {
   createVideoState,
   type VideoAction,

@@ -1,5 +1,5 @@
-import {type Gif} from '#/state/queries/gif'
 import {type ID as PolicyUpdate202508} from '#/components/PolicyUpdateOverlay/updates/202508/config'
+import {type Gif} from '#/features/gifPicker/types'
 import {type Geolocation} from '#/geolocation/types'
 
 /**

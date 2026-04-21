@@ -2,19 +2,17 @@ import {Platform} from 'react-native'
 import {getLocales} from 'expo-localization'
 import {keepPreviousData, useInfiniteQuery} from '@tanstack/react-query'
 
-import {GIF_FEATURED, GIF_SEARCH} from '#/lib/constants'
-import {logger} from '#/logger'
-import {type ContentFormats, type Gif} from '#/state/queries/gif'
+import {GIF_KLIPY_FEATURED, GIF_KLIPY_SEARCH} from '#/lib/constants'
+import {type Gif} from '#/features/gifPicker/types'
 
-export const RQKEY_ROOT = 'gif-service'
+export const RQKEY_ROOT = 'klipy-gif-service'
 export const RQKEY_FEATURED = [RQKEY_ROOT, 'featured']
 export const RQKEY_SEARCH = (query: string) => [RQKEY_ROOT, 'search', query]
 
-const getTrendingGifs = createTenorApi(GIF_FEATURED)
+const getTrendingGifs = createKlipyApi(GIF_KLIPY_FEATURED)
+const searchGifs = createKlipyApi<{q: string}>(GIF_KLIPY_SEARCH)
 
-const searchGifs = createTenorApi<{q: string}>(GIF_SEARCH)
-
-export function useTenorFeaturedGifsQuery(options?: {enabled?: boolean}) {
+export function useFeaturedGifsQuery(options?: {enabled?: boolean}) {
   return useInfiniteQuery({
     queryKey: RQKEY_FEATURED,
     queryFn: ({pageParam}) => getTrendingGifs({pos: pageParam}),
@@ -24,7 +22,7 @@ export function useTenorFeaturedGifsQuery(options?: {enabled?: boolean}) {
   })
 }
 
-export function useTenorGifSearchQuery(
+export function useGifSearchQuery(
   query: string,
   options?: {enabled?: boolean},
 ) {
@@ -38,7 +36,7 @@ export function useTenorGifSearchQuery(
   })
 }
 
-function createTenorApi<Input extends object>(
+function createKlipyApi<Input extends object>(
   urlFn: (params: string) => string,
 ): (input: Input & {pos?: string}) => Promise<{
   next: string
@@ -47,7 +45,6 @@ function createTenorApi<Input extends object>(
   return async input => {
     const params = new URLSearchParams()
 
-    // set client key based on platform
     params.set(
       'client_key',
       Platform.select({
@@ -61,11 +58,6 @@ function createTenorApi<Input extends object>(
     params.set('limit', '30')
 
     params.set('contentfilter', 'high')
-
-    params.set(
-      'media_filter',
-      (['preview', 'gif', 'tinygif'] satisfies ContentFormats[]).join(','),
-    )
 
     const locale = getLocales?.()?.[0]
 
@@ -86,20 +78,12 @@ function createTenorApi<Input extends object>(
       },
     })
     if (!res.ok) {
-      throw new Error('Failed to fetch Tenor API')
+      throw new Error(`Failed to fetch KLIPY API (status ${res.status})`)
     }
-    return res.json()
+    const body: {next: string; results: Gif[]} = await res.json()
+    return {
+      next: body.next,
+      results: body.results,
+    }
   }
-}
-
-export function tenorUrlToBskyGifUrl(tenorUrl: string) {
-  let url
-  try {
-    url = new URL(tenorUrl)
-  } catch (e) {
-    logger.debug('invalid url passed to tenorUrlToBskyGifUrl()')
-    return ''
-  }
-  url.hostname = 't.gifs.bsky.app'
-  return url.href
 }
