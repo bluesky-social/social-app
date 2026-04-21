@@ -3,7 +3,6 @@ import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
 
 export type UserReactionInfo = {
   message: string
@@ -27,7 +26,7 @@ export function getReactionInfo({
   const isFromMe = reaction.sender.did === currentAccountDid
   const senderDid = reaction.sender.did
   const sender = convo.members.find(m => m.did === senderDid)
-  const name = sender ? createSanitizedDisplayName(sender) : senderDid
+  const name = sender ? createSanitizedDisplayName(sender) : null
   const isGroup = ChatBskyConvoDefs.isGroupConvo(convo.kind)
 
   const lastMessageText = reactedTo.text
@@ -43,11 +42,10 @@ export function getReactionInfo({
   let message: string
   if (isFromMe) {
     message = i18n._(msg`You reacted ${reaction.value} to ${target}`)
-  } else if (isGroup) {
+  } else if (isGroup && name) {
     message = i18n._(msg`${name} reacted ${reaction.value} to ${target}`)
-  } else if (sender) {
-    const directName = sanitizeDisplayName(sender.displayName || sender.handle)
-    message = i18n._(msg`${directName} reacted ${reaction.value} to ${target}`)
+  } else if (sender && name) {
+    message = i18n._(msg`${name} reacted ${reaction.value} to ${target}`)
   } else {
     message = i18n._(msg`Someone reacted ${reaction.value} to ${target}`)
   }
