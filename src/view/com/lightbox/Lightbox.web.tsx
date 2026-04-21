@@ -30,7 +30,7 @@ import * as Menu from '#/components/Menu'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useLightbox, useLightboxControls} from '#/features/lightbox/state'
-import {type ImageSource} from './ImageViewing/@types'
+import {type ImageSource} from '#/features/lightbox/types'
 
 export function Lightbox() {
   const {activeLightbox} = useLightbox()

@@ -30,7 +30,7 @@ import {
   type Dimensions as ImageDimensions,
   type ImageSource,
   type LightboxTransforms,
-} from '../../@types'
+} from '../../types'
 
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
 const MIN_SCREEN_ZOOM = 2

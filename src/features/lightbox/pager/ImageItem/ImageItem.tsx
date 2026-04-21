@@ -10,7 +10,7 @@ import {
   type Dimensions as ImageDimensions,
   type ImageSource,
   type LightboxTransforms,
-} from '../../@types'
+} from '../../types'
 
 type Props = {
   imageSrc: ImageSource

@@ -51,14 +51,14 @@ import {useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {IS_IOS} from '#/env'
 import {type Lightbox} from '#/features/lightbox/state'
-import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
+import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
+import ImageDefaultHeader from '../../../view/com/lightbox/ImageViewing/components/ImageDefaultHeader'
 import {
   type ImageSource,
   type LightboxTransforms,
   type Transform,
-} from './@types'
-import ImageDefaultHeader from './components/ImageDefaultHeader'
-import ImageItem from './components/ImageItem/ImageItem'
+} from '../types'
+import ImageItem from './ImageItem/ImageItem'
 
 type Rect = {x: number; y: number; width: number; height: number}
 

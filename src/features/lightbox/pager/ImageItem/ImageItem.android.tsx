@@ -20,7 +20,7 @@ import {
   type Dimensions as ImageDimensions,
   type ImageSource,
   type LightboxTransforms,
-} from '../../@types'
+} from '../../types'
 import {
   applyRounding,
   createTransform,
@@ -29,7 +29,7 @@ import {
   prependTransform,
   readTransform,
   type TransformMatrix,
-} from '../../transforms'
+} from '../transforms'
 
 const MIN_SCREEN_ZOOM = 2
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
