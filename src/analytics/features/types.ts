@@ -17,7 +17,6 @@ export enum Features {
   ComposerLanguageDetectionEnable = 'composer:language_detection:enable',
   KlipyGifProviderEnable = 'klipy_gif_provider:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
-  NativeLanguageDetectionEnable = 'native_language_detection:enable',
 
   AATest = 'aa-test',
 }
