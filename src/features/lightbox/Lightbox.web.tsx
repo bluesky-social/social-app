@@ -254,9 +254,8 @@ function LightboxGallery({
           {({props}) => (
             <Pressable
               {...props}
-              style={[a.absolute, styles.menuBtn, delayedFadeInAnim]}
-              accessibilityLabel={_(msg`Image options`)}
-              accessibilityHint="">
+              accessible={false}
+              style={[a.absolute, styles.menuBtn, delayedFadeInAnim]}>
               <CircleChromeButton
                 icon={EllipsisIcon}
                 label={_(msg`Image options`)}
