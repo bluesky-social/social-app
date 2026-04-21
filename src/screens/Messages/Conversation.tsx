@@ -308,7 +308,7 @@ function GroupChatGate() {
 
   const groupChatGateDialogControl = Dialog.useDialogControl()
 
-  const isGatedGroupChat = ax.features.enabled(ax.features.GroupChatsEnable)
+  const isGatedGroupChat = !ax.features.enabled(ax.features.GroupChatsEnable)
 
   useEffect(() => {
     if (isGatedGroupChat) {
