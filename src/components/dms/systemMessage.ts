@@ -3,8 +3,8 @@ import {type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
-import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon} from '#/components/icons/ArrowBoxLeft'
-import {ArrowBoxRight_Stroke2_Corner3_Rounded as ArrowBoxRightIcon} from '#/components/icons/ArrowBoxRight'
+import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
+import {ArrowBoxRight_Stroke2_Corner3_Rounded as JoinIcon} from '#/components/icons/ArrowBoxRight'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Lock_Stroke2_Corner0_Rounded as LockIcon} from '#/components/icons/Lock'
@@ -20,22 +20,22 @@ export function getSystemMessageInfo(
 ): SystemMessageInfo | null {
   if (ChatBskyConvoDefs.isSystemMessageDataAddMember(data)) {
     return {
-      Icon: ArrowBoxLeftIcon,
+      Icon: JoinIcon,
       message: msg`${createSanitizedDisplayName(data.member)} was added to the group`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataRemoveMember(data)) {
     return {
-      Icon: ArrowBoxRightIcon,
+      Icon: LeaveIcon,
       message: msg`${createSanitizedDisplayName(data.member)} was removed from the group`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataMemberJoin(data)) {
     return {
-      Icon: ArrowBoxLeftIcon,
+      Icon: JoinIcon,
       message: msg`${createSanitizedDisplayName(data.member)} joined the group`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataMemberLeave(data)) {
     return {
-      Icon: ArrowBoxLeftIcon,
+      Icon: LeaveIcon,
       message: msg`${createSanitizedDisplayName(data.member)} left the group`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvo(data)) {
