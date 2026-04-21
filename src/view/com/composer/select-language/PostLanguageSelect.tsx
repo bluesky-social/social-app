@@ -25,6 +25,7 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/compon
 import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
 import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 export function PostLanguageSelect({
   currentLanguages: currentLanguagesProp,
@@ -155,9 +156,10 @@ function LanguageBtn({
   currentLanguages?: string[]
   nudgeCount?: number
 }) {
+  const t = useTheme()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
-  const t = useTheme()
 
   const postLanguagesPref = toPostLanguages(langPrefs.postLanguage)
   const currentLanguages = currentLanguagesProp ?? postLanguagesPref
@@ -192,7 +194,13 @@ function LanguageBtn({
       )}
       accessibilityHint={_(msg`Opens post language settings`)}
       style={[a.mr_xs]}
-      {...props}>
+      {...props}
+      onPress={e => {
+        props.onPress?.(e)
+        ax.metric('composer:language:langSelectorPressed', {
+          wasNudged: nudgeCount > 0,
+        })
+      }}>
       {({pressed, hovered}) => {
         const color =
           pressed || hovered ? t.palette.primary_300 : t.palette.primary_500

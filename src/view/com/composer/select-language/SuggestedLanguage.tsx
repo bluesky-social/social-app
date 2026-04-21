@@ -205,8 +205,7 @@ export function SuggestedLanguage({
   /**
    * Merge in remote config
    */
-  const configRef = useRef(DEFAULT_CONFIG)
-  configRef.current = DEFAULT_CONFIG
+  const config = useMemo(() => DEFAULT_CONFIG, [])
 
   /*
    * Held in a ref so the debounced detection closure always sees the
@@ -221,20 +220,29 @@ export function SuggestedLanguage({
   const detectLanguage = useMemo(() => {
     return debounce(async (text: string) => {
       try {
-        const {certain, uncertain} = await guessLanguage(
-          text,
-          configRef.current,
-        )
+        const {certain, uncertain} = await guessLanguage(text, config)
         if (certain.length === 1 && uncertain.length === 0) {
+          // we have a single confident candidate with no competitors — show it!
           setSuggLang(certain[0].language)
         } else {
-          onNudgeRef.current?.()
+          const topCandidate = uncertain[0]?.language
+          // ambiguous results — if the top candidate isn't already
+          // selected, nudge the user
+          if (!currentLanguages.includes(topCandidate)) {
+            onNudgeRef.current?.()
+            ax.metric('composer:language:nudgeUser', {
+              os: Platform.OS,
+              suggestedLanguage: topCandidate,
+              currentTargetLanguages: currentLanguages,
+              textLength: text.length,
+            })
+          }
         }
       } catch (e) {
         ax.logger.error('Error detecting language', {safeMessage: e})
       }
     }, 500)
-  }, [])
+  }, [config, currentLanguages])
 
   useEffect(() => {
     // show reply prompt if there's not enough text to start using the model
@@ -339,7 +347,7 @@ function GuessedLanguage({
     langPrefs.appLanguage,
   )
   const onAccept = () => {
-    ax.metric('translate:acceptSuggestion', {
+    ax.metric('composer:language:acceptSuggestion', {
       os: Platform.OS,
       suggestedLanguage: language,
       currentTargetLanguages: metadata.currentTargetLanguages,
@@ -348,7 +356,7 @@ function GuessedLanguage({
     onAcceptOuter(language)
   }
   const onDecline = () => {
-    ax.metric('translate:declineSuggestion', {
+    ax.metric('composer:language:declineSuggestion', {
       os: Platform.OS,
       suggestedLanguage: language,
       currentTargetLanguages: metadata.currentTargetLanguages,
@@ -361,7 +369,7 @@ function GuessedLanguage({
   // eslint-disable-next-line react-hooks/refs
   metaRef.current = metadata
   useEffect(() => {
-    ax.metric('translate:suggestLanguage', {
+    ax.metric('composer:language:suggestLanguage', {
       os: Platform.OS,
       suggestedLanguage: language,
       currentTargetLanguages: metaRef.current.currentTargetLanguages,

@@ -800,7 +800,7 @@ export type Events = {
      */
     resultSourceLanguage: string
   }
-  'translate:suggestLanguage': {
+  'composer:language:suggestLanguage': {
     os: Platform['OS']
     /**
      * The language we detected and suggested to the user as an override for the
@@ -817,7 +817,7 @@ export type Events = {
      */
     textLength: number
   }
-  'translate:acceptSuggestion': {
+  'composer:language:acceptSuggestion': {
     os: Platform['OS']
     /**
      * The language we detected and suggested to the user as an override for the
@@ -834,7 +834,7 @@ export type Events = {
      */
     textLength: number
   }
-  'translate:declineSuggestion': {
+  'composer:language:declineSuggestion': {
     os: Platform['OS']
     /**
      * The language we detected and suggested to the user as an override for the
@@ -861,7 +861,39 @@ export type Events = {
      */
     currentTargetLanguages: string[]
   }
-  'composer:language:replyNudgeDecline': {}
+  'composer:language:replyNudgeDecline': {
+    /**
+     * The language of the post the user is replying to.
+     */
+    replyToLanguage: string
+    /**
+     * This is the user's current composer languages, which are always defined.
+     */
+    currentTargetLanguages: string[]
+  }
+  'composer:language:nudgeUser': {
+    os: Platform['OS']
+    /**
+     * The language we detected and suggested to the user as an override for the
+     * expected target language.
+     */
+    suggestedLanguage: string | undefined
+    /**
+     * This is the user's current composer languages, which are always defined.
+     */
+    currentTargetLanguages: string[]
+    /**
+     * The length of the text being translated. We assume shorter texts are
+     * more likely to have inaccurate translations.
+     */
+    textLength: number
+  }
+  'composer:language:langSelectorPressed': {
+    /**
+     * If the user was nudged by our language detection to update their language
+     */
+    wasNudged: boolean
+  }
 
   'postMenu:openMuteWordsDialog': {
     uri: string
