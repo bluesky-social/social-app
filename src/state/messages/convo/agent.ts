@@ -52,11 +52,6 @@ export function isConvoItemMessage(
   )
 }
 
-/**
- * TODO This should return `ev.message` once `@atproto/api` supports it. - dsb
- * Firehose events for system messages only carry
- * `{rev, convoId, message: SystemMessageData*}` - no id or sentAt.
- */
 function toSystemMessageView(
   ev: ChatBskyConvoGetLog.OutputSchema['logs'][number],
 ): ChatBskyConvoDefs.SystemMessageView | null {
@@ -74,13 +69,7 @@ function toSystemMessageView(
     ChatBskyConvoDefs.isLogEnableJoinLink(ev) ||
     ChatBskyConvoDefs.isLogDisableJoinLink(ev)
   if (!isSystem) return null
-  return {
-    $type: 'chat.bsky.convo.defs#systemMessageView',
-    id: ev.rev,
-    rev: ev.rev,
-    sentAt: new Date().toISOString(),
-    data: ev.message as ChatBskyConvoDefs.SystemMessageView['data'],
-  }
+  return ev.message
 }
 
 export class Convo {
