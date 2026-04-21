@@ -65,6 +65,7 @@ export type ContextType = {
 
 export type MenuContextType = {
   align: 'left' | 'right'
+  xOffset: number
 }
 
 export type ItemContextType = {
