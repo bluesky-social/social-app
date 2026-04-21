@@ -1,5 +1,6 @@
 import {useEffect, useMemo, useRef, useState} from 'react'
 import {Platform, Text as RNText, View} from 'react-native'
+import {RichText} from '@atproto/api'
 import {parseLanguageString} from '@atproto/syntax'
 import {
   guessLanguageAsync,
@@ -250,8 +251,8 @@ export function SuggestedLanguage({
       setHasInteracted(true)
     }
 
-    if (ax.features.enabled(ax.features.NativeLanguageDetectionEnable)) {
-      const textTrimmed = text.trim() // TODO strip emojis, urls, mentions, etc. to improve accuracy and reduce noise
+    if (ax.features.enabled(ax.features.ComposerLanguageDetectionEnable)) {
+      const textTrimmed = sanitizeTextForDetection(text)
 
       /*
        * If text drops under the min length requirement, reset suggestions state
@@ -315,7 +316,7 @@ export function SuggestedLanguage({
     return (
       <ReplyLanguageNudge
         language={replyToLanguages[0]}
-        metadata={{currentTargetLanguages: currentLanguages, rawText: text}}
+        metadata={{currentTargetLanguages: currentLanguages}}
         onAccept={onAccept}
         onDecline={onDecline}
       />
@@ -350,7 +351,7 @@ function GuessedLanguage({
       os: Platform.OS,
       suggestedLanguage: language,
       currentTargetLanguages: metadata.currentTargetLanguages,
-      textLength: metadata.rawText.trim().length,
+      textLength: sanitizeTextForDetection(metadata.rawText).length,
     })
     onAcceptOuter(language)
   }
@@ -359,7 +360,7 @@ function GuessedLanguage({
       os: Platform.OS,
       suggestedLanguage: language,
       currentTargetLanguages: metadata.currentTargetLanguages,
-      textLength: metadata.rawText.trim().length,
+      textLength: sanitizeTextForDetection(metadata.rawText).length,
     })
     onDeclineOuter()
   }
@@ -372,7 +373,7 @@ function GuessedLanguage({
       os: Platform.OS,
       suggestedLanguage: language,
       currentTargetLanguages: metaRef.current.currentTargetLanguages,
-      textLength: metaRef.current.rawText.trim().length,
+      textLength: sanitizeTextForDetection(metadata.rawText).length,
     })
   }, [ax, language])
 
@@ -402,7 +403,6 @@ function ReplyLanguageNudge({
   language: string
   metadata: {
     currentTargetLanguages: string[]
-    rawText: string
   }
   onAccept: (language: string) => void
   onDecline: () => void
@@ -551,4 +551,27 @@ async function guessLanguage(
   }
 
   return {certain, uncertain}
+}
+
+/**
+ * Strip any detected facets from the text to improve language detection
+ * accuracy. For example, URLs and mentions.
+ *
+ * Tags are intentionally kept — their word content is usually in the
+ * post's language and helps detection; the leading `#` is short enough
+ * not to distort results.
+ */
+function sanitizeTextForDetection(text: string): string {
+  const rt = new RichText({text: text.trim()})
+  rt.detectFacetsWithoutResolution()
+
+  let sanitized = ''
+  for (const segment of rt.segments()) {
+    if (segment.isLink() || segment.isMention() || segment.isTag()) {
+      continue
+    }
+    sanitized += segment.text
+  }
+
+  return sanitized.trim()
 }
