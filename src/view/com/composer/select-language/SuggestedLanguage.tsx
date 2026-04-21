@@ -56,7 +56,23 @@ export function SuggestedLanguage({
   }, [text, hasInteracted])
 
   useEffect(() => {
-    const textTrimmed = text.trim()
+    let textTrimmed = text.trim()
+
+    // Remove the last word before guessing to prevent a half-written word
+    // or typos from affecting the confidence of language detection.
+    // There are two gotchas with this approach:
+    // First, it might increase the practical minimum length for the language
+    // detection because removing the last word would eat away from the
+    // 40 character min limit. I think it's worth it though.
+    // Second, this will also discard the last word that has been typed fully
+    // which might affect the outcome towards a positive result. One might
+    // consider detecting punctuation at the end of the last word to include
+    // it in the language detection, but it's quite hard to do that for all
+    // languages correctly.
+    const lastSpace = textTrimmed.lastIndexOf(' ')
+    if (lastSpace > 0) {
+      textTrimmed = textTrimmed.slice(0, lastSpace).trim()
+    }
 
     // Don't run the language model on small posts, the results are likely
     // to be inaccurate anyway.
@@ -193,16 +209,18 @@ function LanguageSuggestionButton({
  * The magic numbers are based on debugging sessions against some test strings
  */
 function guessLanguage(text: string): string | undefined {
-  const scores = lande(text).filter(([_lang, value]) => value >= 0.0002)
-  // if the model has multiple items with a score higher than 0.0002, it isn't certain enough
+  // William Wordsworth's "Composed upon Westminster Bridge, September 3, 1802" poem's
+  // last sestet gets a 0.93 confidence score by this model. I find that 90% is a good threshold
+  // if we only have only one language detected at that level. I understand that a carefully
+  // picked portion of an English sonnet from 223 years ago isn't a perfect
+  // representative of modern English, but it's English regardless.
+  const scores = lande(text).filter(([_lang, value]) => value >= 0.9)
+
+  // If there are more than one language with a high score, we don't want to make a suggestion
   if (scores.length !== 1) {
     return undefined
   }
-  const [lang, value] = scores[0]
-  // if the model doesn't give a score of 0.97 or above, it isn't certain enough
-  if (value < 0.97) {
-    return undefined
-  }
+  const [lang, _] = scores[0]
   return code3ToCode2Strict(lang)
 }
 
