@@ -227,7 +227,13 @@ function LightboxGallery({
         )}
       </View>
       {img.alt ? (
-        <View style={[a.px_4xl, a.py_2xl, t.atoms.bg, delayedFadeInAnim]}>
+        <View
+          style={[
+            a.px_4xl,
+            a.py_2xl,
+            {backgroundColor: 'rgba(0, 0, 0, 0.45)'},
+            delayedFadeInAnim,
+          ]}>
           <Pressable
             accessibilityLabel={_(msg`Expand alt text`)}
             accessibilityHint={_(
@@ -237,7 +243,7 @@ function LightboxGallery({
               setAltExpanded(!isAltExpanded)
             }}>
             <Text
-              style={[a.text_md, a.leading_snug]}
+              style={[a.text_md, a.leading_snug, {color: '#fff'}]}
               numberOfLines={isAltExpanded ? 0 : 3}
               ellipsizeMode="tail">
               {img.alt}
