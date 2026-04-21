@@ -1,3 +1,11 @@
+import {useEffect} from 'react'
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -21,9 +29,16 @@ import {Text} from '#/components/Typography'
 export function PostLanguageSelect({
   currentLanguages: currentLanguagesProp,
   onSelectLanguage,
+  nudgeCount = 0,
 }: {
   currentLanguages?: string[]
   onSelectLanguage?: (language: string) => void
+  /**
+   * Incremented by the parent when language detection was ambiguous. Each
+   * increment flashes a transient hint on the button, then fades. The
+   * initial `0` on mount is intentionally ignored.
+   */
+  nudgeCount?: number
 }) {
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
@@ -52,7 +67,10 @@ export function PostLanguageSelect({
   ) {
     return (
       <>
-        <LanguageBtn onPress={languageDialogControl.open} />
+        <LanguageBtn
+          onPress={languageDialogControl.open}
+          nudgeCount={nudgeCount}
+        />
         <LanguageSelectDialog
           titleText={<Trans>Choose post languages</Trans>}
           subtitleText={
@@ -72,7 +90,11 @@ export function PostLanguageSelect({
       <Menu.Root>
         <Menu.Trigger label={_(msg`Select post language`)}>
           {({props}) => (
-            <LanguageBtn currentLanguages={currentLanguages} {...props} />
+            <LanguageBtn
+              currentLanguages={currentLanguages}
+              nudgeCount={nudgeCount}
+              {...props}
+            />
           )}
         </Menu.Trigger>
         <Menu.Outer>
@@ -122,17 +144,40 @@ export function PostLanguageSelect({
   )
 }
 
-function LanguageBtn(
-  props: Omit<ButtonProps, 'label' | 'children'> & {
-    currentLanguages?: string[]
-  },
-) {
+const NUDGE_FADE_MS = 150
+const NUDGE_HOLD_MS = 1700
+
+function LanguageBtn({
+  currentLanguages: currentLanguagesProp,
+  nudgeCount = 0,
+  ...props
+}: Omit<ButtonProps, 'label' | 'children'> & {
+  currentLanguages?: string[]
+  nudgeCount?: number
+}) {
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
   const t = useTheme()
 
   const postLanguagesPref = toPostLanguages(langPrefs.postLanguage)
-  const currentLanguages = props.currentLanguages ?? postLanguagesPref
+  const currentLanguages = currentLanguagesProp ?? postLanguagesPref
+
+  /*
+   * Stays at 0 when idle; each nudge runs fade-in → hold → fade-out as a
+   * single reanimated sequence. Reassigning `value` cancels any prior
+   * sequence, so rapid re-nudges cleanly restart the flash.
+   */
+  const nudgeOpacity = useSharedValue(0)
+  useEffect(() => {
+    if (nudgeCount === 0) return
+    nudgeOpacity.value = withSequence(
+      withTiming(1, {duration: NUDGE_FADE_MS}),
+      withDelay(NUDGE_HOLD_MS, withTiming(0, {duration: NUDGE_FADE_MS})),
+    )
+  }, [nudgeCount, nudgeOpacity])
+  const nudgeStyle = useAnimatedStyle(() => ({
+    opacity: nudgeOpacity.value,
+  }))
 
   return (
     <Button
@@ -151,8 +196,8 @@ function LanguageBtn(
       {({pressed, hovered}) => {
         const color =
           pressed || hovered ? t.palette.primary_300 : t.palette.primary_500
-        if (currentLanguages.length > 0) {
-          return (
+        const label =
+          currentLanguages.length > 0 ? (
             <Text
               style={[
                 {color},
@@ -167,10 +212,21 @@ function LanguageBtn(
                 .map(lang => codeToLanguageName(lang, langPrefs.appLanguage))
                 .join(', ')}
             </Text>
+          ) : (
+            <GlobeIcon size="xs" style={{color}} />
           )
-        } else {
-          return <GlobeIcon size="xs" style={{color}} />
-        }
+        return (
+          <>
+            {label}
+            <Animated.View
+              pointerEvents="none"
+              style={[a.absolute, {top: 3, right: 1}, nudgeStyle]}>
+              <Text emoji style={[a.text_lg]}>
+                🤔
+              </Text>
+            </Animated.View>
+          </>
+        )
       }}
     </Button>
   )

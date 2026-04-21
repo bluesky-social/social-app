@@ -155,6 +155,7 @@ export function SuggestedLanguage({
   replyToLanguages: replyToLanguagesProp,
   currentLanguages,
   onAcceptSuggestedLanguage,
+  onNudge,
 }: {
   text: string
   /**
@@ -171,6 +172,13 @@ export function SuggestedLanguage({
    * only suggest the first one.
    */
   onAcceptSuggestedLanguage: (language: string | null) => void
+  /**
+   * Fired when detection produced ambiguous results — no strong suggestion
+   * to show, but we want to hint to the user that the detector is unsure.
+   * Expected to be an incrementing counter setter on the parent so the
+   * nudge can re-fire on each detection cycle.
+   */
+  onNudge?: () => void
 }) {
   const ax = useAnalytics()
   const [hasInteracted, setHasInteracted] = useState(false)
@@ -201,6 +209,13 @@ export function SuggestedLanguage({
   configRef.current = DEFAULT_CONFIG
 
   /*
+   * Held in a ref so the debounced detection closure always sees the
+   * latest callback identity without rebuilding the debounce timer.
+   */
+  const onNudgeRef = useRef(onNudge)
+  onNudgeRef.current = onNudge
+
+  /*
    * Main language detection effect
    */
   const detectLanguage = useMemo(() => {
@@ -213,10 +228,7 @@ export function SuggestedLanguage({
         if (certain.length === 1 && uncertain.length === 0) {
           setSuggLang(certain[0].language)
         } else {
-          console.log('NUDGE')
-          // TODO: surface a subtler nudge when results are ambiguous (e.g. a
-          // certain candidate with competing uncertain ones, or multiple
-          // certain candidates) rather than showing nothing.
+          onNudgeRef.current?.()
         }
       } catch (e) {
         ax.logger.error('Error detecting language', {safeMessage: e})

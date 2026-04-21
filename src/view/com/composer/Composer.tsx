@@ -268,6 +268,16 @@ export const ComposePost = ({
     setReplyToLanguages([])
   }
 
+  /**
+   * Incremented each time language detection is ambiguous — we can't
+   * surface a strong suggestion, but we still want to flash a hint on the
+   * language pill. Consumers key an effect on this counter to retrigger.
+   */
+  const [languageNudgeCount, setLanguageNudgeCount] = useState(0)
+  const onLanguageNudge = () => {
+    setLanguageNudgeCount(n => n + 1)
+  }
+
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
     {
@@ -1146,6 +1156,7 @@ export const ComposePost = ({
         replyToLanguages={replyToLanguages}
         currentLanguages={currentLanguages}
         onAcceptSuggestedLanguage={setAcceptedLanguageSuggestion}
+        onNudge={onLanguageNudge}
       />
       <ComposerPills
         isReply={!!replyTo}
@@ -1169,6 +1180,7 @@ export const ComposePost = ({
         }}
         currentLanguages={currentLanguages}
         onSelectLanguage={onSelectLanguage}
+        languageNudgeCount={languageNudgeCount}
         openGallery={openGallery}
         textInputRef={textInputRef}
       />
@@ -1873,6 +1885,7 @@ function ComposerFooter({
   onAddPost,
   currentLanguages,
   onSelectLanguage,
+  languageNudgeCount,
   openGallery,
   textInputRef,
 }: {
@@ -1884,6 +1897,7 @@ function ComposerFooter({
   onAddPost: () => void
   currentLanguages: string[]
   onSelectLanguage?: (language: string) => void
+  languageNudgeCount: number
   openGallery?: boolean
   textInputRef: React.RefObject<TextInputRef | null>
 }) {
@@ -2049,6 +2063,7 @@ function ComposerFooter({
         <PostLanguageSelect
           currentLanguages={currentLanguages}
           onSelectLanguage={onSelectLanguage}
+          nudgeCount={languageNudgeCount}
         />
         <CharProgress
           count={post.shortenedGraphemeLength}
