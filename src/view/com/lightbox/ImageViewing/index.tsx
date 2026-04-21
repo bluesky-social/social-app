@@ -44,13 +44,13 @@ import {Trans} from '@lingui/react/macro'
 
 import {type Dimensions} from '#/lib/media/types'
 import {colors, s} from '#/lib/styles'
-import {type Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
 import {useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {IS_IOS} from '#/env'
+import {type Lightbox} from '#/features/lightbox/state'
 import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
 import {
   type ImageSource,

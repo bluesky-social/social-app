@@ -9,7 +9,6 @@ import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {saveImageToMediaLibrary} from '#/lib/media/manip'
 import {useA11y} from '#/state/a11y'
-import {useLightbox, useLightboxControls} from '#/state/lightbox'
 import {
   atoms as a,
   flatten,
@@ -30,6 +29,7 @@ import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useLightbox, useLightboxControls} from '#/features/lightbox/state'
 import {type ImageSource} from './ImageViewing/@types'
 
 export function Lightbox() {

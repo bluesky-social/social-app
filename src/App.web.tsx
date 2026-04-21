@@ -24,7 +24,6 @@ import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
-import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
 import {Provider as ModalStateProvider} from '#/state/modals'
 import {init as initPersistedState} from '#/state/persisted'
@@ -70,6 +69,7 @@ import {
   features,
   setupDeviceId,
 } from '#/analytics'
+import {Provider as LightboxStateProvider} from '#/features/lightbox/state'
 import {
   prefetchLiveEvents,
   Provider as LiveEventsProvider,

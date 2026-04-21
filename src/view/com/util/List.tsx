@@ -12,9 +12,9 @@ import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
-import {useLightbox} from '#/state/lightbox'
 import {useTheme} from '#/alf'
 import {IS_IOS} from '#/env'
+import {useLightbox} from '#/features/lightbox/state'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL

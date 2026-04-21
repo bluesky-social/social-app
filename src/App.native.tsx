@@ -31,7 +31,6 @@ import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
 import {GlobalGestureEventsProvider} from '#/state/global-gesture-events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
-import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
 import {Provider as ModalStateProvider} from '#/state/modals'
 import {init as initPersistedState} from '#/state/persisted'
@@ -78,6 +77,7 @@ import {
   setupDeviceId,
 } from '#/analytics'
 import {IS_ANDROID, IS_IOS} from '#/env'
+import {Provider as LightboxStateProvider} from '#/features/lightbox/state'
 import {
   prefetchLiveEvents,
   Provider as LiveEventsProvider,
