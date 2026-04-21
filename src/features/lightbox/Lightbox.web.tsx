@@ -18,6 +18,7 @@ import {
 } from '#/alf'
 import {Button} from '#/components/Button'
 import {Backdrop} from '#/components/Dialog'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ShareIcon} from '#/components/icons/ArrowOutOfBox'
 import {
   ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon,
   ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
@@ -265,6 +266,37 @@ function LightboxGallery({
         </Menu.Trigger>
         <Menu.Outer>
           <Menu.Group>
+            <Menu.Item
+              label={_(msg`Share image`)}
+              onPress={async () => {
+                const url = img.uri
+                if (
+                  typeof navigator !== 'undefined' &&
+                  'share' in navigator &&
+                  navigator.share
+                ) {
+                  try {
+                    await navigator.share({url})
+                  } catch {
+                    // User cancelled or share failed; no-op
+                  }
+                } else if (
+                  typeof navigator !== 'undefined' &&
+                  navigator.clipboard
+                ) {
+                  try {
+                    await navigator.clipboard.writeText(url)
+                    Toast.show(_(msg`Link copied to clipboard`))
+                  } catch {
+                    Toast.show(_(msg`Failed to copy link`), {type: 'error'})
+                  }
+                }
+              }}>
+              <Menu.ItemText>
+                <Trans>Share image</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={ShareIcon} position="right" />
+            </Menu.Item>
             <Menu.Item
               label={_(msg`Download image`)}
               onPress={() => {
