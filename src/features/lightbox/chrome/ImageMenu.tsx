@@ -23,23 +23,20 @@ export function ImageMenu({onPressShare, onPressSave}: Props) {
         label={_(msg`Image options`)}
         contentLabel={_(msg`Image options`)}>
         {triggerProps => {
-          if (triggerProps.IS_NATIVE) {
-            return (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={_(msg`Image options`)}
-                accessibilityHint=""
-                onPress={() => triggerProps.control.open('full')}
-                style={a.self_start}>
-                <CircleChromeButton
-                  icon={DotsIcon}
-                  label={_(msg`Image options`)}
-                />
-              </Pressable>
-            )
+          if (!triggerProps.IS_NATIVE) {
+            // ImageMenu is native-only; web uses Lightbox.web.tsx's own menu
+            return null
           }
           return (
-            <CircleChromeButton icon={DotsIcon} label={_(msg`Image options`)} />
+            <Pressable
+              accessible={false}
+              onPress={() => triggerProps.control.open('full')}
+              style={a.self_start}>
+              <CircleChromeButton
+                icon={DotsIcon}
+                label={_(msg`Image options`)}
+              />
+            </Pressable>
           )
         }}
       </ContextMenu.Trigger>
