@@ -231,7 +231,7 @@ function SettingsInner({convoId}: {convoId: string}) {
       initialNumToRender={initialNumToRender}
       keyExtractor={keyExtractor}
       ListHeaderComponent={
-        convo ? (
+        convo?.kind === 'group' ? (
           <SettingsHeader convo={convo} isOwner={isOwner} />
         ) : (
           <SettingsHeaderPlaceholder />
@@ -725,7 +725,7 @@ function SettingsHeader({
   convo,
   isOwner,
 }: {
-  convo: ConvoWithDetails
+  convo: Extract<ConvoWithDetails, {kind: 'group'}>
   isOwner: boolean
 }) {
   const t = useTheme()
@@ -733,7 +733,7 @@ function SettingsHeader({
 
   const navigation = useNavigation<NavigationProp>()
 
-  const groupName = convo.kind === 'group' ? convo.details.name : ''
+  const groupName = convo.details.name
   const [newGroupName, setNewGroupName] = useState(groupName)
 
   const [isLocked, setIsLocked] = useState(false)
@@ -905,7 +905,7 @@ function SettingsHeader({
         onChangeText={setNewGroupName}
         onConfirm={handleEditName}
       />
-      <InviteLinkDialog control={inviteLinkDialog} />
+      <InviteLinkDialog convo={convo} control={inviteLinkDialog} />
       <LockChatPrompt control={lockChatPrompt} onConfirm={handleConfirmLock} />
       <LeaveChatPrompt
         control={leaveChatPrompt}

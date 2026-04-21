@@ -8,6 +8,7 @@ import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {AddMembersFlow} from '#/components/dms/AddMembersFlow'
+import {parseConvoView} from '#/components/dms/util'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import {Text} from '#/components/Typography'
@@ -21,6 +22,11 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
   const inviteLinkPrompt = Dialog.useDialogControl()
 
   const {currentAccount} = useSession()
+
+  const convo = convoState.convo
+    ? parseConvoView(convoState.convo, currentAccount?.did)
+    : null
+  const groupConvo = convo?.kind === 'group' ? convo : null
 
   const isOwner =
     currentAccount?.did == null
@@ -104,11 +110,11 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
                 </ButtonText>
               </Button>
             ) : null}
-            {isOwner || isLinkEnabled ? (
+            {isOwner && groupConvo ? (
               <Button
                 color="secondary"
                 size="small"
-                label={l`Click here to view or create an invite link for this group chat`}
+                label={l`Click here to create or manage an invite link for this group chat`}
                 onPress={() => inviteLinkPrompt.open()}>
                 <ButtonIcon icon={ChainLinkIcon} />
                 <ButtonText>
@@ -119,7 +125,9 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
           </View>
         ) : null}
       </View>
-      <InviteLinkDialog control={inviteLinkPrompt} />
+      {groupConvo ? (
+        <InviteLinkDialog convo={groupConvo} control={inviteLinkPrompt} />
+      ) : null}
       <Dialog.Outer
         control={addMembersControl}
         testID="addChatMembersDialog"

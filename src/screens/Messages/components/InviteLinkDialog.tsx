@@ -2,6 +2,10 @@ import {useState} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {useCreateJoinLink} from '#/state/queries/messages/create-join-link'
+import {useDisableJoinLink} from '#/state/queries/messages/disable-join-link'
+import {useEditJoinLink} from '#/state/queries/messages/edit-join-link'
+import {useEnableJoinLink} from '#/state/queries/messages/enable-join-link'
 import {atoms as a, useTheme, web} from '#/alf'
 import {
   Button,
@@ -10,11 +14,16 @@ import {
   StackedButton,
 } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {type ConvoWithDetails} from '#/components/dms/util'
 import * as Toggle from '#/components/forms/Toggle'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon} from '#/components/icons/ArrowShareRight'
-import {ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon} from '#/components/icons/ChainLink'
+import {
+  ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon,
+  ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon,
+} from '#/components/icons/ChainLink'
 import {EditBig_Stroke2_Corner2_Rounded as EditIcon} from '#/components/icons/EditBig'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
 import {CopyTextButton} from './CopyTextButton'
@@ -37,15 +46,62 @@ const dateFormatter = new Intl.DateTimeFormat(undefined, {
 })
 
 export function InviteLinkDialog({
+  convo,
   control,
 }: {
+  convo: Extract<ConvoWithDetails, {kind: 'group'}>
   control: Dialog.DialogOuterProps['control']
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
 
-  const [step, setStep] = useState(Step.INFO)
-  const [whoCanJoin, setWhoCanJoin] = useState(['anyone'])
+  const {joinLink} = convo.details
+  const enabledStatus = joinLink?.enabledStatus
+
+  const initialStep = joinLink ? Step.MANAGE : Step.INFO
+  const initialWhoCanJoin = joinLink
+    ? [
+        `${joinLink.joinRule}${joinLink.requireApproval ? ':requireApproval' : ''}`,
+      ]
+    : ['anyone']
+
+  const [step, setStep] = useState<Step>(initialStep)
+  const [whoCanJoin, setWhoCanJoin] = useState(initialWhoCanJoin)
+
+  const {mutate: createJoinLink} = useCreateJoinLink(convo.view.id, {
+    onSuccess: () => {
+      setStep(Step.MANAGE)
+    },
+    onError: () => {
+      Toast.show(l`Failed to create invite link`, {
+        type: 'error',
+      })
+    },
+  })
+  const {mutate: editJoinLink} = useEditJoinLink(convo.view.id, {
+    onSuccess: () => {
+      setStep(Step.MANAGE)
+    },
+    onError: () => {
+      Toast.show(l`Failed to edit invite link`, {
+        type: 'error',
+      })
+    },
+  })
+  const {mutate: disableJoinLink} = useDisableJoinLink(convo.view.id, {
+    onError: () => {
+      Toast.show(l`Failed to disable invite link`, {
+        type: 'error',
+      })
+    },
+  })
+  const {mutate: enableJoinLink} = useEnableJoinLink(convo.view.id, {
+    onError: () => {
+      Toast.show(l`Failed to enable invite link`, {
+        type: 'error',
+      })
+    },
+  })
 
   const whoCanJoinOptions = [
     {name: 'anyone', label: l`Anyone can join instantly`},
@@ -133,10 +189,23 @@ export function InviteLinkDialog({
               color="primary"
               size="large"
               onPress={() => {
-                setStep(Step.MANAGE)
+                const parts = whoCanJoin[0].split(':')
+                const joinRule = parts[0]
+                const requireApproval = parts[1] === 'requireApproval'
+                if (joinLink) {
+                  editJoinLink({
+                    joinRule,
+                    requireApproval,
+                  })
+                } else {
+                  createJoinLink({
+                    joinRule,
+                    requireApproval,
+                  })
+                }
               }}>
               <ButtonText>
-                <Trans>Generate invite link</Trans>
+                {joinLink ? l`Update invite link` : l`Generate invite link`}
               </ButtonText>
               <ButtonIcon icon={ArrowRightIcon} />
             </Button>
@@ -145,64 +214,101 @@ export function InviteLinkDialog({
       )
       break
     case Step.MANAGE:
-      const createdAt = new Date()
+      const joinLinkURI =
+        joinLink && joinLink.code !== ''
+          ? `https://bsky.app/chat/${joinLink.code}`
+          : 'https://bsky.app/chat'
+      const createdAt = joinLink ? new Date(joinLink.createdAt) : null
       const value =
         whoCanJoinOptions.find(o => o.name === whoCanJoin[0])?.label ??
         whoCanJoinOptions[0].label
       header = l`Invite link`
       content = (
         <>
-          <View style={[a.mt_lg]}>
-            <CopyTextButton
-              label={l`Invite link`}
-              value="https://bsky.app/chat/asdf123">
-              <Text
-                numberOfLines={1}
-                style={[a.mr_xs, a.text_md, t.atoms.text]}>
-                https//bsky.app/chat/asdf123
-              </Text>
-            </CopyTextButton>
-            <Text style={[a.mt_xs, a.text_xs, t.atoms.text_contrast_medium]}>
-              <Trans>
-                Created {timeFormatter.format(createdAt)}{' '}
-                {dateFormatter.format(createdAt)}
-              </Trans>
-            </Text>
-          </View>
-          <View style={[a.mt_lg]}>
-            <EditTextButton
-              label={l`Edit link settings`}
-              value={value}
-              onPress={() => setStep(Step.GENERATE)}>
-              <Text
-                numberOfLines={1}
-                style={[a.mr_xs, a.text_md, t.atoms.text, {maxWidth: '80%'}]}>
-                {value}
-              </Text>
-            </EditTextButton>
-          </View>
+          {enabledStatus === 'enabled' ? (
+            <>
+              <View style={[a.mt_lg]}>
+                <CopyTextButton label={l`Invite link`} value={joinLinkURI}>
+                  <Text
+                    numberOfLines={1}
+                    style={[a.mr_xs, a.text_md, t.atoms.text]}>
+                    {joinLinkURI}
+                  </Text>
+                </CopyTextButton>
+                {createdAt ? (
+                  <Text
+                    style={[a.mt_xs, a.text_xs, t.atoms.text_contrast_medium]}>
+                    <Trans>
+                      Created {timeFormatter.format(createdAt)}{' '}
+                      {dateFormatter.format(createdAt)}
+                    </Trans>
+                  </Text>
+                ) : null}
+              </View>
+              <View style={[a.mt_lg]}>
+                <EditTextButton
+                  label={l`Edit link settings`}
+                  value={value}
+                  onPress={() => setStep(Step.GENERATE)}>
+                  <Text
+                    numberOfLines={1}
+                    style={[
+                      a.mr_xs,
+                      a.text_md,
+                      t.atoms.text,
+                      {maxWidth: '80%'},
+                    ]}>
+                    {value}
+                  </Text>
+                </EditTextButton>
+              </View>
+            </>
+          ) : null}
           <View style={[a.flex_row, a.justify_between, a.gap_sm, a.mt_lg]}>
+            {enabledStatus === 'disabled' ? (
+              <StackedButton
+                label={l`Enable`}
+                icon={ChainLinkIcon}
+                color="primary_subtle"
+                style={[a.flex_1, a.rounded_full]}
+                onPress={() => {
+                  enableJoinLink()
+                }}>
+                Enable
+              </StackedButton>
+            ) : (
+              <StackedButton
+                label={l`Disable`}
+                icon={ChainLinkBrokenIcon}
+                color="negative_subtle"
+                style={[a.flex_1, a.rounded_full]}
+                onPress={() => {
+                  disableJoinLink()
+                }}>
+                Disable
+              </StackedButton>
+            )}
             <StackedButton
-              label={l`Disable`}
-              icon={ChainLinkBrokenIcon}
-              color="negative_subtle"
-              style={[a.flex_1, a.rounded_full]}
-              onPress={() => {}}>
-              Disable
-            </StackedButton>
-            <StackedButton
+              disabled={enabledStatus === 'disabled'}
               label={l`Post link`}
               icon={EditIcon}
-              color="primary_subtle"
+              color={
+                enabledStatus === 'enabled' ? 'primary_subtle' : 'secondary'
+              }
               style={[a.flex_1, a.rounded_full]}
+              // TODO Implement this. -dsb
               onPress={() => {}}>
               Post link
             </StackedButton>
             <StackedButton
+              disabled={enabledStatus === 'disabled'}
               label={l`Share`}
               icon={ArrowShareRightIcon}
-              color="primary_subtle"
+              color={
+                enabledStatus === 'enabled' ? 'primary_subtle' : 'secondary'
+              }
               style={[a.flex_1, a.rounded_full]}
+              // TODO Implement this. -dsb
               onPress={() => {}}>
               Share
             </StackedButton>
@@ -216,8 +322,8 @@ export function InviteLinkDialog({
     <Dialog.Outer
       control={control}
       onClose={() => {
-        setStep(Step.INFO)
-        setWhoCanJoin(['anyone'])
+        setStep(initialStep)
+        setWhoCanJoin(initialWhoCanJoin)
       }}>
       <Dialog.Handle />
       <Dialog.ScrollableInner

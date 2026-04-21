@@ -134,10 +134,14 @@ export function ConvoProvider({
           data &&
           convo.convo &&
           ChatBskyConvoDefs.isGroupConvo(data.kind) &&
-          ChatBskyConvoDefs.isGroupConvo(convo.convo.kind) &&
-          data.kind.name !== convo.convo.kind.name
+          ChatBskyConvoDefs.isGroupConvo(convo.convo.kind)
         ) {
-          convo.updateGroupName(data.kind.name)
+          if (data.kind.name !== convo.convo.kind.name) {
+            convo.updateGroupName(data.kind.name)
+          }
+          if (data.kind.joinLink !== convo.convo.kind.joinLink) {
+            convo.updateJoinLink(data.kind.joinLink)
+          }
         }
       }
     })
