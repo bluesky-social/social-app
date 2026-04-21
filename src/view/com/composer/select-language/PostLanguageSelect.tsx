@@ -169,16 +169,16 @@ function LanguageBtn({
    * single reanimated sequence. Reassigning `value` cancels any prior
    * sequence, so rapid re-nudges cleanly restart the flash.
    */
-  const nudgeOpacity = useSharedValue(0)
+  const nudgePulse = useSharedValue(0)
   useEffect(() => {
     if (nudgeCount === 0) return
-    nudgeOpacity.value = withSequence(
+    nudgePulse.value = withSequence(
       withTiming(1, {duration: NUDGE_FADE_MS}),
       withDelay(NUDGE_HOLD_MS, withTiming(0, {duration: NUDGE_FADE_MS})),
     )
-  }, [nudgeCount, nudgeOpacity])
-  const nudgeStyle = useAnimatedStyle(() => ({
-    opacity: nudgeOpacity.value,
+  }, [nudgeCount, nudgePulse])
+  const pulseStyle = useAnimatedStyle(() => ({
+    opacity: nudgePulse.value,
   }))
 
   return (
@@ -193,7 +193,7 @@ function LanguageBtn({
         }),
       )}
       accessibilityHint={_(msg`Opens post language settings`)}
-      style={[a.mr_xs]}
+      style={[a.mr_xs, a.overflow_hidden]}
       {...props}
       onPress={e => {
         props.onPress?.(e)
@@ -204,35 +204,40 @@ function LanguageBtn({
       {({pressed, hovered}) => {
         const color =
           pressed || hovered ? t.palette.primary_300 : t.palette.primary_500
-        const label =
-          currentLanguages.length > 0 ? (
-            <Text
-              style={[
-                {color},
-                a.font_semi_bold,
-                a.text_sm,
-                a.leading_snug,
-                {maxWidth: 100},
-              ]}
-              numberOfLines={1}
-              maxFontSizeMultiplier={1.5}>
-              {currentLanguages
-                .map(lang => codeToLanguageName(lang, langPrefs.appLanguage))
-                .join(', ')}
-            </Text>
-          ) : (
-            <GlobeIcon size="xs" style={{color}} />
-          )
         return (
           <>
-            {label}
             <Animated.View
               pointerEvents="none"
-              style={[a.absolute, {top: 3, right: 1}, nudgeStyle]}>
-              <Text emoji style={[a.text_lg]}>
-                🤔
+              style={[
+                a.absolute,
+                {
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  left: 0,
+                  backgroundColor: t.atoms.bg_contrast_50.backgroundColor,
+                },
+                pulseStyle,
+              ]}
+            />
+            {currentLanguages.length > 0 ? (
+              <Text
+                style={[
+                  {color},
+                  a.font_semi_bold,
+                  a.text_sm,
+                  a.leading_snug,
+                  {maxWidth: 100},
+                ]}
+                numberOfLines={1}
+                maxFontSizeMultiplier={1.5}>
+                {currentLanguages
+                  .map(lang => codeToLanguageName(lang, langPrefs.appLanguage))
+                  .join(', ')}
               </Text>
-            </Animated.View>
+            ) : (
+              <GlobeIcon size="xs" style={{color}} />
+            )}
           </>
         )
       }}
