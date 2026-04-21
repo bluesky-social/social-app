@@ -1,17 +1,16 @@
-import {memo} from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {atoms as a, useTheme} from '#/alf'
 import {getSystemMessageInfo} from '#/components/dms/systemMessage'
-import {Text} from '../Typography'
+import {Text} from '#/components/Typography'
 
-let SystemMessageItem = ({
+export function SystemMessageItem({
   item,
 }: {
   item: ConvoItem & {type: 'system-message'}
-}): React.ReactNode => {
+}) {
   const t = useTheme()
   const {i18n} = useLingui()
 
@@ -29,14 +28,17 @@ let SystemMessageItem = ({
         a.justify_center,
         a.px_md,
         a.mt_md,
-        t.atoms.bg,
       ]}>
-      <Icon size="sm" style={[a.mr_2xs, t.atoms.text_contrast_medium]} />
-      <Text style={[a.text_xs, a.text_center, t.atoms.text_contrast_medium]}>
+      <Icon size="xs" style={[a.mr_2xs, t.atoms.text_contrast_medium]} />
+      <Text
+        style={[
+          a.text_xs,
+          a.text_center,
+          t.atoms.text_contrast_medium,
+          {includeFontPadding: false, textAlignVertical: 'center'},
+        ]}>
         {i18n._(message)}
       </Text>
     </View>
   )
 }
-SystemMessageItem = memo(SystemMessageItem)
-export {SystemMessageItem}
