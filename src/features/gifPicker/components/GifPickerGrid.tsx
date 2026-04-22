@@ -15,13 +15,6 @@ type Props = {
   hasData: boolean
   isFetchingNextPage: boolean
   error: unknown
-  /**
-   * Identifies the current data source at a coarse grain ("recents" vs
-   * "network"). Used to remount the underlying FlatList when crossing that
-   * boundary so virtualized cells from the previous view can't bleed into the
-   * next one.
-   */
-  viewKey: string
   fetchNextPage: () => Promise<unknown>
   onEndReached: () => void
   onSelectGif: (gif: Gif) => void
@@ -35,7 +28,6 @@ export const GifPickerGrid = forwardRef<ListMethods, Props>(
       hasData,
       isFetchingNextPage,
       error,
-      viewKey,
       fetchNextPage,
       onEndReached,
       onSelectGif,
@@ -59,7 +51,7 @@ export const GifPickerGrid = forwardRef<ListMethods, Props>(
     return (
       <Dialog.InnerFlatList
         ref={ref}
-        key={`${numColumns}-${viewKey}`}
+        key={String(numColumns)}
         data={data}
         renderItem={({item}: {item: Gif[][]}) => (
           <View style={[a.flex_row, a.gap_sm]}>

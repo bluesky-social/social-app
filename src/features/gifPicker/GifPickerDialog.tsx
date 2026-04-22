@@ -100,24 +100,21 @@ function GifPickerBody({
   const items = isRecentsActive ? getRecents() : networkItems
   const hasData = items.length > 0
 
-  // Remount the grid only when switching between the network view and the
-  // local recents list, so FlatList doesn't carry stale virtualized cells
-  // across that boundary. Within the network view we rely on normal React
-  // reconciliation as `items` changes — remounting on every search keystroke
-  // would blur the sticky-header search input.
-  const viewKey = isRecentsActive ? 'recents' : 'network'
-
   const onEndReached = () => {
     if (isRecentsActive) return
     if (isFetchingNextPage || !hasNextPage || error) return
     void fetchNextPage()
   }
 
+  const onClearSearch = () => {
+    textInputRef.current?.clear()
+    setRawSearch('')
+    setActiveCategory('trending')
+  }
+
   const onGoBack = () => {
     if (isSearching || activeCategory !== 'trending') {
-      textInputRef.current?.clear()
-      setRawSearch('')
-      setActiveCategory('trending')
+      onClearSearch()
     } else {
       control.close()
     }
@@ -145,7 +142,8 @@ function GifPickerBody({
       <GifPickerHeader
         inputRef={textInputRef}
         onChangeText={onChangeSearch}
-        onGoBack={onGoBack}
+        onClear={onClearSearch}
+        canClear={rawSearch.length > 0}
         onEscape={() => control.close()}
       />
       {showPills && (
@@ -179,7 +177,6 @@ function GifPickerBody({
         hasData={hasData}
         isFetchingNextPage={!isRecentsActive && isFetchingNextPage}
         error={isRecentsActive ? null : error}
-        viewKey={viewKey}
         fetchNextPage={fetchNextPage}
         onEndReached={onEndReached}
         onSelectGif={handleSelectGif}
