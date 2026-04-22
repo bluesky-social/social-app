@@ -85,5 +85,17 @@ export function getSystemMessageInfo(
   } else if (ChatBskyConvoDefs.isSystemMessageDataDisableJoinLink(data)) {
     return {Icon: ChainLinkBrokenIcon, message: msg`Invite link disabled`}
   }
+  // Unrecognized system message, see `isRenderableSystemMessageData`.
   return null
+}
+
+/**
+ * True if the system-message data kind is one we render a visible row for.
+ * Kept in sync with `getSystemMessageInfo` - if that returns null, the
+ * `SystemMessageItem` renders null (zero height).
+ */
+export function isRenderableSystemMessageData(
+  data: ChatBskyConvoDefs.SystemMessageView['data'],
+): boolean {
+  return getSystemMessageInfo(data, []) !== null
 }

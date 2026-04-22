@@ -36,8 +36,11 @@ import {
 } from '#/state/messages/convo/types'
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type MessagesEventBusError} from '#/state/messages/events/types'
+import {isRenderableSystemMessageData} from '#/components/dms/getSystemMessageInfo'
 import {IS_NATIVE} from '#/env'
 import * as bsky from '#/types/bsky'
+
+const MAX_PAGES_PER_FETCH = 5
 
 const logger = Logger.create(Logger.Context.ConversationAgent)
 
@@ -683,51 +686,17 @@ export class Convo {
       this.isFetchingHistory = true
       this.commit()
 
-      const nextCursor = this.oldestRev // for TS
-      const response = await networkRetry(2, () => {
-        return this.agent.chat.bsky.convo.getMessages(
-          {
-            cursor: nextCursor,
-            convoId: this.convoId,
-            limit: IS_NATIVE ? 30 : 60,
-          },
-          {headers: DM_SERVICE_HEADERS},
-        )
-      })
-      const {cursor, messages, relatedProfiles} = response.data
-
-      this.oldestRev = cursor ?? null
-
-      if (relatedProfiles) {
-        for (const profile of relatedProfiles) {
-          this.systemMessageProfiles.set(profile.did, profile)
-        }
-      }
-
       /*
-       * If the response contained fewer messages than the limit, we know
-       * there are no more pages, regardless of whether a cursor was returned.
+       * Keep pulling pages until we've added at least one visible row or
+       * exhausted history. For example, a page of only unrecognized system
+       * messages renders with zero height, leaving the user pinned to the top
+       * with `onStartReached` unable to fire again.
+       *
+       * Bounded so a long run of unrecognized messages can't spin here.
        */
-      if (messages.length < (IS_NATIVE ? 30 : 60)) {
-        this.oldestRev = null
-      }
-
-      for (const message of messages) {
-        if (
-          ChatBskyConvoDefs.isMessageView(message) ||
-          ChatBskyConvoDefs.isDeletedMessageView(message) ||
-          ChatBskyConvoDefs.isSystemMessageView(message)
-        ) {
-          /*
-           * If this message is already in new messages, it was added by the
-           * firehose ingestion, and we can safely overwrite it. This trusts
-           * the server on ordering, and keeps it in sync.
-           */
-          if (this.newMessages.has(message.id)) {
-            this.newMessages.delete(message.id)
-          }
-          this.pastMessages.set(message.id, message)
-        }
+      for (let i = 0; i < MAX_PAGES_PER_FETCH && this.oldestRev !== null; i++) {
+        const addedVisibleRow = await this.fetchNextHistoryPage()
+        if (addedVisibleRow) break
       }
     } catch (err) {
       const e = err as Error
@@ -746,6 +715,65 @@ export class Convo {
       this.isFetchingHistory = false
       this.commit()
     }
+  }
+
+  private async fetchNextHistoryPage(): Promise<boolean> {
+    const limit = IS_NATIVE ? 30 : 60
+    const nextCursor = this.oldestRev ?? undefined
+    const response = await networkRetry(2, () => {
+      return this.agent.chat.bsky.convo.getMessages(
+        {
+          cursor: nextCursor,
+          convoId: this.convoId,
+          limit,
+        },
+        {headers: DM_SERVICE_HEADERS},
+      )
+    })
+    const {cursor, messages, relatedProfiles} = response.data
+
+    this.oldestRev = cursor ?? null
+
+    if (relatedProfiles) {
+      for (const profile of relatedProfiles) {
+        this.systemMessageProfiles.set(profile.did, profile)
+      }
+    }
+
+    /*
+     * If the response contained fewer messages than the limit, we know
+     * there are no more pages, regardless of whether a cursor was returned.
+     */
+    if (messages.length < limit) {
+      this.oldestRev = null
+    }
+
+    let addedVisibleRow = false
+    for (const message of messages) {
+      if (
+        ChatBskyConvoDefs.isMessageView(message) ||
+        ChatBskyConvoDefs.isDeletedMessageView(message) ||
+        ChatBskyConvoDefs.isSystemMessageView(message)
+      ) {
+        /*
+         * If this message is already in new messages, it was added by the
+         * firehose ingestion, and we can safely overwrite it. This trusts
+         * the server on ordering, and keeps it in sync.
+         */
+        if (this.newMessages.has(message.id)) {
+          this.newMessages.delete(message.id)
+        }
+        this.pastMessages.set(message.id, message)
+
+        if (
+          !ChatBskyConvoDefs.isSystemMessageView(message) ||
+          isRenderableSystemMessageData(message.data)
+        ) {
+          addedVisibleRow = true
+        }
+      }
+    }
+    return addedVisibleRow
   }
 
   private cleanupFirehoseConnection: (() => void) | undefined

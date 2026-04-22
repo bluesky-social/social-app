@@ -166,6 +166,22 @@ export function MessagesList({
 
   // -- Scroll handling
 
+  // Since `onStartReached` doesn't cover the case where content fits entirely
+  // in the viewport (e.g. a group chat of only system messages or unrecognized
+  // system messages), this callback fills the next page of history whenever the
+  // viewport can't be scrolled away from the top and more history exists.
+  const maybeFetchMoreHistory = useCallback(() => {
+    if (
+      hasInitiallyScrolled.current &&
+      !convoState.hasAllHistory &&
+      !convoState.isFetchingHistory &&
+      convoState.fetchMessageHistory &&
+      isAtTop.get()
+    ) {
+      void convoState.fetchMessageHistory()
+    }
+  }, [convoState, isAtTop])
+
   // Every time the content size changes, that means one of two things is happening:
   // 1. New messages are being added from the log or from a message you have sent
   // 2. Old messages are being prepended to the top
@@ -201,6 +217,7 @@ export function MessagesList({
         }
         prevContentHeight.current = height
         prevItemCount.current = convoState.items.length
+        maybeFetchMoreHistory()
         return
       }
 
@@ -235,12 +252,15 @@ export function MessagesList({
       prevContentHeight.current = height
       prevItemCount.current = convoState.items.length
       didBackground.current = false
+
+      maybeFetchMoreHistory()
     },
     [
       hasScrolled,
       setHasScrolled,
       convoState.isFetchingHistory,
       convoState.items.length,
+      maybeFetchMoreHistory,
       // these are stable
       flatListRef,
       isAtTop,
