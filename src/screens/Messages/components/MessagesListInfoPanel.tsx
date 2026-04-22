@@ -20,16 +20,19 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
 
   const {currentAccount} = useSession()
 
+  const convo = convoState.convo
+  const isGroup = convo?.kind === 'group'
+
   const isOwner =
-    currentAccount?.did == null
+    currentAccount?.did == null || !isGroup
       ? false
-      : convoState.getPrimaryMember?.()?.did === currentAccount.did
+      : convo.primaryMember.did === currentAccount.did
   // TODO Get this from @api/atproto - dsb
   const isLinkEnabled = false
 
-  const groupName = convoState.getGroupInfo?.()?.name
+  const groupName = isGroup ? convo.details.name : undefined
 
-  const members = (convoState?.convo?.members ?? []).filter(
+  const members = (convo?.members ?? []).filter(
     profile => profile.did !== currentAccount?.did,
   )
 

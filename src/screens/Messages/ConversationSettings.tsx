@@ -34,7 +34,7 @@ import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button, type ButtonColor, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {AddMembersFlow} from '#/components/dms/AddMembersFlow'
-import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
+import {type ConvoWithDetails} from '#/components/dms/util'
 import {Error} from '#/components/Error'
 import * as TextField from '#/components/forms/TextField'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -129,8 +129,6 @@ function SettingsInner() {
   const {currentAccount} = useSession()
 
   const convo = convoState.convo
-    ? parseConvoView(convoState.convo, currentAccount?.did)
-    : null
   const primaryMember = convo?.primaryMember
   const isOwner = !!primaryMember && primaryMember.did === currentAccount?.did
 

@@ -1133,6 +1133,7 @@ export class Convo {
     })
 
     this.pendingMessages.forEach(m => {
+      const senderProfile = this.relatedProfiles.get(this.senderUserDid)
       items.push({
         type: 'pending-message',
         key: m.id,
@@ -1143,15 +1144,12 @@ export class Convo {
           id: nanoid(),
           rev: '__fake__',
           sentAt: new Date().toISOString(),
-          /*
-           * `getItems` is only run in "active" status states, where
-           * `this.sender` is defined
-           */
           sender: {
             $type: 'chat.bsky.convo.defs#messageViewSender',
             did: this.senderUserDid,
           },
         },
+        relatedProfiles: senderProfile ? [senderProfile] : [],
         nextMessage: null,
         prevMessage: null,
         failed: this.pendingMessageFailure !== null,

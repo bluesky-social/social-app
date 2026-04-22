@@ -9,7 +9,7 @@ import {Text} from '#/components/Typography'
 export function SystemMessageItem({
   item,
 }: {
-  item: ConvoItem & {type: 'system-message'}
+  item: Extract<ConvoItem, {type: 'system-message'}>
 }) {
   const t = useTheme()
   const {i18n} = useLingui()

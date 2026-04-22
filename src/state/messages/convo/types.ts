@@ -103,6 +103,7 @@ export type ConvoItem =
       type: 'pending-message'
       key: string
       message: ChatBskyConvoDefs.MessageView
+      relatedProfiles: bsky.profile.AnyProfileView[]
       nextMessage:
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
