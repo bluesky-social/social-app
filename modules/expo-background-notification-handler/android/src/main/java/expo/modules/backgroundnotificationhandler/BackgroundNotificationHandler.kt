@@ -1,7 +1,9 @@
 package expo.modules.backgroundnotificationhandler
 
 import android.content.Context
+import android.util.Log
 import com.google.firebase.messaging.RemoteMessage
+import org.json.JSONObject
 
 class BackgroundNotificationHandler(
   private val context: Context,
@@ -13,13 +15,29 @@ class BackgroundNotificationHandler(
       return
     }
 
-    if (remoteMessage.data["reason"] == "chat-message" || remoteMessage.data["reason"] == "chat-reaction") {
+    val reason = remoteMessage.data["reason"]
+    Log.d(TAG, "handleMessage: reason=$reason")
+
+    if (reason == "chat-message" || reason == "chat-reaction") {
       mutateWithChatMessage(remoteMessage)
+      packBodyForPresentation(remoteMessage)
     } else {
       mutateWithOtherReason(remoteMessage)
     }
 
     notifInterface.showMessage(remoteMessage)
+  }
+
+  private fun packBodyForPresentation(remoteMessage: RemoteMessage) {
+    val body = JSONObject().apply {
+      put("reason", remoteMessage.data["reason"])
+      put("senderDisplayName", remoteMessage.data["senderDisplayName"])
+      put("senderAvatarUrl", remoteMessage.data["senderAvatarUrl"])
+      put("senderHandle", remoteMessage.data["senderHandle"])
+      put("convoId", remoteMessage.data["convoId"])
+    }
+    remoteMessage.data["body"] = body.toString()
+    Log.d(TAG, "packBodyForPresentation: $body")
   }
 
   private fun mutateWithChatMessage(remoteMessage: RemoteMessage) {
@@ -40,6 +58,10 @@ class BackgroundNotificationHandler(
 
     // TODO - Remove this once we have more backend capability
     remoteMessage.data["badge"] = null
+  }
+
+  companion object {
+    private const val TAG = "BGNotifHandler"
   }
 
   private fun mutateWithOtherReason(remoteMessage: RemoteMessage) {

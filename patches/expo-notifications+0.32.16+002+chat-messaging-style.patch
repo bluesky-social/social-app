@@ -1,0 +1,96 @@
+diff --git a/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/service/delegates/ExpoPresentationDelegate.kt b/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/service/delegates/ExpoPresentationDelegate.kt
+index 38f6fba..f7dc7b7 100644
+--- a/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/service/delegates/ExpoPresentationDelegate.kt
++++ b/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/service/delegates/ExpoPresentationDelegate.kt
+@@ -2,6 +2,7 @@ package expo.modules.notifications.service.delegates
+ 
+ import android.app.NotificationManager
+ import android.content.Context
++import android.graphics.BitmapFactory
+ import android.media.RingtoneManager
+ import android.net.Uri
+ import android.os.Build
+@@ -13,6 +14,8 @@ import android.util.Log
+ import android.util.Pair
+ import androidx.core.app.NotificationCompat
+ import androidx.core.app.NotificationManagerCompat
++import androidx.core.app.Person
++import androidx.core.graphics.drawable.IconCompat
+ import expo.modules.notifications.notifications.SoundResolver
+ import expo.modules.notifications.notifications.enums.NotificationPriority
+ import expo.modules.notifications.notifications.model.NotificationBehaviorRecord
+@@ -26,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.launch
+ import org.json.JSONException
+ import org.json.JSONObject
++import java.net.URL
+ import java.util.Date
+ 
+ open class ExpoPresentationDelegate(
+@@ -156,11 +160,64 @@ open class ExpoPresentationDelegate(
+ 
+   override fun dismissAllNotifications() = NotificationManagerCompat.from(context).cancelAll()
+ 
+-  protected open suspend fun createNotification(notification: Notification, notificationBehavior: NotificationBehaviorRecord?): android.app.Notification =
+-    ExpoNotificationBuilder(context, notification, SharedPreferencesNotificationCategoriesStore(context)).apply {
++  protected open suspend fun createNotification(notification: Notification, notificationBehavior: NotificationBehaviorRecord?): android.app.Notification {
++    val baseNotification = ExpoNotificationBuilder(context, notification, SharedPreferencesNotificationCategoriesStore(context)).apply {
+       setAllowedBehavior(notificationBehavior)
+     }.build()
+ 
++    val body = notification.notificationRequest.content.body
++    val reason = body?.optString("reason")
++    Log.d("ChatNotif", "createNotification: body=${body} reason=${reason}")
++    if (reason == "chat-message" || reason == "chat-reaction") {
++      val result = buildChatNotification(baseNotification, body)
++      Log.d("ChatNotif", "buildChatNotification returned: ${if (result != null) "success" else "null, using base"}")
++      return result ?: baseNotification
++    }
++    return baseNotification
++  }
++
++  private fun buildChatNotification(baseNotification: android.app.Notification, body: JSONObject): android.app.Notification? {
++    try {
++      val senderName = body.optString("senderDisplayName").ifEmpty { null }
++      Log.d("ChatNotif", "senderName=$senderName")
++      if (senderName == null) return null
++      val messageText = NotificationCompat.getContentText(baseNotification)?.toString() ?: ""
++      val avatarUrl = body.optString("senderAvatarUrl").ifEmpty { null }
++      Log.d("ChatNotif", "messageText=$messageText avatarUrl=$avatarUrl")
++
++      val personBuilder = Person.Builder().setName(senderName)
++      if (avatarUrl != null) {
++        try {
++          val thumbnailUrl = avatarUrl.replace("/img/avatar/", "/img/avatar_thumbnail/")
++          Log.d("ChatNotif", "Downloading avatar: $thumbnailUrl")
++          val conn = URL(thumbnailUrl).openConnection()
++          conn.connectTimeout = 5000
++          conn.readTimeout = 5000
++          val bitmap = BitmapFactory.decodeStream(conn.getInputStream())
++          Log.d("ChatNotif", "Avatar download: ${if (bitmap != null) "success ${bitmap.width}x${bitmap.height}" else "null bitmap"}")
++          if (bitmap != null) {
++            personBuilder.setIcon(IconCompat.createWithBitmap(bitmap))
++          }
++        } catch (e: Exception) {
++          Log.e("ChatNotif", "Avatar download failed", e)
++        }
++      }
++      val person = personBuilder.build()
++
++      val style = NotificationCompat.MessagingStyle(person)
++        .addMessage(messageText, System.currentTimeMillis(), person)
++
++      val builder = NotificationCompat.Builder(context, baseNotification)
++        .setStyle(style)
++
++      Log.d("ChatNotif", "Built MessagingStyle notification")
++      return builder.build()
++    } catch (e: Exception) {
++      Log.e("ChatNotif", "Failed to build chat notification", e)
++      return null
++    }
++  }
++
+   protected open fun getNotification(statusBarNotification: StatusBarNotification): Notification? {
+     val notification = statusBarNotification.notification
+     notification.extras.getByteArray(ExpoNotificationBuilder.EXTRAS_MARSHALLED_NOTIFICATION_REQUEST_KEY)?.let {
