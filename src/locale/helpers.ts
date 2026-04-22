@@ -1,5 +1,4 @@
 import {type AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
-import {guessLanguageSync} from '@bsky.app/expo-guess-language'
 import * as bcp47Match from 'bcp-47-match'
 import lande from 'lande'
 
@@ -88,12 +87,7 @@ export function codeToLanguageName(lang2or3: string, appLang: string): string {
 
 export function getPostLanguage(
   post: AppBskyFeedDefs.PostView,
-  options?: {
-    enableNativeDetection?: boolean
-  },
 ): string | undefined {
-  const enableNativeDetection = options?.enableNativeDetection ?? false
-
   let candidates: string[] = getPostLanguageTags(post)
   let postText: string = ''
   if (hasProp(post.record, 'text') && typeof post.record.text === 'string') {
@@ -111,44 +105,26 @@ export function getPostLanguage(
   }
 
   // run the language model
-  if (enableNativeDetection) {
-    let results = guessLanguageSync(postText)
+  let langsProbabilityMap = lande(postText)
 
-    // filter down using declared languages
-    if (candidates.length) {
-      results = results.filter(r => candidates.includes(r.language))
-    }
+  // filter down using declared languages
+  if (candidates.length) {
+    langsProbabilityMap = langsProbabilityMap.filter(
+      ([lang, _probability]: [string, number]) =>
+        candidates.includes(code3ToCode2(lang)),
+    )
+  }
 
-    if (results[0]) {
-      return results[0].language
-    }
-  } else {
-    let langsProbabilityMap = lande(postText)
-
-    // filter down using declared languages
-    if (candidates?.length) {
-      langsProbabilityMap = langsProbabilityMap.filter(
-        ([lang, _probability]: [string, number]) => {
-          return candidates.includes(code3ToCode2(lang))
-        },
-      )
-    }
-
-    if (langsProbabilityMap[0]) {
-      return code3ToCode2(langsProbabilityMap[0][0])
-    }
+  if (langsProbabilityMap[0]) {
+    return code3ToCode2(langsProbabilityMap[0][0])
   }
 }
 
 export function isPostInLanguage(
   post: AppBskyFeedDefs.PostView,
   targetLangs: string[],
-  options?: {
-    enableNativeDetection?: boolean
-  },
 ): boolean {
-  const enableNativeDetection = options?.enableNativeDetection ?? false
-  const lang = getPostLanguage(post, {enableNativeDetection})
+  const lang = getPostLanguage(post)
   if (!lang) {
     // the post has no text, so we just say "yes" for now
     return true
