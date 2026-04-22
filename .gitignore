@@ -127,3 +127,6 @@ bskyweb/static/media/*.webp
 bskyweb/static/media/*.jpg
 bskyweb/static/media/*.png
 bskyweb/static/media/*.svg
+
+# superpowers plugin plans/specs — local-only workspace
+docs/superpowers/

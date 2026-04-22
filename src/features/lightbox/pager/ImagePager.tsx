@@ -381,7 +381,7 @@ function ImageView({
         overdrag={true}
         style={styles.pager}>
         {images.map((imageSrc, i) => (
-          <View key={imageSrc.uri}>
+          <View key={`${i}-${imageSrc.uri}`}>
             <LightboxImage
               onTap={onTap}
               onZoom={onZoom}
@@ -410,6 +410,8 @@ function ImageView({
             onRequestClose={handleRequestClose}
             onPressShare={() => onPressShare(images[imageIndex].uri)}
             onPressSave={() => onPressSave(images[imageIndex].uri)}
+            imageCount={images.length}
+            activeIndex={imageIndex}
           />
         </Animated.View>
         <Animated.View
@@ -420,8 +422,6 @@ function ImageView({
             altText={images[imageIndex].alt}
             isAltExpanded={isAltExpanded}
             onToggleAltExpanded={() => setIsAltExpanded(e => !e)}
-            imageCount={images.length}
-            activeIndex={imageIndex}
           />
         </Animated.View>
       </View>

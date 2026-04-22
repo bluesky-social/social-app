@@ -5,8 +5,8 @@ import {
   type StyleProp,
   StyleSheet,
   type TextStyle,
+  View,
 } from 'react-native'
-import {BlurView} from 'expo-blur'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {type Props as IconProps} from '#/components/icons/common'
@@ -39,9 +39,9 @@ export function CircleChromeButton({
       onPress={onPress}
       testID={testID}
       style={({pressed}) => [styles.root, pressed && styles.pressed]}>
-      <BlurView intensity={20} tint="dark" style={styles.inner}>
+      <View style={styles.inner}>
         <Icon width={ICON} fill="#fff" style={iconStyle} />
-      </BlurView>
+      </View>
     </Pressable>
   )
 }
@@ -57,7 +57,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    // @ts-expect-error web-only
+    backdropFilter: 'blur(8px)',
+    WebkitBackdropFilter: 'blur(8px)',
   },
   pressed: {
     opacity: 0.85,

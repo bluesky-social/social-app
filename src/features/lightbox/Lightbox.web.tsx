@@ -31,6 +31,7 @@ import * as Menu from '#/components/Menu'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {CircleChromeButton} from '#/features/lightbox/chrome/CircleChromeButton'
+import {PagerDots} from '#/features/lightbox/chrome/PagerDots'
 import {useLightbox, useLightboxControls} from '#/features/lightbox/state'
 import {type ImageSource} from '#/features/lightbox/types'
 
@@ -265,6 +266,7 @@ function LightboxGallery({
               style={[a.absolute, styles.menuBtn, delayedFadeInAnim]}>
               <CircleChromeButton
                 icon={EllipsisIcon}
+                iconStyle={{transform: [{rotate: '90deg'}]}}
                 label={_(msg`Image options`)}
               />
             </Pressable>
@@ -330,6 +332,13 @@ function LightboxGallery({
           onPress={onClose}
         />
       </View>
+      {imgs.length > 1 && (
+        <View
+          style={[a.absolute, styles.pagerDots, delayedFadeInAnim]}
+          pointerEvents="none">
+          <PagerDots count={imgs.length} activeIndex={index} />
+        </View>
+      )}
     </View>
   )
 }
@@ -448,6 +457,14 @@ const styles = StyleSheet.create({
   closeBtn: {
     top: 20,
     right: 20,
+  },
+  pagerDots: {
+    top: 20,
+    left: 0,
+    right: 0,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   leftBtn: {
     left: 20,
