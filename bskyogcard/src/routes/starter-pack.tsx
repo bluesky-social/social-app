@@ -13,7 +13,12 @@ import {
 import {type AppContext} from '../context.js'
 import {httpLogger} from '../logger.js'
 import {loadEmojiAsSvg} from '../util.js'
-import {getImage, handler, hideAvatarLabels, originVerifyMiddleware} from './util.js'
+import {
+  getImage,
+  handler,
+  hideAvatarLabels,
+  originVerifyMiddleware,
+} from './util.js'
 
 export default function (ctx: AppContext, app: Express) {
   return app.get(
@@ -86,4 +91,3 @@ export default function (ctx: AppContext, app: Express) {
     }),
   )
 }
-
