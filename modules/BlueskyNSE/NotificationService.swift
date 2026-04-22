@@ -109,18 +109,10 @@ class NotificationService: UNNotificationServiceExtension {
   }
 
   func downloadAvatarImage(from urlString: String) -> INImage? {
-    var thumbnailUrlString = urlString.replacingOccurrences(
+    let thumbnailUrlString = urlString.replacingOccurrences(
       of: "/img/avatar/",
       with: "/img/avatar_thumbnail/"
     )
-
-    // CDN URLs may end with @webp or no extension (which defaults to webp).
-    // INImage doesn't reliably handle WebP, so force JPEG.
-    if let atRange = thumbnailUrlString.range(of: "@", options: .backwards) {
-      thumbnailUrlString = String(thumbnailUrlString[..<atRange.lowerBound]) + "@jpeg"
-    } else {
-      thumbnailUrlString += "@jpeg"
-    }
 
     guard let url = URL(string: thumbnailUrlString) else { return nil }
 
