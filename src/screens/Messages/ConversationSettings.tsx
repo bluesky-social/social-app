@@ -24,6 +24,7 @@ import {useEditGroupName} from '#/state/queries/messages/edit-group-name'
 import {useGetConvoAvailabilityQuery} from '#/state/queries/messages/get-convo-availability'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
+import {useListJoinRequestsQuery} from '#/state/queries/messages/list-join-requests'
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
 import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -109,7 +110,7 @@ export function MessagesConversationSettingsScreen({route}: Props) {
         <Layout.Header.Slot />
       </Layout.Header.Outer>
       <ConvoProvider key={convoId} convoId={convoId}>
-        <SettingsInner />
+        <SettingsInner convoId={convoId} />
       </ConvoProvider>
     </Layout.Screen>
   )
@@ -119,7 +120,7 @@ function keyExtractor(item: Item) {
   return item.type === 'CHAT_MEMBER' ? item.profile.did : item.type
 }
 
-function SettingsInner() {
+function SettingsInner({convoId}: {convoId: string}) {
   const {t: l} = useLingui()
 
   const initialNumToRender = useInitialNumToRender({minItemHeight: 68})
@@ -136,6 +137,17 @@ function SettingsInner() {
 
   const data: bsky.profile.AnyProfileView[] = convo?.members ?? []
   const invites: string[] = []
+
+  const {data: joinRequestsData, hasNextPage: hasMoreRequests} =
+    useListJoinRequestsQuery({
+      convoId,
+      enabled: isOwner,
+    })
+  const requestCount =
+    joinRequestsData?.pages.reduce(
+      (sum, page) => sum + page.requests.length,
+      0,
+    ) ?? 0
 
   const items = [
     {
@@ -172,7 +184,8 @@ function SettingsInner() {
         return (
           <MembersAndRequests
             memberCount={data.length}
-            requestCount={5}
+            requestCount={requestCount}
+            hasMoreRequests={!!hasMoreRequests}
             isOwner={isOwner}
           />
         )
@@ -229,10 +242,12 @@ function SettingsInner() {
 function MembersAndRequests({
   memberCount,
   requestCount,
+  hasMoreRequests,
   isOwner,
 }: {
   memberCount: number
   requestCount: number
+  hasMoreRequests: boolean
   isOwner: boolean
 }) {
   const t = useTheme()
@@ -245,21 +260,32 @@ function MembersAndRequests({
           <Trans>Members</Trans>{' '}
         </Text>
         <Text
-          style={[
-            a.text_xs,
-            a.font_medium,
-            {color: t.palette.contrast_500},
-          ]}>{l`${memberCount}/${MEMBER_LIMIT}`}</Text>
+          style={[a.text_xs, a.font_medium, {color: t.palette.contrast_500}]}>
+          {l({
+            message: `${memberCount}/${MEMBER_LIMIT}`,
+            comment:
+              'The number of group chat members out of the total number of permitted users.',
+          })}
+        </Text>
       </View>
       {isOwner && requestCount > 0 ? (
         <InlineLinkText
           label={l`View incoming group chat requests`}
           style={[a.text_sm, a.text_right, a.font_semi_bold]}
           to="#">
-          {l`${plural(requestCount, {
-            one: '# request',
-            other: '# requests',
-          })}`}
+          {hasMoreRequests
+            ? l({
+                message: `${requestCount}+ requests`,
+                comment:
+                  'Displayed when there are more than 50 requests to join a group chat',
+              })
+            : l({
+                message: `${plural(requestCount, {
+                  one: '# request',
+                  other: '# requests',
+                })}`,
+                comment: 'The number of requests to join a group chat.',
+              })}
         </InlineLinkText>
       ) : null}
     </View>
