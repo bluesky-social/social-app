@@ -1,8 +1,10 @@
 import UserNotifications
 import UIKit
 import Intents
+import os
 
 let APP_GROUP = "group.app.bsky"
+private let logger = Logger(subsystem: "xyz.blueskyweb.app.BlueskyNSE", category: "NotificationService")
 typealias ContentHandler = (UNNotificationContent) -> Void
 
 // This extension allows us to do some processing of the received notification
@@ -71,10 +73,16 @@ class NotificationService: UNNotificationServiceExtension {
   ) -> UNNotificationContent {
     let senderDisplayName = userInfo["senderDisplayName"] as? String ?? "Unknown"
     let convoId = userInfo["convoId"] as? String
+    let avatarUrlString = userInfo["senderAvatarUrl"] as? String
+
+    logger.info("Communication notification: sender=\(senderDisplayName, privacy: .public) convoId=\(convoId ?? "nil", privacy: .public) avatarUrl=\(avatarUrlString ?? "nil", privacy: .public)")
 
     var avatarImage: INImage? = nil
-    if let avatarUrlString = userInfo["senderAvatarUrl"] as? String {
+    if let avatarUrlString {
       avatarImage = downloadAvatarImage(from: avatarUrlString)
+      logger.info("Avatar download result: \(avatarImage != nil ? "success" : "failed", privacy: .public)")
+    } else {
+      logger.info("No avatar URL in payload")
     }
 
     let senderHandle = INPersonHandle(value: nil, type: .unknown)
