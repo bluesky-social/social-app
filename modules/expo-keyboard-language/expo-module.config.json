@@ -1,0 +1,9 @@
+{
+  "platforms": ["ios", "android"],
+  "ios": {
+    "modules": ["ExpoKeyboardLanguageModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.keyboardlanguage.ExpoKeyboardLanguageModule"]
+  }
+}

@@ -71,6 +71,7 @@ import {
   type SupportedMimeTypes,
 } from '#/lib/constants'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
+import {useKeyboardLanguage} from '#/lib/hooks/useKeyboardLanguage'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {mimeToExt} from '#/lib/media/video/util'
 import {useCallOnce} from '#/lib/once'
@@ -135,6 +136,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {device, useStorage} from '#/storage'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
   draftToComposerPosts,
@@ -247,25 +249,51 @@ export const ComposePost = ({
   )
 
   /**
+   * Automatic keyboard language detection.
+   */
+  const keyboardLanguage = useKeyboardLanguage()
+  const [autoLangEnabled = false] = useStorage(device, ['useKeyboardLanguage'])
+  const [manualOverride, setManualOverride] = useState(false)
+  const isAutoMode = !!autoLangEnabled && !manualOverride
+
+  /**
    * The currently selected languages of the post. Prefer local temporary
-   * language suggestion over global lang prefs, if available.
+   * language suggestion, then auto-detected keyboard language, then global
+   * lang prefs.
    */
   const currentLanguages = useMemo(
     () =>
       acceptedLanguageSuggestion
         ? [acceptedLanguageSuggestion]
-        : toPostLanguages(langPrefs.postLanguage),
-    [acceptedLanguageSuggestion, langPrefs.postLanguage],
+        : isAutoMode && keyboardLanguage
+          ? [keyboardLanguage]
+          : toPostLanguages(langPrefs.postLanguage),
+    [
+      acceptedLanguageSuggestion,
+      isAutoMode,
+      keyboardLanguage,
+      langPrefs.postLanguage,
+    ],
   )
 
   /**
    * When the user selects a language from the composer language selector,
    * clear any temporary language suggestions they may have selected
-   * previously, and any we might try to suggest to them.
+   * previously, and any we might try to suggest to them. Also locks out
+   * auto mode for this session.
    */
   const onSelectLanguage = () => {
     setAcceptedLanguageSuggestion(null)
     setReplyToLanguages([])
+    setManualOverride(true)
+  }
+
+  /**
+   * Re-enable auto mode when the user taps "Automatic" in the language menu.
+   */
+  const onSelectAutomatic = () => {
+    setAcceptedLanguageSuggestion(null)
+    setManualOverride(false)
   }
 
   const [composerState, composerDispatch] = useReducer(
@@ -991,7 +1019,7 @@ export const ComposePost = ({
         originalLocalRefs: composerState.originalLocalRefs,
       })
     }
-    setLangPrefs.savePostLanguageToHistory()
+    setLangPrefs.savePostLanguageToHistory(fromPostLanguages(currentLanguages))
     if (initQuote) {
       // We want to wait for the quote count to update before we call `onPost`, which will refetch data
       whenAppViewReady(agent, initQuote.uri, res => {
@@ -1169,6 +1197,10 @@ export const ComposePost = ({
         }}
         currentLanguages={currentLanguages}
         onSelectLanguage={onSelectLanguage}
+        onSelectAutomatic={onSelectAutomatic}
+        keyboardLanguage={keyboardLanguage}
+        isAutoMode={isAutoMode}
+        autoLangEnabled={autoLangEnabled}
         openGallery={openGallery}
         textInputRef={textInputRef}
       />
@@ -1873,6 +1905,10 @@ function ComposerFooter({
   onAddPost,
   currentLanguages,
   onSelectLanguage,
+  onSelectAutomatic,
+  keyboardLanguage,
+  isAutoMode,
+  autoLangEnabled,
   openGallery,
   textInputRef,
 }: {
@@ -1884,6 +1920,10 @@ function ComposerFooter({
   onAddPost: () => void
   currentLanguages: string[]
   onSelectLanguage?: (language: string) => void
+  onSelectAutomatic?: () => void
+  keyboardLanguage: string | null
+  isAutoMode: boolean
+  autoLangEnabled: boolean
   openGallery?: boolean
   textInputRef: React.RefObject<TextInputRef | null>
 }) {
@@ -2049,6 +2089,10 @@ function ComposerFooter({
         <PostLanguageSelect
           currentLanguages={currentLanguages}
           onSelectLanguage={onSelectLanguage}
+          onSelectAutomatic={onSelectAutomatic}
+          keyboardLanguage={keyboardLanguage}
+          isAutoMode={isAutoMode}
+          autoLangEnabled={autoLangEnabled}
         />
         <CharProgress
           count={post.shortenedGraphemeLength}
