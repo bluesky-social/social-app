@@ -14,7 +14,7 @@ import {
 import {type AppContext} from '../context.js'
 import {httpLogger} from '../logger.js'
 import {loadEmojiAsSvg} from '../util.js'
-import {handler, originVerifyMiddleware} from './util.js'
+import {getImage, handler, hideAvatarLabels, originVerifyMiddleware} from './util.js'
 
 export default function (ctx: AppContext, app: Express) {
   return app.get(
@@ -88,34 +88,3 @@ export default function (ctx: AppContext, app: Express) {
   )
 }
 
-async function getImage(url: string) {
-  const response = await fetch(ensureJpeg(url))
-  const arrayBuf = await response.arrayBuffer() // must drain body even if it will be discarded
-  if (response.status !== 200) return null
-  return Buffer.from(arrayBuf)
-}
-
-// CDN URLs end with @jpeg, @webp, or no extension (which may default to webp).
-// We want to ensure the image URLs we use are for jpegs, required for compat with satori.
-function ensureJpeg(url: string) {
-  return url.replace(/(@[a-z]{3,5})?$/, '@jpeg')
-}
-
-const hideAvatarLabels = new Set([
-  '!hide',
-  '!warn',
-  'porn',
-  'sexual',
-  'nudity',
-  'sexual-figurative',
-  'graphic-media',
-  'gore',
-  'self-harm',
-  'sensitive',
-  'security',
-  'impersonation',
-  'scam',
-  'spam',
-  'misleading',
-  'inauthentic',
-])
