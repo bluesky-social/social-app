@@ -56,12 +56,11 @@ let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
   }
 
   return (
-    <View style={[a.w_full, a.my_sm]}>
+    <View style={[a.w_full, a.mt_md]}>
       <Text
         style={[
           a.text_xs,
           a.text_center,
-          t.atoms.bg,
           t.atoms.text_contrast_medium,
           a.px_md,
         ]}>

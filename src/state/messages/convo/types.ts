@@ -127,6 +127,12 @@ export type ConvoItem =
         | null
     }
   | {
+      type: 'system-message'
+      key: string
+      message: ChatBskyConvoDefs.SystemMessageView
+      relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[]
+    }
+  | {
       type: 'error'
       key: string
       code: ConvoItemError

@@ -58,6 +58,7 @@ import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {DateDividerToggleProvider} from '#/components/dms/DateDividerToggle'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
+import {SystemMessageItem} from '#/components/dms/SystemMessageItem'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -383,6 +384,8 @@ export function MessagesList({
       )
     } else if (item.type === 'deleted-message') {
       return <Text>Deleted message</Text>
+    } else if (item.type === 'system-message') {
+      return <SystemMessageItem item={item} />
     } else if (item.type === 'error') {
       return <MessageListError item={item} />
     }

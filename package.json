@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.121.0",
+  "version": "1.122.0",
   "private": true,
   "engines": {
     "node": ">=20"
@@ -81,16 +81,19 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.19.9",
+    "@atproto/api": "^0.19.11",
+    "@atproto/syntax": "0.5.2",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.7",
+    "@bsky.app/expo-guess-language": "^0.2.8",
     "@bsky.app/expo-image-crop-tool": "^0.5.0",
     "@bsky.app/expo-scroll-edge-effect": "^0.1.4",
     "@bsky.app/expo-translate-text": "^0.2.9",
     "@bsky.app/react-native-mmkv": "2.12.5",
     "@bsky.app/sift": "^0.3.3",
     "@bsky.app/tapper": "^0.5.1",
+    "@bsky.app/video": "0.3.4",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",
@@ -108,7 +111,6 @@
     "@fortawesome/react-native-fontawesome": "^0.3.2",
     "@growthbook/growthbook": "^1.6.5",
     "@growthbook/growthbook-react": "^1.6.5",
-    "@haileyok/bluesky-video": "0.3.2",
     "@ipld/dag-cbor": "^9.2.0",
     "@lingui/core": "^5.9.2",
     "@lingui/react": "^5.9.2",

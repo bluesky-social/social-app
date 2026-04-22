@@ -167,6 +167,7 @@ export function SuggestedFollowsHome() {
 
   return (
     <ProfileGrid
+      recId={data?.recId}
       isSuggestionsLoading={isLoading}
       profiles={filteredProfiles}
       totalProfileCount={allProfiles.length}

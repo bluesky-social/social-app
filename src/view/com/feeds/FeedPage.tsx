@@ -30,7 +30,6 @@ import {
 } from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
@@ -70,7 +69,6 @@ export function FeedPage({
   const queryClient = useQueryClient()
   const {openComposer} = useOpenComposer()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
-  const setMinimalShellMode = useSetMinimalShellMode()
   const headerOffset = useHeaderOffset()
   const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const scrollElRef = useRef<ListMethods>(null)
@@ -95,8 +93,7 @@ export function FeedPage({
       animated: IS_NATIVE,
       offset: -headerOffset,
     })
-    setMinimalShellMode(false)
-  }, [headerOffset, setMinimalShellMode])
+  }, [headerOffset])
 
   const onSoftReset = useCallback(() => {
     const isScreenFocused =

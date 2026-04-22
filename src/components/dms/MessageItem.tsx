@@ -168,12 +168,18 @@ let MessageItem = ({
     isInCluster && !effectiveFirstInCluster && !effectiveLastInCluster
 
   const hasReactions = message.reactions && message.reactions.length > 0
+  const prevHasReactions =
+    prevIsMessage &&
+    prevMessage.reactions != null &&
+    prevMessage.reactions.length > 0
   const squaredBottomCorner =
     !hasReactions &&
     isInCluster &&
     (isInMiddleOfCluster || effectiveFirstInCluster)
   const squaredTopCorner =
-    isInCluster && (isInMiddleOfCluster || effectiveLastInCluster)
+    !prevHasReactions &&
+    isInCluster &&
+    (isInMiddleOfCluster || effectiveLastInCluster)
 
   const pendingColor = t.palette.primary_300
 
@@ -398,8 +404,7 @@ let MessageItem = ({
           <DateDivider date={message.sentAt} />
         </Animated.View>
       )}
-      <View
-        style={[messageInset, isFirstInCluster && !showDateDivider && a.mt_sm]}>
+      <View style={[messageInset, effectiveFirstInCluster && a.mt_md]}>
         <View style={[a.relative]}>
           {showAvatar ? (
             <View
@@ -474,7 +479,23 @@ let MessageItem = ({
                   ]}>
                   <RichText
                     value={rt}
-                    style={[a.text_md, isFromSelf && {color: t.palette.white}]}
+                    style={[
+                      a.text_md,
+                      isFromSelf && {color: t.palette.white},
+                      // Emoji-only: add top leading to avoid clipping the
+                      // glyph, then pull the bottom up by the same amount so
+                      // the glyph bottom-aligns with the avatar instead of
+                      // sitting above its line-box baseline.
+                      isOnlyEmoji(message.text) && [
+                        a.leading_tight,
+                        // Visually align bottom of the emoji with the avatar
+                        !isFromSelf &&
+                          platform({
+                            android: {marginTop: a.mt_2xs.marginTop},
+                            default: {marginBottom: -a.mb_sm.marginBottom},
+                          }),
+                      ],
+                    ]}
                     interactiveStyle={a.underline}
                     enableTags
                     emojiMultiplier={3}

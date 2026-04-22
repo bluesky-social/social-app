@@ -33,7 +33,7 @@ export function EmojiReactionPicker({
   const t = useTheme()
   const isFromSelf = message.sender?.did === currentAccount?.did
   const {measurement, close} = useContextMenuContext()
-  const {align} = useContextMenuMenuContext()
+  const {align, xOffset} = useContextMenuMenuContext()
   const [layout, setLayout] = useState({width: 0, height: 0})
   const {width: screenWidth} = useWindowDimensions()
 
@@ -44,12 +44,15 @@ export function EmojiReactionPicker({
 
   const position = useMemo(() => {
     return {
-      x: align === 'left' ? 12 : screenWidth - layout.width - 12,
+      x:
+        align === 'left'
+          ? (measurement?.x ?? 0) + xOffset
+          : (measurement?.x ?? 0) + (measurement?.width ?? 0) - layout.width,
       y: (measurement?.y ?? 0) - tokens.space.xs - layout.height,
       height: layout.height,
       width: layout.width,
     }
-  }, [measurement, align, screenWidth, layout])
+  }, [measurement, align, xOffset, screenWidth, layout])
 
   const limitReacted = hasReachedReactionLimit(message, currentAccount?.did)
 

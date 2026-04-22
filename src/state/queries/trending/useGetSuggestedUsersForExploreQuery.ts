@@ -8,6 +8,7 @@ import {
   aggregateUserInterests,
   createBskyTopicsHeader,
 } from '#/lib/api/feed/utils'
+import {logger} from '#/logger'
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -48,6 +49,9 @@ export function useGetSuggestedUsersForExploreQuery(props: QueryProps = {}) {
         },
       )
 
+      if (!data.recIdStr) {
+        logger.debug('getSuggestedUsersForExplore response missing recIdStr')
+      }
       return {...data, recId: data.recIdStr}
     },
   })

@@ -257,7 +257,6 @@ export function Gallery({
           horizontal
           pagingEnabled={false}
           showsHorizontalScrollIndicator={false}
-          decelerationRate={0.993}
           directionalLockEnabled
           nestedScrollEnabled
           alwaysBounceVertical={false}
@@ -431,15 +430,20 @@ function GalleryImage({
           color: utils.alpha(t.atoms.bg.backgroundColor, 0.2),
           foreground: true,
         }}
-        style={[
+        style={({pressed}) => [
           a.rounded_md,
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
-          web({
-            cursor: 'inherit',
-            outline: 0,
-            border: 0,
-          }),
+          web([
+            {
+              cursor: 'inherit',
+              outline: 0,
+              border: 0,
+            },
+            a.transition_transform,
+            {transitionDuration: '200ms'},
+            pressed && {transform: [{scale: 0.99}]},
+          ]),
         ]}>
         <Image
           source={{uri: image.thumb}}

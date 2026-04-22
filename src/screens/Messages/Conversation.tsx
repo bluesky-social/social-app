@@ -6,9 +6,7 @@ import {
   ScrollEdgeEffect,
   ScrollEdgeEffectProvider,
 } from '@bsky.app/expo-scroll-edge-effect'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {
   type RouteProp,
   useFocusEffect,
@@ -32,11 +30,11 @@ import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useConvoQuery} from '#/state/queries/messages/conversation'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, useTheme, web} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
+import * as Dialog from '#/components/Dialog'
 import {
   EmailDialogScreenID,
   useEmailDialogControl,
@@ -47,6 +45,9 @@ import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {Error} from '#/components/Error'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import * as Prompt from '#/components/Prompt'
+import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
 import {ChatDisabled} from './components/ChatDisabled'
 
@@ -56,11 +57,11 @@ type Props = NativeStackScreenProps<
 >
 
 export function MessagesConversationScreen(props: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const aaCopy = useAgeAssuranceCopy()
   return (
     <AgeRestrictedScreen
-      screenTitle={_(msg`Conversation`)}
+      screenTitle={l`Conversation`}
       infoText={aaCopy.chatsInfoText}>
       <MessagesConversationScreenInner {...props} />
     </AgeRestrictedScreen>
@@ -68,25 +69,22 @@ export function MessagesConversationScreen(props: Props) {
 }
 
 export function MessagesConversationScreenInner({route}: Props) {
-  const setMinimalShellMode = useSetMinimalShellMode()
-
   const convoId = route.params.conversation
   const {setCurrentConvoId} = useCurrentConvoId()
 
   useFocusEffect(
     useCallback(() => {
       setCurrentConvoId(convoId)
-      setMinimalShellMode(true)
 
       return () => {
         setCurrentConvoId(undefined)
-        setMinimalShellMode(false)
       }
-    }, [convoId, setCurrentConvoId, setMinimalShellMode]),
+    }, [convoId, setCurrentConvoId]),
   )
 
   return (
     <Layout.Screen
+      minimalShell
       testID="convoScreen"
       noInsetTop={IS_LIQUID_GLASS}
       style={web([{minHeight: 0}, a.flex_1])}>
@@ -102,7 +100,7 @@ export function MessagesConversationScreenInner({route}: Props) {
 function Inner({convoId}: {convoId: string}) {
   const t = useTheme()
   const convoState = useConvo()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const isFocused = useIsFocused()
   const {top: topInset} = useSafeAreaInsets()
@@ -140,8 +138,8 @@ function Inner({convoId}: {convoId: string}) {
           <MessagesListHeader convo={convo} />
         </Layout.Center>
         <Error
-          title={_(msg`Something went wrong`)}
-          message={_(msg`We couldn't load this conversation`)}
+          title={l`Something went wrong`}
+          message={l`We couldn't load this conversation`}
           onRetry={() => convoState.error.retry()}
           sideBorders={false}
         />
@@ -293,6 +291,74 @@ function InnerReady({
           }
         />
       )}
+
+      {convo?.kind === 'group' && <GroupChatGate />}
     </>
+  )
+}
+
+function GroupChatGate() {
+  const {t: l} = useLingui()
+  const ax = useAnalytics()
+  const navigation = useNavigation<NavigationProp>()
+
+  const groupChatGateDialogControl = Dialog.useDialogControl()
+
+  const isGatedGroupChat = !ax.features.enabled(ax.features.GroupChatsEnable)
+
+  useEffect(() => {
+    if (isGatedGroupChat) {
+      setTimeout(() => groupChatGateDialogControl.open())
+    }
+  }, [isGatedGroupChat, groupChatGateDialogControl])
+
+  const hasBeenReleased = ax.features.enabled(
+    ax.features.GroupChatsHasBeenReleased,
+  )
+
+  const onGoBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.replace('Messages', {animation: 'pop'})
+    }
+  }
+
+  return (
+    <Prompt.Outer
+      control={groupChatGateDialogControl}
+      nativeOptions={{preventDismiss: true, preventExpansion: true}}
+      testID="groupChatGateDialog">
+      <Prompt.Content>
+        <View style={[a.w_full, a.align_center, a.py_2xl]}>
+          <Text style={{fontSize: 48}} emoji>
+            🐴
+          </Text>
+        </View>
+        <Prompt.TitleText>
+          {hasBeenReleased ? (
+            <Trans>Group chats are now available</Trans>
+          ) : (
+            <Trans>Group chats are not yet available</Trans>
+          )}
+        </Prompt.TitleText>
+        <Prompt.DescriptionText>
+          {hasBeenReleased ? (
+            <Trans>Update your app to the latest version to join in!</Trans>
+          ) : (
+            <Trans>
+              This feature isn't available to you yet. Please check back later.
+            </Trans>
+          )}
+        </Prompt.DescriptionText>
+      </Prompt.Content>
+      <Prompt.Actions>
+        <Prompt.Action
+          cta={l`Go Back`}
+          onPress={onGoBack}
+          color="primary_subtle"
+        />
+      </Prompt.Actions>
+    </Prompt.Outer>
   )
 }

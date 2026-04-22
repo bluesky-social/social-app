@@ -13,7 +13,7 @@ import {
   useLoggedOutView,
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
-import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
+import {useEnableMinimalShellMode} from '#/state/shell/minimal-mode'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Login} from '#/screens/Login'
 import {Signup} from '#/screens/Signup'
@@ -37,7 +37,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const ax = useAnalytics()
   const t = useTheme()
   const insets = useSafeAreaInsets()
-  const setMinimalShellMode = useSetMinimalShellMode()
+  useEnableMinimalShellMode()
   const {requestedAccountSwitchTo} = useLoggedOutView()
   const [screenState, setScreenState] = useState<ScreenState>(() => {
     if (requestedAccountSwitchTo === 'new') {
@@ -67,10 +67,6 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
       },
     })
   }, [accounts, agent, queryClient])
-
-  useEffect(() => {
-    setMinimalShellMode(true)
-  }, [setMinimalShellMode])
 
   const onPressDismiss = useCallback(() => {
     if (onDismiss) {
