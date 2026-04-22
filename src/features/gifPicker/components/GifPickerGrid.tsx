@@ -16,9 +16,10 @@ type Props = {
   isFetchingNextPage: boolean
   error: unknown
   /**
-   * Identifies the current data source (e.g. "recents", "trending", a search
-   * term). Used to remount the underlying FlatList when switching sources so
-   * virtualized cells from the previous view can't bleed into the next one.
+   * Identifies the current data source at a coarse grain ("recents" vs
+   * "network"). Used to remount the underlying FlatList when crossing that
+   * boundary so virtualized cells from the previous view can't bleed into the
+   * next one.
    */
   viewKey: string
   fetchNextPage: () => Promise<unknown>
