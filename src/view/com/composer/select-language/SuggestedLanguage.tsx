@@ -283,7 +283,7 @@ export function SuggestedLanguage({
 
       void detectLanguage(textTrimmed)
     }
-  }, [text, hasInteracted])
+  }, [text, hasInteracted, detectLanguage, ax])
 
   /*
    * This is intentionally computed based on a ref. Since we set and clear
