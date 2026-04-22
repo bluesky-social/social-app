@@ -24,9 +24,9 @@ export type SystemMessageInfo = {
 function getReferredDisplayName(
   user: ChatBskyConvoDefs.SystemMessageReferredUser,
   relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[],
-): string {
+): string | null {
   const profile = relatedProfiles.find(p => p.did === user.did)
-  return profile ? createSanitizedDisplayName(profile) : user.did
+  return profile ? createSanitizedDisplayName(profile) : null
 }
 
 export function getSystemMessageInfo(
@@ -34,24 +34,34 @@ export function getSystemMessageInfo(
   relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[],
 ): SystemMessageInfo | null {
   if (ChatBskyConvoDefs.isSystemMessageDataAddMember(data)) {
+    const name = getReferredDisplayName(data.member, relatedProfiles)
     return {
       Icon: JoinIcon,
-      message: msg`${getReferredDisplayName(data.member, relatedProfiles)} was added to the group`,
+      message: name
+        ? msg`${name} was added to the group`
+        : msg`Someone was added to the group`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataRemoveMember(data)) {
+    const name = getReferredDisplayName(data.member, relatedProfiles)
     return {
       Icon: LeaveIcon,
-      message: msg`${getReferredDisplayName(data.member, relatedProfiles)} was removed from the group`,
+      message: name
+        ? msg`${name} was removed from the group`
+        : msg`Someone was removed from the group`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataMemberJoin(data)) {
+    const name = getReferredDisplayName(data.member, relatedProfiles)
     return {
       Icon: JoinIcon,
-      message: msg`${getReferredDisplayName(data.member, relatedProfiles)} joined the group`,
+      message: name
+        ? msg`${name} joined the group`
+        : msg`Someone joined the group`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataMemberLeave(data)) {
+    const name = getReferredDisplayName(data.member, relatedProfiles)
     return {
       Icon: LeaveIcon,
-      message: msg`${getReferredDisplayName(data.member, relatedProfiles)} left the group`,
+      message: name ? msg`${name} left the group` : msg`Someone left the group`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvo(data)) {
     return {Icon: LockIcon, message: msg`Chat locked`}
