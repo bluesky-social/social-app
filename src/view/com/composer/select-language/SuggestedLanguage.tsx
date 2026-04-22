@@ -9,6 +9,8 @@ import {
 import {Trans, useLingui} from '@lingui/react/macro'
 import debounce from 'lodash.debounce'
 
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useNonReactiveObject} from '#/lib/hooks/useNonReactiveObject'
 import {deviceLanguageCodes} from '#/locale/deviceLocales'
 import {codeToLanguageName} from '#/locale/helpers'
 import {useLanguagePrefs} from '#/state/preferences/languages'
@@ -203,16 +205,23 @@ export function SuggestedLanguage({
   }
 
   /**
-   * Merge in remote config
+   * Merge in remote config (eventually)
    */
   const config = useMemo(() => DEFAULT_CONFIG, [])
+
+  /**
+   * Create non-reactive ref for debounced detection method.
+   */
+  const detectionPropsRef = useNonReactiveObject({
+    config,
+    currentLanguages,
+  })
 
   /*
    * Held in a ref so the debounced detection closure always sees the
    * latest callback identity without rebuilding the debounce timer.
    */
-  const onNudgeRef = useRef(onNudge)
-  onNudgeRef.current = onNudge
+  const handleOnNudge = useNonReactiveCallback(onNudge)
 
   /*
    * Main language detection effect
@@ -220,30 +229,35 @@ export function SuggestedLanguage({
   const detectLanguage = useMemo(() => {
     return debounce(async (text: string) => {
       try {
-        const {certain, uncertain} = await guessLanguage(text, config)
+        const {certain, uncertain} = await guessLanguage(
+          text,
+          detectionPropsRef.current.config,
+        )
         if (certain.length === 1 && uncertain.length === 0) {
           // we have a single confident candidate with no competitors — show it!
           setSuggLang(certain[0].language)
         } else {
           const topCandidate = uncertain[0]?.language
+          const currLangs = detectionPropsRef.current.currentLanguages
           // ambiguous results — if the top candidate isn't already
           // selected, nudge the user
-          if (!currentLanguages.includes(topCandidate)) {
-            onNudgeRef.current?.()
-            setSuggLang(undefined)
+          if (topCandidate !== undefined && !currLangs.includes(topCandidate)) {
+            handleOnNudge()
             ax.metric('composer:language:nudgeUser', {
               os: Platform.OS,
               suggestedLanguage: topCandidate,
-              currentTargetLanguages: currentLanguages,
+              currentTargetLanguages: currLangs,
               textLength: text.length,
             })
           }
+
+          setSuggLang(undefined)
         }
       } catch (e) {
         ax.logger.error('Error detecting language', {safeMessage: e})
       }
     }, 500)
-  }, [config, currentLanguages])
+  }, [])
 
   useEffect(() => {
     // show reply prompt if there's not enough text to start using the model
@@ -365,9 +379,7 @@ function GuessedLanguage({
     onDeclineOuter()
   }
 
-  const metaRef = useRef(metadata)
-  // eslint-disable-next-line react-hooks/refs
-  metaRef.current = metadata
+  const metaRef = useNonReactiveObject(metadata)
   useEffect(() => {
     ax.metric('composer:language:suggestLanguage', {
       os: Platform.OS,
