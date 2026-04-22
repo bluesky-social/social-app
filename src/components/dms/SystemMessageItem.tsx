@@ -28,7 +28,6 @@ export function SystemMessageItem({
         a.justify_center,
         a.px_md,
         a.mt_md,
-        a.mb_xs,
       ]}>
       <Icon size="xs" style={[a.mr_2xs, t.atoms.text_contrast_medium]} />
       <Text

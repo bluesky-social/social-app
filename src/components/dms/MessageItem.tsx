@@ -404,8 +404,7 @@ let MessageItem = ({
           <DateDivider date={message.sentAt} />
         </Animated.View>
       )}
-      <View
-        style={[messageInset, isFirstInCluster && !showDateDivider && a.mt_sm]}>
+      <View style={[messageInset, effectiveFirstInCluster && a.mt_md]}>
         <View style={[a.relative]}>
           {showAvatar ? (
             <View
