@@ -919,7 +919,6 @@ function SettingsHeader({
 
 function SettingsHeaderPlaceholder() {
   const t = useTheme()
-  const {t: l} = useLingui()
 
   return (
     <View style={[a.px_xl, a.py_4xl, a.border_b, t.atoms.border_contrast_low]}>
@@ -928,7 +927,7 @@ function SettingsHeaderPlaceholder() {
       </View>
       <Text
         style={[a.text_2xl, a.font_bold, a.text_center, a.pt_lg, t.atoms.text]}>
-        {l`…`}
+        …
       </Text>
       <Text
         style={[
@@ -1015,7 +1014,7 @@ function SettingsButtonPlaceholder() {
           a.pt_xs,
           t.atoms.text,
         ]}>
-        {l`…`}
+        …
       </Text>
     </View>
   )
