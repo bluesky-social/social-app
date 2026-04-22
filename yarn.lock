@@ -20,10 +20,10 @@
     "@jridgewell/gen-mapping" "^0.3.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@atproto/api@^0.19.10":
-  version "0.19.10"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.19.10.tgz#311a3fb8c642ee8bb1eea96acadfedbf500e9f08"
-  integrity sha512-HrHWjL6aEEfUKBSZFZ7Fz+MF3WcGOdhTlX6f71j4fgf91pMhwxgdo2K13Qjn2CxIh8/iHAJi+oiLWKOgZnOLNA==
+"@atproto/api@^0.19.11":
+  version "0.19.11"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.19.11.tgz#73885a47959907f22b68d671011ee70f80afd44b"
+  integrity sha512-7V4Sg6hcv/UxoXobjfvy/Ox2ioKQtZ3DzbsiFndYCcBfsZ5GO8rNEroHPq3hT0CFBJK1NAD6JfOtTBN2z267Xg==
   dependencies:
     "@atproto/common-web" "^0.4.21"
     "@atproto/lexicon" "^0.6.2"

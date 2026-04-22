@@ -1,4 +1,4 @@
-import {ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
 import {type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
@@ -21,28 +21,47 @@ export type SystemMessageInfo = {
   Icon: React.ComponentType<SVGIconProps>
 }
 
+function getReferredDisplayName(
+  user: ChatBskyConvoDefs.SystemMessageReferredUser,
+  relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[],
+): string | null {
+  const profile = relatedProfiles.find(p => p.did === user.did)
+  return profile ? createSanitizedDisplayName(profile) : null
+}
+
 export function getSystemMessageInfo(
   data: ChatBskyConvoDefs.SystemMessageView['data'],
+  relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[],
 ): SystemMessageInfo | null {
   if (ChatBskyConvoDefs.isSystemMessageDataAddMember(data)) {
+    const name = getReferredDisplayName(data.member, relatedProfiles)
     return {
       Icon: JoinIcon,
-      message: msg`${createSanitizedDisplayName(data.member)} was added to the group`,
+      message: name
+        ? msg`${name} was added to the group`
+        : msg`Someone was added to the group`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataRemoveMember(data)) {
+    const name = getReferredDisplayName(data.member, relatedProfiles)
     return {
       Icon: LeaveIcon,
-      message: msg`${createSanitizedDisplayName(data.member)} was removed from the group`,
+      message: name
+        ? msg`${name} was removed from the group`
+        : msg`Someone was removed from the group`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataMemberJoin(data)) {
+    const name = getReferredDisplayName(data.member, relatedProfiles)
     return {
       Icon: JoinIcon,
-      message: msg`${createSanitizedDisplayName(data.member)} joined the group`,
+      message: name
+        ? msg`${name} joined the group`
+        : msg`Someone joined the group`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataMemberLeave(data)) {
+    const name = getReferredDisplayName(data.member, relatedProfiles)
     return {
       Icon: LeaveIcon,
-      message: msg`${createSanitizedDisplayName(data.member)} left the group`,
+      message: name ? msg`${name} left the group` : msg`Someone left the group`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvo(data)) {
     return {Icon: LockIcon, message: msg`Chat locked`}
@@ -53,7 +72,9 @@ export function getSystemMessageInfo(
   } else if (ChatBskyConvoDefs.isSystemMessageDataEditGroup(data)) {
     return {
       Icon: PencilIcon,
-      message: msg`Chat title changed to ${data.newName ?? ''}`,
+      message: data.newName
+        ? msg`Chat title changed to ${data.newName}`
+        : msg`Chat title changed`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataCreateJoinLink(data)) {
     return {Icon: ChainLinkIcon, message: msg`Invite link created`}

@@ -102,6 +102,10 @@ export class Convo {
     {id: string; message: ChatBskyConvoSendMessage.InputSchema['message']}
   > = new Map()
   private deletedMessages: Set<string> = new Set()
+  private systemMessageProfiles: Map<
+    string,
+    ChatBskyActorDefs.ProfileViewBasic
+  > = new Map()
 
   private isProcessingPendingMessages = false
 
@@ -469,6 +473,7 @@ export class Convo {
     this.newMessages = new Map()
     this.pendingMessages = new Map()
     this.deletedMessages = new Set()
+    this.systemMessageProfiles = new Map()
 
     this.pendingMessageFailure = null
     this.fetchMessageHistoryError = undefined
@@ -689,9 +694,15 @@ export class Convo {
           {headers: DM_SERVICE_HEADERS},
         )
       })
-      const {cursor, messages} = response.data
+      const {cursor, messages, relatedProfiles} = response.data
 
       this.oldestRev = cursor ?? null
+
+      if (relatedProfiles) {
+        for (const profile of relatedProfiles) {
+          this.systemMessageProfiles.set(profile.did, profile)
+        }
+      }
 
       /*
        * If the response contained fewer messages than the limit, we know
@@ -861,6 +872,14 @@ export class Convo {
             const systemView = toSystemMessageView(ev)
             if (systemView) {
               this.newMessages.set(systemView.id, systemView)
+              if (
+                'relatedProfiles' in ev &&
+                Array.isArray(ev.relatedProfiles)
+              ) {
+                for (const profile of ev.relatedProfiles) {
+                  this.systemMessageProfiles.set(profile.did, profile)
+                }
+              }
               needsCommit = true
             }
           }
@@ -1155,6 +1174,7 @@ export class Convo {
           type: 'system-message',
           key: m.id,
           message: m,
+          relatedProfiles: Array.from(this.systemMessageProfiles.values()),
         })
       }
     })
@@ -1192,6 +1212,7 @@ export class Convo {
           type: 'system-message',
           key: m.id,
           message: m,
+          relatedProfiles: Array.from(this.systemMessageProfiles.values()),
         })
       }
     })

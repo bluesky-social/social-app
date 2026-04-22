@@ -45,7 +45,12 @@ export function AvatarBubbles({
         : size === 'medium'
           ? 56 / 120
           : 1
-  const marginOffset = size === 'small' || size === 'medium' ? -2 : 0
+  const marginOffset =
+    (typeof size === 'number' && size < 120) ||
+    size === 'small' ||
+    size === 'medium'
+      ? -2
+      : 0
 
   const initialValue = animate ? 0 : 1
   const p0 = useSharedValue(initialValue)

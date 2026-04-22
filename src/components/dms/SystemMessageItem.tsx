@@ -3,7 +3,7 @@ import {useLingui} from '@lingui/react/macro'
 
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {atoms as a, useTheme} from '#/alf'
-import {getSystemMessageInfo} from '#/components/dms/systemMessage'
+import {getSystemMessageInfo} from '#/components/dms/getSystemMessageInfo'
 import {Text} from '#/components/Typography'
 
 export function SystemMessageItem({
@@ -14,7 +14,7 @@ export function SystemMessageItem({
   const t = useTheme()
   const {i18n} = useLingui()
 
-  const info = getSystemMessageInfo(item.message.data)
+  const info = getSystemMessageInfo(item.message.data, item.relatedProfiles)
   if (!info) return null
 
   const {Icon, message} = info
@@ -28,6 +28,7 @@ export function SystemMessageItem({
         a.justify_center,
         a.px_md,
         a.mt_md,
+        a.mb_xs,
       ]}>
       <Icon size="xs" style={[a.mr_2xs, t.atoms.text_contrast_medium]} />
       <Text
