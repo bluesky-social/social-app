@@ -76,7 +76,8 @@ class NotificationService: UNNotificationServiceExtension {
       avatarImage = downloadAvatarImage(from: avatarUrlString)
     }
 
-    let senderHandle = INPersonHandle(value: nil, type: .unknown)
+    let senderHandleValue = userInfo["senderHandle"] as? String
+    let senderHandle = INPersonHandle(value: senderHandleValue, type: .unknown)
     let sender = INPerson(
       personHandle: senderHandle,
       nameComponents: nil,
