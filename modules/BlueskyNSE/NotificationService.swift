@@ -71,6 +71,14 @@ class NotificationService: UNNotificationServiceExtension {
   ) -> UNNotificationContent {
     let senderDisplayName = userInfo["senderDisplayName"] as? String ?? "Unknown"
     let convoId = userInfo["convoId"] as? String
+
+    // The push title is "Sender to @recipient" — extract the "to @recipient"
+    // part as subtitle so the user knows which account received the message.
+    if let title = content.title as String?,
+       let range = title.range(of: " to ", options: .backwards) {
+      content.subtitle = String(title[range.upperBound...])
+    }
+
     var avatarImage: INImage? = nil
     if let avatarUrlString = userInfo["senderAvatarUrl"] as? String {
       avatarImage = downloadAvatarImage(from: avatarUrlString)
