@@ -298,7 +298,7 @@ function BaseChatItem({
 
       // System message
       if (ChatBskyConvoDefs.isSystemMessageView(convo.lastMessage)) {
-        const info = getSystemMessageInfo(convo.lastMessage.data)
+        const info = getSystemMessageInfo(convo.lastMessage.data, convo.members)
         if (info) {
           lastMessage = i18n._(info.message)
           lastMessageSentAt = convo.lastMessage.sentAt

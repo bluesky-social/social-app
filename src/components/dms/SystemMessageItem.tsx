@@ -14,7 +14,7 @@ export function SystemMessageItem({
   const t = useTheme()
   const {i18n} = useLingui()
 
-  const info = getSystemMessageInfo(item.message.data)
+  const info = getSystemMessageInfo(item.message.data, item.relatedProfiles)
   if (!info) return null
 
   const {Icon, message} = info

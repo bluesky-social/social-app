@@ -1,4 +1,4 @@
-import {ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
 import {type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
@@ -21,28 +21,37 @@ export type SystemMessageInfo = {
   Icon: React.ComponentType<SVGIconProps>
 }
 
+function getReferredDisplayName(
+  user: ChatBskyConvoDefs.SystemMessageReferredUser,
+  relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[],
+): string {
+  const profile = relatedProfiles.find(p => p.did === user.did)
+  return profile ? createSanitizedDisplayName(profile) : user.did
+}
+
 export function getSystemMessageInfo(
   data: ChatBskyConvoDefs.SystemMessageView['data'],
+  relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[],
 ): SystemMessageInfo | null {
   if (ChatBskyConvoDefs.isSystemMessageDataAddMember(data)) {
     return {
       Icon: JoinIcon,
-      message: msg`${createSanitizedDisplayName(data.member)} was added to the group`,
+      message: msg`${getReferredDisplayName(data.member, relatedProfiles)} was added to the group`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataRemoveMember(data)) {
     return {
       Icon: LeaveIcon,
-      message: msg`${createSanitizedDisplayName(data.member)} was removed from the group`,
+      message: msg`${getReferredDisplayName(data.member, relatedProfiles)} was removed from the group`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataMemberJoin(data)) {
     return {
       Icon: JoinIcon,
-      message: msg`${createSanitizedDisplayName(data.member)} joined the group`,
+      message: msg`${getReferredDisplayName(data.member, relatedProfiles)} joined the group`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataMemberLeave(data)) {
     return {
       Icon: LeaveIcon,
-      message: msg`${createSanitizedDisplayName(data.member)} left the group`,
+      message: msg`${getReferredDisplayName(data.member, relatedProfiles)} left the group`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvo(data)) {
     return {Icon: LockIcon, message: msg`Chat locked`}
