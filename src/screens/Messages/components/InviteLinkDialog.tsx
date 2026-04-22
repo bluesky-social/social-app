@@ -275,7 +275,7 @@ export function InviteLinkDialog({
                 onPress={() => {
                   disableJoinLink()
                 }}>
-                Disable
+                <Trans>Disable</Trans>
               </StackedButton>
               <StackedButton
                 disabled={enabledStatus === 'disabled'}
@@ -287,7 +287,7 @@ export function InviteLinkDialog({
                 style={[a.flex_1, a.rounded_full]}
                 // TODO Implement this. -dsb
                 onPress={() => {}}>
-                Post link
+                <Trans>Post link</Trans>
               </StackedButton>
               <StackedButton
                 disabled={enabledStatus === 'disabled'}
@@ -299,7 +299,7 @@ export function InviteLinkDialog({
                 style={[a.flex_1, a.rounded_full]}
                 // TODO Implement this. -dsb
                 onPress={() => {}}>
-                Share
+                <Trans>Share</Trans>
               </StackedButton>
             </View>
           ) : (
