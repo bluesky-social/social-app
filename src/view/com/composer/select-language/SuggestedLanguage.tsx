@@ -277,7 +277,6 @@ export function SuggestedLanguage({
        */
       if (textTrimmed.length < MIN_TEXT_LENGTH) {
         setSuggLang(undefined)
-        declinedSuggLangsRef.current = []
         return
       }
 
