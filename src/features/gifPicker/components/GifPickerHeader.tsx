@@ -12,12 +12,12 @@ import {IS_WEB} from '#/env'
 export function GifPickerHeader({
   inputRef,
   onChangeText,
-  onClose,
+  onGoBack,
   onEscape,
 }: {
   inputRef: Ref<TextInput>
   onChangeText: (text: string) => void
-  onClose: () => void
+  onGoBack: () => void
   onEscape: () => void
 }) {
   const {t: l} = useLingui()
@@ -40,8 +40,8 @@ export function GifPickerHeader({
           size="small"
           color="secondary"
           shape="round"
-          onPress={onClose}
-          label={l`Close GIF dialog`}>
+          onPress={onGoBack}
+          label={l`Go back`}>
           <ButtonIcon icon={Arrow} size="md" />
         </Button>
       )}
