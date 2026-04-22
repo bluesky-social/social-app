@@ -3,7 +3,7 @@ import {type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Celebrate_Stroke2_Corner0_Rounded as Celebrate} from '#/components/icons/Celebrate'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
@@ -48,6 +48,7 @@ export function GifCategoryPills({
   hasRecents: boolean
 }) {
   const {i18n} = useLingui()
+  const t = useTheme()
 
   return (
     <View
@@ -56,7 +57,8 @@ export function GifCategoryPills({
         a.justify_between,
         a.align_center,
         a.gap_xs,
-        a.mb_md,
+        a.pb_md,
+        t.atoms.bg,
       ]}>
       {GIF_CATEGORIES.map(category => {
         if (category.id === 'recents' && !hasRecents) return null
