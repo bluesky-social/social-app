@@ -269,13 +269,17 @@ export const ComposePost = ({
   }
 
   /**
-   * Incremented each time language detection is ambiguous — we can't
-   * surface a strong suggestion, but we still want to flash a hint on the
-   * language pill. Consumers key an effect on this counter to retrigger.
+   * Timestamp (ms) of the last honored nudge from language detection.
+   * Used to rate-limit the pulse animation: we ignore back-to-back
+   * nudges that arrive within NUDGE_COOLDOWN_MS. Consumers key an effect
+   * on this value — it only changes when we actually want to re-pulse.
    */
-  const [languageNudgeCount, setLanguageNudgeCount] = useState(0)
+  const [languageNudgeAt, setLanguageNudgeAt] = useState(0)
   const onLanguageNudge = () => {
-    setLanguageNudgeCount(n => n + 1)
+    const now = Date.now()
+    // ignore back-to-back nudges within 10s; only update state (and
+    // therefore re-pulse) once the cooldown has elapsed
+    setLanguageNudgeAt(prev => (now - prev > 10_000 ? now : prev))
   }
 
   const [composerState, composerDispatch] = useReducer(
@@ -1180,7 +1184,7 @@ export const ComposePost = ({
         }}
         currentLanguages={currentLanguages}
         onSelectLanguage={onSelectLanguage}
-        languageNudgeCount={languageNudgeCount}
+        languageNudgeAt={languageNudgeAt}
         openGallery={openGallery}
         textInputRef={textInputRef}
       />
@@ -1885,7 +1889,7 @@ function ComposerFooter({
   onAddPost,
   currentLanguages,
   onSelectLanguage,
-  languageNudgeCount,
+  languageNudgeAt,
   openGallery,
   textInputRef,
 }: {
@@ -1897,7 +1901,7 @@ function ComposerFooter({
   onAddPost: () => void
   currentLanguages: string[]
   onSelectLanguage?: (language: string) => void
-  languageNudgeCount: number
+  languageNudgeAt: number
   openGallery?: boolean
   textInputRef: React.RefObject<TextInputRef | null>
 }) {
@@ -2063,7 +2067,7 @@ function ComposerFooter({
         <PostLanguageSelect
           currentLanguages={currentLanguages}
           onSelectLanguage={onSelectLanguage}
-          nudgeCount={languageNudgeCount}
+          nudgeAt={languageNudgeAt}
         />
         <CharProgress
           count={post.shortenedGraphemeLength}

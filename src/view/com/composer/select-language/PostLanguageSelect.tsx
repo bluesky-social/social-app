@@ -30,16 +30,18 @@ import {useAnalytics} from '#/analytics'
 export function PostLanguageSelect({
   currentLanguages: currentLanguagesProp,
   onSelectLanguage,
-  nudgeCount = 0,
+  nudgeAt = 0,
 }: {
   currentLanguages?: string[]
   onSelectLanguage?: (language: string) => void
   /**
-   * Incremented by the parent when language detection was ambiguous. Each
-   * increment flashes a transient hint on the button, then fades. The
-   * initial `0` on mount is intentionally ignored.
+   * Timestamp (ms) of the last honored language-detection nudge. Each
+   * time this changes, the button flashes a transient hint and fades.
+   * The parent rate-limits updates, so successive detector firings inside
+   * the cooldown won't re-flash. The initial `0` on mount is intentionally
+   * ignored.
    */
-  nudgeCount?: number
+  nudgeAt?: number
 }) {
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
@@ -68,10 +70,7 @@ export function PostLanguageSelect({
   ) {
     return (
       <>
-        <LanguageBtn
-          onPress={languageDialogControl.open}
-          nudgeCount={nudgeCount}
-        />
+        <LanguageBtn onPress={languageDialogControl.open} nudgeAt={nudgeAt} />
         <LanguageSelectDialog
           titleText={<Trans>Choose post languages</Trans>}
           subtitleText={
@@ -93,7 +92,7 @@ export function PostLanguageSelect({
           {({props}) => (
             <LanguageBtn
               currentLanguages={currentLanguages}
-              nudgeCount={nudgeCount}
+              nudgeAt={nudgeAt}
               {...props}
             />
           )}
@@ -150,11 +149,11 @@ const PULSE_FADE_OUT_MS = 500
 
 function LanguageBtn({
   currentLanguages: currentLanguagesProp,
-  nudgeCount = 0,
+  nudgeAt = 0,
   ...props
 }: Omit<ButtonProps, 'label' | 'children'> & {
   currentLanguages?: string[]
-  nudgeCount?: number
+  nudgeAt?: number
 }) {
   const t = useTheme()
   const ax = useAnalytics()
@@ -172,7 +171,7 @@ function LanguageBtn({
    */
   const nudgePulse = useSharedValue(0)
   useEffect(() => {
-    if (nudgeCount === 0) return
+    if (nudgeAt === 0) return
     const easing = Easing.inOut(Easing.quad)
     const fadeIn = {duration: PULSE_FADE_IN_MS, easing}
     const fadeOut = {duration: PULSE_FADE_OUT_MS, easing}
@@ -182,7 +181,7 @@ function LanguageBtn({
       withTiming(1, fadeIn),
       withTiming(0, fadeOut),
     )
-  }, [nudgeCount, nudgePulse])
+  }, [nudgeAt, nudgePulse])
   const pulseStyle = useAnimatedStyle(() => ({
     opacity: nudgePulse.value,
   }))
@@ -204,7 +203,7 @@ function LanguageBtn({
       onPress={e => {
         props.onPress?.(e)
         ax.metric('composer:language:langSelectorPressed', {
-          wasNudged: nudgeCount > 0,
+          wasNudged: nudgeAt > 0,
         })
       }}>
       {({pressed, hovered}) => {
