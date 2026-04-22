@@ -72,7 +72,9 @@ export function getSystemMessageInfo(
   } else if (ChatBskyConvoDefs.isSystemMessageDataEditGroup(data)) {
     return {
       Icon: PencilIcon,
-      message: msg`Chat title changed to ${data.newName ?? ''}`,
+      message: data.newName
+        ? msg`Chat title changed to ${data.newName}`
+        : msg`Chat title changed`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataCreateJoinLink(data)) {
     return {Icon: ChainLinkIcon, message: msg`Invite link created`}
