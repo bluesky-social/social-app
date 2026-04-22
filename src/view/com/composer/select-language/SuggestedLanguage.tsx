@@ -91,65 +91,11 @@ const DEFAULT_CONFIG: LanguageDetectionConfig = {
    * bump above baseline is smaller).
    */
   overrides: {
-    // Indonesian ↔ Malay: near-identical vocabulary; `lande` also
-    // over-commits to `id` on short English input.
-    id: {
-      acceptanceThreshold: platform({web: 0.99, default: 0.95}),
-      deviceLocaleAcceptanceThreshold: platform({web: 0.97, default: 0.9}),
-    },
-    ms: {
-      acceptanceThreshold: platform({web: 0.99, default: 0.95}),
-      deviceLocaleAcceptanceThreshold: platform({web: 0.97, default: 0.9}),
-    },
-
-    // Scandinavian cluster: written Bokmål and Danish overlap ~80%.
-    nb: {
-      acceptanceThreshold: platform({web: 0.97, default: 0.93}),
-      deviceLocaleAcceptanceThreshold: platform({web: 0.97, default: 0.9}),
-    },
-    no: {
-      acceptanceThreshold: platform({web: 0.97, default: 0.93}),
-      deviceLocaleAcceptanceThreshold: platform({web: 0.97, default: 0.9}),
-    },
-    da: {
-      acceptanceThreshold: platform({web: 0.97, default: 0.93}),
-      deviceLocaleAcceptanceThreshold: platform({web: 0.97, default: 0.9}),
-    },
-
-    // Serbo-Croatian cluster: mutually intelligible.
-    hr: {
-      acceptanceThreshold: platform({web: 0.97, default: 0.93}),
-      deviceLocaleAcceptanceThreshold: platform({web: 0.97, default: 0.9}),
-    },
-    sr: {
-      acceptanceThreshold: platform({web: 0.97, default: 0.93}),
-      deviceLocaleAcceptanceThreshold: platform({web: 0.97, default: 0.9}),
-    },
-    bs: {
-      acceptanceThreshold: platform({web: 0.97, default: 0.93}),
-      deviceLocaleAcceptanceThreshold: platform({web: 0.97, default: 0.9}),
-    },
-
-    // Czech ↔ Slovak: close enough to flip on short text.
-    cs: {
-      acceptanceThreshold: platform({web: 0.95, default: 0.92}),
-      deviceLocaleAcceptanceThreshold: platform({web: 0.95, default: 0.85}),
-    },
-    sk: {
-      acceptanceThreshold: platform({web: 0.95, default: 0.92}),
-      deviceLocaleAcceptanceThreshold: platform({web: 0.95, default: 0.85}),
-    },
-
-    // Iberian minority languages: Galician and Catalan frequently
-    // mislabeled as Portuguese/Spanish/French on short text. Device
-    // locale is a strong prior here (rarely installed unless the user
-    // actually reads them), so only the base bar is raised.
-    gl: {
-      acceptanceThreshold: platform({web: 0.95, default: 0.92}),
-    },
-    ca: {
-      acceptanceThreshold: platform({web: 0.95, default: 0.92}),
-    },
+    // Example
+    // id: {
+    //   acceptanceThreshold: platform({web: 0.99, default: 0.95}),
+    //   deviceLocaleAcceptanceThreshold: platform({web: 0.97, default: 0.9}),
+    // },
   },
 }
 
