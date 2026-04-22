@@ -29,7 +29,7 @@ export function GifPickerHeader({
       style={[
         native(a.pt_4xl),
         a.relative,
-        a.mb_md,
+        a.pb_md,
         a.flex_row,
         a.align_center,
         !gtMobile && web(a.gap_md),
