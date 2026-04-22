@@ -32,7 +32,7 @@ export function getMessageInfo({
   const isFromMe = lastMessage.sender?.did === currentAccountDid
   const senderDid = lastMessage.sender?.did
   const sender = convo.members.find(m => m.did === senderDid)
-  const name = sender ? createSanitizedDisplayName(sender) : senderDid
+  const name = sender ? createSanitizedDisplayName(sender) : null
   const isGroup = ChatBskyConvoDefs.isGroupConvo(convo.kind)
 
   const reportableMessage = isFromMe ? undefined : lastMessage
@@ -45,7 +45,7 @@ export function getMessageInfo({
           comment: 'When the last message in a chat was made by you.',
         }),
       )
-    } else if (isGroup) {
+    } else if (isGroup && name) {
       return i18n._(
         msg({
           message: `${name}: ${message}`,
@@ -77,6 +77,8 @@ export function getMessageInfo({
         const href = path ? toBskyAppUrl(path) : undefined
         const short = href ? toShortUrl(href) : defaultEmbeddedContentMessage
         message = prefix(short)
+      } else {
+        message = prefix(defaultEmbeddedContentMessage)
       }
     } else {
       message = prefix(defaultEmbeddedContentMessage)

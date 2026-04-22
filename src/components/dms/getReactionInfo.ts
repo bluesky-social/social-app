@@ -27,7 +27,6 @@ export function getReactionInfo({
   const senderDid = reaction.sender.did
   const sender = convo.members.find(m => m.did === senderDid)
   const name = sender ? createSanitizedDisplayName(sender) : null
-  const isGroup = ChatBskyConvoDefs.isGroupConvo(convo.kind)
 
   const lastMessageText = reactedTo.text
   const fallbackMessage = i18n._(
@@ -42,9 +41,7 @@ export function getReactionInfo({
   let message: string
   if (isFromMe) {
     message = i18n._(msg`You reacted ${reaction.value} to ${target}`)
-  } else if (isGroup && name) {
-    message = i18n._(msg`${name} reacted ${reaction.value} to ${target}`)
-  } else if (sender && name) {
+  } else if (name) {
     message = i18n._(msg`${name} reacted ${reaction.value} to ${target}`)
   } else {
     message = i18n._(msg`Someone reacted ${reaction.value} to ${target}`)
