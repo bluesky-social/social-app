@@ -74,6 +74,12 @@ import {InviteLinkDialog} from './components/InviteLinkDialog'
 const MEMBER_LIMIT = 50
 const ROW_SPACING = 10
 
+const dateFormatter = new Intl.DateTimeFormat(undefined, {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+})
+
 type Item =
   | {
       type: 'MEMBERS_AND_REQUESTS'
@@ -429,42 +435,46 @@ function Member({
 
   return (
     <SubtleHoverWrapper>
-      <Pressable
-        accessibilityRole="button"
+      <View
         style={[
+          a.flex_row,
+          a.align_center,
+          a.justify_between,
           a.mx_xl,
           {
             marginTop: ROW_SPACING,
             marginBottom: ROW_SPACING,
           },
-        ]}
-        onPress={() => {
-          navigation.navigate('Profile', {name: profile.did})
-        }}>
-        <View style={[a.flex_row, a.align_center, a.justify_between]}>
-          <View style={[a.flex_row, a.align_center]}>
-            <PreviewableUserAvatar
-              profile={profile}
-              size={48}
-              moderation={moderation.ui('avatar')}
-            />
-            <View style={[a.mx_sm]}>
-              <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                {displayName}
-              </Text>
-              <Text
-                style={[
-                  a.text_xs,
-                  {color: t.palette.contrast_500},
-                  web(a.pt_2xs),
-                ]}>
-                {sanitizeHandle(profile.handle, '@')}
-              </Text>
-            </View>
+        ]}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={l`View ${displayName}’s profile`}
+          accessibilityHint={l`Opens this member’s profile`}
+          style={[a.flex_1, a.flex_row, a.align_center]}
+          onPress={() => {
+            navigation.navigate('Profile', {name: profile.did})
+          }}>
+          <PreviewableUserAvatar
+            profile={profile}
+            size={48}
+            moderation={moderation.ui('avatar')}
+          />
+          <View style={[a.mx_sm]}>
+            <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+              {displayName}
+            </Text>
+            <Text
+              style={[
+                a.text_xs,
+                {color: t.palette.contrast_500},
+                web(a.pt_2xs),
+              ]}>
+              {sanitizeHandle(profile.handle, '@')}
+            </Text>
           </View>
-          <View>{statusBadge}</View>
-        </View>
-      </Pressable>
+        </Pressable>
+        <View>{statusBadge}</View>
+      </View>
     </SubtleHoverWrapper>
   )
 }
@@ -528,10 +538,13 @@ function MemberMenu({
 
   const blockMemberPrompt = Prompt.usePromptControl()
 
-  const {data: convoAvailability} = useGetConvoAvailabilityQuery(profile.did)
+  const [menuDidOpen, setMenuDidOpen] = useState(false)
+  const {data: convoAvailability} = useGetConvoAvailabilityQuery(profile.did, {
+    enabled: menuDidOpen,
+  })
   const {mutate: initiateConvo} = useGetConvoForMembers({
     onSuccess: ({convo}) => {
-      ax.metric('chat:open', {logContext: 'ProfileHeader'})
+      ax.metric('chat:open', {logContext: 'ConvoSettings'})
       navigation.navigate('MessagesConversation', {conversation: convo.id})
     },
     onError: () => {
@@ -546,12 +559,12 @@ function MemberMenu({
     }
 
     if (convoAvailability.convo) {
-      ax.metric('chat:open', {logContext: 'ProfileHeader'})
+      ax.metric('chat:open', {logContext: 'ConvoSettings'})
       navigation.navigate('MessagesConversation', {
         conversation: convoAvailability.convo.id,
       })
     } else {
-      ax.metric('chat:create', {logContext: 'ProfileHeader'})
+      ax.metric('chat:create', {logContext: 'ConvoSettings'})
       initiateConvo([profile.did])
     }
   }
@@ -598,11 +611,18 @@ function MemberMenu({
     <>
       <Menu.Root>
         <Menu.Trigger label={l`Open chat member options for ${displayName}`}>
-          {({props, state, control: menuControl}) =>
-            type === 'owner' || type === 'invited' ? (
+          {({props, state, control: menuControl}) => {
+            const triggerProps = {
+              ...props,
+              onPress: () => {
+                setMenuDidOpen(true)
+                props.onPress()
+              },
+            }
+            return type === 'owner' || type === 'invited' ? (
               <StatusBadge
                 label={type === 'owner' ? l`Admin` : l`Invited`}
-                pressableProps={props}
+                pressableProps={triggerProps}
                 style={[
                   state.hovered || state.pressed || menuControl.isOpen
                     ? {
@@ -613,7 +633,7 @@ function MemberMenu({
               />
             ) : (
               <Pressable
-                {...props}
+                {...triggerProps}
                 style={[
                   a.rounded_full,
                   a.p_sm,
@@ -629,7 +649,7 @@ function MemberMenu({
                 />
               </Pressable>
             )
-          }
+          }}
         </Menu.Trigger>
         <Menu.Outer>
           <Menu.Group>
@@ -668,9 +688,10 @@ function MemberMenu({
                 <Menu.ItemIcon icon={PersonXIcon} />
               </Menu.Item>
             ) : null}
-            {isOwner ? (
+            {isOwner && type !== 'invited' ? (
               <Menu.Item
                 label={l`Remove ${displayName} from this group chat`}
+                // TODO Need to wire up the remove flow. -dsb
                 onPress={() => {}}>
                 <Menu.ItemText>
                   <Trans>Remove from chat</Trans>
@@ -744,7 +765,7 @@ function SettingsHeader({
   })
 
   const {mutate: leaveConvo} = useLeaveConvo(convo.view.id, {
-    onMutate: () => {
+    onSuccess: () => {
       navigation.dispatch(StackActions.pop(2))
     },
     onError: e => {
@@ -755,7 +776,7 @@ function SettingsHeader({
     },
   })
 
-  const inviteLinkPrompt = Dialog.useDialogControl()
+  const inviteLinkDialog = Dialog.useDialogControl()
   const editNamePrompt = Prompt.usePromptControl()
   const lockChatPrompt = Prompt.usePromptControl()
   const leaveChatPrompt = Prompt.usePromptControl()
@@ -764,28 +785,16 @@ function SettingsHeader({
     muteConvo({mute: !convo.view.muted})
   }
 
-  const handleLeaveChat = () => {
-    leaveChatPrompt.open()
-  }
-
   // TODO Need to implement this when the backend is ready. -dsb
   const handleReportChat = () => {}
 
   const handlePromptName = () => {
+    setNewGroupName(groupName)
     editNamePrompt.open()
   }
 
   const handleEditName = () => {
     editGroupName({name: newGroupName})
-    editNamePrompt.close()
-  }
-
-  const handlePromptInviteLink = () => {
-    inviteLinkPrompt.open()
-  }
-
-  const handlePromptLock = () => {
-    lockChatPrompt.open()
   }
 
   const handleConfirmLock = () => {
@@ -795,6 +804,9 @@ function SettingsHeader({
   const handleUnlock = () => {
     setIsLocked(false)
   }
+
+  // TODO The creation date doesn't exist yet. -dsb
+  const createdAt = new Date()
 
   return (
     <>
@@ -821,8 +833,7 @@ function SettingsHeader({
             a.px_xl,
             t.atoms.text_contrast_high,
           ]}>
-          {/* TODO The creation date doesn't exist yet. -dsb */}
-          Created April 2, 2026
+          <Trans>Created {dateFormatter.format(createdAt)}</Trans>
         </Text>
         <View
           style={[
@@ -855,7 +866,7 @@ function SettingsHeader({
             icon={ChainLinkIcon}
             label={l`Create an invite link for this group chat`}
             text={l`Invite link`}
-            onPress={handlePromptInviteLink}
+            onPress={inviteLinkDialog.open}
           />
           {isOwner ? (
             <SettingsButton
@@ -865,7 +876,7 @@ function SettingsHeader({
                 isLocked ? l`Unlock this group chat` : l`Lock this group chat`
               }
               text={isLocked ? l`Locked` : l`Lock`}
-              onPress={isLocked ? handleUnlock : handlePromptLock}
+              onPress={isLocked ? handleUnlock : lockChatPrompt.open}
             />
           ) : null}
           {isOwner ? null : (
@@ -883,7 +894,7 @@ function SettingsHeader({
               icon={ArrowBoxLeftIcon}
               label={l`Leave this group chat`}
               text={l`Leave`}
-              onPress={handleLeaveChat}
+              onPress={leaveChatPrompt.open}
             />
           )}
         </View>
@@ -894,7 +905,7 @@ function SettingsHeader({
         onChangeText={setNewGroupName}
         onConfirm={handleEditName}
       />
-      <InviteLinkDialog control={inviteLinkPrompt} />
+      <InviteLinkDialog control={inviteLinkDialog} />
       <LockChatPrompt control={lockChatPrompt} onConfirm={handleConfirmLock} />
       <LeaveChatPrompt
         control={leaveChatPrompt}
@@ -925,7 +936,7 @@ function SettingsHeaderPlaceholder() {
           a.px_xl,
           t.atoms.text_contrast_high,
         ]}>
-        <Trans>…</Trans>
+        …
       </Text>
       <View
         style={[
@@ -1046,11 +1057,7 @@ function EditNamePrompt({
           </View>
         </Prompt.Content>
         <Prompt.Actions>
-          <Prompt.Action
-            cta={l`Save`}
-            shouldCloseOnPress={false}
-            onPress={onConfirm}
-          />
+          <Prompt.Action cta={l`Save`} onPress={onConfirm} />
           <Prompt.Cancel />
         </Prompt.Actions>
       </>
