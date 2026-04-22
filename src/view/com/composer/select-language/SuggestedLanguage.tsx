@@ -283,6 +283,13 @@ export function SuggestedLanguage({
 
       void detectLanguage(textTrimmed)
     }
+
+    // Cancel any pending debounced invocation on unmount / re-run so we
+    // don't call setSuggLang after the composer has closed (or after the
+    // user has already accepted a language).
+    return () => {
+      detectLanguage.cancel()
+    }
   }, [text, hasInteracted, detectLanguage, ax])
 
   /*
