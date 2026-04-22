@@ -2,6 +2,7 @@ import {memo, useCallback, useEffect, useMemo, useState} from 'react'
 import {
   Animated,
   type GestureResponderEvent,
+  type LayoutChangeEvent,
   Pressable,
   StyleSheet,
   TouchableOpacity,
@@ -63,11 +64,14 @@ import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
 import {InlineLinkText, Link} from '#/components/Link'
 import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileBadges} from '#/components/ProfileBadges'
+import * as ProfileCard from '#/components/ProfileCard'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 
 const MAX_AUTHORS = 5
@@ -616,7 +620,7 @@ let NotificationFeedItem = ({
       }}>
       {({hovered}) => (
         <>
-          <SubtleHover hover={hovered} />
+          <SubtleHover hover={hovered && !isAuthorsExpanded} />
           <View style={[styles.layoutIcon, a.pr_sm]}>
             {/* TODO: Prevent conditional rendering and move toward composable
           notifications for clearer accessibility labeling */}
@@ -635,6 +639,7 @@ let NotificationFeedItem = ({
               <ExpandedAuthorsList
                 visible={isAuthorsExpanded}
                 authors={authors}
+                moderationOpts={moderationOpts}
               />
               <Text
                 style={[
@@ -983,31 +988,112 @@ function CondensedAuthorsList({
 function ExpandedAuthorsList({
   visible,
   authors,
+  moderationOpts,
 }: {
   visible: boolean
   authors: Author[]
+  moderationOpts: ModerationOpts
 }) {
+  const ax = useAnalytics()
+  const profileCardEnabled = ax.features.enabled(
+    ax.features.NotificationsExpandedProfileCardEnable,
+  )
+  const isNativeFade = !IS_WEB && profileCardEnabled
   const heightInterp = useAnimatedValue(visible ? 1 : 0)
-  const targetHeight =
-    authors.length * (EXPANDED_AUTHOR_EL_HEIGHT + 10) /*10=margin*/
+  const opacityInterp = useAnimatedValue(visible ? 1 : 0)
+  const [measuredHeight, setMeasuredHeight] = useState(0)
+  useEffect(() => {
+    Animated.timing(isNativeFade ? opacityInterp : heightInterp, {
+      toValue: visible ? 1 : 0,
+      duration: 200,
+      useNativeDriver: isNativeFade,
+    }).start()
+  }, [heightInterp, opacityInterp, visible, isNativeFade])
+  const onInnerLayout = (e: LayoutChangeEvent) => {
+    if (measuredHeight === 0) {
+      setMeasuredHeight(e.nativeEvent.layout.height)
+    }
+  }
+
+  if (isNativeFade) {
+    return (
+      <Animated.View style={{opacity: opacityInterp}}>
+        {visible && (
+          <View style={[a.pt_sm, a.pb_md]}>
+            {authors.map((author, i) => (
+              <ExpandedAuthorProfileCard
+                key={author.profile.did}
+                author={author}
+                moderationOpts={moderationOpts}
+                isLast={i === authors.length - 1}
+              />
+            ))}
+          </View>
+        )}
+      </Animated.View>
+    )
+  }
+
+  const targetHeight = profileCardEnabled
+    ? measuredHeight
+    : authors.length * (EXPANDED_AUTHOR_EL_HEIGHT + 10) /*10=margin*/
   const heightStyle = {
     height: Animated.multiply(heightInterp, targetHeight),
   }
-  useEffect(() => {
-    Animated.timing(heightInterp, {
-      toValue: visible ? 1 : 0,
-      duration: 200,
-      useNativeDriver: false,
-    }).start()
-  }, [heightInterp, visible])
-
   return (
     <Animated.View style={[a.overflow_hidden, heightStyle]}>
-      {visible &&
+      {profileCardEnabled ? (
+        <View onLayout={onInnerLayout} style={[a.pt_sm, a.pb_md]}>
+          {authors.map((author, i) => (
+            <ExpandedAuthorProfileCard
+              key={author.profile.did}
+              author={author}
+              moderationOpts={moderationOpts}
+              isLast={i === authors.length - 1}
+            />
+          ))}
+        </View>
+      ) : (
+        visible &&
         authors.map(author => (
           <ExpandedAuthorCard key={author.profile.did} author={author} />
-        ))}
+        ))
+      )}
     </Animated.View>
+  )
+}
+
+function ExpandedAuthorProfileCard({
+  author,
+  moderationOpts,
+  isLast,
+}: {
+  author: Author
+  moderationOpts: ModerationOpts
+  isLast: boolean
+}) {
+  return (
+    <ProfileCard.Link
+      profile={author.profile}
+      style={isLast ? undefined : a.pb_md}>
+      <ProfileCard.Outer>
+        <ProfileCard.Header>
+          <ProfileCard.Avatar
+            profile={author.profile}
+            moderationOpts={moderationOpts}
+          />
+          <ProfileCard.NameAndHandle
+            profile={author.profile}
+            moderationOpts={moderationOpts}
+          />
+          <ProfileCard.FollowButton
+            profile={author.profile}
+            moderationOpts={moderationOpts}
+            logContext="ProfileCard"
+          />
+        </ProfileCard.Header>
+      </ProfileCard.Outer>
+    </ProfileCard.Link>
   )
 }
 
@@ -1016,7 +1102,6 @@ function ExpandedAuthorCard({author}: {author: Author}) {
   const {_} = useLingui()
   return (
     <Link
-      key={author.profile.did}
       label={author.profile.displayName || author.profile.handle}
       accessibilityHint={_(msg`Opens this profile`)}
       to={makeProfileLink({
