@@ -1,17 +1,19 @@
-import assert from 'node:assert'
-
-import React from 'react'
 import resvg from '@resvg/resvg-js'
 import {type Express} from 'express'
 import satori from 'satori'
 
 import {
-  AvatarBubbles,
   AVATAR_BUBBLES_SIZE,
+  AvatarBubbles,
 } from '../components/AvatarBubbles.js'
 import {type AppContext} from '../context.js'
 import {httpLogger} from '../logger.js'
-import {getImage, handler, hideAvatarLabels, originVerifyMiddleware} from './util.js'
+import {
+  getImage,
+  handler,
+  hideAvatarLabels,
+  originVerifyMiddleware,
+} from './util.js'
 
 export default function (ctx: AppContext, app: Express) {
   return app.get(
@@ -29,8 +31,9 @@ export default function (ctx: AppContext, app: Express) {
 
       let profiles
       try {
-        const result =
-          await ctx.appviewAgent.api.app.bsky.actor.getProfiles({actors: dids})
+        const result = await ctx.appviewAgent.api.app.bsky.actor.getProfiles({
+          actors: dids,
+        })
         profiles = result.data.profiles
       } catch (err) {
         httpLogger.warn({err, dids}, 'could not fetch profiles')
@@ -44,7 +47,6 @@ export default function (ctx: AppContext, app: Express) {
           if (profile.labels?.some(l => hideAvatarLabels.has(l.val)))
             return null
           try {
-            assert(profile.avatar)
             return await getImage(profile.avatar)
           } catch (err) {
             httpLogger.warn({err, did}, 'could not fetch avatar image')
@@ -53,14 +55,11 @@ export default function (ctx: AppContext, app: Express) {
         }),
       )
 
-      const svg = await satori(
-        <AvatarBubbles images={images} />,
-        {
-          fonts: ctx.fonts,
-          height: AVATAR_BUBBLES_SIZE,
-          width: AVATAR_BUBBLES_SIZE,
-        },
-      )
+      const svg = await satori(<AvatarBubbles images={images} />, {
+        fonts: ctx.fonts,
+        height: AVATAR_BUBBLES_SIZE,
+        width: AVATAR_BUBBLES_SIZE,
+      })
       const output = await resvg.renderAsync(svg)
       res.statusCode = 200
       res.setHeader('content-type', 'image/png')

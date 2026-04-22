@@ -1,6 +1,3 @@
-/* eslint-disable bsky-internal/avoid-unwrapped-text */
-import React from 'react'
-
 import {Img} from './Img.js'
 
 const SCALE = 3

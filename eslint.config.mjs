@@ -281,6 +281,16 @@ export default defineConfig(
   },
 
   /**
+   * bskyogcard - server-side, Node.js imports are fine
+   */
+  {
+    files: ['bskyogcard/**/*.{js,jsx,ts,tsx}'],
+    rules: {
+      'import-x/no-nodejs-modules': 'off',
+    },
+  },
+
+  /**
    * Test files configuration
    */
   {
