@@ -229,23 +229,34 @@ export function SuggestedLanguage({
   const detectLanguage = useMemo(() => {
     return debounce(async (text: string) => {
       try {
+        const currLangs = detectionPropsRef.current.currentLanguages
         const {certain, uncertain} = await guessLanguage(
           text,
           detectionPropsRef.current.config,
         )
-        if (certain.length === 1 && uncertain.length === 0) {
+        const topCandidate = certain.at(0)?.language
+        if (
+          certain.length === 1 &&
+          uncertain.length === 0 &&
+          topCandidate !== undefined &&
+          !currLangs.includes(topCandidate) &&
+          !declinedSuggLangsRef.current.includes(topCandidate)
+        ) {
           // we have a single confident candidate with no competitors — show it!
-          setSuggLang(certain[0].language)
+          setSuggLang(topCandidate)
         } else {
-          const topCandidate = uncertain[0]?.language
-          const currLangs = detectionPropsRef.current.currentLanguages
+          const nextBestCandidate = uncertain.at(0)?.language
           // ambiguous results — if the top candidate isn't already
-          // selected, nudge the user
-          if (topCandidate !== undefined && !currLangs.includes(topCandidate)) {
+          // selected or previously declined, nudge the user
+          if (
+            nextBestCandidate !== undefined &&
+            !currLangs.includes(nextBestCandidate) &&
+            !declinedSuggLangsRef.current.includes(nextBestCandidate)
+          ) {
             handleOnNudge()
             ax.metric('composer:language:nudgeUser', {
               os: Platform.OS,
-              suggestedLanguage: topCandidate,
+              suggestedLanguage: nextBestCandidate,
               currentTargetLanguages: currLangs,
               textLength: text.length,
             })
