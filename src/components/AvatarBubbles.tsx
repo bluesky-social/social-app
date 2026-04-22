@@ -28,7 +28,10 @@ export function AvatarBubbles({
   size = 'large',
 }: Props) {
   const {currentAccount} = useSession()
-  const profiles = allProfiles.filter(p => p.did !== currentAccount?.did)
+  const profiles =
+    allProfiles.length > 2
+      ? allProfiles.filter(p => p.did !== currentAccount?.did)
+      : allProfiles
   const containerSize =
     typeof size === 'number'
       ? size
@@ -86,7 +89,7 @@ export function AvatarBubbles({
   let avatars = (
     <>
       <AvatarBubble
-        profile={profiles[0] ?? allProfiles[0]}
+        profile={profiles[0]}
         scale={p0}
         size={76}
         x={-2}
