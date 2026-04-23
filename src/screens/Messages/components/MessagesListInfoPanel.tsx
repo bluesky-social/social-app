@@ -19,7 +19,7 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
   const {t: l} = useLingui()
 
   const addMembersControl = Dialog.useDialogControl()
-  const inviteLinkPrompt = Dialog.useDialogControl()
+  const inviteLinkControl = Dialog.useDialogControl()
 
   const {currentAccount} = useSession()
 
@@ -27,6 +27,7 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
     ? parseConvoView(convoState.convo, currentAccount?.did)
     : null
   const groupConvo = convo?.kind === 'group' ? convo : null
+  const joinLink = groupConvo?.details.joinLink
 
   const isOwner =
     currentAccount?.did == null
@@ -110,12 +111,19 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
                 </ButtonText>
               </Button>
             ) : null}
-            {isOwner && groupConvo ? (
+            {(isOwner && groupConvo) ||
+            (!isOwner &&
+              groupConvo &&
+              joinLink?.enabledStatus === 'enabled') ? (
               <Button
                 color="secondary"
                 size="small"
-                label={l`Click here to create or manage an invite link for this group chat`}
-                onPress={() => inviteLinkPrompt.open()}>
+                label={
+                  isOwner
+                    ? l`Click here to create or manage an invite link for this group chat`
+                    : l`Click here to view the invite link for this group chat`
+                }
+                onPress={inviteLinkControl.open}>
                 <ButtonIcon icon={ChainLinkIcon} />
                 <ButtonText>
                   <Trans>Invite link</Trans>
@@ -126,7 +134,11 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
         ) : null}
       </View>
       {groupConvo ? (
-        <InviteLinkDialog convo={groupConvo} control={inviteLinkPrompt} />
+        <InviteLinkDialog
+          isOwner={isOwner}
+          convo={groupConvo}
+          control={inviteLinkControl}
+        />
       ) : null}
       <Dialog.Outer
         control={addMembersControl}

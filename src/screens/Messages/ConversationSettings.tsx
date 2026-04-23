@@ -738,6 +738,8 @@ function SettingsHeader({
 
   const [isLocked, setIsLocked] = useState(false)
 
+  const {joinLink} = convo.details
+
   const {mutate: editGroupName} = useEditGroupName(convo.view.id, {
     onError: e => {
       setNewGroupName(groupName)
@@ -862,12 +864,18 @@ function SettingsHeader({
               onPress={handlePromptName}
             />
           ) : null}
-          <SettingsButton
-            icon={ChainLinkIcon}
-            label={l`Create an invite link for this group chat`}
-            text={l`Invite link`}
-            onPress={inviteLinkDialog.open}
-          />
+          {isOwner || (!isOwner && joinLink?.enabledStatus === 'enabled') ? (
+            <SettingsButton
+              icon={ChainLinkIcon}
+              label={
+                isOwner
+                  ? l`Create or modify an invite link for this group chat`
+                  : l`View the invite link for this group chat`
+              }
+              text={l`Invite link`}
+              onPress={inviteLinkDialog.open}
+            />
+          ) : null}
           {isOwner ? (
             <SettingsButton
               color={isLocked ? 'negative_subtle' : 'secondary'}
@@ -905,7 +913,11 @@ function SettingsHeader({
         onChangeText={setNewGroupName}
         onConfirm={handleEditName}
       />
-      <InviteLinkDialog convo={convo} control={inviteLinkDialog} />
+      <InviteLinkDialog
+        convo={convo}
+        control={inviteLinkDialog}
+        isOwner={isOwner}
+      />
       <LockChatPrompt control={lockChatPrompt} onConfirm={handleConfirmLock} />
       <LeaveChatPrompt
         control={leaveChatPrompt}
