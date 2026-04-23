@@ -1,4 +1,4 @@
-import {useMemo, useState} from 'react'
+import {useState} from 'react'
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import {moderateProfile} from '@atproto/api'
 import {plural} from '@lingui/core/macro'
@@ -8,14 +8,15 @@ import {StackActions, useNavigation} from '@react-navigation/native'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
+import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {type Shadow} from '#/state/cache/types'
 import {ConvoProvider, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
@@ -50,7 +51,7 @@ import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/i
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon} from '#/components/icons/Chevron'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
-import {EditBig_Stroke2_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
+import {EditBig_Stroke2_Corner2_Rounded as EditIcon} from '#/components/icons/EditBig'
 import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
 import {Lock_Stroke2_Corner0_Rounded as LockIcon} from '#/components/icons/Lock'
 import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons/Message'
@@ -70,9 +71,16 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
+import {InviteLinkDialog} from './components/InviteLinkDialog'
 
 const MEMBER_LIMIT = 50
 const ROW_SPACING = 10
+
+const dateFormatter = new Intl.DateTimeFormat(undefined, {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+})
 
 type Item =
   | {
@@ -83,7 +91,7 @@ type Item =
     }
   | {
       type: 'CHAT_MEMBER'
-      profile: Shadow<bsky.profile.AnyProfileView>
+      profile: bsky.profile.AnyProfileView
       status: 'owner' | 'standard' | 'invited'
     }
 
@@ -92,9 +100,6 @@ type Props = NativeStackScreenProps<
   'MessagesConversationSettings'
 >
 
-/**
- * TODO This is just layout for now.
- */
 export function MessagesConversationSettingsScreen({route}: Props) {
   const {gtTablet} = useBreakpoints()
 
@@ -138,6 +143,8 @@ function SettingsInner({convoId}: {convoId: string}) {
   const isOwner = !!primaryMember && primaryMember.did === currentAccount?.did
 
   const data: bsky.profile.AnyProfileView[] = convo?.members ?? []
+  // TODO Need this data in order to populate this array. -dsb
+  const invites: string[] = []
 
   const {data: joinRequestsData, hasNextPage: hasMoreRequests} =
     useListJoinRequestsQuery({
@@ -150,7 +157,7 @@ function SettingsInner({convoId}: {convoId: string}) {
       0,
     ) ?? 0
 
-  const items = [
+  const items: Item[] = [
     {
       type: 'MEMBERS_AND_REQUESTS',
     },
@@ -167,11 +174,18 @@ function SettingsInner({convoId}: {convoId: string}) {
         if (aIsSelf !== bIsSelf) return aIsSelf ? -1 : 1
         return 0
       })
-      .map(profile => ({
-        type: 'CHAT_MEMBER',
-        profile,
-        status: primaryMember?.did === profile.did ? 'owner' : 'standard',
-      })),
+      .map(
+        (profile): Item => ({
+          type: 'CHAT_MEMBER',
+          profile,
+          status:
+            primaryMember?.did === profile.did
+              ? 'owner'
+              : invites.includes(profile.did)
+                ? 'invited'
+                : 'standard',
+        }),
+      ),
   ]
 
   function renderItem({item}: {item: Item}) {
@@ -194,14 +208,14 @@ function SettingsInner({convoId}: {convoId: string}) {
           />
         )
       case 'CHAT_MEMBER':
-        return (
+        return convo ? (
           <Member
             convo={convo}
             profile={item.profile}
             status={item.status}
             isOwner={isOwner}
           />
-        )
+        ) : null
       default:
         return null
     }
@@ -209,14 +223,12 @@ function SettingsInner({convoId}: {convoId: string}) {
 
   if (convoState.status === ConvoStatus.Error) {
     return (
-      <>
-        <Error
-          title={l`Something went wrong`}
-          message={l`We couldn’t load this conversation’s settings`}
-          onRetry={() => convoState.error.retry()}
-          sideBorders={false}
-        />
-      </>
+      <Error
+        title={l`Something went wrong`}
+        message={l`We couldn’t load this conversation’s settings`}
+        onRetry={() => convoState.error.retry()}
+        sideBorders={false}
+      />
     )
   }
 
@@ -228,7 +240,7 @@ function SettingsInner({convoId}: {convoId: string}) {
       initialNumToRender={initialNumToRender}
       keyExtractor={keyExtractor}
       ListHeaderComponent={
-        convo ? (
+        convo?.kind === 'group' ? (
           <SettingsHeader convo={convo} isOwner={isOwner} />
         ) : (
           <SettingsHeaderPlaceholder />
@@ -258,9 +270,9 @@ function MembersAndRequests({
 
   return (
     <View style={[a.flex_row, a.justify_between, a.mx_xl, a.mt_lg, a.mb_sm]}>
-      <View style={[a.flex_row, a.align_center]}>
+      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
         <Text style={[a.text_lg, a.font_semi_bold, t.atoms.text]}>
-          <Trans>Members</Trans>{' '}
+          <Trans>Members</Trans>
         </Text>
         <Text
           style={[a.text_xs, a.font_medium, {color: t.palette.contrast_500}]}>
@@ -275,6 +287,7 @@ function MembersAndRequests({
         <InlineLinkText
           label={l`View incoming group chat requests`}
           style={[a.text_sm, a.text_right, a.font_semi_bold]}
+          // TODO Need to implement this. -dsb
           to="#">
           {hasMoreRequests
             ? l({
@@ -311,6 +324,9 @@ function AddMembersLink({
 
   const convoId = convo?.view.id
   const {mutate: addGroupMembers} = useAddGroupMembers(convoId, {
+    onSuccess: () => {
+      addMembersControl.close()
+    },
     onError: e => {
       logger.error('Failed to add group chat members', {message: e})
       Toast.show(l`Failed to add members`, {type: 'error'})
@@ -393,7 +409,6 @@ function AddMembersLink({
           title={l`Add members`}
           onAddMembers={members => {
             addGroupMembers({members})
-            addMembersControl.close()
           }}
         />
       </Dialog.Outer>
@@ -403,12 +418,12 @@ function AddMembersLink({
 
 function Member({
   convo,
-  profile,
+  profile: profileUnshadowed,
   status,
   isOwner,
 }: {
-  convo: ConvoWithDetails | null
-  profile: Shadow<bsky.profile.AnyProfileView>
+  convo: ConvoWithDetails
+  profile: bsky.profile.AnyProfileView
   status: 'owner' | 'standard' | 'invited'
   isOwner: boolean
 }) {
@@ -416,36 +431,32 @@ function Member({
   const t = useTheme()
   const {t: l} = useLingui()
 
+  const profile = useProfileShadow(profileUnshadowed)
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
-  const moderation = useMemo(
-    () =>
-      moderationOpts ? moderateProfile(profile, moderationOpts) : undefined,
-    [profile, moderationOpts],
-  )
+  const moderation = moderationOpts
+    ? moderateProfile(profile, moderationOpts)
+    : undefined
 
   if (!moderation) return null
 
   const isDeletedAccount = profile.handle === 'missing.invalid'
   const displayName = isDeletedAccount
     ? l`Deleted Account`
-    : sanitizeDisplayName(
-        profile.displayName || profile.handle,
-        moderation.ui('displayName'),
-      )
+    : createSanitizedDisplayName(profile, true, moderation.ui('displayName'))
 
+  const isSelf = currentAccount?.did === profile.did
   let statusBadge: React.ReactNode | null = null
-  if (currentAccount?.did === profile.did) {
-    switch (status) {
-      case 'owner':
-        statusBadge = <StatusBadge label={l`Admin`} />
-        break
+  if (isSelf) {
+    if (status === 'owner') {
+      statusBadge = <StatusBadge label={l`Admin`} />
     }
   } else {
     statusBadge = convo ? (
       <MemberMenu
         convo={convo}
         profile={profile}
+        displayName={displayName}
         type={status}
         isOwner={isOwner}
       />
@@ -454,42 +465,46 @@ function Member({
 
   return (
     <SubtleHoverWrapper>
-      <Pressable
-        accessibilityRole="button"
+      <View
         style={[
+          a.flex_row,
+          a.align_center,
+          a.justify_between,
           a.mx_xl,
           {
             marginTop: ROW_SPACING,
             marginBottom: ROW_SPACING,
           },
-        ]}
-        onPress={() => {
-          navigation.navigate('Profile', {name: profile.did})
-        }}>
-        <View style={[a.flex_row, a.align_center, a.justify_between]}>
-          <View style={[a.flex_row, a.align_center]}>
-            <PreviewableUserAvatar
-              profile={profile}
-              size={48}
-              moderation={moderation.ui('avatar')}
-            />
-            <View style={[a.mx_sm]}>
-              <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                {displayName}
-              </Text>
-              <Text
-                style={[
-                  a.text_xs,
-                  {color: t.palette.contrast_500},
-                  web(a.pt_2xs),
-                ]}>
-                {sanitizeHandle(profile.handle, '@')}
-              </Text>
-            </View>
+        ]}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={l`View ${displayName}’s profile`}
+          accessibilityHint={l`Opens this member’s profile`}
+          style={[a.flex_1, a.flex_row, a.align_center]}
+          onPress={() => {
+            navigation.navigate('Profile', {name: profile.did})
+          }}>
+          <PreviewableUserAvatar
+            profile={profile}
+            size={48}
+            moderation={moderation.ui('avatar')}
+          />
+          <View style={[a.mx_sm]}>
+            <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+              {displayName}
+            </Text>
+            <Text
+              style={[
+                a.text_xs,
+                {color: t.palette.contrast_500},
+                web(a.pt_2xs),
+              ]}>
+              {sanitizeHandle(profile.handle, '@')}
+            </Text>
           </View>
-          <View>{statusBadge}</View>
-        </View>
-      </Pressable>
+        </Pressable>
+        <View>{statusBadge}</View>
+      </View>
     </SubtleHoverWrapper>
   )
 }
@@ -497,72 +512,53 @@ function Member({
 function StatusBadge({
   label,
   style,
+  pressableProps,
 }: {
   label: string
   style?: StyleProp<ViewStyle>
+  pressableProps?: TriggerChildProps['props']
 }) {
   const t = useTheme()
 
-  return (
-    <View
-      style={[
-        a.rounded_xs,
-        t.atoms.bg_contrast_50,
-        {
-          paddingTop: 3,
-          paddingBottom: 3,
-          paddingLeft: 6,
-          paddingRight: 6,
-        },
-        style,
-      ]}>
-      <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
-        {label}
-      </Text>
-    </View>
-  )
-}
+  const badgeStyle = [
+    a.rounded_xs,
+    t.atoms.bg_contrast_50,
+    {
+      paddingTop: 3,
+      paddingBottom: 3,
+      paddingLeft: 6,
+      paddingRight: 6,
+    },
+    style,
+  ]
 
-function StatusButton({
-  label,
-  style,
-  ...rest
-}: {
-  label: string
-  style?: StyleProp<ViewStyle>
-} & TriggerChildProps['props']) {
-  const t = useTheme()
-
-  return (
-    <Pressable
-      style={[
-        a.rounded_xs,
-        t.atoms.bg_contrast_50,
-        {
-          paddingTop: 3,
-          paddingBottom: 3,
-          paddingLeft: 6,
-          paddingRight: 6,
-        },
-        style,
-      ]}
-      {...rest}>
-      <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
-        {label}
-      </Text>
-    </Pressable>
+  const labelText = (
+    <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
+      {label}
+    </Text>
   )
+
+  if (pressableProps) {
+    return (
+      <Pressable style={badgeStyle} {...pressableProps}>
+        {labelText}
+      </Pressable>
+    )
+  }
+  return <View style={badgeStyle}>{labelText}</View>
 }
 
 function MemberMenu({
   convo,
   profile,
+  displayName,
   type,
   isOwner,
 }: {
   convo: ConvoWithDetails
   profile: Shadow<bsky.profile.AnyProfileView>
   type: 'owner' | 'standard' | 'invited'
+  displayName: string
   isOwner: boolean
 }) {
   const navigation = useNavigation<NavigationProp>()
@@ -574,10 +570,13 @@ function MemberMenu({
 
   const blockMemberPrompt = Prompt.usePromptControl()
 
-  const {data: convoAvailability} = useGetConvoAvailabilityQuery(profile.did)
+  const [menuDidOpen, setMenuDidOpen] = useState(false)
+  const {data: convoAvailability} = useGetConvoAvailabilityQuery(profile.did, {
+    enabled: menuDidOpen,
+  })
   const {mutate: initiateConvo} = useGetConvoForMembers({
     onSuccess: ({convo}) => {
-      ax.metric('chat:open', {logContext: 'ProfileHeader'})
+      ax.metric('chat:open', {logContext: 'ConvoSettings'})
       navigation.navigate('MessagesConversation', {conversation: convo.id})
     },
     onError: () => {
@@ -599,12 +598,12 @@ function MemberMenu({
     }
 
     if (convoAvailability.convo) {
-      ax.metric('chat:open', {logContext: 'ProfileHeader'})
+      ax.metric('chat:open', {logContext: 'ConvoSettings'})
       navigation.navigate('MessagesConversation', {
         conversation: convoAvailability.convo.id,
       })
     } else {
-      ax.metric('chat:create', {logContext: 'ProfileHeader'})
+      ax.metric('chat:create', {logContext: 'ConvoSettings'})
       initiateConvo([profile.did])
     }
   }
@@ -625,7 +624,7 @@ function MemberMenu({
       } catch (err) {
         const e = err as Error
         if (e?.name !== 'AbortError') {
-          ax.logger.error('Failed to unblock account', {message: e})
+          logger.error('Failed to unblock account', {message: e})
           Toast.show(l`There was an issue! ${e.toString()}`, {
             type: 'error',
           })
@@ -638,7 +637,7 @@ function MemberMenu({
       } catch (err) {
         const e = err as Error
         if (e?.name !== 'AbortError') {
-          ax.logger.error('Failed to block account', {message: e})
+          logger.error('Failed to block account', {message: e})
           Toast.show(l`There was an issue! ${e.toString()}`, {
             type: 'error',
           })
@@ -647,32 +646,22 @@ function MemberMenu({
     }
   }
 
-  const moderationOpts = useModerationOpts()
-  const moderation = useMemo(
-    () =>
-      moderationOpts ? moderateProfile(profile, moderationOpts) : undefined,
-    [profile, moderationOpts],
-  )
-
-  if (!moderation) return null
-
-  const isDeletedAccount = profile.handle === 'missing.invalid'
-  const displayName = isDeletedAccount
-    ? l`Deleted Account`
-    : sanitizeDisplayName(
-        profile.displayName || profile.handle,
-        moderation.ui('displayName'),
-      )
-
   return (
     <>
       <Menu.Root>
         <Menu.Trigger label={l`Open chat member options for ${displayName}`}>
-          {({props, state, control: menuControl}) =>
-            type === 'owner' || type === 'invited' ? (
-              <StatusButton
-                {...props}
+          {({props, state, control: menuControl}) => {
+            const triggerProps = {
+              ...props,
+              onPress: () => {
+                setMenuDidOpen(true)
+                props.onPress()
+              },
+            }
+            return type === 'owner' || type === 'invited' ? (
+              <StatusBadge
                 label={type === 'owner' ? l`Admin` : l`Invited`}
+                pressableProps={triggerProps}
                 style={[
                   state.hovered || state.pressed || menuControl.isOpen
                     ? {
@@ -683,7 +672,7 @@ function MemberMenu({
               />
             ) : (
               <Pressable
-                {...props}
+                {...triggerProps}
                 style={[
                   a.rounded_full,
                   a.p_sm,
@@ -699,7 +688,7 @@ function MemberMenu({
                 />
               </Pressable>
             )
-          }
+          }}
         </Menu.Trigger>
         <Menu.Outer>
           <Menu.Group>
@@ -738,7 +727,7 @@ function MemberMenu({
                 <Menu.ItemIcon icon={PersonXIcon} />
               </Menu.Item>
             ) : null}
-            {isOwner ? (
+            {isOwner && type !== 'invited' ? (
               <Menu.Item
                 label={l`Remove ${displayName} from this group chat`}
                 onPress={() => removeMembers({members: [profile.did]})}>
@@ -751,6 +740,7 @@ function MemberMenu({
             {isOwner && type === 'invited' ? (
               <Menu.Item
                 label={l`Uninvite ${displayName} from this group chat`}
+                // TODO Need to wire up the uninvite flow. -dsb
                 onPress={() => {}}>
                 <Menu.ItemText>
                   <Trans>Uninvite</Trans>
@@ -773,7 +763,7 @@ function SettingsHeader({
   convo,
   isOwner,
 }: {
-  convo: ConvoWithDetails
+  convo: Extract<ConvoWithDetails, {kind: 'group'}>
   isOwner: boolean
 }) {
   const t = useTheme()
@@ -781,10 +771,19 @@ function SettingsHeader({
 
   const navigation = useNavigation<NavigationProp>()
 
-  const groupName = convo.kind === 'group' ? convo.details.name : ''
+  const groupName = convo.details.name
   const [newGroupName, setNewGroupName] = useState(groupName)
 
   const [isLocked, setIsLocked] = useState(false)
+
+  // TODO Enable this once the feature is working end-to-end. -dsb
+  // const {joinLink} = convo.details
+  const isJoinLinkEnabled = false
+  // const isJoinLinkEnabled =
+  //   isOwner || (!isOwner && joinLink?.enabledStatus === 'enabled')
+
+  // TODO Enable this once the feature is working end-to-end. -dsb
+  const isReportLinkEnabled = false
 
   const {mutate: editGroupName} = useEditGroupChatName(convo.view.id, {
     onError: e => {
@@ -813,7 +812,7 @@ function SettingsHeader({
   })
 
   const {mutate: leaveConvo} = useLeaveConvo(convo.view.id, {
-    onMutate: () => {
+    onSuccess: () => {
       navigation.dispatch(StackActions.pop(2))
     },
     onError: e => {
@@ -824,8 +823,8 @@ function SettingsHeader({
     },
   })
 
+  const inviteLinkDialog = Dialog.useDialogControl()
   const editNamePrompt = Prompt.usePromptControl()
-  const inviteLinkPrompt = Prompt.usePromptControl()
   const lockChatPrompt = Prompt.usePromptControl()
   const leaveChatPrompt = Prompt.usePromptControl()
 
@@ -833,31 +832,16 @@ function SettingsHeader({
     muteConvo({mute: !convo.view.muted})
   }
 
-  const handleLeaveChat = () => {
-    leaveChatPrompt.open()
-  }
-
+  // TODO Need to implement this when the backend is ready. -dsb
   const handleReportChat = () => {}
 
   const handlePromptName = () => {
+    setNewGroupName(groupName)
     editNamePrompt.open()
   }
 
   const handleEditName = () => {
     editGroupName({name: newGroupName})
-    editNamePrompt.close()
-  }
-
-  const handlePromptInviteLink = () => {
-    inviteLinkPrompt.open()
-  }
-
-  const handleConfirmInviteLink = () => {
-    inviteLinkPrompt.close()
-  }
-
-  const handlePromptLock = () => {
-    lockChatPrompt.open()
   }
 
   const handleConfirmLock = () => {
@@ -867,6 +851,9 @@ function SettingsHeader({
   const handleUnlock = () => {
     setIsLocked(false)
   }
+
+  // TODO The creation date doesn't exist yet. -dsb
+  const createdAt = new Date()
 
   return (
     <>
@@ -893,7 +880,7 @@ function SettingsHeader({
             a.px_xl,
             t.atoms.text_contrast_high,
           ]}>
-          Created April 2, 2026
+          <Trans>Created {dateFormatter.format(createdAt)}</Trans>
         </Text>
         <View
           style={[
@@ -922,12 +909,18 @@ function SettingsHeader({
               onPress={handlePromptName}
             />
           ) : null}
-          <SettingsButton
-            icon={ChainLinkIcon}
-            label={l`Create an invite link for this group chat`}
-            text={l`Invite link`}
-            onPress={handlePromptInviteLink}
-          />
+          {isJoinLinkEnabled ? (
+            <SettingsButton
+              icon={ChainLinkIcon}
+              label={
+                isOwner
+                  ? l`Create or modify an invite link for this group chat`
+                  : l`View the invite link for this group chat`
+              }
+              text={l`Invite link`}
+              onPress={inviteLinkDialog.open}
+            />
+          ) : null}
           {isOwner ? (
             <SettingsButton
               color={isLocked ? 'negative_subtle' : 'secondary'}
@@ -936,10 +929,10 @@ function SettingsHeader({
                 isLocked ? l`Unlock this group chat` : l`Lock this group chat`
               }
               text={isLocked ? l`Locked` : l`Lock`}
-              onPress={isLocked ? handleUnlock : handlePromptLock}
+              onPress={isLocked ? handleUnlock : lockChatPrompt.open}
             />
           ) : null}
-          {isOwner ? null : (
+          {isOwner ? null : isReportLinkEnabled ? (
             <SettingsButton
               color="secondary"
               icon={FlagIcon}
@@ -947,14 +940,14 @@ function SettingsHeader({
               text={l`Report`}
               onPress={handleReportChat}
             />
-          )}
+          ) : null}
           {isOwner ? null : (
             <SettingsButton
               color="secondary"
               icon={ArrowBoxLeftIcon}
               label={l`Leave this group chat`}
               text={l`Leave`}
-              onPress={handleLeaveChat}
+              onPress={leaveChatPrompt.open}
             />
           )}
         </View>
@@ -965,9 +958,10 @@ function SettingsHeader({
         onChangeText={setNewGroupName}
         onConfirm={handleEditName}
       />
-      <InviteLinkPrompt
-        control={inviteLinkPrompt}
-        onConfirm={handleConfirmInviteLink}
+      <InviteLinkDialog
+        convo={convo}
+        control={inviteLinkDialog}
+        isOwner={isOwner}
       />
       <LockChatPrompt control={lockChatPrompt} onConfirm={handleConfirmLock} />
       <LeaveChatPrompt
@@ -999,7 +993,7 @@ function SettingsHeaderPlaceholder() {
           a.px_xl,
           t.atoms.text_contrast_high,
         ]}>
-        <Trans>…</Trans>
+        …
       </Text>
       <View
         style={[
@@ -1120,36 +1114,11 @@ function EditNamePrompt({
           </View>
         </Prompt.Content>
         <Prompt.Actions>
-          <Prompt.Action
-            cta={l`Save`}
-            shouldCloseOnPress={false}
-            onPress={onConfirm}
-          />
+          <Prompt.Action cta={l`Save`} onPress={onConfirm} />
           <Prompt.Cancel />
         </Prompt.Actions>
       </>
     </Prompt.Outer>
-  )
-}
-
-function InviteLinkPrompt({
-  control,
-  onConfirm,
-}: {
-  control: Dialog.DialogOuterProps['control']
-  onConfirm: () => void
-}) {
-  const {t: l} = useLingui()
-
-  return (
-    <Prompt.Basic
-      control={control}
-      title={l`Invite link`}
-      description={l`An invite link lets people join this group chat without being added directly. You control who can use the link and whether they need your approval. You can disable the link at any time. Your name, avatar, and the name of the group chat will be visible to everyone.`}
-      confirmButtonCta={l`Get started`}
-      cancelButtonCta={l`Cancel`}
-      onConfirm={onConfirm}
-    />
   )
 }
 
