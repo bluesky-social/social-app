@@ -8,7 +8,7 @@ msgstr ""
 "Language: eu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-22 15:38\n"
+"PO-Revision-Date: 2026-04-23 20:56\n"
 "Last-Translator: \n"
 "Language-Team: Basque\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -253,7 +253,7 @@ msgstr "{0} erreakzioantu du {1}"
 #. placeholder {2}: lastMessageText ? `"${convo.lastReaction.message.text}"` : fallbackMessage
 #: src/screens/Messages/components/ChatListItem.tsx:352
 msgid "{0} reacted {1} to {2}"
-msgstr "{0} erreakzioantu du {1} {2}-i"
+msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(data.member)
 #: src/components/dms/systemMessage.ts:30
@@ -1363,7 +1363,7 @@ msgstr "Bluesky-k egiaztatzaile fidagarriak hautatzen dituela erakusten duen ilu
 
 #: src/screens/Messages/ConversationSettings.tsx:1087
 msgid "An invite link lets people join this group chat without being added directly. You control who can use the link and whether they need your approval. You can disable the link at any time. Your name, avatar, and the name of the group chat will be visible to everyone."
-msgstr ""
+msgstr "Gonbidapen-esteka batek txat taldean sartzeko aukera ematen dio jendeari zuzenean gehitu gabe. Esteka nork erabil dezakeen eta zure onespenaren beharra kontrolatzen dituzu. Esteka edozein unetan desgai dezakezu. Zure izena, abatarra eta txat taldearen izena guztientzat egongo dira ikusgai."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:239
 msgid "An issue not included in these options"
@@ -1720,7 +1720,7 @@ msgstr "{name}-ren posten jakinarazpenak jaso aurretik, zure helbide elektroniko
 #: src/components/dms/dialogs/NewChatDialog.tsx:94
 #: src/components/dms/MessageProfileButton.tsx:60
 #: src/screens/Messages/ChatList.tsx:380
-#: src/screens/Messages/Conversation.tsx:232
+#: src/screens/Messages/Conversation.tsx:235
 #: src/screens/Messages/ConversationSettings.tsx:552
 msgid "Before you can message another user, you must first verify your email."
 msgstr "Beste erabiltzaile bati mezua bidali aurretik, zure posta elektronikoa egiaztatu behar duzu."
@@ -2210,11 +2210,11 @@ msgstr "Txata ezabatuta"
 
 #: src/components/dms/systemMessage.ts:48
 msgid "Chat locked"
-msgstr ""
+msgstr "Txata itxita"
 
 #: src/components/dms/systemMessage.ts:52
 msgid "Chat locked permanently"
-msgstr ""
+msgstr "Txata betiko itxita"
 
 #: src/lib/hooks/useNotificationHandler.ts:117
 msgid "Chat messages - silent"
@@ -2256,11 +2256,11 @@ msgstr "Txataren Ezarpenak"
 #. placeholder {0}: data.newName ?? ''
 #: src/components/dms/systemMessage.ts:56
 msgid "Chat title changed to {0}"
-msgstr ""
+msgstr "Txataren izenburua {0}-ra aldatuta"
 
 #: src/components/dms/systemMessage.ts:50
 msgid "Chat unlocked"
-msgstr ""
+msgstr "Txata irekita"
 
 #: src/components/dms/ConvoMenu.tsx:204
 msgctxt "toast"
@@ -2766,7 +2766,7 @@ msgstr "Jarraitu taldearen izenera"
 msgid "Continue to next step"
 msgstr "Jarraitu hurrengo urratsera"
 
-#: src/screens/Messages/Conversation.tsx:64
+#: src/screens/Messages/Conversation.tsx:65
 msgid "Conversation"
 msgstr "Elkarrizketa"
 
@@ -3151,7 +3151,7 @@ msgstr "Arazketa panela"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:479
 msgid "Decline this language suggestion"
-msgstr ""
+msgstr "Uko egin hizkuntza-iradokizun honi"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:84
 msgid "Deepfake adult content"
@@ -4936,7 +4936,7 @@ msgstr "Itzuli"
 
 #: src/components/Error.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:228
-#: src/screens/Messages/Conversation.tsx:357
+#: src/screens/Messages/Conversation.tsx:360
 #: src/screens/Profile/ErrorState.tsx:63
 #: src/screens/Profile/ErrorState.tsx:67
 #: src/screens/StarterPack/StarterPackScreen.tsx:809
@@ -5064,13 +5064,13 @@ msgctxt "toast"
 msgid "Group chat unmuted"
 msgstr "Txat taldea desmututa dago"
 
-#: src/screens/Messages/Conversation.tsx:342
+#: src/screens/Messages/Conversation.tsx:345
 msgid "Group chats are not yet available"
-msgstr ""
+msgstr "Txat taldeak ez daude oraindik eskuragarri"
 
-#: src/screens/Messages/Conversation.tsx:340
+#: src/screens/Messages/Conversation.tsx:343
 msgid "Group chats are now available"
-msgstr ""
+msgstr "Txat taldeak eskuragarri daude orain"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:563
 msgid "Group is locked"
@@ -5690,19 +5690,19 @@ msgstr "Gonbidapen-esteka"
 
 #: src/components/dms/systemMessage.ts:59
 msgid "Invite link created"
-msgstr ""
+msgstr "Gonbidapen-esteka sortuta"
 
 #: src/components/dms/systemMessage.ts:65
 msgid "Invite link disabled"
-msgstr ""
+msgstr "Gonbidapen-esteka desgaituta"
 
 #: src/components/dms/systemMessage.ts:61
 msgid "Invite link edited"
-msgstr ""
+msgstr "Gonbidapen-esteka editatuta"
 
 #: src/components/dms/systemMessage.ts:63
 msgid "Invite link enabled"
-msgstr ""
+msgstr "Gonbidapen-esteka gaituta"
 
 #: src/components/StarterPack/ShareDialog.tsx:83
 msgid "Invite people to this starter pack!"
@@ -6696,7 +6696,7 @@ msgstr "Mututzea pribatua da. Mutututako kontuek zurekin elkarreragin dezakete, 
 #: src/components/dialogs/BirthDateSettings.tsx:46
 #: src/components/dialogs/BirthDateSettings.tsx:50
 msgid "My birthdate"
-msgstr ""
+msgstr "Nire jaiotze data"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:77
 msgid "My favorite feeds and people - join me!"
@@ -7995,7 +7995,7 @@ msgstr "Posteatu Dena"
 
 #: src/view/com/composer/Composer.tsx:1342
 msgid "Post anyway"
-msgstr ""
+msgstr "Posteatu hala ere"
 
 #: src/screens/PostThread/components/ThreadItemPostTombstone.tsx:22
 msgid "Post blocked"
@@ -9944,7 +9944,7 @@ msgstr "Saltatu kontaktuak partekatzea eta jarraitu aplikaziora"
 
 #: src/view/com/composer/Composer.tsx:1340
 msgid "Skip empty posts?"
-msgstr ""
+msgstr "Post hutsak saltatu?"
 
 #: src/screens/Onboarding/StepFinished/index.tsx:288
 #: src/screens/Onboarding/StepFinished/index.tsx:314
@@ -10005,13 +10005,13 @@ msgstr "Norbaitek erreakzionatu du {0}"
 #. placeholder {1}: lastMessageText ? `"${convo.lastReaction.message.text}"` : fallbackMessage
 #: src/screens/Messages/components/ChatListItem.tsx:360
 msgid "Someone reacted {0} to {1}"
-msgstr "Norbaitek erreakzionatu du {0} {1}-i"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/index.tsx:103
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr "Zerbait ez zegoen ondo salatzen saiatzen ari zaren datuekin. Mesedez, jarri laguntzarekin harremanetan."
 
-#: src/screens/Messages/Conversation.tsx:141
+#: src/screens/Messages/Conversation.tsx:144
 #: src/screens/Messages/ConversationSettings.tsx:198
 msgid "Something went wrong"
 msgstr "Zerbait gaizki joan da"
@@ -10373,7 +10373,7 @@ msgstr "Sakatu {0} erreakzio erakusteko"
 
 #: src/components/dms/ReactionsDialog.tsx:360
 msgid "Tap to show all reactions"
-msgstr ""
+msgstr "Sakatu erreakzio guztiak erakusteko"
 
 #: src/components/dms/MessageItem.tsx:313
 msgid "Tap to view reactions"
@@ -10550,7 +10550,7 @@ msgstr "Zure eskualdeko legeek heldua zarela egiaztatzea eskatzen dute funtzio b
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:410
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
-msgstr ""
+msgstr "Erantzuten ari zaren posta {suggestedLanguageName} hizkuntzan idatzita dagoela markatu du egileak. <0>{suggestedLanguageName}</0> hizkuntzan erantzun nahi al duzu?"
 
 #: src/view/screens/PrivacyPolicy.tsx:29
 msgid "The Privacy Policy has been moved to <0/>"
@@ -10825,9 +10825,9 @@ msgstr "Ezaugarri hau ez dago erabilgarri aplikazioaren pasahitza erabiltzen duz
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr "Ezaugarri hau ez dago erabilgarri aplikazioaren pasahitza erabiltzen duzun bitartean. Mesedez, hasi saioa zure pasahitz nagusiarekin."
 
-#: src/screens/Messages/Conversation.tsx:349
+#: src/screens/Messages/Conversation.tsx:352
 msgid "This feature isn't available to you yet. Please check back later."
-msgstr ""
+msgstr "Ezaugarri hau ez dago oraindik eskuragarri zuretzat. Mesedez, saiatu berriro geroago."
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:128
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
@@ -11499,9 +11499,9 @@ msgstr "Eguneratu posta elektronikoa"
 msgid "Update to {domain}"
 msgstr "Eguneratu {domain}ra"
 
-#: src/screens/Messages/Conversation.tsx:347
+#: src/screens/Messages/Conversation.tsx:350
 msgid "Update your app to the latest version to join in!"
-msgstr ""
+msgstr "Eguneratu zure aplikazioa azken bertsiora parte hartzeko!"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:204
 msgid "Update your email"
@@ -12056,7 +12056,7 @@ msgstr "Ezin izan dugu etiketa horren emaitzarik aurkitu."
 msgid "We couldn't find any results for that topic."
 msgstr "Ezin izan dugu gai horren emaitzarik aurkitu."
 
-#: src/screens/Messages/Conversation.tsx:142
+#: src/screens/Messages/Conversation.tsx:145
 msgid "We couldn't load this conversation"
 msgstr "Ezin izan dugu kargatu elkarrizketa hau"
 
@@ -12725,7 +12725,7 @@ msgstr "Erreakzionatu duzu {0}"
 #. placeholder {1}: lastMessageText ? `"${convo.lastReaction.message.text}"` : fallbackMessage
 #: src/screens/Messages/components/ChatListItem.tsx:341
 msgid "You reacted {0} to {1}"
-msgstr "Erreakzionatu duzu {0} {1}-i"
+msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:87
 #: src/components/dialogs/BirthDateSettings.tsx:97
@@ -12761,15 +12761,15 @@ msgstr "Ezin izango zara berriro sartu gonbidatuta ez bazaude."
 #. placeholder {0}: convo.lastMessage.text
 #: src/screens/Messages/components/ChatListItem.tsx:279
 msgid "You: {0}"
-msgstr "Zu: {0}"
+msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:306
 msgid "You: {defaultEmbeddedContentMessage}"
-msgstr "Zu: {defaultEmbeddedContentMessage}"
+msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:299
 msgid "You: {short}"
-msgstr "Zu: {short}"
+msgstr ""
 
 #: src/screens/Signup/index.tsx:152
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
@@ -13035,7 +13035,7 @@ msgstr "Aukeratutako interesek gogoko duzun edukia zerbitzatzen laguntzen digute
 
 #: src/view/com/composer/Composer.tsx:1341
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
-msgstr ""
+msgstr "Zure hariak saltatuko diren post hutsak ditu. Gainerako postak hari gisa argitaratuko dira."
 
 #: src/components/verification/VerificationsDialog.tsx:67
 msgid "Your verifications"

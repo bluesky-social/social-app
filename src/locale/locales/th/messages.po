@@ -8,7 +8,7 @@ msgstr ""
 "Language: th\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-22 15:38\n"
+"PO-Revision-Date: 2026-04-23 20:56\n"
 "Last-Translator: \n"
 "Language-Team: Thai\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1720,7 +1720,7 @@ msgstr ""
 #: src/components/dms/dialogs/NewChatDialog.tsx:94
 #: src/components/dms/MessageProfileButton.tsx:60
 #: src/screens/Messages/ChatList.tsx:380
-#: src/screens/Messages/Conversation.tsx:232
+#: src/screens/Messages/Conversation.tsx:235
 #: src/screens/Messages/ConversationSettings.tsx:552
 msgid "Before you can message another user, you must first verify your email."
 msgstr ""
@@ -2766,7 +2766,7 @@ msgstr ""
 msgid "Continue to next step"
 msgstr "ดำเนินการต่อไปยังขั้นตอนถัดไป"
 
-#: src/screens/Messages/Conversation.tsx:64
+#: src/screens/Messages/Conversation.tsx:65
 msgid "Conversation"
 msgstr ""
 
@@ -4936,7 +4936,7 @@ msgstr "กลับ"
 
 #: src/components/Error.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:228
-#: src/screens/Messages/Conversation.tsx:357
+#: src/screens/Messages/Conversation.tsx:360
 #: src/screens/Profile/ErrorState.tsx:63
 #: src/screens/Profile/ErrorState.tsx:67
 #: src/screens/StarterPack/StarterPackScreen.tsx:809
@@ -5064,11 +5064,11 @@ msgctxt "toast"
 msgid "Group chat unmuted"
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:342
+#: src/screens/Messages/Conversation.tsx:345
 msgid "Group chats are not yet available"
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:340
+#: src/screens/Messages/Conversation.tsx:343
 msgid "Group chats are now available"
 msgstr ""
 
@@ -10011,7 +10011,7 @@ msgstr ""
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:141
+#: src/screens/Messages/Conversation.tsx:144
 #: src/screens/Messages/ConversationSettings.tsx:198
 msgid "Something went wrong"
 msgstr "เกิดข้อผิดพลาดบางอย่าง"
@@ -10825,7 +10825,7 @@ msgstr ""
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:349
+#: src/screens/Messages/Conversation.tsx:352
 msgid "This feature isn't available to you yet. Please check back later."
 msgstr ""
 
@@ -11499,7 +11499,7 @@ msgstr ""
 msgid "Update to {domain}"
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:347
+#: src/screens/Messages/Conversation.tsx:350
 msgid "Update your app to the latest version to join in!"
 msgstr ""
 
@@ -12056,7 +12056,7 @@ msgstr ""
 msgid "We couldn't find any results for that topic."
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:142
+#: src/screens/Messages/Conversation.tsx:145
 msgid "We couldn't load this conversation"
 msgstr "เราไม่สามารถโหลดการสนทนานี้ได้"
 
@@ -12761,15 +12761,15 @@ msgstr ""
 #. placeholder {0}: convo.lastMessage.text
 #: src/screens/Messages/components/ChatListItem.tsx:279
 msgid "You: {0}"
-msgstr "คุณ: {0}"
+msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:306
 msgid "You: {defaultEmbeddedContentMessage}"
-msgstr "คุณ: {defaultEmbeddedContentMessage}"
+msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:299
 msgid "You: {short}"
-msgstr "คุณ: {short}"
+msgstr ""
 
 #: src/screens/Signup/index.tsx:152
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"

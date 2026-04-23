@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-22 15:38\n"
+"PO-Revision-Date: 2026-04-23 20:56\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -253,7 +253,7 @@ msgstr "{0} a reacționat {1}"
 #. placeholder {2}: lastMessageText ? `"${convo.lastReaction.message.text}"` : fallbackMessage
 #: src/screens/Messages/components/ChatListItem.tsx:352
 msgid "{0} reacted {1} to {2}"
-msgstr "{0} a reacționat {1} la {2}"
+msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(data.member)
 #: src/components/dms/systemMessage.ts:30
@@ -1720,7 +1720,7 @@ msgstr "Înainte de a primi notificări despre postările noi de la {name}, treb
 #: src/components/dms/dialogs/NewChatDialog.tsx:94
 #: src/components/dms/MessageProfileButton.tsx:60
 #: src/screens/Messages/ChatList.tsx:380
-#: src/screens/Messages/Conversation.tsx:232
+#: src/screens/Messages/Conversation.tsx:235
 #: src/screens/Messages/ConversationSettings.tsx:552
 msgid "Before you can message another user, you must first verify your email."
 msgstr "Înainte de a putea trimite mesaje unui alt utilizator, trebuie mai întâi să vă verificați adresa de e-mail."
@@ -2210,11 +2210,11 @@ msgstr "Conversație ștearsă"
 
 #: src/components/dms/systemMessage.ts:48
 msgid "Chat locked"
-msgstr ""
+msgstr "Conversație blocată"
 
 #: src/components/dms/systemMessage.ts:52
 msgid "Chat locked permanently"
-msgstr ""
+msgstr "Conversație blocată permanent"
 
 #: src/lib/hooks/useNotificationHandler.ts:117
 msgid "Chat messages - silent"
@@ -2256,11 +2256,11 @@ msgstr "Setări conversație"
 #. placeholder {0}: data.newName ?? ''
 #: src/components/dms/systemMessage.ts:56
 msgid "Chat title changed to {0}"
-msgstr ""
+msgstr "Titlul conversației a fost modificat în {0}"
 
 #: src/components/dms/systemMessage.ts:50
 msgid "Chat unlocked"
-msgstr ""
+msgstr "Conversație deblocată"
 
 #: src/components/dms/ConvoMenu.tsx:204
 msgctxt "toast"
@@ -2766,7 +2766,7 @@ msgstr "Continuați la numele grupului"
 msgid "Continue to next step"
 msgstr "Continuați la pasul următor"
 
-#: src/screens/Messages/Conversation.tsx:64
+#: src/screens/Messages/Conversation.tsx:65
 msgid "Conversation"
 msgstr "Conversație"
 
@@ -3151,7 +3151,7 @@ msgstr "Panou de depanare"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:479
 msgid "Decline this language suggestion"
-msgstr ""
+msgstr "Refuzați această sugestie de limbă"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:84
 msgid "Deepfake adult content"
@@ -4936,7 +4936,7 @@ msgstr "Mergeți înapoi"
 
 #: src/components/Error.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:228
-#: src/screens/Messages/Conversation.tsx:357
+#: src/screens/Messages/Conversation.tsx:360
 #: src/screens/Profile/ErrorState.tsx:63
 #: src/screens/Profile/ErrorState.tsx:67
 #: src/screens/StarterPack/StarterPackScreen.tsx:809
@@ -5064,13 +5064,13 @@ msgctxt "toast"
 msgid "Group chat unmuted"
 msgstr "Conversație de grup dezamuțită"
 
-#: src/screens/Messages/Conversation.tsx:342
+#: src/screens/Messages/Conversation.tsx:345
 msgid "Group chats are not yet available"
-msgstr ""
+msgstr "Conversațiile de grup nu sunt încă disponibile"
 
-#: src/screens/Messages/Conversation.tsx:340
+#: src/screens/Messages/Conversation.tsx:343
 msgid "Group chats are now available"
-msgstr ""
+msgstr "Conversațiile de grup sunt acum disponibile"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:563
 msgid "Group is locked"
@@ -5690,19 +5690,19 @@ msgstr "Link de invitație"
 
 #: src/components/dms/systemMessage.ts:59
 msgid "Invite link created"
-msgstr ""
+msgstr "Link de invitație creat"
 
 #: src/components/dms/systemMessage.ts:65
 msgid "Invite link disabled"
-msgstr ""
+msgstr "Link de invitație dezactivat"
 
 #: src/components/dms/systemMessage.ts:61
 msgid "Invite link edited"
-msgstr ""
+msgstr "Link de invitație editat"
 
 #: src/components/dms/systemMessage.ts:63
 msgid "Invite link enabled"
-msgstr ""
+msgstr "Link de invitație activat"
 
 #: src/components/StarterPack/ShareDialog.tsx:83
 msgid "Invite people to this starter pack!"
@@ -10005,13 +10005,13 @@ msgstr "Cineva a reacționat cu {0}"
 #. placeholder {1}: lastMessageText ? `"${convo.lastReaction.message.text}"` : fallbackMessage
 #: src/screens/Messages/components/ChatListItem.tsx:360
 msgid "Someone reacted {0} to {1}"
-msgstr "Cineva a reacționat cu {0} la {1}"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/index.tsx:103
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr "Ceva nu a fost în regulă cu datele pe care încercați să le raportați. Vă rugăm să contactați asistența."
 
-#: src/screens/Messages/Conversation.tsx:141
+#: src/screens/Messages/Conversation.tsx:144
 #: src/screens/Messages/ConversationSettings.tsx:198
 msgid "Something went wrong"
 msgstr "Ceva nu a mers bine"
@@ -10550,7 +10550,7 @@ msgstr "Legislația din regiunea dvs. necesită verificarea vârstei pentru a ac
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:410
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
-msgstr ""
+msgstr "Postarea la care răspundeți a fost marcată ca fiind scrisă în {suggestedLanguageName} de către autorul său. Doriții să răspundeți în <0>{suggestedLanguageName}</0>?"
 
 #: src/view/screens/PrivacyPolicy.tsx:29
 msgid "The Privacy Policy has been moved to <0/>"
@@ -10825,9 +10825,9 @@ msgstr "Această caracteristică nu este disponibilă când utilizați o parolă
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr "Această caracteristică nu este disponibilă când utilizați o Parolă de Aplicație. Vă rugăm să vă conectați cu parola principală."
 
-#: src/screens/Messages/Conversation.tsx:349
+#: src/screens/Messages/Conversation.tsx:352
 msgid "This feature isn't available to you yet. Please check back later."
-msgstr ""
+msgstr "Această caracteristică nu este încă disponibilă pentru dvs. Vă rugăm să verificați din nou mai târziu."
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:128
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
@@ -11499,9 +11499,9 @@ msgstr "Actualizare e-mail"
 msgid "Update to {domain}"
 msgstr "Actualizare la {domain}"
 
-#: src/screens/Messages/Conversation.tsx:347
+#: src/screens/Messages/Conversation.tsx:350
 msgid "Update your app to the latest version to join in!"
-msgstr ""
+msgstr "Actualizați aplicația la cea mai recentă versiune pentru a vă alătura!"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:204
 msgid "Update your email"
@@ -12056,7 +12056,7 @@ msgstr "Nu am putut găsi niciun rezultat pentru acea etichetă."
 msgid "We couldn't find any results for that topic."
 msgstr "Nu am putut găsi niciun rezultat pentru acest subiect."
 
-#: src/screens/Messages/Conversation.tsx:142
+#: src/screens/Messages/Conversation.tsx:145
 msgid "We couldn't load this conversation"
 msgstr "Nu am putut încărca această conversație"
 
@@ -12725,7 +12725,7 @@ msgstr "Ați reacționat cu {0}"
 #. placeholder {1}: lastMessageText ? `"${convo.lastReaction.message.text}"` : fallbackMessage
 #: src/screens/Messages/components/ChatListItem.tsx:341
 msgid "You reacted {0} to {1}"
-msgstr "Ați reacționat cu {0} la {1}"
+msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:87
 #: src/components/dialogs/BirthDateSettings.tsx:97
@@ -12761,15 +12761,15 @@ msgstr "Nu vă veți putea alătura decât dacă sunteți invitat."
 #. placeholder {0}: convo.lastMessage.text
 #: src/screens/Messages/components/ChatListItem.tsx:279
 msgid "You: {0}"
-msgstr "Dvs.: {0}"
+msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:306
 msgid "You: {defaultEmbeddedContentMessage}"
-msgstr "Dvs.: {defaultEmbeddedContentMessage}"
+msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:299
 msgid "You: {short}"
-msgstr "Dvs.: {short}"
+msgstr ""
 
 #: src/screens/Signup/index.tsx:152
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"

@@ -1715,7 +1715,7 @@ msgstr ""
 #: src/components/dms/dialogs/NewChatDialog.tsx:94
 #: src/components/dms/MessageProfileButton.tsx:60
 #: src/screens/Messages/ChatList.tsx:380
-#: src/screens/Messages/Conversation.tsx:232
+#: src/screens/Messages/Conversation.tsx:235
 #: src/screens/Messages/ConversationSettings.tsx:552
 msgid "Before you can message another user, you must first verify your email."
 msgstr ""
@@ -2761,7 +2761,7 @@ msgstr "Continue to group name"
 msgid "Continue to next step"
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:64
+#: src/screens/Messages/Conversation.tsx:65
 msgid "Conversation"
 msgstr ""
 
@@ -4931,7 +4931,7 @@ msgstr ""
 
 #: src/components/Error.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:228
-#: src/screens/Messages/Conversation.tsx:357
+#: src/screens/Messages/Conversation.tsx:360
 #: src/screens/Profile/ErrorState.tsx:63
 #: src/screens/Profile/ErrorState.tsx:67
 #: src/screens/StarterPack/StarterPackScreen.tsx:809
@@ -5059,11 +5059,11 @@ msgctxt "toast"
 msgid "Group chat unmuted"
 msgstr "Group chat unmuted"
 
-#: src/screens/Messages/Conversation.tsx:342
+#: src/screens/Messages/Conversation.tsx:345
 msgid "Group chats are not yet available"
 msgstr "Group chats are not yet available"
 
-#: src/screens/Messages/Conversation.tsx:340
+#: src/screens/Messages/Conversation.tsx:343
 msgid "Group chats are now available"
 msgstr "Group chats are now available"
 
@@ -10006,7 +10006,7 @@ msgstr ""
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:141
+#: src/screens/Messages/Conversation.tsx:144
 #: src/screens/Messages/ConversationSettings.tsx:198
 msgid "Something went wrong"
 msgstr ""
@@ -10820,7 +10820,7 @@ msgstr ""
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:349
+#: src/screens/Messages/Conversation.tsx:352
 msgid "This feature isn't available to you yet. Please check back later."
 msgstr "This feature isn't available to you yet. Please check back later."
 
@@ -11494,7 +11494,7 @@ msgstr ""
 msgid "Update to {domain}"
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:347
+#: src/screens/Messages/Conversation.tsx:350
 msgid "Update your app to the latest version to join in!"
 msgstr "Update your app to the latest version to join in!"
 
@@ -12051,7 +12051,7 @@ msgstr ""
 msgid "We couldn't find any results for that topic."
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:142
+#: src/screens/Messages/Conversation.tsx:145
 msgid "We couldn't load this conversation"
 msgstr ""
 

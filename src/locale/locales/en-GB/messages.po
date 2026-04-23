@@ -8,7 +8,7 @@ msgstr ""
 "Language: en_GB\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-22 15:38\n"
+"PO-Revision-Date: 2026-04-23 20:56\n"
 "Last-Translator: \n"
 "Language-Team: English, United Kingdom\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -218,7 +218,7 @@ msgstr "{0} is not supported by your device."
 #. placeholder {0}: createSanitizedDisplayName(data.member)
 #: src/components/dms/systemMessage.ts:40
 msgid "{0} joined the group"
-msgstr "{0} joined the group"
+msgstr ""
 
 #. placeholder {0}: formatCount(i18n, JOINED_THIS_WEEK)
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:232
@@ -228,7 +228,7 @@ msgstr "{0} joined this week"
 #. placeholder {0}: createSanitizedDisplayName(data.member)
 #: src/components/dms/systemMessage.ts:45
 msgid "{0} left the group"
-msgstr "{0} left the group"
+msgstr ""
 
 #. placeholder {0}: formatTime(currentTime)
 #. placeholder {1}: formatTime(duration)
@@ -253,17 +253,17 @@ msgstr "{0} reacted {1}"
 #. placeholder {2}: lastMessageText ? `"${convo.lastReaction.message.text}"` : fallbackMessage
 #: src/screens/Messages/components/ChatListItem.tsx:352
 msgid "{0} reacted {1} to {2}"
-msgstr "{0} reacted {1} to {2}"
+msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(data.member)
 #: src/components/dms/systemMessage.ts:30
 msgid "{0} was added to the group"
-msgstr "{0} was added to the group"
+msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(data.member)
 #: src/components/dms/systemMessage.ts:35
 msgid "{0} was removed from the group"
-msgstr "{0} was removed from the group"
+msgstr ""
 
 #. placeholder {0}: feed.displayName
 #. placeholder {1}: sanitizeHandle(feed.creatorHandle, '@')
@@ -1720,7 +1720,7 @@ msgstr "Before you can get notifications for {name}'s posts, you must first veri
 #: src/components/dms/dialogs/NewChatDialog.tsx:94
 #: src/components/dms/MessageProfileButton.tsx:60
 #: src/screens/Messages/ChatList.tsx:380
-#: src/screens/Messages/Conversation.tsx:232
+#: src/screens/Messages/Conversation.tsx:235
 #: src/screens/Messages/ConversationSettings.tsx:552
 msgid "Before you can message another user, you must first verify your email."
 msgstr "Before you can message another user, you must first verify your email."
@@ -2766,7 +2766,7 @@ msgstr "Continue to group name"
 msgid "Continue to next step"
 msgstr "Continue to next step"
 
-#: src/screens/Messages/Conversation.tsx:64
+#: src/screens/Messages/Conversation.tsx:65
 msgid "Conversation"
 msgstr "Conversation"
 
@@ -4936,7 +4936,7 @@ msgstr "Go back"
 
 #: src/components/Error.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:228
-#: src/screens/Messages/Conversation.tsx:357
+#: src/screens/Messages/Conversation.tsx:360
 #: src/screens/Profile/ErrorState.tsx:63
 #: src/screens/Profile/ErrorState.tsx:67
 #: src/screens/StarterPack/StarterPackScreen.tsx:809
@@ -5064,11 +5064,11 @@ msgctxt "toast"
 msgid "Group chat unmuted"
 msgstr "Group chat unmuted"
 
-#: src/screens/Messages/Conversation.tsx:342
+#: src/screens/Messages/Conversation.tsx:345
 msgid "Group chats are not yet available"
 msgstr "Group chats are not yet available"
 
-#: src/screens/Messages/Conversation.tsx:340
+#: src/screens/Messages/Conversation.tsx:343
 msgid "Group chats are now available"
 msgstr "Group chats are now available"
 
@@ -10005,13 +10005,13 @@ msgstr "Someone reacted {0}"
 #. placeholder {1}: lastMessageText ? `"${convo.lastReaction.message.text}"` : fallbackMessage
 #: src/screens/Messages/components/ChatListItem.tsx:360
 msgid "Someone reacted {0} to {1}"
-msgstr "Someone reacted {0} to {1}"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/index.tsx:103
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr "Something wasn't quite right with the data you're trying to report. Please contact support."
 
-#: src/screens/Messages/Conversation.tsx:141
+#: src/screens/Messages/Conversation.tsx:144
 #: src/screens/Messages/ConversationSettings.tsx:198
 msgid "Something went wrong"
 msgstr "Something went wrong"
@@ -10825,7 +10825,7 @@ msgstr "This feature is not available while using an app password. Please sign i
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr "This feature is not available while using an App Password. Please sign in with your main password."
 
-#: src/screens/Messages/Conversation.tsx:349
+#: src/screens/Messages/Conversation.tsx:352
 msgid "This feature isn't available to you yet. Please check back later."
 msgstr "This feature isn't available to you yet. Please check back later."
 
@@ -11499,7 +11499,7 @@ msgstr "Update email"
 msgid "Update to {domain}"
 msgstr "Update to {domain}"
 
-#: src/screens/Messages/Conversation.tsx:347
+#: src/screens/Messages/Conversation.tsx:350
 msgid "Update your app to the latest version to join in!"
 msgstr "Update your app to the latest version to join in!"
 
@@ -12056,7 +12056,7 @@ msgstr "We couldn't find any results for that tag."
 msgid "We couldn't find any results for that topic."
 msgstr "We couldn't find any results for that topic."
 
-#: src/screens/Messages/Conversation.tsx:142
+#: src/screens/Messages/Conversation.tsx:145
 msgid "We couldn't load this conversation"
 msgstr "We couldn't load this conversation"
 
@@ -12725,7 +12725,7 @@ msgstr "You reacted {0}"
 #. placeholder {1}: lastMessageText ? `"${convo.lastReaction.message.text}"` : fallbackMessage
 #: src/screens/Messages/components/ChatListItem.tsx:341
 msgid "You reacted {0} to {1}"
-msgstr "You reacted {0} to {1}"
+msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:87
 #: src/components/dialogs/BirthDateSettings.tsx:97
@@ -12761,15 +12761,15 @@ msgstr "You won’t be able to rejoin unless you’re invited."
 #. placeholder {0}: convo.lastMessage.text
 #: src/screens/Messages/components/ChatListItem.tsx:279
 msgid "You: {0}"
-msgstr "You: {0}"
+msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:306
 msgid "You: {defaultEmbeddedContentMessage}"
-msgstr "You: {defaultEmbeddedContentMessage}"
+msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:299
 msgid "You: {short}"
-msgstr "You: {short}"
+msgstr ""
 
 #: src/screens/Signup/index.tsx:152
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"

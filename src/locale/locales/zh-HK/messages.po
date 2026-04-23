@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-22 15:38\n"
+"PO-Revision-Date: 2026-04-23 20:56\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -218,7 +218,7 @@ msgstr "你嘅裝置唔支援翻譯{0}。"
 #. placeholder {0}: createSanitizedDisplayName(data.member)
 #: src/components/dms/systemMessage.ts:40
 msgid "{0} joined the group"
-msgstr "{0} 加入咗羣組"
+msgstr ""
 
 #. placeholder {0}: formatCount(i18n, JOINED_THIS_WEEK)
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:232
@@ -228,7 +228,7 @@ msgstr "呢個禮拜有 {0} 人加入"
 #. placeholder {0}: createSanitizedDisplayName(data.member)
 #: src/components/dms/systemMessage.ts:45
 msgid "{0} left the group"
-msgstr "{0} 離開咗羣組"
+msgstr ""
 
 #. placeholder {0}: formatTime(currentTime)
 #. placeholder {1}: formatTime(duration)
@@ -253,17 +253,17 @@ msgstr "{0} 畀咗個 {1} 反應"
 #. placeholder {2}: lastMessageText ? `"${convo.lastReaction.message.text}"` : fallbackMessage
 #: src/screens/Messages/components/ChatListItem.tsx:352
 msgid "{0} reacted {1} to {2}"
-msgstr "{0} 向 {2} 畀咗個 {1} 反應"
+msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(data.member)
 #: src/components/dms/systemMessage.ts:30
 msgid "{0} was added to the group"
-msgstr "{0} 已被加入羣組"
+msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(data.member)
 #: src/components/dms/systemMessage.ts:35
 msgid "{0} was removed from the group"
-msgstr "{0} 已被移出羣組"
+msgstr ""
 
 #. placeholder {0}: feed.displayName
 #. placeholder {1}: sanitizeHandle(feed.creatorHandle, '@')
@@ -1720,7 +1720,7 @@ msgstr "喺你接收 {name} 帖文通知之前，你必須驗證你嘅電郵。"
 #: src/components/dms/dialogs/NewChatDialog.tsx:94
 #: src/components/dms/MessageProfileButton.tsx:60
 #: src/screens/Messages/ChatList.tsx:380
-#: src/screens/Messages/Conversation.tsx:232
+#: src/screens/Messages/Conversation.tsx:235
 #: src/screens/Messages/ConversationSettings.tsx:552
 msgid "Before you can message another user, you must first verify your email."
 msgstr "喺你傳送訊息畀其他人之前，你必須驗證你嘅電郵先。"
@@ -2766,7 +2766,7 @@ msgstr "繼續設定羣組名稱"
 msgid "Continue to next step"
 msgstr "繼續去下一步"
 
-#: src/screens/Messages/Conversation.tsx:64
+#: src/screens/Messages/Conversation.tsx:65
 msgid "Conversation"
 msgstr "對話"
 
@@ -3151,7 +3151,7 @@ msgstr "偵錯面板"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:479
 msgid "Decline this language suggestion"
-msgstr ""
+msgstr "拒絕此建議語言"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:84
 msgid "Deepfake adult content"
@@ -4936,7 +4936,7 @@ msgstr "返去"
 
 #: src/components/Error.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:228
-#: src/screens/Messages/Conversation.tsx:357
+#: src/screens/Messages/Conversation.tsx:360
 #: src/screens/Profile/ErrorState.tsx:63
 #: src/screens/Profile/ErrorState.tsx:67
 #: src/screens/StarterPack/StarterPackScreen.tsx:809
@@ -5064,11 +5064,11 @@ msgctxt "toast"
 msgid "Group chat unmuted"
 msgstr "已唔再靜音羣組傾偈"
 
-#: src/screens/Messages/Conversation.tsx:342
+#: src/screens/Messages/Conversation.tsx:345
 msgid "Group chats are not yet available"
 msgstr "羣組傾偈暫時用唔到"
 
-#: src/screens/Messages/Conversation.tsx:340
+#: src/screens/Messages/Conversation.tsx:343
 msgid "Group chats are now available"
 msgstr "羣組傾偈現已推出"
 
@@ -10005,13 +10005,13 @@ msgstr "有人畀咗個 {0} 反應"
 #. placeholder {1}: lastMessageText ? `"${convo.lastReaction.message.text}"` : fallbackMessage
 #: src/screens/Messages/components/ChatListItem.tsx:360
 msgid "Someone reacted {0} to {1}"
-msgstr "有人向 {1} 畀咗個 {0} 反應"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/index.tsx:103
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr "你想擧報嘅內容好似有啲唔啱，請聯絡支援取得協助。"
 
-#: src/screens/Messages/Conversation.tsx:141
+#: src/screens/Messages/Conversation.tsx:144
 #: src/screens/Messages/ConversationSettings.tsx:198
 msgid "Something went wrong"
 msgstr "出咗問題"
@@ -10550,7 +10550,7 @@ msgstr "你所在地區嘅法例需要先驗證你係成年人，先至可以喺
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:410
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
-msgstr ""
+msgstr "你覆緊嘅帖文，發布者標記咗係用 {suggestedLanguageName} 寫嘅。係咪要將回覆語言改成 <0>{suggestedLanguageName}</0> 嚟覆佢？"
 
 #: src/view/screens/PrivacyPolicy.tsx:29
 msgid "The Privacy Policy has been moved to <0/>"
@@ -10825,7 +10825,7 @@ msgstr "呢個功能喺用應用程式專用密碼嗰陣唔畀用，請用你嘅
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr "呢個功能喺用應用程式專用密碼嗰陣唔畀用，請用返你嘅主要密碼登入。"
 
-#: src/screens/Messages/Conversation.tsx:349
+#: src/screens/Messages/Conversation.tsx:352
 msgid "This feature isn't available to you yet. Please check back later."
 msgstr "你暫時仲未用得呢個功能，唔該遲啲再嚟睇下啦。"
 
@@ -11499,7 +11499,7 @@ msgstr "更新電郵"
 msgid "Update to {domain}"
 msgstr "更新成 {domain}"
 
-#: src/screens/Messages/Conversation.tsx:347
+#: src/screens/Messages/Conversation.tsx:350
 msgid "Update your app to the latest version to join in!"
 msgstr "更新 App 至最新版本即可加入！"
 
@@ -12056,7 +12056,7 @@ msgstr "我哋搵唔到同呢個標籤有挐掕嘅結果。"
 msgid "We couldn't find any results for that topic."
 msgstr "我哋搵唔到同呢個話題有挐掕嘅結果。"
 
-#: src/screens/Messages/Conversation.tsx:142
+#: src/screens/Messages/Conversation.tsx:145
 msgid "We couldn't load this conversation"
 msgstr "我哋撈唔到呢個對話"
 
@@ -12725,7 +12725,7 @@ msgstr "你畀咗個 {0} 反應"
 #. placeholder {1}: lastMessageText ? `"${convo.lastReaction.message.text}"` : fallbackMessage
 #: src/screens/Messages/components/ChatListItem.tsx:341
 msgid "You reacted {0} to {1}"
-msgstr "你向 {1} 畀咗個 {0} 反應"
+msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:87
 #: src/components/dialogs/BirthDateSettings.tsx:97
@@ -12761,15 +12761,15 @@ msgstr "除非獲得邀請，否則無法重新加入。"
 #. placeholder {0}: convo.lastMessage.text
 #: src/screens/Messages/components/ChatListItem.tsx:279
 msgid "You: {0}"
-msgstr "你：{0}"
+msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:306
 msgid "You: {defaultEmbeddedContentMessage}"
-msgstr "你：{defaultEmbeddedContentMessage}"
+msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:299
 msgid "You: {short}"
-msgstr "你：{short}"
+msgstr ""
 
 #: src/screens/Signup/index.tsx:152
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"

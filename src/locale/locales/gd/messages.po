@@ -8,7 +8,7 @@ msgstr ""
 "Language: gd\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-22 15:38\n"
+"PO-Revision-Date: 2026-04-23 20:56\n"
 "Last-Translator: \n"
 "Language-Team: Scottish Gaelic\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n>2 && n<20) ? 2 : 3;\n"
@@ -253,7 +253,7 @@ msgstr "Chuir {0} {1} mar fhrith-fhreagairt"
 #. placeholder {2}: lastMessageText ? `"${convo.lastReaction.message.text}"` : fallbackMessage
 #: src/screens/Messages/components/ChatListItem.tsx:352
 msgid "{0} reacted {1} to {2}"
-msgstr "Chuir {0} {1} mar fhrith-fhreagairt dha {2}"
+msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(data.member)
 #: src/components/dms/systemMessage.ts:30
@@ -1720,7 +1720,7 @@ msgstr "Mus fhaigh thu brathan mu phuist a dh’fhoillsicheas {name}, feumaidh t
 #: src/components/dms/dialogs/NewChatDialog.tsx:94
 #: src/components/dms/MessageProfileButton.tsx:60
 #: src/screens/Messages/ChatList.tsx:380
-#: src/screens/Messages/Conversation.tsx:232
+#: src/screens/Messages/Conversation.tsx:235
 #: src/screens/Messages/ConversationSettings.tsx:552
 msgid "Before you can message another user, you must first verify your email."
 msgstr "Mus cuir thu teachdaireachd gu cleachdaiche eile, feumaidh tu am post-d agad a dhearbhadh."
@@ -2766,7 +2766,7 @@ msgstr ""
 msgid "Continue to next step"
 msgstr "Air adhart gun ath-cheum"
 
-#: src/screens/Messages/Conversation.tsx:64
+#: src/screens/Messages/Conversation.tsx:65
 msgid "Conversation"
 msgstr "Còmhradh"
 
@@ -4936,7 +4936,7 @@ msgstr "Air ais"
 
 #: src/components/Error.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:228
-#: src/screens/Messages/Conversation.tsx:357
+#: src/screens/Messages/Conversation.tsx:360
 #: src/screens/Profile/ErrorState.tsx:63
 #: src/screens/Profile/ErrorState.tsx:67
 #: src/screens/StarterPack/StarterPackScreen.tsx:809
@@ -5064,11 +5064,11 @@ msgctxt "toast"
 msgid "Group chat unmuted"
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:342
+#: src/screens/Messages/Conversation.tsx:345
 msgid "Group chats are not yet available"
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:340
+#: src/screens/Messages/Conversation.tsx:343
 msgid "Group chats are now available"
 msgstr ""
 
@@ -10005,13 +10005,13 @@ msgstr "Chuir cuideigin {0} mar fhrith-fhreagairt"
 #. placeholder {1}: lastMessageText ? `"${convo.lastReaction.message.text}"` : fallbackMessage
 #: src/screens/Messages/components/ChatListItem.tsx:360
 msgid "Someone reacted {0} to {1}"
-msgstr "Chuir cuideigin {0} mar fhrith-fhreagairt dha {1}"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/index.tsx:103
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr "Bha rudeigin ann nach robh buileach ceart leis an dàta a bha thu airson aithris a dhèanamh air. Cuir fios gu sgioba na taice."
 
-#: src/screens/Messages/Conversation.tsx:141
+#: src/screens/Messages/Conversation.tsx:144
 #: src/screens/Messages/ConversationSettings.tsx:198
 msgid "Something went wrong"
 msgstr "Chaidh rudeigin ceàrr"
@@ -10825,7 +10825,7 @@ msgstr "Chan eil an gleus seo ri làimh fhad ’s a bhios tu a’ cleachdadh fac
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr "Chan eil an gleus seo ri làimh fhad ’s a bhios tu a’ cleachdadh facal-faire aplacaid. Clàraich a-steach leis a’ phrìomh-fhacal-faire agad."
 
-#: src/screens/Messages/Conversation.tsx:349
+#: src/screens/Messages/Conversation.tsx:352
 msgid "This feature isn't available to you yet. Please check back later."
 msgstr ""
 
@@ -11499,7 +11499,7 @@ msgstr "Ùraich am post-d"
 msgid "Update to {domain}"
 msgstr "Ùraich air {domain}"
 
-#: src/screens/Messages/Conversation.tsx:347
+#: src/screens/Messages/Conversation.tsx:350
 msgid "Update your app to the latest version to join in!"
 msgstr ""
 
@@ -12056,7 +12056,7 @@ msgstr "Cha d’fhuair sinn toradh sam bith leis an taga sin."
 msgid "We couldn't find any results for that topic."
 msgstr "Cha d’fhuair sinn lorg air toradh sam bith a tha mun chuspair sin."
 
-#: src/screens/Messages/Conversation.tsx:142
+#: src/screens/Messages/Conversation.tsx:145
 msgid "We couldn't load this conversation"
 msgstr "Cha b’ urrainn dhuinn an còmhradh seo a luchdadh"
 
@@ -12725,7 +12725,7 @@ msgstr "Chuir thu {0} mar fhrith-fhreagairt"
 #. placeholder {1}: lastMessageText ? `"${convo.lastReaction.message.text}"` : fallbackMessage
 #: src/screens/Messages/components/ChatListItem.tsx:341
 msgid "You reacted {0} to {1}"
-msgstr "Chuir thu {0} mar fhrith-fhreagairt dha {1}"
+msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:87
 #: src/components/dialogs/BirthDateSettings.tsx:97
@@ -12761,15 +12761,15 @@ msgstr ""
 #. placeholder {0}: convo.lastMessage.text
 #: src/screens/Messages/components/ChatListItem.tsx:279
 msgid "You: {0}"
-msgstr "Thusa: {0}"
+msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:306
 msgid "You: {defaultEmbeddedContentMessage}"
-msgstr "Thusa: {defaultEmbeddedContentMessage}"
+msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:299
 msgid "You: {short}"
-msgstr "Thusa: {short}"
+msgstr ""
 
 #: src/screens/Signup/index.tsx:152
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
