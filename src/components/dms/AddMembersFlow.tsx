@@ -98,9 +98,11 @@ function reducer(state: State, action: Action): State {
 }
 
 export function AddMembersFlow({
+  members,
   title,
   onAddMembers,
 }: {
+  members: string[]
   title: string
   onAddMembers: (dids: string[]) => void
 }) {
@@ -154,7 +156,11 @@ export function AddMembersFlow({
     } else if (searchText.length) {
       if (results?.length) {
         for (const profile of results) {
-          if (profile.did === currentAccount?.did) continue
+          if (
+            profile.did === currentAccount?.did ||
+            members.includes(profile.did)
+          )
+            continue
           _items.push({
             type: 'profile',
             key: profile.did,
@@ -202,7 +208,7 @@ export function AddMembersFlow({
     }
 
     return _items
-  }, [isError, searchText, l, results, currentAccount?.did, follows])
+  }, [isError, searchText, l, results, currentAccount?.did, members, follows])
 
   if (searchText && !isFetching && !items.length && !isError) {
     items.push({type: 'empty', key: 'empty', message: l`No results`})
