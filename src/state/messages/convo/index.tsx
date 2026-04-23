@@ -116,11 +116,11 @@ export function ConvoProvider({
       switch (event.type) {
         case 'invalidate-block-state': {
           for (const did of event.accountDids) {
-            queryClient.invalidateQueries({
+            void queryClient.invalidateQueries({
               queryKey: createProfileQueryKey(did),
             })
           }
-          queryClient.invalidateQueries({
+          void queryClient.invalidateQueries({
             queryKey: [ListConvosQueryKeyRoot],
           })
         }
