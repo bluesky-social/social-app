@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import * as HlsTypes from 'hls.js'
+import type * as HlsTypes from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
@@ -275,24 +275,30 @@ function useHLS({
     })
 
     hls.on(Hls.Events.ERROR, (_event, data) => {
+      if (
+        data.details === Hls.ErrorDetails.FRAG_LOAD_ERROR &&
+        data.frag?.type === 'subtitle'
+      ) {
+        // disable the subtitle track on first failure so hls.js doesn't retry
+        // and escalate this into a fatal error
+        hls.subtitleTrack = -1
+        setHasSubtitleTrack(false)
+        ax.logger.error('video: failed to load subtitle fragment', {
+          safeMessage: data.error,
+        })
+        return
+      }
       if (data.fatal) {
         if (
           data.details === 'manifestLoadError' &&
           data.response?.code === 404
         ) {
           setError(new VideoNotFoundError())
-        } else if (
-          data.details === HlsTypes.ErrorDetails.FRAG_LOAD_ERROR &&
-          data.frag?.type === 'subtitle'
-        ) {
-          // non-fatal error loading a subtitle fragment - just mark that we don't have subtitles so it doesn't keep trying to load them
-          setHasSubtitleTrack(false)
-          ax.logger.error('video: failed to load subtitle fragment', {})
         } else {
           setError(data.error)
         }
       } else {
-        console.error(data.error)
+        ax.logger.error('video: error', {safeMessage: data.error})
       }
     })
 
