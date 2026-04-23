@@ -1,4 +1,4 @@
-import {memo, useCallback, useEffect, useMemo, useRef} from 'react'
+import {memo, useEffect, useMemo, useRef} from 'react'
 import {
   type GestureResponderEvent,
   LayoutAnimation,
@@ -28,9 +28,8 @@ import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {makeProfileLink} from '#/lib/routes/links'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
 import {useConvoActive} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -59,7 +58,9 @@ const DISPLAY_NAME_INSET = 22
 const CLUSTERED_MESSAGE_THRESHOLD_MS = 5 * 60 * 1000
 const MESSAGE_GAP_THRESHOLD_MS = 60 * 60 * 1000
 
-function isWithinCluster({
+const TAP_AND_DRAG_DELAY_MS = 100
+
+function isWithinClusterBoundary({
   isPending,
   adjacentMessage,
   isFromSameSender,
@@ -111,43 +112,38 @@ let MessageItem = ({
   const {message, nextMessage, prevMessage} = item
   const isPending = item.type === 'pending-message'
 
-  const displayName = sanitizeDisplayName(
-    profile?.displayName || sanitizeHandle(profile?.handle ?? ''),
-  )
+  const displayName = profile ? createSanitizedDisplayName(profile) : null
 
-  const isFromSelf = message.sender?.did === currentAccount?.did
+  const isFromSelf =
+    message.sender?.did != null && message.sender.did === currentAccount?.did
 
   const prevIsMessage = ChatBskyConvoDefs.isMessageView(prevMessage)
   const nextIsMessage = ChatBskyConvoDefs.isMessageView(nextMessage)
 
   const isPrevFromSameSender =
-    prevIsMessage && prevMessage.sender?.did === message.sender?.did
+    prevIsMessage &&
+    prevMessage.sender?.did === message.sender?.did &&
+    message.sender?.did != null
   const isNextFromSameSender =
-    nextIsMessage && nextMessage.sender?.did === message.sender?.did
+    nextIsMessage &&
+    nextMessage.sender?.did === message.sender?.did &&
+    message.sender?.did != null
 
-  const isFirstInCluster = useMemo(
-    () =>
-      isWithinCluster({
-        isPending,
-        adjacentMessage: prevMessage,
-        isFromSameSender: isPrevFromSameSender,
-        currentSentAt: message.sentAt,
-        direction: 'prev',
-      }),
-    [isPending, prevMessage, isPrevFromSameSender, message.sentAt],
-  )
+  const isFirstInCluster = isWithinClusterBoundary({
+    isPending,
+    adjacentMessage: prevMessage,
+    isFromSameSender: isPrevFromSameSender,
+    currentSentAt: message.sentAt,
+    direction: 'prev',
+  })
 
-  const isLastInCluster = useMemo(
-    () =>
-      isWithinCluster({
-        isPending,
-        adjacentMessage: nextMessage,
-        isFromSameSender: isNextFromSameSender,
-        currentSentAt: message.sentAt,
-        direction: 'next',
-      }),
-    [isPending, nextMessage, isNextFromSameSender, message.sentAt],
-  )
+  const isLastInCluster = isWithinClusterBoundary({
+    isPending,
+    adjacentMessage: nextMessage,
+    isFromSameSender: isNextFromSameSender,
+    currentSentAt: message.sentAt,
+    direction: 'next',
+  })
 
   const hasLargeGapFromPrev =
     !ChatBskyConvoDefs.isMessageView(prevMessage) ||
@@ -159,7 +155,6 @@ let MessageItem = ({
   const isDateDividerToggled = isDividerToggled(message.id)
   const isNextDateDividerToggled =
     nextMessage != null && isDividerToggled(nextMessage.id)
-  const showDateDivider = hasLargeGapFromPrev
 
   const effectiveFirstInCluster = isFirstInCluster || isDateDividerToggled
   const effectiveLastInCluster = isLastInCluster || isNextDateDividerToggled
@@ -169,9 +164,7 @@ let MessageItem = ({
 
   const hasReactions = message.reactions && message.reactions.length > 0
   const prevHasReactions =
-    prevIsMessage &&
-    prevMessage.reactions != null &&
-    prevMessage.reactions.length > 0
+    prevIsMessage && prevMessage.reactions && prevMessage.reactions.length > 0
   const squaredBottomCorner =
     !hasReactions &&
     isInCluster &&
@@ -183,9 +176,7 @@ let MessageItem = ({
 
   const pendingColor = t.palette.primary_300
 
-  const rt = useMemo(() => {
-    return new RichTextAPI({text: message.text, facets: message.facets})
-  }, [message.text, message.facets])
+  const rt = new RichTextAPI({text: message.text, facets: message.facets})
 
   const hasEmbedAndText =
     AppBskyEmbedRecord.isView(message.embed) && rt.text.length > 0
@@ -225,27 +216,26 @@ let MessageItem = ({
         },
   )
 
-  const avatar = profile ? (
-    <Link
-      label={l`${sanitizeDisplayName(
-        profile.displayName || sanitizeHandle(profile.handle),
-      )}’s avatar`}
-      accessibilityHint={l`Opens this profile`}
-      to={makeProfileLink({
-        did: profile.did,
-        handle: profile.handle,
-      })}
-      onPress={() => unstableCacheProfileView(queryClient, profile)}>
-      <ProfileCard.Avatar
-        profile={profile}
-        size={AVATAR_SIZE}
-        moderationOpts={moderationOpts!}
-        disabledPreview
-      />
-    </Link>
-  ) : (
-    <ProfileCard.AvatarPlaceholder size={AVATAR_SIZE} />
-  )
+  const avatar =
+    profile && moderationOpts ? (
+      <Link
+        label={l`${createSanitizedDisplayName(profile)}’s avatar`}
+        accessibilityHint={l`Opens this profile`}
+        to={makeProfileLink({
+          did: profile.did,
+          handle: profile.handle,
+        })}
+        onPress={() => unstableCacheProfileView(queryClient, profile)}>
+        <ProfileCard.Avatar
+          profile={profile}
+          size={AVATAR_SIZE}
+          moderationOpts={moderationOpts}
+          disabledPreview
+        />
+      </Link>
+    ) : (
+      <ProfileCard.AvatarPlaceholder size={AVATAR_SIZE} />
+    )
 
   const groupedReactions = useMemo(() => {
     const reactions = message.reactions ?? []
@@ -287,11 +277,11 @@ let MessageItem = ({
         return l`You reacted ${reaction.value}`
       } else {
         const senderDid = reaction.sender.did
-        const sender = convo.members.find(member => member.did === senderDid)
-        if (sender) {
-          return l`${sanitizeDisplayName(
-            sender.displayName || sender.handle,
-          )} reacted ${reaction.value}`
+        const memberSender = convo.members.find(
+          member => member.did === senderDid,
+        )
+        if (memberSender) {
+          return l`${createSanitizedDisplayName(memberSender)} reacted ${reaction.value}`
         }
         return l`Someone reacted ${reaction.value}`
       }
@@ -343,14 +333,16 @@ let MessageItem = ({
               // Include a delay here to account for tap-and-drag before release.
               setTimeout(() => {
                 reactionTapRef.current = false
-              }, 100)
+              }, TAP_AND_DRAG_DELAY_MS)
             }}
-            onPress={() => (isGroupChat ? reactionsControl.open() : undefined)}>
+            onPress={isGroupChat ? reactionsControl.open : undefined}>
             {groupedReactions.map(group => (
               <Animated.View
                 entering={native(ZoomIn.springify(200).delay(400))}
                 exiting={
-                  groupedReactions.length > 1 && native(ZoomOut.delay(200))
+                  groupedReactions.length > 1
+                    ? native(ZoomOut.delay(200))
+                    : undefined
                 }
                 layout={native(LinearTransition.delay(300))}
                 key={group.value}
@@ -399,7 +391,7 @@ let MessageItem = ({
 
   return (
     <>
-      {(showDateDivider || isDateDividerToggled) && (
+      {(hasLargeGapFromPrev || isDateDividerToggled) && (
         <Animated.View entering={native(FadeIn)} exiting={native(FadeOut)}>
           <DateDivider date={message.sentAt} />
         </Animated.View>
@@ -424,7 +416,7 @@ let MessageItem = ({
               a.flex_grow,
               !isFromSelf && isGroupChat && {paddingLeft: AVATAR_SIZE},
             ]}>
-            {showDisplayName ? (
+            {displayName && showDisplayName ? (
               <Text
                 style={[
                   a.text_xs,
@@ -459,7 +451,6 @@ let MessageItem = ({
                     ...(isOnlyEmoji(message.text)
                       ? []
                       : [
-                          a.rounded_md,
                           a.rounded_xl,
                           a.py_sm,
                           a.px_md,
@@ -538,16 +529,13 @@ let MessageItemMetadata = ({
   const t = useTheme()
   const {t: l} = useLingui()
 
-  const handleRetry = useCallback(
-    (e: GestureResponderEvent) => {
-      if (item.type === 'pending-message' && item.retry) {
-        e.preventDefault()
-        item.retry()
-        return false
-      }
-    },
-    [item],
-  )
+  const handleRetry = (e: GestureResponderEvent) => {
+    if (item.type === 'pending-message' && item.retry) {
+      e.preventDefault()
+      item.retry()
+      return false
+    }
+  }
 
   const errorColor = t.palette.negative_400
 
