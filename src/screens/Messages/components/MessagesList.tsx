@@ -250,10 +250,8 @@ export function MessagesList({
   )
 
   const onStartReached = useCallback(() => {
-    if (hasScrolled && prevContentHeight.current > layoutHeight.get()) {
-      void convoState.fetchMessageHistory()
-    }
-  }, [convoState, hasScrolled, layoutHeight])
+    void convoState.fetchMessageHistory()
+  }, [convoState])
 
   const onScroll = useCallback(
     (e: ScrollEvent) => {
