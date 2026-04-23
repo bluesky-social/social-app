@@ -3,10 +3,11 @@ import {View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import type * as HlsTypes from 'hls.js'
+import * as HlsTypes from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
+import {useAnalytics} from '#/analytics'
 import * as BandwidthEstimate from './bandwidth-estimate'
 import {Controls} from './web-controls/VideoControls'
 
@@ -132,6 +133,7 @@ function useHLS({
   videoRef: React.RefObject<HTMLVideoElement | null>
   setHlsLoading: (v: boolean) => void
 }) {
+  const ax = useAnalytics()
   const [Hls, setHls] = useState<typeof HlsTypes.default | undefined>(
     () => promiseForHls.value,
   )
@@ -279,6 +281,13 @@ function useHLS({
           data.response?.code === 404
         ) {
           setError(new VideoNotFoundError())
+        } else if (
+          data.details === HlsTypes.ErrorDetails.FRAG_LOAD_ERROR &&
+          data.frag?.type === 'subtitle'
+        ) {
+          // non-fatal error loading a subtitle fragment - just mark that we don't have subtitles so it doesn't keep trying to load them
+          setHasSubtitleTrack(false)
+          ax.logger.error('video: failed to load subtitle fragment', {})
         } else {
           setError(data.error)
         }
@@ -294,7 +303,15 @@ function useHLS({
       hls.detachMedia()
       hls.destroy()
     }
-  }, [playlist, setError, setHasSubtitleTrack, videoRef, handleFragChange, Hls])
+  }, [
+    ax,
+    playlist,
+    setError,
+    setHasSubtitleTrack,
+    videoRef,
+    handleFragChange,
+    Hls,
+  ])
 
   const flushOnLoop = useNonReactiveCallback(() => {
     if (!Hls) return
