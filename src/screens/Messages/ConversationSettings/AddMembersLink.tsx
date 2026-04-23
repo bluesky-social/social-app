@@ -11,7 +11,6 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon} from '#/components/
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {ROW_SPACING} from './constants'
 import {SubtleHoverWrapper} from './SubtleHoverWrapper'
 
 export function AddMembersLink({
@@ -40,13 +39,7 @@ export function AddMembersLink({
   return (
     <>
       <SubtleHoverWrapper>
-        <View
-          style={[
-            a.mx_xl,
-            {
-              marginVertical: ROW_SPACING,
-            },
-          ]}>
+        <View style={[a.mx_xl]}>
           <Pressable
             accessibilityRole="button"
             style={({pressed}) => [

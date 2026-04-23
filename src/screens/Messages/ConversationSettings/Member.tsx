@@ -14,7 +14,6 @@ import {atoms as a, useTheme, web} from '#/alf'
 import {type ConvoWithDetails} from '#/components/dms/util'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
-import {ROW_SPACING} from './constants'
 import {MemberMenu} from './MemberMenu'
 import {StatusBadge} from './StatusBadge'
 import {SubtleHoverWrapper} from './SubtleHoverWrapper'
@@ -69,17 +68,7 @@ export function Member({
 
   return (
     <SubtleHoverWrapper>
-      <View
-        style={[
-          a.flex_row,
-          a.align_center,
-          a.justify_between,
-          a.mx_xl,
-          {
-            marginTop: ROW_SPACING,
-            marginBottom: ROW_SPACING,
-          },
-        ]}>
+      <View style={[a.flex_row, a.align_center, a.justify_between, a.mx_xl]}>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={l`View ${displayName}’s profile`}

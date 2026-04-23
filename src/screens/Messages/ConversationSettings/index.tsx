@@ -205,7 +205,10 @@ function SettingsInner({convoId}: {convoId: string}) {
   return (
     <List
       data={items}
-      contentContainerStyle={{paddingBottom: bottomBarOffset + ROW_SPACING}}
+      contentContainerStyle={{
+        gap: ROW_SPACING,
+        paddingBottom: bottomBarOffset + ROW_SPACING,
+      }}
       desktopFixedHeight
       initialNumToRender={initialNumToRender}
       keyExtractor={keyExtractor}
