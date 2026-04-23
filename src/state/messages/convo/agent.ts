@@ -145,6 +145,7 @@ export class Convo {
     this.getGroupInfo = this.getGroupInfo.bind(this)
     this.getPrimaryMember = this.getPrimaryMember.bind(this)
     this.updateGroupName = this.updateGroupName.bind(this)
+    this.updateGroupMembers = this.updateGroupMembers.bind(this)
   }
 
   private commit() {
@@ -955,6 +956,18 @@ export class Convo {
           name,
         },
       }
+    }
+    this.commit()
+  }
+
+  updateGroupMembers(members: ChatBskyActorDefs.ProfileViewBasic[]) {
+    if (this.convo) {
+      this.convo = {
+        ...this.convo,
+        members,
+      }
+      this.sender = members.find(m => m.did === this.senderUserDid)
+      this.recipients = members.filter(m => m.did !== this.senderUserDid)
     }
     this.commit()
   }
