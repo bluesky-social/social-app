@@ -8,7 +8,6 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react/macro'
 import * as Sentry from '@sentry/react-native'
 
-import {useViewportZoomLock} from '#/lib/hooks/useViewportZoomLock'
 import {Provider as HotkeysProvider} from '#/lib/hotkeys'
 import {QueryProvider} from '#/lib/react-query'
 import {ThemeProvider} from '#/lib/ThemeContext'
@@ -196,8 +195,6 @@ function InnerApp() {
 
 function App() {
   const [isReady, setIsReady] = useState(false)
-
-  useViewportZoomLock()
 
   useEffect(() => {
     void Promise.all([initPersistedState(), Geo.resolve(), setupDeviceId]).then(

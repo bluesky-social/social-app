@@ -14,9 +14,10 @@ const ZOOM_LOCKED_VIEWPORT =
  * Listeners run in the capture phase so we update the viewport before iOS
  * commits to auto-zooming the input.
  */
-export function useViewportZoomLock() {
+export function useViewportZoomLock({enabled} = {enabled: true}) {
   useEffect(() => {
     if (!IS_WEB_MOBILE_IOS) return
+    if (!enabled) return
 
     const meta = document.querySelector('meta[name="viewport"]')
     if (!(meta instanceof HTMLMetaElement)) return
@@ -43,7 +44,7 @@ export function useViewportZoomLock() {
       document.removeEventListener('blur', onBlur, true)
       meta.content = originalContent
     }
-  }, [])
+  }, [enabled])
 }
 
 const NON_TEXT_INPUT_TYPES = new Set([

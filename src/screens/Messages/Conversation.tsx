@@ -18,6 +18,7 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useViewportZoomLock} from '#/lib/hooks/useViewportZoomLock'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
@@ -105,6 +106,8 @@ function Inner({convoId}: {convoId: string}) {
   const isFocused = useIsFocused()
   const {top: topInset} = useSafeAreaInsets()
   const {data: convoData} = useConvoQuery({convoId})
+
+  useViewportZoomLock({enabled: isFocused})
 
   const convo = convoData
     ? parseConvoView(convoData, currentAccount?.did)
