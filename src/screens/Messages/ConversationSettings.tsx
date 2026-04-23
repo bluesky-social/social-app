@@ -20,6 +20,7 @@ import {type Shadow} from '#/state/cache/types'
 import {ConvoProvider, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useAddGroupMembers} from '#/state/queries/messages/add-group-members'
 import {useEditGroupName} from '#/state/queries/messages/edit-group-name'
 import {useGetConvoAvailabilityQuery} from '#/state/queries/messages/get-convo-availability'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
@@ -82,7 +83,7 @@ type Item =
   | {
       type: 'CHAT_MEMBER'
       profile: Shadow<bsky.profile.AnyProfileView>
-      status: 'owner' | 'member' | 'invited'
+      status: 'owner' | 'standard' | 'invited'
     }
 
 type Props = NativeStackScreenProps<
@@ -136,7 +137,6 @@ function SettingsInner({convoId}: {convoId: string}) {
   const isOwner = !!primaryMember && primaryMember.did === currentAccount?.did
 
   const data: bsky.profile.AnyProfileView[] = convo?.members ?? []
-  const invites: string[] = []
 
   const {data: joinRequestsData, hasNextPage: hasMoreRequests} =
     useListJoinRequestsQuery({
@@ -169,12 +169,7 @@ function SettingsInner({convoId}: {convoId: string}) {
       .map(profile => ({
         type: 'CHAT_MEMBER',
         profile,
-        status:
-          primaryMember?.did === profile.did
-            ? 'owner'
-            : invites.includes(profile.did)
-              ? 'invited'
-              : 'member',
+        status: primaryMember?.did === profile.did ? 'owner' : 'standard',
       })),
   ]
 
@@ -190,7 +185,7 @@ function SettingsInner({convoId}: {convoId: string}) {
           />
         )
       case 'ADD_MEMBERS_LINK':
-        return <AddMembersLink isOwner={isOwner} />
+        return <AddMembersLink convo={convo} isOwner={isOwner} />
       case 'CHAT_MEMBER':
         return (
           <Member
@@ -292,11 +287,25 @@ function MembersAndRequests({
   )
 }
 
-function AddMembersLink({isOwner}: {isOwner: boolean}) {
+function AddMembersLink({
+  convo,
+  isOwner,
+}: {
+  convo: ConvoWithDetails | null
+  isOwner: boolean
+}) {
   const t = useTheme()
   const {t: l} = useLingui()
 
   const addMembersControl = Dialog.useDialogControl()
+
+  const convoId = convo?.view.id
+  const {mutate: addGroupMembers} = useAddGroupMembers(convoId, {
+    onError: e => {
+      logger.error('Failed to add group chat members', {message: e})
+      Toast.show(l`Failed to add members`, {type: 'error'})
+    },
+  })
 
   if (!isOwner) {
     return null
@@ -371,8 +380,8 @@ function AddMembersLink({isOwner}: {isOwner: boolean}) {
         <Dialog.Handle />
         <AddMembersFlow
           title={l`Add members`}
-          onAddMembers={(_dids: string[]) => {
-            // TODO Add members here
+          onAddMembers={members => {
+            addGroupMembers({members})
             addMembersControl.close()
           }}
         />
@@ -387,7 +396,7 @@ function Member({
   isOwner,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
-  status: 'owner' | 'member' | 'invited'
+  status: 'owner' | 'standard' | 'invited'
   isOwner: boolean
 }) {
   const navigation = useNavigation<NavigationProp>()
@@ -533,7 +542,7 @@ function MemberMenu({
   isOwner,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
-  type: 'owner' | 'member' | 'invited'
+  type: 'owner' | 'standard' | 'invited'
   isOwner: boolean
 }) {
   const navigation = useNavigation<NavigationProp>()
@@ -688,7 +697,7 @@ function MemberMenu({
           </Menu.Group>
           <Menu.Divider />
           <Menu.Group>
-            {type === 'owner' || type === 'member' ? (
+            {type === 'owner' || type === 'standard' ? (
               <Menu.Item
                 label={
                   profile.viewer?.blocking

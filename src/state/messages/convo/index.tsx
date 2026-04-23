@@ -32,6 +32,15 @@ import {useAgent} from '#/state/session'
 
 export * from '#/state/messages/convo/util'
 
+function membersChanged(
+  a: ChatBskyConvoDefs.ConvoView['members'],
+  b: ChatBskyConvoDefs.ConvoView['members'],
+) {
+  if (a.length !== b.length) return true
+  const aDids = new Set(a.map(m => m.did))
+  return b.some(m => !aDids.has(m.did))
+}
+
 const ChatContext = createContext<ConvoState | null>(null)
 ChatContext.displayName = 'ChatContext'
 
@@ -138,6 +147,13 @@ export function ConvoProvider({
           data.kind.name !== convo.convo.kind.name
         ) {
           convo.updateGroupName(data.kind.name)
+        }
+        if (
+          data &&
+          convo.convo &&
+          membersChanged(data.members, convo.convo.members)
+        ) {
+          convo.updateGroupMembers(data.members)
         }
       }
     })
