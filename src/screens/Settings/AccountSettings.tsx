@@ -158,7 +158,11 @@ export function AccountSettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <SettingsList.BadgeButton
               label={_(msg`Edit`)}
-              onPress={() => birthdayControl.open()}
+              onPress={() =>
+                isOauth && !isBskyPds
+                  ? openPdsAccountPage()
+                  : birthdayControl.open()
+              }
             />
           </SettingsList.Item>
           <SettingsList.Divider />

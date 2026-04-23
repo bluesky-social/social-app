@@ -141,3 +141,44 @@ export async function gateRevokeAppPassword(params: {
     name: params.name,
   })
 }
+
+export async function gateGetPreferences(params: {
+  serviceUrl: string
+  did: string
+  password: string
+}): Promise<{preferences: any[]}> {
+  return await gatekeeperPost(params.serviceUrl, '/gate/get-preferences', {
+    did: params.did,
+    password: params.password,
+  })
+}
+
+export async function gatePutPreferences(params: {
+  serviceUrl: string
+  did: string
+  password: string
+  preferences: unknown
+  authFactorToken?: string
+}): Promise<{status: 'success' | 'authFactorTokenRequired'}> {
+  const body: Record<string, unknown> = {
+    did: params.did,
+    password: params.password,
+    preferences: params.preferences,
+  }
+  if (params.authFactorToken) {
+    body.authFactorToken = params.authFactorToken
+  }
+
+  try {
+    await gatekeeperPost(params.serviceUrl, '/gate/put-preferences', body)
+    return {status: 'success'}
+  } catch (e) {
+    if (
+      e instanceof GatekeeperError &&
+      e.errorType === 'AuthFactorTokenRequired'
+    ) {
+      return {status: 'authFactorTokenRequired'}
+    }
+    throw e
+  }
+}
