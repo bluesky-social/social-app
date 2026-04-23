@@ -151,6 +151,9 @@ export function ConvoProvider({
           if (data.kind.joinLink !== convo.convo.details.joinLink) {
             convo.updateJoinLink(data.kind.joinLink)
           }
+          if (data.kind.lockStatus !== convo.convo.kind.lockStatus) {
+            convo.updateLockStatus(data.kind.lockStatus)
+          }
         }
         if (
           data &&

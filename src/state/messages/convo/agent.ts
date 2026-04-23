@@ -148,6 +148,7 @@ export class Convo {
     this.updateGroupName = this.updateGroupName.bind(this)
     this.updateGroupMembers = this.updateGroupMembers.bind(this)
     this.updateJoinLink = this.updateJoinLink.bind(this)
+    this.updateLockStatus = this.updateLockStatus.bind(this)
   }
 
   private commit() {
@@ -1006,6 +1007,25 @@ export class Convo {
       },
     })
 
+    this.commit()
+  }
+
+  updateLockStatus(lockStatus: ChatBskyConvoDefs.ConvoLockStatus) {
+    if (
+      this.convo &&
+      bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvo>(
+        this.convo.kind,
+        ChatBskyConvoDefs.isGroupConvo,
+      )
+    ) {
+      this.convo = {
+        ...this.convo,
+        kind: {
+          ...this.convo.kind,
+          lockStatus,
+        },
+      }
+    }
     this.commit()
   }
 
