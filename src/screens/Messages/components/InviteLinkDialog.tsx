@@ -2,6 +2,8 @@ import {useState} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {shareUrl} from '#/lib/sharing'
 import {useCreateJoinLink} from '#/state/queries/messages/create-join-link'
 import {useDisableJoinLink} from '#/state/queries/messages/disable-join-link'
 import {useEditJoinLink} from '#/state/queries/messages/edit-join-link'
@@ -64,6 +66,8 @@ export function InviteLinkDialog({
 
   const [step, setStep] = useState<Step>(initialStep)
   const [whoCanJoin, setWhoCanJoin] = useState(initialWhoCanJoin)
+
+  const {openComposer} = useOpenComposer()
 
   const {mutate: createJoinLink} = useCreateJoinLink(convo.view.id, {
     onSuccess: () => {
@@ -285,8 +289,14 @@ export function InviteLinkDialog({
                   enabledStatus === 'enabled' ? 'primary_subtle' : 'secondary'
                 }
                 style={[a.flex_1, a.rounded_full]}
-                // TODO Implement this. -dsb
-                onPress={() => {}}>
+                onPress={() => {
+                  control.close(() => {
+                    openComposer({
+                      text: joinLinkURI,
+                      logContext: 'Other',
+                    })
+                  })
+                }}>
                 <Trans>Post link</Trans>
               </StackedButton>
               <StackedButton
@@ -297,8 +307,9 @@ export function InviteLinkDialog({
                   enabledStatus === 'enabled' ? 'primary_subtle' : 'secondary'
                 }
                 style={[a.flex_1, a.rounded_full]}
-                // TODO Implement this. -dsb
-                onPress={() => {}}>
+                onPress={() => {
+                  void shareUrl(joinLinkURI)
+                }}>
                 <Trans>Share</Trans>
               </StackedButton>
             </View>
