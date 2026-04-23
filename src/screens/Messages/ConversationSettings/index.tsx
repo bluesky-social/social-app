@@ -580,7 +580,7 @@ function SettingsButton({
       <Text
         numberOfLines={1}
         style={[
-          a.text_2xs,
+          a.text_xs,
           a.font_medium,
           a.text_center,
           a.pt_xs,
@@ -597,14 +597,14 @@ function SettingsButtonPlaceholder() {
   const {t: l} = useLingui()
 
   return (
-    <View>
+    <View style={[a.align_center]}>
       <Button color="secondary" size="large" shape="round" label={l`Loading…`}>
         <ButtonIcon icon={EllipsisIcon} size="md" />
       </Button>
       <Text
         numberOfLines={1}
         style={[
-          a.text_2xs,
+          a.text_xs,
           a.font_medium,
           a.text_center,
           a.pt_xs,
