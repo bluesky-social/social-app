@@ -97,6 +97,7 @@ export function Member({
             <Text
               style={[
                 a.text_xs,
+                a.leading_snug,
                 {color: t.palette.contrast_500},
                 web(a.pt_2xs),
               ]}>
