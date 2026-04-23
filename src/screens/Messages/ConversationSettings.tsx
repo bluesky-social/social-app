@@ -738,6 +738,15 @@ function SettingsHeader({
 
   const [isLocked, setIsLocked] = useState(false)
 
+  // TODO Enable this once the feature is working end-to-end. -dsb
+  // const {joinLink} = convo.details
+  const isJoinLinkEnabled = false
+  // const isJoinLinkEnabled =
+  //   isOwner || (!isOwner && joinLink?.enabledStatus === 'enabled')
+
+  // TODO Enable this once the feature is working end-to-end. -dsb
+  const isReportLinkEnabled = false
+
   const {mutate: editGroupName} = useEditGroupName(convo.view.id, {
     onError: e => {
       setNewGroupName(groupName)
@@ -862,12 +871,18 @@ function SettingsHeader({
               onPress={handlePromptName}
             />
           ) : null}
-          <SettingsButton
-            icon={ChainLinkIcon}
-            label={l`Create an invite link for this group chat`}
-            text={l`Invite link`}
-            onPress={inviteLinkDialog.open}
-          />
+          {isJoinLinkEnabled ? (
+            <SettingsButton
+              icon={ChainLinkIcon}
+              label={
+                isOwner
+                  ? l`Create or modify an invite link for this group chat`
+                  : l`View the invite link for this group chat`
+              }
+              text={l`Invite link`}
+              onPress={inviteLinkDialog.open}
+            />
+          ) : null}
           {isOwner ? (
             <SettingsButton
               color={isLocked ? 'negative_subtle' : 'secondary'}
@@ -879,7 +894,7 @@ function SettingsHeader({
               onPress={isLocked ? handleUnlock : lockChatPrompt.open}
             />
           ) : null}
-          {isOwner ? null : (
+          {isOwner ? null : isReportLinkEnabled ? (
             <SettingsButton
               color="secondary"
               icon={FlagIcon}
@@ -887,7 +902,7 @@ function SettingsHeader({
               text={l`Report`}
               onPress={handleReportChat}
             />
-          )}
+          ) : null}
           {isOwner ? null : (
             <SettingsButton
               color="secondary"
@@ -905,7 +920,11 @@ function SettingsHeader({
         onChangeText={setNewGroupName}
         onConfirm={handleEditName}
       />
-      <InviteLinkDialog convo={convo} control={inviteLinkDialog} />
+      <InviteLinkDialog
+        convo={convo}
+        control={inviteLinkDialog}
+        isOwner={isOwner}
+      />
       <LockChatPrompt control={lockChatPrompt} onConfirm={handleConfirmLock} />
       <LeaveChatPrompt
         control={leaveChatPrompt}
