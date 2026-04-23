@@ -186,7 +186,13 @@ function SettingsInner({convoId}: {convoId: string}) {
           />
         )
       case 'ADD_MEMBERS_LINK':
-        return <AddMembersLink convo={convo} isOwner={isOwner} />
+        return (
+          <AddMembersLink
+            convo={convo}
+            isOwner={isOwner}
+            members={data.map(profile => profile.did)}
+          />
+        )
       case 'CHAT_MEMBER':
         return (
           <Member
@@ -292,9 +298,11 @@ function MembersAndRequests({
 function AddMembersLink({
   convo,
   isOwner,
+  members,
 }: {
   convo: ConvoWithDetails | null
   isOwner: boolean
+  members: string[]
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -381,6 +389,7 @@ function AddMembersLink({
         nativeOptions={{fullHeight: true}}>
         <Dialog.Handle />
         <AddMembersFlow
+          members={members}
           title={l`Add members`}
           onAddMembers={members => {
             addGroupMembers({members})
