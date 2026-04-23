@@ -10,6 +10,9 @@ const ZOOM_LOCKED_VIEWPORT =
  * To avoid that while still allowing users to pinch-zoom for accessibility, we
  * only pin `maximum-scale=1` while a text input is focused and restore the
  * original viewport on blur.
+ *
+ * Listeners run in the capture phase so we update the viewport before iOS
+ * commits to auto-zooming the input.
  */
 export function useViewportZoomLock() {
   useEffect(() => {
@@ -20,24 +23,24 @@ export function useViewportZoomLock() {
 
     const originalContent = meta.content
 
-    const onFocusIn = (e: FocusEvent) => {
+    const onFocus = (e: FocusEvent) => {
       if (isTextInput(e.target)) {
         meta.content = ZOOM_LOCKED_VIEWPORT
       }
     }
 
-    const onFocusOut = (e: FocusEvent) => {
+    const onBlur = (e: FocusEvent) => {
       if (isTextInput(e.target)) {
         meta.content = originalContent
       }
     }
 
-    document.addEventListener('focusin', onFocusIn)
-    document.addEventListener('focusout', onFocusOut)
+    document.addEventListener('focus', onFocus, true)
+    document.addEventListener('blur', onBlur, true)
 
     return () => {
-      document.removeEventListener('focusin', onFocusIn)
-      document.removeEventListener('focusout', onFocusOut)
+      document.removeEventListener('focus', onFocus, true)
+      document.removeEventListener('blur', onBlur, true)
       meta.content = originalContent
     }
   }, [])
