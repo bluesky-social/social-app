@@ -744,6 +744,9 @@ function SettingsHeader({
   // const isJoinLinkEnabled =
   //   isOwner || (!isOwner && joinLink?.enabledStatus === 'enabled')
 
+  // TODO Enable this once the feature is working end-to-end. -dsb
+  const isReportLinkEnabled = false
+
   const {mutate: editGroupName} = useEditGroupName(convo.view.id, {
     onError: e => {
       setNewGroupName(groupName)
@@ -891,7 +894,7 @@ function SettingsHeader({
               onPress={isLocked ? handleUnlock : lockChatPrompt.open}
             />
           ) : null}
-          {isOwner ? null : (
+          {isOwner ? null : isReportLinkEnabled ? (
             <SettingsButton
               color="secondary"
               icon={FlagIcon}
@@ -899,7 +902,7 @@ function SettingsHeader({
               text={l`Report`}
               onPress={handleReportChat}
             />
-          )}
+          ) : null}
           {isOwner ? null : (
             <SettingsButton
               color="secondary"
