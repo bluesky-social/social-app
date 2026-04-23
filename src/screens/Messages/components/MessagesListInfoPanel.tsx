@@ -27,7 +27,11 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
     ? parseConvoView(convoState.convo, currentAccount?.did)
     : null
   const groupConvo = convo?.kind === 'group' ? convo : null
-  const joinLink = groupConvo?.details.joinLink
+  // TODO Enable this once the feature is working end-to-end. -dsb
+  // const joinLink = groupConvo?.details.joinLink
+  const isJoinLinkEnabled = false
+  //   (isOwner && groupConvo) ||
+  //   (!isOwner && groupConvo && joinLink?.enabledStatus === 'enabled')
 
   const isOwner =
     currentAccount?.did == null
@@ -111,10 +115,7 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
                 </ButtonText>
               </Button>
             ) : null}
-            {(isOwner && groupConvo) ||
-            (!isOwner &&
-              groupConvo &&
-              joinLink?.enabledStatus === 'enabled') ? (
+            {isJoinLinkEnabled ? (
               <Button
                 color="secondary"
                 size="small"

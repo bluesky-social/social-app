@@ -738,7 +738,14 @@ function SettingsHeader({
 
   const [isLocked, setIsLocked] = useState(false)
 
-  const {joinLink} = convo.details
+  // TODO Enable this once the feature is working end-to-end. -dsb
+  // const {joinLink} = convo.details
+  const isJoinLinkEnabled = false
+  // const isJoinLinkEnabled =
+  //   isOwner || (!isOwner && joinLink?.enabledStatus === 'enabled')
+
+  // TODO Enable this once the feature is working end-to-end. -dsb
+  const isReportLinkEnabled = false
 
   const {mutate: editGroupName} = useEditGroupName(convo.view.id, {
     onError: e => {
@@ -864,7 +871,7 @@ function SettingsHeader({
               onPress={handlePromptName}
             />
           ) : null}
-          {isOwner || (!isOwner && joinLink?.enabledStatus === 'enabled') ? (
+          {isJoinLinkEnabled ? (
             <SettingsButton
               icon={ChainLinkIcon}
               label={
@@ -887,7 +894,7 @@ function SettingsHeader({
               onPress={isLocked ? handleUnlock : lockChatPrompt.open}
             />
           ) : null}
-          {isOwner ? null : (
+          {isOwner ? null : isReportLinkEnabled ? (
             <SettingsButton
               color="secondary"
               icon={FlagIcon}
@@ -895,7 +902,7 @@ function SettingsHeader({
               text={l`Report`}
               onPress={handleReportChat}
             />
-          )}
+          ) : null}
           {isOwner ? null : (
             <SettingsButton
               color="secondary"
