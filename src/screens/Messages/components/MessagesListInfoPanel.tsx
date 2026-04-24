@@ -49,7 +49,7 @@ export function MessagesListInfoPanel({
     profile => profile.did !== currentAccount?.did,
   )
 
-  let names: React.ReactNode | null = null
+  let names: React.ReactNode = null
   if (members.length === 1) {
     names = <Trans>New chat with {members[0].displayName}</Trans>
   } else if (members.length === 2) {
