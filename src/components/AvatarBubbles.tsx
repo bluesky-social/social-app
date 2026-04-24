@@ -19,43 +19,21 @@ import type * as bsky from '#/types/bsky'
 type Props = {
   animate?: boolean
   profiles: bsky.profile.AnyProfileView[]
-  size?: 'small' | 'medium' | 'large' | number
+  size?: number
 }
 
 export function AvatarBubbles({
   animate = false,
   profiles: allProfiles,
-  size = 'large',
+  size = 120,
 }: Props) {
   const {currentAccount} = useSession()
   const profiles =
     allProfiles.length > 2
       ? allProfiles.filter(p => p.did !== currentAccount?.did)
       : allProfiles
-  const containerSize =
-    typeof size === 'number'
-      ? size
-      : size === 'small'
-        ? 40
-        : size === 'medium'
-          ? 56
-          : 120
-  const scale =
-    typeof size === 'number'
-      ? size / 120
-      : size === 'small'
-        ? profiles.length === 1
-          ? 1
-          : 40 / 120
-        : size === 'medium'
-          ? 56 / 120
-          : 1
-  const marginOffset =
-    (typeof size === 'number' && size < 120) ||
-    size === 'small' ||
-    size === 'medium'
-      ? -2
-      : 0
+  const scale = profiles.length <= 1 ? 1 : size / 120
+  const marginOffset = size < 120 ? -2 : 0
 
   const initialValue = animate ? 0 : 1
   const p0 = useSharedValue(initialValue)
@@ -93,7 +71,7 @@ export function AvatarBubbles({
       <AvatarBubble
         profile={profiles[0]}
         scale={p0}
-        size={containerSize}
+        size={size}
         x={0}
         y={0}
         style={[a.z_20]}
@@ -184,8 +162,8 @@ export function AvatarBubbles({
       style={[
         a.p_2xs,
         {
-          height: containerSize,
-          width: containerSize,
+          height: size,
+          width: size,
         },
       ]}>
       <View
