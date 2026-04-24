@@ -23,15 +23,15 @@ export type SystemMessageInfo = {
 
 function getReferredDisplayName(
   user: ChatBskyConvoDefs.SystemMessageReferredUser,
-  relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[],
+  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>,
 ): string | null {
-  const profile = relatedProfiles.find(p => p.did === user.did)
+  const profile = relatedProfiles.get(user.did)
   return profile ? createSanitizedDisplayName(profile) : null
 }
 
 export function getSystemMessageInfo(
   data: ChatBskyConvoDefs.SystemMessageView['data'],
-  relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[],
+  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>,
 ): SystemMessageInfo | null {
   if (ChatBskyConvoDefs.isSystemMessageDataAddMember(data)) {
     const name = getReferredDisplayName(data.member, relatedProfiles)

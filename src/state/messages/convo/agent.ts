@@ -107,10 +107,8 @@ export class Convo {
     {id: string; message: ChatBskyConvoSendMessage.InputSchema['message']}
   > = new Map()
   private deletedMessages: Set<string> = new Set()
-  private systemMessageProfiles: Map<
-    string,
-    ChatBskyActorDefs.ProfileViewBasic
-  > = new Map()
+  private relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic> =
+    new Map()
 
   private isProcessingPendingMessages = false
 
@@ -483,7 +481,7 @@ export class Convo {
     this.newMessages = new Map()
     this.pendingMessages = new Map()
     this.deletedMessages = new Set()
-    this.systemMessageProfiles = new Map()
+    this.relatedProfiles = new Map()
 
     this.pendingMessageFailure = null
     this.fetchMessageHistoryError = undefined
@@ -510,6 +508,11 @@ export class Convo {
 
   private setConvo(convo: ChatBskyConvoDefs.ConvoView) {
     this.convo = parseConvoView(convo, this.senderUserDid) ?? this.convo
+    if (this.convo) {
+      for (const member of this.convo.members) {
+        this.relatedProfiles.set(member.did, member)
+      }
+    }
   }
 
   private updateConvo(convo: Partial<ChatBskyConvoDefs.ConvoView>) {
@@ -517,6 +520,9 @@ export class Convo {
       this.convo =
         parseConvoView({...this.convo.view, ...convo}, this.senderUserDid) ??
         this.convo
+      for (const member of this.convo.members) {
+        this.relatedProfiles.set(member.did, member)
+      }
     }
   }
 
@@ -704,7 +710,7 @@ export class Convo {
 
       if (relatedProfiles) {
         for (const profile of relatedProfiles) {
-          this.systemMessageProfiles.set(profile.did, profile)
+          this.relatedProfiles.set(profile.did, profile)
         }
       }
 
@@ -824,6 +830,12 @@ export class Convo {
            */
           this.latestRev = ev.rev
 
+          if ('relatedProfiles' in ev && Array.isArray(ev.relatedProfiles)) {
+            for (const profile of ev.relatedProfiles) {
+              this.relatedProfiles.set(profile.did, profile)
+            }
+          }
+
           if (
             ChatBskyConvoDefs.isLogCreateMessage(ev) &&
             ChatBskyConvoDefs.isMessageView(ev.message)
@@ -876,14 +888,6 @@ export class Convo {
             const systemView = toSystemMessageView(ev)
             if (systemView) {
               this.newMessages.set(systemView.id, systemView)
-              if (
-                'relatedProfiles' in ev &&
-                Array.isArray(ev.relatedProfiles)
-              ) {
-                for (const profile of ev.relatedProfiles) {
-                  this.systemMessageProfiles.set(profile.did, profile)
-                }
-              }
               needsCommit = true
             }
           }
@@ -1180,6 +1184,7 @@ export class Convo {
           type: 'message',
           key: m.id,
           message: m,
+          relatedProfiles: this.relatedProfiles,
           nextMessage: null,
           prevMessage: null,
         })
@@ -1188,6 +1193,7 @@ export class Convo {
           type: 'deleted-message',
           key: m.id,
           message: m,
+          relatedProfiles: this.relatedProfiles,
           nextMessage: null,
           prevMessage: null,
         })
@@ -1196,7 +1202,7 @@ export class Convo {
           type: 'system-message',
           key: m.id,
           message: m,
-          relatedProfiles: Array.from(this.systemMessageProfiles.values()),
+          relatedProfiles: this.relatedProfiles,
         })
       }
     })
@@ -1218,6 +1224,7 @@ export class Convo {
           type: 'message',
           key: m.id,
           message: m,
+          relatedProfiles: this.relatedProfiles,
           nextMessage: null,
           prevMessage: null,
         })
@@ -1226,6 +1233,7 @@ export class Convo {
           type: 'deleted-message',
           key: m.id,
           message: m,
+          relatedProfiles: this.relatedProfiles,
           nextMessage: null,
           prevMessage: null,
         })
@@ -1234,7 +1242,7 @@ export class Convo {
           type: 'system-message',
           key: m.id,
           message: m,
-          relatedProfiles: Array.from(this.systemMessageProfiles.values()),
+          relatedProfiles: this.relatedProfiles,
         })
       }
     })
@@ -1255,6 +1263,7 @@ export class Convo {
             did: this.senderUserDid,
           },
         },
+        relatedProfiles: this.relatedProfiles,
         nextMessage: null,
         prevMessage: null,
         failed: this.pendingMessageFailure !== null,

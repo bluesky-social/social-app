@@ -30,7 +30,6 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {makeProfileLink} from '#/lib/routes/links'
-import {useConvoActive} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
@@ -43,7 +42,6 @@ import {InlineLinkText, Link} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import type * as bsky from '#/types/bsky'
 import {DateDivider} from './DateDivider'
 import {useDateDividerToggle} from './DateDividerToggle'
 import {MessageItemEmbed} from './MessageItemEmbed'
@@ -93,18 +91,17 @@ function isWithinClusterBoundary({
 let MessageItem = ({
   item,
   isGroupChat = false,
-  profile,
 }: {
   item: ConvoItem & {type: 'message' | 'pending-message'}
   isGroupChat?: boolean
-  profile?: bsky.profile.AnyProfileView
 }): React.ReactNode => {
   const t = useTheme()
   const {currentAccount} = useSession()
   const {t: l} = useLingui()
-  const {convo} = useConvoActive()
   const moderationOpts = useModerationOpts()
   const queryClient = useQueryClient()
+
+  const profile = item.relatedProfiles.get(item.message.sender.did)
 
   const reactionsControl = useDialogControl()
   const reactionTapRef = useRef(false)
@@ -277,9 +274,7 @@ let MessageItem = ({
         return l`You reacted ${reaction.value}`
       } else {
         const senderDid = reaction.sender.did
-        const memberSender = convo.members.find(
-          member => member.did === senderDid,
-        )
+        const memberSender = item.relatedProfiles.get(senderDid)
         if (memberSender) {
           return l`${createSanitizedDisplayName(memberSender)} reacted ${reaction.value}`
         }
@@ -290,7 +285,13 @@ let MessageItem = ({
       one: '# person',
       other: '# people',
     })} reacted – ${groupedReactions.map(g => g.value).join(' ')}`
-  }, [reactions, groupedReactions, currentAccount?.did, convo.members, l])
+  }, [
+    reactions,
+    groupedReactions,
+    currentAccount?.did,
+    item.relatedProfiles,
+    l,
+  ])
 
   const appliedReactions = (
     <LayoutAnimationConfig skipEntering skipExiting>
@@ -375,7 +376,7 @@ let MessageItem = ({
       ) : null}
       <ReactionsDialog
         control={reactionsControl}
-        members={convo.members}
+        relatedProfiles={item.relatedProfiles}
         message={message}
         reactions={message.reactions}
         groupedReactions={groupedReactions}
@@ -391,11 +392,13 @@ let MessageItem = ({
 
   return (
     <>
-      {(hasLargeGapFromPrev || isDateDividerToggled) && (
-        <Animated.View entering={native(FadeIn)} exiting={native(FadeOut)}>
-          <DateDivider date={message.sentAt} />
-        </Animated.View>
-      )}
+      <LayoutAnimationConfig skipExiting skipEntering>
+        {(hasLargeGapFromPrev || isDateDividerToggled) && (
+          <Animated.View entering={native(FadeIn)} exiting={native(FadeOut)}>
+            <DateDivider date={message.sentAt} />
+          </Animated.View>
+        )}
+      </LayoutAnimationConfig>
       <View style={[messageInset, effectiveFirstInCluster && a.mt_md]}>
         <View style={[a.relative]}>
           {showAvatar ? (
@@ -434,6 +437,7 @@ let MessageItem = ({
               hasReactions={hasReactions}
               isFromSelf={isFromSelf}
               message={message}
+              senderProfile={profile}
               onTap={() => {
                 if (reactionTapRef.current) return
                 if (!hasLargeGapFromPrev) {

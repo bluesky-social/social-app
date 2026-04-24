@@ -374,9 +374,6 @@ export function MessagesList({
       return (
         <MessageItem
           item={item}
-          profile={convoState.convo.members.find(
-            member => member.did === item.message.sender.did,
-          )}
           isGroupChat={convoState.convo.kind === 'group'}
         />
       )

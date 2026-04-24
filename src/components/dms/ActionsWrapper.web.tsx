@@ -10,6 +10,7 @@ import {MessageContextMenu} from '#/components/dms/MessageContextMenu'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
 import {EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import * as Toast from '#/components/Toast'
+import type * as bsky from '#/types/bsky'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
 import {hasReachedReactionLimit} from './util'
 
@@ -17,12 +18,14 @@ export function ActionsWrapper({
   message,
   hasReactions,
   isFromSelf,
+  senderProfile,
   children,
   onTap,
 }: {
   message: ChatBskyConvoDefs.MessageView
   hasReactions?: boolean
   isFromSelf: boolean
+  senderProfile?: bsky.profile.AnyProfileView
   children: React.ReactNode
   onTap?: () => void
 }) {
@@ -114,7 +117,7 @@ export function ActionsWrapper({
             )
           }}
         </EmojiReactionPicker>
-        <MessageContextMenu message={message}>
+        <MessageContextMenu message={message} senderProfile={senderProfile}>
           {({props, state, IS_NATIVE, control}) => {
             // always false, file is platform split
             if (IS_NATIVE) return null
