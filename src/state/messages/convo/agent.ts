@@ -1011,21 +1011,17 @@ export class Convo {
   }
 
   updateLockStatus(lockStatus: ChatBskyConvoDefs.ConvoLockStatus) {
-    if (
-      this.convo &&
-      bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvo>(
-        this.convo.kind,
-        ChatBskyConvoDefs.isGroupConvo,
-      )
-    ) {
-      this.convo = {
-        ...this.convo,
-        kind: {
-          ...this.convo.kind,
-          lockStatus,
-        },
-      }
+    if (this.convo?.kind !== 'group') {
+      throw new Error('updateLockStatus can only be called on group convo')
     }
+
+    this.updateConvo({
+      kind: {
+        ...this.convo.details,
+        lockStatus,
+      },
+    })
+
     this.commit()
   }
 
