@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {type LayoutChangeEvent, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {moderateProfile} from '@atproto/api'
@@ -319,7 +319,10 @@ function GroupChatGate() {
     ax.features.GroupChatsHasBeenReleased,
   )
 
+  const isAlreadyGoingBackRef = useRef(false)
   const onGoBack = () => {
+    if (isAlreadyGoingBackRef.current) return
+    isAlreadyGoingBackRef.current = true
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {
@@ -330,6 +333,7 @@ function GroupChatGate() {
   return (
     <Prompt.Outer
       control={groupChatGateDialogControl}
+      onClose={onGoBack}
       nativeOptions={{preventDismiss: true, preventExpansion: true}}
       testID="groupChatGateDialog">
       <Prompt.Content>
