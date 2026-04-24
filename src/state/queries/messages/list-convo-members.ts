@@ -5,16 +5,12 @@ import {useQuery, useQueryClient} from '@tanstack/react-query'
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {STALE} from '#/state/queries'
+import {createQueryKey} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
 import * as bsky from '#/types/bsky'
-import {RQKEY_ROOT as GET_CONVOS_KEY} from './conversation'
 
-export const RQKEY_SEGMENT = 'members'
-export const RQKEY = (convoId: string) => [
-  GET_CONVOS_KEY,
-  convoId,
-  RQKEY_SEGMENT,
-]
+const listConvoMembersQueryKey = (convoId: string) =>
+  createQueryKey('listConvoMembers', {convoId})
 
 // group chat size is 50, so should fetch the whole list in one go
 const LIMIT = 50
@@ -41,7 +37,7 @@ export function useListConvoMembersQuery({
           ) => ChatBskyActorDefs.ProfileViewBasic[],
         ) {
           queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
-            RQKEY(convoId),
+            listConvoMembersQueryKey(convoId),
             old => {
               if (!old) return // query doesn't exist yet, skip
               return fn(old)
@@ -84,7 +80,7 @@ export function useListConvoMembersQuery({
   }, [convoId, messagesBus, queryClient])
 
   return useQuery({
-    queryKey: RQKEY(convoId),
+    queryKey: listConvoMembersQueryKey(convoId),
     queryFn: async () => {
       const members = []
       let cursor
