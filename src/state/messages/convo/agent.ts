@@ -538,6 +538,14 @@ export class Convo {
     this.convo = parseConvoView(convo, this.senderUserDid) ?? this.convo
   }
 
+  private updateConvo(convo: Partial<ChatBskyConvoDefs.ConvoView>) {
+    if (this.convo) {
+      this.convo =
+        parseConvoView({...this.convo.view, ...convo}, this.senderUserDid) ??
+        this.convo
+    }
+  }
+
   /**
    * Initialises the convo with placeholder data, if provided. We still refetch it before rendering the convo,
    * but this allows us to render the convo header immediately.
@@ -944,8 +952,7 @@ export class Convo {
       message,
     })
     if (this.convo?.view.status === 'request') {
-      this.setConvo({
-        ...this.convo.view,
+      this.updateConvo({
         status: 'accepted',
       })
     }
@@ -957,22 +964,18 @@ export class Convo {
   }
 
   markConvoAccepted() {
-    if (this.convo) {
-      this.setConvo({
-        ...this.convo.view,
-        status: 'accepted',
-      })
-    }
+    this.updateConvo({
+      status: 'accepted',
+    })
+
     this.commit()
   }
 
   updateMuted(muted: boolean) {
-    if (this.convo) {
-      this.setConvo({
-        ...this.convo.view,
-        muted,
-      })
-    }
+    this.updateConvo({
+      muted,
+    })
+
     this.commit()
   }
 
@@ -981,8 +984,7 @@ export class Convo {
       throw new Error('updateGroupName can only be called on group convo')
     }
 
-    this.setConvo({
-      ...this.convo.view,
+    this.updateConvo({
       kind: {
         ...this.convo.details,
         name,
@@ -996,12 +998,11 @@ export class Convo {
     if (this.convo?.kind !== 'group') {
       throw new Error('updateGroupMembers can only be called on group convo')
     }
-    if (this.convo) {
-      this.setConvo({
-        ...this.convo.view,
-        members,
-      })
-    }
+
+    this.updateConvo({
+      members,
+    })
+
     this.commit()
   }
 
@@ -1009,15 +1010,14 @@ export class Convo {
     if (this.convo?.kind !== 'group') {
       throw new Error('updateJoinLink can only be called on group convo')
     }
-    if (this.convo) {
-      this.setConvo({
-        ...this.convo.view,
-        kind: {
-          ...this.convo.details,
-          joinLink,
-        },
-      })
-    }
+
+    this.updateConvo({
+      kind: {
+        ...this.convo.details,
+        joinLink,
+      },
+    })
+
     this.commit()
   }
 
