@@ -1,6 +1,6 @@
 import {useEffect} from 'react'
 import {type ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
-import {useQuery, useQueryClient} from '@tanstack/react-query'
+import {type QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {useMessagesEventBus} from '#/state/messages/events'
@@ -9,8 +9,9 @@ import {createQueryKey} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
 import * as bsky from '#/types/bsky'
 
+const RQKEY_ROOT = 'listConvoMembers'
 const listConvoMembersQueryKey = (convoId: string) =>
-  createQueryKey('listConvoMembers', {convoId})
+  createQueryKey(RQKEY_ROOT, {convoId})
 
 // group chat size is 50, so should fetch the whole list in one go
 const LIMIT = 50
@@ -99,4 +100,23 @@ export function useListConvoMembersQuery({
     staleTime: STALE.MINUTES.THIRTY,
     placeholderData,
   })
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<ChatBskyActorDefs.ProfileViewBasic, void> {
+  const queryDatas = queryClient.getQueriesData<
+    ChatBskyActorDefs.ProfileViewBasic[]
+  >({
+    queryKey: [RQKEY_ROOT],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData) continue
+    for (const member of queryData) {
+      if (member.did === did) {
+        yield member
+      }
+    }
+  }
 }
