@@ -10,7 +10,7 @@ import {useAgent} from '#/state/session'
 import * as bsky from '#/types/bsky'
 
 const RQKEY_ROOT = 'listConvoMembers'
-const listConvoMembersQueryKey = (convoId: string) =>
+export const listConvoMembersQueryKey = (convoId: string) =>
   createQueryKey(RQKEY_ROOT, {convoId})
 
 // group chat size is 50, so should fetch the whole list in one go

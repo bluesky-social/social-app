@@ -152,7 +152,9 @@ export function MessagesListInfoPanel({
         <AddMembersFlow
           members={members.map(profile => profile.did)}
           title={l`Add people`}
-          onAddMembers={(members: string[]) => addGroupMembers({members})}
+          onAddMembers={(members, profiles) =>
+            addGroupMembers({members, profiles})
+          }
         />
       </Dialog.Outer>
     </>

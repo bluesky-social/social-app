@@ -10,6 +10,7 @@ import {AddMembersFlow} from '#/components/dms/AddMembersFlow'
 import {type ConvoWithDetails} from '#/components/dms/util'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon} from '#/components/icons/Chevron'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 
@@ -26,19 +27,25 @@ export function AddMembersLink({
   const addMembersControl = Dialog.useDialogControl()
 
   const convoId = convo.view.id
-  const {mutate: addGroupMembers} = useAddGroupMembers(convoId, {
-    onSuccess: () => {
-      addMembersControl.close()
+  const {mutate: addGroupMembers, isPending: isAddPending} = useAddGroupMembers(
+    convoId,
+    {
+      onSuccess: () => {
+        addMembersControl.close()
+      },
+      onError: e => {
+        logger.error('Failed to add group chat members', {message: e})
+        Toast.show(l`Failed to add members`, {type: 'error'})
+      },
     },
-    onError: e => {
-      logger.error('Failed to add group chat members', {message: e})
-      Toast.show(l`Failed to add members`, {type: 'error'})
-    },
-  })
+  )
 
   return (
     <>
-      <Button label={l`Add members`} onPress={addMembersControl.open}>
+      <Button
+        disabled={isAddPending}
+        label={l`Add members`}
+        onPress={addMembersControl.open}>
         {({interacting}) => (
           <View
             style={[
@@ -74,7 +81,11 @@ export function AddMembersLink({
                 <Trans>Add members</Trans>
               </Text>
             </View>
-            <ChevronIcon style={[t.atoms.text_contrast_medium]} size="md" />
+            {isAddPending ? (
+              <Loader size="md" />
+            ) : (
+              <ChevronIcon style={[t.atoms.text_contrast_medium]} size="md" />
+            )}
           </View>
         )}
       </Button>
@@ -87,8 +98,8 @@ export function AddMembersLink({
         <AddMembersFlow
           members={members}
           title={l`Add members`}
-          onAddMembers={members => {
-            addGroupMembers({members})
+          onAddMembers={(members, profiles) => {
+            addGroupMembers({members, profiles})
           }}
         />
       </Dialog.Outer>
