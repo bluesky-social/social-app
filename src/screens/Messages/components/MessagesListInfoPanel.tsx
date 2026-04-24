@@ -1,72 +1,90 @@
 import {View} from 'react-native'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
-import {type ConvoState} from '#/state/messages/convo/types'
+import {logger} from '#/logger'
+import {useAddGroupMembers} from '#/state/queries/messages/add-group-members'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {AddMembersFlow} from '#/components/dms/AddMembersFlow'
+import {type ConvoWithDetails} from '#/components/dms/util'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {InviteLinkDialog} from './InviteLinkDialog'
 
-export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
+export function MessagesListInfoPanel({
+  convo,
+}: {
+  convo: Extract<ConvoWithDetails, {kind: 'group'}>
+}) {
   const t = useTheme()
   const {t: l} = useLingui()
 
   const addMembersControl = Dialog.useDialogControl()
+  const inviteLinkControl = Dialog.useDialogControl()
 
   const {currentAccount} = useSession()
 
-  const isOwner =
-    currentAccount?.did == null
-      ? false
-      : convoState.getPrimaryMember?.()?.did === currentAccount.did
-  // TODO Get this from @api/atproto - dsb
-  const isLinkEnabled = false
+  const convoId = convo.view.id
+  const {mutate: addGroupMembers} = useAddGroupMembers(convoId, {
+    onSuccess: () => {
+      addMembersControl.close()
+    },
+    onError: e => {
+      logger.error('Failed to add group chat members', {message: e})
+      Toast.show(l`Failed to add members`, {type: 'error'})
+    },
+  })
 
-  const groupName = convoState.getGroupInfo?.()?.name
+  // TODO Enable this once the feature is working end-to-end. -dsb
+  // const joinLink = groupConvo?.details.joinLink
+  const isJoinLinkEnabled = false
+  //   (isOwner && groupConvo) ||
+  //   (!isOwner && groupConvo && joinLink?.enabledStatus === 'enabled')
 
-  const members = (convoState?.convo?.members ?? []).filter(
+  const isOwner = convo?.primaryMember.did === currentAccount?.did
+
+  const members = (convo?.members ?? []).filter(
     profile => profile.did !== currentAccount?.did,
   )
 
-  let names: React.ReactNode | null = null
+  let names: React.ReactNode = null
   if (members.length === 1) {
     names = <Trans>New chat with {members[0].displayName}</Trans>
-  }
-  if (members.length === 2) {
+  } else if (members.length === 2) {
     names = (
       <Trans>
         New chat with {members[0].displayName} and {members[1].displayName}
       </Trans>
     )
-  }
-  if (members.length > 2) {
+  } else if (members.length > 2) {
+    const memberCount = convo.details.memberCount - 2
     names = (
       <Trans>
         New chat with {members[0].displayName}, {members[1].displayName}, and{' '}
         <Plural
-          value={members.length - 2}
-          one={`${members.length - 2} more`}
-          other={`${members.length - 2} more`}
+          value={memberCount}
+          one={`${memberCount} more`}
+          other={`${memberCount} more`}
         />
         .
       </Trans>
     )
   }
 
-  const showButtons = isOwner || isLinkEnabled
+  const showButtons = isOwner || isJoinLinkEnabled
 
   return (
     <>
       <View style={[a.align_center, a.justify_center]}>
-        <AvatarBubbles animate={true} profiles={members} />
-        {groupName ? (
+        <AvatarBubbles animate={true} profiles={convo?.members} />
+        {convo.details.name ? (
           <Text style={[a.text_2xl, a.font_bold, a.mt_lg, t.atoms.text]}>
-            {groupName}
+            {convo.details.name}
           </Text>
         ) : null}
         {names ? (
@@ -102,12 +120,16 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
                 </ButtonText>
               </Button>
             ) : null}
-            {isOwner || isLinkEnabled ? (
+            {isJoinLinkEnabled ? (
               <Button
                 color="secondary"
                 size="small"
-                label={l`Click here to view or create an invite link for this group chat`}
-                onPress={() => {}}>
+                label={
+                  isOwner
+                    ? l`Click here to create or manage an invite link for this group chat`
+                    : l`Click here to view the invite link for this group chat`
+                }
+                onPress={inviteLinkControl.open}>
                 <ButtonIcon icon={ChainLinkIcon} />
                 <ButtonText>
                   <Trans>Invite link</Trans>
@@ -117,17 +139,22 @@ export function MessagesListInfoPanel({convoState}: {convoState: ConvoState}) {
           </View>
         ) : null}
       </View>
+      <InviteLinkDialog
+        isOwner={isOwner}
+        convo={convo}
+        control={inviteLinkControl}
+      />
       <Dialog.Outer
         control={addMembersControl}
         testID="addChatMembersDialog"
         nativeOptions={{fullHeight: true}}>
         <Dialog.Handle />
         <AddMembersFlow
+          members={members.map(profile => profile.did)}
           title={l`Add people`}
-          onAddMembers={(_dids: string[]) => {
-            // TODO Add members here
-            addMembersControl.close()
-          }}
+          onAddMembers={(members, profiles) =>
+            addGroupMembers({members, profiles})
+          }
         />
       </Dialog.Outer>
     </>

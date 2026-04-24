@@ -9,5 +9,5 @@ export const Lock_Stroke2_Corner2_Rounded = createSinglePathSVG({
 })
 
 export const Unlock_Stroke2_Corner2_Rounded = createSinglePathSVG({
-  path: 'M12 13a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1Z"/><path fill="#000" fill-rule="evenodd" d="M12 2a5 5 0 0 1 4.843 3.751 1 1 0 0 1-1.938.498A3.002 3.002 0 0 0 9 7v2h8a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-7a3 3 0 0 1 3-3V7a5 5 0 0 1 5-5Zm-5 9a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1H7Z',
+  path: 'M12 2a5 5 0 0 1 4.843 3.751 1 1 0 0 1-1.938.498A3.002 3.002 0 0 0 9 7v2h8a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-7a3 3 0 0 1 3-3V7a5 5 0 0 1 5-5m-5 9a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1zm5 2a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1',
 })

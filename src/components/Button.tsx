@@ -77,6 +77,10 @@ export type ButtonState = {
   focused: boolean
   pressed: boolean
   disabled: boolean
+  /**
+   * Alias for hovered || focused || pressed
+   */
+  interacting: boolean
 }
 
 export type ButtonContext = VariantProps & ButtonState
@@ -120,6 +124,7 @@ const Context = createContext<VariantProps & ButtonState>({
   focused: false,
   pressed: false,
   disabled: false,
+  interacting: false,
 })
 Context.displayName = 'ButtonContext'
 
@@ -536,6 +541,7 @@ export const Button = forwardRef<View, ButtonProps>(
     const context = useMemo<ButtonContext>(
       () => ({
         ...state,
+        interacting: state.hovered || state.focused || state.pressed,
         variant,
         color,
         size,

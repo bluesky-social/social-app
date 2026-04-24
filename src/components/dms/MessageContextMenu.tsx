@@ -25,15 +25,18 @@ import {usePromptControl} from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import type * as bsky from '#/types/bsky'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
 import {hasReachedReactionLimit} from './util'
 
 export let MessageContextMenu = ({
   message,
+  senderProfile,
   children,
   onTap,
 }: {
   message: ChatBskyConvoDefs.MessageView
+  senderProfile?: bsky.profile.AnyProfileView
   children: TriggerProps['children']
   onTap?: () => void
 }): React.ReactNode => {
@@ -110,9 +113,7 @@ export let MessageContextMenu = ({
     [l, convo, message, currentAccount?.did],
   )
 
-  const sender = convo.convo.members.find(
-    member => member.did === message.sender.did,
-  )
+  const sender = senderProfile
 
   return (
     <>
@@ -183,7 +184,7 @@ export let MessageContextMenu = ({
         control={reportControl}
         subject={{
           view: 'message',
-          convoId: convo.convo.id,
+          convoId: convo.convo.view.id,
           message,
         }}
         onAfterSubmit={() => {
@@ -197,7 +198,7 @@ export let MessageContextMenu = ({
         control={blockOrDeleteControl}
         currentScreen="conversation"
         params={{
-          convoId: convo.convo.id,
+          convoId: convo.convo.view.id,
           message,
         }}
       />

@@ -1,20 +1,21 @@
-import {type ChatBskyConvoMuteConvo} from '@atproto/api'
+import {ChatBskyConvoDefs, type ChatBskyGroupEditGroup} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
+import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
 import {
   rollbackConvoOptimistic,
   updateConvoOptimistic,
 } from './utils/convo-cache'
 
-export function useMuteConvo(
+export function useEditGroupChatName(
   convoId: string | undefined,
   {
     onSuccess,
     onError,
   }: {
-    onSuccess?: (data: ChatBskyConvoMuteConvo.OutputSchema) => void
+    onSuccess?: (data: ChatBskyGroupEditGroup.OutputSchema) => void
     onError?: (error: Error) => void
   },
 ) {
@@ -22,33 +23,29 @@ export function useMuteConvo(
   const agent = useAgent()
 
   return useMutation({
-    mutationFn: async ({mute}: {mute: boolean}) => {
+    mutationFn: async ({name: groupName}: {name: string}) => {
       if (!convoId) throw new Error('No convoId provided')
-      if (mute) {
-        const {data} = await agent.chat.bsky.convo.muteConvo(
-          {convoId},
-          {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
-        )
-        return data
-      } else {
-        const {data} = await agent.chat.bsky.convo.unmuteConvo(
-          {convoId},
-          {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
-        )
-        return data
-      }
+      const {data} = await agent.chat.bsky.group.editGroup(
+        {convoId, name: groupName},
+        {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
+      )
+      return data
     },
-    onMutate: ({mute}) => {
+    onMutate: ({name: groupName}) => {
       if (!convoId) return
-      return updateConvoOptimistic(queryClient, convoId, prev => ({
-        ...prev,
-        muted: mute,
-      }))
+      return updateConvoOptimistic(queryClient, convoId, prev => {
+        if (!ChatBskyConvoDefs.isGroupConvo(prev.kind)) return undefined
+        return {
+          ...prev,
+          kind: {...prev.kind, name: groupName},
+        }
+      })
     },
     onSuccess: data => {
       onSuccess?.(data)
     },
     onError: (e, _variables, context) => {
+      logger.error(e)
       if (convoId && context) {
         rollbackConvoOptimistic(queryClient, convoId, context)
       }

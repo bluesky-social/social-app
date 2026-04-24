@@ -1,9 +1,10 @@
 import {
   type AtpAgent,
-  ChatBskyActorDefs,
+  type ChatBskyActorDefs,
   ChatBskyConvoDefs,
   type ChatBskyConvoGetLog,
   type ChatBskyConvoSendMessage,
+  type ChatBskyGroupDefs,
 } from '@atproto/api'
 import {XRPCError} from '@atproto/api'
 import {EventEmitter} from 'eventemitter3'
@@ -36,8 +37,12 @@ import {
 } from '#/state/messages/convo/types'
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type MessagesEventBusError} from '#/state/messages/events/types'
+import {
+  type ConvoWithDetails,
+  type GroupConvoMember,
+  parseConvoView,
+} from '#/components/dms/util'
 import {IS_NATIVE} from '#/env'
-import * as bsky from '#/types/bsky'
 
 const logger = Logger.create(Logger.Context.ConversationAgent)
 
@@ -102,10 +107,8 @@ export class Convo {
     {id: string; message: ChatBskyConvoSendMessage.InputSchema['message']}
   > = new Map()
   private deletedMessages: Set<string> = new Set()
-  private systemMessageProfiles: Map<
-    string,
-    ChatBskyActorDefs.ProfileViewBasic
-  > = new Map()
+  private relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic> =
+    new Map()
 
   private isProcessingPendingMessages = false
 
@@ -114,7 +117,7 @@ export class Convo {
   private emitter = new EventEmitter<{event: [ConvoEvent]}>()
 
   convoId: string
-  convo: ChatBskyConvoDefs.ConvoView | undefined
+  convo: ConvoWithDetails | undefined
   sender: ChatBskyActorDefs.ProfileViewBasic | undefined
   recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
   snapshot: ConvoState | undefined
@@ -130,6 +133,7 @@ export class Convo {
       this.setupPlaceholderData(params.placeholderData)
     }
 
+    this.setConvo = this.setConvo.bind(this)
     this.subscribe = this.subscribe.bind(this)
     this.getSnapshot = this.getSnapshot.bind(this)
     this.sendMessage = this.sendMessage.bind(this)
@@ -141,10 +145,10 @@ export class Convo {
     this.markConvoAccepted = this.markConvoAccepted.bind(this)
     this.addReaction = this.addReaction.bind(this)
     this.removeReaction = this.removeReaction.bind(this)
-    this.isGroup = this.isGroup.bind(this)
-    this.getGroupInfo = this.getGroupInfo.bind(this)
-    this.getPrimaryMember = this.getPrimaryMember.bind(this)
     this.updateGroupName = this.updateGroupName.bind(this)
+    this.updateGroupMembers = this.updateGroupMembers.bind(this)
+    this.updateJoinLink = this.updateJoinLink.bind(this)
+    this.updateLockStatus = this.updateLockStatus.bind(this)
   }
 
   private commit() {
@@ -172,6 +176,30 @@ export class Convo {
   }
 
   private generateSnapshot(): ConvoState {
+    const shared = {
+      isFetchingHistory: this.isFetchingHistory,
+      // Explicit null check since the value is initially undefined.
+      hasAllHistory: this.oldestRev === null,
+    }
+
+    const methods = {
+      deleteMessage: this.deleteMessage,
+      sendMessage: this.sendMessage,
+      fetchMessageHistory: this.fetchMessageHistory,
+      markConvoAccepted: this.markConvoAccepted,
+      addReaction: this.addReaction,
+      removeReaction: this.removeReaction,
+    }
+
+    const emptyMethods = {
+      deleteMessage: undefined,
+      sendMessage: undefined,
+      fetchMessageHistory: undefined,
+      markConvoAccepted: undefined,
+      addReaction: undefined,
+      removeReaction: undefined,
+    }
+
     switch (this.status) {
       case ConvoStatus.Initializing: {
         return {
@@ -179,45 +207,48 @@ export class Convo {
           items: [],
           convo: this.convo,
           error: undefined,
-          sender: this.sender,
-          recipients: this.recipients,
-          isFetchingHistory: this.isFetchingHistory,
-          // Explicit null check since the value is initially undefined.
-          hasAllHistory: this.oldestRev === null,
-          deleteMessage: undefined,
-          sendMessage: undefined,
-          fetchMessageHistory: undefined,
-          markConvoAccepted: undefined,
-          addReaction: undefined,
-          removeReaction: undefined,
-          isGroup: this.isGroup,
-          getGroupInfo: this.getGroupInfo,
-          getPrimaryMember: this.getPrimaryMember,
+          ...shared,
+          ...emptyMethods,
         }
       }
-      case ConvoStatus.Disabled:
-      case ConvoStatus.Suspended:
-      case ConvoStatus.Backgrounded:
+      case ConvoStatus.Disabled: {
+        return {
+          status: this.status,
+          items: this.getItems(),
+          convo: this.convo!,
+          error: undefined,
+          ...shared,
+          ...methods,
+        }
+      }
+      case ConvoStatus.Suspended: {
+        return {
+          status: this.status,
+          items: this.getItems(),
+          convo: this.convo!,
+          error: undefined,
+          ...shared,
+          ...methods,
+        }
+      }
+      case ConvoStatus.Backgrounded: {
+        return {
+          status: this.status,
+          items: this.getItems(),
+          convo: this.convo!,
+          error: undefined,
+          ...shared,
+          ...methods,
+        }
+      }
       case ConvoStatus.Ready: {
         return {
           status: this.status,
           items: this.getItems(),
           convo: this.convo!,
           error: undefined,
-          sender: this.sender!,
-          recipients: this.recipients!,
-          isFetchingHistory: this.isFetchingHistory,
-          // Explicit null check since the value is initially undefined.
-          hasAllHistory: this.oldestRev === null,
-          deleteMessage: this.deleteMessage,
-          sendMessage: this.sendMessage,
-          fetchMessageHistory: this.fetchMessageHistory,
-          markConvoAccepted: this.markConvoAccepted,
-          addReaction: this.addReaction,
-          removeReaction: this.removeReaction,
-          isGroup: this.isGroup,
-          getGroupInfo: this.getGroupInfo,
-          getPrimaryMember: this.getPrimaryMember,
+          ...shared,
+          ...methods,
         }
       }
       case ConvoStatus.Error: {
@@ -226,19 +257,9 @@ export class Convo {
           items: [],
           convo: undefined,
           error: this.error!,
-          sender: undefined,
-          recipients: undefined,
           isFetchingHistory: false,
           hasAllHistory: false,
-          deleteMessage: undefined,
-          sendMessage: undefined,
-          fetchMessageHistory: undefined,
-          markConvoAccepted: undefined,
-          addReaction: undefined,
-          removeReaction: undefined,
-          isGroup: undefined,
-          getGroupInfo: undefined,
-          getPrimaryMember: undefined,
+          ...emptyMethods,
         }
       }
       default: {
@@ -247,20 +268,10 @@ export class Convo {
           items: [],
           convo: this.convo,
           error: undefined,
-          sender: this.sender,
-          recipients: this.recipients,
           isFetchingHistory: false,
           // Explicit null check since the value is initially undefined.
           hasAllHistory: this.oldestRev === null,
-          deleteMessage: undefined,
-          sendMessage: undefined,
-          fetchMessageHistory: undefined,
-          markConvoAccepted: undefined,
-          addReaction: undefined,
-          removeReaction: undefined,
-          isGroup: this.isGroup,
-          getGroupInfo: this.getGroupInfo,
-          getPrimaryMember: this.getPrimaryMember,
+          ...emptyMethods,
         }
       }
     }
@@ -460,8 +471,6 @@ export class Convo {
 
   private reset() {
     this.convo = undefined
-    this.sender = undefined
-    this.recipients = undefined
     this.snapshot = undefined
 
     this.status = ConvoStatus.Uninitialized
@@ -473,7 +482,7 @@ export class Convo {
     this.newMessages = new Map()
     this.pendingMessages = new Map()
     this.deletedMessages = new Set()
-    this.systemMessageProfiles = new Map()
+    this.relatedProfiles = new Map()
 
     this.pendingMessageFailure = null
     this.fetchMessageHistoryError = undefined
@@ -498,6 +507,26 @@ export class Convo {
     }
   }
 
+  private setConvo(convo: ChatBskyConvoDefs.ConvoView) {
+    this.convo = parseConvoView(convo, this.senderUserDid) ?? this.convo
+    if (this.convo) {
+      for (const member of this.convo.members) {
+        this.relatedProfiles.set(member.did, member)
+      }
+    }
+  }
+
+  private updateConvo(convo: Partial<ChatBskyConvoDefs.ConvoView>) {
+    if (this.convo) {
+      this.convo =
+        parseConvoView({...this.convo.view, ...convo}, this.senderUserDid) ??
+        this.convo
+      for (const member of this.convo.members) {
+        this.relatedProfiles.set(member.did, member)
+      }
+    }
+  }
+
   /**
    * Initialises the convo with placeholder data, if provided. We still refetch it before rendering the convo,
    * but this allows us to render the convo header immediately.
@@ -505,20 +534,14 @@ export class Convo {
   private setupPlaceholderData(
     data: NonNullable<ConvoParams['placeholderData']>,
   ) {
-    this.convo = data.convo
-    this.sender = data.convo.members.find(m => m.did === this.senderUserDid)
-    this.recipients = data.convo.members.filter(
-      m => m.did !== this.senderUserDid,
-    )
+    this.setConvo(data.convo)
   }
 
   private async setup() {
     try {
-      const {convo, sender, recipients} = await this.fetchConvo()
+      const {convo} = await this.fetchConvo()
 
-      this.convo = convo
-      this.sender = sender
-      this.recipients = recipients
+      this.setConvo(convo)
 
       /*
        * Some validation prior to `Ready` status
@@ -526,14 +549,14 @@ export class Convo {
       if (!this.convo) {
         throw new Error('could not find convo')
       }
-      if (!this.sender) {
-        throw new Error('could not find sender in convo')
-      }
-      if (!this.recipients) {
-        throw new Error('could not find recipients in convo')
+
+      const self = this.convo.members.find(m => m.did === this.senderUserDid)
+
+      if (!self) {
+        throw new Error('could not find self in convo')
       }
 
-      const userIsDisabled = Boolean(this.sender.chatDisabled)
+      const userIsDisabled = Boolean(self.chatDisabled)
 
       if (userIsDisabled) {
         this.dispatch({event: ConvoDispatchEvent.Disable})
@@ -602,22 +625,19 @@ export class Convo {
   }
 
   private pendingFetchConvo:
-    | Promise<{
-        convo: ChatBskyConvoDefs.ConvoView
-        sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-        recipients: ChatBskyActorDefs.ProfileViewBasic[]
-      }>
+    | Promise<{convo: ChatBskyConvoDefs.ConvoView}>
     | undefined
   async fetchConvo() {
     if (this.pendingFetchConvo) return this.pendingFetchConvo
 
+    // non-blocking
+    void this.fetchMemberList()
+
     this.pendingFetchConvo = (async () => {
       try {
         const response = await networkRetry(2, () => {
-          return this.agent.api.chat.bsky.convo.getConvo(
-            {
-              convoId: this.convoId,
-            },
+          return this.agent.chat.bsky.convo.getConvo(
+            {convoId: this.convoId},
             {headers: DM_SERVICE_HEADERS},
           )
         })
@@ -626,8 +646,6 @@ export class Convo {
 
         return {
           convo,
-          sender: convo.members.find(m => m.did === this.senderUserDid),
-          recipients: convo.members.filter(m => m.did !== this.senderUserDid),
         }
       } finally {
         this.pendingFetchConvo = undefined
@@ -639,11 +657,10 @@ export class Convo {
 
   async refreshConvo() {
     try {
-      const {convo, sender, recipients} = await this.fetchConvo()
+      void this.fetchMemberList()
+      const {convo} = await this.fetchConvo()
       // throw new Error('UNCOMMENT TO TEST REFRESH FAILURE')
-      this.convo = convo || this.convo
-      this.sender = sender || this.sender
-      this.recipients = recipients || this.recipients
+      this.setConvo(convo)
     } catch (err) {
       const e = err as Error
       if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
@@ -654,11 +671,32 @@ export class Convo {
     }
   }
 
-  private fetchMessageHistoryError:
-    | {
-        retry: () => void
+  // purely for populating `this.relatedProfiles` - we do not pipe it
+  // into the ConvoWithDetails. If you want to drive UI based on the member list,
+  // use `useListConvoMembersQuery`
+  // we shouldn't also block loading off of this - the UI should be resilient
+  async fetchMemberList() {
+    let cursor: string | undefined
+    do {
+      const result = await networkRetry(2, () => {
+        return this.agent.chat.bsky.convo.getConvoMembers(
+          {
+            convoId: this.convoId,
+            limit: 50,
+            cursor,
+          },
+          {headers: DM_SERVICE_HEADERS},
+        )
+      })
+      cursor = result.data.cursor
+
+      for (const member of result.data.members) {
+        this.relatedProfiles.set(member.did, member)
       }
-    | undefined
+    } while (cursor)
+  }
+
+  private fetchMessageHistoryError: {retry: () => void} | undefined
   async fetchMessageHistory() {
     logger.debug('fetch message history', {})
 
@@ -700,7 +738,7 @@ export class Convo {
 
       if (relatedProfiles) {
         for (const profile of relatedProfiles) {
-          this.systemMessageProfiles.set(profile.did, profile)
+          this.relatedProfiles.set(profile.did, profile)
         }
       }
 
@@ -820,6 +858,12 @@ export class Convo {
            */
           this.latestRev = ev.rev
 
+          if ('relatedProfiles' in ev && Array.isArray(ev.relatedProfiles)) {
+            for (const profile of ev.relatedProfiles) {
+              this.relatedProfiles.set(profile.did, profile)
+            }
+          }
+
           if (
             ChatBskyConvoDefs.isLogCreateMessage(ev) &&
             ChatBskyConvoDefs.isMessageView(ev.message)
@@ -872,14 +916,6 @@ export class Convo {
             const systemView = toSystemMessageView(ev)
             if (systemView) {
               this.newMessages.set(systemView.id, systemView)
-              if (
-                'relatedProfiles' in ev &&
-                Array.isArray(ev.relatedProfiles)
-              ) {
-                for (const profile of ev.relatedProfiles) {
-                  this.systemMessageProfiles.set(profile.did, profile)
-                }
-              }
               needsCommit = true
             }
           }
@@ -907,11 +943,10 @@ export class Convo {
       id: tempId,
       message,
     })
-    if (this.convo?.status === 'request') {
-      this.convo = {
-        ...this.convo,
+    if (this.convo?.view.status === 'request') {
+      this.updateConvo({
         status: 'accepted',
-      }
+      })
     }
     this.commit()
 
@@ -921,41 +956,79 @@ export class Convo {
   }
 
   markConvoAccepted() {
-    if (this.convo) {
-      this.convo = {
-        ...this.convo,
-        status: 'accepted',
-      }
-    }
+    this.updateConvo({
+      status: 'accepted',
+    })
+
     this.commit()
   }
 
   updateMuted(muted: boolean) {
-    if (this.convo) {
-      this.convo = {
-        ...this.convo,
-        muted,
-      }
-    }
+    this.updateConvo({
+      muted,
+    })
+
     this.commit()
   }
 
   updateGroupName(name: string) {
-    if (
-      this.convo &&
-      bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvo>(
-        this.convo.kind,
-        ChatBskyConvoDefs.isGroupConvo,
-      )
-    ) {
-      this.convo = {
-        ...this.convo,
-        kind: {
-          ...this.convo.kind,
-          name,
-        },
-      }
+    if (this.convo?.kind !== 'group') {
+      throw new Error('updateGroupName can only be called on group convo')
     }
+
+    this.updateConvo({
+      kind: {
+        ...this.convo.details,
+        name,
+      },
+    })
+
+    this.commit()
+  }
+
+  updateGroupMembers(members: GroupConvoMember[], memberCount: number) {
+    if (this.convo?.kind !== 'group') {
+      throw new Error('updateGroupMembers can only be called on group convo')
+    }
+
+    this.updateConvo({
+      members,
+      kind: {
+        ...this.convo.details,
+        memberCount,
+      },
+    })
+
+    this.commit()
+  }
+
+  updateJoinLink(joinLink: ChatBskyGroupDefs.JoinLinkView | undefined) {
+    if (this.convo?.kind !== 'group') {
+      throw new Error('updateJoinLink can only be called on group convo')
+    }
+
+    this.updateConvo({
+      kind: {
+        ...this.convo.details,
+        joinLink,
+      },
+    })
+
+    this.commit()
+  }
+
+  updateLockStatus(lockStatus: ChatBskyConvoDefs.ConvoLockStatus) {
+    if (this.convo?.kind !== 'group') {
+      throw new Error('updateLockStatus can only be called on group convo')
+    }
+
+    this.updateConvo({
+      kind: {
+        ...this.convo.details,
+        lockStatus,
+      },
+    })
+
     this.commit()
   }
 
@@ -980,7 +1053,7 @@ export class Convo {
 
       const {id, message} = pendingMessage
 
-      const response = await this.agent.api.chat.bsky.convo.sendMessage(
+      const response = await this.agent.chat.bsky.convo.sendMessage(
         {
           convoId: this.convoId,
           message,
@@ -1023,7 +1096,7 @@ export class Convo {
             this.emitter.emit('event', {
               type: 'invalidate-block-state',
               accountDids: [
-                this.sender!.did,
+                this.senderUserDid,
                 ...this.recipients!.map(r => r.did),
               ],
             })
@@ -1075,7 +1148,7 @@ export class Convo {
     )
 
     try {
-      const {data} = await this.agent.api.chat.bsky.convo.sendMessageBatch(
+      const {data} = await this.agent.chat.bsky.convo.sendMessageBatch(
         {
           items: messageArray.map(({message}) => ({
             convoId: this.convoId,
@@ -1117,7 +1190,7 @@ export class Convo {
 
     try {
       await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.deleteMessageForSelf(
+        return this.agent.chat.bsky.convo.deleteMessageForSelf(
           {
             convoId: this.convoId,
             messageId,
@@ -1158,6 +1231,7 @@ export class Convo {
           type: 'message',
           key: m.id,
           message: m,
+          relatedProfiles: this.relatedProfiles,
           nextMessage: null,
           prevMessage: null,
         })
@@ -1166,6 +1240,7 @@ export class Convo {
           type: 'deleted-message',
           key: m.id,
           message: m,
+          relatedProfiles: this.relatedProfiles,
           nextMessage: null,
           prevMessage: null,
         })
@@ -1174,7 +1249,7 @@ export class Convo {
           type: 'system-message',
           key: m.id,
           message: m,
-          relatedProfiles: Array.from(this.systemMessageProfiles.values()),
+          relatedProfiles: this.relatedProfiles,
         })
       }
     })
@@ -1196,6 +1271,7 @@ export class Convo {
           type: 'message',
           key: m.id,
           message: m,
+          relatedProfiles: this.relatedProfiles,
           nextMessage: null,
           prevMessage: null,
         })
@@ -1204,6 +1280,7 @@ export class Convo {
           type: 'deleted-message',
           key: m.id,
           message: m,
+          relatedProfiles: this.relatedProfiles,
           nextMessage: null,
           prevMessage: null,
         })
@@ -1212,7 +1289,7 @@ export class Convo {
           type: 'system-message',
           key: m.id,
           message: m,
-          relatedProfiles: Array.from(this.systemMessageProfiles.values()),
+          relatedProfiles: this.relatedProfiles,
         })
       }
     })
@@ -1228,15 +1305,12 @@ export class Convo {
           id: nanoid(),
           rev: '__fake__',
           sentAt: new Date().toISOString(),
-          /*
-           * `getItems` is only run in "active" status states, where
-           * `this.sender` is defined
-           */
           sender: {
             $type: 'chat.bsky.convo.defs#messageViewSender',
-            did: this.sender!.did,
+            did: this.senderUserDid,
           },
         },
+        relatedProfiles: this.relatedProfiles,
         nextMessage: null,
         prevMessage: null,
         failed: this.pendingMessageFailure !== null,
@@ -1446,48 +1520,6 @@ export class Convo {
     } catch (error) {
       if (restore) restore()
       throw error
-    }
-  }
-
-  // Group utilities
-
-  isGroup(): boolean | undefined {
-    if (!this.convo) return undefined
-    const info = this.getGroupInfo()
-    return !!info
-  }
-
-  getGroupInfo(): ChatBskyConvoDefs.GroupConvo | undefined {
-    if (
-      this.convo &&
-      bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvo>(
-        this.convo.kind,
-        ChatBskyConvoDefs.isGroupConvo,
-      )
-    ) {
-      return this.convo.kind
-    }
-    return undefined
-  }
-
-  getPrimaryMember(): ChatBskyActorDefs.ProfileViewBasic | undefined {
-    if (this.isGroup()) {
-      return this.convo?.members.find(m => {
-        if (
-          bsky.dangerousIsType<ChatBskyActorDefs.GroupConvoMember>(
-            m.kind,
-            ChatBskyActorDefs.isGroupConvoMember,
-          )
-        ) {
-          return m.kind.role === 'owner'
-        } else {
-          throw new Error(
-            'Expected a GroupConvoMember, got an unknown kind of member',
-          )
-        }
-      })
-    } else {
-      return this.recipients?.find(r => r.did !== this.senderUserDid)
     }
   }
 }

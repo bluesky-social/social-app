@@ -4,23 +4,29 @@ import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
 import {MessageContextMenu} from '#/components/dms/MessageContextMenu'
+import type * as bsky from '#/types/bsky'
 
 export function ActionsWrapper({
   message,
   isFromSelf,
+  senderProfile,
   children,
   onTap,
 }: {
   message: ChatBskyConvoDefs.MessageView
   hasReactions?: boolean
   isFromSelf: boolean
+  senderProfile?: bsky.profile.AnyProfileView
   children: React.ReactNode
   onTap?: () => void
 }) {
   const {t: l} = useLingui()
 
   return (
-    <MessageContextMenu message={message} onTap={onTap}>
+    <MessageContextMenu
+      message={message}
+      senderProfile={senderProfile}
+      onTap={onTap}>
       {trigger =>
         // will always be true, since this file is platform split
         trigger.IS_NATIVE && (

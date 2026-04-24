@@ -161,11 +161,13 @@ function GroupHeaderReady({
     })
   }
 
+  const lockStatus = convo.details.lockStatus
+
   return (
     <Wrapper
       heading={
         <>
-          <AvatarBubbles size="small" profiles={convo.members} />
+          <AvatarBubbles size={40} profiles={convo.members} />
           <Text style={[a.text_md, a.font_semi_bold]} numberOfLines={1}>
             {convo.details.name}
           </Text>
@@ -175,6 +177,7 @@ function GroupHeaderReady({
       settings={
         <Button
           label={l`Open group chat settings`}
+          disabled={lockStatus === 'locked-permanently'}
           size="small"
           color="secondary"
           shape="round"
