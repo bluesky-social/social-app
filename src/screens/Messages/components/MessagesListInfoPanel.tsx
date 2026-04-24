@@ -31,6 +31,9 @@ export function MessagesListInfoPanel({
 
   const convoId = convo.view.id
   const {mutate: addGroupMembers} = useAddGroupMembers(convoId, {
+    onSuccess: () => {
+      addMembersControl.close()
+    },
     onError: e => {
       logger.error('Failed to add group chat members', {message: e})
       Toast.show(l`Failed to add members`, {type: 'error'})
@@ -151,7 +154,6 @@ export function MessagesListInfoPanel({
           title={l`Add people`}
           onAddMembers={(members: string[]) => {
             addGroupMembers({members})
-            addMembersControl.close()
           }}
         />
       </Dialog.Outer>
