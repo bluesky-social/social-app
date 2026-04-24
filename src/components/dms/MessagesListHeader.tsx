@@ -167,7 +167,7 @@ function GroupHeaderReady({
     <Wrapper
       heading={
         <>
-          <AvatarBubbles size="small" profiles={convo.members} />
+          <AvatarBubbles size={40} profiles={convo.members} />
           <Text style={[a.text_md, a.font_semi_bold]} numberOfLines={1}>
             {convo.details.name}
           </Text>
