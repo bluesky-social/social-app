@@ -76,7 +76,14 @@ export function Member({
 
   return (
     <SubtleHoverWrapper>
-      <View style={[a.flex_row, a.align_center, a.justify_between, a.mx_xl]}>
+      <View
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.justify_between,
+          a.px_xl,
+          a.py_sm,
+        ]}>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={l`View ${displayName}’s profile`}

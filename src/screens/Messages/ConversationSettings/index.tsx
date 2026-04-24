@@ -49,7 +49,6 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {InviteLinkDialog} from '../components/InviteLinkDialog'
 import {AddMembersLink} from './AddMembersLink'
-import {ROW_SPACING} from './constants'
 import {Member} from './Member'
 import {MembersAndRequests} from './MembersAndRequests'
 import {EditNamePrompt, LeaveChatPrompt, LockChatPrompt} from './prompts'
@@ -250,8 +249,7 @@ function GroupSettings({
     <List
       data={items}
       contentContainerStyle={{
-        gap: ROW_SPACING,
-        paddingBottom: bottomBarOffset + ROW_SPACING,
+        paddingBottom: bottomBarOffset + a.pb_xl.paddingBottom,
       }}
       desktopFixedHeight
       initialNumToRender={initialNumToRender}
