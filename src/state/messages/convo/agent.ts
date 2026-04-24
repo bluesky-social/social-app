@@ -679,11 +679,14 @@ export class Convo {
     let cursor: string | undefined
     do {
       const result = await networkRetry(2, () => {
-        return this.agent.chat.bsky.convo.getConvoMembers({
-          convoId: this.convoId,
-          limit: 50,
-          cursor,
-        })
+        return this.agent.chat.bsky.convo.getConvoMembers(
+          {
+            convoId: this.convoId,
+            limit: 50,
+            cursor,
+          },
+          {headers: DM_SERVICE_HEADERS},
+        )
       })
       cursor = result.data.cursor
 
