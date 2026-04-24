@@ -49,7 +49,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {InviteLinkDialog} from '../components/InviteLinkDialog'
 import {AddMembersLink} from './AddMembersLink'
-import {Member} from './Member'
+import {Member, MemberPlaceholder} from './Member'
 import {MembersAndRequests} from './MembersAndRequests'
 import {EditNamePrompt, LeaveChatPrompt, LockChatPrompt} from './prompts'
 
@@ -60,14 +60,18 @@ const dateFormatter = new Intl.DateTimeFormat(undefined, {
 })
 
 type Item =
-  | {type: 'MEMBERS_AND_REQUESTS'}
-  | {type: 'ADD_MEMBERS_LINK'}
+  | {type: 'MEMBERS_AND_REQUESTS'; key: string}
+  | {type: 'ADD_MEMBERS_LINK'; key: string}
   | {
       type: 'CHAT_MEMBER'
+      key: string
       profile: GroupConvoMember
       status: 'owner' | 'standard' | 'invited'
     }
-  | {type: 'LOADING'}
+  | {
+      type: 'CHAT_MEMBER_PLACEHOLDER'
+      key: string
+    }
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -115,9 +119,10 @@ function SettingsInner() {
 
   if (!isConvoActive(convoState)) {
     return (
-      <Layout.Content
-        contentContainerStyle={[a.flex_1, a.align_center, a.justify_center]}>
-        <Loader size="xl" />
+      <Layout.Content>
+        <View style={[a.align_center, a.justify_center, a.flex_1, a.py_4xl]}>
+          <Loader size="xl" />
+        </View>
       </Layout.Content>
     )
   }
@@ -142,7 +147,7 @@ function SettingsInner() {
 }
 
 function keyExtractor(item: Item) {
-  return item.type === 'CHAT_MEMBER' ? item.profile.did : item.type
+  return item.key
 }
 
 function GroupSettings({
@@ -180,32 +185,47 @@ function GroupSettings({
   const items: Item[] = [
     {
       type: 'MEMBERS_AND_REQUESTS',
+      key: 'members-and-requests',
     },
-    ...(isOwner ? [{type: 'ADD_MEMBERS_LINK'} as const] : []),
-    ...[...memberListData]
-      .sort((a, b) => {
-        const aIsOwner = a.did === primaryMember?.did
-        const bIsOwner = b.did === primaryMember?.did
-        const aIsSelf = a.did === currentAccount?.did
-        const bIsSelf = b.did === currentAccount?.did
-        if (aIsOwner !== bIsOwner) return aIsOwner ? -1 : 1
-        if (aIsSelf !== bIsSelf) return aIsSelf ? -1 : 1
-        return 0
-      })
-      .map(
-        (profile): Item => ({
-          type: 'CHAT_MEMBER',
-          profile: profile as GroupConvoMember,
-          status:
-            primaryMember?.did === profile.did
-              ? 'owner'
-              : invites.includes(profile.did)
-                ? 'invited'
-                : 'standard',
-        }),
-      ),
-    ...(isPending ? [{type: 'LOADING' as const}] : []),
+    ...(isOwner
+      ? [{type: 'ADD_MEMBERS_LINK', key: 'add-members-link'} as const]
+      : []),
   ]
+  if (isPending) {
+    // should never be pending if we correctly set the query cache data
+    Array.from({length: 5}).forEach((_, i) =>
+      items.push({
+        type: 'CHAT_MEMBER_PLACEHOLDER',
+        key: `chat-member-placeholder-${i}`,
+      }),
+    )
+  } else {
+    items.push(
+      ...memberListData
+        .sort((a, b) => {
+          const aIsOwner = a.did === primaryMember?.did
+          const bIsOwner = b.did === primaryMember?.did
+          const aIsSelf = a.did === currentAccount?.did
+          const bIsSelf = b.did === currentAccount?.did
+          if (aIsOwner !== bIsOwner) return aIsOwner ? -1 : 1
+          if (aIsSelf !== bIsSelf) return aIsSelf ? -1 : 1
+          return 0
+        })
+        .map(
+          (profile): Item => ({
+            type: 'CHAT_MEMBER',
+            key: profile.did,
+            profile: profile as GroupConvoMember,
+            status:
+              primaryMember?.did === profile.did
+                ? 'owner'
+                : invites.includes(profile.did)
+                  ? 'invited'
+                  : 'standard',
+          }),
+        ),
+    )
+  }
 
   function renderItem({item}: {item: Item}) {
     switch (item.type) {
@@ -234,12 +254,8 @@ function GroupSettings({
             isOwner={isOwner}
           />
         ) : null
-      case 'LOADING':
-        return (
-          <View style={[a.w_full, a.align_center, a.py_2xl]}>
-            <Loader size="lg" />
-          </View>
-        )
+      case 'CHAT_MEMBER_PLACEHOLDER':
+        return <MemberPlaceholder />
       default:
         return null
     }

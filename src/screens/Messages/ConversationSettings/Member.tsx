@@ -17,6 +17,8 @@ import {MemberMenu} from './MemberMenu'
 import {StatusBadge} from './StatusBadge'
 import {SubtleHoverWrapper} from './SubtleHoverWrapper'
 
+const outerStyles = [a.px_xl, a.py_sm, a.flex_row, a.align_center, a.gap_sm]
+
 export function Member({
   convo,
   profile: profileUnshadowed,
@@ -35,21 +37,8 @@ export function Member({
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
 
-  const outerStyles = [a.px_xl, a.py_sm, a.flex_row, a.align_center, a.gap_sm]
-
   if (!moderationOpts) {
-    return (
-      <View style={outerStyles}>
-        <ProfileCard.Link profile={profile} style={[a.flex_1]}>
-          <ProfileCard.Outer>
-            <ProfileCard.Header>
-              <ProfileCard.AvatarPlaceholder size={48} />
-              <ProfileCard.NameAndHandlePlaceholder />
-            </ProfileCard.Header>
-          </ProfileCard.Outer>
-        </ProfileCard.Link>
-      </View>
-    )
+    return <MemberPlaceholder />
   }
 
   const moderation = moderateProfile(profile, moderationOpts)
@@ -123,5 +112,18 @@ export function Member({
         {statusBadge}
       </View>
     </SubtleHoverWrapper>
+  )
+}
+
+export function MemberPlaceholder() {
+  return (
+    <View style={outerStyles}>
+      <ProfileCard.Outer>
+        <ProfileCard.Header>
+          <ProfileCard.AvatarPlaceholder size={48} />
+          <ProfileCard.NameAndHandlePlaceholder />
+        </ProfileCard.Header>
+      </ProfileCard.Outer>
+    </View>
   )
 }
