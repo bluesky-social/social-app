@@ -68,13 +68,13 @@ export type DirectConvoMember = ChatBskyActorDefs.ProfileViewBasic & {
 export type ConvoWithDetails = {view: ChatBskyConvoDefs.ConvoView} & (
   | {
       kind: 'group'
-      details: ChatBskyConvoDefs.GroupConvo
+      details: $Typed<ChatBskyConvoDefs.GroupConvo>
       primaryMember: GroupConvoMember // the owner
       members: Array<GroupConvoMember>
     }
   | {
       kind: 'direct'
-      details: ChatBskyConvoDefs.DirectConvo
+      details: $Typed<ChatBskyConvoDefs.DirectConvo>
       primaryMember: DirectConvoMember // the other user
       members: Array<DirectConvoMember>
     }

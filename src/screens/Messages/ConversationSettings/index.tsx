@@ -23,7 +23,7 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button, type ButtonColor, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
+import {type ConvoWithDetails} from '#/components/dms/util'
 import {Error} from '#/components/Error'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon} from '#/components/icons/ArrowBoxLeft'
 import {
@@ -110,8 +110,6 @@ function SettingsInner({convoId}: {convoId: string}) {
   const {currentAccount} = useSession()
 
   const convo = convoState.convo
-    ? parseConvoView(convoState.convo, currentAccount?.did)
-    : null
   const primaryMember = convo?.primaryMember
   const isOwner = !!primaryMember && primaryMember.did === currentAccount?.did
 
