@@ -183,7 +183,7 @@ export let MessageContextMenu = ({
         control={reportControl}
         subject={{
           view: 'message',
-          convoId: convo.convo.id,
+          convoId: convo.convo.view.id,
           message,
         }}
         onAfterSubmit={() => {
@@ -197,7 +197,7 @@ export let MessageContextMenu = ({
         control={blockOrDeleteControl}
         currentScreen="conversation"
         params={{
-          convoId: convo.convo.id,
+          convoId: convo.convo.view.id,
           message,
         }}
       />

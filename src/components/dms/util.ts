@@ -87,7 +87,10 @@ export type ConvoWithDetails = {view: ChatBskyConvoDefs.ConvoView} & (
 export function parseConvoView(
   convoView: ChatBskyConvoDefs.ConvoView,
   ownDid: string | undefined,
+  allMembers?: ChatBskyActorDefs.ProfileViewBasic[],
 ): ConvoWithDetails | null {
+  const memberList = allMembers ?? convoView.members
+
   if (
     bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvo>(
       convoView.kind,
@@ -96,7 +99,7 @@ export function parseConvoView(
   ) {
     let owner: GroupConvoMember | undefined = undefined
 
-    for (const member of convoView.members) {
+    for (const member of memberList) {
       if (
         bsky.dangerousIsType<ChatBskyActorDefs.GroupConvoMember>(
           member.kind,
@@ -104,9 +107,6 @@ export function parseConvoView(
         )
       ) {
         if (member.kind.role === 'owner') {
-          // have to do a type assertion here
-          // this works: {...member, kind: member.kind}
-          // however that's creating a new object for no good reason
           owner = member as GroupConvoMember
         }
       } else {
@@ -127,7 +127,7 @@ export function parseConvoView(
       kind: 'group',
       details: convoView.kind,
       primaryMember: owner,
-      members: convoView.members as Array<GroupConvoMember>,
+      members: memberList as Array<GroupConvoMember>,
     }
   } else if (
     bsky.dangerousIsType<ChatBskyConvoDefs.DirectConvo>(
@@ -135,7 +135,7 @@ export function parseConvoView(
       ChatBskyConvoDefs.isDirectConvo,
     )
   ) {
-    const otherUser = convoView.members.find(m => m.did !== ownDid)
+    const otherUser = memberList.find(m => m.did !== ownDid)
 
     if (!otherUser) {
       logger.warn('No other user found in direct convo')
@@ -147,7 +147,7 @@ export function parseConvoView(
       kind: 'direct',
       details: convoView.kind,
       primaryMember: otherUser as DirectConvoMember,
-      members: convoView.members as Array<DirectConvoMember>,
+      members: memberList as Array<DirectConvoMember>,
     }
   } else {
     logger.warn('Unknown convo kind: ' + JSON.stringify(convoView.kind))

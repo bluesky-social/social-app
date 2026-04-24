@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 
 import {type ActiveConvoStates} from '#/state/messages/convo'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {KnownFollowers} from '#/components/KnownFollowers'
@@ -16,16 +15,16 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
   const t = useTheme()
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
-  const {currentAccount} = useSession()
   const leaveConvoControl = usePromptControl()
 
   const onAcceptChat = useCallback(() => {
     convoState.markConvoAccepted()
   }, [convoState])
 
-  const otherUser = convoState.recipients.find(
-    user => user.did !== currentAccount?.did,
-  )
+  const otherUser =
+    convoState.convo.kind === 'direct'
+      ? convoState.convo.primaryMember
+      : undefined
 
   if (!moderationOpts) {
     return null
@@ -44,7 +43,7 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
         {otherUser && (
           <RejectMenu
             label={_(msg`Block or report`)}
-            convo={convoState.convo}
+            convo={convoState.convo.view}
             profile={otherUser}
             color="negative_subtle"
             size="small"
@@ -53,14 +52,14 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
         )}
         <DeleteChatButton
           label={_(msg`Delete`)}
-          convo={convoState.convo}
+          convo={convoState.convo.view}
           color="secondary"
           size="small"
           currentScreen="conversation"
           onPress={leaveConvoControl.open}
         />
         <LeaveConvoPrompt
-          convoId={convoState.convo.id}
+          convoId={convoState.convo.view.id}
           control={leaveConvoControl}
           currentScreen="conversation"
           hasMessages={false}
@@ -69,7 +68,7 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
       <View style={[a.w_full, a.flex_row]}>
         <AcceptChatButton
           onAcceptConvo={onAcceptChat}
-          convo={convoState.convo}
+          convo={convoState.convo.view}
           color="primary_subtle"
           size="small"
           currentScreen="conversation"
