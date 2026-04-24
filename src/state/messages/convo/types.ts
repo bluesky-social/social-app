@@ -157,8 +157,6 @@ export type ConvoStateUninitialized = {
   items: []
   convo: ConvoWithDetails | undefined
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-  recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
   isFetchingHistory: false
   hasAllHistory: boolean
   deleteMessage: undefined
@@ -173,8 +171,6 @@ export type ConvoStateInitializing = {
   items: []
   convo: ConvoWithDetails | undefined
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-  recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
   isFetchingHistory: boolean
   hasAllHistory: boolean
   deleteMessage: undefined
@@ -189,8 +185,6 @@ export type ConvoStateReady = {
   items: ConvoItem[]
   convo: ConvoWithDetails
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic
-  recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   hasAllHistory: boolean
   deleteMessage: DeleteMessage
@@ -205,8 +199,6 @@ export type ConvoStateBackgrounded = {
   items: ConvoItem[]
   convo: ConvoWithDetails
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic
-  recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   hasAllHistory: boolean
   deleteMessage: DeleteMessage
@@ -221,8 +213,6 @@ export type ConvoStateSuspended = {
   items: ConvoItem[]
   convo: ConvoWithDetails
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic
-  recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   hasAllHistory: boolean
   deleteMessage: DeleteMessage
@@ -237,8 +227,6 @@ export type ConvoStateError = {
   items: []
   convo: undefined
   error: ConvoError
-  sender: undefined
-  recipients: undefined
   isFetchingHistory: false
   hasAllHistory: false
   deleteMessage: undefined
@@ -253,8 +241,6 @@ export type ConvoStateDisabled = {
   items: ConvoItem[]
   convo: ConvoWithDetails
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic
-  recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   hasAllHistory: boolean
   deleteMessage: DeleteMessage
