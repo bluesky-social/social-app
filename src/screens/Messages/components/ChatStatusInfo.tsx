@@ -44,7 +44,7 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
         {otherUser && (
           <RejectMenu
             label={_(msg`Block or report`)}
-            convo={convoState.convo}
+            convo={convoState.convo.view}
             profile={otherUser}
             color="negative_subtle"
             size="small"
@@ -53,14 +53,14 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
         )}
         <DeleteChatButton
           label={_(msg`Delete`)}
-          convo={convoState.convo}
+          convo={convoState.convo.view}
           color="secondary"
           size="small"
           currentScreen="conversation"
           onPress={leaveConvoControl.open}
         />
         <LeaveConvoPrompt
-          convoId={convoState.convo.id}
+          convoId={convoState.convo.view.id}
           control={leaveConvoControl}
           currentScreen="conversation"
           hasMessages={false}
@@ -69,7 +69,7 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
       <View style={[a.w_full, a.flex_row]}>
         <AcceptChatButton
           onAcceptConvo={onAcceptChat}
-          convo={convoState.convo}
+          convo={convoState.convo.view}
           color="primary_subtle"
           size="small"
           currentScreen="conversation"
