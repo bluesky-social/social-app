@@ -102,14 +102,16 @@ export function Member({
               ]}>
               {sanitizeHandle(profile.handle, '@')}
             </Text>
-            <Text
-              style={[
-                a.text_xs,
-                {color: t.palette.contrast_500},
-                web(a.pt_2xs),
-              ]}>
-              {joinedReason}
-            </Text>
+            {!isOwner && (
+              <Text
+                style={[
+                  a.text_xs,
+                  {color: t.palette.contrast_500},
+                  web(a.pt_2xs),
+                ]}>
+                {joinedReason}
+              </Text>
+            )}
           </View>
         </Pressable>
         <View>{statusBadge}</View>
