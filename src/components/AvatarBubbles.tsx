@@ -44,7 +44,9 @@ export function AvatarBubbles({
     typeof size === 'number'
       ? size / 120
       : size === 'small'
-        ? 40 / 120
+        ? profiles.length === 1
+          ? 1
+          : 40 / 120
         : size === 'medium'
           ? 56 / 120
           : 1
