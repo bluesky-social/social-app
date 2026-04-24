@@ -6,7 +6,7 @@ import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-disp
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, native, useTheme, web} from '#/alf'
 import {
   type ConvoWithDetails,
   type GroupConvoMember,
@@ -103,7 +103,7 @@ export function Member({
                 />
                 <ProfileCard.Handle
                   profile={profile}
-                  textStyle={[a.text_xs, a.font_medium, {top: -1}]}
+                  textStyle={[a.text_xs, a.font_medium, native({top: -1})]}
                 />
                 {!isOwner && (
                   <Text
