@@ -43,7 +43,6 @@ import {
   parseConvoView,
 } from '#/components/dms/util'
 import {IS_NATIVE} from '#/env'
-import type * as bsky from '#/types/bsky'
 
 const logger = Logger.create(Logger.Context.ConversationAgent)
 
@@ -108,7 +107,8 @@ export class Convo {
     {id: string; message: ChatBskyConvoSendMessage.InputSchema['message']}
   > = new Map()
   private deletedMessages: Set<string> = new Set()
-  private relatedProfiles: Map<string, bsky.profile.AnyProfileView> = new Map()
+  private relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic> =
+    new Map()
 
   private isProcessingPendingMessages = false
 
@@ -1172,44 +1172,6 @@ export class Convo {
     }
   }
 
-  private getRelatedProfilesForItem(
-    m:
-      | ChatBskyConvoDefs.MessageView
-      | ChatBskyConvoDefs.DeletedMessageView
-      | ChatBskyConvoDefs.SystemMessageView,
-  ): bsky.profile.AnyProfileView[] {
-    const seen = new Set<string>()
-    const profiles: bsky.profile.AnyProfileView[] = []
-
-    const add = (did: string) => {
-      if (seen.has(did)) return
-      seen.add(did)
-      const p = this.relatedProfiles.get(did)
-      if (p) profiles.push(p)
-    }
-
-    if (ChatBskyConvoDefs.isMessageView(m)) {
-      add(m.sender.did)
-      if (m.reactions) {
-        for (const reaction of m.reactions) {
-          add(reaction.sender.did)
-        }
-      }
-    } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
-      add(m.sender.did)
-    } else if (ChatBskyConvoDefs.isSystemMessageView(m)) {
-      const data = m.data
-      if ('member' in data && data.member?.did) {
-        add(data.member.did)
-      }
-      if ('addedBy' in data && data.addedBy?.did) {
-        add(data.addedBy.did)
-      }
-    }
-
-    return profiles
-  }
-
   /*
    * Items in reverse order, since FlatList inverts
    */
@@ -1222,7 +1184,7 @@ export class Convo {
           type: 'message',
           key: m.id,
           message: m,
-          relatedProfiles: this.getRelatedProfilesForItem(m),
+          relatedProfiles: this.relatedProfiles,
           nextMessage: null,
           prevMessage: null,
         })
@@ -1231,7 +1193,7 @@ export class Convo {
           type: 'deleted-message',
           key: m.id,
           message: m,
-          relatedProfiles: this.getRelatedProfilesForItem(m),
+          relatedProfiles: this.relatedProfiles,
           nextMessage: null,
           prevMessage: null,
         })
@@ -1240,7 +1202,7 @@ export class Convo {
           type: 'system-message',
           key: m.id,
           message: m,
-          relatedProfiles: this.getRelatedProfilesForItem(m),
+          relatedProfiles: this.relatedProfiles,
         })
       }
     })
@@ -1262,7 +1224,7 @@ export class Convo {
           type: 'message',
           key: m.id,
           message: m,
-          relatedProfiles: this.getRelatedProfilesForItem(m),
+          relatedProfiles: this.relatedProfiles,
           nextMessage: null,
           prevMessage: null,
         })
@@ -1271,7 +1233,7 @@ export class Convo {
           type: 'deleted-message',
           key: m.id,
           message: m,
-          relatedProfiles: this.getRelatedProfilesForItem(m),
+          relatedProfiles: this.relatedProfiles,
           nextMessage: null,
           prevMessage: null,
         })
@@ -1280,13 +1242,12 @@ export class Convo {
           type: 'system-message',
           key: m.id,
           message: m,
-          relatedProfiles: this.getRelatedProfilesForItem(m),
+          relatedProfiles: this.relatedProfiles,
         })
       }
     })
 
     this.pendingMessages.forEach(m => {
-      const senderProfile = this.relatedProfiles.get(this.senderUserDid)
       items.push({
         type: 'pending-message',
         key: m.id,
@@ -1302,7 +1263,7 @@ export class Convo {
             did: this.senderUserDid,
           },
         },
-        relatedProfiles: senderProfile ? [senderProfile] : [],
+        relatedProfiles: this.relatedProfiles,
         nextMessage: null,
         prevMessage: null,
         failed: this.pendingMessageFailure !== null,

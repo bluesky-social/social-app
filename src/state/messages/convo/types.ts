@@ -1,12 +1,12 @@
 import {
   type BskyAgent,
+  type ChatBskyActorDefs,
   type ChatBskyConvoDefs,
   type ChatBskyConvoSendMessage,
 } from '@atproto/api'
 
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type ConvoWithDetails} from '#/components/dms/util'
-import type * as bsky from '#/types/bsky'
 
 export type ConvoParams = {
   convoId: string
@@ -59,35 +59,20 @@ export enum ConvoDispatchEvent {
 }
 
 export type ConvoDispatch =
-  | {
-      event: ConvoDispatchEvent.Init
-    }
-  | {
-      event: ConvoDispatchEvent.Ready
-    }
-  | {
-      event: ConvoDispatchEvent.Resume
-    }
-  | {
-      event: ConvoDispatchEvent.Background
-    }
-  | {
-      event: ConvoDispatchEvent.Suspend
-    }
-  | {
-      event: ConvoDispatchEvent.Error
-      payload: ConvoError
-    }
-  | {
-      event: ConvoDispatchEvent.Disable
-    }
+  | {event: ConvoDispatchEvent.Init}
+  | {event: ConvoDispatchEvent.Ready}
+  | {event: ConvoDispatchEvent.Resume}
+  | {event: ConvoDispatchEvent.Background}
+  | {event: ConvoDispatchEvent.Suspend}
+  | {event: ConvoDispatchEvent.Error; payload: ConvoError}
+  | {event: ConvoDispatchEvent.Disable}
 
 export type ConvoItem =
   | {
       type: 'message'
       key: string
       message: ChatBskyConvoDefs.MessageView
-      relatedProfiles: bsky.profile.AnyProfileView[]
+      relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
       nextMessage:
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
@@ -101,7 +86,7 @@ export type ConvoItem =
       type: 'pending-message'
       key: string
       message: ChatBskyConvoDefs.MessageView
-      relatedProfiles: bsky.profile.AnyProfileView[]
+      relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
       nextMessage:
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
@@ -120,7 +105,7 @@ export type ConvoItem =
       type: 'deleted-message'
       key: string
       message: ChatBskyConvoDefs.DeletedMessageView
-      relatedProfiles: bsky.profile.AnyProfileView[]
+      relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
       nextMessage:
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
@@ -134,7 +119,7 @@ export type ConvoItem =
       type: 'system-message'
       key: string
       message: ChatBskyConvoDefs.SystemMessageView
-      relatedProfiles: bsky.profile.AnyProfileView[]
+      relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
     }
   | {
       type: 'error'

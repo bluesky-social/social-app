@@ -101,9 +101,7 @@ let MessageItem = ({
   const moderationOpts = useModerationOpts()
   const queryClient = useQueryClient()
 
-  const profile = item.relatedProfiles.find(
-    p => p.did === item.message.sender.did,
-  )
+  const profile = item.relatedProfiles.get(item.message.sender.did)
 
   const reactionsControl = useDialogControl()
   const reactionTapRef = useRef(false)
@@ -276,7 +274,7 @@ let MessageItem = ({
         return l`You reacted ${reaction.value}`
       } else {
         const senderDid = reaction.sender.did
-        const memberSender = item.relatedProfiles.find(p => p.did === senderDid)
+        const memberSender = item.relatedProfiles.get(senderDid)
         if (memberSender) {
           return l`${createSanitizedDisplayName(memberSender)} reacted ${reaction.value}`
         }
@@ -378,7 +376,7 @@ let MessageItem = ({
       ) : null}
       <ReactionsDialog
         control={reactionsControl}
-        members={item.relatedProfiles}
+        relatedProfiles={item.relatedProfiles}
         message={message}
         reactions={message.reactions}
         groupedReactions={groupedReactions}
