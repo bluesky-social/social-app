@@ -11,10 +11,11 @@ import {
   type NavigationProp,
 } from '#/lib/routes/types'
 import {logger} from '#/logger'
-import {ConvoProvider, useConvo} from '#/state/messages/convo'
+import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
 import {useEditGroupChatName} from '#/state/queries/messages/edit-group-chat-name'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
+import {useListConvoMembersQuery} from '#/state/queries/messages/list-convo-members'
 import {useListJoinRequestsQuery} from '#/state/queries/messages/list-join-requests'
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
 import {useSession} from '#/state/session'
@@ -23,7 +24,10 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button, type ButtonColor, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {type ConvoWithDetails} from '#/components/dms/util'
+import {
+  type ConvoWithDetails,
+  type GroupConvoMember,
+} from '#/components/dms/util'
 import {Error} from '#/components/Error'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon} from '#/components/icons/ArrowBoxLeft'
 import {
@@ -37,11 +41,10 @@ import {EditBig_Stroke2_Corner2_Rounded as EditIcon} from '#/components/icons/Ed
 import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
 import {Lock_Stroke2_Corner0_Rounded as LockIcon} from '#/components/icons/Lock'
 import * as Layout from '#/components/Layout'
+import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
-import type * as bsky from '#/types/bsky'
 import {InviteLinkDialog} from '../components/InviteLinkDialog'
 import {AddMembersLink} from './AddMembersLink'
 import {ROW_SPACING} from './constants'
@@ -56,17 +59,14 @@ const dateFormatter = new Intl.DateTimeFormat(undefined, {
 })
 
 type Item =
-  | {
-      type: 'MEMBERS_AND_REQUESTS'
-    }
-  | {
-      type: 'ADD_MEMBERS_LINK'
-    }
+  | {type: 'MEMBERS_AND_REQUESTS'}
+  | {type: 'ADD_MEMBERS_LINK'}
   | {
       type: 'CHAT_MEMBER'
-      profile: bsky.profile.AnyProfileView
+      profile: GroupConvoMember
       status: 'owner' | 'standard' | 'invited'
     }
+  | {type: 'LOADING'}
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -90,36 +90,84 @@ export function MessagesConversationSettingsScreen({route}: Props) {
         <Layout.Header.Slot />
       </Layout.Header.Outer>
       <ConvoProvider key={convoId} convoId={convoId}>
-        <SettingsInner convoId={convoId} />
+        <SettingsInner />
       </ConvoProvider>
     </Layout.Screen>
   )
+}
+
+function SettingsInner() {
+  const {t: l} = useLingui()
+  const convoState = useConvo()
+  const navigation = useNavigation<NavigationProp>()
+
+  if (convoState.status === ConvoStatus.Error) {
+    return (
+      <Error
+        title={l`Something went wrong`}
+        message={l`We couldn’t load this conversation’s settings`}
+        onRetry={() => convoState.error.retry()}
+        sideBorders={false}
+      />
+    )
+  }
+
+  if (!isConvoActive(convoState)) {
+    return (
+      <Layout.Content
+        contentContainerStyle={[a.flex_1, a.align_center, a.justify_center]}>
+        <Loader size="xl" />
+      </Layout.Content>
+    )
+  }
+
+  if (convoState.convo?.kind !== 'group') {
+    return (
+      <Error
+        title={l`Wrong kind of conversation`}
+        message={l`This screen is only available for group conversations.`}
+        onGoBack={() => {
+          if (navigation.canGoBack()) {
+            navigation.goBack()
+          } else {
+            navigation.replace('Messages', {animation: 'pop'})
+          }
+        }}
+      />
+    )
+  }
+
+  return <GroupSettings convo={convoState.convo} />
 }
 
 function keyExtractor(item: Item) {
   return item.type === 'CHAT_MEMBER' ? item.profile.did : item.type
 }
 
-function SettingsInner({convoId}: {convoId: string}) {
-  const {t: l} = useLingui()
-
+function GroupSettings({
+  convo,
+}: {
+  convo: Extract<ConvoWithDetails, {kind: 'group'}>
+}) {
   const initialNumToRender = useInitialNumToRender({minItemHeight: 68})
   const bottomBarOffset = useBottomBarOffset()
 
-  const convoState = useConvo()
   const {currentAccount} = useSession()
 
-  const convo = convoState.convo
   const primaryMember = convo?.primaryMember
   const isOwner = !!primaryMember && primaryMember.did === currentAccount?.did
 
-  const data: bsky.profile.AnyProfileView[] = convo?.members ?? []
+  const {data: memberListData = [], isPending} = useListConvoMembersQuery({
+    convoId: convo.view.id,
+    placeholderData: convo?.members,
+  })
+
   // TODO Need this data in order to populate this array. -dsb
   const invites: string[] = []
 
   const {data: joinRequestsData, hasNextPage: hasMoreRequests} =
     useListJoinRequestsQuery({
-      convoId,
+      convoId: convo.view.id,
       enabled: isOwner,
     })
   const requestCount =
@@ -133,7 +181,7 @@ function SettingsInner({convoId}: {convoId: string}) {
       type: 'MEMBERS_AND_REQUESTS',
     },
     ...(isOwner ? [{type: 'ADD_MEMBERS_LINK'} as const] : []),
-    ...[...data]
+    ...[...memberListData]
       .sort((a, b) => {
         const aIsOwner = a.did === primaryMember?.did
         const bIsOwner = b.did === primaryMember?.did
@@ -146,7 +194,7 @@ function SettingsInner({convoId}: {convoId: string}) {
       .map(
         (profile): Item => ({
           type: 'CHAT_MEMBER',
-          profile,
+          profile: profile as GroupConvoMember,
           status:
             primaryMember?.did === profile.did
               ? 'owner'
@@ -155,6 +203,7 @@ function SettingsInner({convoId}: {convoId: string}) {
                 : 'standard',
         }),
       ),
+    ...(isPending ? [{type: 'LOADING' as const}] : []),
   ]
 
   function renderItem({item}: {item: Item}) {
@@ -162,7 +211,7 @@ function SettingsInner({convoId}: {convoId: string}) {
       case 'MEMBERS_AND_REQUESTS':
         return (
           <MembersAndRequests
-            memberCount={data.length}
+            memberCount={convo.details.memberCount}
             requestCount={requestCount}
             hasMoreRequests={!!hasMoreRequests}
             isOwner={isOwner}
@@ -172,7 +221,7 @@ function SettingsInner({convoId}: {convoId: string}) {
         return convo ? (
           <AddMembersLink
             convo={convo}
-            members={data.map(profile => profile.did)}
+            members={memberListData.map(profile => profile.did)}
           />
         ) : null
       case 'CHAT_MEMBER':
@@ -184,20 +233,15 @@ function SettingsInner({convoId}: {convoId: string}) {
             isOwner={isOwner}
           />
         ) : null
+      case 'LOADING':
+        return (
+          <View style={[a.w_full, a.align_center, a.py_2xl]}>
+            <Loader size="lg" />
+          </View>
+        )
       default:
         return null
     }
-  }
-
-  if (convoState.status === ConvoStatus.Error) {
-    return (
-      <Error
-        title={l`Something went wrong`}
-        message={l`We couldn’t load this conversation’s settings`}
-        onRetry={() => convoState.error.retry()}
-        sideBorders={false}
-      />
-    )
   }
 
   return (
@@ -220,9 +264,6 @@ function SettingsInner({convoId}: {convoId: string}) {
       renderItem={renderItem}
       sideBorders={false}
       windowSize={11}
-      // TODO Paginate on relatedProfiles. -dsb
-      onEndReached={() => {}}
-      onEndReachedThreshold={IS_NATIVE ? 1.5 : 0}
     />
   )
 }

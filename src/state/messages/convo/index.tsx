@@ -133,7 +133,7 @@ export function ConvoProvider({
     const [root, id] = getConvoKey(convoId)
     return queryClient.getQueryCache().subscribe(event => {
       const queryKey = event.query.queryKey as string[]
-      if (queryKey[0] === root && queryKey[1] === id) {
+      if (queryKey[0] === root && queryKey[1] === id && !queryKey[2]) {
         const data = event.query.state.data as
           | ChatBskyConvoDefs.ConvoView
           | undefined

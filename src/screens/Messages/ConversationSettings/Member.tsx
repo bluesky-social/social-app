@@ -11,9 +11,11 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
-import {type ConvoWithDetails} from '#/components/dms/util'
+import {
+  type ConvoWithDetails,
+  type GroupConvoMember,
+} from '#/components/dms/util'
 import {Text} from '#/components/Typography'
-import type * as bsky from '#/types/bsky'
 import {MemberMenu} from './MemberMenu'
 import {StatusBadge} from './StatusBadge'
 import {SubtleHoverWrapper} from './SubtleHoverWrapper'
@@ -25,7 +27,7 @@ export function Member({
   isOwner,
 }: {
   convo: ConvoWithDetails
-  profile: bsky.profile.AnyProfileView
+  profile: GroupConvoMember
   status: 'owner' | 'standard' | 'invited'
   isOwner: boolean
 }) {
@@ -36,12 +38,10 @@ export function Member({
   const profile = useProfileShadow(profileUnshadowed)
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
-  const moderation = moderationOpts
-    ? moderateProfile(profile, moderationOpts)
-    : undefined
-
   // TODO Render a skeleton here. -dsb
-  if (!moderation) return null
+  if (!moderationOpts) return null
+
+  const moderation = moderateProfile(profile, moderationOpts)
 
   const isDeletedAccount = profile.handle === 'missing.invalid'
   const displayName = isDeletedAccount
@@ -65,6 +65,14 @@ export function Member({
       />
     )
   }
+
+  const joinedReason = profile.kind?.addedBy
+    ? l`Added by ${createSanitizedDisplayName(
+        profile.kind.addedBy,
+        true,
+        moderateProfile(profile.kind.addedBy, moderationOpts).ui('displayName'),
+      )}`
+    : `Added by invite link`
 
   return (
     <SubtleHoverWrapper>
@@ -93,6 +101,14 @@ export function Member({
                 web(a.pt_2xs),
               ]}>
               {sanitizeHandle(profile.handle, '@')}
+            </Text>
+            <Text
+              style={[
+                a.text_xs,
+                {color: t.palette.contrast_500},
+                web(a.pt_2xs),
+              ]}>
+              {joinedReason}
             </Text>
           </View>
         </Pressable>

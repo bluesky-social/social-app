@@ -16,7 +16,7 @@ import {
   RQKEY_ROOT as LIST_CONVOS_KEY,
 } from './list-conversations'
 
-const RQKEY_ROOT = 'convo'
+export const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
 
 export function useConvoQuery({convoId}: {convoId: string}) {
