@@ -1,9 +1,10 @@
-import {Pressable, View} from 'react-native'
+import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
 import {useAddGroupMembers} from '#/state/queries/messages/add-group-members'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {AddMembersFlow} from '#/components/dms/AddMembersFlow'
 import {type ConvoWithDetails} from '#/components/dms/util'
@@ -11,7 +12,6 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon} from '#/components/
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {SubtleHoverWrapper} from './SubtleHoverWrapper'
 
 export function AddMembersLink({
   convo,
@@ -38,59 +38,46 @@ export function AddMembersLink({
 
   return (
     <>
-      <SubtleHoverWrapper>
-        <View style={[a.mx_xl]}>
-          <Pressable
-            accessibilityRole="button"
-            style={({pressed}) => [
+      <Button label={l`Add members`} onPress={addMembersControl.open}>
+        {({interacting}) => (
+          <View
+            style={[
+              a.w_full,
               a.flex_row,
               a.align_center,
               a.justify_between,
-              pressed && web({outline: 'none'}),
-            ]}
-            onPress={addMembersControl.open}>
-            {({pressed}) => (
-              <>
-                <View>
-                  <View style={[a.flex_row, a.align_center]}>
-                    <View
-                      style={[
-                        a.flex_row,
-                        a.align_center,
-                        a.justify_center,
-                        a.p_lg,
-                        a.rounded_full,
-                        pressed
-                          ? t.atoms.bg_contrast_100
-                          : t.atoms.bg_contrast_50,
-                        {
-                          height: 48,
-                          width: 48,
-                        },
-                      ]}>
-                      <PlusIcon
-                        style={[t.atoms.text_contrast_high]}
-                        size="sm"
-                      />
-                    </View>
-                    <Text
-                      numberOfLines={1}
-                      style={[
-                        a.text_md,
-                        a.font_semi_bold,
-                        a.mx_sm,
-                        t.atoms.text,
-                      ]}>
-                      <Trans>Add members</Trans>
-                    </Text>
-                  </View>
-                </View>
-                <ChevronIcon style={[t.atoms.text_contrast_medium]} size="md" />
-              </>
-            )}
-          </Pressable>
-        </View>
-      </SubtleHoverWrapper>
+              a.px_xl,
+              a.py_sm,
+              interacting ? [t.atoms.bg_contrast_25] : [],
+            ]}>
+            <View style={[a.flex_row, a.align_center]}>
+              <View
+                style={[
+                  a.flex_row,
+                  a.align_center,
+                  a.justify_center,
+                  a.p_lg,
+                  a.rounded_full,
+                  interacting
+                    ? t.atoms.bg_contrast_100
+                    : t.atoms.bg_contrast_50,
+                  {
+                    height: 48,
+                    width: 48,
+                  },
+                ]}>
+                <PlusIcon style={[t.atoms.text_contrast_high]} size="sm" />
+              </View>
+              <Text
+                numberOfLines={1}
+                style={[a.text_md, a.font_semi_bold, a.mx_sm, t.atoms.text]}>
+                <Trans>Add members</Trans>
+              </Text>
+            </View>
+            <ChevronIcon style={[t.atoms.text_contrast_medium]} size="md" />
+          </View>
+        )}
+      </Button>
 
       <Dialog.Outer
         control={addMembersControl}
