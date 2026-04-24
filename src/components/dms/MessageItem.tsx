@@ -391,11 +391,13 @@ let MessageItem = ({
 
   return (
     <>
-      {(hasLargeGapFromPrev || isDateDividerToggled) && (
-        <Animated.View entering={native(FadeIn)} exiting={native(FadeOut)}>
-          <DateDivider date={message.sentAt} />
-        </Animated.View>
-      )}
+      <LayoutAnimationConfig skipExiting skipEntering>
+        {(hasLargeGapFromPrev || isDateDividerToggled) && (
+          <Animated.View entering={native(FadeIn)} exiting={native(FadeOut)}>
+            <DateDivider date={message.sentAt} />
+          </Animated.View>
+        )}
+      </LayoutAnimationConfig>
       <View style={[messageInset, effectiveFirstInCluster && a.mt_md]}>
         <View style={[a.relative]}>
           {showAvatar ? (
