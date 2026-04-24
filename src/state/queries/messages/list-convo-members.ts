@@ -1,9 +1,12 @@
-import {type ChatBskyActorDefs} from '@atproto/api'
-import {useQuery} from '@tanstack/react-query'
+import {useEffect} from 'react'
+import {type ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
+import {useMessagesEventBus} from '#/state/messages/events'
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
+import * as bsky from '#/types/bsky'
 import {RQKEY_ROOT as GET_CONVOS_KEY} from './conversation'
 
 export const RQKEY_SEGMENT = 'members'
@@ -24,6 +27,61 @@ export function useListConvoMembersQuery({
   placeholderData?: ChatBskyActorDefs.ProfileViewBasic[]
 }) {
   const agent = useAgent()
+  const queryClient = useQueryClient()
+  const messagesBus = useMessagesEventBus()
+
+  useEffect(() => {
+    const unsub = messagesBus.on(
+      ev => {
+        if (ev.type !== 'logs') return
+
+        function mutateList(
+          fn: (
+            update: ChatBskyActorDefs.ProfileViewBasic[],
+          ) => ChatBskyActorDefs.ProfileViewBasic[],
+        ) {
+          queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
+            RQKEY(convoId),
+            old => {
+              if (!old) return // query doesn't exist yet, skip
+              return fn(old)
+            },
+          )
+        }
+
+        for (const log of ev.logs) {
+          if (ChatBskyConvoDefs.isLogAddMember(log)) {
+            const data = log.message.data
+            if (
+              bsky.dangerousIsType<ChatBskyConvoDefs.SystemMessageDataAddMember>(
+                data,
+                ChatBskyConvoDefs.isSystemMessageDataAddMember,
+              )
+            ) {
+              const newMember = log.relatedProfiles.find(
+                r => r.did === data.member.did,
+              )
+              if (newMember) {
+                mutateList(list => list.concat(newMember))
+              }
+            }
+          } else if (ChatBskyConvoDefs.isLogRemoveMember(log)) {
+            const data = log.message.data
+            if (
+              bsky.dangerousIsType<ChatBskyConvoDefs.SystemMessageDataRemoveMember>(
+                data,
+                ChatBskyConvoDefs.isSystemMessageDataRemoveMember,
+              )
+            ) {
+              mutateList(list => list.filter(m => m.did !== data.member.did))
+            }
+          }
+        }
+      },
+      {convoId},
+    )
+    return () => unsub()
+  }, [convoId, messagesBus, queryClient])
 
   return useQuery({
     queryKey: RQKEY(convoId),
