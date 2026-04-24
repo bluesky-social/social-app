@@ -177,6 +177,12 @@ export class Convo {
   }
 
   private generateSnapshot(): ConvoState {
+    const shared = {
+      isFetchingHistory: this.isFetchingHistory,
+      // Explicit null check since the value is initially undefined.
+      hasAllHistory: this.oldestRev === null,
+    }
+
     const methods = {
       deleteMessage: this.deleteMessage,
       sendMessage: this.sendMessage,
@@ -186,6 +192,15 @@ export class Convo {
       removeReaction: this.removeReaction,
     }
 
+    const emptyMethods = {
+      deleteMessage: undefined,
+      sendMessage: undefined,
+      fetchMessageHistory: undefined,
+      markConvoAccepted: undefined,
+      addReaction: undefined,
+      removeReaction: undefined,
+    }
+
     switch (this.status) {
       case ConvoStatus.Initializing: {
         return {
@@ -193,17 +208,8 @@ export class Convo {
           items: [],
           convo: this.convo,
           error: undefined,
-          sender: this.sender,
-          recipients: this.recipients,
-          isFetchingHistory: this.isFetchingHistory,
-          // Explicit null check since the value is initially undefined.
-          hasAllHistory: this.oldestRev === null,
-          deleteMessage: undefined,
-          sendMessage: undefined,
-          fetchMessageHistory: undefined,
-          markConvoAccepted: undefined,
-          addReaction: undefined,
-          removeReaction: undefined,
+          ...shared,
+          ...emptyMethods,
         }
       }
       case ConvoStatus.Disabled: {
@@ -212,11 +218,7 @@ export class Convo {
           items: this.getItems(),
           convo: this.convo!,
           error: undefined,
-          sender: this.sender!,
-          recipients: this.recipients!,
-          isFetchingHistory: this.isFetchingHistory,
-          // Explicit null check since the value is initially undefined.
-          hasAllHistory: this.oldestRev === null,
+          ...shared,
           ...methods,
         }
       }
@@ -226,11 +228,7 @@ export class Convo {
           items: this.getItems(),
           convo: this.convo!,
           error: undefined,
-          sender: this.sender!,
-          recipients: this.recipients!,
-          isFetchingHistory: this.isFetchingHistory,
-          // Explicit null check since the value is initially undefined.
-          hasAllHistory: this.oldestRev === null,
+          ...shared,
           ...methods,
         }
       }
@@ -240,11 +238,7 @@ export class Convo {
           items: this.getItems(),
           convo: this.convo!,
           error: undefined,
-          sender: this.sender!,
-          recipients: this.recipients!,
-          isFetchingHistory: this.isFetchingHistory,
-          // Explicit null check since the value is initially undefined.
-          hasAllHistory: this.oldestRev === null,
+          ...shared,
           ...methods,
         }
       }
@@ -254,11 +248,7 @@ export class Convo {
           items: this.getItems(),
           convo: this.convo!,
           error: undefined,
-          sender: this.sender!,
-          recipients: this.recipients!,
-          isFetchingHistory: this.isFetchingHistory,
-          // Explicit null check since the value is initially undefined.
-          hasAllHistory: this.oldestRev === null,
+          ...shared,
           ...methods,
         }
       }
@@ -268,16 +258,9 @@ export class Convo {
           items: [],
           convo: undefined,
           error: this.error!,
-          sender: undefined,
-          recipients: undefined,
           isFetchingHistory: false,
           hasAllHistory: false,
-          deleteMessage: undefined,
-          sendMessage: undefined,
-          fetchMessageHistory: undefined,
-          markConvoAccepted: undefined,
-          addReaction: undefined,
-          removeReaction: undefined,
+          ...emptyMethods,
         }
       }
       default: {
@@ -286,17 +269,10 @@ export class Convo {
           items: [],
           convo: this.convo,
           error: undefined,
-          sender: this.sender,
-          recipients: this.recipients,
           isFetchingHistory: false,
           // Explicit null check since the value is initially undefined.
           hasAllHistory: this.oldestRev === null,
-          deleteMessage: undefined,
-          sendMessage: undefined,
-          fetchMessageHistory: undefined,
-          markConvoAccepted: undefined,
-          addReaction: undefined,
-          removeReaction: undefined,
+          ...emptyMethods,
         }
       }
     }
@@ -496,8 +472,6 @@ export class Convo {
 
   private reset() {
     this.convo = undefined
-    this.sender = undefined
-    this.recipients = undefined
     this.snapshot = undefined
 
     this.status = ConvoStatus.Uninitialized
@@ -554,19 +528,13 @@ export class Convo {
     data: NonNullable<ConvoParams['placeholderData']>,
   ) {
     this.setConvo(data.convo)
-    this.sender = data.convo.members.find(m => m.did === this.senderUserDid)
-    this.recipients = data.convo.members.filter(
-      m => m.did !== this.senderUserDid,
-    )
   }
 
   private async setup() {
     try {
-      const {convo, sender, recipients} = await this.fetchConvo()
+      const {convo} = await this.fetchConvo()
 
       this.setConvo(convo)
-      this.sender = sender
-      this.recipients = recipients
 
       /*
        * Some validation prior to `Ready` status
@@ -574,14 +542,14 @@ export class Convo {
       if (!this.convo) {
         throw new Error('could not find convo')
       }
-      if (!this.sender) {
-        throw new Error('could not find sender in convo')
-      }
-      if (!this.recipients) {
-        throw new Error('could not find recipients in convo')
+
+      const self = this.convo.members.find(m => m.did === this.senderUserDid)
+
+      if (!self) {
+        throw new Error('could not find self in convo')
       }
 
-      const userIsDisabled = Boolean(this.sender.chatDisabled)
+      const userIsDisabled = Boolean(self.chatDisabled)
 
       if (userIsDisabled) {
         this.dispatch({event: ConvoDispatchEvent.Disable})
@@ -650,11 +618,7 @@ export class Convo {
   }
 
   private pendingFetchConvo:
-    | Promise<{
-        convo: ChatBskyConvoDefs.ConvoView
-        sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-        recipients: ChatBskyActorDefs.ProfileViewBasic[]
-      }>
+    | Promise<{convo: ChatBskyConvoDefs.ConvoView}>
     | undefined
   async fetchConvo() {
     if (this.pendingFetchConvo) return this.pendingFetchConvo
@@ -674,8 +638,6 @@ export class Convo {
 
         return {
           convo,
-          sender: convo.members.find(m => m.did === this.senderUserDid),
-          recipients: convo.members.filter(m => m.did !== this.senderUserDid),
         }
       } finally {
         this.pendingFetchConvo = undefined
@@ -687,11 +649,9 @@ export class Convo {
 
   async refreshConvo() {
     try {
-      const {convo, sender, recipients} = await this.fetchConvo()
+      const {convo} = await this.fetchConvo()
       // throw new Error('UNCOMMENT TO TEST REFRESH FAILURE')
       this.setConvo(convo)
-      this.sender = sender || this.sender
-      this.recipients = recipients || this.recipients
     } catch (err) {
       const e = err as Error
       if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
@@ -1290,10 +1250,6 @@ export class Convo {
           id: nanoid(),
           rev: '__fake__',
           sentAt: new Date().toISOString(),
-          /*
-           * `getItems` is only run in "active" status states, where
-           * `this.sender` is defined
-           */
           sender: {
             $type: 'chat.bsky.convo.defs#messageViewSender',
             did: this.senderUserDid,
