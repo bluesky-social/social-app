@@ -31,6 +31,9 @@ export function MessagesListInfoPanel({
 
   const convoId = convo.view.id
   const {mutate: addGroupMembers} = useAddGroupMembers(convoId, {
+    onSuccess: () => {
+      addMembersControl.close()
+    },
     onError: e => {
       logger.error('Failed to add group chat members', {message: e})
       Toast.show(l`Failed to add members`, {type: 'error'})
@@ -49,7 +52,7 @@ export function MessagesListInfoPanel({
     profile => profile.did !== currentAccount?.did,
   )
 
-  let names: React.ReactNode | null = null
+  let names: React.ReactNode = null
   if (members.length === 1) {
     names = <Trans>New chat with {members[0].displayName}</Trans>
   } else if (members.length === 2) {
@@ -59,13 +62,14 @@ export function MessagesListInfoPanel({
       </Trans>
     )
   } else if (members.length > 2) {
+    const memberCount = convo.details.memberCount - 2
     names = (
       <Trans>
         New chat with {members[0].displayName}, {members[1].displayName}, and{' '}
         <Plural
-          value={members.length - 2}
-          one={`${members.length - 2} more`}
-          other={`${members.length - 2} more`}
+          value={memberCount}
+          one={`${memberCount} more`}
+          other={`${memberCount} more`}
         />
         .
       </Trans>
@@ -148,10 +152,7 @@ export function MessagesListInfoPanel({
         <AddMembersFlow
           members={members.map(profile => profile.did)}
           title={l`Add people`}
-          onAddMembers={(members: string[]) => {
-            addGroupMembers({members})
-            addMembersControl.close()
-          }}
+          onAddMembers={(members: string[]) => addGroupMembers({members})}
         />
       </Dialog.Outer>
     </>
