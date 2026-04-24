@@ -44,8 +44,6 @@ export function MessagesListInfoPanel({
   //   (!isOwner && groupConvo && joinLink?.enabledStatus === 'enabled')
 
   const isOwner = convo?.primaryMember.did === currentAccount?.did
-  // TODO Get this from @api/atproto -dsb
-  const isLinkEnabled = false
 
   const members = (convo?.members ?? []).filter(
     profile => profile.did !== currentAccount?.did,
@@ -74,7 +72,7 @@ export function MessagesListInfoPanel({
     )
   }
 
-  const showButtons = isOwner || isLinkEnabled
+  const showButtons = isOwner || isJoinLinkEnabled
 
   return (
     <>

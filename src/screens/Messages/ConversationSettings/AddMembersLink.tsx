@@ -74,10 +74,11 @@ export function AddMembersLink({
                       />
                     </View>
                     <Text
+                      numberOfLines={1}
                       style={[
                         a.text_md,
                         a.font_semi_bold,
-                        a.pl_sm,
+                        a.mx_sm,
                         t.atoms.text,
                       ]}>
                       <Trans>Add members</Trans>

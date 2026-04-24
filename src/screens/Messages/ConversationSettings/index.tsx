@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
+import {type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
@@ -17,6 +18,7 @@ import {useEditGroupChatName} from '#/state/queries/messages/edit-group-chat-nam
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {useListConvoMembersQuery} from '#/state/queries/messages/list-convo-members'
 import {useListJoinRequestsQuery} from '#/state/queries/messages/list-join-requests'
+import {useLockConvo} from '#/state/queries/messages/lock-conversation'
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
 import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
@@ -283,7 +285,7 @@ function SettingsHeader({
   const groupName = convo.details.name
   const [newGroupName, setNewGroupName] = useState(groupName)
 
-  const [isLocked, setIsLocked] = useState(false)
+  const lockStatus = convo.details.lockStatus
 
   // TODO Enable this once the feature is working end-to-end. -dsb
   // const {joinLink} = convo.details
@@ -298,9 +300,7 @@ function SettingsHeader({
     onError: e => {
       setNewGroupName(groupName)
       logger.error('Failed to edit group chat name', {message: e})
-      Toast.show(l`Failed to edit group chat name`, {
-        type: 'error',
-      })
+      Toast.show(l`Failed to edit group chat name`, {type: 'error'})
     },
   })
 
@@ -314,9 +314,7 @@ function SettingsHeader({
     },
     onError: e => {
       logger.error('Failed to mute group chat', {message: e})
-      Toast.show(l`Failed to mute group chat`, {
-        type: 'error',
-      })
+      Toast.show(l`Failed to mute group chat`, {type: 'error'})
     },
   })
 
@@ -330,6 +328,26 @@ function SettingsHeader({
       Toast.show(l({message: 'Failed to leave group chat', context: 'toast'}), {
         type: 'error',
       })
+    },
+  })
+
+  const {mutate: lockConvo} = useLockConvo(convo.view.id, {
+    onSuccess: data => {
+      const kind = data.convo.kind as ChatBskyConvoDefs.GroupConvo
+      if (kind.lockStatus === 'locked') {
+        Toast.show(l({message: 'Group chat locked', context: 'toast'}))
+      } else {
+        Toast.show(l({message: 'Group chat unlocked', context: 'toast'}))
+      }
+    },
+    onError: (e, {lock}) => {
+      if (lock) {
+        logger.error('Failed to lock group chat', {message: e})
+        Toast.show(l`Failed to lock group chat`, {type: 'error'})
+      } else {
+        logger.error('Failed to unlock group chat', {message: e})
+        Toast.show(l`Failed to unlock group chat`, {type: 'error'})
+      }
     },
   })
 
@@ -355,20 +373,18 @@ function SettingsHeader({
   }
 
   const handleConfirmLock = () => {
-    setIsLocked(true)
+    lockConvo({lock: true})
   }
 
   const handleUnlock = () => {
-    setIsLocked(false)
+    lockConvo({lock: false})
   }
 
   // TODO The creation date doesn't exist yet. -dsb
   const showCreatedAt = false
   const createdAt = new Date()
 
-  // TODO Need to implement this. -dsb
-  const canLockGroupChat = false
-  // const canLockGroupChat = isOwner
+  const canLockGroupChat = isOwner && lockStatus !== 'locked-permanently'
 
   return (
     <>
@@ -440,13 +456,17 @@ function SettingsHeader({
           ) : null}
           {canLockGroupChat ? (
             <SettingsButton
-              color={isLocked ? 'negative_subtle' : 'secondary'}
+              color={lockStatus === 'locked' ? 'negative_subtle' : 'secondary'}
               icon={LockIcon}
               label={
-                isLocked ? l`Unlock this group chat` : l`Lock this group chat`
+                lockStatus === 'locked'
+                  ? l`Unlock this group chat`
+                  : l`Lock this group chat`
               }
-              text={isLocked ? l`Locked` : l`Lock`}
-              onPress={isLocked ? handleUnlock : lockChatPrompt.open}
+              text={lockStatus === 'locked' ? l`Locked` : l`Lock`}
+              onPress={
+                lockStatus === 'locked' ? handleUnlock : lockChatPrompt.open
+              }
             />
           ) : null}
           {isOwner ? null : isReportLinkEnabled ? (
@@ -531,12 +551,14 @@ function SettingsHeaderPlaceholder() {
 
 function SettingsButton({
   color = 'secondary',
+  disabled,
   icon,
   label,
   text,
   onPress,
 }: {
   color?: ButtonColor
+  disabled?: boolean
   icon: React.ComponentType<SVGIconProps>
   label: string
   text: string
@@ -548,6 +570,7 @@ function SettingsButton({
     <View style={[a.align_center]}>
       <Button
         color={color}
+        disabled={disabled}
         size="large"
         shape="round"
         label={label}
@@ -557,7 +580,7 @@ function SettingsButton({
       <Text
         numberOfLines={1}
         style={[
-          a.text_2xs,
+          a.text_xs,
           a.font_medium,
           a.text_center,
           a.pt_xs,
@@ -574,14 +597,14 @@ function SettingsButtonPlaceholder() {
   const {t: l} = useLingui()
 
   return (
-    <View>
+    <View style={[a.align_center]}>
       <Button color="secondary" size="large" shape="round" label={l`Loading…`}>
         <ButtonIcon icon={EllipsisIcon} size="md" />
       </Button>
       <Text
         numberOfLines={1}
         style={[
-          a.text_2xs,
+          a.text_xs,
           a.font_medium,
           a.text_center,
           a.pt_xs,

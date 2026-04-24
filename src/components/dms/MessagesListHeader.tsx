@@ -161,6 +161,8 @@ function GroupHeaderReady({
     })
   }
 
+  const lockStatus = convo.details.lockStatus
+
   return (
     <Wrapper
       heading={
@@ -175,6 +177,7 @@ function GroupHeaderReady({
       settings={
         <Button
           label={l`Open group chat settings`}
+          disabled={lockStatus === 'locked-permanently'}
           size="small"
           color="secondary"
           shape="round"

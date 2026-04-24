@@ -148,6 +148,7 @@ export class Convo {
     this.updateGroupName = this.updateGroupName.bind(this)
     this.updateGroupMembers = this.updateGroupMembers.bind(this)
     this.updateJoinLink = this.updateJoinLink.bind(this)
+    this.updateLockStatus = this.updateLockStatus.bind(this)
   }
 
   private commit() {
@@ -1003,6 +1004,21 @@ export class Convo {
       kind: {
         ...this.convo.details,
         joinLink,
+      },
+    })
+
+    this.commit()
+  }
+
+  updateLockStatus(lockStatus: ChatBskyConvoDefs.ConvoLockStatus) {
+    if (this.convo?.kind !== 'group') {
+      throw new Error('updateLockStatus can only be called on group convo')
+    }
+
+    this.updateConvo({
+      kind: {
+        ...this.convo.details,
+        lockStatus,
       },
     })
 
