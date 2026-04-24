@@ -659,6 +659,11 @@ msgstr ""
 msgid "Account options"
 msgstr ""
 
+#: src/components/dialogs/BirthDateSettings.tsx:261
+#: src/components/dialogs/BirthDateSettings.tsx:266
+msgid "Account password"
+msgstr ""
+
 #: src/components/dialogs/ServerInput.tsx:141
 msgid "Account provider"
 msgstr ""
@@ -1212,6 +1217,10 @@ msgstr ""
 msgid "App Passwords"
 msgstr ""
 
+#: src/components/dialogs/BirthDateSettings.tsx:277
+msgid "App passwords cannot be used here. Please enter your main account password."
+msgstr ""
+
 #: src/components/moderation/LabelsOnMeDialog.tsx:154
 #: src/components/moderation/LabelsOnMeDialog.tsx:157
 msgid "Appeal"
@@ -1416,8 +1425,13 @@ msgstr ""
 msgid "Begin Discussion"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:149
+#: src/components/dialogs/BirthDateSettings.tsx:313
+#: src/components/dialogs/BirthDateSettings.tsx:412
 msgid "Birthdate"
+msgstr ""
+
+#: src/components/dialogs/BirthDateSettings.tsx:126
+msgid "Birthdate updates are not available when signed in with OAuth. Please manage your birthdate through your hosting provider's website."
 msgstr ""
 
 #: src/screens/Settings/AccountSettings.tsx:157
@@ -2257,6 +2271,7 @@ msgstr ""
 msgid "Context menu backdrop, click to close the menu."
 msgstr ""
 
+#: src/components/dialogs/BirthDateSettings.tsx:296
 #: src/screens/Onboarding/StepInterests/index.tsx:92
 #: src/screens/Onboarding/StepProfile/index.tsx:287
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:285
@@ -2630,8 +2645,8 @@ msgstr ""
 msgid "Date of birth"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:175
-#: src/screens/Settings/AccountSettings.tsx:184
+#: src/screens/Settings/AccountSettings.tsx:179
+#: src/screens/Settings/AccountSettings.tsx:188
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:107
 msgid "Deactivate account"
 msgstr ""
@@ -2671,8 +2686,8 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:189
-#: src/screens/Settings/AccountSettings.tsx:198
+#: src/screens/Settings/AccountSettings.tsx:193
+#: src/screens/Settings/AccountSettings.tsx:202
 msgid "Delete account"
 msgstr ""
 
@@ -2994,8 +3009,10 @@ msgstr ""
 #: src/components/contacts/components/InviteInfo.tsx:78
 #: src/components/contacts/screens/ViewMatches.tsx:394
 #: src/components/contacts/screens/ViewMatches.tsx:411
-#: src/components/dialogs/BirthDateSettings.tsx:183
-#: src/components/dialogs/BirthDateSettings.tsx:190
+#: src/components/dialogs/BirthDateSettings.tsx:345
+#: src/components/dialogs/BirthDateSettings.tsx:352
+#: src/components/dialogs/BirthDateSettings.tsx:446
+#: src/components/dialogs/BirthDateSettings.tsx:453
 #: src/components/dialogs/ServerInput.tsx:240
 #: src/components/dialogs/ServerInput.tsx:242
 #: src/components/dms/AfterReportDialog.tsx:142
@@ -3380,7 +3397,8 @@ msgstr ""
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:150
+#: src/components/dialogs/BirthDateSettings.tsx:314
+#: src/components/dialogs/BirthDateSettings.tsx:413
 msgid "Enter your birthdate"
 msgstr ""
 
@@ -3545,8 +3563,8 @@ msgstr ""
 msgid "Explore your data with rsky-satnav"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:166
 #: src/screens/Settings/AccountSettings.tsx:170
+#: src/screens/Settings/AccountSettings.tsx:174
 msgid "Export my data"
 msgstr ""
 
@@ -4577,10 +4595,6 @@ msgstr ""
 msgid "Hides the content"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:69
-msgid "Hmm, it looks like you're logged in with an <0>App Password</0>. To set your birthdate, you'll need to log in with your main account password, or ask whomever controls this account to do so."
-msgstr ""
-
 #: src/view/com/posts/PostFeedErrorMessage.tsx:124
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
 msgstr ""
@@ -5325,6 +5339,10 @@ msgstr ""
 msgid "Live link"
 msgstr ""
 
+#: src/components/dialogs/BirthDateSettings.tsx:289
+msgid "Load birthdate"
+msgstr ""
+
 #: src/view/screens/Notifications.tsx:277
 msgid "Load new notifications"
 msgstr ""
@@ -5742,8 +5760,8 @@ msgstr ""
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:42
-#: src/components/dialogs/BirthDateSettings.tsx:46
+#: src/components/dialogs/BirthDateSettings.tsx:72
+#: src/components/dialogs/BirthDateSettings.tsx:76
 msgid "My Birthdate"
 msgstr ""
 
@@ -6319,10 +6337,12 @@ msgstr ""
 msgid "Open account management"
 msgstr ""
 
+#: src/components/dialogs/BirthDateSettings.tsx:134
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:163
 msgid "Open account settings"
 msgstr ""
 
+#: src/components/dialogs/BirthDateSettings.tsx:140
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:169
 #: src/view/com/modals/DeleteAccount.tsx:89
 msgid "Open Account Settings"
@@ -7917,7 +7937,8 @@ msgstr ""
 msgid "Returns to the previous step"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:190
+#: src/components/dialogs/BirthDateSettings.tsx:352
+#: src/components/dialogs/BirthDateSettings.tsx:453
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:292
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:665
@@ -7943,7 +7964,8 @@ msgctxt "action"
 msgid "Save"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:183
+#: src/components/dialogs/BirthDateSettings.tsx:345
+#: src/components/dialogs/BirthDateSettings.tsx:446
 msgid "Save birthdate"
 msgstr ""
 
@@ -9230,7 +9252,8 @@ msgstr ""
 msgid "Terms"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:169
+#: src/components/dialogs/BirthDateSettings.tsx:333
+#: src/components/dialogs/BirthDateSettings.tsx:432
 #: src/Navigation.tsx:351
 #: src/screens/Settings/AboutSettings.tsx:80
 #: src/screens/Settings/AboutSettings.tsx:83
@@ -9303,7 +9326,8 @@ msgstr ""
 msgid "The author of this thread has hidden this reply."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:156
+#: src/components/dialogs/BirthDateSettings.tsx:320
+#: src/components/dialogs/BirthDateSettings.tsx:419
 msgid "The birthdate you've entered means you are under 18 years old. Certain content and features may be unavailable to you."
 msgstr ""
 
@@ -9633,7 +9657,7 @@ msgstr ""
 msgid "This handle is reserved. Please try a different one."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:50
+#: src/components/dialogs/BirthDateSettings.tsx:80
 msgid "This information is private and not shared with other users."
 msgstr ""
 
@@ -9813,6 +9837,10 @@ msgstr ""
 
 #: src/components/dms/ReportConversationPrompt.tsx:19
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
+msgstr ""
+
+#: src/components/dialogs/BirthDateSettings.tsx:99
+msgid "To update your birthdate, please sign in with your main account password instead of an app password."
 msgstr ""
 
 #: src/components/dms/DateDivider.tsx:44
@@ -10730,7 +10758,7 @@ msgstr ""
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:62
+#: src/components/dialogs/BirthDateSettings.tsx:92
 msgid "We were unable to load your birthdate preferences. Please try again."
 msgstr ""
 
@@ -11218,7 +11246,8 @@ msgstr ""
 msgid "You must be 13 years of age or older to create an account."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:165
+#: src/components/dialogs/BirthDateSettings.tsx:329
+#: src/components/dialogs/BirthDateSettings.tsx:428
 msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
 msgstr ""
 
