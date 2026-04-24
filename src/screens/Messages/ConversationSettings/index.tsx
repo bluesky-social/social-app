@@ -572,7 +572,13 @@ function SettingsButton({
         size="large"
         shape="round"
         label={label}
-        onPress={onPress}>
+        onPress={onPress}
+        style={[
+          {
+            width: 48,
+            height: 48,
+          },
+        ]}>
         <ButtonIcon icon={icon} size="md" />
       </Button>
       <Text
@@ -582,7 +588,7 @@ function SettingsButton({
           a.font_medium,
           a.text_center,
           a.pt_xs,
-          t.atoms.text,
+          t.atoms.text_contrast_medium,
         ]}>
         {text}
       </Text>
