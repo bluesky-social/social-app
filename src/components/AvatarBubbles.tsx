@@ -39,7 +39,7 @@ export function AvatarBubbles({
     allProfiles.length > 2
       ? allProfiles.filter(p => p.did !== currentAccount?.did)
       : allProfiles
-  const scale = profiles.length <= 1 ? 1 : size / 120
+  const scale = size / 120
   const marginOffset = size < 120 ? -2 : 0
 
   const initialValue = animate ? 0 : 1
