@@ -337,24 +337,25 @@ function GroupChatGate() {
       nativeOptions={{preventDismiss: true, preventExpansion: true}}
       testID="groupChatGateDialog">
       <Prompt.Content>
-        <View style={[a.w_full, a.align_center, a.py_2xl]}>
-          <Text style={{fontSize: 48}} emoji>
+        <View style={[a.w_full, a.align_center, a.py_3xl]}>
+          <Text style={{fontSize: 72}} emoji>
             🐴
           </Text>
         </View>
-        <Prompt.TitleText>
+        <Prompt.TitleText style={[a.text_center]}>
           {hasBeenReleased ? (
             <Trans>Group chats are now available</Trans>
           ) : (
             <Trans>Group chats are not yet available</Trans>
           )}
         </Prompt.TitleText>
-        <Prompt.DescriptionText>
+        <Prompt.DescriptionText style={[a.text_center]}>
           {hasBeenReleased ? (
             <Trans>Update your app to the latest version to join in!</Trans>
           ) : (
             <Trans>
-              This feature isn't available to you yet. Please check back later.
+              Hold your horses! This feature isn't available to you yet. Please
+              check back later.
             </Trans>
           )}
         </Prompt.DescriptionText>
