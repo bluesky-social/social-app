@@ -629,13 +629,14 @@ export class Convo {
   async fetchConvo() {
     if (this.pendingFetchConvo) return this.pendingFetchConvo
 
+    // non-blocking
+    void this.fetchMemberList()
+
     this.pendingFetchConvo = (async () => {
       try {
         const response = await networkRetry(2, () => {
           return this.agent.chat.bsky.convo.getConvo(
-            {
-              convoId: this.convoId,
-            },
+            {convoId: this.convoId},
             {headers: DM_SERVICE_HEADERS},
           )
         })
@@ -655,6 +656,7 @@ export class Convo {
 
   async refreshConvo() {
     try {
+      void this.fetchMemberList()
       const {convo} = await this.fetchConvo()
       // throw new Error('UNCOMMENT TO TEST REFRESH FAILURE')
       this.setConvo(convo)
@@ -666,6 +668,28 @@ export class Convo {
         })
       }
     }
+  }
+
+  // purely for populating `this.relatedProfiles` - we do not pipe it
+  // into the ConvoWithDetails. If you want to drive UI based on the member list,
+  // use `useListConvoMembersQuery`
+  // we shouldn't also block loading off of this - the UI should be resilient
+  async fetchMemberList() {
+    let cursor: string | undefined
+    do {
+      const result = await networkRetry(2, () => {
+        return this.agent.chat.bsky.convo.getConvoMembers({
+          convoId: this.convoId,
+          limit: 50,
+          cursor,
+        })
+      })
+      cursor = result.data.cursor
+
+      for (const member of result.data.members) {
+        this.relatedProfiles.set(member.did, member)
+      }
+    } while (cursor)
   }
 
   private fetchMessageHistoryError: {retry: () => void} | undefined
