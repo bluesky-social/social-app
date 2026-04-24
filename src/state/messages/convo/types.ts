@@ -1,12 +1,12 @@
 import {
   type BskyAgent,
-  type ChatBskyActorDefs,
   type ChatBskyConvoDefs,
   type ChatBskyConvoSendMessage,
 } from '@atproto/api'
 
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type ConvoWithDetails} from '#/components/dms/util'
+import type * as bsky from '#/types/bsky'
 
 export type ConvoParams = {
   convoId: string
@@ -87,6 +87,7 @@ export type ConvoItem =
       type: 'message'
       key: string
       message: ChatBskyConvoDefs.MessageView
+      relatedProfiles: bsky.profile.AnyProfileView[]
       nextMessage:
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
@@ -100,6 +101,7 @@ export type ConvoItem =
       type: 'pending-message'
       key: string
       message: ChatBskyConvoDefs.MessageView
+      relatedProfiles: bsky.profile.AnyProfileView[]
       nextMessage:
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
@@ -118,6 +120,7 @@ export type ConvoItem =
       type: 'deleted-message'
       key: string
       message: ChatBskyConvoDefs.DeletedMessageView
+      relatedProfiles: bsky.profile.AnyProfileView[]
       nextMessage:
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
@@ -131,7 +134,7 @@ export type ConvoItem =
       type: 'system-message'
       key: string
       message: ChatBskyConvoDefs.SystemMessageView
-      relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[]
+      relatedProfiles: bsky.profile.AnyProfileView[]
     }
   | {
       type: 'error'

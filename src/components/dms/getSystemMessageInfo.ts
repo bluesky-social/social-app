@@ -1,4 +1,4 @@
-import {type ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
+import {ChatBskyConvoDefs} from '@atproto/api'
 import {type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
@@ -15,6 +15,7 @@ import {
   Unlock_Stroke2_Corner2_Rounded as UnlockIcon,
 } from '#/components/icons/Lock'
 import {PencilLine_Stroke2_Corner0_Rounded as PencilIcon} from '#/components/icons/Pencil'
+import type * as bsky from '#/types/bsky'
 
 export type SystemMessageInfo = {
   message: MessageDescriptor
@@ -23,7 +24,7 @@ export type SystemMessageInfo = {
 
 function getReferredDisplayName(
   user: ChatBskyConvoDefs.SystemMessageReferredUser,
-  relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[],
+  relatedProfiles: bsky.profile.AnyProfileView[],
 ): string | null {
   const profile = relatedProfiles.find(p => p.did === user.did)
   return profile ? createSanitizedDisplayName(profile) : null
@@ -31,7 +32,7 @@ function getReferredDisplayName(
 
 export function getSystemMessageInfo(
   data: ChatBskyConvoDefs.SystemMessageView['data'],
-  relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[],
+  relatedProfiles: bsky.profile.AnyProfileView[],
 ): SystemMessageInfo | null {
   if (ChatBskyConvoDefs.isSystemMessageDataAddMember(data)) {
     const name = getReferredDisplayName(data.member, relatedProfiles)
