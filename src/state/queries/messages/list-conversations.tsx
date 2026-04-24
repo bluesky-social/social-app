@@ -105,8 +105,8 @@ export function ListConvosProviderInner({
 
   const debouncedRefetch = useMemo(() => {
     const refetchAndInvalidate = () => {
-      refetch()
-      queryClient.invalidateQueries({queryKey: [RQKEY_ROOT]})
+      void refetch()
+      void queryClient.invalidateQueries({queryKey: [RQKEY_ROOT]})
     }
     return throttle(refetchAndInvalidate, 500, {
       leading: true,
