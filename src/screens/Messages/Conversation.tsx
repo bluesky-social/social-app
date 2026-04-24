@@ -295,11 +295,12 @@ function InnerReady({
         />
       )}
 
-      {convo?.kind === 'group' && <GroupChatGate />}
+      {/*{!IS_INTERNAL && convo?.kind === 'group' && <GroupChatGate />}*/}
     </>
   )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function GroupChatGate() {
   const {t: l} = useLingui()
   const ax = useAnalytics()
