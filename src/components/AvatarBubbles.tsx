@@ -41,7 +41,7 @@ export function AvatarBubbles({
   const p2 = useSharedValue(initialValue)
   const p3 = useSharedValue(initialValue)
 
-  const animateScale = (p: Animated.SharedValue<number>, index: number) => {
+  const animateScale = (p: SharedValue<number>, index: number) => {
     p.set(0)
     p.set(() =>
       withDelay(
