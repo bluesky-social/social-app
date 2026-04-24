@@ -675,12 +675,13 @@ export class Convo {
   // use `useListConvoMembersQuery`
   // we shouldn't also block loading off of this - the UI should be resilient
   async fetchMemberList() {
-    let cursor
+    let cursor: string | undefined
     do {
       const result = await networkRetry(2, () => {
         return this.agent.chat.bsky.convo.getConvoMembers({
           convoId: this.convoId,
           limit: 50,
+          cursor,
         })
       })
       cursor = result.data.cursor
