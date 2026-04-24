@@ -104,7 +104,10 @@ export function AddMembersFlow({
 }: {
   members: string[]
   title: string
-  onAddMembers: (dids: string[]) => void
+  onAddMembers: (
+    dids: string[],
+    profiles: bsky.profile.AnyProfileView[],
+  ) => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -219,8 +222,8 @@ export function AddMembersFlow({
   }, [control])
 
   const handlePressAdd = useCallback(() => {
-    onAddMembers(groupChatDids)
-  }, [groupChatDids, onAddMembers])
+    onAddMembers(groupChatDids, groupChatProfiles)
+  }, [groupChatDids, groupChatProfiles, onAddMembers])
 
   const renderItems = useCallback(
     ({item}: {item: Item}) => {

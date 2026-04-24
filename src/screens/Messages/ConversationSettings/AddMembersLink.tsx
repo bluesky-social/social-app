@@ -98,8 +98,8 @@ export function AddMembersLink({
         <AddMembersFlow
           members={members}
           title={l`Add members`}
-          onAddMembers={members => {
-            addGroupMembers({members})
+          onAddMembers={(members, profiles) => {
+            addGroupMembers({members, profiles})
           }}
         />
       </Dialog.Outer>
