@@ -40,7 +40,7 @@ export function AvatarBubbles({
       ? allProfiles.filter(p => p.did !== currentAccount?.did)
       : allProfiles
   const scale = profiles.length <= 1 ? 1 : size / 120
-  const marginOffset = size < 120 && profiles.length < 3 ? -2 : 0
+  const marginOffset = size < 120 ? -2 : 0
 
   const initialValue = animate ? 0 : 1
   const p0 = useSharedValue(initialValue)
@@ -69,7 +69,7 @@ export function AvatarBubbles({
   }, [animate, p0, p1, p2, p3])
 
   const scales = [p0, p1, p2, p3]
-  const layouts = getLayouts(profiles.length, size)
+  const layouts = getLayouts(profiles.length)
 
   return (
     <Animated.View style={[a.p_2xs, {height: size, width: size}]}>
@@ -169,13 +169,7 @@ function AvatarPlaceholder({size}: {size: number}) {
   )
 }
 
-function getLayouts(count: number, size: number): Layout[] {
-  if (count === 2) {
-    return [
-      {size: 76, x: -2, y: -2, zIndex: 20, border: true},
-      {size: 76, x: 42, y: 42, zIndex: 10, border: true},
-    ]
-  }
+function getLayouts(count: number): Layout[] {
   if (count === 3) {
     return [
       {size: 68, x: -2, y: -2},
@@ -191,5 +185,8 @@ function getLayouts(count: number, size: number): Layout[] {
       {size: 32, x: 72, y: 9},
     ]
   }
-  return [{size, x: 0, y: 0, zIndex: 20, border: true}]
+  return [
+    {size: 76, x: -2, y: -2, zIndex: 20, border: true},
+    {size: 76, x: 42, y: 42, zIndex: 10, border: true},
+  ]
 }
