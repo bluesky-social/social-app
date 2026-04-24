@@ -1,20 +1,17 @@
-import {Pressable, View} from 'react-native'
+import {View} from 'react-native'
 import {moderateProfile} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
-import {type NavigationProp} from '#/lib/routes/types'
-import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
 import {
   type ConvoWithDetails,
   type GroupConvoMember,
 } from '#/components/dms/util'
+import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {MemberMenu} from './MemberMenu'
 import {StatusBadge} from './StatusBadge'
@@ -31,15 +28,29 @@ export function Member({
   status: 'owner' | 'standard' | 'invited'
   isOwner: boolean
 }) {
-  const navigation = useNavigation<NavigationProp>()
   const t = useTheme()
   const {t: l} = useLingui()
 
   const profile = useProfileShadow(profileUnshadowed)
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
-  // TODO Render a skeleton here. -dsb
-  if (!moderationOpts) return null
+
+  const outerStyles = [a.px_xl, a.py_sm, a.flex_row, a.align_center, a.gap_sm]
+
+  if (!moderationOpts) {
+    return (
+      <View style={outerStyles}>
+        <ProfileCard.Link profile={profile} style={[a.flex_1]}>
+          <ProfileCard.Outer>
+            <ProfileCard.Header>
+              <ProfileCard.AvatarPlaceholder size={48} />
+              <ProfileCard.NameAndHandlePlaceholder />
+            </ProfileCard.Header>
+          </ProfileCard.Outer>
+        </ProfileCard.Link>
+      </View>
+    )
+  }
 
   const moderation = moderateProfile(profile, moderationOpts)
 
@@ -76,53 +87,40 @@ export function Member({
 
   return (
     <SubtleHoverWrapper>
-      <View
-        style={[
-          a.flex_row,
-          a.align_center,
-          a.justify_between,
-          a.px_xl,
-          a.py_sm,
-        ]}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={l`View ${displayName}’s profile`}
-          accessibilityHint={l`Opens this member’s profile`}
-          style={[a.flex_1, a.flex_row, a.align_center]}
-          onPress={() => {
-            navigation.navigate('Profile', {name: profile.handle})
-          }}>
-          <PreviewableUserAvatar
-            profile={profile}
-            size={48}
-            moderation={moderation.ui('avatar')}
-          />
-          <View style={[a.mx_sm]}>
-            <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-              {displayName}
-            </Text>
-            <Text
-              style={[
-                a.text_xs,
-                a.leading_snug,
-                {color: t.palette.contrast_500},
-                web(a.pt_2xs),
-              ]}>
-              {sanitizeHandle(profile.handle, '@')}
-            </Text>
-            {!isOwner && (
-              <Text
-                style={[
-                  a.text_xs,
-                  {color: t.palette.contrast_500},
-                  web(a.pt_2xs),
-                ]}>
-                {joinedReason}
-              </Text>
-            )}
-          </View>
-        </Pressable>
-        <View>{statusBadge}</View>
+      <View style={outerStyles}>
+        <ProfileCard.Link profile={profile} style={[a.flex_1]}>
+          <ProfileCard.Outer>
+            <ProfileCard.Header>
+              <ProfileCard.Avatar
+                size={48}
+                profile={profile}
+                moderationOpts={moderationOpts}
+              />
+              <View style={[a.flex_1]}>
+                <ProfileCard.Name
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                />
+                <ProfileCard.Handle
+                  profile={profile}
+                  textStyle={[a.text_xs, a.font_medium, {top: -1}]}
+                />
+                {!isOwner && (
+                  <Text
+                    style={[
+                      a.text_xs,
+                      a.leading_snug,
+                      t.atoms.text_contrast_medium,
+                      web(a.pt_2xs),
+                    ]}>
+                    {joinedReason}
+                  </Text>
+                )}
+              </View>
+            </ProfileCard.Header>
+          </ProfileCard.Outer>
+        </ProfileCard.Link>
+        {statusBadge}
       </View>
     </SubtleHoverWrapper>
   )
