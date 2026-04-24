@@ -986,13 +986,17 @@ export class Convo {
     this.commit()
   }
 
-  updateGroupMembers(members: GroupConvoMember[]) {
+  updateGroupMembers(members: GroupConvoMember[], memberCount: number) {
     if (this.convo?.kind !== 'group') {
       throw new Error('updateGroupMembers can only be called on group convo')
     }
 
     this.updateConvo({
       members,
+      kind: {
+        ...this.convo.details,
+        memberCount,
+      },
     })
 
     this.commit()

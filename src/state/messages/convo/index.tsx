@@ -157,10 +157,15 @@ export function ConvoProvider({
         }
         if (
           data &&
-          convo.convo &&
-          membersChanged(data.members, convo.convo.members)
+          ChatBskyConvoDefs.isGroupConvo(data.kind) &&
+          convo.convo?.kind === 'group' &&
+          (membersChanged(data.members, convo.convo.members) ||
+            data.kind.memberCount !== convo.convo.details.memberCount)
         ) {
-          convo.updateGroupMembers(data.members as GroupConvoMember[])
+          convo.updateGroupMembers(
+            data.members as GroupConvoMember[],
+            data.kind.memberCount,
+          )
         }
       }
     })
