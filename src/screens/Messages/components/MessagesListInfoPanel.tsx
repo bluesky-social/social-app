@@ -54,15 +54,13 @@ export function MessagesListInfoPanel({
   let names: React.ReactNode | null = null
   if (members.length === 1) {
     names = <Trans>New chat with {members[0].displayName}</Trans>
-  }
-  if (members.length === 2) {
+  } else if (members.length === 2) {
     names = (
       <Trans>
         New chat with {members[0].displayName} and {members[1].displayName}
       </Trans>
     )
-  }
-  if (members.length > 2) {
+  } else if (members.length > 2) {
     names = (
       <Trans>
         New chat with {members[0].displayName}, {members[1].displayName}, and{' '}
@@ -81,7 +79,7 @@ export function MessagesListInfoPanel({
   return (
     <>
       <View style={[a.align_center, a.justify_center]}>
-        <AvatarBubbles animate={true} profiles={members} />
+        <AvatarBubbles animate={true} profiles={convo?.members} />
         {convo.details.name ? (
           <Text style={[a.text_2xl, a.font_bold, a.mt_lg, t.atoms.text]}>
             {convo.details.name}

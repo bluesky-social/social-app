@@ -91,25 +91,38 @@ export function AvatarBubbles({
       <AvatarBubble
         profile={profiles[0]}
         scale={p0}
-        size={76}
-        x={-2}
-        y={-2}
+        size={containerSize}
+        x={0}
+        y={0}
         style={[a.z_20]}
-        includeProfileBorder
-      />
-      <AvatarBubble
-        profile={profiles[1]}
-        scale={p1}
-        size={76}
-        x={42}
-        y={42}
-        style={[a.z_10]}
         includeProfileBorder
       />
     </>
   )
-
-  if (profiles.length === 3) {
+  if (profiles.length === 2) {
+    avatars = (
+      <>
+        <AvatarBubble
+          profile={profiles[0]}
+          scale={p0}
+          size={76}
+          x={-2}
+          y={-2}
+          style={[a.z_20]}
+          includeProfileBorder
+        />
+        <AvatarBubble
+          profile={profiles[1]}
+          scale={p1}
+          size={76}
+          x={42}
+          y={42}
+          style={[a.z_10]}
+          includeProfileBorder
+        />
+      </>
+    )
+  } else if (profiles.length === 3) {
     avatars = (
       <>
         <AvatarBubble
@@ -135,9 +148,7 @@ export function AvatarBubbles({
         />
       </>
     )
-  }
-
-  if (profiles.length >= 4) {
+  } else if (profiles.length >= 4) {
     avatars = (
       <>
         <AvatarBubble
