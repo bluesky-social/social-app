@@ -59,13 +59,14 @@ export function MessagesListInfoPanel({
       </Trans>
     )
   } else if (members.length > 2) {
+    const memberCount = convo.details.memberCount - 2
     names = (
       <Trans>
         New chat with {members[0].displayName}, {members[1].displayName}, and{' '}
         <Plural
-          value={members.length - 2}
-          one={`${members.length - 2} more`}
-          other={`${members.length - 2} more`}
+          value={memberCount}
+          one={`${memberCount} more`}
+          other={`${memberCount} more`}
         />
         .
       </Trans>
