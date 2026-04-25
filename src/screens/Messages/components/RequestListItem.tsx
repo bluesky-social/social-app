@@ -25,19 +25,22 @@ export function RequestListItem({
     return null
   }
 
-  const isDeletedAccount = convo.primaryMember.handle === 'missing.invalid'
+  const isDeletedAccount =
+    !convo.primaryMember || convo.primaryMember.handle === 'missing.invalid'
 
   return (
     <View style={[a.relative, a.flex_1]}>
       <ChatListItem convo={convo.view} showMenu={false}>
-        <View style={[a.pt_xs, a.pb_2xs]}>
-          <KnownFollowers
-            profile={convo.primaryMember}
-            moderationOpts={moderationOpts}
-            minimal
-            showIfEmpty
-          />
-        </View>
+        {convo.primaryMember && (
+          <View style={[a.pt_xs, a.pb_2xs]}>
+            <KnownFollowers
+              profile={convo.primaryMember}
+              moderationOpts={moderationOpts}
+              minimal
+              showIfEmpty
+            />
+          </View>
+        )}
         {/* spacer, since you can't nest pressables */}
         <View style={[a.pt_md, a.pb_xs, a.w_full, {opacity: 0}]} aria-hidden>
           {/* Placeholder text so that it responds to the font height */}
@@ -60,7 +63,7 @@ export function RequestListItem({
                 paddingLeft: tokens.space.lg + 52 + tokens.space.md,
               },
             ]}>
-            {!isDeletedAccount ? (
+            {convo.primaryMember && !isDeletedAccount ? (
               <>
                 <AcceptChatButton convo={convo.view} currentScreen="list" />
                 <RejectMenu

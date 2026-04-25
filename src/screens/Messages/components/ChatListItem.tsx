@@ -14,7 +14,11 @@ import {useHaptics} from '#/lib/haptics'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {decrementBadgeCount} from '#/lib/notifications/notifications'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {type Shadow, useProfileShadow} from '#/state/cache/profile-shadow'
+import {
+  type Shadow,
+  useMaybeProfileShadow,
+  useProfileShadow,
+} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   precacheConvoQuery,
@@ -167,10 +171,11 @@ function GroupChatItem({
   children?: React.ReactNode
 }) {
   const {t: l} = useLingui()
-  const groupOwner = useProfileShadow(convo.primaryMember)
+  const groupOwner = useMaybeProfileShadow(convo.primaryMember)
 
   const moderation = useMemo(
-    () => moderateProfile(groupOwner, moderationOpts),
+    () =>
+      groupOwner ? moderateProfile(groupOwner, moderationOpts) : undefined,
     [groupOwner, moderationOpts],
   )
 
@@ -215,8 +220,8 @@ function BaseChatItem({
   accessibilityHint: string
   isDeletedAccount: boolean
   isBlockedAccount: boolean
-  primaryProfile: Shadow<bsky.profile.AnyProfileView>
-  primaryProfileModeration: ModerationDecision
+  primaryProfile?: Shadow<bsky.profile.AnyProfileView>
+  primaryProfileModeration?: ModerationDecision
   showMenu?: boolean
   showProfileBadges: boolean
   postAlerts?: React.ReactNode
@@ -236,6 +241,7 @@ function BaseChatItem({
   const hasUnread = convo.unreadCount > 0 && !isDeletedAccount
 
   const blockInfo = useMemo(() => {
+    if (!primaryProfileModeration) return {listBlocks: [], userBlock: undefined}
     const modui = primaryProfileModeration.ui('profileView')
     const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
     const listBlocks = blocks.filter(alert => alert.source.type === 'list')
@@ -455,7 +461,7 @@ function BaseChatItem({
                       </Text>
                     </View>
 
-                    {showProfileBadges && (
+                    {showProfileBadges && primaryProfile && (
                       <ProfileBadges
                         profile={primaryProfile}
                         size="md"
@@ -550,7 +556,8 @@ function BaseChatItem({
 
           <ChatListItemPortal.Outlet />
 
-          {showMenu && (
+          {/* TODO: Allow showing menu for groups where the owner has left! */}
+          {showMenu && primaryProfile && (
             <ConvoMenu
               convo={convo}
               profile={primaryProfile}

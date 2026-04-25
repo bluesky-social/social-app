@@ -2,7 +2,9 @@ import {View} from 'react-native'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAddGroupMembers} from '#/state/queries/messages/add-group-members'
+import {useListConvoMembersQuery} from '#/state/queries/messages/list-convo-members'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
@@ -23,13 +25,16 @@ export function MessagesListInfoPanel({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const moderationOpts = useModerationOpts()
+  const convoId = convo.view.id
 
   const addMembersControl = Dialog.useDialogControl()
   const inviteLinkControl = Dialog.useDialogControl()
 
   const {currentAccount} = useSession()
 
-  const convoId = convo.view.id
+  const {data: fullMemberList} = useListConvoMembersQuery({convoId})
+
   const {mutate: addGroupMembers} = useAddGroupMembers(convoId, {
     onSuccess: () => {
       addMembersControl.close()
@@ -46,9 +51,9 @@ export function MessagesListInfoPanel({
   //   (isOwner && groupConvo) ||
   //   (!isOwner && groupConvo && joinLink?.enabledStatus === 'enabled')
 
-  const isOwner = convo?.primaryMember.did === currentAccount?.did
+  const isOwner = convo.primaryMember?.did === currentAccount?.did
 
-  const members = (convo?.members ?? []).filter(
+  const members = (convo.members ?? []).filter(
     profile => profile.did !== currentAccount?.did,
   )
 
@@ -81,7 +86,7 @@ export function MessagesListInfoPanel({
   return (
     <>
       <View style={[a.align_center, a.justify_center]}>
-        <AvatarBubbles animate={true} profiles={convo?.members} />
+        <AvatarBubbles animate={true} profiles={convo.members} />
         {convo.details.name ? (
           <Text style={[a.text_2xl, a.font_bold, a.mt_lg, t.atoms.text]}>
             {convo.details.name}
@@ -139,11 +144,15 @@ export function MessagesListInfoPanel({
           </View>
         ) : null}
       </View>
-      <InviteLinkDialog
-        isOwner={isOwner}
-        convo={convo}
-        control={inviteLinkControl}
-      />
+      {convo.primaryMember && moderationOpts && (
+        <InviteLinkDialog
+          convo={convo}
+          owner={convo.primaryMember}
+          moderationOpts={moderationOpts}
+          isOwner={isOwner}
+          control={inviteLinkControl}
+        />
+      )}
       <Dialog.Outer
         control={addMembersControl}
         testID="addChatMembersDialog"

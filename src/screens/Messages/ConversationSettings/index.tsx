@@ -1,6 +1,10 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
+import {
+  ChatBskyActorDefs,
+  ChatBskyConvoDefs,
+  ModerationOpts,
+} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -14,6 +18,7 @@ import {
 import {logger} from '#/logger'
 import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useEditGroupChatName} from '#/state/queries/messages/edit-group-chat-name'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {useListConvoMembersQuery} from '#/state/queries/messages/list-convo-members'
@@ -99,6 +104,7 @@ function SettingsInner() {
   const {t: l} = useLingui()
   const convoState = useConvo()
   const navigation = useNavigation<NavigationProp>()
+  const moderationOpts = useModerationOpts()
 
   if (convoState.status === ConvoStatus.Error) {
     return (
@@ -111,7 +117,7 @@ function SettingsInner() {
     )
   }
 
-  if (!isConvoActive(convoState)) {
+  if (!isConvoActive(convoState) || !moderationOpts) {
     return (
       <View style={[a.flex_1, a.align_center, a.justify_center]}>
         <Loader size="xl" />
@@ -135,7 +141,9 @@ function SettingsInner() {
     )
   }
 
-  return <GroupSettings convo={convoState.convo} />
+  return (
+    <GroupSettings convo={convoState.convo} moderationOpts={moderationOpts} />
+  )
 }
 
 function keyExtractor(item: Item) {
@@ -157,8 +165,10 @@ function isGroupMember(
 
 function GroupSettings({
   convo,
+  moderationOpts,
 }: {
   convo: Extract<ConvoWithDetails, {kind: 'group'}>
+  moderationOpts: ModerationOpts
 }) {
   const initialNumToRender = useInitialNumToRender({minItemHeight: 68})
   const bottomBarOffset = useBottomBarOffset()
@@ -166,7 +176,7 @@ function GroupSettings({
   const {currentAccount} = useSession()
 
   const primaryMember = convo.primaryMember
-  const isOwner = primaryMember.did === currentAccount?.did
+  const isOwner = !!primaryMember && primaryMember.did === currentAccount?.did
 
   const {data: memberListData = [], isPending} = useListConvoMembersQuery({
     convoId: convo.view.id,
@@ -209,8 +219,8 @@ function GroupSettings({
       ...memberListData
         .filter(isGroupMember)
         .sort((a, b) => {
-          const aIsOwner = a.did === primaryMember.did
-          const bIsOwner = b.did === primaryMember.did
+          const aIsOwner = a.did === primaryMember?.did
+          const bIsOwner = b.did === primaryMember?.did
           const aIsSelf = a.did === currentAccount?.did
           const bIsSelf = b.did === currentAccount?.did
           if (aIsOwner !== bIsOwner) return aIsOwner ? -1 : 1
@@ -223,7 +233,7 @@ function GroupSettings({
             key: profile.did,
             profile,
             status:
-              primaryMember.did === profile.did
+              primaryMember?.did === profile.did
                 ? 'owner'
                 : invites.includes(profile.did)
                   ? 'invited'
@@ -271,7 +281,13 @@ function GroupSettings({
       desktopFixedHeight
       initialNumToRender={initialNumToRender}
       keyExtractor={keyExtractor}
-      ListHeaderComponent={<SettingsHeader convo={convo} isOwner={isOwner} />}
+      ListHeaderComponent={
+        <SettingsHeader
+          convo={convo}
+          isOwner={isOwner}
+          moderationOpts={moderationOpts}
+        />
+      }
       renderItem={renderItem}
       sideBorders={false}
       windowSize={11}
@@ -282,9 +298,11 @@ function GroupSettings({
 function SettingsHeader({
   convo,
   isOwner,
+  moderationOpts,
 }: {
   convo: Extract<ConvoWithDetails, {kind: 'group'}>
   isOwner: boolean
+  moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
   const {i18n, t: l} = useLingui()
@@ -517,11 +535,15 @@ function SettingsHeader({
         onChangeText={setNewGroupName}
         onConfirm={handleEditName}
       />
-      <InviteLinkDialog
-        convo={convo}
-        control={inviteLinkDialog}
-        isOwner={isOwner}
-      />
+      {convo.primaryMember && (
+        <InviteLinkDialog
+          convo={convo}
+          owner={convo.primaryMember}
+          control={inviteLinkDialog}
+          isOwner={isOwner}
+          moderationOpts={moderationOpts}
+        />
+      )}
       <LockChatPrompt control={lockChatPrompt} onConfirm={handleConfirmLock} />
       <LeaveChatPrompt
         control={leaveChatPrompt}
