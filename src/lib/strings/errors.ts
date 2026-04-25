@@ -39,6 +39,34 @@ export function cleanError(str: any): string {
   ) {
     return t`This feature is not available with your current session. Please manage your account through your hosting provider's website, or sign out and sign back in to refresh your permissions.`
   }
+  if (
+    str.includes('session was deleted by another process') ||
+    str.includes('No refresh token available') ||
+    str.includes('The session was revoked')
+  ) {
+    return t`Your session has expired. Please sign in again.`
+  }
+  if (
+    str.includes('Database closed') ||
+    str.includes('Database has been disposed')
+  ) {
+    return t`Session storage is unavailable. Please sign in again.`
+  }
+  if (str.includes('invalid_dpop_proof') && str.includes('iat claim')) {
+    return t`Your device clock appears to be incorrect. Please check your system time settings and try again.`
+  }
+  if (str.includes('invalid_dpop_proof')) {
+    return t`Authentication error. Please try signing in again.`
+  }
+  if (str.includes('Session resume timed out')) {
+    return t`Sign in is taking too long. Please try again.`
+  }
+  if (
+    str.includes('Token set sub mismatch') ||
+    str.includes('Stored session sub mismatch')
+  ) {
+    return t`Session data is corrupted. Please sign in again.`
+  }
   if (str.includes('Account has been suspended')) {
     return t`Account has been suspended`
   }

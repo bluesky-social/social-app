@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -64,7 +65,8 @@ export const ChooseAccountForm = ({
         logger.error('choose account: initSession failed', {
           message: e.message,
         })
-        Toast.show(_(msg`Sign in failed. Please try again.`))
+        const errMsg = cleanError(e.message || e.toString())
+        Toast.show(errMsg || _(msg`Sign in failed. Please try again.`))
         // Move to login form.
         onSelectAccount(account)
       } finally {
