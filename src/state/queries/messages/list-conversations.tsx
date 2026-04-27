@@ -409,8 +409,6 @@ export function useUnreadMessageCount() {
     numUnread?: string
     hasNew: boolean
   }>(() => {
-    console.log('accepted', accepted)
-    console.log('request', request)
     const acceptedCount = calculateCount(
       accepted,
       currentAccount?.did,
