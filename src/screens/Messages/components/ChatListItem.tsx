@@ -351,7 +351,7 @@ function BaseChatItem({
       for (const member of convo.view.members) {
         unstableCacheProfileView(queryClient, member)
       }
-      precacheConvoQuery(queryClient, convo)
+      precacheConvoQuery(queryClient, convo.view)
       void decrementBadgeCount(convo.view.unreadCount)
       if (isDeletedAccount) {
         e.preventDefault()
