@@ -35,6 +35,63 @@ export type Events = {
       | 'AgeAssuranceNoAccessScreen'
     scope: 'current' | 'every'
   }
+  // OAuth session lifecycle. These are silent client-side events used to
+  // diagnose unexpected sign-outs (refresh races, IndexedDB eviction, DPoP
+  // skew, etc.). `account:loggedOut` is reserved for user-initiated logouts.
+  'oauth:sessionDeleted': {
+    // Reason the underlying OAuth client deleted the local session.
+    // Common values map to oauth-client/session-getter causes:
+    //   'session_deleted_by_another_process' — refresh race / cross-tab
+    //   'invalid_grant'                      — refresh token rejected
+    //   'database_closed'                    — IndexedDB unavailable / evicted
+    //   'unknown'                            — unmapped cause
+    cause: string
+    // Truncated error message for further triage in OpenSearch.
+    message?: string
+  }
+  'oauth:sessionRefreshed': {}
+  // Fired when a refresh round-trip to /oauth/token fails for any reason —
+  // network blocked, timeout, 5xx, server-side rejection. The session may or
+  // may not survive (a 400 invalid_grant will additionally fire
+  // oauth:sessionDeleted; a network blip will not).
+  'oauth:refreshFailed': {
+    triggerContext: 'background' | 'debugButton'
+    errorCategory:
+      | 'sessionDeleted'
+      | 'sessionExpired'
+      | 'invalidGrant'
+      | 'databaseClosed'
+      | 'dpopSkew'
+      | 'dpopOther'
+      | 'refreshExhausted'
+      | 'subMismatch'
+      | 'timeout'
+      | 'network'
+      | 'serverError'
+      | 'unknown'
+    // Truncated for triage in OpenSearch / postgres.
+    message?: string
+    // HTTP status when the failure was a non-2xx response (vs. a thrown fetch).
+    httpStatus?: number
+  }
+  'oauth:sessionResumeFailed': {
+    // Where in the app the resume attempt happened.
+    logContext: 'AppBoot' | 'ChooseAccountForm' | 'SwitchAccount'
+    // Coarse error category derived from the thrown error string.
+    errorCategory:
+      | 'sessionDeleted'
+      | 'sessionExpired'
+      | 'invalidGrant'
+      | 'databaseClosed'
+      | 'dpopSkew'
+      | 'dpopOther'
+      | 'refreshExhausted'
+      | 'subMismatch'
+      | 'timeout'
+      | 'network'
+      | 'unknown'
+    message?: string
+  }
   'notifications:openApp': {
     reason: NotificationReason
     causedBoot: boolean
