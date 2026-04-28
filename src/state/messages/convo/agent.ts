@@ -37,6 +37,8 @@ import {type MessagesEventBusError} from '#/state/messages/events/types'
 import {logger} from '#/state/messages/logger'
 import {IS_NATIVE} from '#/env'
 
+const MESSAGES_PER_PAGE = IS_NATIVE ? 20 : 60
+
 export function isConvoItemMessage(
   item: ConvoItem,
 ): item is ConvoItem & {type: 'message'} {
@@ -543,7 +545,7 @@ export class Convo {
           {
             cursor: nextCursor,
             convoId: this.convoId,
-            limit: IS_NATIVE ? 30 : 60,
+            limit: MESSAGES_PER_PAGE,
           },
           {headers: DM_SERVICE_HEADERS},
         )
@@ -571,7 +573,7 @@ export class Convo {
        * If the response contained fewer messages than the limit, we know
        * there are no more pages, regardless of whether a cursor was returned.
        */
-      if (messages.length < (IS_NATIVE ? 30 : 60)) {
+      if (messages.length < MESSAGES_PER_PAGE) {
         this.oldestRev = null
       }
 
