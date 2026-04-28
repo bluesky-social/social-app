@@ -36,8 +36,8 @@ export function SystemMessageGroup({
   const count = item.items.length
 
   const label = plural(count, {
-    one: '# group chat update',
-    other: '# group chat updates',
+    one: '# chat update',
+    other: '# chat updates',
   })
 
   const rotation = useDerivedValue(() =>
