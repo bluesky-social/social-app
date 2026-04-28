@@ -11,16 +11,18 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
+import {useListConvoMembersQuery} from '#/state/queries/messages/list-convo-members'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {type ListMethods} from '#/view/com/util/List'
 import {android, atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {canBeMessaged} from '#/components/dms/util'
+import {canBeMessaged, type ConvoWithDetails} from '#/components/dms/util'
 import * as Toggle from '#/components/forms/Toggle'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
@@ -54,12 +56,12 @@ type PlaceholderItem = {
   key: string
 }
 
-type ErrorItem = {
-  type: 'error'
+type LoadingItem = {
+  type: 'loading'
   key: string
 }
 
-type Item = LabelItem | ProfileItem | EmptyItem | PlaceholderItem | ErrorItem
+type Item = LabelItem | ProfileItem | EmptyItem | PlaceholderItem | LoadingItem
 
 export type State = {
   groupChatDids: string[]
@@ -98,11 +100,11 @@ function reducer(state: State, action: Action): State {
 }
 
 export function AddMembersFlow({
-  members,
+  convo,
   title,
   onAddMembers,
 }: {
-  members: string[]
+  convo: Extract<ConvoWithDetails, {kind: 'group'}>
   title: string
   onAddMembers: (
     dids: string[],
@@ -112,21 +114,32 @@ export function AddMembersFlow({
   const t = useTheme()
   const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
+  const {currentAccount} = useSession()
+
   const control = Dialog.useDialogContext()
+
   const [headerHeight, setHeaderHeight] = useState(0)
   const [footerHeight, setFooterHeight] = useState(0)
-  const listRef = useRef<ListMethods>(null)
-  const {currentAccount} = useSession()
-  const inputRef = useRef<TextInput>(null)
-
   const [searchText, setSearchText] = useState('')
 
+  const listRef = useRef<ListMethods>(null)
+  const inputRef = useRef<TextInput>(null)
+
   const {
-    data: results,
+    data: autocompleteResults,
     isError,
-    isFetching,
+    isFetching: isAutocompleteFetching,
   } = useActorAutocompleteQuery(searchText, true, 12)
   const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
+  const {data: memberListData = [], isPending: isMemberListPending} =
+    useListConvoMembersQuery({
+      convoId: convo.view.id,
+      placeholderData: convo.members,
+    })
+  const memberDidSet = useMemo(
+    () => new Set(memberListData.map(profile => profile.did)),
+    [memberListData],
+  )
 
   const [{groupChatDids, groupChatProfiles}, dispatch] = useReducer(reducer, {
     groupChatDids: [],
@@ -147,8 +160,13 @@ export function AddMembersFlow({
     [groupChatDids, groupChatProfiles],
   )
 
-  const items = useMemo(() => {
-    let _items: Item[] = []
+  const items = useMemo<Item[]>(() => {
+    if (isMemberListPending) {
+      // Still fetching chat member DIDs for filtering, so force the loading state.
+      return []
+    }
+
+    const _items: Item[] = []
 
     if (isError) {
       _items.push({
@@ -157,11 +175,11 @@ export function AddMembersFlow({
         message: l`We’re having network issues, try again`,
       })
     } else if (searchText.length) {
-      if (results?.length) {
-        for (const profile of results) {
+      if (autocompleteResults?.length) {
+        for (const profile of autocompleteResults) {
           if (
             profile.did === currentAccount?.did ||
-            members.includes(profile.did)
+            memberDidSet.has(profile.did)
           )
             continue
           _items.push({
@@ -171,18 +189,11 @@ export function AddMembersFlow({
           })
         }
 
-        _items = _items.sort(item => {
+        _items.sort(item => {
           return item.type === 'profile' && canBeMessaged(item.profile) ? -1 : 1
         })
       }
     } else {
-      const placeholders: Item[] = Array(10)
-        .fill(0)
-        .map((__, i) => ({
-          type: 'placeholder',
-          key: i + '',
-        }))
-
       if (follows) {
         for (const page of follows.pages) {
           for (const profile of page.follows) {
@@ -194,11 +205,13 @@ export function AddMembersFlow({
           }
         }
 
-        _items = _items.sort(item => {
+        _items.sort(item => {
           return item.type === 'profile' && canBeMessaged(item.profile) ? -1 : 1
         })
       } else {
-        _items.push(...placeholders)
+        for (let i = 0; i < 10; i++) {
+          _items.push({type: 'placeholder', key: i + ''})
+        }
       }
     }
 
@@ -210,12 +223,31 @@ export function AddMembersFlow({
       })
     }
 
-    return _items
-  }, [isError, searchText, l, results, currentAccount?.did, members, follows])
+    if (searchText && isAutocompleteFetching && _items.length > 0) {
+      // Stale results are still showing while autocomplete refetches -
+      // append an inline indicator so the user sees that work is happening.
+      _items.push({type: 'loading', key: 'loading'})
+    } else if (
+      searchText &&
+      !isAutocompleteFetching &&
+      !_items.length &&
+      !isError
+    ) {
+      _items.push({type: 'empty', key: 'empty', message: l`No results`})
+    }
 
-  if (searchText && !isFetching && !items.length && !isError) {
-    items.push({type: 'empty', key: 'empty', message: l`No results`})
-  }
+    return _items
+  }, [
+    autocompleteResults,
+    currentAccount?.did,
+    follows,
+    isAutocompleteFetching,
+    isError,
+    isMemberListPending,
+    l,
+    memberDidSet,
+    searchText,
+  ])
 
   const handlePressBack = useCallback(() => {
     control.close()
@@ -242,6 +274,13 @@ export function AddMembersFlow({
         }
         case 'placeholder': {
           return <ProfileCardSkeleton key={item.key} />
+        }
+        case 'loading': {
+          return (
+            <View style={[a.px_lg, a.py_xl, a.align_center]}>
+              <Loader size="lg" />
+            </View>
+          )
         }
         case 'empty': {
           return <EmptyMemberList key={item.key} message={item.message} />
@@ -436,12 +475,24 @@ export function AddMembersFlow({
         renderItem={renderItems}
         ListHeaderComponent={listHeader}
         stickyHeaderIndices={[0]}
+        ListEmptyComponent={
+          isMemberListPending || isAutocompleteFetching ? (
+            <View style={[a.flex_1, a.align_center, a.justify_center]}>
+              <Loader size="xl" />
+            </View>
+          ) : null
+        }
         keyExtractor={(item: Item) => item.key}
         style={[
           web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
           native({height: '100%'}),
         ]}
-        webInnerContentContainerStyle={[a.py_0, {paddingBottom: footerHeight}]}
+        contentContainerStyle={items.length === 0 ? {flexGrow: 1} : undefined}
+        webInnerContentContainerStyle={[
+          a.py_0,
+          {paddingBottom: footerHeight},
+          items.length === 0 && {flexGrow: 1},
+        ]}
         webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
         scrollIndicatorInsets={{top: headerHeight, bottom: footerHeight}}
         keyboardDismissMode="on-drag"
@@ -457,7 +508,6 @@ export function AddMembersFlow({
                   onPress={handlePressBack}>
                   <ButtonIcon icon={ArrowLeftIcon} size="md" />
                   <ButtonText>
-                    {' '}
                     <Trans>Back</Trans>
                   </ButtonText>
                 </Button>

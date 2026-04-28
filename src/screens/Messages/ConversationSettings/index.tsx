@@ -239,12 +239,7 @@ function GroupSettings({
           />
         )
       case 'ADD_MEMBERS_LINK':
-        return convo ? (
-          <AddMembersLink
-            convo={convo}
-            members={memberListData.map(profile => profile.did)}
-          />
-        ) : null
+        return convo ? <AddMembersLink convo={convo} /> : null
       case 'CHAT_MEMBER':
         return convo ? (
           <Member

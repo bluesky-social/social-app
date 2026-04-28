@@ -16,10 +16,8 @@ import {Text} from '#/components/Typography'
 
 export function AddMembersLink({
   convo,
-  members,
 }: {
-  convo: ConvoWithDetails
-  members: string[]
+  convo: Extract<ConvoWithDetails, {kind: 'group'}>
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -96,7 +94,7 @@ export function AddMembersLink({
         nativeOptions={{fullHeight: true}}>
         <Dialog.Handle />
         <AddMembersFlow
-          members={members}
+          convo={convo}
           title={l`Add members`}
           onAddMembers={(members, profiles) => {
             addGroupMembers({members, profiles})

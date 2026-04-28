@@ -150,7 +150,7 @@ export function MessagesListInfoPanel({
         nativeOptions={{fullHeight: true}}>
         <Dialog.Handle />
         <AddMembersFlow
-          members={members.map(profile => profile.did)}
+          convo={convo}
           title={l`Add people`}
           onAddMembers={(members, profiles) =>
             addGroupMembers({members, profiles})
