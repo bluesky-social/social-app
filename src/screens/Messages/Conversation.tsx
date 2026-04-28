@@ -27,11 +27,12 @@ import {useEmail} from '#/state/email-verification'
 import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
+import {logger} from '#/state/messages/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useConvoQuery} from '#/state/queries/messages/conversation'
 import {useSession} from '#/state/session'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, web} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import * as Dialog from '#/components/Dialog'
@@ -100,7 +101,6 @@ export function MessagesConversationScreenInner({route}: Props) {
 }
 
 function Inner({convoId}: {convoId: string}) {
-  const t = useTheme()
   const convoState = useConvo()
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
@@ -124,12 +124,35 @@ function Inner({convoId}: {convoId: string}) {
       !convoState.isFetchingHistory &&
       convoState.items.length === 0)
 
+  const prevReadyToShow = useRef(readyToShow)
+  // eslint-disable-next-line react-hooks/refs
+  if (prevReadyToShow.current !== readyToShow) {
+    logger.debug('readyToShow flip', {
+      convoId,
+      // eslint-disable-next-line react-hooks/refs
+      from: prevReadyToShow.current,
+      to: readyToShow,
+      hasScrolled,
+      status: convoState.status,
+      isFetchingHistory: convoState.isFetchingHistory,
+      itemCount: isConvoActive(convoState) ? convoState.items.length : 0,
+    })
+    // eslint-disable-next-line react-hooks/refs
+    prevReadyToShow.current = readyToShow
+  }
+
   // Any time that we re-render the `Initializing` state, we have to reset `hasScrolled` to false. After entering this
   // state, we know that we're resetting the list of messages and need to re-scroll to the bottom when they get added.
   const [prevState, setPrevState] = useState(convoState.status)
   if (prevState !== convoState.status) {
+    logger.debug('status transition', {
+      convoId,
+      from: prevState,
+      to: convoState.status,
+    })
     setPrevState(convoState.status)
     if (convoState.status === ConvoStatus.Initializing) {
+      logger.debug('resetting hasScrolled (Initializing)', {convoId})
       setHasScrolled(false)
     }
   }
@@ -176,7 +199,8 @@ function Inner({convoId}: {convoId: string}) {
               a.h_full,
               a.justify_center,
               a.align_center,
-              t.atoms.bg,
+              // t.atoms.bg,
+              {backgroundColor: 'rgba(255,0,0,0.2)'},
             ]}>
             <View style={[{marginBottom: 75}]}>
               <Loader size="xl" />

@@ -8,7 +8,6 @@ import {
   isErrorMaybeAppPasswordPermissions,
   isNetworkError,
 } from '#/lib/strings/errors'
-import {Logger} from '#/logger'
 import {
   BACKGROUND_POLL_INTERVAL,
   DEFAULT_POLL_INTERVAL,
@@ -21,8 +20,7 @@ import {
   type MessagesEventBusParams,
   MessagesEventBusStatus,
 } from '#/state/messages/events/types'
-
-const logger = Logger.create(Logger.Context.DMsAgent)
+import {logger} from '#/state/messages/logger'
 
 export class MessagesEventBus {
   private id: string
@@ -110,6 +108,7 @@ export class MessagesEventBus {
 
   private dispatch(action: MessagesEventBusDispatch) {
     const prevStatus = this.status
+    const dispatchStart = Date.now()
 
     switch (this.status) {
       case MessagesEventBusStatus.Initializing: {
@@ -235,11 +234,14 @@ export class MessagesEventBus {
       id: this.id,
       prev: prevStatus,
       next: this.status,
+      pollInterval: this.pollInterval,
+      dispatchMs: Date.now() - dispatchStart,
     })
   }
 
   private async init() {
-    logger.debug(`init`, {})
+    const start = Date.now()
+    logger.debug(`init start`, {id: this.id})
 
     try {
       const response = await networkRetry(2, () => {
@@ -261,8 +263,19 @@ export class MessagesEventBus {
         }
       }
 
+      logger.debug(`init done`, {
+        id: this.id,
+        initMs: Date.now() - start,
+        latestRev: this.latestRev,
+      })
+
       this.dispatch({event: MessagesEventBusDispatchEvent.Ready})
     } catch (e: any) {
+      logger.debug(`init failed`, {
+        id: this.id,
+        initMs: Date.now() - start,
+        message: e.message,
+      })
       if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error(`init failed`, {
           safeMessage: e.message,
@@ -327,15 +340,7 @@ export class MessagesEventBus {
     if (this.isPolling) return
 
     this.isPolling = true
-
-    // logger.debug(
-    //   `poll`,
-    //   {
-    //     requestedPollIntervals: Array.from(
-    //       this.requestedPollIntervals.values(),
-    //     ),
-    //   },
-    // )
+    const start = Date.now()
 
     try {
       const response = await networkRetry(2, () => {
@@ -375,9 +380,20 @@ export class MessagesEventBus {
       }
 
       if (needsEmit) {
+        logger.debug('poll emit', {
+          id: this.id,
+          pollMs: Date.now() - start,
+          batchSize: batch.length,
+          totalReturned: events.length,
+        })
         this.emitter.emit('event', {type: 'logs', logs: batch})
       }
     } catch (e: any) {
+      logger.debug('poll failed', {
+        id: this.id,
+        pollMs: Date.now() - start,
+        message: e.message,
+      })
       if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error(`poll events failed`, {
           safeMessage: e.message,
