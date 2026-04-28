@@ -29,6 +29,7 @@ import {
   oauthCreateAgent,
   oauthResumeSession,
 } from './oauth-agent'
+import {categorizeOauthError, setOauthTelemetrySink} from './oauth-telemetry'
 import {type Action, getInitialState, reducer, type State} from './reducer'
 export {isSignupQueued} from './util'
 import {addSessionDebugLog} from './logging'
@@ -263,7 +264,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         account: persisted.PersistedAccount
       }
       if (storedAccount.isOauthSession) {
-        agentAccount = await oauthResumeSession(storedAccount)
+        try {
+          agentAccount = await oauthResumeSession(storedAccount)
+        } catch (e) {
+          ax.metric('oauth:sessionResumeFailed', {
+            logContext: isSwitchingAccounts ? 'SwitchAccount' : 'AppBoot',
+            errorCategory: categorizeOauthError(e),
+            message: (e instanceof Error ? e.message : String(e)).slice(0, 200),
+          })
+          throw e
+        }
       } else {
         agentAccount = await createAgentAndResume(
           storedAccount,
@@ -322,6 +332,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     },
     [store, cancelPendingTask],
   )
+  useEffect(() => {
+    setOauthTelemetrySink(event => {
+      ax.metric(event.type, event.payload)
+    })
+    return () => setOauthTelemetrySink(null)
+  }, [ax])
+
   useEffect(() => {
     return persisted.onUpdate('session', nextSession => {
       const synced = nextSession
@@ -385,6 +402,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   // @ts-expect-error window type is not declared, debug only
+  // eslint-disable-next-line react-hooks/immutability
   if (__DEV__ && IS_WEB) window.agent = state.currentAgentState.agent
 
   const agent = state.currentAgentState.agent as BskyAppAgent
