@@ -51,6 +51,7 @@ import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
 import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
+import {DateDivider} from '#/components/dms/DateDivider'
 import {DateDividerToggleProvider} from '#/components/dms/DateDividerToggle'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
@@ -404,6 +405,8 @@ export function MessagesList({
           onToggle={onToggleGroup}
         />
       )
+    } else if (item.type === 'system-message-date-divider') {
+      return <DateDivider date={item.sentAt} />
     } else if (item.type === 'error') {
       return <MessageListError item={item} />
     }

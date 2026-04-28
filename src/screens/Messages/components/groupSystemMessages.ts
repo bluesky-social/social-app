@@ -9,14 +9,54 @@ export type SystemMessageGroupItem = {
   items: SystemMessageItem[]
 }
 
-export type RenderItem = ConvoItem | SystemMessageGroupItem
+export type SystemMessageDateDividerItem = {
+  type: 'system-message-date-divider'
+  key: string
+  sentAt: string
+}
+
+export type RenderItem =
+  | ConvoItem
+  | SystemMessageGroupItem
+  | SystemMessageDateDividerItem
+
+const MESSAGE_GAP_THRESHOLD_MS = 60 * 60 * 1000
+
+function getSentAt(item: ConvoItem): string | null {
+  if (
+    item.type === 'message' ||
+    item.type === 'pending-message' ||
+    item.type === 'deleted-message' ||
+    item.type === 'system-message'
+  ) {
+    return item.message.sentAt
+  }
+  return null
+}
 
 export function groupSystemMessages(items: ConvoItem[]): RenderItem[] {
   const result: RenderItem[] = []
   let run: SystemMessageItem[] = []
+  let lastSentAt: string | null = null
+  let runAnchor: string | null = null
 
   const flush = () => {
     if (run.length === 0) return
+
+    const firstSentAt = run[0].message.sentAt
+    const hasLargeGap =
+      runAnchor === null ||
+      new Date(firstSentAt).getTime() - new Date(runAnchor).getTime() >
+        MESSAGE_GAP_THRESHOLD_MS
+
+    if (hasLargeGap) {
+      result.push({
+        type: 'system-message-date-divider',
+        key: `system-message-date-divider:${run[0].key}`,
+        sentAt: firstSentAt,
+      })
+    }
+
     if (run.length === 1) {
       result.push(run[0])
     } else {
@@ -44,11 +84,17 @@ export function groupSystemMessages(items: ConvoItem[]): RenderItem[] {
       if (lastDay !== null && lastDay !== day) {
         flush()
       }
+      if (run.length === 0) {
+        runAnchor = lastSentAt
+      }
       run.push(item)
     } else {
       flush()
       result.push(item)
     }
+
+    const sentAt = getSentAt(item)
+    if (sentAt) lastSentAt = sentAt
   }
   flush()
 
