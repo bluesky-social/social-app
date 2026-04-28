@@ -76,7 +76,8 @@ jobs:
         run: yarn intl:build 2>&1 | tee i18n.log
 
       - name: Check for i18n compilation errors
-        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
+        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation
+          errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
 
       # EXPO_PUBLIC_ENV is handled in eas.json
       - name: ✏️ Write environment variables
@@ -97,13 +98,11 @@ jobs:
         env:
           PROFILE: ${{ inputs.profile || 'testflight' }}
         run: >
-          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
-          SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
-          yarn use-build-number-with-bump
-          eas build -p ios
-          --profile $PROFILE
-          --local --output build.tar.gz --non-interactive
+          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_RELEASE=${{
+          steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }} SENTRY_DIST=${{
+          steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }} yarn
+          use-build-number-with-bump eas build -p ios --profile $PROFILE --local
+          --output build.tar.gz --non-interactive
 
       - name: 📂 Extract build artifact
         run: |
@@ -145,10 +144,9 @@ jobs:
 
       - name: 🪲 Upload dSYM to Sentry
         run: >
-          SENTRY_ORG=blueskyweb
-          SENTRY_PROJECT=app
-          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          yarn sentry-cli debug-files upload "$BUILD_DIR/Bluesky.app.dSYM.zip" --include-sources
+          SENTRY_ORG=blueskyweb SENTRY_PROJECT=app SENTRY_AUTH_TOKEN=${{
+          secrets.SENTRY_AUTH_TOKEN }} yarn sentry-cli debug-files upload
+          "$BUILD_DIR/Bluesky.app.dSYM.zip" --include-sources
 
       - name: 📚 Get version from package.json
         id: get-build-info

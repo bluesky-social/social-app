@@ -82,7 +82,8 @@ jobs:
         run: yarn intl:build 2>&1 | tee i18n.log
 
       - name: Check for i18n compilation errors
-        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
+        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation
+          errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
 
       - name: Type check
         run: yarn typecheck
@@ -127,10 +128,9 @@ jobs:
       - name: 🏗️ Create Bundle
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         run: >
-          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
-          SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
-          yarn export
+          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_RELEASE=${{
+          steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }} SENTRY_DIST=${{
+          steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }} yarn export
 
       - name: 📦 Package Bundle and 🚀 Deploy
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
@@ -162,7 +162,9 @@ jobs:
     needs: [bundleDeploy]
     # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
     # available here
-    if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.changes-detected && github.repository == 'bluesky-social/social-app' }}
+    if: ${{ inputs.channel != 'production' &&
+      needs.bundleDeploy.outputs.changes-detected && github.repository ==
+      'bluesky-social/social-app' }}
     steps:
       - name: Check for EXPO_TOKEN
         run: >
@@ -233,12 +235,10 @@ jobs:
 
       - name: 🏗️ EAS Build
         run: >
-          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
-          SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
-          yarn use-build-number-with-bump
-          eas build -p ios
-          --profile testflight
+          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_RELEASE=${{
+          steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }} SENTRY_DIST=${{
+          steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }} yarn
+          use-build-number-with-bump eas build -p ios --profile testflight
           --local --output build.tar.gz --non-interactive
 
       - name: 📂 Extract build artifact
@@ -281,10 +281,9 @@ jobs:
 
       - name: 🪲 Upload dSYM to Sentry
         run: >
-          SENTRY_ORG=blueskyweb
-          SENTRY_PROJECT=app
-          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          yarn sentry-cli debug-files upload "$BUILD_DIR/Bluesky.app.dSYM.zip" --include-sources
+          SENTRY_ORG=blueskyweb SENTRY_PROJECT=app SENTRY_AUTH_TOKEN=${{
+          secrets.SENTRY_AUTH_TOKEN }} yarn sentry-cli debug-files upload
+          "$BUILD_DIR/Bluesky.app.dSYM.zip" --include-sources
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
@@ -309,7 +308,9 @@ jobs:
     needs: [bundleDeploy]
     # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
     # available here
-    if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.changes-detected && github.repository == 'bluesky-social/social-app'}}
+    if: ${{ inputs.channel != 'production' &&
+      needs.bundleDeploy.outputs.changes-detected && github.repository ==
+      'bluesky-social/social-app'}}
 
     steps:
       - name: Check for EXPO_TOKEN
@@ -369,20 +370,19 @@ jobs:
 
       - name: 🏗️ EAS Build
         run: >
-          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
-          SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
-          yarn use-build-number-with-bump
-          eas build -p android
-          --profile testflight-android
-          --local --output build.aab --non-interactive
+          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_RELEASE=${{
+          steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }} SENTRY_DIST=${{
+          steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }} yarn
+          use-build-number-with-bump eas build -p android --profile
+          testflight-android --local --output build.aab --non-interactive
 
       - name: 📚 Get version from package.json
         id: get-build-info
         run: bash scripts/setGitHubOutput.sh
 
       - name: 🚀 Submit to Google Play
-        run: eas submit -p android --profile testflight-android --non-interactive --path build.aab
+        run: eas submit -p android --profile testflight-android --non-interactive --path
+          build.aab
 
       - name: 🔧 Setup bundletool
         uses: amyu/setup-bundletool@v1
@@ -390,7 +390,8 @@ jobs:
           bundletool-version: "1.17.2"
 
       - name: 🔑 Decode keystore
-        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode >
+          keystore.jks
 
       - name: 📦 Build signed universal APK
         run: |
