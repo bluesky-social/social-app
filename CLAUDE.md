@@ -466,12 +466,10 @@ function MyComponent() {
   const greeting = l`Hello, ${name}!`
 
   // Pluralization
-  const countLabel = l(
-    plural(count, {
-      one: '# item',
-      other: '# items',
-    }),
-  )
+  const countLabel = plural(count, {
+    one: '# item',
+    other: '# items',
+  })
 
   // JSX content - use Trans component
   return (
