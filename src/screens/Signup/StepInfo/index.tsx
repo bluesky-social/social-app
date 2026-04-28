@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from 'react'
 import {type TextInput, View} from 'react-native'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
-import type tldts from 'tldts'
+import type * as tldts from 'tldts'
 
 import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {logger} from '#/logger'
