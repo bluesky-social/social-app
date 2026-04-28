@@ -229,7 +229,7 @@ export default defineConfig(
        * v8 `warn` ones are probably worth fixing. `off` ones are a bit too
        * nit-picky
        */
-      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'off',
