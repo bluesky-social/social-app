@@ -1,4 +1,4 @@
-import {useCallback, useMemo} from 'react'
+import {useMemo} from 'react'
 import {View} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
 import {ChatBskyConvoDefs, moderateProfile} from '@atproto/api'
@@ -7,35 +7,29 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {type ActiveConvoStates} from '#/state/messages/convo'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
+import {type ConvoWithDetails} from '#/components/dms/util'
 import {KnownFollowers} from '#/components/KnownFollowers'
 import {usePromptControl} from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
 import {AcceptChatButton, DeleteChatButton, RejectMenu} from './RequestButtons'
 
-export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
+export function ChatStatusInfo({convo}: {convo: ConvoWithDetails}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
   const leaveConvoControl = usePromptControl()
 
-  const onAcceptChat = useCallback(() => {
-    convoState.markConvoAccepted()
-  }, [convoState])
-
   // either the other person, or the chat owner
   // if we ever allow someone other than the owner to invite people, this will need to change
-  const otherUser = convoState.convo.primaryMember
+  const otherUser = convo.primaryMember
 
-  const lastMessage = ChatBskyConvoDefs.isMessageView(
-    convoState.convo.view.lastMessage,
-  )
-    ? convoState.convo.view.lastMessage
+  const lastMessage = ChatBskyConvoDefs.isMessageView(convo.view.lastMessage)
+    ? convo.view.lastMessage
     : null
 
   if (!moderationOpts) {
@@ -65,7 +59,7 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
           <RejectMenu
             label={lastMessage ? l`Block or report` : l`Block`}
             icon={true}
-            convo={convoState.convo.view}
+            convo={convo.view}
             profile={otherUser}
             color="negative_subtle"
             size="large"
@@ -80,7 +74,7 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
             context: 'Button',
           })}
           icon={true}
-          convo={convoState.convo.view}
+          convo={convo.view}
           color="secondary"
           size="large"
           currentScreen="conversation"
@@ -88,7 +82,7 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
           onPress={leaveConvoControl.open}
         />
         <LeaveConvoPrompt
-          convoId={convoState.convo.view.id}
+          convoId={convo.view.id}
           control={leaveConvoControl}
           currentScreen="conversation"
           hasMessages={false}
@@ -97,8 +91,7 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
       <View style={[a.w_full, a.flex_row]}>
         <AcceptChatButton
           icon={true}
-          onAcceptConvo={onAcceptChat}
-          convo={convoState.convo.view}
+          convo={convo.view}
           color="primary"
           size="large"
           currentScreen="conversation"

@@ -57,6 +57,7 @@ import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {SystemMessageGroup} from '#/components/dms/SystemMessageGroup'
 import {SystemMessageItem} from '#/components/dms/SystemMessageItem'
+import {type ConvoWithDetails} from '#/components/dms/util'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -112,20 +113,25 @@ function onScrollToIndexFailed() {
 }
 
 export function MessagesList({
+  convo,
   hasScrolled,
   setHasScrolled,
   footer,
   hasAcceptOverride,
   transparentHeaderHeight,
+  hideMessages,
 }: {
+  convo: ConvoWithDetails
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
   footer?: React.ReactNode
   hasAcceptOverride?: boolean
   transparentHeaderHeight?: number
+  hideMessages?: boolean
 }) {
   const ax = useAnalytics()
   const convoState = useConvoActive()
+  const isGroupChat = convo.kind === 'group'
   const agent = useAgent()
   const getPost = useGetPost()
   const {embedUri, setEmbed} = useMessageEmbed()
@@ -419,7 +425,8 @@ export function MessagesList({
       return (
         <MessageItem
           item={item}
-          isGroupChat={convoState.convo.kind === 'group'}
+          convoId={convo.view.id}
+          isGroupChat={isGroupChat}
           prevMessage={getNeighborMessage(renderItems, index - 1)}
           nextMessage={getNeighborMessage(renderItems, index + 1)}
           relatedProfiles={convoState.relatedProfiles}
@@ -480,7 +487,7 @@ export function MessagesList({
   )
 
   return (
-    <InviteLinkDialogProvider convo={convoState.convo}>
+    <InviteLinkDialogProvider convo={convo}>
       <KeyboardGestureArea
         interpolator="ios"
         // HACKFIX: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1419
@@ -513,22 +520,24 @@ export function MessagesList({
             ListHeaderComponent={
               <>
                 <MaybeLoader isLoading={convoState.isFetchingHistory} />
-                {convoState.convo?.kind === 'group' &&
-                convoState.hasAllHistory ? (
-                  <MessagesListInfoPanel convo={convoState.convo} />
+                {convo.kind === 'group' && convoState.hasAllHistory ? (
+                  <MessagesListInfoPanel convo={convo} />
                 ) : null}
               </>
             }
             // native only (prop is not supported on web)
             renderScrollComponent={renderScrollComponent}
-            contentContainerStyle={{
-              paddingBottom: platform({
-                // ios is slightly larger as the input has no top padding
-                ios: tokens.space.lg,
-                android: tokens.space.md,
-                web: 0, // web uses ListFooterComponent instead for scroll reasons
-              }),
-            }}
+            contentContainerStyle={[
+              hideMessages && {opacity: 0},
+              {
+                paddingBottom: platform({
+                  // ios is slightly larger as the input has no top padding
+                  ios: tokens.space.lg,
+                  android: tokens.space.md,
+                  web: 0, // web uses ListFooterComponent instead for scroll reasons
+                }),
+              },
+            ]}
             ListFooterComponent={
               <View
                 style={web({height: tokens.space.md + inputHeightJS})}
@@ -558,6 +567,7 @@ export function MessagesList({
           {footer ?? (
             <ConversationFooter
               convoState={convoState}
+              convo={convo}
               hasAcceptOverride={hasAcceptOverride}>
               {ax.features.enabled(ax.features.DmsNewMessageComposerEnable) ? (
                 <MessageComposer
@@ -633,6 +643,7 @@ type FooterState = 'loading' | 'new-chat' | 'request' | 'standard'
 
 function getFooterState(
   convoState: ActiveConvoStates,
+  convo: ConvoWithDetails,
   hasAcceptOverride?: boolean,
 ): FooterState {
   if (convoState.items.length === 0) {
@@ -643,7 +654,7 @@ function getFooterState(
     }
   }
 
-  if (convoState.convo.view.status === 'request' && !hasAcceptOverride) {
+  if (convo.view.status === 'request' && !hasAcceptOverride) {
     return 'request'
   }
 
@@ -652,10 +663,12 @@ function getFooterState(
 
 function ConversationFooter({
   convoState,
+  convo,
   hasAcceptOverride,
   children,
 }: {
   convoState: ConvoState
+  convo: ConvoWithDetails
   hasAcceptOverride?: boolean
   children?: React.ReactNode // message input
 }) {
@@ -663,11 +676,11 @@ function ConversationFooter({
     return null
   }
 
-  const footerState = getFooterState(convoState, hasAcceptOverride)
+  const footerState = getFooterState(convoState, convo, hasAcceptOverride)
 
   switch (footerState) {
     case 'loading':
-      return null
+      return children
     case 'new-chat':
       return (
         <>
@@ -676,7 +689,7 @@ function ConversationFooter({
         </>
       )
     case 'request':
-      return <ChatStatusInfo convoState={convoState} />
+      return <ChatStatusInfo convo={convo} />
     case 'standard':
       return children
   }

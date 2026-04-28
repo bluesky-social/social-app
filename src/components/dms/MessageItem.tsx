@@ -85,12 +85,14 @@ function isWithinClusterBoundary({
 
 let MessageItem = ({
   item,
+  convoId,
   isGroupChat = false,
   prevMessage,
   nextMessage,
   relatedProfiles,
 }: {
   item: ConvoItem & {type: 'message' | 'pending-message'}
+  convoId: string
   isGroupChat?: boolean
   prevMessage:
     | ChatBskyConvoDefs.MessageView
@@ -431,6 +433,7 @@ let MessageItem = ({
               hasReactions={hasReactions}
               isFromSelf={isFromSelf}
               message={message}
+              convoId={convoId}
               senderProfile={profile}>
               {AppBskyEmbedRecord.isView(message.embed) && (
                 <MessageItemEmbed

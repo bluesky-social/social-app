@@ -114,6 +114,10 @@ function Inner({convoId}: {convoId: string}) {
     ? parseConvoView(convoData, currentAccount?.did)
     : null
 
+  const isDisabled = Boolean(
+    convoData?.members.find(m => m.did === currentAccount?.did)?.chatDisabled,
+  )
+
   // Because we want to give the list a chance to asynchronously scroll to the end before it is visible to the user,
   // we use `hasScrolled` to determine when to render. With that said however, there is a chance that the chat will be
   // empty. So, we also check for that possible state as well and render once we can.
@@ -187,20 +191,18 @@ function Inner({convoId}: {convoId: string}) {
           hasScrolled={hasScrolled}
           setHasScrolled={setHasScrolled}
           isActive={isConvoActive(convoState)}
-          isDisabled={convoState.status === ConvoStatus.Disabled}
+          isDisabled={isDisabled}
           hasMessages={isConvoActive(convoState) && convoState.items.length > 0}
+          readyToShow={readyToShow}
         />
         {!readyToShow && (
           <View
             style={[
               a.absolute,
-              a.z_10,
-              a.w_full,
-              a.h_full,
+              a.inset_0,
+              {zIndex: -10},
               a.justify_center,
               a.align_center,
-              // t.atoms.bg,
-              {backgroundColor: 'rgba(255,0,0,0.2)'},
             ]}>
             <View style={[{marginBottom: 75}]}>
               <Loader size="xl" />
@@ -219,6 +221,7 @@ function InnerReady({
   isActive,
   isDisabled,
   hasMessages,
+  readyToShow,
 }: {
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
@@ -226,6 +229,7 @@ function InnerReady({
   isActive: boolean
   isDisabled: boolean
   hasMessages: boolean
+  readyToShow: boolean
 }) {
   const navigation = useNavigation<NavigationProp>()
   const {top: topInset} = useSafeAreaInsets()
@@ -317,12 +321,14 @@ function InnerReady({
       ) : (
         header
       )}
-      {isActive && (
+      {isActive && convo && (
         <MessagesList
+          convo={convo}
           hasScrolled={hasScrolled}
           setHasScrolled={setHasScrolled}
           hasAcceptOverride={!!params.accept}
           transparentHeaderHeight={IS_LIQUID_GLASS ? headerHeight : 0}
+          hideMessages={!readyToShow}
           footer={footer}
         />
       )}
