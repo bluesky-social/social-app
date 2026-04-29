@@ -22,7 +22,7 @@ export type SystemMessageAction =
       profile: ChatBskyActorDefs.ProfileViewBasic
       displayName: string
     }
-  | {kind: 'inviteLink'} // TODO Need to invoke InviteLinkDialog for this case. -dsb
+  | {kind: 'inviteLink'}
 
 export type SystemMessageInfo = {
   message: MessageDescriptor
@@ -109,9 +109,17 @@ export function getSystemMessageInfo(
       action: {kind: 'inviteLink'},
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataEnableJoinLink(data)) {
-    return {Icon: ChainLinkIcon, message: msg`Invite link enabled`}
+    return {
+      Icon: ChainLinkIcon,
+      message: msg`Invite link enabled`,
+      action: {kind: 'inviteLink'},
+    }
   } else if (ChatBskyConvoDefs.isSystemMessageDataDisableJoinLink(data)) {
-    return {Icon: ChainLinkBrokenIcon, message: msg`Invite link disabled`}
+    return {
+      Icon: ChainLinkBrokenIcon,
+      message: msg`Invite link disabled`,
+      action: {kind: 'inviteLink'},
+    }
   }
   return null
 }

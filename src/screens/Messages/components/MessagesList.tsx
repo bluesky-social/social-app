@@ -63,6 +63,7 @@ import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {groupSystemMessages, type RenderItem} from './groupSystemMessages'
+import {InviteLinkDialogProvider} from './InviteLinkDialogProvider'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
 import {MessagesListInfoPanel} from './MessagesListInfoPanel'
 import {KeyboardStickyView} from './vendor/KeyboardStickyView'
@@ -437,109 +438,121 @@ export function MessagesList({
 
   return (
     <DateDividerToggleProvider>
-      <KeyboardGestureArea
-        interpolator="ios"
-        // HACKFIX: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1419
-        offset={Math.round(inputHeightJS)}
-        // slightly too buggy unfortunately, enable when possible
-        // textInputNativeID={textInputId}
-        style={[a.flex_1]}>
-        {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
-        <ScrollProvider onScroll={onScroll}>
-          <List
-            ref={flatListRef}
-            data={renderItems}
-            renderItem={renderItem}
-            keyExtractor={keyExtractor}
-            disableFullWindowScroll={true}
-            disableVirtualization={true}
-            // The extra two items account for the header and the footer components
-            initialNumToRender={IS_NATIVE ? 32 : 62}
-            maxToRenderPerBatch={IS_WEB ? 32 : 62}
-            keyboardDismissMode="interactive"
-            keyboardShouldPersistTaps="handled"
-            maintainVisibleContentPosition={{minIndexForVisible: 0}}
-            removeClippedSubviews={false}
-            sideBorders={false}
-            onContentSizeChange={onContentSizeChange}
-            onStartReached={onStartReached}
-            onScrollToIndexFailed={onScrollToIndexFailed}
-            showsVerticalScrollIndicator={!IS_ANDROID}
-            scrollEventThrottle={100}
-            ListHeaderComponent={
-              <>
-                <MaybeLoader isLoading={convoState.isFetchingHistory} />
-                {convoState.convo?.kind === 'group' &&
-                convoState.hasAllHistory ? (
-                  <MessagesListInfoPanel convo={convoState.convo} />
-                ) : null}
-              </>
-            }
-            // native only (prop is not supported on web)
-            renderScrollComponent={renderScrollComponent}
-            contentContainerStyle={{
-              paddingBottom: platform({
-                // ios is slightly larger as the input has no top padding
-                ios: tokens.space.lg,
-                android: tokens.space.md,
-                web: 0, // web uses ListFooterComponent instead for scroll reasons
+      <InviteLinkDialogProvider convo={convoState.convo}>
+        <KeyboardGestureArea
+          interpolator="ios"
+          // HACKFIX: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1419
+          offset={Math.round(inputHeightJS)}
+          // slightly too buggy unfortunately, enable when possible
+          // textInputNativeID={textInputId}
+          style={[a.flex_1]}>
+          {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
+          <ScrollProvider onScroll={onScroll}>
+            <List
+              ref={flatListRef}
+              data={renderItems}
+              renderItem={renderItem}
+              keyExtractor={keyExtractor}
+              disableFullWindowScroll={true}
+              disableVirtualization={true}
+              // The extra two items account for the header and the footer components
+              initialNumToRender={IS_NATIVE ? 32 : 62}
+              maxToRenderPerBatch={IS_WEB ? 32 : 62}
+              keyboardDismissMode="interactive"
+              keyboardShouldPersistTaps="handled"
+              maintainVisibleContentPosition={{minIndexForVisible: 0}}
+              removeClippedSubviews={false}
+              sideBorders={false}
+              onContentSizeChange={onContentSizeChange}
+              onStartReached={onStartReached}
+              onScrollToIndexFailed={onScrollToIndexFailed}
+              showsVerticalScrollIndicator={!IS_ANDROID}
+              scrollEventThrottle={100}
+              ListHeaderComponent={
+                <>
+                  <MaybeLoader isLoading={convoState.isFetchingHistory} />
+                  {convoState.convo?.kind === 'group' &&
+                  convoState.hasAllHistory ? (
+                    <MessagesListInfoPanel convo={convoState.convo} />
+                  ) : null}
+                </>
+              }
+              // native only (prop is not supported on web)
+              renderScrollComponent={renderScrollComponent}
+              contentContainerStyle={{
+                paddingBottom: platform({
+                  // ios is slightly larger as the input has no top padding
+                  ios: tokens.space.lg,
+                  android: tokens.space.md,
+                  web: 0, // web uses ListFooterComponent instead for scroll reasons
+                }),
+              }}
+              ListFooterComponent={
+                <View
+                  style={web({height: tokens.space.md + inputHeightJS})}
+                  onLayout={onFooterLayout}
+                />
+              }
+              style={web({
+                scrollbarWidth: 'thin',
+                scrollbarColor: `${t.palette.contrast_100} transparent`,
+                scrollbarGutter: 'stable both-edges',
+              })}
+              contentInset={{top: transparentHeaderHeight}}
+              scrollIndicatorInsets={{top: transparentHeaderHeight}}
+            />
+          </ScrollProvider>
+          <KeyboardStickyView
+            style={[a.absolute, a.bottom_0, a.left_0, a.right_0]}
+            onLayout={onInputLayout}
+            minimumOffset={bottomInset}
+            offset={{
+              closed: platform({
+                ios: tokens.space.lg, // hide bottom padding when closed
+                default: 0,
               }),
-            }}
-            ListFooterComponent={
-              <View
-                style={web({height: tokens.space.md + inputHeightJS})}
-                onLayout={onFooterLayout}
-              />
-            }
-            style={web({
-              scrollbarWidth: 'thin',
-              scrollbarColor: `${t.palette.contrast_100} transparent`,
-              scrollbarGutter: 'stable both-edges',
-            })}
-            contentInset={{top: transparentHeaderHeight}}
-            scrollIndicatorInsets={{top: transparentHeaderHeight}}
-          />
-        </ScrollProvider>
-        <KeyboardStickyView
-          style={[a.absolute, a.bottom_0, a.left_0, a.right_0]}
-          onLayout={onInputLayout}
-          minimumOffset={bottomInset}
-          offset={{
-            closed: platform({
-              ios: tokens.space.lg, // hide bottom padding when closed
-              default: 0,
-            }),
-            opened: 0,
-          }}>
-          {footer ?? (
-            <ConversationFooter
-              convoState={convoState}
-              hasAcceptOverride={hasAcceptOverride}>
-              {ax.features.enabled(ax.features.DmsNewMessageComposerEnable) ? (
-                <MessageComposer
-                  textInputId={textInputId}
-                  onSendMessage={(message: string) =>
-                    void onSendMessage(message)
-                  }
-                  hasEmbed={!!embedUri}
-                  setEmbed={setEmbed}>
-                  <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
-                </MessageComposer>
-              ) : (
-                <MessageInput
-                  textInputId={textInputId}
-                  onSendMessage={onSendMessage}
-                  hasEmbed={!!embedUri}
-                  setEmbed={setEmbed}>
-                  <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
-                </MessageInput>
-              )}
-            </ConversationFooter>
-          )}
-        </KeyboardStickyView>
-      </KeyboardGestureArea>
+              opened: 0,
+            }}>
+            {footer ?? (
+              <ConversationFooter
+                convoState={convoState}
+                hasAcceptOverride={hasAcceptOverride}>
+                {ax.features.enabled(
+                  ax.features.DmsNewMessageComposerEnable,
+                ) ? (
+                  <MessageComposer
+                    textInputId={textInputId}
+                    onSendMessage={(message: string) =>
+                      void onSendMessage(message)
+                    }
+                    hasEmbed={!!embedUri}
+                    setEmbed={setEmbed}>
+                    <MessageInputEmbed
+                      embedUri={embedUri}
+                      setEmbed={setEmbed}
+                    />
+                  </MessageComposer>
+                ) : (
+                  <MessageInput
+                    textInputId={textInputId}
+                    onSendMessage={onSendMessage}
+                    hasEmbed={!!embedUri}
+                    setEmbed={setEmbed}>
+                    <MessageInputEmbed
+                      embedUri={embedUri}
+                      setEmbed={setEmbed}
+                    />
+                  </MessageInput>
+                )}
+              </ConversationFooter>
+            )}
+          </KeyboardStickyView>
+        </KeyboardGestureArea>
 
-      {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
+        {newMessagesPill.show && (
+          <NewMessagesPill onPress={scrollToEndOnPress} />
+        )}
+      </InviteLinkDialogProvider>
     </DateDividerToggleProvider>
   )
 }

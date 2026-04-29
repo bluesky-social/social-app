@@ -1,8 +1,9 @@
-import {View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {type ConvoItem} from '#/state/messages/convo/types'
+import {useInviteLinkDialog} from '#/screens/Messages/components/InviteLinkDialogProvider'
 import {atoms as a, useTheme} from '#/alf'
 import {getSystemMessageInfo} from '#/components/dms/getSystemMessageInfo'
 import {Link} from '#/components/Link'
@@ -15,6 +16,7 @@ export function SystemMessageItem({
 }) {
   const t = useTheme()
   const {i18n, t: l} = useLingui()
+  const inviteLinkControl = useInviteLinkDialog()
 
   const info = getSystemMessageInfo(item.message.data, item.relatedProfiles)
   if (!info) return null
@@ -57,8 +59,17 @@ export function SystemMessageItem({
         </Link>
       )
     case 'inviteLink':
-      // TODO Need to invoke InviteLinkDialog for this case. -dsb
-      return row
+      if (!inviteLinkControl) return row
+      return (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={text}
+          accessibilityHint={l`Opens invite link`}
+          onPress={() => inviteLinkControl.open()}
+          style={a.w_full}>
+          {row}
+        </Pressable>
+      )
     default:
       return row
   }
