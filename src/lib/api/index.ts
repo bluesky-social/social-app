@@ -419,9 +419,24 @@ async function resolveMedia(
         $type: 'app.bsky.embed.external',
         external: {
           uri: resolvedLink.uri,
-          title: resolvedLink.title,
-          description: resolvedLink.description,
+          title: 'Let’s Build an Atmospheric Web',
+          description:
+            "The Atmospheric Web shows we don't have to accept the false choice of ownership vs. distribution",
           thumb: blob,
+          kind: 'site.standard.document',
+          publishedAt: new Date().toISOString(),
+          associatedRecord: {
+            uri: 'at://did:plc:lysqukqdu6hsrhet5v2brjgo/pub.leaflet.document/3mcxq7tyx522r',
+            cid: 'bafyreidqwpjd4rwlphvoxautdmf4xfxlpo4yfz5euavswqndj2u4oetqta',
+          },
+          source: {
+            $type: 'app.bsky.embed.external#source',
+            kind: 'site.standard.publication',
+            name: 'Applied Meteorology',
+            description:
+              'Perspectives on AT Protocol and The Atmosphere from Jim Ray at Bluesky DevRel',
+            icon: null,
+          },
         },
       }
     }
