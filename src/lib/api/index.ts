@@ -423,6 +423,7 @@ async function resolveMedia(
           description:
             "The Atmospheric Web shows we don't have to accept the false choice of ownership vs. distribution",
           thumb: blob,
+          // @ts-ignore
           kind: 'site.standard.document',
           publishedAt: new Date().toISOString(),
           associatedRecord: {
