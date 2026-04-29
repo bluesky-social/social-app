@@ -863,7 +863,7 @@ Only use `useMemo`/`useCallback` when you have a specific reason, such as:
 
 1. **Accessibility**: Always provide `label` prop for interactive elements, use `accessibilityHint` where helpful
 
-2. **Translations**: Wrap ALL user-facing strings with `msg()` or `<Trans>`
+2. **Translations**: Wrap ALL user-facing strings with ` `l` `` or `<Trans>`
 
 3. **Styling**: Combine static atoms with theme atoms, use platform utilities for platform-specific styles
 
