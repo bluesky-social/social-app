@@ -81,6 +81,7 @@ module.exports = function (_config) {
             'an',
             'ast',
             'ca',
+            'ar',
             'cy',
             'da',
             'de',

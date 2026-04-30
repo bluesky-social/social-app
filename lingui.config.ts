@@ -5,6 +5,7 @@ export default defineConfig({
   locales: [
     'en',
     'an',
+    'ar',
     'ast',
     'ca',
     'cy',
