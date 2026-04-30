@@ -108,9 +108,9 @@ export const STAGING_LINK_META_PROXY =
 export const PROD_LINK_META_PROXY = 'https://cardyb.bsky.app/v1/extract?url='
 
 export function LINK_META_PROXY(serviceUrl: string) {
-  if (IS_PROD_SERVICE(serviceUrl)) {
-    return PROD_LINK_META_PROXY
-  }
+  // if (IS_PROD_SERVICE(serviceUrl)) {
+  //   return PROD_LINK_META_PROXY
+  // }
 
   return STAGING_LINK_META_PROXY
 }

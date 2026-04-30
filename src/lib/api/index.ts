@@ -8,7 +8,7 @@ import {
   type AppBskyFeedPost,
   AtUri,
   BlobRef,
-  type BskyAgent,
+  BskyAgent,
   type ComAtprotoLabelDefs,
   type ComAtprotoRepoApplyWrites,
   type ComAtprotoRepoStrongRef,
@@ -41,6 +41,10 @@ import {
 } from '#/view/com/composer/state/composer'
 import {createGIFDescription} from '../gif-alt-text'
 import {uploadBlob} from './upload-blob'
+import {
+  BLUESKY_PROXY_HEADER,
+  BSKY_SERVICE,
+} from '#/lib/constants'
 
 export {uploadBlob}
 
@@ -402,7 +406,7 @@ async function resolveMedia(
     }
   }
   if (embedDraft.link) {
-    const resolvedLink = await fetchResolveLinkQuery(
+    const resolvedLink = await specialResolveLink(
       queryClient,
       agent,
       embedDraft.link.uri,
@@ -443,6 +447,29 @@ async function resolveMedia(
     }
   }
   return undefined
+}
+
+async function specialResolveLink(qc: QueryClient, agent: BskyAgent, uri: string): Promise<any> {
+  const resolved = await fetchResolveLinkQuery(
+    qc,
+    agent,
+    uri,
+  )
+  if (resolved.type !== 'external') return resolved
+  // @ts-ignore
+  if (!resolved.associatedRecord) return resolved
+  const pub = new BskyAgent({service: BSKY_SERVICE})
+  pub.configureProxy(BLUESKY_PROXY_HEADER.get())
+  // @ts-ignore
+  const urip = new AtUri(resolved.associatedRecord as string)
+  console.log(urip)
+  const res = await pub.com.atproto.repo.getRecord({
+    repo: urip.host,
+    collection: urip.collection,
+    rkey: urip.rkey,
+  })
+  console.log(res)
+  return resolved
 }
 
 async function resolveRecord(

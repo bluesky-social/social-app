@@ -22,6 +22,7 @@ export interface LinkMeta {
   title?: string
   description?: string
   image?: string
+  associatedRecord?: {uri: string; cid: string}
 }
 
 export async function getLinkMeta(
@@ -92,6 +93,7 @@ export async function getLinkMeta(
     if (shouldFollowRedirect) {
       meta.url = body.url
     }
+    meta.associatedRecord = body.associated_record
   } catch (e) {
     // failed
     console.error(e)

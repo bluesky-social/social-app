@@ -34,6 +34,7 @@ type ResolvedExternalLink = {
   title: string
   description: string
   thumb: ComposerImage | undefined
+  associatedRecord?: {uri: string; cid: string}
 }
 
 type ResolvedPostRecord = {
@@ -239,6 +240,7 @@ async function resolveExternal(
     title: result.title ?? '',
     description: result.description ?? '',
     thumb: result.image ? await imageToThumb(result.image) : undefined,
+    associatedRecord: result.associatedRecord,
   }
 }
 
