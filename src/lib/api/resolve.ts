@@ -1,10 +1,10 @@
 import {
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
+  type BskyAgent,
   type ComAtprotoRepoStrongRef,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {type BskyAgent} from '@atproto/api'
 
 import {POST_IMG_MAX} from '#/lib/constants'
 import {getLinkMeta} from '#/lib/link-meta/link-meta'
@@ -15,18 +15,20 @@ import {
   parseStarterPackUri,
 } from '#/lib/strings/starter-pack'
 import {
+  convertBskyAppUrlIfNeeded,
   isBskyCustomFeedUrl,
   isBskyListUrl,
   isBskyPostUrl,
   isBskyStarterPackUrl,
   isBskyStartUrl,
   isShortLink,
+  isThirdPartyFrontend,
+  makeRecordUri,
 } from '#/lib/strings/url-helpers'
 import {type ComposerImage} from '#/state/gallery'
 import {createComposerImage} from '#/state/gallery'
 import {type Gif} from '#/state/queries/tenor'
 import {createGIFDescription} from '../gif-alt-text'
-import {convertBskyAppUrlIfNeeded, makeRecordUri} from '../strings/url-helpers'
 
 type ResolvedExternalLink = {
   type: 'external'
@@ -84,7 +86,7 @@ export async function resolveLink(
   if (isShortLink(uri)) {
     uri = await resolveShortLink(uri)
   }
-  if (isBskyPostUrl(uri)) {
+  if (isBskyPostUrl(uri) || isThirdPartyFrontend(uri)) {
     uri = convertBskyAppUrlIfNeeded(uri)
     const [_0, user, _1, rkey] = uri.split('/').filter(Boolean)
     const recordUri = makeRecordUri(user, 'app.bsky.feed.post', rkey)

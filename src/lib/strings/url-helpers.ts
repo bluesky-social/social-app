@@ -128,6 +128,30 @@ export function isBskyPostUrl(url: string): boolean {
   return false
 }
 
+export function isThirdPartyFrontend(url: string): boolean {
+  // A non-exhaustive list of third-party Bluesky frontends.
+  const alternativeFrontends = ['bsky.dev', 'deer.social', 'blacksky.community']
+
+  let parsedUrl
+  try {
+    parsedUrl = new URL(url)
+  } catch {
+    return false
+  }
+
+  for (const alternativeFrontendDomain of alternativeFrontends) {
+    let incomingRawDomain = parsedUrl.hostname.split('.').slice(-2).join('.') // Automatically filter subdomains. E.g. staging.bsky.dev and main.bsky.dev should be considered the same.
+    if (alternativeFrontendDomain == incomingRawDomain) {
+      return /profile\/(?<name>[^/]+)\/post\/(?<rkey>[^/]+)/i.test(
+        parsedUrl.pathname,
+      )
+    }
+  }
+
+  // No alternative frontends matched.
+  return false
+}
+
 export function isBskyCustomFeedUrl(url: string): boolean {
   if (isBskyAppUrl(url)) {
     try {
@@ -194,6 +218,13 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
         return startUriToStarterPackUri(urlp.pathname)
       }
 
+      return urlp.pathname + urlp.search
+    } catch (e) {
+      console.error('Unexpected error in convertBskyAppUrlIfNeeded()', e)
+    }
+  } else if (isThirdPartyFrontend(url)) {
+    try {
+      const urlp = new URL(url)
       return urlp.pathname + urlp.search
     } catch (e) {
       console.error('Unexpected error in convertBskyAppUrlIfNeeded()', e)
