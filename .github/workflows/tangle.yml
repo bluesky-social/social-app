@@ -6,14 +6,31 @@ on:
 
 permissions:
   contents: read
-  pull-requests: read
 
 jobs:
   tangle:
     runs-on: ubuntu-latest
     steps:
-      - uses: gwennlbh/to-tangled@6867d16fd934f3fe27df0a540dbd6375ea88b31c # v0.5
+      - uses: actions/checkout@v4
         with:
-          repo: blackskyweb.xyz/blacksky.community
-          knot: knot.blacksky.community
-          ssh-key: ${{ secrets.TANGLED_KEY }}
+          fetch-depth: 0
+      - name: push to forge knot
+        env:
+          TANGLED_KEY: ${{ secrets.TANGLED_KEY }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$TANGLED_KEY" > ~/.ssh/tangled_key
+          chmod 600 ~/.ssh/tangled_key
+          cat > ~/.ssh/config <<'EOF'
+          Host knot.blacksky.community
+            StrictHostKeyChecking no
+            UserKnownHostsFile=/dev/null
+            IdentityFile ~/.ssh/tangled_key
+            IdentitiesOnly yes
+          EOF
+          chmod 600 ~/.ssh/config
+          git fetch --tags origin
+          git remote add tangled git@knot.blacksky.community:blackskyweb.xyz/blacksky.community
+          git push --mirror tangled
