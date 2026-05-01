@@ -1,5 +1,14 @@
-import {describe, expect, test} from '@jest/globals'
 import {type AtpAgent} from '@atproto/api'
+import {describe, expect, jest, test} from '@jest/globals'
+
+// Avoid pulling the UI module chain into the test environment via the
+// resolveLink import in linkResolution.ts.
+jest.mock('#/lib/api/resolve', () => ({
+  resolveLink: jest.fn(),
+}))
+jest.mock('#/state/session/agent', () => ({
+  createPublicAgent: jest.fn(() => ({})),
+}))
 
 import {createThreadStore} from '#/components/ComposerV2/store'
 
