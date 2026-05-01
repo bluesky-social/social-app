@@ -7,7 +7,7 @@ export function buildThreadPost(): ThreadPost {
     langs: [],
     labels: [],
     media: [],
-    external: undefined,
+    embed: undefined,
     quote: undefined,
     ...computePostMediaSelectionsRemaining([], undefined),
   }
