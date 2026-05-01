@@ -83,47 +83,16 @@ export type PostEmbedMedia =
   | (PostEmbedMediaGif & {kind: 'gif'})
 
 /**
- * What a link-resolution reporter (the worker, or a test) sends in. Failed
- * inputs carry just the error string; the store wraps the failure with a
- * bound `retry()` method when it stores the status.
- *
- * `pending` is included so the store can construct the initial pending state
- * with the same type vocabulary, but the worker never emits `pending` - it
- * only emits terminal outcomes (the post-resolution variants and `failed`).
- */
-export type EmbedResolution =
-  | {state: 'pending'; uri: string}
-  | {state: 'failed'; uri: string; error: string}
-  | {
-      state: 'external'
-      uri: string
-      title: string
-      description: string
-      thumb: ComposerImage | undefined
-    }
-  | {
-      state: 'feed'
-      record: ComAtprotoRepoStrongRef.Main
-      view: AppBskyFeedDefs.GeneratorView
-    }
-  | {
-      state: 'list'
-      record: ComAtprotoRepoStrongRef.Main
-      view: AppBskyGraphDefs.ListView
-    }
-  | {
-      state: 'starter-pack'
-      record: ComAtprotoRepoStrongRef.Main
-      view: AppBskyGraphDefs.StarterPackView
-    }
-
-/**
- * What's stored on a post's `embed` field. Mirrors PostMediaUploadStatus'
- * shape: the failed variant has a bound `retry()` so UI can call it directly
- * without having to look up the post id.
+ * What's stored on a post's `embed` field. The failed variant has a bound
+ * `retry()` so UI can call it directly without having to look up the post
+ * id. The pending variant is set synchronously by addUri while resolution
+ * is in flight; the resolved variants (external/feed/list/starter-pack)
+ * land when the worker reports back.
  *
  * Note: `retry` is a function reference and won't survive JSON serialization.
  * On restore (OS-resume / draft load), the store re-attaches it.
+ *
+ * (Worker-side input and outcome types live in linkResolution.ts.)
  */
 export type PostEmbed =
   | {state: 'pending'; uri: string}
@@ -152,23 +121,24 @@ export type PostEmbed =
     }
 
 /**
- * Worker output for an `addUri` call. The store routes `kind: 'post'` to the
- * post's `quote` field and everything else to the `embed` field.
+ * What's stored on a post's `quote` field. Mirrors `PostEmbed`'s shape: the
+ * pending variant is set synchronously by addUri while the post is being
+ * resolved; the resolved variant lands when the worker reports back; the
+ * failed variant carries a bound `retry()`.
+ *
+ * `view` is optional on the resolved variant because `setQuoteEmbed` (used
+ * for direct programmatic insertion, e.g. draft restore) may not have a
+ * hydrated post view to hand.
  */
-export type LinkResolutionOutcome =
+export type PostEmbedQuote =
+  | {state: 'pending'; uri: string}
+  | {state: 'failed'; uri: string; error: string; retry: () => void}
   | {
-      kind: 'post'
-      record: ComAtprotoRepoStrongRef.Main
-      view: AppBskyFeedDefs.PostView
+      state: 'resolved'
+      uri: string
+      cid: string
+      view?: AppBskyFeedDefs.PostView
     }
-  | {kind: 'embed'; embed: Exclude<EmbedResolution, {state: 'pending'}>}
-
-export type PostEmbedQuote = {
-  uri: string
-  cid: string
-  /** Hydrated post view; populated when addUri resolves a post. */
-  view?: AppBskyFeedDefs.PostView
-}
 
 export type ThreadPost = {
   text: string
