@@ -9,6 +9,6 @@ export function buildThreadPost(): ThreadPost {
     media: [],
     external: undefined,
     quote: undefined,
-    ...computePostMediaSelectionsRemaining([]),
+    ...computePostMediaSelectionsRemaining([], undefined),
   }
 }
