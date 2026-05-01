@@ -18,7 +18,7 @@ export type UploadTask = {
   cancel(): void
 }
 
-type StartImageUploadOptions = {
+type StartUploadOptions = {
   postId: string
   mediaId: string
   uri: string
@@ -32,8 +32,24 @@ type StartImageUploadOptions = {
 
 const IMAGE_PROGRESS_STEPS = [0.25, 0.5, 0.75]
 const IMAGE_TICK_MS = 100
+const VIDEO_PROGRESS_STEPS = [0.1, 0.3, 0.5, 0.7, 0.9]
+const VIDEO_TICK_MS = 200
 
-export function startImageUpload(opts: StartImageUploadOptions): UploadTask {
+export function startImageUpload(opts: StartUploadOptions): UploadTask {
+  return runSimulatedUpload(opts, IMAGE_PROGRESS_STEPS, IMAGE_TICK_MS)
+}
+
+export function startVideoUpload(opts: StartUploadOptions): UploadTask {
+  // TODO: replace with real video pipeline (compress, create upload job,
+  // poll until ready, resolve to a BlobRef).
+  return runSimulatedUpload(opts, VIDEO_PROGRESS_STEPS, VIDEO_TICK_MS)
+}
+
+function runSimulatedUpload(
+  opts: StartUploadOptions,
+  progressSteps: number[],
+  tickMs: number,
+): UploadTask {
   let cancelled = false
   let timeoutId: ReturnType<typeof setTimeout> | null = null
   let stepIndex = 0
@@ -42,13 +58,13 @@ export function startImageUpload(opts: StartImageUploadOptions): UploadTask {
     timeoutId = null
     if (cancelled) return
 
-    if (stepIndex < IMAGE_PROGRESS_STEPS.length) {
+    if (stepIndex < progressSteps.length) {
       opts.setUploadStatus(opts.postId, opts.mediaId, {
         state: 'uploading',
-        progress: IMAGE_PROGRESS_STEPS[stepIndex],
+        progress: progressSteps[stepIndex],
       })
       stepIndex += 1
-      timeoutId = setTimeout(tick, IMAGE_TICK_MS)
+      timeoutId = setTimeout(tick, tickMs)
       return
     }
 
@@ -58,7 +74,7 @@ export function startImageUpload(opts: StartImageUploadOptions): UploadTask {
     })
   }
 
-  timeoutId = setTimeout(tick, IMAGE_TICK_MS)
+  timeoutId = setTimeout(tick, tickMs)
 
   return {
     cancel() {
