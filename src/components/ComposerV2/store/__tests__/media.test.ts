@@ -1,6 +1,16 @@
 import {type AtpAgent} from '@atproto/api'
 import {beforeEach, describe, expect, jest, test} from '@jest/globals'
 
+// Avoid pulling the UI module chain (gallery → media picker → ALF) into the
+// test environment via the resolveLink import in linkResolution.ts.
+jest.mock('#/lib/api/resolve', () => ({
+  resolveLink: jest.fn(),
+}))
+jest.mock('#/state/session/agent', () => ({
+  createPublicAgent: jest.fn(() => ({})),
+}))
+
+import {type resolveLink} from '#/lib/api/resolve'
 import {type Gif} from '#/state/queries/tenor'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
@@ -47,13 +57,29 @@ const gifInput: AddMediaInput = {
   gif: {url: 'https://example.com/g.gif'} as Gif,
 }
 
+// Embed-routing tests live in embeds.test.ts; here we just need a never-
+// resolving resolveLink so any addUri-driven resolution doesn't crash and
+// no result ever lands. The promise never settles, which is what we want.
+let mockResolveLink: jest.Mock<typeof resolveLink>
+
 beforeEach(() => {
   jest.useFakeTimers()
+  mockResolveLink = jest.fn(
+    () => new Promise(() => {}),
+  ) as unknown as jest.Mock<typeof resolveLink>
 })
+
+function makeStore() {
+  return createThreadStore({
+    agent,
+    __createId: makeIdGenerator(),
+    __resolveLink: mockResolveLink as unknown as typeof resolveLink,
+  })
+}
 
 describe('addMedia', () => {
   test('adds a single image with pending upload status and returns its id', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     const ids = store.actions.addMedia(root, [imageInput])
     expect(ids).toEqual(['id-2'])
@@ -68,7 +94,7 @@ describe('addMedia', () => {
   })
 
   test('preserves input order in returned ids and on the post', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     const ids = store.actions.addMedia(root, [
       imageInput,
@@ -80,14 +106,14 @@ describe('addMedia', () => {
   })
 
   test('marks state dirty', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     expect(store.getState().isDirty).toBe(false)
     store.actions.addMedia(rootId(store), [imageInput])
     expect(store.getState().isDirty).toBe(true)
   })
 
   test('returns undefined and is a no-op when post id is unknown', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const before = store.getState()
     const result = store.actions.addMedia('does-not-exist', [imageInput])
     expect(result).toBeUndefined()
@@ -95,7 +121,7 @@ describe('addMedia', () => {
   })
 
   test('returns [] for an empty input list and is a no-op', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const before = store.getState()
     const result = store.actions.addMedia(rootId(store), [])
     expect(result).toEqual([])
@@ -103,7 +129,7 @@ describe('addMedia', () => {
   })
 
   test('drives an image upload from pending -> uploading -> uploaded', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     const [imageId] = store.actions.addMedia(root, [imageInput])!
 
@@ -121,7 +147,7 @@ describe('addMedia', () => {
   })
 
   test('drives a video upload through to uploaded', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     const [videoId] = store.actions.addMedia(root, [videoInput])!
 
@@ -137,7 +163,7 @@ describe('addMedia', () => {
   })
 
   test('does not start an upload task for a gif', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     store.actions.addMedia(root, [gifInput])
     jest.runAllTimers()
@@ -150,7 +176,7 @@ describe('addMedia', () => {
 
 describe('addMedia input validation (first item dictates kind, cap by count)', () => {
   test('image-first: filters out non-images and caps at 4', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     const ids = store.actions.addMedia(root, [
       imageInput,
@@ -168,7 +194,7 @@ describe('addMedia input validation (first item dictates kind, cap by count)', (
   })
 
   test('video-first: filters out non-videos and caps at 1', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     const ids = store.actions.addMedia(root, [
       videoInput,
@@ -180,7 +206,7 @@ describe('addMedia input validation (first item dictates kind, cap by count)', (
   })
 
   test('gif-first: filters out non-gifs and caps at 1', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     const ids = store.actions.addMedia(root, [gifInput, gifInput, imageInput])
     expect(ids).toHaveLength(1)
@@ -190,7 +216,7 @@ describe('addMedia input validation (first item dictates kind, cap by count)', (
 
 describe('addMedia respects existing media on the post', () => {
   test('appends images up to a total of 4 when the post already has images', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     store.actions.addMedia(root, [imageInput, imageInput])
     const ids = store.actions.addMedia(root, [
@@ -204,7 +230,7 @@ describe('addMedia respects existing media on the post', () => {
   })
 
   test('drops non-image inputs when the post already has images', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     store.actions.addMedia(root, [imageInput])
     const ids = store.actions.addMedia(root, [videoInput, gifInput])
@@ -213,7 +239,7 @@ describe('addMedia respects existing media on the post', () => {
   })
 
   test('is a no-op when the post already has 4 images', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     store.actions.addMedia(root, [
       imageInput,
@@ -228,7 +254,7 @@ describe('addMedia respects existing media on the post', () => {
   })
 
   test('is a no-op when the post already has a video', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     store.actions.addMedia(root, [videoInput])
     const before = store.getState()
@@ -238,7 +264,7 @@ describe('addMedia respects existing media on the post', () => {
   })
 
   test('is a no-op when the post already has a gif', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     store.actions.addMedia(root, [gifInput])
     const before = store.getState()
@@ -248,9 +274,9 @@ describe('addMedia respects existing media on the post', () => {
   })
 
   test('is a no-op when the post has an external link card', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
-    store.actions.setExternalEmbed(root, {uri: 'https://example.com'})
+    store.actions.addUri(root, 'https://example.com')
     const before = store.getState()
     const ids = store.actions.addMedia(root, [imageInput])
     expect(ids).toEqual([])
@@ -260,7 +286,7 @@ describe('addMedia respects existing media on the post', () => {
 
 describe('selectionsRemaining flags on the post', () => {
   test('empty post starts with 4 / 1 / 1', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const post = store.getState().posts[rootId(store)]
     expect(post.imageSelectionsRemaining).toBe(4)
     expect(post.videoSelectionsRemaining).toBe(1)
@@ -268,7 +294,7 @@ describe('selectionsRemaining flags on the post', () => {
   })
 
   test('decrements as images are added', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     store.actions.addMedia(root, [imageInput, imageInput])
     let post = store.getState().posts[root]
@@ -282,7 +308,7 @@ describe('selectionsRemaining flags on the post', () => {
   })
 
   test('a video locks all three counters to 0', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     store.actions.addMedia(root, [videoInput])
     const post = store.getState().posts[root]
@@ -292,7 +318,7 @@ describe('selectionsRemaining flags on the post', () => {
   })
 
   test('a gif locks all three counters to 0', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     store.actions.addMedia(root, [gifInput])
     const post = store.getState().posts[root]
@@ -302,7 +328,7 @@ describe('selectionsRemaining flags on the post', () => {
   })
 
   test('removing media restores capacity', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     const [imgId] = store.actions.addMedia(root, [imageInput])!
     expect(store.getState().posts[root].imageSelectionsRemaining).toBe(3)
@@ -314,9 +340,9 @@ describe('selectionsRemaining flags on the post', () => {
   })
 
   test('an external link card locks all three counters to 0', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
-    store.actions.setExternalEmbed(root, {uri: 'https://example.com'})
+    store.actions.addUri(root, 'https://example.com')
     const post = store.getState().posts[root]
     expect(post.imageSelectionsRemaining).toBe(0)
     expect(post.videoSelectionsRemaining).toBe(0)
@@ -324,10 +350,10 @@ describe('selectionsRemaining flags on the post', () => {
   })
 
   test('removing the external link card restores capacity', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
-    store.actions.setExternalEmbed(root, {uri: 'https://example.com'})
-    store.actions.removeExternalEmbed(root)
+    store.actions.addUri(root, 'https://example.com')
+    store.actions.removeEmbed(root)
     const post = store.getState().posts[root]
     expect(post.imageSelectionsRemaining).toBe(4)
     expect(post.videoSelectionsRemaining).toBe(1)
@@ -337,7 +363,7 @@ describe('selectionsRemaining flags on the post', () => {
 
 describe('removeMedia', () => {
   test('removes the matching media and leaves others intact', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     const [a, b] = store.actions.addMedia(root, [imageInput, imageInput])!
 
@@ -346,7 +372,7 @@ describe('removeMedia', () => {
   })
 
   test('cancels in-flight upload (no further status writes after removal)', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     const [imageId] = store.actions.addMedia(root, [imageInput])!
     jest.advanceTimersByTime(100)
@@ -356,7 +382,7 @@ describe('removeMedia', () => {
   })
 
   test('is a no-op when media id is unknown', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     store.actions.addMedia(root, [imageInput])
     const before = store.getState()
@@ -367,7 +393,7 @@ describe('removeMedia', () => {
 
 describe('retryMediaUpload', () => {
   test('resets a failed image upload back to pending and walks it to uploaded', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     const [imageId] = store.actions.addMedia(root, [imageInput])!
     store.actions.setUploadStatus(root, imageId, {
@@ -389,7 +415,7 @@ describe('retryMediaUpload', () => {
   })
 
   test('failed status carries a bound retry() method that restarts the upload', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     const [imageId] = store.actions.addMedia(root, [imageInput])!
     store.actions.setUploadStatus(root, imageId, {
@@ -413,7 +439,7 @@ describe('retryMediaUpload', () => {
   })
 
   test('is a no-op for a gif media id', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     const [gifId] = store.actions.addMedia(root, [gifInput])!
     const before = store.getState()
@@ -422,7 +448,7 @@ describe('retryMediaUpload', () => {
   })
 
   test('is a no-op when post or media id is unknown', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     store.actions.addMedia(root, [imageInput])
     const before = store.getState()
@@ -435,7 +461,7 @@ describe('retryMediaUpload', () => {
 
 describe('updateMediaAltText', () => {
   test('updates only the matching media (image)', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     const [a, b] = store.actions.addMedia(root, [imageInput, imageInput])!
     store.actions.updateMediaAltText(root, b, 'a description')
@@ -446,7 +472,7 @@ describe('updateMediaAltText', () => {
   })
 
   test('works on a gif as well', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     const [gifId] = store.actions.addMedia(root, [gifInput])!
     store.actions.updateMediaAltText(root, gifId, 'animated joy')
@@ -454,7 +480,7 @@ describe('updateMediaAltText', () => {
   })
 
   test('is a no-op when alt text is unchanged', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     const [imageId] = store.actions.addMedia(root, [imageInput])!
     const before = store.getState()
@@ -465,7 +491,7 @@ describe('updateMediaAltText', () => {
 
 describe('removePost cancels media uploads', () => {
   test('removing a post cancels any in-flight uploads on that post', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const a = rootId(store)
     const b = store.actions.addPost('after', a)
     store.actions.addMedia(b, [imageInput])
@@ -479,7 +505,7 @@ describe('removePost cancels media uploads', () => {
 
 describe('destroy cancels uploads', () => {
   test('destroy stops any in-flight uploads', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     store.actions.addMedia(root, [imageInput])
     jest.advanceTimersByTime(100)

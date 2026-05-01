@@ -1,6 +1,8 @@
 import {type AtpAgent} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
+import {type resolveLink} from '#/lib/api/resolve'
+import {startUriResolution} from '#/components/ComposerV2/store/linkResolution'
 import type * as types from '#/components/ComposerV2/store/types'
 import {
   startImageUpload,
@@ -18,9 +20,12 @@ export function createThreadStore(options: {
   agent: AtpAgent
   /** Override id generation; useful for deterministic tests. */
   __createId?: () => string
+  /** Override link resolver; useful for deterministic tests. */
+  __resolveLink?: typeof resolveLink
 }) {
   const id = options.__createId ?? nanoid
   const agent = options.agent
+  const resolveLinkOverride = options.__resolveLink
   let state: types.ThreadState = {
     posts: {[id()]: buildThreadPost()},
     isDirty: false,
@@ -36,6 +41,21 @@ export function createThreadStore(options: {
    * (uploaded/failed) and on store destroy.
    */
   const uploadTasks = new Map<string, UploadTask>()
+
+  /**
+   * Generation counter per post for embed link resolution. Cancellation is
+   * implemented by ignoring stale resolution callbacks: every action that
+   * starts or invalidates a resolution (addUri, removeEmbed, removePost,
+   * destroy) bumps the post's gen, and the worker callback compares its
+   * captured gen against the current value before writing to state.
+   */
+  const embedGenByPost = new Map<string, number>()
+
+  function bumpEmbedGen(postId: string): number {
+    const next = (embedGenByPost.get(postId) ?? 0) + 1
+    embedGenByPost.set(postId, next)
+    return next
+  }
 
   /**
    * Action bodies mutate `s` in place. Returning `null` signals a no-op (the
@@ -115,6 +135,10 @@ export function createThreadStore(options: {
       if (!(postId in s.posts)) return null
       // Cancel any in-flight uploads for media on this post before dropping it.
       for (const m of s.posts[postId].media) cancelUploadTask(m.id)
+      // Bump (and drop) the embed gen so a stale resolution callback for
+      // this post can never write back into state.
+      bumpEmbedGen(postId)
+      embedGenByPost.delete(postId)
       delete s.posts[postId]
       s.isDirty = true
       return s
@@ -136,10 +160,11 @@ export function createThreadStore(options: {
     if (!(postId in state.posts)) return undefined
     if (inputs.length === 0) return []
 
-    // External link cards are mutually exclusive with media. This rule is
-    // permanent (unlike the kind/cap rules in filterMediaInputs) so it lives
-    // here at the action boundary rather than inside the filter helper.
-    if (state.posts[postId].external !== undefined) return []
+    // Embeds (external link cards, feed/list/starter-pack record cards, and
+    // the in-flight pending state) are mutually exclusive with media. This
+    // rule is permanent (unlike the kind/cap rules in filterMediaInputs) so
+    // it lives here at the action boundary rather than inside the filter.
+    if (state.posts[postId].embed !== undefined) return []
 
     const accepted = filterMediaInputs(state.posts[postId].media, inputs)
     if (accepted.length === 0) return []
@@ -258,22 +283,100 @@ export function createThreadStore(options: {
     )
   }
 
-  function setExternalEmbed(postId: string, external: types.PostEmbedExternal) {
+  /**
+   * Generic URI handler. Sets `embed` to `pending` synchronously, kicks off
+   * `resolveLink`, and routes the outcome:
+   * - Bluesky post -> goes to the post's `quote` field (clears embed). If
+   *   `quote` is already set, the new outcome is dropped silently to
+   *   preserve the user's prior selection.
+   * - Feed / list / starter-pack / external -> stays on `embed`, unless the
+   *   post has media in which case it's dropped silently (embed cleared).
+   * - Failure -> embed is set to a `failed` state with a bound `retry()` that
+   *   re-runs `addUri` for the same URI.
+   *
+   * Cancellation is gen-based: any later addUri / removeEmbed / removePost /
+   * destroy invalidates this call's outcome before it can land.
+   */
+  function addUri(postId: string, uri: string) {
+    if (!(postId in state.posts)) return
+    const gen = bumpEmbedGen(postId)
     mutateState(s => {
       const post = s.posts[postId]
       if (!post) return null
-      s.posts[postId] = setPostExternal(post, external)
+      s.posts[postId] = setPostEmbed(post, {state: 'pending', uri})
       s.isDirty = true
       return s
     })
+    startUriResolution({
+      postId,
+      uri,
+      resolveLink: resolveLinkOverride,
+      onResolve: handleEmbedResolution(gen),
+    })
   }
 
-  function removeExternalEmbed(postId: string) {
+  function handleEmbedResolution(gen: number) {
+    return (postId: string, outcome: types.LinkResolutionOutcome) => {
+      if (destroyed) return
+      if (embedGenByPost.get(postId) !== gen) return
+      if (outcome.kind === 'post') {
+        mutateState(s => {
+          const post = s.posts[postId]
+          if (!post) return null
+          if (post.quote !== undefined) {
+            // Quote already set: drop the post outcome, just clear pending.
+            s.posts[postId] = setPostEmbed(post, undefined)
+            return s
+          }
+          s.posts[postId] = setPostEmbed(
+            {
+              ...post,
+              quote: {
+                uri: outcome.record.uri,
+                cid: outcome.record.cid,
+                view: outcome.view,
+              },
+            },
+            undefined,
+          )
+          return s
+        })
+        return
+      }
+      // outcome.kind === 'embed'
+      const post = state.posts[postId]
+      if (!post) return
+      if (post.media.length > 0) {
+        // Embed-vs-media collision: silent drop, clear pending.
+        mutateState(s => {
+          const p = s.posts[postId]
+          if (!p) return null
+          s.posts[postId] = setPostEmbed(p, undefined)
+          return s
+        })
+        return
+      }
+      const embed = outcome.embed
+      const stored: types.PostEmbed =
+        embed.state === 'failed'
+          ? {...embed, retry: () => addUri(postId, embed.uri)}
+          : embed
+      mutateState(s => {
+        const p = s.posts[postId]
+        if (!p) return null
+        s.posts[postId] = setPostEmbed(p, stored)
+        return s
+      })
+    }
+  }
+
+  function removeEmbed(postId: string) {
+    bumpEmbedGen(postId)
     mutateState(s => {
       const post = s.posts[postId]
       if (!post) return null
-      if (post.external === undefined) return null
-      s.posts[postId] = setPostExternal(post, undefined)
+      if (post.embed === undefined) return null
+      s.posts[postId] = setPostEmbed(post, undefined)
       s.isDirty = true
       return s
     })
@@ -356,23 +459,23 @@ export function createThreadStore(options: {
     return {
       ...post,
       media,
-      ...computePostMediaSelectionsRemaining(media, post.external),
+      ...computePostMediaSelectionsRemaining(media, post.embed),
     }
   }
 
   /**
-   * Single chokepoint for replacing a post's external link card. Mirrors
-   * setPostMedia so the selectionsRemaining flags stay consistent (an
-   * external link blocks all media selections).
+   * Single chokepoint for replacing a post's embed slot. Mirrors
+   * setPostMedia so the selectionsRemaining flags stay consistent (any
+   * embed - including pending and failed - blocks all media selections).
    */
-  function setPostExternal(
+  function setPostEmbed(
     post: types.ThreadPost,
-    external: types.PostEmbedExternal | undefined,
+    embed: types.PostEmbed | undefined,
   ): types.ThreadPost {
     return {
       ...post,
-      external,
-      ...computePostMediaSelectionsRemaining(post.media, external),
+      embed,
+      ...computePostMediaSelectionsRemaining(post.media, embed),
     }
   }
 
@@ -387,8 +490,8 @@ export function createThreadStore(options: {
       removeMedia,
       updateMediaAltText,
       retryMediaUpload,
-      setExternalEmbed,
-      removeExternalEmbed,
+      addUri,
+      removeEmbed,
       setQuoteEmbed,
       removeQuoteEmbed,
       setUploadStatus,
@@ -397,6 +500,7 @@ export function createThreadStore(options: {
       destroyed = true
       for (const task of uploadTasks.values()) task.cancel()
       uploadTasks.clear()
+      embedGenByPost.clear()
     },
     getState() {
       return state

@@ -1,5 +1,11 @@
-import {type BlobRef} from '@atproto/api'
+import {
+  type AppBskyFeedDefs,
+  type AppBskyGraphDefs,
+  type BlobRef,
+  type ComAtprotoRepoStrongRef,
+} from '@atproto/api'
 
+import {type ComposerImage} from '#/state/gallery'
 import {type Gif} from '#/state/queries/tenor'
 
 /**
@@ -76,13 +82,92 @@ export type PostEmbedMedia =
   | (PostEmbedMediaVideo & {kind: 'video'})
   | (PostEmbedMediaGif & {kind: 'gif'})
 
-export type PostEmbedExternal = {
-  uri: string
-}
+/**
+ * What a link-resolution reporter (the worker, or a test) sends in. Failed
+ * inputs carry just the error string; the store wraps the failure with a
+ * bound `retry()` method when it stores the status.
+ *
+ * `pending` is included so the store can construct the initial pending state
+ * with the same type vocabulary, but the worker never emits `pending` - it
+ * only emits terminal outcomes (the post-resolution variants and `failed`).
+ */
+export type EmbedResolution =
+  | {state: 'pending'; uri: string}
+  | {state: 'failed'; uri: string; error: string}
+  | {
+      state: 'external'
+      uri: string
+      title: string
+      description: string
+      thumb: ComposerImage | undefined
+    }
+  | {
+      state: 'feed'
+      record: ComAtprotoRepoStrongRef.Main
+      view: AppBskyFeedDefs.GeneratorView
+    }
+  | {
+      state: 'list'
+      record: ComAtprotoRepoStrongRef.Main
+      view: AppBskyGraphDefs.ListView
+    }
+  | {
+      state: 'starter-pack'
+      record: ComAtprotoRepoStrongRef.Main
+      view: AppBskyGraphDefs.StarterPackView
+    }
+
+/**
+ * What's stored on a post's `embed` field. Mirrors PostMediaUploadStatus'
+ * shape: the failed variant has a bound `retry()` so UI can call it directly
+ * without having to look up the post id.
+ *
+ * Note: `retry` is a function reference and won't survive JSON serialization.
+ * On restore (OS-resume / draft load), the store re-attaches it.
+ */
+export type PostEmbed =
+  | {state: 'pending'; uri: string}
+  | {state: 'failed'; uri: string; error: string; retry: () => void}
+  | {
+      state: 'external'
+      uri: string
+      title: string
+      description: string
+      thumb: ComposerImage | undefined
+    }
+  | {
+      state: 'feed'
+      record: ComAtprotoRepoStrongRef.Main
+      view: AppBskyFeedDefs.GeneratorView
+    }
+  | {
+      state: 'list'
+      record: ComAtprotoRepoStrongRef.Main
+      view: AppBskyGraphDefs.ListView
+    }
+  | {
+      state: 'starter-pack'
+      record: ComAtprotoRepoStrongRef.Main
+      view: AppBskyGraphDefs.StarterPackView
+    }
+
+/**
+ * Worker output for an `addUri` call. The store routes `kind: 'post'` to the
+ * post's `quote` field and everything else to the `embed` field.
+ */
+export type LinkResolutionOutcome =
+  | {
+      kind: 'post'
+      record: ComAtprotoRepoStrongRef.Main
+      view: AppBskyFeedDefs.PostView
+    }
+  | {kind: 'embed'; embed: Exclude<EmbedResolution, {state: 'pending'}>}
 
 export type PostEmbedQuote = {
   uri: string
   cid: string
+  /** Hydrated post view; populated when addUri resolves a post. */
+  view?: AppBskyFeedDefs.PostView
 }
 
 export type ThreadPost = {
@@ -90,7 +175,8 @@ export type ThreadPost = {
   langs: string[]
   labels: string[]
   media: PostEmbedMedia[]
-  external: PostEmbedExternal | undefined
+  /** Single non-quote embed slot. Mutually exclusive with media. */
+  embed: PostEmbed | undefined
   quote: PostEmbedQuote | undefined
   /**
    * Derived from `media`. How many more items of each kind addMedia would
