@@ -31,6 +31,7 @@ import {useFormatPostStatCount} from '#/components/PostControls/util'
 import * as Skele from '#/components/Skeleton'
 import {useAnalytics} from '#/analytics'
 import {BookmarkButton} from './BookmarkButton'
+import {HideButton} from './HideButton'
 import {
   PostControlButton,
   PostControlButtonIcon,
@@ -93,8 +94,8 @@ let PostControls = ({
   const playHaptic = useHaptics()
   const isBlocked = Boolean(
     post.author.viewer?.blocking ||
-      post.author.viewer?.blockedBy ||
-      post.author.viewer?.blockingByList,
+    post.author.viewer?.blockedBy ||
+    post.author.viewer?.blockingByList,
   )
   const replyDisabled = post.viewer?.replyDisabled
   const {gtPhone} = useBreakpoints()
@@ -312,11 +313,20 @@ let PostControls = ({
         <View />
       </View>
       <View style={[a.flex_row, a.justify_end, secondaryControlSpacingStyles]}>
+        <HideButton
+          post={post}
+          big={big}
+          logContext={logContext}
+          hitSlop={{
+            right: secondaryControlSpacingStyles.gap / 2,
+          }}
+        />
         <BookmarkButton
           post={post}
           big={big}
           logContext={logContext}
           hitSlop={{
+            left: secondaryControlSpacingStyles.gap / 2,
             right: secondaryControlSpacingStyles.gap / 2,
           }}
         />
@@ -401,6 +411,9 @@ export function PostControlsSkeleton({
         </View>
       </View>
       <View style={[a.flex_row, a.justify_end, secondaryControlSpacingStyles]}>
+        <View style={itemStyles}>
+          <Skele.Circle blend size={size} />
+        </View>
         <View style={itemStyles}>
           <Skele.Circle blend size={size} />
         </View>
