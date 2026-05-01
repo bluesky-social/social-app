@@ -23,8 +23,11 @@ import {clearStorage} from '#/state/persisted'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useDeleteActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useProfileQuery, useProfilesQuery} from '#/state/queries/profile'
-import {useAgent} from '#/state/session'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
+import {
+  getWebOAuthClient,
+  markNextRefreshContext,
+} from '#/state/session/oauth-web-client'
 import {useOnboardingDispatch} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -33,7 +36,6 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, platform, tokens, useBreakpoints, useTheme} from '#/alf'
 import {AvatarStackWithFetch} from '#/components/AvatarStack'
-import {Button, ButtonText} from '#/components/Button'
 import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
@@ -60,6 +62,7 @@ import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
+import * as ToastV2 from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useFullVerificationState} from '#/components/verification'
 import {
@@ -68,7 +71,6 @@ import {
 } from '#/components/verification/VerificationCheckButton'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL, IS_IOS, IS_NATIVE} from '#/env'
-import {device, useStorage} from '#/storage'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
@@ -379,7 +381,7 @@ function ProfilePreview({
 
 function DevOptions() {
   const {_} = useLingui()
-  const agent = useAgent()
+  const {currentAccount} = useSession()
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {mutate: deleteChatDeclarationRecord} = useDeleteActorDeclaration()
@@ -462,6 +464,30 @@ function DevOptions() {
         label={_(msg`Open moderation debug page`)}>
         <SettingsList.ItemText>
           <Trans>Debug Moderation</Trans>
+        </SettingsList.ItemText>
+      </SettingsList.PressableItem>
+      <SettingsList.PressableItem
+        onPress={async () => {
+          if (!currentAccount?.isOauthSession) {
+            ToastV2.show(_(msg`Current account is not an OAuth session`), {
+              type: 'warning',
+            })
+            return
+          }
+          markNextRefreshContext('debugButton')
+          try {
+            await getWebOAuthClient().restore(currentAccount.did, true)
+            ToastV2.show(_(msg`OAuth refresh succeeded`), {type: 'success'})
+          } catch (e) {
+            const msgText = e instanceof Error ? e.message : String(e)
+            ToastV2.show(_(msg`OAuth refresh failed: ${msgText}`), {
+              type: 'error',
+            })
+          }
+        }}
+        label={_(msg`Force OAuth token refresh`)}>
+        <SettingsList.ItemText>
+          <Trans>Force OAuth token refresh</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
       <SettingsList.PressableItem
