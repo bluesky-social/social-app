@@ -6,9 +6,13 @@
  * any pending work; this is what the store stores per-media so it can cancel
  * an in-flight upload when the user removes or replaces the media.
  *
- * TODO: replace the simulated progression with real AtpAgent.uploadBlob calls
- * (com.atproto.repo.uploadBlob) for images. The public surface here should
- * not need to change; the simulation lives entirely inside startImageUpload.
+ * TODO: replace the simulated progression with real implementations:
+ *   - images: AtpAgent.uploadBlob (com.atproto.repo.uploadBlob)
+ *   - video: the existing video pipeline (compress, create upload job, poll
+ *     until ready, resolve to a BlobRef)
+ * The public surface here (startImageUpload / startVideoUpload returning an
+ * UploadTask) should not need to change; the simulation lives entirely
+ * inside runSimulatedUpload.
  */
 import {type AtpAgent, type BlobRef} from '@atproto/api'
 

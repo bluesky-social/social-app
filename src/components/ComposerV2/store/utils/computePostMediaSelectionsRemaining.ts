@@ -1,17 +1,30 @@
 import {MAX_IMAGES_PER_POST} from '#/components/ComposerV2/store/const'
-import {type PostEmbedMedia} from '#/components/ComposerV2/store/types'
+import {
+  type PostEmbedExternal,
+  type PostEmbedMedia,
+} from '#/components/ComposerV2/store/types'
 
 /**
- * Mirrors filterMediaInputs' rules. With no media, all kinds are open at
- * their per-kind cap. With existing images, only images are open up to a
- * total of MAX_IMAGES_PER_POST. With an existing video or gif, nothing more
- * can be added.
+ * Mirrors filterMediaInputs' rules. With no media (and no external link),
+ * all kinds are open at their per-kind cap. With existing images, only
+ * images are open up to a total of MAX_IMAGES_PER_POST. With an existing
+ * video, gif, or external link card, nothing more can be added.
  */
-export function computePostMediaSelectionsRemaining(media: PostEmbedMedia[]): {
+export function computePostMediaSelectionsRemaining(
+  media: PostEmbedMedia[],
+  external: PostEmbedExternal | undefined,
+): {
   imageSelectionsRemaining: number
   videoSelectionsRemaining: number
   gifSelectionsRemaining: number
 } {
+  if (external !== undefined) {
+    return {
+      imageSelectionsRemaining: 0,
+      videoSelectionsRemaining: 0,
+      gifSelectionsRemaining: 0,
+    }
+  }
   if (media.length === 0) {
     return {
       imageSelectionsRemaining: MAX_IMAGES_PER_POST,
