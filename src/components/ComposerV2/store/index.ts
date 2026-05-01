@@ -1,8 +1,11 @@
-import {type AtpAgent} from '@atproto/api'
+import {type AppBskyFeedDefs, type AtpAgent} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
 import {type resolveLink} from '#/lib/api/resolve'
-import {startUriResolution} from '#/components/ComposerV2/store/linkResolution'
+import {
+  type LinkResolutionOutcome,
+  startUriResolution,
+} from '#/components/ComposerV2/store/linkResolution'
 import type * as types from '#/components/ComposerV2/store/types'
 import {
   startImageUpload,
@@ -11,6 +14,7 @@ import {
 } from '#/components/ComposerV2/store/uploads'
 import {buildPostMediaItem} from '#/components/ComposerV2/store/utils/buildPostMediaItem'
 import {buildThreadPost} from '#/components/ComposerV2/store/utils/buildThreadPost'
+import {classifyUriTarget} from '#/components/ComposerV2/store/utils/classifyUriTarget'
 import {computePostMediaSelectionsRemaining} from '#/components/ComposerV2/store/utils/computePostMediaSelectionsRemaining'
 import {filterMediaInputs} from '#/components/ComposerV2/store/utils/filterMediaInputs'
 
@@ -43,17 +47,18 @@ export function createThreadStore(options: {
   const uploadTasks = new Map<string, UploadTask>()
 
   /**
-   * Generation counter per post for embed link resolution. Cancellation is
-   * implemented by ignoring stale resolution callbacks: every action that
-   * starts or invalidates a resolution (addUri, removeEmbed, removePost,
-   * destroy) bumps the post's gen, and the worker callback compares its
-   * captured gen against the current value before writing to state.
+   * Per-slot generation counters. Quote and embed are orthogonal slots, so
+   * each has its own counter; cancelling one doesn't invalidate the other.
+   * Every action that starts or invalidates a resolution for a slot bumps
+   * that slot's gen, and the worker callback compares its captured gen
+   * against the current value before writing to state.
    */
+  const quoteGenByPost = new Map<string, number>()
   const embedGenByPost = new Map<string, number>()
 
-  function bumpEmbedGen(postId: string): number {
-    const next = (embedGenByPost.get(postId) ?? 0) + 1
-    embedGenByPost.set(postId, next)
+  function bumpGen(map: Map<string, number>, postId: string): number {
+    const next = (map.get(postId) ?? 0) + 1
+    map.set(postId, next)
     return next
   }
 
@@ -135,9 +140,11 @@ export function createThreadStore(options: {
       if (!(postId in s.posts)) return null
       // Cancel any in-flight uploads for media on this post before dropping it.
       for (const m of s.posts[postId].media) cancelUploadTask(m.id)
-      // Bump (and drop) the embed gen so a stale resolution callback for
+      // Bump (and drop) both gens so any stale resolution callbacks for
       // this post can never write back into state.
-      bumpEmbedGen(postId)
+      bumpGen(quoteGenByPost, postId)
+      bumpGen(embedGenByPost, postId)
+      quoteGenByPost.delete(postId)
       embedGenByPost.delete(postId)
       delete s.posts[postId]
       s.isDirty = true
@@ -284,26 +291,64 @@ export function createThreadStore(options: {
   }
 
   /**
-   * Generic URI handler. Sets `embed` to `pending` synchronously, kicks off
-   * `resolveLink`, and routes the outcome:
-   * - Bluesky post -> goes to the post's `quote` field (clears embed). If
-   *   `quote` is already set, the new outcome is dropped silently to
-   *   preserve the user's prior selection.
-   * - Feed / list / starter-pack / external -> stays on `embed`, unless the
-   *   post has media in which case it's dropped silently (embed cleared).
-   * - Failure -> embed is set to a `failed` state with a bound `retry()` that
-   *   re-runs `addUri` for the same URI.
+   * Generic URI handler. Pre-classifies the URI from its URL pattern to
+   * decide which slot the eventual data will land in:
    *
-   * Cancellation is gen-based: any later addUri / removeEmbed / removePost /
-   * destroy invalidates this call's outcome before it can land.
+   * - Bluesky post URL -> `quote` slot (coexists with media).
+   * - Anything else (feed / list / starter-pack / external) -> `embed` slot
+   *   (mutually exclusive with media).
+   *
+   * Conflict checks happen synchronously based on the target slot:
+   * - If targeting quote and quote is already set -> no-op (preserves prior).
+   * - If targeting embed and embed is already set -> no-op.
+   * - If targeting embed and media is set -> no-op.
+   *
+   * Otherwise, pending state is written to the target slot synchronously and
+   * `resolveLink` runs in the background. The outcome lands in the same slot
+   * (resolved or failed). Cancellation is per-slot gen-based.
    */
   function addUri(postId: string, uri: string) {
-    if (!(postId in state.posts)) return
-    const gen = bumpEmbedGen(postId)
+    const post = state.posts[postId]
+    if (!post) return
+
+    const target = classifyUriTarget(uri)
+
+    if (target === 'quote') {
+      // No-op only when the slot has a settled value. Pending and failed
+      // states are replaceable (failed.retry() relies on this).
+      if (post.quote?.state === 'resolved') return
+      const gen = bumpGen(quoteGenByPost, postId)
+      mutateState(s => {
+        const p = s.posts[postId]
+        if (!p) return null
+        s.posts[postId] = setPostQuote(p, {state: 'pending', uri})
+        s.isDirty = true
+        return s
+      })
+      startUriResolution({
+        postId,
+        uri,
+        resolveLink: resolveLinkOverride,
+        onResolve: handleQuoteResolution(gen, uri),
+      })
+      return
+    }
+
+    // target === 'embed'
+    // Same rule as quote: settled values block; pending / failed are
+    // replaceable (so retry() works on a failed embed).
+    const embedSettled =
+      post.embed !== undefined &&
+      post.embed.state !== 'pending' &&
+      post.embed.state !== 'failed'
+    if (embedSettled) return
+    if (post.media.length > 0) return
+
+    const gen = bumpGen(embedGenByPost, postId)
     mutateState(s => {
-      const post = s.posts[postId]
-      if (!post) return null
-      s.posts[postId] = setPostEmbed(post, {state: 'pending', uri})
+      const p = s.posts[postId]
+      if (!p) return null
+      s.posts[postId] = setPostEmbed(p, {state: 'pending', uri})
       s.isDirty = true
       return s
     })
@@ -311,51 +356,75 @@ export function createThreadStore(options: {
       postId,
       uri,
       resolveLink: resolveLinkOverride,
-      onResolve: handleEmbedResolution(gen),
+      onResolve: handleEmbedResolution(gen, uri),
     })
   }
 
-  function handleEmbedResolution(gen: number) {
-    return (postId: string, outcome: types.LinkResolutionOutcome) => {
+  function handleQuoteResolution(gen: number, uri: string) {
+    return (postId: string, outcome: LinkResolutionOutcome) => {
       if (destroyed) return
-      if (embedGenByPost.get(postId) !== gen) return
-      if (outcome.kind === 'post') {
-        mutateState(s => {
-          const post = s.posts[postId]
-          if (!post) return null
-          if (post.quote !== undefined) {
-            // Quote already set: drop the post outcome, just clear pending.
-            s.posts[postId] = setPostEmbed(post, undefined)
-            return s
-          }
-          s.posts[postId] = setPostEmbed(
-            {
-              ...post,
-              quote: {
-                uri: outcome.record.uri,
-                cid: outcome.record.cid,
-                view: outcome.view,
-              },
-            },
-            undefined,
-          )
-          return s
-        })
-        return
-      }
-      // outcome.kind === 'embed'
-      const post = state.posts[postId]
-      if (!post) return
-      if (post.media.length > 0) {
-        // Embed-vs-media collision: silent drop, clear pending.
+      if (quoteGenByPost.get(postId) !== gen) return
+
+      // Pre-classification said this was a post URL. If resolveLink disagrees
+      // (deleted post, embedding disabled, network error, etc.), surface as
+      // failed in the quote slot.
+      if (outcome.kind !== 'post') {
+        const error =
+          outcome.embed.state === 'failed'
+            ? outcome.embed.error
+            : 'Could not resolve post'
+        const failed: types.PostEmbedQuote = {
+          state: 'failed',
+          uri,
+          error,
+          retry: () => addUri(postId, uri),
+        }
         mutateState(s => {
           const p = s.posts[postId]
           if (!p) return null
-          s.posts[postId] = setPostEmbed(p, undefined)
+          s.posts[postId] = setPostQuote(p, failed)
           return s
         })
         return
       }
+      mutateState(s => {
+        const p = s.posts[postId]
+        if (!p) return null
+        s.posts[postId] = setPostQuote(p, {
+          state: 'resolved',
+          uri: outcome.record.uri,
+          cid: outcome.record.cid,
+          view: outcome.view,
+        })
+        return s
+      })
+    }
+  }
+
+  function handleEmbedResolution(gen: number, uri: string) {
+    return (postId: string, outcome: LinkResolutionOutcome) => {
+      if (destroyed) return
+      if (embedGenByPost.get(postId) !== gen) return
+
+      // Pre-classification said this was a non-post URL. If resolveLink
+      // surprises us with a post outcome, treat as failure rather than
+      // silently moving slots.
+      if (outcome.kind === 'post') {
+        const failed: types.PostEmbed = {
+          state: 'failed',
+          uri,
+          error: 'Unexpected post outcome for non-post URL',
+          retry: () => addUri(postId, uri),
+        }
+        mutateState(s => {
+          const p = s.posts[postId]
+          if (!p) return null
+          s.posts[postId] = setPostEmbed(p, failed)
+          return s
+        })
+        return
+      }
+
       const embed = outcome.embed
       const stored: types.PostEmbed =
         embed.state === 'failed'
@@ -371,7 +440,7 @@ export function createThreadStore(options: {
   }
 
   function removeEmbed(postId: string) {
-    bumpEmbedGen(postId)
+    bumpGen(embedGenByPost, postId)
     mutateState(s => {
       const post = s.posts[postId]
       if (!post) return null
@@ -382,22 +451,37 @@ export function createThreadStore(options: {
     })
   }
 
-  function setQuoteEmbed(postId: string, quote: types.PostEmbedQuote) {
+  /**
+   * Direct setter for an already-resolved quote. Used for draft restore and
+   * any UI flow that already has the post ref+view in hand. Bumps the quote
+   * gen so any in-flight resolution is invalidated.
+   */
+  function setQuoteEmbed(
+    postId: string,
+    ref: {uri: string; cid: string; view?: AppBskyFeedDefs.PostView},
+  ) {
+    bumpGen(quoteGenByPost, postId)
     mutateState(s => {
       const post = s.posts[postId]
       if (!post) return null
-      s.posts[postId] = {...post, quote}
+      s.posts[postId] = setPostQuote(post, {
+        state: 'resolved',
+        uri: ref.uri,
+        cid: ref.cid,
+        view: ref.view,
+      })
       s.isDirty = true
       return s
     })
   }
 
   function removeQuoteEmbed(postId: string) {
+    bumpGen(quoteGenByPost, postId)
     mutateState(s => {
       const post = s.posts[postId]
       if (!post) return null
       if (post.quote === undefined) return null
-      s.posts[postId] = {...post, quote: undefined}
+      s.posts[postId] = setPostQuote(post, undefined)
       s.isDirty = true
       return s
     })
@@ -479,6 +563,17 @@ export function createThreadStore(options: {
     }
   }
 
+  /**
+   * Single chokepoint for replacing a post's quote slot. Quote is
+   * orthogonal to media so no selectionsRemaining recomputation is needed.
+   */
+  function setPostQuote(
+    post: types.ThreadPost,
+    quote: types.PostEmbedQuote | undefined,
+  ): types.ThreadPost {
+    return {...post, quote}
+  }
+
   return {
     actions: {
       setPostText,
@@ -500,6 +595,7 @@ export function createThreadStore(options: {
       destroyed = true
       for (const task of uploadTasks.values()) task.cancel()
       uploadTasks.clear()
+      quoteGenByPost.clear()
       embedGenByPost.clear()
     },
     getState() {

@@ -18,6 +18,9 @@ jest.mock('#/state/session/agent', () => ({
 import {type ResolvedLink, type resolveLink} from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'
 
+const POST_URL = 'https://bsky.app/profile/test.bsky.social/post/abc'
+const EXTERNAL_URL = 'https://example.com'
+
 function makeIdGenerator() {
   let i = 0
   return () => `id-${++i}`
@@ -59,13 +62,10 @@ function makeStore() {
 
 const fakePostView = (uri: string, cid: string) =>
   ({uri, cid}) as unknown as AppBskyFeedDefs.PostView
-
 const fakeGeneratorView = (uri: string, cid: string) =>
   ({uri, cid}) as unknown as AppBskyFeedDefs.GeneratorView
-
 const fakeListView = (uri: string, cid: string) =>
   ({uri, cid}) as unknown as AppBskyGraphDefs.ListView
-
 const fakeStarterPackView = (uri: string, cid: string) =>
   ({uri, cid}) as unknown as AppBskyGraphDefs.StarterPackView
 
@@ -99,39 +99,96 @@ const starterPackLink: ResolvedLink = {
 
 const externalLink: ResolvedLink = {
   type: 'external',
-  uri: 'https://example.com',
+  uri: EXTERNAL_URL,
   title: 'Example',
   description: 'A description',
   thumb: undefined,
 }
 
-describe('addUri routes outcomes', () => {
-  test('post → quote (with view), embed cleared', async () => {
+describe('addUri pre-classifies bsky post URLs to the quote slot', () => {
+  test('post URL → quote.pending → quote.resolved (with view)', async () => {
     const d = deferred<ResolvedLink>()
     mockResolveLink.mockReturnValueOnce(d.promise)
     const store = makeStore()
     const root = rootId(store)
-    store.actions.addUri(root, 'https://bsky.app/post')
-    expect(store.getState().posts[root].embed?.state).toBe('pending')
+    store.actions.addUri(root, POST_URL)
+
+    const pending = store.getState().posts[root].quote
+    if (pending?.state !== 'pending') throw new Error('expected pending')
+    expect(pending.uri).toBe(POST_URL)
+    expect(store.getState().posts[root].embed).toBeUndefined()
 
     d.resolve(postLink)
     await flushPromises()
 
-    const post = store.getState().posts[root]
-    expect(post.embed).toBeUndefined()
-    expect(post.quote).toEqual({
-      uri: 'at://post',
-      cid: 'cp',
-      view: postLink.kind === 'post' ? postLink.view : undefined,
-    })
+    const quote = store.getState().posts[root].quote
+    if (quote?.state !== 'resolved') throw new Error('expected resolved')
+    expect(quote.uri).toBe('at://post')
+    expect(quote.cid).toBe('cp')
+    expect(quote.view).toBe(
+      postLink.kind === 'post' ? postLink.view : undefined,
+    )
   })
 
+  test('addUri is a no-op when quote is already set', () => {
+    const store = makeStore()
+    const root = rootId(store)
+    store.actions.setQuoteEmbed(root, {uri: 'at://existing', cid: 'cx'})
+    const before = store.getState()
+    store.actions.addUri(root, POST_URL)
+    expect(store.getState()).toBe(before)
+    expect(mockResolveLink).not.toHaveBeenCalled()
+  })
+
+  test('post URL with media still routes to quote (orthogonal to media)', async () => {
+    const d = deferred<ResolvedLink>()
+    mockResolveLink.mockReturnValueOnce(d.promise)
+    const store = makeStore()
+    const root = rootId(store)
+    store.actions.addMedia(root, [
+      {kind: 'image', uri: 'file:///a.jpg', width: 10, height: 10},
+    ])
+    store.actions.addUri(root, POST_URL)
+    d.resolve(postLink)
+    await flushPromises()
+    expect(store.getState().posts[root].quote?.state).toBe('resolved')
+    expect(store.getState().posts[root].media).toHaveLength(1)
+  })
+
+  test('post resolution failure produces quote.failed with bound retry()', async () => {
+    const d1 = deferred<ResolvedLink>()
+    const d2 = deferred<ResolvedLink>()
+    mockResolveLink
+      .mockReturnValueOnce(d1.promise)
+      .mockReturnValueOnce(d2.promise)
+    const store = makeStore()
+    const root = rootId(store)
+    store.actions.addUri(root, POST_URL)
+    d1.reject(new Error('post deleted'))
+    await flushPromises()
+
+    const failed = store.getState().posts[root].quote
+    if (failed?.state !== 'failed') throw new Error('expected failed')
+    expect(failed.error).toContain('post deleted')
+    expect(typeof failed.retry).toBe('function')
+
+    failed.retry()
+    expect(store.getState().posts[root].quote?.state).toBe('pending')
+
+    d2.resolve(postLink)
+    await flushPromises()
+    expect(store.getState().posts[root].quote?.state).toBe('resolved')
+  })
+})
+
+describe('addUri pre-classifies non-post URLs to the embed slot', () => {
   test('feed → embed.feed', async () => {
     const d = deferred<ResolvedLink>()
     mockResolveLink.mockReturnValueOnce(d.promise)
     const store = makeStore()
     const root = rootId(store)
-    store.actions.addUri(root, 'https://bsky.app/feed')
+    store.actions.addUri(root, EXTERNAL_URL)
+    expect(store.getState().posts[root].embed?.state).toBe('pending')
     d.resolve(feedLink)
     await flushPromises()
     expect(store.getState().posts[root].embed?.state).toBe('feed')
@@ -142,7 +199,7 @@ describe('addUri routes outcomes', () => {
     mockResolveLink.mockReturnValueOnce(d.promise)
     const store = makeStore()
     const root = rootId(store)
-    store.actions.addUri(root, 'https://bsky.app/list')
+    store.actions.addUri(root, EXTERNAL_URL)
     d.resolve(listLink)
     await flushPromises()
     expect(store.getState().posts[root].embed?.state).toBe('list')
@@ -153,7 +210,7 @@ describe('addUri routes outcomes', () => {
     mockResolveLink.mockReturnValueOnce(d.promise)
     const store = makeStore()
     const root = rootId(store)
-    store.actions.addUri(root, 'https://bsky.app/sp')
+    store.actions.addUri(root, EXTERNAL_URL)
     d.resolve(starterPackLink)
     await flushPromises()
     expect(store.getState().posts[root].embed?.state).toBe('starter-pack')
@@ -164,7 +221,7 @@ describe('addUri routes outcomes', () => {
     mockResolveLink.mockReturnValueOnce(d.promise)
     const store = makeStore()
     const root = rootId(store)
-    store.actions.addUri(root, 'https://example.com')
+    store.actions.addUri(root, EXTERNAL_URL)
     d.resolve(externalLink)
     await flushPromises()
     const embed = store.getState().posts[root].embed
@@ -172,55 +229,46 @@ describe('addUri routes outcomes', () => {
     expect(embed.title).toBe('Example')
   })
 
-  test('post outcome dropped when quote is already set', async () => {
+  test('addUri is a no-op when embed has settled (resolved)', async () => {
     const d = deferred<ResolvedLink>()
     mockResolveLink.mockReturnValueOnce(d.promise)
     const store = makeStore()
     const root = rootId(store)
-    store.actions.setQuoteEmbed(root, {uri: 'at://existing', cid: 'cx'})
-    store.actions.addUri(root, 'https://bsky.app/post')
-    d.resolve(postLink)
-    await flushPromises()
-    expect(store.getState().posts[root].quote).toEqual({
-      uri: 'at://existing',
-      cid: 'cx',
-    })
-    expect(store.getState().posts[root].embed).toBeUndefined()
-  })
-
-  test('non-post outcome with media present is silently dropped', async () => {
-    const d = deferred<ResolvedLink>()
-    mockResolveLink.mockReturnValueOnce(d.promise)
-    const store = makeStore()
-    const root = rootId(store)
-    store.actions.addMedia(root, [
-      {kind: 'image', uri: 'file:///a.jpg', width: 10, height: 10},
-    ])
-    store.actions.addUri(root, 'https://example.com')
+    store.actions.addUri(root, EXTERNAL_URL)
     d.resolve(externalLink)
     await flushPromises()
-    expect(store.getState().posts[root].embed).toBeUndefined()
-    expect(store.getState().posts[root].media).toHaveLength(1)
+    expect(store.getState().posts[root].embed?.state).toBe('external')
+
+    store.actions.addUri(root, 'https://other.example')
+    // Settled slot blocks the second addUri.
+    expect(mockResolveLink).toHaveBeenCalledTimes(1)
+    expect(store.getState().posts[root].embed?.state).toBe('external')
   })
 
-  test('post outcome with media present routes to quote', async () => {
-    const d = deferred<ResolvedLink>()
-    mockResolveLink.mockReturnValueOnce(d.promise)
+  test('addUri replaces a pending embed (e.g. user pastes a different URL)', () => {
+    mockResolveLink.mockReturnValue(new Promise(() => {}))
+    const store = makeStore()
+    const root = rootId(store)
+    store.actions.addUri(root, EXTERNAL_URL)
+    store.actions.addUri(root, 'https://other.example')
+    expect(mockResolveLink).toHaveBeenCalledTimes(2)
+    const embed = store.getState().posts[root].embed
+    if (embed?.state !== 'pending') throw new Error('expected pending')
+    expect(embed.uri).toBe('https://other.example')
+  })
+
+  test('addUri is a no-op when media is set (target is embed)', () => {
     const store = makeStore()
     const root = rootId(store)
     store.actions.addMedia(root, [
       {kind: 'image', uri: 'file:///a.jpg', width: 10, height: 10},
     ])
-    store.actions.addUri(root, 'https://bsky.app/post')
-    d.resolve(postLink)
-    await flushPromises()
-    expect(store.getState().posts[root].quote?.uri).toBe('at://post')
-    expect(store.getState().posts[root].media).toHaveLength(1)
+    store.actions.addUri(root, EXTERNAL_URL)
+    expect(store.getState().posts[root].embed).toBeUndefined()
+    expect(mockResolveLink).not.toHaveBeenCalled()
   })
-})
 
-describe('addUri failure and retry', () => {
-  test('rejection produces a failed embed with a bound retry()', async () => {
+  test('embed resolution failure produces embed.failed with bound retry()', async () => {
     const d1 = deferred<ResolvedLink>()
     const d2 = deferred<ResolvedLink>()
     mockResolveLink
@@ -228,7 +276,7 @@ describe('addUri failure and retry', () => {
       .mockReturnValueOnce(d2.promise)
     const store = makeStore()
     const root = rootId(store)
-    store.actions.addUri(root, 'https://example.com')
+    store.actions.addUri(root, EXTERNAL_URL)
     d1.reject(new Error('network down'))
     await flushPromises()
 
@@ -245,34 +293,41 @@ describe('addUri failure and retry', () => {
   })
 })
 
-describe('addUri cancellation', () => {
-  test('a second addUri invalidates the first response', async () => {
-    const d1 = deferred<ResolvedLink>()
-    const d2 = deferred<ResolvedLink>()
-    mockResolveLink
-      .mockReturnValueOnce(d1.promise)
-      .mockReturnValueOnce(d2.promise)
-    const store = makeStore()
-    const root = rootId(store)
-    store.actions.addUri(root, 'https://a.example')
-    store.actions.addUri(root, 'https://b.example')
-    d1.resolve(externalLink)
-    await flushPromises()
-    const pending = store.getState().posts[root].embed
-    if (pending?.state !== 'pending') throw new Error('expected pending')
-    expect(pending.uri).toBe('https://b.example')
-  })
-
+describe('addUri cancellation by ignoring stale responses', () => {
   test('removeEmbed before the response lands keeps embed undefined', async () => {
     const d = deferred<ResolvedLink>()
     mockResolveLink.mockReturnValueOnce(d.promise)
     const store = makeStore()
     const root = rootId(store)
-    store.actions.addUri(root, 'https://example.com')
+    store.actions.addUri(root, EXTERNAL_URL)
     store.actions.removeEmbed(root)
     d.resolve(externalLink)
     await flushPromises()
     expect(store.getState().posts[root].embed).toBeUndefined()
+  })
+
+  test('removeQuoteEmbed before the response lands keeps quote undefined', async () => {
+    const d = deferred<ResolvedLink>()
+    mockResolveLink.mockReturnValueOnce(d.promise)
+    const store = makeStore()
+    const root = rootId(store)
+    store.actions.addUri(root, POST_URL)
+    store.actions.removeQuoteEmbed(root)
+    d.resolve(postLink)
+    await flushPromises()
+    expect(store.getState().posts[root].quote).toBeUndefined()
+  })
+
+  test('removeEmbed does not invalidate an in-flight quote resolution', async () => {
+    const d = deferred<ResolvedLink>()
+    mockResolveLink.mockReturnValueOnce(d.promise)
+    const store = makeStore()
+    const root = rootId(store)
+    store.actions.addUri(root, POST_URL)
+    store.actions.removeEmbed(root) // unrelated slot
+    d.resolve(postLink)
+    await flushPromises()
+    expect(store.getState().posts[root].quote?.state).toBe('resolved')
   })
 })
 
@@ -281,10 +336,10 @@ describe('setQuoteEmbed / removeQuoteEmbed', () => {
     const store = makeStore()
     const root = rootId(store)
     store.actions.setQuoteEmbed(root, {uri: 'at://x', cid: 'c'})
-    expect(store.getState().posts[root].quote).toEqual({
-      uri: 'at://x',
-      cid: 'c',
-    })
+    const quote = store.getState().posts[root].quote
+    if (quote?.state !== 'resolved') throw new Error('expected resolved')
+    expect(quote.uri).toBe('at://x')
+    expect(quote.cid).toBe('c')
     expect(store.getState().isDirty).toBe(true)
   })
 
