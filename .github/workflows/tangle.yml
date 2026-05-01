@@ -37,6 +37,10 @@ jobs:
           # the destination instead of as proper branches. Materialize them
           # under refs/heads/* first so the mirror push lands them as real
           # branches that forge can render.
+          #
+          # Detach HEAD before fetching so the fetch can overwrite
+          # refs/heads/<currently-checked-out-branch> without git refusing.
+          git -c advice.detachedHead=false checkout --detach
           git fetch origin '+refs/heads/*:refs/heads/*' '+refs/tags/*:refs/tags/*'
           git remote add tangled git@knot.blacksky.community:blackskyweb.xyz/blacksky.community
           git push --mirror tangled
