@@ -92,7 +92,42 @@ export type ThreadPost = {
   media: PostEmbedMedia[]
   external: PostEmbedExternal | undefined
   quote: PostEmbedQuote | undefined
+  /**
+   * Derived from `media`. How many more items of each kind addMedia would
+   * accept on this post given the current state. Kept in sync by the store
+   * whenever `media` is mutated; UI can read these directly to gate pickers.
+   */
+  imageSelectionsRemaining: number
+  videoSelectionsRemaining: number
+  gifSelectionsRemaining: number
 }
+
+/**
+ * Input shape for addMedia. Each entry carries its own kind discriminator
+ * plus the kind-specific source fields. The store generates ids and
+ * postIds; callers don't deal with either.
+ */
+export type AddMediaInput =
+  | {
+      kind: 'image'
+      uri: string
+      width: number
+      height: number
+      altText?: string
+    }
+  | {
+      kind: 'video'
+      uri: string
+      width: number
+      height: number
+      mimeType: string
+      altText?: string
+    }
+  | {
+      kind: 'gif'
+      gif: Gif
+      altText?: string
+    }
 
 export type ThreadReplyTo = {
   uri: string
