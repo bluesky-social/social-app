@@ -1,0 +1,19 @@
+name: Mirror to forge.blacksky.community
+
+on:
+  push: {}
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  tangle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: gwennlbh/to-tangled@6867d16fd934f3fe27df0a540dbd6375ea88b31c # v0.5
+        with:
+          repo: blackskyweb.xyz/blacksky.community
+          knot: knot.blacksky.community
+          ssh-key: ${{ secrets.TANGLED_KEY }}
