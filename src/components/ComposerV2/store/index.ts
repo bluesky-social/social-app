@@ -136,6 +136,11 @@ export function createThreadStore(options: {
     if (!(postId in state.posts)) return undefined
     if (inputs.length === 0) return []
 
+    // External link cards are mutually exclusive with media. This rule is
+    // permanent (unlike the kind/cap rules in filterMediaInputs) so it lives
+    // here at the action boundary rather than inside the filter helper.
+    if (state.posts[postId].external !== undefined) return []
+
     const accepted = filterMediaInputs(state.posts[postId].media, inputs)
     if (accepted.length === 0) return []
 
@@ -253,9 +258,51 @@ export function createThreadStore(options: {
     )
   }
 
+  function setExternalEmbed(postId: string, external: types.PostEmbedExternal) {
+    mutateState(s => {
+      const post = s.posts[postId]
+      if (!post) return null
+      s.posts[postId] = setPostExternal(post, external)
+      s.isDirty = true
+      return s
+    })
+  }
+
+  function removeExternalEmbed(postId: string) {
+    mutateState(s => {
+      const post = s.posts[postId]
+      if (!post) return null
+      if (post.external === undefined) return null
+      s.posts[postId] = setPostExternal(post, undefined)
+      s.isDirty = true
+      return s
+    })
+  }
+
+  function setQuoteEmbed(postId: string, quote: types.PostEmbedQuote) {
+    mutateState(s => {
+      const post = s.posts[postId]
+      if (!post) return null
+      s.posts[postId] = {...post, quote}
+      s.isDirty = true
+      return s
+    })
+  }
+
+  function removeQuoteEmbed(postId: string) {
+    mutateState(s => {
+      const post = s.posts[postId]
+      if (!post) return null
+      if (post.quote === undefined) return null
+      s.posts[postId] = {...post, quote: undefined}
+      s.isDirty = true
+      return s
+    })
+  }
+
   /**
    * Public so the simulated upload worker can push progress in. Real callers
-   * should not invoke this directly; use queueImageUpload / retryImageUpload.
+   * should not invoke this directly; use addMedia / retryMediaUpload.
    *
    * Failed inputs are wrapped here with a `retry()` method bound to this
    * (postId, mediaId) so consumers reading the status from state can retry
@@ -299,14 +346,34 @@ export function createThreadStore(options: {
   }
 
   /**
-   * The single chokepoint for replacing a post's media array. Recomputes the
+   * Single chokepoint for replacing a post's media array. Recomputes the
    * derived selectionsRemaining flags so they never drift from the array.
    */
   function setPostMedia(
     post: types.ThreadPost,
     media: types.PostEmbedMedia[],
   ): types.ThreadPost {
-    return {...post, media, ...computePostMediaSelectionsRemaining(media)}
+    return {
+      ...post,
+      media,
+      ...computePostMediaSelectionsRemaining(media, post.external),
+    }
+  }
+
+  /**
+   * Single chokepoint for replacing a post's external link card. Mirrors
+   * setPostMedia so the selectionsRemaining flags stay consistent (an
+   * external link blocks all media selections).
+   */
+  function setPostExternal(
+    post: types.ThreadPost,
+    external: types.PostEmbedExternal | undefined,
+  ): types.ThreadPost {
+    return {
+      ...post,
+      external,
+      ...computePostMediaSelectionsRemaining(post.media, external),
+    }
   }
 
   return {
@@ -320,6 +387,10 @@ export function createThreadStore(options: {
       removeMedia,
       updateMediaAltText,
       retryMediaUpload,
+      setExternalEmbed,
+      removeExternalEmbed,
+      setQuoteEmbed,
+      removeQuoteEmbed,
       setUploadStatus,
     },
     destroy() {

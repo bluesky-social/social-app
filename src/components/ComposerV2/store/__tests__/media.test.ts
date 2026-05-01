@@ -246,6 +246,16 @@ describe('addMedia respects existing media on the post', () => {
     expect(ids).toEqual([])
     expect(store.getState()).toBe(before)
   })
+
+  test('is a no-op when the post has an external link card', () => {
+    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const root = rootId(store)
+    store.actions.setExternalEmbed(root, {uri: 'https://example.com'})
+    const before = store.getState()
+    const ids = store.actions.addMedia(root, [imageInput])
+    expect(ids).toEqual([])
+    expect(store.getState()).toBe(before)
+  })
 })
 
 describe('selectionsRemaining flags on the post', () => {
@@ -297,6 +307,27 @@ describe('selectionsRemaining flags on the post', () => {
     const [imgId] = store.actions.addMedia(root, [imageInput])!
     expect(store.getState().posts[root].imageSelectionsRemaining).toBe(3)
     store.actions.removeMedia(root, imgId)
+    const post = store.getState().posts[root]
+    expect(post.imageSelectionsRemaining).toBe(4)
+    expect(post.videoSelectionsRemaining).toBe(1)
+    expect(post.gifSelectionsRemaining).toBe(1)
+  })
+
+  test('an external link card locks all three counters to 0', () => {
+    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const root = rootId(store)
+    store.actions.setExternalEmbed(root, {uri: 'https://example.com'})
+    const post = store.getState().posts[root]
+    expect(post.imageSelectionsRemaining).toBe(0)
+    expect(post.videoSelectionsRemaining).toBe(0)
+    expect(post.gifSelectionsRemaining).toBe(0)
+  })
+
+  test('removing the external link card restores capacity', () => {
+    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const root = rootId(store)
+    store.actions.setExternalEmbed(root, {uri: 'https://example.com'})
+    store.actions.removeExternalEmbed(root)
     const post = store.getState().posts[root]
     expect(post.imageSelectionsRemaining).toBe(4)
     expect(post.videoSelectionsRemaining).toBe(1)

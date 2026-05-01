@@ -1,4 +1,4 @@
-import {type AppBskyFeedDefs, type BlobRef} from '@atproto/api'
+import {type BlobRef} from '@atproto/api'
 
 import {type Gif} from '#/state/queries/tenor'
 
@@ -128,13 +128,6 @@ export type AddMediaInput =
       gif: Gif
       altText?: string
     }
-
-export type ThreadReplyTo = {
-  uri: string
-  cid: string
-  authorDid: string
-  view?: AppBskyFeedDefs.PostView
-}
 
 export type ThreadState = {
   /**
