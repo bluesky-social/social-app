@@ -12,12 +12,61 @@
  * lets tests inject a controllable promise.
  */
 import {
+  type AppBskyFeedDefs,
+  type AppBskyGraphDefs,
+  type ComAtprotoRepoStrongRef,
+} from '@atproto/api'
+
+import {
   type ResolvedLink,
   type resolveLink as defaultResolveLink,
 } from '#/lib/api/resolve'
 import {resolveLink as importedResolveLink} from '#/lib/api/resolve'
+import {type ComposerImage} from '#/state/gallery'
 import {createPublicAgent} from '#/state/session/agent'
-import {type LinkResolutionOutcome} from './types'
+
+/**
+ * What the worker (or a test) reports back about a resolved URI. `pending`
+ * is not part of this type because the worker only emits terminal outcomes;
+ * the synchronous pending state is set by the store itself before the
+ * worker runs.
+ */
+export type EmbedResolution =
+  | {state: 'failed'; uri: string; error: string}
+  | {
+      state: 'external'
+      uri: string
+      title: string
+      description: string
+      thumb: ComposerImage | undefined
+    }
+  | {
+      state: 'feed'
+      record: ComAtprotoRepoStrongRef.Main
+      view: AppBskyFeedDefs.GeneratorView
+    }
+  | {
+      state: 'list'
+      record: ComAtprotoRepoStrongRef.Main
+      view: AppBskyGraphDefs.ListView
+    }
+  | {
+      state: 'starter-pack'
+      record: ComAtprotoRepoStrongRef.Main
+      view: AppBskyGraphDefs.StarterPackView
+    }
+
+/**
+ * Worker output for a single URI. The store routes `kind: 'post'` to the
+ * post's `quote` field and everything else to the `embed` field.
+ */
+export type LinkResolutionOutcome =
+  | {
+      kind: 'post'
+      record: ComAtprotoRepoStrongRef.Main
+      view: AppBskyFeedDefs.PostView
+    }
+  | {kind: 'embed'; embed: EmbedResolution}
 
 export type StartUriResolutionOptions = {
   postId: string
