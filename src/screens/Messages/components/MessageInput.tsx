@@ -85,7 +85,6 @@ export function MessageInput({
       return
     }
     clearDraft()
-    void onSendMessage(message)
     playHaptic()
     setEmbed(undefined)
     setMessage('')
@@ -99,6 +98,10 @@ export function MessageInput({
         inputRef.current?.focus()
       }, 100)
     }
+
+    requestAnimationFrame(() => {
+      void onSendMessage(message)
+    })
   }, [
     needsEmailVerification,
     hasEmbed,

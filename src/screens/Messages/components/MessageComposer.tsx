@@ -90,7 +90,6 @@ export function MessageComposer({
     }
 
     clearDraft()
-    onSendMessage(message)
     playHaptic()
     setEmbed(undefined)
     composerInternalApiRef.current?.clear()
@@ -98,6 +97,11 @@ export function MessageComposer({
     if (IS_WEB) {
       composerInternalApiRef.current?.input?.focus()
     }
+
+    // defer send by a frame so that the textinput resizes before we send the message
+    requestAnimationFrame(() => {
+      onSendMessage(message)
+    })
   }
 
   const isFlushingAutocorrectSuggestion = useRef(false)
@@ -290,7 +294,7 @@ export function ComposerContainer({children}: {children: React.ReactNode}) {
     paddingHorizontal: interpolate(
       progress.get(),
       [0, 1],
-      [bottomInset, tokens.space.sm],
+      [bottomInset, tokens.space.md],
       {
         extrapolateRight: Extrapolation.CLAMP,
         extrapolateLeft: Extrapolation.CLAMP,
