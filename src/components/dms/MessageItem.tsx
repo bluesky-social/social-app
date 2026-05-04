@@ -269,6 +269,10 @@ let MessageItem = ({
 
   const reactions = useMemo(() => message.reactions ?? [], [message.reactions])
 
+  const hasSelfReacted = reactions.some(
+    r => r.sender.did === currentAccount?.did,
+  )
+
   const reactionsLabel = useMemo(() => {
     if (reactions.length === 0) return ''
     if (reactions.length === 1) {
@@ -322,7 +326,11 @@ let MessageItem = ({
               a.rounded_lg,
               a.border,
               t.atoms.border_contrast_low,
-              t.atoms.bg_contrast_25,
+              hasSelfReacted
+                ? {
+                    backgroundColor: t.palette.primary_100,
+                  }
+                : t.atoms.bg_contrast_25,
               t.atoms.shadow_sm,
               {
                 paddingTop: platform({android: 2, default: 3}),
@@ -368,7 +376,11 @@ let MessageItem = ({
                 <Text
                   style={[
                     a.text_xs,
-                    t.atoms.text_contrast_medium,
+                    hasSelfReacted
+                      ? {
+                          color: t.palette.primary_900,
+                        }
+                      : t.atoms.text_contrast_high,
                     {textAlignVertical: 'center', includeFontPadding: false},
                   ]}>
                   {reactions.length}
