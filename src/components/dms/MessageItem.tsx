@@ -162,12 +162,16 @@ let MessageItem = ({
   const hasReactions = message.reactions && message.reactions.length > 0
   const prevHasReactions =
     prevIsMessage && prevMessage.reactions && prevMessage.reactions.length > 0
+  const isNextEmojiOnly = nextIsMessage && isOnlyEmoji(nextMessage.text)
+  const isPrevEmojiOnly = prevIsMessage && isOnlyEmoji(prevMessage.text)
   const squaredBottomCorner =
     !hasReactions &&
+    !isNextEmojiOnly &&
     isInCluster &&
     (isInMiddleOfCluster || effectiveFirstInCluster)
   const squaredTopCorner =
     !prevHasReactions &&
+    !isPrevEmojiOnly &&
     isInCluster &&
     (isInMiddleOfCluster || effectiveLastInCluster)
 
