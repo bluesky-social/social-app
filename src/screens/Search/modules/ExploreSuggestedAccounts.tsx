@@ -105,7 +105,7 @@ let SuggestedProfileCard = ({
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
-  recId?: number
+  recId?: string
   position: number
 }): React.ReactNode => {
   const t = useTheme()

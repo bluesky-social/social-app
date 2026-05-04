@@ -1,7 +1,8 @@
 import {
-  ChatBskyConvoDefs,
+  type ChatBskyActorDefs,
+  type ChatBskyConvoDefs,
   type ChatBskyConvoListConvos,
-  type ChatBskyGroupEditGroup,
+  type ChatBskyGroupRemoveMembers,
 } from '@atproto/api'
 import {
   type InfiniteData,
@@ -14,14 +15,15 @@ import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
 import {RQKEY as CONVO_KEY} from './conversation'
 import {RQKEY_ROOT as CONVO_LIST_KEY} from './list-conversations'
+import {listConvoMembersQueryKey} from './list-convo-members'
 
-export function useEditGroupName(
+export function useRemoveFromGroupChat(
   convoId: string | undefined,
   {
     onSuccess,
     onError,
   }: {
-    onSuccess?: (data: ChatBskyGroupEditGroup.OutputSchema) => void
+    onSuccess?: (data: ChatBskyGroupRemoveMembers.OutputSchema) => void
     onError?: (error: Error) => void
   },
 ) {
@@ -29,15 +31,15 @@ export function useEditGroupName(
   const agent = useAgent()
 
   return useMutation({
-    mutationFn: async ({name: groupName}: {name: string}) => {
+    mutationFn: async ({members}: {members: string[]}) => {
       if (!convoId) throw new Error('No convoId provided')
-      const {data} = await agent.chat.bsky.group.editGroup(
-        {convoId, name: groupName},
+      const {data} = await agent.chat.bsky.group.removeMembers(
+        {convoId, members},
         {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
       )
       return data
     },
-    onMutate: ({name: groupName}) => {
+    onMutate: ({members}) => {
       if (!convoId) return
 
       const prevConvo = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(
@@ -46,24 +48,21 @@ export function useEditGroupName(
       const prevListEntries = queryClient.getQueriesData<
         InfiniteData<ChatBskyConvoListConvos.OutputSchema>
       >({queryKey: [CONVO_LIST_KEY]})
+      const prevMemberList = queryClient.getQueryData<
+        ChatBskyActorDefs.ProfileViewBasic[]
+      >(listConvoMembersQueryKey(convoId))
 
-      // Update for a single chat thread
       queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(
         CONVO_KEY(convoId),
         prev => {
           if (!prev) return
-          if (!ChatBskyConvoDefs.isGroupConvo(prev.kind)) return prev
           return {
             ...prev,
-            kind: {
-              ...prev.kind,
-              name: groupName,
-            },
+            members: prev.members.filter(m => !members.includes(m.did)),
           }
         },
       )
 
-      // Update for the chat list
       queryClient.setQueriesData<
         InfiniteData<ChatBskyConvoListConvos.OutputSchema>
       >({queryKey: [CONVO_LIST_KEY]}, prev => {
@@ -74,20 +73,24 @@ export function useEditGroupName(
             ...page,
             convos: page.convos.map(convo => {
               if (convo.id !== convoId) return convo
-              if (!ChatBskyConvoDefs.isGroupConvo(convo.kind)) return convo
               return {
                 ...convo,
-                kind: {
-                  ...convo.kind,
-                  name: groupName,
-                },
+                members: convo.members.filter(m => !members.includes(m.did)),
               }
             }),
           })),
         }
       })
 
-      return {prevConvo, prevListEntries}
+      queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
+        listConvoMembersQueryKey(convoId),
+        prev => {
+          if (!prev) return
+          return prev.filter(m => !members.includes(m.did))
+        },
+      )
+
+      return {prevConvo, prevListEntries, prevMemberList}
     },
     onSuccess: data => {
       onSuccess?.(data)
@@ -101,6 +104,12 @@ export function useEditGroupName(
         for (const [key, data] of context.prevListEntries) {
           queryClient.setQueryData(key, data)
         }
+      }
+      if (context?.prevMemberList && convoId) {
+        queryClient.setQueryData(
+          listConvoMembersQueryKey(convoId),
+          context.prevMemberList,
+        )
       }
       onError?.(e)
     },

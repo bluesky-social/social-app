@@ -1,4 +1,4 @@
-# CLAUDE.md - Bluesky Social App Development Guide
+# CLAUDE.md – Bluesky Social App Development Guide
 
 This document provides guidance for working effectively in the Bluesky Social app codebase.
 
@@ -7,12 +7,16 @@ This document provides guidance for working effectively in the Bluesky Social ap
 Bluesky Social is a cross-platform social media application built with React Native and Expo. It runs on iOS, Android, and Web, connecting to the AT Protocol (atproto) decentralized social network.
 
 **Tech Stack:**
+
+- React 19.1
 - React Native 0.81 with Expo 54
-- TypeScript
-- React Navigation for routing
+- TypeScript 6
+- React Navigation 7 for routing
 - TanStack Query (React Query) for data fetching
-- Lingui for internationalization
+- Lingui 5 for internationalization
 - Custom design system called ALF (Application Layout Framework)
+
+Prefer using the latest features available for each of these libraries (exact versions are found in `package.json`). For example, prefer `@lingui/react/macro` over `@lingui/react`. Suggest refactoring legacy or deprecated uses.
 
 ## Essential Commands
 
@@ -162,6 +166,10 @@ its own looks more like a single component file.
 
 ### Documentation and Tests Within Features
 
+Comment code when necessary to explain the “why” behind something; avoid
+comments that simply describe the code. Avoid Unicode characters in comments,
+e.g., use `-` not `—`.
+
 For larger features or components, it's helpful to include a README.md file
 within the directory that explains the purpose of the feature, how it works, and
 any important implementation details. The `/Component/index.tsx` pattern lends
@@ -182,6 +190,14 @@ ALF is the custom design system. It uses Tailwind-inspired naming with underscor
 
 ### Basic Usage
 
+Generally, order atoms by:
+
+- Flexbox configuration, e.g., `a.flex_row`
+- Spacing, e.g., `a.px_md`
+- Text styles, e.g., `a.font_bold`
+- Themes, e.g., `t.atoms.text`,
+- Raw styles, e.g., `{backgroundColor: t.palette.primary_500}`
+
 ```tsx
 import {atoms as a, useTheme} from '#/alf'
 
@@ -190,9 +206,7 @@ function MyComponent() {
 
   return (
     <View style={[a.flex_row, a.gap_md, a.p_lg, t.atoms.bg]}>
-      <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-        Hello
-      </Text>
+      <Text style={[a.text_md, a.font_bold, t.atoms.text]}>Hello</Text>
     </View>
   )
 }
@@ -200,20 +214,23 @@ function MyComponent() {
 
 ### Key Concepts
 
-**Static Atoms** - Theme-independent styles imported from `atoms`:
+**Static Atoms** – Theme-independent styles imported from `atoms`:
+
 ```tsx
 import {atoms as a} from '#/alf'
 // a.flex_row, a.p_md, a.gap_sm, a.rounded_md, a.text_lg, etc.
 ```
 
-**Theme Atoms** - Theme-dependent colors from `useTheme()`:
+**Theme Atoms** – Theme-dependent colors from `useTheme()`:
+
 ```tsx
 const t = useTheme()
 // t.atoms.bg, t.atoms.text, t.atoms.border_contrast_low, etc.
 // t.palette.primary_500, t.palette.negative_400, etc.
 ```
 
-**Platform Utilities** - For platform-specific styles:
+**Platform Utilities** – For platform-specific styles:
+
 ```tsx
 import {web, native, ios, android, platform} from '#/alf'
 
@@ -225,7 +242,8 @@ const styles = [
 ]
 ```
 
-**Breakpoints** - Responsive design:
+**Breakpoints** – Responsive design:
+
 ```tsx
 import {useBreakpoints} from '#/alf'
 
@@ -245,6 +263,38 @@ if (gtMobile) {
 
 ## Component Patterns
 
+- Prefer fragment shorthand over `Fragment` unless a `key` is needed.
+- Prefer functions over arrow functions for component declarations.
+- Prefer prop destructuring via parameters over a const within the component.
+- Prefer inline types over `Props` types or interfaces.
+- Set reasonable defaults for optional props.
+
+```tsx
+import {Fragment} from 'react'
+import {View} from 'react-native'
+import {Trans, useLingui} from '@lingui/react/macro'
+
+import {Text} from '#/components/Typography'
+
+function MyComponent({foo = []}: {foo?: string[]}) {
+  const {t: l} = useLingui()
+
+  return (
+    <>
+      <View><Text><Trans>Example</Trans><Text></View>
+      <View>
+        {foo.map((foo, index) => (
+          <Fragment key={foo}>
+            <Text>{index}</Text>
+            <Text>{foo}</Text>
+          </Fragment>
+        ))}
+      </View>
+    </>
+  );
+}
+```
+
 ### Dialog Component
 
 Dialogs use a bottom sheet on native and a modal on web. Use `useDialogControl()` hook to manage state.
@@ -263,20 +313,26 @@ function MyFeature() {
 
       <Dialog.Outer control={control}>
         {/* Typically the inner part is in its own component */}
-        <Dialog.Handle />  {/* Native-only drag handle */}
-        <Dialog.ScrollableInner label={_(msg`My Dialog`)}>
-          <Dialog.Header>
-            <Dialog.HeaderText>Title</Dialog.HeaderText>
-          </Dialog.Header>
-
-          <Text>Dialog content here</Text>
-
-          <Button label="Done" onPress={() => control.close()}>
-            <ButtonText>Done</ButtonText>
-          </Button>
-          <Dialog.Close /> {/* Web-only X button in top left */}
-        </Dialog.ScrollableInner>
+        <DialogInner />
       </Dialog.Outer>
+    </>
+  )
+}
+
+function DialogInner() {
+  return (
+    <>
+      <Dialog.Handle /> {/* Native-only drag handle */}
+      <Dialog.ScrollableInner label={l`My Dialog`}>
+        <Dialog.Header>
+          <Dialog.HeaderText>Title</Dialog.HeaderText>
+        </Dialog.Header>
+        <Text>Dialog content here</Text>
+        <Button label="Done" onPress={() => control.close()}>
+          <ButtonText>Done</ButtonText>
+        </Button>
+        <Dialog.Close /> {/* Web-only X button in top left */}
+      </Dialog.ScrollableInner>
     </>
   )
 }
@@ -345,6 +401,7 @@ import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 ```
 
 **Button Props:**
+
 - `color`: `'primary'` | `'secondary'` | `'negative'` | `'primary_subtle'` | `'negative_subtle'` | `'secondary_inverted'`
 - `size`: `'tiny'` | `'small'` | `'large'`
 - `shape`: `'default'` (pill) | `'round'` | `'square'` | `'rectangular'`
@@ -384,39 +441,66 @@ import * as TextField from '#/components/forms/TextField'
 
 ## Internationalization (i18n)
 
-All user-facing strings must be wrapped for translation using Lingui.
+All user-facing strings must be wrapped for translation using Lingui. Include `comment` and/or `context` props when necessary to avoid ambiguity, e.g., “Post” as a noun vs a verb.
+
+Prefer using `t` via `import {useLingui} '@lingui/react/macro'` vs `_` via `import {useLingui} from '@lingui/react'`. Alias `t` to `l` to avoid collisions with `const t = useTheme()`. Refactor existing uses of ``_(msg`foo`)`` to use `` l`foo` ``.
+
+Prefer Unicode punctuation over keyboard punctuation, e.g., `“quote”` over `"quote"`. Prefer en dashes preceded by a non-breaking space over em dashes, e.g., `one – two` over `one—two`.
 
 ```tsx
-import {msg, plural} from '@lingui/core/macro'
-import {Trans} from '@lingui/react/macro'
-import {useLingui} from '@lingui/react'
+import {plural} from '@lingui/core/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 function MyComponent() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
-  // Simple strings - use msg() with _() function
-  const title = _(msg`Settings`)
-  const errorMessage = _(msg`Something went wrong`)
+  // Simple strings - use the l macro
+  const title = l`Settings`
+  const errorMessage = l({
+    message: 'Something went wrong',
+    comment: 'Generic error message for unknown/unhandled errors.',
+    context: 'Toast',
+  })
 
   // Strings with variables
-  const greeting = _(msg`Hello, ${name}!`)
+  const greeting = l`Hello, ${name}!`
 
   // Pluralization
-  const countLabel = _(plural(count, {
+  const countLabel = plural(count, {
     one: '# item',
     other: '# items',
-  }))
+  })
 
   // JSX content - use Trans component
   return (
     <Text>
-      <Trans>Welcome to <Text style={a.font_bold}>Bluesky</Text></Trans>
+      <Trans>
+        Welcome to <Text style={a.font_bold}>Bluesky</Text>, {name}!
+      </Trans>
     </Text>
   )
 }
 ```
 
+Prefer `i18n.date` for date and time formatting. This ensures formatting is re-applied when the language changes at runtime. Refactor existing uses of `Intl.DateTimeFormat` to use `i18n.date`.
+
+```tsx
+import {useLingui} from '@lingui/react/macro'
+
+function MyComponent() {
+  const {i18n} = useLingui()
+
+  const createdAt = new Date()
+
+  return i18n.date(createdAt, {
+    dateStyle: 'medium',
+    timeStyle: 'medium',
+  })
+}
+```
+
 **Commands:**
+
 ```bash
 # DO NOT run these commands - extraction and compilation are handled by a nightly CI job
 yarn intl:extract    # Extract new strings to locale files
@@ -473,7 +557,7 @@ export function useProfileMutation() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (data) => {
+    mutationFn: async data => {
       // Update logic
     },
     onSuccess: (_, variables) => {
@@ -481,7 +565,7 @@ export function useProfileMutation() {
         queryKey: createProfileQueryKey({did: variables.did}),
       })
     },
-    onError: (error) => {
+    onError: error => {
       if (isNetworkError(error)) {
         // don't log, but inform user
       } else if (error instanceof AppBskyExampleProcedure.ExampleError) {
@@ -490,7 +574,7 @@ export function useProfileMutation() {
         // Log unexpected errors to Sentry
         logger.error('Error updating profile', {safeMessage: error})
       }
-    }
+    },
   })
 }
 
@@ -505,21 +589,25 @@ export function useProfileCacheMutation() {
   const queryClient = useQueryClient()
 
   return (data: Partial<Profile>) => {
-    queryClient.setQueryData(createProfileQueryKey({did: data.did}), oldData => {
-      if (!oldData) return oldData
-      return {...oldData, ...data}
-    })
+    queryClient.setQueryData(
+      createProfileQueryKey({did: data.did}),
+      oldData => {
+        if (!oldData) return oldData
+        return {...oldData, ...data}
+      },
+    )
   }
 }
 ```
 
 **Stale Time Constants** (from `src/state/queries/index.ts`):
+
 ```tsx
-STALE.SECONDS.FIFTEEN  // 15 seconds
-STALE.MINUTES.ONE      // 1 minute
-STALE.MINUTES.FIVE     // 5 minutes
-STALE.HOURS.ONE        // 1 hour
-STALE.INFINITY         // Never stale
+STALE.SECONDS.FIFTEEN // 15 seconds
+STALE.MINUTES.ONE // 1 minute
+STALE.MINUTES.FIVE // 5 minutes
+STALE.HOURS.ONE // 1 hour
+STALE.INFINITY // Never stale
 ```
 
 **Paginated APIs:** Many atproto APIs return paginated results with a `cursor`. Use `useInfiniteQuery` for these:
@@ -565,12 +653,7 @@ function SettingsScreen() {
   const autoplayDisabled = useAutoplayDisabled()
   const setAutoplayDisabled = useSetAutoplayDisabled()
 
-  return (
-    <Toggle
-      value={autoplayDisabled}
-      onValueChange={setAutoplayDisabled}
-    />
-  )
+  return <Toggle value={autoplayDisabled} onValueChange={setAutoplayDisabled} />
 }
 ```
 
@@ -604,13 +687,9 @@ import {type CommonNavigatorParams} from '#/lib/routes/types'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 
 export function ProfileScreen({route, navigation}: Props) {
-  const {name} = route.params  // Type-safe params
+  const {name} = route.params // Type-safe params
 
-  return (
-    <Layout.Screen>
-      {/* Screen content */}
-    </Layout.Screen>
-  )
+  return <Layout.Screen>{/* Screen content */}</Layout.Screen>
 }
 
 // Programmatic navigation
@@ -637,8 +716,9 @@ Component.android.tsx  # Android-only
 ```
 
 Example from Dialog:
-- `src/components/Dialog/index.tsx` - Native (uses BottomSheet)
-- `src/components/Dialog/index.web.tsx` - Web (uses modal with Radix primitives)
+
+- `src/components/Dialog/index.tsx` – Native (uses BottomSheet)
+- `src/components/Dialog/index.web.tsx` – Web (uses modal with Radix primitives)
 
 **Important:** The bundler automatically resolves platform-specific files. Just import normally:
 
@@ -653,6 +733,7 @@ const storage = IS_NATIVE
 ```
 
 Platform detection (for runtime logic, not imports):
+
 ```tsx
 import {IS_WEB, IS_NATIVE, IS_IOS, IS_ANDROID} from '#/env'
 
@@ -687,13 +768,13 @@ Common pitfalls to avoid in this codebase:
 // WRONG - causes bugs with state updates, navigation, opening other dialogs
 const onConfirm = () => {
   control.close()
-  navigation.navigate('Home')  // May race with dialog animation
+  navigation.navigate('Home') // May race with dialog animation
 }
 
 // WRONG - same problem
 const onConfirm = () => {
   control.close()
-  otherDialogControl.open()  // Will likely fail or cause visual glitches
+  otherDialogControl.open() // Will likely fail or cause visual glitches
 }
 
 // CORRECT - action runs after dialog fully closes
@@ -720,12 +801,13 @@ const onConfirm = () => {
 ```
 
 This applies to:
+
 - Navigation (`navigation.navigate()`, `navigation.push()`)
 - Opening other dialogs or menus
 - State updates that affect UI (`setState`, `queryClient.invalidateQueries`)
 - Callbacks passed from parent components
 
-The Menu component on iOS specifically uses this pattern - see `src/components/Menu/index.tsx:151`.
+The Menu component on iOS specifically uses this pattern – see `src/components/Menu/index.tsx:151`.
 
 ### Controlled vs Uncontrolled Inputs
 
@@ -748,10 +830,11 @@ Prefer `defaultValue` over `value` for TextInput on the old architecture:
 ### Platform-Specific Behavior
 
 Some components behave differently across platforms:
-- `Dialog.Handle` - Only renders on native (drag handle for bottom sheet)
-- `Dialog.Close` - Only renders on web (X button)
-- `Menu.Divider` - Only renders on web
-- `Menu.ContainerItem` - Only works on native
+
+- `Dialog.Handle` – Only renders on native (drag handle for bottom sheet)
+- `Dialog.Close` – Only renders on web (X button)
+- `Menu.Divider` – Only renders on web
+- `Menu.ContainerItem` – Only works on native
 
 Always test on multiple platforms when using these components.
 
@@ -772,6 +855,7 @@ const handlePress = () => {
 ```
 
 Only use `useMemo`/`useCallback` when you have a specific reason, such as:
+
 - The value is immediately used in an effect's dependency array
 - You're passing a callback to a non-React library that needs referential stability
 
@@ -779,7 +863,7 @@ Only use `useMemo`/`useCallback` when you have a specific reason, such as:
 
 1. **Accessibility**: Always provide `label` prop for interactive elements, use `accessibilityHint` where helpful
 
-2. **Translations**: Wrap ALL user-facing strings with `msg()` or `<Trans>`
+2. **Translations**: Wrap ALL user-facing strings with ` `l` `` or `<Trans>`
 
 3. **Styling**: Combine static atoms with theme atoms, use platform utilities for platform-specific styles
 
@@ -793,14 +877,14 @@ Only use `useMemo`/`useCallback` when you have a specific reason, such as:
 
 ## Key Files Reference
 
-| Purpose | Location |
-|---------|----------|
-| Theme definitions | `src/alf/themes.ts` |
-| Design tokens | `src/alf/tokens.ts` |
-| Static atoms | `src/alf/atoms.ts` (extends `@bsky.app/alf`) |
-| Navigation config | `src/Navigation.tsx` |
-| Route definitions | `src/routes.ts` |
-| Route types | `src/lib/routes/types.ts` |
-| Query hooks | `src/state/queries/*.ts` |
-| Session state | `src/state/session/index.tsx` |
-| i18n setup | `src/locale/i18n.ts` |
+| Purpose           | Location                                     |
+| ----------------- | -------------------------------------------- |
+| Theme definitions | `src/alf/themes.ts`                          |
+| Design tokens     | `src/alf/tokens.ts`                          |
+| Static atoms      | `src/alf/atoms.ts` (extends `@bsky.app/alf`) |
+| Navigation config | `src/Navigation.tsx`                         |
+| Route definitions | `src/routes.ts`                              |
+| Route types       | `src/lib/routes/types.ts`                    |
+| Query hooks       | `src/state/queries/*.ts`                     |
+| Session state     | `src/state/session/index.tsx`                |
+| i18n setup        | `src/locale/i18n.ts`                         |

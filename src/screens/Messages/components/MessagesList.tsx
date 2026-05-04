@@ -58,6 +58,7 @@ import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {DateDividerToggleProvider} from '#/components/dms/DateDividerToggle'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
+import {SystemMessageItem} from '#/components/dms/SystemMessageItem'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -249,10 +250,8 @@ export function MessagesList({
   )
 
   const onStartReached = useCallback(() => {
-    if (hasScrolled && prevContentHeight.current > layoutHeight.get()) {
-      void convoState.fetchMessageHistory()
-    }
-  }, [convoState, hasScrolled, layoutHeight])
+    void convoState.fetchMessageHistory()
+  }, [convoState])
 
   const onScroll = useCallback(
     (e: ScrollEvent) => {
@@ -375,14 +374,13 @@ export function MessagesList({
       return (
         <MessageItem
           item={item}
-          profile={convoState.convo.members.find(
-            member => member.did === item.message.sender.did,
-          )}
-          isGroupChat={convoState.isGroup()}
+          isGroupChat={convoState.convo.kind === 'group'}
         />
       )
     } else if (item.type === 'deleted-message') {
       return <Text>Deleted message</Text>
+    } else if (item.type === 'system-message') {
+      return <SystemMessageItem item={item} />
     } else if (item.type === 'error') {
       return <MessageListError item={item} />
     }
@@ -445,8 +443,9 @@ export function MessagesList({
             ListHeaderComponent={
               <>
                 <MaybeLoader isLoading={convoState.isFetchingHistory} />
-                {convoState.isGroup() && convoState.hasAllHistory ? (
-                  <MessagesListInfoPanel convoState={convoState} />
+                {convoState.convo?.kind === 'group' &&
+                convoState.hasAllHistory ? (
+                  <MessagesListInfoPanel convo={convoState.convo} />
                 ) : null}
               </>
             }
@@ -574,7 +573,7 @@ function getFooterState(
     }
   }
 
-  if (convoState.convo.status === 'request' && !hasAcceptOverride) {
+  if (convoState.convo.view.status === 'request' && !hasAcceptOverride) {
     return 'request'
   }
 

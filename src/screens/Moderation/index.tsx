@@ -4,7 +4,6 @@ import {LABELS} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useFocusEffect} from '@react-navigation/native'
 
 import {getLabelingServiceTitle, isAppLabeler} from '#/lib/moderation'
 import {
@@ -21,7 +20,6 @@ import {
   usePreferencesSetAdultContentMutation,
 } from '#/state/queries/preferences'
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import * as Admonition from '#/components/Admonition'
 import {AgeAssuranceAdmonition} from '#/components/ageAssurance/AgeAssuranceAdmonition'
@@ -161,7 +159,6 @@ export function ModerationScreenInner({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {gtMobile} = useBreakpoints()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const {
@@ -196,12 +193,6 @@ export function ModerationScreenInner({
       })
     }
   }
-
-  useFocusEffect(
-    useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
 
   const {mutateAsync: setAdultContentPref, variables: optimisticAdultContent} =
     usePreferencesSetAdultContentMutation()

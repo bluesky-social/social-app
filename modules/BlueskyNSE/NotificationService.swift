@@ -1,5 +1,6 @@
 import UserNotifications
 import UIKit
+import Intents
 
 let APP_GROUP = "group.app.bsky"
 typealias ContentHandler = (UNNotificationContent) -> Void
@@ -40,17 +41,18 @@ class NotificationService: UNNotificationServiceExtension {
     }
 
     self.bestAttempt = bestAttempt
-    if reason == "chat-message" {
+
+    if reason == "chat-message" || reason == "chat-reaction" {
       mutateWithChatMessage(bestAttempt)
+      let finalContent = createCommunicationNotification(
+        from: bestAttempt,
+        userInfo: request.content.userInfo
+      )
+      contentHandler(finalContent)
     } else {
       mutateWithBadge(bestAttempt)
+      contentHandler(bestAttempt)
     }
-
-    // Any image downloading (or other network tasks) should be handled at the end
-    // of this block. Otherwise, if there is a timeout and serviceExtensionTimeWillExpire
-    // gets called, we might not have all the needed mutations completed in time.
-
-    contentHandler(bestAttempt)
   }
 
   override func serviceExtensionTimeWillExpire() {
@@ -59,6 +61,81 @@ class NotificationService: UNNotificationServiceExtension {
       return
     }
     contentHandler(bestAttempt)
+  }
+
+  // MARK: Communication Notification
+
+  func createCommunicationNotification(
+    from content: UNMutableNotificationContent,
+    userInfo: [AnyHashable: Any]
+  ) -> UNNotificationContent {
+    let senderDisplayName = userInfo["senderDisplayName"] as? String ?? "Unknown"
+    let convoId = userInfo["convoId"] as? String
+    var avatarImage: INImage? = nil
+    if let avatarUrlString = userInfo["senderAvatarUrl"] as? String {
+      avatarImage = downloadAvatarImage(from: avatarUrlString)
+    }
+
+    let senderHandleValue = userInfo["senderHandle"] as? String
+    let senderHandle = INPersonHandle(value: senderHandleValue, type: .unknown)
+    let sender = INPerson(
+      personHandle: senderHandle,
+      nameComponents: nil,
+      displayName: senderDisplayName,
+      image: avatarImage,
+      contactIdentifier: nil,
+      customIdentifier: nil
+    )
+
+    let intent = INSendMessageIntent(
+      recipients: nil,
+      outgoingMessageType: .outgoingMessageText,
+      content: content.body,
+      speakableGroupName: nil,
+      conversationIdentifier: convoId,
+      serviceName: nil,
+      sender: sender,
+      attachments: nil
+    )
+
+    let interaction = INInteraction(intent: intent, response: nil)
+    interaction.direction = .incoming
+    interaction.donate(completion: nil)
+
+    do {
+      return try content.updating(from: intent)
+    } catch {
+      return content
+    }
+  }
+
+  func downloadAvatarImage(from urlString: String) -> INImage? {
+    let thumbnailUrlString = urlString.replacingOccurrences(
+      of: "/img/avatar/",
+      with: "/img/avatar_thumbnail/"
+    )
+
+    guard let url = URL(string: thumbnailUrlString) else { return nil }
+
+    var request = URLRequest(url: url)
+    request.timeoutInterval = 5
+
+    var imageData: Data? = nil
+    let semaphore = DispatchSemaphore(value: 0)
+
+    let task = URLSession.shared.dataTask(with: request) { data, response, error in
+      if let data = data,
+         let httpResponse = response as? HTTPURLResponse,
+         httpResponse.statusCode == 200 {
+        imageData = data
+      }
+      semaphore.signal()
+    }
+    task.resume()
+    semaphore.wait()
+
+    guard let data = imageData else { return nil }
+    return INImage(imageData: data)
   }
 
   // MARK: Mutations

@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.121.0",
+  "version": "1.122.0",
   "private": true,
   "engines": {
     "node": ">=20"
@@ -51,7 +51,7 @@
     "lint": "eslint --cache --quiet src",
     "lint-native": "swiftlint ./modules && ktlint ./modules",
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
-    "typecheck": "tsc --project ./tsconfig.check.json",
+    "typecheck": "tsgo --project ./tsconfig.check.json",
     "e2e:mock-server": "cd dev-env && yarn start",
     "e2e:build": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
     "e2e:build-android": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:android",
@@ -81,10 +81,12 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.19.9",
+    "@atproto/api": "^0.19.11",
+    "@atproto/syntax": "0.5.2",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.7",
+    "@bsky.app/expo-guess-language": "^0.2.8",
     "@bsky.app/expo-image-crop-tool": "^0.5.0",
     "@bsky.app/expo-scroll-edge-effect": "^0.1.4",
     "@bsky.app/expo-translate-text": "^0.2.9",
@@ -261,6 +263,7 @@
     "@types/psl": "^1.1.1",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
+    "@typescript/native-preview": "^7.0.0-dev.20260428.1",
     "babel-jest": "^29.7.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-plugin-react-compiler": "^19.1.0-rc.3",

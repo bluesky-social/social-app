@@ -3,7 +3,7 @@ import {type GestureResponderEvent, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {atoms as a, useTheme, type ViewStyleProp, web} from '#/alf'
+import {atoms as a, type TextStyleProp, useTheme, web} from '#/alf'
 import {
   Button,
   type ButtonColor,
@@ -34,6 +34,8 @@ export function Outer({
   control,
   testID,
   nativeOptions,
+  webOptions,
+  onClose,
 }: React.PropsWithChildren<{
   control: Dialog.DialogControlProps
   testID?: string
@@ -41,6 +43,13 @@ export function Outer({
    * Native-specific options for the prompt. Extends `BottomSheetViewProps`
    */
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
+  /**
+   * Web-specific options for the prompt
+   */
+  webOptions?: {
+    onBackgroundPress?: (e: GestureResponderEvent) => void
+  }
+  onClose?: () => void
 }>) {
   const titleId = useId()
   const descriptionId = useId()
@@ -54,7 +63,8 @@ export function Outer({
     <Dialog.Outer
       control={control}
       testID={testID}
-      webOptions={{alignCenter: true}}
+      onClose={onClose}
+      webOptions={{alignCenter: true, ...webOptions}}
       nativeOptions={{preventExpansion: true, ...nativeOptions}}>
       <Dialog.Handle />
       <Context.Provider value={context}>
@@ -72,7 +82,7 @@ export function Outer({
 export function TitleText({
   children,
   style,
-}: React.PropsWithChildren<ViewStyleProp>) {
+}: React.PropsWithChildren<TextStyleProp>) {
   const {titleId} = useContext(Context)
   return (
     <Text
@@ -93,14 +103,21 @@ export function TitleText({
 export function DescriptionText({
   children,
   selectable,
-}: React.PropsWithChildren<{selectable?: boolean}>) {
+  style,
+}: React.PropsWithChildren<{selectable?: boolean} & TextStyleProp>) {
   const t = useTheme()
   const {descriptionId} = useContext(Context)
   return (
     <Text
       nativeID={descriptionId}
       selectable={selectable}
-      style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high, a.pb_lg]}>
+      style={[
+        a.text_md,
+        a.leading_snug,
+        t.atoms.text_contrast_high,
+        a.pb_lg,
+        style,
+      ]}>
       {children}
     </Text>
   )

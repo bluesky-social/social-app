@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {
   useKeyboardHandler,
@@ -19,6 +19,7 @@ import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {isBskyPostUrl} from '#/lib/strings/url-helpers'
 import {useEmail} from '#/state/email-verification'
 import {
@@ -32,7 +33,7 @@ import {GlassView} from '#/components/GlassView'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import * as Toast from '#/components/Toast'
-import {IS_ANDROID, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 
 const MIN_HEIGHT = 40
 
@@ -61,9 +62,9 @@ export function MessageComposer({
   useSaveMessageDraft(text)
 
   // Android interactive dismiss sometimes doesn't blur the input
-  const blur = () => {
+  const blur = useNonReactiveCallback(() => {
     composerInternalApiRef.current?.input?.blur()
-  }
+  })
 
   useKeyboardHandler({
     onEnd: evt => {
@@ -76,10 +77,10 @@ export function MessageComposer({
 
   const submitDisabled = !editable || (!hasEmbed && text.trim().length === 0)
 
-  const onSubmit = () => {
+  const onSubmit = (message: string) => {
     if (!editable) return
-    if (!hasEmbed && text.trim() === '') return
-    const graphemeCount = countGraphemes(text)
+    if (!hasEmbed && message.trim() === '') return
+    const graphemeCount = countGraphemes(message)
     if (graphemeCount > MAX_DM_GRAPHEME_LENGTH) {
       Toast.show(
         l`Message is too long (${graphemeCount}/${MAX_DM_GRAPHEME_LENGTH})`,
@@ -89,13 +90,52 @@ export function MessageComposer({
     }
 
     clearDraft()
-    onSendMessage(text)
+    onSendMessage(message)
     playHaptic()
     setEmbed(undefined)
     composerInternalApiRef.current?.clear()
 
     if (IS_WEB) {
       composerInternalApiRef.current?.input?.focus()
+    }
+  }
+
+  const isFlushingAutocorrectSuggestion = useRef(false)
+  const handleSubmit = () => {
+    if (IS_IOS) {
+      // HACKFIX: If there's a pending autocomplete suggestion, iOS will prioritize
+      // accepting the suggestion over any imperative `.clear()` action on the textinput.
+      // This means we'll send the message with the typo while the corrected text remains
+      // in the composer's textinput.
+      //
+      // In MessageInput, the previous iteration, we simply sent it, and if another text change
+      // event came in, we'd clear it again. However, it's nicer UX to actually accept the suggestion.
+      //
+      // Thus the solution:
+      // 1. Set a ref indicating we're flushing the autocorrect suggestion
+      // 2. Watch for incoming onChange events. If something comes in, it's almost certainly the corrected text,
+      // so send that
+      // 3. Meanwhile, race that against a simple timeout. If the timeout fires first, send the original text.
+      //
+      // Hopefully, it's delaying the send by no more than a couple frames -sfn
+      isFlushingAutocorrectSuggestion.current = true
+      setTimeout(() => {
+        if (isFlushingAutocorrectSuggestion.current) {
+          isFlushingAutocorrectSuggestion.current = false
+          onSubmit(text)
+        }
+      }, 20)
+    } else {
+      onSubmit(text)
+    }
+  }
+
+  const handleChange = (nextText: string) => {
+    if (IS_IOS && isFlushingAutocorrectSuggestion.current) {
+      isFlushingAutocorrectSuggestion.current = false
+      onSubmit(nextText)
+    } else {
+      setText(nextText)
     }
   }
 
@@ -180,7 +220,7 @@ export function MessageComposer({
                 paddingBottom: 10,
                 paddingRight: 16 + platform({web: 20, default: 0}),
               }}
-              onChange={setText}
+              onChange={handleChange}
               onFacetCommitted={facet => {
                 if (facet.type === 'url' && isBskyPostUrl(facet.value)) {
                   setEmbed(facet.value)
@@ -189,11 +229,11 @@ export function MessageComposer({
               onRequestSubmit={req => {
                 if (req.platform === 'web' && req.shiftKey) return
                 req.nativeEvent.preventDefault()
-                onSubmit()
+                handleSubmit()
               }}
             />
           </GlassView>
-          <SubmitButton onPress={onSubmit} disabled={submitDisabled} />
+          <SubmitButton onPress={handleSubmit} disabled={submitDisabled} />
         </GlassContainer>
       </View>
     </ComposerContainer>

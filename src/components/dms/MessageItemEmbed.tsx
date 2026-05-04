@@ -29,7 +29,6 @@ let MessageItemEmbed = ({
       <View
         style={[
           !isFromSelf && a.ml_sm,
-          t.atoms.bg,
           native({
             flexBasis: 0,
             width: Math.min(screen.width, 600) / 1.4,

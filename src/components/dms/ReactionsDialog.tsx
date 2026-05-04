@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native'
 import Animated from 'react-native-reanimated'
-import {type ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatBskyActorDefs, type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -33,13 +33,13 @@ type Reaction = {
 
 export function ReactionsDialog({
   control,
-  members,
+  relatedProfiles,
   message,
   reactions,
   groupedReactions,
 }: {
   control: Dialog.DialogControlProps
-  members: bsky.profile.AnyProfileView[]
+  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
   message: ChatBskyConvoDefs.MessageView
   reactions?: ChatBskyConvoDefs.ReactionView[]
   groupedReactions?: Reaction[]
@@ -100,7 +100,7 @@ export function ReactionsDialog({
             return 0
           })
           .map(reaction => {
-            const sender = members.find(m => m.did === reaction.sender.did)
+            const sender = relatedProfiles.get(reaction.sender.did)
             if (!sender) return null
             return (
               <ReactionRow
