@@ -396,9 +396,7 @@ function SettingsHeader({
     lockConvo({lock: false})
   }
 
-  // TODO The creation date doesn't exist yet. -dsb
-  const showCreatedAt = false
-  const createdAt = new Date()
+  const createdAt = new Date(convo.details.createdAt)
 
   const canLockGroupChat = isOwner && lockStatus !== 'locked-permanently'
 
@@ -419,25 +417,23 @@ function SettingsHeader({
           ]}>
           {groupName}
         </Text>
-        {showCreatedAt ? (
-          <Text
-            style={[
-              a.text_sm,
-              a.text_center,
-              a.pt_xs,
-              a.px_xl,
-              t.atoms.text_contrast_high,
-            ]}>
-            <Trans>
-              Created{' '}
-              {i18n.date(createdAt, {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric',
-              })}
-            </Trans>
-          </Text>
-        ) : null}
+        <Text
+          style={[
+            a.text_sm,
+            a.text_center,
+            a.pt_xs,
+            a.px_xl,
+            t.atoms.text_contrast_high,
+          ]}>
+          <Trans>
+            Created{' '}
+            {i18n.date(createdAt, {
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric',
+            })}
+          </Trans>
+        </Text>
         <View
           style={[
             a.flex_row,
