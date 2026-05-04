@@ -38,7 +38,7 @@ export function GifPickerHeader({
         <TextField.Icon icon={Search} />
         <TextField.Input
           label={l`Search GIFs`}
-          placeholder={l`Search GIFs`}
+          placeholder={l`Search KLIPY`}
           onChangeText={onChangeText}
           returnKeyType="search"
           inputRef={inputRef}
