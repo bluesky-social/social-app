@@ -1,17 +1,21 @@
 import {View} from 'react-native'
 import {moderateProfile} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
+import {logger} from '#/logger'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useSession} from '#/state/session'
+import {useProfileFollowMutationQueue} from '#/state/queries/profile'
+import {useRequireAuth, useSession} from '#/state/session'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {
   type ConvoWithDetails,
   type GroupConvoMember,
 } from '#/components/dms/util'
+import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {MemberMenu} from './MemberMenu'
 import {StatusBadge} from './StatusBadge'
@@ -36,6 +40,30 @@ export function Member({
   const profile = useProfileShadow(profileUnshadowed)
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
+
+  const [queueFollow] = useProfileFollowMutationQueue(profile, 'GroupChat')
+  const requireAuth = useRequireAuth()
+
+  const isFollowing = !!profile.viewer?.following
+
+  const handleFollow = () => {
+    requireAuth(async () => {
+      try {
+        await queueFollow()
+        Toast.show(l`Following ${displayName}`, {
+          type: 'info',
+        })
+      } catch (err) {
+        const e = err as Error
+        if (e?.name !== 'AbortError') {
+          logger.error('Failed to follow', {message: String(e)})
+          Toast.show(l`There was an issue! ${e.toString()}`, {
+            type: 'error',
+          })
+        }
+      }
+    })
+  }
 
   if (!moderationOpts) {
     return <MemberPlaceholder />
@@ -96,6 +124,7 @@ export function Member({
                 />
                 {!isProfileOwner && (
                   <Text
+                    numberOfLines={1}
                     style={[
                       a.text_xs,
                       a.leading_snug,
@@ -109,6 +138,14 @@ export function Member({
             </ProfileCard.Header>
           </ProfileCard.Outer>
         </ProfileCard.Link>
+        {isSelf || isFollowing ? null : (
+          <SimpleInlineLinkText
+            label={l`Follow ${displayName}`}
+            {...createStaticClick(handleFollow)}
+            style={[a.font_medium]}>
+            <Trans>Follow</Trans>
+          </SimpleInlineLinkText>
+        )}
         {statusBadge}
       </View>
     </SubtleHoverWrapper>

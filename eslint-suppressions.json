@@ -24,11 +24,6 @@
       "count": 5
     }
   },
-  "src/analytics/metrics/types.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/components/Button.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2

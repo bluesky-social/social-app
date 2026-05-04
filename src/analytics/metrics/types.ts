@@ -449,6 +449,7 @@ export type Events = {
       | 'ExploreSuggestedAccounts'
       | 'OnboardingSuggestedAccounts'
       | 'FindContacts'
+      | 'GroupChat'
   }
   'profile:followers:view': {
     contextProfileDid: string
@@ -554,6 +555,7 @@ export type Events = {
       | 'ExploreSuggestedAccounts'
       | 'OnboardingSuggestedAccounts'
       | 'FindContacts'
+      | 'GroupChat'
   }
   'chat:create': {
     logContext:
@@ -975,10 +977,10 @@ export type Events = {
   'thread:click:hideReplyForMe': {}
   'thread:click:hideReplyForEveryone': {}
   'thread:preferences:load': {
-    [key: string]: any
+    [key: string]: unknown
   }
   'thread:preferences:update': {
-    [key: string]: any
+    [key: string]: unknown
   }
   'thread:click:headerMenuOpen': {}
   'thread:click:editOwnThreadgate': {}
