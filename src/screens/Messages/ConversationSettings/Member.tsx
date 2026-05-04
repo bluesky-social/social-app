@@ -72,7 +72,7 @@ export function Member({
         true,
         moderateProfile(profile.kind.addedBy, moderationOpts).ui('displayName'),
       )}`
-    : `Added by invite link`
+    : l`Added by invite link`
 
   return (
     <SubtleHoverWrapper>

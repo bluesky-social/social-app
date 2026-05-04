@@ -53,12 +53,6 @@ import {Member, MemberPlaceholder} from './Member'
 import {MembersAndRequests} from './MembersAndRequests'
 import {EditNamePrompt, LeaveChatPrompt, LockChatPrompt} from './prompts'
 
-const dateFormatter = new Intl.DateTimeFormat(undefined, {
-  month: 'long',
-  day: 'numeric',
-  year: 'numeric',
-})
-
 type Item =
   | {type: 'MEMBERS_AND_REQUESTS'; key: string}
   | {type: 'ADD_MEMBERS_LINK'; key: string}
@@ -293,7 +287,7 @@ function SettingsHeader({
   isOwner: boolean
 }) {
   const t = useTheme()
-  const {t: l} = useLingui()
+  const {i18n, t: l} = useLingui()
 
   const navigation = useNavigation<NavigationProp>()
 
@@ -434,7 +428,14 @@ function SettingsHeader({
               a.px_xl,
               t.atoms.text_contrast_high,
             ]}>
-            <Trans>Created {dateFormatter.format(createdAt)}</Trans>
+            <Trans>
+              Created{' '}
+              {i18n.date(createdAt, {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+              })}
+            </Trans>
           </Text>
         ) : null}
         <View
