@@ -49,7 +49,7 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {IS_INTERNAL, IS_LIQUID_GLASS, IS_WEB} from '#/env'
 import {ChatDisabled} from './components/ChatDisabled'
 
 type Props = NativeStackScreenProps<
@@ -295,12 +295,11 @@ function InnerReady({
         />
       )}
 
-      {/*{!IS_INTERNAL && convo?.kind === 'group' && <GroupChatGate />}*/}
+      {!IS_INTERNAL && convo?.kind === 'group' && <GroupChatGate />}
     </>
   )
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function GroupChatGate() {
   const {t: l} = useLingui()
   const ax = useAnalytics()
