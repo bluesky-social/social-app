@@ -1,4 +1,11 @@
-import {forwardRef, memo, useDeferredValue, useMemo} from 'react'
+import {
+  forwardRef,
+  memo,
+  useDeferredValue,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import {RefreshControl, type ViewToken} from 'react-native'
 import {
   type FlatListPropsWithLayout,
@@ -60,9 +67,12 @@ let List = forwardRef<ListMethods, ListProps>(
     ref,
   ): React.ReactElement<any> => {
     const isScrolledDown = useSharedValue(false)
+    const scrollOffsetY = useSharedValue(0)
+    const localRef = useRef<FlatList_INTERNAL | null>(null)
     const t = useTheme()
     const dedupe = useDedupe(400)
     const scrollsToTop = useAllowScrollToTop()
+    useSaveScrollOnLightbox(localRef, scrollOffsetY)
 
     const handleScrolledDownChange = useNonReactiveCallback(
       (didScrollDown: boolean) => {
@@ -88,6 +98,7 @@ let List = forwardRef<ListMethods, ListProps>(
       },
       onScroll(e, ctx) {
         onScrollFromContext?.(e, ctx)
+        scrollOffsetY.set(e.contentOffset.y)
 
         const didScrollDown = e.contentOffset.y > SCROLLED_DOWN_LIMIT
         if (isScrolledDown.get() !== didScrollDown) {
@@ -174,8 +185,11 @@ let List = forwardRef<ListMethods, ListProps>(
         scrollsToTop={scrollsToTop}
         scrollEventThrottle={1}
         style={style}
-        // @ts-expect-error FlatList_INTERNAL ref type is wrong -sfn
-        ref={ref}
+        ref={node => {
+          localRef.current = node as FlatList_INTERNAL | null
+          if (typeof ref === 'function') ref(node as FlatList_INTERNAL | null)
+          else if (ref) (ref as React.MutableRefObject<any>).current = node
+        }}
       />
     )
   },
@@ -191,4 +205,24 @@ const useAllowScrollToTop = IS_IOS ? useAllowScrollToTopIOS : () => undefined
 function useAllowScrollToTopIOS() {
   const {activeLightbox} = useLightbox()
   return useDeferredValue(!activeLightbox)
+}
+
+// Save scroll position when lightbox opens, restore it when it closes.
+// This prevents the scroll-to-top caused by orientation changes during lightbox viewing.
+function useSaveScrollOnLightbox(
+  listRef: React.RefObject<FlatList_INTERNAL | null>,
+  scrollOffsetY: {get(): number},
+) {
+  const {activeLightbox} = useLightbox()
+  const savedOffset = useRef<number | null>(null)
+
+  useLayoutEffect(() => {
+    if (activeLightbox) {
+      savedOffset.current = scrollOffsetY.get()
+    } else if (savedOffset.current !== null) {
+      const offset = savedOffset.current
+      savedOffset.current = null
+      listRef.current?.scrollToOffset({offset, animated: false})
+    }
+  }, [activeLightbox, listRef, scrollOffsetY])
 }

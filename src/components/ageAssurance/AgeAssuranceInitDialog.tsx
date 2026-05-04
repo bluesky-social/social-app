@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {XRPCError} from '@atproto/api'
+import {XRPCError} from '@atproto/xrpc'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'

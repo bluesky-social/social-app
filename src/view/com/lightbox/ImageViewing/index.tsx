@@ -65,6 +65,10 @@ type Rect = {x: number; y: number; width: number; height: number}
 const PORTRAIT_UP = ScreenOrientation.OrientationLock.PORTRAIT_UP
 const PIXEL_RATIO = PixelRatio.get()
 
+function lockOrientationToPortrait() {
+  void ScreenOrientation.lockAsync(PORTRAIT_UP)
+}
+
 const SLOW_SPRING: WithSpringConfig = {
   mass: IS_IOS ? 1.25 : 0.75,
   damping: 300,
@@ -159,23 +163,38 @@ export default function ImageViewRoot({
   )
 
   // Delay the unlock until after we've finished the scale up animation.
-  // It's complicated to do the same for locking it back so we don't attempt that.
   useAnimatedReaction(
     () => openProgress.get() === 1,
     (isOpen, wasOpen) => {
       if (isOpen && !wasOpen) {
         runOnJS(ScreenOrientation.unlockAsync)()
-      } else if (!isOpen && wasOpen) {
-        // default is PORTRAIT_UP - set via config plugin in app.config.js -sfn
-        runOnJS(ScreenOrientation.lockAsync)(PORTRAIT_UP)
       }
     },
   )
 
+  // Lock orientation back to portrait BEFORE triggering the close animation.
+  // This ensures the feed re-layouts while the lightbox is still fully opaque,
+  // preventing the scroll-to-top issue caused by orientation change.
+  const lockAndClose = useCallback(() => {
+    if (orientation === 'landscape') {
+      void ScreenOrientation.lockAsync(PORTRAIT_UP).then(() => {
+        // Give the layout time to settle behind the lightbox.
+        setTimeout(onRequestClose, 500)
+      })
+    } else {
+      void ScreenOrientation.lockAsync(PORTRAIT_UP)
+      onRequestClose()
+    }
+  }, [orientation, onRequestClose])
+
   const onFlyAway = useCallback(() => {
     'worklet'
+    // Fly-away: image is already off-screen, dismiss immediately.
+    // Lock orientation after — the fast swipe makes any brief scroll
+    // glitch less noticeable than the close button path.
     openProgress.set(0)
     runOnJS(onRequestClose)()
+    runOnJS(lockOrientationToPortrait)()
   }, [onRequestClose, openProgress])
 
   return (
@@ -200,7 +219,7 @@ export default function ImageViewRoot({
             key={activeLightbox.id + '-' + orientation}
             lightbox={activeLightbox}
             orientation={orientation}
-            onRequestClose={onRequestClose}
+            onRequestClose={lockAndClose}
             onPressSave={onPressSave}
             onPressShare={onPressShare}
             onFlyAway={onFlyAway}

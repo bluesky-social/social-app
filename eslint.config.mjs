@@ -199,6 +199,8 @@ export default defineConfig(
           // this is a dep for @atproto/api, but we absolutely need them in sync, so just
           // rely on the transient version
           '@atproto/common-web',
+          // XRPCError is no longer re-exported from @atproto/api
+          '@atproto/xrpc',
         ]
       }],
       'import-x/no-nodejs-modules': 'error',
