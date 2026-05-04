@@ -2451,15 +2451,15 @@
   resolved "https://registry.yarnpkg.com/@bsky.app/react-native-mmkv/-/react-native-mmkv-2.12.5.tgz#eb17d31a6158c74393f617a1763ac223ff3f83a6"
   integrity sha512-3vUz1nQY1DiKIPAWRkpp5ZGxH5f2G6Ui0UuQuEYjYv81xx1qFcSzS9KQ2sHcOKYdkOM9amWV2Q8TQCxt1lrAHg==
 
-"@bsky.app/sift@^0.3.3":
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/@bsky.app/sift/-/sift-0.3.3.tgz#71e7e34b2c6a6ef681b045575bf1aa94ece40783"
-  integrity sha512-EhBg6KR+G67gnXZDzDTAXhuMez/Xok5l1Q3FwWkSw4HXZ5uDy1vrwb86F6YvalTMUZ9bys7b5Lo3rOF5jNXdRQ==
+"@bsky.app/sift@^0.3.4":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@bsky.app/sift/-/sift-0.3.4.tgz#b166d5332ea826b179d3034a8a7e3abc688472f2"
+  integrity sha512-lOMltRODQVgzF9ssRH3eMG9fylvIrHwr4UFkhJMSW1ANB//Yxb30xgvwuGFd+q8H6Qp8/NF0HKTF6r6kRk/OeQ==
 
-"@bsky.app/tapper@^0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@bsky.app/tapper/-/tapper-0.5.1.tgz#7c72e1903435290a29be9f33fe0fcba95bbfa554"
-  integrity sha512-roGmW6Fk9qE8N0u9d74XzX9+MUIr04PElOhfIg0pXtZ1buaORpasLBBC+i6WytxDP2p29CuFdzBXDaBhmcI/ow==
+"@bsky.app/tapper@^0.5.3":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@bsky.app/tapper/-/tapper-0.5.3.tgz#6bc6f2758aae82d61fc0be8841a4f94b2602b031"
+  integrity sha512-pf2GlTPlHYHcsA8E5BSxc9H7HWh/N2NIiV85ccN/gl1fZ02k0Nod44wVK5W9yVWkdunSn7mz0+9Y5of1TDaOaA==
 
 "@bsky.app/video@0.3.4":
   version "0.3.4"
