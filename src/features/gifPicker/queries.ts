@@ -1,6 +1,6 @@
 import {Platform} from 'react-native'
 import {getLocales} from 'expo-localization'
-import {keepPreviousData, useInfiniteQuery} from '@tanstack/react-query'
+import {useInfiniteQuery} from '@tanstack/react-query'
 
 import {GIF_KLIPY_FEATURED, GIF_KLIPY_SEARCH} from '#/lib/constants'
 import {type Gif} from '#/features/gifPicker/types'
@@ -32,7 +32,6 @@ export function useGifSearchQuery(
     initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.next,
     enabled: !!query && options?.enabled !== false,
-    placeholderData: keepPreviousData,
   })
 }
 

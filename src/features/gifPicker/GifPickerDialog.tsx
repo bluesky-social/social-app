@@ -75,12 +75,18 @@ function GifPickerBody({
   const {getRecents, addRecent, hasRecents} = useRecentGifs()
 
   // Determine the effective search query:
-  // - If user is typing, use the typed text
+  // - If user is typing, use the throttled text
+  // - If user clears the input, immediately drop the search (don't wait for
+  //   the throttle to catch up — otherwise the previous query keeps driving
+  //   the visible results until the next interval tick)
   // - If a non-trending category is active, use its searchterm
   // - Otherwise (trending/recents), empty string triggers the featured endpoint
   const activeCategorySearchterm =
     GIF_CATEGORIES.find(c => c.id === activeCategory)?.searchterm ?? ''
-  const effectiveSearch = search.length > 0 ? search : activeCategorySearchterm
+  const effectiveSearch =
+    rawSearch.length > 0 && search.length > 0
+      ? search
+      : activeCategorySearchterm
 
   const isRecentsActive = activeCategory === 'recents' && rawSearch.length === 0
 
@@ -96,7 +102,9 @@ function GifPickerBody({
     refetch,
   } = useGifPickerData(effectiveSearch, {enabled: !isRecentsActive})
 
-  const networkItems = data?.pages.flatMap(page => page.results) ?? []
+  const networkItems = dedupeById(
+    data?.pages.flatMap(page => page.results) ?? [],
+  )
   const items = isRecentsActive ? getRecents() : networkItems
   const hasData = items.length > 0
 
@@ -183,4 +191,15 @@ function GifPickerBody({
       />
     </>
   )
+}
+
+function dedupeById(items: Gif[]): Gif[] {
+  const seen = new Set<string>()
+  const out: Gif[] = []
+  for (const item of items) {
+    if (seen.has(item.id)) continue
+    seen.add(item.id)
+    out.push(item)
+  }
+  return out
 }
