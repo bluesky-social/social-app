@@ -235,6 +235,7 @@
     "react-responsive": "^10.0.1",
     "react-textarea-autosize": "^8.5.3",
     "setimmediate": "^1.0.5",
+    "slugify": "^1.6.9",
     "sonner": "^2.0.7",
     "sonner-native": "^0.21.0",
     "tippy.js": "^6.3.7",
