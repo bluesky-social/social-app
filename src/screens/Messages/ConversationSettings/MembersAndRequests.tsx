@@ -23,21 +23,19 @@ export function MembersAndRequests({
 
   return (
     <View style={[a.flex_row, a.justify_between, a.px_xl, a.pt_xl, a.pb_sm]}>
-      <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
         <Text style={[a.text_lg, a.font_semi_bold, t.atoms.text]}>
-          <Trans>Members</Trans>
+          <Trans comment="The heading above the list of chat members.">
+            Members
+          </Trans>
         </Text>
-        <View
-          style={[a.px_xs, a.py_2xs, t.atoms.bg_contrast_50, a.rounded_full]}>
-          <Text
-            style={[a.text_xs, a.font_medium, {color: t.palette.contrast_500}]}>
-            {l({
-              message: `${memberCount}/${MEMBER_LIMIT}`,
-              comment:
-                'The number of group chat members out of the total number of permitted users.',
-            })}
-          </Text>
-        </View>
+        <Text style={[a.text_xs, a.font_medium, t.atoms.text_contrast_medium]}>
+          {l({
+            message: `${memberCount}/${MEMBER_LIMIT}`,
+            comment:
+              'The number of group chat members out of the total number of permitted users.',
+          })}
+        </Text>
       </View>
       {isOwner && requestCount > 0 ? (
         <InlineLinkText

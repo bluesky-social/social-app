@@ -16,8 +16,10 @@ import {Text} from '#/components/Typography'
 
 export function AddMembersLink({
   convo,
+  disabled,
 }: {
   convo: Extract<ConvoWithDetails, {kind: 'group'}>
+  disabled?: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -41,7 +43,7 @@ export function AddMembersLink({
   return (
     <>
       <Button
-        disabled={isAddPending}
+        disabled={disabled || isAddPending}
         label={l`Add members`}
         onPress={addMembersControl.open}>
         {({interacting}) => (
