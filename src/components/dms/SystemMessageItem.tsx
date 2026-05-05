@@ -62,10 +62,7 @@ export function SystemMessageItem({
     case 'inviteLink':
       if (!inviteLinkControl) return row
       return (
-        <Button
-          label={text}
-          onPress={() => inviteLinkControl.open()}
-          style={a.w_full}>
+        <Button label={text} onPress={inviteLinkControl.open} style={a.w_full}>
           {row}
         </Button>
       )
