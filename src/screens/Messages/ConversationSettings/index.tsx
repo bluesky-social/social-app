@@ -573,7 +573,7 @@ function SettingsButton({
           a.font_medium,
           a.text_center,
           a.pt_xs,
-          t.atoms.text_contrast_medium,
+          t.atoms.text,
         ]}>
         {text}
       </Text>
