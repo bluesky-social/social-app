@@ -182,13 +182,11 @@ let MessageItem = ({
   const hasEmbedAndText =
     AppBskyEmbedRecord.isView(message.embed) && rt.text.length > 0
 
-  const targetBottomRadius =
-    squaredBottomCorner || hasEmbedAndText
-      ? SQUARED_BORDER_RADIUS
-      : BORDER_RADIUS
-  const targetTopRadius = squaredTopCorner
+  const targetBottomRadius = squaredBottomCorner
     ? SQUARED_BORDER_RADIUS
     : BORDER_RADIUS
+  const targetTopRadius =
+    squaredTopCorner || hasEmbedAndText ? SQUARED_BORDER_RADIUS : BORDER_RADIUS
 
   const bottomRadiusSV = useSharedValue(targetBottomRadius)
   const topRadiusSV = useSharedValue(targetTopRadius)
@@ -463,6 +461,14 @@ let MessageItem = ({
                   toggleDivider(message.id)
                 }
               }}>
+              {AppBskyEmbedRecord.isView(message.embed) && (
+                <MessageItemEmbed
+                  embed={message.embed}
+                  isFromSelf={isFromSelf}
+                  squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
+                  squaredTopCorner={squaredTopCorner}
+                />
+              )}
               {rt.text.length > 0 && (
                 <Animated.View
                   accessibilityHint={l`Double tap or long press the message to add a reaction`}
@@ -513,14 +519,6 @@ let MessageItem = ({
                     shouldProxyLinks={true}
                   />
                 </Animated.View>
-              )}
-              {AppBskyEmbedRecord.isView(message.embed) && (
-                <MessageItemEmbed
-                  embed={message.embed}
-                  isFromSelf={isFromSelf}
-                  squaredBottomCorner={squaredBottomCorner}
-                  squaredTopCorner={squaredTopCorner || hasEmbedAndText}
-                />
               )}
               {appliedReactions}
             </ActionsWrapper>
