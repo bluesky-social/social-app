@@ -6,6 +6,7 @@ import {
   type PanGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
+  type AnimatableValue,
   runOnJS,
   type SharedValue,
   useAnimatedReaction,
@@ -460,7 +461,7 @@ function clampTranslation(
   return clampedValue
 }
 
-function withClampedSpring(value: any) {
+function withClampedSpring<T extends AnimatableValue>(value: T): T {
   'worklet'
   return withSpring(value, {overshootClamping: true})
 }

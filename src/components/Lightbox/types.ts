@@ -6,6 +6,7 @@
  *
  */
 
+import {type Component} from 'react'
 import {type TransformsStyle} from 'react-native'
 import {
   type AnimatedRef,
@@ -28,7 +29,7 @@ export type ImageSource = {
   thumbUri: string
   thumbDimensions: Dimensions | null
   thumbRect: MeasuredDimensions | null
-  thumbRef?: AnimatedRef<any> | null
+  thumbRef?: AnimatedRef<Component> | null
   thumbBorderRadius?: number
   alt?: string
   type: 'image' | 'circle-avi' | 'rect-avi'

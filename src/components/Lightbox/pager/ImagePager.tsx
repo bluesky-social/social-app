@@ -13,6 +13,7 @@ import {SystemBars} from 'react-native-edge-to-edge'
 import {Gesture} from 'react-native-gesture-handler'
 import PagerView from 'react-native-pager-view'
 import Animated, {
+  type AnimatableValue,
   type AnimatedRef,
   cancelAnimation,
   interpolate,
@@ -735,7 +736,10 @@ function interpolateTransform(
   }
 }
 
-function withClampedSpring(value: any, config: WithSpringConfig) {
+function withClampedSpring<T extends AnimatableValue>(
+  value: T,
+  config: WithSpringConfig,
+): T {
   'worklet'
   return withSpring(value, {...config, overshootClamping: true})
 }
