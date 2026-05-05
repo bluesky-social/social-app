@@ -76,7 +76,7 @@ export function EmojiReactionPicker({
         t.atoms.border_contrast_low,
         a.shadow_md,
       ]}>
-      {['👍', '😆', '❤️', '👀', '😢'].map(emoji => {
+      {['❤️', '👍', '😆', '👀', '😢'].map(emoji => {
         const alreadyReacted = hasAlreadyReacted(
           message,
           currentAccount?.did,

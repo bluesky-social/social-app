@@ -70,7 +70,7 @@ function MenuInner({
   ) : (
     <Menu.Outer style={[a.rounded_full]}>
       <View style={[a.flex_row, a.gap_xs]}>
-        {['👍', '😆', '❤️', '👀', '😢'].map(emoji => {
+        {['❤️', '👍', '😆', '👀', '😢'].map(emoji => {
           const alreadyReacted = hasAlreadyReacted(
             message,
             currentAccount?.did,
