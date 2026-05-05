@@ -4,7 +4,6 @@ import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAddGroupMembers} from '#/state/queries/messages/add-group-members'
-import {useListConvoMembersQuery} from '#/state/queries/messages/list-convo-members'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
@@ -32,8 +31,6 @@ export function MessagesListInfoPanel({
   const inviteLinkControl = Dialog.useDialogControl()
 
   const {currentAccount} = useSession()
-
-  const {data: fullMemberList} = useListConvoMembersQuery({convoId})
 
   const {mutate: addGroupMembers} = useAddGroupMembers(convoId, {
     onSuccess: () => {
