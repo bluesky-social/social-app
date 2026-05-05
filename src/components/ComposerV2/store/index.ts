@@ -367,8 +367,12 @@ export function createThreadStore(options: {
 
       // Pre-classification said this was a post URL. If resolveLink disagrees
       // (deleted post, embedding disabled, network error, etc.), surface as
-      // failed in the quote slot.
+      // failed in the quote slot. Non-retryable failure codes (e.g.
+      // embedding-disabled) get a failed state with no `retry()`; the user
+      // has to remove the embed manually.
       if (outcome.kind !== 'post') {
+        const code: types.LinkResolutionFailureCode =
+          outcome.embed.state === 'failed' ? outcome.embed.code : 'unknown'
         const error =
           outcome.embed.state === 'failed'
             ? outcome.embed.error
@@ -377,7 +381,11 @@ export function createThreadStore(options: {
           state: 'failed',
           uri,
           error,
-          retry: () => addUri(postId, uri),
+          code,
+          retry:
+            code === 'embedding-disabled'
+              ? undefined
+              : () => addUri(postId, uri),
         }
         mutateState(s => {
           const p = s.posts[postId]
@@ -414,6 +422,7 @@ export function createThreadStore(options: {
           state: 'failed',
           uri,
           error: 'Unexpected post outcome for non-post URL',
+          code: 'unknown',
           retry: () => addUri(postId, uri),
         }
         mutateState(s => {
@@ -428,7 +437,13 @@ export function createThreadStore(options: {
       const embed = outcome.embed
       const stored: types.PostEmbed =
         embed.state === 'failed'
-          ? {...embed, retry: () => addUri(postId, embed.uri)}
+          ? {
+              ...embed,
+              retry:
+                embed.code === 'embedding-disabled'
+                  ? undefined
+                  : () => addUri(postId, embed.uri),
+            }
           : embed
       mutateState(s => {
         const p = s.posts[postId]

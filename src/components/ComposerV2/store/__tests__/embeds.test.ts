@@ -7,15 +7,28 @@ import {beforeEach, describe, expect, jest, test} from '@jest/globals'
 
 // Avoid pulling the UI module chain (gallery → media picker → ALF) into the
 // test environment. Tests inject `__resolveLink` directly, so the real
-// implementation is never invoked.
-jest.mock('#/lib/api/resolve', () => ({
-  resolveLink: jest.fn(),
-}))
+// implementation is never invoked. We do mirror EmbeddingDisabledError so
+// `instanceof` checks in parseErrorCode still match the imported class.
+jest.mock('#/lib/api/resolve', () => {
+  class EmbeddingDisabledError extends Error {
+    constructor() {
+      super('Embedding is disabled for this record')
+    }
+  }
+  return {
+    resolveLink: jest.fn(),
+    EmbeddingDisabledError,
+  }
+})
 jest.mock('#/state/session/agent', () => ({
   createPublicAgent: jest.fn(() => ({})),
 }))
 
-import {type ResolvedLink, type resolveLink} from '#/lib/api/resolve'
+import {
+  EmbeddingDisabledError,
+  type ResolvedLink,
+  type resolveLink,
+} from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'
 
 const POST_URL = 'https://bsky.app/profile/test.bsky.social/post/abc'
@@ -170,14 +183,30 @@ describe('addUri pre-classifies bsky post URLs to the quote slot', () => {
     const failed = store.getState().posts[root].quote
     if (failed?.state !== 'failed') throw new Error('expected failed')
     expect(failed.error).toContain('post deleted')
+    expect(failed.code).toBe('unknown')
     expect(typeof failed.retry).toBe('function')
 
-    failed.retry()
+    failed.retry?.()
     expect(store.getState().posts[root].quote?.state).toBe('pending')
 
     d2.resolve(postLink)
     await flushPromises()
     expect(store.getState().posts[root].quote?.state).toBe('resolved')
+  })
+
+  test('embedding-disabled error is non-retryable (no retry on failed)', async () => {
+    const d = deferred<ResolvedLink>()
+    mockResolveLink.mockReturnValueOnce(d.promise)
+    const store = makeStore()
+    const root = rootId(store)
+    store.actions.addUri(root, POST_URL)
+    d.reject(new EmbeddingDisabledError())
+    await flushPromises()
+
+    const failed = store.getState().posts[root].quote
+    if (failed?.state !== 'failed') throw new Error('expected failed')
+    expect(failed.code).toBe('embedding-disabled')
+    expect(failed.retry).toBeUndefined()
   })
 })
 
@@ -283,8 +312,9 @@ describe('addUri pre-classifies non-post URLs to the embed slot', () => {
     const failed = store.getState().posts[root].embed
     if (failed?.state !== 'failed') throw new Error('expected failed')
     expect(failed.error).toContain('network down')
+    expect(failed.code).toBe('unknown')
 
-    failed.retry()
+    failed.retry?.()
     expect(store.getState().posts[root].embed?.state).toBe('pending')
 
     d2.resolve(externalLink)
