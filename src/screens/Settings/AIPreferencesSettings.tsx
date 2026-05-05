@@ -61,51 +61,33 @@ export function AIPreferencesSettingsScreen({}: Props) {
       </Layout.Header.Outer>
       <Layout.Content>
         <View style={[a.px_lg, a.pt_md, a.pb_lg, a.gap_sm]}>
-          <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_wrap]}>
-            <Text style={[a.text_lg, a.font_bold, t.atoms.text]}>
-              <Trans>How AI may use your data</Trans>
-            </Text>
-            <View
-              style={[
-                a.px_sm,
-                a.py_2xs,
-                a.rounded_full,
-                t.atoms.bg_contrast_25,
-              ]}>
-              <Text
-                style={[
-                  a.text_xs,
-                  a.font_semi_bold,
-                  t.atoms.text_contrast_medium,
-                ]}>
-                <Trans>Experimental</Trans>
-              </Text>
-            </View>
-          </View>
+          <Text style={[a.text_lg, a.font_bold, t.atoms.text]}>
+            <Trans>Determine how AI may use your data (Experimental)</Trans>
+          </Text>
           <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
             <Trans>
-              These settings tell AI systems how you want your data used across
-              the AT Protocol network: posts, blogs, listening history, stories,
-              and any other content tied to your account. Your data stays
-              public, but you can say how AI should handle it.
+              You can adjust these settings to configure how AI systems may use
+              your data across the AT Protocol network. In an open source
+              system, your data stays public, but you can say how AI should
+              handle it.
             </Trans>
           </Text>
           <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
             <Trans>
-              Blacksky will follow the preferences you set here. We took an
-              ecosystem approach by publishing this as a community lexicon other
-              AT Protocol services can adopt and choose to respect. Bad actors
-              may ignore these signals and work around them, which is outside
-              the control of Blacksky, your PDS operator, and other intermediary
-              services on the network.
+              Blacksky will follow the preferences you set here. We will share
+              your preferences with other AT Protocol services who can choose to
+              respect them. Bad actors may ignore these signals and work around
+              them, which is outside the control of Blacksky, your PDS operator,
+              and other intermediary services on the network.
             </Trans>
           </Text>
           <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
             <Trans>
-              These preferences apply across your entire account. The lexicon
-              allows finer controls, like rules for specific AI services or
-              specific types of content, but those aren't exposed in this
-              interface yet.
+              These preferences apply across your entire account. We will
+              continue to build more granular controls for your settings - for
+              example, allowing you to set rules for specific AI services or
+              specific types of content - and will update this page when those
+              are ready.
             </Trans>
           </Text>
           <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
