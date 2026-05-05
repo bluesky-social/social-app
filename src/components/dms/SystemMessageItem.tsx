@@ -1,10 +1,11 @@
-import {Pressable, View} from 'react-native'
+import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useInviteLinkDialog} from '#/screens/Messages/components/InviteLinkDialogProvider'
 import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
 import {getSystemMessageInfo} from '#/components/dms/getSystemMessageInfo'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
@@ -61,14 +62,12 @@ export function SystemMessageItem({
     case 'inviteLink':
       if (!inviteLinkControl) return row
       return (
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={text}
-          accessibilityHint={l`Opens invite link`}
+        <Button
+          label={text}
           onPress={() => inviteLinkControl.open()}
           style={a.w_full}>
           {row}
-        </Pressable>
+        </Button>
       )
     default:
       return row
