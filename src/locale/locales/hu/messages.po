@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-23 20:56\n"
+"PO-Revision-Date: 2026-05-05 08:14\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -18,18 +18,12 @@ msgstr ""
 "X-Crowdin-File: /main/src/locale/locales/en/messages.po\n"
 "X-Crowdin-File-ID: 11\n"
 
-#: src/screens/Messages/ConversationSettings.tsx:931
-#: src/screens/Messages/ConversationSettings.tsx:941
-#: src/screens/Messages/ConversationSettings.tsx:1018
-msgid "…"
-msgstr "…"
-
 #. Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is currently selected.
 #: src/components/InterestTabs.tsx:330
 msgid "\"{interestsDisplayName}\" category (active)"
 msgstr "{interestsDisplayName} kategória (aktív)"
 
-#: src/screens/Messages/components/ChatListItem.tsx:284
+#: src/components/dms/getMessageInfo.ts:66
 msgid "(contains embedded content)"
 msgstr "(beágyazott tartalom)"
 
@@ -94,7 +88,7 @@ msgstr "{0, plural, one {# hónapja} other {# hónapja}}"
 
 #. placeholder {0}: reactions.length
 #. placeholder {1}: groupedReactions.map(g => g.value).join(' ')
-#: src/components/dms/MessageItem.tsx:293
+#: src/components/dms/MessageItem.tsx:284
 msgid "{0, plural, one {# person} other {# people}} reacted – {1}"
 msgstr "{0, plural, other {#}} személy reagált – {1}"
 
@@ -215,20 +209,10 @@ msgstr "A(z) {0} felhasználónév nem elérhető"
 msgid "{0} is not supported by your device."
 msgstr "A(z) {0} nyelv nem támogatott ezen az eszközön."
 
-#. placeholder {0}: createSanitizedDisplayName(data.member)
-#: src/components/dms/systemMessage.ts:40
-msgid "{0} joined the group"
-msgstr ""
-
 #. placeholder {0}: formatCount(i18n, JOINED_THIS_WEEK)
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:232
 msgid "{0} joined this week"
 msgstr "{0} felhasználó csatlakozott ezen a héten"
-
-#. placeholder {0}: createSanitizedDisplayName(data.member)
-#: src/components/dms/systemMessage.ts:45
-msgid "{0} left the group"
-msgstr ""
 
 #. placeholder {0}: formatTime(currentTime)
 #. placeholder {1}: formatTime(duration)
@@ -242,28 +226,11 @@ msgstr "{1}/{0}"
 msgid "{0} out of 50"
 msgstr "50/{0}"
 
-#. placeholder {0}: sanitizeDisplayName( sender.displayName || sender.handle, )
+#. placeholder {0}: createSanitizedDisplayName(memberSender)
 #. placeholder {1}: reaction.value
-#: src/components/dms/MessageItem.tsx:286
+#: src/components/dms/MessageItem.tsx:279
 msgid "{0} reacted {1}"
 msgstr "{0} {1} emojival reagált"
-
-#. placeholder {0}: sanitizeDisplayName( sender.displayName || sender.handle, )
-#. placeholder {1}: convo.lastReaction.reaction.value
-#. placeholder {2}: lastMessageText ? `"${convo.lastReaction.message.text}"` : fallbackMessage
-#: src/screens/Messages/components/ChatListItem.tsx:352
-msgid "{0} reacted {1} to {2}"
-msgstr ""
-
-#. placeholder {0}: createSanitizedDisplayName(data.member)
-#: src/components/dms/systemMessage.ts:30
-msgid "{0} was added to the group"
-msgstr ""
-
-#. placeholder {0}: createSanitizedDisplayName(data.member)
-#: src/components/dms/systemMessage.ts:35
-msgid "{0} was removed from the group"
-msgstr ""
 
 #. placeholder {0}: feed.displayName
 #. placeholder {1}: sanitizeHandle(feed.creatorHandle, '@')
@@ -285,8 +252,8 @@ msgstr "{0} – szerző: {1}"
 msgid "{0}'s avatar"
 msgstr "{0} profilképe"
 
-#. placeholder {0}: sanitizeDisplayName( profile.displayName || sanitizeHandle(profile.handle), )
-#: src/components/dms/MessageItem.tsx:224
+#. placeholder {0}: createSanitizedDisplayName(profile)
+#: src/components/dms/MessageItem.tsx:219
 msgid "{0}’s avatar"
 msgstr "{0} profilképe"
 
@@ -530,7 +497,8 @@ msgstr "{MAX_DISPLAY_NAME, plural, other {A megjelenítendő név túl hosszú. 
 msgid "{MAX_HIDDEN_REPLIES, plural, other {You can hide a maximum of # replies.}}"
 msgstr "{MAX_HIDDEN_REPLIES, plural, other {Legfeljebb # választ lehet elrejteni.}}"
 
-#: src/screens/Messages/ConversationSettings.tsx:252
+#. The number of group chat members out of the total number of permitted users.
+#: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:34
 msgid "{memberCount}/{MEMBER_LIMIT}"
 msgstr "{MEMBER_LIMIT}/{memberCount}"
 
@@ -541,6 +509,32 @@ msgstr "{MIN_ACCESS_AGE, plural, other {A jelenlegi tartózkodási helyeden tör
 #: src/features/liveNow/utils.ts:10
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr "{minutes, plural, one {# perc} other {# perc}}"
+
+#: src/components/dms/getSystemMessageInfo.ts:57
+msgid "{name} joined the group"
+msgstr "{name} csatlakozott a csoporthoz."
+
+#: src/components/dms/getSystemMessageInfo.ts:64
+msgid "{name} left the group"
+msgstr "{name} elhagyta a csoportot."
+
+#. placeholder {0}: reaction.value
+#: src/components/dms/getReactionInfo.ts:45
+msgid "{name} reacted {0} to {target}"
+msgstr "{name} {0} emojival reagált erre: {target}"
+
+#: src/components/dms/getSystemMessageInfo.ts:41
+msgid "{name} was added to the group"
+msgstr "{name} hozzá lett adva a csoporthoz."
+
+#: src/components/dms/getSystemMessageInfo.ts:49
+msgid "{name} was removed from the group"
+msgstr "{name} el lett távolítva a csoportból."
+
+#. When the last message in a group chat came from someone other than you.
+#: src/components/dms/getMessageInfo.ts:50
+msgid "{name}: {message}"
+msgstr "{name}: {message}"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:76
 msgid "{name}'s favorite feeds and people - join me!"
@@ -571,9 +565,15 @@ msgstr "{profileName} {timeAgoString} csatlakozott a Blueskyhoz egy kezdőcsomag
 msgid "{rank}."
 msgstr "{rank}."
 
-#: src/screens/Messages/ConversationSettings.tsx:259
+#. The number of requests to join a group chat.
+#: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:54
 msgid "{requestCount, plural, one {# request} other {# requests}}"
 msgstr "{requestCount, plural, other {# felkérés}}"
+
+#. Displayed when there are more than 50 requests to join a group chat
+#: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:49
+msgid "{requestCount}+ requests"
+msgstr "Több, mint {requestCount} kérelem"
 
 #. trending topic time spent trending. should be as short as possible to fit in a pill
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:191
@@ -713,7 +713,7 @@ msgid "A collection of popular feeds you can find on Bluesky, including News, Bo
 msgstr "A Bluesky néhány hírfolyamát ábrázoló illusztráció. Az alábbi hírfolyamok vannak megjelenítve: News, Booksky, Game Dev, Blacksky és Fountain Pens"
 
 #. If last message does not contain text, fall back to "{user} reacted to {a message}"
-#: src/screens/Messages/components/ChatListItem.tsx:335
+#: src/components/dms/getReactionInfo.ts:33
 msgid "a message"
 msgstr "(üres üzenet)"
 
@@ -802,7 +802,7 @@ msgstr "Fiók"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:426
 #: src/screens/Messages/components/RequestButtons.tsx:101
-#: src/screens/Messages/ConversationSettings.tsx:575
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:116
 #: src/view/com/profile/ProfileMenu.tsx:188
 msgctxt "toast"
 msgid "Account blocked"
@@ -848,7 +848,7 @@ msgstr "Fiókszolgáltató"
 msgid "Account removed from quick access"
 msgstr "Fiók levéve a listáról"
 
-#: src/screens/Messages/ConversationSettings.tsx:562
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:103
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:88
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:310
 #: src/view/com/profile/ProfileMenu.tsx:176
@@ -871,7 +871,7 @@ msgstr "Fiók némítása feloldva"
 msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Bluesky."
 msgstr "Másokat hitelesíteni csak a <0><1/></0> recés pipával rendelkező fiókok képesek. Ezeket a megbízható hitelesítőket a Bluesky jelöli ki."
 
-#: src/lib/hooks/useNotificationHandler.ts:185
+#: src/lib/hooks/useNotificationHandler.ts:192
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:105
 #: src/screens/Settings/NotificationSettings/index.tsx:193
 msgid "Activity from others"
@@ -885,7 +885,7 @@ msgstr "Tevékenységértesítések"
 #: src/components/dialogs/MutedWords.tsx:337
 #: src/components/dialogs/StarterPackDialog.tsx:376
 #: src/components/dialogs/StarterPackDialog.tsx:388
-#: src/components/dms/AddMembersFlow.tsx:341
+#: src/components/dms/AddMembersFlow.tsx:350
 #: src/view/com/modals/UserAddRemoveLists.tsx:236
 msgid "Add"
 msgstr "Felvesz"
@@ -965,7 +965,7 @@ msgstr "Automatizálási feljegyzés alkalmazása"
 msgid "Add emoji reaction"
 msgstr "Emoji-reakció hozzáfűzése"
 
-#: src/components/dms/AddMembersFlow.tsx:422
+#: src/components/dms/AddMembersFlow.tsx:431
 msgid "Add group chat members"
 msgstr "Tagok felvétele"
 
@@ -978,8 +978,9 @@ msgstr "Kép csatolása"
 msgid "Add media to post"
 msgstr "Médiatartalom csatolása a bejegyzéshez"
 
-#: src/screens/Messages/ConversationSettings.tsx:330
-#: src/screens/Messages/ConversationSettings.tsx:347
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:47
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:81
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:100
 msgid "Add members"
 msgstr "Tagok hozzáadása"
 
@@ -1001,8 +1002,8 @@ msgstr "Szó elnémítása a megadott beállításokkal"
 msgid "Add muted words and tags"
 msgstr "Elnémított szavak és címkék felvétele"
 
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:101
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:126
+#: src/screens/Messages/components/MessagesListInfoPanel.tsx:119
+#: src/screens/Messages/components/MessagesListInfoPanel.tsx:154
 #: src/screens/ProfileList/AboutSection.tsx:72
 #: src/screens/ProfileList/AboutSection.tsx:90
 msgid "Add people"
@@ -1059,6 +1060,11 @@ msgstr "Személy felvétele a listára"
 msgid "Add your birthdate"
 msgstr "Születési dátum megadása"
 
+#. placeholder {0}: createSanitizedDisplayName( profile.kind.addedBy, true, moderateProfile(profile.kind.addedBy, moderationOpts).ui('displayName'), )
+#: src/screens/Messages/ConversationSettings/Member.tsx:70
+msgid "Added by {0}"
+msgstr "{0} vette fel a csoportba"
+
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:113
 #: src/view/com/modals/UserAddRemoveLists.tsx:163
 msgid "Added to list"
@@ -1081,8 +1087,8 @@ msgstr "További részletek (legfeljebb 1000 karakter)"
 msgid "Additional details (limit 300 characters)"
 msgstr "További részletek (legfeljebb 300 karakter)"
 
-#: src/screens/Messages/ConversationSettings.tsx:393
-#: src/screens/Messages/ConversationSettings.tsx:613
+#: src/screens/Messages/ConversationSettings/Member.tsx:55
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:151
 msgid "Admin"
 msgstr "Adminisztrátor"
 
@@ -1361,9 +1367,9 @@ msgstr "Illusztráció, amely számos Bluesky-bejegyzést ábrázol megosztási-
 msgid "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
 msgstr "A megbízható hitelesítőket a Bluesky jelöli ki, akik ezután képesek más személyeket hitelesíteni."
 
-#: src/screens/Messages/ConversationSettings.tsx:1087
-msgid "An invite link lets people join this group chat without being added directly. You control who can use the link and whether they need your approval. You can disable the link at any time. Your name, avatar, and the name of the group chat will be visible to everyone."
-msgstr "Meghívóval bárki csatlakozhat anélkül, hogy kézileg hozzá kelljen adni őt a csevegőcsoporthoz. A hivatkozás lehet korlátozott felhasználású és a csatlakozás lehet jóváhagyandó. A hivatkozás bármikor érvényteleníthető. A saját felhasználóneved, profilképed és a csevegőcsoport neve nyilvános lesz."
+#: src/screens/Messages/components/InviteLinkDialog.tsx:158
+msgid "An invite link lets people join this group chat without being added directly. You control who can use the link and whether they need your approval. You can disable the link at any time."
+msgstr "Meghívóval bárki csatlakozhat anélkül, hogy kézileg hozzá kelljen adni őt a csevegőcsoporthoz. A hivatkozás lehet korlátozott felhasználású és a csatlakozás lehet jóváhagyandó. A hivatkozás bármikor érvényteleníthető."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:239
 msgid "An issue not included in these options"
@@ -1438,6 +1444,16 @@ msgstr "Bárki"
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:137
 msgid "Anyone can interact"
 msgstr "Bárki kapcsolatba léphet"
+
+#: src/screens/Messages/components/InviteLinkDialog.tsx:129
+#: src/screens/Messages/components/InviteLinkDialog.tsx:130
+msgid "Anyone can join instantly"
+msgstr "Bárki azonnal csatlakozhat"
+
+#: src/screens/Messages/components/InviteLinkDialog.tsx:134
+#: src/screens/Messages/components/InviteLinkDialog.tsx:135
+msgid "Anyone can request to join"
+msgstr "Bárki kérelmezheti a csatlakozást"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:112
 #: src/screens/Settings/ActivityPrivacySettings.tsx:117
@@ -1561,7 +1577,7 @@ msgstr "Egészen biztos vagy benne?"
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr "Biztosan törölni akarod a(z) „{0}” nevű alkalmazásjelszót?"
 
-#: src/components/dms/MessageContextMenu.tsx:207
+#: src/components/dms/MessageContextMenu.tsx:208
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
 msgstr "Biztosan törölni akarod ezt az üzenetet? Az üzenet a Te nézőpontodból el lesz távolítva, de a többi fél számára nem."
 
@@ -1574,7 +1590,7 @@ msgstr "Biztosan törölni akarod ezt a kezdőcsomagot?"
 msgid "Are you sure you want to discard your changes?"
 msgstr "Biztosan el akarod vetni a változtatásokat?"
 
-#: src/screens/Messages/ConversationSettings.tsx:1130
+#: src/screens/Messages/ConversationSettings/prompts.tsx:90
 msgid "Are you sure you want to leave {groupName}?"
 msgstr "Biztosan el akarod hagyni a(z) {groupName} csoportot?"
 
@@ -1653,9 +1669,9 @@ msgstr "Videók és GIF-ek automatikus lejátszása"
 msgid "Available"
 msgstr "Elérhető"
 
-#: src/components/dms/AddMembersFlow.tsx:290
-#: src/components/dms/AddMembersFlow.tsx:445
-#: src/components/dms/AddMembersFlow.tsx:452
+#: src/components/dms/AddMembersFlow.tsx:299
+#: src/components/dms/AddMembersFlow.tsx:454
+#: src/components/dms/AddMembersFlow.tsx:461
 #: src/components/dms/InitiateChatFlow.tsx:489
 #: src/components/dms/InitiateChatFlow.tsx:674
 #: src/components/dms/InitiateChatFlow.tsx:681
@@ -1721,7 +1737,7 @@ msgstr "A feliratkozás előtt vissza kell igazolnod az e-mail-címedet."
 #: src/components/dms/MessageProfileButton.tsx:60
 #: src/screens/Messages/ChatList.tsx:380
 #: src/screens/Messages/Conversation.tsx:235
-#: src/screens/Messages/ConversationSettings.tsx:552
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:93
 msgid "Before you can message another user, you must first verify your email."
 msgstr "Az üzenetküldés előtt ellenőriznünk kell az e-mail-címedet."
 
@@ -1750,14 +1766,14 @@ msgid "Birthday"
 msgstr "Születésnap"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:853
-#: src/screens/Messages/ConversationSettings.tsx:674
-#: src/screens/Messages/ConversationSettings.tsx:1155
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:217
+#: src/screens/Messages/ConversationSettings/prompts.tsx:115
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:207
 #: src/view/com/profile/ProfileMenu.tsx:563
 msgid "Block"
 msgstr "Letiltás"
 
-#: src/screens/Messages/ConversationSettings.tsx:670
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:209
 msgid "Block {displayName}"
 msgstr "{displayName} letiltása"
 
@@ -1772,7 +1788,7 @@ msgstr "{displayName} letiltása"
 msgid "Block account"
 msgstr "Fiók letiltása"
 
-#: src/screens/Messages/ConversationSettings.tsx:1152
+#: src/screens/Messages/ConversationSettings/prompts.tsx:112
 msgid "Block account?"
 msgstr "Fiók letiltása"
 
@@ -1794,7 +1810,7 @@ msgstr "Letiltás és törlés"
 msgid "Block list"
 msgstr "Lista letiltása"
 
-#: src/screens/Messages/components/ChatStatusInfo.tsx:46
+#: src/screens/Messages/components/ChatStatusInfo.tsx:44
 msgid "Block or report"
 msgstr "Letiltás/jelentés"
 
@@ -1829,7 +1845,7 @@ msgid "Blocked Accounts"
 msgstr "Letiltott fiókok"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:851
-#: src/screens/Messages/ConversationSettings.tsx:1153
+#: src/screens/Messages/ConversationSettings/prompts.tsx:113
 #: src/view/com/profile/ProfileMenu.tsx:558
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Az Általad letiltott fiókok nem képesek válaszolni a bejegyzéseidre, megemlíteni Téged vagy bármilyen egyéb módon kapcsolatba lépni Veled."
@@ -2056,17 +2072,16 @@ msgstr "Kamera"
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:299
 #: src/components/Menu/index.tsx:355
 #: src/components/PostControls/RepostButton.tsx:210
-#: src/components/Prompt.tsx:136
-#: src/components/Prompt.tsx:138
+#: src/components/Prompt.tsx:153
+#: src/components/Prompt.tsx:155
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:152
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:157
 #: src/features/liveNow/components/GoLiveDialog.tsx:248
 #: src/features/liveNow/components/GoLiveDialog.tsx:254
 #: src/lib/media/picker.tsx:38
 #: src/screens/Deactivated.tsx:150
-#: src/screens/Messages/ConversationSettings.tsx:1089
-#: src/screens/Messages/ConversationSettings.tsx:1110
-#: src/screens/Messages/ConversationSettings.tsx:1134
+#: src/screens/Messages/ConversationSettings/prompts.tsx:70
+#: src/screens/Messages/ConversationSettings/prompts.tsx:94
 #: src/screens/Profile/Header/EditProfileDialog.tsx:215
 #: src/screens/Profile/Header/EditProfileDialog.tsx:223
 #: src/screens/Search/Shell.tsx:396
@@ -2194,7 +2209,7 @@ msgstr "Változtatások elmentve"
 msgid "Changes to the starter pack will not be reflected in the list after creation. The list will be an independent copy."
 msgstr "A létrehozandó lista egy másolat a kezdőcsomag jelenlegi állapotáról. A kezdőcsomagban történt későbbi változtatások nem lesznek automatikusan szinkronizálva a listára is."
 
-#: src/lib/hooks/useNotificationHandler.ts:102
+#: src/lib/hooks/useNotificationHandler.ts:109
 #: src/Navigation.tsx:570
 #: src/view/shell/bottom-bar/BottomBar.tsx:224
 #: src/view/shell/desktop/LeftNav.tsx:611
@@ -2208,19 +2223,19 @@ msgctxt "toast"
 msgid "Chat deleted"
 msgstr "Csevegés törölve"
 
-#: src/components/dms/systemMessage.ts:48
+#: src/components/dms/getSystemMessageInfo.ts:67
 msgid "Chat locked"
 msgstr "A csevegést zárolták."
 
-#: src/components/dms/systemMessage.ts:52
+#: src/components/dms/getSystemMessageInfo.ts:71
 msgid "Chat locked permanently"
 msgstr "A csevegést véglegesen zárolták."
 
-#: src/lib/hooks/useNotificationHandler.ts:117
+#: src/lib/hooks/useNotificationHandler.ts:124
 msgid "Chat messages - silent"
 msgstr "Csevegési értesítések – néma"
 
-#: src/lib/hooks/useNotificationHandler.ts:108
+#: src/lib/hooks/useNotificationHandler.ts:115
 msgid "Chat messages - sound"
 msgstr "Csevegési értesítések – hangos"
 
@@ -2253,12 +2268,16 @@ msgstr "Csevegések"
 msgid "Chat Settings"
 msgstr "Csevegések"
 
-#. placeholder {0}: data.newName ?? ''
-#: src/components/dms/systemMessage.ts:56
+#: src/components/dms/getSystemMessageInfo.ts:77
+msgid "Chat title changed"
+msgstr "A csevegést átnevezték."
+
+#. placeholder {0}: data.newName
+#: src/components/dms/getSystemMessageInfo.ts:76
 msgid "Chat title changed to {0}"
 msgstr "Átnevezték a csevegést a következőre: {0}"
 
-#: src/components/dms/systemMessage.ts:50
+#: src/components/dms/getSystemMessageInfo.ts:69
 msgid "Chat unlocked"
 msgstr "A csevegés zárolását feloldották."
 
@@ -2323,6 +2342,10 @@ msgstr "Válaszd ki a megjelenítendő bejegyzések nyelvét"
 msgid "Choose this color as your avatar"
 msgstr "Szín használata profilképként"
 
+#: src/screens/Messages/components/InviteLinkDialog.tsx:194
+msgid "Choose who can join this group chat and how."
+msgstr "Add meg a csatlakozás köreit és módját."
+
 #: src/components/contacts/components/InviteInfo.tsx:57
 msgid "Choose who to invite"
 msgstr "Meghívandó személyek kiválasztása"
@@ -2368,13 +2391,17 @@ msgstr "További információ"
 msgid "click here"
 msgstr "kattints ide"
 
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:97
+#: src/screens/Messages/components/MessagesListInfoPanel.tsx:115
 msgid "Click here to add people to this group chat"
 msgstr "Új csoporttagok felvételéhez kattints ide"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:129
 msgid "Click here to contact our support team"
 msgstr "Kattints ide az ügyfélszolgálattal történő kapcsolatfelvételhez"
+
+#: src/screens/Messages/components/MessagesListInfoPanel.tsx:129
+msgid "Click here to create or manage an invite link for this group chat"
+msgstr "A meghívó létrehozásához vagy szerkesztéséhez kattints ide"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:263
 msgid "Click here to delete your account"
@@ -2402,20 +2429,20 @@ msgstr "Kattints ide a születési dáumod frissítéséhez"
 msgid "Click here to update your email"
 msgstr "E-mail-cím frissítése"
 
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:109
-msgid "Click here to view or create an invite link for this group chat"
-msgstr "A meghívó megtekintéséhez vagy létrehozásához kattints ide"
+#: src/screens/Messages/components/MessagesListInfoPanel.tsx:130
+msgid "Click here to view the invite link for this group chat"
+msgstr "A meghívó megtekintéséhez kattints ide"
 
 #. placeholder {0}: isCashtag ? tag : `#${tag}`
 #: src/components/RichTextTag.tsx:56
 msgid "Click to open tag menu for {0}"
 msgstr "A(z) {0} címke menüjének megnyitása"
 
-#: src/components/dms/MessageItem.tsx:560
+#: src/components/dms/MessageItem.tsx:557
 msgid "Click to retry failed message"
 msgstr "Üzenetküldés megkísérlése ismét"
 
-#: src/components/dms/ActionsWrapper.web.tsx:142
+#: src/components/dms/ActionsWrapper.web.tsx:145
 msgid "Click to view the date and time"
 msgstr "A dátum és idő megtekintéséhez kattints ide"
 
@@ -2444,7 +2471,7 @@ msgstr "Kipp 🐴 kopp 🐴"
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:199
 #: src/components/dialogs/SearchablePeopleList.tsx:339
 #: src/components/dialogs/StarterPackDialog.tsx:187
-#: src/components/dms/AddMembersFlow.tsx:315
+#: src/components/dms/AddMembersFlow.tsx:324
 #: src/components/dms/AfterReportDialog.tsx:93
 #: src/components/dms/AfterReportDialog.tsx:98
 #: src/components/dms/AfterReportDialog.tsx:212
@@ -2463,6 +2490,8 @@ msgstr "Kipp 🐴 kopp 🐴"
 #: src/components/WhoCanReply.tsx:243
 #: src/features/liveNow/components/EditLiveDialog.tsx:217
 #: src/features/liveNow/components/EditLiveDialog.tsx:223
+#: src/screens/Messages/components/InviteLinkDialog.tsx:405
+#: src/screens/Messages/components/InviteLinkDialog.tsx:410
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:288
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:293
 #: src/view/com/feeds/MissingFeed.tsx:211
@@ -2611,8 +2640,8 @@ msgstr "Élőeseményes reklámcsík testreszabása"
 msgid "Configured in <0>moderation settings</0>."
 msgstr "A <0>moderálási beállításokban</0> módosítható."
 
-#: src/components/Prompt.tsx:195
-#: src/components/Prompt.tsx:198
+#: src/components/Prompt.tsx:212
+#: src/components/Prompt.tsx:215
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:186
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:189
 msgid "Confirm"
@@ -2753,7 +2782,7 @@ msgstr "Válaszlánc folytatása"
 msgid "Continue thread..."
 msgstr "Válaszlánc folytatása…"
 
-#: src/components/dms/AddMembersFlow.tsx:255
+#: src/components/dms/AddMembersFlow.tsx:264
 #: src/components/dms/InitiateChatFlow.tsx:441
 msgid "Continue to group name"
 msgstr "Csoportnév megadása"
@@ -2770,7 +2799,7 @@ msgstr "Következő lépés"
 msgid "Conversation"
 msgstr "Beszélgetés"
 
-#: src/screens/Messages/components/ChatListItem.tsx:321
+#: src/screens/Messages/components/ChatListItem.tsx:264
 msgid "Conversation deleted"
 msgstr "Beszélgetés törölve"
 
@@ -2784,7 +2813,7 @@ msgstr "Beszélgetés törölve"
 msgid "Copied build version to clipboard"
 msgstr "Buildszám a vágólapra helyezve"
 
-#: src/components/dms/MessageContextMenu.tsx:64
+#: src/components/dms/MessageContextMenu.tsx:67
 #: src/components/PostControls/DiscoverDebug.tsx:36
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:272
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:77
@@ -2794,6 +2823,7 @@ msgid "Copied to clipboard"
 msgstr "Vágólapra helyezve"
 
 #: src/components/dialogs/Embed.tsx:197
+#: src/screens/Messages/components/CopyTextButton.tsx:71
 #: src/screens/Settings/components/CopyButton.tsx:66
 msgid "Copied!"
 msgstr "Vágólapra helyezve."
@@ -2865,8 +2895,8 @@ msgstr "Profil hivatkozásának másolása"
 msgid "Copy link to starter pack"
 msgstr "Kezdőcsomag hivatkozásának másolása"
 
-#: src/components/dms/MessageContextMenu.tsx:154
-#: src/components/dms/MessageContextMenu.tsx:157
+#: src/components/dms/MessageContextMenu.tsx:155
+#: src/components/dms/MessageContextMenu.tsx:158
 msgid "Copy message text"
 msgstr "Üzenet szövegének másolása"
 
@@ -3030,10 +3060,6 @@ msgstr "Fiók létrehozása a kezdőcsomag igénybevétele nélkül"
 msgid "Create an avatar instead"
 msgstr "Profilkép létrehozása"
 
-#: src/screens/Messages/ConversationSettings.tsx:865
-msgid "Create an invite link for this group chat"
-msgstr "Meghívó létrehozása a csevegőcsoporthoz"
-
 #: src/components/StarterPack/ProfileStarterPacks.tsx:214
 msgid "Create another"
 msgstr "Másik létrehozása"
@@ -3065,6 +3091,10 @@ msgstr "Moderálólista létrehozása"
 msgid "Create new account"
 msgstr "Regisztráció"
 
+#: src/screens/Messages/ConversationSettings/index.tsx:464
+msgid "Create or modify an invite link for this group chat"
+msgstr "Meghívó létrehozása vagy szerkesztése a csevegőcsoporthoz"
+
 #. Accessibility label for button to create a moderation report for the selected option
 #. placeholder {0}: option.title
 #: src/components/moderation/ReportDialog/index.tsx:713
@@ -3081,10 +3111,18 @@ msgstr "Kezdőcsomag létrehozása"
 msgid "Create user list"
 msgstr "Felhasználólista létrehozása"
 
+#. placeholder {0}: dateFormatter.format(createdAt)
 #. placeholder {0}: i18n.date(appPassword.createdAt, { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', })
+#: src/screens/Messages/ConversationSettings/index.tsx:429
 #: src/screens/Settings/AppPasswords.tsx:174
 msgid "Created {0}"
 msgstr "Létrehozás dátuma: {0}"
+
+#. placeholder {0}: timeFormatter.format(createdAt)
+#. placeholder {1}: dateFormatter.format(createdAt)
+#: src/screens/Messages/components/InviteLinkDialog.tsx:289
+msgid "Created {0} {1}"
+msgstr ""
 
 #: src/screens/List/ListHiddenScreen.tsx:131
 msgid "Creator has been blocked"
@@ -3165,9 +3203,9 @@ msgstr "Alapértelmezett"
 msgid "Default icons"
 msgstr "Alapértelmezett ikonok"
 
-#: src/components/dms/MessageContextMenu.tsx:208
+#: src/components/dms/MessageContextMenu.tsx:209
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:803
-#: src/screens/Messages/components/ChatStatusInfo.tsx:55
+#: src/screens/Messages/components/ChatStatusInfo.tsx:53
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:275
 #: src/screens/Settings/AppPasswords.tsx:213
 #: src/screens/StarterPack/StarterPackScreen.tsx:617
@@ -3218,7 +3256,7 @@ msgstr "Beszélgetés törlése"
 msgid "Delete Conversation"
 msgstr "Beszélgetés törlése"
 
-#: src/components/dms/MessageContextMenu.tsx:168
+#: src/components/dms/MessageContextMenu.tsx:169
 msgid "Delete for me"
 msgstr "Törlés helyileg"
 
@@ -3227,11 +3265,11 @@ msgstr "Törlés helyileg"
 msgid "Delete list"
 msgstr "Lista törlése"
 
-#: src/components/dms/MessageContextMenu.tsx:206
+#: src/components/dms/MessageContextMenu.tsx:207
 msgid "Delete message"
 msgstr "Üzenet törlése"
 
-#: src/components/dms/MessageContextMenu.tsx:166
+#: src/components/dms/MessageContextMenu.tsx:167
 msgid "Delete message for me"
 msgstr "Üzenet törlése helyileg"
 
@@ -3267,9 +3305,8 @@ msgid "Deleted"
 msgstr "Törölt tartalom"
 
 #: src/components/dms/MessagesListHeader.tsx:105
-#: src/screens/Messages/components/ChatListItem.tsx:128
-#: src/screens/Messages/ConversationSettings.tsx:383
-#: src/screens/Messages/ConversationSettings.tsx:599
+#: src/screens/Messages/components/ChatListItem.tsx:118
+#: src/screens/Messages/ConversationSettings/Member.tsx:48
 msgid "Deleted Account"
 msgstr "Törölt fiók"
 
@@ -3330,6 +3367,11 @@ msgstr "Párbeszédablak: A bejegyzés kapcsolatbalépési jogosultságainak tes
 #: src/screens/Settings/AppearanceSettings.tsx:110
 msgid "Dim"
 msgstr "Félhomályos"
+
+#: src/screens/Messages/components/InviteLinkDialog.tsx:323
+#: src/screens/Messages/components/InviteLinkDialog.tsx:331
+msgid "Disable"
+msgstr "Letiltás"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:234
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:243
@@ -3534,7 +3576,7 @@ msgctxt "action"
 msgid "Done"
 msgstr "Kész"
 
-#: src/components/dms/MessageItem.tsx:451
+#: src/components/dms/MessageItem.tsx:452
 msgid "Double tap or long press the message to add a reaction"
 msgstr "Koppints kétszer vagy tartsd lenyomva az üzenetet egy reakció hozzáfűzéséhez."
 
@@ -3624,6 +3666,7 @@ msgstr "pl.: Akik folyton csak reklámokkal válaszolnak."
 msgid "Eating disorders"
 msgstr "Étkezési zavar"
 
+#: src/screens/Messages/components/EditTextButton.tsx:51
 #: src/screens/Settings/AccountSettings.tsx:150
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:255
 #: src/screens/StarterPack/StarterPackScreen.tsx:606
@@ -3647,8 +3690,8 @@ msgstr "Profilkép szerkesztése"
 msgid "Edit Feeds"
 msgstr "Hírfolyamok szerkesztése"
 
-#: src/screens/Messages/ConversationSettings.tsx:1042
-#: src/screens/Messages/ConversationSettings.tsx:1047
+#: src/screens/Messages/ConversationSettings/prompts.tsx:27
+#: src/screens/Messages/ConversationSettings/prompts.tsx:32
 msgid "Edit group name"
 msgstr "Csoportnév szerkesztése"
 
@@ -3667,6 +3710,10 @@ msgstr "Kapcsolatbalépési beállítások szerkesztése"
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:106
 msgid "Edit interests"
 msgstr "Érdeklődési körök szerkesztése"
+
+#: src/screens/Messages/components/InviteLinkDialog.tsx:300
+msgid "Edit link settings"
+msgstr "Meghívó beállításai"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:191
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:194
@@ -3687,7 +3734,7 @@ msgstr "Moderálólista szerkesztése"
 msgid "Edit My Feeds"
 msgstr "Hírfolyamgyűjtemény szerkesztése"
 
-#: src/screens/Messages/ConversationSettings.tsx:859
+#: src/screens/Messages/ConversationSettings/index.tsx:455
 msgid "Edit name"
 msgstr "Név szerkesztése"
 
@@ -3721,7 +3768,7 @@ msgstr "Profil szerkesztése"
 msgid "Edit starter pack"
 msgstr "Kezdőcsomag szerkesztése"
 
-#: src/screens/Messages/ConversationSettings.tsx:858
+#: src/screens/Messages/ConversationSettings/index.tsx:454
 msgid "Edit this group chat’s name"
 msgstr "A csoport nevének szerkesztése"
 
@@ -4116,10 +4163,15 @@ msgctxt "toast"
 msgid "Failed to accept chat"
 msgstr "A csevegési kérelem elfogadása meghiúsult"
 
-#: src/components/dms/ActionsWrapper.web.tsx:67
-#: src/components/dms/MessageContextMenu.tsx:104
+#: src/components/dms/ActionsWrapper.web.tsx:70
+#: src/components/dms/MessageContextMenu.tsx:107
 msgid "Failed to add emoji reaction"
 msgstr "Az emoji-reakció hozzáfűzése meghiúsult"
+
+#: src/screens/Messages/components/MessagesListInfoPanel.tsx:39
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:38
+msgid "Failed to add members"
+msgstr "A tagfelvétel meghiúsult"
 
 #: src/components/dialogs/StarterPackDialog.tsx:280
 msgid "Failed to add to starter pack"
@@ -4134,9 +4186,13 @@ msgid "Failed to create app password. Please try again."
 msgstr "Az alkalmazásjelszó létrehozása meghiúsult. Próbáld újra."
 
 #: src/components/dms/MessageProfileButton.tsx:38
-#: src/screens/Messages/ConversationSettings.tsx:529
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:63
 msgid "Failed to create conversation"
 msgstr "A csevegés törlése meghiúsult"
+
+#: src/screens/Messages/components/InviteLinkDialog.tsx:85
+msgid "Failed to create invite link"
+msgstr "A meghívó létrehozása meghiúsult"
 
 #: src/screens/StarterPack/Wizard/index.tsx:250
 #: src/screens/StarterPack/Wizard/index.tsx:260
@@ -4149,7 +4205,7 @@ msgctxt "toast"
 msgid "Failed to delete chat"
 msgstr "A csevegés törlése meghiúsult"
 
-#: src/components/dms/MessageContextMenu.tsx:86
+#: src/components/dms/MessageContextMenu.tsx:89
 msgid "Failed to delete message"
 msgstr "Az üzenet törlése meghiúsult"
 
@@ -4161,14 +4217,26 @@ msgstr "A bejegyzés törlése meghiúsult. Próbáld újra."
 msgid "Failed to delete starter pack"
 msgstr "A kezdőcsomag törlése meghiúsult"
 
+#: src/screens/Messages/components/InviteLinkDialog.tsx:108
+msgid "Failed to disable invite link"
+msgstr "A meghívó letiltása meghiúsult"
+
 #. placeholder {0}: error?.message
 #: src/screens/Profile/components/GermButton.tsx:195
 msgid "Failed to disconnect Germ DM. Error: {0}"
 msgstr "A Germ DM szétkapcsolása meghiúsult. Hibaüzenet: {0}"
 
-#: src/screens/Messages/ConversationSettings.tsx:731
+#: src/screens/Messages/ConversationSettings/index.tsx:317
 msgid "Failed to edit group chat name"
 msgstr "A csevegőcsoport átnevezése meghiúsult"
+
+#: src/screens/Messages/components/InviteLinkDialog.tsx:98
+msgid "Failed to edit invite link"
+msgstr "A meghívó szerkesztése meghiúsult"
+
+#: src/screens/Messages/components/InviteLinkDialog.tsx:118
+msgid "Failed to enable invite link"
+msgstr "A meghívó engedélyezése meghiúsult"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:143
 msgid "Failed to follow all suggested accounts, please try again"
@@ -4186,7 +4254,7 @@ msgstr "A javaslat elrejtése meghiúsult. Ellenőrizd az internetkapcsolatot"
 msgid "Failed to launch SMS app"
 msgstr "Az SMS-alkalmazás megnyitása meghiúsult"
 
-#: src/screens/Messages/ConversationSettings.tsx:759
+#: src/screens/Messages/ConversationSettings/index.tsx:342
 msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "A csevegőcsoport elhagyása meghiúsult"
@@ -4250,12 +4318,16 @@ msgstr "Az ajánlott hírfolyamok betöltése meghiúsult"
 msgid "Failed to load suggested follows"
 msgstr "A javasolt személyek betöltése meghiúsult"
 
+#: src/screens/Messages/ConversationSettings/index.tsx:360
+msgid "Failed to lock group chat"
+msgstr "A csevegőcsoport zárolása meghiúsult"
+
 #: src/screens/Messages/Inbox.tsx:321
 #: src/screens/Messages/Inbox.tsx:348
 msgid "Failed to mark all requests as read"
 msgstr "A kérelmek megjelölése olvasottként meghiúsult"
 
-#: src/screens/Messages/ConversationSettings.tsx:747
+#: src/screens/Messages/ConversationSettings/index.tsx:331
 msgid "Failed to mute group chat"
 msgstr "A csevegőcsoport elnémítása meghiúsult"
 
@@ -4277,8 +4349,8 @@ msgstr "Hálózati hiba miatt az adatok eltávolítása meghiúsult. Ellenőrizd
 msgid "Failed to remove data. {0}"
 msgstr "Az adatok eltávolítása meghiúsult. {0}"
 
-#: src/components/dms/ActionsWrapper.web.tsx:63
-#: src/components/dms/MessageContextMenu.tsx:100
+#: src/components/dms/ActionsWrapper.web.tsx:66
+#: src/components/dms/MessageContextMenu.tsx:103
 #: src/components/dms/ReactionsDialog.tsx:174
 msgid "Failed to remove emoji reaction"
 msgstr "Az emoji-reakció eltávolítása meghiúsult"
@@ -4286,6 +4358,10 @@ msgstr "Az emoji-reakció eltávolítása meghiúsult"
 #: src/components/dialogs/StarterPackDialog.tsx:293
 msgid "Failed to remove from starter pack"
 msgstr "A kezdőcsomagról levétel meghiúsult"
+
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:70
+msgid "Failed to remove group chat member"
+msgstr "A csoporttag eltávolítása meghiúsult"
 
 #: src/components/verification/VerificationRemovePrompt.tsx:34
 msgid "Failed to remove verification"
@@ -4332,6 +4408,10 @@ msgstr "A fellebbezés elküldése meghiúsult. Próbáld újra."
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:251
 msgid "Failed to toggle thread mute, please try again"
 msgstr "A beszélgetés némításának be-/kikapcsolása meghiúsult. Próbáld újra."
+
+#: src/screens/Messages/ConversationSettings/index.tsx:363
+msgid "Failed to unlock group chat"
+msgstr "A csevegőcsoport zárolásának feloldása meghiúsult"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:107
 msgid "Failed to unpin list"
@@ -4814,6 +4894,20 @@ msgstr "A(z) <0/> hírfolyamból"
 msgid "Generate a starter pack"
 msgstr "Kezdőcsomag létrehozása"
 
+#: src/screens/Messages/components/InviteLinkDialog.tsx:189
+#: src/screens/Messages/components/InviteLinkDialog.tsx:224
+#: src/screens/Messages/components/InviteLinkDialog.tsx:247
+msgid "Generate invite link"
+msgstr "Meghívó létrehozása"
+
+#: src/screens/Messages/components/InviteLinkDialog.tsx:378
+msgid "Generate new invite link"
+msgstr "Új meghívó létrehozása"
+
+#: src/screens/Messages/components/InviteLinkDialog.tsx:383
+msgid "Generate new link"
+msgstr "Új meghívó létrehozása"
+
 #: src/screens/Profile/components/GermButton.tsx:86
 #: src/screens/Profile/components/GermButton.tsx:224
 msgid "Germ DM"
@@ -4894,7 +4988,8 @@ msgstr "Feliratkozás egy fiók új bejegyzéseire"
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:77
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:87
-#: src/screens/Messages/ConversationSettings.tsx:1088
+#: src/screens/Messages/components/InviteLinkDialog.tsx:173
+#: src/screens/Messages/components/InviteLinkDialog.tsx:180
 msgid "Get started"
 msgstr "Rendben"
 
@@ -4936,7 +5031,7 @@ msgstr "Vissza"
 
 #: src/components/Error.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:228
-#: src/screens/Messages/Conversation.tsx:360
+#: src/screens/Messages/Conversation.tsx:365
 #: src/screens/Profile/ErrorState.tsx:63
 #: src/screens/Profile/ErrorState.tsx:67
 #: src/screens/StarterPack/StarterPackScreen.tsx:809
@@ -4998,7 +5093,7 @@ msgid "Go to account settings"
 msgstr "Ugrás a fiókbeállításokhoz"
 
 #. placeholder {0}: profile.handle
-#: src/screens/Messages/components/ChatListItem.tsx:149
+#: src/screens/Messages/components/ChatListItem.tsx:139
 msgid "Go to conversation with {0}"
 msgstr "Ugrás a beszélgetéshez vele: {0}"
 
@@ -5011,13 +5106,13 @@ msgid "Go to next"
 msgstr "Tovább"
 
 #: src/components/dms/ConvoMenu.tsx:255
-#: src/screens/Messages/ConversationSettings.tsx:650
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:189
 #: src/view/shell/desktop/LeftNav.tsx:319
 #: src/view/shell/desktop/LeftNav.tsx:325
 msgid "Go to profile"
 msgstr "Profil megnyitása"
 
-#: src/screens/Messages/components/ChatListItem.tsx:194
+#: src/screens/Messages/components/ChatListItem.tsx:184
 msgid "Go to the group chat named \"{chatName}\""
 msgstr "A(z) {chatName} megnevezésű csevegőcsoport megnyitása"
 
@@ -5049,26 +5144,40 @@ msgstr "Az erőszak látványos megjelenítése"
 msgid "Grooming or predatory behavior"
 msgstr "Kiskorúak kizsákmányolása vagy szexuális ragadozás"
 
-#: src/screens/Messages/ConversationSettings.tsx:740
+#: src/screens/Messages/components/InviteLinkDialog.tsx:437
+msgid "Group chat invite link dialog"
+msgstr "Csoportmeghívó-kezelési párbeszédablak"
+
+#: src/screens/Messages/ConversationSettings/index.tsx:352
+msgctxt "toast"
+msgid "Group chat locked"
+msgstr "Csoport zárolva"
+
+#: src/screens/Messages/ConversationSettings/index.tsx:324
 msgctxt "toast"
 msgid "Group chat muted"
 msgstr "Csevegőcsoport elnémítva"
 
 #: src/Navigation.tsx:575
-#: src/screens/Messages/ConversationSettings.tsx:106
+#: src/screens/Messages/ConversationSettings/index.tsx:92
 msgid "Group chat settings"
 msgstr "Csevegőcsoport beállításai"
 
-#: src/screens/Messages/ConversationSettings.tsx:742
+#: src/screens/Messages/ConversationSettings/index.tsx:354
+msgctxt "toast"
+msgid "Group chat unlocked"
+msgstr "Csoport zárolása feloldva"
+
+#: src/screens/Messages/ConversationSettings/index.tsx:326
 msgctxt "toast"
 msgid "Group chat unmuted"
 msgstr "Csevegőcsoport némítása feloldva"
 
-#: src/screens/Messages/Conversation.tsx:345
+#: src/screens/Messages/Conversation.tsx:349
 msgid "Group chats are not yet available"
 msgstr "A csevegőcsoportok még nem elérhetők."
 
-#: src/screens/Messages/Conversation.tsx:343
+#: src/screens/Messages/Conversation.tsx:347
 msgid "Group chats are now available"
 msgstr "A csevegőcsoportok mostantól elérhetők."
 
@@ -5078,7 +5187,7 @@ msgstr "A csoport zárolva van"
 
 #: src/components/dms/InitiateChatFlow.tsx:231
 #: src/components/dms/InitiateChatFlow.tsx:549
-#: src/screens/Messages/ConversationSettings.tsx:1048
+#: src/screens/Messages/ConversationSettings/prompts.tsx:33
 msgid "Group name"
 msgstr "Csoportnév"
 
@@ -5335,6 +5444,10 @@ msgstr "Hmmmm… Ez a moderálási szolgáltatás nem található."
 #: src/view/com/composer/state/video.ts:414
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Egy pillanat! A videófeltöltés lehetősége még nem mindenki számára elérhető. Próbáld újra később."
+
+#: src/screens/Messages/Conversation.tsx:356
+msgid "Hold your horses! This feature isn't available to you yet. Please check back later."
+msgstr "Hátra az agarakkal! Ez a funkció Számodra még nem elérhető. Próbáld újra később."
 
 #: src/Navigation.tsx:819
 #: src/Navigation.tsx:839
@@ -5682,25 +5795,29 @@ msgstr "Ismerősök meghívása"
 msgid "Invite friends <0/>"
 msgstr "Ismerősök meghívása <0/>"
 
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:113
-#: src/screens/Messages/ConversationSettings.tsx:866
-#: src/screens/Messages/ConversationSettings.tsx:1086
+#: src/screens/Messages/components/InviteLinkDialog.tsx:153
+#: src/screens/Messages/components/InviteLinkDialog.tsx:267
+#: src/screens/Messages/components/InviteLinkDialog.tsx:273
+#: src/screens/Messages/components/InviteLinkDialog.tsx:395
+#: src/screens/Messages/components/MessagesListInfoPanel.tsx:135
+#: src/screens/Messages/ConversationSettings/index.tsx:467
 msgid "Invite link"
 msgstr "Meghívó"
 
-#: src/components/dms/systemMessage.ts:59
+#: src/components/dms/getSystemMessageInfo.ts:80
 msgid "Invite link created"
 msgstr "Meghívó létrehozva."
 
-#: src/components/dms/systemMessage.ts:65
+#: src/components/dms/getSystemMessageInfo.ts:86
+#: src/screens/Messages/components/InviteLinkDialog.tsx:267
 msgid "Invite link disabled"
 msgstr "Meghívó letiltva."
 
-#: src/components/dms/systemMessage.ts:61
+#: src/components/dms/getSystemMessageInfo.ts:82
 msgid "Invite link edited"
 msgstr "Meghívó szerkesztve."
 
-#: src/components/dms/systemMessage.ts:63
+#: src/components/dms/getSystemMessageInfo.ts:84
 msgid "Invite link enabled"
 msgstr "Meghívóhivatkozás engedélyezve."
 
@@ -5712,7 +5829,7 @@ msgstr "Hívj meg másokat is ebbe a kezdőcsomagba!"
 msgid "Invite your friends to follow your favorite feeds and people"
 msgstr "Könnyen oszd meg ismerőseiddel a kedvenc hírfolyamaidat és személyeidet!"
 
-#: src/screens/Messages/ConversationSettings.tsx:613
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:151
 msgid "Invited"
 msgstr "Meghívás elküldve"
 
@@ -5922,7 +6039,7 @@ msgid "Learn more."
 msgstr "További információ."
 
 #: src/components/dms/LeaveConvoPrompt.tsx:52
-#: src/screens/Messages/ConversationSettings.tsx:894
+#: src/screens/Messages/ConversationSettings/index.tsx:500
 msgid "Leave"
 msgstr "Elhagyás"
 
@@ -5939,11 +6056,11 @@ msgstr "Csevegés elhagyása"
 msgid "Leave conversation"
 msgstr "Beszélgetés elhagyása"
 
-#: src/screens/Messages/ConversationSettings.tsx:1132
+#: src/screens/Messages/ConversationSettings/prompts.tsx:92
 msgid "Leave group chat"
 msgstr "Csevegőcsoport elhagyása"
 
-#: src/screens/Messages/ConversationSettings.tsx:893
+#: src/screens/Messages/ConversationSettings/index.tsx:499
 msgid "Leave this group chat"
 msgstr "Csevegőcsoport elhagyása"
 
@@ -6036,14 +6153,14 @@ msgstr "{0, plural, one {#} other {#}} felhasználó kedveli"
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "{likeCount, plural, one {#} other {#}} felhasználó kedveli"
 
-#: src/lib/hooks/useNotificationHandler.ts:129
+#: src/lib/hooks/useNotificationHandler.ts:136
 #: src/screens/Settings/NotificationSettings/index.tsx:127
 #: src/screens/Settings/NotificationSettings/LikeNotificationSettings.tsx:41
 #: src/view/screens/Profile.tsx:237
 msgid "Likes"
 msgstr "Kedvelések"
 
-#: src/lib/hooks/useNotificationHandler.ts:171
+#: src/lib/hooks/useNotificationHandler.ts:178
 #: src/screens/Settings/NotificationSettings/index.tsx:208
 #: src/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings.tsx:41
 msgid "Likes of your reposts"
@@ -6237,27 +6354,27 @@ msgstr "Kapcsolatbalépési beállítások betöltése…"
 msgid "Loading..."
 msgstr "Betöltés…"
 
-#: src/screens/Messages/ConversationSettings.tsx:1006
+#: src/screens/Messages/ConversationSettings/index.tsx:621
 msgid "Loading…"
-msgstr "Betöltés…"
+msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:876
+#: src/screens/Messages/ConversationSettings/index.tsx:480
 msgid "Lock"
 msgstr "Zárolás"
 
-#: src/screens/Messages/ConversationSettings.tsx:1109
+#: src/screens/Messages/ConversationSettings/prompts.tsx:69
 msgid "Lock group chat"
 msgstr "Csevegőcsoport zárolása"
 
-#: src/screens/Messages/ConversationSettings.tsx:1107
+#: src/screens/Messages/ConversationSettings/prompts.tsx:67
 msgid "Lock group chat?"
 msgstr "Csevegőcsoport zárolása"
 
-#: src/screens/Messages/ConversationSettings.tsx:874
+#: src/screens/Messages/ConversationSettings/index.tsx:478
 msgid "Lock this group chat"
 msgstr "A csevegőcsoport zárolása"
 
-#: src/screens/Messages/ConversationSettings.tsx:876
+#: src/screens/Messages/ConversationSettings/index.tsx:480
 msgid "Locked"
 msgstr "Zárolva"
 
@@ -6367,11 +6484,11 @@ msgstr "A médiatartalmak egy másik eszközön érhetők el"
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr "A nyugalom megzavarására alkalmas vagy felnőtt témákat ábrázoló médiatartalom."
 
-#: src/screens/Messages/ConversationSettings.tsx:245
+#: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:28
 msgid "Members"
 msgstr "Tagok"
 
-#: src/screens/Messages/ConversationSettings.tsx:1108
+#: src/screens/Messages/ConversationSettings/prompts.tsx:68
 msgid "Members can still read chat history but can’t send new messages."
 msgstr "A tagok továbbra is képesek lesznek az üzenetek elolvasására, de újakat nem képesek küldeni."
 
@@ -6383,7 +6500,7 @@ msgstr "Megemlítési értesítések"
 msgid "mentioned users"
 msgstr "a megemlített felhasználók"
 
-#: src/lib/hooks/useNotificationHandler.ts:150
+#: src/lib/hooks/useNotificationHandler.ts:157
 #: src/screens/Settings/NotificationSettings/index.tsx:160
 #: src/screens/Settings/NotificationSettings/MentionNotificationSettings.tsx:41
 #: src/view/screens/Notifications.tsx:100
@@ -6395,12 +6512,12 @@ msgid "Menu"
 msgstr "Menü"
 
 #: src/screens/Messages/components/MessageComposer.tsx:208
-#: src/screens/Messages/components/MessageInput.tsx:171
+#: src/screens/Messages/components/MessageInput.tsx:172
 #: src/screens/Messages/components/MessageInput.web.tsx:195
 msgid "Message"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings.tsx:658
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:197
 msgctxt "action"
 msgid "Message"
 msgstr "Üzenet küldése"
@@ -6410,26 +6527,26 @@ msgstr "Üzenet küldése"
 msgid "Message {0}"
 msgstr "Üzenetküldés neki: {0}"
 
-#: src/screens/Messages/ConversationSettings.tsx:655
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:194
 msgid "Message {displayName}"
 msgstr "Üzenetküldés neki: {displayName}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:322
+#: src/screens/Messages/components/ChatListItem.tsx:265
 msgid "Message deleted"
 msgstr "Törölt üzenet"
 
-#: src/components/dms/MessageContextMenu.tsx:85
+#: src/components/dms/MessageContextMenu.tsx:88
 msgctxt "toast"
 msgid "Message deleted"
 msgstr "Üzenet törölve"
 
-#: src/components/dms/MessageItem.tsx:554
+#: src/components/dms/MessageItem.tsx:551
 msgid "Message failed to send."
 msgstr "Az üzenet elküldése meghiúsult."
 
 #. placeholder {0}: sender?.handle ?? 'unknown'
 #. placeholder {1}: message.text
-#: src/components/dms/MessageContextMenu.tsx:133
+#: src/components/dms/MessageContextMenu.tsx:134
 msgid "Message from @{0}: {1}"
 msgstr "@{0} üzenete: {1}"
 
@@ -6439,7 +6556,7 @@ msgid "Message from server: {0}"
 msgstr "A kiszolgáló üzenete: {0}"
 
 #: src/screens/Messages/components/MessageComposer.tsx:207
-#: src/screens/Messages/components/MessageInput.tsx:169
+#: src/screens/Messages/components/MessageInput.tsx:170
 msgid "Message input field"
 msgstr "Üzenetbeviteli mező"
 
@@ -6452,7 +6569,7 @@ msgstr "Az üzenet túl hosszú"
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgstr "Az üzenet túl hosszú ({MAX_DM_GRAPHEME_LENGTH}/{graphemeCount})"
 
-#: src/components/dms/MessageContextMenu.tsx:132
+#: src/components/dms/MessageContextMenu.tsx:133
 msgid "Message options"
 msgstr "Üzenetlehetőségek"
 
@@ -6580,7 +6697,7 @@ msgstr "Filmek"
 msgid "Music"
 msgstr "Zene"
 
-#: src/screens/Messages/ConversationSettings.tsx:852
+#: src/screens/Messages/ConversationSettings/index.tsx:448
 msgid "Mute"
 msgstr "Elnémítás"
 
@@ -6625,7 +6742,7 @@ msgstr "Lista elnémítása"
 msgid "Mute these accounts?"
 msgstr "Biztosan el akarod némítani az alábbi fiókokat?"
 
-#: src/screens/Messages/ConversationSettings.tsx:850
+#: src/screens/Messages/ConversationSettings/index.tsx:446
 msgid "Mute this group chat"
 msgstr "Csevegőcsoport elnémítása"
 
@@ -6663,7 +6780,7 @@ msgstr "Válaszlánc elnémítása"
 msgid "Mute words & tags"
 msgstr "Szavak és címkék elnémítása"
 
-#: src/screens/Messages/ConversationSettings.tsx:852
+#: src/screens/Messages/ConversationSettings/index.tsx:448
 msgid "Muted"
 msgstr "Elnémítva"
 
@@ -6775,24 +6892,21 @@ msgid "New chat"
 msgstr "Új csevegés"
 
 #. placeholder {0}: members[0].displayName
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:38
+#: src/screens/Messages/components/MessagesListInfoPanel.tsx:57
 msgid "New chat with {0}"
 msgstr "Új csevegés vele: {0}"
 
 #. placeholder {0}: members[0].displayName
 #. placeholder {1}: members[1].displayName
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:42
+#: src/screens/Messages/components/MessagesListInfoPanel.tsx:60
 msgid "New chat with {0} and {1}"
 msgstr "Új csevegés velük: {0} és {1}"
 
 #. placeholder {0}: members[0].displayName
 #. placeholder {1}: members[1].displayName
-#. placeholder {2}: members.length - 2
-#. placeholder {3}: members.length - 2
-#. placeholder {4}: members.length - 2
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:49
-msgid "New chat with {0}, {1}, and {2, plural, one {{3} more} other {{4} more}}."
-msgstr "Új csevegés velük: {0}, {1}, és {2, plural, other {{4}}} további személy."
+#: src/screens/Messages/components/MessagesListInfoPanel.tsx:67
+msgid "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} more} other {{memberCount} more}}."
+msgstr "Új csevegés velük: {0}, {1} és {memberCount, plural, other {{memberCount}}} további személy."
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:223
 msgid "New email address"
@@ -6809,7 +6923,7 @@ msgstr "Új funkció"
 msgid "New follower notifications"
 msgstr "Értesítések új követőkről"
 
-#: src/lib/hooks/useNotificationHandler.ts:164
+#: src/lib/hooks/useNotificationHandler.ts:171
 #: src/screens/Settings/NotificationSettings/index.tsx:138
 #: src/screens/Settings/NotificationSettings/NewFollowerNotificationSettings.tsx:41
 msgid "New followers"
@@ -6891,7 +7005,7 @@ msgstr "Hírek"
 
 #: src/components/contacts/screens/ViewMatches.tsx:395
 #: src/components/contacts/screens/ViewMatches.tsx:410
-#: src/components/dms/AddMembersFlow.tsx:256
+#: src/components/dms/AddMembersFlow.tsx:265
 #: src/components/dms/InitiateChatFlow.tsx:442
 #: src/screens/Login/ForgotPasswordForm.tsx:149
 #: src/screens/Login/ForgotPasswordForm.tsx:156
@@ -6989,7 +7103,7 @@ msgstr "Abbahagytad {0} követését"
 msgid "No media yet"
 msgstr "Még nincsenek médiatartalmak"
 
-#: src/screens/Messages/components/ChatListItem.tsx:263
+#: src/screens/Messages/components/ChatListItem.tsx:253
 msgid "No messages yet"
 msgstr "Még nem rendelkezel üzenetekkel"
 
@@ -7049,7 +7163,7 @@ msgid "No result"
 msgstr "Nincs találat"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:249
-#: src/components/dms/AddMembersFlow.tsx:208
+#: src/components/dms/AddMembersFlow.tsx:217
 #: src/components/dms/InitiateChatFlow.tsx:338
 #: src/components/ProgressGuide/FollowDialog.tsx:221
 msgid "No results"
@@ -7335,12 +7449,12 @@ msgstr "Profilképkészítő megnyitása"
 msgid "Open camera"
 msgstr "Kamera megnyitása"
 
-#: src/screens/Messages/ConversationSettings.tsx:608
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:138
 msgid "Open chat member options for {displayName}"
 msgstr "{displayName} beállításainak megtekintése"
 
-#: src/screens/Messages/components/ChatListItem.tsx:490
-#: src/screens/Messages/components/ChatListItem.tsx:494
+#: src/screens/Messages/components/ChatListItem.tsx:413
+#: src/screens/Messages/components/ChatListItem.tsx:417
 msgid "Open conversation options"
 msgstr "Beszélgetési beállítások megnyitása"
 
@@ -7375,7 +7489,7 @@ msgstr "Teljes emojilista megnyitása"
 msgid "Open Germ DM"
 msgstr "A Germ DM megnyitása"
 
-#: src/components/dms/MessagesListHeader.tsx:177
+#: src/components/dms/MessagesListHeader.tsx:179
 msgid "Open group chat settings"
 msgstr "Csevegőcsoport beállításainak megnyitása"
 
@@ -7383,7 +7497,7 @@ msgstr "Csevegőcsoport beállításainak megnyitása"
 msgid "Open link to {niceUrl}"
 msgstr "A(z) {niceUrl} hivatkozás megnyitása"
 
-#: src/components/dms/ActionsWrapper.tsx:37
+#: src/components/dms/ActionsWrapper.tsx:43
 msgid "Open message options"
 msgstr "Üzenetlehetőségek megnyitása"
 
@@ -7527,7 +7641,7 @@ msgstr "Bejegyzésíró felület megnyitása"
 msgid "Opens this draft in the composer"
 msgstr "Piszkozat szerkesztése a bejegyzésíró felületen"
 
-#: src/components/dms/MessageItem.tsx:227
+#: src/components/dms/MessageItem.tsx:220
 #: src/view/com/notifications/NotificationFeedItem.tsx:1019
 #: src/view/com/util/UserAvatar.tsx:599
 msgid "Opens this profile"
@@ -7669,6 +7783,14 @@ msgstr "Videó szüneteltetése"
 msgid "People"
 msgstr "Személyek"
 
+#: src/screens/Messages/components/InviteLinkDialog.tsx:140
+msgid "People {ownerName} follows can join instantly"
+msgstr "A(z) {ownerName} által követett személyek csatlakozását nem kell jóváhagyni"
+
+#: src/screens/Messages/components/InviteLinkDialog.tsx:145
+msgid "People {ownerName} follows can request to join"
+msgstr "A(z) {ownerName} által követett személyek kérelmezhetik a csatlakozást"
+
 #. placeholder {0}: route.params.name
 #: src/Navigation.tsx:243
 msgid "People followed by @{0}"
@@ -7683,6 +7805,14 @@ msgstr "Az őt követő személyek: @{0}"
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:193
 msgid "People I follow"
 msgstr "Követett személyektől"
+
+#: src/screens/Messages/components/InviteLinkDialog.tsx:139
+msgid "People I follow can join instantly"
+msgstr "Az Általad követett személyek kézi jóváhagyás nélkül csatlakozhatnak"
+
+#: src/screens/Messages/components/InviteLinkDialog.tsx:144
+msgid "People I follow can request to join"
+msgstr "Az Általad követett személyek kérelmezhetik a csatlakozást"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:510
 msgid "People you follow"
@@ -8049,6 +8179,11 @@ msgstr "Kapcsolatbalépési beállítások"
 msgid "Post language selection"
 msgstr "Bejegyzés nyelvének megadása"
 
+#: src/screens/Messages/components/InviteLinkDialog.tsx:336
+#: src/screens/Messages/components/InviteLinkDialog.tsx:348
+msgid "Post link"
+msgstr "Meghívó közzététele"
+
 #: src/screens/PostThread/components/ThreadError.tsx:33
 #: src/screens/PostThread/components/ThreadItemPostTombstone.tsx:25
 msgid "Post not found"
@@ -8290,7 +8425,7 @@ msgstr "Leválasztottad az idézetet"
 msgid "Quote posts disabled"
 msgstr "Idézés letiltva"
 
-#: src/lib/hooks/useNotificationHandler.ts:157
+#: src/lib/hooks/useNotificationHandler.ts:164
 #: src/screens/Post/PostQuotes.tsx:31
 #: src/screens/Settings/NotificationSettings/index.tsx:171
 #: src/screens/Settings/NotificationSettings/QuoteNotificationSettings.tsx:41
@@ -8313,6 +8448,14 @@ msgstr "Korlát átlépve. Próbáld újra később."
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:700
 msgid "Re-attach quote"
 msgstr "Idézet visszakapcsolása"
+
+#: src/screens/Messages/components/InviteLinkDialog.tsx:365
+msgid "Re-enable invite link"
+msgstr "Meghívó letiltásának feloldása"
+
+#: src/screens/Messages/components/InviteLinkDialog.tsx:373
+msgid "Re-enable link"
+msgstr "Meghívó letiltásának feloldása"
 
 #: src/components/dms/EmojiReactionPicker.tsx:88
 msgid "React with {emoji}"
@@ -8446,7 +8589,7 @@ msgstr "{displayName} eltávolítása a csevegőcsoportból"
 msgid "Remove {displayName} from starter pack"
 msgstr "{displayName} eltávolítása a kezdőcsomagból"
 
-#: src/screens/Messages/ConversationSettings.tsx:681
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:224
 msgid "Remove {displayName} from this group chat"
 msgstr "{displayName} eltávolítása a csevegőcsoportból"
 
@@ -8496,7 +8639,7 @@ msgstr "Hírfolyam eltávolítása"
 msgid "Remove feed?"
 msgstr "Hírfolyam eltávolítása"
 
-#: src/screens/Messages/ConversationSettings.tsx:684
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:227
 msgid "Remove from chat"
 msgstr "Eltávolítás a csevegésből"
 
@@ -8655,7 +8798,7 @@ msgstr "Válasz a bejegyzésedre"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:274
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:286
-#: src/lib/hooks/useNotificationHandler.ts:143
+#: src/lib/hooks/useNotificationHandler.ts:150
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:221
 #: src/screens/Settings/NotificationSettings/index.tsx:149
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:41
@@ -8713,11 +8856,11 @@ msgstr "Frissítetted a válasz láthatóságát"
 msgid "Reply was successfully hidden"
 msgstr "Elrejtetted a választ"
 
-#: src/components/dms/MessageContextMenu.tsx:176
+#: src/components/dms/MessageContextMenu.tsx:177
 #: src/components/dms/MessagesListBlockedFooter.tsx:86
 #: src/components/dms/MessagesListBlockedFooter.tsx:93
 #: src/features/liveNow/components/LiveStatusDialog.tsx:266
-#: src/screens/Messages/ConversationSettings.tsx:885
+#: src/screens/Messages/ConversationSettings/index.tsx:491
 msgid "Report"
 msgstr "Jelentés"
 
@@ -8749,7 +8892,7 @@ msgstr "Hírfolyam jelentése"
 msgid "Report list"
 msgstr "Lista jelentése"
 
-#: src/components/dms/MessageContextMenu.tsx:174
+#: src/components/dms/MessageContextMenu.tsx:175
 msgid "Report message"
 msgstr "Üzenet jelentése"
 
@@ -8776,7 +8919,7 @@ msgstr "Beszélgetés jelentése"
 msgid "Report this feed"
 msgstr "Hírfolyam jelentése"
 
-#: src/screens/Messages/ConversationSettings.tsx:884
+#: src/screens/Messages/ConversationSettings/index.tsx:490
 msgid "Report this group chat"
 msgstr "Csevegőcsoport jelentése"
 
@@ -8844,7 +8987,7 @@ msgstr "{reposter} megosztotta"
 msgid "Reposted by you"
 msgstr "Megosztottad"
 
-#: src/lib/hooks/useNotificationHandler.ts:136
+#: src/lib/hooks/useNotificationHandler.ts:143
 #: src/screens/Settings/NotificationSettings/index.tsx:182
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:41
 msgid "Reposts"
@@ -8854,7 +8997,7 @@ msgstr "Megosztások"
 msgid "Reposts of this post"
 msgstr "A bejegyzés megosztásai"
 
-#: src/lib/hooks/useNotificationHandler.ts:178
+#: src/lib/hooks/useNotificationHandler.ts:185
 #: src/screens/Settings/NotificationSettings/index.tsx:223
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:41
 msgid "Reposts of your reposts"
@@ -9007,7 +9150,7 @@ msgstr "Vissza az előző lépéshez"
 #: src/components/StarterPack/QrCodeDialog.tsx:207
 #: src/features/liveNow/components/EditLiveDialog.tsx:204
 #: src/features/liveNow/components/EditLiveDialog.tsx:211
-#: src/screens/Messages/ConversationSettings.tsx:1063
+#: src/screens/Messages/ConversationSettings/prompts.tsx:47
 #: src/screens/Profile/Header/EditProfileDialog.tsx:233
 #: src/screens/Profile/Header/EditProfileDialog.tsx:247
 #: src/screens/SavedFeeds.tsx:124
@@ -9490,7 +9633,7 @@ msgid "Send feedback"
 msgstr "Visszajelzés küldése"
 
 #: src/screens/Messages/components/MessageComposer.tsx:266
-#: src/screens/Messages/components/MessageInput.tsx:225
+#: src/screens/Messages/components/MessageInput.tsx:226
 #: src/screens/Messages/components/MessageInput.web.tsx:216
 msgid "Send message"
 msgstr "Üzenet küldése"
@@ -9627,6 +9770,8 @@ msgstr "Szexuális tartalom"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:195
 #: src/screens/Hashtag.tsx:130
+#: src/screens/Messages/components/InviteLinkDialog.tsx:352
+#: src/screens/Messages/components/InviteLinkDialog.tsx:359
 #: src/screens/StarterPack/StarterPackScreen.tsx:447
 #: src/screens/Topic.tsx:90
 msgid "Share"
@@ -9996,23 +10141,38 @@ msgstr "További ajánlott hírfolyamok"
 msgid "Some people can reply"
 msgstr "Csak bizonyos személyek válaszolhatnak"
 
+#: src/components/dms/getSystemMessageInfo.ts:58
+msgid "Someone joined the group"
+msgstr "Valaki csatlakozott a csoporthoz."
+
+#: src/components/dms/getSystemMessageInfo.ts:64
+msgid "Someone left the group"
+msgstr "Valaki elhagyta a csoportot."
+
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:290
+#: src/components/dms/MessageItem.tsx:281
 msgid "Someone reacted {0}"
 msgstr "Valaki {0} emojival reagált"
 
-#. placeholder {0}: convo.lastReaction.reaction.value
-#. placeholder {1}: lastMessageText ? `"${convo.lastReaction.message.text}"` : fallbackMessage
-#: src/screens/Messages/components/ChatListItem.tsx:360
-msgid "Someone reacted {0} to {1}"
-msgstr ""
+#. placeholder {0}: reaction.value
+#: src/components/dms/getReactionInfo.ts:47
+msgid "Someone reacted {0} to {target}"
+msgstr "Valaki {0} emojival reagált erre: {target}"
+
+#: src/components/dms/getSystemMessageInfo.ts:42
+msgid "Someone was added to the group"
+msgstr "Valaki hozzá lett adva a csoporthoz."
+
+#: src/components/dms/getSystemMessageInfo.ts:50
+msgid "Someone was removed from the group"
+msgstr "Valaki el lett távolítva a csoportból."
 
 #: src/components/moderation/ReportDialog/index.tsx:103
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr "Valami nem stimmel a beküldendő adatokkal. Vedd fel a kapcsolatot az ügyfélszolgálattal."
 
 #: src/screens/Messages/Conversation.tsx:144
-#: src/screens/Messages/ConversationSettings.tsx:198
+#: src/screens/Messages/ConversationSettings/index.tsx:112
 msgid "Something went wrong"
 msgstr "Valami balul sült el"
 
@@ -10247,7 +10407,7 @@ msgstr "Siker!"
 msgid "Successfully verified"
 msgstr "Fiók hitelesítve"
 
-#: src/components/dms/AddMembersFlow.tsx:200
+#: src/components/dms/AddMembersFlow.tsx:209
 #: src/components/dms/InitiateChatFlow.tsx:317
 msgid "Suggested"
 msgstr "Javasolt"
@@ -10362,7 +10522,7 @@ msgstr "Koppints ide az eltávolításhoz"
 msgid "Tap to remove your {0} reaction"
 msgstr "Koppints ide a(z) „{0}” reakció eltávolításához"
 
-#: src/components/dms/MessageItem.tsx:564
+#: src/components/dms/MessageItem.tsx:561
 msgid "Tap to retry"
 msgstr "Koppints ide az újrapróbálkozáshoz"
 
@@ -10375,7 +10535,7 @@ msgstr "Koppints ide a(z) {0} reakció megtekintéséhez"
 msgid "Tap to show all reactions"
 msgstr "Koppints ide az összes reakció megtekintéséhez"
 
-#: src/components/dms/MessageItem.tsx:313
+#: src/components/dms/MessageItem.tsx:310
 msgid "Tap to view reactions"
 msgstr "Koppints ide a reakciók megtekintéséhez"
 
@@ -10602,6 +10762,10 @@ msgstr "Téma"
 msgid "There is a limit to how often you can change your birthdate. You may need to wait a day or two before updating it again."
 msgstr "A születési dátum szerkesztésének gyakorisága korlátozott. Lehetséges, hogy várnod kell egy pár napot, mielőtt ismét szerkeszthetnéd."
 
+#: src/screens/Messages/components/InviteLinkDialog.tsx:400
+msgid "There is no invite link for this group chat."
+msgstr "Ez a csevegőcsoport jelenleg nem rendelkezik meghívóval."
+
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
 msgstr "A fiók deaktiválásához nem tartozik időkorlát. Bármikor visszajöhetsz."
@@ -10671,8 +10835,8 @@ msgstr "A hírfolyamok frissítése meghiúsult. Ellenőrizd az internetkapcsola
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:431
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:454
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:474
-#: src/screens/Messages/ConversationSettings.tsx:567
-#: src/screens/Messages/ConversationSettings.tsx:580
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:108
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:121
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:117
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:130
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:93
@@ -10799,7 +10963,7 @@ msgstr "Ez a tartalom jelenleg nem elérhető, mert az egyik kapcsolódó felhas
 msgid "This content is not viewable without a Bluesky account."
 msgstr "Ezt a tartalmat bejelentkezés nélkül nem tekintheted meg."
 
-#: src/screens/Messages/components/ChatListItem.tsx:150
+#: src/screens/Messages/components/ChatListItem.tsx:140
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr "Ez a beszélgetés egy már törölt vagy deaktivált fiókkal történt. A lehetőségekhez kattints ide"
 
@@ -10826,10 +10990,6 @@ msgstr "Jelenleg egy alkalmazásjelszóval vagy bejelentkezve. A funkció haszn�
 #: src/lib/strings/errors.ts:31
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr "Jelenleg egy alkalmazásjelszóval vagy bejelentkezve. A funkció használatához a valódi jelszavaddal kell bejelentkezned."
-
-#: src/screens/Messages/Conversation.tsx:352
-msgid "This feature isn't available to you yet. Please check back later."
-msgstr "Ez a funkció számodra még nem elérhető. Próbáld újra később."
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:128
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
@@ -10940,6 +11100,10 @@ msgstr "Ez a profil csak a bejelentkezett felhasználók számára látható; a 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:844
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr "Ez a válasz egy rejtett részlegbe lesz sorolva a válaszláncok legalján és se Te, sem pedig mások nem fognak értesítéseket kapni a jövőbeli válaszokról."
+
+#: src/screens/Messages/ConversationSettings/index.tsx:134
+msgid "This screen is only available for group conversations."
+msgstr "Ez az oldal csak csevegőcsoportoknál elérhető."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:32
 msgid "This service has not provided terms of service or a privacy policy."
@@ -11109,8 +11273,8 @@ msgstr "A legjobbra értékelt válaszok elöl"
 msgid "Topic"
 msgstr "Témakör"
 
-#: src/components/dms/MessageContextMenu.tsx:147
-#: src/components/dms/MessageContextMenu.tsx:149
+#: src/components/dms/MessageContextMenu.tsx:148
+#: src/components/dms/MessageContextMenu.tsx:150
 #: src/components/Post/Translated/index.tsx:150
 #: src/components/Post/Translated/index.tsx:157
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:553
@@ -11183,7 +11347,7 @@ msgstr "Televízió"
 msgid "Two-factor authentication (2FA)"
 msgstr "Kétlépcsős azonosítás (2FA)"
 
-#: src/screens/Messages/components/MessageInput.tsx:170
+#: src/screens/Messages/components/MessageInput.tsx:171
 msgid "Type your message here"
 msgstr "Üzenet megadása"
 
@@ -11255,7 +11419,7 @@ msgctxt "action"
 msgid "Unblock"
 msgstr "Tiltás feloldása"
 
-#: src/screens/Messages/ConversationSettings.tsx:669
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:208
 msgid "Unblock {displayName}"
 msgstr "{displayName} tiltásának feloldása"
 
@@ -11330,11 +11494,11 @@ msgstr "A megadott születési dátum szerint sajnos túl fiatal vagy a Bluesky 
 msgid "Unfortunately, your declared age indicates that you are not old enough to access Bluesky in your region."
 msgstr "A saját állításod szerint ebben a régióban sajnos még túl fiatal vagy a Bluesky használatához."
 
-#: src/screens/Messages/ConversationSettings.tsx:694
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:238
 msgid "Uninvite"
 msgstr "Meghívás visszavonása"
 
-#: src/screens/Messages/ConversationSettings.tsx:691
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:234
 msgid "Uninvite {displayName} from this group chat"
 msgstr "{displayName} meghívásának visszavonása"
 
@@ -11360,7 +11524,7 @@ msgstr "Mégse tetszik"
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "Kedvelés visszavonása ({0, plural, one {# kedvelés} other {# kedvelés}})"
 
-#: src/screens/Messages/ConversationSettings.tsx:874
+#: src/screens/Messages/ConversationSettings/index.tsx:477
 msgid "Unlock this group chat"
 msgstr "A csevegőcsoport zárolásának feloldása"
 
@@ -11397,7 +11561,7 @@ msgstr "Beszélgetés némításának feloldása"
 msgid "Unmute list"
 msgstr "Lista némításának feloldása"
 
-#: src/screens/Messages/ConversationSettings.tsx:849
+#: src/screens/Messages/ConversationSettings/index.tsx:445
 msgid "Unmute this group chat"
 msgstr "Csevegőcsoport némításának feloldása"
 
@@ -11496,12 +11660,16 @@ msgstr "<0>{displayName}</0> listatagságának frissítése"
 msgid "Update email"
 msgstr "E-mail-cím frissítése"
 
+#: src/screens/Messages/components/InviteLinkDialog.tsx:246
+msgid "Update invite link"
+msgstr "Meghívó frissítése"
+
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:544
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:565
 msgid "Update to {domain}"
 msgstr "Frissítés erre: {domain}"
 
-#: src/screens/Messages/Conversation.tsx:350
+#: src/screens/Messages/Conversation.tsx:354
 msgid "Update your app to the latest version to join in!"
 msgstr "A csatlakozáshoz az alkalmazás frissítése szükséges."
 
@@ -11881,7 +12049,7 @@ msgid "View {0}’s profile"
 msgstr "{0} profiljának megtekintése"
 
 #: src/components/dms/MessagesListHeader.tsx:118
-#: src/screens/Messages/ConversationSettings.tsx:645
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:184
 msgid "View {displayName}’s profile"
 msgstr "{displayName} profiljának megtekintése"
 
@@ -11907,7 +12075,7 @@ msgstr "Részletek"
 msgid "View full thread"
 msgstr "Teljes válaszlánc megtekintése"
 
-#: src/screens/Messages/ConversationSettings.tsx:256
+#: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:44
 msgid "View incoming group chat requests"
 msgstr "Bejövő csevegőcsoporti kérelmek megtekintése"
 
@@ -11946,6 +12114,10 @@ msgstr "Borítókép megtekintése"
 #: src/view/com/profile/ProfileSubpageHeader.tsx:108
 msgid "View the avatar"
 msgstr "Profilkép megtekintése"
+
+#: src/screens/Messages/ConversationSettings/index.tsx:465
+msgid "View the invite link for this group chat"
+msgstr "A csevegőcsoport meghívójának megtekintése"
 
 #. placeholder {0}: labeler.creator.handle
 #: src/components/LabelingServiceCard/index.tsx:164
@@ -12062,7 +12234,7 @@ msgstr "Erre a témakörre nincs találat."
 msgid "We couldn't load this conversation"
 msgstr "Ez a beszélgetés nem található"
 
-#: src/screens/Messages/ConversationSettings.tsx:199
+#: src/screens/Messages/ConversationSettings/index.tsx:113
 msgid "We couldn’t load this conversation’s settings"
 msgstr "A beszélgetés beállításainak betöltése meghiúsult"
 
@@ -12172,7 +12344,7 @@ msgstr "Hiba történt az életkor-igazolási folyamat elindítása közben. Ha 
 msgid "We're having network issues, try again"
 msgstr "Hálózati hiba történt. Próbáld újra."
 
-#: src/components/dms/AddMembersFlow.tsx:152
+#: src/components/dms/AddMembersFlow.tsx:157
 #: src/components/dms/InitiateChatFlow.tsx:254
 msgid "We’re having network issues, try again"
 msgstr "Hálózati hiba történt. Próbáld újra."
@@ -12271,6 +12443,10 @@ msgstr "Ha rákoppintasz a jelvényre, akkor megtekintheted egy fiók hitelesít
 msgid "Who can interact with this post?"
 msgstr "Kapcsolatbalépési információ"
 
+#: src/screens/Messages/components/InviteLinkDialog.tsx:199
+msgid "Who can join this group chat and how"
+msgstr "A csatlakozás körei és módja"
+
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:427
 #: src/components/WhoCanReply.tsx:116
 msgid "Who can reply"
@@ -12361,6 +12537,10 @@ msgstr "Írók"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:368
 msgid "Wrong DID returned from server. Received: {0}"
 msgstr "A kiszolgáló helytelen DID-t adott vissza. Válasz: {0}"
+
+#: src/screens/Messages/ConversationSettings/index.tsx:133
+msgid "Wrong kind of conversation"
+msgstr "Helytelen csevegéstípus"
 
 #: src/features/liveNow/components/EditLiveDialog.tsx:154
 #: src/features/liveNow/components/GoLiveDialog.tsx:136
@@ -12475,7 +12655,7 @@ msgstr "Emellett lehetőséged van letölteni a csevegési adataidat is, „JSON
 msgid "You can always opt out and delete your data"
 msgstr "Ezt az engedélyt bármikor visszavonhatod és törölheted az adataidat"
 
-#: src/lib/hooks/useNotificationHandler.ts:104
+#: src/lib/hooks/useNotificationHandler.ts:111
 msgid "You can choose whether chat notifications have sound in the chat settings within the app"
 msgstr "A csevegési értesítések hangosítását/némítását az alkalmazáson belüli csevegési beállításokban szabhatod személyre"
 
@@ -12719,15 +12899,14 @@ msgid "You probably want to restart the app now."
 msgstr "Lehetséges, hogy most előnyös lenne bezárni és újra megnyitni az alkalmazást."
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:281
+#: src/components/dms/MessageItem.tsx:274
 msgid "You reacted {0}"
 msgstr "{0} emojival reagáltál"
 
-#. placeholder {0}: convo.lastReaction.reaction.value
-#. placeholder {1}: lastMessageText ? `"${convo.lastReaction.message.text}"` : fallbackMessage
-#: src/screens/Messages/components/ChatListItem.tsx:341
-msgid "You reacted {0} to {1}"
-msgstr ""
+#. placeholder {0}: reaction.value
+#: src/components/dms/getReactionInfo.ts:43
+msgid "You reacted {0} to {target}"
+msgstr "{0} emojival reagáltál erre: {target}"
 
 #: src/components/dialogs/BirthDateSettings.tsx:87
 #: src/components/dialogs/BirthDateSettings.tsx:97
@@ -12756,22 +12935,14 @@ msgstr "Mostantól fogsz értesítéseket kapni erről a válaszláncról"
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "Kapni fogsz egy „helyreállítási kódot” tartalmazó e-mailt. Ezt a kódot itt kell megadnod a jelszó megváltoztatásához."
 
-#: src/screens/Messages/ConversationSettings.tsx:1131
+#: src/screens/Messages/ConversationSettings/prompts.tsx:91
 msgid "You won’t be able to rejoin unless you’re invited."
 msgstr "A jövőben képtelen leszel ismét csatlakozni, hacsak meg nem hívnak."
 
-#. placeholder {0}: convo.lastMessage.text
-#: src/screens/Messages/components/ChatListItem.tsx:279
-msgid "You: {0}"
-msgstr ""
-
-#: src/screens/Messages/components/ChatListItem.tsx:306
-msgid "You: {defaultEmbeddedContentMessage}"
-msgstr ""
-
-#: src/screens/Messages/components/ChatListItem.tsx:299
-msgid "You: {short}"
-msgstr ""
+#. When the last message in a chat was made by you.
+#: src/components/dms/getMessageInfo.ts:43
+msgid "You: {message}"
+msgstr "Én: {message}"
 
 #: src/screens/Signup/index.tsx:152
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
@@ -12988,6 +13159,10 @@ msgstr "Tartózkodási hely frissítve."
 #: src/components/dialogs/MutedWords.tsx:378
 msgid "Your muted words"
 msgstr "Elnémított szavak"
+
+#: src/screens/Messages/components/InviteLinkDialog.tsx:165
+msgid "Your name, avatar, and the name of the group chat will be visible to everyone."
+msgstr "A felhasználóneved, profilképed és a csoport neve nyilvánosan megtekinthető lesz."
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:72
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."
