@@ -37,8 +37,16 @@ export function GifPickerHeader({
       <TextField.Root style={a.flex_1}>
         <TextField.Icon icon={Search} />
         <TextField.Input
-          label={l`Search GIFs`}
-          placeholder={l`Search KLIPY`}
+          label={l({
+            message: 'Search GIFs',
+            comment:
+              'Accessibility label for the GIF search input inside the GIF picker dialog.',
+          })}
+          placeholder={l({
+            message: 'Search KLIPY',
+            comment:
+              'Placeholder text inside the GIF search input. KLIPY is the third-party GIF provider; keep the brand name as-is.',
+          })}
           onChangeText={onChangeText}
           returnKeyType="search"
           inputRef={inputRef}
@@ -56,7 +64,11 @@ export function GifPickerHeader({
             shape="round"
             style={a.z_30}
             onPress={onClear}
-            label={l`Clear search`}>
+            label={l({
+              message: 'Clear GIF search',
+              comment:
+                'Accessibility label for the X button inside the search input that clears the typed query and returns to the trending feed.',
+            })}>
             <ButtonIcon icon={X} size="sm" />
           </Button>
         )}

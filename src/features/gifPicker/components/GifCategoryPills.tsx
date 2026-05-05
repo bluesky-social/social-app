@@ -23,19 +23,82 @@ export type GifCategory = {
   searchterm: string | null // null = trending/recents (handled by consumer)
 }
 
+/*
+ * Category pill labels are icon-only buttons in the UI; the `label` field is
+ * what screen readers announce. Each is phrased "[topic] GIFs" so the
+ * announcement makes sense in isolation rather than just "Love" or "Happy".
+ */
 export const GIF_CATEGORIES: readonly GifCategory[] = [
-  {id: 'recents', icon: Clock, label: msg`Recents`, searchterm: null},
-  {id: 'trending', icon: Trending, label: msg`Trending`, searchterm: null},
-  {id: 'love', icon: Heart, label: msg`Love`, searchterm: 'love'},
-  {id: 'happy', icon: EmojiSmile, label: msg`Happy`, searchterm: 'happy'},
-  {id: 'sad', icon: EmojiSad, label: msg`Sad`, searchterm: 'cry'},
+  {
+    id: 'recents',
+    icon: Clock,
+    label: msg({
+      message: 'Recent GIFs',
+      comment:
+        'Accessibility label for the icon-only pill that shows previously selected GIFs in the GIF picker.',
+    }),
+    searchterm: null,
+  },
+  {
+    id: 'trending',
+    icon: Trending,
+    label: msg({
+      message: 'Trending GIFs',
+      comment:
+        'Accessibility label for the icon-only pill that shows currently trending/featured GIFs in the GIF picker.',
+    }),
+    searchterm: null,
+  },
+  {
+    id: 'love',
+    icon: Heart,
+    label: msg({
+      message: 'Love GIFs',
+      comment:
+        'Accessibility label for the icon-only pill that filters the GIF picker to GIFs about love/affection.',
+    }),
+    searchterm: 'love',
+  },
+  {
+    id: 'happy',
+    icon: EmojiSmile,
+    label: msg({
+      message: 'Happy GIFs',
+      comment:
+        'Accessibility label for the icon-only pill that filters the GIF picker to happy/joyful GIFs.',
+    }),
+    searchterm: 'happy',
+  },
+  {
+    id: 'sad',
+    icon: EmojiSad,
+    label: msg({
+      message: 'Sad GIFs',
+      comment:
+        'Accessibility label for the icon-only pill that filters the GIF picker to sad/crying GIFs.',
+    }),
+    searchterm: 'cry',
+  },
   {
     id: 'party',
     icon: Celebrate,
-    label: msg`Party`,
+    label: msg({
+      message: 'Party GIFs',
+      comment:
+        'Accessibility label for the icon-only pill that filters the GIF picker to celebration/party GIFs.',
+    }),
     searchterm: 'congratulations',
   },
-  {id: 'yes', icon: Shaka, label: msg`Yes`, searchterm: 'yes'},
+  {
+    id: 'yes',
+    icon: Shaka,
+    label: msg({
+      message: 'Yes GIFs',
+      comment:
+        'Accessibility label for the icon-only pill that filters the GIF picker to affirmation/agreement GIFs.',
+    }),
+    searchterm: 'yes',
+  },
 ] as const
 
 export function GifCategoryPills({

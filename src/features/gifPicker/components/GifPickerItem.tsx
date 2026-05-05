@@ -28,7 +28,11 @@ export function GifPickerItem({
 
   return (
     <Button
-      label={l`Select GIF "${gif.title}"`}
+      label={l({
+        message: `Select GIF "${gif.title}"`,
+        comment:
+          'Accessibility label for an individual GIF tile in the picker grid. The placeholder is the GIF’s title from the provider.',
+      })}
       onPress={onPress}
       style={a.w_full}>
       {({pressed}) => (

@@ -1,9 +1,9 @@
-import {useEffect, useImperativeHandle, useRef, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {type TextInput} from 'react-native'
 
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {type ListMethods} from '#/view/com/util/List'
-import {ios, useBreakpoints} from '#/alf'
+import {ios} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {
@@ -20,20 +20,14 @@ import {useRecentGifs} from '#/features/gifPicker/hooks/useRecentGifs'
 import {type Gif} from '#/features/gifPicker/types'
 
 export function GifPickerDialog({
-  controlRef,
+  control,
   onClose,
   onSelectGif: onSelectGifProp,
 }: {
-  controlRef: React.RefObject<{open: () => void} | null>
+  control: Dialog.DialogControlProps
   onClose?: () => void
   onSelectGif: (gif: Gif) => void
 }) {
-  const control = Dialog.useDialogControl()
-
-  useImperativeHandle(controlRef, () => ({
-    open: () => control.open(),
-  }))
-
   const onSelectGif = (gif: Gif) => {
     control.close(() => onSelectGifProp(gif))
   }
@@ -66,7 +60,6 @@ function GifPickerBody({
   control: Dialog.DialogControlProps
   onSelectGif: (gif: Gif) => void
 }) {
-  const {gtMobile} = useBreakpoints()
   const textInputRef = useRef<TextInput>(null)
   const listRef = useRef<ListMethods>(null)
   const [rawSearch, setRawSearch] = useState('')
@@ -125,6 +118,7 @@ function GifPickerBody({
     textInputRef.current?.clear()
     setRawSearch('')
     setActiveCategory('trending')
+    textInputRef.current?.focus()
   }
 
   const onGoBack = () => {
@@ -182,7 +176,7 @@ function GifPickerBody({
 
   return (
     <>
-      {gtMobile && <Dialog.Close />}
+      <Dialog.Close />
       <GifPickerGrid
         ref={listRef}
         items={items}
