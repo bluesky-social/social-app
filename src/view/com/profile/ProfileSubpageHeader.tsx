@@ -19,7 +19,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar, type UserAvatarType} from '#/view/com/util/UserAvatar'
 import {StarterPack} from '#/components/icons/StarterPack'
 import * as Layout from '#/components/Layout'
-import {useLightboxControls} from '#/features/lightbox/state'
+import {useLightboxControls} from '#/components/Lightbox/state'
 
 export function ProfileSubpageHeader({
   isLoading,

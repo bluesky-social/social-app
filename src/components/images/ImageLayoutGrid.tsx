@@ -4,8 +4,8 @@ import {type AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
 import {type AppBskyEmbedImages} from '@atproto/api'
 
 import {atoms as a, useBreakpoints} from '#/alf'
+import {type Dimensions} from '#/components/Lightbox/types'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
-import {type Dimensions} from '#/features/lightbox/types'
 import {GalleryItem} from './ImageLayoutGridItem'
 
 interface ImageLayoutGridProps {

@@ -26,14 +26,14 @@ import {
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/icons/Download'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
+import {CircleChromeButton} from '#/components/Lightbox/chrome/CircleChromeButton'
+import {PagerDots} from '#/components/Lightbox/chrome/PagerDots'
+import {useLightbox, useLightboxControls} from '#/components/Lightbox/state'
+import {type ImageSource} from '#/components/Lightbox/types'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {CircleChromeButton} from '#/features/lightbox/chrome/CircleChromeButton'
-import {PagerDots} from '#/features/lightbox/chrome/PagerDots'
-import {useLightbox, useLightboxControls} from '#/features/lightbox/state'
-import {type ImageSource} from '#/features/lightbox/types'
 
 export function Lightbox() {
   const {activeLightbox} = useLightbox()

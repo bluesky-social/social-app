@@ -61,6 +61,7 @@ import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
+import {Provider as LightboxStateProvider} from '#/components/Lightbox/state'
 import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
@@ -77,7 +78,6 @@ import {
   setupDeviceId,
 } from '#/analytics'
 import {IS_ANDROID, IS_IOS} from '#/env'
-import {Provider as LightboxStateProvider} from '#/features/lightbox/state'
 import {
   prefetchLiveEvents,
   Provider as LiveEventsProvider,

@@ -2,8 +2,8 @@ import {useCallback} from 'react'
 
 import {shareImageModal} from '#/lib/media/manip'
 import {useSaveImageToMediaLibrary} from '#/lib/media/save-image'
-import ImageView from '#/features/lightbox/pager/ImagePager'
-import {useLightbox, useLightboxControls} from '#/features/lightbox/state'
+import ImageView from '#/components/Lightbox/pager/ImagePager'
+import {useLightbox, useLightboxControls} from '#/components/Lightbox/state'
 
 export function Lightbox() {
   const {activeLightbox} = useLightbox()
