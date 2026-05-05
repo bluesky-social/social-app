@@ -11,10 +11,7 @@ import {
   useContextMenuContext,
   useContextMenuMenuContext,
 } from '#/components/ContextMenu/context'
-import {
-  EmojiHeartEyes_Stroke2_Corner0_Rounded as EmojiHeartEyesIcon,
-  EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon,
-} from '#/components/icons/Emoji'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {type TriggerProps} from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
 import {EmojiPopup} from './EmojiPopup'
@@ -36,11 +33,6 @@ export function EmojiReactionPicker({
   const {align, xOffset} = useContextMenuMenuContext()
   const [layout, setLayout] = useState({width: 0, height: 0})
   const {width: screenWidth} = useWindowDimensions()
-
-  // 1 in 100 chance of showing heart eyes icon
-  const EmojiIcon = useMemo(() => {
-    return Math.random() < 0.01 ? EmojiHeartEyesIcon : EmojiSmileIcon
-  }, [])
 
   const position = useMemo(() => {
     return {
@@ -132,7 +124,7 @@ export function EmojiReactionPicker({
             a.border,
             t.atoms.border_contrast_low,
           ]}>
-          <EmojiIcon size="xl" fill={t.palette.contrast_400} />
+          <PlusIcon size="md" fill={t.palette.contrast_1000} />
         </View>
       </EmojiPopup>
     </View>

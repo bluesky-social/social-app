@@ -7,7 +7,7 @@ import {DropdownMenu} from 'radix-ui'
 import {useSession} from '#/state/session'
 import {atoms as a, flatten, useTheme} from '#/alf'
 import * as EmojiPicker from '#/components/EmojiPicker'
-import {DotGrid3x1_Stroke2_Corner0_Rounded as DotGridIcon} from '#/components/icons/DotGrid'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
 import {hasAlreadyReacted, hasReachedReactionLimit} from './util'
@@ -121,7 +121,7 @@ function MenuInner({
               a.justify_center,
               a.align_center,
             ])}>
-            <DotGridIcon size="lg" style={t.atoms.text_contrast_medium} />
+            <PlusIcon size="md" style={t.atoms.text_contrast_medium} />
           </Pressable>
         </DropdownMenu.Item>
       </View>
