@@ -1,5 +1,5 @@
 import {forwardRef} from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {Platform, useWindowDimensions, View} from 'react-native'
 
 import {cleanError} from '#/lib/strings/errors'
 import {type ListMethods} from '#/view/com/util/List'
@@ -75,8 +75,12 @@ export const GifPickerGrid = forwardRef<ListMethods, Props>(
         ListHeaderComponent={<>{header}</>}
         stickyHeaderIndices={[0]}
         onEndReached={onEndReached}
-        onEndReachedThreshold={4}
-        keyboardDismissMode="on-drag"
+        onEndReachedThreshold={1}
+        // On web, "on-drag" blurs the focused input on ANY scroll event,
+        // including programmatic scrolls (e.g., content shrinking when search
+        // results swap in). That breaks search-while-scrolled — the blur fires
+        // mid-typing and subsequent keystrokes go nowhere.
+        keyboardDismissMode={Platform.OS === 'web' ? 'none' : 'on-drag'}
         ListFooterComponent={
           hasData ? (
             <ListFooter

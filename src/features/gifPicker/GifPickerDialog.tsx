@@ -1,4 +1,4 @@
-import {useImperativeHandle, useRef, useState} from 'react'
+import {useEffect, useImperativeHandle, useRef, useState} from 'react'
 import {type TextInput} from 'react-native'
 
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
@@ -114,6 +114,13 @@ function GifPickerBody({
     void fetchNextPage()
   }
 
+  // Scroll to top when the effective query/category changes, NOT on every
+  // keystroke. Calling scrollToOffset on the FlatList while its sticky header
+  // holds the focused input blurs that input on web.
+  useEffect(() => {
+    listRef.current?.scrollToOffset({offset: 0, animated: false})
+  }, [effectiveSearch, isRecentsActive])
+
   const onClearSearch = () => {
     textInputRef.current?.clear()
     setRawSearch('')
@@ -130,12 +137,10 @@ function GifPickerBody({
 
   const onChangeSearch = (text: string) => {
     setRawSearch(text)
-    listRef.current?.scrollToOffset({offset: 0, animated: false})
   }
 
   const onSelectCategory = (category: GifCategory) => {
     setActiveCategory(category.id)
-    listRef.current?.scrollToOffset({offset: 0, animated: false})
   }
 
   const handleSelectGif = (gif: Gif) => {
