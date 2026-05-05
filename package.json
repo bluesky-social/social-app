@@ -48,7 +48,7 @@
     "test-watch": "NODE_ENV=test jest --watchAll",
     "test-ci": "NODE_ENV=test jest --ci --forceExit --reporters=default --reporters=jest-junit",
     "test-coverage": "NODE_ENV=test jest --coverage",
-    "lint": "eslint --cache --quiet src",
+    "lint": "oxlint --type-aware --quiet src",
     "lint-native": "swiftlint ./modules && ktlint ./modules",
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
     "typecheck": "tsgo --project ./tsconfig.check.json",
@@ -248,7 +248,6 @@
     "@babel/preset-env": "^7.26.0",
     "@babel/runtime": "^7.26.0",
     "@crowdin/cli": "^4.14.1",
-    "@eslint/js": "^9.39.2",
     "@lingui/babel-plugin-lingui-macro": "^5.9.2",
     "@lingui/cli": "^5.9.2",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
@@ -268,14 +267,8 @@
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-plugin-react-compiler": "^19.1.0-rc.3",
     "babel-preset-expo": "~54.0.10",
-    "eslint": "^9.39.2",
-    "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-bsky-internal": "link:./eslint",
-    "eslint-plugin-import-x": "^4.16.2",
-    "eslint-plugin-lingui": "^0.12.0",
-    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-compiler": "^19.1.0-rc.2",
-    "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-native": "^5.0.0",
     "eslint-plugin-react-native-a11y": "^3.5.1",
     "eslint-plugin-simple-import-sort": "^13.0.0",
@@ -288,13 +281,14 @@
     "jest-junit": "^16.0.0",
     "lint-staged": "^13.2.3",
     "lockfile-lint": "^4.14.0",
+    "oxlint": "^1.62.0",
+    "oxlint-tsgolint": "^0.22.1",
     "prettier": "^3.6.0",
     "react-native-dotenv": "^3.4.11",
     "react-refresh": "^0.14.0",
     "svgo": "^3.3.2",
     "ts-plugin-sort-import-suggestions": "^1.0.4",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.58.0",
     "webpack-bundle-analyzer": "^4.10.1"
   },
   "resolutions": {
@@ -361,7 +355,7 @@
   },
   "lint-staged": {
     "*{.js,.jsx,.ts,.tsx}": [
-      "eslint --cache --fix"
+      "oxlint --type-aware --fix"
     ],
     "*{.js,.jsx,.ts,.tsx,.css}": [
       "prettier --cache --write --ignore-unknown"

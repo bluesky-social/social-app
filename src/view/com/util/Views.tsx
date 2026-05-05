@@ -10,6 +10,7 @@ import {type FlatListPropsWithLayout} from 'react-native-reanimated'
  * The types are a bit wrong on `FlatList_INTERNAL`
  */
 export const FlatList_INTERNAL = memo(Animated.FlatList)
+FlatList_INTERNAL.displayName = 'FlatList_INTERNAL'
 export type FlatList_INTERNAL<ItemT = any> = Omit<
   FlatListComponent<ItemT, FlatListPropsWithLayout<ItemT>>,
   'CellRendererComponent'
