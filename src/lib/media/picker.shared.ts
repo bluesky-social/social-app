@@ -2,6 +2,7 @@ import {
   type ImagePickerOptions,
   launchImageLibraryAsync,
   UIImagePickerPreferredAssetRepresentationMode,
+  VideoExportPreset,
 } from 'expo-image-picker'
 import {t} from '@lingui/core/macro'
 
@@ -57,11 +58,9 @@ export async function openUnifiedPicker({
     legacy: true,
     base64: IS_WEB,
     selectionLimit: IS_IOS ? selectionCountRemaining : undefined,
-    // important: anything other than `Current` can cause the image picker to appear
-    // to hang after selecting a video as it might attempt to silently transcode it before
-    // returning anything, which can take ages. -sfn
     preferredAssetRepresentationMode:
-      UIImagePickerPreferredAssetRepresentationMode.Current,
+      UIImagePickerPreferredAssetRepresentationMode.Automatic,
+    videoExportPreset: VideoExportPreset.Passthrough,
     videoMaxDuration: VIDEO_MAX_DURATION_MS / 1000,
   })
 }
