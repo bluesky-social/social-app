@@ -18,12 +18,14 @@ import {
 } from '@atproto/api'
 
 import {
+  EmbeddingDisabledError,
   type ResolvedLink,
   type resolveLink as defaultResolveLink,
 } from '#/lib/api/resolve'
 import {resolveLink as importedResolveLink} from '#/lib/api/resolve'
 import {type ComposerImage} from '#/state/gallery'
 import {createPublicAgent} from '#/state/session/agent'
+import {type LinkResolutionFailureCode} from './types'
 
 /**
  * What the worker (or a test) reports back about a resolved URI. `pending`
@@ -32,7 +34,12 @@ import {createPublicAgent} from '#/state/session/agent'
  * worker runs.
  */
 export type EmbedResolution =
-  | {state: 'failed'; uri: string; error: string}
+  | {
+      state: 'failed'
+      uri: string
+      error: string
+      code: LinkResolutionFailureCode
+    }
   | {
       state: 'external'
       uri: string
@@ -87,9 +94,21 @@ export function startUriResolution(opts: StartUriResolutionOptions): void {
           state: 'failed',
           uri: opts.uri,
           error: String((err && (err as Error).message) ?? err),
+          code: parseErrorCode(err),
         },
       }),
   )
+}
+
+/**
+ * Classify a thrown error into a stable failure code that drives UI
+ * behavior. Today we only special-case EmbeddingDisabledError (which
+ * `resolveLink` throws when fetching a post the author has marked
+ * non-embeddable); everything else falls into 'unknown' and is retryable.
+ */
+export function parseErrorCode(err: unknown): LinkResolutionFailureCode {
+  if (err instanceof EmbeddingDisabledError) return 'embedding-disabled'
+  return 'unknown'
 }
 
 function mapResolvedLink(link: ResolvedLink): LinkResolutionOutcome {

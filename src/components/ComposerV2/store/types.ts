@@ -83,11 +83,21 @@ export type PostEmbedMedia =
   | (PostEmbedMediaGif & {kind: 'gif'})
 
 /**
- * What's stored on a post's `embed` field. The failed variant has a bound
- * `retry()` so UI can call it directly without having to look up the post
- * id. The pending variant is set synchronously by addUri while resolution
- * is in flight; the resolved variants (external/feed/list/starter-pack)
- * land when the worker reports back.
+ * Coarse classification of why a link resolution failed. Drives UI
+ * affordances — for example, `embedding-disabled` is a permanent rejection
+ * (embedding the post is forbidden by the author), so the failed variant
+ * does not carry a `retry()`. Anything else falls under `unknown` and is
+ * retryable.
+ */
+export type LinkResolutionFailureCode = 'embedding-disabled' | 'unknown'
+
+/**
+ * What's stored on a post's `embed` field. The failed variant carries a
+ * bound `retry()` for retryable codes; for permanent failures (e.g.
+ * `embedding-disabled`) `retry` is omitted so UI can detect that case and
+ * surface a non-retryable message. The pending variant is set synchronously
+ * by addUri while resolution is in flight; the resolved variants
+ * (external/feed/list/starter-pack) land when the worker reports back.
  *
  * Note: `retry` is a function reference and won't survive JSON serialization.
  * On restore (OS-resume / draft load), the store re-attaches it.
@@ -96,7 +106,13 @@ export type PostEmbedMedia =
  */
 export type PostEmbed =
   | {state: 'pending'; uri: string}
-  | {state: 'failed'; uri: string; error: string; retry: () => void}
+  | {
+      state: 'failed'
+      uri: string
+      error: string
+      code: LinkResolutionFailureCode
+      retry?: () => void
+    }
   | {
       state: 'external'
       uri: string
@@ -132,7 +148,13 @@ export type PostEmbed =
  */
 export type PostEmbedQuote =
   | {state: 'pending'; uri: string}
-  | {state: 'failed'; uri: string; error: string; retry: () => void}
+  | {
+      state: 'failed'
+      uri: string
+      error: string
+      code: LinkResolutionFailureCode
+      retry?: () => void
+    }
   | {
       state: 'resolved'
       uri: string
