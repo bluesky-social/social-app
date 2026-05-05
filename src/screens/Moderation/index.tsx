@@ -97,7 +97,7 @@ export function ModerationScreen(
         <Layout.Header.BackButton />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
-            <Trans>Moderation</Trans>
+            <Trans>Moderation and Content Filters</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot />
