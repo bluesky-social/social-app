@@ -721,11 +721,6 @@ export function Outer({
                     return isValidElement(child) &&
                       (child.type === Item || child.type === Divider) ? (
                       <Fragment key={i}>
-                        {i > 0 ? (
-                          <View
-                            style={[a.border_b, t.atoms.border_contrast_low]}
-                          />
-                        ) : null}
                         {cloneElement(child, {
                           // @ts-expect-error not typed
                           style: {
@@ -877,7 +872,6 @@ export function ItemText({children, style}: ItemTextProps) {
         a.text_md,
         a.font_semi_bold,
         t.atoms.text_contrast_high,
-        {paddingTop: 3},
         style,
         disabled && t.atoms.text_contrast_low,
       ]}>
