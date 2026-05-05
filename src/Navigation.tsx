@@ -102,6 +102,7 @@ import {AboutSettingsScreen} from '#/screens/Settings/AboutSettings'
 import {AccessibilitySettingsScreen} from '#/screens/Settings/AccessibilitySettings'
 import {AccountSettingsScreen} from '#/screens/Settings/AccountSettings'
 import {ActivityPrivacySettingsScreen} from '#/screens/Settings/ActivityPrivacySettings'
+import {AIPreferencesSettingsScreen} from '#/screens/Settings/AIPreferencesSettings'
 import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
 import {AppIconSettingsScreen} from '#/screens/Settings/AppIconSettings'
 import {AppPasswordsScreen} from '#/screens/Settings/AppPasswords'
@@ -396,6 +397,14 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => AccessibilitySettingsScreen}
         options={{
           title: title(msg`Accessibility Settings`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="AIPreferencesSettings"
+        getComponent={() => AIPreferencesSettingsScreen}
+        options={{
+          title: title(msg`AI Preferences`),
           requireAuth: true,
         }}
       />

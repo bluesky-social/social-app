@@ -50,6 +50,7 @@ export type CommonNavigatorParams = {
   PreferencesThreads: undefined
   PreferencesExternalEmbeds: undefined
   AccessibilitySettings: undefined
+  AIPreferencesSettings: undefined
   AppearanceSettings: undefined
   AccountSettings: undefined
   PrivacyAndSecuritySettings: undefined
