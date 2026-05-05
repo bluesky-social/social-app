@@ -32,6 +32,7 @@ export default defineConfig(
       '*.html',
       'bskyweb/**',
       'bskyembed/**',
+      'bskyogcard/**',
       'src/locale/locales/_build/**',
       'src/locale/locales/**/*.js',
       '*.e2e.ts',

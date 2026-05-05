@@ -10,7 +10,7 @@
     "start": "tsx ./src/bin.ts",
     "dev": "tsx watch --clear-screen=false ./src/bin.ts",
     "build": "tsc && cp -r src/assets dist/",
-    "install-fonts": "tsx scripts/install-fonts.ts"
+    "install-fonts": "node scripts/install-fonts.ts"
   },
   "dependencies": {
     "@atproto/api": "0.12.19-next.0",
@@ -29,6 +29,6 @@
     "@types/express": "^4.17.21",
     "@types/node": "^24.12.2",
     "tsx": "^4.21.0",
-    "typescript": "^5.4.5"
+    "typescript": "^6.0.2"
   }
 }
