@@ -16,6 +16,31 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
+      - name: Verify Node version pins match .nvmrc
+        run: |
+          set -euo pipefail
+          expected=$(tr -d '[:space:]' < .nvmrc)
+          rc=0
+          check() {
+            if [ "$2" != "$expected" ]; then
+              echo "::error file=$1::Node version mismatch: $1 pins '$2' but .nvmrc is '$expected'"
+              rc=1
+            fi
+          }
+          # FROM node:X.Y.Z — service runtime images
+          for f in Dockerfile.bskylink Dockerfile.bskyogcard; do
+            v=$(grep -oE 'FROM node:[0-9]+\.[0-9]+\.[0-9]+' "$f" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
+            check "$f" "$v"
+          done
+          # ENV NODE_VERSION=X.Y.Z — Go images that nvm-install Node for the JS build stage
+          for f in Dockerfile Dockerfile.embedr; do
+            v=$(grep -oE 'NODE_VERSION=[0-9]+\.[0-9]+\.[0-9]+' "$f" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
+            check "$f" "$v"
+          done
+          # eas.json "node": "X.Y.Z"
+          v=$(grep -oE '"node":[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"' eas.json | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
+          check "eas.json" "$v"
+          exit $rc
       - name: Install node
         uses: actions/setup-node@v6
         with:

@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 #
 # Node
 #
-ENV NODE_VERSION=20
+ENV NODE_VERSION=24.15.0
 ENV NVM_DIR=/usr/share/nvm
 
 #
