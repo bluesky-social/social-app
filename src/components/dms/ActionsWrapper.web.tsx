@@ -20,14 +20,12 @@ export function ActionsWrapper({
   isFromSelf,
   senderProfile,
   children,
-  onTap,
 }: {
   message: ChatBskyConvoDefs.MessageView
   hasReactions?: boolean
   isFromSelf: boolean
   senderProfile?: bsky.profile.AnyProfileView
   children: React.ReactNode
-  onTap?: () => void
 }) {
   const viewRef = useRef(null)
   const t = useTheme()
@@ -140,13 +138,10 @@ export function ActionsWrapper({
           }}
         </MessageContextMenu>
       </View>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityHint={l`Click to view the date and time`}
-        onPress={onTap}
+      <View
         style={[{maxWidth: '80%'}, isFromSelf ? a.align_end : a.align_start]}>
         {children}
-      </Pressable>
+      </View>
     </View>
   )
 }

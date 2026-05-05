@@ -378,7 +378,10 @@ export function Trigger({
         <View ref={ref} style={[{opacity: context.isOpen ? 0 : 1}, style]}>
           {children({
             IS_NATIVE: true,
-            control: {isOpen: context.isOpen, open},
+            control: {
+              isOpen: context.isOpen,
+              open: mode => void open(mode),
+            },
             state: {
               pressed: false,
               hovered: false,
@@ -594,10 +597,12 @@ const MENU_WIDTH = 240
 
 export function Outer({
   children,
+  label,
   style,
   align = 'left',
 }: {
   children: React.ReactNode
+  label?: string
   style?: StyleProp<ViewStyle>
   align?: 'left' | 'right'
 }) {
@@ -696,6 +701,7 @@ export function Outer({
                   a.shadow_md,
                   t.atoms.bg_contrast_25,
                   a.w_full,
+                  a.p_sm,
                   // @ts-ignore react-native-web expects string, and this file is platform-split -sfn
                   // note: above @ts-ignore cannot be a @ts-expect-error because this does not cause an error
                   // in the typecheck CI - presumably because of RNW overriding the types
@@ -709,14 +715,21 @@ export function Outer({
                 ]}>
                 {/* innermost element - needs an overflow: hidden for children, but we also need a shadow,
                 so put the shadow on the scaling element and the overflow on the innermost element */}
-                <View
-                  style={[
-                    a.flex_1,
-                    a.rounded_md,
-                    a.overflow_hidden,
-                    a.border,
-                    t.atoms.border_contrast_low,
-                  ]}>
+                <View style={[a.flex_1, a.rounded_md, a.overflow_hidden]}>
+                  {label ? (
+                    <Text
+                      numberOfLines={1}
+                      style={[
+                        a.pl_xs,
+                        a.pt_xs,
+                        a.pr_sm,
+                        a.pb_md,
+                        a.text_xs,
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      {label}
+                    </Text>
+                  ) : null}
                   {flattenReactChildren(children).map((child, i) => {
                     return isValidElement(child) &&
                       (child.type === Item || child.type === Divider) ? (
@@ -835,13 +848,10 @@ export function Item({
         !unstyled && [
           a.flex_row,
           a.align_center,
-          a.gap_sm,
           a.px_md,
           a.rounded_md,
-          a.border,
           t.atoms.bg_contrast_25,
-          t.atoms.border_contrast_low,
-          {minHeight: 44, paddingVertical: 10},
+          {gap: 6, minHeight: 44, paddingVertical: 10},
           (focused || pressed || context.hoveredMenuItem === id) &&
             !rest.disabled &&
             t.atoms.bg_contrast_50,
