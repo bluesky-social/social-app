@@ -58,7 +58,7 @@ export async function openUnifiedPicker({
     base64: IS_WEB,
     selectionLimit: IS_IOS ? selectionCountRemaining : undefined,
     preferredAssetRepresentationMode:
-      UIImagePickerPreferredAssetRepresentationMode.Automatic,
+      UIImagePickerPreferredAssetRepresentationMode.Current,
     videoMaxDuration: VIDEO_MAX_DURATION_MS / 1000,
   })
 }
