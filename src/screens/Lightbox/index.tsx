@@ -7,8 +7,8 @@ import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
-import {useLightbox, useLightboxControls} from '#/state/lightbox'
-import ImageView from '#/view/com/lightbox/ImageViewing'
+import ImageView from '#/components/Lightbox/pager/ImagePager'
+import {useLightbox, useLightboxControls} from '#/components/Lightbox/state'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Lightbox'>
 
