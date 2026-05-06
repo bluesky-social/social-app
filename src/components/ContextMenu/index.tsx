@@ -701,7 +701,6 @@ export function Outer({
                   a.shadow_md,
                   t.atoms.bg_contrast_25,
                   a.w_full,
-                  a.p_sm,
                   // @ts-ignore react-native-web expects string, and this file is platform-split -sfn
                   // note: above @ts-ignore cannot be a @ts-expect-error because this does not cause an error
                   // in the typecheck CI - presumably because of RNW overriding the types
@@ -720,9 +719,9 @@ export function Outer({
                     <Text
                       numberOfLines={1}
                       style={[
-                        a.pl_xs,
-                        a.pt_xs,
-                        a.pr_sm,
+                        a.pl_md,
+                        a.pt_md,
+                        a.pr_lg,
                         a.pb_md,
                         a.text_xs,
                         t.atoms.text_contrast_medium,
@@ -848,7 +847,7 @@ export function Item({
         !unstyled && [
           a.flex_row,
           a.align_center,
-          a.px_md,
+          a.px_2xl,
           a.rounded_md,
           t.atoms.bg_contrast_25,
           {gap: 6, minHeight: 44, paddingVertical: 10},
