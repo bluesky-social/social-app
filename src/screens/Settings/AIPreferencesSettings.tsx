@@ -61,9 +61,27 @@ export function AIPreferencesSettingsScreen({}: Props) {
       </Layout.Header.Outer>
       <Layout.Content>
         <View style={[a.px_lg, a.pt_md, a.pb_lg, a.gap_sm]}>
-          <Text style={[a.text_lg, a.font_bold, t.atoms.text]}>
-            <Trans>Determine how AI may use your data (Experimental)</Trans>
-          </Text>
+          <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_wrap]}>
+            <Text style={[a.text_lg, a.font_bold, t.atoms.text]}>
+              <Trans>Determine how AI may use your data</Trans>
+            </Text>
+            <View
+              style={[
+                a.px_sm,
+                a.py_2xs,
+                a.rounded_full,
+                t.atoms.bg_contrast_25,
+              ]}>
+              <Text
+                style={[
+                  a.text_xs,
+                  a.font_semi_bold,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                <Trans>Experimental</Trans>
+              </Text>
+            </View>
+          </View>
           <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
             <Trans>
               You can adjust these settings to configure how AI systems may use
