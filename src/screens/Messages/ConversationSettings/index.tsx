@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {
   ChatBskyActorDefs,
   ChatBskyConvoDefs,
-  ModerationOpts,
+  type ModerationOpts,
 } from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -204,8 +204,8 @@ function GroupSettings({
     ) ?? 0
 
   const groupMembers = memberListData.filter(isGroupMember).sort((a, b) => {
-    const aIsOwner = a.did === primaryMember.did
-    const bIsOwner = b.did === primaryMember.did
+    const aIsOwner = a.did === primaryMember?.did
+    const bIsOwner = b.did === primaryMember?.did
     const aIsSelf = a.did === currentAccount?.did
     const bIsSelf = b.did === currentAccount?.did
     if (aIsOwner !== bIsOwner) return aIsOwner ? -1 : 1
