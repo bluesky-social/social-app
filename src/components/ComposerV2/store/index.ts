@@ -16,6 +16,7 @@ import {buildPostMediaItem} from '#/components/ComposerV2/store/utils/buildPostM
 import {buildThreadPost} from '#/components/ComposerV2/store/utils/buildThreadPost'
 import {classifyUriTarget} from '#/components/ComposerV2/store/utils/classifyUriTarget'
 import {computePostMediaSelectionsRemaining} from '#/components/ComposerV2/store/utils/computePostMediaSelectionsRemaining'
+import {createAsyncTaskRev} from '#/components/ComposerV2/store/utils/createAsyncTaskRev'
 import {filterMediaInputs} from '#/components/ComposerV2/store/utils/filterMediaInputs'
 
 type Listener = () => void
@@ -47,20 +48,14 @@ export function createThreadStore(options: {
   const uploadTasks = new Map<string, UploadTask>()
 
   /**
-   * Per-slot generation counters. Quote and embed are orthogonal slots, so
-   * each has its own counter; cancelling one doesn't invalidate the other.
-   * Every action that starts or invalidates a resolution for a slot bumps
-   * that slot's gen, and the worker callback compares its captured gen
-   * against the current value before writing to state.
+   * Per-slot revision counters. Quote and embed are orthogonal slots, so
+   * each has its own counter; invalidating one doesn't invalidate the
+   * other. Every action that starts or supersedes a resolution for a slot
+   * calls `incrementFor(postId)`, and the worker callback closes over the
+   * returned `isCurrent` checker to decide whether to write back.
    */
-  const quoteGenByPost = new Map<string, number>()
-  const embedGenByPost = new Map<string, number>()
-
-  function bumpGen(map: Map<string, number>, postId: string): number {
-    const next = (map.get(postId) ?? 0) + 1
-    map.set(postId, next)
-    return next
-  }
+  const quoteRev = createAsyncTaskRev()
+  const embedRev = createAsyncTaskRev()
 
   /**
    * Action bodies mutate `s` in place. Returning `null` signals a no-op (the
@@ -140,12 +135,10 @@ export function createThreadStore(options: {
       if (!(postId in s.posts)) return null
       // Cancel any in-flight uploads for media on this post before dropping it.
       for (const m of s.posts[postId].media) cancelUploadTask(m.id)
-      // Bump (and drop) both gens so any stale resolution callbacks for
-      // this post can never write back into state.
-      bumpGen(quoteGenByPost, postId)
-      bumpGen(embedGenByPost, postId)
-      quoteGenByPost.delete(postId)
-      embedGenByPost.delete(postId)
+      // Drop both rev entries so any stale resolution callbacks for this
+      // post can never write back into state.
+      quoteRev.clearFor(postId)
+      embedRev.clearFor(postId)
       delete s.posts[postId]
       s.isDirty = true
       return s
@@ -305,7 +298,7 @@ export function createThreadStore(options: {
    *
    * Otherwise, pending state is written to the target slot synchronously and
    * `resolveLink` runs in the background. The outcome lands in the same slot
-   * (resolved or failed). Cancellation is per-slot gen-based.
+   * (resolved or failed). Cancellation is per-slot rev-based.
    */
   function addUri(postId: string, uri: string) {
     const post = state.posts[postId]
@@ -317,7 +310,7 @@ export function createThreadStore(options: {
       // No-op only when the slot has a settled value. Pending and failed
       // states are replaceable (failed.retry() relies on this).
       if (post.quote?.state === 'resolved') return
-      const gen = bumpGen(quoteGenByPost, postId)
+      const rev = quoteRev.incrementFor(postId)
       mutateState(s => {
         const p = s.posts[postId]
         if (!p) return null
@@ -329,7 +322,7 @@ export function createThreadStore(options: {
         postId,
         uri,
         resolveLink: resolveLinkOverride,
-        onResolve: handleQuoteResolution(gen, uri),
+        onResolve: handleQuoteResolution(rev, uri),
       })
       return
     }
@@ -344,7 +337,7 @@ export function createThreadStore(options: {
     if (embedSettled) return
     if (post.media.length > 0) return
 
-    const gen = bumpGen(embedGenByPost, postId)
+    const rev = embedRev.incrementFor(postId)
     mutateState(s => {
       const p = s.posts[postId]
       if (!p) return null
@@ -356,14 +349,14 @@ export function createThreadStore(options: {
       postId,
       uri,
       resolveLink: resolveLinkOverride,
-      onResolve: handleEmbedResolution(gen, uri),
+      onResolve: handleEmbedResolution(rev, uri),
     })
   }
 
-  function handleQuoteResolution(gen: number, uri: string) {
+  function handleQuoteResolution(rev: number, uri: string) {
     return (postId: string, outcome: LinkResolutionOutcome) => {
       if (destroyed) return
-      if (quoteGenByPost.get(postId) !== gen) return
+      if (!quoteRev.isCurrentFor(postId, rev)) return
 
       // Pre-classification said this was a post URL. If resolveLink disagrees
       // (deleted post, embedding disabled, network error, etc.), surface as
@@ -409,10 +402,10 @@ export function createThreadStore(options: {
     }
   }
 
-  function handleEmbedResolution(gen: number, uri: string) {
+  function handleEmbedResolution(rev: number, uri: string) {
     return (postId: string, outcome: LinkResolutionOutcome) => {
       if (destroyed) return
-      if (embedGenByPost.get(postId) !== gen) return
+      if (!embedRev.isCurrentFor(postId, rev)) return
 
       // Pre-classification said this was a non-post URL. If resolveLink
       // surprises us with a post outcome, treat as failure rather than
@@ -455,7 +448,7 @@ export function createThreadStore(options: {
   }
 
   function removeEmbed(postId: string) {
-    bumpGen(embedGenByPost, postId)
+    embedRev.incrementFor(postId)
     mutateState(s => {
       const post = s.posts[postId]
       if (!post) return null
@@ -469,13 +462,13 @@ export function createThreadStore(options: {
   /**
    * Direct setter for an already-resolved quote. Used for draft restore and
    * any UI flow that already has the post ref+view in hand. Bumps the quote
-   * gen so any in-flight resolution is invalidated.
+   * rev so any in-flight resolution is invalidated.
    */
   function setQuoteEmbed(
     postId: string,
     ref: {uri: string; cid: string; view?: AppBskyFeedDefs.PostView},
   ) {
-    bumpGen(quoteGenByPost, postId)
+    quoteRev.incrementFor(postId)
     mutateState(s => {
       const post = s.posts[postId]
       if (!post) return null
@@ -491,7 +484,7 @@ export function createThreadStore(options: {
   }
 
   function removeQuoteEmbed(postId: string) {
-    bumpGen(quoteGenByPost, postId)
+    quoteRev.incrementFor(postId)
     mutateState(s => {
       const post = s.posts[postId]
       if (!post) return null
@@ -610,8 +603,8 @@ export function createThreadStore(options: {
       destroyed = true
       for (const task of uploadTasks.values()) task.cancel()
       uploadTasks.clear()
-      quoteGenByPost.clear()
-      embedGenByPost.clear()
+      quoteRev.clearAll()
+      embedRev.clearAll()
     },
     getState() {
       return state
