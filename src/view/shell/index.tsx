@@ -1,8 +1,7 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect} from 'react'
 import {BackHandler, useWindowDimensions, View} from 'react-native'
 import {Drawer} from 'react-native-drawer-layout'
 import {SystemBars} from 'react-native-edge-to-edge'
-import {Gesture} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
@@ -49,6 +48,10 @@ import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
 import {updateActiveViewAsync} from '../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
 import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
+import {
+  DrawerWaitGestureProvider,
+  useDrawerWaitGestures,
+} from './DrawerWaitGestureContext'
 
 function ShellInner() {
   const winDim = useWindowDimensions()
@@ -105,7 +108,9 @@ function ShellInner() {
       <View style={[a.h_full]}>
         <ErrorBoundary
           style={{paddingTop: insets.top, paddingBottom: insets.bottom}}>
-          <TabsNavigator layout={drawerLayout} />
+          <DrawerWaitGestureProvider>
+            <TabsNavigator layout={drawerLayout} />
+          </DrawerWaitGestureProvider>
         </ErrorBoundary>
       </View>
 
@@ -145,7 +150,7 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
   const {hasSession} = useSession()
 
   const swipeEnabled = !canGoBack && hasSession && !isDrawerSwipeDisabled
-  const [trendingScrollGesture] = useState(() => Gesture.Native())
+  const waitGestures = useDrawerWaitGestures()
 
   const renderDrawerContent = useCallback(() => <DrawerContent />, [])
   const onOpenDrawer = useCallback(
@@ -162,7 +167,9 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
       renderDrawerContent={renderDrawerContent}
       drawerStyle={{width: Math.min(400, winDim.width * 0.8)}}
       configureGestureHandler={handler => {
-        handler = handler.requireExternalGestureToFail(trendingScrollGesture)
+        for (const gesture of waitGestures) {
+          handler = handler.requireExternalGestureToFail(gesture)
+        }
 
         if (swipeEnabled) {
           if (isDrawerOpen) {

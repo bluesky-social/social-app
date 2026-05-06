@@ -3,7 +3,9 @@
     "allow": [
       "Bash(yarn typecheck *)",
       "Bash(yarn lint *)",
-      "Bash(yarn test *)"
+      "Bash(yarn test *)",
+      "mcp__plugin_claude-mem_mcp-search__search",
+      "mcp__plugin_claude-mem_mcp-search__get_observations"
     ]
   }
 }

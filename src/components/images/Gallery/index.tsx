@@ -23,7 +23,7 @@ import {type Dimensions} from '#/lib/media/types'
 import {mergeRefs} from '#/lib/merge-refs'
 import {useA11y} from '#/state/a11y'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
-import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
+import {DrawerWaitGesture} from '#/view/shell/DrawerWaitGesture'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
@@ -248,7 +248,7 @@ export function Gallery({
         },
       ]}
       onLayout={measure}>
-      <BlockDrawerGesture>
+      <DrawerWaitGesture>
         <FlatList
           ref={flatListRef}
           role="group"
@@ -339,7 +339,7 @@ export function Gallery({
             paddingRight: insetRight,
           }}
         />
-      </BlockDrawerGesture>
+      </DrawerWaitGesture>
     </View>
   )
 }
