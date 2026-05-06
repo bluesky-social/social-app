@@ -57,6 +57,52 @@ export function isConvoItemMessage(
   )
 }
 
+/**
+ * Two ConvoItems are considered equivalent when they would render identically.
+ * Used by getItems() to preserve object identity across rebuilds, so that
+ * memoized MessageItem renders are not invalidated when an unrelated message
+ * changes (e.g. a reaction added to one message in a long thread).
+ */
+function areConvoItemsEquivalent(a: ConvoItem, b: ConvoItem): boolean {
+  if (a.type !== b.type) return false
+  switch (a.type) {
+    case 'message':
+    case 'deleted-message': {
+      const bb = b as typeof a
+      return (
+        a.message === bb.message &&
+        a.relatedProfiles === bb.relatedProfiles &&
+        a.nextMessage === bb.nextMessage &&
+        a.prevMessage === bb.prevMessage
+      )
+    }
+    case 'pending-message': {
+      const bb = b as typeof a
+      return (
+        a.message === bb.message &&
+        a.relatedProfiles === bb.relatedProfiles &&
+        a.nextMessage === bb.nextMessage &&
+        a.prevMessage === bb.prevMessage &&
+        a.failed === bb.failed &&
+        (a.retry === undefined) === (bb.retry === undefined)
+      )
+    }
+    case 'system-message': {
+      const bb = b as typeof a
+      return (
+        a.message === bb.message && a.relatedProfiles === bb.relatedProfiles
+      )
+    }
+    case 'error': {
+      const bb = b as typeof a
+      return (
+        a.code === bb.code &&
+        (a.retry === undefined) === (bb.retry === undefined)
+      )
+    }
+  }
+}
+
 function toSystemMessageView(
   ev: ChatBskyConvoGetLog.OutputSchema['logs'][number],
 ): ChatBskyConvoDefs.SystemMessageView | null {
@@ -109,6 +155,13 @@ export class Convo {
   private deletedMessages: Set<string> = new Set()
   private relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic> =
     new Map()
+
+  /**
+   * Caches the last emitted ConvoItem per key. getItems() reuses an entry when
+   * the freshly-built item is equivalent, preserving object identity so that
+   * memoized MessageItems do not re-render on unrelated commits.
+   */
+  private itemCache: Map<string, ConvoItem> = new Map()
 
   private isProcessingPendingMessages = false
 
@@ -1078,7 +1131,8 @@ export class Convo {
 
       // continue queue processing
       await this.processPendingMessages()
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       this.handleSendMessageFailure(e)
       this.isProcessingPendingMessages = false
     }
@@ -1177,7 +1231,8 @@ export class Convo {
       this.commit()
 
       logger.debug(`sent ${this.pendingMessages.size} pending messages`, {})
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       this.handleSendMessageFailure(e)
     }
   }
@@ -1334,7 +1389,7 @@ export class Convo {
       })
     }
 
-    return items
+    const fresh = items
       .filter(item => {
         if (isConvoItemMessage(item)) {
           return !this.deletedMessages.has(item.message.id)
@@ -1381,6 +1436,27 @@ export class Convo {
 
         return item
       })
+
+    /**
+     * Preserve identity across rebuilds: Reuse the previously emitted item
+     * whenever the freshly built one is equivalent. Replace the cache with a
+     * map containing only the keys present in this round so dropped items
+     * (e.g. deleted) don't leak.
+     */
+    const nextCache = new Map<string, ConvoItem>()
+    const stabilized = new Array<ConvoItem>(fresh.length)
+    for (let i = 0; i < fresh.length; i++) {
+      const item = fresh[i]
+      const cached = this.itemCache.get(item.key)
+      const reused =
+        cached !== undefined && areConvoItemsEquivalent(cached, item)
+          ? cached
+          : item
+      nextCache.set(item.key, reused)
+      stabilized[i] = reused
+    }
+    this.itemCache = nextCache
+    return stabilized
   }
 
   /**

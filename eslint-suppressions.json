@@ -484,11 +484,6 @@
       "count": 3
     }
   },
-  "src/state/messages/convo/agent.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/state/messages/events/agent.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
