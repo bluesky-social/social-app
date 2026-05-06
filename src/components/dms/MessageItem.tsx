@@ -36,7 +36,6 @@ import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import {atoms as a, native, platform, useTheme} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
-import {alpha} from '#/alf/utils'
 import {useDialogControl} from '#/components/Dialog'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {InlineLinkText, Link} from '#/components/Link'
@@ -327,6 +326,7 @@ let MessageItem = ({
               a.rounded_lg,
               a.border,
               t.atoms.border_contrast_low,
+              t.atoms.shadow_xs,
               hasSelfReacted
                 ? {
                     backgroundColor: t.palette.primary_100,
@@ -337,20 +337,6 @@ let MessageItem = ({
                 paddingBottom: platform({android: 2, default: 3}),
                 transform: [{translateY: -8}],
               },
-              // TODO: new arch supports boxShadow on native
-              // in the meantime this is an attempt to get close
-              platform({
-                web: {
-                  boxShadow: `0 2px 8px 0 ${alpha(t.palette.black, 0.1)}`,
-                },
-                ios: {
-                  shadowColor: t.palette.black,
-                  shadowOffset: {width: 0, height: 2},
-                  shadowOpacity: 0.1,
-                  shadowRadius: 8,
-                },
-                android: {elevation: 0.5},
-              }),
             ]}
             onPressIn={() => {
               // Don't toggle the date divider when tapping a reaction.
