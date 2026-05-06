@@ -5,7 +5,7 @@
 	"redirect_uris": [
 		"https://blacksky.community/auth/web/callback"
 	],
-	"scope": "atproto transition:generic transition:email transition:chat.bsky identity:handle account:email?action=manage account:status?action=manage repo:community.lexicon.preference.ai",
+	"scope": "atproto transition:generic transition:email transition:chat.bsky identity:handle account:email?action=manage account:status?action=manage",
 	"token_endpoint_auth_method": "none",
 	"response_types": [
 		"code"
