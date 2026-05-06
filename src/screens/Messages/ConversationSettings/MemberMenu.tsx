@@ -204,6 +204,7 @@ export function MemberMenu({
           <Menu.Group>
             {canBlockMember ? (
               <Menu.Item
+                destructive
                 label={
                   profile.viewer?.blocking
                     ? l`Unblock ${displayName}`
@@ -214,33 +215,33 @@ export function MemberMenu({
                     ? handleBlockMember
                     : blockMemberPrompt.open
                 }>
-                {profile.viewer?.blocking ? (
-                  <PersonCheck fill={t.palette.negative_500} size="lg" />
-                ) : (
-                  <PersonXIcon fill={t.palette.negative_500} size="lg" />
-                )}
-                <Menu.ItemText style={[{color: t.palette.negative_500}]}>
+                <Menu.ItemIcon
+                  icon={profile.viewer?.blocking ? PersonCheck : PersonXIcon}
+                />
+                <Menu.ItemText>
                   {profile.viewer?.blocking ? l`Unblock` : l`Block`}
                 </Menu.ItemText>
               </Menu.Item>
             ) : null}
             {canRemoveMember ? (
               <Menu.Item
+                destructive
                 label={l`Remove ${displayName} from this group chat`}
                 onPress={() => removeMembers({members: [profile.did]})}>
-                <ArrowBoxLeftIcon fill={t.palette.negative_500} size="lg" />
-                <Menu.ItemText style={[{color: t.palette.negative_500}]}>
+                <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
+                <Menu.ItemText>
                   <Trans>Remove from chat</Trans>
                 </Menu.ItemText>
               </Menu.Item>
             ) : null}
             {canUninviteMember ? (
               <Menu.Item
+                destructive
                 label={l`Uninvite ${displayName} from this group chat`}
                 // TODO Need to wire up the uninvite flow. -dsb
                 onPress={() => {}}>
-                <ArrowBoxLeftIcon fill={t.palette.negative_500} size="lg" />
-                <Menu.ItemText style={[{color: t.palette.negative_500}]}>
+                <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
+                <Menu.ItemText>
                   <Trans>Uninvite</Trans>
                 </Menu.ItemText>
               </Menu.Item>
