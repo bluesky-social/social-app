@@ -536,6 +536,7 @@ export class Convo {
     this.pendingMessages = new Map()
     this.deletedMessages = new Set()
     this.relatedProfiles = new Map()
+    this.itemCache = new Map()
 
     this.pendingMessageFailure = null
     this.fetchMessageHistoryError = undefined
