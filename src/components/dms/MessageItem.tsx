@@ -442,10 +442,9 @@ let MessageItem = ({
                   t.atoms.text_contrast_medium,
                   a.pt_xs,
                   a.pb_2xs,
-                  {
-                    paddingLeft: DISPLAY_NAME_INSET,
-                  },
-                ]}>
+                  {paddingLeft: DISPLAY_NAME_INSET},
+                ]}
+                emoji>
                 {displayName}
               </Text>
             ) : null}
