@@ -1,11 +1,12 @@
 import {type AppBskyFeedDefs, type AtpAgent} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
-import {type resolveLink} from '#/lib/api/resolve'
 import {
-  type LinkResolutionOutcome,
-  startUriResolution,
-} from '#/components/ComposerV2/store/linkResolution'
+  type ResolvedLink,
+  resolveLink as importedResolveLink,
+  type resolveLink,
+} from '#/lib/api/resolve'
+import {createPublicAgent} from '#/state/session/agent'
 import type * as types from '#/components/ComposerV2/store/types'
 import {
   startImageUpload,
@@ -18,6 +19,7 @@ import {classifyUriTarget} from '#/components/ComposerV2/store/utils/classifyUri
 import {computePostMediaSelectionsRemaining} from '#/components/ComposerV2/store/utils/computePostMediaSelectionsRemaining'
 import {createAsyncTaskRev} from '#/components/ComposerV2/store/utils/createAsyncTaskRev'
 import {filterMediaInputs} from '#/components/ComposerV2/store/utils/filterMediaInputs'
+import {parseResolveLinkError} from '#/components/ComposerV2/store/utils/parseResolveLinkError'
 
 type Listener = () => void
 
@@ -304,6 +306,7 @@ export function createThreadStore(options: {
     const post = state.posts[postId]
     if (!post) return
 
+    const resolve = resolveLinkOverride ?? importedResolveLink
     const target = classifyUriTarget(uri)
 
     if (target === 'quote') {
@@ -318,12 +321,10 @@ export function createThreadStore(options: {
         s.isDirty = true
         return s
       })
-      startUriResolution({
-        postId,
-        uri,
-        resolveLink: resolveLinkOverride,
-        onResolve: handleQuoteResolution(rev, uri),
-      })
+      resolve(createPublicAgent(), uri).then(
+        link => applyQuoteResolved(rev, postId, uri, link),
+        err => applyQuoteFailed(rev, postId, uri, err),
+      )
       return
     }
 
@@ -345,106 +346,114 @@ export function createThreadStore(options: {
       s.isDirty = true
       return s
     })
-    startUriResolution({
-      postId,
-      uri,
-      resolveLink: resolveLinkOverride,
-      onResolve: handleEmbedResolution(rev, uri),
+    resolve(createPublicAgent(), uri).then(
+      link => applyEmbedResolved(rev, postId, uri, link),
+      err => applyEmbedFailed(rev, postId, uri, err),
+    )
+  }
+
+  function applyQuoteResolved(
+    rev: number,
+    postId: string,
+    uri: string,
+    link: ResolvedLink,
+  ) {
+    if (destroyed) return
+    if (!quoteRev.isCurrentFor(postId, rev)) return
+    // Pre-classification said this was a post URL. If resolveLink disagrees
+    // (rare, since both use the same URL patterns), surface as a generic
+    // failure in the quote slot.
+    if (link.type !== 'record' || link.kind !== 'post') {
+      applyQuoteFailed(rev, postId, uri, new Error('Could not resolve post'))
+      return
+    }
+    mutateState(s => {
+      const p = s.posts[postId]
+      if (!p) return null
+      s.posts[postId] = setPostQuote(p, {
+        state: 'resolved',
+        uri: link.record.uri,
+        cid: link.record.cid,
+        view: link.view,
+      })
+      return s
     })
   }
 
-  function handleQuoteResolution(rev: number, uri: string) {
-    return (postId: string, outcome: LinkResolutionOutcome) => {
-      if (destroyed) return
-      if (!quoteRev.isCurrentFor(postId, rev)) return
-
-      // Pre-classification said this was a post URL. If resolveLink disagrees
-      // (deleted post, embedding disabled, network error, etc.), surface as
-      // failed in the quote slot. Non-retryable failure codes (e.g.
-      // embedding-disabled) get a failed state with no `retry()`; the user
-      // has to remove the embed manually.
-      if (outcome.kind !== 'post') {
-        const code: types.LinkResolutionFailureCode =
-          outcome.embed.state === 'failed' ? outcome.embed.code : 'unknown'
-        const error =
-          outcome.embed.state === 'failed'
-            ? outcome.embed.error
-            : 'Could not resolve post'
-        const failed: types.PostEmbedQuote = {
-          state: 'failed',
-          uri,
-          error,
-          code,
-          retry:
-            code === 'embedding-disabled'
-              ? undefined
-              : () => addUri(postId, uri),
-        }
-        mutateState(s => {
-          const p = s.posts[postId]
-          if (!p) return null
-          s.posts[postId] = setPostQuote(p, failed)
-          return s
-        })
-        return
-      }
-      mutateState(s => {
-        const p = s.posts[postId]
-        if (!p) return null
-        s.posts[postId] = setPostQuote(p, {
-          state: 'resolved',
-          uri: outcome.record.uri,
-          cid: outcome.record.cid,
-          view: outcome.view,
-        })
-        return s
+  function applyQuoteFailed(
+    rev: number,
+    postId: string,
+    uri: string,
+    err: unknown,
+  ) {
+    if (destroyed) return
+    if (!quoteRev.isCurrentFor(postId, rev)) return
+    // Non-retryable failure codes (e.g. embedding-disabled) get a failed
+    // state with no `retry()`; the user has to remove the embed manually.
+    const {code, isRetryable} = parseResolveLinkError(err)
+    mutateState(s => {
+      const p = s.posts[postId]
+      if (!p) return null
+      s.posts[postId] = setPostQuote(p, {
+        state: 'failed',
+        uri,
+        error: stringifyError(err),
+        code,
+        retry: isRetryable ? () => addUri(postId, uri) : undefined,
       })
-    }
+      return s
+    })
   }
 
-  function handleEmbedResolution(rev: number, uri: string) {
-    return (postId: string, outcome: LinkResolutionOutcome) => {
-      if (destroyed) return
-      if (!embedRev.isCurrentFor(postId, rev)) return
-
-      // Pre-classification said this was a non-post URL. If resolveLink
-      // surprises us with a post outcome, treat as failure rather than
-      // silently moving slots.
-      if (outcome.kind === 'post') {
-        const failed: types.PostEmbed = {
-          state: 'failed',
-          uri,
-          error: 'Unexpected post outcome for non-post URL',
-          code: 'unknown',
-          retry: () => addUri(postId, uri),
-        }
-        mutateState(s => {
-          const p = s.posts[postId]
-          if (!p) return null
-          s.posts[postId] = setPostEmbed(p, failed)
-          return s
-        })
-        return
-      }
-
-      const embed = outcome.embed
-      const stored: types.PostEmbed =
-        embed.state === 'failed'
-          ? {
-              ...embed,
-              retry:
-                embed.code === 'embedding-disabled'
-                  ? undefined
-                  : () => addUri(postId, embed.uri),
-            }
-          : embed
-      mutateState(s => {
-        const p = s.posts[postId]
-        if (!p) return null
-        s.posts[postId] = setPostEmbed(p, stored)
-        return s
-      })
+  function applyEmbedResolved(
+    rev: number,
+    postId: string,
+    uri: string,
+    link: ResolvedLink,
+  ) {
+    if (destroyed) return
+    if (!embedRev.isCurrentFor(postId, rev)) return
+    // Pre-classification said this was a non-post URL. If resolveLink
+    // surprises us with a post outcome, treat as failure rather than
+    // silently moving slots.
+    if (link.type === 'record' && link.kind === 'post') {
+      applyEmbedFailed(
+        rev,
+        postId,
+        uri,
+        new Error('Unexpected post outcome for non-post URL'),
+      )
+      return
     }
+    mutateState(s => {
+      const p = s.posts[postId]
+      if (!p) return null
+      s.posts[postId] = setPostEmbed(p, resolvedLinkToEmbed(link))
+      return s
+    })
+  }
+
+  function applyEmbedFailed(
+    rev: number,
+    postId: string,
+    uri: string,
+    err: unknown,
+  ) {
+    if (destroyed) return
+    if (!embedRev.isCurrentFor(postId, rev)) return
+    const {code, isRetryable} = parseResolveLinkError(err)
+    mutateState(s => {
+      const p = s.posts[postId]
+      if (!p) return null
+      s.posts[postId] = setPostEmbed(p, {
+        state: 'failed',
+        uri,
+        error: stringifyError(err),
+        code,
+        retry: isRetryable ? () => addUri(postId, uri) : undefined,
+      })
+      return s
+    })
   }
 
   function removeEmbed(postId: string) {
@@ -580,6 +589,36 @@ export function createThreadStore(options: {
     quote: types.PostEmbedQuote | undefined,
   ): types.ThreadPost {
     return {...post, quote}
+  }
+
+  /**
+   * Map a non-post ResolvedLink into the PostEmbed shape stored on the post.
+   * Callers handle the post-record case separately (those go to quote).
+   */
+  function resolvedLinkToEmbed(link: ResolvedLink): types.PostEmbed {
+    if (link.type === 'external') {
+      return {
+        state: 'external',
+        uri: link.uri,
+        title: link.title,
+        description: link.description,
+        thumb: link.thumb,
+      }
+    }
+    switch (link.kind) {
+      case 'feed':
+        return {state: 'feed', record: link.record, view: link.view}
+      case 'list':
+        return {state: 'list', record: link.record, view: link.view}
+      case 'starter-pack':
+        return {state: 'starter-pack', record: link.record, view: link.view}
+      case 'post':
+        throw new Error('post records should route to quote, not embed')
+    }
+  }
+
+  function stringifyError(err: unknown): string {
+    return String((err && (err as Error).message) ?? err)
   }
 
   return {
