@@ -21,7 +21,6 @@ import {logger} from '#/logger'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
-import {mimeToExt} from './video/util'
 
 export async function compressIfNeeded(
   img: PickerImage,

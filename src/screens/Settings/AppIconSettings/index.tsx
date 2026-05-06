@@ -14,11 +14,10 @@ import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID, IS_INTERNAL} from '#/env'
+import {IS_ANDROID} from '#/env'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppIconSettings'>
 export function AppIconSettingsScreen({}: Props) {
-  const t = useTheme()
   const {_} = useLingui()
   const sets = useAppIconSets()
   const [currentAppIcon, setCurrentAppIcon] = useState(() =>

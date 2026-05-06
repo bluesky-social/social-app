@@ -6,6 +6,7 @@ import * as EmailValidator from 'email-validator'
 import type tldts from 'tldts'
 
 import {isEmailMaybeInvalid} from '#/lib/strings/email'
+import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {useSignupContext} from '#/screens/Signup/state'
 import {Policies} from '#/screens/Signup/StepInfo/Policies'
@@ -20,7 +21,6 @@ import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/E
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import {Loader} from '#/components/Loader'
-import {getAge} from '#/lib/strings/time'
 import {useAnalytics} from '#/analytics'
 import {BackNextButtons} from '../BackNextButtons'
 
@@ -304,7 +304,6 @@ export function StepInfo({
                 </Admonition.Admonition>
               ) : undefined}
             </View>
-
           </>
         ) : undefined}
       </View>

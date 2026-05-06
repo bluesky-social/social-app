@@ -1,6 +1,5 @@
 import {useCallback} from 'react'
 import {type AppBskyActorDefs, type AppBskyFeedDefs, AtUri} from '@atproto/api'
-import {fetchQueryWithFallback, useMutation, useQuery, useQueryClient} from './useQueryWithFallback'
 
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {updatePostShadow} from '#/state/cache/post-shadow'
@@ -11,6 +10,12 @@ import {useAnalytics} from '#/analytics'
 import {type Metrics, toClout} from '#/analytics/metrics'
 import {useIsThreadMuted, useSetThreadMute} from '../cache/thread-mutes'
 import {findProfileQueryData} from './profile'
+import {
+  fetchQueryWithFallback,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from './useQueryWithFallback'
 
 const RQKEY_ROOT = 'post'
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]
