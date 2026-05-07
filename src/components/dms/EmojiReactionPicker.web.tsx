@@ -118,6 +118,7 @@ function MenuInner({
             style={flatten([
               a.rounded_full,
               {height: 34, width: 34},
+              t.atoms.bg_contrast_50,
               a.justify_center,
               a.align_center,
             ])}>

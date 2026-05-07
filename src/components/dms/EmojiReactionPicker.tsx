@@ -115,14 +115,10 @@ export function EmojiReactionPicker({
         <View
           style={[
             a.rounded_full,
-            t.scheme === 'light'
-              ? t.atoms.bg_contrast_25
-              : t.atoms.bg_contrast_50,
+            t.atoms.bg_contrast_50,
             {height: 40, width: 40},
             a.justify_center,
             a.align_center,
-            a.border,
-            t.atoms.border_contrast_low,
           ]}>
           <PlusIcon size="md" fill={t.palette.contrast_1000} />
         </View>
