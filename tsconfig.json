@@ -9,7 +9,8 @@
       "#/*": ["./src/*"],
       "crypto": ["./src/platform/crypto.ts"],
       "multiformats/cid": ["node_modules/multiformats/types/src/cid.d.ts"],
-      "multiformats/hashes/hasher": ["node_modules/multiformats/types/src/hashes/hasher.d.ts"]
+      "multiformats/hashes/hasher": ["node_modules/multiformats/types/src/hashes/hasher.d.ts"],
+      "psl": ["node_modules/psl/types/index.d.ts"]
     },
     "plugins": [
       {

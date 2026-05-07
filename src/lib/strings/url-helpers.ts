@@ -1,5 +1,5 @@
 import {AtUri} from '@atproto/api'
-import psl from 'psl'
+import * as psl from 'psl'
 import TLDs from 'tlds'
 
 import {BSKY_SERVICE} from '#/lib/constants'
@@ -327,7 +327,7 @@ export function isPossiblyAUrl(str: string): boolean {
 
 export function splitApexDomain(hostname: string): [string, string] {
   const hostnamep = psl.parse(hostname)
-  if (hostnamep.error || !hostnamep.listed || !hostnamep.domain) {
+  if ('error' in hostnamep || !hostnamep.listed || !hostnamep.domain) {
     return ['', hostname]
   }
   return [
