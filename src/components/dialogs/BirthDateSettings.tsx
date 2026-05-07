@@ -329,9 +329,9 @@ function GatekeeperBirthdayFlow({
       {isUnder13 && (
         <Admonition type="error">
           <Trans>
-            You must be at least 13 years old to use Bluesky. Read our{' '}
+            You must be at least 13 years old to use Blacksky. Read our{' '}
             <SimpleInlineLinkText
-              to="https://bsky.social/about/support/tos"
+              to="https://www.blackskyweb.xyz/about/support/tos"
               label={_(msg`Terms of Service`)}>
               Terms of Service
             </SimpleInlineLinkText>{' '}
@@ -426,9 +426,9 @@ function DirectBirthdayFlow({
       {isUnder13 && (
         <Admonition type="error">
           <Trans>
-            You must be at least 13 years old to use Bluesky. Read our{' '}
+            You must be at least 13 years old to use Blacksky. Read our{' '}
             <SimpleInlineLinkText
-              to="https://bsky.social/about/support/tos"
+              to="https://www.blackskyweb.xyz/about/support/tos"
               label={_(msg`Terms of Service`)}>
               Terms of Service
             </SimpleInlineLinkText>{' '}

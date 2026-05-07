@@ -211,7 +211,7 @@ export function Takendown() {
                   Your account was found to be in violation of the{' '}
                   <SimpleInlineLinkText
                     label={_(msg`Blacksky Terms of Service`)}
-                    to="https://bsky.social/about/support/tos"
+                    to="https://www.blackskyweb.xyz/about/support/tos"
                     style={[a.text_md, a.leading_snug]}>
                     Blacksky Terms of Service
                   </SimpleInlineLinkText>

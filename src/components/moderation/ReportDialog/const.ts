@@ -5,8 +5,9 @@ import {
 
 import {type ParsedReportSubject} from '#/components/moderation/ReportDialog/types'
 
-export const DMCA_LINK = 'https://bsky.social/about/support/copyright'
-export const SUPPORT_PAGE = 'https://bsky.social/about/support'
+export const DMCA_LINK =
+  'https://blackskyweb.xyz/about/support/tos/#9-strongclaims-of-copyright-infringementstrong'
+export const SUPPORT_PAGE = 'https://www.blackskyweb.xyz/about/support'
 
 export const NEW_TO_OLD_REASON_MAPPING: Record<string, string> = {}
 

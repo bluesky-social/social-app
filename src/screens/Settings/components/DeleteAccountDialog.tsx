@@ -328,13 +328,13 @@ function DeleteAccountDialogInner({
             </Prompt.TitleText>
             <Prompt.DescriptionText>
               <Trans>
-                This will irreversibly delete your Bluesky account{' '}
+                This will irreversibly delete your Blacksky account{' '}
                 <Span style={[a.font_semi_bold, t.atoms.text]}>
                   {currentHandle}
                 </Span>{' '}
                 and all associated data. Note that this will affect any other{' '}
                 <SimpleInlineLinkText
-                  to="https://bsky.social/about/faq"
+                  to="https://atproto.com/guides/faq"
                   label={_(msg`AT Protocol FAQ`)}>
                   AT Protocol
                 </SimpleInlineLinkText>{' '}
