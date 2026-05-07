@@ -57,52 +57,6 @@ export function isConvoItemMessage(
   )
 }
 
-/**
- * Two ConvoItems are considered equivalent when they would render identically.
- * Used by getItems() to preserve object identity across rebuilds, so that
- * memoized MessageItem renders are not invalidated when an unrelated message
- * changes (e.g. a reaction added to one message in a long thread).
- */
-function areConvoItemsEquivalent(a: ConvoItem, b: ConvoItem): boolean {
-  if (a.type !== b.type) return false
-  switch (a.type) {
-    case 'message':
-    case 'deleted-message': {
-      const bb = b as typeof a
-      return (
-        a.message === bb.message &&
-        a.relatedProfiles === bb.relatedProfiles &&
-        a.nextMessage === bb.nextMessage &&
-        a.prevMessage === bb.prevMessage
-      )
-    }
-    case 'pending-message': {
-      const bb = b as typeof a
-      return (
-        a.message === bb.message &&
-        a.relatedProfiles === bb.relatedProfiles &&
-        a.nextMessage === bb.nextMessage &&
-        a.prevMessage === bb.prevMessage &&
-        a.failed === bb.failed &&
-        (a.retry === undefined) === (bb.retry === undefined)
-      )
-    }
-    case 'system-message': {
-      const bb = b as typeof a
-      return (
-        a.message === bb.message && a.relatedProfiles === bb.relatedProfiles
-      )
-    }
-    case 'error': {
-      const bb = b as typeof a
-      return (
-        a.code === bb.code &&
-        (a.retry === undefined) === (bb.retry === undefined)
-      )
-    }
-  }
-}
-
 function toSystemMessageView(
   ev: ChatBskyConvoGetLog.OutputSchema['logs'][number],
 ): ChatBskyConvoDefs.SystemMessageView | null {
@@ -155,13 +109,6 @@ export class Convo {
   private deletedMessages: Set<string> = new Set()
   private relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic> =
     new Map()
-
-  /**
-   * Caches the last emitted ConvoItem per key. getItems() reuses an entry when
-   * the freshly-built item is equivalent, preserving object identity so that
-   * memoized MessageItems do not re-render on unrelated commits.
-   */
-  private itemCache: Map<string, ConvoItem> = new Map()
 
   private isProcessingPendingMessages = false
 
@@ -269,6 +216,7 @@ export class Convo {
           status: this.status,
           items: this.getItems(),
           convo: this.convo!,
+          relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
           ...methods,
@@ -279,6 +227,7 @@ export class Convo {
           status: this.status,
           items: this.getItems(),
           convo: this.convo!,
+          relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
           ...methods,
@@ -289,6 +238,7 @@ export class Convo {
           status: this.status,
           items: this.getItems(),
           convo: this.convo!,
+          relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
           ...methods,
@@ -299,6 +249,7 @@ export class Convo {
           status: this.status,
           items: this.getItems(),
           convo: this.convo!,
+          relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
           ...methods,
@@ -536,7 +487,6 @@ export class Convo {
     this.pendingMessages = new Map()
     this.deletedMessages = new Set()
     this.relatedProfiles = new Map()
-    this.itemCache = new Map()
 
     this.pendingMessageFailure = null
     this.fetchMessageHistoryError = undefined
@@ -1287,25 +1237,18 @@ export class Convo {
           type: 'message',
           key: m.id,
           message: m,
-          relatedProfiles: this.relatedProfiles,
-          nextMessage: null,
-          prevMessage: null,
         })
       } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
         items.unshift({
           type: 'deleted-message',
           key: m.id,
           message: m,
-          relatedProfiles: this.relatedProfiles,
-          nextMessage: null,
-          prevMessage: null,
         })
       } else if (ChatBskyConvoDefs.isSystemMessageView(m)) {
         items.unshift({
           type: 'system-message',
           key: m.id,
           message: m,
-          relatedProfiles: this.relatedProfiles,
         })
       }
     })
@@ -1327,25 +1270,18 @@ export class Convo {
           type: 'message',
           key: m.id,
           message: m,
-          relatedProfiles: this.relatedProfiles,
-          nextMessage: null,
-          prevMessage: null,
         })
       } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
         items.push({
           type: 'deleted-message',
           key: m.id,
           message: m,
-          relatedProfiles: this.relatedProfiles,
-          nextMessage: null,
-          prevMessage: null,
         })
       } else if (ChatBskyConvoDefs.isSystemMessageView(m)) {
         items.push({
           type: 'system-message',
           key: m.id,
           message: m,
-          relatedProfiles: this.relatedProfiles,
         })
       }
     })
@@ -1366,9 +1302,6 @@ export class Convo {
             did: this.senderUserDid,
           },
         },
-        relatedProfiles: this.relatedProfiles,
-        nextMessage: null,
-        prevMessage: null,
         failed: this.pendingMessageFailure !== null,
         retry:
           this.pendingMessageFailure === 'recoverable'
@@ -1390,74 +1323,12 @@ export class Convo {
       })
     }
 
-    const fresh = items
-      .filter(item => {
-        if (isConvoItemMessage(item)) {
-          return !this.deletedMessages.has(item.message.id)
-        }
-        return true
-      })
-      .map((item, i, arr) => {
-        let nextMessage = null
-        let prevMessage = null
-        const isMessage = isConvoItemMessage(item)
-
-        if (isMessage) {
-          if (
-            ChatBskyConvoDefs.isMessageView(item.message) ||
-            ChatBskyConvoDefs.isDeletedMessageView(item.message)
-          ) {
-            const next = arr[i + 1]
-
-            if (
-              isConvoItemMessage(next) &&
-              (ChatBskyConvoDefs.isMessageView(next.message) ||
-                ChatBskyConvoDefs.isDeletedMessageView(next.message))
-            ) {
-              nextMessage = next.message
-            }
-
-            const prev = arr[i - 1]
-
-            if (
-              isConvoItemMessage(prev) &&
-              (ChatBskyConvoDefs.isMessageView(prev.message) ||
-                ChatBskyConvoDefs.isDeletedMessageView(prev.message))
-            ) {
-              prevMessage = prev.message
-            }
-          }
-
-          return {
-            ...item,
-            nextMessage,
-            prevMessage,
-          }
-        }
-
-        return item
-      })
-
-    /**
-     * Preserve identity across rebuilds: Reuse the previously emitted item
-     * whenever the freshly built one is equivalent. Replace the cache with a
-     * map containing only the keys present in this round so dropped items
-     * (e.g. deleted) don't leak.
-     */
-    const nextCache = new Map<string, ConvoItem>()
-    const stabilized = new Array<ConvoItem>(fresh.length)
-    for (let i = 0; i < fresh.length; i++) {
-      const item = fresh[i]
-      const cached = this.itemCache.get(item.key)
-      const reused =
-        cached !== undefined && areConvoItemsEquivalent(cached, item)
-          ? cached
-          : item
-      nextCache.set(item.key, reused)
-      stabilized[i] = reused
-    }
-    this.itemCache = nextCache
-    return stabilized
+    return items.filter(item => {
+      if (isConvoItemMessage(item)) {
+        return !this.deletedMessages.has(item.message.id)
+      }
+      return true
+    })
   }
 
   /**

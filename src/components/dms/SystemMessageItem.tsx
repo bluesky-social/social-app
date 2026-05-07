@@ -1,4 +1,5 @@
 import {View} from 'react-native'
+import {type ChatBskyActorDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
 import {type ConvoItem} from '#/state/messages/convo/types'
@@ -8,13 +9,15 @@ import {Text} from '#/components/Typography'
 
 export function SystemMessageItem({
   item,
+  relatedProfiles,
 }: {
   item: ConvoItem & {type: 'system-message'}
+  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
 }) {
   const t = useTheme()
   const {i18n} = useLingui()
 
-  const info = getSystemMessageInfo(item.message.data, item.relatedProfiles)
+  const info = getSystemMessageInfo(item.message.data, relatedProfiles)
   if (!info) return null
 
   const {Icon, message} = info

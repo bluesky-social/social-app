@@ -72,29 +72,11 @@ export type ConvoItem =
       type: 'message'
       key: string
       message: ChatBskyConvoDefs.MessageView
-      relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
-      nextMessage:
-        | ChatBskyConvoDefs.MessageView
-        | ChatBskyConvoDefs.DeletedMessageView
-        | null
-      prevMessage:
-        | ChatBskyConvoDefs.MessageView
-        | ChatBskyConvoDefs.DeletedMessageView
-        | null
     }
   | {
       type: 'pending-message'
       key: string
       message: ChatBskyConvoDefs.MessageView
-      relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
-      nextMessage:
-        | ChatBskyConvoDefs.MessageView
-        | ChatBskyConvoDefs.DeletedMessageView
-        | null
-      prevMessage:
-        | ChatBskyConvoDefs.MessageView
-        | ChatBskyConvoDefs.DeletedMessageView
-        | null
       failed: boolean
       /**
        * Retry sending the message. If present, the message is in a failed state.
@@ -105,21 +87,11 @@ export type ConvoItem =
       type: 'deleted-message'
       key: string
       message: ChatBskyConvoDefs.DeletedMessageView
-      relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
-      nextMessage:
-        | ChatBskyConvoDefs.MessageView
-        | ChatBskyConvoDefs.DeletedMessageView
-        | null
-      prevMessage:
-        | ChatBskyConvoDefs.MessageView
-        | ChatBskyConvoDefs.DeletedMessageView
-        | null
     }
   | {
       type: 'system-message'
       key: string
       message: ChatBskyConvoDefs.SystemMessageView
-      relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
     }
   | {
       type: 'error'
@@ -172,6 +144,7 @@ export type ConvoStateReady = {
   status: ConvoStatus.Ready
   items: ConvoItem[]
   convo: ConvoWithDetails
+  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
   error: undefined
   isFetchingHistory: boolean
   hasAllHistory: boolean
@@ -186,6 +159,7 @@ export type ConvoStateBackgrounded = {
   status: ConvoStatus.Backgrounded
   items: ConvoItem[]
   convo: ConvoWithDetails
+  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
   error: undefined
   isFetchingHistory: boolean
   hasAllHistory: boolean
@@ -200,6 +174,7 @@ export type ConvoStateSuspended = {
   status: ConvoStatus.Suspended
   items: ConvoItem[]
   convo: ConvoWithDetails
+  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
   error: undefined
   isFetchingHistory: boolean
   hasAllHistory: boolean
@@ -228,6 +203,7 @@ export type ConvoStateDisabled = {
   status: ConvoStatus.Disabled
   items: ConvoItem[]
   convo: ConvoWithDetails
+  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
   error: undefined
   isFetchingHistory: boolean
   hasAllHistory: boolean
