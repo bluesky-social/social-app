@@ -45,11 +45,11 @@ export function CaptchaWebView({
   }, [])
 
   const redirectHost = useMemo(() => {
-      if (!state?.serviceUrl) return 'blacksky.community'
+    if (!state?.serviceUrl) return 'blacksky.community'
 
     return state?.serviceUrl &&
       new URL(state?.serviceUrl).host === 'staging.bsky.dev'
-        ? 'app.staging.bsky.dev'
+      ? 'app.staging.bsky.dev'
       : 'blacksky.community'
   }, [state?.serviceUrl])
 

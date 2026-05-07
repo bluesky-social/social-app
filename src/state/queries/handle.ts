@@ -1,8 +1,11 @@
 import React from 'react'
-import {fetchQueryWithFallback, useMutation, useQueryClient} from './useQueryWithFallback'
 
-import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
+import {
+  fetchQueryWithFallback,
+  useMutation,
+  useQueryClient,
+} from './useQueryWithFallback'
 
 const handleQueryKeyRoot = 'handle'
 const fetchHandleQueryKey = (handleOrDid: string) => [

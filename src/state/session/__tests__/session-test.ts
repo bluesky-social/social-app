@@ -10,8 +10,6 @@ jest.mock('jwt-decode', () => ({
   },
 }))
 
-jest.mock('../../birthdate')
-jest.mock('../../../ageAssurance/data')
 jest.mock('#/lib/notifications/notifications', () => ({
   unregisterPushToken(_agents: BskyAgent[]) {
     return Promise.resolve()

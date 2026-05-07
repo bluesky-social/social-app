@@ -38,7 +38,6 @@ const OrderedForms = [
 export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   const {_} = useLingui()
   const failedAttemptCountRef = useRef(0)
-  const startTimeRef = useRef(Date.now())
 
   const {accounts} = useSession()
   const {requestedAccountSwitchTo} = useLoggedOutView()
@@ -65,11 +64,8 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   >('Forward')
 
   const ax = useAnalytics()
-  const {
-    data: serviceDescription,
-    error: serviceError,
-    refetch: refetchService,
-  } = useServiceQuery(serviceUrl)
+  const {data: serviceDescription, error: serviceError} =
+    useServiceQuery(serviceUrl)
 
   const onSelectAccount = (account?: SessionAccount) => {
     if (account?.service) {
@@ -103,29 +99,12 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     }
   }, [serviceError, serviceUrl, _])
 
-  const onPressForgotPassword = () => {
-    gotoForm(Forms.ForgotPassword)
-    ax.metric('signin:forgotPasswordPressed', {})
-  }
-
   const handlePressBack = () => {
     onPressBack()
     setScreenTransitionDirection('Backward')
     ax.metric('signin:backPressed', {
       failedAttemptsCount: failedAttemptCountRef.current,
     })
-  }
-
-  const onAttemptSuccess = () => {
-    ax.metric('signin:success', {
-      isUsingCustomProvider: serviceUrl !== DEFAULT_SERVICE,
-      timeTakenSeconds: Math.round((Date.now() - startTimeRef.current) / 1000),
-      failedAttemptsCount: failedAttemptCountRef.current,
-    })
-  }
-
-  const onAttemptFailed = () => {
-    failedAttemptCountRef.current += 1
   }
 
   let content = null

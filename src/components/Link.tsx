@@ -125,9 +125,9 @@ export function useLink({
 
       const requiresWarning = Boolean(
         !disableMismatchWarning &&
-          displayText &&
-          isExternal &&
-          linkRequiresWarning(href, displayText),
+        displayText &&
+        isExternal &&
+        linkRequiresWarning(href, displayText),
       )
 
       if (IS_WEB) {
@@ -220,9 +220,9 @@ export function useLink({
   const handleLongPress = React.useCallback(() => {
     const requiresWarning = Boolean(
       !disableMismatchWarning &&
-        displayText &&
-        isExternal &&
-        linkRequiresWarning(href, displayText),
+      displayText &&
+      isExternal &&
+      linkRequiresWarning(href, displayText),
     )
 
     if (requiresWarning) {

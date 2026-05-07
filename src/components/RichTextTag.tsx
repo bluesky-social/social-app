@@ -61,7 +61,7 @@ export function RichTextTag({
       optimisticUpsert?.find(
         m => m.value === tag && m.targets.includes('tag'),
       )) &&
-      !optimisticRemove?.find(m => m?.value === tag),
+    !optimisticRemove?.find(m => m?.value === tag),
   )
 
   /*

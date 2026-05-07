@@ -325,7 +325,7 @@ export function AssemblyEmbed({
           accessibilityRole="link"
           accessibilityLabel="Sign in to vote"
           accessibilityHint="Opens the assembly page to sign in and vote">
-          <Text style={[a.text_sm, a.font_semibold, {color: '#fff'}]}>
+          <Text style={[a.text_sm, a.font_semi_bold, {color: '#fff'}]}>
             Sign in to vote
           </Text>
         </Pressable>
@@ -459,7 +459,7 @@ export function AssemblyEmbed({
               accessibilityRole="button"
               accessibilityLabel="Agree"
               accessibilityHint="Vote agree on this statement">
-              <Text style={[a.text_sm, a.font_semibold, {color: '#61C554'}]}>
+              <Text style={[a.text_sm, a.font_semi_bold, {color: '#61C554'}]}>
                 {voting ? '...' : 'Agree'}
               </Text>
             </Pressable>
@@ -478,7 +478,7 @@ export function AssemblyEmbed({
               accessibilityRole="button"
               accessibilityLabel="Disagree"
               accessibilityHint="Vote disagree on this statement">
-              <Text style={[a.text_sm, a.font_semibold, {color: '#F40B42'}]}>
+              <Text style={[a.text_sm, a.font_semi_bold, {color: '#F40B42'}]}>
                 {voting ? '...' : 'Disagree'}
               </Text>
             </Pressable>
@@ -500,7 +500,7 @@ export function AssemblyEmbed({
               <Text
                 style={[
                   a.text_sm,
-                  a.font_semibold,
+                  a.font_semi_bold,
                   {color: t.atoms.text_contrast_medium.color},
                 ]}>
                 {voting ? '...' : 'Pass / Unsure'}

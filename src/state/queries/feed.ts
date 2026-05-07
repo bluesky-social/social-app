@@ -14,6 +14,7 @@ import {
   type InfiniteData,
   keepPreviousData,
   type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
   useMutation,
   useQuery,

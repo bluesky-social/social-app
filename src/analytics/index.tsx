@@ -24,7 +24,6 @@ import {
 import {type Metrics, metrics} from '#/analytics/metrics'
 import * as refParams from '#/analytics/misc/refParams'
 import * as env from '#/env'
-import {device} from '#/storage'
 
 export * as utils from '#/analytics/utils'
 export const features = {init, refresh}
