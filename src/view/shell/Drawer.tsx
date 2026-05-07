@@ -35,6 +35,7 @@ import {
   Hashtag_Filled_Corner0_Rounded as HashtagFilled,
   Hashtag_Stroke2_Corner0_Rounded as Hashtag,
 } from '#/components/icons/Hashtag'
+import {Heart2_Stroke2_Corner0_Rounded as Heart} from '#/components/icons/Heart2'
 import {
   HomeOpen_Filled_Corner0_Rounded as HomeFilled,
   HomeOpen_Stoke2_Corner0_Rounded as Home,
@@ -231,6 +232,11 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
     setDrawerOpen(false)
   }, [navigation, setDrawerOpen])
 
+  const onPressSupport = useCallback(() => {
+    navigation.navigate('Support')
+    setDrawerOpen(false)
+  }, [navigation, setDrawerOpen])
+
   const onPressFeedback = useCallback(() => {
     Linking.openURL(
       FEEDBACK_FORM_URL({
@@ -296,6 +302,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
               onPress={onPressProfile}
             />
             <SettingsMenuItem onPress={onPressSettings} />
+            <SupportMenuItem onPress={onPressSupport} />
           </>
         ) : (
           <>
@@ -600,6 +607,19 @@ let SettingsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
   )
 }
 SettingsMenuItem = memo(SettingsMenuItem)
+
+let SupportMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
+  const {_} = useLingui()
+  const t = useTheme()
+  return (
+    <MenuItem
+      icon={<Heart style={[t.atoms.text]} width={iconWidth} />}
+      label={_(msg`Support Us`)}
+      onPress={onPress}
+    />
+  )
+}
+SupportMenuItem = memo(SupportMenuItem)
 
 function MenuItem({icon, label, count, bold, onPress}: MenuItemProps) {
   const t = useTheme()
