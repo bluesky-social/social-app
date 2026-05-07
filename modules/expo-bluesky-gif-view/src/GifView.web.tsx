@@ -1,15 +1,18 @@
-import * as React from 'react'
+import {createRef, PureComponent, type RefObject} from 'react'
 import {StyleSheet} from 'react-native'
 
-import {GifViewProps} from './GifView.types'
+import {type GifViewProps} from './GifView.types'
 
-export class GifView extends React.PureComponent<GifViewProps> {
-  private readonly videoPlayerRef: React.RefObject<HTMLMediaElement> =
-    React.createRef()
+export class GifView extends PureComponent<GifViewProps> {
+  private readonly videoPlayerRef: RefObject<HTMLMediaElement> = createRef()
   private isLoaded = false
 
   constructor(props: GifViewProps | Readonly<GifViewProps>) {
     super(props)
+  }
+
+  componentDidMount() {
+    document.addEventListener('visibilitychange', this.onVisibilityChange)
   }
 
   componentDidUpdate(prevProps: Readonly<GifViewProps>) {
@@ -22,8 +25,26 @@ export class GifView extends React.PureComponent<GifViewProps> {
     }
   }
 
+  componentWillUnmount() {
+    document.removeEventListener('visibilitychange', this.onVisibilityChange)
+  }
+
   static async prefetchAsync(_: string[]): Promise<void> {
     console.warn('prefetchAsync is not supported on web')
+  }
+
+  // Safari pauses backgrounded `<video>` elements when the tab becomes
+  // inactive and does not resume them automatically when the tab is shown
+  // again, leaving GIFs frozen on a still frame. Resume playback when the
+  // page becomes visible if the consumer expects autoplay.
+  private onVisibilityChange = () => {
+    if (
+      document.visibilityState === 'visible' &&
+      this.props.autoplay &&
+      this.videoPlayerRef.current?.paused
+    ) {
+      void this.playAsync()
+    }
   }
 
   private firePlayerStateChangeEvent = () => {
@@ -62,21 +83,29 @@ export class GifView extends React.PureComponent<GifViewProps> {
   }
 
   render() {
+    const {sources, source, autoplay, accessibilityLabel, style} = this.props
+    const useSources = sources && sources.length > 0
+
     return (
       <video
-        src={this.props.source}
-        autoPlay={this.props.autoplay ? 'autoplay' : undefined}
-        preload={this.props.autoplay ? 'auto' : undefined}
+        // When `<source>` children are present, omit `src` so the browser
+        // walks the source list and picks via canPlayType.
+        src={useSources ? undefined : source}
+        autoPlay={autoplay ? 'autoplay' : undefined}
+        preload={autoplay ? 'auto' : undefined}
         playsInline={true}
         loop="loop"
         muted="muted"
-        style={StyleSheet.flatten(this.props.style)}
+        style={StyleSheet.flatten(style)}
         onCanPlay={this.onLoad}
         onPlay={this.firePlayerStateChangeEvent}
         onPause={this.firePlayerStateChangeEvent}
-        aria-label={this.props.accessibilityLabel}
-        ref={this.videoPlayerRef}
-      />
+        aria-label={accessibilityLabel}
+        ref={this.videoPlayerRef}>
+        {useSources
+          ? sources.map(s => <source key={s.src} src={s.src} type={s.type} />)
+          : null}
+      </video>
     )
   }
 }

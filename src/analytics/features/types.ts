@@ -15,7 +15,6 @@ export enum Features {
   GroupChatsHasBeenReleased = 'group_chats:has_been_released',
   DmsNewMessageComposerEnable = 'dms:new_message_composer:enable',
   ComposerLanguageDetectionEnable = 'composer:language_detection:enable',
-  KlipyGifProviderEnable = 'klipy_gif_provider:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
 
   AATest = 'aa-test',
