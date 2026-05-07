@@ -17,6 +17,7 @@ import * as Sentry from '@sentry/react-native'
 import {Provider as HideBottomBarBorderProvider} from '#/lib/hooks/useHideBottomBarBorder'
 import {QueryProvider} from '#/lib/react-query'
 import {ThemeProvider} from '#/lib/ThemeContext'
+import {Provider as TranslateOnDeviceProvider} from '#/lib/translation'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
 import {Provider as A11yProvider} from '#/state/a11y'
@@ -158,9 +159,11 @@ function InnerApp() {
                                                       style={a.h_full}>
                                                       <GlobalGestureEventsProvider>
                                                         <IntentDialogProvider>
-                                                          <TestCtrls />
-                                                          <Shell />
-                                                          <ToastOutlet />
+                                                          <TranslateOnDeviceProvider>
+                                                            <TestCtrls />
+                                                            <Shell />
+                                                            <ToastOutlet />
+                                                          </TranslateOnDeviceProvider>
                                                         </IntentDialogProvider>
                                                       </GlobalGestureEventsProvider>
                                                     </GestureHandlerRootView>
