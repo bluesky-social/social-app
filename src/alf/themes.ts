@@ -163,6 +163,8 @@ export function createThemes({
   const lightPalette = {
     white: BRAND.white,
     black: BRAND.black,
+    pink: color.like,
+    yellow: color.like,
     like: color.like,
 
     contrast_0: color.gray_0,
@@ -227,6 +229,8 @@ export function createThemes({
   const darkPalette: Palette = {
     white: BRAND.white,
     black: BRAND.black,
+    pink: color.like,
+    yellow: color.like,
     like: color.like,
 
     contrast_0: color.gray_1000,
@@ -423,6 +427,10 @@ export function createThemes({
       border_contrast_high: {
         borderColor: lightPalette.contrast_300,
       },
+      shadow_xs: {
+        ...atoms.shadow_xs,
+        shadowColor: lightPalette.black,
+      },
       shadow_sm: {
         ...atoms.shadow_sm,
         shadowColor: lightPalette.black,
@@ -508,6 +516,11 @@ export function createThemes({
       },
       border_contrast_high: {
         borderColor: darkPalette.contrast_300,
+      },
+      shadow_xs: {
+        ...atoms.shadow_xs,
+        shadowOpacity: 0.7,
+        shadowColor: color.trueBlack,
       },
       shadow_sm: {
         ...atoms.shadow_sm,
@@ -602,6 +615,11 @@ export function createThemes({
       },
       shadow_sm: {
         ...atoms.shadow_sm,
+        shadowOpacity: 0.7,
+        shadowColor: `hsl(${hues.primary}, 28%, 6%)`,
+      },
+      shadow_xs: {
+        ...atoms.shadow_xs,
         shadowOpacity: 0.7,
         shadowColor: `hsl(${hues.primary}, 28%, 6%)`,
       },

@@ -1,10 +1,10 @@
 import {useRef, useState} from 'react'
 import {Keyboard, LayoutAnimation, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
-import {isNetworkError} from '#/lib/strings/errors'
-import {cleanError} from '#/lib/strings/errors'
+import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {getWebOAuthClient} from '#/state/session/oauth-web-client'
 import {atoms as a} from '#/alf'

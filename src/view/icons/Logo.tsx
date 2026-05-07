@@ -1,4 +1,4 @@
-import React from 'react'
+import {forwardRef} from 'react'
 import {StyleSheet, type TextProps} from 'react-native'
 import Svg, {
   Defs,
@@ -18,7 +18,7 @@ type Props = {
   style?: TextProps['style']
 } & Omit<SvgProps, 'style'>
 
-export const Logo = React.forwardRef(function LogoImpl(props: Props, ref) {
+export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
   const {fill, ...rest} = props
   const styles = StyleSheet.flatten(props.style)
   const t = useTheme()

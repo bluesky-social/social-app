@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {
   type AppBskyLabelerDefs,
   BskyAgent,
@@ -122,7 +122,7 @@ export type Subject =
 export function useLabelSubject({label}: {label: ComAtprotoLabelDefs.Label}): {
   subject: Subject
 } {
-  return React.useMemo(() => {
+  return useMemo(() => {
     const {cid, uri} = label
     if (cid) {
       return {

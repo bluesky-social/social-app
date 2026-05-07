@@ -20,7 +20,7 @@ export const atoms = {
    */
   util_screen_outer: [
     web({
-      minHeight: '100vh',
+      minHeight: '100dvh',
     }),
     native({
       height: '100%',
@@ -106,6 +106,22 @@ export const atoms = {
   // special composite animation for dialogs
   zoom_fade_in: web({
     animation: `zoomIn ${EXP_CURVE} 0.3s, fadeIn ${EXP_CURVE} 0.3s`,
+  }),
+
+  /**
+   * Visually hidden but available to screen readers (web).
+   * Use for live regions or off-screen labels (e.g. "Image 1 of 3").
+   */
+  sr_only: web({
+    position: 'absolute',
+    width: 1,
+    height: 1,
+    padding: 0,
+    margin: -1,
+    overflow: 'hidden',
+    clip: 'rect(0,0,0,0)',
+    whiteSpace: 'nowrap',
+    borderWidth: 0,
   }),
 
   /**

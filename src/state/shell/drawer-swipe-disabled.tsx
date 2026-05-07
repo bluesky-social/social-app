@@ -1,15 +1,15 @@
-import React from 'react'
+import {createContext, useContext, useState} from 'react'
 
 type StateContext = boolean
 type SetContext = (v: boolean) => void
 
-const stateContext = React.createContext<StateContext>(false)
+const stateContext = createContext<StateContext>(false)
 stateContext.displayName = 'DrawerSwipeDisabledStateContext'
-const setContext = React.createContext<SetContext>((_: boolean) => {})
+const setContext = createContext<SetContext>((_: boolean) => {})
 setContext.displayName = 'DrawerSwipeDisabledSetContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(false)
+  const [state, setState] = useState(false)
   return (
     <stateContext.Provider value={state}>
       <setContext.Provider value={setState}>{children}</setContext.Provider>
@@ -18,9 +18,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useIsDrawerSwipeDisabled() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useSetDrawerSwipeDisabled() {
-  return React.useContext(setContext)
+  return useContext(setContext)
 }

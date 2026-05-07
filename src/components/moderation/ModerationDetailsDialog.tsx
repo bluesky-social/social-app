@@ -1,14 +1,16 @@
 import {View} from 'react-native'
 import {type ModerationCause} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {makeProfileLink} from '#/lib/routes/links'
 import {listUriToHref} from '#/lib/strings/url-helpers'
 import {useSession} from '#/state/session'
-import {atoms as a, useGutters, useTheme} from '#/alf'
+import {atoms as a, useGutters, useTheme, web} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
 import {type AppModerationCause} from '#/components/Pills'
@@ -142,7 +144,10 @@ function ModerationDetailsDialogInner({
         paddingLeft: 0,
         paddingRight: 0,
         paddingBottom: 0,
-      }}>
+      }}
+      style={web({
+        maxWidth: 460,
+      })}>
       <View style={[xGutters, a.pb_lg]}>
         <Text emoji style={[t.atoms.text, a.text_2xl, a.font_bold, a.mb_sm]}>
           {name}
@@ -150,6 +155,15 @@ function ModerationDetailsDialogInner({
         <Text style={[t.atoms.text, a.text_sm, a.leading_snug]}>
           {description}
         </Text>
+
+        {desc.isSubjectAccount && (
+          <Admonition type="info" style={[a.mt_md]}>
+            <Trans>
+              This moderation was applied to the entire user account and will
+              appear on all posts.
+            </Trans>
+          </Admonition>
+        )}
       </View>
 
       {modcause?.type === 'label' && (

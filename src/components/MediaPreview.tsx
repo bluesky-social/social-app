@@ -1,9 +1,9 @@
 import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
-import {isTenorGifUri} from '#/lib/strings/embed-player'
+import {isGifEmbed} from '#/lib/strings/embed-player'
 import {atoms as a, useTheme} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
@@ -38,7 +38,7 @@ export function Embed({
     )
   } else if (e.type === 'link') {
     if (!e.view.external.thumb) return null
-    if (!isTenorGifUri(e.view.external.uri)) return null
+    if (!isGifEmbed(e.view.external.uri)) return null
     return (
       <Outer style={style}>
         <GifItem

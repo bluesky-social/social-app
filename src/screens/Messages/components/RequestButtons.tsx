@@ -1,7 +1,8 @@
 import {useCallback} from 'react'
 import {type ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -11,8 +12,10 @@ import {useEmail} from '#/state/email-verification'
 import {useAcceptConversation} from '#/state/queries/messages/accept-conversation'
 import {precacheConvoQuery} from '#/state/queries/messages/conversation'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
-import {useProfileBlockMutationQueue} from '#/state/queries/profile'
-import * as Toast from '#/view/com/util/Toast'
+import {
+  unstableCacheProfileView,
+  useProfileBlockMutationQueue,
+} from '#/state/queries/profile'
 import {atoms as a} from '#/alf'
 import {
   Button,
@@ -32,6 +35,7 @@ import {PersonX_Stroke2_Corner0_Rounded as PersonXIcon} from '#/components/icons
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import {ReportDialog} from '#/components/moderation/ReportDialog'
+import * as Toast from '#/components/Toast'
 
 export function RejectMenu({
   convo,
@@ -52,6 +56,8 @@ export function RejectMenu({
   const {_} = useLingui()
   const shadowedProfile = useProfileShadow(profile)
   const navigation = useNavigation<NavigationProp>()
+  const queryClient = useQueryClient()
+
   const {mutate: leaveConvo} = useLeaveConvo(convo.id, {
     onMutate: () => {
       if (currentScreen === 'conversation') {
@@ -66,7 +72,9 @@ export function RejectMenu({
             message: 'Failed to delete chat',
           }),
         ),
-        'xmark',
+        {
+          type: 'error',
+        },
       )
     },
   })
@@ -80,7 +88,9 @@ export function RejectMenu({
           message: 'Chat deleted',
         }),
       ),
-      'check',
+      {
+        type: 'success',
+      },
     )
     leaveConvo()
   }, [leaveConvo, _])
@@ -93,7 +103,9 @@ export function RejectMenu({
           message: 'Account blocked',
         }),
       ),
-      'check',
+      {
+        type: 'success',
+      },
     )
     // block and also delete convo
     queueBlock()
@@ -173,6 +185,12 @@ export function RejectMenu({
             }}
             control={reportControl}
             onAfterSubmit={() => {
+              const sender = convo.members.find(
+                member => member.did === lastMessage.sender.did,
+              )
+              if (sender) {
+                unstableCacheProfileView(queryClient, sender)
+              }
               blockOrDeleteControl.open()
             }}
           />
@@ -233,7 +251,9 @@ export function AcceptChatButton({
             message: 'Failed to accept chat',
           }),
         ),
-        'xmark',
+        {
+          type: 'error',
+        },
       )
     },
   })
@@ -302,7 +322,9 @@ export function DeleteChatButton({
             message: 'Failed to delete chat',
           }),
         ),
-        'xmark',
+        {
+          type: 'error',
+        },
       )
     },
   })
@@ -315,7 +337,9 @@ export function DeleteChatButton({
           message: 'Chat deleted',
         }),
       ),
-      'check',
+      {
+        type: 'success',
+      },
     )
     leaveConvo()
   }, [leaveConvo, _])

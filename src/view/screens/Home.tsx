@@ -1,5 +1,6 @@
-import React from 'react'
-import {StyleSheet} from 'react-native'
+import {useCallback, useEffect, useLayoutEffect, useMemo, useRef} from 'react'
+import {ActivityIndicator, StyleSheet} from 'react-native'
+import {withSpring} from 'react-native-reanimated'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
@@ -20,7 +21,7 @@ import {type FeedDescriptor, type FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
+import {useMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {FeedPage} from '#/view/com/feeds/FeedPage'
@@ -34,10 +35,9 @@ import {CustomFeedEmptyState} from '#/view/com/posts/CustomFeedEmptyState'
 import {FollowingEmptyState} from '#/view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from '#/view/com/posts/FollowingEndOfFeed'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
-import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import * as Layout from '#/components/Layout'
 import {useAnalytics} from '#/analytics'
-import {IS_WEB} from '#/env'
+import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
@@ -48,7 +48,7 @@ export function HomeScreen(props: Props) {
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (IS_WEB && !currentAccount) {
       const getParams = new URLSearchParams(window.location.search)
       const splash = getParams.get('splash')
@@ -80,7 +80,7 @@ export function HomeScreen(props: Props) {
 
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
-      <Layout.Screen testID="HomeScreen">
+      <Layout.Screen testID="HomeScreen" noInsetTop={IS_LIQUID_GLASS}>
         <HomeScreenReady
           {...props}
           preferences={preferences}
@@ -92,7 +92,7 @@ export function HomeScreen(props: Props) {
     return (
       <Layout.Screen>
         <Layout.Center style={styles.loading}>
-          <CustomActivityIndicator size="large" />
+          <ActivityIndicator size="large" />
         </Layout.Center>
       </Layout.Screen>
     )
@@ -107,7 +107,7 @@ function HomeScreenReady({
   pinnedFeedInfos: SavedFeedSourceInfo[]
 }) {
   const ax = useAnalytics()
-  const allFeeds = React.useMemo(
+  const allFeeds = useMemo(
     () => pinnedFeedInfos.map(f => f.feedDescriptor),
     [pinnedFeedInfos],
   )
@@ -122,13 +122,13 @@ function HomeScreenReady({
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
   useOTAUpdates()
 
-  React.useEffect(() => {
+  useEffect(() => {
     requestNotificationsPermission('Home')
   }, [requestNotificationsPermission])
 
-  const pagerRef = React.useRef<PagerRef>(null)
-  const lastPagerReportedIndexRef = React.useRef(selectedIndex)
-  React.useLayoutEffect(() => {
+  const pagerRef = useRef<PagerRef>(null)
+  const lastPagerReportedIndexRef = useRef(selectedIndex)
+  useLayoutEffect(() => {
     // Since the pager is not a controlled component, adjust it imperatively
     // if the selected index gets out of sync with what it last reported.
     // This is supposed to only happen on the web when you use the right nav.
@@ -139,11 +139,16 @@ function HomeScreenReady({
   }, [selectedIndex])
 
   const {hasSession} = useSession()
-  const setMinimalShellMode = useSetMinimalShellMode()
+  const {headerMode} = useMinimalShellMode()
+  const showHeader = useCallback(() => {
+    'worklet'
+    headerMode.set(() => withSpring(0, {overshootClamping: true}))
+  }, [headerMode])
+
   useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
+    useCallback(() => {
+      return () => showHeader()
+    }, [showHeader]),
   )
 
   useFocusEffect(
@@ -159,9 +164,9 @@ function HomeScreenReady({
     }),
   )
 
-  const onPageSelected = React.useCallback(
+  const onPageSelected = useCallback(
     (index: number) => {
-      setMinimalShellMode(false)
+      showHeader()
       const maybeFeed = allFeeds[index]
 
       // Mutate the ref before setting state to avoid the imperative syncing effect
@@ -177,26 +182,26 @@ function HomeScreenReady({
         })
       }
     },
-    [ax, setSelectedFeed, setMinimalShellMode, allFeeds],
+    [ax, setSelectedFeed, showHeader, allFeeds],
   )
 
-  const onPressSelected = React.useCallback(() => {
+  const onPressSelected = useCallback(() => {
     emitSoftReset()
   }, [])
 
-  const onPageScrollStateChanged = React.useCallback(
+  const onPageScrollStateChanged = useCallback(
     (state: 'idle' | 'dragging' | 'settling') => {
       'worklet'
       if (state === 'dragging') {
-        setMinimalShellMode(false)
+        showHeader()
       }
     },
-    [setMinimalShellMode],
+    [showHeader],
   )
 
   const [demoMode] = useDemoMode()
 
-  const renderTabBar = React.useCallback(
+  const renderTabBar = useCallback(
     (props: RenderTabBarFnProps) => {
       if (demoMode) {
         return (
@@ -206,7 +211,7 @@ function HomeScreenReady({
             testID="homeScreenFeedTabs"
             onPressSelected={onPressSelected}
             // @ts-ignore
-            feeds={[{displayName: 'Following'}, {displayName: 'Blacksky'}]}
+            feeds={[{displayName: 'Following'}, {displayName: 'Discover'}]}
           />
         )
       }
@@ -223,15 +228,15 @@ function HomeScreenReady({
     [onPressSelected, pinnedFeedInfos, demoMode],
   )
 
-  const renderFollowingEmptyState = React.useCallback(() => {
+  const renderFollowingEmptyState = useCallback(() => {
     return <FollowingEmptyState />
   }, [])
 
-  const renderCustomFeedEmptyState = React.useCallback(() => {
+  const renderCustomFeedEmptyState = useCallback(() => {
     return <CustomFeedEmptyState />
   }, [])
 
-  const homeFeedParams = React.useMemo<FeedParams>(() => {
+  const homeFeedParams = useMemo<FeedParams>(() => {
     return {
       mergeFeedEnabled: Boolean(preferences.feedViewPrefs.lab_mergeFeedEnabled),
       mergeFeedSources: preferences.feedViewPrefs.lab_mergeFeedEnabled
@@ -248,7 +253,6 @@ function HomeScreenReady({
         ref={pagerRef}
         testID="homeScreen"
         onPageSelected={onPageSelected}
-        onPageScrollStateChanged={onPageScrollStateChanged}
         renderTabBar={renderTabBar}
         initialPage={selectedIndex}>
         <FeedPage
@@ -263,7 +267,7 @@ function HomeScreenReady({
           testID="customFeedPage"
           isPageFocused
           isPageAdjacent={false}
-          feed={`feedgen|${PROD_DEFAULT_FEED('blacksky-trend')}`}
+          feed={`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`}
           renderEmptyState={renderCustomFeedEmptyState}
           feedInfo={pinnedFeedInfos[0]}
         />
@@ -326,7 +330,7 @@ function HomeScreenReady({
         testID="customFeedPage"
         isPageFocused
         isPageAdjacent={false}
-        feed={`feedgen|${PROD_DEFAULT_FEED('blacksky-trend')}`}
+        feed={`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`}
         renderEmptyState={renderCustomFeedEmptyState}
         feedInfo={pinnedFeedInfos[0]}
       />

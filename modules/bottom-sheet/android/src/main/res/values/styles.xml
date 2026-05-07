@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="EdgeToEdgeBottomSheetDialogTheme" parent="Theme.Material3.DayNight.BottomSheetDialog">
-        <!-- Enable edge-to-edge -->
+    <style name="EdgeToEdgeBottomSheetDialogTheme" parent="ThemeOverlay.Material3.DayNight.BottomSheetDialog">
+        <!-- Enable edge-to-edge, matching react-native-edge-to-edge's setup -->
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowIsFloating">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:fitsSystemWindows">false</item>
         <item name="enableEdgeToEdge">true</item>
 
         <!-- Configure bottom sheet to respect system window insets -->
@@ -16,5 +18,6 @@
         <item name="paddingLeftSystemWindowInsets">true</item>
         <item name="paddingRightSystemWindowInsets">true</item>
         <item name="paddingTopSystemWindowInsets">false</item>
+        <item name="backgroundTint">@android:color/transparent</item>
     </style>
 </resources>

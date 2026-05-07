@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 
 import {type AppLanguage} from '#/locale/languages'
 import * as persisted from '#/state/persisted'
@@ -11,32 +18,28 @@ type StateContext = persisted.Schema['languagePrefs']
 type ApiContext = {
   setPrimaryLanguage: (code2: string) => void
   setPostLanguage: (commaSeparatedLangCodes: string) => void
-  setContentLanguage: (code2: string) => void
-  toggleContentLanguage: (code2: string) => void
-  togglePostLanguage: (code2: string) => void
+  setContentLanguages: (code2s: string[]) => void
   savePostLanguageToHistory: () => void
   setAppLanguage: (code2: AppLanguage) => void
 }
 
-const stateContext = React.createContext<StateContext>(
+const stateContext = createContext<StateContext>(
   persisted.defaults.languagePrefs,
 )
 stateContext.displayName = 'LanguagePrefsStateContext'
-const apiContext = React.createContext<ApiContext>({
+const apiContext = createContext<ApiContext>({
   setPrimaryLanguage: (_: string) => {},
   setPostLanguage: (_: string) => {},
-  setContentLanguage: (_: string) => {},
-  toggleContentLanguage: (_: string) => {},
-  togglePostLanguage: (_: string) => {},
+  setContentLanguages: (_: string[]) => {},
   savePostLanguageToHistory: () => {},
   setAppLanguage: (_: AppLanguage) => {},
 })
 apiContext.displayName = 'LanguagePrefsApiContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(persisted.get('languagePrefs'))
+  const [state, setState] = useState(() => persisted.get('languagePrefs'))
 
-  const setStateWrapped = React.useCallback(
+  const setStateWrapped = useCallback(
     (fn: SetStateCb) => {
       const s = fn(persisted.get('languagePrefs'))
       setState(s)
@@ -45,13 +48,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setState],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate('languagePrefs', nextLanguagePrefs => {
       setState(nextLanguagePrefs)
     })
   }, [setStateWrapped])
 
-  const api = React.useMemo(
+  const api = useMemo(
     () => ({
       setPrimaryLanguage(code2: string) {
         setStateWrapped(s => ({...s, primaryLanguage: code2}))
@@ -59,43 +62,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       setPostLanguage(commaSeparatedLangCodes: string) {
         setStateWrapped(s => ({...s, postLanguage: commaSeparatedLangCodes}))
       },
-      setContentLanguage(code2: string) {
-        setStateWrapped(s => ({...s, contentLanguages: [code2]}))
-      },
-      toggleContentLanguage(code2: string) {
-        setStateWrapped(s => {
-          const exists = s.contentLanguages.includes(code2)
-          const next = exists
-            ? s.contentLanguages.filter(lang => lang !== code2)
-            : s.contentLanguages.concat(code2)
-          return {
-            ...s,
-            contentLanguages: next,
-          }
-        })
-      },
-      togglePostLanguage(code2: string) {
-        setStateWrapped(s => {
-          const exists = hasPostLanguage(state.postLanguage, code2)
-          let next = s.postLanguage
-
-          if (exists) {
-            next = toPostLanguages(s.postLanguage)
-              .filter(lang => lang !== code2)
-              .join(',')
-          } else {
-            // sort alphabetically for deterministic comparison in context menu
-            next = toPostLanguages(s.postLanguage)
-              .concat([code2])
-              .sort((a, b) => a.localeCompare(b))
-              .join(',')
-          }
-
-          return {
-            ...s,
-            postLanguage: next,
-          }
-        })
+      setContentLanguages(code2s: string[]) {
+        setStateWrapped(s => ({...s, contentLanguages: code2s}))
       },
       /**
        * Saves whatever language codes are currently selected into a history array,
@@ -120,7 +88,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         setStateWrapped(s => ({...s, appLanguage: code2}))
       },
     }),
-    [state, setStateWrapped],
+    [setStateWrapped],
   )
 
   return (
@@ -141,11 +109,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useLanguagePrefs() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useLanguagePrefsApi() {
-  return React.useContext(apiContext)
+  return useContext(apiContext)
 }
 
 export function getContentLanguages() {

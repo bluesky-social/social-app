@@ -6,7 +6,6 @@ import Animated, {
   SlideInLeft,
   SlideInRight,
 } from 'react-native-reanimated'
-import type React from 'react'
 
 import {IS_WEB} from '#/env'
 

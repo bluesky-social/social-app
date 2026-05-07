@@ -1,5 +1,11 @@
 import {useCallback} from 'react'
 import {type AppBskyActorDefs, type AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {
+  type QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {updatePostShadow} from '#/state/cache/post-shadow'
@@ -10,12 +16,6 @@ import {useAnalytics} from '#/analytics'
 import {type Metrics, toClout} from '#/analytics/metrics'
 import {useIsThreadMuted, useSetThreadMute} from '../cache/thread-mutes'
 import {findProfileQueryData} from './profile'
-import {
-  fetchQueryWithFallback,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from './useQueryWithFallback'
 
 const RQKEY_ROOT = 'post'
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]
@@ -24,8 +24,10 @@ export function usePostQuery(uri: string | undefined) {
   const agent = useAgent()
   return useQuery<AppBskyFeedDefs.PostView>({
     queryKey: RQKEY(uri || ''),
-    async queryFn() {
-      const urip = new AtUri(uri!)
+    queryFn: async () => {
+      if (!uri) throw new Error('[unreachable] No URI provided')
+
+      const urip = new AtUri(uri)
 
       if (!urip.host.startsWith('did:')) {
         const res = await agent.resolveHandle({
@@ -43,10 +45,15 @@ export function usePostQuery(uri: string | undefined) {
       throw new Error('No data')
     },
     enabled: !!uri,
-    enableFallback: true,
-    fallbackType: 'post',
-    fallbackIdentifier: uri,
   })
+}
+
+export function precachePost(
+  queryClient: QueryClient,
+  uri: string,
+  post: AppBskyFeedDefs.PostView,
+) {
+  queryClient.setQueryData(RQKEY(uri), post)
 }
 
 export function useGetPost() {
@@ -54,9 +61,9 @@ export function useGetPost() {
   const agent = useAgent()
   return useCallback(
     async ({uri}: {uri: string}) => {
-      return fetchQueryWithFallback(queryClient, {
+      return queryClient.fetchQuery({
         queryKey: RQKEY(uri || ''),
-        queryFn: async () => {
+        async queryFn() {
           const urip = new AtUri(uri)
 
           if (!urip.host.startsWith('did:')) {
@@ -77,9 +84,6 @@ export function useGetPost() {
 
           throw new Error('useGetPost: post not found')
         },
-        enableFallback: true,
-        fallbackType: 'post',
-        fallbackIdentifier: uri,
       })
     },
     [queryClient, agent],
@@ -91,9 +95,9 @@ export function useGetPosts() {
   const agent = useAgent()
   return useCallback(
     async ({uris}: {uris: string[]}) => {
-      return fetchQueryWithFallback(queryClient, {
+      return queryClient.fetchQuery({
         queryKey: RQKEY(uris.join(',') || ''),
-        queryFn: async () => {
+        async queryFn() {
           const res = await agent.getPosts({
             uris,
           })
@@ -104,9 +108,6 @@ export function useGetPosts() {
             throw new Error('useGetPosts failed')
           }
         },
-        enableFallback: true,
-        fallbackType: 'post',
-        fallbackIdentifier: uris[0], // Use first URI as identifier
       })
     },
     [queryClient, agent],
@@ -172,7 +173,7 @@ export function usePostLikeMutationQueue(
     return queueToggle(false)
   }, [queryClient, postUri, queueToggle])
 
-  return [queueLike, queueUnlike]
+  return [queueLike, queueUnlike] as const
 }
 
 function usePostLikeMutation(
@@ -300,7 +301,7 @@ export function usePostRepostMutationQueue(
     return queueToggle(false)
   }, [queryClient, postUri, queueToggle])
 
-  return [queueRepost, queueUnrepost]
+  return [queueRepost, queueUnrepost] as const
 }
 
 function usePostRepostMutation(

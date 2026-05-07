@@ -1,7 +1,8 @@
 import {memo, useMemo} from 'react'
 import {AtUri} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {makeProfileLink} from '#/lib/routes/links'

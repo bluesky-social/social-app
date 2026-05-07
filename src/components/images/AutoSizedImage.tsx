@@ -7,12 +7,13 @@ import Animated, {
 import {Image} from 'expo-image'
 import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {type Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
@@ -127,7 +128,6 @@ export function AutoSizedImage({
             }
           }
         }}
-        loading="lazy"
       />
       <MediaInsetBorder />
 
@@ -186,7 +186,7 @@ export function AutoSizedImage({
                 ],
               ]}>
               <Text style={[a.font_bold, largeAlt ? a.text_xs : {fontSize: 8}]}>
-                ALT
+                <Trans>ALT</Trans>
               </Text>
             </View>
           )}
@@ -209,12 +209,17 @@ export function AutoSizedImage({
           color: utils.alpha(t.atoms.bg.backgroundColor, 0.2),
           foreground: true,
         }}
-        style={[
+        style={({pressed}) => [
           a.w_full,
           a.rounded_md,
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
           {aspectRatio: max ?? 1},
+          web([
+            a.transition_transform,
+            {transitionDuration: '200ms'},
+            pressed && {transform: [{scale: 0.99}]},
+          ]),
         ]}>
         {contents}
       </Pressable>
@@ -236,7 +241,16 @@ export function AutoSizedImage({
             color: utils.alpha(t.atoms.bg.backgroundColor, 0.2),
             foreground: true,
           }}
-          style={[a.h_full]}>
+          style={({pressed}) => [
+            a.h_full,
+            a.rounded_md,
+            a.overflow_hidden,
+            web([
+              a.transition_transform,
+              {transitionDuration: '200ms'},
+              pressed && {transform: [{scale: 0.99}]},
+            ]),
+          ]}>
           {contents}
         </Pressable>
       </ConstrainedImage>

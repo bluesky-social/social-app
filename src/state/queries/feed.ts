@@ -9,7 +9,7 @@ import {
   moderateFeedGenerator,
   RichText,
 } from '@atproto/api'
-import {t} from '@lingui/macro'
+import {t} from '@lingui/core/macro'
 import {
   type InfiniteData,
   keepPreviousData,
@@ -25,13 +25,10 @@ import {getProxyHeadersForFeed} from '#/lib/api/feed/utils'
 import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {
-  PERSISTED_QUERY_GCTIME,
-  PERSISTED_QUERY_ROOT,
-  STALE,
-} from '#/state/queries'
+import {GCTIME, STALE} from '#/state/queries'
 import {RQKEY as listQueryKey} from '#/state/queries/list'
 import {usePreferencesQuery} from '#/state/queries/preferences'
+import {createQueryKey} from '#/state/queries/util'
 import {useAgent, useSession} from '#/state/session'
 import {router} from '#/routes'
 import {useModerationOpts} from '../preferences/moderation-opts'
@@ -523,10 +520,20 @@ const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
   contentMode: undefined,
 }
 
-const createPinnedFeedInfosQueryKeyRoot = (
+const createPinnedFeedInfosQueryKey = (
   kind: 'pinned' | 'saved',
   feedUris: string[],
-) => [PERSISTED_QUERY_ROOT, 'feed-info', kind, feedUris]
+) =>
+  createQueryKey(
+    'feed-info',
+    {
+      kind,
+      feedUris,
+    },
+    {
+      persistedVersion: 1,
+    },
+  )
 
 export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
@@ -535,11 +542,11 @@ export function usePinnedFeedsInfos() {
   const pinnedItems = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
 
   return useQuery({
-    queryKey: createPinnedFeedInfosQueryKeyRoot(
+    queryKey: createPinnedFeedInfosQueryKey(
       'pinned',
       pinnedItems.map(f => f.value),
     ),
-    gcTime: PERSISTED_QUERY_GCTIME,
+    gcTime: GCTIME.INFINITY,
     staleTime: STALE.INFINITY,
     enabled: !isLoadingPrefs,
     queryFn: async () => {
@@ -643,11 +650,11 @@ export function useSavedFeeds() {
   const queryClient = useQueryClient()
 
   return useQuery({
-    queryKey: createPinnedFeedInfosQueryKeyRoot(
+    queryKey: createPinnedFeedInfosQueryKey(
       'saved',
       savedItems.map(f => f.value),
     ),
-    gcTime: PERSISTED_QUERY_GCTIME,
+    gcTime: GCTIME.INFINITY,
     staleTime: STALE.INFINITY,
     enabled: !isLoadingPrefs,
     placeholderData: previousData => {

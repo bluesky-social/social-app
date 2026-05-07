@@ -1,12 +1,9 @@
-const {withXcodeProject, IOSConfig} = require('@expo/config-plugins')
-const path = require('path')
-const PBXFile = require('xcode/lib/pbxFile')
+const {withXcodeProject} = require('expo/config-plugins')
 
 const withXcodeTarget = (
   config,
   {extensionName, controllerName, soundFiles},
 ) => {
-  // eslint-disable-next-line no-shadow
   return withXcodeProject(config, config => {
     let pbxProject = config.modResults
 

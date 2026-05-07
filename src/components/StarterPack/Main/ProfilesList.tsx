@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import {forwardRef, useCallback, useImperativeHandle, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {
   type AppBskyActorDefs,
@@ -37,7 +37,7 @@ interface ProfilesListProps {
   scrollElRef: ListRef
 }
 
-export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
+export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
   function ProfilesListImpl(
     {listUri, moderationOpts, headerHeight, scrollElRef},
     ref,
@@ -48,7 +48,7 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     const {currentAccount} = useSession()
     const {data, refetch, isError} = useAllListMembersQuery(listUri)
 
-    const [isPTRing, setIsPTRing] = React.useState(false)
+    const [isPTRing, setIsPTRing] = useState(false)
 
     // The server returns these sorted by descending creation date, so we want to invert
 
@@ -80,7 +80,7 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
       })
     }, [scrollElRef, headerHeight])
 
-    React.useImperativeHandle(ref, () => ({
+    useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))
 

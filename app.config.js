@@ -35,6 +35,13 @@ module.exports = function (_config) {
 
   const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
 
+  const IOS_ICON_FILE =
+    PLATFORM === 'web' // web build doesn't like .icon files
+      ? './assets/app-icons/ios_icon_default_next.png'
+      : IS_TESTFLIGHT
+        ? './assets/app-icons/ios_icon_testflight.icon'
+        : './assets/app-icons/ios_icon_default.icon'
+
   return {
     expo: {
       version: VERSION,
@@ -47,7 +54,7 @@ module.exports = function (_config) {
       },
       icon: './assets/app-icons/ios_icon_default_next.png',
       userInterfaceStyle: 'automatic',
-      primaryColor: '#1083fe',
+      primaryColor: '#006AFF',
       newArchEnabled: false,
       ios: {
         supportsTablet: false,
@@ -55,12 +62,11 @@ module.exports = function (_config) {
         config: {
           usesNonExemptEncryption: false,
         },
-        icon:
-          PLATFORM === 'web' // web build doesn't like .icon files
-            ? './assets/app-icons/ios_icon_default_next.png'
-            : './assets/app-icons/ios_icon_default.icon',
+        icon: IOS_ICON_FILE,
         infoPlist: {
+          CADisableMinimumFrameDurationOnPhone: true,
           UIBackgroundModes: ['remote-notification'],
+          NSUserActivityTypes: ['INSendMessageIntent'],
           NSCameraUsageDescription:
             'Used for profile pictures, posts, and other kinds of content.',
           NSMicrophoneUsageDescription:
@@ -112,13 +118,13 @@ module.exports = function (_config) {
             'zh-Hans',
             'zh-Hant',
           ],
-          UIDesignRequiresCompatibility: true,
         },
         associatedDomains: ASSOCIATED_DOMAINS,
         entitlements: {
           'com.apple.developer.kernel.increased-memory-limit': true,
           'com.apple.developer.kernel.extended-virtual-addressing': true,
           'com.apple.security.application-groups': 'group.app.bsky',
+          'com.apple.developer.usernotifications.communication': true,
           // 'com.apple.developer.device-information.user-assigned-device-name': true,
         },
         privacyManifests: {
@@ -256,9 +262,16 @@ module.exports = function (_config) {
               deploymentTarget: '15.1',
               buildReactNativeFromSource: true,
               ccacheEnabled: IS_DEV,
+              extraPods: [
+                {
+                  name: 'MCEmojiPicker',
+                  git: 'https://github.com/bluesky-social/MCEmojiPicker.git',
+                  branch: 'main',
+                },
+              ],
             },
             android: {
-              compileSdkVersion: 35,
+              compileSdkVersion: 36,
               targetSdkVersion: 35,
               buildToolsVersion: '35.0.0',
               buildReactNativeFromSource: IS_PRODUCTION,
@@ -286,7 +299,6 @@ module.exports = function (_config) {
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidManifestIntentQueriesPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
-        './plugins/withAndroidDayNightThemePlugin.js',
         './plugins/withAndroidNoJitpackPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',

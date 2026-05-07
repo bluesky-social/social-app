@@ -1,18 +1,19 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {P, Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 
@@ -56,7 +57,7 @@ export function DisableEmail2FADialog({
     try {
       if (currentAccount?.email) {
         await agent.com.atproto.server.updateEmail({
-          email: currentAccount!.email,
+          email: currentAccount.email,
           token: confirmationCode.trim(),
           emailAuthFactor: false,
         })

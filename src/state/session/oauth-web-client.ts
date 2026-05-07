@@ -36,24 +36,14 @@ function attachOauthTelemetry(client: BrowserOAuthClient) {
   const tagged = client as unknown as Record<symbol, true>
   if (tagged[TELEMETRY_ATTACHED]) return
   tagged[TELEMETRY_ATTACHED] = true
-  client.addEventListener('deleted', event => {
-    const detail = (event as CustomEvent<{sub: string; cause?: unknown}>).detail
-    const cause = categorizeOauthError(detail.cause)
-    const message =
-      detail.cause instanceof Error
-        ? detail.cause.message
-        : typeof detail.cause === 'string'
-          ? detail.cause
-          : undefined
-    logger.warn('oauth: session deleted', {sub: detail.sub, cause, message})
-    emitOauthTelemetry({
-      type: 'oauth:sessionDeleted',
-      payload: {cause, message: message?.slice(0, 200)},
-    })
-  })
-  client.addEventListener('updated', () => {
-    emitOauthTelemetry({type: 'oauth:sessionRefreshed', payload: {}})
-  })
+  // NOTE: BrowserOAuthClient.addEventListener was removed in
+  // @atproto/oauth-client-browser ^0.3. The telemetry hooks below previously
+  // observed 'deleted' and 'updated' events; restore once an equivalent
+  // observer surface lands upstream.
+  void client
+  void categorizeOauthError
+  void emitOauthTelemetry
+  void logger
 }
 
 // Lets the debug button mark the next refresh attempt as user-initiated so

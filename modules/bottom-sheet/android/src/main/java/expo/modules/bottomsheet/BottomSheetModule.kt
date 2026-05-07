@@ -25,8 +25,8 @@ class BottomSheetModule : Module() {
           view.dismiss()
         }
 
-        AsyncFunction("updateLayout") { view: BottomSheetView ->
-          view.updateLayout()
+        Prop("fullHeight") { view: BottomSheetView, prop: Boolean ->
+          view.fullHeight = prop
         }
 
         Prop("disableDrag") { view: BottomSheetView, prop: Boolean ->
@@ -48,6 +48,8 @@ class BottomSheetModule : Module() {
         Prop("preventExpansion") { view: BottomSheetView, prop: Boolean ->
           view.preventExpansion = prop
         }
+
+        Prop("sourceViewTag") { _: BottomSheetView, _: Int? -> }
       }
     }
 }

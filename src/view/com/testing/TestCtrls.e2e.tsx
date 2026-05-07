@@ -25,6 +25,7 @@ export function TestCtrls() {
   const onboardingDispatch = useOnboardingDispatch()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const onPressSignInAlice = async () => {
+    console.info('[E2E] Signing in as Alice')
     await login(
       {
         service: 'http://localhost:3000',
@@ -36,6 +37,7 @@ export function TestCtrls() {
     setShowLoggedOut(false)
   }
   const onPressSignInBob = async () => {
+    console.info('[E2E] Signing in as Bob')
     await login(
       {
         service: 'http://localhost:3000',
@@ -54,6 +56,9 @@ export function TestCtrls() {
         accessibilityHint="Enter proxy header"
         testID="e2eProxyHeaderInput"
         onChangeText={val => setProxyHeader(val as any)}
+        autoComplete="off"
+        autoCorrect={false}
+        autoCapitalize="none"
         onSubmitEditing={() => {
           const header = `${proxyHeader}#bsky_appview`
           BLUESKY_PROXY_HEADER.set(header)
@@ -129,15 +134,6 @@ export function TestCtrls() {
       />
       <Pressable
         testID="e2eStartOnboarding"
-        onPress={() => {
-          onboardingDispatch({type: 'start'})
-        }}
-        accessibilityRole="button"
-        style={BTN}
-      />
-      {/* TODO remove this entire control when experiment is over */}
-      <Pressable
-        testID="e2eStartLongboarding"
         onPress={() => {
           onboardingDispatch({type: 'start'})
         }}

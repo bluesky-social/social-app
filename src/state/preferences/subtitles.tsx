@@ -1,23 +1,27 @@
-import React from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 
 import * as persisted from '#/state/persisted'
 
 type StateContext = boolean
 type SetContext = (v: boolean) => void
 
-const stateContext = React.createContext<StateContext>(
+const stateContext = createContext<StateContext>(
   Boolean(persisted.defaults.subtitlesEnabled),
 )
 stateContext.displayName = 'SubtitlesStateContext'
-const setContext = React.createContext<SetContext>((_: boolean) => {})
+const setContext = createContext<SetContext>((_: boolean) => {})
 setContext.displayName = 'SubtitlesSetContext'
 
 export function Provider({children}: {children: React.ReactNode}) {
-  const [state, setState] = React.useState(
-    Boolean(persisted.get('subtitlesEnabled')),
-  )
+  const [state, setState] = useState(Boolean(persisted.get('subtitlesEnabled')))
 
-  const setStateWrapped = React.useCallback(
+  const setStateWrapped = useCallback(
     (subtitlesEnabled: persisted.Schema['subtitlesEnabled']) => {
       setState(Boolean(subtitlesEnabled))
       persisted.write('subtitlesEnabled', subtitlesEnabled)
@@ -25,7 +29,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     [setState],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate('subtitlesEnabled', nextSubtitlesEnabled => {
       setState(Boolean(nextSubtitlesEnabled))
     })
@@ -40,5 +44,5 @@ export function Provider({children}: {children: React.ReactNode}) {
   )
 }
 
-export const useSubtitlesEnabled = () => React.useContext(stateContext)
-export const useSetSubtitlesEnabled = () => React.useContext(setContext)
+export const useSubtitlesEnabled = () => useContext(stateContext)
+export const useSetSubtitlesEnabled = () => useContext(setContext)

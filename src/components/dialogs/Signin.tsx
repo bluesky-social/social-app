@@ -1,7 +1,8 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -31,12 +32,12 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
 
-  const showSignIn = React.useCallback(() => {
+  const showSignIn = useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'none'})
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  const showCreateAccount = React.useCallback(() => {
+  const showCreateAccount = useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'new'})
   }, [requestSwitchToAccount, closeAllActiveElements])

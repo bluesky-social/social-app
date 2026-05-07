@@ -1,4 +1,8 @@
-import {type AppBskyActorDefs} from '@atproto/api'
+import type AtpAgent from '@atproto/api'
+import {
+  type AppBskyActorDefs,
+  type ChatBskyActorDeclaration,
+} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
@@ -52,7 +56,7 @@ export function useUpdateActorDeclaration({
     onError: error => {
       logger.error(error)
       if (currentAccount) {
-        queryClient.invalidateQueries({
+        void queryClient.invalidateQueries({
           queryKey: PROFILE_RKEY(currentAccount.did),
         })
       }
@@ -77,4 +81,22 @@ export function useDeleteActorDeclaration() {
       return result
     },
   })
+}
+
+export async function fetchActorDeclarationRecord({
+  agent,
+  did,
+}: {
+  agent: AtpAgent
+  did?: string
+}) {
+  if (!did) return
+  const res = await agent.com.atproto.repo
+    .getRecord({
+      repo: did,
+      collection: 'chat.bsky.actor.declaration',
+      rkey: 'self',
+    })
+    .catch(_e => undefined)
+  return res?.data.value as ChatBskyActorDeclaration.Main
 }

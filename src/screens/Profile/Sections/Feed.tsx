@@ -1,7 +1,8 @@
 import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
 import {findNodeHandle, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -125,8 +126,7 @@ function ProfileEndOfFeed() {
   const t = useTheme()
 
   return (
-    <View
-      style={[a.w_full, a.py_5xl, a.border_t, t.atoms.border_contrast_medium]}>
+    <View style={[a.w_full, a.py_5xl, a.border_t, t.atoms.border_contrast_low]}>
       <Text style={[t.atoms.text_contrast_medium, a.text_center]}>
         <Trans>End of feed</Trans>
       </Text>

@@ -164,8 +164,8 @@ See [testing.md](./testing.md).
 `./platform/polyfills.*.ts` adds polyfills to the environment. Currently, this includes:
 
 - TextEncoder / TextDecoder
-- react-native-url-polyfill
 - Array#findLast (on web)
+- setImmediate (on web)
 
 ### Sentry sourcemaps
 

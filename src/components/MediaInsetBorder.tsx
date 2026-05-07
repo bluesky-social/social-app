@@ -1,5 +1,4 @@
 import {StyleSheet} from 'react-native'
-import type React from 'react'
 
 import {atoms as a, platform, useTheme, type ViewStyleProp} from '#/alf'
 import {Fill} from '#/components/Fill'

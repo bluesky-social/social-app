@@ -1,4 +1,4 @@
-import {useMemo} from 'react'
+import {useCallback, useMemo} from 'react'
 import {type AppBskyUnspeccedGetTrends, hasMutedWord} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
@@ -9,14 +9,14 @@ import {
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
+import {useAgent} from '#/state/session'
 
 export const DEFAULT_LIMIT = 5
 
 export const createGetTrendsQueryKey = () => ['trends']
 
-const PUBLIC_API = 'https://api.blacksky.community'
-
 export function useGetTrendsQuery() {
+  const agent = useAgent()
   const {data: preferences} = usePreferencesQuery()
   const mutedWords = useMemo(() => {
     return preferences?.moderationPrefs?.mutedWords || []
@@ -28,9 +28,10 @@ export function useGetTrendsQuery() {
     queryKey: createGetTrendsQueryKey(),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
-      const params = new URLSearchParams({limit: String(DEFAULT_LIMIT)})
-      const res = await fetch(
-        `${PUBLIC_API}/xrpc/app.bsky.unspecced.getTrends?${params}`,
+      const {data} = await agent.app.bsky.unspecced.getTrends(
+        {
+          limit: DEFAULT_LIMIT,
+        },
         {
           headers: {
             ...createBskyTopicsHeader(aggregateUserInterests(preferences)),
@@ -38,21 +39,20 @@ export function useGetTrendsQuery() {
           },
         },
       )
-      if (!res.ok) {
-        throw new Error(`getTrends failed: ${res.status}`)
-      }
-      const data = (await res.json()) as AppBskyUnspeccedGetTrends.OutputSchema
       return data
     },
-    select(data: AppBskyUnspeccedGetTrends.OutputSchema) {
-      return {
-        trends: (data.trends ?? []).filter(t => {
-          return !hasMutedWord({
-            mutedWords,
-            text: t.topic + ' ' + t.displayName + ' ' + t.category,
-          })
-        }),
-      }
-    },
+    select: useCallback(
+      (data: AppBskyUnspeccedGetTrends.OutputSchema) => {
+        return {
+          trends: (data.trends ?? []).filter(t => {
+            return !hasMutedWord({
+              mutedWords,
+              text: t.topic + ' ' + t.displayName + ' ' + t.category,
+            })
+          }),
+        }
+      },
+      [mutedWords],
+    ),
   })
 }

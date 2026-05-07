@@ -3,15 +3,29 @@ appId: xyz.blueskyweb.app
 - launchApp:
     appId: "xyz.blueskyweb.app"
     clearState: true
-- waitForAnimationToEnd
-- tapOn: "http://localhost:8081"
-- waitForAnimationToEnd
-- extendedWaitUntil:
-    visible: "Continue"
-- swipe:
-    from: "Bluesky"
-    direction: DOWN
-    duration: 100
+    arguments:
+      "-EXDevMenuIsOnboardingFinished": true
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - openLink: "exp+bluesky://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"
+      - runFlow:
+          when:
+            visible: 'Open in "Bluesky"'
+          commands:
+            - tapOn: Open
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn: 'http://localhost:8081'
+      - runFlow:
+          label: "Dismiss Expo dev menu"
+          when:
+            visible: "Continue"
+          commands:
+            - back
 - tapOn:
     id: e2eProxyHeaderInput
 - inputText: ${output.result}

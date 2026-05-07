@@ -1,12 +1,12 @@
-import React from 'react'
+import {useEffect, useState} from 'react'
 import {RichText as RichTextAPI} from '@atproto/api'
 
 import {useAgent} from '#/state/session'
 
 export function useRichText(text: string): [RichTextAPI, boolean] {
-  const [prevText, setPrevText] = React.useState(text)
-  const [rawRT, setRawRT] = React.useState(() => new RichTextAPI({text}))
-  const [resolvedRT, setResolvedRT] = React.useState<RichTextAPI | null>(null)
+  const [prevText, setPrevText] = useState(text)
+  const [rawRT, setRawRT] = useState(() => new RichTextAPI({text}))
+  const [resolvedRT, setResolvedRT] = useState<RichTextAPI | null>(null)
   const agent = useAgent()
   if (text !== prevText) {
     setPrevText(text)
@@ -14,7 +14,7 @@ export function useRichText(text: string): [RichTextAPI, boolean] {
     setResolvedRT(null)
     // This will queue an immediate re-render
   }
-  React.useEffect(() => {
+  useEffect(() => {
     let ignore = false
     async function resolveRTFacets() {
       // new each time

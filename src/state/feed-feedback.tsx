@@ -153,7 +153,7 @@ export function useFeedFeedback(
     // Send to the feed
     agent.app.bsky.feed
       .sendInteractions(
-        {interactions: interactionsToSend},
+        {interactions: interactionsToSend, feed: feed?.uri},
         {
           encoding: 'application/json',
           headers: {

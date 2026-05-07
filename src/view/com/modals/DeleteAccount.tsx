@@ -1,4 +1,5 @@
-import React from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {useState} from 'react'
 import {
   Linking,
   SafeAreaView,
@@ -7,8 +8,9 @@ import {
   View,
 } from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {gateRequestAccountDelete} from '#/lib/api/gatekeeper'
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
@@ -43,11 +45,11 @@ export function Component({}: {}) {
   const {_} = useLingui()
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
-  const [isEmailSent, setIsEmailSent] = React.useState<boolean>(false)
-  const [confirmCode, setConfirmCode] = React.useState<string>('')
-  const [password, setPassword] = React.useState<string>('')
-  const [isProcessing, setIsProcessing] = React.useState<boolean>(false)
-  const [error, setError] = React.useState<string>('')
+  const [isEmailSent, setIsEmailSent] = useState<boolean>(false)
+  const [confirmCode, setConfirmCode] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [isProcessing, setIsProcessing] = useState<boolean>(false)
+  const [error, setError] = useState<string>('')
 
   const isOauth = currentAccount?.isOauthSession === true
   const isBskyPds = useIsBlackskyPds()

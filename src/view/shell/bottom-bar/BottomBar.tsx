@@ -2,12 +2,12 @@ import {type JSX, useCallback} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {type BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {StackActions} from '@react-navigation/native'
 
-import {useActorStatus} from '#/lib/actor-status'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {BOTTOM_BAR_AVI} from '#/lib/demo'
 import {useHaptics} from '#/lib/haptics'
@@ -49,6 +49,7 @@ import {
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message'
 import {Text} from '#/components/Typography'
+import {useActorStatus} from '#/features/liveNow'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {styles} from './BottomBarStyles'
 
@@ -346,13 +347,14 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   )
 }
 
-interface BtnProps extends Pick<
-  React.ComponentProps<typeof PressableScale>,
-  | 'accessible'
-  | 'accessibilityRole'
-  | 'accessibilityHint'
-  | 'accessibilityLabel'
-> {
+interface BtnProps
+  extends Pick<
+    React.ComponentProps<typeof PressableScale>,
+    | 'accessible'
+    | 'accessibilityRole'
+    | 'accessibilityHint'
+    | 'accessibilityLabel'
+  > {
   testID?: string
   icon: JSX.Element
   notificationCount?: string
@@ -394,10 +396,16 @@ function Btn({
             a.rounded_full,
             {backgroundColor: t.palette.primary_500},
           ]}>
-          <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
+          <Text
+            style={styles.notificationCountLabel}
+            maxFontSizeMultiplier={1.5}>
+            {notificationCount}
+          </Text>
         </View>
       ) : hasNew ? (
-        <View style={[styles.hasNewBadge, a.rounded_full]} />
+        <View
+          style={[styles.hasNewBadge, {backgroundColor: t.palette.primary_500}]}
+        />
       ) : null}
     </PressableScale>
   )

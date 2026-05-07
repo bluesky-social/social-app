@@ -1,15 +1,15 @@
-import React, {useEffect, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {Trans} from '@lingui/react/macro'
+import {useNavigation} from '@react-navigation/native'
 
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
@@ -19,18 +19,11 @@ import {STRIPE_API_URL} from '#/env/common'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SupportReturn'>
 export const SupportReturnScreen = (_props: Props) => {
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {_} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
   const [status, setStatus] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
 
   useEffect(() => {
     if (!IS_WEB || !STRIPE_API_URL) {
@@ -58,7 +51,7 @@ export const SupportReturnScreen = (_props: Props) => {
       })
   }, [])
 
-  const handleBackToHome = React.useCallback(() => {
+  const handleBackToHome = useCallback(() => {
     navigation.navigate('Home')
   }, [navigation])
 

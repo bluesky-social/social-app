@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {AtUri} from '@atproto/api'
 import {
   type QueryClient,
@@ -25,10 +26,8 @@ import {postViewToThreadPlaceholder} from './usePostThread/views'
 /**
  * Extended query options that include fallback configuration
  */
-export interface UseQueryWithFallbackOptions<
-  TData,
-  TError,
-> extends UseQueryOptions<TData, TError> {
+export interface UseQueryWithFallbackOptions<TData, TError>
+  extends UseQueryOptions<TData, TError> {
   /**
    * Enable automatic fallback to PDS + Microcosm on AppView errors
    * @default true for profile/post queries, false otherwise
@@ -50,18 +49,15 @@ export interface UseQueryWithFallbackOptions<
 /**
  * Extended infinite query options that include fallback configuration
  */
-export interface UseInfiniteQueryWithFallbackOptions<
-  TData,
-  TError,
-  TPageParam,
-> extends UseInfiniteQueryOptions<
-  TData,
-  TError,
-  TData,
-  TData,
-  any,
-  TPageParam
-> {
+export interface UseInfiniteQueryWithFallbackOptions<TData, TError, TPageParam>
+  extends UseInfiniteQueryOptions<
+    TData,
+    TError,
+    TData,
+    TData,
+    any,
+    TPageParam
+  > {
   /**
    * Enable automatic fallback to PDS + Microcosm on AppView errors
    * @default false

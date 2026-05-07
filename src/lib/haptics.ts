@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import * as Device from 'expo-device'
 import {impactAsync, ImpactFeedbackStyle} from 'expo-haptics'
 
@@ -8,7 +8,7 @@ import {IS_IOS, IS_WEB} from '#/env'
 export function useHaptics() {
   const isHapticsDisabled = useHapticsDisabled()
 
-  return React.useCallback(
+  return useCallback(
     (strength: 'Light' | 'Medium' | 'Heavy' = 'Medium') => {
       if (isHapticsDisabled || IS_WEB) {
         return

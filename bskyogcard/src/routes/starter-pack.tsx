@@ -1,9 +1,9 @@
 import assert from 'node:assert'
 
 import React from 'react'
-import {AppBskyGraphDefs, AtUri} from '@atproto/api'
+import {type AppBskyGraphDefs, AtUri} from '@atproto/api'
 import resvg from '@resvg/resvg-js'
-import {Express} from 'express'
+import {type Express} from 'express'
 import satori from 'satori'
 
 import {
@@ -11,7 +11,7 @@ import {
   STARTERPACK_HEIGHT,
   STARTERPACK_WIDTH,
 } from '../components/StarterPack.js'
-import {AppContext} from '../context.js'
+import {type AppContext} from '../context.js'
 import {httpLogger} from '../logger.js'
 import {loadEmojiAsSvg} from '../util.js'
 import {handler, originVerifyMiddleware} from './util.js'
@@ -38,11 +38,11 @@ export default function (ctx: AppContext, app: Express) {
       }
       const imageEntries = await Promise.all(
         [starterPack.creator]
-          .concat(starterPack.listItemsSample.map(li => li.subject))
+          .concat((starterPack.listItemsSample ?? []).map(li => li.subject))
           // has avatar
           .filter(p => p.avatar)
           // no sensitive labels
-          .filter(p => !p.labels.some(l => hideAvatarLabels.has(l.val)))
+          .filter(p => !p.labels?.some(l => hideAvatarLabels.has(l.val)))
           .map(async p => {
             try {
               assert(p.avatar)
@@ -58,7 +58,12 @@ export default function (ctx: AppContext, app: Express) {
           }),
       )
       const images = new Map(
-        imageEntries.filter(([_, image]) => image !== null).slice(0, 7),
+        imageEntries
+          .filter(
+            (entry): entry is readonly [string, Buffer<ArrayBuffer>] =>
+              entry[1] !== null,
+          )
+          .slice(0, 7),
       )
       const svg = await satori(
         <StarterPack starterPack={starterPack} images={images} />,
@@ -68,8 +73,9 @@ export default function (ctx: AppContext, app: Express) {
           width: STARTERPACK_WIDTH,
           loadAdditionalAsset: async (code, text) => {
             if (code === 'emoji') {
-              return await loadEmojiAsSvg(text)
+              return (await loadEmojiAsSvg(text)) ?? ''
             }
+            return ''
           },
         },
       )
@@ -83,10 +89,16 @@ export default function (ctx: AppContext, app: Express) {
 }
 
 async function getImage(url: string) {
-  const response = await fetch(url)
+  const response = await fetch(ensureJpeg(url))
   const arrayBuf = await response.arrayBuffer() // must drain body even if it will be discarded
   if (response.status !== 200) return null
   return Buffer.from(arrayBuf)
+}
+
+// CDN URLs end with @jpeg, @webp, or no extension (which may default to webp).
+// We want to ensure the image URLs we use are for jpegs, required for compat with satori.
+function ensureJpeg(url: string) {
+  return url.replace(/(@[a-z]{3,5})?$/, '@jpeg')
 }
 
 const hideAvatarLabels = new Set([

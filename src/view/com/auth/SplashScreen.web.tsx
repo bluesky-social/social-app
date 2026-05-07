@@ -1,8 +1,9 @@
-import React from 'react'
+import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
@@ -32,9 +33,9 @@ export const SplashScreen = ({
   const {_} = useLingui()
   const t = useTheme()
   const {isTabletOrMobile: IS_WEB_MOBILE} = useWebMediaQueries()
-  const [showClipOverlay, setShowClipOverlay] = React.useState(false)
+  const [showClipOverlay, setShowClipOverlay] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     const getParams = new URLSearchParams(window.location.search)
     const clip = getParams.get('clip')
     if (clip === 'true') {

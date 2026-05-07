@@ -1,4 +1,4 @@
-import React from 'react'
+import {useRef, useState} from 'react'
 import {View} from 'react-native'
 
 import {useDialogStateControlContext} from '#/state/dialogs'
@@ -18,11 +18,9 @@ export function Dialogs() {
   const testDialog = Dialog.useDialogControl()
   const {closeAllDialogs} = useDialogStateControlContext()
   const unmountTestDialog = Dialog.useDialogControl()
-  const [reducedMotionEnabled, setReducedMotionEnabled] =
-    React.useState<boolean>()
-  const [shouldRenderUnmountTest, setShouldRenderUnmountTest] =
-    React.useState(false)
-  const unmountTestInterval = React.useRef<number>(undefined)
+  const [reducedMotionEnabled, setReducedMotionEnabled] = useState<boolean>()
+  const [shouldRenderUnmountTest, setShouldRenderUnmountTest] = useState(false)
+  const unmountTestInterval = useRef<number>(undefined)
 
   const onUnmountTestStartPressWithClose = () => {
     setShouldRenderUnmountTest(true)

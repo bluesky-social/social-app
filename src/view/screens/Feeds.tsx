@@ -1,9 +1,9 @@
-import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {useCallback, useMemo, useRef, useState} from 'react'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
+import {Trans} from '@lingui/react/macro'
 import debounce from 'lodash.debounce'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -18,12 +18,11 @@ import {cleanError} from '#/lib/strings/errors'
 import {s} from '#/lib/styles'
 import {
   type SavedFeedItem,
-  useGetBlackskyFeedsQuery,
+  useGetPopularFeedsQuery,
   useSavedFeeds,
   useSearchPopularFeedsMutation,
 } from '#/state/queries/feed'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {List, type ListMethods} from '#/view/com/util/List'
@@ -33,7 +32,6 @@ import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
 import {ButtonIcon} from '#/components/Button'
-import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {Divider} from '#/components/Divider'
 import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
@@ -108,8 +106,8 @@ export function FeedsScreen(_props: Props) {
   const pal = usePalette('default')
   const {openComposer} = useOpenComposer()
   const {isMobile} = useWebMediaQueries()
-  const [query, setQuery] = React.useState('')
-  const [isPTR, setIsPTR] = React.useState(false)
+  const [query, setQuery] = useState('')
+  const [isPTR, setIsPTR] = useState(false)
   const {
     data: savedFeeds,
     isPlaceholderData: isSavedFeedsPlaceholder,
@@ -124,9 +122,8 @@ export function FeedsScreen(_props: Props) {
     fetchNextPage: fetchNextPopularFeedsPage,
     isFetchingNextPage: isPopularFeedsFetchingNextPage,
     hasNextPage: hasNextPopularFeedsPage,
-  } = useGetBlackskyFeedsQuery()
+  } = useGetPopularFeedsQuery()
   const {_} = useLingui()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {
     data: searchResults,
     mutate: search,
@@ -135,20 +132,20 @@ export function FeedsScreen(_props: Props) {
     error: searchError,
   } = useSearchPopularFeedsMutation()
   const {hasSession} = useSession()
-  const listRef = React.useRef<ListMethods>(null)
+  const listRef = useRef<ListMethods>(null)
 
   /**
    * A search query is present. We may not have search results yet.
    */
   const isUserSearching = query.length > 1
-  const debouncedSearch = React.useMemo(
+  const debouncedSearch = useMemo(
     () => debounce(q => search(q), 500), // debounce for 500ms
     [search],
   )
-  const onPressCompose = React.useCallback(() => {
+  const onPressCompose = useCallback(() => {
     openComposer({logContext: 'Fab'})
   }, [openComposer])
-  const onChangeQuery = React.useCallback(
+  const onChangeQuery = useCallback(
     (text: string) => {
       setQuery(text)
       if (text.length > 1) {
@@ -160,15 +157,15 @@ export function FeedsScreen(_props: Props) {
     },
     [setQuery, refetchPopularFeeds, debouncedSearch, resetSearch],
   )
-  const onPressCancelSearch = React.useCallback(() => {
+  const onPressCancelSearch = useCallback(() => {
     setQuery('')
     refetchPopularFeeds()
     resetSearch()
   }, [refetchPopularFeeds, setQuery, resetSearch])
-  const onSubmitQuery = React.useCallback(() => {
+  const onSubmitQuery = useCallback(() => {
     debouncedSearch(query)
   }, [query, debouncedSearch])
-  const onPullToRefresh = React.useCallback(async () => {
+  const onPullToRefresh = useCallback(async () => {
     setIsPTR(true)
     await Promise.all([
       refetchSavedFeeds().catch(_e => undefined),
@@ -176,7 +173,7 @@ export function FeedsScreen(_props: Props) {
     ])
     setIsPTR(false)
   }, [setIsPTR, refetchSavedFeeds, refetchPopularFeeds])
-  const onEndReached = React.useCallback(() => {
+  const onEndReached = useCallback(() => {
     if (
       isPopularFeedsFetching ||
       isUserSearching ||
@@ -193,13 +190,7 @@ export function FeedsScreen(_props: Props) {
     fetchNextPopularFeedsPage,
   ])
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
-
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     let slices: FlatlistSlice[] = []
     const hasActualSavedCount =
       !isSavedFeedsPlaceholder ||
@@ -383,7 +374,7 @@ export function FeedsScreen(_props: Props) {
     item => item.type === 'popularFeedsHeader',
   )
 
-  const onChangeSearchFocus = React.useCallback(
+  const onChangeSearchFocus = useCallback(
     (focus: boolean) => {
       if (focus && searchBarIndex > -1) {
         if (IS_NATIVE) {
@@ -408,14 +399,14 @@ export function FeedsScreen(_props: Props) {
     [searchBarIndex, isMobile],
   )
 
-  const renderItem = React.useCallback(
+  const renderItem = useCallback(
     ({item}: {item: FlatlistSlice}) => {
       if (item.type === 'error') {
         return <ErrorMessage message={item.error} />
       } else if (item.type === 'popularFeedsLoadingMore') {
         return (
           <View style={s.p10}>
-            <CustomActivityIndicator size="large" />
+            <ActivityIndicator size="large" />
           </View>
         )
       } else if (item.type === 'savedFeedsHeader') {

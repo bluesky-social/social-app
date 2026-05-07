@@ -1,4 +1,6 @@
-import React, {
+import {
+  Fragment,
+  memo,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -8,6 +10,7 @@ import React, {
   useState,
 } from 'react'
 import {
+  ActivityIndicator,
   BackHandler,
   Keyboard,
   KeyboardAvoidingView,
@@ -51,8 +54,8 @@ import {
   type BskyAgent,
   type RichText,
 } from '@atproto/api'
-import {msg, plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {plural} from '@lingui/core/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -69,7 +72,6 @@ import {
 } from '#/lib/constants'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {mimeToExt} from '#/lib/media/video/util'
 import {useCallOnce} from '#/lib/once'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -93,7 +95,6 @@ import {
 } from '#/state/preferences/languages'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
-import {type Gif} from '#/state/queries/tenor'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
@@ -119,10 +120,10 @@ import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
 import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
 import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, native, useTheme, web} from '#/alf'
+import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
+import * as EmojiPicker from '#/components/EmojiPicker'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
@@ -132,7 +133,8 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_ANDROID, IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {type Gif} from '#/features/gifPicker/types'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
   draftToComposerPosts,
@@ -183,7 +185,6 @@ export const ComposePost = ({
   onPostSuccess,
   quote: initQuote,
   mention: initMention,
-  openEmojiPicker,
   text: initText,
   imageUris: initImageUris,
   videoUri: initVideoUri,
@@ -194,17 +195,20 @@ export const ComposePost = ({
   cancelRef?: React.RefObject<CancelRef | null>
 }) => {
   const {currentAccount} = useSession()
+  const t = useTheme()
   const ax = useAnalytics()
   const agent = useAgent()
   const queryClient = useQueryClient()
   const currentDid = currentAccount!.did
   const {closeComposer} = useComposerControls()
-  const {_} = useLingui()
+  const {t: l, i18n} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
-  const textInput = useRef<TextInputRef>(null)
+  const textInputRef = useRef<TextInputRef>(null)
   const discardPromptControl = Prompt.usePromptControl()
+  const emptyPostsPromptControl = Prompt.usePromptControl()
+  const skipEmptyConfirmedRef = useRef(false)
   const {mutateAsync: saveDraft, isPending: _isSavingDraft} =
     useSaveDraftMutation()
   const {mutate: cleanupPublishedDraft} = useCleanupPublishedDraftMutation()
@@ -264,6 +268,20 @@ export const ComposePost = ({
     setReplyToLanguages([])
   }
 
+  /**
+   * Timestamp (ms) of the last honored nudge from language detection.
+   * Used to rate-limit the pulse animation: we ignore back-to-back
+   * nudges that arrive within NUDGE_COOLDOWN_MS. Consumers key an effect
+   * on this value — it only changes when we actually want to re-pulse.
+   */
+  const [languageNudgeAt, setLanguageNudgeAt] = useState(0)
+  const onLanguageNudge = () => {
+    const now = Date.now()
+    // ignore back-to-back nudges within 10s; only update state (and
+    // therefore re-pulse) once the cooldown has elapsed
+    setLanguageNudgeAt(prev => (now - prev > 10_000 ? now : prev))
+  }
+
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
     {
@@ -298,7 +316,7 @@ export const ComposePost = ({
     [activePost.id],
   )
 
-  const selectVideo = React.useCallback(
+  const selectVideo = useCallback(
     (postId: string, asset: ImagePickerAsset) => {
       const abortController = new AbortController()
       composerDispatch({
@@ -310,7 +328,7 @@ export const ComposePost = ({
           abortController,
         },
       })
-      processVideo(
+      void processVideo(
         asset,
         videoAction => {
           composerDispatch({
@@ -325,10 +343,10 @@ export const ComposePost = ({
         agent,
         currentDid,
         abortController.signal,
-        _,
+        i18n,
       )
     },
-    [_, agent, currentDid, composerDispatch],
+    [i18n, agent, currentDid, composerDispatch],
   )
 
   const onInitVideo = useNonReactiveCallback(() => {
@@ -457,7 +475,7 @@ export const ComposePost = ({
         }
 
         // Start video compression and upload
-        processVideo(
+        void processVideo(
           asset,
           videoAction => {
             composerDispatch({
@@ -472,7 +490,7 @@ export const ComposePost = ({
           agent,
           currentDid,
           abortController.signal,
-          _,
+          i18n,
         )
       } catch (e) {
         logger.error('Failed to restore video from draft', {
@@ -481,10 +499,10 @@ export const ComposePost = ({
         })
       }
     },
-    [_, agent, currentDid, composerDispatch],
+    [i18n, agent, currentDid, composerDispatch],
   )
 
-  const handleSelectDraft = React.useCallback(
+  const handleSelectDraft = useCallback(
     async (draftSummary: DraftSummary) => {
       logger.debug('loading draft for editing', {
         draftId: draftSummary.id,
@@ -552,32 +570,30 @@ export const ComposePost = ({
     revokeAllMediaUrls()
   }, [closeComposer, queryClient])
 
-  const getDraftSaveError = React.useCallback(
+  const getDraftSaveError = useCallback(
     (e: unknown): string => {
       if (e instanceof AppBskyDraftCreateDraft.DraftLimitReachedError) {
-        return _(msg`You've reached the maximum number of drafts`)
+        return l`You've reached the maximum number of drafts`
       }
-      return _(msg`Failed to save draft`)
+      return l`Failed to save draft`
     },
-    [_],
+    [l],
   )
 
-  const validateDraftTextOrError = React.useCallback((): boolean => {
+  const validateDraftTextOrError = useCallback((): boolean => {
     const tooLong = composerState.thread.posts.some(
       post => post.richtext.graphemeLength > MAX_DRAFT_GRAPHEME_LENGTH,
     )
     if (tooLong) {
       setError(
-        _(
-          msg`One or more posts are too long to save as a draft. ${plural(MAX_DRAFT_GRAPHEME_LENGTH, {one: 'The maximum number of characters is # character.', other: 'The maximum number of characters is # characters.'})}`,
-        ),
+        l`One or more posts are too long to save as a draft. ${plural(MAX_DRAFT_GRAPHEME_LENGTH, {one: 'The maximum number of characters is # character.', other: 'The maximum number of characters is # characters.'})}`,
       )
       return false
     }
     return true
-  }, [composerState.thread.posts, _])
+  }, [composerState.thread.posts, l])
 
-  const handleSaveDraft = React.useCallback(async () => {
+  const handleSaveDraft = useCallback(async () => {
     setError('')
     if (!validateDraftTextOrError()) {
       return
@@ -620,7 +636,7 @@ export const ComposePost = ({
   ])
 
   // Save without closing - for use by DraftsButton
-  const saveCurrentDraft = React.useCallback(async (): Promise<{
+  const saveCurrentDraft = useCallback(async (): Promise<{
     success: boolean
   }> => {
     setError('')
@@ -647,7 +663,7 @@ export const ComposePost = ({
   ])
 
   // Handle discard action - fires metric and closes composer
-  const handleDiscard = React.useCallback(() => {
+  const handleDiscard = useCallback(() => {
     const posts = thread.posts
     const hasContent = posts.some(
       post =>
@@ -664,7 +680,7 @@ export const ComposePost = ({
   }, [thread.posts, ax, onClose])
 
   // Check if composer is empty (no content to save)
-  const isComposerEmpty = React.useMemo(() => {
+  const isComposerEmpty = useMemo(() => {
     // Has multiple posts means it's not empty
     if (thread.posts.length > 1) return false
 
@@ -682,7 +698,7 @@ export const ComposePost = ({
   }, [thread.posts])
 
   // Clear the composer (discard current content)
-  const handleClearComposer = React.useCallback(() => {
+  const handleClearComposer = useCallback(() => {
     composerDispatch({
       type: 'clear',
       initInteractionSettings: preferences?.postInteractionSettings,
@@ -707,7 +723,7 @@ export const ComposePost = ({
   )
 
   const onPressCancel = useCallback(() => {
-    if (textInput.current?.maybeClosePopup()) {
+    if (textInputRef.current?.maybeClosePopup()) {
       return
     }
 
@@ -765,35 +781,66 @@ export const ComposePost = ({
       const media = thread.posts[i].embed.media
       if (media) {
         if (media.type === 'images' && media.images.some(img => !img.alt)) {
-          return _(msg`One or more images is missing alt text.`)
+          return l`One or more images is missing alt text.`
         }
         if (media.type === 'gif' && !media.alt) {
-          return _(msg`One or more GIFs is missing alt text.`)
+          return l`One or more GIFs is missing alt text.`
         }
         if (
           media.type === 'video' &&
           media.video.status !== 'error' &&
           !media.video.altText
         ) {
-          return _(msg`One or more videos is missing alt text.`)
+          return l`One or more videos is missing alt text.`
         }
       }
     }
-  }, [thread, requireAltTextEnabled, _])
+  }, [thread, requireAltTextEnabled, l])
 
   const canPost =
     !missingAltError &&
+    thread.posts.some(post => !isEmptyPost(post)) &&
     thread.posts.every(
       post =>
-        post.shortenedGraphemeLength <= MAX_GRAPHEME_LENGTH &&
-        !isEmptyPost(post) &&
-        !(
-          post.embed.media?.type === 'video' &&
-          post.embed.media.video.status === 'error'
-        ),
+        isEmptyPost(post) ||
+        (post.shortenedGraphemeLength <= MAX_GRAPHEME_LENGTH &&
+          !(
+            post.embed.media?.type === 'video' &&
+            post.embed.media.video.status === 'error'
+          )),
     )
 
-  const onPressPublish = React.useCallback(async () => {
+  const getFilteredThread = (): {
+    type: 'none' | 'trailing-only' | 'non-trailing'
+    filteredThread: ThreadDraft
+  } => {
+    const nonEmptyPosts = thread.posts.filter(post => !isEmptyPost(post))
+
+    if (nonEmptyPosts.length === thread.posts.length) {
+      return {type: 'none', filteredThread: thread}
+    }
+
+    let lastNonEmptyIndex = -1
+    for (let i = thread.posts.length - 1; i >= 0; i--) {
+      if (!isEmptyPost(thread.posts[i])) {
+        lastNonEmptyIndex = i
+        break
+      }
+    }
+
+    const hasNonTrailingEmpty = thread.posts.some(
+      (post, i) => i < lastNonEmptyIndex && isEmptyPost(post),
+    )
+
+    const filteredThread: ThreadDraft = {...thread, posts: nonEmptyPosts}
+
+    return {
+      type: hasNonTrailingEmpty ? 'non-trailing' : 'trailing-only',
+      filteredThread,
+    }
+  }
+
+  const onPressPublish = useCallback(async () => {
     if (isPublishing) {
       return
     }
@@ -802,8 +849,15 @@ export const ComposePost = ({
       return
     }
 
+    const {type: emptyType, filteredThread} = getFilteredThread()
+
+    if (emptyType === 'non-trailing' && !skipEmptyConfirmedRef.current) {
+      emptyPostsPromptControl.open()
+      return
+    }
+
     if (
-      thread.posts.some(
+      filteredThread.posts.some(
         post =>
           post.embed.media?.type === 'video' &&
           post.embed.media.video.asset &&
@@ -814,6 +868,7 @@ export const ComposePost = ({
       return
     }
 
+    skipEmptyConfirmedRef.current = false
     setError('')
     setIsPublishing(true)
 
@@ -822,12 +877,24 @@ export const ComposePost = ({
     try {
       logger.info(`composer: posting...`)
       postUri = (
-        await apilib.post(agent, queryClient, {
-          thread,
-          replyTo: replyTo?.uri,
-          onStateChange: setPublishingStage,
-          langs: currentLanguages,
-        })
+        await apilib.post(
+          agent,
+          queryClient,
+          {
+            thread: filteredThread,
+            replyTo: replyTo?.uri,
+            onStateChange: setPublishingStage,
+            langs: currentLanguages,
+          },
+          {
+            highResolutionImages: ax.features.enabled(
+              ax.features.ImageUploadsHighResolution,
+            ),
+            increasedBlobSizeLimit: ax.features.enabled(
+              ax.features.ImageUploadsBlobSize2mbEnabled,
+            ),
+          },
+        )
       ).uris[0]
 
       /*
@@ -845,10 +912,10 @@ export const ComposePost = ({
               const res = await agent.app.bsky.unspecced.getPostThreadV2({
                 anchor: postUri!,
                 above: false,
-                below: thread.posts.length - 1,
+                below: filteredThread.posts.length - 1,
                 branchingFactor: 1,
               })
-              if (res.data.thread.length !== thread.posts.length) {
+              if (res.data.thread.length !== filteredThread.posts.length) {
                 throw new Error(`composer: app view is not ready`)
               }
               if (
@@ -875,16 +942,16 @@ export const ComposePost = ({
     } catch (e: any) {
       logger.error(e, {
         message: `Composer: create post failed`,
-        hasImages: thread.posts.some(p => p.embed.media?.type === 'images'),
+        hasImages: filteredThread.posts.some(
+          p => p.embed.media?.type === 'images',
+        ),
       })
 
       let err = cleanError(e.message)
       if (err.includes('not locate record')) {
-        err = _(
-          msg`We're sorry! The post you are replying to has been deleted.`,
-        )
+        err = l`We're sorry! The post you are replying to has been deleted.`
       } else if (e instanceof EmbeddingDisabledError) {
-        err = _(msg`This post's author has disabled quote posts.`)
+        err = l`This post's author has disabled quote posts.`
       }
       setError(err)
       setIsPublishing(false)
@@ -892,14 +959,14 @@ export const ComposePost = ({
     } finally {
       if (postUri) {
         let index = 0
-        for (let post of thread.posts) {
+        for (let post of filteredThread.posts) {
           ax.metric('post:create', {
             imageCount:
               post.embed.media?.type === 'images'
                 ? post.embed.media.images.length
                 : 0,
             isReply: index > 0 || !!replyTo,
-            isPartOfThread: thread.posts.length > 1,
+            isPartOfThread: filteredThread.posts.length > 1,
             hasLink: !!post.embed.link,
             hasQuote: !!post.embed.quote,
             langs: fromPostLanguages(currentLanguages),
@@ -908,9 +975,9 @@ export const ComposePost = ({
           index++
         }
       }
-      if (thread.posts.length > 1) {
+      if (filteredThread.posts.length > 1) {
         ax.metric('thread:create', {
-          postCount: thread.posts.length,
+          postCount: filteredThread.posts.length,
           isReply: !!replyTo,
         })
       }
@@ -963,15 +1030,15 @@ export const ComposePost = ({
         <Toast.Outer>
           <Toast.Icon />
           <Toast.Text>
-            {thread.posts.length > 1
-              ? _(msg`Your posts were sent`)
+            {filteredThread.posts.length > 1
+              ? l`Your posts were sent`
               : replyTo
-                ? _(msg`Your reply was sent`)
-                : _(msg`Your post was sent`)}
+                ? l`Your reply was sent`
+                : l`Your post was sent`}
           </Toast.Text>
           {postUri && (
             <Toast.Action
-              label={_(msg`View post`)}
+              label={l`View post`}
               onPress={() => {
                 const {host: name, rkey} = new AtUri(postUri)
                 navigation.navigate('PostThread', {name, rkey})
@@ -986,7 +1053,7 @@ export const ComposePost = ({
       )
     }, 500)
   }, [
-    _,
+    l,
     ax,
     agent,
     thread,
@@ -1006,19 +1073,26 @@ export const ComposePost = ({
     composerState.isDirty,
     cleanupPublishedDraft,
     loadedDraftCreatedAt,
+    emptyPostsPromptControl,
   ])
+
+  const handleConfirmSkipEmpty = () => {
+    skipEmptyConfirmedRef.current = true
+    void onPressPublish()
+  }
 
   // Preserves the referential identity passed to each post item.
   // Avoids re-rendering all posts on each keystroke.
   const onComposerPostPublish = useNonReactiveCallback(() => {
-    onPressPublish()
+    void onPressPublish()
   })
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (publishOnUpload) {
       let erroredVideos = 0
       let uploadingVideos = 0
       for (let post of thread.posts) {
+        if (isEmptyPost(post)) continue
         if (post.embed.media?.type === 'video') {
           const video = post.embed.media.video
           if (video.status === 'error') {
@@ -1032,7 +1106,7 @@ export const ComposePost = ({
         setPublishOnUpload(false)
       } else if (uploadingVideos === 0) {
         setPublishOnUpload(false)
-        onPressPublish()
+        void onPressPublish()
       }
     }
   }, [thread.posts, onPressPublish, publishOnUpload])
@@ -1053,17 +1127,6 @@ export const ComposePost = ({
     }
   }
 
-  const onEmojiButtonPress = useCallback(() => {
-    const rect = textInput.current?.getCursorPosition()
-    if (rect) {
-      openEmojiPicker?.({
-        ...rect,
-        nextFocusRef:
-          textInput as unknown as React.MutableRefObject<HTMLElement>,
-      })
-    }
-  }, [openEmojiPicker])
-
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   useEffect(() => {
     if (composerState.mutableNeedsFocusActive) {
@@ -1071,7 +1134,7 @@ export const ComposePost = ({
       // On Android, this risks getting the cursor stuck behind the keyboard.
       // Not worth it.
       if (!IS_ANDROID) {
-        textInput.current?.focus()
+        textInputRef.current?.focus()
       }
     }
   }, [composerState])
@@ -1097,6 +1160,7 @@ export const ComposePost = ({
         replyToLanguages={replyToLanguages}
         currentLanguages={currentLanguages}
         onAcceptSuggestedLanguage={setAcceptedLanguageSuggestion}
+        onNudge={onLanguageNudge}
       />
       <ComposerPills
         isReply={!!replyTo}
@@ -1112,7 +1176,6 @@ export const ComposePost = ({
           !isEmptyPost(activePost) && (!nextPost || !isEmptyPost(nextPost))
         }
         onError={setError}
-        onEmojiButtonPress={onEmojiButtonPress}
         onSelectVideo={selectVideo}
         onAddPost={() => {
           composerDispatch({
@@ -1121,7 +1184,9 @@ export const ComposePost = ({
         }}
         currentLanguages={currentLanguages}
         onSelectLanguage={onSelectLanguage}
+        languageNudgeAt={languageNudgeAt}
         openGallery={openGallery}
+        textInputRef={textInputRef}
       />
     </>
   )
@@ -1174,17 +1239,23 @@ export const ComposePost = ({
             layout={native(LinearTransition)}
             onScroll={scrollHandler}
             contentContainerStyle={a.flex_grow}
-            style={a.flex_1}
+            style={[
+              a.flex_1,
+              web({
+                scrollbarGutter: 'stable',
+                scrollbarColor: `${t.palette.contrast_200} transparent`,
+              }),
+            ]}
             keyboardShouldPersistTaps="always"
             onContentSizeChange={onScrollViewContentSizeChange}
             onLayout={onScrollViewLayout}>
             {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
             {thread.posts.map((post, index) => (
-              <React.Fragment key={post.id + (composerState.draftId ?? '')}>
+              <Fragment key={post.id + (composerState.draftId ?? '')}>
                 <ComposerPost
                   post={post}
                   dispatch={composerDispatch}
-                  textInput={post.id === activePost.id ? textInput : null}
+                  textInputRef={post.id === activePost.id ? textInputRef : null}
                   isFirstPost={index === 0}
                   isLastPost={index === thread.posts.length - 1}
                   isPartOfThread={thread.posts.length > 1}
@@ -1200,7 +1271,7 @@ export const ComposePost = ({
                 {IS_WEBFooterSticky && post.id === activePost.id && (
                   <View style={styles.stickyFooterWeb}>{footer}</View>
                 )}
-              </React.Fragment>
+              </Fragment>
             ))}
           </Animated.ScrollView>
           {!IS_WEBFooterSticky && footer}
@@ -1209,9 +1280,9 @@ export const ComposePost = ({
         {replyTo ? (
           <Prompt.Basic
             control={discardPromptControl}
-            title={_(msg`Discard draft?`)}
+            title={l`Discard draft?`}
             description=""
-            confirmButtonCta={_(msg`Discard`)}
+            confirmButtonCta={l`Discard`}
             confirmButtonColor="negative"
             onConfirm={handleDiscard}
           />
@@ -1249,33 +1320,38 @@ export const ComposePost = ({
             <Prompt.Actions>
               {allPostsWithinLimit && (
                 <Prompt.Action
-                  cta={
-                    composerState.draftId
-                      ? _(msg`Save changes`)
-                      : _(msg`Save draft`)
-                  }
+                  cta={composerState.draftId ? l`Save changes` : l`Save draft`}
                   onPress={handleSaveDraft}
                   color="primary"
                 />
               )}
               <Prompt.Action
-                cta={_(msg`Discard`)}
+                cta={l`Discard`}
                 onPress={handleDiscard}
                 color="negative_subtle"
               />
-              <Prompt.Cancel cta={_(msg`Keep editing`)} />
+              <Prompt.Cancel cta={l`Keep editing`} />
             </Prompt.Actions>
           </Prompt.Outer>
         )}
+
+        <Prompt.Basic
+          control={emptyPostsPromptControl}
+          title={l`Skip empty posts?`}
+          description={l`Your thread has empty posts that will be skipped. The remaining posts will be published as a thread.`}
+          confirmButtonCta={l`Post anyway`}
+          cancelButtonCta={l`Keep editing`}
+          onConfirm={handleConfirmSkipEmpty}
+        />
       </KeyboardAvoidingView>
     </BottomSheetPortalProvider>
   )
 }
 
-let ComposerPost = React.memo(function ComposerPost({
+let ComposerPost = memo(function ComposerPost({
   post,
   dispatch,
-  textInput,
+  textInputRef,
   isActive,
   isReply,
   isFirstPost,
@@ -1290,7 +1366,7 @@ let ComposerPost = React.memo(function ComposerPost({
 }: {
   post: PostDraft
   dispatch: (action: ComposerAction) => void
-  textInput: React.Ref<TextInputRef>
+  textInputRef: React.RefObject<TextInputRef | null> | null
   isActive: boolean
   isReply: boolean
   isFirstPost: boolean
@@ -1305,16 +1381,16 @@ let ComposerPost = React.memo(function ComposerPost({
 }) {
   const {currentAccount} = useSession()
   const currentDid = currentAccount!.did
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {data: currentProfile} = useProfileQuery({did: currentDid})
   const richtext = post.richtext
   const isTextOnly = !post.embed.link && !post.embed.quote && !post.embed.media
   const forceMinHeight = IS_WEB && isTextOnly && isActive
   const selectTextInputPlaceholder = isReply
     ? isFirstPost
-      ? _(msg`Write your reply`)
-      : _(msg`Add another post`)
-    : _(msg`What's poppin'?`)
+      ? l`Write your reply`
+      : l`Add another post`
+    : l`What's up?`
   const discardPromptControl = Prompt.usePromptControl()
 
   const dispatchPost = useCallback(
@@ -1354,7 +1430,7 @@ let ComposerPost = React.memo(function ComposerPost({
         if (IS_NATIVE) return // web only
         const [mimeType] = uri.slice('data:'.length).split(';')
         if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
-          Toast.show(_(msg`Unsupported video type: ${mimeType}`), {
+          Toast.show(l`Unsupported video type: ${mimeType}`, {
             type: 'error',
           })
           return
@@ -1369,7 +1445,7 @@ let ComposerPost = React.memo(function ComposerPost({
         onImageAdd([res])
       }
     },
-    [post.id, onSelectVideo, onImageAdd, _],
+    [post.id, onSelectVideo, onImageAdd, l],
   )
 
   useHideKeyboardOnBackground()
@@ -1391,7 +1467,7 @@ let ComposerPost = React.memo(function ComposerPost({
           style={[a.mt_xs]}
         />
         <TextInput
-          ref={textInput}
+          ref={textInputRef}
           style={[a.pt_xs]}
           richtext={richtext}
           placeholder={selectTextInputPlaceholder}
@@ -1414,19 +1490,20 @@ let ComposerPost = React.memo(function ComposerPost({
           onError={onError}
           onPressPublish={onPublish}
           accessible={true}
-          accessibilityLabel={_(msg`Write post`)}
-          accessibilityHint={_(
-            msg`Compose posts up to ${plural(MAX_GRAPHEME_LENGTH || 0, {
+          accessibilityLabel={l`Write post`}
+          accessibilityHint={l`Compose posts up to ${plural(
+            MAX_GRAPHEME_LENGTH || 0,
+            {
               other: '# characters',
-            })} in length`,
-          )}
+            },
+          )} in length`}
         />
       </View>
 
       {canRemovePost && isActive && (
         <>
           <Button
-            label={_(msg`Delete post`)}
+            label={l`Delete post`}
             size="small"
             color="secondary"
             variant="ghost"
@@ -1451,15 +1528,15 @@ let ComposerPost = React.memo(function ComposerPost({
           </Button>
           <Prompt.Basic
             control={discardPromptControl}
-            title={_(msg`Discard post?`)}
-            description={_(msg`Are you sure you'd like to discard this post?`)}
+            title={l`Discard post?`}
+            description={l`Are you sure you'd like to discard this post?`}
             onConfirm={() => {
               dispatch({
                 type: 'remove_post',
                 postId: post.id,
               })
             }}
-            confirmButtonCta={_(msg`Discard`)}
+            confirmButtonCta={l`Discard`}
             confirmButtonColor="negative"
           />
         </>
@@ -1516,14 +1593,21 @@ function ComposerTopBar({
   children?: React.ReactNode
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
+
   return (
     <Animated.View
       style={topBarAnimatedStyle}
       layout={native(LinearTransition)}>
-      <View style={styles.topbarInner}>
+      <View
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.gap_xs,
+          IS_LIQUID_GLASS ? [a.px_lg, a.pt_lg, a.pb_md] : [a.p_sm],
+        ]}>
         <Button
-          label={_(msg`Cancel`)}
+          label={l`Cancel`}
           variant="ghost"
           color="primary"
           shape="default"
@@ -1531,10 +1615,8 @@ function ComposerTopBar({
           style={[{paddingLeft: 7, paddingRight: 7}]}
           hoverStyle={[a.bg_transparent, {opacity: 0.5}]}
           onPress={onCancel}
-          accessibilityHint={_(
-            msg`Closes post composer and discards post draft`,
-          )}>
-          <ButtonText style={[a.text_md]}>
+          accessibilityHint={l`Closes post composer and discards post draft`}>
+          <ButtonText style={[a.text_md]} maxFontSizeMultiplier={2}>
             <Trans>Cancel</Trans>
           </ButtonText>
         </Button>
@@ -1545,7 +1627,7 @@ function ComposerTopBar({
               {publishingStage}
             </Text>
             <View style={styles.postBtn}>
-              <CustomActivityIndicator />
+              <ActivityIndicator />
             </View>
           </>
         ) : (
@@ -1567,41 +1649,33 @@ function ComposerTopBar({
               label={
                 isReply
                   ? isThread
-                    ? _(
-                        msg({
-                          message: 'Publish replies',
-                          comment:
-                            'Accessibility label for button to publish multiple replies in a thread',
-                        }),
-                      )
-                    : _(
-                        msg({
-                          message: 'Publish reply',
-                          comment:
-                            'Accessibility label for button to publish a single reply',
-                        }),
-                      )
+                    ? l({
+                        message: 'Publish replies',
+                        comment:
+                          'Accessibility label for button to publish multiple replies in a thread',
+                      })
+                    : l({
+                        message: 'Publish reply',
+                        comment:
+                          'Accessibility label for button to publish a single reply',
+                      })
                   : isThread
-                    ? _(
-                        msg({
-                          message: 'Publish posts',
-                          comment:
-                            'Accessibility label for button to publish multiple posts in a thread',
-                        }),
-                      )
-                    : _(
-                        msg({
-                          message: 'Publish post',
-                          comment:
-                            'Accessibility label for button to publish a single post',
-                        }),
-                      )
+                    ? l({
+                        message: 'Publish posts',
+                        comment:
+                          'Accessibility label for button to publish multiple posts in a thread',
+                      })
+                    : l({
+                        message: 'Publish post',
+                        comment:
+                          'Accessibility label for button to publish a single post',
+                      })
               }
               color="primary"
               size="small"
               onPress={onPublish}
               disabled={!canPost || isPublishQueued}>
-              <ButtonText style={[a.text_md]}>
+              <ButtonText style={[a.text_md]} maxFontSizeMultiplier={2}>
                 {isReply ? (
                   <Trans context="action">Reply</Trans>
                 ) : isThread ? (
@@ -1725,9 +1799,7 @@ function ComposerEmbeds({
         <View
           style={[a.pb_sm, video ? [a.pt_md] : [a.pt_xl], IS_WEB && [a.pb_md]]}>
           <View style={[a.relative]}>
-            <View style={{pointerEvents: 'none'}}>
-              <LazyQuoteEmbed uri={embed.quote.uri} />
-            </View>
+            <LazyQuoteEmbed uri={embed.quote.uri} linkDisabled />
             {canRemoveQuote && (
               <ExternalEmbedRemoveBtn
                 onRemove={() => dispatch({type: 'embed_remove_quote'})}
@@ -1813,27 +1885,29 @@ function ComposerFooter({
   post,
   dispatch,
   showAddButton,
-  onEmojiButtonPress,
   onSelectVideo,
   onAddPost,
   currentLanguages,
   onSelectLanguage,
+  languageNudgeAt,
   openGallery,
+  textInputRef,
 }: {
   post: PostDraft
   dispatch: (action: PostAction) => void
   showAddButton: boolean
-  onEmojiButtonPress: () => void
   onError: (error: string) => void
   onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
   onAddPost: () => void
   currentLanguages: string[]
   onSelectLanguage?: (language: string) => void
+  languageNudgeAt: number
   openGallery?: boolean
+  textInputRef: React.RefObject<TextInputRef | null>
 }) {
   const t = useTheme()
-  const {_} = useLingui()
-  const {isMobile} = useWebMediaQueries()
+  const {t: l} = useLingui()
+  const {gtPhone} = useBreakpoints()
   /*
    * Once we've allowed a certain type of asset to be selected, we don't allow
    * other types of media to be selected.
@@ -1956,17 +2030,23 @@ function ComposerFooter({
                 onAdd={onImageAdd}
               />
               <SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
-              {!isMobile ? (
-                <Button
-                  onPress={onEmojiButtonPress}
-                  style={a.p_sm}
-                  label={_(msg`Open emoji picker`)}
-                  accessibilityHint={_(msg`Opens emoji picker`)}
-                  variant="ghost"
-                  shape="round"
-                  color="primary">
-                  <EmojiSmileIcon size="lg" />
-                </Button>
+              {IS_WEB && gtPhone ? (
+                <EmojiPicker.Root nextFocusRef={textInputRef}>
+                  <EmojiPicker.Trigger label={l`Open emoji picker`}>
+                    {({props}) => (
+                      <Button
+                        style={a.p_sm}
+                        label={props.accessibilityLabel}
+                        variant="ghost"
+                        shape="round"
+                        color="primary"
+                        {...props}>
+                        <EmojiSmileIcon size="lg" />
+                      </Button>
+                    )}
+                  </EmojiPicker.Trigger>
+                  <EmojiPicker.Picker />
+                </EmojiPicker.Root>
               ) : null}
             </ToolbarWrapper>
           )}
@@ -1975,7 +2055,7 @@ function ComposerFooter({
       <View style={[a.flex_row, a.align_center, a.justify_between]}>
         {showAddButton && (
           <Button
-            label={_(msg`Add another post to thread`)}
+            label={l`Add another post to thread`}
             onPress={onAddPost}
             style={[a.p_sm]}
             variant="ghost"
@@ -1987,6 +2067,7 @@ function ComposerFooter({
         <PostLanguageSelect
           currentLanguages={currentLanguages}
           onSelectLanguage={onSelectLanguage}
+          nudgeAt={languageNudgeAt}
         />
         <CharProgress
           count={post.shortenedGraphemeLength}
@@ -2139,10 +2220,15 @@ function useKeyboardVerticalOffset() {
     return bottom * -1
   }
 
+  // they ditched the gap behaviour on 26
+  if (IS_LIQUID_GLASS) {
+    return top
+  }
+
   // iPhone SE
   if (top === 20) return 40
 
-  // all other iPhones
+  // all other iPhones on <26
   return top + 10
 }
 
@@ -2187,13 +2273,6 @@ function useHideKeyboardOnBackground() {
 }
 
 const styles = StyleSheet.create({
-  topbarInner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 8,
-    height: 54,
-    gap: 4,
-  },
   postBtn: {
     borderRadius: 20,
     paddingHorizontal: 20,
@@ -2259,7 +2338,7 @@ function ErrorBanner({
   clearVideo: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const videoError =
     videoState.status === 'error' ? videoState.error : undefined
@@ -2294,7 +2373,7 @@ function ErrorBanner({
             {error}
           </Text>
           <Button
-            label={_(msg`Dismiss error`)}
+            label={l`Dismiss error`}
             size="tiny"
             color="secondary"
             variant="ghost"
@@ -2341,7 +2420,7 @@ function ToolbarWrapper({
 
 function VideoUploadToolbar({state}: {state: VideoState}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const progress = state.progress
   const shouldRotate =
     state.status === 'processing' && (progress === 0 || progress === 1)
@@ -2373,34 +2452,34 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
   switch (state.status) {
     case 'compressing':
       if (isGif) {
-        text = _(msg`Compressing GIF...`)
+        text = l`Compressing GIF...`
       } else {
-        text = _(msg`Compressing video...`)
+        text = l`Compressing video...`
       }
       break
     case 'uploading':
       if (isGif) {
-        text = _(msg`Uploading GIF...`)
+        text = l`Uploading GIF...`
       } else {
-        text = _(msg`Uploading video...`)
+        text = l`Uploading video...`
       }
       break
     case 'processing':
       if (isGif) {
-        text = _(msg`Processing GIF...`)
+        text = l`Processing GIF...`
       } else {
-        text = _(msg`Processing video...`)
+        text = l`Processing video...`
       }
       break
     case 'error':
-      text = _(msg`Error`)
+      text = l`Error`
       wheelProgress = 100
       break
     case 'done':
       if (isGif) {
-        text = _(msg`GIF uploaded`)
+        text = l`GIF uploaded`
       } else {
-        text = _(msg`Video uploaded`)
+        text = l`Video uploaded`
       }
       break
   }

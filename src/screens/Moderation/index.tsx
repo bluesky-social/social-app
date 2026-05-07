@@ -1,16 +1,17 @@
 import {Fragment, useCallback} from 'react'
 import {Linking, View} from 'react-native'
 import {LABELS} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
+import {Trans} from '@lingui/react/macro'
 
-import {getLabelingServiceTitle} from '#/lib/moderation'
+import {getLabelingServiceTitle, isAppLabeler} from '#/lib/moderation'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {logger} from '#/logger'
+import {useRemoveLabelersMutation} from '#/state/queries/labeler'
 import {
   useMyLabelersQuery,
   usePreferencesQuery,
@@ -18,9 +19,9 @@ import {
   usePreferencesSetAdultContentMutation,
 } from '#/state/queries/preferences'
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
-import {Button} from '#/components/Button'
+import * as Admonition from '#/components/Admonition'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
@@ -38,6 +39,7 @@ import {InlineLinkText, Link} from '#/components/Link'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {GlobalLabelPreference} from '#/components/moderation/LabelPreference'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
 
@@ -153,7 +155,6 @@ export function ModerationScreenInner({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {gtMobile} = useBreakpoints()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const {
@@ -161,11 +162,30 @@ export function ModerationScreenInner({
     data: labelers,
     error: labelersError,
   } = useMyLabelersQuery()
-  useFocusEffect(
-    useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
+  const {mutateAsync: removeLabelers, isPending: isRemovingLabelers} =
+    useRemoveLabelersMutation()
+
+  const subscribedDids = preferences.moderationPrefs.labelers.map(l => l.did)
+  const returnedDids = new Set(labelers?.map(l => l.creator.did))
+  const unavailableDids = subscribedDids.filter(
+    did =>
+      !returnedDids.has(did) &&
+      !isAppLabeler(did) &&
+      !isNonConfigurableModerationAuthority(did),
   )
+
+  const handleCleanup = async () => {
+    try {
+      await removeLabelers({dids: unavailableDids})
+      Toast.show(_(msg`Removed unavailable services`), {
+        type: 'success',
+      })
+    } catch (e: any) {
+      logger.error('Failed to remove unavailable labelers', {
+        safeMessage: e.message,
+      })
+    }
+  }
 
   const {mutateAsync: setAdultContentPref, variables: optimisticAdultContent} =
     usePreferencesSetAdultContentMutation()
@@ -398,6 +418,31 @@ export function ModerationScreenInner({
         ]}>
         <Trans>Advanced</Trans>
       </Text>
+
+      {unavailableDids.length > 0 && (
+        <Admonition.Outer type="tip" style={[a.mb_md]}>
+          <Admonition.Row>
+            <Admonition.Icon />
+            <Admonition.Content>
+              <Admonition.Text>
+                <Trans>
+                  Some moderation services in your list are no longer available.
+                </Trans>
+              </Admonition.Text>
+            </Admonition.Content>
+            <Admonition.Button
+              color="primary_subtle"
+              label={_(msg`Remove unavailable moderation services`)}
+              onPress={handleCleanup}
+              disabled={isRemovingLabelers}>
+              <ButtonText>
+                <Trans>Remove</Trans>
+              </ButtonText>
+              {isRemovingLabelers && <ButtonIcon icon={Loader} />}
+            </Admonition.Button>
+          </Admonition.Row>
+        </Admonition.Outer>
+      )}
 
       {isLabelersLoading ? (
         <View style={[a.w_full, a.align_center, a.p_lg]}>

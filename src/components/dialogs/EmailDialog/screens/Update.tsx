@@ -1,13 +1,12 @@
 import {useReducer} from 'react'
-import {Linking, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {View} from 'react-native'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {validate as validateEmail} from 'email-validator'
 
-import {gateUpdateEmail} from '#/lib/api/gatekeeper'
 import {wait} from '#/lib/async/wait'
 import {useCleanError} from '#/lib/hooks/useCleanError'
-import {useIsBlackskyPds} from '#/lib/hooks/useIsBlackskyPds'
 import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
@@ -29,7 +28,6 @@ import {Divider} from '#/components/Divider'
 import * as TextField from '#/components/forms/TextField'
 import {CheckThick_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
-import {Lock_Stroke2_Corner2_Rounded as Lock} from '#/components/icons/Lock'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -40,7 +38,6 @@ type State = {
   emailValid: boolean
   email: string
   token: string
-  password: string
 }
 
 type Action =
@@ -62,10 +59,6 @@ type Action =
     }
   | {
       type: 'setToken'
-      value: string
-    }
-  | {
-      type: 'setPassword'
       value: string
     }
 
@@ -108,12 +101,6 @@ function reducer(state: State, action: Action): State {
         token: action.value,
       }
     }
-    case 'setPassword': {
-      return {
-        ...state,
-        password: action.value,
-      }
-    }
   }
 }
 
@@ -129,50 +116,11 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
     email: '',
     emailValid: true,
     token: '',
-    password: '',
   })
 
   const {mutateAsync: updateEmail} = useUpdateEmail()
   const {mutateAsync: requestEmailUpdate} = useRequestEmailUpdate()
   const {mutateAsync: requestEmailVerification} = useRequestEmailVerification()
-
-  const isOauth = currentAccount?.isOauthSession === true
-  const isBskyPds = useIsBlackskyPds()
-  const useGatekeeper = isOauth && isBskyPds
-
-  if (isOauth && !isBskyPds) {
-    const pdsAccountUrl = currentAccount?.service
-      ? `${currentAccount.service}/account`
-      : undefined
-
-    return (
-      <View style={[a.gap_lg]}>
-        <Text style={[a.text_xl, a.font_bold]}>
-          <Trans>Update your email</Trans>
-        </Text>
-
-        <Admonition type="info">
-          <Trans>
-            Email updates are not available when signed in with OAuth. Please
-            manage your email through your hosting provider's website.
-          </Trans>
-        </Admonition>
-
-        {pdsAccountUrl && (
-          <Button
-            label={_(msg`Open account settings`)}
-            size="large"
-            variant="solid"
-            color="primary"
-            onPress={() => Linking.openURL(pdsAccountUrl)}>
-            <ButtonText>
-              <Trans>Open Account Settings</Trans>
-            </ButtonText>
-          </Button>
-        )}
-      </View>
-    )
-  }
 
   const handleEmailChange = (email: string) => {
     dispatch({
@@ -212,44 +160,33 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
     }
 
     try {
-      if (useGatekeeper) {
-        const {status} = await wait(
-          1000,
-          gateUpdateEmail({
-            serviceUrl: currentAccount.service,
-            did: currentAccount.did,
-            password: state.password,
-            email: state.email,
-            token: state.token || undefined,
-          }),
-        )
+      const {status} = await wait(
+        1000,
+        updateEmail({
+          email: state.email,
+          token: state.token,
+        }),
+      )
 
-        if (status === 'tokenRequired') {
-          dispatch({type: 'setStep', step: 'token'})
-          dispatch({type: 'setMutationStatus', status: 'default'})
-        } else if (status === 'success') {
-          dispatch({type: 'setMutationStatus', status: 'success'})
-        }
-      } else {
-        const {status} = await wait(
-          1000,
-          updateEmail({
-            email: state.email,
-            token: state.token,
-          }),
-        )
+      if (status === 'tokenRequired') {
+        dispatch({
+          type: 'setStep',
+          step: 'token',
+        })
+        dispatch({
+          type: 'setMutationStatus',
+          status: 'default',
+        })
+      } else if (status === 'success') {
+        dispatch({
+          type: 'setMutationStatus',
+          status: 'success',
+        })
 
-        if (status === 'tokenRequired') {
-          dispatch({type: 'setStep', step: 'token'})
-          dispatch({type: 'setMutationStatus', status: 'default'})
-        } else if (status === 'success') {
-          dispatch({type: 'setMutationStatus', status: 'success'})
-
-          try {
-            // fire off a confirmation email immediately
-            await requestEmailVerification()
-          } catch {}
-        }
+        try {
+          // fire off a confirmation email immediately
+          await requestEmailVerification()
+        } catch {}
       }
     } catch (e) {
       logger.error('EmailDialog: update email failed', {safeMessage: e})
@@ -298,31 +235,6 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
             />
           </TextField.Root>
         </View>
-
-        {useGatekeeper && (
-          <View>
-            <Text
-              style={[a.pb_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
-              <Trans>Please enter your account password.</Trans>
-            </Text>
-            <TextField.Root>
-              <TextField.Icon icon={Lock} />
-              <TextField.Input
-                label={_(msg`Password`)}
-                placeholder={_(msg`Password`)}
-                defaultValue={state.password}
-                onChangeText={
-                  state.mutationStatus === 'success'
-                    ? undefined
-                    : (value: string) => dispatch({type: 'setPassword', value})
-                }
-                secureTextEntry
-                autoComplete="password"
-                autoCapitalize="none"
-              />
-            </TextField.Root>
-          </View>
-        )}
 
         {state.step === 'token' && (
           <>
@@ -379,7 +291,7 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
               <Trans>
                 Please click on the link in the email we just sent you to verify
                 your new email address. This is an important step to allow you
-                to continue enjoying all the features of Blacksky.
+                to continue enjoying all the features of Bluesky.
               </Trans>
             </Text>
           </View>
@@ -393,7 +305,6 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
           onPress={handleUpdateEmail}
           disabled={
             !state.email ||
-            (useGatekeeper && !state.password) ||
             (state.step === 'token' &&
               (!state.token || state.token.length !== 11)) ||
             state.mutationStatus === 'pending'

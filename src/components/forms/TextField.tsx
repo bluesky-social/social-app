@@ -115,7 +115,7 @@ export function useSharedInputStyles() {
     ]
     const focus: ViewStyle[] = [
       {
-        backgroundColor: t.palette.contrast_50,
+        backgroundColor: t.palette.primary_25,
         borderColor: t.palette.primary_500,
       },
     ]
@@ -279,7 +279,7 @@ export function createInput(Component: typeof TextInput) {
             a.inset_0,
             {borderRadius: 10},
             t.atoms.bg_contrast_50,
-            {borderColor: 'transparent', borderWidth: 2},
+            {borderColor: 'transparent', borderWidth: 1},
             ctx.hovered ? chromeHover : {},
             ctx.focused ? chromeFocus : {},
             ctx.isInvalid || isInvalid ? chromeError : {},

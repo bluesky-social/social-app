@@ -1,8 +1,9 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View} from 'react-native'
 import {type AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
@@ -16,7 +17,6 @@ import {
 } from '#/state/queries/list'
 import {useAgent} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import * as Toast from '#/view/com/util/Toast'
 import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -24,27 +24,35 @@ import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
 const DESCRIPTION_MAX_GRAPHEMES = 300
 
+export type InitialListValues = {
+  name?: string
+  description?: string
+  avatar?: string
+}
+
 export function CreateOrEditListDialog({
   control,
   list,
   purpose,
   onSave,
+  initialValues,
 }: {
   control: Dialog.DialogControlProps
   list?: AppBskyGraphDefs.ListView
   purpose?: AppBskyGraphDefs.ListPurpose
   onSave?: (uri: string) => void
+  initialValues?: InitialListValues
 }) {
   const {_} = useLingui()
   const cancelControl = Dialog.useDialogControl()
   const [dirty, setDirty] = useState(false)
-  const {height} = useWindowDimensions()
 
   // 'You might lose unsaved changes' warning
   useEffect(() => {
@@ -73,7 +81,7 @@ export function CreateOrEditListDialog({
       control={control}
       nativeOptions={{
         preventDismiss: dirty,
-        minHeight: height,
+        fullHeight: true,
       }}
       testID="createOrEditListDialog">
       <DialogInner
@@ -82,6 +90,7 @@ export function CreateOrEditListDialog({
         onSave={onSave}
         setDirty={setDirty}
         onPressCancel={onPressCancel}
+        initialValues={initialValues}
       />
 
       <Prompt.Basic
@@ -102,12 +111,14 @@ function DialogInner({
   onSave,
   setDirty,
   onPressCancel,
+  initialValues,
 }: {
   list?: AppBskyGraphDefs.ListView
   purpose?: AppBskyGraphDefs.ListPurpose
   onSave?: (uri: string) => void
   setDirty: (dirty: boolean) => void
   onPressCancel: () => void
+  initialValues?: InitialListValues
 }) {
   const activePurpose = useMemo(() => {
     if (list?.purpose) {
@@ -138,11 +149,12 @@ function DialogInner({
   } = useListMetadataMutation()
   const [imageError, setImageError] = useState('')
   const [displayNameTooShort, setDisplayNameTooShort] = useState(false)
-  const initialDisplayName = list?.name || ''
+  const initialDisplayName = list?.name || initialValues?.name || ''
   const [displayName, setDisplayName] = useState(initialDisplayName)
-  const initialDescription = list?.description || ''
+  const initialDescription =
+    list?.description || initialValues?.description || ''
   const [descriptionRt, setDescriptionRt] = useState<RichTextAPI>(() => {
-    const text = list?.description
+    const text = list?.description ?? initialValues?.description
     const facets = list?.descriptionFacets
 
     if (!text || !facets) {
@@ -159,17 +171,22 @@ function DialogInner({
     return richText
   })
 
+  const initialAvatar = list?.avatar ?? initialValues?.avatar
   const [listAvatar, setListAvatar] = useState<string | undefined | null>(
-    list?.avatar,
+    initialAvatar,
   )
   const [newListAvatar, setNewListAvatar] = useState<
     ImageMeta | undefined | null
   >()
 
+  // When creating with pre-filled values (from starter pack), consider dirty
+  // immediately so the Save button is enabled
+  const hasInitialValuesForCreate = !list && initialValues != null
   const dirty =
+    hasInitialValuesForCreate ||
     displayName !== initialDisplayName ||
     descriptionRt.text !== initialDescription ||
-    listAvatar !== list?.avatar
+    listAvatar !== initialAvatar
 
   useEffect(() => {
     setDirty(dirty)

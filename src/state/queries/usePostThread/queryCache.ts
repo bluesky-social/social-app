@@ -14,6 +14,7 @@ import {
   dangerousGetPostShadow,
   updatePostShadow,
 } from '#/state/cache/post-shadow'
+import {findAllPostsInQueryData as findAllPostsInBookmarksQueryData} from '#/state/queries/bookmarks/useBookmarksQuery'
 import {findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData} from '#/state/queries/explore-feed-previews'
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '#/state/queries/notifications/feed'
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '#/state/queries/post-feed'
@@ -30,8 +31,11 @@ import {
 } from '#/state/queries/usePostThread/types'
 import {getRootPostAtUri} from '#/state/queries/usePostThread/utils'
 import {postViewToThreadPlaceholder} from '#/state/queries/usePostThread/views'
-import {didOrHandleUriMatches, getEmbeddedPost} from '#/state/queries/util'
-import {embedViewRecordToPostView} from '#/state/queries/util'
+import {
+  didOrHandleUriMatches,
+  embedViewRecordToPostView,
+  getEmbeddedPost,
+} from '#/state/queries/util'
 
 export function createCacheMutator({
   queryClient,
@@ -256,6 +260,9 @@ export function* getThreadPlaceholderCandidates(
     yield postViewToThreadPlaceholder(post)
   }
   for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
+    yield postViewToThreadPlaceholder(post)
+  }
+  for (let post of findAllPostsInBookmarksQueryData(queryClient, uri)) {
     yield postViewToThreadPlaceholder(post)
   }
   for (let post of findAllPostsInExploreFeedPreviewsQueryData(

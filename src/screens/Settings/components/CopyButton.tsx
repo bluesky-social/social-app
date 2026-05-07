@@ -6,7 +6,7 @@ import Animated, {
   ZoomIn,
 } from 'react-native-reanimated'
 import * as Clipboard from 'expo-clipboard'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button, type ButtonProps} from '#/components/Button'

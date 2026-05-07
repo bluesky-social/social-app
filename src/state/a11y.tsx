@@ -1,26 +1,26 @@
-import React from 'react'
+import {createContext, useContext, useEffect, useMemo, useState} from 'react'
 import {AccessibilityInfo} from 'react-native'
 
 import {IS_WEB} from '#/env'
 import {PlatformInfo} from '../../modules/expo-bluesky-swiss-army'
 
-const Context = React.createContext({
+const Context = createContext({
   reduceMotionEnabled: false,
   screenReaderEnabled: false,
 })
 Context.displayName = 'A11yContext'
 
 export function useA11y() {
-  return React.useContext(Context)
+  return useContext(Context)
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [reduceMotionEnabled, setReduceMotionEnabled] = React.useState(() =>
+  const [reduceMotionEnabled, setReduceMotionEnabled] = useState(() =>
     PlatformInfo.getIsReducedMotionEnabled(),
   )
-  const [screenReaderEnabled, setScreenReaderEnabled] = React.useState(false)
+  const [screenReaderEnabled, setScreenReaderEnabled] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     const reduceMotionChangedSubscription = AccessibilityInfo.addEventListener(
       'reduceMotionChanged',
       enabled => {
@@ -49,7 +49,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     }
   }, [])
 
-  const ctx = React.useMemo(() => {
+  const ctx = useMemo(() => {
     return {
       reduceMotionEnabled,
       /**

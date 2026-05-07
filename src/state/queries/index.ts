@@ -19,22 +19,19 @@ export const STALE = {
   INFINITY: Infinity,
 }
 
+export const GCTIME = {
+  INFINITY: Infinity,
+}
+
 /**
- * Root key for persisted queries.
- *
- * If the `querykey` of your query uses this at index 0, it will be
- * persisted automatically by the `PersistQueryClientProvider` in
- * `#/lib/react-query.tsx`.
- *
- * Be careful when using this, since it will change the query key and may
- * break any cases where we call `invalidateQueries` or `refetchQueries`
- * with the old key.
- *
- * Also, only use this for queries that are safe to persist between
- * app launches (like user preferences).
- *
- * Note that for queries that are persisted, it is recommended to extend
- * the `gcTime` to a longer duration, otherwise it'll get busted
+ * Sentinel prefix used at the start of query keys that should be persisted
+ * across sessions. The persist plugin's dehydrate filter looks for this
+ * value as the first element of `query.queryKey` to decide whether to keep
+ * the query.
  */
-export const PERSISTED_QUERY_ROOT = 'PERSISTED'
-export const PERSISTED_QUERY_GCTIME = Infinity
+export const PERSISTED_QUERY_ROOT = '__persisted__'
+
+/**
+ * Long gcTime applied to persisted queries so they survive cache eviction.
+ */
+export const PERSISTED_QUERY_GCTIME = 24 * 60 * 60 * 1000

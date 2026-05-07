@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react'
-import {Platform, View} from 'react-native'
+import {useCallback, useEffect, useMemo, useState} from 'react'
+import {ActivityIndicator, Platform, View} from 'react-native'
 import ReactNativeDeviceAttest from 'react-native-device-attest'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -10,7 +10,6 @@ import {logger} from '#/logger'
 import {useSignupContext} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
 import {atoms as a, useTheme} from '#/alf'
-import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {FormError} from '#/components/forms/FormError'
 import {useAnalytics} from '#/analytics'
 import {GCP_PROJECT_ID, IS_ANDROID, IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
@@ -35,7 +34,7 @@ export function StepCaptchaNative() {
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    ;(async () => {
+    void (async () => {
       logger.debug('trying to generate attestation token...')
       try {
         if (IS_IOS) {
@@ -49,7 +48,8 @@ export function StepCaptchaNative() {
           setToken(token)
           setPayload(base64UrlEncode(payload))
         }
-      } catch (e: any) {
+      } catch (err) {
+        const e = err as Error
         logger.error(e)
       } finally {
         setReady(true)
@@ -76,10 +76,10 @@ function StepCaptchaInner({
   const theme = useTheme()
   const {state, dispatch} = useSignupContext()
 
-  const [completed, setCompleted] = React.useState(false)
+  const [completed, setCompleted] = useState(false)
 
-  const stateParam = React.useMemo(() => nanoid(15), [])
-  const url = React.useMemo(() => {
+  const stateParam = useMemo(() => nanoid(15), [])
+  const url = useMemo(() => {
     const newUrl = new URL(state.serviceUrl)
     newUrl.pathname = CAPTCHA_PATH
     newUrl.searchParams.set(
@@ -88,11 +88,6 @@ function StepCaptchaInner({
     )
     newUrl.searchParams.set('state', stateParam)
     newUrl.searchParams.set('colorScheme', theme.name)
-
-    if (IS_WEB) {
-      // @ts-ignore web only
-      newUrl.searchParams.set('redirect_url', window.location.origin)
-    }
 
     if (IS_NATIVE && token) {
       newUrl.searchParams.set('platform', Platform.OS)
@@ -113,7 +108,7 @@ function StepCaptchaInner({
     payload,
   ])
 
-  const onSuccess = React.useCallback(
+  const onSuccess = useCallback(
     (code: string) => {
       setCompleted(true)
       ax.metric('signup:captchaSuccess', {})
@@ -125,7 +120,7 @@ function StepCaptchaInner({
     [ax, dispatch],
   )
 
-  const onError = React.useCallback(
+  const onError = useCallback(
     (error?: unknown) => {
       dispatch({
         type: 'setError',
@@ -140,7 +135,7 @@ function StepCaptchaInner({
     [_, ax, dispatch, state.handle],
   )
 
-  const onBackPress = React.useCallback(() => {
+  const onBackPress = useCallback(() => {
     logger.error('Signup Flow Error', {
       errorMessage:
         'User went back from captcha step. Possibly encountered an error.',
@@ -170,7 +165,7 @@ function StepCaptchaInner({
               onError={onError}
             />
           ) : (
-            <CustomActivityIndicator size="large" />
+            <ActivityIndicator size="large" />
           )}
         </View>
         <FormError error={state.error} />

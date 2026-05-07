@@ -4,8 +4,7 @@ import './style.css'
 
 import {Fragment, useEffect, useState} from 'react'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import * as Sentry from '@sentry/react-native'
 
 import {QueryProvider} from '#/lib/react-query'
@@ -18,7 +17,6 @@ import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
-import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
 import {Provider as ModalStateProvider} from '#/state/modals'
 import {init as initPersistedState} from '#/state/persisted'
@@ -43,16 +41,17 @@ import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
-import * as Toast from '#/view/com/util/Toast'
 import {Shell} from '#/view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
+import {Provider as LightboxStateProvider} from '#/components/Lightbox/state'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
+import * as Toast from '#/components/Toast'
 import {ToastOutlet} from '#/components/Toast'
 import {
   AnalyticsContext,
@@ -95,7 +94,7 @@ function InnerApp() {
   const {currentAccount} = useSession()
   const {resumeSession, login} = useSessionApi()
   const theme = useColorModeTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const hasCheckedReferrer = useStarterPackEntry()
 
   // init
@@ -137,24 +136,23 @@ function InnerApp() {
           await features.init
         }
       } catch (e) {
-        logger.error(`session: resumeSession failed`, {message: e})
+        logger.error('session: resumeSession failed', {message: e})
       } finally {
         clearTimeout(safetyTimeout)
         setIsReady(true)
       }
     }
     const account = readLastActiveAccount()
-    onLaunch(account)
+    void onLaunch(account)
   }, [resumeSession, login])
 
   useEffect(() => {
     return listenSessionDropped(() => {
-      Toast.show(
-        _(msg`Sorry! Your session expired. Please sign in again.`),
-        'info',
-      )
+      Toast.show(l`Sorry! Your session expired. Please sign in again.`, {
+        type: 'info',
+      })
     })
-  }, [_])
+  }, [l])
 
   return (
     <Alf theme={theme}>
@@ -220,12 +218,12 @@ function InnerApp() {
 }
 
 function App() {
-  const [isReady, setReady] = useState(false)
+  const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
-    Promise.all([initPersistedState(), setupDeviceId])
-      .then(() => setReady(true))
-      .catch(() => setReady(true))
+    void Promise.all([initPersistedState(), setupDeviceId])
+      .then(() => setIsReady(true))
+      .catch(() => setIsReady(true))
   }, [])
 
   if (!isReady) {

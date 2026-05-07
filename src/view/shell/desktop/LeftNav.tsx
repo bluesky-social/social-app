@@ -1,11 +1,11 @@
 import {type JSX, useCallback, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
-import {useActorStatus} from '#/lib/actor-status'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -43,7 +43,7 @@ import {
   BulletList_Filled_Corner0_Rounded as ListFilled,
   BulletList_Stroke2_Corner0_Rounded as List,
 } from '#/components/icons/BulletList'
-import {DotGrid_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {EditBig_Stroke2_Corner0_Rounded as EditBig} from '#/components/icons/EditBig'
 import {
   Hashtag_Filled_Corner0_Rounded as HashtagFilled,
@@ -78,6 +78,7 @@ import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {useActorStatus} from '#/features/liveNow'
 import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
 import {router} from '../../../routes'
 
@@ -352,7 +353,7 @@ function SwitchMenuItem({
           '@',
         )}`,
       )}
-      onPress={() => onPressSwitchAccount(account, 'SwitchAccount')}>
+      onPress={() => void onPressSwitchAccount(account, 'SwitchAccount')}>
       <View>
         <UserAvatar
           avatar={profile?.avatar}
@@ -577,14 +578,14 @@ function ComposeBtn() {
       <Button
         disabled={isFetchingHandle}
         label={_(msg`Compose new post`)}
-        onPress={onPressCompose}
+        onPress={() => void onPressCompose()}
         size="large"
         variant="solid"
         color="primary"
         style={[a.rounded_full]}>
         <ButtonIcon icon={EditBig} position="left" />
         <ButtonText>
-          <Trans context="action">New Post</Trans>
+          <Trans context="action">New post</Trans>
         </ButtonText>
       </Button>
     </View>

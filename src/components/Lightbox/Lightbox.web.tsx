@@ -1,0 +1,487 @@
+import {useCallback, useEffect, useRef, useState} from 'react'
+import {Pressable, StyleSheet, View} from 'react-native'
+import {Image} from 'expo-image'
+import {msg} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
+import {FocusGuards, FocusScope} from 'radix-ui/internal'
+import {RemoveScrollBar} from 'react-remove-scroll-bar'
+
+import {saveImageToMediaLibrary} from '#/lib/media/manip'
+import {useA11y} from '#/state/a11y'
+import {
+  atoms as a,
+  flatten,
+  ThemeProvider,
+  useBreakpoints,
+  useTheme,
+} from '#/alf'
+import {Button} from '#/components/Button'
+import {Backdrop} from '#/components/Dialog'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ShareIcon} from '#/components/icons/ArrowOutOfBox'
+import {
+  ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon,
+  ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
+} from '#/components/icons/Chevron'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
+import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/icons/Download'
+import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
+import {CircleChromeButton} from '#/components/Lightbox/chrome/CircleChromeButton'
+import {PagerDots} from '#/components/Lightbox/chrome/PagerDots'
+import {useLightbox, useLightboxControls} from '#/components/Lightbox/state'
+import {type ImageSource} from '#/components/Lightbox/types'
+import {Loader} from '#/components/Loader'
+import * as Menu from '#/components/Menu'
+import * as Toast from '#/components/Toast'
+import {Text} from '#/components/Typography'
+
+export function Lightbox() {
+  const {activeLightbox} = useLightbox()
+  const {closeLightbox} = useLightboxControls()
+  const isActive = !!activeLightbox
+
+  if (!isActive) {
+    return null
+  }
+
+  const initialIndex = activeLightbox.index
+  const imgs = activeLightbox.images
+  return (
+    <ThemeProvider theme="dark">
+      <LightboxContainer handleBackgroundPress={closeLightbox}>
+        <LightboxGallery
+          key={activeLightbox.id}
+          imgs={imgs}
+          initialIndex={initialIndex}
+          onClose={closeLightbox}
+        />
+      </LightboxContainer>
+    </ThemeProvider>
+  )
+}
+
+function LightboxContainer({
+  children,
+  handleBackgroundPress,
+}: {
+  children: React.ReactNode
+  handleBackgroundPress: () => void
+}) {
+  const {_} = useLingui()
+  FocusGuards.useFocusGuards()
+  return (
+    <Pressable
+      accessibilityHint={undefined}
+      accessibilityLabel={_(msg`Close image viewer`)}
+      onPress={handleBackgroundPress}
+      style={[a.fixed, a.inset_0, a.z_10]}>
+      <Backdrop />
+      <RemoveScrollBar />
+      <FocusScope.FocusScope loop trapped asChild>
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={_(msg`Image viewer`)}
+          style={{position: 'absolute', inset: 0}}>
+          {children}
+        </div>
+      </FocusScope.FocusScope>
+    </Pressable>
+  )
+}
+
+function LightboxGallery({
+  imgs,
+  initialIndex = 0,
+  onClose,
+}: {
+  imgs: ImageSource[]
+  initialIndex: number
+  onClose: () => void
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const {reduceMotionEnabled} = useA11y()
+  const [index, setIndex] = useState(initialIndex)
+  const [hasAnyLoaded, setAnyHasLoaded] = useState(false)
+  const [isAltExpanded, setAltExpanded] = useState(false)
+
+  const {gtPhone} = useBreakpoints()
+
+  const canGoLeft = index >= 1
+  const canGoRight = index < imgs.length - 1
+  const onPressLeft = useCallback(() => {
+    if (canGoLeft) {
+      setIndex(index - 1)
+    }
+  }, [index, canGoLeft])
+  const onPressRight = useCallback(() => {
+    if (canGoRight) {
+      setIndex(index + 1)
+    }
+  }, [index, canGoRight])
+
+  const onKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        onClose()
+      } else if (e.key === 'ArrowLeft') {
+        onPressLeft()
+      } else if (e.key === 'ArrowRight') {
+        onPressRight()
+      }
+    },
+    [onClose, onPressLeft, onPressRight],
+  )
+
+  useEffect(() => {
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [onKeyDown])
+
+  // Push a history entry so the browser back button closes the lightbox
+  // instead of navigating away from the page.
+  const closedByPopStateRef = useRef(false)
+  useEffect(() => {
+    history.pushState({lightbox: true}, '')
+
+    const handlePopState = () => {
+      closedByPopStateRef.current = true
+      onClose()
+    }
+    window.addEventListener('popstate', handlePopState)
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState)
+      // Only pop our entry if it's still the current one. If navigation
+      // already pushed a new entry on top, leave the orphaned entry —
+      // it shares the same URL so traversing through it is harmless.
+      if (
+        !closedByPopStateRef.current &&
+        (history.state as {lightbox?: boolean})?.lightbox
+      ) {
+        history.back()
+      }
+    }
+  }, [onClose])
+
+  const delayedFadeInAnim = !reduceMotionEnabled && [
+    a.fade_in,
+    {animationDelay: '0.2s', animationFillMode: 'both'},
+  ]
+
+  const img = imgs[index]
+
+  return (
+    <View style={[a.absolute, a.inset_0]}>
+      <View style={[a.flex_1, a.justify_center, a.align_center]}>
+        <LightboxGalleryItem
+          key={index}
+          source={img.uri}
+          alt={img.alt}
+          type={img.type}
+          hasAnyLoaded={hasAnyLoaded}
+          onLoad={() => setAnyHasLoaded(true)}
+        />
+        {canGoLeft && (
+          <Button
+            onPress={onPressLeft}
+            style={[
+              a.absolute,
+              styles.leftBtn,
+              styles.blurredBackdrop,
+              a.transition_color,
+              delayedFadeInAnim,
+            ]}
+            hoverStyle={styles.blurredBackdropHover}
+            color="secondary"
+            label={_(msg`Previous image`)}
+            shape="round"
+            size={gtPhone ? 'large' : 'small'}>
+            <ChevronLeftIcon
+              size={gtPhone ? 'md' : 'sm'}
+              style={{color: t.palette.white}}
+            />
+          </Button>
+        )}
+        {canGoRight && (
+          <Button
+            onPress={onPressRight}
+            style={[
+              a.absolute,
+              styles.rightBtn,
+              styles.blurredBackdrop,
+              a.transition_color,
+              delayedFadeInAnim,
+            ]}
+            hoverStyle={styles.blurredBackdropHover}
+            color="secondary"
+            label={_(msg`Next image`)}
+            shape="round"
+            size={gtPhone ? 'large' : 'small'}>
+            <ChevronRightIcon
+              size={gtPhone ? 'md' : 'sm'}
+              style={{color: t.palette.white}}
+            />
+          </Button>
+        )}
+      </View>
+      {img.alt ? (
+        <View
+          style={[
+            a.px_4xl,
+            a.py_2xl,
+            {backgroundColor: 'rgba(0, 0, 0, 0.45)'},
+            delayedFadeInAnim,
+          ]}>
+          <Pressable
+            accessibilityLabel={_(msg`Expand alt text`)}
+            accessibilityHint={_(
+              msg`If alt text is long, toggles alt text expanded state`,
+            )}
+            onPress={() => {
+              setAltExpanded(!isAltExpanded)
+            }}>
+            <Text
+              style={[a.text_md, a.leading_snug, {color: '#fff'}]}
+              numberOfLines={isAltExpanded ? 0 : 3}
+              ellipsizeMode="tail">
+              {img.alt}
+            </Text>
+          </Pressable>
+        </View>
+      ) : null}
+      {imgs.length > 1 && (
+        <div aria-live="polite" aria-atomic="true" style={a.sr_only}>
+          <Text>{_(msg`Image ${index + 1} of ${imgs.length}`)}</Text>
+        </div>
+      )}
+      <Menu.Root>
+        <Menu.Trigger label={_(msg`Image options`)}>
+          {({props}) => (
+            <Pressable
+              {...props}
+              accessible={false}
+              style={[a.absolute, styles.menuBtn, delayedFadeInAnim]}>
+              <CircleChromeButton
+                icon={EllipsisIcon}
+                iconStyle={{transform: [{rotate: '90deg'}]}}
+                label={_(msg`Image options`)}
+              />
+            </Pressable>
+          )}
+        </Menu.Trigger>
+        <Menu.Outer>
+          <Menu.Group>
+            <Menu.Item
+              label={_(msg`Share image`)}
+              onPress={async () => {
+                const url = img.uri
+                if (
+                  typeof navigator !== 'undefined' &&
+                  'share' in navigator &&
+                  navigator.share
+                ) {
+                  try {
+                    await navigator.share({url})
+                  } catch {
+                    // User cancelled or share failed; no-op
+                  }
+                } else if (
+                  typeof navigator !== 'undefined' &&
+                  navigator.clipboard
+                ) {
+                  try {
+                    await navigator.clipboard.writeText(url)
+                    Toast.show(_(msg`Link copied to clipboard`))
+                  } catch {
+                    Toast.show(_(msg`Failed to copy link`), {type: 'error'})
+                  }
+                }
+              }}>
+              <Menu.ItemText>
+                <Trans>Share image</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={ShareIcon} position="right" />
+            </Menu.Item>
+            <Menu.Item
+              label={_(msg`Download image`)}
+              onPress={() => {
+                saveImageToMediaLibrary({uri: img.uri}).then(
+                  () => {
+                    Toast.show(_(msg`Image saved`))
+                  },
+                  () => {
+                    Toast.show(_(msg`Failed to save image`), {type: 'error'})
+                  },
+                )
+              }}>
+              <Menu.ItemText>
+                <Trans>Download image</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={DownloadIcon} position="right" />
+            </Menu.Item>
+          </Menu.Group>
+        </Menu.Outer>
+      </Menu.Root>
+      <View style={[a.absolute, styles.closeBtn, delayedFadeInAnim]}>
+        <CircleChromeButton
+          icon={XIcon}
+          label={_(msg`Close image viewer`)}
+          onPress={onClose}
+        />
+      </View>
+      {imgs.length > 1 && (
+        <View
+          style={[a.absolute, styles.pagerDots, delayedFadeInAnim]}
+          pointerEvents="none">
+          <PagerDots count={imgs.length} activeIndex={index} />
+        </View>
+      )}
+    </View>
+  )
+}
+
+function LightboxGalleryItem({
+  source,
+  alt,
+  type,
+  onLoad,
+  hasAnyLoaded,
+}: {
+  source: string
+  alt: string | undefined
+  type: ImageSource['type']
+  onLoad: () => void
+  hasAnyLoaded: boolean
+}) {
+  const {reduceMotionEnabled} = useA11y()
+  const [hasLoaded, setHasLoaded] = useState(false)
+  const [isFirstToLoad] = useState(!hasAnyLoaded)
+
+  /**
+   * We want to show a zoom/fade in animation when the lightbox first opens.
+   * To avoid showing it as we switch between images, we keep track in the parent
+   * whether any image has loaded yet. We then save what the value of this is on first
+   * render (as when it changes, we don't want to then *remove* then animation). when
+   * the image loads, if this is the first image to load, we play the animation.
+   *
+   * We also use this `hasLoaded` state to show a loading indicator. This is on a 1s
+   * delay and then a slow fade in to avoid flicker. -sfn
+   */
+  const zoomInWhenReady =
+    !reduceMotionEnabled &&
+    isFirstToLoad &&
+    (hasAnyLoaded
+      ? [a.zoom_fade_in, {animationDuration: '0.5s'}]
+      : {opacity: 0})
+
+  const handleLoad = () => {
+    setHasLoaded(true)
+    onLoad()
+  }
+
+  let image = null
+  switch (type) {
+    case 'circle-avi':
+    case 'rect-avi':
+      image = (
+        <img
+          src={source}
+          style={flatten([
+            styles.avi,
+            {
+              borderRadius:
+                type === 'circle-avi' ? '50%' : type === 'rect-avi' ? '10%' : 0,
+            },
+            zoomInWhenReady,
+          ])}
+          alt={alt}
+          onLoad={handleLoad}
+        />
+      )
+      break
+    case 'image':
+      image = (
+        <Image
+          source={{uri: source}}
+          alt={alt}
+          style={[a.w_full, a.h_full, zoomInWhenReady]}
+          onLoad={handleLoad}
+          contentFit="contain"
+          accessibilityIgnoresInvertColors
+        />
+      )
+      break
+  }
+
+  return (
+    <>
+      {image}
+      {!hasLoaded && (
+        <View
+          style={[
+            a.absolute,
+            a.inset_0,
+            a.justify_center,
+            a.align_center,
+            a.fade_in,
+            {
+              opacity: 0,
+              animationDuration: '500ms',
+              animationDelay: '1s',
+              animationFillMode: 'both',
+            },
+          ]}>
+          <Loader size="xl" />
+        </View>
+      )}
+    </>
+  )
+}
+
+const styles = StyleSheet.create({
+  avi: {
+    // @ts-ignore web-only
+    maxWidth: `calc(min(400px, 100vw))`,
+    // @ts-ignore web-only
+    maxHeight: `calc(min(400px, 100vh))`,
+    padding: 16,
+    boxSizing: 'border-box',
+  },
+  menuBtn: {
+    top: 20,
+    left: 20,
+  },
+  closeBtn: {
+    top: 20,
+    right: 20,
+  },
+  pagerDots: {
+    top: 20,
+    left: 0,
+    right: 0,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  leftBtn: {
+    left: 20,
+    right: 'auto',
+    top: '50%',
+  },
+  rightBtn: {
+    right: 20,
+    left: 'auto',
+    top: '50%',
+  },
+  blurredBackdrop: {
+    backgroundColor: '#00000077',
+    // @ts-expect-error web only -sfn
+    backdropFilter: 'blur(10px)',
+  },
+  blurredBackdropHover: {
+    backgroundColor: '#00000088',
+  },
+})

@@ -1,8 +1,9 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {type AppBskyGraphDefs, type ModerationOpts} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -13,7 +14,6 @@ import {
   useListMembershipAddMutation,
   useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -23,6 +23,7 @@ import {
 } from '#/components/dialogs/SearchablePeopleList'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
+import * as Toast from '#/components/Toast'
 import type * as bsky from '#/types/bsky'
 
 export function ListAddRemoveUsersDialog({
@@ -38,7 +39,10 @@ export function ListAddRemoveUsersDialog({
   ) => void | undefined
 }) {
   return (
-    <Dialog.Outer control={control} testID="listAddRemoveUsersDialog">
+    <Dialog.Outer
+      control={control}
+      testID="listAddRemoveUsersDialog"
+      nativeOptions={{fullHeight: true}}>
       <Dialog.Handle />
       <DialogInner list={list} onChange={onChange} />
     </Dialog.Outer>
@@ -109,7 +113,10 @@ function UserResult({
         Toast.show(_(msg`Added to list`))
         onChange?.('add', profile)
       },
-      onError: e => Toast.show(cleanError(e), 'xmark'),
+      onError: e =>
+        Toast.show(cleanError(e), {
+          type: 'error',
+        }),
     })
   const {mutate: listMembershipRemove, isPending: isRemovingPending} =
     useListMembershipRemoveMutation({
@@ -117,7 +124,10 @@ function UserResult({
         Toast.show(_(msg`Removed from list`))
         onChange?.('remove', profile)
       },
-      onError: e => Toast.show(cleanError(e), 'xmark'),
+      onError: e =>
+        Toast.show(cleanError(e), {
+          type: 'error',
+        }),
     })
   const isMutating = isAddingPending || isRemovingPending
 

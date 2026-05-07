@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useEffect, useRef} from 'react'
 import {type QueryClient, useQueryClient} from '@tanstack/react-query'
 

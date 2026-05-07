@@ -1,21 +1,28 @@
-import React from 'react'
+import {
+  createContext,
+  type ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 
 import * as persisted from '#/state/persisted'
 
 type StateContext = boolean
 type SetContext = (v: boolean) => void
 
-const stateContext = React.createContext<StateContext>(
+const stateContext = createContext<StateContext>(
   Boolean(persisted.defaults.repostCarouselEnabled),
 )
-const setContext = React.createContext<SetContext>((_: boolean) => {})
+const setContext = createContext<SetContext>((_: boolean) => {})
 
-export function Provider({children}: {children: React.ReactNode}) {
-  const [state, setState] = React.useState(
+export function Provider({children}: {children: ReactNode}) {
+  const [state, setState] = useState(
     Boolean(persisted.get('repostCarouselEnabled')),
   )
 
-  const setStateWrapped = React.useCallback(
+  const setStateWrapped = useCallback(
     (value: persisted.Schema['repostCarouselEnabled']) => {
       setState(Boolean(value))
       persisted.write('repostCarouselEnabled', value)
@@ -23,7 +30,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     [setState],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate('repostCarouselEnabled', nextValue => {
       setState(Boolean(nextValue))
     })
@@ -38,5 +45,5 @@ export function Provider({children}: {children: React.ReactNode}) {
   )
 }
 
-export const useRepostCarouselEnabled = () => React.useContext(stateContext)
-export const useSetRepostCarouselEnabled = () => React.useContext(setContext)
+export const useRepostCarouselEnabled = () => useContext(stateContext)
+export const useSetRepostCarouselEnabled = () => useContext(setContext)

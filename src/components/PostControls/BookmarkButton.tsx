@@ -1,9 +1,9 @@
 import {memo} from 'react'
 import {type Insets} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
+import {Trans} from '@lingui/react/macro'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
 import {type Shadow} from '#/state/cache/post-shadow'
@@ -136,6 +136,8 @@ export const BookmarkButton = memo(function BookmarkButton({
     <PostControlButton
       testID="postBookmarkBtn"
       big={big}
+      active={isBookmarked}
+      activeColor={t.palette.primary_500}
       label={
         isBookmarked
           ? _(msg`Remove from saved posts`)
@@ -143,10 +145,7 @@ export const BookmarkButton = memo(function BookmarkButton({
       }
       onPress={onHandlePress}
       hitSlop={hitSlop}>
-      <PostControlButtonIcon
-        fill={isBookmarked ? t.palette.primary_500 : undefined}
-        icon={isBookmarked ? BookmarkFilled : Bookmark}
-      />
+      <PostControlButtonIcon icon={isBookmarked ? BookmarkFilled : Bookmark} />
     </PostControlButton>
   )
 })

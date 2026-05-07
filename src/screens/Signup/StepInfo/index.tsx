@@ -1,7 +1,6 @@
-import React, {useRef} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {type TextInput, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans, useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 import type tldts from 'tldts'
 
@@ -45,7 +44,7 @@ export function StepInfo({
   refetchServer: () => void
   isLoadingStarterPack: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {state, dispatch} = useSignupContext()
   const inviteCodeValueRef = useRef<string>(state.inviteCode)
@@ -64,17 +63,17 @@ export function StepInfo({
     ? getAge(state.dateOfBirth) >= 18
     : true
 
-  const [hasWarnedEmail, setHasWarnedEmail] = React.useState<boolean>(false)
+  const [hasWarnedEmail, setHasWarnedEmail] = useState<boolean>(false)
 
-  const tldtsRef = React.useRef<typeof tldts>(undefined)
-  React.useEffect(() => {
+  const tldtsRef = useRef<typeof tldts>(undefined)
+  useEffect(() => {
     // @ts-expect-error - valid path
-    import('tldts/dist/index.cjs.min.js').then(tldts => {
+    void import('tldts/dist/index.cjs.min.js').then(tldts => {
       tldtsRef.current = tldts
     })
     // This will get used in the avatar creator a few steps later, so lets preload it now
     // @ts-expect-error - valid path
-    import('react-native-view-shot/src/index')
+    void import('react-native-view-shot/src/index')
   }, [])
 
   const onNextPress = () => {
@@ -90,21 +89,21 @@ export function StepInfo({
     if (state.serviceDescription?.inviteCodeRequired && !inviteCode) {
       return dispatch({
         type: 'setError',
-        value: _(msg`Please enter your invite code.`),
+        value: l`Please enter your invite code.`,
         field: 'invite-code',
       })
     }
     if (!email) {
       return dispatch({
         type: 'setError',
-        value: _(msg`Please enter your email.`),
+        value: l`Please enter your email.`,
         field: 'email',
       })
     }
     if (!EmailValidator.validate(email)) {
       return dispatch({
         type: 'setError',
-        value: _(msg`Your email appears to be invalid.`),
+        value: l`Your email appears to be invalid.`,
         field: 'email',
       })
     }
@@ -114,9 +113,7 @@ export function StepInfo({
         setHasWarnedEmail(true)
         return dispatch({
           type: 'setError',
-          value: _(
-            msg`Please double-check that you have entered your email address correctly.`,
-          ),
+          value: l`Please double-check that you have entered your email address correctly.`,
         })
       }
     } else if (hasWarnedEmail) {
@@ -126,14 +123,14 @@ export function StepInfo({
     if (!password) {
       return dispatch({
         type: 'setError',
-        value: _(msg`Please choose your password.`),
+        value: l`Please choose your password.`,
         field: 'password',
       })
     }
     if (password.length < 8) {
       return dispatch({
         type: 'setError',
-        value: _(msg`Your password must be at least 8 characters long.`),
+        value: l`Your password must be at least 8 characters long.`,
         field: 'password',
       })
     }
@@ -179,7 +176,7 @@ export function StepInfo({
                         dispatch({type: 'clearError'})
                       }
                     }}
-                    label={_(msg`Required for this provider`)}
+                    label={l`Required for this provider`}
                     defaultValue={state.inviteCode}
                     autoCapitalize="none"
                     autoComplete="email"
@@ -215,7 +212,7 @@ export function StepInfo({
                       dispatch({type: 'clearError'})
                     }
                   }}
-                  label={_(msg`Enter your email address`)}
+                  label={l`Enter your email address`}
                   defaultValue={state.email}
                   autoCapitalize="none"
                   autoComplete="email"
@@ -243,7 +240,7 @@ export function StepInfo({
                       dispatch({type: 'clearError'})
                     }
                   }}
-                  label={_(msg`Choose your password`)}
+                  label={l`Choose your password`}
                   defaultValue={state.password}
                   secureTextEntry
                   autoComplete="new-password"
@@ -271,8 +268,8 @@ export function StepInfo({
                     value: sanitizeDate(new Date(date)),
                   })
                 }}
-                label={_(msg`Date of birth`)}
-                accessibilityHint={_(msg`Select your date of birth`)}
+                label={l`Date of birth`}
+                accessibilityHint={l`Select your date of birth`}
                 maximumDate={new Date()}
               />
             </View>
@@ -314,7 +311,7 @@ export function StepInfo({
         onBackPress={onPressBack}
         onNextPress={onNextPress}
         onRetryPress={refetchServer}
-        overrideNextText={hasWarnedEmail ? _(msg`It's correct`) : undefined}
+        overrideNextText={hasWarnedEmail ? l`It's correct` : undefined}
       />
     </>
   )

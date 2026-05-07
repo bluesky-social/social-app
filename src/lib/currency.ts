@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 
 import {deviceLocales} from '#/locale/deviceLocales'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -275,7 +275,7 @@ export function useFormatCurrency(
   options?: Parameters<typeof Intl.NumberFormat>[1],
 ) {
   const {appLanguage} = useLanguagePrefs()
-  return React.useMemo(() => {
+  return useMemo(() => {
     const locale = deviceLocales.at(0)
     const languageTag = locale?.languageTag || appLanguage || 'en-US'
     const countryCode = (locale?.regionCode || 'us').toLowerCase()

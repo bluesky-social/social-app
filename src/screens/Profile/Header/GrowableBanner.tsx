@@ -13,7 +13,6 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {BlurView} from 'expo-blur'
 import {useIsFetching} from '@tanstack/react-query'
-import type React from 'react'
 
 import {RQKEY_ROOT as STARTERPACK_RQKEY_ROOT} from '#/state/queries/actor-starter-packs'
 import {RQKEY_ROOT as FEED_RQKEY_ROOT} from '#/state/queries/post-feed'
@@ -30,11 +29,15 @@ export function GrowableBanner({
   children,
   onPress,
   bannerRef,
+  testID,
+  label,
 }: {
   backButton?: React.ReactNode
   children: React.ReactNode
   onPress?: () => void
   bannerRef?: AnimatedRef<Animated.View>
+  testID?: string
+  label?: string
 }) {
   const pagerContext = usePagerHeaderContext()
 
@@ -42,8 +45,11 @@ export function GrowableBanner({
   if (!pagerContext || !IS_IOS) {
     return (
       <Pressable
+        testID={testID}
         onPress={onPress}
         accessibilityRole="image"
+        accessibilityLabel={label}
+        accessibilityHint=""
         style={[a.w_full, a.h_full]}>
         <Animated.View ref={bannerRef} style={[a.w_full, a.h_full]}>
           {children}
@@ -60,7 +66,9 @@ export function GrowableBanner({
       scrollY={scrollY}
       backButton={backButton}
       onPress={onPress}
-      bannerRef={bannerRef}>
+      bannerRef={bannerRef}
+      testID={testID}
+      label={label}>
       {children}
     </GrowableBannerInner>
   )
@@ -72,12 +80,16 @@ function GrowableBannerInner({
   children,
   onPress,
   bannerRef,
+  testID,
+  label,
 }: {
   scrollY: SharedValue<number>
   backButton?: React.ReactNode
   children: React.ReactNode
   onPress?: () => void
   bannerRef?: AnimatedRef<Animated.View>
+  testID?: string
+  label?: string
 }) {
   const {top: topInset} = useSafeAreaInsets()
   const isFetching = useIsProfileFetching()
@@ -142,8 +154,11 @@ function GrowableBannerInner({
           animatedStyle,
         ]}>
         <Pressable
+          testID={testID}
           onPress={onPress}
           accessibilityRole="image"
+          accessibilityLabel={label}
+          accessibilityHint=""
           style={[a.w_full, a.h_full]}>
           <Animated.View
             ref={bannerRef}

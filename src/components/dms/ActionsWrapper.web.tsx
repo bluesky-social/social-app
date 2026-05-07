@@ -1,31 +1,37 @@
 import {useCallback, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {type ChatBskyConvoDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {useConvoActive} from '#/state/messages/convo'
 import {useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {MessageContextMenu} from '#/components/dms/MessageContextMenu'
-import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
 import {EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
+import * as Toast from '#/components/Toast'
+import type * as bsky from '#/types/bsky'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
 import {hasReachedReactionLimit} from './util'
 
 export function ActionsWrapper({
   message,
+  hasReactions,
   isFromSelf,
+  senderProfile,
   children,
+  onTap,
 }: {
   message: ChatBskyConvoDefs.MessageView
+  hasReactions?: boolean
   isFromSelf: boolean
+  senderProfile?: bsky.profile.AnyProfileView
   children: React.ReactNode
+  onTap?: () => void
 }) {
   const viewRef = useRef(null)
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const convo = useConvoActive()
   const {currentAccount} = useSession()
 
@@ -57,17 +63,17 @@ export function ActionsWrapper({
       ) {
         convo
           .removeReaction(message.id, emoji)
-          .catch(() => Toast.show(_(msg`Failed to remove emoji reaction`)))
+          .catch(() => Toast.show(l`Failed to remove emoji reaction`))
       } else {
         if (hasReachedReactionLimit(message, currentAccount?.did)) return
-        convo
-          .addReaction(message.id, emoji)
-          .catch(() =>
-            Toast.show(_(msg`Failed to add emoji reaction`), 'xmark'),
-          )
+        convo.addReaction(message.id, emoji).catch(() =>
+          Toast.show(l`Failed to add emoji reaction`, {
+            type: 'error',
+          }),
+        )
       }
     },
-    [_, convo, message, currentAccount?.did],
+    [l, convo, message, currentAccount?.did],
   )
 
   return (
@@ -87,6 +93,7 @@ export function ActionsWrapper({
           isFromSelf
             ? [a.mr_xs, {marginLeft: 'auto'}, a.flex_row_reverse]
             : [a.ml_xs, {marginRight: 'auto'}],
+          hasReactions ? [a.mb_2xl] : undefined,
         ]}>
         <EmojiReactionPicker message={message} onEmojiSelect={onEmojiSelect}>
           {({props, state, IS_NATIVE, control}) => {
@@ -110,7 +117,7 @@ export function ActionsWrapper({
             )
           }}
         </EmojiReactionPicker>
-        <MessageContextMenu message={message}>
+        <MessageContextMenu message={message} senderProfile={senderProfile}>
           {({props, state, IS_NATIVE, control}) => {
             // always false, file is platform split
             if (IS_NATIVE) return null
@@ -133,10 +140,13 @@ export function ActionsWrapper({
           }}
         </MessageContextMenu>
       </View>
-      <View
+      <Pressable
+        accessibilityRole="button"
+        accessibilityHint={l`Click to view the date and time`}
+        onPress={onTap}
         style={[{maxWidth: '80%'}, isFromSelf ? a.align_end : a.align_start]}>
         {children}
-      </View>
+      </Pressable>
     </View>
   )
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {getGatekeeperUrl} from '#/lib/blacksky-pds'
 
 class GatekeeperError extends Error {

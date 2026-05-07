@@ -1,12 +1,13 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {
   type LayoutChangeEvent,
   type StyleProp,
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
@@ -42,8 +43,16 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
 
   const actualFollowsCount = follows?.pages?.[0]?.follows?.length ?? 0
 
-  // Hide if user already follows 10+ people
-  if (guide?.guide === 'follow-10' && actualFollowsCount >= TOTAL_AVATARS) {
+  // Clear stale guide if user already follows 10+ people
+  const shouldEndGuide =
+    guide?.guide === 'follow-10' && actualFollowsCount >= TOTAL_AVATARS
+  useEffect(() => {
+    if (shouldEndGuide) {
+      endProgressGuide()
+    }
+  }, [shouldEndGuide, endProgressGuide])
+
+  if (shouldEndGuide) {
     return null
   }
 

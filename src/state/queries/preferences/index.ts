@@ -9,11 +9,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {replaceEqualDeep} from '#/lib/functions'
 import {getAge} from '#/lib/strings/time'
-import {
-  PERSISTED_QUERY_GCTIME,
-  PERSISTED_QUERY_ROOT,
-  STALE,
-} from '#/state/queries'
+import {GCTIME, STALE} from '#/state/queries'
 import {
   DEFAULT_HOME_FEED_PREFS,
   DEFAULT_LOGGED_OUT_PREFERENCES,
@@ -23,6 +19,7 @@ import {
   type ThreadViewPreferences,
   type UsePreferencesQueryResponse,
 } from '#/state/queries/preferences/types'
+import {createQueryKey} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
 import {saveLabelers} from '#/state/session/agent-config'
 import {useAnalytics} from '#/analytics'
@@ -31,7 +28,11 @@ export * from '#/state/queries/preferences/const'
 export * from '#/state/queries/preferences/moderation'
 export * from '#/state/queries/preferences/types'
 
-export const preferencesQueryKey = [PERSISTED_QUERY_ROOT, 'getPreferences']
+export const preferencesQueryKey = createQueryKey(
+  'getPreferences',
+  {},
+  {persistedVersion: 1},
+)
 
 export function usePreferencesQuery() {
   const agent = useAgent()
@@ -41,7 +42,7 @@ export function usePreferencesQuery() {
     structuralSharing: replaceEqualDeep,
     refetchOnWindowFocus: true,
     queryKey: preferencesQueryKey,
-    gcTime: PERSISTED_QUERY_GCTIME,
+    gcTime: GCTIME.INFINITY,
     queryFn: async () => {
       if (!agent.did) {
         return DEFAULT_LOGGED_OUT_PREFERENCES

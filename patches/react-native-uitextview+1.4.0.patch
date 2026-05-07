@@ -1,11 +1,11 @@
 diff --git a/node_modules/react-native-uitextview/ios/RNUITextViewShadow.swift b/node_modules/react-native-uitextview/ios/RNUITextViewShadow.swift
-index c34ba71..13d576a 100644
+index c34ba71..3602856 100644
 --- a/node_modules/react-native-uitextview/ios/RNUITextViewShadow.swift
 +++ b/node_modules/react-native-uitextview/ios/RNUITextViewShadow.swift
-@@ -159,13 +159,23 @@ class RNUITextViewShadow: RCTShadowView {
+@@ -159,13 +159,25 @@ class RNUITextViewShadow: RCTShadowView {
      let maxSize = CGSize(width: CGFloat(maxWidth), height: CGFloat(MAXFLOAT))
      let textSize = self.attributedText.boundingRect(with: maxSize, options: .usesLineFragmentOrigin, context: nil)
-     
+ 
 -    var totalLines = self.lineHeight == 0.0 ? 0 : Int(ceil(textSize.height / self.lineHeight))
 -
 -    if self.numberOfLines != 0, totalLines > self.numberOfLines {
@@ -27,6 +27,8 @@ index c34ba71..13d576a 100644
      }
  
 -    self.frameSize = CGSize(width: CGFloat(maxWidth), height: CGFloat(CGFloat(totalLines) * self.lineHeight))
++    finalHeight = ceil(finalHeight)
++
 +    self.frameSize = CGSize(width: CGFloat(maxWidth), height: finalHeight)
      return YGSize(width: Float(self.frameSize.width), height: Float(self.frameSize.height))
    }

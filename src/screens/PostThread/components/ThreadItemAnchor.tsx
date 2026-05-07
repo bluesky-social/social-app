@@ -1,5 +1,5 @@
-import {memo, useCallback, useMemo} from 'react'
-import {type GestureResponderEvent, Text as RNText, View} from 'react-native'
+import {memo, useMemo} from 'react'
+import {Text as RNText, View} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -7,17 +7,14 @@ import {
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
-import {useActorStatus} from '#/lib/actor-status'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {useTranslate} from '#/lib/hooks/useTranslate'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
-import {getTranslatorLink, isPostInLanguage} from '#/locale/helpers'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -25,7 +22,6 @@ import {
 } from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
-import {useLanguagePrefs} from '#/state/preferences'
 import {type ThreadItem} from '#/state/queries/usePostThread/types'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
@@ -39,27 +35,29 @@ import {
   REPLY_LINE_WIDTH,
 } from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
-import {colors} from '#/components/Admonition'
 import {Button} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {InlineLinkText, Link} from '#/components/Link'
+import {GalleryBleed} from '#/components/images/Gallery'
+import {Link} from '#/components/Link'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
+import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
 import {Text} from '#/components/Typography'
-import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {WhoCanReply} from '#/components/WhoCanReply'
 import {useAnalytics} from '#/analytics'
+import {useActorStatus} from '#/features/liveNow'
 import * as bsky from '#/types/bsky'
 
 export function ThreadItemAnchor({
@@ -178,7 +176,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {openComposer} = useOpenComposer()
   const {currentAccount, hasSession} = useSession()
   const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession)
@@ -249,7 +247,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     }
   }, [postSource])
 
-  const onPressReply = useCallback(() => {
+  const onPressReply = useNonReactiveCallback(() => {
     openComposer({
       replyTo: {
         uri: post.uri,
@@ -272,15 +270,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
         reqId: postSource.post.reqId,
       })
     }
-  }, [
-    openComposer,
-    post,
-    record,
-    onPostSuccess,
-    moderation,
-    postSource,
-    feedFeedback,
-  ])
+  })
 
   const onOpenAuthor = () => {
     ax.metric('post:clickthroughAuthor', {
@@ -319,218 +309,243 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   return (
     <>
       <ThreadItemAnchorParentReplyLine isRoot={isRoot} />
+      <GalleryBleed>
+        <View
+          testID={`postThreadItem-by-${post.author.handle}`}
+          style={[
+            {
+              paddingHorizontal: OUTER_SPACE,
+            },
+            isRoot && [a.pt_lg],
+          ]}>
+          <View style={[a.flex_row, a.gap_md, a.pb_md]}>
+            <View collapsable={false}>
+              <PreviewableUserAvatar
+                size={42}
+                profile={post.author}
+                moderation={moderation.ui('avatar')}
+                type={post.author.associated?.labeler ? 'labeler' : 'user'}
+                live={live}
+                onBeforePress={onOpenAuthor}
+              />
+            </View>
+            <Link
+              to={authorHref}
+              style={[a.flex_1]}
+              label={sanitizeDisplayName(
+                post.author.displayName || sanitizeHandle(post.author.handle),
+                moderation.ui('displayName'),
+              )}
+              onPress={onOpenAuthor}>
+              <View style={[a.flex_1, a.align_start]}>
+                <ProfileHoverCard did={post.author.did} style={[a.w_full]}>
+                  <View style={[a.flex_row, a.align_center]}>
+                    <Text
+                      emoji
+                      style={[
+                        a.flex_shrink,
+                        a.text_lg,
+                        a.font_semi_bold,
+                        a.leading_snug,
+                      ]}
+                      numberOfLines={1}>
+                      {sanitizeDisplayName(
+                        post.author.displayName ||
+                          sanitizeHandle(post.author.handle),
+                        moderation.ui('displayName'),
+                      )}
+                    </Text>
 
-      <View
-        testID={`postThreadItem-by-${post.author.handle}`}
-        style={[
-          {
-            paddingHorizontal: OUTER_SPACE,
-          },
-          isRoot && [a.pt_lg],
-        ]}>
-        <View style={[a.flex_row, a.gap_md, a.pb_md]}>
-          <View collapsable={false}>
-            <PreviewableUserAvatar
-              size={42}
-              profile={post.author}
-              moderation={moderation.ui('avatar')}
-              type={post.author.associated?.labeler ? 'labeler' : 'user'}
-              live={live}
-              onBeforePress={onOpenAuthor}
-            />
-          </View>
-          <Link
-            to={authorHref}
-            style={[a.flex_1]}
-            label={sanitizeDisplayName(
-              post.author.displayName || sanitizeHandle(post.author.handle),
-              moderation.ui('displayName'),
-            )}
-            onPress={onOpenAuthor}>
-            <View style={[a.flex_1, a.align_start]}>
-              <ProfileHoverCard did={post.author.did} style={[a.w_full]}>
-                <View style={[a.flex_row, a.align_center]}>
+                    <View style={[a.pl_xs]}>
+                      <ProfileBadges
+                        profile={authorShadow}
+                        size="md"
+                        interactive
+                      />
+                    </View>
+                  </View>
                   <Text
-                    emoji
                     style={[
-                      a.flex_shrink,
-                      a.text_lg,
-                      a.font_semi_bold,
+                      a.text_md,
                       a.leading_snug,
+                      t.atoms.text_contrast_medium,
                     ]}
                     numberOfLines={1}>
-                    {sanitizeDisplayName(
-                      post.author.displayName ||
-                        sanitizeHandle(post.author.handle),
-                      moderation.ui('displayName'),
-                    )}
+                    {sanitizeHandle(post.author.handle, '@')}
                   </Text>
-
-                  <View style={[a.pl_xs]}>
-                    <VerificationCheckButton profile={authorShadow} size="md" />
-                  </View>
-                </View>
-                <Text
-                  style={[
-                    a.text_md,
-                    a.leading_snug,
-                    t.atoms.text_contrast_medium,
-                  ]}
-                  numberOfLines={1}>
-                  {sanitizeHandle(post.author.handle, '@')}
-                </Text>
-              </ProfileHoverCard>
-            </View>
-          </Link>
-          <View collapsable={false} style={[a.self_center]}>
-            <ThreadItemAnchorFollowButton
-              did={post.author.did}
-              enabled={showFollowButton}
-            />
-          </View>
-        </View>
-        <View style={[a.pb_sm]}>
-          <LabelsOnMyPost post={post} style={[a.pb_sm]} />
-          <ContentHider
-            modui={moderation.ui('contentView')}
-            ignoreMute
-            childContainerStyle={[a.pt_sm]}>
-            <PostAlerts
-              modui={moderation.ui('contentView')}
-              size="lg"
-              includeMute
-              style={[a.pb_sm]}
-              additionalCauses={additionalPostAlerts}
-            />
-            {richText?.text ? (
-              <RichText
-                enableTags
-                selectable
-                value={richText}
-                style={[a.flex_1, a.text_lg]}
-                authorHandle={post.author.handle}
-                shouldProxyLinks={true}
-              />
-            ) : undefined}
-            {post.embed && (
-              <View style={[a.py_xs]}>
-                <Embed
-                  embed={post.embed}
-                  moderation={moderation}
-                  viewContext={PostEmbedViewContext.ThreadHighlighted}
-                  onOpen={onOpenEmbed}
-                />
+                </ProfileHoverCard>
               </View>
-            )}
-          </ContentHider>
-          <ExpandedPostDetails
-            post={item.value.post}
-            isThreadAuthor={isThreadAuthor}
-          />
-          {post.repostCount !== 0 ||
-          post.likeCount !== 0 ||
-          post.quoteCount !== 0 ||
-          post.bookmarkCount !== 0 ? (
-            // Show this section unless we're *sure* it has no engagement.
+            </Link>
+            <View collapsable={false} style={[a.self_center]}>
+              <ThreadItemAnchorFollowButton
+                did={post.author.did}
+                enabled={showFollowButton}
+              />
+            </View>
+          </View>
+          <View style={[a.pb_sm]}>
+            <LabelsOnMyPost post={post} style={[a.pb_sm]} />
+            <ContentHider
+              modui={moderation.ui('contentView')}
+              ignoreMute
+              childContainerStyle={[a.pt_sm]}>
+              <PostAlerts
+                modui={moderation.ui('contentView')}
+                size="lg"
+                includeMute
+                style={[a.pb_sm]}
+                additionalCauses={additionalPostAlerts}
+              />
+              {richText?.text ? (
+                <RichText
+                  enableTags
+                  selectable
+                  value={richText}
+                  style={[a.flex_1, a.text_lg]}
+                  authorHandle={post.author.handle}
+                  shouldProxyLinks={true}
+                />
+              ) : undefined}
+              <TranslatedPost post={post} postTextStyle={[a.text_lg]} />
+              {post.embed && (
+                <View style={[richText?.text ? a.py_xs : []]}>
+                  <Embed
+                    embed={post.embed}
+                    moderation={moderation}
+                    viewContext={PostEmbedViewContext.ThreadHighlighted}
+                    onOpen={onOpenEmbed}
+                  />
+                </View>
+              )}
+            </ContentHider>
+            <ExpandedPostDetails
+              post={item.value.post}
+              isThreadAuthor={isThreadAuthor}
+            />
+            {post.repostCount !== 0 ||
+            post.likeCount !== 0 ||
+            post.quoteCount !== 0 ||
+            post.bookmarkCount !== 0 ? (
+              // Show this section unless we're *sure* it has no engagement.
+              <View
+                style={[
+                  a.flex_row,
+                  a.flex_wrap,
+                  a.align_center,
+                  {
+                    rowGap: a.gap_sm.gap,
+                    columnGap: a.gap_lg.gap,
+                  },
+                  a.border_t,
+                  a.border_b,
+                  a.mt_md,
+                  a.py_md,
+                  t.atoms.border_contrast_low,
+                ]}>
+                {post.repostCount != null && post.repostCount !== 0 ? (
+                  <Link to={repostsHref} label={l`Reposts of this post`}>
+                    <Text
+                      testID="repostCount-expanded"
+                      style={[a.text_md, t.atoms.text_contrast_medium]}>
+                      <Trans comment="Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)">
+                        <Text
+                          style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                          {formatPostStatCount(post.repostCount)}
+                        </Text>{' '}
+                        <Plural
+                          value={post.repostCount}
+                          one="repost"
+                          other="reposts"
+                        />
+                      </Trans>
+                    </Text>
+                  </Link>
+                ) : null}
+                {post.quoteCount != null &&
+                post.quoteCount !== 0 &&
+                !post.viewer?.embeddingDisabled ? (
+                  <Link to={quotesHref} label={l`Quotes of this post`}>
+                    <Text
+                      testID="quoteCount-expanded"
+                      style={[a.text_md, t.atoms.text_contrast_medium]}>
+                      <Trans comment="Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)">
+                        <Text
+                          style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                          {formatPostStatCount(post.quoteCount)}
+                        </Text>{' '}
+                        <Plural
+                          value={post.quoteCount}
+                          one="quote"
+                          other="quotes"
+                        />
+                      </Trans>
+                    </Text>
+                  </Link>
+                ) : null}
+                {post.likeCount != null && post.likeCount !== 0 ? (
+                  <Link to={likesHref} label={l`Likes on this post`}>
+                    <Text
+                      testID="likeCount-expanded"
+                      style={[a.text_md, t.atoms.text_contrast_medium]}>
+                      <Trans comment="Like count display, the <0> tags enclose the number of likes in bold (will never be 0)">
+                        <Text
+                          style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                          {formatPostStatCount(post.likeCount)}
+                        </Text>{' '}
+                        <Plural
+                          value={post.likeCount}
+                          one="like"
+                          other="likes"
+                        />
+                      </Trans>
+                    </Text>
+                  </Link>
+                ) : null}
+                {post.bookmarkCount != null && post.bookmarkCount !== 0 ? (
+                  <Text
+                    testID="bookmarkCount-expanded"
+                    style={[a.text_md, t.atoms.text_contrast_medium]}>
+                    <Trans comment="Save count display, the <0> tags enclose the number of saves in bold (will never be 0)">
+                      <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                        {formatPostStatCount(post.bookmarkCount)}
+                      </Text>{' '}
+                      <Plural
+                        value={post.bookmarkCount}
+                        one="save"
+                        other="saves"
+                      />
+                    </Trans>
+                  </Text>
+                ) : null}
+              </View>
+            ) : null}
             <View
               style={[
-                a.flex_row,
-                a.flex_wrap,
-                a.align_center,
+                a.pt_sm,
+                a.pb_2xs,
                 {
-                  rowGap: a.gap_sm.gap,
-                  columnGap: a.gap_lg.gap,
+                  marginLeft: -5,
                 },
-                a.border_t,
-                a.border_b,
-                a.mt_md,
-                a.py_md,
-                t.atoms.border_contrast_low,
               ]}>
-              {post.repostCount != null && post.repostCount !== 0 ? (
-                <Link to={repostsHref} label={_(msg`Reposts of this post`)}>
-                  <Text
-                    testID="repostCount-expanded"
-                    style={[a.text_md, t.atoms.text_contrast_medium]}>
-                    <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                      {formatPostStatCount(post.repostCount)}
-                    </Text>{' '}
-                    <Plural
-                      value={post.repostCount}
-                      one="repost"
-                      other="reposts"
-                    />
-                  </Text>
-                </Link>
-              ) : null}
-              {post.quoteCount != null &&
-              post.quoteCount !== 0 &&
-              !post.viewer?.embeddingDisabled ? (
-                <Link to={quotesHref} label={_(msg`Quotes of this post`)}>
-                  <Text
-                    testID="quoteCount-expanded"
-                    style={[a.text_md, t.atoms.text_contrast_medium]}>
-                    <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                      {formatPostStatCount(post.quoteCount)}
-                    </Text>{' '}
-                    <Plural
-                      value={post.quoteCount}
-                      one="quote"
-                      other="quotes"
-                    />
-                  </Text>
-                </Link>
-              ) : null}
-              {post.likeCount != null && post.likeCount !== 0 ? (
-                <Link to={likesHref} label={_(msg`Likes on this post`)}>
-                  <Text
-                    testID="likeCount-expanded"
-                    style={[a.text_md, t.atoms.text_contrast_medium]}>
-                    <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                      {formatPostStatCount(post.likeCount)}
-                    </Text>{' '}
-                    <Plural value={post.likeCount} one="like" other="likes" />
-                  </Text>
-                </Link>
-              ) : null}
-              {post.bookmarkCount != null && post.bookmarkCount !== 0 ? (
-                <Text
-                  testID="bookmarkCount-expanded"
-                  style={[a.text_md, t.atoms.text_contrast_medium]}>
-                  <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                    {formatPostStatCount(post.bookmarkCount)}
-                  </Text>{' '}
-                  <Plural value={post.bookmarkCount} one="save" other="saves" />
-                </Text>
-              ) : null}
+              <FeedFeedbackProvider value={feedFeedback}>
+                <PostControls
+                  big
+                  post={postShadow}
+                  record={record}
+                  richText={richText}
+                  onPressReply={onPressReply}
+                  logContext="PostThreadItem"
+                  threadgateRecord={threadgateRecord}
+                  feedContext={postSource?.post?.feedContext}
+                  reqId={postSource?.post?.reqId}
+                  viaRepost={viaRepost}
+                />
+              </FeedFeedbackProvider>
             </View>
-          ) : null}
-          <View
-            style={[
-              a.pt_sm,
-              a.pb_2xs,
-              {
-                marginLeft: -5,
-              },
-            ]}>
-            <FeedFeedbackProvider value={feedFeedback}>
-              <PostControls
-                big
-                post={postShadow}
-                record={record}
-                richText={richText}
-                onPressReply={onPressReply}
-                logContext="PostThreadItem"
-                threadgateRecord={threadgateRecord}
-                feedContext={postSource?.post?.feedContext}
-                reqId={postSource?.post?.reqId}
-                viaRepost={viaRepost}
-              />
-            </FeedFeedbackProvider>
+            <DebugFieldDisplay subject={post} />
           </View>
-          <DebugFieldDisplay subject={post} />
         </View>
-      </View>
+      </GalleryBleed>
     </>
   )
 })
@@ -543,43 +558,8 @@ function ExpandedPostDetails({
   isThreadAuthor: boolean
 }) {
   const t = useTheme()
-  const ax = useAnalytics()
-  const {_, i18n} = useLingui()
-  const translate = useTranslate()
+  const {i18n} = useLingui()
   const isRootPost = !('reply' in post.record)
-  const langPrefs = useLanguagePrefs()
-
-  const needsTranslation = useMemo(
-    () =>
-      Boolean(
-        langPrefs.primaryLanguage &&
-        !isPostInLanguage(post, [langPrefs.primaryLanguage]),
-      ),
-    [post, langPrefs.primaryLanguage],
-  )
-
-  const onTranslatePress = useCallback(
-    (e: GestureResponderEvent) => {
-      e.preventDefault()
-      translate(post.record.text || '', langPrefs.primaryLanguage)
-
-      if (
-        bsky.dangerousIsType<AppBskyFeedPost.Record>(
-          post.record,
-          AppBskyFeedPost.isRecord,
-        )
-      ) {
-        ax.metric('translate', {
-          sourceLanguages: post.record.langs ?? [],
-          targetLanguage: langPrefs.primaryLanguage,
-          textLength: post.record.text.length,
-        })
-      }
-
-      return false
-    },
-    [ax, translate, langPrefs, post],
-  )
 
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
@@ -591,26 +571,6 @@ function ExpandedPostDetails({
         {isRootPost && (
           <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
         )}
-        {needsTranslation && (
-          <>
-            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-              &middot;
-            </Text>
-
-            <InlineLinkText
-              // overridden to open an intent on android, but keep
-              // as anchor tag for accessibility
-              to={getTranslatorLink(
-                post.record.text,
-                langPrefs.primaryLanguage,
-              )}
-              label={_(msg`Translate`)}
-              style={[a.text_sm]}
-              onPress={onTranslatePress}>
-              <Trans>Translate</Trans>
-            </InlineLinkText>
-          </>
-        )}
       </View>
     </View>
   )
@@ -618,7 +578,7 @@ function ExpandedPostDetails({
 
 function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const control = Prompt.usePromptControl()
 
   const indexedAt = new Date(post.indexedAt)
@@ -635,15 +595,11 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
 
   if (!isBackdated) return null
 
-  const orange = colors.warning
-
   return (
     <>
       <Button
-        label={_(msg`Archived post`)}
-        accessibilityHint={_(
-          msg`Shows information about when this post was created`,
-        )}
+        label={l`Archived post`}
+        accessibilityHint={l`Shows information about when this post was created`}
         onPress={e => {
           e.preventDefault()
           e.stopPropagation()
@@ -663,7 +619,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
                 paddingVertical: 3,
               },
             ]}>
-            <CalendarClockIcon fill={orange} size="sm" aria-hidden />
+            <CalendarClockIcon fill={t.palette.yellow} size="sm" aria-hidden />
             <Text
               style={[
                 a.text_xs,
@@ -702,7 +658,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
           </Prompt.DescriptionText>
         </Prompt.Content>
         <Prompt.Actions>
-          <Prompt.Action cta={_(msg`Okay`)} onPress={() => {}} />
+          <Prompt.Action cta={l`Okay`} onPress={() => {}} />
         </Prompt.Actions>
       </Prompt.Outer>
     </>

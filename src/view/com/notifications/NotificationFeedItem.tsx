@@ -18,15 +18,14 @@ import {
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {msg, Plural, plural, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {MAX_POST_LINES} from '#/lib/constants'
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
+import {DM_SERVICE_HEADERS, MAX_POST_LINES} from '#/lib/constants'
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {forceLTR} from '#/lib/strings/bidi'
@@ -44,7 +43,6 @@ import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {Post} from '#/view/com/post/Post'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import * as Toast from '#/view/com/util/Toast'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, platform, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -63,12 +61,12 @@ import {StarterPack} from '#/components/icons/StarterPack'
 import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
 import {InlineLinkText, Link} from '#/components/Link'
 import * as MediaPreview from '#/components/MediaPreview'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import * as bsky from '#/types/bsky'
 
 const MAX_AUTHORS = 5
@@ -93,10 +91,9 @@ let NotificationFeedItem = ({
   hideTopBorder?: boolean
 }): React.ReactNode => {
   const queryClient = useQueryClient()
-  const pal = usePalette('default')
   const t = useTheme()
   const {_, i18n} = useLingui()
-  const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
+  const [isAuthorsExpanded, setIsAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
     switch (item.type) {
       case 'post-like':
@@ -146,7 +143,7 @@ let NotificationFeedItem = ({
       e.preventDefault()
       e.stopPropagation()
     }
-    setAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
+    setIsAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
   }
 
   const onBeforePress = useCallback(() => {
@@ -173,9 +170,6 @@ let NotificationFeedItem = ({
 
   const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
   const firstAuthor = authors[0]
-  const firstAuthorVerification = useSimpleVerificationState({
-    profile: firstAuthor.profile,
-  })
   const firstAuthorName = sanitizeDisplayName(
     firstAuthor.profile.displayName || firstAuthor.profile.handle,
   )
@@ -226,8 +220,8 @@ let NotificationFeedItem = ({
           post={item.subject}
           style={
             isHighlighted && {
-              backgroundColor: pal.colors.unreadNotifBg,
-              borderColor: pal.colors.unreadNotifBorder,
+              backgroundColor: t.palette.primary_25,
+              borderColor: t.palette.primary_100,
             }
           }
           hideTopBorder={hideTopBorder}
@@ -246,24 +240,21 @@ let NotificationFeedItem = ({
         emoji
         label={_(msg`Go to ${firstAuthorName}'s profile`)}>
         {forceLTR(firstAuthorName)}
-        {firstAuthorVerification.showBadge && (
-          <View
-            style={[
-              a.relative,
-              {
-                paddingTop: platform({android: 2}),
-                marginBottom: platform({ios: -7}),
-                top: platform({web: 1}),
-                paddingLeft: 3,
-                paddingRight: 2,
-              },
-            ]}>
-            <VerificationCheck
-              width={14}
-              verifier={firstAuthorVerification.role === 'verifier'}
-            />
-          </View>
-        )}
+        <ProfileBadges
+          profile={firstAuthor.profile}
+          size="md"
+          style={[
+            a.relative,
+            {
+              // weird stuff here
+              paddingTop: platform({android: 2}),
+              marginBottom: platform({ios: -6}),
+              top: platform({web: 2}),
+              paddingLeft: 3,
+              paddingRight: 2,
+            },
+          ]}
+        />
       </InlineLinkText>
     </ProfileHoverCard>
   )
@@ -279,7 +270,7 @@ let NotificationFeedItem = ({
     <HeartIconFilled
       size="xl"
       style={[
-        s.likeColor,
+        {color: t.palette.pink},
         // {position: 'relative', top: -4}
       ]}
     />
@@ -584,8 +575,8 @@ let NotificationFeedItem = ({
         item.notification.isRead
           ? undefined
           : {
-              backgroundColor: pal.colors.unreadNotifBg,
-              borderColor: pal.colors.unreadNotifBorder,
+              backgroundColor: t.palette.primary_25,
+              borderColor: t.palette.primary_100,
             },
         !hideTopBorder && a.border_t,
         a.overflow_hidden,
@@ -776,7 +767,9 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
       )
     } catch (err: any) {
       if (err?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
+        Toast.show(_(msg`An issue occurred, please try again.`), {
+          type: 'error',
+        })
       }
     }
   }
@@ -796,7 +789,9 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
       )
     } catch (err: any) {
       if (err?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
+        Toast.show(_(msg`An issue occurred, please try again.`), {
+          type: 'error',
+        })
       }
     }
   }
@@ -880,7 +875,7 @@ function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
           setIsLoading(true)
           const res = await agent.api.chat.bsky.convo.getConvoForMembers(
             {
-              members: [profile.did, agent.session!.did!],
+              members: [profile.did, agent.session!.did],
             },
             {headers: DM_SERVICE_HEADERS},
           )
@@ -1017,9 +1012,6 @@ function ExpandedAuthorsList({
 function ExpandedAuthorCard({author}: {author: Author}) {
   const t = useTheme()
   const {_} = useLingui()
-  const verification = useSimpleVerificationState({
-    profile: author.profile,
-  })
   return (
     <Link
       key={author.profile.did}
@@ -1055,14 +1047,11 @@ function ExpandedAuthorCard({author}: {author: Author}) {
               author.profile.displayName || author.profile.handle,
             )}
           </Text>
-          {verification.showBadge && (
-            <View style={[a.pl_xs, a.self_center]}>
-              <VerificationCheck
-                width={14}
-                verifier={verification.role === 'verifier'}
-              />
-            </View>
-          )}
+          <ProfileBadges
+            profile={author.profile}
+            size="md"
+            style={[a.pl_2xs, a.self_center]}
+          />
           <Text
             numberOfLines={1}
             style={[

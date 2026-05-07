@@ -1,5 +1,5 @@
 diff --git a/node_modules/@discord/bottom-sheet/src/hooks/useStableCallback.ts b/node_modules/@discord/bottom-sheet/src/hooks/useStableCallback.ts
-index 1c788ab..d30f330 100644
+index 1c788ab..89c8d9d 100644
 --- a/node_modules/@discord/bottom-sheet/src/hooks/useStableCallback.ts
 +++ b/node_modules/@discord/bottom-sheet/src/hooks/useStableCallback.ts
 @@ -6,7 +6,7 @@ type Callback = (...args: any[]) => any;
@@ -7,7 +7,7 @@ index 1c788ab..d30f330 100644
   */
  export const useStableCallback = (callback: Callback) => {
 -  const callbackRef = useRef<Callback>();
-+  const callbackRef = useRef<Callback>(undefined);
++  const callbackRef = useRef<Callback | undefined>(undefined);
    const memoCallback = useCallback(
      (...args: any) => callbackRef.current && callbackRef.current(...args),
      []

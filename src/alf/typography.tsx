@@ -1,12 +1,14 @@
 import {Children} from 'react'
-import {type TextProps as RNTextProps} from 'react-native'
-import {type StyleProp, type TextStyle} from 'react-native'
+import {
+  type StyleProp,
+  type TextProps as RNTextProps,
+  type TextStyle,
+} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
 import createEmojiRegex from 'emoji-regex'
 
 import {type Alf, applyFonts, atoms, flatten} from '#/alf'
-import {IS_NATIVE} from '#/env'
-import {IS_IOS} from '#/env'
+import {IS_IOS, IS_NATIVE} from '#/env'
 
 /**
  * Ensures that `lineHeight` defaults to a relative value of `1`, or applies
@@ -107,7 +109,8 @@ export function renderChildrenWithEmoji(
   })
 }
 
-const SINGLE_EMOJI_RE = /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]+$/u
+const SINGLE_EMOJI_RE =
+  /^[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D]+$/u
 export function isOnlyEmoji(text: string) {
   return text.length <= 15 && SINGLE_EMOJI_RE.test(text)
 }
