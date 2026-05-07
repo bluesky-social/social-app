@@ -664,7 +664,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.mp4',
     },
     undefined,
     undefined,
@@ -674,7 +674,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/39248209509382934029',
-      playerUri: 'https://i.giphy.com/media/39248209509382934029/200.webp',
+      playerUri: 'https://i.giphy.com/media/39248209509382934029/200.mp4',
     },
     {
       type: 'giphy_gif',
@@ -682,7 +682,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.mp4',
     },
     {
       type: 'giphy_gif',
@@ -690,7 +690,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.mp4',
     },
     {
       type: 'giphy_gif',
@@ -698,7 +698,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.mp4',
     },
     {
       type: 'giphy_gif',
@@ -706,7 +706,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.mp4',
     },
     {
       type: 'giphy_gif',
@@ -714,7 +714,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.mp4',
     },
     {
       type: 'giphy_gif',
@@ -722,7 +722,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.mp4',
     },
     undefined,
     undefined,
@@ -734,7 +734,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.mp4',
     },
 
     {
@@ -743,7 +743,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.mp4',
     },
     {
       type: 'giphy_gif',
@@ -751,7 +751,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.mp4',
     },
     {
       type: 'giphy_gif',
@@ -759,7 +759,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.mp4',
     },
     {
       type: 'giphy_gif',
@@ -767,7 +767,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.mp4',
     },
 
     undefined,

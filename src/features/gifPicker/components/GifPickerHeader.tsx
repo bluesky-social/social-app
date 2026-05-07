@@ -43,9 +43,8 @@ export function GifPickerHeader({
               'Accessibility label for the GIF search input inside the GIF picker dialog.',
           })}
           placeholder={l({
-            message: 'Search KLIPY',
-            comment:
-              'Placeholder text inside the GIF search input. KLIPY is the third-party GIF provider; keep the brand name as-is.',
+            message: 'Search GIFs',
+            comment: 'Placeholder text inside the GIF search input.',
           })}
           onChangeText={onChangeText}
           returnKeyType="search"

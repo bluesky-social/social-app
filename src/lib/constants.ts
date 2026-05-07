@@ -165,6 +165,13 @@ export const GIF_KLIPY_SEARCH = (params: string) =>
 export const GIF_KLIPY_FEATURED = (params: string) =>
   `${GIF_SERVICE}/klipy/v2/featured?${params}`
 
+export const GIF_GIPHY_SERVICE = 'https://gifs.blacksky.community'
+
+export const GIF_GIPHY_SEARCH = (params: string) =>
+  `${GIF_GIPHY_SERVICE}/v1/gifs/search?${params}`
+export const GIF_GIPHY_TRENDING = (params: string) =>
+  `${GIF_GIPHY_SERVICE}/v1/gifs/trending?${params}`
+
 export const MAX_LABELERS = 20
 
 export const VIDEO_SERVICE = 'https://video.blacksky.community'
