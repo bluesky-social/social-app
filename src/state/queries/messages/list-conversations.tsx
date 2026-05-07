@@ -22,6 +22,7 @@ import {parseConvoView} from '#/components/dms/util'
 import {useLeftConvos} from './leave-conversation'
 
 const DEFAULT_LIMIT = 10
+export const UNREAD_LIMIT = 20
 
 export const RQKEY_ROOT = 'convo-list'
 export const RQKEY = (
@@ -102,7 +103,10 @@ export function ListConvosProviderInner({
 }: {
   children: React.ReactNode
 }) {
-  const {refetch, data} = useListConvosQuery({readState: 'unread', limit: 20})
+  const {refetch, data} = useListConvosQuery({
+    readState: 'unread',
+    limit: UNREAD_LIMIT,
+  })
   const messagesBus = useMessagesEventBus()
   const queryClient = useQueryClient()
   const {currentConvoId} = useCurrentConvoId()
