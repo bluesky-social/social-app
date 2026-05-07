@@ -7,7 +7,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {Trans} from '@lingui/react/macro'
 
 import {
   ScaleAndFadeIn,
@@ -15,8 +14,8 @@ import {
 } from '#/lib/custom-animations/ScaleAndFade'
 import {useHaptics} from '#/lib/haptics'
 import {atoms as a, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
-import {IS_ANDROID, IS_IOS, IS_WEB} from '#/env'
+import {ArrowBottom_Stroke2_Corner0_Rounded as ArrowDownIcon} from '#/components/icons/Arrow'
+import {IS_WEB} from '#/env'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
@@ -28,8 +27,7 @@ export function NewMessagesPill({
   const t = useTheme()
   const playHaptic = useHaptics()
   const {bottom: bottomInset} = useSafeAreaInsets()
-  const bottomBarHeight = IS_IOS ? 42 : IS_ANDROID ? 60 : 0
-  const bottomOffset = IS_WEB ? 0 : bottomInset + bottomBarHeight
+  const bottomOffset = IS_WEB ? 0 : bottomInset
 
   const scale = useSharedValue(1)
 
@@ -67,18 +65,17 @@ export function NewMessagesPill({
       ]}>
       <AnimatedPressable
         style={[
-          a.py_sm,
+          a.align_center,
+          a.justify_center,
           a.rounded_full,
           a.shadow_sm,
           a.border,
-          t.atoms.bg_contrast_50,
-          t.atoms.border_contrast_medium,
+          t.atoms.bg,
+          t.atoms.border_contrast_low,
           {
-            width: 160,
+            height: 40,
+            width: 40,
             alignItems: 'center',
-            shadowOpacity: 0.125,
-            shadowRadius: 12,
-            shadowOffset: {width: 0, height: 5},
             pointerEvents: 'box-only',
           },
           animatedStyle,
@@ -88,9 +85,7 @@ export function NewMessagesPill({
         onPress={onPress}
         onPressIn={onPressIn}
         onPressOut={onPressOut}>
-        <Text style={[a.font_semi_bold]}>
-          <Trans>New messages</Trans>
-        </Text>
+        <ArrowDownIcon size="md" style={[t.atoms.text]} />
       </AnimatedPressable>
     </View>
   )
