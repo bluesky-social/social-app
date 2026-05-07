@@ -33,14 +33,12 @@ export let MessageContextMenu = ({
   message,
   senderProfile,
   children,
-  onTap,
 }: {
   message: ChatBskyConvoDefs.MessageView
   senderProfile?: bsky.profile.AnyProfileView
   children: TriggerProps['children']
-  onTap?: () => void
 }): React.ReactNode => {
-  const {t: l} = useLingui()
+  const {t: l, i18n} = useLingui()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
@@ -133,13 +131,15 @@ export let MessageContextMenu = ({
           label={l`Message options`}
           contentLabel={l`Message from @${
             sender?.handle ?? 'unknown' // should always be defined
-          }: ${message.text}`}
-          onTap={onTap}>
+          }: ${message.text}`}>
           {children}
         </ContextMenu.Trigger>
 
         <ContextMenu.Outer
           align={isFromSelf ? 'right' : 'left'}
+          label={l`Sent at ${i18n.date(new Date(message.sentAt), {
+            timeStyle: 'short',
+          })}`}
           style={[isFromSelf && isGroupChatEnabled ? null : a.ml_sm]}>
           {message.text.length > 0 && (
             <>
