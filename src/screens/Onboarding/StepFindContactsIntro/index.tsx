@@ -40,11 +40,11 @@ export function StepFindContactsIntro() {
       <OnboardingPosition />
       <ContactsHeroImage />
       <OnboardingTitleText style={[a.mt_sm]}>
-        <Trans>Bluesky is more fun with friends</Trans>
+        <Trans>Blacksky is more fun with friends</Trans>
       </OnboardingTitleText>
       <OnboardingDescriptionText>
         <Trans>
-          Find your friends on Bluesky by verifying your phone number and
+          Find your friends on Blacksky by verifying your phone number and
           matching with your contacts. We protect your information and you
           control what happens next.{' '}
           <InlineLinkText

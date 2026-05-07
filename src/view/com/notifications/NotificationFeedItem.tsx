@@ -360,9 +360,9 @@ let NotificationFeedItem = ({
     }
     icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
   } else if (item.type === 'contact-match') {
-    a11yLabel = _(msg`Your contact ${firstAuthorName} is on Bluesky`)
+    a11yLabel = _(msg`Your contact ${firstAuthorName} is on Blacksky`)
     notificationContent = (
-      <Trans>Your contact {firstAuthorLink} is on Bluesky</Trans>
+      <Trans>Your contact {firstAuthorLink} is on Blacksky</Trans>
     )
     icon = (
       <ContactsIconFilled size="xl" style={{color: t.palette.primary_500}} />

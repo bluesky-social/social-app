@@ -328,11 +328,11 @@ function LandingScreenLoaded({
       <Prompt.Outer control={androidDialogControl}>
         <Prompt.Content>
           <Prompt.TitleText>
-            <Trans>Download Bluesky</Trans>
+            <Trans>Download Blacksky</Trans>
           </Prompt.TitleText>
           <Prompt.DescriptionText>
             <Trans>
-              The experience is better in the app. Download Bluesky now and
+              The experience is better in the app. Download Blacksky now and
               we'll pick back up where you left off.
             </Trans>
           </Prompt.DescriptionText>
@@ -403,7 +403,7 @@ export function AppClipOverlay({
               a.text_4xl,
               {lineHeight: 40, color: 'white'},
             ]}>
-            Download Bluesky to get started!
+            Download Blacksky to get started!
           </Text>
           <Text style={[a.text_lg, {color: 'white'}]}>
             We'll remember the starter pack you chose and use it when you create
