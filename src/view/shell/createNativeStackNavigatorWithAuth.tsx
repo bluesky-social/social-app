@@ -162,7 +162,6 @@ function NativeStackNavigator({
           {!isMobile && <DesktopRightNav routeName={activeRoute.name} />}
         </>
       )}
-
     </NavigationContent>
   )
 }

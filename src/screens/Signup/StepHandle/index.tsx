@@ -162,8 +162,7 @@ export function StepHandle() {
       value: selectedDomain,
     })
     dispatch({type: 'prev'})
-    ax.metric('signup:backPressed', {activeStep: state.activeStep}
-    )
+    ax.metric('signup:backPressed', {activeStep: state.activeStep})
   }
 
   return (
@@ -287,8 +286,7 @@ export function StepHandle() {
                   </RequirementText>
                 </Requirement>
                 {isHandleAvailable?.suggestions &&
-                  isHandleAvailable.suggestions.length > 0 &&
-                  (
+                  isHandleAvailable.suggestions.length > 0 && (
                     <HandleSuggestions
                       suggestions={isHandleAvailable.suggestions}
                       onSelect={suggestion => {

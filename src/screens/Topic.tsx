@@ -102,7 +102,13 @@ export default function TopicScreen({
   }
 
   // Legacy: search-based topic view (non-numeric topic param)
-  return <LegacyTopicScreen topicParam={topicParam} headerTitle={headerTitle} onShare={onShare} />
+  return (
+    <LegacyTopicScreen
+      topicParam={topicParam}
+      headerTitle={headerTitle}
+      onShare={onShare}
+    />
+  )
 }
 
 function CuratedTopicFeed({

@@ -321,70 +321,70 @@ export function ModerationScreenInner({
             t.atoms.bg_contrast_25,
           ]}>
           <View
-                style={[
-                  a.py_lg,
-                  a.px_lg,
-                  a.flex_row,
-                  a.align_center,
-                  a.justify_between,
-                  adultContentUIDisabled && {opacity: 0.5},
-                ]}>
-                <Text style={[a.font_semi_bold, t.atoms.text_contrast_high]}>
-                  <Trans>Enable adult content</Trans>
+            style={[
+              a.py_lg,
+              a.px_lg,
+              a.flex_row,
+              a.align_center,
+              a.justify_between,
+              adultContentUIDisabled && {opacity: 0.5},
+            ]}>
+            <Text style={[a.font_semi_bold, t.atoms.text_contrast_high]}>
+              <Trans>Enable adult content</Trans>
+            </Text>
+            <Toggle.Item
+              label={_(msg`Toggle to enable or disable adult content`)}
+              disabled={adultContentUIDisabled}
+              name="adultContent"
+              value={adultContentEnabled}
+              onChange={onToggleAdultContentEnabled}>
+              <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                <Text style={[t.atoms.text_contrast_medium]}>
+                  {adultContentEnabled ? (
+                    <Trans>Enabled</Trans>
+                  ) : (
+                    <Trans>Disabled</Trans>
+                  )}
                 </Text>
-                <Toggle.Item
-                  label={_(msg`Toggle to enable or disable adult content`)}
-                  disabled={adultContentUIDisabled}
-                  name="adultContent"
-                  value={adultContentEnabled}
-                  onChange={onToggleAdultContentEnabled}>
-                  <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-                    <Text style={[t.atoms.text_contrast_medium]}>
-                      {adultContentEnabled ? (
-                        <Trans>Enabled</Trans>
-                      ) : (
-                        <Trans>Disabled</Trans>
-                      )}
-                    </Text>
-                    <Toggle.Switch />
-                  </View>
-                </Toggle.Item>
+                <Toggle.Switch />
               </View>
-              {adultContentUIDisabledOnIOS && (
-                <View style={[a.pb_lg, a.px_lg]}>
-                  <Text>
-                    <Trans>
-                      Adult content can only be enabled via the Web at{' '}
-                      <InlineLinkText
-                        label={_(msg`The Bluesky web application`)}
-                        to=""
-                        onPress={evt => {
-                          evt.preventDefault()
-                          Linking.openURL('https://bsky.app/')
-                          return false
-                        }}>
-                        bsky.app
-                      </InlineLinkText>
-                      .
-                    </Trans>
-                  </Text>
-                </View>
-              )}
+            </Toggle.Item>
+          </View>
+          {adultContentUIDisabledOnIOS && (
+            <View style={[a.pb_lg, a.px_lg]}>
+              <Text>
+                <Trans>
+                  Adult content can only be enabled via the Web at{' '}
+                  <InlineLinkText
+                    label={_(msg`The Bluesky web application`)}
+                    to=""
+                    onPress={evt => {
+                      evt.preventDefault()
+                      Linking.openURL('https://bsky.app/')
+                      return false
+                    }}>
+                    bsky.app
+                  </InlineLinkText>
+                  .
+                </Trans>
+              </Text>
+            </View>
+          )}
 
-              {adultContentEnabled && (
-                <>
-                  <Divider />
-                  <GlobalLabelPreference labelDefinition={LABELS.porn} />
-                  <Divider />
-                  <GlobalLabelPreference labelDefinition={LABELS.sexual} />
-                  <Divider />
-                  <GlobalLabelPreference
-                    labelDefinition={LABELS['graphic-media']}
-                  />
-                  <Divider />
-                  <GlobalLabelPreference labelDefinition={LABELS.nudity} />
-                </>
-              )}
+          {adultContentEnabled && (
+            <>
+              <Divider />
+              <GlobalLabelPreference labelDefinition={LABELS.porn} />
+              <Divider />
+              <GlobalLabelPreference labelDefinition={LABELS.sexual} />
+              <Divider />
+              <GlobalLabelPreference
+                labelDefinition={LABELS['graphic-media']}
+              />
+              <Divider />
+              <GlobalLabelPreference labelDefinition={LABELS.nudity} />
+            </>
+          )}
         </View>
       </View>
 

@@ -228,11 +228,16 @@ describe('cleanError', () => {
 describe('toNiceDomain', () => {
   const inputs = [
     'https://example.com/index.html',
-    'https://bsky.app',
+    'https://blacksky.app',
     'https://bsky.social',
     '#123123123',
   ]
-  const outputs = ['example.com', 'bsky.app', 'Bluesky Social', '#123123123']
+  const outputs = [
+    'example.com',
+    'Blacksky Algorithms',
+    'bsky.social',
+    '#123123123',
+  ]
 
   it("displays the url's host in a easily readable manner", () => {
     for (let i = 0; i < inputs.length; i++) {
@@ -270,8 +275,8 @@ describe('toShareUrl', () => {
   const inputs = ['https://bsky.app', '/3jk7x4irgv52r', 'item/test/123']
   const outputs = [
     'https://bsky.app',
-    'https://bsky.app/3jk7x4irgv52r',
-    'https://bsky.app/item/test/123',
+    'https://blacksky.community/3jk7x4irgv52r',
+    'https://blacksky.community/item/test/123',
   ]
 
   it('appends https, when not present', () => {
@@ -443,58 +448,69 @@ describe('parseEmbedPlayerFromUrl', () => {
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+      playerUri:
+        'https://blacksky.community/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=1',
+      playerUri:
+        'https://blacksky.community/iframe/youtube.html?videoId=videoId&start=1',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+      playerUri:
+        'https://blacksky.community/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+      playerUri:
+        'https://blacksky.community/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=1',
+      playerUri:
+        'https://blacksky.community/iframe/youtube.html?videoId=videoId&start=1',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+      playerUri:
+        'https://blacksky.community/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+      playerUri:
+        'https://blacksky.community/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_short',
       source: 'youtubeShorts',
       hideDetails: true,
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+      playerUri:
+        'https://blacksky.community/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+      playerUri:
+        'https://blacksky.community/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+      playerUri:
+        'https://blacksky.community/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+      playerUri:
+        'https://blacksky.community/iframe/youtube.html?videoId=videoId&start=0',
     },
 
     undefined,
@@ -835,13 +851,13 @@ describe('createStarterPackLinkFromAndroidReferrer', () => {
   it('returns a link when input contains utm_source and utm_content', () => {
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_source=bluesky&utm_content=starterpack_haileyok.com_rkey',
+        'utm_source=blacksky&utm_content=starterpack_haileyok.com_rkey',
       ),
     ).toEqual(validOutput)
 
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_source=bluesky&utm_content=starterpack_test-lover-9000.com_rkey',
+        'utm_source=blacksky&utm_content=starterpack_test-lover-9000.com_rkey',
       ),
     ).toEqual('at://test-lover-9000.com/app.bsky.graph.starterpack/rkey')
   })
@@ -849,7 +865,7 @@ describe('createStarterPackLinkFromAndroidReferrer', () => {
   it('returns a link when input contains utm_source and utm_content in different order', () => {
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_content=starterpack_haileyok.com_rkey&utm_source=bluesky',
+        'utm_content=starterpack_haileyok.com_rkey&utm_source=blacksky',
       ),
     ).toEqual(validOutput)
   })
@@ -857,7 +873,7 @@ describe('createStarterPackLinkFromAndroidReferrer', () => {
   it('returns a link when input contains other parameters as well', () => {
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_source=bluesky&utm_medium=starterpack&utm_content=starterpack_haileyok.com_rkey',
+        'utm_source=blacksky&utm_medium=starterpack&utm_content=starterpack_haileyok.com_rkey',
       ),
     ).toEqual(validOutput)
   })
@@ -872,7 +888,7 @@ describe('createStarterPackLinkFromAndroidReferrer', () => {
 
   it('returns null when utm_content is not present', () => {
     expect(
-      createStarterPackLinkFromAndroidReferrer('utm_source=bluesky'),
+      createStarterPackLinkFromAndroidReferrer('utm_source=blacksky'),
     ).toEqual(null)
   })
 
@@ -981,7 +997,7 @@ describe('parseStarterPackHttpUri', () => {
 
 describe('createStarterPackGooglePlayUri', () => {
   const base =
-    'https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_'
+    'https://play.google.com/store/apps/details?id=community.blacksky.app&referrer=utm_source%3Dblacksky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_'
 
   it('returns valid google play uri when input is valid', () => {
     expect(createStarterPackGooglePlayUri('name', 'rkey')).toEqual(
