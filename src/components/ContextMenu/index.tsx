@@ -743,6 +743,7 @@ export function Outer({
                       </Fragment>
                     ) : null
                   })}
+                  {label ? <View style={[a.pb_md]} /> : null}
                 </View>
               </Animated.View>
             </Animated.View>
