@@ -1,6 +1,10 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
+import {
+  ChatBskyActorDefs,
+  ChatBskyConvoDefs,
+  type ModerationOpts,
+} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -14,6 +18,7 @@ import {
 import {logger} from '#/logger'
 import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useEditGroupChatName} from '#/state/queries/messages/edit-group-chat-name'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {useListConvoMembersQuery} from '#/state/queries/messages/list-convo-members'
@@ -99,6 +104,7 @@ function SettingsInner() {
   const {t: l} = useLingui()
   const convoState = useConvo()
   const navigation = useNavigation<NavigationProp>()
+  const moderationOpts = useModerationOpts()
 
   if (convoState.status === ConvoStatus.Error) {
     return (
@@ -111,7 +117,7 @@ function SettingsInner() {
     )
   }
 
-  if (!isConvoActive(convoState)) {
+  if (!convoState.convo || !moderationOpts) {
     return (
       <View style={[a.flex_1, a.align_center, a.justify_center]}>
         <Loader size="xl" />
@@ -119,7 +125,7 @@ function SettingsInner() {
     )
   }
 
-  if (convoState.convo?.kind !== 'group') {
+  if (convoState.convo.kind !== 'group') {
     return (
       <Error
         title={l`Wrong kind of conversation`}
@@ -135,7 +141,13 @@ function SettingsInner() {
     )
   }
 
-  return <GroupSettings convo={convoState.convo} />
+  return (
+    <GroupSettings
+      convo={convoState.convo}
+      moderationOpts={moderationOpts}
+      isReady={isConvoActive(convoState)}
+    />
+  )
 }
 
 function keyExtractor(item: Item) {
@@ -157,8 +169,12 @@ function isGroupMember(
 
 function GroupSettings({
   convo,
+  moderationOpts,
+  isReady,
 }: {
   convo: Extract<ConvoWithDetails, {kind: 'group'}>
+  moderationOpts: ModerationOpts
+  isReady: boolean
 }) {
   const initialNumToRender = useInitialNumToRender({minItemHeight: 68})
   const bottomBarOffset = useBottomBarOffset()
@@ -166,9 +182,9 @@ function GroupSettings({
   const {currentAccount} = useSession()
 
   const primaryMember = convo.primaryMember
-  const isOwner = primaryMember.did === currentAccount?.did
+  const isOwner = !!primaryMember && primaryMember.did === currentAccount?.did
 
-  const {data: memberListData = [], isPending} = useListConvoMembersQuery({
+  const {data: memberListData = []} = useListConvoMembersQuery({
     convoId: convo.view.id,
     placeholderData: convo.members,
   })
@@ -187,6 +203,16 @@ function GroupSettings({
       0,
     ) ?? 0
 
+  const groupMembers = memberListData.filter(isGroupMember).sort((a, b) => {
+    const aIsOwner = a.did === primaryMember?.did
+    const bIsOwner = b.did === primaryMember?.did
+    const aIsSelf = a.did === currentAccount?.did
+    const bIsSelf = b.did === currentAccount?.did
+    if (aIsOwner !== bIsOwner) return aIsOwner ? -1 : 1
+    if (aIsSelf !== bIsSelf) return aIsSelf ? -1 : 1
+    return 0
+  })
+
   const items: Item[] = [
     {
       type: 'MEMBERS_AND_REQUESTS',
@@ -196,41 +222,30 @@ function GroupSettings({
       ? [{type: 'ADD_MEMBERS_LINK', key: 'add-members-link'} as const]
       : []),
   ]
-  if (isPending) {
-    // should never be pending if we correctly set the query cache data
-    items.push(
-      ...Array.from({length: 5}, (_, i) => ({
-        type: 'CHAT_MEMBER_PLACEHOLDER' as const,
-        key: `chat-member-placeholder-${i}`,
-      })),
-    )
-  } else {
-    items.push(
-      ...memberListData
-        .filter(isGroupMember)
-        .sort((a, b) => {
-          const aIsOwner = a.did === primaryMember.did
-          const bIsOwner = b.did === primaryMember.did
-          const aIsSelf = a.did === currentAccount?.did
-          const bIsSelf = b.did === currentAccount?.did
-          if (aIsOwner !== bIsOwner) return aIsOwner ? -1 : 1
-          if (aIsSelf !== bIsSelf) return aIsSelf ? -1 : 1
-          return 0
-        })
-        .map(
-          (profile): Item => ({
-            type: 'CHAT_MEMBER',
-            key: profile.did,
-            profile,
-            status:
-              primaryMember.did === profile.did
-                ? 'owner'
-                : invites.includes(profile.did)
-                  ? 'invited'
-                  : 'standard',
-          }),
-        ),
-    )
+  items.push(
+    ...groupMembers.map(
+      (profile): Item => ({
+        type: 'CHAT_MEMBER',
+        key: profile.did,
+        profile,
+        status:
+          primaryMember?.did === profile.did
+            ? 'owner'
+            : invites.includes(profile.did)
+              ? 'invited'
+              : 'standard',
+      }),
+    ),
+  )
+  const placeholderCount = Math.max(
+    0,
+    convo.details.memberCount - groupMembers.length,
+  )
+  for (let i = 0; i < placeholderCount; i++) {
+    items.push({
+      type: 'CHAT_MEMBER_PLACEHOLDER',
+      key: `chat-member-placeholder-${i}`,
+    })
   }
 
   function renderItem({item}: {item: Item}) {
@@ -245,7 +260,7 @@ function GroupSettings({
           />
         )
       case 'ADD_MEMBERS_LINK':
-        return <AddMembersLink convo={convo} />
+        return <AddMembersLink convo={convo} disabled={!isReady} />
       case 'CHAT_MEMBER':
         return (
           <Member
@@ -271,7 +286,14 @@ function GroupSettings({
       desktopFixedHeight
       initialNumToRender={initialNumToRender}
       keyExtractor={keyExtractor}
-      ListHeaderComponent={<SettingsHeader convo={convo} isOwner={isOwner} />}
+      ListHeaderComponent={
+        <SettingsHeader
+          convo={convo}
+          isOwner={isOwner}
+          moderationOpts={moderationOpts}
+          isReady={isReady}
+        />
+      }
       renderItem={renderItem}
       sideBorders={false}
       windowSize={11}
@@ -282,9 +304,13 @@ function GroupSettings({
 function SettingsHeader({
   convo,
   isOwner,
+  moderationOpts,
+  isReady,
 }: {
   convo: Extract<ConvoWithDetails, {kind: 'group'}>
   isOwner: boolean
+  moderationOpts: ModerationOpts
+  isReady: boolean
 }) {
   const t = useTheme()
   const {i18n, t: l} = useLingui()
@@ -444,7 +470,7 @@ function SettingsHeader({
           ]}>
           <SettingsButton
             color={convo.view.muted ? 'negative_subtle' : 'secondary'}
-            disabled={isMuting}
+            disabled={!isReady || isMuting}
             icon={convo.view.muted ? BellOffIcon : BellIcon}
             label={
               convo.view.muted
@@ -456,7 +482,7 @@ function SettingsHeader({
           />
           {isOwner ? (
             <SettingsButton
-              disabled={isEditingName}
+              disabled={!isReady || isEditingName}
               icon={EditIcon}
               label={l`Edit this group chat’s name`}
               text={l`Edit name`}
@@ -465,7 +491,7 @@ function SettingsHeader({
           ) : null}
           {isJoinLinkEnabled ? (
             <SettingsButton
-              disabled={lockStatus !== 'unlocked'}
+              disabled={!isReady || lockStatus !== 'unlocked'}
               icon={ChainLinkIcon}
               label={
                 isOwner
@@ -479,7 +505,7 @@ function SettingsHeader({
           {canLockGroupChat ? (
             <SettingsButton
               color={lockStatus === 'locked' ? 'negative_subtle' : 'secondary'}
-              disabled={isLocking}
+              disabled={!isReady || isLocking}
               icon={LockIcon}
               label={
                 lockStatus === 'locked'
@@ -494,6 +520,7 @@ function SettingsHeader({
           ) : null}
           {!isOwner && isReportLinkEnabled && (
             <SettingsButton
+              disabled={!isReady}
               icon={FlagIcon}
               label={l`Report this group chat`}
               text={l`Report`}
@@ -502,7 +529,7 @@ function SettingsHeader({
           )}
           {!isOwner && (
             <SettingsButton
-              disabled={isLeaving}
+              disabled={!isReady || isLeaving}
               icon={ArrowBoxLeftIcon}
               label={l`Leave this group chat`}
               text={l`Leave`}
@@ -517,11 +544,15 @@ function SettingsHeader({
         onChangeText={setNewGroupName}
         onConfirm={handleEditName}
       />
-      <InviteLinkDialog
-        convo={convo}
-        control={inviteLinkDialog}
-        isOwner={isOwner}
-      />
+      {convo.primaryMember && (
+        <InviteLinkDialog
+          convo={convo}
+          owner={convo.primaryMember}
+          control={inviteLinkDialog}
+          isOwner={isOwner}
+          moderationOpts={moderationOpts}
+        />
+      )}
       <LockChatPrompt control={lockChatPrompt} onConfirm={handleConfirmLock} />
       <LeaveChatPrompt
         control={leaveChatPrompt}
@@ -573,7 +604,7 @@ function SettingsButton({
           a.font_medium,
           a.text_center,
           a.pt_xs,
-          t.atoms.text_contrast_medium,
+          t.atoms.text,
         ]}>
         {text}
       </Text>

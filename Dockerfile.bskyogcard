@@ -1,4 +1,4 @@
-FROM node:20.11-alpine3.18 as build
+FROM node:24.15.0-alpine3.22 AS build
 
 # Move files into the image and install
 WORKDIR /app
@@ -14,7 +14,7 @@ RUN yarn install-fonts && yarn build
 RUN yarn install --production --ignore-scripts --prefer-offline
 
 # Uses assets from build stage to reduce build size
-FROM node:20.11-alpine3.18
+FROM node:24.15.0-alpine3.22
 
 RUN apk add --update dumb-init
 
@@ -30,8 +30,6 @@ EXPOSE 3000 3001
 ENV CARD_PORT=3000
 ENV CARD_METRICS_PORT=3001
 ENV NODE_ENV=production
-# potential perf issues w/ io_uring on this version of node
-ENV UV_USE_IO_URING=0
 
 # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#non-root-user
 USER node

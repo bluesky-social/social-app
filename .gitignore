@@ -86,6 +86,9 @@ stats.json
 # VSCode
 .vscode
 
+# Zed
+.zed
+
 # gitignore and github actions
 !.gitignore
 !.github

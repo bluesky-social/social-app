@@ -6,7 +6,6 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
-import Animated from 'react-native-reanimated'
 import {type ChatBskyActorDefs, type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -15,6 +14,7 @@ import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-disp
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {type ActiveConvoStates, useConvoActive} from '#/state/messages/convo'
 import {useSession} from '#/state/session'
+import {type SessionAccount} from '#/state/session/types'
 import {DraggableScrollView} from '#/view/com/pager/DraggableScrollView'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -30,6 +30,8 @@ type Reaction = {
   senders: ChatBskyConvoDefs.ReactionViewSender[]
   count: number
 }
+
+type Tab = Omit<Reaction, 'senders'>
 
 export function ReactionsDialog({
   control,
@@ -52,10 +54,6 @@ export function ReactionsDialog({
 
   const [selected, setSelected] = useState('all')
 
-  const handleFilter = (value: string) => {
-    setSelected(value)
-  }
-
   const filteredReactions = reactions?.filter(
     r => selected === 'all' || r.value === selected,
   )
@@ -71,7 +69,7 @@ export function ReactionsDialog({
         groupedReactions={groupedReactions}
         selected={selected}
         totalReactions={reactions?.length ?? 0}
-        onFilter={handleFilter}
+        onFilter={setSelected}
       />
       <Dialog.Close />
     </>
@@ -135,7 +133,7 @@ function ReactionRow({
 }: {
   control: Dialog.DialogControlProps
   convo: ActiveConvoStates
-  currentAccount?: bsky.profile.AnyProfileView
+  currentAccount?: SessionAccount
   message: ChatBskyConvoDefs.MessageView
   profile: bsky.profile.AnyProfileView
   reaction: ChatBskyConvoDefs.ReactionView
@@ -149,14 +147,13 @@ function ReactionRow({
   const isFromSelf = currentAccount?.did === profile.did
 
   const displayName = createSanitizedDisplayName(profile, true)
-  const handle = sanitizeHandle(profile?.handle ?? '', '@')
+  const handle = sanitizeHandle(profile.handle, '@')
 
   const handleOnPress = () => {
-    const remainingReactions =
-      allReactions?.filter(
-        r =>
-          !(r.value === reaction.value && r.sender.did === currentAccount?.did),
-      ) ?? []
+    const remainingReactions = allReactions.filter(
+      r =>
+        !(r.value === reaction.value && r.sender.did === currentAccount?.did),
+    )
 
     if (remainingReactions.length === 0) {
       control.close()
@@ -283,18 +280,13 @@ function ReactionTabs({
     tabLayouts.current.set(key, layout)
   }
 
-  const tabs = [
-    {
-      key: 'all',
-      value: l`All`,
-      senders: [],
-      count: totalReactions,
-    } as Reaction,
+  const tabs: Tab[] = [
+    {key: 'all', value: l`All`, count: totalReactions},
     ...(groupedReactions ?? []),
   ]
 
   return (
-    <View accessibilityRole="list" style={[t.atoms.bg]}>
+    <View accessibilityRole="tablist" style={[t.atoms.bg]}>
       <DraggableScrollView
         ref={scrollViewRef}
         horizontal={true}
@@ -309,7 +301,7 @@ function ReactionTabs({
         onLayout={e => {
           scrollState.current.width = e.nativeEvent.layout.width
         }}>
-        <Animated.View
+        <View
           style={[
             a.flex_row,
             a.flex_grow,
@@ -317,18 +309,18 @@ function ReactionTabs({
             a.align_center,
             a.justify_start,
           ]}>
-          {tabs?.map((reaction, index) => (
+          {tabs.map((tab, index) => (
             <ReactionTab
-              key={reaction.value}
+              key={tab.key}
               index={index}
-              reaction={reaction}
+              tab={tab}
               selected={selected}
               total={tabs.length}
               onPress={handlePress}
               onTabLayout={handleTabLayout}
             />
           ))}
-        </Animated.View>
+        </View>
       </DraggableScrollView>
     </View>
   )
@@ -336,14 +328,14 @@ function ReactionTabs({
 
 function ReactionTab({
   index,
-  reaction,
+  tab,
   selected,
   total,
   onPress,
   onTabLayout,
 }: {
   index: number
-  reaction: Reaction
+  tab: Tab
   selected: string
   total: number
   onPress: (value: string) => void
@@ -354,11 +346,12 @@ function ReactionTab({
 
   return (
     <Pressable
-      accessibilityRole="button"
+      accessibilityRole="tab"
+      accessibilityState={{selected: selected === tab.key}}
       accessibilityHint={
-        reaction.key === 'all'
+        tab.key === 'all'
           ? l`Tap to show all reactions`
-          : l`Tap to show ${reaction.value} reactions`
+          : l`Tap to show ${tab.value} reactions`
       }
       hitSlop={HITSLOP_10}
       style={[
@@ -370,21 +363,27 @@ function ReactionTab({
         a.px_md,
         a.py_sm,
         a.mb_sm,
-        selected === reaction.key
+        selected === tab.key
           ? t.atoms.border_contrast_low
           : {borderColor: t.palette.contrast_50},
-        selected === reaction.key ? t.atoms.bg_contrast_50 : t.atoms.bg,
+        selected === tab.key ? t.atoms.bg_contrast_50 : t.atoms.bg,
         index === 0 ? a.ml_2xl : index === total - 1 ? a.mr_2xl : null,
       ]}
       onLayout={e => {
-        onTabLayout(reaction.key, {
+        onTabLayout(tab.key, {
           x: e.nativeEvent.layout.x,
           width: e.nativeEvent.layout.width,
         })
       }}
-      onPress={() => onPress(reaction.key)}>
+      onPress={() => onPress(tab.key)}>
       <Text emoji style={[a.text_sm]}>
-        {l`${reaction.value} ${reaction.count}`}
+        {tab.key === 'all'
+          ? l({
+              message: `All ${tab.count}`,
+              comment:
+                'Tab label showing the total count of reactions on a chat message.',
+            })
+          : `${tab.value} ${tab.count}`}
       </Text>
     </Pressable>
   )

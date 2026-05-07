@@ -18,6 +18,7 @@ import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/i
 import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons/Message'
 import {
   Person_Stroke2_Corner2_Rounded as PersonIcon,
+  PersonCheck_Stroke2_Corner0_Rounded as PersonCheck,
   PersonX_Stroke2_Corner0_Rounded as PersonXIcon,
 } from '#/components/icons/Person'
 import * as Menu from '#/components/Menu'
@@ -181,28 +182,29 @@ export function MemberMenu({
         <Menu.Outer>
           <Menu.Group>
             <Menu.Item
+              label={l`Message ${displayName}`}
+              onPress={handleMessageMember}>
+              <Menu.ItemIcon icon={MessageIcon} />
+              <Menu.ItemText>
+                <Trans context="action">Message</Trans>
+              </Menu.ItemText>
+            </Menu.Item>
+            <Menu.Item
               label={l`View ${displayName}’s profile`}
               onPress={() => {
                 navigation.navigate('Profile', {name: profile.did})
               }}>
+              <Menu.ItemIcon icon={PersonIcon} />
               <Menu.ItemText>
                 <Trans>Go to profile</Trans>
               </Menu.ItemText>
-              <Menu.ItemIcon icon={PersonIcon} />
-            </Menu.Item>
-            <Menu.Item
-              label={l`Message ${displayName}`}
-              onPress={handleMessageMember}>
-              <Menu.ItemText>
-                <Trans context="action">Message</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={MessageIcon} />
             </Menu.Item>
           </Menu.Group>
           <Menu.Divider />
           <Menu.Group>
             {canBlockMember ? (
               <Menu.Item
+                destructive
                 label={
                   profile.viewer?.blocking
                     ? l`Unblock ${displayName}`
@@ -213,31 +215,35 @@ export function MemberMenu({
                     ? handleBlockMember
                     : blockMemberPrompt.open
                 }>
+                <Menu.ItemIcon
+                  icon={profile.viewer?.blocking ? PersonCheck : PersonXIcon}
+                />
                 <Menu.ItemText>
-                  <Trans>Block</Trans>
+                  {profile.viewer?.blocking ? l`Unblock` : l`Block`}
                 </Menu.ItemText>
-                <Menu.ItemIcon icon={PersonXIcon} />
               </Menu.Item>
             ) : null}
             {canRemoveMember ? (
               <Menu.Item
+                destructive
                 label={l`Remove ${displayName} from this group chat`}
                 onPress={() => removeMembers({members: [profile.did]})}>
+                <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
                 <Menu.ItemText>
                   <Trans>Remove from chat</Trans>
                 </Menu.ItemText>
-                <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
               </Menu.Item>
             ) : null}
             {canUninviteMember ? (
               <Menu.Item
+                destructive
                 label={l`Uninvite ${displayName} from this group chat`}
                 // TODO Need to wire up the uninvite flow. -dsb
                 onPress={() => {}}>
+                <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
                 <Menu.ItemText>
                   <Trans>Uninvite</Trans>
                 </Menu.ItemText>
-                <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
               </Menu.Item>
             ) : null}
           </Menu.Group>

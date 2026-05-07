@@ -1,7 +1,6 @@
-import {memo, useEffect, useMemo, useRef} from 'react'
+import {memo, useEffect, useMemo} from 'react'
 import {
   type GestureResponderEvent,
-  LayoutAnimation,
   Pressable,
   type StyleProp,
   type TextStyle,
@@ -43,7 +42,6 @@ import * as ProfileCard from '#/components/ProfileCard'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {DateDivider} from './DateDivider'
-import {useDateDividerToggle} from './DateDividerToggle'
 import {MessageItemEmbed} from './MessageItemEmbed'
 import {ReactionsDialog} from './ReactionsDialog'
 
@@ -55,8 +53,6 @@ const DISPLAY_NAME_INSET = 22
 
 const CLUSTERED_MESSAGE_THRESHOLD_MS = 5 * 60 * 1000
 const MESSAGE_GAP_THRESHOLD_MS = 60 * 60 * 1000
-
-const TAP_AND_DRAG_DELAY_MS = 100
 
 function isWithinClusterBoundary({
   isPending,
@@ -104,7 +100,6 @@ let MessageItem = ({
   const profile = item.relatedProfiles.get(item.message.sender.did)
 
   const reactionsControl = useDialogControl()
-  const reactionTapRef = useRef(false)
 
   const {message, nextMessage, prevMessage} = item
   const isPending = item.type === 'pending-message'
@@ -148,16 +143,9 @@ let MessageItem = ({
       new Date(prevMessage.sentAt).getTime() >
       MESSAGE_GAP_THRESHOLD_MS
 
-  const {isDividerToggled, toggleDivider} = useDateDividerToggle()
-  const isDateDividerToggled = isDividerToggled(message.id)
-  const isNextDateDividerToggled =
-    nextMessage != null && isDividerToggled(nextMessage.id)
-
-  const effectiveFirstInCluster = isFirstInCluster || isDateDividerToggled
-  const effectiveLastInCluster = isLastInCluster || isNextDateDividerToggled
-  const isInCluster = !(effectiveFirstInCluster && effectiveLastInCluster)
+  const isInCluster = !(isFirstInCluster && isLastInCluster)
   const isInMiddleOfCluster =
-    isInCluster && !effectiveFirstInCluster && !effectiveLastInCluster
+    isInCluster && !isFirstInCluster && !isLastInCluster
 
   const hasReactions = message.reactions && message.reactions.length > 0
   const prevHasReactions =
@@ -168,12 +156,12 @@ let MessageItem = ({
     !hasReactions &&
     !isNextEmojiOnly &&
     isInCluster &&
-    (isInMiddleOfCluster || effectiveFirstInCluster)
+    (isInMiddleOfCluster || isFirstInCluster)
   const squaredTopCorner =
     !prevHasReactions &&
     !isPrevEmojiOnly &&
     isInCluster &&
-    (isInMiddleOfCluster || effectiveLastInCluster)
+    (isInMiddleOfCluster || isLastInCluster)
 
   const pendingColor = t.palette.primary_300
 
@@ -182,13 +170,11 @@ let MessageItem = ({
   const hasEmbedAndText =
     AppBskyEmbedRecord.isView(message.embed) && rt.text.length > 0
 
-  const targetBottomRadius =
-    squaredBottomCorner || hasEmbedAndText
-      ? SQUARED_BORDER_RADIUS
-      : BORDER_RADIUS
-  const targetTopRadius = squaredTopCorner
+  const targetBottomRadius = squaredBottomCorner
     ? SQUARED_BORDER_RADIUS
     : BORDER_RADIUS
+  const targetTopRadius =
+    squaredTopCorner || hasEmbedAndText ? SQUARED_BORDER_RADIUS : BORDER_RADIUS
 
   const bottomRadiusSV = useSharedValue(targetBottomRadius)
   const topRadiusSV = useSharedValue(targetTopRadius)
@@ -326,28 +312,18 @@ let MessageItem = ({
               a.rounded_lg,
               a.border,
               t.atoms.border_contrast_low,
+              t.atoms.shadow_xs,
               hasSelfReacted
                 ? {
                     backgroundColor: t.palette.primary_100,
                   }
                 : t.atoms.bg_contrast_25,
-              t.atoms.shadow_sm,
               {
                 paddingTop: platform({android: 2, default: 3}),
                 paddingBottom: platform({android: 2, default: 3}),
                 transform: [{translateY: -8}],
               },
             ]}
-            onPressIn={() => {
-              // Don't toggle the date divider when tapping a reaction.
-              reactionTapRef.current = true
-            }}
-            onPressOut={() => {
-              // Include a delay here to account for tap-and-drag before release.
-              setTimeout(() => {
-                reactionTapRef.current = false
-              }, TAP_AND_DRAG_DELAY_MS)
-            }}
             onPress={isGroupChat ? reactionsControl.open : undefined}>
             {groupedReactions.map(group => (
               <Animated.View
@@ -409,13 +385,13 @@ let MessageItem = ({
   return (
     <>
       <LayoutAnimationConfig skipExiting skipEntering>
-        {(hasLargeGapFromPrev || isDateDividerToggled) && (
+        {hasLargeGapFromPrev && (
           <Animated.View entering={native(FadeIn)} exiting={native(FadeOut)}>
             <DateDivider date={message.sentAt} />
           </Animated.View>
         )}
       </LayoutAnimationConfig>
-      <View style={[messageInset, effectiveFirstInCluster && a.mt_md]}>
+      <View style={[messageInset, isFirstInCluster && a.mt_md]}>
         <View style={[a.relative]}>
           {showAvatar ? (
             <View
@@ -442,10 +418,9 @@ let MessageItem = ({
                   t.atoms.text_contrast_medium,
                   a.pt_xs,
                   a.pb_2xs,
-                  {
-                    paddingLeft: DISPLAY_NAME_INSET,
-                  },
-                ]}>
+                  {paddingLeft: DISPLAY_NAME_INSET},
+                ]}
+                emoji>
                 {displayName}
               </Text>
             ) : null}
@@ -453,16 +428,15 @@ let MessageItem = ({
               hasReactions={hasReactions}
               isFromSelf={isFromSelf}
               message={message}
-              senderProfile={profile}
-              onTap={() => {
-                if (reactionTapRef.current) return
-                if (!hasLargeGapFromPrev) {
-                  LayoutAnimation.configureNext(
-                    LayoutAnimation.Presets.easeInEaseOut,
-                  )
-                  toggleDivider(message.id)
-                }
-              }}>
+              senderProfile={profile}>
+              {AppBskyEmbedRecord.isView(message.embed) && (
+                <MessageItemEmbed
+                  embed={message.embed}
+                  isFromSelf={isFromSelf}
+                  squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
+                  squaredTopCorner={squaredTopCorner}
+                />
+              )}
               {rt.text.length > 0 && (
                 <Animated.View
                   accessibilityHint={l`Double tap or long press the message to add a reaction`}
@@ -475,7 +449,7 @@ let MessageItem = ({
                           a.py_sm,
                           a.px_md,
                           {
-                            marginTop: effectiveFirstInCluster
+                            marginTop: isFirstInCluster
                               ? 0
                               : CLUSTERED_MESSAGE_GAP,
                             backgroundColor: isFromSelf
@@ -514,19 +488,11 @@ let MessageItem = ({
                   />
                 </Animated.View>
               )}
-              {AppBskyEmbedRecord.isView(message.embed) && (
-                <MessageItemEmbed
-                  embed={message.embed}
-                  isFromSelf={isFromSelf}
-                  squaredBottomCorner={squaredBottomCorner}
-                  squaredTopCorner={squaredTopCorner || hasEmbedAndText}
-                />
-              )}
               {appliedReactions}
             </ActionsWrapper>
           </View>
         </View>
-        {effectiveLastInCluster && (
+        {isLastInCluster && (
           <MessageItemMetadata
             item={item}
             style={[isFromSelf ? a.text_right : a.text_left]}

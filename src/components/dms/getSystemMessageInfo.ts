@@ -68,7 +68,7 @@ export function getSystemMessageInfo(
   } else if (ChatBskyConvoDefs.isSystemMessageDataUnlockConvo(data)) {
     return {Icon: UnlockIcon, message: msg`Chat unlocked`}
   } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvoPermanently(data)) {
-    return {Icon: LockIcon, message: msg`Chat locked permanently`}
+    return {Icon: LockIcon, message: msg`Chat ended`}
   } else if (ChatBskyConvoDefs.isSystemMessageDataEditGroup(data)) {
     return {
       Icon: PencilIcon,

@@ -75,7 +75,7 @@ export function Member({
   const displayName = isDeletedAccount
     ? l`Deleted Account`
     : createSanitizedDisplayName(profile, true, moderation.ui('displayName'))
-  const isProfileOwner = profile.did === convo.primaryMember.did
+  const isProfileOwner = profile.did === convo.primaryMember?.did
   const isSelf = currentAccount?.did === profile.did
   let statusBadge: React.ReactNode | null = null
   if (isSelf) {

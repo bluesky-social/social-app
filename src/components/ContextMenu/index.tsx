@@ -378,7 +378,10 @@ export function Trigger({
         <View ref={ref} style={[{opacity: context.isOpen ? 0 : 1}, style]}>
           {children({
             IS_NATIVE: true,
-            control: {isOpen: context.isOpen, open},
+            control: {
+              isOpen: context.isOpen,
+              open: mode => void open(mode),
+            },
             state: {
               pressed: false,
               hovered: false,
@@ -594,10 +597,12 @@ const MENU_WIDTH = 240
 
 export function Outer({
   children,
+  label,
   style,
   align = 'left',
 }: {
   children: React.ReactNode
+  label?: string
   style?: StyleProp<ViewStyle>
   align?: 'left' | 'right'
 }) {
@@ -709,23 +714,25 @@ export function Outer({
                 ]}>
                 {/* innermost element - needs an overflow: hidden for children, but we also need a shadow,
                 so put the shadow on the scaling element and the overflow on the innermost element */}
-                <View
-                  style={[
-                    a.flex_1,
-                    a.rounded_md,
-                    a.overflow_hidden,
-                    a.border,
-                    t.atoms.border_contrast_low,
-                  ]}>
+                <View style={[a.flex_1, a.rounded_md, a.overflow_hidden]}>
+                  {label ? (
+                    <Text
+                      numberOfLines={1}
+                      style={[
+                        a.pl_md,
+                        a.pt_md,
+                        a.pr_lg,
+                        a.pb_md,
+                        a.text_xs,
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      {label}
+                    </Text>
+                  ) : null}
                   {flattenReactChildren(children).map((child, i) => {
                     return isValidElement(child) &&
                       (child.type === Item || child.type === Divider) ? (
                       <Fragment key={i}>
-                        {i > 0 ? (
-                          <View
-                            style={[a.border_b, t.atoms.border_contrast_low]}
-                          />
-                        ) : null}
                         {cloneElement(child, {
                           // @ts-expect-error not typed
                           style: {
@@ -736,6 +743,7 @@ export function Outer({
                       </Fragment>
                     ) : null
                   })}
+                  {label ? <View style={[a.pb_md]} /> : null}
                 </View>
               </Animated.View>
             </Animated.View>
@@ -840,13 +848,10 @@ export function Item({
         !unstyled && [
           a.flex_row,
           a.align_center,
-          a.gap_sm,
-          a.px_md,
+          a.px_2xl,
           a.rounded_md,
-          a.border,
           t.atoms.bg_contrast_25,
-          t.atoms.border_contrast_low,
-          {minHeight: 44, paddingVertical: 10},
+          {gap: 6, minHeight: 44, paddingVertical: 10},
           (focused || pressed || context.hoveredMenuItem === id) &&
             !rest.disabled &&
             t.atoms.bg_contrast_50,
@@ -877,7 +882,6 @@ export function ItemText({children, style}: ItemTextProps) {
         a.text_md,
         a.font_semi_bold,
         t.atoms.text_contrast_high,
-        {paddingTop: 3},
         style,
         disabled && t.atoms.text_contrast_low,
       ]}>

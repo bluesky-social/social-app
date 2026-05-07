@@ -1,0 +1,29 @@
+diff --git a/node_modules/expo-image-picker/ios/MediaHandler.swift b/node_modules/expo-image-picker/ios/MediaHandler.swift
+index 6e4fbe1..e334abb 100644
+--- a/node_modules/expo-image-picker/ios/MediaHandler.swift
++++ b/node_modules/expo-image-picker/ios/MediaHandler.swift
+@@ -310,10 +310,12 @@ internal struct MediaHandler {
+         let fileExtension = getFileExtension(from: originalFilename)
+         let destinationUrl = try generateUrl(withFileExtension: fileExtension)
+ 
++        let resourceOptions = PHAssetResourceRequestOptions()
++        resourceOptions.isNetworkAccessAllowed = true
+         try await PHAssetResourceManager.default().writeData(
+           for: resource,
+           toFile: destinationUrl,
+-          options: nil
++          options: resourceOptions
+         )
+ 
+         let mimeType = getMimeType(from: destinationUrl.pathExtension)
+@@ -389,7 +391,9 @@ internal struct MediaHandler {
+ 
+           // Stream the resource into our cache directory. This API is asynchronous but doesn't require
+           // a temporary file like `loadFileRepresentation`.
+-          try await PHAssetResourceManager.default().writeData(for: resource, toFile: destinationUrl, options: nil)
++          let resourceOptions = PHAssetResourceRequestOptions()
++          resourceOptions.isNetworkAccessAllowed = true
++          try await PHAssetResourceManager.default().writeData(for: resource, toFile: destinationUrl, options: resourceOptions)
+ 
+           // Build and return the result using the helper.
+           let mimeType = getMimeType(from: destinationUrl.pathExtension)

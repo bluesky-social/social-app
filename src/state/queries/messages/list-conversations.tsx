@@ -18,6 +18,7 @@ import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
+import {parseConvoView} from '#/components/dms/util'
 import {useLeftConvos} from './leave-conversation'
 
 export const RQKEY_ROOT = 'convo-list'
@@ -453,19 +454,18 @@ function calculateCount(
   return (
     convos
       .filter(convo => convo.id !== currentConvoId)
-      .reduce((acc, convo) => {
-        const otherMember = convo.members.find(
-          member => member.did !== currentAccountDid,
-        )
+      .reduce((acc, convoView) => {
+        const convo = parseConvoView(convoView, currentAccountDid)
 
-        if (!otherMember || !moderationOpts) return acc
+        if (!convo || !moderationOpts) return acc
 
-        const moderation = moderateProfile(otherMember, moderationOpts)
         const shouldIgnore =
-          convo.muted ||
-          moderation.blocked ||
-          otherMember.handle === 'missing.invalid'
-        const unreadCount = !shouldIgnore && convo.unreadCount > 0 ? 1 : 0
+          convo.view.muted ||
+          !convo.primaryMember ||
+          moderateProfile(convo.primaryMember, moderationOpts).blocked ||
+          convo.primaryMember.handle === 'missing.invalid' ||
+          (convo.kind === 'group' && convo.details.lockStatus !== 'unlocked')
+        const unreadCount = !shouldIgnore && convo.view.unreadCount > 0 ? 1 : 0
 
         return acc + unreadCount
       }, 0) ?? 0

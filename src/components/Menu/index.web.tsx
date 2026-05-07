@@ -107,7 +107,7 @@ const RadixTriggerPassThrough = forwardRef(
     props: {
       children: (
         props: RadixPassThroughTriggerProps & {
-          ref: React.Ref<any>
+          ref: React.Ref<HTMLElement>
         },
       ) => React.ReactNode
     },
@@ -225,7 +225,14 @@ export function Outer({
   )
 }
 
-export function Item({children, label, onPress, style, ...rest}: ItemProps) {
+export function Item({
+  children,
+  label,
+  onPress,
+  style,
+  destructive = false,
+  ...rest
+}: ItemProps) {
   const t = useTheme()
   const {control} = useMenuContext()
   const {
@@ -278,7 +285,8 @@ export function Item({children, label, onPress, style, ...rest}: ItemProps) {
           onMouseEnter,
           onMouseLeave,
         })}>
-        <ItemContext.Provider value={{disabled: Boolean(rest.disabled)}}>
+        <ItemContext.Provider
+          value={{disabled: Boolean(rest.disabled), destructive}}>
           {children}
         </ItemContext.Provider>
       </Pressable>
@@ -288,7 +296,7 @@ export function Item({children, label, onPress, style, ...rest}: ItemProps) {
 
 export function ItemText({children, style}: ItemTextProps) {
   const t = useTheme()
-  const {disabled} = useMenuItemContext()
+  const {disabled, destructive} = useMenuItemContext()
   return (
     <Text
       style={[
@@ -296,6 +304,7 @@ export function ItemText({children, style}: ItemTextProps) {
         a.font_semi_bold,
         t.atoms.text_contrast_high,
         style,
+        destructive && {color: t.palette.negative_500},
         disabled && t.atoms.text_contrast_low,
       ]}>
       {children}
@@ -305,7 +314,7 @@ export function ItemText({children, style}: ItemTextProps) {
 
 export function ItemIcon({icon: Comp, position = 'left', fill}: ItemIconProps) {
   const t = useTheme()
-  const {disabled} = useMenuItemContext()
+  const {disabled, destructive} = useMenuItemContext()
   return (
     <View
       style={[
@@ -324,7 +333,9 @@ export function ItemIcon({icon: Comp, position = 'left', fill}: ItemIconProps) {
             ? fill({disabled})
             : disabled
               ? t.atoms.text_contrast_low.color
-              : t.atoms.text_contrast_medium.color
+              : destructive
+                ? t.palette.negative_500
+                : t.atoms.text_contrast_medium.color
         }
       />
     </View>

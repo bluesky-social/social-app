@@ -74,11 +74,6 @@
       "count": 1
     }
   },
-  "src/components/Menu/index.web.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/components/Menu/types.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1

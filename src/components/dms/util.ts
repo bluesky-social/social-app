@@ -69,7 +69,7 @@ export type ConvoWithDetails = {view: ChatBskyConvoDefs.ConvoView} & (
   | {
       kind: 'group'
       details: $Typed<ChatBskyConvoDefs.GroupConvo>
-      primaryMember: GroupConvoMember // the owner
+      primaryMember?: GroupConvoMember // the owner - may have left, thus optional
       members: Array<GroupConvoMember>
     }
   | {
@@ -115,11 +115,6 @@ export function parseConvoView(
         )
         return null
       }
-    }
-
-    if (!owner) {
-      logger.warn('No owner found in group convo')
-      return null
     }
 
     return {

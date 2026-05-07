@@ -51,6 +51,8 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL, IS_LIQUID_GLASS, IS_WEB} from '#/env'
 import {ChatDisabled} from './components/ChatDisabled'
+import {ChatEnded} from './components/ChatEnded'
+import {ChatLocked} from './components/ChatLocked'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -262,6 +264,26 @@ function InnerReady({
 
   const header = <MessagesListHeader convo={convo} />
 
+  let footer: React.ReactNode = null
+  if (isDisabled) {
+    footer = <ChatDisabled />
+  } else if (convo && primaryMember && primaryMemberModeration?.blocked) {
+    footer = (
+      <MessagesListBlockedFooter
+        recipient={primaryMember}
+        convoId={convo.view.id}
+        hasMessages={hasMessages}
+        moderation={primaryMemberModeration}
+      />
+    )
+  } else if (convo?.kind === 'group') {
+    if (convo.details.lockStatus === 'locked') {
+      footer = <ChatLocked convo={convo} />
+    } else if (convo.details.lockStatus === 'locked-permanently') {
+      footer = <ChatEnded convo={convo} />
+    }
+  }
+
   return (
     <>
       {IS_LIQUID_GLASS ? (
@@ -280,18 +302,7 @@ function InnerReady({
           setHasScrolled={setHasScrolled}
           hasAcceptOverride={!!params.accept}
           transparentHeaderHeight={IS_LIQUID_GLASS ? headerHeight : 0}
-          footer={
-            isDisabled ? (
-              <ChatDisabled />
-            ) : convo && primaryMember && primaryMemberModeration?.blocked ? (
-              <MessagesListBlockedFooter
-                recipient={primaryMember}
-                convoId={convo.view.id}
-                hasMessages={hasMessages}
-                moderation={primaryMemberModeration}
-              />
-            ) : null
-          }
+          footer={footer}
         />
       )}
 

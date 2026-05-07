@@ -1,5 +1,9 @@
 import {ScrollView, View} from 'react-native'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
+import {
+  type ChatBskyActorDefs,
+  moderateProfile,
+  type ModerationOpts,
+} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -66,8 +70,8 @@ export function RecentChats({
             if (!convo) return null
 
             if (
-              (convo.kind === 'direct' &&
-                convo.primaryMember.handle === 'missing.invalid') ||
+              !convo.primaryMember ||
+              convo.primaryMember.handle === 'missing.invalid' ||
               convo.view.muted
             ) {
               return null
@@ -77,6 +81,7 @@ export function RecentChats({
               <RecentChatItem
                 key={convo.view.id}
                 convo={convo}
+                primaryMember={convo.primaryMember}
                 onPress={() => onSelectChat(convo.view.id)}
                 moderationOpts={moderationOpts}
               />
@@ -103,15 +108,17 @@ function RecentChatItem({
   onPress,
   moderationOpts,
   convo,
+  primaryMember,
 }: {
   onPress: () => void
   moderationOpts: ModerationOpts
   convo: ConvoWithDetails
+  primaryMember: ChatBskyActorDefs.ProfileViewBasic
 }) {
   const {_} = useLingui()
   const t = useTheme()
 
-  const primaryProfile = useProfileShadow(convo.primaryMember)
+  const primaryProfile = useProfileShadow(primaryMember)
 
   const moderation = moderateProfile(primaryProfile, moderationOpts)
   const name =
