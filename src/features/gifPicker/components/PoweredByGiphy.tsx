@@ -1,3 +1,4 @@
+import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 
@@ -6,7 +7,7 @@ import {atoms as a, useTheme} from '#/alf'
 const ASSET_DARK = require('../../../../assets/images/giphy_attribution_dark.png')
 const ASSET_LIGHT = require('../../../../assets/images/giphy_attribution_light.png')
 
-const HEIGHT = 16
+const HEIGHT = 22
 const ASPECT_RATIO = 200 / 28
 
 export function PoweredByGiphy() {
@@ -14,19 +15,15 @@ export function PoweredByGiphy() {
   const {t: l} = useLingui()
   const source = t.name === 'light' ? ASSET_LIGHT : ASSET_DARK
   return (
-    <Image
-      source={source}
-      contentFit="contain"
-      style={[
-        a.self_end,
-        {
-          height: HEIGHT,
-          width: HEIGHT * ASPECT_RATIO,
-        },
-      ]}
-      accessibilityLabel={l`Powered by GIPHY`}
-      accessibilityHint=""
-      accessibilityIgnoresInvertColors
-    />
+    <View style={[a.align_center, a.justify_center, a.py_sm, t.atoms.bg]}>
+      <Image
+        source={source}
+        contentFit="contain"
+        style={{height: HEIGHT, width: HEIGHT * ASPECT_RATIO}}
+        accessibilityLabel={l`Powered by GIPHY`}
+        accessibilityHint=""
+        accessibilityIgnoresInvertColors
+      />
+    </View>
   )
 }
