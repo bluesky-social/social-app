@@ -46,7 +46,9 @@ export function useProfileListsQuery(did: string, opts?: {enabled?: boolean}) {
             ...page,
             lists: page.lists.filter(list => {
               const decision = moderateUserList(list, moderationOpts!)
-              return !decision.ui('contentList').filter
+              return !decision
+                .ui('contentList')
+                .filters.some(cause => cause.type !== 'muted')
             }),
           }
         }),

@@ -1,12 +1,4 @@
-import {
-  type JSX,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
   ActivityIndicator,
   AppState,
@@ -23,11 +15,9 @@ import {
   AppBskyEmbedVideo,
   type AppBskyFeedDefs,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {isStatusStillActive, isStatusValidForViewers} from '#/lib/actor-status'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -48,7 +38,7 @@ import {
   RQKEY,
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
-import {useLiveNowConfig} from '#/state/service-config'
+import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
 import {useSelectedFeed} from '#/state/shell/selected-feed'
@@ -67,6 +57,11 @@ import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interst
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
+import {
+  isStatusStillActive,
+  isStatusValidForViewers,
+  useLiveNowConfig,
+} from '#/features/liveNow'
 import {ComposerPrompt} from '../feeds/ComposerPrompt'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
@@ -212,25 +207,27 @@ let PostFeed = ({
   scrollElRef?: ListRef
   onHasNew?: (v: boolean) => void
   onScrolledDownChange?: (isScrolledDown: boolean) => void
-  renderEmptyState: () => JSX.Element
-  renderEndOfFeed?: () => JSX.Element
+  renderEmptyState: () => React.ReactElement
+  renderEndOfFeed?: () => React.ReactElement
   testID?: string
   headerOffset?: number
   progressViewOffset?: number
   desktopFixedHeightOffset?: number
-  ListHeaderComponent?: () => JSX.Element
+  ListHeaderComponent?: () => React.ReactElement
   extraData?: any
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
   initialNumToRender?: number
   isVideoFeed?: boolean
+  lastFetchDate?: () => number
 }): React.ReactNode => {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount, hasSession} = useSession()
   const initialNumToRender = useInitialNumToRender()
   const feedFeedback = useFeedFeedbackContext()
   const [isPTRing, setIsPTRing] = useState(false)
+  // eslint-disable-next-line react-hooks/purity
   const lastFetchRef = useRef<number>(Date.now())
   const [feedType, feedUriOrActorDid, feedTab] = feed.split('|')
   const {gtMobile} = useBreakpoints()
@@ -268,13 +265,16 @@ let PostFeed = ({
     fetchNextPage,
   } = usePostFeedQuery(feed, feedParams, opts)
   const lastFetchedAt = data?.pages[0].fetchedAt
-  if (lastFetchedAt) {
-    lastFetchRef.current = lastFetchedAt
-  }
   const isEmpty = useMemo(
     () => !isFetching && !data?.pages?.some(page => page.slices.length),
     [isFetching, data],
   )
+
+  useEffect(() => {
+    if (lastFetchedAt) {
+      lastFetchRef.current = lastFetchedAt
+    }
+  }, [lastFetchedAt])
 
   const checkForNew = useNonReactiveCallback(async () => {
     if (!data?.pages[0] || isFetching || !onHasNew || !enabled || disablePoll) {
@@ -289,7 +289,7 @@ let PostFeed = ({
     try {
       if (await pollLatest(data.pages[0])) {
         if (isEmpty) {
-          refetch()
+          void refetch()
         } else {
           onHasNew(true)
         }
@@ -301,20 +301,26 @@ let PostFeed = ({
     }
   })
 
+  const isScrolledDownRef = useRef(false)
+  const handleScrolledDownChange = (isScrolledDown: boolean) => {
+    isScrolledDownRef.current = isScrolledDown
+    onScrolledDownChange?.(isScrolledDown)
+  }
+
   const myDid = currentAccount?.did || ''
   const onPostCreated = useCallback(() => {
     // NOTE
-    // only invalidate if there's 1 page
-    // more than 1 page can trigger some UI freakouts on iOS and android
-    // -prf
+    // only invalidate if at the top of the feed
+    // changing content when scrolled can trigger some UI freakouts on iOS and android
+    // -sfn
     if (
-      data?.pages.length === 1 &&
+      !isScrolledDownRef.current &&
       (feed === 'following' ||
         feed === `author|${myDid}|posts_and_author_threads`)
     ) {
-      queryClient.invalidateQueries({queryKey: RQKEY(feed)})
+      void queryClient.invalidateQueries({queryKey: RQKEY(feed)})
     }
-  }, [queryClient, feed, data, myDid])
+  }, [queryClient, feed, myDid])
   useEffect(() => {
     return listenPostCreated(onPostCreated)
   }, [onPostCreated])
@@ -324,7 +330,7 @@ let PostFeed = ({
       const timeSinceFirstLoad = Date.now() - lastFetchRef.current
       if (isEmpty || timeSinceFirstLoad > CHECK_LATEST_AFTER) {
         // check for new on enable (aka on focus)
-        checkForNew()
+        void checkForNew()
       }
     }
   }, [enabled, isEmpty, disablePoll, checkForNew])
@@ -334,14 +340,14 @@ let PostFeed = ({
     const subscription = AppState.addEventListener('change', nextAppState => {
       // check for new on app foreground
       if (nextAppState === 'active') {
-        checkForNew()
+        void checkForNew()
       }
     })
     cleanup1 = () => subscription.remove()
     if (pollInterval) {
       // check for new on interval
       const i = setInterval(() => {
-        checkForNew()
+        void checkForNew()
       }, pollInterval)
       cleanup2 = () => clearInterval(i)
     }
@@ -354,7 +360,7 @@ let PostFeed = ({
   const followProgressGuide = useProgressGuide('follow-10')
   const followAndLikeProgressGuide = useProgressGuide('like-10-and-follow-7')
 
-  const showProgressIntersitial =
+  const showProgressInterstitial =
     (followProgressGuide || followAndLikeProgressGuide) && !rightNavVisible
 
   const {trendingVideoDisabled} = useTrendingSettings()
@@ -484,7 +490,7 @@ let PostFeed = ({
               if (hasSession) {
                 if (feedKind === 'discover') {
                   if (sliceIndex === 0) {
-                    if (showProgressIntersitial) {
+                    if (showProgressInterstitial) {
                       arr.push({
                         type: 'interstitialProgressGuide',
                         key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
@@ -647,7 +653,7 @@ let PostFeed = ({
     feedUriOrActorDid,
     feedTab,
     hasSession,
-    showProgressIntersitial,
+    showProgressInterstitial,
     trendingVideoDisabled,
     gtMobile,
     isVideoFeed,
@@ -661,6 +667,8 @@ let PostFeed = ({
   // =
 
   const onRefresh = useCallback(async () => {
+    if (!enabled) return
+
     ax.metric('feed:refresh', {
       feedType: feedType,
       feedUrl: feed,
@@ -668,13 +676,22 @@ let PostFeed = ({
     })
     setIsPTRing(true)
     try {
-      await refetch()
+      await truncateAndInvalidate(queryClient, RQKEY(feed, feedParams))
       onHasNew?.(false)
     } catch (err) {
       logger.error('Failed to refresh posts feed', {message: err})
     }
     setIsPTRing(false)
-  }, [ax, refetch, setIsPTRing, onHasNew, feed, feedType])
+  }, [
+    ax,
+    queryClient,
+    setIsPTRing,
+    onHasNew,
+    feed,
+    feedParams,
+    feedType,
+    enabled,
+  ])
 
   const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
@@ -701,12 +718,12 @@ let PostFeed = ({
   ])
 
   const onPressTryAgain = useCallback(() => {
-    refetch()
+    void refetch()
     onHasNew?.(false)
   }, [refetch, onHasNew])
 
   const onPressRetryLoadMore = useCallback(() => {
-    fetchNextPage()
+    void fetchNextPage()
   }, [fetchNextPage])
 
   // rendering
@@ -728,9 +745,7 @@ let PostFeed = ({
       } else if (row.type === 'loadMoreError') {
         return (
           <LoadMoreRetryBtn
-            label={_(
-              msg`There was an issue fetching posts. Tap here to try again.`,
-            )}
+            label={l`There was an issue fetching posts. Tap here to try again.`}
             onPress={onPressRetryLoadMore}
           />
         )
@@ -827,7 +842,7 @@ let PostFeed = ({
       error,
       onPressTryAgain,
       savedFeedConfig,
-      _,
+      l,
       onPressRetryLoadMore,
       feedType,
       feedUriOrActorDid,
@@ -954,7 +969,7 @@ let PostFeed = ({
         }
       }
     },
-    [feedFeedback, feed, liveNowConfig, getPostPosition],
+    [feedFeedback, feed, liveNowConfig, getPostPosition, ax],
   )
 
   return (
@@ -963,19 +978,19 @@ let PostFeed = ({
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
         data={feedItems}
-        keyExtractor={item => item.key}
+        keyExtractor={(item: FeedRow) => item.key}
         renderItem={renderItem}
         ListFooterComponent={FeedFooter}
         ListHeaderComponent={ListHeaderComponent}
         refreshing={isPTRing}
-        onRefresh={onRefresh}
+        onRefresh={() => void onRefresh()}
         headerOffset={headerOffset}
         progressViewOffset={progressViewOffset}
         contentContainerStyle={{
           minHeight: Dimensions.get('window').height * 1.5,
         }}
-        onScrolledDownChange={onScrolledDownChange}
-        onEndReached={onEndReached}
+        onScrolledDownChange={handleScrolledDownChange}
+        onEndReached={() => void onEndReached()}
         onEndReachedThreshold={2} // number of posts left to trigger load more
         removeClippedSubviews={true}
         extraData={extraData}

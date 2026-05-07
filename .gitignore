@@ -86,6 +86,9 @@ stats.json
 # VSCode
 .vscode
 
+# Zed
+.zed
+
 # gitignore and github actions
 !.gitignore
 !.github
@@ -110,7 +113,9 @@ google-services.json
 
 # i18n
 src/locale/locales/_build/
-src/locale/locales/**/*.js
+src/locale/locales/**/messages.js
+src/locale/locales/**/messages.mjs
+src/locale/locales/**/messages.ts
 
 # local builds
 *.apk
@@ -131,3 +136,6 @@ bskyweb/static/media/*.cjs
 CLAUDE.md
 .claude/
 .claudeignore
+
+# superpowers plugin plans/specs — local-only workspace
+docs/superpowers/

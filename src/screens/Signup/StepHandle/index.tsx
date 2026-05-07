@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {ReactNode, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import Animated, {
   FadeIn,
@@ -6,8 +6,9 @@ import Animated, {
   LayoutAnimationConfig,
   LinearTransition,
 } from 'react-native-reanimated'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {
   createFullHandle,
@@ -48,11 +49,11 @@ export function StepHandle() {
   const isNextLoading = useThrottledValue(state.isLoading, 500)
 
   // Get available domains from service description
-  const availableDomains = React.useMemo(
+  const availableDomains = useMemo(
     () => state.serviceDescription?.availableUserDomains || [],
     [state.serviceDescription?.availableUserDomains],
   )
-  const hasMultipleDomains = React.useMemo(
+  const hasMultipleDomains = useMemo(
     () => availableDomains.length > 1,
     [availableDomains],
   )
@@ -356,7 +357,7 @@ export function StepHandle() {
   )
 }
 
-function Requirement({children}: {children: React.ReactNode}) {
+function Requirement({children}: {children: ReactNode}) {
   return (
     <Animated.View
       style={[a.w_full]}
@@ -368,7 +369,7 @@ function Requirement({children}: {children: React.ReactNode}) {
   )
 }
 
-function RequirementText({children}: {children: React.ReactNode}) {
+function RequirementText({children}: {children: ReactNode}) {
   const t = useTheme()
   return (
     <Text style={[a.text_sm, a.flex_1, {color: t.palette.negative_500}]}>

@@ -1,3 +1,5 @@
+import {type Gif} from '#/features/gifPicker/types'
+
 /**
  * Data that's specific to the device and does not vary based account
  */
@@ -37,4 +39,9 @@ export type Account = {
   birthdateLastUpdatedAt?: string
 
   lastSelectedHomeFeed?: string
+
+  /**
+   * Recently selected GIFs in the GIF picker. Most recent first, capped at 20.
+   */
+  recentGifs?: Gif[]
 }

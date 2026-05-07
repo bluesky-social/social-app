@@ -1,6 +1,6 @@
 import {View} from 'react-native'
 
-import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
+import {atoms as a, useTheme, type ViewStyleProp, web as webOnly} from '#/alf'
 import {IS_NATIVE, IS_WEB, IS_WEB_TOUCH_DEVICE} from '#/env'
 
 export function SubtleHover({
@@ -33,6 +33,10 @@ export function SubtleHover({
         a.transition_opacity,
         t.atoms.bg_contrast_50,
         style,
+        // Force Safari to composite the overlay on its own GPU layer.
+        // This fixes a layout shift that happens due to different subpixel
+        // rounding when the overlay is composited on hover.
+        webOnly({willChange: 'opacity'}),
         {opacity: hover ? opacity : 0},
       ]}
     />

@@ -160,10 +160,10 @@ export const KNOWN_SHUTDOWN_FEEDS = [
 
 export const GIF_SERVICE = 'https://gifs.bsky.app'
 
-export const GIF_SEARCH = (params: string) =>
-  `${GIF_SERVICE}/tenor/v2/search?${params}`
-export const GIF_FEATURED = (params: string) =>
-  `${GIF_SERVICE}/tenor/v2/featured?${params}`
+export const GIF_KLIPY_SEARCH = (params: string) =>
+  `${GIF_SERVICE}/klipy/v2/search?${params}`
+export const GIF_KLIPY_FEATURED = (params: string) =>
+  `${GIF_SERVICE}/klipy/v2/featured?${params}`
 
 export const MAX_LABELERS = 20
 
@@ -194,7 +194,7 @@ export const urls = {
     blog: {
       findFriendsAnnouncement:
         'https://www.blackskyweb.xyz/about/blog/12-16-2025-find-friends',
-      initialVerificationAnnouncement: `https://www.blackskyweb.xyz/about/blog/04-21-2025-verification`,
+      initialVerificationAnnouncement: `https://bsky.social/about/blog/04-21-2025-verification`,
       searchTipsAndTricks:
         'https://www.blackskyweb.xyz/about/blog/05-31-2024-search',
     },

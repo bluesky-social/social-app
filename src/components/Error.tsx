@@ -1,6 +1,7 @@
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useGoBack} from '#/lib/hooks/useGoBack'
 import {CenteredView} from '#/view/com/util/Views'
@@ -59,8 +60,7 @@ export function Error({
             color="primary"
             label={_(msg`Press to retry`)}
             onPress={onRetry}
-            size="large"
-            style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}>
+            size="large">
             <ButtonText>
               <Trans>Retry</Trans>
             </ButtonText>
@@ -72,8 +72,7 @@ export function Error({
             color={onRetry ? 'secondary' : 'primary'}
             label={_(msg`Return to previous page`)}
             onPress={goBack}
-            size="large"
-            style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}>
+            size="large">
             <ButtonText>
               <Trans>Go Back</Trans>
             </ButtonText>

@@ -1,7 +1,8 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {gateDeactivateAccount} from '#/lib/api/gatekeeper'
 import {useIsBlackskyPds} from '#/lib/hooks/useIsBlackskyPds'
@@ -40,15 +41,15 @@ function DeactivateAccountDialogInner({
   const agent = useAgent()
   const {currentAccount} = useSession()
   const {logoutCurrentAccount} = useSessionApi()
-  const [pending, setPending] = React.useState(false)
-  const [error, setError] = React.useState<string | undefined>()
-  const [password, setPassword] = React.useState('')
+  const [pending, setPending] = useState(false)
+  const [error, setError] = useState<string | undefined>()
+  const [password, setPassword] = useState('')
 
   const isOauth = currentAccount?.isOauthSession === true
   const isBskyPds = useIsBlackskyPds()
   const useGatekeeper = isOauth && isBskyPds
 
-  const handleDeactivate = React.useCallback(async () => {
+  const handleDeactivate = useCallback(async () => {
     try {
       setPending(true)
       if (useGatekeeper) {

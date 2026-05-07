@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {AtUri} from '@atproto/api'
 import {
   type QueryClient,

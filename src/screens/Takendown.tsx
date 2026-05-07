@@ -3,8 +3,9 @@ import {View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type ComAtprotoAdminDefs, ToolsOzoneReportDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
@@ -210,7 +211,7 @@ export function Takendown() {
                   Your account was found to be in violation of the{' '}
                   <SimpleInlineLinkText
                     label={_(msg`Blacksky Terms of Service`)}
-                    to="https://bsky.social/about/support/tos"
+                    to="https://www.blackskyweb.xyz/about/support/tos"
                     style={[a.text_md, a.leading_snug]}>
                     Blacksky Terms of Service
                   </SimpleInlineLinkText>

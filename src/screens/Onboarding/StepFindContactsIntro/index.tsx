@@ -1,7 +1,8 @@
 import {View} from 'react-native'
 import * as Contacts from 'expo-contacts'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useQuery} from '@tanstack/react-query'
 
 import {urls} from '#/lib/constants'
@@ -39,11 +40,11 @@ export function StepFindContactsIntro() {
       <OnboardingPosition />
       <ContactsHeroImage />
       <OnboardingTitleText style={[a.mt_sm]}>
-        <Trans>Bluesky is more fun with friends</Trans>
+        <Trans>Blacksky is more fun with friends</Trans>
       </OnboardingTitleText>
       <OnboardingDescriptionText>
         <Trans>
-          Find your friends on Bluesky by verifying your phone number and
+          Find your friends on Blacksky by verifying your phone number and
           matching with your contacts. We protect your information and you
           control what happens next.{' '}
           <InlineLinkText

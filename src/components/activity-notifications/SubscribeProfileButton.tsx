@@ -1,7 +1,8 @@
 import {useCallback, useEffect, useState} from 'react'
 import {type ModerationOpts} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'

@@ -1,7 +1,9 @@
-import React from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {useCallback, useMemo, useState} from 'react'
 import {Linking, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {gateGetPreferences, gatePutPreferences} from '#/lib/api/gatekeeper'
@@ -155,14 +157,14 @@ function GatekeeperBirthdayFlow({
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
 
-  const [password, setPassword] = React.useState('')
-  const [fullPrefs, setFullPrefs] = React.useState<any[] | null>(null)
-  const [date, setDate] = React.useState<Date>(getDateAgo(18))
-  const [originalDate, setOriginalDate] = React.useState<Date | null>(null)
-  const [isPending, setIsPending] = React.useState(false)
-  const [error, setError] = React.useState<string | null>(null)
+  const [password, setPassword] = useState('')
+  const [fullPrefs, setFullPrefs] = useState<any[] | null>(null)
+  const [date, setDate] = useState<Date>(getDateAgo(18))
+  const [originalDate, setOriginalDate] = useState<Date | null>(null)
+  const [isPending, setIsPending] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const loadPreferences = React.useCallback(async () => {
+  const loadPreferences = useCallback(async () => {
     if (!currentAccount || !password) return
     setIsPending(true)
     setError(null)
@@ -189,7 +191,7 @@ function GatekeeperBirthdayFlow({
     }
   }, [currentAccount, password, cleanError])
 
-  const saveBirthDate = React.useCallback(async () => {
+  const saveBirthDate = useCallback(async () => {
     if (!currentAccount || !fullPrefs) return
     setIsPending(true)
     setError(null)
@@ -327,9 +329,9 @@ function GatekeeperBirthdayFlow({
       {isUnder13 && (
         <Admonition type="error">
           <Trans>
-            You must be at least 13 years old to use Bluesky. Read our{' '}
+            You must be at least 13 years old to use Blacksky. Read our{' '}
             <SimpleInlineLinkText
-              to="https://bsky.social/about/support/tos"
+              to="https://www.blackskyweb.xyz/about/support/tos"
               label={_(msg`Terms of Service`)}>
               Terms of Service
             </SimpleInlineLinkText>{' '}
@@ -367,15 +369,13 @@ function DirectBirthdayFlow({
 }) {
   const {_} = useLingui()
   const cleanError = useCleanError()
-  const [date, setDate] = React.useState(
-    preferences.birthDate || getDateAgo(18),
-  )
+  const [date, setDate] = useState(preferences.birthDate || getDateAgo(18))
   const agent = useAgent()
-  const [isPending, setIsPending] = React.useState(false)
-  const [error, setError] = React.useState<Error | null>(null)
+  const [isPending, setIsPending] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
 
   const hasChanged = date !== preferences.birthDate
-  const errorMessage = React.useMemo(() => {
+  const errorMessage = useMemo(() => {
     if (error) {
       const {raw, clean} = cleanError(error)
       return clean || raw || error.toString()
@@ -386,7 +386,7 @@ function DirectBirthdayFlow({
   const isUnder13 = age < 13
   const isUnder18 = age >= 13 && age < 18
 
-  const onSave = React.useCallback(async () => {
+  const onSave = useCallback(async () => {
     setIsPending(true)
     setError(null)
     try {
@@ -426,9 +426,9 @@ function DirectBirthdayFlow({
       {isUnder13 && (
         <Admonition type="error">
           <Trans>
-            You must be at least 13 years old to use Bluesky. Read our{' '}
+            You must be at least 13 years old to use Blacksky. Read our{' '}
             <SimpleInlineLinkText
-              to="https://bsky.social/about/support/tos"
+              to="https://www.blackskyweb.xyz/about/support/tos"
               label={_(msg`Terms of Service`)}>
               Terms of Service
             </SimpleInlineLinkText>{' '}

@@ -1,6 +1,6 @@
-import React from 'react'
+import {createContext, useContext} from 'react'
 
-const MessageContext = React.createContext(false)
+const MessageContext = createContext(false)
 MessageContext.displayName = 'MessageContext'
 
 export function MessageContextProvider({
@@ -14,5 +14,5 @@ export function MessageContextProvider({
 }
 
 export function useIsWithinMessage() {
-  return React.useContext(MessageContext)
+  return useContext(MessageContext)
 }

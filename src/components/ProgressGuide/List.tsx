@@ -1,12 +1,13 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {
   type LayoutChangeEvent,
   type StyleProp,
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
@@ -21,7 +22,6 @@ import {Person_Filled_Corner2_Rounded as PersonIcon} from '#/components/icons/Pe
 import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
-import {FollowDialog} from './FollowDialog'
 import {ProgressGuideTask} from './Task'
 
 const TOTAL_AVATARS = 10
@@ -42,8 +42,16 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
 
   const actualFollowsCount = follows?.pages?.[0]?.follows?.length ?? 0
 
-  // Hide if user already follows 10+ people
-  if (guide?.guide === 'follow-10' && actualFollowsCount >= TOTAL_AVATARS) {
+  // Clear stale guide if user already follows 10+ people
+  const shouldEndGuide =
+    guide?.guide === 'follow-10' && actualFollowsCount >= TOTAL_AVATARS
+  useEffect(() => {
+    if (shouldEndGuide) {
+      endProgressGuide()
+    }
+  }, [shouldEndGuide, endProgressGuide])
+
+  if (shouldEndGuide) {
     return null
   }
 
@@ -90,7 +98,6 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
                 : [a.flex_col, a.gap_md],
             ]}>
             <StackedAvatars follows={follows?.pages?.[0]?.follows} />
-            <FollowDialog guide={guide} showArrow={inlineLayout} />
           </View>
         )}
         {guide.guide === 'like-10-and-follow-7' && (

@@ -301,7 +301,7 @@ export function* findAllPostsInQueryData(
         if (AppBskyFeedDefs.isPostView(item.subject)) {
           const quotedPost = getEmbeddedPost(item.subject?.embed)
           if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
-            yield embedViewRecordToPostView(quotedPost!)
+            yield embedViewRecordToPostView(quotedPost)
           }
         }
       }

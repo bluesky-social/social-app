@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Agent, type AtpSessionData} from '@atproto/api'
 import {type OutputSchema} from '@atproto/api/dist/client/types/com/atproto/server/getSession'
 import {type OAuthSession} from '@atproto/oauth-client-browser'

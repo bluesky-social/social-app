@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import {useCallback, useMemo} from 'react'
 import {type GestureResponderEvent, Linking} from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {
@@ -117,7 +117,7 @@ export function useLink({
   const {linkWarningDialogControl} = useGlobalDialogsControlContext()
   const openLink = useOpenLink()
 
-  const onPress = React.useCallback(
+  const onPress = useCallback(
     (e: GestureResponderEvent) => {
       const exitEarlyIfFalse = outerOnPress?.(e)
 
@@ -141,18 +141,18 @@ export function useLink({
         })
       } else {
         if (isExternal) {
-          openLink(href, overridePresentation, shouldProxy)
+          void openLink(href, overridePresentation, shouldProxy)
         } else {
           const shouldOpenInNewTab = shouldClickOpenNewTab(e)
 
           if (isBskyDownloadUrl(href)) {
-            shareUrl(BSKY_DOWNLOAD_URL)
+            void shareUrl(BSKY_DOWNLOAD_URL)
           } else if (
             shouldOpenInNewTab ||
             href.startsWith('http') ||
             href.startsWith('mailto')
           ) {
-            openLink(href)
+            void openLink(href)
           } else {
             closeModal() // close any active modals
 
@@ -217,7 +217,7 @@ export function useLink({
     ],
   )
 
-  const handleLongPress = React.useCallback(() => {
+  const handleLongPress = useCallback(() => {
     const requiresWarning = Boolean(
       !disableMismatchWarning &&
       displayText &&
@@ -232,7 +232,7 @@ export function useLink({
         share: true,
       })
     } else {
-      shareUrl(href)
+      void shareUrl(href)
     }
   }, [
     disableMismatchWarning,
@@ -242,7 +242,7 @@ export function useLink({
     linkWarningDialogControl,
   ])
 
-  const onLongPress = React.useCallback(
+  const onLongPress = useCallback(
     (e: GestureResponderEvent) => {
       const exitEarlyIfFalse = outerOnLongPress?.(e)
       if (exitEarlyIfFalse === false) return
@@ -451,7 +451,7 @@ export function SimpleInlineLinkText({
   const onPress = (e: GestureResponderEvent) => {
     const exitEarlyIfFalse = outerOnPress?.(e)
     if (exitEarlyIfFalse === false) return
-    Linking.openURL(href)
+    void Linking.openURL(href)
   }
 
   return (

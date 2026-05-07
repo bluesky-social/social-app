@@ -20,7 +20,6 @@ import {
   useSetDrawerOpen,
 } from '#/state/shell'
 import {useCloseAnyActiveElement} from '#/state/util'
-import {Lightbox} from '#/view/com/lightbox/Lightbox'
 import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Deactivated} from '#/screens/Deactivated'
@@ -32,10 +31,11 @@ import {InAppBrowserConsentDialog} from '#/components/dialogs/InAppBrowserConsen
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
+import {Lightbox} from '#/components/Lightbox'
 import {GlobalReportDialog} from '#/components/moderation/ReportDialog'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
-import {IS_ANDROID, IS_IOS} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
 import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
 import {updateActiveViewAsync} from '../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
@@ -205,7 +205,8 @@ export function Shell() {
       <SystemBars
         style={{
           statusBar:
-            t.name !== 'light' || (IS_IOS && fullyExpandedCount > 0)
+            t.name !== 'light' ||
+            (IS_IOS && !IS_LIQUID_GLASS && fullyExpandedCount > 0)
               ? 'light'
               : 'dark',
           navigationBar: t.name !== 'light' ? 'light' : 'dark',

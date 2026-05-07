@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useEffect} from 'react'
 import {useNavigation} from '@react-navigation/native'
 

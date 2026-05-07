@@ -28,32 +28,29 @@ function isLoopback() {
   )
 }
 
-// Marker symbol so HMR re-running this module can't attach two copies of
-// the listeners to the same client instance.
-const TELEMETRY_ATTACHED = Symbol.for('blacksky.oauthTelemetryAttached')
-
-function attachOauthTelemetry(client: BrowserOAuthClient) {
-  const tagged = client as unknown as Record<symbol, true>
-  if (tagged[TELEMETRY_ATTACHED]) return
-  tagged[TELEMETRY_ATTACHED] = true
-  client.addEventListener('deleted', event => {
-    const detail = (event as CustomEvent<{sub: string; cause?: unknown}>).detail
-    const cause = categorizeOauthError(detail.cause)
+// Session hooks passed at construction. @atproto/oauth-client-browser ^0.3
+// removed the post-construction `addEventListener('deleted'|'updated', ...)`
+// surface; the OAuthClient base class now exposes `onDelete`/`onUpdate`
+// callbacks via SessionHooks instead. Functionally equivalent — we still
+// observe the same lifecycle events, just wired up earlier.
+const sessionHooks = {
+  onDelete(sub: string, cause: unknown) {
+    const category = categorizeOauthError(cause)
     const message =
-      detail.cause instanceof Error
-        ? detail.cause.message
-        : typeof detail.cause === 'string'
-          ? detail.cause
+      cause instanceof Error
+        ? cause.message
+        : typeof cause === 'string'
+          ? cause
           : undefined
-    logger.warn('oauth: session deleted', {sub: detail.sub, cause, message})
+    logger.warn('oauth: session deleted', {sub, cause: category, message})
     emitOauthTelemetry({
       type: 'oauth:sessionDeleted',
-      payload: {cause, message: message?.slice(0, 200)},
+      payload: {cause: category, message: message?.slice(0, 200)},
     })
-  })
-  client.addEventListener('updated', () => {
+  },
+  onUpdate(_sub: string) {
     emitOauthTelemetry({type: 'oauth:sessionRefreshed', payload: {}})
-  })
+  },
 }
 
 // Lets the debug button mark the next refresh attempt as user-initiated so
@@ -157,6 +154,7 @@ function createWebOAuthClient() {
       },
       handleResolver: 'https://blacksky.app',
       fetch: oauthInstrumentedFetch,
+      ...sessionHooks,
     })
   }
 
@@ -175,11 +173,11 @@ function createWebOAuthClient() {
     },
     handleResolver: 'https://blacksky.app',
     fetch: oauthInstrumentedFetch,
+    ...sessionHooks,
   })
 }
 
 const BSKY_OAUTH_CLIENT = createWebOAuthClient()
-attachOauthTelemetry(BSKY_OAUTH_CLIENT)
 
 export function getWebOAuthClient() {
   return BSKY_OAUTH_CLIENT

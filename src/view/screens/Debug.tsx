@@ -1,6 +1,6 @@
-import React from 'react'
+import {useState} from 'react'
 import {ScrollView, View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -14,14 +14,13 @@ import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {Button} from '#/view/com/util/forms/Button'
-import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 import * as LoadingPlaceholder from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
-import * as Toast from '#/view/com/util/Toast'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {ViewSelector} from '#/view/com/util/ViewSelector'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
+import * as Toast from '#/components/Toast'
 
 const MAIN_VIEWS = ['Base', 'Controls', 'Error', 'Notifs']
 
@@ -29,9 +28,7 @@ export const DebugScreen = ({}: NativeStackScreenProps<
   CommonNavigatorParams,
   'Debug'
 >) => {
-  const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(
-    'light',
-  )
+  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('light')
   const onToggleColorScheme = () => {
     setColorScheme(colorScheme === 'light' ? 'dark' : 'light')
   }
@@ -47,28 +44,17 @@ export const DebugScreen = ({}: NativeStackScreenProps<
   )
 }
 
-function DebugInner({
-  colorScheme,
-  onToggleColorScheme,
-}: {
+function DebugInner({}: {
   colorScheme: 'light' | 'dark'
   onToggleColorScheme: () => void
 }) {
-  const [currentView, setCurrentView] = React.useState<number>(0)
+  const [currentView, setCurrentView] = useState<number>(0)
   const pal = usePalette('default')
   const {_} = useLingui()
 
   const renderItem = (item: any) => {
     return (
       <View key={`view-${item.currentView}`}>
-        <View style={[s.pt10, s.pl10, s.pr10]}>
-          <ToggleButton
-            type="default-light"
-            onPress={onToggleColorScheme}
-            isSelected={colorScheme === 'dark'}
-            label={_(msg`Dark mode`)}
-          />
-        </View>
         {item.currentView === 3 ? (
           <NotifsView />
         ) : item.currentView === 2 ? (
@@ -134,8 +120,6 @@ function ControlsView() {
     <ScrollView style={[s.pl10, s.pr10]}>
       <Heading label="Buttons" />
       <ButtonsView />
-      <Heading label="Toggle Buttons" />
-      <ToggleButtonsView />
       <View style={s.footerSpacer} />
     </ScrollView>
   )
@@ -190,7 +174,7 @@ function NotifsView() {
   }
   return (
     <View style={s.p10}>
-      <View style={s.flexRow}>
+      <View style={{flexDirection: 'row'}}>
         <Button onPress={triggerPush} label="Trigger Push" />
         <Button onPress={triggerToast} label="Trigger Toast" />
         <Button onPress={triggerToast2} label="Trigger Toast 2" />
@@ -203,7 +187,7 @@ function PaletteView({palette}: {palette: PaletteColorName}) {
   const defaultPal = usePalette('default')
   const pal = usePalette(palette)
   return (
-    <View style={[pal.view, pal.border, s.p10, s.mb5, s.border1]}>
+    <View style={[pal.view, pal.border, s.p10, s.mb5, {borderWidth: 1}]}>
       <Text style={[pal.text]}>{palette} colors</Text>
       <Text style={[pal.textLight]}>Light text</Text>
       <Text style={[pal.link]}>Link text</Text>
@@ -359,15 +343,15 @@ function ButtonsView() {
   const buttonStyles = {marginRight: 5}
   return (
     <View style={[defaultPal.view]}>
-      <View style={[s.flexRow, s.mb5]}>
+      <View style={[{flexDirection: 'row'}, s.mb5]}>
         <Button type="primary" label="Primary solid" style={buttonStyles} />
         <Button type="secondary" label="Secondary solid" style={buttonStyles} />
       </View>
-      <View style={[s.flexRow, s.mb5]}>
+      <View style={[{flexDirection: 'row'}, s.mb5]}>
         <Button type="default" label="Default solid" style={buttonStyles} />
         <Button type="inverted" label="Inverted solid" style={buttonStyles} />
       </View>
-      <View style={s.flexRow}>
+      <View style={{flexDirection: 'row'}}>
         <Button
           type="primary-outline"
           label="Primary outline"
@@ -379,7 +363,7 @@ function ButtonsView() {
           style={buttonStyles}
         />
       </View>
-      <View style={s.flexRow}>
+      <View style={{flexDirection: 'row'}}>
         <Button
           type="primary-light"
           label="Primary light"
@@ -391,80 +375,13 @@ function ButtonsView() {
           style={buttonStyles}
         />
       </View>
-      <View style={s.flexRow}>
+      <View style={{flexDirection: 'row'}}>
         <Button
           type="default-light"
           label="Default light"
           style={buttonStyles}
         />
       </View>
-    </View>
-  )
-}
-
-function ToggleButtonsView() {
-  const defaultPal = usePalette('default')
-  const buttonStyles = s.mb5
-  const [isSelected, setIsSelected] = React.useState(false)
-  const onToggle = () => setIsSelected(!isSelected)
-  return (
-    <View style={[defaultPal.view]}>
-      <ToggleButton
-        type="primary"
-        label="Primary solid"
-        style={buttonStyles}
-        isSelected={isSelected}
-        onPress={onToggle}
-      />
-      <ToggleButton
-        type="secondary"
-        label="Secondary solid"
-        style={buttonStyles}
-        isSelected={isSelected}
-        onPress={onToggle}
-      />
-      <ToggleButton
-        type="inverted"
-        label="Inverted solid"
-        style={buttonStyles}
-        isSelected={isSelected}
-        onPress={onToggle}
-      />
-      <ToggleButton
-        type="primary-outline"
-        label="Primary outline"
-        style={buttonStyles}
-        isSelected={isSelected}
-        onPress={onToggle}
-      />
-      <ToggleButton
-        type="secondary-outline"
-        label="Secondary outline"
-        style={buttonStyles}
-        isSelected={isSelected}
-        onPress={onToggle}
-      />
-      <ToggleButton
-        type="primary-light"
-        label="Primary light"
-        style={buttonStyles}
-        isSelected={isSelected}
-        onPress={onToggle}
-      />
-      <ToggleButton
-        type="secondary-light"
-        label="Secondary light"
-        style={buttonStyles}
-        isSelected={isSelected}
-        onPress={onToggle}
-      />
-      <ToggleButton
-        type="default-light"
-        label="Default light"
-        style={buttonStyles}
-        isSelected={isSelected}
-        onPress={onToggle}
-      />
     </View>
   )
 }

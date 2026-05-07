@@ -2,7 +2,7 @@ import {useCallback, useEffect, useRef} from 'react'
 import {Keyboard} from 'react-native'
 import {File} from 'expo-file-system'
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {msg, plural} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {VIDEO_MAX_DURATION_MS, VIDEO_MAX_SIZE} from '#/lib/constants'
@@ -32,7 +32,7 @@ export type SelectMediaButtonProps = {
     type: AssetType
     assets: ImagePickerAsset[]
     errors: string[]
-  }) => void
+  }) => void | Promise<void>
   /**
    * If true, automatically open the media picker when the component mounts.
    */

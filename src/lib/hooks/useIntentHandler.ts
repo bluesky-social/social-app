@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect} from 'react'
 import {Alert} from 'react-native'
 import * as Linking from 'expo-linking'
 import * as WebBrowser from 'expo-web-browser'
@@ -28,7 +28,7 @@ export function useIntentHandler() {
   const {currentAccount} = useSession()
   const {tryApplyUpdate} = useApplyPullRequestOTAUpdate()
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleIncomingURL = async (url: string) => {
       if (IS_IOS) {
         // Close in-app browser if it's open (iOS only)
@@ -109,7 +109,7 @@ export function useComposeIntent() {
   const {openComposer} = useOpenComposer()
   const {hasSession} = useSession()
 
-  return React.useCallback(
+  return useCallback(
     ({
       text,
       imageUrisStr,
@@ -166,7 +166,7 @@ function useVerifyEmailIntent() {
   const closeAllActiveElements = useCloseAllActiveElements()
   const {verifyEmailDialogControl: control, setVerifyEmailState: setState} =
     useIntentDialogs()
-  return React.useCallback(
+  return useCallback(
     (code: string) => {
       closeAllActiveElements()
       setState({

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {
@@ -8,8 +8,9 @@ import {
   type ModerationOpts,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {JOINED_THIS_WEEK} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -74,7 +75,7 @@ export function LandingScreen({
     AppBskyGraphDefs.validateStarterPackView(starterPack) &&
     AppBskyGraphStarterpack.validateRecord(starterPack.record)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isErrorStarterPack || (starterPack && !isValid)) {
       setScreenState(LoggedOutScreenState.S_LoginOrCreateAccount)
     }
@@ -127,8 +128,7 @@ function LandingScreenLoaded({
   const androidDialogControl = useDialogControl()
   const [descriptionRt] = useRichText(record.description || '')
 
-  const [appClipOverlayVisible, setAppClipOverlayVisible] =
-    React.useState(false)
+  const [appClipOverlayVisible, setAppClipOverlayVisible] = useState(false)
 
   const listItemsCount = starterPack.list?.listItemCount ?? 0
 
@@ -207,13 +207,13 @@ function LandingScreenLoaded({
           ) : null}
           <View style={[a.gap_sm]}>
             <Button
-              label={_(msg`Join Bluesky`)}
+              label={_(msg`Join Blacksky`)}
               onPress={onJoinPress}
               variant="solid"
               color="primary"
               size="large">
               <ButtonText style={[a.text_lg]}>
-                <Trans>Join Bluesky</Trans>
+                <Trans>Join Blacksky</Trans>
               </ButtonText>
             </Button>
             <View style={[a.flex_row, a.align_center, a.gap_sm]}>
@@ -328,11 +328,11 @@ function LandingScreenLoaded({
       <Prompt.Outer control={androidDialogControl}>
         <Prompt.Content>
           <Prompt.TitleText>
-            <Trans>Download Bluesky</Trans>
+            <Trans>Download Blacksky</Trans>
           </Prompt.TitleText>
           <Prompt.DescriptionText>
             <Trans>
-              The experience is better in the app. Download Bluesky now and
+              The experience is better in the app. Download Blacksky now and
               we'll pick back up where you left off.
             </Trans>
           </Prompt.DescriptionText>
@@ -403,7 +403,7 @@ export function AppClipOverlay({
               a.text_4xl,
               {lineHeight: 40, color: 'white'},
             ]}>
-            Download Bluesky to get started!
+            Download Blacksky to get started!
           </Text>
           <Text style={[a.text_lg, {color: 'white'}]}>
             We'll remember the starter pack you chose and use it when you create

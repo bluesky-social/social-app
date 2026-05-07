@@ -19,8 +19,8 @@ public class BottomSheetModule: Module {
         view.dismiss()
       }
 
-      AsyncFunction("updateLayout") { (view: SheetView) in
-        view.updateLayout()
+      Prop("fullHeight") { (view: SheetView, prop: Bool) in
+        view.fullHeight = prop
       }
 
       Prop("cornerRadius") { (view: SheetView, prop: Float) in
@@ -41,6 +41,10 @@ public class BottomSheetModule: Module {
 
       Prop("preventExpansion") { (view: SheetView, prop: Bool) in
         view.preventExpansion = prop
+      }
+
+      Prop("sourceViewTag") { (view: SheetView, prop: Int?) in
+        view.sourceViewTag = prop
       }
     }
   }

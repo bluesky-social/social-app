@@ -1,15 +1,22 @@
-import React, {useEffect, useMemo, useReducer, useRef} from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+} from 'react'
 
 import {useCurrentConvoId} from './current-convo-id'
 
-const MessageDraftsContext = React.createContext<{
+const MessageDraftsContext = createContext<{
   state: State
   dispatch: React.Dispatch<Actions>
 } | null>(null)
 MessageDraftsContext.displayName = 'MessageDraftsContext'
 
 function useMessageDraftsContext() {
-  const ctx = React.useContext(MessageDraftsContext)
+  const ctx = useContext(MessageDraftsContext)
   if (!ctx) {
     throw new Error(
       'useMessageDrafts must be used within a MessageDraftsContext',

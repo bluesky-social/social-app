@@ -8,8 +8,9 @@ import {
   AppBskyContactImportContacts,
   type Un$Typed,
 } from '@atproto/api'
-import {msg, t, Trans} from '@lingui/macro'
+import {msg, t} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'

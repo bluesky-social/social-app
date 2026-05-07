@@ -11,11 +11,11 @@ import Svg, {Circle, Path, Rect} from 'react-native-svg'
 import {Image as ExpoImage} from 'expo-image'
 import {type ModerationUI} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useActorStatus} from '#/lib/actor-status'
 import {useHaptics} from '#/lib/haptics'
 import {
   useCameraPermission,
@@ -24,6 +24,7 @@ import {
 import {compressIfNeeded} from '#/lib/media/manip'
 import {openCamera, openCropper, openPicker} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
+import {convertCdnPreset} from '#/lib/media/util'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {isCancelledError} from '#/lib/strings/errors'
@@ -47,13 +48,14 @@ import {
 import {StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
-import {LiveIndicator} from '#/components/live/LiveIndicator'
-import {LiveStatusDialog} from '#/components/live/LiveStatusDialog'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_NATIVE, IS_WEB, IS_WEB_TOUCH_DEVICE} from '#/env'
+import {useActorStatus} from '#/features/liveNow'
+import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
+import {LiveStatusDialog} from '#/features/liveNow/components/LiveStatusDialog'
 import type * as bsky from '#/types/bsky'
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
@@ -615,9 +617,7 @@ export {PreviewableUserAvatar}
 // manually string-replace to use the smaller ones
 // -prf
 function hackModifyThumbnailPath(uri: string, isEnabled: boolean): string {
-  return isEnabled
-    ? uri.replace('/img/avatar/plain/', '/img/avatar_thumbnail/plain/')
-    : uri
+  return isEnabled ? convertCdnPreset(uri, 'avatar_thumbnail') : uri
 }
 
 const styles = StyleSheet.create({

@@ -1,7 +1,7 @@
 import {memo, useEffect} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorSearchActors, type ModerationOpts} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {type InfiniteData} from '@tanstack/react-query'
 
@@ -105,7 +105,7 @@ let SuggestedProfileCard = ({
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
-  recId?: number
+  recId?: string
   position: number
 }): React.ReactNode => {
   const t = useTheme()

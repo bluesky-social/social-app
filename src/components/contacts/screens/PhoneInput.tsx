@@ -3,8 +3,9 @@ import {Keyboard, View} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyContactStartPhoneVerification} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
 import {urls} from '#/lib/constants'
@@ -284,7 +285,9 @@ function LegalDisclaimer() {
       </Text>
       <Text style={style}>
         &bull;{' '}
-        <Trans>Held by Bluesky for 7 days to prevent abuse, then deleted</Trans>
+        <Trans>
+          Held by Blacksky for 7 days to prevent abuse, then deleted
+        </Trans>
       </Text>
       <Text style={style}>
         &bull;{' '}

@@ -352,7 +352,7 @@ async function whenAppViewReady(
   )
 }
 
-export async function precacheStarterPack(
+export function precacheStarterPack(
   queryClient: QueryClient,
   starterPack:
     | AppBskyGraphDefs.StarterPackViewBasic

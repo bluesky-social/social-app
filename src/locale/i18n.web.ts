@@ -1,5 +1,6 @@
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 import {i18n} from '@lingui/core'
+import defaultLocale from 'date-fns/locale/en-US'
 
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {AppLanguage} from '#/locale/languages'
@@ -10,62 +11,105 @@ import {useLanguagePrefs} from '#/state/preferences'
  */
 export async function dynamicActivate(locale: AppLanguage) {
   let mod: any
+  let dateLocale: Locale = defaultLocale
 
   switch (locale) {
     case AppLanguage.an: {
-      mod = await import(`./locales/an/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/an/messages`),
+        import('date-fns/locale/es'),
+      ])
       break
     }
     case AppLanguage.ast: {
-      mod = await import(`./locales/ast/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/ast/messages`),
+        import('date-fns/locale/es'),
+      ])
       break
     }
     case AppLanguage.ca: {
-      mod = await import(`./locales/ca/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/ca/messages`),
+        import('date-fns/locale/ca'),
+      ])
       break
     }
     case AppLanguage.cy: {
-      mod = await import(`./locales/cy/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/cy/messages`),
+        import('date-fns/locale/cy'),
+      ])
       break
     }
     case AppLanguage.da: {
-      mod = await import(`./locales/da/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/da/messages`),
+        import('date-fns/locale/da'),
+      ])
       break
     }
     case AppLanguage.de: {
-      mod = await import(`./locales/de/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/de/messages`),
+        import('date-fns/locale/de'),
+      ])
       break
     }
     case AppLanguage.el: {
-      mod = await import(`./locales/el/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/el/messages`),
+        import('date-fns/locale/el'),
+      ])
       break
     }
     case AppLanguage.en_GB: {
-      mod = await import(`./locales/en-GB/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/en-GB/messages`),
+        import('date-fns/locale/en-GB'),
+      ])
       break
     }
     case AppLanguage.eo: {
-      mod = await import(`./locales/eo/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/eo/messages`),
+        import('date-fns/locale/eo'),
+      ])
       break
     }
     case AppLanguage.es: {
-      mod = await import(`./locales/es/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/es/messages`),
+        import('date-fns/locale/es'),
+      ])
       break
     }
     case AppLanguage.eu: {
-      mod = await import(`./locales/eu/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/eu/messages`),
+        import('date-fns/locale/eu'),
+      ])
       break
     }
     case AppLanguage.fi: {
-      mod = await import(`./locales/fi/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/fi/messages`),
+        import('date-fns/locale/fi'),
+      ])
       break
     }
     case AppLanguage.fr: {
-      mod = await import(`./locales/fr/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/fr/messages`),
+        import('date-fns/locale/fr'),
+      ])
       break
     }
     case AppLanguage.fy: {
-      mod = await import(`./locales/fy/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/fy/messages`),
+        import('date-fns/locale/fy'),
+      ])
       break
     }
     case AppLanguage.ga: {
@@ -73,19 +117,31 @@ export async function dynamicActivate(locale: AppLanguage) {
       break
     }
     case AppLanguage.gd: {
-      mod = await import(`./locales/gd/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/gd/messages`),
+        import('date-fns/locale/gd'),
+      ])
       break
     }
     case AppLanguage.gl: {
-      mod = await import(`./locales/gl/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/gl/messages`),
+        import('date-fns/locale/gl'),
+      ])
       break
     }
     case AppLanguage.hi: {
-      mod = await import(`./locales/hi/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/hi/messages`),
+        import('date-fns/locale/hi'),
+      ])
       break
     }
     case AppLanguage.hu: {
-      mod = await import(`./locales/hu/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/hu/messages`),
+        import('date-fns/locale/hu'),
+      ])
       break
     }
     case AppLanguage.ia: {
@@ -93,23 +149,38 @@ export async function dynamicActivate(locale: AppLanguage) {
       break
     }
     case AppLanguage.id: {
-      mod = await import(`./locales/id/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/id/messages`),
+        import('date-fns/locale/id'),
+      ])
       break
     }
     case AppLanguage.it: {
-      mod = await import(`./locales/it/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/it/messages`),
+        import('date-fns/locale/it'),
+      ])
       break
     }
     case AppLanguage.ja: {
-      mod = await import(`./locales/ja/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/ja/messages`),
+        import('date-fns/locale/ja'),
+      ])
       break
     }
     case AppLanguage.km: {
-      mod = await import(`./locales/km/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/km/messages`),
+        import('date-fns/locale/km'),
+      ])
       break
     }
     case AppLanguage.ko: {
-      mod = await import(`./locales/ko/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/ko/messages`),
+        import('date-fns/locale/ko'),
+      ])
       break
     }
     case AppLanguage.ne: {
@@ -117,59 +188,101 @@ export async function dynamicActivate(locale: AppLanguage) {
       break
     }
     case AppLanguage.nl: {
-      mod = await import(`./locales/nl/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/nl/messages`),
+        import('date-fns/locale/nl'),
+      ])
       break
     }
     case AppLanguage.pl: {
-      mod = await import(`./locales/pl/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/pl/messages`),
+        import('date-fns/locale/pl'),
+      ])
       break
     }
     case AppLanguage.pt_BR: {
-      mod = await import(`./locales/pt-BR/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/pt-BR/messages`),
+        import('date-fns/locale/pt-BR'),
+      ])
       break
     }
     case AppLanguage.pt_PT: {
-      mod = await import(`./locales/pt-PT/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/pt-PT/messages`),
+        import('date-fns/locale/pt'),
+      ])
       break
     }
     case AppLanguage.ro: {
-      mod = await import(`./locales/ro/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/ro/messages`),
+        import('date-fns/locale/ro'),
+      ])
       break
     }
     case AppLanguage.ru: {
-      mod = await import(`./locales/ru/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/ru/messages`),
+        import('date-fns/locale/ru'),
+      ])
       break
     }
     case AppLanguage.sv: {
-      mod = await import(`./locales/sv/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/sv/messages`),
+        import('date-fns/locale/sv'),
+      ])
       break
     }
     case AppLanguage.th: {
-      mod = await import(`./locales/th/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/th/messages`),
+        import('date-fns/locale/th'),
+      ])
       break
     }
     case AppLanguage.tr: {
-      mod = await import(`./locales/tr/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/tr/messages`),
+        import('date-fns/locale/tr'),
+      ])
       break
     }
     case AppLanguage.uk: {
-      mod = await import(`./locales/uk/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/uk/messages`),
+        import('date-fns/locale/uk'),
+      ])
       break
     }
     case AppLanguage.vi: {
-      mod = await import(`./locales/vi/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/vi/messages`),
+        import('date-fns/locale/vi'),
+      ])
       break
     }
     case AppLanguage.zh_CN: {
-      mod = await import(`./locales/zh-CN/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/zh-CN/messages`),
+        import('date-fns/locale/zh-CN'),
+      ])
       break
     }
     case AppLanguage.zh_HK: {
-      mod = await import(`./locales/zh-HK/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/zh-HK/messages`),
+        import('date-fns/locale/zh-HK'),
+      ])
       break
     }
     case AppLanguage.zh_TW: {
-      mod = await import(`./locales/zh-TW/messages`)
+      ;[mod, {default: dateLocale}] = await Promise.all([
+        import(`./locales/zh-TW/messages`),
+        import('date-fns/locale/zh-TW'),
+      ])
       break
     }
     default: {
@@ -180,14 +293,22 @@ export async function dynamicActivate(locale: AppLanguage) {
 
   i18n.load(locale, mod.messages)
   i18n.activate(locale)
+
+  return dateLocale
 }
 
 export function useLocaleLanguage() {
   const {appLanguage} = useLanguagePrefs()
+  const [dateLocale, setDateLocale] = useState(defaultLocale)
+
   useEffect(() => {
     const sanitizedLanguage = sanitizeAppLanguageSetting(appLanguage)
 
     document.documentElement.lang = sanitizedLanguage
-    dynamicActivate(sanitizedLanguage)
+    dynamicActivate(sanitizedLanguage).then(locale => {
+      setDateLocale(locale)
+    })
   }, [appLanguage])
+
+  return dateLocale
 }

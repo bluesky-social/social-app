@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react'
+import {forwardRef, useCallback, useEffect, useState} from 'react'
 import {
   AccessibilityInfo,
   Image as RNImage,
@@ -36,7 +36,7 @@ const darkSplashImageUri = RNImage.resolveAssetSource(
   darkSplashImagePointer,
 ).uri
 
-export const Logo = React.forwardRef(function LogoImpl(props: SvgProps, ref) {
+export const Logo = forwardRef(function LogoImpl(props: SvgProps, ref) {
   const width = 1000
   const height = width * (243 / 285)
   return (
@@ -84,12 +84,10 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   const outroLogo = useSharedValue(0)
   const outroApp = useSharedValue(0)
   const outroAppOpacity = useSharedValue(0)
-  const [isAnimationComplete, setIsAnimationComplete] = React.useState(false)
-  const [isImageLoaded, setIsImageLoaded] = React.useState(false)
-  const [isLayoutReady, setIsLayoutReady] = React.useState(false)
-  const [reduceMotion, setReduceMotion] = React.useState<boolean | undefined>(
-    false,
-  )
+  const [isAnimationComplete, setIsAnimationComplete] = useState(false)
+  const [isImageLoaded, setIsImageLoaded] = useState(false)
+  const [isLayoutReady, setIsLayoutReady] = useState(false)
+  const [reduceMotion, setReduceMotion] = useState<boolean | undefined>(false)
   const isReady =
     props.isReady &&
     isImageLoaded &&

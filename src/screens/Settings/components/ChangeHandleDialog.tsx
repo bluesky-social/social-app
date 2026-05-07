@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View} from 'react-native'
 import Animated, {
   FadeIn,
   FadeOut,
@@ -11,8 +11,9 @@ import Animated, {
   SlideOutRight,
 } from 'react-native-reanimated'
 import {type ComAtprotoServerDescribeServer} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_10, urls} from '#/lib/constants'
@@ -53,10 +54,8 @@ export function ChangeHandleDialog({
 }: {
   control: Dialog.DialogControlProps
 }) {
-  const {height} = useWindowDimensions()
-
   return (
-    <Dialog.Outer control={control} nativeOptions={{minHeight: height}}>
+    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
       <ChangeHandleDialogInner />
     </Dialog.Outer>
   )

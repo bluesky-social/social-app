@@ -1,7 +1,8 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import type Hls from 'hls.js'
 
 import {clamp} from '#/lib/numbers'
@@ -47,6 +48,7 @@ export function Controls({
   hasSubtitleTrack,
   isGif,
   altText,
+  updateCuePositions,
 }: {
   videoRef: React.RefObject<HTMLVideoElement | null>
   hlsRef: React.RefObject<Hls | undefined | null>
@@ -60,6 +62,7 @@ export function Controls({
   hasSubtitleTrack: boolean
   isGif: boolean
   altText?: string
+  updateCuePositions: (controlsVisible?: boolean) => void
 }) {
   const {
     play,
@@ -293,6 +296,13 @@ export function Controls({
     ((focused || autoplayDisabled) && !playing) ||
     (interactingViaKeypress ? hasFocus : hovered)
 
+  // adjust subtitle cue positioning to avoid occlusion by controls
+  // uses percentage-based positioning (snapToLines=false) so wrapped
+  // multi-line cues grow upward instead of extending offscreen
+  useEffect(() => {
+    updateCuePositions(showControls)
+  }, [showControls, updateCuePositions])
+
   if (isGif) {
     return (
       <GifPresentationControls
@@ -401,8 +411,8 @@ export function Controls({
           {hasSubtitleTrack && (
             <ControlButton
               active={subtitlesEnabled}
-              activeLabel={_(msg`Disable subtitles`)}
-              inactiveLabel={_(msg`Enable subtitles`)}
+              activeLabel={_(msg`Disable captions`)}
+              inactiveLabel={_(msg`Enable captions`)}
               activeIcon={CCActiveIcon}
               inactiveIcon={CCInactiveIcon}
               onPress={onPressSubtitles}

@@ -1,9 +1,9 @@
-import {memo} from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {memo, type ReactNode} from 'react'
 import {type Insets} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
 import {type Shadow} from '#/state/cache/post-shadow'
@@ -26,7 +26,7 @@ export const HideButton = memo(function HideButton({
   big?: boolean
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   hitSlop?: Insets
-}): React.ReactNode {
+}): ReactNode {
   const ax = useAnalytics()
   const {_} = useLingui()
   const {currentAccount} = useSession()

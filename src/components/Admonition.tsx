@@ -9,10 +9,6 @@ import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons
 import {Text as BaseText, type TextProps} from '#/components/Typography'
 import {EmojiSad_Stroke2_Corner0_Rounded as EmojiSadIcon} from './icons/Emoji'
 
-export const colors = {
-  warning: '#FFC404',
-}
-
 type Context = {
   type: 'info' | 'tip' | 'warning' | 'error' | 'apology'
 }
@@ -35,7 +31,7 @@ export function Icon() {
   const fill = {
     info: t.atoms.text_contrast_medium.color,
     tip: t.palette.primary_500,
-    warning: colors.warning,
+    warning: t.palette.yellow,
     error: t.palette.negative_500,
     apology: t.atoms.text_contrast_medium.color,
   }[type]
@@ -110,7 +106,7 @@ export function Outer({
   const borderColor = {
     info: t.atoms.border_contrast_high.borderColor,
     tip: t.palette.primary_500,
-    warning: colors.warning,
+    warning: t.palette.yellow,
     error: t.palette.negative_500,
     apology: t.atoms.border_contrast_high.borderColor,
   }[type]

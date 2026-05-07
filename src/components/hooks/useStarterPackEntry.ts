@@ -1,14 +1,14 @@
-import React from 'react'
+import {useEffect, useState} from 'react'
 
 import {httpStarterPackUriToAtUri} from '#/lib/strings/starter-pack'
 import {useSetActiveStarterPack} from '#/state/shell/starter-pack'
 
 export function useStarterPackEntry() {
-  const [ready, setReady] = React.useState(false)
+  const [ready, setReady] = useState(false)
 
   const setActiveStarterPack = useSetActiveStarterPack()
 
-  React.useEffect(() => {
+  useEffect(() => {
     const href = window.location.href
     const atUri = httpStarterPackUriToAtUri(href)
 

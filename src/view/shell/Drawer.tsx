@@ -1,12 +1,12 @@
-import React, {type ComponentProps, type JSX} from 'react'
+import {type ComponentProps, type JSX, memo, useCallback} from 'react'
 import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, Plural, plural, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
-import {useActorStatus} from '#/lib/actor-status'
-import {HELP_DESK_URL} from '#/lib/constants'
+import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {type PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {getTabState, TabState} from '#/lib/routes/helpers'
@@ -35,7 +35,6 @@ import {
   Hashtag_Filled_Corner0_Rounded as HashtagFilled,
   Hashtag_Stroke2_Corner0_Rounded as Hashtag,
 } from '#/components/icons/Hashtag'
-import {Heart2_Stroke2_Corner0_Rounded as Heart} from '#/components/icons/Heart2'
 import {
   HomeOpen_Filled_Corner0_Rounded as HomeFilled,
   HomeOpen_Stoke2_Corner0_Rounded as Home,
@@ -54,10 +53,10 @@ import {
   UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle'
 import {InlineLinkText} from '#/components/Link'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {IS_WEB} from '#/env'
+import {useActorStatus} from '#/features/liveNow'
 
 const iconWidth = 26
 
@@ -71,7 +70,6 @@ let DrawerProfileCard = ({
   const {_, i18n} = useLingui()
   const t = useTheme()
   const {data: profile} = useProfileQuery({did: account.did})
-  const verification = useSimpleVerificationState({profile})
   const {isActive: live} = useActorStatus(profile)
 
   return (
@@ -97,17 +95,7 @@ let DrawerProfileCard = ({
             numberOfLines={1}>
             {profile?.displayName || account.handle}
           </Text>
-          {verification.showBadge && (
-            <View
-              style={{
-                top: 0,
-              }}>
-              <VerificationCheck
-                width={16}
-                verifier={verification.role === 'verifier'}
-              />
-            </View>
-          )}
+          {profile && <ProfileBadges profile={profile} size="lg" />}
         </View>
         <Text
           emoji
@@ -142,7 +130,7 @@ let DrawerProfileCard = ({
     </TouchableOpacity>
   )
 }
-DrawerProfileCard = React.memo(DrawerProfileCard)
+DrawerProfileCard = memo(DrawerProfileCard)
 export {DrawerProfileCard}
 
 let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
@@ -164,7 +152,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   // events
   // =
 
-  const onPressTab = React.useCallback(
+  const onPressTab = useCallback(
     (tab: 'Home' | 'Search' | 'Messages' | 'Notifications' | 'MyProfile') => {
       const state = navigation.getState()
       setDrawerOpen(false)
@@ -205,64 +193,56 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
     [navigation, setDrawerOpen, currentAccount],
   )
 
-  const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
+  const onPressHome = useCallback(() => onPressTab('Home'), [onPressTab])
 
-  const onPressSearch = React.useCallback(
-    () => onPressTab('Search'),
-    [onPressTab],
-  )
+  const onPressSearch = useCallback(() => onPressTab('Search'), [onPressTab])
 
-  const onPressMessages = React.useCallback(
+  const onPressMessages = useCallback(
     () => onPressTab('Messages'),
     [onPressTab],
   )
 
-  const onPressNotifications = React.useCallback(
+  const onPressNotifications = useCallback(
     () => onPressTab('Notifications'),
     [onPressTab],
   )
 
-  const onPressProfile = React.useCallback(() => {
+  const onPressProfile = useCallback(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
 
-  const onPressMyFeeds = React.useCallback(() => {
+  const onPressMyFeeds = useCallback(() => {
     navigation.navigate('Feeds')
     setDrawerOpen(false)
   }, [navigation, setDrawerOpen])
 
-  const onPressLists = React.useCallback(() => {
+  const onPressLists = useCallback(() => {
     navigation.navigate('Lists')
     setDrawerOpen(false)
   }, [navigation, setDrawerOpen])
 
-  const onPressBookmarks = React.useCallback(() => {
+  const onPressBookmarks = useCallback(() => {
     navigation.navigate('Bookmarks')
     setDrawerOpen(false)
   }, [navigation, setDrawerOpen])
 
-  const onPressSettings = React.useCallback(() => {
+  const onPressSettings = useCallback(() => {
     navigation.navigate('Settings')
     setDrawerOpen(false)
   }, [navigation, setDrawerOpen])
 
-  const onPressDiscuss = React.useCallback(() => {
-    Linking.openURL('https://assembly.blacksky.community/8bbfunvvau')
-  }, [])
+  const onPressFeedback = useCallback(() => {
+    Linking.openURL(
+      FEEDBACK_FORM_URL({
+        email: currentAccount?.email,
+        handle: currentAccount?.handle,
+      }),
+    )
+  }, [currentAccount])
 
-  const onPressHelp = React.useCallback(() => {
+  const onPressHelp = useCallback(() => {
     Linking.openURL(HELP_DESK_URL)
   }, [])
-
-  const onPressSupport = React.useCallback(() => {
-    navigation.navigate('Support')
-    setDrawerOpen(false)
-  }, [navigation, setDrawerOpen])
-
-  const onPressContribute = React.useCallback(() => {
-    navigation.navigate('Support')
-    setDrawerOpen(false)
-  }, [navigation, setDrawerOpen])
 
   // rendering
   // =
@@ -316,7 +296,6 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
               onPress={onPressProfile}
             />
             <SettingsMenuItem onPress={onPressSettings} />
-            <SupportMenuItem onPress={onPressSupport} />
           </>
         ) : (
           <>
@@ -333,24 +312,21 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
       </ScrollView>
 
       <DrawerFooter
-        onPressDiscuss={onPressDiscuss}
+        onPressFeedback={onPressFeedback}
         onPressHelp={onPressHelp}
-        onPressContribute={onPressContribute}
       />
     </View>
   )
 }
-DrawerContent = React.memo(DrawerContent)
+DrawerContent = memo(DrawerContent)
 export {DrawerContent}
 
 let DrawerFooter = ({
-  onPressDiscuss,
+  onPressFeedback,
   onPressHelp,
-  onPressContribute,
 }: {
-  onPressDiscuss: () => void
+  onPressFeedback: () => void
   onPressHelp: () => void
-  onPressContribute: () => void
 }): React.ReactNode => {
   const {_} = useLingui()
   const insets = useSafeAreaInsets()
@@ -370,14 +346,14 @@ let DrawerFooter = ({
         },
       ]}>
       <Button
-        label={_(msg`Begin Discussion`)}
+        label={_(msg`Send feedback`)}
         size="small"
         variant="solid"
         color="secondary"
-        onPress={onPressDiscuss}>
+        onPress={onPressFeedback}>
         <ButtonIcon icon={Message} position="left" />
         <ButtonText>
-          <Trans>Discussion</Trans>
+          <Trans>Feedback</Trans>
         </ButtonText>
       </Button>
       <Button
@@ -393,23 +369,10 @@ let DrawerFooter = ({
           <Trans>Help</Trans>
         </ButtonText>
       </Button>
-      <Button
-        label={_(msg`Support Us`)}
-        size="small"
-        variant="outline"
-        color="secondary"
-        onPress={onPressContribute}
-        style={{
-          backgroundColor: 'transparent',
-        }}>
-        <ButtonText>
-          <Trans>Support Us</Trans>
-        </ButtonText>
-      </Button>
     </View>
   )
 }
-DrawerFooter = React.memo(DrawerFooter)
+DrawerFooter = memo(DrawerFooter)
 
 interface MenuItemProps extends ComponentProps<typeof PressableScale> {
   icon: JSX.Element
@@ -442,7 +405,7 @@ let SearchMenuItem = ({
     />
   )
 }
-SearchMenuItem = React.memo(SearchMenuItem)
+SearchMenuItem = memo(SearchMenuItem)
 
 let HomeMenuItem = ({
   isActive,
@@ -468,7 +431,7 @@ let HomeMenuItem = ({
     />
   )
 }
-HomeMenuItem = React.memo(HomeMenuItem)
+HomeMenuItem = memo(HomeMenuItem)
 
 let ChatMenuItem = ({
   isActive,
@@ -494,7 +457,7 @@ let ChatMenuItem = ({
     />
   )
 }
-ChatMenuItem = React.memo(ChatMenuItem)
+ChatMenuItem = memo(ChatMenuItem)
 
 let NotificationsMenuItem = ({
   isActive,
@@ -532,7 +495,7 @@ let NotificationsMenuItem = ({
     />
   )
 }
-NotificationsMenuItem = React.memo(NotificationsMenuItem)
+NotificationsMenuItem = memo(NotificationsMenuItem)
 
 let FeedsMenuItem = ({
   isActive,
@@ -558,7 +521,7 @@ let FeedsMenuItem = ({
     />
   )
 }
-FeedsMenuItem = React.memo(FeedsMenuItem)
+FeedsMenuItem = memo(FeedsMenuItem)
 
 let ListsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
   const {_} = useLingui()
@@ -572,7 +535,7 @@ let ListsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
     />
   )
 }
-ListsMenuItem = React.memo(ListsMenuItem)
+ListsMenuItem = memo(ListsMenuItem)
 
 let BookmarksMenuItem = ({
   isActive,
@@ -598,7 +561,7 @@ let BookmarksMenuItem = ({
     />
   )
 }
-BookmarksMenuItem = React.memo(BookmarksMenuItem)
+BookmarksMenuItem = memo(BookmarksMenuItem)
 
 let ProfileMenuItem = ({
   isActive,
@@ -623,7 +586,7 @@ let ProfileMenuItem = ({
     />
   )
 }
-ProfileMenuItem = React.memo(ProfileMenuItem)
+ProfileMenuItem = memo(ProfileMenuItem)
 
 let SettingsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
   const {_} = useLingui()
@@ -636,20 +599,7 @@ let SettingsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
     />
   )
 }
-SettingsMenuItem = React.memo(SettingsMenuItem)
-
-let SupportMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
-  const {_} = useLingui()
-  const t = useTheme()
-  return (
-    <MenuItem
-      icon={<Heart style={[t.atoms.text]} width={iconWidth} />}
-      label={_(msg`Support`)}
-      onPress={onPress}
-    />
-  )
-}
-SupportMenuItem = React.memo(SupportMenuItem)
+SettingsMenuItem = memo(SettingsMenuItem)
 
 function MenuItem({icon, label, count, bold, onPress}: MenuItemProps) {
   const t = useTheme()

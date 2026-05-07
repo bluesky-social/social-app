@@ -2,8 +2,9 @@ import {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
 import {type ChatBskyActorDefs, type ChatBskyConvoDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -162,7 +163,11 @@ export function MessagesScreen({navigation, route}: Props) {
             ]
           : []),
         ...conversations.map(
-          convo => ({type: 'CONVERSATION', conversation: convo}) as const,
+          convo =>
+            ({
+              type: 'CONVERSATION',
+              conversation: convo,
+            }) as const,
         ),
       ] satisfies ListItem[]
     }
@@ -211,7 +216,7 @@ export function MessagesScreen({navigation, route}: Props) {
     if (!isScreenFocused) {
       return
     }
-    return listenSoftReset(onSoftReset)
+    return listenSoftReset(() => void onSoftReset())
   }, [onSoftReset, isScreenFocused])
 
   // NOTE(APiligrim)
@@ -261,7 +266,7 @@ export function MessagesScreen({navigation, route}: Props) {
                       size="small"
                       color="secondary_inverted"
                       variant="solid"
-                      onPress={() => refetch()}>
+                      onPress={() => void refetch()}>
                       <ButtonText>
                         <Trans>Retry</Trans>
                       </ButtonText>
@@ -311,8 +316,8 @@ export function MessagesScreen({navigation, route}: Props) {
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         refreshing={isPTRing}
-        onRefresh={onRefresh}
-        onEndReached={onEndReached}
+        onRefresh={() => void onRefresh()}
+        onEndReached={() => void onEndReached()}
         ListFooterComponent={
           <ListFooter
             isFetchingNextPage={isFetchingNextPage}

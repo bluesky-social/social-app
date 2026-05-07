@@ -1,14 +1,13 @@
-import React from 'react'
+import {lazy, Suspense} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
+import {Trans} from '@lingui/react/macro'
 
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
@@ -16,21 +15,12 @@ import {Text} from '#/components/Typography'
 
 // Lazy-loaded so the Stripe SDK (and the js.stripe.com script it injects) are
 // only fetched when the user actually navigates to this screen.
-const SupportStripeCheckout = React.lazy(
-  () => import('./SupportStripeCheckout'),
-)
+const SupportStripeCheckout = lazy(() => import('./SupportStripeCheckout'))
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Support'>
 export const SupportScreen = (_props: Props) => {
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {_} = useLingui()
   const t = useTheme()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
 
   return (
     <Layout.Screen>
@@ -71,9 +61,9 @@ export const SupportScreen = (_props: Props) => {
             </View>
           </View>
 
-          <React.Suspense fallback={null}>
+          <Suspense fallback={null}>
             <SupportStripeCheckout />
-          </React.Suspense>
+          </Suspense>
         </View>
       </Layout.Content>
     </Layout.Screen>

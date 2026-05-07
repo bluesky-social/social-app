@@ -1,21 +1,28 @@
-import React from 'react'
+import {
+  createContext,
+  type PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 
 import * as persisted from '#/state/persisted'
 
 type StateContext = persisted.Schema['noDiscoverFallback']
 type SetContext = (v: persisted.Schema['noDiscoverFallback']) => void
 
-const stateContext = React.createContext<StateContext>(
+const stateContext = createContext<StateContext>(
   persisted.defaults.noDiscoverFallback,
 )
-const setContext = React.createContext<SetContext>(
+const setContext = createContext<SetContext>(
   (_: persisted.Schema['noDiscoverFallback']) => {},
 )
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(persisted.get('noDiscoverFallback'))
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [state, setState] = useState(persisted.get('noDiscoverFallback'))
 
-  const setStateWrapped = React.useCallback(
+  const setStateWrapped = useCallback(
     (noDiscoverFallback: persisted.Schema['noDiscoverFallback']) => {
       setState(noDiscoverFallback)
       persisted.write('noDiscoverFallback', noDiscoverFallback)
@@ -23,7 +30,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setState],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate('noDiscoverFallback', nextNoDiscoverFallback => {
       setState(nextNoDiscoverFallback)
     })
@@ -39,9 +46,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useNoDiscoverFallback() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useSetNoDiscoverFallback() {
-  return React.useContext(setContext)
+  return useContext(setContext)
 }

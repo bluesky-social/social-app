@@ -1,11 +1,8 @@
-import React from 'react'
+import {useCallback} from 'react'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
+import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
-import {
-  fetchQueryWithFallback,
-  useMutation,
-  useQueryClient,
-} from './useQueryWithFallback'
 
 const handleQueryKeyRoot = 'handle'
 const fetchHandleQueryKey = (handleOrDid: string) => [
@@ -19,15 +16,13 @@ export function useFetchHandle() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
-  return React.useCallback(
+  return useCallback(
     async (handleOrDid: string) => {
       if (handleOrDid.startsWith('did:')) {
-        const res = await fetchQueryWithFallback(queryClient, {
+        const res = await queryClient.fetchQuery({
+          staleTime: STALE.MINUTES.FIVE,
           queryKey: fetchHandleQueryKey(handleOrDid),
           queryFn: () => agent.getProfile({actor: handleOrDid}),
-          enableFallback: true,
-          fallbackType: 'profile',
-          fallbackIdentifier: handleOrDid,
         })
         return res.data.handle
       }
@@ -60,9 +55,10 @@ export function useFetchDid() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
-  return React.useCallback(
+  return useCallback(
     async (handleOrDid: string) => {
-      return fetchQueryWithFallback(queryClient, {
+      return queryClient.fetchQuery({
+        staleTime: STALE.INFINITY,
         queryKey: fetchDidQueryKey(handleOrDid),
         queryFn: async () => {
           let identifier = handleOrDid
@@ -72,9 +68,6 @@ export function useFetchDid() {
           }
           return identifier
         },
-        enableFallback: true,
-        fallbackType: 'profile',
-        fallbackIdentifier: handleOrDid,
       })
     },
     [queryClient, agent],

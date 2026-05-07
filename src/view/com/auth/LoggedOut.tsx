@@ -1,15 +1,19 @@
-import React from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
+import {STALE} from '#/state/queries'
+import {profilesQueryKey} from '#/state/queries/profile'
+import {useAgent, useSession} from '#/state/session'
 import {
   useLoggedOutView,
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
-import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
+import {useEnableMinimalShellMode} from '#/state/shell/minimal-mode'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Login} from '#/screens/Login'
 import {Signup} from '#/screens/Signup'
@@ -33,9 +37,9 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const ax = useAnalytics()
   const t = useTheme()
   const insets = useSafeAreaInsets()
-  const setMinimalShellMode = useSetMinimalShellMode()
+  useEnableMinimalShellMode()
   const {requestedAccountSwitchTo} = useLoggedOutView()
-  const [screenState, setScreenState] = React.useState<ScreenState>(() => {
+  const [screenState, setScreenState] = useState<ScreenState>(() => {
     if (requestedAccountSwitchTo === 'new') {
       return ScreenState.S_CreateAccount
     } else if (requestedAccountSwitchTo === 'starterpack') {
@@ -48,11 +52,23 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   })
   const {clearRequestedAccount} = useLoggedOutViewControls()
 
-  React.useEffect(() => {
-    setMinimalShellMode(true)
-  }, [setMinimalShellMode])
+  const queryClient = useQueryClient()
+  const {accounts} = useSession()
+  const agent = useAgent()
+  useEffect(() => {
+    const actors = accounts.map(acc => acc.did)
+    if (actors.length === 0) return
+    void queryClient.prefetchQuery({
+      queryKey: profilesQueryKey(actors),
+      staleTime: STALE.MINUTES.FIVE,
+      queryFn: async () => {
+        const res = await agent.getProfiles({actors})
+        return res.data
+      },
+    })
+  }, [accounts, agent, queryClient])
 
-  const onPressDismiss = React.useCallback(() => {
+  const onPressDismiss = useCallback(() => {
     if (onDismiss) {
       onDismiss()
     }

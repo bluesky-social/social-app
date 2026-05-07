@@ -2,7 +2,7 @@ import {useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {type AppBskyActorDefs, type ModerationOpts} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {useA11y} from '#/state/a11y'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'

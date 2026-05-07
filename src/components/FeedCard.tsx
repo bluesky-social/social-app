@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import {useCallback, useEffect, useMemo} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {
   type AppBskyFeedDefs,
@@ -6,8 +6,7 @@ import {
   AtUri,
   RichText as RichTextApi,
 } from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -19,7 +18,6 @@ import {
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, select, useTheme} from '#/alf'
 import {
@@ -34,6 +32,7 @@ import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {RichText, type RichTextProps} from '#/components/RichText'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useActiveLiveEventFeedUris} from '#/features/liveEvents/context'
 import type * as bsky from '#/types/bsky'
@@ -72,11 +71,11 @@ export function Link({
 }: Props & Omit<LinkProps, 'to' | 'label'>) {
   const queryClient = useQueryClient()
 
-  const href = React.useMemo(() => {
+  const href = useMemo(() => {
     return createProfileFeedHref({feed: view})
   }, [view])
 
-  React.useEffect(() => {
+  useEffect(() => {
     precacheFeedFromGeneratorView(queryClient, view)
   }, [view, queryClient])
 
@@ -211,7 +210,7 @@ export function Description({
   description,
   ...rest
 }: {description?: string} & Partial<RichTextProps>) {
-  const rt = React.useMemo(() => {
+  const rt = useMemo(() => {
     if (!description) return
     const rt = new RichTextApi({text: description || ''})
     rt.detectFacetsWithoutResolution()
@@ -278,7 +277,7 @@ function SaveButtonInner({
   pin?: boolean
   text?: boolean
 } & Partial<ButtonProps>) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const {isPending: isAddSavedFeedPending, mutateAsync: saveFeeds} =
     useAddSavedFeedsMutation()
@@ -288,13 +287,13 @@ function SaveButtonInner({
   const uri = view.uri
   const type = view.uri.includes('app.bsky.feed.generator') ? 'feed' : 'list'
 
-  const savedFeedConfig = React.useMemo(() => {
+  const savedFeedConfig = useMemo(() => {
     return preferences?.savedFeeds?.find(feed => feed.value === uri)
   }, [preferences?.savedFeeds, uri])
   const removePromptControl = Prompt.usePromptControl()
   const isPending = isAddSavedFeedPending || isRemovePending
 
-  const toggleSave = React.useCallback(
+  const toggleSave = useCallback(
     async (e: GestureResponderEvent) => {
       e.preventDefault()
       e.stopPropagation()
@@ -311,17 +310,19 @@ function SaveButtonInner({
             },
           ])
         }
-        Toast.show(_(msg({message: 'Feeds updated!', context: 'toast'})))
+        Toast.show(l({message: 'Feeds updated!', context: 'toast'}))
       } catch (err: any) {
         logger.error(err, {message: `FeedCard: failed to update feeds`, pin})
-        Toast.show(_(msg`Failed to update feeds`), 'xmark')
+        Toast.show(l`Failed to update feeds`, {
+          type: 'error',
+        })
       }
     },
-    [_, pin, saveFeeds, removeFeed, uri, savedFeedConfig, type],
+    [l, pin, saveFeeds, removeFeed, uri, savedFeedConfig, type],
   )
 
-  const onPrompRemoveFeed = React.useCallback(
-    async (e: GestureResponderEvent) => {
+  const onPromptRemoveFeed = useCallback(
+    (e: GestureResponderEvent) => {
       e.preventDefault()
       e.stopPropagation()
 
@@ -334,11 +335,13 @@ function SaveButtonInner({
     <>
       <Button
         disabled={isPending}
-        label={_(msg`Add this feed to your feeds`)}
+        label={l`Add this feed to your feeds`}
         size="small"
         variant="solid"
         color={savedFeedConfig ? 'secondary' : 'primary'}
-        onPress={savedFeedConfig ? onPrompRemoveFeed : toggleSave}
+        onPress={(e: GestureResponderEvent) =>
+          savedFeedConfig ? onPromptRemoveFeed(e) : void toggleSave(e)
+        }
         {...buttonProps}>
         {savedFeedConfig ? (
           <>
@@ -349,7 +352,7 @@ function SaveButtonInner({
             )}
             {text && (
               <ButtonText>
-                <Trans>Unpin Feed</Trans>
+                <Trans>Unpin feed</Trans>
               </ButtonText>
             )}
           </>
@@ -358,7 +361,7 @@ function SaveButtonInner({
             <ButtonIcon size="md" icon={isPending ? Loader : PinIcon} />
             {text && (
               <ButtonText>
-                <Trans>Pin Feed</Trans>
+                <Trans>Pin feed</Trans>
               </ButtonText>
             )}
           </>
@@ -367,12 +370,10 @@ function SaveButtonInner({
 
       <Prompt.Basic
         control={removePromptControl}
-        title={_(msg`Remove from your feeds?`)}
-        description={_(
-          msg`Are you sure you want to remove this from your feeds?`,
-        )}
-        onConfirm={toggleSave}
-        confirmButtonCta={_(msg`Remove`)}
+        title={l`Remove from your feeds?`}
+        description={l`Are you sure you want to remove this from your feeds?`}
+        onConfirm={(e: GestureResponderEvent) => void toggleSave(e)}
+        confirmButtonCta={l`Remove`}
         confirmButtonColor="negative"
       />
     </>

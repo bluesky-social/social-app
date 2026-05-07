@@ -1,26 +1,20 @@
 import {memo, useCallback, useEffect, useMemo} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {
-  measure,
-  type MeasuredDimensions,
-  runOnJS,
-  runOnUI,
+  type AnimatedRef,
   useAnimatedRef,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {useActorStatus} from '#/lib/actor-status'
 import {BACK_HITSLOP} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {getModerationCauseKey, unique} from '#/lib/moderation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {type Shadow} from '#/state/cache/types'
-import {useLightboxControls} from '#/state/lightbox'
 import {useSession} from '#/state/session'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -29,13 +23,15 @@ import {atoms as a, platform, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
-import {EditLiveDialog} from '#/components/live/EditLiveDialog'
-import {LiveIndicator} from '#/components/live/LiveIndicator'
-import {LiveStatusDialog} from '#/components/live/LiveStatusDialog'
+import {useLightboxControls} from '#/components/Lightbox/state'
 import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import * as Pills from '#/components/Pills'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
+import {useActorStatus} from '#/features/liveNow'
+import {EditLiveDialog} from '#/features/liveNow/components/EditLiveDialog'
+import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
+import {LiveStatusDialog} from '#/features/liveNow/components/LiveStatusDialog'
 import {GrowableAvatar} from './GrowableAvatar'
 import {GrowableBanner} from './GrowableBanner'
 import {StatusBarShadow} from './StatusBarShadow'
@@ -57,7 +53,7 @@ let ProfileHeaderShell = ({
   const t = useTheme()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {openLightbox} = useLightboxControls()
   const navigation = useNavigation<NavigationProp>()
   const {top: topInset} = useSafeAreaInsets()
@@ -78,7 +74,7 @@ let ProfileHeaderShell = ({
   const _openLightbox = useCallback(
     (
       uri: string,
-      thumbRect: MeasuredDimensions | null,
+      thumbRef: AnimatedRef<any>,
       type: 'circle-avi' | 'rect-avi' | 'image' = 'circle-avi',
     ) => {
       openLightbox({
@@ -86,7 +82,8 @@ let ProfileHeaderShell = ({
           {
             uri,
             thumbUri: uri,
-            thumbRect,
+            thumbRect: null,
+            thumbRef,
             dimensions:
               type === 'circle-avi' || type === 'rect-avi'
                 ? {
@@ -132,11 +129,7 @@ let ProfileHeaderShell = ({
       const avatar = profile.avatar
       const type = profile.associated?.labeler ? 'rect-avi' : 'circle-avi'
       if (avatar && !(modui.blur && modui.noOverride)) {
-        runOnUI(() => {
-          'worklet'
-          const rect = measure(aviRef)
-          runOnJS(_openLightbox)(avatar, rect, type)
-        })()
+        _openLightbox(avatar, aviRef, type)
       }
     }
   }, [
@@ -154,11 +147,7 @@ let ProfileHeaderShell = ({
     const modui = moderation.ui('banner')
     const banner = profile.banner
     if (banner && !(modui.blur && modui.noOverride)) {
-      runOnUI(() => {
-        'worklet'
-        const rect = measure(bannerRef)
-        runOnJS(_openLightbox)(banner, rect, 'image')
-      })()
+      _openLightbox(banner, bannerRef, 'image')
     }
   }, [profile.banner, moderation, _openLightbox, bannerRef])
 
@@ -169,6 +158,12 @@ let ProfileHeaderShell = ({
         style={[a.relative, {height: 150}]}>
         <StatusBarShadow />
         <GrowableBanner
+          testID={profile.banner ? 'userBannerImage' : 'userBannerFallback'}
+          label={
+            profile.banner
+              ? l`View profile banner`
+              : l`Profile banner placeholder`
+          }
           onPress={isPlaceholderProfile ? undefined : onPressBanner}
           bannerRef={bannerRef}
           backButton={
@@ -177,7 +172,7 @@ let ProfileHeaderShell = ({
                 testID="profileHeaderBackBtn"
                 onPress={onPressBack}
                 hitSlop={BACK_HITSLOP}
-                label={_(msg`Back`)}
+                label={l`Back`}
                 style={[
                   a.absolute,
                   a.pointer,
@@ -252,7 +247,7 @@ let ProfileHeaderShell = ({
           testID="profileHeaderAviButton"
           onPress={onPressAvi}
           accessibilityRole="image"
-          accessibilityLabel={_(msg`View ${profile.handle}'s avatar`)}
+          accessibilityLabel={l`View ${profile.handle}'s avatar`}
           accessibilityHint="">
           <View
             style={[

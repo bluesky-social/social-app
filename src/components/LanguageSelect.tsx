@@ -1,5 +1,5 @@
-import React from 'react'
-import {msg} from '@lingui/macro'
+import {useCallback} from 'react'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
@@ -22,7 +22,7 @@ export function LanguageSelect({
 }) {
   const {_} = useLingui()
 
-  const handleOnChange = React.useCallback(
+  const handleOnChange = useCallback(
     (value: string) => {
       if (!value) return
       onChange(sanitizeAppLanguageSetting(value))

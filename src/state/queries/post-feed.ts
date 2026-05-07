@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef} from 'react'
+import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {AppState} from 'react-native'
 import {
   type AppBskyActorDefs,
@@ -164,7 +164,7 @@ export function usePostFeedQuery(
   const fetchLimit = MIN_POSTS
 
   // Make sure this doesn't invalidate unless really needed.
-  const selectArgs = React.useMemo(
+  const selectArgs = useMemo(
     () => ({
       feedTuners,
       moderationOpts,

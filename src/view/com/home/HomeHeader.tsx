@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo} from 'react'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
@@ -19,7 +19,7 @@ export function HomeHeader(
   const {hasSession} = useSession()
   const navigation = useNavigation<NavigationProp>()
 
-  const hasPinnedCustom = React.useMemo<boolean>(() => {
+  const hasPinnedCustom = useMemo<boolean>(() => {
     if (!hasSession) return false
     return feeds.some(tab => {
       const isFollowing = tab.uri === 'following'
@@ -27,7 +27,7 @@ export function HomeHeader(
     })
   }, [feeds, hasSession])
 
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     const pinnedNames = feeds.map(f => f.displayName)
     if (!hasPinnedCustom) {
       return pinnedNames.concat('Feeds ✨')
@@ -35,11 +35,11 @@ export function HomeHeader(
     return pinnedNames
   }, [hasPinnedCustom, feeds])
 
-  const onPressFeedsLink = React.useCallback(() => {
+  const onPressFeedsLink = useCallback(() => {
     navigation.navigate('Feeds')
   }, [navigation])
 
-  const onSelect = React.useCallback(
+  const onSelect = useCallback(
     (index: number) => {
       if (!hasPinnedCustom && index === items.length - 1) {
         onPressFeedsLink()

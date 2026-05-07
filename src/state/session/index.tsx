@@ -8,7 +8,7 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react'
-import {type AtpSessionEvent, type BskyAgent} from '@atproto/api'
+import {type AtpAgent, type AtpSessionEvent} from '@atproto/api'
 
 import * as persisted from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -49,7 +49,7 @@ const StateContext = createContext<SessionStateContext>({
 })
 StateContext.displayName = 'SessionStateContext'
 
-const AgentContext = createContext<BskyAgent | null>(null)
+const AgentContext = createContext<AtpAgent | null>(null)
 AgentContext.displayName = 'SessionAgentContext'
 
 const ApiContext = createContext<SessionApiContext>({
@@ -98,7 +98,7 @@ class SessionStore {
         ),
       }
       addSessionDebugLog({type: 'persisted:broadcast', data: persistedData})
-      persisted.write('session', persistedData)
+      void persisted.write('session', persistedData)
     }
     this.listeners.forEach(listener => listener())
   }
@@ -107,12 +107,13 @@ class SessionStore {
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const ax = useAnalyticsBase()
   const cancelPendingTask = useOneTaskAtATime()
+  // eslint-disable-next-line react/hook-use-state
   const [store] = useState(() => new SessionStore())
   const state = useSyncExternalStore(store.subscribe, store.getState)
   const onboardingDispatch = useOnboardingDispatch()
 
   const onAgentSessionChange = useCallback(
-    (agent: BskyAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
+    (agent: AtpAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
       const refreshedAccount = agentToSessionAccount(agent) // Mutable, so snapshot it right away.
       if (sessionEvent === 'expired' || sessionEvent === 'create-failed') {
         emitSessionDropped()
@@ -353,10 +354,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
       if (syncedAccount && syncedAccount.refreshJwt) {
         if (syncedAccount.did !== state.currentAgentState.did) {
-          resumeSession(syncedAccount)
+          /*
+           * Web handling: if leader tab has switched to a diff account that is
+           * stale, it will refresh the session before triggering the update to
+           * follower tabs. Follower tabs will therefore receive the fresh
+           * session. See APP-1960, or ask Eric.
+           */
+          void resumeSession(syncedAccount)
         } else {
-          const agent = state.currentAgentState.agent as BskyAgent
+          const agent = state.currentAgentState.agent as AtpAgent
           const prevSession = agent.session
+          // eslint-disable-next-line react-compiler/react-compiler
           agent.sessionManager.session = sessionAccountToSession(syncedAccount)
           addSessionDebugLog({
             type: 'agent:patch',
@@ -475,7 +483,7 @@ export function useRequireAuth() {
   )
 }
 
-export function useAgent(): BskyAgent {
+export function useAgent(): AtpAgent {
   const agent = useContext(AgentContext)
   if (!agent) {
     throw Error('useAgent() must be below <SessionProvider>.')

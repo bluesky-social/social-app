@@ -4,7 +4,6 @@ import {
   type GestureResponderEvent,
   type PressableProps,
 } from 'react-native'
-import type React from 'react'
 
 import {type TextStyleProp, type ViewStyleProp} from '#/alf'
 import type * as Dialog from '#/components/Dialog'

@@ -1,7 +1,8 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {type StyleProp, Text as RNText, type TextStyle} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
@@ -67,7 +68,7 @@ export function RichTextTag({
   /*
    * Mute word records that exactly match the tag in question.
    */
-  const removeableMuteWords = React.useMemo(() => {
+  const removeableMuteWords = useMemo(() => {
     return (
       preferences?.moderationPrefs.mutedWords?.filter(word => {
         return word.value === tag
@@ -147,7 +148,11 @@ export function RichTextTag({
         </Menu.Group>
         <Menu.Divider />
         <Menu.Item
-          label={isMuted ? _(msg`Unmute ${tag}`) : _(msg`Mute ${tag}`)}
+          label={
+            isMuted
+              ? _(msg`Unmute ${isCashtag ? tag : `#${tag}`}`)
+              : _(msg`Mute ${isCashtag ? tag : `#${tag}`}`)
+          }
           onPress={() => {
             if (isMuted) {
               resetUpsert()
@@ -160,7 +165,9 @@ export function RichTextTag({
             }
           }}>
           <Menu.ItemText>
-            {isMuted ? _(msg`Unmute ${tag}`) : _(msg`Mute ${tag}`)}
+            {isMuted
+              ? _(msg`Unmute ${isCashtag ? tag : `#${tag}`}`)
+              : _(msg`Mute ${isCashtag ? tag : `#${tag}`}`)}
           </Menu.ItemText>
           <Menu.ItemIcon icon={isPreferencesLoading ? Loader : Mute} />
         </Menu.Item>

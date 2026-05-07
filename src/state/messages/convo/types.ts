@@ -6,6 +6,7 @@ import {
 } from '@atproto/api'
 
 import {type MessagesEventBus} from '#/state/messages/events/agent'
+import {type ConvoWithDetails} from '#/components/dms/util'
 
 export type ConvoParams = {
   convoId: string
@@ -58,34 +59,20 @@ export enum ConvoDispatchEvent {
 }
 
 export type ConvoDispatch =
-  | {
-      event: ConvoDispatchEvent.Init
-    }
-  | {
-      event: ConvoDispatchEvent.Ready
-    }
-  | {
-      event: ConvoDispatchEvent.Resume
-    }
-  | {
-      event: ConvoDispatchEvent.Background
-    }
-  | {
-      event: ConvoDispatchEvent.Suspend
-    }
-  | {
-      event: ConvoDispatchEvent.Error
-      payload: ConvoError
-    }
-  | {
-      event: ConvoDispatchEvent.Disable
-    }
+  | {event: ConvoDispatchEvent.Init}
+  | {event: ConvoDispatchEvent.Ready}
+  | {event: ConvoDispatchEvent.Resume}
+  | {event: ConvoDispatchEvent.Background}
+  | {event: ConvoDispatchEvent.Suspend}
+  | {event: ConvoDispatchEvent.Error; payload: ConvoError}
+  | {event: ConvoDispatchEvent.Disable}
 
 export type ConvoItem =
   | {
       type: 'message'
       key: string
       message: ChatBskyConvoDefs.MessageView
+      relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
       nextMessage:
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
@@ -99,6 +86,7 @@ export type ConvoItem =
       type: 'pending-message'
       key: string
       message: ChatBskyConvoDefs.MessageView
+      relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
       nextMessage:
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
@@ -117,6 +105,7 @@ export type ConvoItem =
       type: 'deleted-message'
       key: string
       message: ChatBskyConvoDefs.DeletedMessageView
+      relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
       nextMessage:
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
@@ -125,6 +114,12 @@ export type ConvoItem =
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
         | null
+    }
+  | {
+      type: 'system-message'
+      key: string
+      message: ChatBskyConvoDefs.SystemMessageView
+      relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
     }
   | {
       type: 'error'
@@ -148,11 +143,10 @@ type RemoveReaction = (messageId: string, reaction: string) => Promise<void>
 export type ConvoStateUninitialized = {
   status: ConvoStatus.Uninitialized
   items: []
-  convo: ChatBskyConvoDefs.ConvoView | undefined
+  convo: ConvoWithDetails | undefined
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-  recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
   isFetchingHistory: false
+  hasAllHistory: boolean
   deleteMessage: undefined
   sendMessage: undefined
   fetchMessageHistory: undefined
@@ -163,11 +157,10 @@ export type ConvoStateUninitialized = {
 export type ConvoStateInitializing = {
   status: ConvoStatus.Initializing
   items: []
-  convo: ChatBskyConvoDefs.ConvoView | undefined
+  convo: ConvoWithDetails | undefined
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-  recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
   isFetchingHistory: boolean
+  hasAllHistory: boolean
   deleteMessage: undefined
   sendMessage: undefined
   fetchMessageHistory: undefined
@@ -178,11 +171,10 @@ export type ConvoStateInitializing = {
 export type ConvoStateReady = {
   status: ConvoStatus.Ready
   items: ConvoItem[]
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: ConvoWithDetails
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic
-  recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
+  hasAllHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
@@ -193,11 +185,10 @@ export type ConvoStateReady = {
 export type ConvoStateBackgrounded = {
   status: ConvoStatus.Backgrounded
   items: ConvoItem[]
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: ConvoWithDetails
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic
-  recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
+  hasAllHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
@@ -208,11 +199,10 @@ export type ConvoStateBackgrounded = {
 export type ConvoStateSuspended = {
   status: ConvoStatus.Suspended
   items: ConvoItem[]
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: ConvoWithDetails
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic
-  recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
+  hasAllHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
@@ -225,9 +215,8 @@ export type ConvoStateError = {
   items: []
   convo: undefined
   error: ConvoError
-  sender: undefined
-  recipients: undefined
   isFetchingHistory: false
+  hasAllHistory: false
   deleteMessage: undefined
   sendMessage: undefined
   fetchMessageHistory: undefined
@@ -238,11 +227,10 @@ export type ConvoStateError = {
 export type ConvoStateDisabled = {
   status: ConvoStatus.Disabled
   items: ConvoItem[]
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: ConvoWithDetails
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic
-  recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
+  hasAllHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory

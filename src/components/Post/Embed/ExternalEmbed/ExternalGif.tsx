@@ -1,14 +1,17 @@
-import React from 'react'
-import {type GestureResponderEvent, Pressable} from 'react-native'
+import {useCallback, useRef, useState} from 'react'
+import {
+  ActivityIndicator,
+  type GestureResponderEvent,
+  Pressable,
+} from 'react-native'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedExternal} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {type EmbedPlayerParams} from '#/lib/strings/embed-player'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
-import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
@@ -28,16 +31,16 @@ export function ExternalGif({
   const consentDialogControl = useDialogControl()
 
   // Tracking if the placer has been activated
-  const [isPlayerActive, setIsPlayerActive] = React.useState(false)
+  const [isPlayerActive, setIsPlayerActive] = useState(false)
   // Tracking whether the gif has been loaded yet
-  const [isPrefetched, setIsPrefetched] = React.useState(false)
+  const [isPrefetched, setIsPrefetched] = useState(false)
   // Tracking whether the image is animating
-  const [isAnimating, setIsAnimating] = React.useState(true)
+  const [isAnimating, setIsAnimating] = useState(true)
 
   // Used for controlling animation
-  const imageRef = React.useRef<Image>(null)
+  const imageRef = useRef<Image>(null)
 
-  const load = React.useCallback(() => {
+  const load = useCallback(() => {
     setIsPlayerActive(true)
     Image.prefetch(params.playerUri).then(() => {
       // Replace the image once it's fetched
@@ -45,7 +48,7 @@ export function ExternalGif({
     })
   }, [params.playerUri])
 
-  const onPlayPress = React.useCallback(
+  const onPlayPress = useCallback(
     (event: GestureResponderEvent) => {
       // Don't propagate on web
       event.preventDefault()
@@ -91,7 +94,6 @@ export function ExternalGif({
         source={params.source}
         onAccept={load}
       />
-
       <Pressable
         style={[
           {height: 300},
@@ -138,7 +140,7 @@ export function ExternalGif({
               <PlayButtonIcon />
             ) : (
               // Activity indicator while gif loads
-              <CustomActivityIndicator size="large" color="white" />
+              <ActivityIndicator size="large" color="white" />
             )}
           </Fill>
         )}

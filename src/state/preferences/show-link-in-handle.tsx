@@ -1,21 +1,28 @@
-import React from 'react'
+import {
+  createContext,
+  type PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 
 import * as persisted from '#/state/persisted'
 
 type StateContext = persisted.Schema['showLinkInHandle']
 type SetContext = (v: persisted.Schema['showLinkInHandle']) => void
 
-const stateContext = React.createContext<StateContext>(
+const stateContext = createContext<StateContext>(
   persisted.defaults.showLinkInHandle,
 )
-const setContext = React.createContext<SetContext>(
+const setContext = createContext<SetContext>(
   (_: persisted.Schema['showLinkInHandle']) => {},
 )
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(persisted.get('showLinkInHandle'))
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [state, setState] = useState(persisted.get('showLinkInHandle'))
 
-  const setStateWrapped = React.useCallback(
+  const setStateWrapped = useCallback(
     (showLinkInHandle: persisted.Schema['showLinkInHandle']) => {
       setState(showLinkInHandle)
       persisted.write('showLinkInHandle', showLinkInHandle)
@@ -23,7 +30,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setState],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate('showLinkInHandle', nextShowLinkInHandle => {
       setState(nextShowLinkInHandle)
     })
@@ -39,9 +46,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useShowLinkInHandle() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useSetShowLinkInHandle() {
-  return React.useContext(setContext)
+  return useContext(setContext)
 }

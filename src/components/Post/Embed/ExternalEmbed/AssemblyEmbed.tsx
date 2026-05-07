@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {Image, Linking, Pressable, StyleSheet, View} from 'react-native'
 import {type AppBskyEmbedExternal} from '@atproto/api'
 

@@ -1,6 +1,6 @@
 import {Fragment} from 'react'
 import {View} from 'react-native'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {
   type CommonNavigatorParams,

@@ -1,8 +1,9 @@
 import {useCallback, useImperativeHandle, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyGraphDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useSession} from '#/state/session'
 import {ListMembers} from '#/view/com/lists/ListMembers'

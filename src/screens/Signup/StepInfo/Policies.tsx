@@ -1,8 +1,9 @@
 import {type ReactElement} from 'react'
 import {View} from 'react-native'
 import {type ComAtprotoServerDescribeServer} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -42,14 +43,14 @@ export const Policies = ({
       <Trans>
         By creating an account you agree to the{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Terms of Service`)}
+          label={_(msg`Read the Blacksky Terms of Service`)}
           key="tos"
           to={tos}>
           Terms of Service
         </InlineLinkText>{' '}
         and{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Privacy Policy`)}
+          label={_(msg`Read the Blacksky Privacy Policy`)}
           key="pp"
           to={pp}>
           Privacy Policy
@@ -62,7 +63,7 @@ export const Policies = ({
       <Trans>
         By creating an account you agree to the{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Terms of Service`)}
+          label={_(msg`Read the Blacksky Terms of Service`)}
           key="tos"
           to={tos}>
           Terms of Service
@@ -75,7 +76,7 @@ export const Policies = ({
       <Trans>
         By creating an account you agree to the{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Privacy Policy`)}
+          label={_(msg`Read the Blacksky Privacy Policy`)}
           key="pp"
           to={pp}>
           Privacy Policy

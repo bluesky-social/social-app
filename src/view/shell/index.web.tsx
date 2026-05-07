@@ -1,18 +1,15 @@
 import {useCallback, useEffect, useLayoutEffect, useState} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {type NavigationProp} from '#/lib/routes/types'
-import {useProfileEnrichment} from '#/state/queries/profile-enrichment'
 import {useSession} from '#/state/session'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
-import {useComposerKeyboardShortcut} from '#/state/shell/composer/useComposerKeyboardShortcut'
 import {useCloseAllActiveElements} from '#/state/util'
-import {Lightbox} from '#/view/com/lightbox/Lightbox'
 import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Deactivated} from '#/screens/Deactivated'
@@ -22,19 +19,19 @@ import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
+import {Lightbox} from '#/components/Lightbox'
 import {GlobalReportDialog} from '#/components/moderation/ReportDialog'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
 import {FlatNavigator, RoutesContainer} from '#/Navigation'
-import {Composer} from './Composer.web'
+import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
 
 function ShellInner() {
   const navigator = useNavigation<NavigationProp>()
   const closeAllActiveElements = useCloseAllActiveElements()
-  useComposerKeyboardShortcut()
+
   useIntentHandler()
-  useProfileEnrichment()
 
   useEffect(() => {
     const unsubscribe = navigator.addListener('state', () => {
@@ -62,7 +59,6 @@ function ShellInner() {
       <LinkWarningDialog />
       <Lightbox />
       <GlobalReportDialog />
-
       <PortalOutlet />
     </>
   )

@@ -1,8 +1,9 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {AtUri} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
 import {makeCustomFeedLink, makeProfileLink} from '#/lib/routes/links'
@@ -20,7 +21,6 @@ import {
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {formatCount} from '#/view/com/util/numeric/format'
-import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -29,7 +29,7 @@ import {Divider} from '#/components/Divider'
 import {useRichText} from '#/components/hooks/useRichText'
 import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
   Heart2_Stroke2_Corner0_Rounded as Heart,
@@ -49,6 +49,7 @@ import {
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
 import {RichText} from '#/components/RichText'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
@@ -94,7 +95,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
 
   const {data: preferences} = usePreferencesQuery()
 
-  const [likeUri, setLikeUri] = React.useState(info.likeUri || '')
+  const [likeUri, setLikeUri] = useState(info.likeUri || '')
   const likeCount =
     (info.likeCount || 0) +
     (likeUri && !info.likeUri ? 1 : !likeUri && info.likeUri ? -1 : 0)
@@ -138,7 +139,9 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
         _(
           msg`There was an issue updating your feeds, please check your internet connection and try again.`,
         ),
-        'xmark',
+        {
+          type: 'error',
+        },
       )
       logger.error('Failed to update feeds', {message: err})
     }
@@ -176,7 +179,9 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
         ax.metric('feed:pin', {feedUrl: info.uri})
       }
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
+      Toast.show(_(msg`There was an issue contacting the server`), {
+        type: 'error',
+      })
       logger.error('Failed to toggle pinned feed', {message: e})
     }
   }
@@ -259,7 +264,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                             size="xs"
                             fill={
                               likeUri
-                                ? t.palette.like
+                                ? t.palette.pink
                                 : t.atoms.text_contrast_low.color
                             }
                           />
@@ -400,7 +405,7 @@ function DialogInner({
     useUnlikeMutation()
 
   const isLiked = !!likeUri
-  const feedRkey = React.useMemo(() => new AtUri(info.uri).rkey, [info.uri])
+  const feedRkey = useMemo(() => new AtUri(info.uri).rkey, [info.uri])
 
   const onToggleLiked = async () => {
     try {
@@ -420,20 +425,22 @@ function DialogInner({
         _(
           msg`There was an issue contacting the server, please check your internet connection and try again.`,
         ),
-        'xmark',
+        {
+          type: 'error',
+        },
       )
       logger.error('Failed to toggle like', {message: err})
     }
   }
 
-  const onPressShare = React.useCallback(() => {
+  const onPressShare = useCallback(() => {
     playHaptic()
     const url = toShareUrl(info.route.href)
     shareUrl(url)
     ax.metric('feed:share', {feedUrl: info.uri})
   }, [info, playHaptic])
 
-  const onPressReport = React.useCallback(() => {
+  const onPressReport = useCallback(() => {
     reportDialogControl.open()
   }, [reportDialogControl])
 
@@ -503,14 +510,13 @@ function DialogInner({
               disabled={isLikePending || isUnlikePending}
               label={_(msg`Like this feed`)}
               size="small"
-              variant="solid"
               color="secondary"
               onPress={onToggleLiked}
               style={[a.flex_1]}>
               {isLiked ? (
-                <HeartFilled size="sm" fill={t.palette.like} />
+                <HeartFilled size="sm" fill={t.palette.pink} />
               ) : (
-                <ButtonIcon icon={Heart} position="left" />
+                <ButtonIcon icon={Heart} />
               )}
 
               <ButtonText>
@@ -521,7 +527,6 @@ function DialogInner({
               disabled={isFeedStateChangePending}
               label={isPinned ? _(msg`Unpin feed`) : _(msg`Pin feed`)}
               size="small"
-              variant="solid"
               color={isPinned ? 'secondary' : 'primary'}
               onPress={onTogglePinned}
               style={[a.flex_1]}>

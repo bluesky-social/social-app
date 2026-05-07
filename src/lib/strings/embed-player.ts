@@ -23,8 +23,10 @@ export const embedPlayerSources = [
   'vimeo',
   'giphy',
   'tenor',
+  'klipy',
   'flickr',
   'assembly',
+  'bandcamp',
 ] as const
 
 export type EmbedPlayerSource = (typeof embedPlayerSources)[number]
@@ -44,8 +46,11 @@ export type EmbedPlayerType =
   | 'vimeo_video'
   | 'giphy_gif'
   | 'tenor_gif'
+  | 'klipy_gif'
   | 'flickr_album'
   | 'assembly_conversation'
+  | 'bandcamp_album'
+  | 'bandcamp_track'
 
 export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   youtube: 'YouTube',
@@ -54,11 +59,13 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   twitch: 'Twitch',
   giphy: 'GIPHY',
   tenor: 'Tenor',
+  klipy: 'KLIPY',
   spotify: 'Spotify',
   appleMusic: 'Apple Music',
   soundcloud: 'SoundCloud',
   flickr: 'Flickr',
   assembly: "Blacksky People's Assembly",
+  bandcamp: 'Bandcamp',
 }
 
 export interface EmbedPlayerParams {
@@ -390,6 +397,20 @@ export function parseEmbedPlayerFromUrl(
     }
   }
 
+  const klipyGif = parseKlipyGif(urlp)
+  if (klipyGif.success) {
+    const {playerUri, dimensions} = klipyGif
+
+    return {
+      type: 'klipy_gif',
+      source: 'klipy',
+      isGif: true,
+      hideDetails: true,
+      playerUri,
+      dimensions,
+    }
+  }
+
   // this is a standard flickr path! we can use the embedder for albums and groups, so validate the path
   if (urlp.hostname === 'www.flickr.com' || urlp.hostname === 'flickr.com') {
     let i = urlp.pathname.length - 1
@@ -475,6 +496,32 @@ export function parseEmbedPlayerFromUrl(
       }
     }
   }
+
+  const bandcampRegex = /^[a-z\d][a-z\d-]{2,}[a-z\d]\.bandcamp\.com$/i
+
+  if (bandcampRegex.test(urlp.hostname)) {
+    const pathComponents = urlp.pathname.split('/')
+    switch (pathComponents[1]) {
+      case 'album':
+        return {
+          type: 'bandcamp_album',
+          source: 'bandcamp',
+          playerUri: `https://bandcamp.com/EmbeddedPlayer/url=${encodeURIComponent(
+            urlp.href,
+          )}/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/`,
+        }
+      case 'track':
+        return {
+          type: 'bandcamp_track',
+          source: 'bandcamp',
+          playerUri: `https://bandcamp.com/EmbeddedPlayer/url=${encodeURIComponent(
+            urlp.href,
+          )}/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/`,
+        }
+      default:
+        return undefined
+    }
+  }
 }
 
 export function getPlayerAspect({
@@ -516,6 +563,9 @@ export function getPlayerAspect({
       return {height: 150}
     case 'assembly_conversation':
       return {height: 320}
+    case 'bandcamp_album':
+    case 'bandcamp_track':
+      return {aspectRatio: 1}
     default:
       return {aspectRatio: 16 / 9}
   }
@@ -612,4 +662,91 @@ export function isTenorGifUri(url: URL | string) {
     // Invalid URL
     return false
   }
+}
+
+export function parseKlipyGif(urlp: URL):
+  | {success: false}
+  | {
+      success: true
+      playerUri: string
+      dimensions: {height: number; width: number}
+    } {
+  if (urlp.hostname !== 'static.klipy.com') {
+    return {success: false}
+  }
+
+  if (!urlp.pathname.startsWith('/ii/')) {
+    return {success: false}
+  }
+
+  const h = urlp.searchParams.get('hh')
+  const w = urlp.searchParams.get('ww')
+
+  if (!h || !w) {
+    return {success: false}
+  }
+
+  const dimensions = {
+    height: Number(h),
+    width: Number(w),
+  }
+
+  // Validate dimensions are valid positive numbers
+  if (
+    isNaN(dimensions.height) ||
+    isNaN(dimensions.width) ||
+    dimensions.height <= 0 ||
+    dimensions.width <= 0
+  ) {
+    return {success: false}
+  }
+
+  const playerUrl = new URL(urlp.href)
+  playerUrl.hostname = 'k.gifs.bsky.app'
+
+  // On web, swap the gif filename for a video format so the <video>
+  // element can play it. Klipy uses different filename slugs per
+  // format (unlike Tenor's ID-based scheme), so the slugs are
+  // embedded as query params at composition time by resolveGif().
+  if (IS_WEB) {
+    const webmSlug = playerUrl.searchParams.get('webm')
+    const mp4Slug = playerUrl.searchParams.get('mp4')
+    const slug = IS_WEB_SAFARI ? mp4Slug : webmSlug
+    const ext = IS_WEB_SAFARI ? 'mp4' : 'webm'
+
+    // Without a slug we can't produce a playable video URL on web,
+    // so fall back to the link card instead of returning a broken player.
+    if (!slug) {
+      return {success: false}
+    }
+
+    const parts = playerUrl.pathname.split('/')
+    parts[parts.length - 1] = `${slug}.${ext}`
+    playerUrl.pathname = parts.join('/')
+  }
+
+  // Strip all metadata params — only the path matters for the CDN
+  playerUrl.searchParams.delete('hh')
+  playerUrl.searchParams.delete('ww')
+  playerUrl.searchParams.delete('mp4')
+  playerUrl.searchParams.delete('webm')
+
+  return {
+    success: true,
+    playerUri: playerUrl.href,
+    dimensions,
+  }
+}
+
+export function isKlipyGifUri(url: URL | string) {
+  try {
+    return parseKlipyGif(typeof url === 'string' ? new URL(url) : url).success
+  } catch {
+    // Invalid URL
+    return false
+  }
+}
+
+export function isGifEmbed(url: URL | string) {
+  return isTenorGifUri(url) || isKlipyGifUri(url)
 }

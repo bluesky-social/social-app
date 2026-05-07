@@ -1,11 +1,18 @@
-import React from 'react'
+import {
+  forwardRef,
+  lazy,
+  Suspense,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from 'react'
 import {View} from 'react-native'
 import type ViewShot from 'react-native-view-shot'
 
 import {useAvatar} from '#/screens/Onboarding/StepProfile/index'
 import {atoms as a} from '#/alf'
 
-const LazyViewShot = React.lazy(
+const LazyViewShot = lazy(
   // @ts-expect-error dynamic import
   () => import('react-native-view-shot/src/index'),
 )
@@ -18,13 +25,13 @@ export interface PlaceholderCanvasRef {
 
 // This component is supposed to be invisible to the user. We only need this for ViewShot to have something to
 // "screenshot".
-export const PlaceholderCanvas = React.forwardRef<PlaceholderCanvasRef, {}>(
+export const PlaceholderCanvas = forwardRef<PlaceholderCanvasRef, {}>(
   function PlaceholderCanvas({}, ref) {
     const {avatar} = useAvatar()
-    const viewshotRef = React.useRef<ViewShot>(null)
+    const viewshotRef = useRef<ViewShot>(null)
     const Icon = avatar.placeholder.component
 
-    const styles = React.useMemo(
+    const styles = useMemo(
       () => ({
         container: [a.absolute, {top: -2000}],
         imageContainer: [
@@ -36,7 +43,7 @@ export const PlaceholderCanvas = React.forwardRef<PlaceholderCanvasRef, {}>(
       [],
     )
 
-    React.useImperativeHandle(ref, () => ({
+    useImperativeHandle(ref, () => ({
       capture: async () => {
         if (viewshotRef.current?.capture) {
           return await viewshotRef.current.capture()
@@ -46,7 +53,7 @@ export const PlaceholderCanvas = React.forwardRef<PlaceholderCanvasRef, {}>(
 
     return (
       <View style={styles.container}>
-        <React.Suspense fallback={null}>
+        <Suspense fallback={null}>
           <LazyViewShot
             // @ts-ignore this library doesn't have types
             ref={viewshotRef}
@@ -70,7 +77,7 @@ export const PlaceholderCanvas = React.forwardRef<PlaceholderCanvasRef, {}>(
               />
             </View>
           </LazyViewShot>
-        </React.Suspense>
+        </Suspense>
       </View>
     )
   },

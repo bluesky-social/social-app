@@ -1,21 +1,28 @@
-import React from 'react'
+import {
+  createContext,
+  type PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 
 import * as persisted from '#/state/persisted'
 
 type StateContext = persisted.Schema['goLinksEnabled']
 type SetContext = (v: persisted.Schema['goLinksEnabled']) => void
 
-const stateContext = React.createContext<StateContext>(
+const stateContext = createContext<StateContext>(
   persisted.defaults.goLinksEnabled,
 )
-const setContext = React.createContext<SetContext>(
+const setContext = createContext<SetContext>(
   (_: persisted.Schema['goLinksEnabled']) => {},
 )
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(persisted.get('goLinksEnabled'))
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [state, setState] = useState(persisted.get('goLinksEnabled'))
 
-  const setStateWrapped = React.useCallback(
+  const setStateWrapped = useCallback(
     (goLinksEnabled: persisted.Schema['goLinksEnabled']) => {
       setState(goLinksEnabled)
       persisted.write('goLinksEnabled', goLinksEnabled)
@@ -23,7 +30,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setState],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate('goLinksEnabled', nextGoLinksEnabled => {
       setState(nextGoLinksEnabled)
     })
@@ -39,9 +46,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useGoLinksEnabled() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useSetGoLinksEnabled() {
-  return React.useContext(setContext)
+  return useContext(setContext)
 }

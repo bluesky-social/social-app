@@ -23,8 +23,6 @@ export default defineConfig(
   {
     ignores: [
       '**/__mocks__/*.ts',
-      'src/platform/polyfills.ts',
-      'src/third-party/**',
       'ios/**',
       'android/**',
       'coverage/**',
@@ -34,11 +32,13 @@ export default defineConfig(
       '*.html',
       'bskyweb/**',
       'bskyembed/**',
+      'bskyogcard/**',
       'src/locale/locales/_build/**',
       'src/locale/locales/**/*.js',
       '*.e2e.ts',
       '*.e2e.tsx',
       'eslint.config.mjs',
+      '.jscodeshift/**',
     ],
   },
 
@@ -48,7 +48,6 @@ export default defineConfig(
   js.configs.recommended,
   tseslint.configs.recommendedTypeChecked,
   reactHooks.configs.flat.recommended,
-  // @ts-expect-error https://github.com/un-ts/eslint-plugin-import-x/issues/439
   importX.flatConfigs.recommended,
   importX.flatConfigs.typescript,
   importX.flatConfigs['react-native'],
@@ -63,6 +62,7 @@ export default defineConfig(
       'react-native': reactNative,
       'react-native-a11y': reactNativeA11y,
       'simple-import-sort': simpleImportSort,
+      // @ts-expect-error - not sure why
       lingui,
       'react-compiler': reactCompiler,
       'bsky-internal': bskyInternal,
@@ -128,6 +128,7 @@ export default defineConfig(
        */
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
+      'react/hook-use-state': 'warn',
       'react/no-unescaped-entities': 'off',
       'react/prop-types': 'off',
       'react-native/no-inline-styles': 'off',
@@ -190,6 +191,18 @@ export default defineConfig(
          */
         ignore: ['^#\/locale\/locales\/.+\/messages'],
       }],
+      'import-x/no-extraneous-dependencies': ['error', {
+        'whitelist': [
+          // test files only
+          '@jest/globals',
+          // we only use a really simple util from this, and we know it will be present
+          'expo-modules-core',
+          // this is a dep for @atproto/api, but we absolutely need them in sync, so just
+          // rely on the transient version
+          '@atproto/common-web',
+        ]
+      }],
+      'import-x/no-nodejs-modules': 'error',
 
       /**
        * TypeScript-specific rules
@@ -217,7 +230,7 @@ export default defineConfig(
        * v8 `warn` ones are probably worth fixing. `off` ones are a bit too
        * nit-picky
        */
-      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'off',
@@ -237,6 +250,14 @@ export default defineConfig(
       '@typescript-eslint/no-base-to-string': 'warn',
       '@typescript-eslint/prefer-promise-reject-errors': 'warn',
       '@typescript-eslint/await-thenable': 'warn',
+
+      "no-restricted-imports": ["error", {
+        "paths": [{
+          "name": "react",
+          "importNames": ["React", "default"],
+          "message": "React is already in the global type namespace. Use named imports for runtime modules."
+        }]
+      }],
 
       /**
        * Turn off rules that we haven't enforced thus far

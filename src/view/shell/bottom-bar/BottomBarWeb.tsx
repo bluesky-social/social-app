@@ -1,8 +1,9 @@
-import React from 'react'
+import {useCallback, useEffect} from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useNavigationState} from '@react-navigation/native'
 
 import {useHideBottomBarBorder} from '#/lib/hooks/useHideBottomBarBorder'
@@ -60,7 +61,7 @@ export function BottomBarWeb() {
   // Reset footerHeight when the bottom bar unmounts (e.g. window expands past
   // mobile breakpoint). Without this, stale footerHeight causes the message
   // input translateY to pull it over the message list on wider screens.
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       footerHeight.set(0)
     }
@@ -69,18 +70,18 @@ export function BottomBarWeb() {
   const unreadMessageCount = useUnreadMessageCount()
   const notificationCountStr = useUnreadNotifications()
 
-  const showSignIn = React.useCallback(() => {
+  const showSignIn = useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'none'})
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  const showCreateAccount = React.useCallback(() => {
+  const showCreateAccount = useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'new'})
     // setShowLoggedOut(true)
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  const onLongPressProfile = React.useCallback(() => {
+  const onLongPressProfile = useCallback(() => {
     accountSwitchControl.open()
   }, [accountSwitchControl])
 
@@ -313,7 +314,9 @@ const NavItem: React.FC<{
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
       ) : hasNew ? (
-        <View style={styles.hasNewBadge} />
+        <View
+          style={[styles.hasNewBadge, {backgroundColor: t.palette.primary_500}]}
+        />
       ) : null}
     </Link>
   )

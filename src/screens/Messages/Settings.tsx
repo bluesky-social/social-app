@@ -1,19 +1,20 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useUpdateActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 import {useBackgroundNotificationPreferences} from '../../../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -32,7 +33,9 @@ export function MessagesSettingsScreen({}: Props) {
 
   const {mutate: updateDeclaration} = useUpdateActorDeclaration({
     onError: () => {
-      Toast.show(_(msg`Failed to update settings`), 'xmark')
+      Toast.show(_(msg`Failed to update settings`), {
+        type: 'error',
+      })
     },
   })
 
