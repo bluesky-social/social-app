@@ -176,6 +176,8 @@ function GroupSettings({
   moderationOpts: ModerationOpts
   isReady: boolean
 }) {
+  const [isPTRing, setIsPTRing] = useState(false)
+
   const initialNumToRender = useInitialNumToRender({minItemHeight: 68})
   const bottomBarOffset = useBottomBarOffset()
 
@@ -184,7 +186,7 @@ function GroupSettings({
   const primaryMember = convo.primaryMember
   const isOwner = !!primaryMember && primaryMember.did === currentAccount?.did
 
-  const {data: memberListData = []} = useListConvoMembersQuery({
+  const {data: memberListData = [], refetch} = useListConvoMembersQuery({
     convoId: convo.view.id,
     placeholderData: convo.members,
   })
@@ -269,6 +271,16 @@ function GroupSettings({
     }
   }
 
+  const onRefresh = async () => {
+    setIsPTRing(true)
+    try {
+      await refetch()
+    } catch (err) {
+      logger.error('Failed to refresh group chat members', {message: err})
+    }
+    setIsPTRing(false)
+  }
+
   return (
     <List
       data={items}
@@ -289,6 +301,8 @@ function GroupSettings({
       renderItem={renderItem}
       sideBorders={false}
       windowSize={11}
+      refreshing={isPTRing}
+      onRefresh={() => void onRefresh()}
     />
   )
 }

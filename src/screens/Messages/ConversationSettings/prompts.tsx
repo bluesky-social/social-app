@@ -4,6 +4,8 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {atoms as a} from '#/alf'
 import type * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
+import {Lock_Stroke2_Corner0_Rounded as LockIcon} from '#/components/icons/Lock'
 import * as Prompt from '#/components/Prompt'
 
 export function EditNamePrompt({
@@ -62,6 +64,7 @@ export function LockChatPrompt({
   return (
     <Prompt.Basic
       control={control}
+      icon={LockIcon}
       title={l`Lock group chat?`}
       description={l`Members can still read chat history but can’t send new messages.`}
       confirmButtonCta={l`Lock group chat`}
@@ -85,6 +88,7 @@ export function LeaveChatPrompt({
   return (
     <Prompt.Basic
       control={control}
+      icon={LeaveIcon}
       title={l`Are you sure you want to leave ${groupName}?`}
       description={l`You won’t be able to rejoin unless you’re invited.`}
       confirmButtonCta={l`Leave group chat`}

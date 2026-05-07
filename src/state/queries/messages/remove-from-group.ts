@@ -1,6 +1,6 @@
 import {
   type ChatBskyActorDefs,
-  type ChatBskyConvoDefs,
+  ChatBskyConvoDefs,
   type ChatBskyConvoListConvos,
   type ChatBskyGroupRemoveMembers,
 } from '@atproto/api'
@@ -56,9 +56,18 @@ export function useRemoveFromGroupChat(
         CONVO_KEY(convoId),
         prev => {
           if (!prev) return
+          const nextMembers = prev.members.filter(m => !members.includes(m.did))
+          const removed = prev.members.length - nextMembers.length
+          if (!ChatBskyConvoDefs.isGroupConvo(prev.kind)) {
+            return {...prev, members: nextMembers}
+          }
           return {
             ...prev,
-            members: prev.members.filter(m => !members.includes(m.did)),
+            members: nextMembers,
+            kind: {
+              ...prev.kind,
+              memberCount: Math.max(0, prev.kind.memberCount - removed),
+            },
           }
         },
       )
@@ -73,9 +82,20 @@ export function useRemoveFromGroupChat(
             ...page,
             convos: page.convos.map(convo => {
               if (convo.id !== convoId) return convo
+              const nextMembers = convo.members.filter(
+                m => !members.includes(m.did),
+              )
+              const removed = convo.members.length - nextMembers.length
+              if (!ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
+                return {...convo, members: nextMembers}
+              }
               return {
                 ...convo,
-                members: convo.members.filter(m => !members.includes(m.did)),
+                members: nextMembers,
+                kind: {
+                  ...convo.kind,
+                  memberCount: Math.max(0, convo.kind.memberCount - removed),
+                },
               }
             }),
           })),

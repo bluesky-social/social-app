@@ -182,14 +182,6 @@ export function MemberMenu({
         <Menu.Outer>
           <Menu.Group>
             <Menu.Item
-              label={l`Message ${displayName}`}
-              onPress={handleMessageMember}>
-              <Menu.ItemIcon icon={MessageIcon} />
-              <Menu.ItemText>
-                <Trans context="action">Message</Trans>
-              </Menu.ItemText>
-            </Menu.Item>
-            <Menu.Item
               label={l`View ${displayName}’s profile`}
               onPress={() => {
                 navigation.navigate('Profile', {name: profile.did})
@@ -197,6 +189,14 @@ export function MemberMenu({
               <Menu.ItemIcon icon={PersonIcon} />
               <Menu.ItemText>
                 <Trans>Go to profile</Trans>
+              </Menu.ItemText>
+            </Menu.Item>
+            <Menu.Item
+              label={l`Message ${displayName}`}
+              onPress={handleMessageMember}>
+              <Menu.ItemIcon icon={MessageIcon} />
+              <Menu.ItemText>
+                <Trans context="action">Message</Trans>
               </Menu.ItemText>
             </Menu.Item>
           </Menu.Group>

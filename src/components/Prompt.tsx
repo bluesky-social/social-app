@@ -1,9 +1,8 @@
 import {createContext, useCallback, useContext, useId, useMemo} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
-import {atoms as a, type TextStyleProp, useTheme, web} from '#/alf'
+import {atoms as a, native, type TextStyleProp, useTheme, web} from '#/alf'
 import {
   Button,
   type ButtonColor,
@@ -79,6 +78,22 @@ export function Outer({
   )
 }
 
+export function Icon({
+  icon: Icon,
+  fill,
+}: {
+  icon: React.ComponentType<SVGIconProps>
+  fill?: string
+}) {
+  const t = useTheme()
+
+  return (
+    <View style={[a.align_center, a.justify_center, native(a.pt_lg), a.mb_lg]}>
+      <Icon fill={fill || t.palette.contrast_1000} size="3xl" />
+    </View>
+  )
+}
+
 export function TitleText({
   children,
   style,
@@ -89,9 +104,9 @@ export function TitleText({
       nativeID={titleId}
       style={[
         a.flex_1,
-        a.text_2xl,
-        a.font_semi_bold,
-        a.pb_xs,
+        a.text_lg,
+        a.font_bold,
+        a.pb_sm,
         a.leading_snug,
         style,
       ]}>
@@ -111,20 +126,14 @@ export function DescriptionText({
     <Text
       nativeID={descriptionId}
       selectable={selectable}
-      style={[
-        a.text_md,
-        a.leading_snug,
-        t.atoms.text_contrast_high,
-        a.pb_lg,
-        style,
-      ]}>
+      style={[a.text_sm, a.leading_snug, t.atoms.text, a.pb_2xl, style]}>
       {children}
     </Text>
   )
 }
 
 export function Actions({children}: {children: React.ReactNode}) {
-  return <View style={[a.w_full, a.gap_sm, a.justify_end]}>{children}</View>
+  return <View style={[a.w_full, a.gap_md, a.justify_end]}>{children}</View>
 }
 
 export function Content({children}: {children: React.ReactNode}) {
@@ -139,7 +148,7 @@ export function Cancel({
    */
   cta?: string
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {close} = Dialog.useDialogContext()
   const onPress = useCallback(() => {
     close()
@@ -150,9 +159,9 @@ export function Cancel({
       variant="solid"
       color="secondary"
       size="large"
-      label={cta || _(msg`Cancel`)}
+      label={cta || l`Cancel`}
       onPress={onPress}>
-      <ButtonText>{cta || _(msg`Cancel`)}</ButtonText>
+      <ButtonText>{cta || l`Cancel`}</ButtonText>
     </Button>
   )
 }
@@ -191,7 +200,7 @@ export function Action({
   shouldCloseOnPress?: boolean
   testID?: string
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {close} = Dialog.useDialogContext()
   const handleOnPress = useCallback(
     (e: GestureResponderEvent) => {
@@ -209,10 +218,10 @@ export function Action({
       color={color}
       disabled={disabled}
       size="large"
-      label={cta || _(msg`Confirm`)}
+      label={cta || l`Confirm`}
       onPress={handleOnPress}
       testID={testID}>
-      <ButtonText>{cta || _(msg`Confirm`)}</ButtonText>
+      <ButtonText>{cta || l`Confirm`}</ButtonText>
       {icon && <ButtonIcon icon={icon} />}
     </Button>
   )
@@ -220,6 +229,7 @@ export function Action({
 
 export function Basic({
   control,
+  icon,
   title,
   description,
   cancelButtonCta,
@@ -229,6 +239,7 @@ export function Basic({
   showCancel = true,
 }: React.PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
+  icon?: React.ComponentType<SVGIconProps>
   title: string
   description?: string
   cancelButtonCta?: string
@@ -244,11 +255,27 @@ export function Basic({
   confirmButtonColor?: ButtonColor
   showCancel?: boolean
 }>) {
+  const t = useTheme()
+
   return (
     <Outer control={control} testID="confirmModal">
       <Content>
-        <TitleText>{title}</TitleText>
-        {description && <DescriptionText>{description}</DescriptionText>}
+        {icon ? (
+          <Icon
+            icon={icon}
+            fill={
+              confirmButtonColor === 'negative'
+                ? t.palette.negative_500
+                : undefined
+            }
+          />
+        ) : null}
+        <TitleText style={icon ? a.text_center : null}>{title}</TitleText>
+        {description && (
+          <DescriptionText style={icon ? a.text_center : null}>
+            {description}
+          </DescriptionText>
+        )}
       </Content>
       <Actions>
         <Action

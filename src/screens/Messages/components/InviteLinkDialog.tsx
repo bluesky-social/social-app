@@ -38,6 +38,7 @@ enum Step {
   INFO,
   GENERATE,
   MANAGE,
+  CONFIRM_DISABLE,
 }
 
 export function InviteLinkDialog({
@@ -341,13 +342,10 @@ export function InviteLinkDialog({
               {isOwner ? (
                 <StackedButton
                   label={l`Disable`}
-                  icon={isDisabling ? Loader : ChainLinkBrokenIcon}
+                  icon={ChainLinkBrokenIcon}
                   color="negative_subtle"
                   style={[a.flex_1, a.rounded_full]}
-                  disabled={isDisabling}
-                  onPress={() => {
-                    disableJoinLink()
-                  }}>
+                  onPress={() => setStep(Step.CONFIRM_DISABLE)}>
                   <Trans>Disable</Trans>
                 </StackedButton>
               ) : null}
@@ -382,10 +380,10 @@ export function InviteLinkDialog({
           ) : (
             <View style={[a.gap_md, a.mt_lg]}>
               <Button
+                disabled={isEnabling || isDisabling}
                 label={l`Re-enable invite link`}
                 color="primary"
                 size="large"
-                disabled={isEnabling}
                 onPress={() => {
                   enableJoinLink()
                 }}>
@@ -395,6 +393,7 @@ export function InviteLinkDialog({
                 {isEnabling && <ButtonIcon icon={Loader} />}
               </Button>
               <Button
+                disabled={isEnabling || isDisabling}
                 label={l`Generate new invite link`}
                 color="secondary"
                 size="large"
@@ -409,6 +408,63 @@ export function InviteLinkDialog({
       )
       break
     }
+    case Step.CONFIRM_DISABLE:
+      content = (
+        <>
+          <View style={[a.align_center, a.justify_center, a.mb_lg]}>
+            <ChainLinkBrokenIcon fill={t.palette.negative_500} size="3xl" />
+          </View>
+          <Text
+            style={[
+              a.flex_1,
+              a.pb_sm,
+              a.text_center,
+              a.text_lg,
+              a.font_bold,
+              a.leading_snug,
+            ]}>
+            <Trans>Disable this invite link?</Trans>
+          </Text>
+          <Text
+            style={[
+              a.pb_2xl,
+              a.text_center,
+              a.text_sm,
+              a.leading_snug,
+              t.atoms.text,
+            ]}>
+            <Trans>
+              Anyone who has it will no longer be able to join or request to
+              join. You can always create a new one.
+            </Trans>
+          </Text>
+          <View style={[a.w_full, a.gap_md, a.justify_end]}>
+            <Button
+              color="negative"
+              disabled={isDisabling}
+              size="large"
+              label={l`Disable link`}
+              onPress={() => {
+                disableJoinLink()
+                setStep(Step.MANAGE)
+              }}>
+              <ButtonText>
+                <Trans>Disable link</Trans>
+              </ButtonText>
+            </Button>
+            <Button
+              color="secondary"
+              size="large"
+              label={l`Cancel`}
+              onPress={() => {
+                setStep(Step.MANAGE)
+              }}>
+              <ButtonText>{l`Cancel`}</ButtonText>
+            </Button>
+          </View>
+        </>
+      )
+      break
   }
 
   if (!isOwner && (!joinLink || joinLink.enabledStatus === 'disabled')) {

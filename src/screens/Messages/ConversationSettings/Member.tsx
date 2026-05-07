@@ -51,9 +51,7 @@ export function Member({
     requireAuth(async () => {
       try {
         await queueFollow()
-        Toast.show(l`Following ${displayName}`, {
-          type: 'info',
-        })
+        Toast.show(l`Following ${displayName}`)
       } catch (err) {
         const e = err as Error
         if (e?.name !== 'AbortError') {
