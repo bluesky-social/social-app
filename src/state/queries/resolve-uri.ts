@@ -24,10 +24,15 @@ const resolvedDidQueryOptions = (
       const res = await agent.resolveHandle({handle: didOrHandle})
       return res.data.did
     },
+    // @ts-expect-error tanstack 5.25 types require InitialDataFunction to
+    // return `string`, but we want `undefined` to fall through to queryFn
+    // unless the profile cache already has a resolved DID. Returning '' in
+    // the falsy case makes tanstack treat the query as "has data" and skip
+    // the fetch, which leaves the AtUri downstream with an empty host.
     initialData: () => {
-      if (!didOrHandle) return ''
+      if (!didOrHandle) return undefined
       const profile = getUnstableProfile(didOrHandle)
-      return profile?.did ?? ''
+      return profile?.did
     },
     enabled: !!didOrHandle,
   })
