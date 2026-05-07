@@ -258,8 +258,6 @@ function RegionNotice() {
     const locationControl = Dialog.useDialogControl()
 
     const region = formatRegion(geolocation, i18n.locale)
-    if (!region) return null
-
     const isGPS = !!deviceGeolocation?.countryCode
 
     return (
@@ -289,47 +287,39 @@ function RegionNotice() {
                 />
             )}
 
-            <Text style={[a.text_sm, a.leading_snug]}>
-                {isGPS ? (
-                    <Trans>
-                        Based on your device's location, we think you're in{' '}
-                        <Text style={[a.text_sm, a.font_bold]}>{region}</Text>.
-                        Some features are limited because of regional age laws.
-                    </Trans>
-                ) : (
-                    <Trans>
-                        Based on your network, we think you're in{' '}
-                        <Text style={[a.text_sm, a.font_bold]}>{region}</Text>.
-                        Some features are limited because of regional age laws.
-                    </Trans>
-                )}
-            </Text>
-
-            {!isGPS &&
-                (IS_NATIVE ? (
-                    <Text style={[a.text_sm, a.leading_snug]}>
+            {region && (
+                <Text style={[a.text_sm, a.leading_snug]}>
+                    {isGPS ? (
                         <Trans>
-                            This estimate may be inaccurate if you're using a
-                            VPN.{' '}
-                            <InlineLinkText
-                                label={l`Confirm your location`}
-                                {...createStaticClick(() => {
-                                    locationControl.open()
-                                })}>
-                                Tap here to confirm your location.
-                            </InlineLinkText>
+                            Based on your device's location, we think you're in{' '}
+                            <Text style={[a.text_sm, a.font_bold]}>
+                                {region}
+                            </Text>
+                            . Some features are limited because of regional age
+                            laws.
                         </Trans>
-                    </Text>
-                ) : (
-                    <Text style={[a.text_sm, a.leading_snug]}>
+                    ) : (
                         <Trans>
-                            This estimate may be inaccurate if you're using a
-                            VPN.
+                            Based on your network, we think you're in{' '}
+                            <Text style={[a.text_sm, a.font_bold]}>
+                                {region}
+                            </Text>
+                            . Some features are limited because of regional age
+                            laws.
                         </Trans>
-                    </Text>
-                ))}
+                    )}
+                </Text>
+            )}
 
-            {isGPS && IS_NATIVE && (
+            {region && !isGPS && (
+                <Text style={[a.text_sm, a.leading_snug]}>
+                    <Trans>
+                        This estimate may be inaccurate if you're using a VPN.
+                    </Trans>
+                </Text>
+            )}
+
+            {IS_NATIVE && (
                 <Text style={[a.text_sm, a.leading_snug]}>
                     <Trans>
                         <InlineLinkText
