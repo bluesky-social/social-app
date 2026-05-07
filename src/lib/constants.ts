@@ -194,7 +194,7 @@ export const urls = {
     blog: {
       findFriendsAnnouncement:
         'https://www.blackskyweb.xyz/about/blog/12-16-2025-find-friends',
-      initialVerificationAnnouncement: `https://www.blackskyweb.xyz/about/blog/04-21-2025-verification`,
+      initialVerificationAnnouncement: `https://bsky.social/about/blog/04-21-2025-verification`,
       searchTipsAndTricks:
         'https://www.blackskyweb.xyz/about/blog/05-31-2024-search',
     },

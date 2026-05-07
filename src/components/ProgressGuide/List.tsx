@@ -22,7 +22,6 @@ import {Person_Filled_Corner2_Rounded as PersonIcon} from '#/components/icons/Pe
 import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
-import {FollowDialog} from './FollowDialog'
 import {ProgressGuideTask} from './Task'
 
 const TOTAL_AVATARS = 10
@@ -99,7 +98,6 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
                 : [a.flex_col, a.gap_md],
             ]}>
             <StackedAvatars follows={follows?.pages?.[0]?.follows} />
-            <FollowDialog guide={guide} showArrow={inlineLayout} />
           </View>
         )}
         {guide.guide === 'like-10-and-follow-7' && (

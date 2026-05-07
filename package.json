@@ -83,7 +83,7 @@
   "dependencies": {
     "@atproto/api": "^0.19.13",
     "@atproto/oauth-client-browser": "0.3.40",
-    "@atproto/syntax": "0.5.2",
+    "@atproto/syntax": "0.5.4",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.9",
@@ -314,7 +314,9 @@
     "metro-runtime": "0.83.3",
     "metro-source-map": "0.83.3",
     "@atproto/oauth-client": "0.5.14",
-    "@atproto/oauth-client-browser": "0.3.40"
+    "@atproto/oauth-client-browser": "0.3.40",
+    "@atproto/lexicon": "0.6.2",
+    "@atproto/common-web": "0.4.21"
   },
   "jest": {
     "preset": "jest-expo/ios",
