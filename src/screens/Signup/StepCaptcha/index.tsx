@@ -89,6 +89,11 @@ function StepCaptchaInner({
     newUrl.searchParams.set('state', stateParam)
     newUrl.searchParams.set('colorScheme', theme.name)
 
+    if (IS_WEB) {
+      // @ts-ignore web only
+      newUrl.searchParams.set('redirect_url', window.location.origin)
+    }
+
     if (IS_NATIVE && token) {
       newUrl.searchParams.set('platform', Platform.OS)
       newUrl.searchParams.set('token', token)
