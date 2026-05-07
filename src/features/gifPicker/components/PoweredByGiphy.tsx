@@ -6,8 +6,8 @@ import {atoms as a, useTheme} from '#/alf'
 const ASSET_DARK = require('../../../../assets/images/giphy_attribution_dark.png')
 const ASSET_LIGHT = require('../../../../assets/images/giphy_attribution_light.png')
 
-const HEIGHT = 16
-const ASPECT_RATIO = 200 / 28
+const HEIGHT = 22
+const ASPECT_RATIO = 200 / 22
 
 export function PoweredByGiphy() {
   const t = useTheme()
