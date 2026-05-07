@@ -1,5 +1,5 @@
 import {AtUri} from '@atproto/api'
-import * as psl from 'psl'
+import psl from 'psl'
 import TLDs from 'tlds'
 
 import {BSKY_SERVICE} from '#/lib/constants'
