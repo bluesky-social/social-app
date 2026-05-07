@@ -60,8 +60,8 @@ function createKlipyApi<Input extends object>(
 
     const locale = getLocales?.()?.[0]
 
-    if (locale) {
-      params.set('locale', locale.languageTag.replace('-', '_'))
+    if (locale?.regionCode) {
+      params.set('locale', locale.regionCode.toLowerCase())
     }
 
     for (const [key, value] of Object.entries(input)) {

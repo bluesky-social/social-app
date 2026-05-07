@@ -15,7 +15,6 @@ import {
   Unlock_Stroke2_Corner2_Rounded as UnlockIcon,
 } from '#/components/icons/Lock'
 import {PencilLine_Stroke2_Corner0_Rounded as PencilIcon} from '#/components/icons/Pencil'
-import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 
 export type SystemMessageInfo = {
   message: MessageDescriptor
@@ -69,13 +68,7 @@ export function getSystemMessageInfo(
   } else if (ChatBskyConvoDefs.isSystemMessageDataUnlockConvo(data)) {
     return {Icon: UnlockIcon, message: msg`Chat unlocked`}
   } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvoPermanently(data)) {
-    const name = getReferredDisplayName(data.lockedBy, relatedProfiles)
-    return {
-      Icon: XIcon,
-      message: name
-        ? msg`${name} ended the group chat`
-        : msg`This group chat was ended`,
-    }
+    return {Icon: LockIcon, message: msg`Chat ended`}
   } else if (ChatBskyConvoDefs.isSystemMessageDataEditGroup(data)) {
     return {
       Icon: PencilIcon,

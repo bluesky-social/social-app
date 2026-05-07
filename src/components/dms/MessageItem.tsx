@@ -324,12 +324,12 @@ let MessageItem = ({
               a.rounded_lg,
               a.border,
               t.atoms.border_contrast_low,
+              t.atoms.shadow_xs,
               hasSelfReacted
                 ? {
                     backgroundColor: t.palette.primary_100,
                   }
                 : t.atoms.bg_contrast_25,
-              t.atoms.shadow_sm,
               {
                 paddingTop: platform({android: 2, default: 3}),
                 paddingBottom: platform({android: 2, default: 3}),
