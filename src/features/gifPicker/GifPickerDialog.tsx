@@ -15,7 +15,6 @@ import {GifPickerErrorBoundary} from '#/features/gifPicker/components/GifPickerE
 import {GifPickerGrid} from '#/features/gifPicker/components/GifPickerGrid'
 import {GifPickerHeader} from '#/features/gifPicker/components/GifPickerHeader'
 import {GifPickerPlaceholder} from '#/features/gifPicker/components/GifPickerPlaceholder'
-import {PoweredByGiphy} from '#/features/gifPicker/components/PoweredByGiphy'
 import {useGifPickerData} from '#/features/gifPicker/hooks/useGifPickerData'
 import {useRecentGifs} from '#/features/gifPicker/hooks/useRecentGifs'
 import {type Gif} from '#/features/gifPicker/types'
@@ -189,7 +188,6 @@ function GifPickerBody({
         onEndReached={onEndReached}
         onSelectGif={handleSelectGif}
       />
-      <PoweredByGiphy />
     </>
   )
 }
