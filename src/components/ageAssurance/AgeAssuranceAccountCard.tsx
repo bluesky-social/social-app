@@ -32,13 +32,6 @@ import {
 import {USRegionNameToRegionCode} from '#/geolocation/util'
 import {device, useStorage} from '#/storage'
 
-// DEBUG: remove before merging. Forces the card to render with a fake region
-// so the RegionNotice copy can be previewed/screenshotted locally.
-const DEBUG_FORCE_REGION_PREVIEW = true
-// DEBUG: when previewing, set true to render the GPS copy variant instead of
-// the network copy variant.
-const DEBUG_FORCE_GPS = true
-
 const USRegionCodeToRegionName: {[regionCode: string]: string} =
     Object.fromEntries(
         Object.entries(USRegionNameToRegionCode).map(([name, code]) => [
@@ -66,8 +59,7 @@ function formatRegion(
 
 export function AgeAssuranceAccountCard({style}: ViewStyleProp & {}) {
     const aa = useAgeAssurance()
-    if (!DEBUG_FORCE_REGION_PREVIEW && aa.state.access === aa.Access.Full)
-        return null
+    if (aa.state.access === aa.Access.Full) return null
     if (aa.state.error === 'config') {
         return (
             <View style={style}>
@@ -265,12 +257,8 @@ function RegionNotice() {
     const computeAgeAssuranceRegionAccess = useComputeAgeAssuranceRegionAccess()
     const locationControl = Dialog.useDialogControl()
 
-    const region = DEBUG_FORCE_REGION_PREVIEW
-        ? 'Switzerland'
-        : formatRegion(geolocation, i18n.locale)
-    const isGPS = DEBUG_FORCE_REGION_PREVIEW
-        ? DEBUG_FORCE_GPS
-        : !!deviceGeolocation?.countryCode
+    const region = formatRegion(geolocation, i18n.locale)
+    const isGPS = !!deviceGeolocation?.countryCode && IS_NATIVE
 
     return (
         <>
