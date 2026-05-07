@@ -26,6 +26,8 @@ import {
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
 import {AfterReportDialog} from '#/components/dms/AfterReportDialog'
+import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
+import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {CircleX_Stroke2_Corner0_Rounded} from '#/components/icons/CircleX'
 import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
 import {PersonX_Stroke2_Corner0_Rounded as PersonXIcon} from '#/components/icons/Person'
@@ -40,11 +42,13 @@ export function RejectMenu({
   size = 'small',
   color = 'secondary',
   label,
+  icon = false,
   showDeleteConvo,
   currentScreen,
   ...props
 }: Omit<ButtonProps, 'onPress' | 'children' | 'label'> & {
   label?: string
+  icon?: boolean
   convo: ChatBskyConvoDefs.ConvoView
   profile: ChatBskyActorDefs.ProfileViewBasic
   showDeleteConvo?: boolean
@@ -121,10 +125,11 @@ export function RejectMenu({
               label={triggerProps.accessibilityLabel}
               color={color}
               size={size}>
+              {icon ? <ButtonIcon icon={FlagIcon} /> : null}
               <ButtonText>
                 {label || (
-                  <Trans comment="Reject a chat request (leave the conversation), this opens a menu with options">
-                    Leave
+                  <Trans comment="Reject a chat request, this opens a menu with options">
+                    Reject
                   </Trans>
                 )}
               </ButtonText>
@@ -201,11 +206,13 @@ export function AcceptChatButton({
   size = 'small',
   color = 'primary',
   label,
+  icon = false,
   currentScreen,
   onAcceptConvo,
   ...props
 }: Omit<ButtonProps, 'onPress' | 'children' | 'label'> & {
   label?: string
+  icon?: boolean
   convo: ChatBskyConvoDefs.ConvoView
   onAcceptConvo?: () => void
   currentScreen: 'list' | 'conversation'
@@ -260,6 +267,13 @@ export function AcceptChatButton({
     }
   }, [acceptConvo, needsEmailVerification, emailDialogControl])
 
+  let Icon: React.ReactNode = null
+  if (isPending) {
+    Icon = <ButtonIcon icon={Loader} />
+  } else if (icon) {
+    Icon = <ButtonIcon icon={CheckIcon} />
+  }
+
   return (
     <Button
       {...props}
@@ -267,13 +281,10 @@ export function AcceptChatButton({
       size={size}
       color={color}
       onPress={onPressAccept}>
-      {isPending ? (
-        <ButtonIcon icon={Loader} />
-      ) : (
-        <ButtonText>
-          {label || <Trans comment="Accept a chat request">Accept</Trans>}
-        </ButtonText>
-      )}
+      {Icon}
+      <ButtonText>
+        {label || <Trans comment="Accept a chat request">Accept</Trans>}
+      </ButtonText>
     </Button>
   )
 }
@@ -283,10 +294,12 @@ export function DeleteChatButton({
   size = 'small',
   color = 'secondary',
   label,
+  icon = false,
   currentScreen,
   ...props
 }: Omit<ButtonProps, 'children' | 'label'> & {
   label?: string
+  icon?: boolean
   convo: ChatBskyConvoDefs.ConvoView
   currentScreen: 'list' | 'conversation'
 }) {
@@ -332,6 +345,7 @@ export function DeleteChatButton({
       color={color}
       onPress={onPressDelete}
       {...props}>
+      {icon ? <ButtonIcon icon={LeaveIcon} /> : null}
       <ButtonText>{label || <Trans>Delete chat</Trans>}</ButtonText>
     </Button>
   )
