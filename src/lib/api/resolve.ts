@@ -7,7 +7,7 @@ import {
 import {AtUri} from '@atproto/api'
 
 import {POST_IMG_MAX} from '#/lib/constants'
-import {getLinkMeta} from '#/lib/link-meta/link-meta'
+import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
 import {resolveShortLink} from '#/lib/link-meta/resolve-short-link'
 import {downloadAndResize} from '#/lib/media/manip'
 import {
@@ -35,6 +35,11 @@ type ResolvedExternalLink = {
   title: string
   description: string
   thumb: ComposerImage | undefined
+  /**
+   * The AT-URI of the Atmosphere record representing this external content, if
+   * it exists. Example: a site.standard.document record.
+   */
+  associatedRecord?: LinkMeta['associatedRecord']
 }
 
 type ResolvedPostRecord = {
@@ -240,6 +245,7 @@ async function resolveExternal(
     title: result.title ?? '',
     description: result.description ?? '',
     thumb: result.image ? await imageToThumb(result.image) : undefined,
+    associatedRecord: result.associatedRecord,
   }
 }
 
