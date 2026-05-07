@@ -4,11 +4,7 @@ import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
-import {
-  type InfiniteData,
-  type QueryClient,
-  useInfiniteQuery,
-} from '@tanstack/react-query'
+import {useInfiniteQuery} from '@tanstack/react-query'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -18,6 +14,7 @@ import {shareUrl} from '#/lib/sharing'
 import {cleanError} from '#/lib/strings/errors'
 import {enforceLen} from '#/lib/strings/helpers'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
+import {TOPIC_FEED_QUERY_KEY_ROOT} from '#/state/queries/topic-feed'
 import {useAgent} from '#/state/session'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
@@ -125,7 +122,7 @@ function CuratedTopicFeed({
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ['topic-feed', topicId],
+    queryKey: [TOPIC_FEED_QUERY_KEY_ROOT, topicId],
     initialPageParam: undefined as string | undefined,
     queryFn: async ({pageParam}) => {
       const params = new URLSearchParams({topicId, limit: String(PAGE_SIZE)})
@@ -209,26 +206,6 @@ function CuratedTopicFeed({
       )}
     </>
   )
-}
-
-export function* findAllPostsInTopicQueryData(
-  queryClient: QueryClient,
-  uri: string,
-): Generator<AppBskyFeedDefs.PostView, undefined> {
-  type PageData = {posts: AppBskyFeedDefs.PostView[]; cursor: string | null}
-  const queryDatas = queryClient.getQueriesData<InfiniteData<PageData>>({
-    queryKey: ['topic-feed'],
-  })
-  for (const [_queryKey, queryData] of queryDatas) {
-    if (!queryData?.pages) continue
-    for (const page of queryData.pages) {
-      for (const post of page.posts) {
-        if (post.uri === uri) {
-          yield post
-        }
-      }
-    }
-  }
 }
 
 // Legacy search-based topic view for non-numeric topic params

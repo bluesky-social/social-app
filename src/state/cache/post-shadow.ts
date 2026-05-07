@@ -14,8 +14,8 @@ import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '#/state/
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '#/state/queries/post-feed'
 import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '#/state/queries/search-posts'
+import {findAllPostsInTopicQueryData} from '#/state/queries/topic-feed'
 import {findAllPostsInQueryData as findAllPostsInThreadV2QueryData} from '#/state/queries/usePostThread/queryCache'
-import {findAllPostsInTopicQueryData} from '#/screens/Topic'
 import {castAsShadow, type Shadow} from './types'
 export type {Shadow} from './types'
 
