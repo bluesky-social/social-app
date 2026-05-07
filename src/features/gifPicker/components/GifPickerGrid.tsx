@@ -107,7 +107,7 @@ function distributeIntoColumns(items: Gif[], numColumns: number): Gif[][] {
   const heights = new Array(numColumns).fill(0)
 
   for (const item of items) {
-    const [w, h] = item.media_formats.tinygif.dims
+    const [w, h] = item.media_formats.mediumgif.dims
     const ratio = w > 0 && h > 0 ? h / w : 1
 
     let shortest = 0

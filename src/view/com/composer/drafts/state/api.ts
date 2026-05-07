@@ -508,6 +508,7 @@ export async function draftToComposerPosts(
                 url: gifData.url, // Required for useResolveGifQuery
                 media_formats: {
                   gif: mediaObject,
+                  mediumgif: mediaObject,
                   tinygif: mediaObject,
                   preview: mediaObject,
                 },

@@ -56,6 +56,8 @@ export function GifEmbed({
     aspectRatio = clamp(ratio, 0.75, 4)
   }
 
+  console.log('[gif debug]', params.source, params.playerUri)
+
   return (
     <View
       style={[

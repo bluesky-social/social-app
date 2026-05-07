@@ -18,7 +18,8 @@ export function GifPickerItem({
   const {t: l} = useLingui()
   const t = useTheme()
 
-  const [width, height] = gif.media_formats.tinygif.dims
+  const sourceFormat = gif.media_formats.webp ?? gif.media_formats.mediumgif
+  const [width, height] = sourceFormat.dims
   const aspectRatio = width > 0 && height > 0 ? width / height : 1
 
   const onPress = () => {
@@ -47,7 +48,9 @@ export function GifPickerItem({
               transform: [{scale: pressed ? 0.97 : 1}],
             },
           ]}
-          source={{uri: gifPreviewUrl(gif.media_formats.tinygif.url)}}
+          source={{uri: gifPreviewUrl(sourceFormat.url)}}
+          placeholder={{uri: gifPreviewUrl(gif.media_formats.tinygif.url)}}
+          placeholderContentFit="cover"
           contentFit="cover"
           accessibilityLabel={gif.title}
           accessibilityHint=""

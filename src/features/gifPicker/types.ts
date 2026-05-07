@@ -8,7 +8,7 @@ export type Gif = {
   hasaudio: boolean
   id: string
   media_formats: Record<BaseContentFormats, MediaObject> &
-    Partial<Record<VideoContentFormats, MediaObject>>
+    Partial<Record<VideoContentFormats | 'webp', MediaObject>>
   tags: string[]
   title: string
   content_description: string
@@ -26,7 +26,7 @@ type MediaObject = {
   size: number
 }
 
-type BaseContentFormats = 'preview' | 'gif' | 'tinygif'
+type BaseContentFormats = 'preview' | 'gif' | 'mediumgif' | 'tinygif'
 
 type VideoContentFormats = 'mp4' | 'webm'
 
