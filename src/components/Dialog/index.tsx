@@ -104,6 +104,7 @@ function OuterAlert({
       setDisableDrag: () => {},
       isWithinDialog: true,
       type: 'alert' as const,
+      isHeightConstrained: false,
     }),
     [close],
   )
@@ -211,6 +212,8 @@ function OuterSheet({
 
   useImperativeHandle(control.ref, () => ({open, close}), [open, close])
 
+  const isHeightConstrained = nativeOptions?.maxHeight != null
+
   const context = useMemo(
     () => ({
       close,
@@ -220,8 +223,9 @@ function OuterSheet({
       setDisableDrag,
       isWithinDialog: true,
       type: 'sheet' as const,
+      isHeightConstrained,
     }),
-    [close, snapPoint, disableDrag, setDisableDrag],
+    [close, snapPoint, disableDrag, setDisableDrag, isHeightConstrained],
   )
 
   return (
@@ -235,7 +239,9 @@ function OuterSheet({
       onStateChange={onStateChange}
       disableDrag={disableDrag}>
       <Context.Provider value={context}>
-        <View testID={testID} style={[a.relative]}>
+        <View
+          testID={testID}
+          style={[a.relative, isHeightConstrained && a.flex_1]}>
           {children}
         </View>
       </Context.Provider>
@@ -268,11 +274,16 @@ export function Inner({children, style, header}: DialogInnerProps) {
 
 export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
   function ScrollableInner(
-    {children, contentContainerStyle, header, style: _style, ...props},
+    {children, contentContainerStyle, header, style, ...props},
     ref,
   ) {
-    const {nativeSnapPoint, disableDrag, setDisableDrag, type} =
-      useDialogContext()
+    const {
+      nativeSnapPoint,
+      disableDrag,
+      setDisableDrag,
+      type,
+      isHeightConstrained,
+    } = useDialogContext()
 
     const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
     const insets = useSafeAreaInsets()
@@ -309,6 +320,7 @@ export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
 
     return (
       <ScrollView
+        style={[isHeightConstrained && a.flex_1, style]}
         contentContainerStyle={[
           a.pt_2xl,
           IS_LIQUID_GLASS ? a.px_2xl : a.px_xl,

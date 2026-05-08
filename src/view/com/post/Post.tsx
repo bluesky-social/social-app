@@ -12,10 +12,8 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {countLines} from '#/lib/strings/helpers'
-import {colors} from '#/lib/styles'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -26,7 +24,11 @@ import {unstableCacheProfileView} from '#/state/queries/profile'
 import {Link} from '#/view/com/util/Link'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a} from '#/alf'
+import {atoms as a, select, useTheme} from '#/alf'
+import {
+  GalleryBleed,
+  maybeApplyGalleryOffsetStyles,
+} from '#/components/images/Gallery'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -115,7 +117,7 @@ function PostInner({
   onBeforePress?: () => void
 }) {
   const queryClient = useQueryClient()
-  const pal = usePalette('default')
+  const t = useTheme()
   const {openComposer} = useOpenComposer()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
@@ -155,89 +157,119 @@ function PostInner({
   const [hover, setHover] = useState(false)
 
   return (
-    <Link
-      href={itemHref}
-      style={[
-        styles.outer,
-        pal.border,
-        !hideTopBorder && {borderTopWidth: StyleSheet.hairlineWidth},
-        style,
-      ]}
-      onBeforePress={onBeforePress}
-      onPointerEnter={() => {
-        setHover(true)
-      }}
-      onPointerLeave={() => {
-        setHover(false)
-      }}>
-      <SubtleHover hover={hover} />
-      {showReplyLine && <View style={styles.replyLine} />}
-      <View style={styles.layout}>
-        <View style={styles.layoutAvi}>
-          <PreviewableUserAvatar
-            size={42}
-            profile={post.author}
-            moderation={moderation.ui('avatar')}
-            type={post.author.associated?.labeler ? 'labeler' : 'user'}
+    <GalleryBleed>
+      <Link
+        href={itemHref}
+        style={[
+          styles.outer,
+          t.atoms.border_contrast_low,
+          !hideTopBorder && a.border_t,
+          style,
+        ]}
+        onBeforePress={onBeforePress}
+        onPointerEnter={() => {
+          setHover(true)
+        }}
+        onPointerLeave={() => {
+          setHover(false)
+        }}>
+        <SubtleHover hover={hover} />
+        {showReplyLine && (
+          <View
+            style={[
+              styles.replyLine,
+              {
+                backgroundColor: select(t.name, {
+                  light: t.palette.contrast_100,
+                  dim: t.palette.contrast_200,
+                  dark: t.palette.contrast_200,
+                }),
+              },
+            ]}
           />
-        </View>
-        <View style={styles.layoutContent}>
-          <PostMeta
-            author={post.author}
-            moderation={moderation}
-            timestamp={post.indexedAt}
-            postHref={itemHref}
-          />
-          {replyAuthorDid !== '' && (
-            <PostRepliedTo parentAuthor={replyAuthorDid} />
-          )}
-          <LabelsOnMyPost post={post} />
-          <ContentHider
-            modui={moderation.ui('contentView')}
-            style={styles.contentHider}
-            childContainerStyle={styles.contentHiderChild}>
-            <PostAlerts
-              modui={moderation.ui('contentView')}
-              style={[a.pb_xs]}
+        )}
+        <View style={styles.layout}>
+          <View style={styles.layoutAvi}>
+            <PreviewableUserAvatar
+              size={42}
+              profile={post.author}
+              moderation={moderation.ui('avatar')}
+              type={post.author.associated?.labeler ? 'labeler' : 'user'}
             />
-            {richText.text ? (
-              <View style={[a.mb_2xs]}>
-                <RichText
-                  enableTags
-                  testID="postText"
-                  value={richText}
-                  numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-                  style={[a.flex_1, a.text_md]}
-                  authorHandle={post.author.handle}
-                  shouldProxyLinks={true}
-                />
-                {limitLines && (
-                  <ShowMoreTextButton
-                    style={[a.text_md]}
-                    onPress={onPressShowMore}
-                  />
-                )}
-              </View>
-            ) : undefined}
-            <TranslatedPost hideTranslateLink post={post} />
-            {post.embed ? (
-              <Embed
-                embed={post.embed}
-                moderation={moderation}
-                viewContext={PostEmbedViewContext.Feed}
+          </View>
+          <View
+            style={[
+              styles.layoutContent,
+              maybeApplyGalleryOffsetStyles('meta', {
+                post,
+                modui: moderation.ui('contentList'),
+                additionalCauses: [],
+              }),
+            ]}>
+            <PostMeta
+              author={post.author}
+              moderation={moderation}
+              timestamp={post.indexedAt}
+              postHref={itemHref}
+            />
+            {replyAuthorDid !== '' && (
+              <PostRepliedTo parentAuthor={replyAuthorDid} />
+            )}
+            <LabelsOnMyPost post={post} />
+            <ContentHider
+              modui={moderation.ui('contentView')}
+              style={styles.contentHider}
+              childContainerStyle={styles.contentHiderChild}>
+              <PostAlerts
+                modui={moderation.ui('contentView')}
+                style={[a.pb_xs]}
               />
-            ) : null}
-          </ContentHider>
-          <PostControls
-            post={post}
-            record={record}
-            richText={richText}
-            onPressReply={onPressReply}
-            logContext="Post"
-          />
+              {richText.text ? (
+                <View style={[a.mb_2xs]}>
+                  <RichText
+                    enableTags
+                    testID="postText"
+                    value={richText}
+                    numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+                    style={[a.flex_1, a.text_md]}
+                    authorHandle={post.author.handle}
+                    shouldProxyLinks={true}
+                  />
+                  {limitLines && (
+                    <ShowMoreTextButton
+                      style={[a.text_md]}
+                      onPress={onPressShowMore}
+                    />
+                  )}
+                </View>
+              ) : undefined}
+              <TranslatedPost hideTranslateLink post={post} />
+              {post.embed ? (
+                <View
+                  style={maybeApplyGalleryOffsetStyles('embed', {
+                    post,
+                    modui: moderation.ui('contentList'),
+                    additionalCauses: [],
+                  })}>
+                  <Embed
+                    embed={post.embed}
+                    moderation={moderation}
+                    viewContext={PostEmbedViewContext.Feed}
+                  />
+                </View>
+              ) : null}
+            </ContentHider>
+            <PostControls
+              post={post}
+              record={record}
+              richText={richText}
+              onPressReply={onPressReply}
+              logContext="Post"
+            />
+          </View>
         </View>
-      </View>
-    </Link>
+      </Link>
+    </GalleryBleed>
   )
 }
 
@@ -269,7 +301,6 @@ const styles = StyleSheet.create({
     top: 70,
     bottom: 0,
     borderLeftWidth: 2,
-    borderLeftColor: colors.gray2,
   },
   contentHider: {
     marginBottom: 2,

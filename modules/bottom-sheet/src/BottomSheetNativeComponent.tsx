@@ -1,4 +1,4 @@
-import * as React from 'react'
+import {Component, createRef} from 'react'
 import {
   Dimensions,
   type LayoutChangeEvent,
@@ -21,9 +21,11 @@ import {
   Context as PortalContext,
 } from './BottomSheetPortal'
 
+type NativeViewRef = {dismiss: () => void}
+
 const NativeView: React.ComponentType<
   BottomSheetViewProps & {
-    ref: React.RefObject<any>
+    ref: React.RefObject<NativeViewRef | null>
     style: StyleProp<ViewStyle>
   }
 > = requireNativeViewManager('BottomSheet')
@@ -39,14 +41,14 @@ const IS_IOS15 =
 const IS_NON_E2E_ANDROID =
   Platform.OS === 'android' && Number(Platform.Version) < 35
 
-export class BottomSheetNativeComponent extends React.Component<
+export class BottomSheetNativeComponent extends Component<
   BottomSheetViewProps,
   {
     open: boolean
     viewHeight?: number
   }
 > {
-  ref = React.createRef<any>()
+  ref = createRef<NativeViewRef>()
 
   static contextType = PortalContext
 
@@ -129,6 +131,7 @@ export class BottomSheetNativeComponent extends React.Component<
 function BottomSheetNativeComponentInner({
   children,
   backgroundColor,
+  maxHeight,
   onLayout,
   onStateChange,
   nativeViewRef,
@@ -139,7 +142,7 @@ function BottomSheetNativeComponentInner({
   onStateChange: (
     event: NativeSyntheticEvent<{state: BottomSheetState}>,
   ) => void
-  nativeViewRef: React.RefObject<View>
+  nativeViewRef: React.RefObject<NativeViewRef | null>
   onLayout?: (event: LayoutChangeEvent) => void
 }) {
   const insets = useSafeAreaInsets()
@@ -156,6 +159,7 @@ function BottomSheetNativeComponentInner({
   return (
     <NativeView
       {...rest}
+      maxHeight={maxHeight}
       onStateChange={onStateChange}
       ref={nativeViewRef}
       style={{
@@ -170,6 +174,7 @@ function BottomSheetNativeComponentInner({
             flex: 1,
             backgroundColor,
           },
+          maxHeight != null && {maxHeight},
           Platform.OS === 'android' && {
             borderTopLeftRadius: cornerRadius,
             borderTopRightRadius: cornerRadius,
@@ -177,7 +182,9 @@ function BottomSheetNativeComponentInner({
           },
           extraStyles,
         ]}>
-        <View onLayout={onLayout}>
+        <View
+          onLayout={onLayout}
+          style={maxHeight == null ? undefined : {flex: 1}}>
           <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
         </View>
       </View>

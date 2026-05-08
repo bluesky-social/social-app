@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
-import {type ChatBskyActorDefs, type ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatBskyConvoDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -19,7 +19,6 @@ import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
-import {useSession} from '#/state/session'
 import {List, type ListRef} from '#/view/com/util/List'
 import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -38,32 +37,22 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {Text} from '#/components/Typography'
+import {useAgeAssurance} from '#/ageAssurance'
 import {IS_NATIVE} from '#/env'
 import {ChatListItem} from './components/ChatListItem'
-import {InboxPreview} from './components/InboxPreview'
+import {InboxRequests} from './components/InboxRequests'
 
-type ListItem =
-  | {
-      type: 'INBOX'
-      count: number
-      profiles: ChatBskyActorDefs.ProfileViewBasic[]
-    }
-  | {
-      type: 'CONVERSATION'
-      conversation: ChatBskyConvoDefs.ConvoView
-    }
+type ListItem = {
+  type: 'CONVERSATION'
+  conversation: ChatBskyConvoDefs.ConvoView
+}
 
 function renderItem({item}: {item: ListItem}) {
-  switch (item.type) {
-    case 'INBOX':
-      return <InboxPreview profiles={item.profiles} />
-    case 'CONVERSATION':
-      return <ChatListItem convo={item.conversation} />
-  }
+  return <ChatListItem convo={item.conversation} />
 }
 
 function keyExtractor(item: ListItem) {
-  return item.type === 'INBOX' ? 'INBOX' : item.conversation.id
+  return item.conversation.id
 }
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
@@ -71,21 +60,24 @@ type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
 export function MessagesScreen(props: Props) {
   const {_} = useLingui()
   const aaCopy = useAgeAssuranceCopy()
+  const aa = useAgeAssurance()
 
   return (
     <AgeRestrictedScreen
       screenTitle={_(msg`Chats`)}
       infoText={aaCopy.chatsInfoText}
       rightHeaderSlot={
-        <Link
-          to="/messages/settings"
-          label={_(msg`Chat settings`)}
-          size="small"
-          color="secondary">
-          <ButtonText>
-            <Trans>Chat settings</Trans>
-          </ButtonText>
-        </Link>
+        aa.flags.chatDisabled ? null : (
+          <Link
+            to="/messages/settings"
+            label={_(msg`Chat settings`)}
+            size="small"
+            color="secondary">
+            <ButtonText>
+              <Trans>Chat settings</Trans>
+            </ButtonText>
+          </Link>
+        )
       }>
       <MessagesScreenInner {...props} />
     </AgeRestrictedScreen>
@@ -95,7 +87,6 @@ export function MessagesScreen(props: Props) {
 export function MessagesScreenInner({navigation, route}: Props) {
   const {_} = useLingui()
   const t = useTheme()
-  const {currentAccount} = useSession()
   const newChatControl = useDialogControl()
   const scrollElRef: ListRef = useAnimatedRef()
   const pushToConversation = route.params?.pushToConversation
@@ -143,7 +134,11 @@ export function MessagesScreenInner({navigation, route}: Props) {
     refetch,
   } = useListConvosQuery({status: 'accepted'})
 
-  const {data: inboxData, refetch: refetchInbox} = useListConvosQuery({
+  const {
+    data: inboxData,
+    refetch: refetchInbox,
+    hasNextPage: hasMoreRequests,
+  } = useListConvosQuery({
     status: 'request',
   })
 
@@ -161,15 +156,6 @@ export function MessagesScreenInner({navigation, route}: Props) {
           !convo.muted &&
           convo.members.every(member => member.handle !== 'missing.invalid'),
       ) ?? []
-  const hasInboxConvos = inboxAllConvos?.length > 0
-
-  const inboxUnreadConvos = inboxAllConvos.filter(
-    convo => convo.unreadCount > 0,
-  )
-
-  const inboxUnreadConvoMembers = inboxUnreadConvos
-    .map(x => x.members.find(y => y.did !== currentAccount?.did))
-    .filter(x => !!x)
 
   const conversations = useMemo(() => {
     if (data?.pages) {
@@ -179,15 +165,6 @@ export function MessagesScreenInner({navigation, route}: Props) {
         .filter(convo => !leftConvos.includes(convo.id))
 
       return [
-        ...(hasInboxConvos
-          ? [
-              {
-                type: 'INBOX' as const,
-                count: inboxUnreadConvoMembers.length,
-                profiles: inboxUnreadConvoMembers.slice(0, 3),
-              },
-            ]
-          : []),
         ...conversations.map(
           convo =>
             ({
@@ -198,7 +175,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
       ] satisfies ListItem[]
     }
     return []
-  }, [data, leftConvos, hasInboxConvos, inboxUnreadConvoMembers])
+  }, [data, leftConvos])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
@@ -242,7 +219,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
     if (!isScreenFocused) {
       return
     }
-    return listenSoftReset(onSoftReset)
+    return listenSoftReset(() => void onSoftReset())
   }, [onSoftReset, isScreenFocused])
 
   // NOTE(APiligrim)
@@ -254,11 +231,12 @@ export function MessagesScreenInner({navigation, route}: Props) {
   if (activeConversations.length === 0) {
     return (
       <Layout.Screen>
-        <Header newChatControl={newChatControl} />
+        <Header
+          newChatControl={newChatControl}
+          requestsCount={inboxAllConvos.length}
+          hasMoreRequests={hasMoreRequests}
+        />
         <Layout.Center>
-          {!isLoading && hasInboxConvos && (
-            <InboxPreview profiles={inboxUnreadConvoMembers} />
-          )}
           {isLoading ? (
             <ChatListLoadingPlaceholder />
           ) : (
@@ -292,7 +270,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
                       size="small"
                       color="secondary_inverted"
                       variant="solid"
-                      onPress={() => refetch()}>
+                      onPress={() => void refetch()}>
                       <ButtonText>
                         <Trans>Retry</Trans>
                       </ButtonText>
@@ -334,7 +312,11 @@ export function MessagesScreenInner({navigation, route}: Props) {
 
   return (
     <Layout.Screen testID="messagesScreen">
-      <Header newChatControl={newChatControl} />
+      <Header
+        newChatControl={newChatControl}
+        requestsCount={inboxAllConvos.length}
+        hasMoreRequests={hasMoreRequests}
+      />
       <NewChat onNewChat={onNewChat} control={newChatControl} />
       <List
         ref={scrollElRef}
@@ -342,8 +324,8 @@ export function MessagesScreenInner({navigation, route}: Props) {
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         refreshing={isPTRing}
-        onRefresh={onRefresh}
-        onEndReached={onEndReached}
+        onRefresh={() => void onRefresh()}
+        onEndReached={() => void onEndReached()}
         ListFooterComponent={
           <ListFooter
             isFetchingNextPage={isFetchingNextPage}
@@ -363,7 +345,15 @@ export function MessagesScreenInner({navigation, route}: Props) {
   )
 }
 
-function Header({newChatControl}: {newChatControl: DialogControlProps}) {
+function Header({
+  newChatControl,
+  requestsCount,
+  hasMoreRequests,
+}: {
+  newChatControl: DialogControlProps
+  requestsCount: number
+  hasMoreRequests: boolean
+}) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const requireEmailVerification = useRequireEmailVerification()
@@ -378,6 +368,10 @@ function Header({newChatControl}: {newChatControl: DialogControlProps}) {
       </Trans>,
     ],
   })
+
+  const requestsLink = (
+    <InboxRequests count={requestsCount} more={hasMoreRequests} />
+  )
 
   const settingsLink = (
     <Link
@@ -403,6 +397,7 @@ function Header({newChatControl}: {newChatControl: DialogControlProps}) {
           </Layout.Header.Content>
 
           <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+            {requestsLink}
             {settingsLink}
             <Button
               label={_(msg`New chat`)}
@@ -420,11 +415,12 @@ function Header({newChatControl}: {newChatControl: DialogControlProps}) {
       ) : (
         <>
           <Layout.Header.MenuButton />
-          <Layout.Header.Content>
+          <Layout.Header.Content align="left">
             <Layout.Header.TitleText>
               <Trans>Chats</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
+          {requestsLink}
           <Layout.Header.Slot>{settingsLink}</Layout.Header.Slot>
         </>
       )}

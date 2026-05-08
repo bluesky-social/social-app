@@ -8,6 +8,7 @@ import {
   aggregateUserInterests,
   createBskyTopicsHeader,
 } from '#/lib/api/feed/utils'
+import {logger} from '#/logger'
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -16,21 +17,27 @@ import {useAgent} from '#/state/session'
 export type QueryProps = {
   category?: string | null
   limit?: number
+  enabled?: boolean
 }
 
 export const getSuggestedUsersForSeeMoreQueryKeyRoot =
   'unspecced-suggested-users-for-explore'
-export const createGetSuggestedUsersForSeeMoreQueryKey = (
-  props: QueryProps,
-) => [getSuggestedUsersForSeeMoreQueryKeyRoot, props.category, props.limit]
+export const createGetSuggestedUsersForSeeMoreQueryKey = (props: {
+  category?: string | null
+  limit?: number
+}) => [getSuggestedUsersForSeeMoreQueryKeyRoot, props.category, props.limit]
 
 export function useGetSuggestedUsersForSeeMoreQuery(props: QueryProps = {}) {
   const agent = useAgent()
   const {data: preferences} = usePreferencesQuery()
 
   return useQuery({
+    enabled: props.enabled ?? true,
     staleTime: STALE.MINUTES.THREE,
-    queryKey: createGetSuggestedUsersForSeeMoreQueryKey(props),
+    queryKey: createGetSuggestedUsersForSeeMoreQueryKey({
+      category: props.category,
+      limit: props.limit,
+    }),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
       const userInterests = aggregateUserInterests(preferences)
@@ -48,6 +55,9 @@ export function useGetSuggestedUsersForSeeMoreQuery(props: QueryProps = {}) {
         },
       )
 
+      if (!data.recIdStr) {
+        logger.debug('getSuggestedUsersForSeeMore response missing recIdStr')
+      }
       return {...data, recId: data.recIdStr}
     },
   })

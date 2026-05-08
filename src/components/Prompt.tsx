@@ -3,7 +3,7 @@ import {type GestureResponderEvent, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {atoms as a, useTheme, type ViewStyleProp, web} from '#/alf'
+import {atoms as a, type TextStyleProp, useTheme, web} from '#/alf'
 import {
   Button,
   type ButtonColor,
@@ -35,6 +35,8 @@ export function Outer({
   testID,
   nativeOptions,
   type = 'sheet',
+  webOptions,
+  onClose,
 }: React.PropsWithChildren<{
   control: Dialog.DialogControlProps
   testID?: string
@@ -48,6 +50,13 @@ export function Outer({
    * - `alert`: Centered alert modal on all platforms.
    */
   type?: 'sheet' | 'alert'
+  /**
+   * Web-specific options for the prompt
+   */
+  webOptions?: {
+    onBackgroundPress?: (e: GestureResponderEvent) => void
+  }
+  onClose?: () => void
 }>) {
   const titleId = useId()
   const descriptionId = useId()
@@ -62,7 +71,8 @@ export function Outer({
       control={control}
       testID={testID}
       type={type}
-      webOptions={{alignCenter: true}}
+      onClose={onClose}
+      webOptions={{alignCenter: true, ...webOptions}}
       nativeOptions={{preventExpansion: true, ...nativeOptions}}>
       {type !== 'alert' && <Dialog.Handle />}
       <Context.Provider value={context}>
@@ -109,7 +119,7 @@ export function Icon({
 export function TitleText({
   children,
   style,
-}: React.PropsWithChildren<ViewStyleProp>) {
+}: React.PropsWithChildren<TextStyleProp>) {
   const {titleId} = useContext(Context)
   const {type} = Dialog.useDialogContext()
   return (
@@ -132,7 +142,8 @@ export function TitleText({
 export function DescriptionText({
   children,
   selectable,
-}: React.PropsWithChildren<{selectable?: boolean}>) {
+  style,
+}: React.PropsWithChildren<{selectable?: boolean} & TextStyleProp>) {
   const t = useTheme()
   const {descriptionId} = useContext(Context)
   const {type} = Dialog.useDialogContext()
@@ -146,6 +157,7 @@ export function DescriptionText({
         t.atoms.text_contrast_high,
         a.pb_lg,
         type === 'alert' && a.text_center,
+        style,
       ]}>
       {children}
     </Text>

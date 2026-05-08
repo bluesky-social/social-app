@@ -32,6 +32,7 @@ export default defineConfig(
       '*.html',
       'bskyweb/**',
       'bskyembed/**',
+      'bskyogcard/**',
       'src/locale/locales/_build/**',
       'src/locale/locales/**/*.js',
       '*.e2e.ts',
@@ -229,7 +230,7 @@ export default defineConfig(
        * v8 `warn` ones are probably worth fixing. `off` ones are a bit too
        * nit-picky
        */
-      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'off',
@@ -249,6 +250,14 @@ export default defineConfig(
       '@typescript-eslint/no-base-to-string': 'warn',
       '@typescript-eslint/prefer-promise-reject-errors': 'warn',
       '@typescript-eslint/await-thenable': 'warn',
+
+      "no-restricted-imports": ["error", {
+        "paths": [{
+          "name": "react",
+          "importNames": ["React", "default"],
+          "message": "React is already in the global type namespace. Use named imports for runtime modules."
+        }]
+      }],
 
       /**
        * Turn off rules that we haven't enforced thus far

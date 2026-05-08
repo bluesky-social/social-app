@@ -8,6 +8,7 @@ import {
   aggregateUserInterests,
   createBskyTopicsHeader,
 } from '#/lib/api/feed/utils'
+import {logger} from '#/logger'
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -19,9 +20,9 @@ export type QueryProps = {
 
 export const getSuggestedUsersForDiscoverQueryKeyRoot =
   'unspecced-suggested-users-for-explore'
-export const createGetSuggestedUsersForDiscoverQueryKey = (
-  props: QueryProps,
-) => [getSuggestedUsersForDiscoverQueryKeyRoot, props.limit]
+export const createGetSuggestedUsersForDiscoverQueryKey = (props: {
+  limit?: number
+}) => [getSuggestedUsersForDiscoverQueryKeyRoot, props.limit]
 
 export function useGetSuggestedUsersForDiscoverQuery(props: QueryProps = {}) {
   const agent = useAgent()
@@ -29,7 +30,7 @@ export function useGetSuggestedUsersForDiscoverQuery(props: QueryProps = {}) {
 
   return useQuery({
     staleTime: STALE.MINUTES.THREE,
-    queryKey: createGetSuggestedUsersForDiscoverQueryKey(props),
+    queryKey: createGetSuggestedUsersForDiscoverQueryKey({limit: props.limit}),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
       const userInterests = aggregateUserInterests(preferences)
@@ -46,6 +47,9 @@ export function useGetSuggestedUsersForDiscoverQuery(props: QueryProps = {}) {
             },
           },
         )
+      if (!data.recIdStr) {
+        logger.debug('getSuggestedUsersForDiscover response missing recIdStr')
+      }
       return {...data, recId: data.recIdStr}
     },
   })

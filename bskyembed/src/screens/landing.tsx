@@ -28,7 +28,7 @@ export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 const root = document.getElementById('app')
 if (!root) throw new Error('No root element')
 
-initSystemColorMode()
+initSystemColorMode({additionalBodyClasses: 'dark:bg-dimmedBgDarken'})
 
 const agent = new AtpAgent({
   service: 'https://public.api.bsky.app',
@@ -119,7 +119,7 @@ function LandingPage() {
   }, [uri])
 
   return (
-    <main className="w-full min-h-screen flex flex-col items-center gap-8 py-14 px-4 md:pt-32 dark:bg-dimmedBgDarken dark:text-slate-200">
+    <main className="w-full min-h-dvh flex flex-col items-center gap-8 py-14 px-4 md:pt-32 dark:text-slate-200">
       <Link
         href="https://bsky.social/about"
         className="transition-transform hover:scale-110">

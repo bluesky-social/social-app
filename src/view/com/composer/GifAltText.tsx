@@ -11,7 +11,6 @@ import {
   parseEmbedPlayerFromUrl,
 } from '#/lib/strings/embed-player'
 import {useResolveGifQuery} from '#/state/queries/resolve-link'
-import {type Gif} from '#/state/queries/tenor'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -24,6 +23,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {GifEmbed} from '#/components/Post/Embed/ExternalEmbed/Gif'
 import {Text} from '#/components/Typography'
+import {type Gif} from '#/features/gifPicker/types'
 
 export function GifAltTextDialog({
   gif,

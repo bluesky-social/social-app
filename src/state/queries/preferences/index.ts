@@ -84,7 +84,10 @@ export function usePreferencesQuery() {
          * Prefs are all downstream of age assurance now. For logged-out
          * users, we override moderation prefs based on AA state.
          */
-        if (aa.state.access !== aa.Access.Full) {
+        if (
+          aa.state.access !== aa.Access.Full ||
+          aa.flags.adultContentDisabled
+        ) {
           data = {
             ...data,
             moderationPrefs: makeAgeRestrictedModerationPrefs(

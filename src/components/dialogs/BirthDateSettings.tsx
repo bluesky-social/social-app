@@ -1,8 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
 import {isAppPassword} from '#/lib/jwt'
@@ -34,7 +32,7 @@ export function BirthDateSettingsDialog({
   control: Dialog.DialogControlProps
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {isLoading, error, data: preferences} = usePreferencesQuery()
   const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
   const {currentAccount} = useSession()
@@ -45,11 +43,11 @@ export function BirthDateSettingsDialog({
       <Dialog.Handle />
       {isBirthdateUpdateAllowed ? (
         <Dialog.ScrollableInner
-          label={_(msg`My Birthdate`)}
+          label={l`My birthdate`}
           style={web({maxWidth: 400})}>
           <View style={[a.gap_md]}>
             <Text style={[a.text_xl, a.font_semi_bold]}>
-              <Trans>My Birthdate</Trans>
+              <Trans>My birthdate</Trans>
             </Text>
             <Text
               style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
@@ -64,9 +62,7 @@ export function BirthDateSettingsDialog({
               <ErrorMessage
                 message={
                   error?.toString() ||
-                  _(
-                    msg`We were unable to load your birthdate preferences. Please try again.`,
-                  )
+                  l`We were unable to load your birthdate preferences. Please try again.`
                 }
                 style={[a.rounded_sm]}
               />
@@ -88,7 +84,7 @@ export function BirthDateSettingsDialog({
         </Dialog.ScrollableInner>
       ) : (
         <Dialog.ScrollableInner
-          label={_(msg`You recently changed your birthdate`)}
+          label={l`You recently changed your birthdate`}
           style={web({maxWidth: 400})}>
           <View style={[a.gap_sm]}>
             <Text
@@ -123,15 +119,16 @@ function BirthdayInner({
   control: Dialog.DialogControlProps
   preferences: UsePreferencesQueryResponse
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const cleanError = useCleanError()
   const [date, setDate] = useState(preferences.birthDate || getDateAgo(18))
   const {isPending, error, mutateAsync: setBirthDate} = useBirthdateMutation()
   const hasChanged = date !== preferences.birthDate
   const errorMessage = useMemo(() => {
     if (error) {
-      const {raw, clean} = cleanError(error)
-      return clean || raw || error.toString()
+      const e = error as Error
+      const {raw, clean} = cleanError(e)
+      return clean || raw || e.toString()
     }
   }, [error, cleanError])
 
@@ -146,7 +143,8 @@ function BirthdayInner({
         await setBirthDate({birthDate: date})
       }
       control.close()
-    } catch (e: any) {
+    } catch (error) {
+      const e = error as Error
       logger.error(`setBirthDate failed`, {message: e.message})
     }
   }, [date, setBirthDate, control, hasChanged])
@@ -158,11 +156,10 @@ function BirthdayInner({
           testID="birthdayInput"
           value={date}
           onChangeDate={newDate => setDate(new Date(newDate))}
-          label={_(msg`Birthdate`)}
-          accessibilityHint={_(msg`Enter your birthdate`)}
+          label={l`Birthdate`}
+          accessibilityHint={l`Enter your birthdate`}
         />
       </View>
-
       {isUnder18 && hasChanged && (
         <Admonition type="info">
           <Trans>
@@ -171,30 +168,27 @@ function BirthdayInner({
           </Trans>
         </Admonition>
       )}
-
       {isUnder13 && (
         <Admonition type="error">
           <Trans>
             You must be at least 13 years old to use Bluesky. Read our{' '}
             <SimpleInlineLinkText
               to="https://bsky.social/about/support/tos"
-              label={_(msg`Terms of Service`)}>
+              label={l`Terms of Service`}>
               Terms of Service
             </SimpleInlineLinkText>{' '}
             for more information.
           </Trans>
         </Admonition>
       )}
-
       {errorMessage ? (
         <ErrorMessage message={errorMessage} style={[a.rounded_sm]} />
       ) : undefined}
-
       <View style={IS_WEB && [a.flex_row, a.justify_end]}>
         <Button
-          label={hasChanged ? _(msg`Save birthdate`) : _(msg`Done`)}
+          label={hasChanged ? l`Save birthdate` : l`Done`}
           size="large"
-          onPress={onSave}
+          onPress={() => void onSave()}
           variant="solid"
           color="primary"
           disabled={isUnder13}>

@@ -16,8 +16,8 @@ export function useDialogCallbackQueue(
     for (const cb of closeCallbacks.current) {
       try {
         cb()
-      } catch (e: any) {
-        logger.error(e || 'Error running close callback')
+      } catch (e) {
+        logger.error('Error running close callback', {safeMessage: e})
       }
     }
     closeCallbacks.current = []

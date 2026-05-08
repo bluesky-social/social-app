@@ -3,7 +3,6 @@ import {type ListRenderItemInfo, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -14,7 +13,6 @@ import {shareUrl} from '#/lib/sharing'
 import {cleanError} from '#/lib/strings/errors'
 import {enforceLen} from '#/lib/strings/helpers'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
@@ -50,21 +48,10 @@ export default function TopicScreen({
   }, [topic])
 
   const [activeTab, setActiveTab] = useState(0)
-  const setMinimalShellMode = useSetMinimalShellMode()
 
-  useFocusEffect(
-    useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
-
-  const onPageSelected = useCallback(
-    (index: number) => {
-      setMinimalShellMode(false)
-      setActiveTab(index)
-    },
-    [setMinimalShellMode],
-  )
+  const onPageSelected = (index: number) => {
+    setActiveTab(index)
+  }
 
   const sections = useMemo(() => {
     return [

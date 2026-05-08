@@ -15,8 +15,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {GlassContainer} from 'expo-glass-effect'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
@@ -26,7 +25,6 @@ import {
   useMessageDraft,
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
-import {type EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker'
 import {atoms as a, platform, tokens, useTheme} from '#/alf'
 import {GlassView} from '#/components/GlassView'
 import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
@@ -47,13 +45,12 @@ export function MessageInput({
   children,
 }: {
   textInputId?: string
-  onSendMessage: (message: string) => void
+  onSendMessage: (message: string) => Promise<void> | void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
-  openEmojiPicker?: (pos: EmojiPickerPosition) => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const playHaptic = useHaptics()
   const {getDraft, clearDraft} = useMessageDraft()
@@ -82,13 +79,12 @@ export function MessageInput({
       return
     }
     if (countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
-      Toast.show(_(msg`Message is too long`), {
+      Toast.show(l`Message is too long`, {
         type: 'error',
       })
       return
     }
     clearDraft()
-    onSendMessage(message)
     playHaptic()
     setEmbed(undefined)
     setMessage('')
@@ -102,6 +98,10 @@ export function MessageInput({
         inputRef.current?.focus()
       }, 100)
     }
+
+    requestAnimationFrame(() => {
+      void onSendMessage(message)
+    })
   }, [
     needsEmailVerification,
     hasEmbed,
@@ -111,7 +111,7 @@ export function MessageInput({
     playHaptic,
     setEmbed,
     inputRef,
-    _,
+    l,
   ])
 
   useFocusedInputHandler(
@@ -139,7 +139,8 @@ export function MessageInput({
     scrollEnabled: isInputScrollable.get(),
   }))
 
-  const submitDisabled = needsEmailVerification || message.trim().length === 0
+  const submitDisabled =
+    needsEmailVerification || (!hasEmbed && message.trim().length === 0)
 
   const blur = useCallback(() => {
     inputRef.current?.blur()
@@ -169,9 +170,9 @@ export function MessageInput({
           fallbackStyle={[t.atoms.bg_contrast_50]}>
           <AnimatedTextInput
             nativeID={textInputId}
-            accessibilityLabel={_(msg`Message input field`)}
-            accessibilityHint={_(msg`Type your message here`)}
-            placeholder={_(msg`Message`)}
+            accessibilityLabel={l`Message input field`}
+            accessibilityHint={l`Type your message here`}
+            placeholder={l`Message`}
             placeholderTextColor={t.palette.contrast_500}
             value={message}
             onChange={evt => {
@@ -225,7 +226,7 @@ export function MessageInput({
           }}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={_(msg`Send message`)}
+            accessibilityLabel={l`Send message`}
             accessibilityHint=""
             hitSlop={HITSLOP_10}
             style={[

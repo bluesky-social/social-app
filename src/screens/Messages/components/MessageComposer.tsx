@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {
   useKeyboardHandler,
@@ -19,25 +19,21 @@ import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {isBskyPostUrl} from '#/lib/strings/url-helpers'
 import {useEmail} from '#/state/email-verification'
 import {
   useMessageDraft,
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
-import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
-import {
-  type Emoji,
-  EmojiPicker,
-  type EmojiPickerState,
-} from '#/view/com/composer/text-input/web/EmojiPicker'
 import {atoms as a, native, platform, tokens, useTheme, utils} from '#/alf'
 import {Composer, useComposerInternalApiRef} from '#/components/Composer'
+import * as EmojiPicker from '#/components/EmojiPicker'
 import {GlassView} from '#/components/GlassView'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import * as Toast from '#/components/Toast'
-import {IS_ANDROID, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 
 const MIN_HEIGHT = 40
 
@@ -60,19 +56,15 @@ export function MessageComposer({
   const {needsEmailVerification} = useEmail()
   const editable = !needsEmailVerification
   const {getDraft, clearDraft} = useMessageDraft()
-  const [emojiPickerState, setEmojiPickerState] = useState<EmojiPickerState>({
-    isOpen: false,
-    pos: {top: 0, left: 0, right: 0, bottom: 0, nextFocusRef: null},
-  })
   const composerInternalApiRef = useComposerInternalApiRef()
 
   const [text, setText] = useState(getDraft)
   useSaveMessageDraft(text)
 
   // Android interactive dismiss sometimes doesn't blur the input
-  const blur = () => {
+  const blur = useNonReactiveCallback(() => {
     composerInternalApiRef.current?.input?.blur()
-  }
+  })
 
   useKeyboardHandler({
     onEnd: evt => {
@@ -85,14 +77,10 @@ export function MessageComposer({
 
   const submitDisabled = !editable || (!hasEmbed && text.trim().length === 0)
 
-  const openEmojiPicker = (pos: any) => {
-    setEmojiPickerState({isOpen: true, pos})
-  }
-
-  const onSubmit = () => {
+  const onSubmit = (message: string) => {
     if (!editable) return
-    if (!hasEmbed && text.trim() === '') return
-    const graphemeCount = countGraphemes(text)
+    if (!hasEmbed && message.trim() === '') return
+    const graphemeCount = countGraphemes(message)
     if (graphemeCount > MAX_DM_GRAPHEME_LENGTH) {
       Toast.show(
         l`Message is too long (${graphemeCount}/${MAX_DM_GRAPHEME_LENGTH})`,
@@ -102,7 +90,6 @@ export function MessageComposer({
     }
 
     clearDraft()
-    onSendMessage(text)
     playHaptic()
     setEmbed(undefined)
     composerInternalApiRef.current?.clear()
@@ -110,17 +97,51 @@ export function MessageComposer({
     if (IS_WEB) {
       composerInternalApiRef.current?.input?.focus()
     }
+
+    // defer send by a frame so that the textinput resizes before we send the message
+    requestAnimationFrame(() => {
+      onSendMessage(message)
+    })
   }
 
-  useEffect(() => {
-    function onEmojiInserted(emoji: Emoji) {
-      composerInternalApiRef.current?.insert(emoji.native)
+  const isFlushingAutocorrectSuggestion = useRef(false)
+  const handleSubmit = () => {
+    if (IS_IOS) {
+      // HACKFIX: If there's a pending autocomplete suggestion, iOS will prioritize
+      // accepting the suggestion over any imperative `.clear()` action on the textinput.
+      // This means we'll send the message with the typo while the corrected text remains
+      // in the composer's textinput.
+      //
+      // In MessageInput, the previous iteration, we simply sent it, and if another text change
+      // event came in, we'd clear it again. However, it's nicer UX to actually accept the suggestion.
+      //
+      // Thus the solution:
+      // 1. Set a ref indicating we're flushing the autocorrect suggestion
+      // 2. Watch for incoming onChange events. If something comes in, it's almost certainly the corrected text,
+      // so send that
+      // 3. Meanwhile, race that against a simple timeout. If the timeout fires first, send the original text.
+      //
+      // Hopefully, it's delaying the send by no more than a couple frames -sfn
+      isFlushingAutocorrectSuggestion.current = true
+      setTimeout(() => {
+        if (isFlushingAutocorrectSuggestion.current) {
+          isFlushingAutocorrectSuggestion.current = false
+          onSubmit(text)
+        }
+      }, 20)
+    } else {
+      onSubmit(text)
     }
-    textInputWebEmitter.addListener('emoji-inserted', onEmojiInserted)
-    return () => {
-      textInputWebEmitter.removeListener('emoji-inserted', onEmojiInserted)
+  }
+
+  const handleChange = (nextText: string) => {
+    if (IS_IOS && isFlushingAutocorrectSuggestion.current) {
+      isFlushingAutocorrectSuggestion.current = false
+      onSubmit(nextText)
+    } else {
+      setText(nextText)
     }
-  }, [composerInternalApiRef])
+  }
 
   return (
     <ComposerContainer>
@@ -142,54 +163,47 @@ export function MessageComposer({
             tintColor={t.palette.contrast_50}
             fallbackStyle={[t.atoms.bg_contrast_50]}>
             {IS_WEB && (
-              <Pressable
-                onPress={e => {
-                  e.currentTarget.measure(
-                    (_fx, _fy, _width, _height, px, py) => {
-                      // TODO: rip this horrible system out
-                      openEmojiPicker?.({
-                        top: py,
-                        left: px - 400,
-                        right: px - 400,
-                        bottom: py,
-                        nextFocusRef: {
-                          current:
-                            composerInternalApiRef.current?.input?.element,
+              <EmojiPicker.Root
+                onEmojiSelect={emoji =>
+                  composerInternalApiRef.current?.insert(emoji.native)
+                }
+                nextFocusRef={() =>
+                  composerInternalApiRef.current?.input?.element
+                }>
+                <EmojiPicker.Trigger label={l`Open emoji picker`}>
+                  {({props, state, control}) => (
+                    <Pressable
+                      {...props}
+                      style={[
+                        a.overflow_hidden,
+                        a.absolute,
+                        a.rounded_full,
+                        a.align_center,
+                        a.justify_center,
+                        a.z_30,
+                        {
+                          height: 20,
+                          width: 20,
+                          top: 10,
+                          right: 10,
                         },
-                      })
-                    },
-                  )
-                }}
-                style={[
-                  a.overflow_hidden,
-                  a.absolute,
-                  a.rounded_full,
-                  a.align_center,
-                  a.justify_center,
-                  a.z_30,
-                  {
-                    height: 20,
-                    width: 20,
-                    top: 10,
-                    right: 10,
-                  },
-                ]}
-                accessibilityLabel={l`Open emoji picker`}
-                accessibilityHint="">
-                {state => (
-                  <EmojiSmileIcon
-                    size="md"
-                    style={
-                      state.hovered ||
-                      state.focused ||
-                      state.pressed ||
-                      emojiPickerState.isOpen
-                        ? {color: t.palette.primary_500}
-                        : t.atoms.text_contrast_high
-                    }
-                  />
-                )}
-              </Pressable>
+                      ]}>
+                      <EmojiSmileIcon
+                        size="md"
+                        style={
+                          state.hovered ||
+                          state.focused ||
+                          state.pressed ||
+                          control.isOpen
+                            ? {color: t.palette.primary_500}
+                            : t.atoms.text_contrast_high
+                        }
+                      />
+                    </Pressable>
+                  )}
+                </EmojiPicker.Trigger>
+                <EmojiPicker.Picker />
+              </EmojiPicker.Root>
             )}
 
             <Composer
@@ -210,7 +224,7 @@ export function MessageComposer({
                 paddingBottom: 10,
                 paddingRight: 16 + platform({web: 20, default: 0}),
               }}
-              onChange={setText}
+              onChange={handleChange}
               onFacetCommitted={facet => {
                 if (facet.type === 'url' && isBskyPostUrl(facet.value)) {
                   setEmbed(facet.value)
@@ -219,21 +233,13 @@ export function MessageComposer({
               onRequestSubmit={req => {
                 if (req.platform === 'web' && req.shiftKey) return
                 req.nativeEvent.preventDefault()
-                onSubmit()
+                handleSubmit()
               }}
             />
           </GlassView>
-          <SubmitButton onPress={onSubmit} disabled={submitDisabled} />
+          <SubmitButton onPress={handleSubmit} disabled={submitDisabled} />
         </GlassContainer>
       </View>
-
-      {IS_WEB && (
-        <EmojiPicker
-          pinToTop
-          state={emojiPickerState}
-          close={() => setEmojiPickerState(prev => ({...prev, isOpen: false}))}
-        />
-      )}
     </ComposerContainer>
   )
 }
@@ -288,7 +294,7 @@ export function ComposerContainer({children}: {children: React.ReactNode}) {
     paddingHorizontal: interpolate(
       progress.get(),
       [0, 1],
-      [bottomInset, tokens.space.sm],
+      [bottomInset, tokens.space.md],
       {
         extrapolateRight: Extrapolation.CLAMP,
         extrapolateLeft: Extrapolation.CLAMP,

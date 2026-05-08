@@ -46,6 +46,7 @@ export type DialogContextProps = {
   // in the event that the hook is used outside of a dialog
   isWithinDialog: boolean
   type: 'sheet' | 'alert'
+  isHeightConstrained: boolean
 }
 
 export type DialogControlOpenOptions = {

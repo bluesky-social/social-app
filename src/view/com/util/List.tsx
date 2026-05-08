@@ -6,14 +6,14 @@ import {
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated'
-import {updateActiveVideoViewAsync} from '@haileyok/bluesky-video'
+import {updateActiveVideoViewAsync} from '@bsky.app/video'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
-import {useLightbox} from '#/state/lightbox'
 import {useTheme} from '#/alf'
+import {useLightbox} from '#/components/Lightbox/state'
 import {IS_IOS} from '#/env'
 import {FlatList_INTERNAL} from './Views'
 

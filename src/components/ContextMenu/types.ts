@@ -21,6 +21,7 @@ export type {
 export type AuxiliaryViewProps = {
   children?: React.ReactNode
   align?: 'left' | 'right'
+  style?: StyleProp<ViewStyle>
 }
 
 export type ItemProps = Omit<MenuItemProps, 'onPress' | 'children'> & {
@@ -64,6 +65,7 @@ export type ContextType = {
 
 export type MenuContextType = {
   align: 'left' | 'right'
+  xOffset: number
 }
 
 export type ItemContextType = {
@@ -83,6 +85,14 @@ export type TriggerProps = {
   hint?: string
   role?: AccessibilityRole
   style?: StyleProp<ViewStyle>
+  /**
+   * Callback for single taps. Composed with the double-tap and
+   * press-and-hold gestures via `Gesture.Exclusive`, so a double tap
+   * does not also fire this handler.
+   *
+   * @platform ios, android
+   */
+  onTap?: () => void
 }
 export type TriggerChildProps =
   | {

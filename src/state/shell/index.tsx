@@ -11,7 +11,11 @@ export {
   useIsDrawerSwipeDisabled,
   useSetDrawerSwipeDisabled,
 } from './drawer-swipe-disabled'
-export {useMinimalShellMode, useSetMinimalShellMode} from './minimal-mode'
+export {
+  useEnableMinimalShellMode,
+  useEnableMinimalShellModeForScreen,
+  useMinimalShellMode,
+} from './minimal-mode'
 export {useOnboardingDispatch, useOnboardingState} from './onboarding'
 export {useTickEveryMinute} from './tick-every-minute'
 

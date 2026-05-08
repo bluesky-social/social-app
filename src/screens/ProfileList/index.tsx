@@ -10,7 +10,7 @@ import {
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useFocusEffect, useIsFocused} from '@react-navigation/native'
+import {useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -31,7 +31,6 @@ import {
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListRef} from '#/view/com/util/List'
@@ -155,7 +154,6 @@ function ProfileListScreenLoaded({
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const {openComposer} = useOpenComposer()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {currentAccount} = useSession()
   const {rkey} = route.params
   const feedSectionRef = useRef<SectionRef>(null)
@@ -175,12 +173,6 @@ function ProfileListScreenLoaded({
   }, [list, moderationOpts])
 
   useSetTitle(isHidden ? _(msg`List Hidden`) : list.name)
-
-  useFocusEffect(
-    useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
 
   const onChangeMembers = () => {
     if (isCurateList) {
