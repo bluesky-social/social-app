@@ -1,5 +1,5 @@
 import {type ConvoItem} from '#/state/messages/convo/types'
-import {localDateString} from '#/components/dms/util'
+import {localDateString, MESSAGE_GAP_THRESHOLD_MS} from '#/components/dms/util'
 
 export type SystemMessageItem = Extract<ConvoItem, {type: 'system-message'}>
 
@@ -19,8 +19,6 @@ export type RenderItem =
   | ConvoItem
   | SystemMessageGroupItem
   | SystemMessageDateDividerItem
-
-const MESSAGE_GAP_THRESHOLD_MS = 60 * 60 * 1000
 
 function getSentAt(item: ConvoItem): string | null {
   if (

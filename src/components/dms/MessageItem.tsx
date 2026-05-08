@@ -45,15 +45,13 @@ import {Text} from '#/components/Typography'
 import {DateDivider} from './DateDivider'
 import {MessageItemEmbed} from './MessageItemEmbed'
 import {ReactionsDialog} from './ReactionsDialog'
+import {CLUSTERED_MESSAGE_THRESHOLD_MS, MESSAGE_GAP_THRESHOLD_MS} from './util'
 
 const AVATAR_SIZE = 28
 const CLUSTERED_MESSAGE_GAP = 2
 const BORDER_RADIUS = 18
 const SQUARED_BORDER_RADIUS = 4
 const DISPLAY_NAME_INSET = 22
-
-const CLUSTERED_MESSAGE_THRESHOLD_MS = 5 * 60 * 1000
-const MESSAGE_GAP_THRESHOLD_MS = 60 * 60 * 1000
 
 function isWithinClusterBoundary({
   isPending,
