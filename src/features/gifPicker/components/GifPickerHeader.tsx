@@ -7,6 +7,7 @@ import {Button, ButtonIcon} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
 import {MagnifyingGlass_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {PoweredByGiphy} from '#/features/gifPicker/components/PoweredByGiphy'
 
 export function GifPickerHeader({
   inputRef,
@@ -25,54 +26,48 @@ export function GifPickerHeader({
   const t = useTheme()
 
   return (
-    <View
-      style={[
-        native(a.pt_4xl),
-        a.relative,
-        a.pb_md,
-        a.flex_row,
-        a.align_center,
-        t.atoms.bg,
-      ]}>
-      <TextField.Root style={a.flex_1}>
-        <TextField.Icon icon={Search} />
-        <TextField.Input
-          label={l({
-            message: 'Search GIFs',
-            comment:
-              'Accessibility label for the GIF search input inside the GIF picker dialog.',
-          })}
-          placeholder={l({
-            message: 'Search KLIPY',
-            comment:
-              'Placeholder text inside the GIF search input. KLIPY is the third-party GIF provider; keep the brand name as-is.',
-          })}
-          onChangeText={onChangeText}
-          returnKeyType="search"
-          inputRef={inputRef}
-          maxLength={50}
-          onKeyPress={({nativeEvent}) => {
-            if (nativeEvent.key === 'Escape') {
-              onEscape()
-            }
-          }}
-        />
-        {canClear && (
-          <Button
-            size="tiny"
-            color="secondary"
-            shape="round"
-            style={a.z_30}
-            onPress={onClear}
+    <View style={[native(a.pt_4xl), a.relative, a.pb_md, a.gap_sm, t.atoms.bg]}>
+      <View style={[a.flex_row, a.align_center]}>
+        <TextField.Root style={a.flex_1}>
+          <TextField.Icon icon={Search} />
+          <TextField.Input
             label={l({
-              message: 'Clear GIF search',
+              message: 'Search GIFs',
               comment:
-                'Accessibility label for the X button inside the search input that clears the typed query and returns to the trending feed.',
-            })}>
-            <ButtonIcon icon={X} size="sm" />
-          </Button>
-        )}
-      </TextField.Root>
+                'Accessibility label for the GIF search input inside the GIF picker dialog.',
+            })}
+            placeholder={l({
+              message: 'Search GIFs',
+              comment: 'Placeholder text inside the GIF search input.',
+            })}
+            onChangeText={onChangeText}
+            returnKeyType="search"
+            inputRef={inputRef}
+            maxLength={50}
+            onKeyPress={({nativeEvent}) => {
+              if (nativeEvent.key === 'Escape') {
+                onEscape()
+              }
+            }}
+          />
+          {canClear && (
+            <Button
+              size="tiny"
+              color="secondary"
+              shape="round"
+              style={a.z_30}
+              onPress={onClear}
+              label={l({
+                message: 'Clear GIF search',
+                comment:
+                  'Accessibility label for the X button inside the search input that clears the typed query and returns to the trending feed.',
+              })}>
+              <ButtonIcon icon={X} size="sm" />
+            </Button>
+          )}
+        </TextField.Root>
+      </View>
+      <PoweredByGiphy />
     </View>
   )
 }
