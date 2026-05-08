@@ -1,5 +1,4 @@
 import {Pressable, View} from 'react-native'
-import {type ChatBskyActorDefs} from '@atproto/api'
 import Animated, {
   FadeIn,
   FadeOut,
@@ -8,6 +7,7 @@ import Animated, {
   useDerivedValue,
   withTiming,
 } from 'react-native-reanimated'
+import {type ChatBskyActorDefs} from '@atproto/api'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
