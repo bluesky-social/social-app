@@ -16,7 +16,6 @@ import {
   type NavigationProp,
 } from '#/lib/routes/types'
 import {logger} from '#/logger'
-import {ConvoProvider} from '#/state/messages/convo'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useConvoQuery} from '#/state/queries/messages/conversation'
 import {useEditGroupChatName} from '#/state/queries/messages/edit-group-chat-name'
@@ -94,9 +93,7 @@ export function MessagesConversationSettingsScreen({route}: Props) {
         </Layout.Header.Content>
         <Layout.Header.Slot />
       </Layout.Header.Outer>
-      <ConvoProvider key={convoId} convoId={convoId}>
-        <SettingsInner convoId={convoId} />
-      </ConvoProvider>
+      <SettingsInner convoId={convoId} />
     </Layout.Screen>
   )
 }
