@@ -52,6 +52,7 @@ import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
 import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
+import {DateDivider} from '#/components/dms/DateDivider'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {SystemMessageGroup} from '#/components/dms/SystemMessageGroup'
@@ -62,6 +63,7 @@ import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {groupSystemMessages, type RenderItem} from './groupSystemMessages'
+import {InviteLinkDialogProvider} from './InviteLinkDialogProvider'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
 import {MessagesListInfoPanel} from './MessagesListInfoPanel'
 import {KeyboardStickyView} from './vendor/KeyboardStickyView'
@@ -434,6 +436,8 @@ export function MessagesList({
           relatedProfiles={convoState.relatedProfiles}
         />
       )
+    } else if (item.type === 'system-message-date-divider') {
+      return <DateDivider date={item.sentAt} />
     } else if (item.type === 'error') {
       return <MessageListError item={item} />
     }
@@ -463,7 +467,7 @@ export function MessagesList({
   )
 
   return (
-    <>
+    <InviteLinkDialogProvider convo={convoState.convo}>
       <KeyboardGestureArea
         interpolator="ios"
         // HACKFIX: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1419
@@ -567,7 +571,7 @@ export function MessagesList({
       </KeyboardGestureArea>
 
       {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
-    </>
+    </InviteLinkDialogProvider>
   )
 }
 

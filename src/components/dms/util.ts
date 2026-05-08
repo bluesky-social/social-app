@@ -4,6 +4,9 @@ import {EMOJI_REACTION_LIMIT} from '#/lib/constants'
 import {logger} from '#/logger'
 import * as bsky from '#/types/bsky'
 
+export const MESSAGE_GAP_THRESHOLD_MS = 60 * 60 * 1000
+export const CLUSTERED_MESSAGE_THRESHOLD_MS = 5 * 60 * 1000
+
 export function canBeMessaged(profile: bsky.profile.AnyProfileView) {
   switch (profile.associated?.chat?.allowIncoming) {
     case 'none':
