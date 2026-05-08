@@ -168,7 +168,13 @@ export function MessagesSettingsScreenInner({}: Props) {
             <Text style={[a.pb_xs, a.text_md, a.font_semi_bold, t.atoms.text]}>
               <Trans>Allow direct messages from</Trans>
             </Text>
-            <Text style={[a.pb_md, a.text_sm, t.atoms.text_contrast_high]}>
+            <Text
+              style={[
+                a.pb_md,
+                a.text_sm,
+                a.leading_snug,
+                t.atoms.text_contrast_high,
+              ]}>
               <Trans>
                 You can continue ongoing conversations regardless of which
                 setting you choose.
@@ -208,7 +214,13 @@ export function MessagesSettingsScreenInner({}: Props) {
                   style={[a.pb_xs, a.text_md, a.font_semi_bold, t.atoms.text]}>
                   <Trans>Allow group chat invites from</Trans>
                 </Text>
-                <Text style={[a.pb_md, a.text_sm, t.atoms.text_contrast_high]}>
+                <Text
+                  style={[
+                    a.pb_md,
+                    a.text_sm,
+                    a.leading_snug,
+                    t.atoms.text_contrast_high,
+                  ]}>
                   <Trans>
                     You can continue ongoing conversations regardless of which
                     setting you choose.
@@ -265,7 +277,13 @@ export function MessagesSettingsScreenInner({}: Props) {
             <Text style={[a.pb_xs, a.text_md, a.font_semi_bold, t.atoms.text]}>
               <Trans>Download chat data</Trans>
             </Text>
-            <Text style={[a.pb_md, a.text_sm, t.atoms.text_contrast_high]}>
+            <Text
+              style={[
+                a.pb_md,
+                a.text_sm,
+                a.leading_snug,
+                t.atoms.text_contrast_high,
+              ]}>
               <Trans>
                 This file only includes chat messages that you have sent and
                 does not include chat messages that you have received.
