@@ -57,6 +57,39 @@ export function MessagesSettingsScreenInner({}: Props) {
 
   const [loading, setLoading] = useState(false)
 
+  const allowMessagesFromOptions: {name: AllowIncoming; label: string}[] = [
+    {
+      name: 'all',
+      label: l({context: 'allow messages from', message: `Everyone`}),
+    },
+    {
+      name: 'following',
+      label: l({context: 'allow messages from', message: `Users I follow`}),
+    },
+    {
+      name: 'none',
+      label: l({context: 'allow messages from', message: `No one`}),
+    },
+  ]
+
+  const allowGroupInvitesFromOptions: {name: AllowIncoming; label: string}[] = [
+    {
+      name: 'all',
+      label: l({context: 'allow group chat invites from', message: `Everyone`}),
+    },
+    {
+      name: 'following',
+      label: l({
+        context: 'allow group chat invites from',
+        message: `Users I follow`,
+      }),
+    },
+    {
+      name: 'none',
+      label: l({context: 'allow group chat invites from', message: `No one`}),
+    },
+  ]
+
   const onDownloadChatData = async () => {
     if (!agent.session) return
     try {
@@ -142,7 +175,7 @@ export function MessagesSettingsScreenInner({}: Props) {
               </Trans>
             </Text>
             <Toggle.Group
-              label={l`Allow new messages from`}
+              label={l`Allow direct messages from`}
               type="radio"
               values={[
                 (profile?.associated?.chat?.allowIncoming as AllowIncoming) ??
@@ -150,57 +183,20 @@ export function MessagesSettingsScreenInner({}: Props) {
               ]}
               onChange={onSelectMessagesFrom}>
               <View>
-                <Toggle.Item
-                  highlightRow
-                  name="all"
-                  label={l({
-                    context: 'allow messages from',
-                    message: `Everyone`,
-                  })}>
-                  {({selected}) => (
-                    <Toggle.RadioWithLabel
-                      label={l({
-                        context: 'allow messages from',
-                        message: `Everyone`,
-                      })}
-                      selected={selected}
-                    />
-                  )}
-                </Toggle.Item>
-                <Toggle.Item
-                  highlightRow
-                  name="following"
-                  label={l({
-                    context: 'allow messages from',
-                    message: `Users I follow`,
-                  })}>
-                  {({selected}) => (
-                    <Toggle.RadioWithLabel
-                      label={l({
-                        context: 'allow messages from',
-                        message: `Users I follow`,
-                      })}
-                      selected={selected}
-                    />
-                  )}
-                </Toggle.Item>
-                <Toggle.Item
-                  highlightRow
-                  name="none"
-                  label={l({
-                    context: 'allow messages from',
-                    message: `No one`,
-                  })}>
-                  {({selected}) => (
-                    <Toggle.RadioWithLabel
-                      label={l({
-                        context: 'allow messages from',
-                        message: `No one`,
-                      })}
-                      selected={selected}
-                    />
-                  )}
-                </Toggle.Item>
+                {allowMessagesFromOptions.map(option => (
+                  <Toggle.Item
+                    key={option.name}
+                    highlightRow
+                    name={option.name}
+                    label={option.label}>
+                    {({selected}) => (
+                      <Toggle.RadioWithLabel
+                        label={option.label}
+                        selected={selected}
+                      />
+                    )}
+                  </Toggle.Item>
+                ))}
               </View>
             </Toggle.Group>
           </View>
@@ -219,7 +215,7 @@ export function MessagesSettingsScreenInner({}: Props) {
                   </Trans>
                 </Text>
                 <Toggle.Group
-                  label={l`Allow new group chat invites from`}
+                  label={l`Allow group chat invites from`}
                   type="radio"
                   values={[
                     (profile?.associated?.chat
@@ -227,57 +223,20 @@ export function MessagesSettingsScreenInner({}: Props) {
                   ]}
                   onChange={onSelectGroupInvitesFrom}>
                   <View>
-                    <Toggle.Item
-                      highlightRow
-                      name="all"
-                      label={l({
-                        context: 'allow group chat invites from',
-                        message: `Everyone`,
-                      })}>
-                      {({selected}) => (
-                        <Toggle.RadioWithLabel
-                          label={l({
-                            context: 'allow group chat invites from',
-                            message: `Everyone`,
-                          })}
-                          selected={selected}
-                        />
-                      )}
-                    </Toggle.Item>
-                    <Toggle.Item
-                      highlightRow
-                      name="following"
-                      label={l({
-                        context: 'allow group chat invites from',
-                        message: `Users I follow`,
-                      })}>
-                      {({selected}) => (
-                        <Toggle.RadioWithLabel
-                          label={l({
-                            context: 'allow group chat invites from',
-                            message: `Users I follow`,
-                          })}
-                          selected={selected}
-                        />
-                      )}
-                    </Toggle.Item>
-                    <Toggle.Item
-                      highlightRow
-                      name="none"
-                      label={l({
-                        context: 'allow group chat invites from',
-                        message: `No one`,
-                      })}>
-                      {({selected}) => (
-                        <Toggle.RadioWithLabel
-                          label={l({
-                            context: 'allow group chat invites from',
-                            message: `No one`,
-                          })}
-                          selected={selected}
-                        />
-                      )}
-                    </Toggle.Item>
+                    {allowGroupInvitesFromOptions.map(option => (
+                      <Toggle.Item
+                        key={option.name}
+                        highlightRow
+                        name={option.name}
+                        label={option.label}>
+                        {({selected}) => (
+                          <Toggle.RadioWithLabel
+                            label={option.label}
+                            selected={selected}
+                          />
+                        )}
+                      </Toggle.Item>
+                    ))}
                   </View>
                 </Toggle.Group>
               </View>

@@ -31,7 +31,9 @@ export function useUpdateActorDeclaration({
           PROFILE_RKEY(currentAccount.did),
         )
       const allowIncoming =
-        update.allowIncoming ?? current?.associated?.chat?.allowIncoming
+        update.allowIncoming ??
+        current?.associated?.chat?.allowIncoming ??
+        'following'
       const allowGroupInvites =
         update.allowGroupInvites ?? current?.associated?.chat?.allowGroupInvites
       const result = await agent.com.atproto.repo.putRecord({
@@ -40,7 +42,7 @@ export function useUpdateActorDeclaration({
         rkey: 'self',
         record: {
           $type: 'chat.bsky.actor.declaration',
-          ...(allowIncoming && {allowIncoming}),
+          allowIncoming,
           ...(allowGroupInvites && {allowGroupInvites}),
         },
       })
@@ -57,7 +59,7 @@ export function useUpdateActorDeclaration({
             associated: {
               ...old.associated,
               chat: {
-                allowIncoming: 'all',
+                allowIncoming: 'following',
                 ...old.associated?.chat,
                 ...update,
               },
