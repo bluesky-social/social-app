@@ -63,6 +63,7 @@ import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {groupSystemMessages, type RenderItem} from './groupSystemMessages'
+import {InviteLinkDialogProvider} from './InviteLinkDialogProvider'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
 import {MessagesListInfoPanel} from './MessagesListInfoPanel'
 import {KeyboardStickyView} from './vendor/KeyboardStickyView'
@@ -466,7 +467,7 @@ export function MessagesList({
   )
 
   return (
-    <>
+    <InviteLinkDialogProvider convo={convoState.convo}>
       <KeyboardGestureArea
         interpolator="ios"
         // HACKFIX: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1419
@@ -570,7 +571,7 @@ export function MessagesList({
       </KeyboardGestureArea>
 
       {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
-    </>
+    </InviteLinkDialogProvider>
   )
 }
 
