@@ -192,56 +192,33 @@ export async function resolveGif(
   gif: Gif,
 ): Promise<ResolvedExternalLink> {
   const gifUrl = gif.media_formats.gif.url
-  const uri = buildGifUri(gif, gifUrl)
+  const params = new URLSearchParams()
+  params.set('hh', String(gif.media_formats.gif.dims[1]))
+  params.set('ww', String(gif.media_formats.gif.dims[0]))
+
+  // For Klipy GIFs, embed video format slugs so parseKlipyGif can
+  // swap to the right format per platform at render time. Klipy uses
+  // different filename slugs per format (unlike Tenor where format is
+  // encoded in the URL ID), so this info must travel with the URL.
+  try {
+    const url = new URL(gifUrl)
+    if (url.hostname === 'static.klipy.com') {
+      const mp4Slug = getFileSlug(gif.media_formats.mp4?.url)
+      const webmSlug = getFileSlug(gif.media_formats.webm?.url)
+      if (mp4Slug) params.set('mp4', mp4Slug)
+      if (webmSlug) params.set('webm', webmSlug)
+    }
+  } catch {}
+
+  const uri = `${gifUrl}?${params.toString()}`
   const altText = gif.content_description || gif.title
   return {
     type: 'external',
     uri,
     title: altText,
     description: createGIFDescription(altText),
-    thumb: await tryImageToThumb(gif.media_formats.preview.url),
+    thumb: await imageToThumb(gif.media_formats.preview.url),
   }
-}
-
-async function tryImageToThumb(
-  uri: string,
-): Promise<ComposerImage | undefined> {
-  return await Promise.race([
-    imageToThumb(uri),
-    new Promise<undefined>(resolve =>
-      setTimeout(() => resolve(undefined), 8e3),
-    ),
-  ])
-}
-
-function buildGifUri(gif: Gif, gifUrl: string): string {
-  let url: URL
-  try {
-    url = new URL(gifUrl)
-  } catch {
-    return gifUrl
-  }
-
-  if (url.hostname === 'static.klipy.com') {
-    url.searchParams.set('hh', String(gif.media_formats.gif.dims[1]))
-    url.searchParams.set('ww', String(gif.media_formats.gif.dims[0]))
-    const mp4Slug = getFileSlug(gif.media_formats.mp4?.url)
-    const webmSlug = getFileSlug(gif.media_formats.webm?.url)
-    if (mp4Slug) url.searchParams.set('mp4', mp4Slug)
-    if (webmSlug) url.searchParams.set('webm', webmSlug)
-    return url.toString()
-  }
-
-  if (/(^|\.)giphy\.com$/.test(url.hostname)) {
-    const cleaned = new URL(`https://media.giphy.com${url.pathname}`)
-    cleaned.searchParams.set('hh', String(gif.media_formats.gif.dims[1]))
-    cleaned.searchParams.set('ww', String(gif.media_formats.gif.dims[0]))
-    return cleaned.toString()
-  }
-
-  url.searchParams.set('hh', String(gif.media_formats.gif.dims[1]))
-  url.searchParams.set('ww', String(gif.media_formats.gif.dims[0]))
-  return url.toString()
 }
 
 function getFileSlug(url: string | undefined): string | undefined {
