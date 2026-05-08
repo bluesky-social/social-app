@@ -27,7 +27,6 @@ export function NewMessagesPill({
   const t = useTheme()
   const playHaptic = useHaptics()
   const {bottom: bottomInset} = useSafeAreaInsets()
-  const bottomOffset = IS_WEB ? 0 : bottomInset
 
   const scale = useSharedValue(1)
 
@@ -58,7 +57,7 @@ export function NewMessagesPill({
         a.z_10,
         a.align_center,
         {
-          bottom: bottomOffset + 70,
+          bottom: bottomInset + 70,
           // Don't prevent scrolling in this area _except_ for in the pill itself
           pointerEvents: 'box-none',
         },
