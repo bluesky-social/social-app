@@ -21,20 +21,32 @@ export function useUpdateActorDeclaration({
   const agent = useAgent()
 
   return useMutation({
-    mutationFn: async (allowIncoming: 'all' | 'none' | 'following') => {
+    mutationFn: async (update: {
+      allowIncoming?: 'all' | 'none' | 'following'
+      allowGroupInvites?: 'all' | 'none' | 'following'
+    }) => {
       if (!currentAccount) throw new Error('Not signed in')
+      const current =
+        queryClient.getQueryData<AppBskyActorDefs.ProfileViewDetailed>(
+          PROFILE_RKEY(currentAccount.did),
+        )
+      const allowIncoming =
+        update.allowIncoming ?? current?.associated?.chat?.allowIncoming
+      const allowGroupInvites =
+        update.allowGroupInvites ?? current?.associated?.chat?.allowGroupInvites
       const result = await agent.com.atproto.repo.putRecord({
         repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
         rkey: 'self',
         record: {
           $type: 'chat.bsky.actor.declaration',
-          allowIncoming,
+          ...(allowIncoming && {allowIncoming}),
+          ...(allowGroupInvites && {allowGroupInvites}),
         },
       })
       return result
     },
-    onMutate: allowIncoming => {
+    onMutate: update => {
       if (!currentAccount) return
       queryClient.setQueryData(
         PROFILE_RKEY(currentAccount?.did),
@@ -45,7 +57,9 @@ export function useUpdateActorDeclaration({
             associated: {
               ...old.associated,
               chat: {
-                allowIncoming,
+                allowIncoming: 'all',
+                ...old.associated?.chat,
+                ...update,
               },
             },
           } satisfies AppBskyActorDefs.ProfileViewDetailed

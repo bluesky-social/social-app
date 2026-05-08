@@ -222,7 +222,7 @@ export function InviteLinkDialog({
                     name={option.name}
                     style={[a.flex_1]}>
                     {({selected}) => (
-                      <TargetOption
+                      <Toggle.RadioWithLabel
                         label={isOwner ? option.owner : option.member}
                         selected={selected}
                       />
@@ -452,24 +452,5 @@ export function InviteLinkDialog({
         {content}
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  )
-}
-
-function TargetOption({label, selected}: {label: string; selected: boolean}) {
-  const t = useTheme()
-
-  return (
-    <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-      <Toggle.Radio />
-      <Toggle.LabelText
-        style={[
-          a.font_normal,
-          a.flex_1,
-          a.leading_tight,
-          selected ? t.atoms.text : t.atoms.text_contrast_high,
-        ]}>
-        {label}
-      </Toggle.LabelText>
-    </View>
   )
 }

@@ -572,4 +572,29 @@ export function BaseRadio({
   )
 }
 
+export function RadioWithLabel({
+  label,
+  selected,
+}: {
+  label: string
+  selected: boolean
+}) {
+  const t = useTheme()
+
+  return (
+    <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
+      <Radio />
+      <LabelText
+        style={[
+          a.font_medium,
+          a.flex_1,
+          a.leading_tight,
+          selected ? t.atoms.text : t.atoms.text_contrast_high,
+        ]}>
+        {label}
+      </LabelText>
+    </View>
+  )
+}
+
 export const Platform = IS_NATIVE ? Switch : Checkbox
