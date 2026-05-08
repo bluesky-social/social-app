@@ -106,7 +106,7 @@ msgstr ""
 #. placeholder {0}: numUnreadNotifications ?? 0
 #: src/view/shell/bottom-bar/BottomBar.tsx:224
 #: src/view/shell/bottom-bar/BottomBar.tsx:256
-#: src/view/shell/Drawer.tsx:486
+#: src/view/shell/Drawer.tsx:493
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -537,12 +537,12 @@ msgid "{postsCount, plural, one {post} other {posts}}"
 msgstr "{postsCount, plural, one {post} other {posts}}"
 
 #: src/components/NewskieDialog.tsx:115
-msgid "{profileName} joined Bluesky {timeAgoString} ago"
-msgstr ""
+msgid "{profileName} joined Blacksky {timeAgoString} ago"
+msgstr "{profileName} joined Blacksky {timeAgoString} ago"
 
 #: src/components/NewskieDialog.tsx:112
-msgid "{profileName} joined Bluesky using a starter pack {timeAgoString} ago"
-msgstr ""
+msgid "{profileName} joined Blacksky using a starter pack {timeAgoString} ago"
+msgstr "{profileName} joined Blacksky using a starter pack {timeAgoString} ago"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:425
 msgid "{PRONOUNS_MAX_GRAPHEMES, plural, other {Pronouns is too long. The maximum number of characters is #.}}"
@@ -604,13 +604,13 @@ msgstr ""
 
 #. placeholder {0}: formatCount(i18n, profile?.followersCount ?? 0)
 #. placeholder {1}: profile?.followersCount || 0
-#: src/view/shell/Drawer.tsx:108
+#: src/view/shell/Drawer.tsx:109
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
 msgstr ""
 
 #. placeholder {0}: formatCount(i18n, profile?.followsCount ?? 0)
 #. placeholder {1}: profile?.followsCount || 0
-#: src/view/shell/Drawer.tsx:119
+#: src/view/shell/Drawer.tsx:120
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr ""
 
@@ -693,8 +693,8 @@ msgid "7 days"
 msgstr ""
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:17
-msgid "A collection of popular feeds you can find on Bluesky, including News, Booksky, Game Dev, Blacksky, and Fountain Pens"
-msgstr ""
+msgid "A collection of popular feeds you can find on Blacksky, including News, Booksky, Game Dev, and Fountain Pens"
+msgstr "A collection of popular feeds you can find on Blacksky, including News, Booksky, Game Dev, and Fountain Pens"
 
 #. If last message does not contain text, fall back to "{user} reacted to {a message}"
 #: src/components/dms/getReactionInfo.ts:33
@@ -716,8 +716,8 @@ msgstr ""
 
 #: src/Navigation.tsx:566
 #: src/screens/Settings/AboutSettings.tsx:76
-#: src/screens/Settings/Settings.tsx:248
-#: src/screens/Settings/Settings.tsx:251
+#: src/screens/Settings/Settings.tsx:257
+#: src/screens/Settings/Settings.tsx:260
 #: src/view/com/auth/SplashScreen.web.tsx:193
 msgid "About"
 msgstr ""
@@ -745,8 +745,8 @@ msgid "Accept this language suggestion"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:45
-#: src/screens/Settings/Settings.tsx:226
-#: src/screens/Settings/Settings.tsx:229
+#: src/screens/Settings/Settings.tsx:235
+#: src/screens/Settings/Settings.tsx:238
 msgid "Accessibility"
 msgstr ""
 
@@ -757,8 +757,8 @@ msgstr ""
 #: src/Navigation.tsx:425
 #: src/screens/Login/LoginForm.tsx:76
 #: src/screens/Settings/AccountSettings.tsx:69
-#: src/screens/Settings/Settings.tsx:166
-#: src/screens/Settings/Settings.tsx:169
+#: src/screens/Settings/Settings.tsx:167
+#: src/screens/Settings/Settings.tsx:170
 msgid "Account"
 msgstr ""
 
@@ -802,7 +802,7 @@ msgstr ""
 msgid "Account Muted by List"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:590
+#: src/screens/Settings/Settings.tsx:599
 msgid "Account options"
 msgstr ""
 
@@ -815,7 +815,7 @@ msgstr "Account password"
 msgid "Account provider"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:624
+#: src/screens/Settings/Settings.tsx:633
 msgid "Account removed from quick access"
 msgstr ""
 
@@ -903,8 +903,8 @@ msgstr ""
 msgid "Add alt text (optional)"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:528
-#: src/screens/Settings/Settings.tsx:531
+#: src/screens/Settings/Settings.tsx:537
+#: src/screens/Settings/Settings.tsx:540
 #: src/view/shell/desktop/LeftNav.tsx:267
 #: src/view/shell/desktop/LeftNav.tsx:271
 msgid "Add another account"
@@ -1096,6 +1096,8 @@ msgid "Advanced"
 msgstr ""
 
 #: src/screens/Settings/AIPreferencesSettings.tsx:58
+#: src/screens/Settings/Settings.tsx:191
+#: src/screens/Settings/Settings.tsx:194
 msgid "AI preferences"
 msgstr "AI preferences"
 
@@ -1499,8 +1501,8 @@ msgstr ""
 
 #: src/Navigation.tsx:417
 #: src/screens/Settings/AppearanceSettings.tsx:73
-#: src/screens/Settings/Settings.tsx:218
-#: src/screens/Settings/Settings.tsx:221
+#: src/screens/Settings/Settings.tsx:227
+#: src/screens/Settings/Settings.tsx:230
 msgid "Appearance"
 msgstr ""
 
@@ -1509,8 +1511,8 @@ msgstr ""
 msgid "Apply default recommended feeds"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:495
-#: src/screens/Settings/Settings.tsx:497
+#: src/screens/Settings/Settings.tsx:504
+#: src/screens/Settings/Settings.tsx:506
 msgid "Apply Pull Request"
 msgstr ""
 
@@ -1731,9 +1733,13 @@ msgstr "Blacksky is an open network where you can choose your hosting provider. 
 msgid "Blacksky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Blacksky option."
 msgstr "Blacksky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Blacksky option."
 
-#: src/components/ProgressGuide/List.tsx:117
+#: src/components/ProgressGuide/List.tsx:115
 msgid "Blacksky is better with friends!"
 msgstr "Blacksky is better with friends!"
+
+#: src/screens/Onboarding/StepFindContactsIntro/index.tsx:43
+msgid "Blacksky is more fun with friends"
+msgstr "Blacksky is more fun with friends"
 
 #: src/view/com/auth/SplashScreen.web.tsx:206
 msgid "Blacksky on GitHub"
@@ -1861,10 +1867,6 @@ msgstr ""
 msgid "Bluesky helps friends find each other by creating an encoded digital fingerprint, called a \"hash\", and then looking for matching hashes."
 msgstr ""
 
-#: src/screens/Onboarding/StepFindContactsIntro/index.tsx:43
-msgid "Bluesky is more fun with friends"
-msgstr ""
-
 #: src/components/contacts/screens/ViewMatches.tsx:315
 msgid "Bluesky is more fun with friends. Do you want to invite some of yours? <0/>"
 msgstr ""
@@ -1964,7 +1966,7 @@ msgstr ""
 msgid "By <0>{0}</0>"
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:295
+#: src/components/contacts/screens/PhoneInput.tsx:297
 msgid "By continuing, you consent to this use. You may change your mind any time by visiting settings. <0>Learn more</0>"
 msgstr ""
 
@@ -2022,7 +2024,7 @@ msgstr ""
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:88
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:248
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:254
-#: src/screens/Settings/Settings.tsx:293
+#: src/screens/Settings/Settings.tsx:302
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
 #: src/view/com/composer/Composer.tsx:1610
@@ -2157,7 +2159,7 @@ msgstr ""
 #: src/Navigation.tsx:591
 #: src/view/shell/bottom-bar/BottomBar.tsx:220
 #: src/view/shell/desktop/LeftNav.tsx:615
-#: src/view/shell/Drawer.tsx:454
+#: src/view/shell/Drawer.tsx:461
 msgid "Chat"
 msgstr ""
 
@@ -2305,11 +2307,11 @@ msgstr ""
 msgid "Choose your username"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:487
+#: src/screens/Settings/Settings.tsx:496
 msgid "Clear all storage data"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:489
+#: src/screens/Settings/Settings.tsx:498
 msgid "Clear all storage data (restart after this)"
 msgstr ""
 
@@ -2590,8 +2592,8 @@ msgstr ""
 msgid "Content & Media"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:198
-#: src/screens/Settings/Settings.tsx:201
+#: src/screens/Settings/Settings.tsx:207
+#: src/screens/Settings/Settings.tsx:210
 msgid "Content and media"
 msgstr ""
 
@@ -3026,8 +3028,8 @@ msgid "Customization options"
 msgstr ""
 
 #: src/screens/Onboarding/Layout.tsx:60
-msgid "Customizes your Bluesky experience"
-msgstr ""
+msgid "Customizes your Blacksky experience"
+msgstr "Customizes your Blacksky experience"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:200
 msgid "Dangerous challenges or activities"
@@ -3063,7 +3065,7 @@ msgstr ""
 msgid "Deactivate account"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:452
+#: src/screens/Settings/Settings.tsx:461
 msgid "Debug Moderation"
 msgstr ""
 
@@ -3134,7 +3136,7 @@ msgstr ""
 msgid "Delete chat"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:459
+#: src/screens/Settings/Settings.tsx:468
 msgid "Delete chat declaration record"
 msgstr ""
 
@@ -3262,8 +3264,8 @@ msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:275
-#: src/screens/Settings/Settings.tsx:278
+#: src/screens/Settings/Settings.tsx:284
+#: src/screens/Settings/Settings.tsx:287
 msgid "Developer options"
 msgstr ""
 
@@ -3368,6 +3370,11 @@ msgstr ""
 msgid "Discover New Feeds"
 msgstr ""
 
+#: src/view/shell/desktop/RightNav.tsx:112
+#: src/view/shell/desktop/RightNav.tsx:113
+msgid "Discussion"
+msgstr "Discussion"
+
 #: src/components/Dialog/index.tsx:408
 msgid "Dismiss"
 msgstr ""
@@ -3380,7 +3387,7 @@ msgstr ""
 msgid "Dismiss error"
 msgstr ""
 
-#: src/components/ProgressGuide/List.tsx:82
+#: src/components/ProgressGuide/List.tsx:81
 msgid "Dismiss getting started guide"
 msgstr ""
 
@@ -3494,8 +3501,8 @@ msgid "Double tap to like"
 msgstr ""
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:331
-msgid "Download Bluesky"
-msgstr ""
+msgid "Download Blacksky"
+msgstr "Download Blacksky"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:115
 #: src/screens/Settings/components/ExportCarDialog.tsx:120
@@ -3927,7 +3934,7 @@ msgstr ""
 msgid "Error occurred while saving file"
 msgstr ""
 
-#: src/screens/Signup/StepCaptcha/index.tsx:127
+#: src/screens/Signup/StepCaptcha/index.tsx:132
 msgid "Error receiving captcha response."
 msgstr ""
 
@@ -4035,7 +4042,7 @@ msgstr ""
 #: src/Navigation.tsx:845
 #: src/screens/Search/Shell.tsx:353
 #: src/view/shell/desktop/LeftNav.tsx:695
-#: src/view/shell/Drawer.tsx:402
+#: src/view/shell/Drawer.tsx:409
 msgid "Explore"
 msgstr ""
 
@@ -4396,9 +4403,7 @@ msgstr ""
 msgid "Feed unavailable"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:108
-#: src/view/shell/desktop/RightNav.tsx:109
-#: src/view/shell/Drawer.tsx:356
+#: src/view/shell/Drawer.tsx:363
 msgid "Feedback"
 msgstr ""
 
@@ -4416,7 +4421,7 @@ msgstr ""
 #: src/view/screens/Feeds.tsx:503
 #: src/view/screens/Profile.tsx:238
 #: src/view/shell/desktop/LeftNav.tsx:733
-#: src/view/shell/Drawer.tsx:518
+#: src/view/shell/Drawer.tsx:525
 msgid "Feeds"
 msgstr ""
 
@@ -4488,8 +4493,8 @@ msgstr ""
 msgid "Find Friends"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:209
-#: src/screens/Settings/Settings.tsx:212
+#: src/screens/Settings/Settings.tsx:218
+#: src/screens/Settings/Settings.tsx:221
 msgid "Find friends from contacts"
 msgstr ""
 
@@ -4511,6 +4516,9 @@ msgid "Find posts, users, and feeds on Blacksky"
 msgstr "Find posts, users, and feeds on Blacksky"
 
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:46
+msgid "Find your friends on Blacksky by verifying your phone number and matching with your contacts. We protect your information and you control what happens next. <0>Learn more</0>"
+msgstr "Find your friends on Blacksky by verifying your phone number and matching with your contacts. We protect your information and you control what happens next. <0>Learn more</0>"
+
 #: src/screens/Settings/FindContactsSettings.tsx:126
 msgid "Find your friends on Bluesky by verifying your phone number and matching with your contacts. We protect your information and you control what happens next. <0>Learn more</0>"
 msgstr ""
@@ -4566,11 +4574,11 @@ msgstr ""
 msgid "Follow 10 accounts"
 msgstr ""
 
-#: src/components/ProgressGuide/List.tsx:75
+#: src/components/ProgressGuide/List.tsx:74
 msgid "Follow 10 people to get started"
 msgstr ""
 
-#: src/components/ProgressGuide/List.tsx:116
+#: src/components/ProgressGuide/List.tsx:114
 msgid "Follow 7 accounts"
 msgstr ""
 
@@ -4806,7 +4814,7 @@ msgstr ""
 msgid "Germ DM reconnected"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:360
+#: src/view/shell/Drawer.tsx:367
 msgid "Get help"
 msgstr ""
 
@@ -5145,14 +5153,14 @@ msgid "Having trouble?"
 msgstr ""
 
 #: src/components/contacts/screens/PhoneInput.tsx:288
-msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
-msgstr ""
+msgid "Held by Blacksky for 7 days to prevent abuse, then deleted"
+msgstr "Held by Blacksky for 7 days to prevent abuse, then deleted"
 
-#: src/screens/Settings/Settings.tsx:240
-#: src/screens/Settings/Settings.tsx:244
-#: src/view/shell/desktop/RightNav.tsx:129
-#: src/view/shell/desktop/RightNav.tsx:132
-#: src/view/shell/Drawer.tsx:369
+#: src/screens/Settings/Settings.tsx:249
+#: src/screens/Settings/Settings.tsx:253
+#: src/view/shell/desktop/RightNav.tsx:133
+#: src/view/shell/desktop/RightNav.tsx:136
+#: src/view/shell/Drawer.tsx:376
 msgid "Help"
 msgstr ""
 
@@ -5309,7 +5317,7 @@ msgstr "Hold your horses! This feature isn't available to you yet. Please check 
 #: src/Navigation.tsx:860
 #: src/view/shell/bottom-bar/BottomBar.tsx:177
 #: src/view/shell/desktop/LeftNav.tsx:677
-#: src/view/shell/Drawer.tsx:428
+#: src/view/shell/Drawer.tsx:435
 msgid "Home"
 msgstr ""
 
@@ -5750,8 +5758,8 @@ msgid "Language Settings"
 msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:98
-#: src/screens/Settings/Settings.tsx:232
-#: src/screens/Settings/Settings.tsx:235
+#: src/screens/Settings/Settings.tsx:241
+#: src/screens/Settings/Settings.tsx:244
 msgid "Languages"
 msgstr ""
 
@@ -5761,7 +5769,7 @@ msgstr ""
 
 #: src/screens/Hashtag.tsx:99
 #: src/screens/Search/SearchResults.tsx:65
-#: src/screens/Topic.tsx:264
+#: src/screens/Topic.tsx:241
 msgid "Latest"
 msgstr ""
 
@@ -5787,7 +5795,7 @@ msgstr "Learn more about Blacksky"
 msgid "Learn more about how inviting friends works"
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:301
+#: src/components/contacts/screens/PhoneInput.tsx:303
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:53
 #: src/screens/Settings/FindContactsSettings.tsx:133
 msgctxt "english-only-resource"
@@ -5899,7 +5907,7 @@ msgstr ""
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
-#: src/components/ProgressGuide/List.tsx:110
+#: src/components/ProgressGuide/List.tsx:108
 msgid "Like 10 posts"
 msgstr ""
 
@@ -6066,7 +6074,7 @@ msgstr ""
 #: src/view/screens/Profile.tsx:232
 #: src/view/screens/Profile.tsx:240
 #: src/view/shell/desktop/LeftNav.tsx:751
-#: src/view/shell/Drawer.tsx:533
+#: src/view/shell/Drawer.tsx:540
 msgid "Lists"
 msgstr ""
 
@@ -6184,12 +6192,12 @@ msgstr ""
 msgid "Login"
 msgstr "Login"
 
-#: src/view/shell/desktop/RightNav.tsx:141
+#: src/view/shell/desktop/RightNav.tsx:145
 msgid "Logo by @sawaratsuki.bsky.social"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:138
-#: src/view/shell/Drawer.tsx:697
+#: src/view/shell/desktop/RightNav.tsx:142
+#: src/view/shell/Drawer.tsx:717
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr ""
 
@@ -6413,8 +6421,8 @@ msgstr ""
 msgid "Moderation"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:182
-#: src/screens/Settings/Settings.tsx:185
+#: src/screens/Settings/Settings.tsx:183
+#: src/screens/Settings/Settings.tsx:186
 msgid "Moderation and content filters"
 msgstr "Moderation and content filters"
 
@@ -6670,7 +6678,7 @@ msgstr ""
 msgid "Navigates to the next screen"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:79
+#: src/view/shell/Drawer.tsx:80
 msgid "Navigates to your profile"
 msgstr ""
 
@@ -7121,12 +7129,12 @@ msgstr ""
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:30
-#: src/screens/Settings/Settings.tsx:190
-#: src/screens/Settings/Settings.tsx:193
+#: src/screens/Settings/Settings.tsx:199
+#: src/screens/Settings/Settings.tsx:202
 #: src/view/screens/Notifications.tsx:129
 #: src/view/shell/bottom-bar/BottomBar.tsx:251
 #: src/view/shell/desktop/LeftNav.tsx:714
-#: src/view/shell/Drawer.tsx:481
+#: src/view/shell/Drawer.tsx:488
 msgid "Notifications"
 msgstr ""
 
@@ -7191,7 +7199,7 @@ msgstr "On"
 msgid "on<0><1/><2><3/></2></0>"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:385
+#: src/screens/Settings/Settings.tsx:394
 msgid "Onboarding reset"
 msgstr ""
 
@@ -7329,7 +7337,7 @@ msgstr ""
 msgid "Open message options"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:450
+#: src/screens/Settings/Settings.tsx:459
 msgid "Open moderation debug page"
 msgstr ""
 
@@ -7363,12 +7371,12 @@ msgstr ""
 msgid "Open starter pack menu"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:443
-#: src/screens/Settings/Settings.tsx:457
+#: src/screens/Settings/Settings.tsx:452
+#: src/screens/Settings/Settings.tsx:466
 msgid "Open storybook page"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:436
+#: src/screens/Settings/Settings.tsx:445
 msgid "Open system log"
 msgstr ""
 
@@ -7442,7 +7450,7 @@ msgstr ""
 msgid "Opens full image"
 msgstr "Opens full image"
 
-#: src/screens/Settings/Settings.tsx:241
+#: src/screens/Settings/Settings.tsx:250
 msgid "Opens helpdesk in browser"
 msgstr ""
 
@@ -8111,13 +8119,13 @@ msgid "Primary language"
 msgstr ""
 
 #: src/view/com/auth/SplashScreen.web.tsx:203
-#: src/view/shell/desktop/RightNav.tsx:117
-#: src/view/shell/desktop/RightNav.tsx:118
+#: src/view/shell/desktop/RightNav.tsx:121
+#: src/view/shell/desktop/RightNav.tsx:122
 msgid "Privacy"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:174
-#: src/screens/Settings/Settings.tsx:177
+#: src/screens/Settings/Settings.tsx:175
+#: src/screens/Settings/Settings.tsx:178
 msgid "Privacy and security"
 msgstr ""
 
@@ -8137,8 +8145,8 @@ msgstr ""
 #: src/screens/Settings/AboutSettings.tsx:93
 #: src/screens/Settings/AboutSettings.tsx:96
 #: src/view/screens/PrivacyPolicy.tsx:25
-#: src/view/shell/Drawer.tsx:692
-#: src/view/shell/Drawer.tsx:693
+#: src/view/shell/Drawer.tsx:712
+#: src/view/shell/Drawer.tsx:713
 msgid "Privacy Policy"
 msgstr ""
 
@@ -8166,8 +8174,8 @@ msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:294
 #: src/view/shell/desktop/LeftNav.tsx:792
-#: src/view/shell/Drawer.tsx:78
-#: src/view/shell/Drawer.tsx:584
+#: src/view/shell/Drawer.tsx:79
+#: src/view/shell/Drawer.tsx:591
 msgid "Profile"
 msgstr ""
 
@@ -8345,13 +8353,13 @@ msgstr ""
 
 #: src/screens/Signup/StepInfo/Policies.tsx:53
 #: src/screens/Signup/StepInfo/Policies.tsx:79
-msgid "Read the Bluesky Privacy Policy"
-msgstr ""
+msgid "Read the Blacksky Privacy Policy"
+msgstr "Read the Blacksky Privacy Policy"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:46
 #: src/screens/Signup/StepInfo/Policies.tsx:66
-msgid "Read the Bluesky Terms of Service"
-msgstr ""
+msgid "Read the Blacksky Terms of Service"
+msgstr "Read the Blacksky Terms of Service"
 
 #: src/components/WelcomeModal.tsx:149
 msgid "Real conversations."
@@ -8418,7 +8426,7 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:113
 #: src/screens/Bookmarks/index.tsx:265
 #: src/screens/Moderation/index.tsx:439
-#: src/screens/Settings/Settings.tsx:626
+#: src/screens/Settings/Settings.tsx:635
 #: src/view/com/modals/UserAddRemoveLists.tsx:236
 #: src/view/com/posts/PostFeedErrorMessage.tsx:221
 msgid "Remove"
@@ -8440,8 +8448,8 @@ msgstr "Remove {displayName} from this group chat"
 msgid "Remove {historyItem}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:607
-#: src/screens/Settings/Settings.tsx:610
+#: src/screens/Settings/Settings.tsx:616
+#: src/screens/Settings/Settings.tsx:619
 msgid "Remove account"
 msgstr ""
 
@@ -8494,7 +8502,7 @@ msgstr "Remove from chat"
 msgid "Remove from my feeds"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:620
+#: src/screens/Settings/Settings.tsx:629
 msgid "Remove from quick access?"
 msgstr ""
 
@@ -8903,8 +8911,8 @@ msgstr ""
 msgid "Resend Verification Email"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:479
-#: src/screens/Settings/Settings.tsx:481
+#: src/screens/Settings/Settings.tsx:488
+#: src/screens/Settings/Settings.tsx:490
 msgid "Reset activity subscription nudge"
 msgstr ""
 
@@ -8912,8 +8920,8 @@ msgstr ""
 msgid "Reset code"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:464
-#: src/screens/Settings/Settings.tsx:466
+#: src/screens/Settings/Settings.tsx:473
+#: src/screens/Settings/Settings.tsx:475
 msgid "Reset onboarding state"
 msgstr ""
 
@@ -9070,7 +9078,7 @@ msgid "Save to my feeds"
 msgstr ""
 
 #: src/view/shell/desktop/LeftNav.tsx:770
-#: src/view/shell/Drawer.tsx:559
+#: src/view/shell/Drawer.tsx:566
 msgctxt "link to bookmarks screen"
 msgid "Saved"
 msgstr ""
@@ -9481,7 +9489,7 @@ msgstr "Send Email"
 msgid "Send error report"
 msgstr "Send error report"
 
-#: src/view/shell/Drawer.tsx:349
+#: src/view/shell/Drawer.tsx:356
 msgid "Send feedback"
 msgstr ""
 
@@ -9566,9 +9574,9 @@ msgid "Sets email for password reset"
 msgstr ""
 
 #: src/Navigation.tsx:226
-#: src/screens/Settings/Settings.tsx:93
+#: src/screens/Settings/Settings.tsx:94
 #: src/view/shell/desktop/LeftNav.tsx:810
-#: src/view/shell/Drawer.tsx:597
+#: src/view/shell/Drawer.tsx:604
 msgid "Settings"
 msgstr ""
 
@@ -9634,8 +9642,8 @@ msgstr ""
 #: src/screens/Messages/components/InviteLinkDialog.tsx:365
 #: src/screens/Messages/components/InviteLinkDialog.tsx:372
 #: src/screens/StarterPack/StarterPackScreen.tsx:447
-#: src/screens/Topic.tsx:76
-#: src/screens/Topic.tsx:289
+#: src/screens/Topic.tsx:73
+#: src/screens/Topic.tsx:266
 msgid "Share"
 msgstr ""
 
@@ -9832,7 +9840,7 @@ msgstr ""
 msgid "Shows information about when this post was created"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:116
+#: src/screens/Settings/Settings.tsx:117
 msgid "Shows other accounts you can switch to"
 msgstr ""
 
@@ -9902,9 +9910,9 @@ msgstr "Sign in to Blacksky or create a new account"
 msgid "Sign in to view post"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:258
-#: src/screens/Settings/Settings.tsx:260
-#: src/screens/Settings/Settings.tsx:292
+#: src/screens/Settings/Settings.tsx:267
+#: src/screens/Settings/Settings.tsx:269
+#: src/screens/Settings/Settings.tsx:301
 #: src/screens/SignupQueued.tsx:94
 #: src/screens/SignupQueued.tsx:97
 #: src/screens/Takendown.tsx:88
@@ -9918,7 +9926,7 @@ msgstr ""
 msgid "Sign Out"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:289
+#: src/screens/Settings/Settings.tsx:298
 #: src/view/shell/desktop/LeftNav.tsx:214
 msgid "Sign out?"
 msgstr ""
@@ -10078,8 +10086,8 @@ msgstr ""
 msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr ""
 
-#: src/App.native.tsx:123
-#: src/App.web.tsx:151
+#: src/App.native.tsx:124
+#: src/App.web.tsx:152
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr ""
 
@@ -10193,16 +10201,16 @@ msgstr "Starts the sign-in process"
 msgid "Step {0} of {1}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:390
+#: src/screens/Settings/Settings.tsx:399
 msgid "Storage cleared, you need to restart the app now."
 msgstr ""
 
-#: src/components/contacts/screens/PhoneInput.tsx:292
+#: src/components/contacts/screens/PhoneInput.tsx:294
 msgid "Stored as part of a secure code for matching with others"
 msgstr ""
 
 #: src/Navigation.tsx:319
-#: src/screens/Settings/Settings.tsx:445
+#: src/screens/Settings/Settings.tsx:454
 msgid "Storybook"
 msgstr ""
 
@@ -10315,15 +10323,21 @@ msgstr "Support on OpenCollective"
 msgid "Support the Blacksky community through OpenCollective. Your contributions help us maintain and improve the platform."
 msgstr "Support the Blacksky community through OpenCollective. Your contributions help us maintain and improve the platform."
 
+#: src/view/shell/desktop/RightNav.tsx:103
+#: src/view/shell/desktop/RightNav.tsx:104
+#: src/view/shell/Drawer.tsx:617
+msgid "Support Us"
+msgstr "Support Us"
+
 #: src/view/screens/SupportStripeCheckout.web.tsx:118
 msgid "Support with Card"
 msgstr "Support with Card"
 
 #: src/components/dialogs/SwitchAccount.tsx:47
 #: src/components/dialogs/SwitchAccount.tsx:50
-#: src/screens/Settings/Settings.tsx:115
-#: src/screens/Settings/Settings.tsx:127
-#: src/screens/Settings/Settings.tsx:568
+#: src/screens/Settings/Settings.tsx:116
+#: src/screens/Settings/Settings.tsx:128
+#: src/screens/Settings/Settings.tsx:577
 #: src/view/shell/desktop/LeftNav.tsx:252
 msgid "Switch account"
 msgstr ""
@@ -10351,7 +10365,7 @@ msgstr ""
 #: src/screens/Log.tsx:49
 #: src/screens/Settings/AboutSettings.tsx:100
 #: src/screens/Settings/AboutSettings.tsx:103
-#: src/screens/Settings/Settings.tsx:438
+#: src/screens/Settings/Settings.tsx:447
 msgid "System log"
 msgstr ""
 
@@ -10415,7 +10429,7 @@ msgstr ""
 msgid "Task complete - 10 likes!"
 msgstr ""
 
-#: src/components/ProgressGuide/List.tsx:111
+#: src/components/ProgressGuide/List.tsx:109
 msgid "Teach our algorithm what you like"
 msgstr ""
 
@@ -10440,8 +10454,8 @@ msgid "Temporarily deactivate your account"
 msgstr "Temporarily deactivate your account"
 
 #: src/view/com/auth/SplashScreen.web.tsx:198
-#: src/view/shell/desktop/RightNav.tsx:124
-#: src/view/shell/desktop/RightNav.tsx:125
+#: src/view/shell/desktop/RightNav.tsx:128
+#: src/view/shell/desktop/RightNav.tsx:129
 msgid "Terms"
 msgstr ""
 
@@ -10451,8 +10465,8 @@ msgstr ""
 #: src/screens/Settings/AboutSettings.tsx:85
 #: src/screens/Settings/AboutSettings.tsx:88
 #: src/view/screens/TermsOfService.tsx:25
-#: src/view/shell/Drawer.tsx:685
-#: src/view/shell/Drawer.tsx:687
+#: src/view/shell/Drawer.tsx:705
+#: src/view/shell/Drawer.tsx:707
 msgid "Terms of Service"
 msgstr ""
 
@@ -10529,8 +10543,8 @@ msgid "The Blacksky Trending"
 msgstr "The Blacksky Trending"
 
 #: src/screens/Moderation/index.tsx:379
-msgid "The Bluesky web application"
-msgstr ""
+msgid "The Blacksky web application"
+msgstr "The Blacksky web application"
 
 #: src/view/screens/CommunityGuidelines.tsx:32
 msgid "The Community Guidelines have been moved to <0/>"
@@ -10545,8 +10559,8 @@ msgid "The Discover feed now knows what you like"
 msgstr ""
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:334
-msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
-msgstr ""
+msgid "The experience is better in the app. Download Blacksky now and we'll pick back up where you left off."
+msgstr "The experience is better in the app. Download Blacksky now and we'll pick back up where you left off."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:70
 msgid "The feed has been replaced with Discover."
@@ -11035,11 +11049,11 @@ msgid "This will delete \"{0}\" from your muted words. You can always add it bac
 msgstr ""
 
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:330
-msgid "This will irreversibly delete your Bluesky account <0>{currentHandle}</0> and all associated data. Note that this will affect any other <1>AT Protocol</1> services you use with this account."
-msgstr ""
+msgid "This will irreversibly delete your Blacksky account <0>{currentHandle}</0> and all associated data. Note that this will affect any other <1>AT Protocol</1> services you use with this account."
+msgstr "This will irreversibly delete your Blacksky account <0>{currentHandle}</0> and all associated data. Note that this will affect any other <1>AT Protocol</1> services you use with this account."
 
 #. placeholder {0}: account.handle
-#: src/screens/Settings/Settings.tsx:621
+#: src/screens/Settings/Settings.tsx:630
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 
@@ -11131,7 +11145,7 @@ msgstr ""
 
 #: src/screens/Hashtag.tsx:88
 #: src/screens/Search/SearchResults.tsx:55
-#: src/screens/Topic.tsx:254
+#: src/screens/Topic.tsx:231
 msgid "Top"
 msgstr ""
 
@@ -11143,7 +11157,7 @@ msgid "Top replies first"
 msgstr ""
 
 #: src/Navigation.tsx:586
-#: src/screens/Topic.tsx:56
+#: src/screens/Topic.tsx:53
 msgid "Topic"
 msgstr ""
 
@@ -11260,11 +11274,11 @@ msgstr ""
 msgid "Unable to resolve handle"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:504
+#: src/screens/Settings/Settings.tsx:513
 msgid "Unapply Pull Request"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:506
+#: src/screens/Settings/Settings.tsx:515
 msgid "Unapply Pull Request {currentChannel}"
 msgstr ""
 
@@ -11481,8 +11495,8 @@ msgstr ""
 msgid "Unpinned list"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:471
-#: src/screens/Settings/Settings.tsx:473
+#: src/screens/Settings/Settings.tsx:480
+#: src/screens/Settings/Settings.tsx:482
 msgid "Unsnooze email reminder"
 msgstr ""
 
@@ -12079,8 +12093,8 @@ msgstr ""
 msgid "We couldn't find any results for that tag."
 msgstr ""
 
-#: src/screens/Topic.tsx:185
-#: src/screens/Topic.tsx:366
+#: src/screens/Topic.tsx:182
+#: src/screens/Topic.tsx:343
 msgid "We couldn't find any results for that topic."
 msgstr ""
 
@@ -12626,12 +12640,12 @@ msgid "You hid this reply."
 msgstr ""
 
 #: src/components/NewskieDialog.tsx:107
-msgid "You joined Bluesky {timeAgoString} ago"
-msgstr ""
+msgid "You joined Blacksky {timeAgoString} ago"
+msgstr "You joined Blacksky {timeAgoString} ago"
 
 #: src/components/NewskieDialog.tsx:104
-msgid "You joined Bluesky using a starter pack {timeAgoString} ago"
-msgstr ""
+msgid "You joined Blacksky using a starter pack {timeAgoString} ago"
+msgstr "You joined Blacksky using a starter pack {timeAgoString} ago"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:84
 msgid "You may appeal non-self labels if you feel they were placed in error."
@@ -12655,8 +12669,8 @@ msgstr "You must be 13 years of age or older to create an account."
 
 #: src/components/dialogs/BirthDateSettings.tsx:331
 #: src/components/dialogs/BirthDateSettings.tsx:428
-msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
-msgstr ""
+msgid "You must be at least 13 years old to use Blacksky. Read our <0>Terms of Service</0> for more information."
+msgstr "You must be at least 13 years old to use Blacksky. Read our <0>Terms of Service</0> for more information."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:365
 msgid "You must be following at least seven other people to generate a starter pack."
@@ -12679,7 +12693,7 @@ msgstr ""
 msgid "You previously deactivated @{0}."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:401
+#: src/screens/Settings/Settings.tsx:410
 msgid "You probably want to restart the app now."
 msgstr ""
 
@@ -12693,7 +12707,7 @@ msgstr ""
 msgid "You reacted {0} to {target}"
 msgstr "You reacted {0} to {target}"
 
-#: src/screens/Settings/Settings.tsx:290
+#: src/screens/Settings/Settings.tsx:299
 #: src/view/shell/desktop/LeftNav.tsx:215
 msgid "You will be signed out of all your accounts."
 msgstr ""
@@ -12861,12 +12875,12 @@ msgid "Your choice will be remembered for future links. You can change it at any
 msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:365
-msgid "Your contact {firstAuthorLink} is on Bluesky"
-msgstr ""
+msgid "Your contact {firstAuthorLink} is on Blacksky"
+msgstr "Your contact {firstAuthorLink} is on Blacksky"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:363
-msgid "Your contact {firstAuthorName} is on Bluesky"
-msgstr ""
+msgid "Your contact {firstAuthorName} is on Blacksky"
+msgstr "Your contact {firstAuthorName} is on Blacksky"
 
 #: src/components/contacts/screens/ViewMatches.tsx:454
 msgid "Your contact {name}"
