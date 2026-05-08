@@ -55,8 +55,8 @@ export function groupSystemMessages(items: ConvoItem[]): RenderItem[] {
       })
     }
 
-    if (run.length === 1) {
-      result.push(run[0])
+    if (run.length < 4) {
+      for (const item of run) result.push(item)
     } else {
       // Key off the first member's id so the key stays stable when a new
       // system message arrives at the end of the run (the common case).
