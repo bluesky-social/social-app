@@ -13,6 +13,7 @@ import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {KnownFollowers} from '#/components/KnownFollowers'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {usePromptControl} from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
@@ -135,10 +136,17 @@ function InviterHeader({
         size={42}
         moderation={moderation.ui('avatar')}
       />
-      <View>
-        <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-          <Trans>{displayName} added you</Trans>
-        </Text>
+      <View style={[a.flex_1]}>
+        <View style={[a.flex_row, a.align_center]}>
+          <Text
+            style={[a.text_md, a.font_bold, t.atoms.text]}
+            numberOfLines={1}>
+            <Trans comment="Text identifying the person who added you to a group chat. Display name is followed by the user’s profile badges.">
+              Added by {displayName}
+            </Trans>
+          </Text>
+          <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
+        </View>
         <Text style={[web(a.pt_xs), a.text_sm, t.atoms.text_contrast_high]}>
           {sanitizeHandle(profile.handle, '@')}
         </Text>
