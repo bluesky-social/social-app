@@ -21,12 +21,15 @@ import {useAgent, useSession} from '#/state/session'
 import {parseConvoView} from '#/components/dms/util'
 import {useLeftConvos} from './leave-conversation'
 
+const DEFAULT_LIMIT = 10
+
 export const RQKEY_ROOT = 'convo-list'
 export const RQKEY = (
   status: 'accepted' | 'request' | 'all',
   readState: 'all' | 'unread' = 'all',
   kind: 'all' | 'group' | 'direct' = 'all',
-) => [RQKEY_ROOT, status, readState, kind]
+  limit?: number,
+) => [RQKEY_ROOT, status, readState, kind, limit]
 type RQPageParam = string | undefined
 
 export function useListConvosQuery({
@@ -34,21 +37,23 @@ export function useListConvosQuery({
   status,
   readState = 'all',
   kind = 'all',
+  limit = DEFAULT_LIMIT,
 }: {
   enabled?: boolean
   status?: 'request' | 'accepted'
   readState?: 'all' | 'unread'
   kind?: 'all' | 'group' | 'direct'
+  limit?: number
 } = {}) {
   const agent = useAgent()
 
   return useInfiniteQuery({
     enabled,
-    queryKey: RQKEY(status ?? 'all', readState),
+    queryKey: RQKEY(status ?? 'all', readState, kind, limit),
     queryFn: async ({pageParam}) => {
       const {data} = await agent.chat.bsky.convo.listConvos(
         {
-          limit: 20,
+          limit,
           cursor: pageParam,
           readState: readState === 'unread' ? 'unread' : undefined,
           kind: kind === 'all' ? undefined : kind,
@@ -97,7 +102,7 @@ export function ListConvosProviderInner({
 }: {
   children: React.ReactNode
 }) {
-  const {refetch, data} = useListConvosQuery({readState: 'unread'})
+  const {refetch, data} = useListConvosQuery({readState: 'unread', limit: 20})
   const messagesBus = useMessagesEventBus()
   const queryClient = useQueryClient()
   const {currentConvoId} = useCurrentConvoId()
