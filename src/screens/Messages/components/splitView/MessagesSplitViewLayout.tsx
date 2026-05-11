@@ -17,8 +17,8 @@ import {SplitViewProvider} from './context'
 const CENTER_COLUMN_WIDTH = 600
 const LEFT_NAV_FULL_WIDTH = 245
 const LEFT_NAV_MINIMAL_WIDTH = 86
-const RIGHT_NAV_FULL_WIDTH = 330 + 28
-const RIGHT_NAV_MINIMAL_WIDTH = 280 + 28
+const RIGHT_NAV_FULL_WIDTH = 330
+const RIGHT_NAV_MINIMAL_WIDTH = 280
 
 type MessageScreens =
   | 'Messages'
@@ -80,7 +80,7 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
         {maxWidth: containerWidth},
         {
           transform: [
-            {translateX: LEFT_NAV_MINIMAL_WIDTH / 2},
+            {translateX: LEFT_NAV_MINIMAL_WIDTH},
             {translateX: web(SCROLLBAR_OFFSET) ?? 0},
           ],
         },
@@ -91,7 +91,7 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
           style={[
             a.border_l,
             t.atoms.border_contrast_low,
-            {width: centerColumnOffset ? 300 : 350},
+            {width: containerWidth - CENTER_COLUMN_WIDTH},
           ]}>
           <ChatListHeader newChatControl={newChatControl} />
           <ChatList
@@ -102,7 +102,12 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
         </View>
       </SplitViewProvider>
       <SplitViewProvider side="right">
-        <View style={[a.border_x, t.atoms.border_contrast_low, {width: 600}]}>
+        <View
+          style={[
+            a.border_x,
+            t.atoms.border_contrast_low,
+            {width: CENTER_COLUMN_WIDTH},
+          ]}>
           {children}
         </View>
       </SplitViewProvider>

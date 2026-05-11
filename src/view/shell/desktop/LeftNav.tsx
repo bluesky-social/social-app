@@ -49,7 +49,7 @@ import {
   BulletList_Stroke2_Corner0_Rounded as List,
 } from '#/components/icons/BulletList'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
-import {EditBig_Stroke2_Corner0_Rounded as EditBig} from '#/components/icons/EditBig'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {
   Hashtag_Filled_Corner0_Rounded as HashtagFilled,
   Hashtag_Stroke2_Corner0_Rounded as Hashtag,
@@ -81,8 +81,8 @@ import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useActorStatus} from '#/features/liveNow'
+import {router} from '#/routes'
 import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
-import {router} from '../../../routes'
 
 const NAV_ICON_WIDTH = 28
 
@@ -458,10 +458,6 @@ function NavItem({
             width: 24,
             height: 24,
           },
-          minimal && {
-            width: 30,
-            height: 30,
-          },
         ]}>
         {isCurrent || isRelated ? iconFilled : icon}
         {typeof count === 'string' && count ? (
@@ -499,12 +495,6 @@ function NavItem({
                   paddingVertical: 1,
                   minWidth: 16,
                 },
-                minimal && [
-                  {
-                    top: '10%',
-                    left: count.length === 1 ? 20 : 16,
-                  },
-                ],
               ]}>
               {count}
             </Text>
@@ -521,10 +511,6 @@ function NavItem({
                 height: 8,
                 right: -2,
                 top: -4,
-              },
-              minimal && {
-                right: 4,
-                top: 2,
               },
             ]}
           />
@@ -584,15 +570,15 @@ function ComposeBtn({minimal}: {minimal: boolean}) {
     openComposer({mention: await getProfileHandle(), logContext: 'Fab'})
 
   return (
-    <View style={minimal ? [a.p_sm] : [a.flex_row, a.pl_md, a.pt_xl]}>
+    <View style={minimal ? [a.px_sm, a.pt_lg] : [a.flex_row, a.pl_md, a.pt_lg]}>
       <Button
         disabled={isFetchingHandle}
         label={_(msg`Compose new post`)}
         onPress={() => void onPressCompose()}
         size="large"
         color="primary"
-        style={[a.rounded_full, minimal && {width: 56, height: 56}]}>
-        <ButtonIcon icon={EditBig} size={minimal ? 'lg' : 'sm'} />
+        style={[a.rounded_full, minimal && {width: 48, height: 48}]}>
+        <ButtonIcon icon={EditBigIcon} size={minimal ? 'lg' : 'sm'} />
         {!minimal && (
           <ButtonText>
             <Trans context="action">New post</Trans>
@@ -665,7 +651,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
                 -300 +
                 (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0) +
                 (isMessagesRelatedScreen && !leftNavMinimalBreakpoint
-                  ? -130
+                  ? -153
                   : 0),
             },
             {translateX: '-100%'},
@@ -867,10 +853,6 @@ const styles = StyleSheet.create({
     width: 245,
   },
   leftNavMinimal: {
-    paddingTop: 0,
-    paddingBottom: 0,
-    paddingLeft: 0,
-    paddingRight: 0,
     height: '100%',
     width: 86,
     alignItems: 'center',

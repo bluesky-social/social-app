@@ -553,11 +553,8 @@ function BaseChatItem({
                   {subtitle && (
                     <Text
                       numberOfLines={1}
-                      style={[
-                        a.text_sm,
-                        t.atoms.text_contrast_medium,
-                        a.pb_xs,
-                      ]}>
+                      style={[a.text_sm, t.atoms.text_contrast_medium, a.pb_xs]}
+                      emoji>
                       {subtitle}
                     </Text>
                   )}
