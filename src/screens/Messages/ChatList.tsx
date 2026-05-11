@@ -376,6 +376,7 @@ export function ChatList({
           }),
         ]
       }
+      contentContainerStyle={isWithinSplitView && a.py_sm}
     />
   )
 }

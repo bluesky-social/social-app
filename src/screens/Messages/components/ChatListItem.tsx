@@ -119,7 +119,7 @@ function DirectChatItem({
 }) {
   const {t: l} = useLingui()
   const profile = useProfileShadow(convo.primaryMember)
-  const {isWithinLeftPanel} = useIsWithinSplitView()
+  const {isWithinSplitView} = useIsWithinSplitView()
 
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
@@ -137,7 +137,7 @@ function DirectChatItem({
       avatar={
         <PreviewableUserAvatar
           profile={profile}
-          size={52}
+          size={isWithinSplitView ? 48 : 52}
           moderation={moderation.ui('avatar')}
         />
       }
@@ -158,7 +158,7 @@ function DirectChatItem({
       isBlockedAccount={moderation.blocked}
       showProfileBadges
       postAlerts={
-        isWithinLeftPanel ? null : (
+        isWithinSplitView ? null : (
           <PostAlerts
             modui={moderation.ui('contentList')}
             size="sm"
@@ -186,6 +186,7 @@ function GroupChatItem({
 }) {
   const {t: l} = useLingui()
   const groupOwner = useMaybeProfileShadow(convo.primaryMember)
+  const {isWithinSplitView} = useIsWithinSplitView()
 
   const moderation = useMemo(
     () =>
@@ -198,7 +199,12 @@ function GroupChatItem({
   return (
     <BaseChatItem
       convo={convo}
-      avatar={<AvatarBubbles profiles={convo.members} size={52} />}
+      avatar={
+        <AvatarBubbles
+          profiles={convo.members}
+          size={isWithinSplitView ? 48 : 52}
+        />
+      }
       title={chatName}
       accessibilityHint={l`Go to the group chat named "${chatName}"`}
       primaryProfile={groupOwner}
@@ -252,6 +258,7 @@ function BaseChatItem({
   const leaveConvoControl = useDialogControl()
   const {mutate: markAsRead} = useMarkAsReadMutation()
   const {gtMobile} = useBreakpoints()
+  const {isWithinSplitView} = useIsWithinSplitView()
 
   const playHaptic = useHaptics()
   const queryClient = useQueryClient()
@@ -423,6 +430,8 @@ function BaseChatItem({
         leftFirst: deleteAction,
       }
 
+  const avatarSize = isWithinSplitView ? 48 : 52
+
   return (
     <ChatListItemPortal.Provider>
       <GestureActionView actions={actions}>
@@ -432,7 +441,7 @@ function BaseChatItem({
           // @ts-expect-error web only
           onFocus={onFocus}
           onBlur={onMouseLeave}
-          style={[a.relative, t.atoms.bg]}>
+          style={[a.relative, t.atoms.bg, isWithinSplitView && a.mx_sm]}>
           <View
             style={[
               a.z_10,
@@ -473,14 +482,15 @@ function BaseChatItem({
                   a.px_lg,
                   a.py_md,
                   a.gap_md,
-                  selected && t.atoms.bg_contrast_25,
-                  (hovered || pressed || focused) && t.atoms.bg_contrast_50,
+                  isWithinSplitView && a.rounded_sm,
+                  (hovered || pressed || focused) && t.atoms.bg_contrast_25,
+                  selected && t.atoms.bg_contrast_50,
                 ]}>
                 {/* Avatar goes here */}
-                <View style={{width: 52, height: 52}} />
+                <View style={{width: avatarSize, height: avatarSize}} />
 
                 <View
-                  style={[a.flex_1, a.justify_center, web({paddingRight: 45})]}>
+                  style={[a.flex_1, a.justify_center, web({paddingRight: 40})]}>
                   <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
                     <View style={[a.flex_shrink]}>
                       <Text
