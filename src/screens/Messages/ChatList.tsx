@@ -29,8 +29,10 @@ import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotate'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
-import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons/Message'
-import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import {
+  Message_Stroke2_Corner0_Rounded as MessageIcon,
+  MessagePlus_Stroke2_Corner0_Rounded as NewChatIcon,
+} from '#/components/icons/Message'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
@@ -346,12 +348,14 @@ export function Header({newChatControl}: {newChatControl: DialogControlProps}) {
   const requireEmailVerification = useRequireEmailVerification()
   const leftConvos = useLeftConvos()
 
-  const {data: inboxData, hasNextPage: hasMoreRequests} = useListConvosQuery({
-    status: 'request',
-  })
+  const {data: unreadInboxData, hasNextPage: hasMoreRequests} =
+    useListConvosQuery({
+      status: 'request',
+      readState: 'unread',
+    })
 
   const inboxAllConvos =
-    inboxData?.pages
+    unreadInboxData?.pages
       .flatMap(page => page.convos)
       .filter(
         convo =>
@@ -371,48 +375,38 @@ export function Header({newChatControl}: {newChatControl: DialogControlProps}) {
     ],
   })
 
-  const requestsLink = (
-    <InboxRequests
-      count={inboxAllConvos.length}
-      more={hasMoreRequests ?? false}
-    />
-  )
-
-  const settingsLink = (
-    <Link
-      to="/messages/settings"
-      label={l`Chat settings`}
-      size="small"
-      variant="ghost"
-      color="secondary"
-      shape="round"
-      style={[a.justify_center]}>
-      <ButtonIcon icon={SettingsIcon} size="lg" />
-    </Link>
-  )
-
   return (
     <Layout.Header.Outer>
       {gtMobile ? (
         <>
-          <Layout.Header.Content>
+          <Layout.Header.Content align="left">
             <Layout.Header.TitleText>
               <Trans>Chats</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
 
           <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-            {requestsLink}
-            {settingsLink}
+            <InboxRequests
+              count={inboxAllConvos.length}
+              more={hasMoreRequests}
+              variant="solid"
+            />
+            <Link
+              to="/messages/settings"
+              label={l`Chat settings`}
+              size="small"
+              color="secondary"
+              shape="round"
+              style={[a.justify_center]}>
+              <ButtonIcon icon={SettingsIcon} />
+            </Link>
             <Button
               label={l`New chat`}
               color="primary"
               size="small"
+              shape="round"
               onPress={wrappedOpenChatControl}>
-              <ButtonIcon icon={PlusIcon} />
-              <ButtonText>
-                <Trans>New chat</Trans>
-              </ButtonText>
+              <ButtonIcon icon={NewChatIcon} />
             </Button>
           </View>
         </>
@@ -424,8 +418,23 @@ export function Header({newChatControl}: {newChatControl: DialogControlProps}) {
               <Trans>Chats</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
-          {requestsLink}
-          <Layout.Header.Slot>{settingsLink}</Layout.Header.Slot>
+          <InboxRequests
+            count={inboxAllConvos.length}
+            more={hasMoreRequests}
+            variant="ghost"
+          />
+          <Layout.Header.Slot>
+            <Link
+              to="/messages/settings"
+              label={l`Chat settings`}
+              size="small"
+              variant="ghost"
+              color="secondary"
+              shape="round"
+              style={[a.justify_center]}>
+              <ButtonIcon icon={SettingsIcon} size="lg" />
+            </Link>
+          </Layout.Header.Slot>
         </>
       )}
     </Layout.Header.Outer>
