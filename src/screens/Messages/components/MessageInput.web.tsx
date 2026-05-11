@@ -1,7 +1,6 @@
-import {useCallback, useEffect, useRef, useState} from 'react'
+import {useCallback, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {flushSync} from 'react-dom'
 import TextareaAutosize from 'react-textarea-autosize'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
@@ -12,13 +11,9 @@ import {
   useMessageDraft,
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
-import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
-import {
-  type Emoji,
-  type EmojiPickerPosition,
-} from '#/view/com/composer/text-input/web/EmojiPicker'
 import {atoms as a, flatten, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
+import * as EmojiPicker from '#/components/EmojiPicker'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
@@ -31,16 +26,14 @@ export function MessageInput({
   hasEmbed,
   setEmbed,
   children,
-  openEmojiPicker,
 }: {
   onSendMessage: (message: string) => void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
-  openEmojiPicker?: (pos: EmojiPickerPosition) => void
 }) {
   const {isMobile} = useWebMediaQueries()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {getDraft, clearDraft} = useMessageDraft()
   const [message, setMessage] = useState(getDraft)
@@ -57,7 +50,7 @@ export function MessageInput({
       return
     }
     if (countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
-      Toast.show(_(msg`Message is too long`), {
+      Toast.show(l`Message is too long`, {
         type: 'error',
       })
       return
@@ -66,7 +59,7 @@ export function MessageInput({
     onSendMessage(message)
     setMessage('')
     setEmbed(undefined)
-  }, [message, onSendMessage, _, clearDraft, hasEmbed, setEmbed])
+  }, [message, onSendMessage, l, clearDraft, hasEmbed, setEmbed])
 
   const onKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -105,12 +98,11 @@ export function MessageInput({
   }, [])
 
   const onEmojiInserted = useCallback(
-    (emoji: Emoji) => {
+    (emoji: EmojiPicker.Emoji) => {
       if (!textAreaRef.current) {
         return
       }
       const position = textAreaRef.current.selectionStart ?? 0
-      textAreaRef.current.focus()
       flushSync(() => {
         setMessage(
           message =>
@@ -122,12 +114,6 @@ export function MessageInput({
     },
     [setMessage],
   )
-  useEffect(() => {
-    textInputWebEmitter.addListener('emoji-inserted', onEmojiInserted)
-    return () => {
-      textInputWebEmitter.removeListener('emoji-inserted', onEmojiInserted)
-    }
-  }, [onEmojiInserted])
 
   useSaveMessageDraft(message)
   useExtractEmbedFromFacets(message, setEmbed)
@@ -153,49 +139,45 @@ export function MessageInput({
         // @ts-expect-error web only
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}>
-        <Button
-          onPress={e => {
-            e.currentTarget.measure((_fx, _fy, _width, _height, px, py) => {
-              openEmojiPicker?.({
-                top: py,
-                left: px,
-                right: px,
-                bottom: py,
-                nextFocusRef:
-                  textAreaRef as unknown as React.MutableRefObject<HTMLElement>,
-              })
-            })
-          }}
-          style={[
-            a.rounded_full,
-            a.overflow_hidden,
-            a.align_center,
-            a.justify_center,
-            {
-              marginTop: 5,
-              height: 30,
-              width: 30,
-            },
-          ]}
-          label={_(msg`Open emoji picker`)}>
-          {state => (
-            <View
-              style={[
-                a.absolute,
-                a.inset_0,
-                a.align_center,
-                a.justify_center,
-                {
-                  backgroundColor:
-                    state.hovered || state.focused || state.pressed
-                      ? t.atoms.bg.backgroundColor
-                      : undefined,
-                },
-              ]}>
-              <EmojiSmile size="lg" />
-            </View>
-          )}
-        </Button>
+        <EmojiPicker.Root
+          onEmojiSelect={onEmojiInserted}
+          nextFocusRef={textAreaRef}>
+          <EmojiPicker.Trigger label={l`Open emoji picker`}>
+            {({props, state}) => (
+              <Button
+                style={[
+                  a.rounded_full,
+                  a.overflow_hidden,
+                  a.align_center,
+                  a.justify_center,
+                  {
+                    marginTop: 5,
+                    height: 30,
+                    width: 30,
+                  },
+                ]}
+                label={props.accessibilityLabel}
+                {...props}>
+                <View
+                  style={[
+                    a.absolute,
+                    a.inset_0,
+                    a.align_center,
+                    a.justify_center,
+                    {
+                      backgroundColor:
+                        state.hovered || state.focused || state.pressed
+                          ? t.atoms.bg.backgroundColor
+                          : undefined,
+                    },
+                  ]}>
+                  <EmojiSmile size="lg" />
+                </View>
+              </Button>
+            )}
+          </EmojiPicker.Trigger>
+          <EmojiPicker.Picker />
+        </EmojiPicker.Root>
         <TextareaAutosize
           ref={textAreaRef}
           style={flatten([
@@ -210,7 +192,7 @@ export function MessageInput({
             },
           ])}
           maxRows={12}
-          placeholder={_(msg`Write a message`)}
+          placeholder={l`Message`}
           defaultValue=""
           value={message}
           dirName="ltr"
@@ -231,7 +213,7 @@ export function MessageInput({
         />
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={_(msg`Send message`)}
+          accessibilityLabel={l`Send message`}
           accessibilityHint=""
           style={[
             a.rounded_full,

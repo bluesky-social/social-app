@@ -1,4 +1,4 @@
-import EventEmitter from 'eventemitter3'
+import {EventEmitter} from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
 import {logger} from '#/logger'

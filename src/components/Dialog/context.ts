@@ -23,6 +23,7 @@ export const Context = createContext<DialogContextProps>({
   disableDrag: false,
   setDisableDrag: () => {},
   isWithinDialog: false,
+  isHeightConstrained: false,
 })
 Context.displayName = 'DialogContext'
 

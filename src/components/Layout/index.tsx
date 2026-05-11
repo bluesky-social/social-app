@@ -1,6 +1,11 @@
 import {forwardRef, memo, useContext, useMemo} from 'react'
-import {StyleSheet, View, type ViewProps, type ViewStyle} from 'react-native'
-import {type StyleProp} from 'react-native'
+import {
+  type StyleProp,
+  StyleSheet,
+  View,
+  type ViewProps,
+  type ViewStyle,
+} from 'react-native'
 import {
   KeyboardAwareScrollView,
   type KeyboardAwareScrollViewProps,
@@ -11,6 +16,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
+import {useEnableMinimalShellModeForScreen} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {
   atoms as a,
@@ -30,6 +36,7 @@ export * as Header from '#/components/Layout/Header'
 export type ScreenProps = React.ComponentProps<typeof View> & {
   style?: StyleProp<ViewStyle>
   noInsetTop?: boolean
+  minimalShell?: boolean
 }
 
 /**
@@ -38,9 +45,13 @@ export type ScreenProps = React.ComponentProps<typeof View> & {
 export const Screen = memo(function Screen({
   style,
   noInsetTop,
+  minimalShell = false,
   ...props
 }: ScreenProps) {
   const {top} = useSafeAreaInsets()
+
+  useEnableMinimalShellModeForScreen({enabled: minimalShell})
+
   return (
     <>
       {IS_WEB && <WebCenterBorders />}

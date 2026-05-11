@@ -13,7 +13,7 @@ class BackgroundNotificationHandler(
       return
     }
 
-    if (remoteMessage.data["reason"] == "chat-message") {
+    if (remoteMessage.data["reason"] == "chat-message" || remoteMessage.data["reason"] == "chat-reaction") {
       mutateWithChatMessage(remoteMessage)
     } else {
       mutateWithOtherReason(remoteMessage)

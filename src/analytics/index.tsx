@@ -110,6 +110,7 @@ const Context = createContext<AnalyticsBaseContextType>({
     },
   },
 })
+Context.displayName = 'AnalyticsContext'
 
 /**
  * Ensures that deviceId is set and migrated from legacy storage. Handled on

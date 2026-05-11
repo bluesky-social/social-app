@@ -52,8 +52,9 @@ import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 
-const PARENT_CHUNK_SIZE = 20
+const PARENT_CHUNK_SIZE = IS_NATIVE ? 5 : 20
 const CHILDREN_CHUNK_SIZE = 50
 
 export function PostThread({uri}: {uri: string}) {

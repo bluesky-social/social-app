@@ -99,6 +99,7 @@ export function useProfilesQuery({
 }) {
   const agent = useAgent()
   return useQuery({
+    enabled: handles.length > 0,
     staleTime: STALE.MINUTES.FIVE,
     queryKey: profilesQueryKey(handles),
     queryFn: async () => {

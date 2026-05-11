@@ -7,7 +7,7 @@ import {
   withSpring,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import EventEmitter from 'eventemitter3'
+import {EventEmitter} from 'eventemitter3'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {useMinimalShellMode} from '#/state/shell'

@@ -185,6 +185,7 @@ export function ProfileFeedScreenInner({
 
       <FeedFeedbackProvider value={feedFeedback}>
         <PostFeed
+          enabled
           feed={feed}
           feedParams={feedParams}
           pollInterval={60e3}

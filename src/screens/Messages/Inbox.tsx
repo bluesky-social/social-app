@@ -4,9 +4,7 @@ import {
   type ChatBskyConvoDefs,
   type ChatBskyConvoListConvos,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {
   type InfiniteData,
@@ -50,11 +48,11 @@ import {RequestListItem} from './components/RequestListItem'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesInbox'>
 
 export function MessagesInboxScreen(props: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const aaCopy = useAgeAssuranceCopy()
   return (
     <AgeRestrictedScreen
-      screenTitle={_(msg`Chat requests`)}
+      screenTitle={l`Chat requests`}
       infoText={aaCopy.chatsInfoText}>
       <MessagesInboxScreenInner {...props} />
     </AgeRestrictedScreen>
@@ -126,7 +124,7 @@ function RequestList({
   conversations: ChatBskyConvoDefs.ConvoView[]
   hasUnreadConvos: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
 
@@ -207,15 +205,15 @@ function RequestList({
                       t.atoms.text_contrast_medium,
                       {maxWidth: 360},
                     ]}>
-                    {cleanError(error) || _(msg`Failed to load conversations`)}
+                    {cleanError(error) || l`Failed to load conversations`}
                   </Text>
 
                   <Button
-                    label={_(msg`Reload conversations`)}
+                    label={l`Reload conversations`}
                     size="small"
                     color="secondary_inverted"
                     variant="solid"
-                    onPress={() => refetch()}>
+                    onPress={() => void refetch()}>
                     <ButtonText>
                       <Trans>Retry</Trans>
                     </ButtonText>
@@ -249,7 +247,7 @@ function RequestList({
                     variant="solid"
                     color="secondary"
                     size="small"
-                    label={_(msg`Go back`)}
+                    label={l`Go back`}
                     onPress={() => {
                       if (navigation.canGoBack()) {
                         navigation.goBack()
@@ -278,8 +276,8 @@ function RequestList({
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         refreshing={isPTRing}
-        onRefresh={onRefresh}
-        onEndReached={onEndReached}
+        onRefresh={() => void onRefresh()}
+        onEndReached={() => void onEndReached()}
         ListFooterComponent={
           <ListFooter
             isFetchingNextPage={isFetchingNextPage}
@@ -309,16 +307,16 @@ function renderItem({item}: {item: ChatBskyConvoDefs.ConvoView}) {
 }
 
 function MarkAllReadFAB() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {mutate: markAllRead} = useUpdateAllRead('request', {
     onMutate: () => {
-      Toast.show(_(msg`Marked all as read`), {
+      Toast.show(l`Marked all as read`, {
         type: 'success',
       })
     },
     onError: () => {
-      Toast.show(_(msg`Failed to mark all requests as read`), {
+      Toast.show(l`Failed to mark all requests as read`, {
         type: 'error',
       })
     },
@@ -330,22 +328,22 @@ function MarkAllReadFAB() {
       onPress={() => markAllRead()}
       icon={<CheckIcon size="lg" fill={t.palette.white} />}
       accessibilityRole="button"
-      accessibilityLabel={_(msg`Mark all as read`)}
+      accessibilityLabel={l`Mark all as read`}
       accessibilityHint=""
     />
   )
 }
 
 function MarkAsReadHeaderButton() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {mutate: markAllRead} = useUpdateAllRead('request', {
     onMutate: () => {
-      Toast.show(_(msg`Marked all as read`), {
+      Toast.show(l`Marked all as read`, {
         type: 'success',
       })
     },
     onError: () => {
-      Toast.show(_(msg`Failed to mark all requests as read`), {
+      Toast.show(l`Failed to mark all requests as read`, {
         type: 'error',
       })
     },
@@ -353,7 +351,7 @@ function MarkAsReadHeaderButton() {
 
   return (
     <Button
-      label={_(msg`Mark all as read`)}
+      label={l`Mark all as read`}
       size="small"
       color="secondary"
       variant="solid"

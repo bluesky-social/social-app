@@ -313,7 +313,9 @@ const NavItem: React.FC<{
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
       ) : hasNew ? (
-        <View style={styles.hasNewBadge} />
+        <View
+          style={[styles.hasNewBadge, {backgroundColor: t.palette.primary_500}]}
+        />
       ) : null}
     </Link>
   )

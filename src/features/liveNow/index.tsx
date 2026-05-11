@@ -6,6 +6,7 @@ import {
   AppBskyEmbedExternal,
   AtUri,
   ComAtprotoRepoPutRecord,
+  moderateStatus,
 } from '@atproto/api'
 import {retry} from '@atproto/common-web'
 import {msg} from '@lingui/core/macro'
@@ -21,6 +22,7 @@ import {
   updateProfileShadow,
   useMaybeProfileShadow,
 } from '#/state/cache/profile-shadow'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
 import {useTickEveryMinute} from '#/state/shell'
 import {useDialogContext} from '#/components/Dialog'
@@ -36,6 +38,13 @@ export const DEFAULT_ALLOWED_DOMAINS = [
   'stream.place',
   'bluecast.app',
 ]
+
+const DEFAULT_STATE = {
+  status: '',
+  isDisabled: false,
+  isActive: false,
+  record: {},
+} satisfies AppBskyActorDefs.StatusView
 
 export type LiveNowConfig = {
   canGoLive: boolean
@@ -87,9 +96,23 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
   const shadowed = useMaybeProfileShadow(actor)
   const tick = useTickEveryMinute()
   const config = useLiveNowConfig()
+  const moderationOpts = useModerationOpts()
+
+  const moderation = useMemo(() => {
+    if (!actor || !('status' in actor && actor.status)) return undefined
+    if (!moderationOpts) return undefined
+    return moderateStatus(actor, moderationOpts)
+  }, [actor, moderationOpts])
 
   return useMemo(() => {
     void tick // revalidate every minute
+
+    /*
+     * Do not even allow Live Now to show if filtered for `contentList`.
+     */
+    if (moderation && moderation.ui('contentList').filter) {
+      return DEFAULT_STATE
+    }
 
     if (shadowed && 'status' in shadowed && shadowed.status) {
       const isValid = isStatusValidForViewers(shadowed.status, config)
@@ -118,14 +141,9 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
         record: shadowed.status.record,
       } satisfies AppBskyActorDefs.StatusView
     } else {
-      return {
-        status: '',
-        isDisabled: false,
-        isActive: false,
-        record: {},
-      } satisfies AppBskyActorDefs.StatusView
+      return DEFAULT_STATE
     }
-  }, [shadowed, config, tick])
+  }, [shadowed, config, tick, moderation])
 }
 
 export function isStatusStillActive(timeStr: string | undefined) {

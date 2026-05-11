@@ -1,46 +1,37 @@
-import {createContext, useCallback, useContext, useMemo} from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import {
   type SharedValue,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
+import {useFocusEffect} from '@react-navigation/native'
 
 type StateContext = {
   headerMode: SharedValue<number>
   footerMode: SharedValue<number>
 }
-type SetContext = (v: boolean) => void
+type SetContext = {
+  add: () => void
+  subtract: () => void
+}
 
-const stateContext = createContext<StateContext>({
-  headerMode: {
-    value: 0,
-    addListener() {},
-    removeListener() {},
-    modify() {},
-    get() {
-      return 0
-    },
-    set() {},
-  },
-  footerMode: {
-    value: 0,
-    addListener() {},
-    removeListener() {},
-    modify() {},
-    get() {
-      return 0
-    },
-    set() {},
-  },
-})
+const stateContext = createContext<StateContext | null>(null)
 stateContext.displayName = 'MinimalModeStateContext'
-const setContext = createContext<SetContext>((_: boolean) => {})
+const setContext = createContext<SetContext | null>(null)
 setContext.displayName = 'MinimalModeSetContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const headerMode = useSharedValue(0)
   const footerMode = useSharedValue(0)
-  const setMode = useCallback(
+
+  const setModeWorklet = useCallback(
     (v: boolean) => {
       'worklet'
       headerMode.set(() =>
@@ -56,6 +47,31 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     },
     [headerMode, footerMode],
   )
+
+  // defaults to "visible", if the count is >0 it gets hidden
+  const countRef = useRef(0)
+  const add = useCallback(() => {
+    // 0 -> 1 = hide
+    if (countRef.current === 0) setModeWorklet(true)
+
+    countRef.current += 1
+  }, [setModeWorklet])
+  const subtract = useCallback(() => {
+    // 1 -> 0 = show
+    if (countRef.current === 1) setModeWorklet(false)
+
+    // count must never go below 0
+    if (countRef.current > 0) countRef.current -= 1
+  }, [setModeWorklet])
+
+  const setters = useMemo(
+    () => ({
+      add,
+      subtract,
+    }),
+    [add, subtract],
+  )
+
   const value = useMemo(
     () => ({
       headerMode,
@@ -65,15 +81,49 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
   return (
     <stateContext.Provider value={value}>
-      <setContext.Provider value={setMode}>{children}</setContext.Provider>
+      <setContext.Provider value={setters}>{children}</setContext.Provider>
     </stateContext.Provider>
   )
 }
 
 export function useMinimalShellMode() {
-  return useContext(stateContext)
+  const context = useContext(stateContext)
+  if (!context)
+    throw new Error(
+      'useMinimalShellMode must be used within a MinimalModeProvider',
+    )
+  return context
 }
 
-export function useSetMinimalShellMode() {
-  return useContext(setContext)
+export function useMinimalShellModeSetters() {
+  const context = useContext(setContext)
+  if (!context)
+    throw new Error(
+      'useMinimalShellModeSetters must be used within a MinimalModeProvider',
+    )
+  return context
+}
+
+export function useEnableMinimalShellMode({enabled} = {enabled: true}) {
+  const setters = useMinimalShellModeSetters()
+  useEffect(() => {
+    if (enabled) {
+      setters.add()
+      return () => setters.subtract()
+    }
+  }, [enabled, setters])
+}
+
+export function useEnableMinimalShellModeForScreen(
+  {enabled} = {enabled: true},
+) {
+  const setters = useMinimalShellModeSetters()
+  useFocusEffect(
+    useCallback(() => {
+      if (enabled) {
+        setters.add()
+        return () => setters.subtract()
+      }
+    }, [enabled, setters]),
+  )
 }

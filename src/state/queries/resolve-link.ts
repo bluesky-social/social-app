@@ -4,7 +4,7 @@ import {type QueryClient, useQuery} from '@tanstack/react-query'
 import {type ResolvedLink, resolveGif, resolveLink} from '#/lib/api/resolve'
 import {STALE} from '#/state/queries/index'
 import {useAgent} from '#/state/session'
-import {type Gif} from './tenor'
+import {type Gif} from '#/features/gifPicker/types'
 
 export const RQKEY_LINK_ROOT = 'resolve-link'
 export const RQKEY_LINK = (url: string) => [RQKEY_LINK_ROOT, url]

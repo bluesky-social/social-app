@@ -8,7 +8,7 @@ import {
   parseStarterPackUri,
 } from '#/lib/strings/starter-pack'
 import {messages} from '#/locale/locales/en/messages'
-import {tenorUrlToBskyGifUrl} from '#/state/queries/tenor'
+import {klipyUrlToBskyGifUrl} from '#/features/gifPicker/utils'
 import {cleanError} from '../../src/lib/strings/errors'
 import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
 import {enforceLen} from '../../src/lib/strings/helpers'
@@ -450,6 +450,13 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://sufjanstevens.bandcamp.com',
     'https://bandcamp.com/',
     'https://bandcamp.com',
+
+    'https://static.klipy.com/ii/abc123/73/ac/someFile.gif?hh=200&ww=300',
+    'https://static.klipy.com/ii/abc123/73/ac/someFile.gif?hh=200&ww=300&mp4=videoSlugMp4&webm=videoSlugWebm',
+    'https://static.klipy.com/ii/abc123/73/ac/someFile.gif?hh=200',
+    'https://static.klipy.com/ii/abc123/73/ac/someFile.gif',
+    'https://static.klipy.com/other/path.gif?hh=200&ww=300',
+    'https://static.klipy.com',
   ]
 
   const outputs = [
@@ -845,6 +852,35 @@ describe('parseEmbedPlayerFromUrl', () => {
     undefined,
     undefined,
     undefined,
+
+    {
+      type: 'klipy_gif',
+      source: 'klipy',
+      isGif: true,
+      hideDetails: true,
+      playerUri: 'https://k.gifs.bsky.app/ii/abc123/73/ac/someFile.gif',
+      dimensions: {
+        width: 300,
+        height: 200,
+      },
+    },
+    // With video slug params — on native (test env), keeps gif filename,
+    // strips mp4/webm params. On web, would swap to video filename.
+    {
+      type: 'klipy_gif',
+      source: 'klipy',
+      isGif: true,
+      hideDetails: true,
+      playerUri: 'https://k.gifs.bsky.app/ii/abc123/73/ac/someFile.gif',
+      dimensions: {
+        width: 300,
+        height: 200,
+      },
+    },
+    undefined,
+    undefined,
+    undefined,
+    undefined,
   ]
 
   it('correctly grabs the correct id from uri', () => {
@@ -1035,17 +1071,30 @@ describe('createStarterPackGooglePlayUri', () => {
   })
 })
 
-describe('tenorUrlToBskyGifUrl', () => {
+describe('klipyUrlToBskyGifUrl', () => {
   const inputs = [
-    'https://media.tenor.com/someID_AAAAC/someName.gif',
-    'https://media.tenor.com/someID/someName.gif',
+    'https://static.klipy.com/ii/abc123/73/ac/someFile.gif',
+    'https://static.klipy.com/ii/abc123/73/ac/someFile.gif?hh=200&ww=300',
   ]
 
   it.each(inputs)(
-    'returns url with t.gifs.bsky.app as hostname for input url',
+    'returns url with k.gifs.bsky.app as hostname for input url',
     input => {
-      const out = tenorUrlToBskyGifUrl(input)
-      expect(out.startsWith('https://t.gifs.bsky.app/')).toEqual(true)
+      const out = klipyUrlToBskyGifUrl(input)
+      expect(out.startsWith('https://k.gifs.bsky.app/')).toEqual(true)
     },
   )
+
+  it('preserves the path and query params when rewriting', () => {
+    const out = klipyUrlToBskyGifUrl(
+      'https://static.klipy.com/ii/abc123/73/ac/someFile.gif?hh=200&ww=300',
+    )
+    expect(out).toEqual(
+      'https://k.gifs.bsky.app/ii/abc123/73/ac/someFile.gif?hh=200&ww=300',
+    )
+  })
+
+  it('returns empty string for invalid URLs', () => {
+    expect(klipyUrlToBskyGifUrl('not-a-url')).toEqual('')
+  })
 })

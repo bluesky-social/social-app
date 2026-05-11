@@ -202,7 +202,7 @@ function ListItem({
       <View style={styles.listItemContent}>
         <Text
           type="lg"
-          style={[s.bold, pal.text]}
+          style={[{fontWeight: '600'}, pal.text]}
           numberOfLines={1}
           lineHeight={1.2}>
           {sanitizeDisplayName(list.name)}

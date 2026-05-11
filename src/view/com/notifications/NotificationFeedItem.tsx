@@ -26,7 +26,6 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {DM_SERVICE_HEADERS, MAX_POST_LINES} from '#/lib/constants'
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {forceLTR} from '#/lib/strings/bidi'
@@ -92,10 +91,9 @@ let NotificationFeedItem = ({
   hideTopBorder?: boolean
 }): React.ReactNode => {
   const queryClient = useQueryClient()
-  const pal = usePalette('default')
   const t = useTheme()
   const {_, i18n} = useLingui()
-  const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
+  const [isAuthorsExpanded, setIsAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
     switch (item.type) {
       case 'post-like':
@@ -145,7 +143,7 @@ let NotificationFeedItem = ({
       e.preventDefault()
       e.stopPropagation()
     }
-    setAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
+    setIsAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
   }
 
   const onBeforePress = useCallback(() => {
@@ -222,8 +220,8 @@ let NotificationFeedItem = ({
           post={item.subject}
           style={
             isHighlighted && {
-              backgroundColor: pal.colors.unreadNotifBg,
-              borderColor: pal.colors.unreadNotifBorder,
+              backgroundColor: t.palette.primary_25,
+              borderColor: t.palette.primary_100,
             }
           }
           hideTopBorder={hideTopBorder}
@@ -272,7 +270,7 @@ let NotificationFeedItem = ({
     <HeartIconFilled
       size="xl"
       style={[
-        s.likeColor,
+        {color: t.palette.pink},
         // {position: 'relative', top: -4}
       ]}
     />
@@ -577,8 +575,8 @@ let NotificationFeedItem = ({
         item.notification.isRead
           ? undefined
           : {
-              backgroundColor: pal.colors.unreadNotifBg,
-              borderColor: pal.colors.unreadNotifBorder,
+              backgroundColor: t.palette.primary_25,
+              borderColor: t.palette.primary_100,
             },
         !hideTopBorder && a.border_t,
         a.overflow_hidden,

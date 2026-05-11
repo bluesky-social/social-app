@@ -5,7 +5,6 @@ import Animated, {
   useReducedMotion,
 } from 'react-native-reanimated'
 
-import {s} from '#/lib/styles'
 import {useTheme} from '#/alf'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
@@ -86,7 +85,7 @@ export function AnimatedLikeIcon({
         {isLiked ? (
           <Animated.View
             entering={shouldAnimate ? keyframe.duration(300) : undefined}>
-            <HeartIconFilled style={s.likeColor} width={size} />
+            <HeartIconFilled style={{color: t.palette.pink}} width={size} />
           </Animated.View>
         ) : (
           <HeartIconOutline
@@ -100,7 +99,7 @@ export function AnimatedLikeIcon({
               entering={circle1Keyframe.duration(300)}
               style={{
                 position: 'absolute',
-                backgroundColor: s.likeColor.color,
+                backgroundColor: t.palette.pink,
                 top: 0,
                 left: 0,
                 width: size,

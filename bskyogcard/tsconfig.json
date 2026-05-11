@@ -3,9 +3,12 @@
     "target": "ESNext",
     "module": "NodeNext",
     "esModuleInterop": true,
+    "erasableSyntaxOnly": true,
     "moduleResolution": "NodeNext",
     "jsx": "react-jsx",
-    "outDir": "dist"
+    "rootDir": "./src",
+    "outDir": "dist",
+    "skipLibCheck": true
   },
   "include": ["./src/index.ts", "./src/bin.ts"]
 }

@@ -197,7 +197,7 @@ jobs:
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "26.0"
+          xcode-version: "26.4"
 
       - name: ☕️ Setup Cocoapods
         uses: maxim-lobanov/setup-cocoapods@v1
@@ -239,10 +239,52 @@ jobs:
           yarn use-build-number-with-bump
           eas build -p ios
           --profile testflight
-          --local --output build.ipa --non-interactive
+          --local --output build.tar.gz --non-interactive
+
+      - name: 📂 Extract build artifact
+        run: |
+          if [ -f "build.tar.gz" ]; then
+            echo "Extracting build.tar.gz..."
+            rm -rf ios-build
+            mkdir -p ios-build
+            tar -xzf build.tar.gz -C ios-build
+            echo "Extraction completed successfully"
+
+            echo ""
+            echo "Top-level extracted files:"
+            find ios-build -maxdepth 3 -print
+
+            echo ""
+            echo "Searching for IPA..."
+            IPA_PATH="$(find ios-build -type f -name '*.ipa' -print -quit)"
+            if [ -z "$IPA_PATH" ]; then
+              echo "ERROR: No .ipa found anywhere under ios-build."
+              echo "Archive contents:"
+              tar -tzf build.tar.gz | sed -n '1,200p'
+              exit 1
+            fi
+
+            BUILD_DIR="$(dirname "$IPA_PATH")"
+            echo "Found IPA at: $IPA_PATH"
+            echo "Build dir: $BUILD_DIR"
+            echo ""
+            echo "Build dir contents:"
+            ls -la "$BUILD_DIR"
+            echo "BUILD_DIR=$BUILD_DIR" >> $GITHUB_ENV
+          else
+            echo "Archive file not found!"
+            exit 1
+          fi
 
       - name: 🚀 Deploy
-        run: eas submit -p ios --non-interactive --path build.ipa
+        run: eas submit -p ios --non-interactive --path "$BUILD_DIR/Bluesky.ipa"
+
+      - name: 🪲 Upload dSYM to Sentry
+        run: >
+          SENTRY_ORG=blueskyweb
+          SENTRY_PROJECT=app
+          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+          yarn sentry-cli debug-files upload "$BUILD_DIR/Bluesky.app.dSYM.zip" --include-sources
 
       - name: ⬇️ Restore Cache
         id: get-base-commit

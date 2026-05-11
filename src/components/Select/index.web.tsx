@@ -3,8 +3,7 @@ import {View} from 'react-native'
 import {Select as RadixSelect} from 'radix-ui'
 
 import {useA11y} from '#/state/a11y'
-import {flatten, useTheme, web} from '#/alf'
-import {atoms as a} from '#/alf'
+import {atoms as a, flatten, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {
@@ -109,7 +108,7 @@ export function Trigger({children, label}: TriggerProps) {
             borderRadius: 10,
             maxWidth: 400,
             outline: 0,
-            borderWidth: 2,
+            borderWidth: 1,
             borderStyle: 'solid',
             borderColor: focused
               ? t.palette.primary_500

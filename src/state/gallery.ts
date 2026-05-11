@@ -204,6 +204,7 @@ export async function compressImage(
   img: ComposerImage,
   options?: {
     highResolution?: boolean
+    increasedBlobSizeLimit?: boolean
   },
 ): Promise<PickerImage> {
   const source = img.transformed || img.source
@@ -211,6 +212,7 @@ export async function compressImage(
 
   let attempts = 0
   let maxDimension = highResolution ? 4000 : POST_IMG_MAX.width
+  let maxBytes = options?.increasedBlobSizeLimit ? 2000000 : POST_IMG_MAX.size
 
   let minQualityPercentage = 0
   let maxQualityPercentage = 101 // exclusive
@@ -251,7 +253,7 @@ export async function compressImage(
 
     const base64 = res.base64
     const size = base64 ? getDataUriSize(base64) : 0
-    if (base64 && size <= POST_IMG_MAX.size) {
+    if (base64 && size <= maxBytes) {
       minQualityPercentage = qualityPercentage
       newDataUri = {
         path: await moveIfNecessary(res.uri),
@@ -275,7 +277,7 @@ export async function compressImage(
 async function moveIfNecessary(from: string) {
   const cacheDir = IS_NATIVE && getImageCacheDirectory()
 
-  if (cacheDir && from.startsWith(cacheDir)) {
+  if (cacheDir && !from.startsWith(cacheDir)) {
     const to = joinPath(cacheDir, nanoid(36))
 
     await makeDirectoryAsync(cacheDir, {intermediates: true})

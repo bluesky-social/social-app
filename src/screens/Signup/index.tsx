@@ -3,9 +3,7 @@ import {AppState, type AppStateStatus, View} from 'react-native'
 import ReactNativeDeviceAttest from 'react-native-device-attest'
 import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import {AppBskyGraphStarterpack} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
 import {logger} from '#/logger'
@@ -36,7 +34,7 @@ import * as bsky from '#/types/bsky'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
@@ -61,6 +59,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     uri: activeStarterPack?.uri,
   })
 
+  // eslint-disable-next-line react/hook-use-state
   const [isFetchedAtMount] = useState(starterPack != null)
   const showStarterPackCard =
     activeStarterPack?.uri && !isFetchingStarterPack && starterPack
@@ -85,21 +84,21 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
       dispatch({type: 'setServiceDescription', value: undefined})
       dispatch({
         type: 'setError',
-        value: _(
-          msg`Unable to contact your service. Please check your Internet connection.`,
-        ),
+        value: l`Unable to contact your service. Please check your Internet connection.`,
       })
     } else if (serviceInfo) {
       dispatch({type: 'setServiceDescription', value: serviceInfo})
       dispatch({type: 'setError', value: ''})
     }
-  }, [_, serviceInfo, isError])
+  }, [l, serviceInfo, isError])
 
   useEffect(() => {
     if (state.pendingSubmit) {
       if (!state.pendingSubmit.mutableProcessed) {
+        // OK to mutate assuming it's never read in render.
+        // eslint-disable-next-line react-hooks/immutability, react-compiler/react-compiler
         state.pendingSubmit.mutableProcessed = true
-        submit(state, dispatch)
+        void submit(state, dispatch)
       }
     }
   }, [state, dispatch, submit])
@@ -133,8 +132,8 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
       <SignupContext.Provider value={{state, dispatch}}>
         <LoggedOutLayout
           leadin=""
-          title={_(msg`Create Account`)}
-          description={_(msg`We're so excited to have you join us!`)}
+          title={l`Create account`}
+          description={l`We’re so excited to have you join us!`}
           scrollable>
           <View testID="createAccount" style={a.flex_1}>
             {showStarterPackCard &&
@@ -204,7 +203,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                         isFetchingStarterPack && !isErrorStarterPack
                       }
                       isServerError={isError}
-                      refetchServer={refetch}
+                      refetchServer={() => void refetch()}
                     />
                   ) : state.activeStep === SignupStep.HANDLE ? (
                     <StepHandle />
@@ -231,7 +230,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                       ]}>
                       <Trans>Having trouble?</Trans>{' '}
                       <InlineLinkText
-                        label={_(msg`Contact support`)}
+                        label={l`Contact support`}
                         to={FEEDBACK_FORM_URL({email: state.email})}
                         style={[!gtMobile && a.text_md]}>
                         <Trans>Contact support</Trans>

@@ -111,6 +111,7 @@ export function Outer({
       disableDrag: false,
       setDisableDrag: () => {},
       isWithinDialog: true,
+      isHeightConstrained: false,
     }),
     [close],
   )
@@ -196,6 +197,7 @@ export function Inner({
           a.border,
           t.atoms.bg,
           {
+            cursor: 'default', // The overlay applies `cursor: 'pointer'` to all children.
             maxWidth: 600,
             borderColor: t.palette.contrast_200,
             shadowColor: t.palette.black,

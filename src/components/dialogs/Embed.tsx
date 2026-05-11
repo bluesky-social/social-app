@@ -109,7 +109,7 @@ function EmbedDialogInner({
             <Trans>Embed post</Trans>
           </Text>
           <Text
-            style={[a.text_md, t.atoms.text_contrast_medium, a.leading_normal]}>
+            style={[a.text_md, t.atoms.text_contrast_medium, a.leading_snug]}>
             <Trans>
               Embed this post in your website. Simply copy the following snippet
               and paste it into the HTML code of your website.
@@ -117,12 +117,7 @@ function EmbedDialogInner({
           </Text>
         </View>
         <View
-          style={[
-            a.border,
-            t.atoms.border_contrast_low,
-            a.rounded_sm,
-            a.overflow_hidden,
-          ]}>
+          style={[a.border, t.atoms.border_contrast_low, {borderRadius: 18}]}>
           <Button
             label={
               showCustomisation
@@ -190,10 +185,9 @@ function EmbedDialogInner({
           <Button
             label={_(msg`Copy code`)}
             color="primary"
-            variant="solid"
             size="large"
             onPress={() => {
-              navigator.clipboard.writeText(snippet)
+              void navigator.clipboard.writeText(snippet)
               setCopied(true)
             }}>
             {copied ? (

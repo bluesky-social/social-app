@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import {LayoutAnimation, TextInput, View} from 'react-native'
+import {LayoutAnimation, type TextInput, View} from 'react-native'
 import {moderateProfile, type ModerationOpts} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -23,13 +23,11 @@ import * as Dialog from '#/components/Dialog'
 import {canBeMessaged} from '#/components/dms/util'
 import * as TextField from '#/components/forms/TextField'
 import * as Toggle from '#/components/forms/Toggle'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {
   ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon,
   ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon,
 } from '#/components/icons/Arrow'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
-import {MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass'
 import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -37,6 +35,11 @@ import {Text} from '#/components/Typography'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {ChatProfileTabs} from './ChatProfileTabs'
+import {EmptyMemberList} from './components/EmptyMemberList'
+import {GroupChatProfileCard} from './components/GroupChatProfileCard'
+import {ProfileCardSkeleton} from './components/ProfileCardSkeleton'
+import {UserLabel} from './components/UserLabel'
+import {UserSearchInput} from './components/UserSearchInput'
 
 type NewGroupChatItem = {
   type: 'newGroupChat'
@@ -49,7 +52,7 @@ type LabelItem = {
   message: string
 }
 
-export type ProfileItem = {
+type ProfileItem = {
   type: 'profile'
   key: string
   profile: bsky.profile.AnyProfileView
@@ -184,6 +187,7 @@ function reducer(state: State, action: Action): State {
     }
   }
 }
+
 export function InitiateChatFlow({
   title,
   onSelectChat,
@@ -382,7 +386,7 @@ export function InitiateChatFlow({
           )
         }
         case 'label': {
-          return <Label key={item.key} message={item.message} />
+          return <UserLabel key={item.key} message={item.message} />
         }
         case 'profile': {
           switch (chatState) {
@@ -417,7 +421,7 @@ export function InitiateChatFlow({
           return <ProfileCardSkeleton key={item.key} />
         }
         case 'empty': {
-          return <Empty key={item.key} message={item.message} />
+          return <EmptyMemberList key={item.key} message={item.message} />
         }
         default:
           return null
@@ -560,7 +564,7 @@ export function InitiateChatFlow({
                 </TextField.Root>
               </View>
             ) : (
-              <SearchInput
+              <UserSearchInput
                 inputRef={inputRef}
                 value={searchText}
                 onChangeText={text => {
@@ -813,59 +817,6 @@ function DefaultProfileCard({
   )
 }
 
-function GroupChatProfileCard({
-  profile,
-  moderationOpts,
-}: {
-  profile: bsky.profile.AnyProfileView
-  moderationOpts: ModerationOpts
-}) {
-  const t = useTheme()
-  const enabled = canBeMessaged(profile)
-  const moderation = moderateProfile(profile, moderationOpts)
-  const handle = sanitizeHandle(profile.handle, '@')
-  const displayName = sanitizeDisplayName(
-    profile.displayName || sanitizeHandle(profile.handle),
-    moderation.ui('displayName'),
-  )
-
-  return (
-    <Toggle.Item
-      key={profile.did}
-      disabled={!enabled}
-      name={profile.did}
-      label={displayName}
-      style={[a.flex_1, a.py_sm, a.px_lg]}>
-      <View style={[a.flex_grow, !enabled ? {opacity: 0.5} : null]}>
-        <ProfileCard.Header>
-          <ProfileCard.Avatar
-            profile={profile}
-            moderationOpts={moderationOpts}
-            size={44}
-            disabledPreview
-          />
-          <View>
-            <ProfileCard.Name
-              profile={profile}
-              moderationOpts={moderationOpts}
-            />
-            {enabled ? (
-              <ProfileCard.Handle profile={profile} />
-            ) : (
-              <Text
-                style={[a.leading_snug, t.atoms.text_contrast_high]}
-                numberOfLines={2}>
-                <Trans>{handle} can’t be messaged</Trans>
-              </Text>
-            )}
-          </View>
-        </ProfileCard.Header>
-      </View>
-      {enabled ? <Toggle.Checkbox /> : null}
-    </Toggle.Item>
-  )
-}
-
 function GroupChatMemberProfileCard({
   profile,
   moderationOpts,
@@ -899,109 +850,6 @@ function GroupChatMemberProfileCard({
           )}
         </View>
       </ProfileCard.Header>
-    </View>
-  )
-}
-
-function ProfileCardSkeleton() {
-  return (
-    <View
-      style={[
-        a.flex_1,
-        a.py_md,
-        a.px_lg,
-        a.gap_md,
-        a.align_center,
-        a.flex_row,
-      ]}>
-      <ProfileCard.AvatarPlaceholder size={42} />
-      <ProfileCard.NameAndHandlePlaceholder />
-    </View>
-  )
-}
-
-function Label({message}: {message: string}) {
-  const t = useTheme()
-  return (
-    <View style={[a.px_lg, a.py_sm]}>
-      <Text style={[a.text_xs, a.font_medium, t.atoms.text_contrast_high]}>
-        {message}
-      </Text>
-    </View>
-  )
-}
-
-function Empty({message}: {message: string}) {
-  const t = useTheme()
-  return (
-    <View style={[a.p_lg, a.py_xl, a.align_center, a.gap_md]}>
-      <Text style={[a.text_sm, a.italic, t.atoms.text_contrast_high]}>
-        {message}
-      </Text>
-
-      <Text style={[a.text_xs, t.atoms.text_contrast_low]}>(╯°□°)╯︵ ┻━┻</Text>
-    </View>
-  )
-}
-
-function SearchInput({
-  value,
-  onChangeText,
-  onEscape,
-  inputRef,
-}: {
-  value: string
-  onChangeText: (text: string) => void
-  onEscape: () => void
-  inputRef: React.RefObject<TextInput | null>
-}) {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const {
-    state: hovered,
-    onIn: onMouseEnter,
-    onOut: onMouseLeave,
-  } = useInteractionState()
-  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
-  const interacted = hovered || focused
-
-  return (
-    <View
-      {...web({
-        onMouseEnter,
-        onMouseLeave,
-      })}
-      style={[a.flex_row, a.align_center, a.gap_sm]}>
-      <SearchIcon
-        size="md"
-        fill={interacted ? t.palette.primary_500 : t.palette.contrast_300}
-      />
-      <TextInput
-        // @ts-ignore bottom sheet input types issue - esb
-        ref={inputRef}
-        placeholder={l`Search for people`}
-        value={value}
-        onChangeText={onChangeText}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        style={[a.flex_1, a.py_md, a.text_md, t.atoms.text]}
-        placeholderTextColor={t.palette.contrast_500}
-        keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
-        returnKeyType="search"
-        clearButtonMode="while-editing"
-        maxLength={50}
-        onKeyPress={({nativeEvent}) => {
-          if (nativeEvent.key === 'Escape') {
-            onEscape()
-          }
-        }}
-        autoCorrect={false}
-        autoComplete="off"
-        autoCapitalize="none"
-        autoFocus
-        accessibilityLabel={l`Search profiles`}
-        accessibilityHint={l`Searches for profiles`}
-      />
     </View>
   )
 }

@@ -1,10 +1,12 @@
-import {useCallback} from 'react'
+import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {type AppBskyActorDefs, type AppBskyEmbedExternal} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {
+  type AppBskyActorDefs,
+  type AppBskyEmbedExternal,
+  moderateStatus,
+} from '@atproto/api'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -19,8 +21,10 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {Globe_Stroke2_Corner0_Rounded} from '#/components/icons/Globe'
+import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon} from '#/components/icons/SquareArrowTopRight'
 import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
+import * as Hider from '#/components/moderation/Hider'
 import {useGlobalReportDialogControl} from '#/components/moderation/ReportDialog'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
@@ -64,7 +68,7 @@ function DialogInner({
   navigation: NavigationProp
   status: AppBskyActorDefs.StatusView
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const control = Dialog.useDialogContext()
 
   const onPressOpenProfile = useCallback(() => {
@@ -77,7 +81,7 @@ function DialogInner({
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`${sanitizeHandle(profile.handle)} is live`)}
+      label={l`${sanitizeHandle(profile.handle)} is live`}
       contentContainerStyle={[a.pt_0, a.px_0]}
       style={[web({maxWidth: 420}), a.overflow_hidden]}>
       <LiveStatus
@@ -105,45 +109,56 @@ export function LiveStatus({
   onPressOpenProfile: () => void
 }) {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const queryClient = useQueryClient()
   const openLink = useOpenLink()
   const moderationOpts = useModerationOpts()
   const reportDialogControl = useGlobalReportDialogControl()
   const dialogContext = Dialog.useDialogContext()
+  const moderation = useMemo(() => {
+    if (!moderationOpts) return undefined
+    return moderateStatus(profile, moderationOpts)
+  }, [profile, moderationOpts])
 
   return (
     <>
       {embed.external.thumb && (
-        <View
-          style={[
-            t.atoms.bg_contrast_25,
-            a.w_full,
-            a.aspect_card,
-            android([
-              a.overflow_hidden,
-              {
-                borderTopLeftRadius: a.rounded_md.borderRadius,
-                borderTopRightRadius: a.rounded_md.borderRadius,
-              },
-            ]),
-          ]}>
-          <Image
-            source={embed.external.thumb}
-            contentFit="cover"
-            style={[a.absolute, a.inset_0]}
-            accessibilityIgnoresInvertColors
-          />
-          <LiveIndicator
-            size="large"
-            style={[
-              a.absolute,
-              {top: tokens.space.lg, left: tokens.space.lg},
-              a.align_start,
-            ]}
-          />
-        </View>
+        <Hider.Outer modui={moderation?.ui('contentMedia')}>
+          <Hider.Mask>
+            <ModeratedImage />
+          </Hider.Mask>
+          <Hider.Content>
+            <View
+              style={[
+                t.atoms.bg_contrast_25,
+                a.w_full,
+                a.aspect_card,
+                android([
+                  a.overflow_hidden,
+                  {
+                    borderTopLeftRadius: a.rounded_md.borderRadius,
+                    borderTopRightRadius: a.rounded_md.borderRadius,
+                  },
+                ]),
+              ]}>
+              <Image
+                source={embed.external.thumb}
+                contentFit="cover"
+                style={[a.absolute, a.inset_0]}
+                accessibilityIgnoresInvertColors
+              />
+              <LiveIndicator
+                size="large"
+                style={[
+                  a.absolute,
+                  {top: tokens.space.lg, left: tokens.space.lg},
+                  a.align_start,
+                ]}
+              />
+            </View>
+          </Hider.Content>
+        </Hider.Outer>
       )}
       <View
         style={[
@@ -171,7 +186,7 @@ export function LiveStatus({
           </View>
         </View>
         <Button
-          label={_(msg`Watch now`)}
+          label={l`Watch now`}
           size={platform({native: 'large', web: 'small'})}
           color="primary"
           variant="solid"
@@ -200,7 +215,7 @@ export function LiveStatus({
               />
             </View>
             <Button
-              label={_(msg`Open profile`)}
+              label={l`Open profile`}
               size="small"
               color="secondary"
               variant="solid"
@@ -231,7 +246,7 @@ export function LiveStatus({
           </View>
           {status && (
             <SimpleInlineLinkText
-              label={_(msg`Report this livestream`)}
+              label={l`Report this livestream`}
               {...createStaticClick(() => {
                 function open() {
                   reportDialogControl.open({
@@ -254,5 +269,59 @@ export function LiveStatus({
         </View>
       </View>
     </>
+  )
+}
+
+function ModeratedImage() {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const hider = Hider.useHider()
+
+  return (
+    <View
+      style={[
+        a.p_lg,
+        a.py_xl,
+        a.align_center,
+        a.justify_center,
+        t.atoms.bg_contrast_25,
+      ]}>
+      <View style={[a.align_center, a.gap_sm, {maxWidth: 200}]}>
+        <ImageIcon size="lg" fill={t.atoms.text_contrast_medium.color} />
+        <Text
+          style={[
+            a.italic,
+            a.leading_snug,
+            a.text_center,
+            t.atoms.text_contrast_medium,
+          ]}>
+          {hider.meta.allowOverride ? (
+            <Trans comment="Image has been moderated and user has the option of showing it temporarily">
+              Image is hidden due to your moderation settings.
+            </Trans>
+          ) : (
+            /*
+             * In practice, if `allowOverride` is false, we won't even allow this
+             * dialog to open. That is handled in
+             * `#/features/liveNow/index.tsx`. But for clarity, I've included
+             * this here.
+             */
+            <Trans comment="Image has been moderated and is not visible to the user">
+              Image is unavailable.
+            </Trans>
+          )}
+        </Text>
+
+        {hider.meta.allowOverride && (
+          <SimpleInlineLinkText
+            label={l`Show anyway`}
+            {...createStaticClick(() => {
+              hider.setIsContentVisible(true)
+            })}>
+            <Trans>Show anyway</Trans>
+          </SimpleInlineLinkText>
+        )}
+      </View>
+    </View>
   )
 }

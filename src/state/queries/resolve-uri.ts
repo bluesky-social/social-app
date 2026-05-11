@@ -1,9 +1,5 @@
-import {AtUri} from '@atproto/api'
-import {
-  type QueryClient,
-  useQuery,
-  type UseQueryResult,
-} from '@tanstack/react-query'
+import {AtUri, type BskyAgent} from '@atproto/api'
+import {type QueryClient, queryOptions, useQuery} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
@@ -12,26 +8,12 @@ import {useUnstableProfileViewCache} from './profile'
 const RQKEY_ROOT = 'resolved-did'
 export const RQKEY = (didOrHandle: string) => [RQKEY_ROOT, didOrHandle]
 
-type UriUseQueryResult = UseQueryResult<{did: string; uri: string}, Error>
-export function useResolveUriQuery(uri: string | undefined): UriUseQueryResult {
-  const urip = new AtUri(uri || '')
-  const res = useResolveDidQuery(urip.host)
-  if (res.data) {
-    // @ts-expect-error TODO new-sdk-migration
-    urip.host = res.data
-    return {
-      ...res,
-      data: {did: urip.host, uri: urip.toString()},
-    } as UriUseQueryResult
-  }
-  return res as UriUseQueryResult
-}
-
-export function useResolveDidQuery(didOrHandle: string | undefined) {
-  const agent = useAgent()
-  const {getUnstableProfile} = useUnstableProfileViewCache()
-
-  return useQuery<string, Error>({
+const resolvedDidQueryOptions = (
+  agent: BskyAgent,
+  getUnstableProfile: (did: string) => {did: string} | undefined,
+  didOrHandle: string | undefined,
+) =>
+  queryOptions({
     staleTime: STALE.HOURS.ONE,
     queryKey: RQKEY(didOrHandle ?? ''),
     queryFn: async () => {
@@ -50,6 +32,30 @@ export function useResolveDidQuery(didOrHandle: string | undefined) {
     },
     enabled: !!didOrHandle,
   })
+
+export function useResolveUriQuery(uri: string | undefined) {
+  const urip = new AtUri(uri || '')
+  const host = urip.host
+
+  const agent = useAgent()
+  const {getUnstableProfile} = useUnstableProfileViewCache()
+
+  return useQuery({
+    ...resolvedDidQueryOptions(agent, getUnstableProfile, host),
+    select: did => ({
+      did,
+      uri: AtUri.make(did, urip.collection, urip.rkey).toString(),
+    }),
+  })
+}
+
+export function useResolveDidQuery(didOrHandle: string | undefined) {
+  const agent = useAgent()
+  const {getUnstableProfile} = useUnstableProfileViewCache()
+
+  return useQuery(
+    resolvedDidQueryOptions(agent, getUnstableProfile, didOrHandle),
+  )
 }
 
 export function precacheResolvedUri(
