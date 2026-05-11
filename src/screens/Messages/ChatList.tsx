@@ -28,9 +28,11 @@ import {type DialogControlProps, useDialogControl} from '#/components/Dialog'
 import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotate'
+import {BubbleSmile_Stroke2_Corner2_Rounded_Large as BubbleSmileIcon} from '#/components/icons/Bubble'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
+import {Inbox_Stroke2_Corner2_Rounded_Large as InboxLargeIcon} from '#/components/icons/Inbox'
 import {
-  Message_Stroke2_Corner0_Rounded as MessageIcon,
+  MessagePlus_Stroke2_Corner0_Rounded as MessagePlusIcon,
   MessagePlus_Stroke2_Corner0_Rounded as NewChatIcon,
 } from '#/components/icons/Message'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
@@ -90,6 +92,7 @@ export function MessagesScreen(props: Props) {
 export function MessagesScreenInner({navigation, route}: Props) {
   const {isWithinSplitView} = useIsWithinSplitView()
   const {t: l} = useLingui()
+  const t = useTheme()
   const newChatControl = useDialogControl()
   const pushToConversation = route.params?.pushToConversation
 
@@ -132,15 +135,18 @@ export function MessagesScreenInner({navigation, route}: Props) {
     return (
       <>
         <EmptyState
-          message={l`Start a conversation`}
-          icon={MessageIcon}
-          iconSize="3xl"
+          message={l`Say hi to someone`}
+          icon={BubbleSmileIcon}
+          textStyle={t.atoms.text}
+          iconColor={t.atoms.text.color}
+          iconSize="4xl"
           button={{
             label: l`New chat`,
             text: l`New chat`,
             onPress: newChatControl.open,
             size: 'small',
-            color: 'secondary_inverted',
+            color: 'primary',
+            icon: MessagePlusIcon,
           }}
           style={[a.h_full, a.justify_center, a.pb_5xl]}
         />
@@ -152,17 +158,36 @@ export function MessagesScreenInner({navigation, route}: Props) {
   return (
     <Layout.Screen testID="messagesScreen">
       <Header newChatControl={newChatControl} />
-      <ChatList />
+      <ChatList newChatControl={newChatControl} />
       <NewChat onNewChat={onNewChat} control={newChatControl} />
     </Layout.Screen>
   )
 }
 
-export function ChatList({selectedChat}: {selectedChat?: string}) {
+export function ChatList({
+  selectedChat,
+  newChatControl,
+}: {
+  selectedChat?: string
+  newChatControl: DialogControlProps
+}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const scrollElRef: ListRef = useAnimatedRef()
   const {isWithinSplitView} = useIsWithinSplitView()
+
+  const openChatControl = useCallback(() => {
+    newChatControl.open()
+  }, [newChatControl])
+
+  const requireEmailVerification = useRequireEmailVerification()
+  const wrappedOpenChatControl = requireEmailVerification(openChatControl, {
+    instructions: [
+      <Trans key="new-chat">
+        Before you can message another user, you must first verify your email.
+      </Trans>,
+    ],
+  })
 
   const initialNumToRender = useInitialNumToRender({minItemHeight: 80})
   const [isPTRing, setIsPTRing] = useState(false)
@@ -289,14 +314,27 @@ export function ChatList({selectedChat}: {selectedChat?: string}) {
               </>
             ) : isWithinSplitView ? (
               <EmptyState
-                message={l`Your conversations will appear here`}
-                icon={MessageIcon}
+                message={l`Inbox empty`}
+                icon={InboxLargeIcon}
+                iconSize="4xl"
+                textStyle={t.atoms.text}
+                iconColor={t.atoms.text.color}
               />
             ) : (
               <EmptyState
                 message={l`No chats yet`}
-                icon={MessageIcon}
-                iconSize="3xl"
+                icon={InboxLargeIcon}
+                iconSize="4xl"
+                textStyle={t.atoms.text}
+                iconColor={t.atoms.text.color}
+                button={{
+                  label: l`New chat`,
+                  text: l`New chat`,
+                  onPress: wrappedOpenChatControl,
+                  size: 'small',
+                  color: 'primary',
+                  icon: MessagePlusIcon,
+                }}
               />
             )}
           </>

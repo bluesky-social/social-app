@@ -197,11 +197,12 @@ export function ItemIcon({
     '2xs': 8,
     xs: 12,
     sm: 16,
-    md: 20,
+    md: 18,
     lg: 24,
     xl: 28,
     '2xl': 32,
     '3xl': 40,
+    '4xl': 48,
   }[size]
 
   const color =

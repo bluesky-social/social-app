@@ -94,7 +94,10 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
             {width: centerColumnOffset ? 300 : 350},
           ]}>
           <ChatListHeader newChatControl={newChatControl} />
-          <ChatList selectedChat={selectedChat} />
+          <ChatList
+            newChatControl={newChatControl}
+            selectedChat={selectedChat}
+          />
           <NewChat onNewChat={onNewChat} control={newChatControl} />
         </View>
       </SplitViewProvider>
