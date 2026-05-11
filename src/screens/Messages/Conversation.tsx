@@ -10,6 +10,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {
   type RouteProp,
   useFocusEffect,
+  useIsFocused,
   useNavigation,
   useRoute,
 } from '@react-navigation/native'
@@ -103,6 +104,7 @@ function Inner({convoId}: {convoId: string}) {
   const convoState = useConvo()
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
+  const isFocused = useIsFocused()
   const {top: topInset} = useSafeAreaInsets()
   const {data: convoData} = useConvoQuery({convoId})
 
