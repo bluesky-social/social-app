@@ -137,16 +137,22 @@ function InviterHeader({
         moderation={moderation.ui('avatar')}
       />
       <View style={[a.flex_1]}>
-        <View style={[a.flex_row, a.align_center]}>
-          <Text
-            style={[a.text_md, a.font_bold, t.atoms.text]}
-            numberOfLines={1}>
-            <Trans comment="Text identifying the person who added you to a group chat. Display name is followed by the user’s profile badges.">
-              Added by {displayName}
-            </Trans>
-          </Text>
-          <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
-        </View>
+        <Text style={[a.flex_row, a.align_center]}>
+          <Trans comment="Text identifying the person who added you to a group chat">
+            <Text
+              style={[a.text_md, a.font_bold, t.atoms.text]}
+              numberOfLines={1}>
+              {displayName}
+            </Text>
+            <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
+            <Text
+              style={[a.text_md, a.font_bold, t.atoms.text]}
+              numberOfLines={1}>
+              {' '}
+              added you
+            </Text>
+          </Trans>
+        </Text>
         <Text style={[web(a.pt_xs), a.text_sm, t.atoms.text_contrast_high]}>
           {sanitizeHandle(profile.handle, '@')}
         </Text>
