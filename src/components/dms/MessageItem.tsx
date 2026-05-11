@@ -20,6 +20,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {
   AppBskyEmbedRecord,
+  type ChatBskyActorDefs,
   ChatBskyConvoDefs,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -44,15 +45,13 @@ import {Text} from '#/components/Typography'
 import {DateDivider} from './DateDivider'
 import {MessageItemEmbed} from './MessageItemEmbed'
 import {ReactionsDialog} from './ReactionsDialog'
+import {CLUSTERED_MESSAGE_THRESHOLD_MS, MESSAGE_GAP_THRESHOLD_MS} from './util'
 
 const AVATAR_SIZE = 28
 const CLUSTERED_MESSAGE_GAP = 2
 const BORDER_RADIUS = 18
 const SQUARED_BORDER_RADIUS = 4
 const DISPLAY_NAME_INSET = 22
-
-const CLUSTERED_MESSAGE_THRESHOLD_MS = 5 * 60 * 1000
-const MESSAGE_GAP_THRESHOLD_MS = 60 * 60 * 1000
 
 function isWithinClusterBoundary({
   isPending,
@@ -87,9 +86,21 @@ function isWithinClusterBoundary({
 let MessageItem = ({
   item,
   isGroupChat = false,
+  prevMessage,
+  nextMessage,
+  relatedProfiles,
 }: {
   item: ConvoItem & {type: 'message' | 'pending-message'}
   isGroupChat?: boolean
+  prevMessage:
+    | ChatBskyConvoDefs.MessageView
+    | ChatBskyConvoDefs.DeletedMessageView
+    | null
+  nextMessage:
+    | ChatBskyConvoDefs.MessageView
+    | ChatBskyConvoDefs.DeletedMessageView
+    | null
+  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
 }): React.ReactNode => {
   const t = useTheme()
   const {currentAccount} = useSession()
@@ -97,11 +108,11 @@ let MessageItem = ({
   const moderationOpts = useModerationOpts()
   const queryClient = useQueryClient()
 
-  const profile = item.relatedProfiles.get(item.message.sender.did)
+  const {message} = item
+  const profile = relatedProfiles.get(message.sender.did)
 
   const reactionsControl = useDialogControl()
 
-  const {message, nextMessage, prevMessage} = item
   const isPending = item.type === 'pending-message'
 
   const displayName = profile ? createSanitizedDisplayName(profile) : null
@@ -268,7 +279,7 @@ let MessageItem = ({
         return l`You reacted ${reaction.value}`
       } else {
         const senderDid = reaction.sender.did
-        const memberSender = item.relatedProfiles.get(senderDid)
+        const memberSender = relatedProfiles.get(senderDid)
         if (memberSender) {
           return l`${createSanitizedDisplayName(memberSender)} reacted ${reaction.value}`
         }
@@ -279,13 +290,7 @@ let MessageItem = ({
       one: '# person',
       other: '# people',
     })} reacted – ${groupedReactions.map(g => g.value).join(' ')}`
-  }, [
-    reactions,
-    groupedReactions,
-    currentAccount?.did,
-    item.relatedProfiles,
-    l,
-  ])
+  }, [reactions, groupedReactions, currentAccount?.did, relatedProfiles, l])
 
   const appliedReactions = (
     <LayoutAnimationConfig skipEntering skipExiting>
@@ -368,7 +373,7 @@ let MessageItem = ({
       ) : null}
       <ReactionsDialog
         control={reactionsControl}
-        relatedProfiles={item.relatedProfiles}
+        relatedProfiles={relatedProfiles}
         message={message}
         reactions={message.reactions}
         groupedReactions={groupedReactions}

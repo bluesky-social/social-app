@@ -216,6 +216,7 @@ export class Convo {
           status: this.status,
           items: this.getItems(),
           convo: this.convo!,
+          relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
           ...methods,
@@ -226,6 +227,7 @@ export class Convo {
           status: this.status,
           items: this.getItems(),
           convo: this.convo!,
+          relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
           ...methods,
@@ -236,6 +238,7 @@ export class Convo {
           status: this.status,
           items: this.getItems(),
           convo: this.convo!,
+          relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
           ...methods,
@@ -246,6 +249,7 @@ export class Convo {
           status: this.status,
           items: this.getItems(),
           convo: this.convo!,
+          relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
           ...methods,
@@ -1078,7 +1082,8 @@ export class Convo {
 
       // continue queue processing
       await this.processPendingMessages()
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       this.handleSendMessageFailure(e)
       this.isProcessingPendingMessages = false
     }
@@ -1177,7 +1182,8 @@ export class Convo {
       this.commit()
 
       logger.debug(`sent ${this.pendingMessages.size} pending messages`, {})
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       this.handleSendMessageFailure(e)
     }
   }
@@ -1231,25 +1237,18 @@ export class Convo {
           type: 'message',
           key: m.id,
           message: m,
-          relatedProfiles: this.relatedProfiles,
-          nextMessage: null,
-          prevMessage: null,
         })
       } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
         items.unshift({
           type: 'deleted-message',
           key: m.id,
           message: m,
-          relatedProfiles: this.relatedProfiles,
-          nextMessage: null,
-          prevMessage: null,
         })
       } else if (ChatBskyConvoDefs.isSystemMessageView(m)) {
         items.unshift({
           type: 'system-message',
           key: m.id,
           message: m,
-          relatedProfiles: this.relatedProfiles,
         })
       }
     })
@@ -1271,25 +1270,18 @@ export class Convo {
           type: 'message',
           key: m.id,
           message: m,
-          relatedProfiles: this.relatedProfiles,
-          nextMessage: null,
-          prevMessage: null,
         })
       } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
         items.push({
           type: 'deleted-message',
           key: m.id,
           message: m,
-          relatedProfiles: this.relatedProfiles,
-          nextMessage: null,
-          prevMessage: null,
         })
       } else if (ChatBskyConvoDefs.isSystemMessageView(m)) {
         items.push({
           type: 'system-message',
           key: m.id,
           message: m,
-          relatedProfiles: this.relatedProfiles,
         })
       }
     })
@@ -1310,9 +1302,6 @@ export class Convo {
             did: this.senderUserDid,
           },
         },
-        relatedProfiles: this.relatedProfiles,
-        nextMessage: null,
-        prevMessage: null,
         failed: this.pendingMessageFailure !== null,
         retry:
           this.pendingMessageFailure === 'recoverable'
@@ -1334,53 +1323,12 @@ export class Convo {
       })
     }
 
-    return items
-      .filter(item => {
-        if (isConvoItemMessage(item)) {
-          return !this.deletedMessages.has(item.message.id)
-        }
-        return true
-      })
-      .map((item, i, arr) => {
-        let nextMessage = null
-        let prevMessage = null
-        const isMessage = isConvoItemMessage(item)
-
-        if (isMessage) {
-          if (
-            ChatBskyConvoDefs.isMessageView(item.message) ||
-            ChatBskyConvoDefs.isDeletedMessageView(item.message)
-          ) {
-            const next = arr[i + 1]
-
-            if (
-              isConvoItemMessage(next) &&
-              (ChatBskyConvoDefs.isMessageView(next.message) ||
-                ChatBskyConvoDefs.isDeletedMessageView(next.message))
-            ) {
-              nextMessage = next.message
-            }
-
-            const prev = arr[i - 1]
-
-            if (
-              isConvoItemMessage(prev) &&
-              (ChatBskyConvoDefs.isMessageView(prev.message) ||
-                ChatBskyConvoDefs.isDeletedMessageView(prev.message))
-            ) {
-              prevMessage = prev.message
-            }
-          }
-
-          return {
-            ...item,
-            nextMessage,
-            prevMessage,
-          }
-        }
-
-        return item
-      })
+    return items.filter(item => {
+      if (isConvoItemMessage(item)) {
+        return !this.deletedMessages.has(item.message.id)
+      }
+      return true
+    })
   }
 
   /**

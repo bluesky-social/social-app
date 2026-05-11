@@ -56,7 +56,7 @@ function createKlipyApi<Input extends object>(
     // 30 is divisible by 2 and 3, so both 2 and 3 column layouts can be used
     params.set('limit', '30')
 
-    params.set('contentfilter', 'high')
+    params.set('contentfilter', 'low') // PG-13 equivalent
 
     const locale = getLocales?.()?.[0]
 

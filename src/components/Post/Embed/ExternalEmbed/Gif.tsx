@@ -87,6 +87,7 @@ export function GifEmbed({
         />
         <GifView
           source={params.playerUri}
+          sources={params.playerSources}
           placeholderSource={thumb}
           style={[a.flex_1]}
           autoplay={!autoplayDisabled}

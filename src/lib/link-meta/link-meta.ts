@@ -22,6 +22,11 @@ export interface LinkMeta {
   title?: string
   description?: string
   image?: string
+  /**
+   * The AT-URI of the Atmosphere record representing this external content, if
+   * it exists. Example: a site.standard.document record.
+   */
+  associatedRecord?: string
 }
 
 export async function getLinkMeta(
@@ -89,6 +94,7 @@ export async function getLinkMeta(
     meta.description = body.description
     meta.image = body.image
     meta.title = body.title
+    meta.associatedRecord = body.associated_record
     if (shouldFollowRedirect) {
       meta.url = body.url
     }

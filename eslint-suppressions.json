@@ -139,11 +139,6 @@
       "count": 1
     }
   },
-  "src/components/dialogs/GifSelect.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/components/dialogs/LanguageSelectDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -479,11 +474,6 @@
       "count": 3
     }
   },
-  "src/state/messages/convo/agent.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/state/messages/events/agent.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -582,21 +572,6 @@
   "src/view/com/feeds/ProfileFeedgens.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
-    }
-  },
-  "src/view/com/lightbox/ImageViewing/@types/index.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/view/com/lightbox/ImageViewing/components/ImageItem/ImageItem.android.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/view/com/lightbox/ImageViewing/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
     }
   },
   "src/view/com/lists/ListMembers.tsx": {
@@ -710,11 +685,6 @@
     }
   },
   "src/view/com/util/Views.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/view/com/util/fab/FABInner.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }

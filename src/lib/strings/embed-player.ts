@@ -1,6 +1,6 @@
 import {Dimensions} from 'react-native'
 
-import {IS_WEB, IS_WEB_SAFARI} from '#/env'
+import {IS_WEB} from '#/env'
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 
@@ -68,6 +68,13 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
 export interface EmbedPlayerParams {
   type: EmbedPlayerType
   playerUri: string
+  /**
+   * Web-only ordered list of `<source>` tags for `<video>` playback. When
+   * present, the browser uses `canPlayType` to pick the first one it supports,
+   * which avoids UA sniffing for codec selection. `playerUri` is used as the
+   * native source and as a fallback `<video src>` when this is empty.
+   */
+  playerSources?: ReadonlyArray<{src: string; type: string}>
   isGif?: boolean
   source: EmbedPlayerSource
   metaUri?: string
@@ -382,7 +389,7 @@ export function parseEmbedPlayerFromUrl(
 
   const tenorGif = parseTenorGif(urlp)
   if (tenorGif.success) {
-    const {playerUri, dimensions} = tenorGif
+    const {playerUri, playerSources, dimensions} = tenorGif
 
     return {
       type: 'tenor_gif',
@@ -390,13 +397,14 @@ export function parseEmbedPlayerFromUrl(
       isGif: true,
       hideDetails: true,
       playerUri,
+      playerSources,
       dimensions,
     }
   }
 
   const klipyGif = parseKlipyGif(urlp)
   if (klipyGif.success) {
-    const {playerUri, dimensions} = klipyGif
+    const {playerUri, playerSources, dimensions} = klipyGif
 
     return {
       type: 'klipy_gif',
@@ -404,6 +412,7 @@ export function parseEmbedPlayerFromUrl(
       isGif: true,
       hideDetails: true,
       playerUri,
+      playerSources,
       dimensions,
     }
   }
@@ -580,13 +589,14 @@ export function parseTenorGif(urlp: URL):
   | {
       success: true
       playerUri: string
+      playerSources?: ReadonlyArray<{src: string; type: string}>
       dimensions: {height: number; width: number}
     } {
   if (urlp.hostname !== 'media.tenor.com') {
     return {success: false}
   }
 
-  let [__, id, filename] = urlp.pathname.split('/')
+  const [__, id, filename] = urlp.pathname.split('/')
 
   if (!id || !filename) {
     return {success: false}
@@ -619,20 +629,25 @@ export function parseTenorGif(urlp: URL):
   }
 
   if (IS_WEB) {
-    if (IS_WEB_SAFARI) {
-      id = id.replace('AAAAC', 'AAAP1')
-      filename = filename.replace('.gif', '.mp4')
-    } else {
-      id = id.replace('AAAAC', 'AAAP3')
-      filename = filename.replace('.gif', '.webm')
+    // Tenor encodes the format in the ID prefix: AAAP3 = webm, AAAP1 = mp4.
+    // Provide both as <source> tags so the browser picks via canPlayType
+    // instead of relying on user-agent sniffing.
+    const webmUrl = `https://t.gifs.bsky.app/${id.replace('AAAAC', 'AAAP3')}/${filename.replace('.gif', '.webm')}`
+    const mp4Url = `https://t.gifs.bsky.app/${id.replace('AAAAC', 'AAAP1')}/${filename.replace('.gif', '.mp4')}`
+    return {
+      success: true,
+      playerUri: mp4Url,
+      playerSources: [
+        {src: webmUrl, type: 'video/webm'},
+        {src: mp4Url, type: 'video/mp4'},
+      ],
+      dimensions,
     }
-  } else {
-    id = id.replace('AAAAC', 'AAAAM')
   }
 
   return {
     success: true,
-    playerUri: `https://t.gifs.bsky.app/${id}/${filename}`,
+    playerUri: `https://t.gifs.bsky.app/${id.replace('AAAAC', 'AAAAM')}/${filename}`,
     dimensions,
   }
 }
@@ -651,6 +666,7 @@ export function parseKlipyGif(urlp: URL):
   | {
       success: true
       playerUri: string
+      playerSources?: ReadonlyArray<{src: string; type: string}>
       dimensions: {height: number; width: number}
     } {
   if (urlp.hostname !== 'static.klipy.com') {
@@ -683,35 +699,61 @@ export function parseKlipyGif(urlp: URL):
     return {success: false}
   }
 
+  const webmSlug = urlp.searchParams.get('webm')
+  const mp4Slug = urlp.searchParams.get('mp4')
+
   const playerUrl = new URL(urlp.href)
   playerUrl.hostname = 'k.gifs.bsky.app'
-
-  // On web, swap the gif filename for a video format so the <video>
-  // element can play it. Klipy uses different filename slugs per
-  // format (unlike Tenor's ID-based scheme), so the slugs are
-  // embedded as query params at composition time by resolveGif().
-  if (IS_WEB) {
-    const webmSlug = playerUrl.searchParams.get('webm')
-    const mp4Slug = playerUrl.searchParams.get('mp4')
-    const slug = IS_WEB_SAFARI ? mp4Slug : webmSlug
-    const ext = IS_WEB_SAFARI ? 'mp4' : 'webm'
-
-    // Without a slug we can't produce a playable video URL on web,
-    // so fall back to the link card instead of returning a broken player.
-    if (!slug) {
-      return {success: false}
-    }
-
-    const parts = playerUrl.pathname.split('/')
-    parts[parts.length - 1] = `${slug}.${ext}`
-    playerUrl.pathname = parts.join('/')
-  }
 
   // Strip all metadata params — only the path matters for the CDN
   playerUrl.searchParams.delete('hh')
   playerUrl.searchParams.delete('ww')
   playerUrl.searchParams.delete('mp4')
   playerUrl.searchParams.delete('webm')
+
+  // On web, swap the gif filename for a video format so the <video>
+  // element can play it. Klipy uses different filename slugs per
+  // format (unlike Tenor's ID-based scheme), so the slugs are
+  // embedded as query params at composition time by resolveGif().
+  if (IS_WEB) {
+    // Without any slug we can't produce a playable video URL on web,
+    // so fall back to the link card instead of returning a broken player.
+    if (!webmSlug && !mp4Slug) {
+      return {success: false}
+    }
+
+    const buildVideoUrl = (slug: string, ext: string) => {
+      const u = new URL(playerUrl.href)
+      const parts = u.pathname.split('/')
+      parts[parts.length - 1] = `${slug}.${ext}`
+      u.pathname = parts.join('/')
+      return u.href
+    }
+
+    const sources: {src: string; type: string}[] = []
+    if (webmSlug) {
+      sources.push({
+        src: buildVideoUrl(webmSlug, 'webm'),
+        type: 'video/webm',
+      })
+    }
+    if (mp4Slug) {
+      sources.push({src: buildVideoUrl(mp4Slug, 'mp4'), type: 'video/mp4'})
+    }
+
+    // Prefer mp4 as the fallback `playerUri` for `<video src>` since it has
+    // wider codec support across legacy browsers.
+    const fallback = mp4Slug
+      ? buildVideoUrl(mp4Slug, 'mp4')
+      : buildVideoUrl(webmSlug!, 'webm')
+
+    return {
+      success: true,
+      playerUri: fallback,
+      playerSources: sources,
+      dimensions,
+    }
+  }
 
   return {
     success: true,

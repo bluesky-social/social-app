@@ -25,6 +25,7 @@ import {
   type $Typed,
   type AppBskyEmbedRecord,
   AppBskyRichtextFacet,
+  ChatBskyConvoDefs,
   RichText,
 } from '@atproto/api'
 import {useScrollEdgeEffectRef} from '@bsky.app/expo-scroll-edge-effect'
@@ -42,11 +43,7 @@ import {
   isConvoActive,
   useConvoActive,
 } from '#/state/messages/convo'
-import {
-  type ConvoItem,
-  type ConvoState,
-  ConvoStatus,
-} from '#/state/messages/convo/types'
+import {type ConvoState, ConvoStatus} from '#/state/messages/convo/types'
 import {useGetPost} from '#/state/queries/post'
 import {useAgent} from '#/state/session'
 import {List, type ListMethods} from '#/view/com/util/List'
@@ -55,14 +52,18 @@ import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
 import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
+import {DateDivider} from '#/components/dms/DateDivider'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
+import {SystemMessageGroup} from '#/components/dms/SystemMessageGroup'
 import {SystemMessageItem} from '#/components/dms/SystemMessageItem'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
 import {ChatStatusInfo} from './ChatStatusInfo'
+import {groupSystemMessages, type RenderItem} from './groupSystemMessages'
+import {InviteLinkDialogProvider} from './InviteLinkDialogProvider'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
 import {MessagesListInfoPanel} from './MessagesListInfoPanel'
 import {KeyboardStickyView} from './vendor/KeyboardStickyView'
@@ -81,8 +82,29 @@ function MaybeLoader({isLoading}: {isLoading: boolean}) {
   )
 }
 
-function keyExtractor(item: ConvoItem) {
+function keyExtractor(item: RenderItem) {
   return item.key
+}
+
+function getNeighborMessage(
+  items: RenderItem[],
+  index: number,
+): ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView | null {
+  const neighbor = items[index]
+  if (!neighbor) return null
+  if (
+    neighbor.type === 'message' ||
+    neighbor.type === 'pending-message' ||
+    neighbor.type === 'deleted-message'
+  ) {
+    if (
+      ChatBskyConvoDefs.isMessageView(neighbor.message) ||
+      ChatBskyConvoDefs.isDeletedMessageView(neighbor.message)
+    ) {
+      return neighbor.message
+    }
+  }
+  return null
 }
 
 function onScrollToIndexFailed() {
@@ -111,6 +133,23 @@ export function MessagesList({
 
   const textInputId = 'chat-input-' + useId()
   const flatListRef = useAnimatedRef<ListMethods>()
+
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
+    () => new Set(),
+  )
+  const onToggleGroup = (key: string) => {
+    setExpandedGroups(prev => {
+      const next = new Set(prev)
+      if (next.has(key)) {
+        next.delete(key)
+      } else {
+        next.add(key)
+      }
+      return next
+    })
+  }
+
+  const renderItems = groupSystemMessages(convoState.items)
 
   const [newMessagesPill, setNewMessagesPill] = useState({
     show: false,
@@ -188,7 +227,7 @@ export function MessagesList({
 
       // Initial scroll to bottom — unconditional, not gated on isAtBottom. This is separated because contentInset
       // can cause an early onScroll with a negative offset that sets isAtBottom to false before we get here.
-      if (!hasInitiallyScrolled.current && convoState.items.length > 0) {
+      if (!hasInitiallyScrolled.current && renderItems.length > 0) {
         hasInitiallyScrolled.current = true
         flatListRef.current?.scrollToOffset({offset: height, animated: false})
         // If history is already done loading, mark ready after a frame for the scroll to settle.
@@ -199,7 +238,7 @@ export function MessagesList({
           })
         }
         prevContentHeight.current = height
-        prevItemCount.current = convoState.items.length
+        prevItemCount.current = renderItems.length
         return
       }
 
@@ -213,7 +252,7 @@ export function MessagesList({
           didBackground.current &&
           hasScrolled &&
           height - prevContentHeight.current > layoutHeight.get() - 50 &&
-          convoState.items.length - prevItemCount.current > 1
+          renderItems.length - prevItemCount.current > 1
         ) {
           flatListRef.current?.scrollToOffset({
             offset: prevContentHeight.current - 65,
@@ -232,14 +271,14 @@ export function MessagesList({
       }
 
       prevContentHeight.current = height
-      prevItemCount.current = convoState.items.length
+      prevItemCount.current = renderItems.length
       didBackground.current = false
     },
     [
       hasScrolled,
       setHasScrolled,
       convoState.isFetchingHistory,
-      convoState.items.length,
+      renderItems.length,
       // these are stable
       flatListRef,
       isAtTop,
@@ -368,18 +407,37 @@ export function MessagesList({
     })
   }, [flatListRef])
 
-  const renderItem = ({item}: {item: ConvoItem}) => {
+  const renderItem = ({item, index}: {item: RenderItem; index: number}) => {
     if (item.type === 'message' || item.type === 'pending-message') {
       return (
         <MessageItem
           item={item}
           isGroupChat={convoState.convo.kind === 'group'}
+          prevMessage={getNeighborMessage(renderItems, index - 1)}
+          nextMessage={getNeighborMessage(renderItems, index + 1)}
+          relatedProfiles={convoState.relatedProfiles}
         />
       )
     } else if (item.type === 'deleted-message') {
       return <Text>Deleted message</Text>
     } else if (item.type === 'system-message') {
-      return <SystemMessageItem item={item} />
+      return (
+        <SystemMessageItem
+          item={item}
+          relatedProfiles={convoState.relatedProfiles}
+        />
+      )
+    } else if (item.type === 'system-message-group') {
+      return (
+        <SystemMessageGroup
+          item={item}
+          expanded={expandedGroups.has(item.key)}
+          onToggle={onToggleGroup}
+          relatedProfiles={convoState.relatedProfiles}
+        />
+      )
+    } else if (item.type === 'system-message-date-divider') {
+      return <DateDivider date={item.sentAt} />
     } else if (item.type === 'error') {
       return <MessageListError item={item} />
     }
@@ -409,7 +467,7 @@ export function MessagesList({
   )
 
   return (
-    <>
+    <InviteLinkDialogProvider convo={convoState.convo}>
       <KeyboardGestureArea
         interpolator="ios"
         // HACKFIX: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1419
@@ -421,7 +479,7 @@ export function MessagesList({
         <ScrollProvider onScroll={onScroll}>
           <List
             ref={flatListRef}
-            data={convoState.items}
+            data={renderItems}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
             disableFullWindowScroll={true}
@@ -513,7 +571,7 @@ export function MessagesList({
       </KeyboardGestureArea>
 
       {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
-    </>
+    </InviteLinkDialogProvider>
   )
 }
 
