@@ -321,8 +321,8 @@ export function ComposerContainer({children}: {children: React.ReactNode}) {
               a.pl_lg,
               a.pb_lg,
               // prevent overlap with the scrollbar, which looks ugly
-              a.pr_xs, // xs + md = lg
-              {width: `calc(100% - ${tokens.space.md}px)` as '100%'},
+              a.pr_sm, // sm + sm = lg
+              {width: `calc(100% - ${tokens.space.sm}px)` as '100%'},
             ],
           })}
           key={t.name} // android does not update when you change the colors. sigh.
