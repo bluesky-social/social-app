@@ -272,7 +272,7 @@ export function ChatList({
 
   if (conversations.length === 0) {
     return (
-      <Layout.Center>
+      <Layout.Center style={web({minHeight: '100%'})}>
         {isLoading ? (
           <ChatListLoadingPlaceholder />
         ) : (
@@ -319,6 +319,7 @@ export function ChatList({
                 iconSize="4xl"
                 textStyle={t.atoms.text}
                 iconColor={t.atoms.text.color}
+                style={web([a.h_full, a.justify_center, {paddingBottom: 120}])}
               />
             ) : (
               <EmptyState
@@ -335,6 +336,7 @@ export function ChatList({
                   color: 'primary',
                   icon: MessagePlusIcon,
                 }}
+                style={web([a.h_full, a.justify_center, {paddingBottom: 120}])}
               />
             )}
           </>
