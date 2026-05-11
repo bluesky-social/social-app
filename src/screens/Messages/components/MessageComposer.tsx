@@ -32,6 +32,7 @@ import * as EmojiPicker from '#/components/EmojiPicker'
 import {GlassView} from '#/components/GlassView'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
+import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 
@@ -42,19 +43,21 @@ export function MessageComposer({
   onSendMessage,
   hasEmbed,
   setEmbed,
+  loading = false,
   children,
 }: {
   textInputId?: string
   onSendMessage: (message: string) => void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
+  loading?: boolean
   children?: React.ReactNode
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
   const playHaptic = useHaptics()
   const {needsEmailVerification} = useEmail()
-  const editable = !needsEmailVerification
+  const editable = !needsEmailVerification && !loading
   const {getDraft, clearDraft} = useMessageDraft()
   const composerInternalApiRef = useComposerInternalApiRef()
 
@@ -209,7 +212,7 @@ export function MessageComposer({
             <Composer
               nativeID={textInputId}
               label={l`Message input field`}
-              placeholder={l`Message`}
+              placeholder={loading ? l`Loading chat…` : l`Message`}
               autocompletePlacement="top-start"
               internalApiRef={composerInternalApiRef}
               defaultValue={text}
@@ -237,7 +240,11 @@ export function MessageComposer({
               }}
             />
           </GlassView>
-          <SubmitButton onPress={handleSubmit} disabled={submitDisabled} />
+          <SubmitButton
+            onPress={handleSubmit}
+            disabled={submitDisabled}
+            loading={loading}
+          />
         </GlassContainer>
       </View>
     </ComposerContainer>
@@ -247,9 +254,11 @@ export function MessageComposer({
 function SubmitButton({
   onPress,
   disabled,
+  loading,
 }: {
   onPress: () => void
   disabled: boolean
+  loading: boolean
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
@@ -278,7 +287,11 @@ function SubmitButton({
         ]}
         onPress={onPress}
         disabled={disabled}>
-        <PaperPlaneIcon size="md" fill={t.palette.white} style={[a.mb_2xs]} />
+        {loading ? (
+          <Loader size="md" fill={t.palette.white} style={[a.mb_2xs]} />
+        ) : (
+          <PaperPlaneIcon size="md" fill={t.palette.white} style={[a.mb_2xs]} />
+        )}
       </Pressable>
     </GlassView>
   )

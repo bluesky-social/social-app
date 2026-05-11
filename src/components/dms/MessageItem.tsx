@@ -5,7 +5,6 @@ import {
   type StyleProp,
   type TextStyle,
   View,
-  type ViewStyle,
 } from 'react-native'
 import Animated, {
   FadeIn,
@@ -42,16 +41,19 @@ import {InlineLinkText, Link} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {getBubbleColor, getMessageInset} from './bubbleStyles'
 import {DateDivider} from './DateDivider'
 import {MessageItemEmbed} from './MessageItemEmbed'
 import {ReactionsDialog} from './ReactionsDialog'
-import {CLUSTERED_MESSAGE_THRESHOLD_MS, MESSAGE_GAP_THRESHOLD_MS} from './util'
-
-const AVATAR_SIZE = 28
-const CLUSTERED_MESSAGE_GAP = 2
-const BORDER_RADIUS = 18
-const SQUARED_BORDER_RADIUS = 4
-const DISPLAY_NAME_INSET = 22
+import {
+  AVATAR_SIZE,
+  BUBBLE_GAP,
+  BUBBLE_RADIUS,
+  BUBBLE_RADIUS_SHARP,
+  CLUSTERED_MESSAGE_THRESHOLD_MS,
+  DISPLAY_NAME_INSET,
+  MESSAGE_GAP_THRESHOLD_MS,
+} from './util'
 
 function isWithinClusterBoundary({
   isPending,
@@ -174,18 +176,16 @@ let MessageItem = ({
     isInCluster &&
     (isInMiddleOfCluster || isLastInCluster)
 
-  const pendingColor = t.palette.primary_300
-
   const rt = new RichTextAPI({text: message.text, facets: message.facets})
 
   const hasEmbedAndText =
     AppBskyEmbedRecord.isView(message.embed) && rt.text.length > 0
 
   const targetBottomRadius = squaredBottomCorner
-    ? SQUARED_BORDER_RADIUS
-    : BORDER_RADIUS
+    ? BUBBLE_RADIUS_SHARP
+    : BUBBLE_RADIUS
   const targetTopRadius =
-    squaredTopCorner || hasEmbedAndText ? SQUARED_BORDER_RADIUS : BORDER_RADIUS
+    squaredTopCorner || hasEmbedAndText ? BUBBLE_RADIUS_SHARP : BUBBLE_RADIUS
 
   const bottomRadiusSV = useSharedValue(targetBottomRadius)
   const topRadiusSV = useSharedValue(targetTopRadius)
@@ -381,10 +381,9 @@ let MessageItem = ({
     </LayoutAnimationConfig>
   )
 
-  const messageInset = platform<ViewStyle | undefined>({
-    ios: isFromSelf ? a.mr_md : isGroupChat ? a.ml_md : a.ml_sm,
-    android: isFromSelf ? a.mr_sm : isGroupChat ? a.ml_sm : undefined,
-    web: isFromSelf ? a.mr_sm : isGroupChat ? a.ml_sm : undefined,
+  const messageInset = getMessageInset({
+    isIncoming: !isFromSelf,
+    isGroupChat,
   })
 
   return (
@@ -450,18 +449,15 @@ let MessageItem = ({
                     ...(isOnlyEmoji(message.text)
                       ? []
                       : [
-                          a.rounded_xl,
                           a.py_sm,
                           a.px_md,
                           {
-                            marginTop: isFirstInCluster
-                              ? 0
-                              : CLUSTERED_MESSAGE_GAP,
-                            backgroundColor: isFromSelf
-                              ? isPending
-                                ? pendingColor
-                                : t.palette.primary_500
-                              : t.palette.contrast_50,
+                            borderRadius: BUBBLE_RADIUS,
+                            marginTop: isFirstInCluster ? 0 : BUBBLE_GAP,
+                            backgroundColor: getBubbleColor(t, {
+                              isIncoming: !isFromSelf,
+                              isPending,
+                            }),
                           },
                           isFromSelf ? a.self_end : a.self_start,
                           borderRadiusStyle,

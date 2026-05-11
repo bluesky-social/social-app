@@ -5,10 +5,7 @@ import {type $Typed, type AppBskyEmbedRecord} from '@atproto/api'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {MessageContextProvider} from './MessageContext'
-
-const CLUSTERED_MESSAGE_GAP = 2
-const BORDER_RADIUS = 20
-const SQUARED_BORDER_RADIUS = 4
+import {BUBBLE_GAP, BUBBLE_RADIUS, BUBBLE_RADIUS_SHARP} from './util'
 
 let MessageItemEmbed = ({
   embed,
@@ -39,7 +36,7 @@ let MessageItemEmbed = ({
             maxWidth: 360,
           }),
           {
-            marginTop: CLUSTERED_MESSAGE_GAP,
+            marginBottom: BUBBLE_GAP,
           },
         ]}>
         <View style={{marginTop: -8}}>
@@ -55,20 +52,20 @@ let MessageItemEmbed = ({
                 ? {
                     backgroundColor: t.palette.primary_50,
                     borderBottomRightRadius: squaredBottomCorner
-                      ? SQUARED_BORDER_RADIUS
-                      : BORDER_RADIUS,
+                      ? BUBBLE_RADIUS_SHARP
+                      : BUBBLE_RADIUS,
                     borderTopRightRadius: squaredTopCorner
-                      ? SQUARED_BORDER_RADIUS
-                      : BORDER_RADIUS,
+                      ? BUBBLE_RADIUS_SHARP
+                      : BUBBLE_RADIUS,
                   }
                 : {
                     backgroundColor: t.palette.contrast_50,
                     borderBottomLeftRadius: squaredBottomCorner
-                      ? SQUARED_BORDER_RADIUS
-                      : BORDER_RADIUS,
+                      ? BUBBLE_RADIUS_SHARP
+                      : BUBBLE_RADIUS,
                     borderTopLeftRadius: squaredTopCorner
-                      ? SQUARED_BORDER_RADIUS
-                      : BORDER_RADIUS,
+                      ? BUBBLE_RADIUS_SHARP
+                      : BUBBLE_RADIUS,
                   },
             ]}
           />

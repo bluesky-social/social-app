@@ -6,8 +6,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {ScaleAndFadeIn} from '#/lib/custom-animations/ScaleAndFade'
 import {ShrinkAndPop} from '#/lib/custom-animations/ShrinkAndPop'
@@ -22,7 +21,7 @@ let lastIndex = 0
 
 export function ChatEmptyPill() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const playHaptic = useHaptics()
   const [promptIndex, setPromptIndex] = useState(lastIndex)
 
@@ -30,15 +29,15 @@ export function ChatEmptyPill() {
 
   const prompts = useMemo(() => {
     return [
-      _(msg`Say hello!`),
-      _(msg`Share your favorite feed!`),
-      _(msg`Tell a joke!`),
-      _(msg`Share a fun fact!`),
-      _(msg`Share a cool story!`),
-      _(msg`Send a neat website!`),
-      _(msg`Clip 🐴 clop 🐴`),
+      l`Say hello!`,
+      l`Share your favorite feed!`,
+      l`Tell a joke!`,
+      l`Share a fun fact!`,
+      l`Share a cool story!`,
+      l`Send a neat website!`,
+      l`Clip 🐴 clop 🐴`,
     ]
-  }, [_])
+  }, [l])
 
   const onPressIn = useCallback(() => {
     if (IS_WEB) return

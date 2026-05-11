@@ -42,12 +42,14 @@ export function MessageInput({
   onSendMessage,
   hasEmbed,
   setEmbed,
+  disabled = false,
   children,
 }: {
   textInputId?: string
   onSendMessage: (message: string) => Promise<void> | void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
+  disabled?: boolean
   children?: React.ReactNode
 }) {
   const {t: l} = useLingui()
@@ -67,12 +69,13 @@ export function MessageInput({
   const [shouldEnforceClear, setShouldEnforceClear] = useState(false)
 
   const {needsEmailVerification} = useEmail()
+  const editable = !needsEmailVerification && !disabled
 
   useSaveMessageDraft(message)
   useExtractEmbedFromFacets(message, setEmbed)
 
   const onSubmit = useCallback(() => {
-    if (needsEmailVerification) {
+    if (!editable) {
       return
     }
     if (!hasEmbed && message.trim() === '') {
@@ -103,7 +106,7 @@ export function MessageInput({
       void onSendMessage(message)
     })
   }, [
-    needsEmailVerification,
+    editable,
     hasEmbed,
     message,
     clearDraft,
@@ -139,8 +142,7 @@ export function MessageInput({
     scrollEnabled: isInputScrollable.get(),
   }))
 
-  const submitDisabled =
-    needsEmailVerification || (!hasEmbed && message.trim().length === 0)
+  const submitDisabled = !editable || (!hasEmbed && message.trim().length === 0)
 
   const blur = useCallback(() => {
     inputRef.current?.blur()
@@ -209,7 +211,7 @@ export function MessageInput({
             ref={inputRef}
             hitSlop={HITSLOP_10}
             animatedProps={animatedProps}
-            editable={!needsEmailVerification}
+            editable={editable}
           />
         </GlassView>
         <GlassView

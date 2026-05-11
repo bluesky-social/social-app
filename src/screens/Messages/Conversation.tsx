@@ -1,11 +1,9 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useEffect, useId, useRef, useState} from 'react'
 import {type LayoutChangeEvent, View} from 'react-native'
+import {KeyboardGestureArea} from 'react-native-keyboard-controller'
+import Animated, {FadeOut} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {moderateProfile} from '@atproto/api'
-import {
-  ScrollEdgeEffect,
-  ScrollEdgeEffectProvider,
-} from '@bsky.app/expo-scroll-edge-effect'
+import {ScrollEdgeEffectProvider} from '@bsky.app/expo-scroll-edge-effect'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {
   type RouteProp,
@@ -17,42 +15,47 @@ import {
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useViewportZoomLock} from '#/lib/hooks/useViewportZoomLock'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
-import {useEmail} from '#/state/email-verification'
 import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
-import {ConvoStatus} from '#/state/messages/convo/types'
+import {type ConvoState, ConvoStatus} from '#/state/messages/convo/types'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useConvoQuery} from '#/state/queries/messages/conversation'
 import {useSession} from '#/state/session'
-import {MessagesList} from '#/screens/Messages/components/MessagesList'
-import {atoms as a, useTheme, web} from '#/alf'
+import {ChatSkeleton} from '#/screens/Messages/components/ChatSkeleton'
+import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
+import {MessageInput} from '#/screens/Messages/components/MessageInput'
+import {
+  getChatBottomReservation,
+  MessagesList,
+} from '#/screens/Messages/components/MessagesList'
+import {useBlockForEmailVerification} from '#/screens/Messages/hooks/useBlockForEmailVerification'
+import {useChatFooterOverride} from '#/screens/Messages/hooks/useChatFooterOverride'
+import {useInputHeight} from '#/screens/Messages/hooks/useInputHeight'
+import {useSendChatMessage} from '#/screens/Messages/hooks/useSendChatMessage'
+import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import * as Dialog from '#/components/Dialog'
-import {
-  EmailDialogScreenID,
-  useEmailDialogControl,
-} from '#/components/dialogs/EmailDialog'
-import {MessagesListBlockedFooter} from '#/components/dms/MessagesListBlockedFooter'
-import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
+import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {Error} from '#/components/Error'
 import * as Layout from '#/components/Layout'
-import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL, IS_LIQUID_GLASS, IS_WEB} from '#/env'
-import {ChatDisabled} from './components/ChatDisabled'
-import {ChatEnded} from './components/ChatEnded'
-import {ChatLocked} from './components/ChatLocked'
+import {ChatStatusInfo} from './components/ChatStatusInfo'
+import {ConvoHeader} from './components/ConvoHeader'
+import {InviteLinkDialogProvider} from './components/InviteLinkDialogProvider'
+import {
+  MessageInputEmbed,
+  useMessageEmbed,
+} from './components/MessageInputEmbed'
+import {KeyboardStickyView} from './components/vendor/KeyboardStickyView'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -101,12 +104,10 @@ export function MessagesConversationScreenInner({route}: Props) {
 }
 
 function Inner({convoId}: {convoId: string}) {
-  const t = useTheme()
   const convoState = useConvo()
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const isFocused = useIsFocused()
-  const {top: topInset} = useSafeAreaInsets()
   const {data: convoData} = useConvoQuery({convoId})
 
   useViewportZoomLock({enabled: isFocused})
@@ -138,9 +139,8 @@ function Inner({convoId}: {convoId: string}) {
   if (convoState.status === ConvoStatus.Error) {
     return (
       <>
-        <Layout.Center
-          style={[a.w_full, IS_LIQUID_GLASS && {paddingTop: topInset}]}>
-          <MessagesListHeader convo={convo} />
+        <Layout.Center style={[a.w_full]}>
+          <ConvoHeader convo={convo} />
         </Layout.Center>
         <Error
           title={l`Something went wrong`}
@@ -156,159 +156,192 @@ function Inner({convoId}: {convoId: string}) {
     <Layout.Center style={[a.flex_1]}>
       {/* MessagesList does not use the body scroll */}
       {isFocused && IS_WEB && <RemoveScrollBar />}
-      {!readyToShow && (
-        <View style={IS_LIQUID_GLASS && {paddingTop: topInset}}>
-          <MessagesListHeader convo={convo} />
-        </View>
-      )}
-      <View style={[a.flex_1]}>
-        <InnerReady
-          convo={convo}
-          hasScrolled={hasScrolled}
-          setHasScrolled={setHasScrolled}
-          isActive={isConvoActive(convoState)}
-          isDisabled={convoState.status === ConvoStatus.Disabled}
-          hasMessages={isConvoActive(convoState) && convoState.items.length > 0}
-        />
-        {!readyToShow && (
-          <View
-            style={[
-              a.absolute,
-              a.z_10,
-              a.w_full,
-              a.h_full,
-              a.justify_center,
-              a.align_center,
-              t.atoms.bg,
-            ]}>
-            <View style={[{marginBottom: 75}]}>
-              <Loader size="xl" />
-            </View>
-          </View>
-        )}
-      </View>
+      <ChatBody
+        convo={convo}
+        convoState={convoState}
+        hasScrolled={hasScrolled}
+        setHasScrolled={setHasScrolled}
+        readyToShow={readyToShow}
+      />
     </Layout.Center>
   )
 }
 
-function InnerReady({
+/**
+ * Owns the keyboard/composer area. To keep the composer from jumping around,
+ * it's mounted once and always occupies the same real estate, regardless of
+ * whether we're showing the `MessagesList` or the `ChatSkeleton` above it.
+ */
+function ChatBody({
+  convo,
+  convoState,
   hasScrolled,
   setHasScrolled,
-  convo,
-  isActive,
-  isDisabled,
-  hasMessages,
+  readyToShow,
 }: {
+  convo: ConvoWithDetails | null
+  convoState: ConvoState
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
-  convo: ConvoWithDetails | null
-  isActive: boolean
-  isDisabled: boolean
-  hasMessages: boolean
+  readyToShow: boolean
 }) {
-  const navigation = useNavigation<NavigationProp>()
-  const {top: topInset} = useSafeAreaInsets()
+  const t = useTheme()
+  const ax = useAnalytics()
+  const {bottom: bottomInset} = useSafeAreaInsets()
+  const {params} =
+    useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>()
+  const {embedUri, setEmbed} = useMessageEmbed()
+
+  const isActive = isConvoActive(convoState)
+  const isDisabled = convoState.status === ConvoStatus.Disabled
+  const hasMessages = isActive && convoState.items.length > 0
+
+  const textInputId = `chat-input-${useId()}`
+  const {inputHeightUI, inputHeightJS, onInputLayout} = useInputHeight()
+
   const [headerHeight, setHeaderHeight] = useState(0)
   const onHeaderLayout = (e: LayoutChangeEvent) => {
     setHeaderHeight(e.nativeEvent.layout.height)
   }
-  const {params} =
-    useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>()
-  const {needsEmailVerification} = useEmail()
-  const emailDialogControl = useEmailDialogControl()
 
-  /**
-   * Must be non-reactive, otherwise the update to open the global dialog will
-   * cause a re-render loop.
-   */
-  const maybeBlockForEmailVerification = useNonReactiveCallback(() => {
-    if (needsEmailVerification) {
-      /*
-       * HACKFIX
-       *
-       * Load bearing timeout, to bump this state update until the after the
-       * `navigator.addListener('state')` handler closes elements from
-       * `shell/index.*.tsx`  - sfn & esb
-       */
-      setTimeout(() =>
-        emailDialogControl.open({
-          id: EmailDialogScreenID.Verify,
-          instructions: [
-            <Trans key="pre-compose">
-              Before you can message another user, you must first verify your
-              email.
-            </Trans>,
-          ],
-          onCloseWithoutVerifying: () => {
-            if (navigation.canGoBack()) {
-              navigation.goBack()
-            } else {
-              navigation.navigate('Messages', {animation: 'pop'})
-            }
-          },
-        }),
-      )
-    }
-  })
-
-  useEffect(() => {
-    maybeBlockForEmailVerification()
-  }, [maybeBlockForEmailVerification])
-
-  const primaryMember = useMaybeProfileShadow(convo?.primaryMember)
-  const moderationOpts = useModerationOpts()
-  const primaryMemberModeration = useMemo(() => {
-    if (!primaryMember || !moderationOpts) return null
-    return moderateProfile(primaryMember, moderationOpts)
-  }, [primaryMember, moderationOpts])
-
-  const header = <MessagesListHeader convo={convo} />
-
-  let footer: React.ReactNode = null
-  if (isDisabled) {
-    footer = <ChatDisabled />
-  } else if (convo && primaryMember && primaryMemberModeration?.blocked) {
-    footer = (
-      <MessagesListBlockedFooter
-        recipient={primaryMember}
-        convoId={convo.view.id}
-        hasMessages={hasMessages}
-        moderation={primaryMemberModeration}
-      />
-    )
-  } else if (convo?.kind === 'group') {
-    if (convo.details.lockStatus === 'locked') {
-      footer = <ChatLocked convo={convo} />
-    } else if (convo.details.lockStatus === 'locked-permanently') {
-      footer = <ChatEnded convo={convo} />
-    }
+  const [footerHeight, setFooterHeight] = useState(0)
+  const onFooterLayout = (e: LayoutChangeEvent) => {
+    setFooterHeight(e.nativeEvent.layout.height)
   }
 
-  return (
-    <>
-      {IS_LIQUID_GLASS ? (
-        <ScrollEdgeEffect
-          edge="top"
-          style={[a.absolute, a.w_full, a.z_10, {paddingTop: topInset}]}
-          onLayout={onHeaderLayout}>
-          {header}
-        </ScrollEdgeEffect>
-      ) : (
-        header
-      )}
-      {isActive && (
-        <MessagesList
-          hasScrolled={hasScrolled}
-          setHasScrolled={setHasScrolled}
-          hasAcceptOverride={!!params.accept}
-          transparentHeaderHeight={IS_LIQUID_GLASS ? headerHeight : 0}
-          footer={footer}
-        />
-      )}
+  useBlockForEmailVerification()
 
+  const footerOverride = useChatFooterOverride({convo, isDisabled, hasMessages})
+
+  const onSendMessage = useSendChatMessage({
+    convoState,
+    embedUri,
+    hasScrolled,
+    setHasScrolled,
+  })
+
+  return (
+    <InviteLinkDialogProvider convo={convo}>
+      <ConvoHeader convo={convo} onLayout={onHeaderLayout} />
+      <KeyboardGestureArea
+        interpolator="ios"
+        // HACKFIX: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1419
+        offset={Math.round(inputHeightJS)}
+        // TODO slightly too buggy unfortunately, enable when possible
+        // textInputNativeID={textInputId}
+        style={[a.flex_1]}>
+        <View style={[a.flex_1]}>
+          {isActive && (
+            <MessagesList
+              hasScrolled={hasScrolled}
+              setHasScrolled={setHasScrolled}
+              transparentHeaderHeight={IS_LIQUID_GLASS ? headerHeight : 0}
+              inputHeightUI={inputHeightUI}
+              inputHeightJS={inputHeightJS}
+            />
+          )}
+          {!readyToShow && (
+            <Animated.View
+              exiting={FadeOut.duration(200)}
+              style={[
+                a.absolute,
+                web(a.px_md),
+                {top: 0, left: 0, right: 0, bottom: 0},
+                t.atoms.bg,
+              ]}>
+              <ChatSkeleton
+                convo={convo}
+                transparentHeaderHeight={IS_LIQUID_GLASS ? headerHeight : 0}
+                bottomPadding={getChatBottomReservation({
+                  inputHeight: footerOverride ? footerHeight : inputHeightJS,
+                  bottomInset,
+                })}
+              />
+            </Animated.View>
+          )}
+        </View>
+        <KeyboardStickyView
+          style={[a.absolute, a.bottom_0, a.left_0, a.right_0]}
+          onLayout={footerOverride ? onFooterLayout : onInputLayout}
+          minimumOffset={bottomInset}
+          offset={{
+            closed: platform({
+              ios: tokens.space.lg, // hide bottom padding when closed
+              default: 0,
+            }),
+            opened: 0,
+          }}>
+          {footerOverride ?? (
+            <ConversationFooter
+              convoState={convoState}
+              hasAcceptOverride={!!params.accept}>
+              {ax.features.enabled(ax.features.DmsNewMessageComposerEnable) ? (
+                <MessageComposer
+                  textInputId={textInputId}
+                  onSendMessage={(message: string) =>
+                    void onSendMessage(message)
+                  }
+                  hasEmbed={!!embedUri}
+                  setEmbed={setEmbed}
+                  loading={!readyToShow}>
+                  <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+                </MessageComposer>
+              ) : (
+                <MessageInput
+                  textInputId={textInputId}
+                  onSendMessage={onSendMessage}
+                  hasEmbed={!!embedUri}
+                  setEmbed={setEmbed}
+                  disabled={!readyToShow}>
+                  <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+                </MessageInput>
+              )}
+            </ConversationFooter>
+          )}
+        </KeyboardStickyView>
+      </KeyboardGestureArea>
       {!IS_INTERNAL && convo?.kind === 'group' && <GroupChatGate />}
-    </>
+    </InviteLinkDialogProvider>
   )
+}
+
+/**
+ * Wraps the composer with optional decorations or replaces it entirely for
+ * convo states where the user can't send a message. The composer stays mounted
+ * in every other case - including during history fetch - so its height is
+ * stable for the skeleton above.
+ */
+function ConversationFooter({
+  convoState,
+  hasAcceptOverride,
+  children,
+}: {
+  convoState: ConvoState
+  hasAcceptOverride?: boolean
+  children?: React.ReactNode // message input
+}) {
+  if (!isConvoActive(convoState)) {
+    return children
+  }
+
+  const hasItems = convoState.items.length > 0
+  const isRequest =
+    convoState.convo.view.status === 'request' && !hasAcceptOverride
+
+  if (hasItems && isRequest) {
+    return <ChatStatusInfo convoState={convoState} />
+  }
+
+  if (!hasItems && !convoState.isFetchingHistory) {
+    return (
+      <>
+        <ChatEmptyPill />
+        {children}
+      </>
+    )
+  }
+
+  return children
 }
 
 function GroupChatGate() {

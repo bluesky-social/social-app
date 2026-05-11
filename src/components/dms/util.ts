@@ -2,10 +2,21 @@ import {type $Typed, ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
 
 import {EMOJI_REACTION_LIMIT} from '#/lib/constants'
 import {logger} from '#/logger'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
+
+// The extra two items account for the header and the footer components
+export const INITIAL_NUMBER_TO_RENDER = IS_NATIVE ? 32 : 62
+export const MAX_TO_RENDER_PER_BATCH = IS_WEB ? 32 : 62
 
 export const MESSAGE_GAP_THRESHOLD_MS = 60 * 60 * 1000
 export const CLUSTERED_MESSAGE_THRESHOLD_MS = 5 * 60 * 1000
+
+export const AVATAR_SIZE = 28
+export const BUBBLE_GAP = 2
+export const BUBBLE_RADIUS = 20
+export const BUBBLE_RADIUS_SHARP = 4
+export const DISPLAY_NAME_INSET = 22
 
 export function canBeMessaged(profile: bsky.profile.AnyProfileView) {
   switch (profile.associated?.chat?.allowIncoming) {

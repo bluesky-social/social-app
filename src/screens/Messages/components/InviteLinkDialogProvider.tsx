@@ -16,7 +16,7 @@ export function InviteLinkDialogProvider({
   convo,
   children,
 }: {
-  convo: ConvoWithDetails | undefined
+  convo: ConvoWithDetails | null
   children: React.ReactNode
 }) {
   if (convo?.kind !== 'group') {
