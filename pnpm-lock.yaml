@@ -20,7 +20,6 @@ overrides:
   react-native-reanimated: 3.19.1
   psl: 1.9.0
   '@types/psl': 1.1.1
-  zod: 3.23.8
 
 importers:
 
@@ -507,8 +506,8 @@ importers:
         specifier: 0.14.5
         version: 0.14.5
       zod:
-        specifier: 3.23.8
-        version: 3.23.8
+        specifier: ^3.20.2
+        version: 3.25.76
     devDependencies:
       '@babel/core':
         specifier: ^7.26.0
@@ -9206,16 +9205,16 @@ packages:
     resolution: {integrity: sha512-+hEiRIiPobgyuFlEojnqjJnhFvg4r/i3cqgcm67eehZf/WBaK3g6cD02YU9mtdVxZjv8CzCA9n/Rhrs3yAAvAw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      zod: 3.23.8
+      zod: ^3.24.4
 
   zod-validation-error@4.0.2:
     resolution: {integrity: sha512-Q6/nZLe6jxuU80qb/4uJ4t5v2VEZ44lzQjPDhYJNztRQ4wyWc6VF3D3Kb/fAuPetZQnhS3hnajCf9CsWesghLQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      zod: 3.23.8
+      zod: ^3.25.0 || ^4.0.0
 
-  zod@3.23.8:
-    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
 snapshots:
 
@@ -9230,14 +9229,14 @@ snapshots:
       await-lock: 2.2.2
       multiformats: 9.9.0
       tlds: 1.261.0
-      zod: 3.23.8
+      zod: 3.25.76
 
   '@atproto/common-web@0.4.21':
     dependencies:
       '@atproto/lex-data': 0.0.15
       '@atproto/lex-json': 0.0.16
       '@atproto/syntax': 0.5.4
-      zod: 3.23.8
+      zod: 3.25.76
 
   '@atproto/lex-data@0.0.15':
     dependencies:
@@ -9257,7 +9256,7 @@ snapshots:
       '@atproto/syntax': 0.5.2
       iso-datestring-validator: 2.2.2
       multiformats: 9.9.0
-      zod: 3.23.8
+      zod: 3.25.76
 
   '@atproto/syntax@0.5.2':
     dependencies:
@@ -9270,7 +9269,7 @@ snapshots:
   '@atproto/xrpc@0.7.7':
     dependencies:
       '@atproto/lexicon': 0.6.2
-      zod: 3.23.8
+      zod: 3.25.76
 
   '@babel/code-frame@7.10.4':
     dependencies:
@@ -14412,8 +14411,8 @@ snapshots:
       '@babel/plugin-proposal-private-methods': 7.18.6(@babel/core@7.29.0)
       eslint: 9.39.4(jiti@2.7.0)
       hermes-parser: 0.25.1
-      zod: 3.23.8
-      zod-validation-error: 3.5.4(zod@3.23.8)
+      zod: 3.25.76
+      zod-validation-error: 3.5.4(zod@3.25.76)
     transitivePeerDependencies:
       - supports-color
 
@@ -14423,8 +14422,8 @@ snapshots:
       '@babel/parser': 7.29.3
       eslint: 9.39.4(jiti@2.7.0)
       hermes-parser: 0.25.1
-      zod: 3.23.8
-      zod-validation-error: 4.0.2(zod@3.23.8)
+      zod: 3.25.76
+      zod-validation-error: 4.0.2(zod@3.25.76)
     transitivePeerDependencies:
       - supports-color
 
@@ -19315,12 +19314,12 @@ snapshots:
       css-what: 6.2.2
       entities: 5.0.0
 
-  zod-validation-error@3.5.4(zod@3.23.8):
+  zod-validation-error@3.5.4(zod@3.25.76):
     dependencies:
-      zod: 3.23.8
+      zod: 3.25.76
 
-  zod-validation-error@4.0.2(zod@3.23.8):
+  zod-validation-error@4.0.2(zod@3.25.76):
     dependencies:
-      zod: 3.23.8
+      zod: 3.25.76
 
-  zod@3.23.8: {}
+  zod@3.25.76: {}
