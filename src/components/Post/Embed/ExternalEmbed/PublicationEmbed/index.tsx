@@ -64,6 +64,7 @@ export function PublicationEmbed({
           <View
             style={[
               a.flex_col,
+              a.w_full,
               a.transition_color,
               hovered ? t.atoms.bg_contrast_25 : null,
             ]}>
