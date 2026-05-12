@@ -199,7 +199,10 @@ export function InviteLinkDialog({
       )
       break
     case Step.GENERATE:
-      header = l`Generate invite link`
+      header =
+        joinLink && enabledStatus === 'enabled'
+          ? l`Update invite link`
+          : l`Generate invite link`
       content = (
         <>
           <View>
@@ -234,7 +237,11 @@ export function InviteLinkDialog({
           </View>
           <View style={[a.mt_4xl]}>
             <Button
-              label={l`Generate invite link`}
+              label={
+                joinLink && enabledStatus === 'enabled'
+                  ? l`Update invite link`
+                  : l`Generate invite link`
+              }
               color="primary"
               size="large"
               disabled={isSaving}
