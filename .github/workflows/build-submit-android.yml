@@ -48,6 +48,7 @@ jobs:
         with:
           expo-version: latest
           eas-version: latest
+          packager: pnpm
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ⛏️ Setup EAS local builds
