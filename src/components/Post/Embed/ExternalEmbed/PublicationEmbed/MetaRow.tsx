@@ -44,7 +44,7 @@ export function MetaRow({link}: {link: PublicationViewExternal}) {
           the URL). Component exists below for the moment that field lands.
         */}
         {/* <SharesChip count={???} /> */}
-        {typeof link.readingTime === 'number' && (
+        {typeof link.readingTime === 'number' && link.readingTime > 0 && (
           <ReadingTimeChip minutes={link.readingTime} />
         )}
       </View>

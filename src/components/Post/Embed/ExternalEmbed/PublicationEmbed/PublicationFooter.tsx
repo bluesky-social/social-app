@@ -1,3 +1,4 @@
+import {useEffect} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -21,15 +22,17 @@ export function PublicationFooter({
 
   const did = parseDidFromAtUri(source.associatedRecord?.uri)
   const profileQuery = useProfileQuery({did: did ?? undefined})
-  if (profileQuery.error && did) {
-    // Sweep finding: silence non-actionable network errors here. We use
-    // `logger.error` only when the DID was present and the lookup failed for
-    // a non-network reason; React Query already handles transient network
-    // failures with its built-in retry. This keeps Sentry quiet on broken DIDs.
-    logger.error('PublicationEmbed handle resolve failed', {
-      safeMessage: profileQuery.error,
-    })
-  }
+  const profileError = profileQuery.error
+  useEffect(() => {
+    if (profileError && did) {
+      // Log once per error transition. React Query handles transient network
+      // failures via retry; once the error is set we don't want to re-log on
+      // every render (could burn Sentry quota with a feed of broken DIDs).
+      logger.error('PublicationEmbed handle resolve failed', {
+        safeMessage: profileError,
+      })
+    }
+  }, [profileError, did])
   const handle = did ? profileQuery.data?.handle : undefined
 
   const name = source.name || (source.uri ? toNiceDomain(source.uri) : '')
