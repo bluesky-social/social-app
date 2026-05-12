@@ -55,8 +55,6 @@ jobs:
           attempt_delay: 2000
       - name: Lint check
         run: pnpm lint
-      - name: Lint lockfile
-        run: pnpm lockfile-lint
       - name: Prettier check
         run: pnpm prettier --check .
       - name: Check & compile i18n

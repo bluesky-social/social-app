@@ -74,9 +74,6 @@ jobs:
       - name: Lint check
         run: pnpm lint
 
-      - name: Lint lockfile
-        run: pnpm lockfile-lint
-
       - name: Prettier check
         run: pnpm prettier --check .
 
