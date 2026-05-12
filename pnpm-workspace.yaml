@@ -17,6 +17,7 @@ overrides:
   "react-native-reanimated": "3.19.1"
   "psl": "1.9.0"
   "@types/psl": "1.1.1"
+  "zod": "3.23.8"
 allowBuilds:
   "@sentry/cli": true
   "core-js-pure": true
