@@ -32,6 +32,8 @@ import {
   parseEmbed,
 } from '#/types/bsky/post'
 import {ExternalEmbed} from './ExternalEmbed'
+import {PublicationEmbed} from './ExternalEmbed/PublicationEmbed'
+import {type PublicationViewExternal} from './ExternalEmbed/PublicationEmbed/types'
 import {ModeratedFeedEmbed} from './FeedEmbed'
 import {ImageEmbed} from './ImageEmbed'
 import {ModeratedListEmbed} from './ListEmbed'
@@ -95,6 +97,21 @@ function MediaEmbed({
       )
     }
     case 'link': {
+      const external = embed.view.external as PublicationViewExternal
+      if (external.source) {
+        return (
+          <ContentHider
+            modui={rest.moderation?.ui('contentMedia')}
+            activeStyle={[a.mt_sm]}>
+            <PublicationEmbed
+              link={external}
+              source={external.source}
+              onOpen={rest.onOpen}
+              style={[a.mt_sm, rest.style]}
+            />
+          </ContentHider>
+        )
+      }
       return (
         <ContentHider
           modui={rest.moderation?.ui('contentMedia')}
