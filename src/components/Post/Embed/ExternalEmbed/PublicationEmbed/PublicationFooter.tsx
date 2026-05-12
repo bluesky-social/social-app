@@ -40,7 +40,7 @@ export function PublicationFooter({
         a.flex_row,
         a.align_center,
         a.px_md,
-        a.py_sm,
+        a.py_md,
         a.transition_color,
         {gap: 10},
         hovered ? t.atoms.bg_contrast_25 : null,

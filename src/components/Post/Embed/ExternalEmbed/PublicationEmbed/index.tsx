@@ -103,9 +103,7 @@ export function PublicationEmbed({
           </View>
         )}
       </Link>
-      <View style={[a.py_md]}>
-        <Divider />
-      </View>
+      <Divider />
       <PublicationFooter source={source} />
       {/*
         Note: `source.theme` (background/foreground/accent/accentForeground
