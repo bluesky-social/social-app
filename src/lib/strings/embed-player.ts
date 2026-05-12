@@ -317,7 +317,7 @@ export function parseEmbedPlayerFromUrl(
           isGif: true,
           hideDetails: true,
           metaUri: `https://giphy.com/gifs/${gifId}`,
-          playerUri: `https://i.giphy.com/media/${gifId}/200.webp`,
+          playerUri: `https://i.giphy.com/media/${gifId}/200.mp4`,
         }
       }
     }
@@ -330,6 +330,8 @@ export function parseEmbedPlayerFromUrl(
     const [__, media, trackingOrId, idOrFilename, filename] =
       urlp.pathname.split('/')
 
+    const dimensions = readGifDimensions(urlp)
+
     if (media === 'media') {
       if (idOrFilename && gifFilenameRegex.test(idOrFilename)) {
         return {
@@ -338,7 +340,8 @@ export function parseEmbedPlayerFromUrl(
           isGif: true,
           hideDetails: true,
           metaUri: `https://giphy.com/gifs/${trackingOrId}`,
-          playerUri: `https://i.giphy.com/media/${trackingOrId}/200.webp`,
+          playerUri: `https://i.giphy.com/media/${trackingOrId}/200.mp4`,
+          dimensions,
         }
       } else if (filename && gifFilenameRegex.test(filename)) {
         return {
@@ -347,7 +350,8 @@ export function parseEmbedPlayerFromUrl(
           isGif: true,
           hideDetails: true,
           metaUri: `https://giphy.com/gifs/${idOrFilename}`,
-          playerUri: `https://i.giphy.com/media/${idOrFilename}/200.webp`,
+          playerUri: `https://i.giphy.com/media/${idOrFilename}/200.mp4`,
+          dimensions,
         }
       }
     }
@@ -366,7 +370,7 @@ export function parseEmbedPlayerFromUrl(
         isGif: true,
         hideDetails: true,
         metaUri: `https://giphy.com/gifs/${gifId}`,
-        playerUri: `https://i.giphy.com/media/${gifId}/200.webp`,
+        playerUri: `https://i.giphy.com/media/${gifId}/200.mp4`,
       }
     } else if (mediaOrFilename) {
       const gifId = mediaOrFilename.split('.')[0]
@@ -378,7 +382,7 @@ export function parseEmbedPlayerFromUrl(
         metaUri: `https://giphy.com/gifs/${gifId}`,
         playerUri: `https://i.giphy.com/media/${
           mediaOrFilename.split('.')[0]
-        }/200.webp`,
+        }/200.mp4`,
       }
     }
   }
@@ -591,6 +595,17 @@ export function getGiphyMetaUri(url: URL) {
       return params.metaUri
     }
   }
+}
+
+function readGifDimensions(
+  urlp: URL,
+): {height: number; width: number} | undefined {
+  const h = parseInt(urlp.searchParams.get('hh') ?? '', 10)
+  const w = parseInt(urlp.searchParams.get('ww') ?? '', 10)
+  if (Number.isFinite(h) && Number.isFinite(w) && h > 0 && w > 0) {
+    return {height: h, width: w}
+  }
+  return undefined
 }
 
 export function parseTenorGif(urlp: URL):
