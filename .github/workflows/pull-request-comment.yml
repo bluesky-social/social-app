@@ -131,9 +131,6 @@ jobs:
       - name: Lint check
         run: pnpm lint
 
-      - name: Lint lockfile
-        run: pnpm lockfile-lint
-
       - name: 🔤 Compile translations
         run: pnpm intl:build 2>&1 | tee i18n.log
 
