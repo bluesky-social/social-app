@@ -296,31 +296,6 @@
     "typescript-eslint": "^8.58.0",
     "webpack-bundle-analyzer": "^4.10.1"
   },
-  "pnpm": {
-    "overrides": {
-      "@react-native/babel-preset": "0.81.5",
-      "@react-native/normalize-colors": "0.81.5",
-      "@expo/image-utils": "0.8.12",
-      "multiformats": "9.9.0",
-      "unicode-segmenter": "0.14.5",
-      "@types/estree": "1.0.6",
-      "metro": "0.83.3",
-      "metro-core": "0.83.3",
-      "metro-config": "0.83.3",
-      "metro-runtime": "0.83.3",
-      "metro-source-map": "0.83.3",
-      "react-native-compressor": "1.13.0",
-      "react-native-reanimated": "3.19.1",
-      "psl": "1.9.0",
-      "@types/psl": "1.1.1"
-    },
-    "onlyBuiltDependencies": [
-      "@sentry/cli",
-      "core-js-pure",
-      "esbuild",
-      "unrs-resolver"
-    ]
-  },
   "jest": {
     "preset": "jest-expo/ios",
     "setupFilesAfterEnv": [
