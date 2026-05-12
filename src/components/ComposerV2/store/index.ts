@@ -62,14 +62,17 @@ export function createThreadStore(options: {
   /**
    * Action bodies mutate `s` in place. Returning `null` signals a no-op (the
    * state ref is preserved and listeners are not notified). Otherwise we
-   * shallow-clone the top-level object so getState() returns a new reference,
-   * which is what useSyncExternalStore needs to trigger a rerender.
+   * shallow-clone both the top-level state and the inner `posts` object so
+   * any consumer of either reference sees a fresh value. (Some actions
+   * mutate `s.posts` in place, e.g. removePost's `delete s.posts[id]`;
+   * cloning posts here means selectors and React Compiler memoization can
+   * use ref equality reliably.)
    */
   function mutateState(fn: (s: types.ThreadState) => types.ThreadState | null) {
     if (destroyed) return
     const next = fn(state)
     if (next === null) return
-    state = {...next}
+    state = {...next, posts: {...next.posts}}
     for (const listener of listeners) listener()
   }
 
