@@ -10,6 +10,8 @@ import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
+import {PublicationEmbed} from '#/components/Post/Embed/ExternalEmbed/PublicationEmbed'
+import {type PublicationViewExternal} from '#/components/Post/Embed/ExternalEmbed/PublicationEmbed/types'
 import {ModeratedFeedEmbed} from '#/components/Post/Embed/FeedEmbed'
 import {ModeratedListEmbed} from '#/components/Post/Embed/ListEmbed'
 import {Embed as StarterPackEmbed} from '#/components/StarterPack/StarterPackCard'
@@ -86,6 +88,23 @@ export const ExternalEmbedLink = ({
   const linkComponent = useMemo(() => {
     if (data) {
       if (data.type === 'external') {
+        if (data.source) {
+          const publicationLink: PublicationViewExternal = {
+            uri,
+            title: data.title || uri,
+            description: data.description,
+            thumb: data.thumb?.source.path,
+            createdAt: data.createdAt,
+            readingTime: data.readingTime,
+            source: data.source,
+            associatedRecord: data.associatedRecord
+              ? {uri: data.associatedRecord, cid: ''}
+              : undefined,
+          }
+          return (
+            <PublicationEmbed link={publicationLink} source={data.source} />
+          )
+        }
         return (
           <ExternalEmbed
             link={{
