@@ -242,6 +242,7 @@ func serve(cctx *cli.Context) error {
 
 	// OAuth client metadata (generated dynamically from request host)
 	e.GET("/oauth-client-metadata.json", server.OAuthClientMetadata)
+	e.GET("/oauth-client-metadata-native.json", server.OAuthClientMetadataNative)
 
 	// OAuth callback (serves SPA so React handles it client-side)
 	e.GET("/auth/web/callback", server.WebGeneric)
@@ -494,6 +495,29 @@ func (srv *Server) OAuthClientMetadata(c echo.Context) error {
 		"grant_types":                 []string{"authorization_code", "refresh_token"},
 		"application_type":            "web",
 		"dpop_bound_access_tokens":    true,
+	}
+
+	return c.JSON(http.StatusOK, metadata)
+}
+
+func (srv *Server) OAuthClientMetadataNative(c echo.Context) error {
+	scheme := "https"
+	if c.Request().TLS == nil && strings.HasPrefix(c.Request().Host, "localhost") {
+		scheme = "http"
+	}
+	baseURL := fmt.Sprintf("%s://%s", scheme, c.Request().Host)
+
+	metadata := map[string]interface{}{
+		"client_id":                  baseURL + "/oauth-client-metadata-native.json",
+		"client_name":                "Blacksky Community",
+		"client_uri":                 baseURL,
+		"redirect_uris":             []string{"blacksky:/oauth/callback"},
+		"scope":                      "atproto transition:generic transition:email transition:chat.bsky identity:handle account:email?action=manage account:status?action=manage",
+		"token_endpoint_auth_method": "none",
+		"response_types":            []string{"code"},
+		"grant_types":               []string{"authorization_code", "refresh_token"},
+		"application_type":          "native",
+		"dpop_bound_access_tokens":  true,
 	}
 
 	return c.JSON(http.StatusOK, metadata)
