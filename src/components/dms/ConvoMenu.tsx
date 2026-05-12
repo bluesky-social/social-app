@@ -268,6 +268,9 @@ function MenuContent({
             )}
           </Menu.ItemText>
         </Menu.Item>
+      </Menu.Group>
+      <Menu.Divider />
+      <Menu.Group>
         {isGroupConvo ? null : (
           <Menu.Item
             destructive
@@ -288,6 +291,9 @@ function MenuContent({
             <Trans>Report conversation</Trans>
           </Menu.ItemText>
         </Menu.Item>
+      </Menu.Group>
+      <Menu.Divider />
+      <Menu.Group>
         <Menu.Item
           destructive
           label={l`Leave conversation`}
