@@ -1,8 +1,6 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {saveBytesToDisk} from '#/lib/media/manip'
@@ -22,14 +20,14 @@ export function ExportCarDialog({
 }: {
   control: Dialog.DialogControlProps
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const agent = useAgent()
   const [loading, setLoading] = useState<'repo' | 'chat' | false>(false)
 
   const download = useCallback(async () => {
     if (!agent.session) {
-      return // shouldnt ever happen
+      return // shouldn't ever happen
     }
     try {
       setLoading('repo')
@@ -42,16 +40,15 @@ export function ExportCarDialog({
       )
 
       if (saveRes) {
-        Toast.show(_(msg`File saved successfully!`))
+        Toast.show(l`File saved successfully!`)
       }
     } catch (e) {
       logger.error('Error occurred while downloading CAR file', {message: e})
-      Toast.show(_(msg`Error occurred while saving file`), {type: 'error'})
+      Toast.show(l`Error occurred while saving file`, {type: 'error'})
     } finally {
       setLoading(false)
-      control.close()
     }
-  }, [_, control, agent])
+  }, [l, agent])
 
   const downloadChatData = useCallback(async () => {
     if (!agent.session) {
@@ -76,16 +73,15 @@ export function ExportCarDialog({
       )
 
       if (saveRes) {
-        Toast.show(_(msg`File saved successfully!`))
+        Toast.show(l`File saved successfully!`)
       }
     } catch (e) {
       logger.error('Error occurred while downloading chat data', {message: e})
-      Toast.show(_(msg`Error occurred while saving file`), {type: 'error'})
+      Toast.show(l`Error occurred while saving file`, {type: 'error'})
     } finally {
       setLoading(false)
-      control.close()
     }
-  }, [_, control, agent])
+  }, [l, agent])
 
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
@@ -94,13 +90,20 @@ export function ExportCarDialog({
         accessibilityDescribedBy="dialog-description"
         accessibilityLabelledBy="dialog-title"
         style={web({maxWidth: 500})}>
-        <View style={[a.relative, a.gap_lg, a.w_full]}>
-          <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
-            <Trans>Export My Data</Trans>
+        <View style={[a.relative, a.w_full]}>
+          <Text
+            nativeID="dialog-title"
+            style={[a.mb_sm, a.text_2xl, a.font_bold]}>
+            <Trans>Export my profile data</Trans>
           </Text>
           <Text
             nativeID="dialog-description"
-            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
+            style={[
+              a.mb_lg,
+              a.text_sm,
+              a.leading_snug,
+              t.atoms.text_contrast_high,
+            ]}>
             <Trans>
               Your account repository, containing all public data records, can
               be downloaded as a "CAR" file. This file does not include media
@@ -112,17 +115,27 @@ export function ExportCarDialog({
           <Button
             color="primary"
             size="large"
-            label={_(msg`Download CAR file`)}
+            label={l`Download CAR file`}
             disabled={!!loading}
-            onPress={download}>
-            <ButtonIcon icon={DownloadIcon} />
+            onPress={() => void download()}>
+            <ButtonIcon icon={loading === 'repo' ? Loader : DownloadIcon} />
             <ButtonText>
-              <Trans>Download CAR file</Trans>
+              <Trans context="button">Download CAR file</Trans>
             </ButtonText>
-            {loading === 'repo' && <ButtonIcon icon={Loader} />}
           </Button>
 
-          <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
+          <Text
+            nativeID="dialog-title"
+            style={[a.mt_2xl, a.mb_sm, a.text_2xl, a.font_bold]}>
+            <Trans>Export my chat data</Trans>
+          </Text>
+          <Text
+            style={[
+              a.mb_lg,
+              a.text_sm,
+              a.leading_snug,
+              t.atoms.text_contrast_high,
+            ]}>
             <Trans>
               You can also download your chat data as a "JSONL" file. This file
               only includes chat messages that you have sent and does not
@@ -131,30 +144,30 @@ export function ExportCarDialog({
           </Text>
 
           <Button
-            color="secondary"
+            color="primary"
             size="large"
-            label={_(msg`Download chat data`)}
+            label={l`Download chat data`}
             disabled={!!loading}
-            onPress={downloadChatData}>
-            <ButtonIcon icon={DownloadIcon} />
+            onPress={() => void downloadChatData()}>
+            <ButtonIcon icon={loading === 'chat' ? Loader : DownloadIcon} />
             <ButtonText>
-              <Trans>Download chat data</Trans>
+              <Trans context="button">Download chat data</Trans>
             </ButtonText>
-            {loading === 'chat' && <ButtonIcon icon={Loader} />}
           </Button>
 
           <Text
             style={[
-              t.atoms.text_contrast_medium,
+              a.flex_1,
+              a.mt_2xl,
               a.text_sm,
               a.leading_snug,
-              a.flex_1,
+              t.atoms.text_contrast_medium,
             ]}>
             <Trans>
               This feature is in beta. You can read more about repository
               exports in{' '}
               <InlineLinkText
-                label={_(msg`View blogpost for more details`)}
+                label={l`View blogpost for more details`}
                 to="https://docs.bsky.app/blog/repo-export"
                 style={[a.text_sm]}>
                 this blogpost
