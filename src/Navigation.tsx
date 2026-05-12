@@ -55,6 +55,7 @@ import {
 import {useCloseAllActiveElements} from '#/state/util'
 import {CommunityGuidelinesScreen} from '#/view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from '#/view/screens/CopyrightPolicy'
+import {DebugComposerScreen} from '#/view/screens/DebugComposer'
 import {DebugModScreen} from '#/view/screens/DebugMod'
 import {FeedsScreen} from '#/view/screens/Feeds'
 import {HomeScreen} from '#/view/screens/Home'
@@ -308,6 +309,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="DebugMod"
         getComponent={() => DebugModScreen}
         options={{title: title(msg`Moderation states`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="DebugComposer"
+        getComponent={() => DebugComposerScreen}
+        options={{title: title(msg`Composer V2`), requireAuth: true}}
       />
       <Stack.Screen
         name="SharedPreferencesTester"
