@@ -96,8 +96,8 @@ let PostControls = ({
   const playHaptic = useHaptics()
   const isBlocked = Boolean(
     post.author.viewer?.blocking ||
-      post.author.viewer?.blockedBy ||
-      post.author.viewer?.blockingByList,
+    post.author.viewer?.blockedBy ||
+    post.author.viewer?.blockingByList,
   )
   const replyDisabled = post.viewer?.replyDisabled
   const {gtPhone} = useBreakpoints()

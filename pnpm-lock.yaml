@@ -639,7 +639,7 @@ importers:
         specifier: ^13.2.3
         version: 13.3.0
       prettier:
-        specifier: ^3.6.0
+        specifier: ^3.8.3
         version: 3.8.3
       react-native-dotenv:
         specifier: ^3.4.11
