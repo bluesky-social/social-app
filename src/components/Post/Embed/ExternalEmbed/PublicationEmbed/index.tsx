@@ -76,7 +76,7 @@ export function PublicationEmbed({
                 loading="lazy"
               />
             ) : null}
-            <View style={[a.p_md, a.gap_sm]}>
+            <View style={[a.p_md, {gap: 6}]}>
               <View style={[{gap: 4}]}>
                 <Text
                   emoji
@@ -103,7 +103,9 @@ export function PublicationEmbed({
           </View>
         )}
       </Link>
-      <Divider />
+      <View style={[a.py_md]}>
+        <Divider />
+      </View>
       <PublicationFooter source={source} />
       {/*
         Note: `source.theme` (background/foreground/accent/accentForeground

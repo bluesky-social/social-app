@@ -39,18 +39,18 @@ export function PublicationFooter({
       style={[
         a.flex_row,
         a.align_center,
-        a.gap_sm,
         a.px_md,
         a.py_sm,
         a.transition_color,
+        {gap: 10},
         hovered ? t.atoms.bg_contrast_25 : null,
       ]}
       testID="publication-embed-footer">
       <UserAvatar type="user" size={40} avatar={source.icon} />
-      <View style={[a.flex_1, {minWidth: 0}]}>
+      <View style={[a.flex_1, {minWidth: 0, gap: 2}]}>
         <Text
           numberOfLines={1}
-          style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
+          style={[a.text_sm, a.font_medium, t.atoms.text]}>
           {name}
         </Text>
         {handle && (
