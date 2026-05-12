@@ -1,11 +1,9 @@
 name: build-and-push-ogcard-aws
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - "bskyogcard/**"
-      - "Dockerfile.bskyogcard"
-      - ".github/workflows/build-and-push-ogcard-aws.yaml"
+  push:
+    branches:
+      - main
 
 env:
   REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_REGISTRY }}
