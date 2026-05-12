@@ -4,10 +4,10 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
-    "start": "node --loader ts-node/esm ./src/bin.ts",
-    "dev": "node --watch-path ./src --loader ts-node/esm ./src/bin.ts",
+    "start": "tsx ./src/bin.ts",
+    "dev": "node --watch-path ./src --import tsx ./src/bin.ts",
     "build": "tsc && cp -r src/assets dist/",
-    "install-fonts": "node --loader ts-node/esm scripts/install-fonts.ts"
+    "install-fonts": "tsx scripts/install-fonts.ts"
   },
   "dependencies": {
     "@atproto/api": "0.12.19-next.0",
