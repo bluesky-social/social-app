@@ -264,11 +264,6 @@
       "count": 1
     }
   },
-  "src/lib/hooks/useCleanError.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/lib/hooks/useNonReactiveCallback.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
