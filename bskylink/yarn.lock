@@ -720,10 +720,10 @@ iso-datestring-validator@^2.2.2:
   resolved "https://registry.yarnpkg.com/iso-datestring-validator/-/iso-datestring-validator-2.2.2.tgz#2daa80d2900b7a954f9f731d42f96ee0c19a6895"
   integrity sha512-yLEMkBbLZTlVQqOnQ4FiMujR6T4DEcCb1xizmvXS+OxuhwcbtynoosRzdMA69zZCShCNAbi+gJ71FxZBBXx1SA==
 
-kysely@^0.27.3:
-  version "0.27.3"
-  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.27.3.tgz#6cc6c757040500b43c4ac596cdbb12be400ee276"
-  integrity sha512-lG03Ru+XyOJFsjH3OMY6R/9U38IjDPfnOfDgO3ynhbDr+Dz8fak+X6L62vqu3iybQnj+lG84OttBuU9KY3L9kA==
+kysely@^0.28.17:
+  version "0.28.17"
+  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.28.17.tgz#cb8c74696b911a43c595f752b653b90ed56d42b9"
+  integrity sha512-nbD8lB9EB3wNdMhOCdx5Li8DxnLbvKByylRLcJ1h+4SkrowVeECAyZlyiKMThF7xFdRz0jSQ2MoJr+wXux2y0Q==
 
 lru-cache@^11.1.0:
   version "11.1.0"
