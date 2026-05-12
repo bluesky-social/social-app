@@ -30,6 +30,9 @@ module.exports = async function (env, argv) {
     'unicode-segmenter/grapheme': require
       .resolve('unicode-segmenter/grapheme')
       .replace(/\.cjs$/, '.js'),
+    // Force ESM version - zod's main/exports.require point to index.cjs which
+    // Expo's webpack config treats as a static asset, breaking `require('zod')`
+    zod$: require.resolve('zod').replace(/\.cjs$/, '.js'),
     'react-native-gesture-handler': false, // RNGH should not be used on web, so let's cause a build error if it sneaks in
     '@sentry-internal/replay': false, // not used, ~300kb of dead weight
   })
