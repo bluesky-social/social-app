@@ -1,9 +1,9 @@
-import {AppBskyFeedDefs} from '@atproto/api'
+import * as app from './lexicons/app'
 
 export const CONTENT_LABELS = ['porn', 'sexual', 'nudity', 'graphic-media']
 
 export function labelsToInfo(
-  labels?: AppBskyFeedDefs.PostView['labels'],
+  labels?: app.bsky.feed.defs.PostView['labels'],
 ): string | undefined {
   const label = labels?.find(label => CONTENT_LABELS.includes(label.val))
 

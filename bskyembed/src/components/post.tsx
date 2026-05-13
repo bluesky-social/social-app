@@ -1,9 +1,3 @@
-import {
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AppBskyRichtextFacet,
-  RichText,
-} from '@atproto/api'
 import {h} from 'preact'
 
 import logo from '../../assets/logo_full_name.svg'
@@ -12,7 +6,7 @@ import {Reply as ReplyIcon} from '../icons/Reply'
 import {Repost as RepostIcon} from '../icons/Repost'
 import {Robot as RobotIcon} from '../icons/Robot'
 import {CONTENT_LABELS} from '../labels'
-import * as bsky from '../types/bsky'
+import * as app from '../lexicons/app'
 import {niceDate} from '../util/nice-date'
 import {prettyNumber} from '../util/pretty-number'
 import {getRkey} from '../util/rkey'
@@ -23,24 +17,18 @@ import {Link} from './link'
 import {VerificationCheck} from './verification-check'
 
 interface Props {
-  thread: AppBskyFeedDefs.ThreadViewPost
+  post: app.bsky.feed.defs.PostView
 }
 
-export function Post({thread}: Props) {
-  const post = thread.post
-
+export function Post({post}: Props) {
   const isAuthorLabeled = post.author.labels?.some(label =>
     CONTENT_LABELS.includes(label.val),
   )
 
-  let record: AppBskyFeedPost.Record | null = null
-  if (
-    bsky.dangerousIsType<AppBskyFeedPost.Record>(
-      post.record,
-      AppBskyFeedPost.isRecord,
-    )
-  ) {
-    record = post.record
+  let record = null
+  const validation = app.bsky.feed.post.$safeValidate(post.record)
+  if (validation.success) {
+    record = validation.value
   }
 
   const verification = getVerificationState({profile: post.author})
@@ -153,70 +141,70 @@ export function Post({thread}: Props) {
   )
 }
 
-function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
+function PostContent({record}: {record: app.bsky.feed.post.Main | null}) {
   // text-only check - posts with no text (e.g. gallery posts) would otherwise
   // render an empty <p> that adds an extra flex gap above the embed
   if (!record?.text) return null
 
-  const rt = new RichText({
-    text: record.text,
-    facets: record.facets,
-  })
+  // const rt = new RichText({
+  //   text: record.text,
+  //   facets: record.facets,
+  // })
 
-  const richText = []
+  // const richText = []
 
-  let counter = 0
-  for (const segment of rt.segments()) {
-    if (
-      segment.link &&
-      AppBskyRichtextFacet.validateLink(segment.link).success
-    ) {
-      richText.push(
-        <Link
-          key={counter}
-          href={segment.link.uri}
-          className="text-brand hover:underline"
-          disableTracking={
-            !segment.link.uri.startsWith('https://bsky.app') &&
-            !segment.link.uri.startsWith('https://go.bsky.app')
-          }>
-          {segment.text}
-        </Link>,
-      )
-    } else if (
-      segment.mention &&
-      AppBskyRichtextFacet.validateMention(segment.mention).success
-    ) {
-      richText.push(
-        <Link
-          key={counter}
-          href={`/profile/${segment.mention.did}`}
-          className="text-brand hover:underline">
-          {segment.text}
-        </Link>,
-      )
-    } else if (
-      segment.tag &&
-      AppBskyRichtextFacet.validateTag(segment.tag).success
-    ) {
-      richText.push(
-        <Link
-          key={counter}
-          href={`/hashtag/${segment.tag.tag}`}
-          className="text-brand hover:underline">
-          {segment.text}
-        </Link>,
-      )
-    } else {
-      richText.push(segment.text)
-    }
+  // let counter = 0
+  // for (const segment of rt.segments()) {
+  //   if (
+  //     segment.link &&
+  //     app.bsky.richtext.facet.link.$safeValidate(segment.link).success
+  //   ) {
+  //     richText.push(
+  //       <Link
+  //         key={counter}
+  //         href={segment.link.uri}
+  //         className="text-brand hover:underline"
+  //         disableTracking={
+  //           !segment.link.uri.startsWith('https://bsky.app') &&
+  //           !segment.link.uri.startsWith('https://go.bsky.app')
+  //         }>
+  //         {segment.text}
+  //       </Link>,
+  //     )
+  //   } else if (
+  //     segment.mention &&
+  //     app.bsky.richtext.facet.mention.safeValidate(segment.mention).success
+  //   ) {
+  //     richText.push(
+  //       <Link
+  //         key={counter}
+  //         href={`/profile/${segment.mention.did}`}
+  //         className="text-brand hover:underline">
+  //         {segment.text}
+  //       </Link>,
+  //     )
+  //   } else if (
+  //     segment.tag &&
+  //     app.bsky.richtext.facet.tag.safeValidate(segment.tag).success
+  //   ) {
+  //     richText.push(
+  //       <Link
+  //         key={counter}
+  //         href={`/hashtag/${segment.tag.tag}`}
+  //         className="text-brand hover:underline">
+  //         {segment.text}
+  //       </Link>,
+  //     )
+  //   } else {
+  //     richText.push(segment.text)
+  //   }
 
-    counter++
-  }
+  //   counter++
+  // }
 
-  return (
-    <p className="text-md min-[400px]:text-lg leading-snug min-[400px]:leading-snug break-word break-words whitespace-pre-wrap">
-      {richText}
-    </p>
-  )
+  // return (
+  //   <p className="text-md min-[400px]:text-lg leading-snug min-[400px]:leading-snug break-word break-words whitespace-pre-wrap">
+  //     {richText}
+  //   </p>
+  // )
 }
