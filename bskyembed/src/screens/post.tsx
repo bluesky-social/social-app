@@ -1,6 +1,6 @@
 import '../index.css'
 
-import {type AtUriString, Client} from '@atproto/lex'
+import {Client, isAtUriString} from '@atproto/lex'
 import {h, render} from 'preact'
 
 import logo from '../../assets/logo.svg'
@@ -17,7 +17,7 @@ if (!root) throw new Error('No root element')
 const client = new Client('https://public.api.bsky.app')
 
 const uri = `at://${window.location.pathname.slice('/embed/'.length)}`
-if (!uri) {
+if (!isAtUriString(uri)) {
   throw new Error('No uri in path')
 }
 
@@ -41,7 +41,7 @@ switch (colorMode) {
 
 client
   .call(app.bsky.feed.getPosts, {
-    uris: [uri as AtUriString],
+    uris: [uri],
   })
   .then(({posts}) => {
     const post = posts[0]
