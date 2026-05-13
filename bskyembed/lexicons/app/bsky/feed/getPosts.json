@@ -1,0 +1,46 @@
+{
+  "id": "app.bsky.feed.getPosts",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "posts"
+          ],
+          "properties": {
+            "posts": {
+              "type": "array",
+              "items": {
+                "ref": "app.bsky.feed.defs#postView",
+                "type": "ref"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "uris"
+        ],
+        "properties": {
+          "uris": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "at-uri"
+            },
+            "maxLength": 25,
+            "description": "List of post AT-URIs to return hydrated views for."
+          }
+        }
+      },
+      "description": "Gets post views for a specified list of posts (by AT-URI). This is sometimes referred to as 'hydrating' a 'feed skeleton'."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}
