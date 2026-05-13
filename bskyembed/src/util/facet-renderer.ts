@@ -1,9 +1,6 @@
-import * as facetDefs from '../lexicons/app/bsky/richtext/facet.defs'
+import * as app from '../lexicons/app'
 
-type Facet = facetDefs.Main
-type Link = facetDefs.Link
-type Mention = facetDefs.Mention
-type Tag = facetDefs.Tag
+type Facet = app.bsky.richtext.facet.Main
 
 const encoder = new TextEncoder()
 const decoder = new TextDecoder()
@@ -14,22 +11,16 @@ export class FacetSegment {
     public facet?: Facet,
   ) {}
 
-  get link(): Link | undefined {
-    return this.facet?.features.find(
-      f => f.$type === 'app.bsky.richtext.facet#link',
-    ) as Link | undefined
+  get link() {
+    return this.facet?.features.find(app.bsky.richtext.facet.link.$isTypeOf)
   }
 
-  get mention(): Mention | undefined {
-    return this.facet?.features.find(
-      f => f.$type === 'app.bsky.richtext.facet#mention',
-    ) as Mention | undefined
+  get mention() {
+    return this.facet?.features.find(app.bsky.richtext.facet.mention.$isTypeOf)
   }
 
-  get tag(): Tag | undefined {
-    return this.facet?.features.find(
-      f => f.$type === 'app.bsky.richtext.facet#tag',
-    ) as Tag | undefined
+  get tag() {
+    return this.facet?.features.find(app.bsky.richtext.facet.tag.$isTypeOf)
   }
 }
 
