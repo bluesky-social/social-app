@@ -65,7 +65,7 @@ type Item =
       type: 'CHAT_MEMBER'
       key: string
       profile: GroupConvoMember
-      status: 'owner' | 'standard' | 'invited'
+      status: 'owner' | 'standard'
     }
   | {
       type: 'CHAT_MEMBER_PLACEHOLDER'
@@ -189,9 +189,6 @@ function GroupSettings({
     placeholderData: convo.members,
   })
 
-  // TODO Need this data in order to populate this array. -dsb
-  const invites: string[] = []
-
   const {data: joinRequestsData, hasNextPage: hasMoreRequests} =
     useListJoinRequestsQuery({
       convoId: convo.view.id,
@@ -228,12 +225,7 @@ function GroupSettings({
         type: 'CHAT_MEMBER',
         key: profile.did,
         profile,
-        status:
-          primaryMember?.did === profile.did
-            ? 'owner'
-            : invites.includes(profile.did)
-              ? 'invited'
-              : 'standard',
+        status: primaryMember?.did === profile.did ? 'owner' : 'standard',
       }),
     ),
   )
