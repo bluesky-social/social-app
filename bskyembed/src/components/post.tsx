@@ -1,4 +1,4 @@
-import {h} from 'preact'
+import {ComponentChild, h} from 'preact'
 
 import logo from '../../assets/logo_full_name.svg'
 import {Like as LikeIcon} from '../icons/Like'
@@ -7,6 +7,7 @@ import {Repost as RepostIcon} from '../icons/Repost'
 import {Robot as RobotIcon} from '../icons/Robot'
 import {CONTENT_LABELS} from '../labels'
 import * as app from '../lexicons/app'
+import {FacetRenderer} from '../util/facet-renderer'
 import {niceDate} from '../util/nice-date'
 import {prettyNumber} from '../util/pretty-number'
 import {getRkey} from '../util/rkey'
@@ -146,65 +147,51 @@ function PostContent({record}: {record: app.bsky.feed.post.Main | null}) {
   // render an empty <p> that adds an extra flex gap above the embed
   if (!record?.text) return null
 
-  // const rt = new RichText({
-  //   text: record.text,
-  //   facets: record.facets,
-  // })
+  const rt = new FacetRenderer({text: record.text, facets: record.facets})
+  const richText: ComponentChild[] = []
 
-  // const richText = []
+  let counter = 0
+  for (const segment of rt.segments()) {
+    if (segment.link) {
+      richText.push(
+        <Link
+          key={counter}
+          href={segment.link.uri}
+          className="text-brand hover:underline"
+          disableTracking={
+            !segment.link.uri.startsWith('https://bsky.app') &&
+            !segment.link.uri.startsWith('https://go.bsky.app')
+          }>
+          {segment.text}
+        </Link>,
+      )
+    } else if (segment.mention) {
+      richText.push(
+        <Link
+          key={counter}
+          href={`/profile/${segment.mention.did}`}
+          className="text-brand hover:underline">
+          {segment.text}
+        </Link>,
+      )
+    } else if (segment.tag) {
+      richText.push(
+        <Link
+          key={counter}
+          href={`/hashtag/${segment.tag.tag}`}
+          className="text-brand hover:underline">
+          {segment.text}
+        </Link>,
+      )
+    } else {
+      richText.push(segment.text)
+    }
+    counter++
+  }
 
-  // let counter = 0
-  // for (const segment of rt.segments()) {
-  //   if (
-  //     segment.link &&
-  //     app.bsky.richtext.facet.link.$safeValidate(segment.link).success
-  //   ) {
-  //     richText.push(
-  //       <Link
-  //         key={counter}
-  //         href={segment.link.uri}
-  //         className="text-brand hover:underline"
-  //         disableTracking={
-  //           !segment.link.uri.startsWith('https://bsky.app') &&
-  //           !segment.link.uri.startsWith('https://go.bsky.app')
-  //         }>
-  //         {segment.text}
-  //       </Link>,
-  //     )
-  //   } else if (
-  //     segment.mention &&
-  //     app.bsky.richtext.facet.mention.safeValidate(segment.mention).success
-  //   ) {
-  //     richText.push(
-  //       <Link
-  //         key={counter}
-  //         href={`/profile/${segment.mention.did}`}
-  //         className="text-brand hover:underline">
-  //         {segment.text}
-  //       </Link>,
-  //     )
-  //   } else if (
-  //     segment.tag &&
-  //     app.bsky.richtext.facet.tag.safeValidate(segment.tag).success
-  //   ) {
-  //     richText.push(
-  //       <Link
-  //         key={counter}
-  //         href={`/hashtag/${segment.tag.tag}`}
-  //         className="text-brand hover:underline">
-  //         {segment.text}
-  //       </Link>,
-  //     )
-  //   } else {
-  //     richText.push(segment.text)
-  //   }
-
-  //   counter++
-  // }
-
-  // return (
-  //   <p className="text-md min-[400px]:text-lg leading-snug min-[400px]:leading-snug break-word break-words whitespace-pre-wrap">
-  //     {richText}
-  //   </p>
-  // )
+  return (
+    <p className="text-md min-[400px]:text-lg leading-snug min-[400px]:leading-snug break-word break-words whitespace-pre-wrap">
+      {richText}
+    </p>
+  )
 }
