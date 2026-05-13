@@ -60,6 +60,7 @@ export default defineConfig(
           ignoreRestSiblings: true,
         },
       ],
+      'import-x/consistent-type-specifier-style': ['warn', 'prefer-inline'],
     },
   },
 )
