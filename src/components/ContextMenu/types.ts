@@ -70,6 +70,7 @@ export type MenuContextType = {
 
 export type ItemContextType = {
   disabled: boolean
+  destructive: boolean
 }
 
 export type TriggerProps = {
