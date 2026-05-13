@@ -6,7 +6,6 @@ overrides:
   "@react-native/normalize-colors": "0.81.5"
   "@expo/image-utils": "0.8.12"
   "multiformats": "9.9.0"
-  "unicode-segmenter": "0.14.5"
   "@types/estree": "1.0.6"
   "metro": "0.83.3"
   "metro-core": "0.83.3"
