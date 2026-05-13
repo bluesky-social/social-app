@@ -36,7 +36,8 @@
       "properties": {
         "chat": {
           "ref": "#chatPreference",
-          "type": "ref"
+          "type": "ref",
+          "description": "Deprecated: use chat.bsky.notification preferences instead. This will only return a default value."
         },
         "like": {
           "ref": "#filterablePreference",
@@ -109,7 +110,8 @@
             "accepted"
           ]
         }
-      }
+      },
+      "description": "Deprecated: use chat.bsky.notification preferences instead. This will only return a default value."
     },
     "activitySubscription": {
       "type": "object",
