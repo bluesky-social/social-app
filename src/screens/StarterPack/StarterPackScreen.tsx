@@ -76,6 +76,7 @@ import {ShareDialog} from '#/components/StarterPack/ShareDialog'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {useBrand} from '#/brand/context'
 import {IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 
@@ -309,6 +310,7 @@ function Header({
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const brand = useBrand()
   const {currentAccount, hasSession} = useSession()
   const agent = useAgent()
   const queryClient = useQueryClient()
@@ -475,7 +477,7 @@ function Header({
           {richText ? <RichText value={richText} style={[a.text_md]} /> : null}
           {!hasSession ? (
             <Button
-              label={_(msg`Join Bluesky`)}
+              label={_(msg`Join ${brand.name}`)}
               onPress={() => {
                 setActiveStarterPack({
                   uri: starterPack.uri,
@@ -486,7 +488,7 @@ function Header({
               color="primary"
               size="large">
               <ButtonText style={[a.text_lg]}>
-                <Trans>Join Bluesky</Trans>
+                <Trans>Join {brand.name}</Trans>
               </ButtonText>
             </Button>
           ) : null}
@@ -503,12 +505,12 @@ function Header({
                   a.text_sm,
                   t.atoms.text_contrast_medium,
                 ]}>
-                <Trans comment="Number of users (always at least 25) who have joined Bluesky using a specific starter pack">
+                <Trans comment="Number of users (always at least 25) who have joined the app using a specific starter pack">
                   <Plural
                     value={starterPack.joinedAllTimeCount || 0}
                     other="# people have"
                   />{' '}
-                  joined Bluesky via this starter pack!
+                  joined {brand.name} via this starter pack!
                 </Trans>
               </Text>
             </View>

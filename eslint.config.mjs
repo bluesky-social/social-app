@@ -281,6 +281,20 @@ export default defineConfig(
   },
 
   /**
+   * Brand config files - CommonJS build-time config, not part of the TS project
+   */
+  {
+    files: ['brands/**/*.js'],
+    ...tseslint.configs.disableTypeChecked,
+    languageOptions: {
+      parserOptions: {
+        projectService: false,
+        project: null,
+      },
+    },
+  },
+
+  /**
    * bskyogcard - server-side, Node.js imports are fine
    */
   {

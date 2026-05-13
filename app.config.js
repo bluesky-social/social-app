@@ -1,6 +1,13 @@
 // @ts-check
 const pkg = require('./package.json')
 
+// Brand selector. EXPO_PUBLIC_BRAND so it's inlined into the JS bundle and
+// readable at runtime via process.env.EXPO_PUBLIC_BRAND. BRAND is accepted as
+// a shorthand for local dev.
+const BRAND = process.env.EXPO_PUBLIC_BRAND ?? process.env.BRAND ?? 'bluesky'
+/** @type {import('./brands/types').BrandConfig} */
+const brand = require(`./brands/${BRAND}/brand`)
+
 /**
  * @param {import('@expo/config-types').ExpoConfig} _config
  * @returns {{ expo: import('@expo/config-types').ExpoConfig }}
@@ -23,10 +30,7 @@ module.exports = function (_config) {
   const IS_DEV = !IS_TESTFLIGHT && !IS_PRODUCTION
 
   const ASSOCIATED_DOMAINS = [
-    'applinks:bsky.app',
-    'applinks:staging.bsky.app',
-    'appclips:bsky.app',
-    'appclips:go.bsky.app', // Allows App Clip to work when scanning QR codes
+    ...brand.associatedDomains,
     // When testing local services, enter an ngrok (et al) domain here. It must use a standard HTTP/HTTPS port.
     ...(IS_DEV || IS_TESTFLIGHT ? [] : []),
   ]
@@ -45,20 +49,20 @@ module.exports = function (_config) {
   return {
     expo: {
       version: VERSION,
-      name: 'Bluesky',
-      slug: 'bluesky',
-      scheme: 'bluesky',
-      owner: 'blueskysocial',
+      name: brand.name,
+      slug: brand.slug,
+      scheme: brand.scheme,
+      owner: brand.owner,
       runtimeVersion: {
         policy: 'appVersion',
       },
       icon: './assets/app-icons/ios_icon_default_next.png',
       userInterfaceStyle: 'automatic',
-      primaryColor: '#006AFF',
+      primaryColor: brand.primaryColor,
       newArchEnabled: false,
       ios: {
         supportsTablet: false,
-        bundleIdentifier: 'xyz.blueskyweb.app',
+        bundleIdentifier: brand.bundleId,
         config: {
           usesNonExemptEncryption: false,
         },
@@ -75,7 +79,7 @@ module.exports = function (_config) {
             'Used to save images to your library.',
           NSPhotoLibraryUsageDescription:
             'Used for profile pictures, posts, and other kinds of content',
-          CFBundleSpokenName: 'Blue Sky',
+          CFBundleSpokenName: brand.spokenName,
           CFBundleLocalizations: [
             'en',
             'an',
@@ -123,7 +127,7 @@ module.exports = function (_config) {
         entitlements: {
           'com.apple.developer.kernel.increased-memory-limit': true,
           'com.apple.developer.kernel.extended-virtual-addressing': true,
-          'com.apple.security.application-groups': 'group.app.bsky',
+          'com.apple.security.application-groups': brand.iosAppGroup,
           'com.apple.developer.usernotifications.communication': true,
           // 'com.apple.developer.device-information.user-assigned-device-name': true,
         },
@@ -191,10 +195,10 @@ module.exports = function (_config) {
         adaptiveIcon: {
           foregroundImage: './assets/icon-android-foreground.png',
           monochromeImage: './assets/icon-android-monochrome.png',
-          backgroundColor: '#006AFF',
+          backgroundColor: brand.primaryColor,
         },
         googleServicesFile: './google-services.json',
-        package: 'xyz.blueskyweb.app',
+        package: brand.androidPackage,
         intentFilters: [
           {
             action: 'VIEW',
@@ -202,7 +206,7 @@ module.exports = function (_config) {
             data: [
               {
                 scheme: 'https',
-                host: 'bsky.app',
+                host: brand.webHost,
               },
               ...(IS_DEV
                 ? [
@@ -325,22 +329,22 @@ module.exports = function (_config) {
           {
             ios: {
               enableFullScreenImage_legacy: true, // iOS only
-              backgroundColor: '#006AFF', // primary_500
+              backgroundColor: brand.splashColor, // primary_500
               image: './assets/splash/splash.png',
               resizeMode: 'cover',
               dark: {
                 enableFullScreenImage_legacy: true, // iOS only
-                backgroundColor: '#002861', // primary_900
+                backgroundColor: brand.splashColorDark, // primary_900
                 image: './assets/splash/splash-dark.png',
                 resizeMode: 'cover',
               },
             },
             android: {
-              backgroundColor: '#006AFF', // primary_500
+              backgroundColor: brand.splashColor, // primary_500
               image: './assets/splash/android-splash-logo-white.png',
               imageWidth: 102, // even division of 306px
               dark: {
-                backgroundColor: '#002861', // primary_900
+                backgroundColor: brand.splashColorDark, // primary_900
                 image: './assets/splash/android-splash-logo-white.png',
                 imageWidth: 102,
               },
@@ -419,8 +423,7 @@ module.exports = function (_config) {
         [
           'expo-contacts',
           {
-            contactsPermission:
-              'I agree to allow Bluesky to use my contacts for friend discovery until I opt out.',
+            contactsPermission: brand.contactsPermission,
           },
         ],
       ],
@@ -429,30 +432,19 @@ module.exports = function (_config) {
           build: {
             experimental: {
               ios: {
-                appExtensions: [
-                  {
-                    targetName: 'Share-with-Bluesky',
-                    bundleIdentifier: 'xyz.blueskyweb.app.Share-with-Bluesky',
-                    entitlements: {
-                      'com.apple.security.application-groups': [
-                        'group.app.bsky',
-                      ],
-                    },
-                  },
-                  {
-                    targetName: 'BlueskyNSE',
-                    bundleIdentifier: 'xyz.blueskyweb.app.BlueskyNSE',
-                    entitlements: {
-                      'com.apple.security.application-groups': [
-                        'group.app.bsky',
-                      ],
-                    },
-                  },
-                  {
-                    targetName: 'BlueskyClip',
-                    bundleIdentifier: 'xyz.blueskyweb.app.AppClip',
-                  },
-                ],
+                appExtensions: brand.appExtensions.map(ext => ({
+                  targetName: ext.targetName,
+                  bundleIdentifier: `${brand.bundleId}.${ext.bundleSuffix}`,
+                  ...(ext.includeAppGroupEntitlement
+                    ? {
+                        entitlements: {
+                          'com.apple.security.application-groups': [
+                            brand.iosAppGroup,
+                          ],
+                        },
+                      }
+                    : {}),
+                })),
               },
             },
           },

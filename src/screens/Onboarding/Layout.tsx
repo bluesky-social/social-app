@@ -21,6 +21,7 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons
 import {HEADER_SLOT_SIZE} from '#/components/Layout'
 import {createPortalGroup} from '#/components/Portal'
 import {P, Text} from '#/components/Typography'
+import {useBrand} from '#/brand/context'
 import {IS_ANDROID, IS_INTERNAL, IS_WEB} from '#/env'
 
 const ONBOARDING_COL_WIDTH = 420
@@ -31,6 +32,7 @@ export const OnboardingHeaderSlot = createPortalGroup()
 export function Layout({children}: React.PropsWithChildren<{}>) {
   const {_} = useLingui()
   const t = useTheme()
+  const brand = useBrand()
   const insets = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
   const onboardDispatch = useOnboardingDispatch()
@@ -57,7 +59,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
       aria-role="dialog"
       aria-label={dialogLabel}
       accessibilityLabel={dialogLabel}
-      accessibilityHint={_(msg`Customizes your Bluesky experience`)}
+      accessibilityHint={_(msg`Customizes your ${brand.name} experience`)}
       style={[IS_WEB ? a.fixed : a.absolute, a.inset_0, a.flex_1, t.atoms.bg]}>
       {!gtMobile ? (
         <View

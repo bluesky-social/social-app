@@ -3,9 +3,11 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
+import {useBrand} from '#/brand/context'
 
 export function useValuePropText(step: 0 | 1 | 2) {
   const {_} = useLingui()
+  const brand = useBrand()
 
   return [
     {
@@ -14,7 +16,7 @@ export function useValuePropText(step: 0 | 1 | 2) {
         msg`No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you.`,
       ),
       alt: _(
-        msg`A collection of popular feeds you can find on Bluesky, including News, Booksky, Game Dev, Blacksky, and Fountain Pens`,
+        msg`A collection of popular feeds you can find on ${brand.name}, including News, Booksky, Game Dev, Blacksky, and Fountain Pens`,
       ),
     },
     {
@@ -29,10 +31,10 @@ export function useValuePropText(step: 0 | 1 | 2) {
     {
       title: _(msg`Forget the noise`),
       description: _(
-        msg`No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention.`,
+        msg`No ads, no invasive tracking, no engagement traps. ${brand.name} respects your time and attention.`,
       ),
       alt: _(
-        msg`An illustration of several Bluesky posts alongside repost, like, and comment icons`,
+        msg`An illustration of several ${brand.name} posts alongside repost, like, and comment icons`,
       ),
     },
   ][step]

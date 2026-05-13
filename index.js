@@ -1,9 +1,13 @@
 import 'react-native-gesture-handler' // must be first
 import '#/platform/polyfills'
+// Resolves and stashes the active brand. MUST come before `#/App` so that
+// brand-driven module-level constants see a populated brand at first read.
+import '#/brand/boot'
 
 import {LogBox} from 'react-native'
 import {registerRootComponent} from 'expo'
 
+// eslint-disable-next-line import-x/no-unresolved
 import App from '#/App'
 
 if (process.env.NODE_ENV === 'test') {

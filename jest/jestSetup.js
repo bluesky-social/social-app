@@ -1,5 +1,9 @@
 /* global jest */
 import 'react-native-gesture-handler/jestSetup'
+// Set the active brand before any module that reads brand-driven constants
+// is imported. The native entry (`index.js`) does this; jest doesn't go
+// through that entry, so we mirror it here.
+import '#/brand/boot'
 
 import {configure} from '@testing-library/react-native'
 

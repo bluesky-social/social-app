@@ -21,6 +21,7 @@ import {Button, ButtonIcon} from '#/components/Button'
 import {Person_Filled_Corner2_Rounded as PersonIcon} from '#/components/icons/Person'
 import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
+import {useBrand} from '#/brand/context'
 import type * as bsky from '#/types/bsky'
 import {FollowDialog} from './FollowDialog'
 import {ProgressGuideTask} from './Task'
@@ -30,6 +31,7 @@ const TOTAL_AVATARS = 10
 export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
   const t = useTheme()
   const {_} = useLingui()
+  const brand = useBrand()
   const {gtPhone} = useBreakpoints()
   const {rightNavVisible} = useLayoutBreakpoints()
   const {currentAccount} = useSession()
@@ -114,7 +116,7 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
               current={guide.numFollows + 1}
               total={7 + 1}
               title={_(msg`Follow 7 accounts`)}
-              subtitle={_(msg`Bluesky is better with friends!`)}
+              subtitle={_(msg`${brand.name} is better with friends!`)}
             />
           </>
         )}

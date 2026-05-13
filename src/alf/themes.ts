@@ -1,44 +1,44 @@
-import {
-  createThemes,
-  DEFAULT_PALETTE,
-  DEFAULT_SUBDUED_PALETTE,
-} from '@bsky.app/alf'
+import {createThemes} from '@bsky.app/alf'
 
-const DEFAULT_THEMES = createThemes({
-  defaultPalette: DEFAULT_PALETTE,
-  subduedPalette: DEFAULT_SUBDUED_PALETTE,
+import {getActiveBrand} from '#/brand/activeBrand'
+
+const brand = getActiveBrand()
+
+const BRAND_THEMES = createThemes({
+  defaultPalette: brand.palette.default,
+  subduedPalette: brand.palette.subdued,
 })
 
 export const themes = {
-  lightPalette: DEFAULT_THEMES.light.palette,
-  darkPalette: DEFAULT_THEMES.dark.palette,
-  dimPalette: DEFAULT_THEMES.dim.palette,
-  light: DEFAULT_THEMES.light,
-  dark: DEFAULT_THEMES.dark,
-  dim: DEFAULT_THEMES.dim,
+  lightPalette: BRAND_THEMES.light.palette,
+  darkPalette: BRAND_THEMES.dark.palette,
+  dimPalette: BRAND_THEMES.dim.palette,
+  light: BRAND_THEMES.light,
+  dark: BRAND_THEMES.dark,
+  dim: BRAND_THEMES.dim,
 }
 
 /**
  * @deprecated use ALF and access palette from `useTheme()`
  */
-export const lightPalette = DEFAULT_THEMES.light.palette
+export const lightPalette = BRAND_THEMES.light.palette
 /**
  * @deprecated use ALF and access palette from `useTheme()`
  */
-export const darkPalette = DEFAULT_THEMES.dark.palette
+export const darkPalette = BRAND_THEMES.dark.palette
 /**
  * @deprecated use ALF and access palette from `useTheme()`
  */
-export const dimPalette = DEFAULT_THEMES.dim.palette
+export const dimPalette = BRAND_THEMES.dim.palette
 /**
  * @deprecated use ALF and access theme from `useTheme()`
  */
-export const light = DEFAULT_THEMES.light
+export const light = BRAND_THEMES.light
 /**
  * @deprecated use ALF and access theme from `useTheme()`
  */
-export const dark = DEFAULT_THEMES.dark
+export const dark = BRAND_THEMES.dark
 /**
  * @deprecated use ALF and access theme from `useTheme()`
  */
-export const dim = DEFAULT_THEMES.dim
+export const dim = BRAND_THEMES.dim

@@ -30,6 +30,7 @@ import {
   useAgeAssuranceRegionConfigWithFallback,
 } from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'
+import {useBrand} from '#/brand/context'
 import {IS_NATIVE} from '#/env'
 import {
   useDeviceGeolocationApi,
@@ -60,6 +61,7 @@ export function StepInfo({
 }) {
   const {t: l} = useLingui()
   const ax = useAnalytics()
+  const brand = useBrand()
   const {state, dispatch} = useSignupContext()
   const preemptivelyCompleteActivePolicyUpdate =
     usePreemptivelyCompleteActivePolicyUpdate()
@@ -175,6 +177,7 @@ export function StepInfo({
         <FormError error={state.error} />
         <HostingProvider
           minimal
+          locked={!brand.features.allowForeignPdsSignup}
           serviceUrl={state.serviceUrl}
           onSelectServiceUrl={v => dispatch({type: 'setServiceUrl', value: v})}
         />
