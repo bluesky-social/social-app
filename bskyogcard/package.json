@@ -3,14 +3,11 @@
   "version": "0.0.0",
   "type": "module",
   "main": "src/index.ts",
-  "engines": {
-    "node": ">=24.15.0"
-  },
   "scripts": {
     "start": "tsx ./src/bin.ts",
-    "dev": "tsx watch --clear-screen=false ./src/bin.ts",
+    "dev": "node --watch-path ./src --import tsx ./src/bin.ts",
     "build": "tsc && cp -r src/assets dist/",
-    "install-fonts": "node scripts/install-fonts.ts"
+    "install-fonts": "tsx scripts/install-fonts.ts"
   },
   "dependencies": {
     "@atproto/api": "0.12.19-next.0",
@@ -28,7 +25,7 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^24.12.2",
-    "@types/react": "^18.3.0",
+    "@types/react": "^18.3.1",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2"
   }

@@ -1,13 +1,13 @@
 import {useRef, useState} from 'react'
-import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {clamp} from '#/lib/numbers'
 import {type EmbedPlayerParams} from '#/lib/strings/embed-player'
 import {useAutoplayDisabled} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {Fill} from '#/components/Fill'
+import {ConstrainedImage} from '#/components/images/AutoSizedImage'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {GifView} from '../../../../../modules/expo-bluesky-gif-view'
 import {type GifViewStateChangeEvent} from '../../../../../modules/expo-bluesky-gif-view/src/GifView.types'
@@ -19,14 +19,12 @@ export function GifEmbed({
   altText,
   isPreferredAltText,
   hideAlt,
-  style = {width: '100%'},
 }: {
   params: EmbedPlayerParams
   thumb: string | undefined
   altText: string
   isPreferredAltText: boolean
   hideAlt?: boolean
-  style?: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -53,60 +51,64 @@ export function GifEmbed({
   let aspectRatio = 1
   if (params.dimensions) {
     const ratio = params.dimensions.width / params.dimensions.height
-    aspectRatio = clamp(ratio, 0.75, 4)
+    if (!Number.isNaN(ratio)) {
+      aspectRatio = ratio
+    }
   }
+  const constrained = Math.max(aspectRatio, 1 / 2)
 
   return (
-    <View
-      style={[
-        a.rounded_md,
-        a.overflow_hidden,
-        {backgroundColor: t.palette.black},
-        {aspectRatio},
-        style,
-      ]}>
+    <ConstrainedImage aspectRatio={constrained} minMobileAspectRatio={14 / 9}>
       <View
         style={[
-          a.absolute,
-          /*
-           * Aspect ratio was being clipped weirdly on web -esb
-           */
-          {
-            top: -2,
-            bottom: -2,
-            left: -2,
-            right: -2,
-          },
+          a.flex_1,
+          a.rounded_md,
+          a.overflow_hidden,
+          {backgroundColor: t.palette.black},
         ]}>
-        <MediaInsetBorder />
-        <GifPresentationControls
-          onPress={onPress}
-          isPlaying={playerState.isPlaying}
-          isLoading={!playerState.isLoaded}
-          altText={!hideAlt && isPreferredAltText ? altText : undefined}
-        />
-        <GifView
-          source={params.playerUri}
-          sources={params.playerSources}
-          placeholderSource={thumb}
-          style={[a.flex_1]}
-          autoplay={!autoplayDisabled}
-          onPlayerStateChange={onPlayerStateChange}
-          ref={playerRef}
-          accessibilityHint={_(msg`Animated GIF`)}
-          accessibilityLabel={altText}
-        />
-        {!playerState.isPlaying && (
-          <Fill
-            style={[
-              t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
-              {
-                opacity: 0.3,
-              },
-            ]}
+        <View
+          style={[
+            a.absolute,
+            /*
+             * Aspect ratio was being clipped weirdly on web -esb
+             */
+            {
+              top: -2,
+              bottom: -2,
+              left: -2,
+              right: -2,
+            },
+          ]}>
+          <MediaInsetBorder />
+          <GifPresentationControls
+            onPress={onPress}
+            isPlaying={playerState.isPlaying}
+            isLoading={!playerState.isLoaded}
+            altText={!hideAlt && isPreferredAltText ? altText : undefined}
           />
-        )}
+          <GifView
+            source={params.playerUri}
+            sources={params.playerSources}
+            placeholderSource={thumb}
+            style={[a.flex_1]}
+            autoplay={!autoplayDisabled}
+            onPlayerStateChange={onPlayerStateChange}
+            ref={playerRef}
+            accessibilityHint={_(msg`Animated GIF`)}
+            accessibilityLabel={altText}
+          />
+          {!playerState.isPlaying && (
+            <Fill
+              style={[
+                t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
+                {
+                  opacity: 0.3,
+                },
+              ]}
+            />
+          )}
+        </View>
       </View>
-    </View>
+    </ConstrainedImage>
   )
 }

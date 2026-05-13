@@ -1,11 +1,9 @@
 name: build-and-push-link-aws
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - "bskylink/**"
-      - "Dockerfile.bskylink"
-      - ".github/workflows/build-and-push-link-aws.yaml"
+  push:
+    branches:
+      - main
 
 env:
   REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_REGISTRY }}
