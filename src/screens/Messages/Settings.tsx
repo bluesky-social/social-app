@@ -121,163 +121,155 @@ export function MessagesSettingsScreenInner({}: Props) {
   )
 
   return (
-    <>
-      <Layout.Screen testID="messagesSettingsScreen">
-        <Layout.Header.Outer>
-          <Layout.Header.BackButton />
-          <Layout.Header.Content>
-            <Layout.Header.TitleText>
-              <Trans>Chat Settings</Trans>
-            </Layout.Header.TitleText>
-          </Layout.Header.Content>
-          <Layout.Header.Slot />
-        </Layout.Header.Outer>
-        <Layout.Content>
-          <View style={[a.py_xl, a.gap_md]}>
-            <View style={[a.px_xl]}>
-              <Text
-                style={[a.pb_xs, a.text_md, a.font_semi_bold, t.atoms.text]}>
-                <Trans>Allow direct messages from</Trans>
-              </Text>
-              <Text
-                style={[
-                  a.pb_md,
-                  a.text_sm,
-                  a.leading_snug,
-                  t.atoms.text_contrast_high,
-                ]}>
-                <Trans>
-                  You can continue ongoing conversations regardless of which
-                  setting you choose.
-                </Trans>
-              </Text>
-              <Toggle.Group
-                label={l`Allow direct messages from`}
-                type="radio"
-                values={[
-                  (profile?.associated?.chat?.allowIncoming as AllowIncoming) ??
-                    'following',
-                ]}
-                onChange={onSelectMessagesFrom}>
-                <View>
-                  {allowMessagesFromOptions.map(option => (
-                    <Toggle.Item
-                      key={option.name}
-                      highlightRow
-                      name={option.name}
-                      label={option.label}>
-                      {({selected}) => (
-                        <Toggle.RadioWithLabel
-                          label={option.label}
-                          selected={selected}
-                        />
-                      )}
-                    </Toggle.Item>
-                  ))}
-                </View>
-              </Toggle.Group>
-            </View>
-            <Divider style={{marginVertical: 10}} />
-            {isGroupChatEnabled ? (
-              <>
-                <View style={[a.px_xl]}>
+    <Layout.Screen testID="messagesSettingsScreen">
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Chat Settings</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
+      <Layout.Content>
+        <View style={[a.py_xl, a.gap_md]}>
+          <View style={[a.px_xl]}>
+            <Text style={[a.pb_xs, a.text_md, a.font_semi_bold, t.atoms.text]}>
+              <Trans>Allow direct messages from</Trans>
+            </Text>
+            <Text
+              style={[
+                a.pb_md,
+                a.text_sm,
+                a.leading_snug,
+                t.atoms.text_contrast_high,
+              ]}>
+              <Trans>
+                You can continue ongoing conversations regardless of which
+                setting you choose.
+              </Trans>
+            </Text>
+            <Toggle.Group
+              label={l`Allow direct messages from`}
+              type="radio"
+              values={[
+                (profile?.associated?.chat?.allowIncoming as AllowIncoming) ??
+                  'following',
+              ]}
+              onChange={onSelectMessagesFrom}>
+              <View>
+                {allowMessagesFromOptions.map(option => (
+                  <Toggle.Item
+                    key={option.name}
+                    highlightRow
+                    name={option.name}
+                    label={option.label}>
+                    {({selected}) => (
+                      <Toggle.RadioWithLabel
+                        label={option.label}
+                        selected={selected}
+                      />
+                    )}
+                  </Toggle.Item>
+                ))}
+              </View>
+            </Toggle.Group>
+          </View>
+          <Divider style={{marginVertical: 10}} />
+          {isGroupChatEnabled ? (
+            <>
+              <View style={[a.px_xl]}>
+                <Text
+                  style={[a.pb_xs, a.text_md, a.font_semi_bold, t.atoms.text]}>
+                  <Trans>Allow group chat invites from</Trans>
+                </Text>
+                <Text
+                  style={[
+                    a.pb_md,
+                    a.text_sm,
+                    a.leading_snug,
+                    t.atoms.text_contrast_high,
+                  ]}>
+                  <Trans>
+                    You can continue ongoing conversations regardless of which
+                    setting you choose.
+                  </Trans>
+                </Text>
+                <Toggle.Group
+                  label={l`Allow group chat invites from`}
+                  type="radio"
+                  values={[
+                    (profile?.associated?.chat
+                      ?.allowGroupInvites as AllowIncoming) ?? 'following',
+                  ]}
+                  onChange={onSelectGroupInvitesFrom}>
+                  <View>
+                    {allowGroupInvitesFromOptions.map(option => (
+                      <Toggle.Item
+                        key={option.name}
+                        highlightRow
+                        name={option.name}
+                        label={option.label}>
+                        {({selected}) => (
+                          <Toggle.RadioWithLabel
+                            label={option.label}
+                            selected={selected}
+                          />
+                        )}
+                      </Toggle.Item>
+                    ))}
+                  </View>
+                </Toggle.Group>
+              </View>
+              <Divider style={{marginVertical: 10}} />
+            </>
+          ) : null}
+          {IS_NATIVE && (
+            <>
+              <View style={[a.px_xl]}>
+                <Toggle.Item
+                  label={l`Notification sounds`}
+                  name="playSoundChat"
+                  value={preferences.playSoundChat}
+                  style={[a.flex_row, a.align_center, a.justify_between]}
+                  onChange={onSelectSoundSetting}>
+                  <BellIcon style={[a.mr_2xs, t.atoms.text]} size="md" />
                   <Text
                     style={[
-                      a.pb_xs,
+                      a.flex_1,
                       a.text_md,
                       a.font_semi_bold,
                       t.atoms.text,
                     ]}>
-                    <Trans>Allow group chat invites from</Trans>
+                    <Trans>Notification sounds</Trans>
                   </Text>
-                  <Text
-                    style={[
-                      a.pb_md,
-                      a.text_sm,
-                      a.leading_snug,
-                      t.atoms.text_contrast_high,
-                    ]}>
-                    <Trans>
-                      You can continue ongoing conversations regardless of which
-                      setting you choose.
-                    </Trans>
-                  </Text>
-                  <Toggle.Group
-                    label={l`Allow group chat invites from`}
-                    type="radio"
-                    values={[
-                      (profile?.associated?.chat
-                        ?.allowGroupInvites as AllowIncoming) ?? 'following',
-                    ]}
-                    onChange={onSelectGroupInvitesFrom}>
-                    <View>
-                      {allowGroupInvitesFromOptions.map(option => (
-                        <Toggle.Item
-                          key={option.name}
-                          highlightRow
-                          name={option.name}
-                          label={option.label}>
-                          {({selected}) => (
-                            <Toggle.RadioWithLabel
-                              label={option.label}
-                              selected={selected}
-                            />
-                          )}
-                        </Toggle.Item>
-                      ))}
-                    </View>
-                  </Toggle.Group>
-                </View>
-                <Divider style={{marginVertical: 10}} />
-              </>
-            ) : null}
-            {IS_NATIVE && (
-              <>
-                <View style={[a.px_xl]}>
-                  <Toggle.Item
-                    label={l`Notification sounds`}
-                    name="playSoundChat"
-                    value={preferences.playSoundChat}
-                    style={[a.flex_row, a.align_center, a.justify_between]}
-                    onChange={onSelectSoundSetting}>
-                    <BellIcon style={[a.mr_2xs, t.atoms.text]} size="md" />
-                    <Text
-                      style={[
-                        a.flex_1,
-                        a.text_md,
-                        a.font_semi_bold,
-                        t.atoms.text,
-                      ]}>
-                      <Trans>Notification sounds</Trans>
-                    </Text>
-                    <Toggle.Switch />
-                  </Toggle.Item>
-                </View>
-                <Divider style={{marginVertical: 10}} />
-              </>
-            )}
-            <View style={[a.px_xl]}>
-              <Toggle.Item
-                label={l`Export chat data`}
-                name="playSoundChat"
-                value={preferences.playSoundChat}
-                style={[a.flex_row, a.align_center, a.justify_between]}
-                onChange={() => {
-                  exportCarControl.open()
-                }}>
-                <CarIcon style={[a.mr_2xs, t.atoms.text]} size="md" />
-                <Text
-                  style={[a.flex_1, a.text_md, a.font_semi_bold, t.atoms.text]}>
-                  <Trans>Export chat data</Trans>
-                </Text>
-                <ChevronRightIcon style={[a.ml_2xs, t.atoms.text]} size="md" />
-              </Toggle.Item>
-            </View>
-            <Divider style={{marginVertical: 10}} />
+                  <Toggle.Switch />
+                </Toggle.Item>
+              </View>
+              <Divider style={{marginVertical: 10}} />
+            </>
+          )}
+          <View style={[a.px_xl]}>
+            <Toggle.Item
+              label={l`Export chat data`}
+              name="playSoundChat"
+              value={preferences.playSoundChat}
+              style={[a.flex_row, a.align_center, a.justify_between]}
+              onChange={() => {
+                exportCarControl.open()
+              }}>
+              <CarIcon style={[a.mr_2xs, t.atoms.text]} size="md" />
+              <Text
+                style={[a.flex_1, a.text_md, a.font_semi_bold, t.atoms.text]}>
+                <Trans>Export chat data</Trans>
+              </Text>
+              <ChevronRightIcon style={[a.ml_2xs, t.atoms.text]} size="md" />
+            </Toggle.Item>
           </View>
-        </Layout.Content>
-      </Layout.Screen>
+          <Divider style={{marginVertical: 10}} />
+        </View>
+      </Layout.Content>
       <ExportCarDialog control={exportCarControl} />
-    </>
+    </Layout.Screen>
   )
 }
