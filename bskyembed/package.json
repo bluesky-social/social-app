@@ -10,10 +10,17 @@
     "analyze": "ANALYZE=1 vite build",
     "lint": "eslint --cache src",
     "typecheck": "tsc --noEmit",
-    "format": "prettier -w src"
+    "format": "prettier -w src",
+    "lex": "lex",
+    "lex:install": "lex install",
+    "lex:update": "lex install --update",
+    "lex:ci": "lex install --ci",
+    "lex:build": "lex build --lexicons ./lexicons --out ./src/lexicons --clear",
+    "postinstall": "pnpm lex:install && pnpm lex:build"
   },
   "dependencies": {
-    "@atproto/api": "0.20.30",
+    "@atproto/lex": "^0.3.0",
+    "@atproto/syntax": "^0.7.2",
     "preact": "^10.29.7"
   },
   "devDependencies": {
