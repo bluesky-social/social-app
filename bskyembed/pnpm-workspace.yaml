@@ -1,4 +1,5 @@
 allowBuilds:
+<<<<<<< HEAD
   '@sentry/cli': true
   'core-js': true
   'esbuild': true
@@ -6,3 +7,9 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - '@atproto/*'
   - '@bsky.app/*'
+=======
+  "@sentry/cli": true
+  "core-js": true
+  "esbuild": true
+  "unrs-resolver": true
+>>>>>>> 7cb3499c2 (use pnpm, update eslint/typescript)
