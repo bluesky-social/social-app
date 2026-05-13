@@ -20,13 +20,12 @@ export default function (ctx: AppContext, app: Express) {
     '/avatar-bubbles',
     originVerifyMiddleware(ctx),
     handler(async (req, res) => {
-      const didsParam = req.query.dids
-      if (typeof didsParam !== 'string') {
-        return res.status(400).end('missing dids parameter')
-      }
-      const dids = didsParam.split(',').filter(Boolean)
+      const didParam = req.query.did
+      const dids = (Array.isArray(didParam) ? didParam : [didParam]).filter(
+        (d): d is string => typeof d === 'string' && d.length > 0,
+      )
       if (dids.length < 1 || dids.length > 4) {
-        return res.status(400).end('dids must contain 1-4 DIDs')
+        return res.status(400).end('did param must contain 1-4 DIDs')
       }
 
       let profiles
