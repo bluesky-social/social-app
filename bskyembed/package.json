@@ -26,6 +26,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@preact/preset-vite": "^2.10.5",
+    "@typescript-eslint/parser": "^8.64.0",
     "@vitejs/plugin-legacy": "^8.2.1",
     "autoprefixer": "^10.5.3",
     "eslint": "^10.7.0",

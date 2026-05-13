@@ -513,6 +513,10 @@
           "maxLength": 100,
           "description": "Storage for NUXs the user has encountered."
         },
+        "isBetaUser": {
+          "type": "boolean",
+          "description": "Indicates if the user is participating in the beta features program."
+        },
         "queuedNudges": {
           "type": "array",
           "items": {
@@ -657,6 +661,15 @@
           "type": "string",
           "format": "datetime",
           "description": "Timestamp when the verification was created."
+        },
+        "issuerHandle": {
+          "type": "string",
+          "format": "handle",
+          "description": "The handle of the issuer."
+        },
+        "issuerDisplayName": {
+          "type": "string",
+          "description": "The display name of the issuer."
         }
       },
       "description": "An individual verification for an associated subject."
@@ -881,6 +894,14 @@
       ],
       "properties": {
         "allowIncoming": {
+          "type": "string",
+          "knownValues": [
+            "all",
+            "none",
+            "following"
+          ]
+        },
+        "allowGroupInvites": {
           "type": "string",
           "knownValues": [
             "all",

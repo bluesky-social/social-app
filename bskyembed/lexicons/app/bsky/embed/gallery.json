@@ -1,35 +1,40 @@
 {
-  "id": "app.bsky.embed.images",
+  "id": "app.bsky.embed.gallery",
   "defs": {
     "main": {
       "type": "object",
       "required": [
-        "images"
+        "items"
       ],
       "properties": {
-        "images": {
+        "items": {
           "type": "array",
           "items": {
-            "ref": "#image",
-            "type": "ref"
+            "refs": [
+              "#image"
+            ],
+            "type": "union",
+            "description": "The media items in the gallery. Each item may be of a different type, but all types must be supported by the client."
           },
-          "maxLength": 4
+          "maxLength": 20,
+          "description": "The schema-level maxLength of 20 is a future-proof ceiling. Clients should currently enforce a soft limit of 10 items in authoring UIs."
         }
       }
     },
     "view": {
       "type": "object",
       "required": [
-        "images"
+        "items"
       ],
       "properties": {
-        "images": {
+        "items": {
           "type": "array",
           "items": {
-            "ref": "#viewImage",
-            "type": "ref"
-          },
-          "maxLength": 4
+            "refs": [
+              "#viewImage"
+            ],
+            "type": "union"
+          }
         }
       }
     },
@@ -37,7 +42,8 @@
       "type": "object",
       "required": [
         "image",
-        "alt"
+        "alt",
+        "aspectRatio"
       ],
       "properties": {
         "alt": {
@@ -49,8 +55,7 @@
           "accept": [
             "image/*"
           ],
-          "maxSize": 2000000,
-          "description": "The raw image file. May be up to 2 MB, formerly limited to 1 MB."
+          "maxSize": 2000000
         },
         "aspectRatio": {
           "ref": "app.bsky.embed.defs#aspectRatio",
@@ -61,24 +66,25 @@
     "viewImage": {
       "type": "object",
       "required": [
-        "thumb",
+        "thumbnail",
         "fullsize",
-        "alt"
+        "alt",
+        "aspectRatio"
       ],
       "properties": {
         "alt": {
           "type": "string",
           "description": "Alt text description of the image, for accessibility."
         },
-        "thumb": {
-          "type": "string",
-          "format": "uri",
-          "description": "Fully-qualified URL where a thumbnail of the image can be fetched. For example, CDN location provided by the App View."
-        },
         "fullsize": {
           "type": "string",
           "format": "uri",
           "description": "Fully-qualified URL where a large version of the image can be fetched. May or may not be the exact original blob. For example, CDN location provided by the App View."
+        },
+        "thumbnail": {
+          "type": "string",
+          "format": "uri",
+          "description": "Fully-qualified URL where a thumbnail of the image can be fetched. For example, CDN location provided by the App View."
         },
         "aspectRatio": {
           "ref": "app.bsky.embed.defs#aspectRatio",
@@ -89,5 +95,5 @@
   },
   "$type": "com.atproto.lexicon.schema",
   "lexicon": 1,
-  "description": "A set of images embedded in a Bluesky record (eg, a post)."
+  "description": "An assortment of media embedded in a Bluesky record (eg, a post)."
 }
