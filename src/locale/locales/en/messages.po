@@ -2316,7 +2316,7 @@ msgid "Clear all storage data (restart after this)"
 msgstr ""
 
 #. Accessibility label for the X button inside the search input that clears the typed query and returns to the trending feed.
-#: src/features/gifPicker/components/GifPickerHeader.tsx:67
+#: src/features/gifPicker/components/GifPickerHeader.tsx:60
 msgid "Clear GIF search"
 msgstr "Clear GIF search"
 
@@ -7329,7 +7329,7 @@ msgstr ""
 msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
-#: src/components/Post/Embed/ExternalEmbed/index.tsx:91
+#: src/components/Post/Embed/ExternalEmbed/index.tsx:92
 msgid "Open link to {niceUrl}"
 msgstr ""
 
@@ -8089,6 +8089,10 @@ msgstr ""
 #: src/components/dialogs/LinkWarning.tsx:82
 msgid "Potentially misleading link warning"
 msgstr ""
+
+#: src/features/gifPicker/components/PoweredByGiphy.tsx:27
+msgid "Powered by GIPHY"
+msgstr "Powered by GIPHY"
 
 #: src/screens/Messages/components/MessageListError.tsx:18
 msgid "Press to attempt reconnection"
@@ -9180,7 +9184,9 @@ msgid "Search for posts, users, or feeds"
 msgstr ""
 
 #. Accessibility label for the GIF search input inside the GIF picker dialog.
-#: src/features/gifPicker/components/GifPickerHeader.tsx:40
+#. Placeholder text inside the GIF search input.
+#: src/features/gifPicker/components/GifPickerHeader.tsx:34
+#: src/features/gifPicker/components/GifPickerHeader.tsx:39
 msgid "Search GIFs"
 msgstr ""
 
@@ -9188,11 +9194,6 @@ msgstr ""
 #: src/screens/Search/SearchResults.tsx:314
 msgid "Search is currently unavailable when logged out"
 msgstr ""
-
-#. Placeholder text inside the GIF search input. KLIPY is the third-party GIF provider; keep the brand name as-is.
-#: src/features/gifPicker/components/GifPickerHeader.tsx:45
-msgid "Search KLIPY"
-msgstr "Search KLIPY"
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:232
 #: src/components/dialogs/LanguageSelectDialog.tsx:233
