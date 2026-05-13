@@ -1,0 +1,212 @@
+{
+  "id": "tools.ozone.report.defs",
+  "defs": {
+    "reasonType": {
+      "type": "string",
+      "knownValues": [
+        "tools.ozone.report.defs#reasonAppeal",
+        "tools.ozone.report.defs#reasonOther",
+        "tools.ozone.report.defs#reasonViolenceAnimal",
+        "tools.ozone.report.defs#reasonViolenceThreats",
+        "tools.ozone.report.defs#reasonViolenceGraphicContent",
+        "tools.ozone.report.defs#reasonViolenceGlorification",
+        "tools.ozone.report.defs#reasonViolenceExtremistContent",
+        "tools.ozone.report.defs#reasonViolenceTrafficking",
+        "tools.ozone.report.defs#reasonViolenceOther",
+        "tools.ozone.report.defs#reasonSexualAbuseContent",
+        "tools.ozone.report.defs#reasonSexualNCII",
+        "tools.ozone.report.defs#reasonSexualDeepfake",
+        "tools.ozone.report.defs#reasonSexualAnimal",
+        "tools.ozone.report.defs#reasonSexualUnlabeled",
+        "tools.ozone.report.defs#reasonSexualOther",
+        "tools.ozone.report.defs#reasonChildSafetyCSAM",
+        "tools.ozone.report.defs#reasonChildSafetyGroom",
+        "tools.ozone.report.defs#reasonChildSafetyPrivacy",
+        "tools.ozone.report.defs#reasonChildSafetyHarassment",
+        "tools.ozone.report.defs#reasonChildSafetyOther",
+        "tools.ozone.report.defs#reasonHarassmentTroll",
+        "tools.ozone.report.defs#reasonHarassmentTargeted",
+        "tools.ozone.report.defs#reasonHarassmentHateSpeech",
+        "tools.ozone.report.defs#reasonHarassmentDoxxing",
+        "tools.ozone.report.defs#reasonHarassmentOther",
+        "tools.ozone.report.defs#reasonMisleadingBot",
+        "tools.ozone.report.defs#reasonMisleadingImpersonation",
+        "tools.ozone.report.defs#reasonMisleadingSpam",
+        "tools.ozone.report.defs#reasonMisleadingScam",
+        "tools.ozone.report.defs#reasonMisleadingElections",
+        "tools.ozone.report.defs#reasonMisleadingOther",
+        "tools.ozone.report.defs#reasonRuleSiteSecurity",
+        "tools.ozone.report.defs#reasonRuleProhibitedSales",
+        "tools.ozone.report.defs#reasonRuleBanEvasion",
+        "tools.ozone.report.defs#reasonRuleOther",
+        "tools.ozone.report.defs#reasonSelfHarmContent",
+        "tools.ozone.report.defs#reasonSelfHarmED",
+        "tools.ozone.report.defs#reasonSelfHarmStunts",
+        "tools.ozone.report.defs#reasonSelfHarmSubstances",
+        "tools.ozone.report.defs#reasonSelfHarmOther"
+      ]
+    },
+    "reasonOther": {
+      "type": "token",
+      "description": "An issue not included in these options"
+    },
+    "reasonAppeal": {
+      "type": "token",
+      "description": "Appeal a previously taken moderation action"
+    },
+    "reasonRuleOther": {
+      "type": "token",
+      "description": "Other"
+    },
+    "reasonSelfHarmED": {
+      "type": "token",
+      "description": "Eating disorders"
+    },
+    "reasonSexualNCII": {
+      "type": "token",
+      "description": "Non-consensual intimate imagery"
+    },
+    "reasonSexualOther": {
+      "type": "token",
+      "description": "Other sexual violence content"
+    },
+    "reasonSexualAnimal": {
+      "type": "token",
+      "description": "Animal sexual abuse"
+    },
+    "reasonMisleadingBot": {
+      "type": "token",
+      "description": "Fake account or bot"
+    },
+    "reasonSelfHarmOther": {
+      "type": "token",
+      "description": "Other dangerous content"
+    },
+    "reasonViolenceOther": {
+      "type": "token",
+      "description": "Other violent content"
+    },
+    "reasonMisleadingScam": {
+      "type": "token",
+      "description": "Scam"
+    },
+    "reasonMisleadingSpam": {
+      "type": "token",
+      "description": "Spam"
+    },
+    "reasonRuleBanEvasion": {
+      "type": "token",
+      "description": "Banned user returning"
+    },
+    "reasonSelfHarmStunts": {
+      "type": "token",
+      "description": "Dangerous challenges or activities"
+    },
+    "reasonSexualDeepfake": {
+      "type": "token",
+      "description": "Deepfake adult content"
+    },
+    "reasonViolenceAnimal": {
+      "type": "token",
+      "description": "Animal welfare violations"
+    },
+    "reasonChildSafetyCSAM": {
+      "type": "token",
+      "description": "Child sexual abuse material (CSAM). These reports will be sent only be sent to the application's Moderation Authority."
+    },
+    "reasonHarassmentOther": {
+      "type": "token",
+      "description": "Other harassing or hateful content"
+    },
+    "reasonHarassmentTroll": {
+      "type": "token",
+      "description": "Trolling"
+    },
+    "reasonMisleadingOther": {
+      "type": "token",
+      "description": "Other misleading content"
+    },
+    "reasonSelfHarmContent": {
+      "type": "token",
+      "description": "Content promoting or depicting self-harm"
+    },
+    "reasonSexualUnlabeled": {
+      "type": "token",
+      "description": "Unlabelled adult content"
+    },
+    "reasonViolenceThreats": {
+      "type": "token",
+      "description": "Threats or incitement"
+    },
+    "reasonChildSafetyGroom": {
+      "type": "token",
+      "description": "Grooming or predatory behavior. These reports will be sent only be sent to the application's Moderation Authority."
+    },
+    "reasonChildSafetyOther": {
+      "type": "token",
+      "description": "Other child safety. These reports will be sent only be sent to the application's Moderation Authority."
+    },
+    "reasonRuleSiteSecurity": {
+      "type": "token",
+      "description": "Hacking or system attacks"
+    },
+    "reasonHarassmentDoxxing": {
+      "type": "token",
+      "description": "Doxxing"
+    },
+    "reasonChildSafetyPrivacy": {
+      "type": "token",
+      "description": "Privacy violation involving a minor"
+    },
+    "reasonHarassmentTargeted": {
+      "type": "token",
+      "description": "Targeted harassment"
+    },
+    "reasonSelfHarmSubstances": {
+      "type": "token",
+      "description": "Dangerous substances or drug abuse"
+    },
+    "reasonSexualAbuseContent": {
+      "type": "token",
+      "description": "Adult sexual abuse content"
+    },
+    "reasonMisleadingElections": {
+      "type": "token",
+      "description": "False information about elections"
+    },
+    "reasonRuleProhibitedSales": {
+      "type": "token",
+      "description": "Promoting or selling prohibited items or services"
+    },
+    "reasonViolenceTrafficking": {
+      "type": "token",
+      "description": "Human trafficking"
+    },
+    "reasonHarassmentHateSpeech": {
+      "type": "token",
+      "description": "Hate speech"
+    },
+    "reasonChildSafetyHarassment": {
+      "type": "token",
+      "description": "Harassment or bullying of minors"
+    },
+    "reasonViolenceGlorification": {
+      "type": "token",
+      "description": "Glorification of violence"
+    },
+    "reasonViolenceGraphicContent": {
+      "type": "token",
+      "description": "Graphic violent content"
+    },
+    "reasonMisleadingImpersonation": {
+      "type": "token",
+      "description": "Impersonation"
+    },
+    "reasonViolenceExtremistContent": {
+      "type": "token",
+      "description": "Extremist content. These reports will be sent only be sent to the application's Moderation Authority."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}
