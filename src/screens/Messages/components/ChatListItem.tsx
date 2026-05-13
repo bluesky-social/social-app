@@ -39,6 +39,7 @@ import {getSystemMessageInfo} from '#/components/dms/getSystemMessageInfo'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen} from '#/components/icons/EnveopeOpen'
 import {Trash_Stroke2_Corner0_Rounded} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
@@ -264,72 +265,80 @@ function BaseChatItem({
     isDeletedAccount ||
     (convo.kind === 'group' && convo.details.lockStatus !== 'unlocked')
 
-  const {lastMessage, lastMessageSentAt, latestReportableMessage} =
-    useMemo(() => {
-      let lastMessage = l`No messages yet`
+  const {
+    lastMessage,
+    LastMessageIcon,
+    lastMessageSentAt,
+    latestReportableMessage,
+  } = useMemo(() => {
+    let lastMessage = l`No messages yet`
 
-      let lastMessageSentAt: string | null = null
+    let LastMessageIcon: React.ComponentType<SVGIconProps> | null = null
 
-      let latestReportableMessage: ChatBskyConvoDefs.MessageView | undefined
+    let lastMessageSentAt: string | null = null
 
-      // Deleted message
-      if (ChatBskyConvoDefs.isDeletedMessageView(convo.view.lastMessage)) {
+    let latestReportableMessage: ChatBskyConvoDefs.MessageView | undefined
+
+    // Deleted message
+    if (ChatBskyConvoDefs.isDeletedMessageView(convo.view.lastMessage)) {
+      lastMessageSentAt = convo.view.lastMessage.sentAt
+
+      lastMessage = isDeletedAccount
+        ? l`Conversation deleted`
+        : l`Message deleted`
+    }
+
+    // Message
+    if (ChatBskyConvoDefs.isMessageView(convo.view.lastMessage)) {
+      const info = getMessageInfo({
+        convo: convo.view,
+        currentAccountDid: currentAccount?.did,
+        i18n,
+      })
+      if (info) {
+        lastMessage = info.message ?? lastMessage
+        lastMessageSentAt = info.sentAt
+        latestReportableMessage = info.reportableMessage
+      }
+    }
+
+    // Reaction
+    if (ChatBskyConvoDefs.isMessageAndReactionView(convo.view.lastReaction)) {
+      const info = getReactionInfo({
+        convo: convo.view,
+        currentAccountDid: currentAccount?.did,
+        i18n,
+      })
+      if (
+        info &&
+        (!lastMessageSentAt ||
+          new Date(lastMessageSentAt) < new Date(info.createdAt))
+      ) {
+        lastMessage = info.message
+        lastMessageSentAt = info.createdAt
+      }
+    }
+
+    // System message
+    if (ChatBskyConvoDefs.isSystemMessageView(convo.view.lastMessage)) {
+      const info = getSystemMessageInfo(
+        convo.view.lastMessage.data,
+        new Map(convo.view.members.map(m => [m.did, m])),
+      )
+      if (info) {
+        lastMessage = i18n._(info.message)
+        LastMessageIcon = info.Icon
         lastMessageSentAt = convo.view.lastMessage.sentAt
-
-        lastMessage = isDeletedAccount
-          ? l`Conversation deleted`
-          : l`Message deleted`
       }
+    }
 
-      // Message
-      if (ChatBskyConvoDefs.isMessageView(convo.view.lastMessage)) {
-        const info = getMessageInfo({
-          convo: convo.view,
-          currentAccountDid: currentAccount?.did,
-          i18n,
-        })
-        if (info) {
-          lastMessage = info.message ?? lastMessage
-          lastMessageSentAt = info.sentAt
-          latestReportableMessage = info.reportableMessage
-        }
-      }
-
-      // Reaction
-      if (ChatBskyConvoDefs.isMessageAndReactionView(convo.view.lastReaction)) {
-        const info = getReactionInfo({
-          convo: convo.view,
-          currentAccountDid: currentAccount?.did,
-          i18n,
-        })
-        if (
-          info &&
-          (!lastMessageSentAt ||
-            new Date(lastMessageSentAt) < new Date(info.createdAt))
-        ) {
-          lastMessage = info.message
-          lastMessageSentAt = info.createdAt
-        }
-      }
-
-      // System message
-      if (ChatBskyConvoDefs.isSystemMessageView(convo.view.lastMessage)) {
-        const info = getSystemMessageInfo(
-          convo.view.lastMessage.data,
-          new Map(convo.view.members.map(m => [m.did, m])),
-        )
-        if (info) {
-          lastMessage = i18n._(info.message)
-          lastMessageSentAt = convo.view.lastMessage.sentAt
-        }
-      }
-
-      return {
-        lastMessage,
-        lastMessageSentAt,
-        latestReportableMessage,
-      }
-    }, [l, convo, currentAccount?.did, isDeletedAccount, i18n])
+    return {
+      lastMessage,
+      LastMessageIcon,
+      lastMessageSentAt,
+      latestReportableMessage,
+    }
+  }, [l, convo, currentAccount?.did, isDeletedAccount, i18n])
 
   const [showActions, setShowActions] = useState(false)
 
@@ -526,17 +535,27 @@ function BaseChatItem({
                     </Text>
                   )}
 
-                  <Text
-                    emoji
-                    numberOfLines={2}
-                    style={[
-                      a.text_sm,
-                      a.leading_snug,
-                      hasUnread ? a.font_semi_bold : t.atoms.text_contrast_high,
-                      isDimStyle && t.atoms.text_contrast_medium,
-                    ]}>
-                    {lastMessage}
-                  </Text>
+                  <View style={[a.flex_row, a.align_center]}>
+                    {LastMessageIcon && (
+                      <LastMessageIcon
+                        size="xs"
+                        style={[a.mr_2xs, t.atoms.text_contrast_medium]}
+                      />
+                    )}
+                    <Text
+                      emoji
+                      numberOfLines={2}
+                      style={[
+                        a.text_sm,
+                        a.leading_snug,
+                        hasUnread
+                          ? a.font_semi_bold
+                          : t.atoms.text_contrast_high,
+                        isDimStyle && t.atoms.text_contrast_medium,
+                      ]}>
+                      {lastMessage}
+                    </Text>
+                  </View>
 
                   {postAlerts}
 
