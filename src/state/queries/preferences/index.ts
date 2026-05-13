@@ -81,14 +81,6 @@ export function usePreferencesQuery() {
     select: useCallback(
       (data: UsePreferencesQueryResponse) => {
         /**
-         * The persisted query cache stores dates as strings, but our code
-         * expects a `Date`.
-         */
-        if (data.birthDate && !(data.birthDate instanceof Date)) {
-          data = {...data, birthDate: new Date(data.birthDate)}
-        }
-
-        /**
          * Prefs are all downstream of age assurance now. For logged-out
          * users, we override moderation prefs based on AA state.
          */
@@ -108,6 +100,13 @@ export function usePreferencesQuery() {
       [aa],
     ),
   })
+
+  if (query.data?.birthDate) {
+    /**
+     * The persisted query cache stores dates as strings, but our code expects a `Date`.
+     */
+    query.data.birthDate = new Date(query.data.birthDate)
+  }
 
   return query
 }
