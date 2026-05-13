@@ -24,6 +24,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.2
         version: 2.10.5(@babel/core@7.29.0)(preact@10.29.1)(vite@8.0.12(jiti@1.21.7)(terser@5.47.1))
+      '@typescript-eslint/parser':
+        specifier: ^8.59.3
+        version: 8.59.3(eslint@9.39.4(jiti@1.21.7))(typescript@6.0.3)
       '@vitejs/plugin-legacy':
         specifier: ^8.0.1
         version: 8.0.1(terser@5.47.1)(vite@8.0.12(jiti@1.21.7)(terser@5.47.1))

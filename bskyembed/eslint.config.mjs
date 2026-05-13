@@ -5,11 +5,13 @@ import tseslint from 'typescript-eslint'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import { importX } from 'eslint-plugin-import-x'
 import globals from 'globals'
+import tsParser from '@typescript-eslint/parser'
+
 
 export default defineConfig(
   // Global ignores
   {
-    ignores: ['dist/**', 'node_modules/**'],
+    ignores: ['dist/**', 'node_modules/**', 'src/lexicons/**'],
   },
 
   // Base JS recommended rules
@@ -35,6 +37,7 @@ export default defineConfig(
         ...globals.browser,
       },
       parserOptions: {
+        parser: tsParser,
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
       },
