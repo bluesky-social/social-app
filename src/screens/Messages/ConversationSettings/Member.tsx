@@ -138,7 +138,7 @@ export function Member({
             </ProfileCard.Header>
           </ProfileCard.Outer>
         </ProfileCard.Link>
-        {isSelf || isFollowing ? null : (
+        {isSelf || isFollowing || profile.viewer?.blocking ? null : (
           <SimpleInlineLinkText
             label={l`Follow ${displayName}`}
             {...createStaticClick(handleFollow)}
