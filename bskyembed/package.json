@@ -16,7 +16,7 @@
     "lex:update": "lex install --update",
     "lex:ci": "lex install --ci",
     "lex:build": "lex build --lexicons ./lexicons --out ./src/lexicons --clear",
-    "postinstall": "pnpm lex:install && pnpm lex:build"
+    "postinstall": "pnpm lex:ci && pnpm lex:build"
   },
   "dependencies": {
     "@atproto/lex": "^0.3.0",
