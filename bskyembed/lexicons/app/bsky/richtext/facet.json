@@ -1,0 +1,90 @@
+{
+  "id": "app.bsky.richtext.facet",
+  "defs": {
+    "tag": {
+      "type": "object",
+      "required": [
+        "tag"
+      ],
+      "properties": {
+        "tag": {
+          "type": "string",
+          "maxLength": 640,
+          "maxGraphemes": 64
+        }
+      },
+      "description": "Facet feature for a hashtag. The text usually includes a '#' prefix, but the facet reference should not (except in the case of 'double hash tags')."
+    },
+    "link": {
+      "type": "object",
+      "required": [
+        "uri"
+      ],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "description": "Facet feature for a URL. The text URL may have been simplified or truncated, but the facet reference should be a complete URL."
+    },
+    "main": {
+      "type": "object",
+      "required": [
+        "index",
+        "features"
+      ],
+      "properties": {
+        "index": {
+          "ref": "#byteSlice",
+          "type": "ref"
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "refs": [
+              "#mention",
+              "#link",
+              "#tag"
+            ],
+            "type": "union"
+          }
+        }
+      },
+      "description": "Annotation of a sub-string within rich text."
+    },
+    "mention": {
+      "type": "object",
+      "required": [
+        "did"
+      ],
+      "properties": {
+        "did": {
+          "type": "string",
+          "format": "did"
+        }
+      },
+      "description": "Facet feature for mention of another account. The text is usually a handle, including a '@' prefix, but the facet reference is a DID."
+    },
+    "byteSlice": {
+      "type": "object",
+      "required": [
+        "byteStart",
+        "byteEnd"
+      ],
+      "properties": {
+        "byteEnd": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "byteStart": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "description": "Specifies the sub-string range a facet feature applies to. Start index is inclusive, end index is exclusive. Indices are zero-indexed, counting bytes of the UTF-8 encoded text. NOTE: some languages, like Javascript, use UTF-16 or Unicode codepoints for string slice indexing; in these languages, convert to byte arrays before working with facets."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

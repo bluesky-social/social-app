@@ -1,0 +1,83 @@
+{
+  "id": "app.bsky.embed.external",
+  "defs": {
+    "main": {
+      "type": "object",
+      "required": [
+        "external"
+      ],
+      "properties": {
+        "external": {
+          "ref": "#external",
+          "type": "ref"
+        }
+      },
+      "description": "A representation of some externally linked content (eg, a URL and 'card'), embedded in a Bluesky record (eg, a post)."
+    },
+    "view": {
+      "type": "object",
+      "required": [
+        "external"
+      ],
+      "properties": {
+        "external": {
+          "ref": "#viewExternal",
+          "type": "ref"
+        }
+      }
+    },
+    "external": {
+      "type": "object",
+      "required": [
+        "uri",
+        "title",
+        "description"
+      ],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "uri"
+        },
+        "thumb": {
+          "type": "blob",
+          "accept": [
+            "image/*"
+          ],
+          "maxSize": 1000000
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "viewExternal": {
+      "type": "object",
+      "required": [
+        "uri",
+        "title",
+        "description"
+      ],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "uri"
+        },
+        "thumb": {
+          "type": "string",
+          "format": "uri"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

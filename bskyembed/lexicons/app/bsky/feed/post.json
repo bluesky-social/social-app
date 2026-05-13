@@ -1,0 +1,145 @@
+{
+  "id": "app.bsky.feed.post",
+  "defs": {
+    "main": {
+      "key": "tid",
+      "type": "record",
+      "record": {
+        "type": "object",
+        "required": [
+          "text",
+          "createdAt"
+        ],
+        "properties": {
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 640,
+              "maxGraphemes": 64
+            },
+            "maxLength": 8,
+            "description": "Additional hashtags, in addition to any included in post text and facets."
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 3000,
+            "description": "The primary post content. May be an empty string, if there are embeds.",
+            "maxGraphemes": 300
+          },
+          "embed": {
+            "refs": [
+              "app.bsky.embed.images",
+              "app.bsky.embed.video",
+              "app.bsky.embed.external",
+              "app.bsky.embed.record",
+              "app.bsky.embed.recordWithMedia"
+            ],
+            "type": "union"
+          },
+          "langs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "language"
+            },
+            "maxLength": 3,
+            "description": "Indicates human language of post primary text content."
+          },
+          "reply": {
+            "ref": "#replyRef",
+            "type": "ref"
+          },
+          "facets": {
+            "type": "array",
+            "items": {
+              "ref": "app.bsky.richtext.facet",
+              "type": "ref"
+            },
+            "description": "Annotations of text (mentions, URLs, hashtags, etc)"
+          },
+          "labels": {
+            "refs": [
+              "com.atproto.label.defs#selfLabels"
+            ],
+            "type": "union",
+            "description": "Self-label values for this post. Effectively content warnings."
+          },
+          "entities": {
+            "type": "array",
+            "items": {
+              "ref": "#entity",
+              "type": "ref"
+            },
+            "description": "DEPRECATED: replaced by app.bsky.richtext.facet."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Client-declared timestamp when this post was originally created."
+          }
+        }
+      },
+      "description": "Record containing a Bluesky post."
+    },
+    "entity": {
+      "type": "object",
+      "required": [
+        "index",
+        "type",
+        "value"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Expected values are 'mention' and 'link'."
+        },
+        "index": {
+          "ref": "#textSlice",
+          "type": "ref"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "description": "Deprecated: use facets instead."
+    },
+    "replyRef": {
+      "type": "object",
+      "required": [
+        "root",
+        "parent"
+      ],
+      "properties": {
+        "root": {
+          "ref": "com.atproto.repo.strongRef",
+          "type": "ref"
+        },
+        "parent": {
+          "ref": "com.atproto.repo.strongRef",
+          "type": "ref"
+        }
+      }
+    },
+    "textSlice": {
+      "type": "object",
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "end": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "description": "Deprecated. Use app.bsky.richtext instead -- A text segment. Start is inclusive, end is exclusive. Indices are for utf16-encoded strings."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}
