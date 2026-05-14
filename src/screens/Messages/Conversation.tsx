@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {type LayoutChangeEvent, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {moderateProfile} from '@atproto/api'
+import {ChatBskyConvoDefs, moderateProfile} from '@atproto/api'
 import {
   ScrollEdgeEffect,
   ScrollEdgeEffectProvider,
@@ -29,6 +29,8 @@ import {ConvoStatus} from '#/state/messages/convo/types'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useConvoQuery} from '#/state/queries/messages/conversation'
+import {useListJoinRequestsQuery} from '#/state/queries/messages/list-join-requests'
+import {useMarkJoinRequestsRead} from '#/state/queries/messages/mark-join-request.read'
 import {useSession} from '#/state/session'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, web} from '#/alf'
@@ -51,6 +53,7 @@ import {IS_INTERNAL, IS_LIQUID_GLASS} from '#/env'
 import {ChatDisabled} from './components/ChatDisabled'
 import {ChatEnded} from './components/ChatEnded'
 import {ChatLocked} from './components/ChatLocked'
+import {RequestStatus} from './components/RequestStatus'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -170,6 +173,7 @@ function InnerReady({
   isDisabled: boolean
 }) {
   const navigation = useNavigation<NavigationProp>()
+  const {currentAccount} = useSession()
   const {top: topInset} = useSafeAreaInsets()
   const [headerHeight, setHeaderHeight] = useState(0)
   const onHeaderLayout = (e: LayoutChangeEvent) => {
@@ -179,6 +183,19 @@ function InnerReady({
     useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>()
   const {needsEmailVerification} = useEmail()
   const emailDialogControl = useEmailDialogControl()
+
+  const isOwner =
+    convo?.kind === 'group' && convo.primaryMember?.did === currentAccount?.did
+
+  const {hasNextPage: hasMoreRequests} = useListJoinRequestsQuery({
+    convoId: convo?.view.id,
+    enabled: isOwner,
+  })
+  const unreadRequestCount =
+    convo?.kind === 'group' && ChatBskyConvoDefs.isGroupConvo(convo.view.kind)
+      ? (convo.view.kind.unreadJoinRequestCount ?? 0)
+      : 0
+  const {mutate: markJoinRequestsRead} = useMarkJoinRequestsRead(convo?.view.id)
 
   /**
    * Must be non-reactive, otherwise the update to open the global dialog will
@@ -264,8 +281,26 @@ function InnerReady({
           {header}
         </ScrollEdgeEffect>
       ) : (
-        header
+        <View onLayout={onHeaderLayout}>{header}</View>
       )}
+
+      {isActive && convo?.kind === 'group' && unreadRequestCount > 0 ? (
+        <RequestStatus
+          top={headerHeight}
+          count={unreadRequestCount}
+          more={!!hasMoreRequests}
+          onDismiss={() => {
+            markJoinRequestsRead()
+          }}
+          onPress={() => {
+            markJoinRequestsRead()
+            navigation.navigate('MessagesJoinRequests', {
+              conversation: convo.view.id,
+            })
+          }}
+        />
+      ) : null}
+
       {isActive && (
         <MessagesList
           hasScrolled={hasScrolled}

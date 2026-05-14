@@ -215,14 +215,14 @@ function GroupChatItem({
       isBlockedAccount={false}
       isDeletedAccount={false}
       subtitle={
-        convo.details.joinRequestCount
-          ? convo.details.joinRequestCount > 20
+        convo.details.unreadJoinRequestCount
+          ? convo.details.unreadJoinRequestCount > 20
             ? l({
                 message: '20+ new join requests',
                 context:
                   'Displayed when there are more than 20 requests to join a group chat',
               })
-            : plural(convo.details.joinRequestCount, {
+            : plural(convo.details.unreadJoinRequestCount, {
                 one: '# new join request',
                 other: '# new join requests',
               })
