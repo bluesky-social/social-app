@@ -115,12 +115,12 @@ export function ExportCarDialog({
           <Button
             color="primary"
             size="large"
-            label={l`Download CAR file`}
+            label={l`Download profile data`}
             disabled={!!loading}
             onPress={() => void download()}>
             <ButtonIcon icon={loading === 'repo' ? Loader : DownloadIcon} />
             <ButtonText>
-              <Trans context="button">Download CAR file</Trans>
+              <Trans context="button">Download profile data</Trans>
             </ButtonText>
           </Button>
 

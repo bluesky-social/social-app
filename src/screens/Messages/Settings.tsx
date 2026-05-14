@@ -50,6 +50,7 @@ export function MessagesSettingsScreenInner({}: Props) {
     did: currentAccount!.did,
   })
   const {preferences, setPref} = useBackgroundNotificationPreferences()
+
   const exportCarControl = Dialog.useDialogControl()
 
   const isGroupChatEnabled = ax.features.enabled(ax.features.GroupChatsEnable)
@@ -233,7 +234,7 @@ export function MessagesSettingsScreenInner({}: Props) {
                   value={preferences.playSoundChat}
                   style={[a.flex_row, a.align_center, a.justify_between]}
                   onChange={onSelectSoundSetting}>
-                  <BellIcon style={[a.mr_2xs, t.atoms.text]} size="md" />
+                  <BellIcon style={[a.mr_2xs, t.atoms.text]} size="lg" />
                   <Text
                     style={[
                       a.flex_1,
@@ -251,19 +252,19 @@ export function MessagesSettingsScreenInner({}: Props) {
           )}
           <View style={[a.px_xl]}>
             <Toggle.Item
-              label={l`Export chat data`}
+              label={l`Export my chat data`}
               name="playSoundChat"
               value={preferences.playSoundChat}
               style={[a.flex_row, a.align_center, a.justify_between]}
               onChange={() => {
                 exportCarControl.open()
               }}>
-              <CarIcon style={[a.mr_2xs, t.atoms.text]} size="md" />
+              <CarIcon style={[a.mr_2xs, t.atoms.text]} size="lg" />
               <Text
                 style={[a.flex_1, a.text_md, a.font_semi_bold, t.atoms.text]}>
-                <Trans>Export chat data</Trans>
+                <Trans>Export my chat data</Trans>
               </Text>
-              <ChevronRightIcon style={[a.ml_2xs, t.atoms.text]} size="md" />
+              <ChevronRightIcon style={[a.ml_2xs, t.atoms.text]} size="lg" />
             </Toggle.Item>
           </View>
           <Divider style={{marginVertical: 10}} />

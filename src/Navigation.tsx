@@ -114,16 +114,6 @@ import {InterestsSettingsScreen} from '#/screens/Settings/InterestsSettings'
 import {LanguageSettingsScreen} from '#/screens/Settings/LanguageSettings'
 import {LegacyNotificationSettingsScreen} from '#/screens/Settings/LegacyNotificationSettings'
 import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
-import {ActivityNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/ActivityNotificationSettings'
-import {LikeNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/LikeNotificationSettings'
-import {LikesOnRepostsNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings'
-import {MentionNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/MentionNotificationSettings'
-import {MiscellaneousNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings'
-import {NewFollowerNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/NewFollowerNotificationSettings'
-import {QuoteNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/QuoteNotificationSettings'
-import {ReplyNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/ReplyNotificationSettings'
-import {RepostNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/RepostNotificationSettings'
-import {RepostsOnRepostsNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings'
 import {PrivacyAndSecuritySettingsScreen} from '#/screens/Settings/PrivacyAndSecuritySettings'
 import {SettingsScreen} from '#/screens/Settings/Settings'
 import {ThreadPreferencesScreen} from '#/screens/Settings/ThreadPreferences'
@@ -443,86 +433,6 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="NotificationSettings"
         getComponent={() => NotificationSettingsScreen}
         options={{title: title(msg`Notification settings`), requireAuth: true}}
-      />
-      <Stack.Screen
-        name="ReplyNotificationSettings"
-        getComponent={() => ReplyNotificationSettingsScreen}
-        options={{
-          title: title(msg`Reply notifications`),
-          requireAuth: true,
-        }}
-      />
-      <Stack.Screen
-        name="MentionNotificationSettings"
-        getComponent={() => MentionNotificationSettingsScreen}
-        options={{
-          title: title(msg`Mention notifications`),
-          requireAuth: true,
-        }}
-      />
-      <Stack.Screen
-        name="QuoteNotificationSettings"
-        getComponent={() => QuoteNotificationSettingsScreen}
-        options={{
-          title: title(msg`Quote notifications`),
-          requireAuth: true,
-        }}
-      />
-      <Stack.Screen
-        name="LikeNotificationSettings"
-        getComponent={() => LikeNotificationSettingsScreen}
-        options={{
-          title: title(msg`Like notifications`),
-          requireAuth: true,
-        }}
-      />
-      <Stack.Screen
-        name="RepostNotificationSettings"
-        getComponent={() => RepostNotificationSettingsScreen}
-        options={{
-          title: title(msg`Repost notifications`),
-          requireAuth: true,
-        }}
-      />
-      <Stack.Screen
-        name="NewFollowerNotificationSettings"
-        getComponent={() => NewFollowerNotificationSettingsScreen}
-        options={{
-          title: title(msg`New follower notifications`),
-          requireAuth: true,
-        }}
-      />
-      <Stack.Screen
-        name="LikesOnRepostsNotificationSettings"
-        getComponent={() => LikesOnRepostsNotificationSettingsScreen}
-        options={{
-          title: title(msg`Likes of your reposts notifications`),
-          requireAuth: true,
-        }}
-      />
-      <Stack.Screen
-        name="RepostsOnRepostsNotificationSettings"
-        getComponent={() => RepostsOnRepostsNotificationSettingsScreen}
-        options={{
-          title: title(msg`Reposts of your reposts notifications`),
-          requireAuth: true,
-        }}
-      />
-      <Stack.Screen
-        name="ActivityNotificationSettings"
-        getComponent={() => ActivityNotificationSettingsScreen}
-        options={{
-          title: title(msg`Activity notifications`),
-          requireAuth: true,
-        }}
-      />
-      <Stack.Screen
-        name="MiscellaneousNotificationSettings"
-        getComponent={() => MiscellaneousNotificationSettingsScreen}
-        options={{
-          title: title(msg`Miscellaneous notifications`),
-          requireAuth: true,
-        }}
       />
       <Stack.Screen
         name="ContentAndMediaSettings"
@@ -916,6 +826,7 @@ const LINKING = {
 
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const ax = useAnalytics()
+  // eslint-disable-next-line react-compiler/react-compiler
   const notyLogger = ax.logger.useChild(ax.logger.Context.Notifications)
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
   const {currentAccount, accounts} = useSession()
@@ -943,7 +854,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
         const account = accounts.find(a => a.did === payload.recipientDid)
         if (account) {
-          onPressSwitchAccount(account, 'Notification')
+          void onPressSwitchAccount(account, 'Notification')
         } else {
           setShowLoggedOut(true)
         }
@@ -955,7 +866,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
         // chat-added-to-group routes to the convo because the recipient was
         // just added and now has access.
         // @ts-expect-error nested navigators aren't typed -sfn
-        navigate('MessagesTab', {
+        void navigate('MessagesTab', {
           screen: 'Messages',
           params: {
             pushToConversation: payload.convoId,
@@ -1012,7 +923,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
           } else if (path) {
             const [screen, params] = router.matchPath(path)
             // @ts-expect-error nested navigators aren't typed -sfn
-            navigate('HomeTab', {screen, params})
+            void navigate('HomeTab', {screen, params})
             notyLogger.debug(`handlePushNotificationEntry: navigate`, {
               screen,
               params,
@@ -1118,7 +1029,7 @@ function navigate<K extends keyof AllNavigatorParams>(
         }
         navigationRef.addListener('state', handler)
 
-        // @ts-ignore I dont know what would make typescript happy but I have a life -prf
+        // @ts-ignore I don't know what would make typescript happy but I have a life -prf
         navigationRef.navigate(name, params)
       }),
       timeout(1e3),
@@ -1131,7 +1042,7 @@ function resetToTab(
   tabName: 'HomeTab' | 'SearchTab' | 'MessagesTab' | 'NotificationsTab',
 ) {
   if (navigationRef.isReady()) {
-    navigate(tabName)
+    void navigate(tabName)
     if (navigationRef.canGoBack()) {
       navigationRef.dispatch(StackActions.popToTop()) //we need to check .canGoBack() before calling it
     }
