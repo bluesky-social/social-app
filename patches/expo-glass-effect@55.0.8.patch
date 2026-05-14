@@ -1,0 +1,60 @@
+diff --git a/ios/GlassContainer.swift b/ios/GlassContainer.swift
+index 61fb67cdfa2022f57524ddde05096067055e9ee6..b2d111ef8a724b8e7d4404f3d40efce3bd6fbb6d 100644
+--- a/ios/GlassContainer.swift
++++ b/ios/GlassContainer.swift
+@@ -1,6 +1,7 @@
+ // Copyright 2022-present 650 Industries. All rights reserved.
+ 
+ import ExpoModulesCore
++import React
+ 
+ public final class GlassContainer: ExpoView {
+   private var containerEffect: Any?
+@@ -46,11 +47,19 @@ public final class GlassContainer: ExpoView {
+     }
+   }
+ 
+-  public override func mountChildComponentView(_ childComponentView: UIView, index: Int) {
++  // Paper: redirect children into the container effect's contentView
++  public override func didUpdateReactSubviews() {
++    for subview in self.reactSubviews() {
++      containerEffectView.contentView.addSubview(subview)
++    }
++  }
++
++  // Fabric: redirect children into the container effect's contentView
++  @objc public func mountChildComponentView(_ childComponentView: UIView, index: Int) {
+     containerEffectView.contentView.insertSubview(childComponentView, at: index)
+   }
+ 
+-  public override func unmountChildComponentView(_ childComponentView: UIView, index: Int) {
++  @objc public func unmountChildComponentView(_ childComponentView: UIView, index: Int) {
+     childComponentView.removeFromSuperview()
+   }
+ }
+diff --git a/ios/GlassView.swift b/ios/GlassView.swift
+index 35cd8f320009a9e28fdbb2f55cc409734ba98f40..9587306b6fac3455ab27a5289eb62a711aa50c03 100644
+--- a/ios/GlassView.swift
++++ b/ios/GlassView.swift
+@@ -271,11 +271,19 @@ public final class GlassView: ExpoView {
+       #endif
+     }
+   }
+-  public override func mountChildComponentView(_ childComponentView: UIView, index: Int) {
++  // Paper: redirect children into the glass effect's contentView
++  public override func didUpdateReactSubviews() {
++    for subview in self.reactSubviews() {
++      glassEffectView.contentView.addSubview(subview)
++    }
++  }
++
++  // Fabric: redirect children into the glass effect's contentView
++  @objc public func mountChildComponentView(_ childComponentView: UIView, index: Int) {
+     glassEffectView.contentView.insertSubview(childComponentView, at: index)
+   }
+ 
+-  public override func unmountChildComponentView(_ childComponentView: UIView, index: Int) {
++  @objc public func unmountChildComponentView(_ childComponentView: UIView, index: Int) {
+     childComponentView.removeFromSuperview()
+   }
+ }
