@@ -24,7 +24,7 @@ jobs:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request'}}
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
@@ -66,7 +66,7 @@ jobs:
 
       - name: ⬇️ Get base stats from cache
         id: get-base-stats
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: stats-base.json
           key: stats-base-${{ steps.base-commit.outputs.base-commit }}
@@ -108,7 +108,7 @@ jobs:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request'}}
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 100
 

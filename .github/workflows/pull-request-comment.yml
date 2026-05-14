@@ -48,7 +48,7 @@ jobs:
       - name: Check organization membership
         if: steps.check-mention.outputs.mentioned == 'true'
         id: check-org
-        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7.1.0
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             try {
@@ -78,7 +78,7 @@ jobs:
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         id: pr-info
-        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7.1.0
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             const pr = await github.rest.pulls.get({
@@ -113,7 +113,7 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: ${{ steps.pr-info.outputs.head-sha }}
 
@@ -152,7 +152,7 @@ jobs:
         run: yarn global add eas-cli-local-build-plugin
 
       - name: 🪛 Setup jq
-        uses: dcarbone/install-jq-action@8867ddb4788346d7c22b72ea2e2ffe4d514c7bcb # v2.1.0
+        uses: dcarbone/install-jq-action@b7ef57d46ece78760b4019dbc4080a1ba2a40b45 # v3.2.0
 
       - name: Env
         id: env

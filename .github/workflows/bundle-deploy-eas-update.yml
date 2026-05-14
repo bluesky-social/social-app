@@ -48,7 +48,7 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
@@ -101,7 +101,7 @@ jobs:
 
       - name: 🪛 Setup jq
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        uses: dcarbone/install-jq-action@8867ddb4788346d7c22b72ea2e2ffe4d514c7bcb # v2.1.0
+        uses: dcarbone/install-jq-action@b7ef57d46ece78760b4019dbc4080a1ba2a40b45 # v3.2.0
 
       # eas.json not used here, set EXPO_PUBLIC_ENV
       - name: Env
@@ -142,7 +142,7 @@ jobs:
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         with:
           path: most-recent-testflight-commit.txt
@@ -172,7 +172,7 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 5
 
@@ -205,7 +205,7 @@ jobs:
           version: 1.16.2
 
       - name: 💾 Cache Pods
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         id: pods-cache
         with:
           path: ./ios/Pods
@@ -288,7 +288,7 @@ jobs:
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         if: ${{ inputs.channel == 'testflight' }}
         with:
           path: most-recent-testflight-commit.txt
@@ -320,7 +320,7 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 5
 
@@ -340,7 +340,7 @@ jobs:
       - name: ⛏️ Setup EAS local builds
         run: yarn global add eas-cli-local-build-plugin
 
-      - uses: actions/setup-java@c1e323688fd81a25caa38c78aa6df2d33d3e20d9 # v4.8.0
+      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
         with:
           distribution: "temurin"
           java-version: "17"
@@ -385,7 +385,7 @@ jobs:
 
       - name: 🚀 Upload Artifact
         id: upload-artifact
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           retention-days: 30
           compression-level: 0
@@ -405,7 +405,7 @@ jobs:
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         if: ${{ inputs.channel != 'testflight' && inputs.channel != 'production' }}
         with:
           path: most-recent-testflight-commit.txt

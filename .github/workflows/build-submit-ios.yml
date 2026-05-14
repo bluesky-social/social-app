@@ -28,7 +28,7 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 5
 
@@ -39,7 +39,7 @@ jobs:
           cache: yarn
 
       - name: 🪛 Setup jq
-        uses: dcarbone/install-jq-action@8867ddb4788346d7c22b72ea2e2ffe4d514c7bcb # v2.1.0
+        uses: dcarbone/install-jq-action@b7ef57d46ece78760b4019dbc4080a1ba2a40b45 # v3.2.0
 
       - name: 🔨 Setup EAS
         uses: expo/expo-github-action@main
@@ -64,7 +64,7 @@ jobs:
           version: 1.16.2
 
       - name: 💾 Cache Pods
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         id: pods-cache
         with:
           path: ./ios/Pods
@@ -168,7 +168,7 @@ jobs:
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         if: ${{ inputs.profile == 'testflight' }}
         with:
           path: most-recent-testflight-commit.txt
