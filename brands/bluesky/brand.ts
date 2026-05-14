@@ -1,24 +1,20 @@
 import {DEFAULT_PALETTE, DEFAULT_SUBDUED_PALETTE} from '@bsky.app/alf'
 
 import {type Brand} from '#/brand/types'
+import nativeConfig from './brand.js'
 
 /**
  * Bluesky runtime brand. Recreates the upstream Bluesky behavior exactly so
  * that with no `EXPO_PUBLIC_BRAND` set (native) or unmatched hostname (web),
  * the app is indistinguishable from `main`.
  *
- * Note: identity fields (id, name, scheme, primaryColor, spokenName) are
- * intentionally duplicated with `./brand.js`. That file is consumed by
- * `app.config.js` (CommonJS), and we deliberately don't bridge the two to
- * avoid TS<->JS interop quirks. Keep them in sync by hand; both files live
- * in the same directory so drift is visually obvious in PR diffs.
+ * Identity + native-build fields come from `./brand.js` via the spread
+ * below. Keep all such fields in `brand.js` (it's the file `app.config.js`
+ * reads at native build time). Add runtime-only fields (PDS, feeds, links,
+ * palette, logo) here.
  */
 const brand: Brand = {
-  id: 'bluesky',
-  name: 'Bluesky',
-  spokenName: 'Blue Sky',
-  scheme: 'bluesky',
-  primaryColor: '#006AFF',
+  ...nativeConfig,
 
   pds: {
     serviceUrl: 'https://bsky.social',

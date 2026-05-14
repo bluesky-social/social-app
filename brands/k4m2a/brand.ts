@@ -1,11 +1,12 @@
 import {DEFAULT_PALETTE, DEFAULT_SUBDUED_PALETTE} from '@bsky.app/alf'
 
 import {type Brand} from '#/brand/types'
+import nativeConfig from './brand.js'
 
 /**
  * k4m2a runtime brand — placeholder scaffolding. Fill in TODOs before
- * shipping. Identity fields here must stay in sync with `./brand.js`
- * (consumed by `app.config.js`).
+ * shipping. Identity + native-build fields are spread from `./brand.js`;
+ * edit them there. Runtime-only fields are below.
  *
  * To activate locally:
  *   EXPO_PUBLIC_BRAND=k4m2a yarn web
@@ -14,13 +15,7 @@ import {type Brand} from '#/brand/types'
  * Web hostname mapping lives in `src/brand/resolve.web.ts`.
  */
 const brand: Brand = {
-  id: 'k4m2a',
-  // TODO: must match brand.js
-  name: 'k4m2a',
-  spokenName: 'k4m2a',
-  scheme: 'k4m2a',
-  // TODO: must match brand.js
-  primaryColor: '#000000',
+  ...nativeConfig,
 
   pds: {
     // TODO: signup default points here. Sign-in still allows foreign PDS

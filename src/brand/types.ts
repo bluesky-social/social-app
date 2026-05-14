@@ -1,6 +1,8 @@
 import {type AppBskyActorDefs} from '@atproto/api'
 import {type Palette} from '@bsky.app/alf'
 
+import {type BrandConfig} from '../../brands/types'
+
 export type SavedFeed = Pick<
   AppBskyActorDefs.SavedFeed,
   'type' | 'value' | 'pinned'
@@ -9,17 +11,14 @@ export type SavedFeed = Pick<
 /**
  * Runtime brand definition. One per community. Loaded from
  * `brands/<id>/brand.ts` and selected at boot by hostname (web) or
- * `BRAND` env baked into the app config (native).
+ * `EXPO_PUBLIC_BRAND` baked into the app config (native).
  *
- * Adding a field here without populating it on every brand under `brands/`
- * will produce a TypeScript error at the brand definition site.
+ * Composed from `BrandConfig` (the Node-safe identity + native-build fields
+ * read by `app.config.js`) plus the runtime-only fields below. Brand authors
+ * never redeclare identity fields — they live in `brand.js` and flow through
+ * via `import nativeConfig from './brand.js'; const brand = {...nativeConfig, ...}`.
  */
-export type Brand = {
-  id: string
-  name: string
-  spokenName: string
-  scheme: string
-
+export type Brand = BrandConfig & {
   pds: {
     serviceUrl: string
     serviceDid: string
@@ -57,8 +56,6 @@ export type Brand = {
     showStarterPacks: boolean
     showLiveNow: boolean
   }
-
-  primaryColor: string
 
   /**
    * Full palette ramps consumed by `src/alf/themes.ts`. Brands are required

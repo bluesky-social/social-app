@@ -9,8 +9,42 @@ by `EXPO_PUBLIC_BRAND` and by the hostname mapping in `src/brand/resolve.web.ts`
 - `brand.js` — CommonJS native-build identity (name, scheme, bundle id, app
   extensions, splash colors). Read by `app.config.js` at native build time.
 - `brand.ts` — TypeScript runtime brand (PDS, default feeds, links, feature
-  flags, palette). Read by `src/brand/registry.ts`.
+  flags, palette, logo). Read by `src/brand/registry.ts`. **Imports
+  `./brand.js` and spreads it** — there is no field duplication between
+  the two files.
 - `assets/` — brand-specific icons, splash images, logos.
+
+## Why two files?
+
+`app.config.js` is a CommonJS Node script that runs at native-build time
+(under EAS Build, `expo prebuild`, etc). It cannot import `brand.ts`
+directly because:
+
+1. There's no TypeScript loader in that environment — converting
+   `app.config.js` to `app.config.ts` would work, but it's a high-traffic
+   upstream file and renaming it makes every weekly merge a hand-resolved
+   conflict. We pay a tiny structural cost here to keep upstream merges
+   trivial.
+2. `brand.ts` imports `@bsky.app/alf` (for the palette) and references
+   `require('./assets/*.png')` for kawaii images. Both crash under Node.
+
+So `brand.js` carries everything `app.config.js` needs — identity,
+bundle ids, splash, app extensions. `brand.ts` carries everything the
+running app needs — palette, logo, PDS, links, feeds, features. The
+runtime side imports the build side via `import nativeConfig from
+'./brand.js'; const brand = {...nativeConfig, ...runtimeFields}`, so
+there's exactly one source of truth for every field.
+
+**Rule of thumb for adding a new field:**
+
+- If `app.config.js` reads it (anything that affects the native binary —
+  bundle id, scheme, splash, icons, app extensions, entitlements) →
+  `brand.js`, and add it to `BrandConfig` in `brands/types.d.ts`.
+- Otherwise (anything the running JS app uses — feeds, links, palette,
+  feature flags, PDS) → `brand.ts`, and add it to `Brand` in
+  `src/brand/types.ts`.
+
+The TypeScript type system enforces both contracts.
 
 ## Adding a brand
 
