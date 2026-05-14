@@ -1,13 +1,7 @@
 import {useCallback, useMemo, useState} from 'react'
-import {AppBskyUnspeccedDefs, AtUri} from '@atproto/api'
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {
-  buildSyntheticPostView,
-  isAuthorModerated,
-  isPostModerated,
-  resolveIdentityViaSlingshot,
-} from '#/state/queries/microcosm-fallback'
 import {useThreadPreferences} from '#/state/queries/preferences/useThreadPreferences'
 import {
   LINEAR_VIEW_BELOW,
@@ -37,56 +31,10 @@ import {useAgent, useSession} from '#/state/session'
 import {useMergeThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {useBreakpoints} from '#/alf'
 import {IS_WEB} from '#/env'
-import {useQuery, useQueryClient} from '../useQueryWithFallback'
 
 export * from '#/state/queries/usePostThread/context'
 export {useUpdatePostThreadThreadgateQueryCache} from '#/state/queries/usePostThread/queryCache'
 export * from '#/state/queries/usePostThread/types'
-
-/**
- * Attempt to load a thread post via Slingshot when the AppView returns NotFound.
- * Returns a UsePostThreadQueryResult with a single synthetic post, or null.
- */
-async function tryThreadFallback(
-  queryClient: import('@tanstack/react-query').QueryClient,
-  anchorUri: string,
-): Promise<UsePostThreadQueryResult | null> {
-  try {
-    const urip = new AtUri(anchorUri)
-    const identity = await resolveIdentityViaSlingshot(urip.host)
-    if (!identity) return null
-
-    // Check moderation before allowing fallback
-    const [authorModerated, postModerated] = await Promise.all([
-      isAuthorModerated(identity.did),
-      isPostModerated(anchorUri),
-    ])
-
-    if (authorModerated || postModerated) {
-      console.log('[Thread Fallback] Blocked by moderation for', anchorUri)
-      return null
-    }
-
-    const post = await buildSyntheticPostView(
-      queryClient,
-      anchorUri,
-      identity.did,
-      identity.handle,
-    )
-    if (!post) return null
-
-    console.log('[Thread Fallback] Loaded post via Slingshot for', anchorUri)
-
-    return {
-      thread: [views.postViewToThreadPlaceholder(post)],
-      threadgate: undefined,
-      hasOtherReplies: false,
-    } as UsePostThreadQueryResult
-  } catch (e) {
-    console.error('[Thread Fallback] Failed:', e)
-    return null
-  }
-}
 
 export function usePostThread({anchor}: {anchor?: string}) {
   const qc = useQueryClient()
@@ -129,16 +77,6 @@ export function usePostThread({anchor}: {anchor?: string}) {
         below,
         sort: sort,
       })
-
-      // Check if the anchor post came back as NotFound -- try Slingshot fallback
-      const anchorItem = data.thread?.find(t => t.depth === 0)
-      if (
-        anchorItem &&
-        AppBskyUnspeccedDefs.isThreadItemNotFound(anchorItem.value)
-      ) {
-        const fallbackThread = await tryThreadFallback(qc, anchor!)
-        if (fallbackThread) return fallbackThread
-      }
 
       /*
        * Initialize `ctx.meta` to track if we know we have additional replies
@@ -186,9 +124,6 @@ export function usePostThread({anchor}: {anchor?: string}) {
       }
       return data
     },
-    enableFallback: true,
-    fallbackType: 'thread',
-    fallbackIdentifier: anchor,
   })
 
   const thread = useMemo(() => query.data?.thread || [], [query.data?.thread])

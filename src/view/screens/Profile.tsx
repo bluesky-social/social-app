@@ -32,6 +32,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useLabelerInfoQuery} from '#/state/queries/labeler'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useProfileQuery} from '#/state/queries/profile'
+import {classifyProfileError} from '#/state/queries/profile-status'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useAgent, useSession} from '#/state/session'
 import {ProfileFeedgens} from '#/view/com/feeds/ProfileFeedgens'
@@ -40,6 +41,7 @@ import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListRef} from '#/view/com/util/List'
+import {ProfileStatusError} from '#/screens/Profile/components/ProfileStatusError'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
@@ -125,6 +127,18 @@ function ProfileScreenInner({route}: Props) {
     )
   }
   if (resolveError || profileError) {
+    const kind = classifyProfileError(profileError ?? resolveError)
+    if (kind !== 'unknown') {
+      return (
+        <SafeAreaView style={[a.flex_1]}>
+          <ProfileStatusError
+            kind={kind}
+            didOrHandle={name ?? ''}
+            did={resolvedDid}
+          />
+        </SafeAreaView>
+      )
+    }
     return (
       <SafeAreaView style={[a.flex_1]}>
         <ErrorScreen
@@ -133,6 +147,17 @@ function ProfileScreenInner({route}: Props) {
           message={cleanError(resolveError || profileError)}
           onPressTryAgain={onPressTryAgain}
           showHeader
+        />
+      </SafeAreaView>
+    )
+  }
+  if (profile?.status?.status === 'deactivated') {
+    return (
+      <SafeAreaView style={[a.flex_1]}>
+        <ProfileStatusError
+          kind="deactivated"
+          didOrHandle={name ?? ''}
+          did={resolvedDid}
         />
       </SafeAreaView>
     )

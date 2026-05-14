@@ -1,4 +1,4 @@
-import {BskyAgent} from '@atproto/api'
+import {Agent} from '@atproto/api'
 
 import {logger} from '#/logger'
 
@@ -79,7 +79,7 @@ export function configureAdditionalModerationAuthorities() {
 
   additionalLabelers.push(BLACKSKY_LABELER)
   const appLabelers = Array.from(
-    new Set([...BskyAgent.appLabelers, ...additionalLabelers]),
+    new Set([...Agent.appLabelers, ...additionalLabelers]),
   )
 
   logger.info(`applying mod authorities`, {
@@ -87,5 +87,5 @@ export function configureAdditionalModerationAuthorities() {
     appLabelers,
   })
 
-  BskyAgent.configure({appLabelers})
+  Agent.configure({appLabelers})
 }
