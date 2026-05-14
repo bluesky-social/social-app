@@ -15,7 +15,7 @@ jobs:
       contents: write
 
     steps:
-      - name: Check out Git repository
+      - name: ⬇️ Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ssh-key: ${{secrets.GH_ACTION_DEPLOY_KEY}}
@@ -24,20 +24,16 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: yarn
-      - name: Yarn install
-        uses: Wandalen/wretry.action@master
-        with:
-          command: yarn --frozen-lockfile
-          attempt_limit: 3
-          attempt_delay: 2000
-      - name: Extract language strings
+      - name: ⚙️ Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: 🧵 Extract language strings
         run: yarn intl:extract
-      - name: Create commit
+      - name: ✍️ Create commit
         uses: stefanzweifel/git-auto-commit-action@b863ae1933cb653a53c021fe36dbb774e1fb9403 # v5.2.0
         with:
           commit_message: Nightly source-language update
           file_pattern: ./src/locale/locales/en/messages.po
-      - name: Push source lang to Crowdin
+      - name: 🧑‍🧑‍🧒‍🧒 Push source lang to Crowdin
         uses: crowdin/github-action@8868a33591d21088edfc398968173a3b98d51706 # v2.16.2
         with:
           upload_sources: true
