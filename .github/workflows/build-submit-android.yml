@@ -99,7 +99,7 @@ jobs:
 
       - name: ⏰ Get a timestamp
         id: timestamp
-        uses: nanzm/get-time-action@master
+        uses: nanzm/get-time-action@887e4db9af58ebae64998b7105921b816af77977 # v2
         with:
           format: "MM-DD-HH-mm-ss"
 
