@@ -2,6 +2,7 @@ import {View} from 'react-native'
 import {moderateProfile} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {logger} from '#/logger'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -138,7 +139,7 @@ export function Member({
             </ProfileCard.Header>
           </ProfileCard.Outer>
         </ProfileCard.Link>
-        {isSelf || isFollowing || profile.viewer?.blocking ? null : (
+        {isSelf || isFollowing || isBlockedOrBlocking(profile) ? null : (
           <SimpleInlineLinkText
             label={l`Follow ${displayName}`}
             {...createStaticClick(handleFollow)}
