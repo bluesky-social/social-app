@@ -3,24 +3,30 @@ import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
-import {InlineLinkText} from '#/components/Link'
+import * as Dialog from '#/components/Dialog'
+import {ManageRequestsFlow} from '#/components/dms/MangeRequestsFlow'
+import {type ConvoWithDetails} from '#/components/dms/util'
+import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function MembersAndRequests({
-  memberCount,
-  memberLimit,
+  convo,
   requestCount,
   hasMoreRequests,
   isOwner,
 }: {
-  memberCount: number
-  memberLimit: number
+  convo: Extract<ConvoWithDetails, {kind: 'group'}>
   requestCount: number
   hasMoreRequests: boolean
   isOwner: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+
+  const manageRequestsControl = Dialog.useDialogControl()
+
+  const memberCount = convo.details.memberCount
+  const memberLimit = convo.details.memberLimit
 
   return (
     <View style={[a.flex_row, a.justify_between, a.px_xl, a.pt_xl, a.pb_sm]}>
@@ -42,8 +48,9 @@ export function MembersAndRequests({
         <InlineLinkText
           label={l`View incoming group chat requests`}
           style={[a.text_sm, a.text_right, a.font_semi_bold]}
-          // TODO Need to implement this. -dsb
-          to="#">
+          {...createStaticClick(() => {
+            manageRequestsControl.open()
+          })}>
           {hasMoreRequests
             ? l({
                 message: `${requestCount}+ requests`,
@@ -59,6 +66,14 @@ export function MembersAndRequests({
               })}
         </InlineLinkText>
       ) : null}
+
+      <Dialog.Outer
+        control={manageRequestsControl}
+        testID="manageRequestsDialog"
+        nativeOptions={{fullHeight: true}}>
+        <Dialog.Handle />
+        <ManageRequestsFlow convo={convo} />
+      </Dialog.Outer>
     </View>
   )
 }
