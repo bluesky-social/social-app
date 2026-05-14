@@ -27,6 +27,7 @@
   },
   "scripts": {
     "prepare": "is-ci || husky install",
+    "postinstall": "pnpm intl:compile-if-needed",
     "prebuild": "EXPO_NO_GIT_STATUS=1 expo prebuild --clean",
     "android": "expo run:android",
     "android:prod": "expo run:android --variant release",
@@ -65,6 +66,7 @@
     "intl:extract": "lingui extract --clean --locale en",
     "intl:extract:all": "lingui extract --clean",
     "intl:compile": "lingui compile",
+    "intl:compile-if-needed": "is-ci || [ -f src/locale/locales/en/messages.ts ] || pnpm intl:compile",
     "intl:pull": "crowdin download translations --verbose -b main",
     "intl:push": "crowdin push translations --verbose -b main",
     "intl:push-sources": "crowdin push sources --verbose -b main",
