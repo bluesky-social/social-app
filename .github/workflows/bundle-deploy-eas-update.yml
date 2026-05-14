@@ -88,7 +88,7 @@ jobs:
         run: yarn typecheck
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@main
+        uses: expo/expo-github-action@b184ff86a3c926240f1b6db41764c83a01c02eef # main
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         with:
           expo-version: latest
@@ -183,7 +183,7 @@ jobs:
           cache: yarn
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@main
+        uses: expo/expo-github-action@b184ff86a3c926240f1b6db41764c83a01c02eef # main
         with:
           expo-version: latest
           eas-version: latest
@@ -331,7 +331,7 @@ jobs:
           cache: yarn
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@main
+        uses: expo/expo-github-action@b184ff86a3c926240f1b6db41764c83a01c02eef # main
         with:
           expo-version: latest
           eas-version: latest
@@ -379,7 +379,7 @@ jobs:
 
       - name: ⏰ Get a timestamp
         id: timestamp
-        uses: nanzm/get-time-action@master
+        uses: nanzm/get-time-action@887e4db9af58ebae64998b7105921b816af77977 # v2
         with:
           format: "MM-DD-HH-mm-ss"
 

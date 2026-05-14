@@ -142,7 +142,7 @@ jobs:
         run: yarn typecheck
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@main
+        uses: expo/expo-github-action@b184ff86a3c926240f1b6db41764c83a01c02eef # main
         with:
           expo-version: latest
           eas-version: latest
