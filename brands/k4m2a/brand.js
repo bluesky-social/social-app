@@ -22,9 +22,9 @@ const brand = {
   androidPackage: 'TODO.k4m2a.app',
   // TODO: iOS App Group id used by the share extension and NSE
   iosAppGroup: 'group.TODO.k4m2a',
-  // TODO: brand primary hex (drives splash, status bar, app icon background)
+  // Brand is monochrome: black mark on white in light mode, white on black in dark.
   primaryColor: '#000000',
-  splashColor: '#000000',
+  splashColor: '#FFFFFF',
   splashColorDark: '#000000',
   // TODO: deep-link / universal-link host (no scheme prefix)
   webHost: 'TODO.example.com',

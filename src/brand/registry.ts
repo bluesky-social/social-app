@@ -1,5 +1,6 @@
 import bluesky from '../../brands/bluesky/brand'
 import k4m2a from '../../brands/k4m2a/brand'
+import mdparivaar from '../../brands/mdparivaar/brand'
 import {type Brand} from './types'
 
 /**
@@ -9,6 +10,7 @@ import {type Brand} from './types'
 export const brands: Record<string, Brand> = {
   bluesky,
   k4m2a,
+  mdparivaar,
 }
 
 export const DEFAULT_BRAND_ID = 'bluesky'

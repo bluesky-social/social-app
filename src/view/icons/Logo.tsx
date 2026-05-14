@@ -8,6 +8,7 @@ import Svg, {
   Stop,
   type SvgProps,
 } from 'react-native-svg'
+import {SvgXml} from 'react-native-svg'
 import {Image} from 'expo-image'
 
 import {useKawaiiMode} from '#/state/preferences/kawaii'
@@ -43,6 +44,20 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
         accessibilityHint=""
         accessibilityIgnoresInvertColors
         style={[{height: size, aspectRatio: 1.4}]}
+      />
+    )
+  }
+
+  if ('xml' in mark) {
+    return (
+      <SvgXml
+        xml={mark.xml}
+        width={size}
+        height={size * mark.ratio}
+        // @ts-ignore color drives `currentColor` fills inside the xml
+        color={
+          typeof _fill === 'string' && _fill !== 'url(#sky)' ? _fill : undefined
+        }
       />
     )
   }

@@ -4,6 +4,36 @@ White-label configuration for community-specific deployments of the social
 app. Each subdirectory is one brand. The directory name is the brand id used
 by `EXPO_PUBLIC_BRAND` and by the hostname mapping in `src/brand/resolve.web.ts`.
 
+For the architectural overview (why the system is shaped the way it is, what
+the boot sequence looks like, what the constraints were), see
+[`BRAND_SYSTEM.md`](./BRAND_SYSTEM.md).
+
+## Running a specific brand locally
+
+```bash
+# Default — bluesky (no env var needed)
+yarn web
+
+# k4m2a — monochrome black/white visual brand. Currently points at bluesky's
+# PDS / feeds for visual testing; swap services in brand.ts to make it real.
+EXPO_PUBLIC_BRAND=k4m2a yarn web
+
+# MDParivaar — saffron #CD7233 brand with the Madhyasth Darshan icon.
+# Same testing arrangement: bluesky services, mdparivaar visuals.
+EXPO_PUBLIC_BRAND=mdparivaar yarn web
+```
+
+The same env var works for native:
+
+```bash
+EXPO_PUBLIC_BRAND=k4m2a yarn ios
+EXPO_PUBLIC_BRAND=mdparivaar yarn ios
+```
+
+If `EXPO_PUBLIC_BRAND` is unset, the app falls back to `bluesky`. On web, the
+hostname mapping in `src/brand/resolve.web.ts` overrides the default but is
+itself overridden by an explicit `EXPO_PUBLIC_BRAND` (useful for local dev).
+
 ## Files in a brand directory
 
 - `brand.js` — CommonJS native-build identity (name, scheme, bundle id, app

@@ -94,11 +94,24 @@ export type Brand = BrandConfig & {
   }
 }
 
-export type SvgShape = {
-  /** SVG `viewBox` attribute, e.g. `'0 0 64 57'`. */
-  viewBox: string
-  /** SVG path `d` attribute. */
-  path: string
-  /** height-to-width ratio for layout, derived from the viewBox. */
-  ratio: number
-}
+/**
+ * Logo shape. Two modes:
+ *
+ * - **Path mode** — single-path SVG with dynamic fill. The wrapper renders
+ *   `<Svg viewBox><Path d={path} fill={...}/></Svg>` and supports the wrapper's
+ *   `fill` prop for runtime theming. Use this when the logo is one shape.
+ * - **XML mode** — raw SVG string. The wrapper renders `<SvgXml xml={xml}/>`
+ *   verbatim. Use for multi-element logos (rect + path, transforms, multiple
+ *   colors). Set fills inside the XML to `currentColor` to allow the wrapper's
+ *   `fill` prop to recolor them; literal hex fills are preserved as-is.
+ */
+export type SvgShape =
+  | {
+      viewBox: string
+      path: string
+      ratio: number
+    }
+  | {
+      xml: string
+      ratio: number
+    }

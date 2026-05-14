@@ -14,7 +14,12 @@
       "Bash(grep -E \"Trans|<Text|msg\\\\\\\\\\\\`|l\\\\\\\\\\\\`|message:|placeholder:|comment:|context:\")",
       "Bash(awk 'NR==478 {p=1} p && /^function|^export function|^let / {print NR\": \"$0; exit}' /Users/achal/Code/k4m2a/social-app/src/screens/StarterPack/StarterPackScreen.tsx)",
       "Bash(awk '/^function|^export function|^let / && NR < 478 {f=NR\": \"$0} END{print f}' /Users/achal/Code/k4m2a/social-app/src/screens/StarterPack/StarterPackScreen.tsx)",
-      "Bash(npx eslint *)"
+      "Bash(npx eslint *)",
+      "Bash(file /Users/achal/Code/k4m2a-old/k4m2a-style-pallete/*)",
+      "Bash(awk 'NR>=1 && NR<=1' /Users/achal/Downloads/MD_icon.svg)",
+      "Bash(awk 'NR>=44 && NR<=45' /Users/achal/Downloads/MD_icon.svg)",
+      "Bash(grep -c '`' /Users/achal/Downloads/MD_icon.svg)",
+      "Bash(grep -c '\\\\${' /Users/achal/Downloads/MD_icon.svg)"
     ]
   }
 }
