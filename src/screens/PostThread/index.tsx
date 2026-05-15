@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {type LayoutChangeEvent, useWindowDimensions, View} from 'react-native'
 import {Trans} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'

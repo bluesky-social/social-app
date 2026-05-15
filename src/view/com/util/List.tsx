@@ -14,6 +14,7 @@ import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useTheme} from '#/alf'
+import {useLightbox} from '#/components/Lightbox/state'
 import {IS_IOS} from '#/env'
 import {FlatList_INTERNAL} from './Views'
 
