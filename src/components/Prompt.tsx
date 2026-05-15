@@ -2,7 +2,7 @@ import {createContext, useCallback, useContext, useId, useMemo} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import {atoms as a, native, type TextStyleProp, useTheme, web} from '#/alf'
+import {atoms as a, useTheme, type ViewStyleProp, web} from '#/alf'
 import {
   Button,
   type ButtonColor,
@@ -78,35 +78,19 @@ export function Outer({
   )
 }
 
-export function Icon({
-  icon: Icon,
-  fill,
-}: {
-  icon: React.ComponentType<SVGIconProps>
-  fill?: string
-}) {
-  const t = useTheme()
-
-  return (
-    <View style={[a.align_center, a.justify_center, native(a.pt_lg), a.mb_lg]}>
-      <Icon fill={fill || t.palette.contrast_1000} size="3xl" />
-    </View>
-  )
-}
-
 export function TitleText({
   children,
   style,
-}: React.PropsWithChildren<TextStyleProp>) {
+}: React.PropsWithChildren<ViewStyleProp>) {
   const {titleId} = useContext(Context)
   return (
     <Text
       nativeID={titleId}
       style={[
         a.flex_1,
-        a.text_lg,
-        a.font_bold,
-        a.pb_sm,
+        a.text_2xl,
+        a.font_semi_bold,
+        a.pb_xs,
         a.leading_snug,
         style,
       ]}>
@@ -118,22 +102,21 @@ export function TitleText({
 export function DescriptionText({
   children,
   selectable,
-  style,
-}: React.PropsWithChildren<{selectable?: boolean} & TextStyleProp>) {
+}: React.PropsWithChildren<{selectable?: boolean}>) {
   const t = useTheme()
   const {descriptionId} = useContext(Context)
   return (
     <Text
       nativeID={descriptionId}
       selectable={selectable}
-      style={[a.text_sm, a.leading_snug, t.atoms.text, a.pb_2xl, style]}>
+      style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high, a.pb_lg]}>
       {children}
     </Text>
   )
 }
 
 export function Actions({children}: {children: React.ReactNode}) {
-  return <View style={[a.w_full, a.gap_md, a.justify_end]}>{children}</View>
+  return <View style={[a.w_full, a.gap_sm, a.justify_end]}>{children}</View>
 }
 
 export function Content({children}: {children: React.ReactNode}) {
@@ -229,7 +212,6 @@ export function Action({
 
 export function Basic({
   control,
-  icon,
   title,
   description,
   cancelButtonCta,
@@ -239,7 +221,6 @@ export function Basic({
   showCancel = true,
 }: React.PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
-  icon?: React.ComponentType<SVGIconProps>
   title: string
   description?: string
   cancelButtonCta?: string
@@ -255,27 +236,11 @@ export function Basic({
   confirmButtonColor?: ButtonColor
   showCancel?: boolean
 }>) {
-  const t = useTheme()
-
   return (
     <Outer control={control} testID="confirmModal">
       <Content>
-        {icon ? (
-          <Icon
-            icon={icon}
-            fill={
-              confirmButtonColor === 'negative'
-                ? t.palette.negative_500
-                : undefined
-            }
-          />
-        ) : null}
-        <TitleText style={icon ? a.text_center : null}>{title}</TitleText>
-        {description && (
-          <DescriptionText style={icon ? a.text_center : null}>
-            {description}
-          </DescriptionText>
-        )}
+        <TitleText>{title}</TitleText>
+        {description && <DescriptionText>{description}</DescriptionText>}
       </Content>
       <Actions>
         <Action
