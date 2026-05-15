@@ -1,4 +1,4 @@
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -30,14 +30,17 @@ export function Header({
   return (
     <View
       style={[
-        styles.root,
+        a.absolute,
+        a.top_0,
+        a.left_0,
+        a.right_0,
         a.flex_row,
         a.justify_between,
         a.align_center,
         a.px_md,
+        a.pointer_events_box_none,
         {paddingTop: insets.top + 8},
-      ]}
-      pointerEvents="box-none">
+      ]}>
       <ImageMenu onPressShare={onPressShare} onPressSave={onPressSave} />
       <PagerDots count={imageCount} activeIndex={activeIndex} />
       <CircleChromeButton
@@ -48,12 +51,3 @@ export function Header({
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  root: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-  },
-})

@@ -27,9 +27,9 @@ type Props = {
   | 'accessibilityHint'
 >
 
-const SIZE = 44
+const SIZE = 32
 const RADIUS = 24
-const ICON = 24
+const ICON = 18
 
 export function CircleChromeButton({
   icon: Icon,
