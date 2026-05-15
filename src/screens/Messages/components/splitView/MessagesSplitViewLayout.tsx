@@ -61,15 +61,25 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
       ? route?.params?.conversation
       : undefined
 
-  const leftNavWidth = centerColumnOffset
-    ? LEFT_NAV_MINIMAL_WIDTH
-    : LEFT_NAV_FULL_WIDTH
   const rightNavWidth = centerColumnOffset
     ? RIGHT_NAV_MINIMAL_WIDTH
     : RIGHT_NAV_FULL_WIDTH
 
-  const containerWidth =
-    leftNavWidth - LEFT_NAV_MINIMAL_WIDTH + CENTER_COLUMN_WIDTH + rightNavWidth
+  const leftNavWidth = centerColumnOffset
+    ? LEFT_NAV_MINIMAL_WIDTH
+    : LEFT_NAV_FULL_WIDTH - LEFT_NAV_MINIMAL_WIDTH
+
+  // slight reduce width for smaller breakpoint
+  const centerColumnWidth = centerColumnOffset
+    ? CENTER_COLUMN_WIDTH - 50
+    : CENTER_COLUMN_WIDTH
+
+  // nasty magic numbers here, sorry :(
+  const offset = centerColumnOffset
+    ? LEFT_NAV_MINIMAL_WIDTH - 34
+    : LEFT_NAV_MINIMAL_WIDTH + 5
+
+  const containerWidth = leftNavWidth + centerColumnWidth + rightNavWidth
 
   return (
     <View
@@ -80,7 +90,7 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
         {maxWidth: containerWidth},
         {
           transform: [
-            {translateX: LEFT_NAV_MINIMAL_WIDTH},
+            {translateX: offset},
             {translateX: web(SCROLLBAR_OFFSET) ?? 0},
           ],
         },
@@ -91,7 +101,7 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
           style={[
             a.border_l,
             t.atoms.border_contrast_low,
-            {width: containerWidth - CENTER_COLUMN_WIDTH},
+            {width: containerWidth - centerColumnWidth},
           ]}>
           <ChatListHeader newChatControl={newChatControl} />
           <ChatList
@@ -106,7 +116,7 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
           style={[
             a.border_x,
             t.atoms.border_contrast_low,
-            {width: CENTER_COLUMN_WIDTH},
+            {width: centerColumnWidth},
           ]}>
           {children}
         </View>
