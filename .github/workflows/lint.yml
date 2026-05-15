@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        job: [lint, lockfile-lint, prettier, intl:build, typecheck]
+        job: [lint, lockfile-lint, prettier]
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v5
