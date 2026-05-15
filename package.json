@@ -89,7 +89,8 @@
     "make-deploy-bundle": "bash scripts/bundleUpdate.sh",
     "generate-webpack-stats-file": "EXPO_PUBLIC_GENERATE_STATS=1 pnpm build-web",
     "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 pnpm build-web",
-    "icons:optimize": "svgo -f ./assets/icons"
+    "icons:optimize": "svgo -f ./assets/icons",
+    "prettier": "prettier --check ."
   },
   "dependencies": {
     "@atproto/api": "0.20.6",
