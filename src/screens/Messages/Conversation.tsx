@@ -350,14 +350,14 @@ function GroupChatGate() {
             🐴
           </Text>
         </View>
-        <Prompt.TitleText>
+        <Prompt.TitleText style={[a.text_center]}>
           {hasBeenReleased ? (
             <Trans>Group chats are now available</Trans>
           ) : (
             <Trans>Group chats are not yet available</Trans>
           )}
         </Prompt.TitleText>
-        <Prompt.DescriptionText>
+        <Prompt.DescriptionText style={[a.text_center]}>
           {hasBeenReleased ? (
             <Trans>Update your app to the latest version to join in!</Trans>
           ) : (
