@@ -625,7 +625,12 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const isMessagesRelatedScreen = routeName.startsWith('Messages')
+
+  const aa = useAgeAssurance()
+  // splitview uses the minimal variant of the leftnav. unfortunately there's no easy
+  // way to thread this data through because of the view hierarchy, so just check the route name
+  const isMessagesRelatedScreen =
+    routeName.startsWith('Messages') && aa.state.access === aa.Access.Full
   const {leftNavMinimal: leftNavMinimalBreakpoint, centerColumnOffset} =
     useLayoutBreakpoints()
   const numUnreadNotifications = useUnreadNotifications()
