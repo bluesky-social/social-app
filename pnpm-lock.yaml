@@ -1883,6 +1883,7 @@ packages:
 
   '@formatjs/intl-enumerator@1.8.12':
     resolution: {integrity: sha512-rT2hnyQ0q6RDG1jISMH+MP6wlHQLUC81C0BeYEzabJb48S4tU2HGCPUxsOqMa3vDAUmpnz9Kw5vYTD5hTkOVgg==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@formatjs/intl-getcanonicallocales@2.5.6':
     resolution: {integrity: sha512-CnBbc4St61RL06gDXlCZG08Gt41uiySgsdZNBExh8/c0FBONJCrAlQ9FsyalUdq9ze0nCeknJtMmO8JnB9xHgQ==}
