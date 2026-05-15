@@ -32,7 +32,7 @@ This is NOT required when developing for web.
     - `bundler install` (this will install Cocoapods)
 - After initial setup:
   - Copy `google-services.json.example` to `google-services.json` or provide your own `google-services.json`. (A real firebase project is NOT required)
-  - `npx expo prebuild` -> you will also need to run this anytime `app.json` or native `package.json` deps change
+  - `pnpm prebuild` -> you will also need to run this anytime `app.json` or native `package.json` deps change
 
 ### Running the Native App
 
@@ -65,7 +65,7 @@ After you do `pnpm ios` and `pnpm android` once, you can later just run `pnpm we
 - Copy the `.env.example` to `.env` and fill in any necessary tokens. (The Sentry token is NOT required; see instructions below if you want to enable Sentry.)
 - To run on the device, add `--device` to the command (e.g. `pnpm android --device`). To build in production mode (slower build, faster app), also add `--variant release` on Android or `--configuration Release` on iOS.
 - If you want to use Expo EAS on your own builds without ejecting from Expo, make sure to change the `owner` and `extra.eas.projectId` properties. If you do not have an Expo account, you may remove these properties.
-- `npx react-native info` Checks what has been installed.
+- `pnpm exec react-native info` Checks what has been installed.
 - If the Android simulator frequently hangs or is very sluggish, [bump its memory limit](https://stackoverflow.com/a/40068396)
 - The Android simulator won't be able to access localhost services unless you run `adb reverse tcp:{PORT} tcp:{PORT}`
   - For instance, the locally-hosted dev-wallet will need `adb reverse tcp:3001 tcp:3001`
