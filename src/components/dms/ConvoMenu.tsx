@@ -160,6 +160,7 @@ let ConvoMenu = ({
             currentScreen={currentScreen}
             params={{
               convoId: convo.id,
+              did: profile.did,
             }}
           />
         </>
