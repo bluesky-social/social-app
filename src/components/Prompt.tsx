@@ -2,7 +2,7 @@ import {createContext, useCallback, useContext, useId, useMemo} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import {atoms as a, useTheme, type ViewStyleProp, web} from '#/alf'
+import {atoms as a, type TextStyleProp, useTheme, web} from '#/alf'
 import {
   Button,
   type ButtonColor,
@@ -81,7 +81,7 @@ export function Outer({
 export function TitleText({
   children,
   style,
-}: React.PropsWithChildren<ViewStyleProp>) {
+}: React.PropsWithChildren<TextStyleProp>) {
   const {titleId} = useContext(Context)
   return (
     <Text
@@ -102,14 +102,21 @@ export function TitleText({
 export function DescriptionText({
   children,
   selectable,
-}: React.PropsWithChildren<{selectable?: boolean}>) {
+  style,
+}: React.PropsWithChildren<{selectable?: boolean} & TextStyleProp>) {
   const t = useTheme()
   const {descriptionId} = useContext(Context)
   return (
     <Text
       nativeID={descriptionId}
       selectable={selectable}
-      style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high, a.pb_lg]}>
+      style={[
+        a.text_md,
+        a.leading_snug,
+        t.atoms.text_contrast_high,
+        a.pb_lg,
+        style,
+      ]}>
       {children}
     </Text>
   )
