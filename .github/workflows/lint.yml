@@ -6,13 +6,17 @@ on:
     branches:
       - main
 concurrency:
-  group: "${{ github.workflow }}-${{ github.head_ref || github.ref }}"
+  group: '${{ github.workflow }}-${{ github.head_ref || github.ref }}'
   cancel-in-progress: true
 
 jobs:
   linting:
     name: Run linters
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        job: [lint, lockfile-lint, prettier, intl:build, typecheck]
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v5
@@ -27,12 +31,12 @@ jobs:
               rc=1
             fi
           }
-          # FROM node:X.Y.Z — service runtime images
+          # FROM node:X.Y.Z - service runtime images
           for f in Dockerfile.bskylink Dockerfile.bskyogcard; do
             v=$(grep -oE 'FROM node:[0-9]+\.[0-9]+\.[0-9]+' "$f" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
             check "$f" "$v"
           done
-          # ENV NODE_VERSION=X.Y.Z — Go images that nvm-install Node for the JS build stage
+          # ENV NODE_VERSION=X.Y.Z - Go images that nvm-install Node for the JS build stage
           for f in Dockerfile.embedr; do
             v=$(grep -oE 'NODE_VERSION=[0-9]+\.[0-9]+\.[0-9]+' "$f" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
             check "$f" "$v"
@@ -53,10 +57,25 @@ jobs:
           command: pnpm install --frozen-lockfile
           attempt_limit: 3
           attempt_delay: 2000
-      - name: Lint check
-        run: pnpm lint
-      - name: Prettier check
-        run: pnpm prettier --check .
+      - name: Lint checks
+        run: pnpm ${{ matrix.job }}
+  typechecking:
+    name: Run typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v5
+      - name: Install node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: pnpm install
+        uses: Wandalen/wretry.action@master
+        with:
+          command: pnpm --frozen-lockfile
+          attempt_limit: 3
+          attempt_delay: 2000
       - name: Check & compile i18n
         run: pnpm intl:build
       - name: Type check
@@ -64,10 +83,13 @@ jobs:
   testing:
     name: Run tests
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v6
       - name: Install node
         uses: actions/setup-node@v6
         with:
@@ -83,4 +105,4 @@ jobs:
         run: pnpm intl:build
       - name: Run tests
         run: |
-          NODE_ENV=test pnpm test --forceExit
+          NODE_ENV=test pnpm test --forceExit --shard=${{ matrix.shard }}/${{ strategy.job-total }}
