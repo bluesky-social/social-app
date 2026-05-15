@@ -23,6 +23,7 @@ const RIGHT_NAV_MINIMAL_WIDTH = 280
 type MessageScreens =
   | 'Messages'
   | 'MessagesConversation'
+  | 'MessagesConversationSettings'
   | 'MessagesInbox'
   | 'MessagesSettings'
 
@@ -55,10 +56,11 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
     navigation.navigate('MessagesConversation', {conversation})
 
   const selectedChat =
-    route.name === 'MessagesConversation' &&
+    (route.name === 'MessagesConversation' ||
+      route.name === 'MessagesConversationSettings') &&
     route.params &&
-    'conversation' in route?.params
-      ? route?.params?.conversation
+    'conversation' in route.params
+      ? route.params.conversation
       : undefined
 
   const rightNavWidth = centerColumnOffset
