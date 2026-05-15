@@ -34,7 +34,7 @@ export const AfterReportConversationDialog = memo(function DeleteDialogInner({
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
-        label={l`Would you like to delete this conversation?`}
+        label={l`Would you like to leave this conversation?`}
         style={[web({maxWidth: 400})]}>
         <DialogInner params={params} currentScreen={currentScreen} />
         <Dialog.Close />
@@ -84,7 +84,7 @@ function DoneStep({
   const onPressPrimaryAction = () => {
     control.close(() => {
       leaveConvo()
-      Toast.show(l({message: 'Conversation deleted', context: 'toast'}), {
+      Toast.show(l({message: 'Conversation left', context: 'toast'}), {
         type: 'success',
       })
     })
@@ -102,12 +102,12 @@ function DoneStep({
       </View>
       <View style={[a.gap_sm]}>
         <Button
-          label={l`Delete conversation`}
+          label={l`Leave conversation`}
           onPress={onPressPrimaryAction}
           size="large"
           color="negative">
           <ButtonText>
-            <Trans>Delete conversation</Trans>
+            <Trans>Leave conversation</Trans>
           </ButtonText>
         </Button>
         <Button
