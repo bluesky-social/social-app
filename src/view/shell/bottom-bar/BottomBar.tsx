@@ -61,7 +61,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const t = useTheme()
   const {_} = useLingui()
   const safeAreaInsets = useSafeAreaInsets()
-  const {footerHeight} = useShellLayout()
+  const {setFooterHeight} = useShellLayout()
   const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile, isAtMessages} =
     useNavigationTabState()
   const numUnreadNotifications = useUnreadNotifications()
@@ -154,9 +154,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
           {paddingBottom: clamp(safeAreaInsets.bottom, 15, 60)},
           footerMinimalShellTransform,
         ]}
-        onLayout={e => {
-          footerHeight.set(e.nativeEvent.layout.height)
-        }}>
+        onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}>
         {hasSession ? (
           <>
             <Btn

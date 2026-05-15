@@ -232,42 +232,41 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <Geo.Provider>
-      <AppConfigProvider>
-        <A11yProvider>
-          <KeyboardControllerProvider preload={false}>
-            <OnboardingProvider>
-              <AnalyticsContext>
-                <SessionProvider>
-                  <PrefsStateProvider>
-                    <I18nProvider>
-                      <ShellStateProvider>
-                        <ModalStateProvider>
-                          <DialogStateProvider>
-                            <LightboxStateProvider>
-                              <PortalProvider>
-                                <BottomSheetProvider>
-                                  <StarterPackProvider>
-                                    <SafeAreaProvider
-                                      initialMetrics={initialWindowMetrics}>
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <Geo.Provider>
+        <AppConfigProvider>
+          <A11yProvider>
+            <KeyboardControllerProvider preload={false}>
+              <OnboardingProvider>
+                <AnalyticsContext>
+                  <SessionProvider>
+                    <PrefsStateProvider>
+                      <I18nProvider>
+                        <ShellStateProvider>
+                          <ModalStateProvider>
+                            <DialogStateProvider>
+                              <LightboxStateProvider>
+                                <PortalProvider>
+                                  <BottomSheetProvider>
+                                    <StarterPackProvider>
                                       <InnerApp />
-                                    </SafeAreaProvider>
-                                  </StarterPackProvider>
-                                </BottomSheetProvider>
-                              </PortalProvider>
-                            </LightboxStateProvider>
-                          </DialogStateProvider>
-                        </ModalStateProvider>
-                      </ShellStateProvider>
-                    </I18nProvider>
-                  </PrefsStateProvider>
-                </SessionProvider>
-              </AnalyticsContext>
-            </OnboardingProvider>
-          </KeyboardControllerProvider>
-        </A11yProvider>
-      </AppConfigProvider>
-    </Geo.Provider>
+                                    </StarterPackProvider>
+                                  </BottomSheetProvider>
+                                </PortalProvider>
+                              </LightboxStateProvider>
+                            </DialogStateProvider>
+                          </ModalStateProvider>
+                        </ShellStateProvider>
+                      </I18nProvider>
+                    </PrefsStateProvider>
+                  </SessionProvider>
+                </AnalyticsContext>
+              </OnboardingProvider>
+            </KeyboardControllerProvider>
+          </A11yProvider>
+        </AppConfigProvider>
+      </Geo.Provider>
+    </SafeAreaProvider>
   )
 }
 
