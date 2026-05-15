@@ -340,7 +340,9 @@ function ListImpl<ItemT>(
           ref={containerRef}
           style={[
             contentContainerStyle,
-            desktopFixedHeight ? styles.minHeightViewport : null,
+            desktopFixedHeight && !disableFullWindowScroll
+              ? styles.minHeightViewport
+              : null,
           ]}>
           <Visibility
             root={disableFullWindowScroll ? nativeRef : null}
