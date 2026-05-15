@@ -1,4 +1,4 @@
-import {expect, test} from '@jest/globals'
+import {expect, test} from 'vitest'
 
 import {add, type ConsoleTransportEntry, getEntries} from '#/logger/logDump'
 import {LogContext, LogLevel} from '#/logger/types'

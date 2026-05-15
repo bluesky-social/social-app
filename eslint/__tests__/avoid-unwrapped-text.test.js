@@ -1,6 +1,12 @@
-const {RuleTester} = require('eslint')
-const tseslint = require('typescript-eslint')
-const avoidUnwrappedText = require('../avoid-unwrapped-text')
+import {RuleTester} from 'eslint'
+import tseslint from 'typescript-eslint'
+import {describe, it} from 'vitest'
+
+import avoidUnwrappedText from '../avoid-unwrapped-text.js'
+
+RuleTester.describe = describe
+RuleTester.it = it
+RuleTester.itOnly = it.only
 
 const ruleTester = new RuleTester({
   languageOptions: {

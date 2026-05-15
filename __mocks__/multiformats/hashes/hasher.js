@@ -1,6 +1,8 @@
-export const from = jest.fn().mockImplementation(() => {
+import {vi} from 'vitest'
+
+export const from = vi.fn().mockImplementation(() => {
   return {
-    digest: jest.fn().mockImplementation(() => {
+    digest: vi.fn().mockImplementation(() => {
       return Promise.resolve('')
     }),
   }

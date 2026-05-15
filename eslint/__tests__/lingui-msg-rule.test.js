@@ -1,6 +1,12 @@
-const {RuleTester} = require('eslint')
-const tseslint = require('typescript-eslint')
-const linguiMsgRule = require('../lingui-msg-rule')
+import {RuleTester} from 'eslint'
+import tseslint from 'typescript-eslint'
+import {describe, it} from 'vitest'
+
+import linguiMsgRule from '../lingui-msg-rule.js'
+
+RuleTester.describe = describe
+RuleTester.it = it
+RuleTester.itOnly = it.only
 
 const ruleTester = new RuleTester({
   languageOptions: {

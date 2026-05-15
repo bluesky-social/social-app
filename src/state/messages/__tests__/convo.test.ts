@@ -1,4 +1,4 @@
-import {describe, it} from '@jest/globals'
+import {describe, it} from 'vitest'
 
 describe(`#/state/messages/convo`, () => {
   describe(`init`, () => {

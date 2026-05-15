@@ -1,3 +1,5 @@
+import {describe, expect, it} from 'vitest'
+
 import {getLikelyType, LikelyType} from '../../src/lib/link-meta/link-meta'
 
 describe('getLikelyType', () => {

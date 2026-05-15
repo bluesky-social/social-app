@@ -1,5 +1,6 @@
 import {createDownloadResumable, deleteAsync} from 'expo-file-system/legacy'
 import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
+import {afterEach, beforeEach, describe, expect, it, type Mock, vi} from 'vitest'
 
 import {
   downloadAndResize,
@@ -16,10 +17,10 @@ const mockResizedImage = {
 }
 
 describe('downloadAndResize', () => {
-  const errorSpy = jest.spyOn(global.console, 'error')
+  const errorSpy = vi.spyOn(global.console, 'error')
 
   beforeEach(() => {
-    const mockedCreateResizedImage = manipulateAsync as jest.Mock
+    const mockedCreateResizedImage = manipulateAsync as Mock
     mockedCreateResizedImage.mockResolvedValue({
       uri: 'file://resized-image.jpg',
       ...mockResizedImage,
@@ -27,13 +28,13 @@ describe('downloadAndResize', () => {
   })
 
   afterEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('should return resized image for valid URI and options', async () => {
-    const mockedFetch = createDownloadResumable as jest.Mock
+    const mockedFetch = createDownloadResumable as Mock
     mockedFetch.mockReturnValue({
-      cancelAsync: jest.fn(),
+      cancelAsync: vi.fn(),
       downloadAsync: jest
         .fn()
         .mockResolvedValue({uri: 'file://resized-image.jpg'}),

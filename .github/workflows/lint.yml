@@ -82,5 +82,4 @@ jobs:
       - name: Check & compile i18n
         run: pnpm intl:build
       - name: Run tests
-        run: |
-          NODE_ENV=test pnpm test --forceExit
+        run: pnpm test-ci

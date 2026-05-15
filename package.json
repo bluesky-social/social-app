@@ -44,10 +44,10 @@
     "build-embed": "cd bskyembed && yarn build && yarn build-snippet && cd .. && node ./scripts/post-embed-build.js",
     "start": "expo start --dev-client",
     "start:prod": "expo start --dev-client --no-dev --minify",
-    "test": "NODE_ENV=test jest --forceExit --testTimeout=20000 --bail",
-    "test-watch": "NODE_ENV=test jest --watchAll",
-    "test-ci": "NODE_ENV=test jest --ci --forceExit --reporters=default --reporters=jest-junit",
-    "test-coverage": "NODE_ENV=test jest --coverage",
+    "test": "NODE_ENV=test vitest run --bail=1",
+    "test-watch": "NODE_ENV=test vitest",
+    "test-ci": "NODE_ENV=test vitest run --reporter=default --reporter=junit --outputFile.junit=./junit.xml",
+    "test-coverage": "NODE_ENV=test vitest run --coverage",
     "lint": "eslint --cache --quiet src",
     "lint-native": "swiftlint ./modules && ktlint ./modules",
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
@@ -226,7 +226,7 @@
     "react-native-uitextview": "^1.4.0",
     "react-native-uuid": "^2.0.3",
     "react-native-view-shot": "^4.0.3",
-    "react-native-web": "^0.21.0",
+    "react-native-web": "^0.21.2",
     "react-native-web-webview": "^1.0.2",
     "react-native-webview": "^13.15.0",
     "react-remove-scroll-bar": "^2.3.8",
@@ -250,12 +250,11 @@
     "@eslint/js": "^9.39.2",
     "@lingui/babel-plugin-lingui-macro": "^5.9.2",
     "@lingui/cli": "^5.9.2",
+    "@lingui/vite-plugin": "^6.0.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
     "@react-native/babel-preset": "0.81.5",
     "@react-native/typescript-config": "^0.81.5",
     "@sentry/webpack-plugin": "^3.2.2",
-    "@testing-library/react-native": "^13.2.0",
-    "@types/jest": "29.5.14",
     "@types/lodash.chunk": "^4.2.7",
     "@types/lodash.debounce": "^4.0.7",
     "@types/lodash.shuffle": "^4.2.7",
@@ -263,7 +262,7 @@
     "@types/react": "^19.1.17",
     "@types/react-dom": "^19.1.11",
     "@typescript/native-preview": "^7.0.0-dev.20260428.1",
-    "babel-jest": "^29.7.0",
+    "@vitest/coverage-v8": "^4.0.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-plugin-react-compiler": "19.1.0-rc.3",
     "babel-preset-expo": "~54.0.10",
@@ -282,9 +281,6 @@
     "globals": "^17.0.0",
     "husky": "^8.0.3",
     "is-ci": "^3.0.1",
-    "jest": "^29.7.0",
-    "jest-expo": "~54.0.17",
-    "jest-junit": "^16.0.0",
     "lint-staged": "^13.2.3",
     "prettier": "^3.8.3",
     "react-native-dotenv": "^3.4.11",
@@ -293,44 +289,8 @@
     "ts-plugin-sort-import-suggestions": "^1.0.4",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.58.0",
+    "vitest": "^4.0.0",
     "webpack-bundle-analyzer": "^4.10.1"
-  },
-  "jest": {
-    "preset": "jest-expo/ios",
-    "setupFilesAfterEnv": [
-      "./jest/jestSetup.js"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ],
-    "transform": {
-      "\\.[jt]sx?$": "babel-jest"
-    },
-    "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|@discord|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match)"
-    ],
-    "modulePathIgnorePatterns": [
-      "__tests__/.*/__mocks__",
-      "__e2e__/.*",
-      "bskylink/.*"
-    ],
-    "coveragePathIgnorePatterns": [
-      "<rootDir>/node_modules/",
-      "<rootDir>/src/platform",
-      "<rootDir>/src/third-party",
-      "<rootDir>/src/view/com/util",
-      "<rootDir>/src/state/lib",
-      "<rootDir>/__tests__/test-utils.js"
-    ],
-    "reporters": [
-      "default",
-      "jest-junit"
-    ]
   },
   "browserslist": {
     "production": [

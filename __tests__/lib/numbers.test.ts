@@ -1,3 +1,5 @@
+import {describe, expect, it} from 'vitest'
+
 import {clamp} from '../../src/lib/numbers'
 
 describe('clamp', () => {

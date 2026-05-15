@@ -1,25 +1,25 @@
-import {jest} from '@jest/globals'
+import {vi} from 'vitest'
 
 export {Nux} from '#/state/queries/nuxs/definitions'
 
-export const useNuxs = jest.fn(() => {
+export const useNuxs = vi.fn(() => {
   return {
     nuxs: undefined,
     status: 'loading' as const,
   }
 })
 
-export const useNux = jest.fn((id: string) => {
+export const useNux = vi.fn((id: string) => {
   return {
     nux: undefined,
     status: 'loading' as const,
   }
 })
 
-export const useSaveNux = jest.fn(() => {
+export const useSaveNux = vi.fn(() => {
   return {}
 })
 
-export const useResetNuxs = jest.fn(() => {
+export const useResetNuxs = vi.fn(() => {
   return {}
 })

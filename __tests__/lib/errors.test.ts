@@ -1,3 +1,5 @@
+import {describe, expect, it} from 'vitest'
+
 import {isNetworkError} from '../../src/lib/strings/errors'
 
 describe('isNetworkError', () => {

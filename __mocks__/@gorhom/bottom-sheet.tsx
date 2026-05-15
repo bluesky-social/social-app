@@ -1,5 +1,6 @@
 import React, {type ReactNode} from 'react'
 import {FlatList, Modal, ScrollView, TextInput, View} from 'react-native'
+import {vi} from 'vitest'
 
 const BottomSheetModalContext = React.createContext(null)
 BottomSheetModalContext.displayName = 'BottomSheetModalContext'
@@ -33,12 +34,12 @@ const BottomSheetScrollView = (props: any) => <ScrollView {...props} />
 const BottomSheetFlatList = (props: any) => <FlatList {...props} />
 const BottomSheetTextInput = (props: any) => <TextInput {...props} />
 
-const useBottomSheet = jest.fn()
-const useBottomSheetModal = jest.fn()
-const useBottomSheetSpringConfigs = jest.fn()
-const useBottomSheetTimingConfigs = jest.fn()
-const useBottomSheetInternal = jest.fn()
-const useBottomSheetDynamicSnapPoints = jest.fn()
+const useBottomSheet = vi.fn()
+const useBottomSheetModal = vi.fn()
+const useBottomSheetSpringConfigs = vi.fn()
+const useBottomSheetTimingConfigs = vi.fn()
+const useBottomSheetInternal = vi.fn()
+const useBottomSheetDynamicSnapPoints = vi.fn()
 
 export {useBottomSheet}
 export {useBottomSheetModal}

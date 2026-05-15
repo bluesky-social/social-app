@@ -1,3 +1,5 @@
-jest.mock('sentry-expo', () => ({
-  init: () => jest.fn(),
+import {vi} from 'vitest'
+
+vi.mock('sentry-expo', () => ({
+  init: () => vi.fn(),
 }))

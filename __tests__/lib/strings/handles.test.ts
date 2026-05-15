@@ -1,3 +1,5 @@
+import {describe, expect, it} from 'vitest'
+
 import {type IsValidHandle, validateServiceHandle} from '#/lib/strings/handles'
 
 describe('handle validation', () => {

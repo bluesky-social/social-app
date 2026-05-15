@@ -1,5 +1,6 @@
 import {RichText} from '@atproto/api'
 import {i18n} from '@lingui/core'
+import {describe, expect, it} from 'vitest'
 
 import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
 import {
