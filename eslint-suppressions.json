@@ -659,16 +659,6 @@
       "count": 2
     }
   },
-  "src/view/com/util/List.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "src/view/com/util/List.web.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 14
-    }
-  },
   "src/view/com/util/MainScrollProvider.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
