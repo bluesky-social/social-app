@@ -215,7 +215,6 @@ function RequestList({
                     label={l`Reload conversations`}
                     size="small"
                     color="secondary_inverted"
-                    variant="solid"
                     onPress={() => void refetch()}>
                     <ButtonText>
                       <Trans>Retry</Trans>
@@ -347,7 +346,6 @@ function MarkAsReadHeaderButton() {
       label={l`Mark all as read`}
       size="small"
       color="secondary"
-      variant="solid"
       onPress={() => markAllRead()}>
       <ButtonIcon icon={CheckIcon} />
       <ButtonText>
