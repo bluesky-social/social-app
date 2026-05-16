@@ -216,16 +216,13 @@ function AltTextInner({
             style={[a.text_2xl, a.font_semi_bold, a.leading_tight, a.pb_sm]}>
             <Trans>Add alt text</Trans>
           </Text>
-          <View style={[a.align_center]}>
-            <GifEmbed
-              thumb={thumb}
-              altText={altText}
-              isPreferredAltText={true}
-              params={params}
-              hideAlt
-              style={[{height: 225}]}
-            />
-          </View>
+          <GifEmbed
+            thumb={thumb}
+            altText={altText}
+            isPreferredAltText={true}
+            params={params}
+            hideAlt
+          />
         </View>
       </View>
       <Dialog.Close />

@@ -59,7 +59,11 @@ export function useListConvoMembersQuery({
                 r => r.did === data.member.did,
               )
               if (newMember) {
-                mutateList(list => list.concat(newMember))
+                mutateList(list =>
+                  list.some(m => m.did === newMember.did)
+                    ? list
+                    : list.concat(newMember),
+                )
               }
             }
           } else if (ChatBskyConvoDefs.isLogRemoveMember(log)) {

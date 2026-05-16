@@ -86,8 +86,8 @@ export type ButtonState = {
 export type ButtonContext = VariantProps & ButtonState
 
 type NonTextElements =
-  | React.ReactElement<any>
-  | Iterable<React.ReactElement<any> | null | undefined | boolean>
+  | React.ReactElement
+  | Iterable<React.ReactElement | null | undefined | boolean>
 
 export type ButtonProps = Pick<
   PressableProps,
@@ -811,14 +811,15 @@ export function ButtonIcon({
      * also so that we can calculate transforms.
      */
     const iconSize = {
+      '2xs': 8,
       xs: 12,
       sm: 16,
       md: 18,
       lg: 24,
       xl: 28,
-      '2xs': 8,
       '2xl': 32,
       '3xl': 40,
+      '4xl': 48,
     }[iconSizeShorthand]
 
     /*

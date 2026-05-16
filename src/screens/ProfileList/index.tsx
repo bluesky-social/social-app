@@ -15,7 +15,6 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import {ComposeIcon2} from '#/lib/icons'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -38,6 +37,7 @@ import {ListHiddenScreen} from '#/screens/List/ListHiddenScreen'
 import {atoms as a, native, platform, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {ListAddRemoveUsersDialog} from '#/components/dialogs/lists/ListAddRemoveUsersDialog'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Hider from '#/components/moderation/Hider'
@@ -232,13 +232,7 @@ function ProfileListScreenLoaded({
             <FAB
               testID="composeFAB"
               onPress={() => openComposer({logContext: 'Fab'})}
-              icon={
-                <ComposeIcon2
-                  strokeWidth={1.5}
-                  size={29}
-                  style={{color: 'white'}}
-                />
-              }
+              icon={<EditBigIcon size="lg" fill={t.palette.white} />}
               accessibilityRole="button"
               accessibilityLabel={_(msg`New post`)}
               accessibilityHint=""
@@ -281,13 +275,7 @@ function ProfileListScreenLoaded({
           <FAB
             testID="composeFAB"
             onPress={() => openComposer({logContext: 'Fab'})}
-            icon={
-              <ComposeIcon2
-                strokeWidth={1.5}
-                size={29}
-                style={{color: 'white'}}
-              />
-            }
+            icon={<EditBigIcon size="lg" fill={t.palette.white} />}
             accessibilityRole="button"
             accessibilityLabel={_(msg`New post`)}
             accessibilityHint=""

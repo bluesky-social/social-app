@@ -65,7 +65,7 @@ type Item =
       type: 'CHAT_MEMBER'
       key: string
       profile: GroupConvoMember
-      status: 'owner' | 'standard' | 'invited'
+      status: 'owner' | 'standard'
     }
   | {
       type: 'CHAT_MEMBER_PLACEHOLDER'
@@ -176,6 +176,8 @@ function GroupSettings({
   moderationOpts: ModerationOpts
   isReady: boolean
 }) {
+  const [isPTRing, setIsPTRing] = useState(false)
+
   const initialNumToRender = useInitialNumToRender({minItemHeight: 68})
   const bottomBarOffset = useBottomBarOffset()
 
@@ -184,13 +186,10 @@ function GroupSettings({
   const primaryMember = convo.primaryMember
   const isOwner = !!primaryMember && primaryMember.did === currentAccount?.did
 
-  const {data: memberListData = []} = useListConvoMembersQuery({
+  const {data: memberListData = [], refetch} = useListConvoMembersQuery({
     convoId: convo.view.id,
     placeholderData: convo.members,
   })
-
-  // TODO Need this data in order to populate this array. -dsb
-  const invites: string[] = []
 
   const {data: joinRequestsData, hasNextPage: hasMoreRequests} =
     useListJoinRequestsQuery({
@@ -228,12 +227,7 @@ function GroupSettings({
         type: 'CHAT_MEMBER',
         key: profile.did,
         profile,
-        status:
-          primaryMember?.did === profile.did
-            ? 'owner'
-            : invites.includes(profile.did)
-              ? 'invited'
-              : 'standard',
+        status: primaryMember?.did === profile.did ? 'owner' : 'standard',
       }),
     ),
   )
@@ -277,6 +271,16 @@ function GroupSettings({
     }
   }
 
+  const onRefresh = async () => {
+    setIsPTRing(true)
+    try {
+      await refetch()
+    } catch (err) {
+      logger.error('Failed to refresh group chat members', {message: err})
+    }
+    setIsPTRing(false)
+  }
+
   return (
     <List
       data={items}
@@ -297,6 +301,8 @@ function GroupSettings({
       renderItem={renderItem}
       sideBorders={false}
       windowSize={11}
+      refreshing={isPTRing}
+      onRefresh={() => void onRefresh()}
     />
   )
 }

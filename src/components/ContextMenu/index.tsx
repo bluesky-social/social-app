@@ -761,6 +761,7 @@ export function Item({
   style,
   onPress,
   position,
+  destructive = false,
   ...rest
 }: ItemProps) {
   const t = useTheme()
@@ -819,8 +820,8 @@ export function Item({
   )
 
   const itemContext = useMemo(
-    () => ({disabled: Boolean(rest.disabled)}),
-    [rest.disabled],
+    () => ({disabled: Boolean(rest.disabled), destructive}),
+    [rest.disabled, destructive],
   )
 
   return (
@@ -872,7 +873,7 @@ export function Item({
 
 export function ItemText({children, style}: ItemTextProps) {
   const t = useTheme()
-  const {disabled} = useContextMenuItemContext()
+  const {disabled, destructive} = useContextMenuItemContext()
   return (
     <Text
       numberOfLines={2}
@@ -883,6 +884,7 @@ export function ItemText({children, style}: ItemTextProps) {
         a.font_semi_bold,
         t.atoms.text_contrast_high,
         style,
+        destructive && {color: t.palette.negative_500},
         disabled && t.atoms.text_contrast_low,
       ]}>
       {children}
@@ -892,14 +894,16 @@ export function ItemText({children, style}: ItemTextProps) {
 
 export function ItemIcon({icon: Comp}: ItemIconProps) {
   const t = useTheme()
-  const {disabled} = useContextMenuItemContext()
+  const {disabled, destructive} = useContextMenuItemContext()
   return (
     <Comp
       size="lg"
       fill={
         disabled
           ? t.atoms.text_contrast_low.color
-          : t.atoms.text_contrast_medium.color
+          : destructive
+            ? t.palette.negative_500
+            : t.atoms.text_contrast_medium.color
       }
     />
   )

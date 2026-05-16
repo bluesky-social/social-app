@@ -9,8 +9,8 @@
  *   import * as Toast from '#/components/Toast'
  *   Toast.show(message, {type: 'error'})
  *
- * Usage: jscodeshift -t .jscodeshift/toast-v2.js <file-path>
- * Example: jscodeshift -t .jscodeshift/toast-v2.js src/App.native.tsx
+ * Usage: jscodeshift -t .jscodeshift/repo/toast-v2.js <file-path>
+ * Example: jscodeshift -t .jscodeshift/repo/toast-v2.js src/App.native.tsx
  */
 
 /* eslint-disable */

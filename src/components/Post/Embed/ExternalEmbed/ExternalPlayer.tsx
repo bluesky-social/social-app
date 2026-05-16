@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   type GestureResponderEvent,
   Pressable,
-  StyleSheet,
   useWindowDimensions,
   View,
 } from 'react-native'
@@ -32,6 +31,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
+import {KeepAwake} from '#/components/KeepAwake'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {IS_NATIVE} from '#/env'
 
@@ -55,13 +55,13 @@ function PlaceholderOverlay({
   if (isPlayerActive && !isLoading) return null
 
   return (
-    <View style={[a.absolute, a.inset_0, styles.overlayLayer]}>
+    <View style={[a.absolute, a.inset_0, {zIndex: 2}]}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={_(msg`Play Video`)}
         accessibilityHint={_(msg`Plays the video`)}
         onPress={onPress}
-        style={[styles.overlayContainer]}>
+        style={[a.flex_1, a.justify_center, a.align_center]}>
         {!isPlayerActive ? (
           <PlayButtonIcon />
         ) : (
@@ -96,21 +96,24 @@ function Player({
   if (!isPlayerActive) return null
 
   return (
-    <EventStopper style={[a.absolute, a.inset_0, styles.playerLayer]}>
-      <WebView
-        javaScriptEnabled={true}
-        onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-        mediaPlaybackRequiresUserAction={false}
-        allowsInlineMediaPlayback
-        bounces={false}
-        allowsFullscreenVideo
-        nestedScrollEnabled
-        source={{uri: params.playerUri}}
-        onLoad={onLoad}
-        style={styles.webview}
-        setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
-      />
-    </EventStopper>
+    <>
+      <EventStopper style={[a.absolute, a.inset_0, {zIndex: 3}]}>
+        <WebView
+          javaScriptEnabled={true}
+          onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+          mediaPlaybackRequiresUserAction={false}
+          allowsInlineMediaPlayback
+          bounces={false}
+          allowsFullscreenVideo
+          nestedScrollEnabled
+          source={{uri: params.playerUri}}
+          onLoad={onLoad}
+          style={a.bg_transparent}
+          setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
+        />
+      </EventStopper>
+      <KeepAwake />
+    </>
   )
 }
 
@@ -129,7 +132,7 @@ export function ExternalPlayer({
   const externalEmbedsPrefs = useExternalEmbedsPrefs()
   const consentDialogControl = useDialogControl()
 
-  const [isPlayerActive, setPlayerActive] = useState(false)
+  const [isPlayerActive, setIsPlayerActive] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
   const aspect = useMemo(() => {
@@ -161,7 +164,7 @@ export function ExternalPlayer({
     const isVisible = top <= realWinHeight - insets.bottom && bot >= insets.top
 
     if (!isVisible) {
-      runOnJS(setPlayerActive)(false)
+      runOnJS(setIsPlayerActive)(false)
     }
   }, false) // False here disables autostarting the callback
 
@@ -173,7 +176,7 @@ export function ExternalPlayer({
     // Interval for scrolling works in most cases, However, for twitch embeds, if we navigate away from the screen the webview will
     // continue playing. We need to watch for the blur event
     const unsubscribe = navigation.addListener('blur', () => {
-      setPlayerActive(false)
+      setIsPlayerActive(false)
     })
 
     // Start watching for changes
@@ -199,13 +202,13 @@ export function ExternalPlayer({
         return
       }
 
-      setPlayerActive(true)
+      setIsPlayerActive(true)
     },
     [externalEmbedsPrefs, consentDialogControl, params.source],
   )
 
   const onAcceptConsent = useCallback(() => {
-    setPlayerActive(true)
+    setIsPlayerActive(true)
   }, [])
 
   return (
@@ -231,9 +234,7 @@ export function ExternalPlayer({
             <Fill
               style={[
                 t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
-                {
-                  opacity: 0.3,
-                },
+                {opacity: 0.3},
               ]}
             />
           </>
@@ -262,24 +263,3 @@ export function ExternalPlayer({
     </>
   )
 }
-
-const styles = StyleSheet.create({
-  overlayContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  overlayLayer: {
-    zIndex: 2,
-  },
-  playerLayer: {
-    zIndex: 3,
-  },
-  webview: {
-    backgroundColor: 'transparent',
-  },
-  gifContainer: {
-    width: '100%',
-    overflow: 'hidden',
-  },
-})

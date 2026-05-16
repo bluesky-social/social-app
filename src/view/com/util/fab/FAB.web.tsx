@@ -1,13 +1,13 @@
 import {View} from 'react-native'
 
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {useBreakpoints} from '#/alf'
 import {FABInner, type FABProps} from './FABInner'
 
-export const FAB = (_opts: FABProps) => {
-  const {isDesktop} = useWebMediaQueries()
+export const FAB = (props: FABProps) => {
+  const {gtMobile} = useBreakpoints()
 
-  if (!isDesktop) {
-    return <FABInner {..._opts} />
+  if (!gtMobile) {
+    return <FABInner {...props} />
   }
 
   return <View />

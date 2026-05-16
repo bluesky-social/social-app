@@ -8,12 +8,10 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {ComposeIcon2} from '#/lib/icons'
 import {
   type NativeStackScreenProps,
   type NotificationsTabNavigatorParams,
 } from '#/lib/routes/types'
-import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {emitSoftReset, listenSoftReset} from '#/state/events'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
@@ -33,6 +31,7 @@ import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {ButtonIcon} from '#/components/Button'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText, Link} from '#/components/Link'
@@ -50,6 +49,7 @@ type Props = NativeStackScreenProps<
 >
 export function NotificationsScreen({}: Props) {
   const {_} = useLingui()
+  const t = useTheme()
   const {openComposer} = useOpenComposer()
   const unreadNotifs = useUnreadNotifications()
   const hasNew = !!unreadNotifs
@@ -161,7 +161,7 @@ export function NotificationsScreen({}: Props) {
       <FAB
         testID="composeFAB"
         onPress={() => openComposer({logContext: 'Fab'})}
-        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+        icon={<EditBigIcon size="lg" fill={t.palette.white} />}
         accessibilityRole="button"
         accessibilityLabel={_(msg`New post`)}
         accessibilityHint=""

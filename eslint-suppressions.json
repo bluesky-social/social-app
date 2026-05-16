@@ -24,11 +24,6 @@
       "count": 5
     }
   },
-  "src/components/Button.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/components/Composer/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -260,11 +255,6 @@
     }
   },
   "src/lib/hooks/useAccountSwitcher.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/lib/hooks/useCleanError.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
@@ -662,16 +652,6 @@
   "src/view/com/util/Link.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
-    }
-  },
-  "src/view/com/util/List.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "src/view/com/util/List.web.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 14
     }
   },
   "src/view/com/util/MainScrollProvider.tsx": {

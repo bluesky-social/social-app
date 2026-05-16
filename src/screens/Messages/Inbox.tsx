@@ -25,10 +25,11 @@ import {useMessagesEventBus} from '#/state/messages/events'
 import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useUpdateAllRead} from '#/state/queries/messages/update-all-read'
+import {EmptyState} from '#/view/com/util/EmptyState'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {List} from '#/view/com/util/List'
 import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -37,13 +38,14 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/i
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotate'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
-import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons/Message'
+import {Inbox_Stroke2_Corner2_Rounded_Large as InboxLargeIcon} from '#/components/icons/Inbox'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 import {RequestListItem} from './components/RequestListItem'
+import {useIsWithinSplitView} from './components/splitView/context'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesInbox'>
 
@@ -127,6 +129,7 @@ function RequestList({
   const {t: l} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
+  const {isWithinSplitView} = useIsWithinSplitView()
 
   // Request the poll interval to be 10s (or whatever the MESSAGE_SCREEN_POLL_INTERVAL is set to in the future)
   // but only when the screen is active
@@ -180,7 +183,7 @@ function RequestList({
 
   if (conversations.length < 1) {
     return (
-      <Layout.Center>
+      <Layout.Center style={web([a.h_full])}>
         {isLoading ? (
           <ChatListLoadingPlaceholder />
         ) : (
@@ -212,56 +215,45 @@ function RequestList({
                     label={l`Reload conversations`}
                     size="small"
                     color="secondary_inverted"
-                    variant="solid"
                     onPress={() => void refetch()}>
                     <ButtonText>
                       <Trans>Retry</Trans>
                     </ButtonText>
-                    <ButtonIcon icon={RetryIcon} position="right" />
+                    <ButtonIcon icon={RetryIcon} />
                   </Button>
                 </View>
               </>
             ) : (
-              <>
-                <View style={[a.pt_3xl, a.align_center]}>
-                  <MessageIcon width={48} fill={t.palette.primary_500} />
-                  <Text
-                    style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_semi_bold]}>
-                    <Trans comment="Title message shown in chat requests inbox when it's empty">
-                      Inbox zero!
-                    </Trans>
-                  </Text>
-                  <Text
-                    style={[
-                      a.text_md,
-                      a.pb_xl,
-                      a.text_center,
-                      a.leading_snug,
-                      t.atoms.text_contrast_medium,
-                    ]}>
-                    <Trans>
-                      You don't have any chat requests at the moment.
-                    </Trans>
-                  </Text>
-                  <Button
-                    variant="solid"
-                    color="secondary"
-                    size="small"
-                    label={l`Go back`}
-                    onPress={() => {
-                      if (navigation.canGoBack()) {
-                        navigation.goBack()
-                      } else {
-                        navigation.navigate('Messages', {animation: 'pop'})
+              <EmptyState
+                message={l({
+                  message: `Inbox zero!`,
+                  comment:
+                    "Title message shown in chat requests inbox when it's empty",
+                })}
+                icon={InboxLargeIcon}
+                iconSize="4xl"
+                textStyle={t.atoms.text}
+                iconColor={t.atoms.text.color}
+                button={
+                  isWithinSplitView
+                    ? undefined
+                    : {
+                        label: l`Back to Chats`,
+                        text: l`Back`,
+                        onPress: () => {
+                          if (navigation.canGoBack()) {
+                            navigation.goBack()
+                          } else {
+                            navigation.navigate('Messages', {animation: 'pop'})
+                          }
+                        },
+                        size: 'small',
+                        color: 'secondary',
+                        icon: ArrowLeftIcon,
                       }
-                    }}>
-                    <ButtonIcon icon={ArrowLeftIcon} />
-                    <ButtonText>
-                      <Trans>Back to Chats</Trans>
-                    </ButtonText>
-                  </Button>
-                </View>
-              </>
+                }
+                style={web([a.h_full, a.justify_center, a.pb_5xl])}
+              />
             )}
           </>
         )}
@@ -354,7 +346,6 @@ function MarkAsReadHeaderButton() {
       label={l`Mark all as read`}
       size="small"
       color="secondary"
-      variant="solid"
       onPress={() => markAllRead()}>
       <ButtonIcon icon={CheckIcon} />
       <ButtonText>

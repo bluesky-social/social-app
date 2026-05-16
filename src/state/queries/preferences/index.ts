@@ -53,7 +53,7 @@ export function usePreferencesQuery() {
         const res = await agent.getPreferences()
 
         // save to local storage to ensure there are labels on initial requests
-        saveLabelers(
+        void saveLabelers(
           agent.did,
           res.moderationPrefs.labelers.map(l => l.did),
         )

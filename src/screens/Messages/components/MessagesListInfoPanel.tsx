@@ -1,6 +1,7 @@
 import {View} from 'react-native'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
+import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAddGroupMembers} from '#/state/queries/messages/add-group-members'
@@ -56,18 +57,22 @@ export function MessagesListInfoPanel({
 
   let names: React.ReactNode = null
   if (members.length === 1) {
-    names = <Trans>New chat with {members[0].displayName}</Trans>
+    names = (
+      <Trans>New chat with {createSanitizedDisplayName(members[0])}</Trans>
+    )
   } else if (members.length === 2) {
     names = (
       <Trans>
-        New chat with {members[0].displayName} and {members[1].displayName}
+        New chat with {createSanitizedDisplayName(members[0])} and{' '}
+        {createSanitizedDisplayName(members[1])}
       </Trans>
     )
   } else if (members.length > 2) {
     const memberCount = convo.details.memberCount - 2
     names = (
       <Trans>
-        New chat with {members[0].displayName}, {members[1].displayName}, and{' '}
+        New chat with {createSanitizedDisplayName(members[0])},{' '}
+        {createSanitizedDisplayName(members[1])}, and{' '}
         <Plural
           value={memberCount}
           one={`${memberCount} more`}

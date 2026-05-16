@@ -46,9 +46,10 @@ import {DesktopRightNav} from './desktop/RightNav'
 // Older screens are unmounted to prevent memory growth during long sessions.
 const WEB_MAX_CACHED_SCREENS = 5
 
-type NativeStackNavigationOptionsWithAuth = NativeStackNavigationOptions & {
-  requireAuth?: boolean
-}
+export type NativeStackNavigationOptionsWithAuth =
+  NativeStackNavigationOptions & {
+    requireAuth?: boolean
+  }
 
 function NativeStackNavigator({
   id,
@@ -200,7 +201,11 @@ function NativeStackNavigator({
       </View>
       {IS_WEB && (
         <>
-          {showBottomBar ? <BottomBarWeb /> : <DesktopLeftNav />}
+          {showBottomBar ? (
+            <BottomBarWeb />
+          ) : (
+            <DesktopLeftNav routeName={activeRoute.name} />
+          )}
           {!isMobile && <DesktopRightNav routeName={activeRoute.name} />}
         </>
       )}

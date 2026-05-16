@@ -162,6 +162,7 @@ export let MessageContextMenu = ({
             </>
           )}
           <ContextMenu.Item
+            destructive
             testID="messageDropdownDeleteBtn"
             label={l`Delete message for me`}
             onPress={() => deleteControl.open()}>
@@ -170,6 +171,7 @@ export let MessageContextMenu = ({
           </ContextMenu.Item>
           {!isFromSelf && (
             <ContextMenu.Item
+              destructive
               testID="messageDropdownReportBtn"
               label={l`Report message`}
               onPress={() => reportControl.open()}>

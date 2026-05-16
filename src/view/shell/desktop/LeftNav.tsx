@@ -8,8 +8,6 @@ import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {
@@ -30,7 +28,14 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {atoms as a, tokens, useLayoutBreakpoints, useTheme, web} from '#/alf'
+import {
+  atoms as a,
+  tokens,
+  useBreakpoints,
+  useLayoutBreakpoints,
+  useTheme,
+  web,
+} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps} from '#/components/Dialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
@@ -44,7 +49,7 @@ import {
   BulletList_Stroke2_Corner0_Rounded as List,
 } from '#/components/icons/BulletList'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
-import {EditBig_Stroke2_Corner0_Rounded as EditBig} from '#/components/icons/EditBig'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {
   Hashtag_Filled_Corner0_Rounded as HashtagFilled,
   Hashtag_Stroke2_Corner0_Rounded as Hashtag,
@@ -76,12 +81,12 @@ import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useActorStatus} from '#/features/liveNow'
+import {router} from '#/routes'
 import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
-import {router} from '../../../routes'
 
 const NAV_ICON_WIDTH = 28
 
-function ProfileCard() {
+function ProfileCard({minimal}: {minimal: boolean}) {
   const {currentAccount, accounts} = useSession()
   const {logoutEveryAccount} = useSessionApi()
   const {isLoading, data} = useProfilesQuery({
@@ -89,7 +94,6 @@ function ProfileCard() {
   })
   const profiles = data?.profiles
   const signOutPromptControl = Prompt.usePromptControl()
-  const {leftNavMinimal} = useLayoutBreakpoints()
   const {_} = useLingui()
   const t = useTheme()
 
@@ -106,7 +110,7 @@ function ProfileCard() {
   const {isActive: live} = useActorStatus(profile)
 
   return (
-    <View style={[a.my_md, !leftNavMinimal && [a.w_full, a.align_start]]}>
+    <View style={[a.my_md, !minimal && [a.w_full, a.align_start]]}>
       {!isLoading && profile ? (
         <Menu.Root>
           <Menu.Trigger label={_(msg`Switch accounts`)}>
@@ -125,7 +129,7 @@ function ProfileCard() {
                     a.align_center,
                     a.flex_row,
                     {gap: 6},
-                    !leftNavMinimal && [a.pl_lg, a.pr_md],
+                    !minimal && [a.pl_lg, a.pr_md],
                   ]}>
                   <View
                     style={[
@@ -138,8 +142,8 @@ function ProfileCard() {
                       a.z_10,
                       active && {
                         transform: [
-                          {scale: !leftNavMinimal ? 2 / 3 : 0.8},
-                          {translateX: !leftNavMinimal ? -22 : 0},
+                          {scale: !minimal ? 2 / 3 : 0.8},
+                          {translateX: !minimal ? -22 : 0},
                         ],
                       },
                     ]}>
@@ -150,7 +154,7 @@ function ProfileCard() {
                       live={live}
                     />
                   </View>
-                  {!leftNavMinimal && (
+                  {!minimal && (
                     <>
                       <View
                         style={[
@@ -203,7 +207,7 @@ function ProfileCard() {
         <LoadingPlaceholder
           width={size}
           height={size}
-          style={[{borderRadius: size}, !leftNavMinimal && a.ml_lg]}
+          style={[{borderRadius: size}, !minimal && a.ml_lg]}
         />
       )}
       <Prompt.Basic
@@ -291,12 +295,18 @@ function SwitcherMenuProfileLink() {
     }
     return getCurrentRoute(state)
   })
-  let isCurrent =
-    currentRouteInfo.name === 'Profile'
-      ? isTab(currentRouteInfo.name, pathName) &&
+  const isCurrent = useMemo(() => {
+    if (currentRouteInfo.name === 'Profile') {
+      return (
+        isTab(currentRouteInfo.name, pathName) &&
         (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
           currentAccount?.handle
-      : isTab(currentRouteInfo.name, pathName)
+      )
+    } else {
+      return isTab(currentRouteInfo.name, pathName)
+    }
+  }, [currentAccount?.handle, currentRouteInfo, pathName])
+
   const onProfilePress = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
       if (e.ctrlKey || e.metaKey || e.altKey) {
@@ -374,12 +384,21 @@ interface NavItemProps {
   icon: JSX.Element
   iconFilled: JSX.Element
   label: string
+  minimal: boolean
 }
-function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
+function NavItem({
+  count,
+  hasNew,
+  href,
+  icon,
+  iconFilled,
+  label,
+  minimal,
+}: NavItemProps) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const {leftNavMinimal} = useLayoutBreakpoints()
+
   const [pathName] = useMemo(() => router.matchPath(href), [href])
   const currentRouteInfo = useNavigationState(state => {
     if (!state) {
@@ -393,6 +412,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
         (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
           currentAccount?.handle
       : isTab(currentRouteInfo.name, pathName)
+  const isRelated = currentRouteInfo.name.startsWith(pathName)
   const navigation = useNavigation<NavigationProp>()
   const onPressWrapped = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -417,7 +437,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
         a.flex_row,
         a.align_center,
         a.p_md,
-        a.rounded_sm,
+        a.rounded_full,
         a.gap_sm,
         a.outline_inset_1,
         a.transition_color,
@@ -438,12 +458,8 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
             width: 24,
             height: 24,
           },
-          leftNavMinimal && {
-            width: 40,
-            height: 40,
-          },
         ]}>
-        {isCurrent ? iconFilled : icon}
+        {isCurrent || isRelated ? iconFilled : icon}
         {typeof count === 'string' && count ? (
           <View
             style={[
@@ -479,12 +495,6 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
                   paddingVertical: 1,
                   minWidth: 16,
                 },
-                leftNavMinimal && [
-                  {
-                    top: '10%',
-                    left: count.length === 1 ? 20 : 16,
-                  },
-                ],
               ]}>
               {count}
             </Text>
@@ -502,15 +512,11 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
                 right: -2,
                 top: -4,
               },
-              leftNavMinimal && {
-                right: 4,
-                top: 2,
-              },
             ]}
           />
         ) : null}
       </View>
-      {!leftNavMinimal && (
+      {!minimal && (
         <Text style={[a.text_xl, isCurrent ? a.font_bold : a.font_normal]}>
           {label}
         </Text>
@@ -519,12 +525,11 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
   )
 }
 
-function ComposeBtn() {
+function ComposeBtn({minimal}: {minimal: boolean}) {
   const {currentAccount} = useSession()
   const {getState} = useNavigation()
   const {openComposer} = useOpenComposer()
   const {_} = useLingui()
-  const {leftNavMinimal} = useLayoutBreakpoints()
   const [isFetchingHandle, setIsFetchingHandle] = useState(false)
   const fetchHandle = useFetchHandle()
 
@@ -564,31 +569,28 @@ function ComposeBtn() {
   const onPressCompose = async () =>
     openComposer({mention: await getProfileHandle(), logContext: 'Fab'})
 
-  if (leftNavMinimal) {
-    return null
-  }
-
   return (
-    <View style={[a.flex_row, a.pl_md, a.pt_xl]}>
+    <View style={minimal ? [a.px_sm, a.pt_lg] : [a.flex_row, a.pl_md, a.pt_lg]}>
       <Button
         disabled={isFetchingHandle}
         label={_(msg`Compose new post`)}
         onPress={() => void onPressCompose()}
         size="large"
-        variant="solid"
         color="primary"
-        style={[a.rounded_full]}>
-        <ButtonIcon icon={EditBig} position="left" />
-        <ButtonText>
-          <Trans context="action">New post</Trans>
-        </ButtonText>
+        style={[a.rounded_full, minimal && {width: 48, height: 48}]}>
+        <ButtonIcon icon={EditBigIcon} size={minimal ? 'lg' : 'sm'} />
+        {!minimal && (
+          <ButtonText>
+            <Trans context="action">New post</Trans>
+          </ButtonText>
+        )}
       </Button>
     </View>
   )
 }
 
-function ChatNavItem() {
-  const pal = usePalette('default')
+function ChatNavItem({minimal}: {minimal: boolean}) {
+  const t = useTheme()
   const {_} = useLingui()
   const numUnreadMessages = useUnreadMessageCount()
   const aa = useAgeAssurance()
@@ -596,14 +598,19 @@ function ChatNavItem() {
   return (
     <NavItem
       href="/messages"
+      minimal={minimal}
       count={aa.flags.chatDisabled ? undefined : numUnreadMessages.numUnread}
       hasNew={aa.flags.chatDisabled ? false : numUnreadMessages.hasNew}
       icon={
-        <Message style={pal.text} aria-hidden={true} width={NAV_ICON_WIDTH} />
+        <Message
+          style={t.atoms.text}
+          aria-hidden={true}
+          width={NAV_ICON_WIDTH}
+        />
       }
       iconFilled={
         <MessageFilled
-          style={pal.text}
+          style={t.atoms.text}
           aria-hidden={true}
           width={NAV_ICON_WIDTH}
         />
@@ -613,15 +620,24 @@ function ChatNavItem() {
   )
 }
 
-export function DesktopLeftNav() {
+export function DesktopLeftNav({routeName}: {routeName: string}) {
   const {hasSession, currentAccount} = useSession()
-  const pal = usePalette('default')
   const {_} = useLingui()
-  const {isDesktop} = useWebMediaQueries()
-  const {leftNavMinimal, centerColumnOffset} = useLayoutBreakpoints()
+  const t = useTheme()
+  const {gtMobile} = useBreakpoints()
+
+  const aa = useAgeAssurance()
+  // splitview uses the minimal variant of the leftnav. unfortunately there's no easy
+  // way to thread this data through because of the view hierarchy, so just check the route name
+  const isMessagesRelatedScreen =
+    routeName.startsWith('Messages') && aa.state.access === aa.Access.Full
+  const {leftNavMinimal: leftNavMinimalBreakpoint, centerColumnOffset} =
+    useLayoutBreakpoints()
   const numUnreadNotifications = useUnreadNotifications()
 
-  if (!hasSession && !isDesktop) {
+  const leftNavMinimal = isMessagesRelatedScreen || leftNavMinimalBreakpoint
+
+  if (!hasSession && !gtMobile) {
     return null
   }
 
@@ -637,7 +653,11 @@ export function DesktopLeftNav() {
           transform: [
             {
               translateX:
-                -300 + (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0),
+                -300 +
+                (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0) +
+                (isMessagesRelatedScreen && !leftNavMinimalBreakpoint
+                  ? -153
+                  : 0),
             },
             {translateX: '-100%'},
             ...a.scrollbar_offset.transform,
@@ -645,7 +665,7 @@ export function DesktopLeftNav() {
         },
       ]}>
       {hasSession ? (
-        <ProfileCard />
+        <ProfileCard minimal={leftNavMinimal} />
       ) : !leftNavMinimal ? (
         <View style={[a.pt_xl]}>
           <NavSignupCard />
@@ -656,34 +676,36 @@ export function DesktopLeftNav() {
         <>
           <NavItem
             href="/"
+            minimal={leftNavMinimal}
             icon={
               <Home
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
-                style={pal.text}
+                style={t.atoms.text}
               />
             }
             iconFilled={
               <HomeFilled
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
-                style={pal.text}
+                style={t.atoms.text}
               />
             }
             label={_(msg`Home`)}
           />
           <NavItem
             href="/search"
+            minimal={leftNavMinimal}
             icon={
               <MagnifyingGlass
-                style={pal.text}
+                style={t.atoms.text}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
             }
             iconFilled={
               <MagnifyingGlassFilled
-                style={pal.text}
+                style={t.atoms.text}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
@@ -692,36 +714,38 @@ export function DesktopLeftNav() {
           />
           <NavItem
             href="/notifications"
+            minimal={leftNavMinimal}
             count={numUnreadNotifications}
             icon={
               <Bell
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
-                style={pal.text}
+                style={t.atoms.text}
               />
             }
             iconFilled={
               <BellFilled
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
-                style={pal.text}
+                style={t.atoms.text}
               />
             }
             label={_(msg`Notifications`)}
           />
-          <ChatNavItem />
+          <ChatNavItem minimal={leftNavMinimal} />
           <NavItem
             href="/feeds"
+            minimal={leftNavMinimal}
             icon={
               <Hashtag
-                style={pal.text}
+                style={t.atoms.text}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
             }
             iconFilled={
               <HashtagFilled
-                style={pal.text}
+                style={t.atoms.text}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
@@ -730,16 +754,17 @@ export function DesktopLeftNav() {
           />
           <NavItem
             href="/lists"
+            minimal={leftNavMinimal}
             icon={
               <List
-                style={pal.text}
+                style={t.atoms.text}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
             }
             iconFilled={
               <ListFilled
-                style={pal.text}
+                style={t.atoms.text}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
@@ -748,16 +773,17 @@ export function DesktopLeftNav() {
           />
           <NavItem
             href="/saved"
+            minimal={leftNavMinimal}
             icon={
               <Bookmark
-                style={pal.text}
+                style={t.atoms.text}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
             }
             iconFilled={
               <BookmarkFilled
-                style={pal.text}
+                style={t.atoms.text}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
@@ -771,42 +797,44 @@ export function DesktopLeftNav() {
           />
           <NavItem
             href={currentAccount ? makeProfileLink(currentAccount) : '/'}
+            minimal={leftNavMinimal}
             icon={
               <UserCircle
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
-                style={pal.text}
+                style={t.atoms.text}
               />
             }
             iconFilled={
               <UserCircleFilled
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
-                style={pal.text}
+                style={t.atoms.text}
               />
             }
             label={_(msg`Profile`)}
           />
           <NavItem
             href="/settings"
+            minimal={leftNavMinimal}
             icon={
               <Settings
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
-                style={pal.text}
+                style={t.atoms.text}
               />
             }
             iconFilled={
               <SettingsFilled
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
-                style={pal.text}
+                style={t.atoms.text}
               />
             }
             label={_(msg`Settings`)}
           />
 
-          <ComposeBtn />
+          <ComposeBtn minimal={leftNavMinimal} />
         </>
       )}
     </View>
@@ -824,15 +852,12 @@ const styles = StyleSheet.create({
     // @ts-expect-error web only
     maxHeight: '100vh',
     overflowY: 'auto',
+    scrollbarWidth: 'thin',
   },
   leftNavWide: {
     width: 245,
   },
   leftNavMinimal: {
-    paddingTop: 0,
-    paddingBottom: 0,
-    paddingLeft: 0,
-    paddingRight: 0,
     height: '100%',
     width: 86,
     alignItems: 'center',
