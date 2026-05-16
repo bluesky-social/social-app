@@ -33,17 +33,27 @@ class BottomSheetView(
   private var eventDispatcher: EventDispatcher? = null
 
   // Native content height observation (eliminates JS bridge round-trip)
-  private var contentLayoutListener: View.OnLayoutChangeListener? = null
+  private var contentLayoutListener: OnLayoutChangeListener? = null
   private var observedChildren: List<View> = emptyList()
   private var lastObservedContentHeight: Float = 0f
   private var pendingLayoutUpdate: Boolean = false
 
   private val screenHeight: Float =
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+      // API 35+: edge-to-edge is mandatory, heightPixels is the full display
       context.resources.displayMetrics.heightPixels.toFloat()
-    } else {
+    } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+      // API 30-34: heightPixels may exclude nav bar, use currentWindowMetrics
       val wm = context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
       wm.currentWindowMetrics.bounds.height().toFloat()
+    } else {
+      // API < 30: currentWindowMetrics not available, use getRealSize
+      // which includes system bars (heightPixels may exclude them)
+      val wm = context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
+      val size = android.graphics.Point()
+      @Suppress("DEPRECATION")
+      wm.defaultDisplay.getRealSize(size)
+      size.y.toFloat()
     }
 
   private fun getNavigationBarHeight(): Int {
@@ -355,7 +365,7 @@ class BottomSheetView(
 
     val innerViewGroup = this.innerView as? ViewGroup ?: return
 
-    val listener = View.OnLayoutChangeListener { _, _, top, _, bottom, _, _, oldTop, oldBottom ->
+    val listener = OnLayoutChangeListener { _, _, top, _, bottom, _, _, oldTop, oldBottom ->
       val newHeight = bottom - top
       val oldHeight = oldBottom - oldTop
       if (newHeight != oldHeight) {

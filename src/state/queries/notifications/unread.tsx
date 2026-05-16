@@ -12,7 +12,7 @@ import {
 } from 'react'
 import {AppState} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
-import EventEmitter from 'eventemitter3'
+import {EventEmitter} from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
 import {resetBadgeCount} from '#/lib/notifications/notifications'

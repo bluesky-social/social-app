@@ -13,12 +13,10 @@ export interface UsePaletteValue {
   viewLight: ViewStyle
   btn: ViewStyle
   border: ViewStyle
-  borderDark: ViewStyle
   text: TextStyle
   textLight: TextStyle
   textInverted: TextStyle
   link: TextStyle
-  icon: TextStyle
 }
 
 /**
@@ -42,9 +40,6 @@ export function usePalette(color: PaletteColorName): UsePaletteValue {
       border: {
         borderColor: palette.border,
       },
-      borderDark: {
-        borderColor: palette.borderDark,
-      },
       text: {
         color: palette.text,
       },
@@ -56,9 +51,6 @@ export function usePalette(color: PaletteColorName): UsePaletteValue {
       },
       link: {
         color: palette.link,
-      },
-      icon: {
-        color: palette.icon,
       },
     }
   }, [theme, color])

@@ -46,6 +46,7 @@ export const PostsList = forwardRef<SectionRef, ProfilesListProps>(
     return (
       <View>
         <PostFeed
+          enabled
           feed={feed}
           pollInterval={60e3}
           scrollElRef={scrollElRef}

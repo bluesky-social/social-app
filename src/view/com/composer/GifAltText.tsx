@@ -11,7 +11,6 @@ import {
   parseEmbedPlayerFromUrl,
 } from '#/lib/strings/embed-player'
 import {useResolveGifQuery} from '#/state/queries/resolve-link'
-import {type Gif} from '#/state/queries/tenor'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -24,6 +23,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {GifEmbed} from '#/components/Post/Embed/ExternalEmbed/Gif'
 import {Text} from '#/components/Typography'
+import {type Gif} from '#/features/gifPicker/types'
 
 export function GifAltTextDialog({
   gif,
@@ -101,7 +101,7 @@ export function GifAltTextDialogLoaded({
         </Text>
       </TouchableOpacity>
 
-      <Admonition type="tip" style={[a.mt_sm]}>
+      <Admonition type="info" style={[a.mt_sm]}>
         <Trans>
           Alt text describes images for blind and low-vision users, and helps
           give context to everyone.
@@ -216,16 +216,13 @@ function AltTextInner({
             style={[a.text_2xl, a.font_semi_bold, a.leading_tight, a.pb_sm]}>
             <Trans>Add alt text</Trans>
           </Text>
-          <View style={[a.align_center]}>
-            <GifEmbed
-              thumb={thumb}
-              altText={altText}
-              isPreferredAltText={true}
-              params={params}
-              hideAlt
-              style={[{height: 225}]}
-            />
-          </View>
+          <GifEmbed
+            thumb={thumb}
+            altText={altText}
+            isPreferredAltText={true}
+            params={params}
+            hideAlt
+          />
         </View>
       </View>
       <Dialog.Close />

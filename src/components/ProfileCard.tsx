@@ -145,6 +145,7 @@ export function Link({
 
   return (
     <InternalLink
+      testID={`profileCard-${profile.handle}-link`}
       label={l`View ${
         profile.displayName || sanitizeHandle(profile.handle)
       }’s profile`}
@@ -200,7 +201,7 @@ export function AvatarPlaceholder({size = 40}: {size?: number}) {
     <View
       style={[
         a.rounded_full,
-        t.atoms.bg_contrast_25,
+        t.atoms.bg_contrast_50,
         {
           width: size,
           height: size,
@@ -347,7 +348,7 @@ export function NameAndHandlePlaceholder() {
       <View
         style={[
           a.rounded_xs,
-          t.atoms.bg_contrast_25,
+          t.atoms.bg_contrast_50,
           {
             width: '60%',
             height: 14,
@@ -358,7 +359,7 @@ export function NameAndHandlePlaceholder() {
       <View
         style={[
           a.rounded_xs,
-          t.atoms.bg_contrast_25,
+          t.atoms.bg_contrast_50,
           {
             width: '40%',
             height: 10,
@@ -376,7 +377,7 @@ export function NamePlaceholder({style}: ViewStyleProp) {
     <View
       style={[
         a.rounded_xs,
-        t.atoms.bg_contrast_25,
+        t.atoms.bg_contrast_50,
         {
           width: '60%',
           height: 14,
@@ -438,7 +439,7 @@ export function DescriptionPlaceholder({
             style={[
               a.rounded_xs,
               a.w_full,
-              t.atoms.bg_contrast_25,
+              t.atoms.bg_contrast_50,
               {height: 12, width: i + 1 === numberOfLines ? '60%' : '100%'},
             ]}
           />
@@ -599,7 +600,7 @@ export function FollowButtonPlaceholder({style}: ViewStyleProp) {
     <View
       style={[
         a.rounded_sm,
-        t.atoms.bg_contrast_25,
+        t.atoms.bg_contrast_50,
         a.w_full,
         {
           height: 33,

@@ -28,7 +28,7 @@ export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 const root = document.getElementById('app')
 if (!root) throw new Error('No root element')
 
-initSystemColorMode()
+initSystemColorMode({additionalBodyClasses: 'dark:bg-dimmedBgDarken'})
 
 const agent = new AtpAgent({
   service: 'https://public.api.bsky.app',
@@ -39,6 +39,7 @@ render(<LandingPage />, root)
 function LandingPage() {
   const [uri, setUri] = useState('')
   const [colorMode, setColorMode] = useState<ColorModeValues>('system')
+
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [thread, setThread] = useState<AppBskyFeedDefs.ThreadViewPost | null>(
@@ -118,7 +119,7 @@ function LandingPage() {
   }, [uri])
 
   return (
-    <main className="w-full min-h-screen flex flex-col items-center gap-8 py-14 px-4 md:pt-32 dark:bg-dimmedBgDarken dark:text-slate-200">
+    <main className="w-full min-h-dvh flex flex-col items-center gap-8 py-14 px-4 md:pt-32 dark:text-slate-200">
       <Link
         href="https://bsky.social/about"
         className="transition-transform hover:scale-110">
@@ -185,7 +186,7 @@ function LandingPage() {
 function Skeleton() {
   return (
     <Container>
-      <div className="flex-1 flex-col flex gap-2 pb-8">
+      <div className="flex-1 flex-col flex gap-2 p-5 pb-8">
         <div className="flex gap-2.5 items-center">
           <div className="w-10 h-10 overflow-hidden rounded-full bg-neutral-100 dark:bg-slate-700 shrink-0 animate-pulse" />
           <div className="flex-1">

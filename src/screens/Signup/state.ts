@@ -4,8 +4,7 @@ import {
   ComAtprotoServerCreateAccount,
   type ComAtprotoServerDescribeServer,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
 import {DEFAULT_SERVICE} from '#/lib/constants'
@@ -18,7 +17,9 @@ import {type AnalyticsContextType, useAnalytics} from '#/analytics'
 
 export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
-const DEFAULT_DATE = new Date(Date.now() - 60e3 * 60 * 24 * 365 * 20) // default to 20 years ago
+const date = new Date()
+date.setFullYear(date.getFullYear() - 20) // default to 20 years ago
+const DEFAULT_DATE = date
 
 export enum SignupStep {
   INFO,
@@ -256,7 +257,7 @@ export const useSignupContext = () => useContext(SignupContext)
 
 export function useSubmitSignup() {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {createAccount} = useSessionApi()
   const onboardingDispatch = useOnboardingDispatch()
 
@@ -266,7 +267,7 @@ export function useSubmitSignup() {
         dispatch({type: 'setStep', value: SignupStep.INFO})
         return dispatch({
           type: 'setError',
-          value: _(msg`Please enter your email.`),
+          value: l`Please enter your email.`,
           field: 'email',
         })
       }
@@ -274,7 +275,7 @@ export function useSubmitSignup() {
         dispatch({type: 'setStep', value: SignupStep.INFO})
         return dispatch({
           type: 'setError',
-          value: _(msg`Your email appears to be invalid.`),
+          value: l`Your email appears to be invalid.`,
           field: 'email',
         })
       }
@@ -282,7 +283,7 @@ export function useSubmitSignup() {
         dispatch({type: 'setStep', value: SignupStep.INFO})
         return dispatch({
           type: 'setError',
-          value: _(msg`Please choose your password.`),
+          value: l`Please choose your password.`,
           field: 'password',
         })
       }
@@ -290,7 +291,7 @@ export function useSubmitSignup() {
         dispatch({type: 'setStep', value: SignupStep.HANDLE})
         return dispatch({
           type: 'setError',
-          value: _(msg`Please choose your handle.`),
+          value: l`Please choose your handle.`,
           field: 'handle',
         })
       }
@@ -305,7 +306,7 @@ export function useSubmitSignup() {
         })
         return dispatch({
           type: 'setError',
-          value: _(msg`Please complete the verification captcha.`),
+          value: l`Please complete the verification captcha.`,
         })
       }
       dispatch({type: 'setError', value: ''})
@@ -337,14 +338,13 @@ export function useSubmitSignup() {
          * createAccount fails, one tab is not stuck in onboarding — Eric
          */
         onboardingDispatch({type: 'start'})
-      } catch (e: any) {
+      } catch (err) {
+        const e = err as Error
         let errMsg = e.toString()
         if (e instanceof ComAtprotoServerCreateAccount.InvalidInviteCodeError) {
           dispatch({
             type: 'setError',
-            value: _(
-              msg`Invite code not accepted. Check that you input it correctly and try again.`,
-            ),
+            value: l`Invite code not accepted. Check that you input it correctly and try again.`,
             field: 'invite-code',
           })
           dispatch({type: 'setStep', value: SignupStep.INFO})
@@ -370,6 +370,6 @@ export function useSubmitSignup() {
         dispatch({type: 'setIsLoading', value: false})
       }
     },
-    [_, onboardingDispatch, createAccount],
+    [l, ax.logger, createAccount, onboardingDispatch],
   )
 }

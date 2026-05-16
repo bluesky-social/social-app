@@ -27,6 +27,7 @@ export function NewskieDialog({
   profile: AppBskyActorDefs.ProfileViewDetailed
   disabled?: boolean
 }) {
+  const t = useTheme()
   const {_} = useLingui()
   const control = useDialogControl()
 
@@ -52,7 +53,7 @@ export function NewskieDialog({
         {({hovered, pressed}) => (
           <Newskie
             size="lg"
-            fill="#FFC404"
+            fill={t.palette.yellow}
             style={{
               opacity: hovered || pressed ? 0.5 : 1,
             }}
@@ -132,7 +133,7 @@ function DialogInner({
             <Newskie
               width={64}
               height={64}
-              fill="#FFC404"
+              fill={t.palette.yellow}
               style={[a.absolute, a.inset_0]}
             />
           </View>

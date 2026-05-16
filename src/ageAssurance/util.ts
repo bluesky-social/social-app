@@ -2,13 +2,19 @@ import {useMemo} from 'react'
 import {
   ageAssuranceRuleIDs as ids,
   type AppBskyAgeassuranceDefs,
+  type AtpAgent,
   getAgeAssuranceRegionConfig,
   type ModerationPrefs,
 } from '@atproto/api'
 
 import {getAge} from '#/lib/strings/time'
+import {restrictChatSettings} from '#/state/queries/messages/restrictChatSettings'
 import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
-import {useAgeAssuranceDataContext} from '#/ageAssurance/data'
+import {
+  getDidFromAgentSession,
+  getOtherRequiredDataFromCache,
+  useAgeAssuranceDataContext,
+} from '#/ageAssurance/data'
 import {AgeAssuranceAccess} from '#/ageAssurance/types'
 import {type Geolocation, useGeolocation} from '#/geolocation'
 
@@ -109,3 +115,16 @@ export const makeAgeRestrictedModerationPrefs = (
   adultContentEnabled: false,
   labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
 })
+
+/**
+ * Checks our cache of the actor's chat declaration record, and if it's not
+ * already restricted, restricts it.
+ */
+export function maybeRestrictChatSettings({agent}: {agent: AtpAgent}) {
+  const did = getDidFromAgentSession(agent)
+  if (!did) return
+  const data = getOtherRequiredDataFromCache({did})
+  // ...update the chat setting record if allowIncoming is not already 'none'.
+  if (data?.actorDeclaration?.allowIncoming === 'none') return
+  restrictChatSettings({agent, did})
+}

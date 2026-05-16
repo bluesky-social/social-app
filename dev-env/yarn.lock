@@ -64,14 +64,14 @@
     "@atproto/xrpc" "^0.7.6"
     "@atproto/xrpc-server" "^0.10.0"
 
-"@atproto/api@^0.19.2":
-  version "0.19.3"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.19.3.tgz#61de8d2e31abe9eb2b4c8f4ad124ed79d4a77e89"
-  integrity sha512-G8YpBpRouHdTAIagi/QQIUZOhGd1jfBQWkJy9QfxAzjjEpPvaVOSk4e1S85QzGLm/xbzVONzGkmdtiOSfP6wVg==
+"@atproto/api@^0.19.4":
+  version "0.19.4"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.19.4.tgz#f3ff850baf4d85538c082fb91aa0982737eb68be"
+  integrity sha512-fYNM62vdXxer0h8a9Jzl4/ag9uFIe0nTO+LkC6KTlx1yUDigrAoQMMbllIiCWj62GhUMxAkHabk/BZjjVAfKng==
   dependencies:
     "@atproto/common-web" "^0.4.18"
     "@atproto/lexicon" "^0.6.2"
-    "@atproto/syntax" "^0.5.0"
+    "@atproto/syntax" "^0.5.1"
     "@atproto/xrpc" "^0.7.7"
     await-lock "^2.2.2"
     multiformats "^9.9.0"
@@ -96,23 +96,23 @@
     multiformats "^9.9.0"
     uint8arrays "3.0.0"
 
-"@atproto/bsky@^0.0.219":
-  version "0.0.219"
-  resolved "https://registry.yarnpkg.com/@atproto/bsky/-/bsky-0.0.219.tgz#6a9f82eb4ab999e121d04ad2b3f08ff60cc75fba"
-  integrity sha512-Vm7JpIyCqd7sHzHsXqppGSaKkXKUhvdZ/UOldc247Bgmx+L/U+E6IeR028hzMr1YyDvU+bkO1hlqT8uUovOCdA==
+"@atproto/bsky@^0.0.221":
+  version "0.0.221"
+  resolved "https://registry.yarnpkg.com/@atproto/bsky/-/bsky-0.0.221.tgz#b574456225db66c866848526947473d60bb4d0e7"
+  integrity sha512-feNR6xkJ9HCJbQdJU3ytsnAfaSBXJdaXIMi0tNPrsLfoqCWWbTfXIcMczXeY4SOhKGFR5oMYxE9zrRC/TTAssw==
   dependencies:
     "@atproto-labs/fetch-node" "^0.2.0"
     "@atproto-labs/xrpc-utils" "^0.0.24"
-    "@atproto/api" "^0.19.2"
-    "@atproto/common" "^0.5.14"
+    "@atproto/api" "^0.19.4"
+    "@atproto/common" "^0.5.15"
     "@atproto/crypto" "^0.4.5"
     "@atproto/did" "^0.3.0"
     "@atproto/identity" "^0.4.12"
     "@atproto/lexicon" "^0.6.2"
-    "@atproto/repo" "^0.8.12"
+    "@atproto/repo" "^0.8.13"
     "@atproto/sync" "^0.1.40"
-    "@atproto/syntax" "^0.5.0"
-    "@atproto/xrpc-server" "^0.10.15"
+    "@atproto/syntax" "^0.5.1"
+    "@atproto/xrpc-server" "^0.10.17"
     "@bufbuild/protobuf" "^1.5.0"
     "@connectrpc/connect" "^1.1.4"
     "@connectrpc/connect-express" "^1.1.4"
@@ -146,13 +146,13 @@
     undici "^6.19.8"
     zod "3.23.8"
 
-"@atproto/bsync@^0.0.24":
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/@atproto/bsync/-/bsync-0.0.24.tgz#6b0d4b02c0c0241687456ab817471d36ee81ae61"
-  integrity sha512-JN+oncaPBNRjzjTPGR7Q1fkKF3cqOQ6oLRrAh9kVU04ZS3FhWUG8cQvnr8wb1PUhFb/XYpWkwDw5+GIhdb7Lfw==
+"@atproto/bsync@^0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@atproto/bsync/-/bsync-0.0.25.tgz#0d6056f844c0b2579d9dfc04b6727974dc03fcd6"
+  integrity sha512-5tjP5QbUcNtMBw7FJeyRfA0OHQRKrg97Jva6Q26cKqLMICGYNbx0fpD7nZhGTP2/s1gd6UZkG9Zdh4GRZpbxWg==
   dependencies:
     "@atproto/common" "^0.5.14"
-    "@atproto/syntax" "^0.5.0"
+    "@atproto/syntax" "^0.5.1"
     "@bufbuild/protobuf" "^1.5.0"
     "@connectrpc/connect" "^1.1.4"
     "@connectrpc/connect-node" "^1.1.4"
@@ -170,6 +170,16 @@
     "@atproto/lex-data" "^0.0.13"
     "@atproto/lex-json" "^0.0.13"
     "@atproto/syntax" "^0.5.0"
+    zod "^3.23.8"
+
+"@atproto/common-web@^0.4.19":
+  version "0.4.19"
+  resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.4.19.tgz#bbd7f84f545ebe73ca3bc00314ccf4ee66e7069e"
+  integrity sha512-3BTi58p5WpT+9/zb6UZrdsXcfPo5P45UJm0E4iwHLILr+jc37CuBj9JReDSZ4U0i9RTrI3ZkfySyZ9bd+LnMsw==
+  dependencies:
+    "@atproto/lex-data" "^0.0.14"
+    "@atproto/lex-json" "^0.0.14"
+    "@atproto/syntax" "^0.5.1"
     zod "^3.23.8"
 
 "@atproto/common@0.1.0":
@@ -203,6 +213,17 @@
     multiformats "^9.9.0"
     pino "^8.21.0"
 
+"@atproto/common@^0.5.15":
+  version "0.5.15"
+  resolved "https://registry.yarnpkg.com/@atproto/common/-/common-0.5.15.tgz#3c43c25d3493d868cc4281d6ac2f923b00644463"
+  integrity sha512-+cdfdMPAIbH9zQGLfH1gNY2KEZsMxj0EelVQL5uJUFL+UkkAXiiqWj7J5mbax8sf02cC/afJnfkWzERNAheKoA==
+  dependencies:
+    "@atproto/common-web" "^0.4.19"
+    "@atproto/lex-cbor" "^0.0.15"
+    "@atproto/lex-data" "^0.0.14"
+    multiformats "^9.9.0"
+    pino "^8.21.0"
+
 "@atproto/crypto@0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@atproto/crypto/-/crypto-0.1.0.tgz#bc73a479f9dbe06fa025301c182d7f7ab01bc568"
@@ -223,23 +244,23 @@
     "@noble/hashes" "^1.6.1"
     uint8arrays "3.0.0"
 
-"@atproto/dev-env@^0.3.213":
-  version "0.3.213"
-  resolved "https://registry.yarnpkg.com/@atproto/dev-env/-/dev-env-0.3.213.tgz#30ca66f827d44ccabb02b359119f68549fa3edf0"
-  integrity sha512-Bjhv+zzcQxhwV4I7si+yDls8sSetksILeiBemfRe3cvE4GOgs7KfsYI5+pqNmBZ5rrFPt3KUeN9vIo31LCgZOw==
+"@atproto/dev-env@^0.3.215":
+  version "0.3.215"
+  resolved "https://registry.yarnpkg.com/@atproto/dev-env/-/dev-env-0.3.215.tgz#9da8c4a73abb4501ac72c73da9536e2ec86cb46f"
+  integrity sha512-zwZwGWYLgP2Zdie6/gMtxuDbSs7/UV/gPJYfOlXln1ZDoMkfFbgCTq44PWRnJpUKTzrq7gt19E0GsL7DMkppjA==
   dependencies:
-    "@atproto/api" "^0.19.2"
-    "@atproto/bsky" "^0.0.219"
-    "@atproto/bsync" "^0.0.24"
-    "@atproto/common-web" "^0.4.18"
+    "@atproto/api" "^0.19.4"
+    "@atproto/bsky" "^0.0.221"
+    "@atproto/bsync" "^0.0.25"
+    "@atproto/common-web" "^0.4.19"
     "@atproto/crypto" "^0.4.5"
     "@atproto/identity" "^0.4.12"
     "@atproto/lexicon" "^0.6.2"
-    "@atproto/ozone" "^0.1.166"
-    "@atproto/pds" "^0.4.214"
+    "@atproto/ozone" "^0.1.167"
+    "@atproto/pds" "^0.4.216"
     "@atproto/sync" "^0.1.40"
-    "@atproto/syntax" "^0.5.0"
-    "@atproto/xrpc-server" "^0.10.15"
+    "@atproto/syntax" "^0.5.1"
+    "@atproto/xrpc-server" "^0.10.17"
     "@did-plc/lib" "^0.0.1"
     "@did-plc/server" "^0.0.1"
     dotenv "^16.0.3"
@@ -288,6 +309,14 @@
     "@atproto/lex-data" "^0.0.13"
     tslib "^2.8.1"
 
+"@atproto/lex-cbor@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@atproto/lex-cbor/-/lex-cbor-0.0.15.tgz#ae4558d8ce22119710ad22feb458d22774b3ca3b"
+  integrity sha512-3osDicK9bAMXJlKjLKqwYrhLQ60bOguWBNjE+fuNjMuizNzC0aqaClE3d+qMsFuFq9bjEHFw+4Vr9Qmd/m6VYg==
+  dependencies:
+    "@atproto/lex-data" "^0.0.14"
+    tslib "^2.8.1"
+
 "@atproto/lex-client@^0.0.15":
   version "0.0.15"
   resolved "https://registry.yarnpkg.com/@atproto/lex-client/-/lex-client-0.0.15.tgz#c647d14e91ca3f52feebf4b34f80abb7e93b3bee"
@@ -296,6 +325,16 @@
     "@atproto/lex-data" "^0.0.13"
     "@atproto/lex-json" "^0.0.13"
     "@atproto/lex-schema" "^0.0.14"
+    tslib "^2.8.1"
+
+"@atproto/lex-client@^0.0.17":
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/@atproto/lex-client/-/lex-client-0.0.17.tgz#566689a288f8b2af31f4a0fa081496dfaaef7278"
+  integrity sha512-lZ9clUjWgpno1XhSawQP+1/JeIYA9qBh759b/NSU0OiypQqgq7IxDvmzaBsiHK1sqjo0tyEkmG4X5Ym7YXjv0Q==
+  dependencies:
+    "@atproto/lex-data" "^0.0.14"
+    "@atproto/lex-json" "^0.0.14"
+    "@atproto/lex-schema" "^0.0.16"
     tslib "^2.8.1"
 
 "@atproto/lex-data@^0.0.13":
@@ -308,12 +347,22 @@
     uint8arrays "3.0.0"
     unicode-segmenter "^0.14.0"
 
-"@atproto/lex-document@^0.0.15":
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/@atproto/lex-document/-/lex-document-0.0.15.tgz#b2f19756291a0d259cd99f5ebe4872e9133069b6"
-  integrity sha512-QT2MbICG4cTFrrA19SIHpZJ33WRLdzjhDsEhSknQ4dE5CjqPf4BP9LaC4pOeW8NE5Kn92hgIm3JWNjoak8blXw==
+"@atproto/lex-data@^0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@atproto/lex-data/-/lex-data-0.0.14.tgz#2f2f3c64699925a0d4785e5afd0e7731ba1d46c0"
+  integrity sha512-53DUa9664SS76nGAMYopWsO10OH0AAdf7P/HSKB6Wzx3iqe6lk/K61QZnKxOG1LreYl5CfvIJU6eNf4txI6GlQ==
   dependencies:
-    "@atproto/lex-schema" "^0.0.14"
+    multiformats "^9.9.0"
+    tslib "^2.8.1"
+    uint8arrays "3.0.0"
+    unicode-segmenter "^0.14.0"
+
+"@atproto/lex-document@^0.0.17":
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/@atproto/lex-document/-/lex-document-0.0.17.tgz#8460096235910bf5ec8305f03a8da6bab8d8a12b"
+  integrity sha512-rQiDCSYQwze4+kaArUtmp4bjZ9rV3vYUMhjdDwmZCKodpppNEYrP5AQzyKlxBtKO+MRdLYwHDDwwvakU8atRww==
+  dependencies:
+    "@atproto/lex-schema" "^0.0.16"
     core-js "^3"
     tslib "^2.8.1"
 
@@ -325,19 +374,27 @@
     "@atproto/lex-data" "^0.0.13"
     tslib "^2.8.1"
 
-"@atproto/lex-resolver@^0.0.17":
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/@atproto/lex-resolver/-/lex-resolver-0.0.17.tgz#2c474f6babeb54665656bf28b8d27a98de69deae"
-  integrity sha512-6nI5bYZUYh50ZI8r4erLRP9EbNcW226VShpVN3vHyOSgTje4VP1RTcvBhROBAPj4rL3vc+Oa8OiL6IQXkYrQBg==
+"@atproto/lex-json@^0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@atproto/lex-json/-/lex-json-0.0.14.tgz#717e533ab583aa5f580acb2a77d9aa3e7eddaa17"
+  integrity sha512-6lPkDKqe7teEu4WrN5q7400cvZKgYS3uwUMvzG3F9XkgVYhOwSDCtouV/nSLBbpvo3l9OP0kiigtclcNcyekww==
+  dependencies:
+    "@atproto/lex-data" "^0.0.14"
+    tslib "^2.8.1"
+
+"@atproto/lex-resolver@^0.0.19":
+  version "0.0.19"
+  resolved "https://registry.yarnpkg.com/@atproto/lex-resolver/-/lex-resolver-0.0.19.tgz#806fcb71e72d0db51e2eb29c594eddb8c4087414"
+  integrity sha512-oATn4RpZNLh5rp9doN5/UOYS/Cd25GOD90ohB5jnnmeoF8jTupqIYTVhntbnx1EFn+5tTlgkyXEBV+XESBUcdQ==
   dependencies:
     "@atproto-labs/did-resolver" "^0.2.6"
     "@atproto/crypto" "^0.4.5"
-    "@atproto/lex-client" "^0.0.15"
-    "@atproto/lex-data" "^0.0.13"
-    "@atproto/lex-document" "^0.0.15"
-    "@atproto/lex-schema" "^0.0.14"
-    "@atproto/repo" "^0.8.12"
-    "@atproto/syntax" "^0.5.0"
+    "@atproto/lex-client" "^0.0.17"
+    "@atproto/lex-data" "^0.0.14"
+    "@atproto/lex-document" "^0.0.17"
+    "@atproto/lex-schema" "^0.0.16"
+    "@atproto/repo" "^0.8.13"
+    "@atproto/syntax" "^0.5.1"
     tslib "^2.8.1"
 
 "@atproto/lex-schema@^0.0.14":
@@ -347,6 +404,17 @@
   dependencies:
     "@atproto/lex-data" "^0.0.13"
     "@atproto/syntax" "^0.5.0"
+    tslib "^2.8.1"
+
+"@atproto/lex-schema@^0.0.16":
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/@atproto/lex-schema/-/lex-schema-0.0.16.tgz#8362932e239b7eaa7c5d6982d06c3147e3afd138"
+  integrity sha512-O+IorivZHJPeV3kU3NDD2yI8ATfckOphgvDfeiyKHRTxRUKS+lHMCpGUiSTC3fJrfMvYITrruUVViUHVEScrbA==
+  dependencies:
+    "@atproto/lex-data" "^0.0.14"
+    "@atproto/syntax" "^0.5.1"
+    "@standard-schema/spec" "^1.1.0"
+    iso-datestring-validator "^2.2.2"
     tslib "^2.8.1"
 
 "@atproto/lexicon@^0.6.0", "@atproto/lexicon@^0.6.2":
@@ -382,28 +450,28 @@
   optionalDependencies:
     "@atproto/oauth-provider-api" "0.3.7"
 
-"@atproto/oauth-provider@^0.15.12":
-  version "0.15.12"
-  resolved "https://registry.yarnpkg.com/@atproto/oauth-provider/-/oauth-provider-0.15.12.tgz#9dbbfdd6808399d9d7ff8993ac888938fbf4c515"
-  integrity sha512-Ri4aVx2I4lOKxViB92jwPhAs/NctWEwV0tgYSHcaRpvqr2SVlC2LxTVjUq14ohdbVfv4VFRzj0vZypEX+mclHg==
+"@atproto/oauth-provider@^0.15.14":
+  version "0.15.14"
+  resolved "https://registry.yarnpkg.com/@atproto/oauth-provider/-/oauth-provider-0.15.14.tgz#d969018b4ad5c0dd5863150cb8c1b65458738589"
+  integrity sha512-arA3O+Ye1YBhoIUnZtn8wfatnVnwiZrGyNkxhH0nqGbh/RRfwA5W0tgnSDq0VMclLkrPY/OnZ4v3oo9N81yWGg==
   dependencies:
     "@atproto-labs/fetch" "^0.2.3"
     "@atproto-labs/fetch-node" "^0.2.0"
     "@atproto-labs/pipe" "^0.1.1"
     "@atproto-labs/simple-store" "^0.3.0"
     "@atproto-labs/simple-store-memory" "^0.1.4"
-    "@atproto/common" "^0.5.14"
+    "@atproto/common" "^0.5.15"
     "@atproto/did" "^0.3.0"
     "@atproto/jwk" "^0.6.0"
     "@atproto/jwk-jose" "^0.1.11"
-    "@atproto/lex-document" "^0.0.15"
-    "@atproto/lex-resolver" "^0.0.17"
+    "@atproto/lex-document" "^0.0.17"
+    "@atproto/lex-resolver" "^0.0.19"
     "@atproto/oauth-provider-api" "0.3.7"
     "@atproto/oauth-provider-frontend" "0.2.9"
     "@atproto/oauth-provider-ui" "0.4.3"
     "@atproto/oauth-scopes" "^0.3.2"
     "@atproto/oauth-types" "^0.6.3"
-    "@atproto/syntax" "^0.5.0"
+    "@atproto/syntax" "^0.5.1"
     "@hapi/accept" "^6.0.3"
     "@hapi/address" "^5.1.1"
     "@hapi/bourne" "^3.0.0"
@@ -442,20 +510,20 @@
     "@atproto/jwk" "^0.6.0"
     zod "^3.23.8"
 
-"@atproto/ozone@^0.1.166":
-  version "0.1.166"
-  resolved "https://registry.yarnpkg.com/@atproto/ozone/-/ozone-0.1.166.tgz#9e65d6f67ef1fe285d0880e5f5a1b282dc63bd70"
-  integrity sha512-XZ77P/V/tt3SqTQYRsi5nM3P2h+QaNT7Nz3GTf+TMLVolACufRHPoDgp/PoTuS2FaLj1ndHnGyIPvZi/o8he6g==
+"@atproto/ozone@^0.1.167":
+  version "0.1.167"
+  resolved "https://registry.yarnpkg.com/@atproto/ozone/-/ozone-0.1.167.tgz#c3974bbe06f0926f165f90d5ba51ba9ce2032fff"
+  integrity sha512-AFquyND8zsskjkDc3WrQObUnZlEky05pFo0YYLy5JoqQN0WXIePLgGY0SC0EIokfF8iYXJE1ZM1u/dgA7DHqGQ==
   dependencies:
-    "@atproto/api" "^0.19.2"
+    "@atproto/api" "^0.19.4"
     "@atproto/common" "^0.5.14"
     "@atproto/crypto" "^0.4.5"
     "@atproto/identity" "^0.4.12"
     "@atproto/lexicon" "^0.6.2"
-    "@atproto/syntax" "^0.5.0"
+    "@atproto/syntax" "^0.5.1"
     "@atproto/ws-client" "^0.0.4"
     "@atproto/xrpc" "^0.7.7"
-    "@atproto/xrpc-server" "^0.10.15"
+    "@atproto/xrpc-server" "^0.10.16"
     "@did-plc/lib" "^0.0.1"
     compression "^1.7.4"
     cors "^2.8.5"
@@ -473,30 +541,30 @@
     undici "^6.14.1"
     ws "^8.12.0"
 
-"@atproto/pds@^0.4.214":
-  version "0.4.214"
-  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.4.214.tgz#c68d55ec0b00a4e35f4801c826d44b65cd62f984"
-  integrity sha512-bTWeWg3H0TlELfE2eI2ySQuC6ojsCBSSmPtCXBh3Td9TFNpIoZQ/tYLUJMtMXaiVUi6HxzXQL1/iuYfC4Y+ZYQ==
+"@atproto/pds@^0.4.216":
+  version "0.4.216"
+  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.4.216.tgz#4d9c73a529bd00893753aba1e7bb33f99b9aaaf4"
+  integrity sha512-yPNatCb2kvudRp5DMbPemN1+uMsLOJDydw2PCBMxuzdimOf10PsekOhhZxtfGGRvk2NbvKoyfUvkROoFmTr+ew==
   dependencies:
     "@atproto-labs/fetch-node" "^0.2.0"
     "@atproto-labs/simple-store" "^0.3.0"
     "@atproto-labs/simple-store-memory" "^0.1.4"
     "@atproto-labs/simple-store-redis" "^0.0.1"
     "@atproto-labs/xrpc-utils" "^0.0.24"
-    "@atproto/api" "^0.19.2"
+    "@atproto/api" "^0.19.4"
     "@atproto/aws" "^0.2.31"
-    "@atproto/common" "^0.5.14"
+    "@atproto/common" "^0.5.15"
     "@atproto/crypto" "^0.4.5"
     "@atproto/identity" "^0.4.12"
-    "@atproto/lex-cbor" "^0.0.14"
-    "@atproto/lex-data" "^0.0.13"
+    "@atproto/lex-cbor" "^0.0.15"
+    "@atproto/lex-data" "^0.0.14"
     "@atproto/lexicon" "^0.6.2"
-    "@atproto/oauth-provider" "^0.15.12"
+    "@atproto/oauth-provider" "^0.15.14"
     "@atproto/oauth-scopes" "^0.3.2"
-    "@atproto/repo" "^0.8.12"
-    "@atproto/syntax" "^0.5.0"
+    "@atproto/repo" "^0.8.13"
+    "@atproto/syntax" "^0.5.1"
     "@atproto/xrpc" "^0.7.7"
-    "@atproto/xrpc-server" "^0.10.15"
+    "@atproto/xrpc-server" "^0.10.17"
     "@did-plc/lib" "^0.0.4"
     "@hapi/address" "^5.1.1"
     better-sqlite3 "^10.0.0"
@@ -540,6 +608,21 @@
     varint "^6.0.0"
     zod "^3.23.8"
 
+"@atproto/repo@^0.8.13":
+  version "0.8.13"
+  resolved "https://registry.yarnpkg.com/@atproto/repo/-/repo-0.8.13.tgz#70160b8b3f78b6addcba7cf3e3ae06306e6b6641"
+  integrity sha512-VS8XHaBMGdq60xwRI5zQmXzsMF1hU7NKPjmkdr65tJdrv2z0VW77mG01Ui19Xh9O0mUc/LG6GEhwVrabB9Txow==
+  dependencies:
+    "@atproto/common" "^0.5.14"
+    "@atproto/common-web" "^0.4.18"
+    "@atproto/crypto" "^0.4.5"
+    "@atproto/lexicon" "^0.6.2"
+    "@ipld/dag-cbor" "^7.0.0"
+    multiformats "^9.9.0"
+    uint8arrays "3.0.0"
+    varint "^6.0.0"
+    zod "^3.23.8"
+
 "@atproto/sync@^0.1.40":
   version "0.1.40"
   resolved "https://registry.yarnpkg.com/@atproto/sync/-/sync-0.1.40.tgz#b8b467ac4fbf2e682d36cd5697508f993e9e645a"
@@ -559,6 +642,13 @@
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.5.0.tgz#061ef538aee784f8e5fa1ea50a7f5beb4c276c9b"
   integrity sha512-UA2DSpGdOQzUQ4gi5SH+NEJz/YR3a3Fg3y2oh+xETDSiTRmA4VhHRCojhXAVsBxUT6EnItw190C/KN+DWW90kw==
+  dependencies:
+    tslib "^2.8.1"
+
+"@atproto/syntax@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.5.1.tgz#78257b903a0723720dca32110379208791ac3c24"
+  integrity sha512-J8DJjgKgACIyCTbpfvoTnf7+ofTx1kxTGO7KAftkC+jczaMdQhKdgIBAg2DaYy+80cvYGTHy5q/HI9qMAwGbWw==
   dependencies:
     tslib "^2.8.1"
 
@@ -582,6 +672,27 @@
     "@atproto/lex-data" "^0.0.13"
     "@atproto/lex-json" "^0.0.13"
     "@atproto/lex-schema" "^0.0.14"
+    "@atproto/lexicon" "^0.6.2"
+    "@atproto/ws-client" "^0.0.4"
+    "@atproto/xrpc" "^0.7.7"
+    express "^4.17.2"
+    http-errors "^2.0.0"
+    mime-types "^2.1.35"
+    rate-limiter-flexible "^2.4.1"
+    ws "^8.12.0"
+
+"@atproto/xrpc-server@^0.10.16", "@atproto/xrpc-server@^0.10.17":
+  version "0.10.17"
+  resolved "https://registry.yarnpkg.com/@atproto/xrpc-server/-/xrpc-server-0.10.17.tgz#1016d4a6d97966a3f80e8785e5d5cba7b68c1c60"
+  integrity sha512-FjexO6P/LRTx6/FdiWTzycFF4TgACW9npsFOitnocydTCOLYouP0OvUwdkxkreFC7qerT4+ARKpqrxRzyj0MNA==
+  dependencies:
+    "@atproto/common" "^0.5.15"
+    "@atproto/crypto" "^0.4.5"
+    "@atproto/lex-cbor" "^0.0.15"
+    "@atproto/lex-client" "^0.0.17"
+    "@atproto/lex-data" "^0.0.14"
+    "@atproto/lex-json" "^0.0.14"
+    "@atproto/lex-schema" "^0.0.16"
     "@atproto/lexicon" "^0.6.2"
     "@atproto/ws-client" "^0.0.4"
     "@atproto/xrpc" "^0.7.7"
@@ -2146,6 +2257,11 @@
   dependencies:
     tslib "^2.6.2"
 
+"@standard-schema/spec@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@standard-schema/spec/-/spec-1.1.0.tgz#a79b55dbaf8604812f52d140b2c9ab41bc150bb8"
+  integrity sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==
+
 "@tokenizer/token@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@tokenizer/token/-/token-0.3.0.tgz#fe98a93fe789247e998c75e74e9c7c63217aa276"
@@ -2282,13 +2398,13 @@ await-lock@^2.2.2:
   integrity sha512-aDczADvlvTGajTDjcjpJMqRkOF6Qdz3YbPZm/PyW6tKPkx2hlYBzxMhEywM/tU72HrVZjgl5VCdRuMlA7pZ8Gw==
 
 axios@^1.3.4:
-  version "1.13.6"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.13.6.tgz#c3f92da917dc209a15dd29936d20d5089b6b6c98"
-  integrity sha512-ChTCHMouEe2kn713WHbQGcuYrr6fXTBiu460OTwWrWob16g1bXn4vtz07Ope7ewMozJAnEquLk5lWQWtBig9DQ==
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.16.0.tgz#f8e5dd931cef2a5f8c32216d5784eda2f8750eb7"
+  integrity sha512-6hp5CwvTPlN2A31g5dxnwAX0orzM7pmCRDLnZSX772mv8WDqICwFjowHuPs04Mc8deIld1+ejhtaMn5vp6b+1w==
   dependencies:
-    follow-redirects "^1.15.11"
+    follow-redirects "^1.16.0"
     form-data "^4.0.5"
-    proxy-from-env "^1.1.0"
+    proxy-from-env "^2.1.0"
 
 balanced-match@^1.0.0:
   version "1.0.2"
@@ -2886,10 +3002,10 @@ finalhandler@~1.3.1:
     statuses "~2.0.2"
     unpipe "~1.0.0"
 
-follow-redirects@^1.15.11:
-  version "1.15.11"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.11.tgz#777d73d72a92f8ec4d2e410eb47352a56b8e8340"
-  integrity sha512-deG2P0JfjrTxl50XGCDyfI97ZGVCxIpfKYmfyrQ54n5FO/0gfIES8C/Psl6kWVDolizcaaxZJnTS0QSMxvnsBQ==
+follow-redirects@^1.16.0:
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.16.0.tgz#28474a159d3b9d11ef62050a14ed60e4df6d61bc"
+  integrity sha512-y5rN/uOsadFT/JfYwhxRS5R7Qce+g3zG97+JrtFZlC9klX/W5hD7iiLzScI4nZqUS7DNUdhPgw4xI8W2LuXlUw==
 
 foreground-child@^3.1.0:
   version "3.3.1"
@@ -3640,10 +3756,10 @@ proxy-addr@~2.0.7:
     forwarded "0.2.0"
     ipaddr.js "1.9.1"
 
-proxy-from-env@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/proxy-from-env/-/proxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
-  integrity sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==
+proxy-from-env@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/proxy-from-env/-/proxy-from-env-2.1.0.tgz#a7487568adad577cfaaa7e88c49cab3ab3081aba"
+  integrity sha512-cJ+oHTW1VAEa8cJslgmUZrc+sjRKgAKl3Zyse6+PV38hZe/V6Z14TbCuXcan9F9ghlz4QrFr2c92TNF82UkYHA==
 
 pump@^3.0.0:
   version "3.0.4"
@@ -4146,10 +4262,10 @@ typed-emitter@^2.1.0:
   optionalDependencies:
     rxjs "^7.5.2"
 
-typescript@^5.9.3:
-  version "5.9.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.9.3.tgz#5b4f59e15310ab17a216f5d6cf53ee476ede670f"
-  integrity sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==
+typescript@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-6.0.2.tgz#0b1bfb15f68c64b97032f3d78abbf98bdbba501f"
+  integrity sha512-bGdAIrZ0wiGDo5l8c++HWtbaNCWTS4UTv7RaTH/ThVIgjkveJt83m74bBHMJkuCbslY8ixgLBVZJIOiQlQTjfQ==
 
 uglify-js@^3.1.4:
   version "3.19.3"

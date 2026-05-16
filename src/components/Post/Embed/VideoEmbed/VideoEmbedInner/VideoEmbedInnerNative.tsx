@@ -1,7 +1,7 @@
 import {useImperativeHandle, useRef, useState} from 'react'
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
-import {BlueskyVideoView} from '@haileyok/bluesky-video'
+import {BlueskyVideoView} from '@bsky.app/video'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -13,6 +13,7 @@ import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {Pause_Filled_Corner0_Rounded as PauseIcon} from '#/components/icons/Pause'
 import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
+import {KeepAwake} from '#/components/KeepAwake'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {useVideoMuteState} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import {GifPresentationControls} from '../GifPresentationControls'
@@ -112,6 +113,7 @@ export function VideoEmbedInnerNative({
         />
       )}
       <MediaInsetBorder />
+      <KeepAwake enabled={isPlaying} />
     </View>
   )
 }

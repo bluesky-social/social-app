@@ -15,10 +15,8 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {ComposeIcon2} from '#/lib/icons'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
 import {type AllNavigatorParams} from '#/lib/routes/types'
-import {s} from '#/lib/styles'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {useSetHomeBadge} from '#/state/home-badge'
@@ -30,15 +28,16 @@ import {
 } from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
+import {PostFeed} from '#/view/com/posts/PostFeed'
+import {FAB} from '#/view/com/util/fab/FAB'
+import {type ListMethods} from '#/view/com/util/List'
+import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
+import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
+import {useTheme} from '#/alf'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
-import {PostFeed} from '../posts/PostFeed'
-import {FAB} from '../util/fab/FAB'
-import {type ListMethods} from '../util/List'
-import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
-import {MainScrollProvider} from '../util/MainScrollProvider'
 
 const POLL_FREQ = 60e3 // 60sec
 
@@ -70,7 +69,6 @@ export function FeedPage({
   const queryClient = useQueryClient()
   const {openComposer} = useOpenComposer()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
-  const setMinimalShellMode = useSetMinimalShellMode()
   const headerOffset = useHeaderOffset()
   const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const scrollElRef = useRef<ListMethods>(null)
@@ -83,6 +81,7 @@ export function FeedPage({
     const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
     return IS_NATIVE && _isVideoFeed
   }, [feedInfo])
+  const t = useTheme()
 
   useEffect(() => {
     if (isPageFocused) {
@@ -95,8 +94,7 @@ export function FeedPage({
       animated: IS_NATIVE,
       offset: -headerOffset,
     })
-    setMinimalShellMode(false)
-  }, [headerOffset, setMinimalShellMode])
+  }, [headerOffset])
 
   const onSoftReset = useCallback(() => {
     const isScreenFocused =
@@ -176,7 +174,7 @@ export function FeedPage({
         <FAB
           testID="composeFAB"
           onPress={onPressCompose}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+          icon={<EditBigIcon size="lg" fill={t.palette.white} />}
           accessibilityRole="button"
           accessibilityLabel={_(msg({message: `New post`, context: 'action'}))}
           accessibilityHint=""

@@ -1,4 +1,4 @@
-import {XRPCError} from '@atproto/xrpc'
+import {XRPCError} from '@atproto/api'
 import {t} from '@lingui/core/macro'
 
 export function cleanError(str: any): string {

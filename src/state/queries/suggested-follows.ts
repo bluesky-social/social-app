@@ -92,6 +92,7 @@ export function useSuggestedFollowsByActorWithDismiss({
 
   return {
     profiles,
+    recId: data?.recId,
     onDismiss,
     isLoading,
     error,

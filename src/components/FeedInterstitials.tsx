@@ -7,21 +7,17 @@ import Animated, {
   LayoutAnimationConfig,
   LinearTransition,
 } from 'react-native-reanimated'
-import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {type AppBskyFeedDefs} from '@atproto/api'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
-import {useProfilesQuery} from '#/state/queries/profile'
 import {useSuggestedFollowsByActorWithDismiss} from '#/state/queries/suggested-follows'
+import {useGetSuggestedUsersForDiscoverQuery} from '#/state/queries/trending/useGetSuggestedUsersForDiscoverQuery'
 import {useSession} from '#/state/session'
-import * as userActionHistory from '#/state/userActionHistory'
-import {type SeenPost} from '#/state/userActionHistory'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {
   atoms as a,
@@ -39,12 +35,12 @@ import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Has
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
+import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {Text} from '#/components/Typography'
 import {type Metrics, useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {FollowDialogWithoutGuide} from './ProgressGuide/FollowDialog'
-import {ProgressGuideList} from './ProgressGuide/List'
 
 const DISMISS_ANIMATION_DURATION = 200
 
@@ -111,95 +107,6 @@ export function SuggestedFeedsCardPlaceholder() {
   )
 }
 
-function getRank(seenPost: SeenPost): string {
-  let tier: string
-  if (seenPost.feedContext === 'popfriends') {
-    tier = 'a'
-  } else if (seenPost.feedContext?.startsWith('cluster')) {
-    tier = 'b'
-  } else if (seenPost.feedContext === 'popcluster') {
-    tier = 'c'
-  } else if (seenPost.feedContext?.startsWith('ntpc')) {
-    tier = 'd'
-  } else if (seenPost.feedContext?.startsWith('t-')) {
-    tier = 'e'
-  } else if (seenPost.feedContext === 'nettop') {
-    tier = 'f'
-  } else {
-    tier = 'g'
-  }
-  let score = Math.round(
-    Math.log(
-      1 + seenPost.likeCount + seenPost.repostCount + seenPost.replyCount,
-    ),
-  )
-  if (seenPost.isFollowedBy || Math.random() > 0.9) {
-    score *= 2
-  }
-  const rank = 100 - score
-  return `${tier}-${rank}`
-}
-
-function sortSeenPosts(postA: SeenPost, postB: SeenPost): 0 | 1 | -1 {
-  const rankA = getRank(postA)
-  const rankB = getRank(postB)
-  // Yes, we're comparing strings here.
-  // The "larger" string means a worse rank.
-  if (rankA > rankB) {
-    return 1
-  } else if (rankA < rankB) {
-    return -1
-  } else {
-    return 0
-  }
-}
-
-function useExperimentalSuggestedUsersQuery() {
-  const {currentAccount} = useSession()
-  const userActionSnapshot = userActionHistory.useActionHistorySnapshot()
-  const dids = useMemo(() => {
-    const {likes, follows, followSuggestions, seen} = userActionSnapshot
-    const likeDids = likes
-      .map(l => new AtUri(l))
-      .map(uri => uri.host)
-      .filter(did => !follows.includes(did))
-    let suggestedDids: string[] = []
-    if (followSuggestions.length > 0) {
-      suggestedDids = [
-        // It's ok if these will pick the same item (weighed by its frequency)
-        /* eslint-disable react-hooks/purity */
-        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
-        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
-        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
-        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
-        /* eslint-enable react-hooks/purity */
-      ]
-    }
-    const seenDids = seen
-      .sort(sortSeenPosts)
-      .map(l => new AtUri(l.uri))
-      .map(uri => uri.host)
-    return [...new Set([...suggestedDids, ...likeDids, ...seenDids])].filter(
-      did => did !== currentAccount?.did,
-    )
-  }, [userActionSnapshot, currentAccount])
-  const {data, isLoading, error} = useProfilesQuery({
-    handles: dids.slice(0, 16),
-  })
-
-  const profiles = data
-    ? data.profiles.filter(profile => {
-        return !profile.viewer?.following
-      })
-    : []
-
-  return {
-    isLoading,
-    error,
-    profiles: profiles.slice(0, 6),
-  }
-}
-
 export function SuggestedFollows({feed}: {feed: FeedDescriptor}) {
   const {currentAccount} = useSession()
   const [feedType, feedUriOrDid] = feed.split('|')
@@ -215,13 +122,14 @@ export function SuggestedFollows({feed}: {feed: FeedDescriptor}) {
 }
 
 export function SuggestedFollowsProfile({did}: {did: string}) {
-  const {profiles, onDismiss, isLoading, error} =
+  const {profiles, recId, onDismiss, isLoading, error} =
     useSuggestedFollowsByActorWithDismiss({did})
 
   return (
     <ProfileGrid
       isSuggestionsLoading={isLoading}
       profiles={profiles}
+      recId={recId}
       error={error}
       viewContext="profile"
       onDismiss={onDismiss}
@@ -230,11 +138,9 @@ export function SuggestedFollowsProfile({did}: {did: string}) {
 }
 
 export function SuggestedFollowsHome() {
-  const {
-    isLoading: isSuggestionsLoading,
-    profiles: experimentalProfiles,
-    error: experimentalError,
-  } = useExperimentalSuggestedUsersQuery()
+  const {isLoading, data, error} = useGetSuggestedUsersForDiscoverQuery()
+
+  const profiles = data?.actors
 
   const [dismissedDids, setDismissedDids] = useState<Set<string>>(new Set())
 
@@ -248,12 +154,12 @@ export function SuggestedFollowsHome() {
       recId?: string
     }> = []
 
-    for (const profile of experimentalProfiles) {
-      result.push({actor: profile, recId: undefined})
+    for (const profile of profiles ?? []) {
+      result.push({actor: profile, recId: data?.recId})
     }
 
     return result
-  }, [experimentalProfiles])
+  }, [data?.recId, profiles])
 
   const filteredProfiles = useMemo(() => {
     return allProfiles.filter(p => !dismissedDids.has(p.actor.did))
@@ -261,10 +167,11 @@ export function SuggestedFollowsHome() {
 
   return (
     <ProfileGrid
-      isSuggestionsLoading={isSuggestionsLoading}
+      recId={data?.recId}
+      isSuggestionsLoading={isLoading}
       profiles={filteredProfiles}
       totalProfileCount={allProfiles.length}
-      error={experimentalError}
+      error={error}
       viewContext="feed"
       onDismiss={onDismiss}
     />
@@ -275,6 +182,7 @@ export function ProfileGrid({
   isSuggestionsLoading,
   error,
   profiles,
+  recId,
   totalProfileCount,
   viewContext = 'feed',
   onDismiss,
@@ -283,6 +191,7 @@ export function ProfileGrid({
 }: {
   isSuggestionsLoading: boolean
   profiles: {actor: bsky.profile.AnyProfileView; recId?: string}[]
+  recId?: string
   totalProfileCount?: number
   error: Error | null
   viewContext: 'profile' | 'profileHeader' | 'feed'
@@ -292,7 +201,7 @@ export function ProfileGrid({
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
   const {gtMobile} = useBreakpoints()
   const followDialogControl = useDialogControl()
@@ -309,10 +218,10 @@ export function ProfileGrid({
   const containerRef = useRef<View>(null)
   const hasTrackedRef = useRef(false)
   const logContext: Metrics['suggestedUser:seen']['logContext'] = isFeedContext
-    ? 'InterstitialDiscover'
+    ? 'DiscoverInterstitial'
     : isProfileHeaderContext
-      ? 'Profile'
-      : 'InterstitialProfile'
+      ? 'ProfileHeader'
+      : 'ProfileInterstitial'
 
   // Callback to fire seen events
   const fireSeen = useCallback(() => {
@@ -333,7 +242,7 @@ export function ProfileGrid({
         })
       }
     })
-  }, [ax, isLoading, error, profiles, maxLength, logContext])
+  }, [isLoading, error, profiles, maxLength, ax, logContext])
 
   // For profile header, fire when isVisible becomes true
   useEffect(() => {
@@ -421,9 +330,7 @@ export function ProfileGrid({
               profile={profile.actor}
               onPress={() => {
                 ax.metric('suggestedUser:press', {
-                  logContext: isFeedContext
-                    ? 'InterstitialDiscover'
-                    : 'InterstitialProfile',
+                  logContext,
                   recId: profile.recId,
                   position: index,
                   suggestedDid: profile.actor.did,
@@ -439,14 +346,12 @@ export function ProfileGrid({
                   <ProfileCard.Outer>
                     {onDismiss && (
                       <Button
-                        label={_(msg`Dismiss this suggestion`)}
+                        label={l`Dismiss this suggestion`}
                         onPress={e => {
                           e.preventDefault()
                           onDismiss(profile.actor.did)
                           ax.metric('suggestedUser:dismiss', {
-                            logContext: isFeedContext
-                              ? 'InterstitialDiscover'
-                              : 'InterstitialProfile',
+                            logContext,
                             position: index,
                             suggestedDid: profile.actor.did,
                             recId: profile.recId,
@@ -512,10 +417,8 @@ export function ProfileGrid({
                       style={[a.rounded_sm]}
                       onFollow={() => {
                         ax.metric('suggestedUser:follow', {
-                          logContext: isFeedContext
-                            ? 'InterstitialDiscover'
-                            : 'InterstitialProfile',
-                          location: 'Card',
+                          logContext,
+                          location: 'Profile',
                           recId: profile.recId,
                           position: index,
                           suggestedDid: profile.actor.did,
@@ -565,35 +468,32 @@ export function ProfileGrid({
         <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
           <Trans>Suggested for you</Trans>
         </Text>
-        {!isProfileHeaderContext && (
-          <Button
-            label={_(msg`See more suggested profiles`)}
-            onPress={() => {
-              followDialogControl.open()
-              ax.metric('suggestedUser:seeMore', {
-                logContext: isFeedContext ? 'Explore' : 'Profile',
-              })
-            }}>
-            {({hovered}) => (
-              <Text
-                style={[
-                  a.text_sm,
-                  {color: t.palette.primary_500},
-                  hovered &&
-                    web({
-                      textDecorationLine: 'underline',
-                      textDecorationColor: t.palette.primary_500,
-                    }),
-                ]}>
-                <Trans>See more</Trans>
-              </Text>
-            )}
-          </Button>
-        )}
+        <Button
+          label={l`See more suggested profiles`}
+          onPress={() => {
+            followDialogControl.open()
+            ax.metric('suggestedUser:seeMore', {
+              logContext,
+              recId,
+            })
+          }}>
+          {({hovered}) => (
+            <Text
+              style={[
+                a.text_sm,
+                {color: t.palette.primary_500},
+                hovered &&
+                  web({
+                    textDecorationLine: 'underline',
+                    textDecorationColor: t.palette.primary_500,
+                  }),
+              ]}>
+              <Trans>See more</Trans>
+            </Text>
+          )}
+        </Button>
       </View>
-
       <FollowDialogWithoutGuide control={followDialogControl} />
-
       <LayoutAnimationConfig skipExiting skipEntering>
         {gtMobile ? (
           <View style={[a.p_lg, a.pt_md]}>
@@ -611,16 +511,14 @@ export function ProfileGrid({
               decelerationRate="fast">
               {content}
 
-              {!isProfileHeaderContext && (
-                <SeeMoreSuggestedProfilesCard
-                  onPress={() => {
-                    followDialogControl.open()
-                    ax.metric('suggestedUser:seeMore', {
-                      logContext: 'Explore',
-                    })
-                  }}
-                />
-              )}
+              <SeeMoreSuggestedProfilesCard
+                onPress={() => {
+                  followDialogControl.open()
+                  ax.metric('suggestedUser:seeMore', {
+                    logContext,
+                  })
+                }}
+              />
             </ScrollView>
           </BlockDrawerGesture>
         )}
@@ -630,11 +528,11 @@ export function ProfileGrid({
 }
 
 function SeeMoreSuggestedProfilesCard({onPress}: {onPress: () => void}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Button
-      label={_(msg`Browse more accounts`)}
+      label={l`Browse more accounts`}
       onPress={onPress}
       style={[
         a.flex_col,
@@ -658,7 +556,7 @@ const numFeedsToDisplay = 3
 export function SuggestedFeeds() {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {data, isLoading, error} = useGetPopularFeedsQuery({
     limit: numFeedsToDisplay,
   })
@@ -745,7 +643,7 @@ export function SuggestedFeeds() {
               a.gap_md,
             ]}>
             <InlineLinkText
-              label={_(msg`Browse more suggestions`)}
+              label={l`Browse more suggestions`}
               to="/search"
               style={[t.atoms.text_contrast_medium]}>
               <Trans>Browse more suggestions</Trans>
@@ -764,7 +662,7 @@ export function SuggestedFeeds() {
               {content}
 
               <Button
-                label={_(msg`Browse more feeds on the Explore page`)}
+                label={l`Browse more feeds on the Explore page`}
                 onPress={() => {
                   navigation.navigate('SearchTab')
                 }}

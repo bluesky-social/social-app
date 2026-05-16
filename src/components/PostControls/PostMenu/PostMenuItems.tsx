@@ -8,7 +8,7 @@ import {
 import * as Clipboard from 'expo-clipboard'
 import {
   type AppBskyFeedDefs,
-  AppBskyFeedPost,
+  type AppBskyFeedPost,
   type AppBskyFeedThreadgate,
   AtUri,
   type RichText as RichTextAPI,
@@ -28,6 +28,7 @@ import {
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {useTranslate} from '#/lib/translation'
+import {getPostLanguageTags} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -95,7 +96,6 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL} from '#/env'
-import * as bsky from '#/types/bsky'
 
 let PostMenuItems = ({
   post,
@@ -277,21 +277,9 @@ let PostMenuItems = ({
   const onPressTranslate = () => {
     void translate({
       text: record.text,
-      targetLangCode: langPrefs.primaryLanguage,
+      expectedTargetLanguage: langPrefs.primaryLanguage,
+      possibleSourceLanguages: getPostLanguageTags(post),
     })
-
-    if (
-      bsky.dangerousIsType<AppBskyFeedPost.Record>(
-        post.record,
-        AppBskyFeedPost.isRecord,
-      )
-    ) {
-      ax.metric('translate', {
-        sourceLanguages: post.record.langs ?? [],
-        targetLanguage: langPrefs.primaryLanguage,
-        textLength: post.record.text.length,
-      })
-    }
   }
 
   const onHidePost = () => {

@@ -1,75 +1,70 @@
 import {useMemo} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import Svg, {Circle, Line} from 'react-native-svg'
 import {AtUri} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {atoms as a, select, useTheme} from '#/alf'
+import {Link} from '#/components/Link'
 import {SubtleHover} from '#/components/SubtleHover'
-import {Link} from '../util/Link'
-import {Text} from '../util/text/Text'
+import {Text} from '#/components/Typography'
 
 export function ViewFullThread({uri}: {uri: string}) {
-  const {
-    state: hover,
-    onIn: onHoverIn,
-    onOut: onHoverOut,
-  } = useInteractionState()
-  const pal = usePalette('default')
+  const t = useTheme()
   const itemHref = useMemo(() => {
     const urip = new AtUri(uri)
     return makeProfileLink({did: urip.hostname, handle: ''}, 'post', urip.rkey)
   }, [uri])
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Link
-      style={[styles.viewFullThread]}
-      href={itemHref}
-      asAnchor
-      noFeedback
-      onPointerEnter={onHoverIn}
-      onPointerLeave={onHoverOut}>
-      <SubtleHover
-        hover={hover}
-        // adjust position for visual alignment - the actual box has lots of top padding and not much bottom padding -sfn
-        style={{top: 8, bottom: -5}}
-      />
-      <View style={styles.viewFullThreadDots}>
-        <Svg width="4" height="40">
-          <Line
-            x1="2"
-            y1="0"
-            x2="2"
-            y2="15"
-            stroke={pal.colors.replyLine}
-            strokeWidth="2"
+      style={[
+        a.flex_row,
+        {
+          gap: 10,
+          paddingLeft: 18,
+        },
+      ]}
+      to={itemHref}
+      label={l`View full thread`}>
+      {({hovered}) => (
+        <>
+          <SubtleHover
+            hover={hovered}
+            // adjust position for visual alignment - the actual box has lots of top padding and not much bottom padding -sfn
+            style={{top: 8, bottom: -5}}
           />
-          <Circle cx="2" cy="22" r="1.5" fill={pal.colors.replyLineDot} />
-          <Circle cx="2" cy="28" r="1.5" fill={pal.colors.replyLineDot} />
-          <Circle cx="2" cy="34" r="1.5" fill={pal.colors.replyLineDot} />
-        </Svg>
-      </View>
-
-      <Text type="md" style={[pal.link, {paddingTop: 18, paddingBottom: 4}]}>
-        {/* HACKFIX: Trans isn't working after SDK 53 upgrade -sfn */}
-        {_(msg`View full thread`)}
-      </Text>
+          <View style={[a.align_center, {width: 42}]}>
+            <Svg width="4" height="40">
+              <Line
+                x1="2"
+                y1="0"
+                x2="2"
+                y2="15"
+                stroke={select(t.name, {
+                  light: t.palette.contrast_100,
+                  dim: t.palette.contrast_200,
+                  dark: t.palette.contrast_200,
+                })}
+                strokeWidth="2"
+              />
+              <Circle cx="2" cy="22" r="1.5" fill={t.palette.contrast_200} />
+              <Circle cx="2" cy="28" r="1.5" fill={t.palette.contrast_200} />
+              <Circle cx="2" cy="34" r="1.5" fill={t.palette.contrast_200} />
+            </Svg>
+          </View>
+          <Text
+            style={[
+              a.text_md,
+              {color: t.palette.primary_500, paddingTop: 18, paddingBottom: 4},
+            ]}>
+            {/* HACKFIX: Trans isn't working after SDK 53 upgrade -sfn */}
+            {l`View full thread`}
+          </Text>
+        </>
+      )}
     </Link>
   )
 }
-
-const styles = StyleSheet.create({
-  viewFullThread: {
-    flexDirection: 'row',
-    gap: 10,
-    paddingLeft: 18,
-  },
-  viewFullThreadDots: {
-    width: 42,
-    alignItems: 'center',
-  },
-})

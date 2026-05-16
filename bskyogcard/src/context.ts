@@ -4,7 +4,7 @@ import {fileURLToPath} from 'node:url'
 
 import {AtpAgent} from '@atproto/api'
 
-import {Config} from './config.js'
+import {type Config} from './config.js'
 
 const __DIRNAME = path.dirname(fileURLToPath(import.meta.url))
 
@@ -20,10 +20,13 @@ export class AppContext {
   fonts: {name: string; data: Buffer}[]
   abortController = new AbortController()
 
-  constructor(private opts: AppContextOptions) {
-    this.cfg = this.opts.cfg
-    this.appviewAgent = this.opts.appviewAgent
-    this.fonts = this.opts.fonts
+  private opts: AppContextOptions
+
+  constructor(opts: AppContextOptions) {
+    this.opts = opts
+    this.cfg = opts.cfg
+    this.appviewAgent = opts.appviewAgent
+    this.fonts = opts.fonts
   }
 
   static async fromConfig(cfg: Config, overrides?: Partial<AppContextOptions>) {

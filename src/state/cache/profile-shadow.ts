@@ -1,7 +1,7 @@
 import {useEffect, useMemo, useState} from 'react'
 import {type AppBskyActorDefs, type AppBskyNotificationDefs} from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
-import EventEmitter from 'eventemitter3'
+import {EventEmitter} from 'eventemitter3'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {findAllProfilesInQueryData as findAllProfilesInActivitySubscriptionsQueryData} from '#/state/queries/activity-subscriptions'
@@ -11,6 +11,7 @@ import {findAllProfilesInQueryData as findAllProfilesInContactMatchesQueryData} 
 import {findAllProfilesInQueryData as findAllProfilesInKnownFollowersQueryData} from '#/state/queries/known-followers'
 import {findAllProfilesInQueryData as findAllProfilesInListMembersQueryData} from '#/state/queries/list-members'
 import {findAllProfilesInQueryData as findAllProfilesInListConvosQueryData} from '#/state/queries/messages/list-conversations'
+import {findAllProfilesInQueryData as findAllProfilesInMessagesQueryData} from '#/state/queries/messages/list-convo-members'
 import {findAllProfilesInQueryData as findAllProfilesInMyBlockedAccountsQueryData} from '#/state/queries/my-blocked-accounts'
 import {findAllProfilesInQueryData as findAllProfilesInMyMutedAccountsQueryData} from '#/state/queries/my-muted-accounts'
 import {findAllProfilesInQueryData as findAllProfilesInNotifsQueryData} from '#/state/queries/notifications/feed'
@@ -26,7 +27,9 @@ import {findAllProfilesInQueryData as findAllProfilesInProfileFollowersQueryData
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowsQueryData} from '#/state/queries/profile-follows'
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedFollowsQueryData} from '#/state/queries/suggested-follows'
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedOnboardingUsersQueryData} from '#/state/queries/trending/useGetSuggestedOnboardingUsersQuery'
-import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersQueryData} from '#/state/queries/trending/useGetSuggestedUsersQuery'
+import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForDiscoverQueryData} from '#/state/queries/trending/useGetSuggestedUsersForDiscoverQuery'
+import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForExploreQueryData} from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery'
+import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForSeeMoreQueryData} from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery'
 import {findAllProfilesInQueryData as findAllProfilesInPostThreadV2QueryData} from '#/state/queries/usePostThread/queryCache'
 import type * as bsky from '#/types/bsky'
 import {castAsShadow, type Shadow} from './types'
@@ -134,22 +137,22 @@ export function usePostAuthorShadowFilter(data?: FeedPage[]) {
     new Map<string, {muted: boolean; blocked: boolean}>(),
   )
 
-  const [prevData, setPrevData] = useState(data)
-  if (data !== prevData) {
-    const newAuthors = new Set(trackedDids)
-    let hasNew = false
-    for (const slice of data?.flatMap(page => page.slices) ?? []) {
-      for (const item of slice.items) {
-        const author = item.post.author
-        if (!newAuthors.has(author.did)) {
-          hasNew = true
-          newAuthors.add(author.did)
+  useEffect(() => {
+    setTrackedDids(prev => {
+      const currentDids = new Set(prev)
+      let hasNew = false
+      for (const slice of data?.flatMap(page => page.slices) ?? []) {
+        for (const item of slice.items) {
+          const author = item.post.author
+          if (!currentDids.has(author.did)) {
+            hasNew = true
+            currentDids.add(author.did)
+          }
         }
       }
-    }
-    if (hasNew) setTrackedDids([...newAuthors])
-    setPrevData(data)
-  }
+      return hasNew ? [...currentDids] : prev
+    })
+  }, [data])
 
   useEffect(() => {
     const unsubs: Array<() => void> = []
@@ -249,7 +252,9 @@ function* findProfilesInCache(
   yield* findAllProfilesInProfileFollowersQueryData(queryClient, did)
   yield* findAllProfilesInProfileFollowsQueryData(queryClient, did)
   yield* findAllProfilesInSuggestedOnboardingUsersQueryData(queryClient, did)
-  yield* findAllProfilesInSuggestedUsersQueryData(queryClient, did)
+  yield* findAllProfilesInSuggestedUsersForDiscoverQueryData(queryClient, did)
+  yield* findAllProfilesInSuggestedUsersForExploreQueryData(queryClient, did)
+  yield* findAllProfilesInSuggestedUsersForSeeMoreQueryData(queryClient, did)
   yield* findAllProfilesInSuggestedFollowsQueryData(queryClient, did)
   yield* findAllProfilesInActorSearchQueryData(queryClient, did)
   yield* findAllProfilesInListConvosQueryData(queryClient, did)
@@ -260,4 +265,5 @@ function* findProfilesInCache(
   yield* findAllProfilesInActivitySubscriptionsQueryData(queryClient, did)
   yield* findAllProfilesInNotifsQueryData(queryClient, did)
   yield* findAllProfilesInContactMatchesQueryData(queryClient, did)
+  yield* findAllProfilesInMessagesQueryData(queryClient, did)
 }

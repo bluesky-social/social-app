@@ -180,9 +180,9 @@ func serve(cctx *cli.Context) error {
 
 	// Create CORS middleware for oembed
 	oembedCORS := middleware.CORSWithConfig(middleware.CORSConfig{
-			AllowOrigins: []string{"*"},
-			AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodOptions},
-			AllowHeaders: []string{"Origin", "Content-Type", "Accept"},
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodOptions},
+		AllowHeaders: []string{"Origin", "Content-Type", "Accept"},
 	})
 
 	e.GET("/robots.txt", echo.WrapHandler(staticHandler))
@@ -271,7 +271,7 @@ func (srv *Server) errorHandler(err error, c echo.Context) {
 		code = he.Code
 	}
 	c.Logger().Error(err)
-	data := map[string]interface{}{
+	data := map[string]any{
 		"statusCode": code,
 	}
 	c.Render(code, "error.html", data)

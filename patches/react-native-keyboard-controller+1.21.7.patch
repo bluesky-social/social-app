@@ -1,0 +1,48 @@
+diff --git a/node_modules/react-native-keyboard-controller/src/components/KeyboardChatScrollView/useExtraContentPadding/index.ts b/node_modules/react-native-keyboard-controller/src/components/KeyboardChatScrollView/useExtraContentPadding/index.ts
+index 24a25ae..2c5ff6d 100644
+--- a/node_modules/react-native-keyboard-controller/src/components/KeyboardChatScrollView/useExtraContentPadding/index.ts
++++ b/node_modules/react-native-keyboard-controller/src/components/KeyboardChatScrollView/useExtraContentPadding/index.ts
+@@ -1,8 +1,6 @@
+ import { useCallback } from "react";
+-import { Platform } from "react-native";
+ import { scrollTo, useAnimatedReaction } from "react-native-reanimated";
+ 
+-import { IS_FABRIC } from "../../../architecture";
+ import { isScrollAtEnd, shouldShiftContent } from "../useChatKeyboard/helpers";
+ 
+ import type { KeyboardLiftBehavior } from "../useChatKeyboard/types";
+@@ -52,7 +50,6 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
+     scroll,
+     layout,
+     size,
+-    contentOffsetY,
+     inverted,
+     keyboardLiftBehavior,
+     freeze,
+@@ -62,20 +59,14 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
+     (target: number) => {
+       "worklet";
+ 
+-      if (contentOffsetY && IS_FABRIC) {
+-        // eslint-disable-next-line react-compiler/react-compiler
+-        contentOffsetY.value = target;
+-      } else if (Platform.OS === "android") {
+-        // Defer scrollTo so the animatedProps inset commit lands first;
+-        // otherwise the native ScrollView clamps to the old range.
+-        requestAnimationFrame(() => {
+-          scrollTo(scrollViewRef, 0, target, false);
+-        });
+-      } else {
++      // Always defer scrollTo so the animatedProps inset commit lands first;
++      // otherwise the native ScrollView clamps contentOffset to the old
++      // contentInset range (iOS Fabric) or the old contentInsetBottom (Android).
++      requestAnimationFrame(() => {
+         scrollTo(scrollViewRef, 0, target, false);
+-      }
++      });
+     },
+-    [scrollViewRef, contentOffsetY],
++    [scrollViewRef],
+   );
+ 
+   useAnimatedReaction(

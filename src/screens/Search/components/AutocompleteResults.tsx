@@ -1,11 +1,18 @@
 import {memo} from 'react'
-import {ActivityIndicator, View} from 'react-native'
+import {
+  ActivityIndicator,
+  TouchableOpacity,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {usePalette} from '#/lib/hooks/usePalette'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {SearchLinkCard} from '#/view/shell/desktop/Search'
+import {Link} from '#/view/com/util/Link'
+import {Text} from '#/view/com/util/text/Text'
 import {SearchProfileCard} from '#/screens/Search/components/SearchProfileCard'
 import {atoms as a, native} from '#/alf'
 import * as Layout from '#/components/Layout'
@@ -76,3 +83,52 @@ let AutocompleteResults = ({
 }
 AutocompleteResults = memo(AutocompleteResults)
 export {AutocompleteResults}
+
+let SearchLinkCard = ({
+  label,
+  to,
+  onPress,
+  style,
+}: {
+  label: string
+  to?: string
+  onPress?: () => void
+  style?: ViewStyle
+}): React.ReactNode => {
+  const pal = usePalette('default')
+
+  const inner = (
+    <View
+      style={[pal.border, {paddingVertical: 16, paddingHorizontal: 12}, style]}>
+      <Text type="md" style={[pal.text]}>
+        {label}
+      </Text>
+    </View>
+  )
+
+  if (onPress) {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        accessibilityLabel={label}
+        accessibilityHint="">
+        {inner}
+      </TouchableOpacity>
+    )
+  }
+
+  return (
+    <Link href={to} asAnchor anchorNoUnderline>
+      <View
+        style={[
+          pal.border,
+          {paddingVertical: 16, paddingHorizontal: 12},
+          style,
+        ]}>
+        <Text type="md" style={[pal.text]}>
+          {label}
+        </Text>
+      </View>
+    </Link>
+  )
+}

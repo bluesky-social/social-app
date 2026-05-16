@@ -61,6 +61,14 @@ function getLocalizedLanguage(
   }
 }
 
+export function getPostLanguageTags(post: AppBskyFeedDefs.PostView) {
+  return AppBskyFeedPost.isRecord(post.record) &&
+    hasProp(post.record, 'langs') &&
+    Array.isArray(post.record.langs)
+    ? post.record.langs
+    : []
+}
+
 export function languageName(language: Language, appLang: string): string {
   // if Intl.DisplayNames is unavailable on the target, display the English name
   if (!Intl.DisplayNames) {
@@ -80,22 +88,14 @@ export function codeToLanguageName(lang2or3: string, appLang: string): string {
 export function getPostLanguage(
   post: AppBskyFeedDefs.PostView,
 ): string | undefined {
-  let candidates: string[] = []
+  let candidates: string[] = getPostLanguageTags(post)
   let postText: string = ''
   if (hasProp(post.record, 'text') && typeof post.record.text === 'string') {
     postText = post.record.text
   }
 
-  if (
-    AppBskyFeedPost.isRecord(post.record) &&
-    hasProp(post.record, 'langs') &&
-    Array.isArray(post.record.langs)
-  ) {
-    candidates = post.record.langs
-  }
-
   // if there's only one declared language, use that
-  if (candidates?.length === 1) {
+  if (candidates.length === 1) {
     return candidates[0]
   }
 
@@ -108,11 +108,10 @@ export function getPostLanguage(
   let langsProbabilityMap = lande(postText)
 
   // filter down using declared languages
-  if (candidates?.length) {
+  if (candidates.length) {
     langsProbabilityMap = langsProbabilityMap.filter(
-      ([lang, _probability]: [string, number]) => {
-        return candidates.includes(code3ToCode2(lang))
-      },
+      ([lang, _probability]: [string, number]) =>
+        candidates.includes(code3ToCode2(lang)),
     )
   }
 

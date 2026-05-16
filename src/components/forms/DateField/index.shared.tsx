@@ -63,7 +63,7 @@ export function DateFieldButton({
             paddingLeft: 14,
             paddingRight: 14,
             borderColor: 'transparent',
-            borderWidth: 2,
+            borderWidth: 1,
           },
           native({
             paddingTop: 10,

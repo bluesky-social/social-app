@@ -5,38 +5,44 @@ import {Trans} from '@lingui/react/macro'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
 import {atoms as a, tokens} from '#/alf'
+import {parseConvoView} from '#/components/dms/util'
 import {KnownFollowers} from '#/components/KnownFollowers'
 import {Text} from '#/components/Typography'
 import {ChatListItem, ChatListItemPortal} from './ChatListItem'
 import {AcceptChatButton, DeleteChatButton, RejectMenu} from './RequestButtons'
 
-export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
+export function RequestListItem({
+  convo: convoView,
+}: {
+  convo: ChatBskyConvoDefs.ConvoView
+}) {
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
 
-  const otherUser = convo.members.find(
-    member => member.did !== currentAccount?.did,
-  )
+  const convo = parseConvoView(convoView, currentAccount?.did)
 
-  if (!otherUser || !moderationOpts) {
+  if (!convo || !moderationOpts) {
     return null
   }
 
-  const isDeletedAccount = otherUser.handle === 'missing.invalid'
+  const isDeletedAccount =
+    !convo.primaryMember || convo.primaryMember.handle === 'missing.invalid'
 
   return (
     <View style={[a.relative, a.flex_1]}>
-      <ChatListItem convo={convo} showMenu={false}>
-        <View style={[a.pt_xs, a.pb_2xs]}>
-          <KnownFollowers
-            profile={otherUser}
-            moderationOpts={moderationOpts}
-            minimal
-            showIfEmpty
-          />
-        </View>
+      <ChatListItem convo={convo.view} showMenu={false}>
+        {convo.primaryMember && (
+          <View style={[a.pt_xs, a.pb_2xs]}>
+            <KnownFollowers
+              profile={convo.primaryMember}
+              moderationOpts={moderationOpts}
+              minimal
+              showIfEmpty
+            />
+          </View>
+        )}
         {/* spacer, since you can't nest pressables */}
-        <View style={[a.pt_md, a.pb_xs, a.w_full, {opacity: 0}]} aria-hidden>
+        <View style={[a.py_lg, a.w_full, {opacity: 0}]} aria-hidden>
           {/* Placeholder text so that it responds to the font height */}
           <Text style={[a.text_xs, a.leading_tight, a.font_semi_bold]}>
             <Trans comment="Accept a chat request">Accept Request</Trans>
@@ -57,19 +63,19 @@ export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
                 paddingLeft: tokens.space.lg + 52 + tokens.space.md,
               },
             ]}>
-            {!isDeletedAccount ? (
+            {convo.primaryMember && !isDeletedAccount ? (
               <>
-                <AcceptChatButton convo={convo} currentScreen="list" />
+                <AcceptChatButton convo={convo.view} currentScreen="list" />
                 <RejectMenu
-                  convo={convo}
-                  profile={otherUser}
+                  convo={convo.view}
+                  profile={convo.primaryMember}
                   showDeleteConvo
                   currentScreen="list"
                 />
               </>
             ) : (
               <>
-                <DeleteChatButton convo={convo} currentScreen="list" />
+                <DeleteChatButton convo={convo.view} currentScreen="list" />
                 <View style={a.flex_1} />
               </>
             )}

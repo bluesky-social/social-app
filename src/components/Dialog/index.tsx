@@ -157,6 +157,8 @@ export function Outer({
     [open, close],
   )
 
+  const isHeightConstrained = nativeOptions?.maxHeight != null
+
   const context = useMemo(
     () => ({
       close,
@@ -165,8 +167,9 @@ export function Outer({
       disableDrag,
       setDisableDrag,
       isWithinDialog: true,
+      isHeightConstrained,
     }),
-    [close, snapPoint, disableDrag, setDisableDrag],
+    [close, snapPoint, disableDrag, setDisableDrag, isHeightConstrained],
   )
 
   return (
@@ -180,7 +183,9 @@ export function Outer({
       onStateChange={onStateChange}
       disableDrag={disableDrag}>
       <Context.Provider value={context}>
-        <View testID={testID} style={[a.relative]}>
+        <View
+          testID={testID}
+          style={[a.relative, isHeightConstrained && a.flex_1]}>
           {children}
         </View>
       </Context.Provider>
@@ -213,10 +218,11 @@ export function Inner({children, style, header}: DialogInnerProps) {
 
 export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
   function ScrollableInner(
-    {children, contentContainerStyle, header, ...props},
+    {children, contentContainerStyle, header, style, ...props},
     ref,
   ) {
-    const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
+    const {nativeSnapPoint, disableDrag, setDisableDrag, isHeightConstrained} =
+      useDialogContext()
     const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
     const insets = useSafeAreaInsets()
     const [keyboardHeight, setKeyboardHeight] = useState(() =>
@@ -243,6 +249,7 @@ export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
 
     return (
       <ScrollView
+        style={[isHeightConstrained && a.flex_1, style]}
         contentContainerStyle={[
           a.pt_2xl,
           IS_LIQUID_GLASS ? a.px_2xl : a.px_xl,

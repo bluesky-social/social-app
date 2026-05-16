@@ -1,14 +1,17 @@
 import {useCallback, useMemo} from 'react'
 import {Platform, type StyleProp, type TextStyle, View} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
+import {type AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {useTranslate} from '#/lib/translation'
-import {type TranslationFunction} from '#/lib/translation'
+import {
+  type TranslationFunction,
+  type TranslationFunctionParams,
+} from '#/lib/translation'
 import {
   codeToLanguageName,
+  getPostLanguageTags,
   isPostInLanguage,
   languageName,
 } from '#/locale/helpers'
@@ -25,18 +28,17 @@ import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import * as bsky from '#/types/bsky'
 
 const X_ICON_OFFSET = 16
 
 export function TranslatedPost({
   hideTranslateLink = false,
   post,
-  postText,
   postTextStyle = a.text_md,
 }: {
   hideTranslateLink?: boolean
   post: AppBskyFeedDefs.PostView
-  postText: string
   postTextStyle?: StyleProp<TextStyle>
 }) {
   const langPrefs = useLanguagePrefs()
@@ -44,6 +46,21 @@ export function TranslatedPost({
     key: post.uri,
   })
 
+  const record = useMemo<AppBskyFeedPost.Record | undefined>(() => {
+    return bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      post.record,
+      AppBskyFeedPost.isRecord,
+    )
+      ? post.record
+      : undefined
+  }, [post])
+  const initialTranslationParams = useMemo<TranslationFunctionParams>(() => {
+    return {
+      text: record?.text || '',
+      expectedTargetLanguage: langPrefs.primaryLanguage,
+      possibleSourceLanguages: getPostLanguageTags(post),
+    }
+  }, [post, record, langPrefs])
   const needsTranslation = useMemo(() => {
     if (hideTranslateLink) return false
     return !isPostInLanguage(post, [langPrefs.primaryLanguage])
@@ -55,11 +72,11 @@ export function TranslatedPost({
     case 'success':
       return (
         <TranslationResult
-          clearTranslation={clearTranslation}
           translate={translate}
-          postText={postText}
+          clearTranslation={clearTranslation}
+          initialTranslationParams={initialTranslationParams}
           postTextStyle={postTextStyle}
-          sourceLanguage={
+          resultSourceLanguage={
             translationState.sourceLanguage ?? null // Fallback primarily for iOS
           }
           translatedText={translationState.translatedText}
@@ -68,19 +85,18 @@ export function TranslatedPost({
     case 'error':
       return (
         <TranslationError
+          translate={translate}
           clearTranslation={clearTranslation}
           message={translationState.message}
-          postText={postText}
-          primaryLanguage={langPrefs.primaryLanguage}
+          initialTranslationParams={initialTranslationParams}
         />
       )
     default:
       return (
         needsTranslation && (
           <TranslationLink
-            postText={postText}
-            primaryLanguage={langPrefs.primaryLanguage}
             translate={translate}
+            initialTranslationParams={initialTranslationParams}
           />
         )
       )
@@ -103,30 +119,18 @@ function TranslationLoading() {
 }
 
 function TranslationLink({
-  postText,
-  primaryLanguage,
   translate,
+  initialTranslationParams,
 }: {
-  postText: string
-  primaryLanguage: string
   translate: TranslationFunction
+  initialTranslationParams: TranslationFunctionParams
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const ax = useAnalytics()
 
   const handleTranslate = useCallback(() => {
-    void translate({
-      text: postText,
-      targetLangCode: primaryLanguage,
-    })
-
-    ax.metric('translate', {
-      sourceLanguages: [], // todo: get from post maybe?
-      targetLanguage: primaryLanguage,
-      textLength: postText.length,
-    })
-  }, [ax, postText, primaryLanguage, translate])
+    void translate(initialTranslationParams)
+  }, [initialTranslationParams, translate])
 
   return (
     <View
@@ -158,22 +162,24 @@ function TranslationLink({
 }
 
 function TranslationError({
+  translate,
   clearTranslation,
   message,
-  postText,
-  primaryLanguage,
+  initialTranslationParams,
 }: {
+  translate: TranslationFunction
   clearTranslation: () => void
   message: string
-  postText: string
-  primaryLanguage: string
+  initialTranslationParams: TranslationFunctionParams
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const translate = useGoogleTranslate()
 
   const handleFallback = () => {
-    void translate(postText, primaryLanguage)
+    void translate({
+      ...initialTranslationParams,
+      forceGoogleTranslate: true,
+    })
   }
 
   return (
@@ -244,24 +250,24 @@ function TranslationError({
 function TranslationResult({
   clearTranslation,
   translate,
-  postText,
   postTextStyle,
-  sourceLanguage,
+  resultSourceLanguage,
   translatedText,
+  initialTranslationParams,
 }: {
   clearTranslation: () => void
   translate: TranslationFunction
-  postText: string
   postTextStyle?: StyleProp<TextStyle>
-  sourceLanguage: string | null
+  resultSourceLanguage: string | null
   translatedText: string
+  initialTranslationParams: TranslationFunctionParams
 }) {
   const t = useTheme()
   const langPrefs = useLanguagePrefs()
   const {i18n, t: l} = useLingui()
 
-  const langName = sourceLanguage
-    ? codeToLanguageName(sourceLanguage, i18n.locale)
+  const langName = resultSourceLanguage
+    ? codeToLanguageName(resultSourceLanguage, i18n.locale)
     : undefined
 
   const flattenedStyle = flatten(postTextStyle) ?? {}
@@ -320,7 +326,7 @@ function TranslationResult({
               <Trans>Translated</Trans>
             </Text>
           )}
-          {sourceLanguage != null && (
+          {resultSourceLanguage != null && (
             <>
               <Text
                 style={[
@@ -333,9 +339,9 @@ function TranslationResult({
                 &middot;{' '}
               </Text>
               <TranslationLanguageSelect
-                sourceLanguage={sourceLanguage}
+                resultSourceLanguage={resultSourceLanguage}
                 translate={translate}
-                postText={postText}
+                initialTranslationParams={initialTranslationParams}
               />
             </>
           )}
@@ -359,12 +365,12 @@ function TranslationResult({
 
 function TranslationLanguageSelect({
   translate,
-  postText,
-  sourceLanguage,
+  resultSourceLanguage,
+  initialTranslationParams,
 }: {
   translate: TranslationFunction
-  postText: string
-  sourceLanguage: string
+  resultSourceLanguage: string
+  initialTranslationParams: TranslationFunctionParams
 }) {
   const t = useTheme()
   const ax = useAnalytics()
@@ -380,8 +386,8 @@ function TranslationLanguageSelect({
       )
         .sort((a, b) => {
           // Prioritize sourceLanguage at the top
-          if (a.code2 === sourceLanguage) return -1
-          if (b.code2 === sourceLanguage) return 1
+          if (a.code2 === resultSourceLanguage) return -1
+          if (b.code2 === resultSourceLanguage) return 1
           // Localized sort
           return languageName(a, langPrefs.appLanguage).localeCompare(
             languageName(b, langPrefs.appLanguage),
@@ -392,25 +398,28 @@ function TranslationLanguageSelect({
           label: languageName(l, langPrefs.appLanguage), // The viewer may not be familiar with the source language, so localize the name
           value: l.code2,
         })),
-    [langPrefs, sourceLanguage],
+    [langPrefs, resultSourceLanguage],
   )
 
   const handleChangeTranslationLanguage = (sourceLangCode: string) => {
     ax.metric('translate:override', {
       os: Platform.OS,
-      sourceLanguage: sourceLangCode,
-      targetLanguage: langPrefs.primaryLanguage,
+      possibleSourceLanguages: initialTranslationParams.possibleSourceLanguages,
+      expectedSourceLanguage: sourceLangCode,
+      expectedTargetLanguage: initialTranslationParams.expectedTargetLanguage,
+      resultSourceLanguage,
     })
     void translate({
-      text: postText,
-      targetLangCode: langPrefs.primaryLanguage,
-      sourceLangCode,
+      text: initialTranslationParams.text,
+      expectedTargetLanguage: initialTranslationParams.expectedTargetLanguage,
+      expectedSourceLanguage: sourceLangCode,
+      possibleSourceLanguages: initialTranslationParams.possibleSourceLanguages,
     })
   }
 
   return (
     <Select.Root
-      value={sourceLanguage}
+      value={resultSourceLanguage}
       onValueChange={handleChangeTranslationLanguage}>
       <Select.Trigger label={l`Change the source language`}>
         {({props}) => {

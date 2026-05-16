@@ -8,6 +8,7 @@ import {
 } from '#/lib/routes/types'
 import {
   type EmbedPlayerSource,
+  exemptExternalEmbedSources,
   externalEmbedLabels,
 } from '#/lib/strings/embed-player'
 import {
@@ -54,8 +55,10 @@ export function ExternalMediaPreferencesScreen({}: Props) {
             <View style={[a.mt_sm, a.w_full]}>
               {native(<SettingsList.Divider style={[a.my_0]} />)}
               {Object.entries(externalEmbedLabels)
-                // TODO: Remove special case when we disable the old integration.
-                .filter(([key]) => key !== 'tenor')
+                .filter(
+                  ([key]) =>
+                    !exemptExternalEmbedSources.has(key as EmbedPlayerSource),
+                )
                 .map(([key, label]) => (
                   <Fragment key={key}>
                     <PrefSelector

@@ -30,6 +30,7 @@ import (
 	"github.com/flosch/pongo2/v6"
 	"github.com/klauspost/compress/gzhttp"
 	"github.com/klauspost/compress/gzip"
+	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/urfave/cli/v2"
@@ -200,6 +201,14 @@ func serve(cctx *cli.Context) error {
 	e.Use(middleware.RemoveTrailingSlashWithConfig(middleware.TrailingSlashConfig{
 		RedirectCode: http.StatusFound,
 	}))
+
+	echoprom := echoprometheus.NewMiddlewareWithConfig(
+		echoprometheus.MiddlewareConfig{
+			DoNotUseRequestPathFor404: true,
+		},
+	)
+
+	e.Use(echoprom)
 
 	// CORS middleware
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{

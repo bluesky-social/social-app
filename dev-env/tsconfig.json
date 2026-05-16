@@ -28,6 +28,7 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": false,
     "esModuleInterop": true,
+    "skipLibCheck": true,
     "paths": {
       "#/*": ["./src/*"],
       "lib/*": ["./src/lib/*"],

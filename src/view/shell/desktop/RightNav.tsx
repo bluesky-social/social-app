@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/core'
+import {useNavigation} from '@react-navigation/native'
 
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
@@ -49,6 +49,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   const kawaii = useKawaiiMode()
   const gutters = useGutters(['base', 0, 'base', 'wide'])
   const isSearchScreen = routeName === 'Search'
+  const isMessagesRelatedScreen = routeName.startsWith('Messages')
   const webqueryParams = useWebQueryParams()
   const searchQuery = webqueryParams?.q
   const showExploreScreenDuplicatedContent =
@@ -56,7 +57,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   const {rightNavVisible, centerColumnOffset, leftNavMinimal} =
     useLayoutBreakpoints()
 
-  if (!rightNavVisible) {
+  if (!rightNavVisible || isMessagesRelatedScreen) {
     return null
   }
 

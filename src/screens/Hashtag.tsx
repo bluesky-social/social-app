@@ -4,7 +4,6 @@ import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useFocusEffect} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -17,7 +16,6 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {enforceLen} from '#/lib/strings/helpers'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Pager} from '#/view/com/pager/Pager'
@@ -79,21 +77,10 @@ export default function HashtagScreen({
   }, [tag, author])
 
   const [activeTab, setActiveTab] = useState(0)
-  const setMinimalShellMode = useSetMinimalShellMode()
 
-  useFocusEffect(
-    useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
-
-  const onPageSelected = useCallback(
-    (index: number) => {
-      setMinimalShellMode(false)
-      setActiveTab(index)
-    },
-    [setMinimalShellMode],
-  )
+  const onPageSelected = (index: number) => {
+    setActiveTab(index)
+  }
 
   const sections = useMemo(() => {
     return [

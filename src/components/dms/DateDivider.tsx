@@ -1,39 +1,21 @@
 import {memo} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {subDays} from 'date-fns'
 
 import {atoms as a, useTheme} from '#/alf'
-import {Text} from '../Typography'
+import {Text} from '#/components/Typography'
 import {localDateString} from './util'
 
-const timeFormatter = new Intl.DateTimeFormat(undefined, {
-  hour: 'numeric',
-  minute: 'numeric',
-})
-const weekdayFormatter = new Intl.DateTimeFormat(undefined, {
-  weekday: 'long',
-})
-const longDateFormatter = new Intl.DateTimeFormat(undefined, {
-  weekday: 'short',
-  month: 'long',
-  day: 'numeric',
-})
-const longDateFormatterWithYear = new Intl.DateTimeFormat(undefined, {
-  weekday: 'short',
-  month: 'long',
-  day: 'numeric',
-  year: 'numeric',
-})
-
 let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
-  const {_} = useLingui()
   const t = useTheme()
+  const {t: l, i18n} = useLingui()
 
   let date: string
-  const time = timeFormatter.format(new Date(dateStr))
+  const time = i18n.date(new Date(dateStr), {
+    hour: 'numeric',
+    minute: 'numeric',
+  })
 
   const timestamp = new Date(dateStr)
 
@@ -42,37 +24,41 @@ let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
   const oneWeekAgo = subDays(today, 7)
 
   if (localDateString(today) === localDateString(timestamp)) {
-    date = _(msg`Today`)
+    date = l`Today`
   } else if (localDateString(yesterday) === localDateString(timestamp)) {
-    date = _(msg`Yesterday`)
+    date = l`Yesterday`
   } else {
     if (timestamp < oneWeekAgo) {
       if (timestamp.getFullYear() === today.getFullYear()) {
-        date = longDateFormatter.format(timestamp)
+        date = i18n.date(timestamp, {
+          weekday: 'short',
+          month: 'long',
+          day: 'numeric',
+        })
       } else {
-        date = longDateFormatterWithYear.format(timestamp)
+        date = i18n.date(timestamp, {
+          weekday: 'short',
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+        })
       }
     } else {
-      date = weekdayFormatter.format(timestamp)
+      date = i18n.date(timestamp, {weekday: 'long'})
     }
   }
 
   return (
-    <View style={[a.w_full, a.my_lg]}>
+    <View style={[a.w_full, a.mt_md]}>
       <Text
         style={[
           a.text_xs,
           a.text_center,
-          t.atoms.bg,
           t.atoms.text_contrast_medium,
           a.px_md,
         ]}>
         <Trans>
-          <Text
-            style={[a.text_xs, t.atoms.text_contrast_medium, a.font_semi_bold]}>
-            {date}
-          </Text>{' '}
-          at {time}
+          {date} at {time}
         </Trans>
       </Text>
     </View>

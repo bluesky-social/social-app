@@ -60,7 +60,7 @@ export function PostLoadingPlaceholder({
           },
         ]}
       />
-      <View style={[s.flex1]}>
+      <View style={[a.flex_1]}>
         <LoadingPlaceholder width={100} height={6} style={{marginBottom: 10}} />
         <LoadingPlaceholder width="95%" height={6} style={{marginBottom: 8}} />
         <LoadingPlaceholder width="95%" height={6} style={{marginBottom: 8}} />
@@ -238,7 +238,7 @@ export function FeedLoadingPlaceholder({
           height={36}
           style={[styles.avatar, {borderRadius: 8}]}
         />
-        <View style={[s.flex1]}>
+        <View style={[a.flex_1]}>
           <LoadingPlaceholder width={100} height={8} style={[s.mt5, s.mb10]} />
           <LoadingPlaceholder width={120} height={8} />
         </View>

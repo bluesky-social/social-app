@@ -57,7 +57,7 @@ export const otherRequiredData: OtherRequiredData = {
   birthdate: new Date(2000, 1, 1).toISOString(),
 }
 
-const serverStateEnabled = false
+const serverStateEnabled = false || IS_E2E
 export const serverState: AppBskyAgeassuranceGetState.OutputSchema | undefined =
   serverStateEnabled
     ? {

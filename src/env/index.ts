@@ -10,6 +10,10 @@ const iOSMajorVersion =
   Platform.OS === 'ios' && typeof Platform.Version === 'string'
     ? parseInt(Platform.Version.split('.')[0], 10)
     : 0
+const androidPlatformVersion =
+  Platform.OS === 'android' && typeof Platform.Version === 'number'
+    ? Platform.Version
+    : 0
 
 /**
  * The semver version of the app, specified in our `package.json`.file. On
@@ -50,5 +54,6 @@ export const IS_HIGH_DPI: boolean = true
 // ideally we'd use isLiquidGlassAvailable() from expo-glass-effect but checking iOS version is good enough for now
 export const IS_LIQUID_GLASS: boolean = iOSMajorVersion >= 26
 // So we can avoid attempting on-device translation when we know it's unsupported.
-export const HAS_ON_DEVICE_TRANSLATION: boolean =
-  (IS_IOS && iOSMajorVersion >= 18) || IS_ANDROID
+export const IS_TRANSLATION_SUPPORTED: boolean =
+  (IS_IOS && iOSMajorVersion >= 18) ||
+  (IS_ANDROID && androidPlatformVersion > 22)

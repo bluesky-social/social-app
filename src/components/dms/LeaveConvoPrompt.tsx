@@ -1,5 +1,4 @@
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
@@ -20,7 +19,7 @@ export function LeaveConvoPrompt({
   currentScreen: 'list' | 'conversation'
   hasMessages?: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
 
   const {mutate: leaveConvo} = useLeaveConvo(convoId, {
@@ -32,7 +31,7 @@ export function LeaveConvoPrompt({
       }
     },
     onError: () => {
-      Toast.show(_(msg`Could not leave chat`), {
+      Toast.show(l`Could not leave chat`, {
         type: 'error',
       })
     },
@@ -41,15 +40,13 @@ export function LeaveConvoPrompt({
   return (
     <Prompt.Basic
       control={control}
-      title={_(msg`Leave conversation`)}
+      title={l`Leave conversation`}
       description={
         hasMessages
-          ? _(
-              msg`Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant.`,
-            )
-          : _(msg`Are you sure you want to leave this conversation?`)
+          ? l`Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant.`
+          : l`Are you sure you want to leave this conversation?`
       }
-      confirmButtonCta={_(msg`Leave`)}
+      confirmButtonCta={l`Leave`}
       confirmButtonColor="negative"
       onConfirm={() => leaveConvo()}
     />

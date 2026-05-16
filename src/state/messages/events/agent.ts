@@ -1,5 +1,5 @@
 import {type BskyAgent, type ChatBskyConvoGetLog} from '@atproto/api'
-import EventEmitter from 'eventemitter3'
+import {EventEmitter} from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'

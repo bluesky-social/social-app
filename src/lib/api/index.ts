@@ -5,8 +5,7 @@ import {
   type AppBskyEmbedRecord,
   type AppBskyEmbedRecordWithMedia,
   type AppBskyEmbedVideo,
-  type AppBskyFeedPost,
-  AtUri,
+  AppBskyFeedPost,
   BlobRef,
   type BskyAgent,
   type ComAtprotoLabelDefs,
@@ -39,6 +38,7 @@ import {
   type PostDraft,
   type ThreadDraft,
 } from '#/view/com/composer/state/composer'
+import * as bsky from '#/types/bsky'
 import {createGIFDescription} from '../gif-alt-text'
 import {uploadBlob} from './upload-blob'
 
@@ -51,10 +51,16 @@ interface PostOpts {
   langs?: string[]
 }
 
+type FeatureFlags = {
+  highResolutionImages?: boolean
+  increasedBlobSizeLimit?: boolean
+}
+
 export async function post(
   agent: BskyAgent,
   queryClient: QueryClient,
   opts: PostOpts,
+  featureFlags?: FeatureFlags,
 ) {
   const thread = opts.thread
   opts.onStateChange?.(t`Processing...`)
@@ -91,6 +97,7 @@ export async function post(
       queryClient,
       draft,
       opts.onStateChange,
+      featureFlags,
     )
     let labels: $Typed<ComAtprotoLabelDefs.SelfLabels> | undefined
     if (draft.labels.length) {
@@ -207,21 +214,41 @@ async function resolveRT(agent: BskyAgent, richtext: RichText) {
   return rt
 }
 
+export class ReplyDeletedError extends Error {
+  constructor() {
+    super('Could not resolve reply')
+  }
+}
+
 async function resolveReply(agent: BskyAgent, replyTo: string) {
-  const replyToUrip = new AtUri(replyTo)
-  const parentPost = await agent.getPost({
-    repo: replyToUrip.host,
-    rkey: replyToUrip.rkey,
+  const {data} = await agent.app.bsky.feed.getPosts({
+    uris: [replyTo],
   })
-  if (parentPost) {
-    const parentRef = {
-      uri: parentPost.uri,
-      cid: parentPost.cid,
+  const parentPost = data.posts[0]
+  if (!parentPost) {
+    throw new ReplyDeletedError()
+  }
+
+  const parentRef = {
+    uri: parentPost.uri,
+    cid: parentPost.cid,
+  }
+  let rootRef = parentRef
+
+  if (
+    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      parentPost.record,
+      AppBskyFeedPost.isRecord,
+    )
+  ) {
+    if (parentPost.record.reply) {
+      rootRef = parentPost.record.reply.root
     }
-    return {
-      root: parentPost.value.reply?.root || parentRef,
-      parent: parentRef,
-    }
+  }
+
+  return {
+    root: rootRef,
+    parent: parentRef,
   }
 }
 
@@ -230,6 +257,7 @@ async function resolveEmbed(
   queryClient: QueryClient,
   draft: PostDraft,
   onStateChange: ((state: string) => void) | undefined,
+  featureFlags?: FeatureFlags,
 ): Promise<
   | $Typed<AppBskyEmbedImages.Main>
   | $Typed<AppBskyEmbedVideo.Main>
@@ -240,7 +268,13 @@ async function resolveEmbed(
 > {
   if (draft.embed.quote) {
     const [resolvedMedia, resolvedQuote] = await Promise.all([
-      resolveMedia(agent, queryClient, draft.embed, onStateChange),
+      resolveMedia(
+        agent,
+        queryClient,
+        draft.embed,
+        onStateChange,
+        featureFlags,
+      ),
       resolveRecord(agent, queryClient, draft.embed.quote.uri),
     ])
     if (resolvedMedia) {
@@ -263,6 +297,7 @@ async function resolveEmbed(
     queryClient,
     draft.embed,
     onStateChange,
+    featureFlags,
   )
   if (resolvedMedia) {
     return resolvedMedia
@@ -288,6 +323,7 @@ async function resolveMedia(
   queryClient: QueryClient,
   embedDraft: EmbedDraft,
   onStateChange: ((state: string) => void) | undefined,
+  featureFlags?: FeatureFlags,
 ): Promise<
   | $Typed<AppBskyEmbedExternal.Main>
   | $Typed<AppBskyEmbedImages.Main>
@@ -303,7 +339,10 @@ async function resolveMedia(
     const images: AppBskyEmbedImages.Image[] = await Promise.all(
       imagesDraft.map(async (image, i) => {
         logger.debug(`Compressing image #${i}`)
-        const {path, width, height, mime} = await compressImage(image)
+        const {path, width, height, mime} = await compressImage(image, {
+          highResolution: featureFlags?.highResolutionImages,
+          increasedBlobSizeLimit: featureFlags?.increasedBlobSizeLimit,
+        })
         logger.debug(`Uploading image #${i}`)
         const res = await uploadBlob(agent, path, mime)
         return {

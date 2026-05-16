@@ -15,7 +15,6 @@ import {
 import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
-import {Buffer} from 'buffer'
 
 import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
@@ -322,7 +321,12 @@ export async function saveBytesToDisk(
   bytes: Uint8Array,
   type: string,
 ) {
-  const encoded = Buffer.from(bytes).toString('base64')
+  // ideally we'd use `bytes.toBase64()`, but that's only baseline newly available
+  let binary = ''
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte)
+  }
+  const encoded = btoa(binary)
   return await saveToDevice(filename, encoded, type)
 }
 

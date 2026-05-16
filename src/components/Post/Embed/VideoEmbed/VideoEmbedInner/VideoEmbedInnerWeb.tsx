@@ -1,4 +1,4 @@
-import {useEffect, useId, useRef, useState} from 'react'
+import {useCallback, useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
@@ -37,7 +37,7 @@ export function VideoEmbedInnerWeb({
     throw error
   }
 
-  const {hlsRef, loop} = useHLS({
+  const {hlsRef, loop, updateCuePositions} = useHLS({
     playlist: embed.playlist,
     setHasSubtitleTrack,
     setError,
@@ -90,6 +90,7 @@ export function VideoEmbedInnerWeb({
           hasSubtitleTrack={hasSubtitleTrack}
           isGif={embed.presentation === 'gif'}
           altText={embed.alt}
+          updateCuePositions={updateCuePositions}
         />
       </div>
     </View>
@@ -145,6 +146,47 @@ function useHLS({
   }, [Hls, setHlsLoading])
 
   const hlsRef = useRef<HlsTypes.default | undefined>(undefined)
+  const controlsVisibleRef = useRef(false)
+
+  /**
+   * Repositions VTT subtitle cues using percentage-based line values
+   * (snapToLines=false) so that multi-line/wrapped cues grow upward
+   * instead of extending offscreen. Moves cues higher when controls
+   * are visible to avoid occlusion by the scrub bar.
+   *
+   * Called from two sites:
+   * - SUBTITLE_FRAG_PROCESSED: applies positioning to newly loaded cues
+   * - VideoControls effect: updates positioning when controls show/hide
+   */
+  const updateCuePositions = useCallback(
+    (controlsVisible?: boolean) => {
+      if (controlsVisible != null) {
+        // save controlsVisible state so that when it's called from SUBTITLE_FRAG_PROCESSED,
+        // the most recent value is used (as we won't know the control state there)
+        controlsVisibleRef.current = controlsVisible
+      }
+      // magic numbers: cue position, % from top of video
+      const line = controlsVisibleRef.current ? 70 : 85
+      const video = videoRef.current
+      if (!video) return
+      for (let i = 0; i < video.textTracks.length; i++) {
+        const track = video.textTracks[i]
+        if (track.cues) {
+          for (let j = 0; j < track.cues.length; j++) {
+            const cue = track.cues[j] as VTTCue
+            cue.snapToLines = false
+            cue.line = line
+          }
+        }
+        // toggle track mode to force the browser to re-render active cues
+        if (track.mode === 'showing') {
+          track.mode = 'hidden'
+          track.mode = 'showing'
+        }
+      }
+    },
+    [videoRef],
+  )
   const [lowQualityFragments, setLowQualityFragments] = useState<
     HlsTypes.Fragment[]
   >([])
@@ -218,6 +260,10 @@ function useHLS({
       if (data.subtitleTracks.length > 0) {
         setHasSubtitleTrack(true)
       }
+    })
+
+    hls.on(Hls.Events.SUBTITLE_FRAG_PROCESSED, () => {
+      updateCuePositions()
     })
 
     hls.on(Hls.Events.FRAG_BUFFERED, (_event, {frag}) => {
@@ -307,5 +353,6 @@ function useHLS({
   return {
     hlsRef,
     loop: !hasLowQualityFragmentAtStart,
+    updateCuePositions,
   }
 }

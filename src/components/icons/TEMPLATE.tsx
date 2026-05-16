@@ -51,7 +51,7 @@ export function createSinglePathSVG({
         fill="none"
         {...rest}
         ref={ref}
-        viewBox={viewBox || '0 0 24 24'}
+        viewBox={viewBox ?? '0 0 24 24'}
         width={size}
         height={size}
         style={[style]}>
@@ -71,7 +71,13 @@ export function createSinglePathSVG({
   })
 }
 
-export function createSinglePathSVG2({path}: {path: string}) {
+export function createMultiPathSVG({
+  paths,
+  viewBox,
+}: {
+  paths: string[]
+  viewBox?: string
+}) {
   return forwardRef<Svg, Props>(function LogoImpl(props, ref) {
     const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
 
@@ -80,27 +86,7 @@ export function createSinglePathSVG2({path}: {path: string}) {
         fill="none"
         {...rest}
         ref={ref}
-        viewBox="0 0 24 24"
-        width={size}
-        height={size}
-        style={style}>
-        {gradient}
-        <Path fill={fill} fillRule="evenodd" clipRule="evenodd" d={path} />
-      </Svg>
-    )
-  })
-}
-
-export function createMultiPathSVG({paths}: {paths: string[]}) {
-  return forwardRef<Svg, Props>(function LogoImpl(props, ref) {
-    const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
-
-    return (
-      <Svg
-        fill="none"
-        {...rest}
-        ref={ref}
-        viewBox="0 0 24 24"
+        viewBox={viewBox ?? '0 0 24 24'}
         width={size}
         height={size}
         style={[style]}>
