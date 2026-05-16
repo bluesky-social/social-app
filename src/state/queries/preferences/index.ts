@@ -36,6 +36,10 @@ export const preferencesQueryKey = createQueryKey(
   {persistedVersion: 1},
 )
 
+type SetFeedViewPreferencesMutationContext = {
+  prevPrefs?: UsePreferencesQueryResponse
+}
+
 export function usePreferencesQuery() {
   const agent = useAgent()
   const aa = useAgeAssurance()
@@ -189,17 +193,51 @@ export function useSetFeedViewPreferencesMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
-  return useMutation<void, unknown, Partial<BskyFeedViewPreference>>({
+  return useMutation<
+    void,
+    unknown,
+    Partial<BskyFeedViewPreference>,
+    SetFeedViewPreferencesMutationContext
+  >({
     mutationFn: async prefs => {
       /*
        * special handling here, merged into `feedViewPrefs` above, since
        * following was previously called `home`
        */
       await agent.setFeedViewPrefs('home', prefs)
-      // triggers a refetch
-      await queryClient.invalidateQueries({
+    },
+    onMutate: async newFeedViewPrefs => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({
         queryKey: preferencesQueryKey,
       })
+
+      // Snapshot the previous value
+      const prevPrefs =
+        queryClient.getQueryData<UsePreferencesQueryResponse>(
+          preferencesQueryKey,
+        )
+
+      // Optimistically update the cache
+      queryClient.setQueryData(
+        preferencesQueryKey,
+        (old: UsePreferencesQueryResponse) => ({
+          ...old,
+          feedViewPrefs: {
+            ...old.feedViewPrefs,
+            ...newFeedViewPrefs,
+          },
+        }),
+      )
+
+      // Return a context object with the snapshotted value
+      return {prevPrefs}
+    },
+    // On error, rollback to the previous state
+    onError: (_err, _newPrefs, context) => {
+      if (context?.prevPrefs) {
+        queryClient.setQueryData(preferencesQueryKey, context?.prevPrefs)
+      }
     },
   })
 }
