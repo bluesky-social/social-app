@@ -14,7 +14,10 @@ import {
 import {type QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
-import {labelIsHideableOffense} from '#/lib/moderation'
+import {
+  hasMutedWordInAuthorName,
+  labelIsHideableOffense,
+} from '#/lib/moderation'
 import * as bsky from '#/types/bsky'
 import {precacheProfile} from '../profile'
 import {
@@ -132,14 +135,18 @@ export function shouldFilterNotif(
       notif.record,
       AppBskyFeedPost.isRecord,
     ) &&
-    hasMutedWord({
+    (hasMutedWord({
       mutedWords: moderationOpts.prefs.mutedWords,
       text: notif.record.text,
       facets: notif.record.facets,
       outlineTags: notif.record.tags,
       languages: notif.record.langs,
       actor: notif.author,
-    })
+    }) ||
+      hasMutedWordInAuthorName({
+        mutedWords: moderationOpts.prefs.mutedWords,
+        author: notif.author,
+      }))
   ) {
     return true
   }

@@ -2,6 +2,7 @@ import {useCallback, useMemo, useRef} from 'react'
 import {
   type AppBskyActorDefs,
   type AppBskyFeedDefs,
+  type AppBskyFeedPost,
   type AppBskyFeedSearchPosts,
   AtUri,
   moderatePost,
@@ -13,6 +14,12 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
+import {
+  hasMutedWordInAuthorName,
+  hasMutedWordInEmbeddedPost,
+  hasMutedWordInPostAltText,
+  hasMutedWordInText,
+} from '#/lib/moderation'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent} from '#/state/session'
 import {
@@ -121,11 +128,32 @@ export function useSearchPostsQuery({
           pages: [
             ...reusedPages,
             ...data.pages.slice(reusedPages.length).map(page => {
+              const mutedWords = moderationOpts!.prefs.mutedWords
               return {
                 ...page,
                 posts: page.posts.filter(post => {
                   const mod = moderatePost(post, moderationOpts!)
-                  return !mod.ui('contentList').filter
+                  if (mod.ui('contentList').filter) return false
+                  if (
+                    hasMutedWordInAuthorName({
+                      mutedWords,
+                      author: post.author,
+                    })
+                  )
+                    return false
+                  if (
+                    hasMutedWordInText({
+                      mutedWords,
+                      text: (post.record as AppBskyFeedPost.Record)?.text ?? '',
+                      author: post.author,
+                    })
+                  )
+                    return false
+                  if (hasMutedWordInPostAltText({mutedWords, post}))
+                    return false
+                  if (hasMutedWordInEmbeddedPost({mutedWords, post}))
+                    return false
+                  return true
                 }),
               }
             }),

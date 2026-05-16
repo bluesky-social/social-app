@@ -28,7 +28,9 @@ import * as Toggle from '#/components/forms/Toggle'
 import {useFormatDistance} from '#/components/hooks/dates'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {PageText_Stroke2_Corner0_Rounded as PageText} from '#/components/icons/PageText'
+import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {OpenQuote_Stroke2_Corner0_Rounded as Quote} from '#/components/icons/Quote'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
@@ -66,9 +68,12 @@ function MutedWordsInner() {
 
   const submit = useCallback(async () => {
     const sanitizedValue = sanitizeMutedWordValue(field)
-    const surfaces = ['tag', targets.includes('content') && 'content'].filter(
-      Boolean,
-    ) as AppBskyActorDefs.MutedWord['targets']
+    const surfaceSet = new Set(
+      targets.filter(t => ['content', 'tag', 'profiles', 'embeds'].includes(t)),
+    )
+    // 'Text & tags' (content) always implies tags
+    if (surfaceSet.has('content')) surfaceSet.add('tag')
+    const surfaces = [...surfaceSet] as AppBskyActorDefs.MutedWord['targets']
     const actorTarget = excludeFollowing ? 'exclude-following' : 'all'
 
     const now = Date.now()
@@ -121,9 +126,10 @@ function MutedWordsInner() {
         </Text>
         <Text style={[a.pb_lg, a.leading_snug, t.atoms.text_contrast_medium]}>
           <Trans>
-            Posts can be muted based on their text, their tags, or both. We
-            recommend avoiding common words that appear in many posts, since it
-            can result in no posts being shown.
+            Choose which surfaces to mute this word in. "Profiles" covers
+            display names, bios, and image alt text. We recommend avoiding
+            common words that appear in many posts, since it can result in no
+            posts being shown.
           </Trans>
         </Text>
 
@@ -248,8 +254,8 @@ function MutedWordsInner() {
           </Toggle.Group>
 
           <Toggle.Group
-            label={_(msg`Select what content this mute word should apply to.`)}
-            type="radio"
+            label={_(msg`Select where this mute word should apply.`)}
+            type="checkbox"
             values={targets}
             onChange={setTargets}>
             <Text
@@ -262,38 +268,92 @@ function MutedWordsInner() {
               <Trans>Mute in:</Trans>
             </Text>
 
-            <View style={[a.flex_row, a.align_center, a.gap_sm, a.flex_wrap]}>
-              <Toggle.Item
-                label={_(msg`Mute this word in post text and tags`)}
-                name="content"
-                style={[a.flex_1]}>
-                <TargetToggle>
-                  <View
-                    style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-                    <Toggle.Radio />
-                    <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
-                      <Trans>Text & tags</Trans>
-                    </Toggle.LabelText>
-                  </View>
-                  <PageText size="sm" />
-                </TargetToggle>
-              </Toggle.Item>
+            <View
+              style={[
+                gtMobile && [a.flex_row, a.align_center, a.justify_start],
+                a.gap_sm,
+              ]}>
+              <View
+                style={[
+                  a.flex_1,
+                  a.flex_row,
+                  a.justify_start,
+                  a.align_center,
+                  a.gap_sm,
+                ]}>
+                <Toggle.Item
+                  label={_(msg`Mute this word in post text and tags`)}
+                  name="content"
+                  style={[a.flex_1]}>
+                  <TargetToggle>
+                    <View
+                      style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
+                      <Toggle.Checkbox />
+                      <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
+                        <Trans>Text & Tags</Trans>
+                      </Toggle.LabelText>
+                    </View>
+                    <PageText size="sm" />
+                  </TargetToggle>
+                </Toggle.Item>
 
-              <Toggle.Item
-                label={_(msg`Mute this word in tags only`)}
-                name="tag"
-                style={[a.flex_1]}>
-                <TargetToggle>
-                  <View
-                    style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-                    <Toggle.Radio />
-                    <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
-                      <Trans>Tags only</Trans>
-                    </Toggle.LabelText>
-                  </View>
-                  <Hashtag size="sm" />
-                </TargetToggle>
-              </Toggle.Item>
+                <Toggle.Item
+                  label={_(msg`Mute this word in tags`)}
+                  name="tag"
+                  style={[a.flex_1]}>
+                  <TargetToggle>
+                    <View
+                      style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
+                      <Toggle.Checkbox />
+                      <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
+                        <Trans>Tags</Trans>
+                      </Toggle.LabelText>
+                    </View>
+                    <Hashtag size="sm" />
+                  </TargetToggle>
+                </Toggle.Item>
+              </View>
+
+              <View
+                style={[
+                  a.flex_1,
+                  a.flex_row,
+                  a.justify_start,
+                  a.align_center,
+                  a.gap_sm,
+                ]}>
+                <Toggle.Item
+                  label={_(msg`Mute this word in display names and bios`)}
+                  name="profiles"
+                  style={[a.flex_1]}>
+                  <TargetToggle>
+                    <View
+                      style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
+                      <Toggle.Checkbox />
+                      <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
+                        <Trans>Profiles</Trans>
+                      </Toggle.LabelText>
+                    </View>
+                    <Person size="sm" />
+                  </TargetToggle>
+                </Toggle.Item>
+
+                <Toggle.Item
+                  label={_(msg`Mute this word in quoted posts`)}
+                  name="embeds"
+                  style={[a.flex_1]}>
+                  <TargetToggle>
+                    <View
+                      style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
+                      <Toggle.Checkbox />
+                      <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
+                        <Trans>Quoted posts</Trans>
+                      </Toggle.LabelText>
+                    </View>
+                    <Quote size="sm" />
+                  </TargetToggle>
+                </Toggle.Item>
+              </View>
             </View>
           </Toggle.Group>
 
@@ -480,29 +540,38 @@ function MutedWordRow({
                   wordBreak: 'break-word',
                 }),
               ]}>
-              {word.targets.find(t => t === 'content') ? (
-                <Trans comment="Pattern: {wordValue} in text, tags">
-                  {word.value}{' '}
-                  <Text style={[a.font_normal, t.atoms.text_contrast_medium]}>
-                    in{' '}
-                    <Text
-                      style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>
-                      text & tags
+              {(() => {
+                const surfaces: string[] = []
+                if (word.targets.includes('content')) {
+                  surfaces.push('Text & Tags')
+                } else if (word.targets.includes('tag')) {
+                  surfaces.push('tags')
+                }
+                // 'content' implies profiles for backward compat
+                if (
+                  word.targets.includes('profiles') ||
+                  word.targets.includes('content')
+                )
+                  surfaces.push('profiles')
+                if (word.targets.includes('embeds'))
+                  surfaces.push('quoted posts')
+                const label = surfaces.join(', ').replace(/, ([^,]*)$/, ' & $1')
+                return (
+                  <Trans comment="Pattern: {wordValue} in {surfaces}">
+                    {word.value}{' '}
+                    <Text style={[a.font_normal, t.atoms.text_contrast_medium]}>
+                      in{' '}
+                      <Text
+                        style={[
+                          a.font_semi_bold,
+                          t.atoms.text_contrast_medium,
+                        ]}>
+                        {label}
+                      </Text>
                     </Text>
-                  </Text>
-                </Trans>
-              ) : (
-                <Trans comment="Pattern: {wordValue} in tags">
-                  {word.value}{' '}
-                  <Text style={[a.font_normal, t.atoms.text_contrast_medium]}>
-                    in{' '}
-                    <Text
-                      style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>
-                      tags
-                    </Text>
-                  </Text>
-                </Trans>
-              )}
+                  </Trans>
+                )
+              })()}
             </Text>
           </View>
 
