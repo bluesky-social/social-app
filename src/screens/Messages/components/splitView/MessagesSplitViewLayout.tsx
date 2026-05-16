@@ -60,7 +60,7 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
 
   const halfLeftNavWidth = LEFT_NAV_MINIMAL_WIDTH / 2
 
-  const leftColumnWidth = 360 + (centerColumnOffset ? 0 : halfLeftNavWidth)
+  const leftColumnWidth = 360
 
   const rightColumnWidth =
     CENTER_COLUMN_WIDTH - (centerColumnOffset ? halfLeftNavWidth + 30 : 0)
@@ -76,7 +76,11 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
         {maxWidth: containerWidth},
         {
           transform: [
-            {translateX: halfLeftNavWidth},
+            {
+              translateX: centerColumnOffset
+                ? halfLeftNavWidth
+                : halfLeftNavWidth / 2,
+            },
             {translateX: web(SCROLLBAR_OFFSET) ?? 0},
           ],
         },
