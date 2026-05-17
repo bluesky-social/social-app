@@ -11,6 +11,7 @@ import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {getActiveBrand} from '#/brand/activeBrand'
 // @ts-ignore
 import splashImagePointer from '../../../../assets/splash/illustration-mobile.png'
 // @ts-ignore
@@ -32,6 +33,7 @@ export const SplashScreen = ({
   const isDarkMode = t.name !== 'light'
 
   const playHaptic = useHaptics()
+  const brandName = getActiveBrand().name
 
   const styles = useMemo(() => {
     const logoFill = isDarkMode ? 'white' : t.palette.primary_500
@@ -99,7 +101,7 @@ export const SplashScreen = ({
               }}
               label={_(msg`Create new account`)}
               accessibilityHint={_(
-                msg`Opens flow to create a new Bluesky account`,
+                msg`Opens flow to create a new ${brandName} account`,
               )}
               size="large"
               color={isDarkMode ? 'secondary_inverted' : 'secondary'}>
@@ -117,7 +119,7 @@ export const SplashScreen = ({
             }}
             label={_(msg`Sign in`)}
             accessibilityHint={_(
-              msg`Opens flow to sign in to your existing Bluesky account`,
+              msg`Opens flow to sign in to your existing ${brandName} account`,
             )}
             size="large">
             <ButtonText style={{color: 'white'}}>

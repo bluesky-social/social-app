@@ -25,7 +25,8 @@
       "Bash(touch static/css/.keep static/js/.keep static/media/.keep)",
       "Bash(mkdir -p embedr-static)",
       "Bash(touch embedr-static/.keep)",
-      "Bash(go vet *)"
+      "Bash(go vet *)",
+      "Bash(grep -iE \"Trans>.*Bluesky|msg\\\\`.*Bluesky|l\\\\`.*Bluesky|>Bluesky<|'Bluesky|\\\\\"Bluesky\")"
     ]
   }
 }
