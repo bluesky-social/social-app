@@ -19,7 +19,13 @@
       "Bash(awk 'NR>=1 && NR<=1' /Users/achal/Downloads/MD_icon.svg)",
       "Bash(awk 'NR>=44 && NR<=45' /Users/achal/Downloads/MD_icon.svg)",
       "Bash(grep -c '`' /Users/achal/Downloads/MD_icon.svg)",
-      "Bash(grep -c '\\\\${' /Users/achal/Downloads/MD_icon.svg)"
+      "Bash(grep -c '\\\\${' /Users/achal/Downloads/MD_icon.svg)",
+      "Bash(go build *)",
+      "Bash(mkdir -p static/css static/js static/media)",
+      "Bash(touch static/css/.keep static/js/.keep static/media/.keep)",
+      "Bash(mkdir -p embedr-static)",
+      "Bash(touch embedr-static/.keep)",
+      "Bash(go vet *)"
     ]
   }
 }

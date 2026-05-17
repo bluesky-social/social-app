@@ -1,23 +1,26 @@
 {% extends "base.html" %}
 
-{% block head_title %}Bluesky{% endblock %}
+{% block head_title %}{{ brand.Name }}{% endblock %}
 
 {% block html_head_extra -%}
-  <meta property="og:title" content="Bluesky" />
-  <meta name="twitter:title" content="Bluesky" />
+  <meta property="og:title" content="{{ brand.Name }}" />
+  <meta name="twitter:title" content="{{ brand.Name }}" />
 
-  <meta name="description" content="Social media as it should be. Find your community among millions of users, unleash your creativity, and have some fun again." />
-  <meta name="og:description" content="Social media as it should be. Find your community among millions of users, unleash your creativity, and have some fun again." />
-  <meta name="twitter:description" content="Social media as it should be. Find your community among millions of users, unleash your creativity, and have some fun again." />
+  <meta name="description" content="{{ brand.Description }}" />
+  <meta name="og:description" content="{{ brand.Description }}" />
+  <meta name="twitter:description" content="{{ brand.Description }}" />
 
-  <meta property="og:url" content="https://bsky.app" />
-  <meta name="twitter:url" content="https://bsky.app" />
-  <link rel="canonical" href="https://bsky.app" />
+  {%- if brand.CanonicalHost %}
+  <meta property="og:url" content="https://{{ brand.CanonicalHost }}" />
+  <meta name="twitter:url" content="https://{{ brand.CanonicalHost }}" />
+  <link rel="canonical" href="https://{{ brand.CanonicalHost }}" />
+  {% endif -%}
 
-  <meta property="og:image" content="https://bsky.app/static/social-card-default-gradient.png" />
-  <meta property="twitter:image" content="https://bsky.app/static/social-card-default-gradient.png"  />
-
+  {%- if brand.DefaultOGImage %}
+  <meta property="og:image" content="{{ brand.DefaultOGImage }}" />
+  <meta property="twitter:image" content="{{ brand.DefaultOGImage }}"  />
   <meta name="twitter:card" content="summary_large_image" />
+  {% endif -%}
 {%- endblock %}
 
 {% block noscript_extra %}
