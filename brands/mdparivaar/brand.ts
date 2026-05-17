@@ -5,13 +5,11 @@ import nativeConfig from './brand.js'
 import {MD_ICON_SVG} from './logoIcon.svg'
 
 /**
- * MDParivaar runtime brand. Visual-testing config: services (PDS, appview,
- * feeds, links) point at bluesky's defaults so the app works end-to-end.
- * Only the visual brand (name, palette, logo) is MDParivaar.
- *
- * To turn this into a real community brand, replace `pds`, `defaultFeeds`,
- * `appAccountDid`, `links`, and `blogUrls`, and flip
- * `features.allowForeignPdsSignup` back to false.
+ * MDParivaar runtime brand. Accounts live on the self-hosted PDS at
+ * coseeker.org; reads still go through bluesky's public appview. The
+ * `defaultFeeds`, `appAccountDid`, `links`, and `blogUrls` fields still
+ * reference bluesky-owned resources — swap them for MDParivaar-owned
+ * values as those become available.
  *
  * To activate locally:
  *   EXPO_PUBLIC_BRAND=mdparivaar yarn web
@@ -60,10 +58,9 @@ const MD_ICON_SHAPE = {
 const brand: Brand = {
   ...nativeConfig,
 
-  // Bluesky-default services for visual testing.
   pds: {
-    serviceUrl: 'https://bsky.social',
-    serviceDid: 'did:web:bsky.social',
+    serviceUrl: 'https://coseeker.org',
+    serviceDid: 'did:web:coseeker.org',
     publicService: 'https://public.api.bsky.app',
     appview: 'https://api.bsky.app',
     appviewDid: 'did:web:api.bsky.app',
@@ -111,7 +108,7 @@ const brand: Brand = {
   },
 
   features: {
-    allowForeignPdsSignup: true,
+    allowForeignPdsSignup: false,
     showStarterPacks: true,
     showLiveNow: true,
   },

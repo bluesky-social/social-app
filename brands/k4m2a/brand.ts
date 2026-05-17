@@ -4,14 +4,11 @@ import {type Brand} from '#/brand/types'
 import nativeConfig from './brand.js'
 
 /**
- * k4m2a runtime brand. Currently configured for VISUAL TESTING ONLY:
- * services (PDS, appview, feeds, links) are pointed at the bluesky defaults
- * so the app works end-to-end against bluesky's network. Only the visual
- * brand (name, palette, logo) is k4m2a.
- *
- * To turn k4m2a into a real community brand, replace `pds`, `defaultFeeds`,
- * `appAccountDid`, `links`, and `blogUrls` with k4m2a-owned values, and flip
- * `features.allowForeignPdsSignup` back to false.
+ * k4m2a runtime brand. Accounts live on the self-hosted PDS at
+ * coseeker.org; reads still go through bluesky's public appview. The
+ * `defaultFeeds`, `appAccountDid`, `links`, and `blogUrls` fields still
+ * reference bluesky-owned resources — swap them for k4m2a-owned values
+ * as those become available.
  *
  * To activate locally:
  *   EXPO_PUBLIC_BRAND=k4m2a yarn web
@@ -102,11 +99,9 @@ const WORDMARK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 535.4
 const brand: Brand = {
   ...nativeConfig,
 
-  // Bluesky defaults — visual-testing config. Swap to k4m2a-owned values
-  // once the brand has its own PDS / appview / feeds.
   pds: {
-    serviceUrl: 'https://bsky.social',
-    serviceDid: 'did:web:bsky.social',
+    serviceUrl: 'https://coseeker.org',
+    serviceDid: 'did:web:coseeker.org',
     publicService: 'https://public.api.bsky.app',
     appview: 'https://api.bsky.app',
     appviewDid: 'did:web:api.bsky.app',
@@ -154,8 +149,7 @@ const brand: Brand = {
   },
 
   features: {
-    // Visual testing uses bluesky's PDS, so the picker stays open.
-    allowForeignPdsSignup: true,
+    allowForeignPdsSignup: false,
     showStarterPacks: true,
     showLiveNow: true,
   },
