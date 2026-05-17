@@ -9,8 +9,20 @@ import {InlineLinkText, type LinkProps} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichTextTag} from '#/components/RichTextTag'
 import {Text, type TextProps} from '#/components/Typography'
+import {IS_ANDROID} from '#/env'
 
 const WORD_WRAP = {wordWrap: 1}
+/*
+ * Workaround for an RN Android text-layout bug (see facebook/react-native#53286
+ * and #53344) that drops the last wrapped line when a single word would widow
+ * inside a row-flex container with `lineHeight` set. Appending a non-breaking
+ * space at the end of the text shifts the wrap measurement past the buggy
+ * path. NBSP is used over a regular space because trailing ASCII whitespace
+ * gets trimmed by Android's text engine before measurement.
+ *
+ * Bluesky issue: bluesky-social/social-app#5235
+ */
+const ANDROID_WIDOW_FIX = IS_ANDROID ? '\u00A0' : ''
 // lifted from facet detection in `RichText` impl, _without_ `gm` flags
 const URL_REGEX =
   /(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/i
@@ -101,7 +113,7 @@ export function RichText({
         onTextLayout={onTextLayout}
         // @ts-ignore web only -prf
         dataSet={WORD_WRAP}>
-        {text}
+        {text + ANDROID_WIDOW_FIX}
       </Text>
     )
   }
@@ -175,6 +187,7 @@ export function RichText({
     }
     key++
   }
+  els.push(ANDROID_WIDOW_FIX)
 
   return (
     <Text
