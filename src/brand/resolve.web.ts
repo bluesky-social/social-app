@@ -7,8 +7,10 @@ import {type Brand} from './types'
  * verbatim; anything not listed falls back to the default brand.
  */
 const HOSTNAME_TO_BRAND_ID: Record<string, string> = {
-  // TODO: add the production hostname for k4m2a once known.
-  // 'TODO.example.com': 'k4m2a',
+  'k4m2a.app': 'k4m2a',
+  'www.k4m2a.app': 'k4m2a',
+  'mdparivaar.com': 'mdparivaar',
+  'www.mdparivaar.com': 'mdparivaar',
 }
 
 /**

@@ -56,8 +56,10 @@ var brands = map[string]Brand{
 // production hostnames come online. Anything not listed falls back to
 // the default brand.
 var hostnameToBrandID = map[string]string{
-	"k4m2a.app":      "k4m2a",
-	"mdparivaar.com": "mdparivaar",
+	"k4m2a.app":          "k4m2a",
+	"www.k4m2a.app":      "k4m2a",
+	"mdparivaar.com":     "mdparivaar",
+	"www.mdparivaar.com": "mdparivaar",
 }
 
 const defaultBrandID = "bluesky"
