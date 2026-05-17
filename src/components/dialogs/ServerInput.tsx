@@ -82,7 +82,7 @@ function DialogInner({
   const {_} = useLingui()
   const t = useTheme()
   const {accounts} = useSession()
-  const brandName = getActiveBrand().name
+  const pdsName = getActiveBrand().pds.name
   const {gtMobile} = useBreakpoints()
   const [customAddress, setCustomAddress] = useState(initialCustomAddress)
   const [pdsAddressHistory, setPdsAddressHistory] = useState<string[]>(
@@ -143,8 +143,8 @@ function DialogInner({
           <SegmentedControl.Item
             testID="bskyServiceSelectBtn"
             value={BSKY_SERVICE}
-            label={brandName}>
-            <SegmentedControl.ItemText>{brandName}</SegmentedControl.ItemText>
+            label={pdsName}>
+            <SegmentedControl.ItemText>{pdsName}</SegmentedControl.ItemText>
           </SegmentedControl.Item>
           <SegmentedControl.Item
             testID="customSelectBtn"

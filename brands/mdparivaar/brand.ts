@@ -59,6 +59,7 @@ const brand: Brand = {
   ...nativeConfig,
 
   pds: {
+    name: 'CoSeeker',
     serviceUrl: 'https://coseeker.org',
     serviceDid: 'did:web:coseeker.org',
     publicService: 'https://public.api.bsky.app',

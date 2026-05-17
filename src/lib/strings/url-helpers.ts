@@ -54,7 +54,7 @@ export function toNiceDomain(url: string): string {
   try {
     const urlp = new URL(url)
     if (`https://${urlp.host}` === BSKY_SERVICE) {
-      return getActiveBrand().name
+      return getActiveBrand().pds.name
     }
     return urlp.host ? urlp.host : url
   } catch (e) {

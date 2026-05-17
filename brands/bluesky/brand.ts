@@ -17,6 +17,7 @@ const brand: Brand = {
   ...nativeConfig,
 
   pds: {
+    name: 'Bluesky Social',
     serviceUrl: 'https://bsky.social',
     serviceDid: 'did:web:bsky.social',
     publicService: 'https://public.api.bsky.app',

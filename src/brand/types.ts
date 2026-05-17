@@ -20,6 +20,12 @@ export type SavedFeed = Pick<
  */
 export type Brand = BrandConfig & {
   pds: {
+    /**
+     * Human-readable name of the hosting provider, shown in signin /
+     * signup UI (e.g. "Bluesky Social", "CoSeeker"). Distinct from
+     * `brand.name`: the brand is the app; the PDS is who hosts accounts.
+     */
+    name: string
     serviceUrl: string
     serviceDid: string
     publicService: string
