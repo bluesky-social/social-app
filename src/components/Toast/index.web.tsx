@@ -83,6 +83,13 @@ type PromiseToastOptions<T> = Omit<BaseToastOptions, 'type'> & {
   loading: React.ReactNode
   success: React.ReactNode | ((data: T) => React.ReactNode)
   error?: React.ReactNode | ((err: unknown) => React.ReactNode)
+  /**
+   * Delay (ms) before the loading toast is shown. If the promise settles
+   * before this delay elapses, the loading toast is skipped entirely and the
+   * success/error toast appears directly. Defaults to 0 (loading shown
+   * immediately).
+   */
+  loadingDelay?: number
 }
 
 /**
@@ -92,9 +99,17 @@ type PromiseToastOptions<T> = Omit<BaseToastOptions, 'type'> & {
  */
 export function promise<T>(
   input: Promise<T>,
-  {loading, success, error, ...options}: PromiseToastOptions<T>,
+  {
+    loading,
+    success,
+    error,
+    loadingDelay = 0,
+    ...options
+  }: PromiseToastOptions<T>,
 ): Promise<T> {
   const id = nanoid()
+  let settled = false
+  let loadingShown = false
 
   const render = (
     content: React.ReactNode,
@@ -115,19 +130,27 @@ export function promise<T>(
     )
   }
 
-  render(loading, 'pending')
+  const timer = setTimeout(() => {
+    if (settled) return
+    loadingShown = true
+    render(loading, 'pending')
+  }, loadingDelay)
 
   return input.then(
     data => {
+      settled = true
+      clearTimeout(timer)
       const content = typeof success === 'function' ? success(data) : success
       render(content, 'success')
       return data
     },
     err => {
+      settled = true
+      clearTimeout(timer)
       if (error !== undefined) {
         const content = typeof error === 'function' ? error(err) : error
         render(content, 'error')
-      } else {
+      } else if (loadingShown) {
         sonner.dismiss(id)
       }
       throw err

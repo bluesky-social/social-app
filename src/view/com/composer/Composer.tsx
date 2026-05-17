@@ -1035,6 +1035,7 @@ export const ComposePost = ({
     })()
 
     Toast.promise(appViewReady, {
+      loadingDelay: 500,
       loading: (
         <Toast.Outer>
           <Toast.Icon />
