@@ -41,6 +41,7 @@ const AgeAssuranceStateContext = createContext<{
   flags: {
     adultContentDisabled: boolean
     chatDisabled: boolean
+    isDeclaredUnderAdultAge: boolean
     isOverRegionMinAccessAge: boolean
     isOverAppMinAccessAge: boolean
   }
@@ -55,6 +56,7 @@ const AgeAssuranceStateContext = createContext<{
   flags: {
     adultContentDisabled: false,
     chatDisabled: false,
+    isDeclaredUnderAdultAge: false,
     isOverRegionMinAccessAge: false,
     isOverAppMinAccessAge: false,
   },
@@ -109,6 +111,9 @@ function InnerProvider({children}: {children: React.ReactNode}) {
         const isUnderAdultAge = data?.birthdate
           ? isUnderAge(data.birthdate, 18)
           : true
+        const isDeclaredUnderAdultAge = data?.birthdate
+          ? isUnderAge(data.birthdate, 18)
+          : false
         const isOverRegionMinAccessAge = data?.birthdate
           ? !isUnderAge(data.birthdate, config.minAccessAge)
           : false
@@ -124,6 +129,7 @@ function InnerProvider({children}: {children: React.ReactNode}) {
           flags: {
             adultContentDisabled,
             chatDisabled,
+            isDeclaredUnderAdultAge,
             isOverRegionMinAccessAge,
             isOverAppMinAccessAge,
           },
