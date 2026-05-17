@@ -108,7 +108,8 @@ export function promise<T>(
         ...options,
         unstyled: true, // required on web
         id,
-        duration: type === 'pending' ? Infinity : (options?.duration ?? DURATION),
+        duration:
+          type === 'pending' ? Infinity : (options?.duration ?? DURATION),
         dismissible: type === 'pending' ? false : options?.dismissible,
       },
     )

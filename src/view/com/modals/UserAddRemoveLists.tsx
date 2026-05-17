@@ -24,11 +24,11 @@ import {
   useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships'
 import {useSession} from '#/state/session'
+import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_WEB, IS_WEB_MOBILE} from '#/env'
 import {MyLists} from '../lists/MyLists'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
-import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 
 export const snapPoints = ['fullscreen']
@@ -172,7 +172,7 @@ function ListItem({
         onRemove?.(list.uri)
       }
     } catch (e) {
-      Toast.show(cleanError(e), 'xmark')
+      Toast.show(cleanError(e), {type: 'error'})
     } finally {
       setIsProcessing(false)
     }

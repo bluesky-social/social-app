@@ -18,11 +18,11 @@ import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {useRemoveFeedMutation} from '#/state/queries/preferences'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as Prompt from '#/components/Prompt'
+import * as Toast from '#/components/Toast'
 import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
-import * as Toast from '../util/Toast'
 
 export enum KnownError {
   Block = 'Block',
@@ -152,7 +152,7 @@ function FeedgenErrorMessage({
         _l(
           msgLingui`There was an issue removing this feed. Please check your internet connection and try again.`,
         ),
-        'exclamation-circle',
+        {type: 'warning'},
       )
       logger.error('Failed to remove feed', {message: err})
     }
