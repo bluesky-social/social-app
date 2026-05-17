@@ -78,3 +78,57 @@ export function show(
     )
   }
 }
+
+type PromiseToastOptions<T> = Omit<BaseToastOptions, 'type'> & {
+  loading: React.ReactNode
+  success: React.ReactNode | ((data: T) => React.ReactNode)
+  error?: React.ReactNode | ((err: unknown) => React.ReactNode)
+}
+
+/**
+ * Show a toast tied to a promise. While the promise is pending, the toast
+ * displays the `loading` content with a spinner. When the promise settles, the
+ * same toast is swapped in place with the `success` or `error` content.
+ */
+export function promise<T>(
+  input: Promise<T>,
+  {loading, success, error, ...options}: PromiseToastOptions<T>,
+): Promise<T> {
+  const id = nanoid()
+
+  const render = (
+    content: React.ReactNode,
+    type: 'pending' | 'success' | 'error',
+  ) => {
+    sonner.custom(
+      <ToastConfigProvider id={id} type={type}>
+        {content}
+      </ToastConfigProvider>,
+      {
+        ...options,
+        id,
+        duration: type === 'pending' ? Infinity : (options?.duration ?? DURATION),
+        dismissible: type === 'pending' ? false : options?.dismissible,
+      },
+    )
+  }
+
+  render(loading, 'pending')
+
+  return input.then(
+    data => {
+      const content = typeof success === 'function' ? success(data) : success
+      render(content, 'success')
+      return data
+    },
+    err => {
+      if (error !== undefined) {
+        const content = typeof error === 'function' ? error(err) : error
+        render(content, 'error')
+      } else {
+        sonner.dismiss(id)
+      }
+      throw err
+    },
+  )
+}

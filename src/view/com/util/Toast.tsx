@@ -21,6 +21,7 @@ export const convertLegacyToastType = (
     case 'error':
     case 'warning':
     case 'info':
+    case 'pending':
       return type
     // legacy ones need conversion
     case 'xmark':

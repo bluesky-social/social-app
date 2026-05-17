@@ -873,7 +873,6 @@ export const ComposePost = ({
     setIsPublishing(true)
 
     let postUri: string | undefined
-    let postSuccessData: OnPostSuccessData
     try {
       logger.info(`composer: posting...`)
       postUri = (
@@ -896,15 +895,93 @@ export const ComposePost = ({
           },
         )
       ).uris[0]
+    } catch (e) {
+      const error = e instanceof Error ? e : new Error(String(e))
+      logger.error(error, {
+        message: `Composer: create post failed`,
+        hasImages: filteredThread.posts.some(
+          p => p.embed.media?.type === 'images',
+        ),
+      })
 
-      /*
-       * Wait for app view to have received the post(s). If this fails, it's
-       * ok, because the post _was_ actually published above.
-       */
+      let err = cleanError(error.message)
+      if (
+        e instanceof apilib.ReplyDeletedError ||
+        err.includes('not locate record')
+      ) {
+        err = l`We're sorry! The post you are replying to has been deleted.`
+      } else if (e instanceof EmbeddingDisabledError) {
+        err = l`This post's author has disabled quote posts.`
+      }
+      setError(err)
+      setIsPublishing(false)
+      return
+    }
+
+    // Stage 4 succeeded. Everything from here on runs against a post that
+    // already exists - fire metrics, clean up local state, close the composer,
+    // and let the AppView-ready wait happen in the background under a toast.
+    if (postUri) {
+      let index = 0
+      for (let post of filteredThread.posts) {
+        ax.metric('post:create', {
+          imageCount:
+            post.embed.media?.type === 'images'
+              ? post.embed.media.images.length
+              : 0,
+          isReply: index > 0 || !!replyTo,
+          isPartOfThread: filteredThread.posts.length > 1,
+          hasLink: !!post.embed.link,
+          hasQuote: !!post.embed.quote,
+          langs: fromPostLanguages(currentLanguages),
+          logContext: 'Composer',
+        })
+        index++
+      }
+    }
+    if (filteredThread.posts.length > 1) {
+      ax.metric('thread:create', {
+        postCount: filteredThread.posts.length,
+        isReply: !!replyTo,
+      })
+    }
+    if (postUri && !replyTo) {
+      emitPostCreated()
+    }
+    // Clean up draft and its media after successful publish
+    if (composerState.draftId && composerState.originalLocalRefs) {
+      // Fire draft:post metric
+      if (loadedDraftCreatedAt) {
+        const draftAgeMs = Date.now() - new Date(loadedDraftCreatedAt).getTime()
+        ax.metric('draft:post', {
+          draftAgeMs,
+          wasEdited: composerState.isDirty,
+        })
+      }
+
+      logger.debug('post published, cleaning up draft', {
+        draftId: composerState.draftId,
+        mediaFileCount: composerState.originalLocalRefs.size,
+      })
+      cleanupPublishedDraft({
+        draftId: composerState.draftId,
+        originalLocalRefs: composerState.originalLocalRefs,
+      })
+    }
+    setLangPrefs.savePostLanguageToHistory()
+    onClose()
+
+    /*
+     * Wait for the AppView to have received the post(s) in the background.
+     * If this fails, it's ok - the post _was_ actually published above. We
+     * still want onPost/onPostSuccess to fire once the AppView is ready so
+     * downstream query invalidation reads back the new post.
+     */
+    const appViewReady = (async () => {
+      let postSuccessData: OnPostSuccessData
       try {
         if (postUri) {
           logger.info(`composer: waiting for app view`)
-
           const posts = await retry(
             5,
             _e => true,
@@ -934,102 +1011,43 @@ export const ComposePost = ({
             posts,
           }
         }
-      } catch (waitErr: any) {
+      } catch (waitErr) {
         logger.info(`composer: waiting for app view failed`, {
           safeMessage: waitErr,
         })
       }
-    } catch (e: any) {
-      logger.error(e, {
-        message: `Composer: create post failed`,
-        hasImages: filteredThread.posts.some(
-          p => p.embed.media?.type === 'images',
-        ),
-      })
-
-      let err = cleanError(e.message)
-      if (
-        e instanceof apilib.ReplyDeletedError ||
-        err.includes('not locate record')
-      ) {
-        err = l`We're sorry! The post you are replying to has been deleted.`
-      } else if (e instanceof EmbeddingDisabledError) {
-        err = l`This post's author has disabled quote posts.`
-      }
-      setError(err)
-      setIsPublishing(false)
-      return
-    } finally {
-      if (postUri) {
-        let index = 0
-        for (let post of filteredThread.posts) {
-          ax.metric('post:create', {
-            imageCount:
-              post.embed.media?.type === 'images'
-                ? post.embed.media.images.length
-                : 0,
-            isReply: index > 0 || !!replyTo,
-            isPartOfThread: filteredThread.posts.length > 1,
-            hasLink: !!post.embed.link,
-            hasQuote: !!post.embed.quote,
-            langs: fromPostLanguages(currentLanguages),
-            logContext: 'Composer',
+      if (initQuote) {
+        // Wait for the quote count to update before triggering refetches.
+        try {
+          await whenAppViewReady(agent, initQuote.uri, res => {
+            const anchor = res.data.thread.at(0)
+            return (
+              AppBskyUnspeccedDefs.isThreadItemPost(anchor?.value) &&
+              anchor.value.post.quoteCount !== initQuote.quoteCount
+            )
           })
-          index++
+        } catch (e) {
+          logger.info(`composer: quote count wait failed`, {safeMessage: e})
         }
       }
-      if (filteredThread.posts.length > 1) {
-        ax.metric('thread:create', {
-          postCount: filteredThread.posts.length,
-          isReply: !!replyTo,
-        })
-      }
-    }
-    if (postUri && !replyTo) {
-      emitPostCreated()
-    }
-    // Clean up draft and its media after successful publish
-    if (composerState.draftId && composerState.originalLocalRefs) {
-      // Fire draft:post metric
-      if (loadedDraftCreatedAt) {
-        const draftAgeMs = Date.now() - new Date(loadedDraftCreatedAt).getTime()
-        ax.metric('draft:post', {
-          draftAgeMs,
-          wasEdited: composerState.isDirty,
-        })
-      }
-
-      logger.debug('post published, cleaning up draft', {
-        draftId: composerState.draftId,
-        mediaFileCount: composerState.originalLocalRefs.size,
-      })
-      cleanupPublishedDraft({
-        draftId: composerState.draftId,
-        originalLocalRefs: composerState.originalLocalRefs,
-      })
-    }
-    setLangPrefs.savePostLanguageToHistory()
-    if (initQuote) {
-      // We want to wait for the quote count to update before we call `onPost`, which will refetch data
-      whenAppViewReady(agent, initQuote.uri, res => {
-        const anchor = res.data.thread.at(0)
-        if (
-          AppBskyUnspeccedDefs.isThreadItemPost(anchor?.value) &&
-          anchor.value.post.quoteCount !== initQuote.quoteCount
-        ) {
-          onPost?.(postUri)
-          onPostSuccess?.(postSuccessData)
-          return true
-        }
-        return false
-      })
-    } else {
       onPost?.(postUri)
       onPostSuccess?.(postSuccessData)
-    }
-    onClose()
-    setTimeout(() => {
-      Toast.show(
+    })()
+
+    Toast.promise(appViewReady, {
+      loading: (
+        <Toast.Outer>
+          <Toast.Icon />
+          <Toast.Text>
+            {filteredThread.posts.length > 1
+              ? l`Sending posts…`
+              : replyTo
+                ? l`Sending reply…`
+                : l`Sending post…`}
+          </Toast.Text>
+        </Toast.Outer>
+      ),
+      success: () => (
         <Toast.Outer>
           <Toast.Icon />
           <Toast.Text>
@@ -1051,10 +1069,9 @@ export const ComposePost = ({
               </Trans>
             </Toast.Action>
           )}
-        </Toast.Outer>,
-        {type: 'success'},
-      )
-    }, 500)
+        </Toast.Outer>
+      ),
+    })
   }, [
     l,
     ax,

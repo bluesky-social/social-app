@@ -539,11 +539,6 @@
       "count": 8
     }
   },
-  "src/view/com/composer/Composer.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/view/com/composer/drafts/state/queries.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2

@@ -12,6 +12,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
+import {Loader} from '#/components/Loader'
 import {dismiss} from '#/components/Toast/sonner'
 import {type ToastType} from '#/components/Toast/types'
 import {Text as BaseText} from '#/components/Typography'
@@ -22,6 +23,7 @@ export const ICONS = {
   error: ErrorIcon,
   warning: WarningIcon,
   info: CircleInfo,
+  pending: CircleCheck,
 }
 
 const ToastConfigContext = createContext<{
@@ -79,6 +81,9 @@ export function Outer({children}: {children: React.ReactNode}) {
 export function Icon({icon}: {icon?: React.ComponentType<SVGIconProps>}) {
   const {type} = useContext(ToastConfigContext)
   const styles = useToastStyles({type})
+  if (!icon && type === 'pending') {
+    return <Loader size="md" fill={styles.iconColor} />
+  }
   const IconComponent = icon || ICONS[type]
   return <IconComponent size="md" fill={styles.iconColor} />
 }
@@ -173,6 +178,7 @@ export function Action(
       },
       warning: base,
       info: base,
+      pending: base,
     }[type]
   }, [t, type])
 
@@ -299,6 +305,12 @@ function useToastStyles({type}: {type: ToastType}) {
         textColor: t.atoms.text.color,
       },
       info: {
+        backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
+        borderColor: t.atoms.border_contrast_low.borderColor,
+        iconColor: t.atoms.text.color,
+        textColor: t.atoms.text.color,
+      },
+      pending: {
         backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
         borderColor: t.atoms.border_contrast_low.borderColor,
         iconColor: t.atoms.text.color,
