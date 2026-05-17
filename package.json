@@ -269,6 +269,7 @@
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-plugin-react-compiler": "^19.1.0-rc.3",
     "babel-preset-expo": "~54.0.10",
+    "eas-build-cache-provider": "^18.5.0",
     "eslint": "^9.39.2",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-bsky-internal": "link:./eslint",
