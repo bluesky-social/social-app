@@ -111,9 +111,11 @@ input:focus {
   background: var(--backgroundLight);
   color: var(--text);
   text-align: center;
-  white-space: nowrap;
+  white-space: pre-wrap;
   font-size: 12px;
   z-index: 10;
+  max-width: min(300px, 90vw);
+  box-sizing: border-box;
 }
 [data-tooltip]::before {
   content: '';
