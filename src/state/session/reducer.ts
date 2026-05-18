@@ -10,7 +10,9 @@ import {createTemporaryAgentsAndResume} from './util'
 // A hack so that the reducer can't read anything from the agent.
 // From the reducer's point of view, it should be a completely opaque object.
 type OpaqueBskyAgent = {
-  readonly service: URL
+  // Optional: the OAuth agent extends the plain @atproto/api Agent, which
+  // has no `service: URL` (only the legacy AtpAgent/BskyAgent does).
+  readonly service?: URL | undefined
   readonly api: unknown
   readonly app: unknown
   readonly com: unknown

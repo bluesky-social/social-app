@@ -28,7 +28,7 @@
  * brand text not wrapped in Lingui.
  */
 
-import {type I18n} from '@lingui/core'
+import {type I18n, type Messages as LinguiMessages} from '@lingui/core'
 
 import {EUROSKY} from '#/config/eurosky'
 
@@ -176,18 +176,19 @@ function rebrandValue(v: unknown): unknown {
   return v
 }
 
-type Messages = Record<string, unknown>
+type AnyMessages = Record<string, unknown>
 
 /**
  * Apply the rebrand to a single locale catalog. Only curated IDs are
- * transformed; everything else is passed through by reference.
+ * transformed; everything else is passed through by reference. Public
+ * surface is Lingui's Messages; we widen internally to walk the values.
  */
-export function rebrandMessages(messages: Messages): Messages {
-  const out: Messages = {...messages}
+export function rebrandMessages(messages: LinguiMessages): LinguiMessages {
+  const out: AnyMessages = {...(messages as AnyMessages)}
   for (const id of APP_BRAND_MSGIDS) {
     if (id in out) out[id] = rebrandValue(out[id])
   }
-  return out
+  return out as LinguiMessages
 }
 
 /**
@@ -204,17 +205,17 @@ export function installRebrand(i18n: I18n): void {
   i18n.loadAndActivate = (options: Parameters<I18n['loadAndActivate']>[0]) =>
     origLoadAndActivate({
       ...options,
-      messages: rebrandMessages(options.messages as Messages),
+      messages: rebrandMessages(options.messages),
     })
 
   const origLoad = i18n.load.bind(i18n) as (...args: unknown[]) => void
   i18n.load = ((a: unknown, b?: unknown) => {
     if (typeof a === 'string') {
-      return origLoad(a, rebrandMessages(b as Messages))
+      return origLoad(a, rebrandMessages(b as LinguiMessages))
     }
     // object form: i18n.load({ en: messages, ... })
-    const all = a as Record<string, Messages>
-    const out: Record<string, Messages> = {}
+    const all = a as Record<string, LinguiMessages>
+    const out: Record<string, LinguiMessages> = {}
     for (const locale of Object.keys(all)) {
       out[locale] = rebrandMessages(all[locale])
     }

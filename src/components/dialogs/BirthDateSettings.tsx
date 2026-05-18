@@ -37,6 +37,12 @@ export function BirthDateSettingsDialog({
   const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
   const {currentAccount} = useSession()
   const isUsingAppPassword = isAppPassword(currentAccount?.accessJwt || '')
+  // Eurosky: OAuth sessions are non-privileged for the personalDetailsPref
+  // write (atproto PDS restriction), so the birthdate cannot be set from
+  // here. Show an honest message instead of the doomed editable form / the
+  // misleading "app password" server error. Age-assurance enforcement is
+  // unaffected - this only changes this dialog's UI.
+  const isOauthSession = currentAccount?.isOauthSession === true
   const cleanError = useCleanError()
   const defaultErrorMessage = l`We were unable to load your birthdate preferences. Please try again.`
   const fetchErrorMessage = useMemo(() => {
@@ -78,6 +84,14 @@ export function BirthDateSettingsDialog({
                   <Span style={[a.italic]}>App Password</Span>. To set your
                   birthdate, you'll need to sign in with your main account
                   password, or ask whomever controls this account to do so.
+                </Trans>
+              </Admonition>
+            ) : isOauthSession ? (
+              <Admonition type="info">
+                <Trans>
+                  You're signed in via your hosting provider (OAuth). Setting
+                  your birthdate from within the app isn't supported for OAuth
+                  sign-ins, so it can't be changed here.
                 </Trans>
               </Admonition>
             ) : (

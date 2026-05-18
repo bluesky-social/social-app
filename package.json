@@ -36,7 +36,7 @@
     "web": "expo start --web",
     "use-build-number": "./scripts/useBuildNumberEnv.sh",
     "use-build-number-with-bump": "./scripts/useBuildNumberEnvWithBump.sh",
-    "build-web": "expo export:web && node ./scripts/post-web-build.js",
+    "build-web": "expo export:web && node ./scripts/post-web-build.js && node ./scripts/gen-oauth-metadata.js",
     "build-all": "yarn intl:build && yarn use-build-number-with-bump eas build --platform all",
     "build-ios": "yarn use-build-number-with-bump eas build -p ios",
     "build-android": "yarn use-build-number-with-bump eas build -p android",
@@ -82,6 +82,7 @@
   },
   "dependencies": {
     "@atproto/api": "^0.19.15",
+    "@atproto/oauth-client-browser": "0.3.40",
     "@atproto/syntax": "0.5.2",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
@@ -299,6 +300,7 @@
     "webpack-bundle-analyzer": "^4.10.1"
   },
   "resolutions": {
+    "@atproto/oauth-client-browser": "0.3.40",
     "@react-native/babel-preset": "0.81.5",
     "@react-native/normalize-colors": "0.81.5",
     "**/@expo/image-utils": "0.8.12",

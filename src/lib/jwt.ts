@@ -23,7 +23,14 @@ export function isJwtExpired(token: string) {
 }
 
 export function isAppPassword(token: string) {
-  const payload = jwtDecode(token)
-  // @ts-ignore
-  return payload.scope === 'com.atproto.appPass'
+  try {
+    const payload = jwtDecode(token)
+    // @ts-ignore
+    return payload.scope === 'com.atproto.appPass'
+  } catch {
+    // OAuth / DPoP access tokens are not app-password JWTs and may not be
+    // decodable; treat as not-an-app-password instead of throwing.
+    logger.error(`session: could not decode jwt in isAppPassword`)
+    return false
+  }
 }
