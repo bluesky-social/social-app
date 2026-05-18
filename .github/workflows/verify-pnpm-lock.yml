@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out PR HEAD
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -21,7 +21,7 @@ jobs:
           BASE_REF: ${{ github.base_ref }}
         run: git fetch origin $BASE_REF --depth=1
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       - name: Install node
         uses: actions/setup-node@v6

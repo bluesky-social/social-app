@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Verify Node version pins match .nvmrc
         run: |
           set -euo pipefail
@@ -41,7 +41,7 @@ jobs:
           v=$(grep -oE '"node":[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"' eas.json | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
           check "eas.json" "$v"
           exit $rc
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
       - name: Install node
         uses: actions/setup-node@v6
         with:
@@ -66,8 +66,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+        uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v6
       - name: Install node
         uses: actions/setup-node@v6
         with:
