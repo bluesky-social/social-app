@@ -28,11 +28,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: pnpm/action-setup@v4
+
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
-          cache: yarn
+          cache: pnpm
 
       - name: Ensure tracking relevant branches and checkout base
         env:
@@ -56,12 +58,12 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           git merge --no-edit $HEAD_REF
-          yarn install
-          yarn intl:build
+          pnpm install
+          pnpm intl:build
 
       - name: 🔦 Generate stats file for PR
         run: |
-          yarn generate-webpack-stats-file
+          pnpm generate-webpack-stats-file
           mv stats.json ../stats-new.json
 
       - name: ⬇️ Get base stats from cache
@@ -80,9 +82,9 @@ jobs:
       - name: 🔦 Generate stats file from base commit
         if: ${{ !steps.get-base-stats.outputs.cache-hit }}
         run: |
-          yarn install
-          yarn intl:build
-          yarn generate-webpack-stats-file
+          pnpm install
+          pnpm intl:build
+          pnpm generate-webpack-stats-file
           mv stats.json stats-base.json
 
       - name: ％ Get diff
@@ -116,11 +118,13 @@ jobs:
         run: git fetch origin main:main --depth 100
         if: github.event_name == 'pull_request'
 
+      - uses: pnpm/action-setup@v4
+
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
-          cache: yarn
+          cache: pnpm
 
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint

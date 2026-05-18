@@ -42,20 +42,20 @@ Install the [Crowdin CLI](https://crowdin.github.io/crowdin-cli/). You will need
 
 ### English source-file sync with Crowdin
 
-Every night, a GitHub action will run `yarn intl:extract` to update the english `messages.po` file. This will be automatically synced with Crowdin. Crowdin should notify all subscribed users of new translations.
+Every night, a GitHub action will run `pnpm intl:extract` to update the english `messages.po` file. This will be automatically synced with Crowdin. Crowdin should notify all subscribed users of new translations.
 
 ### Release process
 
 1. Pull main and create a branch.
-1. Run `yarn intl:release` to fetch all translation updates from Crowdin and extract all `.po` files so that they're synced with the latest code. Commit that.
+1. Run `pnpm intl:release` to fetch all translation updates from Crowdin and extract all `.po` files so that they're synced with the latest code. Commit that.
 1. Create a PR, ensure the translations all look correct, and merge.
 1. If needed:
   1. Merge all approved translation PRs (contributions from outside crowdin).
-  1. Run `yarn intl:push` to sync Crowdin with the state of the repo.
+  1. Run `pnpm intl:push` to sync Crowdin with the state of the repo.
 
 ### Testing the translations in Crowdin
 
-You can run `yarn intl:pull` to pull the currently-approved translations from Crowdin.
+You can run `pnpm intl:pull` to pull the currently-approved translations from Crowdin.
 
 ## Developers
 
@@ -118,15 +118,15 @@ function sayHello() {
 }
 ```
 
-We can then run `yarn intl:extract` to update the catalog in `src/locale/locales/{locale}/messages.po`. This will add the new string to the catalog.
-We can then run `yarn intl:compile` to update the translation files in `src/locale/locales/{locale}/messages.js`. This will add the new string to the translation files. 
+We can then run `pnpm intl:extract` to update the catalog in `src/locale/locales/{locale}/messages.po`. This will add the new string to the catalog.
+We can then run `pnpm intl:compile` to update the translation files in `src/locale/locales/{locale}/messages.js`. This will add the new string to the translation files. 
 The configuration for translations is defined in `lingui.config.js`
 
 So the workflow is as follows:
 1. Wrap messages in Trans macro
-2. Run `yarn intl:extract` command to generate message catalogs
+2. Run `pnpm intl:extract` command to generate message catalogs
 3. Translate message catalogs (send them to translators usually)
-4. Run `yarn intl:compile` to create runtime catalogs
+4. Run `pnpm intl:compile` to create runtime catalogs
 5. Load runtime catalog
 6. Enjoy translated app!
 
