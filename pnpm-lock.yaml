@@ -115,18 +115,6 @@ importers:
       '@formatjs/intl-pluralrules':
         specifier: ^5.4.6
         version: 5.4.6
-      '@fortawesome/fontawesome-svg-core':
-        specifier: ^6.1.1
-        version: 6.7.2
-      '@fortawesome/free-regular-svg-icons':
-        specifier: ^6.1.1
-        version: 6.7.2
-      '@fortawesome/free-solid-svg-icons':
-        specifier: ^6.1.1
-        version: 6.7.2
-      '@fortawesome/react-native-fontawesome':
-        specifier: ^0.3.2
-        version: 0.3.2(@fortawesome/fontawesome-svg-core@6.7.2)(react-native-svg@15.12.1(patch_hash=31401fa6ff01498773afb51a7b066821c471eb3e71b0764a10017938beed49e9)(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))
       '@growthbook/growthbook':
         specifier: ^1.6.5
         version: 1.6.5
@@ -1899,29 +1887,6 @@ packages:
 
   '@formatjs/intl-pluralrules@5.4.6':
     resolution: {integrity: sha512-2HlOq+c7KsSps829SJ3B5987coX5mzKx9NbPcNwQ07eq8FBHgB3HfMoxt5HvLsdk4oQwCjAEnocbtd+wVwZ2Kg==}
-
-  '@fortawesome/fontawesome-common-types@6.7.2':
-    resolution: {integrity: sha512-Zs+YeHUC5fkt7Mg1l6XTniei3k4bwG/yo3iFUtZWd/pMx9g3fdvkSK9E0FOC+++phXOka78uJcYb8JaFkW52Xg==}
-    engines: {node: '>=6'}
-
-  '@fortawesome/fontawesome-svg-core@6.7.2':
-    resolution: {integrity: sha512-yxtOBWDrdi5DD5o1pmVdq3WMCvnobT0LU6R8RyyVXPvFRd2o79/0NCuQoCjNTeZz9EzA9xS3JxNWfv54RIHFEA==}
-    engines: {node: '>=6'}
-
-  '@fortawesome/free-regular-svg-icons@6.7.2':
-    resolution: {integrity: sha512-7Z/ur0gvCMW8G93dXIQOkQqHo2M5HLhYrRVC0//fakJXxcF1VmMPsxnG6Ee8qEylA8b8Q3peQXWMNZ62lYF28g==}
-    engines: {node: '>=6'}
-
-  '@fortawesome/free-solid-svg-icons@6.7.2':
-    resolution: {integrity: sha512-GsBrnOzU8uj0LECDfD5zomZJIjrPhIlWU82AHwa2s40FKH+kcxQaBvBo3Z4TxyZHIyX8XTDxsyA33/Vx9eFuQA==}
-    engines: {node: '>=6'}
-
-  '@fortawesome/react-native-fontawesome@0.3.2':
-    resolution: {integrity: sha512-CiWfJWSZHRg12VXlaeFnaa5yJVPOrjsSFEvF6ntz3cnjg4oN3cvauL+JATacMCl0v9xzib32qC1WZAvvGkfB4w==}
-    peerDependencies:
-      '@fortawesome/fontawesome-svg-core': ~1 || ~6
-      react-native: '>= 0.67'
-      react-native-svg: '>= 11.x'
 
   '@gorhom/portal@1.0.14':
     resolution: {integrity: sha512-MXyL4xvCjmgaORr/rtryDNFy3kU4qUbKlwtQqqsygd0xX3mhKjOLn6mQK8wfu0RkoE0pBE0nAasRoHua+/QZ7A==}
@@ -5881,9 +5846,6 @@ packages:
   human-signals@4.3.1:
     resolution: {integrity: sha512-nZXjEF2nbo7lIw3mgYjItAfgQXog3OjJogSbKa2CQIIvSGWcKgeJnQlNXip6NglNzYH45nSRiEVimMvYL8DDqQ==}
     engines: {node: '>=14.18.0'}
-
-  humps@2.0.1:
-    resolution: {integrity: sha512-E0eIbrFWUhwfXJmsbdjRQFQPrl5pTEoKlz163j1mTqqUnU9PgR4AgB8AIITzuB3vLBdxZXyZ9TDIrwB2OASz4g==}
 
   husky@8.0.3:
     resolution: {integrity: sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==}
@@ -10822,28 +10784,6 @@ snapshots:
       decimal.js: 10.6.0
       tslib: 2.8.1
 
-  '@fortawesome/fontawesome-common-types@6.7.2': {}
-
-  '@fortawesome/fontawesome-svg-core@6.7.2':
-    dependencies:
-      '@fortawesome/fontawesome-common-types': 6.7.2
-
-  '@fortawesome/free-regular-svg-icons@6.7.2':
-    dependencies:
-      '@fortawesome/fontawesome-common-types': 6.7.2
-
-  '@fortawesome/free-solid-svg-icons@6.7.2':
-    dependencies:
-      '@fortawesome/fontawesome-common-types': 6.7.2
-
-  '@fortawesome/react-native-fontawesome@0.3.2(@fortawesome/fontawesome-svg-core@6.7.2)(react-native-svg@15.12.1(patch_hash=31401fa6ff01498773afb51a7b066821c471eb3e71b0764a10017938beed49e9)(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))':
-    dependencies:
-      '@fortawesome/fontawesome-svg-core': 6.7.2
-      humps: 2.0.1
-      prop-types: 15.8.1
-      react-native: 0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
-      react-native-svg: 15.12.1(patch_hash=31401fa6ff01498773afb51a7b066821c471eb3e71b0764a10017938beed49e9)(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-
   '@gorhom/portal@1.0.14(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
     dependencies:
       nanoid: 3.3.12
@@ -15446,8 +15386,6 @@ snapshots:
   human-signals@2.1.0: {}
 
   human-signals@4.3.1: {}
-
-  humps@2.0.1: {}
 
   husky@8.0.3: {}
 
