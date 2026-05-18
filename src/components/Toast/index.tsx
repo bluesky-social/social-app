@@ -78,3 +78,81 @@ export function show(
     )
   }
 }
+
+type PromiseToastOptions<T> = Omit<BaseToastOptions, 'type'> & {
+  loading: React.ReactNode
+  success: React.ReactNode | ((data: T) => React.ReactNode)
+  error?: React.ReactNode | ((err: unknown) => React.ReactNode)
+  /**
+   * Delay (ms) before the loading toast is shown. If the promise settles
+   * before this delay elapses, the loading toast is skipped entirely and the
+   * success/error toast appears directly. Defaults to 0 (loading shown
+   * immediately).
+   */
+  loadingDelay?: number
+}
+
+/**
+ * Show a toast tied to a promise. While the promise is pending, the toast
+ * displays the `loading` content with a spinner. When the promise settles, the
+ * same toast is swapped in place with the `success` or `error` content.
+ */
+export function promise<T>(
+  input: Promise<T>,
+  {
+    loading,
+    success,
+    error,
+    loadingDelay = 0,
+    ...options
+  }: PromiseToastOptions<T>,
+): Promise<T> {
+  const id = nanoid()
+  let settled = false
+  let loadingShown = false
+
+  const render = (
+    content: React.ReactNode,
+    type: 'pending' | 'success' | 'error',
+  ) => {
+    sonner.custom(
+      <ToastConfigProvider id={id} type={type}>
+        {content}
+      </ToastConfigProvider>,
+      {
+        ...options,
+        id,
+        duration:
+          type === 'pending' ? Infinity : (options?.duration ?? DURATION),
+        dismissible: type === 'pending' ? false : options?.dismissible,
+      },
+    )
+  }
+
+  const timer = setTimeout(() => {
+    if (settled) return
+    loadingShown = true
+    render(loading, 'pending')
+  }, loadingDelay)
+
+  return input.then(
+    data => {
+      settled = true
+      clearTimeout(timer)
+      const content = typeof success === 'function' ? success(data) : success
+      render(content, 'success')
+      return data
+    },
+    err => {
+      settled = true
+      clearTimeout(timer)
+      if (error !== undefined) {
+        const content = typeof error === 'function' ? error(err) : error
+        render(content, 'error')
+      } else if (loadingShown) {
+        sonner.dismiss(id)
+      }
+      throw err
+    },
+  )
+}

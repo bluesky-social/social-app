@@ -1,6 +1,5 @@
 import {Pressable, View} from 'react-native'
 
-import {show as deprecatedShow} from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
 import * as Toast from '#/components/Toast'
@@ -133,20 +132,6 @@ export function Toasts() {
             })
           }>
           <DefaultToast content="This is an error toast :(" type="error" />
-        </Pressable>
-
-        <Pressable
-          accessibilityRole="button"
-          onPress={() =>
-            deprecatedShow(
-              `This is a test of the deprecated API`,
-              'exclamation-circle',
-            )
-          }>
-          <DefaultToast
-            content="This is a test of the deprecated API"
-            type="warning"
-          />
         </Pressable>
       </View>
     </View>

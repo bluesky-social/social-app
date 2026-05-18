@@ -8,7 +8,13 @@ export type ExternalToast = Exclude<
   undefined
 >
 
-export type ToastType = 'default' | 'success' | 'error' | 'warning' | 'info'
+export type ToastType =
+  | 'default'
+  | 'success'
+  | 'error'
+  | 'warning'
+  | 'info'
+  | 'pending'
 
 /**
  * Not all properties are available on all platforms, so we pick out only those
