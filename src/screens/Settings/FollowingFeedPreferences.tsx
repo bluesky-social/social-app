@@ -45,7 +45,7 @@ export function FollowingFeedPreferencesScreen({}: Props) {
 
   const mergeFeedEnabled = Boolean(
     variables?.lab_mergeFeedEnabled ??
-      preferences?.feedViewPrefs?.lab_mergeFeedEnabled,
+    preferences?.feedViewPrefs?.lab_mergeFeedEnabled,
   )
 
   return (

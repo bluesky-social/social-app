@@ -139,7 +139,7 @@ function ContentHiderActive({
     return [...new Set(selfBlurNames)].join(', ')
   }, [
     _,
-    modui?.blurs,
+    modui.blurs,
     blur,
     desc.name,
     desc.isSubjectAccount,
