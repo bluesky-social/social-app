@@ -97,7 +97,7 @@ jobs:
 
       - name: ⛏️ Setup Expo
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        run: pnpm add -g eas-cli-local-build-plugin
+        run: pnpm -g --allow-build=dtrace-provider add eas-cli-local-build-plugin
 
       - name: 🪛 Setup jq
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
@@ -193,7 +193,7 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ⛏️ Setup EAS local builds
-        run: pnpm add -g eas-cli-local-build-plugin
+        run: pnpm -g --allow-build=dtrace-provider add eas-cli-local-build-plugin
 
       - name: ⚙️ Install dependencies
         run: pnpm install --frozen-lockfile
@@ -344,7 +344,7 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ⛏️ Setup EAS local builds
-        run: pnpm add -g eas-cli-local-build-plugin
+        run: pnpm -g --allow-build=dtrace-provider add eas-cli-local-build-plugin
 
       - uses: actions/setup-java@v4
         with:
