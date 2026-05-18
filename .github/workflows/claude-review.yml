@@ -1,0 +1,24 @@
+name: claude-review
+
+# Thin caller for the org-wide reusable review workflow in
+# bluesky-social/.github. See .github/claude-review-prompt.md for
+# social-app-specific prompt content.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+# Reusable workflows can only use permissions granted by the caller.
+# Default repo setting is read-only; this caller explicitly opts in to
+# the writes the reusable workflow needs (comment on PRs, get OIDC token).
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+jobs:
+  review:
+    uses: bluesky-social/.github/.github/workflows/claude-review.yml@v1
+    secrets: inherit
+    with:
+      prompt-file: .github/claude-review-prompt.md

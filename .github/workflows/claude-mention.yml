@@ -1,0 +1,23 @@
+name: claude-mention
+
+# Thin caller for the org-wide reusable @-mention workflow in
+# bluesky-social/.github. Shares the same prompt as claude-review.yml.
+
+on:
+  issue_comment:
+    types: [created]
+
+# See the corresponding comment in claude-review.yml re: why these
+# explicit permissions are necessary for reusable workflows.
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  id-token: write
+
+jobs:
+  mention:
+    uses: bluesky-social/.github/.github/workflows/claude-mention.yml@v1
+    secrets: inherit
+    with:
+      prompt-file: .github/claude-review-prompt.md
