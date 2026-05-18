@@ -308,11 +308,11 @@ export function useServerStateQuery() {
       const geolocation = device.get(['mergedGeolocation'])
       const isAArequired = Boolean(
         config &&
-          geolocation &&
-          !!getAgeAssuranceRegionConfig(config, {
-            countryCode: geolocation?.countryCode ?? '',
-            regionCode: geolocation?.regionCode,
-          }),
+        geolocation &&
+        !!getAgeAssuranceRegionConfig(config, {
+          countryCode: geolocation?.countryCode ?? '',
+          regionCode: geolocation?.regionCode,
+        }),
       )
 
       // only refetch when needed

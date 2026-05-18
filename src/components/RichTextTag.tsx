@@ -62,7 +62,7 @@ export function RichTextTag({
       optimisticUpsert?.find(
         m => m.value === tag && m.targets.includes('tag'),
       )) &&
-      !optimisticRemove?.find(m => m?.value === tag),
+    !optimisticRemove?.find(m => m?.value === tag),
   )
 
   /*
@@ -74,7 +74,7 @@ export function RichTextTag({
         return word.value === tag
       }) || []
     )
-  }, [tag, preferences?.moderationPrefs?.mutedWords])
+  }, [tag, preferences?.moderationPrefs.mutedWords])
 
   return (
     <Menu.Root>

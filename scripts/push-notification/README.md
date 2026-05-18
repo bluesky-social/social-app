@@ -29,7 +29,7 @@ directly in Xcode.
 
 1. Boot an iOS simulator and install the app:
    ```
-   yarn ios
+   pnpm ios
    ```
 2. Sign in to the account you'll be testing against. The `recipientDid` in
    each payload is substituted at send time and must match the signed-in DID,

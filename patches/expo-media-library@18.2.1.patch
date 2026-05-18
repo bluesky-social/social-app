@@ -1,0 +1,13 @@
+diff --git a/android/src/main/java/expo/modules/medialibrary/MediaLibraryModule.kt b/android/src/main/java/expo/modules/medialibrary/MediaLibraryModule.kt
+index 97c19ff07a49dc80adce7f100eb205b2045dc115..a9a520617eb74caddbbd9cbd15635f113017ab65 100644
+--- a/android/src/main/java/expo/modules/medialibrary/MediaLibraryModule.kt
++++ b/android/src/main/java/expo/modules/medialibrary/MediaLibraryModule.kt
+@@ -109,7 +109,7 @@ class MediaLibraryModule : Module() {
+     }
+ 
+     AsyncFunction("createAssetAsync") Coroutine { localUri: String, albumId: String? ->
+-      requireSystemPermissions()
++      // requireSystemPermissions()
+       return@Coroutine createAssetWithAlbumId(context, localUri, true, albumId)
+     }
+ 
