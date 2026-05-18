@@ -1,7 +1,7 @@
-diff --git a/node_modules/expo-image/build/Image.types.d.ts b/node_modules/expo-image/build/Image.types.d.ts
-index 022ae48..416504f 100644
---- a/node_modules/expo-image/build/Image.types.d.ts
-+++ b/node_modules/expo-image/build/Image.types.d.ts
+diff --git a/build/Image.types.d.ts b/build/Image.types.d.ts
+index 022ae487e65ae9d624f8a4be262b01944928f250..416504fe18ecd00fdc713faca23485fb292caf2c 100644
+--- a/build/Image.types.d.ts
++++ b/build/Image.types.d.ts
 @@ -152,6 +152,16 @@ export interface ImageProps extends Omit<ViewProps, 'style' | 'children'> {
       * @default 'normal'
       */
@@ -19,10 +19,10 @@ index 022ae48..416504f 100644
      /**
       * Determines whether to cache the image and where: on the disk, in the memory or both.
       *
-diff --git a/node_modules/expo-image/src/ExpoImage.web.tsx b/node_modules/expo-image/src/ExpoImage.web.tsx
-index 2a49ff0..1c3de93 100644
---- a/node_modules/expo-image/src/ExpoImage.web.tsx
-+++ b/node_modules/expo-image/src/ExpoImage.web.tsx
+diff --git a/src/ExpoImage.web.tsx b/src/ExpoImage.web.tsx
+index 2a49ff00649b374b86fa780653a4b0d6f13a4a57..1c3de93ef280bf6f3c27bed34c794b8ff59e3db3 100644
+--- a/src/ExpoImage.web.tsx
++++ b/src/ExpoImage.web.tsx
 @@ -70,6 +70,7 @@ export default function ExpoImage({
    onLoadEnd,
    onDisplay,
@@ -47,10 +47,10 @@ index 2a49ff0..1c3de93 100644
            contentPosition={selectedSource ? contentPosition : { top: '50%', left: '50%' }}
            hashPlaceholderContentPosition={contentPosition}
            hashPlaceholderStyle={imageHashStyle}
-diff --git a/node_modules/expo-image/src/Image.types.ts b/node_modules/expo-image/src/Image.types.ts
-index 9dec0e7..61c1621 100644
---- a/node_modules/expo-image/src/Image.types.ts
-+++ b/node_modules/expo-image/src/Image.types.ts
+diff --git a/src/Image.types.ts b/src/Image.types.ts
+index 9dec0e7aee61dfaa73a3cfa535d08259c9dad209..61c162114977dff35b633ac6b1f3d59e373bbbfe 100644
+--- a/src/Image.types.ts
++++ b/src/Image.types.ts
 @@ -178,6 +178,17 @@ export interface ImageProps extends Omit<ViewProps, 'style' | 'children'> {
     */
    priority?: 'low' | 'normal' | 'high' | null;
@@ -69,10 +69,10 @@ index 9dec0e7..61c1621 100644
    /**
     * Determines whether to cache the image and where: on the disk, in the memory or both.
     *
-diff --git a/node_modules/expo-image/src/web/ImageWrapper.tsx b/node_modules/expo-image/src/web/ImageWrapper.tsx
-index e8f891d..89a5cb1 100644
---- a/node_modules/expo-image/src/web/ImageWrapper.tsx
-+++ b/node_modules/expo-image/src/web/ImageWrapper.tsx
+diff --git a/src/web/ImageWrapper.tsx b/src/web/ImageWrapper.tsx
+index e8f891d525892f8d3668e34cf96cefccfbfc49f6..89a5cb1e3a8574fc3bd1d0361895a610e3165dfb 100644
+--- a/src/web/ImageWrapper.tsx
++++ b/src/web/ImageWrapper.tsx
 @@ -30,6 +30,7 @@ const ImageWrapper = React.forwardRef(
        contentPosition,
        hashPlaceholderContentPosition,
@@ -89,10 +89,10 @@ index e8f891d..89a5cb1 100644
            {...getImageWrapperEventHandler(events, sourceWithHeaders)}
            {...getImgPropsFromSource(source)}
            {...props}
-diff --git a/node_modules/expo-image/src/web/ImageWrapper.types.ts b/node_modules/expo-image/src/web/ImageWrapper.types.ts
-index 19bbe2f..179837f 100644
---- a/node_modules/expo-image/src/web/ImageWrapper.types.ts
-+++ b/node_modules/expo-image/src/web/ImageWrapper.types.ts
+diff --git a/src/web/ImageWrapper.types.ts b/src/web/ImageWrapper.types.ts
+index 19bbe2f15999124cda0ca7c81b3ebcf289f522f8..179837f803a3d315c85075895f4191631b37eda7 100644
+--- a/src/web/ImageWrapper.types.ts
++++ b/src/web/ImageWrapper.types.ts
 @@ -29,6 +29,7 @@ export type ImageWrapperProps = {
    contentPosition?: ImageContentPositionObject;
    hashPlaceholderContentPosition?: ImageContentPositionObject;

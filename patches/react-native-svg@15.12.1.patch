@@ -1,7 +1,7 @@
-diff --git a/node_modules/react-native-svg/android/src/main/java/com/horcrux/svg/PathView.java b/node_modules/react-native-svg/android/src/main/java/com/horcrux/svg/PathView.java
-index 06829bd..1b15818 100644
---- a/node_modules/react-native-svg/android/src/main/java/com/horcrux/svg/PathView.java
-+++ b/node_modules/react-native-svg/android/src/main/java/com/horcrux/svg/PathView.java
+diff --git a/android/src/main/java/com/horcrux/svg/PathView.java b/android/src/main/java/com/horcrux/svg/PathView.java
+index 06829bd00dbded262e1871aaf6db3ae0cfa9d1b1..1b158185a6d7e907aa18ddc806902fcc2bd51027 100644
+--- a/android/src/main/java/com/horcrux/svg/PathView.java
++++ b/android/src/main/java/com/horcrux/svg/PathView.java
 @@ -14,17 +14,33 @@ import android.graphics.Paint;
  import android.graphics.Path;
  import com.facebook.react.bridge.ReactContext;

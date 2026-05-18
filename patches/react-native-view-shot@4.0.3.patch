@@ -1,7 +1,7 @@
-diff --git a/node_modules/react-native-view-shot/src/index.js b/node_modules/react-native-view-shot/src/index.js
-index fa76d7e..018b686 100644
---- a/node_modules/react-native-view-shot/src/index.js
-+++ b/node_modules/react-native-view-shot/src/index.js
+diff --git a/src/index.js b/src/index.js
+index fa76d7e1272e7fbe4bbd153104db127f1f6eecad..018b6860b7fa02d498d73b5fd06028bae99abedb 100644
+--- a/src/index.js
++++ b/src/index.js
 @@ -125,13 +125,17 @@ export function captureRef<T: React$ElementType>(
      }
    }

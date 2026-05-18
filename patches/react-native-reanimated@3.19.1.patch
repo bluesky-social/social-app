@@ -1,7 +1,7 @@
-diff --git a/node_modules/react-native-reanimated/lib/module/component/PerformanceMonitor.js b/node_modules/react-native-reanimated/lib/module/component/PerformanceMonitor.js
-index 9c98d6c..70ada9f 100644
---- a/node_modules/react-native-reanimated/lib/module/component/PerformanceMonitor.js
-+++ b/node_modules/react-native-reanimated/lib/module/component/PerformanceMonitor.js
+diff --git a/lib/module/component/PerformanceMonitor.js b/lib/module/component/PerformanceMonitor.js
+index 9c98d6cc395419f50969753a4e4c7962b7be588f..3686a97280ac540efa0814ac4dea40358860a76f 100644
+--- a/lib/module/component/PerformanceMonitor.js
++++ b/lib/module/component/PerformanceMonitor.js
 @@ -1,125 +1,5 @@
  'use strict';
  
@@ -169,10 +169,11 @@ index 9c98d6c..70ada9f 100644
 -  }
 -});
  //# sourceMappingURL=PerformanceMonitor.js.map
-diff --git a/node_modules/react-native-reanimated/src/component/PerformanceMonitor.tsx b/node_modules/react-native-reanimated/src/component/PerformanceMonitor.tsx
-index ff8fc8a..34dde79 100644
---- a/node_modules/react-native-reanimated/src/component/PerformanceMonitor.tsx
-+++ b/node_modules/react-native-reanimated/src/component/PerformanceMonitor.tsx
+\ No newline at end of file
+diff --git a/src/component/PerformanceMonitor.tsx b/src/component/PerformanceMonitor.tsx
+index ff8fc8a947a0aeb959e21ec061882c3d190a2ce0..34dde79727765623df80dbcdab5016de6fd5d82c 100644
+--- a/src/component/PerformanceMonitor.tsx
++++ b/src/component/PerformanceMonitor.tsx
 @@ -1,170 +1,5 @@
  'use strict';
  
