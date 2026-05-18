@@ -8,7 +8,7 @@ import {FocusGuards, FocusScope} from 'radix-ui/internal'
 
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
-import {atoms as a, flatten, useBreakpoints, web} from '#/alf'
+import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
@@ -26,6 +26,7 @@ interface WelcomeModalProps {
 
 export function WelcomeModal({control}: WelcomeModalProps) {
   const {_} = useLingui()
+  const t = useTheme()
   const ax = useAnalytics()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const {gtMobile} = useBreakpoints()
@@ -160,7 +161,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                     color="primary"
                     style={{
                       width: 200,
-                      backgroundColor: '#006AFF',
+                      backgroundColor: t.palette.primary_500,
                     }}>
                     <ButtonText>
                       <Trans>Create account</Trans>
@@ -176,7 +177,10 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                     hoverStyle={[a.bg_transparent]}>
                     {({hovered}) => (
                       <ButtonText
-                        style={[hovered && [a.underline], {color: '#006AFF'}]}>
+                        style={[
+                          hovered && [a.underline],
+                          {color: t.palette.primary_500},
+                        ]}>
                         <Trans>Explore the app</Trans>
                       </ButtonText>
                     )}
@@ -200,7 +204,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                         style={[
                           a.font_medium,
                           {
-                            color: '#006AFF',
+                            color: t.palette.primary_500,
                             fontSize: undefined,
                           },
                           signInLinkHovered && a.underline,

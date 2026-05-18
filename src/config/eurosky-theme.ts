@@ -105,6 +105,14 @@ type PrimaryRamp = Pick<
  *
  * contrast_0 stays pure white (components that need a true white surface),
  * contrast_25 = cotton (page bg), contrast_950 = ink (heading text).
+ *
+ * !! SYNC: ALF derives the page background from this ramp - light bg =
+ * contrast_0, dark bg = this.contrast_1000, dim bg =
+ * euroskyWarmContrastSubdued.contrast_1000. `web/index.html`'s static
+ * <style> hardcodes those same body backgrounds (it can't import TS); if
+ * you change contrast_0 / contrast_1000 here (or the subdued deep end),
+ * update the html.theme--{light,dark,dim} background-color + --background
+ * in web/index.html too, or a scroll/header seam reappears.
  */
 const euroskyWarmContrast: ContrastRamp = {
   contrast_0: '#FFFFFF',
@@ -125,14 +133,40 @@ const euroskyWarmContrast: ContrastRamp = {
 }
 
 /**
- * `null` = keep whatever contrast ramp the upstream base palette ships
- * (cool blue-grey). Lets us A/B "warm vs stock neutral" while leaving the
- * dim/subdued palette's own distinct ramp intact.
+ * Subdued variant of the warm ramp, used for the `dim` theme. ALF builds
+ * `dim` from invertPalette(SUBDUED), so its background is this ramp's
+ * contrast_1000 (and its near-bg layers are 975/950). The deep end is
+ * lifted to a warm soft-black instead of pure #000000 - that lift is the
+ * entire reason `dim` looks softer than `dark` (mirrors how upstream's
+ * DEFAULT_SUBDUED lifts contrast_1000 to #151D28). Light steps stay equal
+ * to the default ramp so only the "dimness" of dark surfaces changes.
+ *
+ * !! SYNC: contrast_1000 here = the dim body background hardcoded in
+ * web/index.html (html.theme--dim). Change one, change the other.
  */
-const NEUTRALS = {
-  euroskyWarm: euroskyWarmContrast,
+const euroskyWarmContrastSubdued: ContrastRamp = {
+  ...euroskyWarmContrast,
+  contrast_900: '#2C2A24',
+  contrast_950: '#232118',
+  contrast_975: '#1B1914',
+  contrast_1000: '#15130E', // dim background - warm soft-black, not pure black
+}
+
+type NeutralPreset = {default: ContrastRamp; subdued: ContrastRamp} | null
+
+/**
+ * `blueskyStock: null` = keep whatever contrast ramps the upstream base
+ * palettes ship (cool blue-grey), which already differ default-vs-subdued
+ * so dark/dim stay distinct. `euroskyWarm` supplies its own pair so the
+ * dark/dim distinction survives the override.
+ */
+const NEUTRALS: Record<string, NeutralPreset> = {
+  euroskyWarm: {
+    default: euroskyWarmContrast,
+    subdued: euroskyWarmContrastSubdued,
+  },
   blueskyStock: null,
-} as const
+}
 
 // ---------------------------------------------------------------------------
 // ACCENT presets (the primary_ ramp)
@@ -190,8 +224,8 @@ const ACCENTS = {
 //  ▼▼▼  SELECTOR - this is the entire "which look" decision.  Edit, reload.
 // ===========================================================================
 
-const NEUTRAL: ContrastRamp | null = NEUTRALS.euroskyWarm // NEUTRALS.blueskyStock
-const ACCENT: PrimaryRamp = ACCENTS.blue // ACCENTS.green
+const NEUTRAL: NeutralPreset = NEUTRALS.euroskyWarm // NEUTRALS.blueskyStock
+const ACCENT: PrimaryRamp = ACCENTS.green // ACCENTS.blue
 
 // ===========================================================================
 //  ▲▲▲  Everything below is mechanical composition - no decisions here.
@@ -233,18 +267,24 @@ const euroskyPositive: Pick<
   positive_975: '#001A0D',
 }
 
-function compose(base: Palette): Palette {
+function compose(base: Palette, neutral: ContrastRamp | null): Palette {
   return {
     ...base,
-    ...(NEUTRAL ?? {}),
+    ...(neutral ?? {}),
     ...ACCENT,
     ...euroskyPositive,
     yellow: EUROSKY_BRAND.accentYellow,
   }
 }
 
-export const EUROSKY_PALETTE: Palette = compose(DEFAULT_PALETTE)
-export const EUROSKY_SUBDUED_PALETTE: Palette = compose(DEFAULT_SUBDUED_PALETTE)
+export const EUROSKY_PALETTE: Palette = compose(
+  DEFAULT_PALETTE,
+  NEUTRAL?.default ?? null,
+)
+export const EUROSKY_SUBDUED_PALETTE: Palette = compose(
+  DEFAULT_SUBDUED_PALETTE,
+  NEUTRAL?.subdued ?? null,
+)
 
 /**
  * Gradient overrides for `src/alf/tokens.ts`. Mostly decorative (avatar

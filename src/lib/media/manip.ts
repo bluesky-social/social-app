@@ -18,6 +18,7 @@ import * as Sharing from 'expo-sharing'
 
 import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
+import {EUROSKY} from '#/config/eurosky'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
@@ -92,7 +93,7 @@ export async function shareImageModal({uri}: {uri: string}) {
   })
 }
 
-const ALBUM_NAME = 'Bluesky'
+const ALBUM_NAME = EUROSKY.brand.name
 
 /**
  * Saves an image to the user's device. Uses the CDN's `download` preset

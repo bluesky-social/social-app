@@ -57,17 +57,26 @@
         -ms-overflow-style: scrollbar;
         font-synthesis-weight: none;
       }
+      /*
+       * Eurosky: these MUST match ALF's t.atoms.bg / text (from
+       * src/config/eurosky-theme.ts). ALF bg = palette.contrast_0,
+       * text = palette.contrast_1000; dark = invert(EUROSKY_PALETTE),
+       * dim = invert(EUROSKY_SUBDUED_PALETTE). Mismatch = a seam where the
+       * body bg peeks past the app (header, overscroll, gutters).
+       *   light bg #FFFFFF | dark bg #000000 | dim bg #15130E
+       * Keep in sync if the ramp anchors change there.
+       */
       :root {
-        --text: black;
-        --background: white;
-        --backgroundLight: #e2e7ee;
+        --text: #1A1A1A;
+        --background: #FFFFFF;
+        --backgroundLight: #F7F6F2;
       }
       @media (prefers-color-scheme: dark) {
         :root {
           color-scheme: dark;
-          --text: white;
-          --background: black;
-          --backgroundLight: #232e3e;
+          --text: #F7F6F2;
+          --background: #000000;
+          --backgroundLight: #1A1A1A;
         }
       }
       html,
@@ -81,28 +90,28 @@
       html.theme--light,
       html.theme--light body,
       html.theme--light #root {
-        background-color: white;
-        --text: black;
-        --background: white;
-        --backgroundLight: #DCE2EA;
+        background-color: #FFFFFF;
+        --text: #1A1A1A;
+        --background: #FFFFFF;
+        --backgroundLight: #F7F6F2;
       }
       html.theme--dark,
       html.theme--dark body,
       html.theme--dark #root {
         color-scheme: dark;
-        background-color: black;
-        --text: white;
-        --background: black;
-        --backgroundLight: #232E3E;
+        background-color: #000000;
+        --text: #F7F6F2;
+        --background: #000000;
+        --backgroundLight: #1A1A1A;
       }
       html.theme--dim,
       html.theme--dim body,
       html.theme--dim #root {
         color-scheme: dark;
-        background-color: #151D28;
-        --text: white;
-        --background: #151D28;
-        --backgroundLight: #2C3A4E;
+        background-color: #15130E;
+        --text: #F7F6F2;
+        --background: #15130E;
+        --backgroundLight: #232118;
       }
       #splash {
         display: flex;

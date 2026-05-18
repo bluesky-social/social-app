@@ -88,7 +88,6 @@ const APP_BRAND_MSGIDS = new Set<string>([
   'N142Sr', // Share this starter pack and help people join your community on Bluesky.
   'J9OB+F', // Learn more about verification on Bluesky
   'C5mG5F', // ...These trusted verifiers are selected by Bluesky.
-  'u7I+xA', // This appeal will be sent to Bluesky's moderation service. (review)
   'c0B9fT', // ...everything else happening on Bluesky.
   'M9NMWw', // Our moderators have reviewed reports and decided to disable your access to chats on Bluesky.
   '60qGwF', // The Bluesky web application
@@ -115,6 +114,8 @@ const APP_BRAND_MSGIDS = new Set<string>([
   'u9cCQU', // Bluesky will not show your profile and posts to logged-out users...
   '+lYa0i', // Note: Bluesky is an open and public network... the Bluesky app and website...
   'lvYkpV', // Learn more about what is public on Bluesky.
+  'jPKBV3', // ...no longer be visible to other Bluesky users (Deactivate dialog)
+  '1bmUMg', // ...no longer be visible to other Bluesky users (Delete dialog)
 ])
 
 /**
@@ -134,8 +135,9 @@ const APP_BRAND_MSGIDS = new Set<string>([
  *   'E1Imji'  Bluesky+                             (product/subscription name)
  *   'oaQ0RU'  Bluesky Classic(TM)                  (trademark / app-icon variant)
  *   '7+c6/U'  ...sign in to other Bluesky clients  (network ecosystem)
- *   'jPKBV3'  ...visible to other Bluesky users    (network-wide visibility)
- *   '1bmUMg'  ...visible to other Bluesky users    (network-wide visibility)
+ *   'u7I+xA'  ...sent to Bluesky's moderation service (the real Bluesky-run
+ *             labeler at moderation.bsky.app; keep until we run our own -
+ *             pairs with the literal in useModerationCauseDescription.ts)
  *   '0CnYjF'  Read the Bluesky Terms of Service    (legal doc name)
  *   'SVSh8N'  Read the Bluesky Privacy Policy      (legal doc name)
  *   'f6UtWw'  ...Bluesky Social Terms of Service   (legal entity + doc)
