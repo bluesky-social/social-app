@@ -218,6 +218,10 @@ module.exports = function (_config) {
         ],
       },
       web: {
+        // Eurosky fork: web-only display name -> drives the static
+        // %WEB_TITLE% pre-boot tab title (@expo/webpack-config uses
+        // web.name ?? name). Native app name stays a later pass.
+        name: 'Eurosky',
         favicon: './assets/favicon.png',
       },
       updates: {

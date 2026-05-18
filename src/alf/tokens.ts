@@ -1,5 +1,8 @@
 import {tokens} from '@bsky.app/alf'
 
+// Eurosky fork: gradients are overridden in src/config/eurosky-theme.ts.
+import {EUROSKY_GRADIENTS} from '#/config/eurosky-theme'
+
 export * from '@bsky.app/alf/dist/tokens'
 
 export const color = {
@@ -72,4 +75,7 @@ export const gradients = {
     ],
     hover_value: '#755B62',
   },
+  // Eurosky fork: override every gradient with the brand ramps. Placed last
+  // so it wins over the upstream defaults above without editing them.
+  ...EUROSKY_GRADIENTS,
 } as const
