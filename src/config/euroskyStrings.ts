@@ -30,6 +30,8 @@
 
 import {type I18n} from '@lingui/core'
 
+import {EUROSKY} from '#/config/eurosky'
+
 /**
  * Curated app-brand message IDs. Each comment is the English source so the
  * list is reviewable without cross-referencing the catalog.
@@ -110,6 +112,9 @@ const APP_BRAND_MSGIDS = new Set<string>([
   't5KS8P', // Learn more about Bluesky (review: splash link to bluesky.com)
   'N9+Gul', // Read the Bluesky blog (review: splash link to bluesky.com)
   'aBX1qv', // This content is not viewable without a Bluesky account.
+  'u9cCQU', // Bluesky will not show your profile and posts to logged-out users...
+  '+lYa0i', // Note: Bluesky is an open and public network... the Bluesky app and website...
+  'lvYkpV', // Learn more about what is public on Bluesky.
 ])
 
 /**
@@ -131,9 +136,6 @@ const APP_BRAND_MSGIDS = new Set<string>([
  *   '7+c6/U'  ...sign in to other Bluesky clients  (network ecosystem)
  *   'jPKBV3'  ...visible to other Bluesky users    (network-wide visibility)
  *   '1bmUMg'  ...visible to other Bluesky users    (network-wide visibility)
- *   'u9cCQU'  Bluesky will not show... logged-out  (PWI / appview behavior)
- *   '+lYa0i'  Bluesky is an open and public network... (network + app, network sense dominates)
- *   'lvYkpV'  Learn more about what is public on Bluesky. (pairs with PWI)
  *   '0CnYjF'  Read the Bluesky Terms of Service    (legal doc name)
  *   'SVSh8N'  Read the Bluesky Privacy Policy      (legal doc name)
  *   'f6UtWw'  ...Bluesky Social Terms of Service   (legal entity + doc)
@@ -146,8 +148,10 @@ const BLUESKY = /\bBluesky\b/g
 
 function rebrandString(s: string): string {
   if (s.indexOf('Bluesky') === -1) return s
-  // "Bluesky Social" first so the brand never becomes "Eurosky Social".
-  return s.replace(BLUESKY_SOCIAL, 'Eurosky').replace(BLUESKY, 'Eurosky')
+  // "Bluesky Social" first so the brand never becomes "<name> Social".
+  return s
+    .replace(BLUESKY_SOCIAL, EUROSKY.brand.name)
+    .replace(BLUESKY, EUROSKY.brand.name)
 }
 
 /**

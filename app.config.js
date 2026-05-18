@@ -222,6 +222,10 @@ module.exports = function (_config) {
         // %WEB_TITLE% pre-boot tab title (@expo/webpack-config uses
         // web.name ?? name). Native app name stays a later pass.
         name: 'Eurosky',
+        // Eurosky favicon: a self-contained PNG (the cotton-tile avatar -
+        // ink star on #f7f6f2) that reads on both light and dark browser
+        // themes. Standard Expo mechanism, same as upstream, so no custom
+        // <link> wiring and minimal merge surface.
         favicon: './assets/favicon.png',
       },
       updates: {
