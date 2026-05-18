@@ -52,7 +52,7 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ⛏️ Setup EAS local builds
-        run: pnpm -g --allow-build=dtrace-provider add eas-cli-local-build-plugin
+        run: pnpm add -g eas-cli-local-build-plugin
 
       - name: ⚙️ Install dependencies
         run: pnpm install --frozen-lockfile
