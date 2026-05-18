@@ -20,15 +20,14 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v4
-      - name: Verify Node version pins match .nvmrc
+      - name: Verify Node version pins match package.json
         run: |
           set -euo pipefail
-          expected=$(tr -d '[:space:]' < .nvmrc)
+          expected=$(node -p "require('./package.json').engines.node.replace(/[^0-9.]/g, '')")
           rc=0
           check() {
             if [ "$2" != "$expected" ]; then
-              echo "::error file=$1::Node version mismatch: $1 pins '$2' but .nvmrc is '$expected'"
+              echo "::error file=$1::Node version mismatch: $1 pins '$2' but package.json is '$expected'"
               rc=1
             fi
           }
@@ -46,6 +45,7 @@ jobs:
           v=$(grep -oE '"node":[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"' eas.json | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
           check "eas.json" "$v"
           exit $rc
+      - uses: pnpm/action-setup@v6
       - name: Install node
         uses: actions/setup-node@v6
         with:
@@ -65,16 +65,16 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
       - name: Install node
         uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
+          node-version-file: package.json
           cache: pnpm
       - name: pnpm install
         uses: Wandalen/wretry.action@master
         with:
-          command: pnpm --frozen-lockfile
+          command: pnpm install --frozen-lockfile
           attempt_limit: 3
           attempt_delay: 2000
       - name: Check & compile i18n
@@ -91,7 +91,7 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
       - name: Install node
         uses: actions/setup-node@v6
         with:
