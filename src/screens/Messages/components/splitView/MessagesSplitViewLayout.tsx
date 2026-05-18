@@ -1,8 +1,11 @@
+import {useCallback} from 'react'
 import {View} from 'react-native'
+import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
 import {type ScreenLayoutArgs, useIsFocused} from '@react-navigation/native'
 import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
 
 import {type FlatNavigatorParams} from '#/lib/routes/types'
+import {ScrollProvider} from '#/lib/ScrollContext'
 import {type NativeStackNavigationOptionsWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
 import {atoms as a, useLayoutBreakpoints, useTheme, web} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
@@ -13,6 +16,7 @@ import {useAgeAssurance} from '#/ageAssurance'
 import {IS_WEB} from '#/env'
 import {ChatList, Header as ChatListHeader} from '../../ChatList'
 import {SplitViewProvider} from './context'
+import {splitViewLeftScroll} from './leftColumnScroll'
 
 const CENTER_COLUMN_WIDTH = 600
 const LEFT_NAV_FULL_WIDTH = 245
@@ -47,6 +51,11 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
   const t = useTheme()
   const aa = useAgeAssurance()
   const isFocused = useIsFocused()
+
+  const onLeftColumnScroll = useCallback((e: ReanimatedScrollEvent) => {
+    'worklet'
+    splitViewLeftScroll.current = e.contentOffset.y
+  }, [])
 
   if (!IS_WEB || !rightNavVisible || aa.state.access !== aa.Access.Full) {
     return children
@@ -106,10 +115,12 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
             {width: containerWidth - centerColumnWidth},
           ]}>
           <ChatListHeader newChatControl={newChatControl} />
-          <ChatList
-            newChatControl={newChatControl}
-            selectedChat={selectedChat}
-          />
+          <ScrollProvider onScroll={onLeftColumnScroll}>
+            <ChatList
+              newChatControl={newChatControl}
+              selectedChat={selectedChat}
+            />
+          </ScrollProvider>
           <NewChat onNewChat={onNewChat} control={newChatControl} />
         </View>
       </SplitViewProvider>
