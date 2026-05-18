@@ -1,7 +1,7 @@
-diff --git a/node_modules/expo-updates/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift b/node_modules/expo-updates/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift
-index 68086bd..78c7761 100644
---- a/node_modules/expo-updates/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift
-+++ b/node_modules/expo-updates/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift
+diff --git a/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift b/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift
+index 68086bd9963675e71fcc4008df693fed9110cd3a..78c776191ac9071ff0057fd9d045ca1e01011dcf 100644
+--- a/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift
++++ b/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift
 @@ -78,13 +78,20 @@ public final class ExpoUpdatesUpdate: Update {
        status = UpdateStatus.StatusPending
      }
