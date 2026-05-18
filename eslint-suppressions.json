@@ -147,6 +147,9 @@
   "src/components/dialogs/PostInteractionSettingsDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "react-hooks/preserve-manual-memoization": {
+      "count": 1
     }
   },
   "src/components/dialogs/lists/CreateOrEditListDialog.tsx": {
@@ -397,6 +400,9 @@
   "src/screens/PostThread/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "react-hooks/preserve-manual-memoization": {
+      "count": 1
     }
   },
   "src/screens/Profile/Header/EditProfileDialog.tsx": {
@@ -542,6 +548,9 @@
   "src/view/com/composer/Composer.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "react-hooks/preserve-manual-memoization": {
+      "count": 3
     }
   },
   "src/view/com/composer/drafts/state/queries.ts": {
@@ -592,6 +601,11 @@
   "src/view/com/pager/Pager.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 4
+    }
+  },
+  "src/view/com/pager/Pager.web.tsx": {
+    "react-hooks/preserve-manual-memoization": {
+      "count": 1
     }
   },
   "src/view/com/pager/PagerWithHeader.tsx": {

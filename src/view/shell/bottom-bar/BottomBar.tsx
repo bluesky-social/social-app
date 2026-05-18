@@ -351,14 +351,13 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   )
 }
 
-interface BtnProps
-  extends Pick<
-    React.ComponentProps<typeof PressableScale>,
-    | 'accessible'
-    | 'accessibilityRole'
-    | 'accessibilityHint'
-    | 'accessibilityLabel'
-  > {
+interface BtnProps extends Pick<
+  React.ComponentProps<typeof PressableScale>,
+  | 'accessible'
+  | 'accessibilityRole'
+  | 'accessibilityHint'
+  | 'accessibilityLabel'
+> {
   testID?: string
   icon: JSX.Element
   notificationCount?: string

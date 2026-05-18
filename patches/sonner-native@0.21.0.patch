@@ -1,7 +1,7 @@
-diff --git a/node_modules/sonner-native/lib/commonjs/toast.js b/node_modules/sonner-native/lib/commonjs/toast.js
-index 121816a..0c3c7bd 100644
---- a/node_modules/sonner-native/lib/commonjs/toast.js
-+++ b/node_modules/sonner-native/lib/commonjs/toast.js
+diff --git a/lib/commonjs/toast.js b/lib/commonjs/toast.js
+index 121816a452339c1088aeba87928ff63a0bdacca5..47e74bce47323201f0bb4e5ed9dc55b373c07b97 100644
+--- a/lib/commonjs/toast.js
++++ b/lib/commonjs/toast.js
 @@ -264,7 +264,7 @@ const Toast = exports.Toast = /*#__PURE__*/React.forwardRef(({
        ...toastSwipeHandlerProps,
        children: /*#__PURE__*/(0, _jsxRuntime.jsx)(_reactNativeReanimated.default.View, {
