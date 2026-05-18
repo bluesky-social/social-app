@@ -16,6 +16,7 @@
  * actual client-metadata objects are built inline in oauth-web-client.ts
  * so their literal types match the library's expected input.
  */
+import publicJwks from '#/config/oauth.public-jwks.json'
 import shared from '#/config/oauth.shared.json'
 
 /**
@@ -31,3 +32,23 @@ export const OAUTH_SCOPE: string = shared.scope
 export const OAUTH_HANDLE_RESOLVER: string = shared.handleResolver
 /** PDS the "Create account" flow sends the user to (prompt: 'create'). */
 export const OAUTH_SIGNUP_PDS_HOST: string = shared.signupPdsHost
+
+/**
+ * Public JWKS for the confidential client. Inlined into the generated
+ * `oauth-client-metadata.json` (by gen-oauth-metadata.js) AND advertised by
+ * the running prod client - same file, so they cannot drift. Public key
+ * only (no `d`); the private key lives solely in the assertion Worker.
+ */
+export const OAUTH_PUBLIC_JWKS: {keys: Record<string, unknown>[]} = publicJwks
+
+/**
+ * Stateless Cloudflare Worker endpoint that signs the `private_key_jwt`
+ * client assertion (confidential client; the private key never reaches the
+ * browser). Prod-only; loopback/dev stays a public client and never calls
+ * this. Override per deployment with EXPO_PUBLIC_OAUTH_ASSERTION_URL
+ * (Expo inlines EXPO_PUBLIC_* at build). Default points at a conventional
+ * subdomain route - set it to wherever the Worker is actually deployed.
+ */
+export const OAUTH_ASSERTION_URL: string =
+  process.env.EXPO_PUBLIC_OAUTH_ASSERTION_URL ||
+  'https://oauth.eurosky.atmo.tools/client-assertion'

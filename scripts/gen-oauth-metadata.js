@@ -18,20 +18,30 @@ const projectRoot = path.join(__dirname, '..')
 const shared = require(
   path.join(projectRoot, 'src', 'config', 'oauth.shared.json'),
 )
+// Inlined public JWKS - same file the running confidential client reads
+// (src/config/oauth.ts -> OAUTH_PUBLIC_JWKS), so the advertised keys cannot
+// drift from what the client authenticates with. Public key only (no `d`).
+const publicJwks = require(
+  path.join(projectRoot, 'src', 'config', 'oauth.public-jwks.json'),
+)
 
 const baseUrl = process.env.EXPO_PUBLIC_OAUTH_BASE_URL || shared.defaultBaseUrl
 
+// Confidential client: private_key_jwt + inline jwks. The private key lives
+// only in the stateless assertion Worker; this advertises the public half.
 const metadata = {
   client_id: `${baseUrl}/oauth-client-metadata.json`,
   client_name: shared.clientName,
   client_uri: baseUrl,
   redirect_uris: [`${baseUrl}/`],
   scope: shared.scope,
-  token_endpoint_auth_method: 'none',
+  token_endpoint_auth_method: 'private_key_jwt',
+  token_endpoint_auth_signing_alg: 'ES256',
   response_types: ['code'],
   grant_types: ['authorization_code', 'refresh_token'],
   application_type: 'web',
   dpop_bound_access_tokens: true,
+  jwks: publicJwks,
 }
 
 const outDir = path.join(projectRoot, 'web-build')

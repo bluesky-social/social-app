@@ -82,6 +82,10 @@
   },
   "dependencies": {
     "@atproto/api": "^0.19.15",
+    "@atproto/jwk": "0.6.0",
+    "@atproto/jwk-jose": "0.1.11",
+    "@atproto/jwk-webcrypto": "0.2.0",
+    "@atproto/oauth-client": "0.5.14",
     "@atproto/oauth-client-browser": "0.3.40",
     "@atproto/syntax": "0.5.2",
     "@bitdrift/react-native": "^0.6.8",
@@ -300,6 +304,10 @@
     "webpack-bundle-analyzer": "^4.10.1"
   },
   "resolutions": {
+    "@atproto/jwk": "0.6.0",
+    "@atproto/jwk-jose": "0.1.11",
+    "@atproto/jwk-webcrypto": "0.2.0",
+    "@atproto/oauth-client": "0.5.14",
     "@atproto/oauth-client-browser": "0.3.40",
     "@react-native/babel-preset": "0.81.5",
     "@react-native/normalize-colors": "0.81.5",
