@@ -1492,7 +1492,7 @@ packages:
     hasBin: true
 
   '@discord/bottom-sheet@https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/28a87d1bb55e10fc355fa1455545a30734995908':
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/28a87d1bb55e10fc355fa1455545a30734995908}
+    resolution: {gitHosted: true, integrity: sha512-zsoB8sFUx8O9aO0fKAkzoWLMyaX7EBd3ooNYjzsh9vr/c9zg/a3jOAbWzWbvM86QCZIszfbW9GXeJZKZRVk/tg==, tarball: https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/28a87d1bb55e10fc355fa1455545a30734995908}
     version: 4.6.1
     peerDependencies:
       '@shopify/flash-list': '*'
@@ -7783,7 +7783,7 @@ packages:
       react-native: '*'
 
   react-native-progress@https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4:
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4}
+    resolution: {gitHosted: true, integrity: sha512-gDJJirvdhK5uUuI2OkiuleTbmeCyjkf1G6kPd4HAMc1pW8pUUeA0wKyPxZaI+s9htw8IDH6mFlmBB1ob8QMB4g==, tarball: https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4}
     version: 5.0.0
     peerDependencies:
       react-native-svg: '*'
