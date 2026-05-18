@@ -525,7 +525,7 @@ export function MessagesList({
             style={web({
               scrollbarWidth: 'thin',
               scrollbarColor: `${t.palette.contrast_100} transparent`,
-              scrollbarGutter: 'stable both-edges',
+              scrollbarGutter: 'stable',
             })}
             contentInset={{top: transparentHeaderHeight}}
             scrollIndicatorInsets={{top: transparentHeaderHeight}}

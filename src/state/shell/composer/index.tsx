@@ -97,9 +97,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     const author = opts.replyTo?.author || opts.quote?.author
     const isBlocked = Boolean(
       author &&
-        (author.viewer?.blocking ||
-          author.viewer?.blockedBy ||
-          author.viewer?.blockingByList),
+      (author.viewer?.blocking ||
+        author.viewer?.blockedBy ||
+        author.viewer?.blockingByList),
     )
     if (isBlocked) {
       Toast.show(_(msg`Cannot interact with a blocked user`), {

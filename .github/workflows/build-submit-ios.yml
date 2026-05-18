@@ -32,11 +32,13 @@ jobs:
         with:
           fetch-depth: 5
 
+      - uses: pnpm/action-setup@v4
+
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
-          cache: yarn
+          cache: pnpm
 
       - name: 🪛 Setup jq
         uses: dcarbone/install-jq-action@v2
@@ -46,13 +48,14 @@ jobs:
         with:
           expo-version: latest
           eas-version: latest
+          packager: pnpm
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ⛏️ Setup EAS local builds
-        run: yarn global add eas-cli-local-build-plugin
+        run: pnpm add -g eas-cli-local-build-plugin
 
       - name: ⚙️ Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
@@ -68,12 +71,12 @@ jobs:
         id: pods-cache
         with:
           path: ./ios/Pods
-          # We'll use the yarn.lock for our hash since we don't yet have a Podfile.lock. Pod versions will not
-          # change unless the yarn version changes as well.
-          key: ${{ runner.os }}-pods-${{ hashFiles('yarn.lock') }}
+          # We'll use the pnpm-lock.yaml for our hash since we don't yet have a Podfile.lock. Pod versions will not
+          # change unless the pnpm version changes as well.
+          key: ${{ runner.os }}-pods-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: 🔤 Compile translations
-        run: yarn intl:build 2>&1 | tee i18n.log
+        run: pnpm intl:build 2>&1 | tee i18n.log
 
       - name: Check for i18n compilation errors
         run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
@@ -100,7 +103,7 @@ jobs:
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
-          yarn use-build-number-with-bump
+          pnpm use-build-number-with-bump
           eas build -p ios
           --profile $PROFILE
           --local --output build.tar.gz --non-interactive
@@ -148,7 +151,7 @@ jobs:
           SENTRY_ORG=blueskyweb
           SENTRY_PROJECT=app
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          yarn sentry-cli debug-files upload "$BUILD_DIR/Bluesky.app.dSYM.zip" --include-sources
+          pnpm sentry-cli debug-files upload "$BUILD_DIR/Bluesky.app.dSYM.zip" --include-sources
 
       - name: 📚 Get version from package.json
         id: get-build-info

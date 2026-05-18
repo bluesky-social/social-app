@@ -319,9 +319,7 @@ let MessageItem = ({
               t.atoms.border_contrast_low,
               t.atoms.shadow_xs,
               hasSelfReacted
-                ? {
-                    backgroundColor: t.palette.primary_100,
-                  }
+                ? {backgroundColor: t.palette.primary_100}
                 : t.atoms.bg_contrast_25,
               {
                 paddingTop: platform({android: 2, default: 3}),
@@ -384,7 +382,7 @@ let MessageItem = ({
   const messageInset = platform<ViewStyle | undefined>({
     ios: isFromSelf ? a.mr_md : isGroupChat ? a.ml_md : a.ml_sm,
     android: isFromSelf ? a.mr_sm : isGroupChat ? a.ml_sm : undefined,
-    web: isFromSelf ? a.mr_sm : isGroupChat ? a.ml_sm : undefined,
+    web: isFromSelf ? a.mr_lg : isGroupChat ? a.ml_lg : undefined,
   })
 
   return (
