@@ -359,6 +359,11 @@
       "count": 1
     }
   },
+  "src/screens/Login/LoginForm.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
   "src/screens/Login/SetNewPasswordForm.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1

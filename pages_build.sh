@@ -28,6 +28,12 @@ else
   yarn install
 fi
 
+# Eurosky: extract + compile i18n catalogs before bundling. Upstream relies
+# on a nightly CI job for this; the fork deploys without it, so without this
+# step any fork-added/changed string ships as its raw message ID (the
+# compiled catalogs would be stale). build-web bundles the compiled output.
+yarn intl:build
+
 # Build the web bundle. Output lands in ./web-build/.
 yarn build-web
 

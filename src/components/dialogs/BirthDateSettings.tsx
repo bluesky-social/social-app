@@ -14,7 +14,7 @@ import {
   usePreferencesQuery,
   type UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
-import {useSession} from '#/state/session'
+import {useSession, useSessionApi} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -43,6 +43,7 @@ export function BirthDateSettingsDialog({
   // misleading "app password" server error. Age-assurance enforcement is
   // unaffected - this only changes this dialog's UI.
   const isOauthSession = currentAccount?.isOauthSession === true
+  const {logoutCurrentAccount} = useSessionApi()
   const cleanError = useCleanError()
   const defaultErrorMessage = l`We were unable to load your birthdate preferences. Please try again.`
   const fetchErrorMessage = useMemo(() => {
@@ -87,13 +88,29 @@ export function BirthDateSettingsDialog({
                 </Trans>
               </Admonition>
             ) : isOauthSession ? (
-              <Admonition type="info">
-                <Trans>
-                  You're signed in via your hosting provider (OAuth). Setting
-                  your birthdate from within the app isn't supported for OAuth
-                  sign-ins, so it can't be changed here.
-                </Trans>
-              </Admonition>
+              <View style={[a.gap_md]}>
+                <Admonition type="info">
+                  <Trans>
+                    You're signed in via your hosting provider (OAuth). Setting
+                    your birthdate isn't supported for OAuth sign-ins. To set
+                    it, log out and sign in again with your account password
+                    (use "Sign in with password" on the sign-in screen), set
+                    your birthdate, then continue.
+                  </Trans>
+                </Admonition>
+                <Button
+                  testID="oauthBirthdateLogoutButton"
+                  label={l`Log out`}
+                  accessibilityHint={l`Logs out so you can sign in with your password`}
+                  variant="solid"
+                  color="primary"
+                  size="large"
+                  onPress={() => logoutCurrentAccount('Settings')}>
+                  <ButtonText>
+                    <Trans>Log out</Trans>
+                  </ButtonText>
+                </Button>
+              </View>
             ) : (
               <BirthdayInner control={control} preferences={preferences} />
             )}

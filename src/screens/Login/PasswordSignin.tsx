@@ -1,4 +1,4 @@
-import {useCallback, useRef, useState} from 'react'
+import {useRef, useState} from 'react'
 import {Keyboard, type TextInput, View} from 'react-native'
 import {
   ComAtprotoServerCreateSession,
@@ -10,15 +10,14 @@ import {Trans} from '@lingui/react/macro'
 
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
-import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {useSessionApi} from '#/state/session'
+import {resolvePdsFromIdentifier} from '#/state/session/resolve-pds'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {atoms as a, ios, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
-import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
@@ -30,14 +29,18 @@ import {FormContainer} from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
-export const LoginForm = ({
+/**
+ * Eurosky fork: password sign-in. Reimplements the upstream password/2FA
+ * login WITHOUT the hosting-provider picker - the PDS is resolved from the
+ * handle (handle -> DID -> #atproto_pds). Fork-owned so upstream
+ * LoginForm.tsx stays pristine (zero merge surface). Prop type is kept
+ * identical to upstream LoginForm so screens/Login/index.tsx passes the
+ * same props regardless of which form it renders.
+ */
+export const PasswordSignin = ({
   error,
-  serviceUrl,
-  serviceDescription,
   initialHandle,
   setError,
-  setServiceUrl,
-  onPressRetryConnect,
   onPressBack,
   onPressForgotPassword,
   onAttemptSuccess,
@@ -56,26 +59,24 @@ export const LoginForm = ({
   onAttemptFailed: () => void
 }) => {
   const t = useTheme()
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [errorField, setErrorField] = useState<
-    'none' | 'identifier' | 'password' | '2fa'
-  >('none')
-  const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] = useState(false)
-  const identifierValueRef = useRef<string>(initialHandle || '')
-  const passwordValueRef = useRef<string>('')
-  const [authFactorToken, setAuthFactorToken] = useState('')
-  const identifierRef = useRef<TextInput>(null)
-  const passwordRef = useRef<TextInput>(null)
-  const hasFocusedOnce = useRef<boolean>(false)
   const {_} = useLingui()
   const {login} = useSessionApi()
   const requestNotificationsPermission = useRequestNotificationsPermission()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
 
-  const onPressSelectService = useCallback(() => {
-    Keyboard.dismiss()
-  }, [])
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [errorField, setErrorField] = useState<
+    'none' | 'identifier' | 'password' | '2fa'
+  >('none')
+  const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] = useState(false)
+  const [authFactorToken, setAuthFactorToken] = useState('')
+
+  const identifierValueRef = useRef<string>(initialHandle || '')
+  const passwordValueRef = useRef<string>('')
+  const identifierRef = useRef<TextInput>(null)
+  const passwordRef = useRef<TextInput>(null)
+  const hasFocusedOnce = useRef(false)
 
   const onPressNext = async () => {
     if (isProcessing) return
@@ -87,11 +88,10 @@ export const LoginForm = ({
     const password = passwordValueRef.current
 
     if (!identifier) {
-      setError(_(msg`Please enter your username`))
+      setError(_(msg`Please enter your handle`))
       setErrorField('identifier')
       return
     }
-
     if (!password) {
       setError(_(msg`Please enter your password`))
       setErrorField('password')
@@ -99,35 +99,14 @@ export const LoginForm = ({
     }
 
     setIsProcessing(true)
-
     try {
-      // try to guess the handle if the user just gave their own username
-      let fullIdent = identifier
-      if (
-        !identifier.includes('@') && // not an email
-        !identifier.includes('.') && // not a domain
-        serviceDescription &&
-        serviceDescription.availableUserDomains.length > 0
-      ) {
-        let matched = false
-        for (const domain of serviceDescription.availableUserDomains) {
-          if (fullIdent.endsWith(domain)) {
-            matched = true
-          }
-        }
-        if (!matched) {
-          fullIdent = createFullHandle(
-            identifier,
-            serviceDescription.availableUserDomains[0],
-          )
-        }
-      }
-
-      // TODO remove double login
+      // No hosting-provider picker: resolve the account's PDS from the
+      // handle so non-Bluesky-hosted accounts (e.g. Eurosky's PDS) work.
+      const service = await resolvePdsFromIdentifier(identifier)
       await login(
         {
-          service: serviceUrl,
-          identifier: fullIdent,
+          service,
+          identifier,
           password,
           authFactorToken: authFactorToken.trim(),
         },
@@ -137,8 +116,8 @@ export const LoginForm = ({
       setShowLoggedOut(false)
       setHasCheckedForStarterPack(true)
       requestNotificationsPermission('Login')
-    } catch (e: any) {
-      const errMsg = e.toString()
+    } catch (e) {
+      const errMsg = e instanceof Error ? e.message : String(e)
       setIsProcessing(false)
       if (
         e instanceof ComAtprotoServerCreateSession.AuthFactorTokenRequiredError
@@ -176,17 +155,9 @@ export const LoginForm = ({
   }
 
   return (
-    <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
-      <View>
-        <TextField.LabelText>
-          <Trans>Hosting provider</Trans>
-        </TextField.LabelText>
-        <HostingProvider
-          serviceUrl={serviceUrl}
-          onSelectServiceUrl={setServiceUrl}
-          onOpenDialog={onPressSelectService}
-        />
-      </View>
+    <FormContainer
+      testID="passwordSigninForm"
+      titleText={<Trans>Sign in</Trans>}>
       <View>
         <TextField.LabelText>
           <Trans>Account</Trans>
@@ -197,7 +168,7 @@ export const LoginForm = ({
             <TextField.Input
               testID="loginUsernameInput"
               inputRef={identifierRef}
-              label={_(msg`Username or email address`)}
+              label={_(msg`Handle`)}
               autoCapitalize="none"
               autoFocus={!IS_IOS}
               autoCorrect={false}
@@ -212,10 +183,10 @@ export const LoginForm = ({
               onSubmitEditing={() => {
                 passwordRef.current?.focus()
               }}
-              blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
+              blurOnSubmit={false}
               editable={!isProcessing}
               accessibilityHint={_(
-                msg`Enter the username or email address you used when you created your account`,
+                msg`Enter your handle, e.g. name.bsky.social`,
               )}
             />
           </TextField.Root>
@@ -237,18 +208,13 @@ export const LoginForm = ({
                 passwordValueRef.current = v
                 if (errorField) setErrorField('none')
               }}
-              onSubmitEditing={onPressNext}
-              blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
+              onSubmitEditing={() => void onPressNext()}
+              blurOnSubmit={false}
               editable={!isProcessing}
               accessibilityHint={_(msg`Enter your password`)}
               onLayout={ios(() => {
                 if (hasFocusedOnce.current) return
                 hasFocusedOnce.current = true
-                // kinda dumb, but if we use `autoFocus` to focus
-                // the username input, it happens before the password
-                // input gets rendered. this breaks the password autofill
-                // on iOS (it only does the username part). delaying
-                // it until both inputs are rendered fixes the autofill -sfn
                 identifierRef.current?.focus()
               })}
             />
@@ -261,7 +227,6 @@ export const LoginForm = ({
               color="secondary"
               style={[
                 a.rounded_sm,
-                // t.atoms.bg_contrast_100,
                 {marginLeft: 'auto', left: 6, padding: 6},
                 a.z_10,
               ]}>
@@ -272,6 +237,7 @@ export const LoginForm = ({
           </TextField.Root>
         </View>
       </View>
+
       {isAuthFactorTokenNeeded && (
         <View>
           <TextField.LabelText>
@@ -287,13 +253,13 @@ export const LoginForm = ({
               autoCorrect={false}
               autoComplete="one-time-code"
               returnKeyType="done"
-              blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
-              value={authFactorToken} // controlled input due to uncontrolled input not receiving pasted values properly
+              blurOnSubmit={false}
+              value={authFactorToken}
               onChangeText={text => {
                 setAuthFactorToken(text)
                 if (errorField) setErrorField('none')
               }}
-              onSubmitEditing={onPressNext}
+              onSubmitEditing={() => void onPressNext()}
               editable={!isProcessing}
               accessibilityHint={_(
                 msg`Input the code which has been emailed to you`,
@@ -310,7 +276,9 @@ export const LoginForm = ({
           </Text>
         </View>
       )}
+
       <FormError error={error} />
+
       <View style={[a.pt_md, web([a.justify_between, a.flex_row])]}>
         {IS_WEB && (
           <Button
@@ -323,41 +291,18 @@ export const LoginForm = ({
             </ButtonText>
           </Button>
         )}
-        {!serviceDescription && error ? (
-          <Button
-            testID="loginRetryButton"
-            label={_(msg`Retry`)}
-            accessibilityHint={_(msg`Retries signing in`)}
-            color="primary_subtle"
-            size="large"
-            onPress={onPressRetryConnect}>
-            <ButtonText>
-              <Trans>Retry</Trans>
-            </ButtonText>
-          </Button>
-        ) : !serviceDescription ? (
-          <Button
-            label={_(msg`Connecting to service...`)}
-            size="large"
-            color="secondary"
-            disabled>
-            <ButtonIcon icon={Loader} />
-            <ButtonText>Connecting...</ButtonText>
-          </Button>
-        ) : (
-          <Button
-            testID="loginNextButton"
-            label={_(msg`Sign in`)}
-            accessibilityHint={_(msg`Navigates to the next screen`)}
-            color="primary"
-            size="large"
-            onPress={onPressNext}>
-            <ButtonText>
-              <Trans>Sign in</Trans>
-            </ButtonText>
-            {isProcessing && <ButtonIcon icon={Loader} />}
-          </Button>
-        )}
+        <Button
+          testID="loginNextButton"
+          label={_(msg`Sign in`)}
+          accessibilityHint={_(msg`Signs in with your password`)}
+          color="primary"
+          size="large"
+          onPress={() => void onPressNext()}>
+          <ButtonText>
+            <Trans>Sign in</Trans>
+          </ButtonText>
+          {isProcessing && <ButtonIcon icon={Loader} />}
+        </Button>
       </View>
     </FormContainer>
   )
