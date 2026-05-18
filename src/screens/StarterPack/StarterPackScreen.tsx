@@ -8,7 +8,6 @@ import {
   type ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
@@ -58,6 +57,7 @@ import {DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
 import * as Layout from '#/components/Layout'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
@@ -482,7 +482,6 @@ function Header({
                 })
                 requestSwitchToAccount({requestedAccount: 'new'})
               }}
-              variant="solid"
               color="primary"
               size="large">
               <ButtonText style={[a.text_lg]}>
@@ -491,11 +490,10 @@ function Header({
             </Button>
           ) : null}
           {joinedAllTimeCount >= 25 ? (
-            <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-              <FontAwesomeIcon
-                icon="arrow-trend-up"
-                size={12}
-                color={t.atoms.text_contrast_medium.color}
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <TrendingIcon
+                width={16}
+                style={{color: t.atoms.text_contrast_medium.color}}
               />
               <Text
                 style={[
