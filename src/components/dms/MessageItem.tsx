@@ -355,10 +355,9 @@ let MessageItem = ({
                 <Text
                   style={[
                     a.text_xs,
+                    a.font_medium,
                     hasSelfReacted
-                      ? {
-                          color: t.palette.primary_900,
-                        }
+                      ? {color: t.palette.primary_900}
                       : t.atoms.text_contrast_high,
                     {textAlignVertical: 'center', includeFontPadding: false},
                   ]}>
