@@ -44,8 +44,8 @@ importers:
   .:
     dependencies:
       '@atproto/api':
-        specifier: ^0.19.15
-        version: 0.19.17
+        specifier: ^0.19.19
+        version: 0.19.19
       '@atproto/syntax':
         specifier: 0.5.2
         version: 0.5.2
@@ -688,8 +688,8 @@ packages:
       graphql:
         optional: true
 
-  '@atproto/api@0.19.17':
-    resolution: {integrity: sha512-xeLBwZGvVQALdgDM2SqExhqr9OenO/P3w+k0Og2Y2eDooTzlXyPdBuvimOVa0Hq7MtytHtSFAWgF6Are2aG90Q==}
+  '@atproto/api@0.19.19':
+    resolution: {integrity: sha512-8pwyN3qM1HnaJzL297OBjfxwLLJvNHkFDr5smoFRLXEDiyPprQfbsH7YrGsJfX8Cez+KcHZAuZTY4Hh6NUBwBQ==}
 
   '@atproto/common-web@0.4.21':
     resolution: {integrity: sha512-Odq+wdk3YNasGCjjlpl3bCIPvqYHige5DLfMkIffNv/2PI/iIj5ZvAvMvJlJ59OhReKSxtpI0invx5UQPc3+fw==}
@@ -1492,7 +1492,7 @@ packages:
     hasBin: true
 
   '@discord/bottom-sheet@https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/28a87d1bb55e10fc355fa1455545a30734995908':
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/28a87d1bb55e10fc355fa1455545a30734995908}
+    resolution: {gitHosted: true, integrity: sha512-zsoB8sFUx8O9aO0fKAkzoWLMyaX7EBd3ooNYjzsh9vr/c9zg/a3jOAbWzWbvM86QCZIszfbW9GXeJZKZRVk/tg==, tarball: https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/28a87d1bb55e10fc355fa1455545a30734995908}
     version: 4.6.1
     peerDependencies:
       '@shopify/flash-list': '*'
@@ -7783,7 +7783,7 @@ packages:
       react-native: '*'
 
   react-native-progress@https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4:
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4}
+    resolution: {gitHosted: true, integrity: sha512-gDJJirvdhK5uUuI2OkiuleTbmeCyjkf1G6kPd4HAMc1pW8pUUeA0wKyPxZaI+s9htw8IDH6mFlmBB1ob8QMB4g==, tarball: https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4}
     version: 5.0.0
     peerDependencies:
       react-native-svg: '*'
@@ -9206,7 +9206,7 @@ snapshots:
 
   '@0no-co/graphql.web@1.2.0': {}
 
-  '@atproto/api@0.19.17':
+  '@atproto/api@0.19.19':
     dependencies:
       '@atproto/common-web': 0.4.21
       '@atproto/lexicon': 0.6.2

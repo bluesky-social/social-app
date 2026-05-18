@@ -40,3 +40,5 @@ patchedDependencies:
   "react-native-view-shot@4.0.3": patches/react-native-view-shot@4.0.3.patch
   "react-native@0.81.5": patches/react-native@0.81.5.patch
   "sonner-native@0.21.0": patches/sonner-native@0.21.0.patch
+minimumReleaseAgeExclude:
+  - '@atproto/api@0.19.19'

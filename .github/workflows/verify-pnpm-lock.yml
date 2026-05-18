@@ -37,7 +37,7 @@ jobs:
         uses: Wandalen/wretry.action@master
         with:
           # Fine to skip scripts since we don't run any code
-          command: pnpm install --ignore-scripts
+          command: pnpm clean && pnpm install --ignore-scripts --no-frozen-lockfile
           attempt_limit: 3
           attempt_delay: 2000
 
