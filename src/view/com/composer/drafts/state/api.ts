@@ -470,7 +470,7 @@ export async function draftToComposerPosts(
               height,
               mime: 'image/jpeg',
             },
-          } as ComposerImage
+          }
         })
 
         const images = (await Promise.all(imagePromises)).filter(
@@ -511,7 +511,7 @@ export async function draftToComposerPosts(
                   tinygif: mediaObject,
                   preview: mediaObject,
                 },
-              } as Gif,
+              },
               alt: gifData.alt,
             }
             break
