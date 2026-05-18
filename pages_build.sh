@@ -11,7 +11,14 @@
 #
 # Deploy locally with:
 #   ./pages_build.sh
-#   npx wrangler pages deploy web-build --project-name=eurosky-web
+#   npx wrangler pages deploy web-build --project-name=eurosky-web --branch=main
+#
+# --branch=main is REQUIRED to publish to the live eurosky-web.pages.dev.
+# wrangler auto-detects the local git branch; anything other than the
+# project's production branch (main) deploys as a Preview at a
+# deployment-specific URL and the production root keeps the old build.
+# Build needs node >=24.15 (see NODE_VERSION above); locally:
+#   bash -lc '. "$HOME/.nvm/nvm.sh"; nvm use 24; ./pages_build.sh'
 set -euo pipefail
 
 # Use frozen lockfile in CI (mirrors GitHub Actions); allow regeneration locally.
