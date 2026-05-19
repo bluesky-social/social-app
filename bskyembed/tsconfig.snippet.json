@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES5",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "target": "ES2015",
+    "lib": ["DOM", "ESNext"],
     "strict": true,
     "outDir": "dist"
   },
