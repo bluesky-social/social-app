@@ -268,6 +268,7 @@ function LightboxGallery({
                 icon={EllipsisIcon}
                 iconStyle={{transform: [{rotate: '90deg'}]}}
                 label={_(msg`Image options`)}
+                onPress={props.onPress}
               />
             </Pressable>
           )}
