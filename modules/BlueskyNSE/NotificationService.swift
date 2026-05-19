@@ -44,7 +44,13 @@ class NotificationService: UNNotificationServiceExtension {
 
     if reason == "chat-message" || reason == "chat-reaction" {
       mutateWithChatMessage(bestAttempt)
-      mutateChatMessageBody(bestAttempt, userInfo: request.content.userInfo)
+      // Only apply the title->body swap for chat-message. For chat-reaction,
+      // `messageKind` refers to the reacted-to message, so we'd clobber the
+      // descriptive reaction body with the title for reactions on system
+      // messages.
+      if reason == "chat-message" {
+        mutateChatMessageBody(bestAttempt, userInfo: request.content.userInfo)
+      }
       mutateWithGroupSubtitle(bestAttempt, userInfo: request.content.userInfo)
       let finalContent = createCommunicationNotification(
         from: bestAttempt,
