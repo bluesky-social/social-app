@@ -27,7 +27,6 @@ export enum ConvoStatus {
   Error = 'error',
   Backgrounded = 'backgrounded',
   Suspended = 'suspended',
-  Disabled = 'disabled',
 }
 
 export enum ConvoItemError {
@@ -58,7 +57,6 @@ export enum ConvoDispatchEvent {
   Background = 'background',
   Suspend = 'suspend',
   Error = 'error',
-  Disable = 'disable',
 }
 
 export type ConvoDispatch =
@@ -68,7 +66,6 @@ export type ConvoDispatch =
   | {event: ConvoDispatchEvent.Background}
   | {event: ConvoDispatchEvent.Suspend}
   | {event: ConvoDispatchEvent.Error; payload: ConvoError}
-  | {event: ConvoDispatchEvent.Disable}
 
 export type ConvoItem =
   | {
@@ -189,19 +186,6 @@ export type ConvoStateError = {
   addReaction: undefined
   removeReaction: undefined
 }
-export type ConvoStateDisabled = {
-  status: ConvoStatus.Disabled
-  items: ConvoItem[]
-  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
-  error: undefined
-  isFetchingHistory: boolean
-  hasAllHistory: boolean
-  deleteMessage: DeleteMessage
-  sendMessage: SendMessage
-  fetchMessageHistory: FetchMessageHistory
-  addReaction: AddReaction
-  removeReaction: RemoveReaction
-}
 export type ConvoState =
   | ConvoStateUninitialized
   | ConvoStateInitializing
@@ -209,7 +193,6 @@ export type ConvoState =
   | ConvoStateBackgrounded
   | ConvoStateSuspended
   | ConvoStateError
-  | ConvoStateDisabled
 
 export type ConvoEvent =
   | {

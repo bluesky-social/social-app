@@ -191,16 +191,6 @@ export class Convo {
           ...emptyMethods,
         }
       }
-      case ConvoStatus.Disabled: {
-        return {
-          status: this.status,
-          items: this.getItems(),
-          relatedProfiles: this.relatedProfiles,
-          error: undefined,
-          ...shared,
-          ...methods,
-        }
-      }
       case ConvoStatus.Suspended: {
         return {
           status: this.status,
