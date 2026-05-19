@@ -425,6 +425,8 @@ function BaseChatItem({
     },
   }
 
+  const isGroupConvo = convo.kind === 'group'
+
   const actions = hasUnread
     ? {
         leftFirst: markReadAction,
@@ -481,12 +483,19 @@ function BaseChatItem({
               <View
                 style={[
                   a.flex_row,
-                  isDeletedAccount ? a.align_center : a.align_start,
+                  isDeletedAccount || isGroupConvo
+                    ? a.align_center
+                    : a.align_start,
                   a.flex_1,
                   a.px_lg,
                   a.py_md,
                   a.gap_md,
                   isWithinSplitView && a.rounded_sm,
+                  {
+                    backgroundColor: hasUnread
+                      ? t.palette.primary_25
+                      : t.palette.contrast_0,
+                  },
                   (hovered || pressed || focused) && t.atoms.bg_contrast_25,
                   selected && t.atoms.bg_contrast_50,
                 ]}>
@@ -495,7 +504,8 @@ function BaseChatItem({
 
                 <View
                   style={[a.flex_1, a.justify_center, web({paddingRight: 40})]}>
-                  <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
+                  <View
+                    style={[a.w_full, a.flex_row, a.align_center, a.pb_2xs]}>
                     <View style={[a.flex_shrink]}>
                       <Text
                         emoji
@@ -530,7 +540,7 @@ function BaseChatItem({
                                 t.atoms.text_contrast_medium,
                                 web({whiteSpace: 'preserve nowrap'}),
                               ]}>
-                              &middot; {timeElapsed}
+                              {timeElapsed}
                             </Text>
                           )}
                         </TimeElapsed>
@@ -545,12 +555,27 @@ function BaseChatItem({
                           web({whiteSpace: 'preserve nowrap'}),
                         ]}>
                         {' '}
-                        &middot;{' '}
                         <BellStroke
                           size="xs"
                           style={[t.atoms.text_contrast_medium]}
                         />
                       </Text>
+                    )}
+                    {hasUnread && (
+                      <View
+                        style={[
+                          a.rounded_full,
+                          {
+                            backgroundColor: isDimStyle
+                              ? t.palette.contrast_200
+                              : t.palette.primary_500,
+                            height: 8,
+                            width: 8,
+                            marginLeft: 6,
+                          },
+                          web({whiteSpace: 'preserve nowrap'}),
+                        ]}
+                      />
                     )}
                   </View>
 
@@ -569,7 +594,12 @@ function BaseChatItem({
                     {LastMessageIcon && (
                       <LastMessageIcon
                         size="xs"
-                        style={[a.mr_2xs, t.atoms.text_contrast_medium]}
+                        style={[
+                          a.mr_2xs,
+                          hasUnread
+                            ? t.atoms.text_contrast_high
+                            : t.atoms.text_contrast_medium,
+                        ]}
                       />
                     )}
                     <Text
@@ -578,9 +608,7 @@ function BaseChatItem({
                       style={[
                         a.text_sm,
                         a.leading_snug,
-                        hasUnread
-                          ? a.font_semi_bold
-                          : t.atoms.text_contrast_high,
+                        hasUnread ? a.font_medium : t.atoms.text_contrast_high,
                         isDimStyle && t.atoms.text_contrast_medium,
                       ]}>
                       {lastMessage}
@@ -589,24 +617,6 @@ function BaseChatItem({
 
                   {children}
                 </View>
-
-                {hasUnread && (
-                  <View
-                    style={[
-                      a.absolute,
-                      a.rounded_full,
-                      {
-                        backgroundColor: isDimStyle
-                          ? t.palette.contrast_200
-                          : t.palette.primary_500,
-                        height: 7,
-                        width: 7,
-                        top: 15,
-                        right: 12,
-                      },
-                    ]}
-                  />
-                )}
               </View>
             )}
           </Link>
