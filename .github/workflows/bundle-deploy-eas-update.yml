@@ -91,8 +91,6 @@ jobs:
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         with:
           expo-version: latest
-          eas-version: latest
-          packager: pnpm
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ⛏️ Setup Expo
@@ -188,12 +186,7 @@ jobs:
         uses: expo/expo-github-action@main
         with:
           expo-version: latest
-          eas-version: latest
-          packager: pnpm
           token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: ⛏️ Setup EAS local builds
-        run: pnpm add -g eas-cli-local-build-plugin
 
       - name: ⚙️ Install dependencies
         run: pnpm install --frozen-lockfile
@@ -339,12 +332,7 @@ jobs:
         uses: expo/expo-github-action@main
         with:
           expo-version: latest
-          eas-version: latest
-          packager: pnpm
           token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: ⛏️ Setup EAS local builds
-        run: pnpm add -g eas-cli-local-build-plugin
 
       - uses: actions/setup-java@v5
         with:
