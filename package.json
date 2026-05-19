@@ -87,7 +87,7 @@
   },
   "dependencies": {
     "@atproto/api": "0.20.0",
-    "@atproto/syntax": "0.6.0",
+    "@atproto/syntax": "0.6.1",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.9",
