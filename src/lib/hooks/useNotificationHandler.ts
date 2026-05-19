@@ -243,8 +243,11 @@ export function useNotificationsHandler() {
           }
         } else if (
           payload.reason === 'chat-message' ||
-          payload.reason === 'chat-reaction'
+          payload.reason === 'chat-reaction' ||
+          payload.reason === 'chat-added-to-group'
         ) {
+          // chat-added-to-group routes to the convo because the recipient was
+          // just added and now has access.
           navigation.dispatch(state => {
             if (state.routes[0].name === 'Messages') {
               if (
@@ -278,9 +281,8 @@ export function useNotificationsHandler() {
             }
           })
         } else {
-          // chat-added-to-group, chat-removed-from-group,
-          // chat-join-request-rejected: open the Messages list without
-          // targeting a specific conversation
+          // chat-removed-from-group, chat-join-request-rejected: the convo is
+          // no longer accessible to the recipient, so just open the list.
           navigation.dispatch(
             CommonActions.navigate('MessagesTab', {screen: 'Messages'}),
           )
@@ -314,7 +316,13 @@ export function useNotificationsHandler() {
           isChatNotificationPayload(payload) &&
           payload.recipientDid === currentAccount?.did
         ) {
-          const shouldAlert = payload.convoId !== currentConvoId
+          // chat-removed-from-group / chat-join-request-rejected always alert,
+          // even if the recipient is currently viewing the affected convo -
+          // they need to know they were removed/rejected.
+          const shouldAlert =
+            payload.reason === 'chat-removed-from-group' ||
+            payload.reason === 'chat-join-request-rejected' ||
+            payload.convoId !== currentConvoId
           return {
             shouldShowList: shouldAlert,
             shouldShowBanner: shouldAlert,

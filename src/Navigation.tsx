@@ -949,8 +949,11 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
         }
       } else if (
         payload.reason === 'chat-message' ||
-        payload.reason === 'chat-reaction'
+        payload.reason === 'chat-reaction' ||
+        payload.reason === 'chat-added-to-group'
       ) {
+        // chat-added-to-group routes to the convo because the recipient was
+        // just added and now has access.
         // @ts-expect-error nested navigators aren't typed -sfn
         navigate('MessagesTab', {
           screen: 'Messages',
@@ -959,9 +962,8 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
           },
         })
       } else {
-        // chat-added-to-group, chat-removed-from-group,
-        // chat-join-request-rejected: open the Messages list without
-        // targeting a specific conversation
+        // chat-removed-from-group, chat-join-request-rejected: the convo is
+        // no longer accessible to the recipient, so just open the list.
         // @ts-expect-error nested navigators aren't typed -sfn
         navigate('MessagesTab', {screen: 'Messages'})
       }
