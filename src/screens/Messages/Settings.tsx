@@ -20,6 +20,7 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/compon
 import * as Layout from '#/components/Layout'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {useBackgroundNotificationPreferences} from '../../../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -45,6 +46,7 @@ export function MessagesSettingsScreenInner({}: Props) {
   const t = useTheme()
   const {t: l} = useLingui()
   const ax = useAnalytics()
+  const aa = useAgeAssurance()
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({
     did: currentAccount!.did,
@@ -54,6 +56,7 @@ export function MessagesSettingsScreenInner({}: Props) {
   const exportCarControl = Dialog.useDialogControl()
 
   const isGroupChatEnabled = ax.features.enabled(ax.features.GroupChatsEnable)
+  const groupInvitesLocked = aa.flags.isDeclaredUnderAdultAge
 
   const allowMessagesFromOptions: {name: AllowIncoming; label: string}[] = [
     {
@@ -191,17 +194,26 @@ export function MessagesSettingsScreenInner({}: Props) {
                     a.leading_snug,
                     t.atoms.text_contrast_high,
                   ]}>
-                  <Trans>
-                    You can continue ongoing conversations regardless of which
-                    setting you choose.
-                  </Trans>
+                  {groupInvitesLocked ? (
+                    <Trans>
+                      Group chats are only available to users 18 and over.
+                    </Trans>
+                  ) : (
+                    <Trans>
+                      You can continue ongoing conversations regardless of which
+                      setting you choose.
+                    </Trans>
+                  )}
                 </Text>
                 <Toggle.Group
+                  disabled={groupInvitesLocked}
                   label={l`Allow group chat invites from`}
                   type="radio"
                   values={[
-                    (profile?.associated?.chat
-                      ?.allowGroupInvites as AllowIncoming) ?? 'following',
+                    groupInvitesLocked
+                      ? 'none'
+                      : ((profile?.associated?.chat
+                          ?.allowGroupInvites as AllowIncoming) ?? 'following'),
                   ]}
                   onChange={onSelectGroupInvitesFrom}>
                   <View>

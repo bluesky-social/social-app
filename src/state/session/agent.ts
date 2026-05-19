@@ -19,9 +19,13 @@ import {
   PUBLIC_BSKY_SERVICE,
   TIMELINE_SAVED_FEED,
 } from '#/lib/constants'
+import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {snoozeBirthdateUpdateAllowedForDid} from '#/state/birthdate'
-import {restrictChatSettings} from '#/state/queries/messages/restrictChatSettings'
+import {
+  restrictChatSettings,
+  restrictGroupChatSettings,
+} from '#/state/queries/messages/restrictChatSettings'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
 import {
   prefetchAgeAssuranceData,
@@ -222,6 +226,9 @@ export async function createAgentAndCreateAccount(
         const state = getAndComputeAgeAssuranceState({did: account.did})
         if (state.access !== AgeAssuranceAccess.Full) {
           restrictChatSettings({agent, did: account.did})
+        }
+        if (getAge(birthDate) < 18) {
+          restrictGroupChatSettings({agent, did: account.did})
         }
       }),
     ]).then(promises => {

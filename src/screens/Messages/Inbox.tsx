@@ -43,6 +43,7 @@ import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAgeAssurance} from '#/ageAssurance'
 import {IS_NATIVE} from '#/env'
 import {RequestListItem} from './components/RequestListItem'
 import {useIsWithinSplitView} from './components/splitView/context'
@@ -63,8 +64,12 @@ export function MessagesInboxScreen(props: Props) {
 
 export function MessagesInboxScreenInner({}: Props) {
   const {gtTablet} = useBreakpoints()
+  const aa = useAgeAssurance()
 
-  const listConvosQuery = useListConvosQuery({status: 'request'})
+  const listConvosQuery = useListConvosQuery({
+    status: 'request',
+    kind: aa.flags.isDeclaredUnderAdultAge ? 'direct' : 'all',
+  })
   const {data} = listConvosQuery
 
   const leftConvos = useLeftConvos()

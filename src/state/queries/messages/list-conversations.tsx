@@ -14,6 +14,7 @@ import {
 } from '@tanstack/react-query'
 import throttle from 'lodash.throttle'
 
+import {useAgeAssurance} from '#/ageAssurance'
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useMessagesEventBus} from '#/state/messages/events'
@@ -115,10 +116,12 @@ export function ListConvosProviderInner({
 }: {
   children: React.ReactNode
 }) {
+  const aa = useAgeAssurance()
   const {refetch, data} = useListConvosQuery({
     readState: 'unread',
     limit: UNREAD_LIMIT,
     lockStatus: 'unlocked',
+    kind: aa.flags.isDeclaredUnderAdultAge ? 'direct' : 'all',
   })
   const messagesBus = useMessagesEventBus()
   const queryClient = useQueryClient()
