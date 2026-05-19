@@ -120,6 +120,15 @@ class NotificationService: UNNotificationServiceExtension {
       attachments: nil
     )
 
+    // For group convos, attach the composite group avatar (rendered by the
+    // ogcard service) to the `speakableGroupName` parameter so iOS shows it
+    // alongside the sender on the Communication Notification.
+    if userInfo["convoKind"] as? String == "group",
+       let convoAvatarUrlString = userInfo["convoAvatarUrl"] as? String,
+       let groupImage = downloadAvatarImage(from: convoAvatarUrlString) {
+      intent.setImage(groupImage, forParameterNamed: \.speakableGroupName)
+    }
+
     let interaction = INInteraction(intent: intent, response: nil)
     interaction.direction = .incoming
     interaction.donate(completion: nil)
