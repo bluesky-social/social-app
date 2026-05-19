@@ -318,8 +318,19 @@
     "transform": {
       "\\.[jt]sx?$": "babel-jest"
     },
+    "moduleNameMapper": {
+      "^multiformats$": "<rootDir>/node_modules/multiformats/dist/src/index.js",
+      "^multiformats/cid$": "<rootDir>/node_modules/multiformats/dist/src/cid.js",
+      "^multiformats/bases/base32$": "<rootDir>/node_modules/multiformats/dist/src/bases/base32.js",
+      "^multiformats/hashes/digest$": "<rootDir>/node_modules/multiformats/dist/src/hashes/digest.js",
+      "^multiformats/hashes/sha2$": "<rootDir>/node_modules/multiformats/dist/src/hashes/sha2.js",
+      "^uint8arrays/from-string$": "<rootDir>/node_modules/uint8arrays/dist/src/from-string.js",
+      "^uint8arrays/to-string$": "<rootDir>/node_modules/uint8arrays/dist/src/to-string.js",
+      "^unicode-segmenter/grapheme$": "<rootDir>/node_modules/unicode-segmenter/grapheme.cjs",
+      "^await-lock$": "<rootDir>/node_modules/await-lock/build/AwaitLock.js"
+    },
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|@discord|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|multiformats|uint8arrays|unicode-segmenter|@ipld/.*|cborg)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|@discord|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|multiformats|uint8arrays|@ipld/.*|cborg|await-lock)"
     ],
     "modulePathIgnorePatterns": [
       "__tests__/.*/__mocks__",
