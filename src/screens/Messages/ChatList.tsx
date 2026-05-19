@@ -174,6 +174,7 @@ export function ChatList({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const aa = useAgeAssurance()
   const scrollElRef: ListRef = useAnimatedRef()
   const {isWithinSplitView} = useIsWithinSplitView()
 
@@ -206,6 +207,7 @@ export function ChatList({
 
   const {refetch: refetchInbox} = useListConvosQuery({
     status: 'request',
+    kind: aa.flags.isUnder18 ? 'direct' : 'all',
   })
 
   useRefreshOnFocus(refetch)
@@ -408,6 +410,7 @@ export function ChatList({
 export function Header({newChatControl}: {newChatControl: DialogControlProps}) {
   const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
+  const aa = useAgeAssurance()
   const requireEmailVerification = useRequireEmailVerification()
   const leftConvos = useLeftConvos()
 
@@ -415,6 +418,7 @@ export function Header({newChatControl}: {newChatControl: DialogControlProps}) {
     useListConvosQuery({
       status: 'request',
       readState: 'unread',
+      kind: aa.flags.isUnder18 ? 'direct' : 'all',
     })
 
   const inboxAllConvos =

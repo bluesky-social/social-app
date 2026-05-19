@@ -32,6 +32,7 @@ import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/componen
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {useAgeAssurance} from '#/ageAssurance'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {ChatProfileTabs} from './ChatProfileTabs'
@@ -205,6 +206,7 @@ export function InitiateChatFlow({
   const [footerHeight, setFooterHeight] = useState(0)
   const listRef = useRef<ListMethods>(null)
   const {currentAccount} = useSession()
+  const aa = useAgeAssurance()
   const inputRef = useRef<TextInput>(null)
 
   const [searchText, setSearchText] = useState('')
@@ -320,7 +322,11 @@ export function InitiateChatFlow({
       })
     }
 
-    if (chatState === ChatState.NEW_CHAT && searchText === '') {
+    if (
+      chatState === ChatState.NEW_CHAT &&
+      searchText === '' &&
+      !aa.flags.isUnder18
+    ) {
       _items.unshift({type: 'newGroupChat', key: 'newGroupChat'})
     }
 
@@ -334,6 +340,7 @@ export function InitiateChatFlow({
     results,
     currentAccount?.did,
     follows,
+    aa.flags.isUnder18,
   ])
 
   if (searchText && !isFetching && !items.length && !isError) {

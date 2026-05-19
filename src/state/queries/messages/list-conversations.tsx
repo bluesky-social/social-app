@@ -19,6 +19,7 @@ import {useMessagesEventBus} from '#/state/messages/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
 import {parseConvoView} from '#/components/dms/util'
+import {useAgeAssurance} from '#/ageAssurance'
 import {useLeftConvos} from './leave-conversation'
 
 const DEFAULT_LIMIT = 10
@@ -111,10 +112,12 @@ export function ListConvosProviderInner({
 }: {
   children: React.ReactNode
 }) {
+  const aa = useAgeAssurance()
   const {refetch, data} = useListConvosQuery({
     readState: 'unread',
     limit: UNREAD_LIMIT,
     lockStatus: 'unlocked',
+    kind: aa.flags.isUnder18 ? 'direct' : 'all',
   })
   const messagesBus = useMessagesEventBus()
   const queryClient = useQueryClient()

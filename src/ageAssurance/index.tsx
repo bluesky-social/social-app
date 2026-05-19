@@ -41,6 +41,7 @@ const AgeAssuranceStateContext = createContext<{
   flags: {
     adultContentDisabled: boolean
     chatDisabled: boolean
+    isUnder18: boolean
     isOverRegionMinAccessAge: boolean
     isOverAppMinAccessAge: boolean
   }
@@ -55,6 +56,7 @@ const AgeAssuranceStateContext = createContext<{
   flags: {
     adultContentDisabled: false,
     chatDisabled: false,
+    isUnder18: false,
     isOverRegionMinAccessAge: false,
     isOverAppMinAccessAge: false,
   },
@@ -106,7 +108,9 @@ function InnerProvider({children}: {children: React.ReactNode}) {
     <AgeAssuranceStateContext.Provider
       value={useMemo(() => {
         const chatDisabled = state.access !== AgeAssuranceAccess.Full
-        const isUnderAdultAge = data?.birthdate
+        // Conservative default: if we don't yet know the birthdate, treat as
+        // under 18 so we don't briefly expose group-chat UI.
+        const isUnder18 = data?.birthdate
           ? isUnderAge(data.birthdate, 18)
           : true
         const isOverRegionMinAccessAge = data?.birthdate
@@ -116,7 +120,7 @@ function InnerProvider({children}: {children: React.ReactNode}) {
           ? !isUnderAge(data.birthdate, MIN_ACCESS_AGE)
           : false
         const adultContentDisabled =
-          state.access !== AgeAssuranceAccess.Full || isUnderAdultAge
+          state.access !== AgeAssuranceAccess.Full || isUnder18
         return {
           Access: AgeAssuranceAccess,
           Status: AgeAssuranceStatus,
@@ -124,6 +128,7 @@ function InnerProvider({children}: {children: React.ReactNode}) {
           flags: {
             adultContentDisabled,
             chatDisabled,
+            isUnder18,
             isOverRegionMinAccessAge,
             isOverAppMinAccessAge,
           },
