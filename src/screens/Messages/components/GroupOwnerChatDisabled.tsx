@@ -41,7 +41,7 @@ export function GroupOwnerChatDisabled({
   return (
     <ChatFooter
       heading={l`This chat is unavailable`}
-      subheading={l`The group owner has been suspended`}
+      subheading={l`The group owner has lost access to chats`}
       icon={WarningIcon}>
       <Pressable
         accessibilityRole="button"
