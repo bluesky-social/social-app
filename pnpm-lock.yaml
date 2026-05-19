@@ -8,7 +8,6 @@ overrides:
   '@react-native/babel-preset': 0.81.5
   '@react-native/normalize-colors': 0.81.5
   '@expo/image-utils': 0.8.12
-  multiformats: 9.9.0
   '@types/estree': 1.0.6
   react-native-compressor: 1.13.0
   react-native-reanimated: 3.19.1
@@ -44,11 +43,11 @@ importers:
   .:
     dependencies:
       '@atproto/api':
-        specifier: ^0.19.19
-        version: 0.19.19
+        specifier: 0.20.0
+        version: 0.20.0
       '@atproto/syntax':
-        specifier: 0.5.2
-        version: 0.5.2
+        specifier: 0.6.0
+        version: 0.6.0
       '@bitdrift/react-native':
         specifier: ^0.6.8
         version: 0.6.14(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -134,7 +133,7 @@ importers:
         specifier: ^1.6.5
         version: 1.6.5(react@19.1.0)
       '@ipld/dag-cbor':
-        specifier: ^9.2.0
+        specifier: ^9.2.7
         version: 9.2.7
       '@lingui/core':
         specifier: ^5.9.2
@@ -389,8 +388,8 @@ importers:
         specifier: ^4.1.1
         version: 4.1.1
       multiformats:
-        specifier: 9.9.0
-        version: 9.9.0
+        specifier: ^13.4.2
+        version: 13.4.2
       nanoid:
         specifier: ^5.0.5
         version: 5.1.11
@@ -703,29 +702,33 @@ packages:
       graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
       typescript: ^5.0.0 || ^6.0.0
 
-  '@atproto/api@0.19.19':
-    resolution: {integrity: sha512-8pwyN3qM1HnaJzL297OBjfxwLLJvNHkFDr5smoFRLXEDiyPprQfbsH7YrGsJfX8Cez+KcHZAuZTY4Hh6NUBwBQ==}
+  '@atproto/api@0.20.0':
+    resolution: {integrity: sha512-PwkmAFkgfxnJd/F31EL1B1jcxkecEQ3aGmxoRpquHKQgiL5XOBFxCPXkyfl7yrvZknPCpbjj5O2rDetP3ewnow==}
+    engines: {node: '>=22'}
 
-  '@atproto/common-web@0.4.21':
-    resolution: {integrity: sha512-Odq+wdk3YNasGCjjlpl3bCIPvqYHige5DLfMkIffNv/2PI/iIj5ZvAvMvJlJ59OhReKSxtpI0invx5UQPc3+fw==}
+  '@atproto/common-web@0.5.0':
+    resolution: {integrity: sha512-ReWnkuZdDU/74/I47gaI26uxQjHmpq4edp41NnZZQ5vIIKGb7Ei6pZHzDTUD9JURo109SKrPx9RMP2IQm0fOKA==}
+    engines: {node: '>=22'}
 
-  '@atproto/lex-data@0.0.15':
-    resolution: {integrity: sha512-ZsbGiaM5S3CnGrcTMbDGON3bLZzCi/Mx9UvcMREKSRujnF68eHgMiXxJqvykP7+QpOX6tYCK93axZkuJVhtSEw==}
+  '@atproto/lex-data@0.1.0':
+    resolution: {integrity: sha512-xFEUWNo+qEC9oNK55ly5MJoljIWZBMmokXIEyrgf7IFn4d5HthN6GdWVFuxqvKXDvzq2ConkHioOH3wiWpDh8w==}
+    engines: {node: '>=22'}
 
-  '@atproto/lex-json@0.0.16':
-    resolution: {integrity: sha512-IgLgQ0krshVlrIYZ+heTBDbCnM3LmAgWvsaYn5MxvKA3LcBot3PG3ptdO8VOweVZ+WgCLuo39cz9EbUmIbqdtg==}
+  '@atproto/lex-json@0.1.0':
+    resolution: {integrity: sha512-oWUrRMwFyWpmi/5k1Se3xBTbP06XdxBS5iFuUz9LmqItaPXwrWRD87a9ldPvINQ/A2/mn7J6/qug8sDVlhD+vQ==}
+    engines: {node: '>=22'}
 
-  '@atproto/lexicon@0.6.2':
-    resolution: {integrity: sha512-p3Ly6hinVZW0ETuAXZMeUGwuMm3g8HvQMQ41yyEE6AL0hAkfeKFaZKos6BdBrr6CjkpbrDZqE8M+5+QOceysMw==}
+  '@atproto/lexicon@0.7.0':
+    resolution: {integrity: sha512-75WFG3cOMnr90gLFGloTglgaEbSQSjD0E3muXerLxS94o7qZlonIQWz4/2FqUvy5KYBuYqq7wFWaGFMOq6OkNg==}
+    engines: {node: '>=22'}
 
-  '@atproto/syntax@0.5.2':
-    resolution: {integrity: sha512-W41szOnkppoHr0iCUrzL8gy3OD6qmDyp1UvUgmTx2oFQfgbudpz51T/gznesiCcqiUT5obfHdx4PJ+WdlEOE7Q==}
+  '@atproto/syntax@0.6.0':
+    resolution: {integrity: sha512-Z3Zrj4y/HLAF1SKVm4Fyhv/JUhrAMDyWqB5PJKvKA5/A8jxwZXpupFC6sNFRh4rlLS9Sl07L8gtvLO3RMG5jxQ==}
+    engines: {node: '>=22'}
 
-  '@atproto/syntax@0.5.4':
-    resolution: {integrity: sha512-9XJOpMAgsGFxMEIp8nJ8AIWv+krrY1xQMj+wULbbXhQztQV+9aZ0TbG9Jtn3Op2or8Kr6OqyWR4ga9Z189kKDw==}
-
-  '@atproto/xrpc@0.7.7':
-    resolution: {integrity: sha512-K1ZyO/BU8JNtXX5dmPp7b5UrkLMMqpsIa/Lrj5D3Su+j1Xwq1m6QJ2XJ1AgjEjkI1v4Muzm7klianLE6XGxtmA==}
+  '@atproto/xrpc@0.8.0':
+    resolution: {integrity: sha512-NJy02bIKrWlE2NQkRV1kT0Cj0ixbuxlF/MejBdo4cPWAa9v3oZexvAcjjb0zaOYeABkaU14iyIhvn2G4e/oLpw==}
+    engines: {node: '>=22'}
 
   '@babel/code-frame@7.10.4':
     resolution: {integrity: sha512-vG6SvB6oYEhvgisZNFRmRCUkLz11c7rp+tbNTynGqc6mS1d5ATd/sGyV6W0KZZnXRKMTzZDRgQT3Ou9jhpAfUg==}
@@ -4332,8 +4335,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  await-lock@2.2.2:
-    resolution: {integrity: sha512-aDczADvlvTGajTDjcjpJMqRkOF6Qdz3YbPZm/PyW6tKPkx2hlYBzxMhEywM/tU72HrVZjgl5VCdRuMlA7pZ8Gw==}
+  await-lock@3.0.0:
+    resolution: {integrity: sha512-eO6fLiSnrJrMdjWMNK8zbVRXPs2TKJg78iKZd9wDpN3na5tcoV6EoeiOlMgk2QaAQ1gIrK1YuMsJHXWqz89tSA==}
 
   b4a@1.8.1:
     resolution: {integrity: sha512-aiqre1Nr0B/6DgE2N5vwTc+2/oQZ4Wh1t4NznYY4E00y8LCt6NqdRv81so00oo27D8MVKTpUa/MwUUtBLXCoDw==}
@@ -7600,8 +7603,8 @@ packages:
     resolution: {integrity: sha512-2eznPJP8z2BFLX50tf0LuODrpINqP1RVIm/CObbTcBRITQgmC/TjcREF1NeTBzIcR5XO/ukWo+YHOjBbFwIupg==}
     hasBin: true
 
-  multiformats@9.9.0:
-    resolution: {integrity: sha512-HoMUjhH9T8DDBNT+6xzkrd9ga/XiBI4xLr58LJACwK6G3HTOPeMz4nB4KJs33L2BelrIJa7P0VuNaVF3hMYfjg==}
+  multiformats@13.4.2:
+    resolution: {integrity: sha512-eh6eHCrRi1+POZ3dA+Dq1C6jhP1GNtr9CRINMb67OKzqW9I5DUuZM/3jLPlzhgpGeiNUlEGEbkCYChXMCc/8DQ==}
 
   multipasta@0.2.7:
     resolution: {integrity: sha512-KPA58d68KgGil15oDqXjkUBEBYc00XvbPj5/X+dyzeo/lWm9Nc25pQRlf1D+gv4OpK7NM0J1odrbu9JNNGvynA==}
@@ -9750,8 +9753,8 @@ packages:
   uc.micro@2.1.0:
     resolution: {integrity: sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A==}
 
-  uint8arrays@3.0.0:
-    resolution: {integrity: sha512-HRCx0q6O9Bfbp+HHSfQQKD7wU70+lydKVt4EghkdOvlK/NlrF90z+eXV34mUd48rNvVJXwkrMSPpCATkct8fJA==}
+  uint8arrays@5.1.1:
+    resolution: {integrity: sha512-9muQwa4wZG4dKi9gMAIBtnk2Pw87SRpvWTH6lOGm19V2Uqxr4uomUf2PGqPnWc+qs06sN8owUU4jfcoWOcfwVQ==}
 
   unbox-primitive@1.1.0:
     resolution: {integrity: sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw==}
@@ -10268,55 +10271,51 @@ snapshots:
       graphql: 16.8.1
       typescript: 6.0.3
 
-  '@atproto/api@0.19.19':
+  '@atproto/api@0.20.0':
     dependencies:
-      '@atproto/common-web': 0.4.21
-      '@atproto/lexicon': 0.6.2
-      '@atproto/syntax': 0.5.4
-      '@atproto/xrpc': 0.7.7
-      await-lock: 2.2.2
-      multiformats: 9.9.0
+      '@atproto/common-web': 0.5.0
+      '@atproto/lexicon': 0.7.0
+      '@atproto/syntax': 0.6.0
+      '@atproto/xrpc': 0.8.0
+      await-lock: 3.0.0
+      multiformats: 13.4.2
       tlds: 1.261.0
       zod: 3.25.76
 
-  '@atproto/common-web@0.4.21':
+  '@atproto/common-web@0.5.0':
     dependencies:
-      '@atproto/lex-data': 0.0.15
-      '@atproto/lex-json': 0.0.16
-      '@atproto/syntax': 0.5.4
+      '@atproto/lex-data': 0.1.0
+      '@atproto/lex-json': 0.1.0
+      '@atproto/syntax': 0.6.0
       zod: 3.25.76
 
-  '@atproto/lex-data@0.0.15':
+  '@atproto/lex-data@0.1.0':
     dependencies:
-      multiformats: 9.9.0
+      multiformats: 13.4.2
       tslib: 2.8.1
-      uint8arrays: 3.0.0
+      uint8arrays: 5.1.1
       unicode-segmenter: 0.14.5
 
-  '@atproto/lex-json@0.0.16':
+  '@atproto/lex-json@0.1.0':
     dependencies:
-      '@atproto/lex-data': 0.0.15
+      '@atproto/lex-data': 0.1.0
       tslib: 2.8.1
 
-  '@atproto/lexicon@0.6.2':
+  '@atproto/lexicon@0.7.0':
     dependencies:
-      '@atproto/common-web': 0.4.21
-      '@atproto/syntax': 0.5.2
+      '@atproto/common-web': 0.5.0
+      '@atproto/syntax': 0.6.0
       iso-datestring-validator: 2.2.2
-      multiformats: 9.9.0
+      multiformats: 13.4.2
       zod: 3.25.76
 
-  '@atproto/syntax@0.5.2':
+  '@atproto/syntax@0.6.0':
     dependencies:
       tslib: 2.8.1
 
-  '@atproto/syntax@0.5.4':
+  '@atproto/xrpc@0.8.0':
     dependencies:
-      tslib: 2.8.1
-
-  '@atproto/xrpc@0.7.7':
-    dependencies:
-      '@atproto/lexicon': 0.6.2
+      '@atproto/lexicon': 0.7.0
       zod: 3.25.76
 
   '@babel/code-frame@7.10.4':
@@ -12332,7 +12331,7 @@ snapshots:
   '@ipld/dag-cbor@9.2.7':
     dependencies:
       cborg: 5.1.1
-      multiformats: 9.9.0
+      multiformats: 13.4.2
 
   '@isaacs/cliui@8.0.2':
     dependencies:
@@ -14898,7 +14897,7 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
-  await-lock@2.2.2: {}
+  await-lock@3.0.0: {}
 
   b4a@1.8.1: {}
 
@@ -18952,7 +18951,7 @@ snapshots:
       dns-packet: 5.6.1
       thunky: 1.1.0
 
-  multiformats@9.9.0: {}
+  multiformats@13.4.2: {}
 
   multipasta@0.2.7: {}
 
@@ -21168,9 +21167,9 @@ snapshots:
 
   uc.micro@2.1.0: {}
 
-  uint8arrays@3.0.0:
+  uint8arrays@5.1.1:
     dependencies:
-      multiformats: 9.9.0
+      multiformats: 13.4.2
 
   unbox-primitive@1.1.0:
     dependencies:

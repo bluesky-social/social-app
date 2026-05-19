@@ -86,8 +86,8 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.19.19",
-    "@atproto/syntax": "0.5.2",
+    "@atproto/api": "0.20.0",
+    "@atproto/syntax": "0.6.0",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.9",
@@ -116,7 +116,7 @@
     "@fortawesome/react-native-fontawesome": "^0.3.2",
     "@growthbook/growthbook": "^1.6.5",
     "@growthbook/growthbook-react": "^1.6.5",
-    "@ipld/dag-cbor": "^9.2.0",
+    "@ipld/dag-cbor": "^9.2.7",
     "@lingui/core": "^5.9.2",
     "@lingui/react": "^5.9.2",
     "@miblanchard/react-native-slider": "^2.6.0",
@@ -201,7 +201,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.shuffle": "^4.2.0",
     "lodash.throttle": "^4.1.1",
-    "multiformats": "9.9.0",
+    "multiformats": "^13.4.2",
     "nanoid": "^5.0.5",
     "normalize-url": "^8.0.0",
     "psl": "1.9.0",
