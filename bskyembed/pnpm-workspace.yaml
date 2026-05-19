@@ -3,3 +3,6 @@ allowBuilds:
   "core-js": true
   "esbuild": true
   "unrs-resolver": true
+minimumReleaseAgeExclude:
+  - '@atproto/*'
+  - '@bsky.app/*'
