@@ -511,7 +511,7 @@ func (srv *Server) OAuthClientMetadataNative(c echo.Context) error {
 		"client_id":                  baseURL + "/oauth-client-metadata-native.json",
 		"client_name":                "Blacksky Community",
 		"client_uri":                 baseURL,
-		"redirect_uris":             []string{"blacksky:/oauth/callback"},
+		"redirect_uris":             []string{"community.blacksky:/oauth/callback"},
 		"scope":                      "atproto transition:generic transition:email transition:chat.bsky identity:handle account:email?action=manage account:status?action=manage",
 		"token_endpoint_auth_method": "none",
 		"response_types":            []string{"code"},
