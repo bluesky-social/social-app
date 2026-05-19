@@ -24,6 +24,7 @@ import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {
   BUTTON_VISUAL_ALIGNMENT_OFFSET,
   CENTER_COLUMN_OFFSET,
+  CENTER_COLUMN_WIDTH,
   HEADER_SLOT_SIZE,
   SCROLLBAR_OFFSET,
 } from '#/components/Layout/const'
@@ -65,7 +66,7 @@ export function Outer({
           web: [a.py_xs, {minHeight: 52}],
         }),
         t.atoms.border_contrast_low,
-        gtMobile && [a.mx_auto, {maxWidth: 600}],
+        gtMobile && [a.mx_auto, {maxWidth: CENTER_COLUMN_WIDTH}],
         !isWithinOffsetView &&
           !isWithinSplitView && {
             transform: [
