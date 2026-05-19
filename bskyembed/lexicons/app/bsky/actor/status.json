@@ -1,0 +1,48 @@
+{
+  "id": "app.bsky.actor.status",
+  "defs": {
+    "live": {
+      "type": "token",
+      "description": "Advertises an account as currently offering live content."
+    },
+    "main": {
+      "key": "literal:self",
+      "type": "record",
+      "record": {
+        "type": "object",
+        "required": [
+          "status",
+          "createdAt"
+        ],
+        "properties": {
+          "embed": {
+            "refs": [
+              "app.bsky.embed.external"
+            ],
+            "type": "union",
+            "description": "An optional embed associated with the status."
+          },
+          "status": {
+            "type": "string",
+            "description": "The status for the account.",
+            "knownValues": [
+              "app.bsky.actor.status#live"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "durationMinutes": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The duration of the status in minutes. Applications can choose to impose minimum and maximum limits."
+          }
+        }
+      },
+      "description": "A declaration of a Bluesky account status."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

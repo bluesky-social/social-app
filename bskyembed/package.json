@@ -10,15 +10,23 @@
     "analyze": "ANALYZE=1 vite build",
     "lint": "eslint --cache src",
     "typecheck": "tsc --noEmit",
-    "format": "prettier -w src"
+    "format": "prettier -w src",
+    "lex": "lex",
+    "lex:install": "lex install",
+    "lex:update": "lex install --update",
+    "lex:ci": "lex install --ci",
+    "lex:build": "lex build --lexicons ./lexicons --out ./src/lexicons --clear",
+    "postinstall": "pnpm lex:ci && pnpm lex:build"
   },
   "dependencies": {
-    "@atproto/api": "^0.15.25",
+    "@atproto/lex": "^0.1.0",
+    "@atproto/syntax": "^0.6.0",
     "preact": "^10.4.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
     "@preact/preset-vite": "^2.10.2",
+    "@typescript-eslint/parser": "^8.59.3",
     "@vitejs/plugin-legacy": "^8.0.1",
     "autoprefixer": "^10.4.19",
     "eslint": "^9.18.0",

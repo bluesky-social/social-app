@@ -1,0 +1,161 @@
+{
+  "id": "app.bsky.embed.record",
+  "defs": {
+    "main": {
+      "type": "object",
+      "required": [
+        "record"
+      ],
+      "properties": {
+        "record": {
+          "ref": "com.atproto.repo.strongRef",
+          "type": "ref"
+        }
+      }
+    },
+    "view": {
+      "type": "object",
+      "required": [
+        "record"
+      ],
+      "properties": {
+        "record": {
+          "refs": [
+            "#viewRecord",
+            "#viewNotFound",
+            "#viewBlocked",
+            "#viewDetached",
+            "app.bsky.feed.defs#generatorView",
+            "app.bsky.graph.defs#listView",
+            "app.bsky.labeler.defs#labelerView",
+            "app.bsky.graph.defs#starterPackViewBasic"
+          ],
+          "type": "union"
+        }
+      }
+    },
+    "viewRecord": {
+      "type": "object",
+      "required": [
+        "uri",
+        "cid",
+        "author",
+        "value",
+        "indexedAt"
+      ],
+      "properties": {
+        "cid": {
+          "type": "string",
+          "format": "cid"
+        },
+        "uri": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "value": {
+          "type": "unknown",
+          "description": "The record data itself."
+        },
+        "author": {
+          "ref": "app.bsky.actor.defs#profileViewBasic",
+          "type": "ref"
+        },
+        "embeds": {
+          "type": "array",
+          "items": {
+            "refs": [
+              "app.bsky.embed.images#view",
+              "app.bsky.embed.video#view",
+              "app.bsky.embed.external#view",
+              "app.bsky.embed.record#view",
+              "app.bsky.embed.recordWithMedia#view"
+            ],
+            "type": "union"
+          }
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "ref": "com.atproto.label.defs#label",
+            "type": "ref"
+          }
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "likeCount": {
+          "type": "integer"
+        },
+        "quoteCount": {
+          "type": "integer"
+        },
+        "replyCount": {
+          "type": "integer"
+        },
+        "repostCount": {
+          "type": "integer"
+        }
+      }
+    },
+    "viewBlocked": {
+      "type": "object",
+      "required": [
+        "uri",
+        "blocked",
+        "author"
+      ],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "author": {
+          "ref": "app.bsky.feed.defs#blockedAuthor",
+          "type": "ref"
+        },
+        "blocked": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "viewDetached": {
+      "type": "object",
+      "required": [
+        "uri",
+        "detached"
+      ],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "detached": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "viewNotFound": {
+      "type": "object",
+      "required": [
+        "uri",
+        "notFound"
+      ],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "notFound": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1,
+  "description": "A representation of a record embedded in a Bluesky record (eg, a post). For example, a quote-post, or sharing a feed generator record."
+}

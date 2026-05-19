@@ -1,10 +1,4 @@
-import {
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AppBskyRichtextFacet,
-  RichText,
-} from '@atproto/api'
-import {h} from 'preact'
+import {ComponentChild, h} from 'preact'
 
 import logo from '../../assets/logo_full_name.svg'
 import {Like as LikeIcon} from '../icons/Like'
@@ -12,7 +6,8 @@ import {Reply as ReplyIcon} from '../icons/Reply'
 import {Repost as RepostIcon} from '../icons/Repost'
 import {Robot as RobotIcon} from '../icons/Robot'
 import {CONTENT_LABELS} from '../labels'
-import * as bsky from '../types/bsky'
+import * as app from '../lexicons/app'
+import {FacetRenderer} from '../util/facet-renderer'
 import {niceDate} from '../util/nice-date'
 import {prettyNumber} from '../util/pretty-number'
 import {getRkey} from '../util/rkey'
@@ -23,24 +18,18 @@ import {Link} from './link'
 import {VerificationCheck} from './verification-check'
 
 interface Props {
-  thread: AppBskyFeedDefs.ThreadViewPost
+  post: app.bsky.feed.defs.PostView
 }
 
-export function Post({thread}: Props) {
-  const post = thread.post
-
+export function Post({post}: Props) {
   const isAuthorLabeled = post.author.labels?.some(label =>
     CONTENT_LABELS.includes(label.val),
   )
 
-  let record: AppBskyFeedPost.Record | null = null
-  if (
-    bsky.dangerousIsType<AppBskyFeedPost.Record>(
-      post.record,
-      AppBskyFeedPost.isRecord,
-    )
-  ) {
-    record = post.record
+  let record = null
+  const validation = app.bsky.feed.post.$safeValidate(post.record)
+  if (validation.success) {
+    record = validation.value
   }
 
   const verification = getVerificationState({profile: post.author})
@@ -153,22 +142,15 @@ export function Post({thread}: Props) {
   )
 }
 
-function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
+function PostContent({record}: {record: app.bsky.feed.post.Main | null}) {
   if (!record) return null
 
-  const rt = new RichText({
-    text: record.text,
-    facets: record.facets,
-  })
-
-  const richText = []
+  const rt = new FacetRenderer({text: record.text, facets: record.facets})
+  const richText: ComponentChild[] = []
 
   let counter = 0
   for (const segment of rt.segments()) {
-    if (
-      segment.link &&
-      AppBskyRichtextFacet.validateLink(segment.link).success
-    ) {
+    if (segment.link) {
       richText.push(
         <Link
           key={counter}
@@ -181,10 +163,7 @@ function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
           {segment.text}
         </Link>,
       )
-    } else if (
-      segment.mention &&
-      AppBskyRichtextFacet.validateMention(segment.mention).success
-    ) {
+    } else if (segment.mention) {
       richText.push(
         <Link
           key={counter}
@@ -193,10 +172,7 @@ function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
           {segment.text}
         </Link>,
       )
-    } else if (
-      segment.tag &&
-      AppBskyRichtextFacet.validateTag(segment.tag).success
-    ) {
+    } else if (segment.tag) {
       richText.push(
         <Link
           key={counter}
@@ -208,7 +184,6 @@ function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
     } else {
       richText.push(segment.text)
     }
-
     counter++
   }
 

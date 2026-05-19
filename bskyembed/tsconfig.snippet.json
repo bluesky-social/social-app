@@ -3,6 +3,7 @@
     "target": "ES2015",
     "lib": ["DOM", "ESNext"],
     "strict": true,
+    "rootDir": "snippet",
     "outDir": "dist"
   },
   "include": ["snippet"]
