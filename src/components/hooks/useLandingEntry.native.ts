@@ -5,13 +5,17 @@ import {
   httpStarterPackUriToAtUri,
 } from '#/lib/strings/starter-pack'
 import {useHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
-import {useSetActiveStarterPack} from '#/state/shell/starter-pack'
+import {
+  useSetActiveGroupChatJoinRequest,
+  useSetActiveStarterPack,
+} from '#/state/shell/landing'
 import {IS_ANDROID} from '#/env'
 import {Referrer, SharedPrefs} from '../../../modules/expo-bluesky-swiss-army'
 
-export function useStarterPackEntry() {
+export function useLandingEntry() {
   const [ready, setReady] = useState(false)
   const setActiveStarterPack = useSetActiveStarterPack()
+  const setActiveGroupChatJoinRequest = useSetActiveGroupChatJoinRequest()
   const hasCheckedForStarterPack = useHasCheckedForStarterPack()
 
   useEffect(() => {
@@ -29,7 +33,27 @@ export function useStarterPackEntry() {
       setReady(true)
     }, 500)
 
-    ;(async () => {
+    void (async () => {
+      // Check for group chat join request
+      const groupChatJoinRequestCode = SharedPrefs.getString(
+        'groupChatJoinRequestCode',
+      )
+      const groupChatJoinRequestUri = SharedPrefs.getString(
+        'groupChatJoinRequestUri',
+      )
+
+      if (groupChatJoinRequestCode && groupChatJoinRequestUri) {
+        setActiveGroupChatJoinRequest({
+          uri: groupChatJoinRequestUri,
+          code: groupChatJoinRequestCode,
+        })
+        SharedPrefs.setValue('groupChatJoinRequestCode', null)
+        SharedPrefs.setValue('groupChatJoinRequestUri', null)
+        setReady(true)
+        return
+      }
+
+      // Check for starter pack
       let uri: string | null | undefined
 
       if (IS_ANDROID) {
@@ -58,7 +82,12 @@ export function useStarterPackEntry() {
     return () => {
       clearTimeout(timeout)
     }
-  }, [ready, setActiveStarterPack, hasCheckedForStarterPack])
+  }, [
+    ready,
+    setActiveStarterPack,
+    setActiveGroupChatJoinRequest,
+    hasCheckedForStarterPack,
+  ])
 
   return ready
 }

@@ -275,8 +275,8 @@ export function InviteLinkDialog({
       break
     case Step.MANAGE: {
       const joinLinkURI = joinLink?.code
-        ? `https://bsky.app/chat/${joinLink.code}`
-        : 'https://bsky.app/chat'
+        ? `https://bsky.app/c/${joinLink.code}`
+        : 'https://bsky.app/'
       const createdAt = joinLink ? new Date(joinLink.createdAt) : null
       const currentOptionName = joinLink
         ? `${joinLink.joinRule}${joinLink.requireApproval ? ':requireApproval' : ''}`

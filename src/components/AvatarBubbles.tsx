@@ -44,7 +44,7 @@ export function AvatarBubbles({
   const {currentAccount} = useSession()
   const profiles =
     allProfiles.length > 2
-      ? allProfiles.filter(p => p.did !== currentAccount?.did)
+      ? allProfiles.filter(p => p?.did != null && p.did !== currentAccount?.did)
       : allProfiles
   const moderations = useMemo(() => {
     if (!moderationOpts) return []

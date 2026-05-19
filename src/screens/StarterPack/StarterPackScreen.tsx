@@ -37,12 +37,12 @@ import {
   useStarterPackQuery,
 } from '#/state/queries/starter-packs'
 import {useAgent, useSession} from '#/state/session'
+import {useSetActiveStarterPack} from '#/state/shell/landing'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {
   ProgressGuideAction,
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
-import {useSetActiveStarterPack} from '#/state/shell/starter-pack'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
