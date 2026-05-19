@@ -180,11 +180,6 @@ function Inner({convoId}: {convoId: string}) {
 
   return (
     <Layout.Center style={[a.flex_1]}>
-      {!readyToShow && (
-        <View style={IS_LIQUID_GLASS && {paddingTop: topInset}}>
-          <MessagesListHeader convo={convo} />
-        </View>
-      )}
       <View style={[a.flex_1]}>
         <InnerReady
           convo={convo}
