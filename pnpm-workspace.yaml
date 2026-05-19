@@ -18,6 +18,7 @@ allowBuilds:
   'esbuild': true
   'unrs-resolver': true
 patchedDependencies:
+  '@atproto/lexicon@0.7.0': patches/@atproto__lexicon@0.7.0.patch
   '@discord/bottom-sheet@4.6.1': patches/@discord__bottom-sheet@4.6.1.patch
   '@sentry/react-native@6.20.0': patches/@sentry__react-native@6.20.0.patch
   'expo-glass-effect@55.0.8': patches/expo-glass-effect@55.0.8.patch

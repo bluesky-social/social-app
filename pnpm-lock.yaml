@@ -16,6 +16,7 @@ overrides:
   react-native-screens: 4.24.0
 
 patchedDependencies:
+  '@atproto/lexicon@0.7.0': 3cf406f5cf0e2a9b7c5ecbc9fda2164ef42324f03572d7b4a82f17d37543c9c6
   '@discord/bottom-sheet@4.6.1': 253965341bfbc8e63630dfca511c5d0e0878900e5fe414b2278bd322fc215e2a
   '@sentry/react-native@6.20.0': 1d48e4d5178f5684eb33262299e7eed283bf9601f79b9ae1af63a7f607d3483a
   expo-glass-effect@55.0.8: 6c9fa5b104e53b87df4e17b320acb3b94d12ac90c0101190045dd620681efff0
@@ -10274,7 +10275,7 @@ snapshots:
   '@atproto/api@0.20.0':
     dependencies:
       '@atproto/common-web': 0.5.0
-      '@atproto/lexicon': 0.7.0
+      '@atproto/lexicon': 0.7.0(patch_hash=3cf406f5cf0e2a9b7c5ecbc9fda2164ef42324f03572d7b4a82f17d37543c9c6)
       '@atproto/syntax': 0.6.0
       '@atproto/xrpc': 0.8.0
       await-lock: 3.0.0
@@ -10301,7 +10302,7 @@ snapshots:
       '@atproto/lex-data': 0.1.0
       tslib: 2.8.1
 
-  '@atproto/lexicon@0.7.0':
+  '@atproto/lexicon@0.7.0(patch_hash=3cf406f5cf0e2a9b7c5ecbc9fda2164ef42324f03572d7b4a82f17d37543c9c6)':
     dependencies:
       '@atproto/common-web': 0.5.0
       '@atproto/syntax': 0.6.0
@@ -10315,7 +10316,7 @@ snapshots:
 
   '@atproto/xrpc@0.8.0':
     dependencies:
-      '@atproto/lexicon': 0.7.0
+      '@atproto/lexicon': 0.7.0(patch_hash=3cf406f5cf0e2a9b7c5ecbc9fda2164ef42324f03572d7b4a82f17d37543c9c6)
       zod: 3.25.76
 
   '@babel/code-frame@7.10.4':
