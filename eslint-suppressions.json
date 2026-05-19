@@ -317,16 +317,6 @@
       "count": 1
     }
   },
-  "src/locale/i18n.web.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/platform/polyfills.web.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/screens/Bookmarks/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
