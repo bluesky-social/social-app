@@ -19,8 +19,8 @@
     "postinstall": "pnpm lex:ci && pnpm lex:build"
   },
   "dependencies": {
-    "@atproto/lex": "^0.0.26",
-    "@atproto/syntax": "^0.5.4",
+    "@atproto/lex": "^0.1.0",
+    "@atproto/syntax": "^0.6.0",
     "preact": "^10.4.8"
   },
   "devDependencies": {
