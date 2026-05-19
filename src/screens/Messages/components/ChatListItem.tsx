@@ -41,6 +41,7 @@ import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen} from '#/components/icons/EnveopeOpen'
+import {Lock_Stroke2_Corner2_Rounded as LockIcon} from '#/components/icons/Lock'
 import {Trash_Stroke2_Corner0_Rounded} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
@@ -265,10 +266,7 @@ function BaseChatItem({
   const hasUnread =
     convo.view.unreadCount > 0 &&
     !isDeletedAccount &&
-    !(
-      convo.kind === 'group' &&
-      convo.details.lockStatus === 'locked-permanently'
-    )
+    (convo.kind !== 'group' || convo.details.lockStatus === 'unlocked')
 
   const blockInfo = useMemo(() => {
     if (!primaryProfileModeration) return {listBlocks: [], userBlock: undefined}
@@ -353,6 +351,12 @@ function BaseChatItem({
         LastMessageIcon = info.Icon
         lastMessageSentAt = convo.view.lastMessage.sentAt
       }
+    }
+
+    // Chat locked - override message
+    if (convo.kind === 'group' && convo.details.lockStatus !== 'unlocked') {
+      lastMessage = l`This chat is locked`
+      LastMessageIcon = LockIcon
     }
 
     return {

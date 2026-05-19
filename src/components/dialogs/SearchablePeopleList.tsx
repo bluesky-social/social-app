@@ -114,6 +114,7 @@ export function SearchablePeopleList({
   const {data: convos} = useListConvosQuery({
     enabled: showRecentConvos,
     status: 'accepted',
+    lockStatus: 'unlocked',
   })
 
   const items = useMemo(() => {
