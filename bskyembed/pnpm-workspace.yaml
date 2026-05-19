@@ -3,4 +3,5 @@ allowBuilds:
   unrs-resolver: true
 minimumReleaseAgeExclude:
   - '@atproto/*'
+  - '@atproto-labs/*'
   - '@bsky.app/*'
