@@ -26,7 +26,7 @@
     }
   },
   "scripts": {
-    "prepare": "is-ci || husky install",
+    "prepare": "is-ci || husky",
     "postinstall": "pnpm intl:compile-if-needed",
     "prebuild": "EXPO_NO_GIT_STATUS=1 expo prebuild --clean",
     "android": "expo run:android",
@@ -282,7 +282,7 @@
     "eslint-plugin-simple-import-sort": "^13.0.0",
     "file-loader": "6.2.0",
     "globals": "^17.0.0",
-    "husky": "^8.0.3",
+    "husky": "^9.1.7",
     "is-ci": "^3.0.1",
     "jest": "^29.7.0",
     "jest-expo": "~54.0.17",
