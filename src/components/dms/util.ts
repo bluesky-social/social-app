@@ -24,6 +24,20 @@ export function canBeMessaged(profile: bsky.profile.AnyProfileView) {
   }
 }
 
+export function canBeAddedToGroup(profile: bsky.profile.AnyProfileView) {
+  switch (profile.associated?.chat?.allowGroupInvites) {
+    case 'none':
+      return false
+    case 'all':
+      return true
+    case 'following':
+    case undefined:
+      return Boolean(profile.viewer?.followedBy)
+    default:
+      return false
+  }
+}
+
 export function localDateString(date: Date) {
   // can't use toISOString because it should be in local time
   const mm = date.getMonth()
