@@ -241,14 +241,10 @@ export function MessagesList({
           itemCount: convoState.items.length,
           isFetchingHistory: convoState.isFetchingHistory,
         })
-        // If history is already done loading, mark ready after a frame for the scroll to settle.
-        // Otherwise, the footer sentinel's onLayout will handle it when history finishes.
-        if (!convoState.isFetchingHistory) {
-          requestAnimationFrame(() => {
-            logger.debug('setHasScrolled(true) via onContentSizeChange')
-            setHasScrolled(true)
-          })
-        }
+        requestAnimationFrame(() => {
+          logger.debug('setHasScrolled(true) via onContentSizeChange')
+          setHasScrolled(true)
+        })
         prevContentHeight.current = height
         prevItemCount.current = renderItems.length
         return
@@ -289,7 +285,6 @@ export function MessagesList({
     [
       hasScrolled,
       setHasScrolled,
-      convoState.isFetchingHistory,
       renderItems.length,
       // these are stable
       flatListRef,
@@ -459,26 +454,6 @@ export function MessagesList({
     return null
   }
 
-  // Footer sentinel: when history is still loading during the initial scroll, the footer's onLayout fires each time
-  // new items are prepended (shifting its position). Once history finishes, this triggers setHasScrolled.
-  const onFooterLayout = useCallback(() => {
-    logger.debug('onFooterLayout', {
-      hasInitiallyScrolled: hasInitiallyScrolled.current,
-      hasScrolled,
-      isFetchingHistory: convoState.isFetchingHistory,
-    })
-    if (
-      hasInitiallyScrolled.current &&
-      !hasScrolled &&
-      !convoState.isFetchingHistory
-    ) {
-      requestAnimationFrame(() => {
-        logger.debug('setHasScrolled(true) via onFooterLayout')
-        setHasScrolled(true)
-      })
-    }
-  }, [hasScrolled, setHasScrolled, convoState.isFetchingHistory])
-
   const renderScrollComponent = useCallback(
     (props: ScrollViewProps) => (
       <ChatScrollComponent {...props} inputHeight={inputHeightUI} />
@@ -539,10 +514,7 @@ export function MessagesList({
               },
             ]}
             ListFooterComponent={
-              <View
-                style={web({height: tokens.space.md + inputHeightJS})}
-                onLayout={onFooterLayout}
-              />
+              <View style={web({height: tokens.space.md + inputHeightJS})} />
             }
             style={web({
               scrollbarWidth: 'thin',
