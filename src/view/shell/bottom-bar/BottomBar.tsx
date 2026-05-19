@@ -50,16 +50,29 @@ import {
 } from '#/components/icons/Message'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {styles} from './BottomBarStyles'
 
 type TabOptions = 'Home' | 'Search' | 'Messages' | 'Notifications' | 'MyProfile'
 
+const TAB_TO_NAV_ITEM: Record<
+  TabOptions,
+  'home' | 'search' | 'chat' | 'notifications' | 'profile'
+> = {
+  Home: 'home',
+  Search: 'search',
+  Messages: 'chat',
+  Notifications: 'notifications',
+  MyProfile: 'profile',
+}
+
 export function BottomBar({navigation}: BottomTabBarProps) {
   const {hasSession, currentAccount} = useSession()
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
   const safeAreaInsets = useSafeAreaInsets()
   const {footerHeight} = useShellLayout()
   const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile, isAtMessages} =
@@ -90,6 +103,10 @@ export function BottomBar({navigation}: BottomTabBarProps) {
 
   const onPressTab = useCallback(
     (tab: TabOptions) => {
+      ax.metric('nav:click', {
+        item: TAB_TO_NAV_ITEM[tab],
+        surface: 'bottomBar',
+      })
       const state = navigation.getState()
       const tabState = getTabState(state, tab)
       if (tabState === TabState.InsideAtRoot) {
@@ -117,7 +134,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
         dedupe(() => navigation.navigate(`${tab}Tab`))
       }
     },
-    [navigation, dedupe],
+    [navigation, dedupe, ax],
   )
   const onPressHome = useCallback(() => onPressTab('Home'), [onPressTab])
   const onPressSearch = useCallback(() => onPressTab('Search'), [onPressTab])

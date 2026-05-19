@@ -80,8 +80,20 @@ import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
 import {router} from '#/routes'
+
+type LeftNavItem =
+  | 'home'
+  | 'search'
+  | 'chat'
+  | 'notifications'
+  | 'feeds'
+  | 'lists'
+  | 'saved'
+  | 'profile'
+  | 'settings'
 import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
 
 const NAV_ICON_WIDTH = 28
@@ -385,6 +397,7 @@ interface NavItemProps {
   iconFilled: JSX.Element
   label: string
   minimal: boolean
+  navItem: LeftNavItem
 }
 function NavItem({
   count,
@@ -394,9 +407,11 @@ function NavItem({
   iconFilled,
   label,
   minimal,
+  navItem,
 }: NavItemProps) {
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
 
   const [pathName] = useMemo(() => router.matchPath(href), [href])
@@ -416,6 +431,7 @@ function NavItem({
   const navigation = useNavigation<NavigationProp>()
   const onPressWrapped = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+      ax.metric('nav:click', {item: navItem, surface: 'leftNav'})
       if (e.ctrlKey || e.metaKey || e.altKey) {
         return
       }
@@ -428,7 +444,7 @@ function NavItem({
         navigation.navigate(screen, params, {pop: true})
       }
     },
-    [navigation, href, isCurrent],
+    [navigation, href, isCurrent, ax, navItem],
   )
 
   return (
@@ -598,6 +614,7 @@ function ChatNavItem({minimal}: {minimal: boolean}) {
   return (
     <NavItem
       href="/messages"
+      navItem="chat"
       minimal={minimal}
       count={aa.flags.chatDisabled ? undefined : numUnreadMessages.numUnread}
       hasNew={aa.flags.chatDisabled ? false : numUnreadMessages.hasNew}
@@ -676,6 +693,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
         <>
           <NavItem
             href="/"
+            navItem="home"
             minimal={leftNavMinimal}
             icon={
               <Home
@@ -695,6 +713,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           />
           <NavItem
             href="/search"
+            navItem="search"
             minimal={leftNavMinimal}
             icon={
               <MagnifyingGlass
@@ -714,6 +733,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           />
           <NavItem
             href="/notifications"
+            navItem="notifications"
             minimal={leftNavMinimal}
             count={numUnreadNotifications}
             icon={
@@ -735,6 +755,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           <ChatNavItem minimal={leftNavMinimal} />
           <NavItem
             href="/feeds"
+            navItem="feeds"
             minimal={leftNavMinimal}
             icon={
               <Hashtag
@@ -754,6 +775,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           />
           <NavItem
             href="/lists"
+            navItem="lists"
             minimal={leftNavMinimal}
             icon={
               <List
@@ -773,6 +795,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           />
           <NavItem
             href="/saved"
+            navItem="saved"
             minimal={leftNavMinimal}
             icon={
               <Bookmark
@@ -797,6 +820,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           />
           <NavItem
             href={currentAccount ? makeProfileLink(currentAccount) : '/'}
+            navItem="profile"
             minimal={leftNavMinimal}
             icon={
               <UserCircle
@@ -816,6 +840,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           />
           <NavItem
             href="/settings"
+            navItem="settings"
             minimal={leftNavMinimal}
             icon={
               <Settings
