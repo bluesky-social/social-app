@@ -5,7 +5,7 @@
     "start": "NODE_ENV=development ./dev-infra/with-test-redis-and-db.sh ts-node ./mock-server.ts"
   },
   "dependencies": {
-    "@atproto/dev-env": "^0.4.8",
+    "@atproto/dev-env": "^0.5.0",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
   }

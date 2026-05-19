@@ -1,6 +1,9 @@
 allowBuilds:
-  "better-sqlite3": false # doesn't work on node24! TODO: enable once dev-env supports node24. this PR cannot be merged until then
-  "core-js": true
-  "protobufjs": true
-  "sharp": true
-  "unrs-resolver": true
+  'better-sqlite3': true
+  'core-js': true
+  'protobufjs': true
+  'sharp': true
+  'unrs-resolver': true
+minimumReleaseAgeExclude:
+  - '@atproto/*'
+  - '@atproto-labs/*'
