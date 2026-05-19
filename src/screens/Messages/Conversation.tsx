@@ -49,6 +49,7 @@ import {ChatDisabled} from './components/ChatDisabled'
 import {ChatEnded} from './components/ChatEnded'
 import {ChatLocked} from './components/ChatLocked'
 import {RequestStatus} from './components/RequestStatus'
+import {GroupOwnerChatDisabled} from './components/GroupOwnerChatDisabled'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -250,7 +251,9 @@ function InnerReady({
       />
     )
   } else if (convo?.kind === 'group') {
-    if (convo.details.lockStatus === 'locked') {
+    if (convo.primaryMember?.chatDisabled) {
+      footer = <GroupOwnerChatDisabled convo={convo} />
+    } else if (convo.details.lockStatus === 'locked') {
       footer = <ChatLocked convo={convo} />
     } else if (convo.details.lockStatus === 'locked-permanently') {
       footer = <ChatEnded convo={convo} />
