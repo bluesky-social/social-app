@@ -15,11 +15,13 @@ let MessageItemEmbed = ({
   isFromSelf,
   squaredTopCorner,
   squaredBottomCorner,
+  isFirstInCluster,
 }: {
   embed: $Typed<AppBskyEmbedRecord.View>
   isFromSelf: boolean
   squaredTopCorner: boolean
   squaredBottomCorner: boolean
+  isFirstInCluster: boolean
 }): React.ReactNode => {
   const t = useTheme()
   const screen = useWindowDimensions()
@@ -34,15 +36,14 @@ let MessageItemEmbed = ({
             width: Math.min(screen.width, 600) / 1.4,
           }),
           web({
-            width: '100%',
             minWidth: 280,
             maxWidth: 360,
           }),
           {
-            marginTop: CLUSTERED_MESSAGE_GAP,
+            marginTop: isFirstInCluster ? 0 : CLUSTERED_MESSAGE_GAP,
           },
         ]}>
-        <View style={{marginTop: -8}}>
+        <View>
           <Embed
             embed={embed}
             allowNestedQuotes
