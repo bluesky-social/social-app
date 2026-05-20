@@ -394,8 +394,15 @@ let MessageItem = ({
                 a.absolute,
                 a.bottom_0,
                 a.z_50,
-                {
-                  transform: [{translateY: hasReactions ? -24 : 0}],
+                hasReactions && {
+                  transform: [
+                    {
+                      translateY: platform({
+                        ios: -29,
+                        default: -27,
+                      }),
+                    },
+                  ],
                 },
               ]}>
               {avatar}
