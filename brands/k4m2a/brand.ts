@@ -17,39 +17,68 @@ import nativeConfig from './brand.js'
  * Web hostname mapping lives in `src/brand/resolve.web.ts`.
  */
 
-// Monochrome primary ramp tuned to the k4m2a brand book (#000, #333, #4C4C4C
-// dark; #D6D6D6, #C5C5C5 light). primary_500 is what most "primary" UI
-// elements (buttons, focus rings) render with.
 const K4M2A_PRIMARY_RAMP = {
   primary_25: '#FAFAFA',
-  primary_50: '#F2F2F2',
-  primary_100: '#E5E5E5',
-  primary_200: '#D6D6D6',
-  primary_300: '#C5C5C5',
-  primary_400: '#9E9E9E',
-  primary_500: '#4C4C4C',
-  primary_600: '#333333',
-  primary_700: '#1F1F1F',
-  primary_800: '#141414',
-  primary_900: '#0A0A0A',
-  primary_950: '#050505',
-  primary_975: '#000000',
+  primary_50: '#F4F4F6',
+  primary_100: '#E5E5EA',
+  primary_200: '#D1D1D6', // Light gray for disabled bg in light mode
+  primary_300: '#C7C7CC',
+  primary_400: '#AEAEB2',
+  primary_500: '#8E8E93', // Premium iOS System Gray active accent (highly visible in both light & dark)
+  primary_600: '#7C7C80', // Active hover color
+  primary_700: '#636366',
+  primary_800: '#48484A', // Matte charcoal for disabled bg in dark/dim mode
+  primary_900: '#3A3A3C',
+  primary_950: '#2C2C2E',
+  primary_975: '#1C1C1E',
+}
+
+const K4M2A_CONTRASTS = {
+  // Overrides for a premium matte carbon-black theme in dark mode
+  contrast_700: '#D6D6D6',
+  contrast_800: '#A3A3A3',
+  contrast_900: '#666666',
+  contrast_950: '#444444',
+  contrast_975: '#222222',
+  contrast_1000: '#121212',
+}
+
+const K4M2A_SUBDUED_CONTRASTS = {
+  // Overrides for a gorgeous matte graphite/charcoal theme in dim mode (purging bluish-gray)
+  contrast_700: '#9E9E9E',
+  contrast_800: '#3F3F3F',
+  contrast_900: '#2A2A2A',
+  contrast_950: '#1E1E1E',
+  contrast_975: '#151515',
+  contrast_1000: '#0D0D0D',
 }
 
 const k4m2aPalette = {
   ...DEFAULT_PALETTE,
   ...K4M2A_PRIMARY_RAMP,
+  ...K4M2A_CONTRASTS,
 }
 
 const k4m2aSubduedPalette = {
   ...DEFAULT_SUBDUED_PALETTE,
   ...K4M2A_PRIMARY_RAMP,
+  ...K4M2A_SUBDUED_CONTRASTS,
 }
 
 // Inline icon SVG (black "k_____a" mark). Default fills swapped to
 // `currentColor` so the wrapper can recolor for light/dark themes; the gray
 // accent strokes stay literal `#d6d6d6` because they're a brand decision.
 const ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 77.234 115.671">
+  <style>
+    svg {
+      color: #121212;
+    }
+    @media (prefers-color-scheme: dark) {
+      svg {
+        color: #FFFFFF;
+      }
+    }
+  </style>
   <g>
     <path fill="currentColor" d="M46.688,37.485,1.674,15.53a2.022,2.022,0,0,1-.31-3.9L34.81.111a2.021,2.021,0,1,1,1.316,3.822L7.4,13.824l41.06,20.027a2.022,2.022,0,1,1-1.772,3.634Z" transform="translate(0 72.474)"/>
     <rect fill="currentColor" width="3.186" height="110.963" rx="1.593" transform="translate(8.042 0)"/>
@@ -64,6 +93,16 @@ const ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 77.234 11
 // two `#d6d6d6` accent strokes (left of "k", right of "a") are part of the
 // brand identity and stay literal.
 const WORDMARK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 535.428 210.357">
+  <style>
+    svg {
+      color: #121212;
+    }
+    @media (prefers-color-scheme: dark) {
+      svg {
+        color: #FFFFFF;
+      }
+    }
+  </style>
   <defs>
     <clipPath id="cp1"><rect width="65.989" height="95.181" fill="none"/></clipPath>
     <clipPath id="cp2"><rect width="86.994" height="95.181" fill="none"/></clipPath>

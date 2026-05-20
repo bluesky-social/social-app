@@ -35,14 +35,36 @@ const MDPARIVAAR_PRIMARY_RAMP = {
   primary_975: '#241208',
 }
 
+const MDPARIVAAR_CONTRASTS = {
+  // Only override high contrast values (700-1000) for custom dark-mode warm-brown backgrounds and surfaces
+  contrast_700: '#B19688', // Premium warm sandstone text/icons
+  contrast_800: '#423028', // Active elements
+  contrast_900: '#30221C', // Elegant warm border
+  contrast_950: '#241814', // Warm card/surface background
+  contrast_975: '#1C120E', // Hover state
+  contrast_1000: '#150D0A', // Deep near-black warm cocoa background for dark mode (instead of #000000)
+}
+
+const MDPARIVAAR_SUBDUED_CONTRASTS = {
+  // Subdued overrides for custom dim-mode warm-brown backgrounds and surfaces
+  contrast_700: '#C5A898', // Soft sandstone text/icons
+  contrast_800: '#543E33', // Active elements
+  contrast_900: '#3F2E26', // Elegant dim border
+  contrast_950: '#32231D', // Dim card/surface background
+  contrast_975: '#271B16', // Hover state
+  contrast_1000: '#1E1410', // Comfortable warm dim cocoa background for dim mode (instead of #151D28)
+}
+
 const mdparivaarPalette = {
   ...DEFAULT_PALETTE,
   ...MDPARIVAAR_PRIMARY_RAMP,
+  ...MDPARIVAAR_CONTRASTS,
 }
 
 const mdparivaarSubduedPalette = {
   ...DEFAULT_SUBDUED_PALETTE,
   ...MDPARIVAAR_PRIMARY_RAMP,
+  ...MDPARIVAAR_SUBDUED_CONTRASTS,
 }
 
 // The MD icon is a self-contained design (white-on-saffron). Rendered via

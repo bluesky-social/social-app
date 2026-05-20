@@ -22,3 +22,46 @@ if (!brand.defaultFeeds[0] || !brand.defaultFeeds[1]) {
 }
 
 setActiveBrand(brand)
+
+// On web, persist the resolved brand details so subsequent page loads can read them from localStorage early
+if (typeof window !== 'undefined') {
+  try {
+    const {mark} = brand.logo
+    const svgString =
+      'xml' in mark
+        ? mark.xml
+        : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${mark.viewBox}"><path fill="currentColor" d="${mark.path}"/></svg>`
+    localStorage.setItem('ACTIVE_BRAND_SPLASH_COLOR', brand.splashColor)
+    localStorage.setItem(
+      'ACTIVE_BRAND_SPLASH_COLOR_DARK',
+      brand.splashColorDark,
+    )
+    localStorage.setItem('ACTIVE_BRAND_LOGO_SVG', svgString)
+    localStorage.setItem('ACTIVE_BRAND_PRIMARY_COLOR', brand.primaryColor)
+    localStorage.setItem(
+      'ACTIVE_BRAND_BG_LIGHT',
+      brand.palette.default.contrast_0,
+    )
+    localStorage.setItem(
+      'ACTIVE_BRAND_BG_DARK',
+      brand.palette.default.contrast_1000,
+    )
+    localStorage.setItem(
+      'ACTIVE_BRAND_BG_DIM',
+      brand.palette.subdued.contrast_1000,
+    )
+
+    // Dynamically apply tab title and favicon link
+    if (typeof document !== 'undefined') {
+      document.title = brand.name
+      const existingFavicons = document.querySelectorAll("link[rel*='icon']")
+      existingFavicons.forEach(el => el.remove())
+
+      const faviconLink = document.createElement('link')
+      faviconLink.type = 'image/svg+xml'
+      faviconLink.rel = 'shortcut icon'
+      faviconLink.href = `data:image/svg+xml,${encodeURIComponent(svgString)}`
+      document.head.appendChild(faviconLink)
+    }
+  } catch (_) {}
+}
