@@ -269,7 +269,7 @@ jobs:
           fi
 
       - name: 🚀 Deploy
-        run: eas submit -p ios --non-interactive --path "$BUILD_DIR/Bluesky.ipa"
+        run: pnpm eas submit -p ios --non-interactive --path "$BUILD_DIR/Bluesky.ipa"
 
       - name: 🪲 Upload dSYM to Sentry
         run: >
