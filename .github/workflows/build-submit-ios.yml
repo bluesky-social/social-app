@@ -46,9 +46,10 @@ jobs:
       - name: ⚙️ Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: 🧐 Validate Expo token
+      - name: 🔨 Setup Expo CLI
         uses: expo/expo-github-action@main
         with:
+          expo-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
       - uses: maxim-lobanov/setup-xcode@v1
