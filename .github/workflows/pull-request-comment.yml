@@ -144,7 +144,12 @@ jobs:
         uses: expo/expo-github-action@main
         with:
           expo-version: latest
+          eas-version: latest
+          packager: pnpm
           token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: ⛏️ Setup Expo
+        run: pnpm add -g eas-cli-local-build-plugin
 
       - name: 🪛 Setup jq
         uses: dcarbone/install-jq-action@v2
