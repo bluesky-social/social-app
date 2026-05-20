@@ -93,10 +93,6 @@ jobs:
           expo-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: ⛏️ Setup Expo
-        if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        run: pnpm add -g eas-cli-local-build-plugin
-
       - name: 🪛 Setup jq
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         uses: dcarbone/install-jq-action@v2
@@ -233,7 +229,7 @@ jobs:
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
           pnpm use-build-number-with-bump
-          eas build -p ios
+          pnpm eas build -p ios
           --profile testflight
           --local --output build.tar.gz --non-interactive
 
@@ -367,7 +363,7 @@ jobs:
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
           pnpm use-build-number-with-bump
-          eas build -p android
+          pnpm eas build -p android
           --profile testflight-android
           --local --output build.apk --non-interactive
 
