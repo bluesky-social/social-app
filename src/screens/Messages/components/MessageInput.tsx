@@ -158,7 +158,6 @@ export function MessageInput({
 
   return (
     <ComposerContainer>
-      {children}
       <GlassContainer
         style={[a.flex_row, a.align_end, a.gap_sm]}
         spacing={tokens.space.xs}>
@@ -168,6 +167,7 @@ export function MessageInput({
           style={[a.flex_1, a.rounded_xl, {minHeight: MIN_HEIGHT}]}
           tintColor={t.palette.contrast_50}
           fallbackStyle={[t.atoms.bg_contrast_50]}>
+          {children}
           <AnimatedTextInput
             nativeID={textInputId}
             accessibilityLabel={l`Message input field`}
