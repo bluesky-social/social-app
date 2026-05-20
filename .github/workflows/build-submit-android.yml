@@ -43,14 +43,19 @@ jobs:
       - name: 🪛 Setup jq
         uses: dcarbone/install-jq-action@v2
 
-      - name: ⚙️ Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: ⛏️ Setup EAS CLI & local builds
+        # note: can't do it via expo-github-action because we need to set the allow-build flag
+        run: pnpm -g --allow-build=dtrace-provider add eas-cli@latest eas-cli-local-build-plugin
 
       - name: 🔨 Setup Expo CLI
         uses: expo/expo-github-action@main
         with:
           expo-version: latest
+          packager: pnpm
           token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: ⚙️ Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - uses: actions/setup-java@v5
         with:
@@ -87,7 +92,7 @@ jobs:
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
           pnpm use-build-number-with-bump
-          pnpm eas build -p android
+          eas build -p android
           --profile $PROFILE
           --local --output build.aab --non-interactive
 
@@ -157,7 +162,7 @@ jobs:
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
           pnpm use-build-number-with-bump
-          pnpm eas build -p android
+          eas build -p android
           --profile production-apk
           --local --output build.apk --non-interactive
 
