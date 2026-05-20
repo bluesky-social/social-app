@@ -1,10 +1,10 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {
   BSKY_LABELER_DID,
   type ModerationCause,
   type ModerationCauseSource,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -28,6 +28,7 @@ export interface ModerationCauseDescription {
   sourceType?: ModerationCauseSource['type']
   sourceAvi?: string
   sourceDid?: string
+  isSubjectAccount?: boolean
 }
 
 export function useModerationCauseDescription(
@@ -38,7 +39,7 @@ export function useModerationCauseDescription(
   const {labelDefs, labelers} = useLabelDefinitions()
   const globalLabelStrings = useGlobalLabelStrings()
 
-  return React.useMemo(() => {
+  return useMemo(() => {
     if (!cause) {
       return {
         icon: Warning,
@@ -162,6 +163,7 @@ export function useModerationCauseDescription(
         sourceType: cause.source.type,
         sourceAvi: labeler?.creator.avatar,
         sourceDid: cause.label.src,
+        isSubjectAccount: cause.label.uri.startsWith('did:'),
       }
     }
     // should never happen

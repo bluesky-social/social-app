@@ -1,13 +1,13 @@
 import {type AppBskyActorDefs, AppBskyGraphDefs, AtUri} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {
   useListBlockMutation,
   useListDeleteMutation,
@@ -20,7 +20,7 @@ import {useDialogControl} from '#/components/Dialog'
 import {CreateOrEditListDialog} from '#/components/dialogs/lists/CreateOrEditListDialog'
 import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ShareIcon} from '#/components/icons/ArrowOutOfBox'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLink} from '#/components/icons/ChainLink'
-import {DotGrid_Stroke2_Corner0_Rounded as DotGridIcon} from '#/components/icons/DotGrid'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as DotGridIcon} from '#/components/icons/DotGrid'
 import {PencilLine_Stroke2_Corner0_Rounded as PencilLineIcon} from '#/components/icons/Pencil'
 import {PersonCheck_Stroke2_Corner0_Rounded as PersonCheckIcon} from '#/components/icons/Person'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
@@ -34,6 +34,8 @@ import {
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 
 export function MoreOptionsMenu({
   list,
@@ -43,6 +45,7 @@ export function MoreOptionsMenu({
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const editListDialogControl = useDialogControl()
   const deleteListPromptControl = useDialogControl()
@@ -111,11 +114,7 @@ export function MoreOptionsMenu({
     try {
       await muteList({uri: list.uri, mute: false})
       Toast.show(_(msg({message: 'List unmuted', context: 'toast'})))
-      logger.metric(
-        'moderation:unsubscribedFromList',
-        {listType: 'mute'},
-        {statsig: true},
-      )
+      ax.metric('moderation:unsubscribedFromList', {listType: 'mute'})
     } catch {
       Toast.show(
         _(
@@ -129,11 +128,7 @@ export function MoreOptionsMenu({
     try {
       await blockList({uri: list.uri, block: false})
       Toast.show(_(msg({message: 'List unblocked', context: 'toast'})))
-      logger.metric(
-        'moderation:unsubscribedFromList',
-        {listType: 'block'},
-        {statsig: true},
-      )
+      ax.metric('moderation:unsubscribedFromList', {listType: 'block'})
     } catch {
       Toast.show(
         _(
@@ -159,13 +154,13 @@ export function MoreOptionsMenu({
             </Button>
           )}
         </Menu.Trigger>
-        <Menu.Outer>
+        <Menu.Outer showCancel>
           <Menu.Group>
             <Menu.Item
-              label={isWeb ? _(msg`Copy link to list`) : _(msg`Share via...`)}
+              label={IS_WEB ? _(msg`Copy link to list`) : _(msg`Share via...`)}
               onPress={onPressShare}>
               <Menu.ItemText>
-                {isWeb ? (
+                {IS_WEB ? (
                   <Trans>Copy link to list</Trans>
                 ) : (
                   <Trans>Share via...</Trans>
@@ -173,7 +168,7 @@ export function MoreOptionsMenu({
               </Menu.ItemText>
               <Menu.ItemIcon
                 position="right"
-                icon={isWeb ? ChainLink : ShareIcon}
+                icon={IS_WEB ? ChainLink : ShareIcon}
               />
             </Menu.Item>
             {savedFeedConfig && (

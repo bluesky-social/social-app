@@ -8,7 +8,6 @@ import {
   type ViewabilityConfig,
   type ViewToken,
 } from 'react-native'
-import {SystemBars} from 'react-native-edge-to-edge'
 import {
   Gesture,
   GestureDetector,
@@ -22,8 +21,7 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
-import {useEvent} from 'expo'
-import {useEventListener} from 'expo'
+import {useEvent, useEventListener} from 'expo'
 import {Image, type ImageStyle} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {createVideoPlayer, type VideoPlayer, VideoView} from 'expo-video'
@@ -35,8 +33,7 @@ import {
   type ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {
   type RouteProp,
   useFocusEffect,
@@ -57,7 +54,7 @@ import {
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {isAndroid} from '#/platform/detection'
+import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'
 import {
   POST_TOMBSTONE,
@@ -67,19 +64,17 @@ import {
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {
   FeedFeedbackProvider,
+  useFeedFeedback,
   useFeedFeedbackContext,
 } from '#/state/feed-feedback'
-import {useFeedFeedback} from '#/state/feed-feedback'
 import {useFeedInfo} from '#/state/queries/feed'
 import {usePostLikeMutationQueue} from '#/state/queries/post'
 import {
-  type AuthorFilter,
   type FeedPostSliceItem,
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {List} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -101,6 +96,8 @@ import * as Hider from '#/components/moderation/Hider'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_ANDROID} from '#/env'
 import * as bsky from '#/types/bsky'
 import {Scrubber, VIDEO_PLAYER_BOTTOM_INSET} from './components/Scrubber'
 
@@ -133,16 +130,13 @@ export function VideoFeed({}: NativeStackScreenProps<
   const {params} = useRoute<RouteProp<CommonNavigatorParams, 'VideoFeed'>>()
 
   const t = useTheme()
-  const setMinShellMode = useSetMinimalShellMode()
   useFocusEffect(
     useCallback(() => {
-      setMinShellMode(true)
       setSystemUITheme('lightbox', t)
       return () => {
-        setMinShellMode(false)
         setSystemUITheme('theme', t)
       }
-    }, [setMinShellMode, t]),
+    }, [t]),
   )
 
   const isFocused = useIsFocused()
@@ -150,9 +144,8 @@ export function VideoFeed({}: NativeStackScreenProps<
 
   return (
     <ThemeProvider theme="dark">
-      <Layout.Screen noInsetTop style={{backgroundColor: 'black'}}>
+      <Layout.Screen minimalShell noInsetTop style={{backgroundColor: 'black'}}>
         <KeepAwake />
-        <SystemBars style={{statusBar: 'light', navigationBar: 'light'}} />
         <View
           style={[
             a.absolute,
@@ -193,18 +186,16 @@ function Feed() {
   const feedDesc = useMemo(() => {
     switch (params.type) {
       case 'feedgen':
-        return `feedgen|${params.uri as string}` as const
+        return `feedgen|${params.uri}` as const
       case 'author':
-        return `author|${params.did as string}|${
-          params.filter as AuthorFilter
-        }` as const
+        return `author|${params.did}|${params.filter}` as const
       default:
         throw new Error(`Invalid video feed params ${JSON.stringify(params)}`)
     }
   }, [params])
   const feedUri = params.type === 'feedgen' ? params.uri : undefined
   const {data: feedInfo} = useFeedInfo(feedUri)
-  const feedFeedback = useFeedFeedback(feedInfo, hasSession)
+  const feedFeedback = useFeedFeedback(feedInfo ?? undefined, hasSession)
   const {data, error, hasNextPage, isFetchingNextPage, fetchNextPage} =
     usePostFeedQuery(
       feedDesc,
@@ -454,7 +445,7 @@ function Feed() {
           }
           onEndReached={() => {
             if (hasNextPage && !isFetchingNextPage) {
-              fetchNextPage()
+              void fetchNextPage()
             }
           }}
           showsVerticalScrollIndicator={false}
@@ -491,9 +482,11 @@ let VideoItem = ({
   feedContext: string | undefined
   reqId: string | undefined
 }): React.ReactNode => {
+  const ax = useAnalytics()
   const postShadow = usePostShadow(post)
   const {width, height} = useSafeAreaFrame()
-  const {sendInteraction} = useFeedFeedbackContext()
+  const {sendInteraction, feedDescriptor} = useFeedFeedbackContext()
+  const hasTrackedView = useRef(false)
 
   useEffect(() => {
     if (active) {
@@ -503,8 +496,28 @@ let VideoItem = ({
         feedContext,
         reqId,
       })
+
+      // Track post:view event
+      if (!hasTrackedView.current) {
+        hasTrackedView.current = true
+        ax.metric('post:view', {
+          uri: post.uri,
+          authorDid: post.author.did,
+          logContext: 'ImmersiveVideo',
+          feedDescriptor,
+        })
+      }
     }
-  }, [active, post.uri, feedContext, reqId, sendInteraction])
+  }, [
+    ax,
+    active,
+    post.uri,
+    post.author.did,
+    feedContext,
+    reqId,
+    sendInteraction,
+    feedDescriptor,
+  ])
 
   // TODO: high-performance android phones should also
   // be capable of rendering 3 video players, but currently
@@ -567,10 +580,10 @@ function VideoItemInner({
   embed: AppBskyEmbedVideo.View
 }) {
   const {bottom} = useSafeAreaInsets()
-  const [isReady, setIsReady] = useState(!isAndroid)
+  const [isReady, setIsReady] = useState(!IS_ANDROID)
 
   useEventListener(player, 'timeUpdate', evt => {
-    if (isAndroid && !isReady && evt.currentTime >= 0.05) {
+    if (IS_ANDROID && !isReady && evt.currentTime >= 0.05) {
       setIsReady(true)
     }
   })
@@ -603,7 +616,7 @@ function ModerationOverlay({
   embed: AppBskyEmbedVideo.View
   onPressShow: () => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const hider = Hider.useHider()
   const {bottom} = useSafeAreaInsets()
 
@@ -630,7 +643,7 @@ function ModerationOverlay({
             <Trans>Hidden by your moderation settings.</Trans>
           </Text>
           <Button
-            label={_(msg`Show anyway`)}
+            label={l`Show anyway`}
             size="small"
             variant="solid"
             color="secondary_inverted"
@@ -658,7 +671,7 @@ function ModerationOverlay({
           <Divider style={{borderColor: 'white'}} />
           <View>
             <Button
-              label={_(msg`View details`)}
+              label={l`View details`}
               onPress={() => {
                 hider.showInfoDialog()
               }}
@@ -706,7 +719,7 @@ function Overlay({
   feedContext: string | undefined
   reqId: string | undefined
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()
@@ -760,6 +773,7 @@ function Overlay({
         embed: post.embed,
         langs: record?.langs,
       },
+      logContext: 'PostReply',
     })
   }, [openComposer, post, record])
 
@@ -792,11 +806,9 @@ function Overlay({
             <Animated.View style={[a.px_md, animatedStyle]}>
               <View style={[a.w_full, a.flex_row, a.align_center, a.gap_md]}>
                 <Link
-                  label={_(
-                    msg`View ${sanitizeDisplayName(
-                      post.author.displayName || post.author.handle,
-                    )}'s profile`,
-                  )}
+                  label={l`View ${sanitizeDisplayName(
+                    post.author.displayName || post.author.handle,
+                  )}'s profile`}
                   to={{
                     screen: 'Profile',
                     params: {name: post.author.did},
@@ -829,13 +841,11 @@ function Overlay({
                     <Button
                       label={
                         profile.viewer?.following
-                          ? _(msg`Following ${handle}`)
-                          : _(msg`Follow ${handle}`)
+                          ? l`Following ${handle}`
+                          : l`Follow ${handle}`
                       }
                       accessibilityHint={
-                        profile.viewer?.following
-                          ? _(msg`Unfollows the user`)
-                          : ''
+                        profile.viewer?.following ? l`Unfollows the user` : ''
                       }
                       size="small"
                       variant="solid"
@@ -843,8 +853,8 @@ function Overlay({
                       style={[a.mb_xs]}
                       onPress={() =>
                         profile.viewer?.following
-                          ? queueUnfollow()
-                          : queueFollow()
+                          ? void queueUnfollow()
+                          : void queueFollow()
                       }>
                       {!!profile.viewer?.following && (
                         <ButtonIcon icon={CheckIcon} />
@@ -873,6 +883,7 @@ function Overlay({
                     record={record}
                     feedContext={feedContext}
                     logContext="FeedItem"
+                    forceGoogleTranslate={true}
                     onPressReply={() =>
                       navigation.navigate('PostThread', {
                         name: post.author.did,
@@ -897,7 +908,7 @@ function Overlay({
           </LinearGradient>
         </View>
         {/*
-        {isAndroid && status === 'loading' && (
+        {IS_ANDROID && status === 'loading' && (
           <View
             style={[
               a.absolute,
@@ -928,7 +939,7 @@ function ExpandableRichTextView({
   const [hasBeenExpanded, setHasBeenExpanded] = useState(false)
   const [constrained, setConstrained] = useState(false)
   const [contentHeight, setContentHeight] = useState(0)
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {screenReaderEnabled} = useA11y()
 
   if (expanded && !hasBeenExpanded) {
@@ -955,7 +966,7 @@ function ExpandableRichTextView({
       ]}>
       <RichText
         value={value}
-        style={[a.text_sm, a.flex_1, a.leading_normal]}
+        style={[a.text_sm, a.flex_1, a.leading_relaxed]}
         authorHandle={authorHandle}
         enableTags
         numberOfLines={
@@ -969,8 +980,8 @@ function ExpandableRichTextView({
       />
       {constrained && !screenReaderEnabled && (
         <Pressable
-          accessibilityHint={_(msg`Expands or collapses post text`)}
-          accessibilityLabel={expanded ? _(msg`Read less`) : _(msg`Read more`)}
+          accessibilityHint={l`Expands or collapses post text`}
+          accessibilityLabel={expanded ? l`Read less` : l`Read more`}
           hitSlop={HITSLOP_20}
           onPress={() => setExpanded(prev => !prev)}
           style={[a.absolute, a.inset_0]}
@@ -1030,7 +1041,7 @@ function PlayPauseTapArea({
   feedContext: string | undefined
   reqId: string | undefined
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const playHaptic = useHaptics()
   // TODO: implement viaRepost -sfn
@@ -1044,23 +1055,36 @@ function PlayPauseTapArea({
   const {isPlaying} = useEvent(player, 'playingChange', {
     isPlaying: player.playing,
   })
+  const isMounted = useRef(false)
 
-  const togglePlayPause = () => {
-    if (!player) return
-    doubleTapRef.current = null
-    if (player.playing) {
-      player.pause()
-    } else {
-      player.play()
+  useEffect(() => {
+    isMounted.current = true
+    return () => {
+      isMounted.current = false
     }
-  }
+  }, [])
+
+  const togglePlayPause = useNonReactiveCallback(() => {
+    // gets called after a timeout, so guard against being called after unmount -sfn
+    if (!player || !isMounted.current) return
+    doubleTapRef.current = null
+    try {
+      if (player.playing) {
+        player.pause()
+      } else {
+        player.play()
+      }
+    } catch (err) {
+      logger.error('Could not toggle play/pause', {safeMessage: err})
+    }
+  })
 
   const onPress = () => {
     if (doubleTapRef.current) {
       clearTimeout(doubleTapRef.current)
       doubleTapRef.current = null
       playHaptic('Light')
-      queueLike()
+      void queueLike()
       sendInteraction({
         item: post.uri,
         event: 'app.bsky.feed.defs#interactionLike',
@@ -1075,16 +1099,12 @@ function PlayPauseTapArea({
   return (
     <Button
       disabled={!player}
-      aria-valuetext={
-        isPlaying ? _(msg`Video is playing`) : _(msg`Video is paused`)
-      }
-      label={_(
-        `Video from ${sanitizeHandle(
-          post.author.handle,
-          '@',
-        )}. Tap to play or pause the video`,
-      )}
-      accessibilityHint={_(msg`Double tap to like`)}
+      aria-valuetext={isPlaying ? l`Video is playing` : l`Video is paused`}
+      label={l`Video from ${sanitizeHandle(
+        post.author.handle,
+        '@',
+      )}. Tap to play or pause the video`}
+      accessibilityHint={l`Double tap to like`}
       onPress={onPress}
       style={[a.absolute, a.inset_0, a.z_10]}>
       <View />
@@ -1094,7 +1114,7 @@ function PlayPauseTapArea({
 
 function EndMessage() {
   const navigation = useNavigation<NavigationProp>()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   return (
     <View
@@ -1145,8 +1165,8 @@ function EndMessage() {
         variant="solid"
         color="secondary_inverted"
         size="small"
-        label={_(msg`Go back`)}
-        accessibilityHint={_(msg`Returns to previous page`)}>
+        label={l`Go back`}
+        accessibilityHint={l`Returns to previous page`}>
         <ButtonIcon icon={ArrowLeftIcon} />
         <ButtonText>
           <Trans>Go back</Trans>

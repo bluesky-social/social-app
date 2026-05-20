@@ -1,4 +1,4 @@
-import {memo, useState} from 'react'
+import {memo, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
   type AppBskyFeedDefs,
@@ -6,8 +6,8 @@ import {
   type AppBskyFeedThreadgate,
   type RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg, plural} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {plural} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react/macro'
 
 import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
@@ -24,10 +24,12 @@ import {
   ProgressGuideAction,
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
-import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, flatten, useBreakpoints} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Reply as Bubble} from '#/components/icons/Reply'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
+import * as Skele from '#/components/Skeleton'
+import * as Toast from '#/components/Toast'
+import {useAnalytics} from '#/analytics'
 import {BookmarkButton} from './BookmarkButton'
 import {
   PostControlButton,
@@ -53,6 +55,7 @@ let PostControls = ({
   onShowLess,
   viaRepost,
   variant,
+  forceGoogleTranslate = false,
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -68,8 +71,11 @@ let PostControls = ({
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
   viaRepost?: {uri: string; cid: string}
   variant?: 'compact' | 'normal' | 'large'
+  forceGoogleTranslate?: boolean
 }): React.ReactNode => {
-  const {_} = useLingui()
+  const ax = useAnalytics()
+  const t = useTheme()
+  const {t: l} = useLingui()
   const {openComposer} = useOpenComposer()
   const {feedDescriptor} = useFeedFeedbackContext()
   const [queueLike, queueUnlike] = usePostLikeMutationQueue(
@@ -90,8 +96,8 @@ let PostControls = ({
   const playHaptic = useHaptics()
   const isBlocked = Boolean(
     post.author.viewer?.blocking ||
-      post.author.viewer?.blockedBy ||
-      post.author.viewer?.blockingByList,
+    post.author.viewer?.blockedBy ||
+    post.author.viewer?.blockingByList,
   )
   const replyDisabled = post.viewer?.replyDisabled
   const {gtPhone} = useBreakpoints()
@@ -101,10 +107,9 @@ let PostControls = ({
 
   const onPressToggleLike = async () => {
     if (isBlocked) {
-      Toast.show(
-        _(msg`Cannot interact with a blocked user`),
-        'exclamation-circle',
-      )
+      Toast.show(l`Cannot interact with a blocked user`, {
+        type: 'warning',
+      })
       return
     }
 
@@ -123,7 +128,8 @@ let PostControls = ({
       } else {
         await queueUnlike()
       }
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       if (e?.name !== 'AbortError') {
         throw e
       }
@@ -132,10 +138,9 @@ let PostControls = ({
 
   const onRepost = async () => {
     if (isBlocked) {
-      Toast.show(
-        _(msg`Cannot interact with a blocked user`),
-        'exclamation-circle',
-      )
+      Toast.show(l`Cannot interact with a blocked user`, {
+        type: 'warning',
+      })
       return
     }
 
@@ -151,7 +156,8 @@ let PostControls = ({
       } else {
         await queueUnrepost()
       }
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       if (e?.name !== 'AbortError') {
         throw e
       }
@@ -160,10 +166,9 @@ let PostControls = ({
 
   const onQuote = () => {
     if (isBlocked) {
-      Toast.show(
-        _(msg`Cannot interact with a blocked user`),
-        'exclamation-circle',
-      )
+      Toast.show(l`Cannot interact with a blocked user`, {
+        type: 'warning',
+      })
       return
     }
 
@@ -173,9 +178,16 @@ let PostControls = ({
       feedContext,
       reqId,
     })
+    ax.metric('post:clickQuotePost', {
+      uri: post.uri,
+      authorDid: post.author.did,
+      logContext,
+      feedDescriptor,
+    })
     openComposer({
       quote: post,
       onPost: onPostReply,
+      logContext: 'QuotePost',
     })
   }
 
@@ -188,11 +200,11 @@ let PostControls = ({
     })
   }
 
-  const secondaryControlSpacingStyles = flatten([
-    {gap: 0}, // default, we want `gap` to be defined on the resulting object
-    variant !== 'compact' && a.gap_xs,
-    (big || gtPhone) && a.gap_sm,
-  ])
+  const secondaryControlSpacingStyles = useSecondaryControlSpacingStyles({
+    variant,
+    big,
+    gtPhone,
+  })
 
   return (
     <View
@@ -216,19 +228,26 @@ let PostControls = ({
             testID="replyBtn"
             onPress={
               !replyDisabled
-                ? () => requireAuth(() => onPressReply())
+                ? () =>
+                    requireAuth(() => {
+                      ax.metric('post:clickReply', {
+                        uri: post.uri,
+                        authorDid: post.author.did,
+                        logContext,
+                        feedDescriptor,
+                      })
+                      onPressReply()
+                    })
                 : undefined
             }
-            label={_(
-              msg({
-                message: `Reply (${plural(post.replyCount || 0, {
-                  one: '# reply',
-                  other: '# replies',
-                })})`,
-                comment:
-                  'Accessibility label for the reply button, verb form followed by number of replies and noun form',
-              }),
-            )}
+            label={l({
+              message: `Reply (${plural(post.replyCount || 0, {
+                one: '# reply',
+                other: '# replies',
+              })})`,
+              comment:
+                'Accessibility label for the reply button, verb form followed by number of replies and noun form',
+            })}
             big={big}>
             <PostControlButtonIcon icon={Bubble} />
             {typeof post.replyCount !== 'undefined' && post.replyCount > 0 && (
@@ -242,7 +261,7 @@ let PostControls = ({
           <RepostButton
             isReposted={!!post.viewer?.repost}
             repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
-            onRepost={onRepost}
+            onRepost={() => void onRepost()}
             onQuote={onQuote}
             big={big}
             embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
@@ -252,29 +271,27 @@ let PostControls = ({
           <PostControlButton
             testID="likeBtn"
             big={big}
+            active={Boolean(post.viewer?.like)}
+            activeColor={t.palette.pink}
             onPress={() => requireAuth(() => onPressToggleLike())}
             label={
               post.viewer?.like
-                ? _(
-                    msg({
-                      message: `Unlike (${plural(post.likeCount || 0, {
-                        one: '# like',
-                        other: '# likes',
-                      })})`,
-                      comment:
-                        'Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun',
-                    }),
-                  )
-                : _(
-                    msg({
-                      message: `Like (${plural(post.likeCount || 0, {
-                        one: '# like',
-                        other: '# likes',
-                      })})`,
-                      comment:
-                        'Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form',
-                    }),
-                  )
+                ? l({
+                    message: `Unlike (${plural(post.likeCount || 0, {
+                      one: '# like',
+                      other: '# likes',
+                    })})`,
+                    comment:
+                      'Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun',
+                  })
+                : l({
+                    message: `Like (${plural(post.likeCount || 0, {
+                      one: '# like',
+                      other: '# likes',
+                    })})`,
+                    comment:
+                      'Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form',
+                  })
             }>
             <AnimatedLikeIcon
               isLiked={Boolean(post.viewer?.like)}
@@ -282,10 +299,14 @@ let PostControls = ({
               hasBeenToggled={hasLikeIconBeenToggled}
             />
             <CountWheel
-              likeCount={post.likeCount ?? 0}
-              big={big}
-              isLiked={Boolean(post.viewer?.like)}
+              count={post.likeCount ?? 0}
+              isToggled={Boolean(post.viewer?.like)}
               hasBeenToggled={hasLikeIconBeenToggled}
+              renderCount={({count}) => (
+                <PostControlButtonText testID="likeCount">
+                  {formatPostStatCount(count)}
+                </PostControlButtonText>
+              )}
             />
           </PostControlButton>
         </View>
@@ -314,6 +335,7 @@ let PostControls = ({
             left: secondaryControlSpacingStyles.gap / 2,
             right: secondaryControlSpacingStyles.gap / 2,
           }}
+          logContext={logContext}
         />
         <PostMenuButton
           testID="postDropdownBtn"
@@ -329,6 +351,8 @@ let PostControls = ({
           hitSlop={{
             left: secondaryControlSpacingStyles.gap / 2,
           }}
+          logContext={logContext}
+          forceGoogleTranslate={forceGoogleTranslate}
         />
       </View>
     </View>
@@ -336,3 +360,77 @@ let PostControls = ({
 }
 PostControls = memo(PostControls)
 export {PostControls}
+
+export function PostControlsSkeleton({
+  big,
+  style,
+  variant,
+}: {
+  big?: boolean
+  style?: StyleProp<ViewStyle>
+  variant?: 'compact' | 'normal' | 'large'
+}) {
+  const {gtPhone} = useBreakpoints()
+
+  const rowHeight = big ? 32 : 28
+  const padding = 4
+  const size = rowHeight - padding * 2
+
+  const secondaryControlSpacingStyles = useSecondaryControlSpacingStyles({
+    variant,
+    big,
+    gtPhone,
+  })
+
+  const itemStyles = {
+    padding,
+  }
+
+  return (
+    <Skele.Row
+      style={[a.flex_row, a.justify_between, a.align_center, a.gap_md, style]}>
+      <View style={[a.flex_row, a.flex_1, {maxWidth: 320}]}>
+        <View
+          style={[itemStyles, a.flex_1, a.align_start, {marginLeft: -padding}]}>
+          <Skele.Pill blend size={size} />
+        </View>
+
+        <View style={[itemStyles, a.flex_1, a.align_start]}>
+          <Skele.Pill blend size={size} />
+        </View>
+
+        <View style={[itemStyles, a.flex_1, a.align_start]}>
+          <Skele.Pill blend size={size} />
+        </View>
+      </View>
+      <View style={[a.flex_row, a.justify_end, secondaryControlSpacingStyles]}>
+        <View style={itemStyles}>
+          <Skele.Circle blend size={size} />
+        </View>
+        <View style={itemStyles}>
+          <Skele.Circle blend size={size} />
+        </View>
+        <View style={itemStyles}>
+          <Skele.Circle blend size={size} />
+        </View>
+      </View>
+    </Skele.Row>
+  )
+}
+
+function useSecondaryControlSpacingStyles({
+  variant,
+  big,
+  gtPhone,
+}: {
+  variant?: 'compact' | 'normal' | 'large'
+  big?: boolean
+  gtPhone: boolean
+}) {
+  return useMemo(() => {
+    let gap = 0 // default, we want `gap` to be defined on the resulting object
+    if (variant !== 'compact') gap = a.gap_xs.gap
+    if (big || gtPhone) gap = a.gap_sm.gap
+    return {gap}
+  }, [variant, big, gtPhone])
+}

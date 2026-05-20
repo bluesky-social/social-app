@@ -1,9 +1,16 @@
-import React, {useContext, useState, useSyncExternalStore} from 'react'
-import {type ChatBskyConvoDefs} from '@atproto/api'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  useSyncExternalStore,
+} from 'react'
+import {ChatBskyConvoDefs} from '@atproto/api'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useAppState} from '#/lib/hooks/useAppState'
+import {useAppState} from '#/lib/appState'
 import {Convo} from '#/state/messages/convo/agent'
 import {
   type ConvoParams,
@@ -22,10 +29,20 @@ import {
 import {RQKEY_ROOT as ListConvosQueryKeyRoot} from '#/state/queries/messages/list-conversations'
 import {RQKEY as createProfileQueryKey} from '#/state/queries/profile'
 import {useAgent} from '#/state/session'
+import {type GroupConvoMember} from '#/components/dms/util'
 
 export * from '#/state/messages/convo/util'
 
-const ChatContext = React.createContext<ConvoState | null>(null)
+function membersChanged(
+  a: ChatBskyConvoDefs.ConvoView['members'],
+  b: ChatBskyConvoDefs.ConvoView['members'],
+) {
+  if (a.length !== b.length) return true
+  const aDids = new Set(a.map(m => m.did))
+  return b.some(m => !aDids.has(m.did))
+}
+
+const ChatContext = createContext<ConvoState | null>(null)
 ChatContext.displayName = 'ChatContext'
 
 export function useConvo() {
@@ -82,7 +99,7 @@ export function ConvoProvider({
   const appState = useAppState()
   const isActive = appState === 'active'
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       if (isActive) {
         convo.resume()
         markAsRead({convoId})
@@ -95,22 +112,64 @@ export function ConvoProvider({
     }, [isActive, convo, convoId, markAsRead]),
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return convo.on(event => {
       switch (event.type) {
         case 'invalidate-block-state': {
           for (const did of event.accountDids) {
-            queryClient.invalidateQueries({
+            void queryClient.invalidateQueries({
               queryKey: createProfileQueryKey(did),
             })
           }
-          queryClient.invalidateQueries({
+          void queryClient.invalidateQueries({
             queryKey: [ListConvosQueryKeyRoot],
           })
         }
       }
     })
   }, [convo, queryClient])
+
+  useEffect(() => {
+    const [root, id] = getConvoKey(convoId)
+    return queryClient.getQueryCache().subscribe(event => {
+      const queryKey = event.query.queryKey as string[]
+      if (queryKey[0] === root && queryKey[1] === id) {
+        const data = event.query.state.data as
+          | ChatBskyConvoDefs.ConvoView
+          | undefined
+        if (data && convo.convo && data.muted !== convo.convo.view.muted) {
+          convo.updateMuted(data.muted)
+        }
+        if (
+          data &&
+          ChatBskyConvoDefs.isGroupConvo(data.kind) &&
+          convo.convo?.kind === 'group'
+        ) {
+          if (data.kind.name !== convo.convo.details.name) {
+            convo.updateGroupName(data.kind.name)
+          }
+          if (data.kind.joinLink !== convo.convo.details.joinLink) {
+            convo.updateJoinLink(data.kind.joinLink)
+          }
+          if (data.kind.lockStatus !== convo.convo.details.lockStatus) {
+            convo.updateLockStatus(data.kind.lockStatus)
+          }
+        }
+        if (
+          data &&
+          ChatBskyConvoDefs.isGroupConvo(data.kind) &&
+          convo.convo?.kind === 'group' &&
+          (membersChanged(data.members, convo.convo.members) ||
+            data.kind.memberCount !== convo.convo.details.memberCount)
+        ) {
+          convo.updateGroupMembers(
+            data.members as GroupConvoMember[],
+            data.kind.memberCount,
+          )
+        }
+      }
+    })
+  }, [convo, convoId, queryClient])
 
   return <ChatContext.Provider value={service}>{children}</ChatContext.Provider>
 }

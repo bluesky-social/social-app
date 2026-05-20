@@ -1,14 +1,22 @@
-import React, {useImperativeHandle} from 'react'
+import {
+  forwardRef,
+  useCallback,
+  useContext,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from 'react'
 import {
   FlatList,
   type FlatListProps,
   type GestureResponderEvent,
+  type LayoutChangeEvent,
+  Pressable,
   type StyleProp,
-  TouchableWithoutFeedback,
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {DismissableLayer, FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
@@ -47,15 +55,15 @@ export function Outer({
 }: React.PropsWithChildren<DialogOuterProps>) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const {setDialogIsOpen} = useDialogStateControlContext()
 
-  const open = React.useCallback(() => {
+  const open = useCallback(() => {
     setDialogIsOpen(control.id, true)
     setIsOpen(true)
   }, [setIsOpen, setDialogIsOpen, control.id])
 
-  const close = React.useCallback<DialogControlProps['close']>(
+  const close = useCallback<DialogControlProps['close']>(
     cb => {
       setDialogIsOpen(control.id, false)
       setIsOpen(false)
@@ -79,7 +87,7 @@ export function Outer({
     [control.id, onClose, setDialogIsOpen],
   )
 
-  const handleBackgroundPress = React.useCallback(
+  const handleBackgroundPress = useCallback(
     async (e: GestureResponderEvent) => {
       webOptions?.onBackgroundPress ? webOptions.onBackgroundPress(e) : close()
     },
@@ -95,7 +103,7 @@ export function Outer({
     [close, open],
   )
 
-  const context = React.useMemo(
+  const context = useMemo(
     () => ({
       close,
       isNativeDialog: false,
@@ -103,6 +111,7 @@ export function Outer({
       disableDrag: false,
       setDisableDrag: () => {},
       isWithinDialog: true,
+      isHeightConstrained: false,
     }),
     [close],
   )
@@ -113,7 +122,7 @@ export function Outer({
         <Portal>
           <Context.Provider value={context}>
             <RemoveScrollBar />
-            <TouchableWithoutFeedback
+            <Pressable
               accessibilityHint={undefined}
               accessibilityLabel={_(msg`Close active dialog`)}
               onPress={handleBackgroundPress}>
@@ -146,7 +155,7 @@ export function Outer({
                   {children}
                 </View>
               </View>
-            </TouchableWithoutFeedback>
+            </Pressable>
           </Context.Provider>
         </Portal>
       )}
@@ -164,7 +173,7 @@ export function Inner({
   contentContainerStyle,
 }: DialogInnerProps) {
   const t = useTheme()
-  const {close} = React.useContext(Context)
+  const {close} = useContext(Context)
   const {gtMobile} = useBreakpoints()
   const {reduceMotionEnabled} = useA11y()
   FocusGuards.useFocusGuards()
@@ -180,6 +189,7 @@ export function Inner({
         onClick={stopPropagation}
         onStartShouldSetResponder={_ => true}
         onTouchEnd={stopPropagation}
+        // note: flatten is required for some reason -sfn
         style={flatten([
           a.relative,
           a.rounded_md,
@@ -187,6 +197,7 @@ export function Inner({
           a.border,
           t.atoms.bg,
           {
+            cursor: 'default', // The overlay applies `cursor: 'pointer'` to all children.
             maxWidth: 600,
             borderColor: t.palette.contrast_200,
             shadowColor: t.palette.black,
@@ -213,7 +224,7 @@ export function Inner({
 
 export const ScrollableInner = Inner
 
-export const InnerFlatList = React.forwardRef<
+export const InnerFlatList = forwardRef<
   FlatList,
   FlatListProps<any> & {label: string} & {
     webInnerStyle?: StyleProp<ViewStyle>
@@ -244,7 +255,7 @@ export const InnerFlatList = React.forwardRef<
       contentContainerStyle={[a.h_full, a.px_0, webInnerContentContainerStyle]}>
       <FlatList
         ref={ref}
-        style={[a.h_full, gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}
+        style={[a.h_full, gtMobile ? a.px_2xl : a.px_xl, style]}
         {...props}
       />
       {footer}
@@ -252,11 +263,18 @@ export const InnerFlatList = React.forwardRef<
   )
 })
 
-export function FlatListFooter({children}: {children: React.ReactNode}) {
+export function FlatListFooter({
+  children,
+  onLayout,
+}: {
+  children: React.ReactNode
+  onLayout?: (event: LayoutChangeEvent) => void
+}) {
   const t = useTheme()
 
   return (
     <View
+      onLayout={onLayout}
       style={[
         a.absolute,
         a.bottom_0,
@@ -275,7 +293,7 @@ export function FlatListFooter({children}: {children: React.ReactNode}) {
 
 export function Close() {
   const {_} = useLingui()
-  const {close} = React.useContext(Context)
+  const {close} = useContext(Context)
   return (
     <View
       style={[
@@ -303,7 +321,7 @@ export function Handle() {
   return null
 }
 
-function Backdrop() {
+export function Backdrop() {
   const t = useTheme()
   const {reduceMotionEnabled} = useA11y()
   return (

@@ -2,7 +2,7 @@ import {useRef, useState} from 'react'
 import {View} from 'react-native'
 import PagerView from 'react-native-pager-view'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, tokens, useTheme} from '#/alf'

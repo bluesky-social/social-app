@@ -39,7 +39,13 @@ export async function pickVideo(): Promise<ImagePickerResult> {
 // lets us use the ImagePickerAsset type, which the rest of the code expects.
 // We should unwind this and just pass the ArrayBuffer/objectUrl through the system
 // instead of a string -sfn
-export const getVideoMetadata = (file: File): Promise<ImagePickerAsset> => {
+export function getVideoMetadata(
+  file: File | string,
+): Promise<ImagePickerAsset> {
+  if (typeof file === 'string')
+    throw new Error(
+      'getVideoMetadata was passed a uri, when on web it should be a File',
+    )
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.onload = () => {

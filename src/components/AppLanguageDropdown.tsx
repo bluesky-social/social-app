@@ -1,5 +1,5 @@
-import React from 'react'
-import {msg} from '@lingui/macro'
+import {useCallback} from 'react'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -20,7 +20,7 @@ export function AppLanguageDropdown() {
   const setLangPrefs = useLanguagePrefsApi()
   const sanitizedLang = sanitizeAppLanguageSetting(langPrefs.appLanguage)
 
-  const onChangeAppLanguage = React.useCallback(
+  const onChangeAppLanguage = useCallback(
     (value: string) => {
       if (!value) return
       if (sanitizedLang !== value) {
@@ -48,6 +48,7 @@ export function AppLanguageDropdown() {
             })}
             variant="ghost"
             color="secondary"
+            shape="rectangular"
             style={[
               a.pr_xs,
               a.pl_sm,
@@ -65,6 +66,7 @@ export function AppLanguageDropdown() {
         )}
       </Select.Trigger>
       <Select.Content
+        label={_(msg`Select language`)}
         renderItem={({label, value}) => (
           <Select.Item value={value} label={label}>
             <Select.ItemIndicator />

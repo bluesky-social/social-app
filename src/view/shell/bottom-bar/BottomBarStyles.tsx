@@ -1,7 +1,6 @@
 import {StyleSheet} from 'react-native'
 
-import {colors} from '#/lib/styles'
-import {atoms as a} from '#/alf'
+import {atoms as a, tokens} from '#/alf'
 
 export const styles = StyleSheet.create({
   bottomBar: {
@@ -11,8 +10,8 @@ export const styles = StyleSheet.create({
     right: 0,
     flexDirection: 'row',
     borderTopWidth: StyleSheet.hairlineWidth,
-    paddingLeft: 5,
-    paddingRight: 10,
+    paddingLeft: tokens.space.sm,
+    paddingRight: tokens.space.sm,
   },
   bottomBarWeb: a.fixed,
   ctrl: {
@@ -24,9 +23,9 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     left: '52%',
     top: 8,
-    backgroundColor: colors.blue3,
-    paddingHorizontal: 4,
-    paddingBottom: 1,
+    paddingHorizontal: 5,
+    paddingTop: 1,
+    paddingBottom: 2,
     borderRadius: 6,
     zIndex: 1,
   },
@@ -35,17 +34,12 @@ export const styles = StyleSheet.create({
     paddingBottom: 3,
     borderRadius: 12,
   },
-  notificationCountLight: {
-    borderColor: colors.white,
-  },
-  notificationCountDark: {
-    borderColor: colors.gray8,
-  },
   notificationCountLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: colors.white,
+    color: 'white',
     fontVariant: ['tabular-nums'],
+    includeFontPadding: false,
   },
   hasNewBadge: {
     position: 'absolute',
@@ -54,8 +48,7 @@ export const styles = StyleSheet.create({
     top: 10,
     width: 8,
     height: 8,
-    backgroundColor: colors.blue3,
-    borderRadius: 6,
+    borderRadius: 4,
     zIndex: 1,
   },
   ctrlIcon: {

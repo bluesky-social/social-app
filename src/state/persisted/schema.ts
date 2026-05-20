@@ -98,6 +98,7 @@ const schema = z.object({
     .object({
       giphy: z.enum(externalEmbedOptions).optional(),
       tenor: z.enum(externalEmbedOptions).optional(),
+      klipy: z.enum(externalEmbedOptions).optional(),
       youtube: z.enum(externalEmbedOptions).optional(),
       youtubeShorts: z.enum(externalEmbedOptions).optional(),
       twitch: z.enum(externalEmbedOptions).optional(),
@@ -106,6 +107,7 @@ const schema = z.object({
       appleMusic: z.enum(externalEmbedOptions).optional(),
       soundcloud: z.enum(externalEmbedOptions).optional(),
       flickr: z.enum(externalEmbedOptions).optional(),
+      bandcamp: z.enum(externalEmbedOptions).optional(),
     })
     .optional(),
   invites: z.object({
@@ -116,6 +118,7 @@ const schema = z.object({
   }),
   hiddenPosts: z.array(z.string()).optional(), // should move to server
   useInAppBrowser: z.boolean().optional(),
+  /** @deprecated */
   lastSelectedHomeFeed: z.string().optional(),
   pdsAddressHistory: z.array(z.string()).optional(),
   disableHaptics: z.boolean().optional(),

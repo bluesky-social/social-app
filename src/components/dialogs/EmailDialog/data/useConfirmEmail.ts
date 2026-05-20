@@ -2,7 +2,10 @@ import {useMutation} from '@tanstack/react-query'
 
 import {useAgent, useSession} from '#/state/session'
 
-export function useConfirmEmail() {
+export function useConfirmEmail({
+  onSuccess,
+  onError,
+}: {onSuccess?: () => void; onError?: () => void} = {}) {
   const agent = useAgent()
   const {currentAccount} = useSession()
 
@@ -13,11 +16,13 @@ export function useConfirmEmail() {
       }
 
       await agent.com.atproto.server.confirmEmail({
-        email: currentAccount.email,
+        email: currentAccount.email.trim(),
         token: token.trim(),
       })
       // will update session state at root of app
       await agent.resumeSession(agent.session!)
     },
+    onSuccess,
+    onError,
   })
 }

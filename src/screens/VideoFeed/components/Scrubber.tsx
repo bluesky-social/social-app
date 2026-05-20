@@ -6,6 +6,7 @@ import {
   type NativeGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
+  clamp,
   interpolate,
   runOnJS,
   runOnUI,
@@ -257,9 +258,4 @@ function PlayerListener({
   })
 
   return null
-}
-
-function clamp(num: number, min: number, max: number) {
-  'worklet'
-  return Math.min(Math.max(num, min), max)
 }

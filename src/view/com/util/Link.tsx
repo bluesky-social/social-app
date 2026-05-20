@@ -25,12 +25,12 @@ import {
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
 import {type TypographyVariant} from '#/lib/ThemeContext'
-import {isAndroid, isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {useModalControls} from '#/state/modals'
 import {WebAuxClickWrapper} from '#/view/com/util/WebAuxClickWrapper'
 import {useTheme} from '#/alf'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import {IS_WEB} from '#/env'
 import {router} from '../../../routes'
 import {PressableWithHover} from './PressableWithHover'
 import {Text} from './text/Text'
@@ -129,8 +129,7 @@ export const Link = memo(function Link({
           {...props}
           android_ripple={{
             color: t.atoms.bg_contrast_25.backgroundColor,
-          }}
-          unstable_pressDelay={isAndroid ? 90 : undefined}>
+          }}>
           {/* @ts-ignore web only -prf */}
           <View style={style} href={anchorHref}>
             {children ? children : <Text>{title || 'link'}</Text>}
@@ -219,7 +218,7 @@ export const TextLink = memo(function TextLink({
         })
       }
       if (
-        isWeb &&
+        IS_WEB &&
         href !== '#' &&
         e != null &&
         isModifiedEvent(e as React.MouseEvent)
@@ -323,7 +322,7 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   onBeforePress,
   ...props
 }: TextLinkOnWebOnlyProps) {
-  if (isWeb) {
+  if (IS_WEB) {
     return (
       <TextLink
         testID={testID}

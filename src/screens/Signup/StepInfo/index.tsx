@@ -1,15 +1,17 @@
-import React, {useRef} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {type TextInput, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 import type tldts from 'tldts'
 
 import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {logger} from '#/logger'
-import {is13, is18, useSignupContext} from '#/screens/Signup/state'
+import {useSignupContext} from '#/screens/Signup/state'
 import {Policies} from '#/screens/Signup/StepInfo/Policies'
 import {atoms as a, native} from '#/alf'
+import * as Admonition from '#/components/Admonition'
+import * as Dialog from '#/components/Dialog'
+import {DeviceLocationRequestDialog} from '#/components/dialogs/DeviceLocationRequestDialog'
 import * as DateField from '#/components/forms/DateField'
 import {type DateFieldRef} from '#/components/forms/DateField/types'
 import {FormError} from '#/components/forms/FormError'
@@ -18,8 +20,21 @@ import * as TextField from '#/components/forms/TextField'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
+import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {usePreemptivelyCompleteActivePolicyUpdate} from '#/components/PolicyUpdateOverlay/usePreemptivelyCompleteActivePolicyUpdate'
+import * as Toast from '#/components/Toast'
+import {
+  isUnderAge,
+  MIN_ACCESS_AGE,
+  useAgeAssuranceRegionConfigWithFallback,
+} from '#/ageAssurance/util'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
+import {
+  useDeviceGeolocationApi,
+  useIsDeviceGeolocationGranted,
+} from '#/geolocation'
 import {BackNextButtons} from '../BackNextButtons'
 
 function sanitizeDate(date: Date): Date {
@@ -43,7 +58,8 @@ export function StepInfo({
   refetchServer: () => void
   isLoadingStarterPack: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
+  const ax = useAnalytics()
   const {state, dispatch} = useSignupContext()
   const preemptivelyCompleteActivePolicyUpdate =
     usePreemptivelyCompleteActivePolicyUpdate()
@@ -57,17 +73,31 @@ export function StepInfo({
   const passwordInputRef = useRef<TextInput>(null)
   const birthdateInputRef = useRef<DateFieldRef>(null)
 
-  const [hasWarnedEmail, setHasWarnedEmail] = React.useState<boolean>(false)
+  const aaRegionConfig = useAgeAssuranceRegionConfigWithFallback()
+  const {setDeviceGeolocation} = useDeviceGeolocationApi()
+  const locationControl = Dialog.useDialogControl()
+  const isOverRegionMinAccessAge = state.dateOfBirth
+    ? !isUnderAge(state.dateOfBirth.toISOString(), aaRegionConfig.minAccessAge)
+    : true
+  const isOverAppMinAccessAge = state.dateOfBirth
+    ? !isUnderAge(state.dateOfBirth.toISOString(), MIN_ACCESS_AGE)
+    : true
+  const isOverMinAdultAge = state.dateOfBirth
+    ? !isUnderAge(state.dateOfBirth.toISOString(), 18)
+    : true
+  const isDeviceGeolocationGranted = useIsDeviceGeolocationGranted()
 
-  const tldtsRef = React.useRef<typeof tldts>(undefined)
-  React.useEffect(() => {
+  const [hasWarnedEmail, setHasWarnedEmail] = useState<boolean>(false)
+
+  const tldtsRef = useRef<typeof tldts>(undefined)
+  useEffect(() => {
     // @ts-expect-error - valid path
-    import('tldts/dist/index.cjs.min.js').then(tldts => {
+    void import('tldts/dist/index.cjs.min.js').then(tldts => {
       tldtsRef.current = tldts
     })
     // This will get used in the avatar creator a few steps later, so lets preload it now
     // @ts-expect-error - valid path
-    import('react-native-view-shot/src/index')
+    void import('react-native-view-shot/src/index')
   }, [])
 
   const onNextPress = () => {
@@ -76,28 +106,28 @@ export function StepInfo({
     const emailChanged = prevEmailValueRef.current !== email
     const password = passwordValueRef.current
 
-    if (!is13(state.dateOfBirth)) {
+    if (!isOverRegionMinAccessAge) {
       return
     }
 
     if (state.serviceDescription?.inviteCodeRequired && !inviteCode) {
       return dispatch({
         type: 'setError',
-        value: _(msg`Please enter your invite code.`),
+        value: l`Please enter your invite code.`,
         field: 'invite-code',
       })
     }
     if (!email) {
       return dispatch({
         type: 'setError',
-        value: _(msg`Please enter your email.`),
+        value: l`Please enter your email.`,
         field: 'email',
       })
     }
     if (!EmailValidator.validate(email)) {
       return dispatch({
         type: 'setError',
-        value: _(msg`Your email appears to be invalid.`),
+        value: l`Your email appears to be invalid.`,
         field: 'email',
       })
     }
@@ -107,9 +137,7 @@ export function StepInfo({
         setHasWarnedEmail(true)
         return dispatch({
           type: 'setError',
-          value: _(
-            msg`Please double-check that you have entered your email address correctly.`,
-          ),
+          value: l`Please double-check that you have entered your email address correctly.`,
         })
       }
     } else if (hasWarnedEmail) {
@@ -119,14 +147,14 @@ export function StepInfo({
     if (!password) {
       return dispatch({
         type: 'setError',
-        value: _(msg`Please choose your password.`),
+        value: l`Please choose your password.`,
         field: 'password',
       })
     }
     if (password.length < 8) {
       return dispatch({
         type: 'setError',
-        value: _(msg`Your password must be at least 8 characters long.`),
+        value: l`Your password must be at least 8 characters long.`,
         field: 'password',
       })
     }
@@ -136,13 +164,9 @@ export function StepInfo({
     dispatch({type: 'setEmail', value: email})
     dispatch({type: 'setPassword', value: password})
     dispatch({type: 'next'})
-    logger.metric(
-      'signup:nextPressed',
-      {
-        activeStep: state.activeStep,
-      },
-      {statsig: true},
-    )
+    ax.metric('signup:nextPressed', {
+      activeStep: state.activeStep,
+    })
   }
 
   return (
@@ -177,7 +201,7 @@ export function StepInfo({
                         dispatch({type: 'clearError'})
                       }
                     }}
-                    label={_(msg`Required for this provider`)}
+                    label={l`Required for this provider`}
                     defaultValue={state.inviteCode}
                     autoCapitalize="none"
                     autoComplete="email"
@@ -213,7 +237,7 @@ export function StepInfo({
                       dispatch({type: 'clearError'})
                     }
                   }}
-                  label={_(msg`Enter your email address`)}
+                  label={l`Enter your email address`}
                   defaultValue={state.email}
                   autoCapitalize="none"
                   autoComplete="email"
@@ -241,7 +265,7 @@ export function StepInfo({
                       dispatch({type: 'clearError'})
                     }
                   }}
-                  label={_(msg`Choose your password`)}
+                  label={l`Choose your password`}
                   defaultValue={state.password}
                   secureTextEntry
                   autoComplete="new-password"
@@ -269,27 +293,88 @@ export function StepInfo({
                     value: sanitizeDate(new Date(date)),
                   })
                 }}
-                label={_(msg`Date of birth`)}
-                accessibilityHint={_(msg`Select your date of birth`)}
+                label={l`Date of birth`}
+                accessibilityHint={l`Select your date of birth`}
                 maximumDate={new Date()}
               />
             </View>
-            <Policies
-              serviceDescription={state.serviceDescription}
-              needsGuardian={!is18(state.dateOfBirth)}
-              under13={!is13(state.dateOfBirth)}
-            />
+
+            <View style={[a.gap_sm]}>
+              <Policies serviceDescription={state.serviceDescription} />
+
+              {!isOverRegionMinAccessAge || !isOverAppMinAccessAge ? (
+                <Admonition.Outer type="error">
+                  <Admonition.Row>
+                    <Admonition.Icon />
+                    <Admonition.Content>
+                      <Admonition.Text>
+                        {!isOverAppMinAccessAge ? (
+                          <Plural
+                            value={MIN_ACCESS_AGE}
+                            other="You must be # years of age or older to create an account."
+                          />
+                        ) : (
+                          <Plural
+                            value={aaRegionConfig.minAccessAge}
+                            other="You must be # years of age or older to create an account in your region."
+                          />
+                        )}
+                      </Admonition.Text>
+                      {IS_NATIVE &&
+                        !isDeviceGeolocationGranted &&
+                        isOverAppMinAccessAge && (
+                          <Admonition.Text>
+                            <Trans>
+                              Have we got your location wrong?{' '}
+                              <SimpleInlineLinkText
+                                label={l`Tap here to confirm your location with GPS.`}
+                                {...createStaticClick(() => {
+                                  locationControl.open()
+                                })}>
+                                Tap here to confirm your location with GPS.
+                              </SimpleInlineLinkText>
+                            </Trans>
+                          </Admonition.Text>
+                        )}
+                    </Admonition.Content>
+                  </Admonition.Row>
+                </Admonition.Outer>
+              ) : !isOverMinAdultAge ? (
+                <Admonition.Admonition type="warning">
+                  <Trans>
+                    If you are not yet an adult according to the laws of your
+                    country, your parent or legal guardian must read these Terms
+                    on your behalf.
+                  </Trans>
+                </Admonition.Admonition>
+              ) : undefined}
+            </View>
+
+            {IS_NATIVE && (
+              <DeviceLocationRequestDialog
+                control={locationControl}
+                onLocationAcquired={props => {
+                  props.closeDialog(() => {
+                    // set this after close!
+                    setDeviceGeolocation(props.geolocation)
+                    Toast.show(l`Your location has been updated.`, {
+                      type: 'success',
+                    })
+                  })
+                }}
+              />
+            )}
           </>
         ) : undefined}
       </View>
       <BackNextButtons
-        hideNext={!is13(state.dateOfBirth)}
+        hideNext={!isOverRegionMinAccessAge}
         showRetry={isServerError}
         isLoading={state.isLoading}
         onBackPress={onPressBack}
         onNextPress={onNextPress}
         onRetryPress={refetchServer}
-        overrideNextText={hasWarnedEmail ? _(msg`It's correct`) : undefined}
+        overrideNextText={hasWarnedEmail ? l`It's correct` : undefined}
       />
     </>
   )

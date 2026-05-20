@@ -1,14 +1,14 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {differenceInSeconds} from 'date-fns'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {isNative} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -18,6 +18,7 @@ import {useDialogControl} from '#/components/Dialog'
 import {Newskie} from '#/components/icons/Newskie'
 import * as StarterPackCard from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 
 export function NewskieDialog({
   profile,
@@ -26,10 +27,11 @@ export function NewskieDialog({
   profile: AppBskyActorDefs.ProfileViewDetailed
   disabled?: boolean
 }) {
+  const t = useTheme()
   const {_} = useLingui()
   const control = useDialogControl()
 
-  const createdAt = profile.createdAt as string | undefined
+  const createdAt = profile.createdAt
 
   const [now] = useState(() => Date.now())
   const daysOld = useMemo(() => {
@@ -51,7 +53,7 @@ export function NewskieDialog({
         {({hovered, pressed}) => (
           <Newskie
             size="lg"
-            fill="#FFC404"
+            fill={t.palette.yellow}
             style={{
               opacity: hovered || pressed ? 0.5 : 1,
             }}
@@ -131,7 +133,7 @@ function DialogInner({
             <Newskie
               width={64}
               height={64}
-              fill="#FFC404"
+              fill={t.palette.yellow}
               style={[a.absolute, a.inset_0]}
             />
           </View>
@@ -162,7 +164,7 @@ function DialogInner({
           </StarterPackCard.Link>
         ) : null}
 
-        {isNative && (
+        {IS_NATIVE && (
           <Button
             label={_(msg`Close`)}
             color="secondary"

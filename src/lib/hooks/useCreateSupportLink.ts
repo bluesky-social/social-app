@@ -1,5 +1,5 @@
 import {useCallback} from 'react'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useSession} from '#/state/session'
@@ -9,6 +9,7 @@ export const ZENDESK_SUPPORT_URL =
 
 export enum SupportCode {
   AA_DID = 'AA_DID',
+  AA_BIRTHDATE = 'AA_BIRTHDATE',
 }
 
 /**

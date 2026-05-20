@@ -1,46 +1,56 @@
 import {memo, useCallback} from 'react'
-import {LayoutAnimation} from 'react-native'
+import {LayoutAnimation, Platform} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {type ChatBskyConvoDefs, RichText} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
+import {useQueryClient} from '@tanstack/react-query'
 
-import {useTranslate} from '#/lib/hooks/useTranslate'
+import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
-import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {useConvoActive} from '#/state/messages/convo'
 import {useLanguagePrefs} from '#/state/preferences'
+import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
+import {atoms as a} from '#/alf'
 import * as ContextMenu from '#/components/ContextMenu'
 import {type TriggerProps} from '#/components/ContextMenu/types'
-import {ReportDialog} from '#/components/dms/ReportDialog'
-import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
+import {AfterReportDialog} from '#/components/dms/AfterReportDialog'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
-import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
-import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
+import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
+import {Language_Stroke2_Corner2_Rounded as LanguageIcon} from '#/components/icons/Language'
+import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
+import {ReportDialog} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
+import * as Toast from '#/components/Toast'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
+import type * as bsky from '#/types/bsky'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
 import {hasReachedReactionLimit} from './util'
 
 export let MessageContextMenu = ({
   message,
+  senderProfile,
   children,
 }: {
   message: ChatBskyConvoDefs.MessageView
+  senderProfile?: bsky.profile.AnyProfileView
   children: TriggerProps['children']
 }): React.ReactNode => {
-  const {_} = useLingui()
+  const {t: l, i18n} = useLingui()
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
+  const queryClient = useQueryClient()
   const convo = useConvoActive()
   const deleteControl = usePromptControl()
   const reportControl = usePromptControl()
+  const blockOrDeleteControl = usePromptControl()
   const langPrefs = useLanguagePrefs()
-  const translate = useTranslate()
+  const translate = useGoogleTranslate()
 
   const isFromSelf = message.sender?.did === currentAccount?.did
+  const isGroupChatEnabled = ax.features.enabled(ax.features.GroupChatsEnable)
 
   const onCopyMessage = useCallback(() => {
     const str = richTextToString(
@@ -51,33 +61,31 @@ export let MessageContextMenu = ({
       true,
     )
 
-    Clipboard.setStringAsync(str)
-    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
-  }, [_, message.text, message.facets])
+    void Clipboard.setStringAsync(str)
+    Toast.show(l`Copied to clipboard`, {
+      type: 'success',
+    })
+  }, [l, message.text, message.facets])
 
   const onPressTranslateMessage = useCallback(() => {
-    translate(message.text, langPrefs.primaryLanguage)
+    void translate(message.text, langPrefs.primaryLanguage)
 
-    logger.metric(
-      'translate',
-      {
-        sourceLanguages: [],
-        targetLanguage: langPrefs.primaryLanguage,
-        textLength: message.text.length,
-      },
-      {statsig: false},
-    )
-  }, [langPrefs.primaryLanguage, message.text, translate])
+    ax.metric('translate', {
+      os: Platform.OS,
+      possibleSourceLanguages: [], // N/A for chats
+      expectedTargetLanguage: langPrefs.primaryLanguage,
+      textLength: message.text.length,
+      googleTranslate: true,
+    })
+  }, [ax, langPrefs.primaryLanguage, message.text, translate])
 
   const onDelete = useCallback(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     convo
       .deleteMessage(message.id)
-      .then(() =>
-        Toast.show(_(msg({message: 'Message deleted', context: 'toast'}))),
-      )
-      .catch(() => Toast.show(_(msg`Failed to delete message`)))
-  }, [_, convo, message.id])
+      .then(() => Toast.show(l({message: 'Message deleted', context: 'toast'})))
+      .catch(() => Toast.show(l`Failed to delete message`))
+  }, [l, convo, message.id])
 
   const onEmojiSelect = useCallback(
     (emoji: string) => {
@@ -90,28 +98,28 @@ export let MessageContextMenu = ({
       ) {
         convo
           .removeReaction(message.id, emoji)
-          .catch(() => Toast.show(_(msg`Failed to remove emoji reaction`)))
+          .catch(() => Toast.show(l`Failed to remove emoji reaction`))
       } else {
         if (hasReachedReactionLimit(message, currentAccount?.did)) return
-        convo
-          .addReaction(message.id, emoji)
-          .catch(() =>
-            Toast.show(_(msg`Failed to add emoji reaction`), 'xmark'),
-          )
+        convo.addReaction(message.id, emoji).catch(() =>
+          Toast.show(l`Failed to add emoji reaction`, {
+            type: 'error',
+          }),
+        )
       }
     },
-    [_, convo, message, currentAccount?.did],
+    [l, convo, message, currentAccount?.did],
   )
 
-  const sender = convo.convo.members.find(
-    member => member.did === message.sender.did,
-  )
+  const sender = senderProfile
 
   return (
     <>
       <ContextMenu.Root>
-        {isNative && (
-          <ContextMenu.AuxiliaryView align={isFromSelf ? 'right' : 'left'}>
+        {IS_NATIVE && (
+          <ContextMenu.AuxiliaryView
+            align={isFromSelf ? 'right' : 'left'}
+            style={[isFromSelf && isGroupChatEnabled ? null : a.ml_sm]}>
             <EmojiReactionPicker
               message={message}
               onEmojiSelect={onEmojiSelect}
@@ -120,69 +128,86 @@ export let MessageContextMenu = ({
         )}
 
         <ContextMenu.Trigger
-          label={_(msg`Message options`)}
-          contentLabel={_(
-            msg`Message from @${
-              sender?.handle ?? 'unknown' // should always be defined
-            }: ${message.text}`,
-          )}>
+          label={l`Message options`}
+          contentLabel={l`Message from @${
+            sender?.handle ?? 'unknown' // should always be defined
+          }: ${message.text}`}>
           {children}
         </ContextMenu.Trigger>
 
-        <ContextMenu.Outer align={isFromSelf ? 'right' : 'left'}>
+        <ContextMenu.Outer
+          align={isFromSelf ? 'right' : 'left'}
+          label={l`Sent at ${i18n.date(new Date(message.sentAt), {
+            timeStyle: 'short',
+          })}`}
+          style={[isFromSelf && isGroupChatEnabled ? null : a.ml_sm]}>
           {message.text.length > 0 && (
             <>
               <ContextMenu.Item
                 testID="messageDropdownTranslateBtn"
-                label={_(msg`Translate`)}
+                label={l`Translate`}
                 onPress={onPressTranslateMessage}>
-                <ContextMenu.ItemText>{_(msg`Translate`)}</ContextMenu.ItemText>
-                <ContextMenu.ItemIcon icon={Translate} position="right" />
+                <ContextMenu.ItemIcon icon={LanguageIcon} position="left" />
+                <ContextMenu.ItemText>{l`Translate`}</ContextMenu.ItemText>
               </ContextMenu.Item>
               <ContextMenu.Item
                 testID="messageDropdownCopyBtn"
-                label={_(msg`Copy message text`)}
+                label={l`Copy message text`}
                 onPress={onCopyMessage}>
+                <ContextMenu.ItemIcon icon={ClipboardIcon} position="left" />
                 <ContextMenu.ItemText>
-                  {_(msg`Copy message text`)}
+                  {l`Copy message text`}
                 </ContextMenu.ItemText>
-                <ContextMenu.ItemIcon icon={ClipboardIcon} position="right" />
               </ContextMenu.Item>
-              <ContextMenu.Divider />
             </>
           )}
           <ContextMenu.Item
+            destructive
             testID="messageDropdownDeleteBtn"
-            label={_(msg`Delete message for me`)}
+            label={l`Delete message for me`}
             onPress={() => deleteControl.open()}>
-            <ContextMenu.ItemText>{_(msg`Delete for me`)}</ContextMenu.ItemText>
-            <ContextMenu.ItemIcon icon={Trash} position="right" />
+            <ContextMenu.ItemIcon icon={TrashIcon} position="left" />
+            <ContextMenu.ItemText>{l`Delete for me`}</ContextMenu.ItemText>
           </ContextMenu.Item>
           {!isFromSelf && (
             <ContextMenu.Item
+              destructive
               testID="messageDropdownReportBtn"
-              label={_(msg`Report message`)}
+              label={l`Report message`}
               onPress={() => reportControl.open()}>
-              <ContextMenu.ItemText>{_(msg`Report`)}</ContextMenu.ItemText>
-              <ContextMenu.ItemIcon icon={Warning} position="right" />
+              <ContextMenu.ItemIcon icon={FlagIcon} position="left" />
+              <ContextMenu.ItemText>{l`Report`}</ContextMenu.ItemText>
             </ContextMenu.Item>
           )}
         </ContextMenu.Outer>
       </ContextMenu.Root>
-
       <ReportDialog
-        currentScreen="conversation"
-        params={{type: 'convoMessage', convoId: convo.convo.id, message}}
         control={reportControl}
+        subject={{
+          view: 'message',
+          convoId: convo.convo.view.id,
+          message,
+        }}
+        onAfterSubmit={() => {
+          if (sender) {
+            unstableCacheProfileView(queryClient, sender)
+          }
+          blockOrDeleteControl.open()
+        }}
       />
-
+      <AfterReportDialog
+        control={blockOrDeleteControl}
+        currentScreen="conversation"
+        params={{
+          convoId: convo.convo.view.id,
+          message,
+        }}
+      />
       <Prompt.Basic
         control={deleteControl}
-        title={_(msg`Delete message`)}
-        description={_(
-          msg`Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant.`,
-        )}
-        confirmButtonCta={_(msg`Delete`)}
+        title={l`Delete message`}
+        description={l`Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants.`}
+        confirmButtonCta={l`Delete`}
         confirmButtonColor="negative"
         onConfirm={onDelete}
       />

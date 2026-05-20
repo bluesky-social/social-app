@@ -1,16 +1,16 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {Dimensions, StyleSheet, View} from 'react-native'
 import {
   FontAwesomeIcon,
   type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
-import {isWeb} from '#/platform/detection'
+import {IS_WEB} from '#/env'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
 
@@ -19,8 +19,8 @@ export function FollowingEndOfFeed() {
   const palInverted = usePalette('inverted')
   const navigation = useNavigation<NavigationProp>()
 
-  const onPressFindAccounts = React.useCallback(() => {
-    if (isWeb) {
+  const onPressFindAccounts = useCallback(() => {
+    if (IS_WEB) {
       navigation.navigate('Search', {})
     } else {
       navigation.navigate('SearchTab')
@@ -28,7 +28,7 @@ export function FollowingEndOfFeed() {
     }
   }, [navigation])
 
-  const onPressDiscoverFeeds = React.useCallback(() => {
+  const onPressDiscoverFeeds = useCallback(() => {
     navigation.navigate('Feeds')
   }, [navigation])
 

@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {
@@ -7,22 +7,24 @@ import {
   type ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
+import {Trans} from '@lingui/react/macro'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import {ComposeIcon2} from '#/lib/icons'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
+  type NavigationProp,
 } from '#/lib/routes/types'
 import {combinedDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {isInvalidHandle} from '#/lib/strings/handles'
-import {colors, s} from '#/lib/styles'
+import {colors} from '#/lib/styles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {listenSoftReset} from '#/state/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -31,7 +33,6 @@ import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useAgent, useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {ProfileFeedgens} from '#/view/com/feeds/ProfileFeedgens'
 import {ProfileLists} from '#/view/com/lists/ProfileLists'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
@@ -41,7 +42,13 @@ import {type ListRef} from '#/view/com/util/List'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {Circle_And_Square_Stroke1_Corner0_Rounded_Filled as CircleAndSquareIcon} from '#/components/icons/CircleAndSquare'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
+import {Heart2_Stroke1_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
+import {Image_Stroke1_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
+import {Message_Stroke1_Corner0_Rounded_Filled as MessageIcon} from '#/components/icons/Message'
+import {VideoClip_Stroke1_Corner0_Rounded as VideoIcon} from '#/components/icons/VideoClip'
 import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
@@ -72,45 +79,45 @@ function ProfileScreenInner({route}: Props) {
     data: resolvedDid,
     error: resolveError,
     refetch: refetchDid,
-    isLoading: isLoadingDid,
+    isPending: isDidPending,
   } = useResolveDidQuery(name)
   const {
     data: profile,
     error: profileError,
     refetch: refetchProfile,
-    isLoading: isLoadingProfile,
     isPlaceholderData: isPlaceholderProfile,
+    isPending: isProfilePending,
   } = useProfileQuery({
     did: resolvedDid,
   })
 
-  const onPressTryAgain = React.useCallback(() => {
+  const onPressTryAgain = useCallback(() => {
     if (resolveError) {
-      refetchDid()
+      void refetchDid()
     } else {
-      refetchProfile()
+      void refetchProfile()
     }
   }, [resolveError, refetchDid, refetchProfile])
 
   // Apply hard-coded redirects as need
-  React.useEffect(() => {
+  useEffect(() => {
     if (resolveError) {
       if (name === 'lulaoficial.bsky.social') {
         console.log('Applying redirect to lula.com.br')
-        navigate('Profile', {name: 'lula.com.br'})
+        void navigate('Profile', {name: 'lula.com.br'})
       }
     }
   }, [name, resolveError])
 
   // When we open the profile, we want to reset the posts query if we are blocked.
-  React.useEffect(() => {
+  useEffect(() => {
     if (resolvedDid && profile?.viewer?.blockedBy) {
       resetProfilePostsQueries(queryClient, resolvedDid)
     }
   }, [queryClient, profile?.viewer?.blockedBy, resolvedDid])
 
   // Most pushes will happen here, since we will have only placeholder data
-  if (isLoadingDid || isLoadingProfile) {
+  if (isDidPending || isProfilePending) {
     return (
       <Layout.Content>
         <ProfileHeaderLoading />
@@ -165,10 +172,12 @@ function ProfileScreenLoaded({
   hideBackButton: boolean
   isPlaceholderProfile: boolean
 }) {
+  const t = useTheme()
   const profile = useProfileShadow(profileUnshadowed)
   const {hasSession, currentAccount} = useSession()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {openComposer} = useOpenComposer()
+  const navigation = useNavigation<NavigationProp>()
+  const requireEmailVerification = useRequireEmailVerification()
   const {
     data: labelerInfo,
     error: labelerError,
@@ -177,20 +186,20 @@ function ProfileScreenLoaded({
     did: profile.did,
     enabled: !!profile.associated?.labeler,
   })
-  const [currentPage, setCurrentPage] = React.useState(0)
+  const [currentPage, setCurrentPage] = useState(0)
   const {_} = useLingui()
 
-  const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
+  const [scrollViewTag, setScrollViewTag] = useState<number | null>(null)
 
-  const postsSectionRef = React.useRef<SectionRef>(null)
-  const repliesSectionRef = React.useRef<SectionRef>(null)
-  const mediaSectionRef = React.useRef<SectionRef>(null)
-  const videosSectionRef = React.useRef<SectionRef>(null)
-  const likesSectionRef = React.useRef<SectionRef>(null)
-  const feedsSectionRef = React.useRef<SectionRef>(null)
-  const listsSectionRef = React.useRef<SectionRef>(null)
-  const starterPacksSectionRef = React.useRef<SectionRef>(null)
-  const labelsSectionRef = React.useRef<SectionRef>(null)
+  const postsSectionRef = useRef<SectionRef>(null)
+  const repliesSectionRef = useRef<SectionRef>(null)
+  const mediaSectionRef = useRef<SectionRef>(null)
+  const videosSectionRef = useRef<SectionRef>(null)
+  const likesSectionRef = useRef<SectionRef>(null)
+  const feedsSectionRef = useRef<SectionRef>(null)
+  const listsSectionRef = useRef<SectionRef>(null)
+  const starterPacksSectionRef = useRef<SectionRef>(null)
+  const labelsSectionRef = useRef<SectionRef>(null)
 
   useSetTitle(combinedDisplayName(profile))
 
@@ -306,12 +315,11 @@ function ProfileScreenLoaded({
   )
 
   useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(false)
+    useCallback(() => {
       return listenSoftReset(() => {
         scrollSectionToTop(currentPage)
       })
-    }, [setMinimalShellMode, currentPage, scrollSectionToTop]),
+    }, [currentPage, scrollSectionToTop]),
   )
 
   // events
@@ -323,7 +331,7 @@ function ProfileScreenLoaded({
       isInvalidHandle(profile.handle)
         ? undefined
         : profile.handle
-    openComposer({mention})
+    openComposer({mention, logContext: 'ProfileFeed'})
   }
 
   const onPageSelected = (i: number) => {
@@ -333,6 +341,17 @@ function ProfileScreenLoaded({
   const onCurrentPageSelected = (index: number) => {
     scrollSectionToTop(index)
   }
+
+  const navToWizard = useCallback(() => {
+    navigation.navigate('StarterPackWizard', {})
+  }, [navigation])
+  const wrappedNavToWizard = requireEmailVerification(navToWizard, {
+    instructions: [
+      <Trans key="nav">
+        Before creating a starter pack, you must first verify your email.
+      </Trans>,
+    ],
+  })
 
   // rendering
   // =
@@ -361,7 +380,7 @@ function ProfileScreenLoaded({
     <ScreenHider
       testID="profileView"
       style={styles.container}
-      screenDescription={_(msg`profile`)}
+      screenDescription={_(msg`user`)}
       modui={moderation.ui('profileView')}>
       <PagerWithHeader
         testID="profilePager"
@@ -408,6 +427,19 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No posts yet`)}
+                emptyStateButton={
+                  isMe
+                    ? {
+                        label: _(msg`Write a post`),
+                        text: _(msg`Write a post`),
+                        onPress: () =>
+                          openComposer({logContext: 'ProfileFeed'}),
+                        size: 'small',
+                        color: 'primary',
+                      }
+                    : undefined
+                }
               />
             )
           : null}
@@ -421,6 +453,8 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No replies yet`)}
+                emptyStateIcon={MessageIcon}
               />
             )
           : null}
@@ -434,6 +468,20 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No media yet`)}
+                emptyStateButton={
+                  isMe
+                    ? {
+                        label: _(msg`Post a photo`),
+                        text: _(msg`Post a photo`),
+                        onPress: () =>
+                          openComposer({logContext: 'ProfileFeed'}),
+                        size: 'small',
+                        color: 'primary',
+                      }
+                    : undefined
+                }
+                emptyStateIcon={ImageIcon}
               />
             )
           : null}
@@ -447,6 +495,20 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No video posts yet`)}
+                emptyStateButton={
+                  isMe
+                    ? {
+                        label: _(msg`Post a video`),
+                        text: _(msg`Post a video`),
+                        onPress: () =>
+                          openComposer({logContext: 'ProfileFeed'}),
+                        size: 'small',
+                        color: 'primary',
+                      }
+                    : undefined
+                }
+                emptyStateIcon={VideoIcon}
               />
             )
           : null}
@@ -460,6 +522,8 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No likes yet`)}
+                emptyStateIcon={HeartIcon}
               />
             )
           : null}
@@ -485,6 +549,25 @@ function ProfileScreenLoaded({
                 headerOffset={headerHeight}
                 enabled={isFocused}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={
+                  isMe
+                    ? _(
+                        msg`Starter Packs let you share your favorite feeds and people with your friends.`,
+                      )
+                    : _(msg`No Starter Packs yet`)
+                }
+                emptyStateButton={
+                  isMe
+                    ? {
+                        label: _(msg`Create a Starter Pack`),
+                        text: _(msg`Create a Starter Pack`),
+                        onPress: wrappedNavToWizard,
+                        color: 'primary',
+                        size: 'small',
+                      }
+                    : undefined
+                }
+                emptyStateIcon={CircleAndSquareIcon}
               />
             )
           : null}
@@ -505,7 +588,7 @@ function ProfileScreenLoaded({
         <FAB
           testID="composeFAB"
           onPress={onPressCompose}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+          icon={<EditBigIcon size="lg" fill={t.palette.white} />}
           accessibilityRole="button"
           accessibilityLabel={_(msg`New post`)}
           accessibilityHint=""
@@ -517,16 +600,16 @@ function ProfileScreenLoaded({
 
 function useRichText(text: string): [RichTextAPI, boolean] {
   const agent = useAgent()
-  const [prevText, setPrevText] = React.useState(text)
-  const [rawRT, setRawRT] = React.useState(() => new RichTextAPI({text}))
-  const [resolvedRT, setResolvedRT] = React.useState<RichTextAPI | null>(null)
+  const [prevText, setPrevText] = useState(text)
+  const [rawRT, setRawRT] = useState(() => new RichTextAPI({text}))
+  const [resolvedRT, setResolvedRT] = useState<RichTextAPI | null>(null)
   if (text !== prevText) {
     setPrevText(text)
     setRawRT(new RichTextAPI({text}))
     setResolvedRT(null)
     // This will queue an immediate re-render
   }
-  React.useEffect(() => {
+  useEffect(() => {
     let ignore = false
     async function resolveRTFacets() {
       // new each time
@@ -536,7 +619,7 @@ function useRichText(text: string): [RichTextAPI, boolean] {
         setResolvedRT(resolvedRT)
       }
     }
-    resolveRTFacets()
+    void resolveRTFacets()
     return () => {
       ignore = true
     }

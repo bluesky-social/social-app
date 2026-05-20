@@ -1,8 +1,8 @@
-import React from 'react'
+import {createContext, useContext, useMemo, useState} from 'react'
 
-import {isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useActiveStarterPack} from '#/state/shell/starter-pack'
+import {IS_WEB} from '#/env'
 
 type State = {
   showLoggedOut: boolean
@@ -26,7 +26,7 @@ type Controls = {
     /**
      * The did of the account to populate the login form with.
      */
-    requestedAccount?: string | 'none' | 'new' | 'starterpack'
+    requestedAccount?: (string & {}) | 'none' | 'new' | 'starterpack'
   }) => void
   /**
    * Clears the requested account so that next time the logged out view is
@@ -35,13 +35,13 @@ type Controls = {
   clearRequestedAccount: () => void
 }
 
-const StateContext = React.createContext<State>({
+const StateContext = createContext<State>({
   showLoggedOut: false,
   requestedAccountSwitchTo: undefined,
 })
 StateContext.displayName = 'LoggedOutStateContext'
 
-const ControlsContext = React.createContext<Controls>({
+const ControlsContext = createContext<Controls>({
   setShowLoggedOut: () => {},
   requestSwitchToAccount: () => {},
   clearRequestedAccount: () => {},
@@ -52,16 +52,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const activeStarterPack = useActiveStarterPack()
   const {hasSession} = useSession()
   const shouldShowStarterPack = Boolean(activeStarterPack?.uri) && !hasSession
-  const [state, setState] = React.useState<State>({
+  const [state, setState] = useState<State>({
     showLoggedOut: shouldShowStarterPack,
     requestedAccountSwitchTo: shouldShowStarterPack
-      ? isWeb
+      ? IS_WEB
         ? 'starterpack'
         : 'new'
       : undefined,
   })
 
-  const controls = React.useMemo<Controls>(
+  const controls = useMemo<Controls>(
     () => ({
       setShowLoggedOut(show) {
         setState(s => ({
@@ -96,9 +96,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useLoggedOutView() {
-  return React.useContext(StateContext)
+  return useContext(StateContext)
 }
 
 export function useLoggedOutViewControls() {
-  return React.useContext(ControlsContext)
+  return useContext(ControlsContext)
 }

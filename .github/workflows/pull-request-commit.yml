@@ -24,42 +24,51 @@ jobs:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request'}}
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
+      - uses: pnpm/action-setup@v6
+
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
-          cache: yarn
+          cache: pnpm
 
       - name: Ensure tracking relevant branches and checkout base
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          BASE_REF: ${{ github.base_ref }}
         run: |
-          git checkout ${{ github.head_ref }}
-          git checkout ${{ github.base_ref }}
+          git checkout $HEAD_REF
+          git checkout $BASE_REF
 
       - name: Get the base commit
         id: base-commit
-        run: echo base-commit=$(git log -n 1 ${{ github.base_ref }} --pretty=format:'%H') >> "$GITHUB_OUTPUT"
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: echo base-commit=$(git log -n 1 $BASE_REF --pretty=format:'%H') >> "$GITHUB_OUTPUT"
 
       - name: Merge PR commit
+        env:
+          HEAD_REF: ${{ github.head_ref }}
         run: |
           # Have to set a git config for the merge to work
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          git merge --no-edit ${{ github.head_ref }}
-          yarn install
-          yarn intl:build
+          git merge --no-edit $HEAD_REF
+          pnpm install
+          pnpm intl:build
 
       - name: 🔦 Generate stats file for PR
         run: |
-          yarn generate-webpack-stats-file
+          pnpm generate-webpack-stats-file
           mv stats.json ../stats-new.json
 
       - name: ⬇️ Get base stats from cache
         id: get-base-stats
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: stats-base.json
           key: stats-base-${{ steps.base-commit.outputs.base-commit }}
@@ -73,18 +82,18 @@ jobs:
       - name: 🔦 Generate stats file from base commit
         if: ${{ !steps.get-base-stats.outputs.cache-hit }}
         run: |
-          yarn install
-          yarn intl:build
-          yarn generate-webpack-stats-file
+          pnpm install
+          pnpm intl:build
+          pnpm generate-webpack-stats-file
           mv stats.json stats-base.json
 
       - name: ％ Get diff
         id: get-diff
         uses: NejcZdovc/bundle-size-diff@v1
         with:
-          base_path: 'stats-base.json'
-          pr_path: '../stats-new.json'
-          excluded_assets: '(.+).chunk.js|(.+).js.map|(.+).json|(.+).png'
+          base_path: "stats-base.json"
+          pr_path: "../stats-new.json"
+          excluded_assets: "(.+).chunk.js|(.+).js.map|(.+).json|(.+).png|(.+).svg|(.+).webp|(.+).jpg|(.+).ico"
 
       - name: 💬 Drop a comment
         uses: marocchino/sticky-pull-request-comment@v2
@@ -101,7 +110,7 @@ jobs:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request'}}
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 100
 
@@ -109,11 +118,13 @@ jobs:
         run: git fetch origin main:main --depth 100
         if: github.event_name == 'pull_request'
 
+      - uses: pnpm/action-setup@v6
+
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
-          cache: yarn
+          cache: pnpm
 
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint

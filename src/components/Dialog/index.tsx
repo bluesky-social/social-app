@@ -1,36 +1,40 @@
-import React, {useImperativeHandle} from 'react'
 import {
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import {
+  Keyboard,
+  type KeyboardEventListener,
+  type LayoutChangeEvent,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
   Pressable,
-  type ScrollView,
+  ScrollView,
   type StyleProp,
   TextInput,
   View,
   type ViewStyle,
 } from 'react-native'
-import {
-  KeyboardAwareScrollView,
-  useKeyboardHandler,
-  useReanimatedKeyboardAnimation,
-} from 'react-native-keyboard-controller'
+import {useReanimatedKeyboardAnimation} from 'react-native-keyboard-controller'
 import Animated, {
   runOnJS,
   type ScrollEvent,
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {useEnableKeyboardController} from '#/lib/hooks/useEnableKeyboardController'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {logger} from '#/logger'
-import {isAndroid, isIOS} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
-import {atoms as a, ios, platform, tokens, useTheme} from '#/alf'
+import {android, atoms as a, ios, platform, tokens, useTheme} from '#/alf'
 import {useThemeName} from '#/alf/util/useColorModeTheme'
 import {Context, useDialogContext} from '#/components/Dialog/context'
 import {
@@ -39,6 +43,8 @@ import {
   type DialogOuterProps,
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
+import {useOnKeyboard} from '#/components/hooks/useOnKeyboard'
+import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
 import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
 import {
   type BottomSheetSnapPointChangeEvent,
@@ -62,21 +68,21 @@ export function Outer({
 }: React.PropsWithChildren<DialogOuterProps>) {
   const themeName = useThemeName()
   const t = useTheme(themeName)
-  const ref = React.useRef<BottomSheetNativeComponent>(null)
-  const closeCallbacks = React.useRef<(() => void)[]>([])
+  const ref = useRef<BottomSheetNativeComponent>(null)
+  const closeCallbacks = useRef<(() => void)[]>([])
   const {setDialogIsOpen, setFullyExpandedCount} =
     useDialogStateControlContext()
 
-  const prevSnapPoint = React.useRef<BottomSheetSnapPoint>(
+  const prevSnapPoint = useRef<BottomSheetSnapPoint>(
     BottomSheetSnapPoint.Hidden,
   )
 
-  const [disableDrag, setDisableDrag] = React.useState(false)
-  const [snapPoint, setSnapPoint] = React.useState<BottomSheetSnapPoint>(
+  const [disableDrag, setDisableDrag] = useState(false)
+  const [snapPoint, setSnapPoint] = useState<BottomSheetSnapPoint>(
     BottomSheetSnapPoint.Partial,
   )
 
-  const callQueuedCallbacks = React.useCallback(() => {
+  const callQueuedCallbacks = useCallback(() => {
     for (const cb of closeCallbacks.current) {
       try {
         cb()
@@ -88,7 +94,7 @@ export function Outer({
     closeCallbacks.current = []
   }, [])
 
-  const open = React.useCallback<DialogControlProps['open']>(() => {
+  const open = useCallback<DialogControlProps['open']>(() => {
     // Run any leftover callbacks that might have been queued up before calling `.open()`
     callQueuedCallbacks()
     setDialogIsOpen(control.id, true)
@@ -96,7 +102,7 @@ export function Outer({
   }, [setDialogIsOpen, control.id, callQueuedCallbacks])
 
   // This is the function that we call when we want to dismiss the dialog.
-  const close = React.useCallback<DialogControlProps['close']>(cb => {
+  const close = useCallback<DialogControlProps['close']>(cb => {
     if (typeof cb === 'function') {
       closeCallbacks.current.push(cb)
     }
@@ -105,7 +111,7 @@ export function Outer({
 
   // This is the actual thing we are doing once we "confirm" the dialog. We want the dialog's close animation to
   // happen before we run this. It is passed to the `BottomSheet` component.
-  const onCloseAnimationComplete = React.useCallback(() => {
+  const onCloseAnimationComplete = useCallback(() => {
     // This removes the dialog from our list of stored dialogs. Not super necessary on iOS, but on Android this
     // tells us that we need to toggle the accessibility overlay setting
     setDialogIsOpen(control.id, false)
@@ -151,7 +157,9 @@ export function Outer({
     [open, close],
   )
 
-  const context = React.useMemo(
+  const isHeightConstrained = nativeOptions?.maxHeight != null
+
+  const context = useMemo(
     () => ({
       close,
       isNativeDialog: true,
@@ -159,21 +167,25 @@ export function Outer({
       disableDrag,
       setDisableDrag,
       isWithinDialog: true,
+      isHeightConstrained,
     }),
-    [close, snapPoint, disableDrag, setDisableDrag],
+    [close, snapPoint, disableDrag, setDisableDrag, isHeightConstrained],
   )
 
   return (
     <BottomSheet
       ref={ref}
-      cornerRadius={20}
+      // device-bezel radius when undefined
+      cornerRadius={IS_LIQUID_GLASS ? undefined : 20}
       backgroundColor={t.atoms.bg.backgroundColor}
       {...nativeOptions}
       onSnapPointChange={onSnapPointChange}
       onStateChange={onStateChange}
       disableDrag={disableDrag}>
       <Context.Provider value={context}>
-        <View testID={testID} style={[a.relative]}>
+        <View
+          testID={testID}
+          style={[a.relative, isHeightConstrained && a.flex_1]}>
           {children}
         </View>
       </Context.Provider>
@@ -181,6 +193,9 @@ export function Outer({
   )
 }
 
+/**
+ * @deprecated use `Dialog.ScrollableInner` instead
+ */
 export function Inner({children, style, header}: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
@@ -190,9 +205,9 @@ export function Inner({children, style, header}: DialogInnerProps) {
         style={[
           a.pt_2xl,
           a.px_xl,
-          {
-            paddingBottom: insets.bottom + insets.top,
-          },
+          IS_LIQUID_GLASS
+            ? a.pb_2xl
+            : {paddingBottom: insets.bottom + insets.top},
           style,
         ]}>
         {children}
@@ -201,46 +216,27 @@ export function Inner({children, style, header}: DialogInnerProps) {
   )
 }
 
-export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
+export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
   function ScrollableInner(
-    {children, contentContainerStyle, header, ...props},
+    {children, contentContainerStyle, header, style, ...props},
     ref,
   ) {
-    const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
+    const {nativeSnapPoint, disableDrag, setDisableDrag, isHeightConstrained} =
+      useDialogContext()
+    const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
     const insets = useSafeAreaInsets()
-
-    useEnableKeyboardController(isIOS)
-
-    const [keyboardHeight, setKeyboardHeight] = React.useState(0)
-
-    useKeyboardHandler(
-      {
-        onEnd: e => {
-          'worklet'
-          runOnJS(setKeyboardHeight)(e.height)
-        },
-      },
-      [],
+    const [keyboardHeight, setKeyboardHeight] = useState(() =>
+      IS_ANDROID ? (Keyboard.metrics()?.height ?? 0) : 0,
     )
 
-    let paddingBottom = 0
-    if (isIOS) {
-      paddingBottom += keyboardHeight / 4
-      if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
-        paddingBottom += insets.bottom + tokens.space.md
-      }
-      paddingBottom = Math.max(paddingBottom, tokens.space._2xl)
-    } else {
-      paddingBottom += keyboardHeight
-      if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
-        paddingBottom += insets.top
-      }
-      paddingBottom +=
-        Math.max(insets.bottom, tokens.space._5xl) + tokens.space._2xl
-    }
+    const keyboardEventHandler = useCallback<KeyboardEventListener>(e => {
+      setKeyboardHeight(e.endCoordinates.height)
+    }, [])
+    useOnKeyboard('keyboardDidShow', keyboardEventHandler)
+    useOnKeyboard('keyboardDidHide', keyboardEventHandler)
 
     const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      if (!isAndroid) {
+      if (!IS_ANDROID) {
         return
       }
       const {contentOffset} = e.nativeEvent
@@ -252,20 +248,34 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     }
 
     return (
-      <KeyboardAwareScrollView
+      <ScrollView
+        style={[isHeightConstrained && a.flex_1, style]}
         contentContainerStyle={[
           a.pt_2xl,
-          a.px_xl,
-          {paddingBottom},
+          IS_LIQUID_GLASS ? a.px_2xl : a.px_xl,
+          platform({
+            ios: a.pb_2xl,
+            android: {
+              paddingBottom: keyboardHeight + insets.bottom + tokens.space.xl,
+            },
+          }),
           contentContainerStyle,
         ]}
         ref={ref}
-        showsVerticalScrollIndicator={isAndroid ? false : undefined}
+        showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
+        contentInsetAdjustmentBehavior={
+          isAtMaxSnapPoint ? 'automatic' : 'never'
+        }
+        automaticallyAdjustKeyboardInsets={isAtMaxSnapPoint}
         {...props}
-        bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
-        bottomOffset={30}
+        bounces={isAtMaxSnapPoint}
         scrollEventThrottle={50}
-        onScroll={isAndroid ? onScroll : undefined}
+        // set drag state based on scroll on android.
+        // we want to detect if it's at the top or not, so watch
+        // scrollEndDrag and momentumScrollEnd as well
+        onScroll={android(onScroll)}
+        onScrollEndDrag={android(onScroll)}
+        onMomentumScrollEnd={android(onScroll)}
         keyboardShouldPersistTaps="handled"
         // TODO: figure out why this positions the header absolutely (rather than stickily)
         // on Android. fine to disable for now, because we don't have any
@@ -273,27 +283,30 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         stickyHeaderIndices={ios(header ? [0] : undefined)}>
         {header}
         {children}
-      </KeyboardAwareScrollView>
+      </ScrollView>
     )
   },
 )
 
-export const InnerFlatList = React.forwardRef<
+export const InnerFlatList = forwardRef<
   ListMethods,
   ListProps<any> & {
     webInnerStyle?: StyleProp<ViewStyle>
     webInnerContentContainerStyle?: StyleProp<ViewStyle>
     footer?: React.ReactNode
   }
->(function InnerFlatList({footer, style, ...props}, ref) {
+>(function InnerFlatList(
+  {headerOffset, footer, style, contentContainerStyle, ...props},
+  ref,
+) {
   const insets = useSafeAreaInsets()
   const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
 
-  useEnableKeyboardController(isIOS)
+  const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
 
   const onScroll = (e: ScrollEvent) => {
     'worklet'
-    if (!isAndroid) {
+    if (!IS_ANDROID) {
       return
     }
     const {contentOffset} = e
@@ -305,28 +318,48 @@ export const InnerFlatList = React.forwardRef<
   }
 
   return (
-    <ScrollProvider onScroll={onScroll}>
+    <ScrollProvider
+      onScroll={onScroll}
+      onEndDrag={onScroll}
+      onMomentumEnd={onScroll}>
       <List
         keyboardShouldPersistTaps="handled"
-        bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
-        ListFooterComponent={<View style={{height: insets.bottom + 100}} />}
+        contentInsetAdjustmentBehavior={
+          isAtMaxSnapPoint ? 'automatic' : 'never'
+        }
+        automaticallyAdjustKeyboardInsets={isAtMaxSnapPoint}
+        scrollIndicatorInsets={{top: headerOffset}}
+        bounces={isAtMaxSnapPoint}
         ref={ref}
-        showsVerticalScrollIndicator={isAndroid ? false : undefined}
+        showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
         {...props}
         style={[a.h_full, style]}
+        contentContainerStyle={[
+          {paddingTop: headerOffset},
+          android({
+            paddingBottom: insets.top + insets.bottom + tokens.space.xl,
+          }),
+          contentContainerStyle,
+        ]}
       />
       {footer}
     </ScrollProvider>
   )
 })
 
-export function FlatListFooter({children}: {children: React.ReactNode}) {
+export function FlatListFooter({
+  children,
+  onLayout,
+}: {
+  children: React.ReactNode
+  onLayout?: (event: LayoutChangeEvent) => void
+}) {
   const t = useTheme()
-  const {top, bottom} = useSafeAreaInsets()
+  const {bottom} = useSafeAreaInsets()
   const {height} = useReanimatedKeyboardAnimation()
 
   const animatedStyle = useAnimatedStyle(() => {
-    if (!isIOS) return {}
+    if (!IS_IOS) return {}
     return {
       transform: [{translateY: Math.min(0, height.get() + bottom - 10)}],
     }
@@ -334,6 +367,7 @@ export function FlatListFooter({children}: {children: React.ReactNode}) {
 
   return (
     <Animated.View
+      onLayout={onLayout}
       style={[
         a.absolute,
         a.bottom_0,
@@ -344,12 +378,7 @@ export function FlatListFooter({children}: {children: React.ReactNode}) {
         t.atoms.border_contrast_low,
         a.px_lg,
         a.pt_md,
-        {
-          paddingBottom: platform({
-            ios: tokens.space.md + bottom,
-            android: tokens.space.md + bottom + top,
-          }),
-        },
+        {paddingBottom: bottom + tokens.space.md},
         // TODO: had to admit defeat here, but we should
         // try and get this to work for Android as well -sfn
         ios(animatedStyle),
@@ -359,7 +388,13 @@ export function FlatListFooter({children}: {children: React.ReactNode}) {
   )
 }
 
-export function Handle({difference = false}: {difference?: boolean}) {
+export function Handle({
+  difference = false,
+  fill,
+}: {
+  difference?: boolean
+  fill?: string
+}) {
   const t = useTheme()
   const {_} = useLingui()
   const {screenReaderEnabled} = useA11y()
@@ -390,7 +425,7 @@ export function Handle({difference = false}: {difference?: boolean}) {
                   opacity: 0.75,
                 }
               : {
-                  backgroundColor: t.palette.contrast_975,
+                  backgroundColor: fill || t.palette.contrast_975,
                   opacity: 0.5,
                 },
           ]}
@@ -401,5 +436,9 @@ export function Handle({difference = false}: {difference?: boolean}) {
 }
 
 export function Close() {
+  return null
+}
+
+export function Backdrop() {
   return null
 }

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import {forwardRef, memo, useCallback, useState} from 'react'
 import {type JSX} from 'react'
 import {type ScrollView, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
@@ -35,7 +35,7 @@ export interface PagerWithHeaderProps {
   onPageSelected?: (index: number) => void
   onCurrentPageSelected?: (index: number) => void
 }
-export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
+export const PagerWithHeader = forwardRef<PagerRef, PagerWithHeaderProps>(
   function PageWithHeaderImpl(
     {
       children,
@@ -49,9 +49,9 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     }: PagerWithHeaderProps,
     ref,
   ) {
-    const [currentPage, setCurrentPage] = React.useState(0)
+    const [currentPage, setCurrentPage] = useState(0)
 
-    const renderTabBar = React.useCallback(
+    const renderTabBar = useCallback(
       (props: RenderTabBarFnProps) => {
         return (
           <PagerTabBar
@@ -76,7 +76,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       ],
     )
 
-    const onPageSelectedInner = React.useCallback(
+    const onPageSelectedInner = useCallback(
       (index: number) => {
         setCurrentPage(index)
         onPageSelected?.(index)
@@ -162,7 +162,7 @@ let PagerTabBar = ({
     </>
   )
 }
-PagerTabBar = React.memo(PagerTabBar)
+PagerTabBar = memo(PagerTabBar)
 
 function PagerItem({
   isFocused,

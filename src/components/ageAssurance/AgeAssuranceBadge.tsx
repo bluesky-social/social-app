@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, select, useTheme} from '#/alf'
 import {ShieldCheck_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'

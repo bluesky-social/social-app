@@ -1,0 +1,22 @@
+diff --git a/lib/commonjs/toast.js b/lib/commonjs/toast.js
+index 121816a452339c1088aeba87928ff63a0bdacca5..47e74bce47323201f0bb4e5ed9dc55b373c07b97 100644
+--- a/lib/commonjs/toast.js
++++ b/lib/commonjs/toast.js
+@@ -264,7 +264,7 @@ const Toast = exports.Toast = /*#__PURE__*/React.forwardRef(({
+       ...toastSwipeHandlerProps,
+       children: /*#__PURE__*/(0, _jsxRuntime.jsx)(_reactNativeReanimated.default.View, {
+         entering: entering,
+-        exiting: exiting,
++        exiting: _reactNative.Platform.OS === 'android' ? undefined : exiting,
+         children: jsx
+       })
+     });
+@@ -274,7 +274,7 @@ const Toast = exports.Toast = /*#__PURE__*/React.forwardRef(({
+     children: /*#__PURE__*/(0, _jsxRuntime.jsx)(_reactNativeReanimated.default.View, {
+       style: [unstyled ? undefined : elevationStyle, defaultStyles.toast, toastStyleCtx, styles?.toast, style, wiggleAnimationStyle],
+       entering: entering,
+-      exiting: exiting,
++      exiting: _reactNative.Platform.OS === 'android' ? undefined : exiting,
+       children: /*#__PURE__*/(0, _jsxRuntime.jsxs)(_reactNative.View, {
+         style: [defaultStyles.toastContent, toastContentStyleCtx, styles?.toastContent],
+         children: [promiseOptions || variant === 'loading' ? 'loading' in icons ? icons.loading : /*#__PURE__*/(0, _jsxRuntime.jsx)(_reactNative.ActivityIndicator, {}) : icon ? /*#__PURE__*/(0, _jsxRuntime.jsx)(_reactNative.View, {

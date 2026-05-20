@@ -1,12 +1,14 @@
 import {Children} from 'react'
-import {type TextProps as RNTextProps} from 'react-native'
-import {type StyleProp, type TextStyle} from 'react-native'
+import {
+  type StyleProp,
+  type TextProps as RNTextProps,
+  type TextStyle,
+} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
 import createEmojiRegex from 'emoji-regex'
 
-import {isNative} from '#/platform/detection'
-import {isIOS} from '#/platform/detection'
 import {type Alf, applyFonts, atoms, flatten} from '#/alf'
+import {IS_IOS, IS_NATIVE} from '#/env'
 
 /**
  * Ensures that `lineHeight` defaults to a relative value of `1`, or applies
@@ -25,7 +27,8 @@ export function normalizeTextStyles(
     fontFamily: Alf['fonts']['family']
   } & Pick<Alf, 'flags'>,
 ) {
-  const s = flatten(styles)
+  const s = flatten(styles) ?? {}
+
   // should always be defined on these components
   s.fontSize = (s.fontSize || atoms.text_md.fontSize) * fontScale
 
@@ -33,7 +36,7 @@ export function normalizeTextStyles(
     if (s.lineHeight !== 0 && s.lineHeight <= 2) {
       s.lineHeight = Math.round(s.fontSize * s.lineHeight)
     }
-  } else if (!isNative) {
+  } else if (!IS_NATIVE) {
     s.lineHeight = s.fontSize
   }
 
@@ -80,7 +83,7 @@ export function renderChildrenWithEmoji(
   props: Omit<TextProps, 'children'> = {},
   emoji: boolean,
 ) {
-  if (!isIOS || !emoji) {
+  if (!IS_IOS || !emoji) {
     return children
   }
   return Children.map(children, child => {
@@ -106,7 +109,8 @@ export function renderChildrenWithEmoji(
   })
 }
 
-const SINGLE_EMOJI_RE = /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]+$/u
+const SINGLE_EMOJI_RE =
+  /^[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D]+$/u
 export function isOnlyEmoji(text: string) {
   return text.length <= 15 && SINGLE_EMOJI_RE.test(text)
 }

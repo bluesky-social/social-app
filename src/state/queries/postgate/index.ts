@@ -1,4 +1,4 @@
-import React from 'react'
+import {useRef} from 'react'
 import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
@@ -36,6 +36,7 @@ export async function getPostgateRecord({
     const res = await agent.resolveHandle({
       handle: urip.host,
     })
+    // @ts-expect-error TODO new-sdk-migration
     urip.host = res.data.did
   }
 
@@ -173,7 +174,7 @@ export function useToggleQuoteDetachmentMutation() {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const getPosts = useGetPosts()
-  const prevEmbed = React.useRef<AppBskyFeedDefs.PostView['embed']>(undefined)
+  const prevEmbed = useRef<AppBskyFeedDefs.PostView['embed']>(undefined)
 
   return useMutation({
     mutationFn: async ({

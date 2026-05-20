@@ -2,7 +2,7 @@ import {type Insets, Platform} from 'react-native'
 import {type AppBskyActorDefs, BSKY_LABELER_DID} from '@atproto/api'
 
 import {type ProxyHeaderValue} from '#/state/session/agent'
-import {BLUESKY_PROXY_DID, CHAT_PROXY_DID} from '#/env'
+import {BLUESKY_PROXY_DID, CHAT_PROXY_DID, IS_DEV} from '#/env'
 
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
@@ -62,6 +62,8 @@ export const MAX_DESCRIPTION = 256
 
 export const MAX_GRAPHEME_LENGTH = 300
 
+export const MAX_DRAFT_GRAPHEME_LENGTH = 1000
+
 export const MAX_DM_GRAPHEME_LENGTH = 1000
 
 // Recommended is 100 per: https://www.w3.org/WAI/GL/WCAG20/tests/test3.html
@@ -105,12 +107,12 @@ export const STAGING_LINK_META_PROXY =
 
 export const PROD_LINK_META_PROXY = 'https://cardyb.bsky.app/v1/extract?url='
 
-export function LINK_META_PROXY(serviceUrl: string) {
-  if (IS_PROD_SERVICE(serviceUrl)) {
-    return PROD_LINK_META_PROXY
+export function LINK_META_PROXY(_serviceUrl: string) {
+  if (IS_DEV) {
+    return STAGING_LINK_META_PROXY
   }
 
-  return STAGING_LINK_META_PROXY
+  return PROD_LINK_META_PROXY
 }
 
 export const STATUS_PAGE_URL = 'https://status.bsky.app/'
@@ -171,10 +173,10 @@ export const KNOWN_SHUTDOWN_FEEDS = [
 
 export const GIF_SERVICE = 'https://gifs.bsky.app'
 
-export const GIF_SEARCH = (params: string) =>
-  `${GIF_SERVICE}/tenor/v2/search?${params}`
-export const GIF_FEATURED = (params: string) =>
-  `${GIF_SERVICE}/tenor/v2/featured?${params}`
+export const GIF_KLIPY_SEARCH = (params: string) =>
+  `${GIF_SERVICE}/klipy/v2/search?${params}`
+export const GIF_KLIPY_FEATURED = (params: string) =>
+  `${GIF_SERVICE}/klipy/v2/featured?${params}`
 
 export const MAX_LABELERS = 20
 
@@ -203,7 +205,14 @@ export const EMOJI_REACTION_LIMIT = 5
 export const urls = {
   website: {
     blog: {
+      findFriendsAnnouncement:
+        'https://bsky.social/about/blog/12-16-2025-find-friends',
       initialVerificationAnnouncement: `https://bsky.social/about/blog/04-21-2025-verification`,
+      searchTipsAndTricks: 'https://bsky.social/about/blog/05-31-2024-search',
+    },
+    support: {
+      findFriendsPrivacyPolicy:
+        'https://bsky.social/about/support/find-friends-privacy-policy',
     },
   },
 }
@@ -213,6 +222,7 @@ export const PUBLIC_APPVIEW_DID = 'did:web:api.bsky.app'
 export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.bsky.dev'
 
 export const DEV_ENV_APPVIEW = `http://localhost:2584` // always the same
+export const DEV_ENV_APPVIEW_DID = `did:plc:dw4kbjf5mn7nhenabiqpkyh3` // always the same
 
 // temp hack for e2e - esb
 export const BLUESKY_PROXY_HEADER = {
@@ -231,6 +241,10 @@ export const DM_SERVICE_HEADERS = {
 
 export const BLUESKY_MOD_SERVICE_HEADERS = {
   'atproto-proxy': `${BSKY_LABELER_DID}#atproto_labeler`,
+}
+
+export const BLUESKY_NOTIF_SERVICE_HEADERS = {
+  'atproto-proxy': `${BLUESKY_PROXY_DID}#bsky_notif`,
 }
 
 export const webLinks = {

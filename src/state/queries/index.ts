@@ -18,3 +18,7 @@ export const STALE = {
   },
   INFINITY: Infinity,
 }
+
+export const GCTIME = {
+  INFINITY: Infinity,
+}

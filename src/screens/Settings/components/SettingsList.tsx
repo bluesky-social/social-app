@@ -194,12 +194,15 @@ export function ItemIcon({
    * also so that we can calculate transforms.
    */
   const iconSize = {
+    '2xs': 8,
     xs: 12,
     sm: 16,
-    md: 20,
+    md: 18,
     lg: 24,
     xl: 28,
     '2xl': 32,
+    '3xl': 40,
+    '4xl': 48,
   }[size]
 
   const color =
@@ -252,7 +255,7 @@ export function Divider({style}: ViewStyleProp) {
     <View
       style={[
         a.border_t,
-        t.atoms.border_contrast_medium,
+        t.atoms.border_contrast_low,
         a.w_full,
         a.my_sm,
         style,

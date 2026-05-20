@@ -1,18 +1,18 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {ComAtprotoModerationDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {ToolsOzoneReportDefs} from '@atproto/api'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
 import {BLUESKY_MOD_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 
 export function ChatDisabled() {
@@ -20,17 +20,33 @@ export function ChatDisabled() {
   return (
     <View style={[a.p_md]}>
       <View
-        style={[a.align_start, a.p_xl, a.rounded_md, t.atoms.bg_contrast_25]}>
+        style={[
+          a.align_center,
+          a.justify_center,
+          a.p_lg,
+          t.atoms.bg_contrast_50,
+          {
+            borderRadius: 40,
+          },
+        ]}>
+        <WarningIcon fill={t.atoms.text.color} size="lg" style={[a.mb_xs]} />
         <Text
           style={[
+            a.mb_xs,
+            a.text_center,
             a.text_md,
             a.font_semi_bold,
-            a.pb_sm,
-            t.atoms.text_contrast_high,
+            t.atoms.text,
           ]}>
           <Trans>Your chats have been disabled</Trans>
         </Text>
-        <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+        <Text
+          style={[
+            a.text_center,
+            a.text_sm,
+            a.leading_snug,
+            t.atoms.text_contrast_high,
+          ]}>
           <Trans>
             Our moderators have reviewed reports and decided to disable your
             access to chats on Bluesky.
@@ -44,21 +60,21 @@ export function ChatDisabled() {
 
 function AppealDialog() {
   const control = Dialog.useDialogControl()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <>
       <Button
         testID="appealDisabledChatBtn"
-        variant="ghost"
-        color="secondary"
+        color="secondary_inverted"
         size="small"
         onPress={control.open}
-        label={_(msg`Appeal this decision`)}
-        style={a.mt_sm}>
-        <ButtonText>{_(msg`Appeal this decision`)}</ButtonText>
+        label={l`Appeal this decision`}
+        style={a.mt_lg}>
+        <ButtonText>
+          <Trans>Appeal this decision</Trans>
+        </ButtonText>
       </Button>
-
       <Dialog.Outer control={control}>
         <Dialog.Handle />
         <DialogInner />
@@ -68,7 +84,7 @@ function AppealDialog() {
 }
 
 function DialogInner() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const control = Dialog.useDialogContext()
   const [details, setDetails] = useState('')
   const {gtMobile} = useBreakpoints()
@@ -81,7 +97,7 @@ function DialogInner() {
         throw new Error('No current account, should be unreachable')
       await agent.createModerationReport(
         {
-          reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
+          reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
           subject: {
             $type: 'com.atproto.admin.defs#repoRef',
             did: currentAccount.did,
@@ -96,11 +112,13 @@ function DialogInner() {
     },
     onError: err => {
       logger.error('Failed to submit chat appeal', {message: err})
-      Toast.show(_(msg`Failed to submit appeal, please try again.`), 'xmark')
+      Toast.show(l`Failed to submit appeal, please try again.`, {
+        type: 'error',
+      })
     },
     onSuccess: () => {
       control.close()
-      Toast.show(_(msg({message: 'Appeal submitted', context: 'toast'})))
+      Toast.show(l({message: 'Appeal submitted', context: 'toast'}))
     },
   })
 
@@ -108,7 +126,7 @@ function DialogInner() {
   const onBack = useCallback(() => control.close(), [control])
 
   return (
-    <Dialog.ScrollableInner label={_(msg`Appeal this decision`)}>
+    <Dialog.ScrollableInner label={l`Appeal this decision`}>
       <Text style={[a.text_2xl, a.font_semi_bold, a.pb_xs, a.leading_tight]}>
         <Trans>Appeal this decision</Trans>
       </Text>
@@ -117,10 +135,8 @@ function DialogInner() {
       </Text>
       <View style={[a.my_md]}>
         <Dialog.Input
-          label={_(msg`Text input field`)}
-          placeholder={_(
-            msg`Please explain why you think your chats were incorrectly disabled`,
-          )}
+          label={l`Text input field`}
+          placeholder={l`Please explain why you think your chats were incorrectly disabled`}
           value={details}
           onChangeText={setDetails}
           autoFocus={true}
@@ -129,12 +145,11 @@ function DialogInner() {
           maxLength={300}
         />
       </View>
-
       <View
         style={
           gtMobile
             ? [a.flex_row, a.justify_between]
-            : [{flexDirection: 'column-reverse'}, a.gap_sm]
+            : [a.flex_col_reverse, a.gap_sm]
         }>
         <Button
           testID="backBtn"
@@ -142,8 +157,10 @@ function DialogInner() {
           color="secondary"
           size="large"
           onPress={onBack}
-          label={_(msg`Back`)}>
-          <ButtonText>{_(msg`Back`)}</ButtonText>
+          label={l`Back`}>
+          <ButtonText>
+            <Trans>Back</Trans>
+          </ButtonText>
         </Button>
         <Button
           testID="submitBtn"
@@ -151,8 +168,10 @@ function DialogInner() {
           color="primary"
           size="large"
           onPress={onSubmit}
-          label={_(msg`Submit`)}>
-          <ButtonText>{_(msg`Submit`)}</ButtonText>
+          label={l`Submit`}>
+          <ButtonText>
+            <Trans>Submit</Trans>
+          </ButtonText>
           {isPending && <ButtonIcon icon={Loader} />}
         </Button>
       </View>

@@ -49,6 +49,7 @@ type OtherNotificationType =
   | 'like-via-repost'
   | 'repost-via-repost'
   | 'subscribed-post'
+  | 'contact-match'
   | 'unknown'
 
 type FeedNotificationBase = {

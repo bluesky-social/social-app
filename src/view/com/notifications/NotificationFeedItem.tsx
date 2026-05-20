@@ -1,11 +1,4 @@
-import {
-  memo,
-  type ReactElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import {memo, useCallback, useEffect, useMemo, useState} from 'react'
 import {
   Animated,
   type GestureResponderEvent,
@@ -25,15 +18,14 @@ import {
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {msg, Plural, plural, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {MAX_POST_LINES} from '#/lib/constants'
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
+import {DM_SERVICE_HEADERS, MAX_POST_LINES} from '#/lib/constants'
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {forceLTR} from '#/lib/strings/bidi'
@@ -42,34 +34,39 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {type FeedNotification} from '#/state/queries/notifications/feed'
+import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
-import {useAgent} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {Post} from '#/view/com/post/Post'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, platform, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
+import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
   ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
 } from '#/components/icons/Chevron'
+import {Contacts_Filled_Corner2_Rounded as ContactsIconFilled} from '#/components/icons/Contacts'
 import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled} from '#/components/icons/Heart2'
 import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
-import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import {Repost_Stroke2_Corner3_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {StarterPack} from '#/components/icons/StarterPack'
 import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
 import {InlineLinkText, Link} from '#/components/Link'
 import * as MediaPreview from '#/components/MediaPreview'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import * as bsky from '#/types/bsky'
 
 const MAX_AUTHORS = 5
@@ -94,10 +91,9 @@ let NotificationFeedItem = ({
   hideTopBorder?: boolean
 }): React.ReactNode => {
   const queryClient = useQueryClient()
-  const pal = usePalette('default')
   const t = useTheme()
   const {_, i18n} = useLingui()
-  const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
+  const [isAuthorsExpanded, setIsAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
     switch (item.type) {
       case 'post-like':
@@ -111,6 +107,7 @@ let NotificationFeedItem = ({
         break
       }
       case 'follow':
+      case 'contact-match':
       case 'verified':
       case 'unverified': {
         return makeProfileLink(item.notification.author)
@@ -146,7 +143,7 @@ let NotificationFeedItem = ({
       e.preventDefault()
       e.stopPropagation()
     }
-    setAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
+    setIsAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
   }
 
   const onBeforePress = useCallback(() => {
@@ -173,12 +170,35 @@ let NotificationFeedItem = ({
 
   const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
   const firstAuthor = authors[0]
-  const firstAuthorVerification = useSimpleVerificationState({
-    profile: firstAuthor.profile,
-  })
   const firstAuthorName = sanitizeDisplayName(
     firstAuthor.profile.displayName || firstAuthor.profile.handle,
   )
+
+  // Calculate if this is a follow-back notification
+  const isFollowBack = useMemo(() => {
+    if (item.type !== 'follow') return false
+    if (
+      item.notification.author.viewer?.following &&
+      bsky.dangerousIsType<AppBskyGraphFollow.Record>(
+        item.notification.record,
+        AppBskyGraphFollow.isRecord,
+      )
+    ) {
+      let followingTimestamp
+      try {
+        const rkey = new AtUri(item.notification.author.viewer.following).rkey
+        followingTimestamp = TID.fromStr(rkey).timestamp()
+      } catch (e) {
+        return false
+      }
+      if (followingTimestamp) {
+        const followedTimestamp =
+          new Date(item.notification.record.createdAt).getTime() * 1000
+        return followedTimestamp > followingTimestamp
+      }
+    }
+    return false
+  }, [item])
 
   if (item.subjectUri && !item.subject && item.type !== 'feedgen-like') {
     // don't render anything if the target post was deleted or unfindable
@@ -200,8 +220,8 @@ let NotificationFeedItem = ({
           post={item.subject}
           style={
             isHighlighted && {
-              backgroundColor: pal.colors.unreadNotifBg,
-              borderColor: pal.colors.unreadNotifBorder,
+              backgroundColor: t.palette.primary_25,
+              borderColor: t.palette.primary_100,
             }
           }
           hideTopBorder={hideTopBorder}
@@ -220,24 +240,21 @@ let NotificationFeedItem = ({
         emoji
         label={_(msg`Go to ${firstAuthorName}'s profile`)}>
         {forceLTR(firstAuthorName)}
-        {firstAuthorVerification.showBadge && (
-          <View
-            style={[
-              a.relative,
-              {
-                paddingTop: platform({android: 2}),
-                marginBottom: platform({ios: -7}),
-                top: platform({web: 1}),
-                paddingLeft: 3,
-                paddingRight: 2,
-              },
-            ]}>
-            <VerificationCheck
-              width={14}
-              verifier={firstAuthorVerification.role === 'verifier'}
-            />
-          </View>
-        )}
+        <ProfileBadges
+          profile={firstAuthor.profile}
+          size="md"
+          style={[
+            a.relative,
+            {
+              // weird stuff here
+              paddingTop: platform({android: 2}),
+              marginBottom: platform({ios: -6}),
+              top: platform({web: 2}),
+              paddingLeft: 3,
+              paddingRight: 2,
+            },
+          ]}
+        />
       </InlineLinkText>
     </ProfileHoverCard>
   )
@@ -248,12 +265,12 @@ let NotificationFeedItem = ({
     : ''
 
   let a11yLabel = ''
-  let notificationContent: ReactElement<any>
+  let notificationContent: React.ReactElement<any>
   let icon = (
     <HeartIconFilled
       size="xl"
       style={[
-        s.likeColor,
+        {color: t.palette.pink},
         // {position: 'relative', top: -4}
       ]}
     />
@@ -309,30 +326,6 @@ let NotificationFeedItem = ({
     )
     icon = <RepostIcon size="xl" style={{color: t.palette.positive_500}} />
   } else if (item.type === 'follow') {
-    let isFollowBack = false
-
-    if (
-      item.notification.author.viewer?.following &&
-      bsky.dangerousIsType<AppBskyGraphFollow.Record>(
-        item.notification.record,
-        AppBskyGraphFollow.isRecord,
-      )
-    ) {
-      let followingTimestamp
-      try {
-        const rkey = new AtUri(item.notification.author.viewer.following).rkey
-        followingTimestamp = TID.fromStr(rkey).timestamp()
-      } catch (e) {
-        // For some reason the following URI was invalid. Default to it not being a follow back.
-        console.error('Invalid following URI')
-      }
-      if (followingTimestamp) {
-        const followedTimestamp =
-          new Date(item.notification.record.createdAt).getTime() * 1000
-        isFollowBack = followedTimestamp > followingTimestamp
-      }
-    }
-
     if (isFollowBack && !hasMultipleAuthors) {
       /*
        * Follow-backs are ungrouped, grouped follow-backs not supported atm,
@@ -366,6 +359,14 @@ let NotificationFeedItem = ({
       )
     }
     icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
+  } else if (item.type === 'contact-match') {
+    a11yLabel = _(msg`Your contact ${firstAuthorName} is on Bluesky`)
+    notificationContent = (
+      <Trans>Your contact {firstAuthorLink} is on Bluesky</Trans>
+    )
+    icon = (
+      <ContactsIconFilled size="xl" style={{color: t.palette.primary_500}} />
+    )
   } else if (item.type === 'feedgen-like') {
     a11yLabel = hasMultipleAuthors
       ? _(
@@ -431,7 +432,7 @@ let NotificationFeedItem = ({
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
-        <Text style={[pal.text, s.bold]}>
+        <Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
           <Plural
             value={additionalAuthorsCount}
             one={`${formattedAuthorsCount} other`}
@@ -456,7 +457,7 @@ let NotificationFeedItem = ({
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
-        <Text style={[pal.text, s.bold]}>
+        <Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
           <Plural
             value={additionalAuthorsCount}
             one={`${formattedAuthorsCount} other`}
@@ -574,8 +575,8 @@ let NotificationFeedItem = ({
         item.notification.isRead
           ? undefined
           : {
-              backgroundColor: pal.colors.unreadNotifBg,
-              borderColor: pal.colors.unreadNotifBorder,
+              backgroundColor: t.palette.primary_25,
+              borderColor: t.palette.primary_100,
             },
         !hideTopBorder && a.border_t,
         a.overflow_hidden,
@@ -663,6 +664,11 @@ let NotificationFeedItem = ({
                 </TimeElapsed>
               </Text>
             </ExpandListPressable>
+            {(item.type === 'follow' && !hasMultipleAuthors && !isFollowBack) ||
+            (item.type === 'contact-match' &&
+              !item.notification.author.viewer?.following) ? (
+              <FollowBackButton profile={item.notification.author} />
+            ) : null}
             {item.type === 'post-like' ||
             item.type === 'repost' ||
             item.type === 'like-via-repost' ||
@@ -732,6 +738,116 @@ function ExpandListPressable({
   }
 }
 
+function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
+  const {_} = useLingui()
+  const {currentAccount, hasSession} = useSession()
+  const profileShadow = useProfileShadow(profile)
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
+    profileShadow,
+    'ProfileCard',
+  )
+
+  // Don't show button if not logged in or for own profile
+  if (!hasSession || profile.did === currentAccount?.did) {
+    return null
+  }
+
+  const onPressFollow = async (e: GestureResponderEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    try {
+      await queueFollow()
+      Toast.show(
+        _(
+          msg`Following ${sanitizeDisplayName(
+            profile.displayName || profile.handle,
+          )}`,
+        ),
+      )
+    } catch (err: any) {
+      if (err?.name !== 'AbortError') {
+        Toast.show(_(msg`An issue occurred, please try again.`), {
+          type: 'error',
+        })
+      }
+    }
+  }
+
+  const onPressUnfollow = async (e: GestureResponderEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    try {
+      await queueUnfollow()
+      Toast.show(
+        _(
+          msg`No longer following ${sanitizeDisplayName(
+            profile.displayName || profile.handle,
+          )}`,
+        ),
+      )
+    } catch (err: any) {
+      if (err?.name !== 'AbortError') {
+        Toast.show(_(msg`An issue occurred, please try again.`), {
+          type: 'error',
+        })
+      }
+    }
+  }
+
+  // Don't show button if viewer data is missing or user is blocked
+  if (!profileShadow.viewer) {
+    return null
+  }
+  if (
+    profileShadow.viewer.blockedBy ||
+    profileShadow.viewer.blocking ||
+    profileShadow.viewer.blockingByList
+  ) {
+    return null
+  }
+
+  const isFollowing = profileShadow.viewer.following
+  const isFollowedBy = profileShadow.viewer.followedBy
+  const followingLabel = _(
+    msg({
+      message: 'Following',
+      comment: 'User is following this account, click to unfollow',
+    }),
+  )
+
+  return (
+    <View style={[a.pt_sm]}>
+      {isFollowing ? (
+        <Button
+          label={followingLabel}
+          color="secondary"
+          size="small"
+          style={[a.self_start]}
+          onPress={onPressUnfollow}>
+          <ButtonIcon icon={CheckIcon} />
+          <ButtonText>
+            <Trans>Following</Trans>
+          </ButtonText>
+        </Button>
+      ) : (
+        <Button
+          label={isFollowedBy ? _(msg`Follow back`) : _(msg`Follow`)}
+          color="primary"
+          size="small"
+          style={[a.self_start]}
+          onPress={onPressFollow}>
+          <ButtonIcon icon={PlusIcon} />
+          <ButtonText>
+            {isFollowedBy ? <Trans>Follow back</Trans> : <Trans>Follow</Trans>}
+          </ButtonText>
+        </Button>
+      )}
+    </View>
+  )
+}
+
 function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
   const {_} = useLingui()
   const agent = useAgent()
@@ -759,7 +875,7 @@ function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
           setIsLoading(true)
           const res = await agent.api.chat.bsky.convo.getConvoForMembers(
             {
-              members: [profile.did, agent.session!.did!],
+              members: [profile.did, agent.session!.did],
             },
             {headers: DM_SERVICE_HEADERS},
           )
@@ -896,9 +1012,6 @@ function ExpandedAuthorsList({
 function ExpandedAuthorCard({author}: {author: Author}) {
   const t = useTheme()
   const {_} = useLingui()
-  const verification = useSimpleVerificationState({
-    profile: author.profile,
-  })
   return (
     <Link
       key={author.profile.did}
@@ -934,14 +1047,11 @@ function ExpandedAuthorCard({author}: {author: Author}) {
               author.profile.displayName || author.profile.handle,
             )}
           </Text>
-          {verification.showBadge && (
-            <View style={[a.pl_xs, a.self_center]}>
-              <VerificationCheck
-                width={14}
-                verifier={verification.role === 'verifier'}
-              />
-            </View>
-          )}
+          <ProfileBadges
+            profile={author.profile}
+            size="md"
+            style={[a.pl_2xs, a.self_center]}
+          />
           <Text
             numberOfLines={1}
             style={[

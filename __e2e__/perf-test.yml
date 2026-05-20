@@ -1,4 +1,3 @@
-
 # flow.yaml
 
 appId: xyz.blueskyweb.app
@@ -33,7 +32,7 @@ appId: xyz.blueskyweb.app
     direction: "LEFT"
 - swipe:
     direction: "LEFT"
-- swipe: 
+- swipe:
     direction: "LEFT"
 - swipe:
     direction: "RIGHT"

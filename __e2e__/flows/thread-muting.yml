@@ -31,8 +31,6 @@ appId: xyz.blueskyweb.app
       id: "viewHeaderHomeFeedPrefsBtn"
 - tapOn:
     id: "replyBtn"
-- tapOn:
-    id: "replyBtn"
 - inputText: "Reply 1"
 - tapOn:
     id: "composerPublishBtn"
@@ -69,8 +67,6 @@ appId: xyz.blueskyweb.app
     id: "bottomBarProfileBtn"
 - tapOn:
     id: "profilePager-selector-1"
-- tapOn:
-    id: "replyBtn"
 - tapOn:
     id: "replyBtn"
 - inputText: "Reply 2"

@@ -1,7 +1,8 @@
-import React from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {cleanError} from '#/lib/strings/errors'
@@ -9,22 +10,28 @@ import {logger} from '#/logger'
 import {useProfileFollowersQuery} from '#/state/queries/profile-followers'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useSession} from '#/state/session'
+import {PeopleRemove2_Stroke1_Corner0_Rounded as PeopleRemoveIcon} from '#/components/icons/PeopleRemove2'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {useAnalytics} from '#/analytics'
 import {List} from '../util/List'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
 
 function renderItem({
   item,
   index,
+  contextProfileDid,
 }: {
   item: ActorDefs.ProfileView
   index: number
+  contextProfileDid: string | undefined
 }) {
   return (
     <ProfileCardWithFollowBtn
       key={item.did}
       profile={item}
       noBorder={index === 0}
+      position={index + 1}
+      contextProfileDid={contextProfileDid}
     />
   )
 }
@@ -35,10 +42,12 @@ function keyExtractor(item: ActorDefs.ProfileViewBasic) {
 
 export function ProfileFollowers({name}: {name: string}) {
   const {_} = useLingui()
+  const ax = useAnalytics()
+  const navigation = useNavigation()
   const initialNumToRender = useInitialNumToRender()
   const {currentAccount} = useSession()
 
-  const [isPTRing, setIsPTRing] = React.useState(false)
+  const [isPTRing, setIsPTRing] = useState(false)
   const {
     data: resolvedDid,
     isLoading: isDidLoading,
@@ -57,14 +66,40 @@ export function ProfileFollowers({name}: {name: string}) {
   const isError = !!resolveError || !!error
   const isMe = resolvedDid === currentAccount?.did
 
-  const followers = React.useMemo(() => {
+  const followers = useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.followers)
     }
     return []
   }, [data])
 
-  const onRefresh = React.useCallback(async () => {
+  // Track pagination events - fire for page 3+ (pages 1-2 may auto-load)
+  const paginationTrackingRef = useRef<{
+    did: string | undefined
+    page: number
+  }>({did: undefined, page: 0})
+  useEffect(() => {
+    const currentPageCount = data?.pages?.length || 0
+    // Reset tracking when profile changes
+    if (paginationTrackingRef.current.did !== resolvedDid) {
+      paginationTrackingRef.current = {did: resolvedDid, page: currentPageCount}
+      return
+    }
+    if (
+      resolvedDid &&
+      currentPageCount >= 3 &&
+      currentPageCount > paginationTrackingRef.current.page
+    ) {
+      ax.metric('profile:followers:paginate', {
+        contextProfileDid: resolvedDid,
+        itemCount: followers.length,
+        page: currentPageCount,
+      })
+    }
+    paginationTrackingRef.current.page = currentPageCount
+  }, [ax, data?.pages?.length, resolvedDid, followers.length])
+
+  const onRefresh = useCallback(async () => {
     setIsPTRing(true)
     try {
       await refetch()
@@ -74,7 +109,7 @@ export function ProfileFollowers({name}: {name: string}) {
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || !!error) return
     try {
       await fetchNextPage()
@@ -82,6 +117,46 @@ export function ProfileFollowers({name}: {name: string}) {
       logger.error('Failed to load more followers', {message: err})
     }
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
+
+  const renderItemWithContext = useCallback(
+    ({item, index}: {item: ActorDefs.ProfileView; index: number}) =>
+      renderItem({item, index, contextProfileDid: resolvedDid}),
+    [resolvedDid],
+  )
+
+  // track pageview
+  useEffect(() => {
+    if (resolvedDid) {
+      ax.metric('profile:followers:view', {
+        contextProfileDid: resolvedDid,
+        isOwnProfile: isMe,
+      })
+    }
+  }, [ax, resolvedDid, isMe])
+
+  // track seen items
+  const seenItemsRef = useRef<Set<string>>(new Set())
+  useEffect(() => {
+    seenItemsRef.current.clear()
+  }, [resolvedDid])
+  const onItemSeen = useCallback(
+    (item: ActorDefs.ProfileView) => {
+      if (seenItemsRef.current.has(item.did)) {
+        return
+      }
+      seenItemsRef.current.add(item.did)
+      const position = followers.findIndex(p => p.did === item.did) + 1
+      if (position === 0) {
+        return
+      }
+      ax.metric('profileCard:seen', {
+        profileDid: item.did,
+        position,
+        ...(resolvedDid !== undefined && {contextProfileDid: resolvedDid}),
+      })
+    },
+    [ax, followers, resolvedDid],
+  )
 
   if (followers.length < 1) {
     return (
@@ -91,12 +166,21 @@ export function ProfileFollowers({name}: {name: string}) {
         emptyType="results"
         emptyMessage={
           isMe
-            ? _(msg`You do not have any followers.`)
+            ? _(msg`No followers yet`)
             : _(msg`This user doesn't have any followers.`)
         }
         errorMessage={cleanError(resolveError || error)}
         onRetry={isError ? refetch : undefined}
         sideBorders={false}
+        useEmptyState={true}
+        emptyStateIcon={PeopleRemoveIcon}
+        emptyStateButton={{
+          label: _(msg`Go back`),
+          text: _(msg`Go back`),
+          color: 'secondary',
+          size: 'small',
+          onPress: () => navigation.goBack(),
+        }}
       />
     )
   }
@@ -104,12 +188,13 @@ export function ProfileFollowers({name}: {name: string}) {
   return (
     <List
       data={followers}
-      renderItem={renderItem}
+      renderItem={renderItemWithContext}
       keyExtractor={keyExtractor}
       refreshing={isPTRing}
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
+      onItemSeen={onItemSeen}
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}

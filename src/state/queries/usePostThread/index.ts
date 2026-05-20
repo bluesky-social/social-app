@@ -1,7 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useThreadPreferences} from '#/state/queries/preferences/useThreadPreferences'
 import {
@@ -31,6 +30,7 @@ import * as views from '#/state/queries/usePostThread/views'
 import {useAgent, useSession} from '#/state/session'
 import {useMergeThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {useBreakpoints} from '#/alf'
+import {IS_WEB} from '#/env'
 
 export * from '#/state/queries/usePostThread/context'
 export {useUpdatePostThreadThreadgateQueryCache} from '#/state/queries/usePostThread/queryCache'
@@ -49,12 +49,11 @@ export function usePostThread({anchor}: {anchor?: string}) {
     setSort: baseSetSort,
     view,
     setView: baseSetView,
-    prioritizeFollowedUsers,
   } = useThreadPreferences()
   const below = useMemo(() => {
     return view === 'linear'
       ? LINEAR_VIEW_BELOW
-      : isWeb && gtPhone
+      : IS_WEB && gtPhone
         ? TREE_VIEW_BELOW_DESKTOP
         : TREE_VIEW_BELOW
   }, [view, gtPhone])
@@ -63,11 +62,9 @@ export function usePostThread({anchor}: {anchor?: string}) {
     anchor,
     sort,
     view,
-    prioritizeFollowedUsers,
   })
   const postThreadOtherQueryKey = createPostThreadOtherQueryKey({
     anchor,
-    prioritizeFollowedUsers,
   })
 
   const query = useQuery<UsePostThreadQueryResult>({
@@ -79,7 +76,6 @@ export function usePostThread({anchor}: {anchor?: string}) {
         branchingFactor: view === 'linear' ? LINEAR_VIEW_BF : TREE_VIEW_BF,
         below,
         sort: sort,
-        prioritizeFollowedUsers: prioritizeFollowedUsers,
       })
 
       /*
@@ -167,7 +163,6 @@ export function usePostThread({anchor}: {anchor?: string}) {
     async queryFn() {
       const {data} = await agent.app.bsky.unspecced.getPostThreadOtherV2({
         anchor: anchor!,
-        prioritizeFollowedUsers,
       })
       return data
     },

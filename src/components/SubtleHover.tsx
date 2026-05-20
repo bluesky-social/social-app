@@ -1,8 +1,7 @@
 import {View} from 'react-native'
 
-import {isTouchDevice} from '#/lib/browser'
-import {isNative, isWeb} from '#/platform/detection'
-import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
+import {atoms as a, useTheme, type ViewStyleProp, web as webOnly} from '#/alf'
+import {IS_NATIVE, IS_WEB, IS_WEB_TOUCH_DEVICE} from '#/env'
 
 export function SubtleHover({
   style,
@@ -34,14 +33,18 @@ export function SubtleHover({
         a.transition_opacity,
         t.atoms.bg_contrast_50,
         style,
+        // Force Safari to composite the overlay on its own GPU layer.
+        // This fixes a layout shift that happens due to different subpixel
+        // rounding when the overlay is composited on hover.
+        webOnly({willChange: 'opacity'}),
         {opacity: hover ? opacity : 0},
       ]}
     />
   )
 
-  if (isWeb && web) {
-    return isTouchDevice ? null : el
-  } else if (isNative && native) {
+  if (IS_WEB && web) {
+    return IS_WEB_TOUCH_DEVICE ? null : el
+  } else if (IS_NATIVE && native) {
     return el
   }
 

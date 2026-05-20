@@ -1,6 +1,7 @@
 import {Text as RNText, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {
@@ -13,7 +14,7 @@ import {
   Text as AdmonitionText,
 } from '#/components/Admonition'
 import {ButtonIcon, ButtonText} from '#/components/Button'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Retry} from '#/components/icons/ArrowRotateCounterClockwise'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Retry} from '#/components/icons/ArrowRotate'
 import {BellRinging_Filled_Corner0_Rounded as BellRingingFilledIcon} from '#/components/icons/BellRinging'
 import {InlineLinkText} from '#/components/Link'
 import {H1} from '#/components/Typography'

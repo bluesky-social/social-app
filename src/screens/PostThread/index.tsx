@@ -1,10 +1,19 @@
-import {useCallback, useMemo, useRef, useState} from 'react'
+import {
+  startTransition,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {useFeedFeedback} from '#/state/feed-feedback'
 import {type ThreadViewOption} from '#/state/queries/preferences/useThreadPreferences'
 import {
@@ -42,11 +51,14 @@ import {
 import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 
-const PARENT_CHUNK_SIZE = 5
+const PARENT_CHUNK_SIZE = IS_NATIVE ? 5 : 20
 const CHILDREN_CHUNK_SIZE = 50
 
 export function PostThread({uri}: {uri: string}) {
+  const ax = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const {hasSession} = useSession()
   const initialNumToRender = useInitialNumToRender()
@@ -62,7 +74,6 @@ export function PostThread({uri}: {uri: string}) {
    */
   const thread = usePostThread({anchor: uri})
   const {anchor, hasParents} = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     let hasParents = false
     for (const item of thread.data.items) {
       if (item.type === 'threadPost' && item.depth === 0) {
@@ -73,8 +84,30 @@ export function PostThread({uri}: {uri: string}) {
     return {hasParents}
   }, [thread.data.items])
 
+  // Track post:view event when anchor post is viewed
+  const seenPostUriRef = useRef<string | null>(null)
+  useEffect(() => {
+    if (
+      anchor?.type === 'threadPost' &&
+      anchor.value.post.uri !== seenPostUriRef.current
+    ) {
+      const post = anchor.value.post
+      seenPostUriRef.current = post.uri
+
+      ax.metric('post:view', {
+        uri: post.uri,
+        authorDid: post.author.did,
+        logContext: 'Post',
+        feedDescriptor: feedFeedback.feedDescriptor,
+      })
+    }
+  }, [ax, anchor, feedFeedback.feedDescriptor])
+
+  // Track post:view events for parent posts and replies (non-anchor posts)
+  const trackThreadItemView = usePostViewTracking('PostThreadItem')
+
   const {openComposer} = useOpenComposer()
-  const optimisticOnPostReply = useCallback(
+  const optimisticOnPostReply = useNonReactiveCallback(
     (payload: OnPostSuccessData) => {
       if (payload) {
         const {replyToUri, posts} = payload
@@ -83,9 +116,8 @@ export function PostThread({uri}: {uri: string}) {
         }
       }
     },
-    [thread],
   )
-  const onReplyToAnchor = useCallback(() => {
+  const onReplyToAnchor = useNonReactiveCallback(() => {
     if (anchor?.type !== 'threadPost') {
       return
     }
@@ -101,6 +133,7 @@ export function PostThread({uri}: {uri: string}) {
         langs: post.record.langs,
       },
       onPostSuccess: optimisticOnPostReply,
+      logContext: 'PostReply',
     })
 
     if (anchorPostSource) {
@@ -111,13 +144,7 @@ export function PostThread({uri}: {uri: string}) {
         reqId: anchorPostSource.post.reqId,
       })
     }
-  }, [
-    anchor,
-    openComposer,
-    optimisticOnPostReply,
-    anchorPostSource,
-    feedFeedback,
-  ])
+  })
 
   const isRoot = !!anchor && anchor.value.post.record.reply === undefined
   const canReply = !anchor?.value.post?.viewer?.replyDisabled
@@ -364,12 +391,34 @@ export function PostThread({uri}: {uri: string}) {
     return results
   }, [thread, deferParents, maxParentCount, maxChildrenCount])
 
+  /**
+   * Defer rendering reply skeletons so that the anchor post (from cache)
+   * can paint without being blocked by skeleton layout work. On mount,
+   * skeletons are filtered out. After the first render, they're added
+   * back via a low-priority transition.
+   */
+  const [showReplySkeletons, setShowReplySkeletons] = useState(false)
+  useEffect(() => {
+    if (thread.state.isPlaceholderData && !showReplySkeletons) {
+      startTransition(() => {
+        setShowReplySkeletons(true)
+      })
+    }
+  }, [thread.state.isPlaceholderData, showReplySkeletons])
+
+  const deferredSlices = useMemo(() => {
+    if (showReplySkeletons) return slices
+    return slices.filter(
+      item => !(item.type === 'skeleton' && item.item === 'reply'),
+    )
+  }, [slices, showReplySkeletons])
+
   const isTombstoneView = useMemo(() => {
-    if (slices.length > 1) return false
-    return slices.every(
+    if (deferredSlices.length > 1) return false
+    return deferredSlices.every(
       s => s.type === 'threadPostBlocked' || s.type === 'threadPostNotFound',
     )
-  }, [slices])
+  }, [deferredSlices])
 
   const renderItem = useCallback(
     ({item, index}: {item: ThreadItem; index: number}) => {
@@ -522,7 +571,7 @@ export function PostThread({uri}: {uri: string}) {
       ) : (
         <List
           ref={listRef}
-          data={slices}
+          data={deferredSlices}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           onContentSizeChange={platform({
@@ -533,6 +582,12 @@ export function PostThread({uri}: {uri: string}) {
           onEndReached={onEndReached}
           onEndReachedThreshold={4}
           onStartReachedThreshold={1}
+          onItemSeen={item => {
+            // Track post:view for parent posts and replies (non-anchor posts)
+            if (item.type === 'threadPost' && item.depth !== 0) {
+              trackThreadItemView(item.value.post)
+            }
+          }}
           /**
            * NATIVE ONLY
            * {@link https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition}
@@ -563,8 +618,10 @@ export function PostThread({uri}: {uri: string}) {
           initialNumToRender={initialNumToRender}
           /**
            * Default: 21
+           *
+           * Smaller for placeholder data so we don't waste time rendering skeletons
            */
-          windowSize={7}
+          windowSize={thread.state.isPlaceholderData ? 1 : 7}
           /**
            * Default: 10
            */

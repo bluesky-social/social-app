@@ -21,6 +21,7 @@ export type {
 export type AuxiliaryViewProps = {
   children?: React.ReactNode
   align?: 'left' | 'right'
+  style?: StyleProp<ViewStyle>
 }
 
 export type ItemProps = Omit<MenuItemProps, 'onPress' | 'children'> & {
@@ -49,6 +50,7 @@ export type ContextType = {
   translationSV: SharedValue<number>
   mode: 'full' | 'auxiliary-only'
   open: (evt: Measurement, mode: 'full' | 'auxiliary-only') => void
+  returnLocationSV: SharedValue<{x: number; y: number} | null>
   close: () => void
   registerHoverable: (
     id: string,
@@ -63,10 +65,12 @@ export type ContextType = {
 
 export type MenuContextType = {
   align: 'left' | 'right'
+  xOffset: number
 }
 
 export type ItemContextType = {
   disabled: boolean
+  destructive: boolean
 }
 
 export type TriggerProps = {
@@ -82,10 +86,18 @@ export type TriggerProps = {
   hint?: string
   role?: AccessibilityRole
   style?: StyleProp<ViewStyle>
+  /**
+   * Callback for single taps. Composed with the double-tap and
+   * press-and-hold gestures via `Gesture.Exclusive`, so a double tap
+   * does not also fire this handler.
+   *
+   * @platform ios, android
+   */
+  onTap?: () => void
 }
 export type TriggerChildProps =
   | {
-      isNative: true
+      IS_NATIVE: true
       control: {
         isOpen: boolean
         open: (mode: 'full' | 'auxiliary-only') => void
@@ -115,7 +127,7 @@ export type TriggerChildProps =
       }
     }
   | {
-      isNative: false
+      IS_NATIVE: false
       control: Dialog.DialogOuterProps['control']
       state: {
         hovered: false

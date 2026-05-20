@@ -1,8 +1,6 @@
-/// <reference lib="dom" />
-
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
-import {blobToDataUri, getDataUriSize} from './util'
+import {blobToDataUri, convertCdnPreset, getDataUriSize} from './util'
 
 export async function compressIfNeeded(
   img: PickerImage,
@@ -44,9 +42,17 @@ export async function shareImageModal(_opts: {uri: string}) {
   throw new Error('TODO')
 }
 
-export async function saveImageToMediaLibrary(_opts: {uri: string}) {
-  // TODO
-  throw new Error('TODO')
+/**
+ * Saves an image to the user's device. Uses the CDN's `download` preset
+ * which uses the JPEG version with the Content-Disposition header set to
+ * `attachment; filename=<filename>`. On native this saves to the media library;
+ * on web it triggers a browser download.
+ */
+export async function saveImageToMediaLibrary({uri}: {uri: string}) {
+  const downloadUri = convertCdnPreset(uri, 'download')
+  const segments = downloadUri.split('/')
+  const filename = `bluesky-${segments.at(-1)}.jpg`
+  downloadUrl(downloadUri, filename)
 }
 
 export async function getImageDim(path: string): Promise<Dimensions> {
@@ -162,17 +168,20 @@ export async function saveBytesToDisk(
 ) {
   const blob = new Blob([bytes], {type})
   const url = URL.createObjectURL(blob)
-  await downloadUrl(url, filename)
+  downloadUrl(url, filename)
   // Firefox requires a small delay
   setTimeout(() => URL.revokeObjectURL(url), 100)
   return true
 }
 
-async function downloadUrl(href: string, filename: string) {
+function downloadUrl(href: string, filename: string) {
   const a = document.createElement('a')
   a.href = href
   a.download = filename
+  a.style.display = 'none'
+  document.body.appendChild(a)
   a.click()
+  document.body.removeChild(a)
 }
 
 export async function safeDeleteAsync() {

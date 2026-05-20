@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {Alert, AppState, type AppStateStatus} from 'react-native'
 import {nativeBuildVersion} from 'expo-application'
 import {
@@ -12,14 +12,13 @@ import {
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
-import {IS_TESTFLIGHT} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_TESTFLIGHT} from '#/env'
 
 const MINIMUM_MINIMIZE_TIME = 15 * 60e3
 
 async function setExtraParams() {
   await setExtraParamAsync(
-    isIOS ? 'ios-build-number' : 'android-build-number',
+    IS_IOS ? 'ios-build-number' : 'android-build-number',
     // Hilariously, `buildVersion` is not actually a string on Android even though the TS type says it is.
     // This just ensures it gets passed as a string
     `${nativeBuildVersion}`,
@@ -32,7 +31,7 @@ async function setExtraParams() {
 
 async function setExtraParamsPullRequest(channel: string) {
   await setExtraParamAsync(
-    isIOS ? 'ios-build-number' : 'android-build-number',
+    IS_IOS ? 'ios-build-number' : 'android-build-number',
     // Hilariously, `buildVersion` is not actually a string on Android even though the TS type says it is.
     // This just ensures it gets passed as a string
     `${nativeBuildVersion}`,
@@ -68,7 +67,7 @@ async function updateTestflight() {
 
 export function useApplyPullRequestOTAUpdate() {
   const {currentlyRunning} = useUpdates()
-  const [pending, setPending] = React.useState(false)
+  const [pending, setPending] = useState(false)
   const currentChannel = currentlyRunning?.channel
   const isCurrentlyRunningPullRequestDeployment =
     currentChannel?.startsWith('pull-request')
@@ -125,14 +124,14 @@ export function useApplyPullRequestOTAUpdate() {
 export function useOTAUpdates() {
   const shouldReceiveUpdates = isEnabled && !__DEV__
 
-  const appState = React.useRef<AppStateStatus>('active')
-  const lastMinimize = React.useRef(0)
-  const ranInitialCheck = React.useRef(false)
-  const timeout = React.useRef<NodeJS.Timeout>(undefined)
+  const appState = useRef<AppStateStatus>('active')
+  const lastMinimize = useRef(0)
+  const ranInitialCheck = useRef(false)
+  const timeout = useRef<NodeJS.Timeout>(undefined)
   const {currentlyRunning, isUpdatePending} = useUpdates()
   const currentChannel = currentlyRunning?.channel
 
-  const setCheckTimeout = React.useCallback(() => {
+  const setCheckTimeout = useCallback(() => {
     timeout.current = setTimeout(async () => {
       try {
         await setExtraParams()
@@ -154,7 +153,7 @@ export function useOTAUpdates() {
     }, 10e3)
   }, [])
 
-  const onIsTestFlight = React.useCallback(async () => {
+  const onIsTestFlight = useCallback(async () => {
     try {
       await updateTestflight()
     } catch (err: any) {
@@ -164,13 +163,13 @@ export function useOTAUpdates() {
     }
   }, [])
 
-  React.useEffect(() => {
+  useEffect(() => {
     // We don't need to check anything if the current update is a PR update
     if (currentChannel?.startsWith('pull-request')) {
       return
     }
 
-    // We use this setTimeout to allow Statsig to initialize before we check for an update
+    // We use this setTimeout to allow analytics to initialize before we check for an update
     // For Testflight users, we can prompt the user to update immediately whenever there's an available update. This
     // is suspect however with the Apple App Store guidelines, so we don't want to prompt production users to update
     // immediately.
@@ -187,11 +186,18 @@ export function useOTAUpdates() {
 
   // After the app has been minimized for 15 minutes, we want to either A. install an update if one has become available
   // or B check for an update again.
-  React.useEffect(() => {
+  useEffect(() => {
     // We also don't start this timeout if the user is on a pull request update
     if (!isEnabled || currentChannel?.startsWith('pull-request')) {
       return
     }
+
+    // TEMP: disable wake-from-background OTA loading on Android.
+    // This is causing a crash when the thread view is open due to
+    // `maintainVisibleContentPosition`. See repro repo for more details:
+    // https://github.com/mozzius/ota-crash-repro
+    // Old Arch only - re-enable once we're on the New Archictecture! -sfn
+    if (IS_ANDROID) return
 
     const subscription = AppState.addEventListener(
       'change',

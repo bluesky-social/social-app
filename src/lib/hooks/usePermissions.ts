@@ -2,8 +2,8 @@ import {Linking} from 'react-native'
 import {useCameraPermissions as useExpoCameraPermissions} from 'expo-camera'
 import * as MediaLibrary from 'expo-media-library'
 
-import {isWeb} from '#/platform/detection'
 import {Alert} from '#/view/com/util/Alert'
+import {IS_WEB} from '#/env'
 
 const openPermissionAlert = (perm: string) => {
   Alert.alert(
@@ -26,7 +26,7 @@ export function usePhotoLibraryPermission() {
   const requestPhotoAccessIfNeeded = async () => {
     // On the, we use <input type="file"> to produce a filepicker
     // This does not need any permission granting.
-    if (isWeb) {
+    if (IS_WEB) {
       return true
     }
 
@@ -55,7 +55,7 @@ export function useVideoLibraryPermission() {
   const requestVideoAccessIfNeeded = async () => {
     // On the, we use <input type="file"> to produce a filepicker
     // This does not need any permission granting.
-    if (isWeb) {
+    if (IS_WEB) {
       return true
     }
 

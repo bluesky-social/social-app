@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useRef, useState} from 'react'
 import {
   ActivityIndicator,
   type GestureResponderEvent,
@@ -6,17 +6,17 @@ import {
 } from 'react-native'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedExternal} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {type EmbedPlayerParams} from '#/lib/strings/embed-player'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
+import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 
 export function ExternalGif({
   link,
@@ -31,16 +31,16 @@ export function ExternalGif({
   const consentDialogControl = useDialogControl()
 
   // Tracking if the placer has been activated
-  const [isPlayerActive, setIsPlayerActive] = React.useState(false)
+  const [isPlayerActive, setIsPlayerActive] = useState(false)
   // Tracking whether the gif has been loaded yet
-  const [isPrefetched, setIsPrefetched] = React.useState(false)
+  const [isPrefetched, setIsPrefetched] = useState(false)
   // Tracking whether the image is animating
-  const [isAnimating, setIsAnimating] = React.useState(true)
+  const [isAnimating, setIsAnimating] = useState(true)
 
   // Used for controlling animation
-  const imageRef = React.useRef<Image>(null)
+  const imageRef = useRef<Image>(null)
 
-  const load = React.useCallback(() => {
+  const load = useCallback(() => {
     setIsPlayerActive(true)
     Image.prefetch(params.playerUri).then(() => {
       // Replace the image once it's fetched
@@ -48,7 +48,7 @@ export function ExternalGif({
     })
   }, [params.playerUri])
 
-  const onPlayPress = React.useCallback(
+  const onPlayPress = useCallback(
     (event: GestureResponderEvent) => {
       // Don't propagate on web
       event.preventDefault()
@@ -66,12 +66,12 @@ export function ExternalGif({
       // Control animation on native
       setIsAnimating(prev => {
         if (prev) {
-          if (isNative) {
+          if (IS_NATIVE) {
             imageRef.current?.stopAnimating()
           }
           return false
         } else {
-          if (isNative) {
+          if (IS_NATIVE) {
             imageRef.current?.startAnimating()
           }
           return true
@@ -94,7 +94,6 @@ export function ExternalGif({
         source={params.source}
         onAccept={load}
       />
-
       <Pressable
         style={[
           {height: 300},
@@ -112,7 +111,7 @@ export function ExternalGif({
         <Image
           source={{
             uri:
-              !isPrefetched || (isWeb && !isAnimating)
+              !isPrefetched || (IS_WEB && !isAnimating)
                 ? link.thumb
                 : params.playerUri,
           }} // Web uses the thumb to control playback
@@ -123,7 +122,7 @@ export function ExternalGif({
           accessibilityIgnoresInvertColors
           accessibilityLabel={link.title}
           accessibilityHint={link.title}
-          cachePolicy={isIOS ? 'disk' : 'memory-disk'} // cant control playback with memory-disk on ios
+          cachePolicy={IS_IOS ? 'disk' : 'memory-disk'} // cant control playback with memory-disk on ios
         />
 
         {(!isPrefetched || !isAnimating) && (

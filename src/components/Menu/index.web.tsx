@@ -6,7 +6,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {DropdownMenu} from 'radix-ui'
 
@@ -107,7 +107,7 @@ const RadixTriggerPassThrough = forwardRef(
     props: {
       children: (
         props: RadixPassThroughTriggerProps & {
-          ref: React.Ref<any>
+          ref: React.Ref<HTMLElement>
         },
       ) => React.ReactNode
     },
@@ -138,7 +138,7 @@ export function Trigger({
       <RadixTriggerPassThrough>
         {props =>
           children({
-            isNative: false,
+            IS_NATIVE: false,
             control,
             state: {
               hovered,
@@ -225,7 +225,14 @@ export function Outer({
   )
 }
 
-export function Item({children, label, onPress, style, ...rest}: ItemProps) {
+export function Item({
+  children,
+  label,
+  onPress,
+  style,
+  destructive = false,
+  ...rest
+}: ItemProps) {
   const t = useTheme()
   const {control} = useMenuContext()
   const {
@@ -262,6 +269,7 @@ export function Item({children, label, onPress, style, ...rest}: ItemProps) {
           a.gap_lg,
           a.py_sm,
           a.rounded_xs,
+          a.overflow_hidden,
           {minHeight: 32, paddingHorizontal: 10},
           web({outline: 0}),
           (hovered || focused) &&
@@ -277,7 +285,8 @@ export function Item({children, label, onPress, style, ...rest}: ItemProps) {
           onMouseEnter,
           onMouseLeave,
         })}>
-        <ItemContext.Provider value={{disabled: Boolean(rest.disabled)}}>
+        <ItemContext.Provider
+          value={{disabled: Boolean(rest.disabled), destructive}}>
           {children}
         </ItemContext.Provider>
       </Pressable>
@@ -287,7 +296,7 @@ export function Item({children, label, onPress, style, ...rest}: ItemProps) {
 
 export function ItemText({children, style}: ItemTextProps) {
   const t = useTheme()
-  const {disabled} = useMenuItemContext()
+  const {disabled, destructive} = useMenuItemContext()
   return (
     <Text
       style={[
@@ -295,6 +304,7 @@ export function ItemText({children, style}: ItemTextProps) {
         a.font_semi_bold,
         t.atoms.text_contrast_high,
         style,
+        destructive && {color: t.palette.negative_500},
         disabled && t.atoms.text_contrast_low,
       ]}>
       {children}
@@ -302,9 +312,9 @@ export function ItemText({children, style}: ItemTextProps) {
   )
 }
 
-export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
+export function ItemIcon({icon: Comp, position = 'left', fill}: ItemIconProps) {
   const t = useTheme()
-  const {disabled} = useMenuItemContext()
+  const {disabled, destructive} = useMenuItemContext()
   return (
     <View
       style={[
@@ -319,9 +329,13 @@ export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
       <Comp
         size="md"
         fill={
-          disabled
-            ? t.atoms.text_contrast_low.color
-            : t.atoms.text_contrast_medium.color
+          fill
+            ? fill({disabled})
+            : disabled
+              ? t.atoms.text_contrast_low.color
+              : destructive
+                ? t.palette.negative_500
+                : t.atoms.text_contrast_medium.color
         }
       />
     </View>

@@ -1,8 +1,9 @@
-import React from 'react'
+import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
@@ -31,10 +32,10 @@ export const SplashScreen = ({
 }) => {
   const {_} = useLingui()
   const t = useTheme()
-  const {isTabletOrMobile: isMobileWeb} = useWebMediaQueries()
-  const [showClipOverlay, setShowClipOverlay] = React.useState(false)
+  const {isTabletOrMobile: IS_WEB_MOBILE} = useWebMediaQueries()
+  const [showClipOverlay, setShowClipOverlay] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     const getParams = new URLSearchParams(window.location.search)
     const clip = getParams.get('clip')
     if (clip === 'true') {
@@ -78,7 +79,7 @@ export const SplashScreen = ({
             a.justify_center,
             // @ts-expect-error web only
             {paddingBottom: '20vh'},
-            isMobileWeb && a.pb_5xl,
+            IS_WEB_MOBILE && a.pb_5xl,
             t.atoms.border_contrast_medium,
             a.align_center,
             a.gap_5xl,

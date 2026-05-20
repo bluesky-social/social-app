@@ -41,7 +41,8 @@ export function makeRecordUri(
   collection: string,
   rkey: string,
 ) {
-  const urip = new AtUri('at://host/')
+  const urip = new AtUri('at://placeholder.placeholder/')
+  // @ts-expect-error TODO new-sdk-migration
   urip.host = didOrName
   urip.collection = collection
   urip.rkey = rkey
@@ -193,12 +194,7 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
         return startUriToStarterPackUri(urlp.pathname)
       }
 
-      // special-case search links
-      if (urlp.pathname === '/search') {
-        return `/search?q=${urlp.searchParams.get('q')}`
-      }
-
-      return urlp.pathname
+      return urlp.pathname + urlp.search
     } catch (e) {
       console.error('Unexpected error in convertBskyAppUrlIfNeeded()', e)
     }

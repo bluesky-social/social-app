@@ -5,33 +5,33 @@ import Animated, {
   FadeOut,
   LayoutAnimationConfig,
   LinearTransition,
-  StretchOutY,
 } from 'react-native-reanimated'
 import {type ComAtprotoServerListAppPasswords} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
-import {isWeb} from '#/platform/detection'
 import {
   useAppPasswordDeleteMutation,
   useAppPasswordsQuery,
 } from '#/state/queries/app-passwords'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
-import {Admonition, colors} from '#/components/Admonition'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {AddAppPasswordDialog} from './components/AddAppPasswordDialog'
 import * as SettingsList from './components/SettingsList'
@@ -94,7 +94,7 @@ export function AppPasswordsScreen({}: Props) {
                         key={appPassword.name}
                         style={a.w_full}
                         entering={FadeIn}
-                        exiting={isWeb ? FadeOut : StretchOutY}
+                        exiting={FadeOut}
                         layout={LinearTransition.delay(150)}>
                         <SettingsList.Item>
                           <AppPasswordCard appPassword={appPassword} />
@@ -104,7 +104,7 @@ export function AppPasswordsScreen({}: Props) {
                   </View>
                 ) : (
                   <EmptyState
-                    icon="growth"
+                    icon={Growth}
                     message={_(msg`No app passwords yet`)}
                   />
                 )
@@ -188,6 +188,7 @@ function AppPasswordCard({
           variant="ghost"
           color="negative"
           size="small"
+          shape="square"
           style={[a.bg_transparent]}
           onPress={() => deleteControl.open()}>
           <ButtonIcon icon={TrashIcon} />
@@ -195,7 +196,7 @@ function AppPasswordCard({
       </View>
       {appPassword.privileged && (
         <View style={[a.flex_row, a.gap_sm, a.align_center, a.mt_md]}>
-          <WarningIcon style={[{color: colors.warning}]} />
+          <WarningIcon style={[{color: t.palette.yellow}]} />
           <Text style={t.atoms.text_contrast_high}>
             <Trans>Allows access to direct messages</Trans>
           </Text>

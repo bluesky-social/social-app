@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View} from 'react-native'
 import Animated, {
   FadeIn,
   FadeOut,
@@ -11,14 +11,18 @@ import Animated, {
   SlideOutRight,
 } from 'react-native-reanimated'
 import {type ComAtprotoServerDescribeServer} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_10, urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
-import {createFullHandle, validateServiceHandle} from '#/lib/strings/handles'
-import {sanitizeHandle} from '#/lib/strings/handles'
+import {
+  createFullHandle,
+  sanitizeHandle,
+  validateServiceHandle,
+} from '#/lib/strings/handles'
 import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useServiceQuery} from '#/state/queries/service'
@@ -29,8 +33,8 @@ import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import * as SegmentedControl from '#/components/forms/SegmentedControl'
 import * as TextField from '#/components/forms/TextField'
-import * as ToggleButton from '#/components/forms/ToggleButton'
 import {
   ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon,
   ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon,
@@ -49,10 +53,8 @@ export function ChangeHandleDialog({
 }: {
   control: Dialog.DialogControlProps
 }) {
-  const {height} = useWindowDimensions()
-
   return (
-    <Dialog.Outer control={control} nativeOptions={{minHeight: height}}>
+    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
       <ChangeHandleDialogInner />
     </Dialog.Outer>
   )
@@ -395,21 +397,22 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
             />
           </TextField.Root>
         </View>
-        <ToggleButton.Group
+        <SegmentedControl.Root
           label={_(msg`Choose domain verification method`)}
-          values={[dnsPanel ? 'dns' : 'file']}
-          onChange={values => setDNSPanel(values[0] === 'dns')}>
-          <ToggleButton.Button name="dns" label={_(msg`DNS Panel`)}>
-            <ToggleButton.ButtonText>
+          type="tabs"
+          value={dnsPanel ? 'dns' : 'file'}
+          onChange={values => setDNSPanel(values === 'dns')}>
+          <SegmentedControl.Item value="dns" label={_(msg`DNS Panel`)}>
+            <SegmentedControl.ItemText>
               <Trans>DNS Panel</Trans>
-            </ToggleButton.ButtonText>
-          </ToggleButton.Button>
-          <ToggleButton.Button name="file" label={_(msg`No DNS Panel`)}>
-            <ToggleButton.ButtonText>
+            </SegmentedControl.ItemText>
+          </SegmentedControl.Item>
+          <SegmentedControl.Item value="file" label={_(msg`No DNS Panel`)}>
+            <SegmentedControl.ItemText>
               <Trans>No DNS Panel</Trans>
-            </ToggleButton.ButtonText>
-          </ToggleButton.Button>
-        </ToggleButton.Group>
+            </SegmentedControl.ItemText>
+          </SegmentedControl.Item>
+        </SegmentedControl.Root>
         {dnsPanel ? (
           <>
             <Text>
@@ -500,9 +503,14 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
               value={currentAccount?.did ?? ''}
               label={_(msg`Copy DID`)}
               size="large"
-              variant="solid"
+              shape="rectangular"
               color="secondary"
-              style={[a.px_md, a.border, t.atoms.border_contrast_low]}>
+              style={[
+                a.px_md,
+                a.border,
+                t.atoms.border_contrast_low,
+                t.atoms.bg_contrast_25,
+              ]}>
               <Text style={[a.text_md, a.flex_1]}>{currentAccount?.did}</Text>
               <ButtonIcon icon={CopyIcon} />
             </CopyButton>

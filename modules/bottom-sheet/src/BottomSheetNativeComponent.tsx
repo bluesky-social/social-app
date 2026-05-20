@@ -1,25 +1,25 @@
-import * as React from 'react'
+import {Component, createRef} from 'react'
 import {
   Dimensions,
   type LayoutChangeEvent,
   type NativeSyntheticEvent,
   Platform,
   type StyleProp,
+  useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
-import {isIOS} from '#/platform/detection'
 import {
   type BottomSheetState,
   type BottomSheetViewProps,
 } from './BottomSheet.types'
-import {BottomSheetPortalProvider} from './BottomSheetPortal'
-import {Context as PortalContext} from './BottomSheetPortal'
-
-const screenHeight = Dimensions.get('screen').height
+import {
+  BottomSheetPortalProvider,
+  Context as PortalContext,
+} from './BottomSheetPortal'
 
 const NativeView: React.ComponentType<
   BottomSheetViewProps & {
@@ -30,19 +30,23 @@ const NativeView: React.ComponentType<
 
 const NativeModule = requireNativeModule('BottomSheet')
 
-const isIOS15 =
+const IS_IOS15 =
   Platform.OS === 'ios' &&
   // semvar - can be 3 segments, so can't use Number(Platform.Version)
   Number(Platform.Version.split('.').at(0)) < 16
+// older android versions (15 and below) aren't naturally edge-to-edge
+// and behave a little differently
+const IS_NON_E2E_ANDROID =
+  Platform.OS === 'android' && Number(Platform.Version) < 35
 
-export class BottomSheetNativeComponent extends React.Component<
+export class BottomSheetNativeComponent extends Component<
   BottomSheetViewProps,
   {
     open: boolean
     viewHeight?: number
   }
 > {
-  ref = React.createRef<any>()
+  ref = createRef<any>()
 
   static contextType = PortalContext
 
@@ -70,10 +74,6 @@ export class BottomSheetNativeComponent extends React.Component<
     this.props.onStateChange?.(event)
   }
 
-  private updateLayout = () => {
-    this.ref.current?.updateLayout()
-  }
-
   static dismissAll = async () => {
     await NativeModule.dismissAll()
   }
@@ -91,7 +91,8 @@ export class BottomSheetNativeComponent extends React.Component<
     }
 
     let extraStyles
-    if (isIOS15 && this.state.viewHeight) {
+    if (IS_IOS15 && this.state.viewHeight) {
+      const screenHeight = Dimensions.get('screen').height
       const {viewHeight} = this.state
       const cornerRadius = this.props.cornerRadius ?? 0
       if (viewHeight < screenHeight / 2) {
@@ -111,11 +112,14 @@ export class BottomSheetNativeComponent extends React.Component<
           nativeViewRef={this.ref}
           onStateChange={this.onStateChange}
           extraStyles={extraStyles}
-          onLayout={e => {
-            const {height} = e.nativeEvent.layout
-            this.setState({viewHeight: height})
-            this.updateLayout()
-          }}
+          onLayout={
+            IS_IOS15
+              ? e => {
+                  const {height} = e.nativeEvent.layout
+                  this.setState({viewHeight: height})
+                }
+              : undefined
+          }
         />
       </Portal>
     )
@@ -125,6 +129,7 @@ export class BottomSheetNativeComponent extends React.Component<
 function BottomSheetNativeComponentInner({
   children,
   backgroundColor,
+  maxHeight,
   onLayout,
   onStateChange,
   nativeViewRef,
@@ -136,16 +141,23 @@ function BottomSheetNativeComponentInner({
     event: NativeSyntheticEvent<{state: BottomSheetState}>,
   ) => void
   nativeViewRef: React.RefObject<View>
-  onLayout: (event: LayoutChangeEvent) => void
+  onLayout?: (event: LayoutChangeEvent) => void
 }) {
   const insets = useSafeAreaInsets()
   const cornerRadius = rest.cornerRadius ?? 0
+  const {height: screenHeight} = useWindowDimensions()
 
-  const sheetHeight = isIOS ? screenHeight - insets.top : screenHeight
+  // sigh... on older Android versions, screenHeight does not include safe area insets
+  // on newer Androids + iOS, it does. we need to find the inner bit + the bottom inset
+  // for the sheet content
+  const sheetHeight = IS_NON_E2E_ANDROID
+    ? screenHeight + insets.bottom
+    : screenHeight - insets.top
 
   return (
     <NativeView
       {...rest}
+      maxHeight={maxHeight}
       onStateChange={onStateChange}
       ref={nativeViewRef}
       style={{
@@ -160,13 +172,17 @@ function BottomSheetNativeComponentInner({
             flex: 1,
             backgroundColor,
           },
+          maxHeight != null && {maxHeight},
           Platform.OS === 'android' && {
             borderTopLeftRadius: cornerRadius,
             borderTopRightRadius: cornerRadius,
+            overflow: 'hidden',
           },
           extraStyles,
         ]}>
-        <View onLayout={onLayout}>
+        <View
+          onLayout={onLayout}
+          style={maxHeight == null ? undefined : {flex: 1}}>
           <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
         </View>
       </View>

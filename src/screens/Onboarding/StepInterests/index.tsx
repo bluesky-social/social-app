@@ -1,38 +1,38 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {interests, useInterestsDisplayNames} from '#/lib/interests'
-import {logEvent} from '#/lib/statsig/statsig'
 import {capitalize} from '#/lib/strings/capitalize'
 import {logger} from '#/logger'
 import {
-  DescriptionText,
   OnboardingControls,
-  TitleText,
+  OnboardingDescriptionText,
+  OnboardingPosition,
+  OnboardingTitleText,
 } from '#/screens/Onboarding/Layout'
-import {Context} from '#/screens/Onboarding/state'
+import {useOnboardingInternalState} from '#/screens/Onboarding/state'
 import {InterestButton} from '#/screens/Onboarding/StepInterests/InterestButton'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
-import {IconCircle} from '#/components/IconCircle'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {Loader} from '#/components/Loader'
+import {useAnalytics} from '#/analytics'
 
 export function StepInterests() {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const interestsDisplayNames = useInterestsDisplayNames()
 
-  const {state, dispatch} = React.useContext(Context)
-  const [saving, setSaving] = React.useState(false)
-  const [selectedInterests, setSelectedInterests] = React.useState<string[]>(
+  const {state, dispatch} = useOnboardingInternalState()
+  const [saving, setSaving] = useState(false)
+  const [selectedInterests, setSelectedInterests] = useState<string[]>(
     state.interestsStepResults.selectedInterests.map(i => i),
   )
 
-  const saveInterests = React.useCallback(async () => {
+  const saveInterests = useCallback(async () => {
     setSaving(true)
 
     try {
@@ -42,7 +42,7 @@ export function StepInterests() {
         selectedInterests,
       })
       dispatch({type: 'next'})
-      logEvent('onboarding:interests:nextPressed', {
+      ax.metric('onboarding:interests:nextPressed', {
         selectedInterests,
         selectedInterestsLength: selectedInterests.length,
       })
@@ -50,20 +50,19 @@ export function StepInterests() {
       logger.info(`onboading: error saving interests`)
       logger.error(e)
     }
-  }, [selectedInterests, setSaving, dispatch])
+  }, [ax, selectedInterests, setSaving, dispatch])
 
   return (
-    <View style={[a.align_start]} testID="onboardingInterests">
-      <IconCircle icon={Hashtag} style={[a.mb_2xl]} />
-
-      <TitleText>
+    <View style={[a.align_start, a.gap_sm]} testID="onboardingInterests">
+      <OnboardingPosition />
+      <OnboardingTitleText>
         <Trans>What are your interests?</Trans>
-      </TitleText>
-      <DescriptionText>
+      </OnboardingTitleText>
+      <OnboardingDescriptionText>
         <Trans>We'll use this to help customize your experience.</Trans>
-      </DescriptionText>
+      </OnboardingDescriptionText>
 
-      <View style={[a.w_full, a.pt_2xl]}>
+      <View style={[a.w_full, a.pt_lg]}>
         <Toggle.Group
           values={selectedInterests}
           onChange={setSelectedInterests}
@@ -93,7 +92,7 @@ export function StepInterests() {
           <ButtonText>
             <Trans>Continue</Trans>
           </ButtonText>
-          <ButtonIcon icon={saving ? Loader : ChevronRight} />
+          {saving && <ButtonIcon icon={Loader} />}
         </Button>
       </OnboardingControls.Portal>
     </View>

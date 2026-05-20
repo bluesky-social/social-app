@@ -1,12 +1,13 @@
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
-import {logger} from '#/logger'
 import {type ThreadPreferences} from '#/state/queries/preferences/useThreadPreferences'
 import {Button, ButtonIcon} from '#/components/Button'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
 import * as Menu from '#/components/Menu'
+import {useAnalytics} from '#/analytics'
 
 export function HeaderDropdown({
   sort,
@@ -17,6 +18,7 @@ export function HeaderDropdown({
   ThreadPreferences,
   'sort' | 'setSort' | 'view' | 'setView'
 >): React.ReactNode {
+  const ax = useAnalytics()
   const {_} = useLingui()
   return (
     <Menu.Root>
@@ -30,7 +32,7 @@ export function HeaderDropdown({
             shape="round"
             hitSlop={HITSLOP_10}
             onPress={() => {
-              logger.metric('thread:click:headerMenuOpen', {})
+              ax.metric('thread:click:headerMenuOpen', {})
               onPress()
             }}
             {...props}>

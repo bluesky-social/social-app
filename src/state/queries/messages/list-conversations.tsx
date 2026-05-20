@@ -18,35 +18,54 @@ import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
+import {parseConvoView} from '#/components/dms/util'
 import {useLeftConvos} from './leave-conversation'
+
+const DEFAULT_LIMIT = 10
+export const UNREAD_LIMIT = 20
 
 export const RQKEY_ROOT = 'convo-list'
 export const RQKEY = (
   status: 'accepted' | 'request' | 'all',
   readState: 'all' | 'unread' = 'all',
-) => [RQKEY_ROOT, status, readState]
+  kind: 'all' | 'group' | 'direct' = 'all',
+  lockStatus:
+    | 'unlocked'
+    | 'locked'
+    | 'locked-permanently'
+    | undefined = undefined,
+  limit?: number,
+) => [RQKEY_ROOT, status, readState, kind, lockStatus, limit]
 type RQPageParam = string | undefined
 
 export function useListConvosQuery({
   enabled,
   status,
   readState = 'all',
+  kind = 'all',
+  limit = DEFAULT_LIMIT,
+  lockStatus,
 }: {
   enabled?: boolean
   status?: 'request' | 'accepted'
   readState?: 'all' | 'unread'
+  kind?: 'all' | 'group' | 'direct'
+  limit?: number
+  lockStatus?: 'unlocked' | 'locked' | 'locked-permanently'
 } = {}) {
   const agent = useAgent()
 
   return useInfiniteQuery({
     enabled,
-    queryKey: RQKEY(status ?? 'all', readState),
+    queryKey: RQKEY(status ?? 'all', readState, kind, lockStatus, limit),
     queryFn: async ({pageParam}) => {
       const {data} = await agent.chat.bsky.convo.listConvos(
         {
-          limit: 20,
+          limit,
           cursor: pageParam,
           readState: readState === 'unread' ? 'unread' : undefined,
+          kind: kind === 'all' ? undefined : kind,
+          lockStatus,
           status,
         },
         {headers: DM_SERVICE_HEADERS},
@@ -92,7 +111,11 @@ export function ListConvosProviderInner({
 }: {
   children: React.ReactNode
 }) {
-  const {refetch, data} = useListConvosQuery({readState: 'unread'})
+  const {refetch, data} = useListConvosQuery({
+    readState: 'unread',
+    limit: UNREAD_LIMIT,
+    lockStatus: 'unlocked',
+  })
   const messagesBus = useMessagesEventBus()
   const queryClient = useQueryClient()
   const {currentConvoId} = useCurrentConvoId()
@@ -101,8 +124,8 @@ export function ListConvosProviderInner({
 
   const debouncedRefetch = useMemo(() => {
     const refetchAndInvalidate = () => {
-      refetch()
-      queryClient.invalidateQueries({queryKey: [RQKEY_ROOT]})
+      void refetch()
+      void queryClient.invalidateQueries({queryKey: [RQKEY_ROOT]})
     }
     return throttle(refetchAndInvalidate, 500, {
       leading: true,
@@ -449,19 +472,18 @@ function calculateCount(
   return (
     convos
       .filter(convo => convo.id !== currentConvoId)
-      .reduce((acc, convo) => {
-        const otherMember = convo.members.find(
-          member => member.did !== currentAccountDid,
-        )
+      .reduce((acc, convoView) => {
+        const convo = parseConvoView(convoView, currentAccountDid)
 
-        if (!otherMember || !moderationOpts) return acc
+        if (!convo || !moderationOpts) return acc
 
-        const moderation = moderateProfile(otherMember, moderationOpts)
         const shouldIgnore =
-          convo.muted ||
-          moderation.blocked ||
-          otherMember.handle === 'missing.invalid'
-        const unreadCount = !shouldIgnore && convo.unreadCount > 0 ? 1 : 0
+          convo.view.muted ||
+          !convo.primaryMember ||
+          moderateProfile(convo.primaryMember, moderationOpts).blocked ||
+          convo.primaryMember.handle === 'missing.invalid' ||
+          (convo.kind === 'group' && convo.details.lockStatus !== 'unlocked')
+        const unreadCount = !shouldIgnore && convo.view.unreadCount > 0 ? 1 : 0
 
         return acc + unreadCount
       }, 0) ?? 0

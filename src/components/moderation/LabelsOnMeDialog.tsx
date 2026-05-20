@@ -1,8 +1,10 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {type ComAtprotoLabelDefs, ComAtprotoModerationDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {type ComAtprotoLabelDefs, ToolsOzoneReportDefs} from '@atproto/api'
+import {XRPCError} from '@atproto/api'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
@@ -11,14 +13,15 @@ import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {isAndroid} from '#/platform/detection'
 import {useAgent, useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {IS_ANDROID} from '#/env'
+import {Admonition} from '../Admonition'
 import {Divider} from '../Divider'
 import {Loader} from '../Loader'
 
@@ -44,12 +47,12 @@ export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
 function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const [appealingLabel, setAppealingLabel] = React.useState<
+  const [appealingLabel, setAppealingLabel] = useState<
     ComAtprotoLabelDefs.Label | undefined
   >(undefined)
   const {labels} = props
   const isAccount = props.type === 'account'
-  const containsSelfLabel = React.useMemo(
+  const containsSelfLabel = useMemo(
     () => labels.some(l => l.src === currentAccount?.did),
     [currentAccount?.did, labels],
   )
@@ -221,13 +224,14 @@ function AppealForm({
   const {_} = useLingui()
   const {labeler, strings} = useLabelInfo(label)
   const {gtMobile} = useBreakpoints()
-  const [details, setDetails] = React.useState('')
+  const [details, setDetails] = useState('')
   const {subject} = useLabelSubject({label})
   const isAccountReport = 'did' in subject
   const agent = useAgent()
   const sourceName = labeler
     ? sanitizeHandle(labeler.creator.handle, '@')
     : label.src
+  const [error, setError] = useState<string | null>(null)
 
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
@@ -236,7 +240,7 @@ function AppealForm({
         : 'com.atproto.admin.defs#repoRef'
       await agent.createModerationReport(
         {
-          reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
+          reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
           subject: {
             $type,
             ...subject,
@@ -252,8 +256,16 @@ function AppealForm({
       )
     },
     onError: err => {
+      if (err instanceof XRPCError && err.error === 'AlreadyAppealed') {
+        setError(
+          _(
+            msg`You've already appealed this label and it's being reviewed by our moderation team.`,
+          ),
+        )
+      } else {
+        setError(_(msg`Failed to submit appeal, please try again.`))
+      }
       logger.error('Failed to submit label appeal', {message: err})
-      Toast.show(_(msg`Failed to submit appeal, please try again.`), 'xmark')
     },
     onSuccess: () => {
       control.close()
@@ -261,7 +273,7 @@ function AppealForm({
     },
   })
 
-  const onSubmit = React.useCallback(() => mutate(), [mutate])
+  const onSubmit = useCallback(() => mutate(), [mutate])
 
   return (
     <>
@@ -285,6 +297,11 @@ function AppealForm({
           </Trans>
         </Text>
       </View>
+      {error && (
+        <Admonition type="error" style={[a.mt_sm]}>
+          {error}
+        </Admonition>
+      )}
       <View style={[a.my_md]}>
         <Dialog.Input
           label={_(msg`Text input field`)}
@@ -328,7 +345,7 @@ function AppealForm({
           {isPending && <ButtonIcon icon={Loader} />}
         </Button>
       </View>
-      {isAndroid && <View style={{height: 300}} />}
+      {IS_ANDROID && <View style={{height: 300}} />}
     </>
   )
 }

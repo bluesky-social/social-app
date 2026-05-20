@@ -1,10 +1,9 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/types'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {useFullVerificationState} from '#/components/verification'
@@ -12,6 +11,7 @@ import {type FullVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {VerificationsDialog} from '#/components/verification/VerificationsDialog'
 import {VerifierDialog} from '#/components/verification/VerifierDialog'
+import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export function shouldShowVerificationCheckButton(
@@ -51,42 +51,36 @@ export function shouldShowVerificationCheckButton(
 
 export function VerificationCheckButton({
   profile,
-  size,
+  width,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
-  size: 'lg' | 'md' | 'sm'
+  width: number
 }) {
   const state = useFullVerificationState({
     profile,
   })
 
   if (shouldShowVerificationCheckButton(state)) {
-    return <Badge profile={profile} verificationState={state} size={size} />
+    return <Badge profile={profile} verificationState={state} width={width} />
   }
 
   return null
 }
 
-export function Badge({
+function Badge({
   profile,
   verificationState: state,
-  size,
+  width,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
   verificationState: FullVerificationState
-  size: 'lg' | 'md' | 'sm'
+  width: number
 }) {
   const t = useTheme()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const verificationsDialogControl = useDialogControl()
   const verifierDialogControl = useDialogControl()
-  const {gtPhone} = useBreakpoints()
-  let dimensions = 12
-  if (size === 'lg') {
-    dimensions = gtPhone ? 20 : 18
-  } else if (size === 'md') {
-    dimensions = 14
-  }
 
   const verifiedByHidden = !state.profile.showBadge && state.profile.isViewer
 
@@ -101,7 +95,7 @@ export function Badge({
         hitSlop={20}
         onPress={evt => {
           evt.preventDefault()
-          logger.metric('verification:badge:click', {}, {statsig: true})
+          ax.metric('verification:badge:click', {})
           if (state.profile.role === 'verifier') {
             verifierDialogControl.open()
           } else {
@@ -115,8 +109,8 @@ export function Badge({
               a.align_end,
               a.transition_transform,
               {
-                width: dimensions,
-                height: dimensions,
+                width: width,
+                height: width,
                 transform: [
                   {
                     scale: hovered ? 1.1 : 1,
@@ -125,7 +119,7 @@ export function Badge({
               },
             ]}>
             <VerificationCheck
-              width={dimensions}
+              width={width}
               fill={
                 verifiedByHidden
                   ? t.atoms.bg_contrast_100.backgroundColor

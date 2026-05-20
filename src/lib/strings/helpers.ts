@@ -1,6 +1,5 @@
-import {useCallback, useMemo} from 'react'
 import {type RichText} from '@atproto/api'
-import Graphemer from 'graphemer'
+import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {shortenLinks} from './rich-text-manip'
 
@@ -29,37 +28,18 @@ export function enforceLen(
   return str
 }
 
-export function useEnforceMaxGraphemeCount() {
-  const splitter = useMemo(() => new Graphemer(), [])
-
-  return useCallback(
-    (text: string, maxCount: number) => {
-      if (splitter.countGraphemes(text) > maxCount) {
-        return splitter.splitGraphemes(text).slice(0, maxCount).join('')
-      } else {
-        return text
-      }
-    },
-    [splitter],
-  )
-}
-
-export function useWarnMaxGraphemeCount({
+export function isOverMaxGraphemeCount({
   text,
   maxCount,
 }: {
   text: string | RichText
   maxCount: number
 }) {
-  const splitter = useMemo(() => new Graphemer(), [])
-
-  return useMemo(() => {
-    if (typeof text === 'string') {
-      return splitter.countGraphemes(text) > maxCount
-    } else {
-      return shortenLinks(text).graphemeLength > maxCount
-    }
-  }, [splitter, maxCount, text])
+  if (typeof text === 'string') {
+    return countGraphemes(text) > maxCount
+  } else {
+    return shortenLinks(text).graphemeLength > maxCount
+  }
 }
 
 export function countLines(str: string | undefined): number {

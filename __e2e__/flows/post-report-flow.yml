@@ -17,7 +17,8 @@ appId: xyz.blueskyweb.app
     index: 0
 - tapOn:
     id: "postDropdownReportBtn"
-- tapOn: "Create report for Misleading Post"
+- tapOn: "Create report for Misleading"
+- tapOn: "Create report for Spam"
 - tapOn: "Send report to Dev-env Moderation"
 - tapOn:
     point: "50%,90%"

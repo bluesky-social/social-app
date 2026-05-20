@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef} from 'react'
+import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {AppState} from 'react-native'
 import {
   type AppBskyActorDefs,
@@ -30,9 +30,7 @@ import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {FeedTuner, type FeedTunerFn} from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
-import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
 import {logger} from '#/logger'
-import {useAgeAssuranceContext} from '#/state/ageAssurance'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {useAgent} from '#/state/session'
@@ -142,12 +140,8 @@ export function usePostFeedQuery(
    * available for the remainder of the session, so this delay only affects cold
    * loads. -esb
    */
-  const {isReady: isAgeAssuranceReady} = useAgeAssuranceContext()
   const enabled =
-    opts?.enabled !== false &&
-    Boolean(moderationOpts) &&
-    Boolean(preferences) &&
-    isAgeAssuranceReady
+    opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences)
   const userInterests = aggregateUserInterests(preferences)
   const followingPinnedIndex =
     preferences?.savedFeeds?.findIndex(
@@ -170,7 +164,7 @@ export function usePostFeedQuery(
   const fetchLimit = MIN_POSTS
 
   // Make sure this doesn't invalidate unless really needed.
-  const selectArgs = React.useMemo(
+  const selectArgs = useMemo(
     () => ({
       feedTuners,
       moderationOpts,
@@ -208,44 +202,27 @@ export function usePostFeedQuery(
             cursor: undefined,
           }
 
-      try {
-        const res = await api.fetch({cursor, limit: fetchLimit})
+      const res = await api.fetch({cursor, limit: fetchLimit})
 
-        /*
-         * If this is a public view, we need to check if posts fail moderation.
-         * If all fail, we throw an error. If only some fail, we continue and let
-         * moderations happen later, which results in some posts being shown and
-         * some not.
-         */
-        if (!agent.session) {
-          assertSomePostsPassModeration(
-            res.feed,
-            preferences?.moderationPrefs ||
-              DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
-          )
-        }
+      /*
+       * If this is a public view, we need to check if posts fail moderation.
+       * If all fail, we throw an error. If only some fail, we continue and let
+       * moderations happen later, which results in some posts being shown and
+       * some not.
+       */
+      if (!agent.session) {
+        assertSomePostsPassModeration(
+          res.feed,
+          preferences?.moderationPrefs ||
+            DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+        )
+      }
 
-        return {
-          api,
-          cursor: res.cursor,
-          feed: res.feed,
-          fetchedAt: Date.now(),
-        }
-      } catch (e) {
-        const feedDescParts = feedDesc.split('|')
-        const feedOwnerDid = new AtUri(feedDescParts[1]).hostname
-
-        if (
-          feedDescParts[0] === 'feedgen' &&
-          BSKY_FEED_OWNER_DIDS.includes(feedOwnerDid)
-        ) {
-          logger.error(`Bluesky feed may be offline: ${feedOwnerDid}`, {
-            feedDesc,
-            jsError: e,
-          })
-        }
-
-        throw e
+      return {
+        api,
+        cursor: res.cursor,
+        feed: res.feed,
+        fetchedAt: Date.now(),
       }
     },
     initialPageParam: undefined,

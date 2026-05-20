@@ -1,8 +1,8 @@
 import {View} from 'react-native'
 import {type AppBskyLabelerDefs} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -55,7 +55,7 @@ export function Description({value, handle}: {value?: string; handle: string}) {
   const {_} = useLingui()
   return value ? (
     <Text numberOfLines={2}>
-      <RichText value={value} style={[a.leading_snug]} />
+      <RichText value={value} />
     </Text>
   ) : (
     <Text emoji style={[a.leading_snug]}>
@@ -157,7 +157,7 @@ export function Link({
       to={{
         screen: 'Profile',
         params: {
-          name: labeler.creator.handle,
+          name: labeler.creator.did,
         },
       }}
       label={_(

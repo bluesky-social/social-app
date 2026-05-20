@@ -14,8 +14,9 @@ import {ComponentChildren, h} from 'preact'
 import {useMemo} from 'preact/hooks'
 
 import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
-import playIcon from '../../assets/play_filled_corner2_rounded.svg'
+import playIcon from '../../assets/play_filled_corner0_rounded.svg'
 import starterPackIcon from '../../assets/starterPack.svg'
+import {Globe} from '../icons/Globe'
 import {CONTENT_LABELS, labelsToInfo} from '../labels'
 import * as bsky from '../types/bsky'
 import {getRkey} from '../util/rkey'
@@ -83,9 +84,9 @@ export function Embed({
         return (
           <Link
             href={`/profile/${record.author.did}/post/${getRkey(record)}`}
-            className="transition-colors hover:bg-neutral-100 dark:hover:bg-slate-700 border dark:border-slate-600 rounded-xl p-2 gap-1.5 w-full flex flex-col">
+            className="transition-colors hover:bg-blue-50 dark:hover:bg-slate-900 border dark:border-slate-600 rounded-xl p-2 gap-1.5 w-full flex flex-col">
             <div className="flex gap-1.5 items-center">
-              <div className="w-4 h-4 rounded-full bg-neutral-300 dark:bg-slate-700 shrink-0">
+              <div className="w-4 h-4 rounded-full bg-neutral-300 dark:bg-slate-900 shrink-0">
                 <img
                   className="rounded-full"
                   src={record.author.avatar}
@@ -93,7 +94,7 @@ export function Embed({
                 />
               </div>
               <div className="flex flex-1 items-center shrink min-w-0 min-h-0">
-                <p className="block text-sm shrink-0 font-bold max-w-[70%] line-clamp-1">
+                <p className="text-sm shrink-0 font-semibold max-w-[70%] truncate">
                   {record.author.displayName?.trim() || record.author.handle}
                 </p>
                 {verification.isVerified && (
@@ -103,7 +104,7 @@ export function Embed({
                     size={12}
                   />
                 )}
-                <p className="block line-clamp-1 text-sm text-textLight dark:text-textDimmed shrink-[10] ml-1">
+                <p className="text-sm text-textLight dark:text-textDimmed min-w-0 truncate ml-1">
                   @{record.author.handle}
                 </p>
               </div>
@@ -222,7 +223,7 @@ export function Embed({
 
 function Info({children}: {children: ComponentChildren}) {
   return (
-    <div className="w-full rounded-xl border py-2 px-2.5 flex-row flex gap-2 bg-neutral-50">
+    <div className="w-full rounded-xl border py-2 px-2.5 flex-row flex gap-2 hover:bg-blue-50 dark:border-slate-600 dark:hover:bg-slate-900">
       <img src={infoIcon} className="w-4 h-4 shrink-0 mt-0.5" />
       <p className="text-sm text-textLight dark:text-textDimmed">{children}</p>
     </div>
@@ -334,13 +335,18 @@ function ExternalEmbed({
         />
       )}
       <div className="py-3 px-4">
-        <p className="text-sm text-textLight dark:text-textDimmed line-clamp-1">
-          {toNiceDomain(content.external.uri)}
+        <p className="font-semibold leading-tight line-clamp-3">
+          {content.external.title}
         </p>
-        <p className="font-semibold line-clamp-3">{content.external.title}</p>
-        <p className="text-sm text-textLight dark:text-textDimmed line-clamp-2 mt-0.5">
+        <p className="text-sm leading-snug text-textLight dark:text-textDimmed line-clamp-2 mt-0.5">
           {content.external.description}
         </p>
+        <div className="flex flex-row items-center gap-1 border-t dark:border-slate-600 mt-1 pt-1.5">
+          <Globe size={12} className="text-textLight dark:text-textDimmed" />
+          <p className="text-sm leading-none text-textLight dark:text-textDimmed line-clamp-1">
+            {toNiceDomain(content.external.uri)}
+          </p>
+        </div>
       </div>
     </Link>
   )
@@ -374,7 +380,7 @@ function GenericWithImageEmbed({
           <div className="w-8 h-8 rounded-md bg-brand shrink-0" />
         )}
         <div className="flex-1">
-          <p className="font-bold text-sm">{title}</p>
+          <p className="font-semibold text-sm">{title}</p>
           <p className="text-textLight dark:text-textDimmed text-sm">
             {subtitle}
           </p>
@@ -389,13 +395,35 @@ function GenericWithImageEmbed({
   )
 }
 
-// just the thumbnail and a play button
 function VideoEmbed({content}: {content: AppBskyEmbedVideo.View}) {
   let aspectRatio = 1
 
   if (content.aspectRatio) {
     const {width, height} = content.aspectRatio
     aspectRatio = clamp(width / height, 1 / 1, 3 / 1)
+  }
+
+  const supportsHls = useMemo(() => {
+    const video = document.createElement('video')
+    return video.canPlayType('application/vnd.apple.mpegurl') !== ''
+  }, [])
+
+  if (supportsHls) {
+    return (
+      <video
+        src={content.playlist}
+        poster={content.thumbnail}
+        controls
+        playsinline
+        preload="metadata"
+        // @ts-expect-error https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/video#loading
+        loading="lazy"
+        aria-label={content.alt || undefined}
+        onClickCapture={evt => evt.stopPropagation()}
+        className="w-full rounded-xl bg-black"
+        style={{aspectRatio: `${aspectRatio} / 1`}}
+      />
+    )
   }
 
   return (

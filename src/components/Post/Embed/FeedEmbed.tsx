@@ -17,16 +17,16 @@ export function FeedEmbed({
   return (
     <FeedCard.Link
       view={embed.view}
-      style={[a.border, t.atoms.border_contrast_low, a.p_md, a.rounded_sm]}>
+      style={[a.border, t.atoms.border_contrast_low, a.p_sm, a.rounded_md]}>
       <FeedCard.Outer>
         <FeedCard.Header>
-          <FeedCard.Avatar src={embed.view.avatar} />
+          <FeedCard.Avatar src={embed.view.avatar} size={48} />
           <FeedCard.TitleAndByline
             title={embed.view.displayName}
             creator={embed.view.creator}
+            uri={embed.view.uri}
           />
         </FeedCard.Header>
-        <FeedCard.Likes count={embed.view.likeCount || 0} />
       </FeedCard.Outer>
     </FeedCard.Link>
   )

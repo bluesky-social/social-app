@@ -1,28 +1,106 @@
-import React, {useCallback, useEffect} from 'react'
+import {createContext, useCallback, useContext, useEffect} from 'react'
 import {type NativeScrollEvent} from 'react-native'
-import {interpolate, useSharedValue, withSpring} from 'react-native-reanimated'
-import EventEmitter from 'eventemitter3'
+import {
+  clamp,
+  interpolate,
+  type SharedValue,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {EventEmitter} from 'eventemitter3'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
-import {isNative, isWeb} from '#/platform/detection'
-import {useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
+import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 
 const WEB_HIDE_SHELL_THRESHOLD = 200
 
-function clamp(num: number, min: number, max: number) {
-  'worklet'
-  return Math.min(Math.max(num, min), max)
+const HomeHeaderModeContext = createContext<SharedValue<number> | null>(null)
+HomeHeaderModeContext.displayName = 'HomeHeaderModeContext'
+
+export function HomeHeaderModeProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const headerMode = useSharedValue(0)
+  return (
+    <HomeHeaderModeContext.Provider value={headerMode}>
+      {children}
+    </HomeHeaderModeContext.Provider>
+  )
+}
+
+export function useHomeHeaderMode() {
+  const headerMode = useContext(HomeHeaderModeContext)
+  if (!headerMode) {
+    throw new Error(
+      'useHomeHeaderMode must be used within a HomeHeaderModeProvider',
+    )
+  }
+  return headerMode
+}
+
+export function useHomeHeaderTransform() {
+  const headerMode = useHomeHeaderMode()
+  const {headerHeight} = useShellLayout()
+  const {top: topInset} = useSafeAreaInsets()
+
+  const headerPinnedHeight = IS_LIQUID_GLASS ? topInset : 0
+
+  return useAnimatedStyle(() => {
+    const headerModeValue = headerMode.get()
+    const hHeight = headerHeight.get()
+
+    if (IS_LIQUID_GLASS) {
+      // bit of a hackfix, but: the header can get affected by scrollEdgeEffects
+      // when animating from closed to open. workaround is to trigger a relayout
+      // by offsetting the top position. the actual value doesn't matter, and we
+      // simultaneously offset it using the translate transform.
+      // I think a cleaner way to do it would be to use UIScrollEdgeElementContainerInteraction
+      // manually or something like that, because this kinda sucks -sfn
+      const relayoutingOffset = headerModeValue === 0 ? 1 : 0
+      return {
+        top: relayoutingOffset,
+        pointerEvents: headerModeValue === 0 ? 'auto' : 'none',
+        opacity: Math.pow(1 - headerModeValue, 2),
+        transform: [
+          {
+            translateY:
+              interpolate(
+                headerModeValue,
+                [0, 1],
+                [0, headerPinnedHeight - hHeight],
+              ) - relayoutingOffset,
+          },
+        ],
+      }
+    }
+
+    return {
+      pointerEvents: headerModeValue === 0 ? 'auto' : 'none',
+      opacity: Math.pow(1 - headerModeValue, 2),
+      transform: [
+        {
+          translateY: interpolate(headerModeValue, [0, 1], [0, -hHeight]),
+        },
+      ],
+    }
+  })
 }
 
 export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const {headerHeight} = useShellLayout()
-  const {headerMode} = useMinimalShellMode()
+  const headerMode = useHomeHeaderMode()
+  const {top: topInset} = useSafeAreaInsets()
+  const headerPinnedHeight = IS_LIQUID_GLASS ? topInset : 0
   const startDragOffset = useSharedValue<number | null>(null)
   const startMode = useSharedValue<number | null>(null)
   const didJustRestoreScroll = useSharedValue<boolean>(false)
 
-  const setMode = React.useCallback(
+  const setMode = useCallback(
     (v: boolean) => {
       'worklet'
       headerMode.set(() =>
@@ -35,7 +113,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   )
 
   useEffect(() => {
-    if (isWeb) {
+    if (IS_WEB) {
       return listenToForcedWindowScroll(() => {
         startDragOffset.set(null)
         startMode.set(null)
@@ -48,7 +126,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     (e: NativeScrollEvent) => {
       'worklet'
       const offsetY = Math.max(0, e.contentOffset.y)
-      if (isNative) {
+      if (IS_NATIVE) {
         const startDragOffsetValue = startDragOffset.get()
         if (startDragOffsetValue === null) {
           return
@@ -75,7 +153,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     (e: NativeScrollEvent) => {
       'worklet'
       const offsetY = Math.max(0, e.contentOffset.y)
-      if (isNative) {
+      if (IS_NATIVE) {
         startDragOffset.set(offsetY)
         startMode.set(headerMode.get())
       }
@@ -86,7 +164,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const onEndDrag = useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
-      if (isNative) {
+      if (IS_NATIVE) {
         if (e.velocity && e.velocity.y !== 0) {
           // If we detect a velocity, wait for onMomentumEnd to snap.
           return
@@ -100,7 +178,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const onMomentumEnd = useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
-      if (isNative) {
+      if (IS_NATIVE) {
         snapToClosestState(e)
       }
     },
@@ -111,7 +189,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     (e: NativeScrollEvent) => {
       'worklet'
       const offsetY = Math.max(0, e.contentOffset.y)
-      if (isNative) {
+      if (IS_NATIVE) {
         const startDragOffsetValue = startDragOffset.get()
         const startModeValue = startMode.get()
         if (startDragOffsetValue === null || startModeValue === null) {
@@ -126,9 +204,10 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
         // The "mode" value is always between 0 and 1.
         // Figure out how much to move it based on the current dragged distance.
         const dy = offsetY - startDragOffsetValue
+        const hideDistance = headerHeight.get() - headerPinnedHeight
         const dProgress = interpolate(
           dy,
-          [-headerHeight.get(), headerHeight.get()],
+          [-hideDistance, hideDistance],
           [-1, 1],
         )
         const newValue = clamp(startModeValue + dProgress, 0, 1)
@@ -156,6 +235,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     },
     [
       headerHeight,
+      headerPinnedHeight,
       headerMode,
       setMode,
       startDragOffset,
@@ -177,7 +257,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
 
 const emitter = new EventEmitter()
 
-if (isWeb) {
+if (IS_WEB) {
   const originalScroll = window.scroll
   window.scroll = function () {
     emitter.emit('forced-scroll')

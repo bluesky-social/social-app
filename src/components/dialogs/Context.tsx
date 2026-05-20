@@ -3,6 +3,7 @@ import {createContext, useContext, useMemo, useState} from 'react'
 import {type AgeAssuranceRedirectDialogState} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import * as Dialog from '#/components/Dialog'
 import {type Screen} from '#/components/dialogs/EmailDialog/types'
+import {type ReportSubject} from '#/components/moderation/ReportDialog'
 
 type Control = Dialog.DialogControlProps
 
@@ -24,6 +25,7 @@ type ControlsContext = {
     share?: boolean
   }>
   ageAssuranceRedirectDialogControl: StatefulControl<AgeAssuranceRedirectDialogState>
+  reportDialogControl: StatefulControl<{subject: ReportSubject}>
 }
 
 const ControlsContext = createContext<ControlsContext | null>(null)
@@ -51,6 +53,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   }>()
   const ageAssuranceRedirectDialogControl =
     useStatefulDialogControl<AgeAssuranceRedirectDialogState>()
+  const reportDialogControl = useStatefulDialogControl<{
+    subject: ReportSubject
+  }>()
 
   const ctx = useMemo<ControlsContext>(
     () => ({
@@ -60,6 +65,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       emailDialogControl,
       linkWarningDialogControl,
       ageAssuranceRedirectDialogControl,
+      reportDialogControl,
     }),
     [
       mutedWordsDialogControl,
@@ -68,6 +74,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       emailDialogControl,
       linkWarningDialogControl,
       ageAssuranceRedirectDialogControl,
+      reportDialogControl,
     ],
   )
 

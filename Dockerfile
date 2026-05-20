@@ -1,4 +1,4 @@
-FROM golang:1.24.5-bullseye AS build-env
+FROM golang:1.26-bookworm AS build-env
 
 WORKDIR /usr/src/social-app
 
@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 #
 # Node
 #
-ENV NODE_VERSION=20
+ENV NODE_VERSION=24.15.0
 ENV NVM_DIR=/usr/share/nvm
 
 #
@@ -65,11 +65,11 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER" >> .env && \
   echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env && \
   echo "EXPO_PUBLIC_SENTRY_DSN=$EXPO_PUBLIC_SENTRY_DSN" >> .env && \
-  npm install --global yarn && \
-  yarn && \
-  yarn intl:build 2>&1 | tee i18n.log && \
+  npm install --global pnpm@11.1.1 && \
+  pnpm install --frozen-lockfile && \
+  pnpm intl:build 2>&1 | tee i18n.log && \
   if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compile errors!\n\n"; fi && \
-  SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN SENTRY_RELEASE=$EXPO_PUBLIC_RELEASE_VERSION SENTRY_DIST=$EXPO_PUBLIC_BUNDLE_IDENTIFIER yarn build-web
+  SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN SENTRY_RELEASE=$EXPO_PUBLIC_RELEASE_VERSION SENTRY_DIST=$EXPO_PUBLIC_BUNDLE_IDENTIFIER pnpm build-web
 
 # DEBUG
 RUN find ./bskyweb/static && find ./web-build/static
@@ -89,7 +89,7 @@ RUN cd bskyweb/ && \
     -o /bskyweb \
     ./cmd/bskyweb
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 ENV GODEBUG=netdns=go
 ENV TZ=Etc/UTC

@@ -8,19 +8,20 @@ import {
   EncodingType,
   getInfoAsync,
   makeDirectoryAsync,
+  moveAsync,
   StorageAccessFramework,
   writeAsStringAsync,
 } from 'expo-file-system/legacy'
 import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
-import {Buffer} from 'buffer'
 
 import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
-import {isAndroid, isIOS} from '#/platform/detection'
+import {IS_ANDROID, IS_IOS} from '#/env'
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
+import {convertCdnPreset} from './util'
 
 export async function compressIfNeeded(
   img: PickerImage,
@@ -56,25 +57,19 @@ export interface DownloadAndResizeOpts {
 }
 
 export async function downloadAndResize(opts: DownloadAndResizeOpts) {
-  let appendExt = 'jpeg'
   try {
-    const urip = new URL(opts.uri)
-    const ext = urip.pathname.split('.').pop()
-    if (ext === 'png') {
-      appendExt = 'png'
-    }
+    new URL(opts.uri)
   } catch (e: any) {
     console.error('Invalid URI', opts.uri, e)
     return
   }
 
-  const path = createPath(appendExt)
+  const path = await downloadImage(opts.uri, String(uuid.v4()), opts.timeout)
 
   try {
-    await downloadImage(opts.uri, path, opts.timeout)
     return await doResize(path, opts)
   } finally {
-    safeDeleteAsync(path)
+    void safeDeleteAsync(path)
   }
 }
 
@@ -84,38 +79,77 @@ export async function shareImageModal({uri}: {uri: string}) {
     return
   }
 
-  // we're currently relying on the fact our CDN only serves pngs
-  // -prf
-  const imageUri = await downloadImage(uri, createPath('png'), 5e3)
-  const imagePath = await moveToPermanentPath(imageUri, '.png')
-  safeDeleteAsync(imageUri)
+  const downloadedPath = await downloadImage(uri, String(uuid.v4()), 15e3)
+  const {uri: jpegUri} = await manipulateAsync(downloadedPath, [], {
+    format: SaveFormat.JPEG,
+    compress: 1.0,
+  })
+  void safeDeleteAsync(downloadedPath)
+  const imagePath = await moveToPermanentPath(jpegUri, '.jpg')
   await Sharing.shareAsync(imagePath, {
-    mimeType: 'image/png',
-    UTI: 'image/png',
+    mimeType: 'image/jpeg',
+    UTI: 'image/jpeg',
   })
 }
 
 const ALBUM_NAME = 'Bluesky'
 
+/**
+ * Saves an image to the user's device. Uses the CDN's `download` preset
+ * which uses the JPEG version with the Content-Disposition header set to
+ * `attachment; filename=<filename>`. On native this saves to the media library;
+ * on web it triggers a browser download.
+ */
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
-  // download the file to cache
-  // NOTE
-  // assuming PNG
-  // we're currently relying on the fact our CDN only serves pngs
-  // -prf
-  const imageUri = await downloadImage(uri, createPath('png'), 5e3)
-  const imagePath = await moveToPermanentPath(imageUri, '.png')
+  const downloadUri = convertCdnPreset(uri, 'download')
+  const downloadedPath = await downloadImage(
+    downloadUri,
+    String(uuid.v4()),
+    20e3,
+  )
+  const imagePath = await moveToPermanentPath(downloadedPath, '.jpg')
 
   // save
   try {
-    if (isAndroid) {
+    if (IS_ANDROID) {
       // android triggers an annoying permission prompt if you try and move an image
       // between albums. therefore, we need to either create the album with the image
       // as the starting image, or put it directly into the album
       const album = await MediaLibrary.getAlbumAsync(ALBUM_NAME)
       if (album) {
-        // if album exists, put the image straight in there
-        await MediaLibrary.createAssetAsync(imagePath, album)
+        // try and migrate if needed
+        try {
+          if (await MediaLibrary.albumNeedsMigrationAsync(album)) {
+            await MediaLibrary.migrateAlbumIfNeededAsync(album)
+          }
+        } catch (err) {
+          logger.info('Attempted and failed to migrate album', {
+            safeMessage: err,
+          })
+        }
+
+        try {
+          // if album exists, put the image straight in there
+          await MediaLibrary.createAssetAsync(imagePath, album)
+        } catch (err) {
+          logger.info('Failed to create asset', {safeMessage: err})
+          // however, it's possible that we don't have write permission to the album
+          // try making a new one!
+          try {
+            await MediaLibrary.createAlbumAsync(
+              ALBUM_NAME,
+              undefined,
+              undefined,
+              imagePath,
+            )
+          } catch (err2) {
+            logger.info('Failed to create asset in a fresh album', {
+              safeMessage: err2,
+            })
+            // ... and if all else fails, just put it in DCIM
+            await MediaLibrary.createAssetAsync(imagePath)
+          }
+        }
       } else {
         // otherwise, create album with asset (albums must always have at least one asset)
         await MediaLibrary.createAlbumAsync(
@@ -126,12 +160,13 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
         )
       }
     } else {
-      await MediaLibrary.createAssetAsync(imagePath)
+      await MediaLibrary.saveToLibraryAsync(imagePath)
     }
   } catch (err) {
     logger.error(err instanceof Error ? err : String(err), {
       message: 'Failed to save image to media library',
     })
+    throw err
   } finally {
     safeDeleteAsync(imagePath)
   }
@@ -273,7 +308,7 @@ function joinPath(a: string, b: string) {
 }
 
 function normalizePath(str: string, allPlatforms = false): string {
-  if (isAndroid || allPlatforms) {
+  if (IS_ANDROID || allPlatforms) {
     if (!str.startsWith('file://')) {
       return `file://${str}`
     }
@@ -286,7 +321,12 @@ export async function saveBytesToDisk(
   bytes: Uint8Array,
   type: string,
 ) {
-  const encoded = Buffer.from(bytes).toString('base64')
+  // ideally we'd use `bytes.toBase64()`, but that's only baseline newly available
+  let binary = ''
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte)
+  }
+  const encoded = btoa(binary)
   return await saveToDevice(filename, encoded, type)
 }
 
@@ -296,7 +336,7 @@ export async function saveToDevice(
   type: string,
 ) {
   try {
-    if (isIOS) {
+    if (IS_IOS) {
       await withTempFile(filename, encoded, async tmpFileUrl => {
         await Sharing.shareAsync(tmpFileUrl, {UTI: type})
       })
@@ -370,23 +410,42 @@ export function getResizedDimensions(originalDims: {
   }
 }
 
-function createPath(ext: string) {
-  // cacheDirectory will never be null on native, so the null check here is not necessary except for typescript.
-  // we use a web-only function for downloadAndResize on web
-  return `${cacheDirectory ?? ''}/${uuid.v4()}.${ext}`
-}
-
-async function downloadImage(uri: string, path: string, timeout: number) {
-  const dlResumable = createDownloadResumable(uri, path, {cache: true})
-
-  const to1 = setTimeout(() => dlResumable.cancelAsync(), timeout)
+async function downloadImage(uri: string, destName: string, timeout: number) {
+  // Download to a temp path first, then rename with the correct extension
+  // based on the response's mimeType.
+  const tempPath = `${cacheDirectory ?? ''}/${destName}.bin`
+  const dlResumable = createDownloadResumable(uri, tempPath, {cache: true})
+  let timedOut = false
+  const to1 = setTimeout(() => {
+    timedOut = true
+    void dlResumable.cancelAsync()
+  }, timeout)
 
   const dlRes = await dlResumable.downloadAsync()
   clearTimeout(to1)
 
   if (!dlRes?.uri) {
-    throw new Error('Failed to download image - dlRes is undefined')
+    if (timedOut) {
+      throw new Error('Failed to download image - timed out')
+    } else {
+      throw new Error('Failed to download image - dlRes is undefined')
+    }
   }
 
-  return normalizePath(dlRes.uri)
+  const ext = extFromMime(dlRes.mimeType)
+  const finalPath = `${cacheDirectory ?? ''}/${destName}.${ext}`
+  await moveAsync({from: dlRes.uri, to: finalPath})
+
+  return normalizePath(finalPath)
+}
+
+const MIME_TO_EXT: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/webp': 'webp',
+  'image/png': 'png',
+  'image/gif': 'gif',
+}
+
+function extFromMime(mimeType?: string | null): string {
+  return (mimeType && MIME_TO_EXT[mimeType]) || 'jpg'
 }

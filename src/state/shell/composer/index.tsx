@@ -1,20 +1,23 @@
-import React from 'react'
+import {createContext, useContext, useMemo, useState} from 'react'
 import {
   type AppBskyActorDefs,
   type AppBskyFeedDefs,
   type AppBskyUnspeccedGetPostThreadV2,
   type ModerationDecision,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {postUriToRelativePath, toBskyAppUrl} from '#/lib/strings/url-helpers'
 import {purgeTemporaryImageFiles} from '#/state/gallery'
-import {precacheResolveLinkQuery} from '#/state/queries/resolve-link'
-import {type EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker'
-import * as Toast from '#/view/com/util/Toast'
+import {
+  precacheResolveLinkQuery,
+  RQKEY_GIF_ROOT,
+  RQKEY_LINK_ROOT,
+} from '#/state/queries/resolve-link'
+import * as Toast from '#/components/Toast'
 
 export interface ComposerOptsPostRef {
   uri: string
@@ -33,16 +36,25 @@ export type OnPostSuccessData =
     }
   | undefined
 
+export type ComposerLogContext =
+  | 'Fab'
+  | 'PostReply'
+  | 'QuotePost'
+  | 'ProfileFeed'
+  | 'Deeplink'
+  | 'Other'
+
 export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef
   onPost?: (postUri: string | undefined) => void
   onPostSuccess?: (data: OnPostSuccessData) => void
   quote?: AppBskyFeedDefs.PostView
   mention?: string // handle of user to mention
-  openEmojiPicker?: (pos: EmojiPickerPosition | undefined) => void
   text?: string
   imageUris?: {uri: string; width: number; height: number; altText?: string}[]
   videoUri?: {uri: string; width: number; height: number}
+  openGallery?: boolean
+  logContext?: ComposerLogContext
 }
 
 type StateContext = ComposerOpts | undefined
@@ -51,9 +63,9 @@ type ControlsContext = {
   closeComposer: () => boolean
 }
 
-const stateContext = React.createContext<StateContext>(undefined)
+const stateContext = createContext<StateContext>(undefined)
 stateContext.displayName = 'ComposerStateContext'
-const controlsContext = React.createContext<ControlsContext>({
+const controlsContext = createContext<ControlsContext>({
   openComposer(_opts: ComposerOpts) {},
   closeComposer() {
     return false
@@ -63,7 +75,7 @@ controlsContext.displayName = 'ComposerControlsContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {_} = useLingui()
-  const [state, setState] = React.useState<StateContext>()
+  const [state, setState] = useState<StateContext>()
   const queryClient = useQueryClient()
 
   const openComposer = useNonReactiveCallback((opts: ComposerOpts) => {
@@ -85,15 +97,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     const author = opts.replyTo?.author || opts.quote?.author
     const isBlocked = Boolean(
       author &&
-        (author.viewer?.blocking ||
-          author.viewer?.blockedBy ||
-          author.viewer?.blockingByList),
+      (author.viewer?.blocking ||
+        author.viewer?.blockedBy ||
+        author.viewer?.blockingByList),
     )
     if (isBlocked) {
-      Toast.show(
-        _(msg`Cannot interact with a blocked user`),
-        'exclamation-circle',
-      )
+      Toast.show(_(msg`Cannot interact with a blocked user`), {
+        type: 'warning',
+      })
     } else {
       setState(prevOpts => {
         if (prevOpts) {
@@ -110,12 +121,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     if (wasOpen) {
       setState(undefined)
       purgeTemporaryImageFiles()
+      // Purging deletes cached thumbnails on disk, so remove the query
+      // caches that may hold references to those now-deleted file paths.
+      // Without this, restoring a draft would serve stale ResolvedLink
+      // data pointing at missing files, causing "Failed to load blob".
+      queryClient.removeQueries({queryKey: [RQKEY_LINK_ROOT]})
+      queryClient.removeQueries({queryKey: [RQKEY_GIF_ROOT]})
     }
 
     return wasOpen
   })
 
-  const api = React.useMemo(
+  const api = useMemo(
     () => ({
       openComposer,
       closeComposer,
@@ -133,12 +150,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useComposerState() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useComposerControls() {
-  const {closeComposer} = React.useContext(controlsContext)
-  return React.useMemo(() => ({closeComposer}), [closeComposer])
+  const {closeComposer} = useContext(controlsContext)
+  return useMemo(() => ({closeComposer}), [closeComposer])
 }
 
 /**
@@ -148,6 +165,6 @@ export function useComposerControls() {
  * @deprecated use `#/lib/hooks/useOpenComposer` instead
  */
 export function useOpenComposer() {
-  const {openComposer} = React.useContext(controlsContext)
-  return React.useMemo(() => ({openComposer}), [openComposer])
+  const {openComposer} = useContext(controlsContext)
+  return useMemo(() => ({openComposer}), [openComposer])
 }

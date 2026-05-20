@@ -1,9 +1,8 @@
-const {withXcodeProject} = require('@expo/config-plugins')
+const {withXcodeProject} = require('expo/config-plugins')
 const path = require('path')
 const fs = require('fs')
 
 const withSounds = (config, {extensionName, soundFiles}) => {
-  // eslint-disable-next-line no-shadow
   return withXcodeProject(config, config => {
     for (const file of soundFiles) {
       const soundPath = path.join(config.modRequest.projectRoot, 'assets', file)

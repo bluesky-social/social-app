@@ -5,7 +5,7 @@ import {
   type AppBskyFeedDefs,
 } from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
-import EventEmitter from 'eventemitter3'
+import {EventEmitter} from 'eventemitter3'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {findAllPostsInQueryData as findAllPostsInBookmarksQueryData} from '#/state/queries/bookmarks/useBookmarksQuery'

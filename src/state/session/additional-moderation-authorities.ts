@@ -70,7 +70,7 @@ export function isNonConfigurableModerationAuthority(did: string) {
 }
 
 export function configureAdditionalModerationAuthorities() {
-  const geolocation = device.get(['geolocation'])
+  const geolocation = device.get(['mergedGeolocation'])
   // default to all
   let additionalLabelers: string[] = MODERATION_AUTHORITIES_DIDS
 

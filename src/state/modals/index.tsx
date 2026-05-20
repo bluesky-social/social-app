@@ -1,6 +1,7 @@
-import React from 'react'
+import {createContext, useContext, useEffect, useMemo, useState} from 'react'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useHotkeysContext} from '#/lib/hotkeys'
 
 export interface UserAddRemoveListsModal {
   name: 'user-add-remove-lists'
@@ -11,10 +12,6 @@ export interface UserAddRemoveListsModal {
   onRemove?: (listUri: string) => void
 }
 
-export interface DeleteAccountModal {
-  name: 'delete-account'
-}
-
 export interface ContentLanguagesSettingsModal {
   name: 'content-languages-settings'
 }
@@ -23,16 +20,13 @@ export interface ContentLanguagesSettingsModal {
  * @deprecated DO NOT ADD NEW MODALS
  */
 export type Modal =
-  // Account
-  | DeleteAccountModal
-
   // Curation
   | ContentLanguagesSettingsModal
 
   // Lists
   | UserAddRemoveListsModal
 
-const ModalContext = React.createContext<{
+const ModalContext = createContext<{
   isModalActive: boolean
   activeModals: Modal[]
 }>({
@@ -41,7 +35,7 @@ const ModalContext = React.createContext<{
 })
 ModalContext.displayName = 'ModalContext'
 
-const ModalControlContext = React.createContext<{
+const ModalControlContext = createContext<{
   openModal: (modal: Modal) => void
   closeModal: () => boolean
   closeAllModals: () => boolean
@@ -53,7 +47,16 @@ const ModalControlContext = React.createContext<{
 ModalControlContext.displayName = 'ModalControlContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [activeModals, setActiveModals] = React.useState<Modal[]>([])
+  const [activeModals, setActiveModals] = useState<Modal[]>([])
+  const {disableScope, enableScope} = useHotkeysContext()
+
+  useEffect(() => {
+    if (activeModals.length > 0) {
+      disableScope('global')
+    } else {
+      enableScope('global')
+    }
+  }, [activeModals.length, disableScope, enableScope])
 
   const openModal = useNonReactiveCallback((modal: Modal) => {
     setActiveModals(modals => [...modals, modal])
@@ -73,7 +76,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return wasActive
   })
 
-  const state = React.useMemo(
+  const state = useMemo(
     () => ({
       isModalActive: activeModals.length > 0,
       activeModals,
@@ -81,7 +84,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [activeModals],
   )
 
-  const methods = React.useMemo(
+  const methods = useMemo(
     () => ({
       openModal,
       closeModal,
@@ -103,12 +106,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
  * @deprecated use the dialog system from `#/components/Dialog.tsx`
  */
 export function useModals() {
-  return React.useContext(ModalContext)
+  return useContext(ModalContext)
 }
 
 /**
  * @deprecated use the dialog system from `#/components/Dialog.tsx`
  */
 export function useModalControls() {
-  return React.useContext(ModalControlContext)
+  return useContext(ModalControlContext)
 }

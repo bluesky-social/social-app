@@ -1,38 +1,53 @@
 import {ScrollView, View} from 'react-native'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {
+  type ChatBskyActorDefs,
+  moderateProfile,
+  type ModerationOpts,
+} from '@atproto/api'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
+import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {type NavigationProp} from '#/lib/routes/types'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {logger} from '#/logger'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, tokens, useTheme} from '#/alf'
+import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button} from '#/components/Button'
 import {useDialogContext} from '#/components/Dialog'
+import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
-import type * as bsky from '#/types/bsky'
+import {useAnalytics} from '#/analytics'
 
-export function RecentChats({postUri}: {postUri: string}) {
+export function RecentChats({
+  postUri,
+  onBeforePress,
+}: {
+  postUri: string
+  onBeforePress?: () => void
+}) {
+  const ax = useAnalytics()
   const control = useDialogContext()
   const {currentAccount} = useSession()
-  const {data} = useListConvosQuery({status: 'accepted'})
+  const {data} = useListConvosQuery({
+    status: 'accepted',
+    lockStatus: 'unlocked',
+  })
   const convos = data?.pages[0]?.convos?.slice(0, 10)
   const moderationOpts = useModerationOpts()
   const navigation = useNavigation<NavigationProp>()
 
   const onSelectChat = (convoId: string) => {
+    onBeforePress?.()
     control.close(() => {
-      logger.metric('share:press:recentDm', {}, {statsig: true})
+      ax.metric('share:press:recentDm', {})
       navigation.navigate('MessagesConversation', {
         conversation: convoId,
         embed: postUri,
@@ -50,26 +65,27 @@ export function RecentChats({postUri}: {postUri: string}) {
         style={[a.flex_1, a.pt_2xs, {minHeight: 98}]}
         contentContainerStyle={[a.gap_sm, a.px_md]}
         showsHorizontalScrollIndicator={false}
-        fadingEdgeLength={64}
         nestedScrollEnabled>
         {convos && convos.length > 0 ? (
-          convos.map(convo => {
-            const otherMember = convo.members.find(
-              member => member.did !== currentAccount?.did,
-            )
+          convos.map(c => {
+            const convo = parseConvoView(c, currentAccount?.did)
+
+            if (!convo) return null
 
             if (
-              !otherMember ||
-              otherMember.handle === 'missing.invalid' ||
-              convo.muted
-            )
+              !convo.primaryMember ||
+              convo.primaryMember.handle === 'missing.invalid' ||
+              convo.view.muted
+            ) {
               return null
+            }
 
             return (
               <RecentChatItem
-                key={convo.id}
-                profile={otherMember}
-                onPress={() => onSelectChat(convo.id)}
+                key={convo.view.id}
+                convo={convo}
+                primaryMember={convo.primaryMember}
+                onPress={() => onSelectChat(convo.view.id)}
                 moderationOpts={moderationOpts}
               />
             )
@@ -92,27 +108,35 @@ export function RecentChats({postUri}: {postUri: string}) {
 const WIDTH = 80
 
 function RecentChatItem({
-  profile: profileUnshadowed,
   onPress,
   moderationOpts,
+  convo,
+  primaryMember,
 }: {
-  profile: bsky.profile.AnyProfileView
   onPress: () => void
   moderationOpts: ModerationOpts
+  convo: ConvoWithDetails
+  primaryMember: ChatBskyActorDefs.ProfileViewBasic
 }) {
   const {_} = useLingui()
   const t = useTheme()
 
-  const profile = useProfileShadow(profileUnshadowed)
+  const primaryProfile = useProfileShadow(primaryMember)
 
-  const moderation = moderateProfile(profile, moderationOpts)
-  const name = sanitizeDisplayName(
-    profile.displayName || sanitizeHandle(profile.handle),
-    moderation.ui('displayName'),
-  )
-  const verification = useSimpleVerificationState({profile})
+  const moderation = moderateProfile(primaryProfile, moderationOpts)
+  const name =
+    convo.kind === 'group'
+      ? convo.details.name
+      : createSanitizedDisplayName(
+          primaryProfile,
+          true,
+          moderation.ui('displayName'),
+        )
 
-  if (isBlockedOrBlocking(profile) || isMuted(profile)) {
+  if (
+    convo.kind === 'direct' &&
+    (isBlockedOrBlocking(primaryProfile) || isMuted(primaryProfile))
+  ) {
     return null
   }
 
@@ -127,12 +151,16 @@ function RecentChatItem({
         a.justify_start,
         a.align_center,
       ]}>
-      <UserAvatar
-        avatar={profile.avatar}
-        size={WIDTH - 8}
-        type={profile.associated?.labeler ? 'labeler' : 'user'}
-        moderation={moderation.ui('avatar')}
-      />
+      {convo.kind === 'group' ? (
+        <AvatarBubbles profiles={convo.members} size={WIDTH - 8} />
+      ) : (
+        <UserAvatar
+          avatar={primaryProfile.avatar}
+          size={WIDTH - 8}
+          type={primaryProfile.associated?.labeler ? 'labeler' : 'user'}
+          moderation={moderation.ui('avatar')}
+        />
+      )}
       <View style={[a.flex_row, a.align_center, a.justify_center, a.w_full]}>
         <Text
           emoji
@@ -140,13 +168,12 @@ function RecentChatItem({
           numberOfLines={1}>
           {name}
         </Text>
-        {verification.showBadge && (
-          <View style={[a.pl_2xs]}>
-            <VerificationCheck
-              width={10}
-              verifier={verification.role === 'verifier'}
-            />
-          </View>
+        {convo.kind === 'direct' && (
+          <ProfileBadges
+            profile={primaryProfile}
+            size="xs"
+            style={[a.pl_2xs]}
+          />
         )}
       </View>
     </Button>

@@ -1,7 +1,8 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {type Avatar} from '#/screens/Onboarding/StepProfile/index'
 import {
@@ -38,7 +39,7 @@ export function AvatarCreatorItems({
   const t = useTheme()
   const isEmojis = type === 'emojis'
 
-  const onSelectEmoji = React.useCallback(
+  const onSelectEmoji = useCallback(
     (emoji: EmojiName) => {
       setAvatar(prev => ({
         ...prev,
@@ -48,7 +49,7 @@ export function AvatarCreatorItems({
     [setAvatar],
   )
 
-  const onSelectColor = React.useCallback(
+  const onSelectColor = useCallback(
     (color: AvatarColor) => {
       setAvatar(prev => ({
         ...prev,

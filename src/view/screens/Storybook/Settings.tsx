@@ -1,6 +1,5 @@
 import {View} from 'react-native'
 
-import * as Toast from '#/view/com/util/Toast'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import {Alien_Stroke2_Corner0_Rounded as AlienIcon} from '#/components/icons/Alien'
@@ -16,6 +15,7 @@ import {Pizza_Stroke2_Corner0_Rounded as PizzaIcon} from '#/components/icons/Piz
 import {RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon} from '#/components/icons/RaisingHand'
 import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
 import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/Window'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 
 export function Settings() {

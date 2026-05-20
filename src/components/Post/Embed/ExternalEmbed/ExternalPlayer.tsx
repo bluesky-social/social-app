@@ -1,9 +1,8 @@
-import React from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {
   ActivityIndicator,
   type GestureResponderEvent,
   Pressable,
-  StyleSheet,
   useWindowDimensions,
   View,
 } from 'react-native'
@@ -17,7 +16,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {WebView} from 'react-native-webview'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedExternal} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
@@ -26,14 +25,15 @@ import {
   type EmbedPlayerParams,
   getPlayerAspect,
 } from '#/lib/strings/embed-player'
-import {isNative} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
+import {KeepAwake} from '#/components/KeepAwake'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
+import {IS_NATIVE} from '#/env'
 
 interface ShouldStartLoadRequest {
   url: string
@@ -55,13 +55,13 @@ function PlaceholderOverlay({
   if (isPlayerActive && !isLoading) return null
 
   return (
-    <View style={[a.absolute, a.inset_0, styles.overlayLayer]}>
+    <View style={[a.absolute, a.inset_0, {zIndex: 2}]}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={_(msg`Play Video`)}
         accessibilityHint={_(msg`Plays the video`)}
         onPress={onPress}
-        style={[styles.overlayContainer]}>
+        style={[a.flex_1, a.justify_center, a.align_center]}>
         {!isPlayerActive ? (
           <PlayButtonIcon />
         ) : (
@@ -84,7 +84,7 @@ function Player({
 }) {
   // ensures we only load what's requested
   // when it's a youtube video, we need to allow both bsky.app and youtube.com
-  const onShouldStartLoadWithRequest = React.useCallback(
+  const onShouldStartLoadWithRequest = useCallback(
     (event: ShouldStartLoadRequest) =>
       event.url === params.playerUri ||
       (params.source.startsWith('youtube') &&
@@ -96,21 +96,24 @@ function Player({
   if (!isPlayerActive) return null
 
   return (
-    <EventStopper style={[a.absolute, a.inset_0, styles.playerLayer]}>
-      <WebView
-        javaScriptEnabled={true}
-        onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-        mediaPlaybackRequiresUserAction={false}
-        allowsInlineMediaPlayback
-        bounces={false}
-        allowsFullscreenVideo
-        nestedScrollEnabled
-        source={{uri: params.playerUri}}
-        onLoad={onLoad}
-        style={styles.webview}
-        setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
-      />
-    </EventStopper>
+    <>
+      <EventStopper style={[a.absolute, a.inset_0, {zIndex: 3}]}>
+        <WebView
+          javaScriptEnabled={true}
+          onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+          mediaPlaybackRequiresUserAction={false}
+          allowsInlineMediaPlayback
+          bounces={false}
+          allowsFullscreenVideo
+          nestedScrollEnabled
+          source={{uri: params.playerUri}}
+          onLoad={onLoad}
+          style={a.bg_transparent}
+          setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
+        />
+      </EventStopper>
+      <KeepAwake />
+    </>
   )
 }
 
@@ -129,10 +132,10 @@ export function ExternalPlayer({
   const externalEmbedsPrefs = useExternalEmbedsPrefs()
   const consentDialogControl = useDialogControl()
 
-  const [isPlayerActive, setPlayerActive] = React.useState(false)
-  const [isLoading, setIsLoading] = React.useState(true)
+  const [isPlayerActive, setIsPlayerActive] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
-  const aspect = React.useMemo(() => {
+  const aspect = useMemo(() => {
     return getPlayerAspect({
       type: params.type,
       width: windowDims.width,
@@ -148,7 +151,7 @@ export function ExternalPlayer({
     const {height: winHeight, width: winWidth} = windowDims
 
     // Get the proper screen height depending on what is going on
-    const realWinHeight = isNative // If it is native, we always want the larger number
+    const realWinHeight = IS_NATIVE // If it is native, we always want the larger number
       ? winHeight > winWidth
         ? winHeight
         : winWidth
@@ -161,19 +164,19 @@ export function ExternalPlayer({
     const isVisible = top <= realWinHeight - insets.bottom && bot >= insets.top
 
     if (!isVisible) {
-      runOnJS(setPlayerActive)(false)
+      runOnJS(setIsPlayerActive)(false)
     }
   }, false) // False here disables autostarting the callback
 
   // watch for leaving the viewport due to scrolling
-  React.useEffect(() => {
+  useEffect(() => {
     // We don't want to do anything if the player isn't active
     if (!isPlayerActive) return
 
     // Interval for scrolling works in most cases, However, for twitch embeds, if we navigate away from the screen the webview will
     // continue playing. We need to watch for the blur event
     const unsubscribe = navigation.addListener('blur', () => {
-      setPlayerActive(false)
+      setIsPlayerActive(false)
     })
 
     // Start watching for changes
@@ -185,11 +188,11 @@ export function ExternalPlayer({
     }
   }, [navigation, isPlayerActive, frameCallback])
 
-  const onLoad = React.useCallback(() => {
+  const onLoad = useCallback(() => {
     setIsLoading(false)
   }, [])
 
-  const onPlayPress = React.useCallback(
+  const onPlayPress = useCallback(
     (event: GestureResponderEvent) => {
       // Prevent this from propagating upward on web
       event.preventDefault()
@@ -199,13 +202,13 @@ export function ExternalPlayer({
         return
       }
 
-      setPlayerActive(true)
+      setIsPlayerActive(true)
     },
     [externalEmbedsPrefs, consentDialogControl, params.source],
   )
 
-  const onAcceptConsent = React.useCallback(() => {
-    setPlayerActive(true)
+  const onAcceptConsent = useCallback(() => {
+    setIsPlayerActive(true)
   }, [])
 
   return (
@@ -226,13 +229,12 @@ export function ExternalPlayer({
               style={[a.flex_1]}
               source={{uri: link.thumb}}
               accessibilityIgnoresInvertColors
+              loading="lazy"
             />
             <Fill
               style={[
                 t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
-                {
-                  opacity: 0.3,
-                },
+                {opacity: 0.3},
               ]}
             />
           </>
@@ -261,24 +263,3 @@ export function ExternalPlayer({
     </>
   )
 }
-
-const styles = StyleSheet.create({
-  overlayContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  overlayLayer: {
-    zIndex: 2,
-  },
-  playerLayer: {
-    zIndex: 3,
-  },
-  webview: {
-    backgroundColor: 'transparent',
-  },
-  gifContainer: {
-    width: '100%',
-    overflow: 'hidden',
-  },
-})

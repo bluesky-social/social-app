@@ -6,12 +6,13 @@ import {
 import {useMutation} from '@tanstack/react-query'
 
 import {until} from '#/lib/async/until'
-import {logger} from '#/logger'
 import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
 import {useAgent, useSession} from '#/state/session'
+import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export function useVerificationsRemoveMutation() {
+  const ax = useAnalytics()
   const agent = useAgent()
   const {currentAccount} = useSession()
   const updateProfileVerificationCache = useUpdateProfileVerificationCache()
@@ -56,7 +57,7 @@ export function useVerificationsRemoveMutation() {
       )
     },
     async onSuccess(_, {profile}) {
-      logger.metric('verification:revoke', {}, {statsig: true})
+      ax.metric('verification:revoke', {})
       await updateProfileVerificationCache({profile})
     },
   })

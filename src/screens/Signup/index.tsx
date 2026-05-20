@@ -3,12 +3,10 @@ import {AppState, type AppStateStatus, View} from 'react-native'
 import ReactNativeDeviceAttest from 'react-native-device-attest'
 import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import {AppBskyGraphStarterpack} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
 import {logger} from '#/logger'
-import {isAndroid} from '#/platform/detection'
 import {useServiceQuery} from '#/state/queries/service'
 import {useStarterPackQuery} from '#/state/queries/starter-packs'
 import {useActiveStarterPack} from '#/state/shell/starter-pack'
@@ -30,15 +28,27 @@ import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {InlineLinkText} from '#/components/Link'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {Text} from '#/components/Typography'
-import {GCP_PROJECT_ID} from '#/env'
+import {useAnalytics} from '#/analytics'
+import {GCP_PROJECT_ID, IS_ANDROID} from '#/env'
 import * as bsky from '#/types/bsky'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {
-  const {_} = useLingui()
+  const ax = useAnalytics()
+  const {t: l} = useLingui()
   const t = useTheme()
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(reducer, {
+    ...initialState,
+    analytics: ax,
+  })
   const {gtMobile} = useBreakpoints()
   const submit = useSubmitSignup()
+
+  useEffect(() => {
+    dispatch({
+      type: 'setAnalytics',
+      value: ax,
+    })
+  }, [ax])
 
   const activeStarterPack = useActiveStarterPack()
   const {
@@ -49,6 +59,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     uri: activeStarterPack?.uri,
   })
 
+  // eslint-disable-next-line react/hook-use-state
   const [isFetchedAtMount] = useState(starterPack != null)
   const showStarterPackCard =
     activeStarterPack?.uri && !isFetchingStarterPack && starterPack
@@ -73,21 +84,21 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
       dispatch({type: 'setServiceDescription', value: undefined})
       dispatch({
         type: 'setError',
-        value: _(
-          msg`Unable to contact your service. Please check your Internet connection.`,
-        ),
+        value: l`Unable to contact your service. Please check your Internet connection.`,
       })
     } else if (serviceInfo) {
       dispatch({type: 'setServiceDescription', value: serviceInfo})
       dispatch({type: 'setError', value: ''})
     }
-  }, [_, serviceInfo, isError])
+  }, [l, serviceInfo, isError])
 
   useEffect(() => {
     if (state.pendingSubmit) {
       if (!state.pendingSubmit.mutableProcessed) {
+        // OK to mutate assuming it's never read in render.
+        // eslint-disable-next-line react-hooks/immutability, react-compiler/react-compiler
         state.pendingSubmit.mutableProcessed = true
-        submit(state, dispatch)
+        void submit(state, dispatch)
       }
     }
   }, [state, dispatch, submit])
@@ -108,7 +119,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
 
   // On Android, warmup the Play Integrity API on the signup screen so it is ready by the time we get to the gate screen.
   useEffect(() => {
-    if (!isAndroid) {
+    if (!IS_ANDROID) {
       return
     }
     ReactNativeDeviceAttest.warmupIntegrity(GCP_PROJECT_ID).catch(err =>
@@ -121,8 +132,8 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
       <SignupContext.Provider value={{state, dispatch}}>
         <LoggedOutLayout
           leadin=""
-          title={_(msg`Create Account`)}
-          description={_(msg`We're so excited to have you join us!`)}
+          title={l`Create account`}
+          description={l`We’re so excited to have you join us!`}
           scrollable>
           <View testID="createAccount" style={a.flex_1}>
             {showStarterPackCard &&
@@ -192,7 +203,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                         isFetchingStarterPack && !isErrorStarterPack
                       }
                       isServerError={isError}
-                      refetchServer={refetch}
+                      refetchServer={() => void refetch()}
                     />
                   ) : state.activeStep === SignupStep.HANDLE ? (
                     <StepHandle />
@@ -219,7 +230,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                       ]}>
                       <Trans>Having trouble?</Trans>{' '}
                       <InlineLinkText
-                        label={_(msg`Contact support`)}
+                        label={l`Contact support`}
                         to={FEEDBACK_FORM_URL({email: state.email})}
                         style={[!gtMobile && a.text_md]}>
                         <Trans>Contact support</Trans>

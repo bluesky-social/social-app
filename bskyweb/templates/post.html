@@ -34,9 +34,17 @@
   <meta property="twitter:image" content="{{ imgThumbUrl }}">
   {% endfor %}
   <meta name="twitter:card" content="summary_large_image">
+  {%- if videoUrl %}
+  <meta property="og:video" content="{{ videoUrl }}">
+  <meta property="og:video:type" content="{{ videoType }}">
+  {%- if videoWidth %}
+  <meta property="og:video:width" content="{{ videoWidth }}">
+  <meta property="og:video:height" content="{{ videoHeight }}">
+  {% endif -%}
+  {% endif -%}
   {% else %}
-  <meta property="og:image" content="{{ postView.Author.Avatar }}">
-  <meta property="twitter:image" content="{{ postView.Author.Avatar }}">
+  <meta property="og:image" content="{{ postView.Author.Avatar|avatar_thumbnail }}">
+  <meta property="twitter:image" content="{{ postView.Author.Avatar|avatar_thumbnail }}">
   <meta name="twitter:card" content="summary">
   {% endif %}
   <meta name="twitter:label1" content="Posted At">
@@ -108,9 +116,9 @@
   {% else %}
   <meta property="og:title" content="@{{ profileHandle }}">
   {% endif -%}
-  <meta name="description" content="This post requires authentication to view.">
-  <meta property="og:description" content="This post requires authentication to view.">
-  <meta property="twitter:description" content="This post requires authentication to view.">
+  <meta name="description" content="This author has chosen to make their posts visible only to people who are signed in.">
+  <meta property="og:description" content="This author has chosen to make their posts visible only to people who are signed in.">
+  <meta property="twitter:description" content="This author has chosen to make their posts visible only to people who are signed in.">
   <meta name="twitter:card" content="summary">
 {% endif -%}
 {%- endblock %}
@@ -129,7 +137,7 @@
 <div id="bsky_post_summary">
   <h3>Post</h3>
   <p id="bsky_handle">{{ profileHandle }}</p>
-  <p id="bsky_post_text">This post requires authentication to view.</p>
+      <p id="bsky_post_text">This author has chosen to make their posts visible only to people who are signed in.</p>
 </div>
 {% endif -%}
 {%- endblock %}

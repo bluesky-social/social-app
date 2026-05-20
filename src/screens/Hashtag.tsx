@@ -1,13 +1,14 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
+import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {cleanError} from '#/lib/strings/errors'
@@ -15,7 +16,6 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {enforceLen} from '#/lib/strings/helpers'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Pager} from '#/view/com/pager/Pager'
@@ -45,20 +45,29 @@ export default function HashtagScreen({
   const {tag, author} = route.params
   const {_} = useLingui()
 
-  const fullTag = React.useMemo(() => {
-    return `#${decodeURIComponent(tag)}`
+  const decodedTag = useMemo(() => {
+    return decodeURIComponent(tag)
   }, [tag])
 
-  const headerTitle = React.useMemo(() => {
-    return enforceLen(fullTag.toLowerCase(), 24, true, 'middle')
-  }, [fullTag])
+  const isCashtag = decodedTag.startsWith('$')
 
-  const sanitizedAuthor = React.useMemo(() => {
-    if (!author) return
+  const fullTag = useMemo(() => {
+    // Cashtags already include the $ prefix, hashtags need # added
+    return isCashtag ? decodedTag : `#${decodedTag}`
+  }, [decodedTag, isCashtag])
+
+  const headerTitle = useMemo(() => {
+    // Keep cashtags uppercase, lowercase hashtags
+    const displayTag = isCashtag ? fullTag.toUpperCase() : fullTag.toLowerCase()
+    return enforceLen(displayTag, 24, true, 'middle')
+  }, [fullTag, isCashtag])
+
+  const sanitizedAuthor = useMemo(() => {
+    if (!author) return ''
     return sanitizeHandle(author)
   }, [author])
 
-  const onShare = React.useCallback(() => {
+  const onShare = useCallback(() => {
     const url = new URL('https://bsky.app')
     url.pathname = `/hashtag/${decodeURIComponent(tag)}`
     if (author) {
@@ -67,24 +76,13 @@ export default function HashtagScreen({
     shareUrl(url.toString())
   }, [tag, author])
 
-  const [activeTab, setActiveTab] = React.useState(0)
-  const setMinimalShellMode = useSetMinimalShellMode()
+  const [activeTab, setActiveTab] = useState(0)
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
+  const onPageSelected = (index: number) => {
+    setActiveTab(index)
+  }
 
-  const onPageSelected = React.useCallback(
-    (index: number) => {
-      setMinimalShellMode(false)
-      setActiveTab(index)
-    },
-    [setMinimalShellMode],
-  )
-
-  const sections = React.useMemo(() => {
+  const sections = useMemo(() => {
     return [
       {
         title: _(msg`Top`),
@@ -166,14 +164,19 @@ function HashtagScreenTab({
 }) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
-  const [isPTR, setIsPTR] = React.useState(false)
+  const [isPTR, setIsPTR] = useState(false)
   const t = useTheme()
   const {hasSession} = useSession()
+  const trackPostView = usePostViewTracking('Hashtag')
 
-  const queryParam = React.useMemo(() => {
-    if (!author) return fullTag
-    return `${fullTag} from:${author}`
-  }, [fullTag, author])
+  const isCashtag = fullTag.startsWith('$')
+
+  const queryParam = useMemo(() => {
+    // Cashtags need # prefix for search: "#$BTC" or "#$BTC from:author"
+    const searchTag = isCashtag ? `#${fullTag}` : fullTag
+    if (!author) return searchTag
+    return `${searchTag} from:${author}`
+  }, [fullTag, author, isCashtag])
 
   const {
     data,
@@ -187,17 +190,17 @@ function HashtagScreenTab({
     hasNextPage,
   } = useSearchPostsQuery({query: queryParam, sort, enabled: active})
 
-  const posts = React.useMemo(() => {
+  const posts = useMemo(() => {
     return data?.pages.flatMap(page => page.posts) || []
   }, [data])
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsPTR(true)
     await refetch()
     setIsPTR(false)
   }, [refetch])
 
-  const onEndReached = React.useCallback(() => {
+  const onEndReached = useCallback(() => {
     if (isFetchingNextPage || !hasNextPage || error) return
     fetchNextPage()
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
@@ -253,7 +256,7 @@ function HashtagScreenTab({
           isError={isError}
           onRetry={refetch}
           emptyType="results"
-          emptyMessage={_(msg`We couldn't find any results for that hashtag.`)}
+          emptyMessage={_(msg`We couldn't find any results for that tag.`)}
         />
       ) : (
         <List
@@ -264,6 +267,7 @@ function HashtagScreenTab({
           onRefresh={onRefresh}
           onEndReached={onEndReached}
           onEndReachedThreshold={4}
+          onItemSeen={trackPostView}
           // @ts-ignore web only -prf
           desktopFixedHeight
           ListFooterComponent={

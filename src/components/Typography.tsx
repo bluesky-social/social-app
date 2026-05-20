@@ -1,7 +1,7 @@
 import {UITextView} from 'react-native-uitextview'
 
 import {logger} from '#/logger'
-import {atoms, flatten, useAlf, useTheme, web} from '#/alf'
+import {atoms as a, type TextStyleProp, useAlf, useTheme, web} from '#/alf'
 import {
   childHasEmoji,
   normalizeTextStyles,
@@ -22,19 +22,29 @@ export function Text({
   selectable,
   title,
   dataSet,
+  numberOfLines,
   ...rest
 }: TextProps) {
   const {fonts, flags} = useAlf()
   const t = useTheme()
-  const s = normalizeTextStyles([atoms.text_sm, t.atoms.text, flatten(style)], {
-    fontScale: fonts.scaleMultiplier,
-    fontFamily: fonts.family,
-    flags,
-  })
+  const s = normalizeTextStyles(
+    [
+      a.text_sm,
+      t.atoms.text,
+      web(numberOfLines === 1 && numberOfLinesClippingFix),
+      style,
+    ],
+    {
+      fontScale: fonts.scaleMultiplier,
+      fontFamily: fonts.family,
+      flags,
+    },
+  )
 
   if (__DEV__) {
     if (!emoji && childHasEmoji(children)) {
       logger.warn(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-base-to-string
         `Text: emoji detected but emoji not enabled: "${children}"\n\nPlease add <Text emoji />'`,
       )
     }
@@ -43,6 +53,7 @@ export function Text({
   const shared = {
     uiTextView: true,
     selectable,
+    numberOfLines,
     style: s,
     dataSet: Object.assign({tooltip: title}, dataSet || {}),
     ...rest,
@@ -81,10 +92,26 @@ export function P({style, ...rest}: TextProps) {
       role: 'paragraph',
     }) || {}
   return (
-    <Text
-      {...attr}
-      {...rest}
-      style={[atoms.text_md, atoms.leading_normal, flatten(style)]}
-    />
+    <Text {...attr} {...rest} style={[a.text_md, a.leading_relaxed, style]} />
   )
 }
+
+/**
+ * HACKFIX: React Native Web applies `overflow: hidden` to
+ * text when using the `numberOfLines` prop, which causes it to clip
+ * ascenders/descenders. It only needs to be doing this for the X axis,
+ * so override the style with `overflowX: 'hidden'`.
+ * Note this only works for `numberOfLines={1}` -sfn
+ *
+ * @see https://github.com/necolas/react-native-web/pull/2836
+ */
+const numberOfLinesClippingFix = {
+  overflowY: 'visible',
+  overflowX: 'clip',
+  // mimic browser default behavior of `min-width: 0` on `overflow: hidden`
+  // elements to allow text to shrink smaller than its intrinsic width when
+  // necessary
+  minWidth: 0,
+  // this is neater and supports vertical writing modes, but it's only baseline newly available
+  // overflowInline: 'clip',
+} satisfies React.CSSProperties as TextStyleProp

@@ -3,13 +3,14 @@ import {
   FontAwesomeIcon,
   type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon} from '#/components/icons/ArrowRotateCounterClockwise'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon} from '#/components/icons/ArrowRotate'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 

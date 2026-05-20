@@ -1,13 +1,4 @@
-import {
-  type AppBskyGraphGetActorStarterPacks,
-  type AppBskyGraphGetStarterPacksWithMembership,
-} from '@atproto/api'
-import {
-  type InfiniteData,
-  type QueryClient,
-  type QueryKey,
-  useInfiniteQuery,
-} from '@tanstack/react-query'
+import {type QueryClient, useInfiniteQuery} from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
 
@@ -28,13 +19,7 @@ export function useActorStarterPacksQuery({
 }) {
   const agent = useAgent()
 
-  return useInfiniteQuery<
-    AppBskyGraphGetActorStarterPacks.OutputSchema,
-    Error,
-    InfiniteData<AppBskyGraphGetActorStarterPacks.OutputSchema>,
-    QueryKey,
-    string | undefined
-  >({
+  return useInfiniteQuery({
     queryKey: RQKEY(did),
     queryFn: async ({pageParam}: {pageParam?: string}) => {
       const res = await agent.app.bsky.graph.getActorStarterPacks({
@@ -59,13 +44,7 @@ export function useActorStarterPacksWithMembershipsQuery({
 }) {
   const agent = useAgent()
 
-  return useInfiniteQuery<
-    AppBskyGraphGetStarterPacksWithMembership.OutputSchema,
-    Error,
-    InfiniteData<AppBskyGraphGetStarterPacksWithMembership.OutputSchema>,
-    QueryKey,
-    string | undefined
-  >({
+  return useInfiniteQuery({
     queryKey: RQKEY_WITH_MEMBERSHIP(did),
     queryFn: async ({pageParam}: {pageParam?: string}) => {
       const res = await agent.app.bsky.graph.getStarterPacksWithMembership({

@@ -3,11 +3,13 @@ import {
   getInfoAsync,
   readDirectoryAsync,
 } from 'expo-file-system/legacy'
-import ExpoImageCropTool, {type OpenCropperOptions} from 'expo-image-crop-tool'
+import {type ImagePickerResult} from 'expo-image-picker'
+import ExpoImageCropTool, {
+  type OpenCropperOptions,
+} from '@bsky.app/expo-image-crop-tool'
 
 import {compressIfNeeded} from './manip'
 import {type PickerImage} from './picker.shared'
-import {ImagePickerResult} from 'expo-image-picker'
 
 async function getFile() {
   const imagesDir = documentDirectory!
@@ -67,7 +69,7 @@ export async function openCropper(opts: OpenCropperOptions) {
 
   return {
     path: item.path,
-    mime: item.mime,
+    mime: item.mimeType,
     size: item.size,
     width: item.width,
     height: item.height,

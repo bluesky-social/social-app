@@ -1,6 +1,6 @@
 import {useCallback} from 'react'
 import {type I18n} from '@lingui/core'
-import {defineMessage, msg, plural} from '@lingui/macro'
+import {defineMessage, msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {differenceInSeconds} from 'date-fns'
 

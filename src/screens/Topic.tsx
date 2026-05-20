@@ -1,19 +1,18 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {cleanError} from '#/lib/strings/errors'
 import {enforceLen} from '#/lib/strings/helpers'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
@@ -38,34 +37,23 @@ export default function TopicScreen({
   const {topic} = route.params
   const {_} = useLingui()
 
-  const headerTitle = React.useMemo(() => {
+  const headerTitle = useMemo(() => {
     return enforceLen(decodeURIComponent(topic), 24, true, 'middle')
   }, [topic])
 
-  const onShare = React.useCallback(() => {
+  const onShare = useCallback(() => {
     const url = new URL('https://bsky.app')
     url.pathname = `/topic/${topic}`
     shareUrl(url.toString())
   }, [topic])
 
-  const [activeTab, setActiveTab] = React.useState(0)
-  const setMinimalShellMode = useSetMinimalShellMode()
+  const [activeTab, setActiveTab] = useState(0)
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
+  const onPageSelected = (index: number) => {
+    setActiveTab(index)
+  }
 
-  const onPageSelected = React.useCallback(
-    (index: number) => {
-      setMinimalShellMode(false)
-      setActiveTab(index)
-    },
-    [setMinimalShellMode],
-  )
-
-  const sections = React.useMemo(() => {
+  const sections = useMemo(() => {
     return [
       {
         title: _(msg`Top`),
@@ -134,7 +122,8 @@ function TopicScreenTab({
 }) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
-  const [isPTR, setIsPTR] = React.useState(false)
+  const [isPTR, setIsPTR] = useState(false)
+  const trackPostView = usePostViewTracking('Topic')
 
   const {
     data,
@@ -152,17 +141,17 @@ function TopicScreenTab({
     enabled: active,
   })
 
-  const posts = React.useMemo(() => {
+  const posts = useMemo(() => {
     return data?.pages.flatMap(page => page.posts) || []
   }, [data])
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsPTR(true)
     await refetch()
     setIsPTR(false)
   }, [refetch])
 
-  const onEndReached = React.useCallback(() => {
+  const onEndReached = useCallback(() => {
     if (isFetchingNextPage || !hasNextPage || error) return
     fetchNextPage()
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
@@ -186,6 +175,7 @@ function TopicScreenTab({
           onRefresh={onRefresh}
           onEndReached={onEndReached}
           onEndReachedThreshold={4}
+          onItemSeen={trackPostView}
           // @ts-ignore web only -prf
           desktopFixedHeight
           ListFooterComponent={

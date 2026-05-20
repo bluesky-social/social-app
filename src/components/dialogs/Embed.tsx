@@ -1,8 +1,9 @@
 import {memo, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, type AppBskyFeedPost, AtUri} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {EMBED_SCRIPT} from '#/lib/constants'
 import {niceDate} from '#/lib/strings/time'
@@ -10,8 +11,8 @@ import {toShareUrl} from '#/lib/strings/url-helpers'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import * as SegmentedControl from '#/components/forms/SegmentedControl'
 import * as TextField from '#/components/forms/TextField'
-import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronBottomIcon,
@@ -108,7 +109,7 @@ function EmbedDialogInner({
             <Trans>Embed post</Trans>
           </Text>
           <Text
-            style={[a.text_md, t.atoms.text_contrast_medium, a.leading_normal]}>
+            style={[a.text_md, t.atoms.text_contrast_medium, a.leading_snug]}>
             <Trans>
               Embed this post in your website. Simply copy the following snippet
               and paste it into the HTML code of your website.
@@ -116,12 +117,7 @@ function EmbedDialogInner({
           </Text>
         </View>
         <View
-          style={[
-            a.border,
-            t.atoms.border_contrast_low,
-            a.rounded_sm,
-            a.overflow_hidden,
-          ]}>
+          style={[a.border, t.atoms.border_contrast_low, {borderRadius: 18}]}>
           <Button
             label={
               showCustomisation
@@ -150,26 +146,27 @@ function EmbedDialogInner({
               <Text style={[t.atoms.text_contrast_medium, a.font_semi_bold]}>
                 <Trans>Color theme</Trans>
               </Text>
-              <ToggleButton.Group
+              <SegmentedControl.Root
                 label={_(msg`Color mode`)}
-                values={[colorMode]}
-                onChange={([value]) => setColorMode(value as ColorModeValues)}>
-                <ToggleButton.Button name="system" label={_(msg`System`)}>
-                  <ToggleButton.ButtonText>
+                type="radio"
+                value={colorMode}
+                onChange={setColorMode}>
+                <SegmentedControl.Item value="system" label={_(msg`System`)}>
+                  <SegmentedControl.ItemText>
                     <Trans>System</Trans>
-                  </ToggleButton.ButtonText>
-                </ToggleButton.Button>
-                <ToggleButton.Button name="light" label={_(msg`Light`)}>
-                  <ToggleButton.ButtonText>
+                  </SegmentedControl.ItemText>
+                </SegmentedControl.Item>
+                <SegmentedControl.Item value="light" label={_(msg`Light`)}>
+                  <SegmentedControl.ItemText>
                     <Trans>Light</Trans>
-                  </ToggleButton.ButtonText>
-                </ToggleButton.Button>
-                <ToggleButton.Button name="dark" label={_(msg`Dark`)}>
-                  <ToggleButton.ButtonText>
+                  </SegmentedControl.ItemText>
+                </SegmentedControl.Item>
+                <SegmentedControl.Item value="dark" label={_(msg`Dark`)}>
+                  <SegmentedControl.ItemText>
                     <Trans>Dark</Trans>
-                  </ToggleButton.ButtonText>
-                </ToggleButton.Button>
-              </ToggleButton.Group>
+                  </SegmentedControl.ItemText>
+                </SegmentedControl.Item>
+              </SegmentedControl.Root>
             </View>
           )}
         </View>
@@ -188,10 +185,9 @@ function EmbedDialogInner({
           <Button
             label={_(msg`Copy code`)}
             color="primary"
-            variant="solid"
             size="large"
             onPress={() => {
-              navigator.clipboard.writeText(snippet)
+              void navigator.clipboard.writeText(snippet)
               setCopied(true)
             }}>
             {copied ? (

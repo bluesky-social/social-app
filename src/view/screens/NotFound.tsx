@@ -1,17 +1,13 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {StyleSheet, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {
-  StackActions,
-  useFocusEffect,
-  useNavigation,
-} from '@react-navigation/native'
+import {Trans} from '@lingui/react/macro'
+import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
@@ -21,16 +17,9 @@ export const NotFoundScreen = () => {
   const pal = usePalette('default')
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
-  const setMinimalShellMode = useSetMinimalShellMode()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
 
   const canGoBack = navigation.canGoBack()
-  const onPressHome = React.useCallback(() => {
+  const onPressHome = useCallback(() => {
     if (canGoBack) {
       navigation.goBack()
     } else {

@@ -15,6 +15,7 @@ export type ServiceConfig = {
   safelinkPdsUrl?: string
   safelinkAgentIdentifier?: string
   safelinkAgentPass?: string
+  metricsApiHost?: string
 }
 
 export type DbConfig = {
@@ -45,6 +46,7 @@ export type Environment = {
   safelinkPdsUrl?: string
   safelinkAgentIdentifier?: string
   safelinkAgentPass?: string
+  metricsApiHost?: string
 }
 
 export const readEnv = (): Environment => {
@@ -65,6 +67,7 @@ export const readEnv = (): Environment => {
     safelinkPdsUrl: envStr('LINK_SAFELINK_PDS_URL'),
     safelinkAgentIdentifier: envStr('LINK_SAFELINK_AGENT_IDENTIFIER'),
     safelinkAgentPass: envStr('LINK_SAFELINK_AGENT_PASS'),
+    metricsApiHost: envStr('LINK_METRICS_API_HOST'),
   }
 }
 
@@ -79,6 +82,7 @@ export const envToCfg = (env: Environment): Config => {
     safelinkPdsUrl: env.safelinkPdsUrl,
     safelinkAgentIdentifier: env.safelinkAgentIdentifier,
     safelinkAgentPass: env.safelinkAgentPass,
+    metricsApiHost: env.metricsApiHost,
   }
   if (!env.dbPostgresUrl) {
     throw new Error('Must configure postgres url (LINK_DB_POSTGRES_URL)')

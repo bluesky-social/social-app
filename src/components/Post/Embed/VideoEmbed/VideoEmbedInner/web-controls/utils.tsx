@@ -1,8 +1,8 @@
 import {type RefObject, useCallback, useEffect, useRef, useState} from 'react'
 
-import {isSafari} from '#/lib/browser'
 import {logger} from '#/logger'
 import {useVideoVolumeState} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
+import {IS_WEB_SAFARI} from '#/env'
 
 export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
   const [playing, setPlaying] = useState(false)
@@ -41,7 +41,7 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
       setCurrentTime(round(ref.current.currentTime) || 0)
       // HACK: Safari randomly fires `stalled` events when changing between segments
       // let's just clear the buffering state if the video is still progressing -sfn
-      if (isSafari) {
+      if (IS_WEB_SAFARI) {
         if (bufferingTimeout) clearTimeout(bufferingTimeout)
         setBuffering(false)
       }

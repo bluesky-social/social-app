@@ -20,7 +20,7 @@ export function Container({
         if (!entry) return
 
         let {height} = entry.contentRect
-        height += 2 // border top and bottom
+        height += 4 // border-2 = 2px top + 2px bottom
         if (height !== prevHeight.current) {
           prevHeight.current = height
           window.parent.postMessage(
@@ -37,7 +37,7 @@ export function Container({
   return (
     <div
       ref={ref}
-      className="w-full bg-white text-black hover:bg-neutral-50 dark:bg-dimmedBg dark:hover:bg-dimmedBgLighten relative transition-colors max-w-[600px] min-w-[300px] flex border dark:border-slate-600 dark:text-slate-200 rounded-xl"
+      className="w-full border-2 border-brand text-black relative transition-colors max-w-[600px] min-w-[300px] flex items-center dark:text-slate-200 rounded-[32px] overflow-hidden cursor-pointer"
       onClick={() => {
         if (ref.current && href) {
           // forwardRef requires preact/compat - let's keep it simple
@@ -49,7 +49,7 @@ export function Container({
         }
       }}>
       {href && <Link href={href} />}
-      <div className="flex-1 px-4 pt-3 pb-2.5 max-w-full">{children}</div>
+      <div className="flex-1 max-w-full">{children}</div>
     </div>
   )
 }

@@ -50,6 +50,7 @@ export type CommonNavigatorParams = {
   AccessibilitySettings: undefined
   AppearanceSettings: undefined
   AccountSettings: undefined
+  AutomationLabelSettings: undefined
   PrivacyAndSecuritySettings: undefined
   ActivityPrivacySettings: undefined
   ContentAndMediaSettings: undefined
@@ -67,10 +68,12 @@ export type CommonNavigatorParams = {
   InterestsSettings: undefined
   AboutSettings: undefined
   AppIconSettings: undefined
+  FindContactsSettings: undefined
   Search: {q?: string; tab?: 'user' | 'profile' | 'feed'}
   Hashtag: {tag: string; author?: string}
   Topic: {topic: string}
   MessagesConversation: {conversation: string; embed?: string; accept?: true}
+  MessagesConversationSettings: {conversation: string}
   MessagesSettings: undefined
   MessagesInbox: undefined
   NotificationsActivityList: {posts: string}
@@ -87,6 +90,7 @@ export type CommonNavigatorParams = {
   StarterPackEdit: {rkey?: string}
   VideoFeed: VideoFeedSourceContext
   Bookmarks: undefined
+  FindContactsFlow: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
@@ -135,7 +139,7 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   Notifications: undefined
   MyProfileTab: undefined
   MessagesTab: undefined
-  Messages: {animation?: 'push' | 'pop'}
+  Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
 }
 
 // NOTE

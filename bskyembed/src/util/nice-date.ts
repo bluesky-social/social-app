@@ -1,11 +1,11 @@
 export function niceDate(date: number | string | Date) {
   const d = new Date(date)
-  return `${d.toLocaleDateString('en-us', {
+  return `${d.toLocaleTimeString(undefined, {
+    hour: 'numeric',
+    minute: '2-digit',
+  })} · ${d.toLocaleDateString('en-us', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
-  })} at ${d.toLocaleTimeString(undefined, {
-    hour: 'numeric',
-    minute: '2-digit',
   })}`
 }

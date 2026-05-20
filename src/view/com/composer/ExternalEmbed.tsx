@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 
 import {cleanError} from '#/lib/strings/errors'
@@ -6,7 +6,6 @@ import {
   useResolveGifQuery,
   useResolveLinkQuery,
 } from '#/state/queries/resolve-link'
-import {type Gif} from '#/state/queries/tenor'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
@@ -15,6 +14,7 @@ import {ModeratedFeedEmbed} from '#/components/Post/Embed/FeedEmbed'
 import {ModeratedListEmbed} from '#/components/Post/Embed/ListEmbed'
 import {Embed as StarterPackEmbed} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
+import {type Gif} from '#/features/gifPicker/types'
 
 export const ExternalEmbedGif = ({
   onRemove,
@@ -25,7 +25,7 @@ export const ExternalEmbedGif = ({
 }) => {
   const t = useTheme()
   const {data, error} = useResolveGifQuery(gif)
-  const linkInfo = React.useMemo(
+  const linkInfo = useMemo(
     () =>
       data && {
         title: data.title ?? data.uri,
@@ -37,7 +37,13 @@ export const ExternalEmbedGif = ({
   )
 
   const loadingStyle: ViewStyle = {
-    aspectRatio: gif.media_formats.gif.dims[0] / gif.media_formats.gif.dims[1],
+    aspectRatio: (() => {
+      const dims = gif.media_formats.gif?.dims
+      if (dims && dims[0] > 0 && dims[1] > 0) {
+        return dims[0] / dims[1]
+      }
+      return 16 / 9 // Default aspect ratio
+    })(),
     width: '100%',
   }
 
@@ -77,7 +83,7 @@ export const ExternalEmbedLink = ({
 }) => {
   const t = useTheme()
   const {data, error} = useResolveLinkQuery(uri)
-  const linkComponent = React.useMemo(() => {
+  const linkComponent = useMemo(() => {
     if (data) {
       if (data.type === 'external') {
         return (

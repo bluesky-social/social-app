@@ -1,9 +1,8 @@
-const {withXcodeProject} = require('@expo/config-plugins')
+const {withXcodeProject} = require('expo/config-plugins')
 
 const BUILD_PHASE_FILES = ['AppDelegate.swift', 'ViewController.swift']
 
 const withXcodeTarget = (config, {targetName}) => {
-  // eslint-disable-next-line no-shadow
   return withXcodeProject(config, config => {
     const pbxProject = config.modResults
 

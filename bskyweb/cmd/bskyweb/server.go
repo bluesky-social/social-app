@@ -9,7 +9,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/fs"
+	"log/slog"
 	"net/http"
 	"net/netip"
 	"net/url"
@@ -28,6 +30,7 @@ import (
 	"github.com/flosch/pongo2/v6"
 	"github.com/klauspost/compress/gzhttp"
 	"github.com/klauspost/compress/gzip"
+	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/urfave/cli/v2"
@@ -40,6 +43,11 @@ type Server struct {
 	cfg   *Config
 
 	ipccClient http.Client
+
+	// sitemapClient is used for fetching sitemaps from the appview. It has
+	// DisableCompression set to true so that gzipped responses are passed
+	// through without being decompressed.
+	sitemapClient http.Client
 }
 
 type Config struct {
@@ -116,6 +124,16 @@ func serve(cctx *cli.Context) error {
 				},
 			},
 		},
+		sitemapClient: http.Client{
+			Transport: &http.Transport{
+				MaxIdleConns:        100,
+				MaxIdleConnsPerHost: 10,
+				IdleConnTimeout:     90 * time.Second,
+				TLSHandshakeTimeout: 10 * time.Second,
+				ForceAttemptHTTP2:   true,
+				DisableCompression:  true,
+			},
+		},
 	}
 
 	// Create the HTTP server.
@@ -184,6 +202,14 @@ func serve(cctx *cli.Context) error {
 		RedirectCode: http.StatusFound,
 	}))
 
+	echoprom := echoprometheus.NewMiddlewareWithConfig(
+		echoprometheus.MiddlewareConfig{
+			DoNotUseRequestPathFor404: true,
+		},
+	)
+
+	e.Use(echoprom)
+
 	// CORS middleware
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: corsOrigins,
@@ -223,7 +249,7 @@ func serve(cctx *cli.Context) error {
 		e.GET("/robots.txt", echo.WrapHandler(staticHandler))
 	}
 
-	e.GET("/iframe/youtube.html", echo.WrapHandler(staticHandler))
+	e.GET("/iframe/*", echo.WrapHandler(staticHandler))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)), func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			c.Response().Before(func() {
@@ -275,6 +301,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/settings/accessibility", server.WebGeneric)
 	e.GET("/settings/appearance", server.WebGeneric)
 	e.GET("/settings/account", server.WebGeneric)
+	e.GET("/settings/automation-label", server.WebGeneric)
 	e.GET("/settings/privacy-and-security", server.WebGeneric)
 	e.GET("/settings/privacy-and-security/activity", server.WebGeneric)
 	e.GET("/settings/content-and-media", server.WebGeneric)
@@ -291,7 +318,6 @@ func serve(cctx *cli.Context) error {
 	e.GET("/settings/notifications/reposts-on-reposts", server.WebGeneric)
 	e.GET("/settings/notifications/activity", server.WebGeneric)
 	e.GET("/settings/notifications/miscellaneous", server.WebGeneric)
-	e.GET("/settings/app-icon", server.WebGeneric)
 	e.GET("/sys/debug", server.WebGeneric)
 	e.GET("/sys/debug-mod", server.WebGeneric)
 	e.GET("/sys/log", server.WebGeneric)
@@ -336,6 +362,10 @@ func serve(cctx *cli.Context) error {
 
 	// ipcc
 	e.GET("/ipcc", server.WebIpCC)
+
+	// sitemap handlers
+	e.GET("/sitemap/users.xml.gz", server.handleSitemapUsersIndex)
+	e.GET("/sitemap/users/*", server.handleSitemapUsersSubpage)
 
 	if linkHost != "" {
 		linkUrl, err := url.Parse(linkHost)
@@ -554,7 +584,10 @@ func (srv *Server) WebPost(c echo.Context) error {
 
 	if postView.Embed != nil && !isEmbedHidden {
 		hasImages := postView.Embed.EmbedImages_View != nil
-		hasMedia := postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil
+		hasVideo := postView.Embed.EmbedVideo_View != nil
+		hasMedia := postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil
+		hasMediaImages := hasMedia && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil
+		hasMediaVideo := hasMedia && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View != nil
 
 		if hasImages {
 			var thumbUrls []string
@@ -562,12 +595,36 @@ func (srv *Server) WebPost(c echo.Context) error {
 				thumbUrls = append(thumbUrls, postView.Embed.EmbedImages_View.Images[i].Thumb)
 			}
 			data["imgThumbUrls"] = thumbUrls
-		} else if hasMedia {
+		} else if hasVideo {
+			if postView.Embed.EmbedVideo_View.Thumbnail != nil {
+				data["imgThumbUrls"] = []string{*postView.Embed.EmbedVideo_View.Thumbnail}
+			}
+			if postView.Embed.EmbedVideo_View.Playlist != "" {
+				data["videoUrl"] = postView.Embed.EmbedVideo_View.Playlist
+				data["videoType"] = "application/vnd.apple.mpegurl"
+				if postView.Embed.EmbedVideo_View.AspectRatio != nil {
+					data["videoWidth"] = postView.Embed.EmbedVideo_View.AspectRatio.Width
+					data["videoHeight"] = postView.Embed.EmbedVideo_View.AspectRatio.Height
+				}
+			}
+		} else if hasMediaImages {
 			var thumbUrls []string
 			for i := range postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images {
 				thumbUrls = append(thumbUrls, postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images[i].Thumb)
 			}
 			data["imgThumbUrls"] = thumbUrls
+		} else if hasMediaVideo {
+			if postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Thumbnail != nil {
+				data["imgThumbUrls"] = []string{*postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Thumbnail}
+			}
+			if postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Playlist != "" {
+				data["videoUrl"] = postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Playlist
+				data["videoType"] = "application/vnd.apple.mpegurl"
+				if postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.AspectRatio != nil {
+					data["videoWidth"] = postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.AspectRatio.Width
+					data["videoHeight"] = postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.AspectRatio.Height
+				}
+			}
 		}
 	}
 
@@ -752,4 +809,55 @@ func (srv *Server) WebIpCC(c echo.Context) error {
 		return c.JSON(500, IPCCResponse{})
 	}
 	return c.JSON(200, outResponse)
+}
+
+func (srv *Server) handleSitemapUsersIndex(c echo.Context) error {
+	url := fmt.Sprintf("%s/external/sitemap/users.xml.gz", srv.cfg.appviewHost)
+	return srv.serveSitemapRequest(c, url, "user index")
+}
+
+func (srv *Server) handleSitemapUsersSubpage(c echo.Context) error {
+	path := c.Param("*")
+	url := fmt.Sprintf("%s/external/sitemap/users/%s", srv.cfg.appviewHost, path)
+	return srv.serveSitemapRequest(c, url, "user subpage")
+}
+
+func (srv *Server) serveSitemapRequest(c echo.Context, url, sitemapType string) error {
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		slog.Error("failed to construct sitemap request", "err", err, "type", sitemapType)
+		return c.String(http.StatusInternalServerError, "Internal Server Error")
+	}
+
+	resp, err := srv.sitemapClient.Do(req)
+	if err != nil {
+		slog.Error("failed to send sitemap request to appview", "err", err, "type", sitemapType)
+		return c.String(http.StatusInternalServerError, "Internal Server Error")
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		buf, err := io.ReadAll(resp.Body)
+		if err != nil {
+			slog.Error("failed to read sitemap error response body", "err", err)
+		}
+
+		slog.Error("invalid sitemap response code",
+			"err", err,
+			"type", sitemapType,
+			"code", resp.StatusCode,
+			"body", string(buf),
+		)
+		return c.String(http.StatusInternalServerError, "Internal Server Error")
+	}
+
+	c.Response().Header().Set("Content-Type", "application/xml")
+	c.Response().Header().Set("Content-Encoding", "gzip")
+	c.Response().WriteHeader(resp.StatusCode)
+
+	if _, err = io.Copy(c.Response().Writer, resp.Body); err != nil {
+		slog.Error("failed to copy sitemap response body to client", "err", err, "type", sitemapType)
+	}
+
+	return nil
 }

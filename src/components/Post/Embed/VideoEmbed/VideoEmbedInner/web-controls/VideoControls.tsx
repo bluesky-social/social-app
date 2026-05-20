@@ -1,12 +1,11 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import type Hls from 'hls.js'
 
-import {isTouchDevice} from '#/lib/browser'
 import {clamp} from '#/lib/numbers'
-import {isIPhoneWeb} from '#/platform/detection'
 import {
   useAutoplayDisabled,
   useSetSubtitlesEnabled,
@@ -28,6 +27,8 @@ import {Pause_Filled_Corner0_Rounded as PauseIcon} from '#/components/icons/Paus
 import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {IS_WEB_MOBILE_IOS, IS_WEB_TOUCH_DEVICE} from '#/env'
+import {GifPresentationControls} from '../../GifPresentationControls'
 import {TimeIndicator} from '../TimeIndicator'
 import {ControlButton} from './ControlButton'
 import {Scrubber} from './Scrubber'
@@ -45,6 +46,9 @@ export function Controls({
   fullscreenRef,
   hlsLoading,
   hasSubtitleTrack,
+  isGif,
+  altText,
+  updateCuePositions,
 }: {
   videoRef: React.RefObject<HTMLVideoElement | null>
   hlsRef: React.RefObject<Hls | undefined | null>
@@ -56,6 +60,9 @@ export function Controls({
   fullscreenRef: React.RefObject<HTMLDivElement | null>
   hlsLoading: boolean
   hasSubtitleTrack: boolean
+  isGif: boolean
+  altText?: string
+  updateCuePositions: (controlsVisible?: boolean) => void
 }) {
   const {
     play,
@@ -126,13 +133,14 @@ export function Controls({
   const autoplayDisabled = useAutoplayDisabled() || isWithinMessage
   useEffect(() => {
     if (active) {
-      if (onScreen) {
+      // GIFs play immediately, videos wait until onScreen
+      if (onScreen || isGif) {
         if (!autoplayDisabled) play()
       } else {
         pause()
       }
     }
-  }, [onScreen, pause, active, play, autoplayDisabled])
+  }, [onScreen, pause, active, play, autoplayDisabled, isGif])
 
   // use minimal quality when not focused
   useEffect(() => {
@@ -215,18 +223,18 @@ export function Controls({
 
   const seekLeft = useCallback(() => {
     if (!videoRef.current) return
-    // eslint-disable-next-line @typescript-eslint/no-shadow
+
     const currentTime = videoRef.current.currentTime
-    // eslint-disable-next-line @typescript-eslint/no-shadow
+
     const duration = videoRef.current.duration || 0
     onSeek(clamp(currentTime - 5, 0, duration))
   }, [onSeek, videoRef])
 
   const seekRight = useCallback(() => {
     if (!videoRef.current) return
-    // eslint-disable-next-line @typescript-eslint/no-shadow
+
     const currentTime = videoRef.current.currentTime
-    // eslint-disable-next-line @typescript-eslint/no-shadow
+
     const duration = videoRef.current.duration || 0
     onSeek(clamp(currentTime + 5, 0, duration))
   }, [onSeek, videoRef])
@@ -288,6 +296,24 @@ export function Controls({
     ((focused || autoplayDisabled) && !playing) ||
     (interactingViaKeypress ? hasFocus : hovered)
 
+  // adjust subtitle cue positioning to avoid occlusion by controls
+  // uses percentage-based positioning (snapToLines=false) so wrapped
+  // multi-line cues grow upward instead of extending offscreen
+  useEffect(() => {
+    updateCuePositions(showControls)
+  }, [showControls, updateCuePositions])
+
+  if (isGif) {
+    return (
+      <GifPresentationControls
+        isPlaying={playing}
+        isLoading={showSpinner}
+        onPress={onPressPlayPause}
+        altText={altText}
+      />
+    )
+  }
+
   return (
     <div
       style={{
@@ -313,13 +339,13 @@ export function Controls({
         onPointerEnter={onPointerMoveEmptySpace}
         onPointerMove={onPointerMoveEmptySpace}
         onPointerLeave={onPointerLeaveEmptySpace}
-        accessibilityLabel={_(
+        accessibilityLabel={
           !focused
-            ? msg`Unmute video`
+            ? _(msg`Unmute video`)
             : playing
-              ? msg`Pause video`
-              : msg`Play video`,
-        )}
+              ? _(msg`Pause video`)
+              : _(msg`Play video`)
+        }
         accessibilityHint=""
         style={[
           a.flex_1,
@@ -342,7 +368,7 @@ export function Controls({
           {opacity: showControls ? 1 : 0},
           {transition: 'opacity 0.2s ease-in-out'},
         ]}>
-        {(!volumeHovered || isTouchDevice) && (
+        {(!volumeHovered || IS_WEB_TOUCH_DEVICE) && (
           <Scrubber
             duration={duration}
             currentTime={currentTime}
@@ -385,8 +411,8 @@ export function Controls({
           {hasSubtitleTrack && (
             <ControlButton
               active={subtitlesEnabled}
-              activeLabel={_(msg`Disable subtitles`)}
-              inactiveLabel={_(msg`Enable subtitles`)}
+              activeLabel={_(msg`Disable captions`)}
+              inactiveLabel={_(msg`Enable captions`)}
               activeIcon={CCActiveIcon}
               inactiveIcon={CCInactiveIcon}
               onPress={onPressSubtitles}
@@ -400,7 +426,7 @@ export function Controls({
             onEndHover={onVolumeEndHover}
             drawFocus={drawFocus}
           />
-          {!isIPhoneWeb && (
+          {!IS_WEB_MOBILE_IOS && (
             <ControlButton
               active={isFullscreen}
               activeLabel={_(msg`Exit fullscreen`)}
