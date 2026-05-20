@@ -144,7 +144,6 @@ export function MessageInputEmbed({
   }
 
   switch (status) {
-    // case 'success':
     case 'pending': {
       return (
         <SimpleContainer onRemove={onRemove}>
