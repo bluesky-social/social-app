@@ -140,10 +140,9 @@ jobs:
       - name: Type check
         run: pnpm typecheck
 
-      - name: 🔨 Setup EAS
+      - name: 🧐 Validate Expo token
         uses: expo/expo-github-action@main
         with:
-          expo-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: 🪛 Setup jq
