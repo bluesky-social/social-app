@@ -389,7 +389,7 @@ jobs:
           webhook-type: incoming-webhook
           payload-templated: true
           payload: |
-            text: Android build is ready for testing. Download the artifact here: ${{ steps.upload-artifact.outputs.artifact-url }}
+            {"text": "Android build is ready for testing. Download the artifact here: ${{ steps.upload-artifact.outputs.artifact-url }}"}
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
