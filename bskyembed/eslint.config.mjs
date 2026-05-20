@@ -1,9 +1,9 @@
 // @ts-check
 import js from '@eslint/js'
-import { defineConfig } from 'eslint/config';
+import {defineConfig} from 'eslint/config'
 import tseslint from 'typescript-eslint'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
-import { importX } from 'eslint-plugin-import-x'
+import {importX} from 'eslint-plugin-import-x'
 import globals from 'globals'
 
 export default defineConfig(
