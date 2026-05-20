@@ -86,22 +86,22 @@ jobs:
       - name: Type check
         run: pnpm typecheck
 
-      - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@main
-        if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        with:
-          expo-version: latest
-          eas-version: latest
-          packager: pnpm
-          token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: ⛏️ Setup Expo
-        if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        run: pnpm add -g eas-cli-local-build-plugin
-
       - name: 🪛 Setup jq
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         uses: dcarbone/install-jq-action@v2
+
+      - name: ⛏️ Setup EAS CLI & local builds
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
+        # note: can't do it via expo-github-action because we need to set the allow-build flag
+        run: pnpm -g --allow-build=dtrace-provider add eas-cli@latest eas-cli-local-build-plugin@latest
+
+      - name: 🔨 Setup Expo CLI
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
+        uses: expo/expo-github-action@main
+        with:
+          expo-version: latest
+          packager: pnpm
+          token: ${{ secrets.EXPO_TOKEN }}
 
       # eas.json not used here, set EXPO_PUBLIC_ENV
       - name: Env
@@ -184,16 +184,18 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
 
-      - name: 🔨 Setup EAS
+      - name: ⛏️ Setup EAS CLI & local builds
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
+        # note: can't do it via expo-github-action because we need to set the allow-build flag
+        run: pnpm -g --allow-build=dtrace-provider add eas-cli@latest eas-cli-local-build-plugin
+
+      - name: 🔨 Setup Expo CLI
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
         uses: expo/expo-github-action@main
         with:
           expo-version: latest
-          eas-version: latest
           packager: pnpm
           token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: ⛏️ Setup EAS local builds
-        run: pnpm add -g eas-cli-local-build-plugin
 
       - name: ⚙️ Install dependencies
         run: pnpm install --frozen-lockfile
@@ -335,24 +337,26 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
 
-      - name: 🔨 Setup EAS
+      - name: ⛏️ Setup EAS CLI & local builds
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
+        # note: can't do it via expo-github-action because we need to set the allow-build flag
+        run: pnpm -g --allow-build=dtrace-provider add eas-cli@latest eas-cli-local-build-plugin
+
+      - name: 🔨 Setup Expo CLI
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
         uses: expo/expo-github-action@main
         with:
           expo-version: latest
-          eas-version: latest
           packager: pnpm
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: ⛏️ Setup EAS local builds
-        run: pnpm add -g eas-cli-local-build-plugin
+      - name: ⚙️ Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - uses: actions/setup-java@v5
         with:
           distribution: "temurin"
           java-version: "17"
-
-      - name: ⚙️ Install dependencies
-        run: pnpm install --frozen-lockfile
 
       - name: 🔤 Compile translations
         run: pnpm intl:build
