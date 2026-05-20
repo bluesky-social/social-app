@@ -8,8 +8,6 @@ import {
   type ViewStyle,
 } from 'react-native'
 import Animated, {
-  FadeIn,
-  FadeOut,
   LayoutAnimationConfig,
   LinearTransition,
   useAnimatedStyle,
@@ -387,13 +385,7 @@ let MessageItem = ({
 
   return (
     <>
-      <LayoutAnimationConfig skipExiting skipEntering>
-        {hasLargeGapFromPrev && (
-          <Animated.View entering={native(FadeIn)} exiting={native(FadeOut)}>
-            <DateDivider date={message.sentAt} />
-          </Animated.View>
-        )}
-      </LayoutAnimationConfig>
+      {hasLargeGapFromPrev && <DateDivider date={message.sentAt} />}
       <View style={[messageInset, isFirstInCluster && a.mt_md]}>
         <View style={[a.relative]}>
           {showAvatar ? (
