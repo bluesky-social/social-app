@@ -140,15 +140,10 @@ jobs:
       - name: Type check
         run: pnpm typecheck
 
-      - name: ⛏️ Setup EAS CLI & local builds
-        # note: can't do it via expo-github-action because we need to set the allow-build flag
-        run: pnpm -g --allow-build=dtrace-provider add eas-cli@latest eas-cli-local-build-plugin
-
-      - name: 🔨 Setup Expo CLI
+      - name: 🔨 Setup EAS
         uses: expo/expo-github-action@main
         with:
           expo-version: latest
-          packager: pnpm
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: 🪛 Setup jq

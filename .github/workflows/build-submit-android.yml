@@ -43,19 +43,14 @@ jobs:
       - name: 🪛 Setup jq
         uses: dcarbone/install-jq-action@v2
 
-      - name: ⛏️ Setup EAS CLI & local builds
-        # note: can't do it via expo-github-action because we need to set the allow-build flag
-        run: pnpm -g --allow-build=dtrace-provider add eas-cli@latest eas-cli-local-build-plugin
+      - name: ⚙️ Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: 🔨 Setup Expo CLI
         uses: expo/expo-github-action@main
         with:
           expo-version: latest
-          packager: pnpm
           token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: ⚙️ Install dependencies
-        run: pnpm install --frozen-lockfile
 
       - uses: actions/setup-java@v5
         with:
@@ -92,7 +87,7 @@ jobs:
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
           pnpm use-build-number-with-bump
-          eas build -p android
+          pnpm eas build -p android
           --profile $PROFILE
           --local --output build.aab --non-interactive
 
@@ -138,7 +133,7 @@ jobs:
           webhook-type: incoming-webhook
           payload-templated: true
           payload: |
-            text: Android production build for Google Play Store submission is ready!\n```Artifact: ${{ steps.upload-artifact-production.outputs.artifact-url }}\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```
+            {"text": "Android production build for Google Play Store submission is ready!\n```Artifact: ${{ steps.upload-artifact-production.outputs.artifact-url }}\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"}
 
       - name: 🔔 Notify Slack of Testflight Build
         if: ${{ inputs.profile != 'production' }}
@@ -148,7 +143,7 @@ jobs:
           webhook-type: incoming-webhook
           payload-templated: true
           payload: |
-            text: Android build is ready for testing. Download the artifact here: ${{ steps.upload-artifact-testflight.outputs.artifact-url }}
+            {"text": "Android build is ready for testing. Download the artifact here: ${{ steps.upload-artifact-testflight.outputs.artifact-url }}"}
 
       - name: 🧹 Clear Metro cache
         if: ${{ inputs.profile == 'production' }}
@@ -162,7 +157,7 @@ jobs:
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
           pnpm use-build-number-with-bump
-          eas build -p android
+          pnpm eas build -p android
           --profile production-apk
           --local --output build.apk --non-interactive
 
@@ -184,7 +179,7 @@ jobs:
           webhook-type: incoming-webhook
           payload-templated: true
           payload: |
-            text: Android production build for GitHub/Obtanium is ready!\n```Artifact: ${{ steps.upload-artifact-production-apk.outputs.artifact-url }}\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```
+            {"text": "Android production build for GitHub/Obtanium is ready!\n```Artifact: ${{ steps.upload-artifact-production-apk.outputs.artifact-url }}\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"}
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
