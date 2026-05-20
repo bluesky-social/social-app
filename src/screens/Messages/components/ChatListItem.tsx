@@ -345,6 +345,7 @@ function BaseChatItem({
       const info = getSystemMessageInfo(
         convo.view.lastMessage.data,
         new Map(convo.view.members.map(m => [m.did, m])),
+        {short: true},
       )
       if (info) {
         lastMessage = i18n._(info.message)
