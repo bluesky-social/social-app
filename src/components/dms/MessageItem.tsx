@@ -378,9 +378,9 @@ let MessageItem = ({
   )
 
   const messageInset = platform<ViewStyle | undefined>({
-    ios: isFromSelf ? a.mr_md : isGroupChat ? a.ml_md : a.ml_sm,
-    android: isFromSelf ? a.mr_sm : isGroupChat ? a.ml_sm : undefined,
-    web: isFromSelf ? a.mr_lg : isGroupChat ? a.ml_lg : undefined,
+    android: a.mx_sm,
+    ios: a.mx_md,
+    web: a.mx_lg,
   })
 
   return (
