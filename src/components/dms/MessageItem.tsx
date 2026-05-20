@@ -8,8 +8,6 @@ import {
   type ViewStyle,
 } from 'react-native'
 import Animated, {
-  FadeIn,
-  FadeOut,
   LayoutAnimationConfig,
   LinearTransition,
   useAnimatedStyle,
@@ -380,20 +378,14 @@ let MessageItem = ({
   )
 
   const messageInset = platform<ViewStyle | undefined>({
-    ios: isFromSelf ? a.mr_md : isGroupChat ? a.ml_md : a.ml_sm,
-    android: isFromSelf ? a.mr_sm : isGroupChat ? a.ml_sm : undefined,
-    web: isFromSelf ? a.mr_lg : isGroupChat ? a.ml_lg : undefined,
+    android: a.mx_sm,
+    ios: a.mx_md,
+    web: a.mx_lg,
   })
 
   return (
     <>
-      <LayoutAnimationConfig skipExiting skipEntering>
-        {hasLargeGapFromPrev && (
-          <Animated.View entering={native(FadeIn)} exiting={native(FadeOut)}>
-            <DateDivider date={message.sentAt} />
-          </Animated.View>
-        )}
-      </LayoutAnimationConfig>
+      {hasLargeGapFromPrev && <DateDivider date={message.sentAt} />}
       <View style={[messageInset, isFirstInCluster && a.mt_md]}>
         <View style={[a.relative]}>
           {showAvatar ? (
@@ -402,8 +394,15 @@ let MessageItem = ({
                 a.absolute,
                 a.bottom_0,
                 a.z_50,
-                {
-                  transform: [{translateY: hasReactions ? -24 : 0}],
+                hasReactions && {
+                  transform: [
+                    {
+                      translateY: platform({
+                        ios: -29,
+                        default: -27,
+                      }),
+                    },
+                  ],
                 },
               ]}>
               {avatar}
@@ -445,27 +444,25 @@ let MessageItem = ({
                 <Animated.View
                   accessibilityHint={l`Double tap or long press the message to add a reaction`}
                   style={[
-                    !isFromSelf && a.ml_sm,
-                    ...(isOnlyEmoji(message.text)
-                      ? []
-                      : [
-                          a.rounded_xl,
-                          a.py_sm,
-                          a.px_md,
-                          {
-                            marginTop:
-                              hasEmbedAndText || !isFirstInCluster
-                                ? CLUSTERED_MESSAGE_GAP
-                                : 0,
-                            backgroundColor: isFromSelf
-                              ? isPending
-                                ? pendingColor
-                                : t.palette.primary_500
-                              : t.palette.contrast_50,
-                          },
-                          isFromSelf ? a.self_end : a.self_start,
-                          borderRadiusStyle,
-                        ]),
+                    !isFromSelf && isGroupChat && a.ml_sm,
+                    !isOnlyEmoji(message.text) && [
+                      a.rounded_xl,
+                      a.py_sm,
+                      a.px_md,
+                      {
+                        marginTop:
+                          hasEmbedAndText || !isFirstInCluster
+                            ? CLUSTERED_MESSAGE_GAP
+                            : 0,
+                        backgroundColor: isFromSelf
+                          ? isPending
+                            ? pendingColor
+                            : t.palette.primary_500
+                          : t.palette.contrast_50,
+                      },
+                      isFromSelf ? a.self_end : a.self_start,
+                      borderRadiusStyle,
+                    ],
                   ]}>
                   <RichText
                     value={rt}
