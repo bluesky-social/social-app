@@ -54,6 +54,9 @@ jobs:
           packager: pnpm
           token: ${{ secrets.EXPO_TOKEN }}
 
+      - name: ⚙️ Install dependencies
+        run: pnpm install --frozen-lockfile
+
       - uses: actions/setup-java@v5
         with:
           distribution: "temurin"
