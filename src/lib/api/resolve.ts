@@ -26,7 +26,6 @@ import {
 } from '#/lib/strings/url-helpers'
 import {type ComposerImage} from '#/state/gallery'
 import {createComposerImage} from '#/state/gallery'
-import {type PublicationViewExternalSource} from '#/components/Post/Embed/ExternalEmbed/PublicationEmbed/types'
 import {type Gif} from '#/features/gifPicker/types'
 import {createGIFDescription} from '../gif-alt-text'
 
@@ -40,12 +39,8 @@ type ResolvedExternalLink = {
    * The AT-URI of the Atmosphere record representing this external content, if
    * it exists. Example: a site.standard.document record.
    */
-  associatedRecord?: LinkMeta['associatedRecord']
-  // APP-2160 / APP-2155: populated by Cardyb when the URL resolves to a
-  // standard.site publication. Until APP-2155 ships these stay undefined.
-  source?: PublicationViewExternalSource
-  createdAt?: string
-  readingTime?: number
+  associatedRefs?: LinkMeta['associatedRefs']
+  view?: LinkMeta['view']
 }
 
 type ResolvedPostRecord = {
@@ -251,7 +246,8 @@ async function resolveExternal(
     title: result.title ?? '',
     description: result.description ?? '',
     thumb: result.image ? await imageToThumb(result.image) : undefined,
-    associatedRecord: result.associatedRecord,
+    associatedRefs: result.associatedRefs,
+    view: result.view,
   }
 }
 

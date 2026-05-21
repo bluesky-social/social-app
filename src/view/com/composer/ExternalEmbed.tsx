@@ -10,10 +10,12 @@ import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
-import {PublicationEmbed} from '#/components/Post/Embed/ExternalEmbed/PublicationEmbed'
-import {type PublicationViewExternal} from '#/components/Post/Embed/ExternalEmbed/PublicationEmbed/types'
 import {ModeratedFeedEmbed} from '#/components/Post/Embed/FeedEmbed'
 import {ModeratedListEmbed} from '#/components/Post/Embed/ListEmbed'
+import {
+  isStandardSiteEmbed,
+  StandardSiteEmbed,
+} from '#/components/Post/Embed/StandardSiteEmbed'
 import {Embed as StarterPackEmbed} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 import {type Gif} from '#/features/gifPicker/types'
@@ -88,21 +90,19 @@ export const ExternalEmbedLink = ({
   const linkComponent = useMemo(() => {
     if (data) {
       if (data.type === 'external') {
-        if (data.source) {
-          const publicationLink: PublicationViewExternal = {
-            uri,
-            title: data.title || uri,
-            description: data.description,
-            thumb: data.thumb?.source.path,
-            createdAt: data.createdAt,
-            readingTime: data.readingTime,
-            source: data.source,
-            associatedRecord: data.associatedRecord
-              ? {uri: data.associatedRecord, cid: ''}
-              : undefined,
-          }
+        if (data.view && isStandardSiteEmbed(data.view.external)) {
           return (
-            <PublicationEmbed link={publicationLink} source={data.source} />
+            <StandardSiteEmbed
+              hideSubscribe
+              view={{
+                ...data.view?.external,
+                title: data.view?.external?.title || data.title || uri,
+                uri,
+                description:
+                  data.view?.external?.description || data.description,
+                thumb: data.view?.external?.thumb || data.thumb?.source.path,
+              }}
+            />
           )
         }
         return (
