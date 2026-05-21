@@ -142,12 +142,11 @@ export function SuggestedLanguage({
     // clear
     setSuggLang(undefined)
   }
-  const onDecline = () => {
-    if (suggLang) {
-      declinedSuggLangsRef.current.push(suggLang)
-      // clear
-      setSuggLang(undefined)
-    }
+  const onDecline = (language: string) => {
+    declinedSuggLangsRef.current.push(language)
+    // clear
+    setSuggLang(undefined)
+    setHasInteracted(true)
   }
 
   /**
@@ -276,7 +275,9 @@ export function SuggestedLanguage({
     !hasInteracted &&
     !suggLang &&
     replyToLanguages.length &&
-    !replyToLanguages.some(l => currentLanguages.includes(l))
+    !replyToLanguages.some(l => currentLanguages.includes(l)) &&
+    // eslint-disable-next-line react-hooks/refs
+    !replyToLanguages.some(l => declinedSuggLangsRef.current.includes(l))
 
   if (hasDeclined) {
     return null
@@ -286,7 +287,7 @@ export function SuggestedLanguage({
         language={suggLang}
         metadata={{currentTargetLanguages: currentLanguages, rawText: text}}
         onAccept={onAccept}
-        onDecline={onDecline}
+        onDecline={() => onDecline(suggLang)}
       />
     )
   } else if (hasSuggestedReplyLanguage) {
@@ -295,7 +296,7 @@ export function SuggestedLanguage({
         language={replyToLanguages[0]}
         metadata={{currentTargetLanguages: currentLanguages}}
         onAccept={onAccept}
-        onDecline={onDecline}
+        onDecline={() => onDecline(replyToLanguages[0])}
       />
     )
   } else {
