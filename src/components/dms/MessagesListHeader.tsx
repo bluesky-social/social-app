@@ -6,18 +6,16 @@ import {
   type ModerationOpts,
 } from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {makeProfileLink} from '#/lib/routes/links'
-import {type NavigationProp} from '#/lib/routes/types'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
-import {Button, ButtonIcon} from '#/components/Button'
+import {ButtonIcon} from '#/components/Button'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Bell2Off_Filled_Corner0_Rounded as BellOffIcon} from '#/components/icons/Bell2'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
@@ -116,7 +114,7 @@ function ProfileHeaderReady({
       heading={
         <Link
           label={l`View ${displayName}’s profile`}
-          style={[a.flex_row, a.gap_md, a.flex_1, a.pr_md]}
+          style={[a.flex_row, a.gap_md, a.flex_1]}
           to={makeProfileLink(profile)}>
           <PreviewableUserAvatar
             size={PFP_SIZE}
@@ -125,14 +123,16 @@ function ProfileHeaderReady({
             disableHoverCard={moderation.blocked}
           />
           <View style={[a.flex_row, a.align_center, a.flex_1]}>
-            <Text style={[a.text_md, a.font_semi_bold]} numberOfLines={1}>
+            <Text
+              style={[a.text_md, a.font_semi_bold, a.flex_shrink]}
+              numberOfLines={1}>
               {displayName}
             </Text>
             <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
+            <MuteStatus muted={convo.view.muted} />
           </View>
         </Link>
       }
-      muted={convo.view.muted}
       settings={
         <ConvoMenu
           convo={convo.view}
@@ -153,39 +153,56 @@ function GroupHeaderReady({
 }) {
   const {t: l} = useLingui()
 
-  const navigation = useNavigation<NavigationProp>()
-
-  const handleNavigateToSettings = () => {
-    navigation.navigate('MessagesConversationSettings', {
-      conversation: convo.view.id,
-    })
-  }
-
-  const lockStatus = convo.details.lockStatus
+  const disabled = convo.details.lockStatus === 'locked-permanently'
 
   return (
     <Wrapper
       heading={
-        <>
+        <Link
+          label={convo.details.name}
+          accessibilityHint={l`Open group chat settings`}
+          style={[a.flex_row, a.gap_md, a.flex_1, a.justify_start]}
+          to={
+            disabled
+              ? '#'
+              : {
+                  screen: 'MessagesConversationSettings',
+                  params: {
+                    conversation: convo.view.id,
+                  },
+                }
+          }>
           <AvatarBubbles size={40} profiles={convo.members} />
-          <Text style={[a.text_md, a.font_semi_bold]} numberOfLines={1}>
-            {convo.details.name}
-          </Text>
-        </>
+          <View style={[a.flex_row, a.flex_1, a.align_center]}>
+            <Text
+              style={[a.text_md, a.font_semi_bold, a.flex_shrink]}
+              numberOfLines={1}>
+              {convo.details.name}
+            </Text>
+            <MuteStatus muted={convo.view.muted} />
+          </View>
+        </Link>
       }
-      muted={convo.view.muted}
       settings={
-        <Button
+        <Link
+          to={
+            disabled
+              ? '#'
+              : {
+                  screen: 'MessagesConversationSettings',
+                  params: {
+                    conversation: convo.view.id,
+                  },
+                }
+          }
           label={l`Open group chat settings`}
-          disabled={lockStatus === 'locked-permanently'}
           size="small"
           color="secondary"
           shape="round"
           variant="ghost"
-          style={[a.bg_transparent]}
-          onPress={handleNavigateToSettings}>
+          style={[a.bg_transparent, a.justify_center]}>
           <ButtonIcon icon={DotsHorizontalIcon} size="md" />
-        </Button>
+        </Link>
       }
     />
   )
@@ -193,22 +210,28 @@ function GroupHeaderReady({
 
 function Wrapper({
   heading,
-  muted,
+
   settings,
 }: {
   heading: React.ReactNode
-  muted: boolean
   settings: React.ReactNode
 }) {
   return (
     <View style={[a.flex_1]}>
-      <View style={[a.w_full, a.flex_row, a.align_center, a.justify_between]}>
-        <View style={[a.flex_row, a.align_center, a.gap_md, a.flex_1, a.pr_md]}>
+      <View
+        style={[
+          a.w_full,
+          a.flex_row,
+          a.align_center,
+          a.justify_between,
+          a.gap_sm,
+        ]}>
+        <View style={[a.flex_row, a.align_center, a.gap_md, a.flex_1]}>
           {heading}
-          <MuteStatus muted={muted} />
         </View>
 
-        <View style={[{minHeight: PFP_SIZE}, a.justify_center]}>
+        <View
+          style={[{minHeight: PFP_SIZE}, a.justify_center, a.flex_shrink_0]}>
           <Layout.Header.Slot>{settings}</Layout.Header.Slot>
         </View>
       </View>
