@@ -427,6 +427,16 @@ async function resolveMedia(
         },
       }
     }
+    if (resolvedLink.type === 'chat-invite') {
+      return {
+        $type: 'app.bsky.embed.external',
+        external: {
+          uri: resolvedLink.uri,
+          title: resolvedLink.view.name,
+          description: '',
+        },
+      }
+    }
   }
   return undefined
 }

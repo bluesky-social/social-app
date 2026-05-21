@@ -1731,6 +1731,7 @@ function ComposerEmbeds({
       {!embed.media && embed.link && (
         <View style={[a.relative, a.mt_lg]} key={embed.link.uri}>
           <ExternalEmbedLink
+            composer
             uri={embed.link.uri}
             hasQuote={!!embed.quote}
             onRemove={() => dispatch({type: 'embed_remove_link'})}
