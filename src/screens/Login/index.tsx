@@ -12,11 +12,15 @@ import {useLoggedOutView} from '#/state/shell/logged-out'
 import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
 import {ForgotPasswordForm} from '#/screens/Login/ForgotPasswordForm'
 import {LoginForm} from '#/screens/Login/LoginForm'
+// Eurosky fork: web uses the OAuth-primary sign-in (which can switch to a
+// fork-owned password form); native keeps the pristine upstream LoginForm.
+import {OAuthSignin} from '#/screens/Login/OAuthSignin'
 import {PasswordUpdatedForm} from '#/screens/Login/PasswordUpdatedForm'
 import {SetNewPasswordForm} from '#/screens/Login/SetNewPasswordForm'
 import {atoms as a, native} from '#/alf'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import {ChooseAccountForm} from './ChooseAccountForm'
 import * as AuthLayout from './components/AuthLayout'
 import {AuthLayoutNavigationContext} from './components/AuthLayout/context'
@@ -141,21 +145,26 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
       description = _(msg`Enter your username and password`)
       goBack = () =>
         accounts.length ? gotoForm(Forms.ChooseAccount) : handlePressBack()
-      content = (
-        <LoginForm
-          error={error}
-          serviceUrl={serviceUrl}
-          serviceDescription={serviceDescription}
-          initialHandle={initialHandle}
-          setError={setError}
-          onAttemptFailed={onAttemptFailed}
-          onAttemptSuccess={onAttemptSuccess}
-          setServiceUrl={setServiceUrl}
-          onPressBack={goBack}
-          onPressForgotPassword={onPressForgotPassword}
-          onPressRetryConnect={refetchService}
-        />
-      )
+      {
+        // Eurosky fork: web -> OAuth-primary sign-in; native -> pristine
+        // upstream LoginForm. Same props either way.
+        const SigninForm = IS_WEB ? OAuthSignin : LoginForm
+        content = (
+          <SigninForm
+            error={error}
+            serviceUrl={serviceUrl}
+            serviceDescription={serviceDescription}
+            initialHandle={initialHandle}
+            setError={setError}
+            onAttemptFailed={onAttemptFailed}
+            onAttemptSuccess={onAttemptSuccess}
+            setServiceUrl={setServiceUrl}
+            onPressBack={goBack}
+            onPressForgotPassword={onPressForgotPassword}
+            onPressRetryConnect={refetchService}
+          />
+        )
+      }
       break
     case Forms.ChooseAccount:
       title = _(msg`Sign in`)

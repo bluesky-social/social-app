@@ -1,5 +1,8 @@
 import {tokens} from '@bsky.app/alf'
 
+// Eurosky fork: gradients are overridden in src/config/eurosky-theme.ts.
+import {EUROSKY_GRADIENTS} from '#/config/eurosky-theme'
+
 export * from '@bsky.app/alf/dist/tokens'
 
 export const color = {
@@ -7,7 +10,9 @@ export const color = {
   temp_purple_dark: tokens.labelerColor.purple_dark,
 } as const
 
-export const gradients = {
+// Upstream gradient defs kept verbatim (merge-friendly); Eurosky overrides
+// are merged in below so there are no duplicate keys in a single literal.
+const UPSTREAM_GRADIENTS = {
   primary: {
     values: [
       [0, '#054CFF'],
@@ -72,4 +77,11 @@ export const gradients = {
     ],
     hover_value: '#755B62',
   },
+} as const
+
+// Eurosky fork: override every gradient with the brand ramps. Separate
+// merge (not a same-literal spread) so there's no duplicate-key (TS2783).
+export const gradients = {
+  ...UPSTREAM_GRADIENTS,
+  ...EUROSKY_GRADIENTS,
 } as const

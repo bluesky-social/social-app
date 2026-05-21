@@ -86,7 +86,6 @@ export function QrCode({
             <Trans>
               on
               <View style={[a.flex_row, a.align_center, {gap: 6}]}>
-                <Logo width={25} fill="white" />
                 <View style={[{marginTop: 3.5}]}>
                   <Logotype width={72} fill="white" />
                 </View>
