@@ -5,7 +5,6 @@ overrides:
   '@react-native/babel-preset': '0.81.5'
   '@react-native/normalize-colors': '0.81.5'
   '@expo/image-utils': '0.8.12'
-  'multiformats': '9.9.0'
   '@types/estree': '1.0.6'
   'react-native-compressor': '1.13.0'
   'react-native-reanimated': '3.19.1'

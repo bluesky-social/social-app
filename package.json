@@ -86,8 +86,8 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.19.19",
-    "@atproto/syntax": "0.5.2",
+    "@atproto/api": "0.20.2",
+    "@atproto/syntax": "0.6.1",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.9",
@@ -116,7 +116,7 @@
     "@fortawesome/react-native-fontawesome": "^0.3.2",
     "@growthbook/growthbook": "^1.6.5",
     "@growthbook/growthbook-react": "^1.6.5",
-    "@ipld/dag-cbor": "^9.2.0",
+    "@ipld/dag-cbor": "^9.2.7",
     "@lingui/core": "^5.9.2",
     "@lingui/react": "^5.9.2",
     "@miblanchard/react-native-slider": "^2.6.0",
@@ -201,7 +201,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.shuffle": "^4.2.0",
     "lodash.throttle": "^4.1.1",
-    "multiformats": "9.9.0",
+    "multiformats": "^13.4.2",
     "nanoid": "^5.0.5",
     "normalize-url": "^8.0.0",
     "psl": "1.9.0",
@@ -318,8 +318,19 @@
     "transform": {
       "\\.[jt]sx?$": "babel-jest"
     },
+    "moduleNameMapper": {
+      "^multiformats$": "<rootDir>/node_modules/multiformats/dist/src/index.js",
+      "^multiformats/cid$": "<rootDir>/node_modules/multiformats/dist/src/cid.js",
+      "^multiformats/bases/base32$": "<rootDir>/node_modules/multiformats/dist/src/bases/base32.js",
+      "^multiformats/hashes/digest$": "<rootDir>/node_modules/multiformats/dist/src/hashes/digest.js",
+      "^multiformats/hashes/sha2$": "<rootDir>/node_modules/multiformats/dist/src/hashes/sha2.js",
+      "^uint8arrays/from-string$": "<rootDir>/node_modules/uint8arrays/dist/src/from-string.js",
+      "^uint8arrays/to-string$": "<rootDir>/node_modules/uint8arrays/dist/src/to-string.js",
+      "^unicode-segmenter/grapheme$": "<rootDir>/node_modules/unicode-segmenter/grapheme.cjs",
+      "^await-lock$": "<rootDir>/node_modules/await-lock/build/AwaitLock.js"
+    },
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|@discord|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|@discord|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|multiformats|uint8arrays|@ipld/.*|cborg|await-lock)"
     ],
     "modulePathIgnorePatterns": [
       "__tests__/.*/__mocks__",
