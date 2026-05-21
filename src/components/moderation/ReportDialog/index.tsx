@@ -24,6 +24,7 @@ import * as Admonition from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import * as TextField from '#/components/forms/TextField'
 import {useDelayedLoading} from '#/components/hooks/useDelayedLoading'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Retry} from '#/components/icons/ArrowRotate'
 import {
@@ -540,30 +541,34 @@ function Inner(props: ReportDialogProps) {
 
                 {state.detailsOpen && (
                   <View>
-                    <Dialog.Input
-                      testID="report:details"
-                      multiline
-                      value={state.details}
-                      onChangeText={details => {
-                        dispatch({type: 'setDetails', details})
-                      }}
-                      label={_(msg`Additional details (limit 300 characters)`)}
-                      style={{paddingRight: 60}}
-                      numberOfLines={4}
-                    />
+                    <TextField.Root>
+                      <TextField.Input
+                        testID="report:details"
+                        multiline
+                        value={state.details}
+                        onChangeText={details => {
+                          dispatch({type: 'setDetails', details})
+                        }}
+                        label={_(
+                          msg`Additional details (limit 300 characters)`,
+                        )}
+                        style={{paddingRight: 50}}
+                        numberOfLines={4}
+                      />
+                    </TextField.Root>
+
                     <View
                       style={[
                         a.absolute,
-                        a.flex_row,
-                        a.align_center,
                         a.pr_md,
                         a.pb_sm,
-                        {
-                          bottom: 0,
-                          right: 0,
-                        },
+                        a.bottom_0,
+                        a.right_0,
                       ]}>
-                      <CharProgress count={state.details?.length || 0} />
+                      <CharProgress
+                        size={30}
+                        count={state.details?.length || 0}
+                      />
                     </View>
                   </View>
                 )}

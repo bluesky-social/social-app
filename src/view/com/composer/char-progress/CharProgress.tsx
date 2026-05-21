@@ -9,6 +9,7 @@ import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {atoms as a, useTheme} from '#/alf'
 import {ProgressCircle} from '#/components/Progress'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 
 export function CharProgress({
   count,
@@ -26,6 +27,27 @@ export function CharProgress({
   const t = useTheme()
   const textColor = count > max ? '#e60000' : t.atoms.text.color
   const circleColor = count > max ? '#e60000' : t.palette.primary_500
+
+  //
+  if (IS_WEB && count > max) {
+    return (
+      <View style={[style, {minHeight: size}]}>
+        <Text
+          style={[
+            {color: textColor, fontVariant: ['tabular-nums']},
+            a.text_center,
+            a.text_xs,
+            {maxWidth: '100%'},
+            textStyle,
+          ]}
+          maxFontSizeMultiplier={1}
+          numberOfLines={1}>
+          {max - count}
+        </Text>
+      </View>
+    )
+  }
+
   return (
     <View style={[style]}>
       {max - count < 100 && (

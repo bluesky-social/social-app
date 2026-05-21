@@ -177,14 +177,10 @@ export function Takendown() {
                     <View
                       style={[
                         a.absolute,
-                        a.flex_row,
-                        a.align_center,
                         a.pr_md,
                         a.pb_sm,
-                        {
-                          bottom: 0,
-                          right: 0,
-                        },
+                        a.bottom_0,
+                        a.right_0,
                       ]}>
                       <CharProgress
                         count={reasonGraphemeLength}

@@ -32,6 +32,7 @@ import {
   type DialogInnerProps,
   type DialogOuterProps,
 } from '#/components/Dialog/types'
+import {Input} from '#/components/forms/TextField'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Portal} from '#/components/Portal'
 
@@ -39,13 +40,20 @@ export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/shared'
 export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
-export {Input} from '#/components/forms/TextField'
+
+export {
+  /**
+   * @deprecated use `TextField.Input` from `#/components/forms/TextField` instead
+   */
+  Input,
+}
 
 // 100 minus 10vh of paddingVertical
 export const WEB_DIALOG_HEIGHT = '80vh'
 
-const stopPropagation = (e: any) => e.stopPropagation()
-const preventDefault = (e: any) => e.preventDefault()
+const stopPropagation = (e: {stopPropagation: () => void}) =>
+  e.stopPropagation()
+const preventDefault = (e: {preventDefault: () => void}) => e.preventDefault()
 
 export function Outer({
   children,

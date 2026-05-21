@@ -36,7 +36,7 @@
   },
   "src/components/Dialog/index.web.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 4
+      "count": 2
     }
   },
   "src/components/DraggableList/index.web.tsx": {
