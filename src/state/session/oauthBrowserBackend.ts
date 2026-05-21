@@ -113,29 +113,85 @@ function decodeKey(encoded: EncodedKey): Promise<WebcryptoKey> {
 }
 
 /**
+ * LOW-2: abandoned sign-ins leave a `state` record (PKCE verifier + a DPoP
+ * key) behind forever. State is short-lived (authorize -> callback is a few
+ * minutes); expire it. Sessions must NOT expire (the whole point of
+ * confidential is long-lived sessions), so this is opt-in per store.
+ */
+const STATE_TTL_MS = 15 * 60 * 1000
+
+/** Best-effort sweep of expired records (fire-and-forget; never throws). */
+async function pruneExpired(store: StoreName, ttlMs: number): Promise<void> {
+  try {
+    const db = await openDb()
+    await new Promise<void>(resolve => {
+      const t = db.transaction(store, 'readwrite')
+      const os = t.objectStore(store)
+      const cutoff = Date.now() - ttlMs
+      const req = os.openCursor()
+      req.onsuccess = () => {
+        const cur = req.result
+        if (!cur) return
+        const v = cur.value as {__storedAt?: number} | undefined
+        if (v && typeof v.__storedAt === 'number' && v.__storedAt < cutoff) {
+          cur.delete()
+        }
+        cur.continue()
+      }
+      t.oncomplete = () => resolve()
+      t.onerror = () => resolve()
+      t.onabort = () => resolve()
+    })
+  } catch {
+    // best effort only
+  }
+}
+
+/**
  * Generic IndexedDB-backed SimpleStore whose value carries a `dpopKey` Key
  * that must be encoded/decoded around the structured-clone boundary. All
  * other fields (tokenSet, iss, verifier, appState, authMethod) are plain
- * structured-cloneable data and pass through untouched.
+ * structured-cloneable data and pass through untouched. When `ttlMs` is set,
+ * records carry a `__storedAt` stamp and expire lazily on read.
  */
-function createKeyStore<V extends {dpopKey: Key}>(store: StoreName) {
+function createKeyStore<V extends {dpopKey: Key}>(
+  store: StoreName,
+  ttlMs?: number,
+) {
+  if (ttlMs) void pruneExpired(store, ttlMs)
+  type Stored = Omit<V, 'dpopKey'> & {
+    dpopKey: EncodedKey
+    __storedAt?: number
+  }
+  // Standalone fns (not `this`) so the store survives method destructuring.
+  const del = (key: string): Promise<void> =>
+    tx(store, 'readwrite', s => s.delete(key)).then(() => undefined)
   return {
     async get(key: string): Promise<V | undefined> {
-      const stored = await tx<
-        (Omit<V, 'dpopKey'> & {dpopKey: EncodedKey}) | undefined
-      >(store, 'readonly', s => s.get(key))
+      const stored = await tx<Stored | undefined>(store, 'readonly', s =>
+        s.get(key),
+      )
       if (!stored) return undefined
-      const {dpopKey, ...rest} = stored
+      const {dpopKey, __storedAt, ...rest} = stored
+      if (
+        ttlMs &&
+        (typeof __storedAt !== 'number' || Date.now() - __storedAt > ttlMs)
+      ) {
+        await del(key)
+        return undefined
+      }
       return {...rest, dpopKey: await decodeKey(dpopKey)} as V
     },
     async set(key: string, value: V): Promise<void> {
       const {dpopKey, ...rest} = value
-      const encoded = {...rest, dpopKey: encodeKey(dpopKey)}
+      const encoded: Stored = {
+        ...rest,
+        dpopKey: encodeKey(dpopKey),
+        ...(ttlMs ? {__storedAt: Date.now()} : {}),
+      } as Stored
       await tx(store, 'readwrite', s => s.put(encoded, key))
     },
-    async del(key: string): Promise<void> {
-      await tx(store, 'readwrite', s => s.delete(key))
-    },
+    del,
     async clear(): Promise<void> {
       await tx(store, 'readwrite', s => s.clear())
     },
@@ -143,7 +199,7 @@ function createKeyStore<V extends {dpopKey: Key}>(store: StoreName) {
 }
 
 export function createOAuthStateStore(): StateStore {
-  return createKeyStore<Parameters<StateStore['set']>[1]>('state')
+  return createKeyStore<Parameters<StateStore['set']>[1]>('state', STATE_TTL_MS)
 }
 
 export function createOAuthSessionStore(): SessionStore {

@@ -65,18 +65,19 @@ function isLoopback(): boolean {
 }
 
 // Session lifecycle hooks. @atproto/oauth-client-browser ^0.3 exposes
-// onDelete/onUpdate via constructor SessionHooks. We only log (telemetry was
-// deliberately dropped from the Eurosky port).
+// onDelete/onUpdate via constructor SessionHooks. "Telemetry dropped" means
+// Blacksky's bespoke OAuth growthbook telemetry was NOT ported - it does NOT
+// mean this logger is inert: logger.* feeds the live Sentry transport, so we
+// must keep PII (DID/sub) and raw error objects out of it (MED-1).
 const sessionHooks = {
-  onDelete(sub: string, cause: unknown) {
+  onDelete(_sub: string, cause: unknown) {
     logger.warn('oauth: session deleted', {
-      sub,
-      message:
+      safeMessage:
         cause instanceof Error
           ? cause.message
           : typeof cause === 'string'
             ? cause
-            : undefined,
+            : 'unknown',
     })
   },
   onUpdate(_sub: string) {},
@@ -135,8 +136,36 @@ function createLoopbackClient(): WebOAuthClient {
 
 // -- Prod: confidential base OAuthClient -------------------------------------
 
+/**
+ * LOW-3: the metadata object needs an `as unknown as` cast (the library's
+ * generated union type is impractical to satisfy by hand), which disables
+ * compile-time checking on the most security-sensitive object. Replace that
+ * silent hole with a loud, fail-closed runtime assertion - in particular,
+ * refuse to ever ship private key material (`d`) in the advertised JWKS.
+ */
+function assertConfidentialMetadata(m: Record<string, unknown>): void {
+  const jwks = m.jwks as {keys?: Array<Record<string, unknown>>} | undefined
+  const k0 = jwks?.keys?.[0]
+  const fail = (why: string): never => {
+    throw new Error(`oauth: refusing to start - bad client metadata: ${why}`)
+  }
+  if (m.token_endpoint_auth_method !== 'private_key_jwt')
+    fail('token_endpoint_auth_method must be private_key_jwt')
+  if (m.token_endpoint_auth_signing_alg !== 'ES256')
+    fail('signing alg must be ES256')
+  if (!jwks || !Array.isArray(jwks.keys) || jwks.keys.length < 1)
+    fail('jwks missing')
+  if (!k0 || typeof k0.kid !== 'string' || !k0.kid) fail('jwks key missing kid')
+  if (k0 && 'd' in k0) fail('PRIVATE key material (d) present in jwks')
+  if (m.client_id !== `${OAUTH_BASE_URL}/oauth-client-metadata.json`)
+    fail('client_id not on OAUTH_BASE_URL')
+  const ru = m.redirect_uris as unknown[] | undefined
+  if (!Array.isArray(ru) || ru[0] !== `${OAUTH_BASE_URL}/`)
+    fail('redirect_uris not pinned to OAUTH_BASE_URL root')
+}
+
 function createConfidentialClient(): WebOAuthClient {
-  const clientMetadata = {
+  const metadataObj = {
     client_id: `${OAUTH_BASE_URL}/oauth-client-metadata.json`,
     client_name: OAUTH_CLIENT_NAME,
     client_uri: OAUTH_BASE_URL,
@@ -151,8 +180,12 @@ function createConfidentialClient(): WebOAuthClient {
     // Public key only (no `d`); kept identical to the generated static
     // oauth-client-metadata.json by reading the same committed file.
     jwks: OAUTH_PUBLIC_JWKS,
-    // The generated metadata cannot be confidential without a keyset.
-  } as unknown as OAuthClientOptions['clientMetadata']
+  }
+  assertConfidentialMetadata(metadataObj)
+  // Cast is unavoidable (huge generated union); the assertion above is the
+  // real guard - it has already validated every security-sensitive field.
+  const clientMetadata =
+    metadataObj as unknown as OAuthClientOptions['clientMetadata']
 
   const client = new OAuthClient({
     clientMetadata,
@@ -164,15 +197,15 @@ function createConfidentialClient(): WebOAuthClient {
     sessionStore: createOAuthSessionStore(),
   })
 
-  client.addEventListener('deleted', ({detail: {sub, cause}}) => {
+  client.addEventListener('deleted', ({detail: {cause}}) => {
+    // No `sub` (DID) - this reaches the live Sentry transport (MED-1).
     logger.warn('oauth: session deleted', {
-      sub,
-      message:
+      safeMessage:
         cause instanceof Error
           ? cause.message
           : typeof cause === 'string'
             ? cause
-            : undefined,
+            : 'unknown',
     })
   })
 

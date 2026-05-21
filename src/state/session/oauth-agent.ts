@@ -37,9 +37,10 @@ export async function oauthResumeSession(account: SessionAccount) {
       ),
     ])
   } catch (e) {
+    // No DID/raw error: this goes to the live Sentry transport. A raw
+    // atproto/XRPC error can carry request/response context (URLs, headers).
     logger.error('oauthResumeSession: restore failed', {
-      did: account.did,
-      error: e instanceof Error ? e.message : String(e),
+      safeMessage: e instanceof Error ? e.message : String(e),
     })
     throw e
   }
@@ -74,7 +75,9 @@ export async function oauthAgentAndSessionToSessionAccount(
     ])
     data = res.data
   } catch (e: any) {
-    logger.error('oauthAgentAndSessionToSessionAccount: getSession failed', e)
+    logger.error('oauthAgentAndSessionToSessionAccount: getSession failed', {
+      safeMessage: e instanceof Error ? e.message : String(e),
+    })
     return undefined
   }
   let aud: string
@@ -90,7 +93,9 @@ export async function oauthAgentAndSessionToSessionAccount(
     ])
     aud = tokenInfo.aud
   } catch (e: any) {
-    logger.error('oauthAgentAndSessionToSessionAccount: getTokenInfo failed', e)
+    logger.error('oauthAgentAndSessionToSessionAccount: getTokenInfo failed', {
+      safeMessage: e instanceof Error ? e.message : String(e),
+    })
     return undefined
   }
   return {
