@@ -3,6 +3,7 @@ import {TouchableOpacity, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
+import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {HITSLOP_10, MAX_ALT_TEXT} from '#/lib/constants'
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
@@ -11,7 +12,6 @@ import {
   parseEmbedPlayerFromUrl,
 } from '#/lib/strings/embed-player'
 import {useResolveGifQuery} from '#/state/queries/resolve-link'
-import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
@@ -146,6 +146,8 @@ function AltTextInner({
   const t = useTheme()
   const {_, i18n} = useLingui()
 
+  const altTextLength = countGraphemes(altText)
+
   return (
     <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
       <View style={a.flex_col_reverse}>
@@ -153,7 +155,9 @@ function AltTextInner({
           <View style={[a.gap_sm]}>
             <View style={[a.relative]}>
               <TextField.LabelText>
-                <Trans>Descriptive alt text</Trans>
+                <Trans>
+                  Descriptive alt text ({altTextLength}/{MAX_ALT_TEXT})
+                </Trans>
               </TextField.LabelText>
               <TextField.Root>
                 <Dialog.Input
@@ -173,9 +177,9 @@ function AltTextInner({
               </TextField.Root>
             </View>
 
-            {altText.length > MAX_ALT_TEXT && (
+            {altTextLength > MAX_ALT_TEXT && (
               <View style={[a.pb_sm, a.flex_row, a.gap_xs]}>
-                <CircleInfo fill={t.palette.negative_500} />
+                <CircleInfo fill={t.palette.negative_500} size="sm" />
                 <Text
                   style={[
                     a.italic,
@@ -194,21 +198,17 @@ function AltTextInner({
             )}
           </View>
 
-          <AltTextCounterWrapper altText={altText}>
-            <Button
-              label={_(msg`Save`)}
-              size="large"
-              color="primary"
-              variant="solid"
-              onPress={() => {
-                control.close()
-              }}
-              style={[a.flex_grow]}>
-              <ButtonText>
-                <Trans>Save</Trans>
-              </ButtonText>
-            </Button>
-          </AltTextCounterWrapper>
+          <Button
+            label={_(msg`Save`)}
+            size="large"
+            color="primary"
+            onPress={() => {
+              control.close()
+            }}>
+            <ButtonText>
+              <Trans>Save</Trans>
+            </ButtonText>
+          </Button>
         </View>
         {/* below the text input to force tab order */}
         <View>
