@@ -4,18 +4,15 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-// @ts-ignore no type definition -prf
-import ProgressCircle from 'react-native-progress/Circle'
-// @ts-ignore no type definition -prf
-import ProgressPie from 'react-native-progress/Pie'
 
 import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {atoms as a, useTheme} from '#/alf'
+import {ProgressCircle} from '#/components/Progress'
 import {Text} from '#/components/Typography'
 
 export function CharProgress({
   count,
-  max,
+  max = MAX_GRAPHEME_LENGTH,
   style,
   textStyle,
   size,
@@ -26,40 +23,42 @@ export function CharProgress({
   textStyle?: StyleProp<TextStyle>
   size?: number
 }) {
-  const maxLength = max || MAX_GRAPHEME_LENGTH
   const t = useTheme()
-  const textColor = count > maxLength ? '#e60000' : t.atoms.text.color
-  const circleColor = count > maxLength ? '#e60000' : t.palette.primary_500
+  const textColor = count > max ? '#e60000' : t.atoms.text.color
+  const circleColor = count > max ? '#e60000' : t.palette.primary_500
   return (
-    <View
-      style={[a.flex_row, a.align_center, a.justify_between, a.gap_sm, style]}>
-      <Text
-        style={[
-          {color: textColor, fontVariant: ['tabular-nums']},
-          a.flex_grow,
-          a.text_right,
-          textStyle,
-        ]}
-        maxFontSizeMultiplier={1}>
-        {maxLength - count}
-      </Text>
-      {count > maxLength ? (
-        <ProgressPie
-          size={size ?? 30}
-          borderWidth={4}
-          borderColor={circleColor}
-          color={circleColor}
-          progress={Math.min((count - maxLength) / maxLength, 1)}
-        />
-      ) : (
-        <ProgressCircle
-          size={size ?? 30}
-          borderWidth={1}
-          borderColor={t.atoms.border_contrast_low.borderColor}
-          color={circleColor}
-          progress={count / maxLength}
-        />
+    <View style={[style]}>
+      {max - count < 100 && (
+        <View
+          style={[
+            a.absolute,
+            a.inset_0,
+            a.justify_center,
+            a.align_center,
+            a.px_xs,
+          ]}>
+          <Text
+            style={[
+              {color: textColor, fontVariant: ['tabular-nums']},
+              a.text_center,
+              a.text_xs,
+              {maxWidth: '100%'},
+              textStyle,
+            ]}
+            maxFontSizeMultiplier={1}
+            adjustsFontSizeToFit
+            numberOfLines={1}>
+            {max - count}
+          </Text>
+        </View>
       )}
+      <ProgressCircle
+        size={size ?? 32}
+        borderWidth={3}
+        borderColor={t.palette.contrast_50}
+        color={circleColor}
+        progress={Math.min(count / max, 1)}
+      />
     </View>
   )
 }
