@@ -37,13 +37,13 @@ import {
   convertBskyAppUrlIfNeeded,
   isBskyPostUrl,
 } from '#/lib/strings/url-helpers'
-import {logger} from '#/logger'
 import {
   type ActiveConvoStates,
   isConvoActive,
   useConvoActive,
 } from '#/state/messages/convo'
 import {type ConvoState, ConvoStatus} from '#/state/messages/convo/types'
+import {logger} from '#/state/messages/logger'
 import {useGetPost} from '#/state/queries/post'
 import {createEmbedViewRecordFromPost} from '#/state/queries/postgate/util'
 import {useAgent} from '#/state/session'
@@ -57,6 +57,7 @@ import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {SystemMessageGroup} from '#/components/dms/SystemMessageGroup'
 import {SystemMessageItem} from '#/components/dms/SystemMessageItem'
+import {type ConvoWithDetails} from '#/components/dms/util'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -112,20 +113,25 @@ function onScrollToIndexFailed() {
 }
 
 export function MessagesList({
+  convo,
   hasScrolled,
   setHasScrolled,
   footer,
   hasAcceptOverride,
   transparentHeaderHeight,
+  hideMessages,
 }: {
+  convo: ConvoWithDetails
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
   footer?: React.ReactNode
   hasAcceptOverride?: boolean
   transparentHeaderHeight?: number
+  hideMessages?: boolean
 }) {
   const ax = useAnalytics()
   const convoState = useConvoActive()
+  const isGroupChat = convo.kind === 'group'
   const agent = useAgent()
   const getPost = useGetPost()
   const {embedUri, setEmbed} = useMessageEmbed()
@@ -230,13 +236,15 @@ export function MessagesList({
       if (!hasInitiallyScrolled.current && renderItems.length > 0) {
         hasInitiallyScrolled.current = true
         flatListRef.current?.scrollToOffset({offset: height, animated: false})
-        // If history is already done loading, mark ready after a frame for the scroll to settle.
-        // Otherwise, the footer sentinel's onLayout will handle it when history finishes.
-        if (!convoState.isFetchingHistory) {
-          requestAnimationFrame(() => {
-            setHasScrolled(true)
-          })
-        }
+        logger.debug('onContentSizeChange: initial scroll', {
+          height,
+          itemCount: convoState.items.length,
+          isFetchingHistory: convoState.isFetchingHistory,
+        })
+        requestAnimationFrame(() => {
+          logger.debug('setHasScrolled(true) via onContentSizeChange')
+          setHasScrolled(true)
+        })
         prevContentHeight.current = height
         prevItemCount.current = renderItems.length
         return
@@ -277,7 +285,6 @@ export function MessagesList({
     [
       hasScrolled,
       setHasScrolled,
-      convoState.isFetchingHistory,
       renderItems.length,
       // these are stable
       flatListRef,
@@ -394,6 +401,7 @@ export function MessagesList({
       rt = stripInvalidMentions(rt)
 
       if (!hasScrolled) {
+        logger.debug('setHasScrolled(true) via onSendMessage')
         setHasScrolled(true)
       }
 
@@ -421,7 +429,8 @@ export function MessagesList({
       return (
         <MessageItem
           item={item}
-          isGroupChat={convoState.convo.kind === 'group'}
+          convoId={convo.view.id}
+          isGroupChat={isGroupChat}
           prevMessage={getNeighborMessage(renderItems, index - 1)}
           nextMessage={getNeighborMessage(renderItems, index + 1)}
           relatedProfiles={convoState.relatedProfiles}
@@ -454,20 +463,6 @@ export function MessagesList({
     return null
   }
 
-  // Footer sentinel: when history is still loading during the initial scroll, the footer's onLayout fires each time
-  // new items are prepended (shifting its position). Once history finishes, this triggers setHasScrolled.
-  const onFooterLayout = useCallback(() => {
-    if (
-      hasInitiallyScrolled.current &&
-      !hasScrolled &&
-      !convoState.isFetchingHistory
-    ) {
-      requestAnimationFrame(() => {
-        setHasScrolled(true)
-      })
-    }
-  }, [hasScrolled, setHasScrolled, convoState.isFetchingHistory])
-
   const renderScrollComponent = useCallback(
     (props: ScrollViewProps) => (
       <ChatScrollComponent {...props} inputHeight={inputHeightUI} />
@@ -476,7 +471,7 @@ export function MessagesList({
   )
 
   return (
-    <InviteLinkDialogProvider convo={convoState.convo}>
+    <InviteLinkDialogProvider convo={convo}>
       <KeyboardGestureArea
         interpolator="ios"
         // HACKFIX: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1419
@@ -509,27 +504,26 @@ export function MessagesList({
             ListHeaderComponent={
               <>
                 <MaybeLoader isLoading={convoState.isFetchingHistory} />
-                {convoState.convo?.kind === 'group' &&
-                convoState.hasAllHistory ? (
-                  <MessagesListInfoPanel convo={convoState.convo} />
+                {convo.kind === 'group' && convoState.hasAllHistory ? (
+                  <MessagesListInfoPanel convo={convo} />
                 ) : null}
               </>
             }
             // native only (prop is not supported on web)
             renderScrollComponent={renderScrollComponent}
-            contentContainerStyle={{
-              paddingBottom: platform({
-                // ios is slightly larger as the input has no top padding
-                ios: tokens.space.lg,
-                android: tokens.space.md,
-                web: 0, // web uses ListFooterComponent instead for scroll reasons
-              }),
-            }}
+            contentContainerStyle={[
+              hideMessages && {opacity: 0},
+              {
+                paddingBottom: platform({
+                  // ios is slightly larger as the input has no top padding
+                  ios: tokens.space.lg,
+                  android: tokens.space.md,
+                  web: 0, // web uses ListFooterComponent instead for scroll reasons
+                }),
+              },
+            ]}
             ListFooterComponent={
-              <View
-                style={web({height: tokens.space.md + inputHeightJS})}
-                onLayout={onFooterLayout}
-              />
+              <View style={web({height: tokens.space.md + inputHeightJS})} />
             }
             style={web({
               scrollbarWidth: 'thin',
@@ -554,6 +548,7 @@ export function MessagesList({
           {footer ?? (
             <ConversationFooter
               convoState={convoState}
+              convo={convo}
               hasAcceptOverride={hasAcceptOverride}>
               {ax.features.enabled(ax.features.DmsNewMessageComposerEnable) ? (
                 <MessageComposer
@@ -629,6 +624,7 @@ type FooterState = 'loading' | 'new-chat' | 'request' | 'standard'
 
 function getFooterState(
   convoState: ActiveConvoStates,
+  convo: ConvoWithDetails,
   hasAcceptOverride?: boolean,
 ): FooterState {
   if (convoState.items.length === 0) {
@@ -639,7 +635,7 @@ function getFooterState(
     }
   }
 
-  if (convoState.convo.view.status === 'request' && !hasAcceptOverride) {
+  if (convo.view.status === 'request' && !hasAcceptOverride) {
     return 'request'
   }
 
@@ -648,10 +644,12 @@ function getFooterState(
 
 function ConversationFooter({
   convoState,
+  convo,
   hasAcceptOverride,
   children,
 }: {
   convoState: ConvoState
+  convo: ConvoWithDetails
   hasAcceptOverride?: boolean
   children?: React.ReactNode // message input
 }) {
@@ -659,16 +657,16 @@ function ConversationFooter({
     return null
   }
 
-  const footerState = getFooterState(convoState, hasAcceptOverride)
+  const footerState = getFooterState(convoState, convo, hasAcceptOverride)
 
   switch (footerState) {
     case 'loading':
-      return null
+      return children
     case 'new-chat':
       // new chat pill goes here - removed for now
       return children
     case 'request':
-      return <ChatStatusInfo convoState={convoState} />
+      return <ChatStatusInfo convo={convo} />
     case 'standard':
       return children
   }

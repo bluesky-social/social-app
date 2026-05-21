@@ -16,12 +16,14 @@ import {hasReachedReactionLimit} from './util'
 
 export function ActionsWrapper({
   message,
+  convoId,
   hasReactions,
   isFromSelf,
   senderProfile,
   children,
 }: {
   message: ChatBskyConvoDefs.MessageView
+  convoId: string
   hasReactions?: boolean
   isFromSelf: boolean
   senderProfile?: bsky.profile.AnyProfileView
@@ -115,7 +117,10 @@ export function ActionsWrapper({
             )
           }}
         </EmojiReactionPicker>
-        <MessageContextMenu message={message} senderProfile={senderProfile}>
+        <MessageContextMenu
+          message={message}
+          convoId={convoId}
+          senderProfile={senderProfile}>
           {({props, state, IS_NATIVE, control}) => {
             // always false, file is platform split
             if (IS_NATIVE) return null

@@ -16,9 +16,8 @@ import {
   type NavigationProp,
 } from '#/lib/routes/types'
 import {logger} from '#/logger'
-import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
-import {ConvoStatus} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useConvoQuery} from '#/state/queries/messages/conversation'
 import {useEditGroupChatName} from '#/state/queries/messages/edit-group-chat-name'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {useListConvoMembersQuery} from '#/state/queries/messages/list-convo-members'
@@ -34,6 +33,7 @@ import * as Dialog from '#/components/Dialog'
 import {
   type ConvoWithDetails,
   type GroupConvoMember,
+  parseConvoView,
 } from '#/components/dms/util'
 import {Error} from '#/components/Error'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon} from '#/components/icons/ArrowBoxLeft'
@@ -93,31 +93,34 @@ export function MessagesConversationSettingsScreen({route}: Props) {
         </Layout.Header.Content>
         <Layout.Header.Slot />
       </Layout.Header.Outer>
-      <ConvoProvider key={convoId} convoId={convoId}>
-        <SettingsInner />
-      </ConvoProvider>
+      <SettingsInner convoId={convoId} />
     </Layout.Screen>
   )
 }
 
-function SettingsInner() {
+function SettingsInner({convoId}: {convoId: string}) {
   const {t: l} = useLingui()
-  const convoState = useConvo()
   const navigation = useNavigation<NavigationProp>()
   const moderationOpts = useModerationOpts()
+  const {currentAccount} = useSession()
+  const {data: convoData, error, refetch} = useConvoQuery({convoId})
 
-  if (convoState.status === ConvoStatus.Error) {
+  const convo = convoData
+    ? parseConvoView(convoData, currentAccount?.did)
+    : null
+
+  if (error) {
     return (
       <Error
         title={l`Something went wrong`}
         message={l`We couldn’t load this conversation’s settings`}
-        onRetry={() => convoState.error.retry()}
+        onRetry={() => refetch()}
         sideBorders={false}
       />
     )
   }
 
-  if (!convoState.convo || !moderationOpts) {
+  if (!convo || !moderationOpts) {
     return (
       <View style={[a.flex_1, a.align_center, a.justify_center]}>
         <Loader size="xl" />
@@ -125,7 +128,7 @@ function SettingsInner() {
     )
   }
 
-  if (convoState.convo.kind !== 'group') {
+  if (convo.kind !== 'group') {
     return (
       <Error
         title={l`Wrong kind of conversation`}
@@ -141,13 +144,7 @@ function SettingsInner() {
     )
   }
 
-  return (
-    <GroupSettings
-      convo={convoState.convo}
-      moderationOpts={moderationOpts}
-      isReady={isConvoActive(convoState)}
-    />
-  )
+  return <GroupSettings convo={convo} moderationOpts={moderationOpts} />
 }
 
 function keyExtractor(item: Item) {
@@ -170,11 +167,9 @@ function isGroupMember(
 function GroupSettings({
   convo,
   moderationOpts,
-  isReady,
 }: {
   convo: Extract<ConvoWithDetails, {kind: 'group'}>
   moderationOpts: ModerationOpts
-  isReady: boolean
 }) {
   const [isPTRing, setIsPTRing] = useState(false)
 
@@ -254,7 +249,7 @@ function GroupSettings({
           />
         )
       case 'ADD_MEMBERS_LINK':
-        return <AddMembersLink convo={convo} disabled={!isReady} />
+        return <AddMembersLink convo={convo} />
       case 'CHAT_MEMBER':
         return (
           <Member
@@ -295,7 +290,6 @@ function GroupSettings({
           convo={convo}
           isOwner={isOwner}
           moderationOpts={moderationOpts}
-          isReady={isReady}
         />
       }
       renderItem={renderItem}
@@ -311,12 +305,10 @@ function SettingsHeader({
   convo,
   isOwner,
   moderationOpts,
-  isReady,
 }: {
   convo: Extract<ConvoWithDetails, {kind: 'group'}>
   isOwner: boolean
   moderationOpts: ModerationOpts
-  isReady: boolean
 }) {
   const t = useTheme()
   const {i18n, t: l} = useLingui()
@@ -476,7 +468,7 @@ function SettingsHeader({
           ]}>
           <SettingsButton
             color={convo.view.muted ? 'negative_subtle' : 'secondary'}
-            disabled={!isReady || isMuting}
+            disabled={isMuting}
             icon={convo.view.muted ? BellOffIcon : BellIcon}
             label={
               convo.view.muted
@@ -488,7 +480,7 @@ function SettingsHeader({
           />
           {isOwner ? (
             <SettingsButton
-              disabled={!isReady || isEditingName}
+              disabled={isEditingName}
               icon={EditIcon}
               label={l`Edit this group chat’s name`}
               text={l`Edit name`}
@@ -497,7 +489,7 @@ function SettingsHeader({
           ) : null}
           {isJoinLinkEnabled ? (
             <SettingsButton
-              disabled={!isReady || lockStatus !== 'unlocked'}
+              disabled={lockStatus !== 'unlocked'}
               icon={ChainLinkIcon}
               label={
                 isOwner
@@ -511,7 +503,7 @@ function SettingsHeader({
           {canLockGroupChat ? (
             <SettingsButton
               color={lockStatus === 'locked' ? 'negative_subtle' : 'secondary'}
-              disabled={!isReady || isLocking}
+              disabled={isLocking}
               icon={LockIcon}
               label={
                 lockStatus === 'locked'
@@ -526,7 +518,6 @@ function SettingsHeader({
           ) : null}
           {!isOwner && isReportLinkEnabled && (
             <SettingsButton
-              disabled={!isReady}
               icon={FlagIcon}
               label={l`Report this group chat`}
               text={l`Report`}
@@ -535,7 +526,7 @@ function SettingsHeader({
           )}
           {!isOwner && (
             <SettingsButton
-              disabled={!isReady || isLeaving}
+              disabled={isLeaving}
               icon={ArrowBoxLeftIcon}
               label={l`Leave this group chat`}
               text={l`Leave`}

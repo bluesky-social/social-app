@@ -1,7 +1,6 @@
 import {
   type ConvoState,
   type ConvoStateBackgrounded,
-  type ConvoStateDisabled,
   type ConvoStateReady,
   type ConvoStateSuspended,
   ConvoStatus,
@@ -15,7 +14,6 @@ export type ActiveConvoStates =
   | ConvoStateReady
   | ConvoStateBackgrounded
   | ConvoStateSuspended
-  | ConvoStateDisabled
 
 /**
  * Checks if a `Convo` has a `status` that is "active", meaning the chat is
@@ -26,7 +24,6 @@ export function isConvoActive(convo: ConvoState): convo is ActiveConvoStates {
   return (
     convo.status === ConvoStatus.Ready ||
     convo.status === ConvoStatus.Backgrounded ||
-    convo.status === ConvoStatus.Suspended ||
-    convo.status === ConvoStatus.Disabled
+    convo.status === ConvoStatus.Suspended
   )
 }

@@ -3,10 +3,11 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
   useSyncExternalStore,
 } from 'react'
-import {ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatBskyConvoDefs} from '@atproto/api'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -16,7 +17,6 @@ import {
   type ConvoParams,
   type ConvoState,
   type ConvoStateBackgrounded,
-  type ConvoStateDisabled,
   type ConvoStateReady,
   type ConvoStateSuspended,
 } from '#/state/messages/convo/types'
@@ -27,20 +27,11 @@ import {
   useMarkAsReadMutation,
 } from '#/state/queries/messages/conversation'
 import {RQKEY_ROOT as ListConvosQueryKeyRoot} from '#/state/queries/messages/list-conversations'
+import {useListConvoMembersQuery} from '#/state/queries/messages/list-convo-members'
 import {RQKEY as createProfileQueryKey} from '#/state/queries/profile'
-import {useAgent} from '#/state/session'
-import {type GroupConvoMember} from '#/components/dms/util'
+import {useAgent, useSession} from '#/state/session'
 
 export * from '#/state/messages/convo/util'
-
-function membersChanged(
-  a: ChatBskyConvoDefs.ConvoView['members'],
-  b: ChatBskyConvoDefs.ConvoView['members'],
-) {
-  if (a.length !== b.length) return true
-  const aDids = new Set(a.map(m => m.did))
-  return b.some(m => !aDids.has(m.did))
-}
 
 const ChatContext = createContext<ConvoState | null>(null)
 ChatContext.displayName = 'ChatContext'
@@ -63,7 +54,6 @@ export function useConvoActive() {
     | ConvoStateReady
     | ConvoStateBackgrounded
     | ConvoStateSuspended
-    | ConvoStateDisabled
   if (!ctx) {
     throw new Error('useConvo must be used within a ConvoProvider')
   }
@@ -82,17 +72,27 @@ export function ConvoProvider({
   const queryClient = useQueryClient()
   const agent = useAgent()
   const events = useMessagesEventBus()
-  const [convo] = useState(() => {
-    const placeholder = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(
+  const {currentAccount} = useSession()
+
+  const getRecipientDids = useCallback(() => {
+    const convo = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(
       getConvoKey(convoId),
     )
-    return new Convo({
-      convoId,
-      agent,
-      events,
-      placeholderData: placeholder ? {convo: placeholder} : undefined,
-    })
-  })
+    if (!convo) return []
+    return convo.members
+      .filter(m => m.did !== currentAccount?.did)
+      .map(m => m.did)
+  }, [queryClient, convoId, currentAccount?.did])
+
+  const [convo] = useState(
+    () =>
+      new Convo({
+        convoId,
+        agent,
+        events,
+        getRecipientDids,
+      }),
+  )
   const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)
   const {mutate: markAsRead} = useMarkAsReadMutation()
 
@@ -103,14 +103,29 @@ export function ConvoProvider({
       if (isActive) {
         convo.resume()
         markAsRead({convoId})
+        // agent no longer owns the convo — invalidate the RQ cache so the
+        // header, member list, and status stay fresh after returning to
+        // the screen.
+        void queryClient.invalidateQueries({queryKey: getConvoKey(convoId)})
 
         return () => {
           convo.background()
           markAsRead({convoId})
         }
       }
-    }, [isActive, convo, convoId, markAsRead]),
+    }, [isActive, convo, convoId, markAsRead, queryClient]),
   )
+
+  // Push member-list data into the agent's `relatedProfiles` Map so that
+  // messages render sender names even when the sender isn't returned in the
+  // per-message `relatedProfiles` payload. The query hook is already
+  // firehose-aware for add/remove-member events.
+  const {data: memberList} = useListConvoMembersQuery({convoId})
+  useEffect(() => {
+    if (memberList) {
+      convo.updateRelatedProfiles(memberList)
+    }
+  }, [memberList, convo])
 
   useEffect(() => {
     return convo.on(event => {
@@ -124,52 +139,44 @@ export function ConvoProvider({
           void queryClient.invalidateQueries({
             queryKey: [ListConvosQueryKeyRoot],
           })
+          break
+        }
+        case 'account-disabled': {
+          // Re-fetch the convo so the UI can surface the disabled state
+          // via `chatDisabled` on the self member.
+          void queryClient.invalidateQueries({
+            queryKey: getConvoKey(convoId),
+          })
+          break
         }
       }
     })
-  }, [convo, queryClient])
+  }, [convo, queryClient, convoId])
 
-  useEffect(() => {
-    const [root, id] = getConvoKey(convoId)
-    return queryClient.getQueryCache().subscribe(event => {
-      const queryKey = event.query.queryKey as string[]
-      if (queryKey[0] === root && queryKey[1] === id) {
-        const data = event.query.state.data as
-          | ChatBskyConvoDefs.ConvoView
-          | undefined
-        if (data && convo.convo && data.muted !== convo.convo.view.muted) {
-          convo.updateMuted(data.muted)
-        }
-        if (
-          data &&
-          ChatBskyConvoDefs.isGroupConvo(data.kind) &&
-          convo.convo?.kind === 'group'
-        ) {
-          if (data.kind.name !== convo.convo.details.name) {
-            convo.updateGroupName(data.kind.name)
-          }
-          if (data.kind.joinLink !== convo.convo.details.joinLink) {
-            convo.updateJoinLink(data.kind.joinLink)
-          }
-          if (data.kind.lockStatus !== convo.convo.details.lockStatus) {
-            convo.updateLockStatus(data.kind.lockStatus)
-          }
-        }
-        if (
-          data &&
-          ChatBskyConvoDefs.isGroupConvo(data.kind) &&
-          convo.convo?.kind === 'group' &&
-          (membersChanged(data.members, convo.convo.members) ||
-            data.kind.memberCount !== convo.convo.details.memberCount)
-        ) {
-          convo.updateGroupMembers(
-            data.members as GroupConvoMember[],
-            data.kind.memberCount,
-          )
-        }
-      }
-    })
-  }, [convo, convoId, queryClient])
+  // Auto-accept: when the user sends in a request-status convo, optimistically
+  // flip the cached status to 'accepted' so UI updates immediately. The server
+  // accepts on first send.
+  const wrappedService = useMemo<ConvoState>(() => {
+    if (!isConvoActive(service)) return service
+    const originalSend = service.sendMessage
+    return {
+      ...service,
+      sendMessage: message => {
+        queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(
+          getConvoKey(convoId),
+          old => {
+            if (!old || old.status !== 'request') return old
+            return {...old, status: 'accepted'}
+          },
+        )
+        originalSend(message)
+      },
+    }
+  }, [service, queryClient, convoId])
 
-  return <ChatContext.Provider value={service}>{children}</ChatContext.Provider>
+  return (
+    <ChatContext.Provider value={wrappedService}>
+      {children}
+    </ChatContext.Provider>
+  )
 }

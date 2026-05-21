@@ -1,5 +1,6 @@
 import {
   type ChatBskyConvoAcceptConvo,
+  type ChatBskyConvoDefs,
   type ChatBskyConvoListConvos,
 } from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
@@ -7,6 +8,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
+import {RQKEY as CONVO_KEY} from './conversation'
 import {
   RQKEY as CONVO_LIST_KEY,
   RQKEY_ROOT as CONVO_LIST_ROOT_KEY,
@@ -39,9 +41,18 @@ export function useAcceptConversation(
     onMutate: () => {
       let prevAcceptedPages: ChatBskyConvoListConvos.OutputSchema[] = []
       let prevInboxPages: ChatBskyConvoListConvos.OutputSchema[] = []
+      let prevConvo: ChatBskyConvoDefs.ConvoView | undefined
       let convoBeingAccepted:
         | ChatBskyConvoListConvos.OutputSchema['convos'][number]
         | undefined
+      queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(
+        CONVO_KEY(convoId),
+        old => {
+          if (!old) return old
+          prevConvo = old
+          return {...old, status: 'accepted'}
+        },
+      )
       queryClient.setQueryData(
         CONVO_LIST_KEY('request'),
         (old?: {
@@ -97,7 +108,7 @@ export function useAcceptConversation(
         },
       )
       onMutate?.()
-      return {prevAcceptedPages, prevInboxPages}
+      return {prevAcceptedPages, prevInboxPages, prevConvo}
     },
     onSuccess: data => {
       queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
@@ -105,6 +116,9 @@ export function useAcceptConversation(
     },
     onError: (error, _, context) => {
       logger.error(error)
+      if (context?.prevConvo) {
+        queryClient.setQueryData(CONVO_KEY(convoId), context.prevConvo)
+      }
       queryClient.setQueryData(
         CONVO_LIST_KEY('accepted'),
         (old?: {

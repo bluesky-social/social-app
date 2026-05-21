@@ -8,11 +8,13 @@ import type * as bsky from '#/types/bsky'
 
 export function ActionsWrapper({
   message,
+  convoId,
   isFromSelf,
   senderProfile,
   children,
 }: {
   message: ChatBskyConvoDefs.MessageView
+  convoId: string
   hasReactions?: boolean
   isFromSelf: boolean
   senderProfile?: bsky.profile.AnyProfileView
@@ -21,7 +23,10 @@ export function ActionsWrapper({
   const {t: l} = useLingui()
 
   return (
-    <MessageContextMenu message={message} senderProfile={senderProfile}>
+    <MessageContextMenu
+      message={message}
+      convoId={convoId}
+      senderProfile={senderProfile}>
       {trigger =>
         // will always be true, since this file is platform split
         trigger.IS_NATIVE && (

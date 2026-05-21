@@ -6,7 +6,6 @@ import {
   ChatBskyConvoDefs,
   type ChatBskyConvoGetLog,
   type ChatBskyConvoSendMessage,
-  type ChatBskyGroupDefs,
 } from '@atproto/api'
 import {XRPCError} from '@atproto/api'
 import {EventEmitter} from 'eventemitter3'
@@ -18,7 +17,6 @@ import {
   isErrorMaybeAppPasswordPermissions,
   isNetworkError,
 } from '#/lib/strings/errors'
-import {Logger} from '#/logger'
 import {
   ACTIVE_POLL_INTERVAL,
   BACKGROUND_POLL_INTERVAL,
@@ -29,7 +27,6 @@ import {
   type ConvoDispatch,
   ConvoDispatchEvent,
   type ConvoError,
-  ConvoErrorCode,
   type ConvoEvent,
   type ConvoItem,
   ConvoItemError,
@@ -39,14 +36,10 @@ import {
 } from '#/state/messages/convo/types'
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type MessagesEventBusError} from '#/state/messages/events/types'
-import {
-  type ConvoWithDetails,
-  type GroupConvoMember,
-  parseConvoView,
-} from '#/components/dms/util'
+import {logger} from '#/state/messages/logger'
 import {IS_NATIVE} from '#/env'
 
-const logger = Logger.create(Logger.Context.ConversationAgent)
+const MESSAGES_PER_PAGE = IS_NATIVE ? 20 : 60
 
 export function isConvoItemMessage(
   item: ConvoItem,
@@ -85,6 +78,7 @@ export class Convo {
   private agent: AtpAgent
   private events: MessagesEventBus
   private senderUserDid: string
+  private getRecipientDids: () => string[]
 
   private status: ConvoStatus = ConvoStatus.Uninitialized
   private error: ConvoError | undefined
@@ -123,9 +117,6 @@ export class Convo {
   private emitter = new EventEmitter<{event: [ConvoEvent]}>()
 
   convoId: string
-  convo: ConvoWithDetails | undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-  recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
   snapshot: ConvoState | undefined
 
   constructor(params: ConvoParams) {
@@ -134,12 +125,8 @@ export class Convo {
     this.agent = params.agent
     this.events = params.events
     this.senderUserDid = params.agent.assertDid
+    this.getRecipientDids = params.getRecipientDids
 
-    if (params.placeholderData) {
-      this.setupPlaceholderData(params.placeholderData)
-    }
-
-    this.setConvo = this.setConvo.bind(this)
     this.subscribe = this.subscribe.bind(this)
     this.getSnapshot = this.getSnapshot.bind(this)
     this.sendMessage = this.sendMessage.bind(this)
@@ -148,13 +135,9 @@ export class Convo {
     this.ingestFirehose = this.ingestFirehose.bind(this)
     this.onFirehoseConnect = this.onFirehoseConnect.bind(this)
     this.onFirehoseError = this.onFirehoseError.bind(this)
-    this.markConvoAccepted = this.markConvoAccepted.bind(this)
     this.addReaction = this.addReaction.bind(this)
     this.removeReaction = this.removeReaction.bind(this)
-    this.updateGroupName = this.updateGroupName.bind(this)
-    this.updateGroupMembers = this.updateGroupMembers.bind(this)
-    this.updateJoinLink = this.updateJoinLink.bind(this)
-    this.updateLockStatus = this.updateLockStatus.bind(this)
+    this.updateRelatedProfiles = this.updateRelatedProfiles.bind(this)
   }
 
   private commit() {
@@ -192,7 +175,6 @@ export class Convo {
       deleteMessage: this.deleteMessage,
       sendMessage: this.sendMessage,
       fetchMessageHistory: this.fetchMessageHistory,
-      markConvoAccepted: this.markConvoAccepted,
       addReaction: this.addReaction,
       removeReaction: this.removeReaction,
     }
@@ -201,7 +183,6 @@ export class Convo {
       deleteMessage: undefined,
       sendMessage: undefined,
       fetchMessageHistory: undefined,
-      markConvoAccepted: undefined,
       addReaction: undefined,
       removeReaction: undefined,
     }
@@ -211,28 +192,15 @@ export class Convo {
         return {
           status: ConvoStatus.Initializing,
           items: [],
-          convo: this.convo,
           error: undefined,
           ...shared,
           ...emptyMethods,
-        }
-      }
-      case ConvoStatus.Disabled: {
-        return {
-          status: this.status,
-          items: this.getItems(),
-          convo: this.convo!,
-          relatedProfiles: this.relatedProfiles,
-          error: undefined,
-          ...shared,
-          ...methods,
         }
       }
       case ConvoStatus.Suspended: {
         return {
           status: this.status,
           items: this.getItems(),
-          convo: this.convo!,
           relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
@@ -243,7 +211,6 @@ export class Convo {
         return {
           status: this.status,
           items: this.getItems(),
-          convo: this.convo!,
           relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
@@ -254,7 +221,6 @@ export class Convo {
         return {
           status: this.status,
           items: this.getItems(),
-          convo: this.convo!,
           relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
@@ -265,7 +231,6 @@ export class Convo {
         return {
           status: ConvoStatus.Error,
           items: [],
-          convo: undefined,
           error: this.error!,
           isFetchingHistory: false,
           hasAllHistory: false,
@@ -276,7 +241,6 @@ export class Convo {
         return {
           status: ConvoStatus.Uninitialized,
           items: [],
-          convo: this.convo,
           error: undefined,
           isFetchingHistory: false,
           // Explicit null check since the value is initially undefined.
@@ -289,6 +253,7 @@ export class Convo {
 
   dispatch(action: ConvoDispatch) {
     const prevStatus = this.status
+    const dispatchStart = Date.now()
 
     switch (this.status) {
       case ConvoStatus.Uninitialized: {
@@ -329,20 +294,12 @@ export class Convo {
             this.withdrawRequestedPollInterval()
             break
           }
-          case ConvoDispatchEvent.Disable: {
-            this.status = ConvoStatus.Disabled
-            void this.fetchMessageHistory() // finish init
-            this.cleanupFirehoseConnection?.()
-            this.withdrawRequestedPollInterval()
-            break
-          }
         }
         break
       }
       case ConvoStatus.Ready: {
         switch (action.event) {
           case ConvoDispatchEvent.Resume: {
-            void this.refreshConvo()
             this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             break
           }
@@ -364,12 +321,6 @@ export class Convo {
             this.withdrawRequestedPollInterval()
             break
           }
-          case ConvoDispatchEvent.Disable: {
-            this.status = ConvoStatus.Disabled
-            this.cleanupFirehoseConnection?.()
-            this.withdrawRequestedPollInterval()
-            break
-          }
         }
         break
       }
@@ -379,14 +330,8 @@ export class Convo {
             if (this.wasChatInactive()) {
               this.reset()
             } else {
-              if (this.convo) {
-                this.status = ConvoStatus.Ready
-                void this.refreshConvo()
-                this.maybeRecoverFromNetworkError()
-              } else {
-                this.status = ConvoStatus.Initializing
-                void this.setup()
-              }
+              this.status = ConvoStatus.Ready
+              this.maybeRecoverFromNetworkError()
               this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             }
             break
@@ -400,12 +345,6 @@ export class Convo {
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
-            this.cleanupFirehoseConnection?.()
-            this.withdrawRequestedPollInterval()
-            break
-          }
-          case ConvoDispatchEvent.Disable: {
-            this.status = ConvoStatus.Disabled
             this.cleanupFirehoseConnection?.()
             this.withdrawRequestedPollInterval()
             break
@@ -426,10 +365,6 @@ export class Convo {
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
-            break
-          }
-          case ConvoDispatchEvent.Disable: {
-            this.status = ConvoStatus.Disabled
             break
           }
         }
@@ -454,15 +389,7 @@ export class Convo {
             this.error = action.payload
             break
           }
-          case ConvoDispatchEvent.Disable: {
-            this.status = ConvoStatus.Disabled
-            break
-          }
         }
-        break
-      }
-      case ConvoStatus.Disabled: {
-        // can't do anything
         break
       }
       default:
@@ -471,8 +398,10 @@ export class Convo {
 
     logger.debug(`dispatch '${action.event}'`, {
       id: this.id,
+      convoId: this.convoId,
       prev: prevStatus,
       next: this.status,
+      dispatchMs: Date.now() - dispatchStart,
     })
 
     this.updateLastActiveTimestamp()
@@ -480,7 +409,6 @@ export class Convo {
   }
 
   private reset() {
-    this.convo = undefined
     this.snapshot = undefined
 
     this.status = ConvoStatus.Uninitialized
@@ -517,82 +445,23 @@ export class Convo {
     }
   }
 
-  private setConvo(convo: ChatBskyConvoDefs.ConvoView) {
-    this.convo = parseConvoView(convo, this.senderUserDid) ?? this.convo
-    if (this.convo) {
-      for (const member of this.convo.members) {
-        this.relatedProfiles.set(member.did, member)
-      }
-    }
-  }
-
-  private updateConvo(convo: Partial<ChatBskyConvoDefs.ConvoView>) {
-    if (this.convo) {
-      this.convo =
-        parseConvoView({...this.convo.view, ...convo}, this.senderUserDid) ??
-        this.convo
-      for (const member of this.convo.members) {
-        this.relatedProfiles.set(member.did, member)
-      }
-    }
-  }
-
   /**
-   * Initialises the convo with placeholder data, if provided. We still refetch it before rendering the convo,
-   * but this allows us to render the convo header immediately.
+   * Merge a batch of related profiles into `this.relatedProfiles`. Called
+   * both by internal ingestion (message-history + firehose responses) and
+   * externally by `ConvoProvider` when `useListConvoMembersQuery` data
+   * updates.
    */
-  private setupPlaceholderData(
-    data: NonNullable<ConvoParams['placeholderData']>,
-  ) {
-    this.setConvo(data.convo)
+  updateRelatedProfiles(profiles: ChatBskyActorDefs.ProfileViewBasic[]) {
+    if (profiles.length === 0) return
+    for (const profile of profiles) {
+      this.relatedProfiles.set(profile.did, profile)
+    }
+    this.commit()
   }
 
-  private async setup() {
-    try {
-      const {convo} = await this.fetchConvo()
-
-      this.setConvo(convo)
-
-      /*
-       * Some validation prior to `Ready` status
-       */
-      if (!this.convo) {
-        throw new Error('could not find convo')
-      }
-
-      const self = this.convo.members.find(m => m.did === this.senderUserDid)
-
-      if (!self) {
-        throw new Error('could not find self in convo')
-      }
-
-      const userIsDisabled = Boolean(self.chatDisabled)
-
-      if (userIsDisabled) {
-        this.dispatch({event: ConvoDispatchEvent.Disable})
-      } else {
-        this.dispatch({event: ConvoDispatchEvent.Ready})
-      }
-    } catch (err) {
-      const e = err as Error
-      if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
-        logger.error('setup failed', {
-          safeMessage: e.message,
-        })
-      }
-
-      this.dispatch({
-        event: ConvoDispatchEvent.Error,
-        payload: {
-          exception: e,
-          code: ConvoErrorCode.InitFailed,
-          retry: () => {
-            this.reset()
-          },
-        },
-      })
-      this.commit()
-    }
+  private setup() {
+    logger.debug('setup', {id: this.id, convoId: this.convoId})
+    this.dispatch({event: ConvoDispatchEvent.Ready})
   }
 
   init() {
@@ -634,81 +503,15 @@ export class Convo {
     }
   }
 
-  private pendingFetchConvo:
-    | Promise<{convo: ChatBskyConvoDefs.ConvoView}>
-    | undefined
-  async fetchConvo() {
-    if (this.pendingFetchConvo) return this.pendingFetchConvo
-
-    // non-blocking
-    void this.fetchMemberList()
-
-    this.pendingFetchConvo = (async () => {
-      try {
-        const response = await networkRetry(2, () => {
-          return this.agent.chat.bsky.convo.getConvo(
-            {convoId: this.convoId},
-            {headers: DM_SERVICE_HEADERS},
-          )
-        })
-
-        const convo = response.data.convo
-
-        return {
-          convo,
-        }
-      } finally {
-        this.pendingFetchConvo = undefined
-      }
-    })()
-
-    return this.pendingFetchConvo
-  }
-
-  async refreshConvo() {
-    try {
-      void this.fetchMemberList()
-      const {convo} = await this.fetchConvo()
-      // throw new Error('UNCOMMENT TO TEST REFRESH FAILURE')
-      this.setConvo(convo)
-    } catch (err) {
-      const e = err as Error
-      if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
-        logger.error(`failed to refresh convo`, {
-          safeMessage: e.message,
-        })
-      }
-    }
-  }
-
-  // purely for populating `this.relatedProfiles` - we do not pipe it
-  // into the ConvoWithDetails. If you want to drive UI based on the member list,
-  // use `useListConvoMembersQuery`
-  // we shouldn't also block loading off of this - the UI should be resilient
-  async fetchMemberList() {
-    let cursor: string | undefined
-    do {
-      const result = await networkRetry(2, () => {
-        return this.agent.chat.bsky.convo.getConvoMembers(
-          {
-            convoId: this.convoId,
-            limit: 50,
-            cursor,
-          },
-          {headers: DM_SERVICE_HEADERS},
-        )
-      })
-      cursor = result.data.cursor
-
-      for (const member of result.data.members) {
-        this.relatedProfiles.set(member.did, member)
-      }
-    } while (cursor)
-  }
-
   private fetchMessageHistoryError: {retry: () => void} | undefined
   async fetchMessageHistory() {
-    logger.debug('fetch message history', {})
+    logger.debug('fetchMessageHistory called', {
+      id: this.id,
+      convoId: this.convoId,
+      oldestRev: this.oldestRev,
+      isFetchingHistory: this.isFetchingHistory,
+      hasError: !!this.fetchMessageHistoryError,
+    })
 
     /*
      * If oldestRev is null, we've fetched all history.
@@ -727,6 +530,7 @@ export class Convo {
      */
     if (this.fetchMessageHistoryError) return
 
+    const start = Date.now()
     try {
       this.isFetchingHistory = true
       this.commit()
@@ -737,12 +541,21 @@ export class Convo {
           {
             cursor: nextCursor,
             convoId: this.convoId,
-            limit: IS_NATIVE ? 30 : 60,
+            limit: MESSAGES_PER_PAGE,
           },
           {headers: DM_SERVICE_HEADERS},
         )
       })
       const {cursor, messages, relatedProfiles} = response.data
+
+      logger.debug('fetchMessageHistory done', {
+        id: this.id,
+        convoId: this.convoId,
+        fetchMs: Date.now() - start,
+        returnedMessages: messages.length,
+        returnedCursor: cursor,
+        prevCursor: nextCursor,
+      })
 
       this.oldestRev = cursor ?? null
 
@@ -756,7 +569,7 @@ export class Convo {
        * If the response contained fewer messages than the limit, we know
        * there are no more pages, regardless of whether a cursor was returned.
        */
-      if (messages.length < (IS_NATIVE ? 30 : 60)) {
+      if (messages.length < MESSAGES_PER_PAGE) {
         this.oldestRev = null
       }
 
@@ -779,6 +592,12 @@ export class Convo {
       }
     } catch (err) {
       const e = err as Error
+      logger.debug('fetchMessageHistory failed', {
+        id: this.id,
+        convoId: this.convoId,
+        fetchMs: Date.now() - start,
+        message: e.message,
+      })
       if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error('failed to fetch message history', {
           safeMessage: e.message,
@@ -841,6 +660,14 @@ export class Convo {
 
   ingestFirehose(events: ChatBskyConvoGetLog.OutputSchema['logs']) {
     let needsCommit = false
+    const hadHistory = this.oldestRev !== undefined
+    logger.debug('ingestFirehose', {
+      id: this.id,
+      convoId: this.convoId,
+      eventCount: events.length,
+      hadHistory,
+      latestRev: this.latestRev,
+    })
 
     for (const ev of events) {
       /*
@@ -957,93 +784,11 @@ export class Convo {
       message,
       optimisticEmbedView,
     })
-    if (this.convo?.view.status === 'request') {
-      this.updateConvo({
-        status: 'accepted',
-      })
-    }
     this.commit()
 
     if (!this.isProcessingPendingMessages && !this.pendingMessageFailure) {
       void this.processPendingMessages()
     }
-  }
-
-  markConvoAccepted() {
-    this.updateConvo({
-      status: 'accepted',
-    })
-
-    this.commit()
-  }
-
-  updateMuted(muted: boolean) {
-    this.updateConvo({
-      muted,
-    })
-
-    this.commit()
-  }
-
-  updateGroupName(name: string) {
-    if (this.convo?.kind !== 'group') {
-      throw new Error('updateGroupName can only be called on group convo')
-    }
-
-    this.updateConvo({
-      kind: {
-        ...this.convo.details,
-        name,
-      },
-    })
-
-    this.commit()
-  }
-
-  updateGroupMembers(members: GroupConvoMember[], memberCount: number) {
-    if (this.convo?.kind !== 'group') {
-      throw new Error('updateGroupMembers can only be called on group convo')
-    }
-
-    this.updateConvo({
-      members,
-      kind: {
-        ...this.convo.details,
-        memberCount,
-      },
-    })
-
-    this.commit()
-  }
-
-  updateJoinLink(joinLink: ChatBskyGroupDefs.JoinLinkView | undefined) {
-    if (this.convo?.kind !== 'group') {
-      throw new Error('updateJoinLink can only be called on group convo')
-    }
-
-    this.updateConvo({
-      kind: {
-        ...this.convo.details,
-        joinLink,
-      },
-    })
-
-    this.commit()
-  }
-
-  updateLockStatus(lockStatus: ChatBskyConvoDefs.ConvoLockStatus) {
-    if (this.convo?.kind !== 'group') {
-      throw new Error('updateLockStatus can only be called on group convo')
-    }
-
-    this.updateConvo({
-      kind: {
-        ...this.convo.details,
-        lockStatus,
-      },
-    })
-
-    this.commit()
   }
 
   async processPendingMessages() {
@@ -1110,14 +855,11 @@ export class Convo {
           case 'block between recipient and sender':
             this.emitter.emit('event', {
               type: 'invalidate-block-state',
-              accountDids: [
-                this.senderUserDid,
-                ...this.recipients!.map(r => r.did),
-              ],
+              accountDids: [this.senderUserDid, ...this.getRecipientDids()],
             })
             break
           case 'Account is disabled':
-            this.dispatch({event: ConvoDispatchEvent.Disable})
+            this.emitter.emit('event', {type: 'account-disabled'})
             break
           case 'Convo not found':
           case 'Account does not exist':
