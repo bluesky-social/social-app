@@ -1,6 +1,7 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {
   Image as RNImage,
+  type ImageStyle,
   Pressable,
   type StyleProp,
   StyleSheet,
@@ -76,7 +77,7 @@ interface UserAvatarProps extends BaseUserAvatarProps {
   noBorder?: boolean
   onLoad?: () => void
   style?: StyleProp<ViewStyle>
-  extraAviStyle?: ViewStyle
+  extraAviStyle?: ImageStyle
 }
 
 interface EditableUserAvatarProps extends BaseUserAvatarProps {
