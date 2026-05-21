@@ -101,6 +101,7 @@ export function MessagesListInfoPanel({
               a.mt_xs,
               t.atoms.text_contrast_high,
               a.text_center,
+              a.leading_snug,
               showButtons ? null : a.mb_4xl,
             ]}>
             {names}
