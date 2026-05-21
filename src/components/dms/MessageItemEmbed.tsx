@@ -6,22 +6,21 @@ import {atoms as a, native, useTheme, web} from '#/alf'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {MessageContextProvider} from './MessageContext'
 
-const CLUSTERED_MESSAGE_GAP = 2
 const BORDER_RADIUS = 20
 const SQUARED_BORDER_RADIUS = 4
 
 let MessageItemEmbed = ({
   embed,
   isFromSelf,
+  isGroupChat,
   squaredTopCorner,
   squaredBottomCorner,
-  isFirstInCluster,
 }: {
   embed: $Typed<AppBskyEmbedRecord.View>
   isFromSelf: boolean
+  isGroupChat: boolean
   squaredTopCorner: boolean
   squaredBottomCorner: boolean
-  isFirstInCluster: boolean
 }): React.ReactNode => {
   const t = useTheme()
   const screen = useWindowDimensions()
@@ -30,18 +29,16 @@ let MessageItemEmbed = ({
     <MessageContextProvider>
       <View
         style={[
-          !isFromSelf && a.ml_sm,
+          !isFromSelf && isGroupChat && a.ml_sm,
           native({
             flexBasis: 0,
             width: Math.min(screen.width, 600) / 1.4,
           }),
           web({
+            width: '100%',
             minWidth: 280,
             maxWidth: 360,
           }),
-          {
-            marginTop: isFirstInCluster ? 0 : CLUSTERED_MESSAGE_GAP,
-          },
         ]}>
         <View>
           <Embed
