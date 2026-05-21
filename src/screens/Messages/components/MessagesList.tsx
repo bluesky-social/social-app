@@ -52,7 +52,6 @@ import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
 import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
-import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {DateDivider} from '#/components/dms/DateDivider'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
@@ -666,12 +665,8 @@ function ConversationFooter({
     case 'loading':
       return null
     case 'new-chat':
-      return (
-        <>
-          <ChatEmptyPill />
-          {children}
-        </>
-      )
+      // new chat pill goes here - removed for now
+      return children
     case 'request':
       return <ChatStatusInfo convoState={convoState} />
     case 'standard':
