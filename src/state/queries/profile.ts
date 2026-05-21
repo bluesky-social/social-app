@@ -10,6 +10,14 @@ import {
   type ComAtprotoRepoUploadBlob,
   type Un$Typed,
 } from '@atproto/api'
+import {
+  type InfiniteData,
+  keepPreviousData,
+  type QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
@@ -21,6 +29,7 @@ import {type ImageMeta} from '#/state/gallery'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {RQKEY as PROFILE_FOLLOWS_RQKEY} from '#/state/queries/profile-follows'
+import {classifyProfileError} from '#/state/queries/profile-status'
 import {
   unstableCacheProfileView,
   useUnstableProfileViewCache,
@@ -39,15 +48,6 @@ import {
 import {RQKEY_ROOT as RQKEY_LIST_CONVOS} from './messages/list-conversations'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
-import {
-  type InfiniteData,
-  keepPreviousData,
-  prefetchQueryWithFallback,
-  type QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from './useQueryWithFallback'
 
 export * from '#/state/queries/unstable-profile-cache'
 /**
@@ -115,9 +115,8 @@ export function useProfileQuery({
       return getUnstableProfile(did) as AppBskyActorDefs.ProfileViewDetailed
     },
     enabled: !!did,
-    enableFallback: true,
-    fallbackType: 'profile',
-    fallbackIdentifier: did,
+    retry: (failureCount, error) =>
+      classifyProfileError(error) === 'unknown' && failureCount < 1,
   })
 }
 
@@ -193,7 +192,7 @@ export function usePrefetchProfileQuery() {
   const queryClient = useQueryClient()
   const prefetchProfileQuery = useCallback(
     async (did: string) => {
-      await prefetchQueryWithFallback(queryClient, {
+      await queryClient.prefetchQuery({
         staleTime: STALE.SECONDS.THIRTY,
         queryKey: RQKEY(did),
         queryFn: async () => {
@@ -224,9 +223,6 @@ export function usePrefetchProfileQuery() {
 
           return profile
         },
-        enableFallback: true,
-        fallbackType: 'profile',
-        fallbackIdentifier: did,
       })
     },
     [queryClient, agent],

@@ -1,5 +1,4 @@
-import {type Agent} from '@atproto/api'
-import {BSKY_LABELER_DID, BskyAgent} from '@atproto/api'
+import {Agent, BSKY_LABELER_DID, type BskyAgent} from '@atproto/api'
 
 import {IS_TEST_USER} from '#/lib/constants'
 import {getNoAppLabelers} from '../preferences/no-app-labelers'
@@ -45,8 +44,8 @@ export async function configureModerationForAccount(
 }
 
 function switchToBskyAppLabeler() {
-  BskyAgent.configure({
-    appLabelers: getNoAppLabelers() ? [] : [BSKY_LABELER_DID],
+  Agent.configure({
+    appLabelers: getNoAppLabelers() ? [] : [BSKY_LABELER_DID, BLACKSKY_LABELER],
   })
 }
 
@@ -58,6 +57,6 @@ async function trySwitchToTestAppLabeler(agent: Agent | BskyAgent) {
   )?.data.did
   if (did) {
     console.warn('USING TEST ENV MODERATION')
-    BskyAgent.configure({appLabelers: [did]})
+    Agent.configure({appLabelers: [did]})
   }
 }

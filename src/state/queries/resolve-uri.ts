@@ -35,6 +35,7 @@ const resolvedDidQueryOptions = (
       return profile?.did
     },
     enabled: !!didOrHandle,
+    retry: false,
   })
 
 export function useResolveUriQuery(uri: string | undefined) {
