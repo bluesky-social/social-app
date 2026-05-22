@@ -16,8 +16,8 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
 import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
-import {PublicationMetaRow} from '#/components/Post/Embed/StandardSiteEmbed/PublicationMetaRow'
 import {matchStandardSitePublisher} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
+import {StandardSiteMetaRow} from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow'
 import {StandardSiteThemeProvider} from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteThemeProvider'
 import {isStandardSitePublicationEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Text} from '#/components/Typography'
@@ -107,7 +107,7 @@ export const StandardSiteEmbed = ({
     <View
       style={[
         a.flex_col,
-        a.rounded_md,
+        a.rounded_lg,
         a.overflow_hidden,
         a.w_full,
         a.border,
@@ -218,7 +218,7 @@ export const StandardSiteEmbed = ({
                   <View style={[a.px_md]}>
                     <Divider />
                     <View style={[a.py_sm]}>
-                      <PublicationMetaRow
+                      <StandardSiteMetaRow
                         view={view}
                         onInteractWithin={onInteractWithin}
                         onInteractWithout={onInteractWithout}
@@ -242,6 +242,7 @@ export const StandardSiteEmbed = ({
             onPress={onPress}
             onLongPress={onLongPress}
             themeColors={themeColors}
+            hideSubscribe={hideSubscribe}
           />
         </>
       )}
@@ -288,7 +289,7 @@ export function PublicationCard({
           <View
             style={[
               a.flex_col,
-              a.rounded_md,
+              a.rounded_lg,
               a.overflow_hidden,
               a.w_full,
               a.border,
@@ -330,7 +331,8 @@ export function PublicationCard({
                     ]}>
                     {view.source?.title}
                   </Text>
-                  <PublicationMetaRow
+                  <StandardSiteMetaRow
+                    type="publication"
                     view={view}
                     onInteractWithin={onInteractWithin}
                     onInteractWithout={onInteractWithout}
@@ -338,7 +340,7 @@ export function PublicationCard({
                 </View>
               </View>
 
-              {!hideSubscribe && (
+              {!hideSubscribe && gtPhone && (
                 <SubscribeButton
                   view={view}
                   style={[!gtPhone && [a.w_full, a.justify_center]]}
@@ -353,6 +355,17 @@ export function PublicationCard({
                 <Text style={[a.text_sm, a.leading_snug]} numberOfLines={3}>
                   {view.description}
                 </Text>
+              </View>
+            )}
+
+            {!hideSubscribe && !gtPhone && (
+              <View style={[view.description && a.pt_sm]}>
+                <SubscribeButton
+                  view={view}
+                  style={[!gtPhone && [a.w_full, a.justify_center]]}
+                  onPress={onPress}
+                  onLongPress={onLongPress}
+                />
               </View>
             )}
           </View>
@@ -544,7 +557,8 @@ export function PublicationFooter({
             ]}>
             {view.source?.title}
           </Text>
-          <PublicationMetaRow
+          <StandardSiteMetaRow
+            type="publication"
             view={view}
             onInteractWithin={onInteractWithin}
             onInteractWithout={onInteractWithout}

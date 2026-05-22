@@ -12,14 +12,19 @@ import {
   matchStandardSitePublisher,
   matchStandardSitePublisherByUri,
 } from '#/components/Post/Embed/StandardSiteEmbed/publishers'
-import {isStandardSiteDocumentUri} from '#/components/Post/Embed/StandardSiteEmbed/utils'
+import {
+  isStandardSiteDocumentUri,
+  isStandardSitePublicationUri,
+} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Text} from '#/components/Typography'
 
-export function PublicationMetaRow({
+export function StandardSiteMetaRow({
+  type = 'document',
   view,
   onInteractWithin,
   onInteractWithout,
 }: {
+  type?: 'document' | 'publication'
   view: AppBskyEmbedExternal.ViewExternal
   onInteractWithin: () => void
   onInteractWithout: () => void
@@ -29,7 +34,11 @@ export function PublicationMetaRow({
   const highlightedPublisher = !!matchStandardSitePublisher(view)
   const didsFromRecords =
     view.associatedRefs
-      ?.filter(isStandardSiteDocumentUri)
+      ?.filter(
+        type === 'document'
+          ? isStandardSiteDocumentUri
+          : isStandardSitePublicationUri,
+      )
       .map(ref => new AtUri(ref.uri).host) || []
   // atm should only be one docment
   const authorDid = didsFromRecords.at(0)
