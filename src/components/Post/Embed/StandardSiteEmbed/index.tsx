@@ -14,16 +14,8 @@ import {
 import {niceDate} from '#/lib/strings/time'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
-import {useProfileQuery} from '#/state/queries/profile'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {
-  atoms as a,
-  ThemeProvider,
-  useAlf,
-  useBreakpoints,
-  useTheme,
-  utils,
-} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, utils} from '#/alf'
 import {ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
@@ -34,6 +26,8 @@ import {StandardSite} from '#/components/icons/community/StandardSite'
 import {Earth_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import {PublicationMetaRow} from '#/components/Post/Embed/StandardSiteEmbed/PublicationMetaRow'
+import {StandardSiteThemeProvider} from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteThemeProvider'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 
@@ -350,9 +344,6 @@ export function PublicationCard({
   const t = useTheme()
   const {t: l} = useLingui()
   const {gtPhone} = useBreakpoints()
-  const profileQuery = useProfileQuery({did: author.did ?? undefined})
-  const handle = author.did ? profileQuery.data?.handle : undefined
-  const highlightedPublisher = useStandardSitePublisherConfig(view)
 
   if (!view.source) return null
 
@@ -410,49 +401,7 @@ export function PublicationCard({
                     ]}>
                     {view.source?.title}
                   </Text>
-                  <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-                    {[
-                      {
-                        type: 'domain',
-                        enabled: !highlightedPublisher,
-                        value: toNiceDomain(view.source?.uri || ''),
-                        hasPrev: false,
-                      },
-                      {
-                        type: 'author',
-                        enabled: true,
-                        value: handle ? l`by @${handle}` : undefined,
-                        hasPrev:
-                          !highlightedPublisher && Boolean(view.source?.uri),
-                      },
-                    ]
-                      .filter(item => item.enabled && item.value)
-                      .map(item => {
-                        return (
-                          <>
-                            {item.hasPrev && (
-                              <Text
-                                style={[
-                                  a.text_xs,
-                                  a.leading_snug,
-                                  t.atoms.text_contrast_medium,
-                                ]}>
-                                •
-                              </Text>
-                            )}
-                            <Text
-                              numberOfLines={1}
-                              style={[
-                                a.text_xs,
-                                a.leading_snug,
-                                t.atoms.text_contrast_medium,
-                              ]}>
-                              {item.value}
-                            </Text>
-                          </>
-                        )
-                      })}
-                  </View>
+                  <PublicationMetaRow view={view} author={author} />
                 </View>
               </>
             </View>
@@ -463,7 +412,6 @@ export function PublicationCard({
                 style={[!gtPhone && [a.w_full, a.justify_center]]}
                 onPress={onPress}
                 onLongPress={onLongPress}
-                themeColors={themeColors}
               />
             )}
           </View>
@@ -485,83 +433,21 @@ export function SubscribeButton({
   view,
   onPress,
   onLongPress,
-  themeColors,
   style,
 }: {
   view: AppBskyEmbedExternal.ViewExternal
   onPress?: () => void
   onLongPress?: () => void
-  themeColors: ThemeColors
   style?: StyleProp<ViewStyle>
 }) {
-  const alf = useAlf()
   const {t: l} = useLingui()
   const highlightedPublisher = useStandardSitePublisherConfig(view)
   const cta = highlightedPublisher
     ? l`Subscribe on ${highlightedPublisher.name}`
     : l`View publication`
-  const themesOverride = useMemo(() => {
-    if (!themeColors.custom) return alf.themes
-    const atoms = {
-      text_inverted: {color: themeColors.accentForeground}, // text
-    }
-    const palette = {
-      contrast_975: utils.darken(themeColors.accent, 5), // hover
-      contrast_900: themeColors.accent, // bg
-      contrast_600: utils.lighten(themeColors.accent, 5), // disabled bg
-      contrast_300: themeColors.accentForeground, // disabled text
-    }
-    return {
-      lightPalette: {
-        ...alf.themes.lightPalette,
-        ...palette,
-      },
-      darkPalette: {
-        ...alf.themes.darkPalette,
-        ...palette,
-      },
-      dimPalette: {
-        ...alf.themes.dimPalette,
-        ...palette,
-      },
-      light: {
-        ...alf.themes.light,
-        atoms: {
-          ...alf.themes.light.atoms,
-          ...atoms,
-        },
-        palette: {
-          ...alf.themes.light.palette,
-          ...palette,
-        },
-      },
-      dark: {
-        ...alf.themes.dark,
-        atoms: {
-          ...alf.themes.dark.atoms,
-          ...atoms,
-        },
-        palette: {
-          ...alf.themes.dark.palette,
-          ...palette,
-        },
-      },
-      dim: {
-        ...alf.themes.dim,
-        atoms: {
-          ...alf.themes.dim.atoms,
-          ...atoms,
-        },
-        palette: {
-          ...alf.themes.dim.palette,
-          ...palette,
-        },
-      },
-    }
-  }, [alf, themeColors])
 
   return (
-    <ThemeProvider theme={alf.themeName} themesOverride={themesOverride}>
+    <StandardSiteThemeProvider view={view}>
       <Link
         shouldProxy
         to={view.source!.uri}
@@ -583,7 +469,7 @@ export function SubscribeButton({
           <ButtonText>{cta}</ButtonText>
         )}
       </Link>
-    </ThemeProvider>
+    </StandardSiteThemeProvider>
   )
 }
 
@@ -662,23 +548,6 @@ export function PublicationFooter({
   const t = useTheme()
   const {t: l} = useLingui()
   const {gtPhone} = useBreakpoints()
-  const profileQuery = useProfileQuery({did: author.did ?? undefined})
-  const handle = author.did ? profileQuery.data?.handle : undefined
-  const highlightedPublisher = useMemo(() => {
-    try {
-      const u = new URL(view.source?.uri || '')
-      if (u.host.endsWith('leaflet.pub')) {
-        return 'Leaflet'
-      } else if (u.host.endsWith('pckt.blog')) {
-        return 'pckt'
-      } else if (u.host.endsWith('offprint.app')) {
-        return 'Offprint'
-      }
-      return null
-    } catch (e) {
-      return null
-    }
-  }, [view])
 
   if (!view.source) return null
 
@@ -725,48 +594,7 @@ export function PublicationFooter({
                 ]}>
                 {view.source?.title}
               </Text>
-              <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-                {[
-                  {
-                    type: 'domain',
-                    enabled: !highlightedPublisher,
-                    value: toNiceDomain(view.source?.uri || ''),
-                    hasPrev: false,
-                  },
-                  {
-                    type: 'author',
-                    enabled: true,
-                    value: handle ? l`by @${handle}` : undefined,
-                    hasPrev: !highlightedPublisher && Boolean(view.source?.uri),
-                  },
-                ]
-                  .filter(item => item.enabled && item.value)
-                  .map(item => {
-                    return (
-                      <>
-                        {item.hasPrev && (
-                          <Text
-                            style={[
-                              a.text_xs,
-                              a.leading_snug,
-                              t.atoms.text_contrast_medium,
-                            ]}>
-                            •
-                          </Text>
-                        )}
-                        <Text
-                          numberOfLines={1}
-                          style={[
-                            a.text_xs,
-                            a.leading_snug,
-                            t.atoms.text_contrast_medium,
-                          ]}>
-                          {item.value}
-                        </Text>
-                      </>
-                    )
-                  })}
-              </View>
+              <PublicationMetaRow view={view} author={author} />
             </View>
           </>
         )}
@@ -778,7 +606,6 @@ export function PublicationFooter({
           style={[!gtPhone && [a.w_full, a.justify_center]]}
           onPress={onPress}
           onLongPress={onLongPress}
-          themeColors={themeColors}
         />
       )}
     </View>

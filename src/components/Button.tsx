@@ -263,7 +263,6 @@ export const Button = forwardRef<View, ButtonProps>(
             baseStyles.push(t.atoms.bg_contrast_50)
           }
         } else if (color === 'secondary_inverted') {
-          console.log(t)
           if (!disabled) {
             baseStyles.push({
               backgroundColor: t.palette.contrast_900,
