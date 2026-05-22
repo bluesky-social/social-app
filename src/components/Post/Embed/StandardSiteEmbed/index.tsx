@@ -16,7 +16,14 @@ import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {
+  atoms as a,
+  ThemeProvider,
+  useAlf,
+  useBreakpoints,
+  useTheme,
+  utils,
+} from '#/alf'
 import {ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
@@ -31,6 +38,7 @@ import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 
 export type ThemeColors = {
+  custom: boolean
   accent: string
   accentForeground: string
 }
@@ -105,14 +113,20 @@ export const StandardSiteEmbed = ({
       new AtUri(ref.uri).collection !== 'site.standard.document',
   )
   const themeColors = useMemo(() => {
+    let custom = false
     let accent = t.atoms.text.color
     let accentForeground = t.atoms.text_inverted.color
     const {accentRGB, accentForegroundRGB} = view.source?.theme || {}
-    if (accent && accentForeground) {
-      accent = colorRGBToHex(accentRGB)
-      accentForeground = colorRGBToHex(accentForegroundRGB)
+    if (accentRGB && accentForegroundRGB) {
+      custom = true
+      accent = utils.rgbToHex(accentRGB.r, accentRGB.g, accentRGB.b)
+      accentForeground = utils.rgbToHex(
+        accentForegroundRGB.r,
+        accentForegroundRGB.g,
+        accentForegroundRGB.b,
+      )
     }
-    return {accent, accentForeground}
+    return {custom, accent, accentForeground}
   }, [view])
 
   const maybeAuthorDid = useMemo(() => {
@@ -471,6 +485,7 @@ export function SubscribeButton({
   view,
   onPress,
   onLongPress,
+  themeColors,
   style,
 }: {
   view: AppBskyEmbedExternal.ViewExternal
@@ -479,34 +494,96 @@ export function SubscribeButton({
   themeColors: ThemeColors
   style?: StyleProp<ViewStyle>
 }) {
+  const alf = useAlf()
   const {t: l} = useLingui()
   const highlightedPublisher = useStandardSitePublisherConfig(view)
   const cta = highlightedPublisher
     ? l`Subscribe on ${highlightedPublisher.name}`
     : l`View publication`
+  const themesOverride = useMemo(() => {
+    if (!themeColors.custom) return alf.themes
+    const atoms = {
+      text_inverted: {color: themeColors.accentForeground}, // text
+    }
+    const palette = {
+      contrast_975: utils.darken(themeColors.accent, 5), // hover
+      contrast_900: themeColors.accent, // bg
+      contrast_600: utils.lighten(themeColors.accent, 5), // disabled bg
+      contrast_300: themeColors.accentForeground, // disabled text
+    }
+    return {
+      lightPalette: {
+        ...alf.themes.lightPalette,
+        ...palette,
+      },
+      darkPalette: {
+        ...alf.themes.darkPalette,
+        ...palette,
+      },
+      dimPalette: {
+        ...alf.themes.dimPalette,
+        ...palette,
+      },
+      light: {
+        ...alf.themes.light,
+        atoms: {
+          ...alf.themes.light.atoms,
+          ...atoms,
+        },
+        palette: {
+          ...alf.themes.light.palette,
+          ...palette,
+        },
+      },
+      dark: {
+        ...alf.themes.dark,
+        atoms: {
+          ...alf.themes.dark.atoms,
+          ...atoms,
+        },
+        palette: {
+          ...alf.themes.dark.palette,
+          ...palette,
+        },
+      },
+      dim: {
+        ...alf.themes.dim,
+        atoms: {
+          ...alf.themes.dim.atoms,
+          ...atoms,
+        },
+        palette: {
+          ...alf.themes.dim.palette,
+          ...palette,
+        },
+      },
+    }
+  }, [alf, themeColors])
 
   return (
-    <Link
-      shouldProxy
-      to={view.source!.uri}
-      label={cta}
-      size="small"
-      color="secondary_inverted"
-      style={[style, {gap: 5}]}
-      onPress={onPress}
-      onLongPress={onLongPress}>
-      {highlightedPublisher ? (
-        <>
-          <View style={[a.flex_row, a.align_center, {gap: 7}]}>
-            <ButtonIcon icon={highlightedPublisher.Icon} size="lg" />
-            <ButtonText>|</ButtonText>
-          </View>
+    <ThemeProvider theme={alf.themeName} themesOverride={themesOverride}>
+      <Link
+        shouldProxy
+        to={view.source!.uri}
+        label={cta}
+        size="small"
+        color="secondary_inverted"
+        style={[style, a.gap_sm]}
+        onPress={onPress}
+        onLongPress={onLongPress}>
+        {highlightedPublisher ? (
+          <>
+            <View style={[a.flex_row, a.align_center, {gap: 7}]}>
+              <ButtonIcon icon={highlightedPublisher.Icon} size="lg" />
+              {/*<ButtonText>|</ButtonText>*/}
+            </View>
+            <ButtonText>{cta}</ButtonText>
+          </>
+        ) : (
           <ButtonText>{cta}</ButtonText>
-        </>
-      ) : (
-        <ButtonText>{cta}</ButtonText>
-      )}
-    </Link>
+        )}
+      </Link>
+    </ThemeProvider>
   )
 }
 
@@ -706,12 +783,4 @@ export function PublicationFooter({
       )}
     </View>
   )
-}
-
-function colorRGBToHex(
-  rgb: AppBskyEmbedExternal.ViewExternalSourceTheme['accentRGB'],
-): string {
-  if (!rgb) return '#000000'
-  const {r, g, b} = rgb
-  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`
 }
