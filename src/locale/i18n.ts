@@ -1,12 +1,12 @@
 // Don't remove -force from these because detection is VERY slow on low-end Android.
 // https://github.com/formatjs/formatjs/issues/4463#issuecomment-2176070577
-import '@formatjs/intl-locale/polyfill-force'
-import '@formatjs/intl-pluralrules/polyfill-force'
-import '@formatjs/intl-numberformat/polyfill-force'
-import '@formatjs/intl-displaynames/polyfill-force'
-import '@formatjs/intl-pluralrules/locale-data/en'
-import '@formatjs/intl-numberformat/locale-data/en'
-import '@formatjs/intl-displaynames/locale-data/en'
+import '@formatjs/intl-locale/polyfill-force.js'
+import '@formatjs/intl-pluralrules/polyfill-force.js'
+import '@formatjs/intl-numberformat/polyfill-force.js'
+import '@formatjs/intl-displaynames/polyfill-force.js'
+import '@formatjs/intl-pluralrules/locale-data/en.js'
+import '@formatjs/intl-numberformat/locale-data/en.js'
+import '@formatjs/intl-displaynames/locale-data/en.js'
 
 import {useEffect, useState} from 'react'
 import {i18n} from '@lingui/core'
@@ -66,9 +66,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesAn})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/es'),
-        import('@formatjs/intl-pluralrules/locale-data/an'),
-        import('@formatjs/intl-numberformat/locale-data/es'),
-        import('@formatjs/intl-displaynames/locale-data/es'),
+        import('@formatjs/intl-pluralrules/locale-data/an.js'),
+        import('@formatjs/intl-numberformat/locale-data/es.js'),
+        import('@formatjs/intl-displaynames/locale-data/es.js'),
       ])
       return dateLocale
     }
@@ -76,9 +76,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesAst})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/es'),
-        import('@formatjs/intl-pluralrules/locale-data/ast'),
-        import('@formatjs/intl-numberformat/locale-data/ast'),
-        import('@formatjs/intl-displaynames/locale-data/ast'),
+        import('@formatjs/intl-pluralrules/locale-data/ast.js'),
+        import('@formatjs/intl-numberformat/locale-data/ast.js'),
+        import('@formatjs/intl-displaynames/locale-data/ast.js'),
       ])
       return dateLocale
     }
@@ -86,9 +86,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesCa})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/ca'),
-        import('@formatjs/intl-pluralrules/locale-data/ca'),
-        import('@formatjs/intl-numberformat/locale-data/ca'),
-        import('@formatjs/intl-displaynames/locale-data/ca'),
+        import('@formatjs/intl-pluralrules/locale-data/ca.js'),
+        import('@formatjs/intl-numberformat/locale-data/ca.js'),
+        import('@formatjs/intl-displaynames/locale-data/ca.js'),
       ])
       return dateLocale
     }
@@ -96,9 +96,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesCy})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/cy'),
-        import('@formatjs/intl-pluralrules/locale-data/cy'),
-        import('@formatjs/intl-numberformat/locale-data/cy'),
-        import('@formatjs/intl-displaynames/locale-data/cy'),
+        import('@formatjs/intl-pluralrules/locale-data/cy.js'),
+        import('@formatjs/intl-numberformat/locale-data/cy.js'),
+        import('@formatjs/intl-displaynames/locale-data/cy.js'),
       ])
       return dateLocale
     }
@@ -106,9 +106,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesDa})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/da'),
-        import('@formatjs/intl-pluralrules/locale-data/da'),
-        import('@formatjs/intl-numberformat/locale-data/da'),
-        import('@formatjs/intl-displaynames/locale-data/da'),
+        import('@formatjs/intl-pluralrules/locale-data/da.js'),
+        import('@formatjs/intl-numberformat/locale-data/da.js'),
+        import('@formatjs/intl-displaynames/locale-data/da.js'),
       ])
       return dateLocale
     }
@@ -116,9 +116,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesDe})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/de'),
-        import('@formatjs/intl-pluralrules/locale-data/de'),
-        import('@formatjs/intl-numberformat/locale-data/de'),
-        import('@formatjs/intl-displaynames/locale-data/de'),
+        import('@formatjs/intl-pluralrules/locale-data/de.js'),
+        import('@formatjs/intl-numberformat/locale-data/de.js'),
+        import('@formatjs/intl-displaynames/locale-data/de.js'),
       ])
       return dateLocale
     }
@@ -126,9 +126,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesEl})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/el'),
-        import('@formatjs/intl-pluralrules/locale-data/el'),
-        import('@formatjs/intl-numberformat/locale-data/el'),
-        import('@formatjs/intl-displaynames/locale-data/el'),
+        import('@formatjs/intl-pluralrules/locale-data/el.js'),
+        import('@formatjs/intl-numberformat/locale-data/el.js'),
+        import('@formatjs/intl-displaynames/locale-data/el.js'),
       ])
       return dateLocale
     }
@@ -136,9 +136,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesEn_GB})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/en-GB'),
-        import('@formatjs/intl-pluralrules/locale-data/en'),
-        import('@formatjs/intl-numberformat/locale-data/en-GB'),
-        import('@formatjs/intl-displaynames/locale-data/en-GB'),
+        import('@formatjs/intl-pluralrules/locale-data/en.js'),
+        import('@formatjs/intl-numberformat/locale-data/en-GB.js'),
+        import('@formatjs/intl-displaynames/locale-data/en-GB.js'),
       ])
       return dateLocale
     }
@@ -146,10 +146,10 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesEo})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/eo'),
-        import('@formatjs/intl-pluralrules/locale-data/eo'),
-        import('@formatjs/intl-numberformat/locale-data/eo'),
+        import('@formatjs/intl-pluralrules/locale-data/eo.js'),
+        import('@formatjs/intl-numberformat/locale-data/eo.js'),
         // borked, see https://github.com/bluesky-social/social-app/pull/9574
-        // import('@formatjs/intl-displaynames/locale-data/eo'),
+        // import('@formatjs/intl-displaynames/locale-data/eo.js'),
       ])
       return dateLocale
     }
@@ -157,9 +157,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesEs})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/es'),
-        import('@formatjs/intl-pluralrules/locale-data/es'),
-        import('@formatjs/intl-numberformat/locale-data/es'),
-        import('@formatjs/intl-displaynames/locale-data/es'),
+        import('@formatjs/intl-pluralrules/locale-data/es.js'),
+        import('@formatjs/intl-numberformat/locale-data/es.js'),
+        import('@formatjs/intl-displaynames/locale-data/es.js'),
       ])
       return dateLocale
     }
@@ -167,9 +167,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesEu})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/eu'),
-        import('@formatjs/intl-pluralrules/locale-data/eu'),
-        import('@formatjs/intl-numberformat/locale-data/eu'),
-        import('@formatjs/intl-displaynames/locale-data/eu'),
+        import('@formatjs/intl-pluralrules/locale-data/eu.js'),
+        import('@formatjs/intl-numberformat/locale-data/eu.js'),
+        import('@formatjs/intl-displaynames/locale-data/eu.js'),
       ])
       return dateLocale
     }
@@ -177,9 +177,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesFi})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/fi'),
-        import('@formatjs/intl-pluralrules/locale-data/fi'),
-        import('@formatjs/intl-numberformat/locale-data/fi'),
-        import('@formatjs/intl-displaynames/locale-data/fi'),
+        import('@formatjs/intl-pluralrules/locale-data/fi.js'),
+        import('@formatjs/intl-numberformat/locale-data/fi.js'),
+        import('@formatjs/intl-displaynames/locale-data/fi.js'),
       ])
       return dateLocale
     }
@@ -187,9 +187,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesFr})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/fr'),
-        import('@formatjs/intl-pluralrules/locale-data/fr'),
-        import('@formatjs/intl-numberformat/locale-data/fr'),
-        import('@formatjs/intl-displaynames/locale-data/fr'),
+        import('@formatjs/intl-pluralrules/locale-data/fr.js'),
+        import('@formatjs/intl-numberformat/locale-data/fr.js'),
+        import('@formatjs/intl-displaynames/locale-data/fr.js'),
       ])
       return dateLocale
     }
@@ -197,18 +197,18 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesFy})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/fy'),
-        import('@formatjs/intl-pluralrules/locale-data/fy'),
-        import('@formatjs/intl-numberformat/locale-data/fy'),
-        import('@formatjs/intl-displaynames/locale-data/fy'),
+        import('@formatjs/intl-pluralrules/locale-data/fy.js'),
+        import('@formatjs/intl-numberformat/locale-data/fy.js'),
+        import('@formatjs/intl-displaynames/locale-data/fy.js'),
       ])
       return dateLocale
     }
     case AppLanguage.ga: {
       i18n.loadAndActivate({locale, messages: messagesGa})
       await Promise.all([
-        import('@formatjs/intl-pluralrules/locale-data/ga'),
-        import('@formatjs/intl-numberformat/locale-data/ga'),
-        import('@formatjs/intl-displaynames/locale-data/ga'),
+        import('@formatjs/intl-pluralrules/locale-data/ga.js'),
+        import('@formatjs/intl-numberformat/locale-data/ga.js'),
+        import('@formatjs/intl-displaynames/locale-data/ga.js'),
       ])
       return undefined
     }
@@ -216,9 +216,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesGd})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/gd'),
-        import('@formatjs/intl-pluralrules/locale-data/gd'),
-        import('@formatjs/intl-numberformat/locale-data/gd'),
-        import('@formatjs/intl-displaynames/locale-data/gd'),
+        import('@formatjs/intl-pluralrules/locale-data/gd.js'),
+        import('@formatjs/intl-numberformat/locale-data/gd.js'),
+        import('@formatjs/intl-displaynames/locale-data/gd.js'),
       ])
       return dateLocale
     }
@@ -226,9 +226,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesGl})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/gl'),
-        import('@formatjs/intl-pluralrules/locale-data/gl'),
-        import('@formatjs/intl-numberformat/locale-data/gl'),
-        import('@formatjs/intl-displaynames/locale-data/gl'),
+        import('@formatjs/intl-pluralrules/locale-data/gl.js'),
+        import('@formatjs/intl-numberformat/locale-data/gl.js'),
+        import('@formatjs/intl-displaynames/locale-data/gl.js'),
       ])
       return dateLocale
     }
@@ -236,9 +236,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesHi})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/hi'),
-        import('@formatjs/intl-pluralrules/locale-data/hi'),
-        import('@formatjs/intl-numberformat/locale-data/hi'),
-        import('@formatjs/intl-displaynames/locale-data/hi'),
+        import('@formatjs/intl-pluralrules/locale-data/hi.js'),
+        import('@formatjs/intl-numberformat/locale-data/hi.js'),
+        import('@formatjs/intl-displaynames/locale-data/hi.js'),
       ])
       return dateLocale
     }
@@ -246,18 +246,18 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesHu})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/hu'),
-        import('@formatjs/intl-pluralrules/locale-data/hu'),
-        import('@formatjs/intl-numberformat/locale-data/hu'),
-        import('@formatjs/intl-displaynames/locale-data/hu'),
+        import('@formatjs/intl-pluralrules/locale-data/hu.js'),
+        import('@formatjs/intl-numberformat/locale-data/hu.js'),
+        import('@formatjs/intl-displaynames/locale-data/hu.js'),
       ])
       return dateLocale
     }
     case AppLanguage.ia: {
       i18n.loadAndActivate({locale, messages: messagesIa})
       await Promise.all([
-        import('@formatjs/intl-pluralrules/locale-data/ia'),
-        import('@formatjs/intl-numberformat/locale-data/ia'),
-        import('@formatjs/intl-displaynames/locale-data/ia'),
+        import('@formatjs/intl-pluralrules/locale-data/ia.js'),
+        import('@formatjs/intl-numberformat/locale-data/ia.js'),
+        import('@formatjs/intl-displaynames/locale-data/ia.js'),
       ])
       return undefined
     }
@@ -265,9 +265,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesId})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/id'),
-        import('@formatjs/intl-pluralrules/locale-data/id'),
-        import('@formatjs/intl-numberformat/locale-data/id'),
-        import('@formatjs/intl-displaynames/locale-data/id'),
+        import('@formatjs/intl-pluralrules/locale-data/id.js'),
+        import('@formatjs/intl-numberformat/locale-data/id.js'),
+        import('@formatjs/intl-displaynames/locale-data/id.js'),
       ])
       return dateLocale
     }
@@ -275,9 +275,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesIt})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/it'),
-        import('@formatjs/intl-pluralrules/locale-data/it'),
-        import('@formatjs/intl-numberformat/locale-data/it'),
-        import('@formatjs/intl-displaynames/locale-data/it'),
+        import('@formatjs/intl-pluralrules/locale-data/it.js'),
+        import('@formatjs/intl-numberformat/locale-data/it.js'),
+        import('@formatjs/intl-displaynames/locale-data/it.js'),
       ])
       return dateLocale
     }
@@ -285,9 +285,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesJa})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/ja'),
-        import('@formatjs/intl-pluralrules/locale-data/ja'),
-        import('@formatjs/intl-numberformat/locale-data/ja'),
-        import('@formatjs/intl-displaynames/locale-data/ja'),
+        import('@formatjs/intl-pluralrules/locale-data/ja.js'),
+        import('@formatjs/intl-numberformat/locale-data/ja.js'),
+        import('@formatjs/intl-displaynames/locale-data/ja.js'),
       ])
       return dateLocale
     }
@@ -295,9 +295,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesKm})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/km'),
-        import('@formatjs/intl-pluralrules/locale-data/km'),
-        import('@formatjs/intl-numberformat/locale-data/km'),
-        import('@formatjs/intl-displaynames/locale-data/km'),
+        import('@formatjs/intl-pluralrules/locale-data/km.js'),
+        import('@formatjs/intl-numberformat/locale-data/km.js'),
+        import('@formatjs/intl-displaynames/locale-data/km.js'),
       ])
       return dateLocale
     }
@@ -305,18 +305,18 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesKo})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/ko'),
-        import('@formatjs/intl-pluralrules/locale-data/ko'),
-        import('@formatjs/intl-numberformat/locale-data/ko'),
-        import('@formatjs/intl-displaynames/locale-data/ko'),
+        import('@formatjs/intl-pluralrules/locale-data/ko.js'),
+        import('@formatjs/intl-numberformat/locale-data/ko.js'),
+        import('@formatjs/intl-displaynames/locale-data/ko.js'),
       ])
       return dateLocale
     }
     case AppLanguage.ne: {
       i18n.loadAndActivate({locale, messages: messagesNe})
       await Promise.all([
-        import('@formatjs/intl-pluralrules/locale-data/ne'),
-        import('@formatjs/intl-numberformat/locale-data/ne'),
-        import('@formatjs/intl-displaynames/locale-data/ne'),
+        import('@formatjs/intl-pluralrules/locale-data/ne.js'),
+        import('@formatjs/intl-numberformat/locale-data/ne.js'),
+        import('@formatjs/intl-displaynames/locale-data/ne.js'),
       ])
       return undefined
     }
@@ -324,9 +324,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesNl})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/nl'),
-        import('@formatjs/intl-pluralrules/locale-data/nl'),
-        import('@formatjs/intl-numberformat/locale-data/nl'),
-        import('@formatjs/intl-displaynames/locale-data/nl'),
+        import('@formatjs/intl-pluralrules/locale-data/nl.js'),
+        import('@formatjs/intl-numberformat/locale-data/nl.js'),
+        import('@formatjs/intl-displaynames/locale-data/nl.js'),
       ])
       return dateLocale
     }
@@ -334,9 +334,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesPl})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/pl'),
-        import('@formatjs/intl-pluralrules/locale-data/pl'),
-        import('@formatjs/intl-numberformat/locale-data/pl'),
-        import('@formatjs/intl-displaynames/locale-data/pl'),
+        import('@formatjs/intl-pluralrules/locale-data/pl.js'),
+        import('@formatjs/intl-numberformat/locale-data/pl.js'),
+        import('@formatjs/intl-displaynames/locale-data/pl.js'),
       ])
       return dateLocale
     }
@@ -344,9 +344,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesPt_BR})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/pt-BR'),
-        import('@formatjs/intl-pluralrules/locale-data/pt'),
-        import('@formatjs/intl-numberformat/locale-data/pt'),
-        import('@formatjs/intl-displaynames/locale-data/pt'),
+        import('@formatjs/intl-pluralrules/locale-data/pt.js'),
+        import('@formatjs/intl-numberformat/locale-data/pt.js'),
+        import('@formatjs/intl-displaynames/locale-data/pt.js'),
       ])
       return dateLocale
     }
@@ -354,9 +354,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesPt_PT})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/pt'),
-        import('@formatjs/intl-pluralrules/locale-data/pt-PT'),
-        import('@formatjs/intl-numberformat/locale-data/pt-PT'),
-        import('@formatjs/intl-displaynames/locale-data/pt-PT'),
+        import('@formatjs/intl-pluralrules/locale-data/pt-PT.js'),
+        import('@formatjs/intl-numberformat/locale-data/pt-PT.js'),
+        import('@formatjs/intl-displaynames/locale-data/pt-PT.js'),
       ])
       return dateLocale
     }
@@ -364,9 +364,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesRo})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/ro'),
-        import('@formatjs/intl-pluralrules/locale-data/ro'),
-        import('@formatjs/intl-numberformat/locale-data/ro'),
-        import('@formatjs/intl-displaynames/locale-data/ro'),
+        import('@formatjs/intl-pluralrules/locale-data/ro.js'),
+        import('@formatjs/intl-numberformat/locale-data/ro.js'),
+        import('@formatjs/intl-displaynames/locale-data/ro.js'),
       ])
       return dateLocale
     }
@@ -374,9 +374,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesRu})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/ru'),
-        import('@formatjs/intl-pluralrules/locale-data/ru'),
-        import('@formatjs/intl-numberformat/locale-data/ru'),
-        import('@formatjs/intl-displaynames/locale-data/ru'),
+        import('@formatjs/intl-pluralrules/locale-data/ru.js'),
+        import('@formatjs/intl-numberformat/locale-data/ru.js'),
+        import('@formatjs/intl-displaynames/locale-data/ru.js'),
       ])
       return dateLocale
     }
@@ -384,9 +384,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesSv})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/sv'),
-        import('@formatjs/intl-pluralrules/locale-data/sv'),
-        import('@formatjs/intl-numberformat/locale-data/sv'),
-        import('@formatjs/intl-displaynames/locale-data/sv'),
+        import('@formatjs/intl-pluralrules/locale-data/sv.js'),
+        import('@formatjs/intl-numberformat/locale-data/sv.js'),
+        import('@formatjs/intl-displaynames/locale-data/sv.js'),
       ])
       return dateLocale
     }
@@ -394,9 +394,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesTh})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/th'),
-        import('@formatjs/intl-pluralrules/locale-data/th'),
-        import('@formatjs/intl-numberformat/locale-data/th'),
-        import('@formatjs/intl-displaynames/locale-data/th'),
+        import('@formatjs/intl-pluralrules/locale-data/th.js'),
+        import('@formatjs/intl-numberformat/locale-data/th.js'),
+        import('@formatjs/intl-displaynames/locale-data/th.js'),
       ])
       return dateLocale
     }
@@ -404,9 +404,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesTr})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/tr'),
-        import('@formatjs/intl-pluralrules/locale-data/tr'),
-        import('@formatjs/intl-numberformat/locale-data/tr'),
-        import('@formatjs/intl-displaynames/locale-data/tr'),
+        import('@formatjs/intl-pluralrules/locale-data/tr.js'),
+        import('@formatjs/intl-numberformat/locale-data/tr.js'),
+        import('@formatjs/intl-displaynames/locale-data/tr.js'),
       ])
       return dateLocale
     }
@@ -414,9 +414,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesUk})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/uk'),
-        import('@formatjs/intl-pluralrules/locale-data/uk'),
-        import('@formatjs/intl-numberformat/locale-data/uk'),
-        import('@formatjs/intl-displaynames/locale-data/uk'),
+        import('@formatjs/intl-pluralrules/locale-data/uk.js'),
+        import('@formatjs/intl-numberformat/locale-data/uk.js'),
+        import('@formatjs/intl-displaynames/locale-data/uk.js'),
       ])
       return dateLocale
     }
@@ -424,9 +424,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesVi})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/vi'),
-        import('@formatjs/intl-pluralrules/locale-data/vi'),
-        import('@formatjs/intl-numberformat/locale-data/vi'),
-        import('@formatjs/intl-displaynames/locale-data/vi'),
+        import('@formatjs/intl-pluralrules/locale-data/vi.js'),
+        import('@formatjs/intl-numberformat/locale-data/vi.js'),
+        import('@formatjs/intl-displaynames/locale-data/vi.js'),
       ])
       return dateLocale
     }
@@ -434,9 +434,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesZh_CN})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/zh-CN'),
-        import('@formatjs/intl-pluralrules/locale-data/zh'),
-        import('@formatjs/intl-numberformat/locale-data/zh'),
-        import('@formatjs/intl-displaynames/locale-data/zh'),
+        import('@formatjs/intl-pluralrules/locale-data/zh.js'),
+        import('@formatjs/intl-numberformat/locale-data/zh.js'),
+        import('@formatjs/intl-displaynames/locale-data/zh.js'),
       ])
       return dateLocale
     }
@@ -444,9 +444,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesZh_HK})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/zh-HK'),
-        import('@formatjs/intl-pluralrules/locale-data/zh'),
-        import('@formatjs/intl-numberformat/locale-data/zh'),
-        import('@formatjs/intl-displaynames/locale-data/zh'),
+        import('@formatjs/intl-pluralrules/locale-data/zh.js'),
+        import('@formatjs/intl-numberformat/locale-data/zh.js'),
+        import('@formatjs/intl-displaynames/locale-data/zh.js'),
       ])
       return dateLocale
     }
@@ -454,9 +454,9 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesZh_TW})
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/zh-TW'),
-        import('@formatjs/intl-pluralrules/locale-data/zh'),
-        import('@formatjs/intl-numberformat/locale-data/zh'),
-        import('@formatjs/intl-displaynames/locale-data/zh'),
+        import('@formatjs/intl-pluralrules/locale-data/zh.js'),
+        import('@formatjs/intl-numberformat/locale-data/zh.js'),
+        import('@formatjs/intl-displaynames/locale-data/zh.js'),
       ])
       return dateLocale
     }
