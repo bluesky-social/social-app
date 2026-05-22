@@ -104,7 +104,7 @@ class NotificationService: UNNotificationServiceExtension {
 
     var speakableGroupName: INSpeakableString? = nil
     if userInfo["convoKind"] as? String == "group",
-       let groupName = userInfo["convoGroupName"] as? String,
+       let groupName = userInfo["groupName"] as? String,
        !groupName.isEmpty {
       speakableGroupName = INSpeakableString(spokenPhrase: groupName)
     }
@@ -126,10 +126,10 @@ class NotificationService: UNNotificationServiceExtension {
     // `recipientCount` on the donation metadata is Apple's documented escape
     // hatch for this case, and overrides the (zero-length) recipients array.
     if userInfo["convoKind"] as? String == "group",
-       let convoMemberCount = userInfo["convoMemberCount"] as? Int,
-       convoMemberCount > 0 {
+       let groupMemberCount = userInfo["groupMemberCount"] as? Int,
+       groupMemberCount > 0 {
       let metadata = INSendMessageIntentDonationMetadata()
-      metadata.recipientCount = convoMemberCount
+      metadata.recipientCount = groupMemberCount
       intent.donationMetadata = metadata
     }
 
@@ -209,7 +209,7 @@ class NotificationService: UNNotificationServiceExtension {
     userInfo: [AnyHashable: Any]
   ) {
     guard userInfo["convoKind"] as? String == "group",
-          let groupName = userInfo["convoGroupName"] as? String,
+          let groupName = userInfo["groupName"] as? String,
           !groupName.isEmpty else {
       return
     }
