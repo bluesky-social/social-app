@@ -1,20 +1,20 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 import {type ModerationDecision} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileBlockMutationQueue} from '#/state/queries/profile'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {BlockedByListDialog} from '#/components/dms/BlockedByListDialog'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
-import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
-import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
-import {PersonCheck_Stroke2_Corner0_Rounded as PersonCheckIcon} from '#/components/icons/Person'
+import {
+  PersonCheck_Stroke2_Corner0_Rounded as PersonCheckIcon,
+  PersonX_Stroke2_Corner0_Rounded as PersonXIcon,
+} from '#/components/icons/Person'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
 
@@ -28,13 +28,11 @@ export function MessagesListBlockedFooter({
   moderation: ModerationDecision
 }) {
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
   const {t: l} = useLingui()
   const recipient = useProfileShadow(initialRecipient)
   const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(recipient)
 
   const leaveConvoControl = useDialogControl()
-  const reportControl = useDialogControl()
   const blockedByListControl = useDialogControl()
 
   const {listBlocks, userBlock} = useMemo(() => {
@@ -59,77 +57,73 @@ export function MessagesListBlockedFooter({
   }, [blockedByListControl, listBlocks, queueUnblock])
 
   return (
-    <View style={[a.gap_lg, a.p_2xl, t.atoms.bg]}>
-      <LinearGradient
-        colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.08)']}
-        style={[a.absolute, {top: -16, left: 0, right: 0, height: 16}]}
-        pointerEvents="none"
-      />
-      <Text style={[a.text_lg, a.font_semi_bold, a.text_center]}>
-        {isBlocking
-          ? l`You are blocking this user`
-          : l`This user is blocking you`}
-      </Text>
-      <View style={[a.flex_row, a.justify_between, a.gap_md]}>
-        <Button
-          label={l`Report chat`}
-          color="negative_subtle"
-          size="large"
-          style={[a.flex_1]}
-          onPress={reportControl.open}>
-          <ButtonIcon icon={FlagIcon} />
-          <ButtonText>
-            <Trans>Report chat</Trans>
-          </ButtonText>
-        </Button>
-        <Button
-          label={l`Delete chat`}
-          color="secondary"
-          size="large"
-          style={[a.flex_1]}
-          onPress={leaveConvoControl.open}>
-          <ButtonIcon icon={LeaveIcon} />
-          <ButtonText>
-            <Trans>Delete chat</Trans>
-          </ButtonText>
-        </Button>
-        {isBlocking && gtMobile && (
+    <View style={[a.p_md]}>
+      <View
+        style={[
+          a.align_center,
+          a.justify_center,
+          a.p_lg,
+          t.atoms.bg_contrast_50,
+          {
+            borderRadius: 40,
+          },
+        ]}>
+        <PersonXIcon fill={t.atoms.text.color} size="lg" style={[a.mb_xs]} />
+        <Text
+          style={[
+            a.mb_xs,
+            a.text_center,
+            a.text_md,
+            a.font_semi_bold,
+            t.atoms.text,
+          ]}>
+          {isBlocking
+            ? l`You are blocking this person`
+            : l`This person is blocking you`}
+        </Text>
+        <Text
+          style={[
+            a.text_center,
+            a.text_sm,
+            a.leading_snug,
+            t.atoms.text_contrast_high,
+          ]}>
+          <Trans>You can read chat history but can’t send new messages.</Trans>
+        </Text>
+        {isBlocking ? (
           <Button
-            label={l`Unblock user`}
-            color="secondary"
+            label={l`Unblock`}
+            color="secondary_inverted"
             size="large"
-            style={[a.flex_1]}
+            style={[a.mt_lg, a.w_full]}
             onPress={onUnblockPress}>
             <ButtonIcon icon={PersonCheckIcon} />
             <ButtonText>
-              <Trans>Unblock user</Trans>
+              <Trans>Unblock</Trans>
             </ButtonText>
           </Button>
-        )}
-      </View>
-      {isBlocking && !gtMobile && (
+        ) : null}
         <Button
-          label={l`Unblock user`}
-          color="secondary"
+          label={l`Leave chat`}
+          color="secondary_inverted"
           size="large"
-          style={[a.flex_1]}
-          onPress={onUnblockPress}>
-          <ButtonIcon icon={PersonCheckIcon} />
+          style={[a.mt_lg, a.w_full]}
+          onPress={leaveConvoControl.open}>
+          <ButtonIcon icon={LeaveIcon} />
           <ButtonText>
-            <Trans>Unblock user</Trans>
+            <Trans>Leave chat</Trans>
           </ButtonText>
         </Button>
-      )}
-      <LeaveConvoPrompt
-        control={leaveConvoControl}
-        currentScreen="conversation"
-        convoId={convoId}
-      />
-      <ReportConversationPrompt control={reportControl} />
-      <BlockedByListDialog
-        control={blockedByListControl}
-        listBlocks={listBlocks}
-      />
+        <LeaveConvoPrompt
+          control={leaveConvoControl}
+          currentScreen="conversation"
+          convoId={convoId}
+        />
+        <BlockedByListDialog
+          control={blockedByListControl}
+          listBlocks={listBlocks}
+        />
+      </View>
     </View>
   )
 }
