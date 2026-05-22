@@ -68,7 +68,6 @@ function isWithinClusterBoundary({
   direction: 'prev' | 'next'
 }): boolean {
   if (!isFromSameSender) return true
-  if (isPending && adjacentMessage) return false
   if (ChatBskyConvoDefs.isMessageView(adjacentMessage)) {
     const thisDate = new Date(currentSentAt)
     const adjDate = new Date(adjacentMessage.sentAt)
@@ -76,7 +75,10 @@ function isWithinClusterBoundary({
       direction === 'next'
         ? adjDate.getTime() - thisDate.getTime()
         : thisDate.getTime() - adjDate.getTime()
-    return diff > CLUSTERED_MESSAGE_THRESHOLD_MS
+    const isOutsideThreshold = diff > CLUSTERED_MESSAGE_THRESHOLD_MS
+    // For pending messages, still check the time threshold
+    if (isPending) return isOutsideThreshold
+    return isOutsideThreshold
   }
   return true
 }
