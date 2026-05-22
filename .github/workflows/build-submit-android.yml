@@ -49,7 +49,8 @@ jobs:
       - name: 🔨 Setup Expo CLI
         uses: expo/expo-github-action@main
         with:
-          expo-version: latest
+          eas-version: '19.0.5'
+          packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
 
       - uses: actions/setup-java@v5
