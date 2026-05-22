@@ -87,7 +87,7 @@
     "export": "expo export --dump-sourcemap && pnpm upload-native-sourcemaps",
     "upload-native-sourcemaps": "pnpm exec sentry-expo-upload-sourcemaps dist",
     "make-deploy-bundle": "bash scripts/bundleUpdate.sh",
-    "generate-web-stats": "EXPO_ATLAS=1 yarn build-web",
+    "generate-web-stats": "EXPO_ATLAS=1 pnpm build-web",
     "open-analyzer": "npx expo-atlas .expo/atlas.jsonl",
     "icons:optimize": "svgo -f ./assets/icons"
   },
