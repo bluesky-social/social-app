@@ -136,15 +136,17 @@ export function JoinRequest({setScreenState}: Props) {
                     a.font_semi_bold,
                     t.atoms.text,
                   ]}>
-                  By{' '}
-                  {createSanitizedDisplayName(
-                    data.joinLinkPreviews[0].owner,
-                    true,
-                    moderateProfile(
+                  <Trans comment="The owner (creator) of a group chat.">
+                    By{' '}
+                    {createSanitizedDisplayName(
                       data.joinLinkPreviews[0].owner,
-                      moderationOpts,
-                    ).ui('displayName'),
-                  )}
+                      true,
+                      moderateProfile(
+                        data.joinLinkPreviews[0].owner,
+                        moderationOpts,
+                      ).ui('displayName'),
+                    )}
+                  </Trans>
                 </Text>
                 <Text
                   style={[
