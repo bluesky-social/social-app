@@ -18,9 +18,7 @@ import {
 } from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
-import {useFocusGuards} from '@radix-ui/react-focus-guards'
-import {FocusScope} from '@radix-ui/react-focus-scope'
+import {DismissableLayer, FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {logger} from '#/logger'
@@ -178,9 +176,9 @@ export function Inner({
   const {close} = useContext(Context)
   const {gtMobile} = useBreakpoints()
   const {reduceMotionEnabled} = useA11y()
-  useFocusGuards()
+  FocusGuards.useFocusGuards()
   return (
-    <FocusScope loop asChild trapped>
+    <FocusScope.FocusScope loop asChild trapped>
       <View
         role="dialog"
         aria-role="dialog"
@@ -209,7 +207,7 @@ export function Inner({
           !reduceMotionEnabled && a.zoom_fade_in,
           style,
         ])}>
-        <DismissableLayer
+        <DismissableLayer.DismissableLayer
           onInteractOutside={preventDefault}
           onFocusOutside={preventDefault}
           onDismiss={close}
@@ -218,9 +216,9 @@ export function Inner({
           <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
             {children}
           </View>
-        </DismissableLayer>
+        </DismissableLayer.DismissableLayer>
       </View>
-    </FocusScope>
+    </FocusScope.FocusScope>
   )
 }
 

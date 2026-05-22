@@ -1,4 +1,4 @@
-import {FocusScope as RadixFocusScope} from '@radix-ui/react-focus-scope'
+import {FocusScope as RadixFocusScope} from 'radix-ui/internal'
 
 /*
  * The web version of the FocusScope component is a proper implementation, we
@@ -7,8 +7,8 @@ import {FocusScope as RadixFocusScope} from '@radix-ui/react-focus-scope'
  */
 export function FocusScope({children}: {children: React.ReactNode}) {
   return (
-    <RadixFocusScope loop asChild trapped>
+    <RadixFocusScope.FocusScope loop asChild trapped>
       {children}
-    </RadixFocusScope>
+    </RadixFocusScope.FocusScope>
   )
 }

@@ -4,8 +4,7 @@ import {ImageBackground} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useFocusGuards} from '@radix-ui/react-focus-guards'
-import {FocusScope} from '@radix-ui/react-focus-scope'
+import {FocusGuards, FocusScope} from 'radix-ui/internal'
 
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
@@ -65,7 +64,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
     requestSwitchToAccount({requestedAccount: 'existing'})
   }
 
-  useFocusGuards()
+  FocusGuards.useFocusGuards()
 
   return (
     <View
@@ -80,7 +79,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
         web({backdropFilter: 'blur(15px)'}),
         isExiting ? a.fade_out : a.fade_in,
       ]}>
-      <FocusScope asChild loop trapped>
+      <FocusScope.FocusScope asChild loop trapped>
         <View
           style={flatten([
             {
@@ -245,7 +244,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
             </Button>
           </ImageBackground>
         </View>
-      </FocusScope>
+      </FocusScope.FocusScope>
     </View>
   )
 }
