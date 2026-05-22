@@ -444,8 +444,8 @@ export async function dynamicActivate(locale: AppLanguage) {
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/zh-HK'),
         import('@formatjs/intl-pluralrules/locale-data/zh.js'),
-        import('@formatjs/intl-numberformat/locale-data/zh.js'),
-        import('@formatjs/intl-displaynames/locale-data/zh.js'),
+        import('@formatjs/intl-numberformat/locale-data/yue-Hant.js'),
+        import('@formatjs/intl-displaynames/locale-data/yue-Hant.js'),
       ])
       return dateLocale
     }
@@ -454,8 +454,8 @@ export async function dynamicActivate(locale: AppLanguage) {
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/zh-TW'),
         import('@formatjs/intl-pluralrules/locale-data/zh.js'),
-        import('@formatjs/intl-numberformat/locale-data/zh.js'),
-        import('@formatjs/intl-displaynames/locale-data/zh.js'),
+        import('@formatjs/intl-numberformat/locale-data/zh-Hant.js'),
+        import('@formatjs/intl-displaynames/locale-data/zh-Hant.js'),
       ])
       return dateLocale
     }
