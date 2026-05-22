@@ -353,10 +353,6 @@ msgstr "{count}+ requests"
 msgid "{date} at {time}"
 msgstr "{date} at {time}"
 
-#: src/screens/Messages/components/ChatStatusInfo.tsx:140
-msgid "{displayName} added you"
-msgstr "{displayName} added you"
-
 #: src/lib/generate-starterpack.ts:104
 #: src/screens/StarterPack/Wizard/index.tsx:189
 msgid "{displayName}'s Starter Pack"
@@ -726,6 +722,11 @@ msgstr ""
 #: src/components/WhoCanReply.tsx:353
 msgid "<0>{0}</0> members"
 msgstr ""
+
+#. Text identifying the person who added you to a group chat
+#: src/screens/Messages/components/ChatStatusInfo.tsx:141
+msgid "<0>{displayName}</0><1/><2> added you</2>"
+msgstr "<0>{displayName}</0><1/><2> added you</2>"
 
 #: src/screens/Hashtag.tsx:226
 #: src/screens/Search/SearchResults.tsx:315
@@ -1855,7 +1856,7 @@ msgid "Birthday"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:853
-#: src/screens/Messages/components/ChatStatusInfo.tsx:66
+#: src/screens/Messages/components/ChatStatusInfo.tsx:67
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:222
 #: src/screens/Messages/ConversationSettings/prompts.tsx:115
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:207
@@ -1900,7 +1901,7 @@ msgstr ""
 msgid "Block list"
 msgstr ""
 
-#: src/screens/Messages/components/ChatStatusInfo.tsx:66
+#: src/screens/Messages/components/ChatStatusInfo.tsx:67
 msgid "Block or report"
 msgstr ""
 
@@ -2540,10 +2541,6 @@ msgstr ""
 msgid "Click to retry failed message"
 msgstr ""
 
-#: src/components/dms/ChatEmptyPill.tsx:39
-msgid "Clip 🐴 clop 🐴"
-msgstr ""
-
 #. Visible label of the button that dismisses the GIF picker error dialog.
 #: src/ageAssurance/components/RedirectOverlay.tsx:265
 #: src/ageAssurance/components/RedirectOverlay.tsx:271
@@ -2628,14 +2625,14 @@ msgid "Close image"
 msgstr ""
 
 #: src/components/Lightbox/Lightbox.web.tsx:75
-#: src/components/Lightbox/Lightbox.web.tsx:331
+#: src/components/Lightbox/Lightbox.web.tsx:330
 msgid "Close image viewer"
 msgstr ""
 
 #: src/components/ContextMenu/Backdrop.ios.tsx:53
 #: src/components/ContextMenu/Backdrop.ios.tsx:79
 #: src/components/ContextMenu/Backdrop.tsx:45
-#: src/components/Lightbox/chrome/ImageMenu.tsx:86
+#: src/components/Lightbox/chrome/ImageMenu.tsx:85
 msgid "Close menu"
 msgstr ""
 
@@ -3397,7 +3394,7 @@ msgstr ""
 msgid "Deleted"
 msgstr ""
 
-#: src/components/dms/MessagesListHeader.tsx:105
+#: src/components/dms/MessagesListHeader.tsx:103
 #: src/screens/Messages/components/ChatListItem.tsx:132
 #: src/screens/Messages/ConversationSettings/Member.tsx:75
 msgid "Deleted Account"
@@ -3715,8 +3712,8 @@ msgctxt "button"
 msgid "Download chat data"
 msgstr "Download chat data"
 
-#: src/components/Lightbox/Lightbox.web.tsx:309
-#: src/components/Lightbox/Lightbox.web.tsx:321
+#: src/components/Lightbox/Lightbox.web.tsx:308
+#: src/components/Lightbox/Lightbox.web.tsx:320
 msgid "Download image"
 msgstr "Download image"
 
@@ -4310,7 +4307,7 @@ msgstr ""
 msgid "Failed to change handle. Please try again."
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:299
+#: src/components/Lightbox/Lightbox.web.tsx:298
 msgid "Failed to copy link"
 msgstr "Failed to copy link"
 
@@ -4506,7 +4503,7 @@ msgstr ""
 msgid "Failed to save draft"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:316
+#: src/components/Lightbox/Lightbox.web.tsx:315
 msgid "Failed to save image"
 msgstr "Failed to save image"
 
@@ -5780,13 +5777,13 @@ msgstr "Image is hidden due to your moderation settings."
 msgid "Image is unavailable."
 msgstr "Image is unavailable."
 
-#: src/components/Lightbox/chrome/ImageMenu.tsx:74
+#: src/components/Lightbox/chrome/ImageMenu.tsx:73
 #: src/components/Lightbox/Lightbox.web.tsx:261
-#: src/components/Lightbox/Lightbox.web.tsx:270
+#: src/components/Lightbox/Lightbox.web.tsx:269
 msgid "Image options"
 msgstr "Image options"
 
-#: src/components/Lightbox/Lightbox.web.tsx:313
+#: src/components/Lightbox/Lightbox.web.tsx:312
 #: src/lib/media/save-image.ios.ts:25
 #: src/lib/media/save-image.ts:29
 msgid "Image saved"
@@ -6207,7 +6204,7 @@ msgid "Leave"
 msgstr ""
 
 #. Leave a conversation (reject a chat invitation)
-#: src/screens/Messages/components/ChatStatusInfo.tsx:77
+#: src/screens/Messages/components/ChatStatusInfo.tsx:78
 msgctxt "Button"
 msgid "Leave"
 msgstr "Leave"
@@ -6350,7 +6347,7 @@ msgstr ""
 msgid "Linear"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:297
+#: src/components/Lightbox/Lightbox.web.tsx:296
 msgid "Link copied to clipboard"
 msgstr "Link copied to clipboard"
 
@@ -7674,7 +7671,8 @@ msgstr ""
 msgid "Open Germ DM"
 msgstr ""
 
-#: src/components/dms/MessagesListHeader.tsx:179
+#: src/components/dms/MessagesListHeader.tsx:163
+#: src/components/dms/MessagesListHeader.tsx:198
 msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
@@ -9409,7 +9407,7 @@ msgstr ""
 msgid "Save draft?"
 msgstr ""
 
-#: src/components/Lightbox/chrome/ImageMenu.tsx:100
+#: src/components/Lightbox/chrome/ImageMenu.tsx:99
 #: src/components/StarterPack/ShareDialog.tsx:144
 #: src/components/StarterPack/ShareDialog.tsx:150
 msgid "Save image"
@@ -9455,7 +9453,6 @@ msgstr ""
 msgid "Saved to your feeds"
 msgstr ""
 
-#: src/components/dms/ChatEmptyPill.tsx:33
 #: src/components/NewskieDialog.tsx:141
 #: src/view/com/notifications/NotificationFeedItem.tsx:867
 #: src/view/com/notifications/NotificationFeedItem.tsx:892
@@ -9826,10 +9823,6 @@ msgstr ""
 msgid "Self-harm or dangerous behaviors"
 msgstr ""
 
-#: src/components/dms/ChatEmptyPill.tsx:38
-msgid "Send a neat website!"
-msgstr ""
-
 #: src/components/contacts/screens/PhoneInput.tsx:255
 #: src/components/contacts/screens/PhoneInput.tsx:260
 msgid "Send code"
@@ -10003,14 +9996,6 @@ msgstr ""
 msgid "Share"
 msgstr ""
 
-#: src/components/dms/ChatEmptyPill.tsx:37
-msgid "Share a cool story!"
-msgstr ""
-
-#: src/components/dms/ChatEmptyPill.tsx:36
-msgid "Share a fun fact!"
-msgstr ""
-
 #: src/view/com/profile/ProfileMenu.tsx:575
 msgid "Share anyway"
 msgstr ""
@@ -10020,9 +10005,9 @@ msgstr ""
 msgid "Share author DID"
 msgstr ""
 
-#: src/components/Lightbox/chrome/ImageMenu.tsx:95
-#: src/components/Lightbox/Lightbox.web.tsx:278
-#: src/components/Lightbox/Lightbox.web.tsx:304
+#: src/components/Lightbox/chrome/ImageMenu.tsx:94
+#: src/components/Lightbox/Lightbox.web.tsx:277
+#: src/components/Lightbox/Lightbox.web.tsx:303
 msgid "Share image"
 msgstr "Share image"
 
@@ -10072,10 +10057,6 @@ msgstr ""
 
 #: src/components/contacts/screens/GetContacts.tsx:232
 msgid "Share your contacts to find friends"
-msgstr ""
-
-#: src/components/dms/ChatEmptyPill.tsx:34
-msgid "Share your favorite feed!"
 msgstr ""
 
 #: src/Navigation.tsx:323
@@ -10806,10 +10787,6 @@ msgstr ""
 
 #: src/lib/interests.ts:73
 msgid "Tech"
-msgstr ""
-
-#: src/components/dms/ChatEmptyPill.tsx:35
-msgid "Tell a joke!"
 msgstr ""
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:368
@@ -12336,7 +12313,7 @@ msgstr ""
 msgid "View {0}’s profile"
 msgstr "View {0}’s profile"
 
-#: src/components/dms/MessagesListHeader.tsx:118
+#: src/components/dms/MessagesListHeader.tsx:116
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:185
 msgid "View {displayName}’s profile"
 msgstr "View {displayName}’s profile"
