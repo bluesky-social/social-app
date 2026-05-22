@@ -11,6 +11,7 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 
 export type ContextType = {
   control: Dialog.DialogOuterProps['control']
+  triggerRef?: React.RefObject<HTMLElement | null>
 }
 
 export type ItemContextType = {
@@ -19,7 +20,7 @@ export type ItemContextType = {
 }
 
 export type RadixPassThroughTriggerProps = {
-  ref: React.RefObject<any>
+  ref: React.Ref<any>
   id: string
   type: 'button'
   disabled: boolean

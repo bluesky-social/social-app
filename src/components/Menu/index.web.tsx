@@ -1,4 +1,4 @@
-import {forwardRef, useCallback, useId, useMemo, useState} from 'react'
+import {forwardRef, useCallback, useId, useMemo, useRef, useState} from 'react'
 import {
   Pressable,
   type StyleProp,
@@ -34,6 +34,34 @@ import {Text} from '#/components/Typography'
 
 export {useMenuContext}
 
+function assignRef<T>(ref: React.Ref<T | null> | undefined, value: T | null) {
+  // Support both callback refs and mutable refs when forwarding Radix's ref.
+  if (!ref) return
+
+  if (typeof ref === 'function') {
+    ref(value)
+  } else {
+    ;(ref as React.MutableRefObject<T | null>).current = value
+  }
+}
+
+export function handleMenuContentFocusCapture(
+  e: React.FocusEvent,
+  triggerRef?: React.RefObject<HTMLElement | null>,
+) {
+  /**
+   * If focus lands on the menu content itself instead of a menu item,
+   * move focus back to the trigger on the next frame. This prevents Enter
+   * from activating the underlying post link after opening the
+   * menu with the mouse.
+   */
+  if (e.target !== e.currentTarget) return
+
+  requestAnimationFrame(() => {
+    triggerRef?.current?.focus()
+  })
+}
+
 export function useMenuControl(): Dialog.DialogControlProps {
   const id = useId()
   const [isOpen, setIsOpen] = useState(false)
@@ -62,9 +90,12 @@ export function Root({
 }>) {
   const {_} = useLingui()
   const defaultControl = useMenuControl()
+  const triggerRef = useRef<HTMLElement | null>(null)
+
   const context = useMemo<ContextType>(
     () => ({
       control: control || defaultControl,
+      triggerRef,
     }),
     [control, defaultControl],
   )
@@ -125,7 +156,7 @@ export function Trigger({
   role = 'button',
   hint,
 }: TriggerProps) {
-  const {control} = useMenuContext()
+  const {control, triggerRef} = useMenuContext()
   const {
     state: hovered,
     onIn: onMouseEnter,
@@ -167,6 +198,16 @@ export function Trigger({
               onBlur: onBlur,
               onMouseEnter,
               onMouseLeave,
+
+              ref: (node: HTMLElement | null) => {
+                // Preserve the ref provided by Radix while also keeping our own reference
+                // to the trigger so focus can be restored from the menu content when needed.
+                assignRef(props.ref, node)
+                if (triggerRef) {
+                  triggerRef.current = node
+                }
+              },
+
               accessibilityHint: hint,
               accessibilityLabel: label,
               accessibilityRole: role,
@@ -187,6 +228,7 @@ export function Outer({
 }>) {
   const t = useTheme()
   const {reduceMotionEnabled} = useA11y()
+  const {triggerRef} = useMenuContext()
 
   return (
     <DropdownMenu.Portal>
@@ -195,7 +237,8 @@ export function Outer({
         collisionPadding={{left: 5, right: 5, bottom: 5}}
         loop
         aria-label="Test"
-        className="dropdown-menu-transform-origin dropdown-menu-constrain-size">
+        className="dropdown-menu-transform-origin dropdown-menu-constrain-size"
+        onFocusCapture={e => handleMenuContentFocusCapture(e, triggerRef)}>
         <View
           style={[
             a.rounded_sm,
