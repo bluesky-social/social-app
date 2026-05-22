@@ -120,6 +120,19 @@ class NotificationService: UNNotificationServiceExtension {
       attachments: nil
     )
 
+    // The push payload omits the full recipient list for group convos. Without
+    // any signal of multiple recipients, iOS classifies the notification as
+    // `MessagingDirect` and ignores `speakableGroupName`. Setting
+    // `recipientCount` on the donation metadata is Apple's documented escape
+    // hatch for this case, and overrides the (zero-length) recipients array.
+    if userInfo["convoKind"] as? String == "group",
+       let convoMemberCount = userInfo["convoMemberCount"] as? Int,
+       convoMemberCount > 0 {
+      let metadata = INSendMessageIntentDonationMetadata()
+      metadata.recipientCount = convoMemberCount
+      intent.donationMetadata = metadata
+    }
+
     // For group convos, attach the composite group avatar (rendered by the
     // ogcard service) to the `speakableGroupName` parameter so iOS shows it
     // alongside the sender on the Communication Notification.
