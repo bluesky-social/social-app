@@ -112,15 +112,7 @@ function Inner({convoId}: {convoId: string}) {
     ? parseConvoView(convoData, currentAccount?.did)
     : null
 
-  // Because we want to give the list a chance to asynchronously scroll to the end before it is visible to the user,
-  // we use `hasScrolled` to determine when to render. With that said however, there is a chance that the chat will be
-  // empty. So, we also check for that possible state as well and render once we can.
   const [hasScrolled, setHasScrolled] = useState(false)
-  const readyToShow =
-    hasScrolled ||
-    (isConvoActive(convoState) &&
-      !convoState.isFetchingHistory &&
-      convoState.items.length === 0)
 
   // Any time that we re-render the `Initializing` state, we have to reset `hasScrolled` to false. After entering this
   // state, we know that we're resetting the list of messages and need to re-scroll to the bottom when they get added.
@@ -151,11 +143,6 @@ function Inner({convoId}: {convoId: string}) {
 
   return (
     <Layout.Center style={[a.flex_1]}>
-      {!IS_LIQUID_GLASS && !readyToShow && (
-        <View>
-          <MessagesListHeader convo={convo} />
-        </View>
-      )}
       <View style={[a.flex_1]}>
         <InnerReady
           convo={convo}
