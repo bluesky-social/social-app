@@ -1,11 +1,12 @@
 import ExpoModulesCore
-import WebKit
 import MCEmojiPicker
 
 class EmojiPickerView: ExpoView, MCEmojiPickerDelegate {
   let onEmojiSelected = EventDispatcher()
 
-  override func layoutSubviews() {
+  required init(appContext: AppContext? = nil) {
+    super.init(appContext: appContext)
+
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
     self.addGestureRecognizer(tapGesture)
   }
