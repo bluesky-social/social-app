@@ -1,9 +1,13 @@
 import UserNotifications
 import UIKit
 import Intents
+import os.log
 
 let APP_GROUP = "group.app.bsky"
 typealias ContentHandler = (UNNotificationContent) -> Void
+
+// Debug logging. Filter in Console.app with `subsystem:app.bsky.NSE`.
+private let nseLog = OSLog(subsystem: "app.bsky.NSE", category: "GroupChat")
 
 // This extension allows us to do some processing of the received notification
 // data before displaying the notification to the user. In our use case, there
@@ -33,9 +37,24 @@ class NotificationService: UNNotificationServiceExtension {
   override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
     self.contentHandler = contentHandler
 
+    let userInfo = request.content.userInfo
+    os_log(
+      "didReceive reason=%{public}@ convoKind=%{public}@ convoGroupName=%{public}@ convoAvatarUrl=%{public}@ messageKind=%{public}@ senderDisplayName=%{public}@ keys=%{public}@",
+      log: nseLog,
+      type: .info,
+      String(describing: userInfo["reason"]),
+      String(describing: userInfo["convoKind"]),
+      String(describing: userInfo["convoGroupName"]),
+      String(describing: userInfo["convoAvatarUrl"]),
+      String(describing: userInfo["messageKind"]),
+      String(describing: userInfo["senderDisplayName"]),
+      String(describing: userInfo.keys.compactMap { $0 as? String }.sorted())
+    )
+
     guard let bestAttempt = NSEUtil.createCopy(request.content),
           let reason = request.content.userInfo["reason"] as? String
     else {
+      os_log("Bailing early: missing copy or reason", log: nseLog, type: .error)
       contentHandler(request.content)
       return
     }
@@ -56,6 +75,14 @@ class NotificationService: UNNotificationServiceExtension {
         from: bestAttempt,
         userInfo: request.content.userInfo
       )
+      os_log(
+        "Delivering chat content title=%{public}@ subtitle=%{public}@ body=%{public}@",
+        log: nseLog,
+        type: .info,
+        finalContent.title,
+        finalContent.subtitle,
+        finalContent.body
+      )
       contentHandler(finalContent)
     } else if reason == "chat-added-to-group"
                 || reason == "chat-removed-from-group"
@@ -63,6 +90,14 @@ class NotificationService: UNNotificationServiceExtension {
       mutateWithChatMessage(bestAttempt)
       mutateWithGroupSubtitle(bestAttempt, userInfo: request.content.userInfo)
       mutateWithBadge(bestAttempt)
+      os_log(
+        "Delivering group-event content title=%{public}@ subtitle=%{public}@ body=%{public}@",
+        log: nseLog,
+        type: .info,
+        bestAttempt.title,
+        bestAttempt.subtitle,
+        bestAttempt.body
+      )
       contentHandler(bestAttempt)
     } else {
       mutateWithBadge(bestAttempt)
@@ -103,10 +138,27 @@ class NotificationService: UNNotificationServiceExtension {
     )
 
     var speakableGroupName: INSpeakableString? = nil
-    if userInfo["convoKind"] as? String == "group",
-       let groupName = userInfo["convoGroupName"] as? String,
+    let convoKind = userInfo["convoKind"] as? String
+    let rawGroupName = userInfo["convoGroupName"]
+    if convoKind == "group",
+       let groupName = rawGroupName as? String,
        !groupName.isEmpty {
       speakableGroupName = INSpeakableString(spokenPhrase: groupName)
+      os_log(
+        "createCommunicationNotification: speakableGroupName set to %{public}@",
+        log: nseLog,
+        type: .info,
+        groupName
+      )
+    } else {
+      os_log(
+        "createCommunicationNotification: speakableGroupName NOT set (convoKind=%{public}@, rawGroupName=%{public}@, type=%{public}@)",
+        log: nseLog,
+        type: .info,
+        String(describing: convoKind),
+        String(describing: rawGroupName),
+        String(describing: type(of: rawGroupName as Any))
+      )
     }
 
     let intent = INSendMessageIntent(
@@ -195,11 +247,26 @@ class NotificationService: UNNotificationServiceExtension {
     _ content: UNMutableNotificationContent,
     userInfo: [AnyHashable: Any]
   ) {
-    guard userInfo["convoKind"] as? String == "group",
-          let groupName = userInfo["convoGroupName"] as? String,
+    let convoKind = userInfo["convoKind"] as? String
+    let rawGroupName = userInfo["convoGroupName"]
+    guard convoKind == "group",
+          let groupName = rawGroupName as? String,
           !groupName.isEmpty else {
+      os_log(
+        "mutateWithGroupSubtitle: skipped (convoKind=%{public}@, rawGroupName=%{public}@)",
+        log: nseLog,
+        type: .info,
+        String(describing: convoKind),
+        String(describing: rawGroupName)
+      )
       return
     }
+    os_log(
+      "mutateWithGroupSubtitle: setting subtitle to %{public}@",
+      log: nseLog,
+      type: .info,
+      groupName
+    )
     content.subtitle = groupName
   }
 
