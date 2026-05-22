@@ -1,4 +1,4 @@
-import {Fragment, type ReactNode, useMemo} from 'react'
+import {Fragment, type ReactNode} from 'react'
 import {View} from 'react-native'
 import {type AppBskyEmbedExternal} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -8,6 +8,7 @@ import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {useProfileQuery} from '#/state/queries/profile'
 import {atoms as a, useTheme} from '#/alf'
 import {InlineLinkText} from '#/components/Link'
+import {matchStandardSitePublisher} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
 import {Text} from '#/components/Typography'
 
 export function PublicationMetaRow({
@@ -25,18 +26,7 @@ export function PublicationMetaRow({
   const {t: l} = useLingui()
   const profileQuery = useProfileQuery({did: author.did ?? undefined})
   const handle = author.did ? profileQuery.data?.handle : undefined
-  const highlightedPublisher = useMemo(() => {
-    try {
-      const u = new URL(view.source?.uri || '')
-      return (
-        u.host.endsWith('leaflet.pub') ||
-        u.host.endsWith('pckt.blog') ||
-        u.host.endsWith('offprint.app')
-      )
-    } catch (e) {
-      return false
-    }
-  }, [view])
+  const highlightedPublisher = !!matchStandardSitePublisher(view)
 
   const metaTextStyle = [
     a.text_xs,

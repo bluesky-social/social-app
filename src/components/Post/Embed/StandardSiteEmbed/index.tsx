@@ -14,14 +14,12 @@ import {ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
-import {Leaflet} from '#/components/icons/community/Leaflet'
-import {Offprint} from '#/components/icons/community/Offprint'
-import {Pckt} from '#/components/icons/community/Pckt'
 import {StandardSite} from '#/components/icons/community/StandardSite'
 import {Earth_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {PublicationMetaRow} from '#/components/Post/Embed/StandardSiteEmbed/PublicationMetaRow'
+import {matchStandardSitePublisher} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
 import {StandardSiteThemeProvider} from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteThemeProvider'
 import {isStandardSitePublicationEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Text} from '#/components/Typography'
@@ -35,33 +33,6 @@ export type ThemeColors = {
 
 const PUBLICATION_AVATAR_STYLE = {
   borderRadius: a.rounded_sm.borderRadius,
-}
-
-export function useStandardSitePublisherConfig(
-  view: AppBskyEmbedExternal.ViewExternal,
-) {
-  try {
-    const u = new URL(view.source?.uri || '')
-    if (u.host.endsWith('leaflet.pub')) {
-      return {
-        name: 'Leaflet',
-        Icon: Leaflet,
-      }
-    } else if (u.host.endsWith('pckt.blog')) {
-      return {
-        name: 'pckt',
-        Icon: Pckt,
-      }
-    } else if (u.host.endsWith('offprint.app')) {
-      return {
-        name: 'Offprint',
-        Icon: Offprint,
-      }
-    }
-    return null
-  } catch (e) {
-    return null
-  }
 }
 
 export const StandardSiteEmbed = ({
@@ -431,7 +402,7 @@ export function SubscribeButton({
   style?: StyleProp<ViewStyle>
 }) {
   const {t: l} = useLingui()
-  const highlightedPublisher = useStandardSitePublisherConfig(view)
+  const highlightedPublisher = matchStandardSitePublisher(view)
   const cta = highlightedPublisher
     ? l`Subscribe on ${highlightedPublisher.name}`
     : l`View publication`
