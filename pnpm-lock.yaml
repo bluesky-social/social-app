@@ -43,8 +43,8 @@ importers:
   .:
     dependencies:
       '@atproto/api':
-        specifier: 0.20.2
-        version: 0.20.2
+        specifier: 0.20.4
+        version: 0.20.4
       '@atproto/syntax':
         specifier: 0.6.1
         version: 0.6.1
@@ -702,8 +702,8 @@ packages:
       graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
       typescript: ^5.0.0 || ^6.0.0
 
-  '@atproto/api@0.20.2':
-    resolution: {integrity: sha512-yOdLECwRyRw16k5GTWGFB8HwM5wfqOIaIgevbyBiX3OBnUgpHgEWbrLX3HNo26SAiyKmo0X6Fsk025IcJAGKog==}
+  '@atproto/api@0.20.4':
+    resolution: {integrity: sha512-1hdMZDLBqPdhK5CYZCsd5T0PK12LhFxHiKge3q1tS7cDd2a553+NhG5YOTtmCke34xkw4MNMJbC4K8UKL+J5Fw==}
     engines: {node: '>=22'}
 
   '@atproto/common-web@0.5.0':
@@ -10271,7 +10271,7 @@ snapshots:
       graphql: 16.8.1
       typescript: 6.0.3
 
-  '@atproto/api@0.20.2':
+  '@atproto/api@0.20.4':
     dependencies:
       '@atproto/common-web': 0.5.0
       '@atproto/lexicon': 0.7.1
