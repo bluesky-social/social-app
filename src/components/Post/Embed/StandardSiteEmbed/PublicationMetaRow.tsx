@@ -1,33 +1,39 @@
 import {Fragment, type ReactNode} from 'react'
 import {View} from 'react-native'
-import {type AppBskyEmbedExternal} from '@atproto/api'
+import {type AppBskyEmbedExternal, AtUri} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {useProfileQuery} from '#/state/queries/profile'
 import {atoms as a, useTheme} from '#/alf'
+import {StandardSite} from '#/components/icons/community/StandardSite'
 import {InlineLinkText} from '#/components/Link'
 import {matchStandardSitePublisher} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
+import {isStandardSiteDocumentUri} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Text} from '#/components/Typography'
 
 export function PublicationMetaRow({
   view,
-  author,
   onInteractWithin,
   onInteractWithout,
 }: {
   view: AppBskyEmbedExternal.ViewExternal
-  author: {did: string | null | undefined}
   onInteractWithin: () => void
   onInteractWithout: () => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const profileQuery = useProfileQuery({did: author.did ?? undefined})
-  const handle = author.did ? profileQuery.data?.handle : undefined
   const highlightedPublisher = !!matchStandardSitePublisher(view)
-
+  const didsFromRecords =
+    view.associatedRefs
+      ?.filter(isStandardSiteDocumentUri)
+      .map(ref => new AtUri(ref.uri).host) || []
+  // atm should only be one docment
+  const authorDid = didsFromRecords.at(0)
+  const authorProfile = authorDid
+    ? view.associatedProfiles?.find(p => p.did === authorDid)
+    : undefined
+  const articleDomain = toNiceDomain(view.uri)
   const metaTextStyle = [
     a.text_xs,
     a.leading_snug,
@@ -36,18 +42,21 @@ export function PublicationMetaRow({
 
   const items: {key: string; node: ReactNode}[] = []
 
-  if (!highlightedPublisher && view.source?.uri) {
+  if (!highlightedPublisher) {
     items.push({
       key: 'domain',
       node: (
-        <Text numberOfLines={1} style={metaTextStyle}>
-          {toNiceDomain(view.source.uri)}
-        </Text>
+        <View style={[a.flex_row, a.align_center]}>
+          <StandardSite size="sm" fill={t.atoms.text_contrast_medium.color} />
+          <Text numberOfLines={1} style={metaTextStyle}>
+            {articleDomain}
+          </Text>
+        </View>
       ),
     })
   }
 
-  if (author.did && handle) {
+  if (authorProfile) {
     items.push({
       key: 'author',
       node: (
@@ -55,8 +64,8 @@ export function PublicationMetaRow({
           <Trans>
             by{' '}
             <InlineLinkText
-              label={l`View @${handle}'s profile`}
-              to={makeProfileLink({did: author.did, handle})}
+              label={l`View @${authorProfile.handle}'s profile`}
+              to={makeProfileLink(authorProfile)}
               style={metaTextStyle}
               onPress={e => {
                 // this link is nested, yes it's not ideal
@@ -64,7 +73,7 @@ export function PublicationMetaRow({
               }}
               onMouseEnter={onInteractWithin}
               onMouseLeave={onInteractWithout}>
-              @{handle}
+              @{authorProfile.handle}
             </InlineLinkText>
           </Trans>
         </Text>

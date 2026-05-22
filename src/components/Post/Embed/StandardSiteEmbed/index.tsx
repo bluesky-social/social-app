@@ -14,8 +14,6 @@ import {ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
-import {StandardSite} from '#/components/icons/community/StandardSite'
-import {Earth_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {PublicationMetaRow} from '#/components/Post/Embed/StandardSiteEmbed/PublicationMetaRow'
@@ -74,12 +72,11 @@ export const StandardSiteEmbed = ({
     }
   }
 
-  // Embeds are expected to associate with at most one publication; if multiple
-  // refs are ever present, the byline silently uses the first one.
-  const publicationUri = view.associatedRefs?.find(
-    ref => new AtUri(ref.uri).collection === 'site.standard.publication',
-  )?.uri
-  const maybeAuthorDid = publicationUri ? new AtUri(publicationUri)?.did : null
+  const {
+    state: interactedWithin,
+    onIn: onInteractWithin,
+    onOut: onInteractWithout,
+  } = useInteractionState()
 
   const onPress = () => {
     playHaptic('Light')
@@ -96,7 +93,6 @@ export const StandardSiteEmbed = ({
   if (isStandardPublication) {
     return (
       <PublicationCard
-        author={{did: maybeAuthorDid}}
         hideSubscribe={hideSubscribe}
         view={view}
         onPress={onPress}
@@ -124,138 +120,116 @@ export const StandardSiteEmbed = ({
         label={view.title || l`Open link to ${niceUrl}`}
         onPress={onPress}
         onLongPress={onLongPress}>
-        {({hovered}) => (
-          <View style={[a.w_full]}>
-            {imageUri ? (
-              <Image
-                style={[a.aspect_card]}
-                source={{uri: imageUri}}
-                accessibilityIgnoresInvertColors
-                loading="lazy"
-              />
-            ) : undefined}
+        {({hovered: maybeHovered}) => {
+          const hovered = maybeHovered && !interactedWithin
+          return (
+            <View style={[a.w_full]}>
+              {imageUri ? (
+                <Image
+                  style={[a.aspect_card]}
+                  source={{uri: imageUri}}
+                  accessibilityIgnoresInvertColors
+                  loading="lazy"
+                />
+              ) : undefined}
 
-            <View
-              style={[
-                a.flex_1,
-                a.pt_sm,
-                t.atoms.border_contrast_low,
-                hasMedia && a.border_t,
-                {gap: 3},
-                isStandard && a.pt_md,
-              ]}>
               <View
                 style={[
-                  a.pb_xs,
-                  a.px_md,
+                  a.flex_1,
+                  a.pt_sm,
+                  t.atoms.border_contrast_low,
+                  hasMedia && a.border_t,
                   {gap: 3},
-                  isStandard && [{gap: 5}, a.pb_sm],
+                  isStandard && a.pt_md,
                 ]}>
-                <Text
-                  emoji
-                  numberOfLines={3}
+                <View
                   style={[
-                    a.text_md,
-                    a.font_semi_bold,
-                    a.leading_snug,
-                    isStandard && [
-                      a.text_lg,
-                      a.font_bold,
-                      hovered && a.underline,
-                    ],
+                    a.pb_xs,
+                    a.px_md,
+                    {gap: 3},
+                    isStandard && [{gap: 5}, a.pb_sm],
                   ]}>
-                  {view.title}
-                </Text>
-                {view.description ? (
                   <Text
                     emoji
-                    numberOfLines={view.thumb ? 2 : 4}
-                    style={[a.text_sm, a.leading_snug]}>
-                    {view.description}
-                  </Text>
-                ) : undefined}
-
-                {isStandard && (view.createdAt || view.readingTime) && (
-                  <View
+                    numberOfLines={3}
                     style={[
-                      a.flex_row,
-                      a.align_center,
-                      a.gap_md,
-                      {paddingTop: 2},
+                      a.text_md,
+                      a.font_semi_bold,
+                      a.leading_snug,
+                      isStandard && [
+                        a.text_lg,
+                        a.font_bold,
+                        hovered && a.underline,
+                      ],
                     ]}>
-                    {view.createdAt && (
-                      <Text
-                        style={[
-                          a.text_xs,
-                          a.leading_snug,
-                          t.atoms.text_contrast_high,
-                        ]}>
-                        {niceDate(i18n, view.createdAt, 'medium', 'none')}
-                      </Text>
-                    )}
-                    {view.readingTime && (
-                      <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
-                        <Clock size="xs" style={t.atoms.text_contrast_high} />
+                    {view.title}
+                  </Text>
+                  {view.description ? (
+                    <Text
+                      emoji
+                      numberOfLines={view.thumb ? 2 : 4}
+                      style={[a.text_sm, a.leading_snug]}>
+                      {view.description}
+                    </Text>
+                  ) : undefined}
+
+                  {isStandard && (view.createdAt || view.readingTime) && (
+                    <View
+                      style={[
+                        a.flex_row,
+                        a.align_center,
+                        a.gap_md,
+                        {paddingTop: 2},
+                      ]}>
+                      {view.createdAt && (
                         <Text
                           style={[
                             a.text_xs,
                             a.leading_snug,
                             t.atoms.text_contrast_high,
                           ]}>
-                          {l({
-                            message: plural(view.readingTime, {
-                              one: '#m',
-                              other: '#m',
-                            }),
-                            comment: `How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.`,
-                          })}
+                          {niceDate(i18n, view.createdAt, 'medium', 'none')}
                         </Text>
-                      </View>
-                    )}
+                      )}
+                      {view.readingTime && (
+                        <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
+                          <Clock size="xs" style={t.atoms.text_contrast_high} />
+                          <Text
+                            style={[
+                              a.text_xs,
+                              a.leading_snug,
+                              t.atoms.text_contrast_high,
+                            ]}>
+                            {l({
+                              message: plural(view.readingTime, {
+                                one: '#m',
+                                other: '#m',
+                              }),
+                              comment: `How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.`,
+                            })}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  )}
+                </View>
+
+                {!view.source && (
+                  <View style={[a.px_md]}>
+                    <Divider />
+                    <View style={[a.py_sm]}>
+                      <PublicationMetaRow
+                        view={view}
+                        onInteractWithin={onInteractWithin}
+                        onInteractWithout={onInteractWithout}
+                      />
+                    </View>
                   </View>
                 )}
               </View>
-
-              {!view.source && (
-                <View style={[a.px_md]}>
-                  <Divider />
-                  <View
-                    style={[
-                      a.flex_row,
-                      a.align_center,
-                      a.gap_2xs,
-                      a.pb_sm,
-                      {
-                        paddingTop: 6, // off menu
-                      },
-                    ]}>
-                    <Globe
-                      size="xs"
-                      style={[
-                        a.transition_color,
-                        hovered
-                          ? t.atoms.text_contrast_medium
-                          : t.atoms.text_contrast_low,
-                      ]}
-                    />
-                    <Text
-                      numberOfLines={1}
-                      style={[
-                        a.transition_color,
-                        a.text_xs,
-                        a.leading_snug,
-                        hovered
-                          ? t.atoms.text_contrast_high
-                          : t.atoms.text_contrast_medium,
-                      ]}>
-                      {toNiceDomain(view.uri)}
-                    </Text>
-                  </View>
-                </View>
-              )}
             </View>
-          </View>
-        )}
+          )
+        }}
       </Link>
 
       {view.source && (
@@ -268,7 +242,6 @@ export const StandardSiteEmbed = ({
             onPress={onPress}
             onLongPress={onLongPress}
             themeColors={themeColors}
-            author={{did: maybeAuthorDid}}
           />
         </>
       )}
@@ -283,7 +256,6 @@ export function PublicationCard({
   onLongPress,
   themeColors,
   style,
-  author,
 }: {
   view: AppBskyEmbedExternal.ViewExternal
   hideSubscribe?: boolean
@@ -291,7 +263,6 @@ export function PublicationCard({
   onLongPress?: () => void
   themeColors: ThemeColors
   style?: StyleProp<ViewStyle>
-  author: {did: string | null | undefined}
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -361,7 +332,6 @@ export function PublicationCard({
                   </Text>
                   <PublicationMetaRow
                     view={view}
-                    author={author}
                     onInteractWithin={onInteractWithin}
                     onInteractWithout={onInteractWithout}
                   />
@@ -450,6 +420,7 @@ function PublicationIcon({
   themeColors: ThemeColors
 }) {
   const opacity = hovered ? 0.6 : 0.2
+  if (!view.source) return null
   return view.source?.icon ? (
     <View>
       <UserAvatar
@@ -481,7 +452,11 @@ function PublicationIcon({
           backgroundColor: themeColors.accent,
         },
       ]}>
-      <StandardSite width={size * 0.8} fill={themeColors.accentForeground} />
+      <Text
+        emoji
+        style={[a.text_xl, a.font_bold, {color: themeColors.accentForeground}]}>
+        {[...view.source.title][0] ?? ''}
+      </Text>
       <MediaInsetBorder
         style={[
           a.rounded_sm,
@@ -501,14 +476,12 @@ export function PublicationFooter({
   onPress,
   onLongPress,
   themeColors,
-  author,
 }: {
   view: AppBskyEmbedExternal.ViewExternal
   hideSubscribe?: boolean
   themeColors: ThemeColors
   onPress?: () => void
   onLongPress?: () => void
-  author: {did: string | null | undefined}
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -573,7 +546,6 @@ export function PublicationFooter({
           </Text>
           <PublicationMetaRow
             view={view}
-            author={author}
             onInteractWithin={onInteractWithin}
             onInteractWithout={onInteractWithout}
           />
