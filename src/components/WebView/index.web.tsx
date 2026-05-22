@@ -1,4 +1,4 @@
-import {type Ref, useEffect, useImperativeHandle, useRef} from 'react'
+import {useEffect, useImperativeHandle, useRef} from 'react'
 import {type StyleProp, StyleSheet, type ViewStyle} from 'react-native'
 // @ts-expect-error untyped
 import {unstable_createElement} from 'react-native-web'
@@ -14,7 +14,7 @@ export type WebViewHandle = {
 }
 
 type WebViewProps = {
-  ref?: Ref<WebViewHandle>
+  ref?: React.Ref<WebViewHandle>
   source: WebViewSource
   style?: StyleProp<ViewStyle>
   title?: string
