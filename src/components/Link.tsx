@@ -326,6 +326,8 @@ export type InlineLinkProps = React.PropsWithChildren<
       disableUnderline?: boolean
       title?: TextProps['title']
       overridePresentation?: boolean
+      onMouseEnter?: () => void
+      onMouseLeave?: () => void
     }
 >
 
@@ -388,8 +390,14 @@ export function InlineLinkText({
       role="link"
       onPress={download ? undefined : onPress}
       onLongPress={onLongPress}
-      onMouseEnter={onHoverIn}
-      onMouseLeave={onHoverOut}
+      onMouseEnter={() => {
+        rest.onMouseEnter?.()
+        onHoverIn()
+      }}
+      onMouseLeave={() => {
+        rest.onMouseLeave?.()
+        onHoverOut()
+      }}
       accessibilityRole="link"
       href={href}
       {...web({

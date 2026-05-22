@@ -13,9 +13,13 @@ import {Text} from '#/components/Typography'
 export function PublicationMetaRow({
   view,
   author,
+  onInteractWithin,
+  onInteractWithout,
 }: {
   view: AppBskyEmbedExternal.ViewExternal
   author: {did: string | null | undefined}
+  onInteractWithin: () => void
+  onInteractWithout: () => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -63,7 +67,13 @@ export function PublicationMetaRow({
             <InlineLinkText
               label={l`View @${handle}'s profile`}
               to={makeProfileLink({did: author.did, handle})}
-              style={metaTextStyle}>
+              style={metaTextStyle}
+              onPress={e => {
+                // this link is nested, yes it's not ideal
+                e.stopPropagation()
+              }}
+              onMouseEnter={onInteractWithin}
+              onMouseLeave={onInteractWithout}>
               @{handle}
             </InlineLinkText>
           </Trans>

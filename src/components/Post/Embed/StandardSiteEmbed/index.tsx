@@ -18,6 +18,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, utils} from '#/alf'
 import {ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
 import {Leaflet} from '#/components/icons/community/Leaflet'
 import {Offprint} from '#/components/icons/community/Offprint'
@@ -309,8 +310,10 @@ export const StandardSiteEmbed = ({
       </Link>
 
       {view.source && (
-        <View style={[a.px_md]}>
-          <Divider />
+        <>
+          <View style={[a.px_md]}>
+            <Divider />
+          </View>
           <PublicationFooter
             view={view}
             onPress={onPress}
@@ -318,7 +321,7 @@ export const StandardSiteEmbed = ({
             themeColors={themeColors}
             author={{did: maybeAuthorDid}}
           />
-        </View>
+        </>
       )}
     </View>
   )
@@ -344,6 +347,11 @@ export function PublicationCard({
   const t = useTheme()
   const {t: l} = useLingui()
   const {gtPhone} = useBreakpoints()
+  const {
+    state: interactedWithin,
+    onIn: onInteractWithin,
+    onOut: onInteractWithout,
+  } = useInteractionState()
 
   if (!view.source) return null
 
@@ -354,77 +362,85 @@ export function PublicationCard({
       label={l`Subscribe`}
       onPress={onPress}
       onLongPress={onLongPress}>
-      {({hovered}) => (
-        <View
-          style={[
-            a.flex_col,
-            a.rounded_md,
-            a.overflow_hidden,
-            a.w_full,
-            a.border,
-            a.p_md,
-            t.atoms.border_contrast_low,
-            style,
-          ]}>
+      {({hovered: maybeHovered}) => {
+        const hovered = maybeHovered && !interactedWithin
+        return (
           <View
             style={[
-              a.flex_1,
-              a.align_center,
-              a.justify_between,
-              a.gap_md,
-              gtPhone && [a.flex_row, a.gap_sm],
-            ]}
-            testID="publication-embed-footer">
+              a.flex_col,
+              a.rounded_md,
+              a.overflow_hidden,
+              a.w_full,
+              a.border,
+              a.p_md,
+              t.atoms.border_contrast_low,
+              style,
+            ]}>
             <View
               style={[
-                a.w_full,
-                a.flex_row,
+                a.flex_1,
                 a.align_center,
-                a.gap_sm,
-                gtPhone && a.flex_1,
-              ]}>
-              <>
-                <PublicationIcon
+                a.justify_between,
+                a.gap_md,
+                gtPhone && [a.flex_row, a.gap_sm],
+              ]}
+              testID="publication-embed-footer">
+              <View
+                style={[
+                  a.w_full,
+                  a.flex_row,
+                  a.align_center,
+                  a.gap_sm,
+                  gtPhone && a.flex_1,
+                ]}>
+                <>
+                  <PublicationIcon
+                    view={view}
+                    size={40}
+                    hovered={hovered}
+                    themeColors={themeColors}
+                  />
+                  <View style={[a.flex_1, a.gap_2xs]}>
+                    <Text
+                      numberOfLines={1}
+                      style={[
+                        a.text_md,
+                        a.font_semi_bold,
+                        t.atoms.text,
+                        hovered && a.underline,
+                      ]}>
+                      {view.source?.title}
+                    </Text>
+                    <PublicationMetaRow
+                      view={view}
+                      author={author}
+                      onInteractWithin={onInteractWithin}
+                      onInteractWithout={onInteractWithout}
+                    />
+                  </View>
+                </>
+              </View>
+
+              {!hideSubscribe && (
+                <SubscribeButton
                   view={view}
-                  size={40}
-                  hovered={hovered}
-                  themeColors={themeColors}
+                  style={[!gtPhone && [a.w_full, a.justify_center]]}
+                  onPress={onPress}
+                  onLongPress={onLongPress}
                 />
-                <View style={[a.flex_1, a.gap_2xs]}>
-                  <Text
-                    numberOfLines={1}
-                    style={[
-                      a.text_md,
-                      a.font_semi_bold,
-                      t.atoms.text,
-                      hovered && a.underline,
-                    ]}>
-                    {view.source?.title}
-                  </Text>
-                  <PublicationMetaRow view={view} author={author} />
-                </View>
-              </>
+              )}
             </View>
 
-            {!hideSubscribe && (
-              <SubscribeButton
-                view={view}
-                style={[!gtPhone && [a.w_full, a.justify_center]]}
-                onPress={onPress}
-                onLongPress={onLongPress}
-              />
+            {view.description && (
+              <View style={[a.pt_sm]}>
+                <Text style={[a.text_sm, a.leading_snug]} numberOfLines={3}>
+                  {view.description}
+                </Text>
+              </View>
             )}
           </View>
-
-          {view.description && (
-            <View style={[a.pt_sm]}>
-              <Text style={[a.text_sm, a.leading_snug]} numberOfLines={3}>
-                {view.description}
-              </Text>
-            </View>
-          )}
-        </View>
-      )}
+        )
+      }}
     </Link>
   )
 }
@@ -548,6 +564,17 @@ export function PublicationFooter({
   const t = useTheme()
   const {t: l} = useLingui()
   const {gtPhone} = useBreakpoints()
+  const {
+    state: maybeHovered,
+    onIn: onHoverIn,
+    onOut: onHoverOut,
+  } = useInteractionState()
+  const {
+    state: interactedWithin,
+    onIn: onInteractWithin,
+    onOut: onInteractWithout,
+  } = useInteractionState()
+  const hovered = maybeHovered && !interactedWithin
 
   if (!view.source) return null
 
@@ -557,11 +584,14 @@ export function PublicationFooter({
         a.flex_1,
         a.align_center,
         a.justify_between,
-        a.py_md,
+        a.p_md,
         a.gap_md,
         gtPhone && [a.flex_row, a.gap_sm],
       ]}
-      testID="publication-embed-footer">
+      testID="publication-embed-footer"
+      // @ts-ignore it's Fine™
+      onMouseEnter={onHoverIn}
+      onMouseLeave={onHoverOut}>
       <Link
         shouldProxy
         to={view.source.uri}
@@ -575,29 +605,32 @@ export function PublicationFooter({
           a.gap_sm,
           gtPhone && a.flex_1,
         ]}>
-        {({hovered}) => (
-          <>
-            <PublicationIcon
+        <>
+          <PublicationIcon
+            view={view}
+            size={32}
+            hovered={hovered}
+            themeColors={themeColors}
+          />
+          <View style={[a.flex_1, a.gap_2xs]}>
+            <Text
+              numberOfLines={1}
+              style={[
+                a.text_sm,
+                a.font_medium,
+                t.atoms.text,
+                hovered && a.underline,
+              ]}>
+              {view.source?.title}
+            </Text>
+            <PublicationMetaRow
               view={view}
-              size={32}
-              hovered={hovered}
-              themeColors={themeColors}
+              author={author}
+              onInteractWithin={onInteractWithin}
+              onInteractWithout={onInteractWithout}
             />
-            <View style={[a.flex_1, a.gap_2xs]}>
-              <Text
-                numberOfLines={1}
-                style={[
-                  a.text_sm,
-                  a.font_medium,
-                  t.atoms.text,
-                  hovered && a.underline,
-                ]}>
-                {view.source?.title}
-              </Text>
-              <PublicationMetaRow view={view} author={author} />
-            </View>
-          </>
-        )}
+          </View>
+        </>
       </Link>
 
       {!hideSubscribe && (
