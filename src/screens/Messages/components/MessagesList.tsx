@@ -1,5 +1,4 @@
 import {
-  cloneElement,
   useCallback,
   useEffect,
   useId,
@@ -581,25 +580,35 @@ export function MessagesList({
             <ConversationFooter
               convoState={convoState}
               hasAcceptOverride={hasAcceptOverride}>
-              {ax.features.enabled(ax.features.DmsNewMessageComposerEnable) ? (
-                <MessageComposer
-                  textInputId={textInputId}
-                  onSendMessage={(message: string) =>
-                    void onSendMessage(message)
-                  }
-                  hasEmbed={!!embedUri}
-                  setEmbed={setEmbed}>
-                  <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
-                </MessageComposer>
-              ) : (
-                <MessageInput
-                  textInputId={textInputId}
-                  onSendMessage={onSendMessage}
-                  hasEmbed={!!embedUri}
-                  setEmbed={setEmbed}>
-                  <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
-                </MessageInput>
-              )}
+              {({loading}) =>
+                ax.features.enabled(ax.features.DmsNewMessageComposerEnable) ? (
+                  <MessageComposer
+                    textInputId={textInputId}
+                    onSendMessage={(message: string) =>
+                      void onSendMessage(message)
+                    }
+                    hasEmbed={!!embedUri}
+                    setEmbed={setEmbed}
+                    loading={loading}>
+                    <MessageInputEmbed
+                      embedUri={embedUri}
+                      setEmbed={setEmbed}
+                    />
+                  </MessageComposer>
+                ) : (
+                  <MessageInput
+                    textInputId={textInputId}
+                    onSendMessage={onSendMessage}
+                    hasEmbed={!!embedUri}
+                    setEmbed={setEmbed}
+                    loading={loading}>
+                    <MessageInputEmbed
+                      embedUri={embedUri}
+                      setEmbed={setEmbed}
+                    />
+                  </MessageInput>
+                )
+              }
             </ConversationFooter>
           )}
         </KeyboardStickyView>
@@ -679,28 +688,25 @@ function ConversationFooter({
 }: {
   convoState: ConvoState
   hasAcceptOverride?: boolean
-  children?: React.ReactNode // message input
+  children?: ((props: {loading?: boolean}) => React.ReactNode) | React.ReactNode
 }) {
   if (!isConvoActive(convoState)) {
     return null
   }
 
   const footerState = getFooterState(convoState, hasAcceptOverride)
+  const renderChildren = (loading?: boolean) =>
+    typeof children === 'function' ? children({loading}) : children
 
   switch (footerState) {
     case 'loading':
-      // Render children with loading prop instead of null
-      return children
-        ? cloneElement(children as React.ReactElement<{loading?: boolean}>, {
-            loading: true,
-          })
-        : null
+      return renderChildren(true)
     case 'new-chat':
       // new chat pill goes here - removed for now
-      return children
+      return renderChildren()
     case 'request':
       return <ChatStatusInfo convoState={convoState} />
     case 'standard':
-      return children
+      return renderChildren()
   }
 }
