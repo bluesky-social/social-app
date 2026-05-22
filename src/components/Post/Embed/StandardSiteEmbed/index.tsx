@@ -453,11 +453,13 @@ export function SubscribeButton({
     ? l`Subscribe on ${highlightedPublisher.name}`
     : l`View publication`
 
+  if (!view.source) return null
+
   return (
     <StandardSiteThemeProvider view={view}>
       <Link
         shouldProxy
-        to={view.source!.uri}
+        to={view.source.uri}
         label={cta}
         size="small"
         color="secondary_inverted"
