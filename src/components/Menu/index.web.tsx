@@ -181,9 +181,13 @@ export function Trigger({
 export function Outer({
   children,
   style,
+  onCloseAutoFocus,
 }: React.PropsWithChildren<{
   showCancel?: boolean
   style?: StyleProp<ViewStyle>
+  onCloseAutoFocus?: React.ComponentProps<
+    typeof DropdownMenu.Content
+  >['onCloseAutoFocus']
 }>) {
   const t = useTheme()
   const {reduceMotionEnabled} = useA11y()
@@ -195,6 +199,7 @@ export function Outer({
         collisionPadding={{left: 5, right: 5, bottom: 5}}
         loop
         aria-label="Test"
+        onCloseAutoFocus={onCloseAutoFocus}
         className="dropdown-menu-transform-origin dropdown-menu-constrain-size">
         <View
           style={[

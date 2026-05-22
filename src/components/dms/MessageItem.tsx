@@ -217,6 +217,7 @@ let MessageItem = ({
   const avatar =
     profile && moderationOpts ? (
       <Link
+        style={[a.rounded_full]}
         label={l`${createSanitizedDisplayName(profile)}’s avatar`}
         accessibilityHint={l`Opens this profile`}
         to={makeProfileLink({
