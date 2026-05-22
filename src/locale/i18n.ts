@@ -67,8 +67,8 @@ export async function dynamicActivate(locale: AppLanguage) {
       const [{default: dateLocale}] = await Promise.all([
         import('date-fns/locale/es'),
         import('@formatjs/intl-pluralrules/locale-data/an.js'),
-        import('@formatjs/intl-numberformat/locale-data/es.js'),
-        import('@formatjs/intl-displaynames/locale-data/es.js'),
+        import('@formatjs/intl-numberformat/locale-data/an.js'),
+        import('@formatjs/intl-displaynames/locale-data/an.js'),
       ])
       return dateLocale
     }
@@ -148,8 +148,7 @@ export async function dynamicActivate(locale: AppLanguage) {
         import('date-fns/locale/eo'),
         import('@formatjs/intl-pluralrules/locale-data/eo.js'),
         import('@formatjs/intl-numberformat/locale-data/eo.js'),
-        // borked, see https://github.com/bluesky-social/social-app/pull/9574
-        // import('@formatjs/intl-displaynames/locale-data/eo.js'),
+        import('@formatjs/intl-displaynames/locale-data/eo.js'),
       ])
       return dateLocale
     }
