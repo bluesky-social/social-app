@@ -165,7 +165,7 @@ export function MessageComposer({
             fallbackStyle={[t.atoms.bg_contrast_50]}>
             {children}
             <View style={[a.flex_1]}>
-              {IS_WEB && (
+              {IS_WEB && !loading ? (
                 <EmojiPicker.Root
                   onEmojiSelect={emoji =>
                     composerInternalApiRef.current?.insert(emoji.native)
@@ -207,7 +207,7 @@ export function MessageComposer({
                   </EmojiPicker.Trigger>
                   <EmojiPicker.Picker />
                 </EmojiPicker.Root>
-              )}
+              ) : null}
 
               <Composer
                 nativeID={textInputId}
