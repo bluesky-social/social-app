@@ -1,4 +1,3 @@
-import {useCallback, useMemo} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedExternal, AtUri} from '@atproto/api'
@@ -7,13 +6,8 @@ import {useLingui} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
 import {shareUrl} from '#/lib/sharing'
-import {
-  exemptExternalEmbedSources,
-  parseEmbedPlayerFromUrl,
-} from '#/lib/strings/embed-player'
 import {niceDate} from '#/lib/strings/time'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, utils} from '#/alf'
 import {ButtonIcon, ButtonText} from '#/components/Button'
@@ -42,30 +36,28 @@ export type ThemeColors = {
 export function useStandardSitePublisherConfig(
   view: AppBskyEmbedExternal.ViewExternal,
 ) {
-  return useMemo(() => {
-    try {
-      const u = new URL(view.source?.uri || '')
-      if (u.host.endsWith('leaflet.pub')) {
-        return {
-          name: 'Leaflet',
-          Icon: Leaflet,
-        }
-      } else if (u.host.endsWith('pckt.blog')) {
-        return {
-          name: 'pckt',
-          Icon: Pckt,
-        }
-      } else if (u.host.endsWith('offprint.app')) {
-        return {
-          name: 'Offprint',
-          Icon: Offprint,
-        }
+  try {
+    const u = new URL(view.source?.uri || '')
+    if (u.host.endsWith('leaflet.pub')) {
+      return {
+        name: 'Leaflet',
+        Icon: Leaflet,
       }
-      return null
-    } catch (e) {
-      return null
+    } else if (u.host.endsWith('pckt.blog')) {
+      return {
+        name: 'pckt',
+        Icon: Pckt,
+      }
+    } else if (u.host.endsWith('offprint.app')) {
+      return {
+        name: 'Offprint',
+        Icon: Offprint,
+      }
     }
-  }, [view])
+    return null
+  } catch (e) {
+    return null
+  }
 }
 
 export const StandardSiteEmbed = ({
@@ -82,58 +74,47 @@ export const StandardSiteEmbed = ({
   const {t: l, i18n} = useLingui()
   const t = useTheme()
   const playHaptic = useHaptics()
-  const externalEmbedPrefs = useExternalEmbedsPrefs()
   const niceUrl = toNiceDomain(view.uri)
   const imageUri = view.thumb
-  const embedPlayerParams = useMemo(() => {
-    const params = parseEmbedPlayerFromUrl(view.uri)
-    if (!params) return
-    const canShow = externalEmbedPrefs?.[params.source] !== 'hide'
-    if (canShow || exemptExternalEmbedSources.has(params.source)) {
-      return params
-    }
-  }, [view.uri, externalEmbedPrefs])
-  const hasMedia = Boolean(imageUri || embedPlayerParams)
+  const hasMedia = Boolean(imageUri)
   const isStandard = view.associatedRefs?.some(ref =>
     new AtUri(ref.uri).collection.startsWith('site.standard.'),
   )
   const isStandardPublication = isStandardSitePublicationEmbed(view)
-  const themeColors = useMemo(() => {
-    let custom = false
-    let accent = t.atoms.text.color
-    let accentForeground = t.atoms.text_inverted.color
-    const {accentRGB, accentForegroundRGB} = view.source?.theme || {}
-    if (accentRGB && accentForegroundRGB) {
-      custom = true
-      accent = utils.rgbToHex(accentRGB.r, accentRGB.g, accentRGB.b)
-      accentForeground = utils.rgbToHex(
+  let themeColors: ThemeColors = {
+    custom: false,
+    accent: t.atoms.text.color,
+    accentForeground: t.atoms.text_inverted.color,
+  }
+  const {accentRGB, accentForegroundRGB} = view.source?.theme || {}
+  if (accentRGB && accentForegroundRGB) {
+    themeColors = {
+      custom: true,
+      accent: utils.rgbToHex(accentRGB.r, accentRGB.g, accentRGB.b),
+      accentForeground: utils.rgbToHex(
         accentForegroundRGB.r,
         accentForegroundRGB.g,
         accentForegroundRGB.b,
-      )
+      ),
     }
-    return {custom, accent, accentForeground}
-  }, [view])
+  }
 
-  const maybeAuthorDid = useMemo(() => {
-    const publicationUri = view.associatedRefs?.find(
-      ref => new AtUri(ref.uri).collection === 'site.standard.publication',
-    )?.uri
-    if (!publicationUri) return null
-    return new AtUri(publicationUri)?.did
-  }, [view])
+  const publicationUri = view.associatedRefs?.find(
+    ref => new AtUri(ref.uri).collection === 'site.standard.publication',
+  )?.uri
+  const maybeAuthorDid = publicationUri ? new AtUri(publicationUri)?.did : null
 
-  const onPress = useCallback(() => {
+  const onPress = () => {
     playHaptic('Light')
     onOpen?.()
-  }, [playHaptic, onOpen])
+  }
 
-  const onLongPress = useCallback(() => {
+  const onLongPress = () => {
     if (view.uri && IS_NATIVE) {
       playHaptic('Heavy')
       shareUrl(view.uri)
     }
-  }, [view.uri, playHaptic])
+  }
 
   if (isStandardPublication) {
     return (
