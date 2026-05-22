@@ -74,6 +74,8 @@ export const StandardSiteEmbed = ({
     }
   }
 
+  // Embeds are expected to associate with at most one publication; if multiple
+  // refs are ever present, the byline silently uses the first one.
   const publicationUri = view.associatedRefs?.find(
     ref => new AtUri(ref.uri).collection === 'site.standard.publication',
   )?.uri
