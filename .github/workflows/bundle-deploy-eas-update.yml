@@ -91,6 +91,8 @@ jobs:
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         with:
           expo-version: latest
+          eas-version: latest
+          packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: 🪛 Setup jq
@@ -182,6 +184,8 @@ jobs:
         uses: expo/expo-github-action@main
         with:
           expo-version: latest
+          eas-version: latest
+          packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ⚙️ Install dependencies
@@ -328,6 +332,8 @@ jobs:
         uses: expo/expo-github-action@main
         with:
           expo-version: latest
+          eas-version: latest
+          packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
 
       - uses: actions/setup-java@v5

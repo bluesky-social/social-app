@@ -50,7 +50,10 @@ jobs:
         uses: expo/expo-github-action@main
         with:
           expo-version: latest
+          eas-version: latest
+          packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
+
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
