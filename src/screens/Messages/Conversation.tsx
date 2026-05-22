@@ -31,7 +31,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useConvoQuery} from '#/state/queries/messages/conversation'
 import {useSession} from '#/state/session'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, web} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import * as Dialog from '#/components/Dialog'
@@ -44,7 +44,6 @@ import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
 import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {Error} from '#/components/Error'
 import * as Layout from '#/components/Layout'
-import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -100,7 +99,6 @@ export function MessagesConversationScreenInner({route}: Props) {
 }
 
 function Inner({convoId}: {convoId: string}) {
-  const t = useTheme()
   const convoState = useConvo()
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
@@ -153,8 +151,8 @@ function Inner({convoId}: {convoId: string}) {
 
   return (
     <Layout.Center style={[a.flex_1]}>
-      {!readyToShow && (
-        <View style={IS_LIQUID_GLASS && {paddingTop: topInset}}>
+      {!IS_LIQUID_GLASS && !readyToShow && (
+        <View>
           <MessagesListHeader convo={convo} />
         </View>
       )}
@@ -166,22 +164,6 @@ function Inner({convoId}: {convoId: string}) {
           isActive={isConvoActive(convoState)}
           isDisabled={convoState.status === ConvoStatus.Disabled}
         />
-        {!readyToShow && (
-          <View
-            style={[
-              a.absolute,
-              a.z_10,
-              a.w_full,
-              a.h_full,
-              a.justify_center,
-              a.align_center,
-              t.atoms.bg,
-            ]}>
-            <View style={[{marginBottom: 75}]}>
-              <Loader size="xl" />
-            </View>
-          </View>
-        )}
       </View>
     </Layout.Center>
   )
