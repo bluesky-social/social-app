@@ -16,24 +16,37 @@ const STANDARD_SITE_PUBLISHERS: StandardSitePublisher[] = [
   {host: 'offprint.app', name: 'Offprint', Icon: Offprint},
 ]
 
-export function getStandardSitePublisherHost(
-  view: AppBskyEmbedExternal.ViewExternal,
-): string | null {
+function hostFromUri(uri: string | undefined): string | null {
   try {
-    return new URL(view.source?.uri || '').host
+    return new URL(uri || '').host
   } catch {
     return null
   }
+}
+
+export function getStandardSitePublisherHost(
+  view: AppBskyEmbedExternal.ViewExternal,
+): string | null {
+  return hostFromUri(view.source?.uri)
 }
 
 export function hostMatches(host: string, target: string): boolean {
   return host === target || host.endsWith('.' + target)
 }
 
+function matchByHost(host: string | null): StandardSitePublisher | null {
+  if (!host) return null
+  return STANDARD_SITE_PUBLISHERS.find(p => hostMatches(host, p.host)) ?? null
+}
+
 export function matchStandardSitePublisher(
   view: AppBskyEmbedExternal.ViewExternal,
 ): StandardSitePublisher | null {
-  const host = getStandardSitePublisherHost(view)
-  if (!host) return null
-  return STANDARD_SITE_PUBLISHERS.find(p => hostMatches(host, p.host)) ?? null
+  return matchByHost(getStandardSitePublisherHost(view))
+}
+
+export function matchStandardSitePublisherByUri(
+  uri: string | undefined,
+): StandardSitePublisher | null {
+  return matchByHost(hostFromUri(uri))
 }

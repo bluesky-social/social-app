@@ -8,7 +8,10 @@ import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {atoms as a, useTheme} from '#/alf'
 import {StandardSite} from '#/components/icons/community/StandardSite'
 import {InlineLinkText} from '#/components/Link'
-import {matchStandardSitePublisher} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
+import {
+  matchStandardSitePublisher,
+  matchStandardSitePublisherByUri,
+} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
 import {isStandardSiteDocumentUri} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Text} from '#/components/Typography'
 
@@ -34,6 +37,8 @@ export function PublicationMetaRow({
     ? view.associatedProfiles?.find(p => p.did === authorDid)
     : undefined
   const articleDomain = toNiceDomain(view.uri)
+  const articlePublisher = matchStandardSitePublisherByUri(view.uri)
+  const DomainIcon = articlePublisher?.Icon ?? StandardSite
   const metaTextStyle = [
     a.text_xs,
     a.leading_snug,
@@ -47,7 +52,7 @@ export function PublicationMetaRow({
       key: 'domain',
       node: (
         <View style={[a.flex_row, a.align_center]}>
-          <StandardSite size="sm" fill={t.atoms.text_contrast_medium.color} />
+          <DomainIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
           <Text numberOfLines={1} style={metaTextStyle}>
             {articleDomain}
           </Text>
