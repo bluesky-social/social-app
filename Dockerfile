@@ -48,7 +48,7 @@ ENV EXPO_PUBLIC_SENTRY_DSN=$EXPO_PUBLIC_SENTRY_DSN
 COPY . .
 
 #
-# Generate the JavaScript webpack.
+# Generate the web bundle with Metro.
 #
 RUN mkdir --parents $NVM_DIR && \
   wget \

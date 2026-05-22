@@ -1,6 +1,6 @@
-const path = require('path')
-const fs = require('fs')
-const {execSync} = require('child_process')
+const path = require('node:path')
+const fs = require('node:fs')
+const {execFileSync} = require('node:child_process')
 
 const projectRoot = path.join(__dirname, '..')
 const distDir = path.join(projectRoot, 'dist')
@@ -119,8 +119,7 @@ if (process.env.SENTRY_AUTH_TOKEN) {
   const sourceMapDir = path.join(distDir, '_expo', 'static')
 
   console.log(`Uploading source maps to Sentry (release: ${release})`)
-  const cmd = [
-    'sentry-cli',
+  const args = [
     'sourcemaps',
     'upload',
     '--org',
@@ -133,7 +132,7 @@ if (process.env.SENTRY_AUTH_TOKEN) {
     sourceMapDir,
   ]
   try {
-    execSync(cmd.join(' '), {stdio: 'inherit', cwd: projectRoot})
+    execFileSync('sentry-cli', args, {stdio: 'inherit', cwd: projectRoot})
     console.log('Sentry source map upload complete')
   } catch (e) {
     console.error('Sentry source map upload failed:', e.message)
