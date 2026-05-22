@@ -9,6 +9,7 @@ export const transparentifyColor = utils.alpha
 
 /**
  * Lighten a hex color by `amount` percentage points of HSL lightness (0-100).
+ * If `hex` is not a valid hex color, returns the input unchanged.
  */
 export function lighten(hex: string, amount: number): string {
   return adjustLightness(hex, amount)
@@ -16,33 +17,51 @@ export function lighten(hex: string, amount: number): string {
 
 /**
  * Darken a hex color by `amount` percentage points of HSL lightness (0-100).
+ * If `hex` is not a valid hex color, returns the input unchanged.
  */
 export function darken(hex: string, amount: number): string {
   return adjustLightness(hex, -amount)
 }
 
 function adjustLightness(hex: string, delta: number): string {
-  const {r, g, b} = hexToRgb(hex)
-  const {h, s, l} = rgbToHsl(r, g, b)
-  const next = clamp(l + delta, 0, 100)
-  const out = hslToRgb(h, s, next)
-  return rgbToHex(out.r, out.g, out.b)
+  try {
+    const rgb = hexToRgb(hex)
+    if (!rgb) return hex
+    const {h, s, l} = rgbToHsl(rgb.r, rgb.g, rgb.b)
+    const next = clamp(l + delta, 0, 100)
+    const out = hslToRgb(h, s, next)
+    return rgbToHex(out.r, out.g, out.b)
+  } catch {
+    return hex
+  }
 }
 
-function hexToRgb(hex: string): {r: number; g: number; b: number} {
-  const h = hex.replace('#', '')
-  const expanded =
-    h.length === 3
-      ? h
-          .split('')
-          .map(c => c + c)
-          .join('')
-      : h
-  const num = parseInt(expanded, 16)
-  return {
-    r: (num >> 16) & 255,
-    g: (num >> 8) & 255,
-    b: num & 255,
+const HEX_PATTERN = /^([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/
+
+export function hexToRgb(
+  hex: string,
+): {r: number; g: number; b: number} | null {
+  try {
+    if (typeof hex !== 'string') return null
+    const h = hex.startsWith('#') ? hex.slice(1) : hex
+    if (!HEX_PATTERN.test(h)) return null
+    // 8-digit hex carries an alpha channel we don't use; drop it
+    const rgb = h.length === 8 ? h.slice(0, 6) : h
+    const expanded =
+      rgb.length === 3
+        ? rgb
+            .split('')
+            .map(c => c + c)
+            .join('')
+        : rgb
+    const num = parseInt(expanded, 16)
+    return {
+      r: (num >> 16) & 255,
+      g: (num >> 8) & 255,
+      b: num & 255,
+    }
+  } catch {
+    return null
   }
 }
 
