@@ -280,7 +280,7 @@ export function PublicationCard({
     <Link
       shouldProxy
       to={view.source.uri}
-      label={l`Subscribe`}
+      label={l`View publication`}
       onPress={onPress}
       onLongPress={onLongPress}>
       {({hovered: maybeHovered}) => {
@@ -530,7 +530,7 @@ export function PublicationFooter({
       <Link
         shouldProxy
         to={view.source.uri}
-        label={l`Subscribe`}
+        label={l`View publication`}
         onPress={onPress}
         onLongPress={onLongPress}
         style={[
