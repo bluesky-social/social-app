@@ -229,7 +229,11 @@ export function MessageInput({
           }}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={loading ? l`Loading chat…` : l`Message`}
+            accessibilityLabel={
+              loading
+                ? l({message: 'Loading chat…', context: 'placeholder'})
+                : l({message: 'Message', context: 'action'})
+            }
             accessibilityHint=""
             hitSlop={HITSLOP_10}
             style={[

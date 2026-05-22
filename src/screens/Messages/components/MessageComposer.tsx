@@ -212,7 +212,11 @@ export function MessageComposer({
               <Composer
                 nativeID={textInputId}
                 label={l`Message input field`}
-                placeholder={loading ? l`Loading chat…` : l`Message`}
+                placeholder={
+                  loading
+                    ? l({message: 'Loading chat…', context: 'placeholder'})
+                    : l({message: 'Message', context: 'action'})
+                }
                 autocompletePlacement="top-start"
                 internalApiRef={composerInternalApiRef}
                 defaultValue={text}
