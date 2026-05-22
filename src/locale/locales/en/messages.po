@@ -770,6 +770,10 @@ msgctxt "toast"
 msgid "Account blocked"
 msgstr ""
 
+#: src/screens/Profile/components/ProfileStatusError.tsx:52
+msgid "Account deactivated"
+msgstr "Account deactivated"
+
 #: src/view/com/modals/DeleteAccount.tsx:71
 msgid "Account deletion is not available when signed in with OAuth. Please manage your account through your hosting provider's website."
 msgstr "Account deletion is not available when signed in with OAuth. Please manage your account through your hosting provider's website."
@@ -786,6 +790,27 @@ msgstr ""
 #: src/lib/strings/errors.ts:74
 msgid "Account is deactivated"
 msgstr ""
+
+#. placeholder {0}: source.handle
+#: src/screens/Profile/components/ProfileStatusError.tsx:76
+msgid "Account is suspended by @{0}."
+msgstr "Account is suspended by @{0}."
+
+#. placeholder {0}: source.handle
+#. placeholder {1}: source.email
+#: src/screens/Profile/components/ProfileStatusError.tsx:117
+msgid "Account is suspended by <0>@{0}</0>, email <1>{1}</1> to appeal."
+msgstr "Account is suspended by <0>@{0}</0>, email <1>{1}</1> to appeal."
+
+#. placeholder {0}: source.handle
+#: src/screens/Profile/components/ProfileStatusError.tsx:96
+msgid "Account is suspended by <0>@{0}</0>. Click <1>here</1> to submit an appeal."
+msgstr "Account is suspended by <0>@{0}</0>. Click <1>here</1> to submit an appeal."
+
+#: src/screens/Profile/components/ProfileStatusError.tsx:67
+#: src/screens/Profile/components/ProfileStatusError.tsx:82
+msgid "Account is suspended."
+msgstr "Account is suspended."
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:454
 #: src/view/com/profile/ProfileMenu.tsx:160
@@ -818,6 +843,10 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:633
 msgid "Account removed from quick access"
 msgstr ""
+
+#: src/screens/Profile/components/ProfileStatusError.tsx:60
+msgid "Account suspended"
+msgstr "Account suspended"
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:103
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:88
@@ -1683,7 +1712,7 @@ msgstr ""
 #: src/components/dialogs/StarterPackDialog.tsx:72
 #: src/components/StarterPack/ProfileStarterPacks.tsx:264
 #: src/components/StarterPack/ProfileStarterPacks.tsx:274
-#: src/view/screens/Profile.tsx:349
+#: src/view/screens/Profile.tsx:374
 msgid "Before creating a starter pack, you must first verify your email."
 msgstr ""
 
@@ -2902,8 +2931,8 @@ msgstr ""
 msgid "Create a starter pack"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:561
-#: src/view/screens/Profile.tsx:562
+#: src/view/screens/Profile.tsx:586
+#: src/view/screens/Profile.tsx:587
 msgid "Create a Starter Pack"
 msgstr ""
 
@@ -4419,7 +4448,7 @@ msgstr ""
 #: src/screens/Search/SearchResults.tsx:81
 #: src/screens/StarterPack/StarterPackScreen.tsx:196
 #: src/view/screens/Feeds.tsx:503
-#: src/view/screens/Profile.tsx:238
+#: src/view/screens/Profile.tsx:263
 #: src/view/shell/desktop/LeftNav.tsx:733
 #: src/view/shell/Drawer.tsx:525
 msgid "Feeds"
@@ -5733,7 +5762,7 @@ msgid "Labeled by the author."
 msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:70
-#: src/view/screens/Profile.tsx:231
+#: src/view/screens/Profile.tsx:256
 msgid "Labels"
 msgstr ""
 
@@ -5956,7 +5985,7 @@ msgstr ""
 #: src/lib/hooks/useNotificationHandler.ts:136
 #: src/screens/Settings/NotificationSettings/index.tsx:127
 #: src/screens/Settings/NotificationSettings/LikeNotificationSettings.tsx:41
-#: src/view/screens/Profile.tsx:237
+#: src/view/screens/Profile.tsx:262
 msgid "Likes"
 msgstr ""
 
@@ -6071,8 +6100,8 @@ msgstr ""
 
 #: src/Navigation.tsx:185
 #: src/view/screens/Lists.tsx:60
-#: src/view/screens/Profile.tsx:232
-#: src/view/screens/Profile.tsx:240
+#: src/view/screens/Profile.tsx:257
+#: src/view/screens/Profile.tsx:265
 #: src/view/shell/desktop/LeftNav.tsx:751
 #: src/view/shell/Drawer.tsx:540
 msgid "Lists"
@@ -6281,7 +6310,7 @@ msgstr "Maximum support amount is $1,000"
 msgid "Maybe later"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:235
+#: src/view/screens/Profile.tsx:260
 msgid "Media"
 msgstr ""
 
@@ -6784,7 +6813,7 @@ msgstr ""
 #: src/screens/ProfileList/index.tsx:292
 #: src/view/screens/Feeds.tsx:544
 #: src/view/screens/Notifications.tsx:166
-#: src/view/screens/Profile.tsx:592
+#: src/view/screens/Profile.tsx:617
 msgid "New post"
 msgstr ""
 
@@ -6903,7 +6932,7 @@ msgstr ""
 
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
-#: src/view/screens/Profile.tsx:524
+#: src/view/screens/Profile.tsx:549
 msgid "No likes yet"
 msgstr ""
 
@@ -6920,7 +6949,7 @@ msgstr ""
 msgid "No longer following {0}"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:470
+#: src/view/screens/Profile.tsx:495
 msgid "No media yet"
 msgstr ""
 
@@ -6966,7 +6995,7 @@ msgid "No posts here"
 msgstr ""
 
 #: src/screens/Profile/Sections/Feed.tsx:81
-#: src/view/screens/Profile.tsx:429
+#: src/view/screens/Profile.tsx:454
 msgid "No posts yet"
 msgstr ""
 
@@ -6983,7 +7012,7 @@ msgstr ""
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "No recent GIFs yet. Pick one to see it here."
 
-#: src/view/screens/Profile.tsx:455
+#: src/view/screens/Profile.tsx:480
 msgid "No replies yet"
 msgstr ""
 
@@ -7016,7 +7045,7 @@ msgstr ""
 msgid "No results found for “<0>{query}</0>”."
 msgstr "No results found for “<0>{query}</0>”."
 
-#: src/view/screens/Profile.tsx:556
+#: src/view/screens/Profile.tsx:581
 msgid "No Starter Packs yet"
 msgstr ""
 
@@ -7029,7 +7058,7 @@ msgstr ""
 msgid "No translation received from your device."
 msgstr "No translation received from your device."
 
-#: src/view/screens/Profile.tsx:497
+#: src/view/screens/Profile.tsx:522
 msgid "No video posts yet"
 msgstr ""
 
@@ -7075,8 +7104,12 @@ msgstr ""
 msgid "Not followed by anyone you're following"
 msgstr ""
 
+#: src/screens/Profile/components/ProfileStatusError.tsx:44
+msgid "Not found"
+msgstr "Not found"
+
 #: src/Navigation.tsx:180
-#: src/view/screens/Profile.tsx:132
+#: src/view/screens/Profile.tsx:146
 msgid "Not Found"
 msgstr ""
 
@@ -7260,7 +7293,7 @@ msgstr ""
 #: src/components/StarterPack/ProfileStarterPacks.tsx:372
 #: src/screens/Settings/AppPasswords.tsx:149
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:109
-#: src/view/screens/Profile.tsx:132
+#: src/view/screens/Profile.tsx:146
 msgid "Oops!"
 msgstr ""
 
@@ -7962,13 +7995,13 @@ msgctxt "description"
 msgid "Post"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:474
-#: src/view/screens/Profile.tsx:475
+#: src/view/screens/Profile.tsx:499
+#: src/view/screens/Profile.tsx:500
 msgid "Post a photo"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:501
-#: src/view/screens/Profile.tsx:502
+#: src/view/screens/Profile.tsx:526
+#: src/view/screens/Profile.tsx:527
 msgid "Post a video"
 msgstr ""
 
@@ -8066,7 +8099,7 @@ msgstr ""
 #: src/screens/ProfileList/index.tsx:167
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:219
 #: src/screens/StarterPack/StarterPackScreen.tsx:197
-#: src/view/screens/Profile.tsx:233
+#: src/view/screens/Profile.tsx:258
 msgid "Posts"
 msgstr ""
 
@@ -8176,6 +8209,7 @@ msgstr ""
 msgid "profile"
 msgstr ""
 
+#: src/screens/Profile/components/ProfileStatusError.tsx:149
 #: src/view/shell/bottom-bar/BottomBar.tsx:294
 #: src/view/shell/desktop/LeftNav.tsx:792
 #: src/view/shell/Drawer.tsx:79
@@ -8657,7 +8691,7 @@ msgstr ""
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:221
 #: src/screens/Settings/NotificationSettings/index.tsx:149
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:41
-#: src/view/screens/Profile.tsx:234
+#: src/view/screens/Profile.tsx:259
 msgid "Replies"
 msgstr ""
 
@@ -10173,7 +10207,7 @@ msgstr ""
 msgid "Starter pack is invalid"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:239
+#: src/view/screens/Profile.tsx:264
 msgid "Starter Packs"
 msgstr ""
 
@@ -10185,7 +10219,7 @@ msgstr ""
 msgid "Starter packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:554
+#: src/view/screens/Profile.tsx:579
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
@@ -10757,6 +10791,10 @@ msgstr ""
 #: src/components/verification/VerificationsDialog.tsx:89
 msgid "This account has a checkmark because it's been verified by trusted sources."
 msgstr ""
+
+#: src/screens/Profile/components/ProfileStatusError.tsx:55
+msgid "This account has been deactivated by its owner."
+msgstr "This account has been deactivated by its owner."
 
 #: src/components/BotAccountAlert.tsx:27
 msgid "This account has been marked as automated by its owner."
@@ -11656,7 +11694,7 @@ msgstr "Use your data in AI search and recommendation systems. This is how AI fi
 msgid "Use your data to build or train new AI models. Once your work is in a model, it stays there, even if you delete your account later."
 msgstr "Use your data to build or train new AI models. Once your work is in a model, it stays there, even if you delete your account later."
 
-#: src/view/screens/Profile.tsx:382
+#: src/view/screens/Profile.tsx:407
 msgid "user"
 msgstr "user"
 
@@ -11887,7 +11925,7 @@ msgstr ""
 msgid "Video: {0}"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:236
+#: src/view/screens/Profile.tsx:261
 msgid "Videos"
 msgstr ""
 
@@ -12089,6 +12127,10 @@ msgstr "We could not connect to the service that provides this custom feed. It m
 #: src/view/com/feeds/MissingFeed.tsx:147
 msgid "We could not find this list. It was probably deleted."
 msgstr ""
+
+#: src/screens/Profile/components/ProfileStatusError.tsx:47
+msgid "We couldn't find an account at {didOrHandle}."
+msgstr "We couldn't find an account at {didOrHandle}."
 
 #: src/screens/Hashtag.tsx:259
 msgid "We couldn't find any results for that tag."
@@ -12315,8 +12357,8 @@ msgstr ""
 msgid "Would you like to save this as a draft to edit later?"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:433
-#: src/view/screens/Profile.tsx:434
+#: src/view/screens/Profile.tsx:458
+#: src/view/screens/Profile.tsx:459
 msgid "Write a post"
 msgstr ""
 
