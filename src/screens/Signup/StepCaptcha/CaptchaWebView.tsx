@@ -1,8 +1,7 @@
 import {useEffect, useMemo, useRef} from 'react'
-import {WebView, type WebViewNavigation} from 'react-native-webview'
-import {type ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes'
 
 import {type SignupState} from '#/screens/Signup/state'
+import {WebView, type WebViewNavigation} from '#/components/WebView'
 
 const ALLOWED_HOSTS = [
   'bsky.social',
@@ -54,8 +53,8 @@ export function CaptchaWebView({
 
   const wasSuccessful = useRef(false)
 
-  const onShouldStartLoadWithRequest = (event: ShouldStartLoadRequest) => {
-    const urlp = new URL(event.url)
+  const onShouldStartLoadWithRequest = (evt: WebViewNavigation) => {
+    const urlp = new URL(evt.url)
     return ALLOWED_HOSTS.includes(urlp.host)
   }
 
