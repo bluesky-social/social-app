@@ -12,10 +12,8 @@ import {Loader} from '#/components/Loader'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
 import {ModeratedFeedEmbed} from '#/components/Post/Embed/FeedEmbed'
 import {ModeratedListEmbed} from '#/components/Post/Embed/ListEmbed'
-import {
-  isStandardSiteEmbed,
-  StandardSiteEmbed,
-} from '#/components/Post/Embed/StandardSiteEmbed'
+import {StandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed'
+import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Embed as StarterPackEmbed} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 import {type Gif} from '#/features/gifPicker/types'

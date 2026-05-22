@@ -29,6 +29,7 @@ import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {PublicationMetaRow} from '#/components/Post/Embed/StandardSiteEmbed/PublicationMetaRow'
 import {StandardSiteThemeProvider} from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteThemeProvider'
+import {isStandardSitePublicationEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 
@@ -36,12 +37,6 @@ export type ThemeColors = {
   custom: boolean
   accent: string
   accentForeground: string
-}
-
-export function isStandardSiteEmbed(view: AppBskyEmbedExternal.ViewExternal) {
-  return view.associatedRefs?.some(ref =>
-    new AtUri(ref.uri).collection.startsWith('site.standard.'),
-  )
 }
 
 export function useStandardSitePublisherConfig(
@@ -102,11 +97,7 @@ export const StandardSiteEmbed = ({
   const isStandard = view.associatedRefs?.some(ref =>
     new AtUri(ref.uri).collection.startsWith('site.standard.'),
   )
-  const isStandardPublication = view.associatedRefs?.every(
-    ref =>
-      new AtUri(ref.uri).collection === 'site.standard.publication' &&
-      new AtUri(ref.uri).collection !== 'site.standard.document',
-  )
+  const isStandardPublication = isStandardSitePublicationEmbed(view)
   const themeColors = useMemo(() => {
     let custom = false
     let accent = t.atoms.text.color
