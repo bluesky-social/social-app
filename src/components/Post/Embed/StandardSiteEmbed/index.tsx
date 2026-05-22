@@ -33,6 +33,10 @@ export type ThemeColors = {
   accentForeground: string
 }
 
+const PUBLICATION_AVATAR_STYLE = {
+  borderRadius: a.rounded_sm.borderRadius,
+}
+
 export function useStandardSitePublisherConfig(
   view: AppBskyEmbedExternal.ViewExternal,
 ) {
@@ -365,32 +369,30 @@ export function PublicationCard({
                   a.gap_sm,
                   gtPhone && a.flex_1,
                 ]}>
-                <>
-                  <PublicationIcon
+                <PublicationIcon
+                  view={view}
+                  size={40}
+                  hovered={hovered}
+                  themeColors={themeColors}
+                />
+                <View style={[a.flex_1, a.gap_2xs]}>
+                  <Text
+                    numberOfLines={1}
+                    style={[
+                      a.text_md,
+                      a.font_semi_bold,
+                      t.atoms.text,
+                      hovered && a.underline,
+                    ]}>
+                    {view.source?.title}
+                  </Text>
+                  <PublicationMetaRow
                     view={view}
-                    size={40}
-                    hovered={hovered}
-                    themeColors={themeColors}
+                    author={author}
+                    onInteractWithin={onInteractWithin}
+                    onInteractWithout={onInteractWithout}
                   />
-                  <View style={[a.flex_1, a.gap_2xs]}>
-                    <Text
-                      numberOfLines={1}
-                      style={[
-                        a.text_md,
-                        a.font_semi_bold,
-                        t.atoms.text,
-                        hovered && a.underline,
-                      ]}>
-                      {view.source?.title}
-                    </Text>
-                    <PublicationMetaRow
-                      view={view}
-                      author={author}
-                      onInteractWithin={onInteractWithin}
-                      onInteractWithout={onInteractWithout}
-                    />
-                  </View>
-                </>
+                </View>
               </View>
 
               {!hideSubscribe && (
@@ -482,7 +484,7 @@ function PublicationIcon({
         type="labeler"
         size={size}
         avatar={view.source.icon}
-        extraAviStyle={{borderRadius: a.rounded_sm.borderRadius}}
+        extraAviStyle={PUBLICATION_AVATAR_STYLE}
       />
       <MediaInsetBorder
         style={[
@@ -579,32 +581,30 @@ export function PublicationFooter({
           a.gap_sm,
           gtPhone && a.flex_1,
         ]}>
-        <>
-          <PublicationIcon
+        <PublicationIcon
+          view={view}
+          size={32}
+          hovered={hovered}
+          themeColors={themeColors}
+        />
+        <View style={[a.flex_1, a.gap_2xs]}>
+          <Text
+            numberOfLines={1}
+            style={[
+              a.text_sm,
+              a.font_medium,
+              t.atoms.text,
+              hovered && a.underline,
+            ]}>
+            {view.source?.title}
+          </Text>
+          <PublicationMetaRow
             view={view}
-            size={32}
-            hovered={hovered}
-            themeColors={themeColors}
+            author={author}
+            onInteractWithin={onInteractWithin}
+            onInteractWithout={onInteractWithout}
           />
-          <View style={[a.flex_1, a.gap_2xs]}>
-            <Text
-              numberOfLines={1}
-              style={[
-                a.text_sm,
-                a.font_medium,
-                t.atoms.text,
-                hovered && a.underline,
-              ]}>
-              {view.source?.title}
-            </Text>
-            <PublicationMetaRow
-              view={view}
-              author={author}
-              onInteractWithin={onInteractWithin}
-              onInteractWithout={onInteractWithout}
-            />
-          </View>
-        </>
+        </View>
       </Link>
 
       {!hideSubscribe && (
