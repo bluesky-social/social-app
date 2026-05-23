@@ -1,6 +1,6 @@
-import UserNotifications
-import UIKit
 import Intents
+import UIKit
+import UserNotifications
 
 let APP_GROUP = "group.app.bsky"
 typealias ContentHandler = (UNNotificationContent) -> Void
@@ -30,11 +30,14 @@ class NotificationService: UNNotificationServiceExtension {
   private var contentHandler: ContentHandler?
   private var bestAttempt: UNMutableNotificationContent?
 
-  override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
+  override func didReceive(
+    _ request: UNNotificationRequest,
+    withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void
+  ) {
     self.contentHandler = contentHandler
 
     guard let bestAttempt = NSEUtil.createCopy(request.content),
-          let reason = request.content.userInfo["reason"] as? String
+      let reason = request.content.userInfo["reason"] as? String
     else {
       contentHandler(request.content)
       return
@@ -58,8 +61,8 @@ class NotificationService: UNNotificationServiceExtension {
       )
       contentHandler(finalContent)
     } else if reason == "chat-added-to-group"
-                || reason == "chat-removed-from-group"
-                || reason == "chat-join-request-rejected" {
+      || reason == "chat-removed-from-group"
+      || reason == "chat-join-request-rejected" {
       mutateWithChatMessage(bestAttempt)
       mutateWithGroupSubtitle(bestAttempt, userInfo: request.content.userInfo)
       mutateWithBadge(bestAttempt)
@@ -72,7 +75,8 @@ class NotificationService: UNNotificationServiceExtension {
 
   override func serviceExtensionTimeWillExpire() {
     guard let contentHandler = self.contentHandler,
-          let bestAttempt = self.bestAttempt else {
+      let bestAttempt = self.bestAttempt
+    else {
       return
     }
     contentHandler(bestAttempt)
@@ -86,7 +90,7 @@ class NotificationService: UNNotificationServiceExtension {
   ) -> UNNotificationContent {
     let senderDisplayName = userInfo["senderDisplayName"] as? String ?? "Unknown"
     let convoId = userInfo["convoId"] as? String
-    var avatarImage: INImage? = nil
+    var avatarImage: INImage?
     if let avatarUrlString = userInfo["senderAvatarUrl"] as? String {
       avatarImage = downloadAvatarImage(from: avatarUrlString)
     }
@@ -102,10 +106,10 @@ class NotificationService: UNNotificationServiceExtension {
       customIdentifier: nil
     )
 
-    var speakableGroupName: INSpeakableString? = nil
+    var speakableGroupName: INSpeakableString?
     if userInfo["convoKind"] as? String == "group",
-       let groupName = userInfo["groupName"] as? String,
-       !groupName.isEmpty {
+      let groupName = userInfo["groupName"] as? String,
+      !groupName.isEmpty {
       speakableGroupName = INSpeakableString(spokenPhrase: groupName)
     }
 
@@ -126,8 +130,8 @@ class NotificationService: UNNotificationServiceExtension {
     // `recipientCount` on the donation metadata is Apple's documented escape
     // hatch for this case, and overrides the (zero-length) recipients array.
     if userInfo["convoKind"] as? String == "group",
-       let groupMemberCount = userInfo["groupMemberCount"] as? Int,
-       groupMemberCount > 0 {
+      let groupMemberCount = userInfo["groupMemberCount"] as? Int,
+      groupMemberCount > 0 {
       let metadata = INSendMessageIntentDonationMetadata()
       metadata.recipientCount = groupMemberCount
       intent.donationMetadata = metadata
@@ -142,6 +146,12 @@ class NotificationService: UNNotificationServiceExtension {
     //    let groupImage = downloadAvatarImage(from: convoAvatarUrlString) {
     //   intent.setImage(groupImage, forParameterNamed: \.speakableGroupName)
     // }
+
+    // Set the group image to the sender avatar instead
+    if userInfo["convoKind"] as? String == "group",
+      let avatarImage {
+      intent.setImage(avatarImage, forParameterNamed: \.speakableGroupName)
+    }
 
     let interaction = INInteraction(intent: intent, response: nil)
     interaction.direction = .incoming
@@ -165,13 +175,13 @@ class NotificationService: UNNotificationServiceExtension {
     var request = URLRequest(url: url)
     request.timeoutInterval = 5
 
-    var imageData: Data? = nil
+    var imageData: Data?
     let semaphore = DispatchSemaphore(value: 0)
 
-    let task = URLSession.shared.dataTask(with: request) { data, response, error in
+    let task = URLSession.shared.dataTask(with: request) { data, response, _ in
       if let data = data,
-         let httpResponse = response as? HTTPURLResponse,
-         httpResponse.statusCode == 200 {
+        let httpResponse = response as? HTTPURLResponse,
+        httpResponse.statusCode == 200 {
         imageData = data
       }
       semaphore.signal()
@@ -210,8 +220,9 @@ class NotificationService: UNNotificationServiceExtension {
     userInfo: [AnyHashable: Any]
   ) {
     guard userInfo["convoKind"] as? String == "group",
-          let groupName = userInfo["groupName"] as? String,
-          !groupName.isEmpty else {
+      let groupName = userInfo["groupName"] as? String,
+      !groupName.isEmpty
+    else {
       return
     }
     content.subtitle = groupName
@@ -227,8 +238,9 @@ class NotificationService: UNNotificationServiceExtension {
     userInfo: [AnyHashable: Any]
   ) {
     guard let messageKind = userInfo["messageKind"] as? String,
-          messageKind != "message",
-          !content.title.isEmpty else {
+      messageKind != "message",
+      !content.title.isEmpty
+    else {
       return
     }
     content.body = content.title
