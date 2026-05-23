@@ -91,6 +91,7 @@ export type CommonNavigatorParams = {
   VideoFeed: VideoFeedSourceContext
   Bookmarks: undefined
   FindContactsFlow: undefined
+  Lightbox: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
