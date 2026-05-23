@@ -83,7 +83,7 @@ msgstr ""
 
 #. placeholder {0}: reactions.length
 #. placeholder {1}: groupedReactions.map(g => g.value).join(' ')
-#: src/components/dms/MessageItem.tsx:287
+#: src/components/dms/MessageItem.tsx:290
 msgid "{0, plural, one {# person} other {# people}} reacted – {1}"
 msgstr "{0, plural, one {# person} other {# people}} reacted – {1}"
 
@@ -109,6 +109,12 @@ msgstr ""
 #: src/view/shell/Drawer.tsx:486
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr ""
+
+#. How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.
+#. placeholder {0}: view.readingTime
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:203
+msgid "{0, plural, one {#m} other {#m}}"
+msgstr "{0, plural, one {#m} other {#m}}"
 
 #. How many months have passed, displayed in a narrow form
 #. placeholder {0}: diff.value
@@ -154,9 +160,9 @@ msgstr ""
 msgid "{0, plural, other {You must be # years of age or older to create an account in your region.}}"
 msgstr ""
 
-#. placeholder {0}: i18n.date(d, {timeStyle: 'short'})
+#. placeholder {0}: i18n.date(d, {timeStyle: ts})
 #. placeholder {1}: i18n.date(d, {dateStyle: 'medium'})
-#: src/lib/strings/time.ts:13
+#: src/lib/strings/time.ts:15
 msgctxt "date and time formatted like this: [time] · [date]"
 msgid "{0} · {1}"
 msgstr ""
@@ -248,7 +254,7 @@ msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(memberSender)
 #. placeholder {1}: reaction.value
-#: src/components/dms/MessageItem.tsx:282
+#: src/components/dms/MessageItem.tsx:285
 msgid "{0} reacted {1}"
 msgstr ""
 
@@ -293,13 +299,13 @@ msgstr ""
 
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || sanitizeHandle(profile.handle), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || sanitizeHandle(profile.handle), )
-#: src/view/com/util/UserAvatar.tsx:577
-#: src/view/com/util/UserAvatar.tsx:595
+#: src/view/com/util/UserAvatar.tsx:581
+#: src/view/com/util/UserAvatar.tsx:599
 msgid "{0}'s avatar"
 msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(profile)
-#: src/components/dms/MessageItem.tsx:218
+#: src/components/dms/MessageItem.tsx:221
 msgid "{0}’s avatar"
 msgstr "{0}’s avatar"
 
@@ -838,7 +844,7 @@ msgstr ""
 msgid "Accept Request"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:470
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:460
 msgid "Accept this language suggestion"
 msgstr ""
 
@@ -1062,8 +1068,8 @@ msgstr ""
 msgid "Add muted words and tags"
 msgstr ""
 
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:126
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:165
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:129
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:168
 #: src/screens/ProfileList/AboutSection.tsx:72
 #: src/screens/ProfileList/AboutSection.tsx:90
 msgid "Add people"
@@ -1694,7 +1700,7 @@ msgstr ""
 msgid "Are you sure?"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:359
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:349
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
 msgstr ""
 
@@ -1826,7 +1832,7 @@ msgstr ""
 #: src/components/dms/MessageProfileButton.tsx:60
 #: src/screens/Messages/ChatList.tsx:187
 #: src/screens/Messages/ChatList.tsx:435
-#: src/screens/Messages/Conversation.tsx:234
+#: src/screens/Messages/Conversation.tsx:231
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:94
 msgid "Before you can message another user, you must first verify your email."
 msgstr ""
@@ -1922,7 +1928,7 @@ msgstr ""
 msgid "Block user and/or delete this conversation"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:182
+#: src/components/Post/Embed/index.tsx:196
 msgid "Blocked"
 msgstr ""
 
@@ -2118,6 +2124,11 @@ msgstr ""
 msgid "By <0>{0}</0>"
 msgstr ""
 
+#. placeholder {0}: authorProfile.handle
+#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:78
+msgid "by <0>@{0}</0>"
+msgstr "by <0>@{0}</0>"
+
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:182
 msgid "By clicking \"Continue\" you acknowledge that you understand and agree to these updates."
 msgstr ""
@@ -2161,7 +2172,7 @@ msgstr ""
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:200
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:291
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:299
-#: src/components/Menu/index.tsx:366
+#: src/components/Menu/index.tsx:367
 #: src/components/PostControls/RepostButton.tsx:210
 #: src/components/Prompt.tsx:152
 #: src/components/Prompt.tsx:154
@@ -2490,7 +2501,7 @@ msgstr ""
 msgid "click here"
 msgstr ""
 
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:122
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:125
 msgid "Click here to add people to this group chat"
 msgstr "Click here to add people to this group chat"
 
@@ -2498,7 +2509,7 @@ msgstr "Click here to add people to this group chat"
 msgid "Click here to contact our support team"
 msgstr ""
 
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:136
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:139
 msgid "Click here to create or manage an invite link for this group chat"
 msgstr "Click here to create or manage an invite link for this group chat"
 
@@ -2528,7 +2539,7 @@ msgstr ""
 msgid "Click here to update your email"
 msgstr ""
 
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:137
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:140
 msgid "Click here to view the invite link for this group chat"
 msgstr "Click here to view the invite link for this group chat"
 
@@ -2537,7 +2548,7 @@ msgstr "Click here to view the invite link for this group chat"
 msgid "Click to open tag menu for {0}"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:541
+#: src/components/dms/MessageItem.tsx:545
 msgid "Click to retry failed message"
 msgstr ""
 
@@ -2636,7 +2647,7 @@ msgstr ""
 msgid "Close menu"
 msgstr ""
 
-#: src/components/Menu/index.tsx:360
+#: src/components/Menu/index.tsx:361
 msgid "Close this dialog"
 msgstr ""
 
@@ -3278,7 +3289,7 @@ msgstr ""
 msgid "Debug panel"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:479
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:469
 msgid "Decline this language suggestion"
 msgstr "Decline this language suggestion"
 
@@ -3390,7 +3401,7 @@ msgstr ""
 msgid "Delete this post?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:175
+#: src/components/Post/Embed/index.tsx:189
 msgid "Deleted"
 msgstr ""
 
@@ -3678,7 +3689,7 @@ msgctxt "action"
 msgid "Done"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:445
+#: src/components/dms/MessageItem.tsx:452
 msgid "Double tap or long press the message to add a reaction"
 msgstr ""
 
@@ -3791,7 +3802,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:442
+#: src/view/com/util/UserAvatar.tsx:446
 #: src/view/com/util/UserBanner.tsx:122
 msgid "Edit avatar"
 msgstr ""
@@ -4191,7 +4202,7 @@ msgstr ""
 msgid "Expands or collapses post text"
 msgstr ""
 
-#: src/lib/api/index.ts:459
+#: src/lib/api/index.ts:460
 msgid "Expected uri to resolve to a record"
 msgstr ""
 
@@ -4294,7 +4305,7 @@ msgstr ""
 msgid "Failed to add emoji reaction"
 msgstr ""
 
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:42
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:42
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:60
 msgid "Failed to add members"
 msgstr "Failed to add members"
@@ -5172,7 +5183,7 @@ msgstr ""
 
 #: src/components/Error.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:228
-#: src/screens/Messages/Conversation.tsx:373
+#: src/screens/Messages/Conversation.tsx:369
 #: src/screens/Profile/ErrorState.tsx:63
 #: src/screens/Profile/ErrorState.tsx:67
 #: src/screens/StarterPack/StarterPackScreen.tsx:809
@@ -5247,6 +5258,7 @@ msgid "Go to next"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:255
+#: src/screens/Messages/components/MessagesListInfoPanel.tsx:93
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:191
 #: src/view/shell/desktop/LeftNav.tsx:333
 #: src/view/shell/desktop/LeftNav.tsx:339
@@ -5260,6 +5272,10 @@ msgstr "Go to the group chat named \"{chatName}\""
 #: src/components/dms/ConvoMenu.tsx:251
 msgid "Go to user's profile"
 msgstr ""
+
+#: src/screens/Messages/components/MessagesListInfoPanel.tsx:87
+msgid "Go to user’s profile"
+msgstr "Go to user’s profile"
 
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:105
 msgid "Going live is currently disabled for your account"
@@ -5320,11 +5336,11 @@ msgctxt "toast"
 msgid "Group chat unmuted"
 msgstr "Group chat unmuted"
 
-#: src/screens/Messages/Conversation.tsx:357
+#: src/screens/Messages/Conversation.tsx:353
 msgid "Group chats are not yet available"
 msgstr "Group chats are not yet available"
 
-#: src/screens/Messages/Conversation.tsx:355
+#: src/screens/Messages/Conversation.tsx:351
 msgid "Group chats are now available"
 msgstr "Group chats are now available"
 
@@ -5601,7 +5617,7 @@ msgstr ""
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:364
+#: src/screens/Messages/Conversation.tsx:360
 msgid "Hold your horses! This feature isn't available to you yet. Please check back later."
 msgstr "Hold your horses! This feature isn't available to you yet. Please check back later."
 
@@ -5960,7 +5976,7 @@ msgstr ""
 #: src/screens/Messages/components/InviteLinkDialog.tsx:290
 #: src/screens/Messages/components/InviteLinkDialog.tsx:296
 #: src/screens/Messages/components/InviteLinkDialog.tsx:471
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:142
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:145
 #: src/screens/Messages/ConversationSettings/index.tsx:507
 msgid "Invite link"
 msgstr "Invite link"
@@ -6209,8 +6225,8 @@ msgctxt "Button"
 msgid "Leave"
 msgstr "Leave"
 
-#: src/components/dms/MessagesListBlockedFooter.tsx:75
-#: src/components/dms/MessagesListBlockedFooter.tsx:82
+#: src/components/dms/MessagesListBlockedFooter.tsx:107
+#: src/components/dms/MessagesListBlockedFooter.tsx:114
 #: src/screens/Messages/components/ChatEnded.tsx:67
 #: src/screens/Messages/components/ChatLocked.tsx:100
 msgid "Leave chat"
@@ -6514,6 +6530,12 @@ msgstr ""
 msgid "Load new posts"
 msgstr ""
 
+#: src/screens/Messages/components/MessageComposer.tsx:217
+#: src/screens/Messages/components/MessageInput.tsx:234
+msgctxt "placeholder"
+msgid "Loading chat…"
+msgstr "Loading chat…"
+
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "Loading lists..."
 msgstr ""
@@ -6681,16 +6703,17 @@ msgstr ""
 msgid "Mentions"
 msgstr ""
 
-#: src/components/Menu/index.tsx:112
+#: src/components/Menu/index.tsx:113
 msgid "Menu"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:212
-#: src/screens/Messages/components/MessageInput.tsx:175
+#: src/screens/Messages/components/MessageInput.tsx:178
 #: src/screens/Messages/components/MessageInput.web.tsx:195
 msgid "Message"
 msgstr "Message"
 
+#: src/screens/Messages/components/MessageComposer.tsx:218
+#: src/screens/Messages/components/MessageInput.tsx:235
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:199
 msgctxt "action"
 msgid "Message"
@@ -6714,7 +6737,7 @@ msgctxt "toast"
 msgid "Message deleted"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:535
+#: src/components/dms/MessageItem.tsx:539
 msgid "Message failed to send."
 msgstr "Message failed to send."
 
@@ -6729,17 +6752,17 @@ msgstr ""
 msgid "Message from server: {0}"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:211
-#: src/screens/Messages/components/MessageInput.tsx:173
+#: src/screens/Messages/components/MessageComposer.tsx:214
+#: src/screens/Messages/components/MessageInput.tsx:176
 msgid "Message input field"
 msgstr ""
 
-#: src/screens/Messages/components/MessageInput.tsx:82
+#: src/screens/Messages/components/MessageInput.tsx:86
 #: src/screens/Messages/components/MessageInput.web.tsx:53
 msgid "Message is too long"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:86
+#: src/screens/Messages/components/MessageComposer.tsx:89
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgstr "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 
@@ -7069,19 +7092,19 @@ msgid "New chat"
 msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:61
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:61
 msgid "New chat with {0}"
 msgstr "New chat with {0}"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:65
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:65
 msgid "New chat with {0} and {1}"
 msgstr "New chat with {0} and {1}"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:73
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:73
 msgid "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} more} other {{memberCount} more}}."
 msgstr "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} more} other {{memberCount} more}}."
 
@@ -7648,7 +7671,7 @@ msgstr ""
 msgid "Open drawer menu"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:173
+#: src/screens/Messages/components/MessageComposer.tsx:176
 #: src/screens/Messages/components/MessageInput.web.tsx:145
 #: src/view/com/composer/Composer.tsx:2038
 msgid "Open emoji picker"
@@ -7677,6 +7700,7 @@ msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
 #: src/components/Post/Embed/ExternalEmbed/index.tsx:86
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:120
 msgid "Open link to {niceUrl}"
 msgstr ""
 
@@ -7800,7 +7824,7 @@ msgstr ""
 msgid "Opens link {0}"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:581
+#: src/view/com/util/UserAvatar.tsx:585
 msgid "Opens live status dialog"
 msgstr ""
 
@@ -7829,9 +7853,9 @@ msgstr ""
 msgid "Opens this draft in the composer"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:219
+#: src/components/dms/MessageItem.tsx:222
 #: src/view/com/notifications/NotificationFeedItem.tsx:1019
-#: src/view/com/util/UserAvatar.tsx:599
+#: src/view/com/util/UserAvatar.tsx:603
 msgid "Opens this profile"
 msgstr ""
 
@@ -8808,8 +8832,8 @@ msgstr ""
 msgid "Remove attachment"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:501
-#: src/view/com/util/UserAvatar.tsx:504
+#: src/view/com/util/UserAvatar.tsx:505
+#: src/view/com/util/UserAvatar.tsx:508
 msgid "Remove Avatar"
 msgstr ""
 
@@ -8917,11 +8941,11 @@ msgstr ""
 msgid "Remove your verification for this account?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:210
+#: src/components/Post/Embed/index.tsx:224
 msgid "Removed by author"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:208
+#: src/components/Post/Embed/index.tsx:222
 msgid "Removed by you"
 msgstr ""
 
@@ -9055,8 +9079,6 @@ msgid "Reply was successfully hidden"
 msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:179
-#: src/components/dms/MessagesListBlockedFooter.tsx:86
-#: src/components/dms/MessagesListBlockedFooter.tsx:93
 #: src/features/liveNow/components/LiveStatusDialog.tsx:266
 #: src/screens/Messages/ConversationSettings/index.tsx:532
 msgid "Report"
@@ -9846,8 +9868,7 @@ msgstr "Send error report"
 msgid "Send feedback"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:271
-#: src/screens/Messages/components/MessageInput.tsx:229
+#: src/screens/Messages/components/MessageComposer.tsx:284
 #: src/screens/Messages/components/MessageInput.web.tsx:216
 msgid "Send message"
 msgstr ""
@@ -10370,7 +10391,7 @@ msgid "Someone left the group"
 msgstr "Someone left the group"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:284
+#: src/components/dms/MessageItem.tsx:287
 msgid "Someone reacted {0}"
 msgstr ""
 
@@ -10602,6 +10623,11 @@ msgstr ""
 msgid "Subscribe"
 msgstr ""
 
+#. placeholder {0}: highlightedPublisher.name
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:392
+msgid "Subscribe on {0}"
+msgstr "Subscribe on {0}"
+
 #. placeholder {0}: labelerInfo.creator.handle
 #: src/screens/Profile/Sections/Labels.tsx:231
 msgid "Subscribe to @{0} to use these labels:"
@@ -10752,7 +10778,7 @@ msgstr "Tap to remove"
 msgid "Tap to remove your {0} reaction"
 msgstr "Tap to remove your {0} reaction"
 
-#: src/components/dms/MessageItem.tsx:545
+#: src/components/dms/MessageItem.tsx:549
 msgid "Tap to retry"
 msgstr "Tap to retry"
 
@@ -10765,7 +10791,7 @@ msgstr "Tap to show {0} reactions"
 msgid "Tap to show all reactions"
 msgstr "Tap to show all reactions"
 
-#: src/components/dms/MessageItem.tsx:307
+#: src/components/dms/MessageItem.tsx:310
 msgid "Tap to view reactions"
 msgstr "Tap to view reactions"
 
@@ -10934,7 +10960,7 @@ msgstr ""
 msgid "The laws in your region require you to verify you're an adult to access certain features. Tap to learn more."
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:410
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:400
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
 msgstr "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
 
@@ -11303,6 +11329,10 @@ msgstr ""
 msgid "This moderation was applied to the entire user account and will appear on all posts."
 msgstr "This moderation was applied to the entire user account and will appear on all posts."
 
+#: src/components/dms/MessagesListBlockedFooter.tsx:82
+msgid "This person is blocking you"
+msgstr "This person is blocking you"
+
 #. placeholder {0}: niceDate(i18n, createdAt)
 #. placeholder {1}: niceDate(i18n, indexedAt)
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:642
@@ -11363,10 +11393,6 @@ msgstr ""
 
 #: src/view/com/profile/ProfileFollowers.tsx:170
 msgid "This user doesn't have any followers."
-msgstr ""
-
-#: src/components/dms/MessagesListBlockedFooter.tsx:69
-msgid "This user has blocked you"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:83
@@ -11596,7 +11622,7 @@ msgstr ""
 msgid "Two-factor authentication (2FA)"
 msgstr ""
 
-#: src/screens/Messages/components/MessageInput.tsx:174
+#: src/screens/Messages/components/MessageInput.tsx:177
 msgid "Type your message here"
 msgstr ""
 
@@ -11650,10 +11676,8 @@ msgstr ""
 msgid "Unavailable feed information"
 msgstr ""
 
-#: src/components/dms/MessagesListBlockedFooter.tsx:98
-#: src/components/dms/MessagesListBlockedFooter.tsx:105
-#: src/components/dms/MessagesListBlockedFooter.tsx:113
-#: src/components/dms/MessagesListBlockedFooter.tsx:120
+#: src/components/dms/MessagesListBlockedFooter.tsx:95
+#: src/components/dms/MessagesListBlockedFooter.tsx:102
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:222
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:207
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:358
@@ -11925,7 +11949,7 @@ msgstr "Update invite link"
 msgid "Update to {domain}"
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:362
+#: src/screens/Messages/Conversation.tsx:358
 msgid "Update your app to the latest version to join in!"
 msgstr "Update your app to the latest version to join in!"
 
@@ -11951,20 +11975,20 @@ msgstr ""
 msgid "Upload a text file to:"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:472
-#: src/view/com/util/UserAvatar.tsx:475
+#: src/view/com/util/UserAvatar.tsx:476
+#: src/view/com/util/UserAvatar.tsx:479
 #: src/view/com/util/UserBanner.tsx:160
 #: src/view/com/util/UserBanner.tsx:163
 msgid "Upload from Camera"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:489
+#: src/view/com/util/UserAvatar.tsx:493
 #: src/view/com/util/UserBanner.tsx:177
 msgid "Upload from Files"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:483
 #: src/view/com/util/UserAvatar.tsx:487
+#: src/view/com/util/UserAvatar.tsx:491
 #: src/view/com/util/UserBanner.tsx:171
 #: src/view/com/util/UserBanner.tsx:175
 msgid "Upload from Library"
@@ -12318,6 +12342,11 @@ msgstr "View {0}’s profile"
 msgid "View {displayName}’s profile"
 msgstr "View {displayName}’s profile"
 
+#. placeholder {0}: authorProfile.handle
+#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:81
+msgid "View @{0}'s profile"
+msgstr "View @{0}'s profile"
+
 #: src/components/ProfileHoverCard/index.web.tsx:479
 msgid "View blocked user's profile"
 msgstr ""
@@ -12375,6 +12404,12 @@ msgstr ""
 #: src/screens/Profile/Header/Shell.tsx:163
 msgid "View profile banner"
 msgstr "View profile banner"
+
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:283
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:393
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:533
+msgid "View publication"
+msgstr "View publication"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:108
 msgid "View the avatar"
@@ -12854,6 +12889,10 @@ msgstr ""
 msgid "You are accessing Bluesky from a region that legally requires us to verify your age before allowing you to access the app."
 msgstr ""
 
+#: src/components/dms/MessagesListBlockedFooter.tsx:81
+msgid "You are blocking this person"
+msgstr "You are blocking this person"
+
 #: src/components/forms/HostingProvider.tsx:46
 msgid "You are creating an account on"
 msgstr ""
@@ -12963,6 +13002,10 @@ msgstr ""
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
 msgstr ""
 
+#: src/components/dms/MessagesListBlockedFooter.tsx:91
+msgid "You can read chat history but can’t send new messages."
+msgstr "You can read chat history but can’t send new messages."
+
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:417
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
@@ -12999,10 +13042,6 @@ msgstr ""
 
 #: src/components/contacts/screens/ViewMatches.tsx:312
 msgid "You got here first"
-msgstr ""
-
-#: src/components/dms/MessagesListBlockedFooter.tsx:67
-msgid "You have blocked this user"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:77
@@ -13162,7 +13201,7 @@ msgid "You probably want to restart the app now."
 msgstr ""
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:277
+#: src/components/dms/MessageItem.tsx:280
 msgid "You reacted {0}"
 msgstr ""
 
