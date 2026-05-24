@@ -456,6 +456,7 @@ function NavItem({count, hasNew, href, icons, label, minimal}: NavItemProps) {
             width: 24,
             height: 24,
           },
+          a.z_10,
         ]}>
         <Icon aria-hidden={true} width={NAV_ICON_WIDTH} style={t.atoms.text} />
         {typeof count === 'string' && count ? (
