@@ -1,5 +1,7 @@
-import {type ComponentProps, type JSX, memo, useCallback} from 'react'
-import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
+import {type ComponentProps, type JSX, memo, useCallback, useContext} from 'react'
+import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {DrawerProgressContext} from 'react-native-drawer-layout'
+import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -22,7 +24,7 @@ import {useSetDrawerOpen} from '#/state/shell'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {atoms as a, tokens, useTheme, web} from '#/alf'
+import {atoms as a, native, tokens, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {
@@ -138,6 +140,14 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   const insets = useSafeAreaInsets()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
+  const drawerProgress = useDrawerProgress()
+  const drawerProgress = useContext(DrawerProgressContext)
+  const borderAnimatedStyle = useAnimatedStyle(() => ({
+    borderRightWidth:
+      drawerProgress && drawerProgress.value > 0
+        ? StyleSheet.hairlineWidth
+        : 0
+  }))
   const {
     isAtHome,
     isAtSearch,
@@ -248,9 +258,15 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   // =
 
   return (
-    <View
+    <Animated.View
       testID="drawer"
-      style={[a.flex_1, a.border_r, t.atoms.bg, t.atoms.border_contrast_low]}>
+      style={[
+        a.flex_1,
+        web(a.border_r),
+        t.atoms.bg,
+        t.atoms.border_contrast_low,
+        native(borderAnimatedStyle),
+      ]}>
       <ScrollView
         style={[a.flex_1]}
         contentContainerStyle={[
@@ -315,7 +331,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
         onPressFeedback={onPressFeedback}
         onPressHelp={onPressHelp}
       />
-    </View>
+    </Animated.View>
   )
 }
 DrawerContent = memo(DrawerContent)
