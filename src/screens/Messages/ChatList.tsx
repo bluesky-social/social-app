@@ -132,6 +132,19 @@ export function MessagesScreenInner({navigation, route}: Props) {
     [navigation],
   )
 
+  const openChatControl = useCallback(() => {
+    newChatControl.open()
+  }, [newChatControl])
+
+  const requireEmailVerification = useRequireEmailVerification()
+  const wrappedOpenChatControl = requireEmailVerification(openChatControl, {
+    instructions: [
+      <Trans key="new-chat">
+        Before you can message another user, you must first verify your email.
+      </Trans>,
+    ],
+  })
+
   if (isWithinSplitView) {
     return (
       <>
@@ -144,7 +157,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
           button={{
             label: l`New chat`,
             text: l`New chat`,
-            onPress: newChatControl.open,
+            onPress: wrappedOpenChatControl,
             size: 'small',
             color: 'primary',
             icon: MessagePlusIcon,
@@ -344,11 +357,11 @@ export function ChatList({
               />
             ) : (
               <EmptyState
-                message={l`No chats yet`}
-                icon={InboxLargeIcon}
-                iconSize="4xl"
+                message={l`Say hi to someone`}
+                icon={BubbleSmileIcon}
                 textStyle={t.atoms.text}
                 iconColor={t.atoms.text.color}
+                iconSize="4xl"
                 button={{
                   label: l`New chat`,
                   text: l`New chat`,
@@ -357,7 +370,7 @@ export function ChatList({
                   color: 'primary',
                   icon: MessagePlusIcon,
                 }}
-                style={web([a.h_full, a.justify_center, {paddingBottom: 120}])}
+                style={[a.h_full, {paddingTop: '20%'}]}
               />
             )}
           </>
