@@ -21,7 +21,10 @@ jobs:
         with:
           go-version-file: bskyweb/go.mod
       - name: Dummy Static Files
-        run: touch bskyweb/static/js/blah.js && touch bskyweb/static/css/blah.txt && touch bskyweb/static/media/blah.txt
+        run: |
+          mkdir -p bskyweb/static/_expo bskyweb/static/assets
+          touch bskyweb/static/_expo/blah.js bskyweb/static/assets/blah.txt
+          touch bskyweb/templates/scripts.html bskyweb/templates/fonts.html
       - name: Check
         run: cd bskyweb/ && make check
       - name: Build (binary)
@@ -38,6 +41,9 @@ jobs:
         with:
           go-version-file: bskyweb/go.mod
       - name: Dummy Static Files
-        run: touch bskyweb/static/js/blah.js && touch bskyweb/static/css/blah.txt && touch bskyweb/static/media/blah.txt
+        run: |
+          mkdir -p bskyweb/static/_expo bskyweb/static/assets
+          touch bskyweb/static/_expo/blah.js bskyweb/static/assets/blah.txt
+          touch bskyweb/templates/scripts.html bskyweb/templates/fonts.html
       - name: Lint
         run: cd bskyweb/ &&  make lint
