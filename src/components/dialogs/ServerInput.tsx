@@ -23,16 +23,24 @@ type SegmentedControlOptions = typeof BSKY_SERVICE | 'custom'
 export function ServerInputDialog({
   control,
   onSelect,
+  customOnly,
 }: {
   control: Dialog.DialogOuterProps['control']
   onSelect: (url: string) => void
+  /**
+   * When true, the dialog only exposes the custom-server input - no
+   * Bluesky/Custom tab bar. Used by the login flow, where this dialog is an
+   * override affordance for an already-resolved or default PDS.
+   */
+  customOnly?: boolean
 }) {
   const ax = useAnalytics()
   const formRef = useRef<DialogInnerRef>(null)
 
   // persist these options between dialog open/close
-  const [fixedOption, setFixedOption] =
-    useState<SegmentedControlOptions>(BSKY_SERVICE)
+  const [fixedOption, setFixedOption] = useState<SegmentedControlOptions>(
+    customOnly ? 'custom' : BSKY_SERVICE,
+  )
   const [previousCustomAddress, setPreviousCustomAddress] = useState('')
 
   const onClose = useCallback(() => {
@@ -42,11 +50,17 @@ export function ServerInputDialog({
       if (result !== BSKY_SERVICE) {
         setPreviousCustomAddress(result)
       }
+    } else if (customOnly) {
+      // In custom-only mode, an empty form on close means the user wants to
+      // clear their server override. Signal this to the caller with an empty
+      // string; default mode preserves the legacy "no call on empty" behavior.
+      onSelect('')
+      setPreviousCustomAddress('')
     }
     ax.metric('signin:hostingProviderPressed', {
       hostingProviderDidChange: fixedOption !== BSKY_SERVICE,
     })
-  }, [ax, onSelect, fixedOption])
+  }, [ax, onSelect, fixedOption, customOnly])
 
   return (
     <Dialog.Outer
@@ -59,6 +73,7 @@ export function ServerInputDialog({
         fixedOption={fixedOption}
         setFixedOption={setFixedOption}
         initialCustomAddress={previousCustomAddress}
+        customOnly={!!customOnly}
       />
     </Dialog.Outer>
   )
@@ -71,11 +86,13 @@ function DialogInner({
   fixedOption,
   setFixedOption,
   initialCustomAddress,
+  customOnly,
 }: {
   formRef: React.Ref<DialogInnerRef>
   fixedOption: SegmentedControlOptions
   setFixedOption: (opt: SegmentedControlOptions) => void
   initialCustomAddress: string
+  customOnly: boolean
 }) {
   const control = Dialog.useDialogContext()
   const {_} = useLingui()
@@ -131,32 +148,38 @@ function DialogInner({
       style={web({maxWidth: 500})}>
       <View style={[a.relative, a.gap_md, a.w_full]}>
         <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
-          <Trans>Choose your account provider</Trans>
+          {customOnly ? (
+            <Trans>Use a custom server</Trans>
+          ) : (
+            <Trans>Choose your account provider</Trans>
+          )}
         </Text>
-        <SegmentedControl.Root
-          type="tabs"
-          label={_(msg`Account provider`)}
-          value={fixedOption}
-          onChange={setFixedOption}>
-          <SegmentedControl.Item
-            testID="bskyServiceSelectBtn"
-            value={BSKY_SERVICE}
-            label={_(msg`Bluesky`)}>
-            <SegmentedControl.ItemText>
-              {_(msg`Bluesky`)}
-            </SegmentedControl.ItemText>
-          </SegmentedControl.Item>
-          <SegmentedControl.Item
-            testID="customSelectBtn"
-            value="custom"
-            label={_(msg`Custom`)}>
-            <SegmentedControl.ItemText>
-              {_(msg`Custom`)}
-            </SegmentedControl.ItemText>
-          </SegmentedControl.Item>
-        </SegmentedControl.Root>
+        {!customOnly && (
+          <SegmentedControl.Root
+            type="tabs"
+            label={_(msg`Account provider`)}
+            value={fixedOption}
+            onChange={setFixedOption}>
+            <SegmentedControl.Item
+              testID="bskyServiceSelectBtn"
+              value={BSKY_SERVICE}
+              label={_(msg`Bluesky`)}>
+              <SegmentedControl.ItemText>
+                {_(msg`Bluesky`)}
+              </SegmentedControl.ItemText>
+            </SegmentedControl.Item>
+            <SegmentedControl.Item
+              testID="customSelectBtn"
+              value="custom"
+              label={_(msg`Custom`)}>
+              <SegmentedControl.ItemText>
+                {_(msg`Custom`)}
+              </SegmentedControl.ItemText>
+            </SegmentedControl.Item>
+          </SegmentedControl.Root>
+        )}
 
-        {fixedOption === BSKY_SERVICE && isFirstTimeUser && (
+        {!customOnly && fixedOption === BSKY_SERVICE && isFirstTimeUser && (
           <View role="tabpanel">
             <Admonition type="tip">
               <Trans>
@@ -212,8 +235,9 @@ function DialogInner({
               </Trans>
             ) : (
               <Trans>
-                Bluesky is an open network where you can choose your hosting
-                provider. If you're a developer, you can host your own server.
+                Bluesky is part of the Atmosphere, an open network where you can
+                choose your hosting provider. If you're a developer, you can
+                host your own server.
               </Trans>
             )}{' '}
             <InlineLinkText

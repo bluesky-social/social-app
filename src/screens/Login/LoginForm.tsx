@@ -1,5 +1,6 @@
-import {useCallback, useRef, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {Keyboard, type TextInput, View} from 'react-native'
+import Animated, {FadeIn} from 'react-native-reanimated'
 import {
   ComAtprotoServerCreateSession,
   type ComAtprotoServerDescribeServer,
@@ -8,23 +9,30 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {isBlueskyHostedPds, ResolvePdsError} from '#/lib/api/resolve-pds'
+import {BSKY_SERVICE, DEFAULT_SERVICE} from '#/lib/constants'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
+import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
+import {useResolvePdsQuery} from '#/state/queries/resolve-pds'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {atoms as a, ios, useTheme, web} from '#/alf'
+import {atoms as a, ios, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
+import {ServerInputDialog} from '#/components/dialogs/ServerInput'
 import {FormError} from '#/components/forms/FormError'
-import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
+import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_WEB} from '#/env'
 import {FormContainer} from './FormContainer'
 
@@ -56,12 +64,16 @@ export const LoginForm = ({
   onAttemptFailed: () => void
 }) => {
   const t = useTheme()
+  const ax = useAnalytics()
   const [isProcessing, setIsProcessing] = useState(false)
   const [errorField, setErrorField] = useState<
     'none' | 'identifier' | 'password' | '2fa'
   >('none')
   const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] = useState(false)
   const identifierValueRef = useRef<string>(initialHandle || '')
+  const resolveDebounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  )
   const passwordValueRef = useRef<string>('')
   const [authFactorToken, setAuthFactorToken] = useState('')
   const identifierRef = useRef<TextInput>(null)
@@ -73,9 +85,72 @@ export const LoginForm = ({
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
 
-  const onPressSelectService = useCallback(() => {
+  // Handle for PDS resolution. Mirrors identifierValueRef but as state so the
+  // query key updates. Set on blur (and on submit) to avoid a request per keystroke.
+  const [handleForResolve, setHandleForResolve] = useState(initialHandle || '')
+  // If the user explicitly picks a custom server via the fallback link, that
+  // overrides the resolved PDS.
+  const [customServerOverride, setCustomServerOverride] = useState<
+    string | undefined
+  >(undefined)
+  const serverInputControl = useDialogControl()
+  const resolveStartRef = useRef<number>(0)
+
+  const resolveQuery = useResolvePdsQuery(handleForResolve, {
+    enabled: !customServerOverride,
+  })
+
+  // Track timing for the resolve-success analytics event.
+  useEffect(() => {
+    if (resolveQuery.isFetching) {
+      resolveStartRef.current = Date.now()
+    }
+  }, [resolveQuery.isFetching])
+
+  // Fire analytics on resolve success/failure.
+  useEffect(() => {
+    if (resolveQuery.isSuccess && resolveQuery.data) {
+      ax.metric('signin:pdsResolve:success', {
+        durationMs: Date.now() - resolveStartRef.current,
+        isBlueskySocial: isBlueskyHostedPds(resolveQuery.data.pds),
+      })
+    }
+  }, [resolveQuery.isSuccess, resolveQuery.data, ax])
+  useEffect(() => {
+    if (resolveQuery.isError) {
+      const reason =
+        resolveQuery.error instanceof ResolvePdsError
+          ? resolveQuery.error.reason
+          : 'network'
+      ax.metric('signin:pdsResolve:failure', {reason})
+    }
+  }, [resolveQuery.isError, resolveQuery.error, ax])
+
+  const onSelectCustomServer = useCallback(
+    (url: string) => {
+      // Empty string = user cleared the input and tapped Done -> clear override.
+      // BSKY_SERVICE = user dismissed the dialog without picking a custom server
+      // (the dialog defaults aren't supposed to override anything).
+      // Both cases fall back to auto-resolve.
+      if (url === '' || url === BSKY_SERVICE) {
+        setCustomServerOverride(undefined)
+        setServiceUrl(DEFAULT_SERVICE)
+        // Make sure resolution has a chance to run with the current handle
+        // value, in case the user opened the dialog before the field blurred.
+        setHandleForResolve(identifierValueRef.current)
+        return
+      }
+      setCustomServerOverride(url)
+      setServiceUrl(url)
+      ax.metric('signin:customServerUsed', {})
+    },
+    [setServiceUrl, ax],
+  )
+
+  const onPressUseCustomServer = useCallback(() => {
     Keyboard.dismiss()
-  }, [])
+    serverInputControl.open()
+  }, [serverInputControl])
 
   const onPressNext = async () => {
     if (isProcessing) return
@@ -123,10 +198,18 @@ export const LoginForm = ({
         }
       }
 
+      // Make sure the resolved-PDS state is in sync with the current input
+      // before deciding which service to use.
+      if (handleForResolve !== fullIdent) {
+        setHandleForResolve(fullIdent)
+      }
+      const service =
+        customServerOverride ?? resolveQuery.data?.pds ?? serviceUrl
+
       // TODO remove double login
       await login(
         {
-          service: serviceUrl,
+          service,
           identifier: fullIdent,
           password,
           authFactorToken: authFactorToken.trim(),
@@ -177,20 +260,12 @@ export const LoginForm = ({
 
   return (
     <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
+      <ServerInputDialog
+        control={serverInputControl}
+        onSelect={onSelectCustomServer}
+        customOnly
+      />
       <View>
-        <TextField.LabelText>
-          <Trans>Hosting provider</Trans>
-        </TextField.LabelText>
-        <HostingProvider
-          serviceUrl={serviceUrl}
-          onSelectServiceUrl={setServiceUrl}
-          onOpenDialog={onPressSelectService}
-        />
-      </View>
-      <View>
-        <TextField.LabelText>
-          <Trans>Account</Trans>
-        </TextField.LabelText>
         <View style={[a.gap_sm]}>
           <TextField.Root isInvalid={errorField === 'identifier'}>
             <TextField.Icon icon={At} />
@@ -208,8 +283,26 @@ export const LoginForm = ({
               onChangeText={v => {
                 identifierValueRef.current = v
                 if (errorField) setErrorField('none')
+                // Debounce the resolution trigger so it fires shortly after
+                // the user stops typing, not on every keystroke.
+                if (resolveDebounceRef.current) {
+                  clearTimeout(resolveDebounceRef.current)
+                }
+                resolveDebounceRef.current = setTimeout(() => {
+                  setHandleForResolve(v)
+                }, 400)
+              }}
+              onBlur={() => {
+                if (resolveDebounceRef.current) {
+                  clearTimeout(resolveDebounceRef.current)
+                }
+                setHandleForResolve(identifierValueRef.current)
               }}
               onSubmitEditing={() => {
+                if (resolveDebounceRef.current) {
+                  clearTimeout(resolveDebounceRef.current)
+                }
+                setHandleForResolve(identifierValueRef.current)
                 passwordRef.current?.focus()
               }}
               blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
@@ -311,7 +404,7 @@ export const LoginForm = ({
         </View>
       )}
       <FormError error={error} />
-      <View style={[a.pt_md, web([a.justify_between, a.flex_row])]}>
+      <View style={[a.pt_md, web([a.flex_row, a.align_center, a.gap_md])]}>
         {IS_WEB && (
           <Button
             label={_(msg`Back`)}
@@ -323,6 +416,14 @@ export const LoginForm = ({
             </ButtonText>
           </Button>
         )}
+        <View style={[web([a.flex_1, {minWidth: 0}]), native([a.pb_md])]}>
+          <PdsResolveStatus
+            query={resolveQuery}
+            override={customServerOverride}
+            handle={handleForResolve}
+            onPressUseCustomServer={onPressUseCustomServer}
+          />
+        </View>
         {!serviceDescription && error ? (
           <Button
             testID="loginRetryButton"
@@ -360,5 +461,130 @@ export const LoginForm = ({
         )}
       </View>
     </FormContainer>
+  )
+}
+
+function PdsResolveStatus({
+  query,
+  override,
+  handle,
+  onPressUseCustomServer,
+}: {
+  query: ReturnType<typeof useResolvePdsQuery>
+  override: string | undefined
+  handle: string
+  onPressUseCustomServer: () => void
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+
+  // Only surface a "Resolving..." state if the fetch is actually slow enough
+  // to be perceptible. Most resolutions complete in <300ms, in which case
+  // flashing a loading message just makes the form look noisy. After 600ms,
+  // we assume the user is genuinely waiting and could use feedback.
+  const [showLoading, setShowLoading] = useState(false)
+  useEffect(() => {
+    if (!query.isFetching) {
+      const raf = requestAnimationFrame(() => setShowLoading(false))
+      return () => cancelAnimationFrame(raf)
+    }
+    const timer = setTimeout(() => setShowLoading(true), 600)
+    return () => clearTimeout(timer)
+  }, [query.isFetching])
+
+  let content: React.ReactNode = null
+  let contentKey = 'empty'
+  if (override) {
+    contentKey = 'override:' + override
+    content = (
+      <Text
+        style={[a.text_sm, t.atoms.text_contrast_medium, web(a.text_right)]}>
+        <Trans>You're signing in to {toNiceDomain(override)}.</Trans>{' '}
+        <InlineLinkText
+          label={_(msg`Change server`)}
+          {...createStaticClick(onPressUseCustomServer)}
+          style={[a.text_sm]}>
+          <Trans>Change</Trans>
+        </InlineLinkText>
+      </Text>
+    )
+  } else if (!handle || !handle.includes('.') || handle.includes('@')) {
+    // Nothing typed yet, partial handle, or an email (legacy login flow).
+    content = null
+  } else if (query.isFetching) {
+    if (!showLoading) {
+      // Fetch is still in flight but hasn't been slow enough to surface yet.
+      // Render nothing instead of a transient flash.
+      return null
+    }
+    contentKey = 'loading'
+    content = (
+      <Text
+        style={[a.text_sm, t.atoms.text_contrast_medium, web(a.text_right)]}>
+        <Trans>Resolving your server…</Trans>
+      </Text>
+    )
+  } else if (query.isError) {
+    contentKey = 'error'
+    content = (
+      <View style={[a.gap_2xs]}>
+        <Text
+          style={[
+            a.text_sm,
+            a.leading_snug,
+            t.atoms.text_contrast_medium,
+            web(a.text_right),
+          ]}>
+          <Trans>Couldn't find your server.</Trans>
+        </Text>
+        <InlineLinkText
+          label={_(msg`Use a custom server`)}
+          {...createStaticClick(onPressUseCustomServer)}
+          style={[a.text_sm, a.leading_snug, web(a.text_right)]}>
+          <Trans>Use a custom server</Trans>
+        </InlineLinkText>
+      </View>
+    )
+  } else if (query.data) {
+    // For the default case (account hosted on any Bluesky-operated PDS, which
+    // includes the *.host.bsky.network shards), hide the subtitle - the user
+    // already expects that and the confirmation just adds noise. Only show
+    // when the resolved PDS is something else worth confirming.
+    if (isBlueskyHostedPds(query.data.pds)) {
+      return null
+    }
+    contentKey = 'resolved:' + query.data.pds
+    content = (
+      <Text
+        style={[a.text_sm, t.atoms.text_contrast_medium, web(a.text_right)]}>
+        <Trans>You're signing in to {toNiceDomain(query.data.pds)}</Trans>
+      </Text>
+    )
+  }
+
+  if (!content) return null
+  return <FadeInWrapper key={contentKey}>{content}</FadeInWrapper>
+}
+
+/**
+ * Fades in its children on mount. Uses `react-native-reanimated`'s FadeIn on
+ * native and a CSS opacity transition on web - the latter because reanimated
+ * layout animations don't reliably trigger entering animations on web.
+ */
+function FadeInWrapper({children}: {children: React.ReactNode}) {
+  const [opacity, setOpacity] = useState(0)
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setOpacity(1))
+    return () => cancelAnimationFrame(raf)
+  }, [])
+  return (
+    <Animated.View
+      entering={native(FadeIn.duration(200))}
+      style={web([
+        a.transition_opacity,
+        {transitionDuration: '200ms', opacity},
+      ])}>
+      {children}
+    </Animated.View>
   )
 }
