@@ -6,17 +6,12 @@ test-coverage.out
 /embedr
 
 # Don't accidentally commit JS-generated code
-static/js/*.js
-static/js/*.map
-static/js/*.js.LICENSE.txt
-static/js/empty.txt
-static/css/*.css
-static/css/*.map
-static/css/*.css.LICENSE.txt
-static/css/empty.txt
+static/_expo/
+static/assets/
 static/media/*.png
 static/media/empty.txt
 templates/scripts.html
+templates/fonts.html
 templates/*-embed.html
 static/embed/*.html
 static/embed/assets/*.js
