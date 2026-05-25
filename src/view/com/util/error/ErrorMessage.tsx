@@ -1,21 +1,12 @@
-import {
-  type StyleProp,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {
-  FontAwesomeIcon,
-  type FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {useLingui} from '@lingui/react/macro'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useTheme} from '#/lib/ThemeContext'
+import {atoms as a, useGutters, useTheme, utils} from '#/alf'
+import {Button} from '#/components/Button'
+import {ArrowRotateClockwise_Stroke2_Corner0_Rounded as ArrowRotateIcon} from '#/components/icons/ArrowRotate'
+import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as Layout from '#/components/Layout'
-import {Text} from '../text/Text'
+import {Text} from '#/components/Typography'
 
 export function ErrorMessage({
   message,
@@ -28,72 +19,51 @@ export function ErrorMessage({
   style?: StyleProp<ViewStyle>
   onPressTryAgain?: () => void
 }) {
-  const theme = useTheme()
-  const pal = usePalette('error')
-  const {_} = useLingui()
+  const {t: l} = useLingui()
+  const t = useTheme()
+  const gutter = useGutters(['base'])
+
   return (
     <Layout.Center>
-      <View testID="errorMessageView" style={[styles.outer, pal.view, style]}>
-        <View
-          style={[
-            styles.errorIcon,
-            {backgroundColor: theme.palette.error.icon},
-          ]}>
-          <FontAwesomeIcon
-            icon="exclamation"
-            style={pal.text as FontAwesomeIconStyle}
-            size={16}
-          />
-        </View>
+      <View
+        testID="errorMessageView"
+        style={[
+          a.flex_row,
+          a.align_center,
+          gutter,
+          a.py_sm,
+          {backgroundColor: t.palette.pink},
+          a.gap_md,
+          style,
+        ]}>
+        <WarningIcon size="md" fill={t.palette.white} />
         <Text
-          type="sm-medium"
-          style={[styles.message, pal.text]}
+          style={[
+            a.flex_1,
+            a.font_medium,
+            a.leading_snug,
+            a.text_md,
+            {color: t.palette.white},
+          ]}
           numberOfLines={numberOfLines}>
           {message}
         </Text>
         {onPressTryAgain && (
-          <TouchableOpacity
+          <Button
             testID="errorMessageTryAgainButton"
-            style={styles.btn}
             onPress={onPressTryAgain}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Retry`)}
-            accessibilityHint={_(
-              msg`Retries the last action, which errored out`,
-            )}>
-            <FontAwesomeIcon
-              icon="arrows-rotate"
-              style={{color: theme.palette.error.icon}}
-              size={18}
-            />
-          </TouchableOpacity>
+            label={l`Retry`}
+            accessibilityHint={l`Retries the last action, which errored out`}
+            size="small"
+            shape="round"
+            variant="ghost"
+            hoverStyle={{
+              backgroundColor: utils.alpha(t.palette.white, 0.2),
+            }}>
+            <ArrowRotateIcon size="md" fill={t.palette.white} />
+          </Button>
         )}
       </View>
     </Layout.Center>
   )
 }
-
-const styles = StyleSheet.create({
-  outer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 8,
-  },
-  errorIcon: {
-    borderRadius: 12,
-    width: 24,
-    height: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 8,
-  },
-  message: {
-    flex: 1,
-    paddingRight: 10,
-  },
-  btn: {
-    paddingHorizontal: 4,
-    paddingVertical: 4,
-  },
-})

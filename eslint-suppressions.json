@@ -683,11 +683,6 @@
       "count": 1
     }
   },
-  "src/view/screens/DebugMod.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/view/shell/createNativeStackNavigatorWithAuth.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
