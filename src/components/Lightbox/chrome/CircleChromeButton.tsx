@@ -28,7 +28,7 @@ type Props = {
 >
 
 const SIZE = 32
-const RADIUS = 24
+const RADIUS = SIZE / 2
 const ICON = 18
 
 export function CircleChromeButton({
