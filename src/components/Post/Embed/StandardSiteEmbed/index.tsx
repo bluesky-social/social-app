@@ -278,7 +278,9 @@ export function PublicationCard({
       <Link
         shouldProxy
         to={view.source.uri}
-        label={l`View publication`}
+        label={
+          view.source.title ? l`View ${view.source.title}` : l`View publication`
+        }
         onPress={onPress}
         onLongPress={onLongPress}
         {...web({
@@ -317,12 +319,7 @@ export function PublicationCard({
           <View style={[a.flex_1, a.gap_2xs]}>
             <Text
               numberOfLines={1}
-              style={[
-                a.text_md,
-                a.font_semi_bold,
-                t.atoms.text,
-                interacted && a.underline,
-              ]}>
+              style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
               {view.source?.title}
             </Text>
             <StandardSiteMetaRow type="publication" view={view} />
@@ -382,12 +379,21 @@ export function SubscribeButton({
 
   if (!view.source) return null
 
+  const publicationTitle = view.source.title
+  const label = highlightedPublisher
+    ? publicationTitle
+      ? l`Subscribe to ${publicationTitle} on ${highlightedPublisher.name}`
+      : l`Subscribe on ${highlightedPublisher.name}`
+    : publicationTitle
+      ? l`View ${publicationTitle}`
+      : l`View publication`
+
   return (
     <StandardSiteThemeProvider view={view}>
       <Link
         shouldProxy
         to={view.source.uri}
-        label={cta}
+        label={label}
         size="small"
         color="secondary_inverted"
         style={[style, a.gap_sm, a.pointer_events_auto]}
@@ -491,7 +497,9 @@ export function PublicationFooter({
       <Link
         shouldProxy
         to={view.source.uri}
-        label={l`View publication`}
+        label={
+          view.source.title ? l`View ${view.source.title}` : l`View publication`
+        }
         onPress={onPress}
         onLongPress={onLongPress}
         style={[a.absolute, a.inset_0, web({outline: 0})]}
