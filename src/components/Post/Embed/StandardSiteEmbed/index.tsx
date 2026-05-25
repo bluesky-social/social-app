@@ -186,9 +186,9 @@ export const StandardSiteEmbed = ({
                           style={[
                             a.text_xs,
                             a.leading_snug,
-                            t.atoms.text_contrast_high,
+                            t.atoms.text_contrast_medium,
                           ]}>
-                          {niceDate(i18n, view.createdAt, 'medium', 'none')}
+                          {niceDate(i18n, view.createdAt, 'long', 'none')}
                         </Text>
                       )}
                       {view.readingTime && (
@@ -198,7 +198,7 @@ export const StandardSiteEmbed = ({
                             style={[
                               a.text_xs,
                               a.leading_snug,
-                              t.atoms.text_contrast_high,
+                              t.atoms.text_contrast_medium,
                             ]}>
                             {l({
                               message: plural(view.readingTime, {
