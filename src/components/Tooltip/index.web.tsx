@@ -1,7 +1,7 @@
 import {Children, createContext, useContext, useMemo} from 'react'
 import {View} from 'react-native'
 import {utils} from '@bsky.app/alf'
-import {Popover} from 'radix-ui'
+import * as Popover from '@radix-ui/react-popover'
 
 import {atoms as a, flatten, select, useTheme} from '#/alf'
 import {

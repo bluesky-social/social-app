@@ -2,7 +2,7 @@ import {useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {type ChatBskyConvoDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
-import {DropdownMenu} from 'radix-ui'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 import {useSession} from '#/state/session'
 import {atoms as a, flatten, useTheme} from '#/alf'

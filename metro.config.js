@@ -11,6 +11,22 @@ if (cfg.resolver.resolveRequest) {
   throw Error('Update this override because it is conflicting now.')
 }
 
+// Enforce "no RNGH on web"
+cfg.resolver.blockList = [/react-native-gesture-handler\/.*/]
+
+// Production-only stubs for unused packages on web. They're statically
+// imported by libraries we do use (so we can't blockList them), but in dev
+// the libraries call into them at module-init time, so we leave them alone.
+// In prod, tree-shaking + the empty stub together drop ~185KB of dead code.
+const isProduction = process.env.NODE_ENV === 'production'
+const STUBBED_PACKAGES = new Set([
+  '@sentry-internal/replay',
+  '@sentry-internal/replay-canvas',
+  '@sentry-internal/feedback',
+])
+const emptyModulePath =
+  require.resolve('metro-runtime/src/modules/empty-module.js')
+
 if (process.env.BSKY_PROFILE) {
   cfg.cacheVersion += ':PROFILE'
 }
@@ -26,6 +42,9 @@ cfg.resolver.resolveRequest = (context, moduleName, platform) => {
         platform,
       )
     }
+  }
+  if (isProduction && platform === 'web' && STUBBED_PACKAGES.has(moduleName)) {
+    return {type: 'sourceFile', filePath: emptyModulePath}
   }
   return context.resolveRequest(context, moduleName, platform)
 }

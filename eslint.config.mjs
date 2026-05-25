@@ -205,6 +205,13 @@ export default defineConfig(
             // this is a dep for @atproto/api, but we absolutely need them in sync, so just
             // rely on the transient version
             '@atproto/common-web',
+            // expo is not good enough at tree-shaking to use `radix-ui` directly
+            '@radix-ui/react-dismissable-layer',
+            '@radix-ui/react-focus-guards',
+            '@radix-ui/react-focus-scope',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-select',
+            '@radix-ui/react-popover',
           ],
         },
       ],
@@ -270,6 +277,16 @@ export default defineConfig(
               message:
                 'React is already in the global type namespace. Use named imports for runtime modules.',
             },
+            {
+              name: 'expo-notifications',
+              message:
+                'Import the helpers from #/lib/notifications/expo-helpers (or the hooks from #/lib/notifications/notifications) instead. expo-notifications is stubbed on web; importing it directly pulls ~70KB of dead weight into the web bundle.',
+            },
+            {
+              name: '@sentry/react-native',
+              message:
+                'Import the curated Sentry barrel from #/logger/sentry/lib instead. Importing @sentry/react-native directly (especially as `import * as Sentry`) defeats Metro tree-shaking and pulls ~180KB of dead weight into the web bundle.',
+            },
           ],
         },
       ],
@@ -299,9 +316,28 @@ export default defineConfig(
    * bskyogcard - server-side, Node.js imports are fine
    */
   {
-    files: ['bskyogcard/**/*.{js,jsx,ts,tsx}'],
+    files: ['bskyogcard/**/*.{js,jsx,ts,tsx}', 'scripts/**/*.{js,ts}'],
     rules: {
       'import-x/no-nodejs-modules': 'off',
+    },
+  },
+
+  /**
+   * Files that legitimately wrap restricted packages (the no-restricted-imports
+   * rule above blocks `expo-notifications` and `@sentry/react-native` by
+   * default; these wrappers are how the rest of the codebase reaches them).
+   */
+  {
+    files: [
+      'src/lib/notifications/notifications.ts',
+      'src/lib/notifications/expo-helpers.ts',
+      'src/lib/hooks/useNotificationHandler.ts',
+      'src/logger/sentry/lib/index.ts',
+      'src/logger/sentry/setup/index.ts',
+      'src/logger/__tests__/logger.test.ts',
+    ],
+    rules: {
+      'no-restricted-imports': 'off',
     },
   },
 

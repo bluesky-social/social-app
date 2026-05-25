@@ -13,7 +13,6 @@ import Animated, {
   useFrameCallback,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {WebView} from 'react-native-webview'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
@@ -33,6 +32,7 @@ import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
 import {KeepAwake} from '#/components/KeepAwake'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
+import {WebView} from '#/components/WebView'
 import {IS_NATIVE} from '#/env'
 
 interface ShouldStartLoadRequest {

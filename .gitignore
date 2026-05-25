@@ -78,6 +78,7 @@ dist/
 *.mobileprovision
 *.orig.*
 web-build/
+dist/
 stats.json
 
 # Temporary files created by Metro to check the health of the file watcher
@@ -133,3 +134,6 @@ bskyweb/static/media/*.svg
 
 # superpowers plugin plans/specs — local-only workspace
 docs/superpowers/
+
+# worktrees
+.claude/worktrees/

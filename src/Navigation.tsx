@@ -1,6 +1,5 @@
 import {type JSX, useCallback, useRef} from 'react'
 import * as Linking from 'expo-linking'
-import * as Notifications from 'expo-notifications'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 import {
@@ -29,6 +28,10 @@ import {
   storePayloadForAccountSwitch,
 } from '#/lib/hooks/useNotificationHandler'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
+import {
+  clearLastNotificationResponse,
+  getLastNotificationResponse,
+} from '#/lib/notifications/expo-helpers'
 import {useCallOnce} from '#/lib/once'
 import {buildStateObject} from '#/lib/routes/helpers'
 import {
@@ -976,7 +979,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
     // intent urls are handled by `useIntentHandler`
     if (linkingUrl) return
 
-    const notificationResponse = Notifications.getLastNotificationResponse()
+    const notificationResponse = getLastNotificationResponse()
 
     if (notificationResponse) {
       notyLogger.debug(`handlePushNotificationEntry: response`, {
@@ -985,7 +988,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
       // Clear the last notification response to ensure it's not used again
       try {
-        Notifications.clearLastNotificationResponse()
+        clearLastNotificationResponse()
       } catch (error) {
         notyLogger.error(
           `handlePushNotificationEntry: error clearing notification response`,

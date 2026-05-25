@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler' // must be first
+import '@expo/metro-runtime'
 import '#/platform/polyfills'
 
 import {LogBox} from 'react-native'

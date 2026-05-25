@@ -1,6 +1,6 @@
 import {createContext, forwardRef, Fragment, useContext, useMemo} from 'react'
 import {View} from 'react-native'
-import {Select as RadixSelect} from 'radix-ui'
+import * as RadixSelect from '@radix-ui/react-select'
 
 import {useA11y} from '#/state/a11y'
 import {atoms as a, flatten, useTheme, web} from '#/alf'

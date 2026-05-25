@@ -16,10 +16,10 @@
     -->
     <link rel="preconnect" href="https://bsky.social">
     <link rel="preconnect" href="https://go.bsky.app">
-    <title>%WEB_TITLE%</title>
+    <!-- let js set by leaving empty -->
+    <title></title>
 
-    <link rel="preload" as="font" type="font/woff2" href="/static/media/InterVariable.c504db5c06caaf7cdfba.woff2" crossorigin>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preload" as="font" type="font/woff2" href="/assets/assets/fonts/inter/InterVariable.woff2" crossorigin>
 
     <style>
       /**
@@ -28,17 +28,21 @@
        * ALL OTHER STYLES BELONG IN `src/style.css`
        *
        * THIS NEEDS TO BE DUPLICATED IN `bskyweb/templates/base.html`
+       *
+       * Font paths point at Metro's dev-server asset URLs (unhashed). In prod,
+       * bskyweb serves the auto-generated fonts.html partial with content-hashed
+       * paths instead.
        */
       @font-face {
         font-family: 'InterVariable';
-        src: url(/static/media/InterVariable.c504db5c06caaf7cdfba.woff2) format('woff2');
+        src: url(/assets/assets/fonts/inter/InterVariable.woff2) format('woff2');
         font-weight: 300 1000;
         font-style: normal;
         font-display: swap;
       }
       @font-face {
         font-family: 'InterVariableItalic';
-        src: url(/static/media/InterVariable-Italic.01dcbad1bac635f9c9cd.woff2) format('woff2');
+        src: url(/assets/assets/fonts/inter/InterVariable-Italic.woff2) format('woff2');
         font-weight: 300 1000;
         font-style: italic;
         font-display: swap;
