@@ -14,6 +14,17 @@ if (cfg.resolver.resolveRequest) {
 // Enforce "no RNGH on web"
 cfg.resolver.blockList = [/react-native-gesture-handler\/.*/]
 
+// Stub out unused Sentry integrations. They're statically imported by
+// @sentry/browser's barrel, so we can't drop them via blockList; we redirect
+// the imports to an empty module instead. ~185KB of dead weight on web.
+const STUBBED_PACKAGES = new Set([
+  '@sentry-internal/replay',
+  '@sentry-internal/replay-canvas',
+  '@sentry-internal/feedback',
+])
+const emptyModulePath =
+  require.resolve('metro-runtime/src/modules/empty-module.js')
+
 if (process.env.BSKY_PROFILE) {
   cfg.cacheVersion += ':PROFILE'
 }
@@ -29,6 +40,9 @@ cfg.resolver.resolveRequest = (context, moduleName, platform) => {
         platform,
       )
     }
+  }
+  if (platform === 'web' && STUBBED_PACKAGES.has(moduleName)) {
+    return {type: 'sourceFile', filePath: emptyModulePath}
   }
   return context.resolveRequest(context, moduleName, platform)
 }
