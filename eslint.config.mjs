@@ -277,6 +277,11 @@ export default defineConfig(
               message:
                 'React is already in the global type namespace. Use named imports for runtime modules.',
             },
+            {
+              name: 'expo-notifications',
+              message:
+                'Import the helpers from #/lib/notifications/expo-helpers (or the hooks from #/lib/notifications/notifications) instead. expo-notifications is stubbed on web; importing it directly pulls ~70KB of dead weight into the web bundle.',
+            },
           ],
         },
       ],
@@ -309,6 +314,21 @@ export default defineConfig(
     files: ['bskyogcard/**/*.{js,jsx,ts,tsx}', 'scripts/**/*.{js,ts}'],
     rules: {
       'import-x/no-nodejs-modules': 'off',
+    },
+  },
+
+  /**
+   * Native-only files that legitimately wrap expo-notifications. The .web.ts
+   * counterparts to these files don't import the package.
+   */
+  {
+    files: [
+      'src/lib/notifications/notifications.ts',
+      'src/lib/notifications/expo-helpers.ts',
+      'src/lib/hooks/useNotificationHandler.ts',
+    ],
+    rules: {
+      'no-restricted-imports': 'off',
     },
   },
 

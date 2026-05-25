@@ -1,6 +1,5 @@
 import {useEffect} from 'react'
 import {Linking, View} from 'react-native'
-import * as Notification from 'expo-notifications'
 import {type AppBskyNotificationDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -8,6 +7,10 @@ import {Trans} from '@lingui/react/macro'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useAppState} from '#/lib/appState'
+import {
+  getPermissionsAsync,
+  requestPermissionsAsync,
+} from '#/lib/notifications/expo-helpers'
 import {
   type AllNavigatorParams,
   type NativeStackScreenProps,
@@ -47,7 +50,7 @@ export function NotificationSettingsScreen({}: Props) {
     queryKey: RQKEY,
     queryFn: async () => {
       if (IS_WEB) return null
-      return await Notification.getPermissionsAsync()
+      return await getPermissionsAsync()
     },
   })
 
@@ -61,7 +64,7 @@ export function NotificationSettingsScreen({}: Props) {
   const onRequestPermissions = async () => {
     if (IS_WEB) return
     if (permissions?.canAskAgain) {
-      const response = await Notification.requestPermissionsAsync()
+      const response = await requestPermissionsAsync()
       queryClient.setQueryData(RQKEY, response)
     } else {
       if (IS_ANDROID) {
