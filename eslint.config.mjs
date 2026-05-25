@@ -205,6 +205,13 @@ export default defineConfig(
             // this is a dep for @atproto/api, but we absolutely need them in sync, so just
             // rely on the transient version
             '@atproto/common-web',
+            // expo is not good enough at tree-shaking to use `radix-ui` directly
+            '@radix-ui/react-dismissable-layer',
+            '@radix-ui/react-focus-guards',
+            '@radix-ui/react-focus-scope',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-select',
+            '@radix-ui/react-popover',
           ],
         },
       ],

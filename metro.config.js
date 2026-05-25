@@ -14,10 +14,11 @@ if (cfg.resolver.resolveRequest) {
 // Enforce "no RNGH on web"
 cfg.resolver.blockList = [/react-native-gesture-handler\/.*/]
 
-// Stub out unused Sentry integrations. They're statically imported by
-// @sentry/browser's barrel, so we can't drop them via blockList; we redirect
-// the imports to an empty module instead. ~185KB of dead weight on web.
+// Stub out unused packages on web. They're statically imported by libraries we
+// do use, so we can't drop them via blockList; we redirect the imports to an
+// empty module instead.
 const STUBBED_PACKAGES = new Set([
+  // Sentry integrations we don't use on web (~185KB).
   '@sentry-internal/replay',
   '@sentry-internal/replay-canvas',
   '@sentry-internal/feedback',
