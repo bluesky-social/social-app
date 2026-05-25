@@ -21,13 +21,9 @@ import {Text} from '#/components/Typography'
 export function StandardSiteMetaRow({
   type = 'document',
   view,
-  onInteractWithin,
-  onInteractWithout,
 }: {
   type?: 'document' | 'publication'
   view: AppBskyEmbedExternal.ViewExternal
-  onInteractWithin: () => void
-  onInteractWithout: () => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -80,13 +76,7 @@ export function StandardSiteMetaRow({
             <InlineLinkText
               label={l`View @${authorProfile.handle}'s profile`}
               to={makeProfileLink(authorProfile)}
-              style={metaTextStyle}
-              onPress={e => {
-                // this link is nested, yes it's not ideal
-                e.stopPropagation()
-              }}
-              onMouseEnter={onInteractWithin}
-              onMouseLeave={onInteractWithout}>
+              style={[metaTextStyle, a.pointer_events_auto]}>
               @{authorProfile.handle}
             </InlineLinkText>
           </Trans>
@@ -98,7 +88,7 @@ export function StandardSiteMetaRow({
   if (items.length === 0) return null
 
   return (
-    <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+    <View style={[a.flex_row, a.align_center, a.gap_xs, a.z_10]}>
       {items.map((item, i) => (
         <Fragment key={item.key}>
           {i > 0 && <Text style={metaTextStyle}>•</Text>}

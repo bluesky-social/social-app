@@ -9,7 +9,7 @@ import {shareUrl} from '#/lib/sharing'
 import {niceDate} from '#/lib/strings/time'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useBreakpoints, useTheme, utils} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, utils, web} from '#/alf'
 import {ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -73,9 +73,9 @@ export const StandardSiteEmbed = ({
   }
 
   const {
-    state: interactedWithin,
-    onIn: onInteractWithin,
-    onOut: onInteractWithout,
+    state: interacted,
+    onIn: onInteract,
+    onOut: onInteractOut,
   } = useInteractionState()
 
   const onPress = () => {
@@ -111,7 +111,7 @@ export const StandardSiteEmbed = ({
         a.overflow_hidden,
         a.w_full,
         a.border,
-        t.atoms.border_contrast_low,
+        interacted ? t.atoms.border_contrast_high : t.atoms.border_contrast_low,
         style,
       ]}>
       <Link
@@ -119,124 +119,108 @@ export const StandardSiteEmbed = ({
         to={view.uri}
         label={view.title || l`Open link to ${niceUrl}`}
         onPress={onPress}
-        onLongPress={onLongPress}>
-        {({hovered: maybeHovered}) => {
-          const hovered = maybeHovered && !interactedWithin
-          return (
-            <View style={[a.w_full]}>
-              {imageUri ? (
-                <Image
-                  style={[a.aspect_card]}
-                  source={{uri: imageUri}}
-                  accessibilityIgnoresInvertColors
-                  loading="lazy"
-                />
-              ) : undefined}
+        onLongPress={onLongPress}
+        style={[a.absolute, a.inset_0, a.z_10]}
+        {...web({
+          onMouseEnter: onInteract,
+          onMouseLeave: onInteractOut,
+        })}
+        onFocus={onInteract}
+        onBlur={onInteractOut}>
+        <></>
+      </Link>
 
+      <View style={[a.w_full, a.z_10, a.pointer_events_none]}>
+        {imageUri ? (
+          <Image
+            style={[a.aspect_card]}
+            source={{uri: imageUri}}
+            accessibilityIgnoresInvertColors
+            loading="lazy"
+          />
+        ) : undefined}
+
+        <View
+          style={[
+            a.flex_1,
+            a.pt_sm,
+            hasMedia && a.border_t,
+            interacted
+              ? t.atoms.border_contrast_high
+              : t.atoms.border_contrast_low,
+            {gap: 3},
+            isStandard && a.pt_md,
+          ]}>
+          <View
+            style={[
+              a.pb_xs,
+              a.px_md,
+              {gap: 3},
+              isStandard && [{gap: 5}, a.pb_sm],
+            ]}>
+            <Text
+              emoji
+              numberOfLines={3}
+              style={[
+                a.text_md,
+                a.font_semi_bold,
+                a.leading_snug,
+                isStandard && [a.text_lg, a.font_bold],
+              ]}>
+              {view.title}
+            </Text>
+            {view.description ? (
+              <Text
+                emoji
+                numberOfLines={view.thumb ? 2 : 4}
+                style={[a.text_sm, a.leading_snug]}>
+                {view.description}
+              </Text>
+            ) : undefined}
+
+            {isStandard && (view.createdAt || view.readingTime) && (
               <View
-                style={[
-                  a.flex_1,
-                  a.pt_sm,
-                  t.atoms.border_contrast_low,
-                  hasMedia && a.border_t,
-                  {gap: 3},
-                  isStandard && a.pt_md,
-                ]}>
-                <View
-                  style={[
-                    a.pb_xs,
-                    a.px_md,
-                    {gap: 3},
-                    isStandard && [{gap: 5}, a.pb_sm],
-                  ]}>
+                style={[a.flex_row, a.align_center, a.gap_md, {paddingTop: 2}]}>
+                {view.createdAt && (
                   <Text
-                    emoji
-                    numberOfLines={3}
                     style={[
-                      a.text_md,
-                      a.font_semi_bold,
+                      a.text_xs,
                       a.leading_snug,
-                      isStandard && [
-                        a.text_lg,
-                        a.font_bold,
-                        hovered && a.underline,
-                      ],
+                      t.atoms.text_contrast_medium,
                     ]}>
-                    {view.title}
+                    {niceDate(i18n, view.createdAt, 'long', 'none')}
                   </Text>
-                  {view.description ? (
+                )}
+                {view.readingTime && (
+                  <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
+                    <Clock size="xs" style={t.atoms.text_contrast_medium} />
                     <Text
-                      emoji
-                      numberOfLines={view.thumb ? 2 : 4}
-                      style={[a.text_sm, a.leading_snug]}>
-                      {view.description}
-                    </Text>
-                  ) : undefined}
-
-                  {isStandard && (view.createdAt || view.readingTime) && (
-                    <View
                       style={[
-                        a.flex_row,
-                        a.align_center,
-                        a.gap_md,
-                        {paddingTop: 2},
+                        a.text_xs,
+                        a.leading_snug,
+                        t.atoms.text_contrast_medium,
                       ]}>
-                      {view.createdAt && (
-                        <Text
-                          style={[
-                            a.text_xs,
-                            a.leading_snug,
-                            t.atoms.text_contrast_high,
-                          ]}>
-                          {niceDate(i18n, view.createdAt, 'medium', 'none')}
-                        </Text>
-                      )}
-                      {view.readingTime && (
-                        <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
-                          <Clock size="xs" style={t.atoms.text_contrast_high} />
-                          <Text
-                            style={[
-                              a.text_xs,
-                              a.leading_snug,
-                              t.atoms.text_contrast_high,
-                            ]}>
-                            {l({
-                              message: plural(view.readingTime, {
-                                one: '#m',
-                                other: '#m',
-                              }),
-                              comment: `How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.`,
-                            })}
-                          </Text>
-                        </View>
-                      )}
-                    </View>
-                  )}
-                </View>
-
-                {!view.source && (
-                  <View style={[a.px_md]}>
-                    <Divider />
-                    <View style={[a.py_sm]}>
-                      <StandardSiteMetaRow
-                        view={view}
-                        onInteractWithin={onInteractWithin}
-                        onInteractWithout={onInteractWithout}
-                      />
-                    </View>
+                      {l({
+                        message: plural(view.readingTime, {
+                          one: '#m',
+                          other: '#m',
+                        }),
+                        comment: `How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.`,
+                      })}
+                    </Text>
                   </View>
                 )}
               </View>
-            </View>
-          )
-        }}
-      </Link>
-
-      {view.source && (
-        <>
-          <View style={[a.px_md]}>
-            <Divider />
+            )}
           </View>
+        </View>
+      </View>
+
+      <View style={[a.z_20]}>
+        <View style={[a.px_md]}>
+          <Divider />
+        </View>
+        {view.source ? (
           <PublicationFooter
             view={view}
             onPress={onPress}
@@ -244,8 +228,12 @@ export const StandardSiteEmbed = ({
             themeColors={themeColors}
             hideSubscribe={hideSubscribe}
           />
-        </>
-      )}
+        ) : (
+          <View style={[a.px_md, a.py_sm, a.pointer_events_none]}>
+            <StandardSiteMetaRow view={view} />
+          </View>
+        )}
+      </View>
     </View>
   )
 }
@@ -269,109 +257,106 @@ export function PublicationCard({
   const {t: l} = useLingui()
   const {gtPhone} = useBreakpoints()
   const {
-    state: interactedWithin,
-    onIn: onInteractWithin,
-    onOut: onInteractWithout,
+    state: interacted,
+    onIn: onInteract,
+    onOut: onInteractOut,
   } = useInteractionState()
 
   if (!view.source) return null
 
   return (
-    <Link
-      shouldProxy
-      to={view.source.uri}
-      label={l`View publication`}
-      onPress={onPress}
-      onLongPress={onLongPress}>
-      {({hovered: maybeHovered}) => {
-        const hovered = maybeHovered && !interactedWithin
-        return (
-          <View
-            style={[
-              a.flex_col,
-              a.rounded_lg,
-              a.overflow_hidden,
-              a.w_full,
-              a.border,
-              a.p_md,
-              t.atoms.border_contrast_low,
-              style,
-            ]}>
-            <View
-              style={[
-                a.flex_1,
-                a.align_center,
-                a.justify_between,
-                a.gap_md,
-                gtPhone && [a.flex_row, a.gap_sm],
-              ]}
-              testID="publication-embed-footer">
-              <View
-                style={[
-                  a.w_full,
-                  a.flex_row,
-                  a.align_center,
-                  a.gap_sm,
-                  gtPhone && a.flex_1,
-                ]}>
-                <PublicationIcon
-                  view={view}
-                  size={40}
-                  hovered={hovered}
-                  themeColors={themeColors}
-                />
-                <View style={[a.flex_1, a.gap_2xs]}>
-                  <Text
-                    numberOfLines={1}
-                    style={[
-                      a.text_md,
-                      a.font_semi_bold,
-                      t.atoms.text,
-                      hovered && a.underline,
-                    ]}>
-                    {view.source?.title}
-                  </Text>
-                  <StandardSiteMetaRow
-                    type="publication"
-                    view={view}
-                    onInteractWithin={onInteractWithin}
-                    onInteractWithout={onInteractWithout}
-                  />
-                </View>
-              </View>
+    <View
+      style={[
+        a.rounded_lg,
+        a.overflow_hidden,
+        a.w_full,
+        a.border,
+        a.p_md,
+        interacted ? t.atoms.border_contrast_high : t.atoms.border_contrast_low,
+        style,
+      ]}>
+      <Link
+        shouldProxy
+        to={view.source.uri}
+        label={
+          view.source.title ? l`View ${view.source.title}` : l`View publication`
+        }
+        onPress={onPress}
+        onLongPress={onLongPress}
+        {...web({
+          onMouseEnter: onInteract,
+          onMouseLeave: onInteractOut,
+        })}
+        onFocus={onInteract}
+        onBlur={onInteractOut}
+        style={[a.absolute, a.inset_0]}>
+        <></>
+      </Link>
 
-              {!hideSubscribe && gtPhone && (
-                <SubscribeButton
-                  view={view}
-                  style={[!gtPhone && [a.w_full, a.justify_center]]}
-                  onPress={onPress}
-                  onLongPress={onLongPress}
-                />
-              )}
-            </View>
-
-            {view.description && (
-              <View style={[a.pt_sm]}>
-                <Text style={[a.text_sm, a.leading_snug]} numberOfLines={3}>
-                  {view.description}
-                </Text>
-              </View>
-            )}
-
-            {!hideSubscribe && !gtPhone && (
-              <View style={[view.description && a.pt_sm]}>
-                <SubscribeButton
-                  view={view}
-                  style={[!gtPhone && [a.w_full, a.justify_center]]}
-                  onPress={onPress}
-                  onLongPress={onLongPress}
-                />
-              </View>
-            )}
+      <View
+        style={[
+          a.flex_1,
+          a.align_center,
+          a.justify_between,
+          a.gap_md,
+          a.pointer_events_none,
+          gtPhone && [a.flex_row, a.gap_sm],
+        ]}>
+        <View
+          style={[
+            a.w_full,
+            a.flex_row,
+            a.align_center,
+            a.gap_sm,
+            gtPhone && a.flex_1,
+          ]}>
+          <PublicationIcon
+            view={view}
+            size={40}
+            interacted={interacted}
+            themeColors={themeColors}
+          />
+          <View style={[a.flex_1, a.gap_2xs]}>
+            <Text
+              numberOfLines={1}
+              style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+              {view.source?.title}
+            </Text>
+            <StandardSiteMetaRow type="publication" view={view} />
           </View>
-        )
-      }}
-    </Link>
+        </View>
+
+        {!hideSubscribe && gtPhone && (
+          <SubscribeButton
+            view={view}
+            style={[!gtPhone && [a.w_full, a.justify_center]]}
+            onPress={onPress}
+            onLongPress={onLongPress}
+          />
+        )}
+      </View>
+
+      <View style={[a.pointer_events_none]}>
+        {view.description && (
+          <View style={[a.pt_sm]}>
+            <Text style={[a.text_sm, a.leading_snug]} numberOfLines={3}>
+              {view.description}
+            </Text>
+          </View>
+        )}
+
+        {!hideSubscribe && !gtPhone && (
+          <View style={[view.description && a.pt_sm]}>
+            <SubscribeButton
+              view={view}
+              style={[!gtPhone && [a.w_full, a.justify_center]]}
+              onPress={onPress}
+              onLongPress={onLongPress}
+            />
+          </View>
+        )}
+      </View>
+    </View>
   )
 }
 
@@ -394,15 +379,24 @@ export function SubscribeButton({
 
   if (!view.source) return null
 
+  const publicationTitle = view.source.title
+  const label = highlightedPublisher
+    ? publicationTitle
+      ? l`Subscribe to ${publicationTitle} on ${highlightedPublisher.name}`
+      : l`Subscribe on ${highlightedPublisher.name}`
+    : publicationTitle
+      ? l`View ${publicationTitle}`
+      : l`View publication`
+
   return (
     <StandardSiteThemeProvider view={view}>
       <Link
         shouldProxy
         to={view.source.uri}
-        label={cta}
+        label={label}
         size="small"
         color="secondary_inverted"
-        style={[style, a.gap_sm]}
+        style={[style, a.gap_sm, a.pointer_events_auto]}
         onPress={onPress}
         onLongPress={onLongPress}>
         {highlightedPublisher ? (
@@ -424,15 +418,13 @@ export function SubscribeButton({
 function PublicationIcon({
   view,
   size,
-  hovered,
   themeColors,
 }: {
   view: AppBskyEmbedExternal.ViewExternal
   size: number
-  hovered?: boolean
+  interacted?: boolean
   themeColors: ThemeColors
 }) {
-  const opacity = hovered ? 0.6 : 0.2
   if (!view.source) return null
   return view.source?.icon ? (
     <View>
@@ -443,15 +435,7 @@ function PublicationIcon({
         avatar={view.source.icon}
         extraAviStyle={PUBLICATION_AVATAR_STYLE}
       />
-      <MediaInsetBorder
-        style={[
-          a.rounded_sm,
-          {
-            borderColor: themeColors.accentForeground,
-            opacity,
-          },
-        ]}
-      />
+      <MediaInsetBorder opaque style={[a.rounded_sm]} />
     </View>
   ) : (
     <View
@@ -470,15 +454,7 @@ function PublicationIcon({
         style={[a.text_xl, a.font_bold, {color: themeColors.accentForeground}]}>
         {[...view.source.title][0] ?? ''}
       </Text>
-      <MediaInsetBorder
-        style={[
-          a.rounded_sm,
-          {
-            borderColor: themeColors.accentForeground,
-            opacity,
-          },
-        ]}
-      />
+      <MediaInsetBorder opaque style={[a.rounded_sm]} />
     </View>
   )
 }
@@ -500,16 +476,10 @@ export function PublicationFooter({
   const {t: l} = useLingui()
   const {gtPhone} = useBreakpoints()
   const {
-    state: maybeHovered,
-    onIn: onHoverIn,
-    onOut: onHoverOut,
+    state: interacted,
+    onIn: onInteract,
+    onOut: onInteractOut,
   } = useInteractionState()
-  const {
-    state: interactedWithin,
-    onIn: onInteractWithin,
-    onOut: onInteractWithout,
-  } = useInteractionState()
-  const hovered = maybeHovered && !interactedWithin
 
   if (!view.source) return null
 
@@ -523,27 +493,38 @@ export function PublicationFooter({
         a.gap_md,
         gtPhone && [a.flex_row, a.gap_sm],
       ]}
-      testID="publication-embed-footer"
-      // @ts-ignore it's Fine™
-      onMouseEnter={onHoverIn}
-      onMouseLeave={onHoverOut}>
+      testID="publication-embed-footer">
       <Link
         shouldProxy
         to={view.source.uri}
-        label={l`View publication`}
+        label={
+          view.source.title ? l`View ${view.source.title}` : l`View publication`
+        }
         onPress={onPress}
         onLongPress={onLongPress}
+        style={[a.absolute, a.inset_0, web({outline: 0})]}
+        {...web({
+          onMouseEnter: onInteract,
+          onMouseLeave: onInteractOut,
+        })}
+        onFocus={onInteract}
+        onBlur={onInteractOut}>
+        <></>
+      </Link>
+
+      <View
         style={[
           a.w_full,
           a.flex_row,
           a.align_center,
           a.gap_sm,
           gtPhone && a.flex_1,
+          a.pointer_events_none,
         ]}>
         <PublicationIcon
           view={view}
           size={32}
-          hovered={hovered}
+          interacted={interacted}
           themeColors={themeColors}
         />
         <View style={[a.flex_1, a.gap_2xs]}>
@@ -553,23 +534,18 @@ export function PublicationFooter({
               a.text_sm,
               a.font_medium,
               t.atoms.text,
-              hovered && a.underline,
+              interacted && a.underline,
             ]}>
             {view.source?.title}
           </Text>
-          <StandardSiteMetaRow
-            type="publication"
-            view={view}
-            onInteractWithin={onInteractWithin}
-            onInteractWithout={onInteractWithout}
-          />
+          <StandardSiteMetaRow type="publication" view={view} />
         </View>
-      </Link>
+      </View>
 
       {!hideSubscribe && (
         <SubscribeButton
           view={view}
-          style={[!gtPhone && [a.w_full, a.justify_center]]}
+          style={[a.z_10, !gtPhone && [a.w_full, a.justify_center]]}
           onPress={onPress}
           onLongPress={onLongPress}
         />
