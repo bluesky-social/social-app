@@ -24,11 +24,11 @@ jobs:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request'}}
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
@@ -68,7 +68,7 @@ jobs:
 
       - name: ⬇️ Get base stats from cache
         id: get-base-stats
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: stats-base.json
           key: stats-base-${{ steps.base-commit.outputs.base-commit }}
@@ -110,7 +110,7 @@ jobs:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request'}}
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 100
 
@@ -118,7 +118,7 @@ jobs:
         run: git fetch origin main:main --depth 100
         if: github.event_name == 'pull_request'
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6

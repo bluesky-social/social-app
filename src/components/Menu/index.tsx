@@ -98,6 +98,7 @@ export function Outer({
 }: React.PropsWithChildren<{
   showCancel?: boolean
   style?: StyleProp<ViewStyle>
+  onCloseAutoFocus?: (event: Event) => void
 }>) {
   const context = useMenuContext()
   const {_} = useLingui()

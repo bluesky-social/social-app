@@ -1,6 +1,7 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {
   Image as RNImage,
+  type ImageStyle,
   Pressable,
   type StyleProp,
   StyleSheet,
@@ -76,6 +77,7 @@ interface UserAvatarProps extends BaseUserAvatarProps {
   noBorder?: boolean
   onLoad?: () => void
   style?: StyleProp<ViewStyle>
+  extraAviStyle?: ImageStyle
 }
 
 interface EditableUserAvatarProps extends BaseUserAvatarProps {
@@ -224,6 +226,7 @@ let UserAvatar = ({
   live,
   hideLiveBadge,
   noBorder,
+  extraAviStyle,
 }: UserAvatarProps): React.ReactNode => {
   const t = useTheme()
   const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
@@ -241,8 +244,9 @@ let UserAvatar = ({
       height: size,
       borderRadius,
       backgroundColor: t.palette.contrast_25,
+      ...extraAviStyle,
     }
-  }, [finalShape, size, t])
+  }, [finalShape, size, t, extraAviStyle])
 
   const borderStyle = useMemo(() => {
     return [

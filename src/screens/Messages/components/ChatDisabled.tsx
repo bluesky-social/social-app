@@ -67,10 +67,10 @@ function AppealDialog() {
       <Button
         testID="appealDisabledChatBtn"
         color="secondary_inverted"
-        size="small"
+        size="large"
         onPress={control.open}
         label={l`Appeal this decision`}
-        style={a.mt_lg}>
+        style={[a.mt_lg, a.w_full]}>
         <ButtonText>
           <Trans>Appeal this decision</Trans>
         </ButtonText>

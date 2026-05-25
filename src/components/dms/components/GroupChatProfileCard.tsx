@@ -5,7 +5,7 @@ import {Trans} from '@lingui/react/macro'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {atoms as a, useTheme} from '#/alf'
-import {canBeMessaged} from '#/components/dms/util'
+import {canBeAddedToGroup} from '#/components/dms/util'
 import * as Toggle from '#/components/forms/Toggle'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
@@ -19,7 +19,7 @@ export function GroupChatProfileCard({
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
-  const enabled = canBeMessaged(profile)
+  const enabled = canBeAddedToGroup(profile)
   const moderation = moderateProfile(profile, moderationOpts)
   const handle = sanitizeHandle(profile.handle, '@')
   const displayName = sanitizeDisplayName(
@@ -53,7 +53,7 @@ export function GroupChatProfileCard({
               <Text
                 style={[a.leading_snug, t.atoms.text_contrast_high]}
                 numberOfLines={2}>
-                <Trans>{handle} can’t be messaged</Trans>
+                <Trans>{handle} can’t be added</Trans>
               </Text>
             )}
           </View>

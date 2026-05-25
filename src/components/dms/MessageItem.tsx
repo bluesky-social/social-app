@@ -8,8 +8,6 @@ import {
   type ViewStyle,
 } from 'react-native'
 import Animated, {
-  FadeIn,
-  FadeOut,
   LayoutAnimationConfig,
   LinearTransition,
   useAnimatedStyle,
@@ -70,7 +68,6 @@ function isWithinClusterBoundary({
   direction: 'prev' | 'next'
 }): boolean {
   if (!isFromSameSender) return true
-  if (isPending && adjacentMessage) return false
   if (ChatBskyConvoDefs.isMessageView(adjacentMessage)) {
     const thisDate = new Date(currentSentAt)
     const adjDate = new Date(adjacentMessage.sentAt)
@@ -78,7 +75,10 @@ function isWithinClusterBoundary({
       direction === 'next'
         ? adjDate.getTime() - thisDate.getTime()
         : thisDate.getTime() - adjDate.getTime()
-    return diff > CLUSTERED_MESSAGE_THRESHOLD_MS
+    const isOutsideThreshold = diff > CLUSTERED_MESSAGE_THRESHOLD_MS
+    // For pending messages, still check the time threshold
+    if (isPending) return isOutsideThreshold
+    return isOutsideThreshold
   }
   return true
 }
@@ -217,6 +217,7 @@ let MessageItem = ({
   const avatar =
     profile && moderationOpts ? (
       <Link
+        style={[a.rounded_full]}
         label={l`${createSanitizedDisplayName(profile)}’s avatar`}
         accessibilityHint={l`Opens this profile`}
         to={makeProfileLink({
@@ -311,7 +312,6 @@ let MessageItem = ({
             style={[
               a.flex_row,
               a.gap_2xs,
-              a.px_xs,
               isFromSelf ? a.justify_end : a.justify_start,
               a.flex_wrap,
               a.rounded_lg,
@@ -319,13 +319,13 @@ let MessageItem = ({
               t.atoms.border_contrast_low,
               t.atoms.shadow_xs,
               hasSelfReacted
-                ? {
-                    backgroundColor: t.palette.primary_100,
-                  }
+                ? {backgroundColor: t.palette.primary_100}
                 : t.atoms.bg_contrast_25,
               {
                 paddingTop: platform({android: 2, default: 3}),
                 paddingBottom: platform({android: 2, default: 3}),
+                paddingLeft: 6,
+                paddingRight: 6,
                 transform: [{translateY: -8}],
               },
             ]}
@@ -344,7 +344,7 @@ let MessageItem = ({
                 <Text
                   emoji
                   style={[
-                    a.text_xs,
+                    a.text_md,
                     {textAlignVertical: 'center', includeFontPadding: false},
                   ]}>
                   {group.value}
@@ -356,11 +356,10 @@ let MessageItem = ({
               <View style={[a.p_2xs, a.pl_0, a.justify_center]}>
                 <Text
                   style={[
-                    a.text_xs,
+                    a.text_sm,
+                    a.font_medium,
                     hasSelfReacted
-                      ? {
-                          color: t.palette.primary_900,
-                        }
+                      ? {color: t.palette.primary_900}
                       : t.atoms.text_contrast_high,
                     {textAlignVertical: 'center', includeFontPadding: false},
                   ]}>
@@ -382,21 +381,19 @@ let MessageItem = ({
   )
 
   const messageInset = platform<ViewStyle | undefined>({
-    ios: isFromSelf ? a.mr_md : isGroupChat ? a.ml_md : a.ml_sm,
-    android: isFromSelf ? a.mr_sm : isGroupChat ? a.ml_sm : undefined,
-    web: isFromSelf ? a.mr_sm : isGroupChat ? a.ml_sm : undefined,
+    android: a.mx_sm,
+    ios: a.mx_md,
+    web: a.mx_lg,
   })
 
   return (
     <>
-      <LayoutAnimationConfig skipExiting skipEntering>
-        {hasLargeGapFromPrev && (
-          <Animated.View entering={native(FadeIn)} exiting={native(FadeOut)}>
-            <DateDivider date={message.sentAt} />
-          </Animated.View>
-        )}
-      </LayoutAnimationConfig>
-      <View style={[messageInset, isFirstInCluster && a.mt_md]}>
+      {hasLargeGapFromPrev && <DateDivider date={message.sentAt} />}
+      <View
+        style={[
+          messageInset,
+          isFirstInCluster ? a.mt_md : {marginTop: CLUSTERED_MESSAGE_GAP},
+        ]}>
         <View style={[a.relative]}>
           {showAvatar ? (
             <View
@@ -404,8 +401,15 @@ let MessageItem = ({
                 a.absolute,
                 a.bottom_0,
                 a.z_50,
-                {
-                  transform: [{translateY: hasReactions ? -24 : 0}],
+                hasReactions && {
+                  transform: [
+                    {
+                      translateY: platform({
+                        ios: -29,
+                        default: -27,
+                      }),
+                    },
+                  ],
                 },
               ]}>
               {avatar}
@@ -438,6 +442,7 @@ let MessageItem = ({
                 <MessageItemEmbed
                   embed={message.embed}
                   isFromSelf={isFromSelf}
+                  isGroupChat={isGroupChat}
                   squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
                   squaredTopCorner={squaredTopCorner}
                 />
@@ -446,26 +451,22 @@ let MessageItem = ({
                 <Animated.View
                   accessibilityHint={l`Double tap or long press the message to add a reaction`}
                   style={[
-                    !isFromSelf && a.ml_sm,
-                    ...(isOnlyEmoji(message.text)
-                      ? []
-                      : [
-                          a.rounded_xl,
-                          a.py_sm,
-                          a.px_md,
-                          {
-                            marginTop: isFirstInCluster
-                              ? 0
-                              : CLUSTERED_MESSAGE_GAP,
-                            backgroundColor: isFromSelf
-                              ? isPending
-                                ? pendingColor
-                                : t.palette.primary_500
-                              : t.palette.contrast_50,
-                          },
-                          isFromSelf ? a.self_end : a.self_start,
-                          borderRadiusStyle,
-                        ]),
+                    !isFromSelf && isGroupChat && a.ml_sm,
+                    !isOnlyEmoji(message.text) && [
+                      a.rounded_xl,
+                      a.py_sm,
+                      a.px_md,
+                      {
+                        marginTop: hasEmbedAndText ? CLUSTERED_MESSAGE_GAP : 0,
+                        backgroundColor: isFromSelf
+                          ? isPending
+                            ? pendingColor
+                            : t.palette.primary_500
+                          : t.palette.contrast_50,
+                      },
+                      isFromSelf ? a.self_end : a.self_start,
+                      borderRadiusStyle,
+                    ],
                   ]}>
                   <RichText
                     value={rt}

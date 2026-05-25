@@ -26,11 +26,13 @@ export function MessageInput({
   hasEmbed,
   setEmbed,
   children,
+  loading = false,
 }: {
   onSendMessage: (message: string) => void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
+  loading?: boolean
 }) {
   const {isMobile} = useWebMediaQueries()
   const {t: l} = useLingui()
@@ -139,47 +141,50 @@ export function MessageInput({
         // @ts-expect-error web only
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}>
-        <EmojiPicker.Root
-          onEmojiSelect={onEmojiInserted}
-          nextFocusRef={textAreaRef}>
-          <EmojiPicker.Trigger label={l`Open emoji picker`}>
-            {({props, state}) => (
-              <Button
-                style={[
-                  a.rounded_full,
-                  a.overflow_hidden,
-                  a.align_center,
-                  a.justify_center,
-                  {
-                    marginTop: 5,
-                    height: 30,
-                    width: 30,
-                  },
-                ]}
-                label={props.accessibilityLabel}
-                {...props}>
-                <View
+        {loading ? null : (
+          <EmojiPicker.Root
+            onEmojiSelect={onEmojiInserted}
+            nextFocusRef={textAreaRef}>
+            <EmojiPicker.Trigger label={l`Open emoji picker`}>
+              {({props, state}) => (
+                <Button
                   style={[
-                    a.absolute,
-                    a.inset_0,
+                    a.rounded_full,
+                    a.overflow_hidden,
                     a.align_center,
                     a.justify_center,
                     {
-                      backgroundColor:
-                        state.hovered || state.focused || state.pressed
-                          ? t.atoms.bg.backgroundColor
-                          : undefined,
+                      marginTop: 5,
+                      height: 30,
+                      width: 30,
                     },
-                  ]}>
-                  <EmojiSmile size="lg" />
-                </View>
-              </Button>
-            )}
-          </EmojiPicker.Trigger>
-          <EmojiPicker.Picker />
-        </EmojiPicker.Root>
+                  ]}
+                  label={props.accessibilityLabel}
+                  {...props}>
+                  <View
+                    style={[
+                      a.absolute,
+                      a.inset_0,
+                      a.align_center,
+                      a.justify_center,
+                      {
+                        backgroundColor:
+                          state.hovered || state.focused || state.pressed
+                            ? t.atoms.bg.backgroundColor
+                            : undefined,
+                      },
+                    ]}>
+                    <EmojiSmile size="lg" />
+                  </View>
+                </Button>
+              )}
+            </EmojiPicker.Trigger>
+            <EmojiPicker.Picker />
+          </EmojiPicker.Root>
+        )}
         <TextareaAutosize
           ref={textAreaRef}
+          disabled={loading}
           style={flatten([
             a.flex_1,
             a.px_sm,
@@ -192,7 +197,11 @@ export function MessageInput({
             },
           ])}
           maxRows={12}
-          placeholder={l`Message`}
+          placeholder={
+            loading
+              ? l({message: 'Loading chat…', context: 'placeholder'})
+              : l({message: 'Message', context: 'action'})
+          }
           defaultValue=""
           value={message}
           dirName="ltr"
@@ -215,6 +224,7 @@ export function MessageInput({
           accessibilityRole="button"
           accessibilityLabel={l`Send message`}
           accessibilityHint=""
+          disabled={loading}
           style={[
             a.rounded_full,
             a.align_center,
