@@ -397,7 +397,7 @@ interface BtnProps extends Pick<
   notificationCount?: string
   hasNew?: boolean
   gesture?: React.ComponentProps<typeof GestureDetector>['gesture']
-  onPress?: () => void
+  onPress: () => void
   onLongPress?: () => void
 }
 
@@ -414,30 +414,31 @@ function Btn({
   accessibilityLabel,
 }: BtnProps) {
   const t = useTheme()
+  const onAccessibilityAction = useCallback(
+    (event: AccessibilityActionEvent) => {
+      if (event.nativeEvent.actionName === 'activate') {
+        onPress()
+      }
+    },
+    [onPress],
+  )
+  const pressableOnPress = gesture ? undefined : onPress
+  const accessibilityActions = gesture
+    ? [{name: 'activate', label: accessibilityLabel}]
+    : undefined
+  const gestureAccessibilityAction = gesture ? onAccessibilityAction : undefined
 
   const content = (
     <PressableScale
       testID={testID}
       style={[styles.ctrl, a.flex_1]}
-      onPress={gesture ? undefined : onPress}
+      onPress={pressableOnPress}
       onLongPress={onLongPress}
       accessible={accessible}
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
-      accessibilityActions={
-        gesture && onPress
-          ? [{name: 'activate', label: accessibilityLabel}]
-          : undefined
-      }
-      onAccessibilityAction={
-        gesture && onPress
-          ? (event: AccessibilityActionEvent) => {
-              if (event.nativeEvent.actionName === 'activate') {
-                onPress()
-              }
-            }
-          : undefined
-      }
+      accessibilityActions={accessibilityActions}
+      onAccessibilityAction={gestureAccessibilityAction}
       targetScale={0.8}
       accessibilityLargeContentTitle={accessibilityLabel}
       accessibilityShowsLargeContentViewer>
@@ -463,9 +464,9 @@ function Btn({
     </PressableScale>
   )
 
-  return gesture ? (
-    <GestureDetector gesture={gesture}>{content}</GestureDetector>
-  ) : (
-    content
-  )
+  if (!gesture) {
+    return content
+  }
+
+  return <GestureDetector gesture={gesture}>{content}</GestureDetector>
 }
