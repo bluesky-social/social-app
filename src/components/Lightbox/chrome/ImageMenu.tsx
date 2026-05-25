@@ -84,7 +84,7 @@ export function ImageMenu({onPressShare, onPressSave}: Props) {
           accessibilityRole="button"
           accessibilityLabel={l`Close menu`}
           accessibilityHint=""
-          style={StyleSheet.absoluteFill}
+          style={[a.absolute, a.inset_0]}
           onPress={close}
         />
         {anchor && (

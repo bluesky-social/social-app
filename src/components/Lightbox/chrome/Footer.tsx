@@ -7,10 +7,9 @@ import {
   View,
 } from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
 type Props = {
@@ -20,7 +19,8 @@ type Props = {
 }
 
 export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
+  const t = useTheme()
   const insets = useSafeAreaInsets()
   const isMomentumScrolling = useRef(false)
 
@@ -28,8 +28,14 @@ export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
 
   return (
     <View
-      style={[styles.root, {paddingBottom: insets.bottom + 8}]}
-      pointerEvents="box-none">
+      style={[
+        a.absolute,
+        a.left_0,
+        a.right_0,
+        a.bottom_0,
+        a.pointer_events_box_none,
+        {paddingBottom: insets.bottom + 8},
+      ]}>
       <View style={[a.mx_md, styles.altWrap]}>
         <ScrollView
           scrollEnabled={isAltExpanded}
@@ -42,7 +48,7 @@ export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
           contentContainerStyle={[a.px_md, a.py_sm]}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={_(msg`Expand alt text`)}
+            accessibilityLabel={l`Expand alt text`}
             accessibilityHint=""
             onPress={() => {
               if (isMomentumScrolling.current) return
@@ -55,7 +61,7 @@ export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
             <Text
               emoji
               selectable
-              style={[a.text_sm, styles.altText]}
+              style={[a.text_sm, {color: t.palette.white}]}
               numberOfLines={isAltExpanded ? undefined : 3}>
               {altText}
             </Text>
@@ -67,18 +73,9 @@ export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
 }
 
 const styles = StyleSheet.create({
-  root: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
   altWrap: {
     backgroundColor: 'rgba(0, 0, 0, 0.45)',
     borderRadius: 12,
     overflow: 'hidden',
-  },
-  altText: {
-    color: '#fff',
   },
 })
