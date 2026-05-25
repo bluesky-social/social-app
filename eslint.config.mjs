@@ -282,6 +282,11 @@ export default defineConfig(
               message:
                 'Import the helpers from #/lib/notifications/expo-helpers (or the hooks from #/lib/notifications/notifications) instead. expo-notifications is stubbed on web; importing it directly pulls ~70KB of dead weight into the web bundle.',
             },
+            {
+              name: '@sentry/react-native',
+              message:
+                'Import the curated Sentry barrel from #/logger/sentry/lib instead. Importing @sentry/react-native directly (especially as `import * as Sentry`) defeats Metro tree-shaking and pulls ~180KB of dead weight into the web bundle.',
+            },
           ],
         },
       ],
@@ -318,14 +323,18 @@ export default defineConfig(
   },
 
   /**
-   * Native-only files that legitimately wrap expo-notifications. The .web.ts
-   * counterparts to these files don't import the package.
+   * Files that legitimately wrap restricted packages (the no-restricted-imports
+   * rule above blocks `expo-notifications` and `@sentry/react-native` by
+   * default; these wrappers are how the rest of the codebase reaches them).
    */
   {
     files: [
       'src/lib/notifications/notifications.ts',
       'src/lib/notifications/expo-helpers.ts',
       'src/lib/hooks/useNotificationHandler.ts',
+      'src/logger/sentry/lib/index.ts',
+      'src/logger/sentry/setup/index.ts',
+      'src/logger/__tests__/logger.test.ts',
     ],
     rules: {
       'no-restricted-imports': 'off',

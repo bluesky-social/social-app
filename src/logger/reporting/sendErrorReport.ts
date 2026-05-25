@@ -1,7 +1,7 @@
 import slugify from 'slugify'
 
 import {getEntries} from '#/logger/logDump'
-import {Sentry} from '#/logger/sentry/lib'
+import * as Sentry from '#/logger/sentry/lib'
 
 export function sendErrorReport({
   title,

@@ -6,7 +6,6 @@ import {Fragment, useEffect, useState} from 'react'
 import {KeyboardProvider as KeyboardControllerProvider} from 'react-native-keyboard-controller'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react/macro'
-import * as Sentry from '@sentry/react-native'
 
 import {Provider as HotkeysProvider} from '#/lib/hotkeys'
 import {QueryProvider} from '#/lib/react-query'
@@ -14,6 +13,7 @@ import {ThemeProvider} from '#/lib/ThemeContext'
 import {Provider as TranslateOnDeviceProvider} from '#/lib/translation'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
+import * as Sentry from '#/logger/sentry/lib'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {
   prefetchAppConfig,
