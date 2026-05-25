@@ -14,11 +14,12 @@ if (cfg.resolver.resolveRequest) {
 // Enforce "no RNGH on web"
 cfg.resolver.blockList = [/react-native-gesture-handler\/.*/]
 
-// Stub out unused packages on web. They're statically imported by libraries we
-// do use, so we can't drop them via blockList; we redirect the imports to an
-// empty module instead.
+// Production-only stubs for unused packages on web. They're statically
+// imported by libraries we do use (so we can't blockList them), but in dev
+// the libraries call into them at module-init time, so we leave them alone.
+// In prod, tree-shaking + the empty stub together drop ~185KB of dead code.
+const isProduction = process.env.NODE_ENV === 'production'
 const STUBBED_PACKAGES = new Set([
-  // Sentry integrations we don't use on web (~185KB).
   '@sentry-internal/replay',
   '@sentry-internal/replay-canvas',
   '@sentry-internal/feedback',
@@ -42,7 +43,7 @@ cfg.resolver.resolveRequest = (context, moduleName, platform) => {
       )
     }
   }
-  if (platform === 'web' && STUBBED_PACKAGES.has(moduleName)) {
+  if (isProduction && platform === 'web' && STUBBED_PACKAGES.has(moduleName)) {
     return {type: 'sourceFile', filePath: emptyModulePath}
   }
   return context.resolveRequest(context, moduleName, platform)
