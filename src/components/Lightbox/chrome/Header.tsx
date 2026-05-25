@@ -1,7 +1,6 @@
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
 import {TimesLarge_Stroke2_Corner0_Rounded as CloseIcon} from '#/components/icons/Times'
@@ -24,7 +23,7 @@ export function Header({
   imageCount,
   activeIndex,
 }: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const insets = useSafeAreaInsets()
 
   return (
@@ -45,7 +44,7 @@ export function Header({
       <PagerDots count={imageCount} activeIndex={activeIndex} />
       <CircleChromeButton
         icon={CloseIcon}
-        label={_(msg`Close image`)}
+        label={l`Close image`}
         onPress={onRequestClose}
       />
     </View>
