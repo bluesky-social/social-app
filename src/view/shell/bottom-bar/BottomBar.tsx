@@ -17,6 +17,7 @@ import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransfo
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
+import {type SharedNavTab, TAB_TO_NAV_ITEM} from '#/lib/routes/tab-to-nav-item'
 import {emitSoftReset} from '#/state/events'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
@@ -55,19 +56,6 @@ import {useActorStatus} from '#/features/liveNow'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {styles} from './BottomBarStyles'
 
-type TabOptions = 'Home' | 'Search' | 'Messages' | 'Notifications' | 'MyProfile'
-
-const TAB_TO_NAV_ITEM: Record<
-  TabOptions,
-  'home' | 'search' | 'chat' | 'notifications' | 'profile'
-> = {
-  Home: 'home',
-  Search: 'search',
-  Messages: 'chat',
-  Notifications: 'notifications',
-  MyProfile: 'profile',
-}
-
 export function BottomBar({navigation}: BottomTabBarProps) {
   const {hasSession, currentAccount} = useSession()
   const t = useTheme()
@@ -102,7 +90,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   }, [requestSwitchToAccount, closeAllActiveElements])
 
   const onPressTab = useCallback(
-    (tab: TabOptions) => {
+    (tab: SharedNavTab) => {
       ax.metric('nav:click', {
         item: TAB_TO_NAV_ITEM[tab],
         surface: 'bottomBar',

@@ -86,6 +86,7 @@ import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
 import {router} from '#/routes'
+import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
 
 type LeftNavItem =
   | 'home'
@@ -97,7 +98,6 @@ type LeftNavItem =
   | 'saved'
   | 'profile'
   | 'settings'
-import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
 
 const LARGE_ELEMENT_SIZE = 48
 const NAV_ICON_WIDTH = 28

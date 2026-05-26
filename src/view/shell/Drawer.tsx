@@ -10,6 +10,7 @@ import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {type PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {getTabState, TabState} from '#/lib/routes/helpers'
+import {type SharedNavTab, TAB_TO_NAV_ITEM} from '#/lib/routes/tab-to-nav-item'
 import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {colors} from '#/lib/styles'
@@ -134,24 +135,6 @@ let DrawerProfileCard = ({
 DrawerProfileCard = memo(DrawerProfileCard)
 export {DrawerProfileCard}
 
-type DrawerTabOption =
-  | 'Home'
-  | 'Search'
-  | 'Messages'
-  | 'Notifications'
-  | 'MyProfile'
-
-const DRAWER_TAB_TO_NAV_ITEM: Record<
-  DrawerTabOption,
-  'home' | 'search' | 'chat' | 'notifications' | 'profile'
-> = {
-  Home: 'home',
-  Search: 'search',
-  Messages: 'chat',
-  Notifications: 'notifications',
-  MyProfile: 'profile',
-}
-
 let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   const t = useTheme()
   const insets = useSafeAreaInsets()
@@ -173,9 +156,9 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   // =
 
   const onPressTab = useCallback(
-    (tab: DrawerTabOption, surface: 'drawer' | 'drawerHeader' = 'drawer') => {
+    (tab: SharedNavTab, surface: 'drawer' | 'drawerHeader' = 'drawer') => {
       ax.metric('nav:click', {
-        item: DRAWER_TAB_TO_NAV_ITEM[tab],
+        item: TAB_TO_NAV_ITEM[tab],
         surface,
       })
       const state = navigation.getState()
