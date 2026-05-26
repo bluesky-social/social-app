@@ -214,24 +214,29 @@ export const StandardSiteEmbed = ({
             )}
           </View>
         </View>
+
+        {!view.source && (
+          <View style={[a.px_md]}>
+            <Divider />
+            <View style={[a.py_sm]}>
+              <StandardSiteMetaRow view={view} />
+            </View>
+          </View>
+        )}
       </View>
 
       <View style={[a.z_20]}>
-        <View style={[a.px_md]}>
-          <Divider />
-        </View>
-        {view.source ? (
-          <PublicationFooter
-            view={view}
-            onPress={onPress}
-            onLongPress={onLongPress}
-            themeColors={themeColors}
-            hideSubscribe={hideSubscribe}
-          />
-        ) : (
-          <View style={[a.px_md, a.py_sm, a.pointer_events_none]}>
-            <StandardSiteMetaRow view={view} />
-          </View>
+        {view.source && (
+          <>
+            <Divider />
+            <PublicationFooter
+              view={view}
+              onPress={onPress}
+              onLongPress={onLongPress}
+              themeColors={themeColors}
+              hideSubscribe={hideSubscribe}
+            />
+          </>
         )}
       </View>
     </View>
