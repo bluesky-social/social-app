@@ -38,7 +38,7 @@ export function DeviceLocationRequestDialog({
       <Dialog.Handle />
 
       <Dialog.ScrollableInner
-        label={_(msg`Confirm your location`)}
+        label={_(msg`Update your location`)}
         style={[web({maxWidth: 380})]}>
         <DeviceLocationRequestDialogInner
           onLocationAcquired={onLocationAcquired}
@@ -103,7 +103,7 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
   return (
     <View style={[a.gap_md]}>
       <Text style={[a.text_xl, a.font_bold]}>
-        <Trans>Confirm your location</Trans>
+        <Trans>Update your location</Trans>
       </Text>
       <View style={[a.gap_sm, a.pb_xs]}>
         <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
