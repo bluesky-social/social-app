@@ -225,7 +225,7 @@ export function ModerationScreenInner({
 
   return (
     <View style={[a.pt_2xl, a.px_lg, gtMobile && a.px_2xl]}>
-      {aa.flags.adultContentDisabled && isBirthdateUpdateAllowed && (
+      {aa.flags.isDeclaredUnderAdultAge && isBirthdateUpdateAllowed && (
         <View style={[a.pb_2xl]}>
           <Admonition.Admonition type="tip" style={[a.pb_md]}>
             <Trans>
