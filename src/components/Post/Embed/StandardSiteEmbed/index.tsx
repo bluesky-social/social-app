@@ -112,6 +112,7 @@ export const StandardSiteEmbed = ({
         a.overflow_hidden,
         a.w_full,
         a.border,
+        t.atoms.bg,
         interacted ? t.atoms.border_contrast_high : t.atoms.border_contrast_low,
         style,
       ]}>
@@ -131,7 +132,13 @@ export const StandardSiteEmbed = ({
         <></>
       </Link>
 
-      <View style={[a.w_full, a.z_10, a.pointer_events_none]}>
+      <View
+        style={[
+          a.w_full,
+          a.z_10,
+          a.pointer_events_none,
+          interacted && [t.atoms.bg_contrast_25],
+        ]}>
         {imageUri ? (
           <Image
             style={[a.aspect_card]}
@@ -226,20 +233,18 @@ export const StandardSiteEmbed = ({
         )}
       </View>
 
-      <View style={[a.z_20]}>
-        {view.source && (
-          <>
-            <Divider />
-            <PublicationFooter
-              view={view}
-              onPress={onPress}
-              onLongPress={onLongPress}
-              themeColors={themeColors}
-              hideSubscribe={hideSubscribe}
-            />
-          </>
-        )}
-      </View>
+      {view.source && (
+        <View style={[a.z_20]}>
+          <Divider />
+          <PublicationFooter
+            view={view}
+            onPress={onPress}
+            onLongPress={onLongPress}
+            themeColors={themeColors}
+            hideSubscribe={hideSubscribe}
+          />
+        </View>
+      )}
     </View>
   )
 }
@@ -278,7 +283,9 @@ export function PublicationCard({
         a.w_full,
         a.border,
         a.p_md,
-        interacted ? t.atoms.border_contrast_high : t.atoms.border_contrast_low,
+        interacted
+          ? [t.atoms.bg_contrast_25, t.atoms.border_contrast_high]
+          : [t.atoms.bg, t.atoms.border_contrast_low],
         style,
       ]}>
       <Link
@@ -500,6 +507,7 @@ export function PublicationFooter({
         a.p_md,
         a.gap_md,
         gtPhone && [a.flex_row, a.gap_sm],
+        interacted && t.atoms.bg_contrast_25,
       ]}
       testID="publication-embed-footer">
       <Link
@@ -538,12 +546,7 @@ export function PublicationFooter({
         <View style={[a.flex_1, a.gap_2xs]}>
           <Text
             numberOfLines={1}
-            style={[
-              a.text_sm,
-              a.font_medium,
-              t.atoms.text,
-              interacted && a.underline,
-            ]}>
+            style={[a.text_sm, a.font_medium, t.atoms.text]}>
             {view.source?.title}
           </Text>
           <StandardSiteMetaRow type="publication" view={view} />
