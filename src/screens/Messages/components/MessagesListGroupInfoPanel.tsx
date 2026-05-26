@@ -83,7 +83,11 @@ export function MessagesListGroupInfoPanel({
     )
   }
 
-  const showButtons = isOwner || isJoinLinkEnabled
+  const isLocked =
+    convo.details.lockStatus === 'locked' ||
+    convo.details.lockStatus === 'locked-permanently'
+
+  const showButtons = !isLocked && (isOwner || isJoinLinkEnabled)
 
   return (
     <>
