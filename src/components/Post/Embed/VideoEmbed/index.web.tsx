@@ -233,7 +233,7 @@ function VideoError({error, retry}: {error: unknown; retry: () => void}) {
   } else if (error instanceof HLSUnsupportedError) {
     showRetryButton = false
     text = _(
-      msg`Your browser does not support the video format. Please try a different browser.`,
+      msg`This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC).`,
     )
   } else {
     text = _(msg`An error occurred while loading the video. Please try again.`)

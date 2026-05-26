@@ -8,11 +8,11 @@ import {useNavigation} from '@react-navigation/native'
 import {HITSLOP_10} from '#/lib/constants'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
-import {useMinimalShellHeaderTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {type NavigationProp} from '#/lib/routes/types'
 import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
+import {useHomeHeaderTransform} from '#/view/com/util/MainScrollProvider'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {ButtonIcon} from '#/components/Button'
@@ -31,7 +31,7 @@ export function HomeHeaderLayoutMobile({
   const {_} = useLingui()
   const {headerHeight} = useShellLayout()
   const insets = useSafeAreaInsets()
-  const headerMinimalShellTransform = useMinimalShellHeaderTransform()
+  const headerMinimalShellTransform = useHomeHeaderTransform()
   const {hasSession} = useSession()
   const playHaptic = useHaptics()
   const {navigate} = useNavigation<NavigationProp>()
