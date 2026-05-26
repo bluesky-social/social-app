@@ -84,20 +84,10 @@ import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
+import {type Events} from '#/analytics/metrics/types'
 import {useActorStatus} from '#/features/liveNow'
 import {router} from '#/routes'
 import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
-
-type LeftNavItem =
-  | 'home'
-  | 'search'
-  | 'chat'
-  | 'notifications'
-  | 'feeds'
-  | 'lists'
-  | 'saved'
-  | 'profile'
-  | 'settings'
 
 const LARGE_ELEMENT_SIZE = 48
 const NAV_ICON_WIDTH = 28
@@ -401,7 +391,7 @@ interface NavItemProps {
   }
   label: string
   minimal: boolean
-  navItem: LeftNavItem
+  navItem: Events['nav:click']['item']
 }
 function NavItem({
   count,
