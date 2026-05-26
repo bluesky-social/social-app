@@ -1,24 +1,23 @@
+import {useCallback} from 'react'
 import {View} from 'react-native'
+import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
 import {type ScreenLayoutArgs, useIsFocused} from '@react-navigation/native'
 import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
 
 import {type FlatNavigatorParams} from '#/lib/routes/types'
+import {ScrollProvider} from '#/lib/ScrollContext'
 import {type NativeStackNavigationOptionsWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
+import {LEFT_NAV_MINIMAL_WIDTH} from '#/view/shell/desktop/LeftNav'
 import {atoms as a, useLayoutBreakpoints, useTheme, web} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
-import {SCROLLBAR_OFFSET} from '#/components/Layout'
+import {CENTER_COLUMN_WIDTH, SCROLLBAR_OFFSET} from '#/components/Layout'
 import {LockScroll} from '#/components/LockScroll'
 import {useAgeAssurance} from '#/ageAssurance'
 import {IS_WEB} from '#/env'
 import {ChatList, Header as ChatListHeader} from '../../ChatList'
 import {SplitViewProvider} from './context'
-
-const CENTER_COLUMN_WIDTH = 600
-const LEFT_NAV_FULL_WIDTH = 245
-const LEFT_NAV_MINIMAL_WIDTH = 86
-const RIGHT_NAV_FULL_WIDTH = 330
-const RIGHT_NAV_MINIMAL_WIDTH = 280
+import {splitViewLeftScroll} from './leftColumnScroll'
 
 type MessageScreens =
   | 'Messages'
@@ -48,6 +47,11 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
   const aa = useAgeAssurance()
   const isFocused = useIsFocused()
 
+  const onLeftColumnScroll = useCallback((e: ReanimatedScrollEvent) => {
+    'worklet'
+    splitViewLeftScroll.current = e.contentOffset.y
+  }, [])
+
   if (!IS_WEB || !rightNavVisible || aa.state.access !== aa.Access.Full) {
     return children
   }
@@ -63,25 +67,14 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
       ? route.params.conversation
       : undefined
 
-  const rightNavWidth = centerColumnOffset
-    ? RIGHT_NAV_MINIMAL_WIDTH
-    : RIGHT_NAV_FULL_WIDTH
+  const halfLeftNavWidth = LEFT_NAV_MINIMAL_WIDTH / 2
 
-  const leftNavWidth = centerColumnOffset
-    ? LEFT_NAV_MINIMAL_WIDTH
-    : LEFT_NAV_FULL_WIDTH - LEFT_NAV_MINIMAL_WIDTH
+  const leftColumnWidth = 360
 
-  // slight reduce width for smaller breakpoint
-  const centerColumnWidth = centerColumnOffset
-    ? CENTER_COLUMN_WIDTH - 50
-    : CENTER_COLUMN_WIDTH
+  const rightColumnWidth =
+    CENTER_COLUMN_WIDTH - (centerColumnOffset ? halfLeftNavWidth + 30 : 0)
 
-  // nasty magic numbers here, sorry :(
-  const offset = centerColumnOffset
-    ? LEFT_NAV_MINIMAL_WIDTH - 34
-    : LEFT_NAV_MINIMAL_WIDTH + 5
-
-  const containerWidth = leftNavWidth + centerColumnWidth + rightNavWidth
+  const containerWidth = leftColumnWidth + rightColumnWidth
 
   return (
     <View
@@ -92,7 +85,11 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
         {maxWidth: containerWidth},
         {
           transform: [
-            {translateX: offset},
+            {
+              translateX: centerColumnOffset
+                ? halfLeftNavWidth
+                : halfLeftNavWidth / 2,
+            },
             {translateX: web(SCROLLBAR_OFFSET) ?? 0},
           ],
         },
@@ -103,13 +100,15 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
           style={[
             a.border_l,
             t.atoms.border_contrast_low,
-            {width: containerWidth - centerColumnWidth},
+            {width: leftColumnWidth},
           ]}>
           <ChatListHeader newChatControl={newChatControl} />
-          <ChatList
-            newChatControl={newChatControl}
-            selectedChat={selectedChat}
-          />
+          <ScrollProvider onScroll={onLeftColumnScroll}>
+            <ChatList
+              newChatControl={newChatControl}
+              selectedChat={selectedChat}
+            />
+          </ScrollProvider>
           <NewChat onNewChat={onNewChat} control={newChatControl} />
         </View>
       </SplitViewProvider>
@@ -118,7 +117,7 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
           style={[
             a.border_x,
             t.atoms.border_contrast_low,
-            {width: centerColumnWidth},
+            {width: rightColumnWidth},
           ]}>
           {children}
         </View>

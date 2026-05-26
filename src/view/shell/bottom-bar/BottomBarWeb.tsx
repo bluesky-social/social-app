@@ -44,7 +44,10 @@ import {
 } from '#/components/icons/Message'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
 import {styles} from './BottomBarStyles'
+
+type NavItemValue = 'home' | 'search' | 'chat' | 'notifications' | 'profile'
 
 export function BottomBarWeb() {
   const {_} = useLingui()
@@ -96,7 +99,7 @@ export function BottomBarWeb() {
         onLayout={event => footerHeight.set(event.nativeEvent.layout.height)}>
         {hasSession ? (
           <>
-            <NavItem routeName="Home" href="/">
+            <NavItem routeName="Home" href="/" navItem="home">
               {({isActive}) => {
                 const Icon = isActive ? HomeFilled : Home
                 return (
@@ -108,7 +111,7 @@ export function BottomBarWeb() {
                 )
               }}
             </NavItem>
-            <NavItem routeName="Search" href="/search">
+            <NavItem routeName="Search" href="/search" navItem="search">
               {({isActive}) => {
                 const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass
                 return (
@@ -126,6 +129,7 @@ export function BottomBarWeb() {
                 <NavItem
                   routeName="Messages"
                   href="/messages"
+                  navItem="chat"
                   notificationCount={
                     aa.flags.chatDisabled
                       ? undefined
@@ -152,6 +156,7 @@ export function BottomBarWeb() {
                 <NavItem
                   routeName="Notifications"
                   href="/notifications"
+                  navItem="notifications"
                   notificationCount={notificationCountStr}>
                   {({isActive}) => {
                     const Icon = isActive ? BellFilled : Bell
@@ -174,6 +179,7 @@ export function BottomBarWeb() {
                         })
                       : '/'
                   }
+                  navItem="profile"
                   onLongPress={onLongPressProfile}>
                   {({isActive}) => (
                     <View style={styles.ctrlIconSizingWrapper}>
@@ -257,12 +263,22 @@ const NavItem: React.FC<{
   children: (props: {isActive: boolean}) => React.ReactNode
   href: string
   routeName: string
+  navItem: NavItemValue
   hasNew?: boolean
   notificationCount?: string
   onLongPress?: () => void
-}> = ({children, href, routeName, hasNew, notificationCount, onLongPress}) => {
+}> = ({
+  children,
+  href,
+  routeName,
+  navItem,
+  hasNew,
+  notificationCount,
+  onLongPress,
+}) => {
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const currentRoute = useNavigationState(state => {
     if (!state) {
@@ -270,6 +286,10 @@ const NavItem: React.FC<{
     }
     return getCurrentRoute(state)
   })
+
+  const onBeforePress = useCallback(() => {
+    ax.metric('nav:click', {item: navItem, surface: 'bottomBar'})
+  }, [ax, navItem])
 
   // Checks whether we're on someone else's profile
   const isOnDifferentProfile =
@@ -295,6 +315,7 @@ const NavItem: React.FC<{
       aria-role="link"
       aria-label={routeName}
       accessible={true}
+      onBeforePress={onBeforePress}
       onLongPress={onLongPress}>
       {children({isActive})}
       {notificationCount ? (

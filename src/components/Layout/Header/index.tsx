@@ -24,11 +24,13 @@ import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {
   BUTTON_VISUAL_ALIGNMENT_OFFSET,
   CENTER_COLUMN_OFFSET,
+  CENTER_COLUMN_WIDTH,
   HEADER_SLOT_SIZE,
   SCROLLBAR_OFFSET,
 } from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
 
 export function Outer({
@@ -47,7 +49,7 @@ export function Outer({
   const {gtMobile} = useBreakpoints()
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
   const {centerColumnOffset} = useLayoutBreakpoints()
-  const {isWithinSplitView} = useIsWithinSplitView()
+  const {isWithinSplitView, isWithinLeftPanel} = useIsWithinSplitView()
 
   return (
     <View
@@ -59,13 +61,13 @@ export function Outer({
         a.align_center,
         a.gap_sm,
         sticky && web([a.sticky, {top: 0}, a.z_10, t.atoms.bg]),
-        gutters,
+        isWithinLeftPanel ? a.px_lg : gutters,
         platform({
           native: [a.pb_xs, {minHeight: 48}],
           web: [a.py_xs, {minHeight: 52}],
         }),
         t.atoms.border_contrast_low,
-        gtMobile && [a.mx_auto, {maxWidth: 600}],
+        gtMobile && [a.mx_auto, {maxWidth: CENTER_COLUMN_WIDTH}],
         !isWithinOffsetView &&
           !isWithinSplitView && {
             transform: [
@@ -111,7 +113,6 @@ export function Slot({children}: {children?: React.ReactNode}) {
 export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
-  const {isWithinRightPanel} = useIsWithinSplitView()
 
   const onPressBack = useCallback(
     (evt: GestureResponderEvent) => {
@@ -125,10 +126,6 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
     },
     [onPress, navigation],
   )
-
-  if (isWithinRightPanel) {
-    return null
-  }
 
   return (
     <Slot>
@@ -154,13 +151,15 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
 
 export function MenuButton() {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const setDrawerOpen = useSetDrawerOpen()
   const {gtMobile} = useBreakpoints()
 
   const onPress = useCallback(() => {
+    ax.metric('nav:click', {item: 'menu', surface: 'topBar'})
     Keyboard.dismiss()
     setDrawerOpen(true)
-  }, [setDrawerOpen])
+  }, [setDrawerOpen, ax])
 
   return gtMobile ? null : (
     <Slot>
@@ -187,12 +186,14 @@ export function TitleText({
   style,
 }: {children: React.ReactNode} & TextStyleProp) {
   const {gtMobile} = useBreakpoints()
+  const {isWithinLeftPanel} = useIsWithinSplitView()
   const align = useContext(AlignmentContext)
   return (
     <Text
       style={[
-        a.text_lg,
-        a.font_semi_bold,
+        isWithinLeftPanel
+          ? [a.text_xl, a.font_bold]
+          : [a.text_lg, a.font_semi_bold],
         a.leading_tight,
         IS_IOS && align === 'platform' && a.text_center,
         gtMobile && a.text_xl,
