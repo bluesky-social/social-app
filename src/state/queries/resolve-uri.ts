@@ -1,6 +1,7 @@
 import {AtUri, type BskyAgent} from '@atproto/api'
 import {type QueryClient, queryOptions, useQuery} from '@tanstack/react-query'
 
+import {PUBLIC_APPVIEW} from '#/lib/constants'
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
 import {useUnstableProfileViewCache} from './profile'
@@ -21,8 +22,14 @@ const resolvedDidQueryOptions = (
       // Just return the did if it's already one
       if (didOrHandle.startsWith('did:')) return didOrHandle
 
-      const res = await agent.resolveHandle({handle: didOrHandle})
-      return res.data.did
+      try {
+        const res = await agent.resolveHandle({handle: didOrHandle})
+        return res.data.did
+      } catch (err) {
+        const did = await resolveHandleViaAppView(didOrHandle)
+        if (did) return did
+        throw err
+      }
     },
     // @ts-expect-error tanstack 5.25 types require InitialDataFunction to
     // return `string`, but we want `undefined` to fall through to queryFn
@@ -61,6 +68,21 @@ export function useResolveDidQuery(didOrHandle: string | undefined) {
   return useQuery(
     resolvedDidQueryOptions(agent, getUnstableProfile, didOrHandle),
   )
+}
+
+async function resolveHandleViaAppView(
+  handle: string,
+): Promise<string | undefined> {
+  try {
+    const res = await fetch(
+      `${PUBLIC_APPVIEW}/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(handle)}`,
+    )
+    if (!res.ok) return undefined
+    const data = (await res.json()) as {did?: string}
+    return data.did
+  } catch {
+    return undefined
+  }
 }
 
 export function precacheResolvedUri(
