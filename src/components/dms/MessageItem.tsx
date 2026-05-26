@@ -26,18 +26,25 @@ import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {makeProfileLink} from '#/lib/routes/links'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
+import {type Shadow} from '#/state/cache/types'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import {atoms as a, native, platform, useTheme} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
+import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {InlineLinkText, Link} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
+import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {DateDivider} from './DateDivider'
@@ -109,7 +116,7 @@ let MessageItem = ({
   const queryClient = useQueryClient()
 
   const {message} = item
-  const profile = relatedProfiles.get(message.sender.did)
+  const profile = useMaybeProfileShadow(relatedProfiles.get(message.sender.did))
 
   const reactionsControl = useDialogControl()
 
@@ -433,70 +440,76 @@ let MessageItem = ({
                 {displayName}
               </Text>
             ) : null}
-            <ActionsWrapper
-              hasReactions={hasReactions}
-              isFromSelf={isFromSelf}
-              message={message}
-              senderProfile={profile}
-              moderationOpts={moderationOpts}>
-              {AppBskyEmbedRecord.isView(message.embed) && (
-                <MessageItemEmbed
-                  embed={message.embed}
-                  isFromSelf={isFromSelf}
-                  isGroupChat={isGroupChat}
-                  squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
-                  squaredTopCorner={squaredTopCorner}
-                />
-              )}
-              {rt.text.length > 0 && (
-                <Animated.View
-                  accessibilityHint={l`Double tap or long press the message to add a reaction`}
-                  style={[
-                    !isFromSelf && isGroupChat && a.ml_sm,
-                    !isOnlyEmoji(message.text) && [
-                      a.rounded_xl,
-                      a.py_sm,
-                      a.px_md,
-                      {
-                        marginTop: hasEmbedAndText ? CLUSTERED_MESSAGE_GAP : 0,
-                        backgroundColor: isFromSelf
-                          ? isPending
-                            ? pendingColor
-                            : t.palette.primary_500
-                          : t.palette.contrast_50,
-                      },
-                      isFromSelf ? a.self_end : a.self_start,
-                      borderRadiusStyle,
-                    ],
-                  ]}>
-                  <RichText
-                    value={rt}
-                    style={[
-                      a.text_md,
-                      isFromSelf && {color: t.palette.white},
-                      // Emoji-only: add top leading to avoid clipping the
-                      // glyph, then pull the bottom up by the same amount so
-                      // the glyph bottom-aligns with the avatar instead of
-                      // sitting above its line-box baseline.
-                      isOnlyEmoji(message.text) && [
-                        a.leading_tight,
-                        // Visually align bottom of the emoji with the avatar
-                        !isFromSelf &&
-                          platform({
-                            android: {marginTop: a.mt_2xs.marginTop},
-                            default: {marginBottom: -a.mb_sm.marginBottom},
-                          }),
-                      ],
-                    ]}
-                    interactiveStyle={a.underline}
-                    enableTags
-                    emojiMultiplier={3}
-                    shouldProxyLinks={true}
+            {profile && isBlockedOrBlocking(profile) && isGroupChat ? (
+              <BlockedPlaceholder profile={profile} style={borderRadiusStyle} />
+            ) : (
+              <ActionsWrapper
+                hasReactions={hasReactions}
+                isFromSelf={isFromSelf}
+                message={message}
+                senderProfile={profile}
+                moderationOpts={moderationOpts}>
+                {AppBskyEmbedRecord.isView(message.embed) && (
+                  <MessageItemEmbed
+                    embed={message.embed}
+                    isFromSelf={isFromSelf}
+                    isGroupChat={isGroupChat}
+                    squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
+                    squaredTopCorner={squaredTopCorner}
                   />
-                </Animated.View>
-              )}
-              {appliedReactions}
-            </ActionsWrapper>
+                )}
+                {rt.text.length > 0 && (
+                  <Animated.View
+                    accessibilityHint={l`Double tap or long press the message to add a reaction`}
+                    style={[
+                      !isFromSelf && isGroupChat && a.ml_sm,
+                      !isOnlyEmoji(message.text) && [
+                        a.rounded_xl,
+                        a.py_sm,
+                        a.px_md,
+                        {
+                          marginTop: hasEmbedAndText
+                            ? CLUSTERED_MESSAGE_GAP
+                            : 0,
+                          backgroundColor: isFromSelf
+                            ? isPending
+                              ? pendingColor
+                              : t.palette.primary_500
+                            : t.palette.contrast_50,
+                        },
+                        isFromSelf ? a.self_end : a.self_start,
+                        borderRadiusStyle,
+                      ],
+                    ]}>
+                    <RichText
+                      value={rt}
+                      style={[
+                        a.text_md,
+                        isFromSelf && {color: t.palette.white},
+                        // Emoji-only: add top leading to avoid clipping the
+                        // glyph, then pull the bottom up by the same amount so
+                        // the glyph bottom-aligns with the avatar instead of
+                        // sitting above its line-box baseline.
+                        isOnlyEmoji(message.text) && [
+                          a.leading_tight,
+                          // Visually align bottom of the emoji with the avatar
+                          !isFromSelf &&
+                            platform({
+                              android: {marginTop: a.mt_2xs.marginTop},
+                              default: {marginBottom: -a.mb_sm.marginBottom},
+                            }),
+                        ],
+                      ]}
+                      interactiveStyle={a.underline}
+                      enableTags
+                      emojiMultiplier={3}
+                      shouldProxyLinks={true}
+                    />
+                  </Animated.View>
+                )}
+                {appliedReactions}
+              </ActionsWrapper>
+            )}
           </View>
         </View>
         {isLastInCluster && (
@@ -560,3 +573,99 @@ let MessageItemMetadata = ({
 }
 MessageItemMetadata = memo(MessageItemMetadata)
 export {MessageItemMetadata}
+
+function BlockedPlaceholder({
+  profile,
+  style,
+}: {
+  profile: Shadow<ChatBskyActorDefs.ProfileViewBasic>
+  style?: StyleProp<ViewStyle>
+}) {
+  const {t: l} = useLingui()
+  const t = useTheme()
+  const control = Prompt.usePromptControl()
+  const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
+
+  return (
+    <>
+      <Button
+        style={[{maxWidth: '80%'}, a.self_start]}
+        label={
+          profile.viewer?.blocking
+            ? l`This message is hidden because you are blocking this user.`
+            : l`This message is hidden because this user is blocking you.`
+        }
+        accessibilityHint={l`Tap for details`}
+        onPress={() => control.open()}>
+        <Animated.View
+          style={[
+            a.ml_sm,
+            a.rounded_xl,
+            a.py_sm,
+            a.px_md,
+            t.atoms.bg,
+            a.self_start,
+            a.border,
+            t.atoms.border_contrast_high,
+            style,
+          ]}>
+          <Text
+            style={[
+              a.text_md,
+              a.leading_snug,
+              a.italic,
+              t.atoms.text_contrast_medium,
+            ]}>
+            {profile.viewer?.blocking ? (
+              <Trans>
+                This message is hidden because you are blocking this user.
+              </Trans>
+            ) : (
+              <Trans>
+                This message is hidden because this user is blocking you.
+              </Trans>
+            )}
+          </Text>
+        </Animated.View>
+      </Button>
+      <Prompt.Outer control={control}>
+        <Prompt.Content>
+          <Prompt.TitleText>
+            {profile.viewer?.blocking ? (
+              <Trans>
+                You are blocking {sanitizeHandle(profile.handle, '@')}
+              </Trans>
+            ) : (
+              <Trans>
+                {sanitizeHandle(profile.handle, '@')} is blocking you
+              </Trans>
+            )}
+          </Prompt.TitleText>
+          <Prompt.DescriptionText>
+            {profile.viewer?.blocking ? (
+              <Trans>
+                Messages from this person are hidden while you are blocking
+                them.
+              </Trans>
+            ) : (
+              <Trans>
+                Messages from this person are hidden while they are blocking
+                you.
+              </Trans>
+            )}
+          </Prompt.DescriptionText>
+          <Prompt.Actions>
+            <Prompt.Action onPress={() => {}} cta={l`Okay`} color="primary" />
+            {profile.viewer?.blocking && !profile.viewer.blockingByList && (
+              <Prompt.Action
+                onPress={() => queueUnblock()}
+                cta={l`Unblock`}
+                color="secondary"
+              />
+            )}
+          </Prompt.Actions>
+        </Prompt.Content>
+      </Prompt.Outer>
+    </>
+  )
+}
