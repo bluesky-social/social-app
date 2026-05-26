@@ -576,76 +576,22 @@ func (srv *Server) WebPost(c echo.Context) error {
 		data["canonicalURL"] = canonicalURL
 	}
 
-	// If any undesirable labels are set, the embed will not be included in
-	// metadata
-	isEmbedHidden := false
-	for _, label := range postView.Labels {
-		isNeg := label.Neg != nil && *label.Neg
-		if hideEmbedLabels[label.Val] && !isNeg {
-			isEmbedHidden = true
-			break
-		}
+	// Embed-hidden gate, post text, image thumbs, and video metadata are all
+	// derived from helpers in jsonld.go so the og:* / twitter:* meta tags
+	// and the JSON-LD payload stay in lockstep — Google's Rich Results
+	// validator requires og:image and JSON-LD image[] to be byte-identical.
+	isEmbedHidden := postEmbedHidden(postView, hideEmbedLabels)
+	data["postText"] = postRecordText(postView)
+
+	if thumbs := extractPostMedia(postView, isEmbedHidden); len(thumbs) > 0 {
+		data["imgThumbUrls"] = thumbs
 	}
-
-	if postView.Record != nil {
-		postRecord, ok := postView.Record.Val.(*appbsky.FeedPost)
-		if ok {
-			data["postText"] = ExpandPostText(postRecord)
-
-			if !isEmbedHidden && postRecord.Labels != nil && postRecord.Labels.LabelDefs_SelfLabels != nil {
-				for _, label := range postRecord.Labels.LabelDefs_SelfLabels.Values {
-					if hideEmbedLabels[label.Val] {
-						isEmbedHidden = true
-						break
-					}
-				}
-			}
-		}
-	}
-
-	if postView.Embed != nil && !isEmbedHidden {
-		hasImages := postView.Embed.EmbedImages_View != nil
-		hasVideo := postView.Embed.EmbedVideo_View != nil
-		hasMedia := postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil
-		hasMediaImages := hasMedia && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil
-		hasMediaVideo := hasMedia && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View != nil
-
-		if hasImages {
-			var thumbUrls []string
-			for i := range postView.Embed.EmbedImages_View.Images {
-				thumbUrls = append(thumbUrls, postView.Embed.EmbedImages_View.Images[i].Thumb)
-			}
-			data["imgThumbUrls"] = thumbUrls
-		} else if hasVideo {
-			if postView.Embed.EmbedVideo_View.Thumbnail != nil {
-				data["imgThumbUrls"] = []string{*postView.Embed.EmbedVideo_View.Thumbnail}
-			}
-			if postView.Embed.EmbedVideo_View.Playlist != "" {
-				data["videoUrl"] = postView.Embed.EmbedVideo_View.Playlist
-				data["videoType"] = "application/vnd.apple.mpegurl"
-				if postView.Embed.EmbedVideo_View.AspectRatio != nil {
-					data["videoWidth"] = postView.Embed.EmbedVideo_View.AspectRatio.Width
-					data["videoHeight"] = postView.Embed.EmbedVideo_View.AspectRatio.Height
-				}
-			}
-		} else if hasMediaImages {
-			var thumbUrls []string
-			for i := range postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images {
-				thumbUrls = append(thumbUrls, postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images[i].Thumb)
-			}
-			data["imgThumbUrls"] = thumbUrls
-		} else if hasMediaVideo {
-			if postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Thumbnail != nil {
-				data["imgThumbUrls"] = []string{*postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Thumbnail}
-			}
-			if postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Playlist != "" {
-				data["videoUrl"] = postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Playlist
-				data["videoType"] = "application/vnd.apple.mpegurl"
-				if postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.AspectRatio != nil {
-					data["videoWidth"] = postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.AspectRatio.Width
-					data["videoHeight"] = postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.AspectRatio.Height
-				}
-			}
+	if vm := extractVideoMeta(postView, isEmbedHidden); vm.URL != "" {
+		data["videoUrl"] = vm.URL
+		data["videoType"] = vm.Type
+		if vm.HasSize {
+			data["videoWidth"] = vm.Width
+			data["videoHeight"] = vm.Height
 		}
 	}
 
