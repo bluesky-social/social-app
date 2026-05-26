@@ -318,7 +318,7 @@ func TestBuildPostJSONLD_TextEscaping(t *testing.T) {
 	}
 }
 
-func TestBuildPostJSONLD_Replies(t *testing.T) {
+func TestBuildPostJSONLD_Comments(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "main")
 	*pv.ReplyCount = 14
 
@@ -361,9 +361,14 @@ func TestBuildPostJSONLD_Replies(t *testing.T) {
 	if first["identifier"] != "at://did:plc:rep00/app.bsky.feed.post/reply00" {
 		t.Errorf("first comment should be reply00, got %v", first["identifier"])
 	}
-	// Each comment must NOT have nested comment[]/isBasedOn/sharedContent.
+	// Each comment must be schema.org Comment (not DiscussionForumPosting —
+	// that type is invalid for the comment property) and must NOT have
+	// nested comment[] / isBasedOn / sharedContent.
 	for i, c := range comments {
 		cm := c.(map[string]any)
+		if cm["@type"] != "Comment" {
+			t.Errorf("reply %d wrong type: got %v, want Comment", i, cm["@type"])
+		}
 		if _, present := cm["comment"]; present {
 			t.Errorf("reply %d should not have nested comment[]", i)
 		}
@@ -372,9 +377,6 @@ func TestBuildPostJSONLD_Replies(t *testing.T) {
 		}
 		if _, present := cm["sharedContent"]; present {
 			t.Errorf("reply %d should not have sharedContent", i)
-		}
-		if cm["@type"] != "DiscussionForumPosting" {
-			t.Errorf("reply %d wrong type: %v", i, cm["@type"])
 		}
 		if cm["url"] == nil || cm["identifier"] == nil {
 			t.Errorf("reply %d missing url/identifier", i)
@@ -483,6 +485,28 @@ func TestBuildPostJSONLD_NilAuthorReply(t *testing.T) {
 	comments, _ := main["comment"].([]any)
 	if len(comments) != 1 {
 		t.Errorf("expected 1 comment (nil-Author dropped), got %d", len(comments))
+	}
+}
+
+func TestBuildPostJSONLD_CommentMedia(t *testing.T) {
+	// Comments with media embeds should expose image[] and thumbnailUrl.
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "main")
+	*pv.ReplyCount = 1
+	thumb := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bob/x@jpg"
+	reply := makePostView("bob.bsky.social", "did:plc:bob", "rep1", "with image",
+		withImages(thumb))
+	replies := []*appbsky.FeedDefs_ThreadViewPost_Replies_Elem{
+		{FeedDefs_ThreadViewPost: &appbsky.FeedDefs_ThreadViewPost{Post: reply}},
+	}
+	out, _ := buildPostJSONLD(pv, replies, "u", hideEmbedLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	c := main["comment"].([]any)[0].(map[string]any)
+	imgs, ok := c["image"].([]any)
+	if !ok || len(imgs) != 1 || imgs[0] != thumb {
+		t.Errorf("comment image[] wrong: %v", c["image"])
+	}
+	if c["thumbnailUrl"] != thumb {
+		t.Errorf("comment thumbnailUrl wrong: %v", c["thumbnailUrl"])
 	}
 }
 

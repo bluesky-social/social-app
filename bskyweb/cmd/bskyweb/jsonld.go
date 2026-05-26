@@ -9,15 +9,10 @@ import (
 )
 
 // schema.org structured-data types emitted on post and profile pages.
-//
-// These mirror the shapes recommended by Google Search for
-// DiscussionForumPosting (post pages) and ProfilePage (profile pages). The
-// goal of building these in Go (rather than writing JSON inline in Pongo2
-// templates) is to get correct JSON escaping for free via encoding/json, and
-// to keep the schema in one place that is easy to unit-test.
-//
-// All fields use omitempty aggressively so optional fields don't emit empty
-// strings or null values that would otherwise confuse Google's validator.
+// Building these as Go structs (rather than inline JSON in templates) gives
+// us correct JSON escaping via encoding/json and a single place to test the
+// schema. Optional fields use omitempty so empty values don't reach Google's
+// validator as null/empty strings.
 
 const schemaOrgContext = "https://schema.org"
 
@@ -45,27 +40,35 @@ type sharedContent struct {
 }
 
 type discussionForumPosting struct {
-	Context         string                   `json:"@context,omitempty"`
-	Type            string                   `json:"@type"`
-	URL             string                   `json:"url,omitempty"`
-	Identifier      string                   `json:"identifier,omitempty"`
-	Author          *personOrOrg             `json:"author,omitempty"`
-	Text            string                   `json:"text,omitempty"`
-	Image           []string                 `json:"image,omitempty"`
-	ThumbnailURL    string                   `json:"thumbnailUrl,omitempty"`
-	DatePublished   string                   `json:"datePublished,omitempty"`
-	InteractionStat []interactionStat        `json:"interactionStatistic,omitempty"`
-	CommentCount    *int64                   `json:"commentCount,omitempty"`
-	Comment         []discussionForumPosting `json:"comment,omitempty"`
-	IsBasedOn       string                   `json:"isBasedOn,omitempty"`
-	SharedContent   *sharedContent           `json:"sharedContent,omitempty"`
+	Context         string            `json:"@context,omitempty"`
+	Type            string            `json:"@type"`
+	URL             string            `json:"url,omitempty"`
+	Identifier      string            `json:"identifier,omitempty"`
+	Author          *personOrOrg      `json:"author,omitempty"`
+	Text            string            `json:"text,omitempty"`
+	Image           []string          `json:"image,omitempty"`
+	ThumbnailURL    string            `json:"thumbnailUrl,omitempty"`
+	DatePublished   string            `json:"datePublished,omitempty"`
+	InteractionStat []interactionStat `json:"interactionStatistic,omitempty"`
+	CommentCount    *int64            `json:"commentCount,omitempty"`
+	Comment         []comment         `json:"comment,omitempty"`
+	IsBasedOn       string            `json:"isBasedOn,omitempty"`
+	SharedContent   *sharedContent    `json:"sharedContent,omitempty"`
 }
 
-// Replies reuse discussionForumPosting via buildReplyNode, which produces a
-// "shallow" form: it includes author, text, datePublished, url, identifier,
-// and media (image, thumbnailUrl) but does NOT recurse into nested
-// comment[], isBasedOn, or sharedContent. This bounds the size of the
-// emitted JSON-LD on posts with deep reply trees.
+// comment is the schema.org Comment shape used inside
+// DiscussionForumPosting.comment[]. The comment property does not accept
+// DiscussionForumPosting, so replies map to Comment.
+type comment struct {
+	Type          string       `json:"@type"`
+	URL           string       `json:"url,omitempty"`
+	Identifier    string       `json:"identifier,omitempty"`
+	Author        *personOrOrg `json:"author,omitempty"`
+	Text          string       `json:"text,omitempty"`
+	Image         []string     `json:"image,omitempty"`
+	ThumbnailURL  string       `json:"thumbnailUrl,omitempty"`
+	DatePublished string       `json:"datePublished,omitempty"`
+}
 
 type webPage struct {
 	Context    string                 `json:"@context"`
@@ -346,7 +349,7 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 		}
 		reply := buildReplyNode(r.FeedDefs_ThreadViewPost.Post, hideLabels)
 		if reply.Type == "" {
-			// nil-Author guard tripped; skip rather than emit a malformed entry.
+			// nil-Author guard tripped; skip.
 			continue
 		}
 		node.Comment = append(node.Comment, reply)
@@ -355,14 +358,11 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 	return node
 }
 
-// buildReplyNode builds a "shallow" DiscussionForumPosting for a reply
-// comment: includes media but skips nested comment[], isBasedOn, and
-// sharedContent (per project decision to bound payload size). Returns the
-// zero value if pv or pv.Author is nil — callers should treat that as
-// "skip this entry".
-func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) discussionForumPosting {
+// buildReplyNode builds a schema.org Comment for a reply. Returns the zero
+// value if pv or pv.Author is nil; callers should treat that as "skip".
+func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) comment {
 	if pv == nil || pv.Author == nil {
-		return discussionForumPosting{}
+		return comment{}
 	}
 	embedHidden := postEmbedHidden(pv, hideLabels)
 	images := extractPostMedia(pv, embedHidden)
@@ -370,9 +370,8 @@ func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) d
 	if len(images) > 0 {
 		thumb = images[0]
 	}
-
-	node := discussionForumPosting{
-		Type:          "DiscussionForumPosting",
+	return comment{
+		Type:          "Comment",
 		URL:           bskyPostURLFromATURI(pv.Author.Handle, pv.Uri),
 		Identifier:    pv.Uri,
 		Author:        buildAuthor(pv.Author),
@@ -381,7 +380,6 @@ func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) d
 		ThumbnailURL:  thumb,
 		DatePublished: pv.IndexedAt,
 	}
-	return node
 }
 
 // buildPostJSONLD marshals the top-level WebPage envelope for a post page.
