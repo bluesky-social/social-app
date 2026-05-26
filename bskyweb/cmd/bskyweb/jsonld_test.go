@@ -504,6 +504,24 @@ func TestBuildProfileJSONLD_HasPart(t *testing.T) {
 
 func TestBskyPostURL(t *testing.T) {
 	tests := []struct {
+		name, handle, rkey, want string
+	}{
+		{"valid", "alice.bsky.social", "abc", "https://bsky.app/profile/alice.bsky.social/post/abc"},
+		{"empty handle", "", "abc", ""},
+		{"handle.invalid", "handle.invalid", "abc", ""},
+		{"empty rkey", "alice.bsky.social", "", ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := bskyPostURL(tt.handle, tt.rkey); got != tt.want {
+				t.Errorf("got %q, want %q", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestBskyPostURLFromATURI(t *testing.T) {
+	tests := []struct {
 		name, handle, atURI, want string
 	}{
 		{"valid", "alice.bsky.social", "at://did:plc:alice/app.bsky.feed.post/abc", "https://bsky.app/profile/alice.bsky.social/post/abc"},
@@ -513,7 +531,7 @@ func TestBskyPostURL(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := bskyPostURL(tt.handle, tt.atURI); got != tt.want {
+			if got := bskyPostURLFromATURI(tt.handle, tt.atURI); got != tt.want {
 				t.Errorf("got %q, want %q", got, tt.want)
 			}
 		})

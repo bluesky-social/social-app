@@ -98,21 +98,24 @@ const maxRecentPosts = 10
 const authorFeedFetchLimit = 3 * maxRecentPosts
 
 // bskyPostURL returns the canonical handle-form URL for a post, given the
-// post's author handle and at-uri. Returns "" if the URI cannot be parsed or
-// the handle is unusable (handle.invalid).
-func bskyPostURL(handle, atURI string) string {
-	if handle == "" || handle == "handle.invalid" {
+// post's author handle and record key. Returns "" if the handle is unusable
+// (empty or handle.invalid) or rkey is empty.
+func bskyPostURL(handle, rkey string) string {
+	if handle == "" || handle == "handle.invalid" || rkey == "" {
 		return ""
 	}
+	return fmt.Sprintf("https://bsky.app/profile/%s/post/%s", handle, rkey)
+}
+
+// bskyPostURLFromATURI is a convenience wrapper for callers that hold an
+// at-uri rather than a record key directly. Returns "" if the URI cannot be
+// parsed.
+func bskyPostURLFromATURI(handle, atURI string) string {
 	parsed, err := syntax.ParseATURI(atURI)
 	if err != nil {
 		return ""
 	}
-	rkey := parsed.RecordKey()
-	if rkey == "" {
-		return ""
-	}
-	return fmt.Sprintf("https://bsky.app/profile/%s/post/%s", handle, rkey.String())
+	return bskyPostURL(handle, parsed.RecordKey().String())
 }
 
 // bskyProfileURL returns the canonical handle-form URL for a profile.
@@ -185,7 +188,7 @@ func extractQuotedPostURL(pv *appbsky.FeedDefs_PostView) string {
 		// Skip _ViewBlocked, _ViewNotFound, _ViewDetached, and non-post records.
 		return ""
 	}
-	return bskyPostURL(vr.Author.Handle, vr.Uri)
+	return bskyPostURLFromATURI(vr.Author.Handle, vr.Uri)
 }
 
 // extractSharedContentURL returns the URL of an external link embedded in
@@ -308,7 +311,7 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 
 	node := discussionForumPosting{
 		Type:            "DiscussionForumPosting",
-		URL:             bskyPostURL(pv.Author.Handle, pv.Uri),
+		URL:             bskyPostURLFromATURI(pv.Author.Handle, pv.Uri),
 		Identifier:      pv.Uri,
 		Author:          buildAuthor(pv.Author),
 		Text:            postRecordText(pv),
@@ -370,7 +373,7 @@ func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) d
 
 	node := discussionForumPosting{
 		Type:          "DiscussionForumPosting",
-		URL:           bskyPostURL(pv.Author.Handle, pv.Uri),
+		URL:           bskyPostURLFromATURI(pv.Author.Handle, pv.Uri),
 		Identifier:    pv.Uri,
 		Author:        buildAuthor(pv.Author),
 		Text:          postRecordText(pv),

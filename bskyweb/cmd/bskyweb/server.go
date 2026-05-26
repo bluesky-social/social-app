@@ -524,12 +524,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 		log.Warnf("failed to fetch profile for: %s\t%v", identifier, err)
 		return c.Render(http.StatusOK, "post.html", data)
 	}
-	unauthedViewingOkay := true
-	for _, label := range pv.Labels {
-		if label.Src == pv.Did && label.Val == "!no-unauthenticated" {
-			unauthedViewingOkay = false
-		}
-	}
+	unauthedViewingOkay := !profileRequiresAuth(pv)
 
 	req := c.Request()
 	requestURI := fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
@@ -538,10 +533,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 	// This both handles DID-form requests and normalizes handle-form requests against stale handles in the URL,
 	// guaranteeing JSON-LD `url` and <link rel="canonical"> match exactly.
 	// If the handle is unusable (handle.invalid or empty), fall back to the request URI with query/fragment stripped.
-	canonicalURL := ""
-	if pv.Handle != "" && pv.Handle != "handle.invalid" {
-		canonicalURL = fmt.Sprintf("https://bsky.app/profile/%s/post/%s", pv.Handle, rkey)
-	}
+	canonicalURL := bskyPostURL(pv.Handle, rkey.String())
 
 	if !unauthedViewingOkay {
 		// Provide minimal OpenGraph data for auth-required posts
@@ -661,29 +653,27 @@ func (srv *Server) WebProfile(c echo.Context) error {
 		return c.Render(http.StatusOK, "profile.html", data)
 	}
 	identifier := handleOrDID.Normalize().String()
-	isDIDInput := handleOrDID.IsDID()
 
 	pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, identifier)
 	if err != nil {
 		log.Warnf("failed to fetch profile for: %s\t%v", identifier, err)
 		return c.Render(http.StatusOK, "profile.html", data)
 	}
-	unauthedViewingOkay := true
-	for _, label := range pv.Labels {
-		if label.Src == pv.Did && label.Val == "!no-unauthenticated" {
-			unauthedViewingOkay = false
-		}
-	}
+	unauthedViewingOkay := !profileRequiresAuth(pv)
 
 	req := c.Request()
 	data["profileView"] = pv
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 	data["requestHost"] = req.Host
 
-	// Canonical URL: when looked up by DID and we have a usable handle,
-	// redirect search engines to the handle-form URL.
-	if isDIDInput && pv.Handle != "" && pv.Handle != "handle.invalid" {
-		data["canonicalURL"] = fmt.Sprintf("https://bsky.app/profile/%s", pv.Handle)
+	// Canonical URL: always prefer the handle-form URL when we have a usable
+	// handle, regardless of how the request was looked up. This handles
+	// DID-form requests and normalizes handle-form requests against stale
+	// handles, guaranteeing JSON-LD `url` and <link rel="canonical"> match.
+	// Falls back to requestURI (with query/fragment stripped by the
+	// canonicalize_url filter) when the handle is unusable.
+	if url := bskyProfileURL(pv.Handle); url != "" {
+		data["canonicalURL"] = url
 	}
 
 	// Fetch recent posts to embed as ProfilePage.hasPart so search engines
@@ -754,12 +744,7 @@ func (srv *Server) WebFeed(c echo.Context) error {
 		log.Warnf("failed to fetch profile for: %s\t%v", identifier, err)
 		return c.Render(http.StatusOK, "feed.html", data)
 	}
-	unauthedViewingOkay := true
-	for _, label := range pv.Labels {
-		if label.Src == pv.Did && label.Val == "!no-unauthenticated" {
-			unauthedViewingOkay = false
-		}
-	}
+	unauthedViewingOkay := !profileRequiresAuth(pv)
 
 	if !unauthedViewingOkay {
 		return c.Render(http.StatusOK, "feed.html", data)
