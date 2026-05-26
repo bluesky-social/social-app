@@ -308,17 +308,10 @@ export function StepInfo({
                     <Admonition.Icon />
                     <Admonition.Content>
                       <Admonition.Text>
-                        {aaRegionConfig.minAccessAge > MIN_ACCESS_AGE ? (
-                          <Plural
-                            value={aaRegionConfig.minAccessAge}
-                            other="You must be # years of age or older to create an account in your region."
-                          />
-                        ) : (
-                          <Plural
-                            value={MIN_ACCESS_AGE}
-                            other="You must be # years of age or older to create an account."
-                          />
-                        )}
+                        <Plural
+                          value={aaRegionConfig.minAccessAge}
+                          other="You must be # years of age or older to create an account in your region."
+                        />
                       </Admonition.Text>
                       {IS_NATIVE &&
                         !isDeviceGeolocationGranted &&
