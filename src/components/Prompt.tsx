@@ -224,6 +224,7 @@ export function Basic({
   cancelButtonCta,
   confirmButtonCta,
   onConfirm,
+  onClose,
   confirmButtonColor,
   showCancel = true,
 }: React.PropsWithChildren<{
@@ -240,11 +241,12 @@ export function Basic({
    * should NOT close the dialog as a side effect of this method.
    */
   onConfirm: (e: GestureResponderEvent) => void
+  onClose?: () => void
   confirmButtonColor?: ButtonColor
   showCancel?: boolean
 }>) {
   return (
-    <Outer control={control} testID="confirmModal">
+    <Outer control={control} testID="confirmModal" onClose={onClose}>
       <Content>
         <TitleText>{title}</TitleText>
         {description && <DescriptionText>{description}</DescriptionText>}

@@ -37,10 +37,10 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
+import {useMessageDialogs} from '#/screens/Messages/components/MessageOverlays'
 import {atoms as a, native, platform, useTheme} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {Button} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {InlineLinkText, Link} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -49,7 +49,6 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {DateDivider} from './DateDivider'
 import {MessageItemEmbed} from './MessageItemEmbed'
-import {ReactionsDialog} from './ReactionsDialog'
 import {CLUSTERED_MESSAGE_THRESHOLD_MS, MESSAGE_GAP_THRESHOLD_MS} from './util'
 
 const AVATAR_SIZE = 28
@@ -118,7 +117,7 @@ let MessageItem = ({
   const {message} = item
   const profile = useMaybeProfileShadow(relatedProfiles.get(message.sender.did))
 
-  const reactionsControl = useDialogControl()
+  const {openReactions} = useMessageDialogs()
 
   const isPending = item.type === 'pending-message'
 
@@ -336,7 +335,7 @@ let MessageItem = ({
                 transform: [{translateY: -8}],
               },
             ]}
-            onPress={isGroupChat ? reactionsControl.open : undefined}>
+            onPress={isGroupChat ? () => openReactions(message) : undefined}>
             {groupedReactions.map(group => (
               <Animated.View
                 entering={native(ZoomIn.springify(200).delay(400))}
@@ -377,13 +376,6 @@ let MessageItem = ({
           </Pressable>
         </View>
       ) : null}
-      <ReactionsDialog
-        control={reactionsControl}
-        relatedProfiles={relatedProfiles}
-        message={message}
-        reactions={message.reactions}
-        groupedReactions={groupedReactions}
-      />
     </LayoutAnimationConfig>
   )
 
