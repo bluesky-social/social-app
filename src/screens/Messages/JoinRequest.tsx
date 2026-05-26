@@ -17,6 +17,11 @@ import {ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon} from '#/
 import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
 import {Text} from '#/components/Typography'
 
+const desktopDarkBg = require('../../../assets/images/chat-desktop-bg-dark.webp')
+const desktopLightBg = require('../../../assets/images/chat-desktop-bg-light.webp')
+const mobileDarkBg = require('../../../assets/images/chat-mobile-bg-dark.webp')
+const mobileLightBg = require('../../../assets/images/chat-mobile-bg-light.webp')
+
 type Props = {
   setScreenState: (state: LoggedOutScreenState) => void
 }
@@ -34,25 +39,31 @@ export function JoinRequest({setScreenState}: Props) {
 
   const {data, error} = useJoinLinkPreviewsQuery({
     codes: code ? [code] : undefined,
+    hasSession: false,
   })
 
-  // Lazy-load background images based on current theme and breakpoint
   const isDarkMode = t.name !== 'light'
   const background = gtMobile
     ? isDarkMode
-      ? require('../../../assets/images/chat-desktop-bg-dark.webp')
-      : require('../../../assets/images/chat-desktop-bg-light.webp')
+      ? desktopDarkBg
+      : desktopLightBg
     : isDarkMode
-      ? require('../../../assets/images/chat-mobile-bg-dark.webp')
-      : require('../../../assets/images/chat-mobile-bg-light.webp')
+      ? mobileDarkBg
+      : mobileLightBg
 
   return (
-    <View style={[a.h_full, a.w_full, t.atoms.bg_contrast_25]}>
+    <View style={[a.util_screen_outer, a.w_full, t.atoms.bg_contrast_25]}>
       <ImageBackground
         source={background}
-        style={[a.h_full, a.w_full, a.flex_1, a.justify_center]}
+        style={[a.util_screen_outer, a.w_full, a.flex_1, a.justify_center]}
         contentFit={gtTablet ? 'contain' : 'cover'}>
-        <View style={[a.h_full, a.w_full, a.justify_center, a.align_center]}>
+        <View
+          style={[
+            a.util_screen_outer,
+            a.w_full,
+            a.justify_center,
+            a.align_center,
+          ]}>
           {error ? (
             <Wrapper>
               <ChainLinkBrokenIcon fill={t.palette.primary_500} size="3xl" />
@@ -64,9 +75,7 @@ export function JoinRequest({setScreenState}: Props) {
                   a.font_semi_bold,
                   t.atoms.text,
                 ]}>
-                {error.message === 'Invalid join link code'
-                  ? l`This invite link has expired`
-                  : error.message}
+                {l`This invite link has expired`}
               </Text>
               <ActionButtons setScreenState={setScreenState} />
             </Wrapper>
@@ -75,9 +84,12 @@ export function JoinRequest({setScreenState}: Props) {
               <AvatarBubbles
                 profiles={[
                   data.joinLinkPreviews[0].owner,
-                  ...Array(data.joinLinkPreviews[0].memberCount - 1).fill(
-                    undefined,
-                  ),
+                  ...Array(
+                    Math.min(
+                      3,
+                      Math.max(0, data.joinLinkPreviews[0].memberCount - 1),
+                    ),
+                  ).fill(undefined),
                 ]}
                 size={135}
               />
@@ -189,8 +201,6 @@ function Wrapper({children}: React.PropsWithChildren<unknown>) {
         ]}
       />
       <View
-        role="dialog"
-        aria-modal
         style={[
           a.zoom_fade_in,
           a.align_center,

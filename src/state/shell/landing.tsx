@@ -1,5 +1,7 @@
 import {createContext, useContext, useState} from 'react'
 
+import {logger} from '#/logger'
+
 type StarterPackLanding = {
   type: 'starterpack'
   uri: string
@@ -49,7 +51,7 @@ export const useSetActiveStarterPack = () => {
       setLanding(undefined)
     } else {
       if (currentLanding && currentLanding.type !== 'starterpack') {
-        console.warn(
+        logger.debug(
           `[landing] Replacing ${currentLanding.type} landing with starterpack`,
         )
       }
@@ -71,7 +73,7 @@ export const useSetActiveGroupChatJoinRequest = () => {
       setLanding(undefined)
     } else {
       if (currentLanding && currentLanding.type !== 'groupchat') {
-        console.warn(
+        logger.debug(
           `[landing] Replacing ${currentLanding.type} landing with groupchat`,
         )
       }

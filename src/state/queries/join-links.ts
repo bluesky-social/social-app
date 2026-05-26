@@ -19,19 +19,19 @@ export const createJoinLinkPreviewQueryKey = (args: {
 
 export function useJoinLinkPreviewsQuery({
   codes,
-  hasSession = false,
+  hasSession,
 }: {
   codes?: string[]
-  hasSession?: boolean
+  hasSession: boolean
 }) {
   const agent = useAgent()
-  const previewAgent = new AtpAgent({service: CHAT_SERVICE})
 
   return useQuery({
     queryKey: createJoinLinkPreviewQueryKey({codes: codes ?? [], hasSession}),
     queryFn: async () => {
       if (!codes) throw new Error('No invite code')
       try {
+        const previewAgent = new AtpAgent({service: CHAT_SERVICE})
         const res = hasSession
           ? await agent.chat.bsky.group.getJoinLinkPreviews(
               {codes},
