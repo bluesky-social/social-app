@@ -32,7 +32,7 @@ patchedDependencies:
   'react-native-compressor@1.13.0': patches/react-native-compressor@1.13.0.patch
   'react-native-date-picker@5.0.13': patches/react-native-date-picker@5.0.13.patch
   'react-native-drawer-layout@4.2.3': patches/react-native-drawer-layout@4.2.3.patch
-  'react-native-keyboard-controller@1.21.7': patches/react-native-keyboard-controller@1.21.7.patch
+  'react-native-keyboard-controller@1.21.8': patches/react-native-keyboard-controller@1.21.8.patch
   'react-native-pager-view@6.8.0': patches/react-native-pager-view@6.8.0.patch
   'react-native-reanimated@3.19.1': patches/react-native-reanimated@3.19.1.patch
   'react-native-svg@15.12.1': patches/react-native-svg@15.12.1.patch
