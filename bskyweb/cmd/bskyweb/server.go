@@ -532,9 +532,23 @@ func (srv *Server) WebPost(c echo.Context) error {
 	}
 
 	req := c.Request()
+	requestURI := fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+
+	// always prefer the handle-form URL when we have a usable handle, regardless of how the request was looked up.
+	// This both handles DID-form requests and normalizes handle-form requests against stale handles in the URL,
+	// guaranteeing JSON-LD `url` and <link rel="canonical"> match exactly.
+	// If the handle is unusable (handle.invalid or empty), fall back to the request URI with query/fragment stripped.
+	canonicalURL := ""
+	if pv.Handle != "" && pv.Handle != "handle.invalid" {
+		canonicalURL = fmt.Sprintf("https://bsky.app/profile/%s/post/%s", pv.Handle, rkey)
+	}
+
 	if !unauthedViewingOkay {
 		// Provide minimal OpenGraph data for auth-required posts
-		data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+		data["requestURI"] = requestURI
+		if canonicalURL != "" {
+			data["canonicalURL"] = canonicalURL
+		}
 		data["requiresAuth"] = true
 		data["profileHandle"] = pv.Handle
 		if pv.DisplayName != nil {
@@ -551,9 +565,16 @@ func (srv *Server) WebPost(c echo.Context) error {
 		return c.Render(http.StatusOK, "post.html", data)
 	}
 
-	postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
+	threadView := tpv.Thread.FeedDefs_ThreadViewPost
+	if threadView == nil || threadView.Post == nil {
+		return c.Render(http.StatusOK, "post.html", data)
+	}
+	postView := threadView.Post
 	data["postView"] = postView
-	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+	data["requestURI"] = requestURI
+	if canonicalURL != "" {
+		data["canonicalURL"] = canonicalURL
+	}
 
 	// If any undesirable labels are set, the embed will not be included in
 	// metadata
@@ -628,6 +649,19 @@ func (srv *Server) WebPost(c echo.Context) error {
 		}
 	}
 
+	// Build schema.org JSON-LD for SEO. canonicalURL is what we want as the
+	// public URL; if it's empty (handle.invalid edge case), fall back to the
+	// request URI so the field still gets emitted with something sensible.
+	jsonldURL := canonicalURL
+	if jsonldURL == "" {
+		jsonldURL = requestURI
+	}
+	if jsonld, err := buildPostJSONLD(postView, threadView.Replies, jsonldURL, hideEmbedLabels); err == nil {
+		data["postJSONLD"] = jsonld
+	} else {
+		log.Warnf("failed to build post JSON-LD for %s: %v", uri, err)
+	}
+
 	return c.Render(http.StatusOK, "post.html", data)
 }
 
@@ -681,6 +715,7 @@ func (srv *Server) WebProfile(c echo.Context) error {
 		return c.Render(http.StatusOK, "profile.html", data)
 	}
 	identifier := handleOrDID.Normalize().String()
+	isDIDInput := handleOrDID.IsDID()
 
 	pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, identifier)
 	if err != nil {
@@ -699,8 +734,51 @@ func (srv *Server) WebProfile(c echo.Context) error {
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 	data["requestHost"] = req.Host
 
-	if !unauthedViewingOkay {
+	// Canonical URL: when looked up by DID and we have a usable handle,
+	// redirect search engines to the handle-form URL.
+	if isDIDInput && pv.Handle != "" && pv.Handle != "handle.invalid" {
+		data["canonicalURL"] = fmt.Sprintf("https://bsky.app/profile/%s", pv.Handle)
+	}
+
+	// Fetch recent posts to embed as ProfilePage.hasPart so search engines
+	// can connect a profile to its recent content. Failures here degrade
+	// gracefully — we still render the profile without hasPart.
+	//
+	// Skipped for auth-required profiles (their posts aren't publicly
+	// indexable anyway), but the rest of the ProfilePage / Person markup
+	// is still emitted so search engines see basic identity.
+	//
+	// NOTE: this adds an extra XRPC call on every public profile page
+	// render. If upstream load becomes a concern, consider caching
+	// per-profile (recent posts change slowly relative to profile views).
+	var recentPosts []*appbsky.FeedDefs_PostView
+	if unauthedViewingOkay {
+		af, err := appbsky.FeedGetAuthorFeed(ctx, srv.xrpcc, pv.Did, "", "posts_no_replies", false, authorFeedFetchLimit)
+		if err != nil {
+			log.Warnf("failed to fetch author feed for: %s\t%v", pv.Did, err)
+		} else {
+			for _, p := range af.Feed {
+				if p == nil || p.Post == nil {
+					continue
+				}
+				// Only the author's own posts (matches RSS handler behavior).
+				if p.Post.Author == nil || p.Post.Author.Did != pv.Did {
+					continue
+				}
+				recentPosts = append(recentPosts, p.Post)
+				if len(recentPosts) >= maxRecentPosts {
+					break
+				}
+			}
+		}
+	} else {
 		data["requiresAuth"] = true
+	}
+
+	if jsonld, err := buildProfileJSONLD(pv, recentPosts, hideEmbedLabels); err == nil {
+		data["profileJSONLD"] = jsonld
+	} else {
+		log.Warnf("failed to build profile JSON-LD for %s: %v", pv.Did, err)
 	}
 
 	return c.Render(http.StatusOK, "profile.html", data)

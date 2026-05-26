@@ -15,8 +15,13 @@
   <meta property="og:type" content="article">
   <meta property="profile:username" content="{{ postView.Author.Handle }}">
   {%- if requestURI %}
+  {% if canonicalURL %}
+  <meta property="og:url" content="{{ canonicalURL }}">
+  <link rel="canonical" href="{{ canonicalURL }}" />
+  {% else %}
   <meta property="og:url" content="{{ requestURI }}">
   <link rel="canonical" href="{{ requestURI|canonicalize_url }}" />
+  {% endif %}
   {% endif -%}
   {%- if postView.Author.DisplayName %}
   <meta property="og:title" content="{{ postView.Author.DisplayName }} (@{{ postView.Author.Handle }})">
@@ -64,52 +69,20 @@
   <meta property="article:published_time" content="{{ postView.IndexedAt }}">
   <link rel="alternate" type="application/json+oembed" href="https://embed.bsky.app/oembed?format=json&url={{ postView.Uri | urlencode }}" />
   <link rel="alternate" href="{{ postView.Uri }}" />
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "DiscussionForumPosting",
-      "author": {
-        "@type": "Person",
-        {%- if postView.Author.DisplayName %}
-        "name": "{{ postView.Author.DisplayName }}",
-        "alternateName": "@{{ postView.Author.Handle }}",
-        {% else %}
-        "name": "@{{ postView.Author.Handle }}",
-        {% endif -%}
-        "url": "https://bsky.app/profile/{{ postView.Author.Handle }}"
-      },
-      {%- if postText %}
-      "text": "{{ postText }}",
-      {% endif %}
-      {%- if imageThumbUrls %}
-      "image": "{{ imageThumbUrls[0] }}",
-      {% endif %}
-      "datePublished": "{{ postView.IndexedAt }}",
-      "interactionStatistic": [
-        {
-          "@type": "InteractionCounter",
-          "interactionType": "https://schema.org/LikeAction",
-          "userInteractionCount": {{ postView.LikeCount }}
-        },
-        {
-          "@type": "InteractionCounter",
-          "interactionType": "https://schema.org/CommentAction",
-          "userInteractionCount": {{ postView.ReplyCount }}
-        },
-        {
-          "@type": "InteractionCounter",
-          "interactionType": "https://schema.org/ShareAction",
-          "userInteractionCount": {{ postView.RepostCount + postView.QuoteCount }}
-        }
-      ]
-    }
-  </script>
+  {%- if postJSONLD %}
+  <script type="application/ld+json">{{ postJSONLD|safe }}</script>
+  {% endif -%}
 {%- elif requiresAuth and profileHandle -%}
   <meta property="og:type" content="article">
   <meta property="profile:username" content="{{ profileHandle }}">
   {%- if requestURI %}
+  {% if canonicalURL %}
+  <meta property="og:url" content="{{ canonicalURL }}">
+  <link rel="canonical" href="{{ canonicalURL }}" />
+  {% else %}
   <meta property="og:url" content="{{ requestURI }}">
   <link rel="canonical" href="{{ requestURI|canonicalize_url }}" />
+  {% endif %}
   {% endif -%}
   {%- if profileDisplayName %}
   <meta property="og:title" content="{{ profileDisplayName }} (@{{ profileHandle }})">
