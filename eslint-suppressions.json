@@ -59,11 +59,6 @@
       "count": 1
     }
   },
-  "src/components/Layout/const.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/components/Lists.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -684,11 +679,6 @@
     }
   },
   "src/view/screens/Debug.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/view/screens/DebugMod.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }

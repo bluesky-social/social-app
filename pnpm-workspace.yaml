@@ -1,11 +1,12 @@
 nodeLinker: 'hoisted'
 autoInstallPeers: true # default: true
 strictPeerDependencies: false # default: false
+trustPolicy: 'no-downgrade' # default: off
+trustPolicyIgnoreAfter: 10080 # 7 days, default: undefined
 overrides:
   '@react-native/babel-preset': '0.81.5'
   '@react-native/normalize-colors': '0.81.5'
   '@expo/image-utils': '0.8.12'
-  'multiformats': '9.9.0'
   '@types/estree': '1.0.6'
   'react-native-compressor': '1.13.0'
   'react-native-reanimated': '3.19.1'
@@ -15,7 +16,6 @@ overrides:
 allowBuilds:
   '@sentry/cli': true
   'core-js-pure': true
-  'dtrace-provider': true
   'esbuild': true
   'unrs-resolver': true
 patchedDependencies:
