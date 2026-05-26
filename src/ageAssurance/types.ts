@@ -21,6 +21,14 @@ export type AgeAssuranceState = {
   error?: 'config' // maybe other specific cases in the future
 }
 
+export type AgeAssuranceFlags = {
+  adultContentDisabled: boolean
+  chatDisabled: boolean
+  isUnder18: boolean
+  isOverRegionMinAccessAge: boolean
+  isOverAppMinAccessAge: boolean
+}
+
 export function parseStatusFromString(raw: string) {
   switch (raw) {
     case 'unknown':

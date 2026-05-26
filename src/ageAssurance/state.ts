@@ -18,7 +18,10 @@ import {
   parseAccessFromString,
   parseStatusFromString,
 } from '#/ageAssurance/types'
-import {getAgeAssuranceRegionConfigWithFallback} from '#/ageAssurance/util'
+import {
+  computeAgeAssuranceFlags,
+  getAgeAssuranceRegionConfigWithFallback,
+} from '#/ageAssurance/util'
 import {type Geolocation, useGeolocation} from '#/geolocation'
 import {device} from '#/storage'
 
@@ -116,29 +119,42 @@ export function computeAgeAssuranceState({
 export function getAndComputeAgeAssuranceState({did}: {did: string}) {
   const config = getConfigFromCache()
   const state = getServerStateFromCache({did})
-  const data = getOtherRequiredDataFromCache({did})
+  const requiredData = getOtherRequiredDataFromCache({did})
   const geolocation = device.get(['mergedGeolocation'])
 
-  if (!geolocation || !config || !state || !data) {
+  if (!geolocation || !config || !state || !requiredData) {
     return {
-      status: AgeAssuranceStatus.Unknown,
-      access: AgeAssuranceAccess.Safe,
+      state: {
+        status: AgeAssuranceStatus.Unknown,
+        access: AgeAssuranceAccess.Safe,
+      },
     }
   }
 
-  return computeAgeAssuranceState({
+  const region = getAgeAssuranceRegionConfigWithFallback(config, geolocation)
+  const data = {
+    accountCreatedAt: state.metadata?.accountCreatedAt,
+    declaredAge: requiredData?.birthdate
+      ? getAge(new Date(requiredData.birthdate))
+      : undefined,
+    birthdate: requiredData?.birthdate,
+  }
+  const computed = computeAgeAssuranceState({
     hasSession: true,
     config,
     geolocation,
     state: state.state,
-    data: {
-      accountCreatedAt: state.metadata?.accountCreatedAt,
-      declaredAge: data?.birthdate
-        ? getAge(new Date(data.birthdate))
-        : undefined,
-      birthdate: data?.birthdate,
-    },
+    data,
   })
+
+  return {
+    state: computed,
+    flags: computeAgeAssuranceFlags({
+      state: computed,
+      config: region,
+      data,
+    }),
+  }
 }
 
 export function useAgeAssuranceState(): AgeAssuranceState {
