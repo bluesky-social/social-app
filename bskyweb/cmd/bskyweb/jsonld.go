@@ -124,52 +124,44 @@ func bskyProfileURL(handle string) string {
 	return fmt.Sprintf("https://bsky.app/profile/%s", handle)
 }
 
-// extractPostMedia returns (image thumbnail URLs, single thumbnailUrl).
-// thumbnailUrl is the first image's thumb (or the video thumbnail). All URLs
-// are reused verbatim from the appview response — the same strings that go
-// into og:image meta tags — so Google sees byte-identical media references.
-func extractPostMedia(pv *appbsky.FeedDefs_PostView, embedHidden bool) ([]string, string) {
+// extractPostMedia returns the image thumbnail URLs for the post (if any).
+// All URLs are reused verbatim from the appview response — the same strings
+// that go into og:image meta tags — so Google sees byte-identical media
+// references. Callers derive thumbnailUrl from urls[0].
+func extractPostMedia(pv *appbsky.FeedDefs_PostView, embedHidden bool) []string {
 	if pv == nil || pv.Embed == nil || embedHidden {
-		return nil, ""
+		return nil
 	}
 
 	if pv.Embed.EmbedImages_View != nil {
-		images := pv.Embed.EmbedImages_View.Images
-		if len(images) == 0 {
-			return nil, ""
-		}
-		urls := make([]string, 0, len(images))
-		for _, img := range images {
-			urls = append(urls, img.Thumb)
-		}
-		return urls, urls[0]
+		return imageThumbs(pv.Embed.EmbedImages_View.Images)
 	}
-	if pv.Embed.EmbedVideo_View != nil {
-		if pv.Embed.EmbedVideo_View.Thumbnail != nil {
-			t := *pv.Embed.EmbedVideo_View.Thumbnail
-			return []string{t}, t
-		}
-		return nil, ""
+	if pv.Embed.EmbedVideo_View != nil && pv.Embed.EmbedVideo_View.Thumbnail != nil {
+		return []string{*pv.Embed.EmbedVideo_View.Thumbnail}
 	}
 	if pv.Embed.EmbedRecordWithMedia_View != nil && pv.Embed.EmbedRecordWithMedia_View.Media != nil {
 		media := pv.Embed.EmbedRecordWithMedia_View.Media
 		if media.EmbedImages_View != nil {
-			images := media.EmbedImages_View.Images
-			if len(images) == 0 {
-				return nil, ""
-			}
-			urls := make([]string, 0, len(images))
-			for _, img := range images {
-				urls = append(urls, img.Thumb)
-			}
-			return urls, urls[0]
+			return imageThumbs(media.EmbedImages_View.Images)
 		}
 		if media.EmbedVideo_View != nil && media.EmbedVideo_View.Thumbnail != nil {
-			t := *media.EmbedVideo_View.Thumbnail
-			return []string{t}, t
+			return []string{*media.EmbedVideo_View.Thumbnail}
 		}
 	}
-	return nil, ""
+	return nil
+}
+
+// imageThumbs returns the thumb URLs for a slice of image embed views, or
+// nil if the slice is empty.
+func imageThumbs(images []*appbsky.EmbedImages_ViewImage) []string {
+	if len(images) == 0 {
+		return nil
+	}
+	urls := make([]string, 0, len(images))
+	for _, img := range images {
+		urls = append(urls, img.Thumb)
+	}
+	return urls
 }
 
 // extractQuotedPostURL returns the canonical handle-form URL of a quoted
@@ -308,7 +300,11 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 		return discussionForumPosting{}
 	}
 	embedHidden := postEmbedHidden(pv, hideLabels)
-	images, thumb := extractPostMedia(pv, embedHidden)
+	images := extractPostMedia(pv, embedHidden)
+	var thumb string
+	if len(images) > 0 {
+		thumb = images[0]
+	}
 
 	node := discussionForumPosting{
 		Type:            "DiscussionForumPosting",
@@ -366,7 +362,11 @@ func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) d
 		return discussionForumPosting{}
 	}
 	embedHidden := postEmbedHidden(pv, hideLabels)
-	images, thumb := extractPostMedia(pv, embedHidden)
+	images := extractPostMedia(pv, embedHidden)
+	var thumb string
+	if len(images) > 0 {
+		thumb = images[0]
+	}
 
 	node := discussionForumPosting{
 		Type:          "DiscussionForumPosting",
