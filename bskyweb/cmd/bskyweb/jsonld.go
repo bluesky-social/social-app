@@ -386,11 +386,24 @@ func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) d
 
 // buildPostJSONLD marshals the top-level WebPage envelope for a post page.
 // This is what gets injected into <script type="application/ld+json">.
+//
+// canonicalURL is the public URL for the page. Callers (WebPost) prefer the
+// handle-form URL when the author has a usable handle, otherwise fall back
+// to the request URI (DID form). The same string is used for both
+// envelope.url and mainEntity.url so search engines see a single
+// authoritative URL for the post.
 func buildPostJSONLD(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_ThreadViewPost_Replies_Elem, canonicalURL string, hideLabels map[string]bool) (string, error) {
 	if pv == nil || pv.Author == nil {
 		return "", fmt.Errorf("nil post view or author")
 	}
 	node := buildPostNode(pv, replies, hideLabels)
+
+	// buildPostNode derives mainEntity.url from the author handle alone, so
+	// it ends up empty when the handle is unusable (handle.invalid). Fall
+	// back to canonicalURL so envelope.url and mainEntity.url always agree.
+	if node.URL == "" {
+		node.URL = canonicalURL
+	}
 
 	// Top-level entity: wrap in WebPage envelope per Google's recommendation.
 	envelope := webPage{

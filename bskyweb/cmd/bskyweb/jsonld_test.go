@@ -384,16 +384,70 @@ func TestBuildPostJSONLD_Replies(t *testing.T) {
 
 func TestBuildPostJSONLD_HandleInvalidAuthor(t *testing.T) {
 	pv := makePostView("handle.invalid", "did:plc:alice", "abc123", "hello")
-	out, _ := buildPostJSONLD(pv, nil, "https://bsky.app/profile/did:plc:alice/post/abc123", hideEmbedLabels)
-	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
-	// With no usable handle, post-level url should be omitted.
-	if _, present := main["url"]; present {
-		t.Errorf("handle.invalid author should not produce post url")
+	fallback := "https://bsky.app/profile/did:plc:alice/post/abc123"
+	out, _ := buildPostJSONLD(pv, nil, fallback, hideEmbedLabels)
+	envelope := unmarshalLD(t, out)
+	main := envelope["mainEntity"].(map[string]any)
+	// With no usable handle, mainEntity.url falls back to the canonical URL
+	// the caller provided (DID-form request URI), so the envelope URL and
+	// the post URL agree on a single string.
+	if main["url"] != fallback {
+		t.Errorf("mainEntity.url should fall back to canonical URL, got %v", main["url"])
 	}
-	// Author URL also omitted.
+	if envelope["url"] != fallback {
+		t.Errorf("envelope.url should equal canonical URL, got %v", envelope["url"])
+	}
+	if main["url"] != envelope["url"] {
+		t.Errorf("envelope.url and mainEntity.url disagree: %v vs %v",
+			envelope["url"], main["url"])
+	}
+	// identifier (AT-URI) is still present and stable across handle changes.
+	if main["identifier"] != pv.Uri {
+		t.Errorf("identifier should still be the AT-URI, got %v", main["identifier"])
+	}
+	// Author URL is omitted (no usable handle to construct a profile URL).
 	author := main["author"].(map[string]any)
 	if _, present := author["url"]; present {
 		t.Errorf("handle.invalid author should not produce author.url")
+	}
+}
+
+// TestBuildPostJSONLD_EnvelopeURLMatchesMainEntity asserts the P0.3
+// invariant that the WebPage envelope and the inner DiscussionForumPosting
+// always carry the same URL — both for happy-path (handle-form canonical)
+// and the handle.invalid fallback case.
+func TestBuildPostJSONLD_EnvelopeURLMatchesMainEntity(t *testing.T) {
+	cases := []struct {
+		name, handle, did, rkey, canonical string
+	}{
+		{
+			name:      "handle form",
+			handle:    "alice.bsky.social",
+			did:       "did:plc:alice",
+			rkey:      "abc",
+			canonical: "https://bsky.app/profile/alice.bsky.social/post/abc",
+		},
+		{
+			name:      "handle.invalid falls back to canonical",
+			handle:    "handle.invalid",
+			did:       "did:plc:alice",
+			rkey:      "abc",
+			canonical: "https://bsky.app/profile/did:plc:alice/post/abc",
+		},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			pv := makePostView(tc.handle, tc.did, tc.rkey, "hi")
+			out, _ := buildPostJSONLD(pv, nil, tc.canonical, hideEmbedLabels)
+			env := unmarshalLD(t, out)
+			main := env["mainEntity"].(map[string]any)
+			if env["url"] != tc.canonical {
+				t.Errorf("envelope.url = %v, want %v", env["url"], tc.canonical)
+			}
+			if main["url"] != tc.canonical {
+				t.Errorf("mainEntity.url = %v, want %v", main["url"], tc.canonical)
+			}
+		})
 	}
 }
 
