@@ -22,10 +22,12 @@ export function MessagesListBlockedFooter({
   recipient: initialRecipient,
   convoId,
   moderation,
+  isGroup,
 }: {
   recipient: bsky.profile.AnyProfileView
   convoId: string
   moderation: ModerationDecision
+  isGroup: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -64,9 +66,7 @@ export function MessagesListBlockedFooter({
           a.justify_center,
           a.p_lg,
           t.atoms.bg_contrast_50,
-          {
-            borderRadius: 40,
-          },
+          {borderRadius: 40},
         ]}>
         <PersonXIcon fill={t.atoms.text.color} size="lg" style={[a.mb_xs]} />
         <Text
@@ -77,9 +77,11 @@ export function MessagesListBlockedFooter({
             a.font_semi_bold,
             t.atoms.text,
           ]}>
-          {isBlocking
-            ? l`You are blocking this person`
-            : l`This person is blocking you`}
+          {isGroup
+            ? l`You are blocking the chat owner`
+            : isBlocking
+              ? l`You are blocking this person`
+              : l`This person is blocking you`}
         </Text>
         <Text
           style={[

@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useEffect, useMemo} from 'react'
 import {View} from 'react-native'
 import Animated, {
   Easing,
@@ -8,6 +8,11 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated'
+import {
+  moderateProfile,
+  type ModerationOpts,
+  type ModerationUI,
+} from '@atproto/api'
 
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -27,18 +32,27 @@ type Props = {
   animate?: boolean
   profiles: bsky.profile.AnyProfileView[]
   size?: number
+  moderationOpts?: ModerationOpts
 }
 
 export function AvatarBubbles({
   animate = false,
   profiles: allProfiles,
   size = 120,
+  moderationOpts,
 }: Props) {
   const {currentAccount} = useSession()
   const profiles =
     allProfiles.length > 2
       ? allProfiles.filter(p => p.did !== currentAccount?.did)
       : allProfiles
+  const moderations = useMemo(() => {
+    if (!moderationOpts) return []
+    return profiles.map(p => {
+      return moderateProfile(p, moderationOpts)
+    })
+  }, [profiles, moderationOpts])
+
   const scale = size / 120
   const marginOffset = size < 120 ? -2 : 0
 
@@ -90,6 +104,7 @@ export function AvatarBubbles({
             y={layout.y}
             zIndex={layout.zIndex}
             includeProfileBorder={layout.border}
+            moderation={moderations[i]?.ui('avatar')}
           />
         ))}
       </View>
@@ -105,6 +120,7 @@ function AvatarBubble({
   y,
   zIndex,
   includeProfileBorder,
+  moderation,
 }: {
   profile?: bsky.profile.AnyProfileView
   scale: SharedValue<number>
@@ -113,6 +129,7 @@ function AvatarBubble({
   y: number
   zIndex?: number
   includeProfileBorder?: boolean
+  moderation?: ModerationUI
 }) {
   const t = useTheme()
 
@@ -140,6 +157,7 @@ function AvatarBubble({
           type="user"
           hideLiveBadge
           noBorder
+          moderation={moderation}
         />
       ) : (
         <AvatarPlaceholder size={size} />
