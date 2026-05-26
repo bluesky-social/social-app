@@ -5,7 +5,10 @@ import * as WebBrowser from 'expo-web-browser'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
+import {CHAT_INVITE_CODE_REGEX} from '#/lib/strings/url-helpers'
 import {useSession} from '#/state/session'
+import {useSetActiveLanding} from '#/state/shell/landing'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {useAnalytics} from '#/analytics'
@@ -25,6 +28,7 @@ export function useIntentHandler() {
   const ax = useAnalytics()
   const composeIntent = useComposeIntent()
   const verifyEmailIntent = useVerifyEmailIntent()
+  const groupChatJoinIntent = useGroupChatJoinIntent()
   const {currentAccount} = useSession()
   const {tryApplyUpdate} = useApplyPullRequestOTAUpdate()
 
@@ -44,6 +48,11 @@ export function useIntentHandler() {
         })
       }
       const urlp = parseLinkingUrl(url)
+      const chatInviteMatch = urlp.pathname.match(CHAT_INVITE_CODE_REGEX)
+      if (chatInviteMatch) {
+        groupChatJoinIntent(chatInviteMatch[1], url)
+        return
+      }
       const [, intent, intentType] = urlp.pathname.split('/')
 
       // On native, our links look like bluesky://intent/SomeIntent, so we have to check the hostname for the
@@ -99,6 +108,7 @@ export function useIntentHandler() {
     ax,
     composeIntent,
     verifyEmailIntent,
+    groupChatJoinIntent,
     currentAccount,
     tryApplyUpdate,
   ])
@@ -159,6 +169,37 @@ export function useComposeIntent() {
       }, 500)
     },
     [hasSession, closeAllActiveElements, openComposer],
+  )
+}
+
+export function useGroupChatJoinIntent() {
+  const closeAllActiveElements = useCloseAllActiveElements()
+  const {hasSession} = useSession()
+  const {groupChatJoinDialogControl: control, setGroupChatJoinState: setState} =
+    useIntentDialogs()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
+  const setActiveLanding = useSetActiveLanding()
+  return useCallback(
+    (code: string, uri?: string) => {
+      closeAllActiveElements()
+      if (hasSession) {
+        setState({code})
+        setTimeout(() => {
+          control.open()
+        }, 1000)
+      } else {
+        setActiveLanding({type: 'groupchat', uri: uri ?? '', code})
+        requestSwitchToAccount({requestedAccount: 'groupchat'})
+      }
+    },
+    [
+      closeAllActiveElements,
+      hasSession,
+      control,
+      setState,
+      requestSwitchToAccount,
+      setActiveLanding,
+    ],
   )
 }
 

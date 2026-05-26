@@ -1,31 +1,15 @@
 import {useEffect, useState} from 'react'
 
 import {httpStarterPackUriToAtUri} from '#/lib/strings/starter-pack'
-import {
-  useSetActiveGroupChatJoinRequest,
-  useSetActiveStarterPack,
-} from '#/state/shell/landing'
+import {useSetActiveStarterPack} from '#/state/shell/landing'
 
 export function useLandingEntry() {
   const [ready, setReady] = useState(false)
   const setActiveStarterPack = useSetActiveStarterPack()
-  const setActiveGroupChatJoinRequest = useSetActiveGroupChatJoinRequest()
 
   useEffect(() => {
     const href = window.location.href
     const url = new URL(href)
-
-    // Check for group chat join request (/c/:code pattern)
-    const groupChatMatch = url.pathname.match(/^\/c\/([a-zA-Z0-9]{7,10})$/)
-    if (groupChatMatch && groupChatMatch[1]) {
-      const code = groupChatMatch[1]
-      setActiveGroupChatJoinRequest({
-        uri: href,
-        code,
-      })
-      setReady(true)
-      return
-    }
 
     // Check for starter pack
     const atUri = httpStarterPackUriToAtUri(href)
@@ -41,7 +25,7 @@ export function useLandingEntry() {
     }
 
     setReady(true)
-  }, [setActiveStarterPack, setActiveGroupChatJoinRequest])
+  }, [setActiveStarterPack])
 
   return ready
 }

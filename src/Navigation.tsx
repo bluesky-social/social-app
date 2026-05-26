@@ -44,6 +44,7 @@ import {
   type State,
 } from '#/lib/routes/types'
 import {bskyTitle} from '#/lib/strings/headings'
+import {CHAT_INVITE_CODE_REGEX} from '#/lib/strings/url-helpers'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -793,6 +794,15 @@ const LINKING = {
     // native, since the home tab and the home screen are defined as initial routes, we don't need to return a state
     // since it will be created by react-navigation.
     if (path.includes('intent/')) {
+      if (IS_NATIVE) return
+      return buildStateObject('Flat', 'Home', params)
+    }
+
+    // Chat invite URLs (`/c/:code`) are handled by `useIntentHandler`, which
+    // opens the GroupChatJoinDialog (or the logged-out join flow). Route the
+    // path to Home on web so the dialog overlays Home; on native, fall through
+    // to the default tab initialization.
+    if (CHAT_INVITE_CODE_REGEX.test(path.split('?')[0])) {
       if (IS_NATIVE) return
       return buildStateObject('Flat', 'Home', params)
     }
