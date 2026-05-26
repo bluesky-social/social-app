@@ -230,11 +230,19 @@ function InnerReady({
   let footer: React.ReactNode = null
   if (isDisabled) {
     footer = <ChatDisabled />
-  } else if (convo && primaryMember && primaryMemberModeration?.blocked) {
+  } else if (
+    convo &&
+    primaryMember &&
+    primaryMemberModeration &&
+    (convo.kind === 'group'
+      ? primaryMemberModeration?.blockCause?.type === 'blocking'
+      : primaryMemberModeration?.blocked)
+  ) {
     footer = (
       <MessagesListBlockedFooter
         recipient={primaryMember}
         convoId={convo.view.id}
+        isGroup={convo.kind === 'group'}
         moderation={primaryMemberModeration}
       />
     )
