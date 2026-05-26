@@ -442,6 +442,7 @@ async function resolveMedia(
           title: resolvedLink.title,
           description: resolvedLink.description,
           thumb: blob,
+          associatedRefs: resolvedLink.associatedRefs,
         },
       }
     }

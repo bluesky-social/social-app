@@ -60,6 +60,20 @@ export type Events = {
   'router:navigate': {
     from?: string
   }
+  'nav:click': {
+    item:
+      | 'home'
+      | 'search'
+      | 'chat'
+      | 'notifications'
+      | 'profile'
+      | 'feeds'
+      | 'lists'
+      | 'saved'
+      | 'settings'
+      | 'menu'
+    surface: 'bottomBar' | 'drawer' | 'drawerHeader' | 'topBar' | 'leftNav'
+  }
   'deepLink:referrerReceived': {
     to: string
     referrer: string

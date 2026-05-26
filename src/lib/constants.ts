@@ -188,7 +188,8 @@ export const VIDEO_MAX_DURATION_MS = 3 * 60 * 1000 // 3 minutes in milliseconds
  * Maximum size of a video in megabytes, _not_ mebibytes. Backend uses
  * ISO megabytes.
  */
-export const VIDEO_MAX_SIZE = 1000 * 1000 * 100 // 100mb
+export const VIDEO_MAX_SIZE_REDUCED = 1000 * 1000 * 100 // 100mb
+export const VIDEO_MAX_SIZE = 3000 * 1000 * 100 // 300mb
 
 export const SUPPORTED_MIME_TYPES = [
   'video/mp4',
