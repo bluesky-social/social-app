@@ -56,7 +56,7 @@ type discussionForumPosting struct {
 	SharedContent   *sharedContent    `json:"sharedContent,omitempty"`
 }
 
-// comment is the schema.org Comment shape used inside
+// comment is the schema.org Comment shape used in
 // DiscussionForumPosting.comment[]. The comment property does not accept
 // DiscussionForumPosting, so replies map to Comment.
 type comment struct {
@@ -85,24 +85,18 @@ type profilePage struct {
 	HasPart     []discussionForumPosting `json:"hasPart,omitempty"`
 }
 
-// maxComments is the maximum number of top-level replies emitted in
-// DiscussionForumPosting.comment[]. Bounded to keep SSR HTML payload small.
+// maxComments caps DiscussionForumPosting.comment[] to keep SSR HTML small.
 const maxComments = 10
 
-// maxRecentPosts is the maximum number of recent posts emitted on a profile
-// page in ProfilePage.hasPart[].
+// maxRecentPosts caps ProfilePage.hasPart[].
 const maxRecentPosts = 10
 
-// authorFeedFetchLimit is how many entries to request from getAuthorFeed
-// when populating ProfilePage.hasPart. We oversample because the
-// posts_no_replies filter still returns reposts (which we drop client-side
-// — only the author's own posts go in hasPart). A 3x oversample is a safe
-// margin even for profiles that repost frequently.
+// authorFeedFetchLimit oversamples getAuthorFeed because posts_no_replies
+// still returns reposts; we drop those client-side. 3x is a safe margin.
 const authorFeedFetchLimit = 3 * maxRecentPosts
 
-// bskyPostURL returns the canonical handle-form URL for a post, given the
-// post's author handle and record key. Returns "" if the handle is unusable
-// (empty or handle.invalid) or rkey is empty.
+// bskyPostURL returns the canonical handle-form post URL, or "" if handle
+// or rkey is unusable.
 func bskyPostURL(handle, rkey string) string {
 	if handle == "" || handle == "handle.invalid" || rkey == "" {
 		return ""
@@ -110,9 +104,7 @@ func bskyPostURL(handle, rkey string) string {
 	return fmt.Sprintf("https://bsky.app/profile/%s/post/%s", handle, rkey)
 }
 
-// bskyPostURLFromATURI is a convenience wrapper for callers that hold an
-// at-uri rather than a record key directly. Returns "" if the URI cannot be
-// parsed.
+// bskyPostURLFromATURI is bskyPostURL for callers holding an at-uri.
 func bskyPostURLFromATURI(handle, atURI string) string {
 	parsed, err := syntax.ParseATURI(atURI)
 	if err != nil {
@@ -121,8 +113,8 @@ func bskyPostURLFromATURI(handle, atURI string) string {
 	return bskyPostURL(handle, parsed.RecordKey().String())
 }
 
-// bskyProfileURL returns the canonical handle-form URL for a profile.
-// Returns "" if the handle is unusable.
+// bskyProfileURL returns the canonical handle-form profile URL, or "" if
+// the handle is unusable.
 func bskyProfileURL(handle string) string {
 	if handle == "" || handle == "handle.invalid" {
 		return ""
@@ -130,10 +122,9 @@ func bskyProfileURL(handle string) string {
 	return fmt.Sprintf("https://bsky.app/profile/%s", handle)
 }
 
-// extractPostMedia returns the image thumbnail URLs for the post (if any).
-// All URLs are reused verbatim from the appview response — the same strings
-// that go into og:image meta tags — so Google sees byte-identical media
-// references. Callers derive thumbnailUrl from urls[0].
+// extractPostMedia returns thumbnail URLs for the post's image or video
+// embed, byte-identical to what we put in og:image. Callers derive
+// thumbnailUrl from urls[0].
 func extractPostMedia(pv *appbsky.FeedDefs_PostView, embedHidden bool) []string {
 	if pv == nil || pv.Embed == nil || embedHidden {
 		return nil
@@ -157,8 +148,7 @@ func extractPostMedia(pv *appbsky.FeedDefs_PostView, embedHidden bool) []string 
 	return nil
 }
 
-// imageThumbs returns the thumb URLs for a slice of image embed views, or
-// nil if the slice is empty.
+// imageThumbs returns the thumb URLs, or nil if empty.
 func imageThumbs(images []*appbsky.EmbedImages_ViewImage) []string {
 	if len(images) == 0 {
 		return nil
@@ -170,9 +160,8 @@ func imageThumbs(images []*appbsky.EmbedImages_ViewImage) []string {
 	return urls
 }
 
-// extractQuotedPostURL returns the canonical handle-form URL of a quoted
-// post, if the embed is a viewable record (not blocked / detached / not
-// found / non-post record like a feed generator or list).
+// extractQuotedPostURL returns the canonical URL of a quoted post, or ""
+// if the embed is blocked / not-found / detached / a non-post record.
 func extractQuotedPostURL(pv *appbsky.FeedDefs_PostView) string {
 	if pv == nil || pv.Embed == nil {
 		return ""
@@ -188,14 +177,13 @@ func extractQuotedPostURL(pv *appbsky.FeedDefs_PostView) string {
 	}
 	vr := rec.Record.EmbedRecord_ViewRecord
 	if vr == nil || vr.Author == nil {
-		// Skip _ViewBlocked, _ViewNotFound, _ViewDetached, and non-post records.
 		return ""
 	}
 	return bskyPostURLFromATURI(vr.Author.Handle, vr.Uri)
 }
 
-// extractSharedContentURL returns the URL of an external link embedded in
-// the post (or in the media slot of a record-with-media embed).
+// extractSharedContentURL returns the URL of an external link embed (also
+// from the media slot of a record-with-media embed).
 func extractSharedContentURL(pv *appbsky.FeedDefs_PostView) string {
 	if pv == nil || pv.Embed == nil {
 		return ""
@@ -212,9 +200,8 @@ func extractSharedContentURL(pv *appbsky.FeedDefs_PostView) string {
 	return ""
 }
 
-// buildAuthor constructs a Person object. Organization classification for
-// custom-domain or organization-style accounts is a future enhancement; for
-// now, every author is emitted as Person.
+// buildAuthor constructs a Person. Organization classification for
+// custom-domain accounts is a future enhancement.
 func buildAuthor(author *appbsky.ActorDefs_ProfileViewBasic) *personOrOrg {
 	if author == nil {
 		return nil
@@ -236,9 +223,9 @@ func buildAuthor(author *appbsky.ActorDefs_ProfileViewBasic) *personOrOrg {
 	return p
 }
 
-// postEmbedHidden checks self-labels and post-view labels for any label that
-// causes embeds to be omitted. Mirrors logic in WebPost handler so the
-// JSON-LD shape stays consistent with og:image emission.
+// postEmbedHidden reports whether any post-view label or self-label asks
+// embeds to be omitted. WebPost uses this so og:image and JSON-LD media
+// suppression stay in sync.
 func postEmbedHidden(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) bool {
 	if pv == nil {
 		return false
@@ -263,8 +250,8 @@ func postEmbedHidden(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) 
 	return false
 }
 
-// postRecordText returns the expanded post text (with shortened links
-// expanded back to full URLs) or "" if the record is missing or malformed.
+// postRecordText returns the post's expanded text, or "" if the record is
+// missing or malformed.
 func postRecordText(pv *appbsky.FeedDefs_PostView) string {
 	if pv == nil || pv.Record == nil {
 		return ""
@@ -276,10 +263,8 @@ func postRecordText(pv *appbsky.FeedDefs_PostView) string {
 	return ExpandPostText(rec)
 }
 
-// buildPostStats returns the standard like/comment/share interaction stat
-// triple. CommentAction count uses ReplyCount to match what Google expects
-// in InteractionCounter; commentCount is emitted separately on
-// DiscussionForumPosting.
+// buildPostStats returns the like / comment / share interaction triple.
+// commentCount is emitted separately on DiscussionForumPosting.
 func buildPostStats(pv *appbsky.FeedDefs_PostView) []interactionStat {
 	if pv == nil {
 		return nil
@@ -297,10 +282,10 @@ func buildPostStats(pv *appbsky.FeedDefs_PostView) []interactionStat {
 	}
 }
 
-// buildPostNode constructs a DiscussionForumPosting (in nested form, no
-// @context, no envelope). Used both for top-level posts and for entries in
-// hasPart / comment arrays. Returns the zero value if pv or pv.Author is nil
-// — callers should treat that as "skip this entry".
+// buildPostNode constructs a DiscussionForumPosting in nested form (no
+// envelope, no @context). Used for top-level posts and for entries in
+// hasPart / comment arrays. Returns the zero value if pv or pv.Author is
+// nil; callers should treat that as "skip".
 func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_ThreadViewPost_Replies_Elem, hideLabels map[string]bool) discussionForumPosting {
 	if pv == nil || pv.Author == nil {
 		return discussionForumPosting{}
@@ -349,7 +334,6 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 		}
 		reply := buildReplyNode(r.FeedDefs_ThreadViewPost.Post, hideLabels)
 		if reply.Type == "" {
-			// nil-Author guard tripped; skip.
 			continue
 		}
 		node.Comment = append(node.Comment, reply)
@@ -358,8 +342,8 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 	return node
 }
 
-// buildReplyNode builds a schema.org Comment for a reply. Returns the zero
-// value if pv or pv.Author is nil; callers should treat that as "skip".
+// buildReplyNode builds a schema.org Comment for a reply. Returns the
+// zero value if pv or pv.Author is nil.
 func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) comment {
 	if pv == nil || pv.Author == nil {
 		return comment{}
@@ -382,28 +366,21 @@ func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) c
 	}
 }
 
-// buildPostJSONLD marshals the top-level WebPage envelope for a post page.
-// This is what gets injected into <script type="application/ld+json">.
-//
-// canonicalURL is the public URL for the page. Callers (WebPost) prefer the
-// handle-form URL when the author has a usable handle, otherwise fall back
-// to the request URI (DID form). The same string is used for both
-// envelope.url and mainEntity.url so search engines see a single
-// authoritative URL for the post.
+// buildPostJSONLD marshals the WebPage envelope wrapping a
+// DiscussionForumPosting. canonicalURL is used for both envelope.url and
+// (as a fallback) mainEntity.url so they always agree.
 func buildPostJSONLD(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_ThreadViewPost_Replies_Elem, canonicalURL string, hideLabels map[string]bool) (string, error) {
 	if pv == nil || pv.Author == nil {
 		return "", fmt.Errorf("nil post view or author")
 	}
 	node := buildPostNode(pv, replies, hideLabels)
 
-	// buildPostNode derives mainEntity.url from the author handle alone, so
-	// it ends up empty when the handle is unusable (handle.invalid). Fall
-	// back to canonicalURL so envelope.url and mainEntity.url always agree.
+	// mainEntity.url is empty when the author handle is unusable; fall back
+	// to canonicalURL so it agrees with envelope.url.
 	if node.URL == "" {
 		node.URL = canonicalURL
 	}
 
-	// Top-level entity: wrap in WebPage envelope per Google's recommendation.
 	envelope := webPage{
 		Context:    schemaOrgContext,
 		Type:       "WebPage",
@@ -417,8 +394,7 @@ func buildPostJSONLD(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_
 	return string(b), nil
 }
 
-// buildProfileJSONLD marshals the ProfilePage object (including hasPart
-// recent posts) for a profile page.
+// buildProfileJSONLD marshals a ProfilePage (with hasPart recent posts).
 func buildProfileJSONLD(pv *appbsky.ActorDefs_ProfileViewDetailed, recentPosts []*appbsky.FeedDefs_PostView, hideLabels map[string]bool) (string, error) {
 	if pv == nil {
 		return "", fmt.Errorf("nil profile view")
@@ -471,10 +447,9 @@ func buildProfileJSONLD(pv *appbsky.ActorDefs_ProfileViewDetailed, recentPosts [
 		if len(page.HasPart) >= maxRecentPosts {
 			break
 		}
-		// Recent posts go in nested form (no replies, no envelope).
+		// Recent posts go in nested form.
 		node := buildPostNode(rp, nil, hideLabels)
 		if node.Type == "" {
-			// nil-Author guard tripped; skip.
 			continue
 		}
 		page.HasPart = append(page.HasPart, node)

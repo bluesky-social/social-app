@@ -4,15 +4,12 @@ import (
 	appbsky "github.com/bluesky-social/indigo/api/bsky"
 )
 
-// Helpers for extracting Open Graph / Twitter Card metadata from post
-// embeds. These produce data for og:* and twitter:* meta tags only — they
-// are not used by the schema.org JSON-LD output (which lives in jsonld.go).
-//
-// The og:video tags exist as a separate code path because JSON-LD does not
-// currently emit a VideoObject (deferred — requires `duration` from the
-// appview that is not exposed today).
+// Helpers for extracting Open Graph metadata from post embeds. These feed
+// og:* / twitter:* meta tags only; the schema.org JSON-LD output lives in
+// jsonld.go. og:video has its own path because JSON-LD does not yet emit
+// VideoObject (deferred — needs `duration` from the appview).
 
-// videoMeta is the metadata needed for og:video meta tags.
+// videoMeta holds og:video meta tag data.
 type videoMeta struct {
 	URL     string
 	Type    string
@@ -21,10 +18,8 @@ type videoMeta struct {
 	HasSize bool
 }
 
-// extractVideoMeta returns og:video metadata for the post if it has a video
-// embed, otherwise the zero value. Respects the same embedHidden gate as
-// extractPostMedia (in jsonld.go) so og:video and og:image suppression stay
-// in sync.
+// extractVideoMeta returns og:video metadata, or the zero value if there's
+// no video embed. Respects embedHidden so og:video and og:image stay in sync.
 func extractVideoMeta(pv *appbsky.FeedDefs_PostView, embedHidden bool) videoMeta {
 	if pv == nil || pv.Embed == nil || embedHidden {
 		return videoMeta{}

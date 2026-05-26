@@ -529,10 +529,9 @@ func (srv *Server) WebPost(c echo.Context) error {
 	req := c.Request()
 	requestURI := fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 
-	// always prefer the handle-form URL when we have a usable handle, regardless of how the request was looked up.
-	// This both handles DID-form requests and normalizes handle-form requests against stale handles in the URL,
-	// guaranteeing JSON-LD `url` and <link rel="canonical"> match exactly.
-	// If the handle is unusable (handle.invalid or empty), fall back to the request URI with query/fragment stripped.
+	// Always prefer the handle-form URL so JSON-LD `url` and
+	// <link rel="canonical"> match. Falls back to requestURI when the
+	// handle is unusable (template strips query/fragment).
 	canonicalURL := bskyPostURL(pv.Handle, rkey.String())
 
 	if !unauthedViewingOkay {
@@ -568,10 +567,8 @@ func (srv *Server) WebPost(c echo.Context) error {
 		data["canonicalURL"] = canonicalURL
 	}
 
-	// Embed-hidden gate, post text, image thumbs, and video metadata are all
-	// derived from helpers in jsonld.go so the og:* / twitter:* meta tags
-	// and the JSON-LD payload stay in lockstep — Google's Rich Results
-	// validator requires og:image and JSON-LD image[] to be byte-identical.
+	// Share extraction helpers with jsonld.go so og:image and JSON-LD
+	// image[] are byte-identical (per Google's requirement).
 	isEmbedHidden := postEmbedHidden(postView, hideEmbedLabels)
 	data["postText"] = postRecordText(postView)
 
@@ -587,9 +584,8 @@ func (srv *Server) WebPost(c echo.Context) error {
 		}
 	}
 
-	// Build schema.org JSON-LD for SEO. canonicalURL is what we want as the
-	// public URL; if it's empty (handle.invalid edge case), fall back to the
-	// request URI so the field still gets emitted with something sensible.
+	// Build JSON-LD. Fall back to requestURI when handle is unusable so the
+	// envelope url is never empty.
 	jsonldURL := canonicalURL
 	if jsonldURL == "" {
 		jsonldURL = requestURI
@@ -666,27 +662,19 @@ func (srv *Server) WebProfile(c echo.Context) error {
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 	data["requestHost"] = req.Host
 
-	// Canonical URL: always prefer the handle-form URL when we have a usable
-	// handle, regardless of how the request was looked up. This handles
-	// DID-form requests and normalizes handle-form requests against stale
-	// handles, guaranteeing JSON-LD `url` and <link rel="canonical"> match.
-	// Falls back to requestURI (with query/fragment stripped by the
-	// canonicalize_url filter) when the handle is unusable.
+	// Prefer the handle-form URL so JSON-LD `url` and
+	// <link rel="canonical"> match. Template falls back to requestURI
+	// when the handle is unusable.
 	if url := bskyProfileURL(pv.Handle); url != "" {
 		data["canonicalURL"] = url
 	}
 
-	// Fetch recent posts to embed as ProfilePage.hasPart so search engines
-	// can connect a profile to its recent content. Failures here degrade
-	// gracefully — we still render the profile without hasPart.
+	// Fetch recent posts for ProfilePage.hasPart. Skipped for auth-required
+	// profiles (posts aren't publicly indexable anyway). Failures degrade
+	// gracefully — the profile still renders without hasPart.
 	//
-	// Skipped for auth-required profiles (their posts aren't publicly
-	// indexable anyway), but the rest of the ProfilePage / Person markup
-	// is still emitted so search engines see basic identity.
-	//
-	// NOTE: this adds an extra XRPC call on every public profile page
-	// render. If upstream load becomes a concern, consider caching
-	// per-profile (recent posts change slowly relative to profile views).
+	// NOTE: extra XRPC call on every public profile render; consider
+	// caching per-profile if upstream load becomes a concern.
 	var recentPosts []*appbsky.FeedDefs_PostView
 	if unauthedViewingOkay {
 		af, err := appbsky.FeedGetAuthorFeed(ctx, srv.xrpcc, pv.Did, "", "posts_no_replies", false, authorFeedFetchLimit)
@@ -697,7 +685,7 @@ func (srv *Server) WebProfile(c echo.Context) error {
 				if p == nil || p.Post == nil {
 					continue
 				}
-				// Only the author's own posts (matches RSS handler behavior).
+				// Only the author's own posts (matches RSS handler).
 				if p.Post.Author == nil || p.Post.Author.Did != pv.Did {
 					continue
 				}

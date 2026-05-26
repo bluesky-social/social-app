@@ -56,10 +56,8 @@ func TestProfileRequiresAuth(t *testing.T) {
 			want: false,
 		},
 		{
-			// Helper does not currently honor a Neg flag — matches existing
-			// inline behavior in WebPost / WebProfile / WebProfileRSS. If
-			// negation semantics are needed for self-labels, all four call
-			// sites need to change together.
+			// Negation isn't honored — matches prior inline behavior in
+			// WebPost / WebProfile / WebProfileRSS.
 			name: "negated label still triggers (matches prior behavior)",
 			pv: &appbsky.ActorDefs_ProfileViewDetailed{
 				Did: "did:plc:alice",

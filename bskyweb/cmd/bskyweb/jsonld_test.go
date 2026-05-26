@@ -11,11 +11,11 @@ import (
 	lexutil "github.com/bluesky-social/indigo/lex/util"
 )
 
-// strPtr / intPtr / boolPtr - small helpers for the optional appbsky fields.
+// Pointer helpers for optional appbsky fields.
 func strPtr(s string) *string { return &s }
 func intPtr(i int64) *int64   { return &i }
 
-// newProfileViewDetailed returns a populated ProfileViewDetailed for tests.
+// newProfileViewDetailed returns a populated profile for tests.
 func newProfileViewDetailed() *appbsky.ActorDefs_ProfileViewDetailed {
 	return &appbsky.ActorDefs_ProfileViewDetailed{
 		Did:            "did:plc:alice",
@@ -298,21 +298,18 @@ func TestBuildPostJSONLD_HiddenEmbed(t *testing.T) {
 }
 
 func TestBuildPostJSONLD_TextEscaping(t *testing.T) {
-	// Crafted to break naive string concatenation: includes ", \, newline,
-	// </script>, and a unicode character.
+	// Includes ", \, newline, </script>, and a unicode char.
 	tricky := "hello \"world\" \\ <\\>\n</script> 🎉"
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", tricky)
 	out, err := buildPostJSONLD(pv, nil, "u", hideEmbedLabels)
 	if err != nil {
 		t.Fatal(err)
 	}
-	// Must round-trip through the JSON parser.
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	if main["text"] != tricky {
 		t.Errorf("text round-trip failed: got %q want %q", main["text"], tricky)
 	}
-	// Defensive: literal "</script>" must not appear in the output, since
-	// that would break out of <script type="application/ld+json">.
+	// Literal </script> would break out of the script tag.
 	if strings.Contains(out, "</script>") {
 		t.Errorf("output contains literal </script>, would break HTML embedding")
 	}
@@ -322,9 +319,7 @@ func TestBuildPostJSONLD_Comments(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "main")
 	*pv.ReplyCount = 14
 
-	// 14 replies: 12 valid, 1 not-found, 1 blocked. The cap is maxComments=10
-	// so we expect exactly 10 valid entries in comment[], with the
-	// non-thread variants filtered out.
+	// 12 valid replies + 1 not-found + 1 blocked. Cap is maxComments=10.
 	const validReplies = 12
 	var replies []*appbsky.FeedDefs_ThreadViewPost_Replies_Elem
 	for i := 0; i < validReplies; i++ {
@@ -355,15 +350,12 @@ func TestBuildPostJSONLD_Comments(t *testing.T) {
 	if len(comments) != maxComments {
 		t.Errorf("expected %d comments (capped from %d valid), got %d", maxComments, validReplies, len(comments))
 	}
-	// First comment must be the first reply (FIFO order, not the not-found
-	// one which sits at the end).
+	// FIFO order: first valid reply, not the not-found at the end.
 	first := comments[0].(map[string]any)
 	if first["identifier"] != "at://did:plc:rep00/app.bsky.feed.post/reply00" {
 		t.Errorf("first comment should be reply00, got %v", first["identifier"])
 	}
-	// Each comment must be schema.org Comment (not DiscussionForumPosting —
-	// that type is invalid for the comment property) and must NOT have
-	// nested comment[] / isBasedOn / sharedContent.
+	// Comment type, no nested comment[] / isBasedOn / sharedContent.
 	for i, c := range comments {
 		cm := c.(map[string]any)
 		if cm["@type"] != "Comment" {
@@ -390,9 +382,8 @@ func TestBuildPostJSONLD_HandleInvalidAuthor(t *testing.T) {
 	out, _ := buildPostJSONLD(pv, nil, fallback, hideEmbedLabels)
 	envelope := unmarshalLD(t, out)
 	main := envelope["mainEntity"].(map[string]any)
-	// With no usable handle, mainEntity.url falls back to the canonical URL
-	// the caller provided (DID-form request URI), so the envelope URL and
-	// the post URL agree on a single string.
+	// mainEntity.url falls back to the caller's canonical URL so envelope
+	// and post URLs always agree.
 	if main["url"] != fallback {
 		t.Errorf("mainEntity.url should fall back to canonical URL, got %v", main["url"])
 	}
@@ -403,21 +394,18 @@ func TestBuildPostJSONLD_HandleInvalidAuthor(t *testing.T) {
 		t.Errorf("envelope.url and mainEntity.url disagree: %v vs %v",
 			envelope["url"], main["url"])
 	}
-	// identifier (AT-URI) is still present and stable across handle changes.
+	// identifier (AT-URI) stays stable across handle changes.
 	if main["identifier"] != pv.Uri {
 		t.Errorf("identifier should still be the AT-URI, got %v", main["identifier"])
 	}
-	// Author URL is omitted (no usable handle to construct a profile URL).
+	// Author URL omitted (no usable handle).
 	author := main["author"].(map[string]any)
 	if _, present := author["url"]; present {
 		t.Errorf("handle.invalid author should not produce author.url")
 	}
 }
 
-// TestBuildPostJSONLD_EnvelopeURLMatchesMainEntity asserts the P0.3
-// invariant that the WebPage envelope and the inner DiscussionForumPosting
-// always carry the same URL — both for happy-path (handle-form canonical)
-// and the handle.invalid fallback case.
+// envelope.url and mainEntity.url must always agree.
 func TestBuildPostJSONLD_EnvelopeURLMatchesMainEntity(t *testing.T) {
 	cases := []struct {
 		name, handle, did, rkey, canonical string
@@ -454,8 +442,7 @@ func TestBuildPostJSONLD_EnvelopeURLMatchesMainEntity(t *testing.T) {
 }
 
 func TestBuildPostJSONLD_NilAuthor(t *testing.T) {
-	// Defensive: appview is contractually required to send an Author, but we
-	// shouldn't panic if a malformed payload sneaks through.
+	// Defensive: don't panic if Author is nil.
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "hi")
 	pv.Author = nil
 	if _, err := buildPostJSONLD(pv, nil, "u", hideEmbedLabels); err == nil {
@@ -464,8 +451,7 @@ func TestBuildPostJSONLD_NilAuthor(t *testing.T) {
 }
 
 func TestBuildPostJSONLD_NilAuthorReply(t *testing.T) {
-	// A reply with a nil author should be silently dropped from comment[]
-	// rather than producing an entry with no @type.
+	// Reply with nil Author should be dropped, not emitted with empty @type.
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "main")
 	*pv.ReplyCount = 2
 
