@@ -113,11 +113,11 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ steps.pr-info.outputs.head-sha }}
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
@@ -143,13 +143,9 @@ jobs:
       - name: 🔨 Setup EAS
         uses: expo/expo-github-action@main
         with:
-          expo-version: latest
-          eas-version: latest
-          packager: pnpm
+          eas-version: '19.0.5'
+          packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: ⛏️ Setup Expo
-        run: pnpm add -g eas-cli-local-build-plugin
 
       - name: 🪛 Setup jq
         uses: dcarbone/install-jq-action@v2

@@ -1,10 +1,12 @@
 // @ts-check
 import js from '@eslint/js'
+import {defineConfig} from 'eslint/config'
 import tseslint from 'typescript-eslint'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
+import {importX} from 'eslint-plugin-import-x'
 import globals from 'globals'
 
-export default tseslint.config(
+export default defineConfig(
   // Global ignores
   {
     ignores: ['dist/**', 'node_modules/**'],
@@ -14,7 +16,11 @@ export default tseslint.config(
   js.configs.recommended,
 
   // TypeScript rules with type checking
-  ...tseslint.configs.recommendedTypeChecked,
+  tseslint.configs.recommendedTypeChecked,
+
+  // import-x
+  importX.flatConfigs.recommended,
+  importX.flatConfigs.typescript,
 
   // Main configuration
   {

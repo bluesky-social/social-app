@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
 import {type ChatBskyConvoDefs} from '@atproto/api'
@@ -45,6 +45,7 @@ import {IS_NATIVE} from '#/env'
 import {ChatListItem} from './components/ChatListItem'
 import {InboxRequests} from './components/InboxRequests'
 import {useIsWithinSplitView} from './components/splitView/context'
+import {splitViewLeftScroll} from './components/splitView/leftColumnScroll'
 
 type ListItem = {
   type: 'CONVERSATION'
@@ -255,12 +256,32 @@ export function ChatList({
       animated: IS_NATIVE,
       offset: 0,
     })
+    if (isWithinSplitView) {
+      splitViewLeftScroll.current = 0
+      restoredRef.current = true
+    }
     try {
       await refetch()
     } catch (err) {
       logger.error('Failed to refresh conversations', {message: err})
     }
-  }, [scrollElRef, refetch])
+  }, [scrollElRef, refetch, isWithinSplitView])
+
+  // Restore the saved scroll offset once the list has rendered enough
+  // content to honor it. Module-level ref survives ChatList re-mounts that
+  // happen on in-splitview navigation (see leftColumnScroll.ts).
+  const restoredRef = useRef(false)
+  const onContentSizeChange = useCallback(
+    (_w: number, h: number) => {
+      if (!isWithinSplitView || restoredRef.current) return
+      const offset = splitViewLeftScroll.current
+      if (offset > 0 && h >= offset) {
+        scrollElRef.current?.scrollToOffset({offset, animated: false})
+        restoredRef.current = true
+      }
+    },
+    [isWithinSplitView, scrollElRef],
+  )
 
   const isScreenFocused = useIsFocused()
   useEffect(() => {
@@ -364,6 +385,7 @@ export function ChatList({
         />
       }
       onEndReachedThreshold={IS_NATIVE ? 1.5 : 0}
+      onContentSizeChange={onContentSizeChange}
       initialNumToRender={initialNumToRender}
       windowSize={11}
       desktopFixedHeight

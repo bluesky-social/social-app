@@ -27,7 +27,6 @@ import {TabBar} from '#/view/com/pager/TabBar'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListMethods} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
-import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {ButtonIcon} from '#/components/Button'
@@ -254,20 +253,18 @@ function NotificationsTab({
 
   return (
     <>
-      <MainScrollProvider>
-        <NotificationFeed
-          enabled={isFocusedAndActive}
-          filter={filter}
-          refreshNotifications={() => checkUnread({invalidate: true})}
-          onScrolledDownChange={setIsScrolledDown}
-          scrollElRef={scrollElRef}
-          ListHeaderComponent={
-            filter === 'mentions' ? (
-              <DisabledNotificationsWarning active={isFocusedAndActive} />
-            ) : null
-          }
-        />
-      </MainScrollProvider>
+      <NotificationFeed
+        enabled={isFocusedAndActive}
+        filter={filter}
+        refreshNotifications={() => checkUnread({invalidate: true})}
+        onScrolledDownChange={setIsScrolledDown}
+        scrollElRef={scrollElRef}
+        ListHeaderComponent={
+          filter === 'mentions' ? (
+            <DisabledNotificationsWarning active={isFocusedAndActive} />
+          ) : null
+        }
+      />
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
           onPress={onPressLoadLatest}

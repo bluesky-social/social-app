@@ -53,7 +53,7 @@ export function useListJoinRequestsQuery({
     queryKey: createListJoinRequestsQueryKey({convoId: convoId ?? ''}),
     queryFn: async ({pageParam}) => {
       const {data} = await agent.chat.bsky.group.listJoinRequests(
-        {convoId: convoId!, cursor: pageParam, limit: 50},
+        {convoId: convoId!, cursor: pageParam, limit: 20},
         {headers: DM_SERVICE_HEADERS},
       )
       return data

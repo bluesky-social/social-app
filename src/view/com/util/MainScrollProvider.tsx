@@ -1,8 +1,10 @@
-import {useCallback, useEffect} from 'react'
+import {createContext, useCallback, useContext, useEffect} from 'react'
 import {type NativeScrollEvent} from 'react-native'
 import {
   clamp,
   interpolate,
+  type SharedValue,
+  useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
@@ -10,15 +12,88 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {EventEmitter} from 'eventemitter3'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
-import {useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 
 const WEB_HIDE_SHELL_THRESHOLD = 200
 
+const HomeHeaderModeContext = createContext<SharedValue<number> | null>(null)
+HomeHeaderModeContext.displayName = 'HomeHeaderModeContext'
+
+export function HomeHeaderModeProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const headerMode = useSharedValue(0)
+  return (
+    <HomeHeaderModeContext.Provider value={headerMode}>
+      {children}
+    </HomeHeaderModeContext.Provider>
+  )
+}
+
+export function useHomeHeaderMode() {
+  const headerMode = useContext(HomeHeaderModeContext)
+  if (!headerMode) {
+    throw new Error(
+      'useHomeHeaderMode must be used within a HomeHeaderModeProvider',
+    )
+  }
+  return headerMode
+}
+
+export function useHomeHeaderTransform() {
+  const headerMode = useHomeHeaderMode()
+  const {headerHeight} = useShellLayout()
+  const {top: topInset} = useSafeAreaInsets()
+
+  const headerPinnedHeight = IS_LIQUID_GLASS ? topInset : 0
+
+  return useAnimatedStyle(() => {
+    const headerModeValue = headerMode.get()
+    const hHeight = headerHeight.get()
+
+    if (IS_LIQUID_GLASS) {
+      // bit of a hackfix, but: the header can get affected by scrollEdgeEffects
+      // when animating from closed to open. workaround is to trigger a relayout
+      // by offsetting the top position. the actual value doesn't matter, and we
+      // simultaneously offset it using the translate transform.
+      // I think a cleaner way to do it would be to use UIScrollEdgeElementContainerInteraction
+      // manually or something like that, because this kinda sucks -sfn
+      const relayoutingOffset = headerModeValue === 0 ? 1 : 0
+      return {
+        top: relayoutingOffset,
+        pointerEvents: headerModeValue === 0 ? 'auto' : 'none',
+        opacity: Math.pow(1 - headerModeValue, 2),
+        transform: [
+          {
+            translateY:
+              interpolate(
+                headerModeValue,
+                [0, 1],
+                [0, headerPinnedHeight - hHeight],
+              ) - relayoutingOffset,
+          },
+        ],
+      }
+    }
+
+    return {
+      pointerEvents: headerModeValue === 0 ? 'auto' : 'none',
+      opacity: Math.pow(1 - headerModeValue, 2),
+      transform: [
+        {
+          translateY: interpolate(headerModeValue, [0, 1], [0, -hHeight]),
+        },
+      ],
+    }
+  })
+}
+
 export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const {headerHeight} = useShellLayout()
-  const {headerMode} = useMinimalShellMode()
+  const headerMode = useHomeHeaderMode()
   const {top: topInset} = useSafeAreaInsets()
   const headerPinnedHeight = IS_LIQUID_GLASS ? topInset : 0
   const startDragOffset = useSharedValue<number | null>(null)
