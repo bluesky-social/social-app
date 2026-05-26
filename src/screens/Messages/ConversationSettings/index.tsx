@@ -246,7 +246,7 @@ function GroupSettings({
         return (
           <MembersAndRequests
             memberCount={convo.details.memberCount}
-            memberLimit={convo.details.memberLimit ?? convo.details.memberCount}
+            memberLimit={convo.details.memberLimit}
             requestCount={requestCount}
             hasMoreRequests={!!hasMoreRequests}
             isOwner={isOwner}
