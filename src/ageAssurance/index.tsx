@@ -108,12 +108,9 @@ function InnerProvider({children}: {children: React.ReactNode}) {
     <AgeAssuranceStateContext.Provider
       value={useMemo(() => {
         const chatDisabled = state.access !== AgeAssuranceAccess.Full
-        const isUnderAdultAge = data?.birthdate
-          ? isUnderAge(data.birthdate, 18)
-          : true
         const isDeclaredUnderAdultAge = data?.birthdate
           ? isUnderAge(data.birthdate, 18)
-          : false
+          : true
         const isOverRegionMinAccessAge = data?.birthdate
           ? !isUnderAge(data.birthdate, config.minAccessAge)
           : false
@@ -121,7 +118,7 @@ function InnerProvider({children}: {children: React.ReactNode}) {
           ? !isUnderAge(data.birthdate, MIN_ACCESS_AGE)
           : false
         const adultContentDisabled =
-          state.access !== AgeAssuranceAccess.Full || isUnderAdultAge
+          state.access !== AgeAssuranceAccess.Full || isDeclaredUnderAdultAge
         return {
           Access: AgeAssuranceAccess,
           Status: AgeAssuranceStatus,
