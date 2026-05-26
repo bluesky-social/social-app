@@ -13,6 +13,7 @@ import {atoms as a, useBreakpoints, useTheme, utils, web} from '#/alf'
 import {ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon} from '#/components/icons/Arrow'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
 import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
@@ -408,12 +409,14 @@ export function SubscribeButton({
           <>
             <View style={[a.flex_row, a.align_center, {gap: 7}]}>
               <ButtonIcon icon={highlightedPublisher.Icon} size="lg" />
-              {/*<ButtonText>|</ButtonText>*/}
             </View>
             <ButtonText>{cta}</ButtonText>
           </>
         ) : (
-          <ButtonText>{cta}</ButtonText>
+          <>
+            <ButtonText>{cta}</ButtonText>
+            <ButtonIcon icon={ArrowTopRightIcon} />
+          </>
         )}
       </Link>
     </StandardSiteThemeProvider>
