@@ -83,6 +83,8 @@ import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
+import {type Events} from '#/analytics/metrics/types'
 import {useActorStatus} from '#/features/liveNow'
 import {router} from '#/routes'
 import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
@@ -389,10 +391,20 @@ interface NavItemProps {
   }
   label: string
   minimal: boolean
+  navItem: Events['nav:click']['item']
 }
-function NavItem({count, hasNew, href, icons, label, minimal}: NavItemProps) {
+function NavItem({
+  count,
+  hasNew,
+  href,
+  icons,
+  label,
+  minimal,
+  navItem,
+}: NavItemProps) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
 
   const [pathName] = useMemo(() => router.matchPath(href), [href])
@@ -412,6 +424,7 @@ function NavItem({count, hasNew, href, icons, label, minimal}: NavItemProps) {
   const navigation = useNavigation<NavigationProp>()
   const onPressWrapped = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+      ax.metric('nav:click', {item: navItem, surface: 'leftNav'})
       if (e.ctrlKey || e.metaKey || e.altKey) {
         return
       }
@@ -424,7 +437,7 @@ function NavItem({count, hasNew, href, icons, label, minimal}: NavItemProps) {
         navigation.navigate(screen, params, {pop: true})
       }
     },
-    [navigation, href, isCurrent],
+    [navigation, href, isCurrent, ax, navItem],
   )
 
   const Icon = isCurrent || isRelated ? icons.active : icons.inactive
@@ -652,6 +665,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           <NavItem
             label={l`Home`}
             href="/"
+            navItem="home"
             minimal={leftNavMinimal}
             icons={{
               inactive: HomeIcon,
@@ -661,6 +675,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           <NavItem
             label={l`Explore`}
             href="/search"
+            navItem="search"
             minimal={leftNavMinimal}
             icons={{
               inactive: MagnifyingGlassIcon,
@@ -670,6 +685,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           <NavItem
             label={l`Notifications`}
             href="/notifications"
+            navItem="notifications"
             minimal={leftNavMinimal}
             count={numUnreadNotifications}
             icons={{
@@ -680,6 +696,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           <NavItem
             label={l`Chat`}
             href="/messages"
+            navItem="chat"
             minimal={leftNavMinimal}
             count={
               aa.flags.chatDisabled ? undefined : numUnreadMessages.numUnread
@@ -693,6 +710,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           <NavItem
             label={l`Feeds`}
             href="/feeds"
+            navItem="feeds"
             minimal={leftNavMinimal}
             icons={{
               inactive: HashtagIcon,
@@ -702,6 +720,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           <NavItem
             label={l`Lists`}
             href="/lists"
+            navItem="lists"
             minimal={leftNavMinimal}
             icons={{
               inactive: ListIcon,
@@ -714,6 +733,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
               context: 'link to bookmarks screen',
             })}
             href="/saved"
+            navItem="saved"
             minimal={leftNavMinimal}
             icons={{
               inactive: BookmarkIcon,
@@ -723,6 +743,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           <NavItem
             label={l`Profile`}
             href={makeProfileLink(currentAccount!)}
+            navItem="profile"
             minimal={leftNavMinimal}
             icons={{
               inactive: UserCircleIcon,
@@ -732,6 +753,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           <NavItem
             label={l`Settings`}
             href="/settings"
+            navItem="settings"
             minimal={leftNavMinimal}
             icons={{
               inactive: SettingsIcon,
