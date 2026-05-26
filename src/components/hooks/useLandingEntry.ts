@@ -16,7 +16,7 @@ export function useLandingEntry() {
     const url = new URL(href)
 
     // Check for group chat join request (/c/:code pattern)
-    const groupChatMatch = url.pathname.match(/^\/c\/([^/]+)$/)
+    const groupChatMatch = url.pathname.match(/^\/c\/([a-z0-9]{7,10})$/i)
     if (groupChatMatch && groupChatMatch[1]) {
       const code = groupChatMatch[1]
       setActiveGroupChatJoinRequest({
