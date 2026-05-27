@@ -57,6 +57,7 @@ export function StarterPack(props: {
         backgroundColor: 'black',
         color: 'white',
         fontFamily: 'Inter',
+        fontWeight: 700,
       }}>
       {/* image tiles */}
       <div
