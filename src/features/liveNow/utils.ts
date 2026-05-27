@@ -33,6 +33,8 @@ const serviceUrlToNameMap: Record<string, string> = {
   'stream.place': 'Streamplace',
   'skylight.social': 'Skylight',
   'bluecast.app': 'Bluecast',
+  'substack.com': 'Substack',
+  'beehiiv.com': 'Beehiiv',
 }
 
 export function getLiveServiceNames(domains: Set<string>) {
