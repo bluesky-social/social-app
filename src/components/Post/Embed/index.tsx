@@ -104,6 +104,7 @@ function MediaEmbed({
             activeStyle={[a.mt_sm]}>
             <StandardSiteEmbed
               view={embed.view.external}
+              onEmbedInteractionCallback={rest.onOpen}
               style={[a.mt_sm, rest.style]}
             />
           </ContentHider>

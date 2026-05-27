@@ -1,30 +1,33 @@
 import {Fragment, type ReactNode} from 'react'
 import {View} from 'react-native'
-import {type AppBskyEmbedExternal, AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {atoms as a, useTheme} from '#/alf'
-import {StandardSite} from '#/components/icons/community/StandardSite'
 import {InlineLinkText} from '#/components/Link'
 import {
   matchStandardSitePublisher,
   matchStandardSitePublisherByUri,
 } from '#/components/Post/Embed/StandardSiteEmbed/publishers'
+import type * as ssTypes from '#/components/Post/Embed/StandardSiteEmbed/types'
 import {
   isStandardSiteDocumentUri,
   isStandardSitePublicationUri,
 } from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 export function StandardSiteMetaRow({
   type = 'document',
+  preview,
   view,
-}: {
-  type?: 'document' | 'publication'
-  view: AppBskyEmbedExternal.ViewExternal
-}) {
+}: ssTypes.CommonProps &
+  ssTypes.PreviewProps & {
+    type?: 'document' | 'publication'
+  }) {
+  const ax = useAnalytics()
   const t = useTheme()
   const {t: l} = useLingui()
   const highlightedPublisher = !!matchStandardSitePublisher(view)
@@ -43,7 +46,7 @@ export function StandardSiteMetaRow({
     : undefined
   const articleDomain = toNiceDomain(view.uri)
   const articlePublisher = matchStandardSitePublisherByUri(view.uri)
-  const DomainIcon = articlePublisher?.Icon ?? StandardSite
+  const DomainIcon = articlePublisher?.Icon
   const metaTextStyle = [
     a.text_xs,
     a.leading_snug,
@@ -57,7 +60,9 @@ export function StandardSiteMetaRow({
       key: 'domain',
       node: (
         <View style={[a.flex_row, a.align_center]}>
-          <DomainIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
+          {DomainIcon && (
+            <DomainIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
+          )}
           <Text numberOfLines={1} style={metaTextStyle}>
             {articleDomain}
           </Text>
@@ -76,7 +81,15 @@ export function StandardSiteMetaRow({
             <InlineLinkText
               label={l`View @${authorProfile.handle}'s profile`}
               to={makeProfileLink(authorProfile)}
-              style={[metaTextStyle, a.pointer_events_auto]}>
+              style={[
+                metaTextStyle,
+                preview ? a.pointer_events_none : a.pointer_events_auto,
+              ]}
+              onPress={() => {
+                ax.metric('embed:standardSite:authorHandle:press', {
+                  handle: authorProfile.handle,
+                })
+              }}>
               @{authorProfile.handle}
             </InlineLinkText>
           </Trans>
