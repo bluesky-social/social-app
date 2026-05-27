@@ -31,6 +31,8 @@ import {atoms as a, useTheme} from '#/alf'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button, type ButtonColor, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {AfterReportConversationDialog} from '#/components/dms/AfterReportConversationDialog'
+import {ReportConversationDialog} from '#/components/dms/ReportConversationDialog'
 import {
   type ConvoWithDetails,
   type GroupConvoMember,
@@ -330,8 +332,7 @@ function SettingsHeader({
   const {joinLink} = convo.details
   const isJoinLinkEnabled = isOwner || joinLink?.enabledStatus === 'enabled'
 
-  // TODO Enable this once the feature is working end-to-end. -dsb
-  const isReportLinkEnabled = false
+  const reportSubjectDid = convo.primaryMember?.did
 
   const {mutate: editGroupName, isPending: isEditingName} =
     useEditGroupChatName(convo.view.id, {
@@ -402,30 +403,8 @@ function SettingsHeader({
   const editNamePrompt = Prompt.usePromptControl()
   const lockChatPrompt = Prompt.usePromptControl()
   const leaveChatPrompt = Prompt.usePromptControl()
-
-  const handleToggleMute = () => {
-    muteConvo({mute: !convo.view.muted})
-  }
-
-  // TODO Need to implement this when the backend is ready. -dsb
-  const handleReportChat = () => {}
-
-  const handlePromptName = () => {
-    setNewGroupName(groupName)
-    editNamePrompt.open()
-  }
-
-  const handleEditName = () => {
-    editGroupName({name: newGroupName})
-  }
-
-  const handleConfirmLock = () => {
-    lockConvo({lock: true})
-  }
-
-  const handleUnlock = () => {
-    lockConvo({lock: false})
-  }
+  const reportControl = Prompt.usePromptControl()
+  const deleteControl = Prompt.usePromptControl()
 
   const createdAt = new Date(convo.details.createdAt)
 
@@ -486,7 +465,7 @@ function SettingsHeader({
                 : l`Mute this group chat`
             }
             text={convo.view.muted ? l`Muted` : l`Mute`}
-            onPress={handleToggleMute}
+            onPress={() => muteConvo({mute: !convo.view.muted})}
           />
           {isOwner ? (
             <SettingsButton
@@ -494,7 +473,10 @@ function SettingsHeader({
               icon={EditIcon}
               label={l`Edit this group chat’s name`}
               text={l`Edit name`}
-              onPress={handlePromptName}
+              onPress={() => {
+                setNewGroupName(groupName)
+                editNamePrompt.open()
+              }}
             />
           ) : null}
           {isJoinLinkEnabled ? (
@@ -522,20 +504,22 @@ function SettingsHeader({
               }
               text={lockStatus === 'locked' ? l`Locked` : l`Lock`}
               onPress={
-                lockStatus === 'locked' ? handleUnlock : lockChatPrompt.open
+                lockStatus === 'locked'
+                  ? () => lockConvo({lock: false})
+                  : lockChatPrompt.open
               }
             />
           ) : null}
-          {!isOwner && isReportLinkEnabled && (
+          {!isOwner && reportSubjectDid ? (
             <SettingsButton
               disabled={!isReady}
               icon={FlagIcon}
               label={l`Report this group chat`}
               text={l`Report`}
-              onPress={handleReportChat}
+              onPress={reportControl.open}
             />
-          )}
-          {!isOwner && (
+          ) : null}
+          {!isOwner ? (
             <SettingsButton
               disabled={!isReady || isLeaving}
               icon={ArrowBoxLeftIcon}
@@ -543,14 +527,14 @@ function SettingsHeader({
               text={l`Leave`}
               onPress={leaveChatPrompt.open}
             />
-          )}
+          ) : null}
         </View>
       </View>
       <EditNamePrompt
         control={editNamePrompt}
         value={newGroupName}
         onChangeText={setNewGroupName}
-        onConfirm={handleEditName}
+        onConfirm={() => editGroupName({name: newGroupName})}
       />
       {convo.primaryMember && (
         <InviteLinkDialog
@@ -561,12 +545,33 @@ function SettingsHeader({
           moderationOpts={moderationOpts}
         />
       )}
-      <LockChatPrompt control={lockChatPrompt} onConfirm={handleConfirmLock} />
+      <LockChatPrompt
+        control={lockChatPrompt}
+        onConfirm={() => lockConvo({lock: true})}
+      />
       <LeaveChatPrompt
         control={leaveChatPrompt}
         groupName={groupName}
         onConfirm={leaveConvo}
       />
+      {reportSubjectDid ? (
+        <>
+          <ReportConversationDialog
+            control={reportControl}
+            convoId={convo.view.id}
+            did={reportSubjectDid}
+            onAfterSubmit={deleteControl.open}
+          />
+          <AfterReportConversationDialog
+            control={deleteControl}
+            currentScreen="conversation"
+            params={{
+              convoId: convo.view.id,
+              did: reportSubjectDid,
+            }}
+          />
+        </>
+      ) : null}
     </>
   )
 }

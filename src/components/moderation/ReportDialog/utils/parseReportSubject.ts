@@ -17,9 +17,16 @@ export function parseReportSubject(
   if (!subject) return
 
   if ('convoId' in subject) {
+    if ('message' in subject) {
+      return {
+        type: 'convoMessage',
+        ...subject,
+      }
+    }
     return {
-      type: 'convoMessage',
-      ...subject,
+      type: 'convo',
+      convoId: subject.convoId,
+      did: subject.did,
     }
   }
 

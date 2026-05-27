@@ -202,11 +202,6 @@
       "count": 2
     }
   },
-  "src/components/moderation/ReportDialog/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/features/liveNow/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3

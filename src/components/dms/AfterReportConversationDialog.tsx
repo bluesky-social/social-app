@@ -11,7 +11,7 @@ import {
   useProfileBlockMutationQueue,
   useProfileQuery,
 } from '#/state/queries/profile'
-import {atoms as a, platform, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
@@ -29,28 +29,30 @@ type ReportDialogParams = {
  * Dialog shown after a report is submitted, allowing the user to block the
  * reporter and/or leave the conversation.
  */
-export const AfterReportDialog = memo(function BlockOrDeleteDialogInner({
-  control,
-  params,
-  currentScreen,
-}: {
-  control: Dialog.DialogControlProps
-  params: ReportDialogParams
-  currentScreen: 'list' | 'conversation'
-}): React.ReactNode {
-  const {t: l} = useLingui()
-  return (
-    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
-      <Dialog.Handle />
-      <Dialog.ScrollableInner
-        label={l`Would you like to block this user and/or delete this conversation?`}
-        style={[web({maxWidth: 400})]}>
-        <DialogInner params={params} currentScreen={currentScreen} />
-        <Dialog.Close />
-      </Dialog.ScrollableInner>
-    </Dialog.Outer>
-  )
-})
+export const AfterReportConversationDialog = memo(
+  function BlockOrLeaveDialogInner({
+    control,
+    params,
+    currentScreen,
+  }: {
+    control: Dialog.DialogControlProps
+    params: ReportDialogParams
+    currentScreen: 'list' | 'conversation'
+  }): React.ReactNode {
+    const {t: l} = useLingui()
+    return (
+      <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
+        <Dialog.Handle />
+        <Dialog.ScrollableInner
+          label={l`Would you like to block this user and/or leave this conversation?`}
+          style={[web({maxWidth: 400})]}>
+          <DialogInner params={params} currentScreen={currentScreen} />
+          <Dialog.Close />
+        </Dialog.ScrollableInner>
+      </Dialog.Outer>
+    )
+  },
+)
 
 function DialogInner({
   params,
@@ -88,7 +90,7 @@ function DialogInner({
       <Button
         label={l`Close`}
         onPress={() => control.close()}
-        size={platform({native: 'small', web: 'large'})}
+        size="large"
         color="secondary">
         <ButtonText>
           <Trans>Close</Trans>
@@ -122,6 +124,28 @@ function DoneStep({
   const shadow = useProfileShadow(profile)
   const [queueBlock] = useProfileBlockMutationQueue(shadow)
 
+  const handleActionsChange = (newActions: string[]) => {
+    const hadBlock = actions.includes('block')
+    const hasBlock = newActions.includes('block')
+
+    // If block was just checked, ensure leave is also checked
+    if (!hadBlock && hasBlock) {
+      if (!newActions.includes('leave')) {
+        setActions([...newActions, 'leave'])
+      } else {
+        setActions(newActions)
+      }
+    }
+    // If block was just unchecked, also uncheck leave
+    else if (hadBlock && !hasBlock) {
+      setActions(newActions.filter(action => action !== 'leave'))
+    }
+    // Otherwise, use the new actions as-is (user can toggle leave independently)
+    else {
+      setActions(newActions)
+    }
+  }
+
   const {mutate: leaveConvo} = useLeaveConvo(convoId, {
     onMutate: () => {
       if (currentScreen === 'conversation') {
@@ -140,13 +164,26 @@ function DoneStep({
   let btnText = l`Done`
   let toastMsg: string | undefined
   if (actions.includes('leave') && actions.includes('block')) {
-    btnText = l`Block and delete`
-    toastMsg = l({message: 'Conversation deleted', context: 'toast'})
+    btnText = l({
+      message: 'Block and leave',
+      context: 'button',
+      comment: 'After-report action for a conversation',
+    })
+    toastMsg = l({message: 'Conversation left', context: 'toast'})
   } else if (actions.includes('leave')) {
-    btnText = l`Delete conversation`
-    toastMsg = l({message: 'Conversation deleted', context: 'toast'})
+    btnText = l({
+      message: 'Leave conversation',
+      context: 'button',
+      comment: 'After-report action for a conversation',
+    })
+    toastMsg = l({message: 'Conversation left', context: 'toast'})
   } else if (actions.includes('block')) {
-    btnText = l`Block user`
+    // Shouldn't be able to reach this, but here for completeness.
+    btnText = l({
+      message: 'Block user',
+      context: 'button',
+      comment: 'After-report action for a conversation',
+    })
     toastMsg = l({message: 'User blocked', context: 'toast'})
   }
 
@@ -177,9 +214,9 @@ function DoneStep({
         </Text>
       </View>
       <Toggle.Group
-        label={l`Block user and/or delete this conversation`}
+        label={l`Block user and/or leave this conversation`}
         values={actions}
-        onChange={setActions}>
+        onChange={handleActionsChange}>
         <View style={[a.gap_md]}>
           <Toggle.Item name="block" label={l`Block user`}>
             <Toggle.Checkbox />
@@ -187,10 +224,13 @@ function DoneStep({
               <Trans>Block user</Trans>
             </Toggle.LabelText>
           </Toggle.Item>
-          <Toggle.Item name="leave" label={l`Delete conversation`}>
+          <Toggle.Item
+            name="leave"
+            label={l`Leave conversation`}
+            disabled={actions.includes('block')}>
             <Toggle.Checkbox />
             <Toggle.LabelText style={[a.text_md]}>
-              <Trans>Delete conversation</Trans>
+              <Trans>Leave conversation</Trans>
             </Toggle.LabelText>
           </Toggle.Item>
         </View>
