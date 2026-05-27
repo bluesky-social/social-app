@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "tsx ./src/bin.ts",
-    "dev": "node --watch-path ./src --import tsx ./src/bin.ts",
+    "dev": "LOG_ENABLED=true LOG_LEVEL=debug node --watch-path ./src --import tsx ./src/bin.ts",
     "build": "tsc && cp -r src/assets dist/",
     "install-fonts": "tsx scripts/install-fonts.ts",
     "typecheck": "tsc --noEmit"
