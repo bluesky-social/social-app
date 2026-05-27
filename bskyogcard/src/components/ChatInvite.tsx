@@ -79,13 +79,11 @@ export function ChatInvite({
             minHeight: 130,
             maxWidth: 1000,
             wordBreak: 'break-word',
-            // textWrap: 'balance',
             lineClamp: 2,
             textOverflow: 'ellipsis',
             overflow: 'hidden',
           }}>
           {preview.name}
-          {/*{(preview.name + ' ').repeat(200)}*/}
         </div>
 
         {/* By @handle */}

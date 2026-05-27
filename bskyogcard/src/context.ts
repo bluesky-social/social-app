@@ -40,7 +40,7 @@ export class AppContext {
     const fontFiles = readdirSync(fontDirectory)
     const fonts = fontFiles.map(file => {
       return {
-        name: path.basename(file, path.extname(file)),
+        name: getName(file),
         data: readFileSync(path.join(fontDirectory, file)),
         weight: getWeight(file),
       }
@@ -53,6 +53,12 @@ export class AppContext {
       ...overrides,
     })
   }
+}
+
+function getName(file: string): string {
+  const base = path.basename(file, path.extname(file))
+  if (base.startsWith('Inter-')) return 'Inter'
+  return base
 }
 
 function getWeight(file: string): FontWeight {
