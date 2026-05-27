@@ -209,6 +209,9 @@ func buildAuthor(author *appbsky.ActorDefs_ProfileViewBasic) *personOrOrg {
 	p := &personOrOrg{
 		Type: "Person",
 	}
+	if author.Did != "" {
+		p.Identifier = author.Did
+	}
 	if author.DisplayName != nil && *author.DisplayName != "" {
 		p.Name = *author.DisplayName
 		if author.Handle != "" {
@@ -223,16 +226,15 @@ func buildAuthor(author *appbsky.ActorDefs_ProfileViewBasic) *personOrOrg {
 	return p
 }
 
-// postEmbedHidden reports whether any post-view label or self-label asks
-// embeds to be omitted. WebPost uses this so og:image and JSON-LD media
-// suppression stay in sync.
-func postEmbedHidden(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) bool {
+// postHasHideLabel reports whether the post-view or self-labels include
+// any non-negated label in labelSet. Self-labels have no negation.
+func postHasHideLabel(pv *appbsky.FeedDefs_PostView, labelSet map[string]bool) bool {
 	if pv == nil {
 		return false
 	}
 	for _, label := range pv.Labels {
 		isNeg := label.Neg != nil && *label.Neg
-		if hideLabels[label.Val] && !isNeg {
+		if labelSet[label.Val] && !isNeg {
 			return true
 		}
 	}
@@ -240,7 +242,7 @@ func postEmbedHidden(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) 
 		if rec, ok := pv.Record.Val.(*appbsky.FeedPost); ok {
 			if rec.Labels != nil && rec.Labels.LabelDefs_SelfLabels != nil {
 				for _, label := range rec.Labels.LabelDefs_SelfLabels.Values {
-					if hideLabels[label.Val] {
+					if labelSet[label.Val] {
 						return true
 					}
 				}
@@ -248,6 +250,13 @@ func postEmbedHidden(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) 
 		}
 	}
 	return false
+}
+
+// postEmbedHidden reports whether any post-view label or self-label asks
+// embeds to be omitted. WebPost uses this so og:image and JSON-LD media
+// suppression stay in sync.
+func postEmbedHidden(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) bool {
+	return postHasHideLabel(pv, hideLabels)
 }
 
 // postRecordText returns the post's expanded text, or "" if the record is
@@ -285,8 +294,9 @@ func buildPostStats(pv *appbsky.FeedDefs_PostView) []interactionStat {
 // buildPostNode constructs a DiscussionForumPosting in nested form (no
 // envelope, no @context). Used for top-level posts and for entries in
 // hasPart / comment arrays. Returns the zero value if pv or pv.Author is
-// nil; callers should treat that as "skip".
-func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_ThreadViewPost_Replies_Elem, hideLabels map[string]bool) discussionForumPosting {
+// nil; callers should treat that as "skip". Replies whose own labels match
+// hideLabels or hideReplyLabels are dropped from comment[].
+func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_ThreadViewPost_Replies_Elem, hideLabels, hideReplyLabels map[string]bool) discussionForumPosting {
 	if pv == nil || pv.Author == nil {
 		return discussionForumPosting{}
 	}
@@ -332,7 +342,13 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 		if len(node.Comment) >= maxComments {
 			break
 		}
-		reply := buildReplyNode(r.FeedDefs_ThreadViewPost.Post, hideLabels)
+		replyPV := r.FeedDefs_ThreadViewPost.Post
+		// Drop labeled replies entirely so abusive/spam text isn't surfaced
+		// into the parent post's structured data.
+		if postHasHideLabel(replyPV, hideReplyLabels) || postHasHideLabel(replyPV, hideLabels) {
+			continue
+		}
+		reply := buildReplyNode(replyPV, hideLabels)
 		if reply.Type == "" {
 			continue
 		}
@@ -369,11 +385,11 @@ func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) c
 // buildPostJSONLD marshals the WebPage envelope wrapping a
 // DiscussionForumPosting. canonicalURL is used for both envelope.url and
 // (as a fallback) mainEntity.url so they always agree.
-func buildPostJSONLD(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_ThreadViewPost_Replies_Elem, canonicalURL string, hideLabels map[string]bool) (string, error) {
+func buildPostJSONLD(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_ThreadViewPost_Replies_Elem, canonicalURL string, hideLabels, hideReplyLabels map[string]bool) (string, error) {
 	if pv == nil || pv.Author == nil {
 		return "", fmt.Errorf("nil post view or author")
 	}
-	node := buildPostNode(pv, replies, hideLabels)
+	node := buildPostNode(pv, replies, hideLabels, hideReplyLabels)
 
 	// mainEntity.url is empty when the author handle is unusable; fall back
 	// to canonicalURL so it agrees with envelope.url.
@@ -447,8 +463,9 @@ func buildProfileJSONLD(pv *appbsky.ActorDefs_ProfileViewDetailed, recentPosts [
 		if len(page.HasPart) >= maxRecentPosts {
 			break
 		}
-		// Recent posts go in nested form.
-		node := buildPostNode(rp, nil, hideLabels)
+		// Recent posts go in nested form. No replies are passed, so the
+		// reply-label set is irrelevant; pass nil.
+		node := buildPostNode(rp, nil, hideLabels, nil)
 		if node.Type == "" {
 			continue
 		}

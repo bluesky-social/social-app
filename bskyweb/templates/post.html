@@ -39,6 +39,11 @@
   <meta property="twitter:image" content="{{ imgThumbUrl }}">
   {% endfor %}
   <meta name="twitter:card" content="summary_large_image">
+  {% else %}
+  <meta property="og:image" content="{{ postView.Author.Avatar|avatar_thumbnail }}">
+  <meta property="twitter:image" content="{{ postView.Author.Avatar|avatar_thumbnail }}">
+  <meta name="twitter:card" content="summary">
+  {% endif %}
   {%- if videoUrl %}
   <meta property="og:video" content="{{ videoUrl }}">
   <meta property="og:video:type" content="{{ videoType }}">
@@ -47,11 +52,6 @@
   <meta property="og:video:height" content="{{ videoHeight }}">
   {% endif -%}
   {% endif -%}
-  {% else %}
-  <meta property="og:image" content="{{ postView.Author.Avatar|avatar_thumbnail }}">
-  <meta property="twitter:image" content="{{ postView.Author.Avatar|avatar_thumbnail }}">
-  <meta name="twitter:card" content="summary">
-  {% endif %}
   <meta name="twitter:label1" content="Posted At">
   <meta name="twitter:value1" content="{{ postView.IndexedAt }}">
   {%- if postView.LikeCount %}

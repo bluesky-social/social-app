@@ -45,7 +45,7 @@ func extractJSONLD(t *testing.T, html string) string {
 
 func TestRenderPost_EmitsJSONLD(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "hello")
-	ld, err := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", hideEmbedLabels)
+	ld, err := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", hideEmbedLabels, hideReplyLabels)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -74,7 +74,7 @@ func TestRenderPost_OGImageMatchesJSONLD(t *testing.T) {
 	thumb1 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/abc@jpeg"
 	thumb2 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/def@jpeg"
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "look", withImages(thumb1, thumb2))
-	ld, _ := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", hideEmbedLabels)
+	ld, _ := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", hideEmbedLabels, hideReplyLabels)
 	html := renderTemplate(t, "post.html", pongo2.Context{
 		"postView":     pv,
 		"requestURI":   "https://bsky.app/profile/alice.bsky.social/post/abc123",
@@ -101,7 +101,7 @@ func TestRenderPost_OGImageMatchesJSONLD(t *testing.T) {
 func TestRenderPost_FallsBackToCanonicalizeFilter(t *testing.T) {
 	// Without canonicalURL, the template falls back to requestURI|canonicalize_url.
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "hi")
-	ld, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels)
+	ld, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
 	html := renderTemplate(t, "post.html", pongo2.Context{
 		"postView":   pv,
 		"requestURI": "https://bsky.app/profile/alice.bsky.social/post/abc123?utm=foo",
@@ -167,7 +167,7 @@ func TestRenderProfile_AuthRequiredEmitsJSONLD(t *testing.T) {
 // og:url and <link rel="canonical"> must emit the same URL.
 func TestRenderPost_OGUrlMatchesCanonical(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "hi")
-	ld, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels)
+	ld, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
 	canonical := "https://bsky.app/profile/alice.bsky.social/post/abc123"
 	html := renderTemplate(t, "post.html", pongo2.Context{
 		"postView":     pv,
@@ -184,5 +184,28 @@ func TestRenderPost_OGUrlMatchesCanonical(t *testing.T) {
 	// DID-form request URI must not leak into og:url.
 	if strings.Contains(html, `<meta property="og:url" content="https://bsky.app/profile/did:plc:alice/post/abc123">`) {
 		t.Errorf("og:url should not echo DID-form request URI when canonical is set")
+	}
+}
+
+// og:video must emit even when there is no thumbnail. Previously the
+// {% if videoUrl %} block was nested inside {% if imgThumbUrls %}, so a
+// video without a thumbnail dropped og:video entirely.
+func TestRenderPost_VideoWithoutThumbnailEmitsOGVideo(t *testing.T) {
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "watch")
+	ld, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	videoURL := "https://video.bsky.app/v.m3u8"
+	html := renderTemplate(t, "post.html", pongo2.Context{
+		"postView":     pv,
+		"requestURI":   "https://bsky.app/profile/alice.bsky.social/post/abc123",
+		"canonicalURL": "https://bsky.app/profile/alice.bsky.social/post/abc123",
+		"postJSONLD":   ld,
+		"videoUrl":     videoURL,
+		"videoType":    "application/x-mpegURL",
+	})
+	if !strings.Contains(html, `<meta property="og:video" content="`+videoURL+`">`) {
+		t.Errorf("og:video should emit even without imgThumbUrls; got:\n%s", html)
+	}
+	if !strings.Contains(html, `<meta property="og:video:type" content="application/x-mpegURL">`) {
+		t.Errorf("og:video:type should emit even without imgThumbUrls; got:\n%s", html)
 	}
 }

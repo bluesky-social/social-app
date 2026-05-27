@@ -500,6 +500,20 @@ var hideEmbedLabels = map[string]bool{
 	"sensitive":         true,
 }
 
+// Replies surfaced into a post's JSON-LD comment[] are dropped entirely when
+// any of these labels are present (in addition to hideEmbedLabels). Targets
+// abuse/spam in third-party reply text, since reply text would otherwise be
+// emitted into the parent post's structured data.
+var hideReplyLabels = map[string]bool{
+	"!hide":         true,
+	"!warn":         true,
+	"porn":          true,
+	"sexual":        true,
+	"nudity":        true,
+	"graphic-media": true,
+	"spam":          true,
+}
+
 func (srv *Server) WebPost(c echo.Context) error {
 	ctx := c.Request().Context()
 	data := srv.NewTemplateContext()
@@ -590,7 +604,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 	if jsonldURL == "" {
 		jsonldURL = requestURI
 	}
-	if jsonld, err := buildPostJSONLD(postView, threadView.Replies, jsonldURL, hideEmbedLabels); err == nil {
+	if jsonld, err := buildPostJSONLD(postView, threadView.Replies, jsonldURL, hideEmbedLabels, hideReplyLabels); err == nil {
 		data["postJSONLD"] = jsonld
 	} else {
 		log.Warnf("failed to build post JSON-LD for %s: %v", uri, err)
