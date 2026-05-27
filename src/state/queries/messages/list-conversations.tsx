@@ -478,21 +478,34 @@ export function ListConvosProviderInner({
                 r => r.did === data.member.did,
               )
               if (newMember) {
+                // If the optimistic add already added them, skip the
+                // memberCount bump to avoid double-counting.
+                const alreadyKnownMember =
+                  queryClient
+                    .getQueryData<
+                      ChatBskyActorDefs.ProfileViewBasic[]
+                    >(listConvoMembersQueryKey(log.convoId))
+                    ?.some(m => m.did === newMember.did) ?? false
                 mutateMembers(log.convoId, list =>
                   list.some(m => m.did === newMember.did)
                     ? list
                     : list.concat(newMember),
                 )
                 mutateConvoView(log.convoId, convo =>
-                  addMemberToConvoView(convo, newMember, log.rev),
+                  addMemberToConvoView(
+                    convo,
+                    newMember,
+                    log.rev,
+                    alreadyKnownMember,
+                  ),
                 )
               }
-              // Refetch so the server can refresh the curated members list.
-              void queryClient.invalidateQueries({
-                queryKey: CONVO_KEY(log.convoId),
-              })
-              debouncedRefetch()
             }
+            // Refetch so the server can refresh the curated members list.
+            void queryClient.invalidateQueries({
+              queryKey: CONVO_KEY(log.convoId),
+            })
+            debouncedRefetch()
           } else if (ChatBskyConvoDefs.isLogRemoveMember(log)) {
             const data = log.message.data
             if (
@@ -501,11 +514,24 @@ export function ListConvosProviderInner({
                 ChatBskyConvoDefs.isSystemMessageDataRemoveMember,
               )
             ) {
+              // If the optimistic remove already dropped them from the full
+              // list, skip the memberCount decrement to avoid double-counting.
+              const alreadyRemovedMember =
+                queryClient
+                  .getQueryData<
+                    ChatBskyActorDefs.ProfileViewBasic[]
+                  >(listConvoMembersQueryKey(log.convoId))
+                  ?.some(m => m.did === data.member.did) === false
               mutateMembers(log.convoId, list =>
                 list.filter(m => m.did !== data.member.did),
               )
               mutateConvoView(log.convoId, convo =>
-                removeMemberFromConvoView(convo, data.member.did, log.rev),
+                removeMemberFromConvoView(
+                  convo,
+                  data.member.did,
+                  log.rev,
+                  alreadyRemovedMember,
+                ),
               )
               // Refetch so the server can refill the curated members list.
               void queryClient.invalidateQueries({
@@ -525,20 +551,31 @@ export function ListConvosProviderInner({
                 r => r.did === data.member.did,
               )
               if (newMember) {
+                const alreadyKnownMember =
+                  queryClient
+                    .getQueryData<
+                      ChatBskyActorDefs.ProfileViewBasic[]
+                    >(listConvoMembersQueryKey(log.convoId))
+                    ?.some(m => m.did === newMember.did) ?? false
                 mutateMembers(log.convoId, list =>
                   list.some(m => m.did === newMember.did)
                     ? list
                     : list.concat(newMember),
                 )
                 mutateConvoView(log.convoId, convo =>
-                  addMemberToConvoView(convo, newMember, log.rev),
+                  addMemberToConvoView(
+                    convo,
+                    newMember,
+                    log.rev,
+                    alreadyKnownMember,
+                  ),
                 )
               }
-              void queryClient.invalidateQueries({
-                queryKey: CONVO_KEY(log.convoId),
-              })
-              debouncedRefetch()
             }
+            void queryClient.invalidateQueries({
+              queryKey: CONVO_KEY(log.convoId),
+            })
+            debouncedRefetch()
           } else if (ChatBskyConvoDefs.isLogMemberLeave(log)) {
             const data = log.message.data
             if (
@@ -547,11 +584,22 @@ export function ListConvosProviderInner({
                 ChatBskyConvoDefs.isSystemMessageDataMemberLeave,
               )
             ) {
+              const alreadyRemovedMember =
+                queryClient
+                  .getQueryData<
+                    ChatBskyActorDefs.ProfileViewBasic[]
+                  >(listConvoMembersQueryKey(log.convoId))
+                  ?.some(m => m.did === data.member.did) === false
               mutateMembers(log.convoId, list =>
                 list.filter(m => m.did !== data.member.did),
               )
               mutateConvoView(log.convoId, convo =>
-                removeMemberFromConvoView(convo, data.member.did, log.rev),
+                removeMemberFromConvoView(
+                  convo,
+                  data.member.did,
+                  log.rev,
+                  alreadyRemovedMember,
+                ),
               )
               void queryClient.invalidateQueries({
                 queryKey: CONVO_KEY(log.convoId),
@@ -747,6 +795,7 @@ function removeMemberFromConvoView(
   convo: ChatBskyConvoDefs.ConvoView,
   did: string,
   rev: string,
+  alreadyRemovedMember: boolean,
 ): ChatBskyConvoDefs.ConvoView {
   const nextMembers = convo.members.filter(m => m.did !== did)
   const wasInCuratedList = nextMembers.length !== convo.members.length
@@ -759,7 +808,9 @@ function removeMemberFromConvoView(
     members: nextMembers,
     kind: {
       ...convo.kind,
-      memberCount: Math.max(0, convo.kind.memberCount - 1),
+      memberCount: alreadyRemovedMember
+        ? convo.kind.memberCount
+        : Math.max(0, convo.kind.memberCount - 1),
     },
   }
 }
@@ -768,6 +819,7 @@ function addMemberToConvoView(
   convo: ChatBskyConvoDefs.ConvoView,
   member: ChatBskyActorDefs.ProfileViewBasic,
   rev: string,
+  alreadyKnownMember: boolean,
 ): ChatBskyConvoDefs.ConvoView {
   const alreadyInCuratedList = convo.members.some(m => m.did === member.did)
   const nextMembers = alreadyInCuratedList
@@ -782,7 +834,9 @@ function addMemberToConvoView(
     members: nextMembers,
     kind: {
       ...convo.kind,
-      memberCount: convo.kind.memberCount + 1,
+      memberCount: alreadyKnownMember
+        ? convo.kind.memberCount
+        : convo.kind.memberCount + 1,
     },
   }
 }
