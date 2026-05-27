@@ -60,13 +60,13 @@
     "mainEntity": {
       "@type": "Person",
       {%- if profileView.DisplayName %}
-      "name": "{{ profileView.DisplayName }}",
+      "name": "{{ profileView.DisplayName|json_escape }}",
       "alternateName": "@{{ profileView.Handle }}",
       {% else %}
       "name": "@{{ profileView.Handle }}",
       {% endif -%}
       "identifier": "{{ profileView.Did }}",
-      "description": "{{ profileView.Description }}",
+      "description": "{{ profileView.Description|json_escape }}",
       "image": "{{ profileView.Avatar }}",
       "interactionStatistic": [
         {
