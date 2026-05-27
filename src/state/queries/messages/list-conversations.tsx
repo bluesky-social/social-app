@@ -21,6 +21,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
 import {parseConvoView} from '#/components/dms/util'
 import * as bsky from '#/types/bsky'
+import {RQKEY as CONVO_KEY} from './conversation'
 import {useLeftConvos} from './leave-conversation'
 import {listConvoMembersQueryKey} from './list-convo-members'
 
@@ -153,6 +154,22 @@ export function ListConvosProviderInner({
               if (!old) return // query doesn't exist yet, skip
               return fn(old)
             },
+          )
+        }
+
+        function mutateConvoView(
+          convoId: string,
+          fn: (
+            convo: ChatBskyConvoDefs.ConvoView,
+          ) => ChatBskyConvoDefs.ConvoView,
+        ) {
+          queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(
+            CONVO_KEY(convoId),
+            old => (old ? fn(old) : old),
+          )
+          queryClient.setQueriesData<ConvoListQueryData>(
+            {queryKey: [RQKEY_ROOT]},
+            old => optimisticUpdate(convoId, old, fn),
           )
         }
 
@@ -466,7 +483,15 @@ export function ListConvosProviderInner({
                     ? list
                     : list.concat(newMember),
                 )
+                mutateConvoView(log.convoId, convo =>
+                  addMemberToConvoView(convo, newMember, log.rev),
+                )
               }
+              // Refetch so the server can refresh the curated members list.
+              void queryClient.invalidateQueries({
+                queryKey: CONVO_KEY(log.convoId),
+              })
+              debouncedRefetch()
             }
           } else if (ChatBskyConvoDefs.isLogRemoveMember(log)) {
             const data = log.message.data
@@ -479,6 +504,14 @@ export function ListConvosProviderInner({
               mutateMembers(log.convoId, list =>
                 list.filter(m => m.did !== data.member.did),
               )
+              mutateConvoView(log.convoId, convo =>
+                removeMemberFromConvoView(convo, data.member.did, log.rev),
+              )
+              // Refetch so the server can refill the curated members list.
+              void queryClient.invalidateQueries({
+                queryKey: CONVO_KEY(log.convoId),
+              })
+              debouncedRefetch()
             }
           } else if (ChatBskyConvoDefs.isLogMemberJoin(log)) {
             const data = log.message.data
@@ -497,7 +530,14 @@ export function ListConvosProviderInner({
                     ? list
                     : list.concat(newMember),
                 )
+                mutateConvoView(log.convoId, convo =>
+                  addMemberToConvoView(convo, newMember, log.rev),
+                )
               }
+              void queryClient.invalidateQueries({
+                queryKey: CONVO_KEY(log.convoId),
+              })
+              debouncedRefetch()
             }
           } else if (ChatBskyConvoDefs.isLogMemberLeave(log)) {
             const data = log.message.data
@@ -510,6 +550,13 @@ export function ListConvosProviderInner({
               mutateMembers(log.convoId, list =>
                 list.filter(m => m.did !== data.member.did),
               )
+              mutateConvoView(log.convoId, convo =>
+                removeMemberFromConvoView(convo, data.member.did, log.rev),
+              )
+              void queryClient.invalidateQueries({
+                queryKey: CONVO_KEY(log.convoId),
+              })
+              debouncedRefetch()
             }
           } else if (ChatBskyConvoDefs.isLogRemoveReaction(log)) {
             queryClient.setQueriesData(
@@ -693,6 +740,50 @@ function optimisticUpdate(
         chatId === convo.id ? updateFn(convo) : convo,
       ),
     })),
+  }
+}
+
+function removeMemberFromConvoView(
+  convo: ChatBskyConvoDefs.ConvoView,
+  did: string,
+  rev: string,
+): ChatBskyConvoDefs.ConvoView {
+  const nextMembers = convo.members.filter(m => m.did !== did)
+  const wasInCuratedList = nextMembers.length !== convo.members.length
+  if (!ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
+    return wasInCuratedList ? {...convo, members: nextMembers, rev} : convo
+  }
+  return {
+    ...convo,
+    rev,
+    members: nextMembers,
+    kind: {
+      ...convo.kind,
+      memberCount: Math.max(0, convo.kind.memberCount - 1),
+    },
+  }
+}
+
+function addMemberToConvoView(
+  convo: ChatBskyConvoDefs.ConvoView,
+  member: ChatBskyActorDefs.ProfileViewBasic,
+  rev: string,
+): ChatBskyConvoDefs.ConvoView {
+  const alreadyInCuratedList = convo.members.some(m => m.did === member.did)
+  const nextMembers = alreadyInCuratedList
+    ? convo.members
+    : convo.members.concat(member)
+  if (!ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
+    return {...convo, members: nextMembers, rev}
+  }
+  return {
+    ...convo,
+    rev,
+    members: nextMembers,
+    kind: {
+      ...convo.kind,
+      memberCount: convo.kind.memberCount + 1,
+    },
   }
 }
 
