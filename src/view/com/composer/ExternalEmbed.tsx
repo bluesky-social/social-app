@@ -91,7 +91,6 @@ export const ExternalEmbedLink = ({
         if (data.view && isStandardSiteEmbed(data.view.external)) {
           return (
             <StandardSiteEmbed
-              hideSubscribe
               view={{
                 ...data.view?.external,
                 title: data.view?.external?.title || data.title || uri,

@@ -38,12 +38,10 @@ export const StandardSiteEmbed = ({
   view,
   onOpen,
   style,
-  hideSubscribe,
 }: {
   view: AppBskyEmbedExternal.ViewExternal
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
-  hideSubscribe?: boolean
 }) => {
   const {t: l, i18n} = useLingui()
   const t = useTheme()
@@ -94,7 +92,6 @@ export const StandardSiteEmbed = ({
   if (isStandardPublication) {
     return (
       <PublicationCard
-        hideSubscribe={hideSubscribe}
         view={view}
         onPress={onPress}
         onLongPress={onLongPress}
@@ -241,7 +238,6 @@ export const StandardSiteEmbed = ({
             onPress={onPress}
             onLongPress={onLongPress}
             themeColors={themeColors}
-            hideSubscribe={hideSubscribe}
             interactedOuter={interacted}
           />
         </View>
@@ -252,14 +248,12 @@ export const StandardSiteEmbed = ({
 
 export function PublicationCard({
   view,
-  hideSubscribe,
   onPress,
   onLongPress,
   themeColors,
   style,
 }: {
   view: AppBskyEmbedExternal.ViewExternal
-  hideSubscribe?: boolean
   onPress?: () => void
   onLongPress?: () => void
   themeColors: ThemeColors
@@ -340,7 +334,7 @@ export function PublicationCard({
           </View>
         </View>
 
-        {!hideSubscribe && gtPhone && (
+        {gtPhone && (
           <SubscribeButton
             view={view}
             style={[!gtPhone && [a.w_full, a.justify_center]]}
@@ -359,7 +353,7 @@ export function PublicationCard({
           </View>
         )}
 
-        {!hideSubscribe && !gtPhone && (
+        {!gtPhone && (
           <View style={[view.description && a.pt_sm]}>
             <SubscribeButton
               view={view}
@@ -477,14 +471,12 @@ function PublicationIcon({
 
 export function PublicationFooter({
   view,
-  hideSubscribe,
   themeColors,
   onPress,
   onLongPress,
   interactedOuter,
 }: {
   view: AppBskyEmbedExternal.ViewExternal
-  hideSubscribe?: boolean
   themeColors: ThemeColors
   onPress?: () => void
   onLongPress?: () => void
@@ -561,14 +553,12 @@ export function PublicationFooter({
         </View>
       </View>
 
-      {!hideSubscribe && (
-        <SubscribeButton
-          view={view}
-          style={[a.z_10, !gtPhone && [a.w_full, a.justify_center]]}
-          onPress={onPress}
-          onLongPress={onLongPress}
-        />
-      )}
+      <SubscribeButton
+        view={view}
+        style={[a.z_10, !gtPhone && [a.w_full, a.justify_center]]}
+        onPress={onPress}
+        onLongPress={onLongPress}
+      />
     </View>
   )
 }
