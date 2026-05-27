@@ -1,0 +1,9 @@
+allowBuilds:
+  'better-sqlite3': true
+  'core-js': true
+  'protobufjs': true
+  'sharp': true
+  'unrs-resolver': true
+minimumReleaseAgeExclude:
+  - '@atproto/*'
+  - '@atproto-labs/*'

@@ -1,8 +1,9 @@
+import fs from 'node:fs'
+import net from 'node:net'
+import path from 'node:path'
+
 import {AtUri, BskyAgent} from '@atproto/api'
 import {type TestBsky, TestNetwork} from '@atproto/dev-env'
-import fs from 'fs'
-import net from 'net'
-import path from 'path'
 
 export interface TestUser {
   email: string
@@ -21,9 +22,11 @@ export interface TestPDS {
 
 class StringIdGenerator {
   _nextId = [0]
-  constructor(
-    public _chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-  ) {}
+  _chars: string
+
+  constructor(chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
+    this._chars = chars
+  }
 
   next() {
     const r = []
@@ -83,13 +86,13 @@ export async function createServer(
   // DISABLED - looks like dev-env added this and now it conflicts
   // add the test mod authority
   // const agent = new BskyAgent({service: pdsUrl})
-  // const res = await agent.api.com.atproto.server.createAccount({
+  // const res = await agent.com.atproto.server.createAccount({
   //   email: 'mod-authority@test.com',
   //   handle: 'mod-authority.test',
   //   password: 'hunter2',
   // })
-  // agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
-  // await agent.api.app.bsky.actor.profile.create(
+  // agent.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
+  // await agent.app.bsky.actor.profile.create(
   //   {repo: res.data.did},
   //   {
   //     displayName: 'Dev-env Moderation',
@@ -97,7 +100,7 @@ export async function createServer(
   //   },
   // )
 
-  // await agent.api.app.bsky.labeler.service.create(
+  // await agent.app.bsky.labeler.service.create(
   //   {repo: res.data.did, rkey: 'self'},
   //   {
   //     policies: {
@@ -109,7 +112,7 @@ export async function createServer(
   // )
 
   const pic = fs.readFileSync(
-    path.join(__dirname, '..', 'assets', 'default-avatar.png'),
+    path.join(import.meta.dirname, '..', 'assets', 'default-avatar.png'),
   )
 
   return {
@@ -125,12 +128,14 @@ export async function createServer(
 class Mocker {
   agent: BskyAgent
   users: Record<string, TestUser> = {}
+  testNet: TestNetwork
+  service: string
+  pic: Uint8Array
 
-  constructor(
-    public testNet: TestNetwork,
-    public service: string,
-    public pic: Uint8Array,
-  ) {
+  constructor(testNet: TestNetwork, service: string, pic: Uint8Array) {
+    this.testNet = testNet
+    this.service = service
+    this.pic = pic
     this.agent = new BskyAgent({service})
   }
 
@@ -161,7 +166,7 @@ class Mocker {
   async createUser(name: string) {
     const agent = new BskyAgent({service: this.service})
 
-    const inviteRes = await agent.api.com.atproto.server.createInviteCode(
+    const inviteRes = await agent.com.atproto.server.createInviteCode(
       {useCount: 1},
       {
         headers: this.pds.adminAuthHeaders(),
@@ -309,20 +314,21 @@ class Mocker {
       'app.bsky.feed.generator',
       rkey,
     )
+    // @ts-expect-error
     const fg1 = await this.testNet.createFeedGen({
-      [fgUri.toString()]: async () => {
+      [fgUri.toString()]: () => {
         return {
-          encoding: 'application/json',
+          encoding: 'application/json' as const,
           body: {
             feed: posts.slice(0, 30).map(uri => ({post: uri})),
           },
         }
       },
     })
-    const avatarRes = await agent.api.com.atproto.repo.uploadBlob(this.pic, {
+    const avatarRes = await agent.com.atproto.repo.uploadBlob(this.pic, {
       encoding: 'image/png',
     })
-    return await agent.api.app.bsky.feed.generator.create(
+    return await agent.app.bsky.feed.generator.create(
       {repo: this.users[user].did, rkey},
       {
         did: fg1.did,
@@ -336,7 +342,7 @@ class Mocker {
 
   async createInvite(forAccount: string) {
     const agent = new BskyAgent({service: this.service})
-    await agent.api.com.atproto.server.createInviteCode(
+    await agent.com.atproto.server.createInviteCode(
       {useCount: 1, forAccount},
       {
         headers: this.pds.adminAuthHeaders(),
