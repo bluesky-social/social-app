@@ -1,7 +1,12 @@
 import {useCallback} from 'react'
+import {
+  ChatBskyConvoGetConvoForMembers,
+  ChatBskyGroupCreateGroup,
+} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
+import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useCreateGroupChat} from '#/state/queries/messages/create-group-chat'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
@@ -39,7 +44,32 @@ export function NewChat({
     },
     onError: error => {
       logger.error('Failed to create chat', {safeMessage: error})
-      Toast.show(l`An issue occurred starting the chat, please try again`, {
+      let errorMessage = l`An issue occurred starting the chat, please try again.`
+      if (isNetworkError(error)) {
+        errorMessage = l`A network error occurred. Please check your internet connection.`
+      } else if (
+        error instanceof ChatBskyConvoGetConvoForMembers.AccountSuspendedError
+      ) {
+        errorMessage = l`Suspended accounts cannot participate in chat.`
+      } else if (
+        error instanceof ChatBskyConvoGetConvoForMembers.BlockedActorError
+      ) {
+        errorMessage = l`This user has blocked you and cannot be messaged.`
+      } else if (
+        error instanceof ChatBskyConvoGetConvoForMembers.MessagesDisabledError
+      ) {
+        errorMessage = l`This user has disabled chat and cannot be messaged.`
+      } else if (
+        error instanceof
+        ChatBskyConvoGetConvoForMembers.NotFollowedBySenderError
+      ) {
+        errorMessage = l`Chat recipient is not followed by the sender.`
+      } else if (
+        error instanceof ChatBskyConvoGetConvoForMembers.RecipientNotFoundError
+      ) {
+        errorMessage = l`Unable to find the selected recipient.`
+      }
+      Toast.show(errorMessage, {
         type: 'error',
       })
     },
@@ -52,12 +82,36 @@ export function NewChat({
     },
     onError: error => {
       logger.error('Failed to create groupchat', {safeMessage: error})
-      Toast.show(
-        l`An issue occurred creating the group chat, please try again`,
-        {
-          type: 'error',
-        },
-      )
+      let errorMessage = l`An issue occurred creating the group chat, please try again.`
+      if (isNetworkError(error)) {
+        errorMessage = l`A network error occurred. Please check your internet connection.`
+      } else if (
+        error instanceof ChatBskyGroupCreateGroup.AccountSuspendedError
+      ) {
+        errorMessage = l`Suspended accounts cannot participate in a group chat.`
+      } else if (error instanceof ChatBskyGroupCreateGroup.BlockedActorError) {
+        errorMessage = l`One of the selected recipients has blocked you and cannot be messaged.`
+      } else if (
+        error instanceof
+        ChatBskyGroupCreateGroup.NewAccountCannotCreateGroupError
+      ) {
+        errorMessage = l`You cannot create a group chat yet.`
+      } else if (
+        error instanceof ChatBskyGroupCreateGroup.NotFollowedBySenderError
+      ) {
+        errorMessage = l`A selected recipient is not followed by the sender.`
+      } else if (
+        error instanceof ChatBskyGroupCreateGroup.RecipientNotFoundError
+      ) {
+        errorMessage = l`Unable to find a selected recipient.`
+      } else if (
+        error instanceof ChatBskyGroupCreateGroup.UserForbidsGroupsError
+      ) {
+        errorMessage = l`One of the selected recipients does not allow group chats.`
+      }
+      Toast.show(errorMessage, {
+        type: 'error',
+      })
     },
   })
 

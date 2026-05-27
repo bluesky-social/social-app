@@ -707,12 +707,14 @@ function NewGroupChatButton({onPress}: {onPress: () => void}) {
   const t = useTheme()
   const {t: l} = useLingui()
 
-  const handleOnPress = () => {
-    onPress()
-  }
-
   return (
-    <Button label={l`New group chat`} onPress={handleOnPress}>
+    <Button
+      label={l({
+        message: 'New group chat',
+        context: 'action',
+        comment: 'Button used to create a new group chat.',
+      })}
+      onPress={onPress}>
       {({hovered, pressed, focused}) => (
         <View
           style={[
@@ -740,7 +742,11 @@ function NewGroupChatButton({onPress}: {onPress: () => void}) {
           <View style={[a.flex_grow]}>
             <Text
               style={[a.text_md, a.font_medium, a.leading_snug, t.atoms.text]}>
-              <Trans>New group chat</Trans>
+              <Trans
+                context="action"
+                comment="Button used to create a new group chat.">
+                New group chat
+              </Trans>
             </Text>
           </View>
           <ChevronRightIcon size="md" fill={t.palette.contrast_1000} />
