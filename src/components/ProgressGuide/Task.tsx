@@ -1,8 +1,8 @@
 import {View} from 'react-native'
-import * as Progress from 'react-native-progress'
 
 import {atoms as a, useTheme} from '#/alf'
 import {AnimatedCheck} from '../anim/AnimatedCheck'
+import {ProgressCircle} from '../Progress'
 import {Text} from '../Typography'
 
 export function ProgressGuideTask({
@@ -25,7 +25,7 @@ export function ProgressGuideTask({
       {current === total ? (
         <AnimatedCheck playOnMount fill={t.palette.primary_500} width={20} />
       ) : (
-        <Progress.Circle
+        <ProgressCircle
           progress={current / total}
           color={t.palette.primary_400}
           size={20}

@@ -21,8 +21,6 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-// @ts-expect-error no type definition
-import ProgressCircle from 'react-native-progress/Circle'
 import Animated, {
   type AnimatedRef,
   Easing,
@@ -129,6 +127,7 @@ import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/i
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
+import {ProgressCircle} from '#/components/Progress'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
@@ -2078,10 +2077,7 @@ function ComposerFooter({
           onSelectLanguage={onSelectLanguage}
           nudgeAt={languageNudgeAt}
         />
-        <CharProgress
-          count={post.shortenedGraphemeLength}
-          style={{width: 65}}
-        />
+        <CharProgress count={post.shortenedGraphemeLength} />
       </View>
     </View>
   )
@@ -2419,7 +2415,7 @@ function ToolbarWrapper({
   if (IS_WEB) return children
   return (
     <Animated.View
-      style={style}
+      style={[style, {minHeight: 40}]}
       entering={FadeIn.duration(400)}
       exiting={FadeOut.duration(400)}>
       {children}
@@ -2494,12 +2490,12 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
   }
 
   return (
-    <ToolbarWrapper style={[a.flex_row, a.align_center, {paddingVertical: 5}]}>
+    <ToolbarWrapper style={[a.flex_row, a.align_center]}>
       <Animated.View style={[animatedStyle]}>
         <ProgressCircle
-          size={30}
-          borderWidth={1}
-          borderColor={t.atoms.border_contrast_low.borderColor}
+          size={32}
+          borderWidth={3}
+          borderColor={t.palette.contrast_50}
           color={
             state.status === 'error'
               ? t.palette.negative_500

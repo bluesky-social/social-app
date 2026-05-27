@@ -4,11 +4,11 @@ import {Image} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
+import {countGraphemes} from 'unicode-segmenter'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {enforceLen} from '#/lib/strings/helpers'
 import {type ComposerImage} from '#/state/gallery'
-import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -91,6 +91,8 @@ const ImageAltTextInner = ({
     }
   }, [image, screenWidth])
 
+  const altTextLength = countGraphemes(altText)
+
   return (
     <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
       <Dialog.Close />
@@ -121,7 +123,9 @@ const ImageAltTextInner = ({
         <View style={[a.gap_sm]}>
           <View style={[a.relative, {width: '100%'}]}>
             <TextField.LabelText>
-              <Trans>Descriptive alt text</Trans>
+              <Trans>
+                Descriptive alt text ({altTextLength}/{MAX_ALT_TEXT})
+              </Trans>
             </TextField.LabelText>
             <TextField.Root>
               <Dialog.Input
@@ -137,9 +141,9 @@ const ImageAltTextInner = ({
             </TextField.Root>
           </View>
 
-          {altText.length > MAX_ALT_TEXT && (
+          {altTextLength > MAX_ALT_TEXT && (
             <View style={[a.pb_sm, a.flex_row, a.gap_xs]}>
-              <CircleInfo fill={t.palette.negative_500} />
+              <CircleInfo fill={t.palette.negative_500} size="sm" />
               <Text
                 style={[
                   a.italic,
@@ -158,22 +162,20 @@ const ImageAltTextInner = ({
           )}
         </View>
 
-        <AltTextCounterWrapper altText={altText}>
-          <Button
-            label={_(msg`Save`)}
-            disabled={altText === image.alt}
-            size="large"
-            color="primary"
-            variant="solid"
-            onPress={() => {
-              control.close()
-            }}
-            style={[a.flex_grow]}>
-            <ButtonText>
-              <Trans>Save</Trans>
-            </ButtonText>
-          </Button>
-        </AltTextCounterWrapper>
+        <Button
+          label={_(msg`Save`)}
+          disabled={altText === image.alt}
+          size="large"
+          color="primary"
+          variant="solid"
+          onPress={() => {
+            control.close()
+          }}
+          style={[a.flex_grow]}>
+          <ButtonText>
+            <Trans>Save</Trans>
+          </ButtonText>
+        </Button>
       </View>
     </Dialog.ScrollableInner>
   )

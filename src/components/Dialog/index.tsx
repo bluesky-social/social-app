@@ -15,7 +15,6 @@ import {
   Pressable,
   ScrollView,
   type StyleProp,
-  TextInput,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -42,7 +41,7 @@ import {
   type DialogInnerProps,
   type DialogOuterProps,
 } from '#/components/Dialog/types'
-import {createInput} from '#/components/forms/TextField'
+import {Input} from '#/components/forms/TextField'
 import {useOnKeyboard} from '#/components/hooks/useOnKeyboard'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
 import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
@@ -51,13 +50,17 @@ import {
   type BottomSheetStateChangeEvent,
 } from '../../../modules/bottom-sheet/src/BottomSheet.types'
 import {type BottomSheetNativeComponent} from '../../../modules/bottom-sheet/src/BottomSheetNativeComponent'
-
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/shared'
 export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
 
-export const Input = createInput(TextInput)
+export {
+  /**
+   * @deprecated use `TextField.Input` from `#/components/forms/TextField` instead
+   */
+  Input,
+}
 
 export function Outer({
   children,
