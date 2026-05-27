@@ -607,11 +607,12 @@ function BlockedPlaceholder({
             a.self_start,
             a.border,
             t.atoms.border_contrast_high,
+            a.flex_shrink,
             style,
           ]}>
           <Text
             style={[
-              a.text_md,
+              a.text_sm,
               a.leading_snug,
               a.italic,
               t.atoms.text_contrast_medium,
