@@ -187,7 +187,7 @@ function ProfileScreenLoaded({
     enabled: !!profile.associated?.labeler,
   })
   const [currentPage, setCurrentPage] = useState(0)
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
 
   const [scrollViewTag, setScrollViewTag] = useState<number | null>(null)
 
@@ -364,6 +364,7 @@ function ProfileScreenLoaded({
     return (
       <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
         <ProfileHeader
+          key={i18n.locale}
           profile={profile}
           labeler={labelerInfo}
           descriptionRT={hasDescription ? descriptionRT : null}

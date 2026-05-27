@@ -15,6 +15,7 @@ import defaultLocale from 'date-fns/locale/en-US'
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {AppLanguage} from '#/locale/languages'
 import {messages as messagesAn} from '#/locale/locales/an/messages'
+import {messages as messagesAr} from '#/locale/locales/ar/messages'
 import {messages as messagesAst} from '#/locale/locales/ast/messages'
 import {messages as messagesCa} from '#/locale/locales/ca/messages'
 import {messages as messagesCy} from '#/locale/locales/cy/messages'
@@ -69,6 +70,16 @@ export async function dynamicActivate(locale: AppLanguage) {
         import('@formatjs/intl-pluralrules/locale-data/an'),
         import('@formatjs/intl-numberformat/locale-data/es'),
         import('@formatjs/intl-displaynames/locale-data/es'),
+      ])
+      return dateLocale
+    }
+    case AppLanguage.ar: {
+      i18n.loadAndActivate({locale, messages: messagesAr})
+      const [{default: dateLocale}] = await Promise.all([
+        import('date-fns/locale/ar'),
+        import('@formatjs/intl-pluralrules/locale-data/ar'),
+        import('@formatjs/intl-numberformat/locale-data/ar'),
+        import('@formatjs/intl-displaynames/locale-data/ar'),
       ])
       return dateLocale
     }
@@ -472,9 +483,11 @@ export function useLocaleLanguage() {
   const [dateLocale, setDateLocale] = useState(defaultLocale)
 
   useEffect(() => {
-    dynamicActivate(sanitizeAppLanguageSetting(appLanguage)).then(locale => {
-      setDateLocale(locale ?? defaultLocale)
-    })
+    void dynamicActivate(sanitizeAppLanguageSetting(appLanguage)).then(
+      locale => {
+        setDateLocale(locale ?? defaultLocale)
+      },
+    )
   }, [appLanguage])
 
   return dateLocale
