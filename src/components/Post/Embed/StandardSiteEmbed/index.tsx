@@ -1,6 +1,6 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {type AppBskyEmbedExternal, AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/api'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
@@ -21,16 +21,11 @@ import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {matchStandardSitePublisher} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
 import {StandardSiteMetaRow} from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow'
 import {StandardSiteThemeProvider} from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteThemeProvider'
+import type * as ssTypes from '#/components/Post/Embed/StandardSiteEmbed/types'
 import {isStandardSitePublicationEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
-
-export type ThemeColors = {
-  custom: boolean
-  accent: string
-  accentForeground: string
-}
 
 const PUBLICATION_AVATAR_STYLE = {
   borderRadius: a.rounded_sm.borderRadius,
@@ -41,15 +36,11 @@ export const StandardSiteEmbed = ({
   view,
   onEmbedInteractionCallback,
   style,
-}: {
-  /**
-   * Indicates the card is showing the composer
-   */
-  preview?: boolean
-  view: AppBskyEmbedExternal.ViewExternal
-  onEmbedInteractionCallback?: () => void
-  style?: StyleProp<ViewStyle>
-}) => {
+}: ssTypes.CommonProps &
+  ssTypes.PreviewProps &
+  ssTypes.PublicApiProps & {
+    style?: StyleProp<ViewStyle>
+  }) => {
   const ax = useAnalytics()
   const {t: l, i18n} = useLingui()
   const t = useTheme()
@@ -61,7 +52,7 @@ export const StandardSiteEmbed = ({
     new AtUri(ref.uri).collection.startsWith('site.standard.'),
   )
   const isStandardPublication = isStandardSitePublicationEmbed(view)
-  let themeColors: ThemeColors = {
+  let themeColors: ssTypes.ThemeColors = {
     custom: false,
     accent: t.atoms.text.color,
     accentForeground: t.atoms.text_inverted.color,
@@ -289,15 +280,14 @@ export function PublicationCard({
   themeColors,
   style,
   onEmbedInteractionCallback,
-}: {
-  preview?: boolean
-  view: AppBskyEmbedExternal.ViewExternal
-  onPress?: () => void
-  onLongPress?: () => void
-  themeColors: ThemeColors
-  style?: StyleProp<ViewStyle>
-  onEmbedInteractionCallback?: () => void
-}) {
+}: ssTypes.CommonProps &
+  ssTypes.PreviewProps &
+  ssTypes.PublicApiProps & {
+    onPress?: () => void
+    onLongPress?: () => void
+    themeColors: ssTypes.ThemeColors
+    style?: StyleProp<ViewStyle>
+  }) {
   const t = useTheme()
   const {t: l} = useLingui()
   const {gtPhone} = useBreakpoints()
@@ -416,12 +406,11 @@ export function SubscribeButton({
   view,
   style,
   onEmbedInteractionCallback,
-}: {
-  preview?: boolean
-  view: AppBskyEmbedExternal.ViewExternal
-  style?: StyleProp<ViewStyle>
-  onEmbedInteractionCallback?: () => void
-}) {
+}: ssTypes.CommonProps &
+  ssTypes.PreviewProps &
+  ssTypes.PublicApiProps & {
+    style?: StyleProp<ViewStyle>
+  }) {
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const playHaptic = useHaptics()
@@ -509,11 +498,10 @@ function PublicationIcon({
   view,
   size,
   themeColors,
-}: {
-  view: AppBskyEmbedExternal.ViewExternal
+}: ssTypes.CommonProps & {
   size: number
   interacted?: boolean
-  themeColors: ThemeColors
+  themeColors: ssTypes.ThemeColors
 }) {
   if (!view.source) return null
   return view.source?.icon ? (
@@ -557,15 +545,14 @@ export function PublicationFooter({
   onLongPress,
   interactedOuter,
   onEmbedInteractionCallback,
-}: {
-  preview?: boolean
-  view: AppBskyEmbedExternal.ViewExternal
-  themeColors: ThemeColors
-  onPress?: () => void
-  onLongPress?: () => void
-  interactedOuter?: boolean
-  onEmbedInteractionCallback?: () => void
-}) {
+}: ssTypes.CommonProps &
+  ssTypes.PreviewProps &
+  ssTypes.PublicApiProps & {
+    themeColors: ssTypes.ThemeColors
+    onPress?: () => void
+    onLongPress?: () => void
+    interactedOuter?: boolean
+  }) {
   const t = useTheme()
   const {t: l} = useLingui()
   const {gtPhone} = useBreakpoints()

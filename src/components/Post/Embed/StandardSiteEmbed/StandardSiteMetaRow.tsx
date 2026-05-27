@@ -1,6 +1,6 @@
 import {Fragment, type ReactNode} from 'react'
 import {View} from 'react-native'
-import {type AppBskyEmbedExternal, AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -11,6 +11,7 @@ import {
   matchStandardSitePublisher,
   matchStandardSitePublisherByUri,
 } from '#/components/Post/Embed/StandardSiteEmbed/publishers'
+import type * as ssTypes from '#/components/Post/Embed/StandardSiteEmbed/types'
 import {
   isStandardSiteDocumentUri,
   isStandardSitePublicationUri,
@@ -19,14 +20,13 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
 export function StandardSiteMetaRow({
-  preview,
   type = 'document',
+  preview,
   view,
-}: {
-  preview?: boolean
-  type?: 'document' | 'publication'
-  view: AppBskyEmbedExternal.ViewExternal
-}) {
+}: ssTypes.CommonProps &
+  ssTypes.PreviewProps & {
+    type?: 'document' | 'publication'
+  }) {
   const ax = useAnalytics()
   const t = useTheme()
   const {t: l} = useLingui()
