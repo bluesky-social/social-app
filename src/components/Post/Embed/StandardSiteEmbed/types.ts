@@ -18,3 +18,9 @@ export type PublicApiProps = {
    */
   onEmbedInteractionCallback?: () => void
 }
+
+export type ThemeColors = {
+  custom: boolean
+  accent: string
+  accentForeground: string
+}
