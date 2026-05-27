@@ -154,6 +154,48 @@ func withPostLabel(val string, neg bool) func(*appbsky.FeedDefs_PostView) {
 	}
 }
 
+// verifierSpec is a compact specifier for a verification entry in fixtures.
+type verifierSpec struct {
+	issuer, handle, displayName string
+	isValid                     bool
+}
+
+// makeVerificationState builds a VerificationState from the supplied specs.
+func makeVerificationState(specs ...verifierSpec) *appbsky.ActorDefs_VerificationState {
+	state := &appbsky.ActorDefs_VerificationState{
+		VerifiedStatus:        "valid",
+		TrustedVerifierStatus: "none",
+	}
+	for _, s := range specs {
+		v := &appbsky.ActorDefs_VerificationView{
+			Issuer:    s.issuer,
+			IsValid:   s.isValid,
+			CreatedAt: "2024-01-01T00:00:00Z",
+			Uri:       "at://" + s.issuer + "/app.bsky.graph.verification/" + s.issuer,
+		}
+		if s.handle != "" {
+			h := s.handle
+			v.Handle = &h
+		}
+		if s.displayName != "" {
+			d := s.displayName
+			v.DisplayName = &d
+		}
+		state.Verifications = append(state.Verifications, v)
+	}
+	return state
+}
+
+// withVerifications sets pv.Author.Verification.
+func withVerifications(state *appbsky.ActorDefs_VerificationState) func(*appbsky.FeedDefs_PostView) {
+	return func(pv *appbsky.FeedDefs_PostView) {
+		if pv.Author == nil {
+			return
+		}
+		pv.Author.Verification = state
+	}
+}
+
 // unmarshalLD parses the JSON-LD blob produced by buildPostJSONLD.
 func unmarshalLD(t *testing.T, s string) map[string]any {
 	t.Helper()
@@ -774,5 +816,236 @@ func TestBuildPostJSONLD_ReplyAuthorHasIdentifier(t *testing.T) {
 	}
 	if auth["identifier"] != "did:plc:bob" {
 		t.Errorf("reply author identifier should be DID, got %v", auth["identifier"])
+	}
+}
+
+func TestBuildReviewedBy_NilAndEmpty(t *testing.T) {
+	if got := buildReviewedBy(nil); got != nil {
+		t.Errorf("nil state should yield nil, got %v", got)
+	}
+	empty := &appbsky.ActorDefs_VerificationState{}
+	if got := buildReviewedBy(empty); got != nil {
+		t.Errorf("empty Verifications should yield nil, got %v", got)
+	}
+	allInvalid := makeVerificationState(
+		verifierSpec{issuer: "did:plc:v1", handle: "v1.example.com", displayName: "V One", isValid: false},
+		verifierSpec{issuer: "did:plc:v2", handle: "v2.example.com", displayName: "V Two", isValid: false},
+	)
+	if got := buildReviewedBy(allInvalid); got != nil {
+		t.Errorf("all-invalid state should yield nil, got %v", got)
+	}
+}
+
+func TestBuildReviewedBy_FiltersInvalid(t *testing.T) {
+	state := makeVerificationState(
+		verifierSpec{issuer: "did:plc:v1", handle: "v1.example.com", displayName: "V One", isValid: true},
+		verifierSpec{issuer: "did:plc:v2", handle: "v2.example.com", displayName: "V Two", isValid: false},
+		verifierSpec{issuer: "did:plc:v3", handle: "v3.example.com", displayName: "V Three", isValid: true},
+		verifierSpec{issuer: "", handle: "noid.example.com", displayName: "No Issuer", isValid: true},
+	)
+	got := buildReviewedBy(state)
+	if len(got) != 2 {
+		t.Fatalf("expected 2 valid verifiers, got %d: %v", len(got), got)
+	}
+	if got[0].Identifier != "did:plc:v1" {
+		t.Errorf("FIFO order broken; first identifier = %q", got[0].Identifier)
+	}
+	if got[1].Identifier != "did:plc:v3" {
+		t.Errorf("expected v3 at index 1, got %q", got[1].Identifier)
+	}
+}
+
+func TestBuildReviewedBy_NameFallbacks(t *testing.T) {
+	cases := []struct {
+		name                                              string
+		spec                                              verifierSpec
+		wantName, wantAlternateName, wantURL, wantIdentif string
+	}{
+		{
+			name:              "DisplayName + handle",
+			spec:              verifierSpec{issuer: "did:plc:v1", handle: "alice.example.com", displayName: "Alice Verifier", isValid: true},
+			wantName:          "Alice Verifier",
+			wantAlternateName: "@alice.example.com",
+			wantURL:           "https://bsky.app/profile/alice.example.com",
+			wantIdentif:       "did:plc:v1",
+		},
+		{
+			name:              "handle only",
+			spec:              verifierSpec{issuer: "did:plc:v2", handle: "bob.example.com", isValid: true},
+			wantName:          "@bob.example.com",
+			wantAlternateName: "",
+			wantURL:           "https://bsky.app/profile/bob.example.com",
+			wantIdentif:       "did:plc:v2",
+		},
+		{
+			name:              "DisplayName only (no handle)",
+			spec:              verifierSpec{issuer: "did:plc:v3", displayName: "Carol Verifier", isValid: true},
+			wantName:          "Carol Verifier",
+			wantAlternateName: "",
+			wantURL:           "https://bsky.app/profile/did:plc:v3",
+			wantIdentif:       "did:plc:v3",
+		},
+		{
+			name:              "DisplayName + handle.invalid",
+			spec:              verifierSpec{issuer: "did:plc:v4", handle: "handle.invalid", displayName: "Dave Verifier", isValid: true},
+			wantName:          "Dave Verifier",
+			wantAlternateName: "",
+			wantURL:           "https://bsky.app/profile/did:plc:v4",
+			wantIdentif:       "did:plc:v4",
+		},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := buildReviewedBy(makeVerificationState(tc.spec))
+			if len(got) != 1 {
+				t.Fatalf("expected 1 entry, got %d", len(got))
+			}
+			v := got[0]
+			if v.Type != "Person" {
+				t.Errorf("@type = %q, want Person", v.Type)
+			}
+			if v.Name != tc.wantName {
+				t.Errorf("name = %q, want %q", v.Name, tc.wantName)
+			}
+			if v.AlternateName != tc.wantAlternateName {
+				t.Errorf("alternateName = %q, want %q", v.AlternateName, tc.wantAlternateName)
+			}
+			if v.URL != tc.wantURL {
+				t.Errorf("url = %q, want %q", v.URL, tc.wantURL)
+			}
+			if v.Identifier != tc.wantIdentif {
+				t.Errorf("identifier = %q, want %q", v.Identifier, tc.wantIdentif)
+			}
+		})
+	}
+}
+
+func TestBuildReviewedBy_Cap(t *testing.T) {
+	specs := make([]verifierSpec, 0, 12)
+	for i := 0; i < 12; i++ {
+		specs = append(specs, verifierSpec{
+			issuer:      fmt.Sprintf("did:plc:v%02d", i),
+			handle:      fmt.Sprintf("v%02d.example.com", i),
+			displayName: fmt.Sprintf("V%02d", i),
+			isValid:     true,
+		})
+	}
+	got := buildReviewedBy(makeVerificationState(specs...))
+	if len(got) != maxReviewedBy {
+		t.Errorf("expected cap at %d, got %d", maxReviewedBy, len(got))
+	}
+	if got[0].Identifier != "did:plc:v00" {
+		t.Errorf("first kept entry should be v00, got %q", got[0].Identifier)
+	}
+}
+
+func TestBuildPostJSONLD_AuthorReviewedBy(t *testing.T) {
+	state := makeVerificationState(verifierSpec{
+		issuer:      "did:plc:verifier1",
+		handle:      "verifier.example.com",
+		displayName: "Trusted Verifier",
+		isValid:     true,
+	})
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "hi",
+		withVerifications(state))
+	out, err := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	if err != nil {
+		t.Fatal(err)
+	}
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	auth := main["author"].(map[string]any)
+	rb, ok := auth["reviewedBy"].([]any)
+	if !ok {
+		t.Fatalf("post author should have reviewedBy, got %v", auth["reviewedBy"])
+	}
+	if len(rb) != 1 {
+		t.Fatalf("expected 1 verifier, got %d", len(rb))
+	}
+	v := rb[0].(map[string]any)
+	if v["@type"] != "Person" {
+		t.Errorf("verifier @type = %v, want Person", v["@type"])
+	}
+	if v["name"] != "Trusted Verifier" {
+		t.Errorf("verifier name = %v", v["name"])
+	}
+	if v["identifier"] != "did:plc:verifier1" {
+		t.Errorf("verifier identifier = %v", v["identifier"])
+	}
+	if v["url"] != "https://bsky.app/profile/verifier.example.com" {
+		t.Errorf("verifier url = %v", v["url"])
+	}
+}
+
+func TestBuildPostJSONLD_ReplyAuthorNoReviewedBy(t *testing.T) {
+	// Replies do not surface verifications even when the reply author
+	// carries Verification.
+	state := makeVerificationState(verifierSpec{
+		issuer:      "did:plc:verifier1",
+		handle:      "verifier.example.com",
+		displayName: "Trusted Verifier",
+		isValid:     true,
+	})
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "main")
+	reply := makePostView("bob.bsky.social", "did:plc:bob", "rep1", "hi",
+		withVerifications(state))
+	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	c := main["comment"].([]any)[0].(map[string]any)
+	auth := c["author"].(map[string]any)
+	if _, present := auth["reviewedBy"]; present {
+		t.Errorf("reply author must not carry reviewedBy, got %v", auth["reviewedBy"])
+	}
+}
+
+func TestBuildProfileJSONLD_MainEntityReviewedBy(t *testing.T) {
+	pv := newProfileViewDetailed()
+	pv.Verification = makeVerificationState(verifierSpec{
+		issuer:      "did:plc:verifier1",
+		handle:      "verifier.example.com",
+		displayName: "Trusted Verifier",
+		isValid:     true,
+	})
+	out, err := buildProfileJSONLD(pv, nil, hideEmbedLabels, hideReplyLabels)
+	if err != nil {
+		t.Fatal(err)
+	}
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	rb, ok := main["reviewedBy"].([]any)
+	if !ok {
+		t.Fatalf("profile mainEntity should have reviewedBy, got %v", main["reviewedBy"])
+	}
+	v := rb[0].(map[string]any)
+	if v["identifier"] != "did:plc:verifier1" {
+		t.Errorf("verifier identifier = %v", v["identifier"])
+	}
+	if v["url"] != "https://bsky.app/profile/verifier.example.com" {
+		t.Errorf("verifier url = %v", v["url"])
+	}
+}
+
+func TestBuildProfileJSONLD_HasPartAuthorReviewedBy(t *testing.T) {
+	// Recent posts inherit verifications via their post-view Author.
+	pv := newProfileViewDetailed()
+	state := makeVerificationState(verifierSpec{
+		issuer:      "did:plc:verifier1",
+		handle:      "verifier.example.com",
+		displayName: "Trusted Verifier",
+		isValid:     true,
+	})
+	post := makePostView("alice.bsky.social", "did:plc:alice", "rp1", "hi",
+		withVerifications(state))
+	out, _ := buildProfileJSONLD(pv, []*appbsky.FeedDefs_PostView{post}, hideEmbedLabels, hideReplyLabels)
+	page := unmarshalLD(t, out)
+	hp := page["hasPart"].([]any)
+	if len(hp) != 1 {
+		t.Fatalf("expected 1 hasPart entry, got %d", len(hp))
+	}
+	auth := hp[0].(map[string]any)["author"].(map[string]any)
+	rb, ok := auth["reviewedBy"].([]any)
+	if !ok || len(rb) != 1 {
+		t.Fatalf("hasPart author should carry reviewedBy, got %v", auth["reviewedBy"])
+	}
+	if rb[0].(map[string]any)["identifier"] != "did:plc:verifier1" {
+		t.Errorf("verifier identifier wrong: %v", rb[0])
 	}
 }

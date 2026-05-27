@@ -32,6 +32,17 @@ type personOrOrg struct {
 	Image                string            `json:"image,omitempty"`
 	InteractionStat      []interactionStat `json:"interactionStatistic,omitempty"`
 	AgentInteractionStat []interactionStat `json:"agentInteractionStatistic,omitempty"`
+	ReviewedBy           []*verifier       `json:"reviewedBy,omitempty"`
+}
+
+// verifier is the schema.org Person shape emitted under Person.reviewedBy.
+// Narrower than personOrOrg: just enough to identify the verifying entity.
+type verifier struct {
+	Type          string `json:"@type"`
+	Name          string `json:"name,omitempty"`
+	AlternateName string `json:"alternateName,omitempty"`
+	Identifier    string `json:"identifier,omitempty"`
+	URL           string `json:"url,omitempty"`
 }
 
 type sharedContent struct {
@@ -90,6 +101,9 @@ const maxComments = 10
 
 // maxRecentPosts caps ProfilePage.hasPart[].
 const maxRecentPosts = 10
+
+// maxReviewedBy caps Person.reviewedBy entries.
+const maxReviewedBy = 10
 
 // authorFeedFetchLimit oversamples getAuthorFeed because posts_no_replies
 // still returns reposts; we drop those client-side. 3x is a safe margin.
@@ -226,6 +240,48 @@ func buildAuthor(author *appbsky.ActorDefs_ProfileViewBasic) *personOrOrg {
 	return p
 }
 
+// buildReviewedBy maps a profile's verifications to Person entries for
+// Person.reviewedBy. Skips !IsValid and missing Issuer; caps at
+// maxReviewedBy. URL falls back to DID-form when the verifier's handle is
+// missing or "handle.invalid".
+func buildReviewedBy(state *appbsky.ActorDefs_VerificationState) []*verifier {
+	if state == nil || len(state.Verifications) == 0 {
+		return nil
+	}
+	var out []*verifier
+	for _, v := range state.Verifications {
+		if v == nil || !v.IsValid || v.Issuer == "" {
+			continue
+		}
+		if len(out) >= maxReviewedBy {
+			break
+		}
+		entry := &verifier{
+			Type:       "Person",
+			Identifier: v.Issuer,
+		}
+		var handle string
+		if v.Handle != nil {
+			handle = *v.Handle
+		}
+		if v.DisplayName != nil && *v.DisplayName != "" {
+			entry.Name = *v.DisplayName
+			if handle != "" && handle != "handle.invalid" {
+				entry.AlternateName = "@" + handle
+			}
+		} else if handle != "" && handle != "handle.invalid" {
+			entry.Name = "@" + handle
+		}
+		if url := bskyProfileURL(handle); url != "" {
+			entry.URL = url
+		} else {
+			entry.URL = "https://bsky.app/profile/" + v.Issuer
+		}
+		out = append(out, entry)
+	}
+	return out
+}
+
 // postHasHideLabel reports whether the post-view or self-labels include
 // any non-negated label in labelSet. Self-labels have no negation.
 func postHasHideLabel(pv *appbsky.FeedDefs_PostView, labelSet map[string]bool) bool {
@@ -317,6 +373,13 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 		ThumbnailURL:    thumb,
 		DatePublished:   pv.IndexedAt,
 		InteractionStat: buildPostStats(pv),
+	}
+
+	// Surface verifications on the post author only; replies do not.
+	if node.Author != nil {
+		if rb := buildReviewedBy(pv.Author.Verification); len(rb) > 0 {
+			node.Author.ReviewedBy = rb
+		}
 	}
 
 	if pv.ReplyCount != nil {
@@ -447,6 +510,9 @@ func buildProfileJSONLD(pv *appbsky.ActorDefs_ProfileViewDetailed, recentPosts [
 	person.AgentInteractionStat = []interactionStat{
 		{Type: "InteractionCounter", InteractionType: "https://schema.org/FollowAction", UserInteractionCount: deref(pv.FollowsCount)},
 		{Type: "InteractionCounter", InteractionType: "https://schema.org/WriteAction", UserInteractionCount: deref(pv.PostsCount)},
+	}
+	if rb := buildReviewedBy(pv.Verification); len(rb) > 0 {
+		person.ReviewedBy = rb
 	}
 
 	page := profilePage{
