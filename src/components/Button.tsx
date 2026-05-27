@@ -874,10 +874,10 @@ export function ButtonIcon({
             left: '50%',
             transform: [
               {
-                translateX: (iconSize / 2) * -1,
+                translateX: Math.ceil((iconSize / 2) * -1),
               },
               {
-                translateY: (iconSize / 2) * -1,
+                translateY: Math.ceil((iconSize / 2) * -1),
               },
             ],
           },

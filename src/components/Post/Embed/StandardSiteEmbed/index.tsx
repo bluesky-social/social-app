@@ -242,6 +242,7 @@ export const StandardSiteEmbed = ({
             onLongPress={onLongPress}
             themeColors={themeColors}
             hideSubscribe={hideSubscribe}
+            interactedOuter={interacted}
           />
         </View>
       )}
@@ -415,7 +416,7 @@ export function SubscribeButton({
         {highlightedPublisher ? (
           <>
             <View style={[a.flex_row, a.align_center, {gap: 7}]}>
-              <ButtonIcon icon={highlightedPublisher.Icon} size="lg" />
+              <ButtonIcon icon={highlightedPublisher.Icon} size="md" />
             </View>
             <ButtonText>{cta}</ButtonText>
           </>
@@ -477,15 +478,17 @@ function PublicationIcon({
 export function PublicationFooter({
   view,
   hideSubscribe,
+  themeColors,
   onPress,
   onLongPress,
-  themeColors,
+  interactedOuter,
 }: {
   view: AppBskyEmbedExternal.ViewExternal
   hideSubscribe?: boolean
   themeColors: ThemeColors
   onPress?: () => void
   onLongPress?: () => void
+  interactedOuter?: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -507,7 +510,7 @@ export function PublicationFooter({
         a.p_md,
         a.gap_md,
         gtPhone && [a.flex_row, a.gap_sm],
-        interacted && t.atoms.bg_contrast_25,
+        interactedOuter && t.atoms.bg_contrast_25,
       ]}
       testID="publication-embed-footer">
       <Link
@@ -546,7 +549,12 @@ export function PublicationFooter({
         <View style={[a.flex_1, a.gap_2xs]}>
           <Text
             numberOfLines={1}
-            style={[a.text_sm, a.font_medium, t.atoms.text]}>
+            style={[
+              a.text_sm,
+              a.font_medium,
+              t.atoms.text,
+              interacted && a.underline,
+            ]}>
             {view.source?.title}
           </Text>
           <StandardSiteMetaRow type="publication" view={view} />
