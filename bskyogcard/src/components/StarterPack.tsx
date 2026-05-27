@@ -137,7 +137,7 @@ export function StarterPack(props: {
             fontSize: isLongTitle ? 55 : 65,
             display: 'flex',
             textAlign: 'center',
-            textWrap: 'pretty',
+            textWrap: 'balance',
           }}>
           {record?.name || 'Starter Pack'}
         </div>
