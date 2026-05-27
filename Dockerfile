@@ -65,7 +65,7 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER" >> .env && \
   echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env && \
   echo "EXPO_PUBLIC_SENTRY_DSN=$EXPO_PUBLIC_SENTRY_DSN" >> .env && \
-  npm install --global pnpm@11.1.1 && \
+  npm install --global pnpm@11.1.3 && \
   pnpm install --frozen-lockfile && \
   pnpm intl:build 2>&1 | tee i18n.log && \
   if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compile errors!\n\n"; fi && \
