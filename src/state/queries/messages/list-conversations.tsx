@@ -1,5 +1,6 @@
 import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
 import {
+  type ChatBskyActorDefs,
   ChatBskyConvoDefs,
   type ChatBskyConvoListConvos,
   moderateProfile,
@@ -19,7 +20,9 @@ import {useMessagesEventBus} from '#/state/messages/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
 import {parseConvoView} from '#/components/dms/util'
+import * as bsky from '#/types/bsky'
 import {useLeftConvos} from './leave-conversation'
+import {listConvoMembersQueryKey} from './list-convo-members'
 
 const DEFAULT_LIMIT = 10
 export const UNREAD_LIMIT = 20
@@ -137,6 +140,21 @@ export function ListConvosProviderInner({
     const unsub = messagesBus.on(
       events => {
         if (events.type !== 'logs') return
+
+        function mutateMembers(
+          convoId: string,
+          fn: (
+            members: ChatBskyActorDefs.ProfileViewBasic[],
+          ) => ChatBskyActorDefs.ProfileViewBasic[],
+        ) {
+          queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
+            listConvoMembersQueryKey(convoId),
+            old => {
+              if (!old) return // query doesn't exist yet, skip
+              return fn(old)
+            },
+          )
+        }
 
         for (const log of events.logs) {
           if (ChatBskyConvoDefs.isLogBeginConvo(log)) {
@@ -431,6 +449,68 @@ export function ListConvosProviderInner({
                   rev: log.rev,
                 })),
             )
+          } else if (ChatBskyConvoDefs.isLogAddMember(log)) {
+            const data = log.message.data
+            if (
+              bsky.dangerousIsType<ChatBskyConvoDefs.SystemMessageDataAddMember>(
+                data,
+                ChatBskyConvoDefs.isSystemMessageDataAddMember,
+              )
+            ) {
+              const newMember = log.relatedProfiles.find(
+                r => r.did === data.member.did,
+              )
+              if (newMember) {
+                mutateMembers(log.convoId, list =>
+                  list.some(m => m.did === newMember.did)
+                    ? list
+                    : list.concat(newMember),
+                )
+              }
+            }
+          } else if (ChatBskyConvoDefs.isLogRemoveMember(log)) {
+            const data = log.message.data
+            if (
+              bsky.dangerousIsType<ChatBskyConvoDefs.SystemMessageDataRemoveMember>(
+                data,
+                ChatBskyConvoDefs.isSystemMessageDataRemoveMember,
+              )
+            ) {
+              mutateMembers(log.convoId, list =>
+                list.filter(m => m.did !== data.member.did),
+              )
+            }
+          } else if (ChatBskyConvoDefs.isLogMemberJoin(log)) {
+            const data = log.message.data
+            if (
+              bsky.dangerousIsType<ChatBskyConvoDefs.SystemMessageDataMemberJoin>(
+                data,
+                ChatBskyConvoDefs.isSystemMessageDataMemberJoin,
+              )
+            ) {
+              const newMember = log.relatedProfiles.find(
+                r => r.did === data.member.did,
+              )
+              if (newMember) {
+                mutateMembers(log.convoId, list =>
+                  list.some(m => m.did === newMember.did)
+                    ? list
+                    : list.concat(newMember),
+                )
+              }
+            }
+          } else if (ChatBskyConvoDefs.isLogMemberLeave(log)) {
+            const data = log.message.data
+            if (
+              bsky.dangerousIsType<ChatBskyConvoDefs.SystemMessageDataMemberLeave>(
+                data,
+                ChatBskyConvoDefs.isSystemMessageDataMemberLeave,
+              )
+            ) {
+              mutateMembers(log.convoId, list =>
+                list.filter(m => m.did !== data.member.did),
+              )
+            }
           } else if (ChatBskyConvoDefs.isLogRemoveReaction(log)) {
             queryClient.setQueriesData(
               {queryKey: [RQKEY_ROOT]},
