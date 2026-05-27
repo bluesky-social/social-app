@@ -89,13 +89,18 @@ export function ChatInvite({
         {/* By @handle */}
         <div
           style={{
-            display: 'flex',
+            display: 'block',
             fontSize: 34,
             fontWeight: 400,
             marginTop: 12,
             lineHeight: 1.3,
+            lineClamp: 1,
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            maxWidth: 800,
+            wordBreak: 'break-all',
           }}>
-          By @{preview.owner.handle}
+          {'By @' + preview.owner.handle}
         </div>
       </div>
     </div>
