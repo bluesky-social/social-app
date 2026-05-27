@@ -5,6 +5,7 @@ import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
+import {useCallOnce} from '#/lib/once'
 import {shareUrl} from '#/lib/sharing'
 import {niceDate} from '#/lib/strings/time'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
@@ -22,6 +23,7 @@ import {StandardSiteMetaRow} from '#/components/Post/Embed/StandardSiteEmbed/Sta
 import {StandardSiteThemeProvider} from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteThemeProvider'
 import {isStandardSitePublicationEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 
 export type ThemeColors = {
@@ -35,14 +37,20 @@ const PUBLICATION_AVATAR_STYLE = {
 }
 
 export const StandardSiteEmbed = ({
+  preview,
   view,
-  onOpen,
+  onEmbedInteractionCallback,
   style,
 }: {
+  /**
+   * Indicates the card is showing the composer
+   */
+  preview?: boolean
   view: AppBskyEmbedExternal.ViewExternal
-  onOpen?: () => void
+  onEmbedInteractionCallback?: () => void
   style?: StyleProp<ViewStyle>
 }) => {
+  const ax = useAnalytics()
   const {t: l, i18n} = useLingui()
   const t = useTheme()
   const playHaptic = useHaptics()
@@ -76,27 +84,51 @@ export const StandardSiteEmbed = ({
     onIn: onInteract,
     onOut: onInteractOut,
   } = useInteractionState()
-
   const onPress = () => {
     playHaptic('Light')
-    onOpen?.()
+    onEmbedInteractionCallback?.()
+    ax.metric('embed:standardSite:article:press', {url: view.uri})
   }
-
   const onLongPress = () => {
     if (view.uri && IS_NATIVE) {
       playHaptic('Heavy')
       shareUrl(view.uri)
+      ax.metric('embed:standardSite:article:longPress', {url: view.uri})
     }
   }
+  const onPressPublication = () => {
+    playHaptic('Light')
+    onEmbedInteractionCallback?.()
+    ax.metric('embed:standardSite:publication:press', {
+      url: view.source?.uri || '',
+    })
+  }
+  const onLongPressPublication = () => {
+    if (view.source?.uri && IS_NATIVE) {
+      playHaptic('Heavy')
+      shareUrl(view.source.uri)
+      ax.metric('embed:standardSite:publication:longPress', {
+        url: view.source.uri,
+      })
+    }
+  }
+
+  useCallOnce(() => {
+    if (!preview) {
+      ax.metric('embed:standardSite:view', {url: view.uri})
+    }
+  })()
 
   if (isStandardPublication) {
     return (
       <PublicationCard
+        preview={preview}
         view={view}
-        onPress={onPress}
-        onLongPress={onLongPress}
+        onPress={onPressPublication}
+        onLongPress={onLongPressPublication}
         style={style}
         themeColors={themeColors}
+        onEmbedInteractionCallback={onEmbedInteractionCallback}
       />
     )
   }
@@ -111,6 +143,7 @@ export const StandardSiteEmbed = ({
         a.border,
         t.atoms.bg,
         interacted ? t.atoms.border_contrast_high : t.atoms.border_contrast_low,
+        preview && a.pointer_events_none,
         style,
       ]}>
       <Link
@@ -224,7 +257,7 @@ export const StandardSiteEmbed = ({
           <View style={[a.px_md]}>
             <Divider />
             <View style={[a.py_sm]}>
-              <StandardSiteMetaRow view={view} />
+              <StandardSiteMetaRow preview={preview} view={view} />
             </View>
           </View>
         )}
@@ -234,11 +267,13 @@ export const StandardSiteEmbed = ({
         <View style={[a.z_20]}>
           <Divider />
           <PublicationFooter
+            preview={preview}
             view={view}
-            onPress={onPress}
-            onLongPress={onLongPress}
+            onPress={onPressPublication}
+            onLongPress={onLongPressPublication}
             themeColors={themeColors}
             interactedOuter={interacted}
+            onEmbedInteractionCallback={onEmbedInteractionCallback}
           />
         </View>
       )}
@@ -247,17 +282,21 @@ export const StandardSiteEmbed = ({
 }
 
 export function PublicationCard({
+  preview,
   view,
   onPress,
   onLongPress,
   themeColors,
   style,
+  onEmbedInteractionCallback,
 }: {
+  preview?: boolean
   view: AppBskyEmbedExternal.ViewExternal
   onPress?: () => void
   onLongPress?: () => void
   themeColors: ThemeColors
   style?: StyleProp<ViewStyle>
+  onEmbedInteractionCallback?: () => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -330,16 +369,20 @@ export function PublicationCard({
               style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
               {view.source?.title}
             </Text>
-            <StandardSiteMetaRow type="publication" view={view} />
+            <StandardSiteMetaRow
+              preview={preview}
+              type="publication"
+              view={view}
+            />
           </View>
         </View>
 
         {gtPhone && (
           <SubscribeButton
+            preview={preview}
             view={view}
             style={[!gtPhone && [a.w_full, a.justify_center]]}
-            onPress={onPress}
-            onLongPress={onLongPress}
+            onEmbedInteractionCallback={onEmbedInteractionCallback}
           />
         )}
       </View>
@@ -356,10 +399,10 @@ export function PublicationCard({
         {!gtPhone && (
           <View style={[view.description && a.pt_sm]}>
             <SubscribeButton
+              preview={preview}
               view={view}
               style={[!gtPhone && [a.w_full, a.justify_center]]}
-              onPress={onPress}
-              onLongPress={onLongPress}
+              onEmbedInteractionCallback={onEmbedInteractionCallback}
             />
           </View>
         )}
@@ -369,17 +412,20 @@ export function PublicationCard({
 }
 
 export function SubscribeButton({
+  preview,
   view,
-  onPress,
-  onLongPress,
   style,
+  onEmbedInteractionCallback,
 }: {
+  preview?: boolean
   view: AppBskyEmbedExternal.ViewExternal
-  onPress?: () => void
-  onLongPress?: () => void
   style?: StyleProp<ViewStyle>
+  onEmbedInteractionCallback?: () => void
 }) {
+  const ax = useAnalytics()
   const {t: l} = useLingui()
+  const playHaptic = useHaptics()
+
   const highlightedPublisher = matchStandardSitePublisher(view)
   const cta = highlightedPublisher
     ? l`Subscribe on ${highlightedPublisher.name}`
@@ -396,6 +442,36 @@ export function SubscribeButton({
       ? l`View ${publicationTitle}`
       : l`View publication`
 
+  const onPress = () => {
+    playHaptic('Light')
+    onEmbedInteractionCallback?.()
+    if (highlightedPublisher) {
+      ax.metric('embed:standardSite:subscribe:press', {
+        url: view.source?.uri || '',
+      })
+    } else {
+      ax.metric('embed:standardSite:publicationCta:press', {
+        url: view.source?.uri || '',
+      })
+    }
+  }
+
+  const onLongPress = () => {
+    if (view.source?.uri && IS_NATIVE) {
+      playHaptic('Heavy')
+      shareUrl(view.source.uri)
+      if (highlightedPublisher) {
+        ax.metric('embed:standardSite:subscribe:longPress', {
+          url: view.source?.uri || '',
+        })
+      } else {
+        ax.metric('embed:standardSite:publicationCta:longPress', {
+          url: view.source?.uri || '',
+        })
+      }
+    }
+  }
+
   return (
     <StandardSiteThemeProvider view={view}>
       <Link
@@ -404,7 +480,11 @@ export function SubscribeButton({
         label={label}
         size="small"
         color="secondary_inverted"
-        style={[style, a.gap_sm, a.pointer_events_auto]}
+        style={[
+          style,
+          a.gap_sm,
+          preview ? a.pointer_events_none : a.pointer_events_auto,
+        ]}
         onPress={onPress}
         onLongPress={onLongPress}>
         {highlightedPublisher ? (
@@ -470,17 +550,21 @@ function PublicationIcon({
 }
 
 export function PublicationFooter({
+  preview,
   view,
   themeColors,
   onPress,
   onLongPress,
   interactedOuter,
+  onEmbedInteractionCallback,
 }: {
+  preview?: boolean
   view: AppBskyEmbedExternal.ViewExternal
   themeColors: ThemeColors
   onPress?: () => void
   onLongPress?: () => void
   interactedOuter?: boolean
+  onEmbedInteractionCallback?: () => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -503,8 +587,8 @@ export function PublicationFooter({
         a.gap_md,
         gtPhone && [a.flex_row, a.gap_sm],
         interactedOuter && t.atoms.bg_contrast_25,
-      ]}
-      testID="publication-embed-footer">
+        preview && a.pointer_events_none,
+      ]}>
       <Link
         shouldProxy
         to={view.source.uri}
@@ -549,15 +633,19 @@ export function PublicationFooter({
             ]}>
             {view.source?.title}
           </Text>
-          <StandardSiteMetaRow type="publication" view={view} />
+          <StandardSiteMetaRow
+            preview={preview}
+            type="publication"
+            view={view}
+          />
         </View>
       </View>
 
       <SubscribeButton
+        preview={preview}
         view={view}
         style={[a.z_10, !gtPhone && [a.w_full, a.justify_center]]}
-        onPress={onPress}
-        onLongPress={onLongPress}
+        onEmbedInteractionCallback={onEmbedInteractionCallback}
       />
     </View>
   )

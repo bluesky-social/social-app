@@ -16,14 +16,18 @@ import {
   isStandardSitePublicationUri,
 } from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 export function StandardSiteMetaRow({
+  preview,
   type = 'document',
   view,
 }: {
+  preview?: boolean
   type?: 'document' | 'publication'
   view: AppBskyEmbedExternal.ViewExternal
 }) {
+  const ax = useAnalytics()
   const t = useTheme()
   const {t: l} = useLingui()
   const highlightedPublisher = !!matchStandardSitePublisher(view)
@@ -77,7 +81,15 @@ export function StandardSiteMetaRow({
             <InlineLinkText
               label={l`View @${authorProfile.handle}'s profile`}
               to={makeProfileLink(authorProfile)}
-              style={[metaTextStyle, a.pointer_events_auto]}>
+              style={[
+                metaTextStyle,
+                preview ? a.pointer_events_none : a.pointer_events_auto,
+              ]}
+              onPress={() => {
+                ax.metric('embed:standardSite:authorHandle:press', {
+                  handle: authorProfile.handle,
+                })
+              }}>
               @{authorProfile.handle}
             </InlineLinkText>
           </Trans>

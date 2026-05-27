@@ -987,6 +987,17 @@ export type Events = {
   'share:press:recentDm': {}
   'share:press:embed': {}
 
+  'embed:standardSite:view': {url: string}
+  'embed:standardSite:article:press': {url: string}
+  'embed:standardSite:article:longPress': {url: string}
+  'embed:standardSite:publication:press': {url: string}
+  'embed:standardSite:publication:longPress': {url: string}
+  'embed:standardSite:publicationCta:press': {url: string}
+  'embed:standardSite:publicationCta:longPress': {url: string}
+  'embed:standardSite:subscribe:press': {url: string}
+  'embed:standardSite:subscribe:longPress': {url: string}
+  'embed:standardSite:authorHandle:press': {handle: string}
+
   'thread:click:showOtherReplies': {}
   'thread:click:hideReplyForMe': {}
   'thread:click:hideReplyForEveryone': {}
