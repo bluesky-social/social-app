@@ -530,7 +530,7 @@ func TestBuildProfileJSONLD_Basic(t *testing.T) {
 		PostsCount:     intPtr(200),
 		CreatedAt:      strPtr("2023-01-01T00:00:00Z"),
 	}
-	out, err := buildProfileJSONLD(pv, nil, hideEmbedLabels)
+	out, err := buildProfileJSONLD(pv, nil, hideEmbedLabels, hideReplyLabels)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -570,7 +570,7 @@ func TestBuildProfileJSONLD_HasPart(t *testing.T) {
 		posts = append(posts, makePostView("alice.bsky.social", "did:plc:alice",
 			"r"+string(rune('0'+i)), "post"))
 	}
-	out, _ := buildProfileJSONLD(pv, posts, hideEmbedLabels)
+	out, _ := buildProfileJSONLD(pv, posts, hideEmbedLabels, hideReplyLabels)
 	page := unmarshalLD(t, out)
 	hp, ok := page["hasPart"].([]any)
 	if !ok {
@@ -585,6 +585,51 @@ func TestBuildProfileJSONLD_HasPart(t *testing.T) {
 	}
 	if _, present := first["@context"]; present {
 		t.Errorf("nested hasPart entries should not have @context")
+	}
+}
+
+func TestBuildProfileJSONLD_HasPartLabelFiltered(t *testing.T) {
+	// Recent posts carrying hideReplyLabels or hideEmbedLabels are dropped
+	// from hasPart entirely. Negation is honored on post-view labels.
+	pv := &appbsky.ActorDefs_ProfileViewDetailed{
+		Did: "did:plc:alice", Handle: "alice.bsky.social",
+		DisplayName: strPtr("Alice"),
+		CreatedAt:   strPtr("2023-01-01T00:00:00Z"),
+	}
+	good := makePostView("alice.bsky.social", "did:plc:alice", "good", "ok")
+	hidden := makePostView("alice.bsky.social", "did:plc:alice", "hide", "hidden",
+		withPostLabel("!hide", false))
+	spam := makePostView("alice.bsky.social", "did:plc:alice", "spam", "spam",
+		withSelfLabel("spam"))
+	embedHide := makePostView("alice.bsky.social", "did:plc:alice", "harm", "embed-only",
+		withPostLabel("self-harm", false))
+	negated := makePostView("alice.bsky.social", "did:plc:alice", "neg", "negated",
+		withPostLabel("!hide", true))
+
+	out, _ := buildProfileJSONLD(pv, []*appbsky.FeedDefs_PostView{
+		good, hidden, spam, embedHide, negated,
+	}, hideEmbedLabels, hideReplyLabels)
+	page := unmarshalLD(t, out)
+	hp, _ := page["hasPart"].([]any)
+
+	got := make(map[string]bool, len(hp))
+	for _, e := range hp {
+		got[e.(map[string]any)["identifier"].(string)] = true
+	}
+	if !got[good.Uri] {
+		t.Errorf("expected unlabeled post in hasPart")
+	}
+	if !got[negated.Uri] {
+		t.Errorf("negated hide label should not gate; expected post in hasPart")
+	}
+	if got[hidden.Uri] {
+		t.Errorf("post with !hide label should be dropped from hasPart")
+	}
+	if got[spam.Uri] {
+		t.Errorf("self-labeled spam post should be dropped from hasPart")
+	}
+	if got[embedHide.Uri] {
+		t.Errorf("post with hideEmbedLabels label should be dropped from hasPart")
 	}
 }
 

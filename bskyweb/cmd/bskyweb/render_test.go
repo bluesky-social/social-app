@@ -114,7 +114,7 @@ func TestRenderPost_FallsBackToCanonicalizeFilter(t *testing.T) {
 
 func TestRenderProfile_EmitsJSONLD(t *testing.T) {
 	pv := newProfileViewDetailed()
-	ld, err := buildProfileJSONLD(pv, nil, hideEmbedLabels)
+	ld, err := buildProfileJSONLD(pv, nil, hideEmbedLabels, hideReplyLabels)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -140,7 +140,7 @@ func TestRenderProfile_EmitsJSONLD(t *testing.T) {
 // before buildProfileJSONLD.
 func TestRenderProfile_AuthRequiredEmitsJSONLD(t *testing.T) {
 	pv := newProfileViewDetailed()
-	ld, err := buildProfileJSONLD(pv, nil, hideEmbedLabels)
+	ld, err := buildProfileJSONLD(pv, nil, hideEmbedLabels, hideReplyLabels)
 	if err != nil {
 		t.Fatal(err)
 	}

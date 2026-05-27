@@ -713,7 +713,7 @@ func (srv *Server) WebProfile(c echo.Context) error {
 		data["requiresAuth"] = true
 	}
 
-	if jsonld, err := buildProfileJSONLD(pv, recentPosts, hideEmbedLabels); err == nil {
+	if jsonld, err := buildProfileJSONLD(pv, recentPosts, hideEmbedLabels, hideReplyLabels); err == nil {
 		data["profileJSONLD"] = jsonld
 	} else {
 		log.Warnf("failed to build profile JSON-LD for %s: %v", pv.Did, err)

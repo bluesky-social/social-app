@@ -411,7 +411,9 @@ func buildPostJSONLD(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_
 }
 
 // buildProfileJSONLD marshals a ProfilePage (with hasPart recent posts).
-func buildProfileJSONLD(pv *appbsky.ActorDefs_ProfileViewDetailed, recentPosts []*appbsky.FeedDefs_PostView, hideLabels map[string]bool) (string, error) {
+// Recent posts whose own labels match hideLabels or hideReplyLabels are
+// dropped from hasPart, mirroring the gating applied to comment[].
+func buildProfileJSONLD(pv *appbsky.ActorDefs_ProfileViewDetailed, recentPosts []*appbsky.FeedDefs_PostView, hideLabels, hideReplyLabels map[string]bool) (string, error) {
 	if pv == nil {
 		return "", fmt.Errorf("nil profile view")
 	}
@@ -462,6 +464,11 @@ func buildProfileJSONLD(pv *appbsky.ActorDefs_ProfileViewDetailed, recentPosts [
 		}
 		if len(page.HasPart) >= maxRecentPosts {
 			break
+		}
+		// Drop labeled posts entirely so flagged content isn't surfaced
+		// into the profile's structured data.
+		if postHasHideLabel(rp, hideReplyLabels) || postHasHideLabel(rp, hideLabels) {
+			continue
 		}
 		// Recent posts go in nested form. No replies are passed, so the
 		// reply-label set is irrelevant; pass nil.
