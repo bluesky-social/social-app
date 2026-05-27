@@ -76,6 +76,35 @@ export function useListConvoMembersQuery({
             ) {
               mutateList(list => list.filter(m => m.did !== data.member.did))
             }
+          } else if (ChatBskyConvoDefs.isLogMemberJoin(log)) {
+            const data = log.message.data
+            if (
+              bsky.dangerousIsType<ChatBskyConvoDefs.SystemMessageDataMemberJoin>(
+                data,
+                ChatBskyConvoDefs.isSystemMessageDataMemberJoin,
+              )
+            ) {
+              const newMember = log.relatedProfiles.find(
+                r => r.did === data.member.did,
+              )
+              if (newMember) {
+                mutateList(list =>
+                  list.some(m => m.did === newMember.did)
+                    ? list
+                    : list.concat(newMember),
+                )
+              }
+            }
+          } else if (ChatBskyConvoDefs.isLogMemberLeave(log)) {
+            const data = log.message.data
+            if (
+              bsky.dangerousIsType<ChatBskyConvoDefs.SystemMessageDataMemberLeave>(
+                data,
+                ChatBskyConvoDefs.isSystemMessageDataMemberLeave,
+              )
+            ) {
+              mutateList(list => list.filter(m => m.did !== data.member.did))
+            }
           }
         }
       },
