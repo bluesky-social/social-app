@@ -122,7 +122,7 @@ jobs:
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
+          node-version-file: package.json
           cache: pnpm
 
       - name: Install dependencies
