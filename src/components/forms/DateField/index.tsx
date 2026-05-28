@@ -1,15 +1,14 @@
-import {useCallback, useImperativeHandle} from 'react'
+import {useImperativeHandle} from 'react'
 import {Keyboard, View} from 'react-native'
-import DatePicker from 'react-native-date-picker'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {type DateFieldProps} from '#/components/forms/DateField/types'
-import {toSimpleDateString} from '#/components/forms/DateField/utils'
+// import {toSimpleDateString} from '#/components/forms/DateField/utils'
 import * as TextField from '#/components/forms/TextField'
 import {DateFieldButton} from './index.shared'
 
@@ -27,26 +26,26 @@ export const LabelText = TextField.LabelText
 export function DateField({
   value,
   inputRef,
-  onChangeDate,
+  // onChangeDate,
   testID,
   label,
   isInvalid,
   accessibilityHint,
-  maximumDate,
+  // maximumDate,
 }: DateFieldProps) {
-  const {_, i18n} = useLingui()
-  const t = useTheme()
+  const {_} = useLingui()
+  // const t = useTheme()
   const control = Dialog.useDialogControl()
 
-  const onChangeInternal = useCallback(
-    (date: Date | undefined) => {
-      if (date) {
-        const formatted = toSimpleDateString(date)
-        onChangeDate(formatted)
-      }
-    },
-    [onChangeDate],
-  )
+  // const onChangeInternal = useCallback(
+  //   (date: Date | undefined) => {
+  //     if (date) {
+  //       const formatted = toSimpleDateString(date)
+  //       onChangeDate(formatted)
+  //     }
+  //   },
+  //   [onChangeDate],
+  // )
 
   useImperativeHandle(
     inputRef,
@@ -82,7 +81,8 @@ export function DateField({
         <Dialog.ScrollableInner label={label}>
           <View style={a.gap_lg}>
             <View style={[a.relative, a.w_full, a.align_center]}>
-              <DatePicker
+              {/* TODO: replace with expo ui date picker */}
+              {/*<DatePicker
                 timeZoneOffsetInMinutes={0}
                 theme={t.scheme}
                 date={new Date(toSimpleDateString(value))}
@@ -98,7 +98,7 @@ export function DateField({
                     ? new Date(toSimpleDateString(maximumDate))
                     : undefined
                 }
-              />
+              />*/}
             </View>
             <Button
               label={_(msg`Done`)}

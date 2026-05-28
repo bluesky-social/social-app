@@ -20,6 +20,7 @@ import {Image} from 'expo-image'
 import * as SplashScreen from 'expo-splash-screen'
 
 import {Logotype} from '#/view/icons/Logotype'
+import {atoms as a} from '#/alf'
 // @ts-ignore
 import splashImagePointer from '../assets/splash/splash.png'
 // @ts-ignore
@@ -223,7 +224,8 @@ export function Splash(props: React.PropsWithChildren<Props>) {
           {!isAnimationComplete && (
             <Animated.View
               style={[
-                StyleSheet.absoluteFillObject,
+                a.absolute,
+                a.inset_0,
                 logoWrapperAnimation,
                 {
                   flex: 1,

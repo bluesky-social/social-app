@@ -1,4 +1,4 @@
-import {MMKV} from '@bsky.app/react-native-mmkv'
+import {MMKV} from 'react-native-mmkv'
 
 import {type DB} from '#/storage/archive/db/types'
 
