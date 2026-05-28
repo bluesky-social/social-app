@@ -1,5 +1,6 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
+import {AppBskyActorStatus, AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -21,12 +22,21 @@ import {Text} from '#/components/Typography'
 import {
   displayDuration,
   getLiveServiceNames,
+  useActorStatus,
   useLiveLinkMetaQuery,
   useLiveNowConfig,
   useUpsertLiveStatusMutation,
 } from '#/features/liveNow'
 import type * as bsky from '#/types/bsky'
 import {LinkPreview} from './LinkPreview'
+
+function getInitialLiveLink(statusRecord: unknown) {
+  if (!AppBskyActorStatus.isRecord(statusRecord)) return ''
+  const validation = AppBskyActorStatus.validateRecord(statusRecord)
+  if (!validation.success) return ''
+  if (!AppBskyEmbedExternal.isMain(validation.value.embed)) return ''
+  return validation.value.embed.external.uri
+}
 
 export function GoLiveDialog({
   control,
@@ -50,14 +60,18 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const control = Dialog.useDialogContext()
   const {_, i18n} = useLingui()
   const t = useTheme()
-  const [liveLink, setLiveLink] = useState('')
   const [liveLinkError, setLiveLinkError] = useState('')
   const [duration, setDuration] = useState(60)
   const moderationOpts = useModerationOpts()
   const tick = useTickEveryMinute()
   const liveNowConfig = useLiveNowConfig()
+  const status = useActorStatus(profile)
   const {formatted: allowedServices} = getLiveServiceNames(
     liveNowConfig.currentAccountAllowedHosts,
+  )
+
+  const [liveLink, setLiveLink] = useState(() =>
+    getInitialLiveLink(status.record),
   )
 
   const time = useCallback(
