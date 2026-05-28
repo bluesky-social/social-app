@@ -1,6 +1,7 @@
 import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 
+import {useAutoplayDisabled} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useAnalytics} from '#/analytics'
@@ -17,6 +18,7 @@ export function GifPickerItem({
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const t = useTheme()
+  const autoplayDisabled = useAutoplayDisabled()
 
   const [width, height] = gif.media_formats.tinygif.dims
   const aspectRatio = width > 0 && height > 0 ? width / height : 1
@@ -48,6 +50,7 @@ export function GifPickerItem({
             },
           ]}
           source={{uri: gifPreviewUrl(gif.media_formats.tinygif.url)}}
+          autoplay={!autoplayDisabled}
           contentFit="cover"
           accessibilityLabel={gif.title}
           accessibilityHint=""
