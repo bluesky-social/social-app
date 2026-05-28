@@ -9,6 +9,7 @@ export type ServiceConfig = {
   metricsPort: number
   version?: string
   appviewUrl: string
+  chatUrl: string
   originVerify?: string
 }
 
@@ -17,6 +18,7 @@ export type Environment = {
   metricsPort?: number
   version?: string
   appviewUrl?: string
+  chatUrl?: string
   originVerify?: string
 }
 
@@ -26,6 +28,7 @@ export const readEnv = (): Environment => {
     metricsPort: envInt('CARD_METRICS_PORT'),
     version: envStr('CARD_VERSION'),
     appviewUrl: envStr('CARD_APPVIEW_URL'),
+    chatUrl: envStr('CARD_CHAT_URL'),
     originVerify: envStr('CARD_ORIGIN_VERIFY'),
   }
 }
@@ -36,6 +39,7 @@ export const envToCfg = (env: Environment): Config => {
     metricsPort: env.metricsPort ?? 3001,
     version: env.version,
     appviewUrl: env.appviewUrl ?? 'https://api.bsky.app',
+    chatUrl: env.chatUrl ?? 'https://api.bsky.chat',
     originVerify: env.originVerify,
   }
   return {
