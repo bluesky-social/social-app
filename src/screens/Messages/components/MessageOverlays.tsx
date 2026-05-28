@@ -148,7 +148,7 @@ export function MessageOverlays({children}: {children: React.ReactNode}) {
           currentScreen="conversation"
           params={{
             convoId: convo.convo.view.id,
-            message: afterReportTarget,
+            did: afterReportTarget.sender.did,
           }}
           onClose={() => setAfterReportTarget(null)}
         />
