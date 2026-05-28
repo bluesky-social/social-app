@@ -167,18 +167,24 @@ export function InviteLinkDialog({
       header = l`Invite link`
       content = (
         <>
-          <View>
+          <View style={[a.gap_lg]}>
             <Text style={[a.text_md, t.atoms.text]}>
               <Trans>
                 An invite link lets people join this group chat without being
-                added directly. You control who can use the link and whether
-                they need your approval. You can disable the link at any time.
+                added directly. You control who can join the chat. You can
+                disable the link at any time.
               </Trans>
             </Text>
-            <Text style={[a.mt_lg, a.text_md, t.atoms.text]}>
+            <Text style={[a.text_md, t.atoms.text]}>
               <Trans>
-                Your name, avatar, and the name of the group chat will be
-                visible to everyone.
+                Group chats can only have a maximum of{' '}
+                {convo.details.memberLimit} people.
+              </Trans>
+            </Text>
+            <Text style={[a.text_md, t.atoms.text]}>
+              <Trans>
+                Your name, avatar, the name of the group chat, and the number of
+                members will be visible to everyone.
               </Trans>
             </Text>
           </View>
