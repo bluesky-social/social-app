@@ -197,7 +197,7 @@ function GroupHeaderReady({
           />
           <View style={[a.flex_row, a.flex_1, a.align_center]}>
             <Text
-              style={[a.text_md, a.font_semi_bold, a.flex_shrink]}
+              style={[a.text_lg, a.font_semi_bold, a.flex_shrink]}
               numberOfLines={1}>
               {convo.details.name}
             </Text>
