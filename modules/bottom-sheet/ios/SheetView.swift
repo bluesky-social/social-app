@@ -144,8 +144,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
     if #available(iOS 26.0, *),
        let tag = self.sourceViewTag,
-       let bridge = self.appContext?.reactBridge,
-       let sourceView = bridge.uiManager.view(forReactTag: NSNumber(value: tag)) {
+       let sourceView = self.appContext?.findView(withTag: tag, ofType: UIView.self) {
       sheetVc.preferredTransition = .zoom { _ in
         return sourceView
       }
