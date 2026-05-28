@@ -175,11 +175,11 @@ func makeVerificationState(specs ...verifierSpec) *appbsky.ActorDefs_Verificatio
 		}
 		if s.handle != "" {
 			h := s.handle
-			v.Handle = &h
+			v.IssuerHandle = &h
 		}
 		if s.displayName != "" {
 			d := s.displayName
-			v.DisplayName = &d
+			v.IssuerDisplayName = &d
 		}
 		state.Verifications = append(state.Verifications, v)
 	}

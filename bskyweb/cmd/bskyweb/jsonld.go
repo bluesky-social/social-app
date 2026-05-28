@@ -261,11 +261,11 @@ func buildReviewedBy(state *appbsky.ActorDefs_VerificationState) []*verifier {
 			Identifier: v.Issuer,
 		}
 		var handle string
-		if v.Handle != nil {
-			handle = *v.Handle
+		if v.IssuerHandle != nil {
+			handle = *v.IssuerHandle
 		}
-		if v.DisplayName != nil && *v.DisplayName != "" {
-			entry.Name = *v.DisplayName
+		if v.IssuerDisplayName != nil && *v.IssuerDisplayName != "" {
+			entry.Name = *v.IssuerDisplayName
 			if handle != "" && handle != "handle.invalid" {
 				entry.AlternateName = "@" + handle
 			}
