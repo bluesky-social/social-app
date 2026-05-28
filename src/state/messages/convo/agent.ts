@@ -9,6 +9,7 @@ import {
   type ChatBskyGroupDefs,
 } from '@atproto/api'
 import {XRPCError} from '@atproto/api'
+import {type QueryClient} from '@tanstack/react-query'
 import {EventEmitter} from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -39,6 +40,7 @@ import {
 } from '#/state/messages/convo/types'
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type MessagesEventBusError} from '#/state/messages/events/types'
+import {precacheConvoQuery} from '#/state/queries/messages/conversation'
 import {
   type ConvoWithDetails,
   type GroupConvoMember,
@@ -84,6 +86,7 @@ export class Convo {
 
   private agent: AtpAgent
   private events: MessagesEventBus
+  private queryClient: QueryClient
   private senderUserDid: string
 
   private status: ConvoStatus = ConvoStatus.Uninitialized
@@ -133,6 +136,7 @@ export class Convo {
     this.convoId = params.convoId
     this.agent = params.agent
     this.events = params.events
+    this.queryClient = params.queryClient
     this.senderUserDid = params.agent.assertDid
 
     if (params.placeholderData) {
@@ -523,6 +527,7 @@ export class Convo {
       for (const member of this.convo.members) {
         this.relatedProfiles.set(member.did, member)
       }
+      precacheConvoQuery(this.queryClient, this.convo.view)
     }
   }
 
@@ -534,6 +539,7 @@ export class Convo {
       for (const member of this.convo.members) {
         this.relatedProfiles.set(member.did, member)
       }
+      precacheConvoQuery(this.queryClient, this.convo.view)
     }
   }
 

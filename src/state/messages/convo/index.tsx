@@ -90,6 +90,7 @@ export function ConvoProvider({
       convoId,
       agent,
       events,
+      queryClient,
       placeholderData: placeholder ? {convo: placeholder} : undefined,
     })
   })

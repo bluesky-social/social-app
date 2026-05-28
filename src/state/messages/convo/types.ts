@@ -6,6 +6,7 @@ import {
   type ChatBskyConvoDefs,
   type ChatBskyConvoSendMessage,
 } from '@atproto/api'
+import {type QueryClient} from '@tanstack/react-query'
 
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type ConvoWithDetails} from '#/components/dms/util'
@@ -14,6 +15,7 @@ export type ConvoParams = {
   convoId: string
   agent: BskyAgent
   events: MessagesEventBus
+  queryClient: QueryClient
   placeholderData?: {
     convo: ChatBskyConvoDefs.ConvoView
   }
