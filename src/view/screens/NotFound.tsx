@@ -1,5 +1,5 @@
 import {useCallback} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
@@ -36,7 +36,7 @@ export const NotFoundScreen = () => {
           </Layout.Header.Content>
           <Layout.Header.Slot />
         </Layout.Header.Outer>
-        <View style={styles.container}>
+        <View style={[a.px_xl, a.align_center, a.h_full, {paddingTop: 100}]}>
           <Text style={[a.mb_md, a.text_4xl, a.font_semi_bold, t.atoms.text]}>
             <Trans>Page not found</Trans>
           </Text>
@@ -61,12 +61,3 @@ export const NotFoundScreen = () => {
     </Layout.Screen>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 100,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    height: '100%',
-  },
-})
