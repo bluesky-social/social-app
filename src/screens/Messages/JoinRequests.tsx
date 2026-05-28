@@ -148,6 +148,51 @@ function JoinRequestsList({
     enabled: true,
   })
 
+  const {mutate: approveJoinRequest, isPending: isApprovePending} =
+    useApproveJoinRequest(convo.view.id, {
+      onError: error => {
+        let errorMessage = l`Failed to accept join request`
+        if (isNetworkError(error)) {
+          errorMessage = l`A network error occurred. Please check your internet connection.`
+        } else if (
+          error instanceof ChatBskyGroupApproveJoinRequest.InvalidConvoError
+        ) {
+          errorMessage = l`Conversation not found.`
+        } else if (
+          error instanceof ChatBskyGroupApproveJoinRequest.InsufficientRoleError
+        ) {
+          errorMessage = l`Only admins can accept join requests.`
+        } else if (
+          error instanceof
+          ChatBskyGroupApproveJoinRequest.MemberLimitReachedError
+        ) {
+          errorMessage = l`The member limit has been reached.`
+        }
+        Toast.show(errorMessage, {type: 'error'})
+      },
+    })
+
+  const {mutate: rejectJoinRequest, isPending: isRejectPending} =
+    useRejectJoinRequest(convo.view.id, {
+      onError: error => {
+        let errorMessage = l`Failed to ignore join request`
+        if (isNetworkError(error)) {
+          errorMessage = l`A network error occurred. Please check your internet connection.`
+        } else if (
+          error instanceof ChatBskyGroupRejectJoinRequest.InvalidConvoError
+        ) {
+          errorMessage = l`Conversation not found.`
+        } else if (
+          error instanceof ChatBskyGroupRejectJoinRequest.InsufficientRoleError
+        ) {
+          errorMessage = l`Only admins can ignore join requests.`
+        }
+        Toast.show(errorMessage, {type: 'error'})
+      },
+    })
+
+  const isMutating = isApprovePending || isRejectPending
+
   const items =
     joinRequestsData?.pages.flatMap(page =>
       page.requests.map(request => request.requestedBy),
@@ -183,8 +228,14 @@ function JoinRequestsList({
               />
             </View>
             <View style={[a.flex_row, a.align_center, a.gap_sm, a.mt_md]}>
-              <AcceptButton convo={convo} profile={item} />
-              <RejectButton convo={convo} profile={item} />
+              <AcceptButton
+                disabled={isMutating}
+                onPress={() => approveJoinRequest({member: item.did})}
+              />
+              <RejectButton
+                disabled={isMutating}
+                onPress={() => rejectJoinRequest({member: item.did})}
+              />
             </View>
           </View>
         </View>
@@ -340,47 +391,21 @@ function Header({count}: {count?: number}) {
 }
 
 function AcceptButton({
-  convo,
-  profile,
+  disabled,
+  onPress,
 }: {
-  convo: Extract<ConvoWithDetails, {kind: 'group'}>
-  profile: bsky.profile.AnyProfileView
+  disabled?: boolean
+  onPress: () => void
 }) {
   const {t: l} = useLingui()
-
-  const {mutate: approveJoinRequest, isPending} = useApproveJoinRequest(
-    convo.view.id,
-    {
-      onError: error => {
-        let errorMessage = l`Failed to accept join request`
-        if (isNetworkError(error)) {
-          errorMessage = l`A network error occurred. Please check your internet connection.`
-        } else if (
-          error instanceof ChatBskyGroupApproveJoinRequest.InvalidConvoError
-        ) {
-          errorMessage = l`Conversation not found.`
-        } else if (
-          error instanceof ChatBskyGroupApproveJoinRequest.InsufficientRoleError
-        ) {
-          errorMessage = l`Only admins can accept join requests.`
-        } else if (
-          error instanceof
-          ChatBskyGroupApproveJoinRequest.MemberLimitReachedError
-        ) {
-          errorMessage = l`The member limit has been reached.`
-        }
-        Toast.show(errorMessage, {type: 'error'})
-      },
-    },
-  )
 
   return (
     <Button
       label={l`Accept join request`}
       size="small"
       color="primary"
-      disabled={isPending}
-      onPress={() => approveJoinRequest({member: profile.did})}>
+      disabled={disabled}
+      onPress={onPress}>
       <ButtonText>
         <Trans comment="Accept a request to join a chat" context="button">
           Accept
@@ -391,42 +416,21 @@ function AcceptButton({
 }
 
 function RejectButton({
-  convo,
-  profile,
+  disabled,
+  onPress,
 }: {
-  convo: Extract<ConvoWithDetails, {kind: 'group'}>
-  profile: bsky.profile.AnyProfileView
+  disabled?: boolean
+  onPress: () => void
 }) {
   const {t: l} = useLingui()
-
-  const {mutate: rejectJoinRequest, isPending} = useRejectJoinRequest(
-    convo.view.id,
-    {
-      onError: error => {
-        let errorMessage = l`Failed to ignore join request`
-        if (isNetworkError(error)) {
-          errorMessage = l`A network error occurred. Please check your internet connection.`
-        } else if (
-          error instanceof ChatBskyGroupRejectJoinRequest.InvalidConvoError
-        ) {
-          errorMessage = l`Conversation not found.`
-        } else if (
-          error instanceof ChatBskyGroupRejectJoinRequest.InsufficientRoleError
-        ) {
-          errorMessage = l`Only admins can ignore join requests.`
-        }
-        Toast.show(errorMessage, {type: 'error'})
-      },
-    },
-  )
 
   return (
     <Button
       label={l`Ignore join request`}
       size="small"
       color="secondary"
-      disabled={isPending}
-      onPress={() => rejectJoinRequest({member: profile.did})}>
+      disabled={disabled}
+      onPress={onPress}>
       <ButtonText>
         <Trans comment="Ignore a request to join a chat" context="button">
           Ignore
