@@ -20,8 +20,13 @@ DEPLOYMENT_URL="https://updates.bsky.app/v1/upload?runtime-version=$RUNTIME_VERS
 tar czvf bundle.tar.gz ./*
 
 echo "Deploying to $DEPLOYMENT_URL..."
+echo "  runtime-version: $RUNTIME_VERSION"
+echo "  bundle-version: $BUNDLE_VERSION"
+echo "  channel: $CHANNEL_NAME"
+echo "  ios-build-number: $BSKY_IOS_BUILD_NUMBER"
+echo "  android-build-number: $BSKY_ANDROID_VERSION_CODE"
 
-curl -o - --form "bundle=@./bundle.tar.gz" --user "bsky:$DENIS_API_KEY" --basic "$DEPLOYMENT_URL"
+curl --fail-with-body -o - --form "bundle=@./bundle.tar.gz" --user "bsky:$DENIS_API_KEY" --basic "$DEPLOYMENT_URL"
 
 cd ..
 
