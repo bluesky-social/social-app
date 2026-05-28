@@ -1,9 +1,14 @@
 import {useState} from 'react'
 import {View} from 'react-native'
+import {
+  ChatBskyGroupApproveJoinRequest,
+  ChatBskyGroupRejectJoinRequest,
+} from '@atproto/api'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
+import {isNetworkError} from '#/lib/hooks/useCleanError'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -13,7 +18,9 @@ import {logger} from '#/logger'
 import {ConvoProvider, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useApproveJoinRequest} from '#/state/queries/messages/approve-join-request'
 import {useListJoinRequestsQuery} from '#/state/queries/messages/list-join-requests'
+import {useRejectJoinRequest} from '#/state/queries/messages/reject-join-request'
 import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
@@ -28,6 +35,7 @@ import {KnownFollowers} from '#/components/KnownFollowers'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
 import {InviteLinkDialog} from './components/InviteLinkDialog'
@@ -331,18 +339,48 @@ function Header({count}: {count?: number}) {
   )
 }
 
-function AcceptButton({}: {
+function AcceptButton({
+  convo,
+  profile,
+}: {
   convo: Extract<ConvoWithDetails, {kind: 'group'}>
   profile: bsky.profile.AnyProfileView
 }) {
   const {t: l} = useLingui()
+
+  const {mutate: approveJoinRequest, isPending} = useApproveJoinRequest(
+    convo.view.id,
+    {
+      onError: error => {
+        let errorMessage = l`Failed to accept join request`
+        if (isNetworkError(error)) {
+          errorMessage = l`A network error occurred. Please check your internet connection.`
+        } else if (
+          error instanceof ChatBskyGroupApproveJoinRequest.InvalidConvoError
+        ) {
+          errorMessage = l`Conversation not found.`
+        } else if (
+          error instanceof ChatBskyGroupApproveJoinRequest.InsufficientRoleError
+        ) {
+          errorMessage = l`Only admins can accept join requests.`
+        } else if (
+          error instanceof
+          ChatBskyGroupApproveJoinRequest.MemberLimitReachedError
+        ) {
+          errorMessage = l`The member limit has been reached.`
+        }
+        Toast.show(errorMessage, {type: 'error'})
+      },
+    },
+  )
 
   return (
     <Button
       label={l`Accept join request`}
       size="small"
       color="primary"
-      onPress={() => {}}>
+      disabled={isPending}
+      onPress={() => approveJoinRequest({member: profile.did})}>
       <ButtonText>
         <Trans comment="Accept a request to join a chat" context="button">
           Accept
@@ -352,18 +390,43 @@ function AcceptButton({}: {
   )
 }
 
-function RejectButton({}: {
+function RejectButton({
+  convo,
+  profile,
+}: {
   convo: Extract<ConvoWithDetails, {kind: 'group'}>
   profile: bsky.profile.AnyProfileView
 }) {
   const {t: l} = useLingui()
+
+  const {mutate: rejectJoinRequest, isPending} = useRejectJoinRequest(
+    convo.view.id,
+    {
+      onError: error => {
+        let errorMessage = l`Failed to ignore join request`
+        if (isNetworkError(error)) {
+          errorMessage = l`A network error occurred. Please check your internet connection.`
+        } else if (
+          error instanceof ChatBskyGroupRejectJoinRequest.InvalidConvoError
+        ) {
+          errorMessage = l`Conversation not found.`
+        } else if (
+          error instanceof ChatBskyGroupRejectJoinRequest.InsufficientRoleError
+        ) {
+          errorMessage = l`Only admins can ignore join requests.`
+        }
+        Toast.show(errorMessage, {type: 'error'})
+      },
+    },
+  )
 
   return (
     <Button
       label={l`Ignore join request`}
       size="small"
       color="secondary"
-      onPress={() => {}}>
+      disabled={isPending}
+      onPress={() => rejectJoinRequest({member: profile.did})}>
       <ButtonText>
         <Trans comment="Ignore a request to join a chat" context="button">
           Ignore
