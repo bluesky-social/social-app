@@ -392,7 +392,7 @@ export function PublicationCard({
         )}
 
         {!gtPhone && (
-          <View style={[view.description && a.pt_sm]}>
+          <View style={[a.pt_sm]}>
             <SubscribeButton
               preview={preview}
               view={view}
