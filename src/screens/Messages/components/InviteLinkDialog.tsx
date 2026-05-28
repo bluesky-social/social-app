@@ -326,8 +326,8 @@ export function InviteLinkDialog({
                   label={l`Edit link settings`}
                   value={ownerValue}
                   onPress={() => setStep(Step.GENERATE)}>
-                  <View style={[a.flex_1, a.mr_xs]}>
-                    <Text numberOfLines={1} style={[a.text_md, t.atoms.text]}>
+                  <View style={[a.flex_1]}>
+                    <Text numberOfLines={1} style={[a.text_sm, t.atoms.text]}>
                       {ownerValue}
                     </Text>
                   </View>
