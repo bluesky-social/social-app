@@ -6,6 +6,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {makeProfileLink} from '#/lib/routes/links'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {atoms as a, useTheme} from '#/alf'
+import {StandardSite} from '#/components/icons/community/StandardSite'
 import {InlineLinkText} from '#/components/Link'
 import {
   matchStandardSitePublisher,
@@ -46,7 +47,7 @@ export function StandardSiteMetaRow({
     : undefined
   const articleDomain = toNiceDomain(view.uri)
   const articlePublisher = matchStandardSitePublisherByUri(view.uri)
-  const DomainIcon = articlePublisher?.Icon
+  const DomainIcon = articlePublisher?.Icon || StandardSite
   const metaTextStyle = [
     a.text_xs,
     a.leading_tight,
