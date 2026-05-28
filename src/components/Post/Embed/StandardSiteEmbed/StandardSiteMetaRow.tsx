@@ -59,9 +59,9 @@ export function StandardSiteMetaRow({
     items.push({
       key: 'domain',
       node: (
-        <View style={[a.flex_shrink, a.flex_row, a.align_center]}>
+        <View style={[a.flex_shrink, a.flex_row, a.align_center, a.gap_2xs]}>
           {DomainIcon && (
-            <DomainIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
+            <DomainIcon size="xs" fill={t.atoms.text_contrast_medium.color} />
           )}
           <Text numberOfLines={1} style={metaTextStyle}>
             {articleDomain}
