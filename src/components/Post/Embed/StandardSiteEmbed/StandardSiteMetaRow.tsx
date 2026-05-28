@@ -64,7 +64,7 @@ export function StandardSiteMetaRow({
           {DomainIcon && (
             <DomainIcon size="xs" fill={t.atoms.text_contrast_medium.color} />
           )}
-          <Text numberOfLines={1} style={metaTextStyle}>
+          <Text numberOfLines={1} style={[metaTextStyle, a.flex_shrink]}>
             {articleDomain}
           </Text>
         </View>
