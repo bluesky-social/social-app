@@ -1,0 +1,374 @@
+import {useState} from 'react'
+import {View} from 'react-native'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
+import {useNavigation} from '@react-navigation/native'
+
+import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+  type NavigationProp,
+} from '#/lib/routes/types'
+import {logger} from '#/logger'
+import {ConvoProvider, useConvo} from '#/state/messages/convo'
+import {ConvoStatus} from '#/state/messages/convo/types'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useListJoinRequestsQuery} from '#/state/queries/messages/list-join-requests'
+import {useSession} from '#/state/session'
+import {List} from '#/view/com/util/List'
+import {atoms as a, useTheme} from '#/alf'
+import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
+import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
+import {Button, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {type ConvoWithDetails} from '#/components/dms/util'
+import {Error} from '#/components/Error'
+import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
+import {KnownFollowers} from '#/components/KnownFollowers'
+import * as Layout from '#/components/Layout'
+import {Loader} from '#/components/Loader'
+import * as ProfileCard from '#/components/ProfileCard'
+import {Text} from '#/components/Typography'
+import type * as bsky from '#/types/bsky'
+import {InviteLinkDialog} from './components/InviteLinkDialog'
+
+type Props = NativeStackScreenProps<
+  CommonNavigatorParams,
+  'MessagesJoinRequests'
+>
+
+export function MessagesJoinRequestsScreen(props: Props) {
+  const {t: l} = useLingui()
+  const aaCopy = useAgeAssuranceCopy()
+  return (
+    <AgeRestrictedScreen
+      screenTitle={l`Requests to join`}
+      infoText={aaCopy.chatsInfoText}>
+      <MessagesJoinRequestsScreenInner {...props} />
+    </AgeRestrictedScreen>
+  )
+}
+
+function MessagesJoinRequestsScreenInner({route}: Props) {
+  const convoId = route.params.conversation
+
+  return (
+    <Layout.Screen>
+      <ConvoProvider key={convoId} convoId={convoId}>
+        <JoinRequestsInner />
+      </ConvoProvider>
+    </Layout.Screen>
+  )
+}
+
+function JoinRequestsInner() {
+  const {t: l} = useLingui()
+  const convoState = useConvo()
+  const navigation = useNavigation<NavigationProp>()
+
+  if (convoState.status === ConvoStatus.Error) {
+    return (
+      <>
+        <Header />
+        <Error
+          title={l`Something went wrong`}
+          message={l`We couldn’t load this conversation’s join requests`}
+          onRetry={() => convoState.error.retry()}
+          sideBorders={false}
+        />
+      </>
+    )
+  }
+
+  if (!convoState.convo) {
+    return (
+      <>
+        <Header />
+        <View style={[a.flex_1, a.align_center, a.justify_center]}>
+          <Loader size="xl" />
+        </View>
+      </>
+    )
+  }
+
+  if (convoState.convo.kind !== 'group') {
+    return (
+      <Error
+        title={l`Wrong kind of conversation`}
+        message={l`This screen is only available for group conversations.`}
+        onGoBack={() => {
+          if (navigation.canGoBack()) {
+            navigation.goBack()
+          } else {
+            navigation.replace('Messages', {animation: 'pop'})
+          }
+        }}
+      />
+    )
+  }
+
+  return <JoinRequestsList convo={convoState.convo} />
+}
+
+function JoinRequestsList({
+  convo,
+}: {
+  convo: Extract<ConvoWithDetails, {kind: 'group'}>
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const moderationOpts = useModerationOpts()
+  const bottomBarOffset = useBottomBarOffset()
+  const {currentAccount} = useSession()
+  const inviteLinkControl = Dialog.useDialogControl()
+
+  const [isPTRing, setIsPTRing] = useState(false)
+  const [footerHeight, setFooterHeight] = useState(0)
+
+  const owner = convo.primaryMember
+  const isOwner = !!owner && owner.did === currentAccount?.did
+
+  const {
+    data: joinRequestsData,
+    isError,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = useListJoinRequestsQuery({
+    convoId: convo.view.id,
+    enabled: true,
+  })
+
+  const items =
+    joinRequestsData?.pages.flatMap(page =>
+      page.requests.map(request => request.requestedBy),
+    ) ?? []
+  const requestCount =
+    joinRequestsData?.pages.reduce(
+      (sum, page) => sum + page.requests.length,
+      0,
+    ) ?? 0
+
+  const renderItem = ({item}: {item: bsky.profile.AnyProfileView}) => {
+    if (!moderationOpts) return null
+    return (
+      <View style={[a.relative, a.flex_1, a.p_lg]}>
+        <View style={[a.flex_row, a.align_start, a.gap_md]}>
+          <ProfileCard.Link profile={item}>
+            <ProfileCard.Avatar
+              profile={item}
+              moderationOpts={moderationOpts}
+              size={44}
+              disabledPreview
+            />
+          </ProfileCard.Link>
+          <View>
+            <ProfileCard.Name profile={item} moderationOpts={moderationOpts} />
+            <ProfileCard.Handle profile={item} />
+            <View style={[a.mt_xs]}>
+              <KnownFollowers
+                profile={item}
+                moderationOpts={moderationOpts}
+                minimal
+                showIfEmpty
+              />
+            </View>
+            <View style={[a.flex_row, a.align_center, a.gap_sm, a.mt_md]}>
+              <AcceptButton convo={convo} profile={item} />
+              <RejectButton convo={convo} profile={item} />
+            </View>
+          </View>
+        </View>
+      </View>
+    )
+  }
+
+  const footer = (
+    <View
+      onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}
+      style={[
+        a.absolute,
+        a.left_0,
+        a.right_0,
+        {bottom: 0},
+        a.px_xl,
+        a.border_t,
+        t.atoms.bg,
+        t.atoms.border_contrast_low,
+        {
+          paddingTop: a.py_lg.paddingTop,
+          paddingBottom: a.py_lg.paddingBottom + bottomBarOffset,
+        },
+      ]}>
+      <Button
+        label={l`Edit invite link`}
+        size="large"
+        color="primary"
+        onPress={() => inviteLinkControl.open()}
+        style={[a.w_full]}>
+        <ButtonText>
+          <Trans context="button">Edit invite link</Trans>
+        </ButtonText>
+      </Button>
+    </View>
+  )
+
+  const onEndReached = async () => {
+    if (isFetchingNextPage || !hasNextPage || isError) return
+    try {
+      await fetchNextPage()
+    } catch (err) {
+      logger.error('Failed to load more join requests', {message: err})
+    }
+  }
+
+  const onRefresh = async () => {
+    setIsPTRing(true)
+    try {
+      await refetch()
+    } catch (err) {
+      logger.error('Failed to refresh group chat requests', {message: err})
+    }
+    setIsPTRing(false)
+  }
+
+  if (isError) {
+    return (
+      <>
+        <Header count={requestCount} />
+        <View
+          style={[
+            a.flex_1,
+            a.align_center,
+            a.justify_center,
+            a.gap_sm,
+            a.p_lg,
+          ]}>
+          <ErrorIcon size="3xl" fill={t.atoms.text_contrast_high.color} />
+          <Text
+            style={[
+              a.leading_snug,
+              a.text_center,
+              a.px_lg,
+              a.text_md,
+              t.atoms.text_contrast_high,
+            ]}>
+            <Trans>Unable to fetch join requests.</Trans>
+          </Text>
+          <Button
+            color="primary"
+            label={l`Press to retry`}
+            onPress={() => void onRefresh()}
+            size="large"
+            style={[a.mt_md]}>
+            <ButtonText>
+              <Trans>Retry</Trans>
+            </ButtonText>
+          </Button>
+        </View>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <Header count={requestCount} />
+      <List
+        data={items}
+        keyExtractor={(item: bsky.profile.AnyProfileView) => item.did}
+        renderItem={renderItem}
+        ListEmptyComponent={
+          <View style={[a.flex_1, a.align_center, a.justify_center, a.py_4xl]}>
+            <Loader size="xl" />
+          </View>
+        }
+        contentContainerStyle={{paddingBottom: footerHeight}}
+        scrollIndicatorInsets={{bottom: footerHeight}}
+        refreshing={isPTRing}
+        onEndReached={() => void onEndReached()}
+        onRefresh={() => void onRefresh()}
+        keyboardDismissMode="on-drag"
+        sideBorders={false}
+        desktopFixedHeight
+      />
+      {footer}
+      {owner && moderationOpts && (
+        <InviteLinkDialog
+          convo={convo}
+          control={inviteLinkControl}
+          owner={owner}
+          isOwner={isOwner}
+          moderationOpts={moderationOpts}
+        />
+      )}
+    </>
+  )
+}
+
+function Header({count}: {count?: number}) {
+  return (
+    <Layout.Header.Outer>
+      <Layout.Header.BackButton />
+      <Layout.Header.Content>
+        <Layout.Header.TitleText>
+          {count === undefined ? (
+            <Trans>Requests to join</Trans>
+          ) : count > 20 ? (
+            <Trans>20+ requests to join</Trans>
+          ) : (
+            <Plural
+              value={count}
+              zero="No requests to join"
+              one="# request to join"
+              other="# requests to join"
+            />
+          )}
+        </Layout.Header.TitleText>
+      </Layout.Header.Content>
+      <Layout.Header.Slot />
+    </Layout.Header.Outer>
+  )
+}
+
+function AcceptButton({}: {
+  convo: Extract<ConvoWithDetails, {kind: 'group'}>
+  profile: bsky.profile.AnyProfileView
+}) {
+  const {t: l} = useLingui()
+
+  return (
+    <Button
+      label={l`Accept join request`}
+      size="small"
+      color="primary"
+      onPress={() => {}}>
+      <ButtonText>
+        <Trans comment="Accept a request to join a chat" context="button">
+          Accept
+        </Trans>
+      </ButtonText>
+    </Button>
+  )
+}
+
+function RejectButton({}: {
+  convo: Extract<ConvoWithDetails, {kind: 'group'}>
+  profile: bsky.profile.AnyProfileView
+}) {
+  const {t: l} = useLingui()
+
+  return (
+    <Button
+      label={l`Ignore join request`}
+      size="small"
+      color="secondary"
+      onPress={() => {}}>
+      <ButtonText>
+        <Trans comment="Ignore a request to join a chat" context="button">
+          Ignore
+        </Trans>
+      </ButtonText>
+    </Button>
+  )
+}

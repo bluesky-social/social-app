@@ -1,10 +1,10 @@
 import {View} from 'react-native'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {useNavigation} from '@react-navigation/native'
 
+import {type NavigationProp} from '#/lib/routes/types'
 import {atoms as a, useTheme} from '#/alf'
-import * as Dialog from '#/components/Dialog'
-import {ManageRequestsFlow} from '#/components/dms/MangeRequestsFlow'
 import {type ConvoWithDetails} from '#/components/dms/util'
 import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
@@ -22,8 +22,7 @@ export function MembersAndRequests({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-
-  const manageRequestsControl = Dialog.useDialogControl()
+  const navigation = useNavigation<NavigationProp>()
 
   const memberCount = convo.details.memberCount
   const memberLimit = convo.details.memberLimit
@@ -49,7 +48,9 @@ export function MembersAndRequests({
           label={l`View incoming group chat requests`}
           style={[a.text_sm, a.text_right, a.font_semi_bold]}
           {...createStaticClick(() => {
-            manageRequestsControl.open()
+            navigation.navigate('MessagesJoinRequests', {
+              conversation: convo.view.id,
+            })
           })}>
           {hasMoreRequests
             ? l({
@@ -66,14 +67,6 @@ export function MembersAndRequests({
               })}
         </InlineLinkText>
       ) : null}
-
-      <Dialog.Outer
-        control={manageRequestsControl}
-        testID="manageRequestsDialog"
-        nativeOptions={{fullHeight: true}}>
-        <Dialog.Handle />
-        <ManageRequestsFlow convo={convo} />
-      </Dialog.Outer>
     </View>
   )
 }
