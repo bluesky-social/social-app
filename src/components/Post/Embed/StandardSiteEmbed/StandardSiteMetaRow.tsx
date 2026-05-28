@@ -49,7 +49,7 @@ export function StandardSiteMetaRow({
   const DomainIcon = articlePublisher?.Icon
   const metaTextStyle = [
     a.text_xs,
-    a.leading_snug,
+    a.leading_tight,
     t.atoms.text_contrast_medium,
   ]
 
@@ -59,7 +59,7 @@ export function StandardSiteMetaRow({
     items.push({
       key: 'domain',
       node: (
-        <View style={[a.flex_row, a.align_center]}>
+        <View style={[a.flex_shrink, a.flex_row, a.align_center]}>
           {DomainIcon && (
             <DomainIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
           )}
@@ -75,7 +75,7 @@ export function StandardSiteMetaRow({
     items.push({
       key: 'author',
       node: (
-        <Text numberOfLines={1} style={metaTextStyle}>
+        <Text numberOfLines={1} style={[metaTextStyle]}>
           <Trans>
             by{' '}
             <InlineLinkText
@@ -85,7 +85,9 @@ export function StandardSiteMetaRow({
                 metaTextStyle,
                 preview ? a.pointer_events_none : a.pointer_events_auto,
               ]}
-              onPress={() => {
+              onPress={e => {
+                e.stopPropagation()
+                e.preventDefault()
                 ax.metric('embed:standardSite:authorHandle:press', {
                   handle: authorProfile.handle,
                 })
