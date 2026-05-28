@@ -2,20 +2,19 @@ import {forwardRef, useCallback, useEffect, useState} from 'react'
 import {
   AccessibilityInfo,
   Image as RNImage,
-  StyleSheet,
   useColorScheme,
   View,
 } from 'react-native'
 import Animated, {
   Easing,
   interpolate,
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Svg, {Path, type SvgProps} from 'react-native-svg'
+import {scheduleOnRN} from 'react-native-worklets'
 import {Image} from 'expo-image'
 import * as SplashScreen from 'expo-splash-screen'
 
@@ -152,9 +151,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                   withTiming(
                     1,
                     {duration: 1200, easing: Easing.in(Easing.cubic)},
-                    () => {
-                      runOnJS(onFinish)()
-                    },
+                    () => scheduleOnRN(onFinish),
                   ),
                 )
                 outroApp.set(() =>
@@ -178,7 +175,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   }, [onFinish, intro, outroLogo, outroApp, outroAppOpacity, isReady])
 
   useEffect(() => {
-    AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion)
+    void AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion)
   }, [])
 
   const logoAnimations =
@@ -189,12 +186,12 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   return (
     <View style={{flex: 1}} onLayout={onLayout}>
       {!isAnimationComplete && (
-        <View style={StyleSheet.absoluteFillObject}>
+        <View style={[a.absolute, a.inset_0]}>
           <Image
             accessibilityIgnoresInvertColors
             onLoadEnd={onLoadEnd}
             source={{uri: isDarkMode ? darkSplashImageUri : splashImageUri}}
-            style={StyleSheet.absoluteFillObject}
+            style={[a.absolute, a.inset_0]}
           />
 
           <Animated.View
