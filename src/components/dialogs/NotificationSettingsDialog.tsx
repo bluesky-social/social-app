@@ -7,9 +7,11 @@ import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {PreferenceControls} from '#/screens/Settings/NotificationSettings/components/PreferenceControls'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 
 type NotificationSettingsDialogProps = {
   control: Dialog.DialogControlProps
@@ -32,6 +34,7 @@ export function NotificationSettingsDialog({
   return (
     <Dialog.Outer control={control}>
       <NotificationSettingsDialogInner
+        control={control}
         name={name}
         syncOthers={syncOthers}
         titleText={titleText}
@@ -43,12 +46,13 @@ export function NotificationSettingsDialog({
 }
 
 function NotificationSettingsDialogInner({
+  control,
   name,
   syncOthers,
   titleText,
   subtitleText,
   allowDisableInApp,
-}: Omit<NotificationSettingsDialogProps, 'control' | 'icon'>) {
+}: Omit<NotificationSettingsDialogProps, 'icon'>) {
   const t = useTheme()
   const {t: l} = useLingui()
   const {data: preferences, isError} = useNotificationSettingsQuery()
@@ -83,6 +87,18 @@ function NotificationSettingsDialogInner({
           )}
         </SettingsList.Container>
         <Dialog.Close />
+        {IS_NATIVE ? (
+          <Button
+            color="secondary"
+            size="large"
+            label={l`Click here to close this dialog`}
+            style={[a.w_full]}
+            onPress={() => control.close()}>
+            <ButtonText>
+              <Trans>Done</Trans>
+            </ButtonText>
+          </Button>
+        ) : null}
       </Dialog.ScrollableInner>
     </>
   )
