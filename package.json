@@ -229,6 +229,7 @@
     "react-native-reanimated": "4.4.0",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "4.25.2",
+    "react-native-scroll-forwarder": "link:./modules/react-native-scroll-forwarder",
     "react-native-svg": "15.15.4",
     "react-native-uitextview": "^2.2.0",
     "react-native-uuid": "^2.0.3",
