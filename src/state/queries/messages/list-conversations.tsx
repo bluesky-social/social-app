@@ -1,5 +1,6 @@
 import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
 import {
+  type ChatBskyActorDefs,
   ChatBskyConvoDefs,
   type ChatBskyConvoListConvos,
   moderateProfile,
@@ -19,7 +20,10 @@ import {useMessagesEventBus} from '#/state/messages/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
 import {parseConvoView} from '#/components/dms/util'
+import * as bsky from '#/types/bsky'
+import {RQKEY as CONVO_KEY} from './conversation'
 import {useLeftConvos} from './leave-conversation'
+import {listConvoMembersQueryKey} from './list-convo-members'
 
 const DEFAULT_LIMIT = 10
 export const UNREAD_LIMIT = 20
@@ -137,6 +141,80 @@ export function ListConvosProviderInner({
     const unsub = messagesBus.on(
       events => {
         if (events.type !== 'logs') return
+
+        function mutateMembers(
+          convoId: string,
+          fn: (
+            members: ChatBskyActorDefs.ProfileViewBasic[],
+          ) => ChatBskyActorDefs.ProfileViewBasic[],
+        ) {
+          queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
+            listConvoMembersQueryKey(convoId),
+            old => {
+              if (!old) return // query doesn't exist yet, skip
+              return fn(old)
+            },
+          )
+        }
+
+        function mutateConvoView(
+          convoId: string,
+          fn: (
+            convo: ChatBskyConvoDefs.ConvoView,
+          ) => ChatBskyConvoDefs.ConvoView,
+        ) {
+          queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(
+            CONVO_KEY(convoId),
+            old => (old ? fn(old) : old),
+          )
+          queryClient.setQueriesData<ConvoListQueryData>(
+            {queryKey: [RQKEY_ROOT]},
+            old => optimisticUpdate(convoId, old, fn),
+          )
+        }
+
+        function handleMemberAdded(
+          convoId: string,
+          did: string,
+          relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[],
+          rev: string,
+        ) {
+          const newMember = relatedProfiles.find(r => r.did === did)
+          if (!newMember) return
+          // If the optimistic add already added them, skip the
+          // memberCount bump to avoid double-counting.
+          const alreadyKnownMember =
+            queryClient
+              .getQueryData<
+                ChatBskyActorDefs.ProfileViewBasic[]
+              >(listConvoMembersQueryKey(convoId))
+              ?.some(m => m.did === did) ?? false
+          mutateMembers(convoId, list =>
+            list.some(m => m.did === did) ? list : list.concat(newMember),
+          )
+          mutateConvoView(convoId, convo =>
+            addMemberToConvoView(convo, newMember, rev, alreadyKnownMember),
+          )
+        }
+
+        function handleMemberRemoved(
+          convoId: string,
+          did: string,
+          rev: string,
+        ) {
+          // If the optimistic remove already dropped them from the full
+          // list, skip the memberCount decrement to avoid double-counting.
+          const alreadyRemovedMember =
+            queryClient
+              .getQueryData<
+                ChatBskyActorDefs.ProfileViewBasic[]
+              >(listConvoMembersQueryKey(convoId))
+              ?.some(m => m.did === did) === false
+          mutateMembers(convoId, list => list.filter(m => m.did !== did))
+          mutateConvoView(convoId, convo =>
+            removeMemberFromConvoView(convo, did, rev, alreadyRemovedMember),
+          )
+        }
 
         for (const log of events.logs) {
           if (ChatBskyConvoDefs.isLogBeginConvo(log)) {
@@ -431,6 +509,74 @@ export function ListConvosProviderInner({
                   rev: log.rev,
                 })),
             )
+          } else if (ChatBskyConvoDefs.isLogAddMember(log)) {
+            const data = log.message.data
+            if (
+              bsky.dangerousIsType<ChatBskyConvoDefs.SystemMessageDataAddMember>(
+                data,
+                ChatBskyConvoDefs.isSystemMessageDataAddMember,
+              )
+            ) {
+              handleMemberAdded(
+                log.convoId,
+                data.member.did,
+                log.relatedProfiles,
+                log.rev,
+              )
+            }
+            // Refetch so the server can refresh the curated members list.
+            void queryClient.invalidateQueries({
+              queryKey: CONVO_KEY(log.convoId),
+            })
+            debouncedRefetch()
+          } else if (ChatBskyConvoDefs.isLogRemoveMember(log)) {
+            const data = log.message.data
+            if (
+              bsky.dangerousIsType<ChatBskyConvoDefs.SystemMessageDataRemoveMember>(
+                data,
+                ChatBskyConvoDefs.isSystemMessageDataRemoveMember,
+              )
+            ) {
+              handleMemberRemoved(log.convoId, data.member.did, log.rev)
+            }
+            // Refetch so the server can refill the curated members list.
+            void queryClient.invalidateQueries({
+              queryKey: CONVO_KEY(log.convoId),
+            })
+            debouncedRefetch()
+          } else if (ChatBskyConvoDefs.isLogMemberJoin(log)) {
+            const data = log.message.data
+            if (
+              bsky.dangerousIsType<ChatBskyConvoDefs.SystemMessageDataMemberJoin>(
+                data,
+                ChatBskyConvoDefs.isSystemMessageDataMemberJoin,
+              )
+            ) {
+              handleMemberAdded(
+                log.convoId,
+                data.member.did,
+                log.relatedProfiles,
+                log.rev,
+              )
+            }
+            void queryClient.invalidateQueries({
+              queryKey: CONVO_KEY(log.convoId),
+            })
+            debouncedRefetch()
+          } else if (ChatBskyConvoDefs.isLogMemberLeave(log)) {
+            const data = log.message.data
+            if (
+              bsky.dangerousIsType<ChatBskyConvoDefs.SystemMessageDataMemberLeave>(
+                data,
+                ChatBskyConvoDefs.isSystemMessageDataMemberLeave,
+              )
+            ) {
+              handleMemberRemoved(log.convoId, data.member.did, log.rev)
+            }
+            void queryClient.invalidateQueries({
+              queryKey: CONVO_KEY(log.convoId),
+            })
+            debouncedRefetch()
           } else if (ChatBskyConvoDefs.isLogRemoveReaction(log)) {
             queryClient.setQueriesData(
               {queryKey: [RQKEY_ROOT]},
@@ -613,6 +759,53 @@ function optimisticUpdate(
         chatId === convo.id ? updateFn(convo) : convo,
       ),
     })),
+  }
+}
+
+function removeMemberFromConvoView(
+  convo: ChatBskyConvoDefs.ConvoView,
+  did: string,
+  rev: string,
+  alreadyRemovedMember: boolean,
+): ChatBskyConvoDefs.ConvoView {
+  // Member add/remove/join/leave events are only meaningful for group convos.
+  if (!ChatBskyConvoDefs.isGroupConvo(convo.kind)) return convo
+  const nextMembers = convo.members.filter(m => m.did !== did)
+  return {
+    ...convo,
+    rev,
+    members: nextMembers,
+    kind: {
+      ...convo.kind,
+      memberCount: alreadyRemovedMember
+        ? convo.kind.memberCount
+        : Math.max(0, convo.kind.memberCount - 1),
+    },
+  }
+}
+
+function addMemberToConvoView(
+  convo: ChatBskyConvoDefs.ConvoView,
+  member: ChatBskyActorDefs.ProfileViewBasic,
+  rev: string,
+  alreadyKnownMember: boolean,
+): ChatBskyConvoDefs.ConvoView {
+  // Member add/remove/join/leave events are only meaningful for group convos.
+  if (!ChatBskyConvoDefs.isGroupConvo(convo.kind)) return convo
+  const alreadyInCuratedList = convo.members.some(m => m.did === member.did)
+  const nextMembers = alreadyInCuratedList
+    ? convo.members
+    : convo.members.concat(member)
+  return {
+    ...convo,
+    rev,
+    members: nextMembers,
+    kind: {
+      ...convo.kind,
+      memberCount: alreadyKnownMember
+        ? convo.kind.memberCount
+        : convo.kind.memberCount + 1,
+    },
   }
 }
 
