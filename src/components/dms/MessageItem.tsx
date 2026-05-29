@@ -37,11 +37,11 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
-import {useMessageDialogs} from '#/screens/Messages/components/MessageOverlays'
 import {atoms as a, native, platform, useTheme} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {Button} from '#/components/Button'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
+import {useMessageDialogs} from '#/components/dms/MessageOverlays'
 import {InlineLinkText, Link} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Prompt from '#/components/Prompt'
@@ -49,6 +49,7 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {DateDivider} from './DateDivider'
 import {MessageItemEmbed} from './MessageItemEmbed'
+import {groupReactions} from './ReactionsDialog'
 import {CLUSTERED_MESSAGE_THRESHOLD_MS, MESSAGE_GAP_THRESHOLD_MS} from './util'
 
 const AVATAR_SIZE = 28
@@ -242,34 +243,10 @@ let MessageItem = ({
       <ProfileCard.AvatarPlaceholder size={AVATAR_SIZE} />
     )
 
-  const groupedReactions = useMemo(() => {
-    const reactions = message.reactions ?? []
-    const grouped = new Map<
-      string,
-      {
-        key: string
-        value: string
-        senders: ChatBskyConvoDefs.ReactionViewSender[]
-        count: number
-      }
-    >()
-    for (const reaction of reactions) {
-      if (!reaction) continue
-      const existing = grouped.get(reaction.value)
-      if (existing) {
-        existing.senders.push(reaction.sender)
-        existing.count++
-      } else {
-        grouped.set(reaction.value, {
-          key: reaction.value,
-          value: reaction.value,
-          senders: [reaction.sender],
-          count: 1,
-        })
-      }
-    }
-    return Array.from(grouped.values())
-  }, [message.reactions])
+  const groupedReactions = useMemo(
+    () => groupReactions(message.reactions),
+    [message.reactions],
+  )
 
   const reactions = useMemo(() => message.reactions ?? [], [message.reactions])
 
