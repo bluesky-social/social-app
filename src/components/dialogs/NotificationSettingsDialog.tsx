@@ -91,7 +91,7 @@ function NotificationSettingsDialogInner({
           <Button
             color="secondary"
             size="large"
-            label={l`Click here to close this dialog`}
+            label={l`Close dialog`}
             style={[a.w_full]}
             onPress={() => control.close()}>
             <ButtonText>
