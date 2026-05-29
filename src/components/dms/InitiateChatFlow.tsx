@@ -394,6 +394,7 @@ export function InitiateChatFlow({
             <NewGroupChatButton
               key={item.key}
               onPress={handlePressNewGroupChat}
+              dimmed={!canCreateGroups}
             />
           )
         }
@@ -439,7 +440,13 @@ export function InitiateChatFlow({
           return null
       }
     },
-    [chatState, handlePressNewGroupChat, moderationOpts, onSelectChat],
+    [
+      canCreateGroups,
+      chatState,
+      handlePressNewGroupChat,
+      moderationOpts,
+      onSelectChat,
+    ],
   )
 
   useLayoutEffect(() => {
@@ -721,7 +728,13 @@ export function InitiateChatFlow({
   )
 }
 
-function NewGroupChatButton({onPress}: {onPress: () => void}) {
+function NewGroupChatButton({
+  onPress,
+  dimmed = false,
+}: {
+  onPress: () => void
+  dimmed?: boolean
+}) {
   const t = useTheme()
   const {t: l} = useLingui()
 
@@ -744,6 +757,7 @@ function NewGroupChatButton({onPress}: {onPress: () => void}) {
             a.align_center,
             a.gap_sm,
             pressed || focused || hovered ? t.atoms.bg_contrast_25 : t.atoms.bg,
+            dimmed && {opacity: 0.5},
           ]}>
           <View
             style={[
