@@ -1017,7 +1017,7 @@ export type Events = {
   'activityPreference:changeChannels': {
     name: string
     push: boolean
-    list: boolean
+    list?: boolean
   }
   'activityPreference:changeFilter': {
     name: string
