@@ -330,7 +330,9 @@ func serve(cctx *cli.Context) error {
 	e.GET("/intent/verify-email", server.WebGeneric)
 	e.GET("/intent/age-assurance", server.WebGeneric)
 	e.GET("/messages", server.WebGeneric)
+	e.GET("/messages/inbox", server.WebGeneric)
 	e.GET("/messages/:conversation", server.WebGeneric)
+	e.GET("/messages/:conversation/settings", server.WebGeneric)
 
 	// profile endpoints; only first populates info
 	e.GET("/profile/:handleOrDID", server.WebProfile)
