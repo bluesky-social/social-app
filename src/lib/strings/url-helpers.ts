@@ -185,7 +185,10 @@ export function isBskyDownloadUrl(url: string): boolean {
   return url === '/download' || url.startsWith('/download?')
 }
 
-export function convertBskyAppUrlIfNeeded(url: string): string {
+export function convertBskyAppUrlIfNeeded(
+  url: string,
+  {stripSearch}: {stripSearch?: boolean} = {},
+): string {
   if (isBskyAppUrl(url)) {
     try {
       const urlp = new URL(url)
@@ -194,7 +197,7 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
         return startUriToStarterPackUri(urlp.pathname)
       }
 
-      return urlp.pathname + urlp.search
+      return urlp.pathname + (stripSearch ? '' : urlp.search)
     } catch (e) {
       console.error('Unexpected error in convertBskyAppUrlIfNeeded()', e)
     }

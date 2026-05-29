@@ -59,7 +59,7 @@ export function useMessageEmbed() {
 
         if (embedFromParams) return
 
-        const url = convertBskyAppUrlIfNeeded(embedUrl)
+        const url = convertBskyAppUrlIfNeeded(embedUrl, {stripSearch: true})
         const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
         const uri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
 

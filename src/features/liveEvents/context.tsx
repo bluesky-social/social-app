@@ -127,7 +127,7 @@ export function useActiveLiveEventFeedUris() {
       // insurance
       .filter(f => isBskyCustomFeedUrl(f.url))
       .map(f => {
-        const uri = convertBskyAppUrlIfNeeded(f.url)
+        const uri = convertBskyAppUrlIfNeeded(f.url, {stripSearch: true})
         const [_0, did, _1, rkey] = uri.split('/').filter(Boolean)
         const urip = makeRecordUri(did, 'app.bsky.feed.generator', rkey)
         return urip.toString()

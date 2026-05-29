@@ -368,7 +368,9 @@ export function MessagesList({
               return facet.features.find(feature => {
                 if (AppBskyRichtextFacet.isLink(feature)) {
                   if (isBskyPostUrl(feature.uri)) {
-                    const url = convertBskyAppUrlIfNeeded(feature.uri)
+                    const url = convertBskyAppUrlIfNeeded(feature.uri, {
+                      stripSearch: true,
+                    })
                     const [_0, _1, _2, rkey] = url.split('/').filter(Boolean)
 
                     // this might have a handle instead of a DID
