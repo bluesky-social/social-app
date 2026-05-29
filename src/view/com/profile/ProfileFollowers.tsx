@@ -10,9 +10,15 @@ import {logger} from '#/logger'
 import {useProfileFollowersQuery} from '#/state/queries/profile-followers'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useSession} from '#/state/session'
+import {useDialogControl} from '#/components/Dialog'
 import {PeopleRemove2_Stroke1_Corner0_Rounded as PeopleRemoveIcon} from '#/components/icons/PeopleRemove2'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {useAnalytics} from '#/analytics'
+import {
+  FollowersPromoBanner,
+  InviteFriendsDialog,
+  useFollowersPromoDismissed,
+} from '#/features/inviteFriends'
 import {List} from '../util/List'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
 
@@ -158,30 +164,50 @@ export function ProfileFollowers({name}: {name: string}) {
     [ax, followers, resolvedDid],
   )
 
+  const inviteFriendsControl = useDialogControl()
+  const [followersPromoDismissed, setFollowersPromoDismissed] =
+    useFollowersPromoDismissed()
+  const showFollowersPromo =
+    isMe &&
+    !followersPromoDismissed &&
+    followers.length < 1 &&
+    !isDidLoading &&
+    !isFollowersLoading &&
+    !isError
+
   if (followers.length < 1) {
     return (
-      <ListMaybePlaceholder
-        isLoading={isDidLoading || isFollowersLoading}
-        isError={isError}
-        emptyType="results"
-        emptyMessage={
-          isMe
-            ? _(msg`No followers yet`)
-            : _(msg`This user doesn't have any followers.`)
-        }
-        errorMessage={cleanError(resolveError || error)}
-        onRetry={isError ? refetch : undefined}
-        sideBorders={false}
-        useEmptyState={true}
-        emptyStateIcon={PeopleRemoveIcon}
-        emptyStateButton={{
-          label: _(msg`Go back`),
-          text: _(msg`Go back`),
-          color: 'secondary',
-          size: 'small',
-          onPress: () => navigation.goBack(),
-        }}
-      />
+      <>
+        {showFollowersPromo && (
+          <FollowersPromoBanner
+            onPress={() => inviteFriendsControl.open()}
+            onDismiss={() => setFollowersPromoDismissed(true)}
+          />
+        )}
+        <ListMaybePlaceholder
+          isLoading={isDidLoading || isFollowersLoading}
+          isError={isError}
+          emptyType="results"
+          emptyMessage={
+            isMe
+              ? _(msg`No followers yet`)
+              : _(msg`This user doesn't have any followers.`)
+          }
+          errorMessage={cleanError(resolveError || error)}
+          onRetry={isError ? refetch : undefined}
+          sideBorders={false}
+          useEmptyState={true}
+          emptyStateIcon={PeopleRemoveIcon}
+          emptyStateButton={{
+            label: _(msg`Go back`),
+            text: _(msg`Go back`),
+            color: 'secondary',
+            size: 'small',
+            onPress: () => navigation.goBack(),
+          }}
+        />
+        <InviteFriendsDialog control={inviteFriendsControl} />
+      </>
     )
   }
 

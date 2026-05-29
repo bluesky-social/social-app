@@ -28,6 +28,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {useDialogControl} from '#/components/Dialog'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
+import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRight} from '#/components/icons/ArrowShareRight'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {
   KnownFollowers,
@@ -39,6 +40,7 @@ import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
+import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {useActorStatus} from '#/features/liveNow'
 import {GermButton} from '../components/GermButton'
 import {EditProfileDialog} from './EditProfileDialog'
@@ -247,6 +249,7 @@ export function HeaderStandardButtons({
   )
   const [, queueUnblock] = useProfileBlockMutationQueue(profile)
   const editProfileControl = useDialogControl()
+  const inviteFriendsControl = useDialogControl()
   const unblockPromptControl = Prompt.usePromptControl()
 
   const isMe = currentAccount?.did === profile.did
@@ -347,7 +350,20 @@ export function HeaderStandardButtons({
               <Trans>Edit Profile</Trans>
             </ButtonText>
           </Button>
+          <Button
+            testID="profileHeaderShareButton"
+            size="small"
+            color="secondary"
+            shape="round"
+            onPress={() => {
+              playHaptic('Light')
+              inviteFriendsControl.open()
+            }}
+            label={_(msg`Invite friends`)}>
+            <ButtonIcon icon={ArrowShareRight} />
+          </Button>
           <EditProfileDialog profile={profile} control={editProfileControl} />
+          <InviteFriendsDialog control={inviteFriendsControl} />
         </>
       ) : profile.viewer?.blocking ? (
         profile.viewer?.blockingByList ? null : (

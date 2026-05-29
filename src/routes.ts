@@ -40,6 +40,8 @@ export const router = new Router<AllNavigatableRoutes>({
   Debug: '/sys/debug',
   DebugMod: '/sys/debug-mod',
   Log: '/sys/log',
+  // invite friends
+  InviteScanner: '/invite/scan',
   // settings
   LanguageSettings: '/settings/language',
   AppPasswords: '/settings/app-passwords',
