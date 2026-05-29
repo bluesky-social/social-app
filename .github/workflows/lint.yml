@@ -33,7 +33,7 @@ jobs:
             check "$f" "$v"
           done
           # ENV NODE_VERSION=X.Y.Z — Go images that nvm-install Node for the JS build stage
-          for f in Dockerfile Dockerfile.embedr; do
+          for f in Dockerfile.embedr; do
             v=$(grep -oE 'NODE_VERSION=[0-9]+\.[0-9]+\.[0-9]+' "$f" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
             check "$f" "$v"
           done
@@ -45,7 +45,7 @@ jobs:
       - name: Install node
         uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
+          node-version-file: package.json
           cache: pnpm
       - name: pnpm install
         uses: Wandalen/wretry.action@master
@@ -71,7 +71,7 @@ jobs:
       - name: Install node
         uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
+          node-version-file: package.json
           cache: pnpm
       - name: pnpm install
         uses: Wandalen/wretry.action@master

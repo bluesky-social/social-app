@@ -33,7 +33,7 @@ jobs:
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
+          node-version-file: package.json
           cache: pnpm
 
       - name: Ensure tracking relevant branches and checkout base
@@ -123,7 +123,7 @@ jobs:
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
+          node-version-file: package.json
           cache: pnpm
 
       - name: 📷 Check fingerprint and install dependencies
