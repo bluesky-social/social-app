@@ -32,7 +32,7 @@ export function NotificationSettingsDialog({
   allowDisableInApp = true,
 }: NotificationSettingsDialogProps) {
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <NotificationSettingsDialogInner
         control={control}
         name={name}
@@ -87,18 +87,18 @@ function NotificationSettingsDialogInner({
           )}
         </SettingsList.Container>
         <Dialog.Close />
-        {IS_NATIVE ? (
+        {IS_NATIVE && (
           <Button
             color="secondary"
             size="large"
             label={l`Close dialog`}
-            style={[a.w_full]}
-            onPress={() => control.close()}>
+            onPress={() => control.close()}
+            style={[a.mt_md]}>
             <ButtonText>
               <Trans>Done</Trans>
             </ButtonText>
           </Button>
-        ) : null}
+        )}
       </Dialog.ScrollableInner>
     </>
   )
