@@ -110,7 +110,7 @@ export function JoinRequest({setScreenState}: Props) {
                     ]}>
                     <Trans>Group chat</Trans>
                   </Text>
-                  <View style={[a.flex_row]}>
+                  <View style={[a.flex_row, a.align_center]}>
                     <PersonGroupIcon
                       size="xs"
                       style={[a.mr_2xs, t.atoms.text_contrast_medium]}
@@ -142,7 +142,7 @@ export function JoinRequest({setScreenState}: Props) {
               <View>
                 <Text
                   style={[
-                    a.mb_2xs,
+                    a.mb_xs,
                     a.text_center,
                     a.text_sm,
                     a.font_semi_bold,
