@@ -12,7 +12,7 @@ export function ResendEmailText({
   onPress,
   style,
 }: TextStyleProp & {
-  onPress: () => Promise<any>
+  onPress: () => Promise<unknown>
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
