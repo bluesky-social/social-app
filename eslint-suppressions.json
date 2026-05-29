@@ -2356,23 +2356,6 @@
       "count": 2
     }
   },
-  "src/view/com/profile/ProfileMenu.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 6
-    },
-    "@typescript-eslint/no-floating-promises": {
-      "count": 4
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 6
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 12
-    }
-  },
   "src/view/com/testing/TestCtrls.e2e.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
