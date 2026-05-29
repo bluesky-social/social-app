@@ -419,16 +419,10 @@ const createPinnedFeedInfosQueryKey = (
   kind: 'pinned' | 'saved',
   feedUris: string[],
 ) =>
-  createQueryKey(
-    FEED_INFO_RQKEY_ROOT,
-    {
-      kind,
-      feedUris,
-    },
-    {
-      persistedVersion: 1,
-    },
-  )
+  createQueryKey(FEED_INFO_RQKEY_ROOT, {
+    kind,
+    feedUris,
+  })
 
 export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
