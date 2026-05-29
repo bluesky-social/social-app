@@ -163,7 +163,7 @@ export function JoinRequest({setScreenState}: Props) {
                 <Text
                   style={[
                     a.text_center,
-                    a.text_2xs,
+                    a.text_xs,
                     a.font_medium,
                     t.atoms.text_contrast_medium,
                   ]}>
