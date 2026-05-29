@@ -14,6 +14,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
+import {useChatActorStatusQuery} from '#/state/queries/messages/get-status'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {type ListMethods} from '#/view/com/util/List'
@@ -31,6 +32,7 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/compon
 import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import * as ProfileCard from '#/components/ProfileCard'
+import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
@@ -206,6 +208,10 @@ export function InitiateChatFlow({
   const listRef = useRef<ListMethods>(null)
   const {currentAccount} = useSession()
   const inputRef = useRef<TextInput>(null)
+  const accountTooNewPromptControl = Dialog.useDialogControl()
+
+  const {data: chatStatus} = useChatActorStatusQuery()
+  const canCreateGroups = chatStatus?.canCreateGroups ?? true
 
   const [searchText, setSearchText] = useState('')
 
@@ -358,9 +364,13 @@ export function InitiateChatFlow({
   }, [chatState, control, newGroupChatTitle, title])
 
   const handlePressNewGroupChat = useCallback(() => {
+    if (!canCreateGroups) {
+      accountTooNewPromptControl.open()
+      return
+    }
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     dispatch({type: 'startNewGroupChat', screenTitle: newGroupChatTitle})
-  }, [newGroupChatTitle])
+  }, [accountTooNewPromptControl, canCreateGroups, newGroupChatTitle])
 
   const handlePressNext = useCallback(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -652,6 +662,14 @@ export function InitiateChatFlow({
           : l`Start chat`
       }
       style={web([a.contents])}>
+      <Prompt.Basic
+        control={accountTooNewPromptControl}
+        title={l`Your account is too new`}
+        description={l`Your account must be at least 7 days old to create a new group chat.`}
+        confirmButtonCta={l`Okay`}
+        onConfirm={() => {}}
+        showCancel={false}
+      />
       <Dialog.InnerFlatList
         ref={listRef}
         data={items}
