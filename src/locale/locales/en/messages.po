@@ -1075,8 +1075,8 @@ msgstr ""
 msgid "Add muted words and tags"
 msgstr ""
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:133
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:172
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:135
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:174
 #: src/screens/ProfileList/AboutSection.tsx:72
 #: src/screens/ProfileList/AboutSection.tsx:90
 msgid "Add people"
@@ -2148,7 +2148,7 @@ msgid "By <0>{0}</0>"
 msgstr ""
 
 #. placeholder {0}: authorProfile.handle
-#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:79
+#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:80
 msgid "by <0>@{0}</0>"
 msgstr "by <0>@{0}</0>"
 
@@ -2528,7 +2528,7 @@ msgstr ""
 msgid "click here"
 msgstr ""
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:129
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:131
 msgid "Click here to add people to this group chat"
 msgstr "Click here to add people to this group chat"
 
@@ -2536,7 +2536,7 @@ msgstr "Click here to add people to this group chat"
 msgid "Click here to contact our support team"
 msgstr ""
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:143
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:145
 msgid "Click here to create or manage an invite link for this group chat"
 msgstr "Click here to create or manage an invite link for this group chat"
 
@@ -2566,7 +2566,7 @@ msgstr ""
 msgid "Click here to update your email"
 msgstr ""
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:144
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:146
 msgid "Click here to view the invite link for this group chat"
 msgstr "Click here to view the invite link for this group chat"
 
@@ -3433,7 +3433,7 @@ msgstr ""
 msgid "Deleted"
 msgstr ""
 
-#: src/components/dms/MessagesListHeader.tsx:107
+#: src/components/dms/MessagesListHeader.tsx:109
 #: src/screens/Messages/components/ChatListItem.tsx:132
 #: src/screens/Messages/ConversationSettings/Member.tsx:75
 msgid "Deleted Account"
@@ -6009,7 +6009,7 @@ msgstr ""
 #: src/screens/Messages/components/InviteLinkDialog.tsx:290
 #: src/screens/Messages/components/InviteLinkDialog.tsx:296
 #: src/screens/Messages/components/InviteLinkDialog.tsx:471
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:149
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:151
 #: src/screens/Messages/ConversationSettings/index.tsx:491
 msgid "Invite link"
 msgstr "Invite link"
@@ -7755,8 +7755,8 @@ msgstr ""
 msgid "Open Germ DM"
 msgstr ""
 
-#: src/components/dms/MessagesListHeader.tsx:169
-#: src/components/dms/MessagesListHeader.tsx:208
+#: src/components/dms/MessagesListHeader.tsx:181
+#: src/components/dms/MessagesListHeader.tsx:220
 msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
@@ -10690,13 +10690,13 @@ msgid "Subscribe"
 msgstr ""
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:420
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:429
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:425
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:434
 msgid "Subscribe on {0}"
 msgstr "Subscribe on {0}"
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:428
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:433
 msgid "Subscribe to {publicationTitle} on {0}"
 msgstr "Subscribe to {publicationTitle} on {0}"
 
@@ -12438,7 +12438,7 @@ msgstr ""
 
 #. placeholder {0}: view.source.title
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:319
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:583
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:588
 msgid "View {0}"
 msgstr "View {0}"
 
@@ -12462,17 +12462,17 @@ msgstr ""
 msgid "View {0}’s profile"
 msgstr "View {0}’s profile"
 
-#: src/components/dms/MessagesListHeader.tsx:120
+#: src/components/dms/MessagesListHeader.tsx:123
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:185
 msgid "View {displayName}’s profile"
 msgstr "View {displayName}’s profile"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:431
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:436
 msgid "View {publicationTitle}"
 msgstr "View {publicationTitle}"
 
 #. placeholder {0}: authorProfile.handle
-#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:82
+#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:83
 msgid "View @{0}'s profile"
 msgstr "View @{0}'s profile"
 
@@ -12535,9 +12535,9 @@ msgid "View profile banner"
 msgstr "View profile banner"
 
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:319
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:421
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:432
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:583
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:426
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:437
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:588
 msgid "View publication"
 msgstr "View publication"
 
