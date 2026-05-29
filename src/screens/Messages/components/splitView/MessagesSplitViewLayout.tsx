@@ -6,6 +6,7 @@ import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
 
 import {type FlatNavigatorParams} from '#/lib/routes/types'
 import {ScrollProvider} from '#/lib/ScrollContext'
+import {useChatActorStatusQuery} from '#/state/queries/messages/get-status'
 import {type NativeStackNavigationOptionsWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
 import {LEFT_NAV_MINIMAL_WIDTH} from '#/view/shell/desktop/LeftNav'
 import {atoms as a, useLayoutBreakpoints, useTheme, web} from '#/alf'
@@ -40,21 +41,36 @@ export function renderMessagesSplitViewLayout(props: LayoutProps) {
   return <MessagesSplitViewLayout {...props} />
 }
 
-function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
-  const {rightNavVisible, centerColumnOffset} = useLayoutBreakpoints()
+function MessagesSplitViewLayout({children, ...props}: LayoutProps) {
+  const {rightNavVisible} = useLayoutBreakpoints()
+  const aa = useAgeAssurance()
+
+  if (!IS_WEB || !rightNavVisible || aa.state.access !== aa.Access.Full) {
+    return children
+  }
+
+  return (
+    <MessagesSplitViewLayoutInner {...props}>
+      {children}
+    </MessagesSplitViewLayoutInner>
+  )
+}
+
+function MessagesSplitViewLayoutInner({
+  children,
+  navigation,
+  route,
+}: LayoutProps) {
+  const {centerColumnOffset} = useLayoutBreakpoints()
   const newChatControl = useDialogControl()
   const t = useTheme()
-  const aa = useAgeAssurance()
   const isFocused = useIsFocused()
+  const {data: chatStatus} = useChatActorStatusQuery()
 
   const onLeftColumnScroll = useCallback((e: ReanimatedScrollEvent) => {
     'worklet'
     splitViewLeftScroll.current = e.contentOffset.y
   }, [])
-
-  if (!IS_WEB || !rightNavVisible || aa.state.access !== aa.Access.Full) {
-    return children
-  }
 
   const onNewChat = (conversation: string) =>
     navigation.navigate('MessagesConversation', {conversation})
@@ -102,11 +118,15 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
             t.atoms.border_contrast_low,
             {width: leftColumnWidth},
           ]}>
-          <ChatListHeader newChatControl={newChatControl} />
+          <ChatListHeader
+            newChatControl={newChatControl}
+            chatStatus={chatStatus}
+          />
           <ScrollProvider onScroll={onLeftColumnScroll}>
             <ChatList
               newChatControl={newChatControl}
               selectedChat={selectedChat}
+              chatStatus={chatStatus}
             />
           </ScrollProvider>
           <NewChat onNewChat={onNewChat} control={newChatControl} />
