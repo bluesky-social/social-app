@@ -50,6 +50,9 @@ export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
             accessibilityRole="button"
             accessibilityLabel={l`Expand alt text`}
             accessibilityHint=""
+            onLongPress={() => {
+              /* noop to allow text selection */
+            }}
             onPress={() => {
               if (isMomentumScrolling.current) return
               LayoutAnimation.configureNext({
