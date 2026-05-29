@@ -188,6 +188,8 @@ export function JoinRequest({setScreenState}: Props) {
 function Wrapper({children}: React.PropsWithChildren<unknown>) {
   const t = useTheme()
 
+  const isDarkMode = t.name !== 'light'
+
   return (
     <>
       <LogomarkWithType
@@ -209,6 +211,7 @@ function Wrapper({children}: React.PropsWithChildren<unknown>) {
           a.pt_4xl,
           t.atoms.bg,
           t.atoms.shadow_xl,
+          isDarkMode ? [a.border, t.atoms.border_contrast_low] : null,
           {
             borderRadius: 48,
             maxWidth: 320,
