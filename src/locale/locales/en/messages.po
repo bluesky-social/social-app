@@ -790,8 +790,8 @@ msgstr ""
 
 #: src/components/contacts/screens/VerifyNumber.tsx:99
 #: src/components/contacts/screens/VerifyNumber.tsx:155
-#: src/components/dms/dialogs/NewChatDialog.tsx:49
-#: src/components/dms/dialogs/NewChatDialog.tsx:87
+#: src/components/dms/dialogs/NewChatDialog.tsx:52
+#: src/components/dms/dialogs/NewChatDialog.tsx:90
 msgid "A network error occurred. Please check your internet connection."
 msgstr ""
 
@@ -822,11 +822,11 @@ msgstr ""
 msgid "A screenshot of the post composer with a new button next to the post button that says \"Drafts\", with a rainbow firework effect. Below, the text in the composer reads \"Hey, did you hear the news? Bluesky has drafts now!!!\"."
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:102
+#: src/components/dms/dialogs/NewChatDialog.tsx:105
 msgid "A selected recipient is not followed by the sender."
 msgstr "A selected recipient is not followed by the sender."
 
-#: src/Navigation.tsx:547
+#: src/Navigation.tsx:457
 #: src/screens/Settings/AboutSettings.tsx:78
 #: src/screens/Settings/Settings.tsx:255
 #: src/screens/Settings/Settings.tsx:258
@@ -855,17 +855,22 @@ msgstr ""
 msgid "Accept this language suggestion"
 msgstr ""
 
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:182
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:186
+msgid "Accepted conversations"
+msgstr "Accepted conversations"
+
 #: src/screens/Settings/AccessibilitySettings.tsx:45
 #: src/screens/Settings/Settings.tsx:233
 #: src/screens/Settings/Settings.tsx:236
 msgid "Accessibility"
 msgstr ""
 
-#: src/Navigation.tsx:390
+#: src/Navigation.tsx:380
 msgid "Accessibility Settings"
 msgstr ""
 
-#: src/Navigation.tsx:406
+#: src/Navigation.tsx:396
 #: src/screens/Login/LoginForm.tsx:192
 #: src/screens/Settings/AccountSettings.tsx:56
 #: src/screens/Settings/Settings.tsx:173
@@ -945,13 +950,9 @@ msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. 
 msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:216
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:105
-#: src/screens/Settings/NotificationSettings/index.tsx:193
+#: src/screens/Settings/NotificationSettings/index.tsx:204
+#: src/screens/Settings/NotificationSettings/index.tsx:309
 msgid "Activity from others"
-msgstr ""
-
-#: src/Navigation.tsx:515
-msgid "Activity notifications"
 msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:179
@@ -1223,7 +1224,7 @@ msgstr ""
 msgid "Age assurance only takes a few minutes"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Update.tsx:224
+#: src/components/dialogs/EmailDialog/screens/Update.tsx:220
 msgid "alice@example.com"
 msgstr ""
 
@@ -1273,13 +1274,13 @@ msgstr ""
 msgid "Allow anyone to reply"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:138
-#: src/screens/Messages/Settings.tsx:153
+#: src/screens/Messages/Settings.tsx:139
+#: src/screens/Messages/Settings.tsx:154
 msgid "Allow direct messages from"
 msgstr "Allow direct messages from"
 
-#: src/screens/Messages/Settings.tsx:184
-#: src/screens/Messages/Settings.tsx:199
+#: src/screens/Messages/Settings.tsx:185
+#: src/screens/Messages/Settings.tsx:200
 msgid "Allow group chat invites from"
 msgstr "Allow group chat invites from"
 
@@ -1464,11 +1465,11 @@ msgstr "An invite link lets people join this group chat without being added dire
 msgid "An issue not included in these options"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:85
+#: src/components/dms/dialogs/NewChatDialog.tsx:88
 msgid "An issue occurred creating the group chat, please try again."
 msgstr "An issue occurred creating the group chat, please try again."
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:47
+#: src/components/dms/dialogs/NewChatDialog.tsx:50
 msgid "An issue occurred starting the chat, please try again."
 msgstr "An issue occurred starting the chat, please try again."
 
@@ -1554,7 +1555,7 @@ msgstr ""
 msgid "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 msgstr "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 
-#: src/Navigation.tsx:555
+#: src/Navigation.tsx:465
 #: src/screens/Settings/AppIconSettings/index.tsx:65
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:19
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:24
@@ -1592,7 +1593,7 @@ msgstr ""
 msgid "App passwords"
 msgstr ""
 
-#: src/Navigation.tsx:358
+#: src/Navigation.tsx:348
 #: src/screens/Settings/AppPasswords.tsx:51
 msgid "App Passwords"
 msgstr ""
@@ -1613,7 +1614,7 @@ msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:272
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:83
-#: src/screens/Messages/components/ChatDisabled.tsx:121
+#: src/screens/Messages/components/ChatDisabled.tsx:125
 msgctxt "toast"
 msgid "Appeal submitted"
 msgstr ""
@@ -1627,14 +1628,14 @@ msgstr ""
 msgid "Appeal Suspension"
 msgstr ""
 
-#: src/screens/Messages/components/ChatDisabled.tsx:72
-#: src/screens/Messages/components/ChatDisabled.tsx:75
-#: src/screens/Messages/components/ChatDisabled.tsx:129
-#: src/screens/Messages/components/ChatDisabled.tsx:131
+#: src/screens/Messages/components/ChatDisabled.tsx:76
+#: src/screens/Messages/components/ChatDisabled.tsx:79
+#: src/screens/Messages/components/ChatDisabled.tsx:133
+#: src/screens/Messages/components/ChatDisabled.tsx:135
 msgid "Appeal this decision"
 msgstr ""
 
-#: src/Navigation.tsx:398
+#: src/Navigation.tsx:388
 #: src/screens/Settings/AppearanceSettings.tsx:73
 #: src/screens/Settings/Settings.tsx:225
 #: src/screens/Settings/Settings.tsx:228
@@ -1747,7 +1748,7 @@ msgstr "Automated account"
 msgid "Automation label"
 msgstr "Automation label"
 
-#: src/Navigation.tsx:414
+#: src/Navigation.tsx:404
 #: src/screens/Settings/AutomationLabelSettings.tsx:103
 msgid "Automation Label"
 msgstr "Automation Label"
@@ -1778,8 +1779,8 @@ msgstr ""
 #: src/screens/Login/LoginForm.tsx:322
 #: src/screens/Login/SetNewPasswordForm.tsx:172
 #: src/screens/Login/SetNewPasswordForm.tsx:178
-#: src/screens/Messages/components/ChatDisabled.tsx:160
-#: src/screens/Messages/components/ChatDisabled.tsx:162
+#: src/screens/Messages/components/ChatDisabled.tsx:164
+#: src/screens/Messages/components/ChatDisabled.tsx:166
 #: src/screens/Messages/Inbox.tsx:242
 #: src/screens/Profile/Header/Shell.tsx:174
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:273
@@ -1835,11 +1836,11 @@ msgstr ""
 msgid "Before you can get notifications for {name}'s posts, you must first verify your email."
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:148
+#: src/components/dms/dialogs/NewChatDialog.tsx:151
 #: src/components/dms/MessageProfileButton.tsx:60
-#: src/screens/Messages/ChatList.tsx:142
-#: src/screens/Messages/ChatList.tsx:200
-#: src/screens/Messages/ChatList.tsx:448
+#: src/screens/Messages/ChatList.tsx:147
+#: src/screens/Messages/ChatList.tsx:211
+#: src/screens/Messages/ChatList.tsx:476
 #: src/screens/Messages/Conversation.tsx:200
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:94
 msgid "Before you can message another user, you must first verify your email."
@@ -1959,7 +1960,7 @@ msgstr ""
 msgid "Blocked accounts"
 msgstr ""
 
-#: src/Navigation.tsx:199
+#: src/Navigation.tsx:189
 #: src/view/screens/ModerationBlockedAccounts.tsx:95
 msgid "Blocked Accounts"
 msgstr ""
@@ -2187,8 +2188,8 @@ msgstr ""
 #: src/components/contacts/screens/GetContacts.tsx:297
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:141
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:146
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:126
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:132
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:122
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:128
 #: src/components/dialogs/InAppBrowserConsent.tsx:99
 #: src/components/dialogs/InAppBrowserConsent.tsx:105
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:192
@@ -2339,7 +2340,7 @@ msgid "Changes to the starter pack will not be reflected in the list after creat
 msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:133
-#: src/Navigation.tsx:573
+#: src/Navigation.tsx:483
 #: src/view/shell/bottom-bar/BottomBar.tsx:229
 #: src/view/shell/desktop/LeftNav.tsx:697
 #: src/view/shell/Drawer.tsx:469
@@ -2373,11 +2374,11 @@ msgctxt "toast"
 msgid "Chat muted"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:66
+#: src/components/dms/dialogs/NewChatDialog.tsx:69
 msgid "Chat recipient is not followed by the sender."
 msgstr "Chat recipient is not followed by the sender."
 
-#: src/Navigation.tsx:588
+#: src/Navigation.tsx:498
 msgid "Chat request inbox"
 msgstr ""
 
@@ -2387,16 +2388,16 @@ msgid "Chat requests"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:84
-#: src/Navigation.tsx:583
-#: src/screens/Messages/ChatList.tsx:79
+#: src/Navigation.tsx:493
 #: src/screens/Messages/ChatList.tsx:83
-#: src/screens/Messages/ChatList.tsx:472
-#: src/screens/Messages/ChatList.tsx:505
+#: src/screens/Messages/ChatList.tsx:87
+#: src/screens/Messages/ChatList.tsx:500
+#: src/screens/Messages/ChatList.tsx:535
 #: src/screens/Messages/Settings.tsx:37
 msgid "Chat settings"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:129
+#: src/screens/Messages/Settings.tsx:130
 msgid "Chat Settings"
 msgstr ""
 
@@ -2418,9 +2419,9 @@ msgctxt "toast"
 msgid "Chat unmuted"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:73
-#: src/screens/Messages/ChatList.tsx:460
-#: src/screens/Messages/ChatList.tsx:494
+#: src/screens/Messages/ChatList.tsx:77
+#: src/screens/Messages/ChatList.tsx:488
+#: src/screens/Messages/ChatList.tsx:524
 msgid "Chats"
 msgstr ""
 
@@ -2553,7 +2554,7 @@ msgstr ""
 msgid "Click here to resend the email"
 msgstr "Click here to resend the email"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:384
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:388
 msgid "Click here to restart the verification process."
 msgstr ""
 
@@ -2562,7 +2563,7 @@ msgstr ""
 msgid "Click here to update your birthdate"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:276
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:285
 msgid "Click here to update your email"
 msgstr ""
 
@@ -2652,6 +2653,7 @@ msgstr ""
 #: src/components/dialogs/LanguageSelectDialog.tsx:221
 #: src/components/dialogs/LanguageSelectDialog.tsx:322
 #: src/components/dialogs/LanguageSelectDialog.tsx:354
+#: src/components/dialogs/NotificationSettingsDialog.tsx:94
 #: src/components/verification/VerificationsDialog.tsx:138
 #: src/components/verification/VerifierDialog.tsx:139
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:36
@@ -2720,7 +2722,7 @@ msgid "Comics"
 msgstr ""
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:46
-#: src/Navigation.tsx:348
+#: src/Navigation.tsx:338
 #: src/view/screens/CommunityGuidelines.tsx:28
 msgid "Community Guidelines"
 msgstr ""
@@ -2775,7 +2777,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/components/TokenField.tsx:38
+#: src/components/dialogs/EmailDialog/components/TokenField.tsx:37
 #: src/screens/Login/LoginForm.tsx:284
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:187
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:191
@@ -2837,7 +2839,7 @@ msgstr ""
 msgid "Content and media"
 msgstr ""
 
-#: src/Navigation.tsx:531
+#: src/Navigation.tsx:441
 msgid "Content and Media"
 msgstr ""
 
@@ -3047,7 +3049,7 @@ msgstr ""
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:41
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:108
-#: src/Navigation.tsx:353
+#: src/Navigation.tsx:343
 #: src/view/screens/CopyrightPolicy.tsx:25
 msgid "Copyright Policy"
 msgstr ""
@@ -3154,7 +3156,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:207
 #: src/components/StarterPack/ProfileStarterPacks.tsx:316
-#: src/Navigation.tsx:619
+#: src/Navigation.tsx:529
 msgid "Create a starter pack"
 msgstr ""
 
@@ -3507,8 +3509,8 @@ msgstr ""
 msgid "Disable"
 msgstr "Disable"
 
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:234
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:243
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:231
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:240
 msgid "Disable 2FA"
 msgstr ""
 
@@ -3516,7 +3518,7 @@ msgstr ""
 msgid "Disable captions"
 msgstr "Disable captions"
 
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:158
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:156
 msgid "Disable email 2FA"
 msgstr ""
 
@@ -3668,7 +3670,7 @@ msgstr ""
 msgid "Domain verified!"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:381
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:385
 msgid "Don't have a code or need a new one? <0>Click here.</0>"
 msgstr ""
 
@@ -3676,7 +3678,7 @@ msgstr ""
 msgid "Don’t see a code? <0>Click here to resend.</0>"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/components/ResendEmailText.tsx:38
+#: src/components/dialogs/EmailDialog/components/ResendEmailText.tsx:36
 msgid "Don't see an email? <0>Click here to resend.</0>"
 msgstr ""
 
@@ -3695,7 +3697,10 @@ msgstr ""
 #: src/components/contacts/screens/ViewMatches.tsx:412
 #: src/components/dialogs/BirthDateSettings.tsx:193
 #: src/components/dialogs/BirthDateSettings.tsx:200
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:195
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:200
 #: src/components/dialogs/LanguageSelectDialog.tsx:327
+#: src/components/dialogs/NotificationSettingsDialog.tsx:98
 #: src/components/dialogs/ServerInput.tsx:237
 #: src/components/dialogs/ServerInput.tsx:239
 #: src/components/dms/AfterReportConversationDialog.tsx:164
@@ -3736,15 +3741,6 @@ msgstr ""
 msgid "Download Bluesky"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:118
-msgid "Download CAR file"
-msgstr ""
-
-#: src/screens/Settings/components/ExportCarDialog.tsx:123
-msgctxt "button"
-msgid "Download CAR file"
-msgstr "Download CAR file"
-
 #: src/screens/Settings/components/ExportCarDialog.tsx:149
 msgid "Download chat data"
 msgstr ""
@@ -3758,6 +3754,15 @@ msgstr "Download chat data"
 #: src/components/Lightbox/Lightbox.web.tsx:316
 msgid "Download image"
 msgstr "Download image"
+
+#: src/screens/Settings/components/ExportCarDialog.tsx:118
+msgid "Download profile data"
+msgstr "Download profile data"
+
+#: src/screens/Settings/components/ExportCarDialog.tsx:123
+msgctxt "button"
+msgid "Download profile data"
+msgstr "Download profile data"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:115
 msgid "Doxxing"
@@ -3820,7 +3825,6 @@ msgstr ""
 
 #: src/screens/Messages/components/EditTextButton.tsx:51
 #: src/screens/Settings/AccountSettings.tsx:150
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:255
 #: src/screens/StarterPack/StarterPackScreen.tsx:604
 #: src/screens/StarterPack/Wizard/index.tsx:331
 #: src/screens/StarterPack/Wizard/index.tsx:336
@@ -3881,7 +3885,7 @@ msgstr ""
 msgid "Edit moderation list"
 msgstr ""
 
-#: src/Navigation.tsx:363
+#: src/Navigation.tsx:353
 #: src/view/screens/Feeds.tsx:511
 msgid "Edit My Feeds"
 msgstr ""
@@ -3889,11 +3893,6 @@ msgstr ""
 #: src/screens/Messages/ConversationSettings/index.tsx:475
 msgid "Edit name"
 msgstr "Edit name"
-
-#. placeholder {0}: createSanitizedDisplayName( profile, )
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:246
-msgid "Edit notifications from {0}"
-msgstr ""
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:114
 msgid "Edit People"
@@ -3932,7 +3931,7 @@ msgstr ""
 msgid "Edit who can reply"
 msgstr ""
 
-#: src/Navigation.tsx:624
+#: src/Navigation.tsx:534
 msgid "Edit your starter pack"
 msgstr ""
 
@@ -3966,7 +3965,7 @@ msgstr ""
 msgid "Email Resent"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:209
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:218
 msgid "Email sent!"
 msgstr ""
 
@@ -4001,8 +4000,8 @@ msgstr ""
 msgid "Embedded video player"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:105
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:112
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:101
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:108
 #: src/screens/Settings/components/Email2FAToggle.tsx:31
 msgid "Enable"
 msgstr ""
@@ -4020,7 +4019,7 @@ msgstr ""
 msgid "Enable captions"
 msgstr "Enable captions"
 
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:93
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:91
 msgid "Enable email 2FA"
 msgstr ""
 
@@ -4033,13 +4032,12 @@ msgstr ""
 msgid "Enable media players for"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:142
 #: src/view/screens/Storybook/Admonitions.tsx:76
 msgid "Enable notifications for an account by visiting their profile and pressing the <0>bell icon</0> <1/>."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:103
-#: src/screens/Settings/NotificationSettings/index.tsx:107
+#: src/screens/Settings/NotificationSettings/index.tsx:114
+#: src/screens/Settings/NotificationSettings/index.tsx:118
 msgid "Enable push notifications"
 msgstr ""
 
@@ -4086,8 +4084,8 @@ msgstr ""
 msgid "Enter a word or tag"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:202
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:321
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:199
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:328
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:64
 msgid "Enter code"
 msgstr ""
@@ -4180,23 +4178,23 @@ msgstr ""
 msgid "Everybody can reply to this post."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:169
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:179
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:171
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:174
 msgid "Everyone"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:75
+#: src/screens/Messages/Settings.tsx:76
 msgctxt "allow group chat invites from"
 msgid "Everyone"
 msgstr "Everyone"
 
-#: src/screens/Messages/Settings.tsx:60
+#: src/screens/Messages/Settings.tsx:61
 msgctxt "allow messages from"
 msgid "Everyone"
 msgstr "Everyone"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:236
-#: src/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings.tsx:41
+#: src/screens/Settings/NotificationSettings/index.tsx:243
+#: src/screens/Settings/NotificationSettings/index.tsx:341
 msgid "Everything else"
 msgstr ""
 
@@ -4272,7 +4270,7 @@ msgstr ""
 msgid "Explicit sexual images."
 msgstr ""
 
-#: src/Navigation.tsx:828
+#: src/Navigation.tsx:738
 #: src/screens/Search/Shell.tsx:362
 #: src/view/shell/desktop/LeftNav.tsx:676
 #: src/view/shell/Drawer.tsx:417
@@ -4284,11 +4282,8 @@ msgstr ""
 msgid "Explore the app"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:254
-#: src/screens/Messages/Settings.tsx:264
-msgid "Export chat data"
-msgstr "Export chat data"
-
+#: src/screens/Messages/Settings.tsx:255
+#: src/screens/Messages/Settings.tsx:265
 #: src/screens/Settings/components/ExportCarDialog.tsx:130
 msgid "Export my chat data"
 msgstr "Export my chat data"
@@ -4317,7 +4312,7 @@ msgstr ""
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
 msgstr ""
 
-#: src/Navigation.tsx:382
+#: src/Navigation.tsx:372
 #: src/screens/Settings/ExternalMediaPreferences.tsx:35
 msgid "External Media Preferences"
 msgstr ""
@@ -4433,7 +4428,7 @@ msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "Failed to leave group chat"
 
-#: src/screens/Messages/ChatList.tsx:334
+#: src/screens/Messages/ChatList.tsx:345
 #: src/screens/Messages/Inbox.tsx:211
 msgid "Failed to load conversations"
 msgstr ""
@@ -4451,17 +4446,8 @@ msgstr ""
 msgid "Failed to load feeds preferences"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:117
-#: src/screens/Settings/NotificationSettings/index.tsx:116
-#: src/screens/Settings/NotificationSettings/LikeNotificationSettings.tsx:50
-#: src/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings.tsx:52
-#: src/screens/Settings/NotificationSettings/MentionNotificationSettings.tsx:50
-#: src/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings.tsx:53
-#: src/screens/Settings/NotificationSettings/NewFollowerNotificationSettings.tsx:50
-#: src/screens/Settings/NotificationSettings/QuoteNotificationSettings.tsx:50
-#: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:52
-#: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:50
-#: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:53
+#: src/components/dialogs/NotificationSettingsDialog.tsx:77
+#: src/screens/Settings/NotificationSettings/index.tsx:127
 msgid "Failed to load notification settings."
 msgstr ""
 
@@ -4564,7 +4550,7 @@ msgctxt "toast"
 msgid "Failed to save your interests."
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:123
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:121
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:137
 msgid "Failed to send email, please try again."
 msgstr ""
@@ -4575,7 +4561,7 @@ msgstr "Failed to send report"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:266
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:77
-#: src/screens/Messages/components/ChatDisabled.tsx:115
+#: src/screens/Messages/components/ChatDisabled.tsx:119
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
@@ -4592,12 +4578,12 @@ msgstr "Failed to unlock group chat"
 msgid "Failed to unpin list"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:150
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:84
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:148
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:82
 msgid "Failed to update email 2FA settings"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Update.tsx:196
+#: src/components/dialogs/EmailDialog/screens/Update.tsx:194
 msgid "Failed to update email, please try again."
 msgstr ""
 
@@ -4609,7 +4595,7 @@ msgstr ""
 msgid "Failed to update notification declaration"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:92
+#: src/screens/Messages/Settings.tsx:93
 msgid "Failed to update settings"
 msgstr ""
 
@@ -4636,7 +4622,7 @@ msgstr ""
 msgid "False information about elections"
 msgstr ""
 
-#: src/Navigation.tsx:298
+#: src/Navigation.tsx:288
 msgid "Feed"
 msgstr ""
 
@@ -4681,7 +4667,7 @@ msgctxt "toast"
 msgid "Feedback sent to feed operator"
 msgstr ""
 
-#: src/Navigation.tsx:604
+#: src/Navigation.tsx:514
 #: src/screens/SavedFeeds.tsx:112
 #: src/screens/SavedFeeds.tsx:303
 #: src/screens/Search/SearchResults.tsx:80
@@ -4734,7 +4720,7 @@ msgstr ""
 msgid "Filter who can opt to receive notifications for your activity"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:163
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:166
 msgid "Filter who you receive notifications from"
 msgstr ""
 
@@ -4763,8 +4749,8 @@ msgstr ""
 msgid "Find accounts to follow"
 msgstr ""
 
-#: src/Navigation.tsx:438
-#: src/Navigation.tsx:646
+#: src/Navigation.tsx:428
+#: src/Navigation.tsx:556
 msgid "Find Contacts"
 msgstr ""
 
@@ -4940,7 +4926,7 @@ msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {
 msgstr ""
 
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:252
+#: src/Navigation.tsx:242
 msgid "Followers of @{0} that you know"
 msgstr ""
 
@@ -4990,7 +4976,7 @@ msgstr ""
 msgid "Following feed preferences"
 msgstr ""
 
-#: src/Navigation.tsx:369
+#: src/Navigation.tsx:359
 #: src/screens/Settings/FollowingFeedPreferences.tsx:57
 msgid "Following Feed Preferences"
 msgstr ""
@@ -5064,7 +5050,7 @@ msgstr ""
 msgid "Free your feed"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:159
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:162
 msgid "From"
 msgstr ""
 
@@ -5117,44 +5103,48 @@ msgstr ""
 msgid "Get help"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/NewFollowerNotificationSettings.tsx:43
+#: src/screens/Settings/NotificationSettings/index.tsx:343
+msgid "Get notifications for starter pack joins, verification, and other activity."
+msgstr "Get notifications for starter pack joins, verification, and other activity."
+
+#: src/screens/Settings/NotificationSettings/index.tsx:269
 msgid "Get notifications when people follow you."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings.tsx:43
-msgid "Get notifications when people like posts that you've reposted."
-msgstr ""
-
-#: src/screens/Settings/NotificationSettings/LikeNotificationSettings.tsx:43
+#: src/screens/Settings/NotificationSettings/index.tsx:261
 msgid "Get notifications when people like your posts."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/MentionNotificationSettings.tsx:43
+#: src/screens/Settings/NotificationSettings/index.tsx:324
+msgid "Get notifications when people like your reposts."
+msgstr "Get notifications when people like your reposts."
+
+#: src/screens/Settings/NotificationSettings/index.tsx:285
 msgid "Get notifications when people mention you."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/QuoteNotificationSettings.tsx:43
+#: src/screens/Settings/NotificationSettings/index.tsx:293
 msgid "Get notifications when people quote your posts."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:43
+#: src/screens/Settings/NotificationSettings/index.tsx:277
 msgid "Get notifications when people reply to your posts."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:43
-msgid "Get notifications when people repost posts that you've reposted."
-msgstr ""
-
-#: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:43
+#: src/screens/Settings/NotificationSettings/index.tsx:302
 msgid "Get notifications when people repost your posts."
 msgstr ""
 
+#: src/screens/Settings/NotificationSettings/index.tsx:333
+msgid "Get notifications when people repost your reposts."
+msgstr "Get notifications when people repost your reposts."
+
+#: src/screens/Settings/NotificationSettings/index.tsx:311
+msgid "Get notifications when there's activity on posts you're subscribed to."
+msgstr "Get notifications when there's activity on posts you're subscribed to."
+
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:94
 msgid "Get notified about new posts"
-msgstr ""
-
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:107
-msgid "Get notified about posts and replies from accounts you choose."
 msgstr ""
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:226
@@ -5173,8 +5163,8 @@ msgstr ""
 msgid "Get notified when someone posts"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:77
-#: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:87
+#: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:71
+#: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:81
 #: src/screens/Messages/components/InviteLinkDialog.tsx:187
 #: src/screens/Messages/components/InviteLinkDialog.tsx:194
 msgid "Get started"
@@ -5211,7 +5201,9 @@ msgstr ""
 #: src/view/com/auth/LoggedOut.tsx:89
 #: src/view/com/profile/ProfileFollowers.tsx:178
 #: src/view/com/profile/ProfileFollowers.tsx:179
-#: src/view/screens/NotFound.tsx:46
+#: src/view/screens/NotFound.tsx:51
+#: src/view/screens/NotFound.tsx:52
+#: src/view/screens/NotFound.tsx:57
 msgid "Go back"
 msgstr ""
 
@@ -5221,7 +5213,6 @@ msgstr ""
 #: src/screens/Profile/ErrorState.tsx:63
 #: src/screens/Profile/ErrorState.tsx:67
 #: src/screens/StarterPack/StarterPackScreen.tsx:807
-#: src/view/screens/NotFound.tsx:45
 msgid "Go Back"
 msgstr ""
 
@@ -5232,7 +5223,9 @@ msgid "Go back to previous step"
 msgstr ""
 
 #: src/screens/Bookmarks/index.tsx:303
-#: src/view/screens/NotFound.tsx:46
+#: src/view/screens/NotFound.tsx:51
+#: src/view/screens/NotFound.tsx:52
+#: src/view/screens/NotFound.tsx:57
 msgid "Go home"
 msgstr ""
 
@@ -5240,10 +5233,6 @@ msgstr ""
 #: src/screens/Bookmarks/components/EmptyState.tsx:52
 msgctxt "Button to go back to the home timeline"
 msgid "Go home"
-msgstr ""
-
-#: src/view/screens/NotFound.tsx:45
-msgid "Go Home"
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:370
@@ -5354,7 +5343,7 @@ msgctxt "toast"
 msgid "Group chat name updated"
 msgstr "Group chat name updated"
 
-#: src/Navigation.tsx:578
+#: src/Navigation.tsx:488
 #: src/screens/Messages/ConversationSettings/index.tsx:91
 msgid "Group chat settings"
 msgstr "Group chat settings"
@@ -5441,7 +5430,7 @@ msgstr ""
 msgid "Harming or endangering minors"
 msgstr ""
 
-#: src/Navigation.tsx:562
+#: src/Navigation.tsx:472
 msgid "Hashtag"
 msgstr ""
 
@@ -5453,8 +5442,8 @@ msgstr ""
 msgid "Hate speech"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:199
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:318
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:196
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:325
 msgid "Have a code? <0>Click here.</0>"
 msgstr ""
 
@@ -5655,8 +5644,8 @@ msgstr ""
 msgid "Hold your horses! This feature isn't available to you yet. Please check back later."
 msgstr "Hold your horses! This feature isn't available to you yet. Please check back later."
 
-#: src/Navigation.tsx:823
-#: src/Navigation.tsx:844
+#: src/Navigation.tsx:733
+#: src/Navigation.tsx:754
 #: src/view/shell/bottom-bar/BottomBar.tsx:184
 #: src/view/shell/desktop/LeftNav.tsx:666
 #: src/view/shell/Drawer.tsx:443
@@ -5752,7 +5741,7 @@ msgstr ""
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:273
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:282
 msgid "If you need to update your email, <0>click here</0>."
 msgstr ""
 
@@ -5760,7 +5749,7 @@ msgstr ""
 msgid "If you remove this post, you won't be able to recover it."
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Update.tsx:209
+#: src/components/dialogs/EmailDialog/screens/Update.tsx:206
 msgid "If you update your email address, email 2FA will be disabled."
 msgstr ""
 
@@ -5768,7 +5757,6 @@ msgstr ""
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:160
 #: src/view/screens/Storybook/Admonitions.tsx:90
 msgid "If you want to restrict who can receive notifications for your account's activity, you can change this in <0>Settings → Privacy and Security</0>."
 msgstr ""
@@ -5876,35 +5864,35 @@ msgstr ""
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:285
+#: src/screens/Settings/NotificationSettings/index.tsx:387
 msgid "In-app"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:148
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:151
 msgid "In-app notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:268
-msgid "In-app, Everyone"
-msgstr ""
+#: src/screens/Settings/NotificationSettings/index.tsx:370
+msgid "In-app, everyone"
+msgstr "In-app, everyone"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:276
-msgid "In-app, People you follow"
-msgstr ""
+#: src/screens/Settings/NotificationSettings/index.tsx:378
+msgid "In-app, people you follow"
+msgstr "In-app, people you follow"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:283
-msgid "In-app, Push"
-msgstr ""
+#: src/screens/Settings/NotificationSettings/index.tsx:385
+msgid "In-app, push"
+msgstr "In-app, push"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:266
-msgid "In-app, Push, Everyone"
-msgstr ""
+#: src/screens/Settings/NotificationSettings/index.tsx:368
+msgid "In-app, push, everyone"
+msgstr "In-app, push, everyone"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:274
-msgid "In-app, Push, People you follow"
-msgstr ""
+#: src/screens/Settings/NotificationSettings/index.tsx:376
+msgid "In-app, push, people you follow"
+msgstr "In-app, push, people you follow"
 
-#: src/screens/Messages/ChatList.tsx:351
+#: src/screens/Messages/ChatList.tsx:362
 msgid "Inbox empty"
 msgstr "Inbox empty"
 
@@ -6138,7 +6126,7 @@ msgstr ""
 msgid "Labels on your content"
 msgstr ""
 
-#: src/Navigation.tsx:225
+#: src/Navigation.tsx:215
 msgid "Language Settings"
 msgstr ""
 
@@ -6341,10 +6329,6 @@ msgstr ""
 msgid "Like 10 posts to train the Discover feed"
 msgstr ""
 
-#: src/Navigation.tsx:475
-msgid "Like notifications"
-msgstr ""
-
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:511
 msgid "Like this feed"
 msgstr ""
@@ -6353,8 +6337,8 @@ msgstr ""
 msgid "Like this labeler"
 msgstr ""
 
-#: src/Navigation.tsx:303
-#: src/Navigation.tsx:308
+#: src/Navigation.tsx:293
+#: src/Navigation.tsx:298
 msgid "Liked by"
 msgstr ""
 
@@ -6379,20 +6363,16 @@ msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:160
-#: src/screens/Settings/NotificationSettings/index.tsx:127
-#: src/screens/Settings/NotificationSettings/LikeNotificationSettings.tsx:41
+#: src/screens/Settings/NotificationSettings/index.tsx:138
+#: src/screens/Settings/NotificationSettings/index.tsx:259
 #: src/view/screens/Profile.tsx:238
 msgid "Likes"
 msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:202
-#: src/screens/Settings/NotificationSettings/index.tsx:208
-#: src/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings.tsx:41
+#: src/screens/Settings/NotificationSettings/index.tsx:217
+#: src/screens/Settings/NotificationSettings/index.tsx:322
 msgid "Likes of your reposts"
-msgstr ""
-
-#: src/Navigation.tsx:499
-msgid "Likes of your reposts notifications"
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:486
@@ -6408,7 +6388,7 @@ msgstr ""
 msgid "Link copied to clipboard"
 msgstr "Link copied to clipboard"
 
-#: src/Navigation.tsx:258
+#: src/Navigation.tsx:248
 msgid "List"
 msgstr ""
 
@@ -6494,7 +6474,7 @@ msgctxt "toast"
 msgid "List unmuted"
 msgstr ""
 
-#: src/Navigation.tsx:179
+#: src/Navigation.tsx:169
 #: src/view/screens/Lists.tsx:60
 #: src/view/screens/Profile.tsx:233
 #: src/view/screens/Profile.tsx:241
@@ -6610,7 +6590,7 @@ msgstr "Lock this group chat"
 msgid "Locked"
 msgstr "Locked"
 
-#: src/Navigation.tsx:328
+#: src/Navigation.tsx:318
 msgid "Log"
 msgstr ""
 
@@ -6657,7 +6637,7 @@ msgstr ""
 msgid "Love GIFs"
 msgstr "Love GIFs"
 
-#: src/components/dialogs/EmailDialog/index.tsx:41
+#: src/components/dialogs/EmailDialog/index.tsx:39
 msgid "Make adjustments to email settings for your account"
 msgstr ""
 
@@ -6698,8 +6678,8 @@ msgstr ""
 msgid "Marked all as read"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:91
-#: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:98
+#: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:85
+#: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:92
 msgid "Maybe later"
 msgstr ""
 
@@ -6730,17 +6710,13 @@ msgstr "Members"
 msgid "Members can still read chat history but can’t send new messages."
 msgstr "Members can still read chat history but can’t send new messages."
 
-#: src/Navigation.tsx:459
-msgid "Mention notifications"
-msgstr ""
-
 #: src/components/WhoCanReply.tsx:320
 msgid "mentioned users"
 msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:181
-#: src/screens/Settings/NotificationSettings/index.tsx:160
-#: src/screens/Settings/NotificationSettings/MentionNotificationSettings.tsx:41
+#: src/screens/Settings/NotificationSettings/index.tsx:171
+#: src/screens/Settings/NotificationSettings/index.tsx:284
 #: src/view/screens/Notifications.tsx:99
 msgid "Mentions"
 msgstr ""
@@ -6812,7 +6788,7 @@ msgstr "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgid "Message options"
 msgstr ""
 
-#: src/Navigation.tsx:838
+#: src/Navigation.tsx:748
 msgid "Messages"
 msgstr ""
 
@@ -6833,10 +6809,6 @@ msgstr ""
 msgid "Minor harassment or bullying"
 msgstr ""
 
-#: src/Navigation.tsx:523
-msgid "Miscellaneous notifications"
-msgstr ""
-
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:35
 msgid "Misleading"
 msgstr ""
@@ -6845,7 +6817,7 @@ msgstr ""
 msgid "Missing media"
 msgstr ""
 
-#: src/Navigation.tsx:184
+#: src/Navigation.tsx:174
 #: src/screens/Moderation/index.tsx:100
 msgid "Moderation"
 msgstr ""
@@ -6889,7 +6861,7 @@ msgstr ""
 msgid "Moderation lists"
 msgstr ""
 
-#: src/Navigation.tsx:189
+#: src/Navigation.tsx:179
 #: src/view/screens/ModerationModlists.tsx:60
 msgid "Moderation Lists"
 msgstr ""
@@ -6898,7 +6870,7 @@ msgstr ""
 msgid "moderation settings"
 msgstr ""
 
-#: src/Navigation.tsx:318
+#: src/Navigation.tsx:308
 msgid "Moderation states"
 msgstr ""
 
@@ -7035,7 +7007,7 @@ msgstr "Muted"
 msgid "Muted accounts"
 msgstr ""
 
-#: src/Navigation.tsx:194
+#: src/Navigation.tsx:184
 #: src/view/screens/ModerationMutedAccounts.tsx:107
 msgid "Muted Accounts"
 msgstr ""
@@ -7131,13 +7103,13 @@ msgstr ""
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:161
-#: src/components/dms/dialogs/NewChatDialog.tsx:171
-#: src/screens/Messages/ChatList.tsx:158
-#: src/screens/Messages/ChatList.tsx:159
-#: src/screens/Messages/ChatList.tsx:366
-#: src/screens/Messages/ChatList.tsx:367
-#: src/screens/Messages/ChatList.tsx:480
+#: src/components/dms/dialogs/NewChatDialog.tsx:165
+#: src/components/dms/dialogs/NewChatDialog.tsx:176
+#: src/screens/Messages/ChatList.tsx:166
+#: src/screens/Messages/ChatList.tsx:167
+#: src/screens/Messages/ChatList.tsx:380
+#: src/screens/Messages/ChatList.tsx:381
+#: src/screens/Messages/ChatList.tsx:509
 msgid "New chat"
 msgstr ""
 
@@ -7158,7 +7130,7 @@ msgstr "New chat with {0} and {1}"
 msgid "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} more} other {{memberCount} more}}."
 msgstr "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} more} other {{memberCount} more}}."
 
-#: src/components/dialogs/EmailDialog/screens/Update.tsx:223
+#: src/components/dialogs/EmailDialog/screens/Update.tsx:219
 msgid "New email address"
 msgstr ""
 
@@ -7169,13 +7141,9 @@ msgstr ""
 msgid "New Feature"
 msgstr ""
 
-#: src/Navigation.tsx:491
-msgid "New follower notifications"
-msgstr ""
-
 #: src/lib/hooks/useNotificationHandler.ts:195
-#: src/screens/Settings/NotificationSettings/index.tsx:138
-#: src/screens/Settings/NotificationSettings/NewFollowerNotificationSettings.tsx:41
+#: src/screens/Settings/NotificationSettings/index.tsx:149
+#: src/screens/Settings/NotificationSettings/index.tsx:268
 msgid "New followers"
 msgstr ""
 
@@ -7373,12 +7341,12 @@ msgstr ""
 msgid "No notifications yet!"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:86
+#: src/screens/Messages/Settings.tsx:87
 msgctxt "allow group chat invites from"
 msgid "No one"
 msgstr "No one"
 
-#: src/screens/Messages/Settings.tsx:68
+#: src/screens/Messages/Settings.tsx:69
 msgctxt "allow messages from"
 msgid "No one"
 msgstr ""
@@ -7504,10 +7472,6 @@ msgstr ""
 msgid "Non-sexual Nudity"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:223
-msgid "None"
-msgstr ""
-
 #: src/screens/FindContactsFlowScreen.tsx:62
 #: src/screens/Settings/FindContactsSettings.tsx:104
 msgid "Not available on this platform."
@@ -7517,7 +7481,7 @@ msgstr ""
 msgid "Not followed by anyone you’re following"
 msgstr "Not followed by anyone you’re following"
 
-#: src/Navigation.tsx:174
+#: src/Navigation.tsx:164
 #: src/view/screens/Profile.tsx:132
 msgid "Not Found"
 msgstr ""
@@ -7543,31 +7507,22 @@ msgstr ""
 msgid "Nothing saved yet"
 msgstr ""
 
-#: src/Navigation.tsx:445
-#: src/Navigation.tsx:599
+#: src/components/dialogs/NotificationSettingsDialog.tsx:64
+#: src/Navigation.tsx:435
+#: src/Navigation.tsx:509
 #: src/view/screens/Notifications.tsx:134
 msgid "Notification settings"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:231
-#: src/screens/Messages/Settings.tsx:244
+#: src/screens/Messages/Settings.tsx:232
+#: src/screens/Messages/Settings.tsx:245
 msgid "Notification sounds"
 msgstr ""
 
-#: src/Navigation.tsx:594
-#: src/Navigation.tsx:833
+#: src/Navigation.tsx:504
+#: src/Navigation.tsx:743
 #: src/screens/Notifications/ActivityList.tsx:31
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
-#: src/screens/Settings/NotificationSettings/index.tsx:93
-#: src/screens/Settings/NotificationSettings/LikeNotificationSettings.tsx:30
-#: src/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings.tsx:30
-#: src/screens/Settings/NotificationSettings/MentionNotificationSettings.tsx:30
-#: src/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings.tsx:30
-#: src/screens/Settings/NotificationSettings/NewFollowerNotificationSettings.tsx:30
-#: src/screens/Settings/NotificationSettings/QuoteNotificationSettings.tsx:30
-#: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:30
-#: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:30
-#: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:30
+#: src/screens/Settings/NotificationSettings/index.tsx:104
 #: src/screens/Settings/Settings.tsx:197
 #: src/screens/Settings/Settings.tsx:200
 #: src/view/screens/Notifications.tsx:128
@@ -7575,10 +7530,6 @@ msgstr ""
 #: src/view/shell/desktop/LeftNav.tsx:686
 #: src/view/shell/Drawer.tsx:496
 msgid "Notifications"
-msgstr ""
-
-#: src/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings.tsx:43
-msgid "Notifications for everything else, such as when someone joins via one of your starter packs."
 msgstr ""
 
 #: src/lib/hooks/useTimeAgo.ts:135
@@ -7596,7 +7547,7 @@ msgstr ""
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:14
 #: src/screens/Settings/AccountSettings.tsx:164
-#: src/screens/Settings/NotificationSettings/index.tsx:292
+#: src/screens/Settings/NotificationSettings/index.tsx:394
 msgid "Off"
 msgstr ""
 
@@ -7643,11 +7594,11 @@ msgstr ""
 msgid "Onboarding reset"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:110
+#: src/components/dms/dialogs/NewChatDialog.tsx:113
 msgid "One of the selected recipients does not allow group chats."
 msgstr "One of the selected recipients does not allow group chats."
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:93
+#: src/components/dms/dialogs/NewChatDialog.tsx:96
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr "One of the selected recipients has blocked you and cannot be messaged."
 
@@ -7997,7 +7948,7 @@ msgstr ""
 msgid "Our moderation team has received your report."
 msgstr ""
 
-#: src/screens/Messages/components/ChatDisabled.tsx:50
+#: src/screens/Messages/components/ChatDisabled.tsx:54
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr ""
 
@@ -8007,12 +7958,9 @@ msgstr "Owner"
 
 #: src/components/Lists.tsx:205
 #: src/components/Lists.tsx:220
-#: src/view/screens/NotFound.tsx:36
+#: src/view/screens/NotFound.tsx:34
+#: src/view/screens/NotFound.tsx:41
 msgid "Page not found"
-msgstr ""
-
-#: src/view/screens/NotFound.tsx:33
-msgid "Page Not Found"
 msgstr ""
 
 #. Accessibility label for the icon-only pill that filters the GIF picker to celebration/party GIFs.
@@ -8072,17 +8020,17 @@ msgid "People {ownerName} follows can request to join"
 msgstr "People {ownerName} follows can request to join"
 
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:245
+#: src/Navigation.tsx:235
 msgid "People followed by @{0}"
 msgstr ""
 
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:238
+#: src/Navigation.tsx:228
 msgid "People following @{0}"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:183
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:193
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:194
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:198
 msgid "People I follow"
 msgstr ""
 
@@ -8231,7 +8179,7 @@ msgstr ""
 msgid "Please choose your password."
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Update.tsx:291
+#: src/components/dialogs/EmailDialog/screens/Update.tsx:286
 msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
 msgstr ""
 
@@ -8260,14 +8208,14 @@ msgstr ""
 msgid "Please enter a unique name for this app password or use our randomly generated one."
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:132
-#: src/components/dialogs/EmailDialog/screens/Update.tsx:136
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:130
+#: src/components/dialogs/EmailDialog/screens/Update.tsx:134
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:146
 msgid "Please enter a valid code."
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:111
-#: src/components/dialogs/EmailDialog/screens/Update.tsx:149
+#: src/components/dialogs/EmailDialog/screens/Update.tsx:147
 msgid "Please enter a valid email address."
 msgstr ""
 
@@ -8280,7 +8228,7 @@ msgid "Please enter a valid, non-temporary email address. You may need to access
 msgstr ""
 
 #. placeholder {0}: currentAccount!.email
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:260
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:269
 msgid "Please enter the code we sent to <0>{0}</0> below."
 msgstr ""
 
@@ -8288,7 +8236,7 @@ msgstr ""
 msgid "Please enter the code you received and the new password you would like to use."
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Update.tsx:248
+#: src/components/dialogs/EmailDialog/screens/Update.tsx:244
 msgid "Please enter the security code we sent to your previous email address."
 msgstr ""
 
@@ -8301,7 +8249,7 @@ msgstr ""
 msgid "Please enter your invite code."
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Update.tsx:218
+#: src/components/dialogs/EmailDialog/screens/Update.tsx:214
 msgid "Please enter your new email address."
 msgstr ""
 
@@ -8318,7 +8266,7 @@ msgstr ""
 msgid "Please explain why you think this label was incorrectly applied by {0}"
 msgstr ""
 
-#: src/screens/Messages/components/ChatDisabled.tsx:139
+#: src/screens/Messages/components/ChatDisabled.tsx:143
 msgid "Please explain why you think your chats were incorrectly disabled"
 msgstr ""
 
@@ -8361,7 +8309,7 @@ msgstr ""
 msgid "Please use the native app to sync your contacts."
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:63
+#: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:59
 msgid "Please verify your email"
 msgstr ""
 
@@ -8412,10 +8360,10 @@ msgid "Post blocked"
 msgstr ""
 
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:271
-#: src/Navigation.tsx:278
-#: src/Navigation.tsx:285
-#: src/Navigation.tsx:292
+#: src/Navigation.tsx:261
+#: src/Navigation.tsx:268
+#: src/Navigation.tsx:275
+#: src/Navigation.tsx:282
 msgid "Post by @{0}"
 msgstr ""
 
@@ -8449,7 +8397,7 @@ msgstr ""
 msgid "Post interaction settings"
 msgstr ""
 
-#: src/Navigation.tsx:205
+#: src/Navigation.tsx:195
 #: src/screens/ModerationInteractionSettings/index.tsx:35
 msgid "Post Interaction Settings"
 msgstr ""
@@ -8486,7 +8434,6 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:257
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:269
 #: src/screens/ProfileList/index.tsx:167
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:219
 #: src/screens/StarterPack/StarterPackScreen.tsx:197
 #: src/view/screens/Profile.tsx:234
 msgid "Posts"
@@ -8498,10 +8445,6 @@ msgstr ""
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:76
 msgid "Posts hidden"
-msgstr ""
-
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:217
-msgid "Posts, Replies"
 msgstr ""
 
 #: src/components/dialogs/LinkWarning.tsx:89
@@ -8554,21 +8497,20 @@ msgstr ""
 msgid "Privacy and security"
 msgstr ""
 
-#: src/Navigation.tsx:422
-#: src/Navigation.tsx:430
+#: src/Navigation.tsx:412
+#: src/Navigation.tsx:420
 #: src/screens/Settings/ActivityPrivacySettings.tsx:41
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:45
 msgid "Privacy and Security"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:164
 #: src/view/screens/Storybook/Admonitions.tsx:94
 msgid "Privacy and Security settings"
 msgstr ""
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:36
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:103
-#: src/Navigation.tsx:338
+#: src/Navigation.tsx:328
 #: src/screens/Settings/AboutSettings.tsx:95
 #: src/screens/Settings/AboutSettings.tsx:98
 #: src/view/screens/PrivacyPolicy.tsx:25
@@ -8649,21 +8591,21 @@ msgstr ""
 msgid "Publish reply"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:287
+#: src/screens/Settings/NotificationSettings/index.tsx:389
 msgid "Push"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:131
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:134
 msgid "Push notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:270
-msgid "Push, Everyone"
-msgstr ""
+#: src/screens/Settings/NotificationSettings/index.tsx:372
+msgid "Push, everyone"
+msgstr "Push, everyone"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:278
-msgid "Push, People you follow"
-msgstr ""
+#: src/screens/Settings/NotificationSettings/index.tsx:380
+msgid "Push, people you follow"
+msgstr "Push, people you follow"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:140
 msgid "QR code copied to your clipboard!"
@@ -8675,10 +8617,6 @@ msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:119
 msgid "QR code saved to your camera roll!"
-msgstr ""
-
-#: src/Navigation.tsx:467
-msgid "Quote notifications"
 msgstr ""
 
 #: src/components/PostControls/RepostButton.tsx:176
@@ -8706,8 +8644,8 @@ msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:188
 #: src/screens/Post/PostQuotes.tsx:31
-#: src/screens/Settings/NotificationSettings/index.tsx:171
-#: src/screens/Settings/NotificationSettings/QuoteNotificationSettings.tsx:41
+#: src/screens/Settings/NotificationSettings/index.tsx:182
+#: src/screens/Settings/NotificationSettings/index.tsx:291
 msgid "Quotes"
 msgstr ""
 
@@ -8807,11 +8745,11 @@ msgstr ""
 msgid "Reason for appeal"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:137
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:140
 msgid "Receive in-app notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:120
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:123
 msgid "Receive push notifications"
 msgstr ""
 
@@ -8845,7 +8783,7 @@ msgstr ""
 msgid "Reject chat request"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:338
+#: src/screens/Messages/ChatList.tsx:349
 #: src/screens/Messages/Inbox.tsx:215
 msgid "Reload conversations"
 msgstr ""
@@ -9084,9 +9022,8 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:274
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:286
 #: src/lib/hooks/useNotificationHandler.ts:174
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:221
-#: src/screens/Settings/NotificationSettings/index.tsx:149
-#: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:41
+#: src/screens/Settings/NotificationSettings/index.tsx:160
+#: src/screens/Settings/NotificationSettings/index.tsx:275
 #: src/view/screens/Profile.tsx:235
 msgid "Replies"
 msgstr ""
@@ -9118,10 +9055,6 @@ msgstr ""
 #: src/components/moderation/ModerationDetailsDialog.tsx:119
 #: src/lib/moderation/useModerationCauseDescription.ts:125
 msgid "Reply Hidden by You"
-msgstr ""
-
-#: src/Navigation.tsx:451
-msgid "Reply notifications"
 msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:418
@@ -9251,10 +9184,6 @@ msgstr ""
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
 msgstr ""
 
-#: src/Navigation.tsx:483
-msgid "Repost notifications"
-msgstr ""
-
 #: src/components/PostControls/RepostButton.tsx:146
 #: src/components/PostControls/RepostButton.web.tsx:43
 #: src/components/PostControls/RepostButton.web.tsx:103
@@ -9277,8 +9206,8 @@ msgid "Reposted by you"
 msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:167
-#: src/screens/Settings/NotificationSettings/index.tsx:182
-#: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:41
+#: src/screens/Settings/NotificationSettings/index.tsx:193
+#: src/screens/Settings/NotificationSettings/index.tsx:300
 msgid "Reposts"
 msgstr ""
 
@@ -9287,13 +9216,9 @@ msgid "Reposts of this post"
 msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:209
-#: src/screens/Settings/NotificationSettings/index.tsx:223
-#: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:41
+#: src/screens/Settings/NotificationSettings/index.tsx:230
+#: src/screens/Settings/NotificationSettings/index.tsx:331
 msgid "Reposts of your reposts"
-msgstr ""
-
-#: src/Navigation.tsx:507
-msgid "Reposts of your reposts notifications"
 msgstr ""
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:226
@@ -9311,7 +9236,7 @@ msgstr "Requests"
 msgid "Require alt text before posting"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:97
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:95
 msgid "Require an email code to sign in to your account."
 msgstr ""
 
@@ -9323,7 +9248,7 @@ msgstr ""
 msgid "Required in your region"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/components/ResendEmailText.tsx:41
+#: src/components/dialogs/EmailDialog/components/ResendEmailText.tsx:39
 msgid "Resend"
 msgstr ""
 
@@ -9394,7 +9319,7 @@ msgstr ""
 #: src/components/StarterPack/ProfileStarterPacks.tsx:377
 #: src/screens/Login/LoginForm.tsx:329
 #: src/screens/Login/LoginForm.tsx:335
-#: src/screens/Messages/ChatList.tsx:343
+#: src/screens/Messages/ChatList.tsx:354
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:220
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:268
@@ -9421,14 +9346,14 @@ msgstr ""
 msgid "Return to previous page"
 msgstr ""
 
-#: src/view/screens/NotFound.tsx:50
+#: src/view/screens/NotFound.tsx:54
 msgid "Returns to home page"
 msgstr ""
 
 #: src/screens/ProfileList/components/ErrorScreen.tsx:36
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:577
 #: src/screens/VideoFeed/index.tsx:1169
-#: src/view/screens/NotFound.tsx:49
+#: src/view/screens/NotFound.tsx:54
 msgid "Returns to previous page"
 msgstr ""
 
@@ -9530,7 +9455,7 @@ msgid "Saved Feeds"
 msgstr ""
 
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:144
-#: src/Navigation.tsx:638
+#: src/Navigation.tsx:548
 #: src/screens/Bookmarks/index.tsx:59
 msgid "Saved Posts"
 msgstr ""
@@ -9546,8 +9471,8 @@ msgstr ""
 msgid "Say hello!"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:152
-#: src/screens/Messages/ChatList.tsx:360
+#: src/screens/Messages/ChatList.tsx:157
+#: src/screens/Messages/ChatList.tsx:371
 msgid "Say hi to someone"
 msgstr "Say hi to someone"
 
@@ -9582,7 +9507,7 @@ msgstr ""
 
 #. placeholder {0}: profile.handle
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:264
+#: src/Navigation.tsx:254
 #: src/screens/Profile/ProfileSearch.tsx:37
 msgid "Search @{0}'s posts"
 msgstr ""
@@ -9678,7 +9603,7 @@ msgstr ""
 msgid "Searches for profiles"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Update.tsx:244
+#: src/components/dialogs/EmailDialog/screens/Update.tsx:240
 msgid "Security step required"
 msgstr ""
 
@@ -9899,7 +9824,7 @@ msgstr ""
 msgid "Select your preferred language for translations in your feed."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:115
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:118
 msgid "Select your preferred notification channels"
 msgstr ""
 
@@ -9916,9 +9841,9 @@ msgstr ""
 msgid "Send code"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:175
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:182
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:303
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:172
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:179
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:311
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:199
 msgid "Send email"
 msgstr ""
@@ -9955,7 +9880,7 @@ msgstr ""
 msgid "Send the message from your phone"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:296
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:304
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:121
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:124
 msgid "Send verification email"
@@ -10010,14 +9935,14 @@ msgstr ""
 msgid "Sets email for password reset"
 msgstr ""
 
-#: src/Navigation.tsx:220
+#: src/Navigation.tsx:210
 #: src/screens/Settings/Settings.tsx:98
 #: src/view/shell/desktop/LeftNav.tsx:754
 #: src/view/shell/Drawer.tsx:612
 msgid "Settings"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:188
+#: src/screens/Settings/NotificationSettings/index.tsx:199
 msgid "Settings for activity from others"
 msgstr ""
 
@@ -10025,39 +9950,39 @@ msgstr ""
 msgid "Settings for allowing others to be notified of your posts"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:122
+#: src/screens/Settings/NotificationSettings/index.tsx:133
 msgid "Settings for like notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:155
+#: src/screens/Settings/NotificationSettings/index.tsx:166
 msgid "Settings for mention notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:133
+#: src/screens/Settings/NotificationSettings/index.tsx:144
 msgid "Settings for new follower notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:231
+#: src/screens/Settings/NotificationSettings/index.tsx:238
 msgid "Settings for notifications for everything else"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:202
+#: src/screens/Settings/NotificationSettings/index.tsx:212
 msgid "Settings for notifications for likes of your reposts"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:217
+#: src/screens/Settings/NotificationSettings/index.tsx:225
 msgid "Settings for notifications for reposts of your reposts"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:166
+#: src/screens/Settings/NotificationSettings/index.tsx:177
 msgid "Settings for quote notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:144
+#: src/screens/Settings/NotificationSettings/index.tsx:155
 msgid "Settings for reply notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:177
+#: src/screens/Settings/NotificationSettings/index.tsx:188
 msgid "Settings for repost notifications"
 msgstr ""
 
@@ -10146,7 +10071,7 @@ msgstr ""
 msgid "Share your contacts to find friends"
 msgstr ""
 
-#: src/Navigation.tsx:323
+#: src/Navigation.tsx:313
 msgid "Shared Preferences Tester"
 msgstr ""
 
@@ -10408,7 +10333,7 @@ msgstr "slide"
 msgid "Smaller"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:92
+#: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:86
 msgid "Snoozes the reminder"
 msgstr ""
 
@@ -10563,7 +10488,7 @@ msgstr ""
 msgid "Start a conversation, and it will appear here."
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:177
+#: src/components/dms/dialogs/NewChatDialog.tsx:182
 msgid "Start a new chat"
 msgstr ""
 
@@ -10586,8 +10511,8 @@ msgstr "Start chat"
 msgid "Start chat with {displayName}"
 msgstr ""
 
-#: src/Navigation.tsx:609
-#: src/Navigation.tsx:614
+#: src/Navigation.tsx:519
+#: src/Navigation.tsx:524
 #: src/screens/StarterPack/Wizard/index.tsx:197
 msgid "Starter Pack"
 msgstr ""
@@ -10649,7 +10574,7 @@ msgstr ""
 msgid "Stored as part of a secure code for matching with others"
 msgstr ""
 
-#: src/Navigation.tsx:313
+#: src/Navigation.tsx:303
 #: src/screens/Settings/Settings.tsx:456
 msgid "Storybook"
 msgstr ""
@@ -10666,8 +10591,8 @@ msgstr ""
 #: src/components/SendErrorReportDialog.tsx:95
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:139
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:140
-#: src/screens/Messages/components/ChatDisabled.tsx:171
-#: src/screens/Messages/components/ChatDisabled.tsx:173
+#: src/screens/Messages/components/ChatDisabled.tsx:175
+#: src/screens/Messages/components/ChatDisabled.tsx:177
 msgid "Submit"
 msgstr ""
 
@@ -10727,7 +10652,7 @@ msgid "Success"
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:183
-#: src/components/dialogs/EmailDialog/screens/Update.tsx:287
+#: src/components/dialogs/EmailDialog/screens/Update.tsx:282
 msgid "Success!"
 msgstr ""
 
@@ -10765,7 +10690,7 @@ msgctxt "Name of app icon variant"
 msgid "Sunset"
 msgstr ""
 
-#: src/Navigation.tsx:333
+#: src/Navigation.tsx:323
 #: src/view/screens/Support.tsx:25
 #: src/view/screens/Support.tsx:28
 msgid "Support"
@@ -10775,11 +10700,11 @@ msgstr ""
 msgid "Support for this feature in your country has not been enabled yet! Please check back later."
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:91
+#: src/components/dms/dialogs/NewChatDialog.tsx:94
 msgid "Suspended accounts cannot participate in a group chat."
 msgstr "Suspended accounts cannot participate in a group chat."
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:53
+#: src/components/dms/dialogs/NewChatDialog.tsx:56
 msgid "Suspended accounts cannot participate in chat."
 msgstr "Suspended accounts cannot participate in chat."
 
@@ -10919,7 +10844,7 @@ msgstr ""
 #: src/components/dialogs/BirthDateSettings.tsx:181
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:31
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:98
-#: src/Navigation.tsx:343
+#: src/Navigation.tsx:333
 #: src/screens/Settings/AboutSettings.tsx:87
 #: src/screens/Settings/AboutSettings.tsx:90
 #: src/view/screens/TermsOfService.tsx:25
@@ -10934,7 +10859,7 @@ msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:307
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:122
-#: src/screens/Messages/components/ChatDisabled.tsx:138
+#: src/screens/Messages/components/ChatDisabled.tsx:142
 msgid "Text input field"
 msgstr ""
 
@@ -11249,7 +11174,7 @@ msgid "This appeal will be sent to <0>{sourceName}</0>."
 msgstr ""
 
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:114
-#: src/screens/Messages/components/ChatDisabled.tsx:134
+#: src/screens/Messages/components/ChatDisabled.tsx:138
 msgid "This appeal will be sent to Bluesky's moderation service."
 msgstr ""
 
@@ -11313,7 +11238,7 @@ msgstr ""
 msgid "This draft will be permanently deleted."
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Update.tsx:157
+#: src/components/dialogs/EmailDialog/screens/Update.tsx:155
 msgid "This email is already associated with your account."
 msgstr ""
 
@@ -11489,7 +11414,7 @@ msgstr ""
 msgid "This user doesn't have any followers."
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:57
+#: src/components/dms/dialogs/NewChatDialog.tsx:60
 msgid "This user has blocked you and cannot be messaged."
 msgstr "This user has blocked you and cannot be messaged."
 
@@ -11498,7 +11423,7 @@ msgstr "This user has blocked you and cannot be messaged."
 msgid "This user has blocked you. You cannot view their content."
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:61
+#: src/components/dms/dialogs/NewChatDialog.tsx:64
 msgid "This user has disabled chat and cannot be messaged."
 msgstr "This user has disabled chat and cannot be messaged."
 
@@ -11569,7 +11494,7 @@ msgstr ""
 msgid "Threaded"
 msgstr ""
 
-#: src/Navigation.tsx:376
+#: src/Navigation.tsx:366
 msgid "Threads Preferences"
 msgstr ""
 
@@ -11595,8 +11520,8 @@ msgid "To disable the email 2FA method, please verify your access to the email a
 msgstr ""
 
 #. placeholder {0}: currentAccount?.email
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:165
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:216
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:162
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:213
 msgid "To disable your email 2FA method, please verify your access to <0>{0}</0>"
 msgstr ""
 
@@ -11641,7 +11566,7 @@ msgstr ""
 msgid "Top replies first"
 msgstr ""
 
-#: src/Navigation.tsx:567
+#: src/Navigation.tsx:477
 msgid "Topic"
 msgstr ""
 
@@ -11758,11 +11683,11 @@ msgstr ""
 msgid "Unable to delete"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:106
+#: src/components/dms/dialogs/NewChatDialog.tsx:109
 msgid "Unable to find a selected recipient."
 msgstr "Unable to find a selected recipient."
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:70
+#: src/components/dms/dialogs/NewChatDialog.tsx:73
 msgid "Unable to find the selected recipient."
 msgstr "Unable to find the selected recipient."
 
@@ -12042,8 +11967,8 @@ msgstr ""
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Update.tsx:301
-#: src/components/dialogs/EmailDialog/screens/Update.tsx:313
+#: src/components/dialogs/EmailDialog/screens/Update.tsx:296
+#: src/components/dialogs/EmailDialog/screens/Update.tsx:308
 #: src/screens/Settings/AccountSettings.tsx:112
 #: src/screens/Settings/AccountSettings.tsx:120
 msgid "Update email"
@@ -12064,7 +11989,7 @@ msgstr ""
 msgid "Update your app to the latest version to join in!"
 msgstr "Update your app to the latest version to join in!"
 
-#: src/components/dialogs/EmailDialog/screens/Update.tsx:204
+#: src/components/dialogs/EmailDialog/screens/Update.tsx:202
 msgid "Update your email"
 msgstr ""
 
@@ -12250,12 +12175,12 @@ msgstr ""
 msgid "users following <0>@{0}</0>"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:79
+#: src/screens/Messages/Settings.tsx:80
 msgctxt "allow group chat invites from"
 msgid "Users I follow"
 msgstr "Users I follow"
 
-#: src/screens/Messages/Settings.tsx:64
+#: src/screens/Messages/Settings.tsx:65
 msgctxt "allow messages from"
 msgid "Users I follow"
 msgstr "Users I follow"
@@ -12272,7 +12197,7 @@ msgstr ""
 msgid "Verification settings"
 msgstr ""
 
-#: src/Navigation.tsx:213
+#: src/Navigation.tsx:203
 #: src/screens/Moderation/VerificationSettings.tsx:34
 msgid "Verification Settings"
 msgstr ""
@@ -12299,8 +12224,8 @@ msgstr ""
 
 #. Button text and accessibility label for action to verify the user's email address using the code entered
 #. Button text and accessibility label for action to verify the user's email address using the code entered
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:352
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:368
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:357
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:372
 msgctxt "action"
 msgid "Verify code"
 msgstr ""
@@ -12311,7 +12236,7 @@ msgid "Verify DNS Record"
 msgstr ""
 
 #. Dialog title when a user is verifying their email address by entering a code they have been sent
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:215
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:224
 msgid "Verify email code"
 msgstr ""
 
@@ -12344,7 +12269,7 @@ msgstr ""
 msgid "Verify your age"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:212
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:221
 #: src/screens/Settings/AccountSettings.tsx:86
 #: src/screens/Settings/AccountSettings.tsx:106
 msgid "Verify your email"
@@ -12379,7 +12304,7 @@ msgstr ""
 msgid "Video failed to process"
 msgstr ""
 
-#: src/Navigation.tsx:630
+#: src/Navigation.tsx:540
 msgid "Video Feed"
 msgstr ""
 
@@ -12710,7 +12635,7 @@ msgid "We recommend selecting at least two interests."
 msgstr ""
 
 #. placeholder {0}: currentAccount!.email
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:241
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:250
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr ""
 
@@ -12744,7 +12669,7 @@ msgid "We will notify you when we find your friends."
 msgstr ""
 
 #. placeholder {0}: currentAccount!.email
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:250
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:259
 msgid "We'll send an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr ""
 
@@ -12814,7 +12739,7 @@ msgid "We're sorry! The post you are replying to has been deleted."
 msgstr ""
 
 #: src/components/Lists.tsx:224
-#: src/view/screens/NotFound.tsx:39
+#: src/view/screens/NotFound.tsx:44
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr ""
 
@@ -12887,7 +12812,7 @@ msgid "Who can verify?"
 msgstr ""
 
 #: src/screens/Home/NoFeedsPinned.tsx:80
-#: src/screens/Messages/ChatList.tsx:323
+#: src/screens/Messages/ChatList.tsx:334
 #: src/screens/Messages/Inbox.tsx:200
 msgid "Whoops!"
 msgstr ""
@@ -13112,8 +13037,8 @@ msgstr ""
 msgid "You can choose whether chat notifications have sound in the chat settings within the app"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:147
-#: src/screens/Messages/Settings.tsx:193
+#: src/screens/Messages/Settings.tsx:148
+#: src/screens/Messages/Settings.tsx:194
 msgid "You can continue ongoing conversations regardless of which setting you choose."
 msgstr ""
 
@@ -13161,7 +13086,7 @@ msgstr ""
 msgid "You can update this later from your settings."
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:98
+#: src/components/dms/dialogs/NewChatDialog.tsx:101
 msgid "You cannot create a group chat yet."
 msgstr "You cannot create a group chat yet."
 
@@ -13514,7 +13439,7 @@ msgstr ""
 msgid "Your birth date"
 msgstr ""
 
-#: src/screens/Messages/components/ChatDisabled.tsx:41
+#: src/screens/Messages/components/ChatDisabled.tsx:45
 msgid "Your chats have been disabled"
 msgstr ""
 
@@ -13556,7 +13481,7 @@ msgstr ""
 msgid "Your email appears to be invalid."
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:66
+#: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:62
 msgid "Your email has not yet been verified. Please verify your email in order to enjoy all the features of Bluesky."
 msgstr ""
 
@@ -13577,7 +13502,7 @@ msgstr ""
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr ""
 
-#: src/Navigation.tsx:539
+#: src/Navigation.tsx:449
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:68
 #: src/screens/Settings/ContentAndMediaSettings.tsx:94
 #: src/screens/Settings/ContentAndMediaSettings.tsx:97
