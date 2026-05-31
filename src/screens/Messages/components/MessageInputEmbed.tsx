@@ -7,10 +7,10 @@ import {
   moderatePost,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {type RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 
+import {HITSLOP_20} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
 import {
   type CommonNavigatorParams,
@@ -25,8 +25,8 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePostQuery} from '#/state/queries/post'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {Button} from '#/components/Button'
+import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
 import * as MediaPreview from '#/components/MediaPreview'
 import {ContentHider} from '#/components/moderation/ContentHider'
@@ -41,10 +41,10 @@ export function useMessageEmbed() {
   const navigation = useNavigation<NavigationProp>()
   const embedFromParams = route.params.embed
 
-  const [embedUri, setEmbed] = useState(embedFromParams)
+  const [embedUri, setEmbedUri] = useState(embedFromParams)
 
   if (embedFromParams && embedUri !== embedFromParams) {
-    setEmbed(embedFromParams)
+    setEmbedUri(embedFromParams)
   }
 
   return {
@@ -53,7 +53,7 @@ export function useMessageEmbed() {
       (embedUrl: string | undefined) => {
         if (!embedUrl) {
           navigation.setParams({embed: ''})
-          setEmbed(undefined)
+          setEmbedUri(undefined)
           return
         }
 
@@ -63,7 +63,7 @@ export function useMessageEmbed() {
         const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
         const uri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
 
-        setEmbed(uri)
+        setEmbedUri(uri)
       },
       [embedFromParams, navigation],
     ),
@@ -103,7 +103,7 @@ export function MessageInputEmbed({
   setEmbed: (embedUrl: string | undefined) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const {data: post, status} = usePostQuery(embedUri)
 
@@ -138,25 +138,29 @@ export function MessageInputEmbed({
     return null
   }
 
-  let content = null
+  const onRemove = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    setEmbed(undefined)
+  }
+
   switch (status) {
-    case 'pending':
-      content = (
-        <View
-          style={[a.flex_1, {minHeight: 64}, a.justify_center, a.align_center]}>
+    case 'pending': {
+      return (
+        <SimpleContainer onRemove={onRemove}>
           <Loader />
-        </View>
+        </SimpleContainer>
       )
-      break
-    case 'error':
-      content = (
-        <View
-          style={[a.flex_1, {minHeight: 64}, a.justify_center, a.align_center]}>
-          <Text style={a.text_center}>Could not fetch post</Text>
-        </View>
+    }
+    case 'error': {
+      return (
+        <SimpleContainer onRemove={onRemove}>
+          <Text style={[a.text_center, t.atoms.text_contrast_medium, a.italic]}>
+            <Trans>Could not fetch post</Trans>
+          </Text>
+        </SimpleContainer>
       )
-      break
-    case 'success':
+    }
+    case 'success': {
       const itemUrip = new AtUri(post.uri)
       const itemHref = makeProfileLink(post.author, 'post', itemUrip.rkey)
 
@@ -164,62 +168,95 @@ export function MessageInputEmbed({
         return null
       }
 
-      content = (
+      return (
         <View
           style={[
             a.flex_1,
-            t.atoms.bg,
-            t.atoms.border_contrast_low,
+            t.atoms.border_contrast_high,
             a.rounded_md,
             a.border,
             a.p_sm,
-            a.mb_sm,
-          ]}
-          pointerEvents="none">
-          <PostMeta
-            showAvatar
-            author={post.author}
-            moderation={moderation}
-            timestamp={post.indexedAt}
-            postHref={itemHref}
-            style={a.flex_0}
-          />
+            a.mt_sm,
+            a.mx_sm,
+          ]}>
+          <View style={[a.flex_1, a.flex_row, a.gap_sm]}>
+            <PostMeta
+              showAvatar
+              author={post.author}
+              moderation={moderation}
+              timestamp={post.indexedAt}
+              postHref={itemHref}
+              linkDisabled
+            />
+            <Button
+              label={l`Remove embed`}
+              onPress={onRemove}
+              style={[a.px_2xs, {transform: [{translateY: -2}]}]}
+              hitSlop={HITSLOP_20}>
+              <XIcon size="xs" style={t.atoms.text_contrast_high} />
+            </Button>
+          </View>
           <ContentHider modui={moderation.ui('contentView')}>
-            <PostAlerts modui={moderation.ui('contentView')} style={a.py_xs} />
+            <PostAlerts
+              modui={moderation.ui('contentView')}
+              style={a.py_xs}
+              size="sm"
+            />
             {rt.text && (
-              <View style={a.mt_xs}>
-                <RichText
-                  enableTags
-                  testID="postText"
-                  value={rt}
-                  style={[a.text_sm, t.atoms.text_contrast_high]}
-                  authorHandle={post.author.handle}
-                  numberOfLines={3}
-                />
-              </View>
+              <RichText
+                enableTags
+                testID="postText"
+                value={rt}
+                style={[a.text_sm, t.atoms.text_contrast_high]}
+                authorHandle={post.author.handle}
+                numberOfLines={3}
+              />
             )}
             <MediaPreview.Embed embed={post.embed} style={a.mt_sm} />
           </ContentHider>
         </View>
       )
-      break
+    }
   }
+}
 
+function SimpleContainer({
+  children,
+  onRemove,
+}: {
+  children: React.ReactNode
+  onRemove?: () => void
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
   return (
-    <View style={[a.flex_row, a.gap_sm]}>
-      {content}
-      <Button
-        label={_(msg`Remove embed`)}
-        onPress={() => {
-          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-          setEmbed(undefined)
-        }}
-        size="tiny"
-        variant="solid"
-        color="secondary"
-        shape="round">
-        <ButtonIcon icon={X} />
-      </Button>
+    <View
+      style={[
+        a.flex_1,
+        {minHeight: 80},
+        a.justify_center,
+        a.align_center,
+        t.atoms.border_contrast_high,
+        a.rounded_md,
+        a.border,
+        a.mt_sm,
+        a.mx_sm,
+      ]}>
+      {children}
+      {onRemove && (
+        <Button
+          label={l`Remove embed`}
+          onPress={onRemove}
+          style={[
+            a.absolute,
+            {top: 10, right: 8},
+            a.px_2xs,
+            {transform: [{translateY: -2}]},
+          ]}
+          hitSlop={HITSLOP_20}>
+          <XIcon size="xs" style={t.atoms.text_contrast_high} />
+        </Button>
+      )}
     </View>
   )
 }

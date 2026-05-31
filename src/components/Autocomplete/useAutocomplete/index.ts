@@ -1,4 +1,4 @@
-import {useCallback} from 'react'
+import {useCallback, useMemo} from 'react'
 import {moderateProfile, type ModerationOpts} from '@atproto/api'
 import {keepPreviousData, useQuery} from '@tanstack/react-query'
 
@@ -90,24 +90,34 @@ export function useAutocomplete({
           }
         }
 
-        if (showSearchFallback && q) {
-          results.unshift({
-            key: `search-${q}`,
-            type: 'search' as const,
-            value: q,
-          })
-        }
-
         return results
       },
-      [q, showSearchFallback, moderationOpts],
+      [q, moderationOpts],
     ),
     placeholderData: keepPreviousData,
   })
 
+  const items = useMemo(() => {
+    if (!query.data) {
+      return []
+    }
+
+    const results = [...query.data]
+
+    if (showSearchFallback && q) {
+      results.unshift({
+        key: `search-${q}`,
+        type: 'search' as const,
+        value: q,
+      })
+    }
+
+    return results
+  }, [query.data, showSearchFallback, q])
+
   return {
     query: q,
-    items: query.data || [],
+    items,
   }
 }
 

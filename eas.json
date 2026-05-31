@@ -1,12 +1,12 @@
 {
   "cli": {
-    "version": ">= 3.8.1",
+    "version": ">=18",
     "promptToConfigurePushNotifications": false,
     "appVersionSource": "remote"
   },
   "build": {
     "base": {
-      "node": "20.19.4"
+      "node": "24.15.0"
     },
     "development": {
       "extends": "base",

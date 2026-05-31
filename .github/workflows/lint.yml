@@ -15,47 +15,72 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+      - name: Verify Node version pins match .nvmrc
+        run: |
+          set -euo pipefail
+          expected=$(tr -d '[:space:]' < .nvmrc)
+          rc=0
+          check() {
+            if [ "$2" != "$expected" ]; then
+              echo "::error file=$1::Node version mismatch: $1 pins '$2' but .nvmrc is '$expected'"
+              rc=1
+            fi
+          }
+          # FROM node:X.Y.Z — service runtime images
+          for f in Dockerfile.bskylink Dockerfile.bskyogcard; do
+            v=$(grep -oE 'FROM node:[0-9]+\.[0-9]+\.[0-9]+' "$f" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
+            check "$f" "$v"
+          done
+          # ENV NODE_VERSION=X.Y.Z — Go images that nvm-install Node for the JS build stage
+          for f in Dockerfile.embedr; do
+            v=$(grep -oE 'NODE_VERSION=[0-9]+\.[0-9]+\.[0-9]+' "$f" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
+            check "$f" "$v"
+          done
+          # eas.json "node": "X.Y.Z"
+          v=$(grep -oE '"node":[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"' eas.json | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
+          check "eas.json" "$v"
+          exit $rc
+      - uses: pnpm/action-setup@v6
       - name: Install node
         uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
-          cache: yarn
-      - name: Yarn install
+          node-version-file: package.json
+          cache: pnpm
+      - name: pnpm install
         uses: Wandalen/wretry.action@master
         with:
-          command: yarn --frozen-lockfile
+          command: pnpm install --frozen-lockfile
           attempt_limit: 3
           attempt_delay: 2000
       - name: Lint check
-        run: yarn lint
-      - name: Lint lockfile
-        run: yarn lockfile-lint
+        run: pnpm lint
       - name: Prettier check
-        run: yarn prettier --check .
+        run: pnpm prettier --check .
       - name: Check & compile i18n
-        run: yarn intl:build
+        run: pnpm intl:build
       - name: Type check
-        run: yarn typecheck
+        run: pnpm typecheck
   testing:
     name: Run tests
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v6
       - name: Install node
         uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
-          cache: yarn
-      - name: Yarn install
+          node-version-file: package.json
+          cache: pnpm
+      - name: pnpm install
         uses: Wandalen/wretry.action@master
         with:
-          command: yarn --frozen-lockfile
+          command: pnpm install --frozen-lockfile
           attempt_limit: 3
           attempt_delay: 2000
       - name: Check & compile i18n
-        run: yarn intl:build
+        run: pnpm intl:build
       - name: Run tests
         run: |
-          NODE_ENV=test yarn test --forceExit
+          NODE_ENV=test pnpm test --forceExit

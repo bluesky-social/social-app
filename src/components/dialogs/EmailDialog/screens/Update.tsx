@@ -1,8 +1,6 @@
 import {useReducer} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {validate as validateEmail} from 'email-validator'
 
 import {wait} from '#/lib/async/wait'
@@ -106,7 +104,7 @@ function reducer(state: State, action: Action): State {
 
 export function Update(_props: ScreenProps<ScreenID.Update>) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const cleanError = useCleanError()
   const {currentAccount} = useSession()
   const [state, dispatch] = useReducer(reducer, {
@@ -133,7 +131,7 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
     if (state.step === 'token' && !isValidCode(state.token)) {
       dispatch({
         type: 'setError',
-        error: _(msg`Please enter a valid code.`),
+        error: l`Please enter a valid code.`,
       })
       return
     }
@@ -146,7 +144,7 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
     if (state.emailValid === false) {
       dispatch({
         type: 'setError',
-        error: _(msg`Please enter a valid email address.`),
+        error: l`Please enter a valid email address.`,
       })
       return
     }
@@ -154,7 +152,7 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
     if (state.email === currentAccount!.email) {
       dispatch({
         type: 'setError',
-        error: _(msg`This email is already associated with your account.`),
+        error: l`This email is already associated with your account.`,
       })
       return
     }
@@ -193,7 +191,7 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
       const {clean} = cleanError(e)
       dispatch({
         type: 'setError',
-        error: clean || _(msg`Failed to update email, please try again.`),
+        error: clean || l`Failed to update email, please try again.`,
       })
     }
   }
@@ -203,7 +201,6 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
       <Text style={[a.text_xl, a.font_bold]}>
         <Trans>Update your email</Trans>
       </Text>
-
       {currentAccount?.emailAuthFactor && (
         <Admonition type="warning">
           <Trans>
@@ -211,7 +208,6 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
           </Trans>
         </Admonition>
       )}
-
       <View style={[a.gap_md]}>
         <View>
           <Text style={[a.pb_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
@@ -220,8 +216,8 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
           <TextField.Root>
             <TextField.Icon icon={Envelope} />
             <TextField.Input
-              label={_(msg`New email address`)}
-              placeholder={_(msg`alice@example.com`)}
+              label={l`New email address`}
+              placeholder={l`alice@example.com`}
               defaultValue={state.email}
               onChangeText={
                 state.mutationStatus === 'success'
@@ -276,7 +272,6 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
 
         {state.error && <Admonition type="error">{state.error}</Admonition>}
       </View>
-
       {state.mutationStatus === 'success' ? (
         <>
           <Divider />
@@ -298,7 +293,7 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
         </>
       ) : (
         <Button
-          label={_(msg`Update email`)}
+          label={l`Update email`}
           size="large"
           variant="solid"
           color="primary"

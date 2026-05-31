@@ -95,7 +95,6 @@ import {
 } from '#/state/preferences/languages'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
-import {type Gif} from '#/state/queries/tenor'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
@@ -135,6 +134,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {type Gif} from '#/features/gifPicker/types'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
   draftToComposerPosts,
@@ -221,6 +221,10 @@ export const ComposePost = ({
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishingStage, setPublishingStage] = useState('')
   const [error, setError] = useState('')
+
+  const enableLargeVideoUploads = ax.features.enabled(
+    ax.features.LargeVideoUploads,
+  )
 
   /**
    * Track when a draft was created so we can measure draft age in metrics.
@@ -344,9 +348,10 @@ export const ComposePost = ({
         currentDid,
         abortController.signal,
         i18n,
+        enableLargeVideoUploads,
       )
     },
-    [i18n, agent, currentDid, composerDispatch],
+    [i18n, agent, currentDid, composerDispatch, enableLargeVideoUploads],
   )
 
   const onInitVideo = useNonReactiveCallback(() => {
@@ -491,6 +496,7 @@ export const ComposePost = ({
           currentDid,
           abortController.signal,
           i18n,
+          enableLargeVideoUploads,
         )
       } catch (e) {
         logger.error('Failed to restore video from draft', {
@@ -499,7 +505,7 @@ export const ComposePost = ({
         })
       }
     },
-    [i18n, agent, currentDid, composerDispatch],
+    [i18n, agent, currentDid, composerDispatch, enableLargeVideoUploads],
   )
 
   const handleSelectDraft = useCallback(
@@ -810,7 +816,7 @@ export const ComposePost = ({
           )),
     )
 
-  const getFilteredThread = (): {
+  const getFilteredThread = useCallback((): {
     type: 'none' | 'trailing-only' | 'non-trailing'
     filteredThread: ThreadDraft
   } => {
@@ -838,7 +844,7 @@ export const ComposePost = ({
       type: hasNonTrailingEmpty ? 'non-trailing' : 'trailing-only',
       filteredThread,
     }
-  }
+  }, [thread])
 
   const onPressPublish = useCallback(async () => {
     if (isPublishing) {
@@ -948,7 +954,10 @@ export const ComposePost = ({
       })
 
       let err = cleanError(e.message)
-      if (err.includes('not locate record')) {
+      if (
+        e instanceof apilib.ReplyDeletedError ||
+        err.includes('not locate record')
+      ) {
         err = l`We're sorry! The post you are replying to has been deleted.`
       } else if (e instanceof EmbeddingDisabledError) {
         err = l`This post's author has disabled quote posts.`
@@ -1008,7 +1017,7 @@ export const ComposePost = ({
     setLangPrefs.savePostLanguageToHistory()
     if (initQuote) {
       // We want to wait for the quote count to update before we call `onPost`, which will refetch data
-      whenAppViewReady(agent, initQuote.uri, res => {
+      void whenAppViewReady(agent, initQuote.uri, res => {
         const anchor = res.data.thread.at(0)
         if (
           AppBskyUnspeccedDefs.isThreadItemPost(anchor?.value) &&
@@ -1056,7 +1065,6 @@ export const ComposePost = ({
     l,
     ax,
     agent,
-    thread,
     canPost,
     isPublishing,
     currentLanguages,
@@ -1074,6 +1082,7 @@ export const ComposePost = ({
     cleanupPublishedDraft,
     loadedDraftCreatedAt,
     emptyPostsPromptControl,
+    getFilteredThread,
   ])
 
   const handleConfirmSkipEmpty = () => {

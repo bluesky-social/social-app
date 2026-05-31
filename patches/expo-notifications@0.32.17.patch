@@ -1,0 +1,170 @@
+diff --git a/android/build.gradle b/android/build.gradle
+index 7db47bdf190b0790c7bf867fbcfeb594005861be..0f868153edd6ec557730531f61dba7bf26a71742 100644
+--- a/android/build.gradle
++++ b/android/build.gradle
+@@ -42,6 +42,7 @@ dependencies {
+   implementation 'com.google.firebase:firebase-messaging:24.0.1'
+ 
+   implementation 'me.leolin:ShortcutBadger:1.1.22@aar'
++  implementation project(':expo-background-notification-handler')
+ 
+   if (project.findProject(':expo-modules-test-core')) {
+     testImplementation project(':expo-modules-test-core')
+diff --git a/android/src/main/java/expo/modules/notifications/notifications/interfaces/INotificationContent.kt b/android/src/main/java/expo/modules/notifications/notifications/interfaces/INotificationContent.kt
+index 7b99e6cf8ee1b0de07a79fe4486c49ff25e489c6..45a450da1c5fff13461b77d3a7b20d0217035687 100644
+--- a/android/src/main/java/expo/modules/notifications/notifications/interfaces/INotificationContent.kt
++++ b/android/src/main/java/expo/modules/notifications/notifications/interfaces/INotificationContent.kt
+@@ -15,6 +15,7 @@ import org.json.JSONObject
+  * This interface exists to provide a common API for both classes.
+  * */
+ interface INotificationContent : Parcelable {
++  val channelId: String?
+   val title: String?
+   val text: String?
+   val subText: String?
+diff --git a/android/src/main/java/expo/modules/notifications/notifications/model/NotificationContent.java b/android/src/main/java/expo/modules/notifications/notifications/model/NotificationContent.java
+index 191b64e101c03eeec37920c2d6582bfd50d8b902..fe8b3c51d6f7c661484467f0d820836145824676 100644
+--- a/android/src/main/java/expo/modules/notifications/notifications/model/NotificationContent.java
++++ b/android/src/main/java/expo/modules/notifications/notifications/model/NotificationContent.java
+@@ -35,6 +35,7 @@ import kotlin.coroutines.Continuation;
+  * Refactoring this class may require a migration strategy for the data stored in SharedPreferences.
+  */
+ public class NotificationContent implements Parcelable, Serializable, INotificationContent {
++  private String mChannelId;
+   private String mTitle;
+   private String mText;
+   private String mSubtitle;
+@@ -65,6 +66,11 @@ public class NotificationContent implements Parcelable, Serializable, INotificat
+     }
+   };
+ 
++  @Nullable
++  public String getChannelId() {
++    return mChannelId;
++  }
++
+   @Nullable
+   public String getTitle() {
+     return mTitle;
+@@ -158,6 +164,7 @@ public class NotificationContent implements Parcelable, Serializable, INotificat
+   }
+ 
+   protected NotificationContent(Parcel in) {
++    mChannelId = in.readString();
+     mTitle = in.readString();
+     mText = in.readString();
+     mSubtitle = in.readString();
+@@ -183,6 +190,7 @@ public class NotificationContent implements Parcelable, Serializable, INotificat
+ 
+   @Override
+   public void writeToParcel(Parcel dest, int flags) {
++    dest.writeString(mChannelId);
+     dest.writeString(mTitle);
+     dest.writeString(mText);
+     dest.writeString(mSubtitle);
+@@ -203,6 +211,7 @@ public class NotificationContent implements Parcelable, Serializable, INotificat
+   private static final long serialVersionUID = 397666843266836802L;
+ 
+   private void writeObject(java.io.ObjectOutputStream out) throws IOException {
++    out.writeObject(mChannelId);
+     out.writeObject(mTitle);
+     out.writeObject(mText);
+     out.writeObject(mSubtitle);
+@@ -285,6 +294,11 @@ public class NotificationContent implements Parcelable, Serializable, INotificat
+       useDefaultVibrationPattern();
+     }
+ 
++    public Builder setChannelId(String channelId) {
++      content.mChannelId = channelId;
++      return this;
++    }
++
+     public Builder setTitle(String title) {
+       content.mTitle = title;
+       return this;
+diff --git a/android/src/main/java/expo/modules/notifications/notifications/model/NotificationData.kt b/android/src/main/java/expo/modules/notifications/notifications/model/NotificationData.kt
+index 3af254c6b5fecb8f850c023422db4d80bd4815a5..3c77e9d774f2d8fcfa5d34dc7b088958676cba71 100644
+--- a/android/src/main/java/expo/modules/notifications/notifications/model/NotificationData.kt
++++ b/android/src/main/java/expo/modules/notifications/notifications/model/NotificationData.kt
+@@ -11,6 +11,9 @@ import org.json.JSONObject
+ * */
+ @JvmInline
+ value class NotificationData(private val data: Map<String, String>) {
++  val channelId: String?
++    get() = data["channelId"]
++
+   val title: String?
+     get() = data["title"]
+ 
+diff --git a/android/src/main/java/expo/modules/notifications/notifications/model/RemoteNotificationContent.kt b/android/src/main/java/expo/modules/notifications/notifications/model/RemoteNotificationContent.kt
+index cdbc237948ae9de7e85aeb3902e724c44557453c..6d970066decfa47d68299a5bd8febd953f9c2060 100644
+--- a/android/src/main/java/expo/modules/notifications/notifications/model/RemoteNotificationContent.kt
++++ b/android/src/main/java/expo/modules/notifications/notifications/model/RemoteNotificationContent.kt
+@@ -31,6 +31,8 @@ class RemoteNotificationContent(private val remoteMessage: RemoteMessage) : INot
+     return remoteMessage.notification?.imageUrl != null
+   }
+ 
++  override val channelId = remoteMessage.notification?.channelId ?: notificationData.channelId
++
+   override val title = remoteMessage.notification?.title ?: notificationData.title
+ 
+   override val text = remoteMessage.notification?.body ?: notificationData.message
+diff --git a/android/src/main/java/expo/modules/notifications/notifications/presentation/builders/ExpoNotificationBuilder.kt b/android/src/main/java/expo/modules/notifications/notifications/presentation/builders/ExpoNotificationBuilder.kt
+index 610d3039cefd589647538ad8ba14587d29fab338..3655fc3121ebc0a97820d9653b61a90bd7c34fc2 100644
+--- a/android/src/main/java/expo/modules/notifications/notifications/presentation/builders/ExpoNotificationBuilder.kt
++++ b/android/src/main/java/expo/modules/notifications/notifications/presentation/builders/ExpoNotificationBuilder.kt
+@@ -101,6 +101,9 @@ open class ExpoNotificationBuilder(
+     builder.setOngoing(content.isSticky)
+ 
+     // see "Notification anatomy" https://developer.android.com/develop/ui/views/notifications#Templates
++    content.channelId?.let {
++      builder.setChannelId(it)
++    }
+     builder.setContentTitle(content.title)
+     builder.setContentText(content.text)
+     builder.setSubText(content.subText)
+diff --git a/android/src/main/java/expo/modules/notifications/service/delegates/FirebaseMessagingDelegate.kt b/android/src/main/java/expo/modules/notifications/service/delegates/FirebaseMessagingDelegate.kt
+index 90ca4ff35132b33dcccb80b90d68572506fef603..9d4cb09b35844805d543acff54772380c732c02c 100644
+--- a/android/src/main/java/expo/modules/notifications/service/delegates/FirebaseMessagingDelegate.kt
++++ b/android/src/main/java/expo/modules/notifications/service/delegates/FirebaseMessagingDelegate.kt
+@@ -3,6 +3,9 @@ package expo.modules.notifications.service.delegates
+ import android.content.Context
+ import android.os.Bundle
+ import com.google.firebase.messaging.RemoteMessage
++import expo.modules.backgroundnotificationhandler.BackgroundNotificationHandler
++import expo.modules.backgroundnotificationhandler.BackgroundNotificationHandlerInterface
++import expo.modules.backgroundnotificationhandler.ExpoBackgroundNotificationHandlerModule
+ import expo.modules.interfaces.taskManager.TaskServiceProviderHelper
+ import expo.modules.notifications.notifications.RemoteMessageSerializer
+ import expo.modules.notifications.notifications.background.BackgroundRemoteNotificationTaskConsumer
+@@ -18,7 +21,7 @@ import expo.modules.notifications.tokens.interfaces.FirebaseTokenListener
+ import java.lang.ref.WeakReference
+ import java.util.*
+ 
+-open class FirebaseMessagingDelegate(protected val context: Context) : FirebaseMessagingDelegate {
++open class FirebaseMessagingDelegate(protected val context: Context) : FirebaseMessagingDelegate, BackgroundNotificationHandlerInterface{
+   companion object {
+     // Unfortunately we cannot save state between instances of a service other way
+     // than by static properties. Fortunately, using weak references we can
+@@ -105,8 +108,19 @@ open class FirebaseMessagingDelegate(protected val context: Context) : FirebaseM
+     DebugLogging.logRemoteMessage("FirebaseMessagingDelegate.onMessageReceived: message", remoteMessage)
+     val notification = createNotification(remoteMessage)
+     DebugLogging.logNotification("FirebaseMessagingDelegate.onMessageReceived: notification", notification)
+-    NotificationsService.receive(context, notification)
+-    runTaskManagerTasks(context.applicationContext, RemoteMessageSerializer.toBundle(remoteMessage))
++    if (!ExpoBackgroundNotificationHandlerModule.isForegrounded) {
++      BackgroundNotificationHandler(context, this).handleMessage(remoteMessage)
++    } else {
++      NotificationsService.receive(context, notification)
++      runTaskManagerTasks(
++        context.applicationContext,
++        RemoteMessageSerializer.toBundle(remoteMessage)
++      )
++    }
++  }
++
++  override fun showMessage(remoteMessage: RemoteMessage) {
++    NotificationsService.receive(context, createNotification(remoteMessage))
+   }
+ 
+   protected fun createNotification(remoteMessage: RemoteMessage): Notification {

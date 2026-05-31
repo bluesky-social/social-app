@@ -16,74 +16,128 @@ import {
 } from '#/components/icons/Lock'
 import {PencilLine_Stroke2_Corner0_Rounded as PencilIcon} from '#/components/icons/Pencil'
 
+export type SystemMessageAction =
+  | {
+      kind: 'profile'
+      profile: ChatBskyActorDefs.ProfileViewBasic
+      displayName: string
+    }
+  | {kind: 'inviteLink'}
+
 export type SystemMessageInfo = {
   message: MessageDescriptor
   Icon: React.ComponentType<SVGIconProps>
+  action?: SystemMessageAction
 }
 
-function getReferredDisplayName(
+function getProfileAction(
   user: ChatBskyConvoDefs.SystemMessageReferredUser,
-  relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[],
-): string | null {
-  const profile = relatedProfiles.find(p => p.did === user.did)
-  return profile ? createSanitizedDisplayName(profile) : null
+  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>,
+): Extract<SystemMessageAction, {kind: 'profile'}> | null {
+  const profile = relatedProfiles.get(user.did)
+  if (!profile) return null
+  return {
+    kind: 'profile',
+    profile,
+    displayName: createSanitizedDisplayName(profile),
+  }
 }
 
 export function getSystemMessageInfo(
   data: ChatBskyConvoDefs.SystemMessageView['data'],
-  relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[],
+  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>,
+  opts = {short: false},
 ): SystemMessageInfo | null {
   if (ChatBskyConvoDefs.isSystemMessageDataAddMember(data)) {
-    const name = getReferredDisplayName(data.member, relatedProfiles)
+    const action = getProfileAction(data.member, relatedProfiles)
     return {
       Icon: JoinIcon,
-      message: name
-        ? msg`${name} was added to the group`
-        : msg`Someone was added to the group`,
+      message: action
+        ? opts.short
+          ? msg`${action.displayName} was added`
+          : msg`${action.displayName} was added to the group`
+        : opts.short
+          ? msg`Someone was added`
+          : msg`Someone was added to the group`,
+      action: action ?? undefined,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataRemoveMember(data)) {
-    const name = getReferredDisplayName(data.member, relatedProfiles)
+    const action = getProfileAction(data.member, relatedProfiles)
     return {
       Icon: LeaveIcon,
-      message: name
-        ? msg`${name} was removed from the group`
-        : msg`Someone was removed from the group`,
+      message: action
+        ? opts.short
+          ? msg`${action.displayName} was removed`
+          : msg`${action.displayName} was removed from the group`
+        : opts.short
+          ? msg`Someone was removed`
+          : msg`Someone was removed from the group`,
+      action: action ?? undefined,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataMemberJoin(data)) {
-    const name = getReferredDisplayName(data.member, relatedProfiles)
+    const action = getProfileAction(data.member, relatedProfiles)
     return {
       Icon: JoinIcon,
-      message: name
-        ? msg`${name} joined the group`
-        : msg`Someone joined the group`,
+      message: action
+        ? opts.short
+          ? msg`${action.displayName} joined`
+          : msg`${action.displayName} joined the group`
+        : opts.short
+          ? msg`Someone joined`
+          : msg`Someone joined the group`,
+      action: action ?? undefined,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataMemberLeave(data)) {
-    const name = getReferredDisplayName(data.member, relatedProfiles)
+    const action = getProfileAction(data.member, relatedProfiles)
     return {
       Icon: LeaveIcon,
-      message: name ? msg`${name} left the group` : msg`Someone left the group`,
+      message: action
+        ? opts.short
+          ? msg`${action.displayName} left`
+          : msg`${action.displayName} left the group`
+        : opts.short
+          ? msg`Someone left`
+          : msg`Someone left the group`,
+      action: action ?? undefined,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvo(data)) {
     return {Icon: LockIcon, message: msg`Chat locked`}
   } else if (ChatBskyConvoDefs.isSystemMessageDataUnlockConvo(data)) {
     return {Icon: UnlockIcon, message: msg`Chat unlocked`}
   } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvoPermanently(data)) {
-    return {Icon: LockIcon, message: msg`Chat locked permanently`}
+    return {Icon: LockIcon, message: msg`Chat ended`}
   } else if (ChatBskyConvoDefs.isSystemMessageDataEditGroup(data)) {
     return {
       Icon: PencilIcon,
-      message: data.newName
-        ? msg`Chat title changed to ${data.newName}`
-        : msg`Chat title changed`,
+      message:
+        data.newName && !opts.short
+          ? msg`Chat title changed to ${data.newName}`
+          : msg`Chat title changed`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataCreateJoinLink(data)) {
-    return {Icon: ChainLinkIcon, message: msg`Invite link created`}
+    return {
+      Icon: ChainLinkIcon,
+      message: msg`Invite link created`,
+      action: {kind: 'inviteLink'},
+    }
   } else if (ChatBskyConvoDefs.isSystemMessageDataEditJoinLink(data)) {
-    return {Icon: ChainLinkIcon, message: msg`Invite link edited`}
+    return {
+      Icon: ChainLinkIcon,
+      message: msg`Invite link edited`,
+      action: {kind: 'inviteLink'},
+    }
   } else if (ChatBskyConvoDefs.isSystemMessageDataEnableJoinLink(data)) {
-    return {Icon: ChainLinkIcon, message: msg`Invite link enabled`}
+    return {
+      Icon: ChainLinkIcon,
+      message: msg`Invite link enabled`,
+      action: {kind: 'inviteLink'},
+    }
   } else if (ChatBskyConvoDefs.isSystemMessageDataDisableJoinLink(data)) {
-    return {Icon: ChainLinkBrokenIcon, message: msg`Invite link disabled`}
+    return {
+      Icon: ChainLinkBrokenIcon,
+      message: msg`Invite link disabled`,
+      action: {kind: 'inviteLink'},
+    }
   }
   return null
 }

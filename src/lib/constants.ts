@@ -2,7 +2,7 @@ import {type Insets, Platform} from 'react-native'
 import {type AppBskyActorDefs, BSKY_LABELER_DID} from '@atproto/api'
 
 import {type ProxyHeaderValue} from '#/state/session/agent'
-import {BLUESKY_PROXY_DID, CHAT_PROXY_DID} from '#/env'
+import {BLUESKY_PROXY_DID, CHAT_PROXY_DID, IS_DEV} from '#/env'
 
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
@@ -107,12 +107,12 @@ export const STAGING_LINK_META_PROXY =
 
 export const PROD_LINK_META_PROXY = 'https://cardyb.bsky.app/v1/extract?url='
 
-export function LINK_META_PROXY(serviceUrl: string) {
-  if (IS_PROD_SERVICE(serviceUrl)) {
-    return PROD_LINK_META_PROXY
+export function LINK_META_PROXY(_serviceUrl: string) {
+  if (IS_DEV) {
+    return STAGING_LINK_META_PROXY
   }
 
-  return STAGING_LINK_META_PROXY
+  return PROD_LINK_META_PROXY
 }
 
 export const STATUS_PAGE_URL = 'https://status.bsky.app/'
@@ -173,11 +173,6 @@ export const KNOWN_SHUTDOWN_FEEDS = [
 
 export const GIF_SERVICE = 'https://gifs.bsky.app'
 
-export const GIF_SEARCH = (params: string) =>
-  `${GIF_SERVICE}/tenor/v2/search?${params}`
-export const GIF_FEATURED = (params: string) =>
-  `${GIF_SERVICE}/tenor/v2/featured?${params}`
-
 export const GIF_KLIPY_SEARCH = (params: string) =>
   `${GIF_SERVICE}/klipy/v2/search?${params}`
 export const GIF_KLIPY_FEATURED = (params: string) =>
@@ -193,7 +188,8 @@ export const VIDEO_MAX_DURATION_MS = 3 * 60 * 1000 // 3 minutes in milliseconds
  * Maximum size of a video in megabytes, _not_ mebibytes. Backend uses
  * ISO megabytes.
  */
-export const VIDEO_MAX_SIZE = 1000 * 1000 * 100 // 100mb
+export const VIDEO_MAX_SIZE_REDUCED = 1000 * 1000 * 100 // 100mb
+export const VIDEO_MAX_SIZE = 3000 * 1000 * 100 // 300mb
 
 export const SUPPORTED_MIME_TYPES = [
   'video/mp4',

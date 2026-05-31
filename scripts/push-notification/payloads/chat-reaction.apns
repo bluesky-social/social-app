@@ -1,0 +1,15 @@
+{
+  "aps": {
+    "alert": {
+      "title": "Alice Test",
+      "body": "reacted to your message"
+    },
+    "mutable-content": 1
+  },
+  "reason": "chat-reaction",
+  "convoId": "3kfakeconvo0001",
+  "messageId": "3kfakemsg0001",
+  "recipientDid": "__RECIPIENT_DID__",
+  "senderDisplayName": "Alice Test",
+  "senderHandle": "alice.test"
+}

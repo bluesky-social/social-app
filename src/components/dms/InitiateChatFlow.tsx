@@ -20,7 +20,7 @@ import {type ListMethods} from '#/view/com/util/List'
 import {android, atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {canBeMessaged} from '#/components/dms/util'
+import {canBeAddedToGroup, canBeMessaged} from '#/components/dms/util'
 import * as TextField from '#/components/forms/TextField'
 import * as Toggle from '#/components/forms/Toggle'
 import {
@@ -246,6 +246,8 @@ export function InitiateChatFlow({
 
   const items = useMemo(() => {
     let _items: Item[] = []
+    const checker =
+      chatState === ChatState.NEW_GROUP_CHAT ? canBeAddedToGroup : canBeMessaged
 
     if (isError) {
       _items.push({
@@ -276,7 +278,7 @@ export function InitiateChatFlow({
         }
 
         _items = _items.sort(item => {
-          return item.type === 'profile' && canBeMessaged(item.profile) ? -1 : 1
+          return item.type === 'profile' && checker(item.profile) ? -1 : 1
         })
       }
     } else {
@@ -299,7 +301,7 @@ export function InitiateChatFlow({
         }
 
         _items = _items.sort(item => {
-          return item.type === 'profile' && canBeMessaged(item.profile) ? -1 : 1
+          return item.type === 'profile' && checker(item.profile) ? -1 : 1
         })
       } else {
         _items.push(...placeholders)
@@ -705,12 +707,14 @@ function NewGroupChatButton({onPress}: {onPress: () => void}) {
   const t = useTheme()
   const {t: l} = useLingui()
 
-  const handleOnPress = () => {
-    onPress()
-  }
-
   return (
-    <Button label={l`New group chat`} onPress={handleOnPress}>
+    <Button
+      label={l({
+        message: 'New group chat',
+        context: 'action',
+        comment: 'Button used to create a new group chat.',
+      })}
+      onPress={onPress}>
       {({hovered, pressed, focused}) => (
         <View
           style={[
@@ -738,7 +742,11 @@ function NewGroupChatButton({onPress}: {onPress: () => void}) {
           <View style={[a.flex_grow]}>
             <Text
               style={[a.text_md, a.font_medium, a.leading_snug, t.atoms.text]}>
-              <Trans>New group chat</Trans>
+              <Trans
+                context="action"
+                comment="Button used to create a new group chat.">
+                New group chat
+              </Trans>
             </Text>
           </View>
           <ChevronRightIcon size="md" fill={t.palette.contrast_1000} />
@@ -825,7 +833,7 @@ function GroupChatMemberProfileCard({
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
-  const enabled = canBeMessaged(profile)
+  const enabled = canBeAddedToGroup(profile)
   const handle = sanitizeHandle(profile.handle, '@')
 
   return (
@@ -845,7 +853,7 @@ function GroupChatMemberProfileCard({
             <Text
               style={[a.leading_snug, t.atoms.text_contrast_high]}
               numberOfLines={2}>
-              <Trans>{handle} can’t be messaged</Trans>
+              <Trans>{handle} can’t be added</Trans>
             </Text>
           )}
         </View>

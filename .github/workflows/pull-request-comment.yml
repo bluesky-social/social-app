@@ -113,43 +113,39 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ steps.pr-info.outputs.head-sha }}
+
+      - uses: pnpm/action-setup@v6
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
-          cache: yarn
+          node-version-file: package.json
+          cache: pnpm
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Lint check
-        run: yarn lint
-
-      - name: Lint lockfile
-        run: yarn lockfile-lint
+        run: pnpm lint
 
       - name: 🔤 Compile translations
-        run: yarn intl:build 2>&1 | tee i18n.log
+        run: pnpm intl:build 2>&1 | tee i18n.log
 
       - name: Check for i18n compilation errors
         run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
 
       - name: Type check
-        run: yarn typecheck
+        run: pnpm typecheck
 
       - name: 🔨 Setup EAS
         uses: expo/expo-github-action@main
         with:
-          expo-version: latest
-          eas-version: latest
+          eas-version: '19.0.5'
+          packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: ⛏️ Setup Expo
-        run: yarn global add eas-cli-local-build-plugin
 
       - name: 🪛 Setup jq
         uses: dcarbone/install-jq-action@v2
@@ -175,10 +171,10 @@ jobs:
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
-          yarn export
+          pnpm export
 
       - name: 📦 Package Bundle and 🚀 Deploy
-        run: yarn use-build-number bash scripts/bundleUpdate.sh
+        run: pnpm use-build-number bash scripts/bundleUpdate.sh
         env:
           DENIS_API_KEY: ${{ secrets.DENIS_API_KEY }}
           CHANNEL_NAME: pull-request-${{ github.event.issue.number }}
