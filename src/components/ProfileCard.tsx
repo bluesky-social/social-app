@@ -11,6 +11,7 @@ import {
   type ModerationOpts,
   RichText as RichTextApi,
 } from '@atproto/api'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import {getModerationCauseKey} from '#/lib/moderation'
@@ -41,6 +42,7 @@ import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import * as Pills from '#/components/Pills'
 import {ProfileBadges} from '#/components/ProfileBadges'
+import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
@@ -479,6 +481,7 @@ export function FollowButtonInner({
   ...rest
 }: FollowButtonProps) {
   const {t: l} = useLingui()
+  const unfollowPromptControl = Prompt.usePromptControl()
   const profile = useProfileShadow(profileUnshadowed)
   const moderation = moderateProfile(profile, moderationOpts)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
@@ -512,9 +515,7 @@ export function FollowButtonInner({
     }
   }
 
-  const onPressUnfollow = async (e: GestureResponderEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
+  const onPressUnfollow = async () => {
     try {
       await queueUnfollow()
       Toast.show(
@@ -523,7 +524,7 @@ export function FollowButtonInner({
           moderation.ui('displayName'),
         )}`,
       )
-      onPressProp?.(e)
+      onPressProp?.()
     } catch (e) {
       const err = e as Error
       if (err?.name !== 'AbortError') {
@@ -566,7 +567,9 @@ export function FollowButtonInner({
           color="secondary"
           {...rest}
           onPress={(e: GestureResponderEvent) => {
-            void onPressUnfollow(e)
+            e.preventDefault()
+            e.stopPropagation()
+            unfollowPromptControl.open()
           }}>
           {withIcon && (
             <ButtonIcon icon={Check} position={isRound ? undefined : 'left'} />
@@ -589,6 +592,17 @@ export function FollowButtonInner({
           {isRound ? null : <ButtonText>{followLabel}</ButtonText>}
         </Button>
       )}
+
+      <Prompt.Basic
+        control={unfollowPromptControl}
+        title={l(msg`Unfollow Account?`)}
+        description={l(
+          msg`You will no longer follow this account. If you have a prior DM conversation, this account can still message you.`,
+        )}
+        onConfirm={onPressUnfollow}
+        confirmButtonCta={l(msg`Unfollow`)}
+        confirmButtonColor="negative"
+      />
     </View>
   )
 }
