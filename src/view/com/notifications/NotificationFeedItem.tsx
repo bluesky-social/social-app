@@ -97,7 +97,12 @@ let NotificationFeedItem = ({
   const queryClient = useQueryClient()
   const t = useTheme()
   const {_, i18n} = useLingui()
+  const ax = useAnalytics()
+  const profileCardEnabled = ax.features.enabled(
+    ax.features.NotificationsExpandedProfileCardEnable,
+  )
   const [isAuthorsExpanded, setIsAuthorsExpanded] = useState<boolean>(false)
+  const [isHoveringAuthorsList, setIsHoveringAuthorsList] = useState(false)
   const itemHref = useMemo(() => {
     switch (item.type) {
       case 'post-like':
@@ -583,7 +588,11 @@ let NotificationFeedItem = ({
               borderColor: t.palette.primary_100,
             },
         !hideTopBorder && a.border_t,
-        a.overflow_hidden,
+        // Clip horizontal overflow (in case of long handles) but let the timestamp overflow the bottom of the cell.
+        platform({
+          web: {overflowX: 'clip', overflowY: 'visible'},
+          native: {overflow: 'hidden'},
+        }),
       ]}
       to={itemHref}
       accessible={!isAuthorsExpanded}
@@ -618,7 +627,9 @@ let NotificationFeedItem = ({
       }}>
       {({hovered}) => (
         <>
-          <SubtleHover hover={hovered && !isAuthorsExpanded} />
+          <SubtleHover
+            hover={hovered && (!profileCardEnabled || !isHoveringAuthorsList)}
+          />
           <View style={[styles.layoutIcon, a.pr_sm]}>
             {/* TODO: Prevent conditional rendering and move toward composable
           notifications for clearer accessibility labeling */}
@@ -627,7 +638,17 @@ let NotificationFeedItem = ({
           <View style={[a.flex_1]}>
             <ExpandListPressable
               hasMultipleAuthors={hasMultipleAuthors}
-              onToggleAuthorsExpanded={onToggleAuthorsExpanded}>
+              onToggleAuthorsExpanded={onToggleAuthorsExpanded}
+              onHoverIn={
+                profileCardEnabled
+                  ? () => setIsHoveringAuthorsList(true)
+                  : undefined
+              }
+              onHoverOut={
+                profileCardEnabled
+                  ? () => setIsHoveringAuthorsList(false)
+                  : undefined
+              }>
               <CondensedAuthorsList
                 visible={!isAuthorsExpanded}
                 authors={authors}
@@ -724,15 +745,21 @@ function ExpandListPressable({
   hasMultipleAuthors,
   children,
   onToggleAuthorsExpanded,
+  onHoverIn,
+  onHoverOut,
 }: {
   hasMultipleAuthors: boolean
   children: React.ReactNode
   onToggleAuthorsExpanded: (e: GestureResponderEvent) => void
+  onHoverIn?: () => void
+  onHoverOut?: () => void
 }) {
   if (hasMultipleAuthors) {
     return (
       <Pressable
         onPress={onToggleAuthorsExpanded}
+        onHoverIn={onHoverIn}
+        onHoverOut={onHoverOut}
         style={[styles.expandedAuthorsTrigger]}
         accessible={false}>
         {children}
