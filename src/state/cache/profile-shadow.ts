@@ -10,7 +10,9 @@ import {findAllProfilesInQueryData as findAllProfilesInExploreFeedPreviewsQueryD
 import {findAllProfilesInQueryData as findAllProfilesInContactMatchesQueryData} from '#/state/queries/find-contacts'
 import {findAllProfilesInQueryData as findAllProfilesInKnownFollowersQueryData} from '#/state/queries/known-followers'
 import {findAllProfilesInQueryData as findAllProfilesInListMembersQueryData} from '#/state/queries/list-members'
+import {findAllProfilesInQueryData as findAllProfilesInGetConvoQueryData} from '#/state/queries/messages/conversation'
 import {findAllProfilesInQueryData as findAllProfilesInListConvosQueryData} from '#/state/queries/messages/list-conversations'
+import {findAllProfilesInQueryData as findAllProfilesInMessagesQueryData} from '#/state/queries/messages/list-convo-members'
 import {findAllProfilesInQueryData as findAllProfilesInMyBlockedAccountsQueryData} from '#/state/queries/my-blocked-accounts'
 import {findAllProfilesInQueryData as findAllProfilesInMyMutedAccountsQueryData} from '#/state/queries/my-muted-accounts'
 import {findAllProfilesInQueryData as findAllProfilesInNotifsQueryData} from '#/state/queries/notifications/feed'
@@ -264,4 +266,6 @@ function* findProfilesInCache(
   yield* findAllProfilesInActivitySubscriptionsQueryData(queryClient, did)
   yield* findAllProfilesInNotifsQueryData(queryClient, did)
   yield* findAllProfilesInContactMatchesQueryData(queryClient, did)
+  yield* findAllProfilesInMessagesQueryData(queryClient, did)
+  yield* findAllProfilesInGetConvoQueryData(queryClient, did)
 }

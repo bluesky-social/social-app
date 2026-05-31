@@ -1,4 +1,8 @@
-import {type ChatBskyConvoDefs} from '@atproto/api'
+import {
+  type ChatBskyActorDefs,
+  type ChatBskyConvoDefs,
+  type ChatBskyConvoGetConvo,
+} from '@atproto/api'
 import {
   type QueryClient,
   useMutation,
@@ -16,22 +20,21 @@ import {
   RQKEY_ROOT as LIST_CONVOS_KEY,
 } from './list-conversations'
 
-const RQKEY_ROOT = 'convo'
+export const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
 
-export function useConvoQuery(convo: ChatBskyConvoDefs.ConvoView) {
+export function useConvoQuery({convoId}: {convoId: string}) {
   const agent = useAgent()
 
   return useQuery({
-    queryKey: RQKEY(convo.id),
+    queryKey: RQKEY(convoId),
     queryFn: async () => {
       const {data} = await agent.chat.bsky.convo.getConvo(
-        {convoId: convo.id},
+        {convoId},
         {headers: DM_SERVICE_HEADERS},
       )
       return data.convo
     },
-    initialData: convo,
     staleTime: STALE.INFINITY,
   })
 }
@@ -58,7 +61,7 @@ export function useMarkAsReadMutation() {
     }) => {
       if (!convoId) throw new Error('No convoId provided')
 
-      await agent.api.chat.bsky.convo.updateRead(
+      await agent.chat.bsky.convo.updateRead(
         {
           convoId,
           messageId,
@@ -109,4 +112,23 @@ export function useMarkAsReadMutation() {
       )
     },
   })
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<ChatBskyActorDefs.ProfileViewBasic, void> {
+  const queryDatas = queryClient.getQueriesData<
+    ChatBskyConvoGetConvo.OutputSchema['convo']
+  >({
+    queryKey: [RQKEY_ROOT],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData) continue
+    for (const member of queryData.members) {
+      if (member.did === did) {
+        yield member
+      }
+    }
+  }
 }

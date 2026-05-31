@@ -1,0 +1,14 @@
+{
+  "aps": {
+    "alert": {
+      "title": "alice.test",
+      "body": "liked your post"
+    },
+    "mutable-content": 1,
+    "sound": "default"
+  },
+  "reason": "like",
+  "uri": "at://did:plc:senderdummy00000000000000/app.bsky.feed.like/3kfakelike0001",
+  "subject": "at://__RECIPIENT_DID__/app.bsky.feed.post/3kfakepost0001",
+  "recipientDid": "__RECIPIENT_DID__"
+}

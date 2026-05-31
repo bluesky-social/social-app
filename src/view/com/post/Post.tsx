@@ -12,10 +12,8 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {countLines} from '#/lib/strings/helpers'
-import {colors} from '#/lib/styles'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -26,7 +24,7 @@ import {unstableCacheProfileView} from '#/state/queries/profile'
 import {Link} from '#/view/com/util/Link'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a} from '#/alf'
+import {atoms as a, select, useTheme} from '#/alf'
 import {
   GalleryBleed,
   maybeApplyGalleryOffsetStyles,
@@ -119,7 +117,7 @@ function PostInner({
   onBeforePress?: () => void
 }) {
   const queryClient = useQueryClient()
-  const pal = usePalette('default')
+  const t = useTheme()
   const {openComposer} = useOpenComposer()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
@@ -164,8 +162,8 @@ function PostInner({
         href={itemHref}
         style={[
           styles.outer,
-          pal.border,
-          !hideTopBorder && {borderTopWidth: StyleSheet.hairlineWidth},
+          t.atoms.border_contrast_low,
+          !hideTopBorder && a.border_t,
           style,
         ]}
         onBeforePress={onBeforePress}
@@ -176,7 +174,20 @@ function PostInner({
           setHover(false)
         }}>
         <SubtleHover hover={hover} />
-        {showReplyLine && <View style={styles.replyLine} />}
+        {showReplyLine && (
+          <View
+            style={[
+              styles.replyLine,
+              {
+                backgroundColor: select(t.name, {
+                  light: t.palette.contrast_100,
+                  dim: t.palette.contrast_200,
+                  dark: t.palette.contrast_200,
+                }),
+              },
+            ]}
+          />
+        )}
         <View style={styles.layout}>
           <View style={styles.layoutAvi}>
             <PreviewableUserAvatar
@@ -265,9 +276,9 @@ function PostInner({
 const styles = StyleSheet.create({
   outer: {
     paddingTop: 10,
-    paddingRight: 10,
+    paddingRight: 15,
     paddingBottom: 5,
-    paddingLeft: 15,
+    paddingLeft: 10,
     // @ts-ignore web only -prf
     cursor: 'pointer',
   },
@@ -276,7 +287,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   layoutAvi: {
-    paddingRight: 8,
+    paddingLeft: 8,
   },
   layoutContent: {
     flex: 1,
@@ -286,11 +297,10 @@ const styles = StyleSheet.create({
   },
   replyLine: {
     position: 'absolute',
-    right: 36,
+    left: 36,
     top: 70,
     bottom: 0,
-    borderRightWidth: 2,
-    borderRightColor: colors.gray2,
+    borderLeftWidth: 2,
   },
   contentHider: {
     marginBottom: 2,

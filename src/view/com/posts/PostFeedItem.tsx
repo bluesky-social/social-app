@@ -33,7 +33,7 @@ import {
 import {Link} from '#/view/com/util/Link'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a} from '#/alf'
+import {atoms as a, select, useTheme} from '#/alf'
 import {
   GalleryBleed,
   maybeApplyGalleryOffsetStyles,
@@ -167,6 +167,7 @@ let FeedItemInner = ({
   const queryClient = useQueryClient()
   const {openComposer} = useOpenComposer()
   const pal = usePalette('default')
+  const t = useTheme()
   const {currentAccount} = useSession()
 
   const [hover, setHover] = useState(false)
@@ -346,8 +347,11 @@ let FeedItemInner = ({
                 style={[
                   styles.replyLine,
                   {
-                    flexGrow: 1,
-                    backgroundColor: pal.colors.replyLine,
+                    backgroundColor: select(t.name, {
+                      light: t.palette.contrast_100,
+                      dim: t.palette.contrast_200,
+                      dark: t.palette.contrast_200,
+                    }),
                     marginBottom: 4,
                   },
                 ]}
@@ -381,8 +385,11 @@ let FeedItemInner = ({
                 style={[
                   styles.replyLine,
                   {
-                    flexGrow: 1,
-                    backgroundColor: pal.colors.replyLine,
+                    backgroundColor: select(t.name, {
+                      light: t.palette.contrast_100,
+                      dim: t.palette.contrast_200,
+                      dark: t.palette.contrast_200,
+                    }),
                     marginTop: live ? 8 : 4,
                   },
                 ]}
@@ -536,6 +543,7 @@ const styles = StyleSheet.create({
     cursor: 'pointer',
   },
   replyLine: {
+    flexGrow: 1,
     width: 2,
     marginLeft: 'auto',
     marginRight: 'auto',

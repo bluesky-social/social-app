@@ -1,13 +1,13 @@
 import {
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
+  type BskyAgent,
   type ComAtprotoRepoStrongRef,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {type BskyAgent} from '@atproto/api'
 
 import {POST_IMG_MAX} from '#/lib/constants'
-import {getLinkMeta} from '#/lib/link-meta/link-meta'
+import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
 import {resolveShortLink} from '#/lib/link-meta/resolve-short-link'
 import {downloadAndResize} from '#/lib/media/manip'
 import {
@@ -15,18 +15,19 @@ import {
   parseStarterPackUri,
 } from '#/lib/strings/starter-pack'
 import {
+  convertBskyAppUrlIfNeeded,
   isBskyCustomFeedUrl,
   isBskyListUrl,
   isBskyPostUrl,
   isBskyStarterPackUrl,
   isBskyStartUrl,
   isShortLink,
+  makeRecordUri,
 } from '#/lib/strings/url-helpers'
 import {type ComposerImage} from '#/state/gallery'
 import {createComposerImage} from '#/state/gallery'
-import {type Gif} from '#/state/queries/tenor'
+import {type Gif} from '#/features/gifPicker/types'
 import {createGIFDescription} from '../gif-alt-text'
-import {convertBskyAppUrlIfNeeded, makeRecordUri} from '../strings/url-helpers'
 
 type ResolvedExternalLink = {
   type: 'external'
@@ -34,6 +35,12 @@ type ResolvedExternalLink = {
   title: string
   description: string
   thumb: ComposerImage | undefined
+  /**
+   * The AT-URI of the Atmosphere record representing this external content, if
+   * it exists. Example: a site.standard.document record.
+   */
+  associatedRefs?: LinkMeta['associatedRefs']
+  view?: LinkMeta['view']
 }
 
 type ResolvedPostRecord = {
@@ -190,14 +197,42 @@ export async function resolveGif(
   agent: BskyAgent,
   gif: Gif,
 ): Promise<ResolvedExternalLink> {
-  const uri = `${gif.media_formats.gif.url}?hh=${gif.media_formats.gif.dims[1]}&ww=${gif.media_formats.gif.dims[0]}`
+  const gifUrl = gif.media_formats.gif.url
+  const params = new URLSearchParams()
+  params.set('hh', String(gif.media_formats.gif.dims[1]))
+  params.set('ww', String(gif.media_formats.gif.dims[0]))
+
+  // For Klipy GIFs, embed video format slugs so parseKlipyGif can
+  // swap to the right format per platform at render time. Klipy uses
+  // different filename slugs per format (unlike Tenor where format is
+  // encoded in the URL ID), so this info must travel with the URL.
+  try {
+    const url = new URL(gifUrl)
+    if (url.hostname === 'static.klipy.com') {
+      const mp4Slug = getFileSlug(gif.media_formats.mp4?.url)
+      const webmSlug = getFileSlug(gif.media_formats.webm?.url)
+      if (mp4Slug) params.set('mp4', mp4Slug)
+      if (webmSlug) params.set('webm', webmSlug)
+    }
+  } catch {}
+
+  const uri = `${gifUrl}?${params.toString()}`
+  const altText = gif.content_description || gif.title
   return {
     type: 'external',
     uri,
-    title: gif.content_description,
-    description: createGIFDescription(gif.content_description),
+    title: altText,
+    description: createGIFDescription(altText),
     thumb: await imageToThumb(gif.media_formats.preview.url),
   }
+}
+
+function getFileSlug(url: string | undefined): string | undefined {
+  if (!url) return undefined
+  const filename = url.split('/').pop()
+  if (!filename) return undefined
+  const dotIndex = filename.lastIndexOf('.')
+  return dotIndex > 0 ? filename.slice(0, dotIndex) : undefined
 }
 
 async function resolveExternal(
@@ -211,6 +246,8 @@ async function resolveExternal(
     title: result.title ?? '',
     description: result.description ?? '',
     thumb: result.image ? await imageToThumb(result.image) : undefined,
+    associatedRefs: result.associatedRefs,
+    view: result.view,
   }
 }
 

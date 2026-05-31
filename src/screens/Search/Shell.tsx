@@ -27,7 +27,6 @@ import {
   useProfilesQuery,
 } from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {
   makeSearchQuery,
   type Params,
@@ -87,7 +86,6 @@ export function SearchScreenShell({
   const route = useRoute()
   const textInput = useRef<TextInput>(null)
   const {t: l} = useLingui()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
 
@@ -96,12 +94,12 @@ export function SearchScreenShell({
   const [activeTab, setActiveTab] = useState(() => getTabIndex(tabParam))
 
   // Query terms
-  const [searchText, _setSearchText] = useState<string>(queryParam)
+  const [searchText, setSearchText] = useState<string>(queryParam)
   const searchTextRef = useRef(searchText)
-  const setSearchText = (text: string) => {
+  const updateSearchText = useCallback((text: string) => {
     searchTextRef.current = text
-    _setSearchText(text)
-  }
+    setSearchText(text)
+  }, [])
   const {data: autocompleteData, isFetching: isAutocompleteFetching} =
     useActorAutocompleteQuery(searchText, true)
 
@@ -177,21 +175,24 @@ export function SearchScreenShell({
   useFocusEffect(
     useNonReactiveCallback(() => {
       if (IS_WEB) {
-        setSearchText(queryParam)
+        updateSearchText(queryParam)
       }
     }),
   )
 
   const onPressClearQuery = useCallback(() => {
     scrollToTopWeb()
-    setSearchText('')
+    updateSearchText('')
     textInput.current?.focus()
-  }, [])
+  }, [updateSearchText])
 
-  const onChangeText = useCallback((text: string) => {
-    scrollToTopWeb()
-    setSearchText(text)
-  }, [])
+  const onChangeText = useCallback(
+    (text: string) => {
+      scrollToTopWeb()
+      updateSearchText(text)
+    },
+    [updateSearchText],
+  )
 
   const navigateToItem = useCallback(
     (item: string) => {
@@ -227,10 +228,16 @@ export function SearchScreenShell({
       // @ts-expect-error route is not typesafe
       navigation.replace(route.name, parameters)
     } else {
-      setSearchText('')
+      updateSearchText('')
       navigation.setParams({q: '', tab: undefined})
     }
-  }, [setShowAutocomplete, setSearchText, navigation, route.params, route.name])
+  }, [
+    setShowAutocomplete,
+    updateSearchText,
+    navigation,
+    route.params,
+    route.name,
+  ])
 
   const onSubmit = (source: 'typed' | 'autocomplete') => () => {
     ax.metric('search:query', {
@@ -249,10 +256,10 @@ export function SearchScreenShell({
 
   const handleHistoryItemClick = useCallback(
     (item: string) => {
-      setSearchText(item)
+      updateSearchText(item)
       navigateToItem(item)
     },
-    [navigateToItem],
+    [navigateToItem, updateSearchText],
   )
 
   const handleProfileClick = useCallback(
@@ -280,17 +287,16 @@ export function SearchScreenShell({
       // @ts-expect-error route is not typesafe
       navigation.replace(route.name, parameters)
     } else {
-      setSearchText('')
+      updateSearchText('')
       navigation.setParams({q: '', tab: undefined})
       textInput.current?.focus()
     }
-  }, [navigation, route])
+  }, [navigation, route.name, route.params, updateSearchText])
 
   useFocusEffect(
     useCallback(() => {
-      setMinimalShellMode(false)
       return listenSoftReset(onSoftReset)
-    }, [onSoftReset, setMinimalShellMode]),
+    }, [onSoftReset]),
   )
 
   const onSearchInputFocus = useCallback(() => {
@@ -438,7 +444,11 @@ export function SearchScreenShell({
         ) : (
           <SearchHistory
             searchHistory={termHistory}
-            selectedProfiles={accountHistoryProfiles?.profiles || []}
+            selectedProfiles={
+              accountHistoryProfiles?.profiles.filter(p =>
+                accountHistory.includes(p.did),
+              ) ?? []
+            }
             onItemClick={handleHistoryItemClick}
             onProfileClick={handleProfileClick}
             onRemoveItemClick={deleteSearchHistoryItem}
@@ -481,17 +491,12 @@ let SearchScreenInner = ({
   focusSearchInput: (tab?: TabParam) => void
 }): React.ReactNode => {
   const t = useTheme()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {hasSession} = useSession()
   const {gtTablet} = useBreakpoints()
 
-  const onPageSelected = useCallback(
-    (index: number) => {
-      setMinimalShellMode(false)
-      setActiveTab(index)
-    },
-    [setActiveTab, setMinimalShellMode],
-  )
+  const onPageSelected = (index: number) => {
+    setActiveTab(index)
+  }
 
   return queryWithParams ? (
     <SearchResults

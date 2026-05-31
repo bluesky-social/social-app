@@ -249,6 +249,7 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
               moderationOpts={moderationOpts!}
               noBorder={index === 0}
               position={index}
+              recSource={hasSearchText ? 'Search' : undefined}
               recId={recIdForLogging}
               isGuide={isGuide}
             />
@@ -264,7 +265,7 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
           return null
       }
     },
-    [moderationOpts, recIdForLogging, isGuide],
+    [moderationOpts, hasSearchText, recIdForLogging, isGuide],
   )
 
   // Track seen profiles
@@ -286,6 +287,7 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
             )
             ax.metric('suggestedUser:seen', {
               logContext: isGuide ? 'ProgressGuide' : 'SeeMoreSuggestedUsers',
+              recSource: hasSearchText ? 'Search' : undefined,
               recId: recIdForLogging,
               position: position !== -1 ? position : 0,
               suggestedDid: item.profile.did,
@@ -548,6 +550,7 @@ let FollowProfileCard = ({
   moderationOpts,
   noBorder,
   position,
+  recSource,
   recId,
   isGuide,
 }: {
@@ -555,6 +558,7 @@ let FollowProfileCard = ({
   moderationOpts: ModerationOpts
   noBorder?: boolean
   position: number
+  recSource?: 'Search'
   recId?: string
   isGuide: boolean
 }): React.ReactNode => {
@@ -564,6 +568,7 @@ let FollowProfileCard = ({
       moderationOpts={moderationOpts}
       noBorder={noBorder}
       position={position}
+      recSource={recSource}
       recId={recId}
       isGuide={isGuide}
     />
@@ -577,6 +582,7 @@ function FollowProfileCardInner({
   onFollow,
   noBorder,
   position,
+  recSource,
   recId,
   isGuide,
 }: {
@@ -585,6 +591,7 @@ function FollowProfileCardInner({
   onFollow?: () => void
   noBorder?: boolean
   position: number
+  recSource?: 'Search'
   recId?: string
   isGuide: boolean
 }) {
@@ -625,6 +632,7 @@ function FollowProfileCardInner({
                       ? 'ProgressGuide'
                       : 'SeeMoreSuggestedUsers',
                     location: 'Card',
+                    recSource,
                     recId,
                     position,
                     suggestedDid: profile.did,

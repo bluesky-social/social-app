@@ -71,7 +71,7 @@ export function useLeaveConvo(
       return {prevPages}
     },
     onSuccess: data => {
-      queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
+      void queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
       onSuccess?.(data)
     },
     onError: (error, _, context) => {
@@ -89,7 +89,7 @@ export function useLeaveConvo(
           }
         },
       )
-      queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
+      void queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
       onError?.(error)
     },
   })

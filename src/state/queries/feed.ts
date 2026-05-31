@@ -413,12 +413,14 @@ const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
   contentMode: undefined,
 }
 
+export const FEED_INFO_RQKEY_ROOT = 'feed-info'
+
 const createPinnedFeedInfosQueryKey = (
   kind: 'pinned' | 'saved',
   feedUris: string[],
 ) =>
   createQueryKey(
-    'feed-info',
+    FEED_INFO_RQKEY_ROOT,
     {
       kind,
       feedUris,

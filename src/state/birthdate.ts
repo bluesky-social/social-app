@@ -4,6 +4,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {preferencesQueryKey} from '#/state/queries/preferences'
 import {useAgent, useSession} from '#/state/session'
 import {usePatchAgeAssuranceOtherRequiredData} from '#/ageAssurance'
+import {isUnderAge, maybeRestrictChatSettings} from '#/ageAssurance/util'
 import {IS_DEV} from '#/env'
 import {account} from '#/storage'
 
@@ -63,6 +64,11 @@ export function useBirthdateMutation() {
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
       })
+
+      if (isUnderAge(birthDate.toISOString(), 18)) {
+        maybeRestrictChatSettings({agent})
+      }
+
       /**
        * Also patch the age assurance other required data with the new
        * birthdate, which may change the user's age assurance access level.

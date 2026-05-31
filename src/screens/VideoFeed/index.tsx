@@ -75,7 +75,6 @@ import {
 } from '#/state/queries/post-feed'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {List} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -131,16 +130,13 @@ export function VideoFeed({}: NativeStackScreenProps<
   const {params} = useRoute<RouteProp<CommonNavigatorParams, 'VideoFeed'>>()
 
   const t = useTheme()
-  const setMinShellMode = useSetMinimalShellMode()
   useFocusEffect(
     useCallback(() => {
-      setMinShellMode(true)
       setSystemUITheme('lightbox', t)
       return () => {
-        setMinShellMode(false)
         setSystemUITheme('theme', t)
       }
-    }, [setMinShellMode, t]),
+    }, [t]),
   )
 
   const isFocused = useIsFocused()
@@ -148,7 +144,7 @@ export function VideoFeed({}: NativeStackScreenProps<
 
   return (
     <ThemeProvider theme="dark">
-      <Layout.Screen noInsetTop style={{backgroundColor: 'black'}}>
+      <Layout.Screen minimalShell noInsetTop style={{backgroundColor: 'black'}}>
         <KeepAwake />
         <View
           style={[

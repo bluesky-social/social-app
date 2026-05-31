@@ -32,7 +32,7 @@ export type SelectMediaButtonProps = {
     type: AssetType
     assets: ImagePickerAsset[]
     errors: string[]
-  }) => void
+  }) => void | Promise<void>
   /**
    * If true, automatically open the media picker when the component mounts.
    */

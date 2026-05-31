@@ -1,7 +1,7 @@
 // @ts-check
 import js from '@eslint/js'
 import tseslint from 'typescript-eslint'
-import { defineConfig } from 'eslint/config';
+import {defineConfig} from 'eslint/config'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 // @ts-expect-error no types
@@ -32,6 +32,7 @@ export default defineConfig(
       '*.html',
       'bskyweb/**',
       'bskyembed/**',
+      'bskyogcard/**',
       'src/locale/locales/_build/**',
       'src/locale/locales/**/*.js',
       '*.e2e.ts',
@@ -183,24 +184,30 @@ export default defineConfig(
        * Import linting
        */
       'import-x/consistent-type-specifier-style': ['warn', 'prefer-inline'],
-      'import-x/no-unresolved': ['error', {
-        /*
-         * The `postinstall` hook runs `compile-if-needed` locally, but not in
-         * CI. For CI-sake, ignore this.
-         */
-        ignore: ['^#\/locale\/locales\/.+\/messages'],
-      }],
-      'import-x/no-extraneous-dependencies': ['error', {
-        'whitelist': [
-          // test files only
-          '@jest/globals',
-          // we only use a really simple util from this, and we know it will be present
-          'expo-modules-core',
-          // this is a dep for @atproto/api, but we absolutely need them in sync, so just
-          // rely on the transient version
-          '@atproto/common-web',
-        ]
-      }],
+      'import-x/no-unresolved': [
+        'error',
+        {
+          /*
+           * The `postinstall` hook runs `compile-if-needed` locally, but not in
+           * CI. For CI-sake, ignore this.
+           */
+          ignore: ['^#\/locale\/locales\/.+\/messages'],
+        },
+      ],
+      'import-x/no-extraneous-dependencies': [
+        'error',
+        {
+          whitelist: [
+            // test files only
+            '@jest/globals',
+            // we only use a really simple util from this, and we know it will be present
+            'expo-modules-core',
+            // this is a dep for @atproto/api, but we absolutely need them in sync, so just
+            // rely on the transient version
+            '@atproto/common-web',
+          ],
+        },
+      ],
       'import-x/no-nodejs-modules': 'error',
 
       /**
@@ -221,15 +228,18 @@ export default defineConfig(
         {prefer: 'type-imports', fixStyle: 'inline-type-imports'},
       ],
       '@typescript-eslint/no-require-imports': 'off',
-      '@typescript-eslint/no-unused-expressions': ['error', {
-        allowTernary: true,
-      }],
+      '@typescript-eslint/no-unused-expressions': [
+        'error',
+        {
+          allowTernary: true,
+        },
+      ],
       /**
        * Maintain previous behavior - these are stricter in typescript-eslint
        * v8 `warn` ones are probably worth fixing. `off` ones are a bit too
        * nit-picky
        */
-      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'off',
@@ -250,13 +260,19 @@ export default defineConfig(
       '@typescript-eslint/prefer-promise-reject-errors': 'warn',
       '@typescript-eslint/await-thenable': 'warn',
 
-      "no-restricted-imports": ["error", {
-        "paths": [{
-          "name": "react",
-          "importNames": ["React", "default"],
-          "message": "React is already in the global type namespace. Use named imports for runtime modules."
-        }]
-      }],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'react',
+              importNames: ['React', 'default'],
+              message:
+                'React is already in the global type namespace. Use named imports for runtime modules.',
+            },
+          ],
+        },
+      ],
 
       /**
        * Turn off rules that we haven't enforced thus far
@@ -280,6 +296,16 @@ export default defineConfig(
   },
 
   /**
+   * bskyogcard, dev-env - server-side, Node.js imports are fine
+   */
+  {
+    files: ['bskyogcard/**/*.{js,jsx,ts,tsx}', 'dev-env/**/*.{js,jsx,ts,tsx}'],
+    rules: {
+      'import-x/no-nodejs-modules': 'off',
+    },
+  },
+
+  /**
    * Test files configuration
    */
   {
@@ -287,7 +313,7 @@ export default defineConfig(
     languageOptions: {
       globals: {
         ...globals.jest,
-      }
+      },
     },
   },
 )

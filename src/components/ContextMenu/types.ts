@@ -65,10 +65,12 @@ export type ContextType = {
 
 export type MenuContextType = {
   align: 'left' | 'right'
+  xOffset: number
 }
 
 export type ItemContextType = {
   disabled: boolean
+  destructive: boolean
 }
 
 export type TriggerProps = {

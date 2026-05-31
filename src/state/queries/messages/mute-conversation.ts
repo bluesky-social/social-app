@@ -1,18 +1,12 @@
-import {
-  type ChatBskyConvoDefs,
-  type ChatBskyConvoListConvos,
-  type ChatBskyConvoMuteConvo,
-} from '@atproto/api'
-import {
-  type InfiniteData,
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query'
+import {type ChatBskyConvoMuteConvo} from '@atproto/api'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {useAgent} from '#/state/session'
-import {RQKEY as CONVO_KEY} from './conversation'
-import {RQKEY_ROOT as CONVO_LIST_KEY} from './list-conversations'
+import {
+  rollbackConvoOptimistic,
+  updateConvoOptimistic,
+} from './utils/convo-cache'
 
 export function useMuteConvo(
   convoId: string | undefined,
@@ -46,59 +40,17 @@ export function useMuteConvo(
     },
     onMutate: ({mute}) => {
       if (!convoId) return
-
-      const prevConvo = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(
-        CONVO_KEY(convoId),
-      )
-      const prevListEntries = queryClient.getQueriesData<
-        InfiniteData<ChatBskyConvoListConvos.OutputSchema>
-      >({queryKey: [CONVO_LIST_KEY]})
-
-      // Update for a single chat thread
-      queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(
-        CONVO_KEY(convoId),
-        prev => {
-          if (!prev) return
-          return {
-            ...prev,
-            muted: mute,
-          }
-        },
-      )
-
-      // Update for the chat list
-      queryClient.setQueriesData<
-        InfiniteData<ChatBskyConvoListConvos.OutputSchema>
-      >({queryKey: [CONVO_LIST_KEY]}, prev => {
-        if (!prev?.pages) return
-        return {
-          ...prev,
-          pages: prev.pages.map(page => ({
-            ...page,
-            convos: page.convos.map(convo => {
-              if (convo.id !== convoId) return convo
-              return {
-                ...convo,
-                muted: mute,
-              }
-            }),
-          })),
-        }
-      })
-
-      return {prevConvo, prevListEntries}
+      return updateConvoOptimistic(queryClient, convoId, prev => ({
+        ...prev,
+        muted: mute,
+      }))
     },
     onSuccess: data => {
       onSuccess?.(data)
     },
     onError: (e, _variables, context) => {
-      if (context?.prevConvo && convoId) {
-        queryClient.setQueryData(CONVO_KEY(convoId), context.prevConvo)
-      }
-      if (context?.prevListEntries) {
-        for (const [key, data] of context.prevListEntries) {
-          queryClient.setQueryData(key, data)
-        }
+      if (convoId && context) {
+        rollbackConvoOptimistic(queryClient, convoId, context)
       }
       onError?.(e)
     },

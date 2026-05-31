@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
 import type Animated from 'react-native-reanimated'
 import {useAnimatedRef, useScrollViewOffset} from 'react-native-reanimated'
@@ -7,7 +7,7 @@ import {TID} from '@atproto/common-web'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {RECOMMENDED_SAVED_FEEDS, TIMELINE_SAVED_FEED} from '#/lib/constants'
@@ -23,7 +23,6 @@ import {
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
@@ -66,7 +65,6 @@ function SavedFeedsInner({
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending} =
     useOverwriteSavedFeedsMutation()
   const navigation = useNavigation<NavigationProp>()
@@ -87,12 +85,6 @@ function SavedFeedsInner({
   const noFollowingFeed =
     currentFeeds.every(f => f.type !== 'timeline') && !noSavedFeedsOfAnyType
   const [isDragging, setIsDragging] = useState(false)
-
-  useFocusEffect(
-    useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
 
   const onSaveChanges = async () => {
     try {
@@ -259,7 +251,6 @@ function SavedFeedsA11y({
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending} =
     useOverwriteSavedFeedsMutation()
   const navigation = useNavigation<NavigationProp>()
@@ -273,12 +264,6 @@ function SavedFeedsA11y({
   const noSavedFeedsOfAnyType = pinnedFeeds.length + unpinnedFeeds.length === 0
   const noFollowingFeed =
     currentFeeds.every(f => f.type !== 'timeline') && !noSavedFeedsOfAnyType
-
-  useFocusEffect(
-    useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
 
   const onSaveChanges = async () => {
     try {

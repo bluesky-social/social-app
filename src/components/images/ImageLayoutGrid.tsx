@@ -3,8 +3,8 @@ import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
 import {type AppBskyEmbedImages} from '@atproto/api'
 
-import {type Dimensions} from '#/view/com/lightbox/ImageViewing/@types'
 import {atoms as a, useBreakpoints} from '#/alf'
+import {type Dimensions} from '#/components/Lightbox/types'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {GalleryItem} from './ImageLayoutGridItem'
 

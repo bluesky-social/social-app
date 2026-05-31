@@ -22,6 +22,8 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {GalleryBleed} from '#/components/images/Gallery'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
+import {StandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed'
+import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {RichText} from '#/components/RichText'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
@@ -39,12 +41,11 @@ import {PostPlaceholder as PostPlaceholderText} from './PostPlaceholder'
 import {
   type CommonProps,
   type EmbedProps,
-  PostEmbedViewContext,
-  QuoteEmbedViewContext,
+  type PostEmbedViewContext,
 } from './types'
 import {VideoEmbed} from './VideoEmbed'
 
-export {PostEmbedViewContext, QuoteEmbedViewContext} from './types'
+export {PostEmbedViewContext} from './types'
 
 export function Embed({embed: rawEmbed, ...rest}: EmbedProps) {
   const embed = parseEmbed(rawEmbed)
@@ -96,6 +97,19 @@ function MediaEmbed({
       )
     }
     case 'link': {
+      if (isStandardSiteEmbed(embed.view.external)) {
+        return (
+          <ContentHider
+            modui={rest.moderation?.ui('contentMedia')}
+            activeStyle={[a.mt_sm]}>
+            <StandardSiteEmbed
+              view={embed.view.external}
+              onEmbedInteractionCallback={rest.onOpen}
+              style={[a.mt_sm, rest.style]}
+            />
+          </ContentHider>
+        )
+      }
       return (
         <ContentHider
           modui={rest.moderation?.ui('contentMedia')}
@@ -164,11 +178,7 @@ function RecordEmbed({
         <QuoteEmbed
           {...rest}
           embed={embed}
-          viewContext={
-            rest.viewContext === PostEmbedViewContext.Feed
-              ? QuoteEmbedViewContext.FeedEmbedRecordWithMedia
-              : undefined
-          }
+          viewContext={rest.viewContext}
           isWithinQuote={rest.isWithinQuote}
           allowNestedQuotes={rest.allowNestedQuotes}
         />
@@ -229,9 +239,10 @@ export function QuoteEmbed({
   linkDisabled,
   isWithinQuote: parentIsWithinQuote,
   allowNestedQuotes: parentAllowNestedQuotes,
+  viewContext,
 }: Omit<CommonProps, 'viewContext'> & {
   embed: EmbedType<'post'>
-  viewContext?: QuoteEmbedViewContext
+  viewContext?: PostEmbedViewContext
   linkDisabled?: boolean
 }) {
   const moderationOpts = useModerationOpts()
@@ -309,7 +320,7 @@ export function QuoteEmbed({
         <Embed
           embed={quote.embed}
           moderation={moderation}
-          viewContext={PostEmbedViewContext.FeedEmbedRecordWithMedia}
+          viewContext={viewContext}
           isWithinQuote={parentIsWithinQuote ?? true}
           // already within quote? override nested
           allowNestedQuotes={

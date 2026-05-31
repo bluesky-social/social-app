@@ -1,4 +1,8 @@
-import {type AppBskyActorDefs} from '@atproto/api'
+import type AtpAgent from '@atproto/api'
+import {
+  type AppBskyActorDefs,
+  type ChatBskyActorDeclaration,
+} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
@@ -17,8 +21,21 @@ export function useUpdateActorDeclaration({
   const agent = useAgent()
 
   return useMutation({
-    mutationFn: async (allowIncoming: 'all' | 'none' | 'following') => {
+    mutationFn: async (update: {
+      allowIncoming?: 'all' | 'none' | 'following'
+      allowGroupInvites?: 'all' | 'none' | 'following'
+    }) => {
       if (!currentAccount) throw new Error('Not signed in')
+      const current =
+        queryClient.getQueryData<AppBskyActorDefs.ProfileViewDetailed>(
+          PROFILE_RKEY(currentAccount.did),
+        )
+      const allowIncoming =
+        update.allowIncoming ??
+        current?.associated?.chat?.allowIncoming ??
+        'following'
+      const allowGroupInvites =
+        update.allowGroupInvites ?? current?.associated?.chat?.allowGroupInvites
       const result = await agent.com.atproto.repo.putRecord({
         repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
@@ -26,11 +43,12 @@ export function useUpdateActorDeclaration({
         record: {
           $type: 'chat.bsky.actor.declaration',
           allowIncoming,
+          ...(allowGroupInvites && {allowGroupInvites}),
         },
       })
       return result
     },
-    onMutate: allowIncoming => {
+    onMutate: update => {
       if (!currentAccount) return
       queryClient.setQueryData(
         PROFILE_RKEY(currentAccount?.did),
@@ -41,7 +59,9 @@ export function useUpdateActorDeclaration({
             associated: {
               ...old.associated,
               chat: {
-                allowIncoming,
+                allowIncoming: 'following',
+                ...old.associated?.chat,
+                ...update,
               },
             },
           } satisfies AppBskyActorDefs.ProfileViewDetailed
@@ -77,4 +97,22 @@ export function useDeleteActorDeclaration() {
       return result
     },
   })
+}
+
+export async function fetchActorDeclarationRecord({
+  agent,
+  did,
+}: {
+  agent: AtpAgent
+  did?: string
+}) {
+  if (!did) return
+  const res = await agent.com.atproto.repo
+    .getRecord({
+      repo: did,
+      collection: 'chat.bsky.actor.declaration',
+      rkey: 'self',
+    })
+    .catch(_e => undefined)
+  return res?.data.value as ChatBskyActorDeclaration.Main
 }

@@ -17,10 +17,6 @@ jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
   }
 })
 
-jest.mock('@fortawesome/react-native-fontawesome', () => ({
-  FontAwesomeIcon: '',
-}))
-
 jest.mock('react-native-safe-area-context', () => {
   const inset = {top: 0, right: 0, bottom: 0, left: 0}
   return {
@@ -61,9 +57,13 @@ jest.mock('expo-media-library', () => ({
   usePermissions: jest.fn(() => [true]),
 }))
 
-jest.mock('lande', () => ({
-  __esModule: true, // this property makes it work
-  default: jest.fn().mockReturnValue([['eng']]),
+jest.mock('@bsky.app/expo-guess-language', () => ({
+  guessLanguageSync: jest
+    .fn()
+    .mockReturnValue([{language: 'en', confidence: 1}]),
+  guessLanguageAsync: jest
+    .fn()
+    .mockResolvedValue([{language: 'en', confidence: 1}]),
 }))
 
 jest.mock('sentry-expo', () => ({

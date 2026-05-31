@@ -29,12 +29,18 @@ export type NotificationReason =
   | 'reply'
   | 'quote'
   | 'chat-message'
+  | 'chat-reaction'
+  | 'chat-added-to-group'
+  | 'chat-removed-from-group'
+  | 'chat-join-request-rejected'
   | 'starterpack-joined'
   | 'like-via-repost'
   | 'repost-via-repost'
   | 'verified'
   | 'unverified'
   | 'subscribed-post'
+
+type ChatNotificationReason = Extract<NotificationReason, `chat-${string}`>
 
 /**
  * Manually overridden type, but retains the possibility of
@@ -44,7 +50,7 @@ export type NotificationReason =
 export type NotificationPayload =
   | undefined
   | {
-      reason: Exclude<NotificationReason, 'chat-message'>
+      reason: Exclude<NotificationReason, ChatNotificationReason>
       uri: string
       subject: string
       recipientDid: string
@@ -55,6 +61,31 @@ export type NotificationPayload =
       messageId: string
       recipientDid: string
     }
+  | {
+      reason: 'chat-reaction'
+      convoId: string
+      messageId: string
+      recipientDid: string
+    }
+  | {
+      reason:
+        | 'chat-added-to-group'
+        | 'chat-removed-from-group'
+        | 'chat-join-request-rejected'
+      convoId: string
+      recipientDid: string
+    }
+
+export type ChatNotificationPayload = Extract<
+  NonNullable<NotificationPayload>,
+  {reason: ChatNotificationReason}
+>
+
+export function isChatNotificationPayload(
+  payload: NonNullable<NotificationPayload>,
+): payload is ChatNotificationPayload {
+  return payload.reason.startsWith('chat-')
+}
 
 const DEFAULT_HANDLER_OPTIONS = {
   shouldShowBanner: false,
@@ -192,8 +223,8 @@ export function useNotificationsHandler() {
     const handleNotification = (payload?: NotificationPayload) => {
       if (!payload) return
 
-      if (payload.reason === 'chat-message') {
-        logger.debug(`useNotificationsHandler: handling chat message`, {
+      if (isChatNotificationPayload(payload)) {
+        logger.debug(`useNotificationsHandler: handling chat notification`, {
           payload,
         })
 
@@ -210,7 +241,13 @@ export function useNotificationsHandler() {
           } else {
             setShowLoggedOut(true)
           }
-        } else {
+        } else if (
+          payload.reason === 'chat-message' ||
+          payload.reason === 'chat-reaction' ||
+          payload.reason === 'chat-added-to-group'
+        ) {
+          // chat-added-to-group routes to the convo because the recipient was
+          // just added and now has access.
           navigation.dispatch(state => {
             if (state.routes[0].name === 'Messages') {
               if (
@@ -243,6 +280,12 @@ export function useNotificationsHandler() {
               })
             }
           })
+        } else {
+          // chat-removed-from-group, chat-join-request-rejected: the convo is
+          // no longer accessible to the recipient, so just open the list.
+          navigation.dispatch(
+            CommonActions.navigate('MessagesTab', {screen: 'Messages'}),
+          )
         }
       } else {
         const url = notificationToURL(payload)
@@ -270,10 +313,16 @@ export function useNotificationsHandler() {
         logger.debug('useNotificationsHandler: incoming', {e, payload})
 
         if (
-          payload.reason === 'chat-message' &&
+          isChatNotificationPayload(payload) &&
           payload.recipientDid === currentAccount?.did
         ) {
-          const shouldAlert = payload.convoId !== currentConvoId
+          // chat-removed-from-group / chat-join-request-rejected always alert,
+          // even if the recipient is currently viewing the affected convo -
+          // they need to know they were removed/rejected.
+          const shouldAlert =
+            payload.reason === 'chat-removed-from-group' ||
+            payload.reason === 'chat-join-request-rejected' ||
+            payload.convoId !== currentConvoId
           return {
             shouldShowList: shouldAlert,
             shouldShowBanner: shouldAlert,
@@ -341,7 +390,8 @@ export function useNotificationsHandler() {
     // Whenever there's a stored payload, that means we had to switch accounts before handling the notification.
     // Whenever currentAccount changes, we should try to handle it again.
     if (
-      storedAccountSwitchPayload?.reason === 'chat-message' &&
+      storedAccountSwitchPayload &&
+      isChatNotificationPayload(storedAccountSwitchPayload) &&
       currentAccount?.did === storedAccountSwitchPayload.recipientDid
     ) {
       handleNotification(storedAccountSwitchPayload)
@@ -429,6 +479,10 @@ export function notificationToURL(payload: NotificationPayload): string | null {
       return `/profile/${urip.host}`
     }
     case 'chat-message':
+    case 'chat-reaction':
+    case 'chat-added-to-group':
+    case 'chat-removed-from-group':
+    case 'chat-join-request-rejected':
       // should be handled separately
       return null
     case 'verified':

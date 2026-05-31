@@ -14,8 +14,7 @@ const CACHE = new MMKV({id: 'bsky_features_cache'})
 setPolyfills({
   localStorage: {
     getItem: key => {
-      const value = CACHE.getString(key)
-      return value != null ? JSON.parse(value) : null
+      return CACHE.getString(key) ?? null
     },
     setItem: async (key, value) => {
       CACHE.set(key, value)
@@ -29,7 +28,7 @@ setPolyfills({
  */
 export type FeatureFetchStrategy = 'prefer-low-latency' | 'prefer-fresh-gates'
 
-const TIMEOUT_INIT = 500 // TODO should base on p99 or something
+const TIMEOUT_INIT = 2000 // TODO should base on p99 or something
 const TIMEOUT_PREFER_LOW_LATENCY = 250
 const TIMEOUT_PREFER_FRESH_GATES = 1500
 

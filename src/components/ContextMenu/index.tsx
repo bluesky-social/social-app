@@ -54,7 +54,7 @@ import {HITSLOP_10} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logger} from '#/logger'
-import {atoms as a, platform, tokens, useTheme} from '#/alf'
+import {atoms as a, flatten, platform, tokens, useTheme} from '#/alf'
 import {
   Context,
   ItemContext,
@@ -378,7 +378,10 @@ export function Trigger({
         <View ref={ref} style={[{opacity: context.isOpen ? 0 : 1}, style]}>
           {children({
             IS_NATIVE: true,
-            control: {isOpen: context.isOpen, open},
+            control: {
+              isOpen: context.isOpen,
+              open: mode => void open(mode),
+            },
             state: {
               pressed: false,
               hovered: false,
@@ -527,7 +530,8 @@ export function AuxiliaryView({
     }
   })
 
-  const menuContext = useMemo(() => ({align}), [align])
+  const xOffset = (flatten(style)?.marginLeft as number) ?? 0
+  const menuContext = useMemo(() => ({align, xOffset}), [align, xOffset])
 
   const onLayout = useCallback(() => {
     if (!measurement) return
@@ -593,10 +597,12 @@ const MENU_WIDTH = 240
 
 export function Outer({
   children,
+  label,
   style,
   align = 'left',
 }: {
   children: React.ReactNode
+  label?: string
   style?: StyleProp<ViewStyle>
   align?: 'left' | 'right'
 }) {
@@ -655,7 +661,8 @@ export function Outer({
     [context.measurement, frame.height, insets, translationSV],
   )
 
-  const menuContext = useMemo(() => ({align}), [align])
+  const xOffset = (flatten(style)?.marginLeft as number) ?? 0
+  const menuContext = useMemo(() => ({align, xOffset}), [align, xOffset])
 
   if (!context.isOpen || !context.measurement) return null
 
@@ -707,23 +714,25 @@ export function Outer({
                 ]}>
                 {/* innermost element - needs an overflow: hidden for children, but we also need a shadow,
                 so put the shadow on the scaling element and the overflow on the innermost element */}
-                <View
-                  style={[
-                    a.flex_1,
-                    a.rounded_md,
-                    a.overflow_hidden,
-                    a.border,
-                    t.atoms.border_contrast_low,
-                  ]}>
+                <View style={[a.flex_1, a.rounded_md, a.overflow_hidden]}>
+                  {label ? (
+                    <Text
+                      numberOfLines={1}
+                      style={[
+                        a.pl_md,
+                        a.pt_md,
+                        a.pr_lg,
+                        a.pb_md,
+                        a.text_xs,
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      {label}
+                    </Text>
+                  ) : null}
                   {flattenReactChildren(children).map((child, i) => {
                     return isValidElement(child) &&
                       (child.type === Item || child.type === Divider) ? (
                       <Fragment key={i}>
-                        {i > 0 ? (
-                          <View
-                            style={[a.border_b, t.atoms.border_contrast_low]}
-                          />
-                        ) : null}
                         {cloneElement(child, {
                           // @ts-expect-error not typed
                           style: {
@@ -734,6 +743,7 @@ export function Outer({
                       </Fragment>
                     ) : null
                   })}
+                  {label ? <View style={[a.pb_md]} /> : null}
                 </View>
               </Animated.View>
             </Animated.View>
@@ -751,6 +761,7 @@ export function Item({
   style,
   onPress,
   position,
+  destructive = false,
   ...rest
 }: ItemProps) {
   const t = useTheme()
@@ -763,7 +774,7 @@ export function Item({
     onOut: onPressOut,
   } = useInteractionState()
   const id = useId()
-  const {align} = useContextMenuMenuContext()
+  const {align, xOffset: menuXOffset} = useContextMenuMenuContext()
 
   const {close, measurement, registerHoverable} = context
 
@@ -779,8 +790,8 @@ export function Item({
       const xOffset = position
         ? position.x
         : align === 'left'
-          ? measurement.x
-          : measurement.x + measurement.width - layout.width
+          ? measurement.x + menuXOffset
+          : measurement.x + measurement.width - layout.width - menuXOffset
 
       registerHoverable(
         id,
@@ -796,12 +807,21 @@ export function Item({
         },
       )
     },
-    [id, measurement, registerHoverable, close, onPress, align, position],
+    [
+      id,
+      measurement,
+      registerHoverable,
+      close,
+      onPress,
+      align,
+      menuXOffset,
+      position,
+    ],
   )
 
   const itemContext = useMemo(
-    () => ({disabled: Boolean(rest.disabled)}),
-    [rest.disabled],
+    () => ({disabled: Boolean(rest.disabled), destructive}),
+    [rest.disabled, destructive],
   )
 
   return (
@@ -829,13 +849,10 @@ export function Item({
         !unstyled && [
           a.flex_row,
           a.align_center,
-          a.gap_sm,
-          a.px_md,
+          a.px_2xl,
           a.rounded_md,
-          a.border,
           t.atoms.bg_contrast_25,
-          t.atoms.border_contrast_low,
-          {minHeight: 44, paddingVertical: 10},
+          {gap: 6, minHeight: 44, paddingVertical: 10},
           (focused || pressed || context.hoveredMenuItem === id) &&
             !rest.disabled &&
             t.atoms.bg_contrast_50,
@@ -856,7 +873,7 @@ export function Item({
 
 export function ItemText({children, style}: ItemTextProps) {
   const t = useTheme()
-  const {disabled} = useContextMenuItemContext()
+  const {disabled, destructive} = useContextMenuItemContext()
   return (
     <Text
       numberOfLines={2}
@@ -866,8 +883,8 @@ export function ItemText({children, style}: ItemTextProps) {
         a.text_md,
         a.font_semi_bold,
         t.atoms.text_contrast_high,
-        {paddingTop: 3},
         style,
+        destructive && {color: t.palette.negative_500},
         disabled && t.atoms.text_contrast_low,
       ]}>
       {children}
@@ -877,14 +894,16 @@ export function ItemText({children, style}: ItemTextProps) {
 
 export function ItemIcon({icon: Comp}: ItemIconProps) {
   const t = useTheme()
-  const {disabled} = useContextMenuItemContext()
+  const {disabled, destructive} = useContextMenuItemContext()
   return (
     <Comp
       size="lg"
       fill={
         disabled
           ? t.atoms.text_contrast_low.color
-          : t.atoms.text_contrast_medium.color
+          : destructive
+            ? t.palette.negative_500
+            : t.atoms.text_contrast_medium.color
       }
     />
   )
