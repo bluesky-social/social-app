@@ -235,7 +235,7 @@ patchedDependencies:
   react-native-uitextview@1.4.0: 62de26caadfc39d1bdff204cdc03a705c0cd343999825e06d8c0c120de06cc99
   react-native-view-shot@4.0.3: a2457dc30a82cc8c21f371a6f860d9396d450a2a1b4265b1a4ee13bdb24d3268
   react-native@0.81.5: 2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194
-  sonner-native@0.21.0: a07ea00b9f97634a402875e49a5231407e82733dd49c5dbc230afc3d1bc7dcf5
+  sonner-native@0.21.0: 4bcd0da0fec32e943460e6e788a9e4adf601b507d2dfd0c8246a6c8c74d8f638
 
 importers:
 
@@ -693,7 +693,7 @@ importers:
         version: 2.0.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       sonner-native:
         specifier: 0.21.0
-        version: 0.21.0(patch_hash=a07ea00b9f97634a402875e49a5231407e82733dd49c5dbc230afc3d1bc7dcf5)(4e42d15c94c2c56af69d343a007eb893)
+        version: 0.21.0(patch_hash=4bcd0da0fec32e943460e6e788a9e4adf601b507d2dfd0c8246a6c8c74d8f638)(4e42d15c94c2c56af69d343a007eb893)
       tippy.js:
         specifier: ^6.3.7
         version: 6.3.7
@@ -18539,7 +18539,7 @@ snapshots:
       uuid: 8.3.2
       websocket-driver: 0.7.4
 
-  sonner-native@0.21.0(patch_hash=a07ea00b9f97634a402875e49a5231407e82733dd49c5dbc230afc3d1bc7dcf5)(4e42d15c94c2c56af69d343a007eb893):
+  sonner-native@0.21.0(patch_hash=4bcd0da0fec32e943460e6e788a9e4adf601b507d2dfd0c8246a6c8c74d8f638)(4e42d15c94c2c56af69d343a007eb893):
     dependencies:
       react: 19.1.0
       react-native: 0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
