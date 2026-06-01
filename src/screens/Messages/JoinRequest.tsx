@@ -15,6 +15,7 @@ import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button, ButtonText} from '#/components/Button'
 import {ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon} from '#/components/icons/ChainLink'
 import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 
 const desktopDarkBg = require('../../../assets/images/chat-desktop-bg-dark.webp')
@@ -50,6 +51,10 @@ export function JoinRequest({setScreenState}: Props) {
     : isDarkMode
       ? mobileDarkBg
       : mobileLightBg
+
+  const requiresApproval = data?.joinLinkPreviews[0]?.requireApproval
+  const requiresFollow =
+    data?.joinLinkPreviews[0]?.joinRule === 'followedByOwner'
 
   return (
     <View style={[a.util_screen_outer, a.w_full, t.atoms.bg_contrast_25]}>
@@ -133,6 +138,7 @@ export function JoinRequest({setScreenState}: Props) {
                   style={[
                     a.text_center,
                     a.text_4xl,
+                    a.leading_tight,
                     a.font_bold,
                     t.atoms.text,
                   ]}>
@@ -140,30 +146,45 @@ export function JoinRequest({setScreenState}: Props) {
                 </Text>
               </View>
               <View>
-                <Text
+                <View
                   style={[
-                    a.mb_xs,
-                    a.text_center,
-                    a.text_sm,
-                    a.font_semi_bold,
-                    t.atoms.text,
+                    a.flex_row,
+                    a.gap_xs,
+                    a.align_center,
+                    a.justify_center,
                   ]}>
-                  <Trans comment="The owner (creator) of a group chat.">
-                    By{' '}
-                    {createSanitizedDisplayName(
-                      data.joinLinkPreviews[0].owner,
-                      true,
-                      moderateProfile(
+                  <Text
+                    style={[
+                      a.mb_xs,
+                      a.text_center,
+                      a.text_sm,
+                      a.leading_snug,
+                      a.font_semi_bold,
+                      t.atoms.text,
+                    ]}>
+                    <Trans comment="The owner (creator) of a group chat.">
+                      By{' '}
+                      {createSanitizedDisplayName(
                         data.joinLinkPreviews[0].owner,
-                        moderationOpts,
-                      ).ui('displayName'),
-                    )}
-                  </Trans>
-                </Text>
+                        true,
+                        moderateProfile(
+                          data.joinLinkPreviews[0].owner,
+                          moderationOpts,
+                        ).ui('displayName'),
+                      )}
+                    </Trans>
+                  </Text>
+                  <ProfileBadges
+                    profile={data.joinLinkPreviews[0].owner}
+                    size="sm"
+                    style={{marginTop: -4}}
+                  />
+                </View>
                 <Text
                   style={[
                     a.text_center,
                     a.text_xs,
+                    a.leading_snug,
                     a.font_medium,
                     t.atoms.text_contrast_medium,
                   ]}>
@@ -171,10 +192,24 @@ export function JoinRequest({setScreenState}: Props) {
                 </Text>
               </View>
               <Text
-                style={[a.text_center, a.text_sm, t.atoms.text_contrast_high]}>
-                {data.joinLinkPreviews[0].requireApproval
+                style={[
+                  a.text_center,
+                  a.text_sm,
+                  a.leading_snug,
+                  t.atoms.text_contrast_high,
+                ]}>
+                {requiresApproval
                   ? l`Sign in to request access to this group chat.`
-                  : l`Sign in to accept invite.`}
+                  : l`Sign in to accept invite.`}{' '}
+                {requiresFollow &&
+                  l`Only people ${createSanitizedDisplayName(
+                    data.joinLinkPreviews[0].owner,
+                    true,
+                    moderateProfile(
+                      data.joinLinkPreviews[0].owner,
+                      moderationOpts,
+                    ).ui('displayName'),
+                  )} follows can join.`}
               </Text>
               <ActionButtons setScreenState={setScreenState} />
             </Wrapper>
@@ -234,7 +269,7 @@ function ActionButtons({
   const isDarkMode = t.name !== 'light'
 
   return (
-    <>
+    <View style={[a.w_full, a.gap_md]}>
       <Button
         testID="signInButton"
         onPress={() => {
@@ -263,6 +298,6 @@ function ActionButtons({
           <Trans>Create account</Trans>
         </ButtonText>
       </Button>
-    </>
+    </View>
   )
 }
