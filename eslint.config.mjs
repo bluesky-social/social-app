@@ -30,6 +30,9 @@ export default defineConfig(
       '.husky/**',
       'patches/**',
       '*.html',
+      // Eurosky fork: static iframe player scripts (browser globals like YT /
+      // onYouTubeIframeAPIReady, not app code). Mirrors the bskyweb/** ignore.
+      'web/iframe/**',
       'bskyweb/**',
       'bskyembed/**',
       'bskyogcard/**',
