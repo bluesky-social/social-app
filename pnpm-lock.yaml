@@ -328,9 +328,6 @@ importers:
       '@lingui/react':
         specifier: ^5.9.2
         version: 5.9.5(@lingui/babel-plugin-lingui-macro@5.9.5(typescript@6.0.3))(react@19.1.0)
-      '@miblanchard/react-native-slider':
-        specifier: ^2.6.0
-        version: 2.6.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       '@mozzius/expo-dynamic-app-icon':
         specifier: ^1.8.0
         version: 1.8.1(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -2319,12 +2316,6 @@ packages:
 
   '@messageformat/parser@5.1.1':
     resolution: {integrity: sha512-3p0YRGCcTUCYvBKLIxtDDyrJ0YijGIwrTRu1DT8gIviIDZru8H23+FkY6MJBzM1n9n20CiM4VeDYuBsrrwnLjg==}
-
-  '@miblanchard/react-native-slider@2.6.0':
-    resolution: {integrity: sha512-o7hk/f/8vkqh6QNR5L52m+ws846fQeD/qNCC9CCSRdBqjq66KiCgbxzlhRzKM/gbtxcvMYMIEEJ1yes5cr6I3A==}
-    peerDependencies:
-      react: '>=16.8'
-      react-native: '>=0.59'
 
   '@mozzius/expo-dynamic-app-icon@1.8.1':
     resolution: {integrity: sha512-JWNY9gw06s+q54b2SqWf6BEo7IYuJCtjJDtca+wTo6kP5dH/wYK85JdLrMbdy+cwOMScEY85uU6Mjn0wkWTLnw==}
@@ -11441,11 +11432,6 @@ snapshots:
   '@messageformat/parser@5.1.1':
     dependencies:
       moo: 0.5.3
-
-  '@miblanchard/react-native-slider@2.6.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      react: 19.1.0
-      react-native: 0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
 
   '@mozzius/expo-dynamic-app-icon@1.8.1(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
     dependencies:
