@@ -192,12 +192,19 @@ let ProfileHeaderStandard = ({
                       style={[
                         t.atoms.bg_contrast_50,
                         a.rounded_full,
-                        a.self_start,
-                        {padding: 6},
+                        a.flex_shrink,
+                        a.align_center,
+                        {padding: 6, maxWidth: '100%'},
                       ]}>
                       <Globe size="sm" style={t.atoms.text_contrast_medium} />
                       <Text
-                        style={[a.text_sm, a.font_medium, a.ml_xs]}
+                        style={[
+                          a.text_sm,
+                          a.font_medium,
+                          a.ml_xs,
+                          a.flex_shrink,
+                          {minWidth: 0},
+                        ]}
                         numberOfLines={1}>
                         {toShortUrl(website)}
                       </Text>
