@@ -4,6 +4,14 @@ strictPeerDependencies: false # default: false
 trustPolicy: 'no-downgrade' # default: off
 trustPolicyIgnoreAfter: 10080 # 7 days, default: undefined
 overrides:
+  # Eurosky fork: pin zod to the last pre-3.25 release. zod 3.25 restructured its
+  # internals ("Zod 4 in v3 clothing"), which breaks @atproto/did@0.3.0's `zod.z`
+  # access once bundled by webpack (works in Node, throws "Cannot read properties
+  # of undefined (reading 'string')" in the browser). All @atproto packages
+  # declare zod ^3.23.8; 3.24.4 satisfies them AND the build tooling's ^3.24.4
+  # (zod-validation-error via babel-plugin-react-compiler). Only lint-only
+  # eslint-plugin-react-hooks wants >=3.25 (harmless: strictPeerDependencies off).
+  'zod': '3.24.4'
   # Eurosky fork: OAuth client stack pins (migrated from package.json "resolutions")
   '@atproto/jwk': '0.6.0'
   '@atproto/jwk-jose': '0.1.11'
