@@ -93,7 +93,7 @@ export function JoinRequest({setScreenState}: Props) {
                 ]}
                 size={135}
               />
-              <View>
+              <View style={[a.gap_2xs]}>
                 <View
                   style={[
                     a.flex_row,
