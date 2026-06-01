@@ -5,6 +5,7 @@ import {
   moderateProfile,
   type ModerationOpts,
 } from '@atproto/api'
+import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -162,7 +163,7 @@ export function InviteLinkDialog({
   let content: React.ReactNode = null
   let header: string | null = null
   switch (step) {
-    case Step.INFO:
+    case Step.INFO: {
       header = l`Invite link`
       content = (
         <>
@@ -177,7 +178,11 @@ export function InviteLinkDialog({
             <Text style={[a.text_md, a.leading_snug]}>
               <Trans>
                 Group chats can only have a maximum of{' '}
-                {convo.details.memberLimit} people.
+                {plural(convo.details.memberLimit, {
+                  one: '# person',
+                  other: '# people',
+                })}
+                .
               </Trans>
             </Text>
             <Text style={[a.text_md, a.leading_snug]}>
@@ -204,7 +209,8 @@ export function InviteLinkDialog({
         </>
       )
       break
-    case Step.GENERATE:
+    }
+    case Step.GENERATE: {
       const linkEnabled = joinLink?.enabledStatus === 'enabled'
       const linkHasChanged = linkEnabled && joinLinkRuleKey !== whoCanJoin
 
@@ -286,6 +292,7 @@ export function InviteLinkDialog({
         </>
       )
       break
+    }
     case Step.MANAGE: {
       const linkEnabled = joinLink?.enabledStatus === 'enabled'
       const linkDisabled = joinLink?.enabledStatus === 'disabled'
@@ -418,7 +425,7 @@ export function InviteLinkDialog({
       )
       break
     }
-    case Step.CONFIRM_DISABLE:
+    case Step.CONFIRM_DISABLE: {
       content = (
         <>
           <View style={[a.align_center, a.justify_center, a.mb_lg]}>
@@ -475,6 +482,7 @@ export function InviteLinkDialog({
         </>
       )
       break
+    }
   }
 
   if (!isOwner && (!joinLink || joinLink.enabledStatus === 'disabled')) {
