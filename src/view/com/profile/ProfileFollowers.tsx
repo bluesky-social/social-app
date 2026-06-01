@@ -167,7 +167,8 @@ export function ProfileFollowers({name}: {name: string}) {
 
   const [followersPromoDismissed, setFollowersPromoDismissed] =
     useFollowersPromoDismissed()
-  const findContactsEnabled = useIsFindContactsFeatureEnabledBasedOnGeolocation()
+  const findContactsEnabled =
+    useIsFindContactsFeatureEnabledBasedOnGeolocation()
   // The banner deep-links into the Find and Invite Friends settings screen, so
   // mirror that screen's availability gates: native-only, allowed in the user's
   // region (geolocation allowlist), and not disabled by the feature flag. This
