@@ -65,7 +65,7 @@ import {InlineLinkText} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_WEB} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {useActorStatus} from '#/features/liveNow'
 
@@ -327,9 +327,9 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
             <DrawerProfileCard
               account={currentAccount}
               onPressProfile={onPressDrawerHeaderProfile}
-              onPressShare={() => {
-                inviteFriendsControl.open()
-              }}
+              onPressShare={
+                IS_NATIVE ? () => inviteFriendsControl.open() : undefined
+              }
             />
           ) : (
             <View style={[a.pr_xl]}>
