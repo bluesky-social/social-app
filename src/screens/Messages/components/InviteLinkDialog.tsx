@@ -218,7 +218,7 @@ export function InviteLinkDialog({
       content = (
         <>
           <View>
-            <Text style={[a.text_md, t.atoms.text]}>
+            <Text style={[a.text_md]}>
               <Trans>Choose who can join this group chat and how.</Trans>
             </Text>
           </View>
@@ -344,13 +344,13 @@ export function InviteLinkDialog({
                   value={ownerValue}
                   onPress={() => setStep(Step.GENERATE)}>
                   <View style={[a.flex_1]}>
-                    <Text numberOfLines={1} style={[a.text_sm, t.atoms.text]}>
+                    <Text numberOfLines={1} style={[a.text_sm]}>
                       {ownerValue}
                     </Text>
                   </View>
                 </EditTextButton>
               ) : (
-                <Text style={[a.text_sm, t.atoms.text]}>{memberValue}</Text>
+                <Text style={[a.text_sm]}>{memberValue}</Text>
               )}
             </View>
           ) : null}
@@ -442,14 +442,7 @@ export function InviteLinkDialog({
             ]}>
             <Trans>Disable this invite link?</Trans>
           </Text>
-          <Text
-            style={[
-              a.pb_2xl,
-              a.text_center,
-              a.text_sm,
-              a.leading_snug,
-              t.atoms.text,
-            ]}>
+          <Text style={[a.pb_2xl, a.text_center, a.text_sm, a.leading_snug]}>
             <Trans>
               Anyone who has it will no longer be able to join or request to
               join. You can always create a new one.
@@ -490,7 +483,7 @@ export function InviteLinkDialog({
     content = (
       <>
         <View style={[a.mt_lg]}>
-          <Text style={[a.text_sm, t.atoms.text]}>
+          <Text style={[a.text_sm]}>
             <Trans>There is no invite link for this group chat.</Trans>
           </Text>
         </View>
@@ -521,9 +514,7 @@ export function InviteLinkDialog({
         header={
           <View>
             <View style={[IS_WEB ? [a.px_2xl, a.pt_xl] : {paddingTop: 10}]}>
-              <Text style={[a.font_bold, a.text_2xl, a.mb_sm, t.atoms.text]}>
-                {header}
-              </Text>
+              <Text style={[a.font_bold, a.text_2xl, a.mb_sm]}>{header}</Text>
             </View>
             <Dialog.Close />
           </View>
