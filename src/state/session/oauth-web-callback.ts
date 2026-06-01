@@ -6,8 +6,9 @@
  * provider returns the user to `/` with params, and we finish sign-in at
  * app startup here.
  */
+import * as persisted from '#/state/persisted'
 import {type SessionApiContext} from '#/state/session/types'
-import {getWebOAuthClient} from './oauth-web-client'
+import {getWebOAuthClient, OAUTH_SIGNUP_STATE} from './oauth-web-client'
 
 /**
  * The OAuth loopback spec requires an IP-based origin (127.0.0.1), not
@@ -46,6 +47,12 @@ export async function tryFinishWebOAuthSignIn(
   const client = getWebOAuthClient()
   const result = await client.init()
   if (result?.session) {
+    // A fresh signup (prompt=create) is created on the external PDS page, which
+    // never runs our in-app signup wizard - so start onboarding here, the same
+    // way that wizard does. Plain sign-ins carry no state and are untouched.
+    if (result.state === OAUTH_SIGNUP_STATE) {
+      await persisted.write('onboarding', {step: 'Welcome'})
+    }
     await login(
       {
         service: '',

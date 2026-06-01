@@ -4,5 +4,5 @@
   "clientName": "Eurosky",
   "scope": "atproto transition:generic transition:email transition:chat.bsky identity:handle account:email?action=manage account:status?action=manage",
   "handleResolver": "https://bsky.social",
-  "signupPdsHost": "https://pds.rip"
+  "signupPdsHost": "https://eurosky.social"
 }
