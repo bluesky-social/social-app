@@ -29,13 +29,14 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {useDialogControl} from '#/components/Dialog'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
+import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon} from '#/components/icons/Arrow'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {
   KnownFollowers,
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
-import {InlineLinkText} from '#/components/Link'
+import {Link} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
@@ -85,6 +86,7 @@ let ProfileHeaderStandard = ({
     profile.viewer?.blockedBy ||
     profile.viewer?.blockingByList
   const website = sanitizeWebsiteUrl(profile.website)
+  const showWebsite = !!website && !moderation.ui('profileView').blur
 
   const unblockAccount = async () => {
     try {
@@ -178,25 +180,42 @@ let ProfileHeaderStandard = ({
                 </View>
               ) : undefined}
 
-              {website && !moderation.ui('profileView').blur ? (
+              {showWebsite || profile.associated?.germ ? (
                 <View
-                  style={[a.flex_row, a.align_center, a.gap_xs]}
+                  style={[a.flex_row, a.align_center, a.gap_sm, a.flex_wrap]}
                   pointerEvents="auto">
-                  <Globe size="sm" style={t.atoms.text_contrast_medium} />
-                  <InlineLinkText
-                    testID="profileHeaderWebsite"
-                    label={website}
-                    to={website}
-                    style={[a.text_md, a.leading_snug]}
-                    numberOfLines={1}>
-                    {toShortUrl(website)}
-                  </InlineLinkText>
+                  {showWebsite && (
+                    <Link
+                      testID="profileHeaderWebsite"
+                      to={website}
+                      label={_(msg`Open website ${toShortUrl(website)}`)}
+                      style={[
+                        t.atoms.bg_contrast_50,
+                        a.rounded_full,
+                        a.self_start,
+                        {padding: 6},
+                      ]}>
+                      <Globe size="sm" style={t.atoms.text_contrast_medium} />
+                      <Text
+                        style={[a.text_sm, a.font_medium, a.ml_xs]}
+                        numberOfLines={1}>
+                        {toShortUrl(website)}
+                      </Text>
+                      <ArrowTopRightIcon
+                        style={[t.atoms.text_contrast_medium, a.mx_2xs]}
+                        width={14}
+                      />
+                    </Link>
+                  )}
+
+                  {profile.associated?.germ && (
+                    <GermButton
+                      germ={profile.associated.germ}
+                      profile={profile}
+                    />
+                  )}
                 </View>
               ) : undefined}
-
-              {profile.associated?.germ && (
-                <GermButton germ={profile.associated.germ} profile={profile} />
-              )}
 
               {!isMe &&
                 !isBlockedUser &&
