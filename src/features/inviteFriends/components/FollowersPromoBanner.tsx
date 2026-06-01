@@ -1,4 +1,5 @@
 import {Pressable, View} from 'react-native'
+import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -18,8 +19,8 @@ export function FollowersPromoBanner({
     <View style={[a.px_lg, a.pt_md]}>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={l`Invite friends`}
-        accessibilityHint={l`Opens the invite friends sheet to share your profile`}
+        accessibilityLabel={l`Find and invite friends`}
+        accessibilityHint={l`Opens the find and invite friends settings`}
         onPress={onPress}
         style={({pressed}) => [
           a.flex_row,
@@ -34,14 +35,11 @@ export function FollowersPromoBanner({
             opacity: pressed ? 0.85 : 1,
           },
         ]}>
-        <View
-          style={{
-            width: 126,
-            height: 64,
-            marginRight: 16,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+        <Image
+          accessibilityIgnoresInvertColors
+          source={require('../../../../assets/images/invite_friends_promo_banner.webp')}
+          style={{width: 126, height: 64, marginRight: 16}}
+          contentFit="contain"
         />
         <Text
           style={[

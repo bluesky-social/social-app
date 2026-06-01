@@ -5,19 +5,19 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useProfileFollowersQuery} from '#/state/queries/profile-followers'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useSession} from '#/state/session'
-import {useDialogControl} from '#/components/Dialog'
+import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
 import {PeopleRemove2_Stroke1_Corner0_Rounded as PeopleRemoveIcon} from '#/components/icons/PeopleRemove2'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {
   FollowersPromoBanner,
-  InviteFriendsDialog,
   useFollowersPromoDismissed,
 } from '#/features/inviteFriends'
 import {List} from '../util/List'
@@ -50,7 +50,7 @@ function keyExtractor(item: ActorDefs.ProfileViewBasic) {
 export function ProfileFollowers({name}: {name: string}) {
   const {_} = useLingui()
   const ax = useAnalytics()
-  const navigation = useNavigation()
+  const navigation = useNavigation<NavigationProp>()
   const initialNumToRender = useInitialNumToRender()
   const {currentAccount} = useSession()
 
@@ -165,14 +165,18 @@ export function ProfileFollowers({name}: {name: string}) {
     [ax, followers, resolvedDid],
   )
 
-  const inviteFriendsControl = useDialogControl()
   const [followersPromoDismissed, setFollowersPromoDismissed] =
     useFollowersPromoDismissed()
-  // Native-only: the invite-friends sheet is a no-op on web, so the banner
-  // would open nothing. Gate it to avoid a dead promo on web.
+  const findContactsEnabled = useIsFindContactsFeatureEnabledBasedOnGeolocation()
+  // The banner deep-links into the Find and Invite Friends settings screen, so
+  // mirror that screen's availability gates: native-only, allowed in the user's
+  // region (geolocation allowlist), and not disabled by the feature flag. This
+  // avoids promoting contact import where the settings entry itself is hidden.
   const showFollowersPromo =
     IS_NATIVE &&
     isMe &&
+    findContactsEnabled &&
+    !ax.features.enabled(ax.features.ImportContactsSettingsDisable) &&
     !followersPromoDismissed &&
     followers.length < 1 &&
     !isDidLoading &&
@@ -184,7 +188,7 @@ export function ProfileFollowers({name}: {name: string}) {
       <>
         {showFollowersPromo && (
           <FollowersPromoBanner
-            onPress={() => inviteFriendsControl.open()}
+            onPress={() => navigation.navigate('FindContactsSettings')}
             onDismiss={() => setFollowersPromoDismissed(true)}
           />
         )}
@@ -210,9 +214,6 @@ export function ProfileFollowers({name}: {name: string}) {
             onPress: () => navigation.goBack(),
           }}
         />
-        {showFollowersPromo && (
-          <InviteFriendsDialog control={inviteFriendsControl} />
-        )}
       </>
     )
   }

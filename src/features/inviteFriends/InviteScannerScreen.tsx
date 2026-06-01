@@ -25,7 +25,7 @@ export function InviteScannerScreen() {
   const insets = useSafeAreaInsets()
   const navigation = useNavigation<NavigationProp>()
   const [permission, requestPermission] = useCameraPermissions()
-  const [error, setError] = useState<string | null>(null)
+  const [showError, setShowError] = useState(false)
   const [scannerEnabled, setScannerEnabled] = useState(true)
 
   const onClose = useCallback(() => {
@@ -44,13 +44,7 @@ export function InviteScannerScreen() {
       )
       if (!profileMatch) {
         setScannerEnabled(false)
-        setError(
-          l({
-            message: 'Profile not found',
-            comment:
-              'Error shown when a scanned QR code is not a valid Bluesky profile URL',
-          }),
-        )
+        setShowError(true)
         return
       }
 
@@ -58,11 +52,11 @@ export function InviteScannerScreen() {
       const handle = profileMatch[1]
       navigation.replace('Profile', {name: handle})
     },
-    [scannerEnabled, navigation, l],
+    [scannerEnabled, navigation],
   )
 
   const onRetry = useCallback(() => {
-    setError(null)
+    setShowError(false)
     setScannerEnabled(true)
   }, [])
 
@@ -165,7 +159,7 @@ export function InviteScannerScreen() {
       </View>
 
       {/* Error overlay shown when scanned QR isn't a valid profile URL */}
-      {error && (
+      {showError && (
         <View
           style={{
             position: 'absolute',
