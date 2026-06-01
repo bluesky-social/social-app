@@ -227,7 +227,7 @@ let PostFeed = ({
   progressViewOffset?: number
   desktopFixedHeightOffset?: number
   ListHeaderComponent?: () => React.ReactElement
-  extraData?: any
+  extraData?: unknown
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
   initialNumToRender?: number
   isVideoFeed?: boolean
@@ -276,6 +276,7 @@ let PostFeed = ({
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
+    onViewableIndexChange,
   } = usePostFeedQuery(feed, feedParams, opts)
   const lastFetchedAt = data?.pages[0].fetchedAt
   const isEmpty = useMemo(
@@ -384,6 +385,7 @@ let PostFeed = ({
    * Cached value of whether the current feed was selected at startup. We don't
    * want this to update when user swipes.
    */
+  // eslint-disable-next-line react/hook-use-state
   const [isCurrentFeedAtStartupSelected] = useState(selectedFeed === feed)
 
   const blockedOrMutedAuthors = usePostAuthorShadowFilter(
@@ -923,6 +925,7 @@ let PostFeed = ({
   // Tracks every post we've seen so we can fire per-post events exactly once,
   // regardless of the post's position within its slice.
   const seenPerPostUrisRef = useRef<Set<string>>(new Set())
+  const highestSeenIndexRef = useRef<number>(-1)
 
   // Helper to calculate position in feed (count only root posts, not interstitials or thread replies)
   const getPostPosition = useNonReactiveCallback(
@@ -997,6 +1000,19 @@ let PostFeed = ({
         }
       }
 
+      const rowIndex = feedItems.findIndex(r => r.key === item.key)
+      if (rowIndex !== -1) {
+        // After PTR/refetch, feedItems shrinks; reset the high-water mark so
+        // the viewport signal restarts from the new list.
+        if (highestSeenIndexRef.current >= feedItems.length) {
+          highestSeenIndexRef.current = -1
+        }
+        if (rowIndex > highestSeenIndexRef.current) {
+          highestSeenIndexRef.current = rowIndex
+          onViewableIndexChange(rowIndex, feedItems.length)
+        }
+      }
+
       // Track post:view events
       if (item.type === 'sliceItem') {
         const slice = item.slice
@@ -1058,7 +1074,15 @@ let PostFeed = ({
         }
       }
     },
-    [feedFeedback, feed, liveNowConfig, getPostPosition, ax],
+    [
+      feedFeedback,
+      feed,
+      liveNowConfig,
+      getPostPosition,
+      ax,
+      feedItems,
+      onViewableIndexChange,
+    ],
   )
 
   return (

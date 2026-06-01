@@ -1472,17 +1472,6 @@
       "count": 2
     }
   },
-  "src/state/queries/post-feed.ts": {
-    "typescript/no-explicit-any": {
-      "count": 3
-    },
-    "typescript/no-floating-promises": {
-      "count": 3
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 3
-    }
-  },
   "src/state/queries/postgate/index.ts": {
     "typescript/no-explicit-any": {
       "count": 2
@@ -1773,11 +1762,6 @@
     },
     "typescript/no-misused-promises": {
       "count": 2
-    }
-  },
-  "src/view/com/posts/PostFeed.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 1
     }
   },
   "src/view/com/posts/PostFeedErrorMessage.tsx": {
