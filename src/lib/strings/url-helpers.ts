@@ -78,6 +78,35 @@ export function toShortUrl(url: string): string {
   }
 }
 
+/**
+ * Normalizes a user-entered website into a safe absolute http(s) URL. Adds a
+ * scheme when missing and rejects anything that isn't http/https (e.g.
+ * `javascript:`). Returns '' when empty or invalid - callers use that both to
+ * clear the field and to decide whether to render the link.
+ */
+export function sanitizeWebsiteUrl(raw?: string): string {
+  const trimmed = raw?.trim()
+  if (!trimmed) {
+    return ''
+  }
+  const withScheme = /^https?:\/\//i.test(trimmed)
+    ? trimmed
+    : `https://${trimmed}`
+  try {
+    const url = new URL(withScheme)
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+      return ''
+    }
+    // Require a dotted host so bare words ("hello") don't pass as URLs.
+    if (!url.hostname.includes('.')) {
+      return ''
+    }
+    return url.toString()
+  } catch {
+    return ''
+  }
+}
+
 export function toShareUrl(url: string): string {
   if (!url.startsWith('https')) {
     const urlp = new URL('https://bsky.app')

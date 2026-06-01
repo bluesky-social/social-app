@@ -14,6 +14,7 @@ import {Trans} from '@lingui/react/macro'
 import {useHaptics} from '#/lib/haptics'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {sanitizeWebsiteUrl, toShortUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {type Shadow, useProfileShadow} from '#/state/cache/profile-shadow'
 import {
@@ -28,11 +29,13 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {useDialogControl} from '#/components/Dialog'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
+import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {
   KnownFollowers,
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
+import {InlineLinkText} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
@@ -81,6 +84,7 @@ let ProfileHeaderStandard = ({
     profile.viewer?.blocking ||
     profile.viewer?.blockedBy ||
     profile.viewer?.blockingByList
+  const website = sanitizeWebsiteUrl(profile.website)
 
   const unblockAccount = async () => {
     try {
@@ -171,6 +175,22 @@ let ProfileHeaderStandard = ({
                     enableTags
                     authorHandle={profile.handle}
                   />
+                </View>
+              ) : undefined}
+
+              {website && !moderation.ui('profileView').blur ? (
+                <View
+                  style={[a.flex_row, a.align_center, a.gap_xs]}
+                  pointerEvents="auto">
+                  <Globe size="sm" style={t.atoms.text_contrast_medium} />
+                  <InlineLinkText
+                    testID="profileHeaderWebsite"
+                    label={website}
+                    to={website}
+                    style={[a.text_md, a.leading_snug]}
+                    numberOfLines={1}>
+                    {toShortUrl(website)}
+                  </InlineLinkText>
                 </View>
               ) : undefined}
 

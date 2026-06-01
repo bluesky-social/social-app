@@ -5,9 +5,15 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
 
-import {MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls} from '#/lib/constants'
+import {
+  MAX_DESCRIPTION,
+  MAX_DISPLAY_NAME,
+  MAX_PRONOUNS,
+  urls,
+} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
+import {sanitizeWebsiteUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {type ImageMeta} from '#/state/gallery'
 import {useProfileUpdateMutation} from '#/state/queries/profile'
@@ -111,6 +117,10 @@ function DialogInner({
   const [displayName, setDisplayName] = useState(initialDisplayName)
   const initialDescription = profile.description || ''
   const [description, setDescription] = useState(initialDescription)
+  const initialPronouns = profile.pronouns || ''
+  const [pronouns, setPronouns] = useState(initialPronouns)
+  const initialWebsite = profile.website || ''
+  const [website, setWebsite] = useState(initialWebsite)
   const [userBanner, setUserBanner] = useState<string | undefined | null>(
     profile.banner,
   )
@@ -127,6 +137,8 @@ function DialogInner({
   const dirty =
     displayName !== initialDisplayName ||
     description !== initialDescription ||
+    pronouns !== initialPronouns ||
+    website !== initialWebsite ||
     userAvatar !== profile.avatar ||
     userBanner !== profile.banner
 
@@ -178,6 +190,8 @@ function DialogInner({
         updates: {
           displayName: displayName.trimEnd(),
           description: description.trimEnd(),
+          pronouns: pronouns.trim(),
+          website: sanitizeWebsiteUrl(website),
         },
         newUserAvatar,
         newUserBanner,
@@ -194,6 +208,8 @@ function DialogInner({
     control,
     displayName,
     description,
+    pronouns,
+    website,
     newUserAvatar,
     newUserBanner,
     setImageError,
@@ -208,6 +224,12 @@ function DialogInner({
     text: description,
     maxCount: MAX_DESCRIPTION,
   })
+  const pronounsTooLong = isOverMaxGraphemeCount({
+    text: pronouns,
+    maxCount: MAX_PRONOUNS,
+  })
+  const websiteInvalid =
+    website.trim() !== '' && sanitizeWebsiteUrl(website) === ''
 
   const cancelButton = useCallback(
     () => (
@@ -236,7 +258,9 @@ function DialogInner({
           !dirty ||
           isUpdatingProfile ||
           displayNameTooLong ||
-          descriptionTooLong
+          descriptionTooLong ||
+          pronounsTooLong ||
+          websiteInvalid
         }
         size="small"
         color="primary"
@@ -257,6 +281,8 @@ function DialogInner({
       isUpdatingProfile,
       displayNameTooLong,
       descriptionTooLong,
+      pronounsTooLong,
+      websiteInvalid,
     ],
   )
 
@@ -381,6 +407,64 @@ function DialogInner({
                 value={MAX_DESCRIPTION}
                 other="Description is too long. The maximum number of characters is #."
               />
+            </Text>
+          )}
+        </View>
+
+        <View>
+          <TextField.LabelText>
+            <Trans>Pronouns</Trans>
+          </TextField.LabelText>
+          <TextField.Root isInvalid={pronounsTooLong}>
+            <Dialog.Input
+              defaultValue={pronouns}
+              onChangeText={setPronouns}
+              label={_(msg`Pronouns`)}
+              placeholder={_(msg`e.g. she/her`)}
+              testID="editProfilePronounsInput"
+            />
+          </TextField.Root>
+          {pronounsTooLong && (
+            <Text
+              style={[
+                a.text_sm,
+                a.mt_xs,
+                a.font_semi_bold,
+                {color: t.palette.negative_400},
+              ]}>
+              <Plural
+                value={MAX_PRONOUNS}
+                other="Pronouns are too long. The maximum number of characters is #."
+              />
+            </Text>
+          )}
+        </View>
+
+        <View>
+          <TextField.LabelText>
+            <Trans>Website</Trans>
+          </TextField.LabelText>
+          <TextField.Root isInvalid={websiteInvalid}>
+            <Dialog.Input
+              defaultValue={website}
+              onChangeText={setWebsite}
+              label={_(msg`Website`)}
+              placeholder={_(msg`e.g. example.com`)}
+              keyboardType="url"
+              autoCapitalize="none"
+              autoCorrect={false}
+              testID="editProfileWebsiteInput"
+            />
+          </TextField.Root>
+          {websiteInvalid && (
+            <Text
+              style={[
+                a.text_sm,
+                a.mt_xs,
+                a.font_semi_bold,
+                {color: t.palette.negative_400},
+              ]}>
+              <Trans>That does not look like a valid website.</Trans>
             </Text>
           )}
         </View>

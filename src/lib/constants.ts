@@ -59,6 +59,8 @@ export function FEEDBACK_FORM_URL({
 
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256
+// Matches the `pronouns` maxGraphemes in the app.bsky.actor.profile lexicon.
+export const MAX_PRONOUNS = 20
 
 export const MAX_GRAPHEME_LENGTH = 300
 
