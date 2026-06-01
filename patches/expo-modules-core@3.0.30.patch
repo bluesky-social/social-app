@@ -13,3 +13,29 @@ index 47c4d15f6b10bbd77858cfff425cda9a618735b9..afe138d22d566244482498a7be0e14b8
    // Check for Content-Type
    val skipContentTypes = listOf(
      "text/event-stream", // Server Sent Events
+diff --git a/ios/Core/ExpoBridgeModule.mm b/ios/Core/ExpoBridgeModule.mm
+index 2ed1c00f47406e109750cc27ace7e0d88e42c00e..2d6ba8a0323581f05ac5a83089c64ab69211e038 100644
+--- a/ios/Core/ExpoBridgeModule.mm
++++ b/ios/Core/ExpoBridgeModule.mm
+@@ -46,7 +46,20 @@ - (void)setBridge:(RCTBridge *)bridge
+   _appContext.reactBridge = bridge;
+ 
+ #if !__has_include(<ReactCommon/RCTRuntimeExecutor.h>)
+-  _appContext._runtime = [EXJavaScriptRuntimeManager runtimeFromBridge:bridge];
++  // Hop the runtime install (and the prepareRuntime() chain it triggers via
++  // _runtime.didSet) onto RCTJSThread. The original line ran synchronously
++  // on whatever thread called setBridge: - typically the main thread - and
++  // raced JSIExecutor::initializeRuntime() on the JS thread, corrupting
++  // Hermes' Hades GC (HadesGC::writeBarrierSlow EXC_BAD_ACCESS).
++  __weak EXAppContext *weakAppContext = _appContext;
++  __weak RCTBridge *weakBridge = bridge;
++  [bridge dispatchBlock:^{
++    EXAppContext *strongAppContext = weakAppContext;
++    RCTBridge *strongBridge = weakBridge;
++    if (strongAppContext != nil && strongBridge != nil && strongAppContext._runtime == nil) {
++      strongAppContext._runtime = [EXJavaScriptRuntimeManager runtimeFromBridge:strongBridge];
++    }
++  } queue:RCTJSThread];
+ #endif // React Native <0.74
+ }
+ 
