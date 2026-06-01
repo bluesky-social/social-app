@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
+import {sanitizePronouns} from '#/lib/strings/pronouns'
 import {type Shadow} from '#/state/cache/types'
 import {atoms as a, useTheme, web} from '#/alf'
 import {NewskieDialog} from '#/components/NewskieDialog'
@@ -22,6 +23,7 @@ export function ProfileHeaderHandle({
   const {_} = useLingui()
   const invalidHandle = isInvalidHandle(profile.handle)
   const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy
+  const pronouns = sanitizePronouns(profile.pronouns ?? '', IS_NATIVE)
   return (
     <View
       style={[a.flex_row, a.gap_sm, a.align_center, {maxWidth: '100%'}]}
@@ -63,6 +65,13 @@ export function ProfileHeaderHandle({
               IS_NATIVE,
             )}
       </Text>
+      {pronouns ? (
+        <Text
+          numberOfLines={1}
+          style={[a.text_md, a.leading_snug, t.atoms.text_contrast_low]}>
+          {pronouns}
+        </Text>
+      ) : undefined}
     </View>
   )
 }
