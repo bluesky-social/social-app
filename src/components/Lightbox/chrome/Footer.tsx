@@ -6,7 +6,10 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {
+  useSafeAreaFrame,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -22,9 +25,15 @@ export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
   const {t: l} = useLingui()
   const t = useTheme()
   const insets = useSafeAreaInsets()
+  const {height: screenHeight} = useSafeAreaFrame()
   const isMomentumScrolling = useRef(false)
 
   if (!altText) return null
+
+  // Cap the overlay height so long alt text - or text enlarged by the OS via
+  // Dynamic Type / font scaling - scrolls within the overlay instead of growing
+  // past the top of the screen. Leaves the upper half clear for the header.
+  const maxHeight = screenHeight / 2
 
   return (
     <View
@@ -38,6 +47,7 @@ export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
       ]}>
       <View style={[a.mx_md, styles.altWrap]}>
         <ScrollView
+          style={{maxHeight}}
           scrollEnabled={isAltExpanded}
           onMomentumScrollBegin={() => {
             isMomentumScrolling.current = true
