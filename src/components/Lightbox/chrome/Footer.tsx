@@ -10,7 +10,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {BlurView} from 'expo-blur'
 import {useLingui} from '@lingui/react/macro'
 
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
 type Props = {
@@ -38,7 +38,19 @@ export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
         {paddingBottom: insets.bottom + 8},
       ]}>
       <View style={[a.mx_md, styles.altWrap]}>
-        <BlurView intensity={16} tint="dark" style={styles.altBlur}>
+        <BlurView
+          intensity={16}
+          tint="dark"
+          style={[
+            // Tint kept over the blur so dense, text-heavy images stay
+            // readable. On Android the blur falls back to a flat overlay, so
+            // bump the opacity to keep the contrast the real blur provides
+            // elsewhere.
+            platform({
+              ios: {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
+              android: {backgroundColor: 'rgba(0, 0, 0, 0.7)'},
+            }),
+          ]}>
           <ScrollView
             scrollEnabled={isAltExpanded}
             onMomentumScrollBegin={() => {
@@ -79,10 +91,5 @@ const styles = StyleSheet.create({
   altWrap: {
     borderRadius: 12,
     overflow: 'hidden',
-  },
-  altBlur: {
-    // Tint kept over the blur so dense, text-heavy images stay readable,
-    // including on Android where the blur falls back to a flat overlay.
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
 })
