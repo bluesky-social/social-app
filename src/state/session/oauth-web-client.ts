@@ -15,7 +15,6 @@
  * Both paths are exposed through one small interface (`signIn`/`init`/
  * `restore`) so oauth-web-callback.ts and oauth-agent.ts stay untouched.
  */
-import {type Jwk} from '@atproto/jwk'
 import {
   OAuthClient,
   type OAuthClientOptions,
@@ -49,7 +48,7 @@ import {createOAuthRemoteKey} from './oauthRemoteKey'
  */
 export interface WebOAuthClient {
   signIn(input: string, options?: AuthorizeOptions): Promise<void>
-  init(): Promise<{session: OAuthSession} | undefined>
+  init(): Promise<{session: OAuthSession; state?: string | null} | undefined>
   restore(sub: string, refresh?: boolean | 'auto'): Promise<OAuthSession>
 }
 
@@ -190,7 +189,7 @@ function createConfidentialClient(): WebOAuthClient {
   const client = new OAuthClient({
     clientMetadata,
     responseMode: 'fragment',
-    keyset: [createOAuthRemoteKey(OAUTH_PUBLIC_JWKS.keys[0] as Jwk)],
+    keyset: [createOAuthRemoteKey(OAUTH_PUBLIC_JWKS.keys[0])],
     handleResolver: OAUTH_HANDLE_RESOLVER,
     runtimeImplementation: createEuroskyOAuthRuntime(),
     stateStore: createOAuthStateStore(),
@@ -219,8 +218,8 @@ function createConfidentialClient(): WebOAuthClient {
     async init() {
       const params = readCallbackParams()
       if (!params) return undefined
-      const {session} = await client.callback(params)
-      return {session}
+      const {session, state} = await client.callback(params)
+      return {session, state}
     },
     restore: (sub, refresh) => client.restore(sub, refresh),
   }
@@ -261,9 +260,19 @@ export async function oauthSignIn(handle: string): Promise<void> {
 }
 
 /**
+ * OAuth `state` marker we set on the create-account flow so the callback can
+ * tell a fresh signup apart from a plain sign-in (and kick off onboarding,
+ * which the external PDS signup page can't do for us).
+ */
+export const OAUTH_SIGNUP_STATE = 'signup'
+
+/**
  * Start the "Create account" flow: straight to the Eurosky signup PDS with
  * prompt=create. Same callback path as sign-in.
  */
 export async function oauthCreateAccount(): Promise<void> {
-  await getWebOAuthClient().signIn(OAUTH_SIGNUP_PDS_HOST, {prompt: 'create'})
+  await getWebOAuthClient().signIn(OAUTH_SIGNUP_PDS_HOST, {
+    prompt: 'create',
+    state: OAUTH_SIGNUP_STATE,
+  })
 }
