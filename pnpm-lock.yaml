@@ -302,17 +302,17 @@ importers:
         specifier: ^2.0.8
         version: 2.1.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@formatjs/intl-displaynames':
-        specifier: ^7.3.8
-        version: 7.3.8
+        specifier: ^7.3.9
+        version: 7.3.9
       '@formatjs/intl-locale':
         specifier: ^5.3.8
         version: 5.3.8
       '@formatjs/intl-numberformat':
-        specifier: ^9.3.9
-        version: 9.3.9
+        specifier: ^9.3.10
+        version: 9.3.10
       '@formatjs/intl-pluralrules':
-        specifier: ^6.3.8
-        version: 6.3.8
+        specifier: ^6.3.9
+        version: 6.3.9
       '@growthbook/growthbook':
         specifier: ^1.6.5
         version: 1.6.5
@@ -912,6 +912,10 @@ packages:
     resolution: {integrity: sha512-9NhCeYjq9+3uxgdtp20LSiJXJvN0FeCtNGpJxuMFZ1Kv3cWUNb6DOhJwUvcVCzKGR66cw4njwM6hrJLqgOwbcw==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/code-frame@7.29.7':
+    resolution: {integrity: sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/compat-data@7.29.3':
     resolution: {integrity: sha512-LIVqM46zQWZhj17qA8wb4nW/ixr2y1Nw+r1etiAWgRM6U1IqP+LNhL1yg440jYZR72jCWcWbLWzIosH+uP1fqg==}
     engines: {node: '>=6.9.0'}
@@ -922,6 +926,10 @@ packages:
 
   '@babel/generator@7.29.1':
     resolution: {integrity: sha512-qsaF+9Qcm2Qv8SRIMMscAvG4O3lJ0F1GuMo5HR/Bp02LopNgnZBC/EkbevHFeGs4ls/oPz9v+Bsmzbkbe+0dUw==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/generator@7.29.7':
+    resolution: {integrity: sha512-DkXD5OJQaAQIdZ1bt3UZdEnHAn9Imd3IVBdX03UFe+ony9Ojw5pzr9YVKGDY1jt+Gcn/FnGkNf8r+Vj5NOJWtQ==}
     engines: {node: '>=6.9.0'}
 
   '@babel/helper-annotate-as-pure@7.27.3':
@@ -951,6 +959,10 @@ packages:
 
   '@babel/helper-globals@7.28.0':
     resolution: {integrity: sha512-+W6cISkXFa1jXsDEdYA8HeevQT/FULhxzR99pxphltZcVaugps53THCeiWA8SguxxpSp3gKPiuYfSWopkLQ4hw==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/helper-globals@7.29.7':
+    resolution: {integrity: sha512-3nQVUAtvkKH9zahfWgw96Jc/uFOmjACE1kQz82E2lqWmHBgjzbNlsC22nuQTfahmWeQtTq5nQ/4Nnd2A1wj4zA==}
     engines: {node: '>=6.9.0'}
 
   '@babel/helper-member-expression-to-functions@7.28.5':
@@ -995,8 +1007,16 @@ packages:
     resolution: {integrity: sha512-qMlSxKbpRlAridDExk92nSobyDdpPijUq2DW6oDnUqd0iOGxmQjyqhMIihI9+zv4LPyZdRje2cavWPbCbWm3eA==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/helper-string-parser@7.29.7':
+    resolution: {integrity: sha512-Pb5ijPrZ89GDH8223L4UP8i6QApWxs04RbPQJTeWDV0/keR2E36MeKnyr6LYmUUvqRRI+Iv87SuF1W6ErINzYw==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/helper-validator-identifier@7.28.5':
     resolution: {integrity: sha512-qSs4ifwzKJSV39ucNjsvc6WVHs6b7S03sOh2OcHF9UHfVPqWWALUsNUVzhSBiItjRZoLHx7nIarVjqKVusUZ1Q==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/helper-validator-identifier@7.29.7':
+    resolution: {integrity: sha512-qehxGkRj55h/ff8EMaJ+cYhyaKlHIxqYDn682wQD7RNp9UujOQsHog2uS0r2vzr4pW+sXf90NeeayjcNaX3fFg==}
     engines: {node: '>=6.9.0'}
 
   '@babel/helper-validator-option@7.27.1':
@@ -1017,6 +1037,11 @@ packages:
 
   '@babel/parser@7.29.3':
     resolution: {integrity: sha512-b3ctpQwp+PROvU/cttc4OYl4MzfJUWy6FZg+PMXfzmt/+39iHVF0sDfqay8TQM3JA2EUOyKcFZt75jWriQijsA==}
+    engines: {node: '>=6.0.0'}
+    hasBin: true
+
+  '@babel/parser@7.29.7':
+    resolution: {integrity: sha512-hnORnjP/1P/zFEndoeX+n+t1RwWRJiJpM/jO7FW32Kn9r5+sJB2JWOdYo4L6k78j15eCwY3Gm/7364B1EMwtNg==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -1598,12 +1623,24 @@ packages:
     resolution: {integrity: sha512-YA6Ma2KsCdGb+WC6UpBVFJGXL58MDA6oyONbjyF/+5sBgxY/dwkhLogbMT2GXXyU84/IhRw/2D1Os1B/giz+BQ==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/template@7.29.7':
+    resolution: {integrity: sha512-puq+Gf35oI24FeN11LkoUQFqv9uwNeWpxXZi/Ji3rRIoKAzKnxRaZ+Gkj0vKS9ZCiTESfng1N9LyOyXvo+m+Gg==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/traverse@7.29.0':
     resolution: {integrity: sha512-4HPiQr0X7+waHfyXPZpWPfWL/J7dcN1mx9gL6WdQVMbPnF3+ZhSMs8tCxN7oHddJE9fhNE7+lxdnlyemKfJRuA==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/traverse@7.29.7':
+    resolution: {integrity: sha512-EhlfNQtZ+NK22w5BM61ciuiq1m58ed33Wr1Xan//ZRTy6hgjnwyCffRYwzsGXdASJSUJ1guZILsErh1eQcl+zw==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/types@7.29.0':
     resolution: {integrity: sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/types@7.29.7':
+    resolution: {integrity: sha512-4zBIxpPzowiZpusoFkyGVwakdRJUyuH5PxQ/PrqghfdFWWasvnCdPfQXHrenDai+gyLARulZjZowCOj6fjT4pA==}
     engines: {node: '>=6.9.0'}
 
   '@bcoe/v8-coverage@0.2.3':
@@ -2071,8 +2108,8 @@ packages:
   '@formatjs/fast-memoize@3.1.5':
     resolution: {integrity: sha512-KLi3fan6WnCHmigd9pmEEN8Hid0v4wiFBW576M/d07KMWYecf1CvyMI3n34vCmHT4AoVqG2n702kiHbXjzZX2A==}
 
-  '@formatjs/intl-displaynames@7.3.8':
-    resolution: {integrity: sha512-Kn4CRkZzC666k8Cflj4ZPnNrK4PnPPMoz5Xar9aTwkwZam1Qw3ptuQOvreK55ILCWisYyT7pICZk/Pi1xsMrjA==}
+  '@formatjs/intl-displaynames@7.3.9':
+    resolution: {integrity: sha512-UELvrHS171ElQW9iMCGqMR/HmUYQPYkYSz1A/SSkQtJ62ZH7aUWC1QnXPxL0CInQmxa/MgC7oE402XBoTe5nTQ==}
 
   '@formatjs/intl-getcanonicallocales@3.2.9':
     resolution: {integrity: sha512-b1dLzhFSeccG5X1PY2KodVFRGd0p6tBPc7pRBJaW6A7+fMeZnwHOAJLkMsGNDyvM9XailkkstE4jzmNa1GVh5w==}
@@ -2080,14 +2117,14 @@ packages:
   '@formatjs/intl-locale@5.3.8':
     resolution: {integrity: sha512-pJgqQlg4zFoyCiVMXlKPBWpY7fAxvsUiShNmB/l8BW2ZwmFMefMWCrDzgocSH9WR+Z3pkihfjh1XbalCZhXc1Q==}
 
-  '@formatjs/intl-localematcher@0.8.8':
-    resolution: {integrity: sha512-pBr2hVKWvkHVnfXegW+53NT9U2uaVQCc+EgzLPCCwXqBA3nvM5fPbK9IcJlNjV+NMKGyZ2F3ZSG78iGdxAAqbA==}
+  '@formatjs/intl-localematcher@0.8.9':
+    resolution: {integrity: sha512-GmB0F/gYh4Hdl4rLWjgDsgT+x4pB54fkJeRh8kAZ4XFzKeCK8dGs+SBJWXO42QZtOUni+IDWKNuCw6wiL4lTvw==}
 
-  '@formatjs/intl-numberformat@9.3.9':
-    resolution: {integrity: sha512-VV0fPzmoA7j4NCdZ3M7xQY0iRDOtKvM2+Wi1/wLN41yhqjDV3BAIPbAIyAa4ZuyyQHWNDY3J+TciBQl66o1qhg==}
+  '@formatjs/intl-numberformat@9.3.10':
+    resolution: {integrity: sha512-wYboXVXZyTvuMBgwE0AxcXYxV8LM0IkH+lfCoBlRVNjCwNzdHVbRcUxDRHE+HbFkQ6/zWFkyguvIP5y3PAt+jw==}
 
-  '@formatjs/intl-pluralrules@6.3.8':
-    resolution: {integrity: sha512-v51wZCnKNoFkQH8WhjdY6MCzySk80ppZ/qExBCdm0eiM/xMoIE0VgiTKcv0NOnE7V8+yML68LLnjZmxiPq1aZw==}
+  '@formatjs/intl-pluralrules@6.3.9':
+    resolution: {integrity: sha512-0405uU1npNs5/N04tfIQ3pme96Xb51tEkCBTBKy8HMjAsssbhnK70gf8v3ogj1WqHf7WFRoFZu8clQTsvwBQNg==}
 
   '@formatjs/intl-supportedvaluesof@2.3.7':
     resolution: {integrity: sha512-ZTXEKijV5H08z19odngZPsXlmGndfukHuVnjd9qyER77XSk/yJwDMiSjoJYY5C5WxFs2UN4s/EMtu75e6Tp3ug==}
@@ -9550,6 +9587,12 @@ snapshots:
       js-tokens: 4.0.0
       picocolors: 1.1.1
 
+  '@babel/code-frame@7.29.7':
+    dependencies:
+      '@babel/helper-validator-identifier': 7.29.7
+      js-tokens: 4.0.0
+      picocolors: 1.1.1
+
   '@babel/compat-data@7.29.3': {}
 
   '@babel/core@7.29.0':
@@ -9576,6 +9619,14 @@ snapshots:
     dependencies:
       '@babel/parser': 7.29.3
       '@babel/types': 7.29.0
+      '@jridgewell/gen-mapping': 0.3.13
+      '@jridgewell/trace-mapping': 0.3.31
+      jsesc: 3.1.0
+
+  '@babel/generator@7.29.7':
+    dependencies:
+      '@babel/parser': 7.29.7
+      '@babel/types': 7.29.7
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/trace-mapping': 0.3.31
       jsesc: 3.1.0
@@ -9624,6 +9675,8 @@ snapshots:
       - supports-color
 
   '@babel/helper-globals@7.28.0': {}
+
+  '@babel/helper-globals@7.29.7': {}
 
   '@babel/helper-member-expression-to-functions@7.28.5':
     dependencies:
@@ -9681,7 +9734,11 @@ snapshots:
 
   '@babel/helper-string-parser@7.27.1': {}
 
+  '@babel/helper-string-parser@7.29.7': {}
+
   '@babel/helper-validator-identifier@7.28.5': {}
+
+  '@babel/helper-validator-identifier@7.29.7': {}
 
   '@babel/helper-validator-option@7.27.1': {}
 
@@ -9708,6 +9765,10 @@ snapshots:
   '@babel/parser@7.29.3':
     dependencies:
       '@babel/types': 7.29.0
+
+  '@babel/parser@7.29.7':
+    dependencies:
+      '@babel/types': 7.29.7
 
   '@babel/plugin-bugfix-firefox-class-in-computed-class-key@7.28.5(@babel/core@7.29.0)':
     dependencies:
@@ -10410,6 +10471,12 @@ snapshots:
       '@babel/parser': 7.29.3
       '@babel/types': 7.29.0
 
+  '@babel/template@7.29.7':
+    dependencies:
+      '@babel/code-frame': 7.29.7
+      '@babel/parser': 7.29.7
+      '@babel/types': 7.29.7
+
   '@babel/traverse@7.29.0':
     dependencies:
       '@babel/code-frame': 7.29.0
@@ -10422,10 +10489,27 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@babel/traverse@7.29.7':
+    dependencies:
+      '@babel/code-frame': 7.29.7
+      '@babel/generator': 7.29.7
+      '@babel/helper-globals': 7.29.7
+      '@babel/parser': 7.29.7
+      '@babel/template': 7.29.7
+      '@babel/types': 7.29.7
+      debug: 4.4.3
+    transitivePeerDependencies:
+      - supports-color
+
   '@babel/types@7.29.0':
     dependencies:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
+
+  '@babel/types@7.29.7':
+    dependencies:
+      '@babel/helper-string-parser': 7.29.7
+      '@babel/helper-validator-identifier': 7.29.7
 
   '@bcoe/v8-coverage@0.2.3': {}
 
@@ -11058,9 +11142,9 @@ snapshots:
 
   '@formatjs/fast-memoize@3.1.5': {}
 
-  '@formatjs/intl-displaynames@7.3.8':
+  '@formatjs/intl-displaynames@7.3.9':
     dependencies:
-      '@formatjs/intl-localematcher': 0.8.8
+      '@formatjs/intl-localematcher': 0.8.9
 
   '@formatjs/intl-getcanonicallocales@3.2.9': {}
 
@@ -11069,19 +11153,19 @@ snapshots:
       '@formatjs/intl-getcanonicallocales': 3.2.9
       '@formatjs/intl-supportedvaluesof': 2.3.7
 
-  '@formatjs/intl-localematcher@0.8.8':
+  '@formatjs/intl-localematcher@0.8.9':
     dependencies:
       '@formatjs/fast-memoize': 3.1.5
 
-  '@formatjs/intl-numberformat@9.3.9':
+  '@formatjs/intl-numberformat@9.3.10':
     dependencies:
       '@formatjs/bigdecimal': 0.2.5
-      '@formatjs/intl-localematcher': 0.8.8
+      '@formatjs/intl-localematcher': 0.8.9
 
-  '@formatjs/intl-pluralrules@6.3.8':
+  '@formatjs/intl-pluralrules@6.3.9':
     dependencies:
       '@formatjs/bigdecimal': 0.2.5
-      '@formatjs/intl-localematcher': 0.8.8
+      '@formatjs/intl-localematcher': 0.8.9
 
   '@formatjs/intl-supportedvaluesof@2.3.7':
     dependencies:
@@ -16815,7 +16899,7 @@ snapshots:
   metro-source-map@0.83.3:
     dependencies:
       '@babel/traverse': 7.29.0
-      '@babel/traverse--for-generate-function-map': '@babel/traverse@7.29.0'
+      '@babel/traverse--for-generate-function-map': '@babel/traverse@7.29.7'
       '@babel/types': 7.29.0
       flow-enums-runtime: 0.0.6
       invariant: 2.2.4
