@@ -243,10 +243,9 @@ let ProfileMenu = ({
 
   const verificationCreatePromptControl = Prompt.usePromptControl()
   const verificationRemovePromptControl = Prompt.usePromptControl()
-  const currentAccountVerifications =
-    profile.verification?.verifications?.filter(v => {
-      return v.issuer === currentAccount?.did
-    }) ?? []
+  const currentAccountVerifications = verification.verifications.filter(v => {
+    return v.issuer === currentAccount?.did
+  })
 
   return (
     <EventStopper onKeyDown={false}>
