@@ -5,7 +5,11 @@ import {type ImagePickerAsset} from 'expo-image-picker'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {VIDEO_MAX_DURATION_MS, VIDEO_MAX_SIZE} from '#/lib/constants'
+import {
+  VIDEO_MAX_DURATION_MS,
+  VIDEO_MAX_SIZE,
+  VIDEO_MAX_SIZE_REDUCED,
+} from '#/lib/constants'
 import {
   usePhotoLibraryPermission,
   useVideoLibraryPermission,
@@ -28,6 +32,12 @@ export type SelectMediaButtonProps = {
    */
   allowedAssetTypes: AssetType | undefined
   selectedAssetsCount: number
+  /**
+   * Whether the user has the larger (300 MB) video upload limit enabled. Used
+   * to validate file size at selection time and to show the correct limit in
+   * error messages.
+   */
+  enableLargeVideoUploads: boolean
   onSelectAssets: (props: {
     type: AssetType
     assets: ImagePickerAsset[]
@@ -231,11 +241,16 @@ async function processImagePickerAssets(
   {
     selectionCountRemaining,
     allowedAssetTypes,
+    enableLargeVideoUploads,
   }: {
     selectionCountRemaining: number
     allowedAssetTypes: AssetType | undefined
+    enableLargeVideoUploads: boolean
   },
 ) {
+  const maxVideoSize = enableLargeVideoUploads
+    ? VIDEO_MAX_SIZE
+    : VIDEO_MAX_SIZE_REDUCED
   /*
    * A deduped set of error codes, which we'll use later
    */
@@ -289,7 +304,7 @@ async function processImagePickerAssets(
        * to filter out large files on web. On native, we compress these anyway,
        * so we only check on web.
        */
-      if (IS_WEB && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
+      if (IS_WEB && asset.fileSize && asset.fileSize > maxVideoSize) {
         errors.add(SelectedAssetError.FileTooBig)
         continue
       }
@@ -308,7 +323,7 @@ async function processImagePickerAssets(
        * to filter out large files on web. On native, we compress GIFs as
        * videos anyway, so we only check on web.
        */
-      if (IS_WEB && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
+      if (IS_WEB && asset.fileSize && asset.fileSize > maxVideoSize) {
         errors.add(SelectedAssetError.FileTooBig)
         continue
       }
@@ -381,6 +396,7 @@ export function SelectMediaButton({
   selectedAssetsCount,
   onSelectAssets,
   autoOpen,
+  enableLargeVideoUploads,
 }: SelectMediaButtonProps) {
   const {_} = useLingui()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
@@ -400,7 +416,10 @@ export function SelectMediaButton({
       } = await processImagePickerAssets(rawAssets, {
         selectionCountRemaining,
         allowedAssetTypes,
+        enableLargeVideoUploads,
       })
+
+      const videoSize = enableLargeVideoUploads ? 300 : 100
 
       /*
        * Convert error codes to user-friendly messages.
@@ -431,7 +450,7 @@ export function SelectMediaButton({
             msg`You can only select one GIF at a time.`,
           ),
           [SelectedAssetError.FileTooBig]: _(
-            msg`One or more of your selected files are too large. Maximum size is 100 MB.`,
+            msg`One or more of your selected files are too large. Maximum size is ${videoSize} MB.`,
           ),
         }[error]
       })
@@ -446,7 +465,13 @@ export function SelectMediaButton({
         errors,
       })
     },
-    [_, onSelectAssets, selectionCountRemaining, allowedAssetTypes],
+    [
+      _,
+      onSelectAssets,
+      selectionCountRemaining,
+      allowedAssetTypes,
+      enableLargeVideoUploads,
+    ],
   )
 
   const onPressSelectMedia = useCallback(async () => {

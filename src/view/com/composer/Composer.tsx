@@ -1917,6 +1917,10 @@ function ComposerFooter({
   const t = useTheme()
   const {t: l} = useLingui()
   const {gtPhone} = useBreakpoints()
+  const ax = useAnalytics()
+  const enableLargeVideoUploads = ax.features.enabled(
+    ax.features.LargeVideoUploads,
+  )
   /*
    * Once we've allowed a certain type of asset to be selected, we don't allow
    * other types of media to be selected.
@@ -2033,6 +2037,7 @@ function ComposerFooter({
                 selectedAssetsCount={selectedAssetsCount}
                 onSelectAssets={onSelectAssets}
                 autoOpen={openGallery}
+                enableLargeVideoUploads={enableLargeVideoUploads}
               />
               <OpenCameraBtn
                 disabled={media?.type === 'images' ? isMaxImages : !!media}
