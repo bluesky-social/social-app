@@ -5,10 +5,11 @@ import {IS_WEB} from '#/env'
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 
 const IFRAME_HOST = IS_WEB
-  ? // @ts-ignore only for web
-    window.location.host === 'localhost:8100'
-    ? 'http://localhost:8100'
-    : 'https://bsky.app'
+  ? // @ts-ignore only for web -- Eurosky fork: serve the YouTube iframe player
+    // from our own origin instead of bsky.app. bsky.app/iframe/* sends
+    // X-Frame-Options: SAMEORIGIN, so it refuses to be framed cross-origin. The
+    // player files live in web/iframe/* and are copied to the web build root.
+    window.location.origin
   : __DEV__ && !process.env.JEST_WORKER_ID
     ? 'http://localhost:8100'
     : 'https://bsky.app'
