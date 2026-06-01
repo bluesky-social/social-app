@@ -237,7 +237,11 @@ export const PUBLIC_APPVIEW_DID = 'did:web:api.bsky.app'
  * itself becomes public, auditable, on-protocol data. When that lands, replace
  * TRUSTED_VERIFIER_DIDS with a query and keep the rest of the pipeline the same.
  */
-export const TRUSTED_VERIFIER_DIDS = ['did:plc:257wekqxg4hyapkq6k47igmp']
+export const TRUSTED_VERIFIER_DIDS = [
+  'did:plc:257wekqxg4hyapkq6k47igmp', // flo-bit.dev
+  'did:plc:durcipmx2rwgzzagbiumobs5', // france-atmosphe.re
+  'did:plc:ooensn4mr5mhznzypvxelfa3', // eurosky.social
+]
 
 /**
  * Microcosm Constellation - an atproto-wide backlink index. We use it as a
