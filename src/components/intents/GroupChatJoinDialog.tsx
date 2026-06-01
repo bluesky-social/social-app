@@ -34,7 +34,9 @@ export function GroupChatJoinDialog() {
   const {groupChatJoinDialogControl, groupChatJoinState} = useIntentDialogs()
 
   return (
-    <Dialog.Outer control={groupChatJoinDialogControl}>
+    <Dialog.Outer
+      control={groupChatJoinDialogControl}
+      nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <GroupChatJoinDialogInner code={groupChatJoinState?.code} />
     </Dialog.Outer>
