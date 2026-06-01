@@ -1,7 +1,9 @@
 import {useMemo} from 'react'
+import {type AppBskyActorDefs} from '@atproto/api'
 
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
+import {useMergedVerificationState} from '#/state/queries/verification/useMergedVerificationState'
 import {useSession} from '#/state/session'
 import type * as bsky from '#/types/bsky'
 
@@ -23,6 +25,11 @@ export type FullVerificationState = {
         isVerified: boolean
         hasIssuedVerification: boolean
       }
+  /**
+   * The merged verification records (ours + Bluesky's), exposed so consumers
+   * read these instead of reaching into `profile.verification` directly.
+   */
+  verifications: AppBskyActorDefs.VerificationView[]
 }
 
 export function useFullVerificationState({
@@ -36,9 +43,10 @@ export function useFullVerificationState({
   const viewerState = useSimpleVerificationState({
     profile: currentAccountProfile,
   })
+  const merged = useMergedVerificationState({profile})
 
   return useMemo(() => {
-    const verifications = profile.verification?.verifications || []
+    const verifications = merged?.verifications || []
     const wasVerified =
       profileState.role === 'default' &&
       !profileState.isVerified &&
@@ -68,8 +76,9 @@ export function useFullVerificationState({
               role: 'default',
               isVerified: viewerState.isVerified,
             },
+      verifications,
     }
-  }, [profile, currentAccount, profileState, viewerState])
+  }, [profile, currentAccount, profileState, viewerState, merged])
 }
 
 export type SimpleVerificationState = {
@@ -84,12 +93,13 @@ export function useSimpleVerificationState({
   profile?: bsky.profile.AnyProfileView
 }): SimpleVerificationState {
   const preferences = usePreferencesQuery()
+  const merged = useMergedVerificationState({profile})
   const prefs = useMemo(
     () => preferences.data?.verificationPrefs || {hideBadges: false},
     [preferences.data?.verificationPrefs],
   )
   return useMemo(() => {
-    if (!profile || !profile.verification) {
+    if (!profile || !merged) {
       return {
         role: 'default',
         isVerified: false,
@@ -97,7 +107,7 @@ export function useSimpleVerificationState({
       }
     }
 
-    const {verifiedStatus, trustedVerifierStatus} = profile.verification
+    const {verifiedStatus, trustedVerifierStatus} = merged
     const isVerifiedUser = ['valid', 'invalid'].includes(verifiedStatus)
     const isVerifierUser = ['valid', 'invalid'].includes(trustedVerifierStatus)
     const isVerified =
@@ -109,5 +119,5 @@ export function useSimpleVerificationState({
       isVerified,
       showBadge: prefs.hideBadges ? false : isVerified,
     }
-  }, [profile, prefs])
+  }, [profile, merged, prefs])
 }

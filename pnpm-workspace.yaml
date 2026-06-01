@@ -4,14 +4,19 @@ strictPeerDependencies: false # default: false
 trustPolicy: 'no-downgrade' # default: off
 trustPolicyIgnoreAfter: 10080 # 7 days, default: undefined
 overrides:
-  # Eurosky fork: pin zod to the last pre-3.25 release. zod 3.25 restructured its
-  # internals ("Zod 4 in v3 clothing"), which breaks @atproto/did@0.3.0's `zod.z`
-  # access once bundled by webpack (works in Node, throws "Cannot read properties
-  # of undefined (reading 'string')" in the browser). All @atproto packages
-  # declare zod ^3.23.8; 3.24.4 satisfies them AND the build tooling's ^3.24.4
-  # (zod-validation-error via babel-plugin-react-compiler). Only lint-only
-  # eslint-plugin-react-hooks wants >=3.25 (harmless: strictPeerDependencies off).
+  # Eurosky fork: zod is split across two majors on purpose.
+  # - Default 3.24.4 (last pre-3.25): zod 3.25 restructured its internals ("Zod 4
+  #   in v3 clothing"), which breaks @atproto/did@0.3.0's `zod.z` access once
+  #   bundled by webpack (works in Node, throws "Cannot read properties of
+  #   undefined (reading 'string')" in the browser). All @atproto packages declare
+  #   zod ^3.23.8, so 3.24.4 satisfies the whole bundled stack consistently.
+  # - eslint-plugin-react-hooks (+ its nested zod-validation-error) import the
+  #   `zod/v4` subpath, which only exists in zod >=3.25. With the 3.24.4 default
+  #   they crash ESLint (ERR_PACKAGE_PATH_NOT_EXPORTED ./v4) and block pre-commit.
+  #   These are lint-only (not in the web bundle), so pin them to 3.25.x.
   'zod': '3.24.4'
+  'eslint-plugin-react-hooks>zod': '3.25.76'
+  'zod-validation-error>zod': '3.25.76'
   # Eurosky fork: OAuth client stack pins (migrated from package.json "resolutions")
   '@atproto/jwk': '0.6.0'
   '@atproto/jwk-jose': '0.1.11'
