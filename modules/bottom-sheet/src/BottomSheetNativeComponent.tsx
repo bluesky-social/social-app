@@ -21,9 +21,11 @@ import {
   Context as PortalContext,
 } from './BottomSheetPortal'
 
+type NativeViewRef = {dismiss: () => void}
+
 const NativeView: React.ComponentType<
   BottomSheetViewProps & {
-    ref: React.RefObject<any>
+    ref: React.RefObject<NativeViewRef | null>
     style: StyleProp<ViewStyle>
   }
 > = requireNativeViewManager('BottomSheet')
@@ -46,7 +48,7 @@ export class BottomSheetNativeComponent extends Component<
     viewHeight?: number
   }
 > {
-  ref = createRef<any>()
+  ref = createRef<NativeViewRef>()
 
   static contextType = PortalContext
 
@@ -140,7 +142,7 @@ function BottomSheetNativeComponentInner({
   onStateChange: (
     event: NativeSyntheticEvent<{state: BottomSheetState}>,
   ) => void
-  nativeViewRef: React.RefObject<View>
+  nativeViewRef: React.RefObject<NativeViewRef | null>
   onLayout?: (event: LayoutChangeEvent) => void
 }) {
   const insets = useSafeAreaInsets()

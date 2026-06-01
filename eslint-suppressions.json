@@ -31,7 +31,7 @@
   },
   "src/components/Dialog/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 2
+      "count": 1
     }
   },
   "src/components/Dialog/index.web.tsx": {

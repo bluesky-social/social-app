@@ -10,6 +10,7 @@ import {
   Keyboard,
   type KeyboardEventListener,
   type LayoutChangeEvent,
+  Modal,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
   Pressable,
@@ -30,9 +31,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
-import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'
-import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
 import {android, atoms as a, ios, platform, tokens, useTheme} from '#/alf'
 import {useThemeName} from '#/alf/util/useColorModeTheme'
@@ -42,6 +41,7 @@ import {
   type DialogInnerProps,
   type DialogOuterProps,
 } from '#/components/Dialog/types'
+import {useDialogCallbackQueue} from '#/components/Dialog/utils'
 import {createInput} from '#/components/forms/TextField'
 import {useOnKeyboard} from '#/components/hooks/useOnKeyboard'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
@@ -59,7 +59,92 @@ export * from '#/components/Dialog/utils'
 
 export const Input = createInput(TextInput)
 
-export function Outer({
+export function Outer(props: React.PropsWithChildren<DialogOuterProps>) {
+  if (props.type === 'alert') {
+    return <OuterAlert {...props} />
+  }
+  return <OuterSheet {...props} />
+}
+
+function OuterAlert({
+  children,
+  control,
+  onClose,
+  testID,
+}: React.PropsWithChildren<DialogOuterProps>) {
+  const t = useTheme()
+  const [isOpen, setIsOpen] = useState(false)
+  const {enqueueCallback, handleOpen, handleClose} = useDialogCallbackQueue(
+    control,
+    onClose,
+  )
+
+  const open: DialogControlProps['open'] = () => {
+    handleOpen()
+    setIsOpen(true)
+  }
+
+  const close: DialogControlProps['close'] = cb => {
+    enqueueCallback(cb)
+    setIsOpen(false)
+  }
+
+  const onDismiss = () => {
+    handleClose()
+  }
+
+  useImperativeHandle(control.ref, () => ({open, close}), [open, close])
+
+  const context = useMemo(
+    () => ({
+      close,
+      isNativeDialog: true,
+      nativeSnapPoint: BottomSheetSnapPoint.Hidden,
+      disableDrag: false,
+      setDisableDrag: () => {},
+      isWithinDialog: true,
+      type: 'alert' as const,
+      isHeightConstrained: false,
+    }),
+    [close],
+  )
+
+  return (
+    <Modal
+      visible={isOpen}
+      transparent
+      animationType="fade"
+      onRequestClose={() => close()}
+      onDismiss={onDismiss}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => close()}
+        style={[
+          a.flex_1,
+          a.justify_center,
+          a.align_center,
+          a.px_xl,
+          {backgroundColor: 'rgba(0,0,0,0.5)'},
+        ]}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={e => e.stopPropagation()}
+          style={[
+            t.atoms.bg,
+            a.w_full,
+            {borderRadius: 48, maxWidth: 320, maxHeight: '90%'},
+            a.overflow_hidden,
+          ]}>
+          <Context.Provider value={context}>
+            <View testID={testID}>{children}</View>
+          </Context.Provider>
+        </Pressable>
+      </Pressable>
+    </Modal>
+  )
+}
+
+function OuterSheet({
   children,
   control,
   onClose,
@@ -69,9 +154,8 @@ export function Outer({
   const themeName = useThemeName()
   const t = useTheme(themeName)
   const ref = useRef<BottomSheetNativeComponent>(null)
-  const closeCallbacks = useRef<(() => void)[]>([])
-  const {setDialogIsOpen, setFullyExpandedCount} =
-    useDialogStateControlContext()
+  const {enqueueCallback, handleOpen, handleClose, setFullyExpandedCount} =
+    useDialogCallbackQueue(control, onClose)
 
   const prevSnapPoint = useRef<BottomSheetSnapPoint>(
     BottomSheetSnapPoint.Hidden,
@@ -82,42 +166,20 @@ export function Outer({
     BottomSheetSnapPoint.Partial,
   )
 
-  const callQueuedCallbacks = useCallback(() => {
-    for (const cb of closeCallbacks.current) {
-      try {
-        cb()
-      } catch (e: any) {
-        logger.error(e || 'Error running close callback')
-      }
-    }
-
-    closeCallbacks.current = []
-  }, [])
-
-  const open = useCallback<DialogControlProps['open']>(() => {
-    // Run any leftover callbacks that might have been queued up before calling `.open()`
-    callQueuedCallbacks()
-    setDialogIsOpen(control.id, true)
+  const open: DialogControlProps['open'] = () => {
+    handleOpen()
     ref.current?.present()
-  }, [setDialogIsOpen, control.id, callQueuedCallbacks])
+  }
 
-  // This is the function that we call when we want to dismiss the dialog.
-  const close = useCallback<DialogControlProps['close']>(cb => {
-    if (typeof cb === 'function') {
-      closeCallbacks.current.push(cb)
-    }
+  const close: DialogControlProps['close'] = cb => {
+    enqueueCallback(cb)
     ref.current?.dismiss()
-  }, [])
+  }
 
-  // This is the actual thing we are doing once we "confirm" the dialog. We want the dialog's close animation to
-  // happen before we run this. It is passed to the `BottomSheet` component.
-  const onCloseAnimationComplete = useCallback(() => {
-    // This removes the dialog from our list of stored dialogs. Not super necessary on iOS, but on Android this
-    // tells us that we need to toggle the accessibility overlay setting
-    setDialogIsOpen(control.id, false)
-    callQueuedCallbacks()
-    onClose?.()
-  }, [callQueuedCallbacks, control.id, onClose, setDialogIsOpen])
+  // Runs after the bottom sheet close animation completes.
+  const onCloseAnimationComplete = () => {
+    handleClose()
+  }
 
   const onSnapPointChange = (e: BottomSheetSnapPointChangeEvent) => {
     const {snapPoint} = e.nativeEvent
@@ -148,14 +210,7 @@ export function Outer({
     }
   }
 
-  useImperativeHandle(
-    control.ref,
-    () => ({
-      open,
-      close,
-    }),
-    [open, close],
-  )
+  useImperativeHandle(control.ref, () => ({open, close}), [open, close])
 
   const isHeightConstrained = nativeOptions?.maxHeight != null
 
@@ -167,6 +222,7 @@ export function Outer({
       disableDrag,
       setDisableDrag,
       isWithinDialog: true,
+      type: 'sheet' as const,
       isHeightConstrained,
     }),
     [close, snapPoint, disableDrag, setDisableDrag, isHeightConstrained],
@@ -221,8 +277,14 @@ export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
     {children, contentContainerStyle, header, style, ...props},
     ref,
   ) {
-    const {nativeSnapPoint, disableDrag, setDisableDrag, isHeightConstrained} =
-      useDialogContext()
+    const {
+      nativeSnapPoint,
+      disableDrag,
+      setDisableDrag,
+      type,
+      isHeightConstrained,
+    } = useDialogContext()
+
     const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
     const insets = useSafeAreaInsets()
     const [keyboardHeight, setKeyboardHeight] = useState(() =>
@@ -234,6 +296,15 @@ export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
     }, [])
     useOnKeyboard('keyboardDidShow', keyboardEventHandler)
     useOnKeyboard('keyboardDidHide', keyboardEventHandler)
+
+    if (type === 'alert') {
+      return (
+        <View style={[a.p_2xl, contentContainerStyle]} {...props}>
+          {header}
+          {children}
+        </View>
+      )
+    }
 
     const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       if (!IS_ANDROID) {

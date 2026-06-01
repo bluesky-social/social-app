@@ -5,6 +5,8 @@ import {useDialogStateControlContext} from '#/state/dialogs'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {H3, P, Text} from '#/components/Typography'
@@ -14,6 +16,8 @@ export function Dialogs() {
   const scrollable = Dialog.useDialogControl()
   const basic = Dialog.useDialogControl()
   const prompt = Prompt.usePromptControl()
+  const alertPrompt = Prompt.usePromptControl()
+  const alertPromptCustom = Prompt.usePromptControl()
   const withMenu = Dialog.useDialogControl()
   const testDialog = Dialog.useDialogControl()
   const {closeAllDialogs} = useDialogStateControlContext()
@@ -113,6 +117,24 @@ export function Dialogs() {
 
       <Button
         variant="solid"
+        color="negative"
+        size="small"
+        onPress={() => alertPrompt.open()}
+        label="Open alert prompt">
+        <ButtonText>Open alert prompt (Basic)</ButtonText>
+      </Button>
+
+      <Button
+        variant="solid"
+        color="negative"
+        size="small"
+        onPress={() => alertPromptCustom.open()}
+        label="Open alert prompt with custom content">
+        <ButtonText>Open alert prompt (custom content)</ButtonText>
+      </Button>
+
+      <Button
+        variant="solid"
         color="primary"
         size="small"
         onPress={testDialog.open}
@@ -172,6 +194,30 @@ export function Dialogs() {
         <Prompt.Actions>
           <Prompt.Cancel />
           <Prompt.Action cta="Confirm" onPress={() => {}} />
+        </Prompt.Actions>
+      </Prompt.Outer>
+
+      <Prompt.Basic
+        control={alertPrompt}
+        type="alert"
+        icon={Trash}
+        title="Delete this post?"
+        description="This action cannot be undone. The post will be permanently removed from your profile and from everyone's feeds."
+        confirmButtonCta="Delete"
+        confirmButtonColor="negative"
+        onConfirm={() => {}}
+      />
+
+      <Prompt.Outer control={alertPromptCustom} type="alert">
+        <Prompt.Icon icon={Warning} color="negative" />
+        <Prompt.TitleText>Are you sure?</Prompt.TitleText>
+        <Prompt.DescriptionText>
+          This is the `alert` variant of the prompt. It renders a centered modal
+          on all platforms and supports an optional icon above the title.
+        </Prompt.DescriptionText>
+        <Prompt.Actions>
+          <Prompt.Action cta="Continue" color="negative" onPress={() => {}} />
+          <Prompt.Cancel />
         </Prompt.Actions>
       </Prompt.Outer>
 
