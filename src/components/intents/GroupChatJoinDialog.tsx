@@ -29,6 +29,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {ProfileBadges} from '../ProfileBadges'
 
 export function GroupChatJoinDialog() {
   const {groupChatJoinDialogControl, groupChatJoinState} = useIntentDialogs()
@@ -272,29 +273,45 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
             </Text>
           </View>
           <View>
+            <View
+              style={[a.flex_row, a.gap_xs, a.align_center, a.justify_center]}>
+              <Text
+                style={[
+                  a.mb_2xs,
+                  a.text_center,
+                  a.text_sm,
+                  a.leading_snug,
+                  a.font_semi_bold,
+                  t.atoms.text,
+                ]}>
+                By{' '}
+                <InlineLinkText
+                  label={`@${joinLinkPreview.owner.handle}`}
+                  to={makeProfileLink(joinLinkPreview.owner)}
+                  style={[a.mb_2xs, a.text_sm, a.font_semi_bold]}>
+                  {createSanitizedDisplayName(
+                    joinLinkPreview.owner,
+                    true,
+                    moderateProfile(joinLinkPreview.owner, moderationOpts).ui(
+                      'displayName',
+                    ),
+                  )}
+                </InlineLinkText>
+              </Text>
+              <ProfileBadges
+                profile={data.joinLinkPreviews[0].owner}
+                size="sm"
+                style={{marginTop: -4}}
+              />
+            </View>
             <Text
               style={[
-                a.mb_2xs,
                 a.text_center,
-                a.text_sm,
+                a.text_xs,
                 a.leading_snug,
-                a.font_semi_bold,
-                t.atoms.text,
+                t.atoms.text_contrast_high,
               ]}>
-              By{' '}
-              <InlineLinkText
-                label={`@${joinLinkPreview.owner.handle}`}
-                to={makeProfileLink(joinLinkPreview.owner)}
-                style={[a.mb_2xs, a.text_sm, a.font_semi_bold]}>
-                {createSanitizedDisplayName(
-                  joinLinkPreview.owner,
-                  true,
-                  moderateProfile(joinLinkPreview.owner, moderationOpts).ui(
-                    'displayName',
-                  ),
-                )}{' '}
-                {sanitizeHandle(joinLinkPreview.owner.handle, '@')}
-              </InlineLinkText>
+              {sanitizeHandle(joinLinkPreview.owner.handle, '@')}
             </Text>
           </View>
         </View>
