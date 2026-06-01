@@ -490,11 +490,6 @@
       "count": 1
     }
   },
-  "src/state/queries/post-feed.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
-    }
-  },
   "src/state/queries/postgate/index.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -611,11 +606,6 @@
   "src/view/com/posts/FeedShutdownMsg.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
-    }
-  },
-  "src/view/com/posts/PostFeed.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
     }
   },
   "src/view/com/posts/PostFeedErrorMessage.tsx": {

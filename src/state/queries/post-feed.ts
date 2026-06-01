@@ -4,8 +4,8 @@ import {
   type AppBskyActorDefs,
   AppBskyFeedDefs,
   type AppBskyFeedPost,
+  type AtpAgent,
   AtUri,
-  type BskyAgent,
   moderatePost,
   type ModerationDecision,
   type ModerationPrefs,
@@ -120,11 +120,25 @@ export interface FeedPage {
 }
 
 /**
- * The minimum number of posts we want in a single "page" of results. Since we
- * filter out unwanted content, we may fetch more than this number to ensure
- * that we get _at least_ this number.
+ * The minimum number of items we want visible after the initial fetch. We
+ * top up the first page until at least this many filtered items are
+ * available, so a cold start never lands the user on a near-empty feed.
  */
 const MIN_POSTS = 30
+
+/**
+ * The number of items to request from the server per page. Larger than
+ * MIN_POSTS so that client-side moderation drops rarely push a page below
+ * the visible threshold and trigger a chain of top-up requests.
+ */
+const FETCH_LIMIT = 60
+
+/**
+ * Once the steady-state feed is loaded, top up only when the rows below the
+ * highest viewable row drop under this threshold. Prevents a moderation-
+ * heavy feed from eagerly pre-fetching many pages the user may never see.
+ */
+const REMAINING_ROW_THRESHOLD = 10
 
 export function usePostFeedQuery(
   feedDesc: FeedDescriptor,
@@ -158,10 +172,11 @@ export function usePostFeedQuery(
 
   /**
    * The number of posts to fetch in a single request. Because we filter
-   * unwanted content, we may over-fetch here to try and fill pages by
-   * `MIN_POSTS`. But if you're doing this, ask @why if it's ok first.
+   * unwanted content, we over-fetch here so that a single page typically
+   * contains enough items to fill the viewport even after moderation drops.
+   * But if you're changing this, ask @why if it's ok first.
    */
-  const fetchLimit = MIN_POSTS
+  const fetchLimit = FETCH_LIMIT
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = useMemo(
@@ -254,7 +269,10 @@ export function usePostFeedQuery(
           let canReuse = true
           for (let key in selectArgs) {
             if (selectArgs.hasOwnProperty(key)) {
-              if ((selectArgs as any)[key] !== (lastArgs as any)[key]) {
+              if (
+                (selectArgs as Record<string, unknown>)[key] !==
+                (lastArgs as Record<string, unknown>)[key]
+              ) {
                 // Can't do reuse anything if any input has changed.
                 canReuse = false
                 break
@@ -362,17 +380,39 @@ export function usePostFeedQuery(
     ),
   })
 
-  // The server may end up returning an empty page, a page with too few items,
-  // or a page with items that end up getting filtered out. When we fetch pages,
-  // we'll keep track of how many items we actually hope to see. If the server
-  // doesn't return enough items, we're going to continue asking for more items.
-  const lastItemCount = useRef(0)
-  const wantedItemCount = useRef(0)
+  // The server may return a page that, after client-side moderation, has
+  // too few items to fill the viewport. We top up in two situations:
+  //   1. Initial load: keep fetching until we have at least MIN_POSTS items.
+  //   2. Steady state: a consumer that wires up `onViewableIndexChange` tells
+  //      us the highest viewable row; if rows below it drop under
+  //      REMAINING_ROW_THRESHOLD we top up. Consumers that don't wire it up
+  //      fall back to legacy "any shortfall triggers a top-up" behavior.
+  const lastViewableIndexRef = useRef<number | null>(null)
+  const totalRowCountRef = useRef(0)
   const autoPaginationAttemptCount = useRef(0)
+  const onViewableIndexChange = useCallback(
+    (viewableIndex: number, totalRowCount: number) => {
+      // If the list shrank (PTR / refetch / truncate), our stored index may
+      // be past the end - reset it so the new highest viewable index sticks.
+      if (
+        lastViewableIndexRef.current === null ||
+        lastViewableIndexRef.current >= totalRowCount ||
+        viewableIndex > lastViewableIndexRef.current
+      ) {
+        lastViewableIndexRef.current = viewableIndex
+      }
+      totalRowCountRef.current = totalRowCount
+    },
+    [],
+  )
+
   useEffect(() => {
     const {data, isLoading, isRefetching, isFetchingNextPage, hasNextPage} =
       query
-    // Count the items that we already have.
+    if (isLoading || isRefetching || isFetchingNextPage || !hasNextPage) {
+      return
+    }
+
     let itemCount = 0
     for (const page of data?.pages || []) {
       for (const slice of page.slices) {
@@ -380,40 +420,36 @@ export function usePostFeedQuery(
       }
     }
 
-    // If items got truncated, reset the state we're tracking below.
-    if (itemCount !== lastItemCount.current) {
-      if (itemCount < lastItemCount.current) {
-        wantedItemCount.current = itemCount
+    let shouldFetch = false
+    const isInitialLoad = (data?.pages.length ?? 0) <= 1
+    if (isInitialLoad && itemCount < MIN_POSTS) {
+      // Cold start: protect against landing the user on a near-empty feed.
+      shouldFetch = true
+    } else if (lastViewableIndexRef.current !== null) {
+      // Consumer is reporting viewport position - top up when the user
+      // gets close to the end.
+      const remaining =
+        totalRowCountRef.current - lastViewableIndexRef.current - 1
+      if (remaining < REMAINING_ROW_THRESHOLD) {
+        shouldFetch = true
       }
-      lastItemCount.current = itemCount
+    } else if (itemCount < MIN_POSTS) {
+      // Legacy fallback for consumers (VideoFeed, trending interstitials)
+      // that don't wire up the viewport signal.
+      shouldFetch = true
     }
 
-    // Now track how many items we really want, and fetch more if needed.
-    if (isLoading || isRefetching) {
-      // During the initial fetch, we want to get an entire page's worth of items.
-      wantedItemCount.current = MIN_POSTS
-    } else if (isFetchingNextPage) {
-      if (itemCount > wantedItemCount.current) {
-        // We have more items than wantedItemCount, so wantedItemCount must be out of date.
-        // Some other code must have called fetchNextPage(), for example, from onEndReached.
-        // Adjust the wantedItemCount to reflect that we want one more full page of items.
-        wantedItemCount.current = itemCount + MIN_POSTS
+    if (shouldFetch) {
+      autoPaginationAttemptCount.current++
+      if (autoPaginationAttemptCount.current < 50 /* failsafe */) {
+        void query.fetchNextPage()
       }
-    } else if (hasNextPage) {
-      // At this point we're not fetching anymore, so it's time to make a decision.
-      // If we didn't receive enough items from the server, paginate again until we do.
-      if (itemCount < wantedItemCount.current) {
-        autoPaginationAttemptCount.current++
-        if (autoPaginationAttemptCount.current < 50 /* failsafe */) {
-          query.fetchNextPage()
-        }
-      } else {
-        autoPaginationAttemptCount.current = 0
-      }
+    } else {
+      autoPaginationAttemptCount.current = 0
     }
   }, [query])
 
-  return query
+  return {...query, onViewableIndexChange}
 }
 
 export async function pollLatest(page: FeedPage | undefined) {
@@ -450,7 +486,7 @@ function createApi({
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
   userInterests?: string
-  agent: BskyAgent
+  agent: AtpAgent
   enableFollowingToDiscoverFallback: boolean
 }) {
   if (feedDesc === 'following') {
@@ -618,7 +654,7 @@ function assertSomePostsPassModeration(
 
 export function resetPostsFeedQueries(queryClient: QueryClient, timeout = 0) {
   setTimeout(() => {
-    queryClient.resetQueries({
+    void queryClient.resetQueries({
       predicate: query => query.queryKey[0] === RQKEY_ROOT,
     })
   }, timeout)
@@ -630,7 +666,7 @@ export function resetProfilePostsQueries(
   timeout = 0,
 ) {
   setTimeout(() => {
-    queryClient.resetQueries({
+    void queryClient.resetQueries({
       predicate: query =>
         !!(
           query.queryKey[0] === RQKEY_ROOT &&
@@ -640,8 +676,11 @@ export function resetProfilePostsQueries(
   }, timeout)
 }
 
-export function isFeedPostSlice(v: any): v is FeedPostSlice {
+export function isFeedPostSlice(v: unknown): v is FeedPostSlice {
   return (
-    v && typeof v === 'object' && '_isFeedPostSlice' in v && v._isFeedPostSlice
+    !!v &&
+    typeof v === 'object' &&
+    '_isFeedPostSlice' in v &&
+    !!v._isFeedPostSlice
   )
 }
