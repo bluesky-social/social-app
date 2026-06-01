@@ -23,7 +23,16 @@ allowBuilds:
   '@sentry/cli': true
   'core-js-pure': true
   'esbuild': true
-  'unrs-resolver': true
+  # Eurosky fork: explicitly DENY these two build scripts (false) so pnpm does
+  # not re-prompt / rewrite this file.
+  # - unrs-resolver: pnpm 11.1.3 links its napi-postinstall bin as 0644 (no +x),
+  #   so the postinstall aborts with exit 126, breaking `pnpm install`/`pnpm web`.
+  #   The script is only a verifier; the native binding installs via
+  #   optionalDependencies and the resolver loads fine. Safe on all platforms
+  #   (lint-only dep; the web build does not use it).
+  # - core-js: its postinstall only prints a donation message; nothing to build.
+  'unrs-resolver': false
+  'core-js': false
 patchedDependencies:
   '@discord/bottom-sheet@4.6.1': patches/@discord__bottom-sheet@4.6.1.patch
   '@sentry/react-native@6.20.0': patches/@sentry__react-native@6.20.0.patch
