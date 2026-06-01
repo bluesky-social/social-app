@@ -8,10 +8,9 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
-import {atoms as a} from '#/alf'
+import {android, atoms as a, ios} from '#/alf'
 import {ArrowShareRight_Stroke2_Corner2_Rounded as ShareIcon} from '#/components/icons/ArrowShareRight'
 import {type Props as IconProps} from '#/components/icons/common'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsIcon} from '#/components/icons/DotGrid'
@@ -36,7 +35,7 @@ const SPRING_IN = {damping: 18, mass: 0.6, stiffness: 240}
 const TIMING_OUT = {duration: 150}
 
 export function ImageMenu({onPressShare, onPressSave}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const triggerRef = useRef<View>(null)
   const [isMounted, setIsMounted] = useState(false)
   const [anchor, setAnchor] = useState<Anchor | null>(null)
@@ -71,7 +70,7 @@ export function ImageMenu({onPressShare, onPressSave}: Props) {
         <CircleChromeButton
           icon={DotsIcon}
           iconStyle={{transform: [{rotate: '90deg'}]}}
-          label={_(msg`Image options`)}
+          label={l`Image options`}
           onPress={open}
         />
       </View>
@@ -83,21 +82,21 @@ export function ImageMenu({onPressShare, onPressSave}: Props) {
         statusBarTranslucent>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={_(msg`Close menu`)}
+          accessibilityLabel={l`Close menu`}
           accessibilityHint=""
-          style={StyleSheet.absoluteFill}
+          style={[a.absolute, a.inset_0]}
           onPress={close}
         />
         {anchor && (
           <MenuCard anchor={anchor} progress={progress}>
             <MenuItem
               icon={ShareIcon}
-              label={_(msg`Share image`)}
+              label={l`Share image`}
               onPress={() => runAction(onPressShare)}
             />
             <MenuItem
               icon={DownloadIcon}
-              label={_(msg`Save image`)}
+              label={l`Save image`}
               onPress={() => runAction(onPressSave)}
             />
           </MenuCard>
@@ -126,6 +125,8 @@ function MenuCard({
       style={[
         a.absolute,
         styles.card,
+        android({alignSelf: 'flex-start'}),
+        ios({width: MENU_WIDTH}),
         {
           top: anchor.y + anchor.height + GAP,
           left: anchor.x,
@@ -162,7 +163,6 @@ function MenuItem({
 
 const styles = StyleSheet.create({
   card: {
-    width: MENU_WIDTH,
     padding: 8,
     borderRadius: 16,
     borderWidth: 0.5,

@@ -1,7 +1,7 @@
-import {useCallback, useEffect, useMemo, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
-import {type ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatBskyActorGetStatus, type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -15,6 +15,7 @@ import {logger} from '#/logger'
 import {listenSoftReset} from '#/state/events'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
+import {useChatActorStatusQuery} from '#/state/queries/messages/get-status'
 import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {EmptyState} from '#/view/com/util/EmptyState'
@@ -42,9 +43,13 @@ import {ListFooter} from '#/components/Lists'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {IS_NATIVE} from '#/env'
+import {ChatDisabled} from './components/ChatDisabled'
 import {ChatListItem} from './components/ChatListItem'
 import {InboxRequests} from './components/InboxRequests'
 import {useIsWithinSplitView} from './components/splitView/context'
+import {splitViewLeftScroll} from './components/splitView/leftColumnScroll'
+
+type ChatStatus = ChatBskyActorGetStatus.OutputSchema
 
 type ListItem = {
   type: 'CONVERSATION'
@@ -94,6 +99,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
   const {t: l} = useLingui()
   const t = useTheme()
   const newChatControl = useDialogControl()
+  const {data: chatStatus} = useChatActorStatusQuery()
   const pushToConversation = route.params?.pushToConversation
 
   // Whenever we have `pushToConversation` set, it means we pressed a notification for a chat without being on
@@ -131,6 +137,19 @@ export function MessagesScreenInner({navigation, route}: Props) {
     [navigation],
   )
 
+  const openChatControl = useCallback(() => {
+    newChatControl.open()
+  }, [newChatControl])
+
+  const requireEmailVerification = useRequireEmailVerification()
+  const wrappedOpenChatControl = requireEmailVerification(openChatControl, {
+    instructions: [
+      <Trans key="new-chat">
+        Before you can message another user, you must first verify your email.
+      </Trans>,
+    ],
+  })
+
   if (isWithinSplitView) {
     return (
       <>
@@ -140,14 +159,18 @@ export function MessagesScreenInner({navigation, route}: Props) {
           textStyle={t.atoms.text}
           iconColor={t.atoms.text.color}
           iconSize="4xl"
-          button={{
-            label: l`New chat`,
-            text: l`New chat`,
-            onPress: newChatControl.open,
-            size: 'small',
-            color: 'primary',
-            icon: MessagePlusIcon,
-          }}
+          button={
+            chatStatus?.chatDisabled
+              ? undefined
+              : {
+                  label: l`New chat`,
+                  text: l`New chat`,
+                  onPress: wrappedOpenChatControl,
+                  size: 'small',
+                  color: 'primary',
+                  icon: MessagePlusIcon,
+                }
+          }
           style={[a.h_full, a.justify_center, a.pb_5xl]}
         />
         <NewChat onNewChat={onNewChat} control={newChatControl} />
@@ -157,8 +180,8 @@ export function MessagesScreenInner({navigation, route}: Props) {
 
   return (
     <Layout.Screen testID="messagesScreen">
-      <Header newChatControl={newChatControl} />
-      <ChatList newChatControl={newChatControl} />
+      <Header newChatControl={newChatControl} chatStatus={chatStatus} />
+      <ChatList newChatControl={newChatControl} chatStatus={chatStatus} />
       <NewChat onNewChat={onNewChat} control={newChatControl} />
     </Layout.Screen>
   )
@@ -167,9 +190,11 @@ export function MessagesScreenInner({navigation, route}: Props) {
 export function ChatList({
   selectedChat,
   newChatControl,
+  chatStatus,
 }: {
   selectedChat?: string
   newChatControl: DialogControlProps
+  chatStatus: ChatStatus | undefined
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -255,12 +280,32 @@ export function ChatList({
       animated: IS_NATIVE,
       offset: 0,
     })
+    if (isWithinSplitView) {
+      splitViewLeftScroll.current = 0
+      restoredRef.current = true
+    }
     try {
       await refetch()
     } catch (err) {
       logger.error('Failed to refresh conversations', {message: err})
     }
-  }, [scrollElRef, refetch])
+  }, [scrollElRef, refetch, isWithinSplitView])
+
+  // Restore the saved scroll offset once the list has rendered enough
+  // content to honor it. Module-level ref survives ChatList re-mounts that
+  // happen on in-splitview navigation (see leftColumnScroll.ts).
+  const restoredRef = useRef(false)
+  const onContentSizeChange = useCallback(
+    (_w: number, h: number) => {
+      if (!isWithinSplitView || restoredRef.current) return
+      const offset = splitViewLeftScroll.current
+      if (offset > 0 && h >= offset) {
+        scrollElRef.current?.scrollToOffset({offset, animated: false})
+        restoredRef.current = true
+      }
+    },
+    [isWithinSplitView, scrollElRef],
+  )
 
   const isScreenFocused = useIsFocused()
   useEffect(() => {
@@ -323,20 +368,24 @@ export function ChatList({
               />
             ) : (
               <EmptyState
-                message={l`No chats yet`}
-                icon={InboxLargeIcon}
-                iconSize="4xl"
+                message={l`Say hi to someone`}
+                icon={BubbleSmileIcon}
                 textStyle={t.atoms.text}
                 iconColor={t.atoms.text.color}
-                button={{
-                  label: l`New chat`,
-                  text: l`New chat`,
-                  onPress: wrappedOpenChatControl,
-                  size: 'small',
-                  color: 'primary',
-                  icon: MessagePlusIcon,
-                }}
-                style={web([a.h_full, a.justify_center, {paddingBottom: 120}])}
+                iconSize="4xl"
+                button={
+                  chatStatus?.chatDisabled
+                    ? undefined
+                    : {
+                        label: l`New chat`,
+                        text: l`New chat`,
+                        onPress: wrappedOpenChatControl,
+                        size: 'small',
+                        color: 'primary',
+                        icon: MessagePlusIcon,
+                      }
+                }
+                style={[a.h_full, {paddingTop: '20%'}]}
               />
             )}
           </>
@@ -354,6 +403,11 @@ export function ChatList({
       refreshing={isPTRing}
       onRefresh={() => void onRefresh()}
       onEndReached={() => void onEndReached()}
+      ListHeaderComponent={
+        chatStatus?.chatDisabled ? (
+          <ChatDisabled shape="banner" style={[isWithinSplitView && a.mb_sm]} />
+        ) : undefined
+      }
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}
@@ -364,6 +418,7 @@ export function ChatList({
         />
       }
       onEndReachedThreshold={IS_NATIVE ? 1.5 : 0}
+      onContentSizeChange={onContentSizeChange}
       initialNumToRender={initialNumToRender}
       windowSize={11}
       desktopFixedHeight
@@ -378,12 +433,20 @@ export function ChatList({
           }),
         ]
       }
-      contentContainerStyle={isWithinSplitView && a.py_sm}
+      contentContainerStyle={
+        isWithinSplitView && !chatStatus?.chatDisabled && a.py_sm
+      }
     />
   )
 }
 
-export function Header({newChatControl}: {newChatControl: DialogControlProps}) {
+export function Header({
+  newChatControl,
+  chatStatus,
+}: {
+  newChatControl: DialogControlProps
+  chatStatus: ChatStatus | undefined
+}) {
   const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
   const requireEmailVerification = useRequireEmailVerification()
@@ -441,14 +504,16 @@ export function Header({newChatControl}: {newChatControl: DialogControlProps}) {
               style={[a.justify_center]}>
               <ButtonIcon icon={SettingsIcon} />
             </Link>
-            <Button
-              label={l`New chat`}
-              color="primary"
-              size="small"
-              shape="round"
-              onPress={wrappedOpenChatControl}>
-              <ButtonIcon icon={NewChatIcon} />
-            </Button>
+            {!chatStatus?.chatDisabled && (
+              <Button
+                label={l`New chat`}
+                color="primary"
+                size="small"
+                shape="round"
+                onPress={wrappedOpenChatControl}>
+                <ButtonIcon icon={NewChatIcon} />
+              </Button>
+            )}
           </View>
         </>
       ) : (

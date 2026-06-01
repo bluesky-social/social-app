@@ -37,6 +37,9 @@ export const DEFAULT_ALLOWED_DOMAINS = [
   'twitch.tv',
   'stream.place',
   'bluecast.app',
+  'youtube.com',
+  'substack.com',
+  'beehiiv.com',
 ]
 
 const DEFAULT_STATE = {

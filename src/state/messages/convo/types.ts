@@ -1,4 +1,6 @@
 import {
+  type $Typed,
+  type AppBskyEmbedRecord,
   type BskyAgent,
   type ChatBskyActorDefs,
   type ChatBskyConvoDefs,
@@ -106,6 +108,7 @@ export type ConvoItem =
 type DeleteMessage = (messageId: string) => Promise<void>
 type SendMessage = (
   message: ChatBskyConvoSendMessage.InputSchema['message'],
+  optimisticEmbedView: $Typed<AppBskyEmbedRecord.View> | undefined,
 ) => void
 type FetchMessageHistory = () => Promise<void>
 type MarkConvoAccepted = () => void

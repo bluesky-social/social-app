@@ -22,25 +22,25 @@ Prefer using the latest features available for each of these libraries (exact ve
 
 ```bash
 # Development
-yarn start              # Start Expo dev server
-yarn web                # Start web version
-yarn android            # Run on Android
-yarn ios                # Run on iOS
+pnpm start              # Start Expo dev server
+pnpm web                # Start web version
+pnpm android            # Run on Android
+pnpm ios                # Run on iOS
 
 # Testing & Quality
-# IMPORTANT: Always use these yarn scripts, never call the underlying tools directly
-yarn test               # Run Jest tests
-yarn lint               # Run ESLint
-yarn typecheck          # Run TypeScript type checking
+# IMPORTANT: Always use these pnpm scripts, never call the underlying tools directly
+pnpm test               # Run Jest tests
+pnpm lint               # Run ESLint
+pnpm typecheck          # Run TypeScript type checking
 
 # Internationalization
 # DO NOT run these commands - extraction and compilation are handled by CI
-yarn intl:extract       # Extract translation strings (nightly CI job)
-yarn intl:compile       # Compile translations for runtime (nightly CI job)
+pnpm intl:extract       # Extract translation strings (nightly CI job)
+pnpm intl:compile       # Compile translations for runtime (nightly CI job)
 
 # Build
-yarn build-web          # Build web version
-yarn prebuild           # Generate native projects
+pnpm build-web          # Build web version
+pnpm prebuild           # Generate native projects
 ```
 
 ## Project Structure
@@ -503,8 +503,8 @@ function MyComponent() {
 
 ```bash
 # DO NOT run these commands - extraction and compilation are handled by a nightly CI job
-yarn intl:extract    # Extract new strings to locale files
-yarn intl:compile    # Compile translations for runtime
+pnpm intl:extract    # Extract new strings to locale files
+pnpm intl:compile    # Compile translations for runtime
 ```
 
 ## State Management

@@ -32,6 +32,7 @@ import * as EmojiPicker from '#/components/EmojiPicker'
 import {GlassView} from '#/components/GlassView'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
+import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 
@@ -43,18 +44,20 @@ export function MessageComposer({
   hasEmbed,
   setEmbed,
   children,
+  loading = false,
 }: {
   textInputId?: string
   onSendMessage: (message: string) => void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
+  loading?: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
   const playHaptic = useHaptics()
   const {needsEmailVerification} = useEmail()
-  const editable = !needsEmailVerification
+  const editable = !needsEmailVerification && !loading
   const {getDraft, clearDraft} = useMessageDraft()
   const composerInternalApiRef = useComposerInternalApiRef()
 
@@ -145,8 +148,6 @@ export function MessageComposer({
 
   return (
     <ComposerContainer>
-      {children}
-
       <View
         collapsable={false}
         ref={native(
@@ -162,82 +163,93 @@ export function MessageComposer({
             style={[a.flex_1, a.rounded_xl, {minHeight: MIN_HEIGHT}]}
             tintColor={t.palette.contrast_50}
             fallbackStyle={[t.atoms.bg_contrast_50]}>
-            {IS_WEB && (
-              <EmojiPicker.Root
-                onEmojiSelect={emoji =>
-                  composerInternalApiRef.current?.insert(emoji.native)
-                }
-                nextFocusRef={() =>
-                  composerInternalApiRef.current?.input?.element
-                }>
-                <EmojiPicker.Trigger label={l`Open emoji picker`}>
-                  {({props, state, control}) => (
-                    <Pressable
-                      {...props}
-                      style={[
-                        a.overflow_hidden,
-                        a.absolute,
-                        a.rounded_full,
-                        a.align_center,
-                        a.justify_center,
-                        a.z_30,
-                        {
-                          height: 20,
-                          width: 20,
-                          top: 10,
-                          right: 10,
-                        },
-                      ]}>
-                      <EmojiSmileIcon
-                        size="md"
-                        style={
-                          state.hovered ||
-                          state.focused ||
-                          state.pressed ||
-                          control.isOpen
-                            ? {color: t.palette.primary_500}
-                            : t.atoms.text_contrast_high
-                        }
-                      />
-                    </Pressable>
-                  )}
-                </EmojiPicker.Trigger>
-                <EmojiPicker.Picker />
-              </EmojiPicker.Root>
-            )}
+            {children}
+            <View style={[a.flex_1]}>
+              {IS_WEB && !loading ? (
+                <EmojiPicker.Root
+                  onEmojiSelect={emoji =>
+                    composerInternalApiRef.current?.insert(emoji.native)
+                  }
+                  nextFocusRef={() =>
+                    composerInternalApiRef.current?.input?.element
+                  }>
+                  <EmojiPicker.Trigger label={l`Open emoji picker`}>
+                    {({props, state, control}) => (
+                      <Pressable
+                        {...props}
+                        style={[
+                          a.overflow_hidden,
+                          a.absolute,
+                          a.rounded_full,
+                          a.align_center,
+                          a.justify_center,
+                          a.z_30,
+                          {
+                            height: 20,
+                            width: 20,
+                            top: 10,
+                            right: 10,
+                          },
+                        ]}>
+                        <EmojiSmileIcon
+                          size="md"
+                          style={
+                            state.hovered ||
+                            state.focused ||
+                            state.pressed ||
+                            control.isOpen
+                              ? {color: t.palette.primary_500}
+                              : t.atoms.text_contrast_high
+                          }
+                        />
+                      </Pressable>
+                    )}
+                  </EmojiPicker.Trigger>
+                  <EmojiPicker.Picker />
+                </EmojiPicker.Root>
+              ) : null}
 
-            <Composer
-              nativeID={textInputId}
-              label={l`Message input field`}
-              placeholder={l`Message`}
-              autocompletePlacement="top-start"
-              internalApiRef={composerInternalApiRef}
-              defaultValue={text}
-              editable={editable}
-              autoFocus={IS_WEB}
-              maxRows={12}
-              outerStyle={[a.flex_1]}
-              contentTextStyle={[a.text_md, a.leading_snug]}
-              contentPaddingStyle={{
-                paddingLeft: 16,
-                paddingTop: 10,
-                paddingBottom: 10,
-                paddingRight: 16 + platform({web: 20, default: 0}),
-              }}
-              onChange={handleChange}
-              onFacetCommitted={facet => {
-                if (facet.type === 'url' && isBskyPostUrl(facet.value)) {
-                  setEmbed(facet.value)
+              <Composer
+                nativeID={textInputId}
+                label={l`Message input field`}
+                placeholder={
+                  loading
+                    ? l({message: 'Loading chat…', context: 'placeholder'})
+                    : l({message: 'Message', context: 'action'})
                 }
-              }}
-              onRequestSubmit={req => {
-                if (req.platform === 'web' && req.shiftKey) return
-                req.nativeEvent.preventDefault()
-                handleSubmit()
-              }}
-            />
+                autocompletePlacement="top-start"
+                internalApiRef={composerInternalApiRef}
+                defaultValue={text}
+                editable={editable}
+                autoFocus={IS_WEB}
+                maxRows={12}
+                outerStyle={[a.flex_1]}
+                contentTextStyle={[a.text_md, a.leading_snug]}
+                contentPaddingStyle={{
+                  paddingLeft: 16,
+                  paddingTop: 10,
+                  paddingBottom: 10,
+                  paddingRight: 16 + platform({web: 20, default: 0}),
+                }}
+                onChange={handleChange}
+                onFacetCommitted={facet => {
+                  if (facet.type === 'url' && isBskyPostUrl(facet.value)) {
+                    setEmbed(facet.value)
+                  }
+                }}
+                onRequestSubmit={req => {
+                  if (req.platform === 'web' && req.shiftKey) return
+                  req.nativeEvent.preventDefault()
+                  handleSubmit()
+                }}
+              />
+            </View>
           </GlassView>
-          <SubmitButton onPress={handleSubmit} disabled={submitDisabled} />
+          <SubmitButton
+            onPress={handleSubmit}
+            disabled={submitDisabled}
+            loading={loading}
+          />
         </GlassContainer>
       </View>
     </ComposerContainer>
@@ -247,9 +259,11 @@ export function MessageComposer({
 function SubmitButton({
   onPress,
   disabled,
+  loading,
 }: {
   onPress: () => void
   disabled: boolean
+  loading: boolean
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
@@ -278,7 +292,11 @@ function SubmitButton({
         ]}
         onPress={onPress}
         disabled={disabled}>
-        <PaperPlaneIcon size="md" fill={t.palette.white} style={[a.mb_2xs]} />
+        {loading ? (
+          <Loader size="md" fill={t.palette.white} style={[a.mb_2xs]} />
+        ) : (
+          <PaperPlaneIcon size="md" fill={t.palette.white} style={[a.mb_2xs]} />
+        )}
       </Pressable>
     </GlassView>
   )

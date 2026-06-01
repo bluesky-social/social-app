@@ -58,10 +58,8 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 		if err != nil {
 			return echo.NewHTTPError(404, fmt.Sprintf("account not found: %s", handle))
 		}
-		for _, label := range pv.Labels {
-			if label.Src == pv.Did && label.Val == "!no-unauthenticated" {
-				return echo.NewHTTPError(403, fmt.Sprintf("account does not allow public views: %s", handle))
-			}
+		if profileRequiresAuth(pv) {
+			return echo.NewHTTPError(403, fmt.Sprintf("account does not allow public views: %s", handle))
 		}
 		return c.Redirect(http.StatusFound, fmt.Sprintf("/profile/%s/rss", pv.Did))
 	}
@@ -76,10 +74,8 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(404, fmt.Sprintf("account not found: %s", did))
 	}
-	for _, label := range pv.Labels {
-		if label.Src == pv.Did && label.Val == "!no-unauthenticated" {
-			return echo.NewHTTPError(403, fmt.Sprintf("account does not allow public views: %s", did))
-		}
+	if profileRequiresAuth(pv) {
+		return echo.NewHTTPError(403, fmt.Sprintf("account does not allow public views: %s", did))
 	}
 
 	af, err := appbsky.FeedGetAuthorFeed(ctx, srv.xrpcc, did.String(), "", "posts_no_replies", false, 30)

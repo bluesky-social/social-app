@@ -192,7 +192,7 @@ export function RejectMenu({
             currentScreen={currentScreen}
             params={{
               convoId: convo.id,
-              message: lastMessage,
+              did: lastMessage.sender.did,
             }}
           />
         </>

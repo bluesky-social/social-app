@@ -36,7 +36,10 @@ export function RecentChats({
   const ax = useAnalytics()
   const control = useDialogContext()
   const {currentAccount} = useSession()
-  const {data} = useListConvosQuery({status: 'accepted'})
+  const {data} = useListConvosQuery({
+    status: 'accepted',
+    lockStatus: 'unlocked',
+  })
   const convos = data?.pages[0]?.convos?.slice(0, 10)
   const moderationOpts = useModerationOpts()
   const navigation = useNavigation<NavigationProp>()
@@ -149,7 +152,11 @@ function RecentChatItem({
         a.align_center,
       ]}>
       {convo.kind === 'group' ? (
-        <AvatarBubbles profiles={convo.members} size={WIDTH - 8} />
+        <AvatarBubbles
+          profiles={convo.members}
+          size={WIDTH - 8}
+          moderationOpts={moderationOpts}
+        />
       ) : (
         <UserAvatar
           avatar={primaryProfile.avatar}

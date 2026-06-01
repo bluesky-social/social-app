@@ -39,7 +39,8 @@ type ResolvedExternalLink = {
    * The AT-URI of the Atmosphere record representing this external content, if
    * it exists. Example: a site.standard.document record.
    */
-  associatedRecord?: LinkMeta['associatedRecord']
+  associatedRefs?: LinkMeta['associatedRefs']
+  view?: LinkMeta['view']
 }
 
 type ResolvedPostRecord = {
@@ -245,7 +246,8 @@ async function resolveExternal(
     title: result.title ?? '',
     description: result.description ?? '',
     thumb: result.image ? await imageToThumb(result.image) : undefined,
-    associatedRecord: result.associatedRecord,
+    associatedRefs: result.associatedRefs,
+    view: result.view,
   }
 }
 

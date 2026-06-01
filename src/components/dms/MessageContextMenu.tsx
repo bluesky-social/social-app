@@ -1,12 +1,17 @@
 import {memo, useCallback} from 'react'
 import {LayoutAnimation, Platform} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
-import {type ChatBskyConvoDefs, RichText} from '@atproto/api'
+import {
+  type ChatBskyConvoDefs,
+  type ModerationOpts,
+  RichText,
+} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
+import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
 import {useConvoActive} from '#/state/messages/convo'
 import {useLanguagePrefs} from '#/state/preferences'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
@@ -27,15 +32,17 @@ import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
-import {hasReachedReactionLimit} from './util'
+import {canReact, hasReachedReactionLimit} from './util'
 
 export let MessageContextMenu = ({
   message,
   senderProfile,
+  moderationOpts,
   children,
 }: {
   message: ChatBskyConvoDefs.MessageView
   senderProfile?: bsky.profile.AnyProfileView
+  moderationOpts: ModerationOpts | undefined
   children: TriggerProps['children']
 }): React.ReactNode => {
   const {t: l, i18n} = useLingui()
@@ -51,6 +58,13 @@ export let MessageContextMenu = ({
 
   const isFromSelf = message.sender?.did === currentAccount?.did
   const isGroupChatEnabled = ax.features.enabled(ax.features.GroupChatsEnable)
+
+  const primaryMember = useMaybeProfileShadow(convo.convo.primaryMember)
+  const reactionsAvailable = canReact({
+    convoState: convo,
+    primaryMember,
+    moderationOpts,
+  })
 
   const onCopyMessage = useCallback(() => {
     const str = richTextToString(
@@ -116,7 +130,7 @@ export let MessageContextMenu = ({
   return (
     <>
       <ContextMenu.Root>
-        {IS_NATIVE && (
+        {IS_NATIVE && reactionsAvailable && (
           <ContextMenu.AuxiliaryView
             align={isFromSelf ? 'right' : 'left'}
             style={[isFromSelf && isGroupChatEnabled ? null : a.ml_sm]}>
@@ -200,7 +214,7 @@ export let MessageContextMenu = ({
         currentScreen="conversation"
         params={{
           convoId: convo.convo.view.id,
-          message,
+          did: message.sender.did,
         }}
       />
       <Prompt.Basic

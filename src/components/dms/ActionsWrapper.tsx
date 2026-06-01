@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {type ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatBskyConvoDefs, type ModerationOpts} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
@@ -10,18 +10,23 @@ export function ActionsWrapper({
   message,
   isFromSelf,
   senderProfile,
+  moderationOpts,
   children,
 }: {
   message: ChatBskyConvoDefs.MessageView
   hasReactions?: boolean
   isFromSelf: boolean
   senderProfile?: bsky.profile.AnyProfileView
+  moderationOpts: ModerationOpts | undefined
   children: React.ReactNode
 }) {
   const {t: l} = useLingui()
 
   return (
-    <MessageContextMenu message={message} senderProfile={senderProfile}>
+    <MessageContextMenu
+      message={message}
+      senderProfile={senderProfile}
+      moderationOpts={moderationOpts}>
       {trigger =>
         // will always be true, since this file is platform split
         trigger.IS_NATIVE && (

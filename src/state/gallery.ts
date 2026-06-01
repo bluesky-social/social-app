@@ -19,6 +19,7 @@ import {openCropper} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
 import {getDataUriSize} from '#/lib/media/util'
 import {isCancelledError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
 import {IS_NATIVE, IS_WEB} from '#/env'
 
 export type ImageTransformation = {
@@ -149,6 +150,7 @@ export async function cropImage(img: ComposerImage): Promise<ComposerImage> {
     }
   } catch (e) {
     if (!isCancelledError(e)) {
+      logger.error('Failed to crop image', {safeMessage: e})
       return img
     }
 

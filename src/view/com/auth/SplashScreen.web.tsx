@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -16,6 +15,7 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
+import {TimesLarge_Stroke2_Corner0_Rounded as TimesIcon} from '#/components/icons/Times'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
@@ -60,13 +60,7 @@ export const SplashScreen = ({
             zIndex: 100,
           }}
           onPress={onDismiss}>
-          <FontAwesomeIcon
-            icon="x"
-            size={24}
-            style={{
-              color: String(t.atoms.text.color),
-            }}
-          />
+          <TimesIcon width={24} style={t.atoms.text} />
         </Pressable>
       )}
 

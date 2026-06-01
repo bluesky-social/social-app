@@ -7,7 +7,7 @@
 #   Environment variables:   NODE_VERSION=24  (or set via .nvmrc — Pages reads it)
 #
 # Local equivalent:
-#   yarn install && yarn build-web && cp _redirects web-build/_redirects
+#   pnpm install && pnpm build-web && cp _redirects web-build/_redirects
 #
 # Deploy locally with:
 #   ./pages_build.sh
@@ -23,19 +23,19 @@ set -euo pipefail
 
 # Use frozen lockfile in CI (mirrors GitHub Actions); allow regeneration locally.
 if [[ -n "${CI:-}" ]]; then
-  yarn install --frozen-lockfile
+  pnpm install --frozen-lockfile
 else
-  yarn install
+  pnpm install
 fi
 
 # Eurosky: extract + compile i18n catalogs before bundling. Upstream relies
 # on a nightly CI job for this; the fork deploys without it, so without this
 # step any fork-added/changed string ships as its raw message ID (the
 # compiled catalogs would be stale). build-web bundles the compiled output.
-yarn intl:build
+pnpm intl:build
 
 # Build the web bundle. Output lands in ./web-build/.
-yarn build-web
+pnpm build-web
 
 # Webpack injects script/css tags with RELATIVE paths (`src="static/..."`).
 # When a user opens a non-root URL like /profile/x/post/y in a fresh tab, the

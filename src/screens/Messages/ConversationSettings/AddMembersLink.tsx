@@ -43,7 +43,7 @@ export function AddMembersLink({
             names = l`${createSanitizedDisplayName(members[0])} and ${createSanitizedDisplayName(members[1])} added to chat`
           } else if (members.length > 2) {
             const memberCount = convo.details.memberCount - 2
-            names = l`${createSanitizedDisplayName(members[0])}, ${createSanitizedDisplayName(members[1])}and ${plural(
+            names = l`${createSanitizedDisplayName(members[0])}, ${createSanitizedDisplayName(members[1])} and ${plural(
               memberCount,
               {
                 one: '# other',

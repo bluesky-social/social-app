@@ -5,15 +5,16 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {atoms as a, useTheme} from '#/alf'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {MEMBER_LIMIT} from './constants'
 
 export function MembersAndRequests({
   memberCount,
+  memberLimit,
   requestCount,
   hasMoreRequests,
   isOwner,
 }: {
   memberCount: number
+  memberLimit: number
   requestCount: number
   hasMoreRequests: boolean
   isOwner: boolean
@@ -31,7 +32,7 @@ export function MembersAndRequests({
         </Text>
         <Text style={[a.text_xs, a.font_medium, t.atoms.text_contrast_medium]}>
           {l({
-            message: `${memberCount}/${MEMBER_LIMIT}`,
+            message: `${memberCount}/${memberLimit}`,
             comment:
               'The number of group chat members out of the total number of permitted users.',
           })}

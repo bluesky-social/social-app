@@ -1,0 +1,59 @@
+diff --git a/android/build.gradle b/android/build.gradle
+index 5071139f8ee5fbba085d2afe3b2093de8eda915c..84bee34a238c6510169f6b6bdb0fda0594c77136 100644
+--- a/android/build.gradle
++++ b/android/build.gradle
+@@ -115,7 +115,6 @@ dependencies {
+   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+   implementation 'org.mp4parser:isoparser:1.9.56'
+-  implementation 'com.github.banketree:AndroidLame-kotlin:v0.0.1'
+   implementation 'javazoom:jlayer:1.0.1'
+ }
+ 
+diff --git a/android/src/main/java/com/reactnativecompressor/Audio/AudioCompressor.kt b/android/src/main/java/com/reactnativecompressor/Audio/AudioCompressor.kt
+deleted file mode 100644
+index 9292d3ee50776bd9d7760b8dcf6d123d44b4e31b..0000000000000000000000000000000000000000
+diff --git a/android/src/main/java/com/reactnativecompressor/Audio/AudioExtractor.kt b/android/src/main/java/com/reactnativecompressor/Audio/AudioExtractor.kt
+deleted file mode 100644
+index c6551828014437a14dc8f2f19488b647dba1bbe1..0000000000000000000000000000000000000000
+diff --git a/android/src/main/java/com/reactnativecompressor/Audio/AudioHelper.kt b/android/src/main/java/com/reactnativecompressor/Audio/AudioHelper.kt
+deleted file mode 100644
+index 42040b4916573463415ef2f57789b3c4fa25d135..0000000000000000000000000000000000000000
+diff --git a/android/src/main/java/com/reactnativecompressor/Audio/AudioMain.kt b/android/src/main/java/com/reactnativecompressor/Audio/AudioMain.kt
+index 446d4fb8b69e7cfdb51b29603aa2d52aac1ab8c8..f02190992dac823b6bbf2d77880a25adc48f16c7 100644
+--- a/android/src/main/java/com/reactnativecompressor/Audio/AudioMain.kt
++++ b/android/src/main/java/com/reactnativecompressor/Audio/AudioMain.kt
+@@ -11,7 +11,9 @@ class AudioMain(private val reactContext: ReactApplicationContext) {
+     promise: Promise) {
+     try {
+ 
+-      AudioCompressor.CompressAudio(fileUrl,optionMap,reactContext,promise)
++    // Skip compression on Android to avoid libandroidlame dependency
++    // Return the original file URL without compression
++    promise.resolve(fileUrl)
+     } catch (ex: Exception) {
+       promise.reject(ex)
+     }
+diff --git a/android/src/main/java/com/reactnativecompressor/Utils/Utils.kt b/android/src/main/java/com/reactnativecompressor/Utils/Utils.kt
+index c14b727e930f4114765bfbe15b742ddcdeaa392f..1198908fcc66eeeea5e537085d7632a0d4b04545 100644
+--- a/android/src/main/java/com/reactnativecompressor/Utils/Utils.kt
++++ b/android/src/main/java/com/reactnativecompressor/Utils/Utils.kt
+@@ -7,7 +7,6 @@ import android.provider.OpenableColumns
+ import android.util.Log
+ import com.facebook.react.bridge.Promise
+ import com.facebook.react.bridge.ReactApplicationContext
+-import com.reactnativecompressor.Audio.AudioCompressor
+ import com.reactnativecompressor.Video.VideoCompressor.CompressionListener
+ import com.reactnativecompressor.Video.VideoCompressor.VideoCompressorClass
+ import java.io.FileNotFoundException
+@@ -152,10 +151,6 @@ object Utils {
+     }
+   }
+ 
+-  fun addLog(log: String) {
+-    Log.d(AudioCompressor.TAG,  log)
+-  }
+-
+   val exifAttributes = arrayOf(
+     "FNumber",
+     "ApertureValue",

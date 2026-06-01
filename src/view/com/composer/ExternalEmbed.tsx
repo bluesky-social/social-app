@@ -12,6 +12,8 @@ import {Loader} from '#/components/Loader'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
 import {ModeratedFeedEmbed} from '#/components/Post/Embed/FeedEmbed'
 import {ModeratedListEmbed} from '#/components/Post/Embed/ListEmbed'
+import {StandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed'
+import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Embed as StarterPackEmbed} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 import {type Gif} from '#/features/gifPicker/types'
@@ -86,6 +88,21 @@ export const ExternalEmbedLink = ({
   const linkComponent = useMemo(() => {
     if (data) {
       if (data.type === 'external') {
+        if (data.view && isStandardSiteEmbed(data.view.external)) {
+          return (
+            <StandardSiteEmbed
+              preview
+              view={{
+                ...data.view?.external,
+                title: data.view?.external?.title || data.title || uri,
+                uri,
+                description:
+                  data.view?.external?.description || data.description,
+                thumb: data.view?.external?.thumb || data.thumb?.source.path,
+              }}
+            />
+          )
+        }
         return (
           <ExternalEmbed
             link={{

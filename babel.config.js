@@ -47,6 +47,9 @@ module.exports = function (api) {
       production: {
         plugins: ['transform-remove-console'],
       },
+      test: {
+        plugins: ['@babel/plugin-transform-class-static-block'],
+      },
     },
   }
 }
