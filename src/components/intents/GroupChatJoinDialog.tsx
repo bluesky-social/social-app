@@ -131,6 +131,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
     joinGroupChat({code})
   }
 
+  // Fallback if the prefetch exceeds the timeout
   if (isLoading || !data || !moderationOpts) {
     return (
       <View style={[a.p_2xl]}>

@@ -6,6 +6,7 @@ import * as WebBrowser from 'expo-web-browser'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
 import {CHAT_INVITE_CODE_REGEX} from '#/lib/strings/url-helpers'
+import {usePrefetchJoinLinkPreviews} from '#/state/queries/join-links'
 import {useSession} from '#/state/session'
 import {useSetActiveLanding} from '#/state/shell/landing'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -179,14 +180,22 @@ export function useGroupChatJoinIntent() {
     useIntentDialogs()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const setActiveLanding = useSetActiveLanding()
+  const prefetchJoinLinkPreviews = usePrefetchJoinLinkPreviews()
   return useCallback(
     (code: string, uri?: string) => {
       closeAllActiveElements()
       if (hasSession) {
         setState({code})
-        setTimeout(() => {
+        const prefetch = prefetchJoinLinkPreviews({
+          codes: [code],
+          hasSession: true,
+        })
+        void Promise.race([
+          prefetch,
+          new Promise(res => setTimeout(res, 200)),
+        ]).finally(() => {
           control.open()
-        }, 1000)
+        })
       } else {
         setActiveLanding({type: 'groupchat', uri: uri ?? '', code})
         requestSwitchToAccount({requestedAccount: 'groupchat'})
@@ -197,6 +206,7 @@ export function useGroupChatJoinIntent() {
       hasSession,
       control,
       setState,
+      prefetchJoinLinkPreviews,
       requestSwitchToAccount,
       setActiveLanding,
     ],
