@@ -64,7 +64,6 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL, IS_IOS, IS_NATIVE} from '#/env'
-import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {useActorStatus} from '#/features/liveNow'
 import {device, useStorage} from '#/storage'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
@@ -77,7 +76,6 @@ export function SettingsScreen({}: Props) {
   const {logoutEveryAccount} = useSessionApi()
   const {accounts, currentAccount} = useSession()
   const switchAccountControl = useDialogControl()
-  const inviteFriendsControl = useDialogControl()
   const signOutPromptControl = Prompt.usePromptControl()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const {data: otherProfiles} = useProfilesQuery({
@@ -210,27 +208,15 @@ export function SettingsScreen({}: Props) {
               <Trans>Content and media</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
-          {IS_NATIVE && (
-            <SettingsList.PressableItem
-              label={l`Find and invite friends`}
-              accessibilityHint={l`Opens the invite friends sheet to share your profile`}
-              onPress={() => inviteFriendsControl.open()}>
-              <SettingsList.ItemIcon icon={ContactsIcon} />
-              <SettingsList.ItemText>
-                <Trans>Find and invite friends</Trans>
-              </SettingsList.ItemText>
-              <SettingsList.Chevron />
-            </SettingsList.PressableItem>
-          )}
           {IS_NATIVE &&
             findContactsEnabled &&
             !ax.features.enabled(ax.features.ImportContactsSettingsDisable) && (
               <SettingsList.LinkItem
                 to="/settings/find-contacts"
-                label={l`Find friends from contacts`}>
+                label={l`Find and invite friends`}>
                 <SettingsList.ItemIcon icon={ContactsIcon} />
                 <SettingsList.ItemText>
-                  <Trans>Find friends from contacts</Trans>
+                  <Trans>Find and invite friends</Trans>
                 </SettingsList.ItemText>
               </SettingsList.LinkItem>
             )}
@@ -316,7 +302,6 @@ export function SettingsScreen({}: Props) {
       />
 
       <SwitchAccountDialog control={switchAccountControl} />
-      <InviteFriendsDialog control={inviteFriendsControl} />
     </Layout.Screen>
   )
 }

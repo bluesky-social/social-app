@@ -28,12 +28,21 @@ import {
 } from '#/components/dialogs/nuxs/InviteFriendsAnnouncement'
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
 import {type EnabledCheckProps} from '#/components/dialogs/nuxs/utils'
+import * as Dialog from '#/components/Dialog'
 import {useAnalytics} from '#/analytics'
 import {useGeolocation} from '#/geolocation'
+import {InviteFriendsDialog} from '#/features/inviteFriends'
 
 type Context = {
   activeNux: Nux | undefined
   dismissActiveNux: () => void
+  /**
+   * Opens the invite-friends dialog. It is mounted persistently by NuxDialogs
+   * (not inside the announcement NUX) so it survives the announcement being
+   * dismissed - the native bottom sheet cannot hand off between two sheets
+   * mounted in the same subtree.
+   */
+  openInviteFriends: () => void
 }
 
 const queuedNuxs: {
@@ -53,6 +62,7 @@ const queuedNuxs: {
 const Context = createContext<Context>({
   activeNux: undefined,
   dismissActiveNux: () => {},
+  openInviteFriends: () => {},
 })
 Context.displayName = 'NuxDialogContext'
 
@@ -105,6 +115,7 @@ function Inner({
   const [activeNux, setActiveNux] = useState<Nux | undefined>()
   const {mutateAsync: saveNux} = useSaveNux()
   const {mutate: resetNuxs} = useResetNuxs()
+  const inviteFriendsControl = Dialog.useDialogControl()
 
   const snoozeNuxDialog = useCallback(() => {
     snooze()
@@ -188,8 +199,9 @@ function Inner({
     return {
       activeNux,
       dismissActiveNux,
+      openInviteFriends: () => inviteFriendsControl.open(),
     }
-  }, [activeNux, dismissActiveNux])
+  }, [activeNux, dismissActiveNux, inviteFriendsControl])
 
   return (
     <Context.Provider value={ctx}>
@@ -198,6 +210,12 @@ function Inner({
       {activeNux === Nux.InviteFriendsAnnouncement && (
         <InviteFriendsAnnouncement />
       )}
+      {/*
+        Mounted persistently (not inside the announcement) so the invite dialog
+        survives the announcement NUX being dismissed during the "Try it"
+        handoff.
+      */}
+      <InviteFriendsDialog control={inviteFriendsControl} />
     </Context.Provider>
   )
 }

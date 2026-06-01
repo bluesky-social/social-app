@@ -3,12 +3,17 @@ import {InviteFriendsDialogInner} from './InviteFriendsDialogInner'
 
 export function InviteFriendsDialog({
   control,
+  onClose,
 }: {
   control: Dialog.DialogControlProps
+  onClose?: () => void
 }) {
   return (
-    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
-      <Dialog.Handle />
+    <Dialog.Outer
+      control={control}
+      onClose={onClose}
+      nativeOptions={{preventExpansion: true}}>
+      {/* <Dialog.Handle /> */}
       <InviteFriendsDialogInner control={control} />
     </Dialog.Outer>
   )

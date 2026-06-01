@@ -5,6 +5,9 @@ import {type DialogControlProps} from '#/components/Dialog'
  * Callers may still create a Dialog control and pass it; opening it does
  * nothing on web.
  */
-export function InviteFriendsDialog(_props: {control: DialogControlProps}) {
+export function InviteFriendsDialog(_props: {
+  control: DialogControlProps
+  onClose?: () => void
+}) {
   return null
 }

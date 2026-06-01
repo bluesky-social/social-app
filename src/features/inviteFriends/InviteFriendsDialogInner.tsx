@@ -13,6 +13,7 @@ import {logger} from '#/logger'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import {Error as ErrorMessage} from '#/components/Error'
@@ -120,13 +121,24 @@ export function InviteFriendsDialogInner({
   return (
     <Dialog.ScrollableInner
       label={l`Invite friends`}
-      contentContainerStyle={[a.pt_sm]}
+      contentContainerStyle={[a.pt_0, a.px_0]}
       header={
-        <Dialog.Header>
+        <Dialog.Header
+          renderLeft={() => (
+            <Button
+              label={l`Done`}
+              onPress={() => control.close()}
+              size="small"
+              color="primary"
+              variant="ghost"
+              style={[a.rounded_full]}>
+              <ButtonText style={[a.text_md]}>{l`Done`}</ButtonText>
+            </Button>
+          )}>
           <Dialog.HeaderText>{l`Invite Friends`}</Dialog.HeaderText>
         </Dialog.Header>
       }>
-      <View style={[a.align_center, a.pt_xl]}>
+      <View style={[a.align_center, a.pt_xl, a.px_xl]}>
         <ThemePicker value={themeKey} onChange={setThemeKey} />
 
         <View style={[a.mt_5xl]}>

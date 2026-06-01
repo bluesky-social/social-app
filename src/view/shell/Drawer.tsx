@@ -91,38 +91,7 @@ let DrawerProfileCard = ({
       accessibilityLabel={_(msg`Profile`)}
       accessibilityHint={_(msg`Navigates to your profile`)}
       onPress={onPressProfile}
-      style={[a.gap_sm, a.pr_lg, {position: 'relative'}]}>
-      {onPressShare && (
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Invite friends`)}
-          accessibilityHint={_(
-            msg`Opens the invite friends sheet to share your profile`,
-          )}
-          onPress={onPressShare}
-          hitSlop={8}
-          style={({pressed}) => [
-            {
-              position: 'absolute',
-              top: 4,
-              right: 16,
-              width: 32,
-              height: 32,
-              borderRadius: 16,
-              backgroundColor: t.palette.contrast_50,
-              alignItems: 'center',
-              justifyContent: 'center',
-              opacity: pressed ? 0.7 : 1,
-              zIndex: 1,
-            },
-          ]}>
-          <ArrowShareRight
-            width={16}
-            height={16}
-            fill={t.palette.primary_500}
-          />
-        </Pressable>
-      )}
+      style={[a.gap_sm, a.pr_lg]}>
       <UserAvatar
         size={52}
         avatar={profile?.avatar}
@@ -135,11 +104,45 @@ let DrawerProfileCard = ({
         <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
           <Text
             emoji
-            style={[a.font_bold, a.text_xl, a.mt_2xs, a.leading_tight]}
+            style={[
+              a.font_bold,
+              a.text_xl,
+              a.mt_2xs,
+              a.leading_tight,
+              a.flex_shrink,
+            ]}
             numberOfLines={1}>
             {profile?.displayName || account.handle}
           </Text>
           {profile && <ProfileBadges profile={profile} size="lg" />}
+          {onPressShare && (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Invite friends`)}
+              accessibilityHint={_(
+                msg`Opens the invite friends sheet to share your profile`,
+              )}
+              onPress={onPressShare}
+              hitSlop={8}
+              style={({pressed}) => [
+                a.ml_auto,
+                {
+                  width: 32,
+                  height: 32,
+                  borderRadius: 16,
+                  backgroundColor: t.palette.contrast_50,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  opacity: pressed ? 0.7 : 1,
+                },
+              ]}>
+              <ArrowShareRight
+                width={16}
+                height={16}
+                fill={t.palette.primary_500}
+              />
+            </Pressable>
+          )}
         </View>
         <Text
           emoji
@@ -325,7 +328,6 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
               account={currentAccount}
               onPressProfile={onPressDrawerHeaderProfile}
               onPressShare={() => {
-                setDrawerOpen(false)
                 inviteFriendsControl.open()
               }}
             />

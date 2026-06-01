@@ -1,6 +1,6 @@
-import {useCallback, useState} from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
+import {Image} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -12,7 +12,6 @@ import {useNuxDialogContext} from '#/components/dialogs/nuxs'
 import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
 import {Text} from '#/components/Typography'
 import {IS_E2E, IS_NATIVE, IS_WEB} from '#/env'
-import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {createIsEnabledCheck} from './utils'
 
 export const enabled = createIsEnabledCheck(() => {
@@ -26,25 +25,23 @@ export function InviteFriendsAnnouncement() {
   const {_} = useLingui()
   const nuxDialogs = useNuxDialogContext()
   const control = Dialog.useDialogControl()
-  const inviteFriendsControl = Dialog.useDialogControl()
-  const [openInviteAfterClose, setOpenInviteAfterClose] = useState(false)
 
   Dialog.useAutoOpen(control)
 
   const onClose = useCallback(() => {
     nuxDialogs.dismissActiveNux()
-    if (openInviteAfterClose) {
-      // Defer to the next tick so the close animation completes before
-      // we open the next dialog (avoids visual glitch on iOS).
-      setOpenInviteAfterClose(false)
-      inviteFriendsControl.open()
-    }
-  }, [nuxDialogs, openInviteAfterClose, inviteFriendsControl])
+  }, [nuxDialogs])
 
   const onPressTryIt = useCallback(() => {
-    setOpenInviteAfterClose(true)
-    control.close()
-  }, [control])
+    // Close this announcement (which dismisses + unmounts the NUX), then open
+    // the invite dialog. The invite dialog is mounted persistently by NuxDialogs
+    // (not here) so it survives the dismissal - the native bottom sheet cannot
+    // hand off to a second sheet mounted in this same subtree. Defer the open to
+    // the next tick so the announcement's teardown completes first.
+    control.close(() => {
+      setTimeout(() => nuxDialogs.openInviteFriends())
+    })
+  }, [control, nuxDialogs])
 
   return (
     <>
@@ -62,38 +59,37 @@ export function InviteFriendsAnnouncement() {
           ]}>
           <View
             style={[
-              a.align_center,
+              a.w_full,
+              a.relative,
               a.overflow_hidden,
               {
-                paddingTop: IS_WEB ? 24 : 40,
-                paddingBottom: 16,
                 borderTopLeftRadius: a.rounded_md.borderRadius,
                 borderTopRightRadius: a.rounded_md.borderRadius,
               },
             ]}>
-            <LinearGradient
-              colors={[t.palette.primary_100, t.palette.primary_200]}
-              locations={[0, 1]}
-              start={{x: 0, y: 0}}
-              end={{x: 0, y: 1}}
-              style={[a.absolute, a.inset_0]}
+            {/* The image is the full header background; the tag sits on top of it. */}
+            <Image
+              accessibilityIgnoresInvertColors
+              source={require('../../../../assets/images/invite_friends_announcement_nux.webp')}
+              style={[a.w_full, {aspectRatio: 754 / 440}]}
+              alt={_(
+                msg`An illustration of the Bluesky app with a paper airplane flying out of it, representing inviting friends`,
+              )}
             />
-            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <SparkleIcon fill={t.palette.primary_800} size="sm" />
-              <Text style={[a.font_semi_bold, {color: t.palette.primary_800}]}>
-                <Trans>New Feature</Trans>
-              </Text>
-            </View>
-            {/*
-              TODO: drop promo image
-            */}
             <View
-              style={{
-                width: 220,
-                height: 140,
-                marginTop: 12,
-              }}
-            />
+              style={[
+                a.absolute,
+                a.align_center,
+                {top: 0, left: 0, right: 0, paddingTop: IS_WEB ? 24 : 20},
+              ]}>
+              <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                <SparkleIcon fill={t.palette.primary_800} size="sm" />
+                <Text
+                  style={[a.font_semi_bold, {color: t.palette.primary_800}]}>
+                  <Trans>New Feature</Trans>
+                </Text>
+              </View>
+            </View>
           </View>
           <View style={[a.align_center, a.px_xl, a.pt_xl, a.gap_2xl, a.pb_sm]}>
             <View style={[a.gap_sm, a.align_center]}>
@@ -151,8 +147,6 @@ export function InviteFriendsAnnouncement() {
           <Dialog.Close />
         </Dialog.ScrollableInner>
       </Dialog.Outer>
-
-      <InviteFriendsDialog control={inviteFriendsControl} />
     </>
   )
 }
