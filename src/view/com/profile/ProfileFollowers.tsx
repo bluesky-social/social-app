@@ -14,6 +14,7 @@ import {useDialogControl} from '#/components/Dialog'
 import {PeopleRemove2_Stroke1_Corner0_Rounded as PeopleRemoveIcon} from '#/components/icons/PeopleRemove2'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 import {
   FollowersPromoBanner,
   InviteFriendsDialog,
@@ -167,7 +168,10 @@ export function ProfileFollowers({name}: {name: string}) {
   const inviteFriendsControl = useDialogControl()
   const [followersPromoDismissed, setFollowersPromoDismissed] =
     useFollowersPromoDismissed()
+  // Native-only: the invite-friends sheet is a no-op on web, so the banner
+  // would open nothing. Gate it to avoid a dead promo on web.
   const showFollowersPromo =
+    IS_NATIVE &&
     isMe &&
     !followersPromoDismissed &&
     followers.length < 1 &&
@@ -206,7 +210,9 @@ export function ProfileFollowers({name}: {name: string}) {
             onPress: () => navigation.goBack(),
           }}
         />
-        <InviteFriendsDialog control={inviteFriendsControl} />
+        {showFollowersPromo && (
+          <InviteFriendsDialog control={inviteFriendsControl} />
+        )}
       </>
     )
   }

@@ -10,12 +10,10 @@ import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
-import {logger} from '#/logger'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
 import {CircleInfo_Stroke2_Corner0_Rounded as InfoIcon} from '#/components/icons/CircleInfo'
-import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 
@@ -66,14 +64,6 @@ export function InviteScannerScreen() {
   const onRetry = useCallback(() => {
     setError(null)
     setScannerEnabled(true)
-  }, [])
-
-  const onPressGallery = useCallback(() => {
-    // TODO: implement gallery image picker + QR decode. expo-camera only
-    // scans live; decoding from a gallery image requires an additional
-    // library (e.g. @react-native-vision-camera + vision-camera-code-scanner,
-    // or a JS-side decoder like jsqr running on a pixel array).
-    logger.warn('InviteScanner: gallery picker not implemented yet')
   }, [])
 
   // Permission states ---------------------------------------------------------
@@ -171,25 +161,6 @@ export function InviteScannerScreen() {
             },
           ]}>
           <ArrowLeftIcon size="lg" fill={t.palette.white} />
-        </Pressable>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={l`Pick from gallery`}
-          accessibilityHint={l`Choose a QR code image from your photo library`}
-          onPress={onPressGallery}
-          hitSlop={12}
-          style={({pressed}) => [
-            {
-              width: 32,
-              height: 32,
-              borderRadius: 16,
-              backgroundColor: 'rgba(255, 255, 255, 0.25)',
-              alignItems: 'center',
-              justifyContent: 'center',
-              opacity: pressed ? 0.6 : 1,
-            },
-          ]}>
-          <ImageIcon width={16} height={16} fill={t.palette.white} />
         </Pressable>
       </View>
 

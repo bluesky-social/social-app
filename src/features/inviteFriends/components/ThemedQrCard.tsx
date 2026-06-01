@@ -8,6 +8,7 @@ import {LinearGradient} from 'expo-linear-gradient'
 
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
+import {hexToRgb, rgbToHex} from '#/alf/util/colorGeneration'
 import {Text} from '#/components/Typography'
 import {type InviteThemeVariant} from '../themes'
 
@@ -238,18 +239,9 @@ function eyeColor(from: string, to: string, t: number): string {
   const fromRgb = hexToRgb(from)
   const toRgb = hexToRgb(to)
   if (!fromRgb || !toRgb) return from
-  const r = Math.round(fromRgb.r + (toRgb.r - fromRgb.r) * t)
-  const g = Math.round(fromRgb.g + (toRgb.g - fromRgb.g) * t)
-  const b = Math.round(fromRgb.b + (toRgb.b - fromRgb.b) * t)
-  return `#${[r, g, b].map(n => n.toString(16).padStart(2, '0')).join('')}`
-}
-
-function hexToRgb(hex: string): {r: number; g: number; b: number} | null {
-  const match = hex.replace('#', '').match(/^([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i)
-  if (!match) return null
-  return {
-    r: parseInt(match[1], 16),
-    g: parseInt(match[2], 16),
-    b: parseInt(match[3], 16),
-  }
+  return rgbToHex(
+    fromRgb.r + (toRgb.r - fromRgb.r) * t,
+    fromRgb.g + (toRgb.g - fromRgb.g) * t,
+    fromRgb.b + (toRgb.b - fromRgb.b) * t,
+  )
 }

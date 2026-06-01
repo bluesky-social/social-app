@@ -52,7 +52,7 @@ export function InviteFriendsDialogInner({
   const isHandleValid = !!handle && handle !== 'handle.invalid'
 
   const canonicalShareUrl = isHandleValid ? getInviteShareUrl(handle) : ''
-  const cosmeticDisplayUrl = isHandleValid ? getInviteDisplayUrl(handle) : ''
+  const displayUrl = isHandleValid ? getInviteDisplayUrl(handle) : ''
 
   const onShare = async () => {
     if (!canonicalShareUrl) {
@@ -225,7 +225,7 @@ export function InviteFriendsDialogInner({
               {color: t.palette.contrast_975, lineHeight: 19.5},
             ]}
             numberOfLines={1}>
-            {cosmeticDisplayUrl || ' '}
+            {displayUrl || ' '}
           </Text>
           <Pressable
             accessibilityRole="button"

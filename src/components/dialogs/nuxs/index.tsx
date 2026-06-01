@@ -18,6 +18,7 @@ import {
 import {useProfileQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
+import * as Dialog from '#/components/Dialog'
 import {
   DraftsAnnouncement,
   enabled as isDraftsAnnouncementEnabled,
@@ -28,10 +29,9 @@ import {
 } from '#/components/dialogs/nuxs/InviteFriendsAnnouncement'
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
 import {type EnabledCheckProps} from '#/components/dialogs/nuxs/utils'
-import * as Dialog from '#/components/Dialog'
 import {useAnalytics} from '#/analytics'
-import {useGeolocation} from '#/geolocation'
 import {InviteFriendsDialog} from '#/features/inviteFriends'
+import {useGeolocation} from '#/geolocation'
 
 type Context = {
   activeNux: Nux | undefined

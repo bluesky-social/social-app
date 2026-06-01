@@ -39,7 +39,7 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_IOS} from '#/env'
+import {IS_IOS, IS_NATIVE} from '#/env'
 import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {useActorStatus} from '#/features/liveNow'
 import {GermButton} from '../components/GermButton'
@@ -350,20 +350,24 @@ export function HeaderStandardButtons({
               <Trans>Edit Profile</Trans>
             </ButtonText>
           </Button>
-          <Button
-            testID="profileHeaderShareButton"
-            size="small"
-            color="secondary"
-            shape="round"
-            onPress={() => {
-              playHaptic('Light')
-              inviteFriendsControl.open()
-            }}
-            label={_(msg`Invite friends`)}>
-            <ButtonIcon icon={ArrowShareRight} />
-          </Button>
+          {/* Invite friends is a native-only share sheet (the dialog is a
+              no-op on web), so gate the entry point to avoid a dead button. */}
+          {IS_NATIVE && (
+            <Button
+              testID="profileHeaderShareButton"
+              size="small"
+              color="secondary"
+              shape="round"
+              onPress={() => {
+                playHaptic('Light')
+                inviteFriendsControl.open()
+              }}
+              label={_(msg`Invite friends`)}>
+              <ButtonIcon icon={ArrowShareRight} />
+            </Button>
+          )}
           <EditProfileDialog profile={profile} control={editProfileControl} />
-          <InviteFriendsDialog control={inviteFriendsControl} />
+          {IS_NATIVE && <InviteFriendsDialog control={inviteFriendsControl} />}
         </>
       ) : profile.viewer?.blocking ? (
         profile.viewer?.blockingByList ? null : (

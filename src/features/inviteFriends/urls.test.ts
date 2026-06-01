@@ -35,25 +35,25 @@ describe('invite URLs', () => {
   })
 
   describe('getInviteDisplayUrl', () => {
-    it('returns a cosmetic bsky.app/invite/<short> string', () => {
+    it('returns the scheme-stripped canonical profile URL', () => {
       expect(getInviteDisplayUrl('danielle.bsky.team')).toBe(
-        'bsky.app/invite/danielle',
+        'bsky.app/profile/danielle.bsky.team',
       )
     })
 
     it('uses the bare handle when there is no dot', () => {
-      expect(getInviteDisplayUrl('alice')).toBe('bsky.app/invite/alice')
+      expect(getInviteDisplayUrl('alice')).toBe('bsky.app/profile/alice')
     })
 
-    it('lowercases the short segment', () => {
+    it('lowercases the handle', () => {
       expect(getInviteDisplayUrl('Danielle.bsky.team')).toBe(
-        'bsky.app/invite/danielle',
+        'bsky.app/profile/danielle.bsky.team',
       )
     })
 
     it('strips a leading @ if present', () => {
       expect(getInviteDisplayUrl('@alice.bsky.social')).toBe(
-        'bsky.app/invite/alice',
+        'bsky.app/profile/alice.bsky.social',
       )
     })
 
@@ -62,9 +62,10 @@ describe('invite URLs', () => {
       expect(getInviteDisplayUrl('@')).toBe('')
     })
 
-    it('returns empty string when first segment is empty (EDGE-002)', () => {
-      expect(getInviteDisplayUrl('.bsky.social')).toBe('')
-      expect(getInviteDisplayUrl('@.bsky.social')).toBe('')
+    it('mirrors getInviteShareUrl exactly minus the scheme', () => {
+      expect(getInviteDisplayUrl('alice.bsky.social')).toBe(
+        getInviteShareUrl('alice.bsky.social').replace(/^https:\/\//, ''),
+      )
     })
   })
 })
