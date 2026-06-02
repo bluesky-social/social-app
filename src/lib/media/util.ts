@@ -1,5 +1,29 @@
+import {POST_IMG_MAX} from '#/lib/constants'
+
 export function extractDataUriMime(uri: string): string {
   return uri.substring(uri.indexOf(':') + 1, uri.indexOf(';'))
+}
+
+export function getResizedDimensions(
+  originalDims: {
+    width: number
+    height: number
+  },
+  max: {width: number; height: number} = POST_IMG_MAX,
+) {
+  if (originalDims.width <= max.width && originalDims.height <= max.height) {
+    return originalDims
+  }
+
+  const ratio = Math.min(
+    max.width / originalDims.width,
+    max.height / originalDims.height,
+  )
+
+  return {
+    width: Math.round(originalDims.width * ratio),
+    height: Math.round(originalDims.height * ratio),
+  }
 }
 
 // Fairly accurate estimate that is more performant

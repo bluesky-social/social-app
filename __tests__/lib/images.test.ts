@@ -4,8 +4,8 @@ import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
 import {
   downloadAndResize,
   type DownloadAndResizeOpts,
-  getResizedDimensions,
 } from '../../src/lib/media/manip'
+import {getResizedDimensions} from '../../src/lib/media/util'
 
 const mockResizedImage = {
   path: 'file://resized-image.jpg',
@@ -41,10 +41,8 @@ describe('downloadAndResize', () => {
 
     const opts: DownloadAndResizeOpts = {
       uri: 'https://example.com/image.jpg',
-      width: 100,
-      height: 100,
+      maxDimension: 2000,
       maxSize: 500000,
-      mode: 'cover',
       timeout: 10000,
     }
 
@@ -60,9 +58,11 @@ describe('downloadAndResize', () => {
 
     // First time it gets called is to get dimensions
     expect(manipulateAsync).toHaveBeenCalledWith(expect.any(String), [], {})
+    // The mocked source image is 100x100, below maxDimension, so it is not
+    // downsized.
     expect(manipulateAsync).toHaveBeenCalledWith(
       expect.any(String),
-      [{resize: {height: opts.height, width: opts.width}}],
+      [{resize: {height: 100, width: 100}}],
       {format: SaveFormat.JPEG, compress: 1.0},
     )
     expect(deleteAsync).toHaveBeenCalledWith(expect.any(String), {
@@ -73,10 +73,8 @@ describe('downloadAndResize', () => {
   it('should return undefined for invalid URI', async () => {
     const opts: DownloadAndResizeOpts = {
       uri: 'invalid-uri',
-      width: 100,
-      height: 100,
+      maxDimension: 2000,
       maxSize: 500000,
-      mode: 'cover',
       timeout: 10000,
     }
 

@@ -21,7 +21,7 @@ import {logger} from '#/logger'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
-import {convertCdnPreset} from './util'
+import {convertCdnPreset, getResizedDimensions} from './util'
 
 export async function compressIfNeeded(
   img: PickerImage,
@@ -31,9 +31,7 @@ export async function compressIfNeeded(
     return img
   }
   const resizedImage = await doResize(normalizePath(img.path), {
-    width: img.width,
-    height: img.height,
-    mode: 'stretch',
+    maxDimension: POST_IMG_MAX.width,
     maxSize,
   })
   const finalImageMovedPath = await moveToPermanentPath(
@@ -49,9 +47,7 @@ export async function compressIfNeeded(
 
 export interface DownloadAndResizeOpts {
   uri: string
-  width: number
-  height: number
-  mode: 'contain' | 'cover' | 'stretch'
+  maxDimension: number
   maxSize: number
   timeout: number
 }
@@ -67,7 +63,10 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
   const path = await downloadImage(opts.uri, String(uuid.v4()), opts.timeout)
 
   try {
-    return await doResize(path, opts)
+    return await doResize(path, {
+      maxDimension: opts.maxDimension,
+      maxSize: opts.maxSize,
+    })
   } finally {
     void safeDeleteAsync(path)
   }
@@ -188,9 +187,7 @@ export function getImageDim(path: string): Promise<Dimensions> {
 // =
 
 interface DoResizeOpts {
-  width: number
-  height: number
-  mode: 'contain' | 'cover' | 'stretch'
+  maxDimension: number
   maxSize: number
 }
 
@@ -204,10 +201,13 @@ async function doResize(
   // Performing an "empty" manipulation lets us get the dimensions of the original image. React Native's Image.getSize()
   // does not work for local files...
   const imageRes = await manipulateAsync(localUri, [], {})
-  const newDimensions = getResizedDimensions({
-    width: imageRes.width,
-    height: imageRes.height,
-  })
+  const newDimensions = getResizedDimensions(
+    {
+      width: imageRes.width,
+      height: imageRes.height,
+    },
+    {width: opts.maxDimension, height: opts.maxDimension},
+  )
 
   let minQualityPercentage = 0
   let maxQualityPercentage = 101 // exclusive
@@ -385,28 +385,6 @@ async function withTempFile<T>(
     return await cb(tmpFileUrl)
   } finally {
     safeDeleteAsync(tmpDirUri)
-  }
-}
-
-export function getResizedDimensions(originalDims: {
-  width: number
-  height: number
-}) {
-  if (
-    originalDims.width <= POST_IMG_MAX.width &&
-    originalDims.height <= POST_IMG_MAX.height
-  ) {
-    return originalDims
-  }
-
-  const ratio = Math.min(
-    POST_IMG_MAX.width / originalDims.width,
-    POST_IMG_MAX.height / originalDims.height,
-  )
-
-  return {
-    width: Math.round(originalDims.width * ratio),
-    height: Math.round(originalDims.height * ratio),
   }
 }
 

@@ -102,6 +102,12 @@ export const POST_IMG_MAX = {
   size: 1000000,
 }
 
+export const POST_IMG_MAX_HIGH_RES = {
+  width: 4000,
+  height: 4000,
+  size: 2000000,
+}
+
 export const STAGING_LINK_META_PROXY =
   'https://cardyb.staging.bsky.dev/v1/extract?url='
 
