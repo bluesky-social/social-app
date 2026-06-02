@@ -800,10 +800,14 @@ const LINKING = {
 
     // Chat invite URLs (`/c/:code`) are handled by `useIntentHandler`, which
     // opens the GroupChatJoinDialog (or the logged-out join flow). Route the
-    // path to Home on web so the dialog overlays Home; on native, fall through
-    // to the default tab initialization.
-    if (CHAT_INVITE_CODE_REGEX.test(path.split('?')[0])) {
-      if (IS_NATIVE) return
+    // path to Home so the dialog overlays Home instead of NotFound. On native,
+    // react-navigation strips the `bluesky://` prefix and passes the path
+    // without a leading slash, so normalize before matching.
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`
+    if (CHAT_INVITE_CODE_REGEX.test(normalizedPath.split('?')[0])) {
+      if (IS_NATIVE) {
+        return buildStateObject('HomeTab', 'Home', params)
+      }
       return buildStateObject('Flat', 'Home', params)
     }
 
