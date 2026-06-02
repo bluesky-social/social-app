@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-02 17:45\n"
+"PO-Revision-Date: 2026-06-02 20:08\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -233,7 +233,7 @@ msgstr ""
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:84
 msgid "{0} joined the group"
-msgstr ""
+msgstr "{0} aniĝis la grupon"
 
 #. placeholder {0}: formatCount(i18n, JOINED_THIS_WEEK)
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:230
@@ -248,7 +248,7 @@ msgstr ""
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:97
 msgid "{0} left the group"
-msgstr ""
+msgstr "{0} foriris el la grupo"
 
 #. placeholder {0}: formatTime(currentTime)
 #. placeholder {1}: formatTime(duration)
@@ -276,7 +276,7 @@ msgstr ""
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:58
 msgid "{0} was added to the group"
-msgstr ""
+msgstr "{0} estis aligita al la grupo"
 
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:70
@@ -286,7 +286,7 @@ msgstr ""
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:71
 msgid "{0} was removed from the group"
-msgstr ""
+msgstr "{0} estis forigita el la grupo"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
@@ -345,11 +345,11 @@ msgstr "{0}s"
 
 #: src/components/dms/SystemMessageGroup.tsx:38
 msgid "{count, plural, one {# chat update} other {# chat updates}}"
-msgstr ""
+msgstr "{count, plural, one {# babileja aktualigo} other {# babilejaj aktualigoj}}"
 
 #: src/screens/Messages/components/InboxRequests.tsx:33
 msgid "{count, plural, one {# request} other {# requests}}"
-msgstr ""
+msgstr "{count, plural, one {# peto} other {# petoj}}"
 
 #: src/view/shell/desktop/LeftNav.tsx:483
 msgid "{count, plural, one {# unread item} other {# unread items}}"
@@ -363,7 +363,7 @@ msgstr ""
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:29
 msgid "{count}+ requests"
-msgstr ""
+msgstr "{count}+ petoj"
 
 #: src/components/dms/DateDivider.tsx:60
 msgid "{date} at {time}"
@@ -1281,12 +1281,12 @@ msgstr "Permesi al ĉiuj respondi"
 #: src/screens/Messages/Settings.tsx:138
 #: src/screens/Messages/Settings.tsx:153
 msgid "Allow direct messages from"
-msgstr ""
+msgstr "Permesi rektajn mesaĝojn de"
 
 #: src/screens/Messages/Settings.tsx:184
 #: src/screens/Messages/Settings.tsx:199
 msgid "Allow group chat invites from"
-msgstr ""
+msgstr "Permesi invitilojn al grupaj babilejoj de"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:128
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:134
@@ -5547,7 +5547,7 @@ msgstr "Kaŝi adaptadajn opciojn"
 
 #: src/components/dms/SystemMessageGroup.tsx:57
 msgid "Hide group chat updates"
-msgstr ""
+msgstr "Kaŝi aktualigojn de grupaj babilejoj"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:533
 msgid "Hide lists"
@@ -7520,7 +7520,7 @@ msgstr "Nedisponebla ĉe ĉi tiu platformo."
 
 #: src/components/KnownFollowers.tsx:254
 msgid "Not followed by anyone you’re following"
-msgstr ""
+msgstr "Sekvata de neniu el viaj sekvatoj"
 
 #: src/Navigation.tsx:174
 #: src/view/screens/Profile.tsx:132
@@ -7904,7 +7904,7 @@ msgstr "Malfermi agordojn de afiŝaj lingvoj"
 
 #: src/components/dms/SystemMessageItem.tsx:60
 msgid "Opens profile"
-msgstr ""
+msgstr "Malfermas profilon"
 
 #. Accessibility hint announced after the GIF picker button label, describing what activating it will do.
 #: src/view/com/composer/photos/SelectGifBtn.tsx:45
@@ -10195,7 +10195,7 @@ msgstr "Montri adaptadajn opciojn"
 
 #: src/components/dms/SystemMessageGroup.tsx:57
 msgid "Show group chat updates"
-msgstr ""
+msgstr "Montri aktualigojn de grupaj babilejoj"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:593
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:595
@@ -12258,12 +12258,12 @@ msgstr "uzantoj sekvantaj <0>@{0}</0>"
 #: src/screens/Messages/Settings.tsx:79
 msgctxt "allow group chat invites from"
 msgid "Users I follow"
-msgstr ""
+msgstr "Uzantoj, kiujn mi sekvas"
 
 #: src/screens/Messages/Settings.tsx:64
 msgctxt "allow messages from"
 msgid "Users I follow"
-msgstr ""
+msgstr "Uzantoj, kiujn mi sekvas"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:451
 msgid "Value:"
