@@ -1,5 +1,10 @@
 import {useCallback} from 'react'
-import {type AppBskyActorDefs, type AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {
+  type AppBskyActorDefs,
+  type AppBskyFeedDefs,
+  AtUri,
+  type RichText,
+} from '@atproto/api'
 import {
   type QueryClient,
   useMutation,
@@ -7,9 +12,13 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {editPost} from '#/lib/api'
+import {until} from '#/lib/async/until'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {type Shadow} from '#/state/cache/types'
+import {RQKEY_ROOT as POST_FEED_RQKEY_ROOT} from '#/state/queries/post-feed'
+import {postThreadQueryKeyRoot} from '#/state/queries/usePostThread/types'
 import {useAgent, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {useAnalytics} from '#/analytics'
@@ -357,6 +366,34 @@ export function usePostDeleteMutation() {
     },
     onSuccess(_, variables) {
       updatePostShadow(queryClient, variables.uri, {isDeleted: true})
+    },
+  })
+}
+
+export function useEditPostMutation() {
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+  return useMutation<{uri: string}, Error, {uri: string; richtext: RichText}>({
+    mutationFn: async ({uri, richtext}) => {
+      const res = await editPost(agent, {uri, richtext})
+      // The delete+recreate takes a moment to re-index. Wait for the edit to
+      // land (it carries `updatedAt`) so the refetch doesn't pull the old one.
+      await until(
+        5,
+        1e3,
+        (posts: AppBskyFeedDefs.PostView[]) =>
+          posts.length > 0 &&
+          typeof (posts[0].record as {updatedAt?: unknown}).updatedAt ===
+            'string',
+        async () => (await agent.getPosts({uris: [uri]})).data.posts,
+      )
+      return res
+    },
+    onSuccess(_, {uri}) {
+      // Same URI after the recreate - refresh anywhere this post shows.
+      queryClient.invalidateQueries({queryKey: RQKEY(uri)})
+      queryClient.invalidateQueries({queryKey: [POST_FEED_RQKEY_ROOT]})
+      queryClient.invalidateQueries({queryKey: [postThreadQueryKeyRoot]})
     },
   })
 }
