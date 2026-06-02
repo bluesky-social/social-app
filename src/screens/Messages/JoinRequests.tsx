@@ -128,6 +128,7 @@ function JoinRequestsList({
   const moderationOpts = useModerationOpts()
   const bottomBarOffset = useBottomBarOffset()
   const {currentAccount} = useSession()
+  const navigation = useNavigation<NavigationProp>()
   const inviteLinkControl = Dialog.useDialogControl()
 
   const [isPTRing, setIsPTRing] = useState(false)
@@ -138,6 +139,7 @@ function JoinRequestsList({
 
   const {
     data: joinRequestsData,
+    isPending,
     isError,
     hasNextPage,
     fetchNextPage,
@@ -148,8 +150,26 @@ function JoinRequestsList({
     enabled: true,
   })
 
+  const items =
+    joinRequestsData?.pages.flatMap(page =>
+      page.requests.map(request => request.requestedBy),
+    ) ?? []
+  const requestCount =
+    joinRequestsData?.pages.reduce(
+      (sum, page) => sum + page.requests.length,
+      0,
+    ) ?? 0
+
   const {mutate: approveJoinRequest, isPending: isApprovePending} =
     useApproveJoinRequest(convo.view.id, {
+      onSuccess: () => {
+        Toast.show(l`Request approved.`)
+        if (requestCount < 1) {
+          navigation.replace('MessagesConversationSettings', {
+            conversation: convo.view.id,
+          })
+        }
+      },
       onError: error => {
         let errorMessage = l`Failed to accept join request`
         if (isNetworkError(error)) {
@@ -174,6 +194,14 @@ function JoinRequestsList({
 
   const {mutate: rejectJoinRequest, isPending: isRejectPending} =
     useRejectJoinRequest(convo.view.id, {
+      onSuccess: () => {
+        Toast.show(l`Request ignored.`)
+        if (requestCount < 1) {
+          navigation.replace('MessagesConversationSettings', {
+            conversation: convo.view.id,
+          })
+        }
+      },
       onError: error => {
         let errorMessage = l`Failed to ignore join request`
         if (isNetworkError(error)) {
@@ -192,16 +220,6 @@ function JoinRequestsList({
     })
 
   const isMutating = isApprovePending || isRejectPending
-
-  const items =
-    joinRequestsData?.pages.flatMap(page =>
-      page.requests.map(request => request.requestedBy),
-    ) ?? []
-  const requestCount =
-    joinRequestsData?.pages.reduce(
-      (sum, page) => sum + page.requests.length,
-      0,
-    ) ?? 0
 
   const renderItem = ({item}: {item: bsky.profile.AnyProfileView}) => {
     if (!moderationOpts) return null
@@ -338,9 +356,12 @@ function JoinRequestsList({
         keyExtractor={(item: bsky.profile.AnyProfileView) => item.did}
         renderItem={renderItem}
         ListEmptyComponent={
-          <View style={[a.flex_1, a.align_center, a.justify_center, a.py_4xl]}>
-            <Loader size="xl" />
-          </View>
+          isPending ? (
+            <View
+              style={[a.flex_1, a.align_center, a.justify_center, a.py_4xl]}>
+              <Loader size="xl" />
+            </View>
+          ) : null
         }
         contentContainerStyle={{paddingBottom: footerHeight}}
         scrollIndicatorInsets={{bottom: footerHeight}}
