@@ -187,7 +187,7 @@ export function InviteLinkDialog({
             </Text>
             <Text style={[a.text_md, a.leading_snug]}>
               <Trans>
-                Your name, avatar, the name of the group chat and the number of
+                Your name, avatar, the name of the group chat, and the number of
                 members will be visible to everyone.
               </Trans>
             </Text>
