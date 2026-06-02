@@ -8,7 +8,7 @@ import ExpoImageCropTool, {
   type OpenCropperOptions,
 } from '@bsky.app/expo-image-crop-tool'
 
-import {PROFILE_IMAGES_MAX_SIZE} from '#/lib/constants'
+import {IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {compressIfNeeded} from './manip'
 import {type PickerImage} from './picker.shared'
 
@@ -37,7 +37,7 @@ async function getFile() {
       width: 4288,
       height: 2848,
     },
-    PROFILE_IMAGES_MAX_SIZE,
+    IMAGE_SIZE_CONFIG_2K_1MB,
   )
 }
 

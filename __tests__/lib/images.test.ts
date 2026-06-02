@@ -1,7 +1,7 @@
 import {createDownloadResumable, deleteAsync} from 'expo-file-system/legacy'
 import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
 
-import {PROFILE_IMAGES_MAX_SIZE} from '../../src/lib/constants'
+import {IMAGE_SIZE_CONFIG_2K_1MB} from '../../src/lib/constants'
 import {
   downloadAndResize,
   type DownloadAndResizeOpts,
@@ -91,7 +91,7 @@ describe('downloadAndResize', () => {
     }
     const resizedDimensionsOne = getResizedDimensions(
       initialDimensionsOne,
-      PROFILE_IMAGES_MAX_SIZE,
+      IMAGE_SIZE_CONFIG_2K_1MB,
     )
 
     const initialDimensionsTwo = {
@@ -100,7 +100,7 @@ describe('downloadAndResize', () => {
     }
     const resizedDimensionsTwo = getResizedDimensions(
       initialDimensionsTwo,
-      PROFILE_IMAGES_MAX_SIZE,
+      IMAGE_SIZE_CONFIG_2K_1MB,
     )
 
     expect(resizedDimensionsOne).toEqual(initialDimensionsOne)
@@ -114,7 +114,7 @@ describe('downloadAndResize', () => {
     }
     const resizedDimensionsOne = getResizedDimensions(
       initialDimensionsOne,
-      PROFILE_IMAGES_MAX_SIZE,
+      IMAGE_SIZE_CONFIG_2K_1MB,
     )
 
     const initialDimensionsTwo = {
@@ -123,7 +123,7 @@ describe('downloadAndResize', () => {
     }
     const resizedDimensionsTwo = getResizedDimensions(
       initialDimensionsTwo,
-      PROFILE_IMAGES_MAX_SIZE,
+      IMAGE_SIZE_CONFIG_2K_1MB,
     )
 
     expect(resizedDimensionsOne).toEqual({

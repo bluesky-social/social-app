@@ -17,7 +17,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {PROFILE_IMAGES_MAX_SIZE} from '#/lib/constants'
+import {IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {
   useCameraPermission,
@@ -395,7 +395,7 @@ let EditableUserAvatar = ({
         await openCamera({
           aspect: [1, 1],
         }),
-        PROFILE_IMAGES_MAX_SIZE,
+        IMAGE_SIZE_CONFIG_2K_1MB,
       ),
     )
   }, [onSelectNewAvatar, requestCameraAccessIfNeeded])
@@ -424,7 +424,7 @@ let EditableUserAvatar = ({
               shape: circular ? 'circle' : 'rectangle',
               aspectRatio: 1,
             }),
-            PROFILE_IMAGES_MAX_SIZE,
+            IMAGE_SIZE_CONFIG_2K_1MB,
           ),
         )
       } else {
@@ -451,7 +451,7 @@ let EditableUserAvatar = ({
 
   const onChangeEditImage = useCallback(
     async (image: ComposerImage) => {
-      const compressed = await compressImage(image, PROFILE_IMAGES_MAX_SIZE)
+      const compressed = await compressImage(image, IMAGE_SIZE_CONFIG_2K_1MB)
       onSelectNewAvatar(compressed)
     },
     [onSelectNewAvatar],
