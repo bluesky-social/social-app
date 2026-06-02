@@ -27,6 +27,7 @@ import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/uti
 import {RichText} from '#/components/RichText'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
+import {matchCustomEmbed} from '#/features/customEmbeds/registry'
 import * as bsky from '#/types/bsky'
 import {
   type Embed as TEmbed,
@@ -97,6 +98,22 @@ function MediaEmbed({
       )
     }
     case 'link': {
+      // EUROSKY: client-side custom embed handlers (e.g. atmo.rsvp events).
+      // Kept additive and above upstream logic to minimize merge conflicts.
+      const customEmbed = matchCustomEmbed(embed.view.external)
+      if (customEmbed) {
+        return (
+          <ContentHider
+            modui={rest.moderation?.ui('contentMedia')}
+            activeStyle={[a.mt_sm]}>
+            <customEmbed.Component
+              view={embed.view.external}
+              onOpen={rest.onOpen}
+              style={[a.mt_sm, rest.style]}
+            />
+          </ContentHider>
+        )
+      }
       if (isStandardSiteEmbed(embed.view.external)) {
         return (
           <ContentHider
