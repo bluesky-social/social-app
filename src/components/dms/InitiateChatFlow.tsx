@@ -316,6 +316,7 @@ export function InitiateChatFlow({
 
     if (
       searchText === '' &&
+      _items.length > 0 &&
       (chatState === ChatState.NEW_CHAT ||
         chatState === ChatState.NEW_GROUP_CHAT)
     ) {
