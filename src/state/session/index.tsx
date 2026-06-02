@@ -313,6 +313,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       patch: {
         emailConfirmed: data.emailConfirmed,
         emailAuthFactor: data.emailAuthFactor,
+        active: data.active,
+        status: data.status,
       },
     })
   }, [store, state, cancelPendingTask])

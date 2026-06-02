@@ -71,7 +71,13 @@ export function cleanError(str: any): string {
     return t`Account has been suspended`
   }
   if (str.includes('Account is deactivated')) {
-    return t`Account is deactivated`
+    return t`Your account is deactivated. If you recently moved to a new hosting provider, reactivate to complete the migration.`
+  }
+  if (str.includes('Account has been taken down')) {
+    return t`Account has been taken down`
+  }
+  if (str.includes('Account has been deleted')) {
+    return t`Account has been deleted`
   }
   if (str.includes('Profile not found')) {
     return t`Profile not found`

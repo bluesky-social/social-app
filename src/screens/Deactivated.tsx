@@ -1,30 +1,58 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {AtpAgent, XRPCError} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
+import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {
-  type SessionAccount,
-  useAgent,
-  useSession,
-  useSessionApi,
-} from '#/state/session'
+import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {AccountList} from '#/components/AccountList'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
+import * as TextField from '#/components/forms/TextField'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
+
+async function reactivateWithPassword({
+  pdsUrl,
+  identifier,
+  password,
+}: {
+  pdsUrl: string
+  identifier: string
+  password: string
+}) {
+  const agent = new AtpAgent({service: pdsUrl})
+  await agent.login({identifier, password})
+  try {
+    try {
+      await agent.com.atproto.server.activateAccount()
+    } catch (e) {
+      // On retry after a partial success, the account may already be active.
+      // Treat that as a successful no-op so the user isn't stuck.
+      if (e instanceof XRPCError && e.error === 'InvalidRequest') return
+      throw e
+    }
+  } finally {
+    try {
+      await agent.logout()
+    } catch {
+      // best-effort cleanup; the throwaway session expires anyway
+    }
+  }
+}
 
 const COL_WIDTH = 400
 
@@ -36,9 +64,9 @@ export function Deactivated() {
   const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const hasOtherAccounts = accounts.length > 1
-  const {logoutCurrentAccount} = useSessionApi()
-  const agent = useAgent()
+  const {logoutCurrentAccount, partialRefreshSession} = useSessionApi()
   const [pending, setPending] = useState(false)
+  const [password, setPassword] = useState('')
   const [error, setError] = useState<string | undefined>()
   const queryClient = useQueryClient()
 
@@ -68,32 +96,60 @@ export function Deactivated() {
   }, [logoutCurrentAccount])
 
   const handleActivate = useCallback(async () => {
+    if (!password.trim()) return
+    if (!currentAccount?.pdsUrl || !currentAccount.handle) {
+      setError(
+        _(msg`Account is missing PDS information. Please sign in again.`),
+      )
+      return
+    }
+    setError(undefined)
+    setPending(true)
     try {
-      setPending(true)
-      await agent.com.atproto.server.activateAccount()
+      await reactivateWithPassword({
+        pdsUrl: currentAccount.pdsUrl,
+        identifier: currentAccount.handle,
+        password,
+      })
+      await partialRefreshSession()
       await queryClient.resetQueries()
-      await agent.resumeSession(agent.session!)
-    } catch (e: any) {
-      switch (e.message) {
-        case 'Bad token scope':
-          setError(
-            _(
-              msg`You're signed in with an App Password. Please sign in with your main password to continue deactivating your account.`,
-            ),
-          )
-          break
-        default:
-          setError(_(msg`Something went wrong, please try again`))
-          break
+      setPassword('')
+    } catch (e: unknown) {
+      if (isNetworkError(e)) {
+        setError(
+          _(
+            msg`Unable to contact your service. Please check your Internet connection.`,
+          ),
+        )
+      } else if (
+        e instanceof XRPCError &&
+        e.error === 'AuthFactorTokenRequired'
+      ) {
+        setError(
+          _(
+            msg`Two-factor authentication is required to reactivate. Please disable 2FA temporarily, or contact support.`,
+          ),
+        )
+      } else if (
+        e instanceof XRPCError &&
+        (e.status === 401 || e.error === 'AuthenticationRequired')
+      ) {
+        setError(_(msg`Incorrect password. Please try again.`))
+      } else if (e instanceof XRPCError && e.status === 429) {
+        setError(
+          _(msg`Too many attempts. Please wait a few minutes and try again.`),
+        )
+      } else {
+        setError(_(msg`Couldn't reactivate the account. Please try again.`))
       }
 
-      logger.error(e, {
+      logger.error(e instanceof Error ? e : String(e), {
         message: 'Failed to activate account',
       })
     } finally {
       setPending(false)
     }
-  }, [_, agent, setPending, setError, queryClient])
+  }, [_, currentAccount, password, queryClient, partialRefreshSession])
 
   return (
     <View style={[a.util_screen_outer, a.flex_1]}>
@@ -118,25 +174,47 @@ export function Deactivated() {
             </Text>
             <Text style={[a.text_sm, a.leading_snug]}>
               <Trans>
-                You previously deactivated @{currentAccount?.handle}.
+                @{currentAccount?.handle} is currently deactivated. If you
+                recently moved to a new hosting provider, this is expected —
+                reactivation is the last step to complete the migration.
               </Trans>
             </Text>
             <Text style={[a.text_sm, a.leading_snug, a.pb_md]}>
               <Trans>
-                You can reactivate your account to continue logging in. Your
-                profile and posts will be visible to other users.
+                Reactivating will restore visibility of your profile and posts
+                to other users.
               </Trans>
             </Text>
 
             <View style={[a.gap_sm]}>
+              <View>
+                <TextField.LabelText>
+                  <Trans>Confirm with your account password</Trans>
+                </TextField.LabelText>
+                <TextField.Root>
+                  <TextField.Icon icon={Lock} />
+                  <TextField.Input
+                    label={_(msg`Password`)}
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry
+                    autoCapitalize="none"
+                    autoComplete="password"
+                    textContentType="password"
+                    editable={!pending}
+                    onSubmitEditing={handleActivate}
+                  />
+                </TextField.Root>
+              </View>
               <Button
                 label={_(msg`Reactivate your account`)}
                 size="large"
                 variant="solid"
                 color="primary"
+                disabled={pending || !password.trim()}
                 onPress={handleActivate}>
                 <ButtonText>
-                  <Trans>Yes, reactivate my account</Trans>
+                  <Trans>Reactivate my account</Trans>
                 </ButtonText>
                 {pending && <ButtonIcon icon={Loader} position="right" />}
               </Button>

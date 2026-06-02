@@ -58,7 +58,10 @@ export type Action =
   | {
       type: 'partial-refresh-session'
       accountDid: string
-      patch: Pick<SessionAccount, 'emailConfirmed' | 'emailAuthFactor'>
+      patch: Pick<
+        SessionAccount,
+        'emailConfirmed' | 'emailAuthFactor' | 'active' | 'status'
+      >
     }
 
 function createPublicAgentState(): AgentState {
@@ -257,6 +260,8 @@ let reducer = (state: State, action: Action): State => {
               ...a,
               emailConfirmed: patch.emailConfirmed ?? a.emailConfirmed,
               emailAuthFactor: patch.emailAuthFactor ?? a.emailAuthFactor,
+              active: patch.active,
+              status: patch.status,
             }
           }
           return a

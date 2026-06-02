@@ -7,6 +7,10 @@ import {Trans} from '@lingui/react/macro'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {getWebOAuthClient} from '#/state/session/oauth-web-client'
+import {
+  isHandleResolutionError,
+  resolveDeactivatedHandle,
+} from '#/state/session/resolveForLogin'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
@@ -47,7 +51,13 @@ export const LoginForm = ({
 
     try {
       const client = getWebOAuthClient()
-      await client.signIn(identifier)
+      try {
+        await client.signIn(identifier)
+      } catch (e) {
+        if (!isHandleResolutionError(e)) throw e
+        const did = await resolveDeactivatedHandle(identifier)
+        await client.signIn(did)
+      }
       // Browser will redirect to authorization server
     } catch (e: any) {
       const errMsg = e.toString()
