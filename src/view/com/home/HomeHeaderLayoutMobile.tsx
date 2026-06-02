@@ -20,7 +20,7 @@ import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/H
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {useAnalytics} from '#/analytics'
-import {IS_DEV, IS_LIQUID_GLASS} from '#/env'
+import {IS_DEV, IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
 export function HomeHeaderLayoutMobile({
   children,
@@ -49,7 +49,10 @@ export function HomeHeaderLayoutMobile({
           left: 0,
           right: 0,
         },
-        IS_LIQUID_GLASS && {paddingTop: insets.top},
+        // Eurosky fork: the home header is position:fixed at top:0, so on web
+        // (incl. standalone PWA) it must pad past the notch/Dynamic Island.
+        // Other screens get this via Layout.Screen; the fixed home header does not.
+        (IS_LIQUID_GLASS || IS_WEB) && {paddingTop: insets.top},
         headerMinimalShellTransform,
       ]}
       onLayout={e => {
