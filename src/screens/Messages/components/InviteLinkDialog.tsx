@@ -1,6 +1,11 @@
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
+import {
+  type ChatBskyGroupDefs,
+  moderateProfile,
+  type ModerationOpts,
+} from '@atproto/api'
+import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -64,14 +69,9 @@ export function InviteLinkDialog({
   )
 
   const {joinLink} = convo.details
-  const enabledStatus = joinLink?.enabledStatus
 
   const defaultStep = joinLink ? Step.MANAGE : Step.INFO
-  const defaultWhoCanJoin = joinLink
-    ? [
-        `${joinLink.joinRule}${joinLink.requireApproval ? ':requireApproval' : ''}`,
-      ]
-    : ['anyone']
+  const defaultWhoCanJoin = joinLink ? joinLinkToKey(joinLink) : 'anyone'
 
   const [step, setStep] = useState(defaultStep)
   const [whoCanJoin, setWhoCanJoin] = useState(defaultWhoCanJoin)
@@ -79,13 +79,13 @@ export function InviteLinkDialog({
   // Resync local state when the server-side join link rules change (mutation
   // success, refetch, or change from another client). Keyed on the rule string
   // so identity-only refetches don't bump a user mid-edit.
-  const joinLinkRuleKey = joinLink
-    ? `${joinLink.joinRule}${joinLink.requireApproval ? ':requireApproval' : ''}`
-    : null
-  useEffect(() => {
+  const joinLinkRuleKey = joinLink ? joinLinkToKey(joinLink) : null
+  const [prevKey, setPrevKey] = useState(joinLinkRuleKey)
+  if (joinLinkRuleKey !== prevKey) {
     setStep(joinLinkRuleKey ? Step.MANAGE : Step.INFO)
-    setWhoCanJoin([joinLinkRuleKey ?? 'anyone'])
-  }, [joinLinkRuleKey])
+    setWhoCanJoin(joinLinkRuleKey ?? 'anyone')
+    setPrevKey(joinLinkRuleKey)
+  }
 
   const {openComposer} = useOpenComposer()
 
@@ -163,22 +163,32 @@ export function InviteLinkDialog({
   let content: React.ReactNode = null
   let header: string | null = null
   switch (step) {
-    case Step.INFO:
+    case Step.INFO: {
       header = l`Invite link`
       content = (
         <>
-          <View>
-            <Text style={[a.text_md, t.atoms.text]}>
+          <View style={[a.gap_lg]}>
+            <Text style={[a.text_md, a.leading_snug]}>
               <Trans>
                 An invite link lets people join this group chat without being
-                added directly. You control who can use the link and whether
-                they need your approval. You can disable the link at any time.
+                added directly. You control who can join the chat. You can
+                disable the link at any time.
               </Trans>
             </Text>
-            <Text style={[a.mt_lg, a.text_md, t.atoms.text]}>
+            <Text style={[a.text_md, a.leading_snug]}>
               <Trans>
-                Your name, avatar, and the name of the group chat will be
-                visible to everyone.
+                Group chats can only have a maximum of{' '}
+                {plural(convo.details.memberLimit, {
+                  one: '# person',
+                  other: '# people',
+                })}
+                .
+              </Trans>
+            </Text>
+            <Text style={[a.text_md, a.leading_snug]}>
+              <Trans>
+                Your name, avatar, the name of the group chat, and the number of
+                members will be visible to everyone.
               </Trans>
             </Text>
           </View>
@@ -199,15 +209,16 @@ export function InviteLinkDialog({
         </>
       )
       break
-    case Step.GENERATE:
-      header =
-        joinLink && enabledStatus === 'enabled'
-          ? l`Update invite link`
-          : l`Generate invite link`
+    }
+    case Step.GENERATE: {
+      const linkEnabled = joinLink?.enabledStatus === 'enabled'
+      const linkHasChanged = linkEnabled && joinLinkRuleKey !== whoCanJoin
+
+      header = linkEnabled ? l`Update invite link` : l`Generate invite link`
       content = (
         <>
           <View>
-            <Text style={[a.text_md, t.atoms.text]}>
+            <Text style={[a.text_md]}>
               <Trans>Choose who can join this group chat and how.</Trans>
             </Text>
           </View>
@@ -215,9 +226,9 @@ export function InviteLinkDialog({
             <Toggle.Group
               label={l`Who can join this group chat and how`}
               type="radio"
-              values={whoCanJoin}
-              onChange={setWhoCanJoin}>
-              <View style={[a.gap_sm]}>
+              values={[whoCanJoin]}
+              onChange={([value]) => setWhoCanJoin(value)}>
+              <View style={[a.gap_xs]}>
                 {whoCanJoinOptions.map(option => (
                   <Toggle.Item
                     key={option.name}
@@ -239,18 +250,22 @@ export function InviteLinkDialog({
           <View style={[a.mt_4xl]}>
             <Button
               label={
-                joinLink && enabledStatus === 'enabled'
-                  ? l`Update invite link`
+                linkEnabled
+                  ? linkHasChanged
+                    ? l`Update invite link`
+                    : l`Back`
                   : l`Generate invite link`
               }
-              color="primary"
+              color={linkEnabled && !linkHasChanged ? 'secondary' : 'primary'}
               size="large"
               disabled={isSaving}
               onPress={() => {
-                const parts = whoCanJoin[0].split(':')
-                const joinRule = parts[0]
-                const requireApproval = parts[1] === 'requireApproval'
-                if (joinLink && enabledStatus === 'enabled') {
+                const {joinRule, requireApproval} = keyToJoinLink(whoCanJoin)
+                if (linkEnabled) {
+                  if (!linkHasChanged) {
+                    setStep(Step.MANAGE)
+                    return
+                  }
                   editJoinLink({
                     joinRule,
                     requireApproval,
@@ -263,36 +278,40 @@ export function InviteLinkDialog({
                 }
               }}>
               <ButtonText>
-                {joinLink && enabledStatus === 'enabled'
-                  ? l`Update invite link`
+                {linkEnabled
+                  ? linkHasChanged
+                    ? l`Update invite link`
+                    : l`Back`
                   : l`Generate invite link`}
               </ButtonText>
-              <ButtonIcon icon={isSaving ? Loader : ArrowRightIcon} />
+              {linkHasChanged && (
+                <ButtonIcon icon={isSaving ? Loader : ArrowRightIcon} />
+              )}
             </Button>
           </View>
         </>
       )
       break
+    }
     case Step.MANAGE: {
+      const linkEnabled = joinLink?.enabledStatus === 'enabled'
+      const linkDisabled = joinLink?.enabledStatus === 'disabled'
       const joinLinkURI = joinLink?.code
         ? `https://bsky.app/chat/${joinLink.code}`
         : 'https://bsky.app/chat'
       const createdAt = joinLink ? new Date(joinLink.createdAt) : null
-      const currentOptionName = joinLink
-        ? `${joinLink.joinRule}${joinLink.requireApproval ? ':requireApproval' : ''}`
-        : whoCanJoinOptions[0].name
-      const currentOption = whoCanJoinOptions.find(
-        o => o.name === currentOptionName,
-      )
+      const currentOption =
+        whoCanJoinOptions.find(
+          o => o.name === (joinLink ? joinLinkToKey(joinLink) : null),
+        ) ?? whoCanJoinOptions[0]
       const ownerValue = currentOption?.owner ?? whoCanJoinOptions[0].owner
       const memberValue = currentOption?.member ?? whoCanJoinOptions[0].member
-      header =
-        enabledStatus === 'enabled' ? l`Invite link` : l`Invite link disabled`
+      header = linkEnabled ? l`Invite link` : l`Invite link disabled`
       content = (
         <>
           <View style={[a.mt_lg]}>
             <CopyTextButton
-              disabled={enabledStatus === 'disabled' || !joinLink?.code}
+              disabled={linkDisabled || !joinLink?.code}
               label={l`Invite link`}
               value={joinLinkURI}>
               <Text
@@ -300,9 +319,7 @@ export function InviteLinkDialog({
                 style={[
                   a.mr_xs,
                   a.text_md,
-                  enabledStatus === 'disabled'
-                    ? t.atoms.text_contrast_low
-                    : t.atoms.text,
+                  linkDisabled ? t.atoms.text_contrast_low : t.atoms.text,
                 ]}>
                 {joinLinkURI}
               </Text>
@@ -319,25 +336,25 @@ export function InviteLinkDialog({
               </Text>
             ) : null}
           </View>
-          {enabledStatus === 'enabled' ? (
+          {linkEnabled ? (
             <View style={[a.mt_lg]}>
               {isOwner ? (
                 <EditTextButton
                   label={l`Edit link settings`}
                   value={ownerValue}
                   onPress={() => setStep(Step.GENERATE)}>
-                  <View style={[a.flex_1, a.mr_xs]}>
-                    <Text numberOfLines={1} style={[a.text_md, t.atoms.text]}>
+                  <View style={[a.flex_1]}>
+                    <Text numberOfLines={1} style={[a.text_sm]}>
                       {ownerValue}
                     </Text>
                   </View>
                 </EditTextButton>
               ) : (
-                <Text style={[a.text_sm, t.atoms.text]}>{memberValue}</Text>
+                <Text style={[a.text_sm]}>{memberValue}</Text>
               )}
             </View>
           ) : null}
-          {enabledStatus === 'enabled' ? (
+          {linkEnabled ? (
             <View style={[a.flex_row, a.justify_between, a.gap_sm, a.mt_lg]}>
               {isOwner ? (
                 <StackedButton
@@ -350,7 +367,7 @@ export function InviteLinkDialog({
                 </StackedButton>
               ) : null}
               <StackedButton
-                disabled={enabledStatus === 'disabled'}
+                disabled={linkDisabled}
                 label={l`Post link`}
                 icon={EditIcon}
                 color="primary_subtle"
@@ -366,7 +383,7 @@ export function InviteLinkDialog({
                 <Trans>Post link</Trans>
               </StackedButton>
               <StackedButton
-                disabled={enabledStatus === 'disabled'}
+                disabled={linkDisabled}
                 label={l`Share`}
                 icon={ArrowShareRightIcon}
                 color="primary_subtle"
@@ -408,7 +425,7 @@ export function InviteLinkDialog({
       )
       break
     }
-    case Step.CONFIRM_DISABLE:
+    case Step.CONFIRM_DISABLE: {
       content = (
         <>
           <View style={[a.align_center, a.justify_center, a.mb_lg]}>
@@ -425,14 +442,7 @@ export function InviteLinkDialog({
             ]}>
             <Trans>Disable this invite link?</Trans>
           </Text>
-          <Text
-            style={[
-              a.pb_2xl,
-              a.text_center,
-              a.text_sm,
-              a.leading_snug,
-              t.atoms.text,
-            ]}>
+          <Text style={[a.pb_2xl, a.text_center, a.text_sm, a.leading_snug]}>
             <Trans>
               Anyone who has it will no longer be able to join or request to
               join. You can always create a new one.
@@ -465,6 +475,7 @@ export function InviteLinkDialog({
         </>
       )
       break
+    }
   }
 
   if (!isOwner && (!joinLink || joinLink.enabledStatus === 'disabled')) {
@@ -472,7 +483,7 @@ export function InviteLinkDialog({
     content = (
       <>
         <View style={[a.mt_lg]}>
-          <Text style={[a.text_sm, t.atoms.text]}>
+          <Text style={[a.text_sm]}>
             <Trans>There is no invite link for this group chat.</Trans>
           </Text>
         </View>
@@ -503,9 +514,7 @@ export function InviteLinkDialog({
         header={
           <View>
             <View style={[IS_WEB ? [a.px_2xl, a.pt_xl] : {paddingTop: 10}]}>
-              <Text style={[a.font_bold, a.text_2xl, a.mb_sm, t.atoms.text]}>
-                {header}
-              </Text>
+              <Text style={[a.font_bold, a.text_2xl, a.mb_sm]}>{header}</Text>
             </View>
             <Dialog.Close />
           </View>
@@ -516,4 +525,18 @@ export function InviteLinkDialog({
       </Dialog.ScrollableInner>
     </Dialog.Outer>
   )
+}
+
+function joinLinkToKey(joinLink: ChatBskyGroupDefs.JoinLinkView): string {
+  return `${joinLink.joinRule}${joinLink.requireApproval ? ':requireApproval' : ''}`
+}
+
+function keyToJoinLink(
+  key: string,
+): Pick<ChatBskyGroupDefs.JoinLinkView, 'joinRule' | 'requireApproval'> {
+  const [joinRule, requireApproval] = key.split(':')
+  return {
+    joinRule,
+    requireApproval: requireApproval === 'requireApproval',
+  }
 }
