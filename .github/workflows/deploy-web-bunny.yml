@@ -17,7 +17,7 @@ on:
   workflow_dispatch: {}
   # To auto-deploy on push, uncomment and set the deploy branch:
   push:
-    branches: [eurosky/fork]
+    branches: [eurosky/deploy]
 
 # Never run two deploys at once; a newer run supersedes an in-flight one.
 concurrency:
