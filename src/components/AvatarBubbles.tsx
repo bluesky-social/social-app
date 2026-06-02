@@ -28,22 +28,28 @@ type Layout = {
   border?: boolean
 }
 
-type Props = {
-  animate?: boolean
-  profiles: bsky.profile.AnyProfileView[]
-  size?: number
-  moderationOpts?: ModerationOpts
-}
-
 export function AvatarBubbles({
   animate = false,
   profiles: allProfiles,
+  self = false,
   size = 120,
   moderationOpts,
-}: Props) {
+}: {
+  animate?: boolean
+  profiles: bsky.profile.AnyProfileView[]
+  /**
+   * By default, when there are more than 2 profiles, the current user is
+   * filtered out (so you don't see yourself among your own group's members).
+   * Set this to `true` for cases where every passed profile should appear,
+   * e.g. an invite preview where the owner is meaningful regardless of viewer.
+   */
+  self?: boolean
+  size?: number
+  moderationOpts?: ModerationOpts
+}) {
   const {currentAccount} = useSession()
   const profiles =
-    allProfiles.length > 2
+    !self && allProfiles.length > 2
       ? allProfiles.filter(p => p?.did != null && p.did !== currentAccount?.did)
       : allProfiles
   const moderations = useMemo(() => {

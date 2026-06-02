@@ -64,20 +64,3 @@ export const useActiveGroupChatJoinRequest = () => {
   const landing = useActiveLanding()
   return landing?.type === 'groupchat' ? landing : undefined
 }
-
-export const useSetActiveGroupChatJoinRequest = () => {
-  const setLanding = useSetActiveLanding()
-  const currentLanding = useActiveLanding()
-  return (joinRequest: {uri: string; code: string} | undefined) => {
-    if (!joinRequest) {
-      setLanding(undefined)
-    } else {
-      if (currentLanding && currentLanding.type !== 'groupchat') {
-        logger.debug(
-          `[landing] Replacing ${currentLanding.type} landing with groupchat`,
-        )
-      }
-      setLanding({type: 'groupchat', ...joinRequest})
-    }
-  }
-}
