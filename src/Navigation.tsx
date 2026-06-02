@@ -44,6 +44,7 @@ import {
   type State,
 } from '#/lib/routes/types'
 import {bskyTitle} from '#/lib/strings/headings'
+import {CHAT_INVITE_CODE_REGEX} from '#/lib/strings/url-helpers'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -794,6 +795,19 @@ const LINKING = {
     // since it will be created by react-navigation.
     if (path.includes('intent/')) {
       if (IS_NATIVE) return
+      return buildStateObject('Flat', 'Home', params)
+    }
+
+    // Chat invite URLs (`/c/:code`) are handled by `useIntentHandler`, which
+    // opens the GroupChatJoinDialog (or the logged-out join flow). Route the
+    // path to Home so the dialog overlays Home instead of NotFound. On native,
+    // react-navigation strips the `bluesky://` prefix and passes the path
+    // without a leading slash, so normalize before matching.
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`
+    if (CHAT_INVITE_CODE_REGEX.test(normalizedPath.split('?')[0])) {
+      if (IS_NATIVE) {
+        return buildStateObject('HomeTab', 'Home', params)
+      }
       return buildStateObject('Flat', 'Home', params)
     }
 
