@@ -4,7 +4,8 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useOnboardingSuggestedStarterPacksQuery} from '#/state/queries/useOnboardingSuggestedStarterPacksQuery'
+// Eurosky fork: curated packs on top of Bluesky's appview-suggested packs.
+import {useEuroskyOnboardingSuggestedStarterPacks as useOnboardingSuggestedStarterPacksQuery} from '#/screens/Onboarding/euroskySuggestedStarterPacks'
 import {
   OnboardingControls,
   OnboardingPosition,
