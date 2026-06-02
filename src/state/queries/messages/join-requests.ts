@@ -1,5 +1,5 @@
 import {
-  type ChatBskyActorDefs,
+  type ChatBskyConvoGetConvoMembers,
   type ChatBskyGroupApproveJoinRequest,
   type ChatBskyGroupListJoinRequests,
   type ChatBskyGroupRejectJoinRequest,
@@ -77,21 +77,28 @@ export function useJoinRequestMutation<A extends JoinRequestAction>(
         }
       })
 
-      let prevMembers: ChatBskyActorDefs.ProfileViewBasic[] | undefined
+      let prevMembers:
+        | InfiniteData<ChatBskyConvoGetConvoMembers.OutputSchema>
+        | undefined
       if (action === 'approve' && requestedByProfile) {
         const membersKey = listConvoMembersQueryKey(convoId)
         prevMembers =
-          queryClient.getQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
-            membersKey,
+          queryClient.getQueryData<
+            InfiniteData<ChatBskyConvoGetConvoMembers.OutputSchema>
+          >(membersKey)
+        queryClient.setQueryData<
+          InfiniteData<ChatBskyConvoGetConvoMembers.OutputSchema>
+        >(membersKey, prev => {
+          if (!prev?.pages) return prev
+          if (prev.pages.some(page => page.members.some(m => m.did === member)))
+            return prev
+          const pages = prev.pages.map((page, i) =>
+            i === prev.pages.length - 1
+              ? {...page, members: [...page.members, requestedByProfile]}
+              : page,
           )
-        queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
-          membersKey,
-          prev => {
-            if (!prev) return prev
-            if (prev.some(m => m.did === member)) return prev
-            return [...prev, requestedByProfile]
-          },
-        )
+          return {...prev, pages}
+        })
       }
 
       return {prevRequests, prevMembers}

@@ -186,10 +186,19 @@ function GroupSettings({
   const primaryMember = convo.primaryMember
   const isOwner = !!primaryMember && primaryMember.did === currentAccount?.did
 
-  const {data: memberListData = [], refetch} = useListConvoMembersQuery({
+  const {
+    data: memberListPages,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isError: isMemberListError,
+  } = useListConvoMembersQuery({
     convoId: convo.view.id,
     placeholderData: convo.members,
   })
+  const memberListData =
+    memberListPages?.pages.flatMap(page => page.members) ?? []
 
   const {data: joinRequestsData, hasNextPage: hasMoreRequests} =
     useListJoinRequestsQuery({
@@ -281,6 +290,15 @@ function GroupSettings({
     setIsPTRing(false)
   }
 
+  const onEndReached = async () => {
+    if (isFetchingNextPage || !hasNextPage || isMemberListError) return
+    try {
+      await fetchNextPage()
+    } catch (err) {
+      logger.error('Failed to load more group chat members', {message: err})
+    }
+  }
+
   return (
     <List
       data={items}
@@ -303,6 +321,8 @@ function GroupSettings({
       windowSize={11}
       refreshing={isPTRing}
       onRefresh={() => void onRefresh()}
+      onEndReached={() => void onEndReached()}
+      onEndReachedThreshold={2}
     />
   )
 }

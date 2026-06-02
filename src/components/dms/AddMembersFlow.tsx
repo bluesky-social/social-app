@@ -1,5 +1,6 @@
 import {
   useCallback,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useReducer,
@@ -131,15 +132,33 @@ export function AddMembersFlow({
     isFetching: isAutocompleteFetching,
   } = useActorAutocompleteQuery(searchText, true, 12)
   const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
-  const {data: memberListData = [], isPending: isMemberListPending} =
-    useListConvoMembersQuery({
-      convoId: convo.view.id,
-      placeholderData: convo.members,
-    })
+  const {
+    data: memberListPages,
+    isPending: isMemberListPending,
+    hasNextPage: hasMoreMembers,
+    isFetchingNextPage: isFetchingMoreMembers,
+    fetchNextPage: fetchMoreMembers,
+  } = useListConvoMembersQuery({
+    convoId: convo.view.id,
+    placeholderData: convo.members,
+  })
+  // We need the full member set so we can filter them out of search/follow
+  // results. Auto-fetch all pages on mount.
+  useEffect(() => {
+    if (hasMoreMembers && !isFetchingMoreMembers) {
+      void fetchMoreMembers()
+    }
+  }, [hasMoreMembers, isFetchingMoreMembers, fetchMoreMembers])
   const memberDidSet = useMemo(
-    () => new Set(memberListData.map(profile => profile.did)),
-    [memberListData],
+    () =>
+      new Set(
+        memberListPages?.pages.flatMap(page =>
+          page.members.map(profile => profile.did),
+        ) ?? [],
+      ),
+    [memberListPages],
   )
+  const isMemberListLoading = isMemberListPending || hasMoreMembers
 
   const [{groupChatDids, groupChatProfiles}, dispatch] = useReducer(reducer, {
     groupChatDids: [],
@@ -161,7 +180,7 @@ export function AddMembersFlow({
   )
 
   const items = useMemo<Item[]>(() => {
-    if (isMemberListPending) {
+    if (isMemberListLoading) {
       // Still fetching chat member DIDs for filtering, so force the loading state.
       return []
     }
@@ -247,7 +266,7 @@ export function AddMembersFlow({
     follows,
     isAutocompleteFetching,
     isError,
-    isMemberListPending,
+    isMemberListLoading,
     l,
     memberDidSet,
     searchText,
@@ -480,7 +499,7 @@ export function AddMembersFlow({
         ListHeaderComponent={listHeader}
         stickyHeaderIndices={[0]}
         ListEmptyComponent={
-          isMemberListPending || isAutocompleteFetching ? (
+          isMemberListLoading || isAutocompleteFetching ? (
             <View style={[a.flex_1, a.align_center, a.justify_center]}>
               <Loader size="xl" />
             </View>

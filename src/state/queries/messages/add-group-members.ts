@@ -1,6 +1,7 @@
 import {
   type ChatBskyActorDefs,
   ChatBskyConvoDefs,
+  type ChatBskyConvoGetConvoMembers,
   type ChatBskyConvoListConvos,
   type ChatBskyGroupAddMembers,
 } from '@atproto/api'
@@ -58,7 +59,7 @@ export function useAddGroupMembers(
         InfiniteData<ChatBskyConvoListConvos.OutputSchema>
       >({queryKey: [CONVO_LIST_KEY]})
       const prevMemberList = queryClient.getQueryData<
-        ChatBskyActorDefs.ProfileViewBasic[]
+        InfiniteData<ChatBskyConvoGetConvoMembers.OutputSchema>
       >(listConvoMembersQueryKey(convoId))
 
       const addedBy: ChatBskyActorDefs.ProfileViewBasic | undefined = myProfile
@@ -120,13 +121,17 @@ export function useAddGroupMembers(
         }
       })
 
-      queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
-        listConvoMembersQueryKey(convoId),
-        prev => {
-          if (!prev) return
-          return [...prev, ...optimisticMembers]
-        },
-      )
+      queryClient.setQueryData<
+        InfiniteData<ChatBskyConvoGetConvoMembers.OutputSchema>
+      >(listConvoMembersQueryKey(convoId), prev => {
+        if (!prev?.pages) return prev
+        const pages = prev.pages.map((page, i) =>
+          i === prev.pages.length - 1
+            ? {...page, members: [...page.members, ...optimisticMembers]}
+            : page,
+        )
+        return {...prev, pages}
+      })
 
       return {prevConvo, prevListEntries, prevMemberList}
     },

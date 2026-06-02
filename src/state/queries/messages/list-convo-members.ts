@@ -1,5 +1,12 @@
-import {type ChatBskyActorDefs} from '@atproto/api'
-import {type QueryClient, useQuery} from '@tanstack/react-query'
+import {
+  type ChatBskyActorDefs,
+  type ChatBskyConvoGetConvoMembers,
+} from '@atproto/api'
+import {
+  type InfiniteData,
+  type QueryClient,
+  useInfiniteQuery,
+} from '@tanstack/react-query'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {STALE} from '#/state/queries'
@@ -10,8 +17,9 @@ const RQKEY_ROOT = 'listConvoMembers'
 export const listConvoMembersQueryKey = (convoId: string) =>
   createQueryKey(RQKEY_ROOT, {convoId})
 
-// Group chat size is at least 50, so should fetch the whole list in one go
-const LIMIT = 50
+const LIMIT = 25
+
+type Page = ChatBskyConvoGetConvoMembers.OutputSchema
 
 export function useListConvoMembersQuery({
   convoId,
@@ -22,25 +30,24 @@ export function useListConvoMembersQuery({
 }) {
   const agent = useAgent()
 
-  return useQuery({
+  return useInfiniteQuery<Page>({
     queryKey: listConvoMembersQueryKey(convoId),
-    queryFn: async () => {
-      const members = []
-      let cursor
-
-      do {
-        const {data} = await agent.chat.bsky.convo.getConvoMembers(
-          {convoId, cursor, limit: LIMIT},
-          {headers: DM_SERVICE_HEADERS},
-        )
-        members.push(...data.members)
-        cursor = data.cursor
-      } while (cursor)
-
-      return members
+    queryFn: async ({pageParam}) => {
+      const {data} = await agent.chat.bsky.convo.getConvoMembers(
+        {convoId, cursor: pageParam as string | undefined, limit: LIMIT},
+        {headers: DM_SERVICE_HEADERS},
+      )
+      return data
     },
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: lastPage => lastPage.cursor,
     staleTime: STALE.MINUTES.THIRTY,
-    placeholderData,
+    placeholderData: placeholderData
+      ? {
+          pages: [{members: placeholderData, cursor: undefined}],
+          pageParams: [undefined],
+        }
+      : undefined,
   })
 }
 
@@ -48,16 +55,16 @@ export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
 ): Generator<ChatBskyActorDefs.ProfileViewBasic, void> {
-  const queryDatas = queryClient.getQueriesData<
-    ChatBskyActorDefs.ProfileViewBasic[]
-  >({
+  const queryDatas = queryClient.getQueriesData<InfiniteData<Page>>({
     queryKey: [RQKEY_ROOT],
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData) continue
-    for (const member of queryData) {
-      if (member.did === did) {
-        yield member
+    for (const page of queryData.pages) {
+      for (const member of page.members) {
+        if (member.did === did) {
+          yield member
+        }
       }
     }
   }

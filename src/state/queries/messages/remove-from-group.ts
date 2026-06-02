@@ -1,6 +1,6 @@
 import {
-  type ChatBskyActorDefs,
   ChatBskyConvoDefs,
+  type ChatBskyConvoGetConvoMembers,
   type ChatBskyConvoListConvos,
   type ChatBskyGroupRemoveMembers,
 } from '@atproto/api'
@@ -49,7 +49,7 @@ export function useRemoveFromGroupChat(
         InfiniteData<ChatBskyConvoListConvos.OutputSchema>
       >({queryKey: [CONVO_LIST_KEY]})
       const prevMemberList = queryClient.getQueryData<
-        ChatBskyActorDefs.ProfileViewBasic[]
+        InfiniteData<ChatBskyConvoGetConvoMembers.OutputSchema>
       >(listConvoMembersQueryKey(convoId))
 
       queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(
@@ -102,13 +102,18 @@ export function useRemoveFromGroupChat(
         }
       })
 
-      queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
-        listConvoMembersQueryKey(convoId),
-        prev => {
-          if (!prev) return
-          return prev.filter(m => !members.includes(m.did))
-        },
-      )
+      queryClient.setQueryData<
+        InfiniteData<ChatBskyConvoGetConvoMembers.OutputSchema>
+      >(listConvoMembersQueryKey(convoId), prev => {
+        if (!prev?.pages) return prev
+        return {
+          ...prev,
+          pages: prev.pages.map(page => ({
+            ...page,
+            members: page.members.filter(m => !members.includes(m.did)),
+          })),
+        }
+      })
 
       return {prevConvo, prevListEntries, prevMemberList}
     },

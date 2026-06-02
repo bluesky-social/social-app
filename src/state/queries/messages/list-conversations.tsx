@@ -2,6 +2,7 @@ import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
 import {
   type ChatBskyActorDefs,
   ChatBskyConvoDefs,
+  type ChatBskyConvoGetConvoMembers,
   type ChatBskyConvoListConvos,
   moderateProfile,
   type ModerationOpts,
@@ -148,13 +149,19 @@ export function ListConvosProviderInner({
             members: ChatBskyActorDefs.ProfileViewBasic[],
           ) => ChatBskyActorDefs.ProfileViewBasic[],
         ) {
-          queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
-            listConvoMembersQueryKey(convoId),
-            old => {
-              if (!old) return // query doesn't exist yet, skip
-              return fn(old)
-            },
-          )
+          queryClient.setQueryData<
+            InfiniteData<ChatBskyConvoGetConvoMembers.OutputSchema>
+          >(listConvoMembersQueryKey(convoId), old => {
+            if (!old?.pages) return
+            const flat = old.pages.flatMap(page => page.members)
+            const next = fn(flat)
+            return {
+              ...old,
+              pages: old.pages.map((page, i) =>
+                i === 0 ? {...page, members: next} : {...page, members: []},
+              ),
+            }
+          })
         }
 
         function mutateConvoView(
@@ -186,9 +193,10 @@ export function ListConvosProviderInner({
           const alreadyKnownMember =
             queryClient
               .getQueryData<
-                ChatBskyActorDefs.ProfileViewBasic[]
+                InfiniteData<ChatBskyConvoGetConvoMembers.OutputSchema>
               >(listConvoMembersQueryKey(convoId))
-              ?.some(m => m.did === did) ?? false
+              ?.pages.some(page => page.members.some(m => m.did === did)) ??
+            false
           mutateMembers(convoId, list =>
             list.some(m => m.did === did) ? list : list.concat(newMember),
           )
@@ -207,9 +215,10 @@ export function ListConvosProviderInner({
           const alreadyRemovedMember =
             queryClient
               .getQueryData<
-                ChatBskyActorDefs.ProfileViewBasic[]
+                InfiniteData<ChatBskyConvoGetConvoMembers.OutputSchema>
               >(listConvoMembersQueryKey(convoId))
-              ?.some(m => m.did === did) === false
+              ?.pages.some(page => page.members.some(m => m.did === did)) ===
+            false
           mutateMembers(convoId, list => list.filter(m => m.did !== did))
           mutateConvoView(convoId, convo =>
             removeMemberFromConvoView(convo, did, rev, alreadyRemovedMember),
