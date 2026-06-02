@@ -1,9 +1,7 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -22,7 +20,7 @@ export const enabled = createIsEnabledCheck(() => {
 
 export function InviteFriendsAnnouncement() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const nuxDialogs = useNuxDialogContext()
   const control = Dialog.useDialogControl()
 
@@ -37,9 +35,9 @@ export function InviteFriendsAnnouncement() {
     // the invite dialog. The invite dialog is mounted persistently by NuxDialogs
     // (not here) so it survives the dismissal - the native bottom sheet cannot
     // hand off to a second sheet mounted in this same subtree. Defer the open to
-    // the next tick so the announcement's teardown completes first.
+    // the next frame so the announcement's teardown completes first.
     control.close(() => {
-      setTimeout(() => nuxDialogs.openInviteFriends())
+      requestAnimationFrame(() => nuxDialogs.openInviteFriends())
     })
   }, [control, nuxDialogs])
 
@@ -52,7 +50,7 @@ export function InviteFriendsAnnouncement() {
         <Dialog.Handle fill={t.palette.primary_400} />
 
         <Dialog.ScrollableInner
-          label={_(msg`Invite your friends`)}
+          label={l`Invite your friends`}
           style={[web({maxWidth: 440})]}
           contentContainerStyle={[
             {paddingTop: 0, paddingLeft: 0, paddingRight: 0},
@@ -72,9 +70,7 @@ export function InviteFriendsAnnouncement() {
               accessibilityIgnoresInvertColors
               source={require('../../../../assets/images/invite_friends_announcement_nux.webp')}
               style={[a.w_full, {aspectRatio: 754 / 440}]}
-              alt={_(
-                msg`An illustration of the Bluesky app with a paper airplane flying out of it, representing inviting friends`,
-              )}
+              alt={l`An illustration of the Bluesky app with a paper airplane flying out of it, representing inviting friends`}
             />
             <View
               style={[
@@ -121,7 +117,7 @@ export function InviteFriendsAnnouncement() {
             {!IS_WEB && (
               <View style={[a.w_full, a.gap_sm]}>
                 <Button
-                  label={_(msg`Try it`)}
+                  label={l`Try it`}
                   size="large"
                   color="primary"
                   onPress={onPressTryIt}
@@ -131,7 +127,7 @@ export function InviteFriendsAnnouncement() {
                   </ButtonText>
                 </Button>
                 <Button
-                  label={_(msg`Cancel`)}
+                  label={l`Cancel`}
                   size="large"
                   color="secondary"
                   onPress={() => control.close()}

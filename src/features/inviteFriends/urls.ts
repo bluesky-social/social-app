@@ -16,7 +16,7 @@ function stripLeadingAt(handle: string): string {
 
 /** Canonical URL - used for QR payload, Share, and Copy. Empty handle -> empty string. */
 export function getInviteShareUrl(handle: string): string {
-  const bare = stripLeadingAt(handle).toLowerCase()
+  const bare = stripLeadingAt(handle)
   if (!bare) return ''
   return `https://bsky.app/profile/${bare}`
 }

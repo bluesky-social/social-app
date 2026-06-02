@@ -22,9 +22,9 @@ describe('invite URLs', () => {
       )
     })
 
-    it('lowercases the handle', () => {
+    it('passes the handle through verbatim (handles are API-normalized, like makeProfileLink)', () => {
       expect(getInviteShareUrl('Alice.Bsky.Social')).toBe(
-        'https://bsky.app/profile/alice.bsky.social',
+        'https://bsky.app/profile/Alice.Bsky.Social',
       )
     })
 
@@ -45,9 +45,9 @@ describe('invite URLs', () => {
       expect(getInviteDisplayUrl('alice')).toBe('bsky.app/profile/alice')
     })
 
-    it('lowercases the handle', () => {
+    it('passes the handle through verbatim (handles are API-normalized, like makeProfileLink)', () => {
       expect(getInviteDisplayUrl('Danielle.bsky.team')).toBe(
-        'bsky.app/profile/danielle.bsky.team',
+        'bsky.app/profile/Danielle.bsky.team',
       )
     })
 

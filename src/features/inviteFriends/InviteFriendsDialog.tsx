@@ -13,7 +13,6 @@ export function InviteFriendsDialog({
       control={control}
       onClose={onClose}
       nativeOptions={{preventExpansion: true}}>
-      {/* <Dialog.Handle /> */}
       <InviteFriendsDialogInner control={control} />
     </Dialog.Outer>
   )

@@ -2,8 +2,7 @@ import {Suspense, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import type ViewShot from 'react-native-view-shot'
 import {setStringAsync} from 'expo-clipboard'
-import {requestMediaLibraryPermissionsAsync} from 'expo-image-picker'
-import {createAssetAsync} from 'expo-media-library'
+import {createAssetAsync, requestPermissionsAsync} from 'expo-media-library'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -78,7 +77,9 @@ export function InviteFriendsDialogInner({
       return
     }
 
-    const permission = await requestMediaLibraryPermissionsAsync()
+    // Write-only permission - saving the QR image does not require read access
+    // to the user's photo library.
+    const permission = await requestPermissionsAsync(true)
     if (!permission.granted) {
       Toast.show(
         l`You must grant access to your photo library to save the QR code`,
