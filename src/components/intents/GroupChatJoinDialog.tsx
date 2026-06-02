@@ -390,8 +390,10 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
         <Button
           testID="openButton"
           onPress={() => {
-            navigation.navigate('MessagesConversation', {
-              conversation: convoId,
+            control.close(() => {
+              navigation.navigate('MessagesConversation', {
+                conversation: convoId,
+              })
             })
           }}
           label={l`Open group chat`}
