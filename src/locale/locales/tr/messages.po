@@ -8,7 +8,7 @@ msgstr ""
 "Language: tr\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-05-27 19:42\n"
+"PO-Revision-Date: 2026-06-02 17:45\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -583,7 +583,7 @@ msgstr "{MAX_HIDDEN_REPLIES, plural, other {En fazla # yanıt gizleyebilirsiniz.
 #. The number of group chat members out of the total number of permitted users.
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:34
 msgid "{memberCount}/{memberLimit}"
-msgstr ""
+msgstr "{memberCount}/{memberLimit}"
 
 #: src/features/liveNow/utils.ts:10
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
@@ -829,7 +829,7 @@ msgstr "Gönderi düzenleyicisinin bir gönderi yanındaki yeni \"Taslaklar\" bu
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:102
 msgid "A selected recipient is not followed by the sender."
-msgstr ""
+msgstr "Seçilmiş alıcılardan biri gönderen tarafından takip edilmiyor."
 
 #: src/Navigation.tsx:547
 #: src/screens/Settings/AboutSettings.tsx:78
@@ -957,7 +957,7 @@ msgstr "Başkalarının etkinlikleri"
 
 #: src/Navigation.tsx:515
 msgid "Activity notifications"
-msgstr "Etkinlik bildirimleri"
+msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:179
 #: src/components/dialogs/MutedWords.tsx:337
@@ -1017,11 +1017,11 @@ msgstr "Alternatif metin ekle (isteğe bağlı)"
 msgid "Add another account"
 msgstr "Başka hesap ekle"
 
-#: src/view/com/composer/Composer.tsx:1401
+#: src/view/com/composer/Composer.tsx:1383
 msgid "Add another post"
 msgstr "Başka gönderi ekle"
 
-#: src/view/com/composer/Composer.tsx:2067
+#: src/view/com/composer/Composer.tsx:2049
 msgid "Add another post to thread"
 msgstr "Konuya yeni bir gönderi ekle"
 
@@ -1052,7 +1052,7 @@ msgid "Add image"
 msgstr "Görsel ekle"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:499
+#: src/view/com/composer/SelectMediaButton.tsx:503
 msgid "Add media to post"
 msgstr "Gönderiye medya ekle"
 
@@ -1234,7 +1234,7 @@ msgstr "ayse@ornek.com"
 
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:284
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:201
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:184
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
 msgstr "Hepsi"
@@ -1387,11 +1387,11 @@ msgstr "Bir hata oluştu"
 msgid "An error occurred"
 msgstr "Bir hata oluştu"
 
-#: src/view/com/composer/state/video.ts:411
+#: src/view/com/composer/state/video.ts:401
 msgid "An error occurred while compressing the video."
 msgstr "Video sıkıştırılırken bir hata oluştu."
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:223
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:206
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:69
 msgid "An error occurred while fetching suggested accounts."
 msgstr "Önerilen hesaplar getirilemedi."
@@ -1432,11 +1432,11 @@ msgstr "QR kod kaydedilirken bir hata oluştu!"
 msgid "An error occurred while trying to follow all"
 msgstr "Tümü takip edilmeye çalışılırken bir hata oluştu"
 
-#: src/view/com/composer/state/video.ts:468
+#: src/view/com/composer/state/video.ts:453
 msgid "An error occurred while uploading the video. {message}"
 msgstr "Video yüklerken bir hata oluştu. {message}"
 
-#: src/view/com/composer/state/video.ts:460
+#: src/view/com/composer/state/video.ts:445
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr "Video yüklerken bir hata oluştu. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin."
 
@@ -1471,11 +1471,11 @@ msgstr "Bu seçeneklerde yer almayan bir sorun"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:85
 msgid "An issue occurred creating the group chat, please try again."
-msgstr ""
+msgstr "Grup sohbetini oluştururken bir sorun çıktı, lütfen tekrar deneyin."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:47
 msgid "An issue occurred starting the chat, please try again."
-msgstr ""
+msgstr "Sohbeti başlatırken bir sorun çıktı, lütfen tekrar deneyin."
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:50
 msgid "An issue occurred while trying to open the chat"
@@ -1704,7 +1704,7 @@ msgstr "Bu yazışmadan ayrılmak istediğinize emin misiniz? Mesajlarınız siz
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Bunu akışlarınızdan çıkarmak istediğinize emin misiniz?"
 
-#: src/view/com/composer/Composer.tsx:1541
+#: src/view/com/composer/Composer.tsx:1523
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Bu taslağı silmek istediğinizden emin misiniz?"
 
@@ -1914,13 +1914,13 @@ msgstr "Hesapları engelle"
 
 #: src/components/dms/AfterReportDialog.tsx:143
 msgid "Block and delete"
-msgstr ""
+msgstr "Engelle ve sil"
 
 #. After-report action for a conversation
 #: src/components/dms/AfterReportConversationDialog.tsx:167
 msgctxt "button"
 msgid "Block and leave"
-msgstr ""
+msgstr "Engelle ve ayrıl"
 
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:119
 msgid "Block list"
@@ -1946,7 +1946,7 @@ msgstr "Kullanıcıyı engelle"
 #: src/components/dms/AfterReportConversationDialog.tsx:182
 msgctxt "button"
 msgid "Block user"
-msgstr ""
+msgstr "Kullanıcıyı engelle"
 
 #: src/components/dms/AfterReportDialog.tsx:180
 msgid "Block user and/or delete this conversation"
@@ -1954,7 +1954,7 @@ msgstr "Kullanıcıyı engelle ve/veya bu yazışmayı sil"
 
 #: src/components/dms/AfterReportConversationDialog.tsx:217
 msgid "Block user and/or leave this conversation"
-msgstr ""
+msgstr "Kullanıcıyı engelle ve/veya bu yazışmadan ayrıl"
 
 #: src/components/Post/Embed/index.tsx:197
 msgid "Blocked"
@@ -2153,7 +2153,7 @@ msgid "By <0>{0}</0>"
 msgstr "<0>{0}</0> tarafından geliştiriliyor"
 
 #. placeholder {0}: authorProfile.handle
-#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:79
+#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:80
 msgid "by <0>@{0}</0>"
 msgstr "<0>@{0}</0>"
 
@@ -2228,8 +2228,8 @@ msgstr "Kamera"
 #: src/screens/Settings/Settings.tsx:300
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
-#: src/view/com/composer/Composer.tsx:1619
-#: src/view/com/composer/Composer.tsx:1629
+#: src/view/com/composer/Composer.tsx:1601
+#: src/view/com/composer/Composer.tsx:1611
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:227
@@ -2380,7 +2380,7 @@ msgstr "Sohbet sessize alındı"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:66
 msgid "Chat recipient is not followed by the sender."
-msgstr ""
+msgstr "Sohbet alıcısı gönderici tarafından takip edilmiyor."
 
 #: src/Navigation.tsx:588
 msgid "Chat request inbox"
@@ -2695,7 +2695,7 @@ msgstr "Hoşgeldiniz ekranını kapat"
 msgid "Closes password update alert"
 msgstr "Şifre güncelleme uyarısını kapatır"
 
-#: src/view/com/composer/Composer.tsx:1627
+#: src/view/com/composer/Composer.tsx:1609
 msgid "Closes post composer and discards post draft"
 msgstr "Gönderi düzenleyiciyi kapatır ve gönderi taslağını siler"
 
@@ -2745,7 +2745,7 @@ msgid "Compose new post"
 msgstr "Yeni gönderi oluştur"
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1503
+#: src/view/com/composer/Composer.tsx:1485
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr "{0, plural, other {# karakter}} uzunluğuna kadar gönderiler oluşturun"
 
@@ -2753,11 +2753,11 @@ msgstr "{0, plural, other {# karakter}} uzunluğuna kadar gönderiler oluşturun
 msgid "Compose reply"
 msgstr "Yanıt oluştur"
 
-#: src/view/com/composer/Composer.tsx:2464
+#: src/view/com/composer/Composer.tsx:2446
 msgid "Compressing GIF..."
 msgstr "GIF sıkıştırılıyor..."
 
-#: src/view/com/composer/Composer.tsx:2466
+#: src/view/com/composer/Composer.tsx:2448
 msgid "Compressing video..."
 msgstr "Video sıkıştırılıyor..."
 
@@ -2890,7 +2890,7 @@ msgstr "Bağlam menüsü arkaplanı, menüyü kapatmak için tıklayın."
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:171
 #: src/screens/Onboarding/StepInterests/index.tsx:93
 #: src/screens/Onboarding/StepProfile/index.tsx:303
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:305
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:287
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:117
 msgid "Continue"
 msgstr "Devam et"
@@ -2915,7 +2915,7 @@ msgstr "Grup adına devam et"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:90
 #: src/screens/Onboarding/StepProfile/index.tsx:300
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:302
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:284
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:114
 #: src/screens/Signup/BackNextButtons.tsx:61
 msgid "Continue to next step"
@@ -2939,7 +2939,7 @@ msgstr "Yazışma silindi"
 #: src/components/dms/AfterReportConversationDialog.tsx:179
 msgctxt "toast"
 msgid "Conversation left"
-msgstr ""
+msgstr "Yazışma terk edildi"
 
 #: src/screens/Settings/AboutSettings.tsx:162
 msgid "Copied build version to clipboard"
@@ -3413,7 +3413,7 @@ msgstr "Hesabımı sil"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:787
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:789
-#: src/view/com/composer/Composer.tsx:1515
+#: src/view/com/composer/Composer.tsx:1497
 msgid "Delete post"
 msgstr "Gönderiyi sil"
 
@@ -3560,9 +3560,9 @@ msgstr "Devre dışı"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:101
 #: src/screens/Profile/Header/EditProfileDialog.tsx:79
-#: src/view/com/composer/Composer.tsx:1294
-#: src/view/com/composer/Composer.tsx:1338
-#: src/view/com/composer/Composer.tsx:1548
+#: src/view/com/composer/Composer.tsx:1276
+#: src/view/com/composer/Composer.tsx:1320
+#: src/view/com/composer/Composer.tsx:1530
 #: src/view/com/composer/drafts/DraftItem.tsx:242
 #: src/view/com/composer/drafts/DraftsButton.tsx:131
 msgid "Discard"
@@ -3573,14 +3573,14 @@ msgstr "Sil"
 msgid "Discard changes?"
 msgstr "Değişiklikler silinsin mi?"
 
-#: src/view/com/composer/Composer.tsx:1292
+#: src/view/com/composer/Composer.tsx:1274
 #: src/view/com/composer/drafts/DraftItem.tsx:239
 #: src/view/com/composer/drafts/DraftsButton.tsx:98
 msgid "Discard draft?"
 msgstr "Taslak silinsin mi?"
 
-#: src/view/com/composer/Composer.tsx:1309
-#: src/view/com/composer/Composer.tsx:1540
+#: src/view/com/composer/Composer.tsx:1291
+#: src/view/com/composer/Composer.tsx:1522
 msgid "Discard post?"
 msgstr "Gönderi silinsin mi?"
 
@@ -3617,7 +3617,7 @@ msgstr "Yok say"
 msgid "Dismiss banner"
 msgstr "Bildirimi gizle"
 
-#: src/view/com/composer/Composer.tsx:2385
+#: src/view/com/composer/Composer.tsx:2367
 msgid "Dismiss error"
 msgstr "Hatayı yok say"
 
@@ -3743,12 +3743,12 @@ msgstr "Bluesky'ı İndir"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:118
 msgid "Download CAR file"
-msgstr "CAR dosyasını indir"
+msgstr ""
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:123
 msgctxt "button"
 msgid "Download CAR file"
-msgstr "CAR dosyasını indir"
+msgstr ""
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:149
 msgid "Download chat data"
@@ -3898,7 +3898,7 @@ msgstr "İsmi düzenle"
 #. placeholder {0}: createSanitizedDisplayName( profile, )
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:246
 msgid "Edit notifications from {0}"
-msgstr "{0} kullanıcısından gelen bildirimleri düzenle"
+msgstr ""
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:114
 msgid "Edit People"
@@ -4143,7 +4143,7 @@ msgstr "Tam ekrana geçer"
 msgid "Entertainment"
 msgstr "Eğlence"
 
-#: src/view/com/composer/Composer.tsx:2484
+#: src/view/com/composer/Composer.tsx:2466
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Hata"
@@ -4238,7 +4238,7 @@ msgstr "Gönderi metnini genişlet"
 msgid "Expands or collapses post text"
 msgstr "Gönderi metnini genişletir ya da daraltır"
 
-#: src/lib/api/index.ts:460
+#: src/lib/api/index.ts:441
 msgid "Expected uri to resolve to a record"
 msgstr "URI'nin bir kayda çözümlenmesi beklendi"
 
@@ -4292,7 +4292,7 @@ msgstr "Uygulamayı keşfet"
 #: src/screens/Messages/Settings.tsx:254
 #: src/screens/Messages/Settings.tsx:264
 msgid "Export chat data"
-msgstr "Sohbet verisini dışarı aktar"
+msgstr ""
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:130
 msgid "Export my chat data"
@@ -4415,7 +4415,7 @@ msgstr "Davetiye bağlantısı düzeltilemedi"
 msgid "Failed to enable invite link"
 msgstr "Davetiye bağlantısı etkinleştirilemedi"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:143
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:127
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr "Önerilen hesaplar tümden takip edilemedi, lütfen tekrar deneyin"
 
@@ -4546,7 +4546,7 @@ msgstr "Doğrulama kaldırılamadı"
 msgid "Failed to resolve location. Please try again."
 msgstr "Konum çözümlenemedi. Lütfen tekrar deneyin."
 
-#: src/view/com/composer/Composer.tsx:584
+#: src/view/com/composer/Composer.tsx:578
 msgid "Failed to save draft"
 msgstr "Taslak kaydedilemedi"
 
@@ -4889,7 +4889,7 @@ msgstr "Hesabı takip et"
 
 #: src/components/contacts/screens/ViewMatches.tsx:276
 #: src/components/contacts/screens/ViewMatches.tsx:291
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:294
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:276
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:162
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:169
 #: src/screens/Settings/FindContactsSettings.tsx:444
@@ -4899,7 +4899,7 @@ msgstr "Hesabı takip et"
 msgid "Follow all"
 msgstr "Hepsini takip et"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:291
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:273
 msgid "Follow all accounts"
 msgstr "Tüm hesapları takip et"
 
@@ -4912,7 +4912,7 @@ msgstr "Tüm hesapları takip et"
 msgid "Follow back"
 msgstr "Geri takip et"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:116
 msgid "Followed all accounts!"
 msgstr "Hesapların tümü takip edildi!"
 
@@ -5037,7 +5037,7 @@ msgid "For the best experience, we recommend using the theme font."
 msgstr "En iyi deneyim için, tema yazı tipini kullanmanızı öneriyoruz."
 
 #: src/components/ProgressGuide/FollowDialog.tsx:131
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:349
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:331
 #: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:88
 msgid "For You"
 msgstr "Sizin İçin"
@@ -5128,7 +5128,7 @@ msgstr "Sizi takip ettiklerinde bildirim alın."
 
 #: src/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings.tsx:43
 msgid "Get notifications when people like posts that you've reposted."
-msgstr "Yeniden gönderilerinizi beğendiklerinde bildirim alın."
+msgstr ""
 
 #: src/screens/Settings/NotificationSettings/LikeNotificationSettings.tsx:43
 msgid "Get notifications when people like your posts."
@@ -5148,7 +5148,7 @@ msgstr "Gönderilerinize yanıt verdiklerinde bildirim alın."
 
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:43
 msgid "Get notifications when people repost posts that you've reposted."
-msgstr "Yeniden gönderilerinizi yeniden gönderdiklerinde bildirim alın."
+msgstr ""
 
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:43
 msgid "Get notifications when people repost your posts."
@@ -5160,7 +5160,7 @@ msgstr "Yeni gönderilerden bildirim al"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:107
 msgid "Get notified about posts and replies from accounts you choose."
-msgstr "Seçtiğiniz hesapların gönderilerinden ve yanıtlarından bildirim alın."
+msgstr ""
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:226
 msgid "Get notified of new posts from {name}"
@@ -5190,7 +5190,7 @@ msgstr "Başla"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2489
+#: src/view/com/composer/Composer.tsx:2471
 msgid "GIF uploaded"
 msgstr "GIF yüklendi"
 
@@ -5249,7 +5249,7 @@ msgstr "Ana sayfaya git"
 
 #: src/view/screens/NotFound.tsx:45
 msgid "Go Home"
-msgstr "Ana Sayfaya Git"
+msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:370
 #: src/view/com/profile/ProfileMenu.tsx:391
@@ -5652,7 +5652,7 @@ msgstr "Hmmm, bu verileri yüklemekte sorun yaşıyoruz gibi görünüyor. Daha 
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "Hmmmm, o moderasyon hizmetini yükleyemedik."
 
-#: src/view/com/composer/state/video.ts:430
+#: src/view/com/composer/state/video.ts:415
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Bekleyin! Videoya kademeli olarak erişim veriyoruz ve siz hâlâ sıradasınız. Birazdan tekrar kontrol edin!"
 
@@ -5891,23 +5891,23 @@ msgstr "Uygulama içi bildirimler"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:268
 msgid "In-app, Everyone"
-msgstr "Uygulama içi, Herkes"
+msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:276
 msgid "In-app, People you follow"
-msgstr "Uygulama içi, Takip ettikleriniz"
+msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:283
 msgid "In-app, Push"
-msgstr "Uygulama içi, Anında"
+msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:266
 msgid "In-app, Push, Everyone"
-msgstr "Uygulama içi, Anında, Herkes"
+msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:274
 msgid "In-app, Push, People you follow"
-msgstr "Uygulama içi, Anında, Takip ettikleriniz"
+msgstr ""
 
 #: src/screens/Messages/ChatList.tsx:351
 msgid "Inbox empty"
@@ -6074,7 +6074,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Şu anda yalnızca siz varsınız! Yukarıdan arama yaparak başlangıç ​​paketinize daha çok kişi ekleyin."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2404
+#: src/view/com/composer/Composer.tsx:2386
 msgid "Job ID: {0}"
 msgstr "İş ID: {0}"
 
@@ -6099,8 +6099,8 @@ msgstr "Yazışmaya katıl"
 msgid "Journalism"
 msgstr "Gazetecilik"
 
-#: src/view/com/composer/Composer.tsx:1342
-#: src/view/com/composer/Composer.tsx:1352
+#: src/view/com/composer/Composer.tsx:1324
+#: src/view/com/composer/Composer.tsx:1334
 #: src/view/com/composer/drafts/DraftsButton.tsx:135
 msgid "Keep editing"
 msgstr "Düzenlemeye devam et"
@@ -6284,7 +6284,7 @@ msgstr "Yazışmadan ayrıl"
 #: src/components/dms/AfterReportConversationDialog.tsx:174
 msgctxt "button"
 msgid "Leave conversation"
-msgstr ""
+msgstr "Yazışmadan ayrıl"
 
 #: src/screens/Messages/ConversationSettings/prompts.tsx:92
 msgid "Leave group chat"
@@ -6348,7 +6348,7 @@ msgstr "Keşif akışını (\"Discover\") eğitmek için 10 gönderiyi beğenin"
 
 #: src/Navigation.tsx:475
 msgid "Like notifications"
-msgstr "Beğeni bildirimleri"
+msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:511
 msgid "Like this feed"
@@ -6398,7 +6398,7 @@ msgstr "Yeniden gönderilerinize dair beğeniler"
 
 #: src/Navigation.tsx:499
 msgid "Likes of your reposts notifications"
-msgstr "Yeniden gönderilerinize dair beğenilerin bildirimleri"
+msgstr ""
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:486
 msgid "Likes on this post"
@@ -6737,7 +6737,7 @@ msgstr "Üyeler sohbet geçmişini okuyabilir ama yeni mesaj atamazlar."
 
 #: src/Navigation.tsx:459
 msgid "Mention notifications"
-msgstr "Bahsetme bildirimleri"
+msgstr ""
 
 #: src/components/WhoCanReply.tsx:320
 msgid "mentioned users"
@@ -6840,7 +6840,7 @@ msgstr "Küçüklere taciz ya da kabadayılık"
 
 #: src/Navigation.tsx:523
 msgid "Miscellaneous notifications"
-msgstr "Diğer bildirimler"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:35
 msgid "Misleading"
@@ -7176,7 +7176,7 @@ msgstr "Yeni Özellik"
 
 #: src/Navigation.tsx:491
 msgid "New follower notifications"
-msgstr "Yeni takipçi bildirimleri"
+msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:195
 #: src/screens/Settings/NotificationSettings/index.tsx:138
@@ -7194,7 +7194,7 @@ msgstr "Yeni grup sohbeti"
 #: src/components/dms/InitiateChatFlow.tsx:745
 msgctxt "action"
 msgid "New group chat"
-msgstr ""
+msgstr "Yeni grup sohbeti"
 
 #: src/components/dms/InitiateChatFlow.tsx:267
 msgid "New group chat with:"
@@ -7511,7 +7511,7 @@ msgstr "Cinsel olmayan çıplaklık"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:223
 msgid "None"
-msgstr "Hiçbiri"
+msgstr ""
 
 #: src/screens/FindContactsFlowScreen.tsx:62
 #: src/screens/Settings/FindContactsSettings.tsx:104
@@ -7584,7 +7584,7 @@ msgstr "Bildirimler"
 
 #: src/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings.tsx:43
 msgid "Notifications for everything else, such as when someone joins via one of your starter packs."
-msgstr "Geri kalan her şey için bildirimler, mesela birinin başlangıç paketinizle katılması gibi."
+msgstr ""
 
 #: src/lib/hooks/useTimeAgo.ts:135
 msgid "now"
@@ -7650,33 +7650,33 @@ msgstr "Onboarding sıfırlama"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:110
 msgid "One of the selected recipients does not allow group chats."
-msgstr ""
+msgstr "Seçilmiş alıcılardan biri grup sohbetlerine izin vermiyor."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:93
 msgid "One of the selected recipients has blocked you and cannot be messaged."
-msgstr ""
+msgstr "Seçilmiş alıcılardan biri sizi engellediğinden kendisiyle yazışılamaz."
 
-#: src/view/com/composer/Composer.tsx:793
+#: src/view/com/composer/Composer.tsx:787
 msgid "One or more GIFs is missing alt text."
 msgstr "Bir veya daha fazla GIF için alternatif metin eksik."
 
-#: src/view/com/composer/Composer.tsx:790
+#: src/view/com/composer/Composer.tsx:784
 msgid "One or more images is missing alt text."
 msgstr "Bir ya da daha fazla görselin alternatif metni eksik."
 
-#: src/view/com/composer/SelectMediaButton.tsx:411
+#: src/view/com/composer/SelectMediaButton.tsx:415
 msgid "One or more of your selected files are not supported."
 msgstr "Seçtiğiniz dosyalardan bir ya da birden fazlası desteklenmiyor."
 
-#: src/view/com/composer/SelectMediaButton.tsx:434
-msgid "One or more of your selected files are too large. Maximum size is 100 MB."
-msgstr "Seçtiğiniz dosyalardan bir ya da birden fazlası çok büyük. En büyük dosya boyu 100 MB olabilir."
+#: src/view/com/composer/SelectMediaButton.tsx:438
+msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
+msgstr ""
 
-#: src/view/com/composer/Composer.tsx:595
+#: src/view/com/composer/Composer.tsx:589
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
 msgstr "Gönderilerden bir ya da birkaçı taslak olarak kaydetmek için çok uzun. {MAX_DRAFT_GRAPHEME_LENGTH, plural, other {Maksimum karakter sayısı # karakterdir.}}"
 
-#: src/view/com/composer/Composer.tsx:800
+#: src/view/com/composer/Composer.tsx:794
 msgid "One or more videos is missing alt text."
 msgstr "Bir veya daha fazla videoda alternatif metin eksik."
 
@@ -7739,7 +7739,7 @@ msgstr "Çekmece menüyü aç"
 
 #: src/screens/Messages/components/MessageComposer.tsx:176
 #: src/screens/Messages/components/MessageInput.web.tsx:148
-#: src/view/com/composer/Composer.tsx:2044
+#: src/view/com/composer/Composer.tsx:2026
 msgid "Open emoji picker"
 msgstr "Emoji seçiciyi aç"
 
@@ -7859,7 +7859,7 @@ msgid "Opens device camera"
 msgstr "Cihaz kamerasını açar"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:505
+#: src/view/com/composer/SelectMediaButton.tsx:509
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "{MAX_IMAGES, plural, other {# adede kadar}} görsel veya tek bir video ya da GIF seçmek için cihaz galerisini açar."
 
@@ -8018,7 +8018,7 @@ msgstr "Sayfa bulunamadı"
 
 #: src/view/screens/NotFound.tsx:33
 msgid "Page Not Found"
-msgstr "Sayfa Bulunamadı"
+msgstr ""
 
 #. Accessibility label for the icon-only pill that filters the GIF picker to celebration/party GIFs.
 #: src/features/gifPicker/components/GifCategoryPills.tsx:85
@@ -8244,7 +8244,7 @@ msgstr "Yeni e-posta adresinizi doğrulamak için lütfen size şimdi yolladığ
 msgid "Please complete the verification captcha."
 msgstr "Lütfen doğrulama captcha'sını tamamlayın."
 
-#: src/view/com/composer/state/video.ts:454
+#: src/view/com/composer/state/video.ts:439
 msgid "Please confirm your email address to upload videos."
 msgstr "Video yüklemek için lütfen e-posta adresinizi onaylayın."
 
@@ -8383,7 +8383,7 @@ msgstr "Politika"
 msgid "Porn"
 msgstr "Pornografi"
 
-#: src/view/com/composer/Composer.tsx:1693
+#: src/view/com/composer/Composer.tsx:1675
 msgctxt "action"
 msgid "Post"
 msgstr "Gönder"
@@ -8403,12 +8403,12 @@ msgstr "Bir fotoğraf gönder"
 msgid "Post a video"
 msgstr "Bir video gönder"
 
-#: src/view/com/composer/Composer.tsx:1691
+#: src/view/com/composer/Composer.tsx:1673
 msgctxt "action"
 msgid "Post All"
 msgstr "Hepsini Gönder"
 
-#: src/view/com/composer/Composer.tsx:1351
+#: src/view/com/composer/Composer.tsx:1333
 msgid "Post anyway"
 msgstr "Yine de gönder"
 
@@ -8429,7 +8429,7 @@ msgctxt "toast"
 msgid "Post deleted"
 msgstr "Gönderi silindi"
 
-#: src/lib/api/index.ts:193
+#: src/lib/api/index.ts:186
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr "Gönderinin yollanması başarısız. Lütfen İnternet bağlantınızı kontrol edin ve tekrar deneyin."
 
@@ -8507,7 +8507,7 @@ msgstr "Gönderiler gizlendi"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:217
 msgid "Posts, Replies"
-msgstr "Gönderiler, Yanıtlar"
+msgstr ""
 
 #: src/components/dialogs/LinkWarning.tsx:89
 msgid "Potentially misleading link"
@@ -8586,15 +8586,15 @@ msgstr "Gizlilik Politikası"
 msgid "Privacy violation of a minor"
 msgstr "Bir küçüğün gizliliğini ihlal"
 
-#: src/view/com/composer/Composer.tsx:2478
+#: src/view/com/composer/Composer.tsx:2460
 msgid "Processing GIF..."
 msgstr "GIF işleniyor..."
 
-#: src/view/com/composer/Composer.tsx:2480
+#: src/view/com/composer/Composer.tsx:2462
 msgid "Processing video..."
 msgstr "Video işleniyor..."
 
-#: src/lib/api/index.ts:66
+#: src/lib/api/index.ts:60
 msgid "Processing..."
 msgstr "İşleniyor..."
 
@@ -8635,22 +8635,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr "Topluca sessize almak ya da engellemek için herkese açık, paylaşılabilir listeler."
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1677
+#: src/view/com/composer/Composer.tsx:1659
 msgid "Publish post"
 msgstr "Gönderiyi yayınla"
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1672
+#: src/view/com/composer/Composer.tsx:1654
 msgid "Publish posts"
 msgstr "Gönderileri yayınla"
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1661
+#: src/view/com/composer/Composer.tsx:1643
 msgid "Publish replies"
 msgstr "Yanıtları yayınla"
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1666
+#: src/view/com/composer/Composer.tsx:1648
 msgid "Publish reply"
 msgstr "Yanıtı yayınla"
 
@@ -8664,11 +8664,11 @@ msgstr "Anında bildirimler"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:270
 msgid "Push, Everyone"
-msgstr "Anında, Herkes"
+msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:278
 msgid "Push, People you follow"
-msgstr "Anında, Takip ettikleriniz"
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:140
 msgid "QR code copied to your clipboard!"
@@ -8684,7 +8684,7 @@ msgstr "Karekod fotoğraflarınıza kaydedildi!"
 
 #: src/Navigation.tsx:467
 msgid "Quote notifications"
-msgstr "Alıntı bildirimleri"
+msgstr ""
 
 #: src/components/PostControls/RepostButton.tsx:176
 #: src/components/PostControls/RepostButton.tsx:199
@@ -9104,7 +9104,7 @@ msgstr "Yanıtlara kapalı"
 msgid "Replies to this post are disabled."
 msgstr "Bu gönderi yanıtlara kapalı."
 
-#: src/view/com/composer/Composer.tsx:1689
+#: src/view/com/composer/Composer.tsx:1671
 msgctxt "action"
 msgid "Reply"
 msgstr "Yanıtla"
@@ -9127,7 +9127,7 @@ msgstr "Yanıt Tarafınızdan Gizlenmiş"
 
 #: src/Navigation.tsx:451
 msgid "Reply notifications"
-msgstr "Yanıt bildirimlerini al"
+msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:418
 msgid "Reply settings are chosen by the author of the thread"
@@ -9258,7 +9258,7 @@ msgstr "Yeniden gönder ({0, plural, other {# defa yeniden gönderilmiş}})"
 
 #: src/Navigation.tsx:483
 msgid "Repost notifications"
-msgstr "Yeniden gönderi bildirimleri"
+msgstr ""
 
 #: src/components/PostControls/RepostButton.tsx:146
 #: src/components/PostControls/RepostButton.web.tsx:43
@@ -9299,7 +9299,7 @@ msgstr "Yeniden gönderilerinizin yeniden gönderileri"
 
 #: src/Navigation.tsx:507
 msgid "Reposts of your reposts notifications"
-msgstr "Yeniden gönderilerinizin yeniden gönderilme bildirimleri"
+msgstr ""
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:226
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:232
@@ -9402,8 +9402,8 @@ msgstr "Son hataya neden olan son eylemi tekrarlar"
 #: src/screens/Messages/ChatList.tsx:343
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:220
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:268
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:271
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:250
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:253
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:92
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:95
 #: src/screens/PostThread/components/ThreadError.tsx:81
@@ -9479,22 +9479,22 @@ msgstr "Doğum tarihini kaydet"
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
 #: src/screens/SavedFeeds.tsx:315
-#: src/view/com/composer/Composer.tsx:1332
+#: src/view/com/composer/Composer.tsx:1314
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save changes"
 msgstr "Değişiklikleri kaydet"
 
-#: src/view/com/composer/Composer.tsx:1304
+#: src/view/com/composer/Composer.tsx:1286
 #: src/view/com/composer/drafts/DraftsButton.tsx:93
 msgid "Save changes?"
 msgstr "Değişiklikler kaydedilsin mi?"
 
-#: src/view/com/composer/Composer.tsx:1332
+#: src/view/com/composer/Composer.tsx:1314
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save draft"
 msgstr "Taslağı kaydet"
 
-#: src/view/com/composer/Composer.tsx:1306
+#: src/view/com/composer/Composer.tsx:1288
 #: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Save draft?"
 msgstr "Taslak kaydedilsin mi?"
@@ -9908,7 +9908,7 @@ msgstr "Akışlarınızdaki çeviriler için tercih ettiğiniz dili seçin."
 msgid "Select your preferred notification channels"
 msgstr "Tercih ettiğiniz bildirim kanallarını seçiniz"
 
-#: src/view/com/composer/SelectMediaButton.tsx:414
+#: src/view/com/composer/SelectMediaButton.tsx:418
 msgid "Selecting multiple media types is not supported."
 msgstr "Farklı türlerde medya seçimi desteklenmemektedir."
 
@@ -10380,7 +10380,7 @@ msgstr "@{0} olarak giriş yapıldı"
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:90
 #: src/screens/Onboarding/StepFinished/index.tsx:295
 #: src/screens/Onboarding/StepFinished/index.tsx:317
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:281
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:263
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:105
 #: src/screens/StarterPack/Wizard/index.tsx:206
 msgid "Skip"
@@ -10391,7 +10391,7 @@ msgstr "Atla"
 msgid "Skip contact sharing and continue to the app"
 msgstr "Bağlantıları paylaşmayı atla ve uygulamaya devam et"
 
-#: src/view/com/composer/Composer.tsx:1349
+#: src/view/com/composer/Composer.tsx:1331
 msgid "Skip empty posts?"
 msgstr "Boş gönderiler atlansın mı?"
 
@@ -10400,7 +10400,7 @@ msgstr "Boş gönderiler atlansın mı?"
 msgid "Skip introduction and start using your account"
 msgstr "Girizgahı atla ve hesabını kullanmaya başla"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:278
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:260
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:102
 msgid "Skip to next step"
 msgstr "Sonraki adıma atla"
@@ -10525,7 +10525,7 @@ msgstr "Bir şeyler ters gitti. Lütfen tekrar deneyin."
 msgid "Something wrong? Let us know."
 msgstr "Bir sorun mu var? Bize bildirin."
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:231
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:214
 msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr "Üzgünüz, hesap önerilerini şu anda yükleyemiyoruz."
 
@@ -10695,13 +10695,13 @@ msgid "Subscribe"
 msgstr "Abone ol"
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:420
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:429
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:425
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:434
 msgid "Subscribe on {0}"
 msgstr "{0} yayıncısına abone ol"
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:428
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:433
 msgid "Subscribe to {publicationTitle} on {0}"
 msgstr "{0} kaynağının {publicationTitle} yayınına abone ol"
 
@@ -10751,7 +10751,7 @@ msgstr "Önerilen hesaplar"
 
 #. Accounts suggested to the user for them to follow
 #: src/components/FeedInterstitials.tsx:469
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:165
 msgid "Suggested for you"
 msgstr "Size önerilenler"
 
@@ -10782,11 +10782,11 @@ msgstr "Bu özellik ülkenizde henüz etkin değil! Lütfen daha sonra tekrar ko
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:91
 msgid "Suspended accounts cannot participate in a group chat."
-msgstr ""
+msgstr "Askıya alınmış hesaplar grup sohbetlerine katılamaz."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:53
 msgid "Suspended accounts cannot participate in chat."
-msgstr ""
+msgstr "Askıya alınmış hesaplar bu sohbete katılamaz."
 
 #: src/components/dialogs/SwitchAccount.tsx:47
 #: src/components/dialogs/SwitchAccount.tsx:50
@@ -11057,10 +11057,10 @@ msgstr "Yanıtlamakta olduğunuz gönderi, yazarı tarafından {suggestedLanguag
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "Gizlilik Politikası <0/> konumuna taşındı"
 
-#: src/view/com/composer/state/video.ts:407
-#: src/view/com/composer/state/video.ts:451
-msgid "The selected video is larger than {videoSize} MB. Please try again with a smaller file."
-msgstr "Seçtiğiniz video {videoSize} MB'tan büyük. Lütfen daha küçük bir dosyayla tekrar deneyin."
+#: src/view/com/composer/state/video.ts:397
+#: src/view/com/composer/state/video.ts:436
+msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
+msgstr ""
 
 #: src/lib/hooks/useCleanError.ts:41
 #: src/lib/strings/errors.ts:19
@@ -11454,7 +11454,7 @@ msgstr "Bu gönderi yazarı tarafından silinmiş"
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Bu gönderi akışlarınızdan ve konularınızdan gizlenecektir. Bu işlem geri alınamaz."
 
-#: src/view/com/composer/Composer.tsx:963
+#: src/view/com/composer/Composer.tsx:945
 msgid "This post's author has disabled quote posts."
 msgstr "Bu gönderinin yazarı alıntılanmasını engellemiş."
 
@@ -11496,7 +11496,7 @@ msgstr "Bu kullanıcının hiç takipçisi yok."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:57
 msgid "This user has blocked you and cannot be messaged."
-msgstr ""
+msgstr "Bu kullanıcı sizi engellediğinden kendisiyle mesajlaşılamaz."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:83
 #: src/lib/moderation/useModerationCauseDescription.ts:76
@@ -11505,7 +11505,7 @@ msgstr "Bu kullanıcı sizi engelledi. İçeriklerini göremezsiniz."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:61
 msgid "This user has disabled chat and cannot be messaged."
-msgstr ""
+msgstr "Bu kullanıcı sohbeti devre dışı bıraktığından kendisiyle mesajlaşılamaz."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:30
 msgid "This user has requested that their content only be shown to signed-in users."
@@ -11765,11 +11765,11 @@ msgstr "Silinemedi"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:106
 msgid "Unable to find a selected recipient."
-msgstr ""
+msgstr "Seçilmiş alıcılardan biri bulunamadı."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:70
 msgid "Unable to find the selected recipient."
-msgstr ""
+msgstr "Seçilmiş alıcı bulunamadı."
 
 #: src/lib/strings/errors.ts:43
 msgid "Unable to resolve handle"
@@ -12034,7 +12034,7 @@ msgstr "Liste aboneliğinden çıktınız"
 msgid "Unsupported clipboard content"
 msgstr "Desteklenmeyen pano içeriği"
 
-#: src/view/com/composer/Composer.tsx:1442
+#: src/view/com/composer/Composer.tsx:1424
 msgid "Unsupported video type: {mimeType}"
 msgstr "Desteklenmeyen video türü: {mimeType}"
 
@@ -12117,20 +12117,20 @@ msgstr "Dosyalardan Yükle"
 msgid "Upload from Library"
 msgstr "Kütüphaneden Yükle"
 
-#: src/view/com/composer/Composer.tsx:2471
+#: src/view/com/composer/Composer.tsx:2453
 msgid "Uploading GIF..."
 msgstr "GIF yükleniyor..."
 
-#: src/lib/api/index.ts:338
+#: src/lib/api/index.ts:322
 msgid "Uploading images..."
 msgstr "Görseller yükleniyor..."
 
-#: src/lib/api/index.ts:409
-#: src/lib/api/index.ts:433
+#: src/lib/api/index.ts:390
+#: src/lib/api/index.ts:414
 msgid "Uploading link thumbnail..."
 msgstr "Web bağlantısının görseli gönderiliyor..."
 
-#: src/view/com/composer/Composer.tsx:2473
+#: src/view/com/composer/Composer.tsx:2455
 msgid "Uploading video..."
 msgstr "Video yükleniyor..."
 
@@ -12380,7 +12380,7 @@ msgstr "Sürüm {0}"
 msgid "Video"
 msgstr "Video"
 
-#: src/view/com/composer/state/video.ts:364
+#: src/view/com/composer/state/video.ts:359
 msgid "Video failed to process"
 msgstr "Video işlenemedi"
 
@@ -12419,7 +12419,7 @@ msgstr "Video bulunamadı."
 msgid "Video settings"
 msgstr "Video ayarları"
 
-#: src/view/com/composer/Composer.tsx:2491
+#: src/view/com/composer/Composer.tsx:2473
 msgid "Video uploaded"
 msgstr "Video yüklendi"
 
@@ -12432,18 +12432,18 @@ msgstr "Video: {0}"
 msgid "Videos"
 msgstr "Videolar"
 
-#: src/view/com/composer/SelectMediaButton.tsx:428
+#: src/view/com/composer/SelectMediaButton.tsx:432
 msgid "Videos must be less than 3 minutes long."
 msgstr "Videolar 3 dakikadan kısa olmalıdır."
 
-#: src/view/com/composer/Composer.tsx:1055
+#: src/view/com/composer/Composer.tsx:1037
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr "Göz at"
 
 #. placeholder {0}: view.source.title
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:319
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:583
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:588
 msgid "View {0}"
 msgstr "{0} yayıncısını görüntüle"
 
@@ -12472,12 +12472,12 @@ msgstr "{0} kullanıcısının profilini görüntüle"
 msgid "View {displayName}’s profile"
 msgstr "{displayName} profilini görüntüle"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:431
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:436
 msgid "View {publicationTitle}"
 msgstr "{publicationTitle} yayınını görüntüle"
 
 #. placeholder {0}: authorProfile.handle
-#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:82
+#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:83
 msgid "View @{0}'s profile"
 msgstr "@{0} profiline bak"
 
@@ -12522,7 +12522,7 @@ msgstr "Daha fazlasını görüntüle"
 msgid "View more trending videos"
 msgstr "Daha çok gündem olan video göster"
 
-#: src/view/com/composer/Composer.tsx:1050
+#: src/view/com/composer/Composer.tsx:1032
 msgid "View post"
 msgstr "Gönderiyi göster"
 
@@ -12540,9 +12540,9 @@ msgid "View profile banner"
 msgstr "Profil kapağını göster"
 
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:319
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:421
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:432
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:583
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:426
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:437
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:588
 msgid "View publication"
 msgstr "Yayını görüntüle"
 
@@ -12719,7 +12719,7 @@ msgstr "En az iki ilgi alanı seçmenizi öneririz."
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "<0>{0}</0> adresine bir bağlantı içeren bir e-posta yolladık. Lütfen e-posta doğrulama sürecini tamamlamak için o bağlantıya tıklayın."
 
-#: src/view/com/composer/state/video.ts:434
+#: src/view/com/composer/state/video.ts:419
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "Video yüklemenize izin verilip verilmediğini belirleyemedik. Lütfen tekrar deneyin."
 
@@ -12814,7 +12814,7 @@ msgstr "Maalesef arama işleminiz tamamlanamadı. Lütfen birkaç dakika içinde
 msgid "We're sorry, you cannot access this screen at this time."
 msgstr "Üzgünüz, şu anda bu ekrana erişemezsiniz."
 
-#: src/view/com/composer/Composer.tsx:961
+#: src/view/com/composer/Composer.tsx:943
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "Üzgünüz! Yanıtladığınız gönderi silindi."
 
@@ -12865,7 +12865,7 @@ msgid "What do you want to call your starter pack?"
 msgstr "Başlangıç ​​paketinize ne ad vermek istersiniz?"
 
 #: src/view/com/auth/SplashScreen.web.tsx:98
-#: src/view/com/composer/Composer.tsx:1402
+#: src/view/com/composer/Composer.tsx:1384
 #: src/view/com/feeds/ComposerPrompt.tsx:193
 msgid "What's up?"
 msgstr "Nasılsınız?"
@@ -12945,13 +12945,13 @@ msgstr "Bu kullanıcıyı engellemek ve/veya bu yazışmayı silmek ister misini
 
 #: src/components/dms/AfterReportConversationDialog.tsx:47
 msgid "Would you like to block this user and/or leave this conversation?"
-msgstr ""
+msgstr "Bu kullanıcıyı engellemek ve/veya bu yazışmadan ayrılmak istiyor musunuz?"
 
 #: src/view/com/composer/drafts/DraftsButton.tsx:110
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr "Taslaklarınıza göz atmadan önce bunu taslak olarak kaydetmek ister misiniz?"
 
-#: src/view/com/composer/Composer.tsx:1320
+#: src/view/com/composer/Composer.tsx:1302
 msgid "Would you like to save this as a draft to edit later?"
 msgstr "Bunu sonradan düzenlemek için taslak olarak kaydetmek ister misiniz?"
 
@@ -12960,12 +12960,12 @@ msgstr "Bunu sonradan düzenlemek için taslak olarak kaydetmek ister misiniz?"
 msgid "Write a post"
 msgstr "Bir gönderi yaz"
 
-#: src/view/com/composer/Composer.tsx:1502
+#: src/view/com/composer/Composer.tsx:1484
 msgid "Write post"
 msgstr "Gönderi yaz"
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:91
-#: src/view/com/composer/Composer.tsx:1400
+#: src/view/com/composer/Composer.tsx:1382
 msgid "Write your reply"
 msgstr "Yanıtınızı yazın"
 
@@ -13068,7 +13068,7 @@ msgstr "Canlı yayındasınız"
 msgid "You are no longer live"
 msgstr "Artık canlı yayında değilsiniz"
 
-#: src/view/com/composer/state/video.ts:427
+#: src/view/com/composer/state/video.ts:412
 msgid "You are not allowed to upload videos."
 msgstr "Video yükleme izniniz yok."
 
@@ -13131,7 +13131,7 @@ msgstr "Artık belirli kişiler gönderi paylaştığında bildirim almayı seç
 msgid "You can now sign in with your new password."
 msgstr "Artık yeni şifrenizle giriş yapabilirsiniz."
 
-#: src/view/com/composer/Composer.tsx:1325
+#: src/view/com/composer/Composer.tsx:1307
 msgid "You can only save drafts up to 1000 characters."
 msgstr "Yalnızca 1000 karaktere kadar taslak kaydedebilirsiniz."
 
@@ -13139,11 +13139,11 @@ msgstr "Yalnızca 1000 karaktere kadar taslak kaydedebilirsiniz."
 msgid "You can only save drafts up to 1000 characters. Would you like to discard this post before viewing your drafts?"
 msgstr "Yalnızca 1000 karaktere kadar olan taslaklar kaydedilebilir. Taslaklarınıza bakmadan önce bu düzenlediğiniz gönderinin silinmesine razı mısınız?"
 
-#: src/view/com/composer/SelectMediaButton.tsx:431
+#: src/view/com/composer/SelectMediaButton.tsx:435
 msgid "You can only select one GIF at a time."
 msgstr "Tek seferde sadece tek bir GIF seçebilirsiniz."
 
-#: src/view/com/composer/SelectMediaButton.tsx:425
+#: src/view/com/composer/SelectMediaButton.tsx:429
 msgid "You can only select one video at a time."
 msgstr "Tek seferde sadece tek bir video seçebilirsiniz."
 
@@ -13156,7 +13156,7 @@ msgid "You can read chat history but can’t send new messages."
 msgstr "Sohbet geçmişini okuyabilirsiniz ancak yeni mesaj gönderemezsiniz."
 
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:417
+#: src/view/com/composer/SelectMediaButton.tsx:421
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr "Toplamda {MAX_IMAGES, plural, other {# adede kadar}} görsel seçebilirsiniz."
 
@@ -13168,7 +13168,7 @@ msgstr "Bunu daha sonra ayarlarınızdan güncelleyebilirsiniz."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:98
 msgid "You cannot create a group chat yet."
-msgstr ""
+msgstr "Henüz bir grup sohbeti oluşturamazsınız."
 
 #: src/lib/hooks/useCleanError.ts:54
 #: src/lib/strings/errors.ts:28
@@ -13266,7 +13266,7 @@ msgstr "E-posta adresinizi başarıyla doğruladınız. Bu diyaloğu kapatabilir
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "Video yükleme sınırına geçici olarak ulaştınız. Lütfen daha sonra tekrar deneyin."
 
-#: src/view/com/composer/Composer.tsx:1315
+#: src/view/com/composer/Composer.tsx:1297
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr "Bu taslakta kaydedilmemiş değişiklikleriniz var, onları kaydetmek ister misiniz?"
 
@@ -13336,7 +13336,7 @@ msgstr "Başlangıç ​​paketi oluşturmak için en az yedi kişiyi takip etm
 msgid "You must grant access to your photo library to save a QR code"
 msgstr "Karekod kaydetmek için fotoğraf galerinize erişim izni vermelisiniz"
 
-#: src/view/com/composer/SelectMediaButton.tsx:460
+#: src/view/com/composer/SelectMediaButton.tsx:464
 msgid "You need to allow access to your media library."
 msgstr "Medya galerinize erişim izni vermeniz gerekmektedir."
 
@@ -13463,7 +13463,7 @@ msgstr "Aktif içeriğin sonuna ulaştınız."
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr "Akışınızın sonuna ulaştınız! Takip edebileceğiniz daha fazla hesap bulun."
 
-#: src/view/com/composer/Composer.tsx:582
+#: src/view/com/composer/Composer.tsx:576
 msgid "You've reached the maximum number of drafts"
 msgstr "En fazla taslak sayısına ulaştınız"
 
@@ -13475,11 +13475,11 @@ msgstr "İzin verilen en fazla istek sayısına ulaştınız. Lütfen daha sonra
 msgid "You've reached the start of the active content."
 msgstr "Aktif içeriğin başına ulaştınız."
 
-#: src/view/com/composer/state/video.ts:438
+#: src/view/com/composer/state/video.ts:423
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "Günlük video yükleme limitinize ulaştınız (çok fazla bayt)"
 
-#: src/view/com/composer/state/video.ts:442
+#: src/view/com/composer/state/video.ts:427
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "Günlük video yükleme limitinize ulaştınız (çok sayıda video)"
 
@@ -13499,7 +13499,7 @@ msgstr "Hesabınız silindi, görüşmek üzere! ✌️"
 msgid "Your account has been suspended"
 msgstr "Hesabınız askıya alındı"
 
-#: src/view/com/composer/state/video.ts:446
+#: src/view/com/composer/state/video.ts:431
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Hesabınız video yüklemek için yeterince eski değil. Lütfen daha sonra tekrar deneyin."
 
@@ -13623,11 +13623,11 @@ msgstr "Şifreniz başarıyla değiştirildi! Lütfen bundan sonra Bluesky'a gir
 msgid "Your password must be at least 8 characters long."
 msgstr "Şifreniz en az 8 karakter uzunluğunda olmalıdır."
 
-#: src/view/com/composer/Composer.tsx:1046
+#: src/view/com/composer/Composer.tsx:1028
 msgid "Your post was sent"
 msgstr "Gönderiniz yollandı"
 
-#: src/view/com/composer/Composer.tsx:1043
+#: src/view/com/composer/Composer.tsx:1025
 msgid "Your posts were sent"
 msgstr "Gönderileriniz yollandı"
 
@@ -13648,7 +13648,7 @@ msgstr "Başka kullanıcıların profil resimleri tarafından çerçevelenmiş p
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "Profiliniz, gönderileriniz, akışlarınız ve listeleriniz artık diğer Bluesky kullanıcıları tarafından görülemeyecek. Hesabınızı istediğiniz zaman oturum açarak yeniden etkinleştirebilirsiniz."
 
-#: src/view/com/composer/Composer.tsx:1045
+#: src/view/com/composer/Composer.tsx:1027
 msgid "Your reply was sent"
 msgstr "Yanıtınız yollandı"
 
@@ -13661,7 +13661,7 @@ msgstr "Raporunuz <0>{0}</0> işaretleyicisine gönderilecektir."
 msgid "Your selected interests help us serve you content you care about."
 msgstr "Seçtiğiniz ilgi alanları, önemsediğiniz içerikleri size sunmamıza yardımcı olur."
 
-#: src/view/com/composer/Composer.tsx:1350
+#: src/view/com/composer/Composer.tsx:1332
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "Konunuzdaki boş gönderiler atlanacak, geride kalan gönderiler ise bir konu olarak yayınlanacaktır."
 
