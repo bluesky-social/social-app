@@ -44,6 +44,11 @@ export type ComposerLogContext =
   | 'Deeplink'
   | 'Other'
 
+export interface ComposerOptsEditPost {
+  uri: string
+  text: string
+}
+
 export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef
   onPost?: (postUri: string | undefined) => void
@@ -55,6 +60,8 @@ export interface ComposerOpts {
   videoUri?: {uri: string; width: number; height: number}
   openGallery?: boolean
   logContext?: ComposerLogContext
+  // Set to edit an existing post instead of creating a new one. Text-only.
+  editPost?: ComposerOptsEditPost
 }
 
 type StateContext = ComposerOpts | undefined
