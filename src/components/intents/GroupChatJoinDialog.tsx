@@ -79,6 +79,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
           control.close(() => {
             Toast.show(
               l`Access requested! The group owner will review your request.`,
+              {duration: 8e3},
             )
             navigation.navigate('Messages', {})
           })
