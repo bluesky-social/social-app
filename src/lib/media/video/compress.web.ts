@@ -1,28 +1,22 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
 
-import {VIDEO_MAX_SIZE, VIDEO_MAX_SIZE_REDUCED} from '#/lib/constants'
+import {VIDEO_MAX_SIZE} from '#/lib/constants'
 import {VideoTooLargeError} from '#/lib/media/video/errors'
 import {type CompressedVideo} from './types'
 
 // doesn't actually compress, converts to ArrayBuffer
 export async function compressVideo(
   asset: ImagePickerAsset,
-  opts?: {
+  _opts?: {
     signal?: AbortSignal
     onProgress?: (progress: number) => void
-    TEMP_enableLargeVideoUploads?: number
   },
 ): Promise<CompressedVideo> {
   const {mimeType, base64} = parseDataUrl(asset.uri)
   const blob = base64ToBlob(base64, mimeType)
   const uri = URL.createObjectURL(blob)
 
-  if (
-    blob.size >
-    (opts?.TEMP_enableLargeVideoUploads
-      ? VIDEO_MAX_SIZE
-      : VIDEO_MAX_SIZE_REDUCED)
-  ) {
+  if (blob.size > VIDEO_MAX_SIZE) {
     throw new VideoTooLargeError()
   }
 

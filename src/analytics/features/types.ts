@@ -16,7 +16,6 @@ export enum Features {
   DmsNewMessageComposerEnable = 'dms:new_message_composer:enable',
   ComposerLanguageDetectionEnable = 'composer:language_detection:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
-  LargeVideoUploads = 'large_video_uploads:enable',
 
   AATest = 'aa-test',
 }
