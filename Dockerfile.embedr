@@ -11,9 +11,13 @@ ENV NVM_DIR=/usr/share/nvm
 # Go
 ENV GODEBUG="netdns=go"
 ENV GOOS="linux"
-ENV GOARCH="amd64"
+ARG TARGETARCH
+ENV GOARCH=${TARGETARCH:-amd64}
 ENV CGO_ENABLED=1
 ENV GOEXPERIMENT="loopvar"
+
+# CI environment for pnpm
+ENV CI=true
 
 COPY . .
 
@@ -29,11 +33,11 @@ RUN mkdir --parents $NVM_DIR && \
 RUN \. "$NVM_DIR/nvm.sh" && \
   nvm install $NODE_VERSION && \
   nvm use $NODE_VERSION && \
-  npm install --global yarn && \
-  yarn && \
-  cd bskyembed && yarn install --frozen-lockfile && cd .. && \
-  yarn intl:build && \
-  yarn build-embed
+  npm install --global pnpm@11.5.0 && \
+  pnpm install --frozen-lockfile && \
+  cd bskyembed && pnpm install --frozen-lockfile && cd .. && \
+  pnpm intl:build && \
+  pnpm build-embed
 
 # DEBUG
 RUN find ./bskyweb/embedr-static && find ./bskyweb/embedr-templates && find ./bskyembed/dist

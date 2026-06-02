@@ -15,7 +15,6 @@ import {
   useRoute,
 } from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
-import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useViewportZoomLock} from '#/lib/hooks/useViewportZoomLock'
@@ -32,7 +31,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useConvoQuery} from '#/state/queries/messages/conversation'
 import {useSession} from '#/state/session'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, web} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import * as Dialog from '#/components/Dialog'
@@ -45,12 +44,13 @@ import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
 import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {Error} from '#/components/Error'
 import * as Layout from '#/components/Layout'
-import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_INTERNAL, IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {IS_INTERNAL, IS_LIQUID_GLASS} from '#/env'
 import {ChatDisabled} from './components/ChatDisabled'
+import {ChatEnded} from './components/ChatEnded'
+import {ChatLocked} from './components/ChatLocked'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -99,7 +99,6 @@ export function MessagesConversationScreenInner({route}: Props) {
 }
 
 function Inner({convoId}: {convoId: string}) {
-  const t = useTheme()
   const convoState = useConvo()
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
@@ -113,15 +112,7 @@ function Inner({convoId}: {convoId: string}) {
     ? parseConvoView(convoData, currentAccount?.did)
     : null
 
-  // Because we want to give the list a chance to asynchronously scroll to the end before it is visible to the user,
-  // we use `hasScrolled` to determine when to render. With that said however, there is a chance that the chat will be
-  // empty. So, we also check for that possible state as well and render once we can.
   const [hasScrolled, setHasScrolled] = useState(false)
-  const readyToShow =
-    hasScrolled ||
-    (isConvoActive(convoState) &&
-      !convoState.isFetchingHistory &&
-      convoState.items.length === 0)
 
   // Any time that we re-render the `Initializing` state, we have to reset `hasScrolled` to false. After entering this
   // state, we know that we're resetting the list of messages and need to re-scroll to the bottom when they get added.
@@ -152,13 +143,6 @@ function Inner({convoId}: {convoId: string}) {
 
   return (
     <Layout.Center style={[a.flex_1]}>
-      {/* MessagesList does not use the body scroll */}
-      {isFocused && IS_WEB && <RemoveScrollBar />}
-      {!readyToShow && (
-        <View style={IS_LIQUID_GLASS && {paddingTop: topInset}}>
-          <MessagesListHeader convo={convo} />
-        </View>
-      )}
       <View style={[a.flex_1]}>
         <InnerReady
           convo={convo}
@@ -166,24 +150,7 @@ function Inner({convoId}: {convoId: string}) {
           setHasScrolled={setHasScrolled}
           isActive={isConvoActive(convoState)}
           isDisabled={convoState.status === ConvoStatus.Disabled}
-          hasMessages={isConvoActive(convoState) && convoState.items.length > 0}
         />
-        {!readyToShow && (
-          <View
-            style={[
-              a.absolute,
-              a.z_10,
-              a.w_full,
-              a.h_full,
-              a.justify_center,
-              a.align_center,
-              t.atoms.bg,
-            ]}>
-            <View style={[{marginBottom: 75}]}>
-              <Loader size="xl" />
-            </View>
-          </View>
-        )}
       </View>
     </Layout.Center>
   )
@@ -195,14 +162,12 @@ function InnerReady({
   convo,
   isActive,
   isDisabled,
-  hasMessages,
 }: {
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
   convo: ConvoWithDetails | null
   isActive: boolean
   isDisabled: boolean
-  hasMessages: boolean
 }) {
   const navigation = useNavigation<NavigationProp>()
   const {top: topInset} = useSafeAreaInsets()
@@ -262,6 +227,33 @@ function InnerReady({
 
   const header = <MessagesListHeader convo={convo} />
 
+  let footer: React.ReactNode = null
+  if (isDisabled) {
+    footer = <ChatDisabled />
+  } else if (
+    convo &&
+    primaryMember &&
+    primaryMemberModeration &&
+    (convo.kind === 'group'
+      ? primaryMemberModeration?.blockCause?.type === 'blocking'
+      : primaryMemberModeration?.blocked)
+  ) {
+    footer = (
+      <MessagesListBlockedFooter
+        recipient={primaryMember}
+        convoId={convo.view.id}
+        isGroup={convo.kind === 'group'}
+        moderation={primaryMemberModeration}
+      />
+    )
+  } else if (convo?.kind === 'group') {
+    if (convo.details.lockStatus === 'locked') {
+      footer = <ChatLocked convo={convo} />
+    } else if (convo.details.lockStatus === 'locked-permanently') {
+      footer = <ChatEnded convo={convo} />
+    }
+  }
+
   return (
     <>
       {IS_LIQUID_GLASS ? (
@@ -280,18 +272,7 @@ function InnerReady({
           setHasScrolled={setHasScrolled}
           hasAcceptOverride={!!params.accept}
           transparentHeaderHeight={IS_LIQUID_GLASS ? headerHeight : 0}
-          footer={
-            isDisabled ? (
-              <ChatDisabled />
-            ) : convo && primaryMember && primaryMemberModeration?.blocked ? (
-              <MessagesListBlockedFooter
-                recipient={primaryMember}
-                convoId={convo.view.id}
-                hasMessages={hasMessages}
-                moderation={primaryMemberModeration}
-              />
-            ) : null
-          }
+          footer={footer}
         />
       )}
 

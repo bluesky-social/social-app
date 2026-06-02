@@ -6,18 +6,19 @@ import {atoms as a, native, useTheme, web} from '#/alf'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {MessageContextProvider} from './MessageContext'
 
-const CLUSTERED_MESSAGE_GAP = 2
 const BORDER_RADIUS = 20
 const SQUARED_BORDER_RADIUS = 4
 
 let MessageItemEmbed = ({
   embed,
   isFromSelf,
+  isGroupChat,
   squaredTopCorner,
   squaredBottomCorner,
 }: {
   embed: $Typed<AppBskyEmbedRecord.View>
   isFromSelf: boolean
+  isGroupChat: boolean
   squaredTopCorner: boolean
   squaredBottomCorner: boolean
 }): React.ReactNode => {
@@ -28,7 +29,7 @@ let MessageItemEmbed = ({
     <MessageContextProvider>
       <View
         style={[
-          !isFromSelf && a.ml_sm,
+          !isFromSelf && isGroupChat && a.ml_sm,
           native({
             flexBasis: 0,
             width: Math.min(screen.width, 600) / 1.4,
@@ -38,11 +39,11 @@ let MessageItemEmbed = ({
             minWidth: 280,
             maxWidth: 360,
           }),
-          {
-            marginTop: CLUSTERED_MESSAGE_GAP,
-          },
+          // Cancel out the embed's internal a.mt_sm so the container's
+          // CLUSTERED_MESSAGE_GAP (2px) is the only spacing applied
+          {marginTop: -a.mt_sm.marginTop},
         ]}>
-        <View style={{marginTop: -8}}>
+        <View>
           <Embed
             embed={embed}
             allowNestedQuotes

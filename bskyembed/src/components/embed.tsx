@@ -416,6 +416,7 @@ function VideoEmbed({content}: {content: AppBskyEmbedVideo.View}) {
         controls
         playsinline
         preload="metadata"
+        // @ts-expect-error https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/video#loading
         loading="lazy"
         aria-label={content.alt || undefined}
         onClickCapture={evt => evt.stopPropagation()}

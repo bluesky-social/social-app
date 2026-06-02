@@ -1,0 +1,52 @@
+name: Lockfile
+
+on:
+  pull_request:
+concurrency:
+  group: "${{ github.workflow }}-${{ github.head_ref || github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  verify-pnpm-lock:
+    name: No manual pnpm-lock.yaml edits
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PR HEAD
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Fetch base branch
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: git fetch origin $BASE_REF --depth=1
+
+      - uses: pnpm/action-setup@v6
+
+      - name: Install node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: package.json
+
+      - name: Reset pnpm-lock.yaml to base
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: git show "origin/$BASE_REF:pnpm-lock.yaml" > pnpm-lock.yaml
+
+      - name: pnpm install
+        uses: Wandalen/wretry.action@master
+        with:
+          # Fine to skip scripts since we don't run any code
+          command: pnpm clean && pnpm install --ignore-scripts --no-frozen-lockfile
+          attempt_limit: 3
+          attempt_delay: 2000
+
+      - name: Verify pnpm-lock.yaml
+        run: |
+          git diff --quiet --exit-code || {
+            echo '::error::`pnpm-lock.yaml` does not match what pnpm would generate given the base `pnpm-lock.yaml` and the head `package.json`.'
+            echo '::error:: - If this is intentional, you can ignore this check.'
+            echo '::error:: - If this is unintentional, apply the following diff:'
+            git --no-pager diff
+            exit 1
+          }

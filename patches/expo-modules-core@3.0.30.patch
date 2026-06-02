@@ -1,0 +1,51 @@
+diff --git a/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt b/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
+index 47c4d15f6b10bbd77858cfff425cda9a618735b9..afe138d22d566244482498a7be0e14b8454eab96 100644
+--- a/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
++++ b/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
+@@ -125,6 +125,10 @@ internal fun peekResponseBody(
+ }
+ 
+ internal fun shouldParseBody(response: Response): Boolean {
++  if (response.request.url.encodedPath == "/bitdrift_public.protobuf.client.v1.ApiService/Mux") {
++    return false
++  }
++
+   // Check for Content-Type
+   val skipContentTypes = listOf(
+     "text/event-stream", // Server Sent Events
+diff --git a/ios/Core/ExpoBridgeModule.mm b/ios/Core/ExpoBridgeModule.mm
+index 2ed1c00f47406e109750cc27ace7e0d88e42c00e..99d0d140eddf95a8db7beb57c61dfcb12c1424b4 100644
+--- a/ios/Core/ExpoBridgeModule.mm
++++ b/ios/Core/ExpoBridgeModule.mm
+@@ -7,6 +7,9 @@
+ // The runtime executor is included as of React Native 0.74 in bridgeless mode.
+ #if __has_include(<ReactCommon/RCTRuntimeExecutor.h>)
+ #import <ReactCommon/RCTRuntimeExecutor.h>
++#else // React Native <0.74
++// dispatchBlock:queue: is declared in RCTBridge+Private.h, not the public header.
++#import <React/RCTBridge+Private.h>
+ #endif // React Native >=0.74
+ 
+ @implementation ExpoBridgeModule
+@@ -46,7 +49,20 @@ - (void)setBridge:(RCTBridge *)bridge
+   _appContext.reactBridge = bridge;
+ 
+ #if !__has_include(<ReactCommon/RCTRuntimeExecutor.h>)
+-  _appContext._runtime = [EXJavaScriptRuntimeManager runtimeFromBridge:bridge];
++  // Hop the runtime install (and the prepareRuntime() chain it triggers via
++  // _runtime.didSet) onto RCTJSThread. The original line ran synchronously
++  // on whatever thread called setBridge: - typically the main thread - and
++  // raced JSIExecutor::initializeRuntime() on the JS thread, corrupting
++  // Hermes' Hades GC (HadesGC::writeBarrierSlow EXC_BAD_ACCESS).
++  __weak EXAppContext *weakAppContext = _appContext;
++  __weak RCTBridge *weakBridge = bridge;
++  [bridge dispatchBlock:^{
++    EXAppContext *strongAppContext = weakAppContext;
++    RCTBridge *strongBridge = weakBridge;
++    if (strongAppContext != nil && strongBridge != nil && strongAppContext._runtime == nil) {
++      strongAppContext._runtime = [EXJavaScriptRuntimeManager runtimeFromBridge:strongBridge];
++    }
++  } queue:RCTJSThread];
+ #endif // React Native <0.74
+ }
+ 

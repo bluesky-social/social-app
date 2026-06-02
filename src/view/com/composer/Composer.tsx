@@ -810,7 +810,7 @@ export const ComposePost = ({
           )),
     )
 
-  const getFilteredThread = (): {
+  const getFilteredThread = useCallback((): {
     type: 'none' | 'trailing-only' | 'non-trailing'
     filteredThread: ThreadDraft
   } => {
@@ -838,7 +838,7 @@ export const ComposePost = ({
       type: hasNonTrailingEmpty ? 'non-trailing' : 'trailing-only',
       filteredThread,
     }
-  }
+  }, [thread])
 
   const onPressPublish = useCallback(async () => {
     if (isPublishing) {
@@ -948,7 +948,10 @@ export const ComposePost = ({
       })
 
       let err = cleanError(e.message)
-      if (err.includes('not locate record')) {
+      if (
+        e instanceof apilib.ReplyDeletedError ||
+        err.includes('not locate record')
+      ) {
         err = l`We're sorry! The post you are replying to has been deleted.`
       } else if (e instanceof EmbeddingDisabledError) {
         err = l`This post's author has disabled quote posts.`
@@ -1008,7 +1011,7 @@ export const ComposePost = ({
     setLangPrefs.savePostLanguageToHistory()
     if (initQuote) {
       // We want to wait for the quote count to update before we call `onPost`, which will refetch data
-      whenAppViewReady(agent, initQuote.uri, res => {
+      void whenAppViewReady(agent, initQuote.uri, res => {
         const anchor = res.data.thread.at(0)
         if (
           AppBskyUnspeccedDefs.isThreadItemPost(anchor?.value) &&
@@ -1056,7 +1059,6 @@ export const ComposePost = ({
     l,
     ax,
     agent,
-    thread,
     canPost,
     isPublishing,
     currentLanguages,
@@ -1074,6 +1076,7 @@ export const ComposePost = ({
     cleanupPublishedDraft,
     loadedDraftCreatedAt,
     emptyPostsPromptControl,
+    getFilteredThread,
   ])
 
   const handleConfirmSkipEmpty = () => {

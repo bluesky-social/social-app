@@ -58,18 +58,6 @@ export const router = new Router<AllNavigatableRoutes>({
   AboutSettings: '/settings/about',
   AppIconSettings: '/settings/app-icon',
   NotificationSettings: '/settings/notifications',
-  ReplyNotificationSettings: '/settings/notifications/replies',
-  MentionNotificationSettings: '/settings/notifications/mentions',
-  QuoteNotificationSettings: '/settings/notifications/quotes',
-  LikeNotificationSettings: '/settings/notifications/likes',
-  RepostNotificationSettings: '/settings/notifications/reposts',
-  NewFollowerNotificationSettings: '/settings/notifications/new-followers',
-  LikesOnRepostsNotificationSettings:
-    '/settings/notifications/likes-on-reposts',
-  RepostsOnRepostsNotificationSettings:
-    '/settings/notifications/reposts-on-reposts',
-  ActivityNotificationSettings: '/settings/notifications/activity',
-  MiscellaneousNotificationSettings: '/settings/notifications/miscellaneous',
   FindContactsSettings: '/settings/find-contacts',
   // support
   Support: '/support',

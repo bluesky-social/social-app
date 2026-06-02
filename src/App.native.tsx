@@ -1,5 +1,4 @@
 import '#/logger/sentry/setup'
-import '#/view/icons'
 
 import {Fragment, useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'

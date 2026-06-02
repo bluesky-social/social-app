@@ -22,6 +22,8 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {GalleryBleed} from '#/components/images/Gallery'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
+import {StandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed'
+import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {RichText} from '#/components/RichText'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
@@ -95,6 +97,19 @@ function MediaEmbed({
       )
     }
     case 'link': {
+      if (isStandardSiteEmbed(embed.view.external)) {
+        return (
+          <ContentHider
+            modui={rest.moderation?.ui('contentMedia')}
+            activeStyle={[a.mt_sm]}>
+            <StandardSiteEmbed
+              view={embed.view.external}
+              onEmbedInteractionCallback={rest.onOpen}
+              style={[a.mt_sm, rest.style]}
+            />
+          </ContentHider>
+        )
+      }
       return (
         <ContentHider
           modui={rest.moderation?.ui('contentMedia')}

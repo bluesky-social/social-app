@@ -228,6 +228,10 @@ export function Shell() {
   return (
     <View testID="mobileShellView" style={[a.h_full, t.atoms.bg]}>
       <SystemBars
+        hidden={{
+          statusBar: false,
+          navigationBar: false,
+        }}
         style={{
           statusBar:
             t.name !== 'light' ||
