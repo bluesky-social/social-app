@@ -6,7 +6,7 @@ import {
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 
-import {POST_IMG_MAX} from '#/lib/constants'
+import {PROFILE_IMAGES_MAX_SIZE} from '#/lib/constants'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
 import {resolveShortLink} from '#/lib/link-meta/resolve-short-link'
 import {downloadAndResize} from '#/lib/media/manip'
@@ -257,8 +257,8 @@ export async function imageToThumb(
   try {
     const img = await downloadAndResize({
       uri: imageUri,
-      maxDimension: POST_IMG_MAX.width,
-      maxSize: POST_IMG_MAX.size,
+      maxDimension: PROFILE_IMAGES_MAX_SIZE.width,
+      maxSize: PROFILE_IMAGES_MAX_SIZE.size,
       timeout: 15e3,
     })
     if (img) {

@@ -19,6 +19,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {PROFILE_IMAGES_MAX_SIZE} from '#/lib/constants'
 import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
 import {compressIfNeeded} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
@@ -212,7 +213,7 @@ export function StepProfile() {
         }
       }
     }
-    image = await compressIfNeeded(image, 1000000)
+    image = await compressIfNeeded(image, PROFILE_IMAGES_MAX_SIZE)
 
     // If we are on mobile, prefetching the image will load the image into memory before we try and display it,
     // stopping any brief flickers.

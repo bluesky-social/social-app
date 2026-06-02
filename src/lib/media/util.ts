@@ -1,5 +1,3 @@
-import {POST_IMG_MAX} from '#/lib/constants'
-
 export function extractDataUriMime(uri: string): string {
   return uri.substring(uri.indexOf(':') + 1, uri.indexOf(';'))
 }
@@ -9,7 +7,7 @@ export function getResizedDimensions(
     width: number
     height: number
   },
-  max: {width: number; height: number} = POST_IMG_MAX,
+  max: {width: number; height: number},
 ) {
   if (originalDims.width <= max.width && originalDims.height <= max.height) {
     return originalDims

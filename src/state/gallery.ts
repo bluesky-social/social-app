@@ -13,7 +13,6 @@ import {
 } from 'expo-image-manipulator'
 import {nanoid} from 'nanoid/non-secure'
 
-import {POST_IMG_MAX_HIGH_RES} from '#/lib/constants'
 import {getImageDim} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
@@ -204,17 +203,15 @@ export function resetImageManipulation(
 
 export async function compressImage(
   img: ComposerImage,
-  {
-    maxDimension = POST_IMG_MAX_HIGH_RES.width,
-    maxBytes = POST_IMG_MAX_HIGH_RES.size,
-  }: {maxDimension?: number; maxBytes?: number} = {},
+  max: {width: number; size: number},
 ): Promise<PickerImage> {
   const source = img.transformed || img.source
 
   let attempts = 0
-  // Seeded from `maxDimension` but shrunk per attempt below, so keep the param
-  // itself pristine.
-  let currentDimension = maxDimension
+  // Seeded from `max.width` but shrunk per attempt below, so keep the passed-in
+  // value pristine.
+  let currentDimension = max.width
+  const maxBytes = max.size
 
   let minQualityPercentage = 0
   let maxQualityPercentage = 101 // exclusive

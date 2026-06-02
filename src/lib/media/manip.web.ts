@@ -1,4 +1,3 @@
-import {POST_IMG_MAX} from '#/lib/constants'
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
 import {
@@ -10,14 +9,14 @@ import {
 
 export async function compressIfNeeded(
   img: PickerImage,
-  maxSize: number,
+  max: {width: number; size: number},
 ): Promise<PickerImage> {
-  if (img.size < maxSize) {
+  if (img.size < max.size) {
     return img
   }
   return await doResize(img.path, {
-    maxDimension: POST_IMG_MAX.width,
-    maxSize,
+    maxDimension: max.width,
+    maxSize: max.size,
   })
 }
 

@@ -16,7 +16,7 @@ import {type PasteEventPayload, TextInputWrapper} from 'expo-paste-input'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
-import {POST_IMG_MAX_HIGH_RES} from '#/lib/constants'
+import {POST_IMG_MAX_SIZE} from '#/lib/constants'
 import {downloadAndResize} from '#/lib/media/manip'
 import {isUriImage} from '#/lib/media/util'
 import {getMentionAt, insertMentionAt} from '#/lib/strings/mention-manip'
@@ -93,8 +93,8 @@ export function TextInput({
               if (isUriImage(feature.uri)) {
                 const res = await downloadAndResize({
                   uri: feature.uri,
-                  maxDimension: POST_IMG_MAX_HIGH_RES.width,
-                  maxSize: POST_IMG_MAX_HIGH_RES.size,
+                  maxDimension: POST_IMG_MAX_SIZE.width,
+                  maxSize: POST_IMG_MAX_SIZE.size,
                   timeout: 15e3,
                 })
 

@@ -6,6 +6,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {PROFILE_IMAGES_MAX_SIZE} from '#/lib/constants'
 import {
   useCameraPermission,
   usePhotoLibraryPermission,
@@ -62,6 +63,7 @@ export function UserBanner({
         await openCamera({
           aspect: [3, 1],
         }),
+        PROFILE_IMAGES_MAX_SIZE,
       ),
     )
   }, [onSelectNewBanner, requestCameraAccessIfNeeded])
@@ -83,6 +85,7 @@ export function UserBanner({
               imageUri: items[0].path,
               aspectRatio: 3 / 1,
             }),
+            PROFILE_IMAGES_MAX_SIZE,
           ),
         )
       } else {
@@ -108,7 +111,7 @@ export function UserBanner({
 
   const onChangeEditImage = useCallback(
     async (image: ComposerImage) => {
-      const compressed = await compressImage(image)
+      const compressed = await compressImage(image, PROFILE_IMAGES_MAX_SIZE)
       onSelectNewBanner?.(compressed)
     },
     [onSelectNewBanner],

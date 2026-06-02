@@ -96,16 +96,16 @@ export const STAGING_FEEDS = [
   `feedgen|${STAGING_DEFAULT_FEED('thevids')}`,
 ]
 
-export const POST_IMG_MAX = {
-  width: 2000,
-  height: 2000,
-  size: 1000000,
-}
-
-export const POST_IMG_MAX_HIGH_RES = {
+export const POST_IMG_MAX_SIZE = {
   width: 4000,
   height: 4000,
   size: 2000000,
+}
+
+export const PROFILE_IMAGES_MAX_SIZE = {
+  width: 2000,
+  height: 2000,
+  size: 1000000,
 }
 
 export const STAGING_LINK_META_PROXY =

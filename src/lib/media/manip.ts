@@ -16,7 +16,6 @@ import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
 
-import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {type PickerImage} from './picker.shared'
@@ -25,14 +24,14 @@ import {convertCdnPreset, getResizedDimensions} from './util'
 
 export async function compressIfNeeded(
   img: PickerImage,
-  maxSize: number = POST_IMG_MAX.size,
+  max: {width: number; size: number},
 ): Promise<PickerImage> {
-  if (img.size < maxSize) {
+  if (img.size < max.size) {
     return img
   }
   const resizedImage = await doResize(normalizePath(img.path), {
-    maxDimension: POST_IMG_MAX.width,
-    maxSize,
+    maxDimension: max.width,
+    maxSize: max.size,
   })
   const finalImageMovedPath = await moveToPermanentPath(
     resizedImage.path,
