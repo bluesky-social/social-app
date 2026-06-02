@@ -1,18 +1,16 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {type ModerationOpts} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
-import * as bcp47Match from 'bcp-47-match'
 
 import {wait} from '#/lib/async/wait'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
-import {useLanguagePrefs} from '#/state/preferences'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
 import {
@@ -53,19 +51,6 @@ export function StepSuggestedAccounts() {
   // so we can enable/disable the button without having to dig through the shadow cache
   const [followedUsers, setFollowedUsers] = useState<string[]>([])
 
-  /*
-   * Special language handling copied wholesale from the Explore screen
-   */
-  const {contentLanguages} = useLanguagePrefs()
-  const useFullExperience = useMemo(() => {
-    if (contentLanguages.length === 0) return true
-    return bcp47Match.basicFilter('en', contentLanguages).length > 0
-  }, [contentLanguages])
-  const interestsDisplayNames = useInterestsDisplayNames()
-  const interests = Object.keys(interestsDisplayNames)
-    .sort(boostInterests(popularInterests))
-    .sort(boostInterests(state.interestsStepResults.selectedInterests))
-
   const {
     data: suggestedUsers,
     isLoading,
@@ -73,8 +58,8 @@ export function StepSuggestedAccounts() {
     isRefetching,
     refetch,
   } = useSuggestedOnboardingUsers({
-    category: selectedInterest || (useFullExperience ? null : interests[0]),
-    search: !useFullExperience,
+    category: selectedInterest,
+    search: false,
     overrideInterests: state.interestsStepResults.selectedInterests,
   })
 
@@ -105,7 +90,6 @@ export function StepSuggestedAccounts() {
         ax.metric('suggestedUser:follow', {
           logContext: 'Onboarding',
           location: 'FollowAll',
-          recSource: !useFullExperience ? 'Search' : undefined,
           recId: suggestedUsers?.recId,
           position: i,
           suggestedDid: did,
@@ -156,7 +140,6 @@ export function StepSuggestedAccounts() {
         seenProfilesRef.current.add(did)
         ax.metric('suggestedUser:seen', {
           logContext: 'Onboarding',
-          recSource: !useFullExperience ? 'Search' : undefined,
           recId: suggestedUsers?.recId,
           position,
           suggestedDid: did,
@@ -164,7 +147,7 @@ export function StepSuggestedAccounts() {
         })
       }
     },
-    [ax, selectedInterest, suggestedUsers?.recId, useFullExperience],
+    [ax, selectedInterest, suggestedUsers?.recId],
   )
 
   useEffect(() => {
@@ -250,7 +233,6 @@ export function StepSuggestedAccounts() {
                 position={index}
                 category={selectedInterest}
                 onSeen={onProfileSeen}
-                recSource={!useFullExperience ? 'Search' : undefined}
                 recId={suggestedUsers.recId}
               />
             ))}
