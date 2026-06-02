@@ -82,6 +82,7 @@ import {MessagesScreen} from '#/screens/Messages/ChatList'
 import {MessagesConversationScreen} from '#/screens/Messages/Conversation'
 import {MessagesConversationSettingsScreen} from '#/screens/Messages/ConversationSettings'
 import {MessagesInboxScreen} from '#/screens/Messages/Inbox'
+import {MessagesJoinRequestsScreen} from '#/screens/Messages/JoinRequests'
 import {MessagesSettingsScreen} from '#/screens/Messages/Settings'
 import {ModerationScreen} from '#/screens/Moderation'
 import {Screen as ModerationVerificationSettings} from '#/screens/Moderation/VerificationSettings'
@@ -487,6 +488,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           name="MessagesConversationSettings"
           getComponent={() => MessagesConversationSettingsScreen}
           options={{title: title(msg`Group chat settings`), requireAuth: true}}
+        />
+        <Stack.Screen
+          name="MessagesJoinRequests"
+          getComponent={() => MessagesJoinRequestsScreen}
+          options={{title: title(msg`Requests to join`), requireAuth: true}}
         />
         <Stack.Screen
           name="MessagesSettings"
