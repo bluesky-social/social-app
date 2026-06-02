@@ -9,6 +9,11 @@ concurrency:
   group: '${{ github.workflow }}-${{ github.head_ref || github.ref }}'
   cancel-in-progress: true
 
+# These jobs only check out the repo and run checks, so read access to the
+# repo contents is all the GITHUB_TOKEN needs.
+permissions:
+  contents: read
+
 jobs:
   linting:
     name: Run linters
