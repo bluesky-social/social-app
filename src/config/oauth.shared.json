@@ -1,6 +1,6 @@
 {
   "_comment": "Single source of truth for OAuth primitives. Imported by BOTH src/config/oauth.ts (the browser TS client) and scripts/gen-oauth-metadata.js (the build-time static metadata emitter), so client_id / scope / redirect_uris cannot drift. Change the domain/scope here only. defaultBaseUrl is overridable at build time via EXPO_PUBLIC_OAUTH_BASE_URL.",
-  "defaultBaseUrl": "https://eurosky.atmo.tools",
+  "defaultBaseUrl": "https://mu.social",
   "clientName": "Eurosky",
   "scope": "atproto transition:generic transition:email transition:chat.bsky identity:handle account:email?action=manage account:status?action=manage",
   "handleResolver": "https://bsky.social",
