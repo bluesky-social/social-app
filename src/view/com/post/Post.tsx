@@ -210,6 +210,7 @@ function PostInner({
               author={post.author}
               moderation={moderation}
               timestamp={post.indexedAt}
+              record={record}
               postHref={itemHref}
             />
             {replyAuthorDid !== '' && (
