@@ -4,8 +4,8 @@ compatibility_date = "2025-05-01"
 
 # Public, non-secret config. Set these to the real values for your deploy.
 [vars]
-CLIENT_ID = "https://eurosky.atmo.tools/oauth-client-metadata.json"
-ALLOWED_ORIGIN = "https://eurosky.atmo.tools"
+CLIENT_ID = "https://mu.social/oauth-client-metadata.json"
+ALLOWED_ORIGIN = "https://mu.social"
 
 # Secret (DO NOT put here). Set with:
 #   wrangler secret put OAUTH_PRIVATE_JWK
@@ -15,8 +15,8 @@ ALLOWED_ORIGIN = "https://eurosky.atmo.tools"
 # Stable hostname for OAUTH_ASSERTION_URL. custom_domain routes must be a
 # BARE host (no path) - Cloudflare rejects paths here. The Worker ignores the
 # request path anyway (it only checks method + Origin), so the app can still
-# POST to https://oauth.eurosky.atmo.tools/client-assertion.
+# POST to https://oauth.mu.social/client-assertion.
 # Only used on `wrangler deploy`; `wrangler dev` serves on localhost.
 [[routes]]
-pattern = "oauth.eurosky.atmo.tools"
+pattern = "oauth.mu.social"
 custom_domain = true

@@ -38,9 +38,9 @@
 export interface Env {
   /** The client's PRIVATE JWK (ES256/P-256), as a JSON string. Secret. Must include `kid`. */
   OAUTH_PRIVATE_JWK: string
-  /** Exact expected `iss`/`sub`, e.g. https://eurosky.atmo.tools/oauth-client-metadata.json */
+  /** Exact expected `iss`/`sub`, e.g. https://mu.social/oauth-client-metadata.json */
   CLIENT_ID: string
-  /** Exact allowed browser Origin (defense-in-depth only), e.g. https://eurosky.atmo.tools */
+  /** Exact allowed browser Origin (defense-in-depth only), e.g. https://mu.social */
   ALLOWED_ORIGIN: string
 }
 

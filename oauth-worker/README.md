@@ -33,7 +33,7 @@ npx wrangler secret put OAUTH_PRIVATE_JWK
 # 2. Confirm vars in wrangler.toml match your domain:
 #      CLIENT_ID       = https://<domain>/oauth-client-metadata.json
 #      ALLOWED_ORIGIN  = https://<domain>
-#    (current: eurosky.atmo.tools)
+#    (current: mu.social)
 
 # 3. Deploy
 npx wrangler deploy
@@ -43,7 +43,7 @@ npx wrangler deploy
 
 The app calls `OAUTH_ASSERTION_URL` (see
 `eurosky-social-app/src/config/oauth.ts`). Default:
-`https://oauth.eurosky.atmo.tools/client-assertion`.
+`https://oauth.mu.social/client-assertion`.
 
 Either bind that route to this Worker (uncomment the `[[routes]]` block in
 `wrangler.toml`, point DNS at it), or set
