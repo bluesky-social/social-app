@@ -47,7 +47,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: 🔨 Setup Expo CLI
-        uses: expo/expo-github-action@main
+        uses: expo/expo-github-action@v9
         with:
           eas-version: '19.0.5'
           packager: 'pnpm --allow-build=dtrace-provider'
