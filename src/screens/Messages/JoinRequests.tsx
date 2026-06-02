@@ -2,10 +2,12 @@ import {useState} from 'react'
 import {View} from 'react-native'
 import {
   ChatBskyGroupApproveJoinRequest,
+  type ChatBskyGroupListJoinRequests,
   ChatBskyGroupRejectJoinRequest,
 } from '@atproto/api'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
+import {type InfiniteData, useQueryClient} from '@tanstack/react-query'
 
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {isNetworkError} from '#/lib/hooks/useCleanError'
@@ -18,18 +20,21 @@ import {logger} from '#/logger'
 import {ConvoProvider, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useApproveJoinRequest} from '#/state/queries/messages/approve-join-request'
-import {useListJoinRequestsQuery} from '#/state/queries/messages/list-join-requests'
-import {useRejectJoinRequest} from '#/state/queries/messages/reject-join-request'
+import {useJoinRequestMutation} from '#/state/queries/messages/join-requests'
+import {
+  createListJoinRequestsQueryKey,
+  useListJoinRequestsQuery,
+} from '#/state/queries/messages/list-join-requests'
 import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {type ConvoWithDetails} from '#/components/dms/util'
 import {Error} from '#/components/Error'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotate'
 import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
 import {KnownFollowers} from '#/components/KnownFollowers'
 import * as Layout from '#/components/Layout'
@@ -129,7 +134,15 @@ function JoinRequestsList({
   const bottomBarOffset = useBottomBarOffset()
   const {currentAccount} = useSession()
   const navigation = useNavigation<NavigationProp>()
+  const queryClient = useQueryClient()
   const inviteLinkControl = Dialog.useDialogControl()
+
+  const getRemainingRequestCount = () => {
+    const data = queryClient.getQueryData<
+      InfiniteData<ChatBskyGroupListJoinRequests.OutputSchema>
+    >(createListJoinRequestsQueryKey({convoId: convo.view.id}))
+    return data?.pages.reduce((sum, page) => sum + page.requests.length, 0) ?? 0
+  }
 
   const [isPTRing, setIsPTRing] = useState(false)
   const [footerHeight, setFooterHeight] = useState(0)
@@ -147,7 +160,6 @@ function JoinRequestsList({
     refetch,
   } = useListJoinRequestsQuery({
     convoId: convo.view.id,
-    enabled: true,
   })
 
   const items =
@@ -161,10 +173,10 @@ function JoinRequestsList({
     ) ?? 0
 
   const {mutate: approveJoinRequest, isPending: isApprovePending} =
-    useApproveJoinRequest(convo.view.id, {
+    useJoinRequestMutation('approve', convo.view.id, {
       onSuccess: () => {
         Toast.show(l`Request approved.`)
-        if (requestCount < 1) {
+        if (getRemainingRequestCount() < 1) {
           navigation.replace('MessagesConversationSettings', {
             conversation: convo.view.id,
           })
@@ -193,10 +205,10 @@ function JoinRequestsList({
     })
 
   const {mutate: rejectJoinRequest, isPending: isRejectPending} =
-    useRejectJoinRequest(convo.view.id, {
+    useJoinRequestMutation('reject', convo.view.id, {
       onSuccess: () => {
         Toast.show(l`Request ignored.`)
-        if (requestCount < 1) {
+        if (getRemainingRequestCount() < 1) {
           navigation.replace('MessagesConversationSettings', {
             conversation: convo.view.id,
           })
@@ -313,7 +325,7 @@ function JoinRequestsList({
   if (isError) {
     return (
       <>
-        <Header count={requestCount} />
+        <Header count={requestCount} hasMoreRequests={hasNextPage} />
         <View
           style={[
             a.flex_1,
@@ -337,20 +349,24 @@ function JoinRequestsList({
             color="primary"
             label={l`Press to retry`}
             onPress={() => void onRefresh()}
+            disabled={isPTRing}
             size="large"
             style={[a.mt_md]}>
             <ButtonText>
               <Trans>Retry</Trans>
             </ButtonText>
+            <ButtonIcon icon={isPTRing ? Loader : RetryIcon} />
           </Button>
         </View>
       </>
     )
   }
 
+  const showFooter = isOwner
+
   return (
     <>
-      <Header count={requestCount} />
+      <Header count={requestCount} hasMoreRequests={hasNextPage} />
       <List
         data={items}
         keyExtractor={(item: bsky.profile.AnyProfileView) => item.did}
@@ -363,8 +379,10 @@ function JoinRequestsList({
             </View>
           ) : null
         }
-        contentContainerStyle={{paddingBottom: footerHeight}}
-        scrollIndicatorInsets={{bottom: footerHeight}}
+        contentContainerStyle={
+          showFooter ? {paddingBottom: footerHeight} : undefined
+        }
+        scrollIndicatorInsets={showFooter ? {bottom: footerHeight} : undefined}
         refreshing={isPTRing}
         onEndReached={() => void onEndReached()}
         onRefresh={() => void onRefresh()}
@@ -372,7 +390,7 @@ function JoinRequestsList({
         sideBorders={false}
         desktopFixedHeight
       />
-      {footer}
+      {showFooter ? footer : null}
       {owner && moderationOpts && (
         <InviteLinkDialog
           convo={convo}
@@ -386,7 +404,14 @@ function JoinRequestsList({
   )
 }
 
-function Header({count}: {count?: number}) {
+function Header({
+  count,
+  hasMoreRequests,
+}: {
+  count?: number
+  hasMoreRequests?: boolean
+}) {
+  const {t: l} = useLingui()
   return (
     <Layout.Header.Outer>
       <Layout.Header.BackButton />
@@ -394,8 +419,12 @@ function Header({count}: {count?: number}) {
         <Layout.Header.TitleText>
           {count === undefined ? (
             <Trans>Requests to join</Trans>
-          ) : count > 20 ? (
-            <Trans>20+ requests to join</Trans>
+          ) : hasMoreRequests ? (
+            l({
+              message: `${count}+ requests to join`,
+              comment:
+                'Displayed when there are more requests to join a group chat than have been loaded',
+            })
           ) : (
             <Plural
               value={count}
