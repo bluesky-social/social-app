@@ -1,4 +1,11 @@
-import {createContext, useContext, useEffect, useMemo, useState} from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 import {usePrefetchJoinLinkPreviews} from '#/state/queries/join-links'
 import {useSession} from '#/state/session'
@@ -38,11 +45,12 @@ export function Provider({children}: {children: React.ReactNode}) {
   const groupChatLanding = useActiveGroupChatJoinRequest()
   const setActiveLanding = useSetActiveLanding()
   const prefetchJoinLinkPreviews = usePrefetchJoinLinkPreviews()
+  const landingHandledRef = useRef(false)
 
   useEffect(() => {
-    if (hasSession && groupChatLanding) {
+    if (hasSession && groupChatLanding && !landingHandledRef.current) {
+      landingHandledRef.current = true
       const code = groupChatLanding.code
-      setGroupChatJoinState({code})
       setActiveLanding(undefined)
       const prefetch = prefetchJoinLinkPreviews({
         codes: [code],
@@ -52,8 +60,12 @@ export function Provider({children}: {children: React.ReactNode}) {
         prefetch,
         new Promise(res => setTimeout(res, 200)),
       ]).finally(() => {
+        setGroupChatJoinState({code})
         groupChatJoinDialogControl.open()
       })
+    }
+    if (!groupChatLanding) {
+      landingHandledRef.current = false
     }
   }, [
     hasSession,
