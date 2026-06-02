@@ -145,7 +145,7 @@ export function JoinRequest({setScreenState}: Props) {
                   {data.joinLinkPreviews[0].name}
                 </Text>
               </View>
-              <View>
+              <View style={[a.w_full]}>
                 <View
                   style={[
                     a.flex_row,
@@ -161,6 +161,7 @@ export function JoinRequest({setScreenState}: Props) {
                       a.leading_snug,
                       a.font_semi_bold,
                       t.atoms.text,
+                      a.max_w_full,
                     ]}>
                     <Trans comment="The owner (creator) of a group chat.">
                       By{' '}
@@ -187,6 +188,7 @@ export function JoinRequest({setScreenState}: Props) {
                     a.leading_snug,
                     a.font_medium,
                     t.atoms.text_contrast_medium,
+                    a.max_w_full,
                   ]}>
                   {sanitizeHandle(data.joinLinkPreviews[0].owner.handle, '@')}
                 </Text>
