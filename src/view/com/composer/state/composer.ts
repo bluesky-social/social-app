@@ -110,6 +110,8 @@ export type ComposerState = {
   loadedMediaMap?: Map<string, string>
   /** Set of original localRef paths from the draft being edited. Used to identify orphaned media on save. */
   originalLocalRefs?: Set<string>
+  /** The post being edited, if any. */
+  editPost?: {uri: string}
 }
 
 export type ComposerAction =
@@ -304,6 +306,7 @@ export function composerReducer(
         initImageUris: [],
         initQuoteUri: undefined,
         initInteractionSettings: action.initInteractionSettings,
+        initEditPost: undefined,
       })
     }
     case 'mark_saved': {
@@ -572,6 +575,7 @@ export function createComposerState({
   initImageUris,
   initQuoteUri,
   initInteractionSettings,
+  initEditPost,
 }: {
   initText: string | undefined
   initMention: string | undefined
@@ -580,6 +584,7 @@ export function createComposerState({
   initInteractionSettings:
     | AppBskyActorDefs.PostInteractionSettingsPref
     | undefined
+  initEditPost: ComposerOpts['editPost']
 }): ComposerState {
   let media: ImagesMedia | undefined
   if (initImageUris?.length) {
@@ -600,15 +605,17 @@ export function createComposerState({
     }
   }
   const initRichText = new RichText({
-    text: initText
-      ? initText
-      : initMention
-        ? insertMentionAt(
-            `@${initMention}`,
-            initMention.length + 1,
-            `${initMention}`,
-          )
-        : '',
+    text: initEditPost
+      ? initEditPost.text
+      : initText
+        ? initText
+        : initMention
+          ? insertMentionAt(
+              `@${initMention}`,
+              initMention.length + 1,
+              `${initMention}`,
+            )
+          : '',
   })
 
   let link: Link | undefined
@@ -673,12 +680,16 @@ export function createComposerState({
   } else if (initMention) {
     // highlight the mention
     initRichText.detectFacetsWithoutResolution()
+  } else if (initEditPost) {
+    // highlight the existing mentions and links
+    initRichText.detectFacetsWithoutResolution()
   }
 
   return {
     activePostIndex: 0,
     mutableNeedsFocusActive: false,
     isDirty: false,
+    editPost: initEditPost ? {uri: initEditPost.uri} : undefined,
     thread: {
       posts: [
         {

@@ -300,6 +300,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                 author={post.author}
                 moderation={moderation}
                 timestamp={post.indexedAt}
+                record={record}
                 postHref={postHref}
                 style={[
                   a.pb_xs,
