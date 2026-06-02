@@ -50,7 +50,7 @@ function GroupChatJoinDialogInner({code}: {code?: string}) {
   return (
     <Dialog.ScrollableInner
       label={l`Join group chat`}
-      style={[web({maxWidth: 400})]}>
+      style={[web({maxWidth: 400, borderRadius: 36})]}>
       <View style={[a.gap_2xl, a.align_center]}>
         <GroupChatJoinDialogContent code={code} />
       </View>
