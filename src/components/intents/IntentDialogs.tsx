@@ -1,5 +1,11 @@
-import {createContext, useContext, useMemo, useState} from 'react'
+import {createContext, useContext, useEffect, useMemo, useState} from 'react'
 
+import {usePrefetchJoinLinkPreviews} from '#/state/queries/join-links'
+import {useSession} from '#/state/session'
+import {
+  useActiveGroupChatJoinRequest,
+  useSetActiveLanding,
+} from '#/state/shell/landing'
 import * as Dialog from '#/components/Dialog'
 import {type DialogControlProps} from '#/components/Dialog'
 import {GroupChatJoinDialog} from '#/components/intents/GroupChatJoinDialog'
@@ -27,6 +33,36 @@ export function Provider({children}: {children: React.ReactNode}) {
   const [groupChatJoinState, setGroupChatJoinState] = useState<
     {code: string} | undefined
   >()
+
+  const {hasSession} = useSession()
+  const groupChatLanding = useActiveGroupChatJoinRequest()
+  const setActiveLanding = useSetActiveLanding()
+  const prefetchJoinLinkPreviews = usePrefetchJoinLinkPreviews()
+
+  useEffect(() => {
+    if (hasSession && groupChatLanding) {
+      const code = groupChatLanding.code
+      setGroupChatJoinState({code})
+      setActiveLanding(undefined)
+      const prefetch = prefetchJoinLinkPreviews({
+        codes: [code],
+        hasSession: true,
+      })
+      void Promise.race([
+        prefetch,
+        new Promise(res => setTimeout(res, 200)),
+      ]).finally(() => {
+        groupChatJoinDialogControl.open()
+      })
+    }
+  }, [
+    hasSession,
+    groupChatLanding,
+    setActiveLanding,
+    setGroupChatJoinState,
+    prefetchJoinLinkPreviews,
+    groupChatJoinDialogControl,
+  ])
 
   const value = useMemo(
     () => ({
