@@ -1,5 +1,9 @@
 import {View} from 'react-native'
-import {ChatBskyGroupRequestJoin, moderateProfile} from '@atproto/api'
+import {
+  ChatBskyGroupRequestJoin,
+  ChatBskyGroupWithdrawJoinRequest,
+  moderateProfile,
+} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -12,17 +16,24 @@ import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useJoinLinkPreviewsQuery} from '#/state/queries/join-links'
 import {useRequestJoinGroupChat} from '#/state/queries/messages/request-join-group-chat'
+import {useWithdrawJoinGroupChatRequest} from '#/state/queries/messages/withdraw-join-group-chat'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {
+  Button,
+  type ButtonColor,
+  ButtonIcon,
+  ButtonText,
+} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {ArrowBoxRight_Stroke2_Corner3_Rounded as JoinIcon} from '#/components/icons/ArrowBoxRight'
 import {ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon} from '#/components/icons/ChainLink'
-import {CheckThick_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
 import {RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon} from '#/components/icons/RaisingHand'
+import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {InlineLinkText} from '#/components/Link'
@@ -72,64 +83,97 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
     hasSession,
   })
 
-  const {mutate: joinGroupChat, isPending} = useRequestJoinGroupChat({
-    onSuccess: data => {
-      switch (data.status) {
-        case 'pending':
-          control.close(() => {
-            Toast.show(
-              l`Access requested! The group owner will review your request.`,
-              {duration: 8e3},
-            )
-            navigation.navigate('Messages', {})
-          })
-          break
-        case 'joined': {
-          if (data.convo && data.convo.id) {
+  const {mutate: joinGroupChat, isPending: isJoinPending} =
+    useRequestJoinGroupChat({
+      onSuccess: data => {
+        switch (data.status) {
+          case 'pending':
             control.close(() => {
-              Toast.show(l`Successfully joined the group chat!`)
-              navigation.navigate('MessagesConversation', {
-                conversation: data.convo!.id,
+              Toast.show(
+                l`Access requested! The group owner will review your request.`,
+              )
+            })
+            break
+          case 'joined': {
+            if (data.convo && data.convo.id) {
+              control.close(() => {
+                Toast.show(l`Successfully joined the group chat!`)
+                navigation.navigate('MessagesConversation', {
+                  conversation: data.convo!.id,
+                })
               })
-            })
-          } else {
-            logger.warn('Request to join group chat returned no convo ID', {
-              status: data.status,
-              convoId: data.convo?.id,
-            })
+            } else {
+              logger.warn('Request to join group chat returned no convo ID', {
+                status: data.status,
+                convoId: data.convo?.id,
+              })
+            }
+            break
           }
-          break
         }
-      }
-    },
-    onError: error => {
-      let errorMessage = l`Failed to join the group chat. Please try again.`
-      if (isNetworkError(error)) {
-        errorMessage = l`There was a problem with your internet connection, please try again`
-      } else if (error instanceof ChatBskyGroupRequestJoin.ConvoLockedError) {
-        errorMessage = l`This conversation is locked.`
-      } else if (
-        error instanceof ChatBskyGroupRequestJoin.FollowRequiredError
-      ) {
-        errorMessage = l`Only followers can join this group chat.`
-      } else if (error instanceof ChatBskyGroupRequestJoin.InvalidCodeError) {
-        errorMessage = l`Invalid group chat code.`
-      } else if (error instanceof ChatBskyGroupRequestJoin.LinkDisabledError) {
-        errorMessage = l`This invite link has been disabled.`
-      } else if (
-        error instanceof ChatBskyGroupRequestJoin.MemberLimitReachedError
-      ) {
-        errorMessage = l`The member limit has been reached.`
-      } else if (error instanceof ChatBskyGroupRequestJoin.UserKickedError) {
-        errorMessage = l`You have been removed from this group.`
-      }
-      Toast.show(errorMessage)
-    },
-  })
+      },
+      onError: error => {
+        let errorMessage = l`Failed to join the group chat. Please try again.`
+        if (isNetworkError(error)) {
+          errorMessage = l`There was a problem with your internet connection, please try again`
+        } else if (error instanceof ChatBskyGroupRequestJoin.ConvoLockedError) {
+          errorMessage = l`This conversation is locked.`
+        } else if (
+          error instanceof ChatBskyGroupRequestJoin.FollowRequiredError
+        ) {
+          errorMessage = l`Only followers can join this group chat.`
+        } else if (error instanceof ChatBskyGroupRequestJoin.InvalidCodeError) {
+          errorMessage = l`Invalid group chat code.`
+        } else if (
+          error instanceof ChatBskyGroupRequestJoin.LinkDisabledError
+        ) {
+          errorMessage = l`This invite link has been disabled.`
+        } else if (
+          error instanceof ChatBskyGroupRequestJoin.MemberLimitReachedError
+        ) {
+          errorMessage = l`The member limit has been reached.`
+        } else if (error instanceof ChatBskyGroupRequestJoin.UserKickedError) {
+          errorMessage = l`You have been removed from this group.`
+        }
+        Toast.show(errorMessage)
+      },
+    })
+
+  const {mutate: withdrawRequest, isPending: isWithdrawPending} =
+    useWithdrawJoinGroupChatRequest({
+      onSuccess: () => {
+        control.close(() => {
+          Toast.show(l`Join request rescinded.`)
+        })
+      },
+      onError: error => {
+        let errorMessage = l`Failed to rescind your request. Please try again.`
+        if (isNetworkError(error)) {
+          errorMessage = l`There was a problem with your internet connection, please try again`
+        } else if (
+          error instanceof
+          ChatBskyGroupWithdrawJoinRequest.InvalidJoinRequestError
+        ) {
+          errorMessage = l`Invalid rescind request.`
+        }
+        Toast.show(errorMessage)
+      },
+    })
+
+  const {
+    state: interacted,
+    onIn: onInteract,
+    onOut: onInteractOut,
+  } = useInteractionState()
 
   const handleJoin = () => {
     if (!code) return
     joinGroupChat({code})
+  }
+
+  const handleWithdraw = () => {
+    if (!convoId) return
+    withdrawRequest({convoId})
   }
 
   // Fallback if the prefetch exceeds the timeout
@@ -203,26 +247,30 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
   const hasRequested = !convoId && joinLinkPreview.viewer?.requestedAt != null
 
   let canJoin = true
-  let ButtonIconImage = isPending ? Loader : JoinIcon
+  let ButtonIconImage = isJoinPending || isWithdrawPending ? Loader : JoinIcon
   let buttonText = joinLinkPreview.requireApproval
     ? l`Request to join`
     : l`Join`
+  let buttonColor: ButtonColor = 'primary'
   if (joinLinkPreview.enabledStatus !== 'enabled') {
     canJoin = false
     ButtonIconImage = WarningIcon
     buttonText = l`Chat invite link no longer available`
+    buttonColor = 'secondary'
   } else if (joinLinkPreview.memberCount >= joinLinkPreview.memberLimit) {
     canJoin = false
     ButtonIconImage = HandIcon
     buttonText = l`This chat is full`
+    buttonColor = 'secondary'
   } else if (joinLinkPreview.joinRule === 'followedByOwner' && !isFollowing) {
     canJoin = false
     ButtonIconImage = HandIcon
     buttonText = l`Only people the chat owner follows can join`
+    buttonColor = 'secondary'
   } else if (hasRequested) {
-    canJoin = false
-    ButtonIconImage = CheckIcon
-    buttonText = l`Requested`
+    ButtonIconImage = XIcon
+    buttonText = l`Rescind request`
+    buttonColor = 'secondary'
   }
 
   return (
@@ -253,7 +301,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
               {joinLinkPreview.name}
             </Text>
           </View>
-          <View style={[a.flex_row]}>
+          <View style={[a.flex_row, a.align_center]}>
             <Text
               style={[a.text_center, a.text_xs, a.leading_snug, t.atoms.text]}>
               <Trans comment="The number of active group chat members out of the total number allowed.">
@@ -264,7 +312,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
             <View style={[a.flex_row, a.ml_md]}>
               <PersonGroupIcon
                 size="xs"
-                style={[a.mr_2xs, t.atoms.text_contrast_medium]}
+                style={[a.mr_xs, t.atoms.text, {marginTop: -2}]}
               />
             </View>
             <Text
@@ -290,7 +338,27 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
                 <InlineLinkText
                   label={`@${joinLinkPreview.owner.handle}`}
                   to={makeProfileLink(joinLinkPreview.owner)}
-                  style={[a.mb_2xs, a.text_sm, a.font_semi_bold]}>
+                  style={[
+                    a.mb_2xs,
+                    a.text_sm,
+                    a.font_semi_bold,
+                    t.atoms.text,
+                    interacted && {
+                      ...web({
+                        outline: 0,
+                        textDecorationLine: 'underline',
+                        textDecorationColor: t.palette.contrast_1000,
+                      }),
+                    },
+                  ]}
+                  {...web({
+                    onMouseEnter: () => {
+                      onInteract()
+                    },
+                    onMouseLeave: () => {
+                      onInteractOut()
+                    },
+                  })}>
                   {createSanitizedDisplayName(
                     joinLinkPreview.owner,
                     true,
@@ -303,7 +371,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
               <ProfileBadges
                 profile={data.joinLinkPreviews[0].owner}
                 size="sm"
-                style={{marginTop: -4}}
+                style={{marginTop: -3}}
               />
             </View>
             <Text
@@ -338,7 +406,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
       ) : (
         <Button
           testID="joinButton"
-          onPress={handleJoin}
+          onPress={hasRequested ? handleWithdraw : handleJoin}
           label={
             joinLinkPreview.requireApproval
               ? l`Request access to group chat`
@@ -350,8 +418,8 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
               : l`Join this group chat`
           }
           size="large"
-          color={canJoin ? 'primary' : 'secondary'}
-          disabled={isPending || !code || !canJoin}
+          color={buttonColor}
+          disabled={isJoinPending || isWithdrawPending || !code || !canJoin}
           style={[a.w_full]}>
           <ButtonIcon icon={ButtonIconImage} />
           <ButtonText>{buttonText}</ButtonText>
