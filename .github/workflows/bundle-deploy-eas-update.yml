@@ -87,7 +87,7 @@ jobs:
         run: pnpm typecheck
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@main
+        uses: expo/expo-github-action@v9
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         with:
           eas-version: '19.0.5'
@@ -180,7 +180,7 @@ jobs:
           cache: pnpm
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@main
+        uses: expo/expo-github-action@v9
         with:
           eas-version: '19.0.5'
           packager: 'pnpm --allow-build=dtrace-provider'
@@ -327,7 +327,7 @@ jobs:
           cache: pnpm
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@main
+        uses: expo/expo-github-action@v9
         with:
           eas-version: '19.0.5'
           packager: 'pnpm --allow-build=dtrace-provider'
