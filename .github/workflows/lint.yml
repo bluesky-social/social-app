@@ -59,6 +59,22 @@ jobs:
           attempt_delay: 2000
       - name: Lint checks
         run: pnpm ${{ matrix.job }}
+  # Aggregates the matrix results into a single stable check name so branch
+  # protection can require "Run linters" regardless of how many matrix jobs run.
+  # The result is asserted in `run` (not `if`) so a malformed expression can
+  # never silently skip the check and report a false pass.
+  linting-summary:
+    name: Run linters
+    if: always()
+    needs: [linting]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require linting to have succeeded
+        env:
+          RESULT: ${{ needs.linting.result }}
+        run: |
+          echo "linting result: $RESULT"
+          test "$RESULT" = "success"
   typechecking:
     name: Run typecheck
     runs-on: ubuntu-latest
@@ -108,3 +124,19 @@ jobs:
       - name: Run tests
         run: |
           NODE_ENV=test pnpm test --forceExit --shard=${{ matrix.shard }}/${{ strategy.job-total }}
+  # Aggregates the sharded test results into a single stable check name so branch
+  # protection can require "Run tests" regardless of how many shards run.
+  # The result is asserted in `run` (not `if`) so a malformed expression can
+  # never silently skip the check and report a false pass.
+  testing-summary:
+    name: Run tests
+    if: always()
+    needs: [testing]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require testing to have succeeded
+        env:
+          RESULT: ${{ needs.testing.result }}
+        run: |
+          echo "testing result: $RESULT"
+          test "$RESULT" = "success"
