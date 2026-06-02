@@ -12,7 +12,6 @@ export async function compressVideo(
   opts?: {
     signal?: AbortSignal
     onProgress?: (progress: number) => void
-    TEMP_enableLargeVideoUploads?: boolean
   },
 ): Promise<CompressedVideo> {
   const {onProgress, signal} = opts || {}

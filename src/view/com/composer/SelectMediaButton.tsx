@@ -5,7 +5,11 @@ import {type ImagePickerAsset} from 'expo-image-picker'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {VIDEO_MAX_DURATION_MS, VIDEO_MAX_SIZE} from '#/lib/constants'
+import {
+  VIDEO_MAX_DURATION_MS,
+  VIDEO_MAX_SIZE,
+  VIDEO_MAX_SIZE_MB,
+} from '#/lib/constants'
 import {
   usePhotoLibraryPermission,
   useVideoLibraryPermission,
@@ -431,7 +435,7 @@ export function SelectMediaButton({
             msg`You can only select one GIF at a time.`,
           ),
           [SelectedAssetError.FileTooBig]: _(
-            msg`One or more of your selected files are too large. Maximum size is 100 MB.`,
+            msg`One or more of your selected files are too large. Maximum size is ${VIDEO_MAX_SIZE_MB} MB.`,
           ),
         }[error]
       })
