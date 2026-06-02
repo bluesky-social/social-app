@@ -15,13 +15,14 @@ import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
+// Eurosky fork: curated suggestions in place of the appview's getSuggestedOnboardingUsers.
+import {useEuroskySuggestedOnboardingUsers as useSuggestedOnboardingUsers} from '#/screens/Onboarding/euroskySuggestedFollows'
 import {
   OnboardingControls,
   OnboardingPosition,
   OnboardingTitleText,
 } from '#/screens/Onboarding/Layout'
 import {useOnboardingInternalState} from '#/screens/Onboarding/state'
-import {useSuggestedOnboardingUsers} from '#/screens/Search/util/useSuggestedOnboardingUsers'
 import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
