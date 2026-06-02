@@ -1,21 +1,44 @@
 import {useEffect, useState} from 'react'
+import * as Linking from 'expo-linking'
 
+import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
 import {
   createStarterPackLinkFromAndroidReferrer,
   httpStarterPackUriToAtUri,
 } from '#/lib/strings/starter-pack'
+import {CHAT_INVITE_CODE_REGEX} from '#/lib/strings/url-helpers'
 import {useHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
-import {useSetActiveStarterPack} from '#/state/shell/landing'
+import {
+  useSetActiveLanding,
+  useSetActiveStarterPack,
+} from '#/state/shell/landing'
 import {IS_ANDROID} from '#/env'
 import {Referrer, SharedPrefs} from '../../../modules/expo-bluesky-swiss-army'
 
 export function useLandingEntry() {
   const [ready, setReady] = useState(false)
   const setActiveStarterPack = useSetActiveStarterPack()
+  const setActiveLanding = useSetActiveLanding()
   const hasCheckedForStarterPack = useHasCheckedForStarterPack()
 
   useEffect(() => {
     if (ready) return
+
+    // Check for group chat invite link from the initial deep link URL
+    const linkingUrl = Linking.getLinkingURL()
+    if (linkingUrl) {
+      const urlp = parseLinkingUrl(linkingUrl)
+      const chatInviteMatch = urlp.pathname.match(CHAT_INVITE_CODE_REGEX)
+      if (chatInviteMatch) {
+        setActiveLanding({
+          type: 'groupchat',
+          uri: linkingUrl,
+          code: chatInviteMatch[1],
+        })
+        setReady(true)
+        return
+      }
+    }
 
     // On Android, we cannot clear the referral link. It gets stored for 90 days and all we can do is query for it. So,
     // let's just ensure we never check again after the first time.
@@ -59,7 +82,7 @@ export function useLandingEntry() {
     return () => {
       clearTimeout(timeout)
     }
-  }, [ready, setActiveStarterPack, hasCheckedForStarterPack])
+  }, [ready, setActiveStarterPack, setActiveLanding, hasCheckedForStarterPack])
 
   return ready
 }
