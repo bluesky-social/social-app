@@ -81,6 +81,11 @@ msgstr ""
 msgid "{0, plural, one {# month} other {# months}}"
 msgstr ""
 
+#. placeholder {0}: convo.details.joinRequestCount
+#: src/screens/Messages/components/ChatListItem.tsx:225
+msgid "{0, plural, one {# new join request} other {# new join requests}}"
+msgstr "{0, plural, one {# new join request} other {# new join requests}}"
+
 #. placeholder {0}: reactions.length
 #. placeholder {1}: groupedReactions.map(g => g.value).join(' ')
 #: src/components/dms/MessageItem.tsx:297
@@ -534,7 +539,7 @@ msgid "{following} following"
 msgstr ""
 
 #: src/components/dms/components/GroupChatProfileCard.tsx:56
-#: src/components/dms/InitiateChatFlow.tsx:856
+#: src/components/dms/InitiateChatFlow.tsx:888
 msgid "{handle} can’t be added"
 msgstr "{handle} can’t be added"
 
@@ -542,7 +547,7 @@ msgstr "{handle} can’t be added"
 msgid "{handle} can't be messaged"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:817
+#: src/components/dms/InitiateChatFlow.tsx:849
 msgid "{handle} can’t be messaged"
 msgstr "{handle} can’t be messaged"
 
@@ -628,7 +633,7 @@ msgstr ""
 msgid "{requestCount, plural, one {# request} other {# requests}}"
 msgstr "{requestCount, plural, one {# request} other {# requests}}"
 
-#. Displayed when there are more than 50 requests to join a group chat
+#. Displayed when there are more than 20 requests to join a group chat
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:48
 msgid "{requestCount}+ requests"
 msgstr "{requestCount}+ requests"
@@ -752,6 +757,11 @@ msgstr ""
 #: src/screens/Profile/Header/Handle.tsx:58
 msgid "⚠Invalid Handle"
 msgstr ""
+
+#: src/screens/Messages/components/ChatListItem.tsx:220
+msgctxt "Displayed when there are more than 20 requests to join a group chat"
+msgid "20+ new join requests"
+msgstr "20+ new join requests"
 
 #: src/components/dialogs/MutedWords.tsx:202
 #: src/components/dialogs/MutedWords.tsx:551
@@ -1766,9 +1776,9 @@ msgstr ""
 #: src/components/dms/AddMembersFlow.tsx:342
 #: src/components/dms/AddMembersFlow.tsx:509
 #: src/components/dms/AddMembersFlow.tsx:515
-#: src/components/dms/InitiateChatFlow.tsx:491
-#: src/components/dms/InitiateChatFlow.tsx:676
-#: src/components/dms/InitiateChatFlow.tsx:683
+#: src/components/dms/InitiateChatFlow.tsx:508
+#: src/components/dms/InitiateChatFlow.tsx:701
+#: src/components/dms/InitiateChatFlow.tsx:708
 #: src/components/moderation/LabelsOnMeDialog.tsx:334
 #: src/components/moderation/LabelsOnMeDialog.tsx:335
 #: src/screens/Login/ChooseAccountForm.tsx:98
@@ -2244,9 +2254,9 @@ msgstr ""
 msgid "Cancel search"
 msgstr ""
 
-#: src/components/PostControls/index.tsx:110
-#: src/components/PostControls/index.tsx:141
-#: src/components/PostControls/index.tsx:169
+#: src/components/PostControls/index.tsx:108
+#: src/components/PostControls/index.tsx:138
+#: src/components/PostControls/index.tsx:166
 #: src/state/shell/composer/index.tsx:105
 msgid "Cannot interact with a blocked user"
 msgstr ""
@@ -2611,7 +2621,7 @@ msgstr ""
 #: src/components/dms/AfterReportDialog.tsx:207
 #: src/components/dms/AfterReportDialog.tsx:212
 #: src/components/dms/EmojiPopup.android.tsx:59
-#: src/components/dms/InitiateChatFlow.tsx:516
+#: src/components/dms/InitiateChatFlow.tsx:533
 #: src/components/NewskieDialog.tsx:169
 #: src/components/NewskieDialog.tsx:175
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:107
@@ -2906,7 +2916,7 @@ msgid "Continue thread..."
 msgstr ""
 
 #: src/components/dms/AddMembersFlow.tsx:307
-#: src/components/dms/InitiateChatFlow.tsx:443
+#: src/components/dms/InitiateChatFlow.tsx:460
 msgid "Continue to group name"
 msgstr "Continue to group name"
 
@@ -2922,7 +2932,7 @@ msgstr ""
 msgid "Conversation"
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:309
+#: src/screens/Messages/components/ChatListItem.tsx:324
 msgid "Conversation deleted"
 msgstr ""
 
@@ -3136,7 +3146,7 @@ msgstr ""
 #. Text on button to create a new starter pack
 #: src/components/dialogs/StarterPackDialog.tsx:113
 #: src/components/dialogs/StarterPackDialog.tsx:210
-#: src/components/dms/InitiateChatFlow.tsx:452
+#: src/components/dms/InitiateChatFlow.tsx:469
 #: src/components/StarterPack/ProfileStarterPacks.tsx:329
 msgid "Create"
 msgstr ""
@@ -3203,7 +3213,7 @@ msgstr ""
 msgid "Create another"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:451
+#: src/components/dms/InitiateChatFlow.tsx:468
 msgid "Create group chat"
 msgstr "Create group chat"
 
@@ -3436,7 +3446,7 @@ msgid "Deleted"
 msgstr ""
 
 #: src/components/dms/MessagesListHeader.tsx:109
-#: src/screens/Messages/components/ChatListItem.tsx:132
+#: src/screens/Messages/components/ChatListItem.tsx:133
 #: src/screens/Messages/ConversationSettings/Member.tsx:75
 msgid "Deleted Account"
 msgstr ""
@@ -5268,7 +5278,7 @@ msgid "Go to account settings"
 msgstr ""
 
 #. placeholder {0}: profile.handle
-#: src/screens/Messages/components/ChatListItem.tsx:153
+#: src/screens/Messages/components/ChatListItem.tsx:154
 msgid "Go to conversation with {0}"
 msgstr ""
 
@@ -5288,7 +5298,7 @@ msgstr ""
 msgid "Go to profile"
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:211
+#: src/screens/Messages/components/ChatListItem.tsx:212
 msgid "Go to the group chat named \"{chatName}\""
 msgstr "Go to the group chat named \"{chatName}\""
 
@@ -5371,8 +5381,8 @@ msgstr "Group chats are now available"
 msgid "Group is locked"
 msgstr "Group is locked"
 
-#: src/components/dms/InitiateChatFlow.tsx:231
-#: src/components/dms/InitiateChatFlow.tsx:551
+#: src/components/dms/InitiateChatFlow.tsx:237
+#: src/components/dms/InitiateChatFlow.tsx:568
 #: src/screens/Messages/ConversationSettings/prompts.tsx:33
 msgid "Group name"
 msgstr "Group name"
@@ -6316,7 +6326,7 @@ msgstr ""
 
 #. Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form
 #. placeholder {0}: post.likeCount || 0
-#: src/components/PostControls/index.tsx:287
+#: src/components/PostControls/index.tsx:284
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -6746,7 +6756,7 @@ msgstr ""
 msgid "Message {displayName}"
 msgstr "Message {displayName}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:310
+#: src/screens/Messages/components/ChatListItem.tsx:325
 msgid "Message deleted"
 msgstr ""
 
@@ -7147,19 +7157,19 @@ msgstr ""
 msgid "New followers"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:230
+#: src/components/dms/InitiateChatFlow.tsx:236
 msgid "New group chat"
 msgstr "New group chat"
 
 #. Button used to create a new group chat.
 #. Button used to create a new group chat.
-#: src/components/dms/InitiateChatFlow.tsx:712
-#: src/components/dms/InitiateChatFlow.tsx:745
+#: src/components/dms/InitiateChatFlow.tsx:743
+#: src/components/dms/InitiateChatFlow.tsx:777
 msgctxt "action"
 msgid "New group chat"
 msgstr "New group chat"
 
-#: src/components/dms/InitiateChatFlow.tsx:267
+#: src/components/dms/InitiateChatFlow.tsx:273
 msgid "New group chat with:"
 msgstr "New group chat with:"
 
@@ -7226,7 +7236,7 @@ msgstr ""
 #: src/components/contacts/screens/ViewMatches.tsx:395
 #: src/components/contacts/screens/ViewMatches.tsx:410
 #: src/components/dms/AddMembersFlow.tsx:308
-#: src/components/dms/InitiateChatFlow.tsx:444
+#: src/components/dms/InitiateChatFlow.tsx:461
 #: src/screens/Login/ForgotPasswordForm.tsx:149
 #: src/screens/Login/ForgotPasswordForm.tsx:156
 #: src/screens/Login/SetNewPasswordForm.tsx:186
@@ -7325,7 +7335,7 @@ msgstr ""
 msgid "No media yet"
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:296
+#: src/screens/Messages/components/ChatListItem.tsx:311
 msgid "No messages yet"
 msgstr ""
 
@@ -7399,7 +7409,7 @@ msgstr ""
 
 #: src/components/dialogs/SearchablePeopleList.tsx:250
 #: src/components/dms/AddMembersFlow.tsx:240
-#: src/components/dms/InitiateChatFlow.tsx:340
+#: src/components/dms/InitiateChatFlow.tsx:346
 #: src/components/ProgressGuide/FollowDialog.tsx:221
 msgid "No results"
 msgstr ""
@@ -7569,6 +7579,7 @@ msgstr ""
 
 #: src/components/BotAccountAlert.tsx:52
 #: src/components/BotAccountAlert.tsx:57
+#: src/components/dms/InitiateChatFlow.tsx:676
 #: src/components/dms/MessageItem.tsx:659
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:661
@@ -7670,8 +7681,8 @@ msgstr ""
 msgid "Open chat member options for {displayName}"
 msgstr "Open chat member options for {displayName}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:471
-#: src/screens/Messages/components/ChatListItem.tsx:475
+#: src/screens/Messages/components/ChatListItem.tsx:486
+#: src/screens/Messages/components/ChatListItem.tsx:490
 msgid "Open conversation options"
 msgstr ""
 
@@ -9043,7 +9054,7 @@ msgstr ""
 
 #. Accessibility label for the reply button, verb form followed by number of replies and noun form
 #. placeholder {0}: post.replyCount || 0
-#: src/components/PostControls/index.tsx:243
+#: src/components/PostControls/index.tsx:240
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr ""
 
@@ -9748,7 +9759,7 @@ msgstr ""
 msgid "Select GIF \"{0}\""
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:651
+#: src/components/dms/InitiateChatFlow.tsx:668
 msgid "Select group chat members"
 msgstr "Select group chat members"
 
@@ -10502,12 +10513,12 @@ msgstr ""
 msgid "Start adding people!"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:652
+#: src/components/dms/InitiateChatFlow.tsx:669
 msgid "Start chat"
 msgstr "Start chat"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:428
-#: src/components/dms/InitiateChatFlow.tsx:785
+#: src/components/dms/InitiateChatFlow.tsx:817
 msgid "Start chat with {displayName}"
 msgstr ""
 
@@ -10661,7 +10672,7 @@ msgid "Successfully verified"
 msgstr ""
 
 #: src/components/dms/AddMembersFlow.tsx:226
-#: src/components/dms/InitiateChatFlow.tsx:319
+#: src/components/dms/InitiateChatFlow.tsx:325
 msgid "Suggested"
 msgstr "Suggested"
 
@@ -11191,7 +11202,7 @@ msgstr ""
 msgid "This chat has ended"
 msgstr "This chat has ended"
 
-#: src/screens/Messages/components/ChatListItem.tsx:360
+#: src/screens/Messages/components/ChatListItem.tsx:375
 #: src/screens/Messages/components/ChatLocked.tsx:61
 msgid "This chat is locked"
 msgstr "This chat is locked"
@@ -11230,7 +11241,7 @@ msgstr ""
 msgid "This content is not viewable without a Bluesky account."
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:154
+#: src/screens/Messages/components/ChatListItem.tsx:155
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr ""
 
@@ -11830,7 +11841,7 @@ msgstr ""
 
 #. Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun
 #. placeholder {0}: post.likeCount || 0
-#: src/components/PostControls/index.tsx:279
+#: src/components/PostControls/index.tsx:276
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -12700,7 +12711,7 @@ msgid "We're having network issues, try again"
 msgstr ""
 
 #: src/components/dms/AddMembersFlow.tsx:175
-#: src/components/dms/InitiateChatFlow.tsx:256
+#: src/components/dms/InitiateChatFlow.tsx:262
 msgid "We’re having network issues, try again"
 msgstr "We’re having network issues, try again"
 
@@ -13422,6 +13433,14 @@ msgstr ""
 #: src/view/com/composer/state/video.ts:446
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr ""
+
+#: src/components/dms/InitiateChatFlow.tsx:674
+msgid "Your account is too new"
+msgstr "Your account is too new"
+
+#: src/components/dms/InitiateChatFlow.tsx:675
+msgid "Your account must be at least 7 days old to create a new group chat."
+msgstr "Your account must be at least 7 days old to create a new group chat."
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:107
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
