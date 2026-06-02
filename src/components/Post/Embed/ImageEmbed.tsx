@@ -89,6 +89,7 @@ export function ImageEmbed({
             onPress={onPress}
             onPressIn={onPressIn}
             viewContext={rest.viewContext}
+            isWithinQuote={rest.isWithinQuote}
           />
         </View>
       )
