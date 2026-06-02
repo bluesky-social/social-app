@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-02 20:08\n"
+"PO-Revision-Date: 2026-06-02 20:40\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1234,7 +1234,7 @@ msgstr "ludoviko@ekzemplo.com"
 
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:284
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:184
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:201
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
 msgstr "Ĉiuj"
@@ -1391,7 +1391,7 @@ msgstr "Eraro okazis"
 msgid "An error occurred while compressing the video."
 msgstr "Eraro okazis dum densigo de la videaĵo."
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:206
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:223
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:69
 msgid "An error occurred while fetching suggested accounts."
 msgstr "Eraro okazis dum ŝargado de proponitaj kontoj."
@@ -1810,11 +1810,11 @@ msgstr "Reveno de forbarita uzanto"
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:259
 msgid "Based on your device's location, we think you're in <0>{region}</0>. This estimate may be inaccurate if you're using a VPN."
-msgstr ""
+msgstr "Baziĝinte sur la loko de via aparato, ni pensas ke vi estas en <0>{region}</0>. Tiu kalkulo povas esti erara se vi uzas VPN-on."
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:265
 msgid "Based on your network, we think you're in <0>{region}</0>. This estimate may be inaccurate if you're using a VPN."
-msgstr ""
+msgstr "Baziĝinte sur via reto, ni pensas ke vi estas en <0>{region}</0>. Tiu kalkulo povas esti erara se vi uzas VPN-on."
 
 #: src/view/screens/Lists.tsx:35
 #: src/view/screens/ModerationModlists.tsx:35
@@ -2890,7 +2890,7 @@ msgstr "Fono de kuntekstmenuo, alklaku por fermi la menuon."
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:171
 #: src/screens/Onboarding/StepInterests/index.tsx:93
 #: src/screens/Onboarding/StepProfile/index.tsx:303
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:287
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:305
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:117
 msgid "Continue"
 msgstr "Daŭrigi"
@@ -2915,7 +2915,7 @@ msgstr "Daŭrigi al grupa nomo"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:90
 #: src/screens/Onboarding/StepProfile/index.tsx:300
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:284
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:302
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:114
 #: src/screens/Signup/BackNextButtons.tsx:61
 msgid "Continue to next step"
@@ -4415,7 +4415,7 @@ msgstr "Malsukcesis redakti invitligilon"
 msgid "Failed to enable invite link"
 msgstr "Malsukcesis ŝalti invitligilon"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:127
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:143
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr "Malsukcesis sekvi ĉiujn proponitajn kontojn, bonvolu reprovi"
 
@@ -4889,7 +4889,7 @@ msgstr "Sekvi konton"
 
 #: src/components/contacts/screens/ViewMatches.tsx:276
 #: src/components/contacts/screens/ViewMatches.tsx:291
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:276
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:294
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:162
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:169
 #: src/screens/Settings/FindContactsSettings.tsx:444
@@ -4899,7 +4899,7 @@ msgstr "Sekvi konton"
 msgid "Follow all"
 msgstr "Sekvi ĉiujn"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:273
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:291
 msgid "Follow all accounts"
 msgstr "Eksekvu ĉiujn kontojn"
 
@@ -4912,7 +4912,7 @@ msgstr "Eksekvu ĉiujn kontojn"
 msgid "Follow back"
 msgstr "Sekvi reciproke"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:116
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
 msgid "Followed all accounts!"
 msgstr "Ĉiuj kontoj eksekvitaj!"
 
@@ -5037,7 +5037,7 @@ msgid "For the best experience, we recommend using the theme font."
 msgstr "Por la plej bona ĝuo, ni rekomendas uzi la tiparon de la etoso."
 
 #: src/components/ProgressGuide/FollowDialog.tsx:131
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:331
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:349
 #: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:88
 msgid "For You"
 msgstr "Por vi"
@@ -9402,8 +9402,8 @@ msgstr "Reprovas la lastan agon, kiu eraris"
 #: src/screens/Messages/ChatList.tsx:343
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:220
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:250
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:253
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:268
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:271
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:92
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:95
 #: src/screens/PostThread/components/ThreadError.tsx:81
@@ -10380,7 +10380,7 @@ msgstr "Ensalutinta kiel @{0}"
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:90
 #: src/screens/Onboarding/StepFinished/index.tsx:295
 #: src/screens/Onboarding/StepFinished/index.tsx:317
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:263
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:281
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:105
 #: src/screens/StarterPack/Wizard/index.tsx:206
 msgid "Skip"
@@ -10400,7 +10400,7 @@ msgstr "Ĉu preterlasi malplenajn afiŝojn?"
 msgid "Skip introduction and start using your account"
 msgstr "Preterpasi enkondukon kaj komenci uzi vian konton"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:260
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:278
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:102
 msgid "Skip to next step"
 msgstr "Preterpasi al sekva paŝo"
@@ -10525,7 +10525,7 @@ msgstr "Io misfunkciis. Bonvolu reprovi."
 msgid "Something wrong? Let us know."
 msgstr "Ĉu io misfunkciis? Sciigu nin."
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:214
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:231
 msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr "Pordonu, ni ne eblis ŝargi kontajn proponojn nune."
 
@@ -10751,7 +10751,7 @@ msgstr "Proponitaj kontoj"
 
 #. Accounts suggested to the user for them to follow
 #: src/components/FeedInterstitials.tsx:469
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:165
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
 msgid "Suggested for you"
 msgstr "Proponitaj por vi"
 

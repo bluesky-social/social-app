@@ -1234,7 +1234,7 @@ msgstr "alice@example.com"
 
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:284
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:184
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:201
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
 msgstr "所有"
@@ -1391,7 +1391,7 @@ msgstr "發生錯誤"
 msgid "An error occurred while compressing the video."
 msgstr "壓縮影片嗰陣發生錯誤。"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:206
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:223
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:69
 msgid "An error occurred while fetching suggested accounts."
 msgstr "攞緊建議帳號嗰陣發生錯誤。"
@@ -2890,7 +2890,7 @@ msgstr "內容選單背景，撳低去閂咗選單。"
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:171
 #: src/screens/Onboarding/StepInterests/index.tsx:93
 #: src/screens/Onboarding/StepProfile/index.tsx:303
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:287
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:305
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:117
 msgid "Continue"
 msgstr "繼續"
@@ -2915,7 +2915,7 @@ msgstr "繼續設定羣組名稱"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:90
 #: src/screens/Onboarding/StepProfile/index.tsx:300
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:284
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:302
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:114
 #: src/screens/Signup/BackNextButtons.tsx:61
 msgid "Continue to next step"
@@ -4415,7 +4415,7 @@ msgstr ""
 msgid "Failed to enable invite link"
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:127
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:143
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr "跟唔到所有建議嘅帳號，唔該試多次"
 
@@ -4889,7 +4889,7 @@ msgstr "跟佢"
 
 #: src/components/contacts/screens/ViewMatches.tsx:276
 #: src/components/contacts/screens/ViewMatches.tsx:291
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:276
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:294
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:162
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:169
 #: src/screens/Settings/FindContactsSettings.tsx:444
@@ -4899,7 +4899,7 @@ msgstr "跟佢"
 msgid "Follow all"
 msgstr "跟晒佢哋"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:273
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:291
 msgid "Follow all accounts"
 msgstr "跟晒所有帳號"
 
@@ -4912,7 +4912,7 @@ msgstr "跟晒所有帳號"
 msgid "Follow back"
 msgstr "跟返佢"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:116
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
 msgid "Followed all accounts!"
 msgstr "跟晒所有帳號！"
 
@@ -5037,7 +5037,7 @@ msgid "For the best experience, we recommend using the theme font."
 msgstr "爲咗有最佳體驗，我哋建議使用主題字型。"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:131
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:331
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:349
 #: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:88
 msgid "For You"
 msgstr "估你心水"
@@ -9402,8 +9402,8 @@ msgstr "試多次執行上一個出錯誤嘅動作"
 #: src/screens/Messages/ChatList.tsx:343
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:220
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:250
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:253
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:268
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:271
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:92
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:95
 #: src/screens/PostThread/components/ThreadError.tsx:81
@@ -10380,7 +10380,7 @@ msgstr "用 @{0} 身份登入"
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:90
 #: src/screens/Onboarding/StepFinished/index.tsx:295
 #: src/screens/Onboarding/StepFinished/index.tsx:317
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:263
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:281
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:105
 #: src/screens/StarterPack/Wizard/index.tsx:206
 msgid "Skip"
@@ -10400,7 +10400,7 @@ msgstr "跳過空白帖文？"
 msgid "Skip introduction and start using your account"
 msgstr "跳過介紹直接開始使用你嘅帳號"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:260
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:278
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:102
 msgid "Skip to next step"
 msgstr "跳到下一步"
@@ -10525,7 +10525,7 @@ msgstr "出咗問題，唔該試多次。"
 msgid "Something wrong? Let us know."
 msgstr "有輘輷？話畀我哋知。"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:214
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:231
 msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr "對唔住，我哋而家撈唔到帳號建議。"
 
@@ -10751,7 +10751,7 @@ msgstr "建議帳號"
 
 #. Accounts suggested to the user for them to follow
 #: src/components/FeedInterstitials.tsx:469
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:165
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
 msgid "Suggested for you"
 msgstr "估你心水"
 
