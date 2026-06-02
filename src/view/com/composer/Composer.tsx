@@ -877,24 +877,12 @@ export const ComposePost = ({
     try {
       logger.info(`composer: posting...`)
       postUri = (
-        await apilib.post(
-          agent,
-          queryClient,
-          {
-            thread: filteredThread,
-            replyTo: replyTo?.uri,
-            onStateChange: setPublishingStage,
-            langs: currentLanguages,
-          },
-          {
-            highResolutionImages: ax.features.enabled(
-              ax.features.ImageUploadsHighResolution,
-            ),
-            increasedBlobSizeLimit: ax.features.enabled(
-              ax.features.ImageUploadsBlobSize2mbEnabled,
-            ),
-          },
-        )
+        await apilib.post(agent, queryClient, {
+          thread: filteredThread,
+          replyTo: replyTo?.uri,
+          onStateChange: setPublishingStage,
+          langs: currentLanguages,
+        })
       ).uris[0]
 
       /*
