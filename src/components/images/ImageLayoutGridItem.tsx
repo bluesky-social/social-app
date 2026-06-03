@@ -106,6 +106,7 @@ export function GalleryItem({
               }
             }}
             loading="lazy"
+            useAppleWebpCodec
           />
           <MediaInsetBorder style={insetBorderStyle} />
         </Pressable>

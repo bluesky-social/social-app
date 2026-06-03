@@ -480,6 +480,7 @@ function GalleryImage({
                 height: e.source.height,
               })
             }}
+            useAppleWebpCodec
           />
 
           {(hasAlt || isCropped) && !hideBadges ? (

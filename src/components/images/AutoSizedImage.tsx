@@ -142,6 +142,7 @@ export function AutoSizedImage({
           }
         }}
         loading="lazy"
+        useAppleWebpCodec
       />
       <MediaInsetBorder />
 
