@@ -422,7 +422,7 @@ export function SelectMediaButton({
               message: `You can select up to ${plural(MAX_IMAGES, {
                 other: '# images',
               })} in total.`,
-              comment: `Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.`,
+              comment: `Error message for maximum number of images that can be selected to add to a post. The number is derived from MAX_IMAGES and may change.`,
             }),
           ),
           [SelectedAssetError.MaxVideos]: _(
@@ -510,7 +510,7 @@ export function SelectMediaButton({
           message: `Opens device gallery to select up to ${plural(MAX_IMAGES, {
             other: '# images',
           })}, or a single video or GIF.`,
-          comment: `Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.`,
+          comment: `Accessibility hint for button in composer to add images, a video, or a GIF to a post. The maximum number of images is derived from MAX_IMAGES and may change.`,
         }),
       )}
       style={a.p_sm}

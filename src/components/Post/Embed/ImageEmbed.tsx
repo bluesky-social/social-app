@@ -15,6 +15,14 @@ import {useAnalytics} from '#/analytics'
 import {type EmbedType} from '#/types/bsky/post'
 import {type CommonProps} from './types'
 
+/**
+ * Posts with more than this many images render the swipeable carousel
+ * (Gallery) instead of the static grid (ImageLayoutGrid). Per the Photos v2
+ * spec: show the grid for up to 4 photos, show the carousel for more than 4.
+ * The grid only supports up to 4 images, so this is also the grid's max.
+ */
+const GALLERY_IMAGE_THRESHOLD = 4
+
 export function ImageEmbed({
   embed,
   ...rest
@@ -24,7 +32,17 @@ export function ImageEmbed({
   const ax = useAnalytics()
   const {openLightbox} = useLightboxControls()
   const {images} = embed.view
+  // PostGalleryEmbedEnable is kept as a kill-switch for the carousel. When the
+  // flag is ON (the intended state), the grid-vs-carousel choice follows
+  // GALLERY_IMAGE_THRESHOLD: 2-4 images use the existing grid, >4 use the
+  // carousel. The 2-4 grid is intentionally preserved (decoupled from the 4->10
+  // launch) per the Photos v2 spec. When the flag is OFF, the carousel is
+  // suppressed entirely and we fall back to the pre-carousel behavior: the grid
+  // renders the first 4 images. NOTE: with the flag OFF, images beyond the first
+  // 4 are not shown - this is the same limitation the grid always had, and only
+  // matters as a deliberate kill-switch state. See OPEN QUESTIONS in the PR.
   const galleryEnabled = ax.features.enabled(ax.features.PostGalleryEmbedEnable)
+  const useGallery = galleryEnabled && images.length > GALLERY_IMAGE_THRESHOLD
 
   // Captured from AutoSizedImage so the peek-commit handler can reuse the same
   // ref + dims that a tap would — keeps the lightbox's return animation intact.
@@ -109,7 +127,7 @@ export function ImageEmbed({
       )
     }
 
-    if (galleryEnabled) {
+    if (useGallery) {
       return (
         <View style={[a.mt_sm, rest.style]}>
           <Gallery

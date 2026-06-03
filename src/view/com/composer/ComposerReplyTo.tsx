@@ -195,7 +195,10 @@ function ComposerReplyToImages({
             </View>
           </View>
         )) ||
-        (images.length === 4 && (
+        (images.length >= 4 && (
+          // Posts can now have up to 10 images, but this is a small 64x64
+          // thumbnail of the post being replied to, so we cap it at a 2x2
+          // preview of the first 4 images for anything >=4.
           <View style={[a.flex_1, a.gap_2xs]}>
             <View style={[a.flex_1, a.flex_row, a.gap_2xs]}>
               <Image
