@@ -174,8 +174,15 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
                 // so fail the drawer gesture immediately.
                 .failOffsetX(-1)
                 // Don't rush declaring that a movement to the right
-                // is a drawer swipe. It could be a vertical scroll.
-                .activeOffsetX(5)
+                // is a drawer swipe. It could be a vertical scroll, or a
+                // slow horizontal carousel swipe. On Android a child
+                // `blocksExternalGesture` only holds the drawer off once the
+                // native scroll has activated, which on a slow swipe doesn't
+                // happen until movement crosses the native touch slop
+                // (~8-16px). Activating the drawer below that lets a slow
+                // carousel swipe pop the drawer open (APP-2119), so require
+                // more travel before claiming on Android.
+                .activeOffsetX(IS_ANDROID ? 20 : 5)
             )
           }
         } else {
