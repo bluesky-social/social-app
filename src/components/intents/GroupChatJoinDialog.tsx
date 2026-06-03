@@ -14,7 +14,6 @@ import {isNetworkError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {STALE} from '#/state/queries'
 import {useJoinLinkPreviewsQuery} from '#/state/queries/join-links'
 import {useRequestJoinGroupChat} from '#/state/queries/messages/request-join-group-chat'
 import {useWithdrawJoinGroupChatRequest} from '#/state/queries/messages/withdraw-join-group-chat'
@@ -82,7 +81,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
   const {data, error, isLoading} = useJoinLinkPreviewsQuery({
     codes: code ? [code] : undefined,
     hasSession,
-    staleTime: STALE.SECONDS.FIFTEEN,
+    staleTime: 0,
   })
 
   const {mutate: joinGroupChat, isPending: isJoinPending} =
