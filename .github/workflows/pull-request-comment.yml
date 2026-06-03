@@ -128,14 +128,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint check
-        run: pnpm lint
-
       - name: 🔤 Compile translations
         run: pnpm intl:build 2>&1 | tee i18n.log
 
       - name: Check for i18n compilation errors
         run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
+
+      - name: Lint check
+        run: pnpm lint
 
       - name: Type check
         run: pnpm typecheck
