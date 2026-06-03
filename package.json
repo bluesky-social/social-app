@@ -295,7 +295,6 @@
     "jest-junit": "^16.0.0",
     "lint-staged": "^13.2.3",
     "prettier": "^3.8.3",
-    "react-native-dotenv": "^3.4.11",
     "react-refresh": "^0.14.0",
     "svgo": "^3.3.2",
     "ts-plugin-sort-import-suggestions": "^1.0.4",
