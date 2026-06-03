@@ -69,8 +69,8 @@ export function maybeApplyGalleryOffsetStyles(
     hasImages = true
   }
   if (isGalleryEmbed) {
-    // one image, not a gallery
-    if (embed.items.length === 1) return
+    // single (or empty) gallery — no offset needed
+    if (embed.items.length <= 1) return
     hasImages = true
   }
   if (isRecordWithMedia) {
@@ -89,8 +89,8 @@ export function maybeApplyGalleryOffsetStyles(
         AppBskyEmbedGallery.isMain,
       )
     ) {
-      // one image, not a gallery
-      if (embed.media.items.length === 1) return
+      // single (or empty) gallery — no offset needed
+      if (embed.media.items.length <= 1) return
     }
     hasImages = true
   }

@@ -162,6 +162,20 @@ export type ComposerAction =
 export const MAX_IMAGES = 4
 export const MAX_GALLERY_IMAGES = 10
 
+/**
+ * Picks the embed variant for a set of images. ≤4 lands in the legacy
+ * `app.bsky.embed.images` shape; >4 promotes to `app.bsky.embed.gallery`.
+ * Anything beyond the gallery cap is silently dropped — callers should
+ * already have enforced the cap upstream (picker, paste, etc).
+ */
+function imagesToMediaVariant(
+  images: ComposerImage[],
+): ImagesMedia | GalleryMedia {
+  return images.length <= MAX_IMAGES
+    ? {type: 'images', images: images.slice(0, MAX_IMAGES)}
+    : {type: 'gallery', images: images.slice(0, MAX_GALLERY_IMAGES)}
+}
+
 export function composerReducer(
   state: ComposerState,
   action: ComposerAction,
@@ -344,39 +358,12 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
       const prevMedia = state.embed.media
       let nextMedia = prevMedia
       if (!prevMedia) {
-        // First selection: pick the variant based on count. ImagesMedia caps
-        // at 4 (legacy `app.bsky.embed.images`); above that promotes to the
-        // new `app.bsky.embed.gallery` (capped at 10).
-        if (action.images.length <= MAX_IMAGES) {
-          nextMedia = {
-            type: 'images',
-            images: action.images.slice(0, MAX_IMAGES),
-          }
-        } else {
-          nextMedia = {
-            type: 'gallery',
-            images: action.images.slice(0, MAX_GALLERY_IMAGES),
-          }
-        }
-      } else if (prevMedia.type === 'images') {
-        const combined = [...prevMedia.images, ...action.images]
-        if (combined.length <= MAX_IMAGES) {
-          nextMedia = {...prevMedia, images: combined}
-        } else {
-          // Adding more than 4 promotes the existing images into a gallery.
-          nextMedia = {
-            type: 'gallery',
-            images: combined.slice(0, MAX_GALLERY_IMAGES),
-          }
-        }
-      } else if (prevMedia.type === 'gallery') {
-        nextMedia = {
-          ...prevMedia,
-          images: [...prevMedia.images, ...action.images].slice(
-            0,
-            MAX_GALLERY_IMAGES,
-          ),
-        }
+        nextMedia = imagesToMediaVariant(action.images)
+      } else if (prevMedia.type === 'images' || prevMedia.type === 'gallery') {
+        nextMedia = imagesToMediaVariant([
+          ...prevMedia.images,
+          ...action.images,
+        ])
       }
       return {
         ...state,
@@ -423,15 +410,11 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
           if (!state.embed.link) {
             nextLabels = []
           }
-        } else if (
-          prevMedia.type === 'gallery' &&
-          remainingImages.length <= MAX_IMAGES
-        ) {
-          // Drop back to the legacy `app.bsky.embed.images` shape when a
-          // gallery shrinks to <=4 items, so old clients still see it.
-          nextMedia = {type: 'images', images: remainingImages}
         } else {
-          nextMedia = {...prevMedia, images: remainingImages}
+          // Re-pick the variant so a gallery that shrinks to <=4 demotes
+          // back to the legacy `app.bsky.embed.images` shape — keeps old
+          // clients rendering it when possible.
+          nextMedia = imagesToMediaVariant(remainingImages)
         }
         return {
           ...state,
@@ -618,12 +601,9 @@ export function createComposerState({
     | AppBskyActorDefs.PostInteractionSettingsPref
     | undefined
 }): ComposerState {
-  let media: ImagesMedia | undefined
+  let media: ImagesMedia | GalleryMedia | undefined
   if (initImageUris?.length) {
-    media = {
-      type: 'images',
-      images: createInitialImages(initImageUris),
-    }
+    media = imagesToMediaVariant(createInitialImages(initImageUris))
   }
   let quote: Link | undefined
   if (initQuoteUri) {
