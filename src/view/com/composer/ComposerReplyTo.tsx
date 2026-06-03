@@ -151,7 +151,6 @@ function ComposerReplyToImages({
         <Image
           source={{uri: images[0].thumb}}
           style={[a.flex_1]}
-          cachePolicy="memory-disk"
           accessibilityIgnoresInvertColors
         />
       )) ||
@@ -160,13 +159,11 @@ function ComposerReplyToImages({
             <Image
               source={{uri: images[0].thumb}}
               style={[a.flex_1]}
-              cachePolicy="memory-disk"
               accessibilityIgnoresInvertColors
             />
             <Image
               source={{uri: images[1].thumb}}
               style={[a.flex_1]}
-              cachePolicy="memory-disk"
               accessibilityIgnoresInvertColors
             />
           </View>
@@ -176,20 +173,17 @@ function ComposerReplyToImages({
             <Image
               source={{uri: images[0].thumb}}
               style={[a.flex_1]}
-              cachePolicy="memory-disk"
               accessibilityIgnoresInvertColors
             />
             <View style={[a.flex_1, a.gap_2xs]}>
               <Image
                 source={{uri: images[1].thumb}}
                 style={[a.flex_1]}
-                cachePolicy="memory-disk"
                 accessibilityIgnoresInvertColors
               />
               <Image
                 source={{uri: images[2].thumb}}
                 style={[a.flex_1]}
-                cachePolicy="memory-disk"
                 accessibilityIgnoresInvertColors
               />
             </View>
@@ -201,13 +195,11 @@ function ComposerReplyToImages({
               <Image
                 source={{uri: images[0].thumb}}
                 style={[a.flex_1]}
-                cachePolicy="memory-disk"
                 accessibilityIgnoresInvertColors
               />
               <Image
                 source={{uri: images[1].thumb}}
                 style={[a.flex_1]}
-                cachePolicy="memory-disk"
                 accessibilityIgnoresInvertColors
               />
             </View>
@@ -215,13 +207,11 @@ function ComposerReplyToImages({
               <Image
                 source={{uri: images[2].thumb}}
                 style={[a.flex_1]}
-                cachePolicy="memory-disk"
                 accessibilityIgnoresInvertColors
               />
               <Image
                 source={{uri: images[3].thumb}}
                 style={[a.flex_1]}
-                cachePolicy="memory-disk"
                 accessibilityIgnoresInvertColors
               />
             </View>
