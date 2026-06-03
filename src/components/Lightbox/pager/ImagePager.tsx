@@ -415,22 +415,24 @@ function ImageView({
         style={styles.pager}>
         {images.map((imageSrc, i) => (
           <View key={`${i}-${imageSrc.uri}`}>
-            <LightboxImage
-              onTap={onTap}
-              onZoom={onZoom}
-              imageSrc={imageSrc}
-              onRequestClose={handleRequestClose}
-              isScrollViewBeingDragged={isDragging}
-              showControls={showControls}
-              safeAreaRef={safeAreaRef}
-              isScaled={isScaled}
-              isFlyingAway={isFlyingAway}
-              isActive={i === imageIndex}
-              dismissSwipeTranslateY={dismissSwipeTranslateY}
-              openProgress={openProgress}
-              thumbRects={thumbRects}
-              imageIndex={i}
-            />
+            {Math.abs(i - imageIndex) <= 1 ? (
+              <LightboxImage
+                onTap={onTap}
+                onZoom={onZoom}
+                imageSrc={imageSrc}
+                onRequestClose={handleRequestClose}
+                isScrollViewBeingDragged={isDragging}
+                showControls={showControls}
+                safeAreaRef={safeAreaRef}
+                isScaled={isScaled}
+                isFlyingAway={isFlyingAway}
+                isActive={i === imageIndex}
+                dismissSwipeTranslateY={dismissSwipeTranslateY}
+                openProgress={openProgress}
+                thumbRects={thumbRects}
+                imageIndex={i}
+              />
+            ) : null}
           </View>
         ))}
       </PagerView>

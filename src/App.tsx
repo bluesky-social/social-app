@@ -1,12 +1,14 @@
 import '#/logger/sentry/setup'
 
 import {Fragment, useEffect, useState} from 'react'
+import {DeviceEventEmitter} from 'react-native'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {KeyboardProvider as KeyboardControllerProvider} from 'react-native-keyboard-controller'
 import {
   initialWindowMetrics,
   SafeAreaProvider,
 } from 'react-native-safe-area-context'
+import {Image} from 'expo-image'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import * as SplashScreen from 'expo-splash-screen'
 import * as SystemUI from 'expo-system-ui'
@@ -140,6 +142,16 @@ function InnerApp() {
       })
     })
   }, [l])
+
+  // Respond to iOS memory warnings before the OS jetsams us. expo-image trims
+  // its own cache on warning, but explicitly clearing it gives the GC a stronger
+  // hint and frees decoded bitmaps no longer in active use.
+  useEffect(() => {
+    const sub = DeviceEventEmitter.addListener('memoryWarning', () => {
+      void Image.clearMemoryCache()
+    })
+    return () => sub.remove()
+  }, [])
 
   return (
     <Alf theme={theme}>
