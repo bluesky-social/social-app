@@ -375,7 +375,7 @@ export function Link({
     return (
       <LinkPeek
         href={href}
-        onCommit={openExternally}
+        onPreviewPress={openExternally}
         shouldProxy={shouldProxy}
         borderRadius={typeof borderRadius === 'number' ? borderRadius : 0}>
         {button}
@@ -390,17 +390,17 @@ export function Link({
  * iOS peek-menu wrapper for an external `Link`. Long-pressing previews the live
  * page in an in-app browser; the in-app-browser preference decides whether
  * tapping the peek morphs into the browser or hands off to the normal link flow
- * via `onCommit`. The menu carries a Share action.
+ * via `onPreviewPress`. The menu carries a Share action.
  */
 function LinkPeek({
   href,
-  onCommit,
+  onPreviewPress,
   shouldProxy,
   borderRadius,
   children,
 }: {
   href: string
-  onCommit: () => void
+  onPreviewPress: () => void
   shouldProxy?: boolean
   borderRadius: number
   children: React.ReactNode
@@ -424,7 +424,7 @@ function LinkPeek({
         }}
         borderRadius={borderRadius}
         // Fires only when not morphing natively (in-app browser off/unset).
-        onPreviewPress={onCommit}>
+        onPreviewPress={onPreviewPress}>
         {children}
       </PeekMenu.Trigger>
       <PeekMenu.Menu>
