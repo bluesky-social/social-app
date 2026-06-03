@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        job: [lint, prettier]
+        job: [lint, prettier, typecheck]
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v5
@@ -62,6 +62,8 @@ jobs:
           command: pnpm install --frozen-lockfile
           attempt_limit: 3
           attempt_delay: 2000
+      - name: Check & compile i18n
+        run: pnpm intl:build
       - name: Lint checks
         run: pnpm ${{ matrix.job }}
   # Aggregates the matrix results into a single stable check name so branch
@@ -80,28 +82,6 @@ jobs:
         run: |
           echo "linting result: $RESULT"
           test "$RESULT" = "success"
-  typechecking:
-    name: Run typecheck
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v6
-      - name: Install node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: package.json
-          cache: pnpm
-      - name: pnpm install
-        uses: Wandalen/wretry.action@master
-        with:
-          command: pnpm install --frozen-lockfile
-          attempt_limit: 3
-          attempt_delay: 2000
-      - name: Check & compile i18n
-        run: pnpm intl:build
-      - name: Type check
-        run: pnpm typecheck
   testing:
     name: Run tests
     runs-on: ubuntu-latest
