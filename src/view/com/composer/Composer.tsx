@@ -611,7 +611,11 @@ export const ComposePost = ({
       ax.metric('draft:save', {
         isNewDraft,
         hasText: posts.some(p => p.richtext.text.trim().length > 0),
-        hasImages: posts.some(p => p.embed.media?.type === 'images'),
+        hasImages: posts.some(
+          p =>
+            p.embed.media?.type === 'images' ||
+            p.embed.media?.type === 'gallery',
+        ),
         hasVideo: posts.some(p => p.embed.media?.type === 'video'),
         hasGif: posts.some(p => p.embed.media?.type === 'gif'),
         hasQuote: posts.some(p => !!p.embed.quote),
@@ -780,7 +784,10 @@ export const ComposePost = ({
     for (let i = 0; i < thread.posts.length; i++) {
       const media = thread.posts[i].embed.media
       if (media) {
-        if (media.type === 'images' && media.images.some(img => !img.alt)) {
+        if (
+          (media.type === 'images' || media.type === 'gallery') &&
+          media.images.some(img => !img.alt)
+        ) {
           return l`One or more images is missing alt text.`
         }
         if (media.type === 'gif' && !media.alt) {
@@ -931,7 +938,9 @@ export const ComposePost = ({
       logger.error(e, {
         message: `Composer: create post failed`,
         hasImages: filteredThread.posts.some(
-          p => p.embed.media?.type === 'images',
+          p =>
+            p.embed.media?.type === 'images' ||
+            p.embed.media?.type === 'gallery',
         ),
       })
 
@@ -953,7 +962,8 @@ export const ComposePost = ({
         for (let post of filteredThread.posts) {
           ax.metric('post:create', {
             imageCount:
-              post.embed.media?.type === 'images'
+              post.embed.media?.type === 'images' ||
+              post.embed.media?.type === 'gallery'
                 ? post.embed.media.images.length
                 : 0,
             isReply: index > 0 || !!replyTo,
@@ -1819,7 +1829,11 @@ function ComposerPills({
 }) {
   const t = useTheme()
   const media = post.embed.media
-  const hasMedia = media?.type === 'images' || media?.type === 'video'
+  const hasMedia =
+    media?.type === 'images' ||
+    media?.type === 'gallery' ||
+    media?.type === 'gif' ||
+    media?.type === 'video'
   const hasLink = !!post.embed.link
 
   // Don't render anything if no pills are going to be displayed

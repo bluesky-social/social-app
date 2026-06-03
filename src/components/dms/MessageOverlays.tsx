@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import {LayoutAnimation} from 'react-native'
@@ -59,8 +60,23 @@ export function MessageOverlays({children}: {children: React.ReactNode}) {
   } | null>(null)
   const [afterReportTarget, setAfterReportTarget] =
     useState<ChatBskyConvoDefs.MessageView | null>(null)
-  const [reactionsTarget, setReactionsTarget] =
-    useState<ChatBskyConvoDefs.MessageView | null>(null)
+  const [reactionsTargetId, setReactionsTargetId] = useState<string | null>(
+    null,
+  )
+  const reactionsOpenRequestedFor = useRef<string | null>(null)
+
+  const liveReactionsMessage = useMemo(() => {
+    if (!reactionsTargetId) return null
+    for (const item of convo.items) {
+      if (
+        (item.type === 'message' || item.type === 'pending-message') &&
+        item.message.id === reactionsTargetId
+      ) {
+        return item.message
+      }
+    }
+    return null
+  }, [convo.items, reactionsTargetId])
 
   const openDeleteMessage = useCallback(
     (message: ChatBskyConvoDefs.MessageView) => {
@@ -83,19 +99,33 @@ export function MessageOverlays({children}: {children: React.ReactNode}) {
 
   const openReactions = useCallback(
     (message: ChatBskyConvoDefs.MessageView) => {
-      setReactionsTarget(message)
+      reactionsOpenRequestedFor.current = message.id
+      setReactionsTargetId(message.id)
     },
     [],
   )
 
-  // These dialogs are conditionally mounted, so we can't open them in the same
-  // tick that we set their targets - the control refs aren't attached yet. Open
-  // in an effect after the dialog has mounted.
+  // The dialog is conditionally mounted, so we can't open it in the same tick
+  // that we set the target - the control ref isn't attached yet. Open in an
+  // effect after the dialog has mounted with a live message resolved.
   useEffect(() => {
-    if (reactionsTarget) {
+    if (
+      liveReactionsMessage &&
+      reactionsOpenRequestedFor.current === liveReactionsMessage.id
+    ) {
+      reactionsOpenRequestedFor.current = null
       reactionsControl.open()
     }
-  }, [reactionsTarget, reactionsControl])
+  }, [liveReactionsMessage, reactionsControl])
+
+  useEffect(() => {
+    if (reactionsTargetId && !liveReactionsMessage) {
+      reactionsControl.close()
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setReactionsTargetId(null)
+      reactionsOpenRequestedFor.current = null
+    }
+  }, [reactionsTargetId, liveReactionsMessage, reactionsControl])
 
   useEffect(() => {
     if (afterReportTarget) {
@@ -125,13 +155,18 @@ export function MessageOverlays({children}: {children: React.ReactNode}) {
     [openDeleteMessage, openReportMessage, openReactions],
   )
 
-  const reportSubject = reportTarget
-    ? ({
-        view: 'message',
-        convoId: convo.convo.view.id,
-        message: reportTarget.message,
-      } as const)
-    : undefined
+  const convoId = convo.convo.view.id
+  const reportSubject = useMemo(
+    () =>
+      reportTarget
+        ? ({
+            view: 'message',
+            convoId,
+            message: reportTarget.message,
+          } as const)
+        : undefined,
+    [reportTarget, convoId],
+  )
 
   return (
     <Context.Provider value={ctx}>
@@ -153,12 +188,15 @@ export function MessageOverlays({children}: {children: React.ReactNode}) {
           onClose={() => setAfterReportTarget(null)}
         />
       )}
-      {reactionsTarget && (
+      {liveReactionsMessage && (
         <ReactionsDialog
           control={reactionsControl}
           relatedProfiles={convo.relatedProfiles}
-          message={reactionsTarget}
-          onClose={() => setReactionsTarget(null)}
+          message={liveReactionsMessage}
+          onClose={() => {
+            setReactionsTargetId(null)
+            reactionsOpenRequestedFor.current = null
+          }}
         />
       )}
       <Prompt.Basic

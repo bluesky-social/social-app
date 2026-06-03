@@ -19,16 +19,19 @@ interface ImageLayoutGridProps {
   onPressIn?: (index: number) => void
   style?: StyleProp<ViewStyle>
   viewContext?: PostEmbedViewContext
+  isWithinQuote?: boolean
 }
 
-export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {
+export function ImageLayoutGrid({
+  style,
+  isWithinQuote: isWithinQuoteProp,
+  ...props
+}: ImageLayoutGridProps) {
   const {gtMobile} = useBreakpoints()
-  const gap =
+  const isWithinQuote =
+    isWithinQuoteProp ??
     props.viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
-      ? gtMobile
-        ? a.gap_xs
-        : a.gap_2xs
-      : a.gap_xs
+  const gap = isWithinQuote ? (gtMobile ? a.gap_xs : a.gap_2xs) : a.gap_xs
 
   return (
     <View style={style}>

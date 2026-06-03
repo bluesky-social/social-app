@@ -28,9 +28,6 @@ export function maybeApplyGalleryOffsetStyles(
     additionalCauses?: ModerationCause[] | AppModerationCause[]
   },
 ) {
-  // don't ever check gates like this, except this one time
-  if (!features.isOn(Features.PostGalleryEmbedEnable)) return
-
   if (
     !bsky.dangerousIsType<AppBskyFeedPost.Record>(
       post.record,
@@ -39,6 +36,13 @@ export function maybeApplyGalleryOffsetStyles(
   ) {
     return
   }
+
+  // The gate only controls whether legacy image embeds opt into the new
+  // expanded gallery layout. Gallery embeds always render expanded by item
+  // count, so their offset must apply regardless of the gate.
+  const isPostGalleryEmbedEnabled = features.isOn(
+    Features.PostGalleryEmbedEnable,
+  )
 
   /*
    * First check if we even have images
@@ -64,12 +68,13 @@ export function maybeApplyGalleryOffsetStyles(
     )
   let hasImages = false
   if (isImageEmbed) {
+    if (!isPostGalleryEmbedEnabled) return
     // one image, not a gallery
     if (embed.images.length === 1) return
     hasImages = true
   }
   if (isGalleryEmbed) {
-    // single (or empty) gallery — no offset needed
+    // single (or empty) gallery - no offset needed
     if (embed.items.length <= 1) return
     hasImages = true
   }
@@ -80,6 +85,7 @@ export function maybeApplyGalleryOffsetStyles(
         AppBskyEmbedImages.isMain,
       )
     ) {
+      if (!isPostGalleryEmbedEnabled) return
       // one image, not a gallery
       if (embed.media.images.length === 1) return
     }
@@ -89,7 +95,7 @@ export function maybeApplyGalleryOffsetStyles(
         AppBskyEmbedGallery.isMain,
       )
     ) {
-      // single (or empty) gallery — no offset needed
+      // single (or empty) gallery - no offset needed
       if (embed.media.items.length <= 1) return
     }
     hasImages = true

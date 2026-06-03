@@ -343,15 +343,15 @@ async function resolveMedia(
   }
   if (embedDraft.media?.type === 'gallery') {
     const imagesDraft = embedDraft.media.images
-    logger.debug(`Uploading gallery items`, {
+    logger.debug(`Uploading images`, {
       count: imagesDraft.length,
     })
     onStateChange?.(t`Uploading images...`)
     const items: $Typed<AppBskyEmbedGallery.Image>[] = await Promise.all(
       imagesDraft.map(async (image, i) => {
-        logger.debug(`Compressing gallery image #${i}`)
+        logger.debug(`Compressing image #${i}`)
         const {path, width, height, mime} = await compressImage(image)
-        logger.debug(`Uploading gallery image #${i}`)
+        logger.debug(`Uploading image #${i}`)
         const res = await uploadBlob(agent, path, mime)
         return {
           $type: 'app.bsky.embed.gallery#image' as const,

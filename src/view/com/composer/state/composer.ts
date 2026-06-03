@@ -16,6 +16,7 @@ import {
   postUriToRelativePath,
   toBskyAppUrl,
 } from '#/lib/strings/url-helpers'
+import {logger} from '#/logger'
 import {type ComposerImage, createInitialImages} from '#/state/gallery'
 import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {threadgateRecordToAllowUISetting} from '#/state/queries/threadgate'
@@ -163,10 +164,12 @@ export const MAX_IMAGES = 4
 export const MAX_GALLERY_IMAGES = 10
 
 /**
- * Picks the embed variant for a set of images. ≤4 lands in the legacy
+ * Picks the embed variant for a set of images. <=4 lands in the legacy
  * `app.bsky.embed.images` shape; >4 promotes to `app.bsky.embed.gallery`.
- * Anything beyond the gallery cap is silently dropped — callers should
- * already have enforced the cap upstream (picker, paste, etc).
+ * Anything beyond the gallery cap is dropped by the hard slice; callers
+ * should already have enforced the cap upstream (picker, paste, etc),
+ * and the reducer logs a warning when the cap is exceeded so the UI
+ * layer can surface a toast.
  */
 function imagesToMediaVariant(
   images: ComposerImage[],
@@ -357,6 +360,21 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
       }
       const prevMedia = state.embed.media
       let nextMedia = prevMedia
+      const prevCount =
+        prevMedia?.type === 'images' || prevMedia?.type === 'gallery'
+          ? prevMedia.images.length
+          : 0
+      const incomingCount = prevCount + action.images.length
+      if (incomingCount > MAX_GALLERY_IMAGES) {
+        // TODO: surface this to the user via a toast once the composer
+        // state shape supports reducer-emitted errors. The hard slice in
+        // imagesToMediaVariant still drops the excess so the cap holds.
+        logger.warn('composer: image add exceeds MAX_GALLERY_IMAGES', {
+          prevCount,
+          incomingCount,
+          dropped: incomingCount - MAX_GALLERY_IMAGES,
+        })
+      }
       if (!prevMedia) {
         nextMedia = imagesToMediaVariant(action.images)
       } else if (prevMedia.type === 'images' || prevMedia.type === 'gallery') {
@@ -412,7 +430,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
           }
         } else {
           // Re-pick the variant so a gallery that shrinks to <=4 demotes
-          // back to the legacy `app.bsky.embed.images` shape — keeps old
+          // back to the legacy `app.bsky.embed.images` shape - keeps old
           // clients rendering it when possible.
           nextMedia = imagesToMediaVariant(remainingImages)
         }
