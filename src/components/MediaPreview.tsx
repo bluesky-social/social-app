@@ -129,6 +129,7 @@ export function ImageItem({
         contentFit="cover"
         accessible={true}
         accessibilityIgnoresInvertColors
+        useAppleWebpCodec
       />
       <MediaInsetBorder style={[a.rounded_xs]} />
       {children}

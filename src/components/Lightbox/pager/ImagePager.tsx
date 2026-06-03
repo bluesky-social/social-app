@@ -32,6 +32,7 @@ import Animated, {
   withSpring,
   type WithSpringConfig,
 } from 'react-native-reanimated'
+import {Image} from 'expo-image'
 import * as ScreenOrientation from 'expo-screen-orientation'
 
 import {type Dimensions} from '#/lib/media/types'
@@ -136,6 +137,9 @@ export default function ImageViewRoot({
       'worklet'
       thumbRects.set({})
     })()
+    requestIdleCallback(() => {
+      void Image.clearMemoryCache()
+    })
   }, [thumbRects])
 
   useAnimatedReaction(

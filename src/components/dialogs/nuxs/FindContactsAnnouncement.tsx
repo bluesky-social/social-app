@@ -78,6 +78,7 @@ export function FindContactsAnnouncement() {
               alt={_(
                 msg`An illustration depicting user avatars flowing from a contact book into the Bluesky app`,
               )}
+              useAppleWebpCodec
             />
           </View>
         </View>
