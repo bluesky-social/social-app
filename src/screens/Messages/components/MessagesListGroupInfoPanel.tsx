@@ -43,13 +43,10 @@ export function MessagesListGroupInfoPanel({
     },
   })
 
-  // TODO Enable this once the feature is working end-to-end. -dsb
-  // const joinLink = groupConvo?.details.joinLink
-  const isJoinLinkEnabled = false
-  //   (isOwner && groupConvo) ||
-  //   (!isOwner && groupConvo && joinLink?.enabledStatus === 'enabled')
-
   const isOwner = convo.primaryMember?.did === currentAccount?.did
+
+  const isJoinLinkEnabled =
+    isOwner || convo.details.joinLink?.enabledStatus === 'enabled'
 
   const members = (convo.members ?? []).filter(
     profile => profile.did !== currentAccount?.did,

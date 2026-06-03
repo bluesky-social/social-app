@@ -178,6 +178,28 @@ export function isBskyStarterPackUrl(url: string): boolean {
   return false
 }
 
+export const CHAT_INVITE_CODE_REGEX = /^\/c\/([a-zA-Z0-9]{7,10})$/
+
+export function getChatInviteCodeFromUrl(url: string): string | undefined {
+  let pathname: string
+  if (isBskyAppUrl(url)) {
+    try {
+      pathname = new URL(url).pathname
+    } catch {
+      return undefined
+    }
+  } else if (url.startsWith('/')) {
+    pathname = url.split('?')[0].split('#')[0]
+  } else {
+    return undefined
+  }
+  return pathname.match(CHAT_INVITE_CODE_REGEX)?.[1]
+}
+
+export function isBskyChatInviteUrl(url: string): boolean {
+  return getChatInviteCodeFromUrl(url) !== undefined
+}
+
 export function isBskyDownloadUrl(url: string): boolean {
   if (isExternalUrl(url)) {
     return false

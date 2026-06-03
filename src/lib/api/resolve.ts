@@ -246,6 +246,10 @@ async function resolveExternal(
     title: result.title ?? '',
     description: result.description ?? '',
     thumb: result.image ? await imageToThumb(result.image) : undefined,
+    /*
+     * New fields from Standard Site integration. Other fields are derived from
+     * opengraph/oembed as before.
+     */
     associatedRefs: result.associatedRefs,
     view: result.view,
   }

@@ -247,8 +247,7 @@ function GroupSettings({
       case 'MEMBERS_AND_REQUESTS':
         return (
           <MembersAndRequests
-            memberCount={convo.details.memberCount}
-            memberLimit={convo.details.memberLimit}
+            convo={convo}
             requestCount={requestCount}
             hasMoreRequests={!!hasMoreRequests}
             isOwner={isOwner}

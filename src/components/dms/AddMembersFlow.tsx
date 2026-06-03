@@ -219,7 +219,7 @@ export function AddMembersFlow({
       }
     }
 
-    if (searchText === '') {
+    if (searchText === '' && _items.length > 0) {
       _items.unshift({
         type: 'label',
         key: 'suggested',
