@@ -20,6 +20,7 @@ import {Divider} from '#/components/Divider'
 import * as TextField from '#/components/forms/TextField'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
+import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -29,13 +30,15 @@ async function reactivateWithPassword({
   pdsUrl,
   identifier,
   password,
+  authFactorToken,
 }: {
   pdsUrl: string
   identifier: string
   password: string
+  authFactorToken?: string
 }) {
   const agent = new AtpAgent({service: pdsUrl})
-  await agent.login({identifier, password})
+  await agent.login({identifier, password, authFactorToken})
   try {
     try {
       await agent.com.atproto.server.activateAccount()
@@ -67,6 +70,8 @@ export function Deactivated() {
   const {logoutCurrentAccount, partialRefreshSession} = useSessionApi()
   const [pending, setPending] = useState(false)
   const [password, setPassword] = useState('')
+  const [authFactorToken, setAuthFactorToken] = useState('')
+  const [needs2fa, setNeeds2fa] = useState(false)
   const [error, setError] = useState<string | undefined>()
   const queryClient = useQueryClient()
 
@@ -97,6 +102,7 @@ export function Deactivated() {
 
   const handleActivate = useCallback(async () => {
     if (!password.trim()) return
+    if (needs2fa && !authFactorToken.trim()) return
     if (!currentAccount?.pdsUrl || !currentAccount.handle) {
       setError(
         _(msg`Account is missing PDS information. Please sign in again.`),
@@ -110,10 +116,13 @@ export function Deactivated() {
         pdsUrl: currentAccount.pdsUrl,
         identifier: currentAccount.handle,
         password,
+        authFactorToken: needs2fa ? authFactorToken.trim() : undefined,
       })
       await partialRefreshSession()
       await queryClient.resetQueries()
       setPassword('')
+      setAuthFactorToken('')
+      setNeeds2fa(false)
     } catch (e: unknown) {
       if (isNetworkError(e)) {
         setError(
@@ -125,11 +134,16 @@ export function Deactivated() {
         e instanceof XRPCError &&
         e.error === 'AuthFactorTokenRequired'
       ) {
-        setError(
-          _(
-            msg`Two-factor authentication is required to reactivate. Please disable 2FA temporarily, or contact support.`,
-          ),
-        )
+        // PDS just emailed a code; reveal the input and let the user retry.
+        // Not a real error, so skip the error log below.
+        setNeeds2fa(true)
+        setError(undefined)
+        return
+      } else if (
+        e instanceof XRPCError &&
+        e.message.includes('Token is invalid')
+      ) {
+        setError(_(msg`Invalid 2FA code. Please try again.`))
       } else if (
         e instanceof XRPCError &&
         (e.status === 401 || e.error === 'AuthenticationRequired')
@@ -149,7 +163,15 @@ export function Deactivated() {
     } finally {
       setPending(false)
     }
-  }, [_, currentAccount, password, queryClient, partialRefreshSession])
+  }, [
+    _,
+    currentAccount,
+    password,
+    authFactorToken,
+    needs2fa,
+    queryClient,
+    partialRefreshSession,
+  ])
 
   return (
     <View style={[a.util_screen_outer, a.flex_1]}>
@@ -206,15 +228,53 @@ export function Deactivated() {
                   />
                 </TextField.Root>
               </View>
+              {needs2fa && (
+                <View>
+                  <TextField.LabelText>
+                    <Trans>2FA confirmation</Trans>
+                  </TextField.LabelText>
+                  <TextField.Root>
+                    <TextField.Icon icon={Ticket} />
+                    <TextField.Input
+                      label={_(msg`Confirmation code`)}
+                      autoFocus
+                      value={authFactorToken}
+                      onChangeText={setAuthFactorToken}
+                      autoCapitalize="characters"
+                      autoCorrect={false}
+                      style={{
+                        textTransform:
+                          authFactorToken === '' ? 'none' : 'uppercase',
+                      }}
+                      editable={!pending}
+                      onSubmitEditing={handleActivate}
+                    />
+                  </TextField.Root>
+                  <Text
+                    style={[a.text_sm, a.pt_xs, t.atoms.text_contrast_medium]}>
+                    <Trans>
+                      Check your email for a sign-in code and enter it here.
+                    </Trans>
+                  </Text>
+                </View>
+              )}
               <Button
                 label={_(msg`Reactivate your account`)}
                 size="large"
                 variant="solid"
                 color="primary"
-                disabled={pending || !password.trim()}
+                disabled={
+                  pending ||
+                  !password.trim() ||
+                  (needs2fa && !authFactorToken.trim())
+                }
                 onPress={handleActivate}>
                 <ButtonText>
-                  <Trans>Reactivate my account</Trans>
+                  {needs2fa ? (
+                    <Trans>Confirm and reactivate</Trans>
+                  ) : (
+                    <Trans>Reactivate my account</Trans>
+                  )}
                 </ButtonText>
                 {pending && <ButtonIcon icon={Loader} position="right" />}
               </Button>

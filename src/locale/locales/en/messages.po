@@ -582,7 +582,7 @@ msgid "{userName}'s verifications"
 msgstr ""
 
 #. placeholder {0}: currentAccount?.handle
-#: src/screens/Deactivated.tsx:176
+#: src/screens/Deactivated.tsx:196
 msgid "@{0} is currently deactivated. If you recently moved to a new hosting provider, this is expected — reactivation is the last step to complete the migration."
 msgstr "@{0} is currently deactivated. If you recently moved to a new hosting provider, this is expected — reactivation is the last step to complete the migration."
 
@@ -684,6 +684,10 @@ msgstr ""
 #: src/components/dialogs/MutedWords.tsx:554
 msgid "24 hours"
 msgstr ""
+
+#: src/screens/Deactivated.tsx:232
+msgid "2FA confirmation"
+msgstr "2FA confirmation"
 
 #: src/components/dialogs/MutedWords.tsx:241
 #: src/components/dialogs/MutedWords.tsx:565
@@ -800,7 +804,7 @@ msgstr ""
 msgid "Account has been taken down"
 msgstr "Account has been taken down"
 
-#: src/screens/Deactivated.tsx:102
+#: src/screens/Deactivated.tsx:108
 msgid "Account is missing PDS information. Please sign in again."
 msgstr "Account is missing PDS information. Please sign in again."
 
@@ -948,7 +952,7 @@ msgid "Add a user to this list"
 msgstr ""
 
 #: src/components/dialogs/SwitchAccount.tsx:56
-#: src/screens/Deactivated.tsx:262
+#: src/screens/Deactivated.tsx:324
 msgid "Add account"
 msgstr ""
 
@@ -2075,7 +2079,7 @@ msgstr ""
 #: src/features/liveNow/components/GoLiveDialog.tsx:248
 #: src/features/liveNow/components/GoLiveDialog.tsx:254
 #: src/lib/media/picker.tsx:38
-#: src/screens/Deactivated.tsx:228
+#: src/screens/Deactivated.tsx:290
 #: src/screens/Messages/ConversationSettings/prompts.tsx:68
 #: src/screens/Messages/ConversationSettings/prompts.tsx:92
 #: src/screens/Profile/Header/EditProfileDialog.tsx:229
@@ -2115,7 +2119,7 @@ msgstr "Cancel account deletion"
 msgid "Cancel quote post"
 msgstr ""
 
-#: src/screens/Deactivated.tsx:222
+#: src/screens/Deactivated.tsx:284
 msgid "Cancel reactivation and sign out"
 msgstr ""
 
@@ -2304,6 +2308,10 @@ msgstr ""
 #: src/screens/SignupQueued.tsx:83
 msgid "Check my status"
 msgstr ""
+
+#: src/screens/Deactivated.tsx:257
+msgid "Check your email for a sign-in code and enter it here."
+msgstr "Check your email for a sign-in code and enter it here."
 
 #: src/view/com/modals/DeleteAccount.tsx:317
 msgid "Check your inbox for an email with the confirmation code to enter below:"
@@ -2618,15 +2626,20 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
+#: src/screens/Deactivated.tsx:276
+msgid "Confirm and reactivate"
+msgstr "Confirm and reactivate"
+
 #: src/view/com/modals/DeleteAccount.tsx:368
 msgid "Confirm delete account"
 msgstr "Confirm delete account"
 
-#: src/screens/Deactivated.tsx:192
+#: src/screens/Deactivated.tsx:212
 msgid "Confirm with your account password"
 msgstr "Confirm with your account password"
 
 #: src/components/dialogs/EmailDialog/components/TokenField.tsx:38
+#: src/screens/Deactivated.tsx:237
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:187
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:191
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:244
@@ -2937,7 +2950,7 @@ msgstr ""
 msgid "Couldn’t load GIFs"
 msgstr "Couldn’t load GIFs"
 
-#: src/screens/Deactivated.tsx:143
+#: src/screens/Deactivated.tsx:155
 msgid "Couldn't reactivate the account. Please try again."
 msgstr "Couldn't reactivate the account. Please try again."
 
@@ -5617,7 +5630,7 @@ msgstr ""
 msgid "Inbox zero!"
 msgstr ""
 
-#: src/screens/Deactivated.tsx:137
+#: src/screens/Deactivated.tsx:149
 msgid "Incorrect password. Please try again."
 msgstr "Incorrect password. Please try again."
 
@@ -5649,6 +5662,10 @@ msgstr ""
 #: src/screens/Moderation/index.tsx:239
 msgid "Interaction settings"
 msgstr ""
+
+#: src/screens/Deactivated.tsx:144
+msgid "Invalid 2FA code. Please try again."
+msgstr "Invalid 2FA code. Please try again."
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:71
 msgid "Invalid 2FA confirmation code."
@@ -7577,11 +7594,11 @@ msgstr "Opens your hosting provider's account management page"
 msgid "Options:"
 msgstr ""
 
-#: src/screens/Deactivated.tsx:270
+#: src/screens/Deactivated.tsx:332
 msgid "Or, continue with another account."
 msgstr ""
 
-#: src/screens/Deactivated.tsx:257
+#: src/screens/Deactivated.tsx:319
 msgid "Or, sign in to one of your other accounts."
 msgstr ""
 
@@ -7663,7 +7680,7 @@ msgstr ""
 msgid "Party GIFs"
 msgstr "Party GIFs"
 
-#: src/screens/Deactivated.tsx:197
+#: src/screens/Deactivated.tsx:217
 #: src/screens/Settings/AccountSettings.tsx:141
 #: src/screens/Settings/AccountSettings.tsx:145
 #: src/screens/Settings/AppPasswords.tsx:104
@@ -8410,15 +8427,15 @@ msgstr ""
 msgid "Reactions"
 msgstr "Reactions"
 
-#: src/screens/Deactivated.tsx:217
+#: src/screens/Deactivated.tsx:278
 msgid "Reactivate my account"
 msgstr "Reactivate my account"
 
-#: src/screens/Deactivated.tsx:210
+#: src/screens/Deactivated.tsx:264
 msgid "Reactivate your account"
 msgstr ""
 
-#: src/screens/Deactivated.tsx:183
+#: src/screens/Deactivated.tsx:203
 msgid "Reactivating will restore visibility of your profile and posts to other users."
 msgstr "Reactivating will restore visibility of your profile and posts to other users."
 
@@ -9978,8 +9995,8 @@ msgstr "Sign in failed. Please try again."
 msgid "Sign in is taking too long. Please try again."
 msgstr "Sign in is taking too long. Please try again."
 
-#: src/screens/Deactivated.tsx:273
-#: src/screens/Deactivated.tsx:279
+#: src/screens/Deactivated.tsx:335
+#: src/screens/Deactivated.tsx:341
 msgid "Sign in or create an account"
 msgstr ""
 
@@ -11225,7 +11242,7 @@ msgid "Toggles the sound"
 msgstr ""
 
 #: src/components/contacts/screens/VerifyNumber.tsx:123
-#: src/screens/Deactivated.tsx:140
+#: src/screens/Deactivated.tsx:152
 msgid "Too many attempts. Please wait a few minutes and try again."
 msgstr ""
 
@@ -11334,10 +11351,6 @@ msgstr ""
 msgid "Two-factor authentication (2FA)"
 msgstr ""
 
-#: src/screens/Deactivated.tsx:130
-msgid "Two-factor authentication is required to reactivate. Please disable 2FA temporarily, or contact support."
-msgstr "Two-factor authentication is required to reactivate. Please disable 2FA temporarily, or contact support."
-
 #: src/screens/Messages/components/MessageInput.tsx:174
 msgid "Type your message here"
 msgstr ""
@@ -11356,7 +11369,7 @@ msgstr ""
 msgid "Unable to contact your service. Please check your internet connection and try again."
 msgstr ""
 
-#: src/screens/Deactivated.tsx:121
+#: src/screens/Deactivated.tsx:130
 #: src/screens/Login/ForgotPasswordForm.tsx:69
 #: src/screens/Login/index.tsx:92
 #: src/screens/Login/LoginForm.tsx:72
@@ -12316,7 +12329,7 @@ msgstr ""
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
 msgstr ""
 
-#: src/screens/Deactivated.tsx:173
+#: src/screens/Deactivated.tsx:193
 msgid "Welcome back!"
 msgstr ""
 
