@@ -177,7 +177,8 @@ export async function post(
       writes: writes,
       validate: true,
     })
-  } catch (e: any) {
+  } catch (err) {
+    const e = err as Error
     logger.error(`Failed to create post`, {
       safeMessage: e.message,
     })
@@ -433,7 +434,7 @@ async function resolveMedia(
         external: {
           uri: resolvedLink.uri,
           title: resolvedLink.view.name,
-          description: '',
+          description: `${resolvedLink.view.memberCount}/${resolvedLink.view.memberLimit}`,
         },
       }
     }
@@ -480,6 +481,7 @@ async function computeCid(record: AppBskyFeedPost.Record): Promise<string> {
 }
 
 // Returns a transformed version of the object for use in DAG-CBOR.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function prepareForHashing(v: any): any {
   // IMPORTANT: BlobRef#ipld() returns the correct object we need for hashing,
   // the API client will convert this for you but we're hashing in the client,
@@ -502,9 +504,10 @@ function prepareForHashing(v: any): any {
 
   // Walk through plain objects
   if (isPlainObject(v)) {
-    const obj: any = {}
+    const obj: Record<string, unknown> = {}
     let pure = true
     for (const key in v) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       let value = v[key]
       // `value` is undefined
       if (value === undefined) {
@@ -523,6 +526,7 @@ function prepareForHashing(v: any): any {
   return v
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isPlainObject(v: any): boolean {
   if (typeof v !== 'object' || v === null) {
     return false

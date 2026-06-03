@@ -178,6 +178,7 @@ export function isBskyStarterPackUrl(url: string): boolean {
   return false
 }
 
+// Invite codes are 7 alphanumeric characters long, supporting up to 10 here to future-proof.
 export const CHAT_INVITE_CODE_REGEX = /^\/c\/([a-zA-Z0-9]{7,10})$/
 
 export function getChatInviteCodeFromUrl(url: string): string | undefined {

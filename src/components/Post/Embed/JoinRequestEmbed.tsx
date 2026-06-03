@@ -24,18 +24,18 @@ import {Loader} from '#/components/Loader'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 
-const JOIN_REQUEST_EMBED_HEIGHT = 164
+const JOIN_REQUEST_EMBED_HEIGHT = 152
 
 export function JoinRequestEmbed({
-  composer = false,
   loading = false,
   preview,
   style,
+  onOpen,
 }: {
-  composer?: boolean
   loading?: boolean
   preview?: ChatBskyGroupDefs.JoinLinkPreviewView
   style?: StyleProp<ViewStyle>
+  onOpen?: () => void
 }) {
   const t = useTheme()
 
@@ -82,22 +82,18 @@ export function JoinRequestEmbed({
   }
 
   return (
-    <JoinRequestEmbedInner
-      composer={composer}
-      preview={preview}
-      style={style}
-    />
+    <JoinRequestEmbedInner preview={preview} style={style} onOpen={onOpen} />
   )
 }
 
 function JoinRequestEmbedInner({
-  composer = false,
   preview,
   style,
+  onOpen,
 }: {
-  composer?: boolean
   preview: ChatBskyGroupDefs.JoinLinkPreviewView
   style?: StyleProp<ViewStyle>
+  onOpen?: () => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -142,14 +138,16 @@ function JoinRequestEmbedInner({
   return (
     <View
       style={[
+        a.justify_between,
         a.border,
         a.rounded_lg,
         a.p_lg,
-        a.gap_md,
+        a.gap_lg,
         t.atoms.border_contrast_high,
+        {height: JOIN_REQUEST_EMBED_HEIGHT},
         style,
       ]}>
-      <View style={[a.flex_row, a.gap_md, a.align_center, a.mb_lg]}>
+      <View style={[a.flex_row, a.gap_md, a.align_center]}>
         <AvatarBubbles size={56} self profiles={avatarProfiles} />
         <View style={[a.flex_1]}>
           <Text
@@ -167,6 +165,7 @@ function JoinRequestEmbedInner({
                 a.font_medium,
                 t.atoms.text_contrast_high,
               ]}
+              allowFontScaling
               numberOfLines={1}>
               <Trans>Group chat</Trans>
             </Text>
@@ -177,6 +176,7 @@ function JoinRequestEmbedInner({
                 a.font_medium,
                 t.atoms.text_contrast_high,
               ]}
+              allowFontScaling
               numberOfLines={1}>
               <Trans comment="The number of members in a group chat, in the format '{members}/{total} members'.">
                 {preview.memberCount}/{preview.memberLimit}{' '}
@@ -198,6 +198,7 @@ function JoinRequestEmbedInner({
                 a.leading_tight,
                 t.atoms.text,
               ]}
+              allowFontScaling
               numberOfLines={1}>
               <Trans comment="The group chat creator, in the format 'By {displayName}'.">
                 By{' '}
@@ -215,6 +216,7 @@ function JoinRequestEmbedInner({
                 a.leading_tight,
                 t.atoms.text_contrast_medium,
               ]}
+              allowFontScaling
               numberOfLines={1}>
               {ownerHandle}
             </Text>
@@ -224,14 +226,14 @@ function JoinRequestEmbedInner({
       {convoId ? (
         <Button
           testID="openButton"
-          onPress={() =>
+          onPress={() => {
+            onOpen?.()
             navigation.navigate('MessagesConversation', {conversation: convoId})
-          }
+          }}
           label={l`Open group chat`}
-          accessibilityHint={l`Open this group chat`}
+          accessibilityHint={l`Tap to open this group chat`}
           size="large"
           color="primary"
-          disabled={composer}
           style={[a.w_full]}>
           <ButtonText>
             <Trans>Open chat</Trans>
@@ -242,6 +244,7 @@ function JoinRequestEmbedInner({
         <Button
           testID="joinButton"
           onPress={() => {
+            onOpen?.()
             setGroupChatJoinState({code: preview.code})
             groupChatJoinDialogControl.open()
           }}
@@ -252,12 +255,12 @@ function JoinRequestEmbedInner({
           }
           accessibilityHint={
             preview.requireApproval
-              ? l`Request access to group chat`
-              : l`Join group chat`
+              ? l`Tap to request access to join this group chat`
+              : l`Tap to join this group chat immediately`
           }
           size="large"
           color={buttonColor}
-          disabled={composer || !canJoin}
+          disabled={!canJoin}
           style={[a.w_full]}>
           <ButtonIcon icon={ButtonIconImage} />
           <ButtonText>{buttonText}</ButtonText>

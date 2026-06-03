@@ -76,12 +76,10 @@ export const ExternalEmbedGif = ({
 }
 
 export const ExternalEmbedLink = ({
-  composer = false,
   uri,
   hasQuote,
   onRemove,
 }: {
-  composer?: boolean
   uri: string
   hasQuote: boolean
   onRemove: () => void
@@ -119,7 +117,7 @@ export const ExternalEmbedLink = ({
           />
         )
       } else if (data.type === 'chat-invite') {
-        return <JoinRequestEmbed composer={composer} preview={data.view} />
+        return <JoinRequestEmbed preview={data.view} />
       } else if (data.kind === 'feed') {
         return (
           <ModeratedFeedEmbed

@@ -26,7 +26,7 @@ export function ChatInviteEmbed({
 
   const preview = data?.joinLinkPreviews[0]
 
-  if (error || (data && !Array.isArray(data.joinLinkPreviews))) {
+  if (error) {
     return <ExternalEmbed link={link} onOpen={onOpen} style={style} />
   }
 
@@ -35,6 +35,7 @@ export function ChatInviteEmbed({
       loading={isPending}
       preview={preview}
       style={[a.mt_sm, style]}
+      onOpen={onOpen}
     />
   )
 }
