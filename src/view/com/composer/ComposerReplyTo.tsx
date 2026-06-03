@@ -152,6 +152,7 @@ function ComposerReplyToImages({
           source={{uri: images[0].thumb}}
           style={[a.flex_1]}
           accessibilityIgnoresInvertColors
+          useAppleWebpCodec
         />
       )) ||
         (images.length === 2 && (
@@ -160,11 +161,13 @@ function ComposerReplyToImages({
               source={{uri: images[0].thumb}}
               style={[a.flex_1]}
               accessibilityIgnoresInvertColors
+              useAppleWebpCodec
             />
             <Image
               source={{uri: images[1].thumb}}
               style={[a.flex_1]}
               accessibilityIgnoresInvertColors
+              useAppleWebpCodec
             />
           </View>
         )) ||
@@ -174,17 +177,20 @@ function ComposerReplyToImages({
               source={{uri: images[0].thumb}}
               style={[a.flex_1]}
               accessibilityIgnoresInvertColors
+              useAppleWebpCodec
             />
             <View style={[a.flex_1, a.gap_2xs]}>
               <Image
                 source={{uri: images[1].thumb}}
                 style={[a.flex_1]}
                 accessibilityIgnoresInvertColors
+                useAppleWebpCodec
               />
               <Image
                 source={{uri: images[2].thumb}}
                 style={[a.flex_1]}
                 accessibilityIgnoresInvertColors
+                useAppleWebpCodec
               />
             </View>
           </View>
@@ -196,11 +202,13 @@ function ComposerReplyToImages({
                 source={{uri: images[0].thumb}}
                 style={[a.flex_1]}
                 accessibilityIgnoresInvertColors
+                useAppleWebpCodec
               />
               <Image
                 source={{uri: images[1].thumb}}
                 style={[a.flex_1]}
                 accessibilityIgnoresInvertColors
+                useAppleWebpCodec
               />
             </View>
             <View style={[a.flex_1, a.flex_row, a.gap_2xs]}>
@@ -208,11 +216,13 @@ function ComposerReplyToImages({
                 source={{uri: images[2].thumb}}
                 style={[a.flex_1]}
                 accessibilityIgnoresInvertColors
+                useAppleWebpCodec
               />
               <Image
                 source={{uri: images[3].thumb}}
                 style={[a.flex_1]}
                 accessibilityIgnoresInvertColors
+                useAppleWebpCodec
               />
             </View>
           </View>
