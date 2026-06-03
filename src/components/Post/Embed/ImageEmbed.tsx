@@ -87,8 +87,7 @@ export function ImageEmbed({
               crop={
                 rest.viewContext === PostEmbedViewContext.ThreadHighlighted
                   ? 'none'
-                  : rest.viewContext ===
-                      PostEmbedViewContext.FeedEmbedRecordWithMedia
+                  : rest.isWithinQuote
                     ? 'square'
                     : 'constrained'
               }
@@ -103,10 +102,7 @@ export function ImageEmbed({
                 onPress(0, [containerRef], [dims])
               }
               onPressIn={() => onPressIn(0)}
-              hideBadge={
-                rest.viewContext ===
-                PostEmbedViewContext.FeedEmbedRecordWithMedia
-              }
+              hideBadge={rest.isWithinQuote}
             />
           </ImageContextMenu>
         </View>
@@ -121,6 +117,7 @@ export function ImageEmbed({
             onPress={onPress}
             onPressIn={onPressIn}
             viewContext={rest.viewContext}
+            isWithinQuote={rest.isWithinQuote}
           />
         </View>
       )
