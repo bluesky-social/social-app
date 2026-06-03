@@ -1,10 +1,4 @@
-import {AppBskyDraftCreateDraft, type AppBskyDraftDefs} from '@atproto/api'
-
-// Shim: AppBskyDraftDefs.DraftPost gains `embedGallery` in atproto PR #4827.
-// Delete once @atproto/api publishes the new lexicon.
-type DraftPostWithGallery = AppBskyDraftDefs.DraftPost & {
-  embedGallery?: AppBskyDraftDefs.DraftEmbedImage[]
-}
+import {AppBskyDraftCreateDraft, AppBskyDraftDefs} from '@atproto/api'
 import {
   useInfiniteQuery,
   useMutation,
@@ -81,15 +75,15 @@ export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
       }
     }
     // Load gallery
-    const embedGallery = (post as DraftPostWithGallery).embedGallery
-    if (embedGallery) {
-      for (const img of embedGallery) {
+    if (post.embedGallery) {
+      for (const item of post.embedGallery.items) {
+        if (!AppBskyDraftDefs.isDraftEmbedImage(item)) continue
         try {
-          const url = await storage.loadMediaFromLocal(img.localRef.path)
-          loadedMedia.set(img.localRef.path, url)
+          const url = await storage.loadMediaFromLocal(item.localRef.path)
+          loadedMedia.set(item.localRef.path, url)
         } catch (e) {
           logger.error('Failed to load draft gallery image', {
-            path: img.localRef.path,
+            path: item.localRef.path,
             safeMessage: e instanceof Error ? e.message : String(e),
           })
         }
@@ -247,10 +241,10 @@ export function useDeleteDraftMutation() {
             await storage.deleteMediaFromLocal(img.localRef.path)
           }
         }
-        const embedGallery = (post as DraftPostWithGallery).embedGallery
-        if (embedGallery) {
-          for (const img of embedGallery) {
-            await storage.deleteMediaFromLocal(img.localRef.path)
+        if (post.embedGallery) {
+          for (const item of post.embedGallery.items) {
+            if (!AppBskyDraftDefs.isDraftEmbedImage(item)) continue
+            await storage.deleteMediaFromLocal(item.localRef.path)
           }
         }
         if (post.embedVideos) {

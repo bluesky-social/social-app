@@ -1,4 +1,5 @@
 import {
+  AppBskyEmbedGallery,
   AppBskyEmbedImages,
   AppBskyEmbedRecordWithMedia,
   type AppBskyFeedDefs,
@@ -7,7 +8,6 @@ import {
   type ModerationUI,
 } from '@atproto/api'
 
-import {AppBskyEmbedGallery} from '#/lib/api/gallery-embed-shim'
 import {unique} from '#/lib/moderation'
 import {type AppModerationCause} from '#/components/Pills'
 import {Features, features} from '#/analytics/features'

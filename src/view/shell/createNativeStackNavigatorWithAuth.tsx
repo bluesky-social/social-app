@@ -171,7 +171,7 @@ function NativeStackNavigator({
     }
 
     // Evicted screens get a lightweight placeholder instead of their full tree
-    finalDescriptors = {} as typeof descriptors
+    finalDescriptors = {}
     for (const key in descriptors) {
       if (mountSet.has(key)) {
         finalDescriptors[key] = descriptors[key]

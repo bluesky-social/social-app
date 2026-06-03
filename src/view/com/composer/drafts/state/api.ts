@@ -1,15 +1,8 @@
 /**
  * Type converters for Draft API - convert between ComposerState and server Draft types.
  */
-import {type AppBskyDraftDefs, AtUri, RichText} from '@atproto/api'
+import {AppBskyDraftDefs, AtUri, RichText} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
-
-// Shim: AppBskyDraftDefs.DraftPost gains an `embedGallery` field in atproto
-// PR #4827. Until @atproto/api ships those types, we widen the shape locally.
-// Delete this once the lexicon publishes.
-type DraftPostWithGallery = AppBskyDraftDefs.DraftPost & {
-  embedGallery?: AppBskyDraftDefs.DraftEmbedImage[]
-}
 
 import {resolveLink} from '#/lib/api/resolve'
 import {getDeviceName} from '#/lib/deviceName'
@@ -123,10 +116,15 @@ async function postDraftToServerPost(
         localRefPaths,
       )
     } else if (post.embed.media.type === 'gallery') {
-      ;(draftPost as DraftPostWithGallery).embedGallery = serializeImages(
-        post.embed.media.images,
-        localRefPaths,
-      )
+      draftPost.embedGallery = {
+        $type: 'app.bsky.draft.defs#draftEmbedGallery',
+        items: serializeImages(post.embed.media.images, localRefPaths).map(
+          img => ({
+            $type: 'app.bsky.draft.defs#draftEmbedImage' as const,
+            ...img,
+          }),
+        ),
+      }
     } else if (post.embed.media.type === 'video') {
       const video = await serializeVideo(post.embed.media.video, localRefPaths)
       if (video) {
@@ -326,11 +324,11 @@ async function restoreDraftImages(
         height,
         mime: 'image/jpeg',
       },
-    } as ComposerImage
+    } satisfies ComposerImage
   })
 
   return (await Promise.all(imagePromises)).filter(
-    (img): img is ComposerImage => img !== null,
+    (img): img is NonNullable<typeof img> => img !== null,
   )
 }
 
@@ -380,18 +378,18 @@ export function draftViewToSummary({
     }
 
     // Process gallery
-    const summaryEmbedGallery = (post as DraftPostWithGallery).embedGallery
-    if (summaryEmbedGallery) {
-      for (const img of summaryEmbedGallery) {
+    if (post.embedGallery) {
+      for (const item of post.embedGallery.items) {
+        if (!AppBskyDraftDefs.isDraftEmbedImage(item)) continue
         meta.mediaCount++
         meta.hasMedia = true
-        const exists = storage.mediaExists(img.localRef.path)
+        const exists = storage.mediaExists(item.localRef.path)
         if (!exists) {
           meta.hasMissingMedia = true
         }
         images.push({
-          localPath: img.localRef.path,
-          altText: img.alt || '',
+          localPath: item.localRef.path,
+          altText: item.alt || '',
           exists,
         })
       }
@@ -523,9 +521,11 @@ export async function draftToComposerPosts(
       }
 
       // Restore gallery
-      const embedGallery = (post as DraftPostWithGallery).embedGallery
-      if (embedGallery && embedGallery.length > 0) {
-        const images = await restoreDraftImages(embedGallery, loadedMedia)
+      if (post.embedGallery && post.embedGallery.items.length > 0) {
+        const galleryImages = post.embedGallery.items.filter(
+          AppBskyDraftDefs.isDraftEmbedImage,
+        )
+        const images = await restoreDraftImages(galleryImages, loadedMedia)
         if (images.length > 0) {
           embed.media = {type: 'gallery', images}
         }
@@ -561,7 +561,7 @@ export async function draftToComposerPosts(
                   tinygif: mediaObject,
                   preview: mediaObject,
                 },
-              } as Gif,
+              },
               alt: gifData.alt,
             }
             break
@@ -680,10 +680,10 @@ export function extractLocalRefs(draft: AppBskyDraftDefs.Draft): Set<string> {
         refs.add(img.localRef.path)
       }
     }
-    const embedGallery = (post as DraftPostWithGallery).embedGallery
-    if (embedGallery) {
-      for (const img of embedGallery) {
-        refs.add(img.localRef.path)
+    if (post.embedGallery) {
+      for (const item of post.embedGallery.items) {
+        if (!AppBskyDraftDefs.isDraftEmbedImage(item)) continue
+        refs.add(item.localRef.path)
       }
     }
     if (post.embedVideos) {

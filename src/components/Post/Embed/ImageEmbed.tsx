@@ -2,7 +2,7 @@ import {useRef} from 'react'
 import {InteractionManager, View} from 'react-native'
 import {type AnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
-import {type AppBskyEmbedImages} from '@atproto/api'
+import {AppBskyEmbedGallery, type AppBskyEmbedImages} from '@atproto/api'
 
 import {atoms as a, tokens} from '#/alf'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
@@ -28,7 +28,7 @@ export function ImageEmbed({
   const {openLightbox} = useLightboxControls()
   const images: AppBskyEmbedImages.ViewImage[] =
     embed.type === 'gallery'
-      ? embed.view.items.map(item => ({
+      ? embed.view.items.filter(AppBskyEmbedGallery.isViewImage).map(item => ({
           thumb: item.thumbnail,
           fullsize: item.fullsize,
           alt: item.alt,
@@ -101,8 +101,7 @@ export function ImageEmbed({
               crop={
                 rest.viewContext === PostEmbedViewContext.ThreadHighlighted
                   ? 'none'
-                  : rest.viewContext ===
-                      PostEmbedViewContext.FeedEmbedRecordWithMedia
+                  : rest.isWithinQuote
                     ? 'square'
                     : 'constrained'
               }
@@ -117,10 +116,7 @@ export function ImageEmbed({
                 onPress(0, [containerRef], [dims])
               }
               onPressIn={() => onPressIn(0)}
-              hideBadge={
-                rest.viewContext ===
-                PostEmbedViewContext.FeedEmbedRecordWithMedia
-              }
+              hideBadge={rest.isWithinQuote}
             />
           </ImageContextMenu>
         </View>
@@ -135,6 +131,7 @@ export function ImageEmbed({
             onPress={onPress}
             onPressIn={onPressIn}
             viewContext={rest.viewContext}
+            isWithinQuote={rest.isWithinQuote}
           />
         </View>
       )

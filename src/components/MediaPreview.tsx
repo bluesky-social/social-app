@@ -1,6 +1,10 @@
 import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {type AppBskyEmbedImages, type AppBskyFeedDefs} from '@atproto/api'
+import {
+  AppBskyEmbedGallery,
+  type AppBskyEmbedImages,
+  type AppBskyFeedDefs,
+} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {shareImageModal} from '#/lib/media/manip'
@@ -52,23 +56,26 @@ export function Embed({
     // a 10-image gallery doesn't blow out the row width.
     return (
       <Outer style={style}>
-        {e.view.items.slice(0, 4).map(item => {
-          const image: AppBskyEmbedImages.ViewImage = {
-            thumb: item.thumbnail,
-            fullsize: item.fullsize,
-            alt: item.alt,
-            aspectRatio: item.aspectRatio,
-          }
-          return peekable ? (
-            <PeekableImageItem key={item.thumbnail} image={image} />
-          ) : (
-            <ImageItem
-              key={item.thumbnail}
-              thumbnail={item.thumbnail}
-              alt={item.alt}
-            />
-          )
-        })}
+        {e.view.items
+          .filter(AppBskyEmbedGallery.isViewImage)
+          .slice(0, 4)
+          .map(item => {
+            const image: AppBskyEmbedImages.ViewImage = {
+              thumb: item.thumbnail,
+              fullsize: item.fullsize,
+              alt: item.alt,
+              aspectRatio: item.aspectRatio,
+            }
+            return peekable ? (
+              <PeekableImageItem key={item.thumbnail} image={image} />
+            ) : (
+              <ImageItem
+                key={item.thumbnail}
+                thumbnail={item.thumbnail}
+                alt={item.alt}
+              />
+            )
+          })}
       </Outer>
     )
   } else if (e.type === 'link') {

@@ -1,6 +1,7 @@
 import {
   type $Typed,
   AppBskyEmbedExternal,
+  AppBskyEmbedGallery,
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
@@ -9,8 +10,6 @@ import {
   AppBskyGraphDefs,
   AppBskyLabelerDefs,
 } from '@atproto/api'
-
-import {AppBskyEmbedGallery} from '#/lib/api/gallery-embed-shim'
 
 export type Embed =
   | {

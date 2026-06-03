@@ -1,6 +1,7 @@
 import {
   type $Typed,
   type AppBskyEmbedExternal,
+  type AppBskyEmbedGallery,
   type AppBskyEmbedImages,
   type AppBskyEmbedRecord,
   type AppBskyEmbedRecordWithMedia,
@@ -21,7 +22,6 @@ import {sha256} from 'js-sha256'
 import {CID} from 'multiformats/cid'
 import * as Hasher from 'multiformats/hashes/hasher'
 
-import {type AppBskyEmbedGallery} from '#/lib/api/gallery-embed-shim'
 import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
@@ -347,14 +347,14 @@ async function resolveMedia(
       count: imagesDraft.length,
     })
     onStateChange?.(t`Uploading images...`)
-    const items: AppBskyEmbedGallery.Image[] = await Promise.all(
+    const items: $Typed<AppBskyEmbedGallery.Image>[] = await Promise.all(
       imagesDraft.map(async (image, i) => {
         logger.debug(`Compressing gallery image #${i}`)
         const {path, width, height, mime} = await compressImage(image)
         logger.debug(`Uploading gallery image #${i}`)
         const res = await uploadBlob(agent, path, mime)
         return {
-          $type: 'app.bsky.embed.gallery#image',
+          $type: 'app.bsky.embed.gallery#image' as const,
           image: res.data.blob,
           alt: image.alt,
           aspectRatio: {width, height},

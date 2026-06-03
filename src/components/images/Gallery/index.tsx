@@ -54,6 +54,7 @@ interface GalleryProps {
   ) => void
   onPressIn?: (index: number) => void
   viewContext?: PostEmbedViewContext
+  isWithinQuote?: boolean
 }
 
 const Context = createContext<{
@@ -97,6 +98,7 @@ export function Gallery({
   onPress,
   onPressIn,
   viewContext,
+  isWithinQuote,
 }: GalleryProps) {
   const {t: l} = useLingui()
   const ax = useAnalytics()
@@ -104,13 +106,20 @@ export function Gallery({
   const largeAltBadge = useLargeAltBadgeEnabled()
   const bps = useBreakpoints()
   const window = useWindowDimensions()
-  const isWithinQuote =
-    viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
   const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage
   const hideBadges = isWithinQuote
   const contentHeight = useMemo(() => {
     if (isWithinChat) {
       return 120
+    }
+    if (isWithinQuote) {
+      if (bps.gtMobile) {
+        return 220
+      } else if (bps.gtPhone) {
+        return 190
+      } else {
+        return 150
+      }
     }
     if (bps.gtMobile) {
       return 300
@@ -119,7 +128,7 @@ export function Gallery({
     } else {
       return 200
     }
-  }, [bps, isWithinChat])
+  }, [bps, isWithinChat, isWithinQuote])
 
   /*
    * Container overflow styles
@@ -220,7 +229,7 @@ export function Gallery({
             crop={
               viewContext === PostEmbedViewContext.ThreadHighlighted
                 ? 'none'
-                : viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
+                : isWithinQuote
                   ? 'square'
                   : 'constrained'
             }
@@ -229,9 +238,7 @@ export function Gallery({
               onPress?.(index, [containerRef], [dims])
             }
             onPressIn={() => onPressIn?.(index)}
-            hideBadge={
-              viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
-            }
+            hideBadge={isWithinQuote}
           />
         ))}
       </View>
