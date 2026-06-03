@@ -48,9 +48,11 @@ export function Embed({
       </Outer>
     )
   } else if (e.type === 'gallery') {
+    // Notification/DM preview is a narrow inline strip; cap at 4 tiles so
+    // a 10-image gallery doesn't blow out the row width.
     return (
       <Outer style={style}>
-        {e.view.items.map(item => {
+        {e.view.items.slice(0, 4).map(item => {
           const image: AppBskyEmbedImages.ViewImage = {
             thumb: item.thumbnail,
             fullsize: item.fullsize,

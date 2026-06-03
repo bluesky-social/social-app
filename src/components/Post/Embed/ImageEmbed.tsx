@@ -16,7 +16,7 @@ import {useAnalytics} from '#/analytics'
 import {type EmbedType} from '#/types/bsky/post'
 import {type CommonProps} from './types'
 
-const GRID_TO_CAROUSEL_THRESHOLD = 4
+const MAX_GRID_IMAGES = 4
 
 export function ImageEmbed({
   embed,
@@ -35,9 +35,9 @@ export function ImageEmbed({
           aspectRatio: item.aspectRatio,
         }))
       : embed.view.images
-  const carouselEnabled =
+  const useExpandedLayout =
     embed.type === 'gallery'
-      ? images.length > GRID_TO_CAROUSEL_THRESHOLD
+      ? images.length > MAX_GRID_IMAGES
       : ax.features.enabled(ax.features.PostGalleryEmbedEnable)
 
   // Captured from AutoSizedImage so the peek-commit handler can reuse the same
@@ -127,7 +127,7 @@ export function ImageEmbed({
       )
     }
 
-    if (carouselEnabled) {
+    if (useExpandedLayout) {
       return (
         <View style={[a.mt_sm, rest.style]}>
           <Gallery
