@@ -2672,7 +2672,7 @@ msgid "Close image"
 msgstr "画像を閉じる"
 
 #: src/components/Lightbox/Lightbox.web.tsx:73
-#: src/components/Lightbox/Lightbox.web.tsx:326
+#: src/components/Lightbox/Lightbox.web.tsx:330
 msgid "Close image viewer"
 msgstr "画像ビューワーを閉じる"
 
@@ -3759,8 +3759,8 @@ msgctxt "button"
 msgid "Download chat data"
 msgstr "チャットのデータをダウンロード"
 
-#: src/components/Lightbox/Lightbox.web.tsx:304
-#: src/components/Lightbox/Lightbox.web.tsx:316
+#: src/components/Lightbox/Lightbox.web.tsx:308
+#: src/components/Lightbox/Lightbox.web.tsx:320
 msgid "Download image"
 msgstr "画像をダウンロード"
 
@@ -4217,8 +4217,8 @@ msgstr "フォローしているユーザーは除外"
 msgid "Exit fullscreen"
 msgstr "全画面表示を終了"
 
-#: src/components/Lightbox/chrome/Footer.tsx:51
-#: src/components/Lightbox/Lightbox.web.tsx:237
+#: src/components/Lightbox/chrome/Footer.tsx:59
+#: src/components/Lightbox/Lightbox.web.tsx:241
 msgid "Expand alt text"
 msgstr "ALTテキストを展開"
 
@@ -4354,7 +4354,7 @@ msgstr "スターターパックへの追加に失敗しました"
 msgid "Failed to change handle. Please try again."
 msgstr "ハンドルの変更に失敗しました。もう一度試してください。"
 
-#: src/components/Lightbox/Lightbox.web.tsx:294
+#: src/components/Lightbox/Lightbox.web.tsx:298
 msgid "Failed to copy link"
 msgstr "リンクのコピーに失敗しました"
 
@@ -4550,7 +4550,7 @@ msgstr "位置情報の調査に失敗しました。もう一度試してくだ
 msgid "Failed to save draft"
 msgstr "下書きの保存に失敗しました"
 
-#: src/components/Lightbox/Lightbox.web.tsx:311
+#: src/components/Lightbox/Lightbox.web.tsx:315
 msgid "Failed to save image"
 msgstr "画像の保存に失敗しました"
 
@@ -5721,7 +5721,7 @@ msgstr "理解した"
 msgid "I'm on Bluesky as {0} - come find me! https://bsky.app/download"
 msgstr "私は {0} としてBlueskyにいます。私を見つけて！ https://bsky.app/download"
 
-#: src/components/Lightbox/Lightbox.web.tsx:238
+#: src/components/Lightbox/Lightbox.web.tsx:242
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "ALTテキストが長い場合、ALTテキストの展開状態を切り替える"
 
@@ -5797,7 +5797,7 @@ msgstr "画像 {0}"
 
 #. placeholder {0}: index + 1
 #. placeholder {1}: imgs.length
-#: src/components/Lightbox/Lightbox.web.tsx:253
+#: src/components/Lightbox/Lightbox.web.tsx:257
 msgid "Image {0} of {1}"
 msgstr "画像 {0} / {1}"
 
@@ -5832,12 +5832,12 @@ msgid "Image is unavailable."
 msgstr "画像は利用できません。"
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:73
-#: src/components/Lightbox/Lightbox.web.tsx:257
-#: src/components/Lightbox/Lightbox.web.tsx:265
+#: src/components/Lightbox/Lightbox.web.tsx:261
+#: src/components/Lightbox/Lightbox.web.tsx:269
 msgid "Image options"
 msgstr "画像オプション"
 
-#: src/components/Lightbox/Lightbox.web.tsx:308
+#: src/components/Lightbox/Lightbox.web.tsx:312
 #: src/lib/media/save-image.ios.ts:25
 #: src/lib/media/save-image.ts:29
 msgid "Image saved"
@@ -6409,7 +6409,7 @@ msgstr "この投稿をいいねする"
 msgid "Linear"
 msgstr "リニア"
 
-#: src/components/Lightbox/Lightbox.web.tsx:292
+#: src/components/Lightbox/Lightbox.web.tsx:296
 msgid "Link copied to clipboard"
 msgstr "リンクをクリップボードにコピーしました"
 
@@ -10098,8 +10098,8 @@ msgid "Share author DID"
 msgstr "著者DIDを共有"
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:94
-#: src/components/Lightbox/Lightbox.web.tsx:273
-#: src/components/Lightbox/Lightbox.web.tsx:299
+#: src/components/Lightbox/Lightbox.web.tsx:277
+#: src/components/Lightbox/Lightbox.web.tsx:303
 msgid "Share image"
 msgstr "画像を共有"
 

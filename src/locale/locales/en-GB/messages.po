@@ -2672,7 +2672,7 @@ msgid "Close image"
 msgstr "Close image"
 
 #: src/components/Lightbox/Lightbox.web.tsx:73
-#: src/components/Lightbox/Lightbox.web.tsx:326
+#: src/components/Lightbox/Lightbox.web.tsx:330
 msgid "Close image viewer"
 msgstr "Close image viewer"
 
@@ -3759,8 +3759,8 @@ msgctxt "button"
 msgid "Download chat data"
 msgstr "Download chat data"
 
-#: src/components/Lightbox/Lightbox.web.tsx:304
-#: src/components/Lightbox/Lightbox.web.tsx:316
+#: src/components/Lightbox/Lightbox.web.tsx:308
+#: src/components/Lightbox/Lightbox.web.tsx:320
 msgid "Download image"
 msgstr "Download image"
 
@@ -4217,8 +4217,8 @@ msgstr "Excludes users you follow"
 msgid "Exit fullscreen"
 msgstr "Exit fullscreen"
 
-#: src/components/Lightbox/chrome/Footer.tsx:51
-#: src/components/Lightbox/Lightbox.web.tsx:237
+#: src/components/Lightbox/chrome/Footer.tsx:59
+#: src/components/Lightbox/Lightbox.web.tsx:241
 msgid "Expand alt text"
 msgstr "Expand alt text"
 
@@ -4354,7 +4354,7 @@ msgstr "Failed to add to starter pack"
 msgid "Failed to change handle. Please try again."
 msgstr "Failed to change handle. Please try again."
 
-#: src/components/Lightbox/Lightbox.web.tsx:294
+#: src/components/Lightbox/Lightbox.web.tsx:298
 msgid "Failed to copy link"
 msgstr "Failed to copy link"
 
@@ -4550,7 +4550,7 @@ msgstr "Failed to resolve location. Please try again."
 msgid "Failed to save draft"
 msgstr "Failed to save draft"
 
-#: src/components/Lightbox/Lightbox.web.tsx:311
+#: src/components/Lightbox/Lightbox.web.tsx:315
 msgid "Failed to save image"
 msgstr "Failed to save image"
 
@@ -5721,7 +5721,7 @@ msgstr "I understand"
 msgid "I'm on Bluesky as {0} - come find me! https://bsky.app/download"
 msgstr "I'm on Bluesky as {0} - come find me! https://bsky.app/download"
 
-#: src/components/Lightbox/Lightbox.web.tsx:238
+#: src/components/Lightbox/Lightbox.web.tsx:242
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "If alt text is long, toggles alt text expanded state"
 
@@ -5797,7 +5797,7 @@ msgstr "Image {0}"
 
 #. placeholder {0}: index + 1
 #. placeholder {1}: imgs.length
-#: src/components/Lightbox/Lightbox.web.tsx:253
+#: src/components/Lightbox/Lightbox.web.tsx:257
 msgid "Image {0} of {1}"
 msgstr "Image {0} of {1}"
 
@@ -5832,12 +5832,12 @@ msgid "Image is unavailable."
 msgstr "Image is unavailable."
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:73
-#: src/components/Lightbox/Lightbox.web.tsx:257
-#: src/components/Lightbox/Lightbox.web.tsx:265
+#: src/components/Lightbox/Lightbox.web.tsx:261
+#: src/components/Lightbox/Lightbox.web.tsx:269
 msgid "Image options"
 msgstr "Image options"
 
-#: src/components/Lightbox/Lightbox.web.tsx:308
+#: src/components/Lightbox/Lightbox.web.tsx:312
 #: src/lib/media/save-image.ios.ts:25
 #: src/lib/media/save-image.ts:29
 msgid "Image saved"
@@ -6409,7 +6409,7 @@ msgstr "Likes on this post"
 msgid "Linear"
 msgstr "Linear"
 
-#: src/components/Lightbox/Lightbox.web.tsx:292
+#: src/components/Lightbox/Lightbox.web.tsx:296
 msgid "Link copied to clipboard"
 msgstr "Link copied to clipboard"
 
@@ -10098,8 +10098,8 @@ msgid "Share author DID"
 msgstr "Share author DID"
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:94
-#: src/components/Lightbox/Lightbox.web.tsx:273
-#: src/components/Lightbox/Lightbox.web.tsx:299
+#: src/components/Lightbox/Lightbox.web.tsx:277
+#: src/components/Lightbox/Lightbox.web.tsx:303
 msgid "Share image"
 msgstr "Share image"
 

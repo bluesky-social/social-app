@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-02 20:08\n"
+"PO-Revision-Date: 2026-06-03 14:59\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -119,7 +119,7 @@ msgstr "{0, plural, one {# 則未讀} other {# 則未讀}}"
 #. placeholder {0}: view.readingTime
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:232
 msgid "{0, plural, one {#m} other {#m}}"
-msgstr ""
+msgstr "{0, plural, other {約 # 分鐘}}"
 
 #. How many months have passed, displayed in a narrow form
 #. placeholder {0}: diff.value
@@ -208,7 +208,7 @@ msgstr "{0} 個跟隨中"
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
 #: src/components/dms/MessageItem.tsx:640
 msgid "{0} is blocking you"
-msgstr ""
+msgstr "{0} 已封鎖您"
 
 #. placeholder {0}: sanitizeHandle(profile.handle)
 #: src/features/liveNow/components/LiveStatusDialog.tsx:84
@@ -228,7 +228,7 @@ msgstr "您的裝置不支援翻譯{0}。"
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:83
 msgid "{0} joined"
-msgstr ""
+msgstr "{0} 加入了"
 
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:84
@@ -243,7 +243,7 @@ msgstr "本週加入了 {0} 人"
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:96
 msgid "{0} left"
-msgstr ""
+msgstr "{0} 離開了"
 
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:97
@@ -271,7 +271,7 @@ msgstr "{0} 做出了 {1} 反應"
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:57
 msgid "{0} was added"
-msgstr ""
+msgstr "{0} 已受邀加入"
 
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:58
@@ -281,7 +281,7 @@ msgstr "{0} 已受邀加入群組"
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:70
 msgid "{0} was removed"
-msgstr ""
+msgstr "{0} 被移出了"
 
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:71
@@ -583,7 +583,7 @@ msgstr "{MAX_HIDDEN_REPLIES, plural, other {您最多可以隱藏 # 則回覆。
 #. The number of group chat members out of the total number of permitted users.
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:34
 msgid "{memberCount}/{memberLimit}"
-msgstr ""
+msgstr "{memberCount}/{memberLimit}"
 
 #: src/features/liveNow/utils.ts:10
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
@@ -738,7 +738,7 @@ msgstr "<0>{0}</0> 的成員"
 #. Text identifying the person who added you to a group chat
 #: src/screens/Messages/components/ChatStatusInfo.tsx:141
 msgid "<0>{displayName}</0><1/><2> added you</2>"
-msgstr ""
+msgstr "<0>{displayName}</0><1/><2> 已將您加入</2>"
 
 #: src/screens/Hashtag.tsx:226
 #: src/screens/Search/SearchResults.tsx:315
@@ -747,7 +747,7 @@ msgstr "<0>登入</0><1>或</1><2>建立帳號</2><3></3><4>即可在 Bluesky �
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:276
 msgid "<0>Tap here to update your location with GPS.</0>"
-msgstr ""
+msgstr "<0>點一下這裡以使用 GPS 確認您的位置。</0>"
 
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #: src/screens/StarterPack/Wizard/index.tsx:494
@@ -829,7 +829,7 @@ msgstr "一張貼文編輯器的螢幕截圖。在發布按鈕旁有一個標示
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:102
 msgid "A selected recipient is not followed by the sender."
-msgstr ""
+msgstr "選擇的部分對象沒有被傳送者跟隨。"
 
 #: src/Navigation.tsx:547
 #: src/screens/Settings/AboutSettings.tsx:78
@@ -1471,11 +1471,11 @@ msgstr "問題未包含在上述選項"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:85
 msgid "An issue occurred creating the group chat, please try again."
-msgstr ""
+msgstr "建立群組對話時發生問題，請再試一次。"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:47
 msgid "An issue occurred starting the chat, please try again."
-msgstr ""
+msgstr "開始對話時發生問題，請再試一次。"
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:50
 msgid "An issue occurred while trying to open the chat"
@@ -1914,13 +1914,13 @@ msgstr "封鎖帳號"
 
 #: src/components/dms/AfterReportDialog.tsx:143
 msgid "Block and delete"
-msgstr ""
+msgstr "封鎖並刪除"
 
 #. After-report action for a conversation
 #: src/components/dms/AfterReportConversationDialog.tsx:167
 msgctxt "button"
 msgid "Block and leave"
-msgstr ""
+msgstr "封鎖並退出"
 
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:119
 msgid "Block list"
@@ -1954,7 +1954,7 @@ msgstr "封鎖此帳號或刪除整個對話（複選）"
 
 #: src/components/dms/AfterReportConversationDialog.tsx:217
 msgid "Block user and/or leave this conversation"
-msgstr ""
+msgstr "封鎖此帳號或退出對話（複選）"
 
 #: src/components/Post/Embed/index.tsx:197
 msgid "Blocked"
@@ -2155,7 +2155,7 @@ msgstr "來自 <0>{0}</0>"
 #. placeholder {0}: authorProfile.handle
 #: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:80
 msgid "by <0>@{0}</0>"
-msgstr ""
+msgstr "來自 <0>@{0}</0>"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:182
 msgid "By clicking \"Continue\" you acknowledge that you understand and agree to these updates."
@@ -2380,7 +2380,7 @@ msgstr "成功靜音對話"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:66
 msgid "Chat recipient is not followed by the sender."
-msgstr ""
+msgstr "訊息接收者沒有被傳送者跟隨。"
 
 #: src/Navigation.tsx:588
 msgid "Chat request inbox"
@@ -2672,7 +2672,7 @@ msgid "Close image"
 msgstr "關閉圖片"
 
 #: src/components/Lightbox/Lightbox.web.tsx:73
-#: src/components/Lightbox/Lightbox.web.tsx:326
+#: src/components/Lightbox/Lightbox.web.tsx:330
 msgid "Close image viewer"
 msgstr "關閉圖片檢視器"
 
@@ -2939,7 +2939,7 @@ msgstr "成功刪除對話"
 #: src/components/dms/AfterReportConversationDialog.tsx:179
 msgctxt "toast"
 msgid "Conversation left"
-msgstr ""
+msgstr "已離開對話"
 
 #: src/screens/Settings/AboutSettings.tsx:162
 msgid "Copied build version to clipboard"
@@ -3067,7 +3067,7 @@ msgstr "無法連線到動態源服務"
 
 #: src/screens/Messages/components/MessageInputEmbed.tsx:158
 msgid "Could not fetch post"
-msgstr ""
+msgstr "無法取得貼文內容"
 
 #: src/view/com/feeds/MissingFeed.tsx:183
 msgid "Could not find profile"
@@ -3759,8 +3759,8 @@ msgctxt "button"
 msgid "Download chat data"
 msgstr "下載對話資料"
 
-#: src/components/Lightbox/Lightbox.web.tsx:304
-#: src/components/Lightbox/Lightbox.web.tsx:316
+#: src/components/Lightbox/Lightbox.web.tsx:308
+#: src/components/Lightbox/Lightbox.web.tsx:320
 msgid "Download image"
 msgstr "下載圖片"
 
@@ -4217,8 +4217,8 @@ msgstr "排除已跟隨的用戶"
 msgid "Exit fullscreen"
 msgstr "退出全螢幕"
 
-#: src/components/Lightbox/chrome/Footer.tsx:51
-#: src/components/Lightbox/Lightbox.web.tsx:237
+#: src/components/Lightbox/chrome/Footer.tsx:59
+#: src/components/Lightbox/Lightbox.web.tsx:241
 msgid "Expand alt text"
 msgstr "展開替代文字"
 
@@ -4354,7 +4354,7 @@ msgstr "新增至新手包時發生問題"
 msgid "Failed to change handle. Please try again."
 msgstr "變更帳號代碼時發生問題，請再試一次。"
 
-#: src/components/Lightbox/Lightbox.web.tsx:294
+#: src/components/Lightbox/Lightbox.web.tsx:298
 msgid "Failed to copy link"
 msgstr "複製連結時發生問題"
 
@@ -4550,7 +4550,7 @@ msgstr "存取位置資訊時發生問題，請再試一次。"
 msgid "Failed to save draft"
 msgstr "儲存草稿時發生問題"
 
-#: src/components/Lightbox/Lightbox.web.tsx:311
+#: src/components/Lightbox/Lightbox.web.tsx:315
 msgid "Failed to save image"
 msgstr "儲存圖片時發生問題"
 
@@ -5314,7 +5314,7 @@ msgstr "前往用戶的個人檔案"
 
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:87
 msgid "Go to user’s profile"
-msgstr ""
+msgstr "前往用戶的個人檔案"
 
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:105
 msgid "Going live is currently disabled for your account"
@@ -5465,7 +5465,7 @@ msgstr "已經有驗證碼了？<0>點一下這裡。</0>"
 
 #: src/screens/Signup/StepInfo/index.tsx:320
 msgid "Have we got your location wrong? <0>Tap here to update your location with GPS.</0>"
-msgstr ""
+msgstr "位置資訊判斷錯誤嗎？<0>點一下這裡以使用 GPS 更新您的位置。</0>"
 
 #: src/screens/Signup/index.tsx:231
 msgid "Having trouble?"
@@ -5721,7 +5721,7 @@ msgstr "我瞭解"
 msgid "I'm on Bluesky as {0} - come find me! https://bsky.app/download"
 msgstr "我在 Bluesky 上的帳號是 {0} - 快來加入我的行列吧! https://bsky.app/download"
 
-#: src/components/Lightbox/Lightbox.web.tsx:238
+#: src/components/Lightbox/Lightbox.web.tsx:242
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "替代文字過長時，切換替代文字的展開狀態"
 
@@ -5797,7 +5797,7 @@ msgstr "圖片 {0}"
 
 #. placeholder {0}: index + 1
 #. placeholder {1}: imgs.length
-#: src/components/Lightbox/Lightbox.web.tsx:253
+#: src/components/Lightbox/Lightbox.web.tsx:257
 msgid "Image {0} of {1}"
 msgstr "第 {0} 張圖片（共 {1} 張）"
 
@@ -5832,12 +5832,12 @@ msgid "Image is unavailable."
 msgstr "無法顯示圖片。"
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:73
-#: src/components/Lightbox/Lightbox.web.tsx:257
-#: src/components/Lightbox/Lightbox.web.tsx:265
+#: src/components/Lightbox/Lightbox.web.tsx:261
+#: src/components/Lightbox/Lightbox.web.tsx:269
 msgid "Image options"
 msgstr "圖片選項"
 
-#: src/components/Lightbox/Lightbox.web.tsx:308
+#: src/components/Lightbox/Lightbox.web.tsx:312
 #: src/lib/media/save-image.ios.ts:25
 #: src/lib/media/save-image.ts:29
 msgid "Image saved"
@@ -6054,7 +6054,7 @@ msgstr "邀請，但更具個人風格"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:394
 msgid "Is your location not accurate? <0>Tap here to update your location with GPS.</0> "
-msgstr ""
+msgstr "目前的位置資訊不準確嗎？<0>點一下這裡來使用 GPS 更新您的位置。 </0> "
 
 #: src/components/contacts/components/InviteInfo.tsx:47
 msgid "It looks like some of your contacts have not tried to find you here yet. You can personally invite them by customizing a draft message we will provide."
@@ -6409,7 +6409,7 @@ msgstr "這則貼文的喜歡數"
 msgid "Linear"
 msgstr "直列模式"
 
-#: src/components/Lightbox/Lightbox.web.tsx:292
+#: src/components/Lightbox/Lightbox.web.tsx:296
 msgid "Link copied to clipboard"
 msgstr "已複製連結至剪貼簿"
 
@@ -6581,7 +6581,7 @@ msgstr "載入更多貼文"
 #: src/screens/Messages/components/MessageInput.web.tsx:202
 msgctxt "placeholder"
 msgid "Loading chat…"
-msgstr ""
+msgstr "正在載入對話……"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "Loading lists..."
@@ -6823,11 +6823,11 @@ msgstr "訊息"
 
 #: src/components/dms/MessageItem.tsx:652
 msgid "Messages from this person are hidden while they are blocking you."
-msgstr ""
+msgstr "當對方封鎖您時，其傳送的訊息將被隱藏。"
 
 #: src/components/dms/MessageItem.tsx:647
 msgid "Messages from this person are hidden while you are blocking them."
-msgstr ""
+msgstr "當您封鎖對方時，其傳送的訊息將被隱藏。"
 
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:101
 msgctxt "Name of app icon variant"
@@ -7650,11 +7650,11 @@ msgstr "重新開始入門引導"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:110
 msgid "One of the selected recipients does not allow group chats."
-msgstr ""
+msgstr "選擇的部分對象選擇不接受群組聊天。"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:93
 msgid "One of the selected recipients has blocked you and cannot be messaged."
-msgstr ""
+msgstr "選擇的部分對象已封鎖您，無法傳送訊息。"
 
 #: src/view/com/composer/Composer.tsx:787
 msgid "One or more GIFs is missing alt text."
@@ -10098,8 +10098,8 @@ msgid "Share author DID"
 msgstr "分享作者 DID"
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:94
-#: src/components/Lightbox/Lightbox.web.tsx:273
-#: src/components/Lightbox/Lightbox.web.tsx:299
+#: src/components/Lightbox/Lightbox.web.tsx:277
+#: src/components/Lightbox/Lightbox.web.tsx:303
 msgid "Share image"
 msgstr "分享圖片"
 
@@ -10447,7 +10447,7 @@ msgstr "僅部分人可以回覆"
 
 #: src/components/dms/getSystemMessageInfo.ts:86
 msgid "Someone joined"
-msgstr ""
+msgstr "某人加入了"
 
 #: src/components/dms/getSystemMessageInfo.ts:87
 msgid "Someone joined the group"
@@ -10455,7 +10455,7 @@ msgstr "某人加入了群組"
 
 #: src/components/dms/getSystemMessageInfo.ts:99
 msgid "Someone left"
-msgstr ""
+msgstr "某人離開了"
 
 #: src/components/dms/getSystemMessageInfo.ts:100
 msgid "Someone left the group"
@@ -10473,7 +10473,7 @@ msgstr "有人對 {target} 做出了 {0} 反應"
 
 #: src/components/dms/getSystemMessageInfo.ts:60
 msgid "Someone was added"
-msgstr ""
+msgstr "某人已受邀加入"
 
 #: src/components/dms/getSystemMessageInfo.ts:61
 msgid "Someone was added to the group"
@@ -10481,7 +10481,7 @@ msgstr "某人已受邀加入群組"
 
 #: src/components/dms/getSystemMessageInfo.ts:73
 msgid "Someone was removed"
-msgstr ""
+msgstr "某人被移出了"
 
 #: src/components/dms/getSystemMessageInfo.ts:74
 msgid "Someone was removed from the group"
@@ -10698,12 +10698,12 @@ msgstr "套用"
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:425
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:434
 msgid "Subscribe on {0}"
-msgstr ""
+msgstr "訂閱 {0}"
 
 #. placeholder {0}: highlightedPublisher.name
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:433
 msgid "Subscribe to {publicationTitle} on {0}"
-msgstr ""
+msgstr "訂閱 {0} 的 {publicationTitle}"
 
 #. placeholder {0}: labelerInfo.creator.handle
 #: src/screens/Profile/Sections/Labels.tsx:231
@@ -10782,11 +10782,11 @@ msgstr "您所在的國家尚未支援這個功能！請晚點再回來看看。
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:91
 msgid "Suspended accounts cannot participate in a group chat."
-msgstr ""
+msgstr "已停權的帳號無法參與群組對話。"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:53
 msgid "Suspended accounts cannot participate in chat."
-msgstr ""
+msgstr "已停權的帳號無法參與對話。"
 
 #: src/components/dialogs/SwitchAccount.tsx:47
 #: src/components/dialogs/SwitchAccount.tsx:50
@@ -10830,7 +10830,7 @@ msgstr "輕觸下方的「允許」按鈕來讓 Bluesky 存取您的所在位置
 
 #: src/components/dms/MessageItem.tsx:598
 msgid "Tap for details"
-msgstr ""
+msgstr "輕觸以瞭解詳細資訊"
 
 #: src/view/com/feeds/MissingFeed.tsx:90
 msgid "Tap for information"
@@ -10842,7 +10842,7 @@ msgstr "輕觸以瞭解更多資訊"
 
 #: src/screens/Signup/StepInfo/index.tsx:323
 msgid "Tap here to update your location with GPS."
-msgstr ""
+msgstr "點一下這裡以使用 GPS 確認您的位置。"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:165
 msgid "Tap to acknowledge that you understand and agree to these updates and continue using Bluesky"
@@ -11413,12 +11413,12 @@ msgstr "這個列表是空的。"
 #: src/components/dms/MessageItem.tsx:596
 #: src/components/dms/MessageItem.tsx:625
 msgid "This message is hidden because this user is blocking you."
-msgstr ""
+msgstr "此訊息已隱藏，因為此用戶封鎖了您。"
 
 #: src/components/dms/MessageItem.tsx:595
 #: src/components/dms/MessageItem.tsx:621
 msgid "This message is hidden because you are blocking this user."
-msgstr ""
+msgstr "此訊息已隱藏，因為您封鎖了此用戶。"
 
 #: src/screens/Profile/ErrorState.tsx:41
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
@@ -11430,7 +11430,7 @@ msgstr "此內容管理規則已套用於整個用戶帳號，並會顯示在所
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:84
 msgid "This person is blocking you"
-msgstr ""
+msgstr "這個用戶封鎖了您"
 
 #. placeholder {0}: niceDate(i18n, createdAt)
 #. placeholder {1}: niceDate(i18n, indexedAt)
@@ -11496,7 +11496,7 @@ msgstr "這個用戶沒有任何跟隨者。"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:57
 msgid "This user has blocked you and cannot be messaged."
-msgstr ""
+msgstr "這個用戶已封鎖您，無法傳送訊息。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:83
 #: src/lib/moderation/useModerationCauseDescription.ts:76
@@ -11505,7 +11505,7 @@ msgstr "這個用戶已封鎖您，因此您無法檢視他們的內容。"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:61
 msgid "This user has disabled chat and cannot be messaged."
-msgstr ""
+msgstr "這個用戶已選擇不允許接收訊息。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:30
 msgid "This user has requested that their content only be shown to signed-in users."
@@ -11531,7 +11531,7 @@ msgstr "這個用戶尚未跟隨任何人。"
 
 #: src/components/Post/Embed/VideoEmbed/index.web.tsx:236
 msgid "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
-msgstr ""
+msgstr "這部影片無法在您的裝置上播放。您的瀏覽器或系統可能不支援必要的視訊解碼器（H.264/AAC）。"
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:157
 msgid "This will create a new list with the same name, description, and members as this starter pack."
@@ -11765,11 +11765,11 @@ msgstr "無法刪除"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:106
 msgid "Unable to find a selected recipient."
-msgstr ""
+msgstr "找不到已選擇的接收者。"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:70
 msgid "Unable to find the selected recipient."
-msgstr ""
+msgstr "找不到已選擇的接收者。"
 
 #: src/lib/strings/errors.ts:43
 msgid "Unable to resolve handle"
@@ -12078,7 +12078,7 @@ msgstr "更新您的電子信箱"
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:41
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:106
 msgid "Update your location"
-msgstr ""
+msgstr "更新您的位置"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:355
 msgctxt "toast"
@@ -12445,7 +12445,7 @@ msgstr "檢視"
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:319
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:588
 msgid "View {0}"
-msgstr ""
+msgstr "檢視 {0}"
 
 #. placeholder {0}: profile.handle
 #: src/screens/Profile/Header/Shell.tsx:257
@@ -12474,12 +12474,12 @@ msgstr "檢視 {displayName} 的個人檔案"
 
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:436
 msgid "View {publicationTitle}"
-msgstr ""
+msgstr "檢視 {publicationTitle}"
 
 #. placeholder {0}: authorProfile.handle
 #: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:83
 msgid "View @{0}'s profile"
-msgstr ""
+msgstr "檢視 @{0} 的個人檔案"
 
 #: src/components/ProfileHoverCard/index.web.tsx:479
 msgid "View blocked user's profile"
@@ -12544,7 +12544,7 @@ msgstr "檢視個人檔案橫幅"
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:437
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:588
 msgid "View publication"
-msgstr ""
+msgstr "檢視發布資訊"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:108
 msgid "View the avatar"
@@ -12945,7 +12945,7 @@ msgstr "需要封鎖此帳號、刪除整個對話，或兩者一併執行嗎？
 
 #: src/components/dms/AfterReportConversationDialog.tsx:47
 msgid "Would you like to block this user and/or leave this conversation?"
-msgstr ""
+msgstr "需要封鎖此帳號、退出對話，或兩者一併執行嗎？"
 
 #: src/view/com/composer/drafts/DraftsButton.tsx:110
 msgid "Would you like to save this as a draft before viewing your drafts?"
@@ -13032,15 +13032,15 @@ msgstr "您所在的地區依法要求我們在允許您使用 Bluesky 應用程
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
 #: src/components/dms/MessageItem.tsx:636
 msgid "You are blocking {0}"
-msgstr ""
+msgstr "您封鎖了 {0}"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:81
 msgid "You are blocking the chat owner"
-msgstr ""
+msgstr "您封鎖了對話擁有者"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:83
 msgid "You are blocking this person"
-msgstr ""
+msgstr "您封鎖了這個用戶"
 
 #: src/components/forms/HostingProvider.tsx:46
 msgid "You are creating an account on"
@@ -13153,7 +13153,7 @@ msgstr "您可以登入以重新啟用帳號。其他用戶將可以重新看到
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:93
 msgid "You can read chat history but can’t send new messages."
-msgstr ""
+msgstr "您仍可以檢視聊天記錄，但無法傳送新的訊息。"
 
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:421
@@ -13168,7 +13168,7 @@ msgstr "您可以稍後在設定中變更。"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:98
 msgid "You cannot create a group chat yet."
-msgstr ""
+msgstr "您還無法建立群組對話。"
 
 #: src/lib/hooks/useCleanError.ts:54
 #: src/lib/strings/errors.ts:28

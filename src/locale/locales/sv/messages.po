@@ -2672,7 +2672,7 @@ msgid "Close image"
 msgstr "Stäng bild"
 
 #: src/components/Lightbox/Lightbox.web.tsx:73
-#: src/components/Lightbox/Lightbox.web.tsx:326
+#: src/components/Lightbox/Lightbox.web.tsx:330
 msgid "Close image viewer"
 msgstr "Stäng bildvisare"
 
@@ -3759,8 +3759,8 @@ msgctxt "button"
 msgid "Download chat data"
 msgstr "Ladda ner chattdata"
 
-#: src/components/Lightbox/Lightbox.web.tsx:304
-#: src/components/Lightbox/Lightbox.web.tsx:316
+#: src/components/Lightbox/Lightbox.web.tsx:308
+#: src/components/Lightbox/Lightbox.web.tsx:320
 msgid "Download image"
 msgstr "Ladda ner bild"
 
@@ -4217,8 +4217,8 @@ msgstr "Undantar användare du följer"
 msgid "Exit fullscreen"
 msgstr "Stäng helskärm"
 
-#: src/components/Lightbox/chrome/Footer.tsx:51
-#: src/components/Lightbox/Lightbox.web.tsx:237
+#: src/components/Lightbox/chrome/Footer.tsx:59
+#: src/components/Lightbox/Lightbox.web.tsx:241
 msgid "Expand alt text"
 msgstr "Utöka alternativtext"
 
@@ -4354,7 +4354,7 @@ msgstr "Det gick inte att lägga till i startpaket"
 msgid "Failed to change handle. Please try again."
 msgstr "Det gick inte att ändra användarnamn. Försök igen."
 
-#: src/components/Lightbox/Lightbox.web.tsx:294
+#: src/components/Lightbox/Lightbox.web.tsx:298
 msgid "Failed to copy link"
 msgstr "Det gick inte att kopiera länk"
 
@@ -4550,7 +4550,7 @@ msgstr "Det gick inte att fastställa din plats. Försök igen."
 msgid "Failed to save draft"
 msgstr "Det gick inte att spara utkast"
 
-#: src/components/Lightbox/Lightbox.web.tsx:311
+#: src/components/Lightbox/Lightbox.web.tsx:315
 msgid "Failed to save image"
 msgstr "Det gick inte att spara bild"
 
@@ -5721,7 +5721,7 @@ msgstr "Jag förstår"
 msgid "I'm on Bluesky as {0} - come find me! https://bsky.app/download"
 msgstr "Du kan hitta mig på Bluesky under namnet {0}. Gå med du också! https://bsky.app/download"
 
-#: src/components/Lightbox/Lightbox.web.tsx:238
+#: src/components/Lightbox/Lightbox.web.tsx:242
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "Sätter alternativtext i utökat läge om den är lång"
 
@@ -5797,7 +5797,7 @@ msgstr "Bild {0}"
 
 #. placeholder {0}: index + 1
 #. placeholder {1}: imgs.length
-#: src/components/Lightbox/Lightbox.web.tsx:253
+#: src/components/Lightbox/Lightbox.web.tsx:257
 msgid "Image {0} of {1}"
 msgstr "Bild {0} av {1}"
 
@@ -5832,12 +5832,12 @@ msgid "Image is unavailable."
 msgstr "Bilden är inte tillgänglig."
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:73
-#: src/components/Lightbox/Lightbox.web.tsx:257
-#: src/components/Lightbox/Lightbox.web.tsx:265
+#: src/components/Lightbox/Lightbox.web.tsx:261
+#: src/components/Lightbox/Lightbox.web.tsx:269
 msgid "Image options"
 msgstr "Bildalternativ"
 
-#: src/components/Lightbox/Lightbox.web.tsx:308
+#: src/components/Lightbox/Lightbox.web.tsx:312
 #: src/lib/media/save-image.ios.ts:25
 #: src/lib/media/save-image.ts:29
 msgid "Image saved"
@@ -6409,7 +6409,7 @@ msgstr "Gillamarkeringar på det här inlägget"
 msgid "Linear"
 msgstr "Linjär vy"
 
-#: src/components/Lightbox/Lightbox.web.tsx:292
+#: src/components/Lightbox/Lightbox.web.tsx:296
 msgid "Link copied to clipboard"
 msgstr "Länk kopierad till urklipp"
 
@@ -10098,8 +10098,8 @@ msgid "Share author DID"
 msgstr "Dela författarens DID"
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:94
-#: src/components/Lightbox/Lightbox.web.tsx:273
-#: src/components/Lightbox/Lightbox.web.tsx:299
+#: src/components/Lightbox/Lightbox.web.tsx:277
+#: src/components/Lightbox/Lightbox.web.tsx:303
 msgid "Share image"
 msgstr "Dela bild"
 

@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-02 17:45\n"
+"PO-Revision-Date: 2026-06-03 14:59\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -2672,7 +2672,7 @@ msgid "Close image"
 msgstr "Fechar imagem"
 
 #: src/components/Lightbox/Lightbox.web.tsx:73
-#: src/components/Lightbox/Lightbox.web.tsx:326
+#: src/components/Lightbox/Lightbox.web.tsx:330
 msgid "Close image viewer"
 msgstr "Fechar visualizador de imagens"
 
@@ -3759,8 +3759,8 @@ msgctxt "button"
 msgid "Download chat data"
 msgstr "Descarregar dados de conversas"
 
-#: src/components/Lightbox/Lightbox.web.tsx:304
-#: src/components/Lightbox/Lightbox.web.tsx:316
+#: src/components/Lightbox/Lightbox.web.tsx:308
+#: src/components/Lightbox/Lightbox.web.tsx:320
 msgid "Download image"
 msgstr "Descarregar imagem"
 
@@ -4217,8 +4217,8 @@ msgstr "Exclui utilizadores que sigo"
 msgid "Exit fullscreen"
 msgstr "Sair do ecrã cheio"
 
-#: src/components/Lightbox/chrome/Footer.tsx:51
-#: src/components/Lightbox/Lightbox.web.tsx:237
+#: src/components/Lightbox/chrome/Footer.tsx:59
+#: src/components/Lightbox/Lightbox.web.tsx:241
 msgid "Expand alt text"
 msgstr "Expandir texto alternativo"
 
@@ -4354,7 +4354,7 @@ msgstr "Falha ao adicionar ao pacote de iniciante"
 msgid "Failed to change handle. Please try again."
 msgstr "Falha ao tentar alterar nome de utilizador. Tente novamente."
 
-#: src/components/Lightbox/Lightbox.web.tsx:294
+#: src/components/Lightbox/Lightbox.web.tsx:298
 msgid "Failed to copy link"
 msgstr "Falha ao copiar o link"
 
@@ -4550,7 +4550,7 @@ msgstr "Falha ao determinar localização. Por favor, tente novamente."
 msgid "Failed to save draft"
 msgstr "Falha ao guardar rascunho"
 
-#: src/components/Lightbox/Lightbox.web.tsx:311
+#: src/components/Lightbox/Lightbox.web.tsx:315
 msgid "Failed to save image"
 msgstr "Falha ao guardar a imagem"
 
@@ -5721,7 +5721,7 @@ msgstr "Entendo"
 msgid "I'm on Bluesky as {0} - come find me! https://bsky.app/download"
 msgstr "Estou no Bluesky como {0} - vem ter comigo! https://bsky.app/download"
 
-#: src/components/Lightbox/Lightbox.web.tsx:238
+#: src/components/Lightbox/Lightbox.web.tsx:242
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "Se o texto alternativo for longo, alterna para o estado de texto alternativo expandido"
 
@@ -5797,7 +5797,7 @@ msgstr "Imagem {0}"
 
 #. placeholder {0}: index + 1
 #. placeholder {1}: imgs.length
-#: src/components/Lightbox/Lightbox.web.tsx:253
+#: src/components/Lightbox/Lightbox.web.tsx:257
 msgid "Image {0} of {1}"
 msgstr "Imagem {0} de {1}"
 
@@ -5832,12 +5832,12 @@ msgid "Image is unavailable."
 msgstr "Imagem indisponível."
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:73
-#: src/components/Lightbox/Lightbox.web.tsx:257
-#: src/components/Lightbox/Lightbox.web.tsx:265
+#: src/components/Lightbox/Lightbox.web.tsx:261
+#: src/components/Lightbox/Lightbox.web.tsx:269
 msgid "Image options"
 msgstr "Opções de imagem"
 
-#: src/components/Lightbox/Lightbox.web.tsx:308
+#: src/components/Lightbox/Lightbox.web.tsx:312
 #: src/lib/media/save-image.ios.ts:25
 #: src/lib/media/save-image.ts:29
 msgid "Image saved"
@@ -6409,7 +6409,7 @@ msgstr "Gostos nesta publicação"
 msgid "Linear"
 msgstr "Linear"
 
-#: src/components/Lightbox/Lightbox.web.tsx:292
+#: src/components/Lightbox/Lightbox.web.tsx:296
 msgid "Link copied to clipboard"
 msgstr "Link copiado para área de transferência"
 
@@ -10098,8 +10098,8 @@ msgid "Share author DID"
 msgstr "Partilhar DID do autor"
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:94
-#: src/components/Lightbox/Lightbox.web.tsx:273
-#: src/components/Lightbox/Lightbox.web.tsx:299
+#: src/components/Lightbox/Lightbox.web.tsx:277
+#: src/components/Lightbox/Lightbox.web.tsx:303
 msgid "Share image"
 msgstr "Partilhar imagem"
 

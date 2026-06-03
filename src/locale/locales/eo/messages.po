@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-02 20:40\n"
+"PO-Revision-Date: 2026-06-03 14:59\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -2672,7 +2672,7 @@ msgid "Close image"
 msgstr "Fermi bildon"
 
 #: src/components/Lightbox/Lightbox.web.tsx:73
-#: src/components/Lightbox/Lightbox.web.tsx:326
+#: src/components/Lightbox/Lightbox.web.tsx:330
 msgid "Close image viewer"
 msgstr "Fermi bildmontrilon"
 
@@ -3759,8 +3759,8 @@ msgctxt "button"
 msgid "Download chat data"
 msgstr "Elŝuti babilejajn datumojn"
 
-#: src/components/Lightbox/Lightbox.web.tsx:304
-#: src/components/Lightbox/Lightbox.web.tsx:316
+#: src/components/Lightbox/Lightbox.web.tsx:308
+#: src/components/Lightbox/Lightbox.web.tsx:320
 msgid "Download image"
 msgstr "Elŝuti bildon"
 
@@ -4217,8 +4217,8 @@ msgstr "Ekskluzivas uzantojn, kiujn vi sekvas"
 msgid "Exit fullscreen"
 msgstr "Malŝalti plenekranon"
 
-#: src/components/Lightbox/chrome/Footer.tsx:51
-#: src/components/Lightbox/Lightbox.web.tsx:237
+#: src/components/Lightbox/chrome/Footer.tsx:59
+#: src/components/Lightbox/Lightbox.web.tsx:241
 msgid "Expand alt text"
 msgstr "Etendi alternativan tekston"
 
@@ -4354,7 +4354,7 @@ msgstr "Malsukcesis aldoni al la startpako"
 msgid "Failed to change handle. Please try again."
 msgstr "Malsukcesis ŝanĝi identigilon. Bonvolu reprovi."
 
-#: src/components/Lightbox/Lightbox.web.tsx:294
+#: src/components/Lightbox/Lightbox.web.tsx:298
 msgid "Failed to copy link"
 msgstr "Malsukcesis kopii ligilon"
 
@@ -4550,7 +4550,7 @@ msgstr "Malsukcesis trovi la lokon. Bonvolu reprovi."
 msgid "Failed to save draft"
 msgstr "Malsukcesis konservi malneton"
 
-#: src/components/Lightbox/Lightbox.web.tsx:311
+#: src/components/Lightbox/Lightbox.web.tsx:315
 msgid "Failed to save image"
 msgstr "Fiaskis konservi bildon"
 
@@ -5721,7 +5721,7 @@ msgstr "Mi komprenas"
 msgid "I'm on Bluesky as {0} - come find me! https://bsky.app/download"
 msgstr "Mi estas ĉe Bluesky kiel {0} - venu trovi min! https://bsky.app/download"
 
-#: src/components/Lightbox/Lightbox.web.tsx:238
+#: src/components/Lightbox/Lightbox.web.tsx:242
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "Se alternativa teksto estas longa, baskulas ĝian malvolvon"
 
@@ -5797,7 +5797,7 @@ msgstr "Bildo {0}"
 
 #. placeholder {0}: index + 1
 #. placeholder {1}: imgs.length
-#: src/components/Lightbox/Lightbox.web.tsx:253
+#: src/components/Lightbox/Lightbox.web.tsx:257
 msgid "Image {0} of {1}"
 msgstr "Bildo {0} el {1}"
 
@@ -5832,12 +5832,12 @@ msgid "Image is unavailable."
 msgstr "Bildo nedisponeblas."
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:73
-#: src/components/Lightbox/Lightbox.web.tsx:257
-#: src/components/Lightbox/Lightbox.web.tsx:265
+#: src/components/Lightbox/Lightbox.web.tsx:261
+#: src/components/Lightbox/Lightbox.web.tsx:269
 msgid "Image options"
 msgstr "Opcioj de bildo"
 
-#: src/components/Lightbox/Lightbox.web.tsx:308
+#: src/components/Lightbox/Lightbox.web.tsx:312
 #: src/lib/media/save-image.ios.ts:25
 #: src/lib/media/save-image.ts:29
 msgid "Image saved"
@@ -6409,7 +6409,7 @@ msgstr "Ŝatoj de ĉi tiu afiŝo"
 msgid "Linear"
 msgstr "Linie"
 
-#: src/components/Lightbox/Lightbox.web.tsx:292
+#: src/components/Lightbox/Lightbox.web.tsx:296
 msgid "Link copied to clipboard"
 msgstr "Ligilo kopiita al tondujo"
 
@@ -10098,8 +10098,8 @@ msgid "Share author DID"
 msgstr "Konigi DID-on de aŭtoro"
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:94
-#: src/components/Lightbox/Lightbox.web.tsx:273
-#: src/components/Lightbox/Lightbox.web.tsx:299
+#: src/components/Lightbox/Lightbox.web.tsx:277
+#: src/components/Lightbox/Lightbox.web.tsx:303
 msgid "Share image"
 msgstr "Kunigi bildon"
 

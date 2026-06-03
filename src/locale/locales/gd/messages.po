@@ -2672,7 +2672,7 @@ msgid "Close image"
 msgstr "Dùin an dealbh"
 
 #: src/components/Lightbox/Lightbox.web.tsx:73
-#: src/components/Lightbox/Lightbox.web.tsx:326
+#: src/components/Lightbox/Lightbox.web.tsx:330
 msgid "Close image viewer"
 msgstr "Dùin sealladair nan dealbhan"
 
@@ -3759,8 +3759,8 @@ msgctxt "button"
 msgid "Download chat data"
 msgstr "Luchdaich a-nuas dàta na cabadaich"
 
-#: src/components/Lightbox/Lightbox.web.tsx:304
-#: src/components/Lightbox/Lightbox.web.tsx:316
+#: src/components/Lightbox/Lightbox.web.tsx:308
+#: src/components/Lightbox/Lightbox.web.tsx:320
 msgid "Download image"
 msgstr ""
 
@@ -4217,8 +4217,8 @@ msgstr "Dùinidh seo às luchd-cleachdaidh a tha thu gan leantainn"
 msgid "Exit fullscreen"
 msgstr "Fàg an làn-sgrìn"
 
-#: src/components/Lightbox/chrome/Footer.tsx:51
-#: src/components/Lightbox/Lightbox.web.tsx:237
+#: src/components/Lightbox/chrome/Footer.tsx:59
+#: src/components/Lightbox/Lightbox.web.tsx:241
 msgid "Expand alt text"
 msgstr "Leudaich an roghainn teacsa"
 
@@ -4354,7 +4354,7 @@ msgstr "Cha b’ urrainn dhuinn pacaid tòiseachaidh a chur ris"
 msgid "Failed to change handle. Please try again."
 msgstr "Dh’fhàillig atharrachadh an làmhrachain. Feuch ris a-rithist."
 
-#: src/components/Lightbox/Lightbox.web.tsx:294
+#: src/components/Lightbox/Lightbox.web.tsx:298
 msgid "Failed to copy link"
 msgstr ""
 
@@ -4550,7 +4550,7 @@ msgstr "Cha d’fhuair sinn lorg air an ionad. Feuch ris a-rithist."
 msgid "Failed to save draft"
 msgstr "Cha b’ urrainn dhuinn an dreachd a luchdadh"
 
-#: src/components/Lightbox/Lightbox.web.tsx:311
+#: src/components/Lightbox/Lightbox.web.tsx:315
 msgid "Failed to save image"
 msgstr ""
 
@@ -5721,7 +5721,7 @@ msgstr "Tha mi a’ tuigsinn"
 msgid "I'm on Bluesky as {0} - come find me! https://bsky.app/download"
 msgstr "Tha mi air Bluesky mar {0} – tiugainn! https://bsky.app/download"
 
-#: src/components/Lightbox/Lightbox.web.tsx:238
+#: src/components/Lightbox/Lightbox.web.tsx:242
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "Ma tha an roghainn teacsa ro fhada, dùisgidh seo staid na roghainn teacsa leudaichte"
 
@@ -5797,7 +5797,7 @@ msgstr ""
 
 #. placeholder {0}: index + 1
 #. placeholder {1}: imgs.length
-#: src/components/Lightbox/Lightbox.web.tsx:253
+#: src/components/Lightbox/Lightbox.web.tsx:257
 msgid "Image {0} of {1}"
 msgstr "Dealbh {0} à {1}"
 
@@ -5832,12 +5832,12 @@ msgid "Image is unavailable."
 msgstr ""
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:73
-#: src/components/Lightbox/Lightbox.web.tsx:257
-#: src/components/Lightbox/Lightbox.web.tsx:265
+#: src/components/Lightbox/Lightbox.web.tsx:261
+#: src/components/Lightbox/Lightbox.web.tsx:269
 msgid "Image options"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:308
+#: src/components/Lightbox/Lightbox.web.tsx:312
 #: src/lib/media/save-image.ios.ts:25
 #: src/lib/media/save-image.ts:29
 msgid "Image saved"
@@ -6409,7 +6409,7 @@ msgstr "Daoine as toil leotha am post seo"
 msgid "Linear"
 msgstr "Loidhneach"
 
-#: src/components/Lightbox/Lightbox.web.tsx:292
+#: src/components/Lightbox/Lightbox.web.tsx:296
 msgid "Link copied to clipboard"
 msgstr ""
 
@@ -10098,8 +10098,8 @@ msgid "Share author DID"
 msgstr "Co-roinn DID an ùghdair"
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:94
-#: src/components/Lightbox/Lightbox.web.tsx:273
-#: src/components/Lightbox/Lightbox.web.tsx:299
+#: src/components/Lightbox/Lightbox.web.tsx:277
+#: src/components/Lightbox/Lightbox.web.tsx:303
 msgid "Share image"
 msgstr ""
 
