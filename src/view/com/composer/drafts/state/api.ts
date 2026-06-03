@@ -15,6 +15,7 @@ import {createPublicAgent} from '#/state/session/agent'
 import {
   type ComposerState,
   type EmbedDraft,
+  MAX_IMAGES,
   type PostDraft,
 } from '#/view/com/composer/state/composer'
 import {type VideoState} from '#/view/com/composer/state/video'
@@ -512,23 +513,31 @@ export async function draftToComposerPosts(
         media: undefined,
       }
 
-      // Restore images
+      // Restore images / gallery. Pick the variant from the restored count so
+      // we match the composer reducer's `imagesToMediaVariant` rule (<=4 stays
+      // legacy `images`, >4 promotes to `gallery`). This keeps restore robust
+      // to drafts whose server slot disagrees with their count - e.g. a draft
+      // saved in `embedImages` with 5 items would otherwise restore as a
+      // broken `images` variant the rest of the composer can't grow.
+      const restoredImages: ComposerImage[] = []
       if (post.embedImages && post.embedImages.length > 0) {
-        const images = await restoreDraftImages(post.embedImages, loadedMedia)
-        if (images.length > 0) {
-          embed.media = {type: 'images', images}
-        }
+        restoredImages.push(
+          ...(await restoreDraftImages(post.embedImages, loadedMedia)),
+        )
       }
-
-      // Restore gallery
       if (post.embedGallery && post.embedGallery.items.length > 0) {
         const galleryImages = post.embedGallery.items.filter(
           AppBskyDraftDefs.isDraftEmbedImage,
         )
-        const images = await restoreDraftImages(galleryImages, loadedMedia)
-        if (images.length > 0) {
-          embed.media = {type: 'gallery', images}
-        }
+        restoredImages.push(
+          ...(await restoreDraftImages(galleryImages, loadedMedia)),
+        )
+      }
+      if (restoredImages.length > 0) {
+        embed.media =
+          restoredImages.length <= MAX_IMAGES
+            ? {type: 'images', images: restoredImages}
+            : {type: 'gallery', images: restoredImages}
       }
 
       // Restore GIF from external embed

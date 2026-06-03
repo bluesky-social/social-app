@@ -178,6 +178,27 @@ type CancelRef = {
   onPressCancel: () => void
 }
 
+function applyGalleryCap(
+  currentCount: number,
+  incoming: ComposerImage[],
+):
+  | {status: 'full'}
+  | {status: 'partial'; accepted: ComposerImage[]; dropped: number}
+  | {status: 'ok'; accepted: ComposerImage[]} {
+  const remaining = MAX_GALLERY_IMAGES - currentCount
+  if (remaining <= 0) {
+    return {status: 'full'}
+  }
+  if (incoming.length > remaining) {
+    return {
+      status: 'partial',
+      accepted: incoming.slice(0, remaining),
+      dropped: incoming.length - remaining,
+    }
+  }
+  return {status: 'ok', accepted: incoming}
+}
+
 type Props = ComposerOpts
 export const ComposePost = ({
   replyTo,
@@ -1407,12 +1428,39 @@ let ComposerPost = memo(function ComposerPost({
 
   const onImageAdd = useCallback(
     (next: ComposerImage[]) => {
+      const media = post.embed.media
+      const currentCount =
+        media?.type === 'images' || media?.type === 'gallery'
+          ? media.images.length
+          : 0
+      const result = applyGalleryCap(currentCount, next)
+      if (result.status === 'full') {
+        Toast.show(
+          l({
+            message: `You can only add up to ${MAX_GALLERY_IMAGES} images per post`,
+            comment:
+              'Toast shown when the user tries to add more images but the post gallery is already at the cap',
+          }),
+          {type: 'warning'},
+        )
+        return
+      }
+      if (result.status === 'partial') {
+        Toast.show(
+          l({
+            message: `Only ${result.accepted.length} of ${next.length} ${plural(next.length, {one: 'image', other: 'images'})} added; limit is ${MAX_GALLERY_IMAGES}`,
+            comment:
+              'Toast shown when adding images would exceed the post gallery cap; only the first N are kept',
+          }),
+          {type: 'warning'},
+        )
+      }
       dispatchPost({
         type: 'embed_add_images',
-        images: next,
+        images: result.accepted,
       })
     },
-    [dispatchPost],
+    [dispatchPost, l, post.embed.media],
   )
 
   const onNewLink = useCallback(
@@ -1943,12 +1991,34 @@ function ComposerFooter({
 
   const onImageAdd = useCallback(
     (next: ComposerImage[]) => {
+      const result = applyGalleryCap(images.length, next)
+      if (result.status === 'full') {
+        Toast.show(
+          l({
+            message: `You can only add up to ${MAX_GALLERY_IMAGES} images per post`,
+            comment:
+              'Toast shown when the user tries to add more images but the post gallery is already at the cap',
+          }),
+          {type: 'warning'},
+        )
+        return
+      }
+      if (result.status === 'partial') {
+        Toast.show(
+          l({
+            message: `Only ${result.accepted.length} of ${next.length} ${plural(next.length, {one: 'image', other: 'images'})} added; limit is ${MAX_GALLERY_IMAGES}`,
+            comment:
+              'Toast shown when adding images would exceed the post gallery cap; only the first N are kept',
+          }),
+          {type: 'warning'},
+        )
+      }
       dispatch({
         type: 'embed_add_images',
-        images: next,
+        images: result.accepted,
       })
     },
-    [dispatch],
+    [dispatch, images.length, l],
   )
 
   const onSelectGif = useCallback(

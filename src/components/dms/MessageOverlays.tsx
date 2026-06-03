@@ -63,6 +63,8 @@ export function MessageOverlays({children}: {children: React.ReactNode}) {
   const [reactionsTargetId, setReactionsTargetId] = useState<string | null>(
     null,
   )
+  const [lastKnownReactionsMessage, setLastKnownReactionsMessage] =
+    useState<ChatBskyConvoDefs.MessageView | null>(null)
   const reactionsOpenRequestedFor = useRef<string | null>(null)
 
   const liveReactionsMessage = useMemo(() => {
@@ -77,6 +79,9 @@ export function MessageOverlays({children}: {children: React.ReactNode}) {
     }
     return null
   }, [convo.items, reactionsTargetId])
+
+  const displayReactionsMessage =
+    liveReactionsMessage ?? lastKnownReactionsMessage
 
   const openDeleteMessage = useCallback(
     (message: ChatBskyConvoDefs.MessageView) => {
@@ -117,6 +122,15 @@ export function MessageOverlays({children}: {children: React.ReactNode}) {
       reactionsControl.open()
     }
   }, [liveReactionsMessage, reactionsControl])
+
+  // Keep a snapshot of the live message so the dialog can finish its close
+  // animation if the underlying message disappears from convo.items.
+  useEffect(() => {
+    if (liveReactionsMessage) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setLastKnownReactionsMessage(liveReactionsMessage)
+    }
+  }, [liveReactionsMessage])
 
   useEffect(() => {
     if (reactionsTargetId && !liveReactionsMessage) {
@@ -188,13 +202,14 @@ export function MessageOverlays({children}: {children: React.ReactNode}) {
           onClose={() => setAfterReportTarget(null)}
         />
       )}
-      {liveReactionsMessage && (
+      {displayReactionsMessage && (
         <ReactionsDialog
           control={reactionsControl}
           relatedProfiles={convo.relatedProfiles}
-          message={liveReactionsMessage}
+          message={displayReactionsMessage}
           onClose={() => {
             setReactionsTargetId(null)
+            setLastKnownReactionsMessage(null)
             reactionsOpenRequestedFor.current = null
           }}
         />
