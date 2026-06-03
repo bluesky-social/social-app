@@ -405,7 +405,8 @@ function GalleryCounter({
             backgroundColor: 'rgba(0, 0, 0, 0.6)',
           },
         ]}>
-        <Text style={[a.font_bold, a.text_xs, a.leading_tight, {color: '#fff'}]}>
+        <Text
+          style={[a.font_bold, a.text_xs, a.leading_tight, {color: '#fff'}]}>
           {currentIndex + 1}/{imageCount}
         </Text>
       </View>
