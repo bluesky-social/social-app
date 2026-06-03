@@ -340,6 +340,11 @@ export function Gallery({
               marginLeft: -insetLeft,
               width,
             },
+            // Prevent horizontal trackpad/wheel swipes from triggering the
+            // browser's back/forward overscroll-navigation gesture. Handles
+            // Chrome and Firefox; Safari is handled via the wheel listener in
+            // usePointerHandlers.web.ts since it ignores overscroll-behavior.
+            web({overscrollBehaviorX: 'contain'}),
           ]}
           contentContainerStyle={{
             gap: ITEM_GAP,
