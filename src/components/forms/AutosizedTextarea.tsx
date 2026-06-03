@@ -35,7 +35,7 @@ export function AutosizedTextarea({
   const {style, minInputHeight, maxInputHeight, verticalContentPadding} =
     useMemo(() => {
       const normalizedStyles = normalizeTextStyles(
-        [a.text_md, a.leading_snug, t.atoms.text, outerStyle],
+        [a.text_input, a.leading_snug, t.atoms.text, outerStyle],
         {
           fontScale: fonts.scaleMultiplier,
           fontFamily: fonts.family,

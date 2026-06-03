@@ -45,7 +45,7 @@ export function UserSearchInput({
         onChangeText={onChangeText}
         onFocus={onFocus}
         onBlur={onBlur}
-        style={[a.flex_1, a.py_md, a.text_md, t.atoms.text]}
+        style={[a.flex_1, a.py_md, a.text_input, t.atoms.text]}
         placeholderTextColor={t.palette.contrast_500}
         keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
         returnKeyType="search"

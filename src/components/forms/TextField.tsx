@@ -207,12 +207,12 @@ export function createInput(Component: typeof TextInput) {
       a.relative,
       a.z_20,
       a.flex_1,
-      a.text_md,
+      a.text_input,
       t.atoms.text,
       a.px_xs,
       {
         // paddingVertical doesn't work w/multiline - esb
-        lineHeight: a.text_md.fontSize * 1.2,
+        lineHeight: a.text_input.fontSize * 1.2,
         textAlignVertical: rest.multiline ? 'top' : undefined,
         minHeight: rest.multiline ? 80 : undefined,
         minWidth: 0,
@@ -436,8 +436,8 @@ export function GhostText({
       <Text
         style={[
           {color: 'transparent'},
-          a.text_md,
-          {lineHeight: a.text_md.fontSize * 1.1875},
+          a.text_input,
+          {lineHeight: a.text_input.fontSize * 1.1875},
           a.w_full,
         ]}
         numberOfLines={1}>
@@ -445,8 +445,8 @@ export function GhostText({
         <Text
           style={[
             t.atoms.text_contrast_low,
-            a.text_md,
-            {lineHeight: a.text_md.fontSize * 1.1875},
+            a.text_input,
+            {lineHeight: a.text_input.fontSize * 1.1875},
           ]}>
           {value}
         </Text>
