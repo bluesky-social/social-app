@@ -38,7 +38,7 @@
   },
   "scripts": {
     "prepare": "is-ci || husky",
-    "postinstall": "pnpm intl:compile-if-needed",
+    "postinstall": "pnpm intl:compile-if-needed && node ./scripts/generateAppIconTypes.mjs",
     "prebuild": "EXPO_NO_GIT_STATUS=1 expo prebuild --clean",
     "android": "expo run:android",
     "android:prod": "expo run:android --variant release",
