@@ -28,6 +28,9 @@ export function RequestListItem({
   const isDeletedAccount =
     !convo.primaryMember || convo.primaryMember.handle === 'missing.invalid'
 
+  const canAcceptRequest =
+    convo.kind === 'direct' || convo.details.lockStatus === 'unlocked'
+
   return (
     <View style={[a.relative, a.flex_1]}>
       <ChatListItem convo={convo.view} showMenu={false}>
@@ -65,7 +68,9 @@ export function RequestListItem({
             ]}>
             {convo.primaryMember && !isDeletedAccount ? (
               <>
-                <AcceptChatButton convo={convo.view} currentScreen="list" />
+                {canAcceptRequest ? (
+                  <AcceptChatButton convo={convo.view} currentScreen="list" />
+                ) : null}
                 <RejectMenu
                   convo={convo.view}
                   profile={convo.primaryMember}
