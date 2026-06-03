@@ -77,7 +77,7 @@ type ResolvedChatInvite = {
   type: 'chat-invite'
   uri: string
   code: string
-  view: ChatBskyGroupDefs.JoinLinkPreviewView
+  view?: ChatBskyGroupDefs.JoinLinkPreviewView
 }
 
 export type ResolvedLink =

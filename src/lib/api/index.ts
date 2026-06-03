@@ -428,7 +428,7 @@ async function resolveMedia(
         },
       }
     }
-    if (resolvedLink.type === 'chat-invite') {
+    if (resolvedLink.type === 'chat-invite' && resolvedLink.view) {
       return {
         $type: 'app.bsky.embed.external',
         external: {
