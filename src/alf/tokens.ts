@@ -5,6 +5,11 @@ import {EUROSKY_GRADIENTS} from '#/config/eurosky-theme'
 
 export * from '@bsky.app/alf/dist/tokens'
 
+// Eurosky fork: minimum font size for text inputs.
+// Mobile browsers auto-zoom when a focused input renders below 16px,
+// so inputs never go under this size.
+export const inputMinFontSize = 16
+
 export const color = {
   temp_purple: tokens.labelerColor.purple,
   temp_purple_dark: tokens.labelerColor.purple_dark,
