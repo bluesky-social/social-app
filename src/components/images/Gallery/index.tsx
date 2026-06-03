@@ -165,6 +165,13 @@ export function Gallery({
   const containerRefsRef = useRef<Map<number, AnimatedRef<any>>>(new Map())
   const thumbDimsRef = useRef<Map<number, Dimensions>>(new Map())
   const currentIndexRef = useRef(0)
+  /*
+   * Reactive mirror of currentIndexRef for the numbering badge. The ref drives
+   * scroll/keyboard logic without re-rendering; this state only updates when
+   * the index actually changes (once per image, not per scroll frame), so the
+   * badge stays live and cheap.
+   */
+  const [currentIndex, setCurrentIndexState] = useState(0)
 
   const emitSwipeMetric = useMemo(
     () =>
@@ -182,6 +189,7 @@ export function Gallery({
     const prev = currentIndexRef.current
     if (prev !== index) {
       currentIndexRef.current = index
+      setCurrentIndexState(index)
       emitSwipeMetric(prev, index)
     }
   }
@@ -348,7 +356,66 @@ export function Gallery({
           }}
         />
       </BlockDrawerGesture>
+
+      {!hideBadges && images.length > 1 ? (
+        <GalleryCounter
+          currentIndex={currentIndex}
+          imageCount={images.length}
+        />
+      ) : null}
     </View>
+  )
+}
+
+/*
+ * Top-right "{n}/{total}" badge for the in-feed carousel. The visible pill is
+ * decorative (accessible={false}) since the digits are redundant for screen
+ * reader users.
+ *
+ * On native, screen reader users never reach this carousel branch - the Gallery
+ * renders a separate per-image stack early when screenReaderEnabled is true,
+ * and each slide there is labelled "Image N of M". So the live region only
+ * needs to exist on web, where screenReaderEnabled is always false and the
+ * carousel is the only branch. There we announce position changes via a
+ * visually-hidden aria-live region.
+ */
+function GalleryCounter({
+  currentIndex,
+  imageCount,
+}: {
+  currentIndex: number
+  imageCount: number
+}) {
+  const {t: l} = useLingui()
+
+  return (
+    <>
+      <View
+        accessible={false}
+        pointerEvents="none"
+        style={[
+          a.absolute,
+          a.justify_center,
+          {
+            top: a.p_xs.padding,
+            right: a.p_xs.padding,
+            paddingHorizontal: 6,
+            paddingVertical: 2,
+            borderRadius: 999,
+            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          },
+        ]}>
+        <Text style={[a.font_bold, a.text_xs, a.leading_tight, {color: '#fff'}]}>
+          {currentIndex + 1}/{imageCount}
+        </Text>
+      </View>
+
+      {IS_WEB ? (
+        <View aria-live="polite" style={a.sr_only}>
+          <Text>{l`Image ${currentIndex + 1} of ${imageCount}`}</Text>
+        </View>
+      ) : null}
+    </>
   )
 }
 
