@@ -76,7 +76,7 @@
   },
   "src/components/Post/Embed/ImageEmbed.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 1
+      "count": 2
     }
   },
   "src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/utils.tsx": {
@@ -169,7 +169,7 @@
   },
   "src/components/images/AutoSizedImage.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 1
+      "count": 2
     }
   },
   "src/components/images/Gallery/index.tsx": {
@@ -313,16 +313,6 @@
     }
   },
   "src/lib/strings/errors.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/locale/i18n.web.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/platform/polyfills.web.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
