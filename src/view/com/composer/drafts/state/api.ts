@@ -4,6 +4,13 @@
 import {type AppBskyDraftDefs, AtUri, RichText} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
+// Shim: AppBskyDraftDefs.DraftPost gains an `embedGallery` field in atproto
+// PR #4827. Until @atproto/api ships those types, we widen the shape locally.
+// Delete this once the lexicon publishes.
+type DraftPostWithGallery = AppBskyDraftDefs.DraftPost & {
+  embedGallery?: AppBskyDraftDefs.DraftEmbedImage[]
+}
+
 import {resolveLink} from '#/lib/api/resolve'
 import {getDeviceName} from '#/lib/deviceName'
 import {getImageDim} from '#/lib/media/manip'
@@ -112,6 +119,11 @@ async function postDraftToServerPost(
   if (post.embed.media) {
     if (post.embed.media.type === 'images') {
       draftPost.embedImages = serializeImages(
+        post.embed.media.images,
+        localRefPaths,
+      )
+    } else if (post.embed.media.type === 'gallery') {
+      ;(draftPost as DraftPostWithGallery).embedGallery = serializeImages(
         post.embed.media.images,
         localRefPaths,
       )
@@ -270,6 +282,59 @@ function serializeGif(gifMedia: {
 }
 
 /**
+ * Restore an array of draft image refs back to ComposerImages. Shared by
+ * both the `embedImages` and `embedGallery` paths in draftToComposerPosts.
+ */
+async function restoreDraftImages(
+  draftImages: AppBskyDraftDefs.DraftEmbedImage[],
+  loadedMedia: Map<string, string>,
+): Promise<ComposerImage[]> {
+  const imagePromises = draftImages.map(async img => {
+    const path = loadedMedia.get(img.localRef.path)
+    if (!path) {
+      return null
+    }
+
+    let width = 0
+    let height = 0
+    try {
+      const dims = await getImageDim(path)
+      width = dims.width
+      height = dims.height
+    } catch (e) {
+      logger.warn('Failed to get image dimensions', {
+        path,
+        error: e,
+      })
+    }
+
+    logger.debug('restoring image with localRefPath', {
+      localRefPath: img.localRef.path,
+      loadedPath: path,
+      width,
+      height,
+    })
+
+    return {
+      alt: img.alt || '',
+      // Preserve the original localRefPath for reuse when saving
+      localRefPath: img.localRef.path,
+      source: {
+        id: nanoid(),
+        path,
+        width,
+        height,
+        mime: 'image/jpeg',
+      },
+    } as ComposerImage
+  })
+
+  return (await Promise.all(imagePromises)).filter(
+    (img): img is ComposerImage => img !== null,
+  )
+}
+
+/**
  * Convert server DraftView to DraftSummary for list display.
  * Also checks which media files exist locally.
  */
@@ -300,6 +365,24 @@ export function draftViewToSummary({
     // Process images
     if (post.embedImages) {
       for (const img of post.embedImages) {
+        meta.mediaCount++
+        meta.hasMedia = true
+        const exists = storage.mediaExists(img.localRef.path)
+        if (!exists) {
+          meta.hasMissingMedia = true
+        }
+        images.push({
+          localPath: img.localRef.path,
+          altText: img.alt || '',
+          exists,
+        })
+      }
+    }
+
+    // Process gallery
+    const summaryEmbedGallery = (post as DraftPostWithGallery).embedGallery
+    if (summaryEmbedGallery) {
+      for (const img of summaryEmbedGallery) {
         meta.mediaCount++
         meta.hasMedia = true
         const exists = storage.mediaExists(img.localRef.path)
@@ -433,51 +516,18 @@ export async function draftToComposerPosts(
 
       // Restore images
       if (post.embedImages && post.embedImages.length > 0) {
-        const imagePromises = post.embedImages.map(async img => {
-          const path = loadedMedia.get(img.localRef.path)
-          if (!path) {
-            return null
-          }
-
-          let width = 0
-          let height = 0
-          try {
-            const dims = await getImageDim(path)
-            width = dims.width
-            height = dims.height
-          } catch (e) {
-            logger.warn('Failed to get image dimensions', {
-              path,
-              error: e,
-            })
-          }
-
-          logger.debug('restoring image with localRefPath', {
-            localRefPath: img.localRef.path,
-            loadedPath: path,
-            width,
-            height,
-          })
-
-          return {
-            alt: img.alt || '',
-            // Preserve the original localRefPath for reuse when saving
-            localRefPath: img.localRef.path,
-            source: {
-              id: nanoid(),
-              path,
-              width,
-              height,
-              mime: 'image/jpeg',
-            },
-          } as ComposerImage
-        })
-
-        const images = (await Promise.all(imagePromises)).filter(
-          (img): img is ComposerImage => img !== null,
-        )
+        const images = await restoreDraftImages(post.embedImages, loadedMedia)
         if (images.length > 0) {
           embed.media = {type: 'images', images}
+        }
+      }
+
+      // Restore gallery
+      const embedGallery = (post as DraftPostWithGallery).embedGallery
+      if (embedGallery && embedGallery.length > 0) {
+        const images = await restoreDraftImages(embedGallery, loadedMedia)
+        if (images.length > 0) {
+          embed.media = {type: 'gallery', images}
         }
       }
 
@@ -627,6 +677,12 @@ export function extractLocalRefs(draft: AppBskyDraftDefs.Draft): Set<string> {
   for (const post of draft.posts) {
     if (post.embedImages) {
       for (const img of post.embedImages) {
+        refs.add(img.localRef.path)
+      }
+    }
+    const embedGallery = (post as DraftPostWithGallery).embedGallery
+    if (embedGallery) {
+      for (const img of embedGallery) {
         refs.add(img.localRef.path)
       }
     }

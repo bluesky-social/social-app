@@ -21,6 +21,7 @@ import {sha256} from 'js-sha256'
 import {CID} from 'multiformats/cid'
 import * as Hasher from 'multiformats/hashes/hasher'
 
+import {type AppBskyEmbedGallery} from '#/lib/api/gallery-embed-shim'
 import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
@@ -252,6 +253,7 @@ async function resolveEmbed(
   onStateChange: ((state: string) => void) | undefined,
 ): Promise<
   | $Typed<AppBskyEmbedImages.Main>
+  | $Typed<AppBskyEmbedGallery.Main>
   | $Typed<AppBskyEmbedVideo.Main>
   | $Typed<AppBskyEmbedExternal.Main>
   | $Typed<AppBskyEmbedRecord.Main>
@@ -311,6 +313,7 @@ async function resolveMedia(
 ): Promise<
   | $Typed<AppBskyEmbedExternal.Main>
   | $Typed<AppBskyEmbedImages.Main>
+  | $Typed<AppBskyEmbedGallery.Main>
   | $Typed<AppBskyEmbedVideo.Main>
   | undefined
 > {
@@ -336,6 +339,31 @@ async function resolveMedia(
     return {
       $type: 'app.bsky.embed.images',
       images,
+    }
+  }
+  if (embedDraft.media?.type === 'gallery') {
+    const imagesDraft = embedDraft.media.images
+    logger.debug(`Uploading gallery items`, {
+      count: imagesDraft.length,
+    })
+    onStateChange?.(t`Uploading images...`)
+    const items: AppBskyEmbedGallery.Image[] = await Promise.all(
+      imagesDraft.map(async (image, i) => {
+        logger.debug(`Compressing gallery image #${i}`)
+        const {path, width, height, mime} = await compressImage(image)
+        logger.debug(`Uploading gallery image #${i}`)
+        const res = await uploadBlob(agent, path, mime)
+        return {
+          $type: 'app.bsky.embed.gallery#image',
+          image: res.data.blob,
+          alt: image.alt,
+          aspectRatio: {width, height},
+        }
+      }),
+    )
+    return {
+      $type: 'app.bsky.embed.gallery',
+      items,
     }
   }
   if (

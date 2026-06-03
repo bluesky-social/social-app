@@ -10,6 +10,8 @@ import {
   AppBskyLabelerDefs,
 } from '@atproto/api'
 
+import {AppBskyEmbedGallery} from '#/lib/api/gallery-embed-shim'
+
 export type Embed =
   | {
       type: 'post'
@@ -46,6 +48,10 @@ export type Embed =
   | {
       type: 'images'
       view: $Typed<AppBskyEmbedImages.View>
+    }
+  | {
+      type: 'gallery'
+      view: $Typed<AppBskyEmbedGallery.View>
     }
   | {
       type: 'link'
@@ -120,6 +126,11 @@ export function parseEmbed(embed: AppBskyFeedDefs.PostView['embed']): Embed {
   if (AppBskyEmbedImages.isView(embed)) {
     return {
       type: 'images',
+      view: embed,
+    }
+  } else if (AppBskyEmbedGallery.isView(embed)) {
+    return {
+      type: 'gallery',
       view: embed,
     }
   } else if (AppBskyEmbedExternal.isView(embed)) {

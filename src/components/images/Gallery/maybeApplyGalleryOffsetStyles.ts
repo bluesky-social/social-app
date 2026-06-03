@@ -7,6 +7,7 @@ import {
   type ModerationUI,
 } from '@atproto/api'
 
+import {AppBskyEmbedGallery} from '#/lib/api/gallery-embed-shim'
 import {unique} from '#/lib/moderation'
 import {type AppModerationCause} from '#/components/Pills'
 import {Features, features} from '#/analytics/features'
@@ -49,6 +50,12 @@ export function maybeApplyGalleryOffsetStyles(
       embed,
       AppBskyEmbedImages.isMain,
     )
+  const isGalleryEmbed =
+    embed &&
+    bsky.dangerousIsType<AppBskyEmbedGallery.Main>(
+      embed,
+      AppBskyEmbedGallery.isMain,
+    )
   const isRecordWithMedia =
     embed &&
     bsky.dangerousIsType<AppBskyEmbedRecordWithMedia.Main>(
@@ -61,6 +68,11 @@ export function maybeApplyGalleryOffsetStyles(
     if (embed.images.length === 1) return
     hasImages = true
   }
+  if (isGalleryEmbed) {
+    // one image, not a gallery
+    if (embed.items.length === 1) return
+    hasImages = true
+  }
   if (isRecordWithMedia) {
     if (
       bsky.dangerousIsType<AppBskyEmbedImages.Main>(
@@ -70,6 +82,15 @@ export function maybeApplyGalleryOffsetStyles(
     ) {
       // one image, not a gallery
       if (embed.media.images.length === 1) return
+    }
+    if (
+      bsky.dangerousIsType<AppBskyEmbedGallery.Main>(
+        embed.media,
+        AppBskyEmbedGallery.isMain,
+      )
+    ) {
+      // one image, not a gallery
+      if (embed.media.items.length === 1) return
     }
     hasImages = true
   }

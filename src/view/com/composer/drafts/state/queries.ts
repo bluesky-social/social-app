@@ -1,4 +1,10 @@
 import {AppBskyDraftCreateDraft, type AppBskyDraftDefs} from '@atproto/api'
+
+// Shim: AppBskyDraftDefs.DraftPost gains `embedGallery` in atproto PR #4827.
+// Delete once @atproto/api publishes the new lexicon.
+type DraftPostWithGallery = AppBskyDraftDefs.DraftPost & {
+  embedGallery?: AppBskyDraftDefs.DraftEmbedImage[]
+}
 import {
   useInfiniteQuery,
   useMutation,
@@ -70,6 +76,21 @@ export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
           logger.error('Failed to load draft image', {
             path: img.localRef.path,
             safeMessage: e.message,
+          })
+        }
+      }
+    }
+    // Load gallery
+    const embedGallery = (post as DraftPostWithGallery).embedGallery
+    if (embedGallery) {
+      for (const img of embedGallery) {
+        try {
+          const url = await storage.loadMediaFromLocal(img.localRef.path)
+          loadedMedia.set(img.localRef.path, url)
+        } catch (e) {
+          logger.error('Failed to load draft gallery image', {
+            path: img.localRef.path,
+            safeMessage: e instanceof Error ? e.message : String(e),
           })
         }
       }
@@ -223,6 +244,12 @@ export function useDeleteDraftMutation() {
       for (const post of draft.posts) {
         if (post.embedImages) {
           for (const img of post.embedImages) {
+            await storage.deleteMediaFromLocal(img.localRef.path)
+          }
+        }
+        const embedGallery = (post as DraftPostWithGallery).embedGallery
+        if (embedGallery) {
+          for (const img of embedGallery) {
             await storage.deleteMediaFromLocal(img.localRef.path)
           }
         }

@@ -47,6 +47,28 @@ export function Embed({
         )}
       </Outer>
     )
+  } else if (e.type === 'gallery') {
+    return (
+      <Outer style={style}>
+        {e.view.items.map(item => {
+          const image: AppBskyEmbedImages.ViewImage = {
+            thumb: item.thumbnail,
+            fullsize: item.fullsize,
+            alt: item.alt,
+            aspectRatio: item.aspectRatio,
+          }
+          return peekable ? (
+            <PeekableImageItem key={item.thumbnail} image={image} />
+          ) : (
+            <ImageItem
+              key={item.thumbnail}
+              thumbnail={item.thumbnail}
+              alt={item.alt}
+            />
+          )
+        })}
+      </Outer>
+    )
   } else if (e.type === 'link') {
     if (!e.view.external.thumb) return null
     if (!isGifEmbed(e.view.external.uri)) return null

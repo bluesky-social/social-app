@@ -2,6 +2,7 @@ import {useRef} from 'react'
 import {InteractionManager, View} from 'react-native'
 import {type AnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
+import {type AppBskyEmbedImages} from '@atproto/api'
 
 import {atoms as a, tokens} from '#/alf'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
@@ -15,16 +16,29 @@ import {useAnalytics} from '#/analytics'
 import {type EmbedType} from '#/types/bsky/post'
 import {type CommonProps} from './types'
 
+const GRID_TO_CAROUSEL_THRESHOLD = 4
+
 export function ImageEmbed({
   embed,
   ...rest
 }: CommonProps & {
-  embed: EmbedType<'images'>
+  embed: EmbedType<'images'> | EmbedType<'gallery'>
 }) {
   const ax = useAnalytics()
   const {openLightbox} = useLightboxControls()
-  const {images} = embed.view
-  const galleryEnabled = ax.features.enabled(ax.features.PostGalleryEmbedEnable)
+  const images: AppBskyEmbedImages.ViewImage[] =
+    embed.type === 'gallery'
+      ? embed.view.items.map(item => ({
+          thumb: item.thumbnail,
+          fullsize: item.fullsize,
+          alt: item.alt,
+          aspectRatio: item.aspectRatio,
+        }))
+      : embed.view.images
+  const carouselEnabled =
+    embed.type === 'gallery'
+      ? images.length > GRID_TO_CAROUSEL_THRESHOLD
+      : ax.features.enabled(ax.features.PostGalleryEmbedEnable)
 
   // Captured from AutoSizedImage so the peek-commit handler can reuse the same
   // ref + dims that a tap would — keeps the lightbox's return animation intact.
@@ -113,7 +127,7 @@ export function ImageEmbed({
       )
     }
 
-    if (galleryEnabled) {
+    if (carouselEnabled) {
       return (
         <View style={[a.mt_sm, rest.style]}>
           <Gallery

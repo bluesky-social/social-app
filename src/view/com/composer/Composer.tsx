@@ -159,7 +159,7 @@ import {
   composerReducer,
   createComposerState,
   type EmbedDraft,
-  MAX_IMAGES,
+  MAX_GALLERY_IMAGES,
   type PostAction,
   type PostDraft,
   type ThreadDraft,
@@ -1708,7 +1708,7 @@ function ComposerEmbeds({
   const video = embed.media?.type === 'video' ? embed.media.video : null
   return (
     <>
-      {embed.media?.type === 'images' && (
+      {(embed.media?.type === 'images' || embed.media?.type === 'gallery') && (
         <Gallery images={embed.media.images} dispatch={dispatch} />
       )}
 
@@ -1908,15 +1908,16 @@ function ComposerFooter({
   >(undefined)
 
   const media = post.embed.media
-  const images = media?.type === 'images' ? media.images : []
+  const images =
+    media?.type === 'images' || media?.type === 'gallery' ? media.images : []
   const video = media?.type === 'video' ? media.video : null
-  const isMaxImages = images.length >= MAX_IMAGES
+  const isMaxImages = images.length >= MAX_GALLERY_IMAGES
   const isMaxVideos = !!video
 
   let selectedAssetsCount = 0
   let isMediaSelectionDisabled = false
 
-  if (media?.type === 'images') {
+  if (media?.type === 'images' || media?.type === 'gallery') {
     isMediaSelectionDisabled = isMaxImages
     selectedAssetsCount = images.length
   } else if (media?.type === 'video') {
@@ -2017,7 +2018,11 @@ function ComposerFooter({
                 autoOpen={openGallery}
               />
               <OpenCameraBtn
-                disabled={media?.type === 'images' ? isMaxImages : !!media}
+                disabled={
+                  media?.type === 'images' || media?.type === 'gallery'
+                    ? isMaxImages
+                    : !!media
+                }
                 onAdd={onImageAdd}
               />
               <SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />

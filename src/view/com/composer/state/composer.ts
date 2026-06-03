@@ -38,6 +38,11 @@ type ImagesMedia = {
   images: ComposerImage[]
 }
 
+type GalleryMedia = {
+  type: 'gallery'
+  images: ComposerImage[]
+}
+
 type VideoMedia = {
   type: 'video'
   video: VideoState
@@ -59,7 +64,7 @@ type Link = {
 export type EmbedDraft = {
   // We'll always submit quote and actual media (images, video, gifs) chosen by the user.
   quote: Link | undefined
-  media: ImagesMedia | VideoMedia | GifMedia | undefined
+  media: ImagesMedia | GalleryMedia | VideoMedia | GifMedia | undefined
   // This field may end up ignored if we have more important things to display than a link card:
   link: Link | undefined
 }
@@ -155,6 +160,7 @@ export type ComposerAction =
     }
 
 export const MAX_IMAGES = 4
+export const MAX_GALLERY_IMAGES = 10
 
 export function composerReducer(
   state: ComposerState,
@@ -338,14 +344,38 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
       const prevMedia = state.embed.media
       let nextMedia = prevMedia
       if (!prevMedia) {
-        nextMedia = {
-          type: 'images',
-          images: action.images.slice(0, MAX_IMAGES),
+        // First selection: pick the variant based on count. ImagesMedia caps
+        // at 4 (legacy `app.bsky.embed.images`); above that promotes to the
+        // new `app.bsky.embed.gallery` (capped at 10).
+        if (action.images.length <= MAX_IMAGES) {
+          nextMedia = {
+            type: 'images',
+            images: action.images.slice(0, MAX_IMAGES),
+          }
+        } else {
+          nextMedia = {
+            type: 'gallery',
+            images: action.images.slice(0, MAX_GALLERY_IMAGES),
+          }
         }
       } else if (prevMedia.type === 'images') {
+        const combined = [...prevMedia.images, ...action.images]
+        if (combined.length <= MAX_IMAGES) {
+          nextMedia = {...prevMedia, images: combined}
+        } else {
+          // Adding more than 4 promotes the existing images into a gallery.
+          nextMedia = {
+            type: 'gallery',
+            images: combined.slice(0, MAX_GALLERY_IMAGES),
+          }
+        }
+      } else if (prevMedia.type === 'gallery') {
         nextMedia = {
           ...prevMedia,
-          images: [...prevMedia.images, ...action.images].slice(0, MAX_IMAGES),
+          images: [...prevMedia.images, ...action.images].slice(
+            0,
+            MAX_GALLERY_IMAGES,
+          ),
         }
       }
       return {
@@ -358,7 +388,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
     }
     case 'embed_update_image': {
       const prevMedia = state.embed.media
-      if (prevMedia?.type === 'images') {
+      if (prevMedia?.type === 'images' || prevMedia?.type === 'gallery') {
         const updatedImage = action.image
         const nextMedia = {
           ...prevMedia,
@@ -382,19 +412,26 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
     case 'embed_remove_image': {
       const prevMedia = state.embed.media
       let nextLabels = state.labels
-      if (prevMedia?.type === 'images') {
+      if (prevMedia?.type === 'images' || prevMedia?.type === 'gallery') {
         const removedImage = action.image
-        let nextMedia: ImagesMedia | undefined = {
-          ...prevMedia,
-          images: prevMedia.images.filter(img => {
-            return img.source.id !== removedImage.source.id
-          }),
-        }
-        if (nextMedia.images.length === 0) {
+        const remainingImages = prevMedia.images.filter(img => {
+          return img.source.id !== removedImage.source.id
+        })
+        let nextMedia: ImagesMedia | GalleryMedia | undefined
+        if (remainingImages.length === 0) {
           nextMedia = undefined
           if (!state.embed.link) {
             nextLabels = []
           }
+        } else if (
+          prevMedia.type === 'gallery' &&
+          remainingImages.length <= MAX_IMAGES
+        ) {
+          // Drop back to the legacy `app.bsky.embed.images` shape when a
+          // gallery shrinks to <=4 items, so old clients still see it.
+          nextMedia = {type: 'images', images: remainingImages}
+        } else {
+          nextMedia = {...prevMedia, images: remainingImages}
         }
         return {
           ...state,

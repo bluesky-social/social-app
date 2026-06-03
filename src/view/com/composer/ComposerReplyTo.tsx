@@ -10,6 +10,7 @@ import {
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {AppBskyEmbedGallery} from '#/lib/api/gallery-embed-shim'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {type ComposerOptsPostRef} from '#/state/shell/composer'
@@ -61,11 +62,14 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   const images = useMemo(() => {
     if (AppBskyEmbedImages.isView(embed)) {
       return embed.images
-    } else if (
-      AppBskyEmbedRecordWithMedia.isView(embed) &&
-      AppBskyEmbedImages.isView(embed.media)
-    ) {
-      return embed.media.images
+    } else if (AppBskyEmbedGallery.isView(embed)) {
+      return galleryItemsToImages(embed.items)
+    } else if (AppBskyEmbedRecordWithMedia.isView(embed)) {
+      if (AppBskyEmbedImages.isView(embed.media)) {
+        return embed.media.images
+      } else if (AppBskyEmbedGallery.isView(embed.media)) {
+        return galleryItemsToImages(embed.media.items)
+      }
     }
   }, [embed])
 
@@ -127,6 +131,19 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
       </View>
     </Pressable>
   )
+}
+
+function galleryItemsToImages(
+  items: AppBskyEmbedGallery.ViewImage[],
+): AppBskyEmbedImages.ViewImage[] {
+  // The reply-to thumbnail only renders up to 4 tiles; slicing here keeps
+  // the existing layout switch valid for galleries up to 10 items.
+  return items.slice(0, 4).map(item => ({
+    thumb: item.thumbnail,
+    fullsize: item.fullsize,
+    alt: item.alt,
+    aspectRatio: item.aspectRatio,
+  }))
 }
 
 function ComposerReplyToImages({
