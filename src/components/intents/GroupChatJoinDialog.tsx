@@ -420,8 +420,8 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
           }
           accessibilityHint={
             joinLinkPreview.requireApproval
-              ? l`Request access to group chat`
-              : l`Join group chat`
+              ? l`Tap to request access to join this group chat`
+              : l`Tap to join this group chat immediately`
           }
           size="large"
           color={buttonColor}
