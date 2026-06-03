@@ -428,7 +428,7 @@ function LinkPeek({
         {children}
       </PeekMenu.Trigger>
       <PeekMenu.Menu>
-        <PeekMenu.MenuItem id="share" onSelect={() => shareUrl(href)}>
+        <PeekMenu.MenuItem id="share" onSelect={() => void shareUrl(href)}>
           <PeekMenu.MenuItemIcon icon={ShareIcon} />
           <PeekMenu.MenuItemText>{l`Share`}</PeekMenu.MenuItemText>
         </PeekMenu.MenuItem>
