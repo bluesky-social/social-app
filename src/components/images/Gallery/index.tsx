@@ -491,6 +491,35 @@ function GalleryImage({
             useAppleWebpCodec
           />
 
+          {!hideBadges && imageCount > 1 ? (
+            <View
+              accessible={false}
+              pointerEvents="none"
+              style={[
+                a.absolute,
+                a.justify_center,
+                a.rounded_sm,
+                a.p_xs,
+                t.atoms.bg_contrast_25,
+                {
+                  top: a.p_xs.padding,
+                  right: a.p_xs.padding,
+                  opacity: 0.8,
+                },
+                largeAltBadge && {
+                  padding: 6,
+                },
+              ]}>
+              <Text
+                style={[
+                  a.font_bold,
+                  largeAltBadge ? a.text_xs : {fontSize: 8},
+                ]}>
+                {index + 1}/{imageCount}
+              </Text>
+            </View>
+          ) : null}
+
           {(hasAlt || isCropped) && !hideBadges ? (
             <View
               accessible={false}
