@@ -24,6 +24,12 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
         FeedTuner.removeMutedThreads,
       ]
     }
+    if (feedDesc.startsWith('newsfeed')) {
+      return [
+        FeedTuner.preferredLangOnly(langPrefs.contentLanguages),
+        FeedTuner.removeMutedThreads,
+      ]
+    }
     if (feedDesc === 'following' || feedDesc.startsWith('list')) {
       const feedTuners = [FeedTuner.removeOrphans]
 
