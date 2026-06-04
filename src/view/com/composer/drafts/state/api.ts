@@ -470,11 +470,11 @@ export async function draftToComposerPosts(
               height,
               mime: 'image/jpeg',
             },
-          } as ComposerImage
+          } satisfies ComposerImage
         })
 
         const images = (await Promise.all(imagePromises)).filter(
-          (img): img is ComposerImage => img !== null,
+          (img): img is NonNullable<typeof img> => img !== null,
         )
         if (images.length > 0) {
           embed.media = {type: 'images', images}
@@ -511,7 +511,7 @@ export async function draftToComposerPosts(
                   tinygif: mediaObject,
                   preview: mediaObject,
                 },
-              } as Gif,
+              },
               alt: gifData.alt,
             }
             break

@@ -489,12 +489,22 @@ export function ListConvosProviderInner({
             // Join link data not included in the log event, trigger refetch to get it
             debouncedRefetch()
           } else if (
-            ChatBskyConvoDefs.isLogIncomingJoinRequest(log) ||
             ChatBskyConvoDefs.isLogApproveJoinRequest(log) ||
-            ChatBskyConvoDefs.isLogRejectJoinRequest(log) ||
-            ChatBskyConvoDefs.isLogOutgoingJoinRequest(log)
+            ChatBskyConvoDefs.isLogRejectJoinRequest(log)
           ) {
-            // TODO Update join request count here when available. -dsb
+            queryClient.setQueriesData(
+              {queryKey: [RQKEY_ROOT]},
+              (old?: ConvoListQueryData) =>
+                updateGroupConvoJoinRequestCount(log, old, -1),
+            )
+          } else if (ChatBskyConvoDefs.isLogIncomingJoinRequest(log)) {
+            queryClient.setQueriesData(
+              {queryKey: [RQKEY_ROOT]},
+              (old?: ConvoListQueryData) =>
+                updateGroupConvoJoinRequestCount(log, old, 1),
+            )
+          } else if (ChatBskyConvoDefs.isLogOutgoingJoinRequest(log)) {
+            // Viewer isn't in the chat yet, no need to do anything
           } else if (ChatBskyConvoDefs.isLogAddReaction(log)) {
             queryClient.setQueriesData(
               {queryKey: [RQKEY_ROOT]},
@@ -760,6 +770,29 @@ function optimisticUpdate(
       ),
     })),
   }
+}
+
+function updateGroupConvoJoinRequestCount(
+  log: {convoId: string; rev: string},
+  old: ConvoListQueryData | undefined,
+  delta: 1 | -1,
+) {
+  return optimisticUpdate(log.convoId, old, convo => {
+    // Join requests are only meaningful for group convos.
+    if (!ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
+      return {...convo, rev: log.rev}
+    }
+    const current = convo.kind.joinRequestCount ?? 0
+    const next = Math.max(0, current + delta)
+    return {
+      ...convo,
+      kind: {
+        ...convo.kind,
+        joinRequestCount: next === 0 ? undefined : next,
+      },
+      rev: log.rev,
+    }
+  })
 }
 
 function removeMemberFromConvoView(

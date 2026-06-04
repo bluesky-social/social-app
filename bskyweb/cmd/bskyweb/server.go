@@ -17,11 +17,13 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
+	"regexp"
 	"strings"
 	"syscall"
 	"time"
 
 	appbsky "github.com/bluesky-social/indigo/api/bsky"
+	chat "github.com/bluesky-social/indigo/api/chat"
 	"github.com/bluesky-social/indigo/atproto/syntax"
 	"github.com/bluesky-social/indigo/util/cliutil"
 	"github.com/bluesky-social/indigo/xrpc"
@@ -37,10 +39,11 @@ import (
 )
 
 type Server struct {
-	echo  *echo.Echo
-	httpd *http.Server
-	xrpcc *xrpc.Client
-	cfg   *Config
+	echo      *echo.Echo
+	httpd     *http.Server
+	xrpcc     *xrpc.Client
+	chatXrpcc *xrpc.Client
+	cfg       *Config
 
 	ipccClient http.Client
 
@@ -54,6 +57,7 @@ type Config struct {
 	debug         bool
 	httpAddress   string
 	appviewHost   string
+	chatHost      string
 	ogcardHost    string
 	linkHost      string
 	ipccHost      string
@@ -64,6 +68,7 @@ func serve(cctx *cli.Context) error {
 	debug := cctx.Bool("debug")
 	httpAddress := cctx.String("http-address")
 	appviewHost := cctx.String("appview-host")
+	chatHost := cctx.String("chat-host")
 	ogcardHost := cctx.String("ogcard-host")
 	linkHost := cctx.String("link-host")
 	ipccHost := cctx.String("ipcc-host")
@@ -81,6 +86,15 @@ func serve(cctx *cli.Context) error {
 	xrpcc := &xrpc.Client{
 		Client: cliutil.NewHttpClient(),
 		Host:   appviewHost,
+	}
+
+	// optional client for the chat appview, used by /c/<code> for OG previews.
+	var chatXrpcc *xrpc.Client
+	if chatHost != "" {
+		chatXrpcc = &xrpc.Client{
+			Client: cliutil.NewHttpClient(),
+			Host:   chatHost,
+		}
 	}
 
 	// httpd
@@ -106,12 +120,14 @@ func serve(cctx *cli.Context) error {
 	// server
 	//
 	server := &Server{
-		echo:  e,
-		xrpcc: xrpcc,
+		echo:      e,
+		xrpcc:     xrpcc,
+		chatXrpcc: chatXrpcc,
 		cfg: &Config{
 			debug:         debug,
 			httpAddress:   httpAddress,
 			appviewHost:   appviewHost,
+			chatHost:      chatHost,
 			ogcardHost:    ogcardHost,
 			linkHost:      linkHost,
 			ipccHost:      ipccHost,
@@ -323,6 +339,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/messages/inbox", server.WebGeneric)
 	e.GET("/messages/:conversation", server.WebGeneric)
 	e.GET("/messages/:conversation/settings", server.WebGeneric)
+	e.GET("/messages/:conversation/requests", server.WebGeneric)
 
 	// profile endpoints; only first populates info
 	e.GET("/profile/:handleOrDID", server.WebProfile)
@@ -348,6 +365,9 @@ func serve(cctx *cli.Context) error {
 	e.GET("/starter-pack/:handleOrDID/:rkey", server.WebStarterPack)
 	e.GET("/starter-pack-short/:code", server.WebGeneric)
 	e.GET("/start/:handleOrDID/:rkey", server.WebStarterPack)
+
+	// chat invites
+	e.GET("/c/:code", server.WebChatInvite)
 
 	// bookmarks
 	e.GET("/saved", server.WebGeneric)
@@ -642,6 +662,43 @@ func (srv *Server) WebStarterPack(c echo.Context) error {
 		data["imgThumbUrl"] = fmt.Sprintf("%s/start/%s/%s", srv.cfg.ogcardHost, identifier, rkey)
 	}
 	return c.Render(http.StatusOK, "starterpack.html", data)
+}
+
+// chatInviteCodeRe is a permissive sanity check on the join code so we don't
+// proxy obviously-bad input to the chat appview. Codes are opaque per the
+// lexicon, but in practice URL-safe and short.
+var chatInviteCodeRe = regexp.MustCompile(`^[A-Za-z0-9_-]{1,64}$`)
+
+func (srv *Server) WebChatInvite(c echo.Context) error {
+	req := c.Request()
+	ctx := req.Context()
+	data := srv.NewTemplateContext()
+	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+
+	code := c.Param("code")
+	if !chatInviteCodeRe.MatchString(code) {
+		return c.Render(http.StatusOK, "chatinvite.html", data)
+	}
+	if srv.chatXrpcc == nil {
+		return c.Render(http.StatusOK, "chatinvite.html", data)
+	}
+
+	out, err := chat.GroupGetJoinLinkPreviews(ctx, srv.chatXrpcc, []string{code})
+	if err != nil {
+		log.Errorf("failed to fetch chat invite preview for code=%s: %v", code, err)
+		return c.Render(http.StatusOK, "chatinvite.html", data)
+	}
+	if len(out.JoinLinkPreviews) == 0 {
+		return c.Render(http.StatusOK, "chatinvite.html", data)
+	}
+	preview := out.JoinLinkPreviews[0]
+
+	data["title"] = preview.Name
+	if srv.cfg.ogcardHost != "" {
+		// bskyogcard registers this route as /chat-invite/:code, not /c/:code.
+		data["imgThumbUrl"] = fmt.Sprintf("%s/chat-invite/%s", srv.cfg.ogcardHost, code)
+	}
+	return c.Render(http.StatusOK, "chatinvite.html", data)
 }
 
 func (srv *Server) WebProfile(c echo.Context) error {

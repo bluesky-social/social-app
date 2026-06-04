@@ -87,6 +87,7 @@ function Inner({
             alt={_(
               msg`An illustration showing that trusted verifiers verify individual user accounts.`,
             )}
+            useAppleWebpCodec
           />
         </View>
 

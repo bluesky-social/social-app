@@ -209,7 +209,7 @@ export function installRebrand(i18n: I18n): void {
     })
 
   const origLoad = i18n.load.bind(i18n) as (...args: unknown[]) => void
-  i18n.load = ((a: unknown, b?: unknown) => {
+  i18n.load = (a: unknown, b?: unknown) => {
     if (typeof a === 'string') {
       return origLoad(a, rebrandMessages(b as LinguiMessages))
     }
@@ -220,5 +220,5 @@ export function installRebrand(i18n: I18n): void {
       out[locale] = rebrandMessages(all[locale])
     }
     return origLoad(out)
-  }) as I18n['load']
+  }
 }

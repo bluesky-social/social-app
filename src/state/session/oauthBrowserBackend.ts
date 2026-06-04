@@ -74,7 +74,7 @@ function openDb(): Promise<IDBDatabase> {
       }
     }
     req.onsuccess = () => resolve(req.result)
-    req.onerror = () => reject(req.error)
+    req.onerror = () => reject(req.error ?? new Error('IndexedDB open failed'))
   })
   return dbPromise
 }
@@ -90,7 +90,8 @@ function tx<T>(
         const t = db.transaction(store, mode)
         const req = fn(t.objectStore(store))
         req.onsuccess = () => resolve(req.result)
-        req.onerror = () => reject(req.error)
+        req.onerror = () =>
+          reject(req.error ?? new Error('IndexedDB request failed'))
       }),
   )
 }
@@ -188,7 +189,7 @@ function createKeyStore<V extends {dpopKey: Key}>(
         ...rest,
         dpopKey: encodeKey(dpopKey),
         ...(ttlMs ? {__storedAt: Date.now()} : {}),
-      } as Stored
+      }
       await tx(store, 'readwrite', s => s.put(encoded, key))
     },
     del,

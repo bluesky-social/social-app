@@ -143,6 +143,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
 
   const [demoMode] = useDemoMode()
   const {isActive: live} = useActorStatus(profile)
+  const isLabeler = profile?.associated?.labeler
 
   return (
     <>
@@ -275,9 +276,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   <View
                     style={[
                       styles.ctrlIcon,
-                      styles.profileIcon,
+                      isLabeler ? styles.profileIconSquare : styles.profileIcon,
                       isAtMyProfile && [
-                        styles.onProfile,
+                        isLabeler ? styles.onProfileSquare : styles.onProfile,
                         {
                           borderColor: t.atoms.text.color,
                           borderWidth: live ? 0 : 1,

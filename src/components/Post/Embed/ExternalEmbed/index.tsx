@@ -108,6 +108,7 @@ export const ExternalEmbed = ({
               source={{uri: imageUri}}
               accessibilityIgnoresInvertColors
               loading="lazy"
+              useAppleWebpCodec
             />
           ) : undefined}
 
