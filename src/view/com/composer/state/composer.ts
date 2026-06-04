@@ -160,7 +160,14 @@ export type ComposerAction =
       draftId: string
     }
 
-export const MAX_IMAGES = 4
+/**
+ * Threshold for picking between embed variants. <= this count uses the
+ * legacy `app.bsky.embed.images` shape; > this count promotes to
+ * `app.bsky.embed.gallery`. Named to flag that if/when we deprecate the
+ * legacy images embed entirely, this constant (and the variant split it
+ * gates) should go away.
+ */
+export const LEGACY_IMAGES_EMBED_MAX = 4
 export const MAX_GALLERY_IMAGES = 10
 
 /**
@@ -174,8 +181,8 @@ export const MAX_GALLERY_IMAGES = 10
 function imagesToMediaVariant(
   images: ComposerImage[],
 ): ImagesMedia | GalleryMedia {
-  return images.length <= MAX_IMAGES
-    ? {type: 'images', images: images.slice(0, MAX_IMAGES)}
+  return images.length <= LEGACY_IMAGES_EMBED_MAX
+    ? {type: 'images', images: images.slice(0, LEGACY_IMAGES_EMBED_MAX)}
     : {type: 'gallery', images: images.slice(0, MAX_GALLERY_IMAGES)}
 }
 
@@ -366,8 +373,8 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
           : 0
       const incomingCount = prevCount + action.images.length
       if (incomingCount > MAX_GALLERY_IMAGES) {
-        // TODO: surface this to the user via a toast once the composer
-        // state shape supports reducer-emitted errors. The hard slice in
+        // Defense in depth: callers (applyGalleryCap in Composer) should have
+        // already trimmed and surfaced a toast. The hard slice in
         // imagesToMediaVariant still drops the excess so the cap holds.
         logger.warn('composer: image add exceeds MAX_GALLERY_IMAGES', {
           prevCount,

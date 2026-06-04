@@ -15,7 +15,7 @@ import {createPublicAgent} from '#/state/session/agent'
 import {
   type ComposerState,
   type EmbedDraft,
-  MAX_IMAGES,
+  LEGACY_IMAGES_EMBED_MAX,
   type PostDraft,
 } from '#/view/com/composer/state/composer'
 import {type VideoState} from '#/view/com/composer/state/video'
@@ -535,7 +535,7 @@ export async function draftToComposerPosts(
       }
       if (restoredImages.length > 0) {
         embed.media =
-          restoredImages.length <= MAX_IMAGES
+          restoredImages.length <= LEGACY_IMAGES_EMBED_MAX
             ? {type: 'images', images: restoredImages}
             : {type: 'gallery', images: restoredImages}
       }
