@@ -355,7 +355,10 @@ async function resolveMedia(
     const items: $Typed<AppBskyEmbedGallery.Image>[] = await Promise.all(
       imagesDraft.map(async (image, i) => {
         logger.debug(`Compressing image #${i}`)
-        const {path, width, height, mime} = await compressImage(image)
+        const {path, width, height, mime} = await compressImage(
+          image,
+          IMAGE_SIZE_CONFIG_POSTS,
+        )
         logger.debug(`Uploading image #${i}`)
         const res = await uploadBlob(agent, path, mime)
         return {
