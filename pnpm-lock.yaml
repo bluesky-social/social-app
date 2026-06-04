@@ -256,6 +256,9 @@ importers:
       '@bsky.app/alf':
         specifier: ^0.1.14
         version: 0.1.14(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      '@bsky.app/expo-dynamic-app-icon':
+        specifier: ^1.8.5
+        version: 1.8.5(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       '@bsky.app/expo-guess-language':
         specifier: ^0.2.8
         version: 0.2.8(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -331,9 +334,6 @@ importers:
       '@lingui/react':
         specifier: ^5.9.2
         version: 5.9.5(@lingui/babel-plugin-lingui-macro@5.9.5(typescript@6.0.3))(react@19.1.0)
-      '@mozzius/expo-dynamic-app-icon':
-        specifier: ^1.8.0
-        version: 1.8.1(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       '@react-native-async-storage/async-storage':
         specifier: 2.2.0
         version: 2.2.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))
@@ -1624,6 +1624,13 @@ packages:
       react: '*'
       react-native: '*'
 
+  '@bsky.app/expo-dynamic-app-icon@1.8.5':
+    resolution: {integrity: sha512-yLpd7XEEiXWpVrh81mhpZx2WrX2WwrJFEV81lNxnX61Cp6yG+ZKX3Oz1v58vpyL5p0I38njVUJ9s+n5NR4EjNw==}
+    peerDependencies:
+      expo: ^52 || ^53 || ^54
+      react: '*'
+      react-native: '*'
+
   '@bsky.app/expo-guess-language@0.2.8':
     resolution: {integrity: sha512-krcQfMSJn39kaFRpaOWxLUW9rT04reoBqjQviu2fTGQWXWEImG25SJondSObVNyGXlmRMrltt72Sc+aRPpQeog==}
     peerDependencies:
@@ -2326,13 +2333,6 @@ packages:
 
   '@messageformat/parser@5.1.1':
     resolution: {integrity: sha512-3p0YRGCcTUCYvBKLIxtDDyrJ0YijGIwrTRu1DT8gIviIDZru8H23+FkY6MJBzM1n9n20CiM4VeDYuBsrrwnLjg==}
-
-  '@mozzius/expo-dynamic-app-icon@1.8.1':
-    resolution: {integrity: sha512-JWNY9gw06s+q54b2SqWf6BEo7IYuJCtjJDtca+wTo6kP5dH/wYK85JdLrMbdy+cwOMScEY85uU6Mjn0wkWTLnw==}
-    peerDependencies:
-      expo: ^52 || ^53 || ^54
-      react: '*'
-      react-native: '*'
 
   '@napi-rs/wasm-runtime@0.2.12':
     resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
@@ -10446,6 +10446,14 @@ snapshots:
       react-native: 0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
       react-responsive: 10.0.1(react@19.1.0)
 
+  '@bsky.app/expo-dynamic-app-icon@1.8.5(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@expo/image-utils': 0.8.12
+      expo: 54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-native: 0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
+      xcode: 3.0.1
+
   '@bsky.app/expo-guess-language@0.2.8(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
     dependencies:
       expo: 54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -11448,14 +11456,6 @@ snapshots:
   '@messageformat/parser@5.1.1':
     dependencies:
       moo: 0.5.3
-
-  '@mozzius/expo-dynamic-app-icon@1.8.1(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@expo/image-utils': 0.8.12
-      expo: 54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-      react: 19.1.0
-      react-native: 0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
-      xcode: 3.0.1
 
   '@napi-rs/wasm-runtime@0.2.12':
     dependencies:
