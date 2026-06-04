@@ -35,6 +35,18 @@ export async function restrictChatSettings({
 }): Promise<void> {
   const cached = getOtherRequiredDataFromCache({did})?.actorDeclaration
 
+  // When the cache is empty we fall back to defaults for any dimension we're
+  // not explicitly restricting, which could drop/downgrade a value the user
+  // has actually set server-side. The cache should be hydrated by
+  // prefetchOtherRequiredData before any of these paths fire, so log if that
+  // assumption ever breaks. (Restricting both dimensions is unaffected, so
+  // don't warn for the common signup/birthdate-change case.)
+  if (!cached && (!restrictIncoming || !restrictGroupInvites)) {
+    logger.warn(
+      `restrictChatSettings: cache miss, falling back to defaults for unrestricted dimensions`,
+    )
+  }
+
   const record: ChatBskyActorDeclaration.Main = {
     $type: 'chat.bsky.actor.declaration',
     allowIncoming: restrictIncoming
