@@ -37,6 +37,7 @@ import {
 import {ChatInviteEmbed} from './ChatInviteEmbed'
 import {ExternalEmbed} from './ExternalEmbed'
 import {ModeratedFeedEmbed} from './FeedEmbed'
+import {GalleryFallbackEmbed} from './GalleryFallbackEmbed'
 import {ImageEmbed} from './ImageEmbed'
 import {ModeratedListEmbed} from './ListEmbed'
 import {PostPlaceholder as PostPlaceholderText} from './PostPlaceholder'
@@ -55,7 +56,8 @@ export function Embed({embed: rawEmbed, ...rest}: EmbedProps) {
   switch (embed.type) {
     case 'images':
     case 'link':
-    case 'video': {
+    case 'video':
+    case 'gallery': {
       return <MediaEmbed embed={embed} {...rest} />
     }
     case 'feed':
@@ -145,6 +147,15 @@ function MediaEmbed({
           modui={rest.moderation?.ui('contentMedia')}
           activeStyle={[a.mt_sm]}>
           <VideoEmbed embed={embed.view} />
+        </ContentHider>
+      )
+    }
+    case 'gallery': {
+      return (
+        <ContentHider
+          modui={rest.moderation?.ui('contentMedia')}
+          activeStyle={[a.mt_sm]}>
+          <GalleryFallbackEmbed count={embed.view.items.length} />
         </ContentHider>
       )
     }
