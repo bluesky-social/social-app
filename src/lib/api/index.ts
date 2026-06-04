@@ -21,6 +21,7 @@ import {sha256} from 'js-sha256'
 import {CID} from 'multiformats/cid'
 import * as Hasher from 'multiformats/hashes/hasher'
 
+import {IMAGE_SIZE_CONFIG_POSTS} from '#/lib/constants'
 import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
@@ -324,7 +325,10 @@ async function resolveMedia(
     const images: AppBskyEmbedImages.Image[] = await Promise.all(
       imagesDraft.map(async (image, i) => {
         logger.debug(`Compressing image #${i}`)
-        const {path, width, height, mime} = await compressImage(image)
+        const {path, width, height, mime} = await compressImage(
+          image,
+          IMAGE_SIZE_CONFIG_POSTS,
+        )
         logger.debug(`Uploading image #${i}`)
         const res = await uploadBlob(agent, path, mime)
         return {

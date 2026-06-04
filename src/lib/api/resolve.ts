@@ -7,7 +7,7 @@ import {
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 
-import {DM_SERVICE_HEADERS, POST_IMG_MAX} from '#/lib/constants'
+import {DM_SERVICE_HEADERS, IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
 import {resolveShortLink} from '#/lib/link-meta/resolve-short-link'
 import {downloadAndResize} from '#/lib/media/manip'
@@ -284,10 +284,7 @@ export async function imageToThumb(
   try {
     const img = await downloadAndResize({
       uri: imageUri,
-      width: POST_IMG_MAX.width,
-      height: POST_IMG_MAX.height,
-      mode: 'contain',
-      maxSize: POST_IMG_MAX.size,
+      ...IMAGE_SIZE_CONFIG_2K_1MB,
       timeout: 15e3,
     })
     if (img) {

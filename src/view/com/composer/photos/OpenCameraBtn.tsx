@@ -3,7 +3,6 @@ import * as MediaLibrary from 'expo-media-library'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {POST_IMG_MAX} from '#/lib/constants'
 import {useCameraPermission} from '#/lib/hooks/usePermissions'
 import {openCamera} from '#/lib/media/picker'
 import {logger} from '#/logger'
@@ -35,7 +34,7 @@ export function OpenCameraBtn({disabled, onAdd}: Props) {
       }
 
       const img = await openCamera({
-        aspect: [POST_IMG_MAX.width, POST_IMG_MAX.height],
+        aspect: [1, 1],
       })
 
       // If we don't have permissions it's fine, we just wont save it. The post itself will still have access to
