@@ -134,7 +134,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
         ) {
           errorMessage = l`The member limit has been reached.`
         } else if (error instanceof ChatBskyGroupRequestJoin.UserKickedError) {
-          errorMessage = l`You have been removed from this group.`
+          errorMessage = l`You have been previously removed from this group and can’t join it using this link.`
         }
         Toast.show(errorMessage)
       },
