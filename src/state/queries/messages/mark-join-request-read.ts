@@ -70,7 +70,7 @@ export function useMarkJoinRequestsRead(convoId: string | undefined) {
       return {prevConvo, prevListEntries}
     },
     onError: (error, _, context) => {
-      logger.error(error)
+      logger.error('Failed to mark join requests as read', {safeMessage: error})
       if (!convoId) return
       if (context?.prevConvo) {
         queryClient.setQueryData(CONVO_KEY(convoId), context.prevConvo)

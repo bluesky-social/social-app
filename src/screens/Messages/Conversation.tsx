@@ -29,8 +29,7 @@ import {ConvoStatus} from '#/state/messages/convo/types'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useConvoQuery} from '#/state/queries/messages/conversation'
-import {useListJoinRequestsQuery} from '#/state/queries/messages/list-join-requests'
-import {useMarkJoinRequestsRead} from '#/state/queries/messages/mark-join-request.read'
+import {useMarkJoinRequestsRead} from '#/state/queries/messages/mark-join-request-read'
 import {useSession} from '#/state/session'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, web} from '#/alf'
@@ -173,7 +172,6 @@ function InnerReady({
   isDisabled: boolean
 }) {
   const navigation = useNavigation<NavigationProp>()
-  const {currentAccount} = useSession()
   const {top: topInset} = useSafeAreaInsets()
   const [headerHeight, setHeaderHeight] = useState(0)
   const onHeaderLayout = (e: LayoutChangeEvent) => {
@@ -184,13 +182,6 @@ function InnerReady({
   const {needsEmailVerification} = useEmail()
   const emailDialogControl = useEmailDialogControl()
 
-  const isOwner =
-    convo?.kind === 'group' && convo.primaryMember?.did === currentAccount?.did
-
-  const {hasNextPage: hasMoreRequests} = useListJoinRequestsQuery({
-    convoId: convo?.view.id,
-    enabled: isOwner,
-  })
   const unreadRequestCount =
     convo?.kind === 'group' && ChatBskyConvoDefs.isGroupConvo(convo.view.kind)
       ? (convo.view.kind.unreadJoinRequestCount ?? 0)
@@ -288,7 +279,6 @@ function InnerReady({
         <RequestStatus
           top={headerHeight}
           count={unreadRequestCount}
-          more={!!hasMoreRequests}
           onDismiss={() => {
             markJoinRequestsRead()
           }}

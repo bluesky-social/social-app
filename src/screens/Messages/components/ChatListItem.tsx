@@ -25,6 +25,7 @@ import {
   precacheConvoQuery,
   useMarkAsReadMutation,
 } from '#/state/queries/messages/conversation'
+import {JOIN_REQUESTS_THRESHOLD} from '#/state/queries/messages/list-join-requests'
 import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
@@ -216,9 +217,9 @@ function GroupChatItem({
       isDeletedAccount={false}
       subtitle={
         convo.details.unreadJoinRequestCount
-          ? convo.details.unreadJoinRequestCount > 20
+          ? convo.details.unreadJoinRequestCount > JOIN_REQUESTS_THRESHOLD
             ? l({
-                message: '20+ new join requests',
+                message: `${JOIN_REQUESTS_THRESHOLD}+ new join requests`,
                 context:
                   'Displayed when there are more than 20 requests to join a group chat',
               })

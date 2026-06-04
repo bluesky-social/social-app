@@ -1,12 +1,12 @@
-import {useEffect} from 'react'
-import {Animated, Pressable} from 'react-native'
+import {Pressable} from 'react-native'
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
-import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
-import {UNREAD_LIMIT} from '#/state/queries/messages/list-conversations'
+import {JOIN_REQUESTS_THRESHOLD} from '#/state/queries/messages/list-join-requests'
 import {atoms as a, useTheme} from '#/alf'
+import * as tokens from '#/alf/tokens'
 import {Envelope_Stroke2_Corner2_Rounded as EnvelopeIcon} from '#/components/icons/Envelope'
 import {TimesLarge_Stroke2_Corner0_Rounded as CloseIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
@@ -14,51 +14,42 @@ import {Text} from '#/components/Typography'
 export function RequestStatus({
   top,
   count,
-  more,
   onDismiss,
   onPress,
 }: {
   top: number
   count: number
-  more: boolean
   onDismiss: () => void
   onPress: () => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const fadeAnim = useAnimatedValue(0)
-
-  useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 200,
-      delay: 200,
-      useNativeDriver: true,
-    }).start()
-  }, [fadeAnim])
 
   return (
     <Animated.View
+      entering={FadeIn.duration(200).delay(200)}
+      exiting={FadeOut.duration(200)}
       style={[
         a.absolute,
         a.z_50,
-        a.mx_md,
         a.rounded_full,
         a.p_lg,
+        a.pr_xl,
         {
           top: top + a.m_md.margin,
           backgroundColor: t.palette.primary_50,
           borderWidth: 1,
           borderColor: t.palette.primary_100,
-          left: a.m_md.margin,
-          right: a.m_md.margin,
-          opacity: fadeAnim,
+          left: tokens.space.md,
+          right: tokens.space.md,
         },
       ]}>
       <Pressable
         accessibilityRole="button"
+        accessibilityLabel={l`View incoming requests`}
+        accessibilityHint={l`View incoming requests to join this group chat`}
         hitSlop={HITSLOP_10}
-        style={[a.flex_row, a.align_center, a.justify_between]}
+        style={[a.flex_row, a.align_center]}
         onPress={onPress}>
         <EnvelopeIcon size="md" fill={t.palette.primary_500} />
         <Text
@@ -69,9 +60,9 @@ export function RequestStatus({
             a.font_semi_bold,
             {color: t.palette.primary_500},
           ]}>
-          {count >= UNREAD_LIMIT && more
+          {count > JOIN_REQUESTS_THRESHOLD
             ? l({
-                message: `${count}+ new join requests`,
+                message: `${JOIN_REQUESTS_THRESHOLD}+ new join requests`,
                 comment:
                   'Displayed when the number of requests is greater than 20',
               })
@@ -80,9 +71,15 @@ export function RequestStatus({
                 other: '# new join requests',
               })}
         </Text>
-        <Pressable accessibilityRole="button" onPress={onDismiss}>
-          <CloseIcon size="md" fill={t.palette.primary_500} />
-        </Pressable>
+      </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={l`Close banner`}
+        accessibilityHint={l`Close the incoming requests banner`}
+        hitSlop={HITSLOP_10}
+        onPress={onDismiss}
+        style={[a.absolute, {top: tokens.space.lg, right: tokens.space.lg}]}>
+        <CloseIcon size="md" fill={t.palette.primary_500} />
       </Pressable>
     </Animated.View>
   )
