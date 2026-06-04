@@ -83,7 +83,7 @@ export function usePrefetchJoinLinkPreviews() {
     return queryClient.prefetchQuery({
       queryKey: createJoinLinkPreviewQueryKey({codes, hasSession}),
       queryFn: () => fetchJoinLinkPreviews({agent, codes, hasSession}),
-      staleTime: STALE.MINUTES.ONE,
+      staleTime: STALE.SECONDS.FIFTEEN,
     })
   }
 }
@@ -110,7 +110,7 @@ export function useGetJoinLinkPreview() {
           queryKey: createJoinLinkPreviewQueryKey({codes: [code], hasSession}),
           queryFn: () =>
             fetchJoinLinkPreviews({agent, codes: [code], hasSession}),
-          staleTime: STALE.MINUTES.ONE,
+          staleTime: STALE.SECONDS.FIFTEEN,
         })
         return data.joinLinkPreviews[0]
       } catch (error) {
