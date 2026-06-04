@@ -197,7 +197,7 @@ export function MessageInput({
               {flexBasis: 'auto', minHeight: MIN_HEIGHT},
               a.flex_shrink_0,
               a.flex_grow,
-              a.text_md,
+              a.text_input,
               a.px_lg,
               t.atoms.text,
               platform({
