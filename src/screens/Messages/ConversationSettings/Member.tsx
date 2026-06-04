@@ -146,12 +146,6 @@ export function Member({
                       web(a.pt_2xs),
                     ]}>
                     {joinedReason}
-                    {showRemoveButton && (
-                      <>
-                        {' • '}
-                        <Trans>Blocked</Trans>
-                      </>
-                    )}
                   </Text>
                 )}
               </View>
