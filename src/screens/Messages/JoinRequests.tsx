@@ -411,7 +411,6 @@ function Header({
   count?: number
   hasMoreRequests?: boolean
 }) {
-  const {t: l} = useLingui()
   return (
     <Layout.Header.Outer>
       <Layout.Header.BackButton />
@@ -420,11 +419,11 @@ function Header({
           {count === undefined ? (
             <Trans>Requests to join</Trans>
           ) : hasMoreRequests ? (
-            l({
-              message: `${count}+ requests to join`,
-              comment:
-                'Displayed when there are more requests to join a group chat than have been loaded',
-            })
+            <Plural
+              value={count}
+              other="#+ requests to join"
+              comment="Displayed when there are more requests to join a group chat than have been loaded"
+            />
           ) : (
             <Plural
               value={count}
