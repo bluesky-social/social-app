@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, ScrollView, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {FocusGuards, FocusScope} from 'radix-ui/internal'
@@ -226,13 +226,17 @@ function LightboxGallery({
         )}
       </View>
       {img.alt ? (
-        <View
+        <ScrollView
+          // Cap the overlay height so long alt text scrolls within the overlay
+          // instead of growing past the top of the screen and pushing the image
+          // out of view. Only scrollable once expanded.
           style={[
-            a.px_4xl,
-            a.py_2xl,
+            styles.altScroll,
             {backgroundColor: 'rgba(0, 0, 0, 0.45)'},
             delayedFadeInAnim,
-          ]}>
+          ]}
+          scrollEnabled={isAltExpanded}
+          contentContainerStyle={[a.px_4xl, a.py_2xl]}>
           <Pressable
             accessibilityLabel={l`Expand alt text`}
             accessibilityHint={l`If alt text is long, toggles alt text expanded state`}
@@ -246,7 +250,7 @@ function LightboxGallery({
               {img.alt}
             </Text>
           </Pressable>
-        </View>
+        </ScrollView>
       ) : null}
       {imgs.length > 1 && (
         <div aria-live="polite" aria-atomic="true" style={a.sr_only}>
@@ -444,6 +448,14 @@ const styles = StyleSheet.create({
     maxHeight: `calc(min(400px, 100vh))`,
     padding: 16,
     boxSizing: 'border-box',
+  },
+  altScroll: {
+    // Size to content like the View it replaced, rather than filling the
+    // column via ScrollView's default flexGrow.
+    flexGrow: 0,
+    flexShrink: 0,
+    // @ts-ignore web-only -sfn
+    maxHeight: '50vh',
   },
   menuBtn: {
     top: 20,
