@@ -4,6 +4,7 @@ import {type FlatList} from 'react-native'
 import {ITEM_GAP} from '#/components/images/Gallery/const'
 import {tween} from '#/components/images/Gallery/tween'
 import {getOffsetForIndex} from '#/components/images/Gallery/utils'
+import {IS_WEB_SAFARI} from '#/env'
 
 const DRAG_THRESHOLD = 3
 const FLICK_DECAY = 0.85
@@ -258,6 +259,7 @@ export function usePointerHandlers({
      * Listener must be non-passive so preventDefault is honored.
      */
     const onWheel = (e: WheelEvent) => {
+      if (!IS_WEB_SAFARI) return
       // Only act on predominantly-horizontal scrolls. Vertical-dominant events
       // are page scroll and must not be swallowed.
       if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
