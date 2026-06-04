@@ -19,7 +19,7 @@ import {useStarterPackQuery} from '#/state/queries/starter-packs'
 import {
   useActiveStarterPack,
   useSetActiveStarterPack,
-} from '#/state/shell/starter-pack'
+} from '#/state/shell/landing'
 import {LoggedOutScreenState} from '#/view/com/auth/LoggedOut'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {Logo} from '#/view/icons/Logo'

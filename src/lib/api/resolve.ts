@@ -2,11 +2,12 @@ import {
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
   type BskyAgent,
+  type ChatBskyGroupDefs,
   type ComAtprotoRepoStrongRef,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 
-import {IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
+import {DM_SERVICE_HEADERS, IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
 import {resolveShortLink} from '#/lib/link-meta/resolve-short-link'
 import {downloadAndResize} from '#/lib/media/manip'
@@ -16,6 +17,7 @@ import {
 } from '#/lib/strings/starter-pack'
 import {
   convertBskyAppUrlIfNeeded,
+  getChatInviteCodeFromUrl,
   isBskyCustomFeedUrl,
   isBskyListUrl,
   isBskyPostUrl,
@@ -71,12 +73,20 @@ type ResolvedStarterPackRecord = {
   view: AppBskyGraphDefs.StarterPackView
 }
 
+type ResolvedChatInvite = {
+  type: 'chat-invite'
+  uri: string
+  code: string
+  view?: ChatBskyGroupDefs.JoinLinkPreviewView
+}
+
 export type ResolvedLink =
   | ResolvedExternalLink
   | ResolvedPostRecord
   | ResolvedFeedRecord
   | ResolvedListRecord
   | ResolvedStarterPackRecord
+  | ResolvedChatInvite
 
 export class EmbeddingDisabledError extends Error {
   constructor() {
@@ -139,6 +149,19 @@ export async function resolveLink(
       },
       kind: 'list',
       view: res.data.list,
+    }
+  }
+  const chatInviteCode = getChatInviteCodeFromUrl(uri)
+  if (chatInviteCode) {
+    const res = await agent.chat.bsky.group.getJoinLinkPreviews(
+      {codes: [chatInviteCode]},
+      {headers: DM_SERVICE_HEADERS},
+    )
+    return {
+      type: 'chat-invite',
+      uri,
+      code: chatInviteCode,
+      view: res.data.joinLinkPreviews[0],
     }
   }
   if (isBskyStartUrl(uri) || isBskyStarterPackUrl(uri)) {
@@ -246,6 +269,10 @@ async function resolveExternal(
     title: result.title ?? '',
     description: result.description ?? '',
     thumb: result.image ? await imageToThumb(result.image) : undefined,
+    /*
+     * New fields from Standard Site integration. Other fields are derived from
+     * opengraph/oembed as before.
+     */
     associatedRefs: result.associatedRefs,
     view: result.view,
   }

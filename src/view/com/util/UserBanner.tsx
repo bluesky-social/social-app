@@ -132,6 +132,7 @@ export function UserBanner({
                     source={{uri: banner}}
                     accessible={true}
                     accessibilityIgnoresInvertColors
+                    useAppleWebpCodec
                   />
                 ) : (
                   <View
@@ -219,6 +220,7 @@ export function UserBanner({
       blurRadius={moderation?.blur ? 100 : 0}
       accessible={true}
       accessibilityIgnoresInvertColors
+      useAppleWebpCodec
     />
   ) : (
     <View

@@ -12,6 +12,7 @@ import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {makeProfileLink} from '#/lib/routes/links'
+import {getChatInviteCodeFromUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -33,6 +34,7 @@ import {
   type EmbedType,
   parseEmbed,
 } from '#/types/bsky/post'
+import {ChatInviteEmbed} from './ChatInviteEmbed'
 import {ExternalEmbed} from './ExternalEmbed'
 import {ModeratedFeedEmbed} from './FeedEmbed'
 import {ImageEmbed} from './ImageEmbed'
@@ -106,6 +108,21 @@ function MediaEmbed({
               view={embed.view.external}
               onEmbedInteractionCallback={rest.onOpen}
               style={[a.mt_sm, rest.style]}
+            />
+          </ContentHider>
+        )
+      }
+      const chatInviteCode = getChatInviteCodeFromUrl(embed.view.external.uri)
+      if (chatInviteCode) {
+        return (
+          <ContentHider
+            modui={rest.moderation?.ui('contentMedia')}
+            activeStyle={[a.mt_sm]}>
+            <ChatInviteEmbed
+              code={chatInviteCode}
+              link={embed.view.external}
+              onOpen={rest.onOpen}
+              style={rest.style}
             />
           </ContentHider>
         )

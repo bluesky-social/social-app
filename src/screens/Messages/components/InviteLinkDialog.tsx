@@ -5,8 +5,7 @@ import {
   moderateProfile,
   type ModerationOpts,
 } from '@atproto/api'
-import {plural} from '@lingui/core/macro'
-import {Trans, useLingui} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
@@ -178,11 +177,7 @@ export function InviteLinkDialog({
             <Text style={[a.text_md, a.leading_snug]}>
               <Trans>
                 Group chats can only have a maximum of{' '}
-                {plural(convo.details.memberLimit, {
-                  one: '# person',
-                  other: '# people',
-                })}
-                .
+                <Plural value={convo.details.memberLimit} other="# people" />.
               </Trans>
             </Text>
             <Text style={[a.text_md, a.leading_snug]}>
@@ -297,8 +292,8 @@ export function InviteLinkDialog({
       const linkEnabled = joinLink?.enabledStatus === 'enabled'
       const linkDisabled = joinLink?.enabledStatus === 'disabled'
       const joinLinkURI = joinLink?.code
-        ? `https://bsky.app/chat/${joinLink.code}`
-        : 'https://bsky.app/chat'
+        ? `https://bsky.app/c/${joinLink.code}`
+        : 'https://bsky.app/'
       const createdAt = joinLink ? new Date(joinLink.createdAt) : null
       const currentOption =
         whoCanJoinOptions.find(

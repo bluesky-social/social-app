@@ -134,11 +134,10 @@ export default defineConfig(
       'react-native/no-inline-styles': 'off',
       ...reactNativeA11y.configs.all.rules,
       'react-compiler/react-compiler': 'warn',
-      // TODO: Fix these and set to error
-      'react-hooks/set-state-in-effect': 'warn',
-      'react-hooks/purity': 'warn',
-      'react-hooks/refs': 'warn',
-      'react-hooks/immutability': 'warn',
+      'react-hooks/set-state-in-effect': 'error',
+      'react-hooks/purity': 'error',
+      'react-hooks/refs': 'error',
+      'react-hooks/immutability': 'error',
 
       /**
        * Import sorting
@@ -235,9 +234,8 @@ export default defineConfig(
         },
       ],
       /**
-       * Maintain previous behavior - these are stricter in typescript-eslint
-       * v8 `warn` ones are probably worth fixing. `off` ones are a bit too
-       * nit-picky
+       * Maintain previous behavior via eslint-suppressions.json - these are
+       * stricter in typescript-eslint v8. `off` ones are a bit too nit-picky.
        */
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/ban-ts-comment': 'off',
@@ -247,18 +245,18 @@ export default defineConfig(
       '@typescript-eslint/unbound-method': 'off',
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',
-      '@typescript-eslint/no-unsafe-member-access': 'warn',
-      '@typescript-eslint/no-unsafe-call': 'warn',
-      '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-misused-promises': 'warn',
-      '@typescript-eslint/require-await': 'warn',
-      '@typescript-eslint/no-unsafe-enum-comparison': 'warn',
-      '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
-      '@typescript-eslint/no-redundant-type-constituents': 'warn',
-      '@typescript-eslint/no-duplicate-type-constituents': 'warn',
-      '@typescript-eslint/no-base-to-string': 'warn',
-      '@typescript-eslint/prefer-promise-reject-errors': 'warn',
-      '@typescript-eslint/await-thenable': 'warn',
+      '@typescript-eslint/no-unsafe-member-access': 'error',
+      '@typescript-eslint/no-unsafe-call': 'error',
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-misused-promises': 'error',
+      '@typescript-eslint/require-await': 'error',
+      '@typescript-eslint/no-unsafe-enum-comparison': 'error',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'error',
+      '@typescript-eslint/no-redundant-type-constituents': 'error',
+      '@typescript-eslint/no-duplicate-type-constituents': 'error',
+      '@typescript-eslint/no-base-to-string': 'error',
+      '@typescript-eslint/prefer-promise-reject-errors': 'error',
+      '@typescript-eslint/await-thenable': 'error',
 
       'no-restricted-imports': [
         'error',
