@@ -61,10 +61,6 @@ export type Embed =
       view: $Typed<AppBskyEmbedVideo.View>
     }
   | {
-      type: 'gallery'
-      view: $Typed<AppBskyEmbedGallery.View>
-    }
-  | {
       type: 'post_with_media'
       view: Embed
       media: Embed
@@ -153,11 +149,6 @@ export function parseEmbed(embed: AppBskyFeedDefs.PostView['embed']): Embed {
       type: 'post_with_media',
       view: parseEmbedRecordView(embed.record),
       media: parseEmbed(embed.media),
-    }
-  } else if (AppBskyEmbedGallery.isView(embed)) {
-    return {
-      type: 'gallery',
-      view: embed,
     }
   } else {
     return {

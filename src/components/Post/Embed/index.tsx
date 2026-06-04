@@ -57,8 +57,7 @@ export function Embed({embed: rawEmbed, ...rest}: EmbedProps) {
     case 'images':
     case 'gallery':
     case 'link':
-    case 'video':
-    case 'gallery': {
+    case 'video': {
       return <MediaEmbed embed={embed} {...rest} />
     }
     case 'feed':
@@ -92,8 +91,7 @@ function MediaEmbed({
   embed: TEmbed
 }) {
   switch (embed.type) {
-    case 'images':
-    case 'gallery': {
+    case 'images': {
       return (
         <ContentHider
           modui={rest.moderation?.ui('contentMedia')}
