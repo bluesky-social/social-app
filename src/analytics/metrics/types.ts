@@ -586,9 +586,80 @@ export type Events = {
       | 'SendViaChatDialog'
       | 'ConvoSettings'
   }
+
+  // Group chat adoption
   'groupchat:create': {
     logContext: 'NewChatDialog'
   }
+  'groupchat:landingPage:view': {
+    hasSession: boolean
+  }
+  'groupchat:inviteLink:redeem': {
+    isNewAccount: boolean
+  }
+
+  // Group chat user interactions
+  'groupchat:message:send': {
+    convoId: string
+    isOwner: boolean
+  }
+  'groupchat:mute': {
+    convoId: string
+  }
+  'groupchat:unmute': {
+    convoId: string
+  }
+  'groupchat:leave': {
+    convoId: string
+    isOwner: boolean
+  }
+  'groupchat:settings:view': {
+    convoId: string
+    isOwner: boolean
+  }
+  'groupchat:inviteLink:shareButton:press': {
+    convoId: string
+    method: 'post' | 'copy' | 'native'
+  }
+  'groupchat:inviteLink:shared': {
+    convoId: string
+    method: 'post' | 'dm'
+  }
+
+  // Group chat owner actions
+  'groupchat:owner:editName': {
+    convoId: string
+  }
+  'groupchat:owner:lock': {
+    convoId: string
+  }
+  'groupchat:owner:unlock': {
+    convoId: string
+  }
+  'groupchat:owner:kickMember': {
+    convoId: string
+  }
+  'groupchat:owner:inviteMember': {
+    convoId: string
+  }
+  'groupchat:owner:joinRequest:accept': {
+    convoId: string
+  }
+  'groupchat:owner:joinRequest:reject': {
+    convoId: string
+  }
+  'groupchat:owner:inviteLink:create': {
+    convoId: string
+  }
+  'groupchat:owner:inviteLink:disable': {
+    convoId: string
+  }
+
+  // Group chat problems
+  'groupchat:join:memberLimitReached': {
+    convoId: string
+  }
+
   'starterPack:addUser': {
     starterPack?: string
   }

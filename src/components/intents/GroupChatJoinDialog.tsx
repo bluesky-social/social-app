@@ -1,3 +1,4 @@
+import {useEffect} from 'react'
 import {View} from 'react-native'
 import {
   ChatBskyGroupDefs,
@@ -45,6 +46,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {ProfileBadges} from '../ProfileBadges'
 
 export function GroupChatJoinDialog() {
@@ -83,6 +85,11 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
   const moderationOpts = useModerationOpts()
   const navigation = useNavigation<NavigationProp>()
   const queryClient = useQueryClient()
+  const ax = useAnalytics()
+
+  useEffect(() => {
+    ax.metric('groupchat:landingPage:view', {hasSession})
+  }, [ax, hasSession])
 
   const {data, error, isLoading} = useJoinLinkPreviewsQuery({
     codes: code ? [code] : undefined,
@@ -96,6 +103,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
         if (code) void invalidateJoinLinkPreviewsForCode(queryClient, code)
         switch (data.status) {
           case 'pending':
+            ax.metric('groupchat:inviteLink:redeem', {isNewAccount: false})
             control.close(() => {
               Toast.show(
                 l`Access requested! The group owner will review your request.`,
@@ -104,6 +112,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
             break
           case 'joined': {
             if (data.convo && data.convo.id) {
+              ax.metric('groupchat:inviteLink:redeem', {isNewAccount: false})
               control.close(() => {
                 Toast.show(l`Successfully joined the group chat!`)
                 navigation.navigate('MessagesConversation', {
@@ -140,6 +149,15 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
           error instanceof ChatBskyGroupRequestJoin.MemberLimitReachedError
         ) {
           errorMessage = l`The member limit has been reached.`
+          const preview = data?.joinLinkPreviews[0]
+          if (
+            ChatBskyGroupDefs.isJoinLinkPreviewView(preview) &&
+            preview.convo?.id
+          ) {
+            ax.metric('groupchat:join:memberLimitReached', {
+              convoId: preview.convo.id,
+            })
+          }
         } else if (error instanceof ChatBskyGroupRequestJoin.UserKickedError) {
           errorMessage = l`You have been previously removed from this group and can’t join it using this link.`
         }

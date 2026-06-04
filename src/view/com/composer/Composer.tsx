@@ -1071,6 +1071,20 @@ export const ComposePost = ({
           isReply: !!replyTo,
         })
       }
+      if (postUri) {
+        for (const q of linkQueries) {
+          const resolved = q.data
+          if (
+            resolved?.type === 'chat-invite' &&
+            ChatBskyGroupDefs.isJoinLinkPreviewView(resolved.view)
+          ) {
+            ax.metric('groupchat:inviteLink:shared', {
+              convoId: resolved.view.convoId,
+              method: 'post',
+            })
+          }
+        }
+      }
     }
     if (postUri && !replyTo) {
       emitPostCreated()
@@ -1164,6 +1178,7 @@ export const ComposePost = ({
     loadedDraftCreatedAt,
     emptyPostsPromptControl,
     getFilteredThread,
+    linkQueries,
   ])
 
   const handleConfirmSkipEmpty = () => {

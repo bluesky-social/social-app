@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {
   ChatBskyActorDefs,
@@ -55,6 +55,7 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 import {InviteLinkDialog} from '../components/InviteLinkDialog'
@@ -344,8 +345,11 @@ function SettingsHeader({
 }) {
   const t = useTheme()
   const {i18n, t: l} = useLingui()
+  const ax = useAnalytics()
 
   const navigation = useNavigation<NavigationProp>()
+
+  const convoId = convo.view.id
 
   const groupName = convo.details.name
   const [newGroupName, setNewGroupName] = useState(groupName)
@@ -357,9 +361,14 @@ function SettingsHeader({
 
   const reportSubjectDid = convo.primaryMember?.did
 
+  useEffect(() => {
+    ax.metric('groupchat:settings:view', {convoId, isOwner})
+  }, [ax, convoId, isOwner])
+
   const {mutate: editGroupName, isPending: isEditingName} =
-    useEditGroupChatName(convo.view.id, {
+    useEditGroupChatName(convoId, {
       onSuccess: () => {
+        ax.metric('groupchat:owner:editName', {convoId})
         Toast.show(l({message: 'Group chat name updated', context: 'toast'}))
       },
       onError: e => {
@@ -369,11 +378,13 @@ function SettingsHeader({
       },
     })
 
-  const {mutate: muteConvo, isPending: isMuting} = useMuteConvo(convo.view.id, {
+  const {mutate: muteConvo, isPending: isMuting} = useMuteConvo(convoId, {
     onSuccess: data => {
       if (data.convo.muted) {
+        ax.metric('groupchat:mute', {convoId})
         Toast.show(l({message: 'Group chat muted', context: 'toast'}))
       } else {
+        ax.metric('groupchat:unmute', {convoId})
         Toast.show(l({message: 'Group chat unmuted', context: 'toast'}))
       }
     },
@@ -383,33 +394,32 @@ function SettingsHeader({
     },
   })
 
-  const {mutate: leaveConvo, isPending: isLeaving} = useLeaveConvo(
-    convo.view.id,
-    {
-      onSuccess: () => {
-        navigation.replace('Messages', {animation: 'pop'})
-      },
-      onError: e => {
-        logger.error('Failed to leave group chat', {message: e})
-        Toast.show(
-          l({message: 'Failed to leave group chat', context: 'toast'}),
-          {type: 'error'},
-        )
-      },
+  const {mutate: leaveConvo, isPending: isLeaving} = useLeaveConvo(convoId, {
+    onSuccess: () => {
+      ax.metric('groupchat:leave', {convoId, isOwner})
+      navigation.replace('Messages', {animation: 'pop'})
     },
-  )
+    onError: e => {
+      logger.error('Failed to leave group chat', {message: e})
+      Toast.show(l({message: 'Failed to leave group chat', context: 'toast'}), {
+        type: 'error',
+      })
+    },
+  })
 
   const {
     mutate: lockConvo,
     mutateAsync: lockConvoAsync,
     isPending: isLocking,
-  } = useLockConvo(convo.view.id, {
+  } = useLockConvo(convoId, {
     onSuccess: (data, {silent}) => {
       if (!ChatBskyConvoDefs.isGroupConvo(data.convo.kind)) return
       if (silent) return
       if (data.convo.kind.lockStatus === 'locked') {
+        ax.metric('groupchat:owner:lock', {convoId})
         Toast.show(l({message: 'Group chat locked', context: 'toast'}))
       } else {
+        ax.metric('groupchat:owner:unlock', {convoId})
         Toast.show(l({message: 'Group chat unlocked', context: 'toast'}))
       }
     },

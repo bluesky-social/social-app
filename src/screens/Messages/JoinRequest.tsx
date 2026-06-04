@@ -1,3 +1,4 @@
+import {useEffect} from 'react'
 import {View} from 'react-native'
 import {ImageBackground} from 'expo-image'
 import {ChatBskyGroupDefs, moderateProfile} from '@atproto/api'
@@ -18,6 +19,7 @@ import {ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon} from '#/
 import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 const desktopDarkBg = require('../../../assets/images/chat-desktop-bg-dark.webp')
 const desktopDimBg = require('../../../assets/images/chat-desktop-bg-dim.webp')
@@ -44,9 +46,14 @@ type Props = {
 export function JoinRequest({setScreenState}: Props) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const ax = useAnalytics()
 
   const {gtMobile, gtTablet} = useBreakpoints()
   const moderationOpts = useModerationOpts()
+
+  useEffect(() => {
+    ax.metric('groupchat:landingPage:view', {hasSession: false})
+  }, [ax])
 
   // Get code from context (logged-out only)
   const contextJoinRequest = useActiveGroupChatJoinRequest()
