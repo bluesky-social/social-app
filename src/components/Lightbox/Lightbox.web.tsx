@@ -232,7 +232,11 @@ function LightboxGallery({
           // out of view. Only scrollable once expanded.
           style={[
             styles.altScroll,
-            {backgroundColor: 'rgba(0, 0, 0, 0.45)'},
+            {
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              // @ts-expect-error web only
+              backdropFilter: 'blur(16px)',
+            },
             delayedFadeInAnim,
           ]}
           scrollEnabled={isAltExpanded}

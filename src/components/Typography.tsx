@@ -31,6 +31,7 @@ export function Text({
     [
       a.text_sm,
       t.atoms.text,
+      a.leading_snug,
       web(numberOfLines === 1 && numberOfLinesClippingFix),
       style,
     ],

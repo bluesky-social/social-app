@@ -6,33 +6,42 @@ on:
     branches:
       - main
 concurrency:
-  group: "${{ github.workflow }}-${{ github.head_ref || github.ref }}"
+  group: '${{ github.workflow }}-${{ github.head_ref || github.ref }}'
   cancel-in-progress: true
+
+# These jobs only check out the repo and run checks, so read access to the
+# repo contents is all the GITHUB_TOKEN needs.
+permissions:
+  contents: read
 
 jobs:
   linting:
     name: Run linters
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        job: [lint, prettier]
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v5
-      - name: Verify Node version pins match .nvmrc
+      - name: Verify Node version pins match package.json
         run: |
           set -euo pipefail
-          expected=$(tr -d '[:space:]' < .nvmrc)
+          expected=$(node -p "require('./package.json').engines.node.replace(/[^0-9.]/g, '')")
           rc=0
           check() {
             if [ "$2" != "$expected" ]; then
-              echo "::error file=$1::Node version mismatch: $1 pins '$2' but .nvmrc is '$expected'"
+              echo "::error file=$1::Node version mismatch: $1 pins '$2' but package.json is '$expected'"
               rc=1
             fi
           }
-          # FROM node:X.Y.Z — service runtime images
+          # FROM node:X.Y.Z - service runtime images
           for f in Dockerfile.bskylink Dockerfile.bskyogcard; do
             v=$(grep -oE 'FROM node:[0-9]+\.[0-9]+\.[0-9]+' "$f" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
             check "$f" "$v"
           done
-          # ENV NODE_VERSION=X.Y.Z — Go images that nvm-install Node for the JS build stage
+          # ENV NODE_VERSION=X.Y.Z - Go images that nvm-install Node for the JS build stage
           for f in Dockerfile.embedr; do
             v=$(grep -oE 'NODE_VERSION=[0-9]+\.[0-9]+\.[0-9]+' "$f" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
             check "$f" "$v"
@@ -53,10 +62,42 @@ jobs:
           command: pnpm install --frozen-lockfile
           attempt_limit: 3
           attempt_delay: 2000
-      - name: Lint check
-        run: pnpm lint
-      - name: Prettier check
-        run: pnpm prettier --check .
+      - name: Lint checks
+        run: pnpm ${{ matrix.job }}
+  # Aggregates the matrix results into a single stable check name so branch
+  # protection can require "Run linters" regardless of how many matrix jobs run.
+  # The result is asserted in `run` (not `if`) so a malformed expression can
+  # never silently skip the check and report a false pass.
+  linting-summary:
+    name: Run linters
+    if: always()
+    needs: [linting]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require linting to have succeeded
+        env:
+          RESULT: ${{ needs.linting.result }}
+        run: |
+          echo "linting result: $RESULT"
+          test "$RESULT" = "success"
+  typechecking:
+    name: Run typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v6
+      - name: Install node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: package.json
+          cache: pnpm
+      - name: pnpm install
+        uses: Wandalen/wretry.action@master
+        with:
+          command: pnpm install --frozen-lockfile
+          attempt_limit: 3
+          attempt_delay: 2000
       - name: Check & compile i18n
         run: pnpm intl:build
       - name: Type check
@@ -64,6 +105,10 @@ jobs:
   testing:
     name: Run tests
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v5
@@ -83,4 +128,20 @@ jobs:
         run: pnpm intl:build
       - name: Run tests
         run: |
-          NODE_ENV=test pnpm test --forceExit
+          NODE_ENV=test pnpm test --forceExit --shard=${{ matrix.shard }}/${{ strategy.job-total }}
+  # Aggregates the sharded test results into a single stable check name so branch
+  # protection can require "Run tests" regardless of how many shards run.
+  # The result is asserted in `run` (not `if`) so a malformed expression can
+  # never silently skip the check and report a false pass.
+  testing-summary:
+    name: Run tests
+    if: always()
+    needs: [testing]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require testing to have succeeded
+        env:
+          RESULT: ${{ needs.testing.result }}
+        run: |
+          echo "testing result: $RESULT"
+          test "$RESULT" = "success"

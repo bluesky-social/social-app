@@ -98,7 +98,8 @@ export const ExternalEmbedLink = ({
                 uri,
                 description:
                   data.view?.external?.description || data.description,
-                thumb: data.view?.external?.thumb || data.thumb?.source.path,
+                // prefer opengraph data to atproto record-derived image
+                thumb: data.thumb?.source.path || data.view?.external?.thumb,
               }}
             />
           )
