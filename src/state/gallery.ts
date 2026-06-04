@@ -239,7 +239,8 @@ export async function compressImage(
       minQualityPercentage = 0
       maxQualityPercentage = 101
       attempts++
-      // 4000px → 3200px → 2560px → 2048px → ~1638px
+      // max.width → 0.8× → 0.64× → 0.512× → ~0.41×
+      // e.g. 4000px → 3200px → 2560px → 2048px → ~1638px
       currentDimension = Math.floor(currentDimension * 0.8)
       continue
     }
