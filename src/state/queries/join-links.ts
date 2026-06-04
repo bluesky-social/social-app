@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import {
   AtpAgent,
-  type BskyAgent,
   type ChatBskyGroupDefs,
   type ChatBskyGroupGetJoinLinkPreviews,
 } from '@atproto/api'
@@ -28,7 +27,7 @@ async function fetchJoinLinkPreviews({
   codes,
   hasSession,
 }: {
-  agent: BskyAgent
+  agent: AtpAgent
   codes: string[]
   hasSession: boolean
 }) {
