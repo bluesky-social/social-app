@@ -215,7 +215,7 @@ function GroupChatItem({
       primaryProfileModeration={moderation}
       isBlockedAccount={false}
       isDeletedAccount={false}
-      subtitle={
+      requestInfo={
         convo.details.unreadJoinRequestCount
           ? convo.details.unreadJoinRequestCount > JOIN_REQUESTS_THRESHOLD
             ? l({
@@ -242,6 +242,7 @@ function BaseChatItem({
   avatar,
   title,
   subtitle,
+  requestInfo,
   accessibilityHint,
   isDeletedAccount,
   isBlockedAccount,
@@ -257,6 +258,7 @@ function BaseChatItem({
   avatar: React.ReactNode
   title: string
   subtitle?: string
+  requestInfo?: string
   accessibilityHint: string
   isDeletedAccount: boolean
   isBlockedAccount: boolean
@@ -281,8 +283,10 @@ function BaseChatItem({
   const playHaptic = useHaptics()
   const queryClient = useQueryClient()
   const hasUnread =
-    convo.view.unreadCount > 0 &&
     !isDeletedAccount &&
+    (convo.view.unreadCount > 0 ||
+      (convo.kind === 'group' &&
+        (convo.details.unreadJoinRequestCount ?? 0) > 0)) &&
     (convo.kind !== 'group' || convo.details.lockStatus === 'unlocked')
 
   const blockInfo = useMemo(() => {
@@ -608,6 +612,19 @@ function BaseChatItem({
 
                   {postAlerts}
 
+                  {requestInfo && (
+                    <Text
+                      numberOfLines={1}
+                      style={[
+                        hasUnread ? a.font_medium : t.atoms.text_contrast_high,
+                        isDimStyle && t.atoms.text_contrast_medium,
+                        a.pb_2xs,
+                      ]}
+                      emoji>
+                      {requestInfo}
+                    </Text>
+                  )}
+
                   <View style={[a.flex_row, a.align_center]}>
                     {LastMessageIcon && (
                       <LastMessageIcon
@@ -624,8 +641,6 @@ function BaseChatItem({
                       emoji
                       numberOfLines={2}
                       style={[
-                        a.text_sm,
-                        a.leading_snug,
                         hasUnread ? a.font_medium : t.atoms.text_contrast_high,
                         isDimStyle && t.atoms.text_contrast_medium,
                       ]}>
