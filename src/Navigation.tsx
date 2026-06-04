@@ -132,6 +132,7 @@ import {
 import {useAnalytics} from '#/analytics'
 import {setNavigationMetadata} from '#/analytics/metadata'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {NewsFeedScreen} from '#/features/newsFeed/NewsFeedScreen'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import {renderMessagesSplitViewLayout} from './screens/Messages/components/splitView/MessagesSplitViewLayout'
@@ -167,6 +168,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="Lists"
         component={ListsScreen}
         options={{title: title(msg`Lists`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="NewsFeed"
+        getComponent={() => NewsFeedScreen}
+        options={{title: title(msg`News`), requireAuth: true}}
       />
       <Stack.Screen
         name="Moderation"
