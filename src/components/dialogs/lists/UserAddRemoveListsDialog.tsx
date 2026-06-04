@@ -43,7 +43,10 @@ export function UserAddRemoveListsDialog({
   onRemove,
 }: UserAddRemoveListsDialogProps) {
   return (
-    <Dialog.Outer control={control} testID="userAddRemoveListsDialog">
+    <Dialog.Outer
+      control={control}
+      testID="userAddRemoveListsDialog"
+      nativeOptions={{fullHeight: true}}>
       <Dialog.Handle />
       <ListsContent profile={profile} onAdd={onAdd} onRemove={onRemove} />
     </Dialog.Outer>
@@ -312,8 +315,7 @@ function ListItem({
         onPress={handleToggleMembership}
         disabled={isPending}
         size="tiny"
-        color={isMember ? 'secondary' : 'primary_subtle'}
-        variant="solid">
+        color={isMember ? 'secondary' : 'primary_subtle'}>
         {isPending && <ButtonIcon icon={Loader} />}
         <ButtonText>
           {isMember ? <Trans>Remove</Trans> : <Trans>Add</Trans>}
