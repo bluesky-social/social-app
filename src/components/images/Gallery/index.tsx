@@ -40,7 +40,7 @@ import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_WEB} from '#/env'
+import {IS_ANDROID, IS_WEB} from '#/env'
 
 export * from './const'
 export * from './maybeApplyGalleryOffsetStyles'
@@ -264,6 +264,9 @@ export function Gallery({
           aria-label={l`Image gallery, ${images.length} images`}
           horizontal
           pagingEnabled={false}
+          // Disable Android's stretch overscroll, which can leave the carousel
+          // settled just off the left edge instead of aligned to x = 0
+          overScrollMode={IS_ANDROID ? 'never' : 'auto'}
           showsHorizontalScrollIndicator={false}
           directionalLockEnabled
           nestedScrollEnabled
