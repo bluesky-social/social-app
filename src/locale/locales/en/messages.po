@@ -93,7 +93,7 @@ msgstr "{0, plural, one {# person} other {# people}}"
 
 #. placeholder {0}: reactions.length
 #. placeholder {1}: groupedReactions.map(g => g.value).join(' ')
-#: src/components/dms/MessageItem.tsx:297
+#: src/components/dms/MessageItem.tsx:273
 msgid "{0, plural, one {# person} other {# people}} reacted – {1}"
 msgstr "{0, plural, one {# person} other {# people}} reacted – {1}"
 
@@ -122,7 +122,7 @@ msgstr ""
 
 #. How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.
 #. placeholder {0}: view.readingTime
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:232
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:233
 msgid "{0, plural, one {#m} other {#m}}"
 msgstr "{0, plural, one {#m} other {#m}}"
 
@@ -211,7 +211,7 @@ msgid "{0} following"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/dms/MessageItem.tsx:640
+#: src/components/dms/MessageItem.tsx:609
 msgid "{0} is blocking you"
 msgstr "{0} is blocking you"
 
@@ -269,7 +269,7 @@ msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(memberSender)
 #. placeholder {1}: reaction.value
-#: src/components/dms/MessageItem.tsx:292
+#: src/components/dms/MessageItem.tsx:268
 msgid "{0} reacted {1}"
 msgstr ""
 
@@ -314,8 +314,8 @@ msgstr ""
 
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || sanitizeHandle(profile.handle), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || sanitizeHandle(profile.handle), )
-#: src/view/com/util/UserAvatar.tsx:595
-#: src/view/com/util/UserAvatar.tsx:613
+#: src/view/com/util/UserAvatar.tsx:596
+#: src/view/com/util/UserAvatar.tsx:614
 msgid "{0}'s avatar"
 msgstr ""
 
@@ -839,7 +839,7 @@ msgstr ""
 msgid "A new code has been sent"
 msgstr ""
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:93
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:94
 msgid "A new form of verification"
 msgstr ""
 
@@ -897,7 +897,7 @@ msgid "Accept join request"
 msgstr "Accept join request"
 
 #. Accept a chat request
-#: src/screens/Messages/components/RequestListItem.tsx:48
+#: src/screens/Messages/components/RequestListItem.tsx:51
 msgid "Accept Request"
 msgstr ""
 
@@ -999,7 +999,7 @@ msgctxt "toast"
 msgid "Account unmuted"
 msgstr ""
 
-#: src/components/verification/VerifierDialog.tsx:99
+#: src/components/verification/VerifierDialog.tsx:100
 msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Bluesky."
 msgstr ""
 
@@ -1085,7 +1085,7 @@ msgstr ""
 msgid "Add App Password"
 msgstr ""
 
-#: src/screens/Settings/AutomationLabelSettings.tsx:166
+#: src/screens/Settings/AutomationLabelSettings.tsx:170
 msgid "Add automation label to account"
 msgstr "Add automation label to account"
 
@@ -1112,8 +1112,8 @@ msgstr ""
 msgid "Add members"
 msgstr "Add members"
 
-#: src/components/moderation/ReportDialog/index.tsx:526
-#: src/components/moderation/ReportDialog/index.tsx:530
+#: src/components/moderation/ReportDialog/index.tsx:528
+#: src/components/moderation/ReportDialog/index.tsx:532
 msgid "Add more details (optional)"
 msgstr ""
 
@@ -1215,7 +1215,7 @@ msgstr ""
 msgid "Additional details (limit 1000 characters)"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:544
+#: src/components/moderation/ReportDialog/index.tsx:546
 msgid "Additional details (limit 300 characters)"
 msgstr ""
 
@@ -1283,7 +1283,7 @@ msgid "alice@example.com"
 msgstr ""
 
 #. the default tab in the interests tab bar
-#: src/components/dms/ReactionsDialog.tsx:284
+#: src/components/dms/ReactionsDialog.tsx:288
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:201
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
@@ -1291,7 +1291,7 @@ msgstr ""
 
 #. Tab label showing the total count of reactions on a chat message.
 #. placeholder {0}: tab.count
-#: src/components/dms/ReactionsDialog.tsx:381
+#: src/components/dms/ReactionsDialog.tsx:385
 msgid "All {0}"
 msgstr "All {0}"
 
@@ -1388,9 +1388,9 @@ msgstr ""
 msgid "Already signed in as @{0}"
 msgstr ""
 
-#: src/components/images/AutoSizedImage.tsx:203
-#: src/components/images/Gallery/index.tsx:531
-#: src/components/images/ImageLayoutGridItem.tsx:138
+#: src/components/images/AutoSizedImage.tsx:204
+#: src/components/images/Gallery/index.tsx:539
+#: src/components/images/ImageLayoutGridItem.tsx:139
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:209
@@ -1540,7 +1540,7 @@ msgstr ""
 msgid "An issue occurred, please try again."
 msgstr ""
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:120
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:121
 msgid "An mockup of a iPhone showing the Bluesky app open to the profile of a verified user with a blue checkmark next to their display name."
 msgstr ""
 
@@ -1729,7 +1729,7 @@ msgstr ""
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:223
+#: src/components/dms/MessageOverlays.tsx:167
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
 msgstr "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
 
@@ -1968,7 +1968,7 @@ msgstr ""
 msgid "Block accounts"
 msgstr ""
 
-#: src/components/dms/AfterReportDialog.tsx:143
+#: src/components/dms/AfterReportDialog.tsx:148
 msgid "Block and delete"
 msgstr "Block and delete"
 
@@ -1992,9 +1992,9 @@ msgstr ""
 
 #: src/components/dms/AfterReportConversationDialog.tsx:221
 #: src/components/dms/AfterReportConversationDialog.tsx:224
-#: src/components/dms/AfterReportDialog.tsx:149
-#: src/components/dms/AfterReportDialog.tsx:184
-#: src/components/dms/AfterReportDialog.tsx:187
+#: src/components/dms/AfterReportDialog.tsx:154
+#: src/components/dms/AfterReportDialog.tsx:189
+#: src/components/dms/AfterReportDialog.tsx:192
 msgid "Block user"
 msgstr ""
 
@@ -2004,7 +2004,7 @@ msgctxt "button"
 msgid "Block user"
 msgstr "Block user"
 
-#: src/components/dms/AfterReportDialog.tsx:180
+#: src/components/dms/AfterReportDialog.tsx:185
 msgid "Block user and/or delete this conversation"
 msgstr ""
 
@@ -2085,7 +2085,7 @@ msgstr ""
 msgid "Bluesky is more fun with friends"
 msgstr ""
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:107
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:108
 msgid "Bluesky is more fun with friends! Import your contacts to see who’s already here."
 msgstr ""
 
@@ -2109,7 +2109,7 @@ msgstr ""
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr ""
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:134
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:136
 msgid "Bluesky will proactively verify notable and authentic accounts."
 msgstr ""
 
@@ -2198,7 +2198,7 @@ msgstr ""
 #. placeholder {0}: sanitizeHandle(handle, '@')
 #. placeholder {0}: sanitizeHandle(item.feed.creator.handle, '@')
 #: src/components/LabelingServiceCard/index.tsx:62
-#: src/components/moderation/ReportDialog/index.tsx:845
+#: src/components/moderation/ReportDialog/index.tsx:847
 #: src/screens/Messages/JoinRequest.tsx:166
 #: src/screens/Search/components/StarterPackCard.tsx:107
 #: src/screens/Search/Explore.tsx:971
@@ -2322,7 +2322,7 @@ msgstr ""
 msgid "Captions & alt text"
 msgstr ""
 
-#: src/components/images/Gallery/index.tsx:256
+#: src/components/images/Gallery/index.tsx:263
 msgid "carousel"
 msgstr "carousel"
 
@@ -2355,7 +2355,7 @@ msgstr ""
 msgid "Change Handle"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:443
+#: src/components/moderation/ReportDialog/index.tsx:445
 msgid "Change moderation service"
 msgstr ""
 
@@ -2368,11 +2368,11 @@ msgstr ""
 msgid "Change password dialog"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:310
+#: src/components/moderation/ReportDialog/index.tsx:312
 msgid "Change report category"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:388
+#: src/components/moderation/ReportDialog/index.tsx:390
 msgid "Change report reason"
 msgstr ""
 
@@ -2643,7 +2643,7 @@ msgstr "Click here to view the invite link for this group chat"
 msgid "Click to open tag menu for {0}"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:559
+#: src/components/dms/MessageItem.tsx:528
 msgid "Click to retry failed message"
 msgstr ""
 
@@ -2657,15 +2657,15 @@ msgstr ""
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:233
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:239
 #: src/components/dialogs/LanguageSelectDialog.tsx:359
-#: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:159
-#: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:168
-#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:164
-#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:172
-#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:139
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:176
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:185
-#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:191
-#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:199
+#: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:160
+#: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:169
+#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:165
+#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:173
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:140
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
+#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:192
+#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:200
 #: src/components/dialogs/SearchablePeopleList.tsx:340
 #: src/components/dialogs/StarterPackDialog.tsx:187
 #: src/components/dms/AddMembersFlow.tsx:367
@@ -2673,10 +2673,10 @@ msgstr ""
 #: src/components/dms/AfterReportConversationDialog.tsx:96
 #: src/components/dms/AfterReportConversationDialog.tsx:247
 #: src/components/dms/AfterReportConversationDialog.tsx:252
-#: src/components/dms/AfterReportDialog.tsx:89
 #: src/components/dms/AfterReportDialog.tsx:94
-#: src/components/dms/AfterReportDialog.tsx:207
+#: src/components/dms/AfterReportDialog.tsx:99
 #: src/components/dms/AfterReportDialog.tsx:212
+#: src/components/dms/AfterReportDialog.tsx:217
 #: src/components/dms/EmojiPopup.android.tsx:59
 #: src/components/dms/InitiateChatFlow.tsx:534
 #: src/components/intents/GroupChatJoinDialog.tsx:204
@@ -2688,7 +2688,7 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:122
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:128
 #: src/components/verification/VerificationsDialog.tsx:146
-#: src/components/verification/VerifierDialog.tsx:146
+#: src/components/verification/VerifierDialog.tsx:147
 #: src/components/WhoCanReply.tsx:236
 #: src/components/WhoCanReply.tsx:243
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:45
@@ -2724,7 +2724,7 @@ msgstr ""
 #: src/components/dialogs/LanguageSelectDialog.tsx:354
 #: src/components/dialogs/NotificationSettingsDialog.tsx:94
 #: src/components/verification/VerificationsDialog.tsx:138
-#: src/components/verification/VerifierDialog.tsx:139
+#: src/components/verification/VerifierDialog.tsx:140
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:36
 msgid "Close dialog"
 msgstr ""
@@ -2999,8 +2999,8 @@ msgstr ""
 msgid "Conversation deleted"
 msgstr ""
 
-#: src/components/dms/AfterReportDialog.tsx:144
-#: src/components/dms/AfterReportDialog.tsx:147
+#: src/components/dms/AfterReportDialog.tsx:149
+#: src/components/dms/AfterReportDialog.tsx:152
 msgctxt "toast"
 msgid "Conversation deleted"
 msgstr ""
@@ -3020,7 +3020,7 @@ msgstr "Conversation not found."
 msgid "Copied build version to clipboard"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:79
+#: src/components/dms/MessageContextMenu.tsx:71
 #: src/components/PostControls/DiscoverDebug.tsx:36
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:272
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:77
@@ -3102,8 +3102,8 @@ msgstr ""
 msgid "Copy link to starter pack"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:169
-#: src/components/dms/MessageContextMenu.tsx:173
+#: src/components/dms/MessageContextMenu.tsx:152
+#: src/components/dms/MessageContextMenu.tsx:156
 msgid "Copy message text"
 msgstr ""
 
@@ -3160,7 +3160,7 @@ msgid "Could not follow all matches. {0}"
 msgstr ""
 
 #: src/components/dms/AfterReportConversationDialog.tsx:158
-#: src/components/dms/AfterReportDialog.tsx:134
+#: src/components/dms/AfterReportDialog.tsx:139
 #: src/components/dms/LeaveConvoPrompt.tsx:34
 msgid "Could not leave chat"
 msgstr ""
@@ -3316,8 +3316,8 @@ msgstr "Create or modify an invite link for this group chat"
 
 #. Accessibility label for button to create a moderation report for the selected option
 #. placeholder {0}: option.title
-#: src/components/moderation/ReportDialog/index.tsx:707
-#: src/components/moderation/ReportDialog/index.tsx:752
+#: src/components/moderation/ReportDialog/index.tsx:709
+#: src/components/moderation/ReportDialog/index.tsx:754
 msgid "Create report for {0}"
 msgstr ""
 
@@ -3418,7 +3418,7 @@ msgstr ""
 msgid "Default icons"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:224
+#: src/components/dms/MessageOverlays.tsx:168
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:803
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:275
 #: src/screens/Settings/AppPasswords.tsx:213
@@ -3459,15 +3459,15 @@ msgstr ""
 msgid "Delete contacts"
 msgstr ""
 
-#: src/components/dms/AfterReportDialog.tsx:146
-#: src/components/dms/AfterReportDialog.tsx:190
-#: src/components/dms/AfterReportDialog.tsx:193
+#: src/components/dms/AfterReportDialog.tsx:151
+#: src/components/dms/AfterReportDialog.tsx:195
+#: src/components/dms/AfterReportDialog.tsx:198
 #: src/screens/Messages/components/RequestButtons.tsx:142
 #: src/screens/Messages/components/RequestButtons.tsx:144
 msgid "Delete conversation"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:184
+#: src/components/dms/MessageContextMenu.tsx:167
 msgid "Delete for me"
 msgstr ""
 
@@ -3476,11 +3476,11 @@ msgstr ""
 msgid "Delete list"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:222
+#: src/components/dms/MessageOverlays.tsx:166
 msgid "Delete message"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:181
+#: src/components/dms/MessageContextMenu.tsx:164
 msgid "Delete message for me"
 msgstr ""
 
@@ -3661,8 +3661,8 @@ msgstr ""
 msgid "Discard post?"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:261
-#: src/screens/Profile/components/GermButton.tsx:268
+#: src/screens/Profile/components/GermButton.tsx:262
+#: src/screens/Profile/components/GermButton.tsx:269
 msgid "Disconnect Germ DM"
 msgstr ""
 
@@ -3690,7 +3690,7 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-#: src/components/contacts/FindContactsBannerNUX.tsx:77
+#: src/components/contacts/FindContactsBannerNUX.tsx:78
 msgid "Dismiss banner"
 msgstr ""
 
@@ -3784,7 +3784,7 @@ msgstr ""
 #: src/components/dialogs/ServerInput.tsx:237
 #: src/components/dialogs/ServerInput.tsx:239
 #: src/components/dms/AfterReportConversationDialog.tsx:164
-#: src/components/dms/AfterReportDialog.tsx:140
+#: src/components/dms/AfterReportDialog.tsx:145
 #: src/components/forms/DateField/index.tsx:104
 #: src/components/forms/DateField/index.tsx:110
 #: src/lib/media/picker.tsx:37
@@ -3805,7 +3805,7 @@ msgctxt "action"
 msgid "Done"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:463
+#: src/components/dms/MessageItem.tsx:432
 msgid "Double tap or long press the message to add a reaction"
 msgstr ""
 
@@ -3848,7 +3848,7 @@ msgstr "Download profile data"
 msgid "Doxxing"
 msgstr ""
 
-#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:119
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:120
 #: src/view/com/composer/drafts/DraftsButton.tsx:70
 #: src/view/com/composer/drafts/DraftsButton.tsx:79
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:119
@@ -3917,7 +3917,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:460
+#: src/view/com/util/UserAvatar.tsx:461
 #: src/view/com/util/UserBanner.tsx:122
 msgid "Edit avatar"
 msgstr ""
@@ -4299,7 +4299,7 @@ msgstr ""
 msgid "Exit fullscreen"
 msgstr ""
 
-#: src/components/Lightbox/chrome/Footer.tsx:65
+#: src/components/Lightbox/chrome/Footer.tsx:59
 #: src/components/Lightbox/Lightbox.web.tsx:241
 msgid "Expand alt text"
 msgstr ""
@@ -4420,7 +4420,7 @@ msgid "Failed to accept join request"
 msgstr "Failed to accept join request"
 
 #: src/components/dms/ActionsWrapper.web.tsx:77
-#: src/components/dms/MessageContextMenu.tsx:119
+#: src/components/dms/MessageContextMenu.tsx:103
 msgid "Failed to add emoji reaction"
 msgstr ""
 
@@ -4465,7 +4465,7 @@ msgctxt "toast"
 msgid "Failed to delete chat"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:101
+#: src/components/dms/MessageOverlays.tsx:112
 msgid "Failed to delete message"
 msgstr ""
 
@@ -4482,7 +4482,7 @@ msgid "Failed to disable invite link"
 msgstr "Failed to disable invite link"
 
 #. placeholder {0}: error?.message
-#: src/screens/Profile/components/GermButton.tsx:195
+#: src/screens/Profile/components/GermButton.tsx:196
 msgid "Failed to disconnect Germ DM. Error: {0}"
 msgstr ""
 
@@ -4593,7 +4593,7 @@ msgid "Failed to pin post"
 msgstr ""
 
 #. placeholder {0}: e?.message
-#: src/screens/Profile/components/GermButton.tsx:163
+#: src/screens/Profile/components/GermButton.tsx:164
 msgid "Failed to reconnect Germ DM. Error: {0}"
 msgstr ""
 
@@ -4607,8 +4607,8 @@ msgid "Failed to remove data. {0}"
 msgstr ""
 
 #: src/components/dms/ActionsWrapper.web.tsx:73
-#: src/components/dms/MessageContextMenu.tsx:115
-#: src/components/dms/ReactionsDialog.tsx:171
+#: src/components/dms/MessageContextMenu.tsx:99
+#: src/components/dms/ReactionsDialog.tsx:175
 msgid "Failed to remove emoji reaction"
 msgstr ""
 
@@ -4833,11 +4833,11 @@ msgstr ""
 msgid "Finalizing"
 msgstr ""
 
-#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:145
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:146
 msgid "Finally!"
 msgstr ""
 
-#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:155
+#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:156
 msgid "Finally! Keep track of posts that matter to you. Save them to revisit anytime."
 msgstr ""
 
@@ -4885,7 +4885,7 @@ msgstr ""
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr ""
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:97
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:98
 msgid "Find your friends"
 msgstr ""
 
@@ -5191,20 +5191,20 @@ msgid "Generate new link"
 msgstr "Generate new link"
 
 #: src/screens/Profile/components/GermButton.tsx:86
-#: src/screens/Profile/components/GermButton.tsx:224
+#: src/screens/Profile/components/GermButton.tsx:225
 msgid "Germ DM"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:182
+#: src/screens/Profile/components/GermButton.tsx:183
 msgid "Germ DM disconnected"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:233
-#: src/screens/Profile/components/GermButton.tsx:238
+#: src/screens/Profile/components/GermButton.tsx:234
+#: src/screens/Profile/components/GermButton.tsx:239
 msgid "Germ DM Link"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:159
+#: src/screens/Profile/components/GermButton.tsx:160
 msgid "Germ DM reconnected"
 msgstr ""
 
@@ -5268,7 +5268,7 @@ msgstr ""
 msgid "Get notified when {name} posts"
 msgstr ""
 
-#: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:138
+#: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:139
 msgid "Get notified when someone posts"
 msgstr ""
 
@@ -5279,7 +5279,7 @@ msgstr ""
 msgid "Get started"
 msgstr ""
 
-#: src/components/MediaPreview.tsx:147
+#: src/components/MediaPreview.tsx:148
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:69
 msgid "GIF"
 msgstr ""
@@ -5413,8 +5413,8 @@ msgstr "Go to user’s profile"
 msgid "Going live is currently disabled for your account"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:252
-#: src/screens/Profile/components/GermButton.tsx:257
+#: src/screens/Profile/components/GermButton.tsx:253
+#: src/screens/Profile/components/GermButton.tsx:258
 msgid "Got it"
 msgstr ""
 
@@ -5524,7 +5524,7 @@ msgid "Handle too long. Please try a shorter one."
 msgstr ""
 
 #: src/components/FeedCard.tsx:156
-#: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:122
+#: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:123
 msgid "Happening now"
 msgstr ""
 
@@ -5903,7 +5903,7 @@ msgid "Image"
 msgstr ""
 
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:436
+#: src/components/images/Gallery/index.tsx:443
 msgid "Image {0}"
 msgstr "Image {0}"
 
@@ -5914,7 +5914,7 @@ msgid "Image {0} of {1}"
 msgstr ""
 
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:421
+#: src/components/images/Gallery/index.tsx:428
 msgid "Image {0} of {imageCount}"
 msgstr "Image {0} of {imageCount}"
 
@@ -5929,17 +5929,17 @@ msgid "Image cache cleared, freed {0}"
 msgstr ""
 
 #. placeholder {0}: images.length
-#: src/components/images/Gallery/index.tsx:257
+#: src/components/images/Gallery/index.tsx:264
 msgid "Image gallery, {0} images"
 msgstr "Image gallery, {0} images"
 
 #. Image has been moderated and user has the option of showing it temporarily
-#: src/features/liveNow/components/LiveStatusDialog.tsx:299
+#: src/features/liveNow/components/LiveStatusDialog.tsx:300
 msgid "Image is hidden due to your moderation settings."
 msgstr "Image is hidden due to your moderation settings."
 
 #. Image has been moderated and is not visible to the user
-#: src/features/liveNow/components/LiveStatusDialog.tsx:309
+#: src/features/liveNow/components/LiveStatusDialog.tsx:310
 msgid "Image is unavailable."
 msgstr "Image is unavailable."
 
@@ -5974,13 +5974,13 @@ msgstr ""
 msgid "Import contacts"
 msgstr ""
 
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:115
-#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:126
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:116
+#: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:127
 msgid "Import Contacts"
 msgstr ""
 
 #: src/components/contacts/FindContactsBannerNUX.tsx:33
-#: src/components/contacts/FindContactsBannerNUX.tsx:71
+#: src/components/contacts/FindContactsBannerNUX.tsx:72
 msgid "Import contacts to find your friends"
 msgstr ""
 
@@ -6093,7 +6093,7 @@ msgstr ""
 msgid "Invalid phone number"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:98
+#: src/components/moderation/ReportDialog/index.tsx:100
 msgid "Invalid report subject"
 msgstr ""
 
@@ -6311,7 +6311,7 @@ msgid "Latest"
 msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:168
-#: src/components/verification/VerifierDialog.tsx:135
+#: src/components/verification/VerifierDialog.tsx:136
 #: src/screens/Moderation/VerificationSettings.tsx:50
 #: src/screens/Profile/Header/EditProfileDialog.tsx:346
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:215
@@ -6366,7 +6366,7 @@ msgid "Learn more about this warning"
 msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:153
-#: src/components/verification/VerifierDialog.tsx:121
+#: src/components/verification/VerifierDialog.tsx:122
 msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr ""
@@ -6376,7 +6376,7 @@ msgstr ""
 msgid "Learn more about what is public on Bluesky."
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:211
+#: src/screens/Profile/components/GermButton.tsx:212
 msgid "Learn more about your Germ DM link"
 msgstr ""
 
@@ -6674,7 +6674,7 @@ msgstr ""
 msgid "Live events appear occasionally when something exciting is happening. If you'd like, you can hide this particular event, or all events for this placement in your app interface."
 msgstr ""
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:244
+#: src/features/liveNow/components/LiveStatusDialog.tsx:245
 msgid "Live feature is in beta"
 msgstr ""
 
@@ -6904,18 +6904,18 @@ msgstr "Message {displayName}"
 msgid "Message deleted"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:100
+#: src/components/dms/MessageOverlays.tsx:111
 msgctxt "toast"
 msgid "Message deleted"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:553
+#: src/components/dms/MessageItem.tsx:522
 msgid "Message failed to send."
 msgstr "Message failed to send."
 
 #. placeholder {0}: sender?.handle ?? 'unknown'
 #. placeholder {1}: message.text
-#: src/components/dms/MessageContextMenu.tsx:146
+#: src/components/dms/MessageContextMenu.tsx:129
 msgid "Message from @{0}: {1}"
 msgstr ""
 
@@ -6938,7 +6938,7 @@ msgstr ""
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgstr "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 
-#: src/components/dms/MessageContextMenu.tsx:145
+#: src/components/dms/MessageContextMenu.tsx:128
 msgid "Message options"
 msgstr ""
 
@@ -6946,11 +6946,11 @@ msgstr ""
 msgid "Messages"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:652
+#: src/components/dms/MessageItem.tsx:621
 msgid "Messages from this person are hidden while they are blocking you."
 msgstr "Messages from this person are hidden while they are blocking you."
 
-#: src/components/dms/MessageItem.tsx:647
+#: src/components/dms/MessageItem.tsx:616
 msgid "Messages from this person are hidden while you are blocking them."
 msgstr "Messages from this person are hidden while you are blocking them."
 
@@ -7229,8 +7229,8 @@ msgstr ""
 msgid "Navigates to your profile"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:340
-#: src/components/moderation/ReportDialog/index.tsx:356
+#: src/components/moderation/ReportDialog/index.tsx:342
+#: src/components/moderation/ReportDialog/index.tsx:358
 msgid "Need to report a copyright violation, legal request, or regulatory compliance issue?"
 msgstr ""
 
@@ -7452,7 +7452,7 @@ msgstr "No GIFs found for \"{query}\"."
 msgid "No GIFs to show right now. Try again in a moment."
 msgstr "No GIFs to show right now. Try again in a moment."
 
-#: src/features/liveNow/components/LinkPreview.tsx:63
+#: src/features/liveNow/components/LinkPreview.tsx:64
 msgid "No image"
 msgstr ""
 
@@ -7640,7 +7640,7 @@ msgstr "Not followed by anyone you’re following"
 msgid "Not Found"
 msgstr ""
 
-#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:130
+#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:131
 msgid "Not ready to hit post? Keep your best ideas in Drafts until the timing is just right."
 msgstr ""
 
@@ -7724,7 +7724,7 @@ msgstr ""
 #: src/components/BotAccountAlert.tsx:52
 #: src/components/BotAccountAlert.tsx:57
 #: src/components/dms/InitiateChatFlow.tsx:677
-#: src/components/dms/MessageItem.tsx:659
+#: src/components/dms/MessageItem.tsx:628
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:661
 msgid "Okay"
@@ -7916,8 +7916,8 @@ msgstr ""
 msgid "Open post options menu"
 msgstr ""
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:218
-#: src/features/liveNow/components/LiveStatusDialog.tsx:228
+#: src/features/liveNow/components/LiveStatusDialog.tsx:219
+#: src/features/liveNow/components/LiveStatusDialog.tsx:229
 msgid "Open profile"
 msgstr ""
 
@@ -8005,7 +8005,7 @@ msgstr ""
 msgid "Opens flow to sign in to your existing Bluesky account"
 msgstr ""
 
-#: src/components/images/Gallery/index.tsx:437
+#: src/components/images/Gallery/index.tsx:444
 msgid "Opens full image"
 msgstr "Opens full image"
 
@@ -8022,7 +8022,7 @@ msgstr ""
 msgid "Opens link {0}"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:599
+#: src/view/com/util/UserAvatar.tsx:600
 msgid "Opens live status dialog"
 msgstr ""
 
@@ -8053,7 +8053,7 @@ msgstr ""
 
 #: src/components/dms/MessageItem.tsx:229
 #: src/view/com/notifications/NotificationFeedItem.tsx:1019
-#: src/view/com/util/UserAvatar.tsx:617
+#: src/view/com/util/UserAvatar.tsx:618
 msgid "Opens this profile"
 msgstr ""
 
@@ -8129,8 +8129,8 @@ msgstr ""
 
 #: src/components/dms/AfterReportConversationDialog.tsx:86
 #: src/components/dms/AfterReportConversationDialog.tsx:213
-#: src/components/dms/AfterReportDialog.tsx:84
-#: src/components/dms/AfterReportDialog.tsx:176
+#: src/components/dms/AfterReportDialog.tsx:89
+#: src/components/dms/AfterReportDialog.tsx:181
 msgid "Our moderation team has received your report."
 msgstr ""
 
@@ -8661,7 +8661,7 @@ msgstr ""
 msgid "Press to view followers of this account that you also follow"
 msgstr ""
 
-#: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:120
+#: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:121
 msgid "Preview"
 msgstr ""
 
@@ -8865,8 +8865,8 @@ msgstr "Re-enable link"
 msgid "React with {emoji}"
 msgstr ""
 
-#: src/components/dms/ReactionsDialog.tsx:65
-#: src/components/dms/ReactionsDialog.tsx:90
+#: src/components/dms/ReactionsDialog.tsx:66
+#: src/components/dms/ReactionsDialog.tsx:94
 msgid "Reactions"
 msgstr "Reactions"
 
@@ -8884,8 +8884,8 @@ msgctxt "english-only-resource"
 msgid "read about how to use search filters"
 msgstr ""
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:160
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:171
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:162
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:173
 msgid "Read blog post"
 msgstr ""
 
@@ -9020,13 +9020,13 @@ msgstr ""
 msgid "Remove attachment"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:519
-#: src/view/com/util/UserAvatar.tsx:522
+#: src/view/com/util/UserAvatar.tsx:520
+#: src/view/com/util/UserAvatar.tsx:523
 msgid "Remove Avatar"
 msgstr ""
 
-#: src/view/com/util/UserBanner.tsx:189
-#: src/view/com/util/UserBanner.tsx:192
+#: src/view/com/util/UserBanner.tsx:190
+#: src/view/com/util/UserBanner.tsx:193
 msgid "Remove Banner"
 msgstr ""
 
@@ -9261,8 +9261,8 @@ msgstr ""
 msgid "Reply was successfully hidden"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:193
-#: src/features/liveNow/components/LiveStatusDialog.tsx:266
+#: src/components/dms/MessageContextMenu.tsx:176
+#: src/features/liveNow/components/LiveStatusDialog.tsx:267
 #: src/screens/Messages/ConversationSettings/index.tsx:517
 msgid "Report"
 msgstr ""
@@ -9279,8 +9279,8 @@ msgstr ""
 msgid "Report conversation"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:96
-#: src/components/moderation/ReportDialog/index.tsx:261
+#: src/components/moderation/ReportDialog/index.tsx:98
+#: src/components/moderation/ReportDialog/index.tsx:263
 msgid "Report dialog"
 msgstr ""
 
@@ -9294,7 +9294,7 @@ msgstr ""
 msgid "Report list"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:190
+#: src/components/dms/MessageContextMenu.tsx:173
 msgid "Report message"
 msgstr ""
 
@@ -9314,8 +9314,8 @@ msgstr ""
 
 #: src/components/dms/AfterReportConversationDialog.tsx:83
 #: src/components/dms/AfterReportConversationDialog.tsx:210
-#: src/components/dms/AfterReportDialog.tsx:81
-#: src/components/dms/AfterReportDialog.tsx:173
+#: src/components/dms/AfterReportDialog.tsx:86
+#: src/components/dms/AfterReportDialog.tsx:178
 msgid "Report submitted"
 msgstr ""
 
@@ -9337,7 +9337,7 @@ msgid "Report this list"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:19
-#: src/features/liveNow/components/LiveStatusDialog.tsx:249
+#: src/features/liveNow/components/LiveStatusDialog.tsx:250
 msgid "Report this livestream"
 msgstr ""
 
@@ -9530,7 +9530,7 @@ msgstr ""
 #: src/components/contacts/screens/VerifyNumber.tsx:355
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:115
-#: src/components/moderation/ReportDialog/index.tsx:295
+#: src/components/moderation/ReportDialog/index.tsx:297
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:56
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:59
 #: src/components/StarterPack/ProfileStarterPacks.tsx:377
@@ -9553,7 +9553,7 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:292
+#: src/components/moderation/ReportDialog/index.tsx:294
 #: src/view/screens/Storybook/Admonitions.tsx:61
 msgid "Retry loading report options"
 msgstr ""
@@ -9638,7 +9638,7 @@ msgid "Save draft?"
 msgstr ""
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:99
-#: src/components/MediaPreview.tsx:196
+#: src/components/MediaPreview.tsx:197
 #: src/components/Post/Embed/ImageContextMenu.tsx:70
 #: src/components/StarterPack/ShareDialog.tsx:144
 #: src/components/StarterPack/ShareDialog.tsx:150
@@ -9674,7 +9674,7 @@ msgstr ""
 msgid "Saved Feeds"
 msgstr ""
 
-#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:144
+#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:145
 #: src/Navigation.tsx:555
 #: src/screens/Bookmarks/index.tsx:59
 msgid "Saved Posts"
@@ -9899,7 +9899,7 @@ msgstr ""
 msgid "Select a color"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:378
+#: src/components/moderation/ReportDialog/index.tsx:380
 msgid "Select a reason"
 msgstr ""
 
@@ -9990,7 +9990,7 @@ msgstr ""
 msgid "Select languages"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:428
+#: src/components/moderation/ReportDialog/index.tsx:430
 msgid "Select moderation service"
 msgstr ""
 
@@ -10092,7 +10092,7 @@ msgstr ""
 msgid "Send post to..."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:816
+#: src/components/moderation/ReportDialog/index.tsx:818
 msgid "Send report to {title}"
 msgstr ""
 
@@ -10114,7 +10114,7 @@ msgid "Send via direct message"
 msgstr ""
 
 #. placeholder {0}: i18n.date(new Date(message.sentAt), { timeStyle: 'short', })
-#: src/components/dms/MessageContextMenu.tsx:154
+#: src/components/dms/MessageContextMenu.tsx:137
 msgid "Sent at {0}"
 msgstr "Sent at {0}"
 
@@ -10219,7 +10219,7 @@ msgstr ""
 msgid "Sexually Suggestive"
 msgstr ""
 
-#: src/components/MediaPreview.tsx:202
+#: src/components/MediaPreview.tsx:203
 #: src/components/Post/Embed/ImageContextMenu.tsx:74
 #: src/components/StarterPack/QrCodeDialog.tsx:195
 #: src/screens/Hashtag.tsx:130
@@ -10309,16 +10309,16 @@ msgstr ""
 
 #: src/components/moderation/ScreenHider.tsx:179
 #: src/components/moderation/ScreenHider.tsx:182
-#: src/features/liveNow/components/LiveStatusDialog.tsx:317
-#: src/features/liveNow/components/LiveStatusDialog.tsx:321
+#: src/features/liveNow/components/LiveStatusDialog.tsx:318
+#: src/features/liveNow/components/LiveStatusDialog.tsx:322
 #: src/screens/List/ListHiddenScreen.tsx:194
 #: src/screens/VideoFeed/index.tsx:646
 #: src/screens/VideoFeed/index.tsx:652
 msgid "Show anyway"
 msgstr ""
 
-#: src/screens/Settings/AutomationLabelSettings.tsx:181
-#: src/screens/Settings/AutomationLabelSettings.tsx:194
+#: src/screens/Settings/AutomationLabelSettings.tsx:185
+#: src/screens/Settings/AutomationLabelSettings.tsx:198
 msgid "Show automation label"
 msgstr "Show automation label"
 
@@ -10412,7 +10412,7 @@ msgid "Show warning and filter from feeds"
 msgstr ""
 
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:60
-#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:170
+#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:171
 msgid "Show when you’re live"
 msgstr ""
 
@@ -10557,7 +10557,7 @@ msgstr ""
 msgid "Skip to next step"
 msgstr ""
 
-#: src/components/images/Gallery/index.tsx:420
+#: src/components/images/Gallery/index.tsx:427
 msgid "slide"
 msgstr "slide"
 
@@ -10614,7 +10614,7 @@ msgid "Someone left the group"
 msgstr "Someone left the group"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:294
+#: src/components/dms/MessageItem.tsx:270
 msgid "Someone reacted {0}"
 msgstr ""
 
@@ -10639,7 +10639,7 @@ msgstr "Someone was removed"
 msgid "Someone was removed from the group"
 msgstr "Someone was removed from the group"
 
-#: src/components/moderation/ReportDialog/index.tsx:101
+#: src/components/moderation/ReportDialog/index.tsx:103
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr ""
 
@@ -10650,7 +10650,7 @@ msgid "Something went wrong"
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:139
-#: src/components/moderation/ReportDialog/index.tsx:287
+#: src/components/moderation/ReportDialog/index.tsx:289
 #: src/screens/Deactivated.tsx:86
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
 #: src/view/screens/Storybook/Admonitions.tsx:56
@@ -10670,7 +10670,7 @@ msgstr ""
 msgid "Something went wrong. Please try again in a moment."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:245
+#: src/components/moderation/ReportDialog/index.tsx:247
 msgid "Something went wrong. Please try again."
 msgstr ""
 
@@ -10812,7 +10812,7 @@ msgstr ""
 msgid "Storybook"
 msgstr ""
 
-#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:181
+#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:182
 msgid "Streaming on Twitch? Set your live status on Bluesky to add a badge to your avatar. Tapping it takes people straight to your stream."
 msgstr ""
 
@@ -10837,9 +10837,9 @@ msgstr ""
 msgid "Submit Appeal"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:506
-#: src/components/moderation/ReportDialog/index.tsx:567
-#: src/components/moderation/ReportDialog/index.tsx:574
+#: src/components/moderation/ReportDialog/index.tsx:508
+#: src/components/moderation/ReportDialog/index.tsx:569
+#: src/components/moderation/ReportDialog/index.tsx:576
 msgid "Submit report"
 msgstr ""
 
@@ -10848,13 +10848,13 @@ msgid "Subscribe"
 msgstr ""
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:425
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:434
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:426
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:435
 msgid "Subscribe on {0}"
 msgstr "Subscribe on {0}"
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:433
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:434
 msgid "Subscribe to {publicationTitle} on {0}"
 msgstr "Subscribe to {publicationTitle} on {0}"
 
@@ -10985,7 +10985,7 @@ msgstr ""
 msgid "Tap below to allow Bluesky to access your GPS location. We will then use that data to more accurately determine the content and features available in your region."
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:598
+#: src/components/dms/MessageItem.tsx:567
 msgid "Tap for details"
 msgstr "Tap for details"
 
@@ -11015,29 +11015,29 @@ msgstr ""
 msgid "Tap to dismiss"
 msgstr ""
 
-#: src/components/dms/ReactionsDialog.tsx:192
+#: src/components/dms/ReactionsDialog.tsx:196
 msgid "Tap to remove"
 msgstr "Tap to remove"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/ReactionsDialog.tsx:208
+#: src/components/dms/ReactionsDialog.tsx:212
 msgid "Tap to remove your {0} reaction"
 msgstr "Tap to remove your {0} reaction"
 
-#: src/components/dms/MessageItem.tsx:563
+#: src/components/dms/MessageItem.tsx:532
 msgid "Tap to retry"
 msgstr "Tap to retry"
 
 #. placeholder {0}: tab.value
-#: src/components/dms/ReactionsDialog.tsx:354
+#: src/components/dms/ReactionsDialog.tsx:358
 msgid "Tap to show {0} reactions"
 msgstr "Tap to show {0} reactions"
 
-#: src/components/dms/ReactionsDialog.tsx:353
+#: src/components/dms/ReactionsDialog.tsx:357
 msgid "Tap to show all reactions"
 msgstr "Tap to show all reactions"
 
-#: src/components/dms/MessageItem.tsx:317
+#: src/components/dms/MessageItem.tsx:293
 msgid "Tap to view reactions"
 msgstr "Tap to view reactions"
 
@@ -11427,7 +11427,7 @@ msgstr ""
 msgid "This author has chosen to make their posts visible only to people who are signed in."
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:243
+#: src/screens/Profile/components/GermButton.tsx:244
 msgid "This button lets others open the Germ DM app to send you a message. You can manage its visibility from the Germ DM app, or you can disconnect your Bluesky account from Germ DM altogether by clicking the button below."
 msgstr ""
 
@@ -11561,7 +11561,7 @@ msgstr ""
 msgid "This is not a valid link"
 msgstr ""
 
-#: src/screens/Settings/AutomationLabelSettings.tsx:169
+#: src/screens/Settings/AutomationLabelSettings.tsx:173
 msgid "This label lets the world know that this account is automated. If turned on, this label appears next to the account's name on their profile and posts. It can be turned on or off at any time."
 msgstr "This label lets the world know that this account is automated. If turned on, this label appears next to the account's name on their profile and posts. It can be turned on or off at any time."
 
@@ -11594,13 +11594,13 @@ msgstr ""
 msgid "This list is empty."
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:596
-#: src/components/dms/MessageItem.tsx:625
+#: src/components/dms/MessageItem.tsx:565
+#: src/components/dms/MessageItem.tsx:594
 msgid "This message is hidden because this user is blocking you."
 msgstr "This message is hidden because this user is blocking you."
 
-#: src/components/dms/MessageItem.tsx:595
-#: src/components/dms/MessageItem.tsx:621
+#: src/components/dms/MessageItem.tsx:564
+#: src/components/dms/MessageItem.tsx:590
 msgid "This message is hidden because you are blocking this user."
 msgstr "This message is hidden because you are blocking this user."
 
@@ -11835,8 +11835,8 @@ msgstr ""
 msgid "Topic"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:162
-#: src/components/dms/MessageContextMenu.tsx:165
+#: src/components/dms/MessageContextMenu.tsx:145
+#: src/components/dms/MessageContextMenu.tsx:148
 #: src/components/Post/Translated/index.tsx:150
 #: src/components/Post/Translated/index.tsx:157
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:553
@@ -11887,7 +11887,7 @@ msgstr ""
 msgid "Trolling"
 msgstr ""
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:140
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:142
 msgid "Trust emerges from relationships, communities, and shared context, so we’re also enabling <0>trusted verifiers</0>: organizations that can directly issue verification."
 msgstr ""
 
@@ -11980,7 +11980,7 @@ msgstr ""
 msgid "Unavailable feed information"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:663
+#: src/components/dms/MessageItem.tsx:632
 #: src/components/dms/MessagesListBlockedFooter.tsx:97
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:222
@@ -12026,8 +12026,8 @@ msgstr ""
 #: src/features/liveEvents/components/LiveEventFeedOptionsMenu.tsx:79
 #: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:40
 #: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:46
-#: src/screens/Profile/components/GermButton.tsx:185
 #: src/screens/Profile/components/GermButton.tsx:186
+#: src/screens/Profile/components/GermButton.tsx:187
 msgid "Undo"
 msgstr ""
 
@@ -12061,7 +12061,7 @@ msgstr ""
 msgid "Unfollows the user"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:490
+#: src/components/moderation/ReportDialog/index.tsx:492
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr ""
 
@@ -12287,22 +12287,22 @@ msgstr ""
 msgid "Upload a text file to:"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:490
-#: src/view/com/util/UserAvatar.tsx:493
-#: src/view/com/util/UserBanner.tsx:160
-#: src/view/com/util/UserBanner.tsx:163
+#: src/view/com/util/UserAvatar.tsx:491
+#: src/view/com/util/UserAvatar.tsx:494
+#: src/view/com/util/UserBanner.tsx:161
+#: src/view/com/util/UserBanner.tsx:164
 msgid "Upload from Camera"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:507
-#: src/view/com/util/UserBanner.tsx:177
+#: src/view/com/util/UserAvatar.tsx:508
+#: src/view/com/util/UserBanner.tsx:178
 msgid "Upload from Files"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:501
-#: src/view/com/util/UserAvatar.tsx:505
-#: src/view/com/util/UserBanner.tsx:171
-#: src/view/com/util/UserBanner.tsx:175
+#: src/view/com/util/UserAvatar.tsx:502
+#: src/view/com/util/UserAvatar.tsx:506
+#: src/view/com/util/UserBanner.tsx:172
+#: src/view/com/util/UserBanner.tsx:176
 msgid "Upload from Library"
 msgstr ""
 
@@ -12363,7 +12363,7 @@ msgid "user"
 msgstr "user"
 
 #: src/components/dms/AfterReportConversationDialog.tsx:187
-#: src/components/dms/AfterReportDialog.tsx:150
+#: src/components/dms/AfterReportDialog.tsx:155
 msgctxt "toast"
 msgid "User blocked"
 msgstr ""
@@ -12631,8 +12631,8 @@ msgid "View"
 msgstr ""
 
 #. placeholder {0}: view.source.title
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:319
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:588
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:320
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:589
 msgid "View {0}"
 msgstr "View {0}"
 
@@ -12661,7 +12661,7 @@ msgstr "View {0}’s profile"
 msgid "View {displayName}’s profile"
 msgstr "View {displayName}’s profile"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:436
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:437
 msgid "View {publicationTitle}"
 msgstr "View {publicationTitle}"
 
@@ -12728,10 +12728,10 @@ msgstr ""
 msgid "View profile banner"
 msgstr "View profile banner"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:319
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:426
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:437
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:588
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:320
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:427
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:438
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:589
 msgid "View publication"
 msgstr "View publication"
 
@@ -12785,8 +12785,8 @@ msgstr ""
 msgid "View your verifications"
 msgstr ""
 
-#: src/components/images/AutoSizedImage.tsx:220
-#: src/components/images/AutoSizedImage.tsx:252
+#: src/components/images/AutoSizedImage.tsx:221
+#: src/components/images/AutoSizedImage.tsx:253
 msgid "Views full image"
 msgstr ""
 
@@ -12829,8 +12829,8 @@ msgstr ""
 msgid "Warn content and filter from feeds"
 msgstr ""
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:189
-#: src/features/liveNow/components/LiveStatusDialog.tsx:198
+#: src/features/liveNow/components/LiveStatusDialog.tsx:190
+#: src/features/liveNow/components/LiveStatusDialog.tsx:199
 msgid "Watch now"
 msgstr ""
 
@@ -12977,7 +12977,7 @@ msgstr ""
 msgid "We’re having network issues, try again"
 msgstr "We’re having network issues, try again"
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:96
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:97
 msgid "We’re introducing a new layer of verification on Bluesky — an easy-to-see checkmark."
 msgstr ""
 
@@ -13063,7 +13063,7 @@ msgstr ""
 msgid "What's up?"
 msgstr ""
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:148
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:150
 msgid "When you tap on a check, you’ll see which organizations have granted verification."
 msgstr ""
 
@@ -13080,7 +13080,7 @@ msgstr "Who can join this group chat and how"
 msgid "Who can reply"
 msgstr ""
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:129
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:131
 msgid "Who can verify?"
 msgstr ""
 
@@ -13132,7 +13132,7 @@ msgstr ""
 msgid "Why should this user be reviewed?"
 msgstr ""
 
-#: src/components/dms/AfterReportDialog.tsx:46
+#: src/components/dms/AfterReportDialog.tsx:51
 msgid "Would you like to block this user and/or delete this conversation?"
 msgstr ""
 
@@ -13224,7 +13224,7 @@ msgid "You are accessing Bluesky from a region that legally requires us to verif
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/dms/MessageItem.tsx:636
+#: src/components/dms/MessageItem.tsx:605
 msgid "You are blocking {0}"
 msgstr "You are blocking {0}"
 
@@ -13316,7 +13316,7 @@ msgstr ""
 msgid "You can continue ongoing conversations regardless of which setting you choose."
 msgstr ""
 
-#: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:149
+#: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:150
 msgid "You can now choose to be notified when specific people post. If there’s someone you want timely updates from, go to their profile and find the new bell icon near the follow button."
 msgstr ""
 
@@ -13552,7 +13552,7 @@ msgid "You probably want to restart the app now."
 msgstr ""
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:287
+#: src/components/dms/MessageItem.tsx:263
 msgid "You reacted {0}"
 msgstr ""
 
@@ -13841,7 +13841,7 @@ msgstr ""
 msgid "Your preferred language"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.tsx:100
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.tsx:102
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.web.tsx:53
 msgid "Your profile picture"
 msgstr ""
@@ -13859,7 +13859,7 @@ msgid "Your reply was sent"
 msgstr ""
 
 #. placeholder {0}: state.selectedLabeler?.creator.displayName
-#: src/components/moderation/ReportDialog/index.tsx:517
+#: src/components/moderation/ReportDialog/index.tsx:519
 msgid "Your report will be sent to <0>{0}</0>."
 msgstr ""
 
