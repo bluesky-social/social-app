@@ -242,6 +242,7 @@ export const TRUSTED_VERIFIER_DIDS = [
   'did:plc:durcipmx2rwgzzagbiumobs5', // france-atmosphe.re
   'did:plc:ooensn4mr5mhznzypvxelfa3', // eurosky.social
   'did:plc:u5zp7npt5kpueado77kuihyz', // npmx.dev
+  'did:plc:hd564mpf6bekrwzyhvujs54b', // medsky.network
 ]
 
 /**
