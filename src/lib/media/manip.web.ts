@@ -9,14 +9,14 @@ import {
 
 export async function compressIfNeeded(
   img: PickerImage,
-  max: {width: number; size: number},
+  {maxDimension, maxSize}: {maxDimension: number; maxSize: number},
 ): Promise<PickerImage> {
-  if (img.size < max.size) {
+  if (img.size < maxSize) {
     return img
   }
   return await doResize(img.path, {
-    maxDimension: max.width,
-    maxSize: max.size,
+    maxDimension,
+    maxSize,
   })
 }
 
@@ -83,10 +83,7 @@ async function doResize(
   opts: DoResizeOpts,
 ): Promise<PickerImage> {
   const sourceDims = await getImageDim(dataUri)
-  const newDimensions = getResizedDimensions(sourceDims, {
-    width: opts.maxDimension,
-    height: opts.maxDimension,
-  })
+  const newDimensions = getResizedDimensions(sourceDims, opts.maxDimension)
 
   let newDataUri
 

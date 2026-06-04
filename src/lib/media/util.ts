@@ -7,15 +7,18 @@ export function getResizedDimensions(
     width: number
     height: number
   },
-  max: {width: number; height: number},
+  maxDimension: number,
 ) {
-  if (originalDims.width <= max.width && originalDims.height <= max.height) {
+  if (
+    originalDims.width <= maxDimension &&
+    originalDims.height <= maxDimension
+  ) {
     return originalDims
   }
 
   const ratio = Math.min(
-    max.width / originalDims.width,
-    max.height / originalDims.height,
+    maxDimension / originalDims.width,
+    maxDimension / originalDims.height,
   )
 
   return {

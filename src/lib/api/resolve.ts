@@ -257,8 +257,7 @@ export async function imageToThumb(
   try {
     const img = await downloadAndResize({
       uri: imageUri,
-      maxDimension: IMAGE_SIZE_CONFIG_2K_1MB.width,
-      maxSize: IMAGE_SIZE_CONFIG_2K_1MB.size,
+      ...IMAGE_SIZE_CONFIG_2K_1MB,
       timeout: 15e3,
     })
     if (img) {

@@ -24,14 +24,14 @@ import {convertCdnPreset, getResizedDimensions} from './util'
 
 export async function compressIfNeeded(
   img: PickerImage,
-  max: {width: number; size: number},
+  {maxDimension, maxSize}: {maxDimension: number; maxSize: number},
 ): Promise<PickerImage> {
-  if (img.size < max.size) {
+  if (img.size < maxSize) {
     return img
   }
   const resizedImage = await doResize(normalizePath(img.path), {
-    maxDimension: max.width,
-    maxSize: max.size,
+    maxDimension,
+    maxSize,
   })
   const finalImageMovedPath = await moveToPermanentPath(
     resizedImage.path,
@@ -205,7 +205,7 @@ async function doResize(
       width: imageRes.width,
       height: imageRes.height,
     },
-    {width: opts.maxDimension, height: opts.maxDimension},
+    opts.maxDimension,
   )
 
   let minQualityPercentage = 0

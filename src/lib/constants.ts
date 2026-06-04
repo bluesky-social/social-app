@@ -97,15 +97,13 @@ export const STAGING_FEEDS = [
 ]
 
 export const IMAGE_SIZE_CONFIG_POSTS = {
-  width: 4000,
-  height: 4000,
-  size: 2000000,
+  maxDimension: 4000,
+  maxSize: 2000000,
 }
 
 export const IMAGE_SIZE_CONFIG_2K_1MB = {
-  width: 2000,
-  height: 2000,
-  size: 1000000,
+  maxDimension: 2000,
+  maxSize: 1000000,
 }
 
 export const STAGING_LINK_META_PROXY =

@@ -203,15 +203,15 @@ export function resetImageManipulation(
 
 export async function compressImage(
   img: ComposerImage,
-  max: {width: number; size: number},
+  {maxDimension, maxSize}: {maxDimension: number; maxSize: number},
 ): Promise<PickerImage> {
   const source = img.transformed || img.source
 
   let attempts = 0
-  // Seeded from `max.width` but shrunk per attempt below, so keep the passed-in
-  // value pristine.
-  let currentDimension = max.width
-  const maxBytes = max.size
+  // Seeded from `maxDimension` but shrunk per attempt below, so keep the
+  // passed-in value pristine.
+  let currentDimension = maxDimension
+  const maxBytes = maxSize
 
   let minQualityPercentage = 0
   let maxQualityPercentage = 101 // exclusive

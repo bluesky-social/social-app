@@ -91,7 +91,7 @@ describe('downloadAndResize', () => {
     }
     const resizedDimensionsOne = getResizedDimensions(
       initialDimensionsOne,
-      IMAGE_SIZE_CONFIG_2K_1MB,
+      IMAGE_SIZE_CONFIG_2K_1MB.maxDimension,
     )
 
     const initialDimensionsTwo = {
@@ -100,7 +100,7 @@ describe('downloadAndResize', () => {
     }
     const resizedDimensionsTwo = getResizedDimensions(
       initialDimensionsTwo,
-      IMAGE_SIZE_CONFIG_2K_1MB,
+      IMAGE_SIZE_CONFIG_2K_1MB.maxDimension,
     )
 
     expect(resizedDimensionsOne).toEqual(initialDimensionsOne)
@@ -114,7 +114,7 @@ describe('downloadAndResize', () => {
     }
     const resizedDimensionsOne = getResizedDimensions(
       initialDimensionsOne,
-      IMAGE_SIZE_CONFIG_2K_1MB,
+      IMAGE_SIZE_CONFIG_2K_1MB.maxDimension,
     )
 
     const initialDimensionsTwo = {
@@ -123,7 +123,7 @@ describe('downloadAndResize', () => {
     }
     const resizedDimensionsTwo = getResizedDimensions(
       initialDimensionsTwo,
-      IMAGE_SIZE_CONFIG_2K_1MB,
+      IMAGE_SIZE_CONFIG_2K_1MB.maxDimension,
     )
 
     expect(resizedDimensionsOne).toEqual({
