@@ -153,15 +153,22 @@ export function Member({
           </ProfileCard.Outer>
         </ProfileCard.Link>
         {showRemoveButton ? (
-          <Button
-            label={l`Remove ${displayName} from this group chat`}
-            size="tiny"
-            color="negative_subtle"
-            onPress={() => removeMemberPrompt.open()}>
-            <ButtonText>
-              <Trans>Remove</Trans>
-            </ButtonText>
-          </Button>
+          <>
+            <Button
+              label={l`Remove ${displayName} from this group chat`}
+              size="tiny"
+              color="negative_subtle"
+              onPress={() => removeMemberPrompt.open()}>
+              <ButtonText>
+                <Trans>Remove</Trans>
+              </ButtonText>
+            </Button>
+            <RemoveMemberPrompt
+              control={removeMemberPrompt}
+              displayName={displayName}
+              onConfirm={() => removeMembers({members: [profile.did]})}
+            />
+          </>
         ) : isSelf || isFollowing || isBlockedOrBlocking(profile) ? null : (
           <SimpleInlineLinkText
             label={l`Follow ${displayName}`}
@@ -172,11 +179,6 @@ export function Member({
         )}
         {statusBadge}
       </View>
-      <RemoveMemberPrompt
-        control={removeMemberPrompt}
-        displayName={displayName}
-        onConfirm={() => removeMembers({members: [profile.did]})}
-      />
     </SubtleHoverWrapper>
   )
 }
