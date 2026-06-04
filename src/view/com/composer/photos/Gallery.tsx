@@ -1,10 +1,11 @@
-import {memo, useMemo, useState} from 'react'
+import {memo, useEffect, useMemo, useRef, useState} from 'react'
 import {
   findNodeHandle,
   type ImageStyle,
   Keyboard,
   type LayoutChangeEvent,
   Platform,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -18,9 +19,12 @@ import {Trans} from '@lingui/react/macro'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type Dimensions} from '#/lib/media/types'
 import {colors} from '#/lib/styles'
+import {useA11y} from '#/state/a11y'
 import {type ComposerImage, cropImage} from '#/state/gallery'
-import {atoms as a, tokens, useTheme} from '#/alf'
+import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
+import {atoms as a, tokens, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
+import {Button, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Pencil_Stroke2_Corner0_Rounded as PencilIcon} from '#/components/icons/Pencil'
@@ -32,9 +36,26 @@ import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
 import {type PostAction} from '../state/composer'
 import {EditImageDialog} from './EditImageDialog'
+import {getCarouselTileWidth} from './galleryLayout'
 import {ImageAltTextDialog} from './ImageAltTextDialog'
 
 const IMAGE_GAP = 8
+
+// Posts with more than this many images preview as a horizontal carousel
+// instead of the grid (matches the viewing-side display rule).
+const GALLERY_CAROUSEL_THRESHOLD = 4
+// Fixed height for carousel tiles; widths derive from each image aspect ratio.
+const CAROUSEL_TILE_HEIGHT = 171
+const CAROUSEL_CONTROLS_STYLE = {
+  display: 'flex' as const,
+  flexDirection: 'row' as const,
+  position: 'absolute' as const,
+  top: 4,
+  right: 4,
+  gap: 4,
+  zIndex: 1,
+}
+const CAROUSEL_ALT_STYLE = {left: 4, bottom: 4}
 
 interface GalleryProps {
   images: ComposerImage[]
@@ -67,7 +88,21 @@ interface GalleryInnerProps extends GalleryProps {
 }
 
 const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
+  const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
+  const {screenReaderEnabled} = useA11y()
+  const isCarousel =
+    images.length > GALLERY_CAROUSEL_THRESHOLD && !screenReaderEnabled
+
+  const scrollRef = useRef<ScrollView>(null)
+  const prevCountRef = useRef(images.length)
+  useEffect(() => {
+    // When a new image is added in carousel mode, reveal it.
+    if (isCarousel && images.length > prevCountRef.current) {
+      scrollRef.current?.scrollToEnd({animated: true})
+    }
+    prevCountRef.current = images.length
+  }, [images.length, isCarousel])
 
   const {altTextControlStyle, imageControlsStyle, imageStyle} = useMemo(() => {
     // Cap columns at 4 so tiles stay tappable when MAX_GALLERY_IMAGES is high;
@@ -104,7 +139,62 @@ const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
     }
   }, [images.length, containerInfo, isMobile])
 
-  return images.length !== 0 ? (
+  if (images.length === 0) {
+    return null
+  }
+
+  const altTextReminder = images.some(image => !image.alt) ? (
+    <Admonition type="info" style={[a.mt_sm]}>
+      <Trans>
+        Alt text describes images for blind and low-vision users, and helps give
+        context to everyone.
+      </Trans>
+    </Admonition>
+  ) : null
+
+  if (isCarousel) {
+    return (
+      <>
+        <ScrollView
+          ref={scrollRef}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          testID="selectedPhotosView"
+          accessibilityLabel={_(msg`Selected photos, ${images.length} images`)}
+          accessibilityHint=""
+          role="group"
+          aria-roledescription={_(msg`carousel`)}
+          style={[{marginTop: 16}, web({overscrollBehaviorX: 'contain'})]}
+          contentContainerStyle={{gap: IMAGE_GAP, paddingRight: IMAGE_GAP}}>
+          {images.map(image => (
+            <GalleryItem
+              key={image.source.id}
+              image={image}
+              altTextControlStyle={CAROUSEL_ALT_STYLE}
+              imageControlsStyle={CAROUSEL_CONTROLS_STYLE}
+              imageStyle={{
+                height: CAROUSEL_TILE_HEIGHT,
+                width: getCarouselTileWidth(
+                  image.transformed ?? image.source,
+                  CAROUSEL_TILE_HEIGHT,
+                ),
+              }}
+              onChange={next => {
+                dispatch({type: 'embed_update_image', image: next})
+              }}
+              onRemove={() => {
+                dispatch({type: 'embed_remove_image', image})
+              }}
+            />
+          ))}
+        </ScrollView>
+        <CarouselAdmonition />
+        {altTextReminder}
+      </>
+    )
+  }
+
+  return (
     <>
       <View testID="selectedPhotosView" style={styles.gallery}>
         {images.map(image => {
@@ -125,16 +215,9 @@ const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
           )
         })}
       </View>
-      {images.some(image => !image.alt) && (
-        <Admonition type="info" style={[a.mt_sm]}>
-          <Trans>
-            Alt text describes images for blind and low-vision users, and helps
-            give context to everyone.
-          </Trans>
-        </Admonition>
-      )}
+      {altTextReminder}
     </>
-  ) : null
+  )
 }
 
 type GalleryItemProps = {
@@ -266,6 +349,42 @@ const GalleryItem = ({
         image={image}
         onChange={onChange}
       />
+    </View>
+  )
+}
+
+function CarouselAdmonition() {
+  const {_} = useLingui()
+  const {nux} = useNux(Nux.ComposerCarouselAnnouncement)
+  const {mutate: save, variables} = useSaveNux()
+
+  // Optimistically hide while the completion is saving.
+  if (variables) return null
+  if (nux && nux.completed) return null
+
+  return (
+    <View style={[a.mt_sm]}>
+      <Admonition type="info">
+        <Trans>
+          Posts with more than 4 photos are shown as a swipeable carousel.
+        </Trans>
+      </Admonition>
+      <Button
+        label={_(msg`Dismiss`)}
+        size="tiny"
+        variant="solid"
+        color="secondary_inverted"
+        shape="round"
+        onPress={() =>
+          save({
+            id: Nux.ComposerCarouselAnnouncement,
+            completed: true,
+            data: undefined,
+          })
+        }
+        style={[a.absolute, {top: 8, right: 8}]}>
+        <ButtonIcon icon={TimesIcon} />
+      </Button>
     </View>
   )
 }
