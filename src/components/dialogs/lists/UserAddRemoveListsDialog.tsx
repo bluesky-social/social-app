@@ -1,6 +1,5 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -172,7 +171,7 @@ function ListsContent({
           ? () => 'lists_dialog_loader'
           : (item: ListWithMembership) => item.list.uri
       }
-      onEndReached={onEndReached}
+      onEndReached={() => void onEndReached()}
       onEndReachedThreshold={0.1}
       ListHeaderComponent={listHeader}
       ListEmptyComponent={<Empty />}
@@ -222,7 +221,7 @@ function ListItem({
             did: subjectDid,
             handle,
             displayName,
-          } as AppBskyActorDefs.ProfileView,
+          },
         })
       },
       onError: err => {

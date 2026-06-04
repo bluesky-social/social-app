@@ -1,4 +1,4 @@
-import {type JSX, useCallback, useMemo, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {
   Dimensions,
   type GestureResponderEvent,
@@ -28,10 +28,23 @@ import {ListFooter} from '#/components/Lists'
 import * as ProfileCard from '#/components/ProfileCard'
 import type * as bsky from '#/types/bsky'
 
-const LOADING_ITEM = {_reactKey: '__loading__'}
-const EMPTY_ITEM = {_reactKey: '__empty__'}
-const ERROR_ITEM = {_reactKey: '__error__'}
-const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
+const LOADING_ITEM = {kind: 'loading', _reactKey: '__loading__'} as const
+const EMPTY_ITEM = {kind: 'empty', _reactKey: '__empty__'} as const
+const ERROR_ITEM = {kind: 'error', _reactKey: '__error__'} as const
+const LOAD_MORE_ERROR_ITEM = {
+  kind: 'load_more_error',
+  _reactKey: '__load_more_error__',
+} as const
+
+type Item =
+  | typeof LOADING_ITEM
+  | typeof EMPTY_ITEM
+  | typeof ERROR_ITEM
+  | typeof LOAD_MORE_ERROR_ITEM
+  | {
+      kind: 'list_item'
+      listItem: AppBskyGraphDefs.ListItemView
+    }
 
 export function ListMembers({
   list,
@@ -50,8 +63,8 @@ export function ListMembers({
   scrollElRef?: ListRef
   onScrolledDownChange: (isScrolledDown: boolean) => void
   onPressTryAgain?: () => void
-  renderHeader: () => JSX.Element
-  renderEmptyState: () => JSX.Element
+  renderHeader: () => React.ReactElement
+  renderEmptyState: () => React.ReactElement
   testID?: string
   headerOffset?: number
   desktopFixedHeightOffset?: number
@@ -62,7 +75,7 @@ export function ListMembers({
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
   const editListsDialogControl = useDialogControl()
-  const [selectedProfile, setSelectedProfile] = React.useState<
+  const [selectedProfile, setSelectedProfile] = useState<
     bsky.profile.AnyProfileView | undefined
   >()
 
@@ -82,23 +95,28 @@ export function ListMembers({
     currentAccount && data?.pages[0].list.creator.did === currentAccount.did
 
   const items = useMemo(() => {
-    let items: any[] = []
+    const items: Item[] = []
     if (isFetched) {
       if (isEmpty && isError) {
-        items = items.concat([ERROR_ITEM])
+        items.push(ERROR_ITEM)
       }
       if (isEmpty) {
-        items = items.concat([EMPTY_ITEM])
+        items.push(EMPTY_ITEM)
       } else if (data) {
         for (const page of data.pages) {
-          items = items.concat(page.items)
+          items.push(
+            ...page.items.map(item => ({
+              kind: 'list_item' as const,
+              listItem: item,
+            })),
+          )
         }
       }
       if (!isEmpty && isError) {
-        items = items.concat([LOAD_MORE_ERROR_ITEM])
+        items.push(LOAD_MORE_ERROR_ITEM)
       }
     } else if (isFetching) {
-      items = items.concat([LOADING_ITEM])
+      items.push(LOADING_ITEM)
     }
     return items
   }, [isFetched, isEmpty, isError, data, isFetching])
@@ -126,7 +144,7 @@ export function ListMembers({
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 
   const onPressRetryLoadMore = useCallback(() => {
-    fetchNextPage()
+    void fetchNextPage()
   }, [fetchNextPage])
 
   const onPressEditMembership = useCallback(
@@ -142,71 +160,81 @@ export function ListMembers({
   // =
 
   const renderItem = useCallback(
-    ({item}: {item: any}) => {
-      if (item === EMPTY_ITEM) {
-        return renderEmptyState()
-      } else if (item === ERROR_ITEM) {
-        return (
-          <ErrorMessage
-            message={cleanError(error)}
-            onPressTryAgain={onPressTryAgain}
-          />
-        )
-      } else if (item === LOAD_MORE_ERROR_ITEM) {
-        return (
-          <LoadMoreRetryBtn
-            label={_(
-              msg`There was an issue fetching the list. Tap here to try again.`,
-            )}
-            onPress={onPressRetryLoadMore}
-          />
-        )
-      } else if (item === LOADING_ITEM) {
-        return <ProfileCardFeedLoadingPlaceholder />
+    ({item}: {item: Item}) => {
+      switch (item.kind) {
+        case 'empty': {
+          return renderEmptyState()
+        }
+        case 'error': {
+          return (
+            <ErrorMessage
+              message={cleanError(error)}
+              onPressTryAgain={onPressTryAgain}
+            />
+          )
+        }
+        case 'load_more_error': {
+          return (
+            <LoadMoreRetryBtn
+              label={_(
+                msg`There was an issue fetching the list. Tap here to try again.`,
+              )}
+              onPress={onPressRetryLoadMore}
+            />
+          )
+        }
+        case 'loading': {
+          return <ProfileCardFeedLoadingPlaceholder />
+        }
+        case 'list_item': {
+          const profile = item.listItem.subject
+          if (!moderationOpts) return null
+
+          return (
+            <View
+              style={[
+                a.py_md,
+                a.px_xl,
+                a.border_t,
+                t.atoms.border_contrast_low,
+              ]}>
+              <ProfileCard.Link profile={profile}>
+                <ProfileCard.Outer>
+                  <ProfileCard.Header>
+                    <ProfileCard.Avatar
+                      profile={profile}
+                      moderationOpts={moderationOpts}
+                    />
+                    <ProfileCard.NameAndHandle
+                      profile={profile}
+                      moderationOpts={moderationOpts}
+                    />
+                    {isOwner && (
+                      <Button
+                        testID={`user-${profile.handle}-editBtn`}
+                        label={_(msg({message: 'Edit', context: 'action'}))}
+                        onPress={e => onPressEditMembership(e, profile)}
+                        size="small"
+                        color="secondary">
+                        <ButtonText>
+                          <Trans context="action">Edit</Trans>
+                        </ButtonText>
+                      </Button>
+                    )}
+                  </ProfileCard.Header>
+
+                  <ProfileCard.Labels
+                    profile={profile}
+                    moderationOpts={moderationOpts}
+                  />
+
+                  <ProfileCard.Description profile={profile} />
+                </ProfileCard.Outer>
+              </ProfileCard.Link>
+            </View>
+          )
+        }
       }
-
-      const profile = (item as AppBskyGraphDefs.ListItemView).subject
-      if (!moderationOpts) return null
-
-      return (
-        <View
-          style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}>
-          <ProfileCard.Link profile={profile}>
-            <ProfileCard.Outer>
-              <ProfileCard.Header>
-                <ProfileCard.Avatar
-                  profile={profile}
-                  moderationOpts={moderationOpts}
-                />
-                <ProfileCard.NameAndHandle
-                  profile={profile}
-                  moderationOpts={moderationOpts}
-                />
-                {isOwner && (
-                  <Button
-                    testID={`user-${profile.handle}-editBtn`}
-                    label={_(msg({message: 'Edit', context: 'action'}))}
-                    onPress={e => onPressEditMembership(e, profile)}
-                    size="small"
-                    variant="solid"
-                    color="secondary">
-                    <ButtonText>
-                      <Trans context="action">Edit</Trans>
-                    </ButtonText>
-                  </Button>
-                )}
-              </ProfileCard.Header>
-
-              <ProfileCard.Labels
-                profile={profile}
-                moderationOpts={moderationOpts}
-              />
-
-              <ProfileCard.Description profile={profile} />
-            </ProfileCard.Outer>
-          </ProfileCard.Link>
-        </View>
-      )
     },
     [
       renderEmptyState,
@@ -247,18 +275,20 @@ export function ListMembers({
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
         data={items}
-        keyExtractor={(item: any) => item.subject?.did || item._reactKey}
+        keyExtractor={(item: Item) =>
+          item.kind === 'list_item' ? item.listItem.subject.did : item._reactKey
+        }
         renderItem={renderItem}
         ListHeaderComponent={!isEmpty ? renderHeader : undefined}
         ListFooterComponent={renderFooter}
         refreshing={isRefreshing}
-        onRefresh={onRefresh}
+        onRefresh={() => void onRefresh()}
         headerOffset={headerOffset}
         contentContainerStyle={{
           minHeight: Dimensions.get('window').height * 1.5,
         }}
         onScrolledDownChange={onScrolledDownChange}
-        onEndReached={onEndReached}
+        onEndReached={() => void onEndReached()}
         onEndReachedThreshold={0.6}
         removeClippedSubviews={true}
         desktopFixedHeight={desktopFixedHeightOffset || true}
