@@ -86,8 +86,8 @@ export type ButtonState = {
 export type ButtonContext = VariantProps & ButtonState
 
 type NonTextElements =
-  | React.ReactElement<any>
-  | Iterable<React.ReactElement<any> | null | undefined | boolean>
+  | React.ReactElement<unknown>
+  | Iterable<React.ReactElement<unknown> | null | undefined | boolean>
 
 export type ButtonProps = Pick<
   PressableProps,
@@ -605,7 +605,10 @@ export function useSharedButtonTextStyles() {
     if (variant === 'solid') {
       if (color === 'primary') {
         if (!disabled) {
-          baseStyles.push({color: t.palette.white})
+          baseStyles.push({
+            color:
+              t.palette.primary_500 === '#FFFFFF' ? '#000000' : t.palette.white,
+          })
         } else {
           baseStyles.push({
             color: select(t.name, {

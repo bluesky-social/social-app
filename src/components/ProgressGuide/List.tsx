@@ -9,6 +9,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {BSKY_APP_ACCOUNT_DID} from '#/lib/constants'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {
@@ -16,6 +17,7 @@ import {
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useBreakpoints, useLayoutBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Person_Filled_Corner2_Rounded as PersonIcon} from '#/components/icons/Person'
@@ -153,26 +155,38 @@ function StackedAvatars({follows}: {follows?: bsky.profile.AnyProfileView[]}) {
       {containerWidth > 0 && (
         <>
           {/* Show followed user avatars */}
-          {followedAvatars.map((follow, i) => (
-            <View
-              key={follow.did}
-              style={[
-                a.rounded_full,
-                a.border,
-                t.atoms.border_contrast_low,
-                {
-                  marginLeft: i === 0 ? 0 : -overlap,
-                  zIndex: TOTAL_AVATARS - i,
-                },
-              ]}>
-              <UserAvatar
-                type="user"
-                size={avatarSize - 2}
-                avatar={follow.avatar}
-                noBorder
-              />
-            </View>
-          ))}
+          {followedAvatars.map((follow, i) => {
+            const isAppAccount = follow.did === BSKY_APP_ACCOUNT_DID
+            return (
+              <View
+                key={follow.did}
+                style={[
+                  a.rounded_full,
+                  a.border,
+                  t.atoms.border_contrast_low,
+                  a.align_center,
+                  a.justify_center,
+                  isAppAccount && t.atoms.bg_contrast_25,
+                  {
+                    width: avatarSize,
+                    height: avatarSize,
+                    marginLeft: i === 0 ? 0 : -overlap,
+                    zIndex: TOTAL_AVATARS - i,
+                  },
+                ]}>
+                {isAppAccount ? (
+                  <Logo earth width={iconSize} fill={t.palette.primary_500} />
+                ) : (
+                  <UserAvatar
+                    type="user"
+                    size={avatarSize - 2}
+                    avatar={follow.avatar}
+                    noBorder
+                  />
+                )}
+              </View>
+            )
+          })}
           {/* Show placeholder avatars for remaining slots */}
           {Array(remainingSlots)
             .fill(0)

@@ -42,10 +42,10 @@ export function PostControlButton({
       big,
       active,
       color: {
-        color: activeColor && active ? activeColor : t.palette.contrast_500,
+        color: activeColor && active ? activeColor : t.palette.contrast_1000,
       },
     }),
-    [big, active, activeColor, t.palette.contrast_500],
+    [big, active, activeColor, t.palette.contrast_1000],
   )
 
   const style = useMemo(

@@ -88,6 +88,8 @@ export type Brand = BrandConfig & {
     wordmark: SvgShape
     /** Combined logomark variant used in Logomark.tsx */
     logomark: SvgShape
+    /** Optional earth logo mark */
+    earth?: SvgShape
     /**
      * Optional kawaii-mode raster fallbacks. Bluesky-only easter egg; other
      * brands can omit this and the kawaii toggle will simply render the
@@ -116,8 +118,10 @@ export type SvgShape =
       viewBox: string
       path: string
       ratio: number
+      scale?: number
     }
   | {
       xml: string
       ratio: number
+      scale?: number
     }

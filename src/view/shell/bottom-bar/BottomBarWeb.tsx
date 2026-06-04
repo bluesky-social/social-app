@@ -22,7 +22,7 @@ import {Link} from '#/view/com/util/Link'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
@@ -44,12 +44,15 @@ import {
 } from '#/components/icons/Message'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
+import {getActiveBrand} from '#/brand/activeBrand'
 import {styles} from './BottomBarStyles'
 
 export function BottomBarWeb() {
   const {_} = useLingui()
   const {hasSession, currentAccount} = useSession()
   const t = useTheme()
+  const {gtPhone} = useBreakpoints()
+  const brand = getActiveBrand()
   const footerMinimalShellTransform = useMinimalShellFooterTransform()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
@@ -217,10 +220,19 @@ export function BottomBarWeb() {
                 },
               ]}>
               <View style={[a.flex_row, a.align_center, a.gap_md]}>
-                <Logo width={32} />
-                <View style={{paddingTop: 4}}>
+                <Logo width={32} earth={true} />
+                {brand.useTextJoinLabel ? (
+                  <Text
+                    style={[
+                      a.font_bold,
+                      gtPhone ? a.text_lg : a.text_md,
+                      t.atoms.text,
+                    ]}>
+                    <Trans>Join now</Trans>
+                  </Text>
+                ) : (
                   <Logotype width={80} fill={t.atoms.text.color} />
-                </View>
+                )}
               </View>
 
               <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>

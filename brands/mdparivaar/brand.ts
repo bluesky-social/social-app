@@ -69,12 +69,20 @@ const mdparivaarSubduedPalette = {
 
 // The MD icon is a self-contained design (white-on-saffron). Rendered via
 // SvgXml as-is; theme tinting does not apply because the SVG carries its
-// own colors. We use the icon for `mark` (compact), `logomark` (mid), and
-// `wordmark` (header) — replace `wordmark` with a real wordmark SVG when
-// one becomes available.
+// own colors. We use the icon for `mark` (compact) and `logomark` (mid).
 const MD_ICON_SHAPE = {
   xml: MD_ICON_SVG,
   ratio: 1, // viewBox is 180x180
+}
+
+// Custom wordmark SVG for "MD Parivaar" text.
+const MD_WORDMARK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 126 24">
+  <text x="50%" y="18" font-family="-apple-system, BlinkMacSystemFont, 'Outfit', 'Inter', sans-serif" font-weight="900" font-size="20" fill="currentColor" text-anchor="middle">MD Parivaar</text>
+</svg>`
+
+const MD_WORDMARK_SHAPE = {
+  xml: MD_WORDMARK_SVG,
+  ratio: 24 / 126,
 }
 
 const brand: Brand = {
@@ -143,7 +151,7 @@ const brand: Brand = {
 
   logo: {
     mark: MD_ICON_SHAPE,
-    wordmark: MD_ICON_SHAPE,
+    wordmark: MD_WORDMARK_SHAPE,
     logomark: MD_ICON_SHAPE,
   },
 }

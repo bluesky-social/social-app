@@ -10,8 +10,6 @@ import Svg, {Path, SvgXml} from 'react-native-svg'
 import {atoms as a, flatten} from '#/alf'
 import {getActiveBrand} from '#/brand/activeBrand'
 
-const size = 100
-
 export function Splash({
   isReady,
   children,
@@ -22,7 +20,9 @@ export function Splash({
   const splashRef = useRef<HTMLDivElement>(null)
 
   const brand = getActiveBrand()
-  const {mark} = brand.logo
+  const isWordmarkOnly = !!brand.splashOnlyWordmark
+  const mark = isWordmarkOnly ? brand.logo.wordmark : brand.logo.mark
+  const size = isWordmarkOnly ? 160 : 100
   const ratio = mark.ratio || 1
 
   // hide the static one that's baked into the HTML - gets replaced by our React version below
@@ -69,9 +69,13 @@ export function Splash({
     }
   }, [isReady])
 
+  const alfTheme = localStorage.getItem('ALF_THEME') || 'light'
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-  const brandPrimary = brand.primaryColor
-  const color = prefersDark ? '#FFFFFF' : brandPrimary || '#000000'
+  const isDark =
+    alfTheme === 'dark' ||
+    alfTheme === 'dim' ||
+    (alfTheme === 'system' && prefersDark)
+  const color = isDark ? '#FFFFFF' : '#000000'
 
   return (
     <>

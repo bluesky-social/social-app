@@ -225,9 +225,15 @@
           const splash = document.getElementById('splash')
           if (splash) {
             splash.innerHTML = brandLogo
+            const alfTheme = localStorage.getItem('ALF_THEME') || 'light'
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-            const brandPrimary = localStorage.getItem('ACTIVE_BRAND_PRIMARY_COLOR')
-            splash.style.color = prefersDark ? '#FFFFFF' : (brandPrimary || '#000000')
+            const isDark = alfTheme === 'dark' || alfTheme === 'dim' || (alfTheme === 'system' && prefersDark)
+            splash.style.color = isDark ? '#FFFFFF' : '#000000'
+            if (localStorage.getItem('ACTIVE_BRAND_SPLASH_ONLY_WORDMARK') === 'true') {
+              const style = document.createElement('style')
+              style.innerHTML = '#splash svg { width: 160px !important; }'
+              document.head.appendChild(style)
+            }
           }
         }
       } catch (e) {}

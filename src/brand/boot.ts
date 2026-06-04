@@ -6,6 +6,8 @@
  * Platform splitting is handled by Metro: `resolve.ts` runs on native,
  * `resolve.web.ts` on web.
  */
+import {invertPalette} from '@bsky.app/alf'
+
 import {setActiveBrand} from './activeBrand'
 import {resolveBrand} from './resolve'
 
@@ -26,11 +28,17 @@ setActiveBrand(brand)
 // On web, persist the resolved brand details so subsequent page loads can read them from localStorage early
 if (typeof window !== 'undefined') {
   try {
-    const {mark} = brand.logo
+    const isWordmarkOnly = !!brand.splashOnlyWordmark
+    const logoToStore = isWordmarkOnly ? brand.logo.wordmark : brand.logo.mark
     const svgString =
-      'xml' in mark
-        ? mark.xml
-        : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${mark.viewBox}"><path fill="currentColor" d="${mark.path}"/></svg>`
+      'xml' in logoToStore
+        ? logoToStore.xml
+        : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${logoToStore.viewBox}"><path fill="currentColor" d="${logoToStore.path}"/></svg>`
+    const faviconLogo = brand.logo.mark
+    const faviconSvgString =
+      'xml' in faviconLogo
+        ? faviconLogo.xml
+        : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${faviconLogo.viewBox}"><path fill="currentColor" d="${faviconLogo.path}"/></svg>`
     localStorage.setItem('ACTIVE_BRAND_SPLASH_COLOR', brand.splashColor)
     localStorage.setItem(
       'ACTIVE_BRAND_SPLASH_COLOR_DARK',
@@ -38,17 +46,22 @@ if (typeof window !== 'undefined') {
     )
     localStorage.setItem('ACTIVE_BRAND_LOGO_SVG', svgString)
     localStorage.setItem('ACTIVE_BRAND_PRIMARY_COLOR', brand.primaryColor)
+    localStorage.setItem('ACTIVE_BRAND_ID', brand.id)
+    localStorage.setItem(
+      'ACTIVE_BRAND_SPLASH_ONLY_WORDMARK',
+      isWordmarkOnly ? 'true' : 'false',
+    )
     localStorage.setItem(
       'ACTIVE_BRAND_BG_LIGHT',
       brand.palette.default.contrast_0,
     )
     localStorage.setItem(
       'ACTIVE_BRAND_BG_DARK',
-      brand.palette.default.contrast_1000,
+      invertPalette(brand.palette.default).contrast_0,
     )
     localStorage.setItem(
       'ACTIVE_BRAND_BG_DIM',
-      brand.palette.subdued.contrast_1000,
+      invertPalette(brand.palette.subdued).contrast_0,
     )
 
     // Dynamically apply tab title and favicon link
@@ -60,7 +73,7 @@ if (typeof window !== 'undefined') {
       const faviconLink = document.createElement('link')
       faviconLink.type = 'image/svg+xml'
       faviconLink.rel = 'shortcut icon'
-      faviconLink.href = `data:image/svg+xml,${encodeURIComponent(svgString)}`
+      faviconLink.href = `data:image/svg+xml,${encodeURIComponent(faviconSvgString)}`
       document.head.appendChild(faviconLink)
     }
   } catch (_) {}

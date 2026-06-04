@@ -33,10 +33,11 @@ export const SplashScreen = ({
   const isDarkMode = t.name !== 'light'
 
   const playHaptic = useHaptics()
-  const brandName = getActiveBrand().name
+  const brand = getActiveBrand()
+  const brandName = brand.name
 
   const styles = useMemo(() => {
-    const logoFill = isDarkMode ? 'white' : t.palette.primary_500
+    const logoFill = isDarkMode ? 'white' : t.atoms.text.color
     return {
       logoFill,
       logoShadow: isDarkMode
@@ -69,7 +70,12 @@ export const SplashScreen = ({
         style={[a.flex_1]}>
         <View
           style={[a.justify_center, a.align_center, {gap: 6, paddingTop: 46}]}>
-          <Logo width={76} fill={styles.logoFill} style={styles.logoShadow} />
+          <Logo
+            earth
+            width={76}
+            fill={styles.logoFill}
+            style={styles.logoShadow}
+          />
           <Logotype
             width={91}
             fill={styles.logoFill}
