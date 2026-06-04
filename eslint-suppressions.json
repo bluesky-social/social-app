@@ -1792,11 +1792,6 @@
       "count": 1
     }
   },
-  "src/state/queries/list-memberships.ts": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    }
-  },
   "src/state/queries/list.ts": {
     "@typescript-eslint/no-floating-promises": {
       "count": 7
