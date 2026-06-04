@@ -37,6 +37,7 @@ export function GalleryFallbackEmbed({count}: {count?: number}) {
         a.rounded_md,
         a.border,
         a.p_lg,
+        a.pb_2xl,
         a.gap_sm,
         a.align_center,
         {
