@@ -1,4 +1,10 @@
-import {darken, hexToRgb, lighten, rgbToHex} from './colorGeneration'
+import {
+  contrastRatio,
+  darken,
+  hexToRgb,
+  lighten,
+  rgbToHex,
+} from './colorGeneration'
 
 describe('hexToRgb', () => {
   it('parses 6-digit hex', () => {
@@ -90,5 +96,35 @@ describe('lighten / darken', () => {
   it('returns the input unchanged for invalid hex', () => {
     expect(lighten('not-a-color', 10)).toBe('not-a-color')
     expect(darken('#zzz', 10)).toBe('#zzz')
+  })
+})
+
+describe('contrastRatio', () => {
+  it('returns 21 for black on white', () => {
+    expect(contrastRatio('#000000', '#ffffff')).toBeCloseTo(21, 5)
+  })
+
+  it('returns 1 for identical colors', () => {
+    expect(contrastRatio('#abcdef', '#abcdef')).toBeCloseTo(1, 5)
+  })
+
+  it('is symmetric regardless of argument order', () => {
+    expect(contrastRatio('#123456', '#fedcba')).toBeCloseTo(
+      contrastRatio('#fedcba', '#123456')!,
+      5,
+    )
+  })
+
+  it('clears AAA large text (4.5:1) for a high-contrast pairing', () => {
+    expect(contrastRatio('#1d3a5f', '#ffffff')!).toBeGreaterThanOrEqual(4.5)
+  })
+
+  it('fails AAA large text (4.5:1) for a low-contrast pairing', () => {
+    expect(contrastRatio('#777777', '#888888')!).toBeLessThan(4.5)
+  })
+
+  it('returns null for invalid hex input', () => {
+    expect(contrastRatio('not-a-color', '#ffffff')).toBeNull()
+    expect(contrastRatio('#ffffff', '#zzz')).toBeNull()
   })
 })
