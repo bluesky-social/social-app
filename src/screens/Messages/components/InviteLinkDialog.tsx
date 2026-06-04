@@ -177,11 +177,7 @@ export function InviteLinkDialog({
             <Text style={[a.text_md, a.leading_snug]}>
               <Trans>
                 Group chats can only have a maximum of{' '}
-                <Plural
-                  value={convo.details.memberLimit}
-                  other="# people"
-                />
-                .
+                <Plural value={convo.details.memberLimit} other="# people" />.
               </Trans>
             </Text>
             <Text style={[a.text_md, a.leading_snug]}>
