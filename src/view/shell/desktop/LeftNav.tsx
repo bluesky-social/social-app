@@ -69,6 +69,10 @@ import {
   Message_Stroke2_Corner0_Rounded as MessageIcon,
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilledIcon,
 } from '#/components/icons/Message'
+import {
+  Newspaper_Filled_Corner2_Rounded as NewspaperFilledIcon,
+  Newspaper_Stroke2_Corner2_Rounded as NewspaperIcon,
+} from '#/components/icons/Newspaper'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {
   SettingsGear2_Filled_Corner0_Rounded as SettingsFilledIcon,
@@ -670,6 +674,16 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
             icons={{
               inactive: HomeIcon,
               active: HomeFilledIcon,
+            }}
+          />
+          <NavItem
+            label={l`News`}
+            href="/news"
+            navItem="news"
+            minimal={leftNavMinimal}
+            icons={{
+              inactive: NewspaperIcon,
+              active: NewspaperFilledIcon,
             }}
           />
           <NavItem
