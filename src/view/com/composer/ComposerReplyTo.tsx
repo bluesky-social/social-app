@@ -171,8 +171,8 @@ function ComposerReplyToImages({
         <Image
           source={{uri: images[0].thumb}}
           style={[a.flex_1]}
-          cachePolicy="memory-disk"
           accessibilityIgnoresInvertColors
+          useAppleWebpCodec
         />
       )) ||
         (images.length === 2 && (
@@ -180,14 +180,14 @@ function ComposerReplyToImages({
             <Image
               source={{uri: images[0].thumb}}
               style={[a.flex_1]}
-              cachePolicy="memory-disk"
               accessibilityIgnoresInvertColors
+              useAppleWebpCodec
             />
             <Image
               source={{uri: images[1].thumb}}
               style={[a.flex_1]}
-              cachePolicy="memory-disk"
               accessibilityIgnoresInvertColors
+              useAppleWebpCodec
             />
           </View>
         )) ||
@@ -196,21 +196,21 @@ function ComposerReplyToImages({
             <Image
               source={{uri: images[0].thumb}}
               style={[a.flex_1]}
-              cachePolicy="memory-disk"
               accessibilityIgnoresInvertColors
+              useAppleWebpCodec
             />
             <View style={[a.flex_1, a.gap_2xs]}>
               <Image
                 source={{uri: images[1].thumb}}
                 style={[a.flex_1]}
-                cachePolicy="memory-disk"
                 accessibilityIgnoresInvertColors
+                useAppleWebpCodec
               />
               <Image
                 source={{uri: images[2].thumb}}
                 style={[a.flex_1]}
-                cachePolicy="memory-disk"
                 accessibilityIgnoresInvertColors
+                useAppleWebpCodec
               />
             </View>
           </View>
@@ -221,28 +221,28 @@ function ComposerReplyToImages({
               <Image
                 source={{uri: images[0].thumb}}
                 style={[a.flex_1]}
-                cachePolicy="memory-disk"
                 accessibilityIgnoresInvertColors
+                useAppleWebpCodec
               />
               <Image
                 source={{uri: images[1].thumb}}
                 style={[a.flex_1]}
-                cachePolicy="memory-disk"
                 accessibilityIgnoresInvertColors
+                useAppleWebpCodec
               />
             </View>
             <View style={[a.flex_1, a.flex_row, a.gap_2xs]}>
               <Image
                 source={{uri: images[2].thumb}}
                 style={[a.flex_1]}
-                cachePolicy="memory-disk"
                 accessibilityIgnoresInvertColors
+                useAppleWebpCodec
               />
               <Image
                 source={{uri: images[3].thumb}}
                 style={[a.flex_1]}
-                cachePolicy="memory-disk"
                 accessibilityIgnoresInvertColors
+                useAppleWebpCodec
               />
             </View>
           </View>
