@@ -249,8 +249,21 @@ function ImageView({
   const [isDragging, setIsDragging] = useState(false)
   const [showControls, setShowControls] = useState(true)
   const [isAltExpanded, setIsAltExpanded] = useState(false)
+  const [hasFullyOpened, setHasFullyOpened] = useState(false)
   const dismissSwipeTranslateY = useSharedValue(0)
   const isFlyingAway = useSharedValue(false)
+
+  // Hold the neighbor window at 0 until the open animation completes, so we
+  // only decode the active image during the most memory-constrained moment.
+  // Mirrors the orientation-unlock gate below.
+  useAnimatedReaction(
+    () => openProgress.get() === 1,
+    isOpen => {
+      if (isOpen) {
+        runOnJS(setHasFullyOpened)(true)
+      }
+    },
+  )
 
   const containerStyle = useAnimatedStyle(() => {
     if (openProgress.get() < 1) {
@@ -415,7 +428,7 @@ function ImageView({
         style={styles.pager}>
         {images.map((imageSrc, i) => (
           <View key={`${i}-${imageSrc.uri}`}>
-            {Math.abs(i - imageIndex) <= 1 ? (
+            {Math.abs(i - imageIndex) <= (hasFullyOpened ? 1 : 0) ? (
               <LightboxImage
                 onTap={onTap}
                 onZoom={onZoom}
