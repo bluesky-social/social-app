@@ -21,8 +21,6 @@ export function GalleryFallbackEmbed({count}: {count?: number}) {
   const t = useTheme()
   const {t: l} = useLingui()
 
-  if (!IS_NATIVE) return null
-
   const bodyStyle = [
     a.text_sm,
     a.text_center,
@@ -57,30 +55,45 @@ export function GalleryFallbackEmbed({count}: {count?: number}) {
               other: 'This post has # photos.',
             })}
           </Text>
-          <Text style={bodyStyle}>
-            {plural(count, {
-              one: 'Update your app to see it.',
-              other: 'Update your app to see them all.',
-            })}
-          </Text>
+          {IS_NATIVE ? (
+            <Text style={bodyStyle}>
+              {plural(count, {
+                one: 'Update your app to see it.',
+                other: 'Update your app to see them all.',
+              })}
+            </Text>
+          ) : (
+            <Text style={bodyStyle}>
+              {plural(count, {
+                one: 'Refresh the page to see it.',
+                other: 'Refresh the page to see them all.',
+              })}
+            </Text>
+          )}
         </View>
-      ) : (
+      ) : IS_NATIVE ? (
         <Text style={bodyStyle}>
           <Trans>Update your app to see it.</Trans>
         </Text>
+      ) : (
+        <Text style={bodyStyle}>
+          <Trans>Refresh the page to see it.</Trans>
+        </Text>
       )}
-      <Button
-        label={l`Update your app`}
-        size="small"
-        color="primary"
-        onPress={() => {
-          void Linking.openURL(BSKY_DOWNLOAD_URL)
-        }}
-        style={[a.mt_xs]}>
-        <ButtonText>
-          <Trans>Update app</Trans>
-        </ButtonText>
-      </Button>
+      {IS_NATIVE && (
+        <Button
+          label={l`Update your app`}
+          size="small"
+          color="primary"
+          onPress={() => {
+            void Linking.openURL(BSKY_DOWNLOAD_URL)
+          }}
+          style={[a.mt_xs]}>
+          <ButtonText>
+            <Trans>Update app</Trans>
+          </ButtonText>
+        </Button>
+      )}
     </View>
   )
 }
