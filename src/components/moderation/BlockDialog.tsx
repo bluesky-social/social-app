@@ -77,7 +77,7 @@ function BlockDialogInner({
   const [headerHeight, setHeaderHeight] = useState(0)
   const [footerHeight, setFooterHeight] = useState(0)
 
-  const {data, isPending, hasNextPage, isFetchingNextPage, fetchNextPage} =
+  const {data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage} =
     useListMutualGroupsQuery({
       subject: profile.did,
       enabled: !profile.viewer?.blocking,
@@ -178,12 +178,12 @@ function BlockDialogInner({
     </View>
   )
 
-  if (isPending || !hasMutualGroupChats) {
+  if (isLoading || !hasMutualGroupChats) {
     return (
       <Dialog.ScrollableInner
         label={profile.viewer?.blocking ? l`Unblock` : l`Block`}>
         {listHeader}
-        {isPending ? (
+        {isLoading ? (
           <View style={[a.py_2xl, a.align_center, a.justify_center]}>
             <Loader size="xl" />
           </View>
@@ -266,7 +266,7 @@ function MutualGroupChat({
   const {mutate: removeMembers, isPending: isRemovePending} =
     useRemoveFromGroupChat(convo?.view.id, {
       onSuccess: () => {
-        Toast.show(l`Member removed from from group chat.`)
+        Toast.show(l`Member removed from group chat.`)
         void queryClient.invalidateQueries({
           queryKey: createListMutualGroupsQueryKey({subject: profileDid}),
         })
