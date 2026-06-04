@@ -499,6 +499,7 @@ function TriggerClone({
         accessibilityLabel={label}
         accessibilityHint={_(msg`The subject of the context menu`)}
         accessibilityIgnoresInvertColors={false}
+        cachePolicy="none"
       />
     </Animated.View>
   )

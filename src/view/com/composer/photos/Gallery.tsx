@@ -330,6 +330,7 @@ const GalleryItem = ({
         }}
         accessible={true}
         accessibilityIgnoresInvertColors
+        enforceEarlyResizing
         cachePolicy="none"
         autoplay={false}
         contentFit="cover"

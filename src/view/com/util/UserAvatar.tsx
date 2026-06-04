@@ -17,6 +17,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {
   useCameraPermission,
@@ -330,6 +331,7 @@ let UserAvatar = ({
           }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
           onLoad={onLoad}
+          useAppleWebpCodec
         />
       )}
       {!noBorder && <MediaInsetBorder style={borderStyle} />}
@@ -394,6 +396,7 @@ let EditableUserAvatar = ({
         await openCamera({
           aspect: [1, 1],
         }),
+        IMAGE_SIZE_CONFIG_2K_1MB,
       ),
     )
   }, [onSelectNewAvatar, requestCameraAccessIfNeeded])
@@ -422,6 +425,7 @@ let EditableUserAvatar = ({
               shape: circular ? 'circle' : 'rectangle',
               aspectRatio: 1,
             }),
+            IMAGE_SIZE_CONFIG_2K_1MB,
           ),
         )
       } else {
@@ -448,7 +452,7 @@ let EditableUserAvatar = ({
 
   const onChangeEditImage = useCallback(
     async (image: ComposerImage) => {
-      const compressed = await compressImage(image)
+      const compressed = await compressImage(image, IMAGE_SIZE_CONFIG_2K_1MB)
       onSelectNewAvatar(compressed)
     },
     [onSelectNewAvatar],

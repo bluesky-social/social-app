@@ -4,6 +4,7 @@ import {type FlatList} from 'react-native'
 import {ITEM_GAP} from '#/components/images/Gallery/const'
 import {tween} from '#/components/images/Gallery/tween'
 import {getOffsetForIndex} from '#/components/images/Gallery/utils'
+import {IS_WEB_SAFARI} from '#/env'
 
 const DRAG_THRESHOLD = 3
 const FLICK_DECAY = 0.85
@@ -246,12 +247,64 @@ export function usePointerHandlers({
       }
     }
 
+    /*
+     * Safari does not support `overscroll-behavior`, so a horizontal trackpad
+     * swipe over the carousel can trigger the browser's back/forward
+     * navigation gesture. We intercept predominantly-horizontal wheel events
+     * and apply the scroll ourselves, calling preventDefault to suppress the
+     * history-nav gesture. Vertical-dominant wheel events are left untouched so
+     * normal page scroll still works. Chrome/Firefox are covered by the
+     * `overscrollBehaviorX: 'contain'` style on the FlatList.
+     *
+     * Listener must be non-passive so preventDefault is honored.
+     */
+    const onWheel = (e: WheelEvent) => {
+      if (!IS_WEB_SAFARI) return
+      // Only act on predominantly-horizontal scrolls. Vertical-dominant events
+      // are page scroll and must not be swallowed.
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
+
+      e.preventDefault()
+
+      // Cancel any in-progress settle tween so manual scrolling feels direct.
+      if (stopTween) {
+        stopTween()
+        stopTween = null
+      }
+      if (overscrollX !== 0) clearOverscroll()
+
+      const maxScroll = el.scrollWidth - el.clientWidth
+      const next = Math.max(0, Math.min(el.scrollLeft + e.deltaX, maxScroll))
+      scrollTo(next)
+
+      // Keep the active index in sync so keyboard/lightbox stay correct, but
+      // only settle when it actually changes - onSettle moves focus, which we
+      // don't want to thrash on every wheel tick.
+      let accumulated = 0
+      let index = 0
+      for (let i = 0; i < imageCount; i++) {
+        const w = (itemWidthsRef.current.get(i) ?? 0) + ITEM_GAP
+        if (next < accumulated + w / 2) {
+          index = i
+          break
+        }
+        accumulated += w
+        if (i === imageCount - 1) index = i
+      }
+      if (index !== localIndex) {
+        localIndex = index
+        onSettle(index)
+      }
+    }
+
     el.addEventListener('mousedown', onMouseDown)
+    el.addEventListener('wheel', onWheel, {passive: false})
     window.addEventListener('mousemove', onMouseMove)
     window.addEventListener('mouseup', onMouseUp)
 
     return () => {
       el.removeEventListener('mousedown', onMouseDown)
+      el.removeEventListener('wheel', onWheel)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('mouseup', onMouseUp)
       if (stopTween) stopTween()

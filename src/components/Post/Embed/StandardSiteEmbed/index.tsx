@@ -166,6 +166,7 @@ export const StandardSiteEmbed = ({
             source={{uri: imageUri}}
             accessibilityIgnoresInvertColors
             loading="lazy"
+            useAppleWebpCodec
           />
         ) : undefined}
 
@@ -355,6 +356,7 @@ export function PublicationCard({
           />
           <View style={[a.flex_1, a.gap_2xs]}>
             <Text
+              emoji
               numberOfLines={1}
               style={[
                 a.text_md,
@@ -385,7 +387,7 @@ export function PublicationCard({
       <View style={[a.pointer_events_none]}>
         {view.description && (
           <View style={[a.pt_sm]}>
-            <Text style={[a.text_sm, a.leading_snug]} numberOfLines={3}>
+            <Text emoji style={[a.text_sm, a.leading_snug]} numberOfLines={3}>
               {view.description}
             </Text>
           </View>
@@ -616,6 +618,7 @@ export function PublicationFooter({
         />
         <View style={[a.flex_1, a.gap_2xs]}>
           <Text
+            emoji
             numberOfLines={1}
             style={[
               a.text_sm,

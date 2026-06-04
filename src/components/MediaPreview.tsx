@@ -53,31 +53,32 @@ export function Embed({
     )
   } else if (e.type === 'gallery') {
     // Notification/DM preview is a narrow inline strip; cap at 4 tiles so
-    // a 10-image gallery doesn't blow out the row width.
-    return (
-      <Outer style={style}>
-        {e.view.items
-          .filter(AppBskyEmbedGallery.isViewImage)
-          .slice(0, 4)
-          .map(item => {
-            const image: AppBskyEmbedImages.ViewImage = {
-              thumb: item.thumbnail,
-              fullsize: item.fullsize,
-              alt: item.alt,
-              aspectRatio: item.aspectRatio,
-            }
-            return peekable ? (
-              <PeekableImageItem key={item.thumbnail} image={image} />
-            ) : (
-              <ImageItem
-                key={item.thumbnail}
-                thumbnail={item.thumbnail}
-                alt={item.alt}
-              />
-            )
-          })}
-      </Outer>
-    )
+    // a 10-image gallery doesn't blow out the row width. Single pass instead
+    // of filter().slice().map() so we stop at 4 viewable items rather than
+    // walking every item in a 10-image gallery.
+    const tiles: React.ReactNode[] = []
+    for (const item of e.view.items) {
+      if (tiles.length >= 4) break
+      if (!AppBskyEmbedGallery.isViewImage(item)) continue
+      if (peekable) {
+        const image: AppBskyEmbedImages.ViewImage = {
+          thumb: item.thumbnail,
+          fullsize: item.fullsize,
+          alt: item.alt,
+          aspectRatio: item.aspectRatio,
+        }
+        tiles.push(<PeekableImageItem key={item.thumbnail} image={image} />)
+      } else {
+        tiles.push(
+          <ImageItem
+            key={item.thumbnail}
+            thumbnail={item.thumbnail}
+            alt={item.alt}
+          />,
+        )
+      }
+    }
+    return <Outer style={style}>{tiles}</Outer>
   } else if (e.type === 'link') {
     if (!e.view.external.thumb) return null
     if (!isGifEmbed(e.view.external.uri)) return null
@@ -160,6 +161,7 @@ export function ImageItem({
         contentFit="cover"
         accessible={true}
         accessibilityIgnoresInvertColors
+        useAppleWebpCodec
       />
       <MediaInsetBorder style={[a.rounded_xs]} />
       {children}

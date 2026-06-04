@@ -199,6 +199,45 @@ function applyGalleryCap(
   return {status: 'ok', accepted: incoming}
 }
 
+function useAddImagesWithCap(
+  currentCount: number,
+  dispatchPostAction: (action: PostAction) => void,
+) {
+  const {t: l} = useLingui()
+  return useCallback(
+    (next: ComposerImage[]) => {
+      const result = applyGalleryCap(currentCount, next)
+      if (result.status === 'full') {
+        Toast.show(
+          l({
+            message: `You can only add up to ${MAX_GALLERY_IMAGES} images per post`,
+            comment:
+              'Toast shown when the user tries to add more images but the post gallery is already at the cap',
+          }),
+          {type: 'warning'},
+        )
+        return
+      }
+      if (result.status === 'partial') {
+        Toast.show(
+          l({
+            message: `Only ${result.accepted.length} of ${next.length} ${plural(next.length, {one: 'image', other: 'images'})} added; limit is ${MAX_GALLERY_IMAGES}`,
+            comment:
+              'Toast shown when adding images would exceed the post gallery cap; only the first N are kept',
+          }),
+          {type: 'warning'},
+        )
+      }
+      dispatchPostAction({
+        type: 'embed_add_images',
+        images: result.accepted,
+      })
+    },
+    [currentCount, dispatchPostAction, l],
+  )
+}
+
+
 type Props = ComposerOpts
 export const ComposePost = ({
   replyTo,
@@ -1426,42 +1465,11 @@ let ComposerPost = memo(function ComposerPost({
     [dispatch, post.id],
   )
 
-  const onImageAdd = useCallback(
-    (next: ComposerImage[]) => {
-      const media = post.embed.media
-      const currentCount =
-        media?.type === 'images' || media?.type === 'gallery'
-          ? media.images.length
-          : 0
-      const result = applyGalleryCap(currentCount, next)
-      if (result.status === 'full') {
-        Toast.show(
-          l({
-            message: `You can only add up to ${MAX_GALLERY_IMAGES} images per post`,
-            comment:
-              'Toast shown when the user tries to add more images but the post gallery is already at the cap',
-          }),
-          {type: 'warning'},
-        )
-        return
-      }
-      if (result.status === 'partial') {
-        Toast.show(
-          l({
-            message: `Only ${result.accepted.length} of ${next.length} ${plural(next.length, {one: 'image', other: 'images'})} added; limit is ${MAX_GALLERY_IMAGES}`,
-            comment:
-              'Toast shown when adding images would exceed the post gallery cap; only the first N are kept',
-          }),
-          {type: 'warning'},
-        )
-      }
-      dispatchPost({
-        type: 'embed_add_images',
-        images: result.accepted,
-      })
-    },
-    [dispatchPost, l, post.embed.media],
-  )
+  const postImagesCount =
+    post.embed.media?.type === 'images' || post.embed.media?.type === 'gallery'
+      ? post.embed.media.images.length
+      : 0
+  const onImageAdd = useAddImagesWithCap(postImagesCount, dispatchPost)
 
   const onNewLink = useCallback(
     (uri: string) => {
@@ -1989,37 +1997,7 @@ function ComposerFooter({
     isMediaSelectionDisabled = !!media
   }
 
-  const onImageAdd = useCallback(
-    (next: ComposerImage[]) => {
-      const result = applyGalleryCap(images.length, next)
-      if (result.status === 'full') {
-        Toast.show(
-          l({
-            message: `You can only add up to ${MAX_GALLERY_IMAGES} images per post`,
-            comment:
-              'Toast shown when the user tries to add more images but the post gallery is already at the cap',
-          }),
-          {type: 'warning'},
-        )
-        return
-      }
-      if (result.status === 'partial') {
-        Toast.show(
-          l({
-            message: `Only ${result.accepted.length} of ${next.length} ${plural(next.length, {one: 'image', other: 'images'})} added; limit is ${MAX_GALLERY_IMAGES}`,
-            comment:
-              'Toast shown when adding images would exceed the post gallery cap; only the first N are kept',
-          }),
-          {type: 'warning'},
-        )
-      }
-      dispatch({
-        type: 'embed_add_images',
-        images: result.accepted,
-      })
-    },
-    [dispatch, images.length, l],
-  )
+  const onImageAdd = useAddImagesWithCap(images.length, dispatch)
 
   const onSelectGif = useCallback(
     (gif: Gif) => {

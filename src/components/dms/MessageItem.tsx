@@ -20,6 +20,7 @@ import {
   AppBskyEmbedRecord,
   type ChatBskyActorDefs,
   ChatBskyConvoDefs,
+  ChatBskyEmbedJoinLink,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {plural} from '@lingui/core/macro'
@@ -49,6 +50,7 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {DateDivider} from './DateDivider'
 import {MessageItemEmbed} from './MessageItemEmbed'
+import {MessageItemInviteEmbed} from './MessageItemInviteEmbed'
 import {groupReactions} from './ReactionsDialog'
 import {CLUSTERED_MESSAGE_THRESHOLD_MS, MESSAGE_GAP_THRESHOLD_MS} from './util'
 
@@ -185,8 +187,10 @@ let MessageItem = ({
 
   const rt = new RichTextAPI({text: message.text, facets: message.facets})
 
-  const hasEmbedAndText =
-    AppBskyEmbedRecord.isView(message.embed) && rt.text.length > 0
+  const hasEmbed =
+    AppBskyEmbedRecord.isView(message.embed) ||
+    ChatBskyEmbedJoinLink.isView(message.embed)
+  const hasEmbedAndText = hasEmbed && rt.text.length > 0
 
   const targetBottomRadius = squaredBottomCorner
     ? SQUARED_BORDER_RADIUS
@@ -420,6 +424,15 @@ let MessageItem = ({
                 moderationOpts={moderationOpts}>
                 {AppBskyEmbedRecord.isView(message.embed) && (
                   <MessageItemEmbed
+                    embed={message.embed}
+                    isFromSelf={isFromSelf}
+                    isGroupChat={isGroupChat}
+                    squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
+                    squaredTopCorner={squaredTopCorner}
+                  />
+                )}
+                {ChatBskyEmbedJoinLink.isView(message.embed) && (
+                  <MessageItemInviteEmbed
                     embed={message.embed}
                     isFromSelf={isFromSelf}
                     isGroupChat={isGroupChat}
