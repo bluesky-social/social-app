@@ -151,6 +151,30 @@ export function LeaveAndLockChatPrompt({
   )
 }
 
+export function RemoveMemberPrompt({
+  control,
+  displayName,
+  onConfirm,
+}: {
+  control: Dialog.DialogOuterProps['control']
+  displayName: string
+  onConfirm: () => void
+}) {
+  const {t: l} = useLingui()
+
+  return (
+    <Prompt.Basic
+      control={control}
+      title={l`Remove ${displayName}?`}
+      description={l`They won’t be able to rejoin unless you invite them again.`}
+      confirmButtonCta={l`Remove`}
+      confirmButtonColor="negative"
+      cancelButtonCta={l`Cancel`}
+      onConfirm={onConfirm}
+    />
+  )
+}
+
 export function BlockMemberPrompt({
   control,
   onConfirm,
