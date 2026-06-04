@@ -78,7 +78,7 @@ export function FindContactsSettingsScreen({}: Props) {
         <Layout.Header.BackButton />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
-            <Trans>Find and Invite Friends</Trans>
+            <Trans>Find and invite friends</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot />

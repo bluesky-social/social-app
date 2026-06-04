@@ -311,7 +311,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="InviteScanner"
         getComponent={() => InviteScannerScreen}
-        options={{title: title(msg`Scan QR Code`), requireAuth: true}}
+        options={{title: title(msg`Scan QR code`), requireAuth: true}}
       />
       <Stack.Screen
         name="SharedPreferencesTester"
