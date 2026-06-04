@@ -1,4 +1,3 @@
-import {useCallback} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
@@ -96,31 +95,28 @@ function ListsContent({
 
   const listItems = data?.pages.flatMap(page => page.listsWithMembership) || []
 
-  const onEndReached = useCallback(async () => {
+  const onEndReached = async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()
     } catch (err) {
       // Error handling is optional since this is just pagination
     }
-  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
+  }
 
-  const renderItem = useCallback(
-    ({item}: {item: ListWithMembership}) =>
-      profile ? (
-        <ListItem
-          listWithMembership={item}
-          profile={profile}
-          onAdd={onAdd}
-          onRemove={onRemove}
-        />
-      ) : null,
-    [profile, onAdd, onRemove],
-  )
+  const renderItem = ({item}: {item: ListWithMembership}) =>
+    profile ? (
+      <ListItem
+        listWithMembership={item}
+        profile={profile}
+        onAdd={onAdd}
+        onRemove={onRemove}
+      />
+    ) : null
 
-  const onClose = useCallback(() => {
+  const onClose = () => {
     control.close()
-  }, [control])
+  }
 
   const listHeader = (
     <View
@@ -174,7 +170,14 @@ function ListsContent({
       onEndReached={() => void onEndReached()}
       onEndReachedThreshold={0.1}
       ListHeaderComponent={listHeader}
-      ListEmptyComponent={<Empty />}
+      ListFooterComponent={
+        isFetchingNextPage ? (
+          <View style={[a.align_center, a.py_lg]}>
+            <Loader size="lg" />
+          </View>
+        ) : null
+      }
+      ListEmptyComponent={!isLoading && data ? <Empty /> : null}
       style={platform({
         web: [a.px_2xl, {minHeight: 400}],
         native: [a.px_2xl, a.pt_lg],
@@ -205,6 +208,7 @@ function ListItem({
 
   const {mutate: addMembership, isPending: isPendingAdd} =
     useListMembershipAddMutation({
+      subject: profile,
       onSuccess: data => {
         Toast.show(l`Added to list`)
         onAdd?.(list.uri)
@@ -249,7 +253,7 @@ function ListItem({
 
   const isPending = isPendingAdd || isPendingRemove
 
-  const handleToggleMembership = useCallback(() => {
+  const handleToggleMembership = () => {
     if (isPending) return
 
     if (!isMember) {
@@ -268,15 +272,7 @@ function ListItem({
         membershipUri: listItem.uri,
       })
     }
-  }, [
-    list.uri,
-    profile.did,
-    isMember,
-    listItem,
-    isPending,
-    addMembership,
-    removeMembership,
-  ])
+  }
 
   return (
     <View

@@ -15,8 +15,9 @@ import {useAgent} from '#/state/session'
 export type ListWithMembership =
   AppBskyGraphGetListsWithMembership.ListWithMembership
 
-const RQKEY_ROOT = 'lists-with-membership'
-export const RQKEY = (actor: string) => createQueryKey(RQKEY_ROOT, {actor})
+const listsWithMembershipQueryKeyRoot = 'lists-with-membership'
+export const createListsWithMembershipQueryKey = (args: {actor: string}) =>
+  createQueryKey(listsWithMembershipQueryKeyRoot, args)
 
 export function useListsWithMembershipQuery({
   actor,
@@ -34,7 +35,7 @@ export function useListsWithMembershipQuery({
     QueryKey,
     string | undefined
   >({
-    queryKey: RQKEY(actor ?? ''),
+    queryKey: createListsWithMembershipQueryKey({actor: actor ?? ''}),
     queryFn: async ({pageParam}: {pageParam?: string}) => {
       const res = await agent.app.bsky.graph.getListsWithMembership({
         actor: actor!, // the enabled flag prevents this from running until actor is set
@@ -64,7 +65,7 @@ export function updateListMembershipOptimistically({
 }) {
   queryClient.setQueryData<
     InfiniteData<AppBskyGraphGetListsWithMembership.OutputSchema>
-  >(RQKEY(actor), old => {
+  >(createListsWithMembershipQueryKey({actor}), old => {
     if (!old) return old
 
     return {
@@ -99,7 +100,7 @@ export function removeListMembershipOptimistically({
 }) {
   queryClient.setQueryData<
     InfiniteData<AppBskyGraphGetListsWithMembership.OutputSchema>
-  >(RQKEY(actor), old => {
+  >(createListsWithMembershipQueryKey({actor}), old => {
     if (!old) return old
 
     return {
