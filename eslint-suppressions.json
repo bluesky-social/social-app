@@ -43,9 +43,6 @@
     }
   },
   "src/analytics/PassiveAnalytics.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
     "react-hooks/purity": {
       "count": 1
     }
