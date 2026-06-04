@@ -28,6 +28,7 @@ import {
   type AppBskyEmbedRecord,
   AppBskyRichtextFacet,
   ChatBskyConvoDefs,
+  type ChatBskyEmbedJoinLink,
   RichText,
 } from '@atproto/api'
 import {useScrollEdgeEffectRef} from '@bsky.app/expo-scroll-edge-effect'
@@ -37,6 +38,7 @@ import {ScrollProvider} from '#/lib/ScrollContext'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {
   convertBskyAppUrlIfNeeded,
+  getChatInviteCodeFromUrl,
   isBskyPostUrl,
 } from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
@@ -46,9 +48,10 @@ import {
   useConvoActive,
 } from '#/state/messages/convo'
 import {type ConvoState, ConvoStatus} from '#/state/messages/convo/types'
+import {useGetJoinLinkPreview} from '#/state/queries/join-links'
 import {useGetPost} from '#/state/queries/post'
 import {createEmbedViewRecordFromPost} from '#/state/queries/postgate/util'
-import {useAgent} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
@@ -131,8 +134,10 @@ export function MessagesList({
   const ax = useAnalytics()
   const convoState = useConvoActive()
   const agent = useAgent()
+  const {hasSession} = useSession()
   const getPost = useGetPost()
-  const {embedUri, setEmbed} = useMessageEmbed()
+  const getJoinLinkPreview = useGetJoinLinkPreview()
+  const {embed: messageEmbed, setEmbed} = useMessageEmbed()
   const t = useTheme()
 
   const textInputId = 'chat-input-' + useId()
@@ -348,12 +353,38 @@ export function MessagesList({
       // we want to remove the post link from the text, re-trim, then detect facets
       rt.detectFacetsWithoutResolution()
 
-      let embed: $Typed<AppBskyEmbedRecord.Main> | undefined
-      let embedView: $Typed<AppBskyEmbedRecord.View> | undefined
+      let embed:
+        | $Typed<AppBskyEmbedRecord.Main>
+        | $Typed<ChatBskyEmbedJoinLink.Main>
+        | undefined
+      let embedView:
+        | $Typed<AppBskyEmbedRecord.View>
+        | $Typed<ChatBskyEmbedJoinLink.View>
+        | undefined
 
-      if (embedUri) {
+      // Find the embedded link facet and, if it's at the start or end of the
+      // message, remove it from the text (the embed card replaces it).
+      const stripLinkFacet = (predicate: (uri: string) => boolean) => {
+        const linkFacet = rt.facets?.find(facet =>
+          facet.features.find(
+            feature =>
+              AppBskyRichtextFacet.isLink(feature) && predicate(feature.uri),
+          ),
+        )
+        if (linkFacet) {
+          const isAtStart = linkFacet.index.byteStart === 0
+          const isAtEnd =
+            linkFacet.index.byteEnd === rt.unicodeText.graphemeLength
+          if (isAtStart || isAtEnd) {
+            rt.delete(linkFacet.index.byteStart, linkFacet.index.byteEnd)
+          }
+          rt = new RichText({text: rt.text.trim()}, {cleanNewlines: true})
+        }
+      }
+
+      if (messageEmbed?.type === 'post') {
         try {
-          const post = await getPost({uri: embedUri})
+          const post = await getPost({uri: messageEmbed.uri})
           if (post) {
             embed = {
               $type: 'app.bsky.embed.record',
@@ -368,42 +399,34 @@ export function MessagesList({
               record: createEmbedViewRecordFromPost(post),
             }
 
-            // look for the embed uri in the facets, so we can remove it from the text
-            const postLinkFacet = rt.facets?.find(facet => {
-              return facet.features.find(feature => {
-                if (AppBskyRichtextFacet.isLink(feature)) {
-                  if (isBskyPostUrl(feature.uri)) {
-                    const url = convertBskyAppUrlIfNeeded(feature.uri)
-                    const [_0, _1, _2, rkey] = url.split('/').filter(Boolean)
-
-                    // this might have a handle instead of a DID
-                    // so just compare the rkey - not particularly dangerous
-                    return post.uri.endsWith(rkey)
-                  }
-                }
-                return false
-              })
+            stripLinkFacet(uri => {
+              if (!isBskyPostUrl(uri)) return false
+              const url = convertBskyAppUrlIfNeeded(uri)
+              const [_0, _1, _2, rkey] = url.split('/').filter(Boolean)
+              // this might have a handle instead of a DID
+              // so just compare the rkey - not particularly dangerous
+              return post.uri.endsWith(rkey)
             })
-
-            if (postLinkFacet) {
-              const isAtStart = postLinkFacet.index.byteStart === 0
-              const isAtEnd =
-                postLinkFacet.index.byteEnd === rt.unicodeText.graphemeLength
-
-              // remove the post link from the text
-              if (isAtStart || isAtEnd) {
-                rt.delete(
-                  postLinkFacet.index.byteStart,
-                  postLinkFacet.index.byteEnd,
-                )
-              }
-
-              rt = new RichText({text: rt.text.trim()}, {cleanNewlines: true})
-            }
           }
         } catch (error) {
           logger.error('Failed to get post as quote for DM', {error})
         }
+      } else if (messageEmbed?.type === 'invite') {
+        const code = messageEmbed.code
+        embed = {
+          $type: 'chat.bsky.embed.joinLink',
+          code,
+        }
+
+        const joinLinkPreview = await getJoinLinkPreview({code, hasSession})
+        if (joinLinkPreview) {
+          embedView = {
+            $type: 'chat.bsky.embed.joinLink#view',
+            joinLinkPreview,
+          }
+        }
+
+        stripLinkFacet(uri => getChatInviteCodeFromUrl(uri) === code)
       }
 
       await rt.detectFacets(agent)
@@ -424,7 +447,16 @@ export function MessagesList({
         embedView,
       )
     },
-    [agent, convoState, embedUri, getPost, hasScrolled, setHasScrolled],
+    [
+      agent,
+      convoState,
+      messageEmbed,
+      getPost,
+      getJoinLinkPreview,
+      hasSession,
+      hasScrolled,
+      setHasScrolled,
+    ],
   )
 
   const scrollToEndOnPress = useCallback(() => {
@@ -595,11 +627,11 @@ export function MessagesList({
                       onSendMessage={(message: string) =>
                         void onSendMessage(message)
                       }
-                      hasEmbed={!!embedUri}
+                      hasEmbed={!!messageEmbed}
                       setEmbed={setEmbed}
                       loading={loading}>
                       <MessageInputEmbed
-                        embedUri={embedUri}
+                        embed={messageEmbed}
                         setEmbed={setEmbed}
                       />
                     </MessageComposer>
@@ -607,11 +639,11 @@ export function MessagesList({
                     <MessageInput
                       textInputId={textInputId}
                       onSendMessage={onSendMessage}
-                      hasEmbed={!!embedUri}
+                      hasEmbed={!!messageEmbed}
                       setEmbed={setEmbed}
                       loading={loading}>
                       <MessageInputEmbed
-                        embedUri={embedUri}
+                        embed={messageEmbed}
                         setEmbed={setEmbed}
                       />
                     </MessageInput>

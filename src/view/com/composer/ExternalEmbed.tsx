@@ -117,7 +117,7 @@ export const ExternalEmbedLink = ({
           />
         )
       } else if (data.type === 'chat-invite') {
-        return <JoinRequestEmbed preview={data.view} />
+        return <JoinRequestEmbed code={data.code} preview={data.view} />
       } else if (data.kind === 'feed') {
         return (
           <ModeratedFeedEmbed

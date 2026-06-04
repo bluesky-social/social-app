@@ -1,43 +1,56 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {type ChatBskyGroupDefs} from '@atproto/api'
-import {Plural, Trans, useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
+import {Trans} from '@lingui/react/macro'
 
-import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
-import {type NavigationProp} from '#/lib/routes/types'
-import {sanitizeHandle} from '#/lib/strings/handles'
 import {atoms as a, useTheme} from '#/alf'
-import {AvatarBubbles} from '#/components/AvatarBubbles'
-import {
-  Button,
-  type ButtonColor,
-  ButtonIcon,
-  ButtonText,
-} from '#/components/Button'
-import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
-import {ArrowBoxRight_Stroke2_Corner3_Rounded as JoinIcon} from '#/components/icons/ArrowBoxRight'
-import {CheckThick_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
-import {RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon} from '#/components/icons/RaisingHand'
+import * as ChatInvite from '#/components/dms/ChatInvite'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
-import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {Loader} from '#/components/Loader'
-import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 
-const JOIN_REQUEST_EMBED_HEIGHT = 152
+const JOIN_REQUEST_EMBED_HEIGHT = 140
 
+/**
+ * The "join request" presentation of a chat invite, used as a post embed (in
+ * feeds and the post composer). Composes the headless `ChatInvite` primitive:
+ * pass either a `code` to fetch by, or an already-resolved `preview` as the
+ * initial data to avoid a loading flash.
+ */
 export function JoinRequestEmbed({
-  loading = false,
+  code,
   preview,
   style,
   onOpen,
 }: {
-  loading?: boolean
+  code?: string
   preview?: ChatBskyGroupDefs.JoinLinkPreviewView
   style?: StyleProp<ViewStyle>
   onOpen?: () => void
 }) {
+  const resolvedCode = code ?? preview?.code
+  if (!resolvedCode) return null
+
+  return (
+    <ChatInvite.Root code={resolvedCode} initialPreview={preview}>
+      <JoinRequestEmbedBody style={style} onOpen={onOpen} />
+    </ChatInvite.Root>
+  )
+}
+
+/**
+ * The context-consuming presentation (loading / no-longer-available / card +
+ * join button). Exported so surfaces that own their own `ChatInvite.Root` (e.g.
+ * to add an error fallback) can render it without nesting another Root.
+ */
+export function JoinRequestEmbedBody({
+  style,
+  onOpen,
+}: {
+  style?: StyleProp<ViewStyle>
+  onOpen?: () => void
+}) {
   const t = useTheme()
+  const {loading, preview} = ChatInvite.useChatInvite()
 
   if (loading) {
     return (
@@ -82,60 +95,6 @@ export function JoinRequestEmbed({
   }
 
   return (
-    <JoinRequestEmbedInner preview={preview} style={style} onOpen={onOpen} />
-  )
-}
-
-function JoinRequestEmbedInner({
-  preview,
-  style,
-  onOpen,
-}: {
-  preview: ChatBskyGroupDefs.JoinLinkPreviewView
-  style?: StyleProp<ViewStyle>
-  onOpen?: () => void
-}) {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const navigation = useNavigation<NavigationProp>()
-
-  const {groupChatJoinDialogControl, setGroupChatJoinState} = useIntentDialogs()
-
-  const ownerDisplayName = createSanitizedDisplayName(preview.owner)
-  const ownerHandle = sanitizeHandle(preview.owner.handle, '@')
-
-  const avatarProfiles = preview.convo?.members ?? [preview.owner]
-
-  const convoId = preview.convo?.id
-  const isFollowing = preview.owner.viewer?.following ?? false
-  const hasRequested = !convoId && preview.viewer?.requestedAt != null
-
-  let canJoin = true
-  let ButtonIconImage = JoinIcon
-  let buttonText = preview.requireApproval ? l`Request to join` : l`Join`
-  let buttonColor: ButtonColor = 'primary'
-  if (preview.enabledStatus !== 'enabled') {
-    canJoin = false
-    ButtonIconImage = WarningIcon
-    buttonText = l`Chat invite link no longer available`
-    buttonColor = 'secondary'
-  } else if (preview.memberCount >= preview.memberLimit) {
-    canJoin = false
-    ButtonIconImage = HandIcon
-    buttonText = l`This chat is full`
-    buttonColor = 'secondary'
-  } else if (preview.joinRule === 'followedByOwner' && !isFollowing) {
-    canJoin = false
-    ButtonIconImage = HandIcon
-    buttonText = l`Only people the chat owner follows can join`
-    buttonColor = 'secondary'
-  } else if (hasRequested) {
-    ButtonIconImage = CheckIcon
-    buttonText = l`Requested`
-    buttonColor = 'secondary'
-  }
-
-  return (
     <View
       style={[
         a.justify_between,
@@ -147,125 +106,8 @@ function JoinRequestEmbedInner({
         {height: JOIN_REQUEST_EMBED_HEIGHT},
         style,
       ]}>
-      <View style={[a.flex_row, a.gap_md, a.align_center]}>
-        <AvatarBubbles size={56} self profiles={avatarProfiles} />
-        <View style={[a.flex_1]}>
-          <Text
-            emoji
-            style={[a.text_lg, a.font_bold, a.leading_tight, t.atoms.text]}
-            numberOfLines={1}>
-            {preview.name}
-          </Text>
-          <View
-            style={[a.flex_row, a.align_center, a.gap_sm, a.mt_2xs, a.mb_sm]}>
-            <Text
-              style={[
-                a.text_xs,
-                a.leading_tight,
-                a.font_medium,
-                t.atoms.text_contrast_high,
-              ]}
-              allowFontScaling
-              numberOfLines={1}>
-              <Trans>Group chat</Trans>
-            </Text>
-            <Text
-              style={[
-                a.text_xs,
-                a.leading_tight,
-                a.font_medium,
-                t.atoms.text_contrast_high,
-              ]}
-              allowFontScaling
-              numberOfLines={1}>
-              <Trans comment="The number of members in a group chat, in the format '{members}/{total} members'.">
-                {preview.memberCount}/{preview.memberLimit}{' '}
-                <Plural
-                  value={preview.memberCount}
-                  one="member"
-                  other="members"
-                />
-              </Trans>
-            </Text>
-          </View>
-          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-            <Text
-              emoji
-              style={[
-                a.flex_shrink,
-                a.text_sm,
-                a.font_medium,
-                a.leading_tight,
-                t.atoms.text,
-              ]}
-              allowFontScaling
-              numberOfLines={1}>
-              <Trans comment="The group chat creator, in the format 'By {displayName}'.">
-                By{' '}
-                <Text style={[a.font_medium, t.atoms.text]}>
-                  {ownerDisplayName}
-                </Text>
-              </Trans>
-            </Text>
-            <ProfileBadges profile={preview.owner} size="sm" />
-            <Text
-              style={[
-                a.flex_shrink,
-                a.text_sm,
-                a.font_medium,
-                a.leading_tight,
-                t.atoms.text_contrast_medium,
-              ]}
-              allowFontScaling
-              numberOfLines={1}>
-              {ownerHandle}
-            </Text>
-          </View>
-        </View>
-      </View>
-      {convoId ? (
-        <Button
-          testID="openButton"
-          onPress={() => {
-            onOpen?.()
-            navigation.navigate('MessagesConversation', {conversation: convoId})
-          }}
-          label={l`Open group chat`}
-          accessibilityHint={l`Tap to open this group chat`}
-          size="large"
-          color="primary"
-          style={[a.w_full]}>
-          <ButtonText>
-            <Trans>Open chat</Trans>
-          </ButtonText>
-          <ButtonIcon icon={ArrowRightIcon} />
-        </Button>
-      ) : (
-        <Button
-          testID="joinButton"
-          onPress={() => {
-            onOpen?.()
-            setGroupChatJoinState({code: preview.code})
-            groupChatJoinDialogControl.open()
-          }}
-          label={
-            preview.requireApproval
-              ? l`Request access to group chat`
-              : l`Join group chat`
-          }
-          accessibilityHint={
-            preview.requireApproval
-              ? l`Tap to request access to join this group chat`
-              : l`Tap to join this group chat immediately`
-          }
-          size="large"
-          color={buttonColor}
-          disabled={!canJoin}
-          style={[a.w_full]}>
-          <ButtonIcon icon={ButtonIconImage} />
-          <ButtonText>{buttonText}</ButtonText>
-        </Button>
-      )}
+      <ChatInvite.Card size="large" />
+      <ChatInvite.JoinButton onPress={onOpen} />
     </View>
   )
 }
