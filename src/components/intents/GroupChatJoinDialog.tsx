@@ -81,6 +81,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
   const {data, error, isLoading} = useJoinLinkPreviewsQuery({
     codes: code ? [code] : undefined,
     hasSession,
+    staleTime: 0,
   })
 
   const {mutate: joinGroupChat, isPending: isJoinPending} =
@@ -326,6 +327,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
             <View
               style={[a.flex_row, a.gap_xs, a.align_center, a.justify_center]}>
               <Text
+                emoji
                 style={[
                   a.mb_2xs,
                   a.text_center,
@@ -402,7 +404,9 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
           color="primary"
           disabled={!code}
           style={[a.w_full]}>
-          <ButtonText>Open chat</ButtonText>
+          <ButtonText>
+            <Trans>Open chat</Trans>
+          </ButtonText>
           <ButtonIcon icon={ArrowRightIcon} />
         </Button>
       ) : (
@@ -416,8 +420,8 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
           }
           accessibilityHint={
             joinLinkPreview.requireApproval
-              ? l`Request access to join this group chat`
-              : l`Join this group chat`
+              ? l`Tap to request access to join this group chat`
+              : l`Tap to join this group chat immediately`
           }
           size="large"
           color={buttonColor}

@@ -811,14 +811,6 @@
       "count": 1
     }
   },
-  "src/lib/api/index.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 5
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 3
-    }
-  },
   "src/lib/async/retry.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2

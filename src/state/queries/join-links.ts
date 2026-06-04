@@ -20,9 +20,11 @@ export const createJoinLinkPreviewQueryKey = (args: {
 export function useJoinLinkPreviewsQuery({
   codes,
   hasSession,
+  staleTime = STALE.MINUTES.ONE,
 }: {
   codes?: string[]
   hasSession: boolean
+  staleTime?: number
 }) {
   const agent = useAgent()
 
@@ -45,7 +47,7 @@ export function useJoinLinkPreviewsQuery({
       }
     },
     enabled: codes != null && codes.length > 0,
-    staleTime: STALE.SECONDS.FIFTEEN,
+    staleTime,
   })
 }
 
@@ -66,7 +68,7 @@ export function usePrefetchJoinLinkPreviews() {
           : await previewAgent.chat.bsky.group.getJoinLinkPreviews({codes})
         return res.data
       },
-      staleTime: STALE.SECONDS.FIFTEEN,
+      staleTime: STALE.MINUTES.ONE,
     })
   }
 }
