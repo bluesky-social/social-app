@@ -19,11 +19,6 @@
       "count": 1
     }
   },
-  "src/ageAssurance/util.ts": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/alf/util/flatten.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -1941,12 +1936,6 @@
   },
   "src/state/session/agent.ts": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/require-await": {
       "count": 1
     }
   },

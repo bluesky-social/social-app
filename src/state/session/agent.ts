@@ -22,10 +22,7 @@ import {
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {snoozeBirthdateUpdateAllowedForDid} from '#/state/birthdate'
-import {
-  restrictChatSettings,
-  restrictGroupChatSettings,
-} from '#/state/queries/messages/restrictChatSettings'
+import {restrictChatSettings} from '#/state/queries/messages/restrictChatSettings'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
 import {
   prefetchAgeAssuranceData,
@@ -224,11 +221,15 @@ export async function createAgentAndCreateAccount(
       // wait for AA data to load first, then check state
       aa.then(async () => {
         const state = getAndComputeAgeAssuranceState({did: account.did})
-        if (state.access !== AgeAssuranceAccess.Full) {
-          restrictChatSettings({agent, did: account.did})
-        }
-        if (getAge(birthDate) < 18) {
-          restrictGroupChatSettings({agent, did: account.did})
+        const restrictIncoming = state.access !== AgeAssuranceAccess.Full
+        const restrictGroupInvites = getAge(birthDate) < 18
+        if (restrictIncoming || restrictGroupInvites) {
+          await restrictChatSettings({
+            agent,
+            did: account.did,
+            restrictIncoming,
+            restrictGroupInvites,
+          })
         }
       }),
     ]).then(promises => {

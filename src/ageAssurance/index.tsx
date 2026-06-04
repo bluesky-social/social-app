@@ -93,7 +93,7 @@ function InnerProvider({children}: {children: React.ReactNode}) {
       const isAgeRestricted = s.access !== AgeAssuranceAccess.Full
       if (isAgeRestricted) {
         void getAndRegisterPushToken({isAgeRestricted})
-        maybeRestrictChatSettings({agent})
+        void maybeRestrictChatSettings({agent})
       }
     },
     [agent, getAndRegisterPushToken],

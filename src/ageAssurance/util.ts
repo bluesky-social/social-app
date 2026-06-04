@@ -12,7 +12,6 @@ import {restrictChatSettings} from '#/state/queries/messages/restrictChatSetting
 import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
 import {
   getDidFromAgentSession,
-  getOtherRequiredDataFromCache,
   useAgeAssuranceDataContext,
 } from '#/ageAssurance/data'
 import {AgeAssuranceAccess} from '#/ageAssurance/types'
@@ -123,8 +122,6 @@ export const makeAgeRestrictedModerationPrefs = (
 export function maybeRestrictChatSettings({agent}: {agent: AtpAgent}) {
   const did = getDidFromAgentSession(agent)
   if (!did) return
-  const data = getOtherRequiredDataFromCache({did})
-  // ...update the chat setting record if allowIncoming is not already 'none'.
-  if (data?.actorDeclaration?.allowIncoming === 'none') return
-  restrictChatSettings({agent, did})
+  // restrictChatSettings is a no-op if allowIncoming is already 'none'.
+  return restrictChatSettings({agent, did, restrictIncoming: true})
 }

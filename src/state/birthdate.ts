@@ -1,11 +1,11 @@
 import {useMemo} from 'react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {restrictGroupChatSettings} from '#/state/queries/messages/restrictChatSettings'
+import {restrictChatSettings} from '#/state/queries/messages/restrictChatSettings'
 import {preferencesQueryKey} from '#/state/queries/preferences'
 import {useAgent, useSession} from '#/state/session'
 import {usePatchAgeAssuranceOtherRequiredData} from '#/ageAssurance'
-import {isUnderAge, maybeRestrictChatSettings} from '#/ageAssurance/util'
+import {isUnderAge} from '#/ageAssurance/util'
 import {IS_DEV} from '#/env'
 import {account} from '#/storage'
 
@@ -67,10 +67,14 @@ export function useBirthdateMutation() {
       })
 
       if (isUnderAge(birthDate.toISOString(), 18)) {
-        maybeRestrictChatSettings({agent})
         const did = agent.sessionManager.did
         if (did) {
-          await restrictGroupChatSettings({agent, did})
+          await restrictChatSettings({
+            agent,
+            did,
+            restrictIncoming: true,
+            restrictGroupInvites: true,
+          })
         }
       }
 
