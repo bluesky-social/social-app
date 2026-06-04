@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Agent, type AtpSessionData} from '@atproto/api'
-import {type OutputSchema} from '@atproto/api/dist/client/types/com/atproto/server/getSession'
+import {
+  Agent,
+  type AtpSessionData,
+  type ComAtprotoServerGetSession,
+} from '@atproto/api'
 import {type OAuthSession} from '@atproto/oauth-client-browser'
 
 import {BLUESKY_PROXY_HEADER, BSKY_SERVICE} from '#/lib/constants'
@@ -62,7 +65,7 @@ export async function oauthAgentAndSessionToSessionAccount(
   agent: Agent,
   session: OAuthSession,
 ): Promise<SessionAccount | undefined> {
-  let data: OutputSchema
+  let data: ComAtprotoServerGetSession.OutputSchema
   try {
     const res = await Promise.race([
       agent.com.atproto.server.getSession(),

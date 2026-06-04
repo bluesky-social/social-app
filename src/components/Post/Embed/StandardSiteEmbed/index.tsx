@@ -166,6 +166,7 @@ export const StandardSiteEmbed = ({
             source={{uri: imageUri}}
             accessibilityIgnoresInvertColors
             loading="lazy"
+            useAppleWebpCodec
           />
         ) : undefined}
 

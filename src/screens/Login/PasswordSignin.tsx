@@ -15,7 +15,7 @@ import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-p
 import {useSessionApi} from '#/state/session'
 import {resolvePdsFromIdentifier} from '#/state/session/resolve-pds'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {atoms as a, ios, useTheme, web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
 import * as TextField from '#/components/forms/TextField'
@@ -115,7 +115,7 @@ export const PasswordSignin = ({
       onAttemptSuccess()
       setShowLoggedOut(false)
       setHasCheckedForStarterPack(true)
-      requestNotificationsPermission('Login')
+      void requestNotificationsPermission('Login')
     } catch (e) {
       const errMsg = e instanceof Error ? e.message : String(e)
       setIsProcessing(false)
@@ -212,11 +212,15 @@ export const PasswordSignin = ({
               blurOnSubmit={false}
               editable={!isProcessing}
               accessibilityHint={_(msg`Enter your password`)}
-              onLayout={ios(() => {
-                if (hasFocusedOnce.current) return
-                hasFocusedOnce.current = true
-                identifierRef.current?.focus()
-              })}
+              onLayout={
+                IS_IOS
+                  ? () => {
+                      if (hasFocusedOnce.current) return
+                      hasFocusedOnce.current = true
+                      identifierRef.current?.focus()
+                    }
+                  : undefined
+              }
             />
             <Button
               testID="forgotPasswordButton"

@@ -147,6 +147,7 @@ export function LiveStatus({
                 contentFit="cover"
                 style={[a.absolute, a.inset_0]}
                 accessibilityIgnoresInvertColors
+                useAppleWebpCodec
               />
               <LiveIndicator
                 size="large"

@@ -391,9 +391,9 @@ export function useEditPostMutation() {
     },
     onSuccess(_, {uri}) {
       // Same URI after the recreate - refresh anywhere this post shows.
-      queryClient.invalidateQueries({queryKey: RQKEY(uri)})
-      queryClient.invalidateQueries({queryKey: [POST_FEED_RQKEY_ROOT]})
-      queryClient.invalidateQueries({queryKey: [postThreadQueryKeyRoot]})
+      void queryClient.invalidateQueries({queryKey: RQKEY(uri)})
+      void queryClient.invalidateQueries({queryKey: [POST_FEED_RQKEY_ROOT]})
+      void queryClient.invalidateQueries({queryKey: [postThreadQueryKeyRoot]})
     },
   })
 }

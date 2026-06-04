@@ -68,6 +68,7 @@ export function BottomBarWeb() {
   const unreadMessageCount = useUnreadMessageCount()
   const notificationCountStr = useUnreadNotifications()
   const aa = useAgeAssurance()
+  const isLabeler = profile?.associated?.labeler
 
   const showSignIn = useCallback(() => {
     closeAllActiveElements()
@@ -190,9 +191,13 @@ export function BottomBarWeb() {
                       <View
                         style={[
                           styles.ctrlIcon,
-                          styles.profileIcon,
+                          isLabeler
+                            ? styles.profileIconSquare
+                            : styles.profileIcon,
                           isActive && [
-                            styles.onProfile,
+                            isLabeler
+                              ? styles.onProfileSquare
+                              : styles.onProfile,
                             {borderColor: t.atoms.text.color},
                           ],
                         ]}>

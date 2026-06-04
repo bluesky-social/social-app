@@ -11,6 +11,7 @@ import {STALE} from '#/state/queries'
 import {profilesQueryKey} from '#/state/queries/profile'
 import {useAgent, useSession} from '#/state/session'
 import {oauthCreateAccount} from '#/state/session/oauth-web-client'
+import {useSetActiveLanding} from '#/state/shell/landing'
 import {
   useLoggedOutView,
   useLoggedOutViewControls,
@@ -18,6 +19,7 @@ import {
 import {useEnableMinimalShellMode} from '#/state/shell/minimal-mode'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Login} from '#/screens/Login'
+import {JoinRequest} from '#/screens/Messages/JoinRequest'
 import {Signup} from '#/screens/Signup'
 import {LandingScreen} from '#/screens/StarterPack/StarterPackLandingScreen'
 import {atoms as a, native, tokens, useTheme} from '#/alf'
@@ -33,8 +35,25 @@ enum ScreenState {
   S_Login,
   S_CreateAccount,
   S_StarterPack,
+  S_GroupChatJoinRequest,
 }
 export {ScreenState as LoggedOutScreenState}
+
+function getInitialScreenState(requestedAccountSwitchTo?: string): ScreenState {
+  switch (requestedAccountSwitchTo) {
+    case 'new':
+      return ScreenState.S_CreateAccount
+    case 'starterpack':
+      return ScreenState.S_StarterPack
+    case 'groupchat':
+      return ScreenState.S_GroupChatJoinRequest
+    case undefined:
+      return ScreenState.S_LoginOrCreateAccount
+    default:
+      // DID or other string = login with that account
+      return ScreenState.S_Login
+  }
+}
 
 export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const {_} = useLingui()
@@ -43,18 +62,11 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const insets = useSafeAreaInsets()
   useEnableMinimalShellMode()
   const {requestedAccountSwitchTo} = useLoggedOutView()
-  const [screenState, setScreenState] = useState<ScreenState>(() => {
-    if (requestedAccountSwitchTo === 'new') {
-      return ScreenState.S_CreateAccount
-    } else if (requestedAccountSwitchTo === 'starterpack') {
-      return ScreenState.S_StarterPack
-    } else if (requestedAccountSwitchTo != null) {
-      return ScreenState.S_Login
-    } else {
-      return ScreenState.S_LoginOrCreateAccount
-    }
-  })
+  const initialScreenState = getInitialScreenState(requestedAccountSwitchTo)
+  const [screenState, setScreenState] =
+    useState<ScreenState>(initialScreenState)
   const {clearRequestedAccount} = useLoggedOutViewControls()
+  const setActiveLanding = useSetActiveLanding()
 
   // Eurosky: every "create account" entry point funnels here. On web,
   // redirect straight to the Eurosky signup PDS via OAuth (prompt=create)
@@ -89,7 +101,9 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
       onDismiss()
     }
     clearRequestedAccount()
-  }, [clearRequestedAccount, onDismiss])
+    // Clear landing context when user dismisses the modal
+    setActiveLanding(undefined)
+  }, [clearRequestedAccount, onDismiss, setActiveLanding])
 
   return (
     <View
@@ -123,6 +137,8 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
 
         {screenState === ScreenState.S_StarterPack ? (
           <LandingScreen setScreenState={setScreenState} />
+        ) : screenState === ScreenState.S_GroupChatJoinRequest ? (
+          <JoinRequest setScreenState={setScreenState} />
         ) : screenState === ScreenState.S_LoginOrCreateAccount ? (
           <SplashScreen
             onPressSignin={() => {
@@ -138,8 +154,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
         {screenState === ScreenState.S_Login ? (
           <Login
             onPressBack={() => {
-              setScreenState(ScreenState.S_LoginOrCreateAccount)
-              clearRequestedAccount()
+              setScreenState(initialScreenState)
             }}
           />
         ) : undefined}
@@ -150,11 +165,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
               <Loader size="xl" />
             </View>
           ) : (
-            <Signup
-              onPressBack={() =>
-                setScreenState(ScreenState.S_LoginOrCreateAccount)
-              }
-            />
+            <Signup onPressBack={() => setScreenState(initialScreenState)} />
           )
         ) : undefined}
       </ErrorBoundary>

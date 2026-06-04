@@ -330,6 +330,7 @@ let UserAvatar = ({
           }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
           onLoad={onLoad}
+          useAppleWebpCodec
         />
       )}
       {!noBorder && <MediaInsetBorder style={borderStyle} />}
