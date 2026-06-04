@@ -27,7 +27,7 @@ export function Card({size}: {size: 'large' | 'small'}) {
   return (
     <View style={[a.flex_row, a.gap_md, a.align_center]}>
       <AvatarBubbles size={56} self profiles={avatarProfiles} />
-      <View style={[a.flex_1, size == 'large' ? a.gap_2xs : a.gap_xs]}>
+      <View style={[a.flex_1, size === 'large' ? a.gap_2xs : a.gap_xs]}>
         <Text
           emoji
           style={[size === 'large' ? a.text_lg : a.text_md, a.font_bold]}
