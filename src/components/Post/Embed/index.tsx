@@ -35,6 +35,7 @@ import {
 } from '#/types/bsky/post'
 import {ExternalEmbed} from './ExternalEmbed'
 import {ModeratedFeedEmbed} from './FeedEmbed'
+import {GalleryFallbackEmbed} from './GalleryFallbackEmbed'
 import {ImageEmbed} from './ImageEmbed'
 import {ModeratedListEmbed} from './ListEmbed'
 import {PostPlaceholder as PostPlaceholderText} from './PostPlaceholder'
@@ -52,6 +53,7 @@ export function Embed({embed: rawEmbed, ...rest}: EmbedProps) {
 
   switch (embed.type) {
     case 'images':
+    case 'gallery':
     case 'link':
     case 'video': {
       return <MediaEmbed embed={embed} {...rest} />
@@ -128,6 +130,15 @@ function MediaEmbed({
           modui={rest.moderation?.ui('contentMedia')}
           activeStyle={[a.mt_sm]}>
           <VideoEmbed embed={embed.view} />
+        </ContentHider>
+      )
+    }
+    case 'gallery': {
+      return (
+        <ContentHider
+          modui={rest.moderation?.ui('contentMedia')}
+          activeStyle={[a.mt_sm]}>
+          <GalleryFallbackEmbed count={embed.view.items.length} />
         </ContentHider>
       )
     }
