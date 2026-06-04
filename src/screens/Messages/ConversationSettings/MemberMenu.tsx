@@ -243,7 +243,7 @@ export function MemberMenu({
         control={blockMemberPrompt}
         profile={profile}
         onBlock={handleBlockMember}
-        onLeave={() => navigation.replace('Messages', {animation: 'pop'})}
+        currentConvoId={convoId}
       />
       <RemoveMemberPrompt
         control={removeMemberPrompt}
