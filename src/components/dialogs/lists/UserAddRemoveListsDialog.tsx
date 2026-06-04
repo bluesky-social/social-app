@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {isNetworkError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -27,34 +28,25 @@ import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Ti
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import type * as bsky from '#/types/bsky'
 
 export type UserAddRemoveListsDialogProps = {
   control: Dialog.DialogControlProps
-  subjectDid: string
-  displayName: string
-  handle: string
+  profile: bsky.profile.AnyProfileView | undefined
   onAdd?: (listUri: string) => void
   onRemove?: (listUri: string) => void
 }
 
 export function UserAddRemoveListsDialog({
   control,
-  subjectDid,
-  displayName,
-  handle,
+  profile,
   onAdd,
   onRemove,
 }: UserAddRemoveListsDialogProps) {
   return (
     <Dialog.Outer control={control} testID="userAddRemoveListsDialog">
       <Dialog.Handle />
-      <ListsContent
-        subjectDid={subjectDid}
-        displayName={displayName}
-        handle={handle}
-        onAdd={onAdd}
-        onRemove={onRemove}
-      />
+      <ListsContent profile={profile} onAdd={onAdd} onRemove={onRemove} />
     </Dialog.Outer>
   )
 }
@@ -82,12 +74,14 @@ function Empty() {
 }
 
 function ListsContent({
-  subjectDid,
-  displayName,
-  handle,
+  profile,
   onAdd,
   onRemove,
-}: Omit<UserAddRemoveListsDialogProps, 'control'>) {
+}: {
+  profile: bsky.profile.AnyProfileView | undefined
+  onAdd?: (listUri: string) => void
+  onRemove?: (listUri: string) => void
+}) {
   const control = Dialog.useDialogContext()
   const {t: l} = useLingui()
 
@@ -98,7 +92,7 @@ function ListsContent({
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = useListsWithMembershipQuery({actor: subjectDid})
+  } = useListsWithMembershipQuery({actor: profile?.did})
 
   const listItems = data?.pages.flatMap(page => page.listsWithMembership) || []
 
@@ -112,17 +106,16 @@ function ListsContent({
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
   const renderItem = useCallback(
-    ({item}: {item: ListWithMembership}) => (
-      <ListItem
-        listWithMembership={item}
-        subjectDid={subjectDid}
-        displayName={displayName}
-        handle={handle}
-        onAdd={onAdd}
-        onRemove={onRemove}
-      />
-    ),
-    [subjectDid, displayName, handle, onAdd, onRemove],
+    ({item}: {item: ListWithMembership}) =>
+      profile ? (
+        <ListItem
+          listWithMembership={item}
+          profile={profile}
+          onAdd={onAdd}
+          onRemove={onRemove}
+        />
+      ) : null,
+    [profile, onAdd, onRemove],
   )
 
   const onClose = useCallback(() => {
@@ -139,9 +132,16 @@ function ListsContent({
         native(a.pt_lg),
       ]}>
       <Text style={[a.text_lg, a.font_semi_bold]}>
-        <Trans>Update {sanitizeDisplayName(displayName)} in Lists</Trans>
+        {profile ? (
+          <Trans>
+            Update {createSanitizedDisplayName(profile, true)} in Lists
+          </Trans>
+        ) : (
+          <Trans>Update in Lists</Trans>
+        )}
       </Text>
       <Button
+        testID="doneBtn"
         label={l`Close`}
         onPress={onClose}
         variant="ghost"
@@ -185,16 +185,12 @@ function ListsContent({
 
 function ListItem({
   listWithMembership,
-  subjectDid,
-  displayName,
-  handle,
+  profile,
   onAdd,
   onRemove,
 }: {
   listWithMembership: ListWithMembership
-  subjectDid: string
-  displayName: string
-  handle: string
+  profile: bsky.profile.AnyProfileView
   onAdd?: (listUri: string) => void
   onRemove?: (listUri: string) => void
 }) {
@@ -214,13 +210,13 @@ function ListItem({
         onAdd?.(list.uri)
         updateListMembershipOptimistically({
           queryClient,
-          actor: subjectDid,
+          actor: profile.did,
           listUri: list.uri,
           membershipUri: data.uri,
           subject: {
-            did: subjectDid,
-            handle,
-            displayName,
+            did: profile.did,
+            handle: profile.handle,
+            displayName: profile.displayName,
           },
         })
       },
@@ -239,7 +235,7 @@ function ListItem({
         onRemove?.(list.uri)
         removeListMembershipOptimistically({
           queryClient,
-          actor: subjectDid,
+          actor: profile.did,
           listUri: list.uri,
         })
       },
@@ -259,7 +255,7 @@ function ListItem({
     if (!isMember) {
       addMembership({
         listUri: list.uri,
-        actorDid: subjectDid,
+        actorDid: profile.did,
       })
     } else {
       if (!listItem?.uri) {
@@ -268,13 +264,13 @@ function ListItem({
       }
       removeMembership({
         listUri: list.uri,
-        actorDid: subjectDid,
+        actorDid: profile.did,
         membershipUri: listItem.uri,
       })
     }
   }, [
     list.uri,
-    subjectDid,
+    profile.did,
     isMember,
     listItem,
     isPending,
@@ -315,7 +311,7 @@ function ListItem({
         </Text>
       </View>
       <Button
-        testID={`user-${handle}-addBtn`}
+        testID={`user-${profile.handle}-addBtn`}
         label={isMember ? l`Remove` : l`Add`}
         onPress={handleToggleMembership}
         disabled={isPending}

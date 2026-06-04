@@ -9,19 +9,20 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
+import {createQueryKey} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
 
 export type ListWithMembership =
   AppBskyGraphGetListsWithMembership.ListWithMembership
 
 const RQKEY_ROOT = 'lists-with-membership'
-export const RQKEY = (actor: string) => [RQKEY_ROOT, actor]
+export const RQKEY = (actor: string) => createQueryKey(RQKEY_ROOT, {actor})
 
 export function useListsWithMembershipQuery({
   actor,
   enabled = true,
 }: {
-  actor: string
+  actor: string | undefined
   enabled?: boolean
 }) {
   const agent = useAgent()
@@ -33,10 +34,10 @@ export function useListsWithMembershipQuery({
     QueryKey,
     string | undefined
   >({
-    queryKey: RQKEY(actor),
+    queryKey: RQKEY(actor ?? ''),
     queryFn: async ({pageParam}: {pageParam?: string}) => {
       const res = await agent.app.bsky.graph.getListsWithMembership({
-        actor,
+        actor: actor!, // the enabled flag prevents this from running until actor is set
         limit: 50,
         cursor: pageParam,
       })

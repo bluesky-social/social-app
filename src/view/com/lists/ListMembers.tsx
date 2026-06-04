@@ -294,14 +294,10 @@ export function ListMembers({
         desktopFixedHeight={desktopFixedHeightOffset || true}
       />
 
-      {selectedProfile && (
-        <UserAddRemoveListsDialog
-          control={editListsDialogControl}
-          subjectDid={selectedProfile.did}
-          displayName={selectedProfile.displayName || selectedProfile.handle}
-          handle={selectedProfile.handle}
-        />
-      )}
+      <UserAddRemoveListsDialog
+        control={editListsDialogControl}
+        profile={selectedProfile}
+      />
     </View>
   )
 }

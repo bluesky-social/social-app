@@ -9,7 +9,10 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {RQKEY as LIST_MEMBERS_RQKEY} from '#/state/queries/list-members'
+import {
+  RQKEY as LIST_MEMBERS_RQKEY,
+  RQKEY_ALL as LIST_MEMBERS_ALL_RQKEY,
+} from '#/state/queries/list-members'
 import {useAgent, useSession} from '#/state/session'
 import type * as bsky from '#/types/bsky'
 import {RQKEY_WITH_MEMBERSHIP as STARTER_PACKS_WITH_MEMBERSHIPS_RKEY} from './actor-starter-packs'
@@ -52,8 +55,11 @@ export function useListMembershipAddMutation({
       // invalidate the members queries (used for rendering the listings)
       // use a timeout to wait for the appview
       setTimeout(() => {
-        queryClient.invalidateQueries({
+        void queryClient.invalidateQueries({
           queryKey: LIST_MEMBERS_RQKEY(variables.listUri),
+        })
+        void queryClient.invalidateQueries({
+          queryKey: LIST_MEMBERS_ALL_RQKEY(variables.listUri),
         })
       }, 1e3)
 
@@ -144,8 +150,11 @@ export function useListMembershipRemoveMutation({
       // invalidate the members queries (used for rendering the listings)
       // use a timeout to wait for the appview
       setTimeout(() => {
-        queryClient.invalidateQueries({
+        void queryClient.invalidateQueries({
           queryKey: LIST_MEMBERS_RQKEY(variables.listUri),
+        })
+        void queryClient.invalidateQueries({
+          queryKey: LIST_MEMBERS_ALL_RQKEY(variables.listUri),
         })
       }, 1e3)
 

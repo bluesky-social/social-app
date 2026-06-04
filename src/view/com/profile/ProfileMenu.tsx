@@ -525,9 +525,7 @@ let ProfileMenu = ({
 
       <UserAddRemoveListsDialog
         control={addToListsDialogControl}
-        subjectDid={profile.did}
-        displayName={profile.displayName || profile.handle}
-        handle={profile.handle}
+        profile={profile}
         onAdd={invalidateProfileQuery}
         onRemove={invalidateProfileQuery}
       />
