@@ -428,7 +428,7 @@ function Header({
           ) : (
             <Plural
               value={count}
-              zero="No requests to join"
+              _0="No requests to join"
               one="# request to join"
               other="# requests to join"
             />
