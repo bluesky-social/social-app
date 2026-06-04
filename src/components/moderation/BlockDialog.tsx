@@ -6,17 +6,21 @@ import {
   ChatBskyGroupRemoveMembers,
 } from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/types'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
-import {useListMutualGroupsQuery} from '#/state/queries/messages/list-mutual-groups'
+import {
+  createListMutualGroupsQueryKey,
+  useListMutualGroupsQuery,
+} from '#/state/queries/messages/list-mutual-groups'
 import {useRemoveFromGroupChat} from '#/state/queries/messages/remove-from-group'
 import {useSession} from '#/state/session'
 import {atoms as a, native, useTheme} from '#/alf'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {type DialogControlProps} from '#/components/Dialog'
 import {parseConvoView} from '#/components/dms/util'
@@ -42,6 +46,7 @@ export function BlockDialog({
 }: BlockDialogProps) {
   return (
     <Dialog.Outer control={control}>
+      <Dialog.Handle />
       <BlockDialogInner
         control={control}
         profile={profile}
@@ -69,9 +74,40 @@ function BlockDialogInner({
   const [headerHeight, setHeaderHeight] = useState(0)
   const [footerHeight, setFooterHeight] = useState(0)
 
-  const {data, isPending} = useListMutualGroupsQuery({subject: profile.did})
+  const [isPTRing, setIsPTRing] = useState(false)
+
+  const {
+    data,
+    refetch,
+    isPending,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useListMutualGroupsQuery({
+    subject: profile.did,
+    enabled: !profile.viewer?.blocking,
+  })
   const items: Item[] = data?.pages.flatMap(page => page.convos) ?? []
   const hasMutualGroupChats = items.length > 0
+
+  const onEndReached = async () => {
+    if (isFetchingNextPage || !hasNextPage) return
+    try {
+      await fetchNextPage()
+    } catch (err) {
+      logger.error('Failed to load more mutual group chats', {message: err})
+    }
+  }
+
+  const onRefresh = async () => {
+    setIsPTRing(true)
+    try {
+      await refetch()
+    } catch (err) {
+      logger.error('Failed to refresh mutual group chats', {message: err})
+    }
+    setIsPTRing(false)
+  }
 
   const renderItems = ({item}: {item: Item}) => {
     return (
@@ -155,62 +191,57 @@ function BlockDialogInner({
 
   if (isPending) {
     return (
-      <>
-        <Dialog.Handle />
-        <Dialog.ScrollableInner
-          label={profile.viewer?.blocking ? l`Unblock` : l`Block`}
-          contentContainerStyle={[
-            a.p_2xl,
-            a.align_center,
-            a.justify_center,
-            {
-              minHeight: 320,
-            },
-          ]}>
-          <Loader size="xl" />
-        </Dialog.ScrollableInner>
-      </>
+      <Dialog.ScrollableInner
+        label={profile.viewer?.blocking ? l`Unblock` : l`Block`}
+        contentContainerStyle={[
+          a.p_2xl,
+          a.align_center,
+          a.justify_center,
+          {
+            minHeight: 320,
+          },
+        ]}>
+        <Loader size="xl" />
+      </Dialog.ScrollableInner>
     )
   }
 
   if (!hasMutualGroupChats) {
     return (
-      <>
-        <Dialog.Handle />
-        <Dialog.ScrollableInner
-          label={profile.viewer?.blocking ? l`Unblock` : l`Block`}>
-          {listHeader}
-          {footer}
-        </Dialog.ScrollableInner>
-      </>
+      <Dialog.ScrollableInner
+        label={profile.viewer?.blocking ? l`Unblock` : l`Block`}>
+        {listHeader}
+        {footer}
+      </Dialog.ScrollableInner>
     )
   }
 
   return (
-    <>
-      <Dialog.Handle />
-      <Dialog.InnerFlatList
-        data={items}
-        renderItem={renderItems}
-        ListHeaderComponent={listHeader}
-        stickyHeaderIndices={[0]}
-        ListEmptyComponent={
-          isPending ? (
-            <View style={[a.flex_1, a.align_center, a.justify_center]}>
-              <Loader size="xl" />
-            </View>
-          ) : null
-        }
-        footer={
-          <Dialog.FlatListFooter
-            onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}>
-            {footer}
-          </Dialog.FlatListFooter>
-        }
-        contentContainerStyle={[a.gap_0, {paddingBottom: footerHeight}]}
-        scrollIndicatorInsets={{top: headerHeight, bottom: footerHeight}}
-      />
-    </>
+    <Dialog.InnerFlatList
+      data={items}
+      refreshing={isPTRing}
+      renderItem={renderItems}
+      ListHeaderComponent={listHeader}
+      stickyHeaderIndices={[0]}
+      ListFooterComponent={
+        isFetchingNextPage ? (
+          <View style={[a.py_lg, a.align_center, a.justify_center]}>
+            <Loader size="lg" />
+          </View>
+        ) : null
+      }
+      footer={
+        <Dialog.FlatListFooter
+          onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}>
+          {footer}
+        </Dialog.FlatListFooter>
+      }
+      contentContainerStyle={[a.gap_0, {paddingBottom: footerHeight}]}
+      scrollIndicatorInsets={{top: headerHeight, bottom: footerHeight}}
+      onRefresh={() => void onRefresh()}
+      onEndReached={() => void onEndReached()}
+      onEndReachedThreshold={3}
+    />
   )
 }
 
@@ -226,6 +257,7 @@ function MutualGroupChat({
   const t = useTheme()
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
+  const queryClient = useQueryClient()
 
   const convo = parseConvoView(view, currentAccount?.did)
 
@@ -234,6 +266,10 @@ function MutualGroupChat({
     {
       onSuccess: () => {
         Toast.show(l`Left group chat.`)
+        void queryClient.invalidateQueries({
+          queryKey: createListMutualGroupsQueryKey({subject: profileDid}),
+        })
+        onLeave?.()
       },
       onError: error => {
         logger.error('Error leaving group chat', {message: error})
@@ -256,6 +292,9 @@ function MutualGroupChat({
     useRemoveFromGroupChat(convo?.view.id, {
       onSuccess: () => {
         Toast.show(l`Kicked member from group chat.`)
+        void queryClient.invalidateQueries({
+          queryKey: createListMutualGroupsQueryKey({subject: profileDid}),
+        })
       },
       onError: error => {
         logger.error('Error removing group chat member', {message: error})
@@ -319,6 +358,7 @@ function MutualGroupChat({
           <ButtonText>
             <Trans>Kick member</Trans>
           </ButtonText>
+          {isRemovePending ? <ButtonIcon icon={Loader} /> : null}
         </Button>
       ) : (
         <Button
@@ -328,11 +368,11 @@ function MutualGroupChat({
           size="small"
           onPress={() => {
             leaveConvo()
-            onLeave?.()
           }}>
           <ButtonText>
             <Trans>Leave chat</Trans>
           </ButtonText>
+          {isLeavePending ? <ButtonIcon icon={Loader} /> : null}
         </Button>
       )}
     </View>

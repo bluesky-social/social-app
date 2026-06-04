@@ -464,7 +464,9 @@ let ProfileMenu = ({
                       <Menu.Item
                         testID="profileHeaderDropdownBlockBtn"
                         label={
-                          profile.viewer ? l`Unblock account` : l`Block account`
+                          profile.viewer?.blocking
+                            ? l`Unblock account`
+                            : l`Block account`
                         }
                         onPress={() => blockPromptControl.open()}>
                         <Menu.ItemText>
