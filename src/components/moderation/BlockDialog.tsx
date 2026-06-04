@@ -18,7 +18,7 @@ import {
 } from '#/state/queries/messages/list-mutual-groups'
 import {useRemoveFromGroupChat} from '#/state/queries/messages/remove-from-group'
 import {useSession} from '#/state/session'
-import {atoms as a, native, useTheme} from '#/alf'
+import {atoms as a, native, useTheme, web} from '#/alf'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -46,13 +46,16 @@ export function BlockDialog({
 }: BlockDialogProps) {
   return (
     <Dialog.Outer control={control}>
-      <Dialog.Handle />
-      <BlockDialogInner
-        control={control}
-        profile={profile}
-        onBlock={onBlock}
-        onLeave={onLeave}
-      />
+      <View style={[a.relative]}>
+        <Dialog.Handle />
+        <BlockDialogInner
+          control={control}
+          profile={profile}
+          onBlock={onBlock}
+          onLeave={onLeave}
+        />
+        <Dialog.Close />
+      </View>
     </Dialog.Outer>
   )
 }
@@ -236,6 +239,7 @@ function BlockDialogInner({
           {footer}
         </Dialog.FlatListFooter>
       }
+      style={[web(a.px_md)]}
       contentContainerStyle={[a.gap_0, {paddingBottom: footerHeight}]}
       scrollIndicatorInsets={{top: headerHeight, bottom: footerHeight}}
       onRefresh={() => void onRefresh()}
