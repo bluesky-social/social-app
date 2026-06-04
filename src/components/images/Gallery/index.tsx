@@ -490,21 +490,22 @@ function GalleryImage({
               style={[
                 a.absolute,
                 a.justify_center,
+                a.rounded_sm,
+                a.p_xs,
+                t.atoms.bg_contrast_25,
                 {
-                  top: a.p_sm.padding,
-                  right: a.p_sm.padding,
-                  paddingHorizontal: 6,
-                  paddingVertical: 2,
-                  borderRadius: 999,
-                  backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                  top: a.p_xs.padding,
+                  right: a.p_xs.padding,
+                  opacity: 0.8,
+                },
+                largeAltBadge && {
+                  padding: 6,
                 },
               ]}>
               <Text
                 style={[
                   a.font_bold,
-                  a.text_xs,
-                  a.leading_tight,
-                  {color: '#fff'},
+                  largeAltBadge ? a.text_xs : {fontSize: 8},
                 ]}>
                 {index + 1}/{imageCount}
               </Text>
