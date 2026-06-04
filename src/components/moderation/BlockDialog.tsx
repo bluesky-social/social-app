@@ -200,9 +200,8 @@ function BlockDialogInner({
           a.p_2xl,
           a.align_center,
           a.justify_center,
-          {
-            minHeight: 320,
-          },
+          {minHeight: 320},
+          web({minWidth: 320}),
         ]}>
         <Loader size="xl" />
       </Dialog.ScrollableInner>
