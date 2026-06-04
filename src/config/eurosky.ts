@@ -19,4 +19,17 @@ export const EUROSKY = {
     /** Display name used in page/tab titles and in-app brand text. */
     name: 'Eurosky',
   },
+  web: {
+    /**
+     * Web hostnames this app serves its own UI on. A link pasted to one of
+     * these hosts (in the composer or a DM) is detected as a first-party
+     * record - quote post, feed, list, or starter pack - and rendered as a
+     * rich embed, exactly like a bsky.app link, instead of a plain link card.
+     *
+     * Bare hostnames only: no scheme, no trailing slash, no subdomain wildcard
+     * (matching is exact). bsky.app is always treated as first-party in
+     * addition to these.
+     */
+    hosts: ['mu.social'],
+  },
 } as const

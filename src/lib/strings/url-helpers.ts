@@ -6,13 +6,27 @@ import {BSKY_SERVICE} from '#/lib/constants'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {startUriToStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
+import {EUROSKY} from '#/config/eurosky'
 
 export const BSKY_APP_HOST = 'https://bsky.app'
+
+/**
+ * Hostnames whose web URLs we treat as first-party app links. Pasting one of
+ * these into the composer or a DM resolves it to an in-app record embed (quote
+ * post, feed, list, starter pack) instead of a plain external link card.
+ * Upstream only knows about bsky.app; the fork adds its own web host(s) via
+ * EUROSKY.web.hosts. See isBskyAppUrl().
+ */
+const APP_URL_HOSTS = ['bsky.app', ...EUROSKY.web.hosts]
+
 const BSKY_TRUSTED_HOSTS = [
   'bsky\\.app',
   'bsky\\.social',
   'blueskyweb\\.xyz',
   'blueskyweb\\.zendesk\\.com',
+  // Fork web host(s) are first-party too, so links to them are not treated as
+  // untrusted/external (e.g. no phishing warning interstitial).
+  ...EUROSKY.web.hosts.map(host => host.replace(/\./g, '\\.')),
   ...(__DEV__ ? ['localhost:19006', 'localhost:8100'] : []),
 ]
 
@@ -121,7 +135,14 @@ export function toBskyAppUrl(url: string): string {
 }
 
 export function isBskyAppUrl(url: string): boolean {
-  return url.startsWith('https://bsky.app/')
+  // Match by parsed hostname rather than a string prefix so that fork hosts are
+  // supported and look-alike hosts (e.g. https://bsky.app.evil.com/) are not.
+  try {
+    const urlp = new URL(url)
+    return urlp.protocol === 'https:' && APP_URL_HOSTS.includes(urlp.hostname)
+  } catch {
+    return false
+  }
 }
 
 export function isRelativeUrl(url: string): boolean {
@@ -129,10 +150,7 @@ export function isRelativeUrl(url: string): boolean {
 }
 
 export function isBskyRSSUrl(url: string): boolean {
-  return (
-    (url.startsWith('https://bsky.app/') || isRelativeUrl(url)) &&
-    /\/rss\/?$/.test(url)
-  )
+  return (isBskyAppUrl(url) || isRelativeUrl(url)) && /\/rss\/?$/.test(url)
 }
 
 export function isExternalUrl(url: string): boolean {
