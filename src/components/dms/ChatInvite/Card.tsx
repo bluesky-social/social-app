@@ -74,7 +74,10 @@ export function Card({size}: {size: 'large' | 'small'}) {
             numberOfLines={1}
             allowFontScaling={!hasFixedHeight}>
             <Trans comment="The group chat creator, in the format 'By {displayName}'.">
-              By <Text style={[a.font_medium]}>{ownerDisplayName}</Text>
+              By{' '}
+              <Text style={[a.font_medium]} allowFontScaling={!hasFixedHeight}>
+                {ownerDisplayName}
+              </Text>
             </Trans>
           </Text>
           <ProfileBadges
