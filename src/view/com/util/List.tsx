@@ -147,17 +147,19 @@ let List = forwardRef<ListMethods, ListProps>(
       )
     }
 
-    let contentOffset
     if (headerOffset != null) {
       style = addStyle(style, {
         paddingTop: headerOffset,
       })
-      contentOffset = {x: 0, y: headerOffset * -1}
     }
 
     return (
       <FlatList_INTERNAL
         showsVerticalScrollIndicator // overridable
+        // Anchor the currently-visible item across content relayouts so that
+        // changing the viewport size (e.g. device rotation) doesn't lose the
+        // scroll position as items reflow to the new width.
+        maintainVisibleContentPosition={{minIndexForVisible: 0}}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         {...props}
@@ -170,7 +172,6 @@ let List = forwardRef<ListMethods, ListProps>(
           ...props.scrollIndicatorInsets,
         }}
         indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
-        contentOffset={contentOffset}
         refreshControl={refreshControl}
         onScroll={scrollHandler}
         scrollsToTop={scrollsToTop}
