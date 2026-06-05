@@ -1,6 +1,7 @@
 import {
   ChatBskyConvoDefs,
   type ChatBskyConvoListConvoRequests,
+  ChatBskyGroupDefs,
 } from '@atproto/api'
 import {
   type InfiniteData,
@@ -19,7 +20,7 @@ export const RQKEY = (limit: number = DEFAULT_LIMIT) => [RQKEY_ROOT, limit]
 type RQPageParam = string | undefined
 
 export function useListConvoRequests({
-  enabled,
+  enabled = true,
   limit = DEFAULT_LIMIT,
 }: {
   enabled?: boolean
@@ -86,6 +87,25 @@ export function optimisticDelete(
       ...page,
       requests: page.requests.filter(
         item => !ChatBskyConvoDefs.isConvoView(item) || item.id !== chatId,
+      ),
+    })),
+  }
+}
+
+export function optimisticDeleteJoinRequest(
+  convoId: string,
+  old: ConvoRequestListQueryData | undefined,
+) {
+  if (!old) return old
+
+  return {
+    ...old,
+    pages: old.pages.map(page => ({
+      ...page,
+      requests: page.requests.filter(
+        item =>
+          !ChatBskyGroupDefs.isJoinRequestConvoView(item) ||
+          item.convoId !== convoId,
       ),
     })),
   }

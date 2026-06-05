@@ -8,6 +8,11 @@ import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
 import {
+  type ConvoRequestListQueryData,
+  optimisticDelete as optimisticDeleteRequest,
+  RQKEY_ROOT as REQUESTS_RQKEY_ROOT,
+} from './list-conversation-requests'
+import {
   RQKEY as CONVO_LIST_KEY,
   RQKEY_ROOT as CONVO_LIST_ROOT_KEY,
 } from './list-conversations'
@@ -96,11 +101,16 @@ export function useAcceptConversation(
           }
         },
       )
+      queryClient.setQueriesData<ConvoRequestListQueryData>(
+        {queryKey: [REQUESTS_RQKEY_ROOT]},
+        old => optimisticDeleteRequest(convoId, old),
+      )
       onMutate?.()
       return {prevAcceptedPages, prevInboxPages}
     },
     onSuccess: data => {
-      queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
+      void queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
+      void queryClient.invalidateQueries({queryKey: [REQUESTS_RQKEY_ROOT]})
       onSuccess?.(data)
     },
     onError: (error, _, context) => {
@@ -131,7 +141,8 @@ export function useAcceptConversation(
           }
         },
       )
-      queryClient.invalidateQueries({queryKey: [CONVO_LIST_ROOT_KEY]})
+      void queryClient.invalidateQueries({queryKey: [CONVO_LIST_ROOT_KEY]})
+      void queryClient.invalidateQueries({queryKey: [REQUESTS_RQKEY_ROOT]})
       onError?.(error)
     },
   })

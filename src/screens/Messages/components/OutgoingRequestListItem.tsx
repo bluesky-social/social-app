@@ -49,10 +49,6 @@ export function OutgoingRequestListItem({
       },
     })
 
-  if (!moderationOpts) {
-    return null
-  }
-
   return (
     <>
       <Link
@@ -71,9 +67,6 @@ export function OutgoingRequestListItem({
               a.gap_md,
               isWithinSplitView && a.mx_sm,
               isWithinSplitView && a.rounded_sm,
-              {
-                backgroundColor: t.palette.contrast_0,
-              },
               (hovered || pressed || focused) && t.atoms.bg_contrast_25,
             ]}>
             <AvatarBubbles
@@ -132,7 +125,7 @@ export function OutgoingRequestListItem({
         control={prompt}
         title={l`Rescind request`}
         description={l`Are you sure you want to rescind your request to join ${convoView.name}?`}
-        confirmButtonCta="Rescind request"
+        confirmButtonCta={l`Rescind request`}
         onConfirm={() => {
           if (isWithdrawPending) return
           withdrawRequest({convoId: convoView.convoId})

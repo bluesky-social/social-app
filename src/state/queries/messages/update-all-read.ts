@@ -1,9 +1,13 @@
-import {type ChatBskyConvoListConvos} from '@atproto/api'
+import {ChatBskyConvoDefs, type ChatBskyConvoListConvos} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
+import {
+  type ConvoRequestListQueryData,
+  RQKEY_ROOT as REQUESTS_RQKEY_ROOT,
+} from './list-conversation-requests'
 import {RQKEY as CONVO_LIST_KEY} from './list-conversations'
 
 export function useUpdateAllRead(
@@ -75,11 +79,36 @@ export function useUpdateAllRead(
           }
         },
       )
+      if (status === 'request') {
+        queryClient.setQueriesData<ConvoRequestListQueryData>(
+          {queryKey: [REQUESTS_RQKEY_ROOT]},
+          old => {
+            if (!old) return old
+            return {
+              ...old,
+              pages: old.pages.map(page => ({
+                ...page,
+                requests: page.requests.map(item => {
+                  if (!ChatBskyConvoDefs.isConvoView(item)) return item
+                  return {
+                    ...item,
+                    $type: 'chat.bsky.convo.defs#convoView' as const,
+                    unreadCount: 0,
+                  }
+                }),
+              })),
+            }
+          },
+        )
+      }
       onMutate?.()
       return {prevPages}
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY(status)})
+      void queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY(status)})
+      if (status === 'request') {
+        void queryClient.invalidateQueries({queryKey: [REQUESTS_RQKEY_ROOT]})
+      }
       onSuccess?.()
     },
     onError: (error, _, context) => {
@@ -97,8 +126,10 @@ export function useUpdateAllRead(
           }
         },
       )
-      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY(status)})
-      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY('all', 'unread')})
+      void queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY(status)})
+      void queryClient.invalidateQueries({
+        queryKey: CONVO_LIST_KEY('all', 'unread'),
+      })
       onError?.(error)
     },
   })
