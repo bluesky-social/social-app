@@ -115,6 +115,7 @@ function Intro() {
   const gutter = useGutters(['base'])
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
   const inviteFriendsControl = useDialogControl()
 
   const {data: isAvailable, isSuccess} = useQuery({
@@ -171,7 +172,10 @@ function Intro() {
         label={_(msg`Share my profile`)}
         size="large"
         color="secondary"
-        onPress={() => inviteFriendsControl.open()}
+        onPress={() => {
+          ax.metric('invite:dialog:open', {logContext: 'FindContactsSettings'})
+          inviteFriendsControl.open()
+        }}
         style={[a.flex_1, a.justify_center]}>
         <ButtonText>
           <Trans>Share my profile</Trans>

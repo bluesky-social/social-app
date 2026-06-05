@@ -1,4 +1,4 @@
-import {useCallback} from 'react'
+import {useCallback, useEffect} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -9,6 +9,7 @@ import * as Dialog from '#/components/Dialog'
 import {useNuxDialogContext} from '#/components/dialogs/nuxs'
 import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_E2E, IS_NATIVE, IS_WEB} from '#/env'
 import {createIsEnabledCheck} from './utils'
 
@@ -21,16 +22,24 @@ export const enabled = createIsEnabledCheck(() => {
 export function InviteFriendsAnnouncement() {
   const t = useTheme()
   const {t: l} = useLingui()
+  const ax = useAnalytics()
   const nuxDialogs = useNuxDialogContext()
   const control = Dialog.useDialogControl()
 
   Dialog.useAutoOpen(control)
+
+  useEffect(() => {
+    ax.metric('invite:nux:presented', {})
+    // Fire once on mount - the NUX has a single lifecycle per session.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const onClose = useCallback(() => {
     nuxDialogs.dismissActiveNux()
   }, [nuxDialogs])
 
   const onPressTryIt = useCallback(() => {
+    ax.metric('invite:nux:tryItPressed', {})
     // Close this announcement (which dismisses + unmounts the NUX), then open
     // the invite dialog. The invite dialog is mounted persistently by NuxDialogs
     // (not here) so it survives the dismissal - the native bottom sheet cannot
@@ -39,7 +48,7 @@ export function InviteFriendsAnnouncement() {
     control.close(() => {
       requestAnimationFrame(() => nuxDialogs.openInviteFriends())
     })
-  }, [control, nuxDialogs])
+  }, [ax, control, nuxDialogs])
 
   return (
     <>

@@ -1,3 +1,4 @@
+import {useEffect} from 'react'
 import {Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
@@ -5,6 +6,7 @@ import {useLingui} from '@lingui/react/macro'
 import {atoms as a, useTheme} from '#/alf'
 import {TimesLarge_Stroke2_Corner0_Rounded as TimesIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 export function FollowersPromoBanner({
   onPress,
@@ -15,6 +17,24 @@ export function FollowersPromoBanner({
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
+
+  useEffect(() => {
+    ax.metric('invite:followersPromo:seen', {})
+    // Fire once per mount - parent unmounts the banner when followers > 0 or
+    // when dismissed, so each mount is a distinct impression.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const handlePress = () => {
+    ax.metric('invite:followersPromo:press', {})
+    onPress()
+  }
+
+  const handleDismiss = () => {
+    ax.metric('invite:followersPromo:dismiss', {})
+    onDismiss()
+  }
   return (
     <View style={[a.px_lg, a.pt_md]}>
       {/*
@@ -28,7 +48,7 @@ export function FollowersPromoBanner({
           accessibilityRole="button"
           accessibilityLabel={l`Find and invite friends`}
           accessibilityHint={l`Opens the find and invite friends settings`}
-          onPress={onPress}
+          onPress={handlePress}
           style={({pressed}) => [
             a.flex_row,
             a.align_center,
@@ -62,7 +82,7 @@ export function FollowersPromoBanner({
           accessibilityRole="button"
           accessibilityLabel={l`Dismiss`}
           accessibilityHint={l`Hides the invite friends promo banner`}
-          onPress={onDismiss}
+          onPress={handleDismiss}
           hitSlop={12}
           style={({pressed}) => [
             {

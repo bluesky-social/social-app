@@ -20,6 +20,7 @@ import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/i
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {ActionButtons} from './components/ActionButtons'
 import {ThemedQrCard} from './components/ThemedQrCard'
@@ -34,6 +35,7 @@ export function InviteFriendsDialogInner({
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
   const navigation = useNavigation<NavigationProp>()
   const {currentAccount} = useSession()
   const profileQuery = useProfileQuery({did: currentAccount?.did})
@@ -58,6 +60,7 @@ export function InviteFriendsDialogInner({
       Toast.show(l`Could not share - please try again`, {type: 'error'})
       return
     }
+    ax.metric('invite:action:share', {})
     try {
       await nativeShareUrl(canonicalShareUrl)
     } catch (err) {
@@ -90,6 +93,7 @@ export function InviteFriendsDialogInner({
 
     try {
       await createAssetAsync(`file://${uri}`)
+      ax.metric('invite:action:download', {})
       Toast.show(l`QR code saved to your camera roll`)
     } catch (err) {
       logger.error('InviteFriendsDialog: download failed', {safeMessage: err})
@@ -98,6 +102,7 @@ export function InviteFriendsDialogInner({
   }
 
   const onScan = () => {
+    ax.metric('invite:action:scan', {})
     // Close dialog first, then navigate (control.close callback per CLAUDE.md
     // Dialog footgun rule — prevents race with the navigation push).
     control.close(() => {
@@ -112,11 +117,17 @@ export function InviteFriendsDialogInner({
     }
     try {
       await setStringAsync(canonicalShareUrl)
+      ax.metric('invite:action:copy', {})
       Toast.show(l`Invite link copied`)
     } catch (err) {
       logger.error('InviteFriendsDialog: copy failed', {safeMessage: err})
       Toast.show(l`Could not copy link`, {type: 'error'})
     }
+  }
+
+  const onThemeChange = (next: InviteThemeKey) => {
+    ax.metric('invite:theme:change', {themeKey: next})
+    setThemeKey(next)
   }
 
   return (
@@ -140,7 +151,7 @@ export function InviteFriendsDialogInner({
         </Dialog.Header>
       }>
       <View style={[a.align_center, a.pt_xl, a.px_xl]}>
-        <ThemePicker value={themeKey} onChange={setThemeKey} />
+        <ThemePicker value={themeKey} onChange={onThemeChange} />
 
         <View style={[a.mt_5xl]}>
           {profileQuery.isLoading ? (

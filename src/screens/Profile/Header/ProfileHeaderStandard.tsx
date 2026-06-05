@@ -39,6 +39,7 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
 import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {useActorStatus} from '#/features/liveNow'
@@ -240,6 +241,7 @@ export function HeaderStandardButtons({
   minimal?: boolean
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {hasSession, currentAccount} = useSession()
   const playHaptic = useHaptics()
   const requireAuth = useRequireAuth()
@@ -360,6 +362,7 @@ export function HeaderStandardButtons({
               shape="round"
               onPress={() => {
                 playHaptic('Light')
+                ax.metric('invite:dialog:open', {logContext: 'ProfileHeader'})
                 inviteFriendsControl.open()
               }}
               label={_(msg`Invite friends`)}>

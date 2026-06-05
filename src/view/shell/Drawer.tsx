@@ -328,7 +328,12 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
               account={currentAccount}
               onPressProfile={onPressDrawerHeaderProfile}
               onPressShare={
-                IS_NATIVE ? () => inviteFriendsControl.open() : undefined
+                IS_NATIVE
+                  ? () => {
+                      ax.metric('invite:dialog:open', {logContext: 'Drawer'})
+                      inviteFriendsControl.open()
+                    }
+                  : undefined
               }
             />
           ) : (

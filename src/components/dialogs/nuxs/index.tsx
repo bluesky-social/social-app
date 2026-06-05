@@ -199,9 +199,12 @@ function Inner({
     return {
       activeNux,
       dismissActiveNux,
-      openInviteFriends: () => inviteFriendsControl.open(),
+      openInviteFriends: () => {
+        ax.metric('invite:dialog:open', {logContext: 'NuxAnnouncement'})
+        inviteFriendsControl.open()
+      },
     }
-  }, [activeNux, dismissActiveNux, inviteFriendsControl])
+  }, [ax, activeNux, dismissActiveNux, inviteFriendsControl])
 
   return (
     <Context.Provider value={ctx}>

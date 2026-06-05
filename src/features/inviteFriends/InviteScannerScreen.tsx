@@ -16,12 +16,14 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/i
 import {CircleInfo_Stroke2_Corner0_Rounded as InfoIcon} from '#/components/icons/CircleInfo'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 const SCAN_FRAME_SIZE = 333
 
 export function InviteScannerScreen() {
   const {t: l} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
   const insets = useSafeAreaInsets()
   const navigation = useNavigation<NavigationProp>()
   const [permission, requestPermission] = useCameraPermissions()
@@ -43,16 +45,18 @@ export function InviteScannerScreen() {
         /^(?:https?:\/\/)?bsky\.app\/profile\/([^/?#]+)/i,
       )
       if (!profileMatch) {
+        ax.metric('invite:scanner:scanned', {result: 'invalidQr'})
         setScannerEnabled(false)
         setShowError(true)
         return
       }
 
+      ax.metric('invite:scanner:scanned', {result: 'profileFound'})
       setScannerEnabled(false)
       const handle = profileMatch[1]
       navigation.replace('Profile', {name: handle})
     },
-    [scannerEnabled, navigation],
+    [ax, scannerEnabled, navigation],
   )
 
   const onRetry = useCallback(() => {
