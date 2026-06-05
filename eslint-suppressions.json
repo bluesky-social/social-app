@@ -1351,9 +1351,6 @@
     }
   },
   "src/screens/Profile/components/ProfileFeedHeader.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
     "@typescript-eslint/no-misused-promises": {
       "count": 5
     }
