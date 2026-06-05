@@ -2,9 +2,11 @@ import {View} from 'react-native'
 import {Plural, Trans} from '@lingui/react/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
+import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {atoms as a, useTheme} from '#/alf'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
+import {SimpleInlineLinkText} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useChatInvite} from './Context'
@@ -75,9 +77,12 @@ export function Card({size}: {size: 'large' | 'small'}) {
             allowFontScaling={!hasFixedHeight}>
             <Trans comment="The group chat creator, in the format 'By {displayName}'.">
               By{' '}
-              <Text style={[a.font_medium]} allowFontScaling={!hasFixedHeight}>
+              <SimpleInlineLinkText
+                to={makeProfileLink(preview.owner)}
+                label={ownerDisplayName}
+                style={[a.font_medium, t.atoms.text]}>
                 {ownerDisplayName}
-              </Text>
+              </SimpleInlineLinkText>
             </Trans>
           </Text>
           <ProfileBadges
