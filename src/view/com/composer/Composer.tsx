@@ -237,7 +237,6 @@ function useAddImagesWithCap(
   )
 }
 
-
 type Props = ComposerOpts
 export const ComposePost = ({
   replyTo,
