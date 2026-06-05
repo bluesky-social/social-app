@@ -32,7 +32,7 @@ export type ChatInviteContextValue = {
    * preview to act on.
    */
   action: ChatInviteAction | undefined
-  /** Whether or not to allow font scaling on text elements. */
+  /** Whether the invite is rendered inside a fixed-height container; when true, text inside disables font scaling so the card doesn't overflow. */
   hasFixedHeight: boolean
 }
 
