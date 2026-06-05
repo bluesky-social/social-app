@@ -91,11 +91,6 @@ msgstr ""
 msgid "{0, plural, one {# new join request} other {# new join requests}}"
 msgstr "{0, plural, one {# new join request} other {# new join requests}}"
 
-#. placeholder {0}: convo.details.memberLimit
-#: src/screens/Messages/components/InviteLinkDialog.tsx:181
-msgid "{0, plural, one {# person} other {# people}}"
-msgstr "{0, plural, one {# person} other {# people}}"
-
 #. placeholder {0}: reactions.length
 #. placeholder {1}: groupedReactions.map(g => g.value).join(' ')
 #: src/components/dms/MessageItem.tsx:273
@@ -119,8 +114,8 @@ msgstr ""
 
 #. placeholder {0}: numUnreadMessages.numUnread ?? 0
 #. placeholder {0}: numUnreadNotifications ?? 0
-#: src/view/shell/bottom-bar/BottomBar.tsx:232
-#: src/view/shell/bottom-bar/BottomBar.tsx:264
+#: src/view/shell/bottom-bar/BottomBar.tsx:233
+#: src/view/shell/bottom-bar/BottomBar.tsx:265
 #: src/view/shell/Drawer.tsx:501
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr ""
@@ -367,6 +362,10 @@ msgstr ""
 msgid "{0}s"
 msgstr ""
 
+#: src/screens/Messages/JoinRequests.tsx:428
+msgid "{count, plural, =0 {No requests to join} one {# request to join} other {# requests to join}}"
+msgstr "{count, plural, =0 {No requests to join} one {# request to join} other {# requests to join}}"
+
 #: src/components/dms/SystemMessageGroup.tsx:38
 msgid "{count, plural, one {# chat update} other {# chat updates}}"
 msgstr "{count, plural, one {# chat update} other {# chat updates}}"
@@ -379,9 +378,10 @@ msgstr "{count, plural, one {# request} other {# requests}}"
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
-#: src/screens/Messages/JoinRequests.tsx:429
-msgid "{count, plural, zero {No requests to join} one {# request to join} other {# requests to join}}"
-msgstr "{count, plural, zero {No requests to join} one {# request to join} other {# requests to join}}"
+#. Displayed when there are more requests to join a group chat than have been loaded
+#: src/screens/Messages/JoinRequests.tsx:422
+msgid "{count, plural, other {#+ requests to join}}"
+msgstr "{count, plural, other {#+ requests to join}}"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:53
@@ -392,11 +392,6 @@ msgstr "{count}+"
 #: src/screens/Messages/components/InboxRequests.tsx:29
 msgid "{count}+ requests"
 msgstr "{count}+ requests"
-
-#. Displayed when there are more requests to join a group chat than have been loaded
-#: src/screens/Messages/JoinRequests.tsx:423
-msgid "{count}+ requests to join"
-msgstr "{count}+ requests to join"
 
 #: src/components/dms/DateDivider.tsx:60
 msgid "{date} at {time}"
@@ -648,7 +643,7 @@ msgstr "{name}'s favorite feeds and people - join me!"
 msgid "{name}'s starter pack"
 msgstr "{name}'s starter pack"
 
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:332
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:337
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -815,7 +810,7 @@ msgid "24 hours"
 msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:278
-#: src/screens/Login/PasswordSignin.tsx:244
+#: src/screens/Login/PasswordSignin.tsx:248
 msgid "2FA Confirmation"
 msgstr ""
 
@@ -901,7 +896,7 @@ msgid "Accept"
 msgstr ""
 
 #. Accept a request to join a chat
-#: src/screens/Messages/JoinRequests.tsx:460
+#: src/screens/Messages/JoinRequests.tsx:459
 msgctxt "button"
 msgid "Accept"
 msgstr "Accept"
@@ -910,7 +905,7 @@ msgstr "Accept"
 msgid "Accept chat request"
 msgstr ""
 
-#: src/screens/Messages/JoinRequests.tsx:454
+#: src/screens/Messages/JoinRequests.tsx:453
 msgid "Accept join request"
 msgstr "Accept join request"
 
@@ -1023,7 +1018,7 @@ msgctxt "toast"
 msgid "Account unmuted"
 msgstr ""
 
-#: src/components/verification/VerifierDialog.tsx:99
+#: src/components/verification/VerifierDialog.tsx:100
 msgid "Accounts with a scalloped blue check mark <0><1/></0> are trusted verifiers. They can verify individual accounts."
 msgstr "Accounts with a scalloped blue check mark <0><1/></0> are trusted verifiers. They can verify individual accounts."
 
@@ -1091,11 +1086,11 @@ msgstr ""
 msgid "Add another account"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1450
+#: src/view/com/composer/Composer.tsx:1432
 msgid "Add another post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2132
+#: src/view/com/composer/Composer.tsx:2114
 msgid "Add another post to thread"
 msgstr ""
 
@@ -1307,7 +1302,7 @@ msgid "alice@example.com"
 msgstr ""
 
 #. the default tab in the interests tab bar
-#: src/components/dms/ReactionsDialog.tsx:284
+#: src/components/dms/ReactionsDialog.tsx:288
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:202
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
@@ -1538,7 +1533,7 @@ msgstr ""
 msgid "An illustration showing that trusted verifiers verify individual user accounts."
 msgstr "An illustration showing that trusted verifiers verify individual user accounts."
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:172
+#: src/screens/Messages/components/InviteLinkDialog.tsx:171
 msgid "An invite link lets people join this group chat without being added directly. You control who can join the chat. You can disable the link at any time."
 msgstr "An invite link lets people join this group chat without being added directly. You control who can join the chat. You can disable the link at any time."
 
@@ -1620,13 +1615,13 @@ msgstr ""
 msgid "Anyone can join"
 msgstr "Anyone can join"
 
+#: src/screens/Messages/components/InviteLinkDialog.tsx:142
 #: src/screens/Messages/components/InviteLinkDialog.tsx:143
-#: src/screens/Messages/components/InviteLinkDialog.tsx:144
 msgid "Anyone can join instantly"
 msgstr "Anyone can join instantly"
 
+#: src/screens/Messages/components/InviteLinkDialog.tsx:147
 #: src/screens/Messages/components/InviteLinkDialog.tsx:148
-#: src/screens/Messages/components/InviteLinkDialog.tsx:149
 msgid "Anyone can request to join"
 msgstr "Anyone can request to join"
 
@@ -1636,7 +1631,7 @@ msgstr "Anyone can request to join"
 msgid "Anyone who follows me"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:446
+#: src/screens/Messages/components/InviteLinkDialog.tsx:441
 msgid "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 msgstr "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 
@@ -1785,7 +1780,7 @@ msgstr ""
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1590
+#: src/view/com/composer/Composer.tsx:1572
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
@@ -1864,14 +1859,14 @@ msgstr ""
 #: src/screens/Login/LoginForm.tsx:322
 #: src/screens/Login/OAuthSignin.tsx:176
 #: src/screens/Login/OAuthSignin.tsx:183
-#: src/screens/Login/PasswordSignin.tsx:285
-#: src/screens/Login/PasswordSignin.tsx:290
+#: src/screens/Login/PasswordSignin.tsx:289
+#: src/screens/Login/PasswordSignin.tsx:294
 #: src/screens/Login/SetNewPasswordForm.tsx:172
 #: src/screens/Login/SetNewPasswordForm.tsx:178
 #: src/screens/Messages/components/ChatDisabled.tsx:164
 #: src/screens/Messages/components/ChatDisabled.tsx:166
-#: src/screens/Messages/components/InviteLinkDialog.tsx:256
-#: src/screens/Messages/components/InviteLinkDialog.tsx:284
+#: src/screens/Messages/components/InviteLinkDialog.tsx:251
+#: src/screens/Messages/components/InviteLinkDialog.tsx:279
 #: src/screens/Messages/Inbox.tsx:242
 #: src/screens/Profile/Header/Shell.tsx:174
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:273
@@ -2301,8 +2296,8 @@ msgstr ""
 #: src/features/liveNow/components/GoLiveDialog.tsx:254
 #: src/lib/media/picker.tsx:38
 #: src/screens/Deactivated.tsx:150
-#: src/screens/Messages/components/InviteLinkDialog.tsx:468
-#: src/screens/Messages/components/InviteLinkDialog.tsx:472
+#: src/screens/Messages/components/InviteLinkDialog.tsx:463
+#: src/screens/Messages/components/InviteLinkDialog.tsx:467
 #: src/screens/Messages/ConversationSettings/prompts.tsx:70
 #: src/screens/Messages/ConversationSettings/prompts.tsx:94
 #: src/screens/Profile/Header/EditProfileDialog.tsx:237
@@ -2317,8 +2312,8 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:300
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
-#: src/view/com/composer/Composer.tsx:1670
-#: src/view/com/composer/Composer.tsx:1680
+#: src/view/com/composer/Composer.tsx:1652
+#: src/view/com/composer/Composer.tsx:1662
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:227
@@ -2341,9 +2336,9 @@ msgstr ""
 msgid "Cancelled"
 msgstr "Cancelled"
 
-#: src/components/PostControls/index.tsx:110
-#: src/components/PostControls/index.tsx:141
-#: src/components/PostControls/index.tsx:169
+#: src/components/PostControls/index.tsx:108
+#: src/components/PostControls/index.tsx:138
+#: src/components/PostControls/index.tsx:166
 #: src/state/shell/composer/index.tsx:112
 msgid "Cannot interact with a blocked user"
 msgstr ""
@@ -2437,8 +2432,8 @@ msgid "Changes to the starter pack will not be reflected in the list after creat
 msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:133
-#: src/Navigation.tsx:483
-#: src/view/shell/bottom-bar/BottomBar.tsx:228
+#: src/Navigation.tsx:485
+#: src/view/shell/bottom-bar/BottomBar.tsx:229
 #: src/view/shell/desktop/LeftNav.tsx:697
 #: src/view/shell/Drawer.tsx:469
 msgid "Chat"
@@ -2537,7 +2532,7 @@ msgid "Check my status"
 msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:307
-#: src/screens/Login/PasswordSignin.tsx:273
+#: src/screens/Login/PasswordSignin.tsx:277
 msgid "Check your email for a sign in code and enter it here."
 msgstr ""
 
@@ -2578,7 +2573,7 @@ msgstr ""
 msgid "Choose this color as your avatar"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:222
+#: src/screens/Messages/components/InviteLinkDialog.tsx:217
 msgid "Choose who can join this group chat and how."
 msgstr "Choose who can join this group chat and how."
 
@@ -2724,14 +2719,14 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:122
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:128
 #: src/components/verification/VerificationsDialog.tsx:147
-#: src/components/verification/VerifierDialog.tsx:145
+#: src/components/verification/VerifierDialog.tsx:146
 #: src/components/WhoCanReply.tsx:236
 #: src/components/WhoCanReply.tsx:243
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:45
 #: src/features/liveNow/components/EditLiveDialog.tsx:217
 #: src/features/liveNow/components/EditLiveDialog.tsx:223
+#: src/screens/Messages/components/InviteLinkDialog.tsx:487
 #: src/screens/Messages/components/InviteLinkDialog.tsx:492
-#: src/screens/Messages/components/InviteLinkDialog.tsx:497
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:288
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:293
 #: src/view/com/feeds/MissingFeed.tsx:211
@@ -2760,7 +2755,7 @@ msgstr ""
 #: src/components/dialogs/LanguageSelectDialog.tsx:354
 #: src/components/dialogs/NotificationSettingsDialog.tsx:94
 #: src/components/verification/VerificationsDialog.tsx:139
-#: src/components/verification/VerifierDialog.tsx:138
+#: src/components/verification/VerifierDialog.tsx:139
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:36
 msgid "Close dialog"
 msgstr ""
@@ -2801,7 +2796,7 @@ msgstr ""
 msgid "Closes password update alert"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1678
+#: src/view/com/composer/Composer.tsx:1660
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -2851,7 +2846,7 @@ msgid "Compose new post"
 msgstr ""
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1552
+#: src/view/com/composer/Composer.tsx:1534
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -2859,11 +2854,11 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2531
+#: src/view/com/composer/Composer.tsx:2513
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2533
+#: src/view/com/composer/Composer.tsx:2515
 msgid "Compressing video..."
 msgstr ""
 
@@ -2888,7 +2883,7 @@ msgstr ""
 
 #: src/components/dialogs/EmailDialog/components/TokenField.tsx:37
 #: src/screens/Login/LoginForm.tsx:284
-#: src/screens/Login/PasswordSignin.tsx:250
+#: src/screens/Login/PasswordSignin.tsx:254
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:187
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:191
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:244
@@ -3299,13 +3294,14 @@ msgstr ""
 
 #: src/components/WelcomeModal.tsx:153
 #: src/components/WelcomeModal.tsx:161
+#: src/screens/Messages/JoinRequest.tsx:300
 #: src/screens/Signup/index.tsx:135
 #: src/view/com/auth/SplashScreen.tsx:105
 #: src/view/com/auth/SplashScreen.web.tsx:113
-#: src/view/shell/bottom-bar/BottomBar.tsx:330
-#: src/view/shell/bottom-bar/BottomBar.tsx:335
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:238
+#: src/view/shell/bottom-bar/BottomBar.tsx:331
+#: src/view/shell/bottom-bar/BottomBar.tsx:336
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:243
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:248
 #: src/view/shell/NavSignupCard.tsx:49
 #: src/view/shell/NavSignupCard.tsx:54
 msgid "Create account"
@@ -3353,6 +3349,7 @@ msgstr ""
 msgid "Create moderation list"
 msgstr ""
 
+#: src/screens/Messages/JoinRequest.tsx:294
 #: src/view/com/auth/SplashScreen.tsx:98
 #: src/view/com/auth/SplashScreen.web.tsx:105
 msgid "Create new account"
@@ -3381,7 +3378,7 @@ msgstr ""
 #. placeholder {0}: i18n.date(appPassword.createdAt, { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', })
 #. placeholder {0}: i18n.date(createdAt, { dateStyle: 'long', timeStyle: 'short', })
 #. placeholder {0}: i18n.date(createdAt, { month: 'long', day: 'numeric', year: 'numeric', })
-#: src/screens/Messages/components/InviteLinkDialog.tsx:329
+#: src/screens/Messages/components/InviteLinkDialog.tsx:324
 #: src/screens/Messages/ConversationSettings/index.tsx:440
 #: src/screens/Settings/AppPasswords.tsx:174
 msgid "Created {0}"
@@ -3475,7 +3472,7 @@ msgstr ""
 msgid "Default icons"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:224
+#: src/components/dms/MessageOverlays.tsx:168
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:831
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:275
 #: src/screens/Settings/AppPasswords.tsx:213
@@ -3547,7 +3544,7 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:815
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:817
-#: src/view/com/composer/Composer.tsx:1564
+#: src/view/com/composer/Composer.tsx:1546
 msgid "Delete post"
 msgstr ""
 
@@ -3641,8 +3638,8 @@ msgstr ""
 msgid "Dim"
 msgstr ""
 
+#: src/screens/Messages/components/InviteLinkDialog.tsx:356
 #: src/screens/Messages/components/InviteLinkDialog.tsx:361
-#: src/screens/Messages/components/InviteLinkDialog.tsx:366
 msgid "Disable"
 msgstr "Disable"
 
@@ -3668,8 +3665,8 @@ msgstr ""
 msgid "Disable haptic feedback"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:456
-#: src/screens/Messages/components/InviteLinkDialog.tsx:462
+#: src/screens/Messages/components/InviteLinkDialog.tsx:451
+#: src/screens/Messages/components/InviteLinkDialog.tsx:457
 msgid "Disable link"
 msgstr "Disable link"
 
@@ -3681,7 +3678,7 @@ msgstr ""
 msgid "Disable replies entirely"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:443
+#: src/screens/Messages/components/InviteLinkDialog.tsx:438
 msgid "Disable this invite link?"
 msgstr "Disable this invite link?"
 
@@ -3694,9 +3691,9 @@ msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:101
 #: src/screens/Profile/Header/EditProfileDialog.tsx:85
-#: src/view/com/composer/Composer.tsx:1343
-#: src/view/com/composer/Composer.tsx:1387
-#: src/view/com/composer/Composer.tsx:1597
+#: src/view/com/composer/Composer.tsx:1325
+#: src/view/com/composer/Composer.tsx:1369
+#: src/view/com/composer/Composer.tsx:1579
 #: src/view/com/composer/drafts/DraftItem.tsx:242
 #: src/view/com/composer/drafts/DraftsButton.tsx:131
 msgid "Discard"
@@ -3707,14 +3704,14 @@ msgstr ""
 msgid "Discard changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1341
+#: src/view/com/composer/Composer.tsx:1323
 #: src/view/com/composer/drafts/DraftItem.tsx:239
 #: src/view/com/composer/drafts/DraftsButton.tsx:98
 msgid "Discard draft?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1358
-#: src/view/com/composer/Composer.tsx:1589
+#: src/view/com/composer/Composer.tsx:1340
+#: src/view/com/composer/Composer.tsx:1571
 msgid "Discard post?"
 msgstr ""
 
@@ -3751,7 +3748,7 @@ msgstr ""
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2452
+#: src/view/com/composer/Composer.tsx:2434
 msgid "Dismiss error"
 msgstr ""
 
@@ -4026,7 +4023,7 @@ msgctxt "button"
 msgid "Edit invite link"
 msgstr "Edit invite link"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:343
+#: src/screens/Messages/components/InviteLinkDialog.tsx:338
 msgid "Edit link settings"
 msgstr "Edit link settings"
 
@@ -4309,7 +4306,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2551
+#: src/view/com/composer/Composer.tsx:2533
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr ""
@@ -4404,7 +4401,7 @@ msgstr ""
 msgid "Expands or collapses post text"
 msgstr ""
 
-#: src/lib/api/index.ts:531
+#: src/lib/api/index.ts:512
 msgid "Expected uri to resolve to a record"
 msgstr ""
 
@@ -4534,7 +4531,7 @@ msgstr ""
 msgid "Failed to create conversation"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:99
+#: src/screens/Messages/components/InviteLinkDialog.tsx:98
 msgid "Failed to create invite link"
 msgstr "Failed to create invite link"
 
@@ -4561,7 +4558,7 @@ msgstr ""
 msgid "Failed to delete starter pack"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:122
+#: src/screens/Messages/components/InviteLinkDialog.tsx:121
 msgid "Failed to disable invite link"
 msgstr "Failed to disable invite link"
 
@@ -4574,11 +4571,11 @@ msgstr ""
 msgid "Failed to edit group chat name"
 msgstr "Failed to edit group chat name"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:112
+#: src/screens/Messages/components/InviteLinkDialog.tsx:111
 msgid "Failed to edit invite link"
 msgstr "Failed to edit invite link"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:132
+#: src/screens/Messages/components/InviteLinkDialog.tsx:131
 msgid "Failed to enable invite link"
 msgstr "Failed to enable invite link"
 
@@ -4716,7 +4713,7 @@ msgstr "Failed to rescind your request. Please try again."
 msgid "Failed to resolve location. Please try again."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:589
+#: src/view/com/composer/Composer.tsx:583
 msgid "Failed to save draft"
 msgstr ""
 
@@ -5232,12 +5229,12 @@ msgid "Forgot Password"
 msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:258
-#: src/screens/Login/PasswordSignin.tsx:224
+#: src/screens/Login/PasswordSignin.tsx:228
 msgid "Forgot password?"
 msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:269
-#: src/screens/Login/PasswordSignin.tsx:234
+#: src/screens/Login/PasswordSignin.tsx:238
 msgid "Forgot?"
 msgstr ""
 
@@ -5262,17 +5259,17 @@ msgstr ""
 msgid "Generate a starter pack"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:217
-#: src/screens/Messages/components/InviteLinkDialog.tsx:257
-#: src/screens/Messages/components/InviteLinkDialog.tsx:285
+#: src/screens/Messages/components/InviteLinkDialog.tsx:212
+#: src/screens/Messages/components/InviteLinkDialog.tsx:252
+#: src/screens/Messages/components/InviteLinkDialog.tsx:280
 msgid "Generate invite link"
 msgstr "Generate invite link"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:414
+#: src/screens/Messages/components/InviteLinkDialog.tsx:409
 msgid "Generate new invite link"
 msgstr "Generate new invite link"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:419
+#: src/screens/Messages/components/InviteLinkDialog.tsx:414
 msgid "Generate new link"
 msgstr "Generate new link"
 
@@ -5360,8 +5357,8 @@ msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:71
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:81
-#: src/screens/Messages/components/InviteLinkDialog.tsx:197
-#: src/screens/Messages/components/InviteLinkDialog.tsx:204
+#: src/screens/Messages/components/InviteLinkDialog.tsx:192
+#: src/screens/Messages/components/InviteLinkDialog.tsx:199
 msgid "Get started"
 msgstr ""
 
@@ -5370,7 +5367,7 @@ msgstr ""
 msgid "GIF"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2556
+#: src/view/com/composer/Composer.tsx:2538
 msgid "GIF uploaded"
 msgstr ""
 
@@ -5393,7 +5390,7 @@ msgstr ""
 #: src/screens/VideoFeed/components/Header.tsx:163
 #: src/screens/VideoFeed/index.tsx:1168
 #: src/screens/VideoFeed/index.tsx:1172
-#: src/view/com/auth/LoggedOut.tsx:105
+#: src/view/com/auth/LoggedOut.tsx:119
 #: src/view/com/profile/ProfileFollowers.tsx:178
 #: src/view/com/profile/ProfileFollowers.tsx:179
 #: src/view/screens/NotFound.tsx:51
@@ -5529,7 +5526,7 @@ msgstr ""
 msgid "Group chat"
 msgstr "Group chat"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:522
+#: src/screens/Messages/components/InviteLinkDialog.tsx:517
 msgid "Group chat invite link dialog"
 msgstr "Group chat invite link dialog"
 
@@ -5572,10 +5569,10 @@ msgstr "Group chats are not yet available"
 msgid "Group chats are now available"
 msgstr "Group chats are now available"
 
-#. placeholder {0}: import {useState} from 'react' import {View} from 'react-native' import { type ChatBskyGroupDefs, moderateProfile, type ModerationOpts, } from '@atproto/api' import {plural} from '@lingui/core/macro' import {Trans, useLingui} from '@lingui/react/macro' import {useOpenComposer} from '#/lib/hooks/useOpenComposer' import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name' import {shareUrl} from '#/lib/sharing' import {useCreateJoinLink} from '#/state/queries/messages/create-join-link' import {useDisableJoinLink} from '#/state/queries/messages/disable-join-link' import {useEditJoinLink} from '#/state/queries/messages/edit-join-link' import {useEnableJoinLink} from '#/state/queries/messages/enable-join-link' import {atoms as a, useTheme, web} from '#/alf' import { Button, ButtonIcon, ButtonText, StackedButton, } from '#/components/Button' import * as Dialog from '#/components/Dialog' import { type ConvoWithDetails, type GroupConvoMember, } from '#/components/dms/util' import * as Toggle from '#/components/forms/Toggle' import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow' import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon} from '#/components/icons/ArrowShareRight' import {ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon} from '#/components/icons/ChainLink' import {EditBig_Stroke2_Corner2_Rounded as EditIcon} from '#/components/icons/EditBig' import {Loader} from '#/components/Loader' import * as Toast from '#/components/Toast' import {Text} from '#/components/Typography' import {IS_WEB} from '#/env' import {CopyTextButton} from './CopyTextButton' import {EditTextButton} from './EditTextButton' enum Step { INFO, GENERATE, MANAGE, CONFIRM_DISABLE, } export function InviteLinkDialog({ convo, control, owner, isOwner, moderationOpts, }: { convo: Extract<ConvoWithDetails, {kind: 'group'}> control: Dialog.DialogOuterProps['control'] owner: GroupConvoMember isOwner: boolean moderationOpts: ModerationOpts }) { const t = useTheme() const {t: l, i18n} = useLingui() const ownerName = createSanitizedDisplayName( owner, false, moderateProfile(owner, moderationOpts).ui('displayName'), ) const {joinLink} = convo.details const defaultStep = joinLink ? Step.MANAGE : Step.INFO const defaultWhoCanJoin = joinLink ? joinLinkToKey(joinLink) : 'anyone' const [step, setStep] = useState(defaultStep) const [whoCanJoin, setWhoCanJoin] = useState(defaultWhoCanJoin) // Resync local state when the server-side join link rules change (mutation // success, refetch, or change from another client). Keyed on the rule string // so identity-only refetches don't bump a user mid-edit. const joinLinkRuleKey = joinLink ? joinLinkToKey(joinLink) : null const [prevKey, setPrevKey] = useState(joinLinkRuleKey) if (joinLinkRuleKey !== prevKey) { setStep(joinLinkRuleKey ? Step.MANAGE : Step.INFO) setWhoCanJoin(joinLinkRuleKey ?? 'anyone') setPrevKey(joinLinkRuleKey) } const {openComposer} = useOpenComposer() const {mutate: createJoinLink, isPending: isCreating} = useCreateJoinLink( convo.view.id, { onSuccess: () => { setStep(Step.MANAGE) }, onError: () => { Toast.show(l`Failed to create invite link`, { type: 'error', }) }, }, ) const {mutate: editJoinLink, isPending: isEditing} = useEditJoinLink( convo.view.id, { onSuccess: () => { setStep(Step.MANAGE) }, onError: () => { Toast.show(l`Failed to edit invite link`, { type: 'error', }) }, }, ) const {mutate: disableJoinLink, isPending: isDisabling} = useDisableJoinLink( convo.view.id, { onError: () => { Toast.show(l`Failed to disable invite link`, { type: 'error', }) }, }, ) const {mutate: enableJoinLink, isPending: isEnabling} = useEnableJoinLink( convo.view.id, { onError: () => { Toast.show(l`Failed to enable invite link`, { type: 'error', }) }, }, ) const isSaving = isCreating || isEditing const whoCanJoinOptions = [ { name: 'anyone', owner: l`Anyone can join instantly`, member: l`Anyone can join instantly`, }, { name: 'anyone:requireApproval', owner: l`Anyone can request to join`, member: l`Anyone can request to join`, }, { name: 'followedByOwner', owner: l`People I follow can join instantly`, member: l`People ${ownerName} follows can join instantly`, }, { name: 'followedByOwner:requireApproval', owner: l`People I follow can request to join`, member: l`People ${ownerName} follows can request to join`, }, ] let content: React.ReactNode = null let header: string | null = null switch (step) { case Step.INFO: { header = l`Invite link` content = ( <> <View style={[a.gap_lg]}> <Text style={[a.text_md, a.leading_snug]}> <Trans> An invite link lets people join this group chat without being added directly. You control who can join the chat. You can disable the link at any time. </Trans> </Text> <Text style={[a.text_md, a.leading_snug]}> <Trans> Group chats can only have a maximum of{' '} {plural(convo.details.memberLimit, { one: '# person', other: '# people', })} . </Trans> </Text> <Text style={[a.text_md, a.leading_snug]}> <Trans> Your name, avatar, the name of the group chat, and the number of members will be visible to everyone. </Trans> </Text> </View> <View style={[a.mt_4xl]}> <Button label={l`Get started`} color="primary" size="large" onPress={() => { setStep(Step.GENERATE) }}> <ButtonText> <Trans>Get started</Trans> </ButtonText> <ButtonIcon icon={ArrowRightIcon} /> </Button> </View> </> ) break } case Step.GENERATE: { const linkEnabled = joinLink?.enabledStatus === 'enabled' const linkHasChanged = linkEnabled && joinLinkRuleKey !== whoCanJoin header = linkEnabled ? l`Update invite link` : l`Generate invite link` content = ( <> <View> <Text style={[a.text_md]}> <Trans>Choose who can join this group chat and how.</Trans> </Text> </View> <View style={[a.mt_lg]}> <Toggle.Group label={l`Who can join this group chat and how`} type="radio" values={[whoCanJoin]} onChange={([value]) => setWhoCanJoin(value)}> <View style={[a.gap_xs]}> {whoCanJoinOptions.map(option => ( <Toggle.Item key={option.name} highlightRow label={isOwner ? option.owner : option.member} name={option.name} style={[a.flex_1]}> {({selected}) => ( <Toggle.RadioWithLabel label={isOwner ? option.owner : option.member} selected={selected} /> )} </Toggle.Item> ))} </View> </Toggle.Group> </View> <View style={[a.mt_4xl]}> <Button label={ linkEnabled ? linkHasChanged ? l`Update invite link` : l`Back` : l`Generate invite link` } color={linkEnabled && !linkHasChanged ? 'secondary' : 'primary'} size="large" disabled={isSaving} onPress={() => { const {joinRule, requireApproval} = keyToJoinLink(whoCanJoin) if (linkEnabled) { if (!linkHasChanged) { setStep(Step.MANAGE) return } editJoinLink({ joinRule, requireApproval, }) } else { createJoinLink({ joinRule, requireApproval, }) } }}> <ButtonText> {linkEnabled ? linkHasChanged ? l`Update invite link` : l`Back` : l`Generate invite link`} </ButtonText> {linkHasChanged && ( <ButtonIcon icon={isSaving ? Loader : ArrowRightIcon} /> )} </Button> </View> </> ) break } case Step.MANAGE: { const linkEnabled = joinLink?.enabledStatus === 'enabled' const linkDisabled = joinLink?.enabledStatus === 'disabled' const joinLinkURI = joinLink?.code ? `https://bsky.app/c/${joinLink.code}` : 'https://bsky.app/' const createdAt = joinLink ? new Date(joinLink.createdAt) : null const currentOption = whoCanJoinOptions.find( o => o.name === (joinLink ? joinLinkToKey(joinLink) : null), ) ?? whoCanJoinOptions[0] const ownerValue = currentOption?.owner ?? whoCanJoinOptions[0].owner const memberValue = currentOption?.member ?? whoCanJoinOptions[0].member header = linkEnabled ? l`Invite link` : l`Invite link disabled` content = ( <> <View style={[a.mt_lg]}> <CopyTextButton disabled={linkDisabled || !joinLink?.code} label={l`Invite link`} value={joinLinkURI}> <Text numberOfLines={1} style={[ a.mr_xs, a.text_md, linkDisabled ? t.atoms.text_contrast_low : t.atoms.text, ]}> {joinLinkURI} </Text> </CopyTextButton> {createdAt ? ( <Text style={[a.mt_xs, a.text_xs, t.atoms.text_contrast_medium]}> <Trans> Created{' '} {i18n.date(createdAt, { dateStyle: 'long', timeStyle: 'short', })} </Trans> </Text> ) : null} </View> {linkEnabled ? ( <View style={[a.mt_lg]}> {isOwner ? ( <EditTextButton label={l`Edit link settings`} value={ownerValue} onPress={() => setStep(Step.GENERATE)}> <View style={[a.flex_1]}> <Text numberOfLines={1} style={[a.text_sm]}> {ownerValue} </Text> </View> </EditTextButton> ) : ( <Text style={[a.text_sm]}>{memberValue}</Text> )} </View> ) : null} {linkEnabled ? ( <View style={[a.flex_row, a.justify_between, a.gap_sm, a.mt_lg]}> {isOwner ? ( <StackedButton label={l`Disable`} icon={ChainLinkBrokenIcon} color="negative_subtle" style={[a.flex_1, a.rounded_full]} onPress={() => setStep(Step.CONFIRM_DISABLE)}> <Trans>Disable</Trans> </StackedButton> ) : null} <StackedButton disabled={linkDisabled} label={l`Post link`} icon={EditIcon} color="primary_subtle" style={[a.flex_1, a.rounded_full]} onPress={() => { control.close(() => { openComposer({ text: joinLinkURI, logContext: 'Other', }) }) }}> <Trans>Post link</Trans> </StackedButton> <StackedButton disabled={linkDisabled} label={l`Share`} icon={ArrowShareRightIcon} color="primary_subtle" style={[a.flex_1, a.rounded_full]} onPress={() => { void shareUrl(joinLinkURI) }}> <Trans>Share</Trans> </StackedButton> </View> ) : ( <View style={[a.gap_md, a.mt_lg]}> <Button disabled={isEnabling || isDisabling} label={l`Re-enable invite link`} color="primary" size="large" onPress={() => { enableJoinLink() }}> <ButtonText> <Trans>Re-enable link</Trans> </ButtonText> {isEnabling && <ButtonIcon icon={Loader} />} </Button> <Button disabled={isEnabling || isDisabling} label={l`Generate new invite link`} color="secondary" size="large" onPress={() => setStep(Step.GENERATE)}> <ButtonText> <Trans>Generate new link</Trans> </ButtonText> </Button> </View> )} </> ) break } case Step.CONFIRM_DISABLE: { content = ( <> <View style={[a.align_center, a.justify_center, a.mb_lg]}> <ChainLinkBrokenIcon fill={t.palette.negative_500} size="3xl" /> </View> <Text style={[ a.flex_1, a.pb_sm, a.text_center, a.text_lg, a.font_bold, a.leading_snug, ]}> <Trans>Disable this invite link?</Trans> </Text> <Text style={[a.pb_2xl, a.text_center, a.text_sm, a.leading_snug]}> <Trans> Anyone who has it will no longer be able to join or request to join. You can always create a new one. </Trans> </Text> <View style={[a.w_full, a.gap_md, a.justify_end]}> <Button color="negative" disabled={isDisabling} size="large" label={l`Disable link`} onPress={() => { disableJoinLink() setStep(Step.MANAGE) }}> <ButtonText> <Trans>Disable link</Trans> </ButtonText> </Button> <Button color="secondary" size="large" label={l`Cancel`} onPress={() => { setStep(Step.MANAGE) }}> <ButtonText>{l`Cancel`}</ButtonText> </Button> </View> </> ) break } } if (!isOwner && (!joinLink || joinLink.enabledStatus === 'disabled')) { header = l`Invite link` content = ( <> <View style={[a.mt_lg]}> <Text style={[a.text_sm]}> <Trans>There is no invite link for this group chat.</Trans> </Text> </View> <View style={[a.gap_md, a.mt_lg]}> <Button label={l`Close`} color="primary" size="large" onPress={() => control.close()}> <ButtonText> <Trans>Close</Trans> </ButtonText> </Button> </View> </> ) } return ( <Dialog.Outer control={control} onClose={() => { setStep(defaultStep) setWhoCanJoin(defaultWhoCanJoin) }}> <Dialog.Handle /> <Dialog.ScrollableInner header={ <View> <View style={[IS_WEB ? [a.px_2xl, a.pt_xl] : {paddingTop: 10}]}> <Text style={[a.font_bold, a.text_2xl, a.mb_sm]}>{header}</Text> </View> <Dialog.Close /> </View> } label={l`Group chat invite link dialog`} style={web({maxWidth: 400})}> {content} </Dialog.ScrollableInner> </Dialog.Outer> ) } function joinLinkToKey(joinLink: ChatBskyGroupDefs.JoinLinkView): string { return `${joinLink.joinRule}${joinLink.requireApproval ? ':requireApproval' : ''}` } function keyToJoinLink( key: string, ): Pick<ChatBskyGroupDefs.JoinLinkView, 'joinRule' | 'requireApproval'> { const [joinRule, requireApproval] = key.split(':') return { joinRule, requireApproval: requireApproval === 'requireApproval', } } 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:179
-msgid "Group chats can only have a maximum of {0}."
-msgstr "Group chats can only have a maximum of {0}."
+#. placeholder {0}: convo.details.memberLimit
+#: src/screens/Messages/components/InviteLinkDialog.tsx:178
+msgid "Group chats can only have a maximum of {0, plural, other {# people}}."
+msgstr "Group chats can only have a maximum of {0, plural, other {# people}}."
 
 #: src/components/dialogs/SearchablePeopleList.tsx:569
 msgid "Group is locked"
@@ -5855,9 +5852,9 @@ msgstr ""
 msgid "Hold your horses! This feature isn't available to you yet. Please check back later."
 msgstr "Hold your horses! This feature isn't available to you yet. Please check back later."
 
-#: src/Navigation.tsx:733
-#: src/Navigation.tsx:754
-#: src/view/shell/bottom-bar/BottomBar.tsx:183
+#: src/Navigation.tsx:740
+#: src/Navigation.tsx:761
+#: src/view/shell/bottom-bar/BottomBar.tsx:184
 #: src/view/shell/desktop/LeftNav.tsx:666
 #: src/view/shell/Drawer.tsx:443
 msgid "Home"
@@ -5981,12 +5978,12 @@ msgid "If you're trying to change your handle or email, do so before you deactiv
 msgstr ""
 
 #. Ignore a request to join a chat
-#: src/screens/Messages/JoinRequests.tsx:485
+#: src/screens/Messages/JoinRequests.tsx:484
 msgctxt "button"
 msgid "Ignore"
 msgstr "Ignore"
 
-#: src/screens/Messages/JoinRequests.tsx:479
+#: src/screens/Messages/JoinRequests.tsx:478
 msgid "Ignore join request"
 msgstr "Ignore join request"
 
@@ -6136,7 +6133,7 @@ msgid "Input new password"
 msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:299
-#: src/screens/Login/PasswordSignin.tsx:265
+#: src/screens/Login/PasswordSignin.tsx:269
 msgid "Input the code which has been emailed to you"
 msgstr ""
 
@@ -6230,10 +6227,10 @@ msgstr ""
 msgid "Invite friends <0/>"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:167
-#: src/screens/Messages/components/InviteLinkDialog.tsx:309
-#: src/screens/Messages/components/InviteLinkDialog.tsx:315
-#: src/screens/Messages/components/InviteLinkDialog.tsx:482
+#: src/screens/Messages/components/InviteLinkDialog.tsx:166
+#: src/screens/Messages/components/InviteLinkDialog.tsx:304
+#: src/screens/Messages/components/InviteLinkDialog.tsx:310
+#: src/screens/Messages/components/InviteLinkDialog.tsx:477
 #: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:148
 #: src/screens/Messages/ConversationSettings/index.tsx:490
 msgid "Invite link"
@@ -6244,7 +6241,7 @@ msgid "Invite link created"
 msgstr "Invite link created"
 
 #: src/components/dms/getSystemMessageInfo.ts:138
-#: src/screens/Messages/components/InviteLinkDialog.tsx:309
+#: src/screens/Messages/components/InviteLinkDialog.tsx:304
 msgid "Invite link disabled"
 msgstr "Invite link disabled"
 
@@ -6294,7 +6291,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr ""
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2471
+#: src/view/com/composer/Composer.tsx:2453
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -6336,8 +6333,8 @@ msgstr "Join this group chat"
 msgid "Journalism"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1391
-#: src/view/com/composer/Composer.tsx:1401
+#: src/view/com/composer/Composer.tsx:1373
+#: src/view/com/composer/Composer.tsx:1383
 #: src/view/com/composer/drafts/DraftsButton.tsx:135
 msgid "Keep editing"
 msgstr ""
@@ -6411,7 +6408,7 @@ msgid "Latest"
 msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:169
-#: src/components/verification/VerifierDialog.tsx:134
+#: src/components/verification/VerifierDialog.tsx:135
 #: src/screens/Moderation/VerificationSettings.tsx:50
 #: src/screens/Profile/Header/EditProfileDialog.tsx:372
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:215
@@ -6466,7 +6463,7 @@ msgid "Learn more about this warning"
 msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:154
-#: src/components/verification/VerifierDialog.tsx:120
+#: src/components/verification/VerifierDialog.tsx:121
 msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr ""
@@ -7789,7 +7786,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:197
 #: src/screens/Settings/Settings.tsx:200
 #: src/view/screens/Notifications.tsx:128
-#: src/view/shell/bottom-bar/BottomBar.tsx:259
+#: src/view/shell/bottom-bar/BottomBar.tsx:260
 #: src/view/shell/desktop/LeftNav.tsx:686
 #: src/view/shell/Drawer.tsx:496
 msgid "Notifications"
@@ -7866,11 +7863,11 @@ msgstr "One of the selected recipients does not allow group chats."
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr "One of the selected recipients has blocked you and cannot be messaged."
 
-#: src/view/com/composer/Composer.tsx:798
+#: src/view/com/composer/Composer.tsx:792
 msgid "One or more GIFs is missing alt text."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:795
+#: src/view/com/composer/Composer.tsx:789
 msgid "One or more images is missing alt text."
 msgstr ""
 
@@ -7882,11 +7879,11 @@ msgstr ""
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 msgstr "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 
-#: src/view/com/composer/Composer.tsx:600
+#: src/view/com/composer/Composer.tsx:594
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:805
+#: src/view/com/composer/Composer.tsx:799
 msgid "One or more videos is missing alt text."
 msgstr ""
 
@@ -7974,7 +7971,7 @@ msgstr ""
 
 #: src/screens/Messages/components/MessageComposer.tsx:176
 #: src/screens/Messages/components/MessageInput.web.tsx:148
-#: src/view/com/composer/Composer.tsx:2109
+#: src/view/com/composer/Composer.tsx:2091
 msgid "Open emoji picker"
 msgstr ""
 
@@ -8061,6 +8058,10 @@ msgstr ""
 msgid "Open system log"
 msgstr ""
 
+#: src/components/intents/GroupChatJoinDialog.tsx:400
+msgid "Open this group chat"
+msgstr "Open this group chat"
+
 #. placeholder {0}: toShortUrl(website)
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:191
 msgid "Open website {0}"
@@ -8112,11 +8113,13 @@ msgstr ""
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr ""
 
+#: src/screens/Messages/JoinRequest.tsx:295
 #: src/view/com/auth/SplashScreen.tsx:100
 #: src/view/com/auth/SplashScreen.web.tsx:107
 msgid "Opens flow to create a new Bluesky account"
 msgstr ""
 
+#: src/screens/Messages/JoinRequest.tsx:281
 #: src/view/com/auth/SplashScreen.tsx:118
 #: src/view/com/auth/SplashScreen.web.tsx:121
 msgid "Opens flow to sign in to your existing Bluesky account"
@@ -8144,7 +8147,7 @@ msgid "Opens live status dialog"
 msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:259
-#: src/screens/Login/PasswordSignin.tsx:225
+#: src/screens/Login/PasswordSignin.tsx:229
 msgid "Opens password reset form"
 msgstr ""
 
@@ -8325,11 +8328,11 @@ msgstr ""
 msgid "People"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:154
+#: src/screens/Messages/components/InviteLinkDialog.tsx:153
 msgid "People {ownerName} follows can join instantly"
 msgstr "People {ownerName} follows can join instantly"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:159
+#: src/screens/Messages/components/InviteLinkDialog.tsx:158
 msgid "People {ownerName} follows can request to join"
 msgstr "People {ownerName} follows can request to join"
 
@@ -8352,11 +8355,11 @@ msgstr "People going to this event"
 msgid "People I follow"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:153
+#: src/screens/Messages/components/InviteLinkDialog.tsx:152
 msgid "People I follow can join instantly"
 msgstr "People I follow can join instantly"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:158
+#: src/screens/Messages/components/InviteLinkDialog.tsx:157
 msgid "People I follow can request to join"
 msgstr "People I follow can request to join"
 
@@ -8653,7 +8656,7 @@ msgstr ""
 msgid "Porn"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1752
+#: src/view/com/composer/Composer.tsx:1734
 msgctxt "action"
 msgid "Post"
 msgstr ""
@@ -8673,12 +8676,12 @@ msgstr ""
 msgid "Post a video"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1750
+#: src/view/com/composer/Composer.tsx:1732
 msgctxt "action"
 msgid "Post All"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1400
+#: src/view/com/composer/Composer.tsx:1382
 msgid "Post anyway"
 msgstr "Post anyway"
 
@@ -8699,7 +8702,7 @@ msgctxt "toast"
 msgid "Post deleted"
 msgstr ""
 
-#: src/lib/api/index.ts:195
+#: src/lib/api/index.ts:188
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr ""
 
@@ -8734,12 +8737,12 @@ msgstr ""
 msgid "Post language selection"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:371
-#: src/screens/Messages/components/InviteLinkDialog.tsx:383
+#: src/screens/Messages/components/InviteLinkDialog.tsx:366
+#: src/screens/Messages/components/InviteLinkDialog.tsx:378
 msgid "Post link"
 msgstr "Post link"
 
-#: src/view/com/composer/Composer.tsx:1214
+#: src/view/com/composer/Composer.tsx:1196
 msgid "Post metrics will be reset"
 msgstr "Post metrics will be reset"
 
@@ -8855,15 +8858,15 @@ msgstr ""
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2545
+#: src/view/com/composer/Composer.tsx:2527
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2547
+#: src/view/com/composer/Composer.tsx:2529
 msgid "Processing video..."
 msgstr ""
 
-#: src/lib/api/index.ts:68
+#: src/lib/api/index.ts:62
 msgid "Processing..."
 msgstr ""
 
@@ -8871,7 +8874,7 @@ msgstr ""
 msgid "profile"
 msgstr ""
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:302
+#: src/view/shell/bottom-bar/BottomBar.tsx:303
 #: src/view/shell/desktop/LeftNav.tsx:744
 #: src/view/shell/Drawer.tsx:80
 #: src/view/shell/Drawer.tsx:599
@@ -8909,22 +8912,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr ""
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1734
+#: src/view/com/composer/Composer.tsx:1716
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1729
+#: src/view/com/composer/Composer.tsx:1711
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1718
+#: src/view/com/composer/Composer.tsx:1700
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1723
+#: src/view/com/composer/Composer.tsx:1705
 msgid "Publish reply"
 msgstr ""
 
@@ -9003,11 +9006,11 @@ msgstr ""
 msgid "Re-attach quote"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:401
+#: src/screens/Messages/components/InviteLinkDialog.tsx:396
 msgid "Re-enable invite link"
 msgstr "Re-enable invite link"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:408
+#: src/screens/Messages/components/InviteLinkDialog.tsx:403
 msgid "Re-enable link"
 msgstr "Re-enable link"
 
@@ -9373,7 +9376,7 @@ msgstr ""
 msgid "Replies to this post are disabled."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1748
+#: src/view/com/composer/Composer.tsx:1730
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -9590,7 +9593,7 @@ msgstr "Requests"
 
 #: src/Navigation.tsx:495
 #: src/screens/Messages/JoinRequests.tsx:58
-#: src/screens/Messages/JoinRequests.tsx:421
+#: src/screens/Messages/JoinRequests.tsx:420
 msgid "Requests to join"
 msgstr "Requests to join"
 
@@ -9689,6 +9692,7 @@ msgstr ""
 #: src/screens/Messages/ChatList.tsx:354
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:220
+#: src/screens/Messages/JoinRequests.tsx:356
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:269
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:272
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:93
@@ -9766,32 +9770,32 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
 #: src/screens/SavedFeeds.tsx:315
-#: src/view/com/composer/Composer.tsx:1381
+#: src/view/com/composer/Composer.tsx:1363
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save changes"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1353
+#: src/view/com/composer/Composer.tsx:1335
 #: src/view/com/composer/drafts/DraftsButton.tsx:93
 msgid "Save changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1381
+#: src/view/com/composer/Composer.tsx:1363
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save draft"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1355
+#: src/view/com/composer/Composer.tsx:1337
 #: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Save draft?"
 msgstr ""
 
 #. Accessibility label for button to save an edited post
-#: src/view/com/composer/Composer.tsx:1711
+#: src/view/com/composer/Composer.tsx:1693
 msgid "Save edit"
 msgstr "Save edit"
 
-#: src/view/com/composer/Composer.tsx:1746
+#: src/view/com/composer/Composer.tsx:1728
 msgctxt "action"
 msgid "Save Edit"
 msgstr "Save Edit"
@@ -9880,7 +9884,7 @@ msgstr ""
 #: src/components/forms/SearchInput.tsx:53
 #: src/screens/Search/Shell.tsx:362
 #: src/screens/Search/Shell.tsx:525
-#: src/view/shell/bottom-bar/BottomBar.tsx:203
+#: src/view/shell/bottom-bar/BottomBar.tsx:204
 msgid "Search"
 msgstr ""
 
@@ -10382,8 +10386,8 @@ msgstr ""
 #: src/components/Post/Embed/ImageContextMenu.tsx:74
 #: src/components/StarterPack/QrCodeDialog.tsx:195
 #: src/screens/Hashtag.tsx:130
-#: src/screens/Messages/components/InviteLinkDialog.tsx:387
-#: src/screens/Messages/components/InviteLinkDialog.tsx:394
+#: src/screens/Messages/components/InviteLinkDialog.tsx:382
+#: src/screens/Messages/components/InviteLinkDialog.tsx:389
 #: src/screens/StarterPack/StarterPackScreen.tsx:447
 #: src/screens/Topic.tsx:90
 msgid "Share"
@@ -10602,17 +10606,19 @@ msgstr ""
 #: src/screens/Login/OAuthSignin.tsx:134
 #: src/screens/Login/OAuthSignin.tsx:142
 #: src/screens/Login/PasswordSignin.tsx:160
-#: src/screens/Login/PasswordSignin.tsx:296
-#: src/screens/Login/PasswordSignin.tsx:302
+#: src/screens/Login/PasswordSignin.tsx:300
+#: src/screens/Login/PasswordSignin.tsx:306
+#: src/screens/Messages/JoinRequest.tsx:280
+#: src/screens/Messages/JoinRequest.tsx:286
 #: src/screens/Search/SearchResults.tsx:316
 #: src/view/com/auth/SplashScreen.tsx:116
 #: src/view/com/auth/SplashScreen.tsx:122
 #: src/view/com/auth/SplashScreen.web.tsx:119
 #: src/view/com/auth/SplashScreen.web.tsx:127
-#: src/view/shell/bottom-bar/BottomBar.tsx:340
-#: src/view/shell/bottom-bar/BottomBar.tsx:345
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:248
+#: src/view/shell/bottom-bar/BottomBar.tsx:341
+#: src/view/shell/bottom-bar/BottomBar.tsx:346
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:253
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:258
 #: src/view/shell/NavSignupCard.tsx:59
 #: src/view/shell/NavSignupCard.tsx:64
 msgid "Sign in"
@@ -10647,6 +10653,10 @@ msgstr ""
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign in to Bluesky or create a new account"
 msgstr ""
+
+#: src/screens/Messages/JoinRequest.tsx:204
+msgid "Sign in to request access to this group chat."
+msgstr "Sign in to request access to this group chat."
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:583
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:585
@@ -10698,7 +10708,7 @@ msgstr ""
 msgid "Signed in as @{0}"
 msgstr ""
 
-#: src/screens/Login/PasswordSignin.tsx:297
+#: src/screens/Login/PasswordSignin.tsx:301
 msgid "Signs in with your password"
 msgstr "Signs in with your password"
 
@@ -10719,7 +10729,7 @@ msgstr ""
 msgid "Skip contact sharing and continue to the app"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1398
+#: src/view/com/composer/Composer.tsx:1380
 msgid "Skip empty posts?"
 msgstr "Skip empty posts?"
 
@@ -11443,7 +11453,7 @@ msgstr ""
 msgid "There is a limit to how often you can change your birthdate. You may need to wait a day or two before updating it again."
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:487
+#: src/screens/Messages/components/InviteLinkDialog.tsx:482
 msgid "There is no invite link for this group chat."
 msgstr "There is no invite link for this group chat."
 
@@ -11802,7 +11812,7 @@ msgstr "This person is blocking you"
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:878
+#: src/view/com/composer/Composer.tsx:872
 msgid "This post has already been edited."
 msgstr "This post has already been edited."
 
@@ -11822,7 +11832,7 @@ msgstr ""
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:996
+#: src/view/com/composer/Composer.tsx:978
 msgid "This post's author has disabled quote posts."
 msgstr ""
 
@@ -12408,7 +12418,7 @@ msgstr ""
 msgid "Unsupported clipboard content"
 msgstr "Unsupported clipboard content"
 
-#: src/view/com/composer/Composer.tsx:1491
+#: src/view/com/composer/Composer.tsx:1473
 msgid "Unsupported video type: {mimeType}"
 msgstr ""
 
@@ -12428,9 +12438,9 @@ msgstr ""
 msgid "Update email"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:217
-#: src/screens/Messages/components/InviteLinkDialog.tsx:255
-#: src/screens/Messages/components/InviteLinkDialog.tsx:283
+#: src/screens/Messages/components/InviteLinkDialog.tsx:212
+#: src/screens/Messages/components/InviteLinkDialog.tsx:250
+#: src/screens/Messages/components/InviteLinkDialog.tsx:278
 msgid "Update invite link"
 msgstr "Update invite link"
 
@@ -12491,20 +12501,20 @@ msgstr ""
 msgid "Upload from Library"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2538
+#: src/view/com/composer/Composer.tsx:2520
 msgid "Uploading GIF..."
 msgstr ""
 
-#: src/lib/api/index.ts:409
+#: src/lib/api/index.ts:393
 msgid "Uploading images..."
 msgstr ""
 
-#: src/lib/api/index.ts:480
-#: src/lib/api/index.ts:504
+#: src/lib/api/index.ts:461
+#: src/lib/api/index.ts:485
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2540
+#: src/view/com/composer/Composer.tsx:2522
 msgid "Uploading video..."
 msgstr ""
 
@@ -12793,7 +12803,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2558
+#: src/view/com/composer/Composer.tsx:2540
 msgid "Video uploaded"
 msgstr ""
 
@@ -12810,7 +12820,7 @@ msgstr ""
 msgid "Videos must be less than 3 minutes long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1088
+#: src/view/com/composer/Composer.tsx:1070
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr ""
@@ -12900,7 +12910,7 @@ msgstr ""
 msgid "View more trending videos"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1083
+#: src/view/com/composer/Composer.tsx:1065
 msgid "View post"
 msgstr ""
 
@@ -13196,7 +13206,7 @@ msgstr "We’re sorry, but your search could not be completed. Please try again 
 msgid "We're sorry, you cannot access this screen at this time."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:994
+#: src/view/com/composer/Composer.tsx:976
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr ""
 
@@ -13252,7 +13262,7 @@ msgid "What do you want to call your starter pack?"
 msgstr ""
 
 #: src/view/com/auth/SplashScreen.web.tsx:95
-#: src/view/com/composer/Composer.tsx:1451
+#: src/view/com/composer/Composer.tsx:1433
 #: src/view/com/feeds/ComposerPrompt.tsx:193
 msgid "What's up?"
 msgstr ""
@@ -13265,7 +13275,7 @@ msgstr ""
 msgid "Who can interact with this post?"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:227
+#: src/screens/Messages/components/InviteLinkDialog.tsx:222
 msgid "Who can join this group chat and how"
 msgstr "Who can join this group chat and how"
 
@@ -13338,7 +13348,7 @@ msgstr "Would you like to block this user and/or leave this conversation?"
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1369
+#: src/view/com/composer/Composer.tsx:1351
 msgid "Would you like to save this as a draft to edit later?"
 msgstr ""
 
@@ -13347,12 +13357,12 @@ msgstr ""
 msgid "Write a post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1551
+#: src/view/com/composer/Composer.tsx:1533
 msgid "Write post"
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:91
-#: src/view/com/composer/Composer.tsx:1449
+#: src/view/com/composer/Composer.tsx:1431
 msgid "Write your reply"
 msgstr ""
 
@@ -13519,7 +13529,7 @@ msgstr ""
 msgid "You can now sign in with your new password."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1374
+#: src/view/com/composer/Composer.tsx:1356
 msgid "You can only save drafts up to 1000 characters."
 msgstr ""
 
@@ -13658,7 +13668,7 @@ msgstr ""
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1364
+#: src/view/com/composer/Composer.tsx:1346
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr ""
 
@@ -13863,7 +13873,7 @@ msgstr ""
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:587
+#: src/view/com/composer/Composer.tsx:581
 msgid "You've reached the maximum number of drafts"
 msgstr ""
 
@@ -14019,7 +14029,7 @@ msgstr ""
 msgid "Your muted words"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:189
+#: src/screens/Messages/components/InviteLinkDialog.tsx:184
 msgid "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone."
 msgstr "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone."
 
@@ -14031,15 +14041,15 @@ msgstr ""
 msgid "Your password must be at least 8 characters long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1079
+#: src/view/com/composer/Composer.tsx:1061
 msgid "Your post was sent"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:886
+#: src/view/com/composer/Composer.tsx:880
 msgid "Your post was updated"
 msgstr "Your post was updated"
 
-#: src/view/com/composer/Composer.tsx:1076
+#: src/view/com/composer/Composer.tsx:1058
 msgid "Your posts were sent"
 msgstr ""
 
@@ -14060,7 +14070,7 @@ msgstr ""
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1078
+#: src/view/com/composer/Composer.tsx:1060
 msgid "Your reply was sent"
 msgstr ""
 
@@ -14073,7 +14083,7 @@ msgstr ""
 msgid "Your selected interests help us serve you content you care about."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1399
+#: src/view/com/composer/Composer.tsx:1381
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 
