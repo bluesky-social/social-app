@@ -576,6 +576,7 @@ function SettingsHeader({
       <LeaveAndLockChatPrompt
         control={leaveAndLockChatPrompt}
         groupName={groupName}
+        lockedPermanently={lockStatus === 'locked-permanently'}
         onConfirm={() => {
           void leaveAndLockConvo()
         }}
