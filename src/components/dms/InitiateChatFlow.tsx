@@ -10,8 +10,10 @@ import {LayoutAnimation, type TextInput, View} from 'react-native'
 import {moderateProfile, type ModerationOpts} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {MAX_GROUP_NAME_GRAPHEME_LENGTH} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useChatActorStatusQuery} from '#/state/queries/messages/get-status'
@@ -212,6 +214,7 @@ export function InitiateChatFlow({
 
   const {data: chatStatus} = useChatActorStatusQuery()
   const canCreateGroups = chatStatus?.canCreateGroups ?? true
+  const groupMemberLimit = chatStatus?.groupMemberLimit
 
   const [searchText, setSearchText] = useState('')
 
@@ -458,6 +461,11 @@ export function InitiateChatFlow({
     }
   }, [])
 
+  const groupNameTooLong = isOverMaxGraphemeCount({
+    text: groupName,
+    maxCount: MAX_GROUP_NAME_GRAPHEME_LENGTH,
+  })
+
   let buttonLabel = l`Continue to group name`
   let buttonText = l`Next`
   let handleButtonPress = handlePressNext
@@ -470,7 +478,7 @@ export function InitiateChatFlow({
       buttonText = l`Create`
       handleButtonPress = handlePressConfirm
       showButton = true
-      isButtonDisabled = groupName === ''
+      isButtonDisabled = groupName === '' || groupNameTooLong
       break
   }
 
@@ -564,7 +572,7 @@ export function InitiateChatFlow({
             {chatState === ChatState.GROUP_NAME ? (
               <View
                 style={[a.w_full, a.relative, web(a.pt_md), native(a.pt_xl)]}>
-                <TextField.Root>
+                <TextField.Root isInvalid={groupNameTooLong}>
                   <TextField.Input
                     label={l`Group name`}
                     value={groupName}
@@ -573,6 +581,7 @@ export function InitiateChatFlow({
                     selectTextOnFocus={IS_NATIVE}
                     autoFocus={false}
                     accessibilityRole="text"
+                    clearButtonMode="while-editing"
                     autoCorrect={false}
                     autoComplete="off"
                     autoCapitalize="none"
@@ -582,6 +591,20 @@ export function InitiateChatFlow({
                     }
                   />
                 </TextField.Root>
+                {groupNameTooLong ? (
+                  <Text
+                    style={[
+                      a.text_sm,
+                      a.mt_xs,
+                      a.font_semi_bold,
+                      {color: t.palette.negative_400},
+                    ]}>
+                    <Trans>
+                      Group name is too long. The maximum number of characters
+                      is {MAX_GROUP_NAME_GRAPHEME_LENGTH}.
+                    </Trans>
+                  </Text>
+                ) : null}
               </View>
             ) : (
               <UserSearchInput
@@ -622,6 +645,8 @@ export function InitiateChatFlow({
       handleButtonPress,
       buttonText,
       groupName,
+      groupNameTooLong,
+      t.palette.negative_400,
       searchText,
       control,
       showChatProfileTabs,
@@ -664,6 +689,11 @@ export function InitiateChatFlow({
       values={groupChatDids}
       onChange={setGroupChatMembers}
       type="checkbox"
+      maxSelections={
+        // groupMemberLimit counts the creator, who is added implicitly, so
+        // reserve one slot for them
+        groupMemberLimit ? groupMemberLimit - 1 : undefined
+      }
       label={
         chatState === ChatState.NEW_GROUP_CHAT
           ? l`Select group chat members`

@@ -67,6 +67,8 @@ export const MAX_DRAFT_GRAPHEME_LENGTH = 1000
 
 export const MAX_DM_GRAPHEME_LENGTH = 1000
 
+export const MAX_GROUP_NAME_GRAPHEME_LENGTH = 50
+
 // Recommended is 100 per: https://www.w3.org/WAI/GL/WCAG20/tests/test3.html
 // but increasing limit per user feedback
 export const MAX_ALT_TEXT = 2000
