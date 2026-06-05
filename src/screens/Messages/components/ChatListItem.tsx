@@ -203,13 +203,11 @@ function GroupChatItem({
     <BaseChatItem
       convo={convo}
       avatar={
-        <View style={[a.pointer_events_none]}>
-          <AvatarBubbles
-            profiles={convo.members}
-            size={isWithinLeftPanel ? 48 : 52}
-            moderationOpts={moderationOpts}
-          />
-        </View>
+        <AvatarBubbles
+          profiles={convo.members}
+          size={isWithinLeftPanel ? 48 : 52}
+          moderationOpts={moderationOpts}
+        />
       }
       title={chatName}
       accessibilityHint={l`Go to the group chat named "${chatName}"`}
@@ -477,6 +475,7 @@ function BaseChatItem({
               a.z_10,
               a.absolute,
               {top: tokens.space.md, left: tokens.space.lg},
+              isGroupConvo && a.pointer_events_none,
             ]}>
             {avatar}
           </View>
