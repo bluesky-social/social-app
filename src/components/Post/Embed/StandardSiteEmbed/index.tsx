@@ -79,13 +79,15 @@ export const StandardSiteEmbed = ({
     onEmbedInteractionCallback?.()
     ax.metric('embed:standardSite:article:press', {url: view.uri})
   }
-  const onLongPress = () => {
-    if (view.uri && IS_NATIVE) {
-      playHaptic('Heavy')
-      shareUrl(view.uri)
-      ax.metric('embed:standardSite:article:longPress', {url: view.uri})
-    }
-  }
+  const onLongPress = IS_NATIVE
+    ? () => {
+        if (view.uri) {
+          playHaptic('Heavy')
+          void shareUrl(view.uri)
+          ax.metric('embed:standardSite:article:longPress', {url: view.uri})
+        }
+      }
+    : undefined
   const onPressPublication = () => {
     playHaptic('Light')
     onEmbedInteractionCallback?.()
@@ -93,15 +95,17 @@ export const StandardSiteEmbed = ({
       url: view.source?.uri || '',
     })
   }
-  const onLongPressPublication = () => {
-    if (view.source?.uri && IS_NATIVE) {
-      playHaptic('Heavy')
-      shareUrl(view.source.uri)
-      ax.metric('embed:standardSite:publication:longPress', {
-        url: view.source.uri,
-      })
-    }
-  }
+  const onLongPressPublication = IS_NATIVE
+    ? () => {
+        if (view.source?.uri) {
+          playHaptic('Heavy')
+          void shareUrl(view.source.uri)
+          ax.metric('embed:standardSite:publication:longPress', {
+            url: view.source.uri,
+          })
+        }
+      }
+    : undefined
 
   if (isStandardPublication) {
     return (
@@ -465,21 +469,23 @@ export function SubscribeButton({
     }
   }
 
-  const onLongPress = () => {
-    if (view.source?.uri && IS_NATIVE) {
-      playHaptic('Heavy')
-      shareUrl(view.source.uri)
-      if (highlightedPublisher) {
-        ax.metric('embed:standardSite:subscribe:longPress', {
-          url: view.source?.uri || '',
-        })
-      } else {
-        ax.metric('embed:standardSite:publicationCta:longPress', {
-          url: view.source?.uri || '',
-        })
+  const onLongPress = IS_NATIVE
+    ? () => {
+        if (view.source?.uri) {
+          playHaptic('Heavy')
+          void shareUrl(view.source.uri)
+          if (highlightedPublisher) {
+            ax.metric('embed:standardSite:subscribe:longPress', {
+              url: view.source?.uri || '',
+            })
+          } else {
+            ax.metric('embed:standardSite:publicationCta:longPress', {
+              url: view.source?.uri || '',
+            })
+          }
+        }
       }
-    }
-  }
+    : undefined
 
   const button = (
     <Link
