@@ -60,7 +60,7 @@ import {useNavigation} from '@react-navigation/native'
 import {useQueries, useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
-import {EmbeddingDisabledError, type ResolvedLink} from '#/lib/api/resolve'
+import {EmbeddingDisabledError} from '#/lib/api/resolve'
 import {useAppState} from '#/lib/appState'
 import {retry} from '#/lib/async/retry'
 import {until} from '#/lib/async/until'
@@ -95,7 +95,7 @@ import {
 } from '#/state/preferences/languages'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
-import {RQKEY_LINK} from '#/state/queries/resolve-link'
+import {resolveLinkQueryOptions} from '#/state/queries/resolve-link'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
@@ -869,20 +869,18 @@ export const ComposePost = ({
   // Subscribe to the resolve-link cache for any link URIs in the thread so we
   // can detect chat invites that resolved to no preview (revoked/expired) and
   // block publishing - otherwise the post would go out without the embed.
-  const linkUris = thread.posts.flatMap(post =>
-    post.embed.link ? [post.embed.link.uri] : [],
-  )
+  const linkUris = thread.posts
+    .filter(post => post.embed.link)
+    .map(post => post.embed.link!.uri)
   const linkQueries = useQueries({
     queries: linkUris.map(uri => ({
-      queryKey: RQKEY_LINK(uri),
-      queryFn: undefined,
+      ...resolveLinkQueryOptions(agent, uri),
       enabled: false,
     })),
   })
-  const hasUnavailableChatInvite = linkQueries.some(q => {
-    const data = q.data as ResolvedLink | undefined
-    return data?.type === 'chat-invite' && !data.view
-  })
+  const hasUnavailableChatInvite = linkQueries.some(
+    q => q.data?.type === 'chat-invite' && !q.data.view,
+  )
 
   const canPost =
     !missingAltError &&
