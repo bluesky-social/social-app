@@ -156,3 +156,17 @@ jobs:
         with:
           header: fingerprint-diff
           delete: true
+
+      - name: 🏷️ Label as fingerprint changed
+        if: ${{ steps.fingerprint.outputs.includes-changes }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: gh pr edit "$PR_NUMBER" --add-label "bot: fingerprint changed"
+
+      - name: 🏷️ Remove fingerprint changed label
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: gh pr edit "$PR_NUMBER" --remove-label "bot: fingerprint changed" || true
