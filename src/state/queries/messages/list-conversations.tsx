@@ -23,6 +23,12 @@ import {parseConvoView} from '#/components/dms/util'
 import * as bsky from '#/types/bsky'
 import {RQKEY as CONVO_KEY} from './conversation'
 import {useLeftConvos} from './leave-conversation'
+import {
+  type ConvoRequestListQueryData,
+  optimisticDelete as optimisticDeleteRequest,
+  optimisticUpdate as optimisticUpdateRequest,
+  RQKEY_ROOT as REQUESTS_RQKEY_ROOT,
+} from './list-conversation-requests'
 import {listConvoMembersQueryKey} from './list-convo-members'
 
 const DEFAULT_LIMIT = 10
@@ -171,6 +177,37 @@ export function ListConvosProviderInner({
             {queryKey: [RQKEY_ROOT]},
             old => optimisticUpdate(convoId, old, fn),
           )
+          queryClient.setQueriesData<ConvoRequestListQueryData>(
+            {queryKey: [REQUESTS_RQKEY_ROOT]},
+            old => optimisticUpdateRequest(convoId, old, fn),
+          )
+        }
+
+        function updateConvoInAllLists(
+          convoId: string,
+          fn: (
+            convo: ChatBskyConvoDefs.ConvoView,
+          ) => ChatBskyConvoDefs.ConvoView,
+        ) {
+          queryClient.setQueriesData<ConvoListQueryData>(
+            {queryKey: [RQKEY_ROOT]},
+            old => optimisticUpdate(convoId, old, fn),
+          )
+          queryClient.setQueriesData<ConvoRequestListQueryData>(
+            {queryKey: [REQUESTS_RQKEY_ROOT]},
+            old => optimisticUpdateRequest(convoId, old, fn),
+          )
+        }
+
+        function deleteConvoFromAllLists(convoId: string) {
+          queryClient.setQueriesData<ConvoListQueryData>(
+            {queryKey: [RQKEY_ROOT]},
+            old => optimisticDelete(convoId, old),
+          )
+          queryClient.setQueriesData<ConvoRequestListQueryData>(
+            {queryKey: [REQUESTS_RQKEY_ROOT]},
+            old => optimisticDeleteRequest(convoId, old),
+          )
         }
 
         function handleMemberAdded(
@@ -220,35 +257,26 @@ export function ListConvosProviderInner({
           if (ChatBskyConvoDefs.isLogBeginConvo(log)) {
             debouncedRefetch()
           } else if (ChatBskyConvoDefs.isLogLeaveConvo(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) => optimisticDelete(log.convoId, old),
-            )
+            deleteConvoFromAllLists(log.convoId)
           } else if (ChatBskyConvoDefs.isLogDeleteMessage(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                optimisticUpdate(log.convoId, old, convo => {
-                  if (
-                    (ChatBskyConvoDefs.isDeletedMessageView(log.message) ||
-                      ChatBskyConvoDefs.isMessageView(log.message)) &&
-                    (ChatBskyConvoDefs.isDeletedMessageView(
-                      convo.lastMessage,
-                    ) ||
-                      ChatBskyConvoDefs.isMessageView(convo.lastMessage))
-                  ) {
-                    return log.message.id === convo.lastMessage.id
-                      ? {
-                          ...convo,
-                          rev: log.rev,
-                          lastMessage: log.message,
-                        }
-                      : convo
-                  } else {
-                    return convo
-                  }
-                }),
-            )
+            updateConvoInAllLists(log.convoId, convo => {
+              if (
+                (ChatBskyConvoDefs.isDeletedMessageView(log.message) ||
+                  ChatBskyConvoDefs.isMessageView(log.message)) &&
+                (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage) ||
+                  ChatBskyConvoDefs.isMessageView(convo.lastMessage))
+              ) {
+                return log.message.id === convo.lastMessage.id
+                  ? {
+                      ...convo,
+                      rev: log.rev,
+                      lastMessage: log.message,
+                    }
+                  : convo
+              } else {
+                return convo
+              }
+            })
           } else if (ChatBskyConvoDefs.isLogCreateMessage(log)) {
             // Store in a new var to avoid TS errors due to closures.
             const logRef: ChatBskyConvoDefs.LogCreateMessage = log
@@ -335,27 +363,24 @@ export function ListConvosProviderInner({
               )
             } else if (updatedConvo.status === 'request') {
               queryClient.setQueriesData({queryKey: RQKEY('request')}, updateFn)
+              // also move-to-top in the new requests cache
+              queryClient.setQueriesData<ConvoRequestListQueryData>(
+                {queryKey: [REQUESTS_RQKEY_ROOT]},
+                old => moveConvoToTopInRequests(updatedConvo, old),
+              )
             }
           } else if (ChatBskyConvoDefs.isLogReadMessage(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                optimisticUpdate(log.convoId, old, convo => ({
-                  ...convo,
-                  unreadCount: 0,
-                  rev: log.rev,
-                })),
-            )
+            updateConvoInAllLists(log.convoId, convo => ({
+              ...convo,
+              unreadCount: 0,
+              rev: log.rev,
+            }))
           } else if (ChatBskyConvoDefs.isLogReadConvo(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                optimisticUpdate(log.convoId, old, convo => ({
-                  ...convo,
-                  unreadCount: 0,
-                  rev: log.rev,
-                })),
-            )
+            updateConvoInAllLists(log.convoId, convo => ({
+              ...convo,
+              unreadCount: 0,
+              rev: log.rev,
+            }))
           } else if (ChatBskyConvoDefs.isLogAcceptConvo(log)) {
             const requests = queryClient.getQueryData<ConvoListQueryData>(
               RQKEY('request'),
@@ -372,6 +397,11 @@ export function ListConvosProviderInner({
             queryClient.setQueryData(
               RQKEY('request'),
               (old?: ConvoListQueryData) => optimisticDelete(log.convoId, old),
+            )
+            // also remove from the new requests cache
+            queryClient.setQueriesData<ConvoRequestListQueryData>(
+              {queryKey: [REQUESTS_RQKEY_ROOT]},
+              old => optimisticDeleteRequest(log.convoId, old),
             )
             queryClient.setQueriesData(
               {queryKey: RQKEY('accepted')},
@@ -398,55 +428,50 @@ export function ListConvosProviderInner({
               },
             )
           } else if (ChatBskyConvoDefs.isLogMuteConvo(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                optimisticUpdate(log.convoId, old, convo => ({
-                  ...convo,
-                  muted: true,
-                  rev: log.rev,
-                })),
-            )
+            updateConvoInAllLists(log.convoId, convo => ({
+              ...convo,
+              muted: true,
+              rev: log.rev,
+            }))
           } else if (ChatBskyConvoDefs.isLogUnmuteConvo(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                optimisticUpdate(log.convoId, old, convo => ({
-                  ...convo,
-                  muted: false,
-                  rev: log.rev,
-                })),
-            )
+            updateConvoInAllLists(log.convoId, convo => ({
+              ...convo,
+              muted: false,
+              rev: log.rev,
+            }))
           } else if (ChatBskyConvoDefs.isLogLockConvo(log)) {
-            mutateConvoView(log.convoId, convo =>
-              ChatBskyConvoDefs.isGroupConvo(convo.kind)
-                ? {
-                    ...convo,
-                    kind: {...convo.kind, lockStatus: 'locked'},
-                    rev: log.rev,
-                  }
-                : {...convo, rev: log.rev},
-            )
+            updateConvoInAllLists(log.convoId, convo => {
+              if (ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
+                return {
+                  ...convo,
+                  kind: {...convo.kind, lockStatus: 'locked'},
+                  rev: log.rev,
+                }
+              }
+              return {...convo, rev: log.rev}
+            })
           } else if (ChatBskyConvoDefs.isLogUnlockConvo(log)) {
-            mutateConvoView(log.convoId, convo =>
-              ChatBskyConvoDefs.isGroupConvo(convo.kind)
-                ? {
-                    ...convo,
-                    kind: {...convo.kind, lockStatus: 'unlocked'},
-                    rev: log.rev,
-                  }
-                : {...convo, rev: log.rev},
-            )
+            updateConvoInAllLists(log.convoId, convo => {
+              if (ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
+                return {
+                  ...convo,
+                  kind: {...convo.kind, lockStatus: 'unlocked'},
+                  rev: log.rev,
+                }
+              }
+              return {...convo, rev: log.rev}
+            })
           } else if (ChatBskyConvoDefs.isLogLockConvoPermanently(log)) {
-            mutateConvoView(log.convoId, convo =>
-              ChatBskyConvoDefs.isGroupConvo(convo.kind)
-                ? {
-                    ...convo,
-                    kind: {...convo.kind, lockStatus: 'locked-permanently'},
-                    rev: log.rev,
-                  }
-                : {...convo, rev: log.rev},
-            )
+            updateConvoInAllLists(log.convoId, convo => {
+              if (ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
+                return {
+                  ...convo,
+                  kind: {...convo.kind, lockStatus: 'locked-permanently'},
+                  rev: log.rev,
+                }
+              }
+              return {...convo, rev: log.rev}
+            })
           } else if (
             ChatBskyConvoDefs.isLogCreateJoinLink(log) ||
             ChatBskyConvoDefs.isLogEditJoinLink(log) ||
@@ -459,33 +484,25 @@ export function ListConvosProviderInner({
             ChatBskyConvoDefs.isLogApproveJoinRequest(log) ||
             ChatBskyConvoDefs.isLogRejectJoinRequest(log)
           ) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                updateGroupConvoJoinRequestCount(log, old, -1),
+            updateConvoInAllLists(log.convoId, convo =>
+              applyJoinRequestCountDelta(convo, log.rev, -1),
             )
           } else if (ChatBskyConvoDefs.isLogIncomingJoinRequest(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                updateGroupConvoJoinRequestCount(log, old, 1),
+            updateConvoInAllLists(log.convoId, convo =>
+              applyJoinRequestCountDelta(convo, log.rev, 1),
             )
           } else if (ChatBskyConvoDefs.isLogOutgoingJoinRequest(log)) {
             // Viewer isn't in the chat yet, no need to do anything
           } else if (ChatBskyConvoDefs.isLogAddReaction(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                optimisticUpdate(log.convoId, old, convo => ({
-                  ...convo,
-                  lastReaction: {
-                    $type: 'chat.bsky.convo.defs#messageAndReactionView',
-                    reaction: log.reaction,
-                    message: log.message,
-                  },
-                  rev: log.rev,
-                })),
-            )
+            updateConvoInAllLists(log.convoId, convo => ({
+              ...convo,
+              lastReaction: {
+                $type: 'chat.bsky.convo.defs#messageAndReactionView',
+                reaction: log.reaction,
+                message: log.message,
+              },
+              rev: log.rev,
+            }))
           } else if (ChatBskyConvoDefs.isLogAddMember(log)) {
             const data = log.message.data
             if (
@@ -739,27 +756,53 @@ function optimisticUpdate(
   }
 }
 
-function updateGroupConvoJoinRequestCount(
-  log: {convoId: string; rev: string},
-  old: ConvoListQueryData | undefined,
+function applyJoinRequestCountDelta(
+  convo: ChatBskyConvoDefs.ConvoView,
+  rev: string,
   delta: 1 | -1,
-) {
-  return optimisticUpdate(log.convoId, old, convo => {
-    // Join requests are only meaningful for group convos.
-    if (!ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
-      return {...convo, rev: log.rev}
+): ChatBskyConvoDefs.ConvoView {
+  // Join requests are only meaningful for group convos.
+  if (!ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
+    return {...convo, rev}
+  }
+  const current = convo.kind.joinRequestCount ?? 0
+  const next = Math.max(0, current + delta)
+  return {
+    ...convo,
+    kind: {
+      ...convo.kind,
+      joinRequestCount: next === 0 ? undefined : next,
+    },
+    rev,
+  }
+}
+
+function moveConvoToTopInRequests(
+  updatedConvo: ChatBskyConvoDefs.ConvoView,
+  old: ConvoRequestListQueryData | undefined,
+): ConvoRequestListQueryData | undefined {
+  if (!old) return old
+  const typedConvo: ConvoRequestListQueryData['pages'][number]['requests'][number] =
+    {
+      $type: 'chat.bsky.convo.defs#convoView',
+      ...updatedConvo,
     }
-    const current = convo.kind.joinRequestCount ?? 0
-    const next = Math.max(0, current + delta)
-    return {
-      ...convo,
-      kind: {
-        ...convo.kind,
-        joinRequestCount: next === 0 ? undefined : next,
-      },
-      rev: log.rev,
-    }
-  })
+  return {
+    ...old,
+    pages: old.pages.map((page, i) => {
+      const filtered = page.requests.filter(
+        item =>
+          !ChatBskyConvoDefs.isConvoView(item) || item.id !== updatedConvo.id,
+      )
+      if (i === 0) {
+        return {
+          ...page,
+          requests: [typedConvo, ...filtered],
+        }
+      }
+      return {...page, requests: filtered}
+    }),
+  }
 }
 
 function removeMemberFromConvoView(

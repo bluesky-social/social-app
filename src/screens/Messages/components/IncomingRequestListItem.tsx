@@ -11,7 +11,7 @@ import {Text} from '#/components/Typography'
 import {ChatListItem, ChatListItemPortal} from './ChatListItem'
 import {AcceptChatButton, DeleteChatButton, RejectMenu} from './RequestButtons'
 
-export function RequestListItem({
+export function IncomingRequestListItem({
   convo: convoView,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
