@@ -57,11 +57,7 @@ jobs:
           node-version-file: package.json
           cache: pnpm
       - name: pnpm install
-        uses: Wandalen/wretry.action@master
-        with:
-          command: pnpm install --frozen-lockfile
-          attempt_limit: 3
-          attempt_delay: 2000
+        run: pnpm install --frozen-lockfile
       - name: Check & compile i18n
         run: pnpm intl:build
       - name: Lint checks
@@ -99,11 +95,7 @@ jobs:
           node-version-file: package.json
           cache: pnpm
       - name: pnpm install
-        uses: Wandalen/wretry.action@master
-        with:
-          command: pnpm install --frozen-lockfile
-          attempt_limit: 3
-          attempt_delay: 2000
+        run: pnpm install --frozen-lockfile
       - name: Check & compile i18n
         run: pnpm intl:build
       - name: Run tests
