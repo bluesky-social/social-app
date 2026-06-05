@@ -156,10 +156,6 @@ let List = forwardRef<ListMethods, ListProps>(
     return (
       <FlatList_INTERNAL
         showsVerticalScrollIndicator // overridable
-        // Anchor the currently-visible item across content relayouts so that
-        // changing the viewport size (e.g. device rotation) doesn't lose the
-        // scroll position as items reflow to the new width.
-        maintainVisibleContentPosition={{minIndexForVisible: 0}}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         {...props}
