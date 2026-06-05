@@ -35,7 +35,11 @@ export function useUpdateActorDeclaration({
         current?.associated?.chat?.allowIncoming ??
         'following'
       const allowGroupInvites =
-        update.allowGroupInvites ?? current?.associated?.chat?.allowGroupInvites
+        update.allowGroupInvites ??
+        current?.associated?.chat?.allowGroupInvites ??
+        // when unset, group invites follow the general DM preference
+        // (see canBeAddedToGroup), so mirror that when persisting
+        allowIncoming
       const result = await agent.com.atproto.repo.putRecord({
         repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
@@ -43,7 +47,7 @@ export function useUpdateActorDeclaration({
         record: {
           $type: 'chat.bsky.actor.declaration',
           allowIncoming,
-          ...(allowGroupInvites && {allowGroupInvites}),
+          allowGroupInvites,
         },
       })
       return result

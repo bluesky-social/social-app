@@ -201,7 +201,12 @@ export function MessagesSettingsScreenInner({}: Props) {
                   type="radio"
                   values={[
                     (profile?.associated?.chat
-                      ?.allowGroupInvites as AllowIncoming) ?? 'following',
+                      ?.allowGroupInvites as AllowIncoming) ??
+                      // when unset, group invites follow the general DM
+                      // preference (see canBeAddedToGroup)
+                      (profile?.associated?.chat
+                        ?.allowIncoming as AllowIncoming) ??
+                      'following',
                   ]}
                   onChange={onSelectGroupInvitesFrom}>
                   <View>
