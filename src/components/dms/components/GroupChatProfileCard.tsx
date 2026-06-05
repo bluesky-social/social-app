@@ -34,32 +34,40 @@ export function GroupChatProfileCard({
       name={profile.did}
       label={displayName}
       style={[a.flex_1, a.py_sm, a.px_lg]}>
-      <View style={[a.flex_grow, !enabled ? {opacity: 0.5} : null]}>
-        <ProfileCard.Header>
-          <ProfileCard.Avatar
-            profile={profile}
-            moderationOpts={moderationOpts}
-            size={44}
-            disabledPreview
-          />
-          <View>
-            <ProfileCard.Name
-              profile={profile}
-              moderationOpts={moderationOpts}
-            />
-            {enabled ? (
-              <ProfileCard.Handle profile={profile} />
-            ) : (
-              <Text
-                style={[a.leading_snug, t.atoms.text_contrast_high]}
-                numberOfLines={2}>
-                <Trans>{handle} can’t be added</Trans>
-              </Text>
-            )}
+      {({disabled, selected}) => (
+        <>
+          <View
+            style={[
+              a.flex_grow,
+              !enabled || (disabled && !selected) ? {opacity: 0.5} : null,
+            ]}>
+            <ProfileCard.Header>
+              <ProfileCard.Avatar
+                profile={profile}
+                moderationOpts={moderationOpts}
+                size={44}
+                disabledPreview
+              />
+              <View>
+                <ProfileCard.Name
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                />
+                {enabled ? (
+                  <ProfileCard.Handle profile={profile} />
+                ) : (
+                  <Text
+                    style={[a.leading_snug, t.atoms.text_contrast_high]}
+                    numberOfLines={2}>
+                    <Trans>{handle} can’t be added</Trans>
+                  </Text>
+                )}
+              </View>
+            </ProfileCard.Header>
           </View>
-        </ProfileCard.Header>
-      </View>
-      {enabled ? <Toggle.Checkbox /> : null}
+          {enabled ? <Toggle.Checkbox /> : null}
+        </>
+      )}
     </Toggle.Item>
   )
 }

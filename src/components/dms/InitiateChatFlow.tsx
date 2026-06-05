@@ -212,6 +212,7 @@ export function InitiateChatFlow({
 
   const {data: chatStatus} = useChatActorStatusQuery()
   const canCreateGroups = chatStatus?.canCreateGroups ?? true
+  const groupMemberLimit = chatStatus?.groupMemberLimit
 
   const [searchText, setSearchText] = useState('')
 
@@ -573,6 +574,7 @@ export function InitiateChatFlow({
                     selectTextOnFocus={IS_NATIVE}
                     autoFocus={false}
                     accessibilityRole="text"
+                    clearButtonMode="while-editing"
                     autoCorrect={false}
                     autoComplete="off"
                     autoCapitalize="none"
@@ -664,6 +666,11 @@ export function InitiateChatFlow({
       values={groupChatDids}
       onChange={setGroupChatMembers}
       type="checkbox"
+      maxSelections={
+        // groupMemberLimit counts the creator, who is added implicitly, so
+        // reserve one slot for them
+        groupMemberLimit ? groupMemberLimit - 1 : undefined
+      }
       label={
         chatState === ChatState.NEW_GROUP_CHAT
           ? l`Select group chat members`
