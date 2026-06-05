@@ -164,8 +164,17 @@ const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
           accessibilityHint=""
           role="group"
           aria-roledescription={_(msg`carousel`)}
-          style={[{marginTop: 16}, web({overscrollBehaviorX: 'contain'})]}
-          contentContainerStyle={{gap: IMAGE_GAP, paddingRight: IMAGE_GAP}}>
+          style={[
+            {
+              marginTop: 16,
+              marginHorizontal: -tokens.space.lg,
+            },
+            web({overscrollBehaviorX: 'contain'}),
+          ]}
+          contentContainerStyle={{
+            gap: IMAGE_GAP,
+            paddingHorizontal: tokens.space.lg,
+          }}>
           {images.map(image => (
             <GalleryItem
               key={image.source.id}
