@@ -32,6 +32,8 @@ export type ChatInviteContextValue = {
    * preview to act on.
    */
   action: ChatInviteAction | undefined
+  /** Whether or not to allow font scaling on text elements. */
+  hasFixedHeight: boolean
 }
 
 const ChatInviteContext = createContext<ChatInviteContextValue | null>(null)

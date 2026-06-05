@@ -31,10 +31,12 @@ export function ProfileBadges({
   interactive = false,
   size,
   style,
+  allowFontScaling = true,
 }: ViewStyleProp & {
   profile: bsky.profile.AnyProfileView
   interactive?: boolean
   size: Size
+  allowFontScaling?: boolean
 }) {
   const shadowed = useProfileShadow(profile)
   const verification = useSimpleVerificationState({profile})
@@ -48,10 +50,12 @@ export function ProfileBadges({
 
   const isOnTheSmallSide = size === 'xs' || size === 'sm'
 
-  const verificationIconWidth =
-    verificationIconSizes[size] * nativeScaleMultiplier * alfScaleMultiplier
-  const botIconWidth =
-    botIconSizes[size] * nativeScaleMultiplier * alfScaleMultiplier
+  const scaleMultiplier = allowFontScaling
+    ? nativeScaleMultiplier * alfScaleMultiplier
+    : 1
+
+  const verificationIconWidth = verificationIconSizes[size] * scaleMultiplier
+  const botIconWidth = botIconSizes[size] * scaleMultiplier
 
   return (
     <View
