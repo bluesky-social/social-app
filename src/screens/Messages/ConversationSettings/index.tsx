@@ -539,7 +539,7 @@ function SettingsHeader({
             />
           ) : null}
           <SettingsButton
-            disabled={!isReady || isLeaving}
+            disabled={!isReady || isLeaving || (isOwner && isLocking)}
             icon={ArrowBoxLeftIcon}
             label={l`Leave this group chat`}
             text={l`Leave`}

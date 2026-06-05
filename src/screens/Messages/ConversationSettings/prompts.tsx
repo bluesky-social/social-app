@@ -127,10 +127,12 @@ export function LeaveChatPrompt({
 export function LeaveAndLockChatPrompt({
   control,
   groupName,
+  lockedPermanently,
   onConfirm,
 }: {
   control: Dialog.DialogOuterProps['control']
   groupName: string
+  lockedPermanently: boolean
   onConfirm: () => void
 }) {
   const {t: l} = useLingui()
@@ -139,7 +141,11 @@ export function LeaveAndLockChatPrompt({
     <Prompt.Basic
       control={control}
       title={l`Are you sure you want to leave ${groupName}?`}
-      description={l`Leaving this chat will lock it permanently and you will not be able to rejoin.`}
+      description={
+        lockedPermanently
+          ? l`You won’t be able to rejoin.`
+          : l`Leaving this chat will lock it permanently and you won’t be able to rejoin.`
+      }
       confirmButtonCta={l`Leave group chat`}
       confirmButtonColor="negative"
       cancelButtonCta={l`Cancel`}
