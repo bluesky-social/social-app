@@ -112,7 +112,6 @@ function SettingsInner() {
         title={l`Something went wrong`}
         message={l`We couldn’t load this conversation’s settings`}
         onRetry={() => convoState.error.retry()}
-        sideBorders={false}
       />
     )
   }
