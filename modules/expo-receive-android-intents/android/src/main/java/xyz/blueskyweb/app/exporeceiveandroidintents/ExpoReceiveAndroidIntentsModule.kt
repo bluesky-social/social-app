@@ -164,15 +164,25 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     // app, since this runs synchronously on the module init path.
     try {
       FileOutputStream(file).use { out ->
-        val input = appContext.currentActivity?.contentResolver?.openInputStream(uri) ?: return
+        val input =
+          appContext.currentActivity?.contentResolver?.openInputStream(uri)
+            ?: run {
+              file.delete()
+              return
+            }
         input.use { it.copyTo(out) }
       }
     } catch (e: Exception) {
       Log.w(TAG, "Failed to copy shared video to cache", e)
+      file.delete()
       return
     }
 
-    val info = getVideoInfo(uri) ?: return
+    val info =
+      getVideoInfo(uri) ?: run {
+        file.delete()
+        return
+      }
 
     val encodedText = text?.let { URLEncoder.encode(it, "UTF-8") }
 
@@ -198,10 +208,16 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     // We have to save this so that we can access it later when uploading the image.
     // createTempFile will automatically place a unique string between "img" and "temp.jpeg"
     val file = createFile("jpeg")
-    val out = FileOutputStream(file)
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
-    out.flush()
-    out.close()
+    try {
+      FileOutputStream(file).use { out ->
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+        out.flush()
+      }
+    } catch (e: Exception) {
+      Log.w(TAG, "Failed to write shared image to cache", e)
+      file.delete()
+      return null
+    }
 
     return mapOf(
       "width" to bitmap.width,
