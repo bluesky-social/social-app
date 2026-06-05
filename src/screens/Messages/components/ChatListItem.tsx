@@ -475,6 +475,7 @@ function BaseChatItem({
               a.z_10,
               a.absolute,
               {top: tokens.space.md, left: tokens.space.lg},
+              isGroupConvo && a.pointer_events_none,
             ]}>
             {avatar}
           </View>
