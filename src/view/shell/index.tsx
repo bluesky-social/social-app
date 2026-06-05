@@ -12,6 +12,7 @@ import {useNotificationsHandler} from '#/lib/hooks/useNotificationHandler'
 import {useNotificationsRegistration} from '#/lib/notifications/notifications'
 import {isStateAtTabRoot} from '#/lib/routes/helpers'
 import {useDialogFullyExpandedCountContext} from '#/state/dialogs'
+import {useModerationTimeoutCleanup} from '#/state/moderation-timeouts'
 import {useSession} from '#/state/session'
 import {
   useIsDrawerOpen,
@@ -53,6 +54,8 @@ import {DrawerContent} from './Drawer'
 function ShellInner() {
   const insets = useSafeAreaInsets()
   const {state: policyUpdateState} = usePolicyUpdateContext()
+
+  useModerationTimeoutCleanup()
 
   const closeAnyActiveElement = useCloseAnyActiveElement()
 

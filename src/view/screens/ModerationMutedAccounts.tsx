@@ -1,14 +1,21 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
+import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {
+  getModerationTimeoutRecord,
+  isExpired,
+} from '#/state/moderation-timeouts'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useMyMutedAccountsQuery} from '#/state/queries/my-muted-accounts'
+import {useSession} from '#/state/session'
+import {useTickEveryMinute} from '#/state/shell'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {List} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
@@ -23,7 +30,10 @@ type Props = NativeStackScreenProps<
 >
 export function ModerationMutedAccounts({}: Props) {
   const t = useTheme()
+  const {i18n} = useLingui()
   const moderationOpts = useModerationOpts()
+  const {currentAccount} = useSession()
+  const tick = useTickEveryMinute()
 
   const [isPTRing, setIsPTRing] = useState(false)
   const {
@@ -36,13 +46,24 @@ export function ModerationMutedAccounts({}: Props) {
     fetchNextPage,
     isFetchingNextPage,
   } = useMyMutedAccountsQuery()
-  const isEmpty = !isFetching && !data?.pages[0]?.mutes.length
   const profiles = useMemo(() => {
-    if (data?.pages) {
-      return data.pages.flatMap(page => page.mutes)
+    if (!currentAccount || !data?.pages) {
+      return []
     }
-    return []
-  }, [data])
+
+    return data.pages
+      .flatMap(page => page.mutes)
+      .filter(mute => {
+        const timeout = getModerationTimeoutRecord(
+          currentAccount.did,
+          'mute',
+          mute.did,
+        )
+        return !timeout || !isExpired(timeout.expiresAt)
+      })
+  }, [currentAccount, data, tick])
+
+  const isEmpty = !isFetching && profiles.length === 0
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
@@ -72,29 +93,43 @@ export function ModerationMutedAccounts({}: Props) {
     index: number
   }) => {
     if (!moderationOpts) return null
+    const timeout = currentAccount
+      ? getModerationTimeoutRecord(currentAccount.did, 'mute', item.did)
+      : undefined
     return (
       <View
         style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}
         key={item.did}>
-        <ProfileCard.Link profile={item} testID={`mutedAccount-${index}`}>
-          <ProfileCard.Outer>
-            <ProfileCard.Header>
-              <ProfileCard.Avatar
+        <View style={[a.gap_xs]}>
+          <ProfileCard.Link profile={item} testID={`mutedAccount-${index}`}>
+            <ProfileCard.Outer>
+              <ProfileCard.Header>
+                <ProfileCard.Avatar
+                  profile={item}
+                  moderationOpts={moderationOpts}
+                />
+                <ProfileCard.NameAndHandle
+                  profile={item}
+                  moderationOpts={moderationOpts}
+                />
+              </ProfileCard.Header>
+              <ProfileCard.Labels
                 profile={item}
                 moderationOpts={moderationOpts}
               />
-              <ProfileCard.NameAndHandle
-                profile={item}
-                moderationOpts={moderationOpts}
-              />
-            </ProfileCard.Header>
-            <ProfileCard.Labels
-              profile={item}
-              moderationOpts={moderationOpts}
-            />
-            <ProfileCard.Description profile={item} />
-          </ProfileCard.Outer>
-        </ProfileCard.Link>
+              <ProfileCard.Description profile={item} />
+            </ProfileCard.Outer>
+          </ProfileCard.Link>
+          {timeout?.expiresAt && !isExpired(timeout.expiresAt) ? (
+            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              <Trans>Expires on</Trans>{' '}
+              {i18n.date(new Date(timeout.expiresAt), {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+            </Text>
+          ) : null}
+        </View>
       </View>
     )
   }

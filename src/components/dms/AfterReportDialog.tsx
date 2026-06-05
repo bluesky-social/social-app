@@ -1,11 +1,16 @@
 import {memo, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
+import {msg} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {
+  calculateExpiresAt,
+  type ModerationTimeoutDuration,
+} from '#/state/moderation-timeouts'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {
   useProfileBlockMutationQueue,
@@ -16,6 +21,7 @@ import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
+import {TimeoutSelectDialog} from '#/components/moderation/TimeoutSelectDialog'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
@@ -121,9 +127,12 @@ function DoneStep({
   const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const control = Dialog.useDialogContext()
+  const blockTimeoutControl = Dialog.useDialogControl()
   const {gtMobile} = useBreakpoints()
   const t = useTheme()
   const [actions, setActions] = useState<string[]>(['block', 'leave'])
+  const [blockDuration, setBlockDuration] =
+    useState<ModerationTimeoutDuration>('forever')
   const shadow = useProfileShadow(profile)
   const [queueBlock] = useProfileBlockMutationQueue(shadow)
 
@@ -156,19 +165,20 @@ function DoneStep({
   }
 
   const onPressPrimaryAction = () => {
-    control.close(() => {
-      if (actions.includes('block')) {
-        void queueBlock()
-      }
-      if (actions.includes('leave')) {
+    // If block is selected, open the timeout dialog instead of closing
+    if (actions.includes('block')) {
+      blockTimeoutControl.open()
+    } else {
+      // If only leaving, close and leave
+      control.close(() => {
         leaveConvo()
-      }
-      if (toastMsg) {
-        Toast.show(toastMsg, {
-          type: 'success',
-        })
-      }
-    })
+        if (toastMsg) {
+          Toast.show(toastMsg, {
+            type: 'success',
+          })
+        }
+      })
+    }
   }
 
   return (
@@ -218,6 +228,38 @@ function DoneStep({
           </ButtonText>
         </Button>
       </View>
+
+      <TimeoutSelectDialog
+        control={blockTimeoutControl}
+        label={l(msg`Choose how long to block this user`)}
+        title={l(msg`Block user`)}
+        description={l(
+          msg`Choose whether this block should be temporary or stay in place until you remove it.`,
+        )}
+        confirmLabel={l(msg`Block user`)}
+        value={blockDuration}
+        onChange={setBlockDuration}
+        onConfirm={async duration => {
+          try {
+            await queueBlock({expiresAt: calculateExpiresAt(duration)})
+            control.close(() => {
+              if (actions.includes('leave')) {
+                leaveConvo()
+              }
+              Toast.show(l({message: 'User blocked', context: 'toast'}), {
+                type: 'success',
+              })
+            })
+          } catch (e: unknown) {
+            const error = e instanceof Error ? e : new Error(String(e))
+            if (error.name !== 'AbortError') {
+              Toast.show(l(msg`There was an issue! ${error.toString()}`), {
+                type: 'error',
+              })
+            }
+          }
+        }}
+      />
     </View>
   )
 }

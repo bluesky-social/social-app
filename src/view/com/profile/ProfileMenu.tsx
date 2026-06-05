@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo} from 'react'
+import {memo, useCallback, useMemo, useState} from 'react'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -13,6 +13,10 @@ import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {type Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
+import {
+  calculateExpiresAt,
+  type ModerationTimeoutDuration,
+} from '#/state/moderation-timeouts'
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
 import {
   RQKEY as profileQueryKey,
@@ -50,6 +54,7 @@ import {
   ReportDialog,
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
+import {TimeoutSelectDialog} from '#/components/moderation/TimeoutSelectDialog'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useFullVerificationState} from '#/components/verification'
@@ -102,11 +107,16 @@ let ProfileMenu = ({
     'ProfileMenu',
   )
 
-  const blockPromptControl = Prompt.usePromptControl()
   const loggedOutWarningPromptControl = Prompt.usePromptControl()
   const goLiveDialogControl = useDialogControl()
   const goLiveDisabledDialogControl = useDialogControl()
   const addToStarterPacksDialogControl = useDialogControl()
+  const muteTimeoutDialogControl = useDialogControl()
+  const blockTimeoutDialogControl = useDialogControl()
+  const [muteDuration, setMuteDuration] =
+    useState<ModerationTimeoutDuration>('forever')
+  const [blockDuration, setBlockDuration] =
+    useState<ModerationTimeoutDuration>('forever')
 
   const showLoggedOutWarning = useMemo(() => {
     return (
@@ -155,21 +165,12 @@ let ProfileMenu = ({
         }
       }
     } else {
-      try {
-        await queueMute()
-        Toast.show(_(msg({message: 'Account muted', context: 'toast'})))
-      } catch (e: any) {
-        if (e?.name !== 'AbortError') {
-          ax.logger.error('Failed to mute account', {message: e})
-          Toast.show(_(msg`There was an issue! ${e.toString()}`), {
-            type: 'error',
-          })
-        }
-      }
+      setMuteDuration('forever')
+      muteTimeoutDialogControl.open()
     }
-  }, [ax, profile.viewer?.muted, queueUnmute, _, queueMute])
+  }, [ax, profile.viewer?.muted, queueUnmute, _, muteTimeoutDialogControl])
 
-  const blockAccount = useCallback(async () => {
+  const onPressBlockAccount = useCallback(async () => {
     if (profile.viewer?.blocking) {
       try {
         await queueUnblock()
@@ -183,8 +184,32 @@ let ProfileMenu = ({
         }
       }
     } else {
+      setBlockDuration('forever')
+      blockTimeoutDialogControl.open()
+    }
+  }, [ax, profile.viewer?.blocking, _, queueUnblock, blockTimeoutDialogControl])
+
+  const onConfirmMuteTimeout = useCallback(
+    async (duration: ModerationTimeoutDuration) => {
       try {
-        await queueBlock()
+        await queueMute({expiresAt: calculateExpiresAt(duration)})
+        Toast.show(_(msg({message: 'Account muted', context: 'toast'})))
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') {
+          ax.logger.error('Failed to mute account', {message: e})
+          Toast.show(_(msg`There was an issue! ${e.toString()}`), {
+            type: 'error',
+          })
+        }
+      }
+    },
+    [ax, _, queueMute],
+  )
+
+  const onConfirmBlockTimeout = useCallback(
+    async (duration: ModerationTimeoutDuration) => {
+      try {
+        await queueBlock({expiresAt: calculateExpiresAt(duration)})
         Toast.show(_(msg({message: 'Account blocked', context: 'toast'})))
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
@@ -194,8 +219,9 @@ let ProfileMenu = ({
           })
         }
       }
-    }
-  }, [ax, profile.viewer?.blocking, _, queueUnblock, queueBlock])
+    },
+    [ax, _, queueBlock],
+  )
 
   const onPressFollowAccount = useCallback(async () => {
     try {
@@ -464,11 +490,11 @@ let ProfileMenu = ({
                       <Menu.Item
                         testID="profileHeaderDropdownBlockBtn"
                         label={
-                          profile.viewer
+                          profile.viewer?.blocking
                             ? _(msg`Unblock account`)
                             : _(msg`Block account`)
                         }
-                        onPress={() => blockPromptControl.open()}>
+                        onPress={onPressBlockAccount}>
                         <Menu.ItemText>
                           {profile.viewer?.blocking ? (
                             <Trans>Unblock account</Trans>
@@ -538,31 +564,31 @@ let ProfileMenu = ({
         }}
       />
 
-      <Prompt.Basic
-        control={blockPromptControl}
-        title={
-          profile.viewer?.blocking
-            ? _(msg`Unblock Account?`)
-            : _(msg`Block Account?`)
-        }
-        description={
-          profile.viewer?.blocking
-            ? _(
-                msg`The account will be able to interact with you after unblocking.`,
-              )
-            : profile.associated?.labeler
-              ? _(
-                  msg`Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you.`,
-                )
-              : _(
-                  msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
-                )
-        }
-        onConfirm={blockAccount}
-        confirmButtonCta={
-          profile.viewer?.blocking ? _(msg`Unblock`) : _(msg`Block`)
-        }
-        confirmButtonColor={profile.viewer?.blocking ? undefined : 'negative'}
+      <TimeoutSelectDialog
+        control={muteTimeoutDialogControl}
+        label={_(msg`Choose how long to mute this account`)}
+        title={_(msg`Mute account`)}
+        description={_(
+          msg`Choose whether this mute should be temporary or stay in place until you remove it.`,
+        )}
+        confirmLabel={_(msg`Mute`)}
+        value={muteDuration}
+        onChange={setMuteDuration}
+        onConfirm={onConfirmMuteTimeout}
+      />
+
+      <TimeoutSelectDialog
+        control={blockTimeoutDialogControl}
+        label={_(msg`Choose how long to block this account`)}
+        title={_(msg`Block account`)}
+        description={_(
+          msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. Choose whether this block should be temporary or permanent.`,
+        )}
+        confirmLabel={_(msg`Block`)}
+        confirmColor="negative"
+        value={blockDuration}
+        onChange={setBlockDuration}
+        onConfirm={onConfirmBlockTimeout}
       />
 
       <Prompt.Basic

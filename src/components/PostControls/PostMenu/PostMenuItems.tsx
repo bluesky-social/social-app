@@ -1,4 +1,4 @@
-import {memo, useMemo} from 'react'
+import {memo, useMemo, useState} from 'react'
 import {
   Platform,
   type PressableProps,
@@ -33,6 +33,10 @@ import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {
+  calculateExpiresAt,
+  type ModerationTimeoutDuration,
+} from '#/state/moderation-timeouts'
 import {
   useHiddenPosts,
   useHiddenPostsApi,
@@ -92,6 +96,7 @@ import {
   ReportDialog,
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
+import {TimeoutSelectDialog} from '#/components/moderation/TimeoutSelectDialog'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
@@ -141,13 +146,18 @@ let PostMenuItems = ({
   })
   const navigation = useNavigation<NavigationProp>()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
-  const blockPromptControl = useDialogControl()
   const reportDialogControl = useReportDialogControl()
   const deletePromptControl = useDialogControl()
   const hidePromptControl = useDialogControl()
   const postInteractionSettingsDialogControl = useDialogControl()
   const quotePostDetachConfirmControl = useDialogControl()
   const hideReplyConfirmControl = useDialogControl()
+  const muteTimeoutDialogControl = useDialogControl()
+  const blockTimeoutDialogControl = useDialogControl()
+  const [muteDuration, setMuteDuration] =
+    useState<ModerationTimeoutDuration>('forever')
+  const [blockDuration, setBlockDuration] =
+    useState<ModerationTimeoutDuration>('forever')
   const {mutateAsync: toggleReplyVisibility} =
     useToggleReplyVisibilityMutation()
 
@@ -420,10 +430,9 @@ let PostMenuItems = ({
     })
   }
 
-  const onBlockAuthor = async () => {
+  const onBlockAuthor = () => {
     try {
-      await queueBlock()
-      Toast.show(l({message: 'Account blocked', context: 'toast'}))
+      blockTimeoutDialogControl.open()
     } catch (err) {
       const e = err as Error
       if (e?.name !== 'AbortError') {
@@ -432,13 +441,27 @@ let PostMenuItems = ({
           type: 'error',
         })
       }
-    } finally {
+    }
+  }
+
+  const onConfirmBlockTimeout = async (duration: ModerationTimeoutDuration) => {
+    try {
+      await queueBlock({expiresAt: calculateExpiresAt(duration)})
+      Toast.show(l({message: 'Account blocked', context: 'toast'}))
       ax.metric('postMenu:blockAccount', {
         uri: postUri,
         authorDid: postAuthor.did,
         logContext,
         feedDescriptor: feedFeedback.feedDescriptor,
       })
+    } catch (err) {
+      const e = err as Error
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to block account', {message: e})
+        Toast.show(l`There was an issue! ${e.toString()}`, {
+          type: 'error',
+        })
+      }
     }
   }
 
@@ -464,23 +487,26 @@ let PostMenuItems = ({
         })
       }
     } else {
-      try {
-        await queueMute()
-        Toast.show(l({message: 'Account muted', context: 'toast'}))
-      } catch (err) {
-        const e = err as Error
-        if (e?.name !== 'AbortError') {
-          logger.error('Failed to mute account', {message: e})
-          Toast.show(l`There was an issue! ${e.toString()}`, {
-            type: 'error',
-          })
-        }
-      } finally {
-        ax.metric('postMenu:muteAccount', {
-          uri: postUri,
-          authorDid: postAuthor.did,
-          logContext,
-          feedDescriptor: feedFeedback.feedDescriptor,
+      muteTimeoutDialogControl.open()
+    }
+  }
+
+  const onConfirmMuteTimeout = async (duration: ModerationTimeoutDuration) => {
+    try {
+      await queueMute({expiresAt: calculateExpiresAt(duration)})
+      Toast.show(l({message: 'Account muted', context: 'toast'}))
+      ax.metric('postMenu:muteAccount', {
+        uri: postUri,
+        authorDid: postAuthor.did,
+        logContext,
+        feedDescriptor: feedFeedback.feedDescriptor,
+      })
+    } catch (err) {
+      const e = err as Error
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to mute account', {message: e})
+        Toast.show(l`There was an issue! ${e.toString()}`, {
+          type: 'error',
         })
       }
     }
@@ -745,7 +771,7 @@ let PostMenuItems = ({
                     <Menu.Item
                       testID="postDropdownBlockBtn"
                       label={l`Block account`}
-                      onPress={() => blockPromptControl.open()}>
+                      onPress={() => void onBlockAuthor()}>
                       <Menu.ItemText>{l`Block account`}</Menu.ItemText>
                       <Menu.ItemIcon icon={PersonX} position="right" />
                     </Menu.Item>
@@ -845,13 +871,25 @@ let PostMenuItems = ({
         onConfirm={() => void onToggleReplyVisibility()}
         confirmButtonCta={l`Yes, hide`}
       />
-      <Prompt.Basic
-        control={blockPromptControl}
-        title={l`Block Account?`}
-        description={l`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`}
-        onConfirm={() => void onBlockAuthor()}
-        confirmButtonCta={l`Block`}
-        confirmButtonColor="negative"
+      <TimeoutSelectDialog
+        control={muteTimeoutDialogControl}
+        label={l`Choose how long to mute this account`}
+        title={l`Mute account`}
+        description={l`Choose whether this mute should be temporary or stay in place until you remove it.`}
+        confirmLabel={l`Mute account`}
+        value={muteDuration}
+        onChange={setMuteDuration}
+        onConfirm={onConfirmMuteTimeout}
+      />
+      <TimeoutSelectDialog
+        control={blockTimeoutDialogControl}
+        label={l`Choose how long to block this account`}
+        title={l`Block account`}
+        description={l`Choose whether this block should be temporary or stay in place until you remove it.`}
+        confirmLabel={l`Block account`}
+        value={blockDuration}
+        onChange={setBlockDuration}
+        onConfirm={onConfirmBlockTimeout}
       />
     </>
   )

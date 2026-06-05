@@ -25,6 +25,10 @@ import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {type Shadow} from '#/state/cache/types'
 import {type ImageMeta} from '#/state/gallery'
+import {
+  clearModerationTimeout,
+  setModerationTimeout,
+} from '#/state/moderation-timeouts'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {RQKEY as PROFILE_FOLLOWS_RQKEY} from '#/state/queries/profile-follows'
@@ -420,6 +424,7 @@ export function useProfileMuteMutationQueue(
 ) {
   const ax = useAnalytics()
   const queryClient = useQueryClient()
+  const {currentAccount} = useSession()
   const did = profile.did
   const initialMuted = profile.viewer?.muted
   const muteMutation = useProfileMuteMutation()
@@ -448,21 +453,42 @@ export function useProfileMuteMutationQueue(
     },
   })
 
-  const queueMute = useCallback(() => {
-    // optimistically update
-    updateProfileShadow(queryClient, did, {
-      muted: true,
-    })
-    return queueToggle(true)
-  }, [queryClient, did, queueToggle])
+  const queueMute = useCallback(
+    async ({expiresAt}: {expiresAt?: string} = {}) => {
+      // optimistically update
+      updateProfileShadow(queryClient, did, {
+        muted: true,
+      })
+      const finalMuted = await queueToggle(true)
+      if (finalMuted) {
+        if (currentAccount) {
+          setModerationTimeout(
+            currentAccount.did,
+            'mute',
+            did,
+            expiresAt ? {expiresAt} : undefined,
+          )
+        }
+      }
+      return finalMuted
+    },
+    [currentAccount, queryClient, did, queueToggle],
+  )
 
   const queueUnmute = useCallback(() => {
     // optimistically update
     updateProfileShadow(queryClient, did, {
       muted: false,
     })
-    return queueToggle(false)
-  }, [queryClient, did, queueToggle])
+    return queueToggle(false).then(async finalMuted => {
+      if (!finalMuted) {
+        if (currentAccount) {
+          clearModerationTimeout(currentAccount.did, 'mute', did)
+        }
+      }
+      return finalMuted
+    })
+  }, [currentAccount, queryClient, did, queueToggle])
 
   return [queueMute, queueUnmute] as const
 }
@@ -498,6 +524,7 @@ export function useProfileBlockMutationQueue(
 ) {
   const ax = useAnalytics()
   const queryClient = useQueryClient()
+  const {currentAccount} = useSession()
   const did = profile.did
   const initialBlockingUri = profile.viewer?.blocking
   const blockMutation = useProfileBlockMutation()
@@ -532,21 +559,42 @@ export function useProfileBlockMutationQueue(
     },
   })
 
-  const queueBlock = useCallback(() => {
-    // optimistically update
-    updateProfileShadow(queryClient, did, {
-      blockingUri: 'pending',
-    })
-    return queueToggle(true)
-  }, [queryClient, did, queueToggle])
+  const queueBlock = useCallback(
+    async ({expiresAt}: {expiresAt?: string} = {}) => {
+      // optimistically update
+      updateProfileShadow(queryClient, did, {
+        blockingUri: 'pending',
+      })
+      const finalBlockingUri = await queueToggle(true)
+      if (finalBlockingUri) {
+        if (currentAccount) {
+          setModerationTimeout(
+            currentAccount.did,
+            'block',
+            did,
+            expiresAt ? {expiresAt, uri: finalBlockingUri} : undefined,
+          )
+        }
+      }
+      return finalBlockingUri
+    },
+    [currentAccount, queryClient, did, queueToggle],
+  )
 
   const queueUnblock = useCallback(() => {
     // optimistically update
     updateProfileShadow(queryClient, did, {
       blockingUri: undefined,
     })
-    return queueToggle(false)
-  }, [queryClient, did, queueToggle])
+    return queueToggle(false).then(async finalBlockingUri => {
+      if (!finalBlockingUri) {
+        if (currentAccount) {
+          clearModerationTimeout(currentAccount.did, 'block', did)
+        }
+      }
+      return finalBlockingUri
+    })
+  }, [currentAccount, queryClient, did, queueToggle])
 
   return [queueBlock, queueUnblock] as const
 }

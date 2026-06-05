@@ -69,6 +69,16 @@ export type Device = {
   [PolicyUpdate202508]?: boolean
 }
 
+export type ModerationTimeoutRecord = {
+  expiresAt: string
+  uri?: string
+}
+
+export type ModerationTimeouts = {
+  blocks: Record<string, ModerationTimeoutRecord>
+  mutes: Record<string, Omit<ModerationTimeoutRecord, 'uri'>>
+}
+
 export type Account = {
   searchTermHistory?: string[]
   searchAccountHistory?: string[]
@@ -85,4 +95,10 @@ export type Account = {
    * Recently selected GIFs in the GIF picker. Most recent first, capped at 20.
    */
   recentGifs?: Gif[]
+
+  /**
+   * Local expiration metadata for temporary mutes and blocks.
+   * The actual moderation records are still stored by the Bluesky API.
+   */
+  moderationTimeouts?: ModerationTimeouts
 }
