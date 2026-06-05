@@ -1,7 +1,8 @@
-import {useWindowDimensions, View} from 'react-native'
+import {View} from 'react-native'
 
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {atoms as a, useAlf, type ViewStyleProp} from '#/alf'
+import {useNativeFontScale} from '#/alf/util/dimensions'
 import {BotBadge, BotBadgeButton, isBotAccount} from '#/components/BotBadge'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
@@ -38,7 +39,7 @@ export function ProfileBadges({
 }) {
   const shadowed = useProfileShadow(profile)
   const verification = useSimpleVerificationState({profile})
-  const {fontScale: nativeScaleMultiplier} = useWindowDimensions()
+  const nativeScaleMultiplier = useNativeFontScale()
   const {
     fonts: {scaleMultiplier: alfScaleMultiplier},
   } = useAlf()
