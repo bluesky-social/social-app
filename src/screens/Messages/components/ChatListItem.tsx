@@ -481,6 +481,9 @@ function BaseChatItem({
 
           <Link
             to={`/messages/${convo.view.id}`}
+            // In split view, this list stays mounted alongside the open convo,
+            // so push would stack duplicate routes on repeated clicks.
+            action={isWithinSplitView ? 'navigate' : 'push'}
             label={title}
             accessibilityHint={accessibilityHint}
             accessibilityActions={
