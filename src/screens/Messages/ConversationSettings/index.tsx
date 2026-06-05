@@ -538,15 +538,17 @@ function SettingsHeader({
               onPress={reportControl.open}
             />
           ) : null}
-          <SettingsButton
-            disabled={!isReady || isLeaving || (isOwner && isLocking)}
-            icon={ArrowBoxLeftIcon}
-            label={l`Leave this group chat`}
-            text={l`Leave`}
-            onPress={
-              isOwner ? leaveAndLockChatPrompt.open : leaveChatPrompt.open
-            }
-          />
+          {!isOwner || (isOwner && lockStatus !== 'locked-permanently') ? (
+            <SettingsButton
+              disabled={!isReady || isLeaving || (isOwner && isLocking)}
+              icon={ArrowBoxLeftIcon}
+              label={l`Leave this group chat`}
+              text={l`Leave`}
+              onPress={
+                isOwner ? leaveAndLockChatPrompt.open : leaveChatPrompt.open
+              }
+            />
+          ) : null}
         </View>
       </View>
       <EditNamePrompt
@@ -576,7 +578,6 @@ function SettingsHeader({
       <LeaveAndLockChatPrompt
         control={leaveAndLockChatPrompt}
         groupName={groupName}
-        lockedPermanently={lockStatus === 'locked-permanently'}
         onConfirm={() => {
           void leaveAndLockConvo()
         }}
