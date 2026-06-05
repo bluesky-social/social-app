@@ -6,12 +6,15 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import androidx.core.net.toUri
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URLEncoder
+
+private const val TAG = "ExpoReceiveAndroidIntents"
 
 enum class AttachmentType {
   IMAGE,
@@ -165,6 +168,7 @@ class ExpoReceiveAndroidIntentsModule : Module() {
         input.use { it.copyTo(out) }
       }
     } catch (e: Exception) {
+      Log.w(TAG, "Failed to copy shared video to cache", e)
       return
     }
 
@@ -188,6 +192,7 @@ class ExpoReceiveAndroidIntentsModule : Module() {
       } catch (e: Exception) {
         // The URI may be unreadable (revoked permission, deleted file, or a
         // provider that rejects the read). Skip this image rather than crash.
+        Log.w(TAG, "Failed to read shared image", e)
         return null
       } ?: return null
     // We have to save this so that we can access it later when uploading the image.
@@ -215,6 +220,7 @@ class ExpoReceiveAndroidIntentsModule : Module() {
       height = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)?.toIntOrNull()
     } catch (e: Exception) {
       // The URI may be unreadable or not a valid media source. Skip rather than crash.
+      Log.w(TAG, "Failed to read shared video metadata", e)
       return null
     } finally {
       retriever.release()
