@@ -136,6 +136,7 @@ export function ListConvosProviderInner({
     const refetchAndInvalidate = () => {
       void refetch()
       void queryClient.invalidateQueries({queryKey: [RQKEY_ROOT]})
+      void queryClient.invalidateQueries({queryKey: [REQUESTS_RQKEY_ROOT]})
     }
     return throttle(refetchAndInvalidate, 500, {
       leading: true,
@@ -163,26 +164,6 @@ export function ListConvosProviderInner({
           )
         }
 
-        function mutateConvoView(
-          convoId: string,
-          fn: (
-            convo: ChatBskyConvoDefs.ConvoView,
-          ) => ChatBskyConvoDefs.ConvoView,
-        ) {
-          queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(
-            CONVO_KEY(convoId),
-            old => (old ? fn(old) : old),
-          )
-          queryClient.setQueriesData<ConvoListQueryData>(
-            {queryKey: [RQKEY_ROOT]},
-            old => optimisticUpdate(convoId, old, fn),
-          )
-          queryClient.setQueriesData<ConvoRequestListQueryData>(
-            {queryKey: [REQUESTS_RQKEY_ROOT]},
-            old => optimisticUpdateRequest(convoId, old, fn),
-          )
-        }
-
         function updateConvoInAllLists(
           convoId: string,
           fn: (
@@ -197,6 +178,19 @@ export function ListConvosProviderInner({
             {queryKey: [REQUESTS_RQKEY_ROOT]},
             old => optimisticUpdateRequest(convoId, old, fn),
           )
+        }
+
+        function mutateConvoView(
+          convoId: string,
+          fn: (
+            convo: ChatBskyConvoDefs.ConvoView,
+          ) => ChatBskyConvoDefs.ConvoView,
+        ) {
+          queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(
+            CONVO_KEY(convoId),
+            old => (old ? fn(old) : old),
+          )
+          updateConvoInAllLists(convoId, fn)
         }
 
         function deleteConvoFromAllLists(convoId: string) {

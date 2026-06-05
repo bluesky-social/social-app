@@ -65,8 +65,8 @@ export function optimisticUpdate(
       requests: page.requests.map((item): ConvoRequestItem => {
         if (ChatBskyConvoDefs.isConvoView(item) && item.id === chatId) {
           return {
-            $type: 'chat.bsky.convo.defs#convoView',
             ...updateFn(item),
+            $type: 'chat.bsky.convo.defs#convoView',
           }
         }
         return item
@@ -88,6 +88,29 @@ export function optimisticDelete(
       requests: page.requests.filter(
         item => !ChatBskyConvoDefs.isConvoView(item) || item.id !== chatId,
       ),
+    })),
+  }
+}
+
+export function markAllRead(
+  old: ConvoRequestListQueryData | undefined,
+): ConvoRequestListQueryData | undefined {
+  if (!old) return old
+
+  return {
+    ...old,
+    pages: old.pages.map(page => ({
+      ...page,
+      requests: page.requests.map((item): ConvoRequestItem => {
+        if (ChatBskyConvoDefs.isConvoView(item)) {
+          return {
+            ...item,
+            $type: 'chat.bsky.convo.defs#convoView',
+            unreadCount: 0,
+          }
+        }
+        return item
+      }),
     })),
   }
 }
