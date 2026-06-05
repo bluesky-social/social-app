@@ -273,7 +273,7 @@ function MessageInputInviteEmbed({
   const {t: l} = useLingui()
 
   return (
-    <ChatInvite.Root code={code}>
+    <ChatInvite.Root code={code} hasFixedHeight={false}>
       <View
         style={[
           a.flex_1,

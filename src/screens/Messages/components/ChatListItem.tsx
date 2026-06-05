@@ -122,7 +122,7 @@ function DirectChatItem({
 }) {
   const {t: l} = useLingui()
   const profile = useProfileShadow(convo.primaryMember)
-  const {isWithinSplitView} = useIsWithinSplitView()
+  const {isWithinLeftPanel} = useIsWithinSplitView()
 
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
@@ -140,7 +140,7 @@ function DirectChatItem({
       avatar={
         <PreviewableUserAvatar
           profile={profile}
-          size={isWithinSplitView ? 48 : 52}
+          size={isWithinLeftPanel ? 48 : 52}
           moderation={moderation.ui('avatar')}
         />
       }
@@ -161,7 +161,7 @@ function DirectChatItem({
       isBlockedAccount={moderation.blocked}
       showProfileBadges
       postAlerts={
-        isWithinSplitView ? null : (
+        isWithinLeftPanel ? null : (
           <PostAlerts
             modui={moderation.ui('contentList')}
             size="sm"
@@ -189,7 +189,7 @@ function GroupChatItem({
 }) {
   const {t: l} = useLingui()
   const groupOwner = useMaybeProfileShadow(convo.primaryMember)
-  const {isWithinSplitView} = useIsWithinSplitView()
+  const {isWithinLeftPanel} = useIsWithinSplitView()
 
   const moderation = useMemo(
     () =>
@@ -205,7 +205,7 @@ function GroupChatItem({
       avatar={
         <AvatarBubbles
           profiles={convo.members}
-          size={isWithinSplitView ? 48 : 52}
+          size={isWithinLeftPanel ? 48 : 52}
           moderationOpts={moderationOpts}
         />
       }
@@ -278,7 +278,7 @@ function BaseChatItem({
   const leaveConvoControl = useDialogControl()
   const {mutate: markAsRead} = useMarkAsReadMutation()
   const {gtMobile} = useBreakpoints()
-  const {isWithinSplitView} = useIsWithinSplitView()
+  const {isWithinLeftPanel} = useIsWithinSplitView()
 
   const playHaptic = useHaptics()
   const queryClient = useQueryClient()
@@ -458,7 +458,7 @@ function BaseChatItem({
         leftFirst: deleteAction,
       }
 
-  const avatarSize = isWithinSplitView ? 48 : 52
+  const avatarSize = isWithinLeftPanel ? 48 : 52
 
   return (
     <ChatListItemPortal.Provider>
@@ -469,7 +469,7 @@ function BaseChatItem({
           // @ts-expect-error web only
           onFocus={onFocus}
           onBlur={onMouseLeave}
-          style={[a.relative, t.atoms.bg, isWithinSplitView && a.mx_sm]}>
+          style={[a.relative, t.atoms.bg, isWithinLeftPanel && a.mx_sm]}>
           <View
             style={[
               a.z_10,
@@ -481,6 +481,9 @@ function BaseChatItem({
 
           <Link
             to={`/messages/${convo.view.id}`}
+            // In split view, this list stays mounted alongside the open convo,
+            // so push would stack duplicate routes on repeated clicks.
+            action={isWithinLeftPanel ? 'navigate' : 'push'}
             label={title}
             accessibilityHint={accessibilityHint}
             accessibilityActions={
@@ -512,7 +515,7 @@ function BaseChatItem({
                   a.px_lg,
                   a.py_md,
                   a.gap_md,
-                  isWithinSplitView && a.rounded_sm,
+                  isWithinLeftPanel && a.rounded_sm,
                   {
                     backgroundColor: hasUnread
                       ? t.palette.primary_25

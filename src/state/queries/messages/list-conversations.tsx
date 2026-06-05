@@ -418,67 +418,34 @@ export function ListConvosProviderInner({
                 })),
             )
           } else if (ChatBskyConvoDefs.isLogLockConvo(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                optimisticUpdate(log.convoId, old, convo => {
-                  if (ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
-                    return {
-                      ...convo,
-                      kind: {
-                        ...convo.kind,
-                        lockStatus: 'locked',
-                      },
-                      rev: log.rev,
-                    }
-                  }
-                  return {
+            mutateConvoView(log.convoId, convo =>
+              ChatBskyConvoDefs.isGroupConvo(convo.kind)
+                ? {
                     ...convo,
+                    kind: {...convo.kind, lockStatus: 'locked'},
                     rev: log.rev,
                   }
-                }),
+                : {...convo, rev: log.rev},
             )
           } else if (ChatBskyConvoDefs.isLogUnlockConvo(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                optimisticUpdate(log.convoId, old, convo => {
-                  if (ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
-                    return {
-                      ...convo,
-                      kind: {
-                        ...convo.kind,
-                        lockStatus: 'unlocked',
-                      },
-                      rev: log.rev,
-                    }
-                  }
-                  return {
+            mutateConvoView(log.convoId, convo =>
+              ChatBskyConvoDefs.isGroupConvo(convo.kind)
+                ? {
                     ...convo,
+                    kind: {...convo.kind, lockStatus: 'unlocked'},
                     rev: log.rev,
                   }
-                }),
+                : {...convo, rev: log.rev},
             )
           } else if (ChatBskyConvoDefs.isLogLockConvoPermanently(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                optimisticUpdate(log.convoId, old, convo => {
-                  if (ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
-                    return {
-                      ...convo,
-                      kind: {
-                        ...convo.kind,
-                        lockStatus: 'locked-permanently',
-                      },
-                      rev: log.rev,
-                    }
-                  }
-                  return {
+            mutateConvoView(log.convoId, convo =>
+              ChatBskyConvoDefs.isGroupConvo(convo.kind)
+                ? {
                     ...convo,
+                    kind: {...convo.kind, lockStatus: 'locked-permanently'},
                     rev: log.rev,
                   }
-                }),
+                : {...convo, rev: log.rev},
             )
           } else if (
             ChatBskyConvoDefs.isLogCreateJoinLink(log) ||
