@@ -71,7 +71,7 @@ export function OutgoingRequestListItem({
             ]}>
             <AvatarBubbles
               profiles={[
-                convoView.owner,
+                convoView?.owner ?? undefined,
                 ...Array(
                   Math.min(3, Math.max(0, convoView.memberCount - 1)),
                 ).fill(undefined),
@@ -127,8 +127,10 @@ export function OutgoingRequestListItem({
         description={l`Are you sure you want to rescind your request to join ${convoView.name}?`}
         confirmButtonCta={l`Rescind request`}
         onConfirm={() => {
-          if (isWithdrawPending) return
-          withdrawRequest({convoId: convoView.convoId})
+          prompt.close(() => {
+            if (isWithdrawPending) return
+            withdrawRequest({convoId: convoView.convoId})
+          })
         }}
       />
     </>

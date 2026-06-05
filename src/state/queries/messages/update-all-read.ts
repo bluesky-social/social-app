@@ -37,6 +37,9 @@ export function useUpdateAllRead(
     },
     onMutate: () => {
       let prevPages: ChatBskyConvoListConvos.OutputSchema[] = []
+      let prevRequestsQueries: Array<
+        [readonly unknown[], ConvoRequestListQueryData | undefined]
+      > = []
       queryClient.setQueryData(
         CONVO_LIST_KEY(status),
         (old?: {
@@ -81,13 +84,17 @@ export function useUpdateAllRead(
         },
       )
       if (status === 'request') {
+        prevRequestsQueries =
+          queryClient.getQueriesData<ConvoRequestListQueryData>({
+            queryKey: [REQUESTS_RQKEY_ROOT],
+          })
         queryClient.setQueriesData<ConvoRequestListQueryData>(
           {queryKey: [REQUESTS_RQKEY_ROOT]},
           markAllRequestsRead,
         )
       }
       onMutate?.()
-      return {prevPages}
+      return {prevPages, prevRequestsQueries}
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY(status)})
@@ -111,10 +118,18 @@ export function useUpdateAllRead(
           }
         },
       )
+      if (status === 'request' && context?.prevRequestsQueries) {
+        for (const [queryKey, prevData] of context.prevRequestsQueries) {
+          queryClient.setQueryData(queryKey, prevData)
+        }
+      }
       void queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY(status)})
       void queryClient.invalidateQueries({
         queryKey: CONVO_LIST_KEY('all', 'unread'),
       })
+      if (status === 'request') {
+        void queryClient.invalidateQueries({queryKey: [REQUESTS_RQKEY_ROOT]})
+      }
       onError?.(error)
     },
   })

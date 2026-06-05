@@ -101,12 +101,16 @@ export function useAcceptConversation(
           }
         },
       )
+      const prevRequestsQueries =
+        queryClient.getQueriesData<ConvoRequestListQueryData>({
+          queryKey: [REQUESTS_RQKEY_ROOT],
+        })
       queryClient.setQueriesData<ConvoRequestListQueryData>(
         {queryKey: [REQUESTS_RQKEY_ROOT]},
         old => optimisticDeleteRequest(convoId, old),
       )
       onMutate?.()
-      return {prevAcceptedPages, prevInboxPages}
+      return {prevAcceptedPages, prevInboxPages, prevRequestsQueries}
     },
     onSuccess: data => {
       void queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
@@ -141,6 +145,11 @@ export function useAcceptConversation(
           }
         },
       )
+      if (context?.prevRequestsQueries) {
+        for (const [queryKey, prevData] of context.prevRequestsQueries) {
+          queryClient.setQueryData(queryKey, prevData)
+        }
+      }
       void queryClient.invalidateQueries({queryKey: [CONVO_LIST_ROOT_KEY]})
       void queryClient.invalidateQueries({queryKey: [REQUESTS_RQKEY_ROOT]})
       onError?.(error)

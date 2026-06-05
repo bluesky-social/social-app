@@ -486,7 +486,9 @@ export function ListConvosProviderInner({
               applyJoinRequestCountDelta(convo, log.rev, 1),
             )
           } else if (ChatBskyConvoDefs.isLogOutgoingJoinRequest(log)) {
-            // Viewer isn't in the chat yet, no need to do anything
+            // Viewer isn't in the chat yet, but the inbox surfaces outgoing
+            // requests, so refetch to pick up the new entry.
+            debouncedRefetch()
           } else if (ChatBskyConvoDefs.isLogAddReaction(log)) {
             updateConvoInAllLists(log.convoId, convo => ({
               ...convo,

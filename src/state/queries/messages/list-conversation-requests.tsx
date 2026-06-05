@@ -148,10 +148,15 @@ export function* findAllProfilesInQueryData(
 
     for (const page of queryData.pages) {
       for (const item of page.requests) {
-        if (!ChatBskyConvoDefs.isConvoView(item)) continue
-        for (const member of item.members) {
-          if (member.did === did) {
-            yield member
+        if (ChatBskyConvoDefs.isConvoView(item)) {
+          for (const member of item.members) {
+            if (member.did === did) {
+              yield member
+            }
+          }
+        } else if (ChatBskyGroupDefs.isJoinRequestConvoView(item)) {
+          if (item.owner.did === did) {
+            yield item.owner
           }
         }
       }
