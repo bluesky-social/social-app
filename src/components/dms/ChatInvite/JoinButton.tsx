@@ -17,7 +17,7 @@ export function JoinButton({
   onPress?: () => void
   style?: StyleProp<ViewStyle>
 }) {
-  const {action} = useChatInvite()
+  const {action, hasFixedHeight} = useChatInvite()
 
   if (!action) return null
 
@@ -35,7 +35,7 @@ export function JoinButton({
       disabled={action.disabled}
       style={[a.w_full, style]}>
       {action.side === 'left' && <ButtonIcon icon={action.icon} />}
-      <ButtonText>{action.label}</ButtonText>
+      <ButtonText allowFontScaling={!hasFixedHeight}>{action.label}</ButtonText>
       {action.side === 'right' && <ButtonIcon icon={action.icon} />}
     </Button>
   )

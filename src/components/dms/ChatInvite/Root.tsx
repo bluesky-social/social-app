@@ -30,6 +30,7 @@ export function Root({
   code,
   initialPreview,
   currentConvoId,
+  hasFixedHeight,
   children,
 }: {
   code: string
@@ -40,6 +41,7 @@ export function Root({
    * open/join (you're already here).
    */
   currentConvoId?: string
+  hasFixedHeight: boolean
   children: React.ReactNode
 }) {
   const {hasSession} = useSession()
@@ -137,7 +139,7 @@ export function Root({
 
   return (
     <ChatInviteProvider
-      value={{code, loading, error: !!error, preview, action}}>
+      value={{code, loading, error: !!error, preview, action, hasFixedHeight}}>
       {children}
     </ChatInviteProvider>
   )
