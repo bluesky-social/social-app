@@ -111,20 +111,16 @@ async function postDraftToServerPost(
 
   // Add embeds
   if (post.embed.media) {
-    if (post.embed.media.type === 'images') {
-      draftPost.embedImages = serializeImages(
-        post.embed.media.images,
-        localRefPaths,
-      )
-    } else if (post.embed.media.type === 'gallery') {
+    // We always write the `embedGallery` shape for images now, including the
+    // legacy `images` variant (<=4 photos). We still read `embedImages` from
+    // older drafts for backwards compat - see `draftToPostDrafts`.
+    if (
+      post.embed.media.type === 'images' ||
+      post.embed.media.type === 'gallery'
+    ) {
       draftPost.embedGallery = {
         $type: 'app.bsky.draft.defs#draftEmbedGallery',
-        items: serializeImages(post.embed.media.images, localRefPaths).map(
-          img => ({
-            $type: 'app.bsky.draft.defs#draftEmbedImage' as const,
-            ...img,
-          }),
-        ),
+        items: serializeImages(post.embed.media.images, localRefPaths),
       }
     } else if (post.embed.media.type === 'video') {
       const video = await serializeVideo(post.embed.media.video, localRefPaths)
@@ -179,7 +175,7 @@ async function postDraftToServerPost(
 function serializeImages(
   images: ComposerImage[],
   localRefPaths: Map<string, string>,
-): AppBskyDraftDefs.DraftEmbedImage[] {
+): AppBskyDraftDefs.DraftEmbedGalleryItems {
   return images.map(image => {
     const sourcePath = image.transformed?.path || image.source.path
     // Reuse existing localRefPath if present (editing draft), otherwise generate new
@@ -194,7 +190,7 @@ function serializeImages(
     })
 
     return {
-      $type: 'app.bsky.draft.defs#draftEmbedImage',
+      $type: 'app.bsky.draft.defs#draftEmbedImage' as const,
       localRef: {
         $type: 'app.bsky.draft.defs#draftEmbedLocalRef',
         path: localRefPath,
