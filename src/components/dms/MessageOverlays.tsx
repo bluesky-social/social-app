@@ -125,6 +125,22 @@ export function MessageOverlays({children}: {children: React.ReactNode}) {
     [openDeleteMessage, openReportMessage, openReactions],
   )
 
+  // `reactionsTarget` is a snapshot from when the dialog was opened. Read the
+  // live message out of the convo items so optimistic reaction changes (e.g.
+  // "Tap to remove") are reflected in the dialog without closing it first.
+  const reactionsMessage = useMemo(() => {
+    if (!reactionsTarget) return null
+    for (const item of convo.items) {
+      if (
+        (item.type === 'message' || item.type === 'pending-message') &&
+        item.message.id === reactionsTarget.id
+      ) {
+        return item.message
+      }
+    }
+    return reactionsTarget
+  }, [convo.items, reactionsTarget])
+
   const reportSubject = reportTarget
     ? ({
         view: 'message',
@@ -153,11 +169,11 @@ export function MessageOverlays({children}: {children: React.ReactNode}) {
           onClose={() => setAfterReportTarget(null)}
         />
       )}
-      {reactionsTarget && (
+      {reactionsMessage && (
         <ReactionsDialog
           control={reactionsControl}
           relatedProfiles={convo.relatedProfiles}
-          message={reactionsTarget}
+          message={reactionsMessage}
           onClose={() => setReactionsTarget(null)}
         />
       )}
