@@ -58,7 +58,12 @@ import {InviteLinkDialog} from '../components/InviteLinkDialog'
 import {AddMembersLink} from './AddMembersLink'
 import {Member, MemberPlaceholder} from './Member'
 import {MembersAndRequests} from './MembersAndRequests'
-import {EditNamePrompt, LeaveChatPrompt, LockChatPrompt} from './prompts'
+import {
+  EditNamePrompt,
+  LeaveAndLockChatPrompt,
+  LeaveChatPrompt,
+  LockChatPrompt,
+} from './prompts'
 
 type Item =
   | {type: 'MEMBERS_AND_REQUESTS'; key: string}
@@ -375,33 +380,48 @@ function SettingsHeader({
     },
   )
 
-  const {mutate: lockConvo, isPending: isLocking} = useLockConvo(
-    convo.view.id,
-    {
-      onSuccess: data => {
-        if (!ChatBskyConvoDefs.isGroupConvo(data.convo.kind)) return
-        if (data.convo.kind.lockStatus === 'locked') {
-          Toast.show(l({message: 'Group chat locked', context: 'toast'}))
-        } else {
-          Toast.show(l({message: 'Group chat unlocked', context: 'toast'}))
-        }
-      },
-      onError: (e, {lock}) => {
-        if (lock) {
-          logger.error('Failed to lock group chat', {message: e})
-          Toast.show(l`Failed to lock group chat`, {type: 'error'})
-        } else {
-          logger.error('Failed to unlock group chat', {message: e})
-          Toast.show(l`Failed to unlock group chat`, {type: 'error'})
-        }
-      },
+  const {
+    mutate: lockConvo,
+    mutateAsync: lockConvoAsync,
+    isPending: isLocking,
+  } = useLockConvo(convo.view.id, {
+    onSuccess: data => {
+      if (!ChatBskyConvoDefs.isGroupConvo(data.convo.kind)) return
+      if (data.convo.kind.lockStatus === 'locked') {
+        Toast.show(l({message: 'Group chat locked', context: 'toast'}))
+      } else {
+        Toast.show(l({message: 'Group chat unlocked', context: 'toast'}))
+      }
     },
-  )
+    onError: (e, {lock}) => {
+      if (lock) {
+        logger.error('Failed to lock group chat', {message: e})
+        Toast.show(l`Failed to lock group chat`, {type: 'error'})
+      } else {
+        logger.error('Failed to unlock group chat', {message: e})
+        Toast.show(l`Failed to unlock group chat`, {type: 'error'})
+      }
+    },
+  })
+
+  const leaveAndLockConvo = async () => {
+    try {
+      if (lockStatus === 'unlocked') {
+        await lockConvoAsync({lock: true})
+      }
+    } catch {
+      // Handled by onError in useLockConvo
+      return
+    }
+    // Owners can only leave a locked chat
+    leaveConvo()
+  }
 
   const inviteLinkDialog = Dialog.useDialogControl()
   const editNamePrompt = Prompt.usePromptControl()
   const lockChatPrompt = Prompt.usePromptControl()
   const leaveChatPrompt = Prompt.usePromptControl()
+  const leaveAndLockChatPrompt = Prompt.usePromptControl()
   const reportControl = Prompt.usePromptControl()
   const deleteControl = Prompt.usePromptControl()
 
@@ -518,15 +538,15 @@ function SettingsHeader({
               onPress={reportControl.open}
             />
           ) : null}
-          {!isOwner ? (
-            <SettingsButton
-              disabled={!isReady || isLeaving}
-              icon={ArrowBoxLeftIcon}
-              label={l`Leave this group chat`}
-              text={l`Leave`}
-              onPress={leaveChatPrompt.open}
-            />
-          ) : null}
+          <SettingsButton
+            disabled={!isReady || isLeaving}
+            icon={ArrowBoxLeftIcon}
+            label={l`Leave this group chat`}
+            text={l`Leave`}
+            onPress={
+              isOwner ? leaveAndLockChatPrompt.open : leaveChatPrompt.open
+            }
+          />
         </View>
       </View>
       <EditNamePrompt
@@ -552,6 +572,13 @@ function SettingsHeader({
         control={leaveChatPrompt}
         groupName={groupName}
         onConfirm={leaveConvo}
+      />
+      <LeaveAndLockChatPrompt
+        control={leaveAndLockChatPrompt}
+        groupName={groupName}
+        onConfirm={() => {
+          void leaveAndLockConvo()
+        }}
       />
       {reportSubjectDid ? (
         <>
