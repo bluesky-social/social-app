@@ -5,7 +5,6 @@ import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
-import {useCallOnce} from '#/lib/once'
 import {shareUrl} from '#/lib/sharing'
 import {niceDate} from '#/lib/strings/time'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
@@ -103,12 +102,6 @@ export const StandardSiteEmbed = ({
       })
     }
   }
-
-  useCallOnce(() => {
-    if (!preview) {
-      ax.metric('embed:standardSite:view', {url: view.uri})
-    }
-  })()
 
   if (isStandardPublication) {
     return (
