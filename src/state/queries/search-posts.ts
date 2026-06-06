@@ -22,29 +22,35 @@ import {
 } from './util'
 
 const searchPostsQueryKeyRoot = 'search-posts'
-const searchPostsQueryKey = ({query, sort}: {query: string; sort?: string}) => [
-  searchPostsQueryKeyRoot,
+const searchPostsQueryKey = ({
   query,
   sort,
-]
+  author,
+}: {
+  query: string
+  sort?: string
+  author?: string
+}) => [searchPostsQueryKeyRoot, query, sort, author]
 
 export function useSearchPostsQuery({
   query,
   sort,
   enabled,
+  author,
 }: {
   query: string
   sort?: 'top' | 'latest'
   enabled?: boolean
+  author?: string
 }) {
   const agent = useAgent()
   const moderationOpts = useModerationOpts()
   const selectArgs = useMemo(
     () => ({
-      isSearchingSpecificUser: /from:(\w+)/.test(query),
+      isSearchingSpecificUser: !!author || /from:(\w+)/.test(query),
       moderationOpts,
     }),
-    [query, moderationOpts],
+    [query, author, moderationOpts],
   )
   const lastRun = useRef<{
     data: InfiniteData<AppBskyFeedSearchPosts.OutputSchema>
@@ -59,13 +65,14 @@ export function useSearchPostsQuery({
     QueryKey,
     string | undefined
   >({
-    queryKey: searchPostsQueryKey({query, sort}),
+    queryKey: searchPostsQueryKey({query, sort, author}),
     queryFn: async ({pageParam}) => {
       const res = await agent.app.bsky.feed.searchPosts({
         q: query,
         limit: 25,
         cursor: pageParam,
         sort,
+        author,
       })
       return res.data
     },
