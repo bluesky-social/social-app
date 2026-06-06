@@ -6,7 +6,7 @@ import {
 } from '@atproto/api'
 
 import {type ComposerImage} from '#/state/gallery'
-import {type Gif} from '#/state/queries/tenor'
+import {type Gif} from '#/features/gifPicker/types'
 
 /**
  * What an upload reporter (the worker, or a test) sends in. Failed inputs
