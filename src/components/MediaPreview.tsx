@@ -127,10 +127,12 @@ export function ImageItem({
   thumbnail,
   alt,
   children,
+  maxWidth = 100,
 }: {
   thumbnail?: string
   alt?: string
   children?: React.ReactNode
+  maxWidth?: number
 }) {
   const t = useTheme()
 
@@ -141,7 +143,7 @@ export function ImageItem({
           {backgroundColor: 'black'},
           a.flex_1,
           a.aspect_square,
-          {maxWidth: 100},
+          {maxWidth},
           a.rounded_xs,
         ]}
         accessibilityLabel={alt}
@@ -152,7 +154,7 @@ export function ImageItem({
   }
 
   return (
-    <View style={[a.relative, a.flex_1, a.aspect_square, {maxWidth: 100}]}>
+    <View style={[a.relative, a.flex_1, a.aspect_square, {maxWidth}]}>
       <Image
         key={thumbnail}
         source={{uri: thumbnail}}
