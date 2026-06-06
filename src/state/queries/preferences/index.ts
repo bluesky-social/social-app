@@ -84,30 +84,26 @@ export function usePreferencesQuery() {
          * Prefs are all downstream of age assurance now. For logged-out
          * users, we override moderation prefs based on AA state.
          */
+        const transformed = data.birthDate
+          ? {...data, birthDate: new Date(data.birthDate)}
+          : data
+
         if (
           aa.state.access !== aa.Access.Full ||
           aa.flags.adultContentDisabled
         ) {
           data = {
-            ...data,
+            ...transformed,
             moderationPrefs: makeAgeRestrictedModerationPrefs(
-              data.moderationPrefs,
+              transformed.moderationPrefs,
             ),
           }
         }
-        return data
+        return transformed
       },
       [aa],
     ),
   })
-
-  if (query.data?.birthDate) {
-    /**
-     * The persisted query cache stores dates as strings, but our code expects a `Date`.
-     */
-    query.data.birthDate = new Date(query.data.birthDate)
-  }
-
   return query
 }
 
