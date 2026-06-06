@@ -20,8 +20,9 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {invalidateActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {RQKEY, useProfileListsQuery} from '#/state/queries/profile-lists'
+import {useProfileListsQuery} from '#/state/queries/profile-lists'
 import {useSession} from '#/state/session'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
@@ -114,7 +115,10 @@ export function ProfileLists({
       animated: IS_NATIVE,
       offset: -headerOffset,
     })
-    queryClient.invalidateQueries({queryKey: RQKEY(did)})
+    invalidateActorStarterPacksQuery({
+      queryClient,
+      did,
+    })
   }, [scrollElRef, queryClient, headerOffset, did])
 
   useImperativeHandle(ref, () => ({

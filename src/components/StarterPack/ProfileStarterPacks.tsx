@@ -12,6 +12,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useGenerateStarterPackMutation} from '#/lib/generate-starterpack'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
@@ -20,7 +21,10 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type NavigationProp} from '#/lib/routes/types'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
-import {useActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
+import {
+  invalidateActorStarterPacksQuery,
+  useActorStarterPacksQuery,
+} from '#/state/queries/actor-starter-packs'
 import {
   EmptyState,
   type EmptyStateButtonProps,
@@ -36,7 +40,7 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
-import {IS_IOS} from '#/env'
+import {IS_IOS, IS_NATIVE} from '#/env'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -113,8 +117,22 @@ export function ProfileStarterPacks({
     return <Empty />
   }, [_, emptyStateMessage, emptyStateButton, emptyStateIcon])
 
+  const queryClient = useQueryClient()
+
+  const onScrollToTop = useCallback(() => {
+    scrollElRef.current?.scrollToOffset({
+      animated: IS_NATIVE,
+      offset: -headerOffset,
+    })
+
+    void invalidateActorStarterPacksQuery({
+      queryClient,
+      did,
+    })
+  }, [scrollElRef, queryClient, headerOffset, did])
+
   useImperativeHandle(ref, () => ({
-    scrollToTop: () => {},
+    scrollToTop: onScrollToTop,
   }))
 
   const onRefresh = useCallback(async () => {
