@@ -11,12 +11,12 @@ jest.mock('#/state/session/agent', () => ({
 }))
 
 import {type resolveLink} from '#/lib/api/resolve'
-import {type Gif} from '#/state/queries/tenor'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
   type AddMediaInput,
   type PostEmbedMedia,
 } from '#/components/ComposerV2/store/types'
+import {type Gif} from '#/features/gifPicker/types'
 
 function makeIdGenerator() {
   let i = 0
@@ -73,7 +73,7 @@ function makeStore() {
   return createThreadStore({
     agent,
     __createId: makeIdGenerator(),
-    __resolveLink: mockResolveLink as unknown as typeof resolveLink,
+    __resolveLink: mockResolveLink,
   })
 }
 
