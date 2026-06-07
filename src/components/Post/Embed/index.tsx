@@ -43,6 +43,7 @@ import {PostPlaceholder as PostPlaceholderText} from './PostPlaceholder'
 import {
   type CommonProps,
   type EmbedProps,
+  type PostContextProps,
   type PostEmbedViewContext,
 } from './types'
 import {VideoEmbed} from './VideoEmbed'
@@ -86,9 +87,10 @@ export function Embed({embed: rawEmbed, ...rest}: EmbedProps) {
 function MediaEmbed({
   embed,
   ...rest
-}: CommonProps & {
-  embed: TEmbed
-}) {
+}: CommonProps &
+  PostContextProps & {
+    embed: TEmbed
+  }) {
   switch (embed.type) {
     case 'images':
     case 'gallery': {
@@ -159,9 +161,10 @@ function MediaEmbed({
 function RecordEmbed({
   embed,
   ...rest
-}: CommonProps & {
-  embed: TEmbed
-}) {
+}: CommonProps &
+  PostContextProps & {
+    embed: TEmbed
+  }) {
   switch (embed.type) {
     case 'feed': {
       return (
@@ -298,6 +301,13 @@ export function QuoteEmbed({
       : undefined
   }, [quote.record])
 
+  const postCreatedAt = bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    quote.record,
+    AppBskyFeedPost.isRecord,
+  )
+    ? quote.record.createdAt
+    : undefined
+
   const onBeforePress = useCallback(() => {
     unstableCacheProfileView(queryClient, quote.author)
     onOpen?.()
@@ -345,6 +355,9 @@ export function QuoteEmbed({
           allowNestedQuotes={
             parentIsWithinQuote ? false : parentAllowNestedQuotes
           }
+          postUri={quote.uri}
+          postAuthorHandle={quote.author.handle}
+          postCreatedAt={postCreatedAt}
         />
       )}
     </>

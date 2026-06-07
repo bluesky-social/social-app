@@ -2,7 +2,8 @@ import {useRef} from 'react'
 import {InteractionManager, View} from 'react-native'
 import {type AnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
-import {AppBskyEmbedGallery, type AppBskyEmbedImages} from '@atproto/api'
+import {AppBskyEmbedGallery, type AppBskyEmbedImages, AtUri} from '@atproto/api'
+import {format, parseISO} from 'date-fns'
 
 import {atoms as a, tokens} from '#/alf'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
@@ -14,16 +15,17 @@ import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {useAnalytics} from '#/analytics'
 import {type EmbedType} from '#/types/bsky/post'
-import {type CommonProps} from './types'
+import {type CommonProps, type PostContextProps} from './types'
 
 const MAX_GRID_IMAGES = 4
 
 export function ImageEmbed({
   embed,
   ...rest
-}: CommonProps & {
-  embed: EmbedType<'images'> | EmbedType<'gallery'>
-}) {
+}: CommonProps &
+  PostContextProps & {
+    embed: EmbedType<'images'> | EmbedType<'gallery'>
+  }) {
   const ax = useAnalytics()
   const {openLightbox} = useLightboxControls()
   const images: AppBskyEmbedImages.ViewImage[] =
@@ -39,6 +41,12 @@ export function ImageEmbed({
     embed.type === 'gallery'
       ? images.length > MAX_GRID_IMAGES
       : ax.features.enabled(ax.features.PostGalleryEmbedEnable)
+  const postRkey = rest.postUri ? new AtUri(rest.postUri).rkey : undefined
+  const handle = rest.postAuthorHandle
+  const timestamp = rest.postCreatedAt
+    ? format(parseISO(rest.postCreatedAt), "yyyy-MM-dd'T'HHmmss")
+    : undefined
+  const canName = !!(handle && postRkey)
 
   // Captured from AutoSizedImage so the peek-commit handler can reuse the same
   // ref + dims that a tap would — keeps the lightbox's return animation intact.
@@ -46,11 +54,17 @@ export function ImageEmbed({
   const singleDimsRef = useRef<Dimensions | null>(null)
 
   if (images.length > 0) {
-    const items = images.map(img => ({
+    const items = images.map((img, idx) => ({
       uri: img.fullsize,
       thumbUri: img.thumb,
       alt: img.alt,
       dimensions: img.aspectRatio ?? null,
+      baseSaveName: canName
+        ? (() => {
+            const base = `${handle}_${postRkey}_img${idx + 1}`
+            return timestamp ? `${base}_${timestamp}` : base
+          })()
+        : undefined,
     }))
     const onPress = (
       index: number,

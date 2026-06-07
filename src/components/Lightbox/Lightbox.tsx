@@ -19,7 +19,7 @@ export function Lightbox() {
     <ImageView
       lightbox={activeLightbox}
       onRequestClose={onClose}
-      onPressSave={uri => void saveImageToAlbum(uri)}
+      onPressSave={opts => void saveImageToAlbum(opts)}
       onPressShare={uri => void shareImageModal({uri})}
     />
   )

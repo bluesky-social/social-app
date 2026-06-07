@@ -255,6 +255,9 @@ function PostInner({
                     embed={post.embed}
                     moderation={moderation}
                     viewContext={PostEmbedViewContext.Feed}
+                    postUri={post.uri}
+                    postAuthorHandle={post.author.handle}
+                    postCreatedAt={record.createdAt}
                   />
                 </View>
               ) : null}
