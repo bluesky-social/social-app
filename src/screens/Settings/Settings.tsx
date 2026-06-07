@@ -57,6 +57,7 @@ import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/W
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
+import {useNuxDialogContext} from '#/components/dialogs/nuxs'
 import {ID as PolicyUpdate202508} from '#/components/PolicyUpdateOverlay/updates/202508/config'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import * as Prompt from '#/components/Prompt'
@@ -65,6 +66,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL, IS_IOS, IS_NATIVE} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
+import {Nux, useResetNuxs} from '#/state/queries/nuxs'
 import {device, useStorage} from '#/storage'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
 
@@ -382,6 +384,8 @@ function DevOptions() {
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {mutate: deleteChatDeclarationRecord} = useDeleteActorDeclaration()
+  const {mutate: resetNuxs} = useResetNuxs()
+  const {triggerNux} = useNuxDialogContext()
   const {
     tryApplyUpdate,
     revertToEmbedded,
@@ -553,6 +557,31 @@ function DevOptions() {
             <ButtonText>Reset state</ButtonText>
           </Button>
         </View>
+      </View>
+      <SettingsList.Divider />
+      <View style={[a.p_xl, a.gap_md]}>
+        <Text style={[a.text_lg, a.font_semi_bold]}>NUX Triggers</Text>
+        {Object.values(Nux).map(nuxId => (
+          <View
+            key={nuxId}
+            style={[a.flex_row, a.align_center, a.justify_between, a.gap_sm]}>
+            <Text style={[a.text_sm, a.flex_1]} numberOfLines={1}>
+              {nuxId}
+            </Text>
+            <Button
+              onPress={() => {
+                resetNuxs([nuxId])
+                setTimeout(() => {
+                  triggerNux(nuxId as Nux)
+                }, 1000)
+              }}
+              label={`Reset & trigger ${nuxId}`}
+              color="secondary"
+              size="tiny">
+              <ButtonText>Reset</ButtonText>
+            </Button>
+          </View>
+        ))}
       </View>
       <SettingsList.Divider />
     </>

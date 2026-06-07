@@ -1,4 +1,4 @@
-import {useContext} from 'react'
+import {useContext, useState} from 'react'
 import {Alert, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as Contacts from 'expo-contacts'
@@ -212,12 +212,14 @@ export function GetContacts({
     },
     onError: err => {
       if (err instanceof PermissionDeniedError) {
-        showPermissionDeniedAlert()
+        setPermissionDenied(true)
       } else {
         logger.error('Error getting contacts', {safeMessage: err})
       }
     },
   })
+
+  const [permissionDenied, setPermissionDenied] = useState(false)
 
   const isPending = isUploadPending || isGetContactsPending
 
@@ -297,6 +299,22 @@ export function GetContacts({
             <Trans>Cancel</Trans>
           </ButtonText>
         </Button>
+        {permissionDenied && (
+          <Button
+            label={_(msg`Continue without contacts`)}
+            size="large"
+            color="secondary"
+            onPress={() => {
+              dispatch({
+                type: 'SYNC_CONTACTS_SUCCESS',
+                payload: {matches: [], contacts: []},
+              })
+            }}>
+            <ButtonText>
+              <Trans>Continue without contacts</Trans>
+            </ButtonText>
+          </Button>
+        )}
       </View>
     </View>
   )

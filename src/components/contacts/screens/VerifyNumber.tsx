@@ -53,6 +53,16 @@ export function VerifyNumber({
     message: string
   } | null>(null)
 
+  // Dev bypass: if phone number is 'devbypass', skip verification entirely
+  useEffect(() => {
+    if (state.phoneNumber === 'devbypass') {
+      dispatch({
+        type: 'VERIFY_PHONE_NUMBER_SUCCESS',
+        payload: {token: 'devbypass-token'},
+      })
+    }
+  }, [state.phoneNumber, dispatch])
+
   const [prevOtpCode, setPrevOtpCode] = useState(otpCode)
   if (otpCode !== prevOtpCode) {
     setPrevOtpCode(otpCode)

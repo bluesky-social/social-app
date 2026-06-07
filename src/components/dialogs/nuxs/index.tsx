@@ -30,6 +30,7 @@ import {useGeolocation} from '#/geolocation'
 type Context = {
   activeNux: Nux | undefined
   dismissActiveNux: () => void
+  triggerNux: (id: Nux) => void
 }
 
 const queuedNuxs: {
@@ -45,6 +46,7 @@ const queuedNuxs: {
 const Context = createContext<Context>({
   activeNux: undefined,
   dismissActiveNux: () => {},
+  triggerNux: () => {},
 })
 Context.displayName = 'NuxDialogContext'
 
@@ -70,13 +72,18 @@ export function NuxDialogs() {
     !profile.createdAt ||
     profile.createdAt === '0001-01-01T00:00:00.000Z' // TODO: Fix this in AppView.
 
-  return !isLoading ? (
+  if (isLoading) {
+    // Still render a provider so useNuxDialogContext works in child screens.
+    return <Context.Provider value={{activeNux: undefined, dismissActiveNux: () => {}, triggerNux: () => {}}} />
+  }
+
+  return (
     <Inner
       currentAccount={currentAccount}
       currentProfile={profile}
       preferences={preferences}
     />
-  ) : null
+  )
 }
 
 function Inner({
@@ -107,6 +114,15 @@ function Inner({
     if (!activeNux) return
     setActiveNux(undefined)
   }, [activeNux, setActiveNux])
+
+  const triggerNux = useCallback(
+    (id: Nux) => {
+      unsnooze()
+      setSnoozed(false)
+      setActiveNux(id)
+    },
+    [setSnoozed],
+  )
 
   if (__DEV__ && typeof window !== 'undefined') {
     // @ts-ignore
@@ -180,8 +196,9 @@ function Inner({
     return {
       activeNux,
       dismissActiveNux,
+      triggerNux,
     }
-  }, [activeNux, dismissActiveNux])
+  }, [activeNux, dismissActiveNux, triggerNux])
 
   return (
     <Context.Provider value={ctx}>

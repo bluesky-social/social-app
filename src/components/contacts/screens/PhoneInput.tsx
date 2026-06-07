@@ -125,6 +125,14 @@ export function PhoneInput({
   const isFeatureEnabled = isFindContactsFeatureEnabled(countryCode)
 
   const onSubmitNumber = () => {
+    // Dev shortcut: typing "continue" bypasses phone verification
+    if (phoneNumber.toLowerCase() === 'continue') {
+      dispatch({
+        type: 'SUBMIT_PHONE_NUMBER',
+        payload: {phoneCountryCode: countryCode, phoneNumber: 'devbypass'},
+      })
+      return
+    }
     if (!isFeatureEnabled) return
     if (!phoneNumber) return
     const result = processPhoneNumber(phoneNumber, countryCode)

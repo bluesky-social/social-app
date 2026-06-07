@@ -206,7 +206,12 @@ export function AnalyticsFeaturesContext({
     return {
       ...parentContext,
       features: {
-        enabled: feats.isOn.bind(feats),
+        enabled: (feature: Features) => {
+          // Disable all feature gates: *:disable flags are always off (feature enabled),
+          // all other flags (e.g. *:enable) are always on (feature enabled).
+          if ((feature as string).endsWith(':disable')) return false
+          return true
+        },
         ...Features,
       },
     }
