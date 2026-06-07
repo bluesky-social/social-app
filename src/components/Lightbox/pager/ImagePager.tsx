@@ -84,7 +84,7 @@ export default function ImageViewRoot({
 }: {
   lightbox: Lightbox | null
   onRequestClose: () => void
-  onPressSave: (uri: string) => void
+  onPressSave: (opts: {uri: string; baseSaveName?: string}) => void
   onPressShare: (uri: string) => void
 }) {
   'use no memo'
@@ -221,7 +221,7 @@ function ImageView({
   lightbox: Lightbox
   orientation: 'portrait' | 'landscape'
   onRequestClose: () => void
-  onPressSave: (uri: string) => void
+  onPressSave: (opts: {uri: string; baseSaveName?: string}) => void
   onPressShare: (uri: string) => void
   onFlyAway: () => void
   safeAreaRef: AnimatedRef<View>
@@ -414,7 +414,12 @@ function ImageView({
           <Header
             onRequestClose={handleRequestClose}
             onPressShare={() => onPressShare(images[imageIndex].uri)}
-            onPressSave={() => onPressSave(images[imageIndex].uri)}
+            onPressSave={() =>
+              onPressSave({
+                uri: images[imageIndex].uri,
+                baseSaveName: images[imageIndex].baseSaveName,
+              })
+            }
             imageCount={images.length}
             activeIndex={imageIndex}
           />

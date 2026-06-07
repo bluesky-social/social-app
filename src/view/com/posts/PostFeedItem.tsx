@@ -480,6 +480,7 @@ let PostContent = ({
         : undefined,
     [post],
   )
+  const postCreatedAt = record?.createdAt
 
   const onPressShowMore = useCallback(() => {
     setLimitLines(false)
@@ -528,6 +529,9 @@ let PostContent = ({
             moderation={moderation}
             onOpen={onOpenEmbed}
             viewContext={PostEmbedViewContext.Feed}
+            postUri={post.uri}
+            postAuthorHandle={postAuthor.handle}
+            postCreatedAt={postCreatedAt}
           />
         </View>
       ) : null}
