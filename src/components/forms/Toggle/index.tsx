@@ -461,7 +461,7 @@ export function Switch() {
 
     if (disabled) {
       base.push({
-        backgroundColor: t.palette.contrast_50,
+        backgroundColor: t.palette.contrast_100,
       })
 
       if (selected) {
