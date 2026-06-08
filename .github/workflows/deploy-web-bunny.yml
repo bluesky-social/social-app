@@ -1,0 +1,48 @@
+# Eurosky fork: build the web app and deploy it to Bunny.net.
+#
+# Builds web-build/ via pages_build.sh, uploads it to the Bunny Edge Storage
+# zone, then purges the pull zone cache. New file (not in upstream) -> no merge
+# surface.
+#
+# Required repo secrets (Settings -> Secrets and variables -> Actions):
+#   BUNNY_STORAGE_ZONE      full base URL incl. zone, e.g.
+#                           https://storage.bunnycdn.com/eurosky-app
+#   BUNNY_STORAGE_PASSWORD  storage zone password (AccessKey for uploads)
+#   BUNNY_API_KEY           account-level API key (for the cache purge)
+#   BUNNY_PULLZONE_ID       numeric pull zone id (for the cache purge)
+name: Deploy web (Bunny)
+
+on:
+  # Manual run: Actions tab -> "Deploy web (Bunny)" -> Run workflow.
+  workflow_dispatch: {}
+  # To auto-deploy on push, uncomment and set the deploy branch:
+  push:
+    branches: [eurosky/deploy]
+
+# Never run two deploys at once; a newer run supersedes an in-flight one.
+concurrency:
+  group: deploy-web-bunny
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: package.json
+          cache: pnpm
+      # pages_build.sh does: frozen install (CI) -> intl:build -> build-web ->
+      # static-path rewrite -> _redirects. CI=true is set by Actions, so it
+      # uses --frozen-lockfile.
+      - name: Build web
+        run: bash ./pages_build.sh
+      - name: Upload to Bunny + purge cache
+        run: bash ./bunny_upload.sh
+        env:
+          BUNNY_STORAGE_ZONE: ${{ secrets.BUNNY_STORAGE_ZONE }}
+          BUNNY_STORAGE_PASSWORD: ${{ secrets.BUNNY_STORAGE_PASSWORD }}
+          BUNNY_API_KEY: ${{ secrets.BUNNY_API_KEY }}
+          BUNNY_PULLZONE_ID: ${{ secrets.BUNNY_PULLZONE_ID }}

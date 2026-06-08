@@ -28,7 +28,10 @@ export function useAccountSwitcher() {
       }
       try {
         setPendingDid(account.did)
-        if (account.accessJwt) {
+        // Eurosky: OAuth accounts have no stored accessJwt (DPoP tokens
+        // live in the BrowserOAuthClient store), so accept isOauthSession
+        // here too - otherwise every account switch forces a re-login.
+        if (account.accessJwt || account.isOauthSession) {
           if (IS_WEB) {
             // We're switching accounts, which remounts the entire app.
             // On mobile, this gets us Home, but on the web we also need reset the URL.

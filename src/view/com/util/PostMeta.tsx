@@ -1,6 +1,10 @@
 import {memo, useCallback} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
+import {
+  type AppBskyActorDefs,
+  type AppBskyFeedPost,
+  type ModerationDecision,
+} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -15,6 +19,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {unstableCacheProfileView} from '#/state/queries/profile'
 import {atoms as a, useTheme, web} from '#/alf'
 import {WebOnlyInlineLinkText} from '#/components/Link'
+import {PostEditedIndicator} from '#/components/PostEditedIndicator'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
@@ -28,6 +33,8 @@ interface PostMetaOpts {
   moderation: ModerationDecision | undefined
   postHref: string
   timestamp: string
+  // Pass the record to show an "Edited" badge on edited posts.
+  record?: AppBskyFeedPost.Record
   linkDisabled?: boolean
   showAvatar?: boolean
   avatarSize?: number
@@ -166,6 +173,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             </MaybeLinkText>
           )}
         </TimeElapsed>
+        {opts.record && <PostEditedIndicator record={opts.record} />}
       </View>
     </View>
   )

@@ -4,6 +4,25 @@ strictPeerDependencies: false # default: false
 trustPolicy: 'no-downgrade' # default: off
 trustPolicyIgnoreAfter: 10080 # 7 days, default: undefined
 overrides:
+  # Eurosky fork: zod is split across two majors on purpose.
+  # - Default 3.24.4 (last pre-3.25): zod 3.25 restructured its internals ("Zod 4
+  #   in v3 clothing"), which breaks @atproto/did@0.3.0's `zod.z` access once
+  #   bundled by webpack (works in Node, throws "Cannot read properties of
+  #   undefined (reading 'string')" in the browser). All @atproto packages declare
+  #   zod ^3.23.8, so 3.24.4 satisfies the whole bundled stack consistently.
+  # - eslint-plugin-react-hooks (+ its nested zod-validation-error) import the
+  #   `zod/v4` subpath, which only exists in zod >=3.25. With the 3.24.4 default
+  #   they crash ESLint (ERR_PACKAGE_PATH_NOT_EXPORTED ./v4) and block pre-commit.
+  #   These are lint-only (not in the web bundle), so pin them to 3.25.x.
+  'zod': '3.24.4'
+  'eslint-plugin-react-hooks>zod': '3.25.76'
+  'zod-validation-error>zod': '3.25.76'
+  # Eurosky fork: OAuth client stack pins (migrated from package.json "resolutions")
+  '@atproto/jwk': '0.6.0'
+  '@atproto/jwk-jose': '0.1.11'
+  '@atproto/jwk-webcrypto': '0.2.0'
+  '@atproto/oauth-client': '0.5.14'
+  '@atproto/oauth-client-browser': '0.3.40'
   '@react-native/babel-preset': '0.81.5'
   '@react-native/normalize-colors': '0.81.5'
   '@expo/image-utils': '0.8.12'
@@ -17,7 +36,16 @@ allowBuilds:
   '@sentry/cli': true
   'core-js-pure': true
   'esbuild': true
-  'unrs-resolver': true
+  # Eurosky fork: explicitly DENY these two build scripts (false) so pnpm does
+  # not re-prompt / rewrite this file.
+  # - unrs-resolver: pnpm 11.1.3 links its napi-postinstall bin as 0644 (no +x),
+  #   so the postinstall aborts with exit 126, breaking `pnpm install`/`pnpm web`.
+  #   The script is only a verifier; the native binding installs via
+  #   optionalDependencies and the resolver loads fine. Safe on all platforms
+  #   (lint-only dep; the web build does not use it).
+  # - core-js: its postinstall only prints a donation message; nothing to build.
+  'unrs-resolver': false
+  'core-js': false
 patchedDependencies:
   '@discord/bottom-sheet@4.6.1': patches/@discord__bottom-sheet@4.6.1.patch
   '@sentry/react-native@6.20.0': patches/@sentry__react-native@6.20.0.patch

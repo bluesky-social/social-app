@@ -1,17 +1,24 @@
-import {type AppBskyActorGetProfile} from '@atproto/api'
-import {useMutation} from '@tanstack/react-query'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {until} from '#/lib/async/until'
-import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
+import {
+  createMuVerificationQueryKey,
+  type MuVerification,
+} from '#/state/queries/verification/useMuVerificationQuery'
 import {useAgent, useSession} from '#/state/session'
 import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
+// Constellation indexes new records off the firehose with a few seconds of lag,
+// so after writing we update the cache optimistically and reconcile shortly
+// after. Bluesky's AppView will never reflect our verification (our issuer is
+// not in its trusted set), so we no longer poll getProfile.
+const CONSTELLATION_INDEX_DELAY = 8e3
+
 export function useVerificationCreateMutation() {
   const ax = useAnalytics()
   const agent = useAgent()
+  const qc = useQueryClient()
   const {currentAccount} = useSession()
-  const updateProfileVerificationCache = useUpdateProfileVerificationCache()
 
   return useMutation({
     async mutationFn({profile}: {profile: bsky.profile.AnyProfileView}) {
@@ -19,36 +26,40 @@ export function useVerificationCreateMutation() {
         throw new Error('User not logged in')
       }
 
+      const createdAt = new Date().toISOString()
       const {uri} = await agent.app.bsky.graph.verification.create(
         {repo: currentAccount.did},
         {
           subject: profile.did,
-          createdAt: new Date().toISOString(),
+          createdAt,
           handle: profile.handle,
           displayName: profile.displayName || '',
         },
       )
-
-      await until(
-        5,
-        1e3,
-        ({data: profile}: AppBskyActorGetProfile.Response) => {
-          if (
-            profile.verification &&
-            profile.verification.verifications.find(v => v.uri === uri)
-          ) {
-            return true
-          }
-          return false
-        },
-        () => {
-          return agent.getProfile({actor: profile.did ?? ''})
-        },
-      )
+      return {uri, createdAt}
     },
-    async onSuccess(_, {profile}) {
+    onSuccess({uri, createdAt}, {profile}) {
       ax.metric('verification:create', {})
-      await updateProfileVerificationCache({profile})
+      if (!currentAccount) return
+
+      const key = createMuVerificationQueryKey(profile.did)
+      qc.setQueryData<MuVerification>(key, prev => {
+        const next: MuVerification = prev ?? {
+          verifications: [],
+          isVerifier: false,
+        }
+        if (next.verifications.some(v => v.uri === uri)) return next
+        return {
+          ...next,
+          verifications: [
+            {issuer: currentAccount.did, uri, isValid: true, createdAt},
+            ...next.verifications,
+          ],
+        }
+      })
+      setTimeout(() => {
+        void qc.invalidateQueries({queryKey: key})
+      }, CONSTELLATION_INDEX_DELAY)
     },
   })
 }

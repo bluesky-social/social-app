@@ -19,19 +19,20 @@ import {AgeAssuranceAccess} from '#/ageAssurance/types'
 import {type Geolocation, useGeolocation} from '#/geolocation'
 
 export const MIN_ACCESS_AGE = 13
+// Fork divergence: in regions with no explicit age-assurance config (i.e. every
+// non-regulated country - Germany and most of the world), grant Full access by
+// default instead of failing safe to None. Upstream's fallback Default is None,
+// which gates anyone without a self-declared birthdate - including OAuth/non-
+// Bluesky-signup accounts that have no way to set one. Regulated regions are
+// unaffected: they match server-provided rules and never hit this fallback.
 const FALLBACK_REGION_CONFIG: AppBskyAgeassuranceDefs.ConfigRegion = {
   countryCode: '*',
   regionCode: undefined,
   minAccessAge: MIN_ACCESS_AGE,
   rules: [
     {
-      $type: ids.IfDeclaredOverAge,
-      age: MIN_ACCESS_AGE,
-      access: AgeAssuranceAccess.Full,
-    },
-    {
       $type: ids.Default,
-      access: AgeAssuranceAccess.None,
+      access: AgeAssuranceAccess.Full,
     },
   ],
 }
@@ -126,5 +127,5 @@ export function maybeRestrictChatSettings({agent}: {agent: AtpAgent}) {
   const data = getOtherRequiredDataFromCache({did})
   // ...update the chat setting record if allowIncoming is not already 'none'.
   if (data?.actorDeclaration?.allowIncoming === 'none') return
-  restrictChatSettings({agent, did})
+  void restrictChatSettings({agent, did})
 }

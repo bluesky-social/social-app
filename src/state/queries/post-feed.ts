@@ -25,6 +25,7 @@ import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {LikesFeedAPI} from '#/lib/api/feed/likes'
 import {ListFeedAPI} from '#/lib/api/feed/list'
 import {MergeFeedAPI} from '#/lib/api/feed/merge'
+import {NewsFeedAPI} from '#/lib/api/feed/news'
 import {PostListFeedAPI} from '#/lib/api/feed/posts'
 import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
@@ -63,6 +64,7 @@ export type FeedDescriptor =
   | `likes|${ActorDid}`
   | `list|${ListUri}`
   | `posts|${PostsUriList}`
+  | `newsfeed|${string}`
   | 'demo'
 export interface FeedParams {
   mergeFeedEnabled?: boolean
@@ -487,6 +489,9 @@ function createApi({
   } else if (feedDesc.startsWith('posts')) {
     const [__, uriList] = feedDesc.split('|')
     return new PostListFeedAPI({agent, feedParams: {uris: uriList.split(',')}})
+  } else if (feedDesc.startsWith('newsfeed')) {
+    const [__, dids] = feedDesc.split('|')
+    return new NewsFeedAPI({agent, dids: dids ? dids.split(',') : []})
   } else if (feedDesc === 'demo') {
     return new DemoFeedAPI({agent})
   } else {

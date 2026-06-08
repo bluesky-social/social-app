@@ -7,12 +7,13 @@ import {Trans} from '@lingui/react/macro'
 import {FocusGuards, FocusScope} from 'radix-ui/internal'
 
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {Logo} from '#/view/icons/Logo'
-import {atoms as a, flatten, useBreakpoints, web} from '#/alf'
+import {Logotype} from '#/view/icons/Logotype'
+import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {EUROSKY} from '#/config/eurosky'
 
 const welcomeModalBg = require('../../assets/images/welcome-modal-bg.jpg')
 
@@ -26,6 +27,7 @@ interface WelcomeModalProps {
 
 export function WelcomeModal({control}: WelcomeModalProps) {
   const {_} = useLingui()
+  const t = useTheme()
   const ax = useAnalytics()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const {gtMobile} = useBreakpoints()
@@ -104,20 +106,13 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                   a.align_center,
                   a.justify_center,
                   a.w_full,
-                  a.p_0,
                 ]}>
-                <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-                  <Logo width={26} />
-                  <Text
-                    style={[
-                      a.text_2xl,
-                      a.font_semi_bold,
-                      a.user_select_none,
-                      {color: '#354358', letterSpacing: -0.5},
-                    ]}>
-                    Bluesky
-                  </Text>
-                </View>
+                <Logotype
+                  width={140}
+                  fill="white"
+                  accessibilityLabel={EUROSKY.brand.name}
+                  accessibilityHint=""
+                />
               </View>
               <View
                 style={[
@@ -132,17 +127,17 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                     gtMobile ? a.text_4xl : a.text_3xl,
                     a.font_semi_bold,
                     a.text_center,
-                    {color: '#354358'},
-                    web({
-                      backgroundImage:
-                        'linear-gradient(180deg, #313F54 0%, #667B99 83.65%, rgba(102, 123, 153, 0.50) 100%)',
-                      backgroundClip: 'text',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      color: 'transparent',
-                      lineHeight: 1.2,
-                      letterSpacing: -0.5,
-                    }),
+                    {
+                      // White + soft shadow reads across both the bright
+                      // sky and dark rock of the alps image; the upstream
+                      // gradient was tuned for an all-clouds background and
+                      // disappeared over the mountains.
+                      color: 'white',
+                      textShadowColor: 'rgba(0,0,0,0.45)',
+                      textShadowOffset: {width: 0, height: 1},
+                      textShadowRadius: 8,
+                    },
+                    web({lineHeight: 1.2, letterSpacing: -0.5}),
                   ]}>
                   <Trans>Real people.</Trans>
                   {'\n'}
@@ -160,7 +155,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                     color="primary"
                     style={{
                       width: 200,
-                      backgroundColor: '#006AFF',
+                      backgroundColor: t.palette.primary_500,
                     }}>
                     <ButtonText>
                       <Trans>Create account</Trans>
@@ -176,7 +171,15 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                     hoverStyle={[a.bg_transparent]}>
                     {({hovered}) => (
                       <ButtonText
-                        style={[hovered && [a.underline], {color: '#006AFF'}]}>
+                        style={[
+                          hovered && [a.underline],
+                          {
+                            color: t.palette.primary_300,
+                            textShadowColor: 'rgba(0,0,0,0.55)',
+                            textShadowOffset: {width: 0, height: 1},
+                            textShadowRadius: 6,
+                          },
+                        ]}>
                         <Trans>Explore the app</Trans>
                       </ButtonText>
                     )}
@@ -187,7 +190,13 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                     style={[
                       a.text_md,
                       a.text_center,
-                      {color: '#405168', lineHeight: 24},
+                      {
+                        color: 'white',
+                        textShadowColor: 'rgba(0,0,0,0.45)',
+                        textShadowOffset: {width: 0, height: 1},
+                        textShadowRadius: 6,
+                        lineHeight: 24,
+                      },
                     ]}>
                     <Trans>Already have an account?</Trans>{' '}
                     <Pressable
@@ -200,8 +209,11 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                         style={[
                           a.font_medium,
                           {
-                            color: '#006AFF',
+                            color: t.palette.primary_300,
                             fontSize: undefined,
+                            textShadowColor: 'rgba(0,0,0,0.55)',
+                            textShadowOffset: {width: 0, height: 1},
+                            textShadowRadius: 6,
                           },
                           signInLinkHovered && a.underline,
                         ]}
@@ -236,7 +248,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                 <XIcon
                   size="md"
                   style={{
-                    color: '#354358',
+                    color: 'white',
                     opacity: hovered || pressed || focused ? 1 : 0.7,
                   }}
                 />

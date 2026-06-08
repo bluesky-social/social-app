@@ -19,11 +19,6 @@
       "count": 1
     }
   },
-  "src/ageAssurance/util.ts": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/alf/util/flatten.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -1263,11 +1258,6 @@
     }
   },
   "src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx": {
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    }
-  },
-  "src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 1
     }

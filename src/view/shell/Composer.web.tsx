@@ -79,6 +79,7 @@ function Inner({state}: {state: ComposerOpts}) {
             text={state.text}
             imageUris={state.imageUris}
             openGallery={state.openGallery}
+            editPost={state.editPost}
           />
         </View>
       </DismissableLayer.DismissableLayer>

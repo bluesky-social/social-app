@@ -60,6 +60,8 @@ export function FEEDBACK_FORM_URL({
 
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256
+// Matches the `pronouns` maxGraphemes in the app.bsky.actor.profile lexicon.
+export const MAX_PRONOUNS = 20
 
 export const MAX_GRAPHEME_LENGTH = 300
 
@@ -227,6 +229,36 @@ export const urls = {
 
 export const PUBLIC_APPVIEW = 'https://api.bsky.app'
 export const PUBLIC_APPVIEW_DID = 'did:web:api.bsky.app'
+
+/**
+ * Verification (Eurosky fork)
+ *
+ * We run our own on-protocol verification on top of Bluesky's. Verifications
+ * themselves reuse the standard `app.bsky.graph.verification` lexicon, so they
+ * are normal records issued by a verifier into their own repo. The trust root
+ * is the set of "trusted verifier" DIDs below: a verification only counts if
+ * its issuer is in this set.
+ *
+ * For now this set is hardcoded. The intended migration path is to read it from
+ * `social.mu.trustedVerifier` records held in a root account, so the trust root
+ * itself becomes public, auditable, on-protocol data. When that lands, replace
+ * TRUSTED_VERIFIER_DIDS with a query and keep the rest of the pipeline the same.
+ */
+export const TRUSTED_VERIFIER_DIDS = [
+  'did:plc:257wekqxg4hyapkq6k47igmp', // flo-bit.dev
+  'did:plc:durcipmx2rwgzzagbiumobs5', // france-atmosphe.re
+  'did:plc:ooensn4mr5mhznzypvxelfa3', // eurosky.social
+  'did:plc:u5zp7npt5kpueado77kuihyz', // npmx.dev
+  'did:plc:hd564mpf6bekrwzyhvujs54b', // medsky.network
+]
+
+/**
+ * Microcosm Constellation - an atproto-wide backlink index. We use it as a
+ * reverse index: "which `app.bsky.graph.verification` records point at this
+ * DID as their subject", without having to run our own AppView.
+ * https://constellation.microcosm.blue/
+ */
+export const CONSTELLATION_SERVICE = 'https://constellation.microcosm.blue'
 export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.bsky.dev'
 
 export const DEV_ENV_APPVIEW = `http://localhost:2584` // always the same

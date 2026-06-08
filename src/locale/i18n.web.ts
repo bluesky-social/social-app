@@ -6,6 +6,10 @@ import {enUS as defaultLocale} from 'date-fns/locale/en-US'
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {AppLanguage} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
+import {installRebrand} from '#/config/euroskyStrings'
+
+// Eurosky fork: single chokepoint for the "Bluesky" -> "Eurosky" brand swap.
+installRebrand(i18n)
 
 /**
  * We do a dynamic import of just the catalog that we need

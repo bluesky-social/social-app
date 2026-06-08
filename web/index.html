@@ -57,17 +57,26 @@
         -ms-overflow-style: scrollbar;
         font-synthesis-weight: none;
       }
+      /*
+       * Eurosky: these MUST match ALF's t.atoms.bg / text (from
+       * src/config/eurosky-theme.ts). ALF bg = palette.contrast_0,
+       * text = palette.contrast_1000; dark = invert(EUROSKY_PALETTE),
+       * dim = invert(EUROSKY_SUBDUED_PALETTE). Mismatch = a seam where the
+       * body bg peeks past the app (header, overscroll, gutters).
+       *   light bg #FFFFFF | dark bg #000000 | dim bg #15130E
+       * Keep in sync if the ramp anchors change there.
+       */
       :root {
-        --text: black;
-        --background: white;
-        --backgroundLight: #e2e7ee;
+        --text: #1A1A1A;
+        --background: #FFFFFF;
+        --backgroundLight: #F7F6F2;
       }
       @media (prefers-color-scheme: dark) {
         :root {
           color-scheme: dark;
-          --text: white;
-          --background: black;
-          --backgroundLight: #232e3e;
+          --text: #F7F6F2;
+          --background: #000000;
+          --backgroundLight: #1A1A1A;
         }
       }
       html,
@@ -81,28 +90,28 @@
       html.theme--light,
       html.theme--light body,
       html.theme--light #root {
-        background-color: white;
-        --text: black;
-        --background: white;
-        --backgroundLight: #DCE2EA;
+        background-color: #FFFFFF;
+        --text: #1A1A1A;
+        --background: #FFFFFF;
+        --backgroundLight: #F7F6F2;
       }
       html.theme--dark,
       html.theme--dark body,
       html.theme--dark #root {
         color-scheme: dark;
-        background-color: black;
-        --text: white;
-        --background: black;
-        --backgroundLight: #232E3E;
+        background-color: #000000;
+        --text: #F7F6F2;
+        --background: #000000;
+        --backgroundLight: #1A1A1A;
       }
       html.theme--dim,
       html.theme--dim body,
       html.theme--dim #root {
         color-scheme: dark;
-        background-color: #151D28;
-        --text: white;
-        --background: #151D28;
-        --backgroundLight: #2C3A4E;
+        background-color: #15130E;
+        --text: #F7F6F2;
+        --background: #15130E;
+        --backgroundLight: #232118;
       }
       #splash {
         display: flex;
@@ -190,8 +199,12 @@
 
     <!-- The root element for your Expo app. -->
     <div id="splash">
-      <!-- Bluesky SVG -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 57"><path fill="#006AFF" d="M13.873 3.805C21.21 9.332 29.103 20.537 32 26.55v15.882c0-.338-.13.044-.41.867-1.512 4.456-7.418 21.847-20.923 7.944-7.111-7.32-3.819-14.64 9.125-16.85-7.405 1.264-15.73-.825-18.014-9.015C1.12 23.022 0 8.51 0 6.55 0-3.268 8.579-.182 13.873 3.805ZM50.127 3.805C42.79 9.332 34.897 20.537 32 26.55v15.882c0-.338.13.044.41.867 1.512 4.456 7.418 21.847 20.923 7.944 7.111-7.32 3.819-14.64-9.125-16.85 7.405 1.264 15.73-.825 18.014-9.015C62.88 23.022 64 8.51 64 6.55c0-9.818-8.578-6.732-13.873-2.745Z"/></svg>
+      <!--
+        Eurosky star (official eurosky-icon-black.svg). fill=var(--text) so
+        it follows the splash theme: ink on light, cotton/white on dark.
+        Keep in sync with EUROSKY_ICON in src/config/eurosky-logo.ts.
+      -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><path fill="var(--text)" d="M990.9671,522.1991c-3.0947,0-6.1689,0-9.2229.0001-456.4914.0202-459.525,3.0539-459.5452,459.5452-.0001,3.0539-.0001,6.1282-.0001,9.2228h-44.3979c0-3.0947,0-6.1689-.0001-9.2229-.0202-456.4913-3.0538-459.525-459.5452-459.5452-3.0539-.0001-6.1282-.0001-9.2229-.0001v-44.3981c3.0947,0,6.1689,0,9.2229-.0001,456.4914-.0202,459.525-3.0534,459.5452-459.5452.0001-3.0539.0001-6.1282.0001-9.2229h44.3979c0,3.0947,0,6.1689.0001,9.2228.0202,456.4917,3.0538,459.525,459.5452,459.5452,3.0539.0001,6.1282.0001,9.2229.0001v44.3981Z"/></svg>
     </div>
     <div id="root">
     </div>

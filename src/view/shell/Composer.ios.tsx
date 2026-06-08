@@ -47,6 +47,7 @@ export function Composer() {
             text={state?.text}
             imageUris={state?.imageUris}
             videoUri={state?.videoUri}
+            editPost={state?.editPost}
           />
         </TooltipSheetCompatProvider>
       </View>

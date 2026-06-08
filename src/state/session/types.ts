@@ -1,3 +1,5 @@
+import {type OAuthSession} from '@atproto/oauth-client-browser'
+
 import {type PersistedAccount} from '#/state/persisted'
 import {type Metrics} from '#/analytics/metrics'
 
@@ -29,6 +31,7 @@ export type SessionApiContext = {
       identifier: string
       password: string
       authFactorToken?: string | undefined
+      oauthSession?: OAuthSession
     },
     logContext: Metrics['account:loggedIn']['logContext'],
   ) => Promise<void>

@@ -30,9 +30,16 @@ export default defineConfig(
       '.husky/**',
       'patches/**',
       '*.html',
+      // Eurosky fork: static iframe player scripts (browser globals like YT /
+      // onYouTubeIframeAPIReady, not app code). Mirrors the bskyweb/** ignore.
+      'web/iframe/**',
       'bskyweb/**',
       'bskyembed/**',
       'bskyogcard/**',
+      // Eurosky fork: the OAuth client-assertion worker is a separate sub-project
+      // (Cloudflare Worker + Bunny Edge Scripting / Deno) with its own runtime,
+      // types, and URL imports - not app code. It has its own tsconfig/lint.
+      'oauth-worker/**',
       'src/locale/locales/_build/**',
       'src/locale/locales/**/*.js',
       '*.e2e.ts',

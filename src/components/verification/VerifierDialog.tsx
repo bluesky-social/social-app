@@ -85,7 +85,7 @@ function Inner({
               },
             ]}
             alt={_(
-              msg`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`,
+              msg`An illustration showing that trusted verifiers verify individual user accounts.`,
             )}
             useAppleWebpCodec
           />
@@ -102,8 +102,7 @@ function Inner({
               <RNText>
                 <VerifierCheck width={14} />
               </RNText>{' '}
-              can verify others. These trusted verifiers are selected by
-              Bluesky.
+              are trusted verifiers. They can verify individual accounts.
             </Trans>
           </Text>
         </View>

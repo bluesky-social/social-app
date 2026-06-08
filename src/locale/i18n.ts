@@ -56,6 +56,10 @@ import {messages as messagesZh_CN} from '#/locale/locales/zh-CN/messages'
 import {messages as messagesZh_HK} from '#/locale/locales/zh-HK/messages'
 import {messages as messagesZh_TW} from '#/locale/locales/zh-TW/messages'
 import {useLanguagePrefs} from '#/state/preferences'
+import {installRebrand} from '#/config/euroskyStrings'
+
+// Eurosky fork: single chokepoint for the "Bluesky" -> "Eurosky" brand swap.
+installRebrand(i18n)
 
 /**
  * We do a dynamic import of just the catalog that we need

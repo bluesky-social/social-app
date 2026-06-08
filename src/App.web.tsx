@@ -37,6 +37,10 @@ import {
   useSession,
   useSessionApi,
 } from '#/state/session'
+import {
+  maybeRedirectLoopbackHost,
+  tryFinishWebOAuthSignIn,
+} from '#/state/session/oauth-web-callback'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
@@ -78,6 +82,9 @@ import {Splash} from '#/Splash'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
 
+// OAuth loopback dev fix - run before anything reads the origin.
+maybeRedirectLoopbackHost()
+
 /**
  * Begin geolocation ASAP
  */
@@ -89,7 +96,7 @@ void prefetchAppConfig()
 function InnerApp() {
   const [isReady, setIsReady] = useState(false)
   const {currentAccount} = useSession()
-  const {resumeSession} = useSessionApi()
+  const {resumeSession, login} = useSessionApi()
   const theme = useColorModeTheme()
   const {t: l} = useLingui()
   const hasCheckedLanding = useLandingEntry()
@@ -98,6 +105,11 @@ function InnerApp() {
   useEffect(() => {
     async function onLaunch(account?: SessionAccount) {
       try {
+        // Finish an OAuth sign-in if we returned to the site root with
+        // callback params; otherwise resume the stored session as usual.
+        if (await tryFinishWebOAuthSignIn(login)) {
+          return
+        }
         if (account) {
           await resumeSession(account)
         } else {
@@ -111,7 +123,7 @@ function InnerApp() {
     }
     const account = readLastActiveAccount()
     void onLaunch(account)
-  }, [resumeSession])
+  }, [resumeSession, login])
 
   useEffect(() => {
     return listenSessionDropped(() => {

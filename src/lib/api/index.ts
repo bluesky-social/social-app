@@ -7,6 +7,7 @@ import {
   type AppBskyEmbedRecordWithMedia,
   type AppBskyEmbedVideo,
   AppBskyFeedPost,
+  AtUri,
   BlobRef,
   type BskyAgent,
   type ComAtprotoLabelDefs,
@@ -23,6 +24,7 @@ import {CID} from 'multiformats/cid'
 import * as Hasher from 'multiformats/hashes/hasher'
 
 import {IMAGE_SIZE_CONFIG_POSTS} from '#/lib/constants'
+import {type EditedPostRecord} from '#/lib/edit-post'
 import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
@@ -194,6 +196,75 @@ export async function post(
   }
 
   return {uris}
+}
+
+export class AlreadyEditedError extends Error {
+  constructor() {
+    super('This post has already been edited')
+  }
+}
+
+/**
+ * Edits a post's text, keeping its embed and other fields. The old text moves
+ * into `originalText` and `updatedAt` is stamped.
+ *
+ * We delete and recreate under the same rkey (one atomic applyWrites) rather
+ * than putRecord, because the app view ignores in-place updates to posts - the
+ * edit just wouldn't show up. The catch: the recreate reads as a new post, so
+ * likes/reposts/replies reset. Fine inside the short edit window, when there's
+ * barely any engagement yet.
+ */
+export async function editPost(
+  agent: BskyAgent,
+  {uri, richtext}: {uri: string; richtext: RichText},
+) {
+  const urip = new AtUri(uri)
+  const existing = await agent.com.atproto.repo.getRecord({
+    repo: urip.host,
+    collection: 'app.bsky.feed.post',
+    rkey: urip.rkey,
+  })
+  if (!AppBskyFeedPost.isRecord(existing.data.value)) {
+    throw new Error('Record is not a post')
+  }
+  const record = existing.data.value as EditedPostRecord
+  if (typeof record.updatedAt === 'string') {
+    throw new AlreadyEditedError()
+  }
+
+  const rt = await resolveRT(agent, richtext)
+  const updated: EditedPostRecord = {
+    ...record,
+    text: rt.text,
+    facets: rt.facets,
+    originalText: record.text,
+    updatedAt: new Date().toISOString(),
+  }
+
+  const writes: (
+    | $Typed<ComAtprotoRepoApplyWrites.Delete>
+    | $Typed<ComAtprotoRepoApplyWrites.Create>
+  )[] = [
+    {
+      $type: 'com.atproto.repo.applyWrites#delete',
+      collection: 'app.bsky.feed.post',
+      rkey: urip.rkey,
+    },
+    {
+      $type: 'com.atproto.repo.applyWrites#create',
+      collection: 'app.bsky.feed.post',
+      rkey: urip.rkey,
+      value: updated,
+    },
+  ]
+
+  await agent.com.atproto.repo.applyWrites({
+    repo: urip.host,
+    validate: true,
+    writes,
+  })
+
+  return {uri}
 }
 
 async function resolveRT(agent: BskyAgent, richtext: RichText) {

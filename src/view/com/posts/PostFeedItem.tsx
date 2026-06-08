@@ -409,6 +409,7 @@ let FeedItemInner = ({
               author={post.author}
               moderation={moderation}
               timestamp={post.indexedAt}
+              record={record}
               postHref={href}
               onOpenAuthor={onOpenAuthor}
             />

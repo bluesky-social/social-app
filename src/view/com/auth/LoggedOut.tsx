@@ -6,9 +6,11 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
+import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {profilesQueryKey} from '#/state/queries/profile'
 import {useAgent, useSession} from '#/state/session'
+import {oauthCreateAccount} from '#/state/session/oauth-web-client'
 import {useSetActiveLanding} from '#/state/shell/landing'
 import {
   useLoggedOutView,
@@ -23,7 +25,9 @@ import {LandingScreen} from '#/screens/StarterPack/StarterPackLandingScreen'
 import {atoms as a, native, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
+import {Loader} from '#/components/Loader'
 import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import {SplashScreen} from './SplashScreen'
 
 enum ScreenState {
@@ -63,6 +67,18 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
     useState<ScreenState>(initialScreenState)
   const {clearRequestedAccount} = useLoggedOutViewControls()
   const setActiveLanding = useSetActiveLanding()
+
+  // Eurosky: every "create account" entry point funnels here. On web,
+  // redirect straight to the Eurosky signup PDS via OAuth (prompt=create)
+  // instead of the legacy multi-step Signup screen. Native keeps Signup
+  // (OAuth is web-only in v1).
+  useEffect(() => {
+    if (IS_WEB && screenState === ScreenState.S_CreateAccount) {
+      void oauthCreateAccount().catch(e => {
+        logger.error('oauth: createAccount failed', {message: String(e)})
+      })
+    }
+  }, [screenState])
 
   const queryClient = useQueryClient()
   const {accounts} = useSession()
@@ -143,7 +159,14 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
           />
         ) : undefined}
         {screenState === ScreenState.S_CreateAccount ? (
-          <Signup onPressBack={() => setScreenState(initialScreenState)} />
+          IS_WEB ? (
+            // Redirecting to the Eurosky signup PDS (see effect above).
+            <View style={[a.flex_1, a.justify_center, a.align_center]}>
+              <Loader size="xl" />
+            </View>
+          ) : (
+            <Signup onPressBack={() => setScreenState(initialScreenState)} />
+          )
         ) : undefined}
       </ErrorBoundary>
     </View>
