@@ -28,7 +28,7 @@ import {
   setBirthdateForDid,
   setCreatedAtForDid,
 } from '#/ageAssurance/data'
-import {getAndComputeAgeAssuranceState} from '#/ageAssurance/state'
+import {unsafeGetAndComputeAgeAssurance} from '#/ageAssurance/state'
 import {AgeAssuranceAccess} from '#/ageAssurance/types'
 import {features} from '#/analytics'
 import {emitNetworkConfirmed, emitNetworkLost} from '../events'
@@ -219,7 +219,7 @@ export async function createAgentAndCreateAccount(
       }),
       // wait for AA data to load first, then check state
       aa.then(async () => {
-        const state = getAndComputeAgeAssuranceState({did: account.did})
+        const {state} = unsafeGetAndComputeAgeAssurance({did: account.did})
         if (state.access !== AgeAssuranceAccess.Full) {
           restrictChatSettings({agent, did: account.did})
         }
