@@ -1,3 +1,5 @@
+import {type computeAgeAssuranceRegionAccess} from '@atproto/api'
+
 import {logger} from '#/ageAssurance/logger'
 
 export enum AgeAssuranceAccess {
@@ -14,11 +16,25 @@ export enum AgeAssuranceStatus {
   Blocked = 'blocked',
 }
 
+export type AgeAssuranceMetadata = Parameters<
+  typeof computeAgeAssuranceRegionAccess
+>[1] & {
+  birthdate: string | undefined
+}
+
 export type AgeAssuranceState = {
   lastInitiatedAt?: string
   status: AgeAssuranceStatus
   access: AgeAssuranceAccess
   error?: 'config' // maybe other specific cases in the future
+}
+
+export type AgeAssuranceFlags = {
+  adultContentDisabled: boolean
+  chatDisabled: boolean
+  isDeclaredUnderAdultAge: boolean
+  isOverRegionMinAccessAge: boolean
+  isOverAppMinAccessAge: boolean
 }
 
 export function parseStatusFromString(raw: string) {
