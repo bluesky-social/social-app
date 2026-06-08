@@ -109,7 +109,7 @@ function computeAgeAssuranceState({
       ? parseAccessFromString(result.access)
       : AgeAssuranceAccess.Full,
   }
-  logger.debug('debug useAgeAssuranceState', {
+  logger.debug('computeAgeAssuranceState', {
     region,
     state,
     metadata,

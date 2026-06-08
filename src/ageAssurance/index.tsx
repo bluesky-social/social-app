@@ -1,4 +1,4 @@
-import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
+import {createContext, useCallback, useContext, useMemo} from 'react'
 
 import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
 import {useAgent} from '#/state/session'
@@ -94,14 +94,10 @@ function InnerProvider({children}: {children: React.ReactNode}) {
   )
   useOnAgeAssuranceAccessUpdate(handleAccessUpdate)
 
-  useEffect(() => {
-    logger.debug(`useAgeAssuranceState`, {state})
-  }, [state])
-
   return (
     <AgeAssuranceStateContext.Provider
       value={useMemo(() => {
-        return {
+        const res = {
           Access: AgeAssuranceAccess,
           Status: AgeAssuranceStatus,
           state,
@@ -111,6 +107,8 @@ function InnerProvider({children}: {children: React.ReactNode}) {
             metadata,
           }),
         }
+        logger.debug(`useAgeAssurance`, res)
+        return res
       }, [state, metadata, regionConfig])}>
       {children}
     </AgeAssuranceStateContext.Provider>
