@@ -738,7 +738,16 @@ function calculateCount(
           moderateProfile(convo.primaryMember, moderationOpts).blocked ||
           convo.primaryMember.handle === 'missing.invalid' ||
           (convo.kind === 'group' && convo.details.lockStatus !== 'unlocked')
-        const unreadCount = !shouldIgnore && convo.view.unreadCount > 0 ? 1 : 0
+        const unreadJoinRequestCount =
+          convo.kind === 'group'
+            ? (convo.details.unreadJoinRequestCount ?? 0)
+            : 0
+
+        const unreadCount =
+          !shouldIgnore &&
+          (convo.view.unreadCount > 0 || unreadJoinRequestCount > 0)
+            ? 1
+            : 0
 
         return acc + unreadCount
       }, 0) ?? 0
