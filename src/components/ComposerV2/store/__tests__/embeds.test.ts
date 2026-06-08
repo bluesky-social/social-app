@@ -69,7 +69,7 @@ function makeStore() {
   return createThreadStore({
     agent,
     __createId: makeIdGenerator(),
-    __resolveLink: mockResolveLink as unknown as typeof resolveLink,
+    __resolveLink: mockResolveLink,
   })
 }
 
@@ -116,6 +116,13 @@ const externalLink: ResolvedLink = {
   title: 'Example',
   description: 'A description',
   thumb: undefined,
+}
+
+const chatInviteLink: ResolvedLink = {
+  type: 'chat-invite',
+  uri: 'https://bsky.app/messages/join/abc123',
+  code: 'abc123',
+  view: undefined,
 }
 
 describe('addUri pre-classifies bsky post URLs to the quote slot', () => {
@@ -256,6 +263,19 @@ describe('addUri pre-classifies non-post URLs to the embed slot', () => {
     const embed = store.getState().posts[root].embed
     if (embed?.state !== 'external') throw new Error('expected external')
     expect(embed.title).toBe('Example')
+  })
+
+  test('chat-invite → embed["chat-invite"]', async () => {
+    const d = deferred<ResolvedLink>()
+    mockResolveLink.mockReturnValueOnce(d.promise)
+    const store = makeStore()
+    const root = rootId(store)
+    store.actions.addUri(root, EXTERNAL_URL)
+    d.resolve(chatInviteLink)
+    await flushPromises()
+    const embed = store.getState().posts[root].embed
+    if (embed?.state !== 'chat-invite') throw new Error('expected chat-invite')
+    expect(embed.code).toBe('abc123')
   })
 
   test('addUri is a no-op when embed has settled (resolved)', async () => {

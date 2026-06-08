@@ -608,6 +608,14 @@ export function createThreadStore(options: {
         thumb: link.thumb,
       }
     }
+    if (link.type === 'chat-invite') {
+      return {
+        state: 'chat-invite',
+        uri: link.uri,
+        code: link.code,
+        view: link.view,
+      }
+    }
     switch (link.kind) {
       case 'feed':
         return {state: 'feed', record: link.record, view: link.view}
