@@ -1,18 +1,21 @@
 import {useEffect, useMemo, useState} from 'react'
-import {computeAgeAssuranceRegionAccess} from '@atproto/api'
+import {
+  type AppBskyAgeassuranceDefs,
+  computeAgeAssuranceRegionAccess,
+} from '@atproto/api'
 
 import {getAge} from '#/lib/strings/time'
 import {useSession} from '#/state/session'
 import {
-  type AgeAssuranceData,
   getConfigFromCache,
   getOtherRequiredDataFromCache,
   getServerStateFromCache,
-  useAgeAssuranceDataContext,
+  useAgeAssuranceServerDataContext,
 } from '#/ageAssurance/data'
 import {logger} from '#/ageAssurance/logger'
 import {
   AgeAssuranceAccess,
+  type AgeAssuranceMetadata,
   type AgeAssuranceState,
   AgeAssuranceStatus,
   parseAccessFromString,
@@ -32,16 +35,16 @@ import {device} from '#/storage'
  */
 function computeAgeAssuranceState({
   hasSession,
-  config,
   geolocation,
+  config,
   state,
-  data,
+  metadata,
 }: {
   hasSession: boolean
-  config: AgeAssuranceData['config']
   geolocation: Geolocation
-  state: AgeAssuranceData['state']
-  data: AgeAssuranceData['data']
+  config?: AppBskyAgeassuranceDefs.Config
+  state?: AppBskyAgeassuranceDefs.State
+  metadata?: AgeAssuranceMetadata
 }) {
   /**
    * This is where we control logged-out moderation prefs. It's all
@@ -91,7 +94,10 @@ function computeAgeAssuranceState({
    * accounts with an accurate birthdate, our default fallback rules should
    * ensure correct access.
    */
-  const result = computeAgeAssuranceRegionAccess(region, data)
+  const result = computeAgeAssuranceRegionAccess(region, {
+    accountCreatedAt: metadata?.accountCreatedAt,
+    declaredAge: metadata?.declaredAge,
+  })
   const computed = {
     lastInitiatedAt: state?.lastInitiatedAt,
     // prefer server state
@@ -106,7 +112,7 @@ function computeAgeAssuranceState({
   logger.debug('debug useAgeAssuranceState', {
     region,
     state,
-    data,
+    metadata,
     computed,
   })
   return computed
@@ -132,7 +138,7 @@ export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
   }
 
   const region = getAgeAssuranceRegionConfigWithFallback(config, geolocation)
-  const data = {
+  const metadata: AgeAssuranceMetadata = {
     accountCreatedAt: state.metadata?.accountCreatedAt,
     declaredAge: requiredData?.birthdate
       ? getAge(new Date(requiredData.birthdate))
@@ -144,15 +150,15 @@ export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
     config,
     geolocation,
     state: state.state,
-    data,
+    metadata,
   })
 
   return {
     state: computed,
     flags: computeAgeAssuranceFlags({
       state: computed,
-      config: region,
-      data,
+      regionConfig: region,
+      metadata,
     }),
   }
 }
@@ -160,7 +166,7 @@ export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
 export function useAgeAssuranceState(): AgeAssuranceState {
   const {hasSession} = useSession()
   const geolocation = useGeolocation()
-  const {config, state, data} = useAgeAssuranceDataContext()
+  const {config, state, metadata} = useAgeAssuranceServerDataContext()
 
   return useMemo(
     () =>
@@ -169,9 +175,9 @@ export function useAgeAssuranceState(): AgeAssuranceState {
         config,
         geolocation,
         state,
-        data,
+        metadata,
       }),
-    [hasSession, geolocation, config, state, data],
+    [hasSession, geolocation, config, state, metadata],
   )
 }
 

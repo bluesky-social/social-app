@@ -11,14 +11,14 @@ import {getAge} from '#/lib/strings/time'
 import {restrictChatSettings} from '#/state/queries/messages/restrictChatSettings'
 import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
 import {
-  type AgeAssuranceData,
   getDidFromAgentSession,
   getOtherRequiredDataFromCache,
-  useAgeAssuranceDataContext,
+  useAgeAssuranceServerDataContext,
 } from '#/ageAssurance/data'
 import {
   AgeAssuranceAccess,
   type AgeAssuranceFlags,
+  type AgeAssuranceMetadata,
   type AgeAssuranceState,
 } from '#/ageAssurance/types'
 import {type Geolocation, useGeolocation} from '#/geolocation'
@@ -67,7 +67,7 @@ export function getAgeAssuranceRegionConfigWithFallback(
  */
 export function useAgeAssuranceRegionConfig() {
   const geolocation = useGeolocation()
-  const {config} = useAgeAssuranceDataContext()
+  const {config} = useAgeAssuranceServerDataContext()
   return useMemo(() => {
     if (!config) return
     // use generic helper, we want to potentially return undefined
@@ -136,22 +136,22 @@ export function maybeRestrictChatSettings({agent}: {agent: AtpAgent}) {
 
 export function computeAgeAssuranceFlags({
   state,
-  config,
-  data,
+  regionConfig,
+  metadata,
 }: {
   state: AgeAssuranceState
-  config: AppBskyAgeassuranceDefs.ConfigRegion
-  data: AgeAssuranceData['data']
+  regionConfig: AppBskyAgeassuranceDefs.ConfigRegion
+  metadata?: AgeAssuranceMetadata
 }): AgeAssuranceFlags {
   const chatDisabled = state.access !== AgeAssuranceAccess.Full
-  const isDeclaredUnderAdultAge = data?.birthdate
-    ? isUnderAge(data.birthdate, 18)
+  const isDeclaredUnderAdultAge = metadata?.declaredAge
+    ? metadata.declaredAge < 18
     : true
-  const isOverRegionMinAccessAge = data?.birthdate
-    ? !isUnderAge(data.birthdate, config.minAccessAge)
+  const isOverRegionMinAccessAge = metadata?.declaredAge
+    ? metadata.declaredAge >= regionConfig.minAccessAge
     : false
-  const isOverAppMinAccessAge = data?.birthdate
-    ? !isUnderAge(data.birthdate, MIN_ACCESS_AGE)
+  const isOverAppMinAccessAge = metadata?.declaredAge
+    ? metadata.declaredAge >= MIN_ACCESS_AGE
     : false
   const adultContentDisabled =
     state.access !== AgeAssuranceAccess.Full || isDeclaredUnderAdultAge

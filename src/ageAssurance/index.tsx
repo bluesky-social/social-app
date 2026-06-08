@@ -4,8 +4,8 @@ import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
 import {useAgent} from '#/state/session'
 import {Provider as RedirectOverlayProvider} from '#/ageAssurance/components/RedirectOverlay'
 import {
-  AgeAssuranceDataProvider,
-  useAgeAssuranceDataContext,
+  AgeAssuranceServerDataProvider,
+  useAgeAssuranceServerDataContext,
 } from '#/ageAssurance/data'
 import {logger} from '#/ageAssurance/logger'
 import {
@@ -26,7 +26,7 @@ import {
 
 export {
   prefetchConfig as prefetchAgeAssuranceConfig,
-  prefetchAgeAssuranceData,
+  prefetchAgeAssuranceServerData,
   refetchServerState as refetchAgeAssuranceServerState,
   usePatchOtherRequiredData as usePatchAgeAssuranceOtherRequiredData,
   usePatchServerState as usePatchAgeAssuranceServerState,
@@ -67,19 +67,19 @@ export function useAgeAssurance() {
 
 export function Provider({children}: {children: React.ReactNode}) {
   return (
-    <AgeAssuranceDataProvider>
+    <AgeAssuranceServerDataProvider>
       <InnerProvider>
         <RedirectOverlayProvider>{children}</RedirectOverlayProvider>
       </InnerProvider>
-    </AgeAssuranceDataProvider>
+    </AgeAssuranceServerDataProvider>
   )
 }
 
 function InnerProvider({children}: {children: React.ReactNode}) {
   const agent = useAgent()
   const state = useAgeAssuranceState()
-  const {data} = useAgeAssuranceDataContext()
-  const config = useAgeAssuranceRegionConfigWithFallback()
+  const {metadata} = useAgeAssuranceServerDataContext()
+  const regionConfig = useAgeAssuranceRegionConfigWithFallback()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
 
   const handleAccessUpdate = useCallback(
@@ -107,11 +107,11 @@ function InnerProvider({children}: {children: React.ReactNode}) {
           state,
           flags: computeAgeAssuranceFlags({
             state,
-            config,
-            data,
+            regionConfig,
+            metadata,
           }),
         }
-      }, [state, data, config])}>
+      }, [state, metadata, regionConfig])}>
       {children}
     </AgeAssuranceStateContext.Provider>
   )

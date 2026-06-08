@@ -1,3 +1,5 @@
+import {type computeAgeAssuranceRegionAccess} from '@atproto/api'
+
 import {logger} from '#/ageAssurance/logger'
 
 export enum AgeAssuranceAccess {
@@ -12,6 +14,12 @@ export enum AgeAssuranceStatus {
   Pending = 'pending',
   Assured = 'assured',
   Blocked = 'blocked',
+}
+
+export type AgeAssuranceMetadata = Parameters<
+  typeof computeAgeAssuranceRegionAccess
+>[1] & {
+  birthdate: string | undefined
 }
 
 export type AgeAssuranceState = {
