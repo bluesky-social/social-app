@@ -17,7 +17,7 @@ import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useAnalytics} from '#/analytics'
-import {IS_ANDROID, IS_IOS} from '#/env'
+import {IS_ANDROID, IS_DEV, IS_IOS} from '#/env'
 import {resetToTab} from '#/Navigation'
 import {router} from '#/routes'
 
@@ -423,6 +423,18 @@ export function storePayloadForAccountSwitch(payload: NotificationPayload) {
 export function getNotificationPayload(
   e: Notifications.Notification,
 ): NotificationPayload | null {
+  // [CHATDBG] TEMP: accept locally-scheduled test notifications in dev. Real
+  // pushes use a 'push' trigger, which local notifs can't produce, so we tag
+  // test notifs with `__chatdbg` in their data and let them through here.
+  if (IS_DEV) {
+    const data = e.request.content.data as
+      | (NotificationPayload & {__chatdbg?: boolean})
+      | undefined
+    if (data?.__chatdbg && data.reason) {
+      return data
+    }
+  }
+
   if (
     e.request.trigger == null ||
     typeof e.request.trigger !== 'object' ||

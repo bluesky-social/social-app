@@ -477,6 +477,13 @@ export class Convo {
       prev: prevStatus,
       next: this.status,
     })
+    logger.debug('[CHATDBG] agent.dispatch', {
+      t: Date.now(),
+      convoId: this.convoId,
+      event: action.event,
+      prev: prevStatus,
+      next: this.status,
+    })
 
     this.updateLastActiveTimestamp()
     this.commit()
@@ -712,26 +719,56 @@ export class Convo {
   private fetchMessageHistoryError: {retry: () => void} | undefined
   async fetchMessageHistory() {
     logger.debug('fetch message history', {})
+    logger.debug('[CHATDBG] fetchMessageHistory called', {
+      t: Date.now(),
+      convoId: this.convoId,
+      oldestRev: this.oldestRev,
+      isFetchingHistory: this.isFetchingHistory,
+      hasFetchError: !!this.fetchMessageHistoryError,
+    })
 
     /*
      * If oldestRev is null, we've fetched all history.
      * Needs to explicitly check for `null` since this is initially `undefined`.
      */
-    if (this.oldestRev === null) return
+    if (this.oldestRev === null) {
+      logger.debug(
+        '[CHATDBG] fetchMessageHistory EARLY RETURN oldestRev===null',
+        {t: Date.now(), convoId: this.convoId},
+      )
+      return
+    }
 
     /*
      * Don't fetch again if a fetch is already in progress
      */
-    if (this.isFetchingHistory) return
+    if (this.isFetchingHistory) {
+      logger.debug(
+        '[CHATDBG] fetchMessageHistory EARLY RETURN already fetching',
+        {t: Date.now(), convoId: this.convoId},
+      )
+      return
+    }
 
     /*
      * If we've rendered a retry state for history fetching, exit. Upon retry,
      * this will be removed and we'll try again.
      */
-    if (this.fetchMessageHistoryError) return
+    if (this.fetchMessageHistoryError) {
+      logger.debug(
+        '[CHATDBG] fetchMessageHistory EARLY RETURN has fetchError',
+        {t: Date.now(), convoId: this.convoId},
+      )
+      return
+    }
 
     try {
       this.isFetchingHistory = true
+      logger.debug('[CHATDBG] fetchMessageHistory START fetch', {
+        t: Date.now(),
+        convoId: this.convoId,
+        cursor: this.oldestRev,
+      })
       this.commit()
 
       const nextCursor = this.oldestRev // for TS
@@ -795,6 +832,14 @@ export class Convo {
       }
     } finally {
       this.isFetchingHistory = false
+      logger.debug('[CHATDBG] fetchMessageHistory FINALLY done', {
+        t: Date.now(),
+        convoId: this.convoId,
+        pastMessages: this.pastMessages.size,
+        newMessages: this.newMessages.size,
+        oldestRev: this.oldestRev,
+        hadError: !!this.fetchMessageHistoryError,
+      })
       this.commit()
     }
   }
@@ -832,6 +877,11 @@ export class Convo {
   private firehoseError: MessagesEventBusError | undefined
 
   onFirehoseConnect() {
+    logger.debug('[CHATDBG] onFirehoseConnect', {
+      t: Date.now(),
+      convoId: this.convoId,
+      status: this.status,
+    })
     this.firehoseError = undefined
     void this.batchRetryPendingMessages()
     this.commit()
@@ -936,6 +986,16 @@ export class Convo {
       }
     }
 
+    logger.debug('[CHATDBG] ingestFirehose', {
+      t: Date.now(),
+      convoId: this.convoId,
+      eventCount: events.length,
+      needsCommit,
+      status: this.status,
+      isFetchingHistory: this.isFetchingHistory,
+      pastMessages: this.pastMessages.size,
+      newMessages: this.newMessages.size,
+    })
     if (needsCommit) {
       this.commit()
     }

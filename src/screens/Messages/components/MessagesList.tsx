@@ -41,7 +41,7 @@ import {
   getChatInviteCodeFromUrl,
   isBskyPostUrl,
 } from '#/lib/strings/url-helpers'
-import {logger} from '#/logger'
+import {Logger, logger} from '#/logger'
 import {
   type ActiveConvoStates,
   isConvoActive,
@@ -74,6 +74,11 @@ import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
 import {MessagesListGroupInfoPanel} from './MessagesListGroupInfoPanel'
 import {MessagesListInfoPanel} from './MessagesListInfoPanel'
 import {KeyboardStickyView} from './vendor/KeyboardStickyView'
+
+// [CHATDBG] TEMP: routed through the conversation-agent context so it shows in
+// the in-app System Log (which filters debug logs by context). Delete with the
+// rest of the [CHATDBG] instrumentation.
+const chatdbg = Logger.create(Logger.Context.ConversationAgent)
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
   return (
@@ -168,12 +173,17 @@ export function MessagesList({
   const listOpacity = useSharedValue(0)
 
   useEffect(() => {
+    chatdbg.debug('[CHATDBG] listOpacity effect', {
+      t: Date.now(),
+      convoId: convoState.convo?.view?.id,
+      hasScrolled,
+    })
     if (hasScrolled) {
       listOpacity.set(withTiming(1, {duration: 200}))
     } else {
       listOpacity.set(0)
     }
-  }, [hasScrolled, listOpacity])
+  }, [hasScrolled, listOpacity, convoState.convo?.view?.id])
 
   const inputHeightUI = useSharedValue(0)
   const [inputHeightJS, setInputHeightJS] = useState(0)
@@ -235,6 +245,17 @@ export function MessagesList({
   // we will not scroll whenever new items get prepended to the top.
   const onContentSizeChange = useCallback(
     (_: number, height: number) => {
+      chatdbg.debug('[CHATDBG] onContentSizeChange enter', {
+        t: Date.now(),
+        convoId: convoState.convo?.view?.id,
+        height,
+        hasInitiallyScrolled: hasInitiallyScrolled.current,
+        hasScrolled,
+        renderItems: renderItems.length,
+        isFetchingHistory: convoState.isFetchingHistory,
+        isAtBottom: isAtBottom.get(),
+        isAtTop: isAtTop.get(),
+      })
       // Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
       // previous off whenever we add new content to the previous offset whenever we add new content to the list.
       if (IS_WEB && isAtTop.get() && hasScrolled) {
@@ -252,11 +273,22 @@ export function MessagesList({
         (renderItems.length > 0 || !convoState.isFetchingHistory)
       ) {
         hasInitiallyScrolled.current = true
+        chatdbg.debug('[CHATDBG] onContentSizeChange INITIAL branch', {
+          t: Date.now(),
+          convoId: convoState.convo?.view?.id,
+          renderItems: renderItems.length,
+          isFetchingHistory: convoState.isFetchingHistory,
+          willSetHasScrolled: !convoState.isFetchingHistory,
+        })
         flatListRef.current?.scrollToOffset({offset: height, animated: false})
         // If history is already done loading, mark ready after a frame for the scroll to settle.
         // Otherwise, the footer sentinel's onLayout will handle it when history finishes.
         if (!convoState.isFetchingHistory) {
           requestAnimationFrame(() => {
+            chatdbg.debug(
+              '[CHATDBG] setHasScrolled(true) from onContentSizeChange rAF',
+              {t: Date.now(), convoId: convoState.convo?.view?.id},
+            )
             setHasScrolled(true)
           })
         }
@@ -311,6 +343,10 @@ export function MessagesList({
   )
 
   const onStartReached = useCallback(() => {
+    chatdbg.debug('[CHATDBG] onStartReached -> fetchMessageHistory', {
+      t: Date.now(),
+      convoId: convoState.convo?.view?.id,
+    })
     void convoState.fetchMessageHistory()
   }, [convoState])
 
@@ -507,16 +543,32 @@ export function MessagesList({
   // Footer sentinel: when history is still loading during the initial scroll, the footer's onLayout fires each time
   // new items are prepended (shifting its position). Once history finishes, this triggers setHasScrolled.
   const onFooterLayout = useCallback(() => {
+    chatdbg.debug('[CHATDBG] onFooterLayout enter', {
+      t: Date.now(),
+      convoId: convoState.convo?.view?.id,
+      hasInitiallyScrolled: hasInitiallyScrolled.current,
+      hasScrolled,
+      isFetchingHistory: convoState.isFetchingHistory,
+    })
     if (
       hasInitiallyScrolled.current &&
       !hasScrolled &&
       !convoState.isFetchingHistory
     ) {
       requestAnimationFrame(() => {
+        chatdbg.debug(
+          '[CHATDBG] setHasScrolled(true) from onFooterLayout rAF',
+          {t: Date.now(), convoId: convoState.convo?.view?.id},
+        )
         setHasScrolled(true)
       })
     }
-  }, [hasScrolled, setHasScrolled, convoState.isFetchingHistory])
+  }, [
+    hasScrolled,
+    setHasScrolled,
+    convoState.isFetchingHistory,
+    convoState.convo?.view?.id,
+  ])
 
   const renderScrollComponent = useCallback(
     (props: ScrollViewProps) => (
@@ -705,23 +757,37 @@ function ChatScrollComponent({
 
 type FooterState = 'loading' | 'new-chat' | 'request' | 'standard'
 
+// [CHATDBG] TEMP: dedupe key so the per-render getFooterState log only fires on
+// change. Delete with the rest of the [CHATDBG] instrumentation.
+let chatdbgLastFooterKey = ''
+
 function getFooterState(
   convoState: ActiveConvoStates,
   hasAcceptOverride?: boolean,
 ): FooterState {
+  let result: FooterState
   if (convoState.convo.view.status === 'request' && !hasAcceptOverride) {
-    return 'request'
+    result = 'request'
+  } else if (convoState.items.length === 0) {
+    result = convoState.isFetchingHistory ? 'loading' : 'new-chat'
+  } else {
+    result = 'standard'
   }
 
-  if (convoState.items.length === 0) {
-    if (convoState.isFetchingHistory) {
-      return 'loading'
-    } else {
-      return 'new-chat'
-    }
+  const key = `${convoState.convo?.view?.id}:${result}:${convoState.items.length}:${convoState.isFetchingHistory}:${convoState.status}`
+  if (key !== chatdbgLastFooterKey) {
+    chatdbgLastFooterKey = key
+    chatdbg.debug('[CHATDBG] getFooterState', {
+      t: Date.now(),
+      convoId: convoState.convo?.view?.id,
+      footerState: result,
+      itemsLength: convoState.items.length,
+      isFetchingHistory: convoState.isFetchingHistory,
+      status: convoState.status,
+    })
   }
 
-  return 'standard'
+  return result
 }
 
 function ConversationFooter({

@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {type LayoutChangeEvent, View} from 'react-native'
+import {AppState, type LayoutChangeEvent, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {ChatBskyConvoDefs, moderateProfile} from '@atproto/api'
 import {
@@ -22,6 +22,7 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
+import {Logger} from '#/logger'
 import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
 import {useEmail} from '#/state/email-verification'
 import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
@@ -59,6 +60,11 @@ type Props = NativeStackScreenProps<
   'MessagesConversation'
 >
 
+// [CHATDBG] TEMP: routed through the conversation-agent context so it shows in
+// the in-app System Log (which filters debug logs by context). Delete with the
+// rest of the [CHATDBG] instrumentation.
+const chatdbg = Logger.create(Logger.Context.ConversationAgent)
+
 export function MessagesConversationScreen(props: Props) {
   const {t: l} = useLingui()
   const aaCopy = useAgeAssuranceCopy()
@@ -74,6 +80,14 @@ export function MessagesConversationScreen(props: Props) {
 export function MessagesConversationScreenInner({route}: Props) {
   const convoId = route.params.conversation
   const {setCurrentConvoId} = useCurrentConvoId()
+
+  useEffect(() => {
+    chatdbg.debug('[CHATDBG] ConversationScreen mount', {
+      t: Date.now(),
+      convoId,
+      appState: AppState.currentState,
+    })
+  }, [convoId])
 
   useFocusEffect(
     useCallback(() => {
@@ -116,9 +130,33 @@ function Inner({convoId}: {convoId: string}) {
 
   const [hasScrolled, setHasScrolled] = useState(false)
 
+  useEffect(() => {
+    chatdbg.debug('[CHATDBG] hasScrolled changed', {
+      t: Date.now(),
+      convoId,
+      hasScrolled,
+    })
+  }, [hasScrolled, convoId])
+
   // Any time that we re-render the `Initializing` state, we have to reset `hasScrolled` to false. After entering this
   // state, we know that we're resetting the list of messages and need to re-scroll to the bottom when they get added.
   const [prevState, setPrevState] = useState(convoState.status)
+  // Ref-based so it captures the real status change independently of the
+  // render-phase setPrevState below (which would otherwise make prevState ===
+  // status by the time this effect runs, hiding the transition).
+  const loggedStatusRef = useRef(convoState.status)
+  useEffect(() => {
+    if (loggedStatusRef.current !== convoState.status) {
+      chatdbg.debug('[CHATDBG] Inner status transition', {
+        t: Date.now(),
+        convoId,
+        prev: loggedStatusRef.current,
+        next: convoState.status,
+        willResetHasScrolled: convoState.status === ConvoStatus.Initializing,
+      })
+      loggedStatusRef.current = convoState.status
+    }
+  }, [convoState.status, convoId])
   if (prevState !== convoState.status) {
     setPrevState(convoState.status)
     if (convoState.status === ConvoStatus.Initializing) {

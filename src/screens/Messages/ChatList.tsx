@@ -9,6 +9,8 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useAppState} from '#/lib/appState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
+// [CHATDBG] TEMP: dev-only test-notification helper. Delete with the button below.
+import {scheduleTestChatNotification} from '#/lib/notifications/devChatNotif'
 import {type MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -18,6 +20,7 @@ import {useMessagesEventBus} from '#/state/messages/events'
 import {useChatActorStatusQuery} from '#/state/queries/messages/get-status'
 import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
+import {useSession} from '#/state/session'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
 import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
@@ -42,7 +45,7 @@ import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
-import {IS_NATIVE} from '#/env'
+import {IS_DEV, IS_NATIVE} from '#/env'
 import {ChatDisabled} from './components/ChatDisabled'
 import {ChatListItem} from './components/ChatListItem'
 import {InboxRequests} from './components/InboxRequests'
@@ -200,6 +203,7 @@ export function ChatList({
   const {t: l} = useLingui()
   const scrollElRef: ListRef = useAnimatedRef()
   const {isWithinSplitView} = useIsWithinSplitView()
+  const {currentAccount} = useSession() // [CHATDBG] TEMP: for test-notif button
 
   const openChatControl = useCallback(() => {
     newChatControl.open()
@@ -395,48 +399,70 @@ export function ChatList({
   }
 
   return (
-    <List
-      ref={scrollElRef}
-      data={conversations}
-      renderItem={renderItem}
-      keyExtractor={keyExtractor}
-      refreshing={isPTRing}
-      onRefresh={() => void onRefresh()}
-      onEndReached={() => void onEndReached()}
-      ListHeaderComponent={
-        chatStatus?.chatDisabled ? (
-          <ChatDisabled shape="banner" style={[isWithinSplitView && a.mb_sm]} />
-        ) : undefined
-      }
-      ListFooterComponent={
-        <ListFooter
-          isFetchingNextPage={isFetchingNextPage}
-          error={cleanError(error)}
-          onRetry={fetchNextPage}
-          style={{borderColor: 'transparent'}}
-          hasNextPage={hasNextPage}
-        />
-      }
-      onEndReachedThreshold={IS_NATIVE ? 1.5 : 0}
-      onContentSizeChange={onContentSizeChange}
-      initialNumToRender={initialNumToRender}
-      windowSize={11}
-      desktopFixedHeight
-      sideBorders={false}
-      disableFullWindowScroll={isWithinSplitView}
-      style={
-        isWithinSplitView && [
-          a.w_full,
-          web({
-            scrollbarWidth: 'thin',
-            scrollbarColor: `${t.palette.contrast_100} transparent`,
-          }),
-        ]
-      }
-      contentContainerStyle={
-        isWithinSplitView && !chatStatus?.chatDisabled && a.py_sm
-      }
-    />
+    <>
+      <List
+        ref={scrollElRef}
+        data={conversations}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        refreshing={isPTRing}
+        onRefresh={() => void onRefresh()}
+        onEndReached={() => void onEndReached()}
+        ListHeaderComponent={
+          chatStatus?.chatDisabled ? (
+            <ChatDisabled
+              shape="banner"
+              style={[isWithinSplitView && a.mb_sm]}
+            />
+          ) : undefined
+        }
+        ListFooterComponent={
+          <ListFooter
+            isFetchingNextPage={isFetchingNextPage}
+            error={cleanError(error)}
+            onRetry={fetchNextPage}
+            style={{borderColor: 'transparent'}}
+            hasNextPage={hasNextPage}
+          />
+        }
+        onEndReachedThreshold={IS_NATIVE ? 1.5 : 0}
+        onContentSizeChange={onContentSizeChange}
+        initialNumToRender={initialNumToRender}
+        windowSize={11}
+        desktopFixedHeight
+        sideBorders={false}
+        disableFullWindowScroll={isWithinSplitView}
+        style={
+          isWithinSplitView && [
+            a.w_full,
+            web({
+              scrollbarWidth: 'thin',
+              scrollbarColor: `${t.palette.contrast_100} transparent`,
+            }),
+          ]
+        }
+        contentContainerStyle={
+          isWithinSplitView && !chatStatus?.chatDisabled && a.py_sm
+        }
+      />
+      {/* [CHATDBG] TEMP: schedules a fake chat push for the first convo. Delete this. */}
+      {IS_DEV && IS_NATIVE && conversations.length > 0 && currentAccount && (
+        <View style={[a.absolute, {bottom: 90, right: 16}]}>
+          <Button
+            label="Test chat push"
+            color="negative"
+            size="small"
+            onPress={() => {
+              void scheduleTestChatNotification({
+                convoId: conversations[0].conversation.id,
+                recipientDid: currentAccount.did,
+              })
+            }}>
+            <ButtonText>Test push (bg now)</ButtonText>
+          </Button>
+        </View>
+      )}
+    </>
   )
 }
 
