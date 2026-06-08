@@ -473,6 +473,7 @@ function SettingsHeader({
             a.justify_center,
             a.gap_2xl,
             a.pt_2xl,
+            a.flex_wrap,
           ]}>
           <SettingsButton
             color={convo.view.muted ? 'negative_subtle' : 'secondary'}
@@ -638,6 +639,7 @@ function SettingsButton({
       </Button>
       <Text
         numberOfLines={1}
+        maxFontSizeMultiplier={2.5}
         style={[
           a.text_xs,
           a.font_medium,
