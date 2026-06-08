@@ -3,6 +3,7 @@ import {useWindowDimensions, View} from 'react-native'
 import {type $Typed, type ChatBskyEmbedJoinLink} from '@atproto/api'
 
 import {useConvoActive} from '#/state/messages/convo'
+import {isKnownJoinLinkPreview} from '#/state/queries/join-links'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import * as ChatInvite from '#/components/dms/ChatInvite'
 import {MessageContextProvider} from './MessageContext'
@@ -27,8 +28,9 @@ let MessageItemInviteEmbed = ({
   const screen = useWindowDimensions()
   const convo = useConvoActive()
 
-  const code =
-    'code' in embed.joinLinkPreview ? embed.joinLinkPreview.code : undefined
+  const code = isKnownJoinLinkPreview(embed.joinLinkPreview)
+    ? embed.joinLinkPreview.code
+    : undefined
   if (!code) return null
 
   return (

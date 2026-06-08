@@ -92,7 +92,7 @@ export function OutgoingRequestListItem({
                     {convoView.name}
                   </Text>
                 </View>
-                {convoView.viewer.requestedAt ? (
+                {convoView.viewer?.requestedAt ? (
                   <TimeElapsed timestamp={convoView.viewer.requestedAt}>
                     {({timeElapsed}) => (
                       <Text

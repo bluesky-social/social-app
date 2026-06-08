@@ -80,7 +80,7 @@ export function JoinRequest({setScreenState}: Props) {
                   a.font_semi_bold,
                   t.atoms.text,
                 ]}>
-                {l`This invite link has expired`}
+                {l`Chat invite link no longer available`}
               </Text>
               <ActionButtons setScreenState={setScreenState} />
             </Wrapper>
