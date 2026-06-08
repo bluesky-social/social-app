@@ -179,6 +179,7 @@ function ProfileCard({minimal}: {minimal: boolean}) {
                           },
                         ]}>
                         <Text
+                          emoji
                           style={[a.font_bold, a.text_sm, a.leading_snug]}
                           numberOfLines={1}>
                           {sanitizeDisplayName(

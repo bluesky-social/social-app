@@ -29,6 +29,7 @@ interface Props {
   onPressIn?: EventFunction
   imageStyle?: StyleProp<ImageStyle>
   viewContext?: PostEmbedViewContext
+  isWithinQuote?: boolean
   insetBorderStyle?: StyleProp<ViewStyle>
   containerRefs: AnimatedRef<any>[]
   thumbDimsRef: React.RefObject<(Dimensions | null)[]>
@@ -42,6 +43,7 @@ export function GalleryItem({
   onPressIn,
   onLongPress,
   viewContext,
+  isWithinQuote,
   insetBorderStyle,
   containerRefs,
   thumbDimsRef,
@@ -52,6 +54,7 @@ export function GalleryItem({
   const image = images[index]
   const hasAlt = !!image.alt
   const hideBadges =
+    isWithinQuote ??
     viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
 
   const aspect =

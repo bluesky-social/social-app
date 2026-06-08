@@ -1,9 +1,9 @@
 import {useState} from 'react'
 import {Alert, View} from 'react-native'
+import * as DynamicAppIcon from '@bsky.app/expo-dynamic-app-icon'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import * as DynamicAppIcon from '@mozzius/expo-dynamic-app-icon'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'

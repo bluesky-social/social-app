@@ -39,14 +39,16 @@ export function useJoinRequestMutation<A extends JoinRequestAction>(
   return useMutation({
     mutationFn: async ({member}: {member: string}) => {
       if (!convoId) throw new Error('No convoId provided')
-      const endpoint =
+      const {data} =
         action === 'approve'
-          ? agent.chat.bsky.group.approveJoinRequest
-          : agent.chat.bsky.group.rejectJoinRequest
-      const {data} = await endpoint(
-        {convoId, member},
-        {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
-      )
+          ? await agent.chat.bsky.group.approveJoinRequest(
+              {convoId, member},
+              {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
+            )
+          : await agent.chat.bsky.group.rejectJoinRequest(
+              {convoId, member},
+              {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
+            )
       return data as JoinRequestOutput<A>
     },
     onMutate: ({member}) => {

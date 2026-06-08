@@ -7,6 +7,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
+import {resolveAllowGroupInvites} from '#/components/dms/util'
 import {RQKEY as PROFILE_RKEY} from '../profile'
 
 export function useUpdateActorDeclaration({
@@ -34,8 +35,12 @@ export function useUpdateActorDeclaration({
         update.allowIncoming ??
         current?.associated?.chat?.allowIncoming ??
         'following'
-      const allowGroupInvites =
-        update.allowGroupInvites ?? current?.associated?.chat?.allowGroupInvites
+      const allowGroupInvites = resolveAllowGroupInvites({
+        allowIncoming,
+        allowGroupInvites:
+          update.allowGroupInvites ??
+          current?.associated?.chat?.allowGroupInvites,
+      })
       const result = await agent.com.atproto.repo.putRecord({
         repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
@@ -43,7 +48,7 @@ export function useUpdateActorDeclaration({
         record: {
           $type: 'chat.bsky.actor.declaration',
           allowIncoming,
-          ...(allowGroupInvites && {allowGroupInvites}),
+          allowGroupInvites,
         },
       })
       return result
@@ -54,14 +59,26 @@ export function useUpdateActorDeclaration({
         PROFILE_RKEY(currentAccount?.did),
         (old?: AppBskyActorDefs.ProfileViewDetailed) => {
           if (!old) return old
+          const allowIncoming =
+            update.allowIncoming ??
+            old.associated?.chat?.allowIncoming ??
+            'following'
+          // resolve the same concrete value the server will receive, so
+          // optimistic cache and persisted record stay aligned
+          const allowGroupInvites = resolveAllowGroupInvites({
+            allowIncoming,
+            allowGroupInvites:
+              update.allowGroupInvites ??
+              old.associated?.chat?.allowGroupInvites,
+          })
           return {
             ...old,
             associated: {
               ...old.associated,
               chat: {
-                allowIncoming: 'following',
                 ...old.associated?.chat,
-                ...update,
+                allowIncoming,
+                allowGroupInvites,
               },
             },
           } satisfies AppBskyActorDefs.ProfileViewDetailed

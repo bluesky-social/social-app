@@ -5,7 +5,6 @@ import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
-import {useCallOnce} from '#/lib/once'
 import {shareUrl} from '#/lib/sharing'
 import {niceDate} from '#/lib/strings/time'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
@@ -80,13 +79,15 @@ export const StandardSiteEmbed = ({
     onEmbedInteractionCallback?.()
     ax.metric('embed:standardSite:article:press', {url: view.uri})
   }
-  const onLongPress = () => {
-    if (view.uri && IS_NATIVE) {
-      playHaptic('Heavy')
-      shareUrl(view.uri)
-      ax.metric('embed:standardSite:article:longPress', {url: view.uri})
-    }
-  }
+  const onLongPress = IS_NATIVE
+    ? () => {
+        if (view.uri) {
+          playHaptic('Heavy')
+          void shareUrl(view.uri)
+          ax.metric('embed:standardSite:article:longPress', {url: view.uri})
+        }
+      }
+    : undefined
   const onPressPublication = () => {
     playHaptic('Light')
     onEmbedInteractionCallback?.()
@@ -94,21 +95,17 @@ export const StandardSiteEmbed = ({
       url: view.source?.uri || '',
     })
   }
-  const onLongPressPublication = () => {
-    if (view.source?.uri && IS_NATIVE) {
-      playHaptic('Heavy')
-      shareUrl(view.source.uri)
-      ax.metric('embed:standardSite:publication:longPress', {
-        url: view.source.uri,
-      })
-    }
-  }
-
-  useCallOnce(() => {
-    if (!preview) {
-      ax.metric('embed:standardSite:view', {url: view.uri})
-    }
-  })()
+  const onLongPressPublication = IS_NATIVE
+    ? () => {
+        if (view.source?.uri) {
+          playHaptic('Heavy')
+          void shareUrl(view.source.uri)
+          ax.metric('embed:standardSite:publication:longPress', {
+            url: view.source.uri,
+          })
+        }
+      }
+    : undefined
 
   if (isStandardPublication) {
     return (
@@ -356,6 +353,7 @@ export function PublicationCard({
           />
           <View style={[a.flex_1, a.gap_2xs]}>
             <Text
+              emoji
               numberOfLines={1}
               style={[
                 a.text_md,
@@ -386,7 +384,7 @@ export function PublicationCard({
       <View style={[a.pointer_events_none]}>
         {view.description && (
           <View style={[a.pt_sm]}>
-            <Text style={[a.text_sm, a.leading_snug]} numberOfLines={3}>
+            <Text emoji style={[a.text_sm, a.leading_snug]} numberOfLines={3}>
               {view.description}
             </Text>
           </View>
@@ -426,6 +424,26 @@ export function SubscribeButton({
     ? l`Subscribe on ${highlightedPublisher.name}`
     : l`View publication`
 
+  /*
+   * The custom site theme paints the button background with `accent` and the
+   * text with `accentForeground`. Only honor it when that pairing clears WCAG
+   * AAA (4.5:1) for large text, which the button's bold label qualifies as.
+   * Otherwise we fall through to the default `secondary_inverted` styling,
+   * which is guaranteed to be legible.
+   */
+  const {accentRGB, accentForegroundRGB} = view.source?.theme || {}
+  let useCustomTheme = false
+  if (accentRGB && accentForegroundRGB) {
+    const accent = utils.rgbToHex(accentRGB.r, accentRGB.g, accentRGB.b)
+    const accentForeground = utils.rgbToHex(
+      accentForegroundRGB.r,
+      accentForegroundRGB.g,
+      accentForegroundRGB.b,
+    )
+    const ratio = utils.contrastRatio(accent, accentForeground)
+    useCustomTheme = ratio !== null && ratio >= 4.5
+  }
+
   if (!view.source) return null
 
   const publicationTitle = view.source.title
@@ -451,52 +469,60 @@ export function SubscribeButton({
     }
   }
 
-  const onLongPress = () => {
-    if (view.source?.uri && IS_NATIVE) {
-      playHaptic('Heavy')
-      shareUrl(view.source.uri)
-      if (highlightedPublisher) {
-        ax.metric('embed:standardSite:subscribe:longPress', {
-          url: view.source?.uri || '',
-        })
-      } else {
-        ax.metric('embed:standardSite:publicationCta:longPress', {
-          url: view.source?.uri || '',
-        })
+  const onLongPress = IS_NATIVE
+    ? () => {
+        if (view.source?.uri) {
+          playHaptic('Heavy')
+          void shareUrl(view.source.uri)
+          if (highlightedPublisher) {
+            ax.metric('embed:standardSite:subscribe:longPress', {
+              url: view.source?.uri || '',
+            })
+          } else {
+            ax.metric('embed:standardSite:publicationCta:longPress', {
+              url: view.source?.uri || '',
+            })
+          }
+        }
       }
-    }
+    : undefined
+
+  const button = (
+    <Link
+      shouldProxy
+      to={view.source.uri}
+      label={label}
+      size="small"
+      color="secondary_inverted"
+      style={[
+        style,
+        a.gap_sm,
+        preview ? a.pointer_events_none : a.pointer_events_auto,
+      ]}
+      onPress={onPress}
+      onLongPress={onLongPress}>
+      {highlightedPublisher ? (
+        <>
+          <View style={[a.flex_row, a.align_center, {gap: 7}]}>
+            <ButtonIcon icon={highlightedPublisher.Icon} size="md" />
+          </View>
+          <ButtonText>{cta}</ButtonText>
+        </>
+      ) : (
+        <>
+          <ButtonText>{cta}</ButtonText>
+          <ButtonIcon icon={ArrowTopRightIcon} />
+        </>
+      )}
+    </Link>
+  )
+
+  if (!useCustomTheme) {
+    return button
   }
 
   return (
-    <StandardSiteThemeProvider view={view}>
-      <Link
-        shouldProxy
-        to={view.source.uri}
-        label={label}
-        size="small"
-        color="secondary_inverted"
-        style={[
-          style,
-          a.gap_sm,
-          preview ? a.pointer_events_none : a.pointer_events_auto,
-        ]}
-        onPress={onPress}
-        onLongPress={onLongPress}>
-        {highlightedPublisher ? (
-          <>
-            <View style={[a.flex_row, a.align_center, {gap: 7}]}>
-              <ButtonIcon icon={highlightedPublisher.Icon} size="md" />
-            </View>
-            <ButtonText>{cta}</ButtonText>
-          </>
-        ) : (
-          <>
-            <ButtonText>{cta}</ButtonText>
-            <ButtonIcon icon={ArrowTopRightIcon} />
-          </>
-        )}
-      </Link>
-    </StandardSiteThemeProvider>
+    <StandardSiteThemeProvider view={view}>{button}</StandardSiteThemeProvider>
   )
 }
 
@@ -617,6 +643,7 @@ export function PublicationFooter({
         />
         <View style={[a.flex_1, a.gap_2xs]}>
           <Text
+            emoji
             numberOfLines={1}
             style={[
               a.text_sm,

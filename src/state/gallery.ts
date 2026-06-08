@@ -201,12 +201,17 @@ export function resetImageManipulation(
   return img
 }
 
-export async function compressImage(img: ComposerImage): Promise<PickerImage> {
+export async function compressImage(
+  img: ComposerImage,
+  {maxDimension, maxSize}: {maxDimension: number; maxSize: number},
+): Promise<PickerImage> {
   const source = img.transformed || img.source
 
   let attempts = 0
-  let maxDimension = 4000
-  let maxBytes = 2000000
+  // Seeded from `maxDimension` but shrunk per attempt below, so keep the
+  // passed-in value pristine.
+  let currentDimension = maxDimension
+  const maxBytes = maxSize
 
   let minQualityPercentage = 0
   let maxQualityPercentage = 101 // exclusive
@@ -215,7 +220,11 @@ export async function compressImage(img: ComposerImage): Promise<PickerImage> {
   while (maxQualityPercentage - minQualityPercentage > 1) {
     if (attempts >= 4) break
 
-    const [w, h] = containImageRes(source.width, source.height, maxDimension)
+    const [w, h] = containImageRes(
+      source.width,
+      source.height,
+      currentDimension,
+    )
     const qualityPercentage = Math.round(
       (maxQualityPercentage + minQualityPercentage) / 2,
     )
@@ -230,8 +239,9 @@ export async function compressImage(img: ComposerImage): Promise<PickerImage> {
       minQualityPercentage = 0
       maxQualityPercentage = 101
       attempts++
-      // 4000px → 3200px → 2560px → 2048px → ~1638px
-      maxDimension = Math.floor(maxDimension * 0.8)
+      // max.width → 0.8× → 0.64× → 0.512× → ~0.41×
+      // e.g. 4000px → 3200px → 2560px → 2048px → ~1638px
+      currentDimension = Math.floor(currentDimension * 0.8)
       continue
     }
 
