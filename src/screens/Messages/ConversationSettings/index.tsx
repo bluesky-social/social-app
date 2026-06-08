@@ -385,8 +385,9 @@ function SettingsHeader({
     mutateAsync: lockConvoAsync,
     isPending: isLocking,
   } = useLockConvo(convo.view.id, {
-    onSuccess: data => {
+    onSuccess: (data, {silent}) => {
       if (!ChatBskyConvoDefs.isGroupConvo(data.convo.kind)) return
+      if (silent) return
       if (data.convo.kind.lockStatus === 'locked') {
         Toast.show(l({message: 'Group chat locked', context: 'toast'}))
       } else {
@@ -407,7 +408,7 @@ function SettingsHeader({
   const leaveAndLockConvo = async () => {
     try {
       if (lockStatus === 'unlocked') {
-        await lockConvoAsync({lock: true})
+        await lockConvoAsync({lock: true, silent: true})
       }
     } catch {
       // Handled by onError in useLockConvo
