@@ -14,13 +14,13 @@ import {
 } from '#/ageAssurance/state'
 import {
   AgeAssuranceAccess,
+  type AgeAssuranceFlags,
   type AgeAssuranceState,
   AgeAssuranceStatus,
 } from '#/ageAssurance/types'
 import {
-  isUnderAge,
+  computeAgeAssuranceFlags,
   maybeRestrictChatSettings,
-  MIN_ACCESS_AGE,
   useAgeAssuranceRegionConfigWithFallback,
 } from '#/ageAssurance/util'
 
@@ -38,13 +38,7 @@ const AgeAssuranceStateContext = createContext<{
   Access: typeof AgeAssuranceAccess
   Status: typeof AgeAssuranceStatus
   state: AgeAssuranceState
-  flags: {
-    adultContentDisabled: boolean
-    chatDisabled: boolean
-    isDeclaredUnderAdultAge: boolean
-    isOverRegionMinAccessAge: boolean
-    isOverAppMinAccessAge: boolean
-  }
+  flags: AgeAssuranceFlags
 }>({
   Access: AgeAssuranceAccess,
   Status: AgeAssuranceStatus,
@@ -107,29 +101,15 @@ function InnerProvider({children}: {children: React.ReactNode}) {
   return (
     <AgeAssuranceStateContext.Provider
       value={useMemo(() => {
-        const chatDisabled = state.access !== AgeAssuranceAccess.Full
-        const isDeclaredUnderAdultAge = data?.birthdate
-          ? isUnderAge(data.birthdate, 18)
-          : true
-        const isOverRegionMinAccessAge = data?.birthdate
-          ? !isUnderAge(data.birthdate, config.minAccessAge)
-          : false
-        const isOverAppMinAccessAge = data?.birthdate
-          ? !isUnderAge(data.birthdate, MIN_ACCESS_AGE)
-          : false
-        const adultContentDisabled =
-          state.access !== AgeAssuranceAccess.Full || isDeclaredUnderAdultAge
         return {
           Access: AgeAssuranceAccess,
           Status: AgeAssuranceStatus,
           state,
-          flags: {
-            adultContentDisabled,
-            chatDisabled,
-            isDeclaredUnderAdultAge,
-            isOverRegionMinAccessAge,
-            isOverAppMinAccessAge,
-          },
+          flags: computeAgeAssuranceFlags({
+            state,
+            config,
+            data,
+          }),
         }
       }, [state, data, config])}>
       {children}

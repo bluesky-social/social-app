@@ -11,11 +11,16 @@ import {getAge} from '#/lib/strings/time'
 import {restrictChatSettings} from '#/state/queries/messages/restrictChatSettings'
 import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
 import {
+  type AgeAssuranceData,
   getDidFromAgentSession,
   getOtherRequiredDataFromCache,
   useAgeAssuranceDataContext,
 } from '#/ageAssurance/data'
-import {AgeAssuranceAccess} from '#/ageAssurance/types'
+import {
+  AgeAssuranceAccess,
+  type AgeAssuranceFlags,
+  type AgeAssuranceState,
+} from '#/ageAssurance/types'
 import {type Geolocation, useGeolocation} from '#/geolocation'
 
 export const MIN_ACCESS_AGE = 13
@@ -127,4 +132,35 @@ export function maybeRestrictChatSettings({agent}: {agent: AtpAgent}) {
   // ...update the chat setting record if allowIncoming is not already 'none'.
   if (data?.actorDeclaration?.allowIncoming === 'none') return
   restrictChatSettings({agent, did})
+}
+
+export function computeAgeAssuranceFlags({
+  state,
+  config,
+  data,
+}: {
+  state: AgeAssuranceState
+  config: AppBskyAgeassuranceDefs.ConfigRegion
+  data: AgeAssuranceData['data']
+}): AgeAssuranceFlags {
+  const chatDisabled = state.access !== AgeAssuranceAccess.Full
+  const isDeclaredUnderAdultAge = data?.birthdate
+    ? isUnderAge(data.birthdate, 18)
+    : true
+  const isOverRegionMinAccessAge = data?.birthdate
+    ? !isUnderAge(data.birthdate, config.minAccessAge)
+    : false
+  const isOverAppMinAccessAge = data?.birthdate
+    ? !isUnderAge(data.birthdate, MIN_ACCESS_AGE)
+    : false
+  const adultContentDisabled =
+    state.access !== AgeAssuranceAccess.Full || isDeclaredUnderAdultAge
+
+  return {
+    adultContentDisabled,
+    chatDisabled,
+    isDeclaredUnderAdultAge,
+    isOverRegionMinAccessAge,
+    isOverAppMinAccessAge,
+  }
 }
