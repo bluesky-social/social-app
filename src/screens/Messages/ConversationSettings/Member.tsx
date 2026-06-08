@@ -153,22 +153,15 @@ export function Member({
           </ProfileCard.Outer>
         </ProfileCard.Link>
         {showRemoveButton ? (
-          <>
-            <Button
-              label={l`Remove ${displayName} from this group chat`}
-              size="tiny"
-              color="negative_subtle"
-              onPress={() => removeMemberPrompt.open()}>
-              <ButtonText>
-                <Trans>Remove</Trans>
-              </ButtonText>
-            </Button>
-            <RemoveMemberPrompt
-              control={removeMemberPrompt}
-              displayName={displayName}
-              onConfirm={() => removeMembers({members: [profile.did]})}
-            />
-          </>
+          <Button
+            label={l`Remove ${displayName} from this group chat`}
+            size="tiny"
+            color="negative_subtle"
+            onPress={() => removeMemberPrompt.open()}>
+            <ButtonText>
+              <Trans>Remove</Trans>
+            </ButtonText>
+          </Button>
         ) : isSelf || isFollowing || isBlockedOrBlocking(profile) ? null : (
           <SimpleInlineLinkText
             label={l`Follow ${displayName}`}
@@ -179,6 +172,14 @@ export function Member({
         )}
         {statusBadge}
       </View>
+      {/* Mounted outside the showRemoveButton conditional: confirming the
+          prompt optimistically drops this row, so gating the prompt on the
+          button would unmount it mid-close and race the dismiss animation. */}
+      <RemoveMemberPrompt
+        control={removeMemberPrompt}
+        displayName={displayName}
+        onConfirm={() => removeMembers({members: [profile.did]})}
+      />
     </SubtleHoverWrapper>
   )
 }
