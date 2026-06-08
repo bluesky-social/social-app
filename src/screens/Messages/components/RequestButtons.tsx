@@ -14,6 +14,7 @@ import {
   unstableCacheProfileView,
   useProfileBlockMutationQueue,
 } from '#/state/queries/profile'
+import {useSession} from '#/state/session'
 import {
   Button,
   ButtonIcon,
@@ -25,8 +26,12 @@ import {
   EmailDialogScreenID,
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
+import {AfterReportConversationDialog} from '#/components/dms/AfterReportConversationDialog'
 import {AfterReportDialog} from '#/components/dms/AfterReportDialog'
-import {type ConvoWithDetails} from '#/components/dms/util'
+import {
+  type ConvoWithDetails,
+  getConvoReportSubject,
+} from '#/components/dms/util'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {CircleX_Stroke2_Corner0_Rounded} from '#/components/icons/CircleX'
@@ -56,6 +61,7 @@ export function RejectMenu({
   currentScreen: 'list' | 'conversation'
 }) {
   const {t: l} = useLingui()
+  const {currentAccount} = useSession()
   const shadowedProfile = useProfileShadow(profile)
   const navigation = useNavigation<NavigationProp>()
   const queryClient = useQueryClient()
@@ -111,9 +117,7 @@ export function RejectMenu({
   const reportControl = useDialogControl()
   const blockOrDeleteControl = useDialogControl()
 
-  const lastMessage = ChatBskyConvoDefs.isMessageView(convo.view.lastMessage)
-    ? convo.view.lastMessage
-    : null
+  const reportSubject = getConvoReportSubject(convo, currentAccount?.did)
 
   return (
     <>
@@ -165,33 +169,35 @@ export function RejectMenu({
         </Menu.Outer>
       </Menu.Root>
 
-      <ReportDialog
-        subject={
-          lastMessage
-            ? {
-                view: 'convo',
-                convoId: convo.view.id,
-                message: lastMessage,
-              }
-            : {
-                convoId: convo.view.id,
-                did: profile.did,
-              }
-        }
-        control={reportControl}
-        onAfterSubmit={() => {
-          unstableCacheProfileView(queryClient, profile)
-          blockOrDeleteControl.open()
-        }}
-      />
-      <AfterReportDialog
-        control={blockOrDeleteControl}
-        currentScreen={currentScreen}
-        params={{
-          convoId: convo.view.id,
-          did: profile.did,
-        }}
-      />
+      {reportSubject && (
+        <ReportDialog
+          subject={reportSubject}
+          control={reportControl}
+          onAfterSubmit={() => {
+            unstableCacheProfileView(queryClient, profile)
+            blockOrDeleteControl.open()
+          }}
+        />
+      )}
+      {convo.kind === 'group' ? (
+        <AfterReportConversationDialog
+          control={blockOrDeleteControl}
+          currentScreen={currentScreen}
+          params={{
+            convoId: convo.view.id,
+            did: profile.did,
+          }}
+        />
+      ) : (
+        <AfterReportDialog
+          control={blockOrDeleteControl}
+          currentScreen={currentScreen}
+          params={{
+            convoId: convo.view.id,
+            did: profile.did,
+          }}
+        />
+      )}
     </>
   )
 }
