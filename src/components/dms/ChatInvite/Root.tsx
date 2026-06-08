@@ -78,7 +78,7 @@ export function Root({
         color: 'primary',
         disabled: false,
         onPress: () => {
-          void setStringAsync(`https://bsky.app/c/${preview.code}`)
+          void setStringAsync(`https://bsky.app/chat/${preview.code}`)
           Toast.show(l`Copied to clipboard`, {type: 'success'})
         },
       }
