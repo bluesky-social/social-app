@@ -8,7 +8,7 @@ msgstr ""
 "Language: it\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-03 14:59\n"
+"PO-Revision-Date: 2026-06-08 20:39\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -354,6 +354,18 @@ msgstr "{count, plural, one {# richiesta} other {# richieste}}"
 #: src/view/shell/desktop/LeftNav.tsx:483
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {# elemento non letto} other {# elementi non letti}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:67
+msgid "{count, plural, one {Refresh the page to see it.} other {Refresh the page to see them all.}}"
+msgstr "{count, plural, one {Aggiorna la pagina per vederlo.} other {Aggiorna la pagina per vederli tutti.}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:53
+msgid "{count, plural, one {This post has # photo.} other {This post has # photos.}}"
+msgstr "{count, plural, one {Questo post ha # foto.} other {Questo post ha # foto.}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:60
+msgid "{count, plural, one {Update your app to see it.} other {Update your app to see them all.}}"
+msgstr "{count, plural, one {Aggiorna l'app per vederlo.} other {Aggiorna l'app per vederli tutti.}}"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:53
@@ -1463,7 +1475,7 @@ msgstr "Un'illustrazione che mostra che Bluesky seleziona certificatori attendib
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:172
 msgid "An invite link lets people join this group chat without being added directly. You control who can use the link and whether they need your approval. You can disable the link at any time."
-msgstr "Un link di invito consente ad altri di unirsi a questa chat di gruppo senza essere aggiunti direttamente. Sei tu a decidere chi può utilizzare il link e se è necessaria la tua approvazione. Puoi disattivare il link in qualsiasi momento."
+msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:239
 msgid "An issue not included in these options"
@@ -1547,7 +1559,7 @@ msgstr "Chiunque può partecipare istantaneamente"
 #: src/screens/Messages/components/InviteLinkDialog.tsx:148
 #: src/screens/Messages/components/InviteLinkDialog.tsx:149
 msgid "Anyone can request to join"
-msgstr "Chiunque può richiedere di partecipare"
+msgstr "Chiunque può chiedere di partecipare"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:112
 #: src/screens/Settings/ActivityPrivacySettings.tsx:117
@@ -1557,7 +1569,7 @@ msgstr "Chiunque mi segua"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:436
 msgid "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
-msgstr "Chiunque lo abbia non potrà più iscriversi o richiedere l'iscrizione. Puoi sempre crearne uno nuovo."
+msgstr "Chiunque lo abbia non potrà più iscriversi o chiedere di partecipare. Puoi sempre crearne uno nuovo."
 
 #: src/Navigation.tsx:555
 #: src/screens/Settings/AppIconSettings/index.tsx:65
@@ -1698,7 +1710,7 @@ msgstr "Vuoi abbandonare questa conversazione?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "Abbandonare questa conversazione? I messaggi verranno eliminati per te, ma non per gli altri partecipanti."
+msgstr ""
 
 #: src/components/FeedCard.tsx:374
 msgid "Are you sure you want to remove this from your feeds?"
@@ -1956,7 +1968,7 @@ msgstr "Blocca utente e/o elimina questa conversazione"
 msgid "Block user and/or leave this conversation"
 msgstr "Blocca utente e/o abbandona questa conversazione"
 
-#: src/components/Post/Embed/index.tsx:197
+#: src/components/Post/Embed/index.tsx:208
 msgid "Blocked"
 msgstr "Bloccato"
 
@@ -3434,7 +3446,7 @@ msgstr "Eliminare questa lista?"
 msgid "Delete this post?"
 msgstr "Eliminare questo post?"
 
-#: src/components/Post/Embed/index.tsx:190
+#: src/components/Post/Embed/index.tsx:201
 msgid "Deleted"
 msgstr "Eliminato"
 
@@ -5006,7 +5018,7 @@ msgstr "Ti segue"
 
 #: src/components/Pills.tsx:175
 msgid "Follows You"
-msgstr "Ti segue"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:128
 msgid "Font"
@@ -7670,7 +7682,7 @@ msgstr "Uno o più file selezionati non sono supportati."
 
 #: src/view/com/composer/SelectMediaButton.tsx:438
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
-msgstr ""
+msgstr "Uno o più dei file selezionati è troppo grande. La dimensione massima è di {VIDEO_MAX_SIZE_MB} MB."
 
 #: src/view/com/composer/Composer.tsx:589
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
@@ -7861,7 +7873,7 @@ msgstr "Apre la fotocamera del dispositivo"
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:509
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
-msgstr "Apre la galleria del dispositivo per selezionare fino a {MAX_IMAGES, plural, other {# immagini}} o un singolo video o GIF."
+msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:102
 #: src/view/com/auth/SplashScreen.web.tsx:110
@@ -8074,7 +8086,7 @@ msgstr "Le persone seguite da {ownerName} possono unirsi istantaneamente"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:159
 msgid "People {ownerName} follows can request to join"
-msgstr "Le persone seguite da {ownerName} possono richiedere di unirsi"
+msgstr "Le persone seguite da {ownerName} possono chiedere di partecipare"
 
 #. placeholder {0}: route.params.name
 #: src/Navigation.tsx:245
@@ -8097,7 +8109,7 @@ msgstr "Le persone che seguo possono unirsi istantaneamente"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:158
 msgid "People I follow can request to join"
-msgstr "Le persone che seguo possono richiedere di unirsi"
+msgstr "Le persone che seguo possono chiedere di partecipare"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:510
 msgid "People you follow"
@@ -8841,6 +8853,10 @@ msgstr "Consigliati"
 msgid "Reconnect"
 msgstr "Riconnetti"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:80
+msgid "Refresh the page to see it."
+msgstr "Aggiorna la pagina per vederlo."
+
 #. Reject a chat request, this opens a menu with options
 #: src/screens/Messages/components/RequestButtons.tsx:131
 msgid "Reject"
@@ -9009,11 +9025,11 @@ msgstr "Rimuovi verifica"
 msgid "Remove your verification for this account?"
 msgstr "Rimuovere la tua verifica per questo account?"
 
-#: src/components/Post/Embed/index.tsx:225
+#: src/components/Post/Embed/index.tsx:236
 msgid "Removed by author"
 msgstr "Rimosso dall'autore"
 
-#: src/components/Post/Embed/index.tsx:223
+#: src/components/Post/Embed/index.tsx:234
 msgid "Removed by you"
 msgstr "Rimosso da te"
 
@@ -10487,6 +10503,10 @@ msgstr "Qualcuno è stato rimosso"
 msgid "Someone was removed from the group"
 msgstr "Qualcuno è stato rimosso dal gruppo"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:48
+msgid "Something new is here"
+msgstr "C'è qualcosa di nuovo"
+
 #: src/components/moderation/ReportDialog/index.tsx:101
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr "C'è stato qualche problema con i dati che stai provando a segnalare. Contatta l'assistenza."
@@ -11060,7 +11080,7 @@ msgstr "L'informativa sulla privacy è stata spostata a <0/>"
 #: src/view/com/composer/state/video.ts:397
 #: src/view/com/composer/state/video.ts:436
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
-msgstr ""
+msgstr "Il video selezionato è più grande di {VIDEO_MAX_SIZE_MB} MB. Riprova con un file più piccolo."
 
 #: src/lib/hooks/useCleanError.ts:41
 #: src/lib/strings/errors.ts:19
@@ -12047,6 +12067,10 @@ msgstr "Aggiorna"
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr "Aggiorna <0>{displayName}</0> nelle liste"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:93
+msgid "Update app"
+msgstr "Aggiorna app"
+
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:301
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:313
 #: src/screens/Settings/AccountSettings.tsx:112
@@ -12064,6 +12088,14 @@ msgstr "Aggiorna link di invito"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:565
 msgid "Update to {domain}"
 msgstr "Aggiorna a {domain}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:85
+msgid "Update your app"
+msgstr "Aggiorna la tua app"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:76
+msgid "Update your app to see it."
+msgstr "Aggiorna la tua app per vederlo."
 
 #: src/screens/Messages/Conversation.tsx:335
 msgid "Update your app to the latest version to join in!"
@@ -13158,7 +13190,7 @@ msgstr "Puoi leggere la cronologia della chat ma non puoi inviare nuovi messaggi
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:421
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
-msgstr "È possibile selezionare fino a {MAX_IMAGES, plural, other {# immagini}} in totale."
+msgstr ""
 
 #: src/components/interstitials/Trending.tsx:132
 #: src/components/interstitials/TrendingVideos.tsx:138
@@ -13613,7 +13645,7 @@ msgstr "Le tue parole silenziate"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:179
 msgid "Your name, avatar, and the name of the group chat will be visible to everyone."
-msgstr "Il tuo nome, il tuo avatar e il nome della chat di gruppo saranno visibili a chiunque."
+msgstr ""
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:72
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."

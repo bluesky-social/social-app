@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-02 17:45\n"
+"PO-Revision-Date: 2026-06-08 20:39\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese, Brazilian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -74,7 +74,7 @@ msgstr "{0, plural, one {# curtida} other {# curtidas}}"
 #. placeholder {0}: convo.members.length
 #: src/components/dialogs/SearchablePeopleList.tsx:559
 msgid "{0, plural, one {# member} other {# members}}"
-msgstr ""
+msgstr "{0, plural, one {# membro} other {# membros}}"
 
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:149
@@ -90,7 +90,7 @@ msgstr "{0, plural, one {# mês} other {# meses}}"
 #. placeholder {1}: groupedReactions.map(g => g.value).join(' ')
 #: src/components/dms/MessageItem.tsx:297
 msgid "{0, plural, one {# person} other {# people}} reacted – {1}"
-msgstr ""
+msgstr "{0, plural, one {# pessoa reagiu} other {# pessoas reagiram}} – {1}"
 
 #. placeholder {0}: quoteCount ?? 0
 #: src/screens/Post/PostQuotes.tsx:34
@@ -119,7 +119,7 @@ msgstr "{0, plural, one {# item não lido} other {# itens não lidos}}"
 #. placeholder {0}: view.readingTime
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:232
 msgid "{0, plural, one {#m} other {#m}}"
-msgstr ""
+msgstr "{0, plural, one {#me} other {#me}}"
 
 #. How many months have passed, displayed in a narrow form
 #. placeholder {0}: diff.value
@@ -192,13 +192,13 @@ msgstr "{0} <0>em <1>texto e tags</1></0>"
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:41
 msgid "{0} added to chat"
-msgstr ""
+msgstr "{0} adicionado à conversa"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:43
 msgid "{0} and {1} added to chat"
-msgstr ""
+msgstr "{0} e {1} adicionados à conversa"
 
 #. placeholder {0}: profile.followsCount || 0
 #: src/screens/Profile/Header/Metrics.tsx:49
@@ -208,7 +208,7 @@ msgstr "{0} seguindo"
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
 #: src/components/dms/MessageItem.tsx:640
 msgid "{0} is blocking you"
-msgstr ""
+msgstr "{0} está bloqueando você"
 
 #. placeholder {0}: sanitizeHandle(profile.handle)
 #: src/features/liveNow/components/LiveStatusDialog.tsx:84
@@ -228,12 +228,12 @@ msgstr "{0} não é suportado pelo seu dispositivo."
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:83
 msgid "{0} joined"
-msgstr ""
+msgstr "{0} entrou"
 
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:84
 msgid "{0} joined the group"
-msgstr ""
+msgstr "{0} entrou no grupo"
 
 #. placeholder {0}: formatCount(i18n, JOINED_THIS_WEEK)
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:230
@@ -243,7 +243,7 @@ msgstr "{0} se juntou esta semana"
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:96
 msgid "{0} left"
-msgstr ""
+msgstr "{0} restantes"
 
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:97
@@ -271,7 +271,7 @@ msgstr "{0} reagiu com {1}"
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:57
 msgid "{0} was added"
-msgstr ""
+msgstr "{0} foi adicionado"
 
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:58
@@ -281,7 +281,7 @@ msgstr "{0} foi adicionado ao grupo"
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:70
 msgid "{0} was removed"
-msgstr ""
+msgstr "{0} foi removido"
 
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:71
@@ -355,15 +355,27 @@ msgstr ""
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {# item não lido} other {# itens não lidos}}"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:67
+msgid "{count, plural, one {Refresh the page to see it.} other {Refresh the page to see them all.}}"
+msgstr ""
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:53
+msgid "{count, plural, one {This post has # photo.} other {This post has # photos.}}"
+msgstr ""
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:60
+msgid "{count, plural, one {Update your app to see it.} other {Update your app to see them all.}}"
+msgstr ""
+
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:53
 msgid "{count}+"
-msgstr ""
+msgstr "{count}+"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:29
 msgid "{count}+ requests"
-msgstr ""
+msgstr "{count}+ solicitações"
 
 #: src/components/dms/DateDivider.tsx:60
 msgid "{date} at {time}"
@@ -636,7 +648,7 @@ msgstr ""
 #. Displayed when there are more than 50 requests to join a group chat
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:48
 msgid "{requestCount}+ requests"
-msgstr ""
+msgstr "{requestCount}+ solicitações"
 
 #. trending topic time spent trending. should be as short as possible to fit in a pill
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:191
@@ -1145,7 +1157,7 @@ msgstr "Adicionado por {0}"
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:102
 msgid "Added by invite link"
-msgstr ""
+msgstr "Adicionado com link de convite"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:113
 #: src/view/com/modals/UserAddRemoveLists.tsx:163
@@ -1557,7 +1569,7 @@ msgstr "Qualquer um que me segue"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:436
 msgid "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
-msgstr ""
+msgstr "Qualquer pessoa que o tenha não poderá mais entrar ou solicitar entrada. Você sempre pode criar um novo."
 
 #: src/Navigation.tsx:555
 #: src/screens/Settings/AppIconSettings/index.tsx:65
@@ -1677,7 +1689,7 @@ msgstr "Deseja mesmo excluir a senha do app \"{0}\"?"
 
 #: src/components/dms/MessageContextMenu.tsx:223
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
-msgstr ""
+msgstr "Deseja mesmo excluir esta mensagem? A mensagem será excluída para você, mas não para os demais participantes."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:684
 msgid "Are you sure you want to delete this starter pack?"
@@ -1690,7 +1702,7 @@ msgstr "Deseja mesmo descartar suas alterações?"
 
 #: src/screens/Messages/ConversationSettings/prompts.tsx:90
 msgid "Are you sure you want to leave {groupName}?"
-msgstr ""
+msgstr "Tem certeza de que deseja sair de {groupName}?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:47
 msgid "Are you sure you want to leave this conversation?"
@@ -1698,7 +1710,7 @@ msgstr "Tem certeza de que deseja sair desta conversa?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "Deseja mesmo sair desta conversa? As mensagens serão excluídas apenas para você."
+msgstr ""
 
 #: src/components/FeedCard.tsx:374
 msgid "Are you sure you want to remove this from your feeds?"
@@ -1735,7 +1747,7 @@ msgstr "No mínimo 8 caracteres"
 
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:338
 msgid "AT Protocol FAQ"
-msgstr ""
+msgstr "FAQ do Protocolo AT"
 
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:48
 msgctxt "Name of app icon variant"
@@ -1810,11 +1822,11 @@ msgstr "Usuário banido retornando"
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:259
 msgid "Based on your device's location, we think you're in <0>{region}</0>. This estimate may be inaccurate if you're using a VPN."
-msgstr ""
+msgstr "Com base na localização do seu dispositivo, achamos que você está em <0>{region}</0>. Essa estimativa pode não ser correta caso esteja usando uma VPN."
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:265
 msgid "Based on your network, we think you're in <0>{region}</0>. This estimate may be inaccurate if you're using a VPN."
-msgstr ""
+msgstr "Com base em sua rede, achamos que você está em <0>{region}</0>. Essa estimativa pode não ser correta caso esteja usando uma VPN."
 
 #: src/view/screens/Lists.tsx:35
 #: src/view/screens/ModerationModlists.tsx:35
@@ -1885,7 +1897,7 @@ msgstr "Bloquear"
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:211
 msgid "Block {displayName}"
-msgstr ""
+msgstr "Bloquear {displayName}"
 
 #: src/components/dms/ConvoMenu.tsx:294
 #: src/components/dms/ConvoMenu.tsx:298
@@ -1956,7 +1968,7 @@ msgstr "Bloquear usuário e/ou excluir esta conversa"
 msgid "Block user and/or leave this conversation"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:197
+#: src/components/Post/Embed/index.tsx:208
 msgid "Blocked"
 msgstr "Bloqueado"
 
@@ -2359,7 +2371,7 @@ msgstr "Conversa excluída"
 
 #: src/components/dms/getSystemMessageInfo.ts:108
 msgid "Chat ended"
-msgstr ""
+msgstr "Conversa encerrada"
 
 #: src/components/dms/getSystemMessageInfo.ts:104
 msgid "Chat locked"
@@ -2407,12 +2419,12 @@ msgstr "Configurações de Conversa"
 
 #: src/components/dms/getSystemMessageInfo.ts:115
 msgid "Chat title changed"
-msgstr ""
+msgstr "Título da conversa alterado"
 
 #. placeholder {0}: data.newName
 #: src/components/dms/getSystemMessageInfo.ts:114
 msgid "Chat title changed to {0}"
-msgstr ""
+msgstr "Título da conversa alterado para {0}"
 
 #: src/components/dms/getSystemMessageInfo.ts:106
 msgid "Chat unlocked"
@@ -2535,7 +2547,7 @@ msgstr "clique aqui"
 
 #: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:129
 msgid "Click here to add people to this group chat"
-msgstr ""
+msgstr "Clique aqui para adicionar pessoas nesta conversa em grupo"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:129
 msgid "Click here to contact our support team"
@@ -2911,7 +2923,7 @@ msgstr "Continuar tópico..."
 #: src/components/dms/AddMembersFlow.tsx:307
 #: src/components/dms/InitiateChatFlow.tsx:443
 msgid "Continue to group name"
-msgstr ""
+msgstr "Prosseguir para o nome do grupo"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:90
 #: src/screens/Onboarding/StepProfile/index.tsx:300
@@ -3327,7 +3339,7 @@ msgstr "Painel de depuração"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:469
 msgid "Decline this language suggestion"
-msgstr ""
+msgstr "Recusar esta sugestão de idioma"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:84
 msgid "Deepfake adult content"
@@ -3434,7 +3446,7 @@ msgstr "Excluir esta lista?"
 msgid "Delete this post?"
 msgstr "Excluir esta postagem?"
 
-#: src/components/Post/Embed/index.tsx:190
+#: src/components/Post/Embed/index.tsx:201
 msgid "Deleted"
 msgstr "Excluído"
 
@@ -3464,7 +3476,7 @@ msgstr "Descrição"
 
 #: src/components/SendErrorReportDialog.tsx:82
 msgid "Description (1000 characters max)"
-msgstr ""
+msgstr "Descrição (máximo de 1000 caracteres)"
 
 #: src/view/com/composer/GifAltText.tsx:156
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:124
@@ -3537,7 +3549,7 @@ msgstr "Desativar feedback tátil"
 #: src/screens/Messages/components/InviteLinkDialog.tsx:446
 #: src/screens/Messages/components/InviteLinkDialog.tsx:452
 msgid "Disable link"
-msgstr ""
+msgstr "Desativar link"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:628
 msgid "Disable quote posts of this post"
@@ -3870,7 +3882,7 @@ msgstr "Editar interesses"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:326
 msgid "Edit link settings"
-msgstr ""
+msgstr "Editar configurações do link"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:191
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:194
@@ -4296,7 +4308,7 @@ msgstr ""
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:130
 msgid "Export my chat data"
-msgstr ""
+msgstr "Exportar meus dados de conversa"
 
 #: src/screens/Settings/AccountSettings.tsx:170
 #: src/screens/Settings/AccountSettings.tsx:174
@@ -4305,7 +4317,7 @@ msgstr "Exportar meus dados"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:97
 msgid "Export my profile data"
-msgstr ""
+msgstr "Exportar meus dados de perfil"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:86
 #: src/screens/Settings/ContentAndMediaSettings.tsx:89
@@ -4356,7 +4368,7 @@ msgstr "Não foi possível alterar o nome de usuário. Por favor tente novamente
 
 #: src/components/Lightbox/Lightbox.web.tsx:298
 msgid "Failed to copy link"
-msgstr ""
+msgstr "Falha ao copiar link"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:173
 msgid "Failed to create app password. Please try again."
@@ -4369,7 +4381,7 @@ msgstr "Falha ao criar conversa"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:99
 msgid "Failed to create invite link"
-msgstr ""
+msgstr "Falha ao criar link de convite"
 
 #: src/screens/StarterPack/Wizard/index.tsx:250
 #: src/screens/StarterPack/Wizard/index.tsx:260
@@ -4396,7 +4408,7 @@ msgstr "Falha ao excluir o pacote inicial"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:122
 msgid "Failed to disable invite link"
-msgstr ""
+msgstr "Falha ao desativar link de convite"
 
 #. placeholder {0}: error?.message
 #: src/screens/Profile/components/GermButton.tsx:195
@@ -4504,7 +4516,7 @@ msgstr "Falha ao marcar todos os pedidos como lidos"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:359
 msgid "Failed to mute group chat"
-msgstr ""
+msgstr "Falha ao silenciar conversa em grupo"
 
 #: src/state/queries/pinned-post.ts:75
 msgid "Failed to pin post"
@@ -4536,7 +4548,7 @@ msgstr "Falha ao remover do pacote inicial"
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:71
 msgid "Failed to remove group chat member"
-msgstr ""
+msgstr "Falha ao remover membro da conversa em grupo"
 
 #: src/components/verification/VerificationRemovePrompt.tsx:34
 msgid "Failed to remove verification"
@@ -4864,7 +4876,7 @@ msgstr "Seguir {0}"
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:142
 msgid "Follow {displayName}"
-msgstr ""
+msgstr "Seguir {displayName}"
 
 #: src/screens/VideoFeed/index.tsx:845
 msgid "Follow {handle}"
@@ -4984,7 +4996,7 @@ msgstr "Seguindo {0}"
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:54
 msgid "Following {displayName}"
-msgstr ""
+msgstr "Seguindo {displayName}"
 
 #: src/screens/VideoFeed/index.tsx:844
 msgid "Following {handle}"
@@ -5006,7 +5018,7 @@ msgstr "Segue você"
 
 #: src/components/Pills.tsx:175
 msgid "Follows You"
-msgstr "Segue Você"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:128
 msgid "Font"
@@ -5385,7 +5397,7 @@ msgstr ""
 
 #: src/components/dialogs/SearchablePeopleList.tsx:569
 msgid "Group is locked"
-msgstr ""
+msgstr "O grupo está bloqueado"
 
 #: src/components/dms/InitiateChatFlow.tsx:231
 #: src/components/dms/InitiateChatFlow.tsx:551
@@ -5428,7 +5440,7 @@ msgstr "Acontecendo agora"
 #. Accessibility label for the icon-only pill that filters the GIF picker to happy/joyful GIFs.
 #: src/features/gifPicker/components/GifCategoryPills.tsx:65
 msgid "Happy GIFs"
-msgstr ""
+msgstr "GIFs felizes"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:86
 msgid "Haptics"
@@ -5658,7 +5670,7 @@ msgstr "Espere! Estamos gradualmente dando acesso ao vídeo, e você ainda está
 
 #: src/screens/Messages/Conversation.tsx:337
 msgid "Hold your horses! This feature isn't available to you yet. Please check back later."
-msgstr ""
+msgstr "Opa, aguenta aí! Este recurso ainda não está disponível para você. Por favor volte em outro momento."
 
 #: src/Navigation.tsx:823
 #: src/Navigation.tsx:844
@@ -5793,7 +5805,7 @@ msgstr "Imagem"
 #. placeholder {0}: index + 1
 #: src/components/images/Gallery/index.tsx:427
 msgid "Image {0}"
-msgstr ""
+msgstr "Imagem {0}"
 
 #. placeholder {0}: index + 1
 #. placeholder {1}: imgs.length
@@ -5804,7 +5816,7 @@ msgstr "Imagem {0} de {1}"
 #. placeholder {0}: index + 1
 #: src/components/images/Gallery/index.tsx:418
 msgid "Image {0} of {imageCount}"
-msgstr ""
+msgstr "Imagem {0} de {imageCount}"
 
 #: src/screens/Settings/AboutSettings.tsx:67
 msgid "Image cache cleared"
@@ -5819,7 +5831,7 @@ msgstr "Memória temporária de imagens removida, {0} liberados"
 #. placeholder {0}: images.length
 #: src/components/images/Gallery/index.tsx:256
 msgid "Image gallery, {0} images"
-msgstr ""
+msgstr "Galeria de imagens, {0} imagens"
 
 #. Image has been moderated and user has the option of showing it temporarily
 #: src/features/liveNow/components/LiveStatusDialog.tsx:299
@@ -5829,7 +5841,7 @@ msgstr ""
 #. Image has been moderated and is not visible to the user
 #: src/features/liveNow/components/LiveStatusDialog.tsx:309
 msgid "Image is unavailable."
-msgstr ""
+msgstr "Imagem indisponível."
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:73
 #: src/components/Lightbox/Lightbox.web.tsx:261
@@ -6288,11 +6300,11 @@ msgstr "Sair desta conversa"
 
 #: src/screens/Messages/ConversationSettings/prompts.tsx:92
 msgid "Leave group chat"
-msgstr ""
+msgstr "Deixar conversa em grupo"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:526
 msgid "Leave this group chat"
-msgstr ""
+msgstr "Sair desta conversa em grupo"
 
 #: src/components/dialogs/LinkWarning.tsx:83
 #: src/components/dialogs/LinkWarning.tsx:91
@@ -6581,7 +6593,7 @@ msgstr "Carregar novas postagens"
 #: src/screens/Messages/components/MessageInput.web.tsx:202
 msgctxt "placeholder"
 msgid "Loading chat…"
-msgstr ""
+msgstr "Carregando chat…"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "Loading lists..."
@@ -6597,23 +6609,23 @@ msgstr "Carregando..."
 
 #: src/screens/Messages/ConversationSettings/index.tsx:505
 msgid "Lock"
-msgstr ""
+msgstr "Bloquear"
 
 #: src/screens/Messages/ConversationSettings/prompts.tsx:69
 msgid "Lock group chat"
-msgstr ""
+msgstr "Bloquear chat em grupo"
 
 #: src/screens/Messages/ConversationSettings/prompts.tsx:67
 msgid "Lock group chat?"
-msgstr ""
+msgstr "Bloquear chat em grupo?"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:503
 msgid "Lock this group chat"
-msgstr ""
+msgstr "Bloquear este chat em grupo"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:505
 msgid "Locked"
-msgstr ""
+msgstr "Trancado"
 
 #: src/Navigation.tsx:328
 msgid "Log"
@@ -6660,7 +6672,7 @@ msgstr "Parece que está faltando um feed com as pessoas que você segue. <0>Cli
 #. Accessibility label for the icon-only pill that filters the GIF picker to GIFs about love/affection.
 #: src/features/gifPicker/components/GifCategoryPills.tsx:55
 msgid "Love GIFs"
-msgstr ""
+msgstr "GIFs amorosos"
 
 #: src/components/dialogs/EmailDialog/index.tsx:41
 msgid "Make adjustments to email settings for your account"
@@ -6733,7 +6745,7 @@ msgstr "Membros"
 
 #: src/screens/Messages/ConversationSettings/prompts.tsx:68
 msgid "Members can still read chat history but can’t send new messages."
-msgstr ""
+msgstr "Membros ainda podem ler o histórico do chat, mas não podem enviar novas mensagens."
 
 #: src/Navigation.tsx:459
 msgid "Mention notifications"
@@ -6756,7 +6768,7 @@ msgstr "Menu"
 
 #: src/screens/Messages/components/MessageInput.tsx:178
 msgid "Message"
-msgstr ""
+msgstr "Mensagem"
 
 #: src/screens/Messages/components/MessageComposer.tsx:218
 #: src/screens/Messages/components/MessageInput.tsx:235
@@ -6764,7 +6776,7 @@ msgstr ""
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:199
 msgctxt "action"
 msgid "Message"
-msgstr ""
+msgstr "Mensagem"
 
 #. placeholder {0}: profile.handle
 #: src/components/dms/MessageProfileButton.tsx:99
@@ -6773,7 +6785,7 @@ msgstr "Mensagem {0}"
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:195
 msgid "Message {displayName}"
-msgstr ""
+msgstr "Mensagem {displayName}"
 
 #: src/screens/Messages/components/ChatListItem.tsx:310
 msgid "Message deleted"
@@ -6823,11 +6835,11 @@ msgstr "Mensagens"
 
 #: src/components/dms/MessageItem.tsx:652
 msgid "Messages from this person are hidden while they are blocking you."
-msgstr ""
+msgstr "Mensagens dessa pessoa são ocultas enquanto ela está bloqueando você."
 
 #: src/components/dms/MessageItem.tsx:647
 msgid "Messages from this person are hidden while you are blocking them."
-msgstr ""
+msgstr "Mensagens dessa pessoa são ocultas enquanto ela está bloqueando você."
 
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:101
 msgctxt "Name of app icon variant"
@@ -7161,7 +7173,7 @@ msgstr "Nova conversa com {0} e {1}"
 #. placeholder {1}: createSanitizedDisplayName(members[1])
 #: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:73
 msgid "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} more} other {{memberCount} more}}."
-msgstr ""
+msgstr "Novo bate-papo com {0}, {1}e {memberCount, plural, one {{memberCount} mais} other {{memberCount} mais}}"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:223
 msgid "New email address"
@@ -7650,11 +7662,11 @@ msgstr "Resetar tutoriais"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:110
 msgid "One of the selected recipients does not allow group chats."
-msgstr ""
+msgstr "Um dos destinatários selecionados não permite chats em grupo."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:93
 msgid "One of the selected recipients has blocked you and cannot be messaged."
-msgstr ""
+msgstr "Um dos destinatários selecionados bloqueou você e não pode ser enviado."
 
 #: src/view/com/composer/Composer.tsx:787
 msgid "One or more GIFs is missing alt text."
@@ -7722,7 +7734,7 @@ msgstr "Abrir câmera"
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:139
 msgid "Open chat member options for {displayName}"
-msgstr ""
+msgstr "Abrir opções de membro do chat para {displayName}"
 
 #: src/screens/Messages/components/ChatListItem.tsx:471
 #: src/screens/Messages/components/ChatListItem.tsx:475
@@ -7861,7 +7873,7 @@ msgstr "Abre a câmera do dispositivo"
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:509
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
-msgstr "Abre a galeria do dispositivo para selecionar até {MAX_IMAGES, plural, other {# imagens}} ou um único vídeo ou GIF."
+msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:102
 #: src/view/com/auth/SplashScreen.web.tsx:110
@@ -7909,7 +7921,7 @@ msgstr "Abre perfil"
 #. Accessibility hint announced after the GIF picker button label, describing what activating it will do.
 #: src/view/com/composer/photos/SelectGifBtn.tsx:45
 msgid "Opens the GIF picker dialog"
-msgstr ""
+msgstr "Abre o seletor de GIF"
 
 #: src/view/com/feeds/ComposerPrompt.tsx:148
 msgid "Opens the post composer"
@@ -8023,7 +8035,7 @@ msgstr ""
 #. Accessibility label for the icon-only pill that filters the GIF picker to celebration/party GIFs.
 #: src/features/gifPicker/components/GifCategoryPills.tsx:85
 msgid "Party GIFs"
-msgstr ""
+msgstr "GIFs festivos"
 
 #: src/screens/Login/LoginForm.tsx:228
 #: src/screens/Settings/AccountSettings.tsx:126
@@ -8070,11 +8082,11 @@ msgstr "Pessoas"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:154
 msgid "People {ownerName} follows can join instantly"
-msgstr ""
+msgstr "Pessoas que {ownerName} segue podem entrar instantaneamente"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:159
 msgid "People {ownerName} follows can request to join"
-msgstr ""
+msgstr "Pessoas que {ownerName} segue podem pedir para entrar"
 
 #. placeholder {0}: route.params.name
 #: src/Navigation.tsx:245
@@ -8093,11 +8105,11 @@ msgstr "Pessoas que eu sigo"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:153
 msgid "People I follow can join instantly"
-msgstr ""
+msgstr "Pessoas que eu sigo podem entrar instantaneamente"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:158
 msgid "People I follow can request to join"
-msgstr ""
+msgstr "Pessoas que eu sigo podem solicitar entrada"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:510
 msgid "People you follow"
@@ -8735,11 +8747,11 @@ msgstr "Reanexar citação"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:384
 msgid "Re-enable invite link"
-msgstr ""
+msgstr "Reativar link de convite"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:391
 msgid "Re-enable link"
-msgstr ""
+msgstr "Reativar link"
 
 #: src/components/dms/EmojiReactionPicker.tsx:80
 msgid "React with {emoji}"
@@ -8841,6 +8853,10 @@ msgstr "Recomendado"
 msgid "Reconnect"
 msgstr "Reconectar"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:80
+msgid "Refresh the page to see it."
+msgstr ""
+
 #. Reject a chat request, this opens a menu with options
 #: src/screens/Messages/components/RequestButtons.tsx:131
 msgid "Reject"
@@ -8872,7 +8888,7 @@ msgstr "Remover"
 
 #: src/components/dms/ChatProfileTabs.tsx:153
 msgid "Remove {displayName} from group chat"
-msgstr ""
+msgstr "Remover {displayName} do chat em grupo"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:62
 msgid "Remove {displayName} from starter pack"
@@ -8931,7 +8947,7 @@ msgstr "Remover feed?"
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:233
 msgid "Remove from chat"
-msgstr ""
+msgstr "Remover da conversa"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:326
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:332
@@ -9009,11 +9025,11 @@ msgstr "Remover verificação"
 msgid "Remove your verification for this account?"
 msgstr "Remover a sua verificação para essa conta?"
 
-#: src/components/Post/Embed/index.tsx:225
+#: src/components/Post/Embed/index.tsx:236
 msgid "Removed by author"
 msgstr "Removido pelo autor"
 
-#: src/components/Post/Embed/index.tsx:223
+#: src/components/Post/Embed/index.tsx:234
 msgid "Removed by you"
 msgstr "Removido por você"
 
@@ -9215,7 +9231,7 @@ msgstr "Denunciar este feed"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:517
 msgid "Report this group chat"
-msgstr ""
+msgstr "Denunciar esta conversa em grupo"
 
 #: src/components/moderation/ReportDialog/copy.ts:31
 msgid "Report this list"
@@ -9444,7 +9460,7 @@ msgstr "Retorna à etapa anterior"
 #. Accessibility label for the icon-only pill that filters the GIF picker to sad/crying GIFs.
 #: src/features/gifPicker/components/GifCategoryPills.tsx:75
 msgid "Sad GIFs"
-msgstr ""
+msgstr "GIFs tristes"
 
 #: src/components/dialogs/BirthDateSettings.tsx:200
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:309
@@ -9794,7 +9810,7 @@ msgstr "Selecione o arquivo de legenda (.vtt)"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:501
 msgid "Select chat \"{name}\""
-msgstr ""
+msgstr "Selecione o chat \"{name}\""
 
 #: src/screens/Settings/LanguageSettings.tsx:195
 #: src/screens/Settings/LanguageSettings.tsx:233
@@ -9830,7 +9846,7 @@ msgstr "Selecionar GIF \"{0}\""
 
 #: src/components/dms/InitiateChatFlow.tsx:651
 msgid "Select group chat members"
-msgstr ""
+msgstr "Selecionar membros do grupo"
 
 #: src/components/dialogs/MutedWords.tsx:151
 msgid "Select how long to mute this word for."
@@ -9933,7 +9949,7 @@ msgstr "Enviar e-mail"
 #: src/screens/Settings/AboutSettings.tsx:118
 #: src/screens/Settings/AboutSettings.tsx:121
 msgid "Send error report"
-msgstr ""
+msgstr "Enviar relatório de erro"
 
 #: src/view/shell/Drawer.tsx:364
 msgid "Send feedback"
@@ -10195,7 +10211,7 @@ msgstr "Mostrar opções de personalização"
 
 #: src/components/dms/SystemMessageGroup.tsx:57
 msgid "Show group chat updates"
-msgstr ""
+msgstr "Mostrar atualizações do chat em grupo"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:593
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:595
@@ -10393,7 +10409,7 @@ msgstr "Pular compartilhamento de contatos e continuar para o app"
 
 #: src/view/com/composer/Composer.tsx:1331
 msgid "Skip empty posts?"
-msgstr ""
+msgstr "Pular publicações vazias?"
 
 #: src/screens/Onboarding/StepFinished/index.tsx:288
 #: src/screens/Onboarding/StepFinished/index.tsx:314
@@ -10407,7 +10423,7 @@ msgstr "Pular para a próxima etapa"
 
 #: src/components/images/Gallery/index.tsx:417
 msgid "slide"
-msgstr ""
+msgstr "slide"
 
 #: src/screens/Settings/AppearanceSettings.tsx:152
 msgid "Smaller"
@@ -10447,7 +10463,7 @@ msgstr "Algumas pessoas podem responder"
 
 #: src/components/dms/getSystemMessageInfo.ts:86
 msgid "Someone joined"
-msgstr ""
+msgstr "Alguém entrou"
 
 #: src/components/dms/getSystemMessageInfo.ts:87
 msgid "Someone joined the group"
@@ -10455,7 +10471,7 @@ msgstr "Alguém entrou no grupo"
 
 #: src/components/dms/getSystemMessageInfo.ts:99
 msgid "Someone left"
-msgstr ""
+msgstr "Alguém saiu"
 
 #: src/components/dms/getSystemMessageInfo.ts:100
 msgid "Someone left the group"
@@ -10473,7 +10489,7 @@ msgstr "Alguém reagiu com {0} a {target}"
 
 #: src/components/dms/getSystemMessageInfo.ts:60
 msgid "Someone was added"
-msgstr ""
+msgstr "Alguém foi adicionado"
 
 #: src/components/dms/getSystemMessageInfo.ts:61
 msgid "Someone was added to the group"
@@ -10481,11 +10497,15 @@ msgstr "Alguém foi adicionado ao grupo"
 
 #: src/components/dms/getSystemMessageInfo.ts:73
 msgid "Someone was removed"
-msgstr ""
+msgstr "Alguém foi removido"
 
 #: src/components/dms/getSystemMessageInfo.ts:74
 msgid "Someone was removed from the group"
 msgstr "Alguém foi removido do grupo"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:48
+msgid "Something new is here"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/index.tsx:101
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
@@ -10698,12 +10718,12 @@ msgstr "Inscrever-se"
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:425
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:434
 msgid "Subscribe on {0}"
-msgstr ""
+msgstr "Inscreva-se em {0}"
 
 #. placeholder {0}: highlightedPublisher.name
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:433
 msgid "Subscribe to {publicationTitle} on {0}"
-msgstr ""
+msgstr "Inscrever-se para {publicationTitle} em {0}"
 
 #. placeholder {0}: labelerInfo.creator.handle
 #: src/screens/Profile/Sections/Labels.tsx:231
@@ -10782,11 +10802,11 @@ msgstr "O suporte para este recurso no seu país ainda não foi habilitado! Por 
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:91
 msgid "Suspended accounts cannot participate in a group chat."
-msgstr ""
+msgstr "Contas suspensas não podem participar de um chat em grupo."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:53
 msgid "Suspended accounts cannot participate in chat."
-msgstr ""
+msgstr "Contas suspensas não podem participar de um chat em grupo."
 
 #: src/components/dialogs/SwitchAccount.tsx:47
 #: src/components/dialogs/SwitchAccount.tsx:50
@@ -10830,7 +10850,7 @@ msgstr "Toque abaixo para permitir o acesso à sua localização GPS. Usaremos e
 
 #: src/components/dms/MessageItem.tsx:598
 msgid "Tap for details"
-msgstr ""
+msgstr "Toque para mais detalhes"
 
 #: src/view/com/feeds/MissingFeed.tsx:90
 msgid "Tap for information"
@@ -10842,7 +10862,7 @@ msgstr "Toque para mais informações"
 
 #: src/screens/Signup/StepInfo/index.tsx:323
 msgid "Tap here to update your location with GPS."
-msgstr ""
+msgstr "Toque aqui para atualizar sua localização com GPS."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:165
 msgid "Tap to acknowledge that you understand and agree to these updates and continue using Bluesky"
@@ -10865,7 +10885,7 @@ msgstr "Toque para remover"
 #. placeholder {0}: reaction.value
 #: src/components/dms/ReactionsDialog.tsx:208
 msgid "Tap to remove your {0} reaction"
-msgstr ""
+msgstr "Toque para remover sua reação {0}"
 
 #: src/components/dms/MessageItem.tsx:563
 msgid "Tap to retry"
@@ -10874,7 +10894,7 @@ msgstr "Toque para tentar novamente"
 #. placeholder {0}: tab.value
 #: src/components/dms/ReactionsDialog.tsx:354
 msgid "Tap to show {0} reactions"
-msgstr ""
+msgstr "Toque para mostrar reações {0}"
 
 #: src/components/dms/ReactionsDialog.tsx:353
 msgid "Tap to show all reactions"
@@ -10882,7 +10902,7 @@ msgstr "Toque para mostrar todas as reações"
 
 #: src/components/dms/MessageItem.tsx:317
 msgid "Tap to view reactions"
-msgstr ""
+msgstr "Toque para ver as reações"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:107
 msgid "Targeted harassment"
@@ -11103,7 +11123,7 @@ msgstr "Há um limite de quantas vezes você pode alterar sua data de nascimento
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:476
 msgid "There is no invite link for this group chat."
-msgstr ""
+msgstr "Não há nenhum link de convite para esse chat em grupo."
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
@@ -11112,7 +11132,7 @@ msgstr "Não há limite de tempo para desativação da conta, volte quando quise
 #. Body message of the error screen shown when the GIF provider request fails. Encourages the user to retry.
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:56
 msgid "There was a problem loading GIFs. Check your connection and try again."
-msgstr ""
+msgstr "Houve um problema ao carregar GIFs. Verifique sua conexão e tente novamente."
 
 #: src/components/contacts/screens/GetContacts.tsx:147
 msgid "There was a problem with your internet connection, please try again"
@@ -11413,12 +11433,12 @@ msgstr "Esta lista está vazia."
 #: src/components/dms/MessageItem.tsx:596
 #: src/components/dms/MessageItem.tsx:625
 msgid "This message is hidden because this user is blocking you."
-msgstr ""
+msgstr "Esta mensagem está oculta porque este usuário está bloqueando você."
 
 #: src/components/dms/MessageItem.tsx:595
 #: src/components/dms/MessageItem.tsx:621
 msgid "This message is hidden because you are blocking this user."
-msgstr ""
+msgstr "Esta mensagem está oculta porque você está bloqueando este usuário."
 
 #: src/screens/Profile/ErrorState.tsx:41
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
@@ -11426,11 +11446,11 @@ msgstr "Este serviço de moderação está indisponível. Veja mais detalhes aba
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:161
 msgid "This moderation was applied to the entire user account and will appear on all posts."
-msgstr ""
+msgstr "Esta moderação foi aplicada a toda a conta de usuário e aparecerá em todas as publicações."
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:84
 msgid "This person is blocking you"
-msgstr ""
+msgstr "Esta pessoa está bloqueando você"
 
 #. placeholder {0}: niceDate(i18n, createdAt)
 #. placeholder {1}: niceDate(i18n, indexedAt)
@@ -12047,6 +12067,10 @@ msgstr "Atualizar"
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr "Atualizar <0>{displayName}</0> nas Listas"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:93
+msgid "Update app"
+msgstr ""
+
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:301
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:313
 #: src/screens/Settings/AccountSettings.tsx:112
@@ -12058,16 +12082,24 @@ msgstr "Atualizar email"
 #: src/screens/Messages/components/InviteLinkDialog.tsx:243
 #: src/screens/Messages/components/InviteLinkDialog.tsx:267
 msgid "Update invite link"
-msgstr ""
+msgstr "Atualizar link de convite"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:544
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:565
 msgid "Update to {domain}"
 msgstr "Alterar para {domain}"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:85
+msgid "Update your app"
+msgstr ""
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:76
+msgid "Update your app to see it."
+msgstr ""
+
 #: src/screens/Messages/Conversation.tsx:335
 msgid "Update your app to the latest version to join in!"
-msgstr ""
+msgstr "Atualize seu aplicativo para a versão mais recente para participar!"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:204
 msgid "Update your email"
@@ -12470,7 +12502,7 @@ msgstr "Ver o perfil de {0}"
 #: src/components/dms/MessagesListHeader.tsx:120
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:185
 msgid "View {displayName}’s profile"
-msgstr ""
+msgstr "Ver perfil de {displayName}"
 
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:436
 msgid "View {publicationTitle}"
@@ -12671,7 +12703,7 @@ msgstr "Não foi possível carregar esta conversa"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:113
 msgid "We couldn’t load this conversation’s settings"
-msgstr ""
+msgstr "Não foi possível carregar as configurações desta conversa"
 
 #: src/components/contacts/screens/GetContacts.tsx:244
 msgid "We delete hashes after matches are made"
@@ -12790,7 +12822,7 @@ msgstr "Estamos introduzindo uma nova camada de verificação no Bluesky — uma
 
 #: src/screens/Signup/index.tsx:136
 msgid "We’re so excited to have you join us!"
-msgstr ""
+msgstr "Estamos muito contentes em receber você!"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:416
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:241
@@ -12880,7 +12912,7 @@ msgstr "Quem pode interagir com esta postagem?"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:216
 msgid "Who can join this group chat and how"
-msgstr ""
+msgstr "Quem pode entrar nesta conversa e como"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:427
 #: src/components/WhoCanReply.tsx:116
@@ -13158,7 +13190,7 @@ msgstr ""
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:421
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
-msgstr "Você pode selecionar até {MAX_IMAGES, plural, other {# imagens}} no total."
+msgstr ""
 
 #: src/components/interstitials/Trending.tsx:132
 #: src/components/interstitials/TrendingVideos.tsx:138
@@ -13392,7 +13424,7 @@ msgstr "Você receberá um e-mail com um \"código de redefinição\". Digite es
 
 #: src/screens/Messages/ConversationSettings/prompts.tsx:91
 msgid "You won’t be able to rejoin unless you’re invited."
-msgstr ""
+msgstr "Você não poderá voltar a entrar a menos que seja convidado."
 
 #. When the last message in a chat was made by you.
 #: src/components/dms/getMessageInfo.ts:43

@@ -8,7 +8,7 @@ msgstr ""
 "Language: ia\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-02 17:45\n"
+"PO-Revision-Date: 2026-06-08 20:39\n"
 "Last-Translator: \n"
 "Language-Team: Interlingua\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -354,6 +354,18 @@ msgstr ""
 #: src/view/shell/desktop/LeftNav.tsx:483
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {# elemento non legite} other {# elementos non legite}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:67
+msgid "{count, plural, one {Refresh the page to see it.} other {Refresh the page to see them all.}}"
+msgstr ""
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:53
+msgid "{count, plural, one {This post has # photo.} other {This post has # photos.}}"
+msgstr ""
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:60
+msgid "{count, plural, one {Update your app to see it.} other {Update your app to see them all.}}"
+msgstr ""
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:53
@@ -1698,7 +1710,7 @@ msgstr "Es tu secur de voler partir de iste conversation?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "Es tu secur de voler partir de iste conversation? Tu messages essera delite pro te, mais non pro le altere participante."
+msgstr ""
 
 #: src/components/FeedCard.tsx:374
 msgid "Are you sure you want to remove this from your feeds?"
@@ -1956,7 +1968,7 @@ msgstr ""
 msgid "Block user and/or leave this conversation"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:197
+#: src/components/Post/Embed/index.tsx:208
 msgid "Blocked"
 msgstr "Blocate"
 
@@ -3434,7 +3446,7 @@ msgstr "Deler iste lista?"
 msgid "Delete this post?"
 msgstr "Deler iste publication?"
 
-#: src/components/Post/Embed/index.tsx:190
+#: src/components/Post/Embed/index.tsx:201
 msgid "Deleted"
 msgstr "Delite"
 
@@ -5006,7 +5018,7 @@ msgstr "Te seque"
 
 #: src/components/Pills.tsx:175
 msgid "Follows You"
-msgstr "Te seque"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:128
 msgid "Font"
@@ -8841,6 +8853,10 @@ msgstr "Recommendate"
 msgid "Reconnect"
 msgstr "Reconnecter"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:80
+msgid "Refresh the page to see it."
+msgstr ""
+
 #. Reject a chat request, this opens a menu with options
 #: src/screens/Messages/components/RequestButtons.tsx:131
 msgid "Reject"
@@ -9009,11 +9025,11 @@ msgstr "Remover verification"
 msgid "Remove your verification for this account?"
 msgstr "Remover tu verification de iste conto?"
 
-#: src/components/Post/Embed/index.tsx:225
+#: src/components/Post/Embed/index.tsx:236
 msgid "Removed by author"
 msgstr "Removite per le autor"
 
-#: src/components/Post/Embed/index.tsx:223
+#: src/components/Post/Embed/index.tsx:234
 msgid "Removed by you"
 msgstr "Removite per te"
 
@@ -10485,6 +10501,10 @@ msgstr ""
 
 #: src/components/dms/getSystemMessageInfo.ts:74
 msgid "Someone was removed from the group"
+msgstr ""
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:48
+msgid "Something new is here"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/index.tsx:101
@@ -12047,6 +12067,10 @@ msgstr "Actualisar"
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr "Actualisar <0>{displayName}</0> in Listas"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:93
+msgid "Update app"
+msgstr ""
+
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:301
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:313
 #: src/screens/Settings/AccountSettings.tsx:112
@@ -12064,6 +12088,14 @@ msgstr ""
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:565
 msgid "Update to {domain}"
 msgstr "Actualisar a {domain}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:85
+msgid "Update your app"
+msgstr ""
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:76
+msgid "Update your app to see it."
+msgstr ""
 
 #: src/screens/Messages/Conversation.tsx:335
 msgid "Update your app to the latest version to join in!"

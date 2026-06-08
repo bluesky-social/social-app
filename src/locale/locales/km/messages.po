@@ -8,7 +8,7 @@ msgstr ""
 "Language: km\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-02 17:45\n"
+"PO-Revision-Date: 2026-06-08 20:39\n"
 "Last-Translator: \n"
 "Language-Team: Khmer\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -353,6 +353,18 @@ msgstr ""
 
 #: src/view/shell/desktop/LeftNav.tsx:483
 msgid "{count, plural, one {# unread item} other {# unread items}}"
+msgstr ""
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:67
+msgid "{count, plural, one {Refresh the page to see it.} other {Refresh the page to see them all.}}"
+msgstr ""
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:53
+msgid "{count, plural, one {This post has # photo.} other {This post has # photos.}}"
+msgstr ""
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:60
+msgid "{count, plural, one {Update your app to see it.} other {Update your app to see them all.}}"
 msgstr ""
 
 #. Displayed when the number of requests is greater than 20
@@ -1698,7 +1710,7 @@ msgstr ""
 
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "តើអ្នកប្រាកដថាចង់ចាកចេញពីការសន្ទនានេះទេ? សាររបស់អ្នកនឹងត្រូវបានលុបសម្រាប់អ្នក ប៉ុន្តែមិនមែនសម្រាប់អ្នកចូលរួមផ្សេងទៀតទេ"
+msgstr ""
 
 #: src/components/FeedCard.tsx:374
 msgid "Are you sure you want to remove this from your feeds?"
@@ -1956,7 +1968,7 @@ msgstr ""
 msgid "Block user and/or leave this conversation"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:197
+#: src/components/Post/Embed/index.tsx:208
 msgid "Blocked"
 msgstr "រារាំង"
 
@@ -3434,7 +3446,7 @@ msgstr "លុបបញ្ជីនេះ"
 msgid "Delete this post?"
 msgstr "លុប post នេះ?"
 
-#: src/components/Post/Embed/index.tsx:190
+#: src/components/Post/Embed/index.tsx:201
 msgid "Deleted"
 msgstr "បានលុប់"
 
@@ -5006,7 +5018,7 @@ msgstr "តាមអ្នក"
 
 #: src/components/Pills.tsx:175
 msgid "Follows You"
-msgstr "តាមអ្នក"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:128
 msgid "Font"
@@ -8841,6 +8853,10 @@ msgstr ""
 msgid "Reconnect"
 msgstr "ភ្ជាប់ឡើងវិញ"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:80
+msgid "Refresh the page to see it."
+msgstr ""
+
 #. Reject a chat request, this opens a menu with options
 #: src/screens/Messages/components/RequestButtons.tsx:131
 msgid "Reject"
@@ -9009,11 +9025,11 @@ msgstr ""
 msgid "Remove your verification for this account?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:225
+#: src/components/Post/Embed/index.tsx:236
 msgid "Removed by author"
 msgstr "លុបចេញដោយ author"
 
-#: src/components/Post/Embed/index.tsx:223
+#: src/components/Post/Embed/index.tsx:234
 msgid "Removed by you"
 msgstr "ដកចេញដោយអ្នក"
 
@@ -10485,6 +10501,10 @@ msgstr ""
 
 #: src/components/dms/getSystemMessageInfo.ts:74
 msgid "Someone was removed from the group"
+msgstr ""
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:48
+msgid "Something new is here"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/index.tsx:101
@@ -12047,6 +12067,10 @@ msgstr ""
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr "ធ្វើបច្ចុប្បន្នភាព <0>{displayName}</0> នៅក្នុងបញ្ជី"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:93
+msgid "Update app"
+msgstr ""
+
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:301
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:313
 #: src/screens/Settings/AccountSettings.tsx:112
@@ -12064,6 +12088,14 @@ msgstr ""
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:565
 msgid "Update to {domain}"
 msgstr "ធ្វើបច្ចុប្បន្នភាពទៅ {domain}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:85
+msgid "Update your app"
+msgstr ""
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:76
+msgid "Update your app to see it."
+msgstr ""
 
 #: src/screens/Messages/Conversation.tsx:335
 msgid "Update your app to the latest version to join in!"

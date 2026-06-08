@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-02 17:45\n"
+"PO-Revision-Date: 2026-06-08 20:39\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -354,6 +354,18 @@ msgstr "{count, plural, one {o cerere} few {# cereri} other {# de cereri}}"
 #: src/view/shell/desktop/LeftNav.tsx:483
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {Un element necitit} few {# elemente necitite} other {# de elemente necitite}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:67
+msgid "{count, plural, one {Refresh the page to see it.} other {Refresh the page to see them all.}}"
+msgstr "{count, plural, one {Reîmprospătați pagina pentru a o vedea.} few {Reîmprospătați pagina pentru a le vedea pe toate.} other {Reîmprospătați pagina pentru a le vedea pe toate.}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:53
+msgid "{count, plural, one {This post has # photo.} other {This post has # photos.}}"
+msgstr "{count, plural, one {Această postare are o fotografie.} few {Această postare are # fotografii.} other {Această postare are # de fotografii.}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:60
+msgid "{count, plural, one {Update your app to see it.} other {Update your app to see them all.}}"
+msgstr "{count, plural, one {Actualizați-vă aplicația pentru a o vedea.} few {Actualizați-vă aplicația pentru a le vedea pe toate.} other {Actualizați-vă aplicația pentru a le vedea pe toate.}}"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:53
@@ -1463,7 +1475,7 @@ msgstr "O ilustrație care arată că Bluesky selectează verificatori de încre
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:172
 msgid "An invite link lets people join this group chat without being added directly. You control who can use the link and whether they need your approval. You can disable the link at any time."
-msgstr "Un link de invitație permite utilizatorilor să se alăture acestei conversații de grup fără a fi adăugați direct. Dvs. controlați cine poate folosi linkul și dacă au nevoie de aprobare. Puteți dezactiva linkul oricând."
+msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:239
 msgid "An issue not included in these options"
@@ -1698,7 +1710,7 @@ msgstr "Sunteți sigur că doriți să părăsiți această conversație?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "Sunteți sigur că doriți să părăsiți această conversație? Mesajele dvs. vor fii șterse pentru dvs. dar nu și pentru celălalt participant."
+msgstr ""
 
 #: src/components/FeedCard.tsx:374
 msgid "Are you sure you want to remove this from your feeds?"
@@ -1956,7 +1968,7 @@ msgstr "Blocați utilizatorul și/sau ștergeți această conversație"
 msgid "Block user and/or leave this conversation"
 msgstr "Blocați utilizatorului și/sau părăsiți această conversație"
 
-#: src/components/Post/Embed/index.tsx:197
+#: src/components/Post/Embed/index.tsx:208
 msgid "Blocked"
 msgstr "Blocat"
 
@@ -3434,7 +3446,7 @@ msgstr "Ștergeți această listă?"
 msgid "Delete this post?"
 msgstr "Ștergeți această postare?"
 
-#: src/components/Post/Embed/index.tsx:190
+#: src/components/Post/Embed/index.tsx:201
 msgid "Deleted"
 msgstr "Șters"
 
@@ -3752,12 +3764,12 @@ msgstr ""
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:149
 msgid "Download chat data"
-msgstr "Descărcați datele de conversație"
+msgstr "Descărcare date de conversație"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:154
 msgctxt "button"
 msgid "Download chat data"
-msgstr "Descărcați datele de conversație"
+msgstr "Descărcare date de conversație"
 
 #: src/components/Lightbox/Lightbox.web.tsx:308
 #: src/components/Lightbox/Lightbox.web.tsx:320
@@ -4771,16 +4783,16 @@ msgstr "Găsiți conturi de urmărit"
 #: src/Navigation.tsx:438
 #: src/Navigation.tsx:646
 msgid "Find Contacts"
-msgstr "Găsiți contacte"
+msgstr "Găsire contacte"
 
 #: src/screens/Settings/FindContactsSettings.tsx:79
 msgid "Find Friends"
-msgstr "Găsiți prieteni"
+msgstr "Găsire prieteni"
 
 #: src/screens/Settings/Settings.tsx:216
 #: src/screens/Settings/Settings.tsx:219
 msgid "Find friends from contacts"
-msgstr "Găsiți prieteni din contacte"
+msgstr "Găsire prieteni din contacte"
 
 #: src/components/contacts/screens/GetContacts.tsx:273
 #: src/components/contacts/screens/GetContacts.tsx:287
@@ -5006,7 +5018,7 @@ msgstr "Vă urmărește"
 
 #: src/components/Pills.tsx:175
 msgid "Follows You"
-msgstr "Vă urmărește"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:128
 msgid "Font"
@@ -7670,7 +7682,7 @@ msgstr "Unul sau mai multe dintre fișierele selectate nu sunt acceptate."
 
 #: src/view/com/composer/SelectMediaButton.tsx:438
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
-msgstr ""
+msgstr "Unul sau mai multe dintre fișierele selectate sunt prea mari. Dimensiunea maximă este de {VIDEO_MAX_SIZE_MB} MB."
 
 #: src/view/com/composer/Composer.tsx:589
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
@@ -7861,7 +7873,7 @@ msgstr "Deschide camera foto a dispozitivului"
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:509
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
-msgstr "Deschide galeria dispozitivului pentru a selecta până la {MAX_IMAGES, plural, one {} few {# imagini}other {# de imagini}}, sau un singur videoclip sau GIF."
+msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:102
 #: src/view/com/auth/SplashScreen.web.tsx:110
@@ -8841,6 +8853,10 @@ msgstr "Recomandat"
 msgid "Reconnect"
 msgstr "Reconectare"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:80
+msgid "Refresh the page to see it."
+msgstr "Reîmprospătați pagina pentru al vedea."
+
 #. Reject a chat request, this opens a menu with options
 #: src/screens/Messages/components/RequestButtons.tsx:131
 msgid "Reject"
@@ -9009,11 +9025,11 @@ msgstr "Eliminați verificarea"
 msgid "Remove your verification for this account?"
 msgstr "Eliminați verificarea dvs. pentru acest cont?"
 
-#: src/components/Post/Embed/index.tsx:225
+#: src/components/Post/Embed/index.tsx:236
 msgid "Removed by author"
 msgstr "Eliminat de autor"
 
-#: src/components/Post/Embed/index.tsx:223
+#: src/components/Post/Embed/index.tsx:234
 msgid "Removed by you"
 msgstr "Eliminat de dvs."
 
@@ -10487,6 +10503,10 @@ msgstr "Cineva a fost eliminat(ă)"
 msgid "Someone was removed from the group"
 msgstr "Cineva a fost eliminat din grup"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:48
+msgid "Something new is here"
+msgstr "Ceva nou este aici"
+
 #: src/components/moderation/ReportDialog/index.tsx:101
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr "Ceva nu a fost în regulă cu datele pe care încercați să le raportați. Vă rugăm să contactați asistența."
@@ -11060,7 +11080,7 @@ msgstr "Politica de Confidențialitate a fost mutată la <0/>"
 #: src/view/com/composer/state/video.ts:397
 #: src/view/com/composer/state/video.ts:436
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
-msgstr ""
+msgstr "Videoclipul selectat este mai mare de {VIDEO_MAX_SIZE_MB} MB. Vă rugăm să încercați din nou cu un fișier mai mic."
 
 #: src/lib/hooks/useCleanError.ts:41
 #: src/lib/strings/errors.ts:19
@@ -12047,6 +12067,10 @@ msgstr "Actualizare"
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr "Actualizați <0>{displayName}</0> în Liste"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:93
+msgid "Update app"
+msgstr "Actualizați aplicația"
+
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:301
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:313
 #: src/screens/Settings/AccountSettings.tsx:112
@@ -12064,6 +12088,14 @@ msgstr "Actualizați linkul de invitație"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:565
 msgid "Update to {domain}"
 msgstr "Actualizare la {domain}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:85
+msgid "Update your app"
+msgstr "Actualizați-vă aplicația"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:76
+msgid "Update your app to see it."
+msgstr "Actualizați-vă aplicația pentru a o vedea."
 
 #: src/screens/Messages/Conversation.tsx:335
 msgid "Update your app to the latest version to join in!"
@@ -13103,7 +13135,7 @@ msgstr "De asemenea, puteți să vă <0>dezactivați temporar</0> contul. Profil
 #: src/view/com/posts/FollowingEmptyState.tsx:60
 #: src/view/com/posts/FollowingEndOfFeed.tsx:61
 msgid "You can also discover new Custom Feeds to follow."
-msgstr "De asemenea, puteți să vă dezactivați temporar contul și să-l reactivați în orice moment."
+msgstr "De asemenea, puteți descoperi noi fluxuri personalizate pe care să le urmăriți."
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:139
 msgid "You can also download your chat data as a \"JSONL\" file. This file only includes chat messages that you have sent and does not include chat messages that you have received."
@@ -13158,7 +13190,7 @@ msgstr "Puteți citi istoricul conversației, dar nu puteți trimite mesaje noi.
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:421
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
-msgstr "Puteți selecta până la {MAX_IMAGES, plural, one {} few {# imagini}other {# de imagini}} în total."
+msgstr ""
 
 #: src/components/interstitials/Trending.tsx:132
 #: src/components/interstitials/TrendingVideos.tsx:138
@@ -13613,7 +13645,7 @@ msgstr "Cuvintele dvs. amuțite"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:179
 msgid "Your name, avatar, and the name of the group chat will be visible to everyone."
-msgstr "Numele și avatarul dvs. și numele conversației de grup vor fi vizibile pentru toată lumea."
+msgstr ""
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:72
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."

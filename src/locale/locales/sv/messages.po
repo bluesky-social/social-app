@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-02 20:08\n"
+"PO-Revision-Date: 2026-06-08 20:39\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -354,6 +354,18 @@ msgstr "{count, plural, one {# förfrågan} other {# förfrågningar}}"
 #: src/view/shell/desktop/LeftNav.tsx:483
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {# oläst notis} other {# olästa notiser}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:67
+msgid "{count, plural, one {Refresh the page to see it.} other {Refresh the page to see them all.}}"
+msgstr "{count, plural, one {Uppdatera sidan för att se den.} other {Uppdatera sidan för att se dem alla.}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:53
+msgid "{count, plural, one {This post has # photo.} other {This post has # photos.}}"
+msgstr "{count, plural, one {Det här inlägget har en bild.} other {Det här inlägget har # bilder.}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:60
+msgid "{count, plural, one {Update your app to see it.} other {Update your app to see them all.}}"
+msgstr "{count, plural, one {Uppdatera din app för att se den.} other {Uppdatera din app för att se dem alla.}}"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:53
@@ -845,16 +857,16 @@ msgstr "Kränkande eller diskriminerande beteende"
 #. Accept a chat request
 #: src/screens/Messages/components/RequestButtons.tsx:286
 msgid "Accept"
-msgstr "Godkänn"
+msgstr "Acceptera"
 
 #: src/screens/Messages/components/RequestButtons.tsx:280
 msgid "Accept chat request"
-msgstr "Godkänn chattförfrågan"
+msgstr "Acceptera chattförfrågan"
 
 #. Accept a chat request
 #: src/screens/Messages/components/RequestListItem.tsx:48
 msgid "Accept Request"
-msgstr "Godkänn förfrågan"
+msgstr "Acceptera förfrågan"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:460
 msgid "Accept this language suggestion"
@@ -1463,7 +1475,7 @@ msgstr "En illustration som visar att Bluesky väljer betrodda verifierare, som 
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:172
 msgid "An invite link lets people join this group chat without being added directly. You control who can use the link and whether they need your approval. You can disable the link at any time."
-msgstr "En inbjudningslänk låter personer gå med i gruppchatten utan att läggas till direkt. Du bestämmer vilka som kan använda länken och om de behöver ditt godkännande. Du kan när som helst inaktivera länken."
+msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:239
 msgid "An issue not included in these options"
@@ -1698,7 +1710,7 @@ msgstr "Är du säker på att du vill lämna den här konversationen?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "Är du säker på att du vill lämna den här konversationen? Dina meddelanden kommer att tas bort för dig, men inte för den andra deltagaren."
+msgstr ""
 
 #: src/components/FeedCard.tsx:374
 msgid "Are you sure you want to remove this from your feeds?"
@@ -1834,7 +1846,7 @@ msgstr "Du måste verifiera din e‑postadress innan du kan skapa ett startpaket
 
 #: src/screens/Messages/components/RequestButtons.tsx:259
 msgid "Before you can accept this chat request, you must first verify your email."
-msgstr "Du måste verifiera din e-post innan du kan godkänna den här chattförfrågningen."
+msgstr "Innan du kan acceptera den här chattförfrågningen måste du verifiera din e-postadress."
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:59
 msgid "Before you can get notifications for {name}'s posts, you must first verify your email."
@@ -1956,7 +1968,7 @@ msgstr "Blockera användare och/eller radera den här konversationen"
 msgid "Block user and/or leave this conversation"
 msgstr "Blockera användare och/eller lämna den här konversationen"
 
-#: src/components/Post/Embed/index.tsx:197
+#: src/components/Post/Embed/index.tsx:208
 msgid "Blocked"
 msgstr "Blockerat"
 
@@ -3434,7 +3446,7 @@ msgstr "Radera den här listan?"
 msgid "Delete this post?"
 msgstr "Radera det här inlägget?"
 
-#: src/components/Post/Embed/index.tsx:190
+#: src/components/Post/Embed/index.tsx:201
 msgid "Deleted"
 msgstr "Raderat"
 
@@ -4334,7 +4346,7 @@ msgstr "Extremistiskt innehåll"
 #: src/screens/Messages/components/RequestButtons.tsx:243
 msgctxt "toast"
 msgid "Failed to accept chat"
-msgstr "Det gick inte att godkänna chatt"
+msgstr "Det gick inte att acceptera chatt"
 
 #: src/components/dms/ActionsWrapper.web.tsx:77
 #: src/components/dms/MessageContextMenu.tsx:119
@@ -5006,7 +5018,7 @@ msgstr "Följer dig"
 
 #: src/components/Pills.tsx:175
 msgid "Follows You"
-msgstr "Följer dig"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:128
 msgid "Font"
@@ -7670,7 +7682,7 @@ msgstr "En eller flera av de filer du valt stöds inte."
 
 #: src/view/com/composer/SelectMediaButton.tsx:438
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
-msgstr ""
+msgstr "En eller flera av de filer du valt är för stora. Maxstorlek är {VIDEO_MAX_SIZE_MB} MB."
 
 #: src/view/com/composer/Composer.tsx:589
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
@@ -7861,7 +7873,7 @@ msgstr "Öppnar enhetens kamera"
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:509
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
-msgstr "Öppnar enhetens galleri där du kan välja upp till {MAX_IMAGES, plural, other {# bilder}}, ett enskilt videoklipp eller en enskild gif-bild."
+msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:102
 #: src/view/com/auth/SplashScreen.web.tsx:110
@@ -8841,6 +8853,10 @@ msgstr "Rekommenderat"
 msgid "Reconnect"
 msgstr "Återanslut"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:80
+msgid "Refresh the page to see it."
+msgstr "Uppdatera sidan för att se den."
+
 #. Reject a chat request, this opens a menu with options
 #: src/screens/Messages/components/RequestButtons.tsx:131
 msgid "Reject"
@@ -9009,11 +9025,11 @@ msgstr "Ta bort verifiering"
 msgid "Remove your verification for this account?"
 msgstr "Ta bort din verifiering av det här kontot?"
 
-#: src/components/Post/Embed/index.tsx:225
+#: src/components/Post/Embed/index.tsx:236
 msgid "Removed by author"
 msgstr "Borttaget av författaren"
 
-#: src/components/Post/Embed/index.tsx:223
+#: src/components/Post/Embed/index.tsx:234
 msgid "Removed by you"
 msgstr "Borttaget av dig"
 
@@ -10487,6 +10503,10 @@ msgstr "Någon togs bort"
 msgid "Someone was removed from the group"
 msgstr "Någon togs bort från gruppen"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:48
+msgid "Something new is here"
+msgstr "Något nytt finns här"
+
 #: src/components/moderation/ReportDialog/index.tsx:101
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr "Något står inte helt rätt till med den data du försöker anmäla. Vänligen kontakta supporten."
@@ -11060,7 +11080,7 @@ msgstr "Integritetspolicyn har flyttats till <0/>"
 #: src/view/com/composer/state/video.ts:397
 #: src/view/com/composer/state/video.ts:436
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
-msgstr ""
+msgstr "Det valda videoklippet är större än {VIDEO_MAX_SIZE_MB} MB. Försök igen med en mindre fil."
 
 #: src/lib/hooks/useCleanError.ts:41
 #: src/lib/strings/errors.ts:19
@@ -12047,6 +12067,10 @@ msgstr "Uppdatera"
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr "Uppdatera <0>{displayName}</0> i Listor"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:93
+msgid "Update app"
+msgstr "Uppdatera appen"
+
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:301
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:313
 #: src/screens/Settings/AccountSettings.tsx:112
@@ -12064,6 +12088,14 @@ msgstr "Uppdatera inbjudningslänk"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:565
 msgid "Update to {domain}"
 msgstr "Uppdatera till {domain}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:85
+msgid "Update your app"
+msgstr "Uppdatera din app"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:76
+msgid "Update your app to see it."
+msgstr "Uppdatera din app för att se den."
 
 #: src/screens/Messages/Conversation.tsx:335
 msgid "Update your app to the latest version to join in!"
@@ -12505,7 +12537,7 @@ msgstr "Visa hela tråden"
 
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:43
 msgid "View incoming group chat requests"
-msgstr "Visa inkommande gruppchattsförfrågningar"
+msgstr "Visa väntande gruppchattsförfrågningar"
 
 #: src/components/moderation/LabelsOnMe.tsx:56
 msgid "View information about these labels"
@@ -13158,7 +13190,7 @@ msgstr "Du kan läsa chatthistoriken men inte skicka nya meddelanden."
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:421
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
-msgstr "Du kan välja upp till {MAX_IMAGES, plural, other {# bilder}} totalt."
+msgstr ""
 
 #: src/components/interstitials/Trending.tsx:132
 #: src/components/interstitials/TrendingVideos.tsx:138
@@ -13613,7 +13645,7 @@ msgstr "Dina ignorerade ord"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:179
 msgid "Your name, avatar, and the name of the group chat will be visible to everyone."
-msgstr "Ditt namn, din avatar och namnet på gruppchatten kommer att vara synliga för alla."
+msgstr ""
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:72
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."

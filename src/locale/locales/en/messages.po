@@ -350,6 +350,18 @@ msgstr "{count, plural, one {# request} other {# requests}}"
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:67
+msgid "{count, plural, one {Refresh the page to see it.} other {Refresh the page to see them all.}}"
+msgstr "{count, plural, one {Refresh the page to see it.} other {Refresh the page to see them all.}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:53
+msgid "{count, plural, one {This post has # photo.} other {This post has # photos.}}"
+msgstr "{count, plural, one {This post has # photo.} other {This post has # photos.}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:60
+msgid "{count, plural, one {Update your app to see it.} other {Update your app to see them all.}}"
+msgstr "{count, plural, one {Update your app to see it.} other {Update your app to see them all.}}"
+
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:53
 msgid "{count}+"
@@ -1951,7 +1963,7 @@ msgstr ""
 msgid "Block user and/or leave this conversation"
 msgstr "Block user and/or leave this conversation"
 
-#: src/components/Post/Embed/index.tsx:197
+#: src/components/Post/Embed/index.tsx:208
 msgid "Blocked"
 msgstr ""
 
@@ -3429,7 +3441,7 @@ msgstr ""
 msgid "Delete this post?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:190
+#: src/components/Post/Embed/index.tsx:201
 msgid "Deleted"
 msgstr ""
 
@@ -8836,6 +8848,10 @@ msgstr ""
 msgid "Reconnect"
 msgstr ""
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:80
+msgid "Refresh the page to see it."
+msgstr "Refresh the page to see it."
+
 #. Reject a chat request, this opens a menu with options
 #: src/screens/Messages/components/RequestButtons.tsx:131
 msgid "Reject"
@@ -9004,11 +9020,11 @@ msgstr ""
 msgid "Remove your verification for this account?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:225
+#: src/components/Post/Embed/index.tsx:236
 msgid "Removed by author"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:223
+#: src/components/Post/Embed/index.tsx:234
 msgid "Removed by you"
 msgstr ""
 
@@ -10481,6 +10497,10 @@ msgstr "Someone was removed"
 #: src/components/dms/getSystemMessageInfo.ts:74
 msgid "Someone was removed from the group"
 msgstr "Someone was removed from the group"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:48
+msgid "Something new is here"
+msgstr "Something new is here"
 
 #: src/components/moderation/ReportDialog/index.tsx:101
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
@@ -12042,6 +12062,10 @@ msgstr ""
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr ""
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:93
+msgid "Update app"
+msgstr "Update app"
+
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:301
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:313
 #: src/screens/Settings/AccountSettings.tsx:112
@@ -12059,6 +12083,14 @@ msgstr "Update invite link"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:565
 msgid "Update to {domain}"
 msgstr ""
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:85
+msgid "Update your app"
+msgstr "Update your app"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:76
+msgid "Update your app to see it."
+msgstr "Update your app to see it."
 
 #: src/screens/Messages/Conversation.tsx:335
 msgid "Update your app to the latest version to join in!"

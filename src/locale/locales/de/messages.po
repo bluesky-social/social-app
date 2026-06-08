@@ -8,7 +8,7 @@ msgstr ""
 "Language: de\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-02 17:45\n"
+"PO-Revision-Date: 2026-06-08 20:39\n"
 "Last-Translator: \n"
 "Language-Team: German\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -354,6 +354,18 @@ msgstr "{count, plural, one {# Anfrage} other {# Anfragen}}"
 #: src/view/shell/desktop/LeftNav.tsx:483
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {# ungelesenes Element} other {# ungelesene Elemente}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:67
+msgid "{count, plural, one {Refresh the page to see it.} other {Refresh the page to see them all.}}"
+msgstr "{count, plural, one {Aktualisiere die Seite, um es zu sehen.} other {Aktualisiere die Seite, um sie alle zu sehen.}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:53
+msgid "{count, plural, one {This post has # photo.} other {This post has # photos.}}"
+msgstr "{count, plural, one {Dieser Post enthält # Foto.} other {Dieser Post enthält # Fotos.}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:60
+msgid "{count, plural, one {Update your app to see it.} other {Update your app to see them all.}}"
+msgstr "{count, plural, one {Aktualisiere deine App, um es zu sehen.} other {Aktualisiere deine App, um sie alle zu sehen.}}"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:53
@@ -1463,7 +1475,7 @@ msgstr "Eine Illustration, die zeigt, dass Bluesky vertrauenswürdige Verifizier
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:172
 msgid "An invite link lets people join this group chat without being added directly. You control who can use the link and whether they need your approval. You can disable the link at any time."
-msgstr "Über einen Einladungslink können Personen diesem Gruppenchat beitreten, ohne direkt hinzugefügt zu werden. Du bestimmst, wer den Link nutzen darf und ob deine Zustimmung erforderlich ist. Du kannst den Link jederzeit deaktivieren."
+msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:239
 msgid "An issue not included in these options"
@@ -1698,7 +1710,7 @@ msgstr "Bist du sicher, dass du diese Konversation verlassen möchtest?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "Möchtest du diese Konversation wirklich verlassen? Deine Nachrichten werden für dich gelöscht, nicht jedoch für den anderen Teilnehmer."
+msgstr ""
 
 #: src/components/FeedCard.tsx:374
 msgid "Are you sure you want to remove this from your feeds?"
@@ -1956,7 +1968,7 @@ msgstr "Nutzer blockieren und/oder diese Konversation löschen"
 msgid "Block user and/or leave this conversation"
 msgstr "Nutzer blockieren und/oder diese Konversation verlassen"
 
-#: src/components/Post/Embed/index.tsx:197
+#: src/components/Post/Embed/index.tsx:208
 msgid "Blocked"
 msgstr "Blockiert"
 
@@ -3434,7 +3446,7 @@ msgstr "Diese Liste löschen?"
 msgid "Delete this post?"
 msgstr "Diesen Post löschen?"
 
-#: src/components/Post/Embed/index.tsx:190
+#: src/components/Post/Embed/index.tsx:201
 msgid "Deleted"
 msgstr "Gelöscht"
 
@@ -3752,12 +3764,12 @@ msgstr ""
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:149
 msgid "Download chat data"
-msgstr "Chat-Daten herunterladen"
+msgstr "Chatdaten herunterladen"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:154
 msgctxt "button"
 msgid "Download chat data"
-msgstr "Chat-Daten herunterladen"
+msgstr "Chatdaten herunterladen"
 
 #: src/components/Lightbox/Lightbox.web.tsx:308
 #: src/components/Lightbox/Lightbox.web.tsx:320
@@ -5006,7 +5018,7 @@ msgstr "Folgt dir"
 
 #: src/components/Pills.tsx:175
 msgid "Follows You"
-msgstr "Folgt dir"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:128
 msgid "Font"
@@ -5911,7 +5923,7 @@ msgstr ""
 
 #: src/screens/Messages/ChatList.tsx:351
 msgid "Inbox empty"
-msgstr "Postfach leer"
+msgstr "Posteingang leer"
 
 #. Title message shown in chat requests inbox when it's empty
 #: src/screens/Messages/Inbox.tsx:228
@@ -7670,7 +7682,7 @@ msgstr "Eine oder mehrere deiner ausgewählten Dateien werden nicht unterstützt
 
 #: src/view/com/composer/SelectMediaButton.tsx:438
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
-msgstr ""
+msgstr "Eine oder mehrere deiner ausgewählten Dateien sind zu groß. Die maximale Größe beträgt {VIDEO_MAX_SIZE_MB} MB."
 
 #: src/view/com/composer/Composer.tsx:589
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
@@ -7861,7 +7873,7 @@ msgstr "Öffnet die Gerätekamera"
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:509
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
-msgstr "Öffnet die Gerätegalerie, um bis zu {MAX_IMAGES, plural, other {# Bilder}} oder ein einzelnes Video oder GIF auszuwählen."
+msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:102
 #: src/view/com/auth/SplashScreen.web.tsx:110
@@ -8841,6 +8853,10 @@ msgstr "Empfohlen"
 msgid "Reconnect"
 msgstr "Erneut verbinden"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:80
+msgid "Refresh the page to see it."
+msgstr "Aktualisiere die Seite, um es zu sehen."
+
 #. Reject a chat request, this opens a menu with options
 #: src/screens/Messages/components/RequestButtons.tsx:131
 msgid "Reject"
@@ -9009,11 +9025,11 @@ msgstr "Verifizierung entfernen"
 msgid "Remove your verification for this account?"
 msgstr "Deine Verifizierung für diesen Account entfernen?"
 
-#: src/components/Post/Embed/index.tsx:225
+#: src/components/Post/Embed/index.tsx:236
 msgid "Removed by author"
 msgstr "Vom Autor entfernt"
 
-#: src/components/Post/Embed/index.tsx:223
+#: src/components/Post/Embed/index.tsx:234
 msgid "Removed by you"
 msgstr "Von dir entfernt"
 
@@ -10487,6 +10503,10 @@ msgstr "Jemand wurde entfernt"
 msgid "Someone was removed from the group"
 msgstr "Jemand wurde aus der Gruppe entfernt"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:48
+msgid "Something new is here"
+msgstr "Es gibt etwas Neues"
+
 #: src/components/moderation/ReportDialog/index.tsx:101
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr "Etwas stimmt mit den Daten, die du melden möchtest, nicht. Bitte kontaktiere den Support."
@@ -11060,7 +11080,7 @@ msgstr "Die Datenschutzerklärung wurde nach <0/> verschoben"
 #: src/view/com/composer/state/video.ts:397
 #: src/view/com/composer/state/video.ts:436
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
-msgstr ""
+msgstr "Das ausgewählte Video ist größer als {VIDEO_MAX_SIZE_MB} MB. Bitte versuche es erneut mit einer kleineren Datei."
 
 #: src/lib/hooks/useCleanError.ts:41
 #: src/lib/strings/errors.ts:19
@@ -12047,6 +12067,10 @@ msgstr "Aktualisieren"
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr "<0>{displayName}</0> in Listen aktualisieren"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:93
+msgid "Update app"
+msgstr "App aktualisieren"
+
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:301
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:313
 #: src/screens/Settings/AccountSettings.tsx:112
@@ -12064,6 +12088,14 @@ msgstr "Einladungslink aktualisieren"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:565
 msgid "Update to {domain}"
 msgstr "Aktualisieren auf {domain}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:85
+msgid "Update your app"
+msgstr "Aktualisiere deine App"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:76
+msgid "Update your app to see it."
+msgstr "Aktualisiere deine App, um es zu sehen."
 
 #: src/screens/Messages/Conversation.tsx:335
 msgid "Update your app to the latest version to join in!"
@@ -13107,7 +13139,7 @@ msgstr "Du kannst auch neue benutzerdefinierte Feeds entdecken, denen du folgen 
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:139
 msgid "You can also download your chat data as a \"JSONL\" file. This file only includes chat messages that you have sent and does not include chat messages that you have received."
-msgstr "Du kannst deine Chat-Daten auch als „JSONL“-Datei herunterladen. Diese Datei enthält nur Chat-Nachrichten, die du gesendet hast, nicht jedoch die, die du empfangen hast."
+msgstr "Du kannst deine Chatdaten auch als „JSONL“-Datei herunterladen. Diese Datei enthält nur Chatnachrichten, die du gesendet hast, nicht jedoch die, die du empfangen hast."
 
 #: src/components/contacts/screens/GetContacts.tsx:250
 msgid "You can always opt out and delete your data"
@@ -13158,7 +13190,7 @@ msgstr "Du kannst den Chatverlauf lesen, aber keine neuen Nachrichten senden."
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:421
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
-msgstr "Du kannst insgesamt bis zu {MAX_IMAGES, plural, other {# Bilder}} auswählen."
+msgstr ""
 
 #: src/components/interstitials/Trending.tsx:132
 #: src/components/interstitials/TrendingVideos.tsx:138
@@ -13505,7 +13537,7 @@ msgstr "Dein Account ist noch nicht alt genug, um Videos hochzuladen. Bitte vers
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:107
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
-msgstr "Dein Account-Repository, das alle öffentlichen Datensätze enthält, kann als „CAR“-Datei heruntergeladen werden. Diese Datei enthält keine Medien-Einbettungen, wie Bilder, oder deine privaten Daten, die separat abgerufen werden müssen."
+msgstr "Dein Account-Repository, das alle öffentlichen Datensätze enthält, kann als „CAR“-Datei heruntergeladen werden. Diese Datei enthält keine eingebetteten Medien wie Bilder oder deine privaten Daten. Diese müssen separat abgerufen werden."
 
 #: src/screens/Takendown.tsx:210
 msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
@@ -13613,7 +13645,7 @@ msgstr "Deine stummgeschalteten Wörter"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:179
 msgid "Your name, avatar, and the name of the group chat will be visible to everyone."
-msgstr "Dein Name, dein Profilbild und der Name des Gruppenchats sind für alle sichtbar."
+msgstr ""
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:72
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."

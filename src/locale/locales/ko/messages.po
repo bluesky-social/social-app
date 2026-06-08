@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-02 17:45\n"
+"PO-Revision-Date: 2026-06-08 20:39\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -354,6 +354,18 @@ msgstr "{count, plural, other {#개 요청}}"
 #: src/view/shell/desktop/LeftNav.tsx:483
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "읽지 않은 항목 {count, plural, other {#개}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:67
+msgid "{count, plural, one {Refresh the page to see it.} other {Refresh the page to see them all.}}"
+msgstr "{count, plural, one {페이지를 새로 고침하고 확인하세요.} other {페이지를 새로 고침하고 모두 확인하세요.}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:53
+msgid "{count, plural, one {This post has # photo.} other {This post has # photos.}}"
+msgstr "이 게시물에는 사진이 {count, plural, other {#장}} 있습니다."
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:60
+msgid "{count, plural, one {Update your app to see it.} other {Update your app to see them all.}}"
+msgstr "{count, plural, one {앱을 업데이트하고 확인하세요.} other {앱을 업데이트하고 모두 확인하세요.}}"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:53
@@ -1463,7 +1475,7 @@ msgstr "Bluesky가 신뢰할 수 있는 인증자를 선정하고 신뢰할 수 
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:172
 msgid "An invite link lets people join this group chat without being added directly. You control who can use the link and whether they need your approval. You can disable the link at any time."
-msgstr "초대 링크를 사용하면 사용자를 직접 추가하지 않아도 사람들이 이 그룹 채팅에 참여할 수 있습니다. 링크 사용 권한 및 승인 필요 여부를 직접 설정할 수 있으며 언제든지 링크를 비활성화할 수 있습니다."
+msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:239
 msgid "An issue not included in these options"
@@ -1698,7 +1710,7 @@ msgstr "이 대화에서 나가시겠습니까?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "정말 이 대화에서 나가시겠습니까? 나에게 보이는 메시지는 삭제되지만 상대방에게는 삭제되지 않습니다."
+msgstr ""
 
 #: src/components/FeedCard.tsx:374
 msgid "Are you sure you want to remove this from your feeds?"
@@ -1956,7 +1968,7 @@ msgstr "사용자를 차단하거나 이 대화를 삭제하기"
 msgid "Block user and/or leave this conversation"
 msgstr "사용자를 차단하거나 이 대화에서 나가기"
 
-#: src/components/Post/Embed/index.tsx:197
+#: src/components/Post/Embed/index.tsx:208
 msgid "Blocked"
 msgstr "차단됨"
 
@@ -3434,7 +3446,7 @@ msgstr "이 리스트를 삭제하시겠습니까?"
 msgid "Delete this post?"
 msgstr "이 게시물을 삭제하시겠습니까?"
 
-#: src/components/Post/Embed/index.tsx:190
+#: src/components/Post/Embed/index.tsx:201
 msgid "Deleted"
 msgstr "삭제됨"
 
@@ -5006,7 +5018,7 @@ msgstr "나를 팔로우함"
 
 #: src/components/Pills.tsx:175
 msgid "Follows You"
-msgstr "나를 팔로우함"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:128
 msgid "Font"
@@ -5377,11 +5389,11 @@ msgstr "그룹 대화를 언뮤트했습니다"
 
 #: src/screens/Messages/Conversation.tsx:330
 msgid "Group chats are not yet available"
-msgstr "그룹 채팅 기능은 아직 사용할 수 없습니다"
+msgstr "그룹 대화 기능은 아직 사용할 수 없습니다"
 
 #: src/screens/Messages/Conversation.tsx:328
 msgid "Group chats are now available"
-msgstr "이제 그룹 채팅 기능을 사용할 수 있습니다"
+msgstr "이제 그룹 대화 기능을 사용할 수 있습니다"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:569
 msgid "Group is locked"
@@ -7650,7 +7662,7 @@ msgstr "온보딩 재설정"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:110
 msgid "One of the selected recipients does not allow group chats."
-msgstr "선택한 수신자 중 한 명이 그룹 채팅을 허용하지 않습니다."
+msgstr "선택한 수신자 중 한 명이 그룹 대화를 허용하지 않습니다."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:93
 msgid "One of the selected recipients has blocked you and cannot be messaged."
@@ -7670,7 +7682,7 @@ msgstr "선택한 파일 중 지원되지 않는 파일이 있습니다."
 
 #: src/view/com/composer/SelectMediaButton.tsx:438
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
-msgstr ""
+msgstr "선택한 파일 중 크기가 너무 큰 파일이 있습니다. 최대 크기는 {VIDEO_MAX_SIZE_MB} MB입니다."
 
 #: src/view/com/composer/Composer.tsx:589
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
@@ -7861,7 +7873,7 @@ msgstr "기기 카메라를 엽니다"
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:509
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
-msgstr "기기 갤러리를 열어 이미지를 최대 {MAX_IMAGES, plural, other {#개}}까지 또는 동영상, GIF를 1개 선택합니다."
+msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:102
 #: src/view/com/auth/SplashScreen.web.tsx:110
@@ -8841,6 +8853,10 @@ msgstr "추천"
 msgid "Reconnect"
 msgstr "다시 연결"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:80
+msgid "Refresh the page to see it."
+msgstr "확인하려면 앱을 새로 고침하세요."
+
 #. Reject a chat request, this opens a menu with options
 #: src/screens/Messages/components/RequestButtons.tsx:131
 msgid "Reject"
@@ -9009,11 +9025,11 @@ msgstr "인증 취소"
 msgid "Remove your verification for this account?"
 msgstr "이 계정을 인증 취소하시겠습니까?"
 
-#: src/components/Post/Embed/index.tsx:225
+#: src/components/Post/Embed/index.tsx:236
 msgid "Removed by author"
 msgstr "작성자가 제거함"
 
-#: src/components/Post/Embed/index.tsx:223
+#: src/components/Post/Embed/index.tsx:234
 msgid "Removed by you"
 msgstr "내가 제거함"
 
@@ -10487,6 +10503,10 @@ msgstr "누군가 내보내졌습니다"
 msgid "Someone was removed from the group"
 msgstr "누군가가 그룹에서 내보내졌습니다"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:48
+msgid "Something new is here"
+msgstr "새로운 기능이 추가되었습니다"
+
 #: src/components/moderation/ReportDialog/index.tsx:101
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr "신고하려는 데이터에 문제가 있습니다. 지원팀에 문의하세요."
@@ -11060,7 +11080,7 @@ msgstr "개인정보 처리방침을 <0/>(으)로 이동했습니다"
 #: src/view/com/composer/state/video.ts:397
 #: src/view/com/composer/state/video.ts:436
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
-msgstr ""
+msgstr "선택한 동영상이 {VIDEO_MAX_SIZE_MB} MB보다 큽니다. 더 작은 파일로 다시 시도해 주세요."
 
 #: src/lib/hooks/useCleanError.ts:41
 #: src/lib/strings/errors.ts:19
@@ -12047,6 +12067,10 @@ msgstr "업데이트"
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr "리스트에서 <0>{displayName}</0> 업데이트"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:93
+msgid "Update app"
+msgstr "앱 업데이트"
+
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:301
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:313
 #: src/screens/Settings/AccountSettings.tsx:112
@@ -12064,6 +12088,14 @@ msgstr "초대 링크 업데이트"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:565
 msgid "Update to {domain}"
 msgstr "{domain}(으)로 변경"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:85
+msgid "Update your app"
+msgstr "앱 업데이트하기"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:76
+msgid "Update your app to see it."
+msgstr "확인하려면 앱을 업데이트하세요."
 
 #: src/screens/Messages/Conversation.tsx:335
 msgid "Update your app to the latest version to join in!"
@@ -13158,7 +13190,7 @@ msgstr "대화 기록은 읽을 수 있지만 새 메시지는 보낼 수 없습
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:421
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
-msgstr "이미지는 최대 {MAX_IMAGES, plural, other {#개}}까지 선택할 수 있습니다."
+msgstr ""
 
 #: src/components/interstitials/Trending.tsx:132
 #: src/components/interstitials/TrendingVideos.tsx:138
@@ -13613,7 +13645,7 @@ msgstr "뮤트한 단어"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:179
 msgid "Your name, avatar, and the name of the group chat will be visible to everyone."
-msgstr "내 이름과 프로필 사진 및 그룹 채팅 이름이 모든 멤버에게 공개됩니다."
+msgstr ""
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:72
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."

@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-03 14:59\n"
+"PO-Revision-Date: 2026-06-08 20:39\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -354,6 +354,18 @@ msgstr "{count, plural, one {# pedido} other {# pedidos}}"
 #: src/view/shell/desktop/LeftNav.tsx:483
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {# item não lido} other {# itens não lidos}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:67
+msgid "{count, plural, one {Refresh the page to see it.} other {Refresh the page to see them all.}}"
+msgstr "{count, plural, one {Recarregue a página para vê-la.} other {Recarregue a página para vê-las.}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:53
+msgid "{count, plural, one {This post has # photo.} other {This post has # photos.}}"
+msgstr "{count, plural, one {Esta publicação tem # imagem.} other {Esta publicação tem # imagens.}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:60
+msgid "{count, plural, one {Update your app to see it.} other {Update your app to see them all.}}"
+msgstr "{count, plural, one {Atualize a sua aplicação para vê-la.} other {Atualize a sua aplicação para vê-las.}}"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:53
@@ -1463,7 +1475,7 @@ msgstr "Uma imagem a mostrar que o Bluesky seleciona verificadores confiáveis e
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:172
 msgid "An invite link lets people join this group chat without being added directly. You control who can use the link and whether they need your approval. You can disable the link at any time."
-msgstr "Um link de convite permite que pessoas entrem nesta conversa de grupo sem serem adicionadas diretamente. Quem pode usar o link e se eles precisam da sua aprovação é controlado por si. Pode desativar o link a qualquer momento."
+msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:239
 msgid "An issue not included in these options"
@@ -1698,7 +1710,7 @@ msgstr "Tem a certeza que deseja sair desta conversa?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "Tem a certeza que deseja sair desta conversa? As suas mensagens serão eliminadas para si, mas não para o outro participante."
+msgstr ""
 
 #: src/components/FeedCard.tsx:374
 msgid "Are you sure you want to remove this from your feeds?"
@@ -1956,7 +1968,7 @@ msgstr "Bloquear utilizador e/ou eliminar esta conversa"
 msgid "Block user and/or leave this conversation"
 msgstr "Bloquear utilizador e/ou sair desta conversa"
 
-#: src/components/Post/Embed/index.tsx:197
+#: src/components/Post/Embed/index.tsx:208
 msgid "Blocked"
 msgstr "Bloqueado"
 
@@ -3434,7 +3446,7 @@ msgstr "Eliminar esta lista?"
 msgid "Delete this post?"
 msgstr "Eliminar esta publicação?"
 
-#: src/components/Post/Embed/index.tsx:190
+#: src/components/Post/Embed/index.tsx:201
 msgid "Deleted"
 msgstr "Eliminado"
 
@@ -5006,7 +5018,7 @@ msgstr "Segue-te"
 
 #: src/components/Pills.tsx:175
 msgid "Follows You"
-msgstr "Segue-te"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:128
 msgid "Font"
@@ -7670,7 +7682,7 @@ msgstr "Um ou mais dos seus ficheiros selecionados não são suportados."
 
 #: src/view/com/composer/SelectMediaButton.tsx:438
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
-msgstr ""
+msgstr "Um ou mais dos ficheiros selecionados são demasiado grandes. O tamanho máximo é {VIDEO_MAX_SIZE_MB}  MB."
 
 #: src/view/com/composer/Composer.tsx:589
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
@@ -7861,7 +7873,7 @@ msgstr "Abre a câmara do dispositivo"
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:509
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
-msgstr "Abre a galeria do dispositivo para selecionar até {MAX_IMAGES, plural, one{# imagem}other {# imagens}} ou um único vídeo ou GIF."
+msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:102
 #: src/view/com/auth/SplashScreen.web.tsx:110
@@ -8841,6 +8853,10 @@ msgstr "Recomendados"
 msgid "Reconnect"
 msgstr "Reconectar"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:80
+msgid "Refresh the page to see it."
+msgstr "Atualize a página para vê-la."
+
 #. Reject a chat request, this opens a menu with options
 #: src/screens/Messages/components/RequestButtons.tsx:131
 msgid "Reject"
@@ -9009,11 +9025,11 @@ msgstr "Remover verificação"
 msgid "Remove your verification for this account?"
 msgstr "Remover a sua verificação para esta conta?"
 
-#: src/components/Post/Embed/index.tsx:225
+#: src/components/Post/Embed/index.tsx:236
 msgid "Removed by author"
 msgstr "Removido pelo autor"
 
-#: src/components/Post/Embed/index.tsx:223
+#: src/components/Post/Embed/index.tsx:234
 msgid "Removed by you"
 msgstr "Removido por si"
 
@@ -10487,6 +10503,10 @@ msgstr "Alguém foi removido"
 msgid "Someone was removed from the group"
 msgstr "Alguém foi removido do grupo"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:48
+msgid "Something new is here"
+msgstr "Há algo de novo aqui"
+
 #: src/components/moderation/ReportDialog/index.tsx:101
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr "Houve um problema com os dados que tentou denunciar. Por favor, contacte o suporte."
@@ -11060,7 +11080,7 @@ msgstr "A Política de Privacidade foi movida para <0/>"
 #: src/view/com/composer/state/video.ts:397
 #: src/view/com/composer/state/video.ts:436
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
-msgstr ""
+msgstr "O vídeo selecionado é maior que {VIDEO_MAX_SIZE_MB} MB. Por favor, tente novamente com um ficheiro menor."
 
 #: src/lib/hooks/useCleanError.ts:41
 #: src/lib/strings/errors.ts:19
@@ -12047,6 +12067,10 @@ msgstr "Atualizar"
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr "Atualizar <0>{displayName}</0> nas Listas"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:93
+msgid "Update app"
+msgstr "Atualizar a aplicação"
+
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:301
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:313
 #: src/screens/Settings/AccountSettings.tsx:112
@@ -12064,6 +12088,14 @@ msgstr "Atualizar link de convite"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:565
 msgid "Update to {domain}"
 msgstr "Atualizar para {domain}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:85
+msgid "Update your app"
+msgstr "Atualize a sua aplicação"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:76
+msgid "Update your app to see it."
+msgstr "Atualize a sua aplicação para vê-la."
 
 #: src/screens/Messages/Conversation.tsx:335
 msgid "Update your app to the latest version to join in!"
@@ -13036,7 +13068,7 @@ msgstr "{0} está bloqueado por si"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:81
 msgid "You are blocking the chat owner"
-msgstr "O dono da conversa está bloqueado por si"
+msgstr "O proprietário da conversa está bloqueado por si"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:83
 msgid "You are blocking this person"
@@ -13158,7 +13190,7 @@ msgstr "Pode ler o histórico da conversa, mas não pode enviar novas mensagens.
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:421
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
-msgstr "Pode selecionar {MAX_IMAGES, plural, one {# imagem}other {# imagens}} no total."
+msgstr ""
 
 #: src/components/interstitials/Trending.tsx:132
 #: src/components/interstitials/TrendingVideos.tsx:138
@@ -13613,7 +13645,7 @@ msgstr "As suas palavras silenciadas"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:179
 msgid "Your name, avatar, and the name of the group chat will be visible to everyone."
-msgstr "O seu nome, foto de perfil e o nome da conversa de grupo serão visíveis para todos."
+msgstr ""
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:72
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."

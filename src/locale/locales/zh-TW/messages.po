@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-03 14:59\n"
+"PO-Revision-Date: 2026-06-08 20:39\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -354,6 +354,18 @@ msgstr "{count, plural, other {# 個邀請}}"
 #: src/view/shell/desktop/LeftNav.tsx:483
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {# 則未讀} other {# 則未讀}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:67
+msgid "{count, plural, one {Refresh the page to see it.} other {Refresh the page to see them all.}}"
+msgstr "{count, plural, other {重新整理以顯示該內容。}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:53
+msgid "{count, plural, one {This post has # photo.} other {This post has # photos.}}"
+msgstr "{count, plural, other {這則貼文有 # 張圖片。}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:60
+msgid "{count, plural, one {Update your app to see it.} other {Update your app to see them all.}}"
+msgstr "{count, plural, other {更新應用程式以顯示該內容。}}"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:53
@@ -1463,7 +1475,7 @@ msgstr "這張插圖說明 Bluesky 官方負責挑選可靠的驗證者，而這
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:172
 msgid "An invite link lets people join this group chat without being added directly. You control who can use the link and whether they need your approval. You can disable the link at any time."
-msgstr "邀請連結可以讓其他人直接加入群組對話。您可以控制連結的使用權限、設定是否需要手動核准才能加入，也可以隨時選擇停用。"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:239
 msgid "An issue not included in these options"
@@ -1557,7 +1569,7 @@ msgstr "跟隨我的人"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:436
 msgid "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
-msgstr "任何都無法再透過此連結加入群組。您隨時都可以建立新的邀請連結。"
+msgstr "任何人都無法再透過此連結加入群組，但您可以隨時建立新的邀請連結。"
 
 #: src/Navigation.tsx:555
 #: src/screens/Settings/AppIconSettings/index.tsx:65
@@ -1698,7 +1710,7 @@ msgstr "您確定要離開這個對話嗎？"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "您確定要離開這段對話嗎？訊息將為您刪除，但不會為其他參與者刪除。"
+msgstr ""
 
 #: src/components/FeedCard.tsx:374
 msgid "Are you sure you want to remove this from your feeds?"
@@ -1956,7 +1968,7 @@ msgstr "封鎖此帳號或刪除整個對話（複選）"
 msgid "Block user and/or leave this conversation"
 msgstr "封鎖此帳號或退出對話（複選）"
 
-#: src/components/Post/Embed/index.tsx:197
+#: src/components/Post/Embed/index.tsx:208
 msgid "Blocked"
 msgstr "已被封鎖"
 
@@ -3434,7 +3446,7 @@ msgstr "要刪除這個列表嗎？"
 msgid "Delete this post?"
 msgstr "要刪除這則貼文嗎？"
 
-#: src/components/Post/Embed/index.tsx:190
+#: src/components/Post/Embed/index.tsx:201
 msgid "Deleted"
 msgstr "已刪除"
 
@@ -5006,7 +5018,7 @@ msgstr "跟隨您"
 
 #: src/components/Pills.tsx:175
 msgid "Follows You"
-msgstr "跟隨您"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:128
 msgid "Font"
@@ -7670,7 +7682,7 @@ msgstr "至少有一個選擇的檔案為不支援的格式。"
 
 #: src/view/com/composer/SelectMediaButton.tsx:438
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
-msgstr ""
+msgstr "至少有一個選擇的檔案太大了。最大檔案尺寸為 {VIDEO_MAX_SIZE_MB} MB。"
 
 #: src/view/com/composer/Composer.tsx:589
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
@@ -7861,7 +7873,7 @@ msgstr "開啟裝置相機"
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:509
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
-msgstr "開啟裝置相簿以選擇最多 {MAX_IMAGES, plural, other {# 張圖片}}、1 段影片或 1 張 GIF。"
+msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:102
 #: src/view/com/auth/SplashScreen.web.tsx:110
@@ -8841,6 +8853,10 @@ msgstr "推薦"
 msgid "Reconnect"
 msgstr "重新連線"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:80
+msgid "Refresh the page to see it."
+msgstr "重新整理以顯示該內容。"
+
 #. Reject a chat request, this opens a menu with options
 #: src/screens/Messages/components/RequestButtons.tsx:131
 msgid "Reject"
@@ -9009,11 +9025,11 @@ msgstr "撤回驗證"
 msgid "Remove your verification for this account?"
 msgstr "要撤回您對這個帳號的驗證嗎？"
 
-#: src/components/Post/Embed/index.tsx:225
+#: src/components/Post/Embed/index.tsx:236
 msgid "Removed by author"
 msgstr "已被發布者刪除"
 
-#: src/components/Post/Embed/index.tsx:223
+#: src/components/Post/Embed/index.tsx:234
 msgid "Removed by you"
 msgstr "由您刪除"
 
@@ -10487,6 +10503,10 @@ msgstr "某人被移出了"
 msgid "Someone was removed from the group"
 msgstr "某人已被移出群組"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:48
+msgid "Something new is here"
+msgstr "這裡有新的東西"
+
 #: src/components/moderation/ReportDialog/index.tsx:101
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr "您目前提交的檢舉內容可能有誤，請聯絡支援以取得協助。"
@@ -11060,7 +11080,7 @@ msgstr "隱私權政策已移動到 <0/>"
 #: src/view/com/composer/state/video.ts:397
 #: src/view/com/composer/state/video.ts:436
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
-msgstr ""
+msgstr "您選擇的影片檔案大小大於 {VIDEO_MAX_SIZE_MB} MB。請使用較小的檔案再試一次。"
 
 #: src/lib/hooks/useCleanError.ts:41
 #: src/lib/strings/errors.ts:19
@@ -12047,6 +12067,10 @@ msgstr "更新"
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr "要把 <0> {displayName} </0> 加入或移出哪些列表？"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:93
+msgid "Update app"
+msgstr "更新應用程式"
+
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:301
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:313
 #: src/screens/Settings/AccountSettings.tsx:112
@@ -12064,6 +12088,14 @@ msgstr "更新邀請連結"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:565
 msgid "Update to {domain}"
 msgstr "變更至 {domain}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:85
+msgid "Update your app"
+msgstr "更新您的應用程式"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:76
+msgid "Update your app to see it."
+msgstr "更新應用程式以顯示該內容。"
 
 #: src/screens/Messages/Conversation.tsx:335
 msgid "Update your app to the latest version to join in!"
@@ -13158,7 +13190,7 @@ msgstr "您仍可以檢視聊天記錄，但無法傳送新的訊息。"
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:421
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
-msgstr "您最多只能選擇 {MAX_IMAGES, plural, other {# 張圖片}}。"
+msgstr ""
 
 #: src/components/interstitials/Trending.tsx:132
 #: src/components/interstitials/TrendingVideos.tsx:138
@@ -13613,7 +13645,7 @@ msgstr "您的靜音字詞"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:179
 msgid "Your name, avatar, and the name of the group chat will be visible to everyone."
-msgstr "您的名稱、大頭貼照，以及群組名稱將會公開顯示在邀請連結上。"
+msgstr ""
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:72
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."

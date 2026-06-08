@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-03 14:59\n"
+"PO-Revision-Date: 2026-06-08 20:39\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -355,6 +355,18 @@ msgstr "{count, plural, one {# 条邀请} other {# 条邀请}}"
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {# 条未读} other {# 条未读}}"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:67
+msgid "{count, plural, one {Refresh the page to see it.} other {Refresh the page to see them all.}}"
+msgstr "{count, plural,one {刷新页面以显示该内容。} other {刷新页面以显示该内容。}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:53
+msgid "{count, plural, one {This post has # photo.} other {This post has # photos.}}"
+msgstr "{count, plural,one {这则帖文有 # 张照片。}other {这则帖文有 # 张照片。}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:60
+msgid "{count, plural, one {Update your app to see it.} other {Update your app to see them all.}}"
+msgstr "{count, plural,one {更新应用以显示该内容。}other {更新应用以显示该内容。}}"
+
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:53
 msgid "{count}+"
@@ -631,7 +643,7 @@ msgstr "{rank}."
 #. The number of requests to join a group chat.
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:53
 msgid "{requestCount, plural, one {# request} other {# requests}}"
-msgstr "{requestCount, plural, one {# 个邀请} other {# 个邀请}}"
+msgstr "{requestCount, plural, one {# 条邀请} other {# 条邀请}}"
 
 #. Displayed when there are more than 50 requests to join a group chat
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:48
@@ -854,7 +866,7 @@ msgstr "接受对话请求"
 #. Accept a chat request
 #: src/screens/Messages/components/RequestListItem.tsx:48
 msgid "Accept Request"
-msgstr "接受请求"
+msgstr "接受申请"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:460
 msgid "Accept this language suggestion"
@@ -1463,7 +1475,7 @@ msgstr "这张图片显示 Bluesky 官方可挑选信任的认证人，并由可
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:172
 msgid "An invite link lets people join this group chat without being added directly. You control who can use the link and whether they need your approval. You can disable the link at any time."
-msgstr "邀请链接可以让其他人通过链接直接加入群组对话，你可以控制谁能加入，以及加入是否需要手动批准，你可以随时停用此链接。"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:239
 msgid "An issue not included in these options"
@@ -1569,7 +1581,7 @@ msgstr "应用图标"
 #: src/screens/Settings/LanguageSettings.tsx:107
 #: src/screens/Settings/LanguageSettings.tsx:123
 msgid "App language"
-msgstr "应用程序语言"
+msgstr "应用语言"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:122
 msgid "App Password"
@@ -1698,7 +1710,7 @@ msgstr "你确定要离开这个对话吗？"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "你确定要离开此对话吗？此操作将仅为你删除对话，而不会为其他参与者删除。"
+msgstr ""
 
 #: src/components/FeedCard.tsx:374
 msgid "Are you sure you want to remove this from your feeds?"
@@ -1956,7 +1968,7 @@ msgstr "屏蔽该用户或删除整个对话（多选）"
 msgid "Block user and/or leave this conversation"
 msgstr "屏蔽该用户或离开对话（多选）"
 
-#: src/components/Post/Embed/index.tsx:197
+#: src/components/Post/Embed/index.tsx:208
 msgid "Blocked"
 msgstr "已被屏蔽"
 
@@ -3434,7 +3446,7 @@ msgstr "要删除此列表吗？"
 msgid "Delete this post?"
 msgstr "要删除这则帖文吗？"
 
-#: src/components/Post/Embed/index.tsx:190
+#: src/components/Post/Embed/index.tsx:201
 msgid "Deleted"
 msgstr "已删除"
 
@@ -5006,7 +5018,7 @@ msgstr "关注了你"
 
 #: src/components/Pills.tsx:175
 msgid "Follows You"
-msgstr "关注了你"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:128
 msgid "Font"
@@ -7670,7 +7682,7 @@ msgstr "你所选中的部分文件格式不被支持。"
 
 #: src/view/com/composer/SelectMediaButton.tsx:438
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
-msgstr ""
+msgstr "你选中的部分文件太大，最大的文件大小为 {VIDEO_MAX_SIZE_MB} MB。"
 
 #: src/view/com/composer/Composer.tsx:589
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
@@ -7861,7 +7873,7 @@ msgstr "开启设备相机"
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:509
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
-msgstr "开启设备相册以选择最多 {MAX_IMAGES, plural, other {# 张图片}}、单段视频或一张 GIF。"
+msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:102
 #: src/view/com/auth/SplashScreen.web.tsx:110
@@ -8841,6 +8853,10 @@ msgstr "推荐"
 msgid "Reconnect"
 msgstr "重新连接"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:80
+msgid "Refresh the page to see it."
+msgstr "刷新页面以显示该内容。"
+
 #. Reject a chat request, this opens a menu with options
 #: src/screens/Messages/components/RequestButtons.tsx:131
 msgid "Reject"
@@ -9009,11 +9025,11 @@ msgstr "撤回认证"
 msgid "Remove your verification for this account?"
 msgstr "要撤回你对这个账户的认证吗？"
 
-#: src/components/Post/Embed/index.tsx:225
+#: src/components/Post/Embed/index.tsx:236
 msgid "Removed by author"
 msgstr "已被发布者删除"
 
-#: src/components/Post/Embed/index.tsx:223
+#: src/components/Post/Embed/index.tsx:234
 msgid "Removed by you"
 msgstr "你已删除"
 
@@ -10487,6 +10503,10 @@ msgstr "有人被移除了"
 msgid "Someone was removed from the group"
 msgstr "有人已被移除出群组"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:48
+msgid "Something new is here"
+msgstr "这里有些新改动"
+
 #: src/components/moderation/ReportDialog/index.tsx:101
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr "你试图提交的举报信息可能有误，请联系支持获取帮助。"
@@ -11060,7 +11080,7 @@ msgstr "隐私政策已移动到 <0/>"
 #: src/view/com/composer/state/video.ts:397
 #: src/view/com/composer/state/video.ts:436
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
-msgstr ""
+msgstr "你所选择的视频大小大于 {VIDEO_MAX_SIZE_MB} MB，请选择其他较小的视频文件。"
 
 #: src/lib/hooks/useCleanError.ts:41
 #: src/lib/strings/errors.ts:19
@@ -12047,6 +12067,10 @@ msgstr "更新"
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr "要把 <0>{displayName}</0> 更新或删除自哪些列表？"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:93
+msgid "Update app"
+msgstr "更新应用"
+
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:301
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:313
 #: src/screens/Settings/AccountSettings.tsx:112
@@ -12064,6 +12088,14 @@ msgstr "更新邀请链接"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:565
 msgid "Update to {domain}"
 msgstr "更新至 {domain}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:85
+msgid "Update your app"
+msgstr "更新你的应用"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:76
+msgid "Update your app to see it."
+msgstr "更新应用以显示该内容。"
 
 #: src/screens/Messages/Conversation.tsx:335
 msgid "Update your app to the latest version to join in!"
@@ -13158,7 +13190,7 @@ msgstr "你仍然可以查看对话记录，但无法发送新信息。"
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:421
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
-msgstr "你最多只能选择 {MAX_IMAGES, plural, other {# 张图片}}。"
+msgstr ""
 
 #: src/components/interstitials/Trending.tsx:132
 #: src/components/interstitials/TrendingVideos.tsx:138
@@ -13613,7 +13645,7 @@ msgstr "你的隐藏字词"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:179
 msgid "Your name, avatar, and the name of the group chat will be visible to everyone."
-msgstr "你的名字、头像以及此群组对话的名称将对所有人可见。"
+msgstr ""
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:72
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."

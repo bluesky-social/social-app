@@ -8,7 +8,7 @@ msgstr ""
 "Language: eu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-02 17:45\n"
+"PO-Revision-Date: 2026-06-08 20:39\n"
 "Last-Translator: \n"
 "Language-Team: Basque\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -354,6 +354,18 @@ msgstr "{count, plural, one {eskaera #} other {# eskaera}}"
 #: src/view/shell/desktop/LeftNav.tsx:483
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {Elementu bat} other {# elementu}} irakurri gabe"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:67
+msgid "{count, plural, one {Refresh the page to see it.} other {Refresh the page to see them all.}}"
+msgstr "{count, plural, one {Freskatu orria ikusteko.} other {Freskatu orria guztiak ikusteko.}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:53
+msgid "{count, plural, one {This post has # photo.} other {This post has # photos.}}"
+msgstr "{count, plural, one {Post honek argazki # dauka.} other {Post honek # argazki ditu.}}"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:60
+msgid "{count, plural, one {Update your app to see it.} other {Update your app to see them all.}}"
+msgstr "{count, plural, one {Zure aplikazioa eguneratu ikusteko.} other {Zure aplikazioa eguneratu guztiak ikusteko.}}"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:53
@@ -1463,7 +1475,7 @@ msgstr "Bluesky-k egiaztatzaile fidagarriak hautatzen dituela erakusten duen ilu
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:172
 msgid "An invite link lets people join this group chat without being added directly. You control who can use the link and whether they need your approval. You can disable the link at any time."
-msgstr "Gonbidapen-esteka batek txat taldean sartzeko aukera ematen dio jendeari zuzenean gehitu gabe. Esteka nork erabil dezakeen eta zure onespenaren beharra kontrolatzen dituzu. Esteka edozein unetan desgai dezakezu."
+msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:239
 msgid "An issue not included in these options"
@@ -1698,7 +1710,7 @@ msgstr "Ziur zaude elkarrizketa hau utzi nahi duzula?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "Ziur zaude elkarrizketa hau utzi nahi duzula? Zure mezuak ezabatuko dira zuretzako, baina ez beste parte-hartzaileentzat."
+msgstr ""
 
 #: src/components/FeedCard.tsx:374
 msgid "Are you sure you want to remove this from your feeds?"
@@ -1956,7 +1968,7 @@ msgstr "Blokeatu erabiltzailea eta/edo ezabatu elkarrizketa hau"
 msgid "Block user and/or leave this conversation"
 msgstr "Blokeatu erabiltzailea eta/edo utzi elkarrizketa hau"
 
-#: src/components/Post/Embed/index.tsx:197
+#: src/components/Post/Embed/index.tsx:208
 msgid "Blocked"
 msgstr "Blokeatua"
 
@@ -3434,7 +3446,7 @@ msgstr "Zerrenda hau ezabatu nahi duzu?"
 msgid "Delete this post?"
 msgstr "Post hau ezabatu nahi duzu?"
 
-#: src/components/Post/Embed/index.tsx:190
+#: src/components/Post/Embed/index.tsx:201
 msgid "Deleted"
 msgstr "Ezabatu da"
 
@@ -5006,7 +5018,7 @@ msgstr "Jarraitzen dizu"
 
 #: src/components/Pills.tsx:175
 msgid "Follows You"
-msgstr "Jarraitzen Dizu"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:128
 msgid "Font"
@@ -7670,7 +7682,7 @@ msgstr "Hautatutako fitxategi bat edo gehiago ez dira onartzen."
 
 #: src/view/com/composer/SelectMediaButton.tsx:438
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
-msgstr ""
+msgstr "Hautatutako fitxategi bat edo gehiago handiegiak dira. Gehienezko tamaina {VIDEO_MAX_SIZE_MB} MB da."
 
 #: src/view/com/composer/Composer.tsx:589
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
@@ -7861,7 +7873,7 @@ msgstr "Ireki kamera gailua"
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:509
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
-msgstr "Gailuaren galeria irekitzen du gehienez {MAX_IMAGES, plural, other {# irudi}}, edo bideo edo GIF bakarra hautatzeko."
+msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:102
 #: src/view/com/auth/SplashScreen.web.tsx:110
@@ -8841,6 +8853,10 @@ msgstr "Gomendatua"
 msgid "Reconnect"
 msgstr "Berriro konektatu"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:80
+msgid "Refresh the page to see it."
+msgstr "Freskatu orria ikusteko."
+
 #. Reject a chat request, this opens a menu with options
 #: src/screens/Messages/components/RequestButtons.tsx:131
 msgid "Reject"
@@ -9009,11 +9025,11 @@ msgstr "Kendu egiaztapena"
 msgid "Remove your verification for this account?"
 msgstr "Zure egiaztapena kendu kontu honi?"
 
-#: src/components/Post/Embed/index.tsx:225
+#: src/components/Post/Embed/index.tsx:236
 msgid "Removed by author"
 msgstr "Egileak kenduta"
 
-#: src/components/Post/Embed/index.tsx:223
+#: src/components/Post/Embed/index.tsx:234
 msgid "Removed by you"
 msgstr "Zuk kenduta"
 
@@ -10487,6 +10503,10 @@ msgstr "Norbait kendua izan da"
 msgid "Someone was removed from the group"
 msgstr "Norbait taldetik kendu da"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:48
+msgid "Something new is here"
+msgstr "Zerbait berria dago hemen"
+
 #: src/components/moderation/ReportDialog/index.tsx:101
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr "Zerbait ez zegoen ondo salatzen saiatzen ari zaren datuekin. Mesedez, jarri laguntzarekin harremanetan."
@@ -11060,7 +11080,7 @@ msgstr "Pribatutasun-politika <0/>-ra eraman da"
 #: src/view/com/composer/state/video.ts:397
 #: src/view/com/composer/state/video.ts:436
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
-msgstr ""
+msgstr "Hautatutako bideoa {VIDEO_MAX_SIZE_MB} MB baino handiagoa da. Mesedez, saiatu berriro fitxategi txikiago batekin."
 
 #: src/lib/hooks/useCleanError.ts:41
 #: src/lib/strings/errors.ts:19
@@ -12047,6 +12067,10 @@ msgstr "Eguneratu"
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr "Eguneratu <0>{displayName}</0> Zerrendetan"
 
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:93
+msgid "Update app"
+msgstr "Eguneratu aplikazioa"
+
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:301
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:313
 #: src/screens/Settings/AccountSettings.tsx:112
@@ -12064,6 +12088,14 @@ msgstr "Eguneratu gonbidapen-esteka"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:565
 msgid "Update to {domain}"
 msgstr "Eguneratu {domain}ra"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:85
+msgid "Update your app"
+msgstr "Eguneratu zure aplikazioa"
+
+#: src/components/Post/Embed/GalleryFallbackEmbed.tsx:76
+msgid "Update your app to see it."
+msgstr "Eguneratu zure aplikazioa ikusteko."
 
 #: src/screens/Messages/Conversation.tsx:335
 msgid "Update your app to the latest version to join in!"
@@ -13158,7 +13190,7 @@ msgstr "Txat-historia irakurri dezakezu, baina ezin duzu mezu berririk bidali."
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:421
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
-msgstr "Guztira gehienez {MAX_IMAGES, plural, other {# irudi}} hauta ditzakezu."
+msgstr ""
 
 #: src/components/interstitials/Trending.tsx:132
 #: src/components/interstitials/TrendingVideos.tsx:138
@@ -13613,7 +13645,7 @@ msgstr "Zure mutututako hitzak"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:179
 msgid "Your name, avatar, and the name of the group chat will be visible to everyone."
-msgstr "Zure izena, abatarra eta txat taldearen izena guztientzat ikusgai egongo dira."
+msgstr ""
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:72
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."
