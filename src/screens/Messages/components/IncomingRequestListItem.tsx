@@ -72,7 +72,7 @@ export function IncomingRequestListItem({
                   <AcceptChatButton convo={convo.view} currentScreen="list" />
                 ) : null}
                 <RejectMenu
-                  convo={convo.view}
+                  convo={convo}
                   profile={convo.primaryMember}
                   showDeleteConvo
                   currentScreen="list"
