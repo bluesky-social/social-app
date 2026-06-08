@@ -709,16 +709,16 @@ function getFooterState(
   convoState: ActiveConvoStates,
   hasAcceptOverride?: boolean,
 ): FooterState {
+  if (convoState.convo.view.status === 'request' && !hasAcceptOverride) {
+    return 'request'
+  }
+
   if (convoState.items.length === 0) {
     if (convoState.isFetchingHistory) {
       return 'loading'
     } else {
       return 'new-chat'
     }
-  }
-
-  if (convoState.convo.view.status === 'request' && !hasAcceptOverride) {
-    return 'request'
   }
 
   return 'standard'
