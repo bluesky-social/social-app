@@ -86,12 +86,23 @@ type Props = NativeStackScreenProps<
 >
 
 export function MessagesConversationSettingsScreen({route}: Props) {
+  const navigation = useNavigation<NavigationProp>()
+
   const convoId = route.params.conversation
 
   return (
     <Layout.Screen>
       <Layout.Header.Outer>
-        <Layout.Header.BackButton />
+        <Layout.Header.BackButton
+          onPress={evt => {
+            if (!navigation.canGoBack()) {
+              evt.preventDefault()
+              navigation.navigate('MessagesConversation', {
+                conversation: convoId,
+              })
+            }
+          }}
+        />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
             <Trans>Group chat settings</Trans>
