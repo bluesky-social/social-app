@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react'
+import {useRef} from 'react'
 import {InteractionManager, View} from 'react-native'
 import {type AnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
@@ -56,20 +56,6 @@ export function ImageEmbed({
   const metricsContext: LightboxMetricsContext | undefined = postContext
     ? {layout, ...postContext}
     : undefined
-
-  // Impression: one per mount of a post photo embed. Covers all three layouts
-  // identically so the opens/impressions CTR is unbiased by layout.
-  useEffect(() => {
-    if (images.length > 0 && postContext) {
-      ax.metric('post:photoEmbed:impression', {
-        layout,
-        totalImages: images.length,
-        ...postContext,
-      })
-    }
-    // Fire once per mount; intentionally not reactive to post context changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   // Captured from AutoSizedImage so the peek-commit handler can reuse the same
   // ref + dims that a tap would — keeps the lightbox's return animation intact.
