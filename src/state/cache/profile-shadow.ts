@@ -11,6 +11,7 @@ import {findAllProfilesInQueryData as findAllProfilesInContactMatchesQueryData} 
 import {findAllProfilesInQueryData as findAllProfilesInKnownFollowersQueryData} from '#/state/queries/known-followers'
 import {findAllProfilesInQueryData as findAllProfilesInListMembersQueryData} from '#/state/queries/list-members'
 import {findAllProfilesInQueryData as findAllProfilesInGetConvoQueryData} from '#/state/queries/messages/conversation'
+import {findAllProfilesInQueryData as findAllProfilesInListConvoRequestsQueryData} from '#/state/queries/messages/list-conversation-requests'
 import {findAllProfilesInQueryData as findAllProfilesInListConvosQueryData} from '#/state/queries/messages/list-conversations'
 import {findAllProfilesInQueryData as findAllProfilesInMessagesQueryData} from '#/state/queries/messages/list-convo-members'
 import {findAllProfilesInQueryData as findAllProfilesInMyBlockedAccountsQueryData} from '#/state/queries/my-blocked-accounts'
@@ -259,6 +260,7 @@ function* findProfilesInCache(
   yield* findAllProfilesInSuggestedFollowsQueryData(queryClient, did)
   yield* findAllProfilesInActorSearchQueryData(queryClient, did)
   yield* findAllProfilesInListConvosQueryData(queryClient, did)
+  yield* findAllProfilesInListConvoRequestsQueryData(queryClient, did)
   yield* findAllProfilesInFeedsQueryData(queryClient, did)
   yield* findAllProfilesInPostThreadV2QueryData(queryClient, did)
   yield* findAllProfilesInKnownFollowersQueryData(queryClient, did)
