@@ -39,6 +39,7 @@ import {type Dimensions} from '#/lib/media/types'
 import {useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {type Lightbox} from '#/components/Lightbox/state'
+import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
 import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
 import {Footer} from '../chrome/Footer'
@@ -228,7 +229,8 @@ function ImageView({
   openProgress: SharedValue<number>
   thumbRects: SharedValue<Record<number, MeasuredDimensions | null>>
 }) {
-  const {images, index: initialImageIndex} = lightbox
+  const {images, index: initialImageIndex, metricsContext} = lightbox
+  const ax = useAnalytics()
   const isAnimated = useMemo(() => canAnimate(lightbox), [lightbox])
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
@@ -377,7 +379,21 @@ function ImageView({
         scrollEnabled={!isScaled}
         initialPage={initialImageIndex}
         onPageSelected={e => {
-          setImageIndex(e.nativeEvent.position)
+          const next = e.nativeEvent.position
+          setImageIndex(prev => {
+            if (metricsContext && prev !== next) {
+              ax.metric('post:photoEmbed:lightboxSwipe', {
+                layout: metricsContext.layout,
+                fromImage: prev + 1,
+                toImage: next + 1,
+                totalImages: images.length,
+                uri: metricsContext.uri,
+                authorDid: metricsContext.authorDid,
+                feedDescriptor: metricsContext.feedDescriptor,
+              })
+            }
+            return next
+          })
           setIsScaled(false)
         }}
         onPageScrollStateChanged={e => {

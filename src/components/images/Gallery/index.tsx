@@ -55,6 +55,13 @@ interface GalleryProps {
   onPressIn?: (index: number) => void
   viewContext?: PostEmbedViewContext
   isWithinQuote?: boolean
+  // Post context for the in-feed carousel swipe metric. Omit for non-post
+  // contexts (no event will be emitted).
+  metricsPostContext?: {
+    uri: string
+    authorDid: string
+    feedDescriptor?: string
+  }
 }
 
 const Context = createContext<{
@@ -99,6 +106,7 @@ export function Gallery({
   onPressIn,
   viewContext,
   isWithinQuote,
+  metricsPostContext,
 }: GalleryProps) {
   const {t: l} = useLingui()
   const ax = useAnalytics()
@@ -169,13 +177,17 @@ export function Gallery({
   const emitSwipeMetric = useMemo(
     () =>
       debounce((fromIndex: number, toIndex: number) => {
-        ax.metric('post:gallery:swipe', {
+        if (!metricsPostContext) return
+        ax.metric('post:photoEmbed:carouselSwipe', {
           fromImage: fromIndex + 1, // convert to 1-based index for easier analysis
           toImage: toIndex + 1, // convert to 1-based index for easier analysis
           totalImages: images.length,
+          uri: metricsPostContext.uri,
+          authorDid: metricsPostContext.authorDid,
+          feedDescriptor: metricsPostContext.feedDescriptor,
         })
       }, 200),
-    [ax, images.length],
+    [ax, images.length, metricsPostContext],
   )
 
   const setCurrentIndex = (index: number) => {
@@ -277,10 +289,6 @@ export function Gallery({
           renderItem={({item, index}) => {
             const openLightboxAtIndex = onPress
               ? () => {
-                  ax.metric('post:gallery:openLightbox', {
-                    fromImage: index + 1, // convert to 1-based index for easier analysis
-                    totalImages: images.length,
-                  })
                   const refs: AnimatedRef<any>[] = []
                   const dims: (Dimensions | null)[] = []
                   for (let i = 0; i < images.length; i++) {

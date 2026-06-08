@@ -1,4 +1,4 @@
-import {useRef} from 'react'
+import {useEffect, useRef} from 'react'
 import {InteractionManager, View} from 'react-native'
 import {type AnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
@@ -8,7 +8,10 @@ import {atoms as a, tokens} from '#/alf'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
 import {Gallery} from '#/components/images/Gallery'
 import {ImageLayoutGrid} from '#/components/images/ImageLayoutGrid'
-import {useLightboxControls} from '#/components/Lightbox/state'
+import {
+  type LightboxMetricsContext,
+  useLightboxControls,
+} from '#/components/Lightbox/state'
 import {type Dimensions} from '#/components/Lightbox/types'
 import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
@@ -40,6 +43,35 @@ export function ImageEmbed({
       ? images.length > MAX_GRID_IMAGES
       : ax.features.enabled(ax.features.PostGalleryEmbedEnable)
 
+  const layout: 'single' | 'grid' | 'carousel' =
+    images.length === 1 ? 'single' : useExpandedLayout ? 'carousel' : 'grid'
+
+  const postContext =
+    rest.uri && rest.authorDid
+      ? {
+          uri: rest.uri,
+          authorDid: rest.authorDid,
+          feedDescriptor: rest.feedDescriptor,
+        }
+      : undefined
+  const metricsContext: LightboxMetricsContext | undefined = postContext
+    ? {layout, ...postContext}
+    : undefined
+
+  // Impression: one per mount of a post photo embed. Covers all three layouts
+  // identically so the opens/impressions CTR is unbiased by layout.
+  useEffect(() => {
+    if (images.length > 0 && postContext) {
+      ax.metric('post:photoEmbed:impression', {
+        layout,
+        totalImages: images.length,
+        ...postContext,
+      })
+    }
+    // Fire once per mount; intentionally not reactive to post context changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   // Captured from AutoSizedImage so the peek-commit handler can reuse the same
   // ref + dims that a tap would — keeps the lightbox's return animation intact.
   const singleContainerRef = useRef<AnimatedRef<any> | null>(null)
@@ -57,6 +89,14 @@ export function ImageEmbed({
       refs: AnimatedRef<any>[],
       fetchedDims: (Dimensions | null)[],
     ) => {
+      if (postContext) {
+        ax.metric('post:photoEmbed:open', {
+          layout,
+          fromImage: index + 1,
+          totalImages: images.length,
+          ...postContext,
+        })
+      }
       openLightbox({
         images: items.map((item, i) => ({
           ...item,
@@ -67,6 +107,7 @@ export function ImageEmbed({
           type: 'image',
         })),
         index,
+        metricsContext,
       })
     }
     const onPressIn = (_: number) => {
@@ -132,6 +173,7 @@ export function ImageEmbed({
             onPressIn={onPressIn}
             viewContext={rest.viewContext}
             isWithinQuote={rest.isWithinQuote}
+            metricsPostContext={postContext}
           />
         </View>
       )

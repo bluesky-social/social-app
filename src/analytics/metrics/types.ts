@@ -1175,18 +1175,37 @@ export type Events = {
   'profile:associated:germ:self-disconnect': {}
   'profile:associated:germ:self-reconnect': {}
 
-  // Gallery carousel events
-  'post:gallery:swipe': {
+  // Post photo embed events
+  'post:photoEmbed:impression': {
+    layout: 'single' | 'grid' | 'carousel'
+    totalImages: number
+    uri: string
+    authorDid: string
+    feedDescriptor?: string
+  }
+  'post:photoEmbed:open': {
+    layout: 'single' | 'grid' | 'carousel'
+    fromImage: number
+    totalImages: number
+    uri: string
+    authorDid: string
+    feedDescriptor?: string
+  }
+  'post:photoEmbed:carouselSwipe': {
     fromImage: number
     toImage: number
     totalImages: number
+    uri: string
+    authorDid: string
+    feedDescriptor?: string
   }
-  'post:gallery:openLightbox': {
+  'post:photoEmbed:lightboxSwipe': {
+    layout: 'single' | 'grid' | 'carousel'
     fromImage: number
+    toImage: number
     totalImages: number
-  }
-  'post:gallery:impression': {
-    totalImages: number
-    postUri: string
+    uri: string
+    authorDid: string
+    feedDescriptor?: string
   }
 }

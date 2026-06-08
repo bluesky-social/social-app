@@ -429,6 +429,7 @@ let FeedItemInner = ({
               onOpenEmbed={onOpenEmbed}
               post={post}
               additionalPostAlerts={additionalPostAlerts}
+              feedDescriptor={feedDescriptor}
             />
             <PostControls
               post={post}
@@ -460,6 +461,7 @@ let PostContent = ({
   postAuthor,
   onOpenEmbed,
   additionalPostAlerts,
+  feedDescriptor,
 }: {
   moderation: ModerationDecision
   richText: RichTextAPI
@@ -468,6 +470,7 @@ let PostContent = ({
   onOpenEmbed: () => void
   post: AppBskyFeedDefs.PostView
   additionalPostAlerts?: AppModerationCause[]
+  feedDescriptor?: string
 }): React.ReactNode => {
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
@@ -528,6 +531,9 @@ let PostContent = ({
             moderation={moderation}
             onOpen={onOpenEmbed}
             viewContext={PostEmbedViewContext.Feed}
+            uri={post.uri}
+            authorDid={post.author.did}
+            feedDescriptor={feedDescriptor}
           />
         </View>
       ) : null}
