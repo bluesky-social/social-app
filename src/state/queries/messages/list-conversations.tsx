@@ -26,6 +26,7 @@ import {useLeftConvos} from './leave-conversation'
 import {
   type ConvoRequestListQueryData,
   optimisticDelete as optimisticDeleteRequest,
+  optimisticDeleteJoinRequest,
   optimisticUpdate as optimisticUpdateRequest,
   RQKEY_ROOT as REQUESTS_RQKEY_ROOT,
 } from './list-conversation-requests'
@@ -474,6 +475,10 @@ export function ListConvosProviderInner({
           ) {
             // Join link data not included in the log event, trigger refetch to get it
             debouncedRefetch()
+          } else if (ChatBskyConvoDefs.isLogEditGroup(log)) {
+            // Updated group details (name etc.) aren't included in the log
+            // event, so refetch to pick them up.
+            debouncedRefetch()
           } else if (
             ChatBskyConvoDefs.isLogApproveJoinRequest(log) ||
             ChatBskyConvoDefs.isLogRejectJoinRequest(log)
@@ -509,6 +514,19 @@ export function ListConvosProviderInner({
             // Viewer isn't in the chat yet, but the inbox surfaces outgoing
             // requests, so refetch to pick up the new entry.
             debouncedRefetch()
+          } else if (ChatBskyConvoDefs.isLogWithdrawIncomingJoinRequest(log)) {
+            // A requester rescinded their request to a group the viewer owns.
+            // Mirror of isLogIncomingJoinRequest: decrement the counts.
+            mutateConvoView(log.convoId, convo =>
+              applyJoinRequestCountDelta(convo, log.rev, -1),
+            )
+          } else if (ChatBskyConvoDefs.isLogWithdrawOutgoingJoinRequest(log)) {
+            // The viewer rescinded their own outgoing join request (possibly on
+            // another device). Remove it from the requests inbox cache.
+            queryClient.setQueriesData<ConvoRequestListQueryData>(
+              {queryKey: [REQUESTS_RQKEY_ROOT]},
+              old => optimisticDeleteJoinRequest(log.convoId, old),
+            )
           } else if (ChatBskyConvoDefs.isLogAddReaction(log)) {
             updateConvoInAllLists(log.convoId, convo => ({
               ...convo,
