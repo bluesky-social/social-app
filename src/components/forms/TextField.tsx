@@ -1,4 +1,11 @@
-import {createContext, useContext, useMemo, useRef} from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import {
   type AccessibilityProps,
   StyleSheet,
@@ -25,6 +32,7 @@ import {
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 
 const Context = createContext<{
   inputRef: React.RefObject<TextInput | null> | null
@@ -186,6 +194,36 @@ export function createInput(Component: typeof TextInput) {
     const {chromeHover, chromeFocus, chromeError, chromeErrorHover} =
       useSharedInputStyles()
 
+    const scrollContainerRef = useRef<Element | null>(null)
+
+    const resizeIfMultiline = useCallback(() => {
+      if (!IS_WEB || !rest.multiline || !ctx.inputRef?.current) return
+
+      const el = ctx.inputRef.current as unknown as HTMLTextAreaElement
+
+      if (!scrollContainerRef.current) {
+        let node: Element | null = el.parentElement
+        while (node) {
+          if (getComputedStyle(node).overflowY === 'auto') {
+            scrollContainerRef.current = node
+            break
+          }
+          node = node.parentElement
+        }
+      }
+
+      const scrollTop = scrollContainerRef.current?.scrollTop ?? 0
+      el.style.height = 'auto'
+      el.style.height = `${Math.min(280, Math.max(80, el.scrollHeight))}px`
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollTop = scrollTop
+      }
+    }, [rest.multiline, ctx.inputRef])
+
+    useEffect(() => {
+      resizeIfMultiline()
+    }, [resizeIfMultiline])
+
     if (!withinRoot) {
       return (
         <Root isInvalid={isInvalid}>
@@ -257,7 +295,10 @@ export function createInput(Component: typeof TextInput) {
           accessibilityLabel={label}
           ref={refs}
           value={value}
-          onChangeText={onChangeText}
+          onChangeText={text => {
+            onChangeText?.(text)
+            resizeIfMultiline()
+          }}
           onFocus={e => {
             ctx.onFocus()
             onFocus?.(e)
