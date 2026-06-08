@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {Trans, useLingui} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {MAX_GROUP_NAME_GRAPHEME_LENGTH} from '#/lib/constants'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
@@ -59,8 +59,11 @@ export function EditNamePrompt({
                   {color: t.palette.negative_400},
                 ]}>
                 <Trans>
-                  Group name is too long. The maximum number of characters is{' '}
-                  {MAX_GROUP_NAME_GRAPHEME_LENGTH}.
+                  Group name is too long.{' '}
+                  <Plural
+                    value={MAX_GROUP_NAME_GRAPHEME_LENGTH}
+                    other="The maximum number of characters is #."
+                  />
                 </Trans>
               </Text>
             ) : null}
