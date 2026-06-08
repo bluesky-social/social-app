@@ -478,13 +478,33 @@ export function ListConvosProviderInner({
             ChatBskyConvoDefs.isLogApproveJoinRequest(log) ||
             ChatBskyConvoDefs.isLogRejectJoinRequest(log)
           ) {
-            updateConvoInAllLists(log.convoId, convo =>
+            // Route through mutateConvoView (not updateConvoInAllLists) so the
+            // single-convo cache updates too, keeping the in-convo requests
+            // banner in sync.
+            mutateConvoView(log.convoId, convo =>
               applyJoinRequestCountDelta(convo, log.rev, -1),
             )
           } else if (ChatBskyConvoDefs.isLogIncomingJoinRequest(log)) {
-            updateConvoInAllLists(log.convoId, convo =>
+            // Route through mutateConvoView (not updateConvoInAllLists) so the
+            // single-convo cache updates too, letting the in-convo requests
+            // banner appear live.
+            mutateConvoView(log.convoId, convo =>
               applyJoinRequestCountDelta(convo, log.rev, 1),
             )
+          } else if (ChatBskyConvoDefs.isLogReadJoinRequests(log)) {
+            // The owner marked join requests as read (possibly on another
+            // device). Zero the unread count but keep the total, mirroring the
+            // useMarkJoinRequestsRead mutation.
+            mutateConvoView(log.convoId, convo => {
+              if (!ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
+                return {...convo, rev: log.rev}
+              }
+              return {
+                ...convo,
+                kind: {...convo.kind, unreadJoinRequestCount: 0},
+                rev: log.rev,
+              }
+            })
           } else if (ChatBskyConvoDefs.isLogOutgoingJoinRequest(log)) {
             // Viewer isn't in the chat yet, but the inbox surfaces outgoing
             // requests, so refetch to pick up the new entry.
@@ -761,13 +781,18 @@ function applyJoinRequestCountDelta(
   if (!ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
     return {...convo, rev}
   }
-  const current = convo.kind.joinRequestCount ?? 0
-  const next = Math.max(0, current + delta)
+  // Bump the total and unread counts together. Both are clamped at 0 and
+  // collapse to undefined when empty, matching the server's shape.
+  const bump = (current: number | undefined) => {
+    const next = Math.max(0, (current ?? 0) + delta)
+    return next === 0 ? undefined : next
+  }
   return {
     ...convo,
     kind: {
       ...convo.kind,
-      joinRequestCount: next === 0 ? undefined : next,
+      joinRequestCount: bump(convo.kind.joinRequestCount),
+      unreadJoinRequestCount: bump(convo.kind.unreadJoinRequestCount),
     },
     rev,
   }
