@@ -13,6 +13,7 @@ import {
   KeyboardGestureArea,
 } from 'react-native-keyboard-controller'
 import Animated, {
+  FadeIn,
   runOnJS,
   type ScrollEvent,
   type SharedValue,
@@ -615,41 +616,43 @@ export function MessagesList({
               opened: 0,
             }}>
             {footer ?? (
-              <ConversationFooter
-                convoState={convoState}
-                hasAcceptOverride={hasAcceptOverride}>
-                {({loading}) =>
-                  ax.features.enabled(
-                    ax.features.DmsNewMessageComposerEnable,
-                  ) ? (
-                    <MessageComposer
-                      textInputId={textInputId}
-                      onSendMessage={(message: string) =>
-                        void onSendMessage(message)
-                      }
-                      hasEmbed={!!messageEmbed}
-                      setEmbed={setEmbed}
-                      loading={loading}>
-                      <MessageInputEmbed
-                        embed={messageEmbed}
+              <Animated.View entering={FadeIn.duration(200)}>
+                <ConversationFooter
+                  convoState={convoState}
+                  hasAcceptOverride={hasAcceptOverride}>
+                  {({loading}) =>
+                    ax.features.enabled(
+                      ax.features.DmsNewMessageComposerEnable,
+                    ) ? (
+                      <MessageComposer
+                        textInputId={textInputId}
+                        onSendMessage={(message: string) =>
+                          void onSendMessage(message)
+                        }
+                        hasEmbed={!!messageEmbed}
                         setEmbed={setEmbed}
-                      />
-                    </MessageComposer>
-                  ) : (
-                    <MessageInput
-                      textInputId={textInputId}
-                      onSendMessage={onSendMessage}
-                      hasEmbed={!!messageEmbed}
-                      setEmbed={setEmbed}
-                      loading={loading}>
-                      <MessageInputEmbed
-                        embed={messageEmbed}
+                        loading={loading}>
+                        <MessageInputEmbed
+                          embed={messageEmbed}
+                          setEmbed={setEmbed}
+                        />
+                      </MessageComposer>
+                    ) : (
+                      <MessageInput
+                        textInputId={textInputId}
+                        onSendMessage={onSendMessage}
+                        hasEmbed={!!messageEmbed}
                         setEmbed={setEmbed}
-                      />
-                    </MessageInput>
-                  )
-                }
-              </ConversationFooter>
+                        loading={loading}>
+                        <MessageInputEmbed
+                          embed={messageEmbed}
+                          setEmbed={setEmbed}
+                        />
+                      </MessageInput>
+                    )
+                  }
+                </ConversationFooter>
+              </Animated.View>
             )}
           </KeyboardStickyView>
         </KeyboardGestureArea>
