@@ -844,6 +844,8 @@ const LINKING = {
   },
 } satisfies LinkingOptions<AllNavigatorParams>
 
+let didHandlePushNotificationEntry = false
+
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const ax = useAnalytics()
   // eslint-disable-next-line react-compiler/react-compiler
@@ -903,6 +905,14 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
   function handlePushNotificationEntry() {
     if (!IS_NATIVE) return
+
+    // Only consume a launching notification once per JS runtime. Account
+    // switches remount the entire tree (see `key={currentAccount?.did}` in
+    // `App.native.tsx`), which re-fires `onNavigationReady` and would
+    // otherwise re-process whatever `getLastNotificationResponse` still has
+    // cached natively (APP-2338).
+    if (didHandlePushNotificationEntry) return
+    didHandlePushNotificationEntry = true
 
     // intent urls are handled by `useIntentHandler`
     if (linkingUrl) return
