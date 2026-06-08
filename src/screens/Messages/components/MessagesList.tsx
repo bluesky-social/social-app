@@ -204,14 +204,38 @@ export function MessagesList({
   // Tracks whether the initial scroll-to-bottom has been triggered. Separated from isAtBottom so that contentInset
   // (which causes an early onScroll with negative offset) can't prevent the first scroll.
   // Reset when hasScrolled goes back to false (e.g. convo re-initialization after backgrounding).
+  // `didInitialScroll` is the reactive mirror of the ref so the reveal effect below can depend on it; the ref
+  // itself stays as the synchronous re-entry guard inside onContentSizeChange.
   const hasInitiallyScrolled = useRef(false)
+  const [didInitialScroll, setDidInitialScroll] = useState(false)
   const prevHasScrolled = useRef(hasScrolled)
   useLayoutEffect(() => {
     if (prevHasScrolled.current && !hasScrolled) {
       hasInitiallyScrolled.current = false
+      setDidInitialScroll(false)
     }
     prevHasScrolled.current = hasScrolled
   }, [hasScrolled])
+
+  // Reveal the list once history has finished loading. We can't reveal earlier because the list isn't inverted -
+  // we must scroll to the bottom (newest message) before fading in, or the user sees a flash of top-anchored content.
+  // This is purely state-driven so it doesn't depend on a layout callback firing: a firehose-delivered message can
+  // dedupe against the fetched history and produce no content-size change, in which case nothing would otherwise
+  // reveal the list and it would stay hidden forever (APP-2238). Either the initial scroll has run, or there's
+  // nothing to scroll (empty convo) - both are safe to reveal once !isFetchingHistory.
+  useEffect(() => {
+    if (hasScrolled || convoState.isFetchingHistory) return
+    if (didInitialScroll || renderItems.length === 0) {
+      const raf = requestAnimationFrame(() => setHasScrolled(true))
+      return () => cancelAnimationFrame(raf)
+    }
+  }, [
+    convoState.isFetchingHistory,
+    hasScrolled,
+    didInitialScroll,
+    renderItems.length,
+    setHasScrolled,
+  ])
 
   // -- Keep track of background state and positioning for new pill
   const layoutHeight = useSharedValue(0)
@@ -247,20 +271,15 @@ export function MessagesList({
 
       // Initial scroll to bottom — unconditional, not gated on isAtBottom. This is separated because contentInset
       // can cause an early onScroll with a negative offset that sets isAtBottom to false before we get here.
-      // Empty convos take this path too (once history is done) so hasScrolled gets set without an animated scroll.
+      // Empty convos take this path too (once history is done). Revealing the list is handled by the effect above,
+      // which fires once history finishes - we just record that the scroll has happened.
       if (
         !hasInitiallyScrolled.current &&
         (renderItems.length > 0 || !convoState.isFetchingHistory)
       ) {
         hasInitiallyScrolled.current = true
+        setDidInitialScroll(true)
         flatListRef.current?.scrollToOffset({offset: height, animated: false})
-        // If history is already done loading, mark ready after a frame for the scroll to settle.
-        // Otherwise, the footer sentinel's onLayout will handle it when history finishes.
-        if (!convoState.isFetchingHistory) {
-          requestAnimationFrame(() => {
-            setHasScrolled(true)
-          })
-        }
         prevContentHeight.current = height
         prevItemCount.current = renderItems.length
         return
@@ -300,7 +319,6 @@ export function MessagesList({
     },
     [
       hasScrolled,
-      setHasScrolled,
       convoState.isFetchingHistory,
       renderItems.length,
       // these are stable
@@ -505,20 +523,6 @@ export function MessagesList({
     return null
   }
 
-  // Footer sentinel: when history is still loading during the initial scroll, the footer's onLayout fires each time
-  // new items are prepended (shifting its position). Once history finishes, this triggers setHasScrolled.
-  const onFooterLayout = useCallback(() => {
-    if (
-      hasInitiallyScrolled.current &&
-      !hasScrolled &&
-      !convoState.isFetchingHistory
-    ) {
-      requestAnimationFrame(() => {
-        setHasScrolled(true)
-      })
-    }
-  }, [hasScrolled, setHasScrolled, convoState.isFetchingHistory])
-
   const renderScrollComponent = useCallback(
     (props: ScrollViewProps) => (
       <ChatScrollComponent {...props} inputHeight={inputHeightUI} />
@@ -588,7 +592,6 @@ export function MessagesList({
                 ListFooterComponent={
                   <View
                     style={web({height: tokens.space.md + inputHeightJS})}
-                    onLayout={onFooterLayout}
                   />
                 }
                 style={[
