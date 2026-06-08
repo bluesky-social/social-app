@@ -129,12 +129,7 @@ let ConvoMenu = ({
             }}
             control={reportControl}
             onAfterSubmit={() => {
-              const sender = convo.members.find(
-                member => member.did === latestReportableMessage.sender.did,
-              )
-              if (sender) {
-                unstableCacheProfileView(queryClient, sender)
-              }
+              unstableCacheProfileView(queryClient, profile)
               blockOrDeleteControl.open()
             }}
           />

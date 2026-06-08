@@ -180,9 +180,7 @@ export function RejectMenu({
         }
         control={reportControl}
         onAfterSubmit={() => {
-          if (profile) {
-            unstableCacheProfileView(queryClient, profile)
-          }
+          unstableCacheProfileView(queryClient, profile)
           blockOrDeleteControl.open()
         }}
       />
