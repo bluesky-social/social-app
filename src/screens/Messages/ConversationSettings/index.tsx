@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {
   ChatBskyActorDefs,
   ChatBskyConvoDefs,
@@ -8,6 +8,7 @@ import {
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {HITSLOP_10} from '#/lib/constants'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {
@@ -429,6 +430,13 @@ function SettingsHeader({
 
   const canLockGroupChat = isOwner && lockStatus !== 'locked-permanently'
 
+  const groupNameComponent = (
+    <Text
+      style={[a.text_2xl, a.font_bold, a.text_center, a.pt_lg, t.atoms.text]}>
+      {groupName}
+    </Text>
+  )
+
   return (
     <>
       <View
@@ -439,16 +447,20 @@ function SettingsHeader({
             moderationOpts={moderationOpts}
           />
         </View>
-        <Text
-          style={[
-            a.text_2xl,
-            a.font_bold,
-            a.text_center,
-            a.pt_lg,
-            t.atoms.text,
-          ]}>
-          {groupName}
-        </Text>
+        {isOwner ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityHint={l`Edit this group chat’s name`}
+            hitSlop={HITSLOP_10}
+            onPress={() => {
+              setNewGroupName(groupName)
+              editNamePrompt.open()
+            }}>
+            {groupNameComponent}
+          </Pressable>
+        ) : (
+          groupNameComponent
+        )}
         <Text
           style={[
             a.text_sm,
