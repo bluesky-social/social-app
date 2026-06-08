@@ -5,6 +5,7 @@ import {
   type ChatBskyActorDefs,
   type ChatBskyConvoDefs,
   type ChatBskyConvoSendMessage,
+  type ChatBskyEmbedJoinLink,
 } from '@atproto/api'
 
 import {type MessagesEventBus} from '#/state/messages/events/agent'
@@ -108,7 +109,10 @@ export type ConvoItem =
 type DeleteMessage = (messageId: string) => Promise<void>
 type SendMessage = (
   message: ChatBskyConvoSendMessage.InputSchema['message'],
-  optimisticEmbedView: $Typed<AppBskyEmbedRecord.View> | undefined,
+  optimisticEmbedView:
+    | $Typed<AppBskyEmbedRecord.View>
+    | $Typed<ChatBskyEmbedJoinLink.View>
+    | undefined,
 ) => void
 type FetchMessageHistory = () => Promise<void>
 type MarkConvoAccepted = () => void

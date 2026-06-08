@@ -1,6 +1,6 @@
 import {memo, useCallback} from 'react'
 import {Keyboard, View} from 'react-native'
-import {ChatBskyConvoDefs, type ModerationCause} from '@atproto/api'
+import {type ModerationCause} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -16,13 +16,18 @@ import {
   unstableCacheProfileView,
   useProfileBlockMutationQueue,
 } from '#/state/queries/profile'
+import {useSession} from '#/state/session'
 import {type ViewStyleProp} from '#/alf'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
+import {AfterReportConversationDialog} from '#/components/dms/AfterReportConversationDialog'
 import {AfterReportDialog} from '#/components/dms/AfterReportDialog'
 import {BlockedByListDialog} from '#/components/dms/BlockedByListDialog'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
-import {ReportConversationDialog} from '#/components/dms/ReportConversationDialog'
+import {
+  type ConvoWithDetails,
+  getConvoReportSubject,
+} from '#/components/dms/util'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon} from '#/components/icons/ArrowBoxLeft'
 import {Bubble_Stroke2_Corner2_Rounded as BubbleIcon} from '#/components/icons/Bubble'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
@@ -39,7 +44,6 @@ import {ReportDialog} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import type * as bsky from '#/types/bsky'
-import {AfterReportConversationDialog} from './AfterReportConversationDialog'
 
 let ConvoMenu = ({
   convo,
@@ -49,10 +53,9 @@ let ConvoMenu = ({
   showMarkAsRead,
   hideTrigger,
   blockInfo,
-  latestReportableMessage,
   style,
 }: {
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: ConvoWithDetails
   profile: Shadow<bsky.profile.AnyProfileView>
   control?: Menu.MenuControlProps
   currentScreen: 'list' | 'conversation'
@@ -62,19 +65,20 @@ let ConvoMenu = ({
     listBlocks: ModerationCause[]
     userBlock?: ModerationCause
   }
-  latestReportableMessage?: ChatBskyConvoDefs.MessageView
   style?: ViewStyleProp['style']
 }): React.ReactNode => {
   const {t: l} = useLingui()
   const queryClient = useQueryClient()
+  const {currentAccount} = useSession()
 
   const leaveConvoControl = Prompt.usePromptControl()
   const reportControl = Prompt.usePromptControl()
   const blockedByListControl = Prompt.usePromptControl()
-  const blockOrDeleteControl = Prompt.usePromptControl()
-  const deleteControl = Prompt.usePromptControl()
+  const afterReportControl = Prompt.usePromptControl()
 
   const {listBlocks} = blockInfo
+
+  const reportSubject = getConvoReportSubject(convo, currentAccount?.did)
 
   return (
     <>
@@ -108,6 +112,7 @@ let ConvoMenu = ({
             showMarkAsRead={showMarkAsRead}
             blockInfo={blockInfo}
             convo={convo}
+            canReport={!!reportSubject}
             leaveConvoControl={leaveConvoControl}
             reportControl={reportControl}
             blockedByListControl={blockedByListControl}
@@ -116,54 +121,37 @@ let ConvoMenu = ({
       </Menu.Root>
       <LeaveConvoPrompt
         control={leaveConvoControl}
-        convoId={convo.id}
+        convoId={convo.view.id}
         currentScreen={currentScreen}
       />
-      {latestReportableMessage ? (
-        <>
-          <ReportDialog
-            subject={{
-              view: 'convo',
-              convoId: convo.id,
-              message: latestReportableMessage,
-            }}
-            control={reportControl}
-            onAfterSubmit={() => {
-              const sender = convo.members.find(
-                member => member.did === latestReportableMessage.sender.did,
-              )
-              if (sender) {
-                unstableCacheProfileView(queryClient, sender)
-              }
-              blockOrDeleteControl.open()
-            }}
-          />
-          <AfterReportDialog
-            control={blockOrDeleteControl}
-            currentScreen={currentScreen}
-            params={{
-              convoId: convo.id,
-              did: latestReportableMessage.sender.did,
-            }}
-          />
-        </>
+      {reportSubject && (
+        <ReportDialog
+          subject={reportSubject}
+          control={reportControl}
+          onAfterSubmit={() => {
+            unstableCacheProfileView(queryClient, profile)
+            afterReportControl.open()
+          }}
+        />
+      )}
+      {convo.kind === 'group' ? (
+        <AfterReportConversationDialog
+          control={afterReportControl}
+          currentScreen={currentScreen}
+          params={{
+            convoId: convo.view.id,
+            did: profile.did,
+          }}
+        />
       ) : (
-        <>
-          <ReportConversationDialog
-            control={reportControl}
-            convoId={convo.id}
-            did={profile.did}
-            onAfterSubmit={deleteControl.open}
-          />
-          <AfterReportConversationDialog
-            control={deleteControl}
-            currentScreen={currentScreen}
-            params={{
-              convoId: convo.id,
-              did: profile.did,
-            }}
-          />
-        </>
+        <AfterReportDialog
+          control={afterReportControl}
+          currentScreen={currentScreen}
+          params={{
+            convoId: convo.view.id,
+            did: profile.did,
+          }}
+        />
       )}
       <BlockedByListDialog
         control={blockedByListControl}
@@ -177,14 +165,16 @@ ConvoMenu = memo(ConvoMenu)
 function MenuContent({
   convo: initialConvo,
   profile,
+  canReport,
   showMarkAsRead,
   blockInfo,
   leaveConvoControl,
   reportControl,
   blockedByListControl,
 }: {
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: ConvoWithDetails
   profile: Shadow<bsky.profile.AnyProfileView>
+  canReport: boolean
   showMarkAsRead?: boolean
   blockInfo: {
     listBlocks: ModerationCause[]
@@ -201,9 +191,9 @@ function MenuContent({
   const {listBlocks, userBlock} = blockInfo
   const isBlocking = userBlock || !!listBlocks.length
   const isDeletedAccount = profile.handle === 'missing.invalid'
-  const isGroupConvo = ChatBskyConvoDefs.isGroupConvo(initialConvo.kind)
+  const isGroupConvo = initialConvo.kind === 'group'
 
-  const convoId = initialConvo.id
+  const convoId = initialConvo.view.id
   const {data: convo} = useConvoQuery({convoId})
 
   const onNavigateToProfile = useCallback(() => {
@@ -299,15 +289,17 @@ function MenuContent({
             </Menu.ItemText>
           </Menu.Item>
         )}
-        <Menu.Item
-          destructive
-          label={l`Report conversation`}
-          onPress={reportControl.open}>
-          <Menu.ItemIcon icon={Flag} />
-          <Menu.ItemText>
-            <Trans>Report conversation</Trans>
-          </Menu.ItemText>
-        </Menu.Item>
+        {canReport && (
+          <Menu.Item
+            destructive
+            label={l`Report conversation`}
+            onPress={reportControl.open}>
+            <Menu.ItemIcon icon={Flag} />
+            <Menu.ItemText>
+              <Trans>Report conversation</Trans>
+            </Menu.ItemText>
+          </Menu.Item>
+        )}
       </Menu.Group>
       <Menu.Divider />
       <Menu.Group>

@@ -2,6 +2,7 @@ import {useCallback, useMemo, useState} from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
 import {
+  AppBskyEmbedGallery,
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
@@ -61,11 +62,14 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   const images = useMemo(() => {
     if (AppBskyEmbedImages.isView(embed)) {
       return embed.images
-    } else if (
-      AppBskyEmbedRecordWithMedia.isView(embed) &&
-      AppBskyEmbedImages.isView(embed.media)
-    ) {
-      return embed.media.images
+    } else if (AppBskyEmbedGallery.isView(embed)) {
+      return galleryItemsToImages(embed.items)
+    } else if (AppBskyEmbedRecordWithMedia.isView(embed)) {
+      if (AppBskyEmbedImages.isView(embed.media)) {
+        return embed.media.images
+      } else if (AppBskyEmbedGallery.isView(embed.media)) {
+        return galleryItemsToImages(embed.media.items)
+      }
     }
   }, [embed])
 
@@ -127,6 +131,22 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
       </View>
     </Pressable>
   )
+}
+
+function galleryItemsToImages(
+  items: AppBskyEmbedGallery.View['items'],
+): AppBskyEmbedImages.ViewImage[] {
+  // The reply-to thumbnail only renders up to 4 tiles; slicing here keeps
+  // the existing layout switch valid for galleries up to 10 items.
+  return items
+    .filter(AppBskyEmbedGallery.isViewImage)
+    .slice(0, 4)
+    .map(item => ({
+      thumb: item.thumbnail,
+      fullsize: item.fullsize,
+      alt: item.alt,
+      aspectRatio: item.aspectRatio,
+    }))
 }
 
 function ComposerReplyToImages({

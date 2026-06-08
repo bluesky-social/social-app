@@ -72,6 +72,48 @@ export function rgbToHex(r: number, g: number, b: number): string {
     .slice(1)}`
 }
 
+/**
+ * Computes the WCAG contrast ratio between two colors, ranging from 1 (no
+ * contrast) to 21 (maximum contrast, i.e. black on white). Returns null if
+ * either argument is not a valid hex color.
+ *
+ * @see https://www.w3.org/TR/WCAG21/#dfn-contrast-ratio
+ */
+export function contrastRatio(hexA: string, hexB: string): number | null {
+  const rgbA = hexToRgb(hexA)
+  const rgbB = hexToRgb(hexB)
+  if (!rgbA || !rgbB) return null
+  const luminanceA = relativeLuminance(rgbA)
+  const luminanceB = relativeLuminance(rgbB)
+  const lighter = Math.max(luminanceA, luminanceB)
+  const darker = Math.min(luminanceA, luminanceB)
+  return (lighter + 0.05) / (darker + 0.05)
+}
+
+/**
+ * Computes the WCAG relative luminance of an RGB color, ranging from 0 (black)
+ * to 1 (white).
+ *
+ * @see https://www.w3.org/TR/WCAG21/#dfn-relative-luminance
+ */
+function relativeLuminance({
+  r,
+  g,
+  b,
+}: {
+  r: number
+  g: number
+  b: number
+}): number {
+  const toLinear = (channel: number) => {
+    const normalized = channel / 255
+    return normalized <= 0.03928
+      ? normalized / 12.92
+      : ((normalized + 0.055) / 1.055) ** 2.4
+  }
+  return 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b)
+}
+
 function rgbToHsl(
   r: number,
   g: number,

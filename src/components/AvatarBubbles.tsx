@@ -36,7 +36,7 @@ export function AvatarBubbles({
   moderationOpts,
 }: {
   animate?: boolean
-  profiles: bsky.profile.AnyProfileView[]
+  profiles: (bsky.profile.AnyProfileView | undefined)[]
   /**
    * By default, when there are more than 2 profiles, the current user is
    * filtered out (so you don't see yourself among your own group's members).
@@ -50,12 +50,12 @@ export function AvatarBubbles({
   const {currentAccount} = useSession()
   const profiles =
     !self && allProfiles.length > 2
-      ? allProfiles.filter(p => p?.did != null && p.did !== currentAccount?.did)
+      ? allProfiles.filter(p => !p || p.did !== currentAccount?.did)
       : allProfiles
   const moderations = useMemo(() => {
     if (!moderationOpts) return []
     return profiles.map(p => {
-      return moderateProfile(p, moderationOpts)
+      return p && moderateProfile(p, moderationOpts)
     })
   }, [profiles, moderationOpts])
 

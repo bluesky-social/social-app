@@ -13,6 +13,7 @@ import {
   KeyboardGestureArea,
 } from 'react-native-keyboard-controller'
 import Animated, {
+  FadeIn,
   runOnJS,
   type ScrollEvent,
   type SharedValue,
@@ -28,6 +29,7 @@ import {
   type AppBskyEmbedRecord,
   AppBskyRichtextFacet,
   ChatBskyConvoDefs,
+  type ChatBskyEmbedJoinLink,
   RichText,
 } from '@atproto/api'
 import {useScrollEdgeEffectRef} from '@bsky.app/expo-scroll-edge-effect'
@@ -37,6 +39,7 @@ import {ScrollProvider} from '#/lib/ScrollContext'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {
   convertBskyAppUrlIfNeeded,
+  getChatInviteCodeFromUrl,
   isBskyPostUrl,
 } from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
@@ -46,9 +49,10 @@ import {
   useConvoActive,
 } from '#/state/messages/convo'
 import {type ConvoState, ConvoStatus} from '#/state/messages/convo/types'
+import {useGetJoinLinkPreview} from '#/state/queries/join-links'
 import {useGetPost} from '#/state/queries/post'
 import {createEmbedViewRecordFromPost} from '#/state/queries/postgate/util'
-import {useAgent} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
@@ -131,8 +135,10 @@ export function MessagesList({
   const ax = useAnalytics()
   const convoState = useConvoActive()
   const agent = useAgent()
+  const {hasSession} = useSession()
   const getPost = useGetPost()
-  const {embedUri, setEmbed} = useMessageEmbed()
+  const getJoinLinkPreview = useGetJoinLinkPreview()
+  const {embed: messageEmbed, setEmbed} = useMessageEmbed()
   const t = useTheme()
 
   const textInputId = 'chat-input-' + useId()
@@ -198,14 +204,38 @@ export function MessagesList({
   // Tracks whether the initial scroll-to-bottom has been triggered. Separated from isAtBottom so that contentInset
   // (which causes an early onScroll with negative offset) can't prevent the first scroll.
   // Reset when hasScrolled goes back to false (e.g. convo re-initialization after backgrounding).
+  // `didInitialScroll` is the reactive mirror of the ref so the reveal effect below can depend on it; the ref
+  // itself stays as the synchronous re-entry guard inside onContentSizeChange.
   const hasInitiallyScrolled = useRef(false)
+  const [didInitialScroll, setDidInitialScroll] = useState(false)
   const prevHasScrolled = useRef(hasScrolled)
   useLayoutEffect(() => {
     if (prevHasScrolled.current && !hasScrolled) {
       hasInitiallyScrolled.current = false
+      setDidInitialScroll(false)
     }
     prevHasScrolled.current = hasScrolled
   }, [hasScrolled])
+
+  // Reveal the list once history has finished loading. We can't reveal earlier because the list isn't inverted -
+  // we must scroll to the bottom (newest message) before fading in, or the user sees a flash of top-anchored content.
+  // This is purely state-driven so it doesn't depend on a layout callback firing: a firehose-delivered message can
+  // dedupe against the fetched history and produce no content-size change, in which case nothing would otherwise
+  // reveal the list and it would stay hidden forever (APP-2238). Either the initial scroll has run, or there's
+  // nothing to scroll (empty convo) - both are safe to reveal once !isFetchingHistory.
+  useEffect(() => {
+    if (hasScrolled || convoState.isFetchingHistory) return
+    if (didInitialScroll || renderItems.length === 0) {
+      const raf = requestAnimationFrame(() => setHasScrolled(true))
+      return () => cancelAnimationFrame(raf)
+    }
+  }, [
+    convoState.isFetchingHistory,
+    hasScrolled,
+    didInitialScroll,
+    renderItems.length,
+    setHasScrolled,
+  ])
 
   // -- Keep track of background state and positioning for new pill
   const layoutHeight = useSharedValue(0)
@@ -241,20 +271,15 @@ export function MessagesList({
 
       // Initial scroll to bottom — unconditional, not gated on isAtBottom. This is separated because contentInset
       // can cause an early onScroll with a negative offset that sets isAtBottom to false before we get here.
-      // Empty convos take this path too (once history is done) so hasScrolled gets set without an animated scroll.
+      // Empty convos take this path too (once history is done). Revealing the list is handled by the effect above,
+      // which fires once history finishes - we just record that the scroll has happened.
       if (
         !hasInitiallyScrolled.current &&
         (renderItems.length > 0 || !convoState.isFetchingHistory)
       ) {
         hasInitiallyScrolled.current = true
+        setDidInitialScroll(true)
         flatListRef.current?.scrollToOffset({offset: height, animated: false})
-        // If history is already done loading, mark ready after a frame for the scroll to settle.
-        // Otherwise, the footer sentinel's onLayout will handle it when history finishes.
-        if (!convoState.isFetchingHistory) {
-          requestAnimationFrame(() => {
-            setHasScrolled(true)
-          })
-        }
         prevContentHeight.current = height
         prevItemCount.current = renderItems.length
         return
@@ -294,7 +319,6 @@ export function MessagesList({
     },
     [
       hasScrolled,
-      setHasScrolled,
       convoState.isFetchingHistory,
       renderItems.length,
       // these are stable
@@ -348,12 +372,38 @@ export function MessagesList({
       // we want to remove the post link from the text, re-trim, then detect facets
       rt.detectFacetsWithoutResolution()
 
-      let embed: $Typed<AppBskyEmbedRecord.Main> | undefined
-      let embedView: $Typed<AppBskyEmbedRecord.View> | undefined
+      let embed:
+        | $Typed<AppBskyEmbedRecord.Main>
+        | $Typed<ChatBskyEmbedJoinLink.Main>
+        | undefined
+      let embedView:
+        | $Typed<AppBskyEmbedRecord.View>
+        | $Typed<ChatBskyEmbedJoinLink.View>
+        | undefined
 
-      if (embedUri) {
+      // Find the embedded link facet and, if it's at the start or end of the
+      // message, remove it from the text (the embed card replaces it).
+      const stripLinkFacet = (predicate: (uri: string) => boolean) => {
+        const linkFacet = rt.facets?.find(facet =>
+          facet.features.find(
+            feature =>
+              AppBskyRichtextFacet.isLink(feature) && predicate(feature.uri),
+          ),
+        )
+        if (linkFacet) {
+          const isAtStart = linkFacet.index.byteStart === 0
+          const isAtEnd =
+            linkFacet.index.byteEnd === rt.unicodeText.graphemeLength
+          if (isAtStart || isAtEnd) {
+            rt.delete(linkFacet.index.byteStart, linkFacet.index.byteEnd)
+          }
+          rt = new RichText({text: rt.text.trim()}, {cleanNewlines: true})
+        }
+      }
+
+      if (messageEmbed?.type === 'post') {
         try {
-          const post = await getPost({uri: embedUri})
+          const post = await getPost({uri: messageEmbed.uri})
           if (post) {
             embed = {
               $type: 'app.bsky.embed.record',
@@ -368,42 +418,34 @@ export function MessagesList({
               record: createEmbedViewRecordFromPost(post),
             }
 
-            // look for the embed uri in the facets, so we can remove it from the text
-            const postLinkFacet = rt.facets?.find(facet => {
-              return facet.features.find(feature => {
-                if (AppBskyRichtextFacet.isLink(feature)) {
-                  if (isBskyPostUrl(feature.uri)) {
-                    const url = convertBskyAppUrlIfNeeded(feature.uri)
-                    const [_0, _1, _2, rkey] = url.split('/').filter(Boolean)
-
-                    // this might have a handle instead of a DID
-                    // so just compare the rkey - not particularly dangerous
-                    return post.uri.endsWith(rkey)
-                  }
-                }
-                return false
-              })
+            stripLinkFacet(uri => {
+              if (!isBskyPostUrl(uri)) return false
+              const url = convertBskyAppUrlIfNeeded(uri)
+              const [_0, _1, _2, rkey] = url.split('/').filter(Boolean)
+              // this might have a handle instead of a DID
+              // so just compare the rkey - not particularly dangerous
+              return post.uri.endsWith(rkey)
             })
-
-            if (postLinkFacet) {
-              const isAtStart = postLinkFacet.index.byteStart === 0
-              const isAtEnd =
-                postLinkFacet.index.byteEnd === rt.unicodeText.graphemeLength
-
-              // remove the post link from the text
-              if (isAtStart || isAtEnd) {
-                rt.delete(
-                  postLinkFacet.index.byteStart,
-                  postLinkFacet.index.byteEnd,
-                )
-              }
-
-              rt = new RichText({text: rt.text.trim()}, {cleanNewlines: true})
-            }
           }
         } catch (error) {
           logger.error('Failed to get post as quote for DM', {error})
         }
+      } else if (messageEmbed?.type === 'invite') {
+        const code = messageEmbed.code
+        embed = {
+          $type: 'chat.bsky.embed.joinLink',
+          code,
+        }
+
+        const joinLinkPreview = await getJoinLinkPreview({code, hasSession})
+        if (joinLinkPreview) {
+          embedView = {
+            $type: 'chat.bsky.embed.joinLink#view',
+            joinLinkPreview,
+          }
+        }
+
+        stripLinkFacet(uri => getChatInviteCodeFromUrl(uri) === code)
       }
 
       await rt.detectFacets(agent)
@@ -424,7 +466,16 @@ export function MessagesList({
         embedView,
       )
     },
-    [agent, convoState, embedUri, getPost, hasScrolled, setHasScrolled],
+    [
+      agent,
+      convoState,
+      messageEmbed,
+      getPost,
+      getJoinLinkPreview,
+      hasSession,
+      hasScrolled,
+      setHasScrolled,
+    ],
   )
 
   const scrollToEndOnPress = useCallback(() => {
@@ -471,20 +522,6 @@ export function MessagesList({
 
     return null
   }
-
-  // Footer sentinel: when history is still loading during the initial scroll, the footer's onLayout fires each time
-  // new items are prepended (shifting its position). Once history finishes, this triggers setHasScrolled.
-  const onFooterLayout = useCallback(() => {
-    if (
-      hasInitiallyScrolled.current &&
-      !hasScrolled &&
-      !convoState.isFetchingHistory
-    ) {
-      requestAnimationFrame(() => {
-        setHasScrolled(true)
-      })
-    }
-  }, [hasScrolled, setHasScrolled, convoState.isFetchingHistory])
 
   const renderScrollComponent = useCallback(
     (props: ScrollViewProps) => (
@@ -555,7 +592,6 @@ export function MessagesList({
                 ListFooterComponent={
                   <View
                     style={web({height: tokens.space.md + inputHeightJS})}
-                    onLayout={onFooterLayout}
                   />
                 }
                 style={[
@@ -583,41 +619,43 @@ export function MessagesList({
               opened: 0,
             }}>
             {footer ?? (
-              <ConversationFooter
-                convoState={convoState}
-                hasAcceptOverride={hasAcceptOverride}>
-                {({loading}) =>
-                  ax.features.enabled(
-                    ax.features.DmsNewMessageComposerEnable,
-                  ) ? (
-                    <MessageComposer
-                      textInputId={textInputId}
-                      onSendMessage={(message: string) =>
-                        void onSendMessage(message)
-                      }
-                      hasEmbed={!!embedUri}
-                      setEmbed={setEmbed}
-                      loading={loading}>
-                      <MessageInputEmbed
-                        embedUri={embedUri}
+              <Animated.View entering={FadeIn.duration(200)}>
+                <ConversationFooter
+                  convoState={convoState}
+                  hasAcceptOverride={hasAcceptOverride}>
+                  {({loading}) =>
+                    ax.features.enabled(
+                      ax.features.DmsNewMessageComposerEnable,
+                    ) ? (
+                      <MessageComposer
+                        textInputId={textInputId}
+                        onSendMessage={(message: string) =>
+                          void onSendMessage(message)
+                        }
+                        hasEmbed={!!messageEmbed}
                         setEmbed={setEmbed}
-                      />
-                    </MessageComposer>
-                  ) : (
-                    <MessageInput
-                      textInputId={textInputId}
-                      onSendMessage={onSendMessage}
-                      hasEmbed={!!embedUri}
-                      setEmbed={setEmbed}
-                      loading={loading}>
-                      <MessageInputEmbed
-                        embedUri={embedUri}
+                        loading={loading}>
+                        <MessageInputEmbed
+                          embed={messageEmbed}
+                          setEmbed={setEmbed}
+                        />
+                      </MessageComposer>
+                    ) : (
+                      <MessageInput
+                        textInputId={textInputId}
+                        onSendMessage={onSendMessage}
+                        hasEmbed={!!messageEmbed}
                         setEmbed={setEmbed}
-                      />
-                    </MessageInput>
-                  )
-                }
-              </ConversationFooter>
+                        loading={loading}>
+                        <MessageInputEmbed
+                          embed={messageEmbed}
+                          setEmbed={setEmbed}
+                        />
+                      </MessageInput>
+                    )
+                  }
+                </ConversationFooter>
+              </Animated.View>
             )}
           </KeyboardStickyView>
         </KeyboardGestureArea>
@@ -677,6 +715,16 @@ function getFooterState(
   convoState: ActiveConvoStates,
   hasAcceptOverride?: boolean,
 ): FooterState {
+  const isRequest =
+    convoState.convo.view.status === 'request' && !hasAcceptOverride
+
+  // For group chats, the request footer is driven purely off status: the owner
+  // is always 'accepted' so never sees it, while members the owner added are
+  // 'request' until they accept. This holds even before any messages load.
+  if (convoState.convo.kind === 'group' && isRequest) {
+    return 'request'
+  }
+
   if (convoState.items.length === 0) {
     if (convoState.isFetchingHistory) {
       return 'loading'
@@ -685,7 +733,12 @@ function getFooterState(
     }
   }
 
-  if (convoState.convo.view.status === 'request' && !hasAcceptOverride) {
+  // For direct chats, only show the request footer once there's a message. The
+  // viewer's status stays 'request' until they send their first message, so an
+  // empty direct request is one the viewer started themselves (show the
+  // composer), whereas any message present must be an incoming one from the
+  // other user (show the accept/reject footer).
+  if (isRequest) {
     return 'request'
   }
 

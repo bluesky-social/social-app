@@ -26,11 +26,7 @@ jobs:
           node-version-file: package.json
           cache: pnpm
       - name: pnpm install
-        uses: Wandalen/wretry.action@master
-        with:
-          command: pnpm install --frozen-lockfile
-          attempt_limit: 3
-          attempt_delay: 2000
+        run: pnpm install --frozen-lockfile
       - name: Extract language strings
         run: pnpm intl:extract
       - name: Create commit

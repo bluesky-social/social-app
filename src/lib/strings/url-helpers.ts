@@ -1,5 +1,5 @@
 import {AtUri} from '@atproto/api'
-import psl from 'psl'
+import {parse} from 'psl'
 import TLDs from 'tlds'
 
 import {BSKY_SERVICE} from '#/lib/constants'
@@ -178,7 +178,8 @@ export function isBskyStarterPackUrl(url: string): boolean {
   return false
 }
 
-export const CHAT_INVITE_CODE_REGEX = /^\/c\/([a-zA-Z0-9]{7,10})$/
+// Invite codes are 7 alphanumeric characters long, supporting up to 10 here to future-proof.
+export const CHAT_INVITE_CODE_REGEX = /^\/chat\/([a-zA-Z0-9]{7,10})$/
 
 export function getChatInviteCodeFromUrl(url: string): string | undefined {
   let pathname: string
@@ -328,7 +329,7 @@ export function isPossiblyAUrl(str: string): boolean {
 }
 
 export function splitApexDomain(hostname: string): [string, string] {
-  const hostnamep = psl.parse(hostname)
+  const hostnamep = parse(hostname)
   if (hostnamep.error || !hostnamep.listed || !hostnamep.domain) {
     return ['', hostname]
   }

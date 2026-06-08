@@ -12,9 +12,15 @@ import {restrictChatSettings} from '#/state/queries/messages/restrictChatSetting
 import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
 import {
   getDidFromAgentSession,
-  useAgeAssuranceDataContext,
+  getOtherRequiredDataFromCache,
+  useAgeAssuranceServerDataContext,
 } from '#/ageAssurance/data'
-import {AgeAssuranceAccess} from '#/ageAssurance/types'
+import {
+  AgeAssuranceAccess,
+  type AgeAssuranceFlags,
+  type AgeAssuranceMetadata,
+  type AgeAssuranceState,
+} from '#/ageAssurance/types'
 import {type Geolocation, useGeolocation} from '#/geolocation'
 
 export const MIN_ACCESS_AGE = 13
@@ -61,7 +67,7 @@ export function getAgeAssuranceRegionConfigWithFallback(
  */
 export function useAgeAssuranceRegionConfig() {
   const geolocation = useGeolocation()
-  const {config} = useAgeAssuranceDataContext()
+  const {config} = useAgeAssuranceServerDataContext()
   return useMemo(() => {
     if (!config) return
     // use generic helper, we want to potentially return undefined
@@ -122,6 +128,39 @@ export const makeAgeRestrictedModerationPrefs = (
 export function maybeRestrictChatSettings({agent}: {agent: AtpAgent}) {
   const did = getDidFromAgentSession(agent)
   if (!did) return
-  // restrictChatSettings is a no-op if allowIncoming is already 'none'.
-  return restrictChatSettings({agent, did, restrictIncoming: true})
+  const data = getOtherRequiredDataFromCache({did})
+  // ...update the chat setting record if allowIncoming is not already 'none'.
+  if (data?.actorDeclaration?.allowIncoming === 'none') return
+  restrictChatSettings({agent, did})
+}
+
+export function computeAgeAssuranceFlags({
+  state,
+  regionConfig,
+  metadata,
+}: {
+  state: AgeAssuranceState
+  regionConfig: AppBskyAgeassuranceDefs.ConfigRegion
+  metadata?: AgeAssuranceMetadata
+}): AgeAssuranceFlags {
+  const chatDisabled = state.access !== AgeAssuranceAccess.Full
+  const isDeclaredUnderAdultAge = metadata?.declaredAge
+    ? metadata.declaredAge < 18
+    : true
+  const isOverRegionMinAccessAge = metadata?.declaredAge
+    ? metadata.declaredAge >= regionConfig.minAccessAge
+    : false
+  const isOverAppMinAccessAge = metadata?.declaredAge
+    ? metadata.declaredAge >= MIN_ACCESS_AGE
+    : false
+  const adultContentDisabled =
+    state.access !== AgeAssuranceAccess.Full || isDeclaredUnderAdultAge
+
+  return {
+    adultContentDisabled,
+    chatDisabled,
+    isDeclaredUnderAdultAge,
+    isOverRegionMinAccessAge,
+    isOverAppMinAccessAge,
+  }
 }

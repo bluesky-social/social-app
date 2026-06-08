@@ -1,6 +1,10 @@
 import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {type AppBskyEmbedImages, type AppBskyFeedDefs} from '@atproto/api'
+import {
+  AppBskyEmbedGallery,
+  type AppBskyEmbedImages,
+  type AppBskyFeedDefs,
+} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {shareImageModal} from '#/lib/media/manip'
@@ -47,6 +51,34 @@ export function Embed({
         )}
       </Outer>
     )
+  } else if (e.type === 'gallery') {
+    // Notification/DM preview is a narrow inline strip; cap at 4 tiles so
+    // a 10-image gallery doesn't blow out the row width. Single pass instead
+    // of filter().slice().map() so we stop at 4 viewable items rather than
+    // walking every item in a 10-image gallery.
+    const tiles: React.ReactNode[] = []
+    for (const item of e.view.items) {
+      if (tiles.length >= 4) break
+      if (!AppBskyEmbedGallery.isViewImage(item)) continue
+      if (peekable) {
+        const image: AppBskyEmbedImages.ViewImage = {
+          thumb: item.thumbnail,
+          fullsize: item.fullsize,
+          alt: item.alt,
+          aspectRatio: item.aspectRatio,
+        }
+        tiles.push(<PeekableImageItem key={item.thumbnail} image={image} />)
+      } else {
+        tiles.push(
+          <ImageItem
+            key={item.thumbnail}
+            thumbnail={item.thumbnail}
+            alt={item.alt}
+          />,
+        )
+      }
+    }
+    return <Outer style={style}>{tiles}</Outer>
   } else if (e.type === 'link') {
     if (!e.view.external.thumb) return null
     if (!isGifEmbed(e.view.external.uri)) return null
@@ -95,10 +127,12 @@ export function ImageItem({
   thumbnail,
   alt,
   children,
+  maxWidth = 100,
 }: {
   thumbnail?: string
   alt?: string
   children?: React.ReactNode
+  maxWidth?: number
 }) {
   const t = useTheme()
 
@@ -109,7 +143,7 @@ export function ImageItem({
           {backgroundColor: 'black'},
           a.flex_1,
           a.aspect_square,
-          {maxWidth: 100},
+          {maxWidth},
           a.rounded_xs,
         ]}
         accessibilityLabel={alt}
@@ -120,7 +154,7 @@ export function ImageItem({
   }
 
   return (
-    <View style={[a.relative, a.flex_1, a.aspect_square, {maxWidth: 100}]}>
+    <View style={[a.relative, a.flex_1, a.aspect_square, {maxWidth}]}>
       <Image
         key={thumbnail}
         source={{uri: thumbnail}}

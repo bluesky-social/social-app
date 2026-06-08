@@ -38,9 +38,6 @@
     }
   },
   "src/analytics/PassiveAnalytics.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
     "react-hooks/purity": {
       "count": 1
     }
@@ -116,11 +113,6 @@
   },
   "src/components/BotAccountAlert.tsx": {
     "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    }
-  },
-  "src/components/Button.tsx": {
-    "react-hooks/immutability": {
       "count": 1
     }
   },
@@ -256,22 +248,12 @@
       "count": 3
     }
   },
-  "src/components/Post/Embed/ExternalEmbed/index.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/components/Post/Embed/ImageEmbed.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
     },
     "@typescript-eslint/no-floating-promises": {
       "count": 1
-    }
-  },
-  "src/components/Post/Embed/StandardSiteEmbed/index.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 3
     }
   },
   "src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx": {
@@ -804,14 +786,6 @@
   "src/lib/api/feed/posts.ts": {
     "@typescript-eslint/require-await": {
       "count": 1
-    }
-  },
-  "src/lib/api/index.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 5
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 3
     }
   },
   "src/lib/async/retry.ts": {
@@ -1367,9 +1341,6 @@
     }
   },
   "src/screens/Profile/components/ProfileFeedHeader.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
     "@typescript-eslint/no-misused-promises": {
       "count": 5
     }
@@ -1795,16 +1766,6 @@
   "src/state/queries/list.ts": {
     "@typescript-eslint/no-floating-promises": {
       "count": 7
-    }
-  },
-  "src/state/queries/messages/accept-conversation.ts": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    }
-  },
-  "src/state/queries/messages/update-all-read.ts": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 3
     }
   },
   "src/state/queries/my-lists.ts": {

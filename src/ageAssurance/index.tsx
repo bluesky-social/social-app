@@ -1,11 +1,11 @@
-import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
+import {createContext, useCallback, useContext, useMemo} from 'react'
 
 import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
 import {useAgent} from '#/state/session'
 import {Provider as RedirectOverlayProvider} from '#/ageAssurance/components/RedirectOverlay'
 import {
-  AgeAssuranceDataProvider,
-  useAgeAssuranceDataContext,
+  AgeAssuranceServerDataProvider,
+  useAgeAssuranceServerDataContext,
 } from '#/ageAssurance/data'
 import {logger} from '#/ageAssurance/logger'
 import {
@@ -14,19 +14,19 @@ import {
 } from '#/ageAssurance/state'
 import {
   AgeAssuranceAccess,
+  type AgeAssuranceFlags,
   type AgeAssuranceState,
   AgeAssuranceStatus,
 } from '#/ageAssurance/types'
 import {
-  isUnderAge,
+  computeAgeAssuranceFlags,
   maybeRestrictChatSettings,
-  MIN_ACCESS_AGE,
   useAgeAssuranceRegionConfigWithFallback,
 } from '#/ageAssurance/util'
 
 export {
   prefetchConfig as prefetchAgeAssuranceConfig,
-  prefetchAgeAssuranceData,
+  prefetchAgeAssuranceServerData,
   refetchServerState as refetchAgeAssuranceServerState,
   usePatchOtherRequiredData as usePatchAgeAssuranceOtherRequiredData,
   usePatchServerState as usePatchAgeAssuranceServerState,
@@ -38,13 +38,7 @@ const AgeAssuranceStateContext = createContext<{
   Access: typeof AgeAssuranceAccess
   Status: typeof AgeAssuranceStatus
   state: AgeAssuranceState
-  flags: {
-    adultContentDisabled: boolean
-    chatDisabled: boolean
-    isDeclaredUnderAdultAge: boolean
-    isOverRegionMinAccessAge: boolean
-    isOverAppMinAccessAge: boolean
-  }
+  flags: AgeAssuranceFlags
 }>({
   Access: AgeAssuranceAccess,
   Status: AgeAssuranceStatus,
@@ -73,19 +67,19 @@ export function useAgeAssurance() {
 
 export function Provider({children}: {children: React.ReactNode}) {
   return (
-    <AgeAssuranceDataProvider>
+    <AgeAssuranceServerDataProvider>
       <InnerProvider>
         <RedirectOverlayProvider>{children}</RedirectOverlayProvider>
       </InnerProvider>
-    </AgeAssuranceDataProvider>
+    </AgeAssuranceServerDataProvider>
   )
 }
 
 function InnerProvider({children}: {children: React.ReactNode}) {
   const agent = useAgent()
   const state = useAgeAssuranceState()
-  const {data} = useAgeAssuranceDataContext()
-  const config = useAgeAssuranceRegionConfigWithFallback()
+  const {metadata} = useAgeAssuranceServerDataContext()
+  const regionConfig = useAgeAssuranceRegionConfigWithFallback()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
 
   const handleAccessUpdate = useCallback(
@@ -100,38 +94,22 @@ function InnerProvider({children}: {children: React.ReactNode}) {
   )
   useOnAgeAssuranceAccessUpdate(handleAccessUpdate)
 
-  useEffect(() => {
-    logger.debug(`useAgeAssuranceState`, {state})
-  }, [state])
-
   return (
     <AgeAssuranceStateContext.Provider
       value={useMemo(() => {
-        const chatDisabled = state.access !== AgeAssuranceAccess.Full
-        const isDeclaredUnderAdultAge = data?.birthdate
-          ? isUnderAge(data.birthdate, 18)
-          : true
-        const isOverRegionMinAccessAge = data?.birthdate
-          ? !isUnderAge(data.birthdate, config.minAccessAge)
-          : false
-        const isOverAppMinAccessAge = data?.birthdate
-          ? !isUnderAge(data.birthdate, MIN_ACCESS_AGE)
-          : false
-        const adultContentDisabled =
-          state.access !== AgeAssuranceAccess.Full || isDeclaredUnderAdultAge
-        return {
+        const res = {
           Access: AgeAssuranceAccess,
           Status: AgeAssuranceStatus,
           state,
-          flags: {
-            adultContentDisabled,
-            chatDisabled,
-            isDeclaredUnderAdultAge,
-            isOverRegionMinAccessAge,
-            isOverAppMinAccessAge,
-          },
+          flags: computeAgeAssuranceFlags({
+            state,
+            regionConfig,
+            metadata,
+          }),
         }
-      }, [state, data, config])}>
+        logger.debug(`useAgeAssurance`, res)
+        return res
+      }, [state, metadata, regionConfig])}>
       {children}
     </AgeAssuranceStateContext.Provider>
   )

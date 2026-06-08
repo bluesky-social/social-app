@@ -87,7 +87,10 @@ export function parseReportSubject(
           reply: !!record.reply,
           image:
             embed.type === 'images' ||
-            (embed.type === 'post_with_media' && embed.media.type === 'images'),
+            embed.type === 'gallery' ||
+            (embed.type === 'post_with_media' &&
+              (embed.media.type === 'images' ||
+                embed.media.type === 'gallery')),
           video:
             embed.type === 'video' ||
             (embed.type === 'post_with_media' && embed.media.type === 'video'),

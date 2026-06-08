@@ -1,9 +1,14 @@
 import {type ChatBskyGroupWithdrawJoinRequest} from '@atproto/api'
-import {useMutation} from '@tanstack/react-query'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
+import {
+  type ConvoRequestListQueryData,
+  optimisticDeleteJoinRequest,
+  RQKEY_ROOT as REQUESTS_RQKEY_ROOT,
+} from './list-conversation-requests'
 
 export function useWithdrawJoinGroupChatRequest({
   onSuccess,
@@ -13,6 +18,7 @@ export function useWithdrawJoinGroupChatRequest({
   onError?: (error: Error) => void
 } = {}) {
   const agent = useAgent()
+  const queryClient = useQueryClient()
   const {hasSession} = useSession()
 
   return useMutation({
@@ -27,7 +33,11 @@ export function useWithdrawJoinGroupChatRequest({
       )
       return res.data
     },
-    onSuccess: data => {
+    onSuccess: (data, {convoId}) => {
+      queryClient.setQueriesData<ConvoRequestListQueryData>(
+        {queryKey: [REQUESTS_RQKEY_ROOT]},
+        old => optimisticDeleteJoinRequest(convoId, old),
+      )
       onSuccess?.(data)
     },
     onError: error => {

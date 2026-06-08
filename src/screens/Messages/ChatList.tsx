@@ -454,6 +454,12 @@ export function Header({
   const aa = useAgeAssurance()
   const requireEmailVerification = useRequireEmailVerification()
   const leftConvos = useLeftConvos()
+  const {isWithinSplitView} = useIsWithinSplitView()
+
+  // In split view, the left column (and this header) stays mounted while the
+  // right column shows the selected route. Pushing would stack duplicate routes
+  // on repeated clicks, so navigate instead to dedupe by route + params.
+  const action = isWithinSplitView ? 'navigate' : 'push'
 
   const {data: unreadInboxData, hasNextPage: hasMoreRequests} =
     useListConvosQuery({
@@ -498,9 +504,11 @@ export function Header({
               count={inboxAllConvos.length}
               more={hasMoreRequests}
               variant="solid"
+              action={action}
             />
             <Link
               to="/messages/settings"
+              action={action}
               label={l`Chat settings`}
               size="small"
               color="secondary"

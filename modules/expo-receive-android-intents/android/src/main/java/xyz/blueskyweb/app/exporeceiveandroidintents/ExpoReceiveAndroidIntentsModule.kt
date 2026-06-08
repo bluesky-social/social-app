@@ -6,12 +6,15 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import androidx.core.net.toUri
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URLEncoder
+
+private const val TAG = "ExpoReceiveAndroidIntents"
 
 enum class AttachmentType {
   IMAGE,
@@ -119,17 +122,15 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     uris: List<Uri>,
     text: String?,
   ) {
-    var allParams = ""
+    // Some URIs we receive may be unreadable (revoked permission, deleted file,
+    // a provider that rejects the read). Skip those rather than crashing the
+    // whole app, since this runs synchronously on the module init path.
+    val allParams =
+      uris
+        .mapNotNull { uri -> getImageInfo(uri) }
+        .joinToString(",") { info -> buildUriData(info) }
 
-    uris.forEachIndexed { index, uri ->
-      val info = getImageInfo(uri)
-      val params = buildUriData(info)
-      allParams = "${allParams}$params"
-
-      if (index < uris.count() - 1) {
-        allParams = "$allParams,"
-      }
-    }
+    if (allParams.isEmpty()) return
 
     val encodedUris = URLEncoder.encode(allParams, "UTF-8")
     val encodedText = text?.let { URLEncoder.encode(it, "UTF-8") }
@@ -158,12 +159,30 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     }
     val file = createFile(extension)
 
-    val out = FileOutputStream(file)
-    appContext.currentActivity?.contentResolver?.openInputStream(uri)?.use {
-      it.copyTo(out)
+    // The URI may be unreadable (revoked permission, deleted file, or a
+    // provider that rejects the read). Bail rather than crashing the whole
+    // app, since this runs synchronously on the module init path.
+    try {
+      FileOutputStream(file).use { out ->
+        val input =
+          appContext.currentActivity?.contentResolver?.openInputStream(uri)
+            ?: run {
+              file.delete()
+              return
+            }
+        input.use { it.copyTo(out) }
+      }
+    } catch (e: Exception) {
+      Log.w(TAG, "Failed to copy shared video to cache", e)
+      file.delete()
+      return
     }
 
-    val info = getVideoInfo(uri) ?: return
+    val info =
+      getVideoInfo(uri) ?: run {
+        file.delete()
+        return
+      }
 
     val encodedText = text?.let { URLEncoder.encode(it, "UTF-8") }
 
@@ -176,15 +195,29 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     }
   }
 
-  private fun getImageInfo(uri: Uri): Map<String, Any> {
-    val bitmap = MediaStore.Images.Media.getBitmap(appContext.currentActivity?.contentResolver, uri)
+  private fun getImageInfo(uri: Uri): Map<String, Any>? {
+    val bitmap =
+      try {
+        MediaStore.Images.Media.getBitmap(appContext.currentActivity?.contentResolver, uri)
+      } catch (e: Exception) {
+        // The URI may be unreadable (revoked permission, deleted file, or a
+        // provider that rejects the read). Skip this image rather than crash.
+        Log.w(TAG, "Failed to read shared image", e)
+        return null
+      } ?: return null
     // We have to save this so that we can access it later when uploading the image.
     // createTempFile will automatically place a unique string between "img" and "temp.jpeg"
     val file = createFile("jpeg")
-    val out = FileOutputStream(file)
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
-    out.flush()
-    out.close()
+    try {
+      FileOutputStream(file).use { out ->
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+        out.flush()
+      }
+    } catch (e: Exception) {
+      Log.w(TAG, "Failed to write shared image to cache", e)
+      file.delete()
+      return null
+    }
 
     return mapOf(
       "width" to bitmap.width,
@@ -195,10 +228,19 @@ class ExpoReceiveAndroidIntentsModule : Module() {
 
   private fun getVideoInfo(uri: Uri): Map<String, Any>? {
     val retriever = MediaMetadataRetriever()
-    retriever.setDataSource(appContext.currentActivity, uri)
-
-    val width = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)?.toIntOrNull()
-    val height = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)?.toIntOrNull()
+    val width: Int?
+    val height: Int?
+    try {
+      retriever.setDataSource(appContext.currentActivity, uri)
+      width = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)?.toIntOrNull()
+      height = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)?.toIntOrNull()
+    } catch (e: Exception) {
+      // The URI may be unreadable or not a valid media source. Skip rather than crash.
+      Log.w(TAG, "Failed to read shared video metadata", e)
+      return null
+    } finally {
+      retriever.release()
+    }
 
     if (width == null || height == null) {
       return null

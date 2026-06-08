@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {type LayoutChangeEvent, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {moderateProfile} from '@atproto/api'
+import {ChatBskyConvoDefs, moderateProfile} from '@atproto/api'
 import {
   ScrollEdgeEffect,
   ScrollEdgeEffectProvider,
@@ -29,6 +29,7 @@ import {ConvoStatus} from '#/state/messages/convo/types'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useConvoQuery} from '#/state/queries/messages/conversation'
+import {useMarkJoinRequestsRead} from '#/state/queries/messages/mark-join-request-read'
 import {useSession} from '#/state/session'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, web} from '#/alf'
@@ -51,6 +52,7 @@ import {IS_INTERNAL, IS_LIQUID_GLASS} from '#/env'
 import {ChatDisabled} from './components/ChatDisabled'
 import {ChatEnded} from './components/ChatEnded'
 import {ChatLocked} from './components/ChatLocked'
+import {RequestStatus} from './components/RequestStatus'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -135,7 +137,6 @@ function Inner({convoId}: {convoId: string}) {
           title={l`Something went wrong`}
           message={l`We couldn't load this conversation`}
           onRetry={() => convoState.error.retry()}
-          sideBorders={false}
         />
       </>
     )
@@ -179,6 +180,12 @@ function InnerReady({
     useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>()
   const {needsEmailVerification} = useEmail()
   const emailDialogControl = useEmailDialogControl()
+
+  const unreadRequestCount =
+    convo?.kind === 'group' && ChatBskyConvoDefs.isGroupConvo(convo.view.kind)
+      ? (convo.view.kind.unreadJoinRequestCount ?? 0)
+      : 0
+  const {mutate: markJoinRequestsRead} = useMarkJoinRequestsRead(convo?.view.id)
 
   /**
    * Must be non-reactive, otherwise the update to open the global dialog will
@@ -264,8 +271,25 @@ function InnerReady({
           {header}
         </ScrollEdgeEffect>
       ) : (
-        header
+        <View onLayout={onHeaderLayout}>{header}</View>
       )}
+
+      {isActive && convo?.kind === 'group' && unreadRequestCount > 0 ? (
+        <RequestStatus
+          top={headerHeight}
+          count={unreadRequestCount}
+          onDismiss={() => {
+            markJoinRequestsRead()
+          }}
+          onPress={() => {
+            markJoinRequestsRead()
+            navigation.navigate('MessagesJoinRequests', {
+              conversation: convo.view.id,
+            })
+          }}
+        />
+      ) : null}
+
       {isActive && (
         <MessagesList
           hasScrolled={hasScrolled}
