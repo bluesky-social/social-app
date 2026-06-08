@@ -67,15 +67,11 @@ export function useBirthdateMutation() {
       })
 
       if (isUnderAge(birthDate.toISOString(), 18)) {
-        const did = agent.sessionManager.did
-        if (did) {
-          await restrictChatSettings({
-            agent,
-            did,
-            restrictIncoming: true,
-            restrictGroupInvites: true,
-          })
-        }
+        await restrictChatSettings({
+          agent,
+          restrictIncoming: true,
+          restrictGroupInvites: true,
+        })
       }
 
       /**

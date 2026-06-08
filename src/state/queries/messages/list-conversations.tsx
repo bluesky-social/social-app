@@ -128,7 +128,7 @@ export function ListConvosProviderInner({
     readState: 'unread',
     limit: UNREAD_LIMIT,
     lockStatus: 'unlocked',
-    kind: aa.flags.isDeclaredUnderAdultAge ? 'direct' : 'all',
+    kind: aa.flags.groupChatDisabled ? 'direct' : 'all',
   })
   const messagesBus = useMessagesEventBus()
   const queryClient = useQueryClient()

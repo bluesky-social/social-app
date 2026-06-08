@@ -335,7 +335,7 @@ export function InitiateChatFlow({
     if (
       chatState === ChatState.NEW_CHAT &&
       searchText === '' &&
-      !aa.flags.isDeclaredUnderAdultAge
+      !aa.flags.groupChatDisabled
     ) {
       _items.unshift({type: 'newGroupChat', key: 'newGroupChat'})
     }
@@ -350,7 +350,7 @@ export function InitiateChatFlow({
     results,
     currentAccount?.did,
     follows,
-    aa.flags.isDeclaredUnderAdultAge,
+    aa.flags.groupChatDisabled,
   ])
 
   if (searchText && !isFetching && !items.length && !isError) {

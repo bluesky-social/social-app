@@ -4,6 +4,7 @@ import {type ChatBskyActorDeclaration} from '@atproto/api'
 import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import {
+  getDidFromAgentSession,
   getOtherRequiredDataFromCache,
   setOtherRequiredDataActorDeclarationCache,
 } from '#/ageAssurance/data'
@@ -24,15 +25,16 @@ import {
  */
 export async function restrictChatSettings({
   agent,
-  did,
   restrictIncoming = false,
   restrictGroupInvites = false,
 }: {
   agent: AtpAgent
-  did: string
   restrictIncoming?: boolean
   restrictGroupInvites?: boolean
 }): Promise<void> {
+  const did = getDidFromAgentSession(agent)
+  if (!did) return
+
   const cached = getOtherRequiredDataFromCache({did})?.actorDeclaration
 
   // When the cache is empty we fall back to defaults for any dimension we're

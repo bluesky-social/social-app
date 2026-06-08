@@ -231,7 +231,7 @@ export function ChatList({
 
   const {refetch: refetchInbox} = useListConvosQuery({
     status: 'request',
-    kind: aa.flags.isDeclaredUnderAdultAge ? 'direct' : 'all',
+    kind: aa.flags.groupChatDisabled ? 'direct' : 'all',
   })
 
   useRefreshOnFocus(refetch)
@@ -465,7 +465,7 @@ export function Header({
     useListConvosQuery({
       status: 'request',
       readState: 'unread',
-      kind: aa.flags.isDeclaredUnderAdultAge ? 'direct' : 'all',
+      kind: aa.flags.groupChatDisabled ? 'direct' : 'all',
     })
 
   const inboxAllConvos =
