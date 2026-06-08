@@ -434,7 +434,7 @@ export function ListConvosProviderInner({
               rev: log.rev,
             }))
           } else if (ChatBskyConvoDefs.isLogLockConvo(log)) {
-            updateConvoInAllLists(log.convoId, convo => {
+            mutateConvoView(log.convoId, convo => {
               if (ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
                 return {
                   ...convo,
@@ -445,7 +445,7 @@ export function ListConvosProviderInner({
               return {...convo, rev: log.rev}
             })
           } else if (ChatBskyConvoDefs.isLogUnlockConvo(log)) {
-            updateConvoInAllLists(log.convoId, convo => {
+            mutateConvoView(log.convoId, convo => {
               if (ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
                 return {
                   ...convo,
@@ -456,7 +456,7 @@ export function ListConvosProviderInner({
               return {...convo, rev: log.rev}
             })
           } else if (ChatBskyConvoDefs.isLogLockConvoPermanently(log)) {
-            updateConvoInAllLists(log.convoId, convo => {
+            mutateConvoView(log.convoId, convo => {
               if (ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
                 return {
                   ...convo,
