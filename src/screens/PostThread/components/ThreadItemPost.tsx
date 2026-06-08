@@ -349,8 +349,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                     embed={post.embed}
                     moderation={moderation}
                     viewContext={PostEmbedViewContext.Feed}
-                    uri={post.uri}
-                    authorDid={post.author.did}
+                    post={post}
                   />
                 </View>
               )}

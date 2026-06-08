@@ -531,8 +531,7 @@ let PostContent = ({
             moderation={moderation}
             onOpen={onOpenEmbed}
             viewContext={PostEmbedViewContext.Feed}
-            uri={post.uri}
-            authorDid={post.author.did}
+            post={post}
             feedDescriptor={feedDescriptor}
           />
         </View>

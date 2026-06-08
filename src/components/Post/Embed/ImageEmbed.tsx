@@ -46,14 +46,13 @@ export function ImageEmbed({
   const layout: 'single' | 'grid' | 'carousel' =
     images.length === 1 ? 'single' : useExpandedLayout ? 'carousel' : 'grid'
 
-  const postContext =
-    rest.uri && rest.authorDid
-      ? {
-          uri: rest.uri,
-          authorDid: rest.authorDid,
-          feedDescriptor: rest.feedDescriptor,
-        }
-      : undefined
+  const postContext = rest.post
+    ? {
+        uri: rest.post.uri,
+        authorDid: rest.post.author.did,
+        feedDescriptor: rest.feedDescriptor,
+      }
+    : undefined
   const metricsContext: LightboxMetricsContext | undefined = postContext
     ? {layout, ...postContext}
     : undefined

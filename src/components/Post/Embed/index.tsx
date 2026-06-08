@@ -347,8 +347,7 @@ export function QuoteEmbed({
           }
           // The photo embed belongs to the quoted post, so attribute its
           // analytics to the quoted post rather than the parent.
-          uri={quote.uri}
-          authorDid={quote.author.did}
+          post={quote}
         />
       )}
     </>

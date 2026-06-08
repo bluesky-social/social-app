@@ -15,11 +15,12 @@ export type CommonProps = {
   viewContext?: PostEmbedViewContext
   isWithinQuote?: boolean
   allowNestedQuotes?: boolean
-  // Post context for analytics on photo embed events (post:photoEmbed:*).
-  // When the embed has no owning post (e.g. previews), leave these undefined
-  // and no events will be emitted.
-  uri?: string
-  authorDid?: string
+  /**
+   * The post that contains this embed. Used for analytics on photo embed
+   * events (post:photoEmbed:*). When the embed has no owning post (e.g.
+   * composer previews), leave this undefined and no events will be emitted.
+   */
+  post?: AppBskyFeedDefs.PostView
   feedDescriptor?: string
 }
 
