@@ -48,6 +48,7 @@ import {
   Message_Stroke2_Corner0_Rounded as Message,
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message'
+import {Newspaper_Stroke2_Corner2_Rounded as Newspaper} from '#/components/icons/Newspaper'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Settings} from '#/components/icons/SettingsGear2'
 import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
@@ -234,6 +235,12 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
     setDrawerOpen(false)
   }, [navigation, setDrawerOpen, ax])
 
+  const onPressNews = useCallback(() => {
+    ax.metric('nav:click', {item: 'news', surface: 'drawer'})
+    navigation.navigate('NewsFeed')
+    setDrawerOpen(false)
+  }, [navigation, setDrawerOpen, ax])
+
   const onPressBookmarks = useCallback(() => {
     ax.metric('nav:click', {item: 'saved', surface: 'drawer'})
     navigation.navigate('Bookmarks')
@@ -295,6 +302,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
           <>
             <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
             <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
+            <NewsMenuItem onPress={onPressNews} />
             <ChatMenuItem isActive={isAtMessages} onPress={onPressMessages} />
             <NotificationsMenuItem
               isActive={isAtNotifications}
@@ -551,6 +559,20 @@ let ListsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
   )
 }
 ListsMenuItem = memo(ListsMenuItem)
+
+let NewsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
+  const {_} = useLingui()
+  const t = useTheme()
+
+  return (
+    <MenuItem
+      icon={<Newspaper style={[t.atoms.text]} width={iconWidth} />}
+      label={_(msg`News`)}
+      onPress={onPress}
+    />
+  )
+}
+NewsMenuItem = memo(NewsMenuItem)
 
 let BookmarksMenuItem = ({
   isActive,
