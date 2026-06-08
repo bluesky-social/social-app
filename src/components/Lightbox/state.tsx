@@ -13,8 +13,8 @@ import {type ImageSource} from '#/components/Lightbox/types'
 
 export type LightboxMetricsContext = {
   layout: 'single' | 'grid' | 'carousel'
-  uri: string
-  authorDid: string
+  postUri: string
+  postAuthorDid: string
   feedDescriptor?: string
 }
 

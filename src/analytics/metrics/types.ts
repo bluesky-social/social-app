@@ -1179,24 +1179,24 @@ export type Events = {
   'post:photoEmbed:impression': {
     layout: 'single' | 'grid' | 'carousel'
     totalImages: number
-    uri: string
-    authorDid: string
+    postUri: string
+    postAuthorDid: string
     feedDescriptor?: string
   }
   'post:photoEmbed:open': {
     layout: 'single' | 'grid' | 'carousel'
     fromImage: number
     totalImages: number
-    uri: string
-    authorDid: string
+    postUri: string
+    postAuthorDid: string
     feedDescriptor?: string
   }
   'post:photoEmbed:carouselSwipe': {
     fromImage: number
     toImage: number
     totalImages: number
-    uri: string
-    authorDid: string
+    postUri: string
+    postAuthorDid: string
     feedDescriptor?: string
   }
   'post:photoEmbed:lightboxSwipe': {
@@ -1204,8 +1204,8 @@ export type Events = {
     fromImage: number
     toImage: number
     totalImages: number
-    uri: string
-    authorDid: string
+    postUri: string
+    postAuthorDid: string
     feedDescriptor?: string
   }
 }

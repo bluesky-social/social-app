@@ -387,8 +387,8 @@ function ImageView({
                 fromImage: prev + 1,
                 toImage: next + 1,
                 totalImages: images.length,
-                uri: metricsContext.uri,
-                authorDid: metricsContext.authorDid,
+                postUri: metricsContext.postUri,
+                postAuthorDid: metricsContext.postAuthorDid,
                 feedDescriptor: metricsContext.feedDescriptor,
               })
             }

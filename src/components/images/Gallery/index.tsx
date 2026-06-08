@@ -58,8 +58,8 @@ interface GalleryProps {
   // Post context for the in-feed carousel swipe metric. Omit for non-post
   // contexts (no event will be emitted).
   metricsPostContext?: {
-    uri: string
-    authorDid: string
+    postUri: string
+    postAuthorDid: string
     feedDescriptor?: string
   }
 }
@@ -182,8 +182,8 @@ export function Gallery({
           fromImage: fromIndex + 1, // convert to 1-based index for easier analysis
           toImage: toIndex + 1, // convert to 1-based index for easier analysis
           totalImages: images.length,
-          uri: metricsPostContext.uri,
-          authorDid: metricsPostContext.authorDid,
+          postUri: metricsPostContext.postUri,
+          postAuthorDid: metricsPostContext.postAuthorDid,
           feedDescriptor: metricsPostContext.feedDescriptor,
         })
       }, 200),

@@ -48,8 +48,8 @@ export function ImageEmbed({
 
   const postContext = rest.post
     ? {
-        uri: rest.post.uri,
-        authorDid: rest.post.author.did,
+        postUri: rest.post.uri,
+        postAuthorDid: rest.post.author.did,
         feedDescriptor: rest.feedDescriptor,
       }
     : undefined

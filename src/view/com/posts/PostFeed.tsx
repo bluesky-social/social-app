@@ -979,8 +979,8 @@ let PostFeed = ({
           ax.metric('post:photoEmbed:impression', {
             layout,
             totalImages,
-            uri: post.uri,
-            authorDid: post.author.did,
+            postUri: post.uri,
+            postAuthorDid: post.author.did,
             feedDescriptor: feedFeedback.feedDescriptor || feed,
           })
         }
