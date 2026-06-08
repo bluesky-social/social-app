@@ -2,6 +2,7 @@ import {
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
   type BlobRef,
+  type ChatBskyGroupDefs,
   type ComAtprotoRepoStrongRef,
 } from '@atproto/api'
 
@@ -97,7 +98,8 @@ export type LinkResolutionFailureCode = 'embedding-disabled' | 'unknown'
  * `embedding-disabled`) `retry` is omitted so UI can detect that case and
  * surface a non-retryable message. The pending variant is set synchronously
  * by addUri while resolution is in flight; the resolved variants
- * (external/feed/list/starter-pack) land when the worker reports back.
+ * (external/feed/list/starter-pack/chat-invite) land when the worker
+ * reports back.
  *
  * Note: `retry` is a function reference and won't survive JSON serialization.
  * On restore (OS-resume / draft load), the store re-attaches it.
@@ -134,6 +136,12 @@ export type PostEmbed =
       state: 'starter-pack'
       record: ComAtprotoRepoStrongRef.Main
       view: AppBskyGraphDefs.StarterPackView
+    }
+  | {
+      state: 'chat-invite'
+      uri: string
+      code: string
+      view: ChatBskyGroupDefs.JoinLinkPreviewView | undefined
     }
 
 /**
