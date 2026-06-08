@@ -48,7 +48,7 @@ jobs:
       - name: Check organization membership
         if: steps.check-mention.outputs.mentioned == 'true'
         id: check-org
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             try {
@@ -78,7 +78,7 @@ jobs:
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         id: pr-info
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const pr = await github.rest.pulls.get({
