@@ -94,7 +94,7 @@ export function MessagesListGroupInfoPanel({
         />
         {convo.details.name ? (
           <Text
-            style={[a.text_2xl, a.font_bold, a.mt_lg, a.px_lg, t.atoms.text]}>
+            style={[a.text_2xl, a.font_bold, a.mt_lg, a.px_xl, a.text_center]}>
             {convo.details.name}
           </Text>
         ) : null}
