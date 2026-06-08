@@ -27,6 +27,10 @@ let MessageItemInviteEmbed = ({
   const screen = useWindowDimensions()
   const convo = useConvoActive()
 
+  const code =
+    'code' in embed.joinLinkPreview ? embed.joinLinkPreview.code : undefined
+  if (!code) return null
+
   return (
     <MessageContextProvider>
       <View
@@ -72,7 +76,7 @@ let MessageItemInviteEmbed = ({
                 },
           ]}>
           <ChatInvite.Root
-            code={embed.joinLinkPreview.code}
+            code={code}
             initialPreview={embed.joinLinkPreview}
             currentConvoId={convo.convo.view.id}
             hasFixedHeight={false}>

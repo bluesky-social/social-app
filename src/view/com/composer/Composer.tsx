@@ -52,6 +52,7 @@ import {
   type AppBskyUnspeccedGetPostThreadV2,
   AtUri,
   type BskyAgent,
+  ChatBskyGroupDefs,
   type RichText,
 } from '@atproto/api'
 import {plural} from '@lingui/core/macro'
@@ -879,7 +880,9 @@ export const ComposePost = ({
     })),
   })
   const hasUnavailableChatInvite = linkQueries.some(
-    q => q.data?.type === 'chat-invite' && !q.data.view,
+    q =>
+      q.data?.type === 'chat-invite' &&
+      !ChatBskyGroupDefs.isJoinLinkPreviewView(q.data.view),
   )
 
   const canPost =
