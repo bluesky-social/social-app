@@ -15,7 +15,6 @@ import {createStaticClick, Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useIsWithinSplitView} from './splitView/context'
 
 export function OutgoingRequestListItem({
   convo: convoView,
@@ -24,7 +23,6 @@ export function OutgoingRequestListItem({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const {isWithinSplitView} = useIsWithinSplitView()
 
   const prompt = Prompt.usePromptControl()
 
@@ -65,8 +63,6 @@ export function OutgoingRequestListItem({
               a.px_lg,
               a.py_md,
               a.gap_md,
-              isWithinSplitView && a.mx_sm,
-              isWithinSplitView && a.rounded_sm,
               (hovered || pressed || focused) && t.atoms.bg_contrast_25,
             ]}>
             <AvatarBubbles
@@ -79,18 +75,13 @@ export function OutgoingRequestListItem({
               size={48}
               moderationOpts={moderationOpts}
             />
-            <View>
+            <View style={[a.flex_1]}>
               <View style={[a.w_full, a.flex_row, a.align_center, a.pb_2xs]}>
                 <View style={[a.flex_shrink]}>
                   <Text
                     emoji
                     numberOfLines={1}
-                    style={[
-                      a.text_md,
-                      t.atoms.text,
-                      a.font_semi_bold,
-                      {lineHeight: 21},
-                    ]}>
+                    style={[a.text_md, a.font_semi_bold]}>
                     {convoView.name}
                   </Text>
                 </View>
@@ -100,7 +91,6 @@ export function OutgoingRequestListItem({
                       <Text
                         style={[
                           a.text_sm,
-                          {lineHeight: 21},
                           t.atoms.text_contrast_medium,
                           web({whiteSpace: 'preserve nowrap'}),
                         ]}>
@@ -112,7 +102,7 @@ export function OutgoingRequestListItem({
               </View>
               <Text
                 numberOfLines={1}
-                style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
+                style={[a.text_sm, t.atoms.text_contrast_high]}>
                 <Trans comment="Displayed when the user has requested to join a group chat.">
                   You requested to join
                 </Trans>
