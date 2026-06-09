@@ -77,12 +77,37 @@ function BlockDialogInner({
   const [headerHeight, setHeaderHeight] = useState(0)
   const [footerHeight, setFooterHeight] = useState(0)
 
+  /*
+   * Optimistically hide convos the viewer has left or removed the profile
+   * from, before the query refetches. We don't expect many items here, so a
+   * simple filter is fine.
+   */
+  const [removedConvoIds, setRemovedConvoIds] = useState<Set<string>>(
+    () => new Set(),
+  )
+  const onOptimisticallyRemoveConvo = (convoId: string) => {
+    setRemovedConvoIds(prev => {
+      const next = new Set(prev)
+      next.add(convoId)
+      return next
+    })
+  }
+  const onRestoreConvo = (convoId: string) => {
+    setRemovedConvoIds(prev => {
+      const next = new Set(prev)
+      next.delete(convoId)
+      return next
+    })
+  }
+
   let {data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage} =
     useListMutualGroupsQuery({
       subject: profile.did,
       enabled: !profile.viewer?.blocking,
     })
-  const items: Item[] = data?.pages.flatMap(page => page.convos) ?? []
+  const items: Item[] = (data?.pages.flatMap(page => page.convos) ?? []).filter(
+    item => !removedConvoIds.has(item.id),
+  )
   const hasMutualGroupChats = items.length > 0
 
   const onEndReached = async () => {
@@ -100,6 +125,8 @@ function BlockDialogInner({
         view={item}
         profileDid={profile.did}
         currentConvoId={currentConvoId}
+        onOptimisticallyRemoveConvo={onOptimisticallyRemoveConvo}
+        onRestoreConvo={onRestoreConvo}
       />
     )
   }
@@ -226,10 +253,14 @@ function MutualGroupChat({
   view,
   profileDid,
   currentConvoId,
+  onOptimisticallyRemoveConvo,
+  onRestoreConvo,
 }: {
   view: ChatBskyConvoDefs.ConvoView
   profileDid: string
   currentConvoId?: string
+  onOptimisticallyRemoveConvo: (convoId: string) => void
+  onRestoreConvo: (convoId: string) => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -248,6 +279,7 @@ function MutualGroupChat({
         })
       },
       onError: error => {
+        onRestoreConvo(view.id)
         logger.error('Error leaving group chat', {message: error})
         let errorMessage = l`Could not leave chat.`
         if (isNetworkError(error)) {
@@ -273,6 +305,7 @@ function MutualGroupChat({
         })
       },
       onError: error => {
+        onRestoreConvo(view.id)
         logger.error('Error removing group chat member', {message: error})
         let errorMessage = l`Could not remove member.`
         if (isNetworkError(error)) {
@@ -331,7 +364,10 @@ function MutualGroupChat({
           disabled={isRemovePending}
           label={l`Kick member`}
           size="small"
-          onPress={() => removeMembers({members: [profileDid]})}>
+          onPress={() => {
+            onOptimisticallyRemoveConvo(view.id)
+            removeMembers({members: [profileDid]})
+          }}>
           <ButtonText>
             <Trans>Kick member</Trans>
           </ButtonText>
@@ -348,6 +384,7 @@ function MutualGroupChat({
           label={l`Leave chat`}
           size="small"
           onPress={() => {
+            onOptimisticallyRemoveConvo(view.id)
             leaveConvo()
           }}>
           <ButtonText>
