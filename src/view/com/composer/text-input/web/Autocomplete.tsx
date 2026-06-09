@@ -40,6 +40,24 @@ export function createSuggestion({
     render: () => {
       let component: ReactRenderer<MentionListRef> | undefined
       let popup: TippyInstance[] | undefined
+      // Popper holds onto getReferenceClientRect and calls it on a debounced
+      // update. By the time it fires the suggestion may have torn down, in
+      // which case props.clientRect() returns null and popper crashes on
+      // `clientRect.left`. Remember the last valid rect and fall back to it so
+      // popper always receives a real DOMRect. See APP-P7.
+      let lastClientRect: DOMRect | undefined
+
+      const getReferenceClientRect = (
+        clientRect: SuggestionProps['clientRect'],
+      ) => {
+        return () => {
+          const rect = clientRect?.()
+          if (rect) {
+            lastClientRect = rect
+          }
+          return lastClientRect ?? new DOMRect()
+        }
+      }
 
       const hide = () => {
         popup?.[0]?.destroy()
@@ -57,9 +75,8 @@ export function createSuggestion({
             return
           }
 
-          // @ts-ignore getReferenceClientRect doesnt like that clientRect can return null -prf
           popup = tippy('body', {
-            getReferenceClientRect: props.clientRect,
+            getReferenceClientRect: getReferenceClientRect(props.clientRect),
             appendTo: () => document.body,
             content: component.element,
             showOnCreate: true,
@@ -77,8 +94,7 @@ export function createSuggestion({
           }
 
           popup?.[0]?.setProps({
-            // @ts-ignore getReferenceClientRect doesnt like that clientRect can return null -prf
-            getReferenceClientRect: props.clientRect,
+            getReferenceClientRect: getReferenceClientRect(props.clientRect),
           })
         },
 
