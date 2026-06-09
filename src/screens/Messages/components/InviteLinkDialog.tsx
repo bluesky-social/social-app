@@ -212,11 +212,9 @@ export function InviteLinkDialog({
       header = linkEnabled ? l`Update invite link` : l`Generate invite link`
       content = (
         <>
-          <View>
-            <Text style={[a.text_md]}>
-              <Trans>Choose who can join this group chat and how.</Trans>
-            </Text>
-          </View>
+          <Text style={[a.text_md]}>
+            <Trans>Choose who can join this group chat and how.</Trans>
+          </Text>
           <View style={[a.mt_lg]}>
             <Toggle.Group
               label={l`Who can join this group chat and how`}
@@ -332,8 +330,8 @@ export function InviteLinkDialog({
             ) : null}
           </View>
           {linkEnabled ? (
-            <View style={[a.mt_lg]}>
-              {isOwner ? (
+            isOwner ? (
+              <View style={[a.mt_lg]}>
                 <EditTextButton
                   label={l`Edit link settings`}
                   value={ownerValue}
@@ -344,10 +342,10 @@ export function InviteLinkDialog({
                     </Text>
                   </View>
                 </EditTextButton>
-              ) : (
-                <Text style={[a.text_sm]}>{memberValue}</Text>
-              )}
-            </View>
+              </View>
+            ) : (
+              <Text style={[a.mt_sm, a.mb_sm, a.text_sm]}>{memberValue}</Text>
+            )
           ) : null}
           {linkEnabled ? (
             <View style={[a.flex_row, a.justify_between, a.gap_sm, a.mt_lg]}>
