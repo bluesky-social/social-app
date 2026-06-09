@@ -10,7 +10,7 @@ import {type ButtonColor} from '#/components/Button'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {ArrowBoxRight_Stroke2_Corner3_Rounded as JoinIcon} from '#/components/icons/ArrowBoxRight'
 import {ChainLink_Stroke2_Corner0_Rounded as LinkIcon} from '#/components/icons/ChainLink'
-import {CheckThick_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
+import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon} from '#/components/icons/RaisingHand'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
@@ -78,7 +78,7 @@ export function Root({
         color: 'primary',
         disabled: false,
         onPress: () => {
-          void setStringAsync(`https://bsky.app/c/${preview.code}`)
+          void setStringAsync(`https://bsky.app/chat/${preview.code}`)
           Toast.show(l`Copied to clipboard`, {type: 'success'})
         },
       }

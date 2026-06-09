@@ -184,39 +184,39 @@ describe('getChatInviteCodeFromUrl', () => {
   type Case = [string, string | undefined]
 
   const cases: Case[] = [
-    ['https://bsky.app/c/abcdefg', 'abcdefg'],
-    ['https://bsky.app/c/abcdefghij', 'abcdefghij'],
+    ['https://bsky.app/chat/abcdefg', 'abcdefg'],
+    ['https://bsky.app/chat/abcdefghij', 'abcdefghij'],
     // http is not recognized as a bsky.app url
-    ['http://bsky.app/c/abcdefg', undefined],
-    ['https://bsky.app/c/abcdefg?utm=foo', 'abcdefg'],
-    ['https://bsky.app/c/abcdefg#section', 'abcdefg'],
-    ['/c/abcdefg', 'abcdefg'],
-    ['/c/abcdefg?utm=foo', 'abcdefg'],
-    ['/c/abcdefg#section', 'abcdefg'],
+    ['http://bsky.app/chat/abcdefg', undefined],
+    ['https://bsky.app/chat/abcdefg?utm=foo', 'abcdefg'],
+    ['https://bsky.app/chat/abcdefg#section', 'abcdefg'],
+    ['/chat/abcdefg', 'abcdefg'],
+    ['/chat/abcdefg?utm=foo', 'abcdefg'],
+    ['/chat/abcdefg#section', 'abcdefg'],
 
     // too short
-    ['https://bsky.app/c/abcdef', undefined],
-    ['/c/abcdef', undefined],
+    ['https://bsky.app/chat/abcdef', undefined],
+    ['/chat/abcdef', undefined],
     // too long
-    ['https://bsky.app/c/abcdefghijk', undefined],
-    ['/c/abcdefghijk', undefined],
+    ['https://bsky.app/chat/abcdefghijk', undefined],
+    ['/chat/abcdefghijk', undefined],
     // invalid characters
-    ['https://bsky.app/c/abc-def', undefined],
-    ['/c/abc def', undefined],
+    ['https://bsky.app/chat/abc-def', undefined],
+    ['/chat/abc def', undefined],
     // trailing path
-    ['https://bsky.app/c/abcdefg/extra', undefined],
-    ['/c/abcdefg/extra', undefined],
+    ['https://bsky.app/chat/abcdefg/extra', undefined],
+    ['/chat/abcdefg/extra', undefined],
     // wrong path
     ['https://bsky.app/profile/abcdefg', undefined],
-    ['https://bsky.app/c', undefined],
+    ['https://bsky.app/chat', undefined],
     // wrong host
-    ['https://example.com/c/abcdefg', undefined],
+    ['https://example.com/chat/abcdefg', undefined],
     // not a url, not a path
-    ['c/abcdefg', undefined],
+    ['chat/abcdefg', undefined],
     ['abcdefg', undefined],
     ['', undefined],
     // malformed url
-    ['https://[invalid/c/abcdefg', undefined],
+    ['https://[invalid/chat/abcdefg', undefined],
   ]
 
   it.each(cases)('given input %p, returns %p', (input, expected) => {

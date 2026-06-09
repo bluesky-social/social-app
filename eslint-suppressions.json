@@ -1773,16 +1773,6 @@
       "count": 7
     }
   },
-  "src/state/queries/messages/accept-conversation.ts": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    }
-  },
-  "src/state/queries/messages/update-all-read.ts": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 3
-    }
-  },
   "src/state/queries/my-lists.ts": {
     "@typescript-eslint/no-floating-promises": {
       "count": 2

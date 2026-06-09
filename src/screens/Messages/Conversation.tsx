@@ -137,7 +137,6 @@ function Inner({convoId}: {convoId: string}) {
           title={l`Something went wrong`}
           message={l`We couldn't load this conversation`}
           onRetry={() => convoState.error.retry()}
-          sideBorders={false}
         />
       </>
     )

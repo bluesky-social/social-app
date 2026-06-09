@@ -13,7 +13,7 @@ jest.mock('jwt-decode', () => ({
 jest.mock('../../birthdate')
 jest.mock('../../../ageAssurance/data')
 jest.mock('../../../ageAssurance/state', () => ({
-  getAndComputeAgeAssuranceState: () => ({}),
+  unsafeGetAndComputeAgeAssurance: () => ({state: {}}),
 }))
 jest.mock('#/lib/notifications/notifications', () => ({
   unregisterPushToken(_agents: BskyAgent[]) {

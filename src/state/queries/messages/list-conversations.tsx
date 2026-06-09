@@ -23,6 +23,13 @@ import {parseConvoView} from '#/components/dms/util'
 import * as bsky from '#/types/bsky'
 import {RQKEY as CONVO_KEY} from './conversation'
 import {useLeftConvos} from './leave-conversation'
+import {
+  type ConvoRequestListQueryData,
+  optimisticDelete as optimisticDeleteRequest,
+  optimisticDeleteJoinRequest,
+  optimisticUpdate as optimisticUpdateRequest,
+  RQKEY_ROOT as REQUESTS_RQKEY_ROOT,
+} from './list-conversation-requests'
 import {listConvoMembersQueryKey} from './list-convo-members'
 
 const DEFAULT_LIMIT = 10
@@ -130,6 +137,7 @@ export function ListConvosProviderInner({
     const refetchAndInvalidate = () => {
       void refetch()
       void queryClient.invalidateQueries({queryKey: [RQKEY_ROOT]})
+      void queryClient.invalidateQueries({queryKey: [REQUESTS_RQKEY_ROOT]})
     }
     return throttle(refetchAndInvalidate, 500, {
       leading: true,
@@ -157,6 +165,22 @@ export function ListConvosProviderInner({
           )
         }
 
+        function updateConvoInAllLists(
+          convoId: string,
+          fn: (
+            convo: ChatBskyConvoDefs.ConvoView,
+          ) => ChatBskyConvoDefs.ConvoView,
+        ) {
+          queryClient.setQueriesData<ConvoListQueryData>(
+            {queryKey: [RQKEY_ROOT]},
+            old => optimisticUpdate(convoId, old, fn),
+          )
+          queryClient.setQueriesData<ConvoRequestListQueryData>(
+            {queryKey: [REQUESTS_RQKEY_ROOT]},
+            old => optimisticUpdateRequest(convoId, old, fn),
+          )
+        }
+
         function mutateConvoView(
           convoId: string,
           fn: (
@@ -167,9 +191,17 @@ export function ListConvosProviderInner({
             CONVO_KEY(convoId),
             old => (old ? fn(old) : old),
           )
+          updateConvoInAllLists(convoId, fn)
+        }
+
+        function deleteConvoFromAllLists(convoId: string) {
           queryClient.setQueriesData<ConvoListQueryData>(
             {queryKey: [RQKEY_ROOT]},
-            old => optimisticUpdate(convoId, old, fn),
+            old => optimisticDelete(convoId, old),
+          )
+          queryClient.setQueriesData<ConvoRequestListQueryData>(
+            {queryKey: [REQUESTS_RQKEY_ROOT]},
+            old => optimisticDeleteRequest(convoId, old),
           )
         }
 
@@ -220,35 +252,26 @@ export function ListConvosProviderInner({
           if (ChatBskyConvoDefs.isLogBeginConvo(log)) {
             debouncedRefetch()
           } else if (ChatBskyConvoDefs.isLogLeaveConvo(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) => optimisticDelete(log.convoId, old),
-            )
+            deleteConvoFromAllLists(log.convoId)
           } else if (ChatBskyConvoDefs.isLogDeleteMessage(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                optimisticUpdate(log.convoId, old, convo => {
-                  if (
-                    (ChatBskyConvoDefs.isDeletedMessageView(log.message) ||
-                      ChatBskyConvoDefs.isMessageView(log.message)) &&
-                    (ChatBskyConvoDefs.isDeletedMessageView(
-                      convo.lastMessage,
-                    ) ||
-                      ChatBskyConvoDefs.isMessageView(convo.lastMessage))
-                  ) {
-                    return log.message.id === convo.lastMessage.id
-                      ? {
-                          ...convo,
-                          rev: log.rev,
-                          lastMessage: log.message,
-                        }
-                      : convo
-                  } else {
-                    return convo
-                  }
-                }),
-            )
+            updateConvoInAllLists(log.convoId, convo => {
+              if (
+                (ChatBskyConvoDefs.isDeletedMessageView(log.message) ||
+                  ChatBskyConvoDefs.isMessageView(log.message)) &&
+                (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage) ||
+                  ChatBskyConvoDefs.isMessageView(convo.lastMessage))
+              ) {
+                return log.message.id === convo.lastMessage.id
+                  ? {
+                      ...convo,
+                      rev: log.rev,
+                      lastMessage: log.message,
+                    }
+                  : convo
+              } else {
+                return convo
+              }
+            })
           } else if (ChatBskyConvoDefs.isLogCreateMessage(log)) {
             // Store in a new var to avoid TS errors due to closures.
             const logRef: ChatBskyConvoDefs.LogCreateMessage = log
@@ -335,27 +358,24 @@ export function ListConvosProviderInner({
               )
             } else if (updatedConvo.status === 'request') {
               queryClient.setQueriesData({queryKey: RQKEY('request')}, updateFn)
+              // also move-to-top in the new requests cache
+              queryClient.setQueriesData<ConvoRequestListQueryData>(
+                {queryKey: [REQUESTS_RQKEY_ROOT]},
+                old => moveConvoToTopInRequests(updatedConvo, old),
+              )
             }
           } else if (ChatBskyConvoDefs.isLogReadMessage(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                optimisticUpdate(log.convoId, old, convo => ({
-                  ...convo,
-                  unreadCount: 0,
-                  rev: log.rev,
-                })),
-            )
+            updateConvoInAllLists(log.convoId, convo => ({
+              ...convo,
+              unreadCount: 0,
+              rev: log.rev,
+            }))
           } else if (ChatBskyConvoDefs.isLogReadConvo(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                optimisticUpdate(log.convoId, old, convo => ({
-                  ...convo,
-                  unreadCount: 0,
-                  rev: log.rev,
-                })),
-            )
+            updateConvoInAllLists(log.convoId, convo => ({
+              ...convo,
+              unreadCount: 0,
+              rev: log.rev,
+            }))
           } else if (ChatBskyConvoDefs.isLogAcceptConvo(log)) {
             const requests = queryClient.getQueryData<ConvoListQueryData>(
               RQKEY('request'),
@@ -372,6 +392,11 @@ export function ListConvosProviderInner({
             queryClient.setQueryData(
               RQKEY('request'),
               (old?: ConvoListQueryData) => optimisticDelete(log.convoId, old),
+            )
+            // also remove from the new requests cache
+            queryClient.setQueriesData<ConvoRequestListQueryData>(
+              {queryKey: [REQUESTS_RQKEY_ROOT]},
+              old => optimisticDeleteRequest(log.convoId, old),
             )
             queryClient.setQueriesData(
               {queryKey: RQKEY('accepted')},
@@ -398,55 +423,50 @@ export function ListConvosProviderInner({
               },
             )
           } else if (ChatBskyConvoDefs.isLogMuteConvo(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                optimisticUpdate(log.convoId, old, convo => ({
-                  ...convo,
-                  muted: true,
-                  rev: log.rev,
-                })),
-            )
+            updateConvoInAllLists(log.convoId, convo => ({
+              ...convo,
+              muted: true,
+              rev: log.rev,
+            }))
           } else if (ChatBskyConvoDefs.isLogUnmuteConvo(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                optimisticUpdate(log.convoId, old, convo => ({
-                  ...convo,
-                  muted: false,
-                  rev: log.rev,
-                })),
-            )
+            updateConvoInAllLists(log.convoId, convo => ({
+              ...convo,
+              muted: false,
+              rev: log.rev,
+            }))
           } else if (ChatBskyConvoDefs.isLogLockConvo(log)) {
-            mutateConvoView(log.convoId, convo =>
-              ChatBskyConvoDefs.isGroupConvo(convo.kind)
-                ? {
-                    ...convo,
-                    kind: {...convo.kind, lockStatus: 'locked'},
-                    rev: log.rev,
-                  }
-                : {...convo, rev: log.rev},
-            )
+            mutateConvoView(log.convoId, convo => {
+              if (ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
+                return {
+                  ...convo,
+                  kind: {...convo.kind, lockStatus: 'locked'},
+                  rev: log.rev,
+                }
+              }
+              return {...convo, rev: log.rev}
+            })
           } else if (ChatBskyConvoDefs.isLogUnlockConvo(log)) {
-            mutateConvoView(log.convoId, convo =>
-              ChatBskyConvoDefs.isGroupConvo(convo.kind)
-                ? {
-                    ...convo,
-                    kind: {...convo.kind, lockStatus: 'unlocked'},
-                    rev: log.rev,
-                  }
-                : {...convo, rev: log.rev},
-            )
+            mutateConvoView(log.convoId, convo => {
+              if (ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
+                return {
+                  ...convo,
+                  kind: {...convo.kind, lockStatus: 'unlocked'},
+                  rev: log.rev,
+                }
+              }
+              return {...convo, rev: log.rev}
+            })
           } else if (ChatBskyConvoDefs.isLogLockConvoPermanently(log)) {
-            mutateConvoView(log.convoId, convo =>
-              ChatBskyConvoDefs.isGroupConvo(convo.kind)
-                ? {
-                    ...convo,
-                    kind: {...convo.kind, lockStatus: 'locked-permanently'},
-                    rev: log.rev,
-                  }
-                : {...convo, rev: log.rev},
-            )
+            mutateConvoView(log.convoId, convo => {
+              if (ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
+                return {
+                  ...convo,
+                  kind: {...convo.kind, lockStatus: 'locked-permanently'},
+                  rev: log.rev,
+                }
+              }
+              return {...convo, rev: log.rev}
+            })
           } else if (
             ChatBskyConvoDefs.isLogCreateJoinLink(log) ||
             ChatBskyConvoDefs.isLogEditJoinLink(log) ||
@@ -455,37 +475,68 @@ export function ListConvosProviderInner({
           ) {
             // Join link data not included in the log event, trigger refetch to get it
             debouncedRefetch()
+          } else if (ChatBskyConvoDefs.isLogEditGroup(log)) {
+            // Updated group details (name etc.) aren't included in the log
+            // event, so refetch to pick them up.
+            debouncedRefetch()
           } else if (
             ChatBskyConvoDefs.isLogApproveJoinRequest(log) ||
             ChatBskyConvoDefs.isLogRejectJoinRequest(log)
           ) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                updateGroupConvoJoinRequestCount(log, old, -1),
+            // Route through mutateConvoView (not updateConvoInAllLists) so the
+            // single-convo cache updates too, keeping the in-convo requests
+            // banner in sync.
+            mutateConvoView(log.convoId, convo =>
+              applyJoinRequestCountDelta(convo, log.rev, -1),
             )
           } else if (ChatBskyConvoDefs.isLogIncomingJoinRequest(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                updateGroupConvoJoinRequestCount(log, old, 1),
+            // Route through mutateConvoView (not updateConvoInAllLists) so the
+            // single-convo cache updates too, letting the in-convo requests
+            // banner appear live.
+            mutateConvoView(log.convoId, convo =>
+              applyJoinRequestCountDelta(convo, log.rev, 1),
             )
+          } else if (ChatBskyConvoDefs.isLogReadJoinRequests(log)) {
+            // The owner marked join requests as read (possibly on another
+            // device). Zero the unread count but keep the total, mirroring the
+            // useMarkJoinRequestsRead mutation.
+            mutateConvoView(log.convoId, convo => {
+              if (!ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
+                return {...convo, rev: log.rev}
+              }
+              return {
+                ...convo,
+                kind: {...convo.kind, unreadJoinRequestCount: 0},
+                rev: log.rev,
+              }
+            })
           } else if (ChatBskyConvoDefs.isLogOutgoingJoinRequest(log)) {
-            // Viewer isn't in the chat yet, no need to do anything
-          } else if (ChatBskyConvoDefs.isLogAddReaction(log)) {
-            queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
-              (old?: ConvoListQueryData) =>
-                optimisticUpdate(log.convoId, old, convo => ({
-                  ...convo,
-                  lastReaction: {
-                    $type: 'chat.bsky.convo.defs#messageAndReactionView',
-                    reaction: log.reaction,
-                    message: log.message,
-                  },
-                  rev: log.rev,
-                })),
+            // Viewer isn't in the chat yet, but the inbox surfaces outgoing
+            // requests, so refetch to pick up the new entry.
+            debouncedRefetch()
+          } else if (ChatBskyConvoDefs.isLogWithdrawIncomingJoinRequest(log)) {
+            // A requester rescinded their request to a group the viewer owns.
+            // Mirror of isLogIncomingJoinRequest: decrement the counts.
+            mutateConvoView(log.convoId, convo =>
+              applyJoinRequestCountDelta(convo, log.rev, -1),
             )
+          } else if (ChatBskyConvoDefs.isLogWithdrawOutgoingJoinRequest(log)) {
+            // The viewer rescinded their own outgoing join request (possibly on
+            // another device). Remove it from the requests inbox cache.
+            queryClient.setQueriesData<ConvoRequestListQueryData>(
+              {queryKey: [REQUESTS_RQKEY_ROOT]},
+              old => optimisticDeleteJoinRequest(log.convoId, old),
+            )
+          } else if (ChatBskyConvoDefs.isLogAddReaction(log)) {
+            updateConvoInAllLists(log.convoId, convo => ({
+              ...convo,
+              lastReaction: {
+                $type: 'chat.bsky.convo.defs#messageAndReactionView',
+                reaction: log.reaction,
+                message: log.message,
+              },
+              rev: log.rev,
+            }))
           } else if (ChatBskyConvoDefs.isLogAddMember(log)) {
             const data = log.message.data
             if (
@@ -687,7 +738,16 @@ function calculateCount(
           moderateProfile(convo.primaryMember, moderationOpts).blocked ||
           convo.primaryMember.handle === 'missing.invalid' ||
           (convo.kind === 'group' && convo.details.lockStatus !== 'unlocked')
-        const unreadCount = !shouldIgnore && convo.view.unreadCount > 0 ? 1 : 0
+        const unreadJoinRequestCount =
+          convo.kind === 'group'
+            ? (convo.details.unreadJoinRequestCount ?? 0)
+            : 0
+
+        const unreadCount =
+          !shouldIgnore &&
+          (convo.view.unreadCount > 0 || unreadJoinRequestCount > 0)
+            ? 1
+            : 0
 
         return acc + unreadCount
       }, 0) ?? 0
@@ -739,27 +799,58 @@ function optimisticUpdate(
   }
 }
 
-function updateGroupConvoJoinRequestCount(
-  log: {convoId: string; rev: string},
-  old: ConvoListQueryData | undefined,
+function applyJoinRequestCountDelta(
+  convo: ChatBskyConvoDefs.ConvoView,
+  rev: string,
   delta: 1 | -1,
-) {
-  return optimisticUpdate(log.convoId, old, convo => {
-    // Join requests are only meaningful for group convos.
-    if (!ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
-      return {...convo, rev: log.rev}
+): ChatBskyConvoDefs.ConvoView {
+  // Join requests are only meaningful for group convos.
+  if (!ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
+    return {...convo, rev}
+  }
+  // Bump the total and unread counts together. Both are clamped at 0 and
+  // collapse to undefined when empty, matching the server's shape.
+  const bump = (current: number | undefined) => {
+    const next = Math.max(0, (current ?? 0) + delta)
+    return next === 0 ? undefined : next
+  }
+  return {
+    ...convo,
+    kind: {
+      ...convo.kind,
+      joinRequestCount: bump(convo.kind.joinRequestCount),
+      unreadJoinRequestCount: bump(convo.kind.unreadJoinRequestCount),
+    },
+    rev,
+  }
+}
+
+function moveConvoToTopInRequests(
+  updatedConvo: ChatBskyConvoDefs.ConvoView,
+  old: ConvoRequestListQueryData | undefined,
+): ConvoRequestListQueryData | undefined {
+  if (!old) return old
+  const typedConvo: ConvoRequestListQueryData['pages'][number]['requests'][number] =
+    {
+      $type: 'chat.bsky.convo.defs#convoView',
+      ...updatedConvo,
     }
-    const current = convo.kind.joinRequestCount ?? 0
-    const next = Math.max(0, current + delta)
-    return {
-      ...convo,
-      kind: {
-        ...convo.kind,
-        joinRequestCount: next === 0 ? undefined : next,
-      },
-      rev: log.rev,
-    }
-  })
+  return {
+    ...old,
+    pages: old.pages.map((page, i) => {
+      const filtered = page.requests.filter(
+        item =>
+          !ChatBskyConvoDefs.isConvoView(item) || item.id !== updatedConvo.id,
+      )
+      if (i === 0) {
+        return {
+          ...page,
+          requests: [typedConvo, ...filtered],
+        }
+      }
+      return {...page, requests: filtered}
+    }),
+  }
 }
 
 function removeMemberFromConvoView(

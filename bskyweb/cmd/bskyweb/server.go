@@ -88,7 +88,7 @@ func serve(cctx *cli.Context) error {
 		Host:   appviewHost,
 	}
 
-	// optional client for the chat appview, used by /c/<code> for OG previews.
+	// optional client for the chat appview, used by /chat/<code> for OG previews.
 	var chatXrpcc *xrpc.Client
 	if chatHost != "" {
 		chatXrpcc = &xrpc.Client{
@@ -367,7 +367,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/start/:handleOrDID/:rkey", server.WebStarterPack)
 
 	// chat invites
-	e.GET("/c/:code", server.WebChatInvite)
+	e.GET("/chat/:code", server.WebChatInvite)
 
 	// bookmarks
 	e.GET("/saved", server.WebGeneric)
@@ -695,7 +695,7 @@ func (srv *Server) WebChatInvite(c echo.Context) error {
 
 	data["title"] = preview.Name
 	if srv.cfg.ogcardHost != "" {
-		// bskyogcard registers this route as /chat-invite/:code, not /c/:code.
+		// bskyogcard registers this route as /chat-invite/:code, not /chat/:code.
 		data["imgThumbUrl"] = fmt.Sprintf("%s/chat-invite/%s", srv.cfg.ogcardHost, code)
 	}
 	return c.Render(http.StatusOK, "chatinvite.html", data)

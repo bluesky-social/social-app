@@ -87,7 +87,6 @@ function JoinRequestsInner() {
           title={l`Something went wrong`}
           message={l`We couldn’t load this conversation’s join requests`}
           onRetry={() => convoState.error.retry()}
-          sideBorders={false}
         />
       </>
     )

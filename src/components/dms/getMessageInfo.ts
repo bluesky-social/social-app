@@ -2,6 +2,7 @@ import {AppBskyEmbedRecord, ChatBskyConvoDefs} from '@atproto/api'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
+import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {
   postUriToRelativePath,
@@ -13,6 +14,7 @@ export type UserMessageInfo = {
   message: string | null
   sentAt: string
   reportableMessage?: ChatBskyConvoDefs.MessageView
+  isBlockedMessage: boolean
 }
 
 export function getMessageInfo({
@@ -36,6 +38,7 @@ export function getMessageInfo({
   const isGroup = ChatBskyConvoDefs.isGroupConvo(convo.kind)
 
   const reportableMessage = isFromMe ? undefined : lastMessage
+  const isBlockedMessage = sender ? isBlockedOrBlocking(sender) : false
 
   const prefix = (message: string) => {
     if (isFromMe) {
@@ -89,5 +92,6 @@ export function getMessageInfo({
     message,
     sentAt: lastMessage.sentAt,
     reportableMessage,
+    isBlockedMessage,
   }
 }

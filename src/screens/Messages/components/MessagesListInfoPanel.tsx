@@ -55,8 +55,12 @@ export function MessagesListInfoPanel({
           a.justify_center,
           a.gap_xs,
           a.mt_lg,
+          a.px_xl,
+          a.max_w_full,
         ]}>
-        <Text style={[a.text_2xl, a.font_bold, t.atoms.text]}>
+        <Text
+          style={[a.text_2xl, a.font_bold, a.text_center, a.flex_shrink]}
+          numberOfLines={1}>
           {displayName}
         </Text>
         <ProfileBadges profile={profile} size="lg" />
