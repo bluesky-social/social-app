@@ -5,12 +5,12 @@ import {
   ChatBskyGroupDefs,
   type ChatBskyGroupGetJoinLinkPreviews,
 } from '@atproto/api'
-import {useQuery, useQueryClient} from '@tanstack/react-query'
+import {type QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {CHAT_SERVICE, DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries/index'
-import {createQueryKey} from '#/state/queries/util'
+import {createQueryKey, type StructuredQueryKey} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
 
 /**
@@ -52,6 +52,29 @@ export const createJoinLinkPreviewQueryKey = (args: {
   createQueryKey(joinLinkPreviewQueryKeyRoot, args, {
     persistedVersion: 1,
   })
+
+/**
+ * Invalidate any join link preview queries whose `codes` include the given
+ * code. Use this when a link's state changes (e.g. it's disabled) so cached
+ * previews refetch and reflect the new state.
+ */
+export function invalidateJoinLinkPreviewsForCode(
+  queryClient: QueryClient,
+  code: string,
+) {
+  return queryClient.invalidateQueries({
+    predicate: query => {
+      const [root, args] = query.queryKey as Partial<
+        StructuredQueryKey<{codes?: string[]}>
+      >
+      return (
+        root === joinLinkPreviewQueryKeyRoot &&
+        Array.isArray(args?.codes) &&
+        args.codes.includes(code)
+      )
+    },
+  })
+}
 
 async function fetchJoinLinkPreviews({
   agent,
