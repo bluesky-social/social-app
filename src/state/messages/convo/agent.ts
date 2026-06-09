@@ -20,6 +20,7 @@ import {
   isNetworkError,
 } from '#/lib/strings/errors'
 import {Logger} from '#/logger'
+import {mergeShadow, type ProfileShadow} from '#/state/cache/profile-shadow'
 import {
   ACTIVE_POLL_INTERVAL,
   BACKGROUND_POLL_INTERVAL,
@@ -130,6 +131,19 @@ export class Convo {
   sender: ChatBskyActorDefs.ProfileViewBasic | undefined
   recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
   snapshot: ConvoState | undefined
+
+  mergeProfileShadow(did: string, shadow: Partial<ProfileShadow>) {
+    this.recipients?.map((recipient, i) => {
+      if (recipient.did === did) {
+        const merged = mergeShadow(recipient, shadow)
+        this.recipients![i] = merged
+      }
+    })
+    const related = this.relatedProfiles.get(did)
+    if (related) {
+      this.relatedProfiles.set(did, mergeShadow(related, shadow))
+    }
+  }
 
   constructor(params: ConvoParams) {
     this.id = nanoid(3)

@@ -11,6 +11,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAppState} from '#/lib/appState'
+import {useOnUpdateProfileShadow} from '#/state/cache/profile-shadow'
 import {Convo} from '#/state/messages/convo/agent'
 import {
   type ConvoParams,
@@ -111,6 +112,10 @@ export function ConvoProvider({
       }
     }, [isActive, convo, convoId, markAsRead]),
   )
+
+  useOnUpdateProfileShadow(({did, shadow}) => {
+    convo.mergeProfileShadow(did, shadow)
+  })
 
   useEffect(() => {
     return convo.on(event => {

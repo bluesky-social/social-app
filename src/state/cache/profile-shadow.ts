@@ -53,6 +53,17 @@ const shadows: WeakMap<
 > = new WeakMap()
 const emitter = new EventEmitter()
 
+export function useOnUpdateProfileShadow(
+  onUpdate: (props: {did: string; shadow: Partial<ProfileShadow>}) => void,
+) {
+  useEffect(() => {
+    emitter.addListener('shadow-update', onUpdate)
+    return () => {
+      emitter.removeListener('shadow-update', onUpdate)
+    }
+  }, [onUpdate])
+}
+
 export function useProfileShadow<
   TProfileView extends bsky.profile.AnyProfileView,
 >(profile: TProfileView): Shadow<TProfileView> {
@@ -206,10 +217,11 @@ export function updateProfileShadow(
   }
   batchedUpdates(() => {
     emitter.emit(did, value)
+    emitter.emit('shadow-update', {did, shadow: value})
   })
 }
 
-function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
+export function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
   profile: TProfileView,
   shadow: Partial<ProfileShadow>,
 ): Shadow<TProfileView> {
