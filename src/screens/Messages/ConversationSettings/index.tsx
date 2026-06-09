@@ -55,6 +55,7 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 import {InviteLinkDialog} from '../components/InviteLinkDialog'
 import {AddMembersLink} from './AddMembersLink'
@@ -87,12 +88,23 @@ type Props = NativeStackScreenProps<
 >
 
 export function MessagesConversationSettingsScreen({route}: Props) {
+  const navigation = useNavigation<NavigationProp>()
+
   const convoId = route.params.conversation
 
   return (
     <Layout.Screen>
       <Layout.Header.Outer>
-        <Layout.Header.BackButton />
+        <Layout.Header.BackButton
+          onPress={evt => {
+            if (IS_WEB && !navigation.canGoBack()) {
+              evt.preventDefault()
+              navigation.navigate('MessagesConversation', {
+                conversation: convoId,
+              })
+            }
+          }}
+        />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
             <Trans>Group chat settings</Trans>
