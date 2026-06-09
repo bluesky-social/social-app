@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from 'react'
+import {useEffect, useMemo, useRef, useState} from 'react'
 import {type AppBskyActorDefs, type AppBskyNotificationDefs} from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
 import {EventEmitter} from 'eventemitter3'
@@ -57,12 +57,19 @@ type ShadowUpdateEventPayload = {did: string; shadow: Partial<ProfileShadow>}
 export function useOnUpdateProfileShadow(
   onUpdate: (payload: ShadowUpdateEventPayload) => void,
 ) {
+  const onUpdateRef = useRef(onUpdate)
+  // eslint-disable-next-line react-hooks/refs
+  onUpdateRef.current = onUpdate
+
   useEffect(() => {
-    emitter.addListener('shadow-update', onUpdate)
-    return () => {
-      emitter.removeListener('shadow-update', onUpdate)
+    function listener(payload: ShadowUpdateEventPayload) {
+      onUpdateRef.current(payload)
     }
-  }, [onUpdate])
+    emitter.addListener('shadow-update', listener)
+    return () => {
+      emitter.removeListener('shadow-update', listener)
+    }
+  }, [])
 }
 
 export function useProfileShadow<
