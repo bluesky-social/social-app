@@ -3,7 +3,6 @@ import {useInfiniteQuery} from '@tanstack/react-query'
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {createQueryKey} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
-import {STALE} from '..'
 
 const listMutualGroupsQueryKeyRoot = 'list-mutual-groups'
 
@@ -23,6 +22,8 @@ export function useListMutualGroupsQuery({
   const isEnabled = enabled !== false && !!subject
 
   return useInfiniteQuery({
+    gcTime: 0,
+    staleTime: 0,
     enabled: isEnabled,
     queryKey: createListMutualGroupsQueryKey({subject: subject ?? ''}),
     queryFn: async ({pageParam}) => {
@@ -34,6 +35,5 @@ export function useListMutualGroupsQuery({
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: page => page.cursor,
-    staleTime: STALE.MINUTES.ONE,
   })
 }
