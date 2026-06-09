@@ -9,11 +9,8 @@ import {useAgent, useSession} from '#/state/session'
 /**
  * Collection NSID for the per-user news feed preferences record, stored as a
  * singleton at rkey `self` (mirroring `app.bsky.actor.profile`).
- *
- * The `redacted` authority segment is a placeholder until the real domain is
- * decided.
  */
-export const NEWS_FEED_PREFS_NSID = 'social.redacted.newsFeedPrefs'
+export const NEWS_FEED_PREFS_NSID = 'social.mu.newsFeedPrefs'
 const NEWS_FEED_PREFS_RKEY = 'self'
 
 /**
