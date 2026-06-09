@@ -1,6 +1,6 @@
 import {createContext, useContext} from 'react'
-import {type ChatBskyGroupDefs} from '@atproto/api'
 
+import {type ChatInvitePreview} from '#/state/queries/join-links'
 import {type ButtonColor} from '#/components/Button'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 
@@ -26,7 +26,7 @@ export type ChatInviteContextValue = {
   code: string
   loading: boolean
   error: boolean
-  preview: ChatBskyGroupDefs.JoinLinkPreviewView | undefined
+  preview: ChatInvitePreview | undefined
   /**
    * The derived action descriptor. Undefined while loading or when there's no
    * preview to act on.

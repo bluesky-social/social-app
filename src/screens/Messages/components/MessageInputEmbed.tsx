@@ -4,6 +4,7 @@ import {
   AppBskyFeedPost,
   AppBskyRichtextFacet,
   AtUri,
+  ChatBskyGroupDefs,
   moderatePost,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -30,6 +31,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import * as ChatInvite from '#/components/dms/ChatInvite'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
+import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {Loader} from '#/components/Loader'
 import * as MediaPreview from '#/components/MediaPreview'
 import {ContentHider} from '#/components/moderation/ContentHider'
@@ -52,12 +54,12 @@ export function useMessageEmbed() {
   const navigation = useNavigation<NavigationProp>()
   const embedFromParams = route.params.embed
 
-  const [embed, setEmbedState] = useState<MessageEmbedState | undefined>(
+  const [embed, setEmbed] = useState<MessageEmbedState | undefined>(
     embedFromParams ? {type: 'post', uri: embedFromParams} : undefined,
   )
 
   if (embedFromParams && embed?.type !== 'post') {
-    setEmbedState({type: 'post', uri: embedFromParams})
+    setEmbed({type: 'post', uri: embedFromParams})
   }
 
   return {
@@ -68,7 +70,7 @@ export function useMessageEmbed() {
           // Only the post embed is reflected in the route param (used by the
           // share-to-DM intent flow); invites are local-only.
           navigation.setParams({embed: ''})
-          setEmbedState(undefined)
+          setEmbed(undefined)
           return
         }
 
@@ -77,7 +79,7 @@ export function useMessageEmbed() {
         if (isBskyChatInviteUrl(embedUrl)) {
           const code = getChatInviteCodeFromUrl(embedUrl)
           if (code) {
-            setEmbedState({type: 'invite', code})
+            setEmbed({type: 'invite', code})
           }
           return
         }
@@ -86,7 +88,7 @@ export function useMessageEmbed() {
           const url = convertBskyAppUrlIfNeeded(embedUrl)
           const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
           const uri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
-          setEmbedState({type: 'post', uri})
+          setEmbed({type: 'post', uri})
         }
       },
       [embedFromParams, navigation],
@@ -314,11 +316,19 @@ function MessageInputInviteEmbedBody() {
     )
   }
 
-  if (!preview) {
+  if (!ChatBskyGroupDefs.isJoinLinkPreviewView(preview)) {
     return (
-      <View style={[{minHeight: 64}, a.justify_center, a.align_center]}>
-        <Text style={[a.text_center, t.atoms.text_contrast_medium, a.italic]}>
-          <Trans>Could not load invite</Trans>
+      <View
+        style={[
+          {minHeight: 64},
+          a.flex_row,
+          a.gap_xs,
+          a.justify_center,
+          a.align_center,
+        ]}>
+        <WarningIcon size="md" fill={t.atoms.text_contrast_medium.color} />
+        <Text style={[a.text_sm, a.font_medium, t.atoms.text_contrast_medium]}>
+          <Trans>Chat invite link no longer available</Trans>
         </Text>
       </View>
     )

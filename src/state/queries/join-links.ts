@@ -1,7 +1,8 @@
 import {useCallback} from 'react'
 import {
+  type $Typed,
   AtpAgent,
-  type ChatBskyGroupDefs,
+  ChatBskyGroupDefs,
   type ChatBskyGroupGetJoinLinkPreviews,
 } from '@atproto/api'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
@@ -11,6 +12,36 @@ import {logger} from '#/logger'
 import {STALE} from '#/state/queries/index'
 import {createQueryKey} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
+
+/**
+ * The three preview shapes we currently support. Excludes the `{$type: string}`
+ * open-union fallback for unrecognized future variants - use
+ * `ChatInvitePreview` for that.
+ */
+export type KnownChatInvitePreview =
+  | $Typed<ChatBskyGroupDefs.JoinLinkPreviewView>
+  | $Typed<ChatBskyGroupDefs.DisabledJoinLinkPreviewView>
+  | $Typed<ChatBskyGroupDefs.InvalidJoinLinkPreviewView>
+
+/**
+ * The full open-union shape, including the `{$type: string}` fallback for
+ * future variants.
+ */
+export type ChatInvitePreview = KnownChatInvitePreview | {$type: string}
+
+/**
+ * Narrows a preview to one of the three known variants, filtering out the
+ * `{$type: string}` open-union fallback for unrecognized future shapes.
+ */
+export function isKnownJoinLinkPreview(
+  preview: unknown,
+): preview is KnownChatInvitePreview {
+  return (
+    ChatBskyGroupDefs.isJoinLinkPreviewView(preview) ||
+    ChatBskyGroupDefs.isDisabledJoinLinkPreviewView(preview) ||
+    ChatBskyGroupDefs.isInvalidJoinLinkPreviewView(preview)
+  )
+}
 
 const joinLinkPreviewQueryKeyRoot = 'join-link-preview'
 
@@ -104,7 +135,7 @@ export function useGetJoinLinkPreview() {
     }: {
       code: string
       hasSession: boolean
-    }): Promise<ChatBskyGroupDefs.JoinLinkPreviewView | undefined> => {
+    }): Promise<KnownChatInvitePreview | undefined> => {
       try {
         const data = await queryClient.fetchQuery({
           queryKey: createJoinLinkPreviewQueryKey({codes: [code], hasSession}),
@@ -112,7 +143,8 @@ export function useGetJoinLinkPreview() {
             fetchJoinLinkPreviews({agent, codes: [code], hasSession}),
           staleTime: STALE.SECONDS.FIFTEEN,
         })
-        return data.joinLinkPreviews[0]
+        const found = data.joinLinkPreviews[0]
+        return isKnownJoinLinkPreview(found) ? found : undefined
       } catch (error) {
         logger.error('Failed to fetch join link preview', {safeMessage: error})
         return undefined
