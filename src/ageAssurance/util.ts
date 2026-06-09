@@ -6,7 +6,7 @@ import {
 } from '@atproto/api'
 
 import {getAge} from '#/lib/strings/time'
-import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
+import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/const'
 import {FALLBACK_REGION_CONFIG, MIN_ACCESS_AGE} from '#/ageAssurance/const'
 import {useAgeAssuranceServerDataContext} from '#/ageAssurance/data'
 import {
