@@ -77,7 +77,7 @@ function BlockDialogInner({
   const [headerHeight, setHeaderHeight] = useState(0)
   const [footerHeight, setFooterHeight] = useState(0)
 
-  const {data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage} =
+  let {data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage} =
     useListMutualGroupsQuery({
       subject: profile.did,
       enabled: !profile.viewer?.blocking,
@@ -112,7 +112,7 @@ function BlockDialogInner({
         style={[
           hasMutualGroupChats && native([a.pt_2xl, a.px_2xl]),
           a.pb_lg,
-          a.gap_xs,
+          a.gap_sm,
         ]}>
         <Text style={[a.text_2xl, a.font_bold, t.atoms.text]}>
           {profile.viewer?.blocking ? (
@@ -121,7 +121,7 @@ function BlockDialogInner({
             <Trans>Block account?</Trans>
           )}
         </Text>
-        <Text style={[a.text_md, t.atoms.text]}>
+        <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
           {profile.viewer?.blocking ? (
             <Trans>
               The account will be able to interact with you after unblocking.
@@ -141,7 +141,7 @@ function BlockDialogInner({
         </Text>
       </View>
       {hasMutualGroupChats ? (
-        <View style={[native(a.px_2xl), a.mb_sm, t.atoms.bg]}>
+        <View style={[web(a.pt_sm), native(a.px_2xl), a.pb_xs, t.atoms.bg]}>
           <Text
             style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_high]}>
             <Trans>Mutual group chats</Trans>
@@ -181,10 +181,11 @@ function BlockDialogInner({
   if (isLoading || !hasMutualGroupChats) {
     return (
       <Dialog.ScrollableInner
-        label={profile.viewer?.blocking ? l`Unblock` : l`Block`}>
+        label={profile.viewer?.blocking ? l`Unblock` : l`Block`}
+        style={[web([{maxWidth: 420}])]}>
         {listHeader}
         {isLoading ? (
-          <View style={[a.py_2xl, a.align_center, a.justify_center]}>
+          <View style={[a.pb_2xl, a.align_center, a.justify_center]}>
             <Loader size="xl" />
           </View>
         ) : null}
@@ -212,11 +213,11 @@ function BlockDialogInner({
           {footer}
         </Dialog.FlatListFooter>
       }
-      style={[web(a.px_md)]}
       contentContainerStyle={[a.gap_0, {paddingBottom: footerHeight}]}
       scrollIndicatorInsets={{top: headerHeight, bottom: footerHeight}}
       onEndReached={() => void onEndReached()}
       onEndReachedThreshold={0.5}
+      style={[web([{maxWidth: 420}])]}
     />
   )
 }
