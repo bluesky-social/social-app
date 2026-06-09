@@ -553,7 +553,7 @@ export function InitiateChatFlow({
                 color="secondary"
                 style={[a.absolute, a.z_20, {right: -4}]}
                 onPress={() => control.close()}>
-                <ButtonIcon icon={XIcon} size="lg" />
+                <ButtonIcon icon={XIcon} size="md" />
               </Button>
             ) : showButton ? (
               <Button
