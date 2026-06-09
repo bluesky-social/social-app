@@ -1,5 +1,5 @@
 /**
- * Eurosky theme configuration.
+ * mu theme configuration.
  *
  * Single source of truth for the palette + gradients. Sibling to
  * `src/config/eurosky.ts` (service / brand-string config). Strategy: keep
@@ -10,21 +10,28 @@
  * (`src/alf/themes.ts`, `src/alf/tokens.ts`) - every other file upstream
  * touches stays untouched, so it can never conflict on merge.
  *
+ * Export symbol names (EUROSKY_PALETTE etc.) are kept verbatim purely so
+ * those two redirect files don't have to change - the *contents* are the mu
+ * brand.
+ *
  * ---------------------------------------------------------------------------
  * HOW THE LOOK IS CHOSEN
  *
- * The identity is built from two independent, swappable axes:
+ * The mu brand kit (`mu-brand-package/mu-brandguidelines.pdf`) ships a neutral
+ * base ramp plus THREE interchangeable accent families - pink, blue, orange -
+ * and instructs picking one primary per design ("Try not to mix colours
+ * together"). The identity is therefore built from two swappable axes:
  *
- *   NEUTRAL  - the contrast_ (background -> text) ramp. This is what carries
- *              the monochrome brand feel: warm cream + ink vs upstream's
- *              cool blue-grey.
+ *   NEUTRAL  - the contrast_ (background -> text) ramp. mu's near-white base
+ *              (#f7f7f2) up to ink (#212121); carries the clean monochrome UI.
  *   ACCENT   - the primary_ ramp. Every themed affordance (buttons, links,
- *              toggles, focus rings, spinners) is derived from this with no
- *              per-component overrides.
+ *              toggles, focus rings, spinners) derives from this. All three
+ *              brand families are defined below; the SELECTOR picks one.
  *
- * To A/B a different look, edit the two lines in the SELECTOR block below and
- * reload - nothing else. The presets are kept here permanently so the
- * alternatives are self-documenting and the swap stays a one-word edit.
+ * To switch mu's primary colour (e.g. pink -> blue), edit the one line in the
+ * SELECTOR block and reload - nothing else. All three ramps are kept here
+ * permanently so the alternatives are self-documenting and the swap stays a
+ * one-word edit.
  * ---------------------------------------------------------------------------
  */
 
@@ -33,29 +40,6 @@ import {
   DEFAULT_SUBDUED_PALETTE,
   type Palette,
 } from '@bsky.app/alf'
-
-/**
- * Raw Eurosky brand colours, names taken verbatim from
- * `branding/eurosky-brandguidelines.md` section 2.
- */
-export const EUROSKY_BRAND = {
-  cotton: '#F7F6F2', // main background
-  stoneLight: '#ECEAE5', // subtle bg / dividers
-  stoneMid: '#E0DDD8', // slightly darker bg / borders
-  ink: '#1A1A1A', // text, primary CTAs, logo
-  charcoal: '#6B6965', // muted text (website CSS --charcoal, not the kit's warm grey)
-  accentBlueBrand: '#9AC2FF', // landing-page accent - too pale for body-text contrast
-  accentYellow: '#F7D204', // highlight accent -> `yellow` slot
-  accentGreen: '#02BC60', // success / positive accent
-  /**
-   * Saturated mid-blue. Not in the printed kit, but the readable
-   * counterpart of the pale brand blue: ALF pins *_500 across its
-   * light/dark inversion (see invertPalette in @bsky.app/alf), so the
-   * primary_500 anchor must clear contrast on BOTH the cotton background
-   * and the inverted near-black one. #9AC2FF cannot; this can.
-   */
-  linkBlue: '#0087E2',
-} as const
 
 type ContrastRamp = Pick<
   Palette,
@@ -94,267 +78,217 @@ type PrimaryRamp = Pick<
 >
 
 // ---------------------------------------------------------------------------
-// NEUTRAL presets (the contrast_ ramp)
+// NEUTRAL preset (the contrast_ ramp) - mu base colours
 // ---------------------------------------------------------------------------
 
 /**
- * Warm cream-to-ink ramp, replacing upstream's cool blue-greys. This is the
- * monochrome brand identity per the guidelines ("Eurosky uses a primarily
- * monochrome colour palette ... for the logo, typography and UI"); the brand
- * is carried here, NOT by tinting CTAs.
- *
- * contrast_0 stays pure white (components that need a true white surface),
- * contrast_25 = cotton (page bg), contrast_950 = ink (heading text).
+ * mu base ramp, verbatim from the brand kit's neutral tonal scale. Near-white
+ * #f7f7f2 page surface up to ink #212121 for heading text. contrast_0 stays
+ * pure white (components that need a true white surface); contrast_25 is the
+ * mu base background; contrast_950 = ink.
  *
  * !! SYNC: ALF derives the page background from this ramp - light bg =
- * contrast_0, dark bg = this.contrast_1000, dim bg =
- * euroskyWarmContrastSubdued.contrast_1000. `web/index.html`'s static
- * <style> hardcodes those same body backgrounds (it can't import TS); if
- * you change contrast_0 / contrast_1000 here (or the subdued deep end),
- * update the html.theme--{light,dark,dim} background-color + --background
- * in web/index.html too, or a scroll/header seam reappears.
+ * contrast_0 (#FFFFFF), dark bg = this.contrast_1000 (#000000), dim bg =
+ * muNeutralSubdued.contrast_1000 (#1A1A1A). `web/index.html`'s static <style>
+ * hardcodes those same body backgrounds (it can't import TS); if you change
+ * contrast_0 / contrast_1000 here (or the subdued deep end), update the
+ * html.theme--{light,dark,dim} background-color + --background in
+ * web/index.html too, or a scroll/header seam reappears.
  */
-const euroskyWarmContrast: ContrastRamp = {
+const muNeutral: ContrastRamp = {
   contrast_0: '#FFFFFF',
-  contrast_25: EUROSKY_BRAND.cotton, // #F7F6F2
-  contrast_50: EUROSKY_BRAND.stoneLight, // #ECEAE5
-  contrast_100: EUROSKY_BRAND.stoneMid, // #E0DDD8
-  contrast_200: '#C7C5C0',
-  contrast_300: '#ACAAA5',
-  contrast_400: '#908E89',
-  contrast_500: EUROSKY_BRAND.charcoal, // #6B6965
-  contrast_600: '#555350',
-  contrast_700: '#3F3D3B',
-  contrast_800: '#2A2826',
-  contrast_900: '#1F1D1B',
-  contrast_950: EUROSKY_BRAND.ink, // #1A1A1A
-  contrast_975: '#0F0F0E',
+  contrast_25: '#F7F7F2', // mu base off-white
+  contrast_50: '#EDEBE5',
+  contrast_100: '#E0DED9',
+  contrast_200: '#C5C4BF',
+  contrast_300: '#ABAAA6',
+  contrast_400: '#92918E',
+  contrast_500: '#797876',
+  contrast_600: '#62615F',
+  contrast_700: '#4B4A49',
+  contrast_800: '#353535',
+  contrast_900: '#2A2A2A',
+  contrast_950: '#212121', // mu ink
+  contrast_975: '#141414',
   contrast_1000: '#000000',
 }
 
 /**
- * Subdued variant of the warm ramp, used for the `dim` theme. ALF builds
- * `dim` from invertPalette(SUBDUED), so its background is this ramp's
- * contrast_1000 (and its near-bg layers are 975/950). The deep end is
- * lifted to a warm soft-black instead of pure #000000 - that lift is the
- * entire reason `dim` looks softer than `dark` (mirrors how upstream's
- * DEFAULT_SUBDUED lifts contrast_1000 to #151D28). Light steps stay equal
- * to the default ramp so only the "dimness" of dark surfaces changes.
+ * Subdued variant for the `dim` theme. ALF builds `dim` from
+ * invertPalette(SUBDUED), so its background is this ramp's contrast_1000. The
+ * deep end is lifted to a soft-black (#1A1A1A) instead of pure #000000 - that
+ * lift is the entire reason `dim` looks softer than `dark` (mirrors how
+ * upstream's DEFAULT_SUBDUED lifts contrast_1000). Light steps stay equal to
+ * muNeutral so only the darkness of dark surfaces changes.
  *
  * !! SYNC: contrast_1000 here = the dim body background hardcoded in
- * web/index.html (html.theme--dim). Change one, change the other.
+ * web/index.html + bskyweb/templates/base.html (html.theme--dim). Change one,
+ * change the others.
  */
-const euroskyWarmContrastSubdued: ContrastRamp = {
-  ...euroskyWarmContrast,
-  contrast_900: '#2C2A24',
-  contrast_950: '#232118',
-  contrast_975: '#1B1914',
-  contrast_1000: '#15130E', // dim background - warm soft-black, not pure black
-}
-
-type NeutralPreset = {default: ContrastRamp; subdued: ContrastRamp} | null
-
-/**
- * `blueskyStock: null` = keep whatever contrast ramps the upstream base
- * palettes ship (cool blue-grey), which already differ default-vs-subdued
- * so dark/dim stay distinct. `euroskyWarm` supplies its own pair so the
- * dark/dim distinction survives the override.
- */
-const NEUTRALS: Record<string, NeutralPreset> = {
-  euroskyWarm: {
-    default: euroskyWarmContrast,
-    subdued: euroskyWarmContrastSubdued,
-  },
-  blueskyStock: null,
+const muNeutralSubdued: ContrastRamp = {
+  ...muNeutral,
+  contrast_900: '#242424',
+  contrast_950: '#1F1F1F',
+  contrast_975: '#1C1C1C',
+  contrast_1000: '#1A1A1A', // dim background - soft black, not pure black
 }
 
 // ---------------------------------------------------------------------------
-// ACCENT presets (the primary_ ramp)
+// ACCENT presets (the primary_ ramp) - mu's three brand families
 // ---------------------------------------------------------------------------
 
 /**
- * Blue accent, anchored on the readable brand link blue (#0087E2 at _500).
- * The pale brand blue (#9AC2FF) lives high on the ramp as the bright tint.
+ * ALF pins *_500 across its light/dark inversion (see invertPalette in
+ * @bsky.app/alf), and uses primary_500 as the solid-button fill / link
+ * colour. So each ramp anchors _500 on the brand family's designated
+ * link/accent tone (~60-65% lightness) - readable on both the near-white base
+ * and the inverted near-black one - with the bright brand tint sitting higher
+ * on the ramp. Steps are the brand tonal scales verbatim; the few endpoints
+ * the kit does not provide are interpolated.
  */
+const pinkAccent: PrimaryRamp = {
+  primary_25: '#FFEDFC',
+  primary_50: '#FFD9F6',
+  primary_100: '#FFBDF2', // brand pink primary tint
+  primary_200: '#F8A2DF',
+  primary_300: '#EF86CB',
+  primary_400: '#E66AB9',
+  primary_500: '#DB4AA6', // brand pink link/anchor
+  primary_600: '#C04293',
+  primary_700: '#A73981',
+  primary_800: '#8D316F',
+  primary_900: '#75295E',
+  primary_950: '#5E224D',
+  primary_975: '#471A3D', // brand pink deep
+}
+
 const blueAccent: PrimaryRamp = {
-  primary_25: '#F2F8FE',
-  primary_50: '#E3F1FD',
-  primary_100: '#C1E1FB',
-  primary_200: '#93CCF8',
-  primary_300: '#57B0F2',
-  primary_400: '#1F97EA',
-  primary_500: EUROSKY_BRAND.linkBlue, // #0087E2 - reads on cotton AND dark
-  primary_600: '#0072C2',
-  primary_700: '#005C9C',
-  primary_800: '#00497C',
-  primary_900: '#00375D',
-  primary_950: '#002844',
-  primary_975: '#001B30',
+  primary_25: '#D1F2FA',
+  primary_50: '#B9E7F4',
+  primary_100: '#A1DCEE',
+  primary_200: '#87D1E8', // brand blue primary tint
+  primary_300: '#72BDDD',
+  primary_400: '#5CA9D2',
+  primary_500: '#4796C7', // brand blue link/anchor
+  primary_600: '#3E88B5',
+  primary_700: '#357BA3',
+  primary_800: '#2C6E92',
+  primary_900: '#236181',
+  primary_950: '#1A5470', // brand blue deep
+  primary_975: '#123D50',
 }
 
-/**
- * Green accent. The raw brand green (#02BC60) is light/saturated and fails
- * text contrast on cotton (~1.9:1), so it is NOT pinned at _500 - it lives
- * at _400 as the bright brand tint, and _500 is anchored on a readable
- * deep green so links/affordances stay legible on light AND dark (the same
- * *_500-is-pinned constraint that governs the blue anchor).
- */
-const greenAccent: PrimaryRamp = {
-  primary_25: '#ECFDF3',
-  primary_50: '#D3F8E0',
-  primary_100: '#A8F0C4',
-  primary_200: '#6FE3A0',
-  primary_300: '#38D07D',
-  primary_400: EUROSKY_BRAND.accentGreen, // #02BC60 - bright brand tint
-  primary_500: '#0A7F45', // readable deep green - reads on cotton AND dark
-  primary_600: '#0A6B3B',
-  primary_700: '#095731',
-  primary_800: '#074326',
-  primary_900: '#05331D',
-  primary_950: '#042414',
-  primary_975: '#03190E',
+const orangeAccent: PrimaryRamp = {
+  primary_25: '#FFE8D6',
+  primary_50: '#FFD3B5',
+  primary_100: '#FFBE92',
+  primary_200: '#FFA86A',
+  primary_300: '#FF8F36', // brand orange primary tint
+  primary_400: '#F9742B',
+  primary_500: '#F2571F', // brand orange link/anchor
+  primary_600: '#DB5019',
+  primary_700: '#C54A12',
+  primary_800: '#AF430B',
+  primary_900: '#9A3D05',
+  primary_950: '#853600', // brand orange deep
+  primary_975: '#6E2C00',
 }
 
 const ACCENTS = {
+  pink: pinkAccent,
   blue: blueAccent,
-  green: greenAccent,
+  orange: orangeAccent,
 } as const
 
 // ===========================================================================
-//  ▼▼▼  SELECTOR - this is the entire "which look" decision.  Edit, reload.
+//  ▼▼▼  SELECTOR - this is the entire "which colour" decision.  Edit, reload.
 // ===========================================================================
 
-const NEUTRAL: NeutralPreset = NEUTRALS.euroskyWarm // NEUTRALS.blueskyStock
-const ACCENT: PrimaryRamp = ACCENTS.green // ACCENTS.blue
+const ACCENT: PrimaryRamp = ACCENTS.pink // ACCENTS.blue | ACCENTS.orange
 
 // ===========================================================================
 //  ▲▲▲  Everything below is mechanical composition - no decisions here.
 // ===========================================================================
 
-/**
- * Green semantic ("positive"/success) scale, anchored on the brand green.
- * Independent of the ACCENT axis - success is green even when primary is
- * blue. Kept stable so success states don't shift when A/B-ing accents.
- */
-const euroskyPositive: Pick<
-  Palette,
-  | 'positive_25'
-  | 'positive_50'
-  | 'positive_100'
-  | 'positive_200'
-  | 'positive_300'
-  | 'positive_400'
-  | 'positive_500'
-  | 'positive_600'
-  | 'positive_700'
-  | 'positive_800'
-  | 'positive_900'
-  | 'positive_950'
-  | 'positive_975'
-> = {
-  positive_25: '#ECFDF5',
-  positive_50: '#D1FAE5',
-  positive_100: '#A7F3D0',
-  positive_200: '#6EE7B7',
-  positive_300: '#34D399',
-  positive_400: '#0AD075',
-  positive_500: EUROSKY_BRAND.accentGreen, // #02BC60
-  positive_600: '#01A052',
-  positive_700: '#017A3E',
-  positive_800: '#015C2F',
-  positive_900: '#013D20',
-  positive_950: '#002915',
-  positive_975: '#001A0D',
-}
-
-function compose(base: Palette, neutral: ContrastRamp | null): Palette {
+function compose(base: Palette, neutral: ContrastRamp): Palette {
   return {
     ...base,
-    ...(neutral ?? {}),
+    ...neutral,
     ...ACCENT,
-    ...euroskyPositive,
-    yellow: EUROSKY_BRAND.accentYellow,
   }
 }
 
-export const EUROSKY_PALETTE: Palette = compose(
-  DEFAULT_PALETTE,
-  NEUTRAL?.default ?? null,
-)
+export const EUROSKY_PALETTE: Palette = compose(DEFAULT_PALETTE, muNeutral)
 export const EUROSKY_SUBDUED_PALETTE: Palette = compose(
   DEFAULT_SUBDUED_PALETTE,
-  NEUTRAL?.subdued ?? null,
+  muNeutralSubdued,
 )
 
 /**
  * Gradient overrides for `src/alf/tokens.ts`. Mostly decorative (avatar
- * fallbacks, occasional accent fills). The `primary` gradient is monochrome
- * so default avatars read as brand ink, not a saturated blue/green that
- * would fight whichever ACCENT is selected.
+ * fallbacks, occasional accent fills). The `primary` gradient is pink to
+ * match the selected accent; the named gradients each stay within a single
+ * brand family (pink / blue / orange) per the "don't mix colours" rule, while
+ * giving default avatars some variety across the palette.
  */
 export const EUROSKY_GRADIENTS = {
   primary: {
     values: [
-      [0, EUROSKY_BRAND.ink],
-      [0.4, EUROSKY_BRAND.charcoal],
-      [0.6, EUROSKY_BRAND.charcoal],
-      [1, EUROSKY_BRAND.stoneMid],
+      [0, '#FFBDF2'],
+      [1, '#DB4AA6'],
     ],
-    hover_value: EUROSKY_BRAND.charcoal,
+    hover_value: '#E66AB9',
   },
   sky: {
     values: [
-      [0, EUROSKY_BRAND.linkBlue],
-      [1, EUROSKY_BRAND.accentBlueBrand], // #9AC2FF
+      [0, '#87D1E8'],
+      [1, '#4796C7'],
     ],
-    hover_value: EUROSKY_BRAND.linkBlue,
+    hover_value: '#4796C7',
   },
   midnight: {
     values: [
-      [0, EUROSKY_BRAND.ink],
-      [1, EUROSKY_BRAND.charcoal],
+      [0, '#471A3D'],
+      [1, '#DB4AA6'],
     ],
-    hover_value: EUROSKY_BRAND.ink,
+    hover_value: '#75295E',
   },
   sunrise: {
     values: [
-      [0, EUROSKY_BRAND.ink],
-      [0.4, EUROSKY_BRAND.accentYellow],
-      [0.8, '#FFE874'],
-      [1, '#FFFAD7'],
+      [0, '#FFE8D6'],
+      [0.6, '#FF8F36'],
+      [1, '#F2571F'],
     ],
-    hover_value: EUROSKY_BRAND.accentYellow,
+    hover_value: '#FF8F36',
   },
   sunset: {
     values: [
-      [0, EUROSKY_BRAND.accentBlueBrand],
-      [0.6, EUROSKY_BRAND.accentYellow],
-      [1, '#FFFAD7'],
+      [0, '#DB4AA6'],
+      [1, '#FFBDF2'],
     ],
-    hover_value: EUROSKY_BRAND.accentYellow,
+    hover_value: '#E66AB9',
   },
   summer: {
     values: [
-      [0, EUROSKY_BRAND.accentYellow],
-      [0.3, '#FFE874'],
-      [1, '#FFFAD7'],
+      [0, '#FF8F36'],
+      [0.5, '#FFA86A'],
+      [1, '#FFD3B5'],
     ],
-    hover_value: '#FFE874',
+    hover_value: '#FF8F36',
   },
   nordic: {
     values: [
-      [0, EUROSKY_BRAND.ink],
-      [1, EUROSKY_BRAND.cotton],
+      [0, '#1A5470'],
+      [1, '#87D1E8'],
     ],
-    hover_value: EUROSKY_BRAND.charcoal,
+    hover_value: '#4796C7',
   },
   bonfire: {
     values: [
-      [0, EUROSKY_BRAND.ink],
-      [0.4, EUROSKY_BRAND.accentBlueBrand],
-      [0.8, EUROSKY_BRAND.accentYellow],
-      [1, EUROSKY_BRAND.cotton],
+      [0, '#853600'],
+      [0.5, '#F2571F'],
+      [1, '#FF8F36'],
     ],
-    hover_value: EUROSKY_BRAND.accentYellow,
+    hover_value: '#F2571F',
   },
 } as const

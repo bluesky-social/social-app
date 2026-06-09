@@ -58,7 +58,7 @@ import {messages as messagesZh_TW} from '#/locale/locales/zh-TW/messages'
 import {useLanguagePrefs} from '#/state/preferences'
 import {installRebrand} from '#/config/euroskyStrings'
 
-// Eurosky fork: single chokepoint for the "Bluesky" -> "Eurosky" brand swap.
+// Eurosky fork: single chokepoint for the "Bluesky" -> "mu" brand swap.
 installRebrand(i18n)
 
 /**

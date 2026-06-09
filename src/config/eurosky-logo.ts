@@ -1,24 +1,59 @@
 /**
- * Eurosky logo - single source for the standalone star mark.
+ * mu logo - single source for the brand wordmark.
  *
- * Path + viewBox are the official `branding/eurosky_logos/icon/
- * eurosky-icon-black.svg` (the 12-point compass-rose star), verbatim. This
- * is the only brand glyph reused in more than one place (the <Logo>
- * component, the native Splash, web/index.html), so it lives here; the
- * wordmark is inlined in Logotype.tsx since that is its only consumer.
+ * The mu brand has no separate symbol: the wordmark "mu" IS the mark, so the
+ * same glyph backs every logo surface (the in-app <Logo> / <Logotype> /
+ * <Logomark>, the native Splash, and the web pre-boot splash). Path data is
+ * the flat single-tone wordmark from the brand kit
+ * (`mu-brand-package/logos/svg/mu-logos_mu_logo_base-01.svg`), verbatim - the
+ * two glyph paths (m + u) concatenated into one `d` (both share a fill, so a
+ * single recolourable <Path> renders the whole mark).
  *
- * Brand rule: the mark is monochrome - only ever black / white / cotton.
- * The `gradient` stops are the one carve-out for marketing/splash
- * treatments (matches the blue splash mock in the brand guide).
+ * Brand rule: the wordmark is filled with a single colour from the kit - the
+ * theme ink/cotton for UI chrome, or one of the accent families for marketing.
+ * The `gradient` stops are the one carve-out (splash / marketing treatments),
+ * matching the pink hero used throughout the brand guide.
+ *
+ * Export name kept generic (`MU_LOGO`) and re-exported as `EUROSKY_ICON` for
+ * the two upstream-adjacent importers that read `.ratio`/`.viewBox`/`.path`,
+ * so the redirect surface stays small.
  */
-export const EUROSKY_ICON = {
-  viewBox: '0 0 1000 1000',
-  /** width / height - the icon is square. */
-  ratio: 1,
-  path: 'M990.9671,522.1991c-3.0947,0-6.1689,0-9.2229.0001-456.4914.0202-459.525,3.0539-459.5452,459.5452-.0001,3.0539-.0001,6.1282-.0001,9.2228h-44.3979c0-3.0947,0-6.1689-.0001-9.2229-.0202-456.4913-3.0538-459.525-459.5452-459.5452-3.0539-.0001-6.1282-.0001-9.2229-.0001v-44.3981c3.0947,0,6.1689,0,9.2229-.0001,456.4914-.0202,459.525-3.0534,459.5452-459.5452.0001-3.0539.0001-6.1282.0001-9.2229h44.3979c0,3.0947,0,6.1689.0001,9.2228.0202,456.4917,3.0538,459.525,459.5452,459.5452,3.0539.0001,6.1282.0001,9.2229.0001v44.3981Z',
+
+/** m + u glyph paths concatenated; both fill the same colour. */
+const WORDMARK_PATH =
+  'M584.2062,303.3777v198.5049l-119.4809,21.0622v-219.5671c0-17.6445-14.3654-32.0098-32.0098-32.0098s-32.0097,14.3653-32.0097,32.0098v230.8485l-119.4809,21.0615v-220.4836c0-17.6445-14.3378-32.0098-32.0098-32.0098-17.6442,0-31.982,14.3653-31.982,32.0098v231.7928l-119.4809,21.0622v-252.855c0-60.4073,35.5109-112.6456,86.7488-136.9586,19.6449-9.3087,41.5681-14.5322,64.7141-14.5322,4.7515,0,9.4196.2222,14.0598.639,20.673,1.9171,40.1512,8.0021,57.5732,17.3942,14.0598-15.3937,31.2039-27.8697,50.4876-36.4559,18.7557-8.3359,39.5398-13.0038,61.3798-13.0038,3.4733,0,6.9189.1113,10.3366.3612,78.7185,5.3073,141.1542,71.0771,141.1542,151.1295Z M902.2478,71.279v251.1879c0,62.7691-38.3728,116.7579-92.9173,139.7091h-.0278c-18.0054,7.5859-37.7892,11.7817-58.5457,11.7817-2.3896,0-4.7792-.0556-7.1411-.1665h-.0833c-80.1913-3.7792-144.2664-70.2159-144.2664-151.3242V124.7119l119.4809-21.0897v218.8446c0,17.6442,14.3656,32.0098,32.0098,32.0098s32.0098-14.3656,32.0098-32.0098V92.3412l119.4809-21.0622Z'
+
+export const MU_LOGO = {
+  viewBox: '0 0 1000 658.9381',
+  /** height / width - the wordmark is wider than it is tall. */
+  ratio: 658.9381 / 1000,
+  path: WORDMARK_PATH,
   /** Stops for the `fill="sky"` gradient variant (marketing/splash only). */
   gradient: {
-    stop0: '#0087E2',
-    stop1: '#9AC2FF',
+    stop0: '#ffbdf2', // pink primary tint
+    stop1: '#db4aa6', // pink link/anchor
   },
+} as const
+
+/** Back-compat alias for upstream-adjacent importers (Logo.tsx, Splash.tsx). */
+export const EUROSKY_ICON = MU_LOGO
+
+/**
+ * 3D / extruded wordmark for marketing + hero surfaces (e.g. the welcome
+ * modal). Geometry from the brand kit's 3D logo
+ * (`mu-brand-package/logos/svg/mu-logos_mu_logo_pink-06.svg`): a `shadow`
+ * silhouette drawn behind a lighter `face` offset up-and-left, which gives the
+ * drop-shadow look. The two fills are left to the renderer so they can be
+ * driven from the active accent ramp (deep tone behind, bright tone in front).
+ */
+export const MU_LOGO_3D = {
+  viewBox: '0 0 1000 712.872',
+  /** height / width. */
+  ratio: 712.872 / 1000,
+  /** Back/extruded silhouette (drawn first). */
+  shadowPath:
+    'M883.3639,69.5967l-2.9286-3.7416-3.0894.1628-117.5959,20.8196c-1.3829.1628-2.4391,1.6261-2.4391,3.0904v228.2775c0,11.3042-6.1807,20.9824-15.9393,25.943v-181.7601l-43.021-64.734-120.6049,21.2246c-1.7075.3256-2.8462,1.6271-2.8462,3.416v143.7822l-37.2463-55.4639c-1.2201-1.7889-2.5215-3.4964-3.9848-5.2039-57.497-74.4945-168.3423-79.9426-232.9135-11.1424-66.7681-34.4815-148.7429-15.5323-193.6342,44.4029-17.8096,23.9099-28.2194,52.1303-30.4967,82.3828l-.0804,262.0274,42.4512,63.8395c2.4391.1628,4.3908.1628,6.831-.3246l114.7488-20.1693c1.1387-.2432,2.2773-1.5457,2.2773-2.7648v-229.6604c0-11.5484,5.8551-21.4698,15.9393-26.5933v183.4686l43.1024,64.6526,121.0913-21.307c1.4643-.2442,2.2773-2.1959,2.2773-3.6602l.0814-229.7418c0-10.653,6.5878-19.7613,15.7765-24.6416l.0814,177.8577v4.7979l43.1024,64.5722,120.8491-21.308c1.4633-.2442,2.5205-1.7075,2.5205-3.2522v-144.2696l36.9207,54.8126c32.1238,45.7033,86.2048,70.0193,141.9933,64.1642,52.1293-5.5295,99.3783-38.3849,122.23-87.0168,8.2953-16.8347,12.6871-35.0513,14.6388-54.3242V129.6957l-40.0924-60.0989ZM560.0175,494.1917l-112.5538,19.8437v-212.8266c.814-19.5995-14.3132-35.6202-33.2615-36.5146-19.1111-.8945-35.7016,13.7444-36.6774,33.3429v228.3599l-112.4715,19.7613v-217.5431c-1.3015-19.5171-17.8096-33.5057-36.4332-32.6926-18.705.814-33.7499,16.3463-33.5067,35.783v226.8956l-112.3086,19.7613v-251.8618c1.1387-37.2463,16.3463-72.378,42.0451-98.7271,45.6229-46.5998,116.6191-57.904,174.2779-27.0817,1.7889.9759,3.822.5698,4.8803-.6512,60.0979-65.4656,163.2179-63.3511,220.7139,4.1476,1.3829,1.6271,2.7657,3.2542,4.0662,4.9617,19.5995,25.129,30.7409,56.1131,31.2293,88.8871v196.1547ZM831.8034,423.683c-56.3573,55.3825-146.3841,56.6025-204.0429,2.2773-5.2863-4.9607-10.1656-10.3284-14.7192-16.0207-19.5995-24.5602-31.5549-55.1383-31.6363-87.3425l-.3246-197.8632,112.5529-19.8427.1628,215.3472c0,19.1121,17.2408,33.5067,35.0513,33.3438,18.8669-.2442,34.0745-15.0458,34.7257-34.1569V92.5298l112.3086-19.7613.0814,250.1543c-1.1387,38.3849-17.3222,74.3297-44.1597,100.7602Z',
+  /** Front face (the two glyph faces concatenated; drawn on top). */
+  facePath:
+    'M875.8816,72.7683l.0813,250.1542c-1.1385,38.3852-17.3221,74.3306-44.1592,100.7611-56.3579,55.382-146.3841,56.6019-204.0432,2.2771-5.2861-4.9608-10.1656-10.3282-14.7197-16.0209-19.5992-24.56-31.5539-55.138-31.6352-87.3425l-.3253-197.8626,112.5531-19.8432.1626,215.3473c0,19.1113,17.2408,33.5057,35.0509,33.3431,18.8673-.244,34.075-15.045,34.7256-34.1563V92.5301l112.3092-19.7619Z M560.0171,298.0372v196.1547l-112.5531,19.8432v-212.8263c.8132-19.5992-14.3131-35.6201-33.2617-36.5147-19.1113-.8946-35.7015,13.7438-36.6774,33.3431v228.3592l-112.4718,19.7619v-217.5431c-1.3012-19.5179-17.8101-33.5057-36.4334-32.6925-18.7046.8132-33.7497,16.3462-33.5057,35.7828v226.8954l-112.3092,19.7619v-251.862c1.1385-37.2466,16.3462-72.3788,42.0448-98.728,45.6231-46.5989,116.6194-57.9031,174.2784-27.0811,1.7891.9759,3.8223.5693,4.8795-.6506,60.0988-65.4662,163.2183-63.3518,220.7147,4.1476,1.3825,1.6265,2.765,3.253,4.0662,4.9608,19.5992,25.1293,30.7407,56.1139,31.2286,88.8877Z',
 } as const

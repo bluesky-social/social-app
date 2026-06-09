@@ -17,7 +17,7 @@
 export const EUROSKY = {
   brand: {
     /** Display name used in page/tab titles and in-app brand text. */
-    name: 'Eurosky',
+    name: 'mu',
   },
   web: {
     /**

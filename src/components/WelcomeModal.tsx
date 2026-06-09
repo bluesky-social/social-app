@@ -1,21 +1,18 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {ImageBackground} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {FocusGuards, FocusScope} from 'radix-ui/internal'
 
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {Logotype} from '#/view/icons/Logotype'
+import {Logo3D} from '#/view/icons/Logo3D'
 import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {EUROSKY} from '#/config/eurosky'
-
-const welcomeModalBg = require('../../assets/images/welcome-modal-bg.jpg')
 
 interface WelcomeModalProps {
   control: {
@@ -33,6 +30,8 @@ export function WelcomeModal({control}: WelcomeModalProps) {
   const {gtMobile} = useBreakpoints()
   const [isExiting, setIsExiting] = useState(false)
   const [signInLinkHovered, setSignInLinkHovered] = useState(false)
+
+  const linkColor = t.palette.primary_500
 
   const fadeOutAndClose = (callback?: () => void) => {
     setIsExiting(true)
@@ -89,16 +88,13 @@ export function WelcomeModal({control}: WelcomeModalProps) {
               maxHeight: 600,
               width: '90%',
               height: '90%',
-              backgroundColor: '#C0DCF0',
             },
+            t.atoms.bg,
             a.rounded_lg,
             a.overflow_hidden,
             a.zoom_in,
           ])}>
-          <ImageBackground
-            source={welcomeModalBg}
-            style={[a.flex_1, a.justify_center]}
-            contentFit="cover">
+          <View style={[a.flex_1, a.justify_center]}>
             <View style={[a.gap_2xl, a.align_center, a.p_4xl]}>
               <View
                 style={[
@@ -107,9 +103,8 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                   a.justify_center,
                   a.w_full,
                 ]}>
-                <Logotype
+                <Logo3D
                   width={140}
-                  fill="white"
                   accessibilityLabel={EUROSKY.brand.name}
                   accessibilityHint=""
                 />
@@ -127,16 +122,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                     gtMobile ? a.text_4xl : a.text_3xl,
                     a.font_semi_bold,
                     a.text_center,
-                    {
-                      // White + soft shadow reads across both the bright
-                      // sky and dark rock of the alps image; the upstream
-                      // gradient was tuned for an all-clouds background and
-                      // disappeared over the mountains.
-                      color: 'white',
-                      textShadowColor: 'rgba(0,0,0,0.45)',
-                      textShadowOffset: {width: 0, height: 1},
-                      textShadowRadius: 8,
-                    },
+                    t.atoms.text,
                     web({lineHeight: 1.2, letterSpacing: -0.5}),
                   ]}>
                   <Trans>Real people.</Trans>
@@ -171,15 +157,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                     hoverStyle={[a.bg_transparent]}>
                     {({hovered}) => (
                       <ButtonText
-                        style={[
-                          hovered && [a.underline],
-                          {
-                            color: t.palette.primary_300,
-                            textShadowColor: 'rgba(0,0,0,0.55)',
-                            textShadowOffset: {width: 0, height: 1},
-                            textShadowRadius: 6,
-                          },
-                        ]}>
+                        style={[hovered && [a.underline], {color: linkColor}]}>
                         <Trans>Explore the app</Trans>
                       </ButtonText>
                     )}
@@ -190,13 +168,8 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                     style={[
                       a.text_md,
                       a.text_center,
-                      {
-                        color: 'white',
-                        textShadowColor: 'rgba(0,0,0,0.45)',
-                        textShadowOffset: {width: 0, height: 1},
-                        textShadowRadius: 6,
-                        lineHeight: 24,
-                      },
+                      t.atoms.text_contrast_medium,
+                      {lineHeight: 24},
                     ]}>
                     <Trans>Already have an account?</Trans>{' '}
                     <Pressable
@@ -208,13 +181,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                       <Text
                         style={[
                           a.font_medium,
-                          {
-                            color: t.palette.primary_300,
-                            fontSize: undefined,
-                            textShadowColor: 'rgba(0,0,0,0.55)',
-                            textShadowOffset: {width: 0, height: 1},
-                            textShadowRadius: 6,
-                          },
+                          {color: linkColor, fontSize: undefined},
                           signInLinkHovered && a.underline,
                         ]}
                         onPress={onPressSignIn}>
@@ -247,14 +214,14 @@ export function WelcomeModal({control}: WelcomeModalProps) {
               {({hovered, pressed, focused}) => (
                 <XIcon
                   size="md"
-                  style={{
-                    color: 'white',
-                    opacity: hovered || pressed || focused ? 1 : 0.7,
-                  }}
+                  style={[
+                    t.atoms.text_contrast_medium,
+                    {opacity: hovered || pressed || focused ? 1 : 0.7},
+                  ]}
                 />
               )}
             </Button>
-          </ImageBackground>
+          </View>
         </View>
       </FocusScope.FocusScope>
     </View>
