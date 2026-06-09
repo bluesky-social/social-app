@@ -143,6 +143,31 @@ func bskyPostURLFromATURI(handle, atURI string) string {
 	return bskyPostURL(handle, parsed.RecordKey().String())
 }
 
+// bskyPostURLFromATURIWithDIDFallback returns the handle-form post URL
+// when the handle is usable, otherwise falls back to the DID-form URL
+// derived from the AT-URI's authority. Returns "" only when the AT-URI is
+// unparseable or has no record key. Used for nested fields (e.g.
+// VideoObject.embedUrl) where omitting on handle.invalid would weaken the
+// emitted structured data.
+func bskyPostURLFromATURIWithDIDFallback(handle, atURI string) string {
+	parsed, err := syntax.ParseATURI(atURI)
+	if err != nil {
+		return ""
+	}
+	rkey := parsed.RecordKey().String()
+	if rkey == "" {
+		return ""
+	}
+	if url := bskyPostURL(handle, rkey); url != "" {
+		return url
+	}
+	did := parsed.Authority().String()
+	if did == "" {
+		return ""
+	}
+	return fmt.Sprintf("https://bsky.app/profile/%s/post/%s", did, rkey)
+}
+
 // bskyProfileURL returns the canonical handle-form profile URL, or "" if
 // the handle is unusable.
 func bskyProfileURL(handle string) string {
@@ -221,6 +246,8 @@ func buildVideoObject(pv *appbsky.FeedDefs_PostView, embedURL, postText string, 
 		Type:       "VideoObject",
 		ContentURL: v.Playlist,
 		EmbedURL:   embedURL,
+		// uploadDate uses IndexedAt (not record CreatedAt) for consistency
+		// with DiscussionForumPosting.datePublished on the parent post.
 		UploadDate: pv.IndexedAt,
 	}
 	if v.Thumbnail != nil {
@@ -437,6 +464,12 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 
 	postURL := bskyPostURLFromATURI(pv.Author.Handle, pv.Uri)
 	postText := postRecordText(pv)
+	// videoEmbedURL prefers the handle-form URL but falls back to DID-form
+	// for handle.invalid authors so VideoObject.embedUrl is never empty.
+	videoEmbedURL := postURL
+	if videoEmbedURL == "" {
+		videoEmbedURL = bskyPostURLFromATURIWithDIDFallback(pv.Author.Handle, pv.Uri)
+	}
 
 	node := discussionForumPosting{
 		Type:            "DiscussionForumPosting",
@@ -446,7 +479,7 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 		Text:            postText,
 		Image:           images,
 		ThumbnailURL:    thumb,
-		Video:           buildVideoObject(pv, postURL, postText, embedHidden),
+		Video:           buildVideoObject(pv, videoEmbedURL, postText, embedHidden),
 		DatePublished:   pv.IndexedAt,
 		InteractionStat: buildPostStats(pv),
 	}
@@ -511,6 +544,10 @@ func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) c
 	}
 	postURL := bskyPostURLFromATURI(pv.Author.Handle, pv.Uri)
 	postText := postRecordText(pv)
+	videoEmbedURL := postURL
+	if videoEmbedURL == "" {
+		videoEmbedURL = bskyPostURLFromATURIWithDIDFallback(pv.Author.Handle, pv.Uri)
+	}
 	return comment{
 		Type:          "Comment",
 		URL:           postURL,
@@ -519,7 +556,7 @@ func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) c
 		Text:          postText,
 		Image:         images,
 		ThumbnailURL:  thumb,
-		Video:         buildVideoObject(pv, postURL, postText, embedHidden),
+		Video:         buildVideoObject(pv, videoEmbedURL, postText, embedHidden),
 		DatePublished: pv.IndexedAt,
 	}
 }

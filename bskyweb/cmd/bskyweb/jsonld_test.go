@@ -1337,3 +1337,51 @@ func TestBuildProfileJSONLD_HasPartVideo(t *testing.T) {
 		t.Errorf("hasPart video embedUrl = %v", video["embedUrl"])
 	}
 }
+
+// handle.invalid authors must still produce a non-empty embedUrl on the
+// VideoObject. The handle-form URL is unusable, so we fall back to the
+// DID-form URL derived from the AT-URI authority. Without this fallback,
+// omitempty drops embedUrl and Google's video indexer loses the canonical
+// page reference.
+func TestBuildPostJSONLD_VideoHandleInvalidEmbedURL(t *testing.T) {
+	playlist := "https://video.bsky.app/p.m3u8"
+	pv := makePostView("handle.invalid", "did:plc:alice", "abc123", "watch",
+		withVideoFull(videoEmbedOpts{
+			playlist: playlist, alt: "scenic clip",
+		}))
+	canonical := "https://bsky.app/profile/did:plc:alice/post/abc123"
+	out, _ := buildPostJSONLD(pv, nil, canonical, hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	video, ok := main["video"].(map[string]any)
+	if !ok {
+		t.Fatalf("video missing on handle.invalid post")
+	}
+	if video["embedUrl"] != canonical {
+		t.Errorf("embedUrl = %v, want %v", video["embedUrl"], canonical)
+	}
+	if video["contentUrl"] != playlist {
+		t.Errorf("contentUrl = %v, want %v", video["contentUrl"], playlist)
+	}
+}
+
+// Same fallback applies to videos on replies whose author is handle.invalid.
+func TestBuildPostJSONLD_VideoHandleInvalidEmbedURL_Reply(t *testing.T) {
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "main")
+	*pv.ReplyCount = 1
+	playlist := "https://video.bsky.app/bob.m3u8"
+	reply := makePostView("handle.invalid", "did:plc:bob", "rep1", "watch",
+		withVideoFull(videoEmbedOpts{
+			playlist: playlist, alt: "bob's clip",
+		}))
+	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	c := main["comment"].([]any)[0].(map[string]any)
+	video, ok := c["video"].(map[string]any)
+	if !ok {
+		t.Fatalf("reply video missing")
+	}
+	want := "https://bsky.app/profile/did:plc:bob/post/rep1"
+	if video["embedUrl"] != want {
+		t.Errorf("reply video embedUrl = %v, want %v", video["embedUrl"], want)
+	}
+}
