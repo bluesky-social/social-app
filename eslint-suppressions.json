@@ -645,14 +645,6 @@
       "count": 2
     }
   },
-  "src/components/hooks/useFullscreen.ts": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    },
-    "react-hooks/set-state-in-effect": {
-      "count": 1
-    }
-  },
   "src/components/hooks/useLandingEntry.native.ts": {
     "react-hooks/set-state-in-effect": {
       "count": 1
