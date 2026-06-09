@@ -402,9 +402,10 @@ func TestBuildPostJSONLD_GalleryInRecordWithMedia(t *testing.T) {
 	}
 }
 
-// Forward-compat: nil items and unknown-variant union elements must be
-// skipped, not panic. Unknown variants are dropped silently so older
-// deploys keep working when new gallery item types ship.
+// Forward-compat: nil items, unknown-variant union elements, and empty
+// Thumbnail strings must be skipped, not panic or leak as <meta
+// property="og:image" content="">. Unknown variants are dropped silently
+// so older deploys keep working when new gallery item types ship.
 func TestExtractPostMedia_GallerySkipsUnknownItems(t *testing.T) {
 	thumb := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g@jpeg"
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "gallery")
@@ -413,6 +414,7 @@ func TestExtractPostMedia_GallerySkipsUnknownItems(t *testing.T) {
 			Items: []*appbsky.EmbedGallery_View_Items_Elem{
 				nil,
 				{}, // empty union, no variant set
+				{EmbedGallery_ViewImage: &appbsky.EmbedGallery_ViewImage{Thumbnail: ""}}, // empty Thumbnail
 				{EmbedGallery_ViewImage: &appbsky.EmbedGallery_ViewImage{Thumbnail: thumb}},
 			},
 		},
@@ -492,6 +494,25 @@ func TestBuildPostJSONLD_HiddenEmbed(t *testing.T) {
 	}
 	if _, present := main["thumbnailUrl"]; present {
 		t.Errorf("hidden-embed post should not emit thumbnailUrl")
+	}
+}
+
+// Symmetric guard for the gallery extraction path. Functionally redundant
+// with the early-return at the top of extractPostMedia, but exists so the
+// hide-embed contract is asserted directly against the gallery branch -
+// catches anyone who later moves the embedHidden check inside an
+// embed-shape branch.
+func TestBuildPostJSONLD_HiddenEmbed_Gallery(t *testing.T) {
+	thumb := "https://cdn.bsky.app/img/g@jpeg"
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "nsfw",
+		withGallery(thumb), withSelfLabel("porn"))
+	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	if _, present := main["image"]; present {
+		t.Errorf("hidden-embed gallery post should not emit image")
+	}
+	if _, present := main["thumbnailUrl"]; present {
+		t.Errorf("hidden-embed gallery post should not emit thumbnailUrl")
 	}
 }
 

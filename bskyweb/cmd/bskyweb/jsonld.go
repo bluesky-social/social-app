@@ -183,7 +183,8 @@ func imageThumbs(images []*appbsky.EmbedImages_ViewImage) []string {
 // galleryThumbs returns the thumbnail URLs of image items in a gallery
 // embed, or nil if empty. Items_Elem is a union; non-image variants and
 // nil entries are skipped so future gallery item types don't break SEO
-// extraction.
+// extraction. Empty Thumbnail strings are also skipped to avoid emitting
+// <meta property="og:image" content=""> if the appview ever returns one.
 func galleryThumbs(items []*appbsky.EmbedGallery_View_Items_Elem) []string {
 	if len(items) == 0 {
 		return nil
@@ -191,6 +192,9 @@ func galleryThumbs(items []*appbsky.EmbedGallery_View_Items_Elem) []string {
 	urls := make([]string, 0, len(items))
 	for _, item := range items {
 		if item == nil || item.EmbedGallery_ViewImage == nil {
+			continue
+		}
+		if item.EmbedGallery_ViewImage.Thumbnail == "" {
 			continue
 		}
 		urls = append(urls, item.EmbedGallery_ViewImage.Thumbnail)
