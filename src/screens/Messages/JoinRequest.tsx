@@ -127,7 +127,9 @@ export function JoinRequest({setScreenState}: Props) {
                         a.leading_snug,
                         t.atoms.text_contrast_medium,
                       ]}>
-                      <Trans comment="The number of active group chat members out of the total number allowed.">
+                      <Trans
+                        context="group-chat-member-count"
+                        comment="The number of active group chat members out of the total number allowed.">
                         {data.joinLinkPreviews[0].memberCount}/
                         {data.joinLinkPreviews[0].memberLimit}
                       </Trans>
