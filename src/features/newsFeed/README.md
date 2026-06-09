@@ -9,9 +9,8 @@ accounts matching those facets.
 Two datasets, deliberately stored differently:
 
 - **User selections (Dataset 1)** - per-user, synced. Stored as a published
-  atproto record in the user's PDS: collection `social.redacted.newsFeedPrefs`,
-  rkey `self`. See `state/prefs.ts`. (`redacted` is a placeholder authority
-  segment until the real domain is chosen.)
+  atproto record in the user's PDS: collection `social.mu.newsFeedPrefs`,
+  rkey `self`. See `state/prefs.ts`.
 - **Source registry (Dataset 2)** - shared, operator-curated config mapping
   accounts to topic / region / language tags. Local list in `sources.ts`. This
   is not a user preference, so it does not live in the PDS.
@@ -51,6 +50,4 @@ the mobile drawer.
 
 ## Not yet done
 
-- The source registry holds curated demo accounts with placeholder tags; the
-  `social.redacted.*` lexicon authority is a placeholder pending the real domain.
 - The news feed is its own screen/route, not a tab inside the home swipe-pager.
