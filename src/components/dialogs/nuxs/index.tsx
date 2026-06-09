@@ -18,7 +18,6 @@ import {
 import {useProfileQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
-import * as Dialog from '#/components/Dialog'
 import {
   DraftsAnnouncement,
   enabled as isDraftsAnnouncementEnabled,
@@ -30,19 +29,11 @@ import {
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
 import {type EnabledCheckProps} from '#/components/dialogs/nuxs/utils'
 import {useAnalytics} from '#/analytics'
-import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {useGeolocation} from '#/geolocation'
 
 type Context = {
   activeNux: Nux | undefined
   dismissActiveNux: () => void
-  /**
-   * Opens the invite-friends dialog. It is mounted persistently by NuxDialogs
-   * (not inside the announcement NUX) so it survives the announcement being
-   * dismissed - the native bottom sheet cannot hand off between two sheets
-   * mounted in the same subtree.
-   */
-  openInviteFriends: () => void
 }
 
 const queuedNuxs: {
@@ -62,7 +53,6 @@ const queuedNuxs: {
 const Context = createContext<Context>({
   activeNux: undefined,
   dismissActiveNux: () => {},
-  openInviteFriends: () => {},
 })
 Context.displayName = 'NuxDialogContext'
 
@@ -115,7 +105,6 @@ function Inner({
   const [activeNux, setActiveNux] = useState<Nux | undefined>()
   const {mutateAsync: saveNux} = useSaveNux()
   const {mutate: resetNuxs} = useResetNuxs()
-  const inviteFriendsControl = Dialog.useDialogControl()
 
   const snoozeNuxDialog = useCallback(() => {
     snooze()
@@ -199,26 +188,19 @@ function Inner({
     return {
       activeNux,
       dismissActiveNux,
-      openInviteFriends: () => {
-        ax.metric('invite:dialog:open', {logContext: 'NuxAnnouncement'})
-        inviteFriendsControl.open()
-      },
     }
-  }, [ax, activeNux, dismissActiveNux, inviteFriendsControl])
+  }, [activeNux, dismissActiveNux])
 
   return (
     <Context.Provider value={ctx}>
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
       {activeNux === Nux.DraftsAnnouncement && <DraftsAnnouncement />}
-      {activeNux === Nux.InviteFriendsAnnouncement && (
-        <InviteFriendsAnnouncement />
-      )}
       {/*
-        Mounted persistently (not inside the announcement) so the invite dialog
-        survives the announcement NUX being dismissed during the "Try it"
-        handoff.
+        Mounted unconditionally: it gates the announcement on `activeNux`
+        internally, so it can keep the invite-friends dialog mounted across
+        the announcement's dismissal during the "Try it" handoff.
       */}
-      <InviteFriendsDialog control={inviteFriendsControl} />
+      <InviteFriendsAnnouncement />
     </Context.Provider>
   )
 }

@@ -4,6 +4,7 @@ import {Image} from 'expo-image'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useCallOnce} from '#/lib/once'
+import {Nux} from '#/state/queries/nuxs'
 import {atoms as a, useTheme, web} from '#/alf'
 import {themes} from '#/alf/themes'
 import {Button, ButtonText} from '#/components/Button'
@@ -13,6 +14,7 @@ import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_E2E, IS_NATIVE, IS_WEB} from '#/env'
+import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {createIsEnabledCheck} from './utils'
 
 export const enabled = createIsEnabledCheck(() => {
@@ -22,6 +24,30 @@ export const enabled = createIsEnabledCheck(() => {
 })
 
 export function InviteFriendsAnnouncement() {
+  const {activeNux} = useNuxDialogContext()
+  /*
+   * The invite dialog's control lives here (outside the activeNux
+   * conditional) so the dialog survives the announcement being dismissed
+   * during the "Try it" handoff - the native bottom sheet cannot hand off to
+   * a second sheet that unmounts along with the first.
+   */
+  const inviteFriendsControl = Dialog.useDialogControl()
+
+  return (
+    <>
+      {activeNux === Nux.InviteFriendsAnnouncement && (
+        <Announcement inviteFriendsControl={inviteFriendsControl} />
+      )}
+      <InviteFriendsDialog control={inviteFriendsControl} />
+    </>
+  )
+}
+
+function Announcement({
+  inviteFriendsControl,
+}: {
+  inviteFriendsControl: Dialog.DialogControlProps
+}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const ax = useAnalytics()
@@ -43,15 +69,18 @@ export function InviteFriendsAnnouncement() {
 
   const onPressTryIt = useCallback(() => {
     ax.metric('invite:nux:tryItPressed', {})
-    // Close this announcement (which dismisses + unmounts the NUX), then open
-    // the invite dialog. The invite dialog is mounted persistently by NuxDialogs
-    // (not here) so it survives the dismissal - the native bottom sheet cannot
-    // hand off to a second sheet mounted in this same subtree. Defer the open to
-    // the next frame so the announcement's teardown completes first.
+    // Close this announcement (which dismisses the NUX and unmounts this
+    // component), then open the invite dialog. Its control lives in the
+    // parent, which stays mounted, so the dialog survives the dismissal.
+    // Defer the open to the next frame so the announcement's teardown
+    // completes first.
     control.close(() => {
-      requestAnimationFrame(() => nuxDialogs.openInviteFriends())
+      requestAnimationFrame(() => {
+        ax.metric('invite:dialog:open', {logContext: 'NuxAnnouncement'})
+        inviteFriendsControl.open()
+      })
     })
-  }, [ax, control, nuxDialogs])
+  }, [ax, control, inviteFriendsControl])
 
   return (
     <>
