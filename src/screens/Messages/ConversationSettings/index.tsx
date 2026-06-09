@@ -11,6 +11,7 @@ import {useNavigation} from '@react-navigation/native'
 import {HITSLOP_10} from '#/lib/constants'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -214,6 +215,12 @@ function GroupSettings({
     const bIsSelf = b.did === currentAccount?.did
     if (aIsOwner !== bIsOwner) return aIsOwner ? -1 : 1
     if (aIsSelf !== bIsSelf) return aIsSelf ? -1 : 1
+    // Surface blocked members to the owner so they can be removed.
+    if (isOwner) {
+      const aBlocked = !!isBlockedOrBlocking(a)
+      const bBlocked = !!isBlockedOrBlocking(b)
+      if (aBlocked !== bBlocked) return aBlocked ? -1 : 1
+    }
     return 0
   })
 

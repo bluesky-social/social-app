@@ -26,7 +26,7 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
-import {BlockMemberPrompt} from './prompts'
+import {BlockMemberPrompt, RemoveMemberPrompt} from './prompts'
 import {StatusBadge} from './StatusBadge'
 
 export function MemberMenu({
@@ -50,6 +50,7 @@ export function MemberMenu({
   const requireEmailVerification = useRequireEmailVerification()
 
   const blockMemberPrompt = Prompt.usePromptControl()
+  const removeMemberPrompt = Prompt.usePromptControl()
 
   const [menuDidOpen, setMenuDidOpen] = useState(false)
   const {data: convoAvailability} = useGetConvoAvailabilityQuery(profile.did, {
@@ -227,7 +228,7 @@ export function MemberMenu({
               <Menu.Item
                 destructive
                 label={l`Remove ${displayName} from this group chat`}
-                onPress={() => removeMembers({members: [profile.did]})}>
+                onPress={removeMemberPrompt.open}>
                 <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
                 <Menu.ItemText>
                   <Trans>Remove from chat</Trans>
@@ -240,6 +241,11 @@ export function MemberMenu({
       <BlockMemberPrompt
         control={blockMemberPrompt}
         onConfirm={() => void handleBlockMember()}
+      />
+      <RemoveMemberPrompt
+        control={removeMemberPrompt}
+        displayName={displayName}
+        onConfirm={() => removeMembers({members: [profile.did]})}
       />
     </>
   )
