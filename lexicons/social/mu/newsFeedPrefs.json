@@ -1,0 +1,36 @@
+{
+  "lexicon": 1,
+  "id": "social.mu.newsFeedPrefs",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "A user's News feed preferences: the topics and regions they selected and the news sources they opted out of. Stored as a singleton at rkey 'self'.",
+      "key": "literal:self",
+      "record": {
+        "type": "object",
+        "required": ["topics", "regions", "excludedDids", "createdAt"],
+        "properties": {
+          "topics": {
+            "type": "array",
+            "description": "Topic ids the user selected (e.g. 'politics', 'tech'). 'all' disables topic filtering.",
+            "items": {"type": "string"}
+          },
+          "regions": {
+            "type": "array",
+            "description": "Region ids the user selected (e.g. 'global', 'uk'). Empty means no region filter.",
+            "items": {"type": "string"}
+          },
+          "excludedDids": {
+            "type": "array",
+            "description": "DIDs of curated sources the user opted out of.",
+            "items": {"type": "string", "format": "did"}
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}
