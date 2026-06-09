@@ -1,5 +1,6 @@
 import {View} from 'react-native'
 import {
+  ChatBskyGroupDefs,
   ChatBskyGroupRequestJoin,
   ChatBskyGroupWithdrawJoinRequest,
   moderateProfile,
@@ -211,7 +212,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
 
   const joinLinkPreview = data.joinLinkPreviews[0]
 
-  if (!joinLinkPreview) {
+  if (!ChatBskyGroupDefs.isJoinLinkPreviewView(joinLinkPreview)) {
     return (
       <>
         <View style={[a.py_lg, a.align_center]}>
@@ -253,12 +254,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
     ? l`Request to join`
     : l`Join`
   let buttonColor: ButtonColor = 'primary'
-  if (joinLinkPreview.enabledStatus !== 'enabled') {
-    canJoin = false
-    ButtonIconImage = WarningIcon
-    buttonText = l`Chat invite link no longer available`
-    buttonColor = 'secondary'
-  } else if (joinLinkPreview.memberCount >= joinLinkPreview.memberLimit) {
+  if (joinLinkPreview.memberCount >= joinLinkPreview.memberLimit) {
     canJoin = false
     ButtonIconImage = HandIcon
     buttonText = l`This chat is full`
@@ -311,10 +307,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
               </Trans>
             </Text>
             <View style={[a.flex_row, a.ml_md]}>
-              <PersonGroupIcon
-                size="xs"
-                style={[a.mr_xs, t.atoms.text, {marginTop: -2}]}
-              />
+              <PersonGroupIcon size="xs" style={[a.mr_xs, t.atoms.text]} />
             </View>
             <Text
               style={[a.text_center, a.text_xs, a.leading_snug, t.atoms.text]}>
@@ -371,7 +364,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
                 </InlineLinkText>
               </Text>
               <ProfileBadges
-                profile={data.joinLinkPreviews[0].owner}
+                profile={joinLinkPreview.owner}
                 size="sm"
                 style={{marginTop: -3}}
               />

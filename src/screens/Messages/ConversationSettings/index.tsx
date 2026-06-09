@@ -11,6 +11,7 @@ import {useNavigation} from '@react-navigation/native'
 import {HITSLOP_10} from '#/lib/constants'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -54,6 +55,7 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 import {InviteLinkDialog} from '../components/InviteLinkDialog'
 import {AddMembersLink} from './AddMembersLink'
@@ -86,12 +88,23 @@ type Props = NativeStackScreenProps<
 >
 
 export function MessagesConversationSettingsScreen({route}: Props) {
+  const navigation = useNavigation<NavigationProp>()
+
   const convoId = route.params.conversation
 
   return (
     <Layout.Screen>
       <Layout.Header.Outer>
-        <Layout.Header.BackButton />
+        <Layout.Header.BackButton
+          onPress={evt => {
+            if (IS_WEB && !navigation.canGoBack()) {
+              evt.preventDefault()
+              navigation.navigate('MessagesConversation', {
+                conversation: convoId,
+              })
+            }
+          }}
+        />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
             <Trans>Group chat settings</Trans>
@@ -214,6 +227,12 @@ function GroupSettings({
     const bIsSelf = b.did === currentAccount?.did
     if (aIsOwner !== bIsOwner) return aIsOwner ? -1 : 1
     if (aIsSelf !== bIsSelf) return aIsSelf ? -1 : 1
+    // Surface blocked members to the owner so they can be removed.
+    if (isOwner) {
+      const aBlocked = !!isBlockedOrBlocking(a)
+      const bBlocked = !!isBlockedOrBlocking(b)
+      if (aBlocked !== bBlocked) return aBlocked ? -1 : 1
+    }
     return 0
   })
 

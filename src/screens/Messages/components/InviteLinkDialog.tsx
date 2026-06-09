@@ -516,7 +516,8 @@ export function InviteLinkDialog({
           </View>
         }
         label={l`Group chat invite link dialog`}
-        style={web({maxWidth: 400})}>
+        style={web({maxWidth: 400})}
+        contentContainerStyle={web(a.pt_0)}>
         {content}
       </Dialog.ScrollableInner>
     </Dialog.Outer>

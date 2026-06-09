@@ -76,7 +76,14 @@ export function OutgoingRequestListItem({
               moderationOpts={moderationOpts}
             />
             <View style={[a.flex_1]}>
-              <View style={[a.w_full, a.flex_row, a.align_center, a.pb_2xs]}>
+              <View
+                style={[
+                  a.w_full,
+                  a.flex_row,
+                  a.align_center,
+                  a.gap_xs,
+                  a.pb_2xs,
+                ]}>
                 <View style={[a.flex_shrink]}>
                   <Text
                     emoji
@@ -85,8 +92,8 @@ export function OutgoingRequestListItem({
                     {convoView.name}
                   </Text>
                 </View>
-                <View style={[a.pl_xs]}>
-                  <TimeElapsed timestamp={convoView.requestedAt}>
+                {convoView.viewer?.requestedAt ? (
+                  <TimeElapsed timestamp={convoView.viewer.requestedAt}>
                     {({timeElapsed}) => (
                       <Text
                         style={[
@@ -98,7 +105,7 @@ export function OutgoingRequestListItem({
                       </Text>
                     )}
                   </TimeElapsed>
-                </View>
+                ) : null}
               </View>
               <Text
                 numberOfLines={1}

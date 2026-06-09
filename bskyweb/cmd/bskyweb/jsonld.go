@@ -177,9 +177,9 @@ func bskyProfileURL(handle string) string {
 	return fmt.Sprintf("https://bsky.app/profile/%s", handle)
 }
 
-// extractPostMedia returns thumbnail URLs for the post's image or video
-// embed, byte-identical to what we put in og:image. Callers derive
-// thumbnailUrl from urls[0].
+// extractPostMedia returns thumbnail URLs for the post's image, gallery,
+// or video embed, byte-identical to what we put in og:image. Callers
+// derive thumbnailUrl from urls[0].
 func extractPostMedia(pv *appbsky.FeedDefs_PostView, embedHidden bool) []string {
 	if pv == nil || pv.Embed == nil || embedHidden {
 		return nil
@@ -188,6 +188,9 @@ func extractPostMedia(pv *appbsky.FeedDefs_PostView, embedHidden bool) []string 
 	if pv.Embed.EmbedImages_View != nil {
 		return imageThumbs(pv.Embed.EmbedImages_View.Images)
 	}
+	if pv.Embed.EmbedGallery_View != nil {
+		return galleryThumbs(pv.Embed.EmbedGallery_View.Items)
+	}
 	if pv.Embed.EmbedVideo_View != nil && pv.Embed.EmbedVideo_View.Thumbnail != nil {
 		return []string{*pv.Embed.EmbedVideo_View.Thumbnail}
 	}
@@ -195,6 +198,9 @@ func extractPostMedia(pv *appbsky.FeedDefs_PostView, embedHidden bool) []string 
 		media := pv.Embed.EmbedRecordWithMedia_View.Media
 		if media.EmbedImages_View != nil {
 			return imageThumbs(media.EmbedImages_View.Images)
+		}
+		if media.EmbedGallery_View != nil {
+			return galleryThumbs(media.EmbedGallery_View.Items)
 		}
 		if media.EmbedVideo_View != nil && media.EmbedVideo_View.Thumbnail != nil {
 			return []string{*media.EmbedVideo_View.Thumbnail}
@@ -211,6 +217,31 @@ func imageThumbs(images []*appbsky.EmbedImages_ViewImage) []string {
 	urls := make([]string, 0, len(images))
 	for _, img := range images {
 		urls = append(urls, img.Thumb)
+	}
+	return urls
+}
+
+// galleryThumbs returns the thumbnail URLs of image items in a gallery
+// embed, or nil if empty. Items_Elem is a union; non-image variants and
+// nil entries are skipped so future gallery item types don't break SEO
+// extraction. Empty Thumbnail strings are also skipped to avoid emitting
+// <meta property="og:image" content=""> if the appview ever returns one.
+func galleryThumbs(items []*appbsky.EmbedGallery_View_Items_Elem) []string {
+	if len(items) == 0 {
+		return nil
+	}
+	urls := make([]string, 0, len(items))
+	for _, item := range items {
+		if item == nil || item.EmbedGallery_ViewImage == nil {
+			continue
+		}
+		if item.EmbedGallery_ViewImage.Thumbnail == "" {
+			continue
+		}
+		urls = append(urls, item.EmbedGallery_ViewImage.Thumbnail)
+	}
+	if len(urls) == 0 {
+		return nil
 	}
 	return urls
 }

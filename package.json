@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.123.0",
+  "version": "1.124.0",
   "private": true,
   "engines": {
     "node": ">=24.15.0"
@@ -59,7 +59,7 @@
     "test-watch": "NODE_ENV=test jest --watchAll",
     "test-ci": "NODE_ENV=test jest --ci --forceExit --reporters=default --reporters=jest-junit",
     "test-coverage": "NODE_ENV=test jest --coverage",
-    "lint": "eslint --cache --quiet src",
+    "lint": "eslint --cache --quiet src modules",
     "lint-native": "swiftlint ./modules && ktlint ./modules",
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
     "typecheck": "tsgo --project ./tsconfig.check.json",
@@ -93,7 +93,7 @@
     "prettier": "prettier --check ."
   },
   "dependencies": {
-    "@atproto/api": "0.20.9",
+    "@atproto/api": "0.20.11",
     "@atproto/syntax": "0.6.1",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",

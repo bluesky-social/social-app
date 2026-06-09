@@ -20,6 +20,8 @@ import {useMessagesEventBus} from '#/state/messages/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
 import {parseConvoView} from '#/components/dms/util'
+import {useAgeAssurance} from '#/ageAssurance'
+import {type AgeAssuranceFlags} from '#/ageAssurance/types'
 import * as bsky from '#/types/bsky'
 import {RQKEY as CONVO_KEY} from './conversation'
 import {useLeftConvos} from './leave-conversation'
@@ -122,10 +124,12 @@ export function ListConvosProviderInner({
 }: {
   children: React.ReactNode
 }) {
+  const aa = useAgeAssurance()
   const {refetch, data} = useListConvosQuery({
     readState: 'unread',
     limit: UNREAD_LIMIT,
     lockStatus: 'unlocked',
+    kind: aa.flags.groupChatDisabled ? 'direct' : 'all',
   })
   const messagesBus = useMessagesEventBus()
   const queryClient = useQueryClient()
@@ -676,6 +680,7 @@ export function useUnreadMessageCount() {
   const {currentAccount} = useSession()
   const {accepted, request} = useListConvos()
   const moderationOpts = useModerationOpts()
+  const aa = useAgeAssurance()
 
   return useMemo<{
     count: number
@@ -687,12 +692,14 @@ export function useUnreadMessageCount() {
       currentAccount?.did,
       currentConvoId,
       moderationOpts,
+      aa.flags,
     )
     const requestCount = calculateCount(
       request,
       currentAccount?.did,
       currentConvoId,
       moderationOpts,
+      aa.flags,
     )
     if (acceptedCount > 0) {
       const total = acceptedCount + Math.min(requestCount, 1)
@@ -723,6 +730,7 @@ function calculateCount(
   currentAccountDid: string | undefined,
   currentConvoId: string | undefined,
   moderationOpts: ModerationOpts | undefined,
+  flags: AgeAssuranceFlags,
 ) {
   return (
     convos
@@ -731,6 +739,8 @@ function calculateCount(
         const convo = parseConvoView(convoView, currentAccountDid)
 
         if (!convo || !moderationOpts) return acc
+
+        if (convo.kind === 'group' && flags.groupChatDisabled) return acc
 
         const shouldIgnore =
           convo.view.muted ||

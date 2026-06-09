@@ -36,6 +36,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Ti
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {useAgeAssurance} from '#/ageAssurance'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {ChatProfileTabs} from './ChatProfileTabs'
@@ -209,6 +210,7 @@ export function InitiateChatFlow({
   const [footerHeight, setFooterHeight] = useState(0)
   const listRef = useRef<ListMethods>(null)
   const {currentAccount} = useSession()
+  const aa = useAgeAssurance()
   const inputRef = useRef<TextInput>(null)
   const accountTooNewPromptControl = Dialog.useDialogControl()
 
@@ -301,6 +303,7 @@ export function InitiateChatFlow({
       if (follows) {
         for (const page of follows.pages) {
           for (const profile of page.follows) {
+            if (!checker(profile)) continue
             _items.push({
               type: 'profile',
               key: profile.did,
@@ -308,10 +311,6 @@ export function InitiateChatFlow({
             })
           }
         }
-
-        _items = _items.sort(item => {
-          return item.type === 'profile' && checker(item.profile) ? -1 : 1
-        })
       } else {
         _items.push(...placeholders)
       }
@@ -330,7 +329,11 @@ export function InitiateChatFlow({
       })
     }
 
-    if (chatState === ChatState.NEW_CHAT && searchText === '') {
+    if (
+      chatState === ChatState.NEW_CHAT &&
+      searchText === '' &&
+      !aa.flags.groupChatDisabled
+    ) {
       _items.unshift({type: 'newGroupChat', key: 'newGroupChat'})
     }
 
@@ -344,6 +347,7 @@ export function InitiateChatFlow({
     results,
     currentAccount?.did,
     follows,
+    aa.flags.groupChatDisabled,
   ])
 
   if (searchText && !isFetching && !items.length && !isError) {
@@ -510,7 +514,6 @@ export function InitiateChatFlow({
               a.relative,
               a.align_center,
               a.justify_between,
-              web(a.pb_lg),
             ]}>
             {IS_NATIVE ? (
               <Button
@@ -546,7 +549,7 @@ export function InitiateChatFlow({
                 color="secondary"
                 style={[a.absolute, a.z_20, {right: -4}]}
                 onPress={() => control.close()}>
-                <ButtonIcon icon={XIcon} size="lg" />
+                <ButtonIcon icon={XIcon} size="md" />
               </Button>
             ) : showButton ? (
               <Button
