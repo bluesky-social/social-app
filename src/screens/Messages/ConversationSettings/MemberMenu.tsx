@@ -22,11 +22,12 @@ import {
   PersonX_Stroke2_Corner0_Rounded as PersonXIcon,
 } from '#/components/icons/Person'
 import * as Menu from '#/components/Menu'
+import {BlockDialog} from '#/components/moderation/BlockDialog'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
-import {BlockMemberPrompt, RemoveMemberPrompt} from './prompts'
+import {RemoveMemberPrompt} from './prompts'
 import {StatusBadge} from './StatusBadge'
 
 export function MemberMenu({
@@ -238,9 +239,11 @@ export function MemberMenu({
           </Menu.Group>
         </Menu.Outer>
       </Menu.Root>
-      <BlockMemberPrompt
+      <BlockDialog
         control={blockMemberPrompt}
-        onConfirm={() => void handleBlockMember()}
+        profile={profile}
+        onBlock={handleBlockMember}
+        currentConvoId={convoId}
       />
       <RemoveMemberPrompt
         control={removeMemberPrompt}
