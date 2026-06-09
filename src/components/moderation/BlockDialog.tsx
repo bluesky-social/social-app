@@ -100,7 +100,7 @@ function BlockDialogInner({
     })
   }
 
-  let {data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage} =
+  const {data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage} =
     useListMutualGroupsQuery({
       subject: profile.did,
       enabled: !profile.viewer?.blocking,
