@@ -209,6 +209,7 @@ export function AddMembersFlow({
       if (follows) {
         for (const page of follows.pages) {
           for (const profile of page.follows) {
+            if (!canBeAddedToGroup(profile)) continue
             _items.push({
               type: 'profile',
               key: profile.did,
@@ -216,12 +217,6 @@ export function AddMembersFlow({
             })
           }
         }
-
-        _items.sort(item => {
-          return item.type === 'profile' && canBeAddedToGroup(item.profile)
-            ? -1
-            : 1
-        })
       } else {
         for (let i = 0; i < 10; i++) {
           _items.push({type: 'placeholder', key: i + ''})
