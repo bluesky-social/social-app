@@ -331,8 +331,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
                 a.font_semi_bold,
                 web({minWidth: 0}),
               ]}
-              numberOfLines={1}
-              allowFontScaling={true}>
+              numberOfLines={1}>
               <Trans comment="The group chat creator, in the format 'By {displayName}'.">
                 By{' '}
                 <InlineLinkText
@@ -384,8 +383,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
                 t.atoms.text_contrast_high,
                 web({minWidth: 0}),
               ]}
-              numberOfLines={1}
-              allowFontScaling={true}>
+              numberOfLines={1}>
               {sanitizeHandle(joinLinkPreview.owner.handle, '@')}
             </Text>
           </View>
