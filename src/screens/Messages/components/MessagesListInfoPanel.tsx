@@ -60,7 +60,8 @@ export function MessagesListInfoPanel({
         ]}>
         <Text
           style={[a.text_2xl, a.font_bold, a.text_center, a.flex_shrink]}
-          numberOfLines={1}>
+          numberOfLines={1}
+          emoji>
           {displayName}
         </Text>
         <ProfileBadges profile={profile} size="lg" />
