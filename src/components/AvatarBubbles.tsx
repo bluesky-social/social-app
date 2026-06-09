@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react'
+import {useEffect} from 'react'
 import {View} from 'react-native'
 import Animated, {
   Easing,
@@ -8,12 +8,10 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated'
-import {
-  moderateProfile,
-  type ModerationOpts,
-  type ModerationUI,
-} from '@atproto/api'
+import {moderateProfile} from '@atproto/api'
 
+import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
@@ -33,7 +31,6 @@ export function AvatarBubbles({
   profiles: allProfiles,
   self = false,
   size = 120,
-  moderationOpts,
 }: {
   animate?: boolean
   profiles: (bsky.profile.AnyProfileView | undefined)[]
@@ -45,19 +42,12 @@ export function AvatarBubbles({
    */
   self?: boolean
   size?: number
-  moderationOpts?: ModerationOpts
 }) {
   const {currentAccount} = useSession()
   const profiles =
     !self && allProfiles.length > 2
       ? allProfiles.filter(p => !p || p.did !== currentAccount?.did)
       : allProfiles
-  const moderations = useMemo(() => {
-    if (!moderationOpts) return []
-    return profiles.map(p => {
-      return p && moderateProfile(p, moderationOpts)
-    })
-  }, [profiles, moderationOpts])
 
   const scale = size / 120
   const marginOffset = size < 120 ? -2 : 0
@@ -100,45 +90,50 @@ export function AvatarBubbles({
           transform: [{scale}],
           transformOrigin: 'top left',
         }}>
-        {layouts.map((layout, i) => (
-          <AvatarBubble
-            key={i}
-            profile={profiles[i]}
-            scale={scales[i]}
-            size={layout.size}
-            x={layout.x}
-            y={layout.y}
-            zIndex={layout.zIndex}
-            includeProfileBorder={layout.border}
-            moderation={moderations[i]?.ui('avatar')}
-          />
-        ))}
+        {layouts.map((layout, i) => {
+          const profile = profiles[i]
+          if (!profile) return null
+          return (
+            <AvatarBubble
+              key={i}
+              profile={profile}
+              scale={scales[i]}
+              size={layout.size}
+              x={layout.x}
+              y={layout.y}
+              zIndex={layout.zIndex}
+              includeProfileBorder={layout.border}
+            />
+          )
+        })}
       </View>
     </Animated.View>
   )
 }
 
 function AvatarBubble({
-  profile,
+  profile: profileUnshadowed,
   scale,
   size,
   x,
   y,
   zIndex,
   includeProfileBorder,
-  moderation,
 }: {
-  profile?: bsky.profile.AnyProfileView
+  profile: bsky.profile.AnyProfileView
   scale: SharedValue<number>
   size: number
   x: number
   y: number
   zIndex?: number
   includeProfileBorder?: boolean
-  moderation?: ModerationUI
 }) {
   const t = useTheme()
-
+  const profile = useProfileShadow(profileUnshadowed)
+  const moderationOpts = useModerationOpts()
+  const moderation = moderationOpts
+    ? moderateProfile(profile, moderationOpts)
+    : undefined
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{translateX: x}, {translateY: y}, {scale: scale.get()}],
   }))
@@ -163,7 +158,7 @@ function AvatarBubble({
           type="user"
           hideLiveBadge
           noBorder
-          moderation={moderation}
+          moderation={moderation?.ui('avatar')}
         />
       ) : (
         <AvatarPlaceholder size={size} />

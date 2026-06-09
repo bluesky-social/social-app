@@ -132,14 +132,6 @@ export class Convo {
   recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
   snapshot: ConvoState | undefined
 
-  mergeProfileShadow(did: string, shadow: Partial<ProfileShadow>) {
-    const related = this.relatedProfiles.get(did)
-    if (related) {
-      this.relatedProfiles.set(did, mergeShadow(related, shadow))
-      this.commit()
-    }
-  }
-
   constructor(params: ConvoParams) {
     this.id = nanoid(3)
     this.convoId = params.convoId
@@ -1492,6 +1484,14 @@ export class Convo {
     } catch (error) {
       if (restore) restore()
       throw error
+    }
+  }
+
+  mergeProfileShadow(did: string, shadow: Partial<ProfileShadow>) {
+    const related = this.relatedProfiles.get(did)
+    if (related) {
+      this.relatedProfiles.set(did, mergeShadow(related, shadow))
+      this.commit()
     }
   }
 }
