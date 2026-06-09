@@ -43,6 +43,13 @@ func extractJSONLD(t *testing.T, html string) string {
 	return strings.TrimSpace(m[1])
 }
 
+func TestRenderBase_NoindexMeta(t *testing.T) {
+    html := renderTemplate(t, "base.html", pongo2.Context{"noindex": true, "nofollow": true})
+    if !strings.Contains(html, `<meta name="robots" content="noindex, nofollow">`) {
+        t.Errorf("expected combined noindex,nofollow meta; got:\n%s", html)
+    }
+}
+
 func TestRenderPost_EmitsJSONLD(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "hello")
 	ld, err := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", hideEmbedLabels, hideReplyLabels)
@@ -241,5 +248,52 @@ func TestRenderPost_VideoWithoutThumbnailEmitsOGVideo(t *testing.T) {
 	}
 	if !strings.Contains(html, `<meta property="og:video:type" content="application/x-mpegURL">`) {
 		t.Errorf("og:video:type should emit even without imgThumbUrls; got:\n%s", html)
+	}
+}
+
+// Auth-required posts must emit noindex,nofollow so the stub page (no body
+// text, no comments) is not indexed.
+func TestRenderPost_AuthRequiredNoindex(t *testing.T) {
+	html := renderTemplate(t, "post.html", pongo2.Context{
+		"requiresAuth":  true,
+		"profileHandle": "alice.bsky.social",
+		"requestURI":    "https://bsky.app/profile/alice.bsky.social/post/abc123",
+		"canonicalURL":  "https://bsky.app/profile/alice.bsky.social/post/abc123",
+		"noindex":       true,
+		"nofollow":      true,
+	})
+	if !strings.Contains(html, `<meta name="robots" content="noindex, nofollow">`) {
+		t.Errorf("auth-required post should emit noindex,nofollow; got:\n%s", html)
+	}
+}
+
+// Auth-required profiles must emit noindex,nofollow.
+func TestRenderProfile_AuthRequiredNoindex(t *testing.T) {
+	pv := newProfileViewDetailed()
+	html := renderTemplate(t, "profile.html", pongo2.Context{
+		"profileView":  pv,
+		"requestURI":   "https://bsky.app/profile/alice.bsky.social",
+		"requiresAuth": true,
+		"noindex":      true,
+		"nofollow":     true,
+	})
+	if !strings.Contains(html, `<meta name="robots" content="noindex, nofollow">`) {
+		t.Errorf("auth-required profile should emit noindex,nofollow; got:\n%s", html)
+	}
+}
+
+// Public posts must NOT emit a robots meta tag. Guards against an accidental
+// flip of the noindex flag for indexable pages.
+func TestRenderPost_PublicNoNoindex(t *testing.T) {
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "hello")
+	ld, _ := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", hideEmbedLabels, hideReplyLabels)
+	html := renderTemplate(t, "post.html", pongo2.Context{
+		"postView":     pv,
+		"requestURI":   "https://bsky.app/profile/alice.bsky.social/post/abc123",
+		"canonicalURL": "https://bsky.app/profile/alice.bsky.social/post/abc123",
+		"postJSONLD":   ld,
+	})
+	if strings.Contains(html, `<meta name="robots"`) {
+		t.Errorf("public post should not emit robots meta; got:\n%s", html)
 	}
 }
