@@ -641,7 +641,7 @@ function BlockedPlaceholder({
             <Prompt.Action onPress={() => {}} cta={l`Okay`} color="primary" />
             {profile.viewer?.blocking && !profile.viewer.blockingByList && (
               <Prompt.Action
-                onPress={() => queueUnblock()}
+                onPress={() => void queueUnblock()}
                 cta={l`Unblock`}
                 color="secondary"
               />
