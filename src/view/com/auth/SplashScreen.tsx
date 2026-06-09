@@ -1,4 +1,3 @@
-import {useMemo} from 'react'
 import {Image as RNImage, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {Image} from 'expo-image'
@@ -7,7 +6,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
-import {Logotype} from '#/view/icons/Logotype'
+import {Logo3D} from '#/view/icons/Logo3D'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 // @ts-ignore
@@ -32,26 +31,6 @@ export const SplashScreen = ({
 
   const playHaptic = useHaptics()
 
-  const styles = useMemo(() => {
-    const logoFill = isDarkMode ? 'white' : t.palette.primary_500
-    return {
-      logoFill,
-      logoShadow: isDarkMode
-        ? [
-            t.atoms.shadow_md,
-            {
-              shadowColor: logoFill,
-              shadowOpacity: 0.5,
-              shadowOffset: {
-                width: 0,
-                height: 0,
-              },
-            },
-          ]
-        : [],
-    }
-  }, [t, isDarkMode])
-
   return (
     <>
       <Image
@@ -66,11 +45,7 @@ export const SplashScreen = ({
         style={[a.flex_1]}>
         <View
           style={[a.justify_center, a.align_center, {gap: 6, paddingTop: 46}]}>
-          <Logotype
-            width={91}
-            fill={styles.logoFill}
-            style={styles.logoShadow}
-          />
+          <Logo3D width={120} />
         </View>
 
         <View style={[a.flex_1]} />
