@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-06 14:56\n"
+"PO-Revision-Date: 2026-06-09 22:16\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -122,9 +122,9 @@ msgstr "{0, plural, one {# nelegita elemento} other {# nelegitaj elementoj}}"
 
 #. How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.
 #. placeholder {0}: view.readingTime
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:230
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:231
 msgid "{0, plural, one {#m} other {#m}}"
-msgstr ""
+msgstr "{0, plural, one {#m} other {#m}}"
 
 #. How many months have passed, displayed in a narrow form
 #. placeholder {0}: diff.value
@@ -197,13 +197,13 @@ msgstr "{0} <0>en <1>teksto kaj kradvortoj</1></0>"
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:41
 msgid "{0} added to chat"
-msgstr ""
+msgstr "{0} aligita al babilejo"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:43
 msgid "{0} and {1} added to chat"
-msgstr ""
+msgstr "{0} kaj {1} aligitaj al babilejo"
 
 #. placeholder {0}: profile.followsCount || 0
 #: src/screens/Profile/Header/Metrics.tsx:49
@@ -213,7 +213,7 @@ msgstr "{0} sekvataj"
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
 #: src/components/dms/MessageItem.tsx:622
 msgid "{0} is blocking you"
-msgstr ""
+msgstr "{0} blokas vin"
 
 #. placeholder {0}: sanitizeHandle(profile.handle)
 #: src/features/liveNow/components/LiveStatusDialog.tsx:84
@@ -233,7 +233,7 @@ msgstr "{0} ne estas subtenata de via aparato."
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:83
 msgid "{0} joined"
-msgstr ""
+msgstr "{0} aniĝis"
 
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:84
@@ -248,7 +248,7 @@ msgstr "{0} aliĝis ĉi-semajne"
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:96
 msgid "{0} left"
-msgstr ""
+msgstr "{0} foriris"
 
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:97
@@ -286,7 +286,7 @@ msgstr "{0} estis aligita al la grupo"
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:70
 msgid "{0} was removed"
-msgstr ""
+msgstr "{0} estis forigita"
 
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:71
@@ -297,7 +297,7 @@ msgstr "{0} estis forigita el la grupo"
 #. placeholder {1}: createSanitizedDisplayName(members[1])
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:46
 msgid "{0}, {1} and {memberCount, plural, one {# other} other {# others}} added to chat"
-msgstr ""
+msgstr "{0}, {1} kaj {memberCount, plural, one {# alia} other {# aliaj}} aligitaj al babilejo"
 
 #. placeholder {0}: feed.displayName
 #. placeholder {1}: sanitizeHandle(feed.creatorHandle, '@')
@@ -325,9 +325,10 @@ msgid "{0}’s avatar"
 msgstr "Profilbildo de {0}"
 
 #. The number of active group chat members out of the total number allowed.
-#. placeholder {0}: data.joinLinkPreviews[0].memberCount
-#. placeholder {1}: data.joinLinkPreviews[0].memberLimit
-#: src/screens/Messages/JoinRequest.tsx:130
+#. placeholder {0}: joinLinkPreview.memberCount
+#. placeholder {1}: joinLinkPreview.memberLimit
+#: src/screens/Messages/JoinRequest.tsx:129
+msgctxt "group-chat-member-count"
 msgid "{0}/{1}"
 msgstr ""
 
@@ -335,14 +336,14 @@ msgstr ""
 #. placeholder {0}: preview.memberCount
 #. placeholder {1}: preview.memberLimit
 #. placeholder {2}: preview.memberCount
-#: src/components/dms/ChatInvite/Card.tsx:56
+#: src/components/dms/ChatInvite/Card.tsx:57
 msgid "{0}/{1} {2, plural, one {member} other {members}}"
 msgstr ""
 
 #. The number of active group chat members out of the total number allowed.
 #. placeholder {0}: joinLinkPreview.memberCount
 #. placeholder {1}: joinLinkPreview.memberLimit
-#: src/components/intents/GroupChatJoinDialog.tsx:308
+#: src/components/intents/GroupChatJoinDialog.tsx:304
 msgid "{0}/{1} members"
 msgstr ""
 
@@ -410,7 +411,7 @@ msgstr ""
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:56
 msgid "{count}+"
-msgstr ""
+msgstr "{count}+"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:31
@@ -800,7 +801,7 @@ msgstr "<0>{0}</0> anoj"
 #. Text identifying the person who added you to a group chat
 #: src/screens/Messages/components/ChatStatusInfo.tsx:141
 msgid "<0>{displayName}</0><1/><2> added you</2>"
-msgstr ""
+msgstr "<0>{displayName}</0><1/><2> aligis vin</2>"
 
 #: src/screens/Hashtag.tsx:226
 #: src/screens/Search/SearchResults.tsx:315
@@ -809,7 +810,7 @@ msgstr "<0>Ensalutu</0><1> aŭ </1><2>kreu konton</2><3> </3><4>por serĉi pri n
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:276
 msgid "<0>Tap here to update your location with GPS.</0>"
-msgstr ""
+msgstr "<0>Tuŝeti ĉi tie por aktualigi vian lokon per GPS.</0>"
 
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #: src/screens/StarterPack/Wizard/index.tsx:494
@@ -940,7 +941,7 @@ msgstr "Akcepti tiun sugeston de lingvo"
 msgid "Accepted conversations"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:94
+#: src/components/intents/GroupChatJoinDialog.tsx:95
 msgid "Access requested! The group owner will review your request."
 msgstr ""
 
@@ -1064,7 +1065,7 @@ msgstr "Aldoni averton pri enhavo"
 
 #: src/features/liveNow/components/GoLiveDialog.tsx:108
 msgid "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event."
-msgstr "Aldoni dumtempan tujelsendan staton al via profilo. Kiam iu alklakos vian profilbildon, ties vidos informon pri via tujelsenda evento."
+msgstr "Aldoni dumtempan tujelsendan staton al via profilo. Kiam iu alklakos vian profilbildon, tiu vidos informon pri via tujelsenda evento."
 
 #: src/screens/ProfileList/AboutSection.tsx:64
 #: src/screens/ProfileList/AboutSection.tsx:82
@@ -1097,11 +1098,11 @@ msgstr "Aldoni alternativan tekston (nedeviga)"
 msgid "Add another account"
 msgstr "Aldoni plian konton"
 
-#: src/view/com/composer/Composer.tsx:1454
+#: src/view/com/composer/Composer.tsx:1484
 msgid "Add another post"
 msgstr "Aldoni plian afiŝon"
 
-#: src/view/com/composer/Composer.tsx:2117
+#: src/view/com/composer/Composer.tsx:2147
 msgid "Add another post to thread"
 msgstr "Aldoni plian afiŝon al fadeno"
 
@@ -1619,7 +1620,7 @@ msgstr "Ĉiuj"
 msgid "Anyone can interact"
 msgstr "Ĉiu povas interagi"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:323
+#: src/components/intents/GroupChatJoinDialog.tsx:316
 msgid "Anyone can join"
 msgstr ""
 
@@ -1641,7 +1642,7 @@ msgstr "Ĉiu kiu sekvas min"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:441
 msgid "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
-msgstr ""
+msgstr "Ĉiu kiu havas ĝin ne plu eblos aliĝi aŭ peti aliĝi. Vi ĉiam povas krei novan."
 
 #: src/Navigation.tsx:467
 #: src/screens/Settings/AppIconSettings/index.tsx:65
@@ -1788,7 +1789,7 @@ msgstr ""
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Ĉu vi certas, ke vi volas forigi ĉi tion el viaj fluoj?"
 
-#: src/view/com/composer/Composer.tsx:1590
+#: src/view/com/composer/Composer.tsx:1620
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Ĉu vi certas, ke vi volas forĵeti ĉi tiun afiŝon?"
 
@@ -2224,16 +2225,21 @@ msgid "Button to go back to the home timeline"
 msgstr "Butono por reveni al la hejma novaĵfluo"
 
 #. The owner (creator) of a group chat.
-#. placeholder {0}: createSanitizedDisplayName( data.joinLinkPreviews[0].owner, true, moderateProfile( data.joinLinkPreviews[0].owner, moderationOpts, ).ui('displayName'), )
+#. placeholder {0}: createSanitizedDisplayName( joinLinkPreview.owner, true, moderateProfile( joinLinkPreview.owner, moderationOpts, ).ui('displayName'), )
 #. placeholder {0}: sanitizeHandle(handle, '@')
 #. placeholder {0}: sanitizeHandle(item.feed.creator.handle, '@')
 #: src/components/LabelingServiceCard/index.tsx:62
 #: src/components/moderation/ReportDialog/index.tsx:847
-#: src/screens/Messages/JoinRequest.tsx:166
+#: src/screens/Messages/JoinRequest.tsx:167
 #: src/screens/Search/components/StarterPackCard.tsx:107
 #: src/screens/Search/Explore.tsx:971
 msgid "By {0}"
 msgstr "De {0}"
+
+#. placeholder {0}: authorProfile.handle
+#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:77
+msgid "by @{0}"
+msgstr ""
 
 #. placeholder {0}: sanitizeHandle(info.creatorHandle, '@')
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:451
@@ -2241,13 +2247,8 @@ msgid "By <0>{0}</0>"
 msgstr "De <0>{0}</0>"
 
 #. The group chat creator, in the format 'By {displayName}'.
-#: src/components/dms/ChatInvite/Card.tsx:78
+#: src/components/dms/ChatInvite/Card.tsx:79
 msgid "By <0>{ownerDisplayName}</0>"
-msgstr ""
-
-#. placeholder {0}: authorProfile.handle
-#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:80
-msgid "by <0>@{0}</0>"
 msgstr ""
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:182
@@ -2321,8 +2322,8 @@ msgstr "Fotilo"
 #: src/screens/Settings/Settings.tsx:300
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
-#: src/view/com/composer/Composer.tsx:1668
-#: src/view/com/composer/Composer.tsx:1678
+#: src/view/com/composer/Composer.tsx:1698
+#: src/view/com/composer/Composer.tsx:1708
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:228
@@ -2454,10 +2455,10 @@ msgstr "Babilejo forigita"
 msgid "Chat ended"
 msgstr "Babilejo finiĝis"
 
-#: src/components/dms/ChatInvite/Root.tsx:105
-#: src/components/intents/GroupChatJoinDialog.tsx:228
-#: src/components/intents/GroupChatJoinDialog.tsx:259
-#: src/components/Post/Embed/JoinRequestEmbed.tsx:94
+#: src/components/intents/GroupChatJoinDialog.tsx:229
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:99
+#: src/screens/Messages/components/MessageInputEmbed.tsx:331
+#: src/screens/Messages/JoinRequest.tsx:83
 msgid "Chat invite link no longer available"
 msgstr ""
 
@@ -2716,8 +2717,8 @@ msgstr "Alklaku por reprovi sendi mesaĝon"
 #: src/components/dms/AfterReportDialog.tsx:217
 #: src/components/dms/EmojiPopup.android.tsx:59
 #: src/components/dms/InitiateChatFlow.tsx:542
-#: src/components/intents/GroupChatJoinDialog.tsx:205
-#: src/components/intents/GroupChatJoinDialog.tsx:240
+#: src/components/intents/GroupChatJoinDialog.tsx:206
+#: src/components/intents/GroupChatJoinDialog.tsx:241
 #: src/components/NewskieDialog.tsx:169
 #: src/components/NewskieDialog.tsx:175
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:107
@@ -2794,10 +2795,10 @@ msgstr "Fermi menuon"
 msgid "Close the incoming requests banner"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:198
 #: src/components/intents/GroupChatJoinDialog.tsx:199
-#: src/components/intents/GroupChatJoinDialog.tsx:235
+#: src/components/intents/GroupChatJoinDialog.tsx:200
 #: src/components/intents/GroupChatJoinDialog.tsx:236
+#: src/components/intents/GroupChatJoinDialog.tsx:237
 #: src/components/Menu/index.tsx:361
 msgid "Close this dialog"
 msgstr "Fermi ĉi tiun dialogujon"
@@ -2810,7 +2811,7 @@ msgstr "Fermi bonvenon-fenestron"
 msgid "Closes password update alert"
 msgstr "Fermas la averton pri pasvorta ĝisdatigo"
 
-#: src/view/com/composer/Composer.tsx:1676
+#: src/view/com/composer/Composer.tsx:1706
 msgid "Closes post composer and discards post draft"
 msgstr "Fermas afiŝan redaktilon kaj forĵetas afiŝan malneton"
 
@@ -2860,7 +2861,7 @@ msgid "Compose new post"
 msgstr "Krei novan afiŝon"
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1552
+#: src/view/com/composer/Composer.tsx:1582
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr "Krei afiŝojn maksimume {0, plural, one {# signon}other {# signojn}} longajn"
 
@@ -2868,11 +2869,11 @@ msgstr "Krei afiŝojn maksimume {0, plural, one {# signon}other {# signojn}} lon
 msgid "Compose reply"
 msgstr "Krei respondon"
 
-#: src/view/com/composer/Composer.tsx:2514
+#: src/view/com/composer/Composer.tsx:2544
 msgid "Compressing GIF..."
 msgstr "Densigado de GIF..."
 
-#: src/view/com/composer/Composer.tsx:2516
+#: src/view/com/composer/Composer.tsx:2546
 msgid "Compressing video..."
 msgstr "Densigado de videaĵo..."
 
@@ -3066,7 +3067,7 @@ msgstr ""
 msgid "Copied build version to clipboard"
 msgstr "Versio kopiita al tondujo"
 
-#: src/components/dms/ChatInvite/Root.tsx:82
+#: src/components/dms/ChatInvite/Root.tsx:84
 #: src/components/dms/MessageContextMenu.tsx:71
 #: src/components/PostControls/DiscoverDebug.tsx:36
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:272
@@ -3119,7 +3120,7 @@ msgstr "Kopii DID-on"
 msgid "Copy host"
 msgstr "Kopii gastiganton"
 
-#: src/components/dms/ChatInvite/Root.tsx:74
+#: src/components/dms/ChatInvite/Root.tsx:76
 #: src/components/StarterPack/ShareDialog.tsx:115
 #: src/screens/StarterPack/StarterPackScreen.tsx:644
 msgid "Copy link"
@@ -3188,9 +3189,9 @@ msgstr "Ne eblis konekti al propra fluo"
 msgid "Could not connect to feed service"
 msgstr "Ne eblis konekti al la servo de fluo"
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:200
+#: src/screens/Messages/components/MessageInputEmbed.tsx:202
 msgid "Could not fetch post"
-msgstr ""
+msgstr "Ne eblis ŝargi afiŝon"
 
 #: src/view/com/feeds/MissingFeed.tsx:183
 msgid "Could not find profile"
@@ -3216,10 +3217,6 @@ msgstr "Ne eblis foriri el babilejo"
 #: src/screens/Profile/ProfileFeed/index.tsx:73
 msgid "Could not load feed"
 msgstr "Ne eblis ŝargi fluon"
-
-#: src/screens/Messages/components/MessageInputEmbed.tsx:321
-msgid "Could not load invite"
-msgstr ""
 
 #: src/screens/ProfileList/components/ErrorScreen.tsx:27
 #: src/screens/ProfileList/index.tsx:80
@@ -3542,7 +3539,7 @@ msgstr "Forigi mian konton"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:787
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:789
-#: src/view/com/composer/Composer.tsx:1564
+#: src/view/com/composer/Composer.tsx:1594
 msgid "Delete post"
 msgstr "Forigi afiŝon"
 
@@ -3666,7 +3663,7 @@ msgstr "Malŝalti tuŝ-retrokupladan prikomentadon"
 #: src/screens/Messages/components/InviteLinkDialog.tsx:451
 #: src/screens/Messages/components/InviteLinkDialog.tsx:457
 msgid "Disable link"
-msgstr ""
+msgstr "Malŝalti invitligilon"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:628
 msgid "Disable quote posts of this post"
@@ -3678,7 +3675,7 @@ msgstr "Malebligi respondojn entute"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:438
 msgid "Disable this invite link?"
-msgstr ""
+msgstr "Ĉu malŝalti ĉi tiun invitligilon?"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:35
 #: src/lib/moderation/useLabelBehaviorDescription.ts:45
@@ -3689,9 +3686,9 @@ msgstr "Malŝaltita"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:101
 #: src/screens/Profile/Header/EditProfileDialog.tsx:79
-#: src/view/com/composer/Composer.tsx:1347
-#: src/view/com/composer/Composer.tsx:1391
-#: src/view/com/composer/Composer.tsx:1597
+#: src/view/com/composer/Composer.tsx:1377
+#: src/view/com/composer/Composer.tsx:1421
+#: src/view/com/composer/Composer.tsx:1627
 #: src/view/com/composer/drafts/DraftItem.tsx:242
 #: src/view/com/composer/drafts/DraftsButton.tsx:131
 msgid "Discard"
@@ -3702,14 +3699,14 @@ msgstr "Forĵeti"
 msgid "Discard changes?"
 msgstr "Ĉu forĵeti ŝanĝojn?"
 
-#: src/view/com/composer/Composer.tsx:1345
+#: src/view/com/composer/Composer.tsx:1375
 #: src/view/com/composer/drafts/DraftItem.tsx:239
 #: src/view/com/composer/drafts/DraftsButton.tsx:98
 msgid "Discard draft?"
 msgstr "Ĉu forĵeti malneton?"
 
-#: src/view/com/composer/Composer.tsx:1362
-#: src/view/com/composer/Composer.tsx:1589
+#: src/view/com/composer/Composer.tsx:1392
+#: src/view/com/composer/Composer.tsx:1619
 msgid "Discard post?"
 msgstr "Ĉu forĵeti afiŝon?"
 
@@ -3746,7 +3743,7 @@ msgstr "Ignori"
 msgid "Dismiss banner"
 msgstr "Fermi rubandon"
 
-#: src/view/com/composer/Composer.tsx:2435
+#: src/view/com/composer/Composer.tsx:2465
 msgid "Dismiss error"
 msgstr "Ignori eraron"
 
@@ -4277,7 +4274,7 @@ msgstr "Ŝaltas plenekranon"
 msgid "Entertainment"
 msgstr "Amuzo"
 
-#: src/view/com/composer/Composer.tsx:2534
+#: src/view/com/composer/Composer.tsx:2564
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Eraro"
@@ -4372,7 +4369,7 @@ msgstr "Etendi afiŝan tekston"
 msgid "Expands or collapses post text"
 msgstr "Etendas aŭ maletendas la tekston de la afiŝo"
 
-#: src/lib/api/index.ts:487
+#: src/lib/api/index.ts:491
 msgid "Expected uri to resolve to a record"
 msgstr "Espektas uri-on gvidantan al rikordo"
 
@@ -4427,7 +4424,7 @@ msgstr "Esplori la apon"
 #: src/screens/Messages/Settings.tsx:263
 #: src/screens/Settings/components/ExportCarDialog.tsx:130
 msgid "Export my chat data"
-msgstr ""
+msgstr "Eksporti miajn babilejajn datumojn"
 
 #: src/screens/Settings/AccountSettings.tsx:170
 #: src/screens/Settings/AccountSettings.tsx:174
@@ -4436,7 +4433,7 @@ msgstr "Eksporti miajn datumojn"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:97
 msgid "Export my profile data"
-msgstr ""
+msgstr "Eksporti miajn profilajn datumojn"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:86
 #: src/screens/Settings/ContentAndMediaSettings.tsx:89
@@ -4566,7 +4563,7 @@ msgstr "Fiaskis kaŝi proponojn, bonvolu kontroli vian interretan konekton"
 msgid "Failed to ignore join request"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:117
+#: src/components/intents/GroupChatJoinDialog.tsx:118
 msgid "Failed to join the group chat. Please try again."
 msgstr ""
 
@@ -4675,7 +4672,7 @@ msgstr "Malsukcesis forigi anon el grupa babilejo"
 msgid "Failed to remove verification"
 msgstr "Malsukcesis forigi konfirmon"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:151
+#: src/components/intents/GroupChatJoinDialog.tsx:152
 msgid "Failed to rescind your request. Please try again."
 msgstr ""
 
@@ -4683,7 +4680,7 @@ msgstr ""
 msgid "Failed to resolve location. Please try again."
 msgstr "Malsukcesis trovi la lokon. Bonvolu reprovi."
 
-#: src/view/com/composer/Composer.tsx:639
+#: src/view/com/composer/Composer.tsx:646
 msgid "Failed to save draft"
 msgstr "Malsukcesis konservi malneton"
 
@@ -5081,7 +5078,7 @@ msgstr "Sekvata de <0>{0}</0> kaj <1>{1}</1>"
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr "Sekvata de <0>{0}</0>, <1>{1}</1>, kaj {2, plural, one {# alia} other {# aliaj}}"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:322
+#: src/components/intents/GroupChatJoinDialog.tsx:315
 msgid "Followers can join"
 msgstr ""
 
@@ -5332,7 +5329,7 @@ msgstr "Enkonduko"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2539
+#: src/view/com/composer/Composer.tsx:2569
 msgid "GIF uploaded"
 msgstr "GIF alŝutita"
 
@@ -5455,7 +5452,7 @@ msgstr "Iri al uzanta profilo"
 
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:87
 msgid "Go to user’s profile"
-msgstr ""
+msgstr "Iri al uzanta profilo"
 
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:105
 msgid "Going live is currently disabled for your account"
@@ -5481,9 +5478,9 @@ msgstr ""
 msgid "Grooming or predatory behavior"
 msgstr ""
 
-#: src/components/dms/ChatInvite/Card.tsx:45
-#: src/components/intents/GroupChatJoinDialog.tsx:298
-#: src/screens/Messages/JoinRequest.tsx:116
+#: src/components/dms/ChatInvite/Card.tsx:46
+#: src/components/intents/GroupChatJoinDialog.tsx:294
+#: src/screens/Messages/JoinRequest.tsx:115
 msgid "Group chat"
 msgstr ""
 
@@ -5622,7 +5619,7 @@ msgstr "Ĉu vi havas kodon? <0>Klaku ĉi tie.</0>"
 
 #: src/screens/Signup/StepInfo/index.tsx:320
 msgid "Have we got your location wrong? <0>Tap here to update your location with GPS.</0>"
-msgstr ""
+msgstr "Ĉu ni misdivenis vian lokon? <0>Tuŝetu ĉi tie por aktualigi vian lokon per GPS.</0>"
 
 #: src/screens/Signup/index.tsx:231
 msgid "Having trouble?"
@@ -6077,7 +6074,7 @@ msgstr ""
 
 #: src/screens/Messages/ChatList.tsx:362
 msgid "Inbox empty"
-msgstr ""
+msgstr "Ricevujo malplenas"
 
 #. Title message shown in chat requests inbox when it's empty
 #: src/screens/Messages/Inbox.tsx:218
@@ -6129,7 +6126,7 @@ msgstr "Ni prezentas \"konservitaj afiŝoj\" alinome \"legosignoj\""
 msgid "Invalid 2FA confirmation code."
 msgstr "Nevalida 2FA-konfirmkodo."
 
-#: src/components/intents/GroupChatJoinDialog.tsx:127
+#: src/components/intents/GroupChatJoinDialog.tsx:128
 msgid "Invalid group chat code."
 msgstr ""
 
@@ -6151,7 +6148,7 @@ msgstr "Nevalida telefononumero"
 msgid "Invalid report subject"
 msgstr "Nevalida temlinio de raporto"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:158
+#: src/components/intents/GroupChatJoinDialog.tsx:159
 msgid "Invalid rescind request."
 msgstr ""
 
@@ -6228,7 +6225,7 @@ msgstr "Invitoj sed personaj"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:394
 msgid "Is your location not accurate? <0>Tap here to update your location with GPS.</0> "
-msgstr ""
+msgstr "Ĉu via loko ne estas ĝusta? <0>Tuŝetu ĉi tie por aktualigi vian lokon per GPS.</0> "
 
 #: src/components/contacts/components/InviteInfo.tsx:47
 msgid "It looks like some of your contacts have not tried to find you here yet. You can personally invite them by customizing a draft message we will provide."
@@ -6248,7 +6245,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Vi estas sola ĉi-momente! Aldoni pli da homoj al via startpako serĉante supre."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2454
+#: src/view/com/composer/Composer.tsx:2484
 msgid "Job ID: {0}"
 msgstr "ID de laboro: {0}"
 
@@ -6257,8 +6254,8 @@ msgstr "ID de laboro: {0}"
 msgid "Jobs"
 msgstr "Laboroj"
 
-#: src/components/dms/ChatInvite/Root.tsx:100
-#: src/components/intents/GroupChatJoinDialog.tsx:254
+#: src/components/dms/ChatInvite/Root.tsx:102
+#: src/components/intents/GroupChatJoinDialog.tsx:255
 msgid "Join"
 msgstr ""
 
@@ -6269,12 +6266,12 @@ msgstr ""
 msgid "Join Bluesky"
 msgstr "Aliĝi al Bluesky"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:63
-#: src/components/intents/GroupChatJoinDialog.tsx:419
+#: src/components/intents/GroupChatJoinDialog.tsx:64
+#: src/components/intents/GroupChatJoinDialog.tsx:412
 msgid "Join group chat"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:147
+#: src/components/intents/GroupChatJoinDialog.tsx:148
 msgid "Join request rescinded."
 msgstr ""
 
@@ -6287,8 +6284,8 @@ msgstr "Aliĝi al konversacio"
 msgid "Journalism"
 msgstr "Ĵurnalismo"
 
-#: src/view/com/composer/Composer.tsx:1395
-#: src/view/com/composer/Composer.tsx:1405
+#: src/view/com/composer/Composer.tsx:1425
+#: src/view/com/composer/Composer.tsx:1435
 #: src/view/com/composer/drafts/DraftsButton.tsx:135
 msgid "Keep editing"
 msgstr "Daŭre redakti"
@@ -6761,7 +6758,7 @@ msgstr "Ŝargi novajn afiŝojn"
 #: src/screens/Messages/components/MessageInput.web.tsx:202
 msgctxt "placeholder"
 msgid "Loading chat…"
-msgstr ""
+msgstr "Ŝargado de babilejo…"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "Loading lists..."
@@ -6997,11 +6994,11 @@ msgstr "Mesaĝoj"
 
 #: src/components/dms/MessageItem.tsx:634
 msgid "Messages from this person are hidden while they are blocking you."
-msgstr ""
+msgstr "Mesaĝoj de ĉi tiu persono estas kaŝitaj dum tiu blokas vin."
 
 #: src/components/dms/MessageItem.tsx:629
 msgid "Messages from this person are hidden while you are blocking them."
-msgstr ""
+msgstr "Mesaĝoj de ĉi tiu persono estas kaŝitaj dum vi blokas tiun."
 
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:101
 msgctxt "Name of app icon variant"
@@ -7806,11 +7803,11 @@ msgstr ""
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:855
+#: src/view/com/composer/Composer.tsx:862
 msgid "One or more GIFs is missing alt text."
 msgstr "Al unu aŭ pli da GIF-oj mankas alt-teksto."
 
-#: src/view/com/composer/Composer.tsx:852
+#: src/view/com/composer/Composer.tsx:859
 msgid "One or more images is missing alt text."
 msgstr "Al unu aŭ pli da bildoj mankas alternativa teksto."
 
@@ -7822,11 +7819,11 @@ msgstr "Unu aŭ pli el viaj elektitaj dosieroj ne estas subtenata."
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:650
+#: src/view/com/composer/Composer.tsx:657
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
 msgstr "Unu aŭ pli afiŝoj estas tro longaj por konservi kiel malneto. La maksimuma nombro da signoj estas {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {# signo.} other {# signoj.}}"
 
-#: src/view/com/composer/Composer.tsx:862
+#: src/view/com/composer/Composer.tsx:869
 msgid "One or more videos is missing alt text."
 msgstr "Al unu aŭ pli da videaĵoj mankas alternativa teksto."
 
@@ -7839,7 +7836,7 @@ msgstr "Nur {0} povas respondi."
 #. placeholder {0}: result.accepted.length
 #. placeholder {1}: next.length
 #. placeholder {2}: next.length
-#: src/view/com/composer/Composer.tsx:225
+#: src/view/com/composer/Composer.tsx:232
 msgid "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
 msgstr ""
 
@@ -7851,7 +7848,7 @@ msgstr ""
 msgid "Only admins can ignore join requests."
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:125
+#: src/components/intents/GroupChatJoinDialog.tsx:126
 msgid "Only followers can join this group chat."
 msgstr ""
 
@@ -7865,13 +7862,13 @@ msgstr "Nur sekvantoj kiujn mi sekvas"
 msgid "Only image files are supported"
 msgstr "Nur bildaj dosieroj estas subtenataj"
 
-#. placeholder {0}: createSanitizedDisplayName( data.joinLinkPreviews[0].owner, true, moderateProfile( data.joinLinkPreviews[0].owner, moderationOpts, ).ui('displayName'), )
-#: src/screens/Messages/JoinRequest.tsx:207
+#. placeholder {0}: createSanitizedDisplayName( joinLinkPreview.owner, true, moderateProfile(joinLinkPreview.owner, moderationOpts).ui( 'displayName', ), )
+#: src/screens/Messages/JoinRequest.tsx:208
 msgid "Only people {0} follows can join."
 msgstr ""
 
-#: src/components/dms/ChatInvite/Root.tsx:115
-#: src/components/intents/GroupChatJoinDialog.tsx:269
+#: src/components/dms/ChatInvite/Root.tsx:112
+#: src/components/intents/GroupChatJoinDialog.tsx:265
 msgid "Only people the chat owner follows can join"
 msgstr ""
 
@@ -7900,8 +7897,8 @@ msgstr "Malfermi la profilbildan kreilon"
 msgid "Open camera"
 msgstr "Malfermi fotilon"
 
-#: src/components/dms/ChatInvite/Root.tsx:87
-#: src/components/intents/GroupChatJoinDialog.tsx:408
+#: src/components/dms/ChatInvite/Root.tsx:89
+#: src/components/intents/GroupChatJoinDialog.tsx:401
 msgid "Open chat"
 msgstr ""
 
@@ -7924,7 +7921,7 @@ msgstr "Malfermi flankmenuon"
 
 #: src/screens/Messages/components/MessageComposer.tsx:176
 #: src/screens/Messages/components/MessageInput.web.tsx:148
-#: src/view/com/composer/Composer.tsx:2094
+#: src/view/com/composer/Composer.tsx:2124
 msgid "Open emoji picker"
 msgstr "Malfermi emoĝi-elektilon"
 
@@ -7945,7 +7942,7 @@ msgstr "Malfermi la tutan emoĝi-liston"
 msgid "Open Germ DM"
 msgstr "Malfermi Germ DM"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:401
+#: src/components/intents/GroupChatJoinDialog.tsx:394
 msgid "Open group chat"
 msgstr ""
 
@@ -7955,7 +7952,7 @@ msgid "Open group chat settings"
 msgstr "Malfermi agrdojn de grupa babilejo"
 
 #: src/components/Post/Embed/ExternalEmbed/index.tsx:88
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:140
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:141
 msgid "Open link to {niceUrl}"
 msgstr "Malfermi ligilon al {niceUrl}"
 
@@ -8006,7 +8003,7 @@ msgstr "Malfermi la historiopaĝon"
 msgid "Open system log"
 msgstr "Malfermi sisteman protokolon"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:402
+#: src/components/intents/GroupChatJoinDialog.tsx:395
 msgid "Open this group chat"
 msgstr ""
 
@@ -8579,7 +8576,7 @@ msgstr "Politiko"
 msgid "Porn"
 msgstr "Pornografio"
 
-#: src/view/com/composer/Composer.tsx:1742
+#: src/view/com/composer/Composer.tsx:1772
 msgctxt "action"
 msgid "Post"
 msgstr "Afiŝi"
@@ -8599,12 +8596,12 @@ msgstr "Afiŝi foton"
 msgid "Post a video"
 msgstr "Afiŝi videaĵon"
 
-#: src/view/com/composer/Composer.tsx:1740
+#: src/view/com/composer/Composer.tsx:1770
 msgctxt "action"
 msgid "Post All"
 msgstr "Afiŝi ĉiujn"
 
-#: src/view/com/composer/Composer.tsx:1404
+#: src/view/com/composer/Composer.tsx:1434
 msgid "Post anyway"
 msgstr "Afiŝi ĉiuokaze"
 
@@ -8625,7 +8622,7 @@ msgctxt "toast"
 msgid "Post deleted"
 msgstr "Afiŝo forigita"
 
-#: src/lib/api/index.ts:189
+#: src/lib/api/index.ts:190
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr "Malsukcesis ŝargi afiŝon. Bonvolu kontroli vian retkonekton kaj reprovi."
 
@@ -8777,15 +8774,15 @@ msgstr "Regularo pri privateco"
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2528
+#: src/view/com/composer/Composer.tsx:2558
 msgid "Processing GIF..."
 msgstr "Traktado de GIF..."
 
-#: src/view/com/composer/Composer.tsx:2530
+#: src/view/com/composer/Composer.tsx:2560
 msgid "Processing video..."
 msgstr "Traktado de videaĵo..."
 
-#: src/lib/api/index.ts:62
+#: src/lib/api/index.ts:63
 msgid "Processing..."
 msgstr "Traktado..."
 
@@ -8826,22 +8823,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr "Publikaj kaj kundivideblaj listoj por bloki aŭ silentigi uzantojn amase."
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1726
+#: src/view/com/composer/Composer.tsx:1756
 msgid "Publish post"
 msgstr "Publikigi afiŝon"
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1721
+#: src/view/com/composer/Composer.tsx:1751
 msgid "Publish posts"
 msgstr "Publikigi afiŝojn"
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1710
+#: src/view/com/composer/Composer.tsx:1740
 msgid "Publish replies"
 msgstr "Publikigi respondojn"
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1715
+#: src/view/com/composer/Composer.tsx:1745
 msgid "Publish reply"
 msgstr "Publikigi respondon"
 
@@ -9105,9 +9102,9 @@ msgstr "Forigi rubandon"
 msgid "Remove caption file"
 msgstr "Forigi subtekstan dosieron"
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:234
-#: src/screens/Messages/components/MessageInputEmbed.tsx:289
-#: src/screens/Messages/components/MessageInputEmbed.tsx:355
+#: src/screens/Messages/components/MessageInputEmbed.tsx:236
+#: src/screens/Messages/components/MessageInputEmbed.tsx:291
+#: src/screens/Messages/components/MessageInputEmbed.tsx:365
 msgid "Remove embed"
 msgstr "Forigi enkorpigaĵon"
 
@@ -9295,7 +9292,7 @@ msgstr "Respondoj malebligitaj"
 msgid "Replies to this post are disabled."
 msgstr "Respondoj por ĉi tiu afiŝo estis malebligitaj."
 
-#: src/view/com/composer/Composer.tsx:1738
+#: src/view/com/composer/Composer.tsx:1768
 msgctxt "action"
 msgid "Reply"
 msgstr "Respondi"
@@ -9480,7 +9477,7 @@ msgstr "Reafiŝoj de ĉi tiu afiŝo"
 msgid "Reposts of your reposts"
 msgstr "Reafiŝoj de viaj reafiŝoj"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:418
+#: src/components/intents/GroupChatJoinDialog.tsx:411
 msgid "Request access to group chat"
 msgstr ""
 
@@ -9497,19 +9494,19 @@ msgstr "Peti kodon"
 msgid "Request ignored."
 msgstr ""
 
-#: src/components/dms/ChatInvite/Root.tsx:100
-#: src/components/intents/GroupChatJoinDialog.tsx:253
+#: src/components/dms/ChatInvite/Root.tsx:102
+#: src/components/intents/GroupChatJoinDialog.tsx:254
 msgid "Request to join"
 msgstr ""
 
-#: src/components/dms/ChatInvite/Root.tsx:119
+#: src/components/dms/ChatInvite/Root.tsx:116
 msgid "Requested"
 msgstr ""
 
 #. Incoming message requests
 #: src/screens/Messages/components/InboxRequests.tsx:26
 msgid "Requests"
-msgstr ""
+msgstr "Petoj"
 
 #: src/Navigation.tsx:495
 #: src/screens/Messages/JoinRequests.tsx:58
@@ -9534,7 +9531,7 @@ msgstr "Necesa por ĉi tiu provizanto"
 msgid "Required in your region"
 msgstr "Devigita en via regiono"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:273
+#: src/components/intents/GroupChatJoinDialog.tsx:269
 msgid "Rescind request"
 msgstr ""
 
@@ -9690,22 +9687,22 @@ msgstr "Konservi naskiĝdaton"
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
 #: src/screens/SavedFeeds.tsx:315
-#: src/view/com/composer/Composer.tsx:1385
+#: src/view/com/composer/Composer.tsx:1415
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save changes"
 msgstr "Konservi ŝanĝojn"
 
-#: src/view/com/composer/Composer.tsx:1357
+#: src/view/com/composer/Composer.tsx:1387
 #: src/view/com/composer/drafts/DraftsButton.tsx:93
 msgid "Save changes?"
 msgstr "Ĉu konservi ŝanĝojn?"
 
-#: src/view/com/composer/Composer.tsx:1385
+#: src/view/com/composer/Composer.tsx:1415
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save draft"
 msgstr "Konservi malneton"
 
-#: src/view/com/composer/Composer.tsx:1359
+#: src/view/com/composer/Composer.tsx:1389
 #: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Save draft?"
 msgstr "Ĉu konservi malneton?"
@@ -9767,7 +9764,7 @@ msgstr "Diru saluton!"
 #: src/screens/Messages/ChatList.tsx:157
 #: src/screens/Messages/ChatList.tsx:371
 msgid "Say hi to someone"
-msgstr ""
+msgstr "Diru saluton al iu"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:43
 msgid "Scam"
@@ -10546,7 +10543,7 @@ msgstr "Ensalutu aŭ kreu konton"
 msgid "Sign in or create your account to join the conversation!"
 msgstr "Ensalutu aŭ kreu vian konton por aliĝi al la konversacio!"
 
-#: src/screens/Messages/JoinRequest.tsx:205
+#: src/screens/Messages/JoinRequest.tsx:206
 msgid "Sign in to accept invite."
 msgstr ""
 
@@ -10558,7 +10555,7 @@ msgstr "Ensaluti al nelistigitan konton"
 msgid "Sign in to Bluesky or create a new account"
 msgstr "Ensalutu al Bluesky aŭ kreu novan konton"
 
-#: src/screens/Messages/JoinRequest.tsx:204
+#: src/screens/Messages/JoinRequest.tsx:205
 msgid "Sign in to request access to this group chat."
 msgstr ""
 
@@ -10616,7 +10613,7 @@ msgstr "Preterpasi"
 msgid "Skip contact sharing and continue to the app"
 msgstr "Preterpasi kontaktan konigon kaj daŭrigi al la apo"
 
-#: src/view/com/composer/Composer.tsx:1402
+#: src/view/com/composer/Composer.tsx:1432
 msgid "Skip empty posts?"
 msgstr "Ĉu preterlasi malplenajn afiŝojn?"
 
@@ -10672,7 +10669,7 @@ msgstr "Kelkaj homoj povas respondi"
 
 #: src/components/dms/getSystemMessageInfo.ts:86
 msgid "Someone joined"
-msgstr ""
+msgstr "Iu aniĝis"
 
 #: src/components/dms/getSystemMessageInfo.ts:87
 msgid "Someone joined the group"
@@ -10680,7 +10677,7 @@ msgstr "Iu aniĝis la grupon"
 
 #: src/components/dms/getSystemMessageInfo.ts:99
 msgid "Someone left"
-msgstr ""
+msgstr "Iu foriris"
 
 #: src/components/dms/getSystemMessageInfo.ts:100
 msgid "Someone left the group"
@@ -10706,7 +10703,7 @@ msgstr "Iu estis aligita al la grupo"
 
 #: src/components/dms/getSystemMessageInfo.ts:73
 msgid "Someone was removed"
-msgstr ""
+msgstr "Iu estis forigita"
 
 #: src/components/dms/getSystemMessageInfo.ts:74
 msgid "Someone was removed from the group"
@@ -10925,15 +10922,15 @@ msgid "Subscribe"
 msgstr "Aboni"
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:424
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:453
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:425
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:454
 msgid "Subscribe on {0}"
-msgstr ""
+msgstr "Aboni ĉe {0}"
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:452
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:453
 msgid "Subscribe to {publicationTitle} on {0}"
-msgstr ""
+msgstr "Aboni {publicationTitle} ĉe {0}"
 
 #. placeholder {0}: labelerInfo.creator.handle
 #: src/screens/Profile/Sections/Labels.tsx:231
@@ -10966,7 +10963,7 @@ msgstr "Sukceso"
 msgid "Success!"
 msgstr "Sukceso!"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:101
+#: src/components/intents/GroupChatJoinDialog.tsx:102
 msgid "Successfully joined the group chat!"
 msgstr ""
 
@@ -11064,7 +11061,7 @@ msgstr "Tuŝetu sube por permesi al Bluesky aliri vian GPS-pozicion. Ni tiam uzo
 
 #: src/components/dms/MessageItem.tsx:580
 msgid "Tap for details"
-msgstr ""
+msgstr "Tuŝeti por detaloj"
 
 #: src/view/com/feeds/MissingFeed.tsx:90
 msgid "Tap for information"
@@ -11076,7 +11073,7 @@ msgstr "Tuŝetu por pliaj informoj"
 
 #: src/screens/Signup/StepInfo/index.tsx:323
 msgid "Tap here to update your location with GPS."
-msgstr ""
+msgstr "Tuŝeti ĉi tie por aktualigi vian lokon per GPS."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:165
 msgid "Tap to acknowledge that you understand and agree to these updates and continue using Bluesky"
@@ -11088,7 +11085,7 @@ msgstr "Tuŝetu por kvitanci, ke vi komprenas kaj konsentas pri tiuj aktualigoj 
 msgid "Tap to close context menu"
 msgstr "Tuŝetu por fermi kuntekstmenuon"
 
-#: src/components/dms/ChatInvite/Root.tsx:75
+#: src/components/dms/ChatInvite/Root.tsx:77
 msgid "Tap to copy this invite link"
 msgstr ""
 
@@ -11096,12 +11093,12 @@ msgstr ""
 msgid "Tap to dismiss"
 msgstr "Tuŝetu por ignori"
 
-#: src/components/dms/ChatInvite/Root.tsx:128
-#: src/components/intents/GroupChatJoinDialog.tsx:424
+#: src/components/dms/ChatInvite/Root.tsx:125
+#: src/components/intents/GroupChatJoinDialog.tsx:417
 msgid "Tap to join this group chat immediately"
 msgstr ""
 
-#: src/components/dms/ChatInvite/Root.tsx:88
+#: src/components/dms/ChatInvite/Root.tsx:90
 msgid "Tap to open this group chat"
 msgstr ""
 
@@ -11114,8 +11111,8 @@ msgstr "Tuŝetu por forigi"
 msgid "Tap to remove your {0} reaction"
 msgstr "Tuŝetu por forigi vian reagon {0}"
 
-#: src/components/dms/ChatInvite/Root.tsx:127
-#: src/components/intents/GroupChatJoinDialog.tsx:423
+#: src/components/dms/ChatInvite/Root.tsx:124
+#: src/components/intents/GroupChatJoinDialog.tsx:416
 msgid "Tap to request access to join this group chat"
 msgstr ""
 
@@ -11301,7 +11298,7 @@ msgstr "La sekvaj agordoj estos uzataj defaŭlte por ĉiuj kreataj de vi afiŝoj
 msgid "The laws in your region require you to verify you're an adult to access certain features. Tap to learn more."
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:135
+#: src/components/intents/GroupChatJoinDialog.tsx:136
 #: src/screens/Messages/JoinRequests.tsx:201
 msgid "The member limit has been reached."
 msgstr ""
@@ -11372,8 +11369,8 @@ msgid "There was a problem loading GIFs. Check your connection and try again."
 msgstr "Estis problemo ŝargante GIF-ojn. Kontrolu vian konekton kaj reprovu."
 
 #: src/components/contacts/screens/GetContacts.tsx:147
-#: src/components/intents/GroupChatJoinDialog.tsx:119
-#: src/components/intents/GroupChatJoinDialog.tsx:153
+#: src/components/intents/GroupChatJoinDialog.tsx:120
+#: src/components/intents/GroupChatJoinDialog.tsx:154
 msgid "There was a problem with your internet connection, please try again"
 msgstr "Estis problemo kun via interreta konekto, bonvolu reprovi denove"
 
@@ -11530,8 +11527,8 @@ msgstr ""
 msgid "This chat has ended"
 msgstr "Ĉi tiu babilejo estas finiĝinta"
 
-#: src/components/dms/ChatInvite/Root.tsx:110
-#: src/components/intents/GroupChatJoinDialog.tsx:264
+#: src/components/dms/ChatInvite/Root.tsx:107
+#: src/components/intents/GroupChatJoinDialog.tsx:260
 msgid "This chat is full"
 msgstr ""
 
@@ -11574,7 +11571,7 @@ msgstr "Ĉi tiu enhavo ne disponeblas pro ke unu el la koncernataj uzantoj bloki
 msgid "This content is not viewable without a Bluesky account."
 msgstr "Ĉi tiu enhavo ne estas videbla sen Bluesky-konto."
 
-#: src/components/intents/GroupChatJoinDialog.tsx:121
+#: src/components/intents/GroupChatJoinDialog.tsx:122
 msgid "This conversation is locked."
 msgstr ""
 
@@ -11636,15 +11633,11 @@ msgstr ""
 msgid "This information is private and not shared with other users."
 msgstr "Ĉi tiuj informoj estas privataj kaj ne montrataj al aliaj uzantoj."
 
-#: src/components/intents/GroupChatJoinDialog.tsx:131
+#: src/components/intents/GroupChatJoinDialog.tsx:132
 msgid "This invite link has been disabled."
 msgstr ""
 
-#: src/screens/Messages/JoinRequest.tsx:83
-msgid "This invite link has expired"
-msgstr ""
-
-#: src/components/intents/GroupChatJoinDialog.tsx:195
+#: src/components/intents/GroupChatJoinDialog.tsx:196
 msgid "This invite link is invalid"
 msgstr ""
 
@@ -11693,12 +11686,12 @@ msgstr "Ĉi tiu listo malplenas."
 #: src/components/dms/MessageItem.tsx:578
 #: src/components/dms/MessageItem.tsx:607
 msgid "This message is hidden because this user is blocking you."
-msgstr ""
+msgstr "Ĉi tiu mesaĝo estas kaŝita ĉar ĉi tiu uzanto blokas vin."
 
 #: src/components/dms/MessageItem.tsx:577
 #: src/components/dms/MessageItem.tsx:603
 msgid "This message is hidden because you are blocking this user."
-msgstr ""
+msgstr "Ĉi tiu mesaĝo estas kaŝita ĉar vi blokas ĉi tiun uzanton."
 
 #: src/screens/Profile/ErrorState.tsx:41
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
@@ -11710,7 +11703,7 @@ msgstr ""
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:84
 msgid "This person is blocking you"
-msgstr ""
+msgstr "Ĉi tiu persono blokas vin"
 
 #. placeholder {0}: niceDate(i18n, createdAt)
 #. placeholder {1}: niceDate(i18n, indexedAt)
@@ -11734,7 +11727,7 @@ msgstr "Ĉi tiu afiŝo estis forigita de ĝia aŭtoro"
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Ĉi tiu afiŝo estos kaŝota el fluoj kaj fadenoj. Tio ne povas esti malfarita."
 
-#: src/view/com/composer/Composer.tsx:1015
+#: src/view/com/composer/Composer.tsx:1022
 msgid "This post's author has disabled quote posts."
 msgstr "La aŭtoro de ĉi tiu afiŝo malŝaltis citafiŝojn."
 
@@ -11804,7 +11797,7 @@ msgstr "Ĉi tiu uzanto estas inkluzivita en la listo <0>{0}</0>, kiun vi silenti
 
 #: src/components/NewskieDialog.tsx:49
 msgid "This user is new here. Press for more info about when they joined."
-msgstr "Ĉi tiu uzanto novas ĉi tie. Premu por pliaj informoj pri kiam ties aliĝis."
+msgstr "Ĉi tiu uzanto novas ĉi tie. Premu por pliaj informoj pri kiam tiu aliĝis."
 
 #: src/view/com/profile/ProfileFollows.tsx:182
 msgid "This user isn't following anyone."
@@ -11812,7 +11805,7 @@ msgstr "Ĉi tiu uzanto sekvas neniun."
 
 #: src/components/Post/Embed/VideoEmbed/index.web.tsx:236
 msgid "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
-msgstr ""
+msgstr "Ĉi tiu videaĵo neludeblas per via aparato. Nepraj videokodekoj (H.264/AAC) eble mankas en via retumilo aŭ operaciumo."
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:157
 msgid "This will create a new list with the same name, description, and members as this starter pack."
@@ -12171,11 +12164,11 @@ msgstr ""
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:245
 msgid "Uninvite"
-msgstr "Malinviti"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:240
 msgid "Uninvite {displayName} from this group chat"
-msgstr "Malinviti {displayName} el ĉi tiu grupa babilejo"
+msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:209
 msgid "Unknown verifier"
@@ -12319,7 +12312,7 @@ msgstr "Malabonita de listo"
 msgid "Unsupported clipboard content"
 msgstr "Nesubtenata tonduja enhavo"
 
-#: src/view/com/composer/Composer.tsx:1491
+#: src/view/com/composer/Composer.tsx:1521
 msgid "Unsupported video type: {mimeType}"
 msgstr "Nesubtenata videaĵa tipo: {mimeType}"
 
@@ -12375,7 +12368,7 @@ msgstr "Ĝisdatigi vian retpoŝtadreson"
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:41
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:106
 msgid "Update your location"
-msgstr ""
+msgstr "Aktualigi vian lokon"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:355
 msgctxt "toast"
@@ -12414,21 +12407,21 @@ msgstr "Alŝuti el la dosieroj"
 msgid "Upload from Library"
 msgstr "Alŝuti el la biblioteko"
 
-#: src/view/com/composer/Composer.tsx:2521
+#: src/view/com/composer/Composer.tsx:2551
 msgid "Uploading GIF..."
 msgstr "Alŝutado de GIF..."
 
-#: src/lib/api/index.ts:327
-#: src/lib/api/index.ts:354
+#: src/lib/api/index.ts:328
+#: src/lib/api/index.ts:355
 msgid "Uploading images..."
 msgstr "Alŝutado de bildoj..."
 
-#: src/lib/api/index.ts:426
-#: src/lib/api/index.ts:450
+#: src/lib/api/index.ts:427
+#: src/lib/api/index.ts:451
 msgid "Uploading link thumbnail..."
 msgstr "Alŝutado de ligila miniaturo..."
 
-#: src/view/com/composer/Composer.tsx:2523
+#: src/view/com/composer/Composer.tsx:2553
 msgid "Uploading video..."
 msgstr "Alŝutado de videaĵo..."
 
@@ -12717,7 +12710,7 @@ msgstr "Videaĵo netrovita."
 msgid "Video settings"
 msgstr "Agordoj pri videaĵoj"
 
-#: src/view/com/composer/Composer.tsx:2541
+#: src/view/com/composer/Composer.tsx:2571
 msgid "Video uploaded"
 msgstr "Videaĵo alŝutita"
 
@@ -12734,16 +12727,16 @@ msgstr "Videaĵoj"
 msgid "Videos must be less than 3 minutes long."
 msgstr "Videaĵoj devas esti malpli ol 3 minute longaj."
 
-#: src/view/com/composer/Composer.tsx:1108
+#: src/view/com/composer/Composer.tsx:1115
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr "Vidi"
 
 #. placeholder {0}: view.source.title
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:317
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:615
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:318
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:640
 msgid "View {0}"
-msgstr ""
+msgstr "Vidi {0}"
 
 #. placeholder {0}: profile.handle
 #: src/screens/Profile/Header/Shell.tsx:257
@@ -12770,14 +12763,9 @@ msgstr "Vidi profilon de {0}"
 msgid "View {displayName}’s profile"
 msgstr "Vidi profilon de {displayName}"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:455
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:456
 msgid "View {publicationTitle}"
-msgstr ""
-
-#. placeholder {0}: authorProfile.handle
-#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:83
-msgid "View @{0}'s profile"
-msgstr ""
+msgstr "Vidi {publicationTitle}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:479
 msgid "View blocked user's profile"
@@ -12828,7 +12816,7 @@ msgstr "Vidi pli"
 msgid "View more trending videos"
 msgstr "Vidi pli da furoraj videaĵoj"
 
-#: src/view/com/composer/Composer.tsx:1103
+#: src/view/com/composer/Composer.tsx:1110
 msgid "View post"
 msgstr "Vidi afiŝon"
 
@@ -12845,12 +12833,12 @@ msgstr "Vidi profilon"
 msgid "View profile banner"
 msgstr ""
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:317
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:425
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:456
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:615
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:318
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:426
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:457
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:640
 msgid "View publication"
-msgstr ""
+msgstr "Vidi publikigon"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:108
 msgid "View the avatar"
@@ -13124,7 +13112,7 @@ msgstr ""
 msgid "We're sorry, you cannot access this screen at this time."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1013
+#: src/view/com/composer/Composer.tsx:1020
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "Ni bedaŭras! La afiŝo al kiu vi respondas estis forigita."
 
@@ -13175,7 +13163,7 @@ msgid "What do you want to call your starter pack?"
 msgstr "Kiel vi volas nomi vian startpakon?"
 
 #: src/view/com/auth/SplashScreen.web.tsx:98
-#: src/view/com/composer/Composer.tsx:1455
+#: src/view/com/composer/Composer.tsx:1485
 #: src/view/com/feeds/ComposerPrompt.tsx:193
 msgid "What's up?"
 msgstr "Kio okazas?"
@@ -13261,7 +13249,7 @@ msgstr ""
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr "Ĉu vi volas konservi ĉi tion kiel malneto antaŭ ol vidi viajn malnetojn?"
 
-#: src/view/com/composer/Composer.tsx:1373
+#: src/view/com/composer/Composer.tsx:1403
 msgid "Would you like to save this as a draft to edit later?"
 msgstr "Ĉu vi volas konservi ĉi tion kiel malneto por redakti ĝin poste?"
 
@@ -13270,12 +13258,12 @@ msgstr "Ĉu vi volas konservi ĉi tion kiel malneto por redakti ĝin poste?"
 msgid "Write a post"
 msgstr "Tajpu afiŝon"
 
-#: src/view/com/composer/Composer.tsx:1551
+#: src/view/com/composer/Composer.tsx:1581
 msgid "Write post"
 msgstr "Tajpu afiŝon"
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:91
-#: src/view/com/composer/Composer.tsx:1453
+#: src/view/com/composer/Composer.tsx:1483
 msgid "Write your reply"
 msgstr "Tajpu vian respondon"
 
@@ -13343,15 +13331,15 @@ msgstr ""
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
 #: src/components/dms/MessageItem.tsx:618
 msgid "You are blocking {0}"
-msgstr ""
+msgstr "Vi blokas {0}"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:81
 msgid "You are blocking the chat owner"
-msgstr ""
+msgstr "Vi blokas la babilejan posedanton"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:83
 msgid "You are blocking this person"
-msgstr ""
+msgstr "Vi blokas ĉi tiun personon"
 
 #: src/components/forms/HostingProvider.tsx:46
 msgid "You are creating an account on"
@@ -13443,11 +13431,11 @@ msgid "You can now sign in with your new password."
 msgstr "Vi nun povas ensaluti per via nova pasvorto."
 
 #. Toast shown when the user tries to add more images but the post gallery is already at the cap
-#: src/view/com/composer/Composer.tsx:212
+#: src/view/com/composer/Composer.tsx:219
 msgid "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1378
+#: src/view/com/composer/Composer.tsx:1408
 msgid "You can only save drafts up to 1000 characters."
 msgstr "Vi povas konservi malnetojn maksimume nur 1000 signojn longajn."
 
@@ -13469,7 +13457,7 @@ msgstr "Vi povas reaktivigi vian konton por daŭrigi ensaluton. Via profilo kaj 
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:93
 msgid "You can read chat history but can’t send new messages."
-msgstr ""
+msgstr "Vi povas legi babilejan historion sed ne povas sendi novajn mesaĝojn."
 
 #. Error message for maximum number of images that can be selected to add to a post.
 #: src/view/com/composer/SelectMediaButton.tsx:423
@@ -13513,7 +13501,7 @@ msgstr "Vi havas neniun konservitan fluon."
 msgid "You got here first"
 msgstr "Vi alvenis ĉi tien unue"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:137
+#: src/components/intents/GroupChatJoinDialog.tsx:138
 msgid "You have been previously removed from this group and can’t join it using this link."
 msgstr ""
 
@@ -13586,7 +13574,7 @@ msgstr "Vi sukcese konfirmis vian retpoŝtadreson. Vi povas fermi ĉi tiun dialo
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "Vi dumtempe atingis la limon por videaĵaj alŝutoj. Bonvolu reprovi poste."
 
-#: src/view/com/composer/Composer.tsx:1368
+#: src/view/com/composer/Composer.tsx:1398
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr "Vi havas nekonservitajn ŝanĝojn al ĉi tiu malneto, ĉu vi volas konservi ilin?"
 
@@ -13773,7 +13761,7 @@ msgstr "Vi malpermesis aliron al viaj kontaktoj"
 
 #: src/state/shell/progress-guide.tsx:237
 msgid "You've found some people to follow"
-msgstr "Vi trovis kelkajn personojn por sekvi"
+msgstr "Vi trovis kelkajn homojn por sekvi"
 
 #: src/components/FocusScope/index.tsx:112
 msgid "You've reached the end of the active content."
@@ -13783,7 +13771,7 @@ msgstr "Vi atingis la finon de la aktiva enhavo."
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr "Vi atingis la finon de via fluo! Trovu pliajn kontojn por sekvi."
 
-#: src/view/com/composer/Composer.tsx:637
+#: src/view/com/composer/Composer.tsx:644
 msgid "You've reached the maximum number of drafts"
 msgstr "Vi atingis la maksimuman nombron da malnetoj"
 
@@ -13951,11 +13939,11 @@ msgstr "Via pasvorto estis sukcese ŝanĝita! Bonvolu ekuzi vian novan pasvorton
 msgid "Your password must be at least 8 characters long."
 msgstr "Via pasvorto bezonas almenaŭ 8 signojn."
 
-#: src/view/com/composer/Composer.tsx:1099
+#: src/view/com/composer/Composer.tsx:1106
 msgid "Your post was sent"
 msgstr "Via afiŝo estis sendita"
 
-#: src/view/com/composer/Composer.tsx:1096
+#: src/view/com/composer/Composer.tsx:1103
 msgid "Your posts were sent"
 msgstr "Viaj afiŝoj estis senditaj"
 
@@ -13976,7 +13964,7 @@ msgstr "Via profilbildo ĉirkaŭita per samcentraj cirkloj de profilbildoj de al
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "Via profilo, afiŝoj, fluoj kaj listoj ne plu videblos por aliaj uzantoj de Bluesky. Vi povas reaktivigi vian konton iam ajn per ensaluto."
 
-#: src/view/com/composer/Composer.tsx:1098
+#: src/view/com/composer/Composer.tsx:1105
 msgid "Your reply was sent"
 msgstr "Via respondo estis sendita"
 
@@ -13989,7 +13977,7 @@ msgstr "Via raporto estos sendota al <0>{0}</0>."
 msgid "Your selected interests help us serve you content you care about."
 msgstr "Viaj elektitaj interesoj helpas nin havigi al vi enhavon, kiu gravas al vi."
 
-#: src/view/com/composer/Composer.tsx:1403
+#: src/view/com/composer/Composer.tsx:1433
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "Via fadeno havas malplenajn afiŝojn, kiuj estos preterlasitaj. La restantaj afiŝoj estos publikigitaj kiel fadeno."
 

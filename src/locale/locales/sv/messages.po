@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-06 14:56\n"
+"PO-Revision-Date: 2026-06-09 22:16\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -122,7 +122,7 @@ msgstr "{0, plural, one {# oläst notis} other {# olästa notiser}}"
 
 #. How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.
 #. placeholder {0}: view.readingTime
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:230
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:231
 msgid "{0, plural, one {#m} other {#m}}"
 msgstr "{0, plural, one {# min} other {# min}}"
 
@@ -325,24 +325,25 @@ msgid "{0}’s avatar"
 msgstr "{0}s avatar"
 
 #. The number of active group chat members out of the total number allowed.
-#. placeholder {0}: data.joinLinkPreviews[0].memberCount
-#. placeholder {1}: data.joinLinkPreviews[0].memberLimit
-#: src/screens/Messages/JoinRequest.tsx:130
+#. placeholder {0}: joinLinkPreview.memberCount
+#. placeholder {1}: joinLinkPreview.memberLimit
+#: src/screens/Messages/JoinRequest.tsx:129
+msgctxt "group-chat-member-count"
 msgid "{0}/{1}"
-msgstr "{0}/{1}"
+msgstr ""
 
 #. The number of members in a group chat, in the format '{members}/{total} members'.
 #. placeholder {0}: preview.memberCount
 #. placeholder {1}: preview.memberLimit
 #. placeholder {2}: preview.memberCount
-#: src/components/dms/ChatInvite/Card.tsx:56
+#: src/components/dms/ChatInvite/Card.tsx:57
 msgid "{0}/{1} {2, plural, one {member} other {members}}"
 msgstr "{0}/{1} {2, plural, other {medlemmar}}"
 
 #. The number of active group chat members out of the total number allowed.
 #. placeholder {0}: joinLinkPreview.memberCount
 #. placeholder {1}: joinLinkPreview.memberLimit
-#: src/components/intents/GroupChatJoinDialog.tsx:308
+#: src/components/intents/GroupChatJoinDialog.tsx:304
 msgid "{0}/{1} members"
 msgstr "{0}/{1} medlemmar"
 
@@ -938,9 +939,9 @@ msgstr "Använd det här språkförslaget"
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:182
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:186
 msgid "Accepted conversations"
-msgstr "Godkända konversationer"
+msgstr "Accepterade konversationer"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:94
+#: src/components/intents/GroupChatJoinDialog.tsx:95
 msgid "Access requested! The group owner will review your request."
 msgstr "Förfrågan skickad! Gruppägaren kommer att granska din förfrågan."
 
@@ -1097,11 +1098,11 @@ msgstr "Lägg till alternativtext (valfritt)"
 msgid "Add another account"
 msgstr "Lägg till ett annat konto"
 
-#: src/view/com/composer/Composer.tsx:1454
+#: src/view/com/composer/Composer.tsx:1484
 msgid "Add another post"
 msgstr "Lägg till ett ytterligare inlägg"
 
-#: src/view/com/composer/Composer.tsx:2117
+#: src/view/com/composer/Composer.tsx:2147
 msgid "Add another post to thread"
 msgstr "Lägg till ytterligare ett inlägg i tråden"
 
@@ -1619,7 +1620,7 @@ msgstr "Alla"
 msgid "Anyone can interact"
 msgstr "Alla får interagera"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:323
+#: src/components/intents/GroupChatJoinDialog.tsx:316
 msgid "Anyone can join"
 msgstr "Vem som helst kan gå med"
 
@@ -1788,7 +1789,7 @@ msgstr "Är du säker på att du vill lämna den här konversationen? Dina medde
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Är du säker på att du vill ta bort det här från dina flöden?"
 
-#: src/view/com/composer/Composer.tsx:1590
+#: src/view/com/composer/Composer.tsx:1620
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Är du säker på att du vill slänga det här inlägget?"
 
@@ -1920,7 +1921,7 @@ msgstr "Du måste verifiera din e‑postadress innan du kan skapa ett startpaket
 
 #: src/screens/Messages/components/RequestButtons.tsx:259
 msgid "Before you can accept this chat request, you must first verify your email."
-msgstr "Du måste verifiera din e-post innan du kan godkänna den här chattförfrågningen."
+msgstr "Innan du kan acceptera den här chattförfrågningen måste du verifiera din e-postadress."
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:59
 msgid "Before you can get notifications for {name}'s posts, you must first verify your email."
@@ -2224,16 +2225,21 @@ msgid "Button to go back to the home timeline"
 msgstr "Knapp som tar dig tillbaka till hemtidslinjen"
 
 #. The owner (creator) of a group chat.
-#. placeholder {0}: createSanitizedDisplayName( data.joinLinkPreviews[0].owner, true, moderateProfile( data.joinLinkPreviews[0].owner, moderationOpts, ).ui('displayName'), )
+#. placeholder {0}: createSanitizedDisplayName( joinLinkPreview.owner, true, moderateProfile( joinLinkPreview.owner, moderationOpts, ).ui('displayName'), )
 #. placeholder {0}: sanitizeHandle(handle, '@')
 #. placeholder {0}: sanitizeHandle(item.feed.creator.handle, '@')
 #: src/components/LabelingServiceCard/index.tsx:62
 #: src/components/moderation/ReportDialog/index.tsx:847
-#: src/screens/Messages/JoinRequest.tsx:166
+#: src/screens/Messages/JoinRequest.tsx:167
 #: src/screens/Search/components/StarterPackCard.tsx:107
 #: src/screens/Search/Explore.tsx:971
 msgid "By {0}"
 msgstr "Av {0}"
+
+#. placeholder {0}: authorProfile.handle
+#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:77
+msgid "by @{0}"
+msgstr ""
 
 #. placeholder {0}: sanitizeHandle(info.creatorHandle, '@')
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:451
@@ -2241,14 +2247,9 @@ msgid "By <0>{0}</0>"
 msgstr "Av <0>{0}</0>"
 
 #. The group chat creator, in the format 'By {displayName}'.
-#: src/components/dms/ChatInvite/Card.tsx:78
+#: src/components/dms/ChatInvite/Card.tsx:79
 msgid "By <0>{ownerDisplayName}</0>"
 msgstr "Av <0>{ownerDisplayName}</0>"
-
-#. placeholder {0}: authorProfile.handle
-#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:80
-msgid "by <0>@{0}</0>"
-msgstr "av <0>@{0}</0>"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:182
 msgid "By clicking \"Continue\" you acknowledge that you understand and agree to these updates."
@@ -2321,8 +2322,8 @@ msgstr "Kamera"
 #: src/screens/Settings/Settings.tsx:300
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
-#: src/view/com/composer/Composer.tsx:1668
-#: src/view/com/composer/Composer.tsx:1678
+#: src/view/com/composer/Composer.tsx:1698
+#: src/view/com/composer/Composer.tsx:1708
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:228
@@ -2454,10 +2455,10 @@ msgstr "Chatt raderad"
 msgid "Chat ended"
 msgstr "Chatt avslutad"
 
-#: src/components/dms/ChatInvite/Root.tsx:105
-#: src/components/intents/GroupChatJoinDialog.tsx:228
-#: src/components/intents/GroupChatJoinDialog.tsx:259
-#: src/components/Post/Embed/JoinRequestEmbed.tsx:94
+#: src/components/intents/GroupChatJoinDialog.tsx:229
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:99
+#: src/screens/Messages/components/MessageInputEmbed.tsx:331
+#: src/screens/Messages/JoinRequest.tsx:83
 msgid "Chat invite link no longer available"
 msgstr "Inbjudningslänken till den här chatten är inte längre tillgänglig"
 
@@ -2716,8 +2717,8 @@ msgstr "Klicka för att försöka på nytt med misslyckat meddelande"
 #: src/components/dms/AfterReportDialog.tsx:217
 #: src/components/dms/EmojiPopup.android.tsx:59
 #: src/components/dms/InitiateChatFlow.tsx:542
-#: src/components/intents/GroupChatJoinDialog.tsx:205
-#: src/components/intents/GroupChatJoinDialog.tsx:240
+#: src/components/intents/GroupChatJoinDialog.tsx:206
+#: src/components/intents/GroupChatJoinDialog.tsx:241
 #: src/components/NewskieDialog.tsx:169
 #: src/components/NewskieDialog.tsx:175
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:107
@@ -2794,10 +2795,10 @@ msgstr "Stäng meny"
 msgid "Close the incoming requests banner"
 msgstr "Stäng banderollen för väntande förfrågningar"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:198
 #: src/components/intents/GroupChatJoinDialog.tsx:199
-#: src/components/intents/GroupChatJoinDialog.tsx:235
+#: src/components/intents/GroupChatJoinDialog.tsx:200
 #: src/components/intents/GroupChatJoinDialog.tsx:236
+#: src/components/intents/GroupChatJoinDialog.tsx:237
 #: src/components/Menu/index.tsx:361
 msgid "Close this dialog"
 msgstr "Stäng den här dialogrutan"
@@ -2810,7 +2811,7 @@ msgstr "Stäng välkomstfönster"
 msgid "Closes password update alert"
 msgstr "Stänger avisering om uppdatering av lösenord"
 
-#: src/view/com/composer/Composer.tsx:1676
+#: src/view/com/composer/Composer.tsx:1706
 msgid "Closes post composer and discards post draft"
 msgstr "Stänger inläggsverktyget och slänger utkastet"
 
@@ -2860,7 +2861,7 @@ msgid "Compose new post"
 msgstr "Skriv ett nytt inlägg"
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1552
+#: src/view/com/composer/Composer.tsx:1582
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr "Skriv inlägg som är upp till {0, plural, other {# tecken}} långa"
 
@@ -2868,11 +2869,11 @@ msgstr "Skriv inlägg som är upp till {0, plural, other {# tecken}} långa"
 msgid "Compose reply"
 msgstr "Skriv svar"
 
-#: src/view/com/composer/Composer.tsx:2514
+#: src/view/com/composer/Composer.tsx:2544
 msgid "Compressing GIF..."
 msgstr "Komprimerar gif-bild…"
 
-#: src/view/com/composer/Composer.tsx:2516
+#: src/view/com/composer/Composer.tsx:2546
 msgid "Compressing video..."
 msgstr "Komprimerar videoklipp…"
 
@@ -3066,7 +3067,7 @@ msgstr "Konversationen hittades inte."
 msgid "Copied build version to clipboard"
 msgstr "Byggversion kopierad till urklipp"
 
-#: src/components/dms/ChatInvite/Root.tsx:82
+#: src/components/dms/ChatInvite/Root.tsx:84
 #: src/components/dms/MessageContextMenu.tsx:71
 #: src/components/PostControls/DiscoverDebug.tsx:36
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:272
@@ -3119,7 +3120,7 @@ msgstr "Kopiera DID"
 msgid "Copy host"
 msgstr "Kopiera värd"
 
-#: src/components/dms/ChatInvite/Root.tsx:74
+#: src/components/dms/ChatInvite/Root.tsx:76
 #: src/components/StarterPack/ShareDialog.tsx:115
 #: src/screens/StarterPack/StarterPackScreen.tsx:644
 msgid "Copy link"
@@ -3188,7 +3189,7 @@ msgstr "Kunde inte ansluta till anpassat flöde"
 msgid "Could not connect to feed service"
 msgstr "Kunde inte ansluta till flödestjänst"
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:200
+#: src/screens/Messages/components/MessageInputEmbed.tsx:202
 msgid "Could not fetch post"
 msgstr "Kunde inte hämta inlägg"
 
@@ -3216,10 +3217,6 @@ msgstr "Kunde inte lämna chatt"
 #: src/screens/Profile/ProfileFeed/index.tsx:73
 msgid "Could not load feed"
 msgstr "Kunde inte läsa in flöde"
-
-#: src/screens/Messages/components/MessageInputEmbed.tsx:321
-msgid "Could not load invite"
-msgstr "Kunde inte läsa in inbjudan"
 
 #: src/screens/ProfileList/components/ErrorScreen.tsx:27
 #: src/screens/ProfileList/index.tsx:80
@@ -3542,7 +3539,7 @@ msgstr "Radera mitt konto"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:787
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:789
-#: src/view/com/composer/Composer.tsx:1564
+#: src/view/com/composer/Composer.tsx:1594
 msgid "Delete post"
 msgstr "Radera inlägg"
 
@@ -3689,9 +3686,9 @@ msgstr "Inaktiverat"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:101
 #: src/screens/Profile/Header/EditProfileDialog.tsx:79
-#: src/view/com/composer/Composer.tsx:1347
-#: src/view/com/composer/Composer.tsx:1391
-#: src/view/com/composer/Composer.tsx:1597
+#: src/view/com/composer/Composer.tsx:1377
+#: src/view/com/composer/Composer.tsx:1421
+#: src/view/com/composer/Composer.tsx:1627
 #: src/view/com/composer/drafts/DraftItem.tsx:242
 #: src/view/com/composer/drafts/DraftsButton.tsx:131
 msgid "Discard"
@@ -3702,14 +3699,14 @@ msgstr "Släng"
 msgid "Discard changes?"
 msgstr "Vill du slänga ändringarna?"
 
-#: src/view/com/composer/Composer.tsx:1345
+#: src/view/com/composer/Composer.tsx:1375
 #: src/view/com/composer/drafts/DraftItem.tsx:239
 #: src/view/com/composer/drafts/DraftsButton.tsx:98
 msgid "Discard draft?"
 msgstr "Vill du slänga utkastet?"
 
-#: src/view/com/composer/Composer.tsx:1362
-#: src/view/com/composer/Composer.tsx:1589
+#: src/view/com/composer/Composer.tsx:1392
+#: src/view/com/composer/Composer.tsx:1619
 msgid "Discard post?"
 msgstr "Vill du slänga inlägget?"
 
@@ -3746,7 +3743,7 @@ msgstr "Avvisa"
 msgid "Dismiss banner"
 msgstr "Avvisa banderoll"
 
-#: src/view/com/composer/Composer.tsx:2435
+#: src/view/com/composer/Composer.tsx:2465
 msgid "Dismiss error"
 msgstr "Avvisa fel"
 
@@ -4277,7 +4274,7 @@ msgstr "Öppnar helskärm"
 msgid "Entertainment"
 msgstr "Underhållning"
 
-#: src/view/com/composer/Composer.tsx:2534
+#: src/view/com/composer/Composer.tsx:2564
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Fel"
@@ -4372,7 +4369,7 @@ msgstr "Utöka inläggstext"
 msgid "Expands or collapses post text"
 msgstr "Utökar eller fäller ihop inläggstext"
 
-#: src/lib/api/index.ts:487
+#: src/lib/api/index.ts:491
 msgid "Expected uri to resolve to a record"
 msgstr "Förväntade att URI:n skulle hänvisa till en datapost"
 
@@ -4465,7 +4462,7 @@ msgstr "Extremistiskt innehåll"
 #: src/screens/Messages/components/RequestButtons.tsx:243
 msgctxt "toast"
 msgid "Failed to accept chat"
-msgstr "Det gick inte att godkänna chatt"
+msgstr "Det gick inte att acceptera chatt"
 
 #: src/screens/Messages/JoinRequests.tsx:186
 msgid "Failed to accept join request"
@@ -4566,7 +4563,7 @@ msgstr "Det gick inte att dölja förslag. Kontrollera din internetanslutning"
 msgid "Failed to ignore join request"
 msgstr "Det gick inte att avfärda medlemsförfrågan"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:117
+#: src/components/intents/GroupChatJoinDialog.tsx:118
 msgid "Failed to join the group chat. Please try again."
 msgstr "Det gick inte att gå med i gruppchatten. Försök igen."
 
@@ -4675,7 +4672,7 @@ msgstr "Det gick inte att ta bort medlem från gruppchatt"
 msgid "Failed to remove verification"
 msgstr "Det gick inte att ta bort verifiering"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:151
+#: src/components/intents/GroupChatJoinDialog.tsx:152
 msgid "Failed to rescind your request. Please try again."
 msgstr "Det gick inte att återkalla din förfrågan. Försök igen."
 
@@ -4683,7 +4680,7 @@ msgstr "Det gick inte att återkalla din förfrågan. Försök igen."
 msgid "Failed to resolve location. Please try again."
 msgstr "Det gick inte att fastställa din plats. Försök igen."
 
-#: src/view/com/composer/Composer.tsx:639
+#: src/view/com/composer/Composer.tsx:646
 msgid "Failed to save draft"
 msgstr "Det gick inte att spara utkast"
 
@@ -5081,7 +5078,7 @@ msgstr "Följs av <0>{0}</0> och <1>{1}</1>"
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr "Följs av <0>{0}</0>, <1>{1}</1>, och {2, plural, one {# annan} other {# andra}}"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:322
+#: src/components/intents/GroupChatJoinDialog.tsx:315
 msgid "Followers can join"
 msgstr "Följare kan gå med"
 
@@ -5332,7 +5329,7 @@ msgstr "Kom igång"
 msgid "GIF"
 msgstr "Gif-bild"
 
-#: src/view/com/composer/Composer.tsx:2539
+#: src/view/com/composer/Composer.tsx:2569
 msgid "GIF uploaded"
 msgstr "Gif-bild uppladdad"
 
@@ -5481,9 +5478,9 @@ msgstr "Grafiskt våldsamt innehåll"
 msgid "Grooming or predatory behavior"
 msgstr "Sexuell manipulation eller utnyttjande av barn (”grooming”)"
 
-#: src/components/dms/ChatInvite/Card.tsx:45
-#: src/components/intents/GroupChatJoinDialog.tsx:298
-#: src/screens/Messages/JoinRequest.tsx:116
+#: src/components/dms/ChatInvite/Card.tsx:46
+#: src/components/intents/GroupChatJoinDialog.tsx:294
+#: src/screens/Messages/JoinRequest.tsx:115
 msgid "Group chat"
 msgstr "Gruppchatt"
 
@@ -5548,7 +5545,7 @@ msgstr "Gruppnamn"
 #: src/components/dms/InitiateChatFlow.tsx:602
 #: src/screens/Messages/ConversationSettings/prompts.tsx:61
 msgid "Group name is too long. The maximum number of characters is {MAX_GROUP_NAME_GRAPHEME_LENGTH}."
-msgstr "Gruppnamnet är för långt. Det maximala antalet tecken är {MAX_GROUP_NAME_GRAPHEME_LENGTH}."
+msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:219
 msgid "Hacking or system attacks"
@@ -6129,7 +6126,7 @@ msgstr "Nu införs sparade inlägg, även kallat bokmärken"
 msgid "Invalid 2FA confirmation code."
 msgstr "Ogiltig bekräftelsekod för 2FA."
 
-#: src/components/intents/GroupChatJoinDialog.tsx:127
+#: src/components/intents/GroupChatJoinDialog.tsx:128
 msgid "Invalid group chat code."
 msgstr "Ogiltig gruppchattskod."
 
@@ -6151,7 +6148,7 @@ msgstr "Ogiltigt telefonnummer"
 msgid "Invalid report subject"
 msgstr "Ogiltigt ämne för anmälan"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:158
+#: src/components/intents/GroupChatJoinDialog.tsx:159
 msgid "Invalid rescind request."
 msgstr "Ogiltig begäran om återkallelse."
 
@@ -6248,7 +6245,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Just nu är det bara du! Lägg till fler personer i ditt startpaket genom att söka ovan."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2454
+#: src/view/com/composer/Composer.tsx:2484
 msgid "Job ID: {0}"
 msgstr "Jobb-ID: {0}"
 
@@ -6257,8 +6254,8 @@ msgstr "Jobb-ID: {0}"
 msgid "Jobs"
 msgstr "Jobb"
 
-#: src/components/dms/ChatInvite/Root.tsx:100
-#: src/components/intents/GroupChatJoinDialog.tsx:254
+#: src/components/dms/ChatInvite/Root.tsx:102
+#: src/components/intents/GroupChatJoinDialog.tsx:255
 msgid "Join"
 msgstr "Gå med"
 
@@ -6269,12 +6266,12 @@ msgstr "Gå med"
 msgid "Join Bluesky"
 msgstr "Gå med i Bluesky"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:63
-#: src/components/intents/GroupChatJoinDialog.tsx:419
+#: src/components/intents/GroupChatJoinDialog.tsx:64
+#: src/components/intents/GroupChatJoinDialog.tsx:412
 msgid "Join group chat"
 msgstr "Gå med i gruppchatt"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:147
+#: src/components/intents/GroupChatJoinDialog.tsx:148
 msgid "Join request rescinded."
 msgstr "Medlemsförfrågan återkallad."
 
@@ -6287,8 +6284,8 @@ msgstr "Delta i samtalen"
 msgid "Journalism"
 msgstr "Journalistik"
 
-#: src/view/com/composer/Composer.tsx:1395
-#: src/view/com/composer/Composer.tsx:1405
+#: src/view/com/composer/Composer.tsx:1425
+#: src/view/com/composer/Composer.tsx:1435
 #: src/view/com/composer/drafts/DraftsButton.tsx:135
 msgid "Keep editing"
 msgstr "Fortsätt redigera"
@@ -6640,7 +6637,7 @@ msgstr "Listbeskrivning"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:466
 msgid "List description is too long. {DESCRIPTION_MAX_GRAPHEMES, plural, other {The maximum number of characters is #.}}"
-msgstr "Listbeskrivningen är för lång. {DESCRIPTION_MAX_GRAPHEMES, plural, other {Det maximala antalet tecken är #.}}"
+msgstr "Listbeskrivningen är för lång. {DESCRIPTION_MAX_GRAPHEMES, plural, other {Maximalt antal tecken är #.}}"
 
 #: src/screens/List/ListHiddenScreen.tsx:133
 msgid "List has been hidden"
@@ -6665,7 +6662,7 @@ msgstr "Listnamn"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:430
 msgid "List name is too long. {DISPLAY_NAME_MAX_GRAPHEMES, plural, other {The maximum number of characters is #.}}"
-msgstr "Listnamnet är för långt. {DISPLAY_NAME_MAX_GRAPHEMES, plural, other {Det maximala antalet tecken är #.}}"
+msgstr "Listnamnet är för långt. {DISPLAY_NAME_MAX_GRAPHEMES, plural, other {Maximalt antal tecken är #.}}"
 
 #: src/screens/ProfileList/components/Header.tsx:115
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:130
@@ -7806,11 +7803,11 @@ msgstr "En av de valda mottagarna tillåter inte gruppchattar."
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr "En av de valda mottagarna har blockerat dig och kan inte nås via meddelanden."
 
-#: src/view/com/composer/Composer.tsx:855
+#: src/view/com/composer/Composer.tsx:862
 msgid "One or more GIFs is missing alt text."
 msgstr "En eller flera gif-bilder saknar alternativtext."
 
-#: src/view/com/composer/Composer.tsx:852
+#: src/view/com/composer/Composer.tsx:859
 msgid "One or more images is missing alt text."
 msgstr "En eller flera bilder saknar alternativtext."
 
@@ -7822,11 +7819,11 @@ msgstr "En eller flera av de filer du valt stöds inte."
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 msgstr "En eller flera av de filer du valt är för stora. Maxstorlek är {VIDEO_MAX_SIZE_MB} MB."
 
-#: src/view/com/composer/Composer.tsx:650
+#: src/view/com/composer/Composer.tsx:657
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
 msgstr "Ett eller flera inlägg är för långa för att sparas som utkast. {MAX_DRAFT_GRAPHEME_LENGTH, plural, other {Maximalt antal tecken är #.}}"
 
-#: src/view/com/composer/Composer.tsx:862
+#: src/view/com/composer/Composer.tsx:869
 msgid "One or more videos is missing alt text."
 msgstr "Ett eller flera videoklipp saknar alternativtext."
 
@@ -7839,7 +7836,7 @@ msgstr "Endast {0} får svara."
 #. placeholder {0}: result.accepted.length
 #. placeholder {1}: next.length
 #. placeholder {2}: next.length
-#: src/view/com/composer/Composer.tsx:225
+#: src/view/com/composer/Composer.tsx:232
 msgid "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
 msgstr "Endast {0} av {1} {2, plural, one {bild} other {bilder}} lades till. Gränsen är {MAX_GALLERY_IMAGES} bilder"
 
@@ -7851,7 +7848,7 @@ msgstr "Endast administratörer kan godkänna medlemsförfrågningar."
 msgid "Only admins can ignore join requests."
 msgstr "Endast administratörer kan avfärda medlemsförfrågningar."
 
-#: src/components/intents/GroupChatJoinDialog.tsx:125
+#: src/components/intents/GroupChatJoinDialog.tsx:126
 msgid "Only followers can join this group chat."
 msgstr "Endast följare kan gå med i den här gruppchatten."
 
@@ -7865,13 +7862,13 @@ msgstr "Bara följare som jag följer"
 msgid "Only image files are supported"
 msgstr "Endast bildfiler stöds"
 
-#. placeholder {0}: createSanitizedDisplayName( data.joinLinkPreviews[0].owner, true, moderateProfile( data.joinLinkPreviews[0].owner, moderationOpts, ).ui('displayName'), )
-#: src/screens/Messages/JoinRequest.tsx:207
+#. placeholder {0}: createSanitizedDisplayName( joinLinkPreview.owner, true, moderateProfile(joinLinkPreview.owner, moderationOpts).ui( 'displayName', ), )
+#: src/screens/Messages/JoinRequest.tsx:208
 msgid "Only people {0} follows can join."
 msgstr "Endast personer som {0} följer kan gå med."
 
-#: src/components/dms/ChatInvite/Root.tsx:115
-#: src/components/intents/GroupChatJoinDialog.tsx:269
+#: src/components/dms/ChatInvite/Root.tsx:112
+#: src/components/intents/GroupChatJoinDialog.tsx:265
 msgid "Only people the chat owner follows can join"
 msgstr "Endast personer som chattägaren följer kan gå med"
 
@@ -7900,8 +7897,8 @@ msgstr "Öppna avatarskapare"
 msgid "Open camera"
 msgstr "Öppna kamera"
 
-#: src/components/dms/ChatInvite/Root.tsx:87
-#: src/components/intents/GroupChatJoinDialog.tsx:408
+#: src/components/dms/ChatInvite/Root.tsx:89
+#: src/components/intents/GroupChatJoinDialog.tsx:401
 msgid "Open chat"
 msgstr "Öppna chatt"
 
@@ -7924,7 +7921,7 @@ msgstr "Öppna sidpanel"
 
 #: src/screens/Messages/components/MessageComposer.tsx:176
 #: src/screens/Messages/components/MessageInput.web.tsx:148
-#: src/view/com/composer/Composer.tsx:2094
+#: src/view/com/composer/Composer.tsx:2124
 msgid "Open emoji picker"
 msgstr "Öppna emoji-väljaren"
 
@@ -7945,7 +7942,7 @@ msgstr "Öppna fullständig emoji-lista"
 msgid "Open Germ DM"
 msgstr "Öppna Germ DM"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:401
+#: src/components/intents/GroupChatJoinDialog.tsx:394
 msgid "Open group chat"
 msgstr "Öppna gruppchatt"
 
@@ -7955,7 +7952,7 @@ msgid "Open group chat settings"
 msgstr "Öppna inställningar för gruppchatt"
 
 #: src/components/Post/Embed/ExternalEmbed/index.tsx:88
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:140
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:141
 msgid "Open link to {niceUrl}"
 msgstr "Öppna länk till {niceUrl}"
 
@@ -8006,7 +8003,7 @@ msgstr "Öppna Storybook-sida"
 msgid "Open system log"
 msgstr "Öppna systemlogg"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:402
+#: src/components/intents/GroupChatJoinDialog.tsx:395
 msgid "Open this group chat"
 msgstr "Öppna den här gruppchatten"
 
@@ -8207,7 +8204,7 @@ msgstr "Ägare"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:44
 msgid "Owner must lock the group before leaving."
-msgstr ""
+msgstr "Ägare måste låsa gruppen innan de kan lämna den."
 
 #: src/components/Lists.tsx:205
 #: src/components/Lists.tsx:220
@@ -8579,7 +8576,7 @@ msgstr "Politik"
 msgid "Porn"
 msgstr "Porr"
 
-#: src/view/com/composer/Composer.tsx:1742
+#: src/view/com/composer/Composer.tsx:1772
 msgctxt "action"
 msgid "Post"
 msgstr "Publicera"
@@ -8599,12 +8596,12 @@ msgstr "Publicera ett foto"
 msgid "Post a video"
 msgstr "Publicera ett videoklipp"
 
-#: src/view/com/composer/Composer.tsx:1740
+#: src/view/com/composer/Composer.tsx:1770
 msgctxt "action"
 msgid "Post All"
 msgstr "Publicera alla"
 
-#: src/view/com/composer/Composer.tsx:1404
+#: src/view/com/composer/Composer.tsx:1434
 msgid "Post anyway"
 msgstr "Publicera ändå"
 
@@ -8625,7 +8622,7 @@ msgctxt "toast"
 msgid "Post deleted"
 msgstr "Inlägg raderat"
 
-#: src/lib/api/index.ts:189
+#: src/lib/api/index.ts:190
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr "Inlägget kunde inte laddas upp. Kontrollera din internetanslutning och försök igen."
 
@@ -8777,15 +8774,15 @@ msgstr "Integritetspolicy"
 msgid "Privacy violation of a minor"
 msgstr "Kränkning av minderårigs integritet"
 
-#: src/view/com/composer/Composer.tsx:2528
+#: src/view/com/composer/Composer.tsx:2558
 msgid "Processing GIF..."
 msgstr "Bearbetar gif-bild…"
 
-#: src/view/com/composer/Composer.tsx:2530
+#: src/view/com/composer/Composer.tsx:2560
 msgid "Processing video..."
 msgstr "Bearbetar videoklipp…"
 
-#: src/lib/api/index.ts:62
+#: src/lib/api/index.ts:63
 msgid "Processing..."
 msgstr "Bearbetar…"
 
@@ -8826,22 +8823,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr "Publika, delningsbara listor över användare som kan ignoreras eller blockeras i grupp."
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1726
+#: src/view/com/composer/Composer.tsx:1756
 msgid "Publish post"
 msgstr "Publicera inlägg"
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1721
+#: src/view/com/composer/Composer.tsx:1751
 msgid "Publish posts"
 msgstr "Publicera samtliga inlägg"
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1710
+#: src/view/com/composer/Composer.tsx:1740
 msgid "Publish replies"
 msgstr "Publicera samtliga svar"
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1715
+#: src/view/com/composer/Composer.tsx:1745
 msgid "Publish reply"
 msgstr "Publicera samtliga svar"
 
@@ -9105,9 +9102,9 @@ msgstr "Ta bort banderoll"
 msgid "Remove caption file"
 msgstr "Ta bort undertextfil"
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:234
-#: src/screens/Messages/components/MessageInputEmbed.tsx:289
-#: src/screens/Messages/components/MessageInputEmbed.tsx:355
+#: src/screens/Messages/components/MessageInputEmbed.tsx:236
+#: src/screens/Messages/components/MessageInputEmbed.tsx:291
+#: src/screens/Messages/components/MessageInputEmbed.tsx:365
 msgid "Remove embed"
 msgstr "Ta bort inbäddning"
 
@@ -9295,7 +9292,7 @@ msgstr "Svar inaktiverade"
 msgid "Replies to this post are disabled."
 msgstr "Svar är inaktiverat för det här inlägget."
 
-#: src/view/com/composer/Composer.tsx:1738
+#: src/view/com/composer/Composer.tsx:1768
 msgctxt "action"
 msgid "Reply"
 msgstr "Svara"
@@ -9480,7 +9477,7 @@ msgstr "Återpubliceringar av det här inlägget"
 msgid "Reposts of your reposts"
 msgstr "Återpubliceringar av dina återpubliceringar"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:418
+#: src/components/intents/GroupChatJoinDialog.tsx:411
 msgid "Request access to group chat"
 msgstr "Begär att få åtkomst till gruppchatten"
 
@@ -9497,12 +9494,12 @@ msgstr "Begär kod"
 msgid "Request ignored."
 msgstr "Förfrågan avfärdad."
 
-#: src/components/dms/ChatInvite/Root.tsx:100
-#: src/components/intents/GroupChatJoinDialog.tsx:253
+#: src/components/dms/ChatInvite/Root.tsx:102
+#: src/components/intents/GroupChatJoinDialog.tsx:254
 msgid "Request to join"
 msgstr "Begär att få gå med"
 
-#: src/components/dms/ChatInvite/Root.tsx:119
+#: src/components/dms/ChatInvite/Root.tsx:116
 msgid "Requested"
 msgstr "Förfrågan skickad"
 
@@ -9534,7 +9531,7 @@ msgstr "Obligatoriskt för den här leverantören"
 msgid "Required in your region"
 msgstr "Obligatoriskt i din region"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:273
+#: src/components/intents/GroupChatJoinDialog.tsx:269
 msgid "Rescind request"
 msgstr "Återkalla förfrågan"
 
@@ -9690,22 +9687,22 @@ msgstr "Spara födelsedatum"
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
 #: src/screens/SavedFeeds.tsx:315
-#: src/view/com/composer/Composer.tsx:1385
+#: src/view/com/composer/Composer.tsx:1415
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save changes"
 msgstr "Spara ändringar"
 
-#: src/view/com/composer/Composer.tsx:1357
+#: src/view/com/composer/Composer.tsx:1387
 #: src/view/com/composer/drafts/DraftsButton.tsx:93
 msgid "Save changes?"
 msgstr "Spara ändringar?"
 
-#: src/view/com/composer/Composer.tsx:1385
+#: src/view/com/composer/Composer.tsx:1415
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save draft"
 msgstr "Spara utkast"
 
-#: src/view/com/composer/Composer.tsx:1359
+#: src/view/com/composer/Composer.tsx:1389
 #: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Save draft?"
 msgstr "Spara utkast?"
@@ -10546,9 +10543,9 @@ msgstr "Logga in eller skapa ett konto"
 msgid "Sign in or create your account to join the conversation!"
 msgstr "Logga in eller skapa ett konto för att delta i konversationen!"
 
-#: src/screens/Messages/JoinRequest.tsx:205
+#: src/screens/Messages/JoinRequest.tsx:206
 msgid "Sign in to accept invite."
-msgstr "Logga in för att godkänna inbjudan."
+msgstr "Logga in för att acceptera inbjudan."
 
 #: src/components/AccountList.tsx:70
 msgid "Sign in to account that is not listed"
@@ -10558,7 +10555,7 @@ msgstr "Logga in på ett olistat konto"
 msgid "Sign in to Bluesky or create a new account"
 msgstr "Logga in på Bluesky eller skapa ett nytt konto"
 
-#: src/screens/Messages/JoinRequest.tsx:204
+#: src/screens/Messages/JoinRequest.tsx:205
 msgid "Sign in to request access to this group chat."
 msgstr "Logga in för att begära att få åtkomst till den här gruppchatten."
 
@@ -10616,7 +10613,7 @@ msgstr "Hoppa över"
 msgid "Skip contact sharing and continue to the app"
 msgstr "Hoppa över kontaktdelning och fortsätt till appen"
 
-#: src/view/com/composer/Composer.tsx:1402
+#: src/view/com/composer/Composer.tsx:1432
 msgid "Skip empty posts?"
 msgstr "Hoppa över tomma inlägg?"
 
@@ -10925,13 +10922,13 @@ msgid "Subscribe"
 msgstr "Prenumerera"
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:424
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:453
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:425
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:454
 msgid "Subscribe on {0}"
 msgstr "Prenumerera med {0}"
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:452
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:453
 msgid "Subscribe to {publicationTitle} on {0}"
 msgstr "Prenumerera på {publicationTitle} med {0}"
 
@@ -10966,7 +10963,7 @@ msgstr "Klart"
 msgid "Success!"
 msgstr "Klart!"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:101
+#: src/components/intents/GroupChatJoinDialog.tsx:102
 msgid "Successfully joined the group chat!"
 msgstr "Du har gått med i gruppchatten!"
 
@@ -11088,7 +11085,7 @@ msgstr "Tryck för att bekräfta att du förstår och godkänner uppdateringarna
 msgid "Tap to close context menu"
 msgstr "Tryck för att stänga kontextmeny"
 
-#: src/components/dms/ChatInvite/Root.tsx:75
+#: src/components/dms/ChatInvite/Root.tsx:77
 msgid "Tap to copy this invite link"
 msgstr "Tryck för att kopiera den här inbjudningslänken"
 
@@ -11096,12 +11093,12 @@ msgstr "Tryck för att kopiera den här inbjudningslänken"
 msgid "Tap to dismiss"
 msgstr "Tryck för att avvisa"
 
-#: src/components/dms/ChatInvite/Root.tsx:128
-#: src/components/intents/GroupChatJoinDialog.tsx:424
+#: src/components/dms/ChatInvite/Root.tsx:125
+#: src/components/intents/GroupChatJoinDialog.tsx:417
 msgid "Tap to join this group chat immediately"
 msgstr "Tryck för att gå med i den här gruppchatten direkt"
 
-#: src/components/dms/ChatInvite/Root.tsx:88
+#: src/components/dms/ChatInvite/Root.tsx:90
 msgid "Tap to open this group chat"
 msgstr "Tryck för att öppna den här gruppchatten"
 
@@ -11114,8 +11111,8 @@ msgstr "Tryck för att ta bort"
 msgid "Tap to remove your {0} reaction"
 msgstr "Tryck för att ta bort din reaktion {0}"
 
-#: src/components/dms/ChatInvite/Root.tsx:127
-#: src/components/intents/GroupChatJoinDialog.tsx:423
+#: src/components/dms/ChatInvite/Root.tsx:124
+#: src/components/intents/GroupChatJoinDialog.tsx:416
 msgid "Tap to request access to join this group chat"
 msgstr "Tryck för att begära att få åtkomst till den här gruppchatten"
 
@@ -11301,7 +11298,7 @@ msgstr "Följande inställningar används som standard när du skapar nya inläg
 msgid "The laws in your region require you to verify you're an adult to access certain features. Tap to learn more."
 msgstr "Enligt lagen i din region måste du verifiera att du är vuxen för att få tillgång till vissa funktioner. Tryck för att läsa mer."
 
-#: src/components/intents/GroupChatJoinDialog.tsx:135
+#: src/components/intents/GroupChatJoinDialog.tsx:136
 #: src/screens/Messages/JoinRequests.tsx:201
 msgid "The member limit has been reached."
 msgstr "Gränsen för antalet medlemmar har nåtts."
@@ -11372,8 +11369,8 @@ msgid "There was a problem loading GIFs. Check your connection and try again."
 msgstr "Ett problem uppstod under inläsningen av gif-bilderna. Kontrollera din anslutning och försök igen."
 
 #: src/components/contacts/screens/GetContacts.tsx:147
-#: src/components/intents/GroupChatJoinDialog.tsx:119
-#: src/components/intents/GroupChatJoinDialog.tsx:153
+#: src/components/intents/GroupChatJoinDialog.tsx:120
+#: src/components/intents/GroupChatJoinDialog.tsx:154
 msgid "There was a problem with your internet connection, please try again"
 msgstr "Ett problem uppstod med din internetanslutning. Försök igen"
 
@@ -11530,8 +11527,8 @@ msgstr "Med den här knappen kan andra öppna Germ DM-appen för att skicka ett 
 msgid "This chat has ended"
 msgstr "Den här chatten är avslutad"
 
-#: src/components/dms/ChatInvite/Root.tsx:110
-#: src/components/intents/GroupChatJoinDialog.tsx:264
+#: src/components/dms/ChatInvite/Root.tsx:107
+#: src/components/intents/GroupChatJoinDialog.tsx:260
 msgid "This chat is full"
 msgstr "Den här chatten är full"
 
@@ -11574,7 +11571,7 @@ msgstr "Det här innehållet är inte tillgängligt eftersom en av de involverad
 msgid "This content is not viewable without a Bluesky account."
 msgstr "Det här innehållet kan inte visas utan ett Bluesky-konto."
 
-#: src/components/intents/GroupChatJoinDialog.tsx:121
+#: src/components/intents/GroupChatJoinDialog.tsx:122
 msgid "This conversation is locked."
 msgstr "Den här konversationen är låst."
 
@@ -11636,15 +11633,11 @@ msgstr "Den här bilden kunde inte användas. Försök med ett annat format sås
 msgid "This information is private and not shared with other users."
 msgstr "Den här informationen är privat och delas inte med andra användare."
 
-#: src/components/intents/GroupChatJoinDialog.tsx:131
+#: src/components/intents/GroupChatJoinDialog.tsx:132
 msgid "This invite link has been disabled."
 msgstr "Den här inbjudningslänken har inaktiverats."
 
-#: src/screens/Messages/JoinRequest.tsx:83
-msgid "This invite link has expired"
-msgstr "Den här inbjudningslänken har gått ut"
-
-#: src/components/intents/GroupChatJoinDialog.tsx:195
+#: src/components/intents/GroupChatJoinDialog.tsx:196
 msgid "This invite link is invalid"
 msgstr "Den här inbjudningslänken är ogiltig"
 
@@ -11734,7 +11727,7 @@ msgstr "Det här inlägget har raderats av författaren"
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Det här inlägget kommer att hållas dolt från flöden och trådar. Det här kan inte ångras."
 
-#: src/view/com/composer/Composer.tsx:1015
+#: src/view/com/composer/Composer.tsx:1022
 msgid "This post's author has disabled quote posts."
 msgstr "Författaren till det här inlägget har inaktiverat citatinlägg."
 
@@ -12171,11 +12164,11 @@ msgstr "Tyvärr visar den ålder du har angett att du inte är tillräckligt gam
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:245
 msgid "Uninvite"
-msgstr "Återkalla inbjudan"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:240
 msgid "Uninvite {displayName} from this group chat"
-msgstr "Återkalla {displayName}s inbjudan till den här gruppchatten"
+msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:209
 msgid "Unknown verifier"
@@ -12319,7 +12312,7 @@ msgstr "Avslutade prenumeration på lista"
 msgid "Unsupported clipboard content"
 msgstr "Urklippsinnehåll stöds inte"
 
-#: src/view/com/composer/Composer.tsx:1491
+#: src/view/com/composer/Composer.tsx:1521
 msgid "Unsupported video type: {mimeType}"
 msgstr "Videotypen stöds inte: {mimeType}"
 
@@ -12414,21 +12407,21 @@ msgstr "Ladda upp från Filer"
 msgid "Upload from Library"
 msgstr "Ladda upp från Bibliotek"
 
-#: src/view/com/composer/Composer.tsx:2521
+#: src/view/com/composer/Composer.tsx:2551
 msgid "Uploading GIF..."
 msgstr "Laddar upp  gif-bild…"
 
-#: src/lib/api/index.ts:327
-#: src/lib/api/index.ts:354
+#: src/lib/api/index.ts:328
+#: src/lib/api/index.ts:355
 msgid "Uploading images..."
 msgstr "Laddar upp bilder…"
 
-#: src/lib/api/index.ts:426
-#: src/lib/api/index.ts:450
+#: src/lib/api/index.ts:427
+#: src/lib/api/index.ts:451
 msgid "Uploading link thumbnail..."
 msgstr "Laddar upp miniatyrbild av länk…"
 
-#: src/view/com/composer/Composer.tsx:2523
+#: src/view/com/composer/Composer.tsx:2553
 msgid "Uploading video..."
 msgstr "Laddar upp video…"
 
@@ -12717,7 +12710,7 @@ msgstr "Videoklippet hittades inte."
 msgid "Video settings"
 msgstr "Inställningar för videoklipp"
 
-#: src/view/com/composer/Composer.tsx:2541
+#: src/view/com/composer/Composer.tsx:2571
 msgid "Video uploaded"
 msgstr "Videoklipp uppladdat"
 
@@ -12734,14 +12727,14 @@ msgstr "Videoklipp"
 msgid "Videos must be less than 3 minutes long."
 msgstr "Videoklipp får inte vara längre än 3 minuter."
 
-#: src/view/com/composer/Composer.tsx:1108
+#: src/view/com/composer/Composer.tsx:1115
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr "Visa"
 
 #. placeholder {0}: view.source.title
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:317
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:615
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:318
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:640
 msgid "View {0}"
 msgstr "Visa {0}"
 
@@ -12770,14 +12763,9 @@ msgstr "Visa {0}s profil"
 msgid "View {displayName}’s profile"
 msgstr "Visa {displayName}s profil"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:455
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:456
 msgid "View {publicationTitle}"
 msgstr "Visa {publicationTitle}"
-
-#. placeholder {0}: authorProfile.handle
-#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:83
-msgid "View @{0}'s profile"
-msgstr "Visa @{0}s profil"
 
 #: src/components/ProfileHoverCard/index.web.tsx:479
 msgid "View blocked user's profile"
@@ -12828,7 +12816,7 @@ msgstr "Visa mer"
 msgid "View more trending videos"
 msgstr "Visa fler trendande videoklipp"
 
-#: src/view/com/composer/Composer.tsx:1103
+#: src/view/com/composer/Composer.tsx:1110
 msgid "View post"
 msgstr "Visa inlägg"
 
@@ -12845,10 +12833,10 @@ msgstr "Visa profil"
 msgid "View profile banner"
 msgstr "Visa profilbanderoll"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:317
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:425
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:456
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:615
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:318
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:426
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:457
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:640
 msgid "View publication"
 msgstr "Visa publikation"
 
@@ -13124,7 +13112,7 @@ msgstr "Tyvärr kunde inte din sökning slutföras. Försök igen om några minu
 msgid "We're sorry, you cannot access this screen at this time."
 msgstr "Tyvärr kan du inte komma åt den här vyn just nu."
 
-#: src/view/com/composer/Composer.tsx:1013
+#: src/view/com/composer/Composer.tsx:1020
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "Beklagar! Inlägget du svarar på har raderats."
 
@@ -13175,7 +13163,7 @@ msgid "What do you want to call your starter pack?"
 msgstr "Vad vill du att ditt startpaket ska heta?"
 
 #: src/view/com/auth/SplashScreen.web.tsx:98
-#: src/view/com/composer/Composer.tsx:1455
+#: src/view/com/composer/Composer.tsx:1485
 #: src/view/com/feeds/ComposerPrompt.tsx:193
 msgid "What's up?"
 msgstr "Vad händer?"
@@ -13261,7 +13249,7 @@ msgstr "Vill du blockera den här användaren och/eller lämna den här konversa
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr "Vill du spara det här som ett utkast innan du går till dina utkast?"
 
-#: src/view/com/composer/Composer.tsx:1373
+#: src/view/com/composer/Composer.tsx:1403
 msgid "Would you like to save this as a draft to edit later?"
 msgstr "Vill du spara det här som ett utkast så att du kan fortsätta på det senare?"
 
@@ -13270,12 +13258,12 @@ msgstr "Vill du spara det här som ett utkast så att du kan fortsätta på det 
 msgid "Write a post"
 msgstr "Skriv ett inlägg"
 
-#: src/view/com/composer/Composer.tsx:1551
+#: src/view/com/composer/Composer.tsx:1581
 msgid "Write post"
 msgstr "Skriv inlägg"
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:91
-#: src/view/com/composer/Composer.tsx:1453
+#: src/view/com/composer/Composer.tsx:1483
 msgid "Write your reply"
 msgstr "Skriv ditt svar"
 
@@ -13443,11 +13431,11 @@ msgid "You can now sign in with your new password."
 msgstr "Du kan nu logga in med ditt nya lösenord."
 
 #. Toast shown when the user tries to add more images but the post gallery is already at the cap
-#: src/view/com/composer/Composer.tsx:212
+#: src/view/com/composer/Composer.tsx:219
 msgid "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 msgstr "Du kan lägga till max {MAX_GALLERY_IMAGES, plural, other {# bilder}} per inlägg"
 
-#: src/view/com/composer/Composer.tsx:1378
+#: src/view/com/composer/Composer.tsx:1408
 msgid "You can only save drafts up to 1000 characters."
 msgstr "Du kan bara spara utkast med upp till 1000 tecken."
 
@@ -13513,7 +13501,7 @@ msgstr "Du har inga sparade flöden."
 msgid "You got here first"
 msgstr "Du kom hit först"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:137
+#: src/components/intents/GroupChatJoinDialog.tsx:138
 msgid "You have been previously removed from this group and can’t join it using this link."
 msgstr "Du har tidigare tagits bort från den här gruppen och kan inte gå med i den genom länken."
 
@@ -13586,7 +13574,7 @@ msgstr "Din e-postadress har verifierats utan problem. Du kan stänga den här d
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "Du har för tillfället nått gränsen för videouppladdningar. Försök igen senare."
 
-#: src/view/com/composer/Composer.tsx:1368
+#: src/view/com/composer/Composer.tsx:1398
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr "Du har osparade ändringar i det här utkastet. Vill du spara dem?"
 
@@ -13783,7 +13771,7 @@ msgstr "Du har nått slutet av det aktiva innehållet."
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr "Du har nått slutet av ditt flöde! Hitta några fler konton att följa."
 
-#: src/view/com/composer/Composer.tsx:637
+#: src/view/com/composer/Composer.tsx:644
 msgid "You've reached the maximum number of drafts"
 msgstr "Du har nått det maximala antalet utkast"
 
@@ -13951,11 +13939,11 @@ msgstr "Din ändring av lösenordet lyckades! Använd ditt nya lösenord när du
 msgid "Your password must be at least 8 characters long."
 msgstr "Ditt lösenord måste vara minst 8 tecken långt."
 
-#: src/view/com/composer/Composer.tsx:1099
+#: src/view/com/composer/Composer.tsx:1106
 msgid "Your post was sent"
 msgstr "Ditt inlägg har skickats"
 
-#: src/view/com/composer/Composer.tsx:1096
+#: src/view/com/composer/Composer.tsx:1103
 msgid "Your posts were sent"
 msgstr "Dina inlägg har skickats"
 
@@ -13976,7 +13964,7 @@ msgstr "Din profilbild i mitten, omgiven av andra användares profilbilder i rin
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "Din profil samt dina inlägg, flöden och listor kommer inte längre att vara synliga för andra Bluesky-användare. Du kan återaktivera ditt konto när som helst genom att logga in."
 
-#: src/view/com/composer/Composer.tsx:1098
+#: src/view/com/composer/Composer.tsx:1105
 msgid "Your reply was sent"
 msgstr "Ditt svar har skickats"
 
@@ -13989,7 +13977,7 @@ msgstr "Din anmälan kommer att skickas till <0>{0}</0>."
 msgid "Your selected interests help us serve you content you care about."
 msgstr "Dina valda intressen hjälper oss att visa dig innehåll som du bryr dig om."
 
-#: src/view/com/composer/Composer.tsx:1403
+#: src/view/com/composer/Composer.tsx:1433
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "Din tråd innehåller tomma inlägg som kommer att hoppas över. De återstående inläggen publiceras som en tråd."
 

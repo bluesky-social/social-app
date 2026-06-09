@@ -8,7 +8,7 @@ msgstr ""
 "Language: tr\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-06 14:56\n"
+"PO-Revision-Date: 2026-06-09 22:16\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -122,7 +122,7 @@ msgstr "{0, plural, other {# okunmamış öğe}}"
 
 #. How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.
 #. placeholder {0}: view.readingTime
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:230
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:231
 msgid "{0, plural, one {#m} other {#m}}"
 msgstr "{0, plural, other {#dk}}"
 
@@ -325,24 +325,25 @@ msgid "{0}’s avatar"
 msgstr "{0} kullanıcısının avatarı"
 
 #. The number of active group chat members out of the total number allowed.
-#. placeholder {0}: data.joinLinkPreviews[0].memberCount
-#. placeholder {1}: data.joinLinkPreviews[0].memberLimit
-#: src/screens/Messages/JoinRequest.tsx:130
+#. placeholder {0}: joinLinkPreview.memberCount
+#. placeholder {1}: joinLinkPreview.memberLimit
+#: src/screens/Messages/JoinRequest.tsx:129
+msgctxt "group-chat-member-count"
 msgid "{0}/{1}"
-msgstr "{0}/{1}"
+msgstr ""
 
 #. The number of members in a group chat, in the format '{members}/{total} members'.
 #. placeholder {0}: preview.memberCount
 #. placeholder {1}: preview.memberLimit
 #. placeholder {2}: preview.memberCount
-#: src/components/dms/ChatInvite/Card.tsx:56
+#: src/components/dms/ChatInvite/Card.tsx:57
 msgid "{0}/{1} {2, plural, one {member} other {members}}"
 msgstr ""
 
 #. The number of active group chat members out of the total number allowed.
 #. placeholder {0}: joinLinkPreview.memberCount
 #. placeholder {1}: joinLinkPreview.memberLimit
-#: src/components/intents/GroupChatJoinDialog.tsx:308
+#: src/components/intents/GroupChatJoinDialog.tsx:304
 msgid "{0}/{1} members"
 msgstr "{0}/{1} üye"
 
@@ -940,7 +941,7 @@ msgstr "Bu dil önerisini kabul et"
 msgid "Accepted conversations"
 msgstr "Kabul edilen yazışmalar"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:94
+#: src/components/intents/GroupChatJoinDialog.tsx:95
 msgid "Access requested! The group owner will review your request."
 msgstr "Erişim istendi! Grup sahibi talebinizi inceleyecek."
 
@@ -1097,11 +1098,11 @@ msgstr "Alternatif metin ekle (isteğe bağlı)"
 msgid "Add another account"
 msgstr "Başka hesap ekle"
 
-#: src/view/com/composer/Composer.tsx:1454
+#: src/view/com/composer/Composer.tsx:1484
 msgid "Add another post"
 msgstr "Başka gönderi ekle"
 
-#: src/view/com/composer/Composer.tsx:2117
+#: src/view/com/composer/Composer.tsx:2147
 msgid "Add another post to thread"
 msgstr "Konuya yeni bir gönderi ekle"
 
@@ -1619,7 +1620,7 @@ msgstr "Herkes"
 msgid "Anyone can interact"
 msgstr "Herkes etkileşime geçebilir"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:323
+#: src/components/intents/GroupChatJoinDialog.tsx:316
 msgid "Anyone can join"
 msgstr "Herkes katılabilir"
 
@@ -1788,7 +1789,7 @@ msgstr ""
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Bunu akışlarınızdan çıkarmak istediğinize emin misiniz?"
 
-#: src/view/com/composer/Composer.tsx:1590
+#: src/view/com/composer/Composer.tsx:1620
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Bu taslağı silmek istediğinizden emin misiniz?"
 
@@ -2224,16 +2225,21 @@ msgid "Button to go back to the home timeline"
 msgstr "Ana akışa geri dönüş butonu"
 
 #. The owner (creator) of a group chat.
-#. placeholder {0}: createSanitizedDisplayName( data.joinLinkPreviews[0].owner, true, moderateProfile( data.joinLinkPreviews[0].owner, moderationOpts, ).ui('displayName'), )
+#. placeholder {0}: createSanitizedDisplayName( joinLinkPreview.owner, true, moderateProfile( joinLinkPreview.owner, moderationOpts, ).ui('displayName'), )
 #. placeholder {0}: sanitizeHandle(handle, '@')
 #. placeholder {0}: sanitizeHandle(item.feed.creator.handle, '@')
 #: src/components/LabelingServiceCard/index.tsx:62
 #: src/components/moderation/ReportDialog/index.tsx:847
-#: src/screens/Messages/JoinRequest.tsx:166
+#: src/screens/Messages/JoinRequest.tsx:167
 #: src/screens/Search/components/StarterPackCard.tsx:107
 #: src/screens/Search/Explore.tsx:971
 msgid "By {0}"
 msgstr "{0} tarafından"
+
+#. placeholder {0}: authorProfile.handle
+#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:77
+msgid "by @{0}"
+msgstr ""
 
 #. placeholder {0}: sanitizeHandle(info.creatorHandle, '@')
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:451
@@ -2241,14 +2247,9 @@ msgid "By <0>{0}</0>"
 msgstr "<0>{0}</0> tarafından geliştiriliyor"
 
 #. The group chat creator, in the format 'By {displayName}'.
-#: src/components/dms/ChatInvite/Card.tsx:78
+#: src/components/dms/ChatInvite/Card.tsx:79
 msgid "By <0>{ownerDisplayName}</0>"
 msgstr ""
-
-#. placeholder {0}: authorProfile.handle
-#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:80
-msgid "by <0>@{0}</0>"
-msgstr "<0>@{0}</0>"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:182
 msgid "By clicking \"Continue\" you acknowledge that you understand and agree to these updates."
@@ -2321,8 +2322,8 @@ msgstr "Kamera"
 #: src/screens/Settings/Settings.tsx:300
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
-#: src/view/com/composer/Composer.tsx:1668
-#: src/view/com/composer/Composer.tsx:1678
+#: src/view/com/composer/Composer.tsx:1698
+#: src/view/com/composer/Composer.tsx:1708
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:228
@@ -2454,10 +2455,10 @@ msgstr "Sohbet silindi"
 msgid "Chat ended"
 msgstr "Sohbet sona erdi"
 
-#: src/components/dms/ChatInvite/Root.tsx:105
-#: src/components/intents/GroupChatJoinDialog.tsx:228
-#: src/components/intents/GroupChatJoinDialog.tsx:259
-#: src/components/Post/Embed/JoinRequestEmbed.tsx:94
+#: src/components/intents/GroupChatJoinDialog.tsx:229
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:99
+#: src/screens/Messages/components/MessageInputEmbed.tsx:331
+#: src/screens/Messages/JoinRequest.tsx:83
 msgid "Chat invite link no longer available"
 msgstr "Sohbet davetiye bağlantısı artık mevcut değil"
 
@@ -2716,8 +2717,8 @@ msgstr "İletilemeyen mesajı tekrar denemek için tıklayın"
 #: src/components/dms/AfterReportDialog.tsx:217
 #: src/components/dms/EmojiPopup.android.tsx:59
 #: src/components/dms/InitiateChatFlow.tsx:542
-#: src/components/intents/GroupChatJoinDialog.tsx:205
-#: src/components/intents/GroupChatJoinDialog.tsx:240
+#: src/components/intents/GroupChatJoinDialog.tsx:206
+#: src/components/intents/GroupChatJoinDialog.tsx:241
 #: src/components/NewskieDialog.tsx:169
 #: src/components/NewskieDialog.tsx:175
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:107
@@ -2794,10 +2795,10 @@ msgstr "Menüyü kapat"
 msgid "Close the incoming requests banner"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:198
 #: src/components/intents/GroupChatJoinDialog.tsx:199
-#: src/components/intents/GroupChatJoinDialog.tsx:235
+#: src/components/intents/GroupChatJoinDialog.tsx:200
 #: src/components/intents/GroupChatJoinDialog.tsx:236
+#: src/components/intents/GroupChatJoinDialog.tsx:237
 #: src/components/Menu/index.tsx:361
 msgid "Close this dialog"
 msgstr "Bu diyalogu kapat"
@@ -2810,7 +2811,7 @@ msgstr "Hoşgeldiniz ekranını kapat"
 msgid "Closes password update alert"
 msgstr "Şifre güncelleme uyarısını kapatır"
 
-#: src/view/com/composer/Composer.tsx:1676
+#: src/view/com/composer/Composer.tsx:1706
 msgid "Closes post composer and discards post draft"
 msgstr "Gönderi düzenleyiciyi kapatır ve gönderi taslağını siler"
 
@@ -2860,7 +2861,7 @@ msgid "Compose new post"
 msgstr "Yeni gönderi oluştur"
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1552
+#: src/view/com/composer/Composer.tsx:1582
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr "{0, plural, other {# karakter}} uzunluğuna kadar gönderiler oluşturun"
 
@@ -2868,11 +2869,11 @@ msgstr "{0, plural, other {# karakter}} uzunluğuna kadar gönderiler oluşturun
 msgid "Compose reply"
 msgstr "Yanıt oluştur"
 
-#: src/view/com/composer/Composer.tsx:2514
+#: src/view/com/composer/Composer.tsx:2544
 msgid "Compressing GIF..."
 msgstr "GIF sıkıştırılıyor..."
 
-#: src/view/com/composer/Composer.tsx:2516
+#: src/view/com/composer/Composer.tsx:2546
 msgid "Compressing video..."
 msgstr "Video sıkıştırılıyor..."
 
@@ -3066,7 +3067,7 @@ msgstr "Yazışma bulunamadı."
 msgid "Copied build version to clipboard"
 msgstr "Sürüm numarası panoya kopyalandı"
 
-#: src/components/dms/ChatInvite/Root.tsx:82
+#: src/components/dms/ChatInvite/Root.tsx:84
 #: src/components/dms/MessageContextMenu.tsx:71
 #: src/components/PostControls/DiscoverDebug.tsx:36
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:272
@@ -3119,7 +3120,7 @@ msgstr "DID'i kopyala"
 msgid "Copy host"
 msgstr "Sunucu adını kopyala"
 
-#: src/components/dms/ChatInvite/Root.tsx:74
+#: src/components/dms/ChatInvite/Root.tsx:76
 #: src/components/StarterPack/ShareDialog.tsx:115
 #: src/screens/StarterPack/StarterPackScreen.tsx:644
 msgid "Copy link"
@@ -3188,7 +3189,7 @@ msgstr "Özelleştirilmiş akışa bağlanılamadı"
 msgid "Could not connect to feed service"
 msgstr "Akış hizmetine bağlanılamadı"
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:200
+#: src/screens/Messages/components/MessageInputEmbed.tsx:202
 msgid "Could not fetch post"
 msgstr "Gönderi indirilemedi"
 
@@ -3216,10 +3217,6 @@ msgstr "Sohbetten ayrılınamadı"
 #: src/screens/Profile/ProfileFeed/index.tsx:73
 msgid "Could not load feed"
 msgstr "Akış yüklenemedi"
-
-#: src/screens/Messages/components/MessageInputEmbed.tsx:321
-msgid "Could not load invite"
-msgstr ""
 
 #: src/screens/ProfileList/components/ErrorScreen.tsx:27
 #: src/screens/ProfileList/index.tsx:80
@@ -3542,7 +3539,7 @@ msgstr "Hesabımı sil"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:787
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:789
-#: src/view/com/composer/Composer.tsx:1564
+#: src/view/com/composer/Composer.tsx:1594
 msgid "Delete post"
 msgstr "Gönderiyi sil"
 
@@ -3689,9 +3686,9 @@ msgstr "Devre dışı"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:101
 #: src/screens/Profile/Header/EditProfileDialog.tsx:79
-#: src/view/com/composer/Composer.tsx:1347
-#: src/view/com/composer/Composer.tsx:1391
-#: src/view/com/composer/Composer.tsx:1597
+#: src/view/com/composer/Composer.tsx:1377
+#: src/view/com/composer/Composer.tsx:1421
+#: src/view/com/composer/Composer.tsx:1627
 #: src/view/com/composer/drafts/DraftItem.tsx:242
 #: src/view/com/composer/drafts/DraftsButton.tsx:131
 msgid "Discard"
@@ -3702,14 +3699,14 @@ msgstr "Sil"
 msgid "Discard changes?"
 msgstr "Değişiklikler silinsin mi?"
 
-#: src/view/com/composer/Composer.tsx:1345
+#: src/view/com/composer/Composer.tsx:1375
 #: src/view/com/composer/drafts/DraftItem.tsx:239
 #: src/view/com/composer/drafts/DraftsButton.tsx:98
 msgid "Discard draft?"
 msgstr "Taslak silinsin mi?"
 
-#: src/view/com/composer/Composer.tsx:1362
-#: src/view/com/composer/Composer.tsx:1589
+#: src/view/com/composer/Composer.tsx:1392
+#: src/view/com/composer/Composer.tsx:1619
 msgid "Discard post?"
 msgstr "Gönderi silinsin mi?"
 
@@ -3746,7 +3743,7 @@ msgstr "Yok say"
 msgid "Dismiss banner"
 msgstr "Bildirimi gizle"
 
-#: src/view/com/composer/Composer.tsx:2435
+#: src/view/com/composer/Composer.tsx:2465
 msgid "Dismiss error"
 msgstr "Hatayı yok say"
 
@@ -4277,7 +4274,7 @@ msgstr "Tam ekrana geçer"
 msgid "Entertainment"
 msgstr "Eğlence"
 
-#: src/view/com/composer/Composer.tsx:2534
+#: src/view/com/composer/Composer.tsx:2564
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Hata"
@@ -4372,7 +4369,7 @@ msgstr "Gönderi metnini genişlet"
 msgid "Expands or collapses post text"
 msgstr "Gönderi metnini genişletir ya da daraltır"
 
-#: src/lib/api/index.ts:487
+#: src/lib/api/index.ts:491
 msgid "Expected uri to resolve to a record"
 msgstr "URI'nin bir kayda çözümlenmesi beklendi"
 
@@ -4566,7 +4563,7 @@ msgstr "Öneri gizlenemedi, lütfen internet bağlantınızı kontrol edin"
 msgid "Failed to ignore join request"
 msgstr "Katılma talebi gözardı edilemedi"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:117
+#: src/components/intents/GroupChatJoinDialog.tsx:118
 msgid "Failed to join the group chat. Please try again."
 msgstr "Grup sohbetine katılınamadı. Lütfen tekrar deneyin."
 
@@ -4675,7 +4672,7 @@ msgstr "Grup sohbeti üyesi çıkarılamadı"
 msgid "Failed to remove verification"
 msgstr "Doğrulama kaldırılamadı"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:151
+#: src/components/intents/GroupChatJoinDialog.tsx:152
 msgid "Failed to rescind your request. Please try again."
 msgstr "Talebiniz geri çekilemedi. Lütfen tekrar deneyin."
 
@@ -4683,7 +4680,7 @@ msgstr "Talebiniz geri çekilemedi. Lütfen tekrar deneyin."
 msgid "Failed to resolve location. Please try again."
 msgstr "Konum çözümlenemedi. Lütfen tekrar deneyin."
 
-#: src/view/com/composer/Composer.tsx:639
+#: src/view/com/composer/Composer.tsx:646
 msgid "Failed to save draft"
 msgstr "Taslak kaydedilemedi"
 
@@ -5081,7 +5078,7 @@ msgstr "<0>{0}</0> ve <1>{1}</1> tarafından takip ediliyor"
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr "<0>{0}</0>, <1>{1}</1> ve {2, plural, other {# kişi daha}} tarafından takip ediliyor"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:322
+#: src/components/intents/GroupChatJoinDialog.tsx:315
 msgid "Followers can join"
 msgstr "Takipçiler katılabilir"
 
@@ -5332,7 +5329,7 @@ msgstr "Başla"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2539
+#: src/view/com/composer/Composer.tsx:2569
 msgid "GIF uploaded"
 msgstr "GIF yüklendi"
 
@@ -5481,9 +5478,9 @@ msgstr "Açık şiddet içeren içerik"
 msgid "Grooming or predatory behavior"
 msgstr "Reşit olmayanlara yönelik cinsel yönlendirme ya da sarkıntılık davranışı"
 
-#: src/components/dms/ChatInvite/Card.tsx:45
-#: src/components/intents/GroupChatJoinDialog.tsx:298
-#: src/screens/Messages/JoinRequest.tsx:116
+#: src/components/dms/ChatInvite/Card.tsx:46
+#: src/components/intents/GroupChatJoinDialog.tsx:294
+#: src/screens/Messages/JoinRequest.tsx:115
 msgid "Group chat"
 msgstr "Grup sohbeti"
 
@@ -6129,7 +6126,7 @@ msgstr "Kayıtlı gönderileri yani yer imlerini sunarız"
 msgid "Invalid 2FA confirmation code."
 msgstr "Geçersiz 2FA onay kodu."
 
-#: src/components/intents/GroupChatJoinDialog.tsx:127
+#: src/components/intents/GroupChatJoinDialog.tsx:128
 msgid "Invalid group chat code."
 msgstr "Geçersiz grup sohbeti kodu."
 
@@ -6151,7 +6148,7 @@ msgstr "Geçersiz telefon numarası"
 msgid "Invalid report subject"
 msgstr "Geçersiz rapor konusu"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:158
+#: src/components/intents/GroupChatJoinDialog.tsx:159
 msgid "Invalid rescind request."
 msgstr "Geçersiz geri alım talebi."
 
@@ -6248,7 +6245,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Şu anda yalnızca siz varsınız! Yukarıdan arama yaparak başlangıç ​​paketinize daha çok kişi ekleyin."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2454
+#: src/view/com/composer/Composer.tsx:2484
 msgid "Job ID: {0}"
 msgstr "İş ID: {0}"
 
@@ -6257,8 +6254,8 @@ msgstr "İş ID: {0}"
 msgid "Jobs"
 msgstr "İşler"
 
-#: src/components/dms/ChatInvite/Root.tsx:100
-#: src/components/intents/GroupChatJoinDialog.tsx:254
+#: src/components/dms/ChatInvite/Root.tsx:102
+#: src/components/intents/GroupChatJoinDialog.tsx:255
 msgid "Join"
 msgstr "Katıl"
 
@@ -6269,12 +6266,12 @@ msgstr "Katıl"
 msgid "Join Bluesky"
 msgstr "Bluesky'a Katıl"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:63
-#: src/components/intents/GroupChatJoinDialog.tsx:419
+#: src/components/intents/GroupChatJoinDialog.tsx:64
+#: src/components/intents/GroupChatJoinDialog.tsx:412
 msgid "Join group chat"
 msgstr "Grup sohbetine katıl"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:147
+#: src/components/intents/GroupChatJoinDialog.tsx:148
 msgid "Join request rescinded."
 msgstr "Katılım talebi geri alındı."
 
@@ -6287,8 +6284,8 @@ msgstr "Yazışmaya katıl"
 msgid "Journalism"
 msgstr "Gazetecilik"
 
-#: src/view/com/composer/Composer.tsx:1395
-#: src/view/com/composer/Composer.tsx:1405
+#: src/view/com/composer/Composer.tsx:1425
+#: src/view/com/composer/Composer.tsx:1435
 #: src/view/com/composer/drafts/DraftsButton.tsx:135
 msgid "Keep editing"
 msgstr "Düzenlemeye devam et"
@@ -7806,11 +7803,11 @@ msgstr "Seçilmiş alıcılardan biri grup sohbetlerine izin vermiyor."
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr "Seçilmiş alıcılardan biri sizi engellediğinden kendisiyle yazışılamaz."
 
-#: src/view/com/composer/Composer.tsx:855
+#: src/view/com/composer/Composer.tsx:862
 msgid "One or more GIFs is missing alt text."
 msgstr "Bir veya daha fazla GIF için alternatif metin eksik."
 
-#: src/view/com/composer/Composer.tsx:852
+#: src/view/com/composer/Composer.tsx:859
 msgid "One or more images is missing alt text."
 msgstr "Bir ya da daha fazla görselin alternatif metni eksik."
 
@@ -7822,11 +7819,11 @@ msgstr "Seçtiğiniz dosyalardan bir ya da birden fazlası desteklenmiyor."
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 msgstr "Seçtiğiniz dosyalardan bir ya da daha fazlası çok büyük. En fazla {VIDEO_MAX_SIZE_MB} MB olabilir."
 
-#: src/view/com/composer/Composer.tsx:650
+#: src/view/com/composer/Composer.tsx:657
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
 msgstr "Gönderilerden bir ya da birkaçı taslak olarak kaydetmek için çok uzun. {MAX_DRAFT_GRAPHEME_LENGTH, plural, other {Maksimum karakter sayısı # karakterdir.}}"
 
-#: src/view/com/composer/Composer.tsx:862
+#: src/view/com/composer/Composer.tsx:869
 msgid "One or more videos is missing alt text."
 msgstr "Bir veya daha fazla videoda alternatif metin eksik."
 
@@ -7839,7 +7836,7 @@ msgstr "Yalnızca {0} yanıtlayabilir."
 #. placeholder {0}: result.accepted.length
 #. placeholder {1}: next.length
 #. placeholder {2}: next.length
-#: src/view/com/composer/Composer.tsx:225
+#: src/view/com/composer/Composer.tsx:232
 msgid "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
 msgstr ""
 
@@ -7851,7 +7848,7 @@ msgstr "Yalnızca yöneticiler katılma taleplerini kabul edebilir."
 msgid "Only admins can ignore join requests."
 msgstr "Yalnızca yöneticiler katılım taleplerini gözardı edebilir."
 
-#: src/components/intents/GroupChatJoinDialog.tsx:125
+#: src/components/intents/GroupChatJoinDialog.tsx:126
 msgid "Only followers can join this group chat."
 msgstr "Sadece takipçiler bu grup sohbetine katılabilir."
 
@@ -7865,13 +7862,13 @@ msgstr "Sadece benim takip ettiğim takipçiler"
 msgid "Only image files are supported"
 msgstr "Yalnızca resim dosyaları desteklenmektedir"
 
-#. placeholder {0}: createSanitizedDisplayName( data.joinLinkPreviews[0].owner, true, moderateProfile( data.joinLinkPreviews[0].owner, moderationOpts, ).ui('displayName'), )
-#: src/screens/Messages/JoinRequest.tsx:207
+#. placeholder {0}: createSanitizedDisplayName( joinLinkPreview.owner, true, moderateProfile(joinLinkPreview.owner, moderationOpts).ui( 'displayName', ), )
+#: src/screens/Messages/JoinRequest.tsx:208
 msgid "Only people {0} follows can join."
 msgstr "Sadece {0} kişisinin takip ettikleri katılabilir."
 
-#: src/components/dms/ChatInvite/Root.tsx:115
-#: src/components/intents/GroupChatJoinDialog.tsx:269
+#: src/components/dms/ChatInvite/Root.tsx:112
+#: src/components/intents/GroupChatJoinDialog.tsx:265
 msgid "Only people the chat owner follows can join"
 msgstr "Sadece sohbet sahibinin takip ettikleri sohbete katılabilir"
 
@@ -7900,8 +7897,8 @@ msgstr "Avatar oluşturucuyu aç"
 msgid "Open camera"
 msgstr "Kamerayı aç"
 
-#: src/components/dms/ChatInvite/Root.tsx:87
-#: src/components/intents/GroupChatJoinDialog.tsx:408
+#: src/components/dms/ChatInvite/Root.tsx:89
+#: src/components/intents/GroupChatJoinDialog.tsx:401
 msgid "Open chat"
 msgstr ""
 
@@ -7924,7 +7921,7 @@ msgstr "Çekmece menüyü aç"
 
 #: src/screens/Messages/components/MessageComposer.tsx:176
 #: src/screens/Messages/components/MessageInput.web.tsx:148
-#: src/view/com/composer/Composer.tsx:2094
+#: src/view/com/composer/Composer.tsx:2124
 msgid "Open emoji picker"
 msgstr "Emoji seçiciyi aç"
 
@@ -7945,7 +7942,7 @@ msgstr "Tüm emoji listesini aç"
 msgid "Open Germ DM"
 msgstr "Germ DM'i aç"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:401
+#: src/components/intents/GroupChatJoinDialog.tsx:394
 msgid "Open group chat"
 msgstr "Grup sohbetini aç"
 
@@ -7955,7 +7952,7 @@ msgid "Open group chat settings"
 msgstr "Grup sohbeti ayarlarını aç"
 
 #: src/components/Post/Embed/ExternalEmbed/index.tsx:88
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:140
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:141
 msgid "Open link to {niceUrl}"
 msgstr "{niceUrl} web bağlantısını aç"
 
@@ -8006,7 +8003,7 @@ msgstr "Storybook sayfasını aç"
 msgid "Open system log"
 msgstr "Sistem günlüğünü aç"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:402
+#: src/components/intents/GroupChatJoinDialog.tsx:395
 msgid "Open this group chat"
 msgstr "Bu grup sohbetini aç"
 
@@ -8579,7 +8576,7 @@ msgstr "Politika"
 msgid "Porn"
 msgstr "Pornografi"
 
-#: src/view/com/composer/Composer.tsx:1742
+#: src/view/com/composer/Composer.tsx:1772
 msgctxt "action"
 msgid "Post"
 msgstr "Gönder"
@@ -8599,12 +8596,12 @@ msgstr "Bir fotoğraf gönder"
 msgid "Post a video"
 msgstr "Bir video gönder"
 
-#: src/view/com/composer/Composer.tsx:1740
+#: src/view/com/composer/Composer.tsx:1770
 msgctxt "action"
 msgid "Post All"
 msgstr "Hepsini Gönder"
 
-#: src/view/com/composer/Composer.tsx:1404
+#: src/view/com/composer/Composer.tsx:1434
 msgid "Post anyway"
 msgstr "Yine de gönder"
 
@@ -8625,7 +8622,7 @@ msgctxt "toast"
 msgid "Post deleted"
 msgstr "Gönderi silindi"
 
-#: src/lib/api/index.ts:189
+#: src/lib/api/index.ts:190
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr "Gönderinin yollanması başarısız. Lütfen İnternet bağlantınızı kontrol edin ve tekrar deneyin."
 
@@ -8777,15 +8774,15 @@ msgstr "Gizlilik Politikası"
 msgid "Privacy violation of a minor"
 msgstr "Bir küçüğün gizliliğini ihlal"
 
-#: src/view/com/composer/Composer.tsx:2528
+#: src/view/com/composer/Composer.tsx:2558
 msgid "Processing GIF..."
 msgstr "GIF işleniyor..."
 
-#: src/view/com/composer/Composer.tsx:2530
+#: src/view/com/composer/Composer.tsx:2560
 msgid "Processing video..."
 msgstr "Video işleniyor..."
 
-#: src/lib/api/index.ts:62
+#: src/lib/api/index.ts:63
 msgid "Processing..."
 msgstr "İşleniyor..."
 
@@ -8826,22 +8823,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr "Topluca sessize almak ya da engellemek için herkese açık, paylaşılabilir listeler."
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1726
+#: src/view/com/composer/Composer.tsx:1756
 msgid "Publish post"
 msgstr "Gönderiyi yayınla"
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1721
+#: src/view/com/composer/Composer.tsx:1751
 msgid "Publish posts"
 msgstr "Gönderileri yayınla"
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1710
+#: src/view/com/composer/Composer.tsx:1740
 msgid "Publish replies"
 msgstr "Yanıtları yayınla"
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1715
+#: src/view/com/composer/Composer.tsx:1745
 msgid "Publish reply"
 msgstr "Yanıtı yayınla"
 
@@ -9105,9 +9102,9 @@ msgstr "Kapağı Kaldır"
 msgid "Remove caption file"
 msgstr "Altyazı dosyasını kaldır"
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:234
-#: src/screens/Messages/components/MessageInputEmbed.tsx:289
-#: src/screens/Messages/components/MessageInputEmbed.tsx:355
+#: src/screens/Messages/components/MessageInputEmbed.tsx:236
+#: src/screens/Messages/components/MessageInputEmbed.tsx:291
+#: src/screens/Messages/components/MessageInputEmbed.tsx:365
 msgid "Remove embed"
 msgstr "Gömülü içeriği kaldır"
 
@@ -9295,7 +9292,7 @@ msgstr "Yanıtlara kapalı"
 msgid "Replies to this post are disabled."
 msgstr "Bu gönderi yanıtlara kapalı."
 
-#: src/view/com/composer/Composer.tsx:1738
+#: src/view/com/composer/Composer.tsx:1768
 msgctxt "action"
 msgid "Reply"
 msgstr "Yanıtla"
@@ -9480,7 +9477,7 @@ msgstr "Bu gönderinin yeniden gönderilmesi"
 msgid "Reposts of your reposts"
 msgstr "Yeniden gönderilerinizin yeniden gönderileri"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:418
+#: src/components/intents/GroupChatJoinDialog.tsx:411
 msgid "Request access to group chat"
 msgstr "Grup sohbetine erişim talep et"
 
@@ -9497,12 +9494,12 @@ msgstr "Kod iste"
 msgid "Request ignored."
 msgstr "Talep gözard edildi."
 
-#: src/components/dms/ChatInvite/Root.tsx:100
-#: src/components/intents/GroupChatJoinDialog.tsx:253
+#: src/components/dms/ChatInvite/Root.tsx:102
+#: src/components/intents/GroupChatJoinDialog.tsx:254
 msgid "Request to join"
 msgstr "Katılmayı talep et"
 
-#: src/components/dms/ChatInvite/Root.tsx:119
+#: src/components/dms/ChatInvite/Root.tsx:116
 msgid "Requested"
 msgstr ""
 
@@ -9534,7 +9531,7 @@ msgstr "Bu sağlayıcı için gereklidir"
 msgid "Required in your region"
 msgstr "Bölgenizde zorunludur"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:273
+#: src/components/intents/GroupChatJoinDialog.tsx:269
 msgid "Rescind request"
 msgstr "Talebi geri çek"
 
@@ -9690,22 +9687,22 @@ msgstr "Doğum tarihini kaydet"
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
 #: src/screens/SavedFeeds.tsx:315
-#: src/view/com/composer/Composer.tsx:1385
+#: src/view/com/composer/Composer.tsx:1415
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save changes"
 msgstr "Değişiklikleri kaydet"
 
-#: src/view/com/composer/Composer.tsx:1357
+#: src/view/com/composer/Composer.tsx:1387
 #: src/view/com/composer/drafts/DraftsButton.tsx:93
 msgid "Save changes?"
 msgstr "Değişiklikler kaydedilsin mi?"
 
-#: src/view/com/composer/Composer.tsx:1385
+#: src/view/com/composer/Composer.tsx:1415
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save draft"
 msgstr "Taslağı kaydet"
 
-#: src/view/com/composer/Composer.tsx:1359
+#: src/view/com/composer/Composer.tsx:1389
 #: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Save draft?"
 msgstr "Taslak kaydedilsin mi?"
@@ -10546,7 +10543,7 @@ msgstr "Giriş yap veya bir hesap oluştur"
 msgid "Sign in or create your account to join the conversation!"
 msgstr "Sohbete katılmak için giriş yapın veya hesabınızı oluşturun!"
 
-#: src/screens/Messages/JoinRequest.tsx:205
+#: src/screens/Messages/JoinRequest.tsx:206
 msgid "Sign in to accept invite."
 msgstr "Daveti kabul etmek için giriş yapın."
 
@@ -10558,7 +10555,7 @@ msgstr "Listelenmeyen bir hesaba giriş yap"
 msgid "Sign in to Bluesky or create a new account"
 msgstr "Bluesky'da oturum aç veya yeni bir üyelik oluştur"
 
-#: src/screens/Messages/JoinRequest.tsx:204
+#: src/screens/Messages/JoinRequest.tsx:205
 msgid "Sign in to request access to this group chat."
 msgstr "Bu grup sohbetine erişim talep etmek için giriş yapın."
 
@@ -10616,7 +10613,7 @@ msgstr "Atla"
 msgid "Skip contact sharing and continue to the app"
 msgstr "Bağlantıları paylaşmayı atla ve uygulamaya devam et"
 
-#: src/view/com/composer/Composer.tsx:1402
+#: src/view/com/composer/Composer.tsx:1432
 msgid "Skip empty posts?"
 msgstr "Boş gönderiler atlansın mı?"
 
@@ -10925,13 +10922,13 @@ msgid "Subscribe"
 msgstr "Abone ol"
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:424
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:453
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:425
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:454
 msgid "Subscribe on {0}"
 msgstr "{0} yayıncısına abone ol"
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:452
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:453
 msgid "Subscribe to {publicationTitle} on {0}"
 msgstr "{0} kaynağının {publicationTitle} yayınına abone ol"
 
@@ -10966,7 +10963,7 @@ msgstr "Başarılı"
 msgid "Success!"
 msgstr "Başarılı!"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:101
+#: src/components/intents/GroupChatJoinDialog.tsx:102
 msgid "Successfully joined the group chat!"
 msgstr "Grup sohbetine başarıyla katıldınız!"
 
@@ -11088,7 +11085,7 @@ msgstr "Bu güncellemeleri anladığınızı ve onayladığınızı kabul etmek 
 msgid "Tap to close context menu"
 msgstr "Bağlam menüsünü kapatmak için dokunun"
 
-#: src/components/dms/ChatInvite/Root.tsx:75
+#: src/components/dms/ChatInvite/Root.tsx:77
 msgid "Tap to copy this invite link"
 msgstr ""
 
@@ -11096,12 +11093,12 @@ msgstr ""
 msgid "Tap to dismiss"
 msgstr "Gizlemek için dokunun"
 
-#: src/components/dms/ChatInvite/Root.tsx:128
-#: src/components/intents/GroupChatJoinDialog.tsx:424
+#: src/components/dms/ChatInvite/Root.tsx:125
+#: src/components/intents/GroupChatJoinDialog.tsx:417
 msgid "Tap to join this group chat immediately"
 msgstr ""
 
-#: src/components/dms/ChatInvite/Root.tsx:88
+#: src/components/dms/ChatInvite/Root.tsx:90
 msgid "Tap to open this group chat"
 msgstr ""
 
@@ -11114,8 +11111,8 @@ msgstr "Geri almak için dokunun"
 msgid "Tap to remove your {0} reaction"
 msgstr "{0} tepkinizi geri almak için dokunun"
 
-#: src/components/dms/ChatInvite/Root.tsx:127
-#: src/components/intents/GroupChatJoinDialog.tsx:423
+#: src/components/dms/ChatInvite/Root.tsx:124
+#: src/components/intents/GroupChatJoinDialog.tsx:416
 msgid "Tap to request access to join this group chat"
 msgstr ""
 
@@ -11301,7 +11298,7 @@ msgstr "Aşağıdaki ayarlar yeni gönderi oluştururken varsayılan olarak kull
 msgid "The laws in your region require you to verify you're an adult to access certain features. Tap to learn more."
 msgstr "Bölgenizdeki yasalar belirli özelliklere erişebilmeniz için bir yetişkin olduğunuzu doğrulamanızı gerektirmektedir. Daha fazla bilgi edinmek için dokunun."
 
-#: src/components/intents/GroupChatJoinDialog.tsx:135
+#: src/components/intents/GroupChatJoinDialog.tsx:136
 #: src/screens/Messages/JoinRequests.tsx:201
 msgid "The member limit has been reached."
 msgstr "Üye sınırına ulaşıldı."
@@ -11372,8 +11369,8 @@ msgid "There was a problem loading GIFs. Check your connection and try again."
 msgstr "GIFler yüklenemedi. Bağlantınızı kontrol edin ve tekrar deneyin."
 
 #: src/components/contacts/screens/GetContacts.tsx:147
-#: src/components/intents/GroupChatJoinDialog.tsx:119
-#: src/components/intents/GroupChatJoinDialog.tsx:153
+#: src/components/intents/GroupChatJoinDialog.tsx:120
+#: src/components/intents/GroupChatJoinDialog.tsx:154
 msgid "There was a problem with your internet connection, please try again"
 msgstr "İnternet bağlantınızla ilgili bir problem oldu, lütfen tekrar deneyin"
 
@@ -11530,8 +11527,8 @@ msgstr "Bu düğme başkalarının Germ DM uygulaması üzerinden size mesaj yol
 msgid "This chat has ended"
 msgstr "Bu sohbet sona erdi"
 
-#: src/components/dms/ChatInvite/Root.tsx:110
-#: src/components/intents/GroupChatJoinDialog.tsx:264
+#: src/components/dms/ChatInvite/Root.tsx:107
+#: src/components/intents/GroupChatJoinDialog.tsx:260
 msgid "This chat is full"
 msgstr "Bu sohbet dolu"
 
@@ -11574,7 +11571,7 @@ msgstr "Bu içerik, içerikte yer alan kullanıcılardan biri diğerini engelled
 msgid "This content is not viewable without a Bluesky account."
 msgstr "Bu içerik, bir Bluesky hesabı olmadan görüntülenemez."
 
-#: src/components/intents/GroupChatJoinDialog.tsx:121
+#: src/components/intents/GroupChatJoinDialog.tsx:122
 msgid "This conversation is locked."
 msgstr "Bu yazışma kilitli."
 
@@ -11636,15 +11633,11 @@ msgstr "Bu görsel kullanılamaz. Farklı bir format deneyin, .jpg ya da .png gi
 msgid "This information is private and not shared with other users."
 msgstr "Bu bilgi gizlidir ve diğer kullanıcılarla paylaşılmaz."
 
-#: src/components/intents/GroupChatJoinDialog.tsx:131
+#: src/components/intents/GroupChatJoinDialog.tsx:132
 msgid "This invite link has been disabled."
 msgstr "Bu davetiye bağlantısı devre dışı bırakıldı."
 
-#: src/screens/Messages/JoinRequest.tsx:83
-msgid "This invite link has expired"
-msgstr "Bu davetiye bağlantısının süresi dolmuş"
-
-#: src/components/intents/GroupChatJoinDialog.tsx:195
+#: src/components/intents/GroupChatJoinDialog.tsx:196
 msgid "This invite link is invalid"
 msgstr "Bu davetiye bağlantısı geçersiz"
 
@@ -11734,7 +11727,7 @@ msgstr "Bu gönderi yazarı tarafından silinmiş"
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Bu gönderi akışlarınızdan ve konularınızdan gizlenecektir. Bu işlem geri alınamaz."
 
-#: src/view/com/composer/Composer.tsx:1015
+#: src/view/com/composer/Composer.tsx:1022
 msgid "This post's author has disabled quote posts."
 msgstr "Bu gönderinin yazarı alıntılanmasını engellemiş."
 
@@ -12171,11 +12164,11 @@ msgstr "Ne yazık ki beyan edilen yaşınız bulunduğunuz bölgeden Bluesky'a e
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:245
 msgid "Uninvite"
-msgstr "Daveti geri al"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:240
 msgid "Uninvite {displayName} from this group chat"
-msgstr "{displayName}'in bu grup sohbete davetini geri al"
+msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:209
 msgid "Unknown verifier"
@@ -12319,7 +12312,7 @@ msgstr "Liste aboneliğinden çıktınız"
 msgid "Unsupported clipboard content"
 msgstr "Desteklenmeyen pano içeriği"
 
-#: src/view/com/composer/Composer.tsx:1491
+#: src/view/com/composer/Composer.tsx:1521
 msgid "Unsupported video type: {mimeType}"
 msgstr "Desteklenmeyen video türü: {mimeType}"
 
@@ -12414,21 +12407,21 @@ msgstr "Dosyalardan Yükle"
 msgid "Upload from Library"
 msgstr "Kütüphaneden Yükle"
 
-#: src/view/com/composer/Composer.tsx:2521
+#: src/view/com/composer/Composer.tsx:2551
 msgid "Uploading GIF..."
 msgstr "GIF yükleniyor..."
 
-#: src/lib/api/index.ts:327
-#: src/lib/api/index.ts:354
+#: src/lib/api/index.ts:328
+#: src/lib/api/index.ts:355
 msgid "Uploading images..."
 msgstr "Görseller yükleniyor..."
 
-#: src/lib/api/index.ts:426
-#: src/lib/api/index.ts:450
+#: src/lib/api/index.ts:427
+#: src/lib/api/index.ts:451
 msgid "Uploading link thumbnail..."
 msgstr "Web bağlantısının görseli gönderiliyor..."
 
-#: src/view/com/composer/Composer.tsx:2523
+#: src/view/com/composer/Composer.tsx:2553
 msgid "Uploading video..."
 msgstr "Video yükleniyor..."
 
@@ -12717,7 +12710,7 @@ msgstr "Video bulunamadı."
 msgid "Video settings"
 msgstr "Video ayarları"
 
-#: src/view/com/composer/Composer.tsx:2541
+#: src/view/com/composer/Composer.tsx:2571
 msgid "Video uploaded"
 msgstr "Video yüklendi"
 
@@ -12734,14 +12727,14 @@ msgstr "Videolar"
 msgid "Videos must be less than 3 minutes long."
 msgstr "Videolar 3 dakikadan kısa olmalıdır."
 
-#: src/view/com/composer/Composer.tsx:1108
+#: src/view/com/composer/Composer.tsx:1115
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr "Göz at"
 
 #. placeholder {0}: view.source.title
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:317
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:615
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:318
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:640
 msgid "View {0}"
 msgstr "{0} yayıncısını görüntüle"
 
@@ -12770,14 +12763,9 @@ msgstr "{0} kullanıcısının profilini görüntüle"
 msgid "View {displayName}’s profile"
 msgstr "{displayName} profilini görüntüle"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:455
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:456
 msgid "View {publicationTitle}"
 msgstr "{publicationTitle} yayınını görüntüle"
-
-#. placeholder {0}: authorProfile.handle
-#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:83
-msgid "View @{0}'s profile"
-msgstr "@{0} profiline bak"
 
 #: src/components/ProfileHoverCard/index.web.tsx:479
 msgid "View blocked user's profile"
@@ -12828,7 +12816,7 @@ msgstr "Daha fazlasını görüntüle"
 msgid "View more trending videos"
 msgstr "Daha çok gündem olan video göster"
 
-#: src/view/com/composer/Composer.tsx:1103
+#: src/view/com/composer/Composer.tsx:1110
 msgid "View post"
 msgstr "Gönderiyi göster"
 
@@ -12845,10 +12833,10 @@ msgstr "Profili görüntüle"
 msgid "View profile banner"
 msgstr "Profil kapağını göster"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:317
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:425
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:456
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:615
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:318
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:426
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:457
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:640
 msgid "View publication"
 msgstr "Yayını görüntüle"
 
@@ -13124,7 +13112,7 @@ msgstr "Maalesef arama işleminiz tamamlanamadı. Lütfen birkaç dakika içinde
 msgid "We're sorry, you cannot access this screen at this time."
 msgstr "Üzgünüz, şu anda bu ekrana erişemezsiniz."
 
-#: src/view/com/composer/Composer.tsx:1013
+#: src/view/com/composer/Composer.tsx:1020
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "Üzgünüz! Yanıtladığınız gönderi silindi."
 
@@ -13175,7 +13163,7 @@ msgid "What do you want to call your starter pack?"
 msgstr "Başlangıç ​​paketinize ne ad vermek istersiniz?"
 
 #: src/view/com/auth/SplashScreen.web.tsx:98
-#: src/view/com/composer/Composer.tsx:1455
+#: src/view/com/composer/Composer.tsx:1485
 #: src/view/com/feeds/ComposerPrompt.tsx:193
 msgid "What's up?"
 msgstr "Nasılsınız?"
@@ -13261,7 +13249,7 @@ msgstr "Bu kullanıcıyı engellemek ve/veya bu yazışmadan ayrılmak istiyor m
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr "Taslaklarınıza göz atmadan önce bunu taslak olarak kaydetmek ister misiniz?"
 
-#: src/view/com/composer/Composer.tsx:1373
+#: src/view/com/composer/Composer.tsx:1403
 msgid "Would you like to save this as a draft to edit later?"
 msgstr "Bunu sonradan düzenlemek için taslak olarak kaydetmek ister misiniz?"
 
@@ -13270,12 +13258,12 @@ msgstr "Bunu sonradan düzenlemek için taslak olarak kaydetmek ister misiniz?"
 msgid "Write a post"
 msgstr "Bir gönderi yaz"
 
-#: src/view/com/composer/Composer.tsx:1551
+#: src/view/com/composer/Composer.tsx:1581
 msgid "Write post"
 msgstr "Gönderi yaz"
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:91
-#: src/view/com/composer/Composer.tsx:1453
+#: src/view/com/composer/Composer.tsx:1483
 msgid "Write your reply"
 msgstr "Yanıtınızı yazın"
 
@@ -13443,11 +13431,11 @@ msgid "You can now sign in with your new password."
 msgstr "Artık yeni şifrenizle giriş yapabilirsiniz."
 
 #. Toast shown when the user tries to add more images but the post gallery is already at the cap
-#: src/view/com/composer/Composer.tsx:212
+#: src/view/com/composer/Composer.tsx:219
 msgid "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1378
+#: src/view/com/composer/Composer.tsx:1408
 msgid "You can only save drafts up to 1000 characters."
 msgstr "Yalnızca 1000 karaktere kadar taslak kaydedebilirsiniz."
 
@@ -13513,7 +13501,7 @@ msgstr "Kaydedilmiş akışınız yok."
 msgid "You got here first"
 msgstr "İlk siz geldiniz"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:137
+#: src/components/intents/GroupChatJoinDialog.tsx:138
 msgid "You have been previously removed from this group and can’t join it using this link."
 msgstr ""
 
@@ -13586,7 +13574,7 @@ msgstr "E-posta adresinizi başarıyla doğruladınız. Bu diyaloğu kapatabilir
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "Video yükleme sınırına geçici olarak ulaştınız. Lütfen daha sonra tekrar deneyin."
 
-#: src/view/com/composer/Composer.tsx:1368
+#: src/view/com/composer/Composer.tsx:1398
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr "Bu taslakta kaydedilmemiş değişiklikleriniz var, onları kaydetmek ister misiniz?"
 
@@ -13783,7 +13771,7 @@ msgstr "Aktif içeriğin sonuna ulaştınız."
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr "Akışınızın sonuna ulaştınız! Takip edebileceğiniz daha fazla hesap bulun."
 
-#: src/view/com/composer/Composer.tsx:637
+#: src/view/com/composer/Composer.tsx:644
 msgid "You've reached the maximum number of drafts"
 msgstr "En fazla taslak sayısına ulaştınız"
 
@@ -13951,11 +13939,11 @@ msgstr "Şifreniz başarıyla değiştirildi! Lütfen bundan sonra Bluesky'a gir
 msgid "Your password must be at least 8 characters long."
 msgstr "Şifreniz en az 8 karakter uzunluğunda olmalıdır."
 
-#: src/view/com/composer/Composer.tsx:1099
+#: src/view/com/composer/Composer.tsx:1106
 msgid "Your post was sent"
 msgstr "Gönderiniz yollandı"
 
-#: src/view/com/composer/Composer.tsx:1096
+#: src/view/com/composer/Composer.tsx:1103
 msgid "Your posts were sent"
 msgstr "Gönderileriniz yollandı"
 
@@ -13976,7 +13964,7 @@ msgstr "Başka kullanıcıların profil resimleri tarafından çerçevelenmiş p
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "Profiliniz, gönderileriniz, akışlarınız ve listeleriniz artık diğer Bluesky kullanıcıları tarafından görülemeyecek. Hesabınızı istediğiniz zaman oturum açarak yeniden etkinleştirebilirsiniz."
 
-#: src/view/com/composer/Composer.tsx:1098
+#: src/view/com/composer/Composer.tsx:1105
 msgid "Your reply was sent"
 msgstr "Yanıtınız yollandı"
 
@@ -13989,7 +13977,7 @@ msgstr "Raporunuz <0>{0}</0> işaretleyicisine gönderilecektir."
 msgid "Your selected interests help us serve you content you care about."
 msgstr "Seçtiğiniz ilgi alanları, önemsediğiniz içerikleri size sunmamıza yardımcı olur."
 
-#: src/view/com/composer/Composer.tsx:1403
+#: src/view/com/composer/Composer.tsx:1433
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "Konunuzdaki boş gönderiler atlanacak, geride kalan gönderiler ise bir konu olarak yayınlanacaktır."
 
