@@ -1,4 +1,8 @@
-import {AppBskyEmbedRecord, ChatBskyConvoDefs} from '@atproto/api'
+import {
+  AppBskyEmbedRecord,
+  ChatBskyConvoDefs,
+  ChatBskyEmbedJoinLink,
+} from '@atproto/api'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
@@ -83,6 +87,8 @@ export function getMessageInfo({
       } else {
         message = prefix(defaultEmbeddedContentMessage)
       }
+    } else if (ChatBskyEmbedJoinLink.isView(lastMessage.embed)) {
+      message = prefix(i18n._(msg`(chat invite link)`))
     } else {
       message = prefix(defaultEmbeddedContentMessage)
     }
