@@ -95,7 +95,7 @@ export function MessagesConversationSettingsScreen({route}: Props) {
       <Layout.Header.Outer>
         <Layout.Header.BackButton
           onPress={evt => {
-            if (!navigation.canGoBack()) {
+            if (IS_WEB && !navigation.canGoBack()) {
               evt.preventDefault()
               navigation.navigate('MessagesConversation', {
                 conversation: convoId,
