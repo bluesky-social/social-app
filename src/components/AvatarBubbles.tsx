@@ -129,40 +129,46 @@ function AvatarBubble({
   includeProfileBorder?: boolean
 }) {
   const t = useTheme()
-  const profile = useProfileShadow(profileUnshadowed)
-  const moderationOpts = useModerationOpts()
-  const moderation = moderationOpts
-    ? moderateProfile(profile, moderationOpts)
-    : undefined
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{translateX: x}, {translateY: y}, {scale: scale.get()}],
   }))
 
-  return (
-    <Animated.View
-      style={[
-        a.absolute,
-        a.rounded_full,
-        a.flex_grow_0,
-        includeProfileBorder && {
-          borderColor: t.atoms.text_inverted.color,
-          borderWidth: 2,
-        },
-        zIndex != null && {zIndex},
-        animatedStyle,
-      ]}>
-      {profile ? (
-        <UserAvatar
-          avatar={profile.avatar}
-          size={size}
-          type="user"
-          hideLiveBadge
-          noBorder
-          moderation={moderation?.ui('avatar')}
-        />
-      ) : (
+  const style = [
+    a.absolute,
+    a.rounded_full,
+    a.flex_grow_0,
+    includeProfileBorder && {
+      borderColor: t.atoms.text_inverted.color,
+      borderWidth: 2,
+    },
+    zIndex != null && {zIndex},
+    animatedStyle,
+  ]
+
+  const profile = useProfileShadow(profileUnshadowed)
+  const moderationOpts = useModerationOpts()
+
+  if (!moderationOpts) {
+    return (
+      <Animated.View style={style}>
         <AvatarPlaceholder size={size} />
-      )}
+      </Animated.View>
+    )
+  }
+
+  const moderation = moderateProfile(profile, moderationOpts)
+  const avatarModeration = moderation.ui('avatar')
+
+  return (
+    <Animated.View style={style}>
+      <UserAvatar
+        avatar={profile.avatar}
+        size={size}
+        type="user"
+        hideLiveBadge
+        noBorder
+        moderation={avatarModeration}
+      />
     </Animated.View>
   )
 }
