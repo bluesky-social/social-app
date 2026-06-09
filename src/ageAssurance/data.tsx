@@ -16,18 +16,11 @@ import {networkRetry} from '#/lib/async/retry'
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
 import {getAge} from '#/lib/strings/time'
-import {
-  hasSnoozedBirthdateUpdateForDid,
-  snoozeBirthdateUpdateAllowedForDid,
-} from '#/state/birthdate'
 import {fetchActorDeclarationRecord} from '#/state/queries/messages/actor-declaration'
 import {useAgent, useSession} from '#/state/session'
 import * as debug from '#/ageAssurance/debug'
 import {logger} from '#/ageAssurance/logger'
-import {
-  getBirthdateStringFromAge,
-  isLegacyBirthdateBug,
-} from '#/ageAssurance/util'
+import {birthdateFromFlags, getMuAgeStatus} from '#/ageAssurance/muAgeService'
 import {IS_DEV} from '#/env'
 import {device} from '#/storage'
 
@@ -343,51 +336,36 @@ async function getOtherRequiredData({
 }): Promise<OtherRequiredData> {
   if (debug.enabled) return debug.resolve(debug.otherRequiredData)
   const did = getDidFromAgentSession(agent)
-  const [prefs, actorDeclaration] = await Promise.all([
-    agent.getPreferences(),
+
+  /**
+   * mu fork: the declared age comes from our own backend (mu-age-service),
+   * uniformly across OAuth and app-password sessions. It stores only boolean
+   * threshold flags, so we rebuild a representative birthdate for the region
+   * rule engine. `birthdate` undefined === the user has not declared yet, which
+   * gates them into the one-time birthdate prompt (see computeAgeAssuranceState
+   * + NoAccessScreen). We no longer read app.bsky preferences here.
+   */
+  const [status, actorDeclaration] = await Promise.all([
+    getMuAgeStatus(agent),
     fetchActorDeclarationRecord({did, agent}),
   ])
   const data: OtherRequiredData = {
-    birthdate: prefs.birthDate ? prefs.birthDate.toISOString() : undefined,
+    birthdate: status.declared
+      ? birthdateFromFlags({
+          over13: !!status.over13,
+          over16: !!status.over16,
+          over18: !!status.over18,
+        })
+      : undefined,
     actorDeclaration,
   }
 
-  /**
-   * If we can't read a birthdate, it may be due to the user accessing the
-   * account via an app password. In that case, fall-back to declared age
-   * flags.
-   */
-  if (!data.birthdate) {
-    if (prefs.declaredAge?.isOverAge18) {
-      data.birthdate = getBirthdateStringFromAge(18)
-    } else if (prefs.declaredAge?.isOverAge16) {
-      data.birthdate = getBirthdateStringFromAge(16)
-    } else if (prefs.declaredAge?.isOverAge13) {
-      data.birthdate = getBirthdateStringFromAge(13)
-    }
-  }
-
-  if (data && did && birthdateCache.has(did)) {
+  if (did && birthdateCache.has(did)) {
     /*
-     * If birthdate was just set, use the local cache value. On subsequent
-     * reloads, the server should have the correct value.
+     * If a declaration was just set, use the local cache value. On subsequent
+     * reloads, the backend returns the correct value.
      */
     data.birthdate = birthdateCache.get(did)
-  }
-
-  /**
-   * If the user is under the minimum age, and the birthdate is not due to the
-   * legacy bug, AND we've not already snoozed their birthdate update, snooze
-   * further birthdate updates for this user.
-   *
-   * This is basically a migration step for this initial rollout.
-   */
-  if (
-    data.birthdate &&
-    !isLegacyBirthdateBug(data.birthdate) &&
-    !hasSnoozedBirthdateUpdateForDid(did!)
-  ) {
-    snoozeBirthdateUpdateAllowedForDid(did!)
   }
 
   return data

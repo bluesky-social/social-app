@@ -32,4 +32,17 @@ export const EUROSKY = {
      */
     hosts: ['mu.social'],
   },
+  /**
+   * mu age-assurance backend (the `mu-age-service` XRPC service). Stores
+   * self-declared age threshold flags per DID so age gating works over OAuth
+   * AND password sessions uniformly - without touching app.bsky preferences.
+   *
+   * `serviceDid` is the audience of the service-auth JWTs the app mints via
+   * `com.atproto.server.getServiceAuth`; `serviceUrl` is where the XRPC ops
+   * (`social.mu.age.getStatus` / `setStatus`) are served.
+   */
+  ageAssurance: {
+    serviceUrl: 'https://age.mu.social',
+    serviceDid: 'did:web:age.mu.social',
+  },
 } as const
