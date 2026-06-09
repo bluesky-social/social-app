@@ -6,6 +6,7 @@ import {Trans} from '@lingui/react/macro'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
+import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
 import {DesktopSearch} from '#/view/shell/desktop/Search'
 import {
   atoms as a,
@@ -15,8 +16,9 @@ import {
   web,
 } from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
+import {ButtonText} from '#/components/Button'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
-import {InlineLinkText} from '#/components/Link'
+import {InlineLinkText, Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function DesktopRightNav({routeName}: {routeName: string}) {
@@ -59,6 +61,20 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         }),
       ]}>
       {!isSearchScreen && <DesktopSearch />}
+
+      {hasSession && <DesktopFeeds />}
+
+      <Link
+        to="https://whydonate.com/fundraising/the-next-era-of-social-media"
+        label={_(msg`Donate`)}
+        color="secondary"
+        size="small"
+        variant="solid"
+        style={[a.self_start]}>
+        <ButtonText>
+          <Trans>Donate</Trans>
+        </ButtonText>
+      </Link>
 
       <Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
         {hasSession && (
