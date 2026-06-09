@@ -58,7 +58,7 @@ const AVATAR_SIZE = 28
 const CLUSTERED_MESSAGE_GAP = 2
 const BORDER_RADIUS = 18
 const SQUARED_BORDER_RADIUS = 4
-const DISPLAY_NAME_INSET = 22
+const DISPLAY_NAME_INSET = 20
 
 function isWithinClusterBoundary({
   isPending,
