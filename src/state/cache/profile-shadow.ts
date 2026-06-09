@@ -53,8 +53,9 @@ const shadows: WeakMap<
 > = new WeakMap()
 const emitter = new EventEmitter()
 
+type ShadowUpdateEventPayload = {did: string; shadow: Partial<ProfileShadow>}
 export function useOnUpdateProfileShadow(
-  onUpdate: (props: {did: string; shadow: Partial<ProfileShadow>}) => void,
+  onUpdate: (payload: ShadowUpdateEventPayload) => void,
 ) {
   useEffect(() => {
     emitter.addListener('shadow-update', onUpdate)
@@ -217,7 +218,10 @@ export function updateProfileShadow(
   }
   batchedUpdates(() => {
     emitter.emit(did, value)
-    emitter.emit('shadow-update', {did, shadow: value})
+    emitter.emit('shadow-update', {
+      did,
+      shadow: value,
+    } satisfies ShadowUpdateEventPayload)
   })
 }
 
