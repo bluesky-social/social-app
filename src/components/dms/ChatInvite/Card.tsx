@@ -1,4 +1,5 @@
 import {View} from 'react-native'
+import {ChatBskyGroupDefs} from '@atproto/api'
 import {Plural, Trans} from '@lingui/react/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
@@ -20,7 +21,7 @@ export function Card({size}: {size: 'large' | 'small'}) {
   const t = useTheme()
   const {preview, hasFixedHeight} = useChatInvite()
 
-  if (!preview) return null
+  if (!ChatBskyGroupDefs.isJoinLinkPreviewView(preview)) return null
 
   const ownerDisplayName = createSanitizedDisplayName(preview.owner)
   const ownerHandle = sanitizeHandle(preview.owner.handle, '@')

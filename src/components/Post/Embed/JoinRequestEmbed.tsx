@@ -1,7 +1,11 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type ChatBskyGroupDefs} from '@atproto/api'
+import {ChatBskyGroupDefs} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 
+import {
+  type ChatInvitePreview,
+  isKnownJoinLinkPreview,
+} from '#/state/queries/join-links'
 import {atoms as a, useTheme} from '#/alf'
 import * as ChatInvite from '#/components/dms/ChatInvite'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
@@ -23,11 +27,12 @@ export function JoinRequestEmbed({
   onOpen,
 }: {
   code?: string
-  preview?: ChatBskyGroupDefs.JoinLinkPreviewView
+  preview?: ChatInvitePreview
   style?: StyleProp<ViewStyle>
   onOpen?: () => void
 }) {
-  const resolvedCode = code ?? preview?.code
+  const resolvedCode =
+    code ?? (isKnownJoinLinkPreview(preview) ? preview.code : undefined)
   if (!resolvedCode) return null
 
   return (
@@ -73,7 +78,7 @@ export function JoinRequestEmbedBody({
     )
   }
 
-  if (!preview) {
+  if (!ChatBskyGroupDefs.isJoinLinkPreviewView(preview)) {
     return (
       <View
         style={[

@@ -1,16 +1,47 @@
 import {useCallback} from 'react'
 import {
+  type $Typed,
   AtpAgent,
-  type ChatBskyGroupDefs,
+  ChatBskyGroupDefs,
   type ChatBskyGroupGetJoinLinkPreviews,
 } from '@atproto/api'
-import {useQuery, useQueryClient} from '@tanstack/react-query'
+import {type QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {CHAT_SERVICE, DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries/index'
-import {createQueryKey} from '#/state/queries/util'
+import {createQueryKey, type StructuredQueryKey} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
+
+/**
+ * The three preview shapes we currently support. Excludes the `{$type: string}`
+ * open-union fallback for unrecognized future variants - use
+ * `ChatInvitePreview` for that.
+ */
+export type KnownChatInvitePreview =
+  | $Typed<ChatBskyGroupDefs.JoinLinkPreviewView>
+  | $Typed<ChatBskyGroupDefs.DisabledJoinLinkPreviewView>
+  | $Typed<ChatBskyGroupDefs.InvalidJoinLinkPreviewView>
+
+/**
+ * The full open-union shape, including the `{$type: string}` fallback for
+ * future variants.
+ */
+export type ChatInvitePreview = KnownChatInvitePreview | {$type: string}
+
+/**
+ * Narrows a preview to one of the three known variants, filtering out the
+ * `{$type: string}` open-union fallback for unrecognized future shapes.
+ */
+export function isKnownJoinLinkPreview(
+  preview: unknown,
+): preview is KnownChatInvitePreview {
+  return (
+    ChatBskyGroupDefs.isJoinLinkPreviewView(preview) ||
+    ChatBskyGroupDefs.isDisabledJoinLinkPreviewView(preview) ||
+    ChatBskyGroupDefs.isInvalidJoinLinkPreviewView(preview)
+  )
+}
 
 const joinLinkPreviewQueryKeyRoot = 'join-link-preview'
 
@@ -21,6 +52,29 @@ export const createJoinLinkPreviewQueryKey = (args: {
   createQueryKey(joinLinkPreviewQueryKeyRoot, args, {
     persistedVersion: 1,
   })
+
+/**
+ * Invalidate any join link preview queries whose `codes` include the given
+ * code. Use this when a link's state changes (e.g. it's disabled) so cached
+ * previews refetch and reflect the new state.
+ */
+export function invalidateJoinLinkPreviewsForCode(
+  queryClient: QueryClient,
+  code: string,
+) {
+  return queryClient.invalidateQueries({
+    predicate: query => {
+      const [root, args] = query.queryKey as Partial<
+        StructuredQueryKey<{codes?: string[]}>
+      >
+      return (
+        root === joinLinkPreviewQueryKeyRoot &&
+        Array.isArray(args?.codes) &&
+        args.codes.includes(code)
+      )
+    },
+  })
+}
 
 async function fetchJoinLinkPreviews({
   agent,
@@ -104,7 +158,7 @@ export function useGetJoinLinkPreview() {
     }: {
       code: string
       hasSession: boolean
-    }): Promise<ChatBskyGroupDefs.JoinLinkPreviewView | undefined> => {
+    }): Promise<KnownChatInvitePreview | undefined> => {
       try {
         const data = await queryClient.fetchQuery({
           queryKey: createJoinLinkPreviewQueryKey({codes: [code], hasSession}),
@@ -112,7 +166,8 @@ export function useGetJoinLinkPreview() {
             fetchJoinLinkPreviews({agent, codes: [code], hasSession}),
           staleTime: STALE.SECONDS.FIFTEEN,
         })
-        return data.joinLinkPreviews[0]
+        const found = data.joinLinkPreviews[0]
+        return isKnownJoinLinkPreview(found) ? found : undefined
       } catch (error) {
         logger.error('Failed to fetch join link preview', {safeMessage: error})
         return undefined

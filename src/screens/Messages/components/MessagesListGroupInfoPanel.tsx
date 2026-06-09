@@ -94,7 +94,8 @@ export function MessagesListGroupInfoPanel({
         />
         {convo.details.name ? (
           <Text
-            style={[a.text_2xl, a.font_bold, a.mt_lg, a.px_xl, a.text_center]}>
+            style={[a.text_2xl, a.font_bold, a.mt_lg, a.px_xl, a.text_center]}
+            emoji>
             {convo.details.name}
           </Text>
         ) : null}
@@ -107,7 +108,8 @@ export function MessagesListGroupInfoPanel({
               a.text_sm,
               t.atoms.text_contrast_high,
               showButtons ? null : a.mb_4xl,
-            ]}>
+            ]}
+            emoji>
             {names}
           </Text>
         ) : null}
