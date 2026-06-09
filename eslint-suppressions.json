@@ -1,4 +1,113 @@
 {
+  "modules/bottom-sheet/src/BottomSheetNativeComponent.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "modules/bottom-sheet/src/BottomSheetPortal.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "modules/bottom-sheet/src/lib/Portal.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "modules/expo-background-notification-handler/src/ExpoBackgroundNotificationHandlerModule.web.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 4
+    }
+  },
+  "modules/expo-bluesky-gif-view/src/GifView.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    },
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "modules/expo-bluesky-gif-view/src/GifView.web.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/require-await": {
+      "count": 2
+    }
+  },
+  "modules/expo-bluesky-swiss-army/src/PlatformInfo/index.native.ts": {
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 3
+    }
+  },
+  "modules/expo-bluesky-swiss-army/src/Referrer/index.android.ts": {
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "modules/expo-bluesky-swiss-army/src/SharedPrefs/index.native.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 9
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 9
+    }
+  },
+  "modules/expo-bluesky-swiss-army/src/VisibilityView/index.native.tsx": {
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "modules/expo-bluesky-swiss-army/src/VisibilityView/index.tsx": {
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "modules/expo-bluesky-swiss-army/src/VisibilityView/types.ts": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "modules/expo-emoji-picker/src/EmojiPickerView.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
   "src/Navigation.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
