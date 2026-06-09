@@ -42,7 +42,6 @@ import {
   ProgressGuideAction,
   useProgressGuideControls,
 } from '../shell/progress-guide'
-import {RQKEY_ROOT as RQKEY_LIST_CONVOS} from './messages/list-conversations'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 
@@ -528,7 +527,6 @@ export function useProfileBlockMutationQueue(
       updateProfileShadow(queryClient, did, {
         blockingUri: finalBlockingUri,
       })
-      void queryClient.invalidateQueries({queryKey: [RQKEY_LIST_CONVOS]})
     },
   })
 
