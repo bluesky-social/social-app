@@ -1,6 +1,7 @@
 import {useCallback, useState} from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import Svg, {Path} from 'react-native-svg'
 import {
   type BarcodeScanningResult,
   CameraView,
@@ -19,6 +20,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
 const SCAN_FRAME_SIZE = 333
+const SCAN_FRAME_RADIUS = 16
 
 export function InviteScannerScreen() {
   const {t: l} = useLingui()
@@ -131,6 +133,23 @@ export function InviteScannerScreen() {
 
       <ScannerScrim />
 
+      {/* scan-frame outline (the colored border around the cutout) */}
+      <View
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          width: SCAN_FRAME_SIZE,
+          height: SCAN_FRAME_SIZE,
+          marginTop: -SCAN_FRAME_SIZE / 2,
+          marginLeft: -SCAN_FRAME_SIZE / 2,
+          borderWidth: 2,
+          borderColor: '#006aff',
+          borderRadius: SCAN_FRAME_RADIUS,
+        }}
+        pointerEvents="none"
+      />
+
       <View
         style={{
           position: 'absolute',
@@ -214,82 +233,32 @@ export function InviteScannerScreen() {
 }
 
 /**
- * Renders a dark scrim covering the camera view with a transparent 333x333
- * cutout in the middle. We use four absolute Views forming a window-frame
- * shape because React Native doesn't support CSS clip-path / mix-blend modes.
+ * Renders a dark scrim covering the camera view with a rounded-rect cutout in
+ * the middle. Implemented as a single SVG Path (outer screen rect + inner
+ * rounded rect, even-odd fill) so the cutout's corners match the colored
+ * outline above it.
  */
 function ScannerScrim() {
-  const SCRIM_BG = 'rgba(0, 0, 0, 0.55)'
+  const {width, height} = useWindowDimensions()
+  const r = SCAN_FRAME_RADIUS
+  const half = SCAN_FRAME_SIZE / 2
+  const x = width / 2 - half
+  const y = height / 2 - half
+  const right = x + SCAN_FRAME_SIZE
+  const bottom = y + SCAN_FRAME_SIZE
+  const d =
+    `M0 0 H${width} V${height} H0 Z ` +
+    `M${x + r} ${y} H${right - r} A${r} ${r} 0 0 1 ${right} ${y + r} ` +
+    `V${bottom - r} A${r} ${r} 0 0 1 ${right - r} ${bottom} ` +
+    `H${x + r} A${r} ${r} 0 0 1 ${x} ${bottom - r} ` +
+    `V${y + r} A${r} ${r} 0 0 1 ${x + r} ${y} Z`
   return (
-    <>
-      {/* top */}
-      <View
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          top: 0,
-          bottom: '50%',
-          marginBottom: SCAN_FRAME_SIZE / 2,
-          backgroundColor: SCRIM_BG,
-        }}
-      />
-      {/* bottom */}
-      <View
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          top: '50%',
-          bottom: 0,
-          marginTop: SCAN_FRAME_SIZE / 2,
-          backgroundColor: SCRIM_BG,
-        }}
-      />
-      {/* left */}
-      <View
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: 0,
-          width: '50%',
-          height: SCAN_FRAME_SIZE,
-          marginTop: -SCAN_FRAME_SIZE / 2,
-          marginRight: SCAN_FRAME_SIZE / 2,
-          backgroundColor: SCRIM_BG,
-          transform: [{translateX: -SCAN_FRAME_SIZE / 2}],
-        }}
-      />
-      {/* right */}
-      <View
-        style={{
-          position: 'absolute',
-          top: '50%',
-          right: 0,
-          width: '50%',
-          height: SCAN_FRAME_SIZE,
-          marginTop: -SCAN_FRAME_SIZE / 2,
-          marginLeft: SCAN_FRAME_SIZE / 2,
-          backgroundColor: SCRIM_BG,
-          transform: [{translateX: SCAN_FRAME_SIZE / 2}],
-        }}
-      />
-      {/* scan-frame outline (the colored border around the cutout) */}
-      <View
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          width: SCAN_FRAME_SIZE,
-          height: SCAN_FRAME_SIZE,
-          marginTop: -SCAN_FRAME_SIZE / 2,
-          marginLeft: -SCAN_FRAME_SIZE / 2,
-          borderWidth: 2,
-          borderColor: '#006aff',
-          borderRadius: 16,
-        }}
-        pointerEvents="none"
-      />
-    </>
+    <Svg
+      style={StyleSheet.absoluteFill}
+      width={width}
+      height={height}
+      pointerEvents="none">
+      <Path d={d} fill="rgba(0, 0, 0, 0.55)" fillRule="evenodd" />
+    </Svg>
   )
 }
