@@ -133,15 +133,10 @@ export class Convo {
   snapshot: ConvoState | undefined
 
   mergeProfileShadow(did: string, shadow: Partial<ProfileShadow>) {
-    this.recipients?.map((recipient, i) => {
-      if (recipient.did === did) {
-        const merged = mergeShadow(recipient, shadow)
-        this.recipients![i] = merged
-      }
-    })
     const related = this.relatedProfiles.get(did)
     if (related) {
       this.relatedProfiles.set(did, mergeShadow(related, shadow))
+      this.commit()
     }
   }
 
