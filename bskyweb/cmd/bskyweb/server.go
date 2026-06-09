@@ -499,24 +499,22 @@ type renderOptions struct {
 
 // webGeneric returns a handler that renders the base SPA shell with the given
 // render options applied to the template context.
-func (srv *Server) webGeneric(o renderOptions) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		data := srv.NewTemplateContext()
-		data["noindex"] = o.noindex
-		data["nofollow"] = o.nofollow
-		return c.Render(http.StatusOK, "base.html", data)
-	}
+func (srv *Server) webGeneric(c echo.Context, o renderOptions) error {
+	data := srv.NewTemplateContext()
+	data["noindex"] = o.noindex
+	data["nofollow"] = o.nofollow
+	return c.Render(http.StatusOK, "base.html", data)
 }
 
 // handler for endpoint that have no specific server-side handling
 func (srv *Server) WebGeneric(c echo.Context) error {
-	return srv.webGeneric(renderOptions{})(c)
+	return srv.webGeneric(c, renderOptions{})
 }
 
 // handler for routes that should not be indexed by search engines
 // (e.g. auth-only user-state surfaces, internal/debug pages, action/intent dispatch URLs, search results)
 func (srv *Server) WebGenericNoindex(c echo.Context) error {
-	return srv.webGeneric(renderOptions{noindex: true})(c)
+	return srv.webGeneric(c, renderOptions{noindex: true})
 }
 
 // handler for action/intent dispatch URLs (e.g. /intent/compose). These accept
@@ -524,7 +522,7 @@ func (srv *Server) WebGenericNoindex(c echo.Context) error {
 // them as link-graph dead-ends in addition to noindex. Anything legitimately
 // reachable from a hydrated intent page is also reachable via its canonical URL.
 func (srv *Server) WebGenericNoindexNofollow(c echo.Context) error {
-	return srv.webGeneric(renderOptions{noindex: true, nofollow: true})(c)
+	return srv.webGeneric(c, renderOptions{noindex: true, nofollow: true})
 }
 
 func (srv *Server) WebHome(c echo.Context) error {
@@ -599,6 +597,8 @@ func (srv *Server) WebPost(c echo.Context) error {
 			data["canonicalURL"] = canonicalURL
 		}
 		data["requiresAuth"] = true
+		data["noindex"] = true
+		data["nofollow"] = true
 		data["profileHandle"] = pv.Handle
 		if pv.DisplayName != nil {
 			data["profileDisplayName"] = *pv.DisplayName
@@ -793,6 +793,8 @@ func (srv *Server) WebProfile(c echo.Context) error {
 		}
 	} else {
 		data["requiresAuth"] = true
+		data["noindex"] = true
+		data["nofollow"] = true
 	}
 
 	if jsonld, err := buildProfileJSONLD(pv, recentPosts, hideEmbedLabels, hideReplyLabels); err == nil {
