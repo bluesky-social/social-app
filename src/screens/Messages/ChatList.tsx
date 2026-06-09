@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
-import {type ChatBskyActorGetStatus, type ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatBskyActorGetStatus, ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -475,7 +475,10 @@ export function Header({
         convo =>
           !leftConvos.includes(convo.id) &&
           !convo.muted &&
-          convo.members.every(member => member.handle !== 'missing.invalid'),
+          convo.members.every(member => member.handle !== 'missing.invalid') &&
+          (ChatBskyConvoDefs.isGroupConvo(convo.kind)
+            ? !aa.flags.groupChatDisabled
+            : true),
       ) ?? []
 
   const openChatControl = useCallback(() => {
