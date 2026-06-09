@@ -1,6 +1,7 @@
 import {createContext, useCallback, useContext, useMemo} from 'react'
 
 import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
+import {restrictChatSettings} from '#/state/queries/messages/restrictChatSettings'
 import {useAgent} from '#/state/session'
 import {Provider as RedirectOverlayProvider} from '#/ageAssurance/components/RedirectOverlay'
 import {
@@ -20,7 +21,6 @@ import {
 } from '#/ageAssurance/types'
 import {
   computeAgeAssuranceFlags,
-  maybeRestrictChatSettings,
   useAgeAssuranceRegionConfigWithFallback,
 } from '#/ageAssurance/util'
 
@@ -32,7 +32,6 @@ export {
   usePatchServerState as usePatchAgeAssuranceServerState,
 } from '#/ageAssurance/data'
 export {logger} from '#/ageAssurance/logger'
-export {MIN_ACCESS_AGE} from '#/ageAssurance/util'
 
 const AgeAssuranceStateContext = createContext<{
   Access: typeof AgeAssuranceAccess
@@ -48,8 +47,10 @@ const AgeAssuranceStateContext = createContext<{
     access: AgeAssuranceAccess.Full,
   },
   flags: {
+    isAgeRestricted: false,
     adultContentDisabled: false,
     chatDisabled: false,
+    groupChatDisabled: false,
     isDeclaredUnderAdultAge: false,
     isOverRegionMinAccessAge: false,
     isOverAppMinAccessAge: false,
@@ -84,13 +85,25 @@ function InnerProvider({children}: {children: React.ReactNode}) {
 
   const handleAccessUpdate = useCallback(
     (s: AgeAssuranceState) => {
-      const isAgeRestricted = s.access !== AgeAssuranceAccess.Full
-      if (isAgeRestricted) {
-        void getAndRegisterPushToken({isAgeRestricted})
-        maybeRestrictChatSettings({agent})
+      const flags = computeAgeAssuranceFlags({
+        state: s,
+        regionConfig,
+        metadata,
+      })
+      if (flags.isAgeRestricted) {
+        void getAndRegisterPushToken({
+          isAgeRestricted: true,
+        })
+      }
+      if (flags.chatDisabled || flags.groupChatDisabled) {
+        void restrictChatSettings({
+          agent,
+          restrictIncoming: flags.chatDisabled,
+          restrictGroupInvites: flags.groupChatDisabled,
+        })
       }
     },
-    [agent, getAndRegisterPushToken],
+    [agent, getAndRegisterPushToken, regionConfig, metadata],
   )
   useOnAgeAssuranceAccessUpdate(handleAccessUpdate)
 

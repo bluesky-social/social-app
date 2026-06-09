@@ -30,8 +30,10 @@ export type AgeAssuranceState = {
 }
 
 export type AgeAssuranceFlags = {
+  isAgeRestricted: boolean
   adultContentDisabled: boolean
   chatDisabled: boolean
+  groupChatDisabled: boolean
   isDeclaredUnderAdultAge: boolean
   isOverRegionMinAccessAge: boolean
   isOverAppMinAccessAge: boolean

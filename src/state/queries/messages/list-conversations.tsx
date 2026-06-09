@@ -20,6 +20,7 @@ import {useMessagesEventBus} from '#/state/messages/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
 import {parseConvoView} from '#/components/dms/util'
+import {useAgeAssurance} from '#/ageAssurance'
 import * as bsky from '#/types/bsky'
 import {RQKEY as CONVO_KEY} from './conversation'
 import {useLeftConvos} from './leave-conversation'
@@ -122,10 +123,12 @@ export function ListConvosProviderInner({
 }: {
   children: React.ReactNode
 }) {
+  const aa = useAgeAssurance()
   const {refetch, data} = useListConvosQuery({
     readState: 'unread',
     limit: UNREAD_LIMIT,
     lockStatus: 'unlocked',
+    kind: aa.flags.groupChatDisabled ? 'direct' : 'all',
   })
   const messagesBus = useMessagesEventBus()
   const queryClient = useQueryClient()
