@@ -1,5 +1,6 @@
 import {type AppBskyActorDefs} from '@atproto/api'
 
+import {VERIFICATION_DENYLIST_DIDS} from '#/lib/constants'
 import {useMuVerificationQuery} from '#/state/queries/verification/useMuVerificationQuery'
 import type * as bsky from '#/types/bsky'
 
@@ -23,6 +24,13 @@ export function useMergedVerificationState({
   profile?: bsky.profile.AnyProfileView
 }): AppBskyActorDefs.VerificationState | undefined {
   const {data: mu} = useMuVerificationQuery({did: profile?.did})
+
+  // Never surface verification for denylisted accounts, regardless of what
+  // Bluesky or our trusted verifiers say. Returning undefined matches the
+  // "no verification" path, so every badge/dialog treats them as unverified.
+  if (profile?.did && VERIFICATION_DENYLIST_DIDS.includes(profile.did)) {
+    return undefined
+  }
 
   const bskyState = profile?.verification
   const ours = mu?.verifications ?? []

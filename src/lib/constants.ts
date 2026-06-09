@@ -253,6 +253,15 @@ export const TRUSTED_VERIFIER_DIDS = [
 ]
 
 /**
+ * Accounts that must never be shown as verified in our app, regardless of any
+ * verification issued by Bluesky or by one of our trusted verifiers. Keyed by
+ * DID (stable across handle changes). This is a client-side display block only:
+ * it does not revoke any on-protocol verification record, it just refuses to
+ * render the badge. Enforced centrally in `useMergedVerificationState`.
+ */
+export const VERIFICATION_DENYLIST_DIDS = ['did:plc:vc7f4oafdgxsihk4cry2xpze']
+
+/**
  * Microcosm Constellation - an atproto-wide backlink index. We use it as a
  * reverse index: "which `app.bsky.graph.verification` records point at this
  * DID as their subject", without having to run our own AppView.
