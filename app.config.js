@@ -52,6 +52,10 @@ module.exports = function (_config) {
       runtimeVersion: {
         policy: 'appVersion',
       },
+      // mu mark. On web this is the source for the PWA / apple-touch-icon
+      // (iOS "Add to Home Screen"); ios_icon_default_next.png is the mu
+      // full-bleed tile. Native build uses the .icon files (ios.icon below) -
+      // that rebrand is a separate pass.
       icon: './assets/app-icons/ios_icon_default_next.png',
       userInterfaceStyle: 'automatic',
       primaryColor: '#006AFF',
@@ -221,11 +225,11 @@ module.exports = function (_config) {
         // Eurosky fork: web-only display name -> drives the static
         // %WEB_TITLE% pre-boot tab title (@expo/webpack-config uses
         // web.name ?? name). Native app name stays a later pass.
-        name: 'Eurosky',
-        // Eurosky favicon: a self-contained PNG (the cotton-tile avatar -
-        // ink star on #f7f6f2) that reads on both light and dark browser
-        // themes. Standard Expo mechanism, same as upstream, so no custom
-        // <link> wiring and minimal merge surface.
+        name: 'mu',
+        // mu favicon: the brand pink app-icon tile (rounded square, "mu"
+        // wordmark) from the brand kit. The pink fill reads on both light and
+        // dark browser themes. Standard Expo mechanism, same as upstream, so
+        // no custom <link> wiring and minimal merge surface.
         favicon: './assets/favicon.png',
       },
       updates: {
