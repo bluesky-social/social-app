@@ -259,7 +259,9 @@ export const TRUSTED_VERIFIER_DIDS = [
  * it does not revoke any on-protocol verification record, it just refuses to
  * render the badge. Enforced centrally in `useMergedVerificationState`.
  */
-export const VERIFICATION_DENYLIST_DIDS = ['did:plc:vc7f4oafdgxsihk4cry2xpze']
+export const VERIFICATION_DENYLIST_DIDS = new Set([
+  'did:plc:vc7f4oafdgxsihk4cry2xpze',
+])
 
 /**
  * Microcosm Constellation - an atproto-wide backlink index. We use it as a

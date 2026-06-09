@@ -28,7 +28,7 @@ export function useMergedVerificationState({
   // Never surface verification for denylisted accounts, regardless of what
   // Bluesky or our trusted verifiers say. Returning undefined matches the
   // "no verification" path, so every badge/dialog treats them as unverified.
-  if (profile?.did && VERIFICATION_DENYLIST_DIDS.includes(profile.did)) {
+  if (profile?.did && VERIFICATION_DENYLIST_DIDS.has(profile.did)) {
     return undefined
   }
 
