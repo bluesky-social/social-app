@@ -517,7 +517,6 @@ export function InitiateChatFlow({
               a.relative,
               a.align_center,
               a.justify_between,
-              web(a.pb_lg),
             ]}>
             {IS_NATIVE ? (
               <Button
