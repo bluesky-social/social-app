@@ -2394,9 +2394,6 @@
   "src/view/com/util/Link.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 2
     }
   },
   "src/view/com/util/LoadingPlaceholder.tsx": {
@@ -2448,17 +2445,6 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 4
-    }
-  },
-  "src/view/screens/Feeds.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 3
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
     }
   },
   "src/view/screens/Home.tsx": {
