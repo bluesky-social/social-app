@@ -98,6 +98,40 @@ func TestRenderPost_OGImageMatchesJSONLD(t *testing.T) {
 	}
 }
 
+// Gallery posts must hit the same og:image / JSON-LD image[] byte-equality
+// contract that legacy images posts do. Regression guard for the
+// app.bsky.embed.gallery extraction path.
+func TestRenderPost_OGImageMatchesJSONLD_Gallery(t *testing.T) {
+	thumb1 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g1@jpeg"
+	thumb2 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g2@jpeg"
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "gallery", withGallery(thumb1, thumb2))
+	thumbs := extractPostMedia(pv, false)
+	ld, _ := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", hideEmbedLabels, hideReplyLabels)
+	html := renderTemplate(t, "post.html", pongo2.Context{
+		"postView":     pv,
+		"requestURI":   "https://bsky.app/profile/alice.bsky.social/post/abc123",
+		"canonicalURL": "https://bsky.app/profile/alice.bsky.social/post/abc123",
+		"postJSONLD":   ld,
+		"imgThumbUrls": thumbs,
+	})
+
+	if !strings.Contains(html, `<meta property="og:image" content="`+thumb1+`">`) {
+		t.Errorf("og:image[0] not found in rendered HTML for gallery post")
+	}
+	if !strings.Contains(html, `<meta property="og:image" content="`+thumb2+`">`) {
+		t.Errorf("og:image[1] not found in rendered HTML for gallery post")
+	}
+	body := extractJSONLD(t, html)
+	var parsed map[string]any
+	_ = json.Unmarshal([]byte(body), &parsed)
+	main := parsed["mainEntity"].(map[string]any)
+	imgs := main["image"].([]any)
+	if len(imgs) != 2 || imgs[0] != thumb1 || main["thumbnailUrl"] != thumb1 {
+		t.Errorf("JSON-LD image strings drifted from og:image for gallery; image=%v thumbnailUrl=%v",
+			imgs, main["thumbnailUrl"])
+	}
+}
+
 func TestRenderPost_FallsBackToCanonicalizeFilter(t *testing.T) {
 	// Without canonicalURL, the template falls back to requestURI|canonicalize_url.
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "hi")
