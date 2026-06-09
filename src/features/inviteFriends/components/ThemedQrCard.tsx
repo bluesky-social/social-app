@@ -24,7 +24,6 @@ const QR_PIECE_SIZE = 7
 const QR_INNER_PADDING = 4
 const AVATAR_WRAPPER = 72
 const AVATAR_IMAGE = 60
-const AVATAR_RADIUS = 10
 const AVATAR_BORDER = 2
 
 export function ThemedQrCard({
@@ -151,7 +150,7 @@ export function ThemedQrCard({
                 position: 'absolute',
                 width: AVATAR_WRAPPER,
                 height: AVATAR_WRAPPER,
-                borderRadius: AVATAR_RADIUS,
+                borderRadius: AVATAR_WRAPPER / 2,
                 backgroundColor: t.palette.white,
                 overflow: 'hidden',
                 alignItems: 'center',
@@ -161,7 +160,7 @@ export function ThemedQrCard({
                 style={{
                   width: AVATAR_IMAGE,
                   height: AVATAR_IMAGE,
-                  borderRadius: AVATAR_RADIUS,
+                  borderRadius: AVATAR_IMAGE / 2,
                   borderWidth: AVATAR_BORDER,
                   borderColor: t.palette.white,
                   overflow: 'hidden',
@@ -172,7 +171,7 @@ export function ThemedQrCard({
                     style={{
                       width: AVATAR_IMAGE - AVATAR_BORDER * 2,
                       height: AVATAR_IMAGE - AVATAR_BORDER * 2,
-                      borderRadius: AVATAR_RADIUS - AVATAR_BORDER,
+                      borderRadius: (AVATAR_IMAGE - AVATAR_BORDER * 2) / 2,
                     }}
                     accessibilityIgnoresInvertColors
                   />
