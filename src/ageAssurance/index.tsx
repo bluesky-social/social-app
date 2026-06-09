@@ -32,7 +32,6 @@ export {
   usePatchServerState as usePatchAgeAssuranceServerState,
 } from '#/ageAssurance/data'
 export {logger} from '#/ageAssurance/logger'
-export {MIN_ACCESS_AGE} from '#/ageAssurance/util'
 
 const AgeAssuranceStateContext = createContext<{
   Access: typeof AgeAssuranceAccess

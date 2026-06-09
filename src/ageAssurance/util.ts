@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
 import {
-  ageAssuranceRuleIDs as ids,
   type AppBskyAgeassuranceDefs,
   getAgeAssuranceRegionConfig,
   type ModerationPrefs,
@@ -8,6 +7,7 @@ import {
 
 import {getAge} from '#/lib/strings/time'
 import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
+import {FALLBACK_REGION_CONFIG, MIN_ACCESS_AGE} from '#/ageAssurance/const'
 import {useAgeAssuranceServerDataContext} from '#/ageAssurance/data'
 import {
   AgeAssuranceAccess,
@@ -16,24 +16,6 @@ import {
   type AgeAssuranceState,
 } from '#/ageAssurance/types'
 import {type Geolocation, useGeolocation} from '#/geolocation'
-
-export const MIN_ACCESS_AGE = 13
-const FALLBACK_REGION_CONFIG: AppBskyAgeassuranceDefs.ConfigRegion = {
-  countryCode: '*',
-  regionCode: undefined,
-  minAccessAge: MIN_ACCESS_AGE,
-  rules: [
-    {
-      $type: ids.IfDeclaredOverAge,
-      age: MIN_ACCESS_AGE,
-      access: AgeAssuranceAccess.Full,
-    },
-    {
-      $type: ids.Default,
-      access: AgeAssuranceAccess.None,
-    },
-  ],
-}
 
 /**
  * Get age assurance region config based on geolocation, with fallback to
