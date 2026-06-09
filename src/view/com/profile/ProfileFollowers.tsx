@@ -184,15 +184,15 @@ export function ProfileFollowers({name}: {name: string}) {
     !isFollowersLoading &&
     !isError
 
-  if (followers.length < 1) {
-    return (
-      <>
-        {showFollowersPromo && (
-          <FollowersPromoBanner
-            onPress={() => navigation.navigate('FindContactsSettings')}
-            onDismiss={() => setFollowersPromoDismissed(true)}
-          />
-        )}
+  return (
+    <>
+      {showFollowersPromo && (
+        <FollowersPromoBanner
+          onPress={() => navigation.navigate('FindContactsSettings')}
+          onDismiss={() => setFollowersPromoDismissed(true)}
+        />
+      )}
+      {followers.length < 1 ? (
         <ListMaybePlaceholder
           isLoading={isDidLoading || isFollowersLoading}
           isError={isError}
@@ -215,32 +215,30 @@ export function ProfileFollowers({name}: {name: string}) {
             onPress: () => navigation.goBack(),
           }}
         />
-      </>
-    )
-  }
-
-  return (
-    <List
-      data={followers}
-      renderItem={renderItemWithContext}
-      keyExtractor={keyExtractor}
-      refreshing={isPTRing}
-      onRefresh={onRefresh}
-      onEndReached={onEndReached}
-      onEndReachedThreshold={4}
-      onItemSeen={onItemSeen}
-      ListFooterComponent={
-        <ListFooter
-          isFetchingNextPage={isFetchingNextPage}
-          error={cleanError(error)}
-          onRetry={fetchNextPage}
+      ) : (
+        <List
+          data={followers}
+          renderItem={renderItemWithContext}
+          keyExtractor={keyExtractor}
+          refreshing={isPTRing}
+          onRefresh={onRefresh}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={4}
+          onItemSeen={onItemSeen}
+          ListFooterComponent={
+            <ListFooter
+              isFetchingNextPage={isFetchingNextPage}
+              error={cleanError(error)}
+              onRetry={fetchNextPage}
+            />
+          }
+          // @ts-ignore our .web version only -prf
+          desktopFixedHeight
+          initialNumToRender={initialNumToRender}
+          windowSize={11}
+          sideBorders={false}
         />
-      }
-      // @ts-ignore our .web version only -prf
-      desktopFixedHeight
-      initialNumToRender={initialNumToRender}
-      windowSize={11}
-      sideBorders={false}
-    />
+      )}
+    </>
   )
 }

@@ -3,7 +3,9 @@ import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {useCallOnce} from '#/lib/once'
 import {atoms as a, useTheme, web} from '#/alf'
+import {themes} from '#/alf/themes'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useNuxDialogContext} from '#/components/dialogs/nuxs'
@@ -28,11 +30,12 @@ export function InviteFriendsAnnouncement() {
 
   Dialog.useAutoOpen(control)
 
-  useEffect(() => {
+  const firePresented = useCallOnce(() => {
     ax.metric('invite:nux:presented', {})
-    // Fire once on mount - the NUX has a single lifecycle per session.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  })
+  useEffect(() => {
+    firePresented()
+  }, [firePresented])
 
   const onClose = useCallback(() => {
     nuxDialogs.dismissActiveNux()
@@ -87,10 +90,16 @@ export function InviteFriendsAnnouncement() {
                 a.align_center,
                 {top: 0, left: 0, right: 0, paddingTop: IS_WEB ? 24 : 20},
               ]}>
+              {/* Pinned to the light palette: the header illustration has a
+                  fixed light background, so the tag must stay dark in any
+                  theme to remain legible. */}
               <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-                <SparkleIcon fill={t.palette.primary_800} size="sm" />
+                <SparkleIcon fill={themes.lightPalette.primary_800} size="sm" />
                 <Text
-                  style={[a.font_semi_bold, {color: t.palette.primary_800}]}>
+                  style={[
+                    a.font_semi_bold,
+                    {color: themes.lightPalette.primary_800},
+                  ]}>
                   <Trans>New Feature</Trans>
                 </Text>
               </View>

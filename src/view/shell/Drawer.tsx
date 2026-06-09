@@ -331,6 +331,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
                 IS_NATIVE
                   ? () => {
                       ax.metric('invite:dialog:open', {logContext: 'Drawer'})
+                      setDrawerOpen(false)
                       inviteFriendsControl.open()
                     }
                   : undefined
