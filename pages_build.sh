@@ -27,10 +27,16 @@ set -euo pipefail
 : "${EXPO_PUBLIC_ENABLE_LIVE_EVENTS:=false}"
 : "${EXPO_PUBLIC_ENABLE_APP_CONFIG:=false}"
 : "${EXPO_PUBLIC_PLAUSIBLE_DOMAIN:=mu.social}"
+# Route analytics through the first-party Bunny proxy (see plausible-worker/)
+# so ad/content blockers that blocklist plausible.io stop dropping events. The
+# tracker posts to ${EXPO_PUBLIC_PLAUSIBLE_API_HOST}/api/event, so this must
+# include the scheme (unlike the bare PLAUSIBLE_DOMAIN above).
+: "${EXPO_PUBLIC_PLAUSIBLE_API_HOST:=https://events.mu.social}"
 export EXPO_PUBLIC_ENABLE_GEOLOCATION
 export EXPO_PUBLIC_ENABLE_LIVE_EVENTS
 export EXPO_PUBLIC_ENABLE_APP_CONFIG
 export EXPO_PUBLIC_PLAUSIBLE_DOMAIN
+export EXPO_PUBLIC_PLAUSIBLE_API_HOST
 
 # Use frozen lockfile in CI (mirrors GitHub Actions); allow regeneration locally.
 if [[ -n "${CI:-}" ]]; then
