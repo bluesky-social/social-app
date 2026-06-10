@@ -109,14 +109,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                   accessibilityHint=""
                 />
               </View>
-              <View
-                style={[
-                  a.gap_sm,
-                  a.align_center,
-                  a.pt_5xl,
-                  a.pb_3xl,
-                  a.mt_2xl,
-                ]}>
+              <View style={[a.gap_sm, a.align_center, a.pt_lg, a.pb_3xl]}>
                 <Text
                   style={[
                     gtMobile ? a.text_4xl : a.text_3xl,

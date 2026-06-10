@@ -7,7 +7,7 @@ import {Trans} from '@lingui/react/macro'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {Logotype} from '#/view/icons/Logotype'
+import {Logo3D} from '#/view/icons/Logo3D'
 import {
   AppClipOverlay,
   postAppClipMessage,
@@ -82,7 +82,7 @@ export const SplashScreen = ({
             <View style={[a.justify_center, a.align_center]}>
               {!kawaii && (
                 <View style={[a.pb_sm, a.pt_5xl]}>
-                  <Logotype width={161} fill={t.atoms.text.color} />
+                  <Logo3D width={161} />
                 </View>
               )}
 
