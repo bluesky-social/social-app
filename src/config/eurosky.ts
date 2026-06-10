@@ -40,9 +40,16 @@ export const EUROSKY = {
    * `serviceDid` is the audience of the service-auth JWTs the app mints via
    * `com.atproto.server.getServiceAuth`; `serviceUrl` is where the XRPC ops
    * (`social.mu.age.getStatus` / `setStatus`) are served.
+   *
+   * Overridable at build time for testing against a non-prod deployment (e.g.
+   * a Bunny test domain): set EXPO_PUBLIC_AGE_SERVICE_URL +
+   * EXPO_PUBLIC_AGE_SERVICE_DID. The DID must match the deployed script's
+   * SERVICE_DID env var.
    */
   ageAssurance: {
-    serviceUrl: 'https://age.mu.social',
-    serviceDid: 'did:web:age.mu.social',
+    serviceUrl:
+      process.env.EXPO_PUBLIC_AGE_SERVICE_URL || 'https://age.mu.social',
+    serviceDid:
+      process.env.EXPO_PUBLIC_AGE_SERVICE_DID || 'did:web:age.mu.social',
   },
 } as const
