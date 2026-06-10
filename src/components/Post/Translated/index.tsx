@@ -266,6 +266,13 @@ function TranslationResult({
   const langPrefs = useLanguagePrefs()
   const {i18n, t: l} = useLingui()
 
+  const handleFallback = () => {
+    void translate({
+      ...initialTranslationParams,
+      forceGoogleTranslate: true,
+    })
+  }
+
   const langName = resultSourceLanguage
     ? codeToLanguageName(resultSourceLanguage, i18n.locale)
     : undefined
@@ -343,6 +350,39 @@ function TranslationResult({
                 translate={translate}
                 initialTranslationParams={initialTranslationParams}
               />
+              <Text
+                style={[
+                  a.text_xs,
+                  a.font_medium,
+                  a.leading_snug,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                {' '}
+                &middot;{' '}
+              </Text>
+              <Link
+                {...createStaticClick(() => {
+                  handleFallback()
+                })}
+                label={l`Try Google Translate`}
+                hoverStyle={[
+                  native({opacity: 0.5}),
+                  web([
+                    a.underline,
+                    {textDecorationColor: t.palette.primary_500},
+                  ]),
+                ]}
+                hitSlop={HITSLOP_30}>
+                <Text
+                  style={[
+                    a.text_xs,
+                    a.font_medium,
+                    a.leading_snug,
+                    {color: t.palette.primary_500},
+                  ]}>
+                  <Trans>Google Translate</Trans>
+                </Text>
+              </Link>
             </>
           )}
 
