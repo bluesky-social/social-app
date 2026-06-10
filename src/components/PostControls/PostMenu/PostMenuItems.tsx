@@ -552,11 +552,15 @@ let PostMenuItems = ({
                 <Menu.Item
                   testID="postDropdownTranslateBtn"
                   label={
-                    forceGoogleTranslate ? l`Google Translate` : l`Translate`
+                    forceGoogleTranslate
+                      ? l`Open in Google Translate`
+                      : l`Translate`
                   }
                   onPress={onPressTranslate}>
                   <Menu.ItemText>
-                    {forceGoogleTranslate ? l`Google Translate` : l`Translate`}
+                    {forceGoogleTranslate
+                      ? l`Open in Google Translate`
+                      : l`Translate`}
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={Translate} position="right" />
                 </Menu.Item>
