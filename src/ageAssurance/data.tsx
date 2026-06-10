@@ -555,13 +555,27 @@ export function AgeAssuranceServerDataProvider({
         birthdate: data?.birthdate,
       },
       /**
-       * `isPending` is true only until the query first produces data (from the
-       * persisted cache via initialData, or the network). Once it settles -
-       * even to "no declaration" - this flips to false and the gate can show.
+       * Treat the declared age as "not yet known" while the query is pending OR
+       * fetching. `isPending` covers the cold start with no cached data. But the
+       * AA query cache is persisted (see createPersistedQueryStorage) and
+       * restored async: a stale `{birthdate: undefined}` snapshot can hydrate
+       * (flipping isPending to false) while a fresh fetch to mu-age-service is
+       * still in flight. Gating on isPending alone flashes the gate in that
+       * window for users who have actually declared. `isFetching` keeps us in
+       * the loading state until the revalidation settles, after which a genuine
+       * "no declaration" correctly gates with None.
        */
-      metadataLoading: otherRequiredData.isPending,
+      metadataLoading:
+        otherRequiredData.isPending || otherRequiredData.isFetching,
     }),
-    [config, state, data, metadata, otherRequiredData.isPending],
+    [
+      config,
+      state,
+      data,
+      metadata,
+      otherRequiredData.isPending,
+      otherRequiredData.isFetching,
+    ],
   )
   return (
     <AgeAssuranceServerDataContext.Provider value={ctx}>
