@@ -15,6 +15,7 @@ export enum Nux {
   LiveNowBetaDialog = 'LiveNowBetaDialog',
   LiveNowBetaNudge = 'LiveNowBetaNudge',
   DraftsAnnouncement = 'DraftsAnnouncement',
+  GroupChatsAnnouncement = 'GroupChatsAnnouncement',
 
   /*
    * Blocking announcements. New IDs are required for each new announcement.
@@ -77,6 +78,10 @@ export type AppNux = BaseNux<
       id: Nux.DraftsAnnouncement
       data: undefined
     }
+  | {
+      id: Nux.GroupChatsAnnouncement
+      data: undefined
+    }
 >
 
 export const NuxSchemas: Record<Nux, zod.ZodObject<any> | undefined> = {
@@ -93,4 +98,5 @@ export const NuxSchemas: Record<Nux, zod.ZodObject<any> | undefined> = {
   [Nux.LiveNowBetaDialog]: undefined,
   [Nux.LiveNowBetaNudge]: undefined,
   [Nux.DraftsAnnouncement]: undefined,
+  [Nux.GroupChatsAnnouncement]: undefined,
 }

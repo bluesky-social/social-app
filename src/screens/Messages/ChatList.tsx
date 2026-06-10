@@ -100,6 +100,12 @@ export function MessagesScreenInner({navigation, route}: Props) {
   const newChatControl = useDialogControl()
   const {data: chatStatus} = useChatActorStatusQuery()
   const pushToConversation = route.params?.pushToConversation
+  const pushToNewGroupChat = route.params?.pushToNewGroupChat
+  // Tracks whether the next new-chat dialog open should start directly on the
+  // group-chat creation step. Set when deep-linked via `pushToNewGroupChat`,
+  // and reset to `false` whenever the dialog is opened through the normal FAB/
+  // button path so it never gets stuck in group mode.
+  const [startNewChatInGroupChat, setStartNewChatInGroupChat] = useState(false)
 
   // Whenever we have `pushToConversation` set, it means we pressed a notification for a chat without being on
   // this tab. We should immediately push to the conversation after pressing the notification.
@@ -137,6 +143,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
   )
 
   const openChatControl = useCallback(() => {
+    setStartNewChatInGroupChat(false)
     newChatControl.open()
   }, [newChatControl])
 
@@ -148,6 +155,33 @@ export function MessagesScreenInner({navigation, route}: Props) {
       </Trans>,
     ],
   })
+
+  // Deep link into the group-chat creation step of the new-chat dialog. Mirrors
+  // the `pushToConversation` pattern: open the dialog (respecting the same
+  // email-verification gating as the normal new-chat button) starting directly
+  // in group mode, then clear the param so it can fire again later.
+  const openGroupChatControl = useCallback(() => {
+    setStartNewChatInGroupChat(true)
+    newChatControl.open()
+  }, [newChatControl])
+  const wrappedOpenGroupChatControl = requireEmailVerification(
+    openGroupChatControl,
+    {
+      instructions: [
+        <Trans key="new-group-chat">
+          Before you can message another user, you must first verify your email.
+        </Trans>,
+      ],
+    },
+  )
+  useEffect(() => {
+    if (pushToNewGroupChat) {
+      // clear the param first so re-renders don't re-trigger the open, then
+      // open the dialog (gated by email verification) in group mode
+      navigation.setParams({pushToNewGroupChat: undefined})
+      wrappedOpenGroupChatControl()
+    }
+  }, [navigation, pushToNewGroupChat, wrappedOpenGroupChatControl])
 
   if (isWithinSplitView) {
     return (
@@ -172,7 +206,12 @@ export function MessagesScreenInner({navigation, route}: Props) {
           }
           style={[a.h_full, a.justify_center, a.pb_5xl]}
         />
-        <NewChat onNewChat={onNewChat} control={newChatControl} />
+        <NewChat
+          onNewChat={onNewChat}
+          control={newChatControl}
+          startInGroupChat={startNewChatInGroupChat}
+          onClose={() => setStartNewChatInGroupChat(false)}
+        />
       </>
     )
   }
@@ -181,7 +220,12 @@ export function MessagesScreenInner({navigation, route}: Props) {
     <Layout.Screen testID="messagesScreen">
       <Header newChatControl={newChatControl} chatStatus={chatStatus} />
       <ChatList newChatControl={newChatControl} chatStatus={chatStatus} />
-      <NewChat onNewChat={onNewChat} control={newChatControl} />
+      <NewChat
+        onNewChat={onNewChat}
+        control={newChatControl}
+        startInGroupChat={startNewChatInGroupChat}
+        onClose={() => setStartNewChatInGroupChat(false)}
+      />
     </Layout.Screen>
   )
 }

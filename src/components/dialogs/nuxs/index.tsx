@@ -22,6 +22,10 @@ import {
   DraftsAnnouncement,
   enabled as isDraftsAnnouncementEnabled,
 } from '#/components/dialogs/nuxs/DraftsAnnouncement'
+import {
+  enabled as isGroupChatsAnnouncementEnabled,
+  GroupChatsAnnouncement,
+} from '#/components/dialogs/nuxs/GroupChatsAnnouncement'
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
 import {type EnabledCheckProps} from '#/components/dialogs/nuxs/utils'
 import {useAnalytics} from '#/analytics'
@@ -39,6 +43,10 @@ const queuedNuxs: {
   {
     id: Nux.DraftsAnnouncement,
     enabled: isDraftsAnnouncementEnabled,
+  },
+  {
+    id: Nux.GroupChatsAnnouncement,
+    enabled: isGroupChatsAnnouncementEnabled,
   },
 ]
 
@@ -187,6 +195,7 @@ function Inner({
     <Context.Provider value={ctx}>
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
       {activeNux === Nux.DraftsAnnouncement && <DraftsAnnouncement />}
+      {activeNux === Nux.GroupChatsAnnouncement && <GroupChatsAnnouncement />}
     </Context.Provider>
   )
 }
