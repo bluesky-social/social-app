@@ -108,7 +108,7 @@ export function InviteScannerScreen() {
             label={l`Grant access`}
             color="primary"
             size="large"
-            onPress={() => requestPermission()}
+            onPress={() => void requestPermission()}
             style={{marginTop: 8}}>
             <ButtonText>{l`Grant access`}</ButtonText>
           </Button>

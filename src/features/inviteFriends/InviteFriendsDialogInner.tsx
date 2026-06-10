@@ -188,8 +188,8 @@ export function InviteFriendsDialogInner({
 
         <View style={[a.w_full, {marginTop: 48}]}>
           <ActionButtons
-            onShare={onShare}
-            onDownload={onDownload}
+            onShare={() => void onShare()}
+            onDownload={() => void onDownload()}
             onScan={onScan}
           />
         </View>
@@ -243,7 +243,7 @@ export function InviteFriendsDialogInner({
             accessibilityRole="button"
             accessibilityLabel={l`Copy invite link`}
             accessibilityHint={l`Copies the canonical profile URL to the clipboard`}
-            onPress={onCopy}
+            onPress={() => void onCopy()}
             hitSlop={8}
             style={({pressed}) => [{opacity: pressed ? 0.7 : 1}]}>
             <Text
