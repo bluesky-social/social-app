@@ -12,9 +12,6 @@ type GroupChatJoinRequestLanding = {
   type: 'groupchat'
   uri: string
   code: string
-  // Whether the user created a new account (vs. signing in) to redeem this
-  // invite. Set when they pick a path on the logged-out JoinRequest screen.
-  createdAccount?: boolean
 }
 
 type LandingType = StarterPackLanding | GroupChatJoinRequestLanding | undefined
@@ -66,13 +63,4 @@ export const useSetActiveStarterPack = () => {
 export const useActiveGroupChatJoinRequest = () => {
   const landing = useActiveLanding()
   return landing?.type === 'groupchat' ? landing : undefined
-}
-
-export const useSetGroupChatJoinCreatedAccount = () => {
-  const setLanding = useSetActiveLanding()
-  const currentLanding = useActiveLanding()
-  return (createdAccount: boolean) => {
-    if (currentLanding?.type !== 'groupchat') return
-    setLanding({...currentLanding, createdAccount})
-  }
 }
