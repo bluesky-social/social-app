@@ -18,7 +18,10 @@ import {
   parseAccessFromString,
   parseStatusFromString,
 } from '#/ageAssurance/types'
-import {getAgeAssuranceRegionConfigWithFallback} from '#/ageAssurance/util'
+import {
+  getAgeAssuranceRegionConfigWithFallback,
+  MIN_ACCESS_AGE,
+} from '#/ageAssurance/util'
 import {type Geolocation, useGeolocation} from '#/geolocation'
 import {device} from '#/storage'
 
@@ -63,6 +66,30 @@ export function computeAgeAssuranceState({
       status: AgeAssuranceStatus.Unknown,
       access: AgeAssuranceAccess.Safe,
       error: 'config' as const,
+    }
+  }
+
+  /**
+   * mu fork: declared age is sourced from our own backend (see
+   * getOtherRequiredData). No declaration yet -> gate everywhere with None,
+   * which drives the one-time birthdate prompt on NoAccessScreen. Once
+   * declared, `declaredAge` is set and we fall through to the region rules.
+   */
+  if (data?.declaredAge === undefined) {
+    return {
+      status: AgeAssuranceStatus.Unknown,
+      access: AgeAssuranceAccess.None,
+    }
+  }
+
+  /**
+   * mu fork: under-13 is blocked everywhere, regardless of region rules (the
+   * unregulated-region fallback would otherwise grant Full).
+   */
+  if (data.declaredAge < MIN_ACCESS_AGE) {
+    return {
+      status: AgeAssuranceStatus.Blocked,
+      access: AgeAssuranceAccess.None,
     }
   }
 
