@@ -11,7 +11,6 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {useChatActorStatusQuery} from '#/state/queries/messages/get-status'
 import {useListConvoMembersQuery} from '#/state/queries/messages/list-convo-members'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
@@ -162,14 +161,12 @@ export function AddMembersFlow({
     [memberListData],
   )
 
-  const {data: chatStatus} = useChatActorStatusQuery()
-  const groupMemberLimit = chatStatus?.groupMemberLimit
   // The existing members (including the viewer) already occupy slots, so the
   // number of people that can still be added is whatever's left.
-  const remainingSlots =
-    groupMemberLimit !== undefined
-      ? Math.max(0, groupMemberLimit - memberListData.length)
-      : undefined
+  const remainingSlots = Math.max(
+    0,
+    convo.details.memberLimit - memberListData.length,
+  )
 
   const onRemoveDid = useCallback(
     (did: string) => {
