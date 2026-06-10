@@ -1,5 +1,5 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {type AppBskyVideoDefs, type BlobRef, type BskyAgent} from '@atproto/api'
+import {type AppBskyVideoDefs, type AtpAgent, type BlobRef} from '@atproto/api'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
@@ -261,7 +261,7 @@ function trunc2dp(num: number) {
 export async function processVideo(
   asset: ImagePickerAsset,
   dispatch: (action: VideoAction) => void,
-  agent: BskyAgent,
+  agent: AtpAgent,
   did: string,
   signal: AbortSignal,
   i18n: I18n,
