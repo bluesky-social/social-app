@@ -10,7 +10,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {moderateProfile} from '@atproto/api'
 
-import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -90,22 +90,18 @@ export function AvatarBubbles({
           transform: [{scale}],
           transformOrigin: 'top left',
         }}>
-        {layouts.map((layout, i) => {
-          const profile = profiles[i]
-          if (!profile) return null
-          return (
-            <AvatarBubble
-              key={i}
-              profile={profile}
-              scale={scales[i]}
-              size={layout.size}
-              x={layout.x}
-              y={layout.y}
-              zIndex={layout.zIndex}
-              includeProfileBorder={layout.border}
-            />
-          )
-        })}
+        {layouts.map((layout, i) => (
+          <AvatarBubble
+            key={i}
+            profile={profiles[i]}
+            scale={scales[i]}
+            size={layout.size}
+            x={layout.x}
+            y={layout.y}
+            zIndex={layout.zIndex}
+            includeProfileBorder={layout.border}
+          />
+        ))}
       </View>
     </Animated.View>
   )
@@ -120,7 +116,7 @@ function AvatarBubble({
   zIndex,
   includeProfileBorder,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile?: bsky.profile.AnyProfileView
   scale: SharedValue<number>
   size: number
   x: number
@@ -133,42 +129,34 @@ function AvatarBubble({
     transform: [{translateX: x}, {translateY: y}, {scale: scale.get()}],
   }))
 
-  const style = [
-    a.absolute,
-    a.rounded_full,
-    a.flex_grow_0,
-    includeProfileBorder && {
-      borderColor: t.atoms.text_inverted.color,
-      borderWidth: 2,
-    },
-    zIndex != null && {zIndex},
-    animatedStyle,
-  ]
-
-  const profile = useProfileShadow(profileUnshadowed)
+  const profile = useMaybeProfileShadow(profileUnshadowed)
   const moderationOpts = useModerationOpts()
 
-  if (!moderationOpts) {
-    return (
-      <Animated.View style={style}>
-        <AvatarPlaceholder size={size} />
-      </Animated.View>
-    )
-  }
-
-  const moderation = moderateProfile(profile, moderationOpts)
-  const avatarModeration = moderation.ui('avatar')
-
   return (
-    <Animated.View style={style}>
-      <UserAvatar
-        avatar={profile.avatar}
-        size={size}
-        type="user"
-        hideLiveBadge
-        noBorder
-        moderation={avatarModeration}
-      />
+    <Animated.View
+      style={[
+        a.absolute,
+        a.rounded_full,
+        a.flex_grow_0,
+        includeProfileBorder && {
+          borderColor: t.atoms.text_inverted.color,
+          borderWidth: 2,
+        },
+        zIndex != null && {zIndex},
+        animatedStyle,
+      ]}>
+      {profile && moderationOpts ? (
+        <UserAvatar
+          avatar={profile.avatar}
+          size={size}
+          type="user"
+          hideLiveBadge
+          noBorder
+          moderation={moderateProfile(profile, moderationOpts).ui('avatar')}
+        />
+      ) : (
+        <AvatarPlaceholder size={size} />
+      )}
     </Animated.View>
   )
 }
