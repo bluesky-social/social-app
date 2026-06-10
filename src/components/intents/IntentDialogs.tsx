@@ -23,8 +23,10 @@ interface Context {
   verifyEmailState: {code: string} | undefined
   setVerifyEmailState: (state: {code: string} | undefined) => void
   groupChatJoinDialogControl: DialogControlProps
-  groupChatJoinState: {code: string} | undefined
-  setGroupChatJoinState: (state: {code: string} | undefined) => void
+  groupChatJoinState: {code: string; createdAccount?: boolean} | undefined
+  setGroupChatJoinState: (
+    state: {code: string; createdAccount?: boolean} | undefined,
+  ) => void
 }
 
 const Context = createContext({} as Context)
@@ -38,7 +40,7 @@ export function Provider({children}: {children: React.ReactNode}) {
   >()
   const groupChatJoinDialogControl = Dialog.useDialogControl()
   const [groupChatJoinState, setGroupChatJoinState] = useState<
-    {code: string} | undefined
+    {code: string; createdAccount?: boolean} | undefined
   >()
 
   const {hasSession} = useSession()
@@ -51,6 +53,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     if (hasSession && groupChatLanding && !landingHandledRef.current) {
       landingHandledRef.current = true
       const code = groupChatLanding.code
+      const createdAccount = groupChatLanding.createdAccount
       setActiveLanding(undefined)
       const prefetch = prefetchJoinLinkPreviews({
         codes: [code],
@@ -60,7 +63,7 @@ export function Provider({children}: {children: React.ReactNode}) {
         prefetch,
         new Promise(res => setTimeout(res, 200)),
       ]).finally(() => {
-        setGroupChatJoinState({code})
+        setGroupChatJoinState({code, createdAccount})
         groupChatJoinDialogControl.open()
       })
     }

@@ -80,7 +80,9 @@ function GroupChatJoinDialogInner({code}: {code?: string}) {
 function GroupChatJoinDialogContent({code}: {code?: string}) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const {groupChatJoinDialogControl: control} = useIntentDialogs()
+  const {groupChatJoinDialogControl: control, groupChatJoinState} =
+    useIntentDialogs()
+  const isNewAccount = groupChatJoinState?.createdAccount ?? false
   const {hasSession} = useSession()
   const moderationOpts = useModerationOpts()
   const navigation = useNavigation<NavigationProp>()
@@ -103,7 +105,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
         if (code) void invalidateJoinLinkPreviewsForCode(queryClient, code)
         switch (data.status) {
           case 'pending':
-            ax.metric('groupchat:inviteLink:redeem', {isNewAccount: false})
+            ax.metric('groupchat:inviteLink:redeem', {isNewAccount})
             control.close(() => {
               Toast.show(
                 l`Access requested! The group owner will review your request.`,
@@ -112,7 +114,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
             break
           case 'joined': {
             if (data.convo && data.convo.id) {
-              ax.metric('groupchat:inviteLink:redeem', {isNewAccount: false})
+              ax.metric('groupchat:inviteLink:redeem', {isNewAccount})
               control.close(() => {
                 Toast.show(l`Successfully joined the group chat!`)
                 navigation.navigate('MessagesConversation', {

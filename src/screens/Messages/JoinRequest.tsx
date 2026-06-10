@@ -9,7 +9,10 @@ import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-disp
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useJoinLinkPreviewsQuery} from '#/state/queries/join-links'
-import {useActiveGroupChatJoinRequest} from '#/state/shell/landing'
+import {
+  useActiveGroupChatJoinRequest,
+  useSetGroupChatJoinCreatedAccount,
+} from '#/state/shell/landing'
 import {LoggedOutScreenState} from '#/view/com/auth/LoggedOut'
 import {LogomarkWithType} from '#/view/icons/LogomarkWithType'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -283,12 +286,14 @@ function ActionButtons({
   const t = useTheme()
   const {t: l} = useLingui()
   const isDarkMode = t.name !== 'light'
+  const setCreatedAccount = useSetGroupChatJoinCreatedAccount()
 
   return (
     <View style={[a.w_full, a.gap_md]}>
       <Button
         testID="signInButton"
         onPress={() => {
+          setCreatedAccount(false)
           setScreenState(LoggedOutScreenState.S_Login)
         }}
         label={l`Sign in`}
@@ -303,6 +308,7 @@ function ActionButtons({
       <Button
         testID="createAccountButton"
         onPress={() => {
+          setCreatedAccount(true)
           setScreenState(LoggedOutScreenState.S_CreateAccount)
         }}
         label={l`Create new account`}
