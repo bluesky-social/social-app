@@ -15,7 +15,6 @@ export enum Features {
   ComposerLanguageDetectionEnable = 'composer:language_detection:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
   NotificationsExpandedProfileCardEnable = 'notifications:expanded_profile_card:enable',
-  LargeVideoUploads = 'large_video_uploads:enable',
 
   AATest = 'aa-test',
 }
