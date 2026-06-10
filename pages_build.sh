@@ -21,6 +21,17 @@
 #   bash -lc '. "$HOME/.nvm/nvm.sh"; nvm use 24; ./pages_build.sh'
 set -euo pipefail
 
+# Eurosky defaults for web builds. These can still be overridden by explicitly
+# exporting different values in CI or local shells.
+: "${EXPO_PUBLIC_ENABLE_GEOLOCATION:=false}"
+: "${EXPO_PUBLIC_ENABLE_LIVE_EVENTS:=false}"
+: "${EXPO_PUBLIC_ENABLE_APP_CONFIG:=false}"
+: "${EXPO_PUBLIC_PLAUSIBLE_DOMAIN:=mu.social}"
+export EXPO_PUBLIC_ENABLE_GEOLOCATION
+export EXPO_PUBLIC_ENABLE_LIVE_EVENTS
+export EXPO_PUBLIC_ENABLE_APP_CONFIG
+export EXPO_PUBLIC_PLAUSIBLE_DOMAIN
+
 # Use frozen lockfile in CI (mirrors GitHub Actions); allow regeneration locally.
 if [[ -n "${CI:-}" ]]; then
   pnpm install --frozen-lockfile
