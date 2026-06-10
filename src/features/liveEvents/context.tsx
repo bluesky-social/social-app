@@ -10,7 +10,7 @@ import {
   makeRecordUri,
 } from '#/lib/strings/url-helpers'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {IS_DEV, LIVE_EVENTS_URL} from '#/env'
+import {ENABLE_LIVE_EVENTS, IS_DEV, LIVE_EVENTS_URL} from '#/env'
 import {useLiveEventPreferences} from '#/features/liveEvents/preferences'
 import {type LiveEventsWorkerResponse} from '#/features/liveEvents/types'
 import {useDevMode} from '#/storage/hooks/dev-mode'
@@ -49,6 +49,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       // keep this, prefectching handles initial load
       staleTime: 1000 * 15,
       queryKey: liveEventsQueryKey,
+      enabled: ENABLE_LIVE_EVENTS,
       refetchInterval: 1000 * 60 * 5, // refetch every 5 minutes
       async queryFn() {
         return fetchLiveEvents()
@@ -89,6 +90,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export async function prefetchLiveEvents() {
+  if (!ENABLE_LIVE_EVENTS) return
   const data = await fetchLiveEvents()
   if (data) {
     qc.setQueryData(liveEventsQueryKey, data)

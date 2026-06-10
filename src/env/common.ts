@@ -103,6 +103,32 @@ export const GROWTHBOOK_CLIENT_KEY: string =
   process.env.EXPO_PUBLIC_GROWTHBOOK_CLIENT_KEY || 'sdk-7gkUkGy9wguUjyFe'
 
 /**
+ * Plausible Analytics site domain, as configured in Plausible's settings. When
+ * unset, the Plausible analytics sink is disabled entirely. Plausible is a
+ * secondary, privacy-first sink that receives an allowlisted subset of events;
+ * the primary metrics pipeline is unaffected by this value.
+ */
+export const PLAUSIBLE_DOMAIN: string | undefined =
+  process.env.EXPO_PUBLIC_PLAUSIBLE_DOMAIN
+
+/**
+ * Plausible API host. Points at Plausible Cloud by default, but can be set to a
+ * self-hosted instance or a first-party proxy. The tracker posts to
+ * `${PLAUSIBLE_API_HOST}/api/event`.
+ */
+export const PLAUSIBLE_API_HOST: string =
+  process.env.EXPO_PUBLIC_PLAUSIBLE_API_HOST || 'https://plausible.io'
+
+/**
+ * When `true`, the Plausible sink prints each event it would send to the
+ * console and skips the network entirely. Useful for local development: no
+ * domain or dashboard required, and works on both web and native. Defaults to
+ * off.
+ */
+export const PLAUSIBLE_DEBUG: boolean =
+  process.env.EXPO_PUBLIC_PLAUSIBLE_DEBUG === 'true'
+
+/**
  * Sentry DSN for telemetry
  */
 export const SENTRY_DSN: string | undefined = process.env.EXPO_PUBLIC_SENTRY_DSN
@@ -151,3 +177,13 @@ export const APP_CONFIG_PROD_URL = `https://app-config.workers.bsky.app`
 export const APP_CONFIG_URL = IS_DEV
   ? (APP_CONFIG_DEV_URL ?? APP_CONFIG_PROD_URL)
   : APP_CONFIG_PROD_URL
+
+/**
+ * Service enable flags. Default true. Set to 'false' to disable.
+ */
+export const ENABLE_GEOLOCATION =
+  process.env.EXPO_PUBLIC_ENABLE_GEOLOCATION !== 'false'
+export const ENABLE_LIVE_EVENTS =
+  process.env.EXPO_PUBLIC_ENABLE_LIVE_EVENTS !== 'false'
+export const ENABLE_APP_CONFIG =
+  process.env.EXPO_PUBLIC_ENABLE_APP_CONFIG !== 'false'
