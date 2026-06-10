@@ -989,8 +989,8 @@ msgctxt "toast"
 msgid "Account followed"
 msgstr ""
 
-#: src/screens/Login/OAuthSignin.tsx:98
-#: src/screens/Login/OAuthSignin.tsx:104
+#: src/screens/Login/OAuthSignin.tsx:99
+#: src/screens/Login/OAuthSignin.tsx:105
 msgid "Account handle"
 msgstr "Account handle"
 
@@ -1436,7 +1436,7 @@ msgstr ""
 msgid "Already have a code?"
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:201
+#: src/components/WelcomeModal.tsx:174
 msgid "Already have an account?"
 msgstr ""
 
@@ -1895,8 +1895,8 @@ msgstr ""
 #: src/screens/Login/ForgotPasswordForm.tsx:132
 #: src/screens/Login/LoginForm.tsx:317
 #: src/screens/Login/LoginForm.tsx:322
-#: src/screens/Login/OAuthSignin.tsx:176
-#: src/screens/Login/OAuthSignin.tsx:183
+#: src/screens/Login/OAuthSignin.tsx:177
+#: src/screens/Login/OAuthSignin.tsx:184
 #: src/screens/Login/PasswordSignin.tsx:289
 #: src/screens/Login/PasswordSignin.tsx:294
 #: src/screens/Login/SetNewPasswordForm.tsx:172
@@ -2841,7 +2841,7 @@ msgstr "Close the incoming requests banner"
 msgid "Close this dialog"
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:229
+#: src/components/WelcomeModal.tsx:196
 msgid "Close welcome modal"
 msgstr ""
 
@@ -3326,14 +3326,15 @@ msgstr ""
 msgid "Create a list from this starter pack"
 msgstr ""
 
-#: src/screens/Login/OAuthSignin.tsx:148
-#: src/screens/Login/OAuthSignin.tsx:156
-msgid "Create a new account"
-msgstr "Create a new account"
+#. placeholder {0}: EUROSKY.brand.name
+#: src/screens/Login/OAuthSignin.tsx:150
+msgid "Create a new {0} account"
+msgstr "Create a new {0} account"
 
 #: src/screens/Login/OAuthSignin.tsx:149
-msgid "Create a new Eurosky account"
-msgstr "Create a new Eurosky account"
+#: src/screens/Login/OAuthSignin.tsx:157
+msgid "Create a new account"
+msgstr "Create a new account"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:166
 msgid "Create a QR code for a starter pack"
@@ -3354,8 +3355,8 @@ msgstr ""
 msgid "Create a starter pack for me"
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:153
-#: src/components/WelcomeModal.tsx:161
+#: src/components/WelcomeModal.tsx:139
+#: src/components/WelcomeModal.tsx:147
 #: src/screens/Messages/JoinRequest.tsx:300
 #: src/screens/Signup/index.tsx:135
 #: src/view/com/auth/SplashScreen.tsx:105
@@ -4336,7 +4337,7 @@ msgstr ""
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr ""
 
-#: src/screens/Login/OAuthSignin.tsx:117
+#: src/screens/Login/OAuthSignin.tsx:118
 msgid "Enter the handle of the account you want to sign in with"
 msgstr "Enter the handle of the account you want to sign in with"
 
@@ -4516,8 +4517,8 @@ msgstr ""
 msgid "Explore"
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:166
-#: src/components/WelcomeModal.tsx:183
+#: src/components/WelcomeModal.tsx:152
+#: src/components/WelcomeModal.tsx:161
 msgid "Explore the app"
 msgstr ""
 
@@ -4909,6 +4910,8 @@ msgstr ""
 msgid "Feed unavailable"
 msgstr ""
 
+#: src/view/shell/desktop/RightNav.tsx:72
+#: src/view/shell/desktop/RightNav.tsx:73
 #: src/view/shell/Drawer.tsx:379
 msgid "Feedback"
 msgstr ""
@@ -5738,6 +5741,8 @@ msgstr ""
 
 #: src/screens/Settings/Settings.tsx:247
 #: src/screens/Settings/Settings.tsx:251
+#: src/view/shell/desktop/RightNav.tsx:93
+#: src/view/shell/desktop/RightNav.tsx:96
 #: src/view/shell/Drawer.tsx:392
 msgid "Help"
 msgstr ""
@@ -6926,6 +6931,11 @@ msgstr ""
 msgid "Logged-out visibility"
 msgstr ""
 
+#: src/view/shell/desktop/RightNav.tsx:105
+msgid "Logo by @sawaratsuki.bsky.social"
+msgstr "Logo by @sawaratsuki.bsky.social"
+
+#: src/view/shell/desktop/RightNav.tsx:102
 #: src/view/shell/Drawer.tsx:734
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr ""
@@ -8666,7 +8676,7 @@ msgstr ""
 msgid "Please enter your handle"
 msgstr "Please enter your handle"
 
-#: src/screens/Login/OAuthSignin.tsx:67
+#: src/screens/Login/OAuthSignin.tsx:68
 msgid "Please enter your handle to sign in."
 msgstr "Please enter your handle to sign in."
 
@@ -8918,6 +8928,11 @@ msgstr ""
 msgid "Primary language"
 msgstr ""
 
+#: src/view/shell/desktop/RightNav.tsx:81
+#: src/view/shell/desktop/RightNav.tsx:82
+msgid "Privacy"
+msgstr "Privacy"
+
 #: src/screens/Settings/Settings.tsx:181
 #: src/screens/Settings/Settings.tsx:184
 msgid "Privacy and security"
@@ -9163,11 +9178,11 @@ msgstr ""
 msgid "Read the Bluesky Terms of Service"
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:144
+#: src/components/WelcomeModal.tsx:130
 msgid "Real conversations."
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:142
+#: src/components/WelcomeModal.tsx:128
 msgid "Real people."
 msgstr ""
 
@@ -10714,17 +10729,17 @@ msgstr ""
 
 #: src/components/dialogs/Signin.tsx:96
 #: src/components/dialogs/Signin.tsx:98
-#: src/components/WelcomeModal.tsx:206
-#: src/components/WelcomeModal.tsx:221
+#: src/components/WelcomeModal.tsx:179
+#: src/components/WelcomeModal.tsx:188
 #: src/screens/Hashtag.tsx:228
 #: src/screens/Login/index.tsx:144
 #: src/screens/Login/index.tsx:170
 #: src/screens/Login/LoginForm.tsx:179
 #: src/screens/Login/LoginForm.tsx:350
 #: src/screens/Login/LoginForm.tsx:356
-#: src/screens/Login/OAuthSignin.tsx:95
-#: src/screens/Login/OAuthSignin.tsx:134
-#: src/screens/Login/OAuthSignin.tsx:142
+#: src/screens/Login/OAuthSignin.tsx:96
+#: src/screens/Login/OAuthSignin.tsx:135
+#: src/screens/Login/OAuthSignin.tsx:143
 #: src/screens/Login/PasswordSignin.tsx:160
 #: src/screens/Login/PasswordSignin.tsx:300
 #: src/screens/Login/PasswordSignin.tsx:306
@@ -10783,16 +10798,16 @@ msgstr "Sign in to request access to this group chat."
 msgid "Sign in to view post"
 msgstr ""
 
-#: src/screens/Login/OAuthSignin.tsx:163
+#: src/screens/Login/OAuthSignin.tsx:164
 msgid "Sign in with a username and password instead"
 msgstr "Sign in with a username and password instead"
 
-#: src/screens/Login/OAuthSignin.tsx:161
-#: src/screens/Login/OAuthSignin.tsx:171
+#: src/screens/Login/OAuthSignin.tsx:162
+#: src/screens/Login/OAuthSignin.tsx:172
 msgid "Sign in with password"
 msgstr "Sign in with password"
 
-#: src/screens/Login/OAuthSignin.tsx:135
+#: src/screens/Login/OAuthSignin.tsx:136
 msgid "Sign in with your handle via OAuth"
 msgstr "Sign in with your handle via OAuth"
 
@@ -10879,7 +10894,7 @@ msgstr ""
 msgid "So many thoughts, you should post one"
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:146
+#: src/components/WelcomeModal.tsx:132
 msgid "Social media you control."
 msgstr ""
 
@@ -11400,6 +11415,11 @@ msgstr ""
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:214
 msgid "Temporarily deactivate your account"
 msgstr "Temporarily deactivate your account"
+
+#: src/view/shell/desktop/RightNav.tsx:88
+#: src/view/shell/desktop/RightNav.tsx:89
+msgid "Terms"
+msgstr "Terms"
 
 #: src/components/dialogs/BirthDateSettings.tsx:212
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:31
@@ -13994,7 +14014,7 @@ msgstr "You won’t be able to rejoin unless you’re invited."
 msgid "You: {message}"
 msgstr "You: {message}"
 
-#: src/screens/Login/OAuthSignin.tsx:124
+#: src/screens/Login/OAuthSignin.tsx:125
 msgid "You'll be sent to your account's hosting provider to sign in securely."
 msgstr "You'll be sent to your account's hosting provider to sign in securely."
 
