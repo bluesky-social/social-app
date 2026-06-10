@@ -22,6 +22,10 @@ import {
   DraftsAnnouncement,
   enabled as isDraftsAnnouncementEnabled,
 } from '#/components/dialogs/nuxs/DraftsAnnouncement'
+import {
+  enabled as isInviteFriendsAnnouncementEnabled,
+  InviteFriendsAnnouncement,
+} from '#/components/dialogs/nuxs/InviteFriendsAnnouncement'
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
 import {type EnabledCheckProps} from '#/components/dialogs/nuxs/utils'
 import {useAnalytics} from '#/analytics'
@@ -39,6 +43,10 @@ const queuedNuxs: {
   {
     id: Nux.DraftsAnnouncement,
     enabled: isDraftsAnnouncementEnabled,
+  },
+  {
+    id: Nux.InviteFriendsAnnouncement,
+    enabled: isInviteFriendsAnnouncementEnabled,
   },
 ]
 
@@ -187,6 +195,12 @@ function Inner({
     <Context.Provider value={ctx}>
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
       {activeNux === Nux.DraftsAnnouncement && <DraftsAnnouncement />}
+      {/*
+        Mounted unconditionally: it gates the announcement on `activeNux`
+        internally, so it can keep the invite-friends dialog mounted across
+        the announcement's dismissal during the "Try it" handoff.
+      */}
+      <InviteFriendsAnnouncement />
     </Context.Provider>
   )
 }
