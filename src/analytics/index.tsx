@@ -101,7 +101,9 @@ const Context = createContext<AnalyticsBaseContextType>({
       if (PLAUSIBLE_GOALS.has(event)) {
         plausible.track(event, payload, metadata)
       }
+      // Non-goal events are not sent to Plausible
     } else {
+      // In case of no Plausible domain, we go back to the primary metrics pipeline for all events
       metrics.track(event, payload, {
         ...metadata,
         navigation: getNavigationMetadata(),

@@ -1,7 +1,7 @@
 import {createContext, useContext} from 'react'
 import {QueryClient, useQuery} from '@tanstack/react-query'
 
-import {APP_CONFIG_URL} from '#/env'
+import {APP_CONFIG_URL, ENABLE_APP_CONFIG} from '#/env'
 
 const qc = new QueryClient()
 const appConfigQueryKey = ['app-config']
@@ -47,11 +47,14 @@ async function fetchAppConfig(): Promise<AppConfigResponse | null> {
 
 const Context = createContext<AppConfigResponse>(DEFAULT_APP_CONFIG_RESPONSE)
 
+const enabled = ENABLE_APP_CONFIG
+
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {data} = useQuery<AppConfigResponse | null>(
     {
       staleTime: Infinity,
       queryKey: appConfigQueryKey,
+      enabled,
       refetchInterval: query => {
         // refetch regularly if fetch failed, otherwise never refetch
         return query.state.status === 'error' ? 60e3 : Infinity
@@ -70,6 +73,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export async function prefetchAppConfig() {
+  if (!enabled) return
   try {
     const data = await fetchAppConfig()
     if (data) {

@@ -177,3 +177,13 @@ export const APP_CONFIG_PROD_URL = `https://app-config.workers.bsky.app`
 export const APP_CONFIG_URL = IS_DEV
   ? (APP_CONFIG_DEV_URL ?? APP_CONFIG_PROD_URL)
   : APP_CONFIG_PROD_URL
+
+/**
+ * Service enable flags. Default true. Set to 'false' to disable.
+ */
+export const ENABLE_GEOLOCATION =
+  process.env.EXPO_PUBLIC_ENABLE_GEOLOCATION !== 'false'
+export const ENABLE_LIVE_EVENTS =
+  process.env.EXPO_PUBLIC_ENABLE_LIVE_EVENTS !== 'false'
+export const ENABLE_APP_CONFIG =
+  process.env.EXPO_PUBLIC_ENABLE_APP_CONFIG !== 'false'
