@@ -57,7 +57,7 @@ export function InviteFriendsDialogInner({
 
   const onShare = async () => {
     if (!canonicalShareUrl) {
-      Toast.show(l`Could not share - please try again`, {type: 'error'})
+      Toast.show(l`Could not share – please try again`, {type: 'error'})
       return
     }
     ax.metric('invite:action:share', {})
@@ -71,7 +71,7 @@ export function InviteFriendsDialogInner({
   const onDownload = async () => {
     if (!IS_NATIVE) return
     if (!canonicalShareUrl) {
-      Toast.show(l`Could not download - please try again`, {type: 'error'})
+      Toast.show(l`Could not download – please try again`, {type: 'error'})
       return
     }
     const uri = await captureRef.current?.capture?.()
@@ -85,7 +85,7 @@ export function InviteFriendsDialogInner({
     const permission = await requestPermissionsAsync(true)
     if (!permission.granted) {
       Toast.show(
-        l`You must grant access to your photo library to save the QR code`,
+        l`You must grant access to your photo library to save a QR code`,
         {type: 'error'},
       )
       return
@@ -94,10 +94,12 @@ export function InviteFriendsDialogInner({
     try {
       await createAssetAsync(`file://${uri}`)
       ax.metric('invite:action:download', {})
-      Toast.show(l`QR code saved to your camera roll`)
+      Toast.show(l`QR code saved to your camera roll!`)
     } catch (err) {
       logger.error('InviteFriendsDialog: download failed', {safeMessage: err})
-      Toast.show(l`Could not save QR code`, {type: 'error'})
+      Toast.show(l`An error occurred while saving the QR code!`, {
+        type: 'error',
+      })
     }
   }
 
@@ -112,7 +114,7 @@ export function InviteFriendsDialogInner({
 
   const onCopy = async () => {
     if (!canonicalShareUrl) {
-      Toast.show(l`Could not copy - please try again`, {type: 'error'})
+      Toast.show(l`Could not copy – please try again`, {type: 'error'})
       return
     }
     try {
@@ -121,7 +123,7 @@ export function InviteFriendsDialogInner({
       Toast.show(l`Invite link copied`)
     } catch (err) {
       logger.error('InviteFriendsDialog: copy failed', {safeMessage: err})
-      Toast.show(l`Could not copy link`, {type: 'error'})
+      Toast.show(l`Failed to copy link`, {type: 'error'})
     }
   }
 
@@ -205,7 +207,12 @@ export function InviteFriendsDialogInner({
           ]}>
           <Divider style={[a.flex_1]} />
           <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-            {l`Invite link`}
+            {l({
+              message: 'Invite link',
+              context: 'profile invite',
+              comment:
+                'Link that invites someone to follow your profile, distinct from a group chat invite link',
+            })}
           </Text>
           <Divider style={[a.flex_1]} />
         </View>

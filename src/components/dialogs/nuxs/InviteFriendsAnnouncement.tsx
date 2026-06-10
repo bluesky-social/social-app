@@ -152,8 +152,9 @@ function Announcement({
                   {maxWidth: 340},
                 ]}>
                 <Trans>
-                  You can now invite friends with a link or QR code. Share it
-                  anywhere or let them scan to join you on Bluesky.
+                  You can now invite friends with a link or QR code. Share the
+                  link anywhere, or let them scan the code to join you on
+                  Bluesky.
                 </Trans>
               </Text>
             </View>

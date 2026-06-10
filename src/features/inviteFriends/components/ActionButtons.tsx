@@ -36,7 +36,7 @@ export function ActionButtons({
         {l`Download`}
       </StackedButton>
       <StackedButton
-        label={l({message: 'Open QR scanner'})}
+        label={l({message: 'Open QR code scanner'})}
         color="primary_subtle"
         icon={CameraIcon}
         onPress={onScan}
