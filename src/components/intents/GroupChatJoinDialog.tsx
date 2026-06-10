@@ -107,7 +107,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
         if (code) void invalidateJoinLinkPreviewsForCode(queryClient, code)
         switch (data.status) {
           case 'pending':
-            ax.metric('groupchat:inviteLink:redeem', {isNewAccount: false})
+            ax.metric('groupchat:inviteLink:redeem', {})
             control.close(() => {
               Toast.show(
                 l`Access requested! The group owner will review your request.`,
@@ -116,7 +116,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
             break
           case 'joined': {
             if (data.convo && data.convo.id) {
-              ax.metric('groupchat:inviteLink:redeem', {isNewAccount: false})
+              ax.metric('groupchat:inviteLink:redeem', {})
               control.close(() => {
                 Toast.show(l`Successfully joined the group chat!`)
                 navigation.navigate('MessagesConversation', {

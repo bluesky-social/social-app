@@ -594,9 +594,7 @@ export type Events = {
   'groupchat:landingPage:view': {
     hasSession: boolean
   }
-  'groupchat:inviteLink:redeem': {
-    isNewAccount: boolean
-  }
+  'groupchat:inviteLink:redeem': {}
 
   // Group chat user interactions
   'groupchat:message:send': {
