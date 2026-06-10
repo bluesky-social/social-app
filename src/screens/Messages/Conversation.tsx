@@ -48,8 +48,8 @@ import {IS_LIQUID_GLASS} from '#/env'
 import {ChatDisabled} from './components/ChatDisabled'
 import {ChatEnded} from './components/ChatEnded'
 import {ChatLocked} from './components/ChatLocked'
-import {RequestStatus} from './components/RequestStatus'
 import {GroupOwnerChatDisabled} from './components/GroupOwnerChatDisabled'
+import {RequestStatus} from './components/RequestStatus'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
