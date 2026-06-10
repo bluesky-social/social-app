@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
+import {Image} from 'expo-image'
 import {
   type ChatBskyGroupDefs,
   moderateProfile,
@@ -37,6 +38,8 @@ import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
 import {CopyTextButton} from './CopyTextButton'
 import {EditTextButton} from './EditTextButton'
+
+const infoImage = require('../../../../assets/images/chat-invite-friends.webp')
 
 enum Step {
   INFO,
@@ -161,8 +164,24 @@ export function InviteLinkDialog({
 
   let content: React.ReactNode = null
   let header: string | null = null
+  let image: React.ReactNode = null
   switch (step) {
     case Step.INFO: {
+      image = (
+        <Image
+          source={infoImage}
+          style={[
+            web(a.rounded_md),
+            native(a.rounded_xl),
+            a.mb_lg,
+            a.w_full,
+            {aspectRatio: 706 / 418},
+            web({marginTop: 4}),
+            native({marginTop: -8}),
+          ]}
+          accessibilityIgnoresInvertColors
+        />
+      )
       header = l`Invite link`
       content = (
         <>
@@ -508,6 +527,7 @@ export function InviteLinkDialog({
         header={
           <View>
             <View style={[IS_WEB ? [a.px_2xl, a.pt_xl] : {paddingTop: 10}]}>
+              {image}
               <Text style={[a.font_bold, a.text_2xl, a.mb_sm]}>{header}</Text>
             </View>
             <Dialog.Close />
