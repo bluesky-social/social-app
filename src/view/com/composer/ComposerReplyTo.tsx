@@ -266,12 +266,13 @@ function ComposerReplyToImages({
                       a.inset_0,
                       a.align_center,
                       a.justify_center,
-                      {backgroundColor: utils.alpha(t.palette.black, 0.5)},
+                      {backgroundColor: utils.alpha(t.palette.black, 0.6)},
                     ]}>
                     <Text
                       style={[
-                        a.text_2xs,
+                        a.text_xs,
                         a.text_center,
+                        t.atoms.shadow_sm,
                         {color: t.palette.white},
                       ]}>
                       <Trans comment="Number of images beyond the first 3">
