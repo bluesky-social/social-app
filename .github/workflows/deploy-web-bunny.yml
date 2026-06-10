@@ -39,6 +39,11 @@ jobs:
       # uses --frozen-lockfile.
       - name: Build web
         run: bash ./pages_build.sh
+        env:
+          EXPO_PUBLIC_ENABLE_GEOLOCATION: 'false'
+          EXPO_PUBLIC_ENABLE_LIVE_EVENTS: 'false'
+          EXPO_PUBLIC_ENABLE_APP_CONFIG: 'false'
+          EXPO_PUBLIC_PLAUSIBLE_DOMAIN: mu.social
       - name: Upload to Bunny + purge cache
         run: bash ./bunny_upload.sh
         env:

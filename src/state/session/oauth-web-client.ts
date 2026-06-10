@@ -49,7 +49,7 @@ import {createOAuthRemoteKey} from './oauthRemoteKey'
 export interface WebOAuthClient {
   signIn(input: string, options?: AuthorizeOptions): Promise<void>
   init(): Promise<{session: OAuthSession; state?: string | null} | undefined>
-  restore(sub: string, refresh?: boolean | 'auto'): Promise<OAuthSession>
+  restore(sub: string, refresh?: boolean): Promise<OAuthSession>
 }
 
 function isLoopback(): boolean {
