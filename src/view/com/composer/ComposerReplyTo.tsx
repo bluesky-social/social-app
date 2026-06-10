@@ -10,12 +10,13 @@ import {
 } from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {type ComposerOptsPostRef} from '#/state/shell/composer'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, useTheme, utils, web} from '#/alf'
 import {QuoteEmbed} from '#/components/Post/Embed'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
@@ -59,18 +60,28 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
       })
     : null
 
-  const images = useMemo(() => {
+  const {images, totalNumber} = useMemo(() => {
     if (AppBskyEmbedImages.isView(embed)) {
-      return embed.images
+      return {images: embed.images, totalNumber: embed.images.length}
     } else if (AppBskyEmbedGallery.isView(embed)) {
-      return galleryItemsToImages(embed.items)
+      return {
+        images: galleryItemsToImages(embed.items),
+        totalNumber: embed.items.length,
+      }
     } else if (AppBskyEmbedRecordWithMedia.isView(embed)) {
       if (AppBskyEmbedImages.isView(embed.media)) {
-        return embed.media.images
+        return {
+          images: embed.media.images,
+          totalNumber: embed.media.images.length,
+        }
       } else if (AppBskyEmbedGallery.isView(embed.media)) {
-        return galleryItemsToImages(embed.media.items)
+        return {
+          images: galleryItemsToImages(embed.media.items),
+          totalNumber: embed.media.items.length,
+        }
       }
     }
+    return {images: [], totalNumber: 0}
   }, [embed])
 
   return (
@@ -122,7 +133,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
             </Text>
           </View>
           {images && !replyTo.moderation?.ui('contentMedia').blur && (
-            <ComposerReplyToImages images={images} showFull={showFull} />
+            <ComposerReplyToImages images={images} totalNumber={totalNumber} />
           )}
         </View>
         {showFull && parsedQuoteEmbed && parsedQuoteEmbed.type === 'post' && (
@@ -151,10 +162,13 @@ function galleryItemsToImages(
 
 function ComposerReplyToImages({
   images,
+  totalNumber,
 }: {
   images: AppBskyEmbedImages.ViewImage[]
-  showFull: boolean
+  totalNumber: number
 }) {
+  const t = useTheme()
+
   return (
     <View
       style={[
@@ -238,12 +252,35 @@ function ComposerReplyToImages({
                 accessibilityIgnoresInvertColors
                 useAppleWebpCodec
               />
-              <Image
-                source={{uri: images[3].thumb}}
-                style={[a.flex_1]}
-                accessibilityIgnoresInvertColors
-                useAppleWebpCodec
-              />
+              <View style={[a.relative, a.flex_1]}>
+                <Image
+                  source={{uri: images[3].thumb}}
+                  style={[a.flex_1]}
+                  accessibilityIgnoresInvertColors
+                  useAppleWebpCodec
+                />
+                {totalNumber > 4 && (
+                  <View
+                    style={[
+                      a.absolute,
+                      a.inset_0,
+                      a.align_center,
+                      a.justify_center,
+                      {backgroundColor: utils.alpha(t.palette.black, 0.5)},
+                    ]}>
+                    <Text
+                      style={[
+                        a.text_2xs,
+                        a.text_center,
+                        {color: t.palette.white},
+                      ]}>
+                      <Trans comment="Number of images beyond the first 3">
+                        +{totalNumber - 3}
+                      </Trans>
+                    </Text>
+                  </View>
+                )}
+              </View>
             </View>
           </View>
         ))}
