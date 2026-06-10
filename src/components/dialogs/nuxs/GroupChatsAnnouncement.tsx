@@ -160,7 +160,7 @@ export function GroupChatsAnnouncement() {
         </View>
         <View style={[a.px_xl, a.pt_2xl, a.gap_2xl]}>
           <View style={[a.align_center, a.gap_sm]}>
-            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+            <View style={[a.flex_row, a.align_center, a.gap_xs, {left: -6}]}>
               <SparkleIcon fill={t.palette.primary_500} size="sm" />
               <Text
                 style={[
