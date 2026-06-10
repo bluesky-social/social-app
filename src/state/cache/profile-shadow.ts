@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {type AppBskyActorDefs, type AppBskyNotificationDefs} from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
 import {EventEmitter} from 'eventemitter3'
@@ -54,22 +54,18 @@ const shadows: WeakMap<
 const emitter = new EventEmitter()
 
 type ShadowUpdateEventPayload = {did: string; shadow: Partial<ProfileShadow>}
-export function useOnUpdateProfileShadow(
-  onUpdate: (payload: ShadowUpdateEventPayload) => void,
-) {
-  const onUpdateRef = useRef(onUpdate)
-  // eslint-disable-next-line react-hooks/refs
-  onUpdateRef.current = onUpdate
 
-  useEffect(() => {
-    function listener(payload: ShadowUpdateEventPayload) {
-      onUpdateRef.current(payload)
-    }
-    emitter.addListener('shadow-update', listener)
-    return () => {
-      emitter.removeListener('shadow-update', listener)
-    }
-  }, [])
+/**
+ * Subscribe to all profile shadow updates, regardless of did. Useful for
+ * non-React consumers like the Convo agent. Returns an unlisten function.
+ */
+export function listenProfileShadowUpdate(
+  listener: (payload: ShadowUpdateEventPayload) => void,
+): () => void {
+  emitter.addListener('shadow-update', listener)
+  return () => {
+    emitter.removeListener('shadow-update', listener)
+  }
 }
 
 export function useProfileShadow<
@@ -230,6 +226,39 @@ export function updateProfileShadow(
       shadow: value,
     } satisfies ShadowUpdateEventPayload)
   })
+}
+
+/**
+ * Returns true if merging `shadow` into `profile` would change nothing, i.e.
+ * `mergeShadow` would be a no-op. Object-valued fields are compared by
+ * reference, so this can return false negatives - callers may do redundant
+ * merges, but never skip a real change.
+ */
+export function isProfileShadowApplied<
+  TProfileView extends bsky.profile.AnyProfileView,
+>(profile: TProfileView, shadow: Partial<ProfileShadow>): boolean {
+  if ('followingUri' in shadow) {
+    if (profile.viewer?.following !== shadow.followingUri) return false
+  }
+  if ('muted' in shadow) {
+    if (profile.viewer?.muted !== shadow.muted) return false
+  }
+  if ('blockingUri' in shadow) {
+    if (profile.viewer?.blocking !== shadow.blockingUri) return false
+  }
+  if ('activitySubscription' in shadow) {
+    if (profile.viewer?.activitySubscription !== shadow.activitySubscription) {
+      return false
+    }
+  }
+  if ('verification' in shadow) {
+    if (profile.verification !== shadow.verification) return false
+  }
+  if ('status' in shadow) {
+    const current = 'status' in profile ? profile.status : undefined
+    if (current !== shadow.status) return false
+  }
+  return true
 }
 
 export function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(

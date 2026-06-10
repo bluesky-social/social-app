@@ -20,7 +20,12 @@ import {
   isNetworkError,
 } from '#/lib/strings/errors'
 import {Logger} from '#/logger'
-import {mergeShadow, type ProfileShadow} from '#/state/cache/profile-shadow'
+import {
+  isProfileShadowApplied,
+  listenProfileShadowUpdate,
+  mergeShadow,
+  type ProfileShadow,
+} from '#/state/cache/profile-shadow'
 import {
   ACTIVE_POLL_INTERVAL,
   BACKGROUND_POLL_INTERVAL,
@@ -119,6 +124,15 @@ export class Convo {
   private deletedMessages: Set<string> = new Set()
   private relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic> =
     new Map()
+  /**
+   * Accumulated profile shadow state, keyed by did. The profiles this agent
+   * holds come from direct service fetches, so they are invisible to the
+   * shadow cache's react-query scan. We keep our own overlay and re-apply it
+   * whenever server data overwrites `relatedProfiles` or `convo.members`,
+   * otherwise refreshes would revert optimistic state (e.g. a block) until
+   * the server catches up.
+   */
+  private profileShadows: Map<string, Partial<ProfileShadow>> = new Map()
 
   private isProcessingPendingMessages = false
 
@@ -169,15 +183,28 @@ export class Convo {
   private subscribers: (() => void)[] = []
 
   subscribe(subscriber: () => void) {
-    if (this.subscribers.length === 0) this.init()
+    if (this.subscribers.length === 0) {
+      this.cleanupProfileShadowListener = listenProfileShadowUpdate(
+        ({did, shadow}) => {
+          this.mergeProfileShadow(did, shadow)
+        },
+      )
+      this.init()
+    }
 
     this.subscribers.push(subscriber)
 
     return () => {
       this.subscribers = this.subscribers.filter(s => s !== subscriber)
-      if (this.subscribers.length === 0) this.suspend()
+      if (this.subscribers.length === 0) {
+        this.cleanupProfileShadowListener?.()
+        this.cleanupProfileShadowListener = undefined
+        this.suspend()
+      }
     }
   }
+
+  private cleanupProfileShadowListener: (() => void) | undefined
 
   getSnapshot(): ConvoState {
     if (!this.snapshot) this.snapshot = this.generateSnapshot()
@@ -497,6 +524,9 @@ export class Convo {
     this.pendingMessages = new Map()
     this.deletedMessages = new Set()
     this.relatedProfiles = new Map()
+    // Shadow updates fired while suspended are missed, so the overlay may be
+    // stale - drop it and trust the from-scratch refetch.
+    this.profileShadows = new Map()
 
     this.pendingMessageFailure = null
     this.fetchMessageHistoryError = undefined
@@ -528,6 +558,7 @@ export class Convo {
         this.relatedProfiles.set(member.did, member)
       }
     }
+    this.applyProfileShadows()
   }
 
   private updateConvo(convo: Partial<ChatBskyConvoDefs.ConvoView>) {
@@ -538,6 +569,7 @@ export class Convo {
       for (const member of this.convo.members) {
         this.relatedProfiles.set(member.did, member)
       }
+      this.applyProfileShadows()
     }
   }
 
@@ -708,6 +740,7 @@ export class Convo {
         this.relatedProfiles.set(member.did, member)
       }
     } while (cursor)
+    this.applyProfileShadows()
   }
 
   private fetchMessageHistoryError: {retry: () => void} | undefined
@@ -754,6 +787,7 @@ export class Convo {
         for (const profile of relatedProfiles) {
           this.relatedProfiles.set(profile.did, profile)
         }
+        this.applyProfileShadows()
       }
 
       /*
@@ -876,6 +910,7 @@ export class Convo {
             for (const profile of ev.relatedProfiles) {
               this.relatedProfiles.set(profile.did, profile)
             }
+            this.applyProfileShadows()
           }
 
           if (
@@ -1488,10 +1523,84 @@ export class Convo {
   }
 
   mergeProfileShadow(did: string, shadow: Partial<ProfileShadow>) {
-    const related = this.relatedProfiles.get(did)
-    if (related) {
-      this.relatedProfiles.set(did, mergeShadow(related, shadow))
+    // Accumulate even if the did isn't held yet - the profile may arrive
+    // later via message history or the member list, and must get the shadow.
+    this.profileShadows.set(did, {
+      ...this.profileShadows.get(did),
+      ...shadow,
+    })
+    if (this.applyProfileShadow(did, shadow)) {
       this.commit()
+    }
+  }
+
+  /**
+   * Re-applies all accumulated shadows. Must be called after any server data
+   * lands in `relatedProfiles` or `this.convo`, since raw server profiles
+   * would otherwise clobber optimistic state.
+   */
+  private applyProfileShadows() {
+    for (const [did, shadow] of this.profileShadows) {
+      this.applyProfileShadow(did, shadow)
+    }
+  }
+
+  private applyProfileShadow(
+    did: string,
+    shadow: Partial<ProfileShadow>,
+  ): boolean {
+    let changed = false
+
+    const related = this.relatedProfiles.get(did)
+    if (related && !isProfileShadowApplied(related, shadow)) {
+      this.relatedProfiles.set(did, mergeShadow(related, shadow))
+      changed = true
+    }
+
+    if (this.convo) {
+      const next = applyShadowToConvo(this.convo, did, shadow)
+      if (next) {
+        this.convo = next
+        changed = true
+      }
+    }
+
+    return changed
+  }
+}
+
+/**
+ * Returns a new convo with the shadow merged into the matching member (and
+ * `primaryMember`, if it's the same profile), or null if nothing changed.
+ */
+function applyShadowToConvo(
+  convo: ConvoWithDetails,
+  did: string,
+  shadow: Partial<ProfileShadow>,
+): ConvoWithDetails | null {
+  const i = convo.members.findIndex(m => m.did === did)
+  if (i === -1) return null
+  if (isProfileShadowApplied(convo.members[i], shadow)) return null
+
+  // The branches are identical, but narrowing the union is what lets the
+  // member arrays keep their per-kind types.
+  if (convo.kind === 'group') {
+    const members = convo.members.slice()
+    members[i] = mergeShadow(members[i], shadow)
+    return {
+      ...convo,
+      members,
+      primaryMember:
+        convo.primaryMember?.did === did ? members[i] : convo.primaryMember,
+    }
+  } else {
+    const members = convo.members.slice()
+    members[i] = mergeShadow(members[i], shadow)
+    return {
+      ...convo,
+      members,
+      primaryMember:
+        convo.primaryMember.did === did ? members[i] : convo.primaryMember,
     }
   }
 }
