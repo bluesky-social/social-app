@@ -51,7 +51,7 @@ export let MessageContextMenu = ({
   const translate = useGoogleTranslate()
 
   const isFromSelf = message.sender?.did === currentAccount?.did
-  const isGroupChatEnabled = ax.features.enabled(ax.features.GroupChatsEnable)
+  const isGroupChatEnabled = !ax.features.enabled(ax.features.GroupChatsDisable)
 
   const primaryMember = useMaybeProfileShadow(convo.convo.primaryMember)
   const reactionsAvailable = canReact({
