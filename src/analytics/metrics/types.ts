@@ -619,6 +619,10 @@ export type Events = {
     convoId: string
     method: 'post' | 'copy' | 'native'
   }
+  'groupchat:inviteLink:shared': {
+    convoId: string
+    method: 'post' | 'dm'
+  }
 
   // Group chat owner actions
   'groupchat:owner:editName': {
