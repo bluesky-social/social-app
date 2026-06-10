@@ -14,6 +14,7 @@ export enum Features {
   DmsNewMessageComposerEnable = 'dms:new_message_composer:enable',
   ComposerLanguageDetectionEnable = 'composer:language_detection:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
+  NotificationsExpandedProfileCardEnable = 'notifications:expanded_profile_card:enable',
 
   AATest = 'aa-test',
 }
