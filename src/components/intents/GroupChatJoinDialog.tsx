@@ -1,11 +1,13 @@
 import {View} from 'react-native'
 import {
+  ChatBskyGroupDefs,
   ChatBskyGroupRequestJoin,
   ChatBskyGroupWithdrawJoinRequest,
   moderateProfile,
 } from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -14,7 +16,10 @@ import {isNetworkError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useJoinLinkPreviewsQuery} from '#/state/queries/join-links'
+import {
+  invalidateJoinLinkPreviewsForCode,
+  useJoinLinkPreviewsQuery,
+} from '#/state/queries/join-links'
 import {useRequestJoinGroupChat} from '#/state/queries/messages/request-join-group-chat'
 import {useWithdrawJoinGroupChatRequest} from '#/state/queries/messages/withdraw-join-group-chat'
 import {useSession} from '#/state/session'
@@ -77,6 +82,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
   const {hasSession} = useSession()
   const moderationOpts = useModerationOpts()
   const navigation = useNavigation<NavigationProp>()
+  const queryClient = useQueryClient()
 
   const {data, error, isLoading} = useJoinLinkPreviewsQuery({
     codes: code ? [code] : undefined,
@@ -87,6 +93,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
   const {mutate: joinGroupChat, isPending: isJoinPending} =
     useRequestJoinGroupChat({
       onSuccess: data => {
+        if (code) void invalidateJoinLinkPreviewsForCode(queryClient, code)
         switch (data.status) {
           case 'pending':
             control.close(() => {
@@ -190,8 +197,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
     return (
       <>
         <ChainLinkBrokenIcon fill={t.palette.primary_500} size="3xl" />
-        <Text
-          style={[a.text_center, a.text_lg, a.font_semi_bold, t.atoms.text]}>
+        <Text style={[a.text_center, a.text_lg, a.font_semi_bold]}>
           <Trans>This invite link is invalid</Trans>
         </Text>
         <Button
@@ -211,7 +217,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
 
   const joinLinkPreview = data.joinLinkPreviews[0]
 
-  if (!joinLinkPreview) {
+  if (!ChatBskyGroupDefs.isJoinLinkPreviewView(joinLinkPreview)) {
     return (
       <>
         <View style={[a.py_lg, a.align_center]}>
@@ -253,12 +259,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
     ? l`Request to join`
     : l`Join`
   let buttonColor: ButtonColor = 'primary'
-  if (joinLinkPreview.enabledStatus !== 'enabled') {
-    canJoin = false
-    ButtonIconImage = WarningIcon
-    buttonText = l`Chat invite link no longer available`
-    buttonColor = 'secondary'
-  } else if (joinLinkPreview.memberCount >= joinLinkPreview.memberLimit) {
+  if (joinLinkPreview.memberCount >= joinLinkPreview.memberLimit) {
     canJoin = false
     ButtonIconImage = HandIcon
     buttonText = l`This chat is full`
@@ -276,7 +277,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
 
   return (
     <>
-      <View style={[a.py_lg, a.align_center]}>
+      <View style={[a.w_full, a.py_lg, a.align_center]}>
         <AvatarBubbles
           profiles={[
             joinLinkPreview.owner,
@@ -285,7 +286,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
           self
           size={135}
         />
-        <View style={[a.gap_sm, a.align_center, a.mt_lg]}>
+        <View style={[a.w_full, a.gap_sm, a.align_center, a.mt_lg]}>
           <View>
             <Text
               style={[
@@ -297,51 +298,54 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
               ]}>
               <Trans>Group chat</Trans>
             </Text>
-            <Text
-              style={[a.text_center, a.text_3xl, a.font_bold, t.atoms.text]}>
+            <Text style={[a.text_center, a.text_3xl, a.font_bold]}>
               {joinLinkPreview.name}
             </Text>
           </View>
           <View style={[a.flex_row, a.align_center]}>
-            <Text
-              style={[a.text_center, a.text_xs, a.leading_snug, t.atoms.text]}>
+            <Text style={[a.text_center, a.text_xs, a.leading_snug]}>
               <Trans comment="The number of active group chat members out of the total number allowed.">
                 {joinLinkPreview.memberCount}/{joinLinkPreview.memberLimit}{' '}
                 members
               </Trans>
             </Text>
             <View style={[a.flex_row, a.ml_md]}>
-              <PersonGroupIcon
-                size="xs"
-                style={[a.mr_xs, t.atoms.text, {marginTop: -2}]}
-              />
+              <PersonGroupIcon size="xs" style={[a.mr_xs, t.atoms.text]} />
             </View>
-            <Text
-              style={[a.text_center, a.text_xs, a.leading_snug, t.atoms.text]}>
+            <Text style={[a.text_center, a.text_xs, a.leading_snug]}>
               {joinLinkPreview.joinRule === 'followedByOwner'
                 ? l`Followers can join`
                 : l`Anyone can join`}
             </Text>
           </View>
-          <View>
-            <View
-              style={[a.flex_row, a.gap_xs, a.align_center, a.justify_center]}>
-              <Text
-                emoji
-                style={[
-                  a.mb_2xs,
-                  a.text_center,
-                  a.text_sm,
-                  a.leading_snug,
-                  a.font_semi_bold,
-                  t.atoms.text,
-                ]}>
+          <View
+            style={[
+              a.px_2xl,
+              a.w_full,
+              a.flex_row,
+              a.gap_xs,
+              a.align_center,
+              a.justify_center,
+            ]}>
+            <Text
+              emoji
+              style={[
+                a.flex_shrink,
+                a.text_center,
+                a.text_sm,
+                a.leading_snug,
+                a.font_semi_bold,
+                web({minWidth: 0}),
+              ]}
+              numberOfLines={1}>
+              <Trans comment="The group chat creator, in the format 'By {displayName}'.">
                 By{' '}
                 <InlineLinkText
                   label={`@${joinLinkPreview.owner.handle}`}
                   to={makeProfileLink(joinLinkPreview.owner)}
                   style={[
-                    a.mb_2xs,
+                    a.flex_shrink,
+                    a.leading_snug,
                     a.text_sm,
                     a.font_semi_bold,
                     t.atoms.text,
@@ -369,20 +373,23 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
                     ),
                   )}
                 </InlineLinkText>
-              </Text>
-              <ProfileBadges
-                profile={data.joinLinkPreviews[0].owner}
-                size="sm"
-                style={{marginTop: -3}}
-              />
-            </View>
+              </Trans>
+            </Text>
+            <ProfileBadges
+              profile={joinLinkPreview.owner}
+              size="sm"
+              style={{marginTop: -3}}
+            />
             <Text
               style={[
+                a.flex_shrink,
                 a.text_center,
-                a.text_xs,
                 a.leading_snug,
+                a.text_sm,
                 t.atoms.text_contrast_high,
-              ]}>
+                web({minWidth: 0}),
+              ]}
+              numberOfLines={1}>
               {sanitizeHandle(joinLinkPreview.owner.handle, '@')}
             </Text>
           </View>

@@ -810,7 +810,7 @@ const LINKING = {
       return buildStateObject('Flat', 'Home', params)
     }
 
-    // Chat invite URLs (`/c/:code`) are handled by `useIntentHandler`, which
+    // Chat invite URLs (`/chat/:code`) are handled by `useIntentHandler`, which
     // opens the GroupChatJoinDialog (or the logged-out join flow). Route the
     // path to Home so the dialog overlays Home instead of NotFound. On native,
     // react-navigation strips the `bluesky://` prefix and passes the path

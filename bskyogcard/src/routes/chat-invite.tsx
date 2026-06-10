@@ -1,6 +1,6 @@
 import assert from 'node:assert'
 
-import {type ChatBskyGroupDefs} from '@atproto/api'
+import {ChatBskyGroupDefs} from '@atproto/api'
 import resvg from '@resvg/resvg-js'
 import {type Express} from 'express'
 import satori from 'satori'
@@ -32,7 +32,7 @@ export default function (ctx: AppContext, app: Express) {
           codes: [code],
         })
         const found = result.data.joinLinkPreviews[0]
-        if (!found) {
+        if (!ChatBskyGroupDefs.isJoinLinkPreviewView(found)) {
           return res.status(404).end('not found')
         }
         preview = found

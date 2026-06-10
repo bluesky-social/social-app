@@ -15,6 +15,7 @@ import {Divider} from '#/components/Divider'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon} from '#/components/icons/Arrow'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
+import {StandardSite} from '#/components/icons/community/StandardSite'
 import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {matchStandardSitePublisher} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
@@ -535,8 +536,9 @@ function PublicationIcon({
   interacted?: boolean
   themeColors: ssTypes.ThemeColors
 }) {
+  const t = useTheme()
   if (!view.source) return null
-  return view.source?.icon ? (
+  const icon = view.source?.icon ? (
     <View>
       <UserAvatar
         noBorder
@@ -565,6 +567,29 @@ function PublicationIcon({
         {[...view.source.title][0] ?? ''}
       </Text>
       <MediaInsetBorder opaque style={[a.rounded_sm]} />
+    </View>
+  )
+  return (
+    <View style={[a.relative]}>
+      <View
+        style={[
+          a.absolute,
+          a.rounded_full,
+          a.z_10,
+          a.justify_center,
+          a.align_center,
+          t.atoms.bg,
+          {
+            width: 16,
+            height: 16,
+            top: -6,
+            left: -6,
+          },
+        ]}>
+        <StandardSite size="xs" fill={t.atoms.text_contrast_medium.color} />
+        <MediaInsetBorder />
+      </View>
+      {icon}
     </View>
   )
 }

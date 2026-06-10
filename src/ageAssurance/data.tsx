@@ -21,6 +21,7 @@ import {useAgent, useSession} from '#/state/session'
 import * as debug from '#/ageAssurance/debug'
 import {logger} from '#/ageAssurance/logger'
 import {birthdateFromFlags, getMuAgeStatus} from '#/ageAssurance/muAgeService'
+import {type AgeAssuranceMetadata} from '#/ageAssurance/types'
 import {IS_DEV} from '#/env'
 import {device} from '#/storage'
 
@@ -472,9 +473,9 @@ export function useOtherRequiredDataQuery() {
 }
 
 /**
- * Helper to prefetch all age assurance data.
+ * Helper to prefetch all age assurance data from the server.
  */
-export function prefetchAgeAssuranceData({agent}: {agent: AtpAgent}) {
+export function prefetchAgeAssuranceServerData({agent}: {agent: AtpAgent}) {
   return Promise.allSettled([
     // config fetch initiated at the top of the App.platform.tsx files, awaited here
     configPrefetchPromise,
@@ -483,8 +484,8 @@ export function prefetchAgeAssuranceData({agent}: {agent: AtpAgent}) {
   ])
 }
 
-export function clearAgeAssuranceDataForDid({did}: {did: string}) {
-  logger.debug(`clearAgeAssuranceDataForDid: ${did}`)
+export function clearAgeAssuranceServerDataForDid({did}: {did: string}) {
+  logger.debug(`clearAgeAssuranceServerDataForDid: ${did}`)
   qc.removeQueries({queryKey: createServerStateQueryKey({did}), exact: true})
   qc.removeQueries({
     queryKey: createOtherRequiredDataQueryKey({did}),
@@ -492,8 +493,8 @@ export function clearAgeAssuranceDataForDid({did}: {did: string}) {
   })
 }
 
-export function clearAgeAssuranceData() {
-  logger.debug(`clearAgeAssuranceData`)
+export function clearAgeAssuranceServerDataForAll() {
+  logger.debug(`clearAgeAssuranceServerDataForAll`)
   qc.clear()
 }
 
@@ -501,30 +502,30 @@ export function clearAgeAssuranceData() {
  * Context
  */
 
-export type AgeAssuranceData = {
+export type AgeAssuranceServerData = {
+  /**
+   * The raw config from the appview.
+   */
   config: AppBskyAgeassuranceDefs.Config | undefined
+  /**
+   * The raw state from the appview. Must be further processed before being useful.
+   */
   state: AppBskyAgeassuranceDefs.State | undefined
-  data:
-    | {
-        accountCreatedAt: AppBskyAgeassuranceDefs.StateMetadata['accountCreatedAt']
-        declaredAge: number | undefined
-        birthdate: string | undefined
-      }
-    | undefined
+  metadata: AgeAssuranceMetadata | undefined
 }
-export const AgeAssuranceDataContext = createContext<AgeAssuranceData>({
+const AgeAssuranceServerDataContext = createContext<AgeAssuranceServerData>({
   config: undefined,
   state: undefined,
-  data: {
+  metadata: {
     accountCreatedAt: undefined,
     declaredAge: undefined,
     birthdate: undefined,
   },
 })
-export function useAgeAssuranceDataContext() {
-  return useContext(AgeAssuranceDataContext)
+export function useAgeAssuranceServerDataContext() {
+  return useContext(AgeAssuranceServerDataContext)
 }
-export function AgeAssuranceDataProvider({
+export function AgeAssuranceServerDataProvider({
   children,
 }: {
   children: React.ReactNode
@@ -537,7 +538,8 @@ export function AgeAssuranceDataProvider({
     () => ({
       config,
       state,
-      data: {
+      metadata: {
+        // yes, it's weird, but accountCreatedAt comes back on the `getState` endpoint
         accountCreatedAt: metadata?.accountCreatedAt,
         declaredAge: data?.birthdate
           ? getAge(new Date(data.birthdate))
@@ -548,8 +550,8 @@ export function AgeAssuranceDataProvider({
     [config, state, data, metadata],
   )
   return (
-    <AgeAssuranceDataContext.Provider value={ctx}>
+    <AgeAssuranceServerDataContext.Provider value={ctx}>
       {children}
-    </AgeAssuranceDataContext.Provider>
+    </AgeAssuranceServerDataContext.Provider>
   )
 }

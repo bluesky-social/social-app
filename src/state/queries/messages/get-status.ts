@@ -12,6 +12,8 @@ export function useChatActorStatusQuery() {
   const agent = useAgent()
 
   return useQuery({
+    gcTime: STALE.INFINITY,
+    staleTime: STALE.SECONDS.FIFTEEN,
     queryKey: chatActorStatusQueryKey(),
     queryFn: async () => {
       const {data} = await agent.chat.bsky.actor.getStatus(
@@ -21,7 +23,5 @@ export function useChatActorStatusQuery() {
 
       return data
     },
-    staleTime: STALE.INFINITY,
-    gcTime: STALE.INFINITY,
   })
 }

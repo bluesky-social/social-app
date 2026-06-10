@@ -415,6 +415,8 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     moderation={moderation}
                     viewContext={PostEmbedViewContext.ThreadHighlighted}
                     onOpen={onOpenEmbed}
+                    post={post}
+                    feedDescriptor={feedFeedback.feedDescriptor}
                   />
                 </View>
               )}
