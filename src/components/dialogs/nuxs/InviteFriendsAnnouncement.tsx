@@ -1,4 +1,4 @@
-import {useCallback, useEffect} from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -56,12 +56,9 @@ function Announcement({
 
   Dialog.useAutoOpen(control)
 
-  const firePresented = useCallOnce(() => {
+  useCallOnce(() => {
     ax.metric('invite:nux:presented', {})
-  })
-  useEffect(() => {
-    firePresented()
-  }, [firePresented])
+  })()
 
   const onClose = useCallback(() => {
     nuxDialogs.dismissActiveNux()
