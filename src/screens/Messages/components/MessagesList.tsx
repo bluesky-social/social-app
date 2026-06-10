@@ -308,7 +308,13 @@ export function MessagesList({
         } else {
           flatListRef.current?.scrollToOffset({
             offset: height,
-            animated: hasScrolled && height > prevContentHeight.current,
+            // only animate when new items were appended - pure layout growth
+            // (e.g. the composer spacer getting its height on web) should
+            // snap instantly rather than visibly scrolling
+            animated:
+              hasScrolled &&
+              height > prevContentHeight.current &&
+              renderItems.length > prevItemCount.current,
           })
         }
       }
