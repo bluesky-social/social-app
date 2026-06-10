@@ -212,7 +212,7 @@ function Feature({
     <View style={[a.flex_row, a.gap_md, style]}>
       <Icon size="md" style={[t.atoms.text]} />
       <View style={[a.flex_1, a.gap_2xs]}>
-        <Text style={[a.text_md, a.font_bold]}>{titleText}</Text>
+        <Text style={[a.text_md, a.font_semi_bold]}>{titleText}</Text>
         <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
           {descriptionText}
         </Text>
