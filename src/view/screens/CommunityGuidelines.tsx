@@ -33,8 +33,8 @@ export const CommunityGuidelinesScreen = (_props: Props) => {
               The Community Guidelines have been moved to{' '}
               <TextLink
                 style={pal.link}
-                href="https://bsky.social/about/support/community-guidelines"
-                text="bsky.social/about/support/community-guidelines"
+                href="https://hello.mu.social/guidelines"
+                text="hello.mu.social/guidelines"
               />
             </Trans>
           </Text>

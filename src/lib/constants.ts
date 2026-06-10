@@ -299,8 +299,7 @@ export const BLUESKY_NOTIF_SERVICE_HEADERS = {
 }
 
 export const webLinks = {
-  tos: `https://bsky.social/about/support/tos`,
-  privacy: `https://bsky.social/about/support/privacy-policy`,
-  community: `https://bsky.social/about/support/community-guidelines`,
-  communityDeprecated: `https://bsky.social/about/support/community-guidelines-deprecated`,
+  tos: `https://hello.mu.social/terms`,
+  privacy: `https://hello.mu.social/privacy`,
+  community: `https://hello.mu.social/guidelines`,
 }

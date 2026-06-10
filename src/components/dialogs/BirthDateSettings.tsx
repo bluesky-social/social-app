@@ -206,9 +206,9 @@ function BirthdayInner({
       {isUnder13 && (
         <Admonition type="error">
           <Trans>
-            You must be at least 13 years old to use Bluesky. Read our{' '}
+            You must be at least 13 years old to use mu. Read our{' '}
             <SimpleInlineLinkText
-              to="https://bsky.social/about/support/tos"
+              to="https://hello.mu.social/terms"
               label={l`Terms of Service`}>
               Terms of Service
             </SimpleInlineLinkText>{' '}
