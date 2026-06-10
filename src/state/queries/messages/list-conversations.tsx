@@ -25,7 +25,6 @@ import {useAgeAssurance} from '#/ageAssurance'
 import {type AgeAssuranceFlags} from '#/ageAssurance/types'
 import * as bsky from '#/types/bsky'
 import {RQKEY as CONVO_KEY} from './conversation'
-import {useLeftConvos} from './leave-conversation'
 import {
   type ConvoRequestListQueryData,
   optimisticDelete as optimisticDeleteRequest,
@@ -136,7 +135,6 @@ export function ListConvosProviderInner({
   const queryClient = useQueryClient()
   const {currentConvoId} = useCurrentConvoId()
   const {currentAccount} = useSession()
-  const leftConvos = useLeftConvos()
 
   const debouncedRefetch = useMemo(() => {
     const refetchAndInvalidate = () => {
@@ -664,15 +662,12 @@ export function ListConvosProviderInner({
   ])
 
   const ctx = useMemo(() => {
-    const convos =
-      data?.pages
-        .flatMap(page => page.convos)
-        .filter(convo => !leftConvos.includes(convo.id)) ?? []
+    const convos = data?.pages.flatMap(page => page.convos) ?? []
     return {
       accepted: convos.filter(conv => conv.status === 'accepted'),
       request: convos.filter(conv => conv.status === 'request'),
     }
-  }, [data, leftConvos])
+  }, [data])
 
   return (
     <ListConvosContext.Provider value={ctx}>

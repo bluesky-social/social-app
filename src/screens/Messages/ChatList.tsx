@@ -16,7 +16,6 @@ import {listenSoftReset} from '#/state/events'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useChatActorStatusQuery} from '#/state/queries/messages/get-status'
-import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
@@ -237,14 +236,9 @@ export function ChatList({
   useRefreshOnFocus(refetch)
   useRefreshOnFocus(refetchInbox)
 
-  const leftConvos = useLeftConvos()
-
   const conversations = useMemo(() => {
     if (data?.pages) {
-      const conversations = data.pages
-        .flatMap(page => page.convos)
-        // filter out convos that are actively being left
-        .filter(convo => !leftConvos.includes(convo.id))
+      const conversations = data.pages.flatMap(page => page.convos)
 
       return conversations.map(
         convo =>
@@ -256,7 +250,7 @@ export function ChatList({
       ) satisfies ListItem[]
     }
     return []
-  }, [data, leftConvos, selectedChat])
+  }, [data, selectedChat])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
@@ -453,7 +447,6 @@ export function Header({
   const {gtMobile} = useBreakpoints()
   const aa = useAgeAssurance()
   const requireEmailVerification = useRequireEmailVerification()
-  const leftConvos = useLeftConvos()
   const {isWithinSplitView} = useIsWithinSplitView()
 
   // In split view, the left column (and this header) stays mounted while the
@@ -473,7 +466,6 @@ export function Header({
       .flatMap(page => page.convos)
       .filter(
         convo =>
-          !leftConvos.includes(convo.id) &&
           !convo.muted &&
           convo.members.every(member => member.handle !== 'missing.invalid') &&
           (ChatBskyConvoDefs.isGroupConvo(convo.kind)
