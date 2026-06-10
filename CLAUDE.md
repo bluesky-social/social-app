@@ -206,7 +206,7 @@ function MyComponent() {
 
   return (
     <View style={[a.flex_row, a.gap_md, a.p_lg, t.atoms.bg]}>
-      <Text style={[a.text_md, a.font_bold, t.atoms.text]}>Hello</Text>
+      <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_high]}>Hello</Text>
     </View>
   )
 }
@@ -414,11 +414,15 @@ import {Text, H1, H2, P} from '#/components/Typography'
 
 <H1 style={[a.text_xl, a.font_bold]}>Heading</H1>
 <P>Paragraph text with default styling.</P>
-<Text style={[a.text_sm, t.atoms.text_contrast_medium]}>Custom text</Text>
+<Text style={[a.text_md, t.atoms.text_contrast_medium]}>Custom text</Text>
 
-// For text with emoji, add the emoji prop
+// For text with emoji, add the emoji prop. User-generated text (e.g. display names)
+// will almost certainly contain emoji, so only omit it when the text is static and
+// does not contain an emoji
 <Text emoji>Hello! 👋</Text>
 ```
+
+The `Text` component's default style is `[a.text_sm, a.leading_snug, t.atoms.text]`.
 
 ### TextField
 

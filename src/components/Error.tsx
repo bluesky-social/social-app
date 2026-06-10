@@ -1,12 +1,10 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useGoBack} from '#/lib/hooks/useGoBack'
-import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 
 export function Error({
@@ -15,22 +13,20 @@ export function Error({
   onRetry,
   onGoBack,
   hideBackButton,
-  sideBorders = true,
 }: {
   title?: string
   message?: string
   onRetry?: () => unknown
   onGoBack?: () => unknown
   hideBackButton?: boolean
-  sideBorders?: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const goBack = useGoBack(onGoBack)
 
   return (
-    <CenteredView
+    <Layout.Center
       style={[
         a.h_full_vh,
         a.align_center,
@@ -38,8 +34,7 @@ export function Error({
         !gtMobile && a.justify_between,
         t.atoms.border_contrast_low,
         {paddingTop: 175, paddingBottom: 110},
-      ]}
-      sideBorders={sideBorders}>
+      ]}>
       <View style={[a.w_full, a.align_center, a.gap_lg]}>
         <Text style={[a.font_semi_bold, a.text_3xl]}>{title}</Text>
         <Text
@@ -58,7 +53,7 @@ export function Error({
           <Button
             variant="solid"
             color="primary"
-            label={_(msg`Press to retry`)}
+            label={l`Press to retry`}
             onPress={onRetry}
             size="large">
             <ButtonText>
@@ -70,7 +65,7 @@ export function Error({
           <Button
             variant="solid"
             color={onRetry ? 'secondary' : 'primary'}
-            label={_(msg`Return to previous page`)}
+            label={l`Return to previous page`}
             onPress={goBack}
             size="large">
             <ButtonText>
@@ -79,6 +74,6 @@ export function Error({
           </Button>
         )}
       </View>
-    </CenteredView>
+    </Layout.Center>
   )
 }

@@ -1,13 +1,10 @@
 import {Fragment, type ReactNode} from 'react'
 import {View} from 'react-native'
 import {AtUri} from '@atproto/api'
-import {Trans, useLingui} from '@lingui/react/macro'
+import {Trans} from '@lingui/react/macro'
 
-import {makeProfileLink} from '#/lib/routes/links'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {atoms as a, useTheme} from '#/alf'
-import {StandardSite} from '#/components/icons/community/StandardSite'
-import {InlineLinkText} from '#/components/Link'
 import {
   matchStandardSitePublisher,
   matchStandardSitePublisherByUri,
@@ -18,19 +15,15 @@ import {
   isStandardSitePublicationUri,
 } from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 
 export function StandardSiteMetaRow({
   type = 'document',
-  preview,
   view,
 }: ssTypes.CommonProps &
   ssTypes.PreviewProps & {
     type?: 'document' | 'publication'
   }) {
-  const ax = useAnalytics()
   const t = useTheme()
-  const {t: l} = useLingui()
   const highlightedPublisher = !!matchStandardSitePublisher(view)
   const didsFromRecords =
     view.associatedRefs
@@ -47,7 +40,11 @@ export function StandardSiteMetaRow({
     : undefined
   const articleDomain = toNiceDomain(view.uri)
   const articlePublisher = matchStandardSitePublisherByUri(view.uri)
-  const DomainIcon = articlePublisher?.Icon || StandardSite
+  const domainHandleMatch =
+    authorProfile?.handle &&
+    (articleDomain === authorProfile.handle ||
+      articleDomain.endsWith(`.${authorProfile.handle}`))
+  const DomainIcon = articlePublisher?.Icon
   const metaTextStyle = [
     a.text_xs,
     a.leading_tight,
@@ -56,7 +53,7 @@ export function StandardSiteMetaRow({
 
   const items: {key: string; node: ReactNode}[] = []
 
-  if (!highlightedPublisher) {
+  if (!highlightedPublisher && !domainHandleMatch) {
     items.push({
       key: 'domain',
       node: (
@@ -77,25 +74,7 @@ export function StandardSiteMetaRow({
       key: 'author',
       node: (
         <Text numberOfLines={1} style={[metaTextStyle]}>
-          <Trans>
-            by{' '}
-            <InlineLinkText
-              label={l`View @${authorProfile.handle}'s profile`}
-              to={makeProfileLink(authorProfile)}
-              style={[
-                metaTextStyle,
-                preview ? a.pointer_events_none : a.pointer_events_auto,
-              ]}
-              onPress={e => {
-                e.stopPropagation()
-                e.preventDefault()
-                ax.metric('embed:standardSite:authorHandle:press', {
-                  handle: authorProfile.handle,
-                })
-              }}>
-              @{authorProfile.handle}
-            </InlineLinkText>
-          </Trans>
+          <Trans>by @{authorProfile.handle}</Trans>
         </Text>
       ),
     })

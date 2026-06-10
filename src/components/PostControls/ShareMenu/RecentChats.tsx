@@ -152,11 +152,7 @@ function RecentChatItem({
         a.align_center,
       ]}>
       {convo.kind === 'group' ? (
-        <AvatarBubbles
-          profiles={convo.members}
-          size={WIDTH - 8}
-          moderationOpts={moderationOpts}
-        />
+        <AvatarBubbles profiles={convo.members} size={WIDTH - 8} />
       ) : (
         <UserAvatar
           avatar={primaryProfile.avatar}

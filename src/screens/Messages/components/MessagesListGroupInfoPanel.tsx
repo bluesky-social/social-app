@@ -43,13 +43,10 @@ export function MessagesListGroupInfoPanel({
     },
   })
 
-  // TODO Enable this once the feature is working end-to-end. -dsb
-  // const joinLink = groupConvo?.details.joinLink
-  const isJoinLinkEnabled = false
-  //   (isOwner && groupConvo) ||
-  //   (!isOwner && groupConvo && joinLink?.enabledStatus === 'enabled')
-
   const isOwner = convo.primaryMember?.did === currentAccount?.did
+
+  const isJoinLinkEnabled =
+    isOwner || convo.details.joinLink?.enabledStatus === 'enabled'
 
   const members = (convo.members ?? []).filter(
     profile => profile.did !== currentAccount?.did,
@@ -90,14 +87,11 @@ export function MessagesListGroupInfoPanel({
   return (
     <>
       <View style={[a.align_center, a.justify_center]}>
-        <AvatarBubbles
-          animate={true}
-          profiles={convo.members}
-          moderationOpts={moderationOpts}
-        />
+        <AvatarBubbles animate={true} profiles={convo.members} />
         {convo.details.name ? (
           <Text
-            style={[a.text_2xl, a.font_bold, a.mt_lg, a.px_lg, t.atoms.text]}>
+            style={[a.text_2xl, a.font_bold, a.mt_lg, a.px_xl, a.text_center]}
+            emoji>
             {convo.details.name}
           </Text>
         ) : null}
@@ -110,7 +104,8 @@ export function MessagesListGroupInfoPanel({
               a.text_sm,
               t.atoms.text_contrast_high,
               showButtons ? null : a.mb_4xl,
-            ]}>
+            ]}
+            emoji>
             {names}
           </Text>
         ) : null}

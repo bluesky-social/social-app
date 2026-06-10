@@ -34,12 +34,8 @@ jobs:
         run: git show "origin/$BASE_REF:pnpm-lock.yaml" > pnpm-lock.yaml
 
       - name: pnpm install
-        uses: Wandalen/wretry.action@master
-        with:
-          # Fine to skip scripts since we don't run any code
-          command: pnpm clean && pnpm install --ignore-scripts --no-frozen-lockfile
-          attempt_limit: 3
-          attempt_delay: 2000
+        # Fine to skip scripts since we don't run any code
+        run: pnpm clean && pnpm install --ignore-scripts --no-frozen-lockfile
 
       - name: Verify pnpm-lock.yaml
         run: |
