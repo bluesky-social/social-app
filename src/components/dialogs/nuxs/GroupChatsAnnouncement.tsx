@@ -1,5 +1,6 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
 import {type ThemeName} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -54,10 +55,17 @@ export function GroupChatsAnnouncement() {
   const navigation = useNavigation<NavigationProp>()
   const nuxDialogs = useNuxDialogContext()
   const control = Dialog.useDialogControl()
+  const {bottom} = useSafeAreaInsets()
 
   // Measure the footer so the scrollable content can pad itself out from
   // underneath it (the footer is absolutely positioned).
-  const [footerHeight, setFooterHeight] = useState(0)
+  const [footerHeight, setFooterHeight] = useState(
+    platform({
+      native: 124 + bottom,
+      web: 128,
+      default: 0,
+    }),
+  )
 
   Dialog.useAutoOpen(control)
 
@@ -96,7 +104,7 @@ export function GroupChatsAnnouncement() {
           <Dialog.FlatListFooter
             onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}
             border={false}>
-            <View style={[a.gap_md, native(a.px_lg)]}>
+            <View style={[a.gap_md, native(a.px_lg), web(a.pb_xs)]}>
               <Button
                 label={l`Got it`}
                 size="large"

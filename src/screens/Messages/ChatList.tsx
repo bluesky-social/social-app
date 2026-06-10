@@ -8,6 +8,7 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useAppState} from '#/lib/appState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {type MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
@@ -41,7 +42,7 @@ import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
-import {IS_NATIVE} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {ChatDisabled} from './components/ChatDisabled'
 import {ChatListItem} from './components/ChatListItem'
 import {InboxRequests} from './components/InboxRequests'
@@ -174,14 +175,31 @@ export function MessagesScreenInner({navigation, route}: Props) {
       ],
     },
   )
+  // Stable reference to the (otherwise per-render) opener so the effect below
+  // doesn't list it as a dependency - if it did, clearing the param would
+  // re-run the effect and its cleanup would cancel the pending open.
+  const openGroupChat = useNonReactiveCallback(wrappedOpenGroupChatControl)
+  // Deep link into the group-chat creation step of the new-chat dialog. The
+  // dialog control isn't attached synchronously when navigating onto this
+  // screen, so defer the open by a tick. We clear the param *after* opening
+  // (inside the timeout) so clearing doesn't cancel the pending open.
   useEffect(() => {
-    if (pushToNewGroupChat) {
-      // clear the param first so re-renders don't re-trigger the open, then
-      // open the dialog (gated by email verification) in group mode
-      navigation.setParams({pushToNewGroupChat: undefined})
-      wrappedOpenGroupChatControl()
-    }
-  }, [navigation, pushToNewGroupChat, wrappedOpenGroupChatControl])
+    if (!pushToNewGroupChat) return
+    const timeout = setTimeout(() => {
+      openGroupChat()
+      if (IS_WEB) {
+        // `navigation.setParams({pushToNewGroupChat: undefined})` serializes the
+        // literal string "undefined" into the query on web (see router build()),
+        // so strip the param with the history API instead.
+        const url = new URL(window.location.href)
+        url.searchParams.delete('pushToNewGroupChat')
+        history.replaceState(null, '', url.pathname + url.search + url.hash)
+      } else {
+        navigation.setParams({pushToNewGroupChat: undefined})
+      }
+    }, 100)
+    return () => clearTimeout(timeout)
+  }, [navigation, pushToNewGroupChat, openGroupChat])
 
   if (isWithinSplitView) {
     return (
