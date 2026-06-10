@@ -3,6 +3,7 @@ import {Pressable, View} from 'react-native'
 import {
   ChatBskyActorDefs,
   ChatBskyConvoDefs,
+  ChatBskyConvoUnlockConvo,
   type ModerationOpts,
 } from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -417,6 +418,12 @@ function SettingsHeader({
       if (lock) {
         logger.error('Failed to lock group chat', {message: e})
         Toast.show(l`Failed to lock group chat`, {type: 'error'})
+      } else if (
+        e instanceof ChatBskyConvoUnlockConvo.ConvoLockedByModerationError
+      ) {
+        Toast.show(l`This chat is locked by a moderation action`, {
+          type: 'error',
+        })
       } else {
         logger.error('Failed to unlock group chat', {message: e})
         Toast.show(l`Failed to unlock group chat`, {type: 'error'})
@@ -447,7 +454,11 @@ function SettingsHeader({
 
   const createdAt = new Date(convo.details.createdAt)
 
-  const canLockGroupChat = isOwner && lockStatus !== 'locked-permanently'
+  // A lock forced by a moderation action cannot be undone by the owner.
+  const canLockGroupChat =
+    isOwner &&
+    lockStatus !== 'locked-permanently' &&
+    !convo.details.lockStatusModerationOverride
 
   const groupNameComponent = (
     <Text

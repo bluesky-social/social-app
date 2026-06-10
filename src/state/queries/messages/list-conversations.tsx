@@ -532,12 +532,22 @@ export function ListConvosProviderInner({
               }
               return {...convo, rev: log.rev}
             })
+            // The log event doesn't say whether the lock is forced by a
+            // moderation override, so refetch to pick up the flag.
+            void queryClient.invalidateQueries({
+              queryKey: CONVO_KEY(log.convoId),
+            })
           } else if (ChatBskyConvoDefs.isLogUnlockConvo(log)) {
             mutateConvoView(log.convoId, convo => {
               if (ChatBskyConvoDefs.isGroupConvo(convo.kind)) {
                 return {
                   ...convo,
-                  kind: {...convo.kind, lockStatus: 'unlocked'},
+                  kind: {
+                    ...convo.kind,
+                    lockStatus: 'unlocked',
+                    // An unlocked convo cannot be moderation-locked.
+                    lockStatusModerationOverride: false,
+                  },
                   rev: log.rev,
                 }
               }

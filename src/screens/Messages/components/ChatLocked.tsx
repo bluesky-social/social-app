@@ -1,4 +1,5 @@
 import {Pressable} from 'react-native'
+import {ChatBskyConvoUnlockConvo} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
@@ -32,12 +33,20 @@ export function ChatLocked({
 
   const primaryMember = convo?.primaryMember
   const isOwner = !!primaryMember && primaryMember.did === currentAccount?.did
+  // The lock is forced by a moderation action, so the owner cannot undo it.
+  const isModerationLock = convo.details.lockStatusModerationOverride
 
   const {mutate: lockConvo} = useLockConvo(convo.view.id, {
     onSuccess: () => {
       Toast.show(l({message: 'Group chat unlocked', context: 'toast'}))
     },
     onError: e => {
+      if (e instanceof ChatBskyConvoUnlockConvo.ConvoLockedByModerationError) {
+        Toast.show(l`This chat is locked by a moderation action`, {
+          type: 'error',
+        })
+        return
+      }
       logger.error('Failed to unlock group chat', {message: e})
       Toast.show(l`Failed to unlock group chat`, {type: 'error'})
     },
@@ -59,10 +68,14 @@ export function ChatLocked({
   return (
     <ChatFooter
       heading={l`This chat is locked`}
-      subheading={l`No one can send messages`}
+      subheading={
+        isModerationLock
+          ? l`This group is locked by a moderation action on the owner`
+          : l`No one can send messages`
+      }
       icon={LockIcon}>
       {isOwner ? (
-        <>
+        isModerationLock ? null : (
           <Pressable
             accessibilityRole="button"
             hitSlop={HITSLOP_10}
@@ -79,7 +92,7 @@ export function ChatLocked({
               <Trans>Unlock chat</Trans>
             </Text>
           </Pressable>
-        </>
+        )
       ) : (
         <>
           <Pressable
