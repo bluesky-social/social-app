@@ -1,6 +1,7 @@
 import {View} from 'react-native'
 import {ImageBackground} from 'expo-image'
 import {ChatBskyGroupDefs, moderateProfile} from '@atproto/api'
+import {type ThemeName} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
@@ -19,9 +20,22 @@ import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 
 const desktopDarkBg = require('../../../assets/images/chat-desktop-bg-dark.webp')
+const desktopDimBg = require('../../../assets/images/chat-desktop-bg-dim.webp')
 const desktopLightBg = require('../../../assets/images/chat-desktop-bg-light.webp')
 const mobileDarkBg = require('../../../assets/images/chat-mobile-bg-dark.webp')
+const mobileDimBg = require('../../../assets/images/chat-mobile-bg-dim.webp')
 const mobileLightBg = require('../../../assets/images/chat-mobile-bg-light.webp')
+
+function getBackgroundImage(themeName: ThemeName, gtMobile: boolean) {
+  switch (themeName) {
+    case 'dark':
+      return gtMobile ? desktopDarkBg : mobileDarkBg
+    case 'dim':
+      return gtMobile ? desktopDimBg : mobileDimBg
+    default:
+      return gtMobile ? desktopLightBg : mobileLightBg
+  }
+}
 
 type Props = {
   setScreenState: (state: LoggedOutScreenState) => void
@@ -43,14 +57,7 @@ export function JoinRequest({setScreenState}: Props) {
     hasSession: false,
   })
 
-  const isDarkMode = t.name !== 'light'
-  const background = gtMobile
-    ? isDarkMode
-      ? desktopDarkBg
-      : desktopLightBg
-    : isDarkMode
-      ? mobileDarkBg
-      : mobileLightBg
+  const background = getBackgroundImage(t.name, gtMobile)
 
   const joinLinkPreview = data?.joinLinkPreviews[0]
 
