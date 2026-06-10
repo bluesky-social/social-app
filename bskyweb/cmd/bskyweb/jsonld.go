@@ -493,14 +493,8 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 		thumb = images[0]
 	}
 
-	postURL := bskyPostURLFromATURI(pv.Author.Handle, pv.Uri)
+	postURL := bskyPostURLFromATURIWithDIDFallback(pv.Author.Handle, pv.Uri)
 	postText := postRecordText(pv)
-	// videoEmbedURL prefers the handle-form URL but falls back to DID-form
-	// for handle.invalid authors so VideoObject.embedUrl is never empty.
-	videoEmbedURL := postURL
-	if videoEmbedURL == "" {
-		videoEmbedURL = bskyPostURLFromATURIWithDIDFallback(pv.Author.Handle, pv.Uri)
-	}
 
 	node := discussionForumPosting{
 		Type:            "DiscussionForumPosting",
@@ -510,7 +504,7 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 		Text:            postText,
 		Image:           images,
 		ThumbnailURL:    thumb,
-		Video:           buildVideoObject(pv, videoEmbedURL, postText, embedHidden),
+		Video:           buildVideoObject(pv, postURL, postText, embedHidden),
 		DatePublished:   pv.IndexedAt,
 		InteractionStat: buildPostStats(pv),
 	}
@@ -573,12 +567,8 @@ func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) c
 	if len(images) > 0 {
 		thumb = images[0]
 	}
-	postURL := bskyPostURLFromATURI(pv.Author.Handle, pv.Uri)
+	postURL := bskyPostURLFromATURIWithDIDFallback(pv.Author.Handle, pv.Uri)
 	postText := postRecordText(pv)
-	videoEmbedURL := postURL
-	if videoEmbedURL == "" {
-		videoEmbedURL = bskyPostURLFromATURIWithDIDFallback(pv.Author.Handle, pv.Uri)
-	}
 	return comment{
 		Type:          "Comment",
 		URL:           postURL,
@@ -587,7 +577,7 @@ func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) c
 		Text:          postText,
 		Image:         images,
 		ThumbnailURL:  thumb,
-		Video:         buildVideoObject(pv, videoEmbedURL, postText, embedHidden),
+		Video:         buildVideoObject(pv, postURL, postText, embedHidden),
 		DatePublished: pv.IndexedAt,
 	}
 }
