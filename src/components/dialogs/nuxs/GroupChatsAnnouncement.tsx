@@ -98,13 +98,25 @@ export function GroupChatsAnnouncement() {
         showsVerticalScrollIndicator={false}
         label={l`Introducing group chats`}
         // Fill the full-height sheet so the absolute footer pins to the bottom.
-        style={[native(a.h_full), web([{maxWidth: 440}, a.overflow_hidden])]}
-        contentContainerStyle={[a.p_0, {paddingBottom: footerHeight}]}
+        style={[
+          native(a.h_full),
+          web([{maxWidth: 440}, a.overflow_hidden, {borderRadius: 32}]),
+        ]}
+        contentContainerStyle={[
+          native(a.p_0),
+          web(a.p_md),
+          {paddingBottom: footerHeight},
+        ]}
         footer={
           <Dialog.FlatListFooter
             onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}
             border={false}>
-            <View style={[a.gap_md, native(a.px_lg), web(a.pb_xs)]}>
+            <View
+              style={[
+                a.gap_md,
+                native(a.px_lg),
+                web([a.px_lg, a.pb_2xl, a.pt_xl]),
+              ]}>
               <Button
                 label={l`Got it`}
                 size="large"
@@ -199,7 +211,6 @@ export function GroupChatsAnnouncement() {
             />
           </View>
         </View>
-        <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
   )
