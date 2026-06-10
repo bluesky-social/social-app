@@ -30,6 +30,7 @@ import {
   AppBskyRichtextFacet,
   ChatBskyConvoDefs,
   type ChatBskyEmbedJoinLink,
+  ChatBskyGroupDefs,
   RichText,
 } from '@atproto/api'
 import {useScrollEdgeEffectRef} from '@bsky.app/expo-scroll-edge-effect'
@@ -476,6 +477,15 @@ export function MessagesList({
         ax.metric('groupchat:message:send', {
           convoId: convoState.convo.view.id,
           isOwner: convoState.convo.primaryMember?.did === currentAccount?.did,
+        })
+      }
+      if (
+        embedView?.$type === 'chat.bsky.embed.joinLink#view' &&
+        ChatBskyGroupDefs.isJoinLinkPreviewView(embedView.joinLinkPreview)
+      ) {
+        ax.metric('groupchat:inviteLink:shared', {
+          convoId: embedView.joinLinkPreview.convoId,
+          method: 'dm',
         })
       }
     },
