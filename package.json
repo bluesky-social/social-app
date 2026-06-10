@@ -8,8 +8,8 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "11.5.2",
-      "onFail": "warn"
+      "version": "11.5.3",
+      "onFail": "download"
     },
     "runtime": {
       "name": "node",
