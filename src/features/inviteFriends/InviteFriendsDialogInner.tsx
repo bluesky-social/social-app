@@ -2,7 +2,7 @@ import {Suspense, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import type ViewShot from 'react-native-view-shot'
 import {setStringAsync} from 'expo-clipboard'
-import {createAssetAsync, requestPermissionsAsync} from 'expo-media-library'
+import {requestPermissionsAsync, saveToLibraryAsync} from 'expo-media-library'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -92,7 +92,10 @@ export function InviteFriendsDialogInner({
     }
 
     try {
-      await createAssetAsync(`file://${uri}`)
+      // saveToLibraryAsync writes without reading the asset back, so it works
+      // with the add-only permission. createAssetAsync fetches the created
+      // asset, which triggers the full library read prompt on iOS (APP-2374).
+      await saveToLibraryAsync(`file://${uri}`)
       ax.metric('invite:action:download', {})
       Toast.show(l`QR code saved to your camera roll!`)
     } catch (err) {
