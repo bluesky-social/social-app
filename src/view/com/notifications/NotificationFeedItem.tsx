@@ -1205,6 +1205,7 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
         <MediaPreview.Embed
           embed={post.embed}
           style={styles.additionalPostImages}
+          peekable
         />
       </>
     )

@@ -11,10 +11,20 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useHotkeysContext} from '#/lib/hotkeys'
 import {type ImageSource} from '#/components/Lightbox/types'
 
+export type LightboxMetricsContext = {
+  layout: 'single' | 'grid' | 'carousel'
+  postUri: string
+  postAuthorDid: string
+  feedDescriptor?: string
+}
+
 export type Lightbox = {
   id: string
   images: ImageSource[]
   index: number
+  // Set for post photo embeds so the lightbox can emit post:photoEmbed:lightboxSwipe.
+  // Left unset for non-post contexts (e.g. profile avatar/banner lightbox).
+  metricsContext?: LightboxMetricsContext
 }
 
 const LightboxContext = createContext<{

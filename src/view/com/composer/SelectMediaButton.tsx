@@ -5,14 +5,18 @@ import {type ImagePickerAsset} from 'expo-image-picker'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {VIDEO_MAX_DURATION_MS, VIDEO_MAX_SIZE} from '#/lib/constants'
+import {
+  VIDEO_MAX_DURATION_MS,
+  VIDEO_MAX_SIZE,
+  VIDEO_MAX_SIZE_MB,
+} from '#/lib/constants'
 import {
   usePhotoLibraryPermission,
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
 import {openUnifiedPicker} from '#/lib/media/picker'
 import {extractDataUriMime} from '#/lib/media/util'
-import {MAX_IMAGES} from '#/view/com/composer/state/composer'
+import {MAX_GALLERY_IMAGES} from '#/view/com/composer/state/composer'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
@@ -389,7 +393,9 @@ export function SelectMediaButton({
   const t = useTheme()
   const hasAutoOpened = useRef(false)
 
-  const selectionCountRemaining = MAX_IMAGES - selectedAssetsCount
+  // Picker uses the gallery cap; the reducer decides which embed variant
+  // to land in based on the final image count.
+  const selectionCountRemaining = MAX_GALLERY_IMAGES - selectedAssetsCount
 
   const processSelectedAssets = useCallback(
     async (rawAssets: ImagePickerAsset[]) => {
@@ -415,10 +421,10 @@ export function SelectMediaButton({
           ),
           [SelectedAssetError.MaxImages]: _(
             msg({
-              message: `You can select up to ${plural(MAX_IMAGES, {
+              message: `You can select up to ${plural(MAX_GALLERY_IMAGES, {
                 other: '# images',
               })} in total.`,
-              comment: `Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.`,
+              comment: `Error message for maximum number of images that can be selected to add to a post.`,
             }),
           ),
           [SelectedAssetError.MaxVideos]: _(
@@ -431,7 +437,7 @@ export function SelectMediaButton({
             msg`You can only select one GIF at a time.`,
           ),
           [SelectedAssetError.FileTooBig]: _(
-            msg`One or more of your selected files are too large. Maximum size is 100 MB.`,
+            msg`One or more of your selected files are too large. Maximum size is ${VIDEO_MAX_SIZE_MB} MB.`,
           ),
         }[error]
       })
@@ -503,10 +509,11 @@ export function SelectMediaButton({
       )}
       accessibilityHint={_(
         msg({
-          message: `Opens device gallery to select up to ${plural(MAX_IMAGES, {
-            other: '# images',
-          })}, or a single video or GIF.`,
-          comment: `Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.`,
+          message: `Opens device gallery to select up to ${plural(
+            MAX_GALLERY_IMAGES,
+            {other: '# images'},
+          )}, or a single video or GIF.`,
+          comment: `Accessibility hint for button in composer to add images, a video, or a GIF to a post.`,
         }),
       )}
       style={a.p_sm}

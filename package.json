@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.123.0",
+  "version": "1.124.0",
   "private": true,
   "engines": {
     "node": ">=24.15.0"
@@ -8,7 +8,7 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "11.1.3",
+      "version": "11.5.2",
       "onFail": "warn"
     },
     "runtime": {
@@ -59,7 +59,7 @@
     "test-watch": "NODE_ENV=test jest --watchAll",
     "test-ci": "NODE_ENV=test jest --ci --forceExit --reporters=default --reporters=jest-junit",
     "test-coverage": "NODE_ENV=test jest --coverage",
-    "lint": "eslint --cache --quiet src",
+    "lint": "eslint --cache --quiet src modules",
     "lint-native": "swiftlint ./modules && ktlint ./modules",
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
     "typecheck": "tsgo --project ./tsconfig.check.json",
@@ -89,18 +89,21 @@
     "make-deploy-bundle": "bash scripts/bundleUpdate.sh",
     "generate-webpack-stats-file": "EXPO_PUBLIC_GENERATE_STATS=1 pnpm build-web",
     "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 pnpm build-web",
-    "icons:optimize": "svgo -f ./assets/icons"
+    "icons:optimize": "svgo -f ./assets/icons",
+    "prettier": "prettier --check ."
   },
   "dependencies": {
-    "@atproto/api": "0.20.6",
+    "@atproto/api": "0.20.11",
     "@atproto/syntax": "0.6.1",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.14",
+    "@bsky.app/expo-dynamic-app-icon": "^1.8.5",
     "@bsky.app/expo-guess-language": "^0.2.8",
     "@bsky.app/expo-image-crop-tool": "^0.5.1",
     "@bsky.app/expo-scroll-edge-effect": "^0.1.4",
     "@bsky.app/expo-translate-text": "^0.2.9",
+    "@bsky.app/peek-menu": "^0.2.4",
     "@bsky.app/react-native-mmkv": "2.12.5",
     "@bsky.app/sift": "^0.3.8",
     "@bsky.app/tapper": "^0.5.7",
@@ -112,17 +115,15 @@
     "@expo/webpack-config": "^19.0.1",
     "@floating-ui/dom": "^1.6.3",
     "@floating-ui/react-dom": "^2.0.8",
-    "@formatjs/intl-displaynames": "^6.8.13",
-    "@formatjs/intl-locale": "^4.2.13",
-    "@formatjs/intl-numberformat": "^8.15.6",
-    "@formatjs/intl-pluralrules": "^5.4.6",
+    "@formatjs/intl-displaynames": "^7.3.9",
+    "@formatjs/intl-locale": "^5.3.8",
+    "@formatjs/intl-numberformat": "^9.3.10",
+    "@formatjs/intl-pluralrules": "^6.3.9",
     "@growthbook/growthbook": "^1.6.5",
     "@growthbook/growthbook-react": "^1.6.5",
     "@ipld/dag-cbor": "^9.2.7",
     "@lingui/core": "^5.9.2",
     "@lingui/react": "^5.9.2",
-    "@miblanchard/react-native-slider": "^2.6.0",
-    "@mozzius/expo-dynamic-app-icon": "^1.8.0",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-navigation/bottom-tabs": "^7.15.5",
     "@react-navigation/native": "^7.1.33",
@@ -150,7 +151,7 @@
     "babel-plugin-transform-remove-console": "^6.9.4",
     "bcp-47": "^2.1.0",
     "bcp-47-match": "^2.0.3",
-    "date-fns": "^2.30.0",
+    "date-fns": "^4.4.0",
     "email-validator": "^2.0.4",
     "emoji-mart": "^5.6.0",
     "emoji-regex": "^10.4.0",

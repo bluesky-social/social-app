@@ -43,6 +43,13 @@ func extractJSONLD(t *testing.T, html string) string {
 	return strings.TrimSpace(m[1])
 }
 
+func TestRenderBase_NoindexMeta(t *testing.T) {
+    html := renderTemplate(t, "base.html", pongo2.Context{"noindex": true, "nofollow": true})
+    if !strings.Contains(html, `<meta name="robots" content="noindex, nofollow">`) {
+        t.Errorf("expected combined noindex,nofollow meta; got:\n%s", html)
+    }
+}
+
 func TestRenderPost_EmitsJSONLD(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "hello")
 	ld, err := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", hideEmbedLabels, hideReplyLabels)
@@ -95,6 +102,40 @@ func TestRenderPost_OGImageMatchesJSONLD(t *testing.T) {
 	if imgs[0] != thumb1 || main["thumbnailUrl"] != thumb1 {
 		t.Errorf("JSON-LD image strings drifted from og:image; image[0]=%v thumbnailUrl=%v",
 			imgs[0], main["thumbnailUrl"])
+	}
+}
+
+// Gallery posts must hit the same og:image / JSON-LD image[] byte-equality
+// contract that legacy images posts do. Regression guard for the
+// app.bsky.embed.gallery extraction path.
+func TestRenderPost_OGImageMatchesJSONLD_Gallery(t *testing.T) {
+	thumb1 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g1@jpeg"
+	thumb2 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g2@jpeg"
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "gallery", withGallery(thumb1, thumb2))
+	thumbs := extractPostMedia(pv, false)
+	ld, _ := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", hideEmbedLabels, hideReplyLabels)
+	html := renderTemplate(t, "post.html", pongo2.Context{
+		"postView":     pv,
+		"requestURI":   "https://bsky.app/profile/alice.bsky.social/post/abc123",
+		"canonicalURL": "https://bsky.app/profile/alice.bsky.social/post/abc123",
+		"postJSONLD":   ld,
+		"imgThumbUrls": thumbs,
+	})
+
+	if !strings.Contains(html, `<meta property="og:image" content="`+thumb1+`">`) {
+		t.Errorf("og:image[0] not found in rendered HTML for gallery post")
+	}
+	if !strings.Contains(html, `<meta property="og:image" content="`+thumb2+`">`) {
+		t.Errorf("og:image[1] not found in rendered HTML for gallery post")
+	}
+	body := extractJSONLD(t, html)
+	var parsed map[string]any
+	_ = json.Unmarshal([]byte(body), &parsed)
+	main := parsed["mainEntity"].(map[string]any)
+	imgs := main["image"].([]any)
+	if len(imgs) != 2 || imgs[0] != thumb1 || main["thumbnailUrl"] != thumb1 {
+		t.Errorf("JSON-LD image strings drifted from og:image for gallery; image=%v thumbnailUrl=%v",
+			imgs, main["thumbnailUrl"])
 	}
 }
 
@@ -207,5 +248,52 @@ func TestRenderPost_VideoWithoutThumbnailEmitsOGVideo(t *testing.T) {
 	}
 	if !strings.Contains(html, `<meta property="og:video:type" content="application/x-mpegURL">`) {
 		t.Errorf("og:video:type should emit even without imgThumbUrls; got:\n%s", html)
+	}
+}
+
+// Auth-required posts must emit noindex,nofollow so the stub page (no body
+// text, no comments) is not indexed.
+func TestRenderPost_AuthRequiredNoindex(t *testing.T) {
+	html := renderTemplate(t, "post.html", pongo2.Context{
+		"requiresAuth":  true,
+		"profileHandle": "alice.bsky.social",
+		"requestURI":    "https://bsky.app/profile/alice.bsky.social/post/abc123",
+		"canonicalURL":  "https://bsky.app/profile/alice.bsky.social/post/abc123",
+		"noindex":       true,
+		"nofollow":      true,
+	})
+	if !strings.Contains(html, `<meta name="robots" content="noindex, nofollow">`) {
+		t.Errorf("auth-required post should emit noindex,nofollow; got:\n%s", html)
+	}
+}
+
+// Auth-required profiles must emit noindex,nofollow.
+func TestRenderProfile_AuthRequiredNoindex(t *testing.T) {
+	pv := newProfileViewDetailed()
+	html := renderTemplate(t, "profile.html", pongo2.Context{
+		"profileView":  pv,
+		"requestURI":   "https://bsky.app/profile/alice.bsky.social",
+		"requiresAuth": true,
+		"noindex":      true,
+		"nofollow":     true,
+	})
+	if !strings.Contains(html, `<meta name="robots" content="noindex, nofollow">`) {
+		t.Errorf("auth-required profile should emit noindex,nofollow; got:\n%s", html)
+	}
+}
+
+// Public posts must NOT emit a robots meta tag. Guards against an accidental
+// flip of the noindex flag for indexable pages.
+func TestRenderPost_PublicNoNoindex(t *testing.T) {
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "hello")
+	ld, _ := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", hideEmbedLabels, hideReplyLabels)
+	html := renderTemplate(t, "post.html", pongo2.Context{
+		"postView":     pv,
+		"requestURI":   "https://bsky.app/profile/alice.bsky.social/post/abc123",
+		"canonicalURL": "https://bsky.app/profile/alice.bsky.social/post/abc123",
+		"postJSONLD":   ld,
+	})
+	if strings.Contains(html, `<meta name="robots"`) {
+		t.Errorf("public post should not emit robots meta; got:\n%s", html)
 	}
 }

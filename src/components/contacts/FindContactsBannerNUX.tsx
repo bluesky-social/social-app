@@ -60,6 +60,7 @@ export function FindContactsBannerNUX() {
                 a.self_end,
                 a.mt_sm,
               ]}
+              useAppleWebpCodec
             />
             <View style={[a.flex_1, a.justify_center, a.py_xl, a.pr_5xl]}>
               <Text

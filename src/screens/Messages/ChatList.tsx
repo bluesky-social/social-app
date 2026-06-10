@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
-import {type ChatBskyActorGetStatus, type ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatBskyActorGetStatus, ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -16,7 +16,6 @@ import {listenSoftReset} from '#/state/events'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useChatActorStatusQuery} from '#/state/queries/messages/get-status'
-import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
@@ -198,6 +197,7 @@ export function ChatList({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const aa = useAgeAssurance()
   const scrollElRef: ListRef = useAnimatedRef()
   const {isWithinSplitView} = useIsWithinSplitView()
 
@@ -230,19 +230,15 @@ export function ChatList({
 
   const {refetch: refetchInbox} = useListConvosQuery({
     status: 'request',
+    kind: aa.flags.groupChatDisabled ? 'direct' : 'all',
   })
 
   useRefreshOnFocus(refetch)
   useRefreshOnFocus(refetchInbox)
 
-  const leftConvos = useLeftConvos()
-
   const conversations = useMemo(() => {
     if (data?.pages) {
-      const conversations = data.pages
-        .flatMap(page => page.convos)
-        // filter out convos that are actively being left
-        .filter(convo => !leftConvos.includes(convo.id))
+      const conversations = data.pages.flatMap(page => page.convos)
 
       return conversations.map(
         convo =>
@@ -254,7 +250,7 @@ export function ChatList({
       ) satisfies ListItem[]
     }
     return []
-  }, [data, leftConvos, selectedChat])
+  }, [data, selectedChat])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
@@ -449,13 +445,20 @@ export function Header({
 }) {
   const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
+  const aa = useAgeAssurance()
   const requireEmailVerification = useRequireEmailVerification()
-  const leftConvos = useLeftConvos()
+  const {isWithinSplitView} = useIsWithinSplitView()
+
+  // In split view, the left column (and this header) stays mounted while the
+  // right column shows the selected route. Pushing would stack duplicate routes
+  // on repeated clicks, so navigate instead to dedupe by route + params.
+  const action = isWithinSplitView ? 'navigate' : 'push'
 
   const {data: unreadInboxData, hasNextPage: hasMoreRequests} =
     useListConvosQuery({
       status: 'request',
       readState: 'unread',
+      kind: aa.flags.groupChatDisabled ? 'direct' : 'all',
     })
 
   const inboxAllConvos =
@@ -463,9 +466,11 @@ export function Header({
       .flatMap(page => page.convos)
       .filter(
         convo =>
-          !leftConvos.includes(convo.id) &&
           !convo.muted &&
-          convo.members.every(member => member.handle !== 'missing.invalid'),
+          convo.members.every(member => member.handle !== 'missing.invalid') &&
+          (ChatBskyConvoDefs.isGroupConvo(convo.kind)
+            ? !aa.flags.groupChatDisabled
+            : true),
       ) ?? []
 
   const openChatControl = useCallback(() => {
@@ -494,9 +499,11 @@ export function Header({
               count={inboxAllConvos.length}
               more={hasMoreRequests}
               variant="solid"
+              action={action}
             />
             <Link
               to="/messages/settings"
+              action={action}
               label={l`Chat settings`}
               size="small"
               color="secondary"

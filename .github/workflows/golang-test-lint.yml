@@ -20,6 +20,7 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version-file: bskyweb/go.mod
+          cache-dependency-path: bskyweb/go.sum
       - name: Dummy Static Files
         run: touch bskyweb/static/js/blah.js && touch bskyweb/static/css/blah.txt && touch bskyweb/static/media/blah.txt
       - name: Check
@@ -37,6 +38,7 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version-file: bskyweb/go.mod
+          cache-dependency-path: bskyweb/go.sum
       - name: Dummy Static Files
         run: touch bskyweb/static/js/blah.js && touch bskyweb/static/css/blah.txt && touch bskyweb/static/media/blah.txt
       - name: Lint

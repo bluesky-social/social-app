@@ -72,6 +72,60 @@ func withImages(thumbs ...string) func(*appbsky.FeedDefs_PostView) {
 	}
 }
 
+// withGallery adds an app.bsky.embed.gallery view with image items.
+func withGallery(thumbs ...string) func(*appbsky.FeedDefs_PostView) {
+	return func(pv *appbsky.FeedDefs_PostView) {
+		var items []*appbsky.EmbedGallery_View_Items_Elem
+		for _, t := range thumbs {
+			items = append(items, &appbsky.EmbedGallery_View_Items_Elem{
+				EmbedGallery_ViewImage: &appbsky.EmbedGallery_ViewImage{
+					Thumbnail: t,
+					Fullsize:  t + "_full",
+				},
+			})
+		}
+		pv.Embed = &appbsky.FeedDefs_PostView_Embed{
+			EmbedGallery_View: &appbsky.EmbedGallery_View{Items: items},
+		}
+	}
+}
+
+// withRecordWithMediaGallery adds a record-with-media embed whose media slot
+// is an app.bsky.embed.gallery view.
+func withRecordWithMediaGallery(qHandle, qDid, qRkey string, thumbs ...string) func(*appbsky.FeedDefs_PostView) {
+	return func(pv *appbsky.FeedDefs_PostView) {
+		var items []*appbsky.EmbedGallery_View_Items_Elem
+		for _, t := range thumbs {
+			items = append(items, &appbsky.EmbedGallery_View_Items_Elem{
+				EmbedGallery_ViewImage: &appbsky.EmbedGallery_ViewImage{
+					Thumbnail: t,
+					Fullsize:  t + "_full",
+				},
+			})
+		}
+		pv.Embed = &appbsky.FeedDefs_PostView_Embed{
+			EmbedRecordWithMedia_View: &appbsky.EmbedRecordWithMedia_View{
+				Record: &appbsky.EmbedRecord_View{
+					Record: &appbsky.EmbedRecord_View_Record{
+						EmbedRecord_ViewRecord: &appbsky.EmbedRecord_ViewRecord{
+							Uri: "at://" + qDid + "/app.bsky.feed.post/" + qRkey,
+							Cid: "bafy-quoted",
+							Author: &appbsky.ActorDefs_ProfileViewBasic{
+								Did:    qDid,
+								Handle: qHandle,
+							},
+							IndexedAt: "2024-01-01T00:00:00Z",
+						},
+					},
+				},
+				Media: &appbsky.EmbedRecordWithMedia_View_Media{
+					EmbedGallery_View: &appbsky.EmbedGallery_View{Items: items},
+				},
+			},
+		}
+	}
+}
+
 // withVideo adds a video embed with a thumbnail.
 func withVideo(thumb string) func(*appbsky.FeedDefs_PostView) {
 	return func(pv *appbsky.FeedDefs_PostView) {
@@ -299,6 +353,88 @@ func TestBuildPostJSONLD_WithImages(t *testing.T) {
 	}
 }
 
+func TestBuildPostJSONLD_WithGallery(t *testing.T) {
+	thumb1 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g1@jpeg"
+	thumb2 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g2@jpeg"
+	thumb3 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g3@jpeg"
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "gallery", withGallery(thumb1, thumb2, thumb3))
+	out, err := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", hideEmbedLabels, hideReplyLabels)
+	if err != nil {
+		t.Fatal(err)
+	}
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	imgs, ok := main["image"].([]any)
+	if !ok {
+		t.Fatalf("image should be array, got %T", main["image"])
+	}
+	if len(imgs) != 3 {
+		t.Errorf("expected 3 gallery images, got %d", len(imgs))
+	}
+	if imgs[0] != thumb1 || imgs[1] != thumb2 || imgs[2] != thumb3 {
+		t.Errorf("gallery image[] order wrong: %v", imgs)
+	}
+	if main["thumbnailUrl"] != thumb1 {
+		t.Errorf("thumbnailUrl should equal image[0] (Google byte-equality requirement), got %v", main["thumbnailUrl"])
+	}
+}
+
+// Gallery in the media slot of a record-with-media embed should still
+// produce og:image / JSON-LD image[]. Quote-post URL still emits
+// alongside via isBasedOn.
+func TestBuildPostJSONLD_GalleryInRecordWithMedia(t *testing.T) {
+	thumb := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g@jpeg"
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "quote+gallery",
+		withRecordWithMediaGallery("bob.example.com", "did:plc:bob", "xyz", thumb))
+	out, err := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	if err != nil {
+		t.Fatal(err)
+	}
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	imgs, ok := main["image"].([]any)
+	if !ok || len(imgs) != 1 || imgs[0] != thumb {
+		t.Errorf("expected single gallery thumb in image[], got %v", main["image"])
+	}
+	if main["thumbnailUrl"] != thumb {
+		t.Errorf("thumbnailUrl wrong: %v", main["thumbnailUrl"])
+	}
+	if main["isBasedOn"] != "https://bsky.app/profile/bob.example.com/post/xyz" {
+		t.Errorf("isBasedOn should still emit for record-with-media gallery, got %v", main["isBasedOn"])
+	}
+}
+
+// Forward-compat: nil items, unknown-variant union elements, and empty
+// Thumbnail strings must be skipped, not panic or leak as <meta
+// property="og:image" content="">. Unknown variants are dropped silently
+// so older deploys keep working when new gallery item types ship.
+func TestExtractPostMedia_GallerySkipsUnknownItems(t *testing.T) {
+	thumb := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g@jpeg"
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "gallery")
+	pv.Embed = &appbsky.FeedDefs_PostView_Embed{
+		EmbedGallery_View: &appbsky.EmbedGallery_View{
+			Items: []*appbsky.EmbedGallery_View_Items_Elem{
+				nil,
+				{}, // empty union, no variant set
+				{EmbedGallery_ViewImage: &appbsky.EmbedGallery_ViewImage{Thumbnail: ""}}, // empty Thumbnail
+				{EmbedGallery_ViewImage: &appbsky.EmbedGallery_ViewImage{Thumbnail: thumb}},
+			},
+		},
+	}
+	got := extractPostMedia(pv, false)
+	if len(got) != 1 || got[0] != thumb {
+		t.Errorf("expected single thumb, got %v", got)
+	}
+
+	// All-nil / all-unknown gallery should produce no thumbs (not [""]).
+	pv.Embed = &appbsky.FeedDefs_PostView_Embed{
+		EmbedGallery_View: &appbsky.EmbedGallery_View{
+			Items: []*appbsky.EmbedGallery_View_Items_Elem{nil, {}},
+		},
+	}
+	if got := extractPostMedia(pv, false); got != nil {
+		t.Errorf("expected nil for empty/unknown-only gallery, got %v", got)
+	}
+}
+
 func TestBuildPostJSONLD_WithVideo(t *testing.T) {
 	thumb := "https://cdn.bsky.app/img/video_thumbnail/plain/did:plc:alice/v@jpeg"
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "watch", withVideo(thumb))
@@ -358,6 +494,25 @@ func TestBuildPostJSONLD_HiddenEmbed(t *testing.T) {
 	}
 	if _, present := main["thumbnailUrl"]; present {
 		t.Errorf("hidden-embed post should not emit thumbnailUrl")
+	}
+}
+
+// Symmetric guard for the gallery extraction path. Functionally redundant
+// with the early-return at the top of extractPostMedia, but exists so the
+// hide-embed contract is asserted directly against the gallery branch -
+// catches anyone who later moves the embedHidden check inside an
+// embed-shape branch.
+func TestBuildPostJSONLD_HiddenEmbed_Gallery(t *testing.T) {
+	thumb := "https://cdn.bsky.app/img/g@jpeg"
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "nsfw",
+		withGallery(thumb), withSelfLabel("porn"))
+	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	if _, present := main["image"]; present {
+		t.Errorf("hidden-embed gallery post should not emit image")
+	}
+	if _, present := main["thumbnailUrl"]; present {
+		t.Errorf("hidden-embed gallery post should not emit thumbnailUrl")
 	}
 }
 

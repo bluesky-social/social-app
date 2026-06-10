@@ -12,6 +12,7 @@ import {
 } from '@react-navigation/native'
 
 import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
+import {useGroupChatJoinIntent} from '#/lib/hooks/useIntentHandler'
 import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {type AllNavigatorParams, type RouteParams} from '#/lib/routes/types'
@@ -19,6 +20,7 @@ import {shareUrl} from '#/lib/sharing'
 import {
   convertBskyAppUrlIfNeeded,
   createProxiedUrl,
+  getChatInviteCodeFromUrl,
   isBskyDownloadUrl,
   isExternalUrl,
   linkRequiresWarning,
@@ -130,6 +132,7 @@ export function useLink({
   const {closeModal} = useModalControls()
   const {linkWarningDialogControl} = useGlobalDialogsControlContext()
   const openLink = useOpenLink()
+  const groupChatJoinIntent = useGroupChatJoinIntent()
 
   const onPress = useCallback(
     (e: GestureResponderEvent) => {
@@ -146,6 +149,12 @@ export function useLink({
 
       if (IS_WEB) {
         e.preventDefault()
+      }
+
+      const chatInviteCode = getChatInviteCodeFromUrl(href)
+      if (chatInviteCode) {
+        groupChatJoinIntent(chatInviteCode, href)
+        return
       }
 
       if (requiresWarning) {
@@ -228,6 +237,7 @@ export function useLink({
       overridePresentation,
       shouldProxy,
       linkWarningDialogControl,
+      groupChatJoinIntent,
     ],
   )
 

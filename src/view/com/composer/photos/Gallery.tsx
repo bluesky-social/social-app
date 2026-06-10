@@ -70,11 +70,13 @@ const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
   const {isMobile} = useWebMediaQueries()
 
   const {altTextControlStyle, imageControlsStyle, imageStyle} = useMemo(() => {
+    // Cap columns at 4 so tiles stay tappable when MAX_GALLERY_IMAGES is high;
+    // n > 4 wraps to multiple rows via flexWrap on the gallery container.
+    const columns = Math.min(images.length, 4)
     const side =
       images.length === 1
         ? 250
-        : (containerInfo.width - IMAGE_GAP * (images.length - 1)) /
-          images.length
+        : (containerInfo.width - IMAGE_GAP * (columns - 1)) / columns
 
     const isOverflow = isMobile && images.length > 2
 
@@ -245,6 +247,7 @@ const GalleryItem = ({
         }}
         accessible={true}
         accessibilityIgnoresInvertColors
+        enforceEarlyResizing
         cachePolicy="none"
         autoplay={false}
         contentFit="cover"
@@ -272,6 +275,7 @@ const styles = StyleSheet.create({
   gallery: {
     flex: 1,
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: IMAGE_GAP,
     marginTop: 16,
   },

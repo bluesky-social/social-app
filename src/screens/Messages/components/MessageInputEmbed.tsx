@@ -4,6 +4,7 @@ import {
   AppBskyFeedPost,
   AppBskyRichtextFacet,
   AtUri,
+  ChatBskyGroupDefs,
   moderatePost,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -18,6 +19,8 @@ import {
 } from '#/lib/routes/types'
 import {
   convertBskyAppUrlIfNeeded,
+  getChatInviteCodeFromUrl,
+  isBskyChatInviteUrl,
   isBskyPostUrl,
   makeRecordUri,
 } from '#/lib/strings/url-helpers'
@@ -26,7 +29,9 @@ import {usePostQuery} from '#/state/queries/post'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
+import * as ChatInvite from '#/components/dms/ChatInvite'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
+import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {Loader} from '#/components/Loader'
 import * as MediaPreview from '#/components/MediaPreview'
 import {ContentHider} from '#/components/moderation/ContentHider'
@@ -35,35 +40,56 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
 
+/**
+ * The embed staged in the message composer. A message can carry at most one
+ * embed: either a quoted post or a group chat invite link.
+ */
+export type MessageEmbedState =
+  | {type: 'post'; uri: string}
+  | {type: 'invite'; code: string}
+
 export function useMessageEmbed() {
   const route =
     useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>()
   const navigation = useNavigation<NavigationProp>()
   const embedFromParams = route.params.embed
 
-  const [embedUri, setEmbedUri] = useState(embedFromParams)
+  const [embed, setEmbed] = useState<MessageEmbedState | undefined>(
+    embedFromParams ? {type: 'post', uri: embedFromParams} : undefined,
+  )
 
-  if (embedFromParams && embedUri !== embedFromParams) {
-    setEmbedUri(embedFromParams)
+  if (embedFromParams && embed?.type !== 'post') {
+    setEmbed({type: 'post', uri: embedFromParams})
   }
 
   return {
-    embedUri,
+    embed,
     setEmbed: useCallback(
       (embedUrl: string | undefined) => {
         if (!embedUrl) {
+          // Only the post embed is reflected in the route param (used by the
+          // share-to-DM intent flow); invites are local-only.
           navigation.setParams({embed: ''})
-          setEmbedUri(undefined)
+          setEmbed(undefined)
           return
         }
 
         if (embedFromParams) return
 
-        const url = convertBskyAppUrlIfNeeded(embedUrl)
-        const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
-        const uri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
+        if (isBskyChatInviteUrl(embedUrl)) {
+          const code = getChatInviteCodeFromUrl(embedUrl)
+          if (code) {
+            setEmbed({type: 'invite', code})
+          }
+          return
+        }
 
-        setEmbedUri(uri)
+        if (isBskyPostUrl(embedUrl)) {
+          const url = convertBskyAppUrlIfNeeded(embedUrl)
+          const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
+          const uri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
+          setEmbed({type: 'post', uri})
+        }
       },
       [embedFromParams, navigation],
     ),
@@ -81,7 +107,10 @@ export function useExtractEmbedFromFacets(
 
   for (const facet of rt.facets ?? []) {
     for (const feature of facet.features) {
-      if (AppBskyRichtextFacet.isLink(feature) && isBskyPostUrl(feature.uri)) {
+      if (
+        AppBskyRichtextFacet.isLink(feature) &&
+        (isBskyPostUrl(feature.uri) || isBskyChatInviteUrl(feature.uri))
+      ) {
         uriFromFacet = feature.uri
         break
       }
@@ -96,16 +125,40 @@ export function useExtractEmbedFromFacets(
 }
 
 export function MessageInputEmbed({
-  embedUri,
+  embed,
   setEmbed,
 }: {
-  embedUri: string | undefined
+  embed: MessageEmbedState | undefined
   setEmbed: (embedUrl: string | undefined) => void
+}) {
+  const onRemove = useCallback(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    setEmbed(undefined)
+  }, [setEmbed])
+
+  if (!embed) {
+    return null
+  }
+
+  switch (embed.type) {
+    case 'post':
+      return <MessageInputPostEmbed uri={embed.uri} onRemove={onRemove} />
+    case 'invite':
+      return <MessageInputInviteEmbed code={embed.code} onRemove={onRemove} />
+  }
+}
+
+function MessageInputPostEmbed({
+  uri,
+  onRemove,
+}: {
+  uri: string
+  onRemove: () => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
 
-  const {data: post, status} = usePostQuery(embedUri)
+  const {data: post, status} = usePostQuery(uri)
 
   const moderationOpts = useModerationOpts()
   const moderation = useMemo(
@@ -133,15 +186,6 @@ export function MessageInputEmbed({
 
     return {rt: undefined, record: undefined}
   }, [post])
-
-  if (!embedUri) {
-    return null
-  }
-
-  const onRemove = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setEmbed(undefined)
-  }
 
   switch (status) {
     case 'pending': {
@@ -218,6 +262,79 @@ export function MessageInputEmbed({
       )
     }
   }
+}
+
+function MessageInputInviteEmbed({
+  code,
+  onRemove,
+}: {
+  code: string
+  onRemove: () => void
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  return (
+    <ChatInvite.Root code={code} hasFixedHeight={false}>
+      <View
+        style={[
+          a.flex_1,
+          t.atoms.border_contrast_high,
+          a.rounded_md,
+          a.border,
+          a.p_sm,
+          a.mt_sm,
+          a.mx_sm,
+        ]}>
+        <MessageInputInviteEmbedBody />
+        <Button
+          label={l`Remove embed`}
+          onPress={onRemove}
+          style={[
+            a.absolute,
+            {top: 10, right: 8},
+            a.px_2xs,
+            {transform: [{translateY: -2}]},
+          ]}
+          hitSlop={HITSLOP_20}>
+          <XIcon size="xs" style={t.atoms.text_contrast_high} />
+        </Button>
+      </View>
+    </ChatInvite.Root>
+  )
+}
+
+function MessageInputInviteEmbedBody() {
+  const t = useTheme()
+  const {loading, preview} = ChatInvite.useChatInvite()
+
+  if (loading) {
+    return (
+      <View style={[{minHeight: 64}, a.justify_center, a.align_center]}>
+        <Loader />
+      </View>
+    )
+  }
+
+  if (!ChatBskyGroupDefs.isJoinLinkPreviewView(preview)) {
+    return (
+      <View
+        style={[
+          {minHeight: 64},
+          a.flex_row,
+          a.gap_xs,
+          a.justify_center,
+          a.align_center,
+        ]}>
+        <WarningIcon size="md" fill={t.atoms.text_contrast_medium.color} />
+        <Text style={[a.text_sm, a.font_medium, t.atoms.text_contrast_medium]}>
+          <Trans>Chat invite link no longer available</Trans>
+        </Text>
+      </View>
+    )
+  }
+
+  return <ChatInvite.Card size="small" />
 }
 
 function SimpleContainer({
