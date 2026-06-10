@@ -35,7 +35,14 @@ const ALLOWED_ORIGIN = /ALLOWED_ORIGIN\s*=\s*"([^"]+)"/.exec(toml)?.[1]
 // The public key the Worker's private counterpart must match (shared kid).
 const publicJwks = JSON.parse(
   readFileSync(
-    join(here, '..', 'eurosky-social-app', 'src', 'config', 'oauth.public-jwks.json'),
+    join(
+      here,
+      '..',
+      'eurosky-social-app',
+      'src',
+      'config',
+      'oauth.public-jwks.json',
+    ),
     'utf8',
   ),
 )
@@ -185,7 +192,12 @@ async function main() {
   // HIGH-2: injected header params + extra claims must be STRIPPED by the
   // reconstructing minter (and a bogus caller kid ignored, not echoed).
   const inj = await call({
-    header: {...validHeader(), kid: 'attacker-kid', injected_hdr: 'x', crit: ['x']},
+    header: {
+      ...validHeader(),
+      kid: 'attacker-kid',
+      injected_hdr: 'x',
+      crit: ['x'],
+    },
     payload: validPayload({injected_claim: 'y', scope: 'transition:generic'}),
   })
   if (inj.status === 200 && inj.json?.jws) {
@@ -217,9 +229,18 @@ async function main() {
     ['wrong sub -> 400', {payload: validPayload({sub: 'https://evil'})}],
     ['lifetime > 300s -> 400', {payload: validPayload({exp: now() + 3600})}],
     ['non-https aud -> 400', {payload: validPayload({aud: 'http://x'})}],
-    ['aud with path -> 400', {payload: validPayload({aud: 'https://bsky.social/x'})}],
-    ['aud with query -> 400', {payload: validPayload({aud: 'https://bsky.social/?a=1'})}],
-    ['aud with userinfo -> 400', {payload: validPayload({aud: 'https://u@bsky.social'})}],
+    [
+      'aud with path -> 400',
+      {payload: validPayload({aud: 'https://bsky.social/x'})},
+    ],
+    [
+      'aud with query -> 400',
+      {payload: validPayload({aud: 'https://bsky.social/?a=1'})},
+    ],
+    [
+      'aud with userinfo -> 400',
+      {payload: validPayload({aud: 'https://u@bsky.social'})},
+    ],
     ['missing jti -> 400', {payload: validPayload({jti: undefined})}],
     ['alg != ES256 -> 400', {header: {...validHeader(), alg: 'HS256'}}],
   ]
@@ -240,7 +261,9 @@ function validPayloadEnvelope() {
 }
 
 function summarize(skipped) {
-  console.log(`\n${passed} passed, ${failed} failed${skipped ? ' (signing tests skipped)' : ''}`)
+  console.log(
+    `\n${passed} passed, ${failed} failed${skipped ? ' (signing tests skipped)' : ''}`,
+  )
   process.exit(failed ? 1 : 0)
 }
 

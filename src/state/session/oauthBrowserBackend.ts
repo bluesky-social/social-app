@@ -47,7 +47,12 @@ export function createEuroskyOAuthRuntime(): RuntimeImplementation {
     createKey: algs => WebcryptoKey.generate(algs),
     getRandomValues: len => crypto.getRandomValues(new Uint8Array(len)),
     async digest(data, {name}) {
-      const buf = await crypto.subtle.digest(`SHA-${name.slice(3)}`, data)
+      // Normalize to a concrete ArrayBuffer-backed view for TS 6 BufferSource.
+      const digestInput = Uint8Array.from(data)
+      const buf = await crypto.subtle.digest(
+        `SHA-${name.slice(3)}`,
+        digestInput,
+      )
       return new Uint8Array(buf)
     },
     requestLock,
@@ -181,7 +186,7 @@ function createKeyStore<V extends {dpopKey: Key}>(
         await del(key)
         return undefined
       }
-      return {...rest, dpopKey: await decodeKey(dpopKey)} as V
+      return {...rest, dpopKey: await decodeKey(dpopKey)} as unknown as V
     },
     async set(key: string, value: V): Promise<void> {
       const {dpopKey, ...rest} = value
