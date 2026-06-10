@@ -23,6 +23,8 @@ import {
 } from '#/analytics/metadata'
 import {type Metrics, metrics} from '#/analytics/metrics'
 import * as refParams from '#/analytics/misc/refParams'
+import {plausible} from '#/analytics/plausible'
+import {PLAUSIBLE_GOALS} from '#/analytics/plausible/shared'
 import * as env from '#/env'
 import {useGeolocationServiceResponse} from '#/geolocation/service'
 import {device} from '#/storage'
@@ -88,10 +90,23 @@ const Context = createContext<AnalyticsBaseContextType>({
     if (metadata && '__meta' in metadata) {
       delete metadata.__meta
     }
-    metrics.track(event, payload, {
-      ...metadata,
-      navigation: getNavigationMetadata(),
-    })
+    /**
+     * All `metric()` calls bubble up to this root handler, so this is the
+     * single routing point. When a Plausible domain is configured we forward an
+     * allowlisted subset of goals to Plausible (pageviews are auto-captured by
+     * the tracker on web; native is disabled). Otherwise we fall back to the
+     * primary metrics pipeline. See `#/analytics/plausible`.
+     */
+    if (env.PLAUSIBLE_DOMAIN) {
+      if (PLAUSIBLE_GOALS.has(event)) {
+        plausible.track(event, payload, metadata)
+      }
+    } else {
+      metrics.track(event, payload, {
+        ...metadata,
+        navigation: getNavigationMetadata(),
+      })
+    }
   },
   metadata: {
     base: {
@@ -111,6 +126,14 @@ const Context = createContext<AnalyticsBaseContextType>({
   },
 })
 Context.displayName = 'AnalyticsContext'
+
+/**
+ * Initialize the Plausible sink. No-op when no domain is configured, and safe
+ * to call once at module load. On web this sets up the tracker (which then
+ * auto-captures pageviews); on native it is a no-op - Plausible is disabled
+ * there for now.
+ */
+plausible.init()
 
 /**
  * Ensures that deviceId is set and migrated from legacy storage. Handled on
