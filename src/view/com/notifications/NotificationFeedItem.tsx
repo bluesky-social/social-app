@@ -1067,23 +1067,24 @@ function ExpandedAuthorsList({
   }
   return (
     <Animated.View style={[a.overflow_hidden, heightStyle]}>
-      {profileCardEnabled ? (
-        <View onLayout={onInnerLayout} style={[a.pt_sm, a.pb_md]}>
-          {authors.map((author, i) => (
-            <ExpandedAuthorProfileCard
-              key={author.profile.did}
-              author={author}
-              moderationOpts={moderationOpts}
-              isLast={i === authors.length - 1}
-            />
-          ))}
-        </View>
-      ) : (
-        visible &&
-        authors.map(author => (
-          <ExpandedAuthorCard key={author.profile.did} author={author} />
-        ))
-      )}
+      {visible ? (
+        profileCardEnabled ? (
+          <View onLayout={onInnerLayout} style={[a.pt_sm, a.pb_md]}>
+            {authors.map((author, i) => (
+              <ExpandedAuthorProfileCard
+                key={author.profile.did}
+                author={author}
+                moderationOpts={moderationOpts}
+                isLast={i === authors.length - 1}
+              />
+            ))}
+          </View>
+        ) : (
+          authors.map(author => (
+            <ExpandedAuthorCard key={author.profile.did} author={author} />
+          ))
+        )
+      ) : null}
     </Animated.View>
   )
 }
