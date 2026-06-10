@@ -76,6 +76,35 @@ export function invalidateJoinLinkPreviewsForCode(
   })
 }
 
+/**
+ * Invalidate any join link preview queries that resolved to the given convo.
+ * The code isn't always known to the viewer (e.g. when they're a regular
+ * member), so we match on the convoId carried by the resolved preview instead.
+ * Use this when the viewer's membership changes (e.g. they leave or are removed)
+ * so cached previews refetch and reflect their new viewer state.
+ */
+export function invalidateJoinLinkPreviewsForConvo(
+  queryClient: QueryClient,
+  convoId: string,
+) {
+  return queryClient.invalidateQueries({
+    predicate: query => {
+      const [root] = query.queryKey
+      if (root !== joinLinkPreviewQueryKeyRoot) return false
+      const data = query.state.data as
+        | ChatBskyGroupGetJoinLinkPreviews.OutputSchema
+        | undefined
+      return (
+        data?.joinLinkPreviews.some(
+          preview =>
+            ChatBskyGroupDefs.isJoinLinkPreviewView(preview) &&
+            preview.convoId === convoId,
+        ) ?? false
+      )
+    },
+  })
+}
+
 async function fetchJoinLinkPreviews({
   agent,
   codes,

@@ -18,6 +18,7 @@ import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {invalidateJoinLinkPreviewsForConvo} from '#/state/queries/join-links'
 import {useAgent, useSession} from '#/state/session'
 import {parseConvoView} from '#/components/dms/util'
 import {useAgeAssurance} from '#/ageAssurance'
@@ -257,6 +258,11 @@ export function ListConvosProviderInner({
             debouncedRefetch()
           } else if (ChatBskyConvoDefs.isLogLeaveConvo(log)) {
             deleteConvoFromAllLists(log.convoId)
+            // The viewer is no longer in this convo (they left on another
+            // device, or were removed - removed members receive a
+            // logLeaveConvo, not a logRemoveMember). Refetch any cached join
+            // link preview so its viewer state reflects the lost membership.
+            void invalidateJoinLinkPreviewsForConvo(queryClient, log.convoId)
           } else if (ChatBskyConvoDefs.isLogDeleteMessage(log)) {
             updateConvoInAllLists(log.convoId, convo => {
               if (
