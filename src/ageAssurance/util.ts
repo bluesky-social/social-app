@@ -1,41 +1,21 @@
 import {useMemo} from 'react'
 import {
-  ageAssuranceRuleIDs as ids,
   type AppBskyAgeassuranceDefs,
-  type AtpAgent,
   getAgeAssuranceRegionConfig,
   type ModerationPrefs,
 } from '@atproto/api'
 
 import {getAge} from '#/lib/strings/time'
-import {restrictChatSettings} from '#/state/queries/messages/restrictChatSettings'
-import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
+import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/const'
+import {FALLBACK_REGION_CONFIG, MIN_ACCESS_AGE} from '#/ageAssurance/const'
+import {useAgeAssuranceServerDataContext} from '#/ageAssurance/data'
 import {
-  getDidFromAgentSession,
-  getOtherRequiredDataFromCache,
-  useAgeAssuranceDataContext,
-} from '#/ageAssurance/data'
-import {AgeAssuranceAccess} from '#/ageAssurance/types'
+  AgeAssuranceAccess,
+  type AgeAssuranceFlags,
+  type AgeAssuranceMetadata,
+  type AgeAssuranceState,
+} from '#/ageAssurance/types'
 import {type Geolocation, useGeolocation} from '#/geolocation'
-
-export const MIN_ACCESS_AGE = 13
-// Fork divergence: in regions with no explicit age-assurance config (i.e. every
-// non-regulated country - Germany and most of the world), grant Full access by
-// default instead of failing safe to None. Upstream's fallback Default is None,
-// which gates anyone without a self-declared birthdate - including OAuth/non-
-// Bluesky-signup accounts that have no way to set one. Regulated regions are
-// unaffected: they match server-provided rules and never hit this fallback.
-const FALLBACK_REGION_CONFIG: AppBskyAgeassuranceDefs.ConfigRegion = {
-  countryCode: '*',
-  regionCode: undefined,
-  minAccessAge: MIN_ACCESS_AGE,
-  rules: [
-    {
-      $type: ids.Default,
-      access: AgeAssuranceAccess.Full,
-    },
-  ],
-}
 
 /**
  * Get age assurance region config based on geolocation, with fallback to
@@ -63,7 +43,7 @@ export function getAgeAssuranceRegionConfigWithFallback(
  */
 export function useAgeAssuranceRegionConfig() {
   const geolocation = useGeolocation()
-  const {config} = useAgeAssuranceDataContext()
+  const {config} = useAgeAssuranceServerDataContext()
   return useMemo(() => {
     if (!config) return
     // use generic helper, we want to potentially return undefined
@@ -117,15 +97,37 @@ export const makeAgeRestrictedModerationPrefs = (
   labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
 })
 
-/**
- * Checks our cache of the actor's chat declaration record, and if it's not
- * already restricted, restricts it.
- */
-export function maybeRestrictChatSettings({agent}: {agent: AtpAgent}) {
-  const did = getDidFromAgentSession(agent)
-  if (!did) return
-  const data = getOtherRequiredDataFromCache({did})
-  // ...update the chat setting record if allowIncoming is not already 'none'.
-  if (data?.actorDeclaration?.allowIncoming === 'none') return
-  void restrictChatSettings({agent, did})
+export function computeAgeAssuranceFlags({
+  state,
+  regionConfig,
+  metadata,
+}: {
+  state: AgeAssuranceState
+  regionConfig: AppBskyAgeassuranceDefs.ConfigRegion
+  metadata?: AgeAssuranceMetadata
+}): AgeAssuranceFlags {
+  const isAgeRestricted = state.access !== AgeAssuranceAccess.Full
+  const chatDisabled = isAgeRestricted
+  const isDeclaredUnderAdultAge = metadata?.declaredAge
+    ? metadata.declaredAge < 18
+    : true
+  const groupChatDisabled = chatDisabled || isDeclaredUnderAdultAge
+  const isOverRegionMinAccessAge = metadata?.declaredAge
+    ? metadata.declaredAge >= regionConfig.minAccessAge
+    : false
+  const isOverAppMinAccessAge = metadata?.declaredAge
+    ? metadata.declaredAge >= MIN_ACCESS_AGE
+    : false
+  const adultContentDisabled =
+    state.access !== AgeAssuranceAccess.Full || isDeclaredUnderAdultAge
+
+  return {
+    isAgeRestricted,
+    adultContentDisabled,
+    chatDisabled,
+    groupChatDisabled,
+    isDeclaredUnderAdultAge,
+    isOverRegionMinAccessAge,
+    isOverAppMinAccessAge,
+  }
 }

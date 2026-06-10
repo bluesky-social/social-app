@@ -87,7 +87,6 @@ function JoinRequestsInner() {
           title={l`Something went wrong`}
           message={l`We couldn’t load this conversation’s join requests`}
           onRetry={() => convoState.error.retry()}
-          sideBorders={false}
         />
       </>
     )
@@ -475,14 +474,14 @@ function RejectButton({
 
   return (
     <Button
-      label={l`Ignore join request`}
+      label={l`Reject join request`}
       size="small"
       color="secondary"
       disabled={disabled}
       onPress={onPress}>
       <ButtonText>
-        <Trans comment="Ignore a request to join a chat" context="button">
-          Ignore
+        <Trans comment="Reject a request to join a chat" context="button">
+          Reject
         </Trans>
       </ButtonText>
     </Button>

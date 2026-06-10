@@ -1,9 +1,10 @@
 import {type ChatBskyGroupRequestJoin} from '@atproto/api'
-import {useMutation} from '@tanstack/react-query'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
+import {RQKEY_ROOT as REQUESTS_RQKEY_ROOT} from './list-conversation-requests'
 
 export function useRequestJoinGroupChat({
   onSuccess,
@@ -13,6 +14,7 @@ export function useRequestJoinGroupChat({
   onError?: (error: Error) => void
 } = {}) {
   const agent = useAgent()
+  const queryClient = useQueryClient()
   const {hasSession} = useSession()
 
   return useMutation({
@@ -27,6 +29,7 @@ export function useRequestJoinGroupChat({
       return res.data
     },
     onSuccess: data => {
+      void queryClient.invalidateQueries({queryKey: [REQUESTS_RQKEY_ROOT]})
       onSuccess?.(data)
     },
     onError: error => {

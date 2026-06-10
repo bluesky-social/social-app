@@ -14,7 +14,7 @@ import {useCreateJoinLink} from '#/state/queries/messages/create-join-link'
 import {useDisableJoinLink} from '#/state/queries/messages/disable-join-link'
 import {useEditJoinLink} from '#/state/queries/messages/edit-join-link'
 import {useEnableJoinLink} from '#/state/queries/messages/enable-join-link'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, native, useTheme, web} from '#/alf'
 import {
   Button,
   ButtonIcon,
@@ -212,11 +212,9 @@ export function InviteLinkDialog({
       header = linkEnabled ? l`Update invite link` : l`Generate invite link`
       content = (
         <>
-          <View>
-            <Text style={[a.text_md]}>
-              <Trans>Choose who can join this group chat and how.</Trans>
-            </Text>
-          </View>
+          <Text style={[a.text_md]}>
+            <Trans>Choose who can join this group chat and how.</Trans>
+          </Text>
           <View style={[a.mt_lg]}>
             <Toggle.Group
               label={l`Who can join this group chat and how`}
@@ -292,7 +290,7 @@ export function InviteLinkDialog({
       const linkEnabled = joinLink?.enabledStatus === 'enabled'
       const linkDisabled = joinLink?.enabledStatus === 'disabled'
       const joinLinkURI = joinLink?.code
-        ? `https://bsky.app/c/${joinLink.code}`
+        ? `https://bsky.app/chat/${joinLink.code}`
         : 'https://bsky.app/'
       const createdAt = joinLink ? new Date(joinLink.createdAt) : null
       const currentOption =
@@ -304,7 +302,7 @@ export function InviteLinkDialog({
       header = linkEnabled ? l`Invite link` : l`Invite link disabled`
       content = (
         <>
-          <View style={[a.mt_lg]}>
+          <View style={[native(a.mt_lg)]}>
             <CopyTextButton
               disabled={linkDisabled || !joinLink?.code}
               label={l`Invite link`}
@@ -332,8 +330,8 @@ export function InviteLinkDialog({
             ) : null}
           </View>
           {linkEnabled ? (
-            <View style={[a.mt_lg]}>
-              {isOwner ? (
+            isOwner ? (
+              <View style={[a.mt_lg]}>
                 <EditTextButton
                   label={l`Edit link settings`}
                   value={ownerValue}
@@ -344,10 +342,10 @@ export function InviteLinkDialog({
                     </Text>
                   </View>
                 </EditTextButton>
-              ) : (
-                <Text style={[a.text_sm]}>{memberValue}</Text>
-              )}
-            </View>
+              </View>
+            ) : (
+              <Text style={[a.mt_sm, a.mb_sm, a.text_sm]}>{memberValue}</Text>
+            )
           ) : null}
           {linkEnabled ? (
             <View style={[a.flex_row, a.justify_between, a.gap_sm, a.mt_lg]}>
@@ -503,7 +501,8 @@ export function InviteLinkDialog({
       onClose={() => {
         setStep(defaultStep)
         setWhoCanJoin(defaultWhoCanJoin)
-      }}>
+      }}
+      nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
         header={
@@ -515,7 +514,8 @@ export function InviteLinkDialog({
           </View>
         }
         label={l`Group chat invite link dialog`}
-        style={web({maxWidth: 400})}>
+        style={web({maxWidth: 400})}
+        contentContainerStyle={web(a.pt_0)}>
         {content}
       </Dialog.ScrollableInner>
     </Dialog.Outer>

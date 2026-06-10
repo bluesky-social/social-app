@@ -22,7 +22,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {BottomSheetOutlet} from '#/../modules/bottom-sheet'
 import {useAgeAssurance} from '#/ageAssurance'
-import {useAgeAssuranceDataContext} from '#/ageAssurance/data'
+import {useAgeAssuranceServerDataContext} from '#/ageAssurance/data'
 import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
 import {useAgeAssuranceRegionConfig} from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'
@@ -51,17 +51,17 @@ export function NoAccessScreen() {
   const birthdateControl = useDialogControl()
   const deactivateAccountControl = useDialogControl()
   const deleteAccountControl = useDialogControl()
-  const {data} = useAgeAssuranceDataContext()
+  const {metadata} = useAgeAssuranceServerDataContext()
   const region = useAgeAssuranceRegionConfig()
   const {logoutCurrentAccount} = useSessionApi()
 
   const aa = useAgeAssurance()
   const isAARegion = !!region
-  const hasDeclaredAge = data?.declaredAge !== undefined
+  const hasDeclaredAge = metadata?.declaredAge !== undefined
 
   useEffect(() => {
     ax.metric(`ageAssurance:noAccessScreen:shown`, {
-      accountCreatedAt: data?.accountCreatedAt || 'unknown',
+      accountCreatedAt: metadata?.accountCreatedAt || 'unknown',
       isAARegion,
       hasDeclaredAge,
       canUpdateBirthday: true,

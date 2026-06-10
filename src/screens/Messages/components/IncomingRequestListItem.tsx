@@ -11,7 +11,7 @@ import {Text} from '#/components/Typography'
 import {ChatListItem, ChatListItemPortal} from './ChatListItem'
 import {AcceptChatButton, DeleteChatButton, RejectMenu} from './RequestButtons'
 
-export function RequestListItem({
+export function IncomingRequestListItem({
   convo: convoView,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
@@ -34,7 +34,7 @@ export function RequestListItem({
   return (
     <View style={[a.relative, a.flex_1]}>
       <ChatListItem convo={convo.view} showMenu={false}>
-        {convo.primaryMember && (
+        {convo.kind === 'direct' && convo.primaryMember && (
           <View style={[a.pt_xs, a.pb_2xs]}>
             <KnownFollowers
               profile={convo.primaryMember}
@@ -72,7 +72,7 @@ export function RequestListItem({
                   <AcceptChatButton convo={convo.view} currentScreen="list" />
                 ) : null}
                 <RejectMenu
-                  convo={convo.view}
+                  convo={convo}
                   profile={convo.primaryMember}
                   showDeleteConvo
                   currentScreen="list"

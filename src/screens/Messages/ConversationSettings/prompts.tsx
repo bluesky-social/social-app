@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {Trans, useLingui} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {MAX_GROUP_NAME_GRAPHEME_LENGTH} from '#/lib/constants'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
@@ -59,8 +59,11 @@ export function EditNamePrompt({
                   {color: t.palette.negative_400},
                 ]}>
                 <Trans>
-                  Group name is too long. The maximum number of characters is{' '}
-                  {MAX_GROUP_NAME_GRAPHEME_LENGTH}.
+                  Group name is too long.{' '}
+                  <Plural
+                    value={MAX_GROUP_NAME_GRAPHEME_LENGTH}
+                    other="The maximum number of characters is #."
+                  />
                 </Trans>
               </Text>
             ) : null}
@@ -124,11 +127,13 @@ export function LeaveChatPrompt({
   )
 }
 
-export function BlockMemberPrompt({
+export function LeaveAndLockChatPrompt({
   control,
+  groupName,
   onConfirm,
 }: {
   control: Dialog.DialogOuterProps['control']
+  groupName: string
   onConfirm: () => void
 }) {
   const {t: l} = useLingui()
@@ -136,11 +141,36 @@ export function BlockMemberPrompt({
   return (
     <Prompt.Basic
       control={control}
-      title={l`Block account?`}
-      description={l`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`}
-      onConfirm={onConfirm}
-      confirmButtonCta={l`Block`}
+      title={l`Are you sure you want to leave ${groupName}?`}
+      description={l`Leaving this chat will lock it permanently and you won’t be able to rejoin.`}
+      confirmButtonCta={l`Leave group chat`}
       confirmButtonColor="negative"
+      cancelButtonCta={l`Cancel`}
+      onConfirm={onConfirm}
+    />
+  )
+}
+
+export function RemoveMemberPrompt({
+  control,
+  displayName,
+  onConfirm,
+}: {
+  control: Dialog.DialogOuterProps['control']
+  displayName: string
+  onConfirm: () => void
+}) {
+  const {t: l} = useLingui()
+
+  return (
+    <Prompt.Basic
+      control={control}
+      title={l`Remove ${displayName}?`}
+      description={l`They won’t be able to rejoin unless you invite them again.`}
+      confirmButtonCta={l`Remove`}
+      confirmButtonColor="negative"
+      cancelButtonCta={l`Cancel`}
+      onConfirm={onConfirm}
     />
   )
 }
