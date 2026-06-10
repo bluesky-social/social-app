@@ -11,6 +11,7 @@ import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
+import {useCallOnce} from '#/lib/once'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {isNetworkError} from '#/lib/strings/errors'
@@ -89,9 +90,12 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
   const queryClient = useQueryClient()
   const ax = useAnalytics()
 
+  const logViewOnce = useCallOnce()
   useEffect(() => {
-    ax.metric('groupchat:landingPage:view', {hasSession})
-  }, [ax, hasSession])
+    logViewOnce(() => {
+      ax.metric('groupchat:landingPage:view', {hasSession})
+    })
+  }, [ax, hasSession, logViewOnce])
 
   const {data, error, isLoading} = useJoinLinkPreviewsQuery({
     codes: code ? [code] : undefined,

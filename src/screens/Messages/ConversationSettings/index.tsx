@@ -12,6 +12,7 @@ import {HITSLOP_10} from '#/lib/constants'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
+import {useCallOnce} from '#/lib/once'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -361,9 +362,12 @@ function SettingsHeader({
 
   const reportSubjectDid = convo.primaryMember?.did
 
+  const logViewOnce = useCallOnce()
   useEffect(() => {
-    ax.metric('groupchat:settings:view', {convoId, isOwner})
-  }, [ax, convoId, isOwner])
+    logViewOnce(() => {
+      ax.metric('groupchat:settings:view', {convoId, isOwner})
+    })
+  }, [ax, convoId, isOwner, logViewOnce])
 
   const {mutate: editGroupName, isPending: isEditingName} =
     useEditGroupChatName(convoId, {
