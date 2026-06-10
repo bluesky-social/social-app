@@ -98,9 +98,7 @@ jobs:
 
       - name: ⏰ Get a timestamp
         id: timestamp
-        uses: nanzm/get-time-action@master
-        with:
-          format: "MM-DD-HH-mm-ss"
+        run: echo "time=$(date -u +'%m-%d-%H-%M-%S')" >> "$GITHUB_OUTPUT"
 
       - name: 🚀 Upload Production Artifact
         id: upload-artifact-production
