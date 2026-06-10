@@ -23,9 +23,13 @@ import {useAnalytics} from '#/analytics'
 export function NewChat({
   control,
   onNewChat,
+  startInGroupChat = false,
+  onClose,
 }: {
   control: Dialog.DialogControlProps
   onNewChat: (chatId: string) => void
+  startInGroupChat?: boolean
+  onClose?: () => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -169,13 +173,18 @@ export function NewChat({
       <Dialog.Outer
         control={control}
         testID="newChatDialog"
-        nativeOptions={{fullHeight: true}}>
+        nativeOptions={{fullHeight: true}}
+        onClose={onClose}>
         <Dialog.Handle />
         {isGroupChatEnabled ? (
           <InitiateChatFlow
+            // remount when the entry mode changes so the flow re-seeds its
+            // initial step (the children stay mounted across open/close)
+            key={startInGroupChat ? 'group' : 'default'}
             title={l`New chat`}
             onSelectChat={onCreateChat}
             onSelectGroupChat={onCreateGroupChat}
+            startInGroupChat={startInGroupChat}
           />
         ) : (
           <SearchablePeopleList

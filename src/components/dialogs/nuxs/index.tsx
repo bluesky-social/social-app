@@ -19,9 +19,9 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
 import {
-  DraftsAnnouncement,
-  enabled as isDraftsAnnouncementEnabled,
-} from '#/components/dialogs/nuxs/DraftsAnnouncement'
+  enabled as isGroupChatsAnnouncementEnabled,
+  GroupChatsAnnouncement,
+} from '#/components/dialogs/nuxs/GroupChatsAnnouncement'
 import {
   enabled as isInviteFriendsAnnouncementEnabled,
   InviteFriendsAnnouncement,
@@ -41,8 +41,8 @@ const queuedNuxs: {
   enabled?: (props: EnabledCheckProps) => boolean
 }[] = [
   {
-    id: Nux.DraftsAnnouncement,
-    enabled: isDraftsAnnouncementEnabled,
+    id: Nux.GroupChatsAnnouncement,
+    enabled: isGroupChatsAnnouncementEnabled,
   },
   {
     id: Nux.InviteFriendsAnnouncement,
@@ -194,7 +194,7 @@ function Inner({
   return (
     <Context.Provider value={ctx}>
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
-      {activeNux === Nux.DraftsAnnouncement && <DraftsAnnouncement />}
+      {activeNux === Nux.GroupChatsAnnouncement && <GroupChatsAnnouncement />}
       {/*
         Mounted unconditionally: it gates the announcement on `activeNux`
         internally, so it can keep the invite-friends dialog mounted across
