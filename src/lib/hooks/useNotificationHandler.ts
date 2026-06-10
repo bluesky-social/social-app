@@ -380,6 +380,18 @@ export function useNotificationsHandler() {
 
           handleNotification(payload)
           Notifications.dismissAllNotificationsAsync()
+          // Also clear the native `lastResponse` cache. Otherwise a subsequent
+          // `getLastNotificationResponse()` (e.g. on an account-switch remount,
+          // which re-runs `handlePushNotificationEntry`) would replay this
+          // payload and ping-pong the user back to the previous account/chat.
+          try {
+            Notifications.clearLastNotificationResponse()
+          } catch (error) {
+            notyLogger.error(
+              `useNotificationsHandler: error clearing notification response`,
+              {error},
+            )
+          }
         } else {
           logger.error('useNotificationsHandler: received no payload', {
             identifier: e.notification.request.identifier,
