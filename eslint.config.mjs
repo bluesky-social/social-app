@@ -40,6 +40,9 @@ export default defineConfig(
       // (Cloudflare Worker + Bunny Edge Scripting / Deno) with its own runtime,
       // types, and URL imports - not app code. It has its own tsconfig/lint.
       'oauth-worker/**',
+      // Eurosky fork: the Plausible analytics proxy is a Bunny Edge Script
+      // (Deno runtime + URL imports), not app code - same rationale as above.
+      'plausible-worker/**',
       'src/locale/locales/_build/**',
       'src/locale/locales/**/*.js',
       '*.e2e.ts',

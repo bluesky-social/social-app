@@ -44,6 +44,9 @@ jobs:
           EXPO_PUBLIC_ENABLE_LIVE_EVENTS: 'false'
           EXPO_PUBLIC_ENABLE_APP_CONFIG: 'false'
           EXPO_PUBLIC_PLAUSIBLE_DOMAIN: mu.social
+          # First-party Bunny proxy for Plausible (see plausible-worker/). Needs
+          # the scheme: the tracker posts to ${API_HOST}/api/event.
+          EXPO_PUBLIC_PLAUSIBLE_API_HOST: https://events.mu.social
       - name: Upload to Bunny + purge cache
         run: bash ./bunny_upload.sh
         env:
