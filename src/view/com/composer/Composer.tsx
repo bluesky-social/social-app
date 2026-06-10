@@ -1164,6 +1164,7 @@ export const ComposePost = ({
     loadedDraftCreatedAt,
     emptyPostsPromptControl,
     getFilteredThread,
+    linkQueries,
   ])
 
   const handleConfirmSkipEmpty = () => {

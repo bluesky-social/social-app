@@ -135,7 +135,7 @@ export function MessagesList({
   const ax = useAnalytics()
   const convoState = useConvoActive()
   const agent = useAgent()
-  const {hasSession} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const getPost = useGetPost()
   const getJoinLinkPreview = useGetJoinLinkPreview()
   const {embed: messageEmbed, setEmbed} = useMessageEmbed()
@@ -471,6 +471,13 @@ export function MessagesList({
         },
         embedView,
       )
+
+      if (convoState.convo.kind === 'group') {
+        ax.metric('groupchat:message:send', {
+          convoId: convoState.convo.view.id,
+          isOwner: convoState.convo.primaryMember?.did === currentAccount?.did,
+        })
+      }
     },
     [
       agent,
@@ -481,6 +488,8 @@ export function MessagesList({
       hasSession,
       hasScrolled,
       setHasScrolled,
+      ax,
+      currentAccount?.did,
     ],
   )
 
