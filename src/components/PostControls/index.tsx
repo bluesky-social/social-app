@@ -54,7 +54,7 @@ let PostControls = ({
   onShowLess,
   viaRepost,
   variant,
-  forceGoogleTranslate = true,
+  forceGoogleTranslate = false,
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
