@@ -87,11 +87,7 @@ export function MessagesListGroupInfoPanel({
   return (
     <>
       <View style={[a.align_center, a.justify_center]}>
-        <AvatarBubbles
-          animate={true}
-          profiles={convo.members}
-          moderationOpts={moderationOpts}
-        />
+        <AvatarBubbles animate={true} profiles={convo.members} />
         {convo.details.name ? (
           <Text
             style={[a.text_2xl, a.font_bold, a.mt_lg, a.px_xl, a.text_center]}
