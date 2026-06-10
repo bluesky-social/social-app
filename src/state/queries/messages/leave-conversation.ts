@@ -11,6 +11,7 @@ import {
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
+import {invalidateJoinLinkPreviewsForConvo} from '#/state/queries/join-links'
 import {useAgent} from '#/state/session'
 import {RQKEY_ROOT as CONVO_LIST_KEY} from './list-conversations'
 
@@ -72,6 +73,9 @@ export function useLeaveConvo(
     },
     onSuccess: data => {
       void queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
+      if (convoId) {
+        void invalidateJoinLinkPreviewsForConvo(queryClient, convoId)
+      }
       onSuccess?.(data)
     },
     onError: (error, _, context) => {
