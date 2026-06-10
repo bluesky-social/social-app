@@ -40,12 +40,14 @@ function computeAgeAssuranceState({
   config,
   state,
   metadata,
+  metadataLoading = false,
 }: {
   hasSession: boolean
   geolocation: Geolocation
   config?: AppBskyAgeassuranceDefs.Config
   state?: AppBskyAgeassuranceDefs.State
   metadata?: AgeAssuranceMetadata
+  metadataLoading?: boolean
 }) {
   /**
    * This is where we control logged-out moderation prefs. It's all
@@ -80,6 +82,21 @@ function computeAgeAssuranceState({
    * declared, `declaredAge` is set and we fall through to the region rules.
    */
   if (metadata?.declaredAge === undefined) {
+    /**
+     * mu fork: while the declared-age query is still loading we don't yet know
+     * whether the user has declared. Returning None here would flash the gate
+     * (NoAccessScreen) for users who already declared, until the query
+     * resolves a moment later. Fail open to Safe during the load window; once
+     * the query settles, either the real declaredAge arrives (and we fall
+     * through to the region rules) or it settles to "no declaration" and we
+     * gate with None below.
+     */
+    if (metadataLoading) {
+      return {
+        status: AgeAssuranceStatus.Unknown,
+        access: AgeAssuranceAccess.Safe,
+      }
+    }
     return {
       status: AgeAssuranceStatus.Unknown,
       access: AgeAssuranceAccess.None,
@@ -191,7 +208,8 @@ export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
 export function useAgeAssuranceState(): AgeAssuranceState {
   const {hasSession} = useSession()
   const geolocation = useGeolocation()
-  const {config, state, metadata} = useAgeAssuranceServerDataContext()
+  const {config, state, metadata, metadataLoading} =
+    useAgeAssuranceServerDataContext()
 
   return useMemo(
     () =>
@@ -201,8 +219,9 @@ export function useAgeAssuranceState(): AgeAssuranceState {
         geolocation,
         state,
         metadata,
+        metadataLoading,
       }),
-    [hasSession, geolocation, config, state, metadata],
+    [hasSession, geolocation, config, state, metadata, metadataLoading],
   )
 }
 
