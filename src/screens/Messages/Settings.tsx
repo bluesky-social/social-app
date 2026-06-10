@@ -56,7 +56,7 @@ export function MessagesSettingsScreenInner({}: Props) {
 
   const exportCarControl = Dialog.useDialogControl()
 
-  const isGroupChatEnabled = ax.features.enabled(ax.features.GroupChatsEnable)
+  const isGroupChatEnabled = !ax.features.enabled(ax.features.GroupChatsDisable)
   const groupInvitesLocked = aa.flags.groupChatDisabled
 
   const allowMessagesFromOptions: {name: AllowIncoming; label: string}[] = [

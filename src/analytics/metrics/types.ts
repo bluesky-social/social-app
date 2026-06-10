@@ -1208,4 +1208,43 @@ export type Events = {
     postAuthorDid: string
     feedDescriptor?: string
   }
+
+  /*
+   * Invite friends (profile QR share sheet)
+   */
+
+  // NUX announcement dialog was shown to the user
+  'invite:nux:presented': {}
+  // user pressed "Try it" on the NUX announcement
+  'invite:nux:tryItPressed': {}
+  // invite friends dialog opened, with the surface that triggered it
+  'invite:dialog:open': {
+    logContext:
+      | 'ProfileHeader'
+      | 'Drawer'
+      | 'FindContactsSettings'
+      | 'NuxAnnouncement'
+  }
+  // user copied the invite link to clipboard
+  'invite:action:copy': {}
+  // user invoked the native share sheet with the invite link
+  'invite:action:share': {}
+  // user saved the QR code image to their camera roll (success only)
+  'invite:action:download': {}
+  // user pressed the scan button to open the QR scanner
+  'invite:action:scan': {}
+  // user changed the QR card color theme
+  'invite:theme:change': {
+    themeKey: 'dawn' | 'day' | 'dusk' | 'night'
+  }
+  // QR scanner decoded a code; result indicates whether it resolved to a profile
+  'invite:scanner:scanned': {
+    result: 'profileFound' | 'invalidQr'
+  }
+  // empty-followers banner promoting invite/find friends was shown
+  'invite:followersPromo:seen': {}
+  // user pressed the empty-followers promo banner
+  'invite:followersPromo:press': {}
+  // user dismissed the empty-followers promo banner
+  'invite:followersPromo:dismiss': {}
 }
