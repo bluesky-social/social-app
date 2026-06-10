@@ -51,11 +51,18 @@ async function bearer(agent: AtpAgent, lxm: string): Promise<string> {
   return `Bearer ${data.token}`
 }
 
+/**
+ * Time budget for a single backend call. The gate fails closed, so if the
+ * service hangs we want to fail fast to the gate rather than block the app boot
+ * decision (or the declaration spinner) indefinitely.
+ */
+const REQUEST_TIMEOUT = 8000
+
 export async function getMuAgeStatus(agent: AtpAgent): Promise<MuAgeStatus> {
   const authorization = await bearer(agent, GET_STATUS)
   const res = await fetch(
     `${EUROSKY.ageAssurance.serviceUrl}/xrpc/${GET_STATUS}`,
-    {headers: {authorization}},
+    {headers: {authorization}, signal: AbortSignal.timeout(REQUEST_TIMEOUT)},
   )
   if (!res.ok) {
     throw new Error(`getMuAgeStatus: ${res.status}`)
@@ -74,6 +81,7 @@ export async function setMuAgeStatus(
       method: 'POST',
       headers: {authorization, 'content-type': 'application/json'},
       body: JSON.stringify(flags),
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT),
     },
   )
   if (!res.ok) {

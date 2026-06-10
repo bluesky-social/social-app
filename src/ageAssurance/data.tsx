@@ -449,6 +449,15 @@ export function useOtherRequiredDataQuery() {
   return useQuery(
     {
       enabled: !!did,
+      /**
+       * mu fork: the declared age comes from our own backend and changes ~never,
+       * so treat it as fresh for 7 days (5s in dev for easy testing). Avoids
+       * re-minting a service-auth token + hitting the backend on every window
+       * focus; the persisted cache still serves it instantly on cold start, and
+       * a declaration optimistically patches the cache so the gate lifts without
+       * waiting for a refetch.
+       */
+      staleTime: IS_DEV ? 5e3 : 1000 * 60 * 60 * 24 * 7,
       initialData: () => {
         if (!did) return
         return getOtherRequiredDataFromCache({did})
