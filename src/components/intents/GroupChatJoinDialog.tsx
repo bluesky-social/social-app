@@ -7,6 +7,7 @@ import {
 } from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -15,7 +16,10 @@ import {isNetworkError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useJoinLinkPreviewsQuery} from '#/state/queries/join-links'
+import {
+  invalidateJoinLinkPreviewsForCode,
+  useJoinLinkPreviewsQuery,
+} from '#/state/queries/join-links'
 import {useRequestJoinGroupChat} from '#/state/queries/messages/request-join-group-chat'
 import {useWithdrawJoinGroupChatRequest} from '#/state/queries/messages/withdraw-join-group-chat'
 import {useSession} from '#/state/session'
@@ -78,6 +82,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
   const {hasSession} = useSession()
   const moderationOpts = useModerationOpts()
   const navigation = useNavigation<NavigationProp>()
+  const queryClient = useQueryClient()
 
   const {data, error, isLoading} = useJoinLinkPreviewsQuery({
     codes: code ? [code] : undefined,
@@ -88,6 +93,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
   const {mutate: joinGroupChat, isPending: isJoinPending} =
     useRequestJoinGroupChat({
       onSuccess: data => {
+        if (code) void invalidateJoinLinkPreviewsForCode(queryClient, code)
         switch (data.status) {
           case 'pending':
             control.close(() => {
