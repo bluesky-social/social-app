@@ -49,6 +49,18 @@ export const RQKEY = (
     | undefined = undefined,
   limit?: number,
 ) => [RQKEY_ROOT, status, readState, kind, lockStatus, limit]
+
+/**
+ * For using filters that target a subset of conversations (e.g. by status)
+ */
+const RQKEY_PARTIAL = (
+  status?: 'accepted' | 'request' | 'all',
+  readState?: 'all' | 'unread',
+  kind?: 'all' | 'group' | 'direct',
+  lockStatus?: 'unlocked' | 'locked' | 'locked-permanently',
+  limit?: number,
+) => [RQKEY_ROOT, status, readState, kind, lockStatus, limit].filter(Boolean)
+
 type RQPageParam = string | undefined
 
 export function useListConvosQuery({
@@ -349,7 +361,7 @@ export function ListConvosProviderInner({
             }
             // always update the unread one
             queryClient.setQueriesData(
-              {queryKey: RQKEY('all', 'unread')},
+              {queryKey: RQKEY_PARTIAL('all', 'unread')},
               (old?: ConvoListQueryData) =>
                 old
                   ? updateFn(old)
@@ -361,11 +373,14 @@ export function ListConvosProviderInner({
             // update the other ones based on status of the incoming message
             if (updatedConvo.status === 'accepted') {
               queryClient.setQueriesData(
-                {queryKey: RQKEY('accepted')},
+                {queryKey: RQKEY_PARTIAL('accepted')},
                 updateFn,
               )
             } else if (updatedConvo.status === 'request') {
-              queryClient.setQueriesData({queryKey: RQKEY('request')}, updateFn)
+              queryClient.setQueriesData(
+                {queryKey: RQKEY_PARTIAL('request')},
+                updateFn,
+              )
               // also move-to-top in the new requests cache
               queryClient.setQueriesData<ConvoRequestListQueryData>(
                 {queryKey: [REQUESTS_RQKEY_ROOT]},
@@ -386,7 +401,7 @@ export function ListConvosProviderInner({
             }))
           } else if (ChatBskyConvoDefs.isLogAcceptConvo(log)) {
             const requests = queryClient.getQueryData<ConvoListQueryData>(
-              RQKEY('request'),
+              RQKEY_PARTIAL('request'),
             )
             if (!requests) {
               debouncedRefetch()
@@ -398,7 +413,7 @@ export function ListConvosProviderInner({
               return
             }
             queryClient.setQueryData(
-              RQKEY('request'),
+              RQKEY_PARTIAL('request'),
               (old?: ConvoListQueryData) => optimisticDelete(log.convoId, old),
             )
             // also remove from the new requests cache
@@ -407,7 +422,7 @@ export function ListConvosProviderInner({
               old => optimisticDeleteRequest(log.convoId, old),
             )
             queryClient.setQueriesData(
-              {queryKey: RQKEY('accepted')},
+              {queryKey: RQKEY_PARTIAL('accepted')},
               (old?: ConvoListQueryData) => {
                 if (!old) {
                   debouncedRefetch()
@@ -723,7 +738,14 @@ export function useUnreadMessageCount() {
         hasNew: false,
       }
     }
-  }, [accepted, request, currentAccount?.did, currentConvoId, moderationOpts])
+  }, [
+    accepted,
+    request,
+    currentAccount?.did,
+    currentConvoId,
+    moderationOpts,
+    aa.flags,
+  ])
 }
 
 function calculateCount(
