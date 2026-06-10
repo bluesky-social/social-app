@@ -96,7 +96,7 @@ export function GroupChatsAnnouncement() {
           <Dialog.FlatListFooter
             onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}
             border={false}>
-            <View style={[a.gap_md]}>
+            <View style={[a.gap_md, native(a.px_lg)]}>
               <Button
                 label={l`Got it`}
                 size="large"
