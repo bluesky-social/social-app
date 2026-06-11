@@ -4,7 +4,6 @@ import {
   AppBskyFeedPost,
   AppBskyRichtextFacet,
   AtUri,
-  ChatBskyGroupDefs,
   moderatePost,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -31,7 +30,6 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import * as ChatInvite from '#/components/dms/ChatInvite'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
-import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {Loader} from '#/components/Loader'
 import * as MediaPreview from '#/components/MediaPreview'
 import {ContentHider} from '#/components/moderation/ContentHider'
@@ -305,33 +303,14 @@ function MessageInputInviteEmbed({
 }
 
 function MessageInputInviteEmbedBody() {
-  const t = useTheme()
-  const {loading, preview} = ChatInvite.useChatInvite()
+  const {status} = ChatInvite.useChatInvite()
 
-  if (loading) {
-    return (
-      <View style={[{minHeight: 64}, a.justify_center, a.align_center]}>
-        <Loader />
-      </View>
-    )
+  if (status === 'loading') {
+    return <ChatInvite.Loading style={{minHeight: 64}} />
   }
 
-  if (!ChatBskyGroupDefs.isJoinLinkPreviewView(preview)) {
-    return (
-      <View
-        style={[
-          {minHeight: 64},
-          a.flex_row,
-          a.gap_xs,
-          a.justify_center,
-          a.align_center,
-        ]}>
-        <WarningIcon size="md" fill={t.atoms.text_contrast_medium.color} />
-        <Text style={[a.text_sm, a.font_medium, t.atoms.text_contrast_medium]}>
-          <Trans>Chat invite link no longer available</Trans>
-        </Text>
-      </View>
-    )
+  if (status !== 'available') {
+    return <ChatInvite.Unavailable style={{minHeight: 64}} />
   }
 
   return <ChatInvite.Card size="small" />

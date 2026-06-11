@@ -68,6 +68,9 @@ export function MemberMenu({
   })
   const convoId = convo.view.id
   const {mutate: removeMembers} = useRemoveFromGroupChat(convoId, {
+    onSuccess: () => {
+      ax.metric('groupchat:owner:kickMember', {convoId})
+    },
     onError: e => {
       logger.error('Failed to remove group chat member', {message: e})
       Toast.show(l`Failed to remove group chat member`, {type: 'error'})

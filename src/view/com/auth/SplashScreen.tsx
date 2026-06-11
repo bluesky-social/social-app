@@ -8,6 +8,7 @@ import {Trans} from '@lingui/react/macro'
 import {useHaptics} from '#/lib/haptics'
 import {Logo3D} from '#/view/icons/Logo3D'
 import {atoms as a, useTheme} from '#/alf'
+import {BetaTag} from '#/components/BetaTag'
 import {Button, ButtonText} from '#/components/Button'
 // @ts-ignore
 import splashImagePointer from '../../../../assets/splash/illustration-mobile.png'
@@ -46,6 +47,7 @@ export const SplashScreen = ({
         <View
           style={[a.justify_center, a.align_center, {gap: 6, paddingTop: 46}]}>
           <Logo3D width={120} />
+          <BetaTag />
         </View>
 
         <View style={[a.flex_1]} />

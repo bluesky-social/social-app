@@ -1087,7 +1087,10 @@ export class Convo {
     this.commit()
   }
 
-  updateLockStatus(lockStatus: ChatBskyConvoDefs.ConvoLockStatus) {
+  updateLockStatus(
+    lockStatus: ChatBskyConvoDefs.ConvoLockStatus,
+    lockStatusModerationOverride: boolean,
+  ) {
     if (this.convo?.kind !== 'group') {
       throw new Error('updateLockStatus can only be called on group convo')
     }
@@ -1096,6 +1099,7 @@ export class Convo {
       kind: {
         ...this.convo.details,
         lockStatus,
+        lockStatusModerationOverride,
       },
     })
 

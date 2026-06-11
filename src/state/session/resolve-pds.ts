@@ -81,3 +81,32 @@ export async function resolvePdsFromIdentifier(
   }
   return pds
 }
+
+/**
+ * Resolves an actor (handle or DID) to both its DID and its PDS endpoint.
+ *
+ * Useful for reading a record straight from the repo that owns it (a PDS only
+ * serves `com.atproto.repo.getRecord` for repos it hosts), instead of the
+ * viewer's own PDS or the appview.
+ */
+export async function resolveDidAndPds(
+  actor: string,
+): Promise<{did: string; pds: string}> {
+  const id = actor.trim().replace(/^@/, '')
+
+  let did = id
+  if (!id.startsWith('did:')) {
+    const agent = new AtpAgent({service: PUBLIC_BSKY_SERVICE})
+    const res = await agent.com.atproto.identity.resolveHandle({
+      handle: id.toLowerCase(),
+    })
+    did = res.data.did
+  }
+
+  const doc = await fetchDidDoc(did)
+  const pds = pdsFromDidDoc(doc)
+  if (!pds) {
+    throw new Error(`No atproto PDS endpoint in DID document for ${did}`)
+  }
+  return {did, pds}
+}

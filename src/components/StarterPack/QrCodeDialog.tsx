@@ -1,8 +1,7 @@
 import {Suspense, useRef, useState} from 'react'
 import {View} from 'react-native'
 import type ViewShot from 'react-native-view-shot'
-import {requestMediaLibraryPermissionsAsync} from 'expo-image-picker'
-import {createAssetAsync} from 'expo-media-library'
+import {requestPermissionsAsync, saveToLibraryAsync} from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
 import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
@@ -60,7 +59,9 @@ export function QrCodeDialog({
   const onSavePress = async () => {
     ref.current?.capture?.().then(async (uri: string) => {
       if (IS_NATIVE) {
-        const res = await requestMediaLibraryPermissionsAsync()
+        // Write-only permission - saving the QR image does not require read
+        // access to the user's photo library.
+        const res = await requestPermissionsAsync(true)
 
         if (!res.granted) {
           Toast.show(
@@ -73,7 +74,9 @@ export function QrCodeDialog({
 
         // Incase of a FS failure, don't crash the app
         try {
-          await createAssetAsync(`file://${uri}`)
+          // saveToLibraryAsync writes without reading the asset back, so it
+          // works with the add-only permission on iOS (APP-2374)
+          await saveToLibraryAsync(`file://${uri}`)
         } catch (e: unknown) {
           Toast.show(_(msg`An error occurred while saving the QR code!`), {
             type: 'error',
