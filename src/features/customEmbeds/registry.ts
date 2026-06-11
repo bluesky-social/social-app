@@ -1,6 +1,7 @@
 import {type AppBskyEmbedExternal} from '@atproto/api'
 
 import {atmoRsvpHandler} from '#/features/customEmbeds/atmoRsvp'
+import {tangledStringHandler} from '#/features/customEmbeds/tangledString'
 import {type CustomEmbedHandler} from '#/features/customEmbeds/types'
 
 /**
@@ -9,7 +10,7 @@ import {type CustomEmbedHandler} from '#/features/customEmbeds/types'
  * `match` returns true is used; otherwise upstream's default external embed
  * rendering takes over.
  */
-const handlers: CustomEmbedHandler[] = [atmoRsvpHandler]
+const handlers: CustomEmbedHandler[] = [atmoRsvpHandler, tangledStringHandler]
 
 export function matchCustomEmbed(
   view: AppBskyEmbedExternal.ViewExternal,

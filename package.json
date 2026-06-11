@@ -210,6 +210,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.shuffle": "^4.2.0",
     "lodash.throttle": "^4.1.1",
+    "lowlight": "^3.3.0",
     "multiformats": "^13.4.2",
     "nanoid": "^5.0.5",
     "normalize-url": "^8.0.0",
@@ -337,7 +338,7 @@
       "^await-lock$": "<rootDir>/node_modules/await-lock/build/AwaitLock.js"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|@discord|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|multiformats|uint8arrays|@ipld/.*|cborg|await-lock)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|@discord|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|multiformats|uint8arrays|@ipld/.*|cborg|await-lock|lowlight|devlop)"
     ],
     "modulePathIgnorePatterns": [
       "__tests__/.*/__mocks__",
