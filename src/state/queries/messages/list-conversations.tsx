@@ -361,9 +361,18 @@ export function ListConvosProviderInner({
               return
             }
 
+            // add relatedProfiles to members list, but making sure to dedupe
+            const relatedProfilesSansMembers = (
+              logRef.relatedProfiles ?? []
+            ).filter(
+              profile =>
+                !foundConvo.members.some(member => member.did === profile.did),
+            )
+
             // Update the convo
             const updatedConvo = {
               ...foundConvo,
+              members: [...foundConvo.members, ...relatedProfilesSansMembers],
               rev: logRef.rev,
               lastMessage: logRef.message,
               unreadCount:
@@ -625,15 +634,25 @@ export function ListConvosProviderInner({
               old => optimisticDeleteJoinRequest(log.convoId, old),
             )
           } else if (ChatBskyConvoDefs.isLogAddReaction(log)) {
-            updateConvoInAllLists(log.convoId, convo => ({
-              ...convo,
-              lastReaction: {
-                $type: 'chat.bsky.convo.defs#messageAndReactionView',
-                reaction: log.reaction,
-                message: log.message,
-              },
-              rev: log.rev,
-            }))
+            updateConvoInAllLists(log.convoId, convo => {
+              // add relatedProfiles to members list, but making sure to dedupe
+              const relatedProfilesSansMembers = (
+                log.relatedProfiles ?? []
+              ).filter(
+                profile =>
+                  !convo.members.some(member => member.did === profile.did),
+              )
+              return {
+                ...convo,
+                members: [...convo.members, ...relatedProfilesSansMembers],
+                lastReaction: {
+                  $type: 'chat.bsky.convo.defs#messageAndReactionView',
+                  reaction: log.reaction,
+                  message: log.message,
+                },
+                rev: log.rev,
+              }
+            })
           } else if (ChatBskyConvoDefs.isLogAddMember(log)) {
             const data = log.message.data
             if (
