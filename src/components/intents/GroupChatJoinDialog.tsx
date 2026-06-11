@@ -20,6 +20,7 @@ import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   invalidateJoinLinkPreviewsForCode,
+  setJoinLinkPreviewRequestedForCode,
   useJoinLinkPreviewsQuery,
 } from '#/state/queries/join-links'
 import {useRequestJoinGroupChat} from '#/state/queries/messages/request-join-group-chat'
@@ -104,9 +105,14 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
   const {mutate: joinGroupChat, isPending: isJoinPending} =
     useRequestJoinGroupChat({
       onSuccess: data => {
-        if (code) void invalidateJoinLinkPreviewsForCode(queryClient, code)
         switch (data.status) {
           case 'pending':
+            // Optimistically mark the link as requested so any invite cards
+            // backed by the preview cache (e.g. the DM embed) flip to
+            // "Requested" right away, rather than waiting on a server refetch
+            // that can lag behind the write.
+            if (code)
+              setJoinLinkPreviewRequestedForCode(queryClient, code, true)
             ax.metric('groupchat:inviteLink:redeem', {})
             control.close(() => {
               Toast.show(
@@ -116,6 +122,10 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
             break
           case 'joined': {
             if (data.convo && data.convo.id) {
+              // Refetch so invite cards pick up the resolved convo and switch
+              // their action to "Open chat".
+              if (code)
+                void invalidateJoinLinkPreviewsForCode(queryClient, code)
               ax.metric('groupchat:inviteLink:redeem', {})
               control.close(() => {
                 Toast.show(l`Successfully joined the group chat!`)
@@ -172,6 +182,9 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
   const {mutate: withdrawRequest, isPending: isWithdrawPending} =
     useWithdrawJoinGroupChatRequest({
       onSuccess: () => {
+        // Optimistically clear the requested state so invite cards backed by
+        // the preview cache flip back to "Request to join" right away.
+        if (code) setJoinLinkPreviewRequestedForCode(queryClient, code, false)
         control.close(() => {
           Toast.show(l`Join request rescinded.`)
         })
