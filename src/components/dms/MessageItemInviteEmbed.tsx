@@ -82,8 +82,7 @@ let MessageItemInviteEmbed = ({
             initialPreview={embed.joinLinkPreview}
             currentConvoId={convo.convo.view.id}
             hasFixedHeight={false}>
-            <ChatInvite.Card size="small" />
-            <ChatInvite.JoinButton />
+            <MessageItemInviteEmbedBody />
           </ChatInvite.Root>
         </View>
       </View>
@@ -92,3 +91,22 @@ let MessageItemInviteEmbed = ({
 }
 MessageItemInviteEmbed = memo(MessageItemInviteEmbed)
 export {MessageItemInviteEmbed}
+
+function MessageItemInviteEmbedBody() {
+  const {status} = ChatInvite.useChatInvite()
+
+  if (status === 'loading') {
+    return <ChatInvite.Loading style={a.py_lg} />
+  }
+
+  if (status !== 'available') {
+    return <ChatInvite.Unavailable style={a.py_sm} />
+  }
+
+  return (
+    <>
+      <ChatInvite.Card size="small" />
+      <ChatInvite.JoinButton />
+    </>
+  )
+}

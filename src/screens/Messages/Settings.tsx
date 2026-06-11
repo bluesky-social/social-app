@@ -56,7 +56,7 @@ export function MessagesSettingsScreenInner({}: Props) {
 
   const exportCarControl = Dialog.useDialogControl()
 
-  const isGroupChatEnabled = ax.features.enabled(ax.features.GroupChatsEnable)
+  const isGroupChatEnabled = !ax.features.enabled(ax.features.GroupChatsDisable)
   const groupInvitesLocked = aa.flags.groupChatDisabled
 
   const allowMessagesFromOptions: {name: AllowIncoming; label: string}[] = [
@@ -66,7 +66,7 @@ export function MessagesSettingsScreenInner({}: Props) {
     },
     {
       name: 'following',
-      label: l({context: 'allow messages from', message: `Users I follow`}),
+      label: l({context: 'allow messages from', message: `People I follow`}),
     },
     {
       name: 'none',
@@ -83,7 +83,7 @@ export function MessagesSettingsScreenInner({}: Props) {
       name: 'following',
       label: l({
         context: 'allow group chat invites from',
-        message: `Users I follow`,
+        message: `People I follow`,
       }),
     },
     {

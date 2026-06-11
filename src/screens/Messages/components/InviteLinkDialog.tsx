@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
+import {Image} from 'expo-image'
 import {
   type ChatBskyGroupDefs,
   moderateProfile,
@@ -34,9 +35,12 @@ import {EditBig_Stroke2_Corner2_Rounded as EditIcon} from '#/components/icons/Ed
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {CopyTextButton} from './CopyTextButton'
 import {EditTextButton} from './EditTextButton'
+
+const infoImage = require('../../../../assets/images/chat-invite-friends.webp')
 
 enum Step {
   INFO,
@@ -60,6 +64,9 @@ export function InviteLinkDialog({
 }) {
   const t = useTheme()
   const {t: l, i18n} = useLingui()
+  const ax = useAnalytics()
+
+  const convoId = convo.view.id
 
   const ownerName = createSanitizedDisplayName(
     owner,
@@ -89,9 +96,10 @@ export function InviteLinkDialog({
   const {openComposer} = useOpenComposer()
 
   const {mutate: createJoinLink, isPending: isCreating} = useCreateJoinLink(
-    convo.view.id,
+    convoId,
     {
       onSuccess: () => {
+        ax.metric('groupchat:owner:inviteLink:create', {convoId})
         setStep(Step.MANAGE)
       },
       onError: () => {
@@ -102,7 +110,7 @@ export function InviteLinkDialog({
     },
   )
   const {mutate: editJoinLink, isPending: isEditing} = useEditJoinLink(
-    convo.view.id,
+    convoId,
     {
       onSuccess: () => {
         setStep(Step.MANAGE)
@@ -115,8 +123,11 @@ export function InviteLinkDialog({
     },
   )
   const {mutate: disableJoinLink, isPending: isDisabling} = useDisableJoinLink(
-    convo.view.id,
+    convoId,
     {
+      onSuccess: () => {
+        ax.metric('groupchat:owner:inviteLink:disable', {convoId})
+      },
       onError: () => {
         Toast.show(l`Failed to disable invite link`, {
           type: 'error',
@@ -125,7 +136,7 @@ export function InviteLinkDialog({
     },
   )
   const {mutate: enableJoinLink, isPending: isEnabling} = useEnableJoinLink(
-    convo.view.id,
+    convoId,
     {
       onError: () => {
         Toast.show(l`Failed to enable invite link`, {
@@ -161,8 +172,24 @@ export function InviteLinkDialog({
 
   let content: React.ReactNode = null
   let header: string | null = null
+  let image: React.ReactNode = null
   switch (step) {
     case Step.INFO: {
+      image = (
+        <Image
+          source={infoImage}
+          style={[
+            web(a.rounded_md),
+            native(a.rounded_xl),
+            a.mb_lg,
+            a.w_full,
+            {aspectRatio: 706 / 418},
+            web({marginTop: 4}),
+            native({marginTop: -8}),
+          ]}
+          accessibilityIgnoresInvertColors
+        />
+      )
       header = l`Invite link`
       content = (
         <>
@@ -306,7 +333,13 @@ export function InviteLinkDialog({
             <CopyTextButton
               disabled={linkDisabled || !joinLink?.code}
               label={l`Invite link`}
-              value={joinLinkURI}>
+              value={joinLinkURI}
+              onPress={() => {
+                ax.metric('groupchat:inviteLink:shareButton:press', {
+                  convoId,
+                  method: 'copy',
+                })
+              }}>
               <Text
                 numberOfLines={1}
                 style={[
@@ -337,9 +370,7 @@ export function InviteLinkDialog({
                   value={ownerValue}
                   onPress={() => setStep(Step.GENERATE)}>
                   <View style={[a.flex_1]}>
-                    <Text numberOfLines={1} style={[a.text_sm]}>
-                      {ownerValue}
-                    </Text>
+                    <Text style={[a.text_sm]}>{ownerValue}</Text>
                   </View>
                 </EditTextButton>
               </View>
@@ -366,6 +397,10 @@ export function InviteLinkDialog({
                 color="primary_subtle"
                 style={[a.flex_1, a.rounded_full]}
                 onPress={() => {
+                  ax.metric('groupchat:inviteLink:shareButton:press', {
+                    convoId,
+                    method: 'post',
+                  })
                   control.close(() => {
                     openComposer({
                       text: joinLinkURI,
@@ -382,6 +417,10 @@ export function InviteLinkDialog({
                 color="primary_subtle"
                 style={[a.flex_1, a.rounded_full]}
                 onPress={() => {
+                  ax.metric('groupchat:inviteLink:shareButton:press', {
+                    convoId,
+                    method: 'native',
+                  })
                   void shareUrl(joinLinkURI)
                 }}>
                 <Trans>Share</Trans>
@@ -508,6 +547,7 @@ export function InviteLinkDialog({
         header={
           <View>
             <View style={[IS_WEB ? [a.px_2xl, a.pt_xl] : {paddingTop: 10}]}>
+              {image}
               <Text style={[a.font_bold, a.text_2xl, a.mb_sm]}>{header}</Text>
             </View>
             <Dialog.Close />

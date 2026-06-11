@@ -18,7 +18,11 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 import {RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon} from '#/components/icons/RaisingHand'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import * as Toast from '#/components/Toast'
-import {type ChatInviteAction, ChatInviteProvider} from './Context'
+import {
+  type ChatInviteAction,
+  ChatInviteProvider,
+  type ChatInviteStatus,
+} from './Context'
 
 /**
  * Headless data + state owner for a chat invite. Fetches the join link preview
@@ -61,7 +65,18 @@ export function Root({
   })
 
   const preview = data?.joinLinkPreviews[0]
-  const loading = isPending && !preview
+
+  let status: ChatInviteStatus
+  if (isPending && !preview) {
+    status = 'loading'
+  } else if (error) {
+    status = 'error'
+  } else if (ChatBskyGroupDefs.isJoinLinkPreviewView(preview)) {
+    status = 'available'
+  } else {
+    // Resolved to a disabled/invalid/unrecognized preview - nothing to join.
+    status = 'unavailable'
+  }
 
   let action: ChatInviteAction | undefined
   if (ChatBskyGroupDefs.isJoinLinkPreviewView(preview)) {
@@ -135,8 +150,7 @@ export function Root({
   }
 
   return (
-    <ChatInviteProvider
-      value={{code, loading, error: !!error, preview, action, hasFixedHeight}}>
+    <ChatInviteProvider value={{code, status, preview, action, hasFixedHeight}}>
       {children}
     </ChatInviteProvider>
   )

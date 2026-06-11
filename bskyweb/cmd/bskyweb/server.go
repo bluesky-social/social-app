@@ -12,6 +12,7 @@ import (
 	"io"
 	"io/fs"
 	"log/slog"
+	"net"
 	"net/http"
 	"net/netip"
 	"net/url"
@@ -35,15 +36,17 @@ import (
 	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/urfave/cli/v2"
 )
 
 type Server struct {
-	echo      *echo.Echo
-	httpd     *http.Server
-	xrpcc     *xrpc.Client
-	chatXrpcc *xrpc.Client
-	cfg       *Config
+	echo         *echo.Echo
+	httpd        *http.Server
+	metricsHttpd *http.Server
+	xrpcc        *xrpc.Client
+	chatXrpcc    *xrpc.Client
+	cfg          *Config
 
 	ipccClient http.Client
 
@@ -67,6 +70,7 @@ type Config struct {
 func serve(cctx *cli.Context) error {
 	debug := cctx.Bool("debug")
 	httpAddress := cctx.String("http-address")
+	metricsAddress := cctx.String("metrics-address")
 	appviewHost := cctx.String("appview-host")
 	chatHost := cctx.String("chat-host")
 	ogcardHost := cctx.String("ogcard-host")
@@ -387,6 +391,19 @@ func serve(cctx *cli.Context) error {
 		e.Group("/:linkId", server.LinkProxyMiddleware(linkUrl))
 	}
 
+	metricsHttpd, metricsListener, err := newMetricsHTTPServer(metricsAddress)
+	if err != nil {
+		return err
+	}
+	server.metricsHttpd = metricsHttpd
+
+	log.Infof("starting metrics server address=%s", metricsAddress)
+	go func() {
+		if err := metricsHttpd.Serve(metricsListener); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Errorf("metrics HTTP server shutting down unexpectedly: %s", err)
+		}
+	}()
+
 	// Start the server.
 	log.Infof("starting server address=%s", httpAddress)
 	go func() {
@@ -419,6 +436,24 @@ func serve(cctx *cli.Context) error {
 	return nil
 }
 
+func newMetricsHTTPServer(address string) (*http.Server, net.Listener, error) {
+	metricsMux := http.NewServeMux()
+	metricsMux.Handle("/metrics", promhttp.Handler())
+
+	metricsHttpd := &http.Server{
+		Addr:              address,
+		Handler:           metricsMux,
+		ReadHeaderTimeout: 5 * time.Second,
+	}
+
+	metricsListener, err := net.Listen("tcp", address)
+	if err != nil {
+		return nil, nil, fmt.Errorf("listen metrics address %s: %w", address, err)
+	}
+
+	return metricsHttpd, metricsListener, nil
+}
+
 func (srv *Server) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	srv.echo.ServeHTTP(rw, req)
 }
@@ -429,7 +464,18 @@ func (srv *Server) Shutdown() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	return srv.httpd.Shutdown(ctx)
+	var shutdownErr error
+	if srv.metricsHttpd != nil {
+		if err := srv.metricsHttpd.Shutdown(ctx); err != nil {
+			shutdownErr = fmt.Errorf("metrics HTTP server shutdown error: %w", err)
+		}
+	}
+
+	if err := srv.httpd.Shutdown(ctx); err != nil {
+		return errors.Join(shutdownErr, err)
+	}
+
+	return shutdownErr
 }
 
 // NewTemplateContext returns a new pongo2 context with some default values.
