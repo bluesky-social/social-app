@@ -66,12 +66,12 @@ export function useOpenLink() {
           }).catch(err => {
             if (__DEV__)
               logger.error('Could not open web browser', {message: err})
-            Linking.openURL(url)
+            void Linking.openURL(url)
           })
           return
         }
       }
-      Linking.openURL(url)
+      void Linking.openURL(url)
     },
     [ax, enabled, inAppBrowserConsentControl, t, dialogContext],
   )

@@ -976,9 +976,6 @@
     }
   },
   "src/lib/hooks/useOpenLink.ts": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    },
     "@typescript-eslint/require-await": {
       "count": 1
     }
