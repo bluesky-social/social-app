@@ -56,6 +56,11 @@ export function AtmoRsvpEmbed({
   })
 
   const value = event?.value
+  // Prefer the fetched event record's own fields; the link-card `view` only
+  // carries whatever the URL unfurled to, which for atmo.rsvp is just the raw
+  // URL (no OG title). Fall back to the view, then the URL, while loading.
+  const title = value?.name || view.title || view.uri
+  const description = value?.description || view.description
   const isCancelled = value?.status === EVENT_STATUS_CANCELLED
   const whenText = formatWhen(i18n, value)
   const where = getLocationInfo(value)
@@ -91,7 +96,7 @@ export function AtmoRsvpEmbed({
         style,
       ]}>
       <Link
-        label={view.title || l`Open event on ${toNiceDomain(view.uri)}`}
+        label={title || l`Open event on ${toNiceDomain(view.uri)}`}
         to={view.uri}
         shouldProxy
         onPress={onPressCard}>
@@ -120,7 +125,7 @@ export function AtmoRsvpEmbed({
               emoji
               numberOfLines={2}
               style={[a.text_md, a.font_bold, a.leading_snug]}>
-              {view.title || view.uri}
+              {title}
             </Text>
 
             <View style={[a.gap_2xs, a.pt_2xs]}>
@@ -138,7 +143,7 @@ export function AtmoRsvpEmbed({
               )}
             </View>
 
-            {view.description ? (
+            {description ? (
               <Text
                 emoji
                 numberOfLines={2}
@@ -148,7 +153,7 @@ export function AtmoRsvpEmbed({
                   a.pt_2xs,
                   t.atoms.text_contrast_medium,
                 ]}>
-                {view.description}
+                {description}
               </Text>
             ) : undefined}
           </View>
