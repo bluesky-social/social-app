@@ -285,7 +285,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
   }
 
   const convoId = joinLinkPreview.convoId
-  const isFollowing = joinLinkPreview.owner.viewer?.following ?? false
+  const isFollowing = joinLinkPreview.owner.viewer?.followedBy ?? false
   const hasRequested =
     !joinLinkPreview.convo && joinLinkPreview.viewer?.requestedAt != null
 
