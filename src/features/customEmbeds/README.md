@@ -40,3 +40,23 @@ Renders [atmo.rsvp](https://atmo.rsvp) calendar events
   directly to the user's repo via their agent. atmo indexes them off the
   firehose, so the aggregate going-count is updated optimistically and
   reconciles on the next refetch.
+
+## tangledString
+
+Renders [Tangled](https://tangled.org) "strings" (`sh.tangled.string`) - shared
+code snippets/pastes - as a syntax-highlighted code card.
+
+- **Detect**: `https://tangled.org/strings/{actor}/{rkey}` (also `tangled.sh`),
+  where `{actor}` is a handle or DID (`detect.ts`).
+- **Read**: the snippet text lives inline in the record, so a single
+  `com.atproto.repo.getRecord` is all the card needs (`queries.ts`). The owner
+  profile is fetched alongside it for the byline, best-effort.
+- **Highlight**: `highlight.ts` runs the code through `lowlight` (highlight.js
+  grammars, pure JS so it works on web and native) and flattens the result into
+  lines of scoped spans; `CodeBlock.tsx` renders those into ALF-themed `Text`.
+  The language is inferred from the filename extension, falling back to
+  highlight.js auto-detection. Feed cards show a `PREVIEW_LINES` preview and
+  link out for the rest.
+
+> `lowlight` and its `devlop` dependency are ESM-only, so both are added to
+> `transformIgnorePatterns` in `package.json` for Jest.
