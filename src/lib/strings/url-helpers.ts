@@ -123,7 +123,9 @@ export function sanitizeWebsiteUrl(raw?: string): string {
 
 export function toShareUrl(url: string): string {
   if (!url.startsWith('https')) {
-    const urlp = new URL('https://bsky.app')
+    // mu fork: share/copy-link actions hand out our own web host, not bsky.app.
+    // Uses the primary first-party host (see EUROSKY.web.hosts).
+    const urlp = new URL(`https://${EUROSKY.web.hosts[0]}`)
     urlp.pathname = url
     url = urlp.toString()
   }

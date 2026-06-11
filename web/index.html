@@ -18,6 +18,28 @@
     <link rel="preconnect" href="https://go.bsky.app">
     <title>%WEB_TITLE%</title>
 
+    <!--
+      mu fork: default Open Graph / Twitter card metadata for link unfurls.
+      This is a static SPA (no per-route SSR), so every shared mu.social link
+      shows this default card. og:image MUST be an absolute URL; og-image.jpg is
+      copied from this web/ folder to the build root at deploy. Keep the
+      dimensions in sync with the file (assets/og-image.jpg, 2400x1600). If a
+      per-route server renderer is added later, mirror these there.
+    -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="mu">
+    <meta property="og:title" content="mu">
+    <meta property="og:description" content="mu - a social app on the AT Protocol">
+    <meta property="og:url" content="https://mu.social">
+    <meta property="og:image" content="https://mu.social/og-image.jpg">
+    <meta property="og:image:width" content="2400">
+    <meta property="og:image:height" content="1600">
+    <meta property="og:image:alt" content="mu">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="mu">
+    <meta name="twitter:description" content="mu - a social app on the AT Protocol">
+    <meta name="twitter:image" content="https://mu.social/og-image.jpg">
+
     <link rel="preload" as="font" type="font/woff2" href="/static/media/InterVariable.c504db5c06caaf7cdfba.woff2" crossorigin>
     <link rel="stylesheet" href="/static/style.css">
 
