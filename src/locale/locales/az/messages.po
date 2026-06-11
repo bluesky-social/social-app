@@ -8,7 +8,7 @@ msgstr ""
 "Language: az\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-10 21:06\n"
+"PO-Revision-Date: 2026-06-11 18:22\n"
 "Last-Translator: \n"
 "Language-Team: Azerbaijani\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -199,13 +199,13 @@ msgid "{0} <0>in <1>text & tags</1></0>"
 msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:41
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:44
 msgid "{0} added to chat"
 msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:43
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:46
 msgid "{0} and {1} added to chat"
 msgstr ""
 
@@ -299,7 +299,7 @@ msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:46
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:49
 msgid "{0}, {1} and {memberCount, plural, one {# other} other {# others}} added to chat"
 msgstr ""
 
@@ -326,7 +326,7 @@ msgstr ""
 #. The number of active group chat members out of the total number allowed.
 #. placeholder {0}: joinLinkPreview.memberCount
 #. placeholder {1}: joinLinkPreview.memberLimit
-#: src/screens/Messages/JoinRequest.tsx:136
+#: src/screens/Messages/JoinRequest.tsx:143
 msgctxt "group-chat-member-count"
 msgid "{0}/{1}"
 msgstr ""
@@ -342,7 +342,7 @@ msgstr ""
 #. The number of active group chat members out of the total number allowed.
 #. placeholder {0}: joinLinkPreview.memberCount
 #. placeholder {1}: joinLinkPreview.memberLimit
-#: src/components/intents/GroupChatJoinDialog.tsx:307
+#: src/components/intents/GroupChatJoinDialog.tsx:329
 msgid "{0}/{1} members"
 msgstr ""
 
@@ -377,7 +377,7 @@ msgstr ""
 msgid "{0}s"
 msgstr ""
 
-#: src/screens/Messages/JoinRequests.tsx:427
+#: src/screens/Messages/JoinRequests.tsx:433
 msgid "{count, plural, =0 {No requests to join} one {# request to join} other {# requests to join}}"
 msgstr ""
 
@@ -410,7 +410,7 @@ msgid "{count, plural, one {Update your app to see it.} other {Update your app t
 msgstr ""
 
 #. Displayed when there are more requests to join a group chat than have been loaded
-#: src/screens/Messages/JoinRequests.tsx:421
+#: src/screens/Messages/JoinRequests.tsx:427
 msgid "{count, plural, other {#+ requests to join}}"
 msgstr ""
 
@@ -875,8 +875,8 @@ msgstr ""
 #: src/components/dms/LeaveConvoPrompt.tsx:38
 #: src/components/moderation/BlockDialog.tsx:286
 #: src/components/moderation/BlockDialog.tsx:312
-#: src/screens/Messages/JoinRequests.tsx:187
-#: src/screens/Messages/JoinRequests.tsx:219
+#: src/screens/Messages/JoinRequests.tsx:192
+#: src/screens/Messages/JoinRequests.tsx:225
 msgid "A network error occurred. Please check your internet connection."
 msgstr ""
 
@@ -928,7 +928,7 @@ msgid "Accept"
 msgstr ""
 
 #. Accept a request to join a chat
-#: src/screens/Messages/JoinRequests.tsx:458
+#: src/screens/Messages/JoinRequests.tsx:464
 msgctxt "button"
 msgid "Accept"
 msgstr ""
@@ -937,7 +937,7 @@ msgstr ""
 msgid "Accept chat request"
 msgstr ""
 
-#: src/screens/Messages/JoinRequests.tsx:452
+#: src/screens/Messages/JoinRequests.tsx:458
 msgid "Accept join request"
 msgstr ""
 
@@ -955,7 +955,7 @@ msgstr ""
 msgid "Accepted conversations"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:101
+#: src/components/intents/GroupChatJoinDialog.tsx:113
 msgid "Access requested! The group owner will review your request."
 msgstr ""
 
@@ -979,7 +979,7 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:427
 #: src/screens/Messages/components/RequestButtons.tsx:104
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:119
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:122
 #: src/view/com/profile/ProfileMenu.tsx:190
 msgctxt "toast"
 msgid "Account blocked"
@@ -1025,7 +1025,7 @@ msgstr ""
 msgid "Account removed from quick access"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:106
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:109
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:91
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:315
 #: src/view/com/profile/ProfileMenu.tsx:177
@@ -1112,11 +1112,11 @@ msgstr ""
 msgid "Add another account"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1505
+#: src/view/com/composer/Composer.tsx:1520
 msgid "Add another post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2168
+#: src/view/com/composer/Composer.tsx:2183
 msgid "Add another post to thread"
 msgstr ""
 
@@ -1151,9 +1151,9 @@ msgstr ""
 msgid "Add media to post"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:69
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:103
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:122
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:72
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:106
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:125
 msgid "Add members"
 msgstr ""
 
@@ -1175,8 +1175,8 @@ msgstr ""
 msgid "Add muted words and tags"
 msgstr ""
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:130
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:169
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:133
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:172
 #: src/screens/ProfileList/AboutSection.tsx:72
 #: src/screens/ProfileList/AboutSection.tsx:90
 msgid "Add people"
@@ -1269,7 +1269,7 @@ msgid "Additional details (limit 300 characters)"
 msgstr ""
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:94
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:152
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:155
 msgid "Admin"
 msgstr ""
 
@@ -1520,8 +1520,8 @@ msgstr ""
 msgid "An error occurred while loading your lists :/"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:78
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:100
+#: src/components/StarterPack/QrCodeDialog.tsx:81
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:103
 msgid "An error occurred while saving the QR code!"
 msgstr ""
 
@@ -1565,7 +1565,7 @@ msgstr ""
 msgid "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:190
+#: src/screens/Messages/components/InviteLinkDialog.tsx:198
 msgid "An invite link lets people join this group chat without being added directly. You control who can join the chat. You can disable the link at any time."
 msgstr ""
 
@@ -1643,17 +1643,17 @@ msgstr ""
 msgid "Anyone can interact"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:318
+#: src/components/intents/GroupChatJoinDialog.tsx:340
 msgid "Anyone can join"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:145
-#: src/screens/Messages/components/InviteLinkDialog.tsx:146
+#: src/screens/Messages/components/InviteLinkDialog.tsx:153
+#: src/screens/Messages/components/InviteLinkDialog.tsx:154
 msgid "Anyone can join instantly"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:150
-#: src/screens/Messages/components/InviteLinkDialog.tsx:151
+#: src/screens/Messages/components/InviteLinkDialog.tsx:158
+#: src/screens/Messages/components/InviteLinkDialog.tsx:159
 msgid "Anyone can request to join"
 msgstr ""
 
@@ -1663,7 +1663,7 @@ msgstr ""
 msgid "Anyone who follows me"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:458
+#: src/screens/Messages/components/InviteLinkDialog.tsx:478
 msgid "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 msgstr ""
 
@@ -1818,7 +1818,7 @@ msgstr ""
 msgid "Are you sure you want to rescind your request to join {0}?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1641
+#: src/view/com/composer/Composer.tsx:1656
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
@@ -1899,8 +1899,8 @@ msgstr ""
 #: src/screens/Login/SetNewPasswordForm.tsx:178
 #: src/screens/Messages/components/ChatDisabled.tsx:164
 #: src/screens/Messages/components/ChatDisabled.tsx:166
-#: src/screens/Messages/components/InviteLinkDialog.tsx:268
-#: src/screens/Messages/components/InviteLinkDialog.tsx:296
+#: src/screens/Messages/components/InviteLinkDialog.tsx:276
+#: src/screens/Messages/components/InviteLinkDialog.tsx:304
 #: src/screens/Messages/Inbox.tsx:240
 #: src/screens/Profile/Header/Shell.tsx:174
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:273
@@ -1963,7 +1963,7 @@ msgstr ""
 #: src/screens/Messages/ChatList.tsx:273
 #: src/screens/Messages/ChatList.tsx:543
 #: src/screens/Messages/Conversation.tsx:203
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:96
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
 msgid "Before you can message another user, you must first verify your email."
 msgstr ""
 
@@ -1994,12 +1994,12 @@ msgstr ""
 #: src/components/moderation/BlockDialog.tsx:186
 #: src/components/moderation/BlockDialog.tsx:192
 #: src/components/moderation/BlockDialog.tsx:211
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:224
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:227
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:210
 msgid "Block"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:213
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:216
 msgid "Block {displayName}"
 msgstr ""
 
@@ -2260,7 +2260,7 @@ msgstr ""
 #. placeholder {0}: sanitizeHandle(item.feed.creator.handle, '@')
 #: src/components/LabelingServiceCard/index.tsx:62
 #: src/components/moderation/ReportDialog/index.tsx:847
-#: src/screens/Messages/JoinRequest.tsx:174
+#: src/screens/Messages/JoinRequest.tsx:181
 #: src/screens/Search/components/StarterPackCard.tsx:107
 #: src/screens/Search/Explore.tsx:971
 msgid "By {0}"
@@ -2274,7 +2274,7 @@ msgstr ""
 #. The group chat creator, in the format 'By {displayName}'.
 #. placeholder {0}: createSanitizedDisplayName( joinLinkPreview.owner, true, moderateProfile(joinLinkPreview.owner, moderationOpts).ui( 'displayName', ), )
 #. placeholder {0}: sanitizeHandle(info.creatorHandle, '@')
-#: src/components/intents/GroupChatJoinDialog.tsx:341
+#: src/components/intents/GroupChatJoinDialog.tsx:363
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:451
 msgid "By <0>{0}</0>"
 msgstr ""
@@ -2346,8 +2346,8 @@ msgstr ""
 #: src/features/liveNow/components/GoLiveDialog.tsx:254
 #: src/lib/media/picker.tsx:38
 #: src/screens/Deactivated.tsx:150
-#: src/screens/Messages/components/InviteLinkDialog.tsx:480
-#: src/screens/Messages/components/InviteLinkDialog.tsx:484
+#: src/screens/Messages/components/InviteLinkDialog.tsx:500
+#: src/screens/Messages/components/InviteLinkDialog.tsx:504
 #: src/screens/Messages/ConversationSettings/prompts.tsx:100
 #: src/screens/Messages/ConversationSettings/prompts.tsx:124
 #: src/screens/Messages/ConversationSettings/prompts.tsx:148
@@ -2364,8 +2364,8 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:300
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
-#: src/view/com/composer/Composer.tsx:1719
-#: src/view/com/composer/Composer.tsx:1729
+#: src/view/com/composer/Composer.tsx:1734
+#: src/view/com/composer/Composer.tsx:1744
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:228
@@ -2498,8 +2498,8 @@ msgid "Chat ended"
 msgstr ""
 
 #: src/components/dms/ChatInvite/Unavailable.tsx:25
-#: src/components/intents/GroupChatJoinDialog.tsx:234
-#: src/screens/Messages/JoinRequest.tsx:90
+#: src/components/intents/GroupChatJoinDialog.tsx:256
+#: src/screens/Messages/JoinRequest.tsx:97
 msgid "Chat invite link no longer available"
 msgstr ""
 
@@ -2630,7 +2630,7 @@ msgstr ""
 msgid "Choose this color as your avatar"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:235
+#: src/screens/Messages/components/InviteLinkDialog.tsx:243
 msgid "Choose who can join this group chat and how."
 msgstr ""
 
@@ -2684,7 +2684,7 @@ msgstr ""
 msgid "click here"
 msgstr ""
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:126
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:129
 msgid "Click here to add people to this group chat"
 msgstr ""
 
@@ -2692,7 +2692,7 @@ msgstr ""
 msgid "Click here to contact our support team"
 msgstr ""
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:140
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:143
 msgid "Click here to create or manage an invite link for this group chat"
 msgstr ""
 
@@ -2722,7 +2722,7 @@ msgstr ""
 msgid "Click here to update your email"
 msgstr ""
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:141
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:144
 msgid "Click here to view the invite link for this group chat"
 msgstr ""
 
@@ -2767,8 +2767,8 @@ msgstr ""
 #: src/components/dms/AfterReportDialog.tsx:217
 #: src/components/dms/EmojiPopup.android.tsx:59
 #: src/components/dms/InitiateChatFlow.tsx:565
-#: src/components/intents/GroupChatJoinDialog.tsx:211
-#: src/components/intents/GroupChatJoinDialog.tsx:246
+#: src/components/intents/GroupChatJoinDialog.tsx:233
+#: src/components/intents/GroupChatJoinDialog.tsx:268
 #: src/components/NewskieDialog.tsx:169
 #: src/components/NewskieDialog.tsx:175
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:107
@@ -2782,8 +2782,8 @@ msgstr ""
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:45
 #: src/features/liveNow/components/EditLiveDialog.tsx:217
 #: src/features/liveNow/components/EditLiveDialog.tsx:223
-#: src/screens/Messages/components/InviteLinkDialog.tsx:504
-#: src/screens/Messages/components/InviteLinkDialog.tsx:509
+#: src/screens/Messages/components/InviteLinkDialog.tsx:524
+#: src/screens/Messages/components/InviteLinkDialog.tsx:529
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:288
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:293
 #: src/view/com/feeds/MissingFeed.tsx:211
@@ -2850,10 +2850,10 @@ msgstr ""
 msgid "Close the incoming requests banner"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:204
-#: src/components/intents/GroupChatJoinDialog.tsx:205
-#: src/components/intents/GroupChatJoinDialog.tsx:241
-#: src/components/intents/GroupChatJoinDialog.tsx:242
+#: src/components/intents/GroupChatJoinDialog.tsx:226
+#: src/components/intents/GroupChatJoinDialog.tsx:227
+#: src/components/intents/GroupChatJoinDialog.tsx:263
+#: src/components/intents/GroupChatJoinDialog.tsx:264
 #: src/components/Menu/index.tsx:361
 msgid "Close this dialog"
 msgstr ""
@@ -2866,7 +2866,7 @@ msgstr ""
 msgid "Closes password update alert"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1727
+#: src/view/com/composer/Composer.tsx:1742
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -2920,7 +2920,7 @@ msgid "Compose new post"
 msgstr ""
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1603
+#: src/view/com/composer/Composer.tsx:1618
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -2928,11 +2928,11 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2565
+#: src/view/com/composer/Composer.tsx:2580
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2567
+#: src/view/com/composer/Composer.tsx:2582
 msgid "Compressing video..."
 msgstr ""
 
@@ -3117,8 +3117,8 @@ msgid "Conversation left"
 msgstr ""
 
 #: src/components/dms/LeaveConvoPrompt.tsx:40
-#: src/screens/Messages/JoinRequests.tsx:191
-#: src/screens/Messages/JoinRequests.tsx:223
+#: src/screens/Messages/JoinRequests.tsx:196
+#: src/screens/Messages/JoinRequests.tsx:229
 msgid "Conversation not found."
 msgstr ""
 
@@ -3146,12 +3146,12 @@ msgstr ""
 msgid "Copies build version to clipboard"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:252
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:255
 msgid "Copies the canonical profile URL to the clipboard"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:195
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:262
+#: src/components/StarterPack/QrCodeDialog.tsx:198
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:265
 msgid "Copy"
 msgstr ""
 
@@ -3184,7 +3184,7 @@ msgstr ""
 msgid "Copy host"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:251
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:254
 msgid "Copy invite link"
 msgstr ""
 
@@ -3234,7 +3234,7 @@ msgstr ""
 msgid "Copy post text"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:181
+#: src/components/StarterPack/QrCodeDialog.tsx:184
 msgid "Copy QR code"
 msgstr ""
 
@@ -3261,7 +3261,7 @@ msgstr ""
 msgid "Could not connect to feed service"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:117
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:120
 msgid "Could not copy – please try again"
 msgstr ""
 
@@ -3308,7 +3308,7 @@ msgstr ""
 msgid "Could not load list"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:166
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:169
 msgid "Could not load profile"
 msgstr ""
 
@@ -3373,7 +3373,7 @@ msgstr ""
 msgid "Create a list from this starter pack"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:166
+#: src/components/StarterPack/QrCodeDialog.tsx:169
 msgid "Create a QR code for a starter pack"
 msgstr ""
 
@@ -3394,7 +3394,7 @@ msgstr ""
 
 #: src/components/WelcomeModal.tsx:158
 #: src/components/WelcomeModal.tsx:166
-#: src/screens/Messages/JoinRequest.tsx:307
+#: src/screens/Messages/JoinRequest.tsx:314
 #: src/screens/Signup/index.tsx:135
 #: src/view/com/auth/SplashScreen.tsx:107
 #: src/view/com/auth/SplashScreen.web.tsx:116
@@ -3449,13 +3449,13 @@ msgstr ""
 msgid "Create moderation list"
 msgstr ""
 
-#: src/screens/Messages/JoinRequest.tsx:301
+#: src/screens/Messages/JoinRequest.tsx:308
 #: src/view/com/auth/SplashScreen.tsx:100
 #: src/view/com/auth/SplashScreen.web.tsx:108
 msgid "Create new account"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:547
+#: src/screens/Messages/ConversationSettings/index.tsx:553
 msgid "Create or modify an invite link for this group chat"
 msgstr ""
 
@@ -3478,8 +3478,8 @@ msgstr ""
 #. placeholder {0}: i18n.date(appPassword.createdAt, { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', })
 #. placeholder {0}: i18n.date(createdAt, { dateStyle: 'long', timeStyle: 'short', })
 #. placeholder {0}: i18n.date(createdAt, { month: 'long', day: 'numeric', year: 'numeric', })
-#: src/screens/Messages/components/InviteLinkDialog.tsx:341
-#: src/screens/Messages/ConversationSettings/index.tsx:499
+#: src/screens/Messages/components/InviteLinkDialog.tsx:355
+#: src/screens/Messages/ConversationSettings/index.tsx:505
 #: src/screens/Settings/AppPasswords.tsx:174
 msgid "Created {0}"
 msgstr ""
@@ -3647,7 +3647,7 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:796
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:798
-#: src/view/com/composer/Composer.tsx:1615
+#: src/view/com/composer/Composer.tsx:1630
 msgid "Delete post"
 msgstr ""
 
@@ -3741,8 +3741,8 @@ msgstr ""
 msgid "Dim"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:373
-#: src/screens/Messages/components/InviteLinkDialog.tsx:378
+#: src/screens/Messages/components/InviteLinkDialog.tsx:385
+#: src/screens/Messages/components/InviteLinkDialog.tsx:390
 msgid "Disable"
 msgstr ""
 
@@ -3768,8 +3768,8 @@ msgstr ""
 msgid "Disable haptic feedback"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:468
-#: src/screens/Messages/components/InviteLinkDialog.tsx:474
+#: src/screens/Messages/components/InviteLinkDialog.tsx:488
+#: src/screens/Messages/components/InviteLinkDialog.tsx:494
 msgid "Disable link"
 msgstr ""
 
@@ -3781,7 +3781,7 @@ msgstr ""
 msgid "Disable replies entirely"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:455
+#: src/screens/Messages/components/InviteLinkDialog.tsx:475
 msgid "Disable this invite link?"
 msgstr ""
 
@@ -3794,9 +3794,9 @@ msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:101
 #: src/screens/Profile/Header/EditProfileDialog.tsx:79
-#: src/view/com/composer/Composer.tsx:1398
-#: src/view/com/composer/Composer.tsx:1442
-#: src/view/com/composer/Composer.tsx:1648
+#: src/view/com/composer/Composer.tsx:1413
+#: src/view/com/composer/Composer.tsx:1457
+#: src/view/com/composer/Composer.tsx:1663
 #: src/view/com/composer/drafts/DraftItem.tsx:242
 #: src/view/com/composer/drafts/DraftsButton.tsx:131
 msgid "Discard"
@@ -3807,14 +3807,14 @@ msgstr ""
 msgid "Discard changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1396
+#: src/view/com/composer/Composer.tsx:1411
 #: src/view/com/composer/drafts/DraftItem.tsx:239
 #: src/view/com/composer/drafts/DraftsButton.tsx:98
 msgid "Discard draft?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1413
-#: src/view/com/composer/Composer.tsx:1640
+#: src/view/com/composer/Composer.tsx:1428
+#: src/view/com/composer/Composer.tsx:1655
 msgid "Discard post?"
 msgstr ""
 
@@ -3852,7 +3852,7 @@ msgstr ""
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2486
+#: src/view/com/composer/Composer.tsx:2501
 msgid "Dismiss error"
 msgstr ""
 
@@ -3949,8 +3949,8 @@ msgstr ""
 #: src/components/dms/AfterReportDialog.tsx:145
 #: src/components/forms/DateField/index.tsx:104
 #: src/components/forms/DateField/index.tsx:110
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:143
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:149
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:146
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:152
 #: src/lib/media/picker.tsx:37
 #: src/screens/Onboarding/StepProfile/index.tsx:354
 #: src/screens/Onboarding/StepProfile/index.tsx:357
@@ -4123,16 +4123,16 @@ msgstr ""
 msgid "Edit interests"
 msgstr ""
 
-#: src/screens/Messages/JoinRequests.tsx:293
+#: src/screens/Messages/JoinRequests.tsx:299
 msgid "Edit invite link"
 msgstr ""
 
-#: src/screens/Messages/JoinRequests.tsx:299
+#: src/screens/Messages/JoinRequests.tsx:305
 msgctxt "button"
 msgid "Edit invite link"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:355
+#: src/screens/Messages/components/InviteLinkDialog.tsx:369
 msgid "Edit link settings"
 msgstr ""
 
@@ -4155,7 +4155,7 @@ msgstr ""
 msgid "Edit My Feeds"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:534
+#: src/screens/Messages/ConversationSettings/index.tsx:540
 msgid "Edit name"
 msgstr ""
 
@@ -4184,8 +4184,8 @@ msgstr ""
 msgid "Edit starter pack"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:480
-#: src/screens/Messages/ConversationSettings/index.tsx:533
+#: src/screens/Messages/ConversationSettings/index.tsx:486
+#: src/screens/Messages/ConversationSettings/index.tsx:539
 msgid "Edit this group chat’s name"
 msgstr ""
 
@@ -4402,7 +4402,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2585
+#: src/view/com/composer/Composer.tsx:2600
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr ""
@@ -4592,7 +4592,7 @@ msgctxt "toast"
 msgid "Failed to accept chat"
 msgstr ""
 
-#: src/screens/Messages/JoinRequests.tsx:185
+#: src/screens/Messages/JoinRequests.tsx:190
 msgid "Failed to accept join request"
 msgstr ""
 
@@ -4601,8 +4601,8 @@ msgstr ""
 msgid "Failed to add emoji reaction"
 msgstr ""
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:42
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:60
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:45
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:63
 msgid "Failed to add members"
 msgstr ""
 
@@ -4615,7 +4615,7 @@ msgid "Failed to change handle. Please try again."
 msgstr ""
 
 #: src/components/Lightbox/Lightbox.web.tsx:302
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:126
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:129
 msgid "Failed to copy link"
 msgstr ""
 
@@ -4628,7 +4628,7 @@ msgstr ""
 msgid "Failed to create conversation"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:101
+#: src/screens/Messages/components/InviteLinkDialog.tsx:106
 msgid "Failed to create invite link"
 msgstr ""
 
@@ -4655,7 +4655,7 @@ msgstr ""
 msgid "Failed to delete starter pack"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:124
+#: src/screens/Messages/components/InviteLinkDialog.tsx:132
 msgid "Failed to disable invite link"
 msgstr ""
 
@@ -4664,15 +4664,15 @@ msgstr ""
 msgid "Failed to disconnect Germ DM. Error: {0}"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:369
+#: src/screens/Messages/ConversationSettings/index.tsx:374
 msgid "Failed to edit group chat name"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:114
+#: src/screens/Messages/components/InviteLinkDialog.tsx:119
 msgid "Failed to edit invite link"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:134
+#: src/screens/Messages/components/InviteLinkDialog.tsx:142
 msgid "Failed to enable invite link"
 msgstr ""
 
@@ -4688,11 +4688,11 @@ msgstr ""
 msgid "Failed to hide suggestion, please check your internet connection"
 msgstr ""
 
-#: src/screens/Messages/JoinRequests.tsx:217
+#: src/screens/Messages/JoinRequests.tsx:223
 msgid "Failed to ignore join request"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:124
+#: src/components/intents/GroupChatJoinDialog.tsx:137
 msgid "Failed to join the group chat. Please try again."
 msgstr ""
 
@@ -4702,7 +4702,7 @@ msgstr ""
 
 #: src/screens/Messages/components/ChatEnded.tsx:42
 #: src/screens/Messages/components/ChatLocked.tsx:62
-#: src/screens/Messages/ConversationSettings/index.tsx:396
+#: src/screens/Messages/ConversationSettings/index.tsx:401
 msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr ""
@@ -4753,7 +4753,7 @@ msgstr ""
 msgid "Failed to load suggested follows"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:420
+#: src/screens/Messages/ConversationSettings/index.tsx:426
 msgid "Failed to lock group chat"
 msgstr ""
 
@@ -4761,7 +4761,7 @@ msgstr ""
 msgid "Failed to mark all requests as read"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:383
+#: src/screens/Messages/ConversationSettings/index.tsx:390
 msgid "Failed to mute group chat"
 msgstr ""
 
@@ -4794,7 +4794,7 @@ msgid "Failed to remove from starter pack"
 msgstr ""
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:56
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:73
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:76
 msgid "Failed to remove group chat member"
 msgstr ""
 
@@ -4802,7 +4802,7 @@ msgstr ""
 msgid "Failed to remove verification"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:158
+#: src/components/intents/GroupChatJoinDialog.tsx:180
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:34
 msgid "Failed to rescind your request. Please try again."
 msgstr ""
@@ -4854,7 +4854,7 @@ msgid "Failed to toggle thread mute, please try again"
 msgstr ""
 
 #: src/screens/Messages/components/ChatLocked.tsx:51
-#: src/screens/Messages/ConversationSettings/index.tsx:429
+#: src/screens/Messages/ConversationSettings/index.tsx:435
 msgid "Failed to unlock group chat"
 msgstr ""
 
@@ -5211,7 +5211,7 @@ msgstr ""
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:317
+#: src/components/intents/GroupChatJoinDialog.tsx:339
 msgid "Followers can join"
 msgstr ""
 
@@ -5359,17 +5359,17 @@ msgstr ""
 msgid "Generate a starter pack"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:231
-#: src/screens/Messages/components/InviteLinkDialog.tsx:269
-#: src/screens/Messages/components/InviteLinkDialog.tsx:297
+#: src/screens/Messages/components/InviteLinkDialog.tsx:239
+#: src/screens/Messages/components/InviteLinkDialog.tsx:277
+#: src/screens/Messages/components/InviteLinkDialog.tsx:305
 msgid "Generate invite link"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:426
+#: src/screens/Messages/components/InviteLinkDialog.tsx:446
 msgid "Generate new invite link"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:431
+#: src/screens/Messages/components/InviteLinkDialog.tsx:451
 msgid "Generate new link"
 msgstr ""
 
@@ -5457,8 +5457,8 @@ msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:71
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:81
-#: src/screens/Messages/components/InviteLinkDialog.tsx:211
-#: src/screens/Messages/components/InviteLinkDialog.tsx:218
+#: src/screens/Messages/components/InviteLinkDialog.tsx:219
+#: src/screens/Messages/components/InviteLinkDialog.tsx:226
 msgid "Get started"
 msgstr ""
 
@@ -5467,7 +5467,7 @@ msgstr ""
 msgid "GIF"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2590
+#: src/view/com/composer/Composer.tsx:2605
 msgid "GIF uploaded"
 msgstr ""
 
@@ -5573,7 +5573,7 @@ msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:262
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:98
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:191
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:194
 #: src/view/shell/desktop/LeftNav.tsx:336
 #: src/view/shell/desktop/LeftNav.tsx:342
 msgid "Go to profile"
@@ -5623,42 +5623,42 @@ msgid "Grooming or predatory behavior"
 msgstr ""
 
 #: src/components/dms/ChatInvite/Card.tsx:46
-#: src/components/intents/GroupChatJoinDialog.tsx:299
-#: src/screens/Messages/JoinRequest.tsx:122
+#: src/components/intents/GroupChatJoinDialog.tsx:321
+#: src/screens/Messages/JoinRequest.tsx:129
 msgid "Group chat"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:536
+#: src/screens/Messages/components/InviteLinkDialog.tsx:556
 msgid "Group chat invite link dialog"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:412
+#: src/screens/Messages/ConversationSettings/index.tsx:417
 msgctxt "toast"
 msgid "Group chat locked"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:376
+#: src/screens/Messages/ConversationSettings/index.tsx:382
 msgctxt "toast"
 msgid "Group chat muted"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:364
+#: src/screens/Messages/ConversationSettings/index.tsx:369
 msgctxt "toast"
 msgid "Group chat name updated"
 msgstr ""
 
 #: src/Navigation.tsx:496
-#: src/screens/Messages/ConversationSettings/index.tsx:111
+#: src/screens/Messages/ConversationSettings/index.tsx:113
 msgid "Group chat settings"
 msgstr ""
 
 #: src/screens/Messages/components/ChatLocked.tsx:41
-#: src/screens/Messages/ConversationSettings/index.tsx:414
+#: src/screens/Messages/ConversationSettings/index.tsx:420
 msgctxt "toast"
 msgid "Group chat unlocked"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:378
+#: src/screens/Messages/ConversationSettings/index.tsx:385
 msgctxt "toast"
 msgid "Group chat unmuted"
 msgstr ""
@@ -5672,7 +5672,7 @@ msgid "Group chats are only available to users 18 and over."
 msgstr ""
 
 #. placeholder {0}: convo.details.memberLimit
-#: src/screens/Messages/components/InviteLinkDialog.tsx:197
+#: src/screens/Messages/components/InviteLinkDialog.tsx:205
 msgid "Group chats can only have a maximum of {0, plural, other {# people}}."
 msgstr ""
 
@@ -6268,7 +6268,7 @@ msgstr ""
 msgid "Invalid 2FA confirmation code."
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:134
+#: src/components/intents/GroupChatJoinDialog.tsx:147
 msgid "Invalid group chat code."
 msgstr ""
 
@@ -6290,7 +6290,7 @@ msgstr ""
 msgid "Invalid report subject"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:165
+#: src/components/intents/GroupChatJoinDialog.tsx:187
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:41
 msgid "Invalid rescind request."
 msgstr ""
@@ -6315,7 +6315,7 @@ msgstr ""
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:137
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:140
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:368
 #: src/view/shell/Drawer.tsx:121
 msgid "Invite friends"
@@ -6323,7 +6323,7 @@ msgstr ""
 
 #: src/components/contacts/components/InviteInfo.tsx:42
 #: src/components/contacts/components/InviteInfo.tsx:44
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:152
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:155
 msgid "Invite Friends"
 msgstr ""
 
@@ -6331,22 +6331,22 @@ msgstr ""
 msgid "Invite friends <0/>"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:185
-#: src/screens/Messages/components/InviteLinkDialog.tsx:321
-#: src/screens/Messages/components/InviteLinkDialog.tsx:327
-#: src/screens/Messages/components/InviteLinkDialog.tsx:494
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:146
-#: src/screens/Messages/ConversationSettings/index.tsx:550
+#: src/screens/Messages/components/InviteLinkDialog.tsx:193
+#: src/screens/Messages/components/InviteLinkDialog.tsx:329
+#: src/screens/Messages/components/InviteLinkDialog.tsx:335
+#: src/screens/Messages/components/InviteLinkDialog.tsx:514
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:149
+#: src/screens/Messages/ConversationSettings/index.tsx:556
 msgid "Invite link"
 msgstr ""
 
 #. Link that invites someone to follow your profile, distinct from a group chat invite link
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:210
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:213
 msgctxt "profile invite"
 msgid "Invite link"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:123
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:126
 msgid "Invite link copied"
 msgstr ""
 
@@ -6355,7 +6355,7 @@ msgid "Invite link created"
 msgstr ""
 
 #: src/components/dms/getSystemMessageInfo.ts:138
-#: src/screens/Messages/components/InviteLinkDialog.tsx:321
+#: src/screens/Messages/components/InviteLinkDialog.tsx:329
 msgid "Invite link disabled"
 msgstr ""
 
@@ -6380,7 +6380,7 @@ msgstr ""
 msgid "Invite your friends to follow your favorite feeds and people"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:152
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:155
 msgid "Invited"
 msgstr ""
 
@@ -6410,7 +6410,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr ""
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2505
+#: src/view/com/composer/Composer.tsx:2520
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -6420,7 +6420,7 @@ msgid "Jobs"
 msgstr ""
 
 #: src/components/dms/ChatInvite/Root.tsx:117
-#: src/components/intents/GroupChatJoinDialog.tsx:260
+#: src/components/intents/GroupChatJoinDialog.tsx:282
 msgid "Join"
 msgstr ""
 
@@ -6431,12 +6431,12 @@ msgstr ""
 msgid "Join Bluesky"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:68
-#: src/components/intents/GroupChatJoinDialog.tsx:426
+#: src/components/intents/GroupChatJoinDialog.tsx:71
+#: src/components/intents/GroupChatJoinDialog.tsx:448
 msgid "Join group chat"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:154
+#: src/components/intents/GroupChatJoinDialog.tsx:176
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:31
 msgid "Join request rescinded."
 msgstr ""
@@ -6450,8 +6450,8 @@ msgstr ""
 msgid "Journalism"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1446
-#: src/view/com/composer/Composer.tsx:1456
+#: src/view/com/composer/Composer.tsx:1461
+#: src/view/com/composer/Composer.tsx:1471
 #: src/view/com/composer/drafts/DraftsButton.tsx:135
 msgid "Keep editing"
 msgstr ""
@@ -6609,7 +6609,7 @@ msgid "Learn more."
 msgstr ""
 
 #: src/components/dms/LeaveConvoPrompt.tsx:59
-#: src/screens/Messages/ConversationSettings/index.tsx:585
+#: src/screens/Messages/ConversationSettings/index.tsx:590
 msgid "Leave"
 msgstr ""
 
@@ -6649,7 +6649,7 @@ msgstr ""
 msgid "Leave group chat"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:584
+#: src/screens/Messages/ConversationSettings/index.tsx:589
 msgid "Leave this group chat"
 msgstr ""
 
@@ -6954,7 +6954,7 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:564
+#: src/screens/Messages/ConversationSettings/index.tsx:570
 msgid "Lock"
 msgstr ""
 
@@ -6966,11 +6966,11 @@ msgstr ""
 msgid "Lock group chat?"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:562
+#: src/screens/Messages/ConversationSettings/index.tsx:568
 msgid "Lock this group chat"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:564
+#: src/screens/Messages/ConversationSettings/index.tsx:570
 msgid "Locked"
 msgstr ""
 
@@ -7118,7 +7118,7 @@ msgstr ""
 #: src/screens/Messages/components/MessageComposer.tsx:218
 #: src/screens/Messages/components/MessageInput.tsx:235
 #: src/screens/Messages/components/MessageInput.web.tsx:203
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:200
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:203
 msgctxt "action"
 msgid "Message"
 msgstr ""
@@ -7128,7 +7128,7 @@ msgstr ""
 msgid "Message {0}"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:196
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:199
 msgid "Message {displayName}"
 msgstr ""
 
@@ -7302,7 +7302,7 @@ msgstr ""
 msgid "Music"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:526
+#: src/screens/Messages/ConversationSettings/index.tsx:532
 msgid "Mute"
 msgstr ""
 
@@ -7347,7 +7347,7 @@ msgstr ""
 msgid "Mute these accounts?"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:524
+#: src/screens/Messages/ConversationSettings/index.tsx:530
 msgid "Mute this group chat"
 msgstr ""
 
@@ -7389,7 +7389,7 @@ msgstr ""
 msgid "Mute, leave, or remove people anytime. It’s your chat."
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:526
+#: src/screens/Messages/ConversationSettings/index.tsx:532
 msgid "Muted"
 msgstr ""
 
@@ -7509,19 +7509,19 @@ msgid "New chat"
 msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:58
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:61
 msgid "New chat with {0}"
 msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:62
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:65
 msgid "New chat with {0} and {1}"
 msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:70
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:73
 msgid "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} more} other {{memberCount} more}}."
 msgstr ""
 
@@ -8045,15 +8045,15 @@ msgstr ""
 msgid "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
 msgstr ""
 
-#: src/screens/Messages/JoinRequests.tsx:195
+#: src/screens/Messages/JoinRequests.tsx:200
 msgid "Only admins can accept join requests."
 msgstr ""
 
-#: src/screens/Messages/JoinRequests.tsx:227
+#: src/screens/Messages/JoinRequests.tsx:233
 msgid "Only admins can ignore join requests."
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:132
+#: src/components/intents/GroupChatJoinDialog.tsx:145
 msgid "Only followers can join this group chat."
 msgstr ""
 
@@ -8068,12 +8068,12 @@ msgid "Only image files are supported"
 msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName( joinLinkPreview.owner, true, moderateProfile(joinLinkPreview.owner, moderationOpts).ui( 'displayName', ), )
-#: src/screens/Messages/JoinRequest.tsx:215
+#: src/screens/Messages/JoinRequest.tsx:222
 msgid "Only people {0} follows can join."
 msgstr ""
 
 #: src/components/dms/ChatInvite/Root.tsx:127
-#: src/components/intents/GroupChatJoinDialog.tsx:270
+#: src/components/intents/GroupChatJoinDialog.tsx:292
 msgid "Only people the chat owner follows can join"
 msgstr ""
 
@@ -8107,11 +8107,11 @@ msgid "Open camera"
 msgstr ""
 
 #: src/components/dms/ChatInvite/Root.tsx:104
-#: src/components/intents/GroupChatJoinDialog.tsx:415
+#: src/components/intents/GroupChatJoinDialog.tsx:437
 msgid "Open chat"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:139
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:142
 msgid "Open chat member options for {displayName}"
 msgstr ""
 
@@ -8130,7 +8130,7 @@ msgstr ""
 
 #: src/screens/Messages/components/MessageComposer.tsx:176
 #: src/screens/Messages/components/MessageInput.web.tsx:148
-#: src/view/com/composer/Composer.tsx:2145
+#: src/view/com/composer/Composer.tsx:2160
 msgid "Open emoji picker"
 msgstr ""
 
@@ -8151,7 +8151,7 @@ msgstr ""
 msgid "Open Germ DM"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:408
+#: src/components/intents/GroupChatJoinDialog.tsx:430
 msgid "Open group chat"
 msgstr ""
 
@@ -8221,7 +8221,7 @@ msgstr ""
 msgid "Open system log"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:409
+#: src/components/intents/GroupChatJoinDialog.tsx:431
 msgid "Open this group chat"
 msgstr ""
 
@@ -8275,13 +8275,13 @@ msgstr ""
 msgid "Opens device gallery to select up to {MAX_GALLERY_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr ""
 
-#: src/screens/Messages/JoinRequest.tsx:302
+#: src/screens/Messages/JoinRequest.tsx:309
 #: src/view/com/auth/SplashScreen.tsx:102
 #: src/view/com/auth/SplashScreen.web.tsx:110
 msgid "Opens flow to create a new Bluesky account"
 msgstr ""
 
-#: src/screens/Messages/JoinRequest.tsx:288
+#: src/screens/Messages/JoinRequest.tsx:295
 #: src/view/com/auth/SplashScreen.tsx:120
 #: src/view/com/auth/SplashScreen.web.tsx:124
 msgid "Opens flow to sign in to your existing Bluesky account"
@@ -8490,11 +8490,11 @@ msgstr ""
 msgid "People"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:156
+#: src/screens/Messages/components/InviteLinkDialog.tsx:164
 msgid "People {ownerName} follows can join instantly"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:161
+#: src/screens/Messages/components/InviteLinkDialog.tsx:169
 msgid "People {ownerName} follows can request to join"
 msgstr ""
 
@@ -8513,11 +8513,11 @@ msgstr ""
 msgid "People I follow"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:155
+#: src/screens/Messages/components/InviteLinkDialog.tsx:163
 msgid "People I follow can join instantly"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:160
+#: src/screens/Messages/components/InviteLinkDialog.tsx:168
 msgid "People I follow can request to join"
 msgstr ""
 
@@ -8813,7 +8813,7 @@ msgstr ""
 msgid "Porn"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1793
+#: src/view/com/composer/Composer.tsx:1808
 msgctxt "action"
 msgid "Post"
 msgstr ""
@@ -8833,12 +8833,12 @@ msgstr ""
 msgid "Post a video"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1791
+#: src/view/com/composer/Composer.tsx:1806
 msgctxt "action"
 msgid "Post All"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1455
+#: src/view/com/composer/Composer.tsx:1470
 msgid "Post anyway"
 msgstr ""
 
@@ -8898,8 +8898,8 @@ msgstr ""
 msgid "Post language selection"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:383
 #: src/screens/Messages/components/InviteLinkDialog.tsx:395
+#: src/screens/Messages/components/InviteLinkDialog.tsx:411
 msgid "Post link"
 msgstr ""
 
@@ -8957,7 +8957,7 @@ msgstr ""
 #: src/components/Error.tsx:56
 #: src/components/Lists.tsx:104
 #: src/screens/Messages/components/MessageListError.tsx:23
-#: src/screens/Messages/JoinRequests.tsx:349
+#: src/screens/Messages/JoinRequests.tsx:355
 #: src/screens/Signup/BackNextButtons.tsx:48
 msgid "Press to retry"
 msgstr ""
@@ -9015,11 +9015,11 @@ msgstr ""
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2579
+#: src/view/com/composer/Composer.tsx:2594
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2581
+#: src/view/com/composer/Composer.tsx:2596
 msgid "Processing video..."
 msgstr ""
 
@@ -9065,22 +9065,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr ""
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1777
+#: src/view/com/composer/Composer.tsx:1792
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1772
+#: src/view/com/composer/Composer.tsx:1787
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1761
+#: src/view/com/composer/Composer.tsx:1776
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1766
+#: src/view/com/composer/Composer.tsx:1781
 msgid "Publish reply"
 msgstr ""
 
@@ -9100,16 +9100,16 @@ msgstr ""
 msgid "Push, people you follow"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:140
+#: src/components/StarterPack/QrCodeDialog.tsx:143
 msgid "QR code copied to your clipboard!"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:118
+#: src/components/StarterPack/QrCodeDialog.tsx:121
 msgid "QR code has been downloaded!"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:119
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:97
+#: src/components/StarterPack/QrCodeDialog.tsx:122
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:100
 msgid "QR code saved to your camera roll!"
 msgstr ""
 
@@ -9160,11 +9160,11 @@ msgstr ""
 msgid "Re-attach quote"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:413
+#: src/screens/Messages/components/InviteLinkDialog.tsx:433
 msgid "Re-enable invite link"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:420
+#: src/screens/Messages/components/InviteLinkDialog.tsx:440
 msgid "Re-enable link"
 msgstr ""
 
@@ -9278,7 +9278,7 @@ msgid "Reject"
 msgstr ""
 
 #. Reject a request to join a chat
-#: src/screens/Messages/JoinRequests.tsx:483
+#: src/screens/Messages/JoinRequests.tsx:489
 msgctxt "button"
 msgid "Reject"
 msgstr ""
@@ -9287,7 +9287,7 @@ msgstr ""
 msgid "Reject chat request"
 msgstr ""
 
-#: src/screens/Messages/JoinRequests.tsx:477
+#: src/screens/Messages/JoinRequests.tsx:483
 msgid "Reject join request"
 msgstr ""
 
@@ -9322,7 +9322,7 @@ msgid "Remove {displayName} from starter pack"
 msgstr ""
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:157
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:231
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:234
 msgid "Remove {displayName} from this group chat"
 msgstr ""
 
@@ -9378,7 +9378,7 @@ msgstr ""
 msgid "Remove feed?"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:235
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:238
 msgid "Remove from chat"
 msgstr ""
 
@@ -9552,7 +9552,7 @@ msgstr ""
 msgid "Replies to this post are disabled."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1789
+#: src/view/com/composer/Composer.tsx:1804
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -9592,7 +9592,7 @@ msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:189
 #: src/features/liveNow/components/LiveStatusDialog.tsx:267
-#: src/screens/Messages/ConversationSettings/index.tsx:577
+#: src/screens/Messages/ConversationSettings/index.tsx:582
 msgid "Report"
 msgstr ""
 
@@ -9657,7 +9657,7 @@ msgstr ""
 msgid "Report this feed"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:576
+#: src/screens/Messages/ConversationSettings/index.tsx:581
 msgid "Report this group chat"
 msgstr ""
 
@@ -9737,11 +9737,11 @@ msgstr ""
 msgid "Reposts of your reposts"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:425
+#: src/components/intents/GroupChatJoinDialog.tsx:447
 msgid "Request access to group chat"
 msgstr ""
 
-#: src/screens/Messages/JoinRequests.tsx:177
+#: src/screens/Messages/JoinRequests.tsx:182
 msgid "Request approved."
 msgstr ""
 
@@ -9750,12 +9750,12 @@ msgstr ""
 msgid "Request code"
 msgstr ""
 
-#: src/screens/Messages/JoinRequests.tsx:209
+#: src/screens/Messages/JoinRequests.tsx:215
 msgid "Request ignored."
 msgstr ""
 
 #: src/components/dms/ChatInvite/Root.tsx:117
-#: src/components/intents/GroupChatJoinDialog.tsx:259
+#: src/components/intents/GroupChatJoinDialog.tsx:281
 msgid "Request to join"
 msgstr ""
 
@@ -9769,8 +9769,8 @@ msgid "Requests"
 msgstr ""
 
 #: src/Navigation.tsx:501
-#: src/screens/Messages/JoinRequests.tsx:58
-#: src/screens/Messages/JoinRequests.tsx:419
+#: src/screens/Messages/JoinRequests.tsx:59
+#: src/screens/Messages/JoinRequests.tsx:425
 msgid "Requests to join"
 msgstr ""
 
@@ -9791,7 +9791,7 @@ msgstr ""
 msgid "Required in your region"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:274
+#: src/components/intents/GroupChatJoinDialog.tsx:296
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:119
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:121
 msgid "Rescind request"
@@ -9875,7 +9875,7 @@ msgstr ""
 #: src/screens/Messages/ChatList.tsx:412
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:218
-#: src/screens/Messages/JoinRequests.tsx:355
+#: src/screens/Messages/JoinRequests.tsx:361
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:268
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:271
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:92
@@ -9925,7 +9925,7 @@ msgstr ""
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:324
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:668
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:673
-#: src/components/StarterPack/QrCodeDialog.tsx:207
+#: src/components/StarterPack/QrCodeDialog.tsx:210
 #: src/features/liveNow/components/EditLiveDialog.tsx:204
 #: src/features/liveNow/components/EditLiveDialog.tsx:211
 #: src/screens/Messages/ConversationSettings/prompts.tsx:74
@@ -9953,22 +9953,22 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
 #: src/screens/SavedFeeds.tsx:315
-#: src/view/com/composer/Composer.tsx:1436
+#: src/view/com/composer/Composer.tsx:1451
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save changes"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1408
+#: src/view/com/composer/Composer.tsx:1423
 #: src/view/com/composer/drafts/DraftsButton.tsx:93
 msgid "Save changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1436
+#: src/view/com/composer/Composer.tsx:1451
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save draft"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1410
+#: src/view/com/composer/Composer.tsx:1425
 #: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Save draft?"
 msgstr ""
@@ -9985,7 +9985,7 @@ msgstr ""
 msgid "Save new handle"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:199
+#: src/components/StarterPack/QrCodeDialog.tsx:202
 msgid "Save QR code"
 msgstr ""
 
@@ -10568,10 +10568,10 @@ msgstr ""
 #: src/components/Link.tsx:433
 #: src/components/MediaPreview.tsx:237
 #: src/components/Post/Embed/ImageContextMenu.tsx:74
-#: src/components/StarterPack/QrCodeDialog.tsx:195
+#: src/components/StarterPack/QrCodeDialog.tsx:198
 #: src/screens/Hashtag.tsx:130
-#: src/screens/Messages/components/InviteLinkDialog.tsx:399
-#: src/screens/Messages/components/InviteLinkDialog.tsx:406
+#: src/screens/Messages/components/InviteLinkDialog.tsx:415
+#: src/screens/Messages/components/InviteLinkDialog.tsx:426
 #: src/screens/StarterPack/StarterPackScreen.tsx:447
 #: src/screens/Topic.tsx:90
 msgid "Share"
@@ -10796,8 +10796,8 @@ msgstr ""
 #: src/screens/Login/LoginForm.tsx:179
 #: src/screens/Login/LoginForm.tsx:350
 #: src/screens/Login/LoginForm.tsx:356
-#: src/screens/Messages/JoinRequest.tsx:287
-#: src/screens/Messages/JoinRequest.tsx:293
+#: src/screens/Messages/JoinRequest.tsx:294
+#: src/screens/Messages/JoinRequest.tsx:300
 #: src/screens/Search/SearchResults.tsx:316
 #: src/view/com/auth/SplashScreen.tsx:118
 #: src/view/com/auth/SplashScreen.tsx:124
@@ -10830,7 +10830,7 @@ msgstr ""
 msgid "Sign in or create your account to join the conversation!"
 msgstr ""
 
-#: src/screens/Messages/JoinRequest.tsx:213
+#: src/screens/Messages/JoinRequest.tsx:220
 msgid "Sign in to accept invite."
 msgstr ""
 
@@ -10842,7 +10842,7 @@ msgstr ""
 msgid "Sign in to Bluesky or create a new account"
 msgstr ""
 
-#: src/screens/Messages/JoinRequest.tsx:212
+#: src/screens/Messages/JoinRequest.tsx:219
 msgid "Sign in to request access to this group chat."
 msgstr ""
 
@@ -10900,7 +10900,7 @@ msgstr ""
 msgid "Skip contact sharing and continue to the app"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1453
+#: src/view/com/composer/Composer.tsx:1468
 msgid "Skip empty posts?"
 msgstr ""
 
@@ -11005,8 +11005,8 @@ msgid "Something wasn't quite right with the data you're trying to report. Pleas
 msgstr ""
 
 #: src/screens/Messages/Conversation.tsx:133
-#: src/screens/Messages/ConversationSettings/index.tsx:132
-#: src/screens/Messages/JoinRequests.tsx:87
+#: src/screens/Messages/ConversationSettings/index.tsx:137
+#: src/screens/Messages/JoinRequests.tsx:88
 msgid "Something went wrong"
 msgstr ""
 
@@ -11255,7 +11255,7 @@ msgstr ""
 msgid "Success!"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:108
+#: src/components/intents/GroupChatJoinDialog.tsx:121
 msgid "Successfully joined the group chat!"
 msgstr ""
 
@@ -11390,7 +11390,7 @@ msgid "Tap to dismiss"
 msgstr ""
 
 #: src/components/dms/ChatInvite/Root.tsx:140
-#: src/components/intents/GroupChatJoinDialog.tsx:431
+#: src/components/intents/GroupChatJoinDialog.tsx:453
 msgid "Tap to join this group chat immediately"
 msgstr ""
 
@@ -11408,7 +11408,7 @@ msgid "Tap to remove your {0} reaction"
 msgstr ""
 
 #: src/components/dms/ChatInvite/Root.tsx:139
-#: src/components/intents/GroupChatJoinDialog.tsx:430
+#: src/components/intents/GroupChatJoinDialog.tsx:452
 msgid "Tap to request access to join this group chat"
 msgstr ""
 
@@ -11594,8 +11594,8 @@ msgstr ""
 msgid "The laws in your region require you to verify you're an adult to access certain features. Tap to learn more."
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:142
-#: src/screens/Messages/JoinRequests.tsx:200
+#: src/components/intents/GroupChatJoinDialog.tsx:155
+#: src/screens/Messages/JoinRequests.tsx:205
 msgid "The member limit has been reached."
 msgstr ""
 
@@ -11651,7 +11651,7 @@ msgstr ""
 msgid "There is a limit to how often you can change your birthdate. You may need to wait a day or two before updating it again."
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:499
+#: src/screens/Messages/components/InviteLinkDialog.tsx:519
 msgid "There is no invite link for this group chat."
 msgstr ""
 
@@ -11665,8 +11665,8 @@ msgid "There was a problem loading GIFs. Check your connection and try again."
 msgstr ""
 
 #: src/components/contacts/screens/GetContacts.tsx:147
-#: src/components/intents/GroupChatJoinDialog.tsx:126
-#: src/components/intents/GroupChatJoinDialog.tsx:160
+#: src/components/intents/GroupChatJoinDialog.tsx:139
+#: src/components/intents/GroupChatJoinDialog.tsx:182
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:36
 msgid "There was a problem with your internet connection, please try again"
 msgstr ""
@@ -11725,8 +11725,8 @@ msgstr ""
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:455
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:475
 #: src/screens/Messages/ConversationSettings/Member.tsx:71
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:111
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:124
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:114
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:127
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:117
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:130
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:96
@@ -11833,7 +11833,7 @@ msgid "This chat has ended"
 msgstr ""
 
 #: src/components/dms/ChatInvite/Root.tsx:122
-#: src/components/intents/GroupChatJoinDialog.tsx:265
+#: src/components/intents/GroupChatJoinDialog.tsx:287
 msgid "This chat is full"
 msgstr ""
 
@@ -11843,7 +11843,7 @@ msgid "This chat is locked"
 msgstr ""
 
 #: src/screens/Messages/components/ChatLocked.tsx:45
-#: src/screens/Messages/ConversationSettings/index.tsx:424
+#: src/screens/Messages/ConversationSettings/index.tsx:430
 msgid "This chat is locked by a moderation action"
 msgstr ""
 
@@ -11881,7 +11881,7 @@ msgstr ""
 msgid "This content is not viewable without a Bluesky account."
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:128
+#: src/components/intents/GroupChatJoinDialog.tsx:141
 msgid "This conversation is locked."
 msgstr ""
 
@@ -11947,11 +11947,11 @@ msgstr ""
 msgid "This information is private and not shared with other users."
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:138
+#: src/components/intents/GroupChatJoinDialog.tsx:151
 msgid "This invite link has been disabled."
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:201
+#: src/components/intents/GroupChatJoinDialog.tsx:223
 msgid "This invite link is invalid"
 msgstr ""
 
@@ -12057,8 +12057,8 @@ msgstr ""
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:151
-#: src/screens/Messages/JoinRequests.tsx:110
+#: src/screens/Messages/ConversationSettings/index.tsx:156
+#: src/screens/Messages/JoinRequests.tsx:111
 msgid "This screen is only available for group conversations."
 msgstr ""
 
@@ -12313,7 +12313,7 @@ msgctxt "action"
 msgid "Try again"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:167
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:170
 msgid "Try again in a moment."
 msgstr ""
 
@@ -12369,7 +12369,7 @@ msgstr ""
 msgid "Unable to delete"
 msgstr ""
 
-#: src/screens/Messages/JoinRequests.tsx:345
+#: src/screens/Messages/JoinRequests.tsx:351
 msgid "Unable to fetch join requests."
 msgstr ""
 
@@ -12407,7 +12407,7 @@ msgstr ""
 #: src/components/moderation/BlockDialog.tsx:186
 #: src/components/moderation/BlockDialog.tsx:190
 #: src/components/moderation/BlockDialog.tsx:211
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:224
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:227
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:210
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:381
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:443
@@ -12421,7 +12421,7 @@ msgctxt "action"
 msgid "Unblock"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:212
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:215
 msgid "Unblock {displayName}"
 msgstr ""
 
@@ -12525,7 +12525,7 @@ msgstr ""
 msgid "Unlock chat"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:561
+#: src/screens/Messages/ConversationSettings/index.tsx:567
 msgid "Unlock this group chat"
 msgstr ""
 
@@ -12562,7 +12562,7 @@ msgstr ""
 msgid "Unmute list"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:523
+#: src/screens/Messages/ConversationSettings/index.tsx:529
 msgid "Unmute this group chat"
 msgstr ""
 
@@ -12641,7 +12641,7 @@ msgstr ""
 msgid "Unsupported clipboard content"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1542
+#: src/view/com/composer/Composer.tsx:1557
 msgid "Unsupported video type: {mimeType}"
 msgstr ""
 
@@ -12669,9 +12669,9 @@ msgstr ""
 msgid "Update email"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:231
-#: src/screens/Messages/components/InviteLinkDialog.tsx:267
-#: src/screens/Messages/components/InviteLinkDialog.tsx:295
+#: src/screens/Messages/components/InviteLinkDialog.tsx:239
+#: src/screens/Messages/components/InviteLinkDialog.tsx:275
+#: src/screens/Messages/components/InviteLinkDialog.tsx:303
 msgid "Update invite link"
 msgstr ""
 
@@ -12736,7 +12736,7 @@ msgstr ""
 msgid "Upload from Library"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2572
+#: src/view/com/composer/Composer.tsx:2587
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -12750,7 +12750,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2574
+#: src/view/com/composer/Composer.tsx:2589
 msgid "Uploading video..."
 msgstr ""
 
@@ -13039,7 +13039,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2592
+#: src/view/com/composer/Composer.tsx:2607
 msgid "Video uploaded"
 msgstr ""
 
@@ -13056,7 +13056,7 @@ msgstr ""
 msgid "Videos must be less than 3 minutes long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1136
+#: src/view/com/composer/Composer.tsx:1150
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr ""
@@ -13088,7 +13088,7 @@ msgid "View {0}’s profile"
 msgstr ""
 
 #: src/components/dms/MessagesListHeader.tsx:111
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:185
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:188
 msgid "View {displayName}’s profile"
 msgstr ""
 
@@ -13145,7 +13145,7 @@ msgstr ""
 msgid "View more trending videos"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1131
+#: src/view/com/composer/Composer.tsx:1145
 msgid "View post"
 msgstr ""
 
@@ -13173,7 +13173,7 @@ msgstr ""
 msgid "View the avatar"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:548
+#: src/screens/Messages/ConversationSettings/index.tsx:554
 msgid "View the invite link for this group chat"
 msgstr ""
 
@@ -13292,11 +13292,11 @@ msgstr ""
 msgid "We couldn't load this conversation"
 msgstr ""
 
-#: src/screens/Messages/JoinRequests.tsx:88
+#: src/screens/Messages/JoinRequests.tsx:89
 msgid "We couldn’t load this conversation’s join requests"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:133
+#: src/screens/Messages/ConversationSettings/index.tsx:138
 msgid "We couldn’t load this conversation’s settings"
 msgstr ""
 
@@ -13492,7 +13492,7 @@ msgid "What do you want to call your starter pack?"
 msgstr ""
 
 #: src/view/com/auth/SplashScreen.web.tsx:98
-#: src/view/com/composer/Composer.tsx:1506
+#: src/view/com/composer/Composer.tsx:1521
 #: src/view/com/feeds/ComposerPrompt.tsx:193
 msgid "What's up?"
 msgstr ""
@@ -13505,7 +13505,7 @@ msgstr ""
 msgid "Who can interact with this post?"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:239
+#: src/screens/Messages/components/InviteLinkDialog.tsx:247
 msgid "Who can join this group chat and how"
 msgstr ""
 
@@ -13578,7 +13578,7 @@ msgstr ""
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1424
+#: src/view/com/composer/Composer.tsx:1439
 msgid "Would you like to save this as a draft to edit later?"
 msgstr ""
 
@@ -13587,12 +13587,12 @@ msgstr ""
 msgid "Write a post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1602
+#: src/view/com/composer/Composer.tsx:1617
 msgid "Write post"
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:91
-#: src/view/com/composer/Composer.tsx:1504
+#: src/view/com/composer/Composer.tsx:1519
 msgid "Write your reply"
 msgstr ""
 
@@ -13605,8 +13605,8 @@ msgstr ""
 msgid "Wrong DID returned from server. Received: {0}"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:150
-#: src/screens/Messages/JoinRequests.tsx:109
+#: src/screens/Messages/ConversationSettings/index.tsx:155
+#: src/screens/Messages/JoinRequests.tsx:110
 msgid "Wrong kind of conversation"
 msgstr ""
 
@@ -13768,7 +13768,7 @@ msgstr ""
 msgid "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1429
+#: src/view/com/composer/Composer.tsx:1444
 msgid "You can only save drafts up to 1000 characters."
 msgstr ""
 
@@ -13839,7 +13839,7 @@ msgstr ""
 msgid "You got here first"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:144
+#: src/components/intents/GroupChatJoinDialog.tsx:166
 msgid "You have been previously removed from this group and can’t join it using this link."
 msgstr ""
 
@@ -13912,7 +13912,7 @@ msgstr ""
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1419
+#: src/view/com/composer/Composer.tsx:1434
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr ""
 
@@ -13982,7 +13982,7 @@ msgstr ""
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:68
+#: src/components/StarterPack/QrCodeDialog.tsx:69
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:88
 msgid "You must grant access to your photo library to save a QR code"
 msgstr ""
@@ -14283,7 +14283,7 @@ msgstr ""
 msgid "Your muted words"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:203
+#: src/screens/Messages/components/InviteLinkDialog.tsx:211
 msgid "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone."
 msgstr ""
 
@@ -14295,11 +14295,11 @@ msgstr ""
 msgid "Your password must be at least 8 characters long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1127
+#: src/view/com/composer/Composer.tsx:1141
 msgid "Your post was sent"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1124
+#: src/view/com/composer/Composer.tsx:1138
 msgid "Your posts were sent"
 msgstr ""
 
@@ -14320,7 +14320,7 @@ msgstr ""
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1126
+#: src/view/com/composer/Composer.tsx:1140
 msgid "Your reply was sent"
 msgstr ""
 
@@ -14333,7 +14333,7 @@ msgstr ""
 msgid "Your selected interests help us serve you content you care about."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1454
+#: src/view/com/composer/Composer.tsx:1469
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr ""
 

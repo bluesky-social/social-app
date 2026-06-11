@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-10 21:06\n"
+"PO-Revision-Date: 2026-06-11 18:22\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -342,7 +342,7 @@ msgstr "{0}/{1} {2, plural, other {個成員}}"
 #. The number of active group chat members out of the total number allowed.
 #. placeholder {0}: joinLinkPreview.memberCount
 #. placeholder {1}: joinLinkPreview.memberLimit
-#: src/components/intents/GroupChatJoinDialog.tsx:329
+#: src/components/intents/GroupChatJoinDialog.tsx:343
 msgid "{0}/{1} members"
 msgstr "{0}/{1} 個成員"
 
@@ -955,7 +955,7 @@ msgstr "套用此建議語言"
 msgid "Accepted conversations"
 msgstr "已接受的對話"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:113
+#: src/components/intents/GroupChatJoinDialog.tsx:119
 msgid "Access requested! The group owner will review your request."
 msgstr "已送出申請！請靜待擁有者確認以加入群組。"
 
@@ -980,12 +980,12 @@ msgstr "帳號"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:427
 #: src/screens/Messages/components/RequestButtons.tsx:104
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:122
-#: src/view/com/profile/ProfileMenu.tsx:190
+#: src/view/com/profile/ProfileMenu.tsx:189
 msgctxt "toast"
 msgid "Account blocked"
 msgstr "成功封鎖帳號"
 
-#: src/view/com/profile/ProfileMenu.tsx:206
+#: src/view/com/profile/ProfileMenu.tsx:205
 msgctxt "toast"
 msgid "Account followed"
 msgstr "成功跟隨帳號"
@@ -999,7 +999,7 @@ msgid "Account is deactivated"
 msgstr "帳號已停用"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:470
-#: src/view/com/profile/ProfileMenu.tsx:160
+#: src/view/com/profile/ProfileMenu.tsx:159
 msgctxt "toast"
 msgid "Account muted"
 msgstr "成功靜音帳號"
@@ -1028,18 +1028,18 @@ msgstr "成功從快速存取中移除帳號"
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:109
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:91
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:315
-#: src/view/com/profile/ProfileMenu.tsx:177
+#: src/view/com/profile/ProfileMenu.tsx:176
 msgctxt "toast"
 msgid "Account unblocked"
 msgstr "成功解除封鎖帳號"
 
-#: src/view/com/profile/ProfileMenu.tsx:221
+#: src/view/com/profile/ProfileMenu.tsx:220
 msgctxt "toast"
 msgid "Account unfollowed"
 msgstr "成功取消跟隨帳號"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:450
-#: src/view/com/profile/ProfileMenu.tsx:147
+#: src/view/com/profile/ProfileMenu.tsx:146
 msgctxt "toast"
 msgid "Account unmuted"
 msgstr "成功取消靜音帳號"
@@ -1214,8 +1214,8 @@ msgstr "將以下 DNS 記錄新增到您的網域："
 msgid "Add this feed to your feeds"
 msgstr "將此新增至您的動態源"
 
-#: src/view/com/profile/ProfileMenu.tsx:355
-#: src/view/com/profile/ProfileMenu.tsx:358
+#: src/view/com/profile/ProfileMenu.tsx:357
+#: src/view/com/profile/ProfileMenu.tsx:360
 msgid "Add to lists"
 msgstr "新增至列表"
 
@@ -1224,8 +1224,8 @@ msgid "Add to saved posts"
 msgstr "新增至貼文收藏"
 
 #: src/components/dialogs/StarterPackDialog.tsx:184
-#: src/view/com/profile/ProfileMenu.tsx:346
-#: src/view/com/profile/ProfileMenu.tsx:349
+#: src/view/com/profile/ProfileMenu.tsx:348
+#: src/view/com/profile/ProfileMenu.tsx:351
 msgid "Add to starter packs"
 msgstr "新增至新手包"
 
@@ -1643,7 +1643,7 @@ msgstr "任何人"
 msgid "Anyone can interact"
 msgstr "任何人都可以參與互動"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:340
+#: src/components/intents/GroupChatJoinDialog.tsx:354
 msgid "Anyone can join"
 msgstr "任何人都可以加入"
 
@@ -1796,8 +1796,8 @@ msgstr "您確定要刪除這個新手包嗎？"
 msgid "Are you sure you want to discard your changes?"
 msgstr "您確定要放棄變更嗎？"
 
-#: src/screens/Messages/ConversationSettings/prompts.tsx:120
-#: src/screens/Messages/ConversationSettings/prompts.tsx:144
+#: src/screens/Messages/ConversationSettings/prompts.tsx:128
+#: src/screens/Messages/ConversationSettings/prompts.tsx:152
 msgid "Are you sure you want to leave {groupName}?"
 msgstr "您確定要離開 {groupName} 嗎？"
 
@@ -2009,8 +2009,8 @@ msgstr "封鎖 {displayName}"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:758
 #: src/screens/Messages/components/RequestButtons.tsx:154
 #: src/screens/Messages/components/RequestButtons.tsx:156
-#: src/view/com/profile/ProfileMenu.tsx:469
-#: src/view/com/profile/ProfileMenu.tsx:476
+#: src/view/com/profile/ProfileMenu.tsx:471
+#: src/view/com/profile/ProfileMenu.tsx:478
 msgid "Block account"
 msgstr "封鎖帳號"
 
@@ -2274,7 +2274,7 @@ msgstr ""
 #. The group chat creator, in the format 'By {displayName}'.
 #. placeholder {0}: createSanitizedDisplayName( joinLinkPreview.owner, true, moderateProfile(joinLinkPreview.owner, moderationOpts).ui( 'displayName', ), )
 #. placeholder {0}: sanitizeHandle(info.creatorHandle, '@')
-#: src/components/intents/GroupChatJoinDialog.tsx:363
+#: src/components/intents/GroupChatJoinDialog.tsx:377
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:451
 msgid "By <0>{0}</0>"
 msgstr "來自 <0>{0}</0>"
@@ -2348,10 +2348,10 @@ msgstr ""
 #: src/screens/Deactivated.tsx:150
 #: src/screens/Messages/components/InviteLinkDialog.tsx:500
 #: src/screens/Messages/components/InviteLinkDialog.tsx:504
-#: src/screens/Messages/ConversationSettings/prompts.tsx:100
-#: src/screens/Messages/ConversationSettings/prompts.tsx:124
-#: src/screens/Messages/ConversationSettings/prompts.tsx:148
-#: src/screens/Messages/ConversationSettings/prompts.tsx:172
+#: src/screens/Messages/ConversationSettings/prompts.tsx:108
+#: src/screens/Messages/ConversationSettings/prompts.tsx:132
+#: src/screens/Messages/ConversationSettings/prompts.tsx:156
+#: src/screens/Messages/ConversationSettings/prompts.tsx:180
 #: src/screens/Profile/Header/EditProfileDialog.tsx:215
 #: src/screens/Profile/Header/EditProfileDialog.tsx:223
 #: src/screens/Search/Shell.tsx:405
@@ -2498,7 +2498,7 @@ msgid "Chat ended"
 msgstr "對話已結束"
 
 #: src/components/dms/ChatInvite/Unavailable.tsx:25
-#: src/components/intents/GroupChatJoinDialog.tsx:256
+#: src/components/intents/GroupChatJoinDialog.tsx:269
 #: src/screens/Messages/JoinRequest.tsx:97
 msgid "Chat invite link no longer available"
 msgstr "對話邀請連結已失效"
@@ -2767,8 +2767,8 @@ msgstr "點此以重新傳送訊息"
 #: src/components/dms/AfterReportDialog.tsx:217
 #: src/components/dms/EmojiPopup.android.tsx:59
 #: src/components/dms/InitiateChatFlow.tsx:565
-#: src/components/intents/GroupChatJoinDialog.tsx:233
-#: src/components/intents/GroupChatJoinDialog.tsx:268
+#: src/components/intents/GroupChatJoinDialog.tsx:246
+#: src/components/intents/GroupChatJoinDialog.tsx:281
 #: src/components/NewskieDialog.tsx:169
 #: src/components/NewskieDialog.tsx:175
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:107
@@ -2850,10 +2850,10 @@ msgstr ""
 msgid "Close the incoming requests banner"
 msgstr "關閉加入申請通知橫幅"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:226
-#: src/components/intents/GroupChatJoinDialog.tsx:227
-#: src/components/intents/GroupChatJoinDialog.tsx:263
-#: src/components/intents/GroupChatJoinDialog.tsx:264
+#: src/components/intents/GroupChatJoinDialog.tsx:239
+#: src/components/intents/GroupChatJoinDialog.tsx:240
+#: src/components/intents/GroupChatJoinDialog.tsx:276
+#: src/components/intents/GroupChatJoinDialog.tsx:277
 #: src/components/Menu/index.tsx:361
 msgid "Close this dialog"
 msgstr "關閉此對話框"
@@ -3159,8 +3159,8 @@ msgstr "複製"
 msgid "Copy App Password"
 msgstr "複製應用程式專用密碼"
 
-#: src/view/com/profile/ProfileMenu.tsx:506
-#: src/view/com/profile/ProfileMenu.tsx:509
+#: src/view/com/profile/ProfileMenu.tsx:508
+#: src/view/com/profile/ProfileMenu.tsx:511
 msgid "Copy at:// URI"
 msgstr "複製 at:// 連結"
 
@@ -3175,8 +3175,8 @@ msgid "Copy code"
 msgstr "複製程式碼"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:504
-#: src/view/com/profile/ProfileMenu.tsx:515
-#: src/view/com/profile/ProfileMenu.tsx:518
+#: src/view/com/profile/ProfileMenu.tsx:517
+#: src/view/com/profile/ProfileMenu.tsx:520
 msgid "Copy DID"
 msgstr "複製 DID"
 
@@ -3210,8 +3210,8 @@ msgstr "複製列表連結"
 msgid "Copy link to post"
 msgstr "複製貼文連結"
 
-#: src/view/com/profile/ProfileMenu.tsx:285
-#: src/view/com/profile/ProfileMenu.tsx:295
+#: src/view/com/profile/ProfileMenu.tsx:287
+#: src/view/com/profile/ProfileMenu.tsx:297
 msgid "Copy link to profile"
 msgstr "複製個人檔案連結"
 
@@ -3455,7 +3455,7 @@ msgstr "建立內容管理列表"
 msgid "Create new account"
 msgstr "建立新帳號"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:553
+#: src/screens/Messages/ConversationSettings/index.tsx:554
 msgid "Create or modify an invite link for this group chat"
 msgstr "建立或編輯此群組對話的邀請連結"
 
@@ -3479,7 +3479,7 @@ msgstr "建立用戶列表"
 #. placeholder {0}: i18n.date(createdAt, { dateStyle: 'long', timeStyle: 'short', })
 #. placeholder {0}: i18n.date(createdAt, { month: 'long', day: 'numeric', year: 'numeric', })
 #: src/screens/Messages/components/InviteLinkDialog.tsx:355
-#: src/screens/Messages/ConversationSettings/index.tsx:505
+#: src/screens/Messages/ConversationSettings/index.tsx:509
 #: src/screens/Settings/AppPasswords.tsx:174
 msgid "Created {0}"
 msgstr "建立於 {0}"
@@ -4102,8 +4102,8 @@ msgstr "編輯大頭貼照"
 msgid "Edit Feeds"
 msgstr "編輯動態源"
 
-#: src/screens/Messages/ConversationSettings/prompts.tsx:36
-#: src/screens/Messages/ConversationSettings/prompts.tsx:41
+#: src/screens/Messages/ConversationSettings/prompts.tsx:43
+#: src/screens/Messages/ConversationSettings/prompts.tsx:49
 msgid "Edit group name"
 msgstr "編輯群組名稱"
 
@@ -4141,8 +4141,8 @@ msgstr "編輯連結設定"
 msgid "Edit list details"
 msgstr "編輯列表資訊"
 
-#: src/view/com/profile/ProfileMenu.tsx:369
-#: src/view/com/profile/ProfileMenu.tsx:389
+#: src/view/com/profile/ProfileMenu.tsx:371
+#: src/view/com/profile/ProfileMenu.tsx:391
 msgid "Edit live status"
 msgstr "編輯直播狀態"
 
@@ -4155,7 +4155,7 @@ msgstr "編輯內容管理列表"
 msgid "Edit My Feeds"
 msgstr "編輯我的動態源"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:540
+#: src/screens/Messages/ConversationSettings/index.tsx:544
 msgid "Edit name"
 msgstr "編輯名稱"
 
@@ -4184,8 +4184,8 @@ msgstr "編輯個人檔案"
 msgid "Edit starter pack"
 msgstr "編輯新手包"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:486
-#: src/screens/Messages/ConversationSettings/index.tsx:539
+#: src/screens/Messages/ConversationSettings/index.tsx:493
+#: src/screens/Messages/ConversationSettings/index.tsx:543
 msgid "Edit this group chat’s name"
 msgstr "編輯此群組對話的名稱"
 
@@ -4664,7 +4664,7 @@ msgstr "停用邀請連結時發生問題"
 msgid "Failed to disconnect Germ DM. Error: {0}"
 msgstr "中斷連結 Germ DM 時發生問題。錯誤：{0}"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:374
+#: src/screens/Messages/ConversationSettings/index.tsx:381
 msgid "Failed to edit group chat name"
 msgstr "編輯群組對話名稱時發生問題"
 
@@ -4692,7 +4692,7 @@ msgstr "隱藏建議時發生問題，請檢查您的網路連線狀態"
 msgid "Failed to ignore join request"
 msgstr "無法忽略加入申請"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:137
+#: src/components/intents/GroupChatJoinDialog.tsx:147
 msgid "Failed to join the group chat. Please try again."
 msgstr "無法加入群組對話，請再試一次。"
 
@@ -4700,9 +4700,9 @@ msgstr "無法加入群組對話，請再試一次。"
 msgid "Failed to launch SMS app"
 msgstr "無法開啟簡訊應用程式"
 
-#: src/screens/Messages/components/ChatEnded.tsx:42
-#: src/screens/Messages/components/ChatLocked.tsx:62
-#: src/screens/Messages/ConversationSettings/index.tsx:401
+#: src/screens/Messages/components/ChatEnded.tsx:41
+#: src/screens/Messages/components/ChatLocked.tsx:61
+#: src/screens/Messages/ConversationSettings/index.tsx:408
 msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "離開群組對話時發生問題"
@@ -4753,7 +4753,7 @@ msgstr "載入建議動態源時發生問題"
 msgid "Failed to load suggested follows"
 msgstr "載入建議跟隨帳號時發生問題"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:426
+#: src/screens/Messages/ConversationSettings/index.tsx:433
 msgid "Failed to lock group chat"
 msgstr "鎖定邀請連結時發生問題"
 
@@ -4761,7 +4761,7 @@ msgstr "鎖定邀請連結時發生問題"
 msgid "Failed to mark all requests as read"
 msgstr "將所有邀請標示為已讀時發生問題"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:390
+#: src/screens/Messages/ConversationSettings/index.tsx:397
 msgid "Failed to mute group chat"
 msgstr "靜音群組對話時發生問題"
 
@@ -4802,7 +4802,7 @@ msgstr "移除群組對話成員時發生問題"
 msgid "Failed to remove verification"
 msgstr "撤回驗證時發生問題"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:180
+#: src/components/intents/GroupChatJoinDialog.tsx:193
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:34
 msgid "Failed to rescind your request. Please try again."
 msgstr "無法撤銷您的申請，請再試一次。"
@@ -4854,7 +4854,7 @@ msgid "Failed to toggle thread mute, please try again"
 msgstr "將討論串設為靜音時發生問題，請再試一次"
 
 #: src/screens/Messages/components/ChatLocked.tsx:51
-#: src/screens/Messages/ConversationSettings/index.tsx:435
+#: src/screens/Messages/ConversationSettings/index.tsx:442
 msgid "Failed to unlock group chat"
 msgstr "解鎖群組對話時發生問題"
 
@@ -5116,7 +5116,7 @@ msgstr "聚焦搜尋欄位"
 #: src/components/ProfileHoverCard/index.web.tsx:506
 #: src/screens/Messages/ConversationSettings/Member.tsx:170
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:157
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:425
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:429
 #: src/screens/VideoFeed/index.tsx:866
 #: src/view/com/notifications/NotificationFeedItem.tsx:868
 #: src/view/com/notifications/NotificationFeedItem.tsx:875
@@ -5125,7 +5125,7 @@ msgstr "跟隨"
 
 #. placeholder {0}: profile.handle
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:144
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:413
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:417
 msgid "Follow {0}"
 msgstr "跟隨 {0}"
 
@@ -5149,8 +5149,8 @@ msgstr "跟隨 10 個人即可開始"
 msgid "Follow 7 accounts"
 msgstr "跟隨 7 個帳號"
 
-#: src/view/com/profile/ProfileMenu.tsx:325
-#: src/view/com/profile/ProfileMenu.tsx:336
+#: src/view/com/profile/ProfileMenu.tsx:327
+#: src/view/com/profile/ProfileMenu.tsx:338
 msgid "Follow account"
 msgstr "跟隨帳號"
 
@@ -5173,7 +5173,7 @@ msgstr "跟隨所有帳號"
 #. User is not following this account, click to follow back
 #: src/components/ProfileCard.tsx:542
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:155
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:423
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:427
 #: src/view/com/notifications/NotificationFeedItem.tsx:868
 #: src/view/com/notifications/NotificationFeedItem.tsx:875
 msgid "Follow back"
@@ -5211,7 +5211,7 @@ msgstr "被您認識的 <0>{0}</0> 和 <1>{1}</1> 跟隨"
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr "被您認識的 <0>{0}</0>, <1>{1}</1> 和{2, plural, one {其他 # 人跟隨} other {其他 # 人跟隨}}"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:339
+#: src/components/intents/GroupChatJoinDialog.tsx:353
 msgid "Followers can join"
 msgstr "跟隨者可以加入"
 
@@ -5231,7 +5231,7 @@ msgstr "您也認識的跟隨者"
 #: src/components/ProfileHoverCard/index.web.tsx:494
 #: src/components/ProfileHoverCard/index.web.tsx:505
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:421
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:425
 #: src/screens/VideoFeed/index.tsx:864
 #: src/view/com/notifications/NotificationFeedItem.tsx:846
 #: src/view/com/notifications/NotificationFeedItem.tsx:863
@@ -5526,8 +5526,8 @@ msgctxt "Button to go back to the home timeline"
 msgid "Go home"
 msgstr "前往首頁"
 
-#: src/view/com/profile/ProfileMenu.tsx:370
-#: src/view/com/profile/ProfileMenu.tsx:391
+#: src/view/com/profile/ProfileMenu.tsx:372
+#: src/view/com/profile/ProfileMenu.tsx:393
 msgid "Go live"
 msgstr "開始直播"
 
@@ -5538,8 +5538,8 @@ msgstr "開始直播"
 msgid "Go Live"
 msgstr "開始直播"
 
-#: src/view/com/profile/ProfileMenu.tsx:367
-#: src/view/com/profile/ProfileMenu.tsx:387
+#: src/view/com/profile/ProfileMenu.tsx:369
+#: src/view/com/profile/ProfileMenu.tsx:389
 msgid "Go live (disabled)"
 msgstr "直播（已停用）"
 
@@ -5623,7 +5623,7 @@ msgid "Grooming or predatory behavior"
 msgstr "引誘拐騙行為"
 
 #: src/components/dms/ChatInvite/Card.tsx:46
-#: src/components/intents/GroupChatJoinDialog.tsx:321
+#: src/components/intents/GroupChatJoinDialog.tsx:335
 #: src/screens/Messages/JoinRequest.tsx:129
 msgid "Group chat"
 msgstr "群組對話"
@@ -5632,17 +5632,17 @@ msgstr "群組對話"
 msgid "Group chat invite link dialog"
 msgstr "群組對話邀請連結對話框"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:417
+#: src/screens/Messages/ConversationSettings/index.tsx:424
 msgctxt "toast"
 msgid "Group chat locked"
 msgstr "群組對話已鎖定"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:382
+#: src/screens/Messages/ConversationSettings/index.tsx:389
 msgctxt "toast"
 msgid "Group chat muted"
 msgstr "已靜音群組對話"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:369
+#: src/screens/Messages/ConversationSettings/index.tsx:376
 msgctxt "toast"
 msgid "Group chat name updated"
 msgstr "已更新群組對話名稱"
@@ -5653,12 +5653,12 @@ msgid "Group chat settings"
 msgstr "群組對話設定"
 
 #: src/screens/Messages/components/ChatLocked.tsx:41
-#: src/screens/Messages/ConversationSettings/index.tsx:420
+#: src/screens/Messages/ConversationSettings/index.tsx:427
 msgctxt "toast"
 msgid "Group chat unlocked"
 msgstr "群組對話已解除鎖定"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:385
+#: src/screens/Messages/ConversationSettings/index.tsx:392
 msgctxt "toast"
 msgid "Group chat unmuted"
 msgstr "已取消靜音群組對話"
@@ -5682,12 +5682,12 @@ msgstr "群組已鎖定"
 
 #: src/components/dms/InitiateChatFlow.tsx:264
 #: src/components/dms/InitiateChatFlow.tsx:600
-#: src/screens/Messages/ConversationSettings/prompts.tsx:42
+#: src/screens/Messages/ConversationSettings/prompts.tsx:50
 msgid "Group name"
 msgstr "群組名稱"
 
 #: src/components/dms/InitiateChatFlow.tsx:625
-#: src/screens/Messages/ConversationSettings/prompts.tsx:61
+#: src/screens/Messages/ConversationSettings/prompts.tsx:69
 msgid "Group name is too long. {MAX_GROUP_NAME_GRAPHEME_LENGTH, plural, other {The maximum number of characters is #.}}"
 msgstr ""
 
@@ -6268,7 +6268,7 @@ msgstr "為您介紹貼文收藏（又稱書籤）"
 msgid "Invalid 2FA confirmation code."
 msgstr "無效的雙重驗證碼。"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:147
+#: src/components/intents/GroupChatJoinDialog.tsx:157
 msgid "Invalid group chat code."
 msgstr "無效的群組對話邀請。"
 
@@ -6290,7 +6290,7 @@ msgstr "無效的電話號碼"
 msgid "Invalid report subject"
 msgstr "無效的檢舉內容"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:187
+#: src/components/intents/GroupChatJoinDialog.tsx:200
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:41
 msgid "Invalid rescind request."
 msgstr "無效撤銷申請。"
@@ -6316,7 +6316,7 @@ msgid "Invite code not accepted. Check that you input it correctly and try again
 msgstr "邀請碼無效。請檢查是否輸入正確，然後再試一次。"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:140
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:368
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:372
 #: src/view/shell/Drawer.tsx:121
 msgid "Invite friends"
 msgstr ""
@@ -6336,7 +6336,7 @@ msgstr "邀請朋友 <0/>"
 #: src/screens/Messages/components/InviteLinkDialog.tsx:335
 #: src/screens/Messages/components/InviteLinkDialog.tsx:514
 #: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:149
-#: src/screens/Messages/ConversationSettings/index.tsx:556
+#: src/screens/Messages/ConversationSettings/index.tsx:557
 msgid "Invite link"
 msgstr "邀請連結"
 
@@ -6420,7 +6420,7 @@ msgid "Jobs"
 msgstr "工作"
 
 #: src/components/dms/ChatInvite/Root.tsx:117
-#: src/components/intents/GroupChatJoinDialog.tsx:282
+#: src/components/intents/GroupChatJoinDialog.tsx:296
 msgid "Join"
 msgstr "加入"
 
@@ -6431,12 +6431,12 @@ msgstr "加入"
 msgid "Join Bluesky"
 msgstr "加入 Bluesky"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:71
-#: src/components/intents/GroupChatJoinDialog.tsx:448
+#: src/components/intents/GroupChatJoinDialog.tsx:72
+#: src/components/intents/GroupChatJoinDialog.tsx:462
 msgid "Join group chat"
 msgstr "加入群組對話"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:176
+#: src/components/intents/GroupChatJoinDialog.tsx:189
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:31
 msgid "Join request rescinded."
 msgstr "已撤銷加入申請。"
@@ -6609,7 +6609,7 @@ msgid "Learn more."
 msgstr "瞭解詳情。"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:59
-#: src/screens/Messages/ConversationSettings/index.tsx:590
+#: src/screens/Messages/ConversationSettings/index.tsx:591
 msgid "Leave"
 msgstr "離開"
 
@@ -6623,8 +6623,8 @@ msgstr "離開"
 #: src/components/dms/MessagesListBlockedFooter.tsx:116
 #: src/components/moderation/BlockDialog.tsx:384
 #: src/components/moderation/BlockDialog.tsx:391
-#: src/screens/Messages/components/ChatEnded.tsx:67
-#: src/screens/Messages/components/ChatLocked.tsx:113
+#: src/screens/Messages/components/ChatEnded.tsx:66
+#: src/screens/Messages/components/ChatLocked.tsx:112
 msgid "Leave chat"
 msgstr "離開對話"
 
@@ -6644,12 +6644,12 @@ msgctxt "button"
 msgid "Leave conversation"
 msgstr "離開對話"
 
-#: src/screens/Messages/ConversationSettings/prompts.tsx:122
-#: src/screens/Messages/ConversationSettings/prompts.tsx:146
+#: src/screens/Messages/ConversationSettings/prompts.tsx:130
+#: src/screens/Messages/ConversationSettings/prompts.tsx:154
 msgid "Leave group chat"
 msgstr "離開群組對話"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:589
+#: src/screens/Messages/ConversationSettings/index.tsx:590
 msgid "Leave this group chat"
 msgstr "離開此群組對話"
 
@@ -6658,7 +6658,7 @@ msgstr "離開此群組對話"
 msgid "Leaving Bluesky"
 msgstr "離開 Bluesky"
 
-#: src/screens/Messages/ConversationSettings/prompts.tsx:145
+#: src/screens/Messages/ConversationSettings/prompts.tsx:153
 msgid "Leaving this chat will lock it permanently and you won’t be able to rejoin."
 msgstr ""
 
@@ -6954,23 +6954,23 @@ msgstr "正在載入貼文互動設定……"
 msgid "Loading..."
 msgstr "載入中……"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:570
+#: src/screens/Messages/ConversationSettings/index.tsx:571
 msgid "Lock"
 msgstr "鎖定"
 
-#: src/screens/Messages/ConversationSettings/prompts.tsx:99
+#: src/screens/Messages/ConversationSettings/prompts.tsx:107
 msgid "Lock group chat"
 msgstr "鎖定群組對話"
 
-#: src/screens/Messages/ConversationSettings/prompts.tsx:97
+#: src/screens/Messages/ConversationSettings/prompts.tsx:105
 msgid "Lock group chat?"
 msgstr "鎖定群組對話？"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:568
+#: src/screens/Messages/ConversationSettings/index.tsx:569
 msgid "Lock this group chat"
 msgstr "鎖定此群組對話"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:570
+#: src/screens/Messages/ConversationSettings/index.tsx:571
 msgid "Locked"
 msgstr "已鎖定"
 
@@ -7092,7 +7092,7 @@ msgstr ""
 msgid "Members"
 msgstr "成員"
 
-#: src/screens/Messages/ConversationSettings/prompts.tsx:98
+#: src/screens/Messages/ConversationSettings/prompts.tsx:106
 msgid "Members can still read chat history but can’t send new messages."
 msgstr "成員仍可以檢視聊天記錄，但無法傳送新的訊息。"
 
@@ -7281,8 +7281,8 @@ msgstr "更多語言……"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:144
 #: src/view/com/composer/drafts/DraftItem.tsx:190
-#: src/view/com/profile/ProfileMenu.tsx:259
-#: src/view/com/profile/ProfileMenu.tsx:266
+#: src/view/com/profile/ProfileMenu.tsx:258
+#: src/view/com/profile/ProfileMenu.tsx:265
 msgid "More options"
 msgstr "更多選項"
 
@@ -7302,7 +7302,7 @@ msgstr "電影"
 msgid "Music"
 msgstr "音樂"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:532
+#: src/screens/Messages/ConversationSettings/index.tsx:536
 msgid "Mute"
 msgstr "靜音"
 
@@ -7320,8 +7320,8 @@ msgstr "靜音 {0}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:739
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:745
-#: src/view/com/profile/ProfileMenu.tsx:448
-#: src/view/com/profile/ProfileMenu.tsx:455
+#: src/view/com/profile/ProfileMenu.tsx:450
+#: src/view/com/profile/ProfileMenu.tsx:457
 msgid "Mute account"
 msgstr "靜音帳號"
 
@@ -7347,7 +7347,7 @@ msgstr "靜音列表"
 msgid "Mute these accounts?"
 msgstr "要靜音這些帳號嗎？"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:530
+#: src/screens/Messages/ConversationSettings/index.tsx:534
 msgid "Mute this group chat"
 msgstr "靜音此群組對話"
 
@@ -7389,7 +7389,7 @@ msgstr "靜音字詞或標籤"
 msgid "Mute, leave, or remove people anytime. It’s your chat."
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:532
+#: src/screens/Messages/ConversationSettings/index.tsx:536
 msgid "Muted"
 msgstr "已靜音"
 
@@ -7480,7 +7480,7 @@ msgstr "算了，為我建立一個帳號代碼"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:171
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:184
-#: src/view/com/profile/ProfileMenu.tsx:403
+#: src/view/com/profile/ProfileMenu.tsx:405
 msgid "New"
 msgstr "最新"
 
@@ -7763,7 +7763,7 @@ msgstr "沒有人"
 msgid "No one but the author can quote this post."
 msgstr "僅限發布者可以引用這則貼文。"
 
-#: src/screens/Messages/components/ChatLocked.tsx:74
+#: src/screens/Messages/components/ChatLocked.tsx:73
 msgid "No one can send messages"
 msgstr "沒有人可以傳送訊息"
 
@@ -7895,7 +7895,7 @@ msgstr "找不到"
 msgid "Not ready to hit post? Keep your best ideas in Drafts until the timing is just right."
 msgstr "還沒準備好按下發布嗎？先把好點子收進草稿，靜待最完美的時刻。"
 
-#: src/view/com/profile/ProfileMenu.tsx:545
+#: src/view/com/profile/ProfileMenu.tsx:547
 msgid "Note about sharing"
 msgstr "關於分享的注意事項"
 
@@ -8053,7 +8053,7 @@ msgstr "只有管理員可以接受加入申請。"
 msgid "Only admins can ignore join requests."
 msgstr "只有管理員可以忽略加入申請。"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:145
+#: src/components/intents/GroupChatJoinDialog.tsx:155
 msgid "Only followers can join this group chat."
 msgstr "只有跟隨者可以加入此群組對話。"
 
@@ -8073,7 +8073,7 @@ msgid "Only people {0} follows can join."
 msgstr "只有 {0} 跟隨的人可以加入。"
 
 #: src/components/dms/ChatInvite/Root.tsx:127
-#: src/components/intents/GroupChatJoinDialog.tsx:292
+#: src/components/intents/GroupChatJoinDialog.tsx:306
 msgid "Only people the chat owner follows can join"
 msgstr "只有群組擁有者跟隨的人可以加入"
 
@@ -8107,7 +8107,7 @@ msgid "Open camera"
 msgstr "開啟相機"
 
 #: src/components/dms/ChatInvite/Root.tsx:104
-#: src/components/intents/GroupChatJoinDialog.tsx:437
+#: src/components/intents/GroupChatJoinDialog.tsx:451
 msgid "Open chat"
 msgstr "開啟對話"
 
@@ -8151,7 +8151,7 @@ msgstr "開啟完整表情符號列表"
 msgid "Open Germ DM"
 msgstr "開啟 Germ DM"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:430
+#: src/components/intents/GroupChatJoinDialog.tsx:444
 msgid "Open group chat"
 msgstr "開啟群組對話"
 
@@ -8221,7 +8221,7 @@ msgstr "開啟故事書頁面"
 msgid "Open system log"
 msgstr "開啟系統記錄"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:431
+#: src/components/intents/GroupChatJoinDialog.tsx:445
 msgid "Open this group chat"
 msgstr "開啟此群組對話"
 
@@ -8512,6 +8512,16 @@ msgstr "跟隨 @{0} 的人"
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:198
 msgid "People I follow"
 msgstr "我跟隨的人"
+
+#: src/screens/Messages/Settings.tsx:84
+msgctxt "allow group chat invites from"
+msgid "People I follow"
+msgstr ""
+
+#: src/screens/Messages/Settings.tsx:69
+msgctxt "allow messages from"
+msgid "People I follow"
+msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:163
 msgid "People I follow can join instantly"
@@ -9305,7 +9315,7 @@ msgstr "重新載入對話"
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:113
 #: src/screens/Bookmarks/index.tsx:265
 #: src/screens/Messages/ConversationSettings/Member.tsx:162
-#: src/screens/Messages/ConversationSettings/prompts.tsx:170
+#: src/screens/Messages/ConversationSettings/prompts.tsx:178
 #: src/screens/Moderation/index.tsx:477
 #: src/screens/Settings/Settings.tsx:673
 #: src/view/com/modals/UserAddRemoveLists.tsx:236
@@ -9326,7 +9336,7 @@ msgstr "從您的新手包刪除 {displayName}"
 msgid "Remove {displayName} from this group chat"
 msgstr "把 {displayName} 從此群組移除"
 
-#: src/screens/Messages/ConversationSettings/prompts.tsx:168
+#: src/screens/Messages/ConversationSettings/prompts.tsx:176
 msgid "Remove {displayName}?"
 msgstr ""
 
@@ -9449,8 +9459,8 @@ msgstr "從列表中刪除用戶"
 
 #: src/components/verification/VerificationRemovePrompt.tsx:48
 #: src/components/verification/VerificationsDialog.tsx:250
-#: src/view/com/profile/ProfileMenu.tsx:421
-#: src/view/com/profile/ProfileMenu.tsx:424
+#: src/view/com/profile/ProfileMenu.tsx:423
+#: src/view/com/profile/ProfileMenu.tsx:426
 msgid "Remove verification"
 msgstr "撤回驗證"
 
@@ -9592,12 +9602,12 @@ msgstr "成功隱藏回覆"
 
 #: src/components/dms/MessageContextMenu.tsx:189
 #: src/features/liveNow/components/LiveStatusDialog.tsx:267
-#: src/screens/Messages/ConversationSettings/index.tsx:582
+#: src/screens/Messages/ConversationSettings/index.tsx:583
 msgid "Report"
 msgstr "檢舉"
 
-#: src/view/com/profile/ProfileMenu.tsx:488
-#: src/view/com/profile/ProfileMenu.tsx:491
+#: src/view/com/profile/ProfileMenu.tsx:490
+#: src/view/com/profile/ProfileMenu.tsx:493
 msgid "Report account"
 msgstr "檢舉帳號"
 
@@ -9657,7 +9667,7 @@ msgstr "檢舉此對話"
 msgid "Report this feed"
 msgstr "檢舉這個動態源"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:581
+#: src/screens/Messages/ConversationSettings/index.tsx:582
 msgid "Report this group chat"
 msgstr "檢舉此群組對話"
 
@@ -9737,7 +9747,7 @@ msgstr "轉發這則貼文"
 msgid "Reposts of your reposts"
 msgstr "轉發您轉發的貼文"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:447
+#: src/components/intents/GroupChatJoinDialog.tsx:461
 msgid "Request access to group chat"
 msgstr "申請加入群組對話"
 
@@ -9755,7 +9765,7 @@ msgid "Request ignored."
 msgstr "已忽略申請。"
 
 #: src/components/dms/ChatInvite/Root.tsx:117
-#: src/components/intents/GroupChatJoinDialog.tsx:281
+#: src/components/intents/GroupChatJoinDialog.tsx:295
 msgid "Request to join"
 msgstr "申請加入"
 
@@ -9791,7 +9801,7 @@ msgstr "此服務提供者要求必填"
 msgid "Required in your region"
 msgstr "您所在的區域要求必填"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:296
+#: src/components/intents/GroupChatJoinDialog.tsx:310
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:119
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:121
 msgid "Rescind request"
@@ -9928,7 +9938,7 @@ msgstr "傷心 GIFs"
 #: src/components/StarterPack/QrCodeDialog.tsx:210
 #: src/features/liveNow/components/EditLiveDialog.tsx:204
 #: src/features/liveNow/components/EditLiveDialog.tsx:211
-#: src/screens/Messages/ConversationSettings/prompts.tsx:74
+#: src/screens/Messages/ConversationSettings/prompts.tsx:82
 #: src/screens/Profile/Header/EditProfileDialog.tsx:233
 #: src/screens/Profile/Header/EditProfileDialog.tsx:247
 #: src/screens/SavedFeeds.tsx:124
@@ -10148,8 +10158,8 @@ msgstr "搜尋語言"
 msgid "Search my posts"
 msgstr "搜尋我的貼文"
 
-#: src/view/com/profile/ProfileMenu.tsx:306
-#: src/view/com/profile/ProfileMenu.tsx:309
+#: src/view/com/profile/ProfileMenu.tsx:308
+#: src/view/com/profile/ProfileMenu.tsx:311
 msgid "Search posts"
 msgstr "搜尋貼文"
 
@@ -10577,7 +10587,7 @@ msgstr "性暗示"
 msgid "Share"
 msgstr "分享"
 
-#: src/view/com/profile/ProfileMenu.tsx:548
+#: src/view/com/profile/ProfileMenu.tsx:550
 msgid "Share anyway"
 msgstr "仍然分享"
 
@@ -10641,8 +10651,8 @@ msgstr "分享這個新手包，以協助他人融入您在 Bluesky 上的社群
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:166
 #: src/screens/StarterPack/StarterPackScreen.tsx:638
 #: src/screens/StarterPack/StarterPackScreen.tsx:646
-#: src/view/com/profile/ProfileMenu.tsx:285
-#: src/view/com/profile/ProfileMenu.tsx:297
+#: src/view/com/profile/ProfileMenu.tsx:287
+#: src/view/com/profile/ProfileMenu.tsx:299
 msgid "Share via..."
 msgstr "分享到……"
 
@@ -11255,7 +11265,7 @@ msgstr "完成"
 msgid "Success!"
 msgstr "完成！"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:121
+#: src/components/intents/GroupChatJoinDialog.tsx:131
 msgid "Successfully joined the group chat!"
 msgstr "成功加入群組對話！"
 
@@ -11390,7 +11400,7 @@ msgid "Tap to dismiss"
 msgstr "輕觸以跳過"
 
 #: src/components/dms/ChatInvite/Root.tsx:140
-#: src/components/intents/GroupChatJoinDialog.tsx:453
+#: src/components/intents/GroupChatJoinDialog.tsx:467
 msgid "Tap to join this group chat immediately"
 msgstr "輕觸以立即加入此群組對話"
 
@@ -11408,7 +11418,7 @@ msgid "Tap to remove your {0} reaction"
 msgstr "輕觸以收回您的 {0} 反應"
 
 #: src/components/dms/ChatInvite/Root.tsx:139
-#: src/components/intents/GroupChatJoinDialog.tsx:452
+#: src/components/intents/GroupChatJoinDialog.tsx:466
 msgid "Tap to request access to join this group chat"
 msgstr "輕觸以申請加入此群組對話"
 
@@ -11528,7 +11538,7 @@ msgstr "就這些了！"
 
 #: src/components/moderation/BlockDialog.tsx:153
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:204
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:438
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:442
 msgid "The account will be able to interact with you after unblocking."
 msgstr "解除封鎖後，該帳號將能夠重新與您進行互動。"
 
@@ -11594,7 +11604,7 @@ msgstr "以下設定將自動套用到新的貼文。您也可以針對個別貼
 msgid "The laws in your region require you to verify you're an adult to access certain features. Tap to learn more."
 msgstr "受限於您所在地區的法律規定，您必須在證明已成年後才能使用部分功能。輕觸以瞭解詳情。"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:155
+#: src/components/intents/GroupChatJoinDialog.tsx:165
 #: src/screens/Messages/JoinRequests.tsx:205
 msgid "The member limit has been reached."
 msgstr "已達到群組成員上限。"
@@ -11665,8 +11675,8 @@ msgid "There was a problem loading GIFs. Check your connection and try again."
 msgstr "載入 GIFs 時發生問題。請檢查您的網路連線狀態後再試一次。"
 
 #: src/components/contacts/screens/GetContacts.tsx:147
-#: src/components/intents/GroupChatJoinDialog.tsx:139
-#: src/components/intents/GroupChatJoinDialog.tsx:182
+#: src/components/intents/GroupChatJoinDialog.tsx:149
+#: src/components/intents/GroupChatJoinDialog.tsx:195
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:36
 msgid "There was a problem with your internet connection, please try again"
 msgstr "您的網路連線發生了一些問題，請再試一次"
@@ -11733,12 +11743,12 @@ msgstr "更新動態源時發生問題，請檢查您的網路連線狀態後再
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:304
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:320
-#: src/view/com/profile/ProfileMenu.tsx:152
-#: src/view/com/profile/ProfileMenu.tsx:165
-#: src/view/com/profile/ProfileMenu.tsx:182
-#: src/view/com/profile/ProfileMenu.tsx:195
-#: src/view/com/profile/ProfileMenu.tsx:211
-#: src/view/com/profile/ProfileMenu.tsx:226
+#: src/view/com/profile/ProfileMenu.tsx:151
+#: src/view/com/profile/ProfileMenu.tsx:164
+#: src/view/com/profile/ProfileMenu.tsx:181
+#: src/view/com/profile/ProfileMenu.tsx:194
+#: src/view/com/profile/ProfileMenu.tsx:210
+#: src/view/com/profile/ProfileMenu.tsx:225
 msgid "There was an issue! {0}"
 msgstr "發生問題！{0}"
 
@@ -11778,7 +11788,7 @@ msgstr "這些設定只會影響「Following」（跟隨中）動態源。"
 msgid "They own this chat"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/prompts.tsx:169
+#: src/screens/Messages/ConversationSettings/prompts.tsx:177
 msgid "They won’t be able to rejoin unless you invite them again."
 msgstr ""
 
@@ -11828,22 +11838,22 @@ msgstr "該作者已限制僅限已登入用戶可以檢視其貼文。"
 msgid "This button lets others open the Germ DM app to send you a message. You can manage its visibility from the Germ DM app, or you can disconnect your Bluesky account from Germ DM altogether by clicking the button below."
 msgstr "這個按鈕可讓其他人開啟 Germ DM 應用程式傳送訊息給您。您可以透過 Germ DM 應用程式管理此按鈕的顯示狀態，或者點選下方按鈕以解除您的 Bluesky 帳號與 Germ DM 之間的連結。"
 
-#: src/screens/Messages/components/ChatEnded.tsx:49
+#: src/screens/Messages/components/ChatEnded.tsx:48
 msgid "This chat has ended"
 msgstr "此對話已結束"
 
 #: src/components/dms/ChatInvite/Root.tsx:122
-#: src/components/intents/GroupChatJoinDialog.tsx:287
+#: src/components/intents/GroupChatJoinDialog.tsx:301
 msgid "This chat is full"
 msgstr "此對話已滿員"
 
 #: src/screens/Messages/components/ChatListItem.tsx:373
-#: src/screens/Messages/components/ChatLocked.tsx:70
+#: src/screens/Messages/components/ChatLocked.tsx:69
 msgid "This chat is locked"
 msgstr "此對話已鎖定"
 
 #: src/screens/Messages/components/ChatLocked.tsx:45
-#: src/screens/Messages/ConversationSettings/index.tsx:430
+#: src/screens/Messages/ConversationSettings/index.tsx:437
 msgid "This chat is locked by a moderation action"
 msgstr ""
 
@@ -11881,7 +11891,7 @@ msgstr "由於他們之中有一人封鎖了對方，導致無法檢視這項內
 msgid "This content is not viewable without a Bluesky account."
 msgstr "這項內容需要登入 Bluesky 帳號才能檢視。"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:141
+#: src/components/intents/GroupChatJoinDialog.tsx:151
 msgid "This conversation is locked."
 msgstr "此對話已鎖定。"
 
@@ -11931,7 +11941,7 @@ msgstr "這個動態源空空如也。"
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
 msgstr "這個動態源已經不再提供服務。我們將改為顯示「<0>Discover</0>」動態源。"
 
-#: src/screens/Messages/components/ChatLocked.tsx:73
+#: src/screens/Messages/components/ChatLocked.tsx:72
 msgid "This group is locked by a moderation action on the owner"
 msgstr ""
 
@@ -11947,11 +11957,11 @@ msgstr "無法使用這張圖片。請改用其他格式的檔案，例如 .jpg 
 msgid "This information is private and not shared with other users."
 msgstr "這項資訊將不會分享給其他用戶。"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:151
+#: src/components/intents/GroupChatJoinDialog.tsx:161
 msgid "This invite link has been disabled."
 msgstr "此邀請連結已停用。"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:223
+#: src/components/intents/GroupChatJoinDialog.tsx:236
 msgid "This invite link is invalid"
 msgstr "此邀請連結無效"
 
@@ -12049,7 +12059,7 @@ msgstr "這則貼文將會從動態及討論串中隱藏，之後將無法取消
 msgid "This post's author has disabled quote posts."
 msgstr "這則貼文的發布者拒絕引用貼文。"
 
-#: src/view/com/profile/ProfileMenu.tsx:546
+#: src/view/com/profile/ProfileMenu.tsx:548
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr "此個人檔案僅限已登入用戶可以檢視。未登入者則無法查看。"
 
@@ -12409,14 +12419,14 @@ msgstr "無法取得動態源資訊"
 #: src/components/moderation/BlockDialog.tsx:211
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:227
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:210
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:381
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:443
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:385
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:447
 #: src/screens/ProfileList/components/Header.tsx:166
 #: src/screens/ProfileList/components/Header.tsx:173
 msgid "Unblock"
 msgstr "解除封鎖"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:385
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:389
 msgctxt "action"
 msgid "Unblock"
 msgstr "解除封鎖"
@@ -12427,8 +12437,8 @@ msgstr "解除封鎖 {displayName}"
 
 #: src/components/dms/ConvoMenu.tsx:284
 #: src/components/dms/ConvoMenu.tsx:288
-#: src/view/com/profile/ProfileMenu.tsx:468
-#: src/view/com/profile/ProfileMenu.tsx:474
+#: src/view/com/profile/ProfileMenu.tsx:470
+#: src/view/com/profile/ProfileMenu.tsx:476
 msgid "Unblock account"
 msgstr "解除封鎖帳號"
 
@@ -12437,7 +12447,7 @@ msgid "Unblock account?"
 msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:202
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:436
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:440
 msgid "Unblock Account?"
 msgstr "要解除封鎖嗎？"
 
@@ -12474,12 +12484,12 @@ msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
 msgstr "取消轉發（{0, plural, other {# 則轉發}}）"
 
 #. placeholder {0}: profile.handle
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:412
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:416
 msgid "Unfollow {0}"
 msgstr "取消跟隨 {0}"
 
-#: src/view/com/profile/ProfileMenu.tsx:325
-#: src/view/com/profile/ProfileMenu.tsx:334
+#: src/view/com/profile/ProfileMenu.tsx:327
+#: src/view/com/profile/ProfileMenu.tsx:336
 msgid "Unfollow account"
 msgstr "取消跟隨帳號"
 
@@ -12521,11 +12531,11 @@ msgstr "取消喜歡"
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "取消喜歡（{0, plural, other {# 個喜歡}}）"
 
-#: src/screens/Messages/components/ChatLocked.tsx:92
+#: src/screens/Messages/components/ChatLocked.tsx:91
 msgid "Unlock chat"
 msgstr "解除鎖定對話"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:567
+#: src/screens/Messages/ConversationSettings/index.tsx:568
 msgid "Unlock this group chat"
 msgstr "解除鎖定此群組對話"
 
@@ -12548,8 +12558,8 @@ msgstr "取消靜音 {0}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:738
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:744
-#: src/view/com/profile/ProfileMenu.tsx:447
-#: src/view/com/profile/ProfileMenu.tsx:453
+#: src/view/com/profile/ProfileMenu.tsx:449
+#: src/view/com/profile/ProfileMenu.tsx:455
 msgid "Unmute account"
 msgstr "取消靜音帳號"
 
@@ -12562,7 +12572,7 @@ msgstr "取消靜音對話"
 msgid "Unmute list"
 msgstr "取消靜音列表"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:529
+#: src/screens/Messages/ConversationSettings/index.tsx:533
 msgid "Unmute this group chat"
 msgstr "取消靜音此群組對話"
 
@@ -12875,16 +12885,6 @@ msgstr "被 <0>@{0}</0> 跟隨的用戶"
 msgid "users following <0>@{0}</0>"
 msgstr "正在跟隨 <0>@{0}</0> 的用戶"
 
-#: src/screens/Messages/Settings.tsx:84
-msgctxt "allow group chat invites from"
-msgid "Users I follow"
-msgstr "我跟隨的用戶"
-
-#: src/screens/Messages/Settings.tsx:69
-msgctxt "allow messages from"
-msgid "Users I follow"
-msgstr "我跟隨的用戶"
-
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:451
 msgid "Value:"
 msgstr "值："
@@ -12912,8 +12912,8 @@ msgstr "驗證者："
 
 #: src/components/verification/VerificationCreatePrompt.tsx:85
 #: src/components/verification/VerificationCreatePrompt.tsx:87
-#: src/view/com/profile/ProfileMenu.tsx:431
-#: src/view/com/profile/ProfileMenu.tsx:434
+#: src/view/com/profile/ProfileMenu.tsx:433
+#: src/view/com/profile/ProfileMenu.tsx:436
 msgid "Verify account"
 msgstr "驗證帳號"
 
@@ -13173,7 +13173,7 @@ msgstr "檢視發布資訊"
 msgid "View the avatar"
 msgstr "檢視大頭貼照"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:554
+#: src/screens/Messages/ConversationSettings/index.tsx:555
 msgid "View the invite link for this group chat"
 msgstr "檢視此群組對話的邀請連結"
 
@@ -13839,7 +13839,7 @@ msgstr "您目前還沒有任何已儲存的動態源。"
 msgid "You got here first"
 msgstr "您是第一個抵達這裡的人"
 
-#: src/components/intents/GroupChatJoinDialog.tsx:166
+#: src/components/intents/GroupChatJoinDialog.tsx:176
 msgid "You have been previously removed from this group and can’t join it using this link."
 msgstr "您已被移出此群組，無法使用該邀請連結再次加入。"
 
@@ -14050,7 +14050,7 @@ msgstr "您將繼續收到這條討論串的通知"
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "您將收到一封包含「重設驗證碼」的電子郵件。請在這裡輸入該代碼，然後輸入您的新密碼。"
 
-#: src/screens/Messages/ConversationSettings/prompts.tsx:121
+#: src/screens/Messages/ConversationSettings/prompts.tsx:129
 msgid "You won’t be able to rejoin unless you’re invited."
 msgstr "除非收到邀請，否則無法重新加入。"
 
