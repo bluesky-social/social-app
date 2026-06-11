@@ -389,7 +389,7 @@ export function Checkbox() {
         t.atoms.border_contrast_high,
         a.transition_color,
         {
-          borderWidth: 1,
+          borderWidth: 2,
           height: 24,
           width: 24,
           borderRadius: 6,
