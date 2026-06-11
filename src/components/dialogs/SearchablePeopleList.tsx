@@ -514,11 +514,7 @@ function ExistingChatCard({
           ]}>
           <ProfileCard.Header>
             {convo.kind === 'group' ? (
-              <AvatarBubbles
-                profiles={convo.members}
-                size={40}
-                moderationOpts={moderationOpts}
-              />
+              <AvatarBubbles profiles={convo.members} size={40} />
             ) : (
               <ProfileCard.Avatar
                 profile={convo.primaryMember}

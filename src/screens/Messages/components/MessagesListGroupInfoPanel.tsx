@@ -16,6 +16,7 @@ import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/i
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {InviteLinkDialog} from './InviteLinkDialog'
 
 export function MessagesListGroupInfoPanel({
@@ -25,6 +26,7 @@ export function MessagesListGroupInfoPanel({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const ax = useAnalytics()
   const moderationOpts = useModerationOpts()
   const convoId = convo.view.id
 
@@ -35,6 +37,7 @@ export function MessagesListGroupInfoPanel({
 
   const {mutate: addGroupMembers} = useAddGroupMembers(convoId, {
     onSuccess: () => {
+      ax.metric('groupchat:owner:inviteMember', {convoId})
       addMembersControl.close()
     },
     onError: e => {
@@ -87,14 +90,11 @@ export function MessagesListGroupInfoPanel({
   return (
     <>
       <View style={[a.align_center, a.justify_center]}>
-        <AvatarBubbles
-          animate={true}
-          profiles={convo.members}
-          moderationOpts={moderationOpts}
-        />
+        <AvatarBubbles animate={true} profiles={convo.members} />
         {convo.details.name ? (
           <Text
-            style={[a.text_2xl, a.font_bold, a.mt_lg, a.px_xl, a.text_center]}>
+            style={[a.text_2xl, a.font_bold, a.mt_lg, a.px_xl, a.text_center]}
+            emoji>
             {convo.details.name}
           </Text>
         ) : null}
@@ -107,7 +107,8 @@ export function MessagesListGroupInfoPanel({
               a.text_sm,
               t.atoms.text_contrast_high,
               showButtons ? null : a.mb_4xl,
-            ]}>
+            ]}
+            emoji>
             {names}
           </Text>
         ) : null}

@@ -22,11 +22,12 @@ import {
   PersonX_Stroke2_Corner0_Rounded as PersonXIcon,
 } from '#/components/icons/Person'
 import * as Menu from '#/components/Menu'
+import {BlockDialog} from '#/components/moderation/BlockDialog'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
-import {BlockMemberPrompt} from './prompts'
+import {RemoveMemberPrompt} from './prompts'
 import {StatusBadge} from './StatusBadge'
 
 export function MemberMenu({
@@ -50,6 +51,7 @@ export function MemberMenu({
   const requireEmailVerification = useRequireEmailVerification()
 
   const blockMemberPrompt = Prompt.usePromptControl()
+  const removeMemberPrompt = Prompt.usePromptControl()
 
   const [menuDidOpen, setMenuDidOpen] = useState(false)
   const {data: convoAvailability} = useGetConvoAvailabilityQuery(profile.did, {
@@ -66,6 +68,9 @@ export function MemberMenu({
   })
   const convoId = convo.view.id
   const {mutate: removeMembers} = useRemoveFromGroupChat(convoId, {
+    onSuccess: () => {
+      ax.metric('groupchat:owner:kickMember', {convoId})
+    },
     onError: e => {
       logger.error('Failed to remove group chat member', {message: e})
       Toast.show(l`Failed to remove group chat member`, {type: 'error'})
@@ -227,7 +232,7 @@ export function MemberMenu({
               <Menu.Item
                 destructive
                 label={l`Remove ${displayName} from this group chat`}
-                onPress={() => removeMembers({members: [profile.did]})}>
+                onPress={removeMemberPrompt.open}>
                 <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
                 <Menu.ItemText>
                   <Trans>Remove from chat</Trans>
@@ -237,9 +242,16 @@ export function MemberMenu({
           </Menu.Group>
         </Menu.Outer>
       </Menu.Root>
-      <BlockMemberPrompt
+      <BlockDialog
         control={blockMemberPrompt}
-        onConfirm={() => void handleBlockMember()}
+        profile={profile}
+        onBlock={handleBlockMember}
+        currentConvoId={convoId}
+      />
+      <RemoveMemberPrompt
+        control={removeMemberPrompt}
+        displayName={displayName}
+        onConfirm={() => removeMembers({members: [profile.did]})}
       />
     </>
   )

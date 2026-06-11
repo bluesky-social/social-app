@@ -67,7 +67,18 @@ export class GifView extends PureComponent<GifViewProps> {
   }
 
   async playAsync(): Promise<void> {
-    this.videoPlayerRef.current?.play()
+    try {
+      await this.videoPlayerRef.current?.play()
+    } catch (err) {
+      // `play()` rejects with a NotAllowedError when the browser blocks
+      // playback (e.g. Safari low-power mode or autoplay policy). This is
+      // expected and benign - the GIF simply stays paused - so swallow it
+      // rather than letting it surface as an unhandled rejection.
+      if (err instanceof DOMException && err.name === 'NotAllowedError') {
+        return
+      }
+      throw err
+    }
   }
 
   async pauseAsync(): Promise<void> {

@@ -1,4 +1,4 @@
-import {BskyAgent} from '@atproto/api'
+import {AtpAgent} from '@atproto/api'
 
 import {device} from '#/storage'
 
@@ -83,8 +83,8 @@ export function configureAdditionalModerationAuthorities() {
   }
 
   const appLabelers = Array.from(
-    new Set([...BskyAgent.appLabelers, ...additionalLabelers]),
+    new Set([...AtpAgent.appLabelers, ...additionalLabelers]),
   )
 
-  BskyAgent.configure({appLabelers})
+  AtpAgent.configure({appLabelers})
 }

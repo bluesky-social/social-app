@@ -1,4 +1,4 @@
-import {type AppBskyVideoDefs, type BskyAgent} from '@atproto/api'
+import {type AppBskyVideoDefs, type AtpAgent} from '@atproto/api'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 import {nanoid} from 'nanoid/non-secure'
@@ -18,7 +18,7 @@ export async function uploadVideo({
   i18n,
 }: {
   video: CompressedVideo
-  agent: BskyAgent
+  agent: AtpAgent
   did: string
   setProgress: (progress: number) => void
   signal: AbortSignal

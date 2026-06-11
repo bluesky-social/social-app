@@ -11,7 +11,6 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {useChatActorStatusQuery} from '#/state/queries/messages/get-status'
 import {useListConvoMembersQuery} from '#/state/queries/messages/list-convo-members'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
@@ -67,6 +66,7 @@ type Item = LabelItem | ProfileItem | EmptyItem | PlaceholderItem | LoadingItem
 export type State = {
   groupChatDids: string[]
   groupChatProfiles: bsky.profile.AnyProfileView[]
+  searchText: string
 }
 
 export type Action =
@@ -80,6 +80,10 @@ export type Action =
       groupChatDids: string[]
       groupChatProfiles: bsky.profile.AnyProfileView[]
     }
+  | {
+      type: 'setSearchText'
+      searchText: string
+    }
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -88,6 +92,7 @@ function reducer(state: State, action: Action): State {
         ...state,
         groupChatDids: action.groupChatDids,
         groupChatProfiles: action.groupChatProfiles,
+        searchText: '',
       }
     }
     case 'removeDids': {
@@ -95,6 +100,12 @@ function reducer(state: State, action: Action): State {
         ...state,
         groupChatDids: action.groupChatDids,
         groupChatProfiles: action.groupChatProfiles,
+      }
+    }
+    case 'setSearchText': {
+      return {
+        ...state,
+        searchText: action.searchText,
       }
     }
   }
@@ -121,10 +132,18 @@ export function AddMembersFlow({
 
   const [headerHeight, setHeaderHeight] = useState(0)
   const [footerHeight, setFooterHeight] = useState(0)
-  const [searchText, setSearchText] = useState('')
 
   const listRef = useRef<ListMethods>(null)
   const inputRef = useRef<TextInput>(null)
+
+  const [{groupChatDids, groupChatProfiles, searchText}, dispatch] = useReducer(
+    reducer,
+    {
+      groupChatDids: [],
+      groupChatProfiles: [],
+      searchText: '',
+    },
+  )
 
   const {
     data: autocompleteResults,
@@ -142,19 +161,12 @@ export function AddMembersFlow({
     [memberListData],
   )
 
-  const {data: chatStatus} = useChatActorStatusQuery()
-  const groupMemberLimit = chatStatus?.groupMemberLimit
   // The existing members (including the viewer) already occupy slots, so the
   // number of people that can still be added is whatever's left.
-  const remainingSlots =
-    groupMemberLimit !== undefined
-      ? Math.max(0, groupMemberLimit - memberListData.length)
-      : undefined
-
-  const [{groupChatDids, groupChatProfiles}, dispatch] = useReducer(reducer, {
-    groupChatDids: [],
-    groupChatProfiles: [],
-  })
+  const remainingSlots = Math.max(
+    0,
+    convo.details.memberLimit - memberListData.length,
+  )
 
   const onRemoveDid = useCallback(
     (did: string) => {
@@ -209,6 +221,7 @@ export function AddMembersFlow({
       if (follows) {
         for (const page of follows.pages) {
           for (const profile of page.follows) {
+            if (!canBeAddedToGroup(profile)) continue
             _items.push({
               type: 'profile',
               key: profile.did,
@@ -216,12 +229,6 @@ export function AddMembersFlow({
             })
           }
         }
-
-        _items.sort(item => {
-          return item.type === 'profile' && canBeAddedToGroup(item.profile)
-            ? -1
-            : 1
-        })
       } else {
         for (let i = 0; i < 10; i++) {
           _items.push({type: 'placeholder', key: i + ''})
@@ -410,7 +417,7 @@ export function AddMembersFlow({
               inputRef={inputRef}
               value={searchText}
               onChangeText={text => {
-                setSearchText(text)
+                dispatch({type: 'setSearchText', searchText: text})
                 listRef.current?.scrollToOffset({offset: 0, animated: false})
               }}
               onEscape={control.close}

@@ -50,8 +50,9 @@ import {
   AppBskyDraftCreateDraft,
   AppBskyUnspeccedDefs,
   type AppBskyUnspeccedGetPostThreadV2,
+  type AtpAgent,
   AtUri,
-  type BskyAgent,
+  ChatBskyGroupDefs,
   type RichText,
 } from '@atproto/api'
 import {plural} from '@lingui/core/macro'
@@ -134,7 +135,14 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {
+  IS_ANDROID,
+  IS_IOS,
+  IS_LIQUID_GLASS,
+  IS_NATIVE,
+  IS_WEB,
+  IS_WEB_SAFARI,
+} from '#/env'
 import {type Gif} from '#/features/gifPicker/types'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
@@ -879,7 +887,9 @@ export const ComposePost = ({
     })),
   })
   const hasUnavailableChatInvite = linkQueries.some(
-    q => q.data?.type === 'chat-invite' && !q.data.view,
+    q =>
+      q.data?.type === 'chat-invite' &&
+      !ChatBskyGroupDefs.isJoinLinkPreviewView(q.data.view),
   )
 
   const canPost =
@@ -1061,6 +1071,20 @@ export const ComposePost = ({
           isReply: !!replyTo,
         })
       }
+      if (postUri) {
+        for (const q of linkQueries) {
+          const resolved = q.data
+          if (
+            resolved?.type === 'chat-invite' &&
+            ChatBskyGroupDefs.isJoinLinkPreviewView(resolved.view)
+          ) {
+            ax.metric('groupchat:inviteLink:shared', {
+              convoId: resolved.view.convoId,
+              method: 'post',
+            })
+          }
+        }
+      }
     }
     if (postUri && !replyTo) {
       emitPostCreated()
@@ -1154,6 +1178,7 @@ export const ComposePost = ({
     loadedDraftCreatedAt,
     emptyPostsPromptControl,
     getFilteredThread,
+    linkQueries,
   ])
 
   const handleConfirmSkipEmpty = () => {
@@ -1218,6 +1243,24 @@ export const ComposePost = ({
       }
     }
   }, [composerState])
+
+  useEffect(() => {
+    // Safari ignores `overscroll-behavior`, so horizontal trackpad swipes over
+    // the composer (e.g. on a quote post) can still trigger the browser's
+    // back/forward navigation gesture. Suppress predominantly-horizontal wheel
+    // events so the history-nav gesture never fires. Chrome and Firefox are
+    // covered by the `overscrollBehaviorX: 'contain'` style on the ScrollView.
+    if (!IS_WEB_SAFARI) return
+    const el =
+      scrollViewRef.current?.getScrollableNode() as unknown as HTMLElement | null
+    if (!el) return
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
+      e.preventDefault()
+    }
+    el.addEventListener('wheel', onWheel, {passive: false})
+    return () => el.removeEventListener('wheel', onWheel)
+  }, [scrollViewRef])
 
   const isLastThreadedPost = thread.posts.length > 1 && nextPost === undefined
   const {
@@ -1324,6 +1367,11 @@ export const ComposePost = ({
               web({
                 scrollbarGutter: 'stable',
                 scrollbarColor: `${t.palette.contrast_200} transparent`,
+                // Prevent horizontal trackpad swipes from triggering the
+                // browser's back/forward overscroll-navigation gesture.
+                // Handles Chrome and Firefox; Safari is handled separately
+                // via a wheel listener since it ignores overscroll-behavior.
+                overscrollBehaviorX: 'contain',
               }),
             ]}
             keyboardShouldPersistTaps="always"
@@ -2310,7 +2358,7 @@ function useKeyboardVerticalOffset() {
 }
 
 async function whenAppViewReady(
-  agent: BskyAgent,
+  agent: AtpAgent,
   uri: string,
   fn: (res: AppBskyUnspeccedGetPostThreadV2.Response) => boolean,
 ) {

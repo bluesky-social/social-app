@@ -3,6 +3,7 @@ import {useWindowDimensions, View} from 'react-native'
 import {type $Typed, type ChatBskyEmbedJoinLink} from '@atproto/api'
 
 import {useConvoActive} from '#/state/messages/convo'
+import {isKnownJoinLinkPreview} from '#/state/queries/join-links'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import * as ChatInvite from '#/components/dms/ChatInvite'
 import {MessageContextProvider} from './MessageContext'
@@ -26,6 +27,11 @@ let MessageItemInviteEmbed = ({
   const t = useTheme()
   const screen = useWindowDimensions()
   const convo = useConvoActive()
+
+  const code = isKnownJoinLinkPreview(embed.joinLinkPreview)
+    ? embed.joinLinkPreview.code
+    : undefined
+  if (!code) return null
 
   return (
     <MessageContextProvider>
@@ -72,12 +78,11 @@ let MessageItemInviteEmbed = ({
                 },
           ]}>
           <ChatInvite.Root
-            code={embed.joinLinkPreview.code}
+            code={code}
             initialPreview={embed.joinLinkPreview}
             currentConvoId={convo.convo.view.id}
             hasFixedHeight={false}>
-            <ChatInvite.Card size="small" />
-            <ChatInvite.JoinButton />
+            <MessageItemInviteEmbedBody />
           </ChatInvite.Root>
         </View>
       </View>
@@ -86,3 +91,22 @@ let MessageItemInviteEmbed = ({
 }
 MessageItemInviteEmbed = memo(MessageItemInviteEmbed)
 export {MessageItemInviteEmbed}
+
+function MessageItemInviteEmbedBody() {
+  const {status} = ChatInvite.useChatInvite()
+
+  if (status === 'loading') {
+    return <ChatInvite.Loading style={a.py_lg} />
+  }
+
+  if (status !== 'available') {
+    return <ChatInvite.Unavailable style={a.py_sm} />
+  }
+
+  return (
+    <>
+      <ChatInvite.Card size="small" />
+      <ChatInvite.JoinButton />
+    </>
+  )
+}

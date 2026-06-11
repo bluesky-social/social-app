@@ -59,12 +59,27 @@ type discussionForumPosting struct {
 	Text            string            `json:"text,omitempty"`
 	Image           []string          `json:"image,omitempty"`
 	ThumbnailURL    string            `json:"thumbnailUrl,omitempty"`
+	Video           *videoObject      `json:"video,omitempty"`
 	DatePublished   string            `json:"datePublished,omitempty"`
 	InteractionStat []interactionStat `json:"interactionStatistic,omitempty"`
 	CommentCount    *int64            `json:"commentCount,omitempty"`
 	Comment         []comment         `json:"comment,omitempty"`
 	IsBasedOn       string            `json:"isBasedOn,omitempty"`
 	SharedContent   *sharedContent    `json:"sharedContent,omitempty"`
+}
+
+// videoObject is the schema.org VideoObject shape for video embeds.
+// duration is omitted because the appview does not expose it.
+type videoObject struct {
+	Type         string `json:"@type"`
+	Name         string `json:"name,omitempty"`
+	Description  string `json:"description,omitempty"`
+	ThumbnailURL string `json:"thumbnailUrl,omitempty"`
+	UploadDate   string `json:"uploadDate,omitempty"`
+	ContentURL   string `json:"contentUrl,omitempty"`
+	EmbedURL     string `json:"embedUrl,omitempty"`
+	Width        int64  `json:"width,omitempty"`
+	Height       int64  `json:"height,omitempty"`
 }
 
 // comment is the schema.org Comment shape used in
@@ -78,6 +93,7 @@ type comment struct {
 	Text          string       `json:"text,omitempty"`
 	Image         []string     `json:"image,omitempty"`
 	ThumbnailURL  string       `json:"thumbnailUrl,omitempty"`
+	Video         *videoObject `json:"video,omitempty"`
 	DatePublished string       `json:"datePublished,omitempty"`
 }
 
@@ -127,6 +143,31 @@ func bskyPostURLFromATURI(handle, atURI string) string {
 	return bskyPostURL(handle, parsed.RecordKey().String())
 }
 
+// bskyPostURLFromATURIWithDIDFallback returns the handle-form post URL
+// when the handle is usable, otherwise falls back to the DID-form URL
+// derived from the AT-URI's authority. Returns "" only when the AT-URI is
+// unparseable or has no record key. Used for nested fields (e.g.
+// VideoObject.embedUrl) where omitting on handle.invalid would weaken the
+// emitted structured data.
+func bskyPostURLFromATURIWithDIDFallback(handle, atURI string) string {
+	parsed, err := syntax.ParseATURI(atURI)
+	if err != nil {
+		return ""
+	}
+	rkey := parsed.RecordKey().String()
+	if rkey == "" {
+		return ""
+	}
+	if url := bskyPostURL(handle, rkey); url != "" {
+		return url
+	}
+	did := parsed.Authority().String()
+	if did == "" {
+		return ""
+	}
+	return fmt.Sprintf("https://bsky.app/profile/%s/post/%s", did, rkey)
+}
+
 // bskyProfileURL returns the canonical handle-form profile URL, or "" if
 // the handle is unusable.
 func bskyProfileURL(handle string) string {
@@ -136,9 +177,9 @@ func bskyProfileURL(handle string) string {
 	return fmt.Sprintf("https://bsky.app/profile/%s", handle)
 }
 
-// extractPostMedia returns thumbnail URLs for the post's image or video
-// embed, byte-identical to what we put in og:image. Callers derive
-// thumbnailUrl from urls[0].
+// extractPostMedia returns thumbnail URLs for the post's image, gallery,
+// or video embed, byte-identical to what we put in og:image. Callers
+// derive thumbnailUrl from urls[0].
 func extractPostMedia(pv *appbsky.FeedDefs_PostView, embedHidden bool) []string {
 	if pv == nil || pv.Embed == nil || embedHidden {
 		return nil
@@ -147,6 +188,9 @@ func extractPostMedia(pv *appbsky.FeedDefs_PostView, embedHidden bool) []string 
 	if pv.Embed.EmbedImages_View != nil {
 		return imageThumbs(pv.Embed.EmbedImages_View.Images)
 	}
+	if pv.Embed.EmbedGallery_View != nil {
+		return galleryThumbs(pv.Embed.EmbedGallery_View.Items)
+	}
 	if pv.Embed.EmbedVideo_View != nil && pv.Embed.EmbedVideo_View.Thumbnail != nil {
 		return []string{*pv.Embed.EmbedVideo_View.Thumbnail}
 	}
@@ -154,6 +198,9 @@ func extractPostMedia(pv *appbsky.FeedDefs_PostView, embedHidden bool) []string 
 		media := pv.Embed.EmbedRecordWithMedia_View.Media
 		if media.EmbedImages_View != nil {
 			return imageThumbs(media.EmbedImages_View.Images)
+		}
+		if media.EmbedGallery_View != nil {
+			return galleryThumbs(media.EmbedGallery_View.Items)
 		}
 		if media.EmbedVideo_View != nil && media.EmbedVideo_View.Thumbnail != nil {
 			return []string{*media.EmbedVideo_View.Thumbnail}
@@ -172,6 +219,89 @@ func imageThumbs(images []*appbsky.EmbedImages_ViewImage) []string {
 		urls = append(urls, img.Thumb)
 	}
 	return urls
+}
+
+// galleryThumbs returns the thumbnail URLs of image items in a gallery
+// embed, or nil if empty. Items_Elem is a union; non-image variants and
+// nil entries are skipped so future gallery item types don't break SEO
+// extraction. Empty Thumbnail strings are also skipped to avoid emitting
+// <meta property="og:image" content=""> if the appview ever returns one.
+func galleryThumbs(items []*appbsky.EmbedGallery_View_Items_Elem) []string {
+	if len(items) == 0 {
+		return nil
+	}
+	urls := make([]string, 0, len(items))
+	for _, item := range items {
+		if item == nil || item.EmbedGallery_ViewImage == nil {
+			continue
+		}
+		if item.EmbedGallery_ViewImage.Thumbnail == "" {
+			continue
+		}
+		urls = append(urls, item.EmbedGallery_ViewImage.Thumbnail)
+	}
+	if len(urls) == 0 {
+		return nil
+	}
+	return urls
+}
+
+// findVideoEmbed returns the post's video embed view, or nil if there is
+// none or embeds are hidden. Shared with extractVideoMeta so og:video and
+// JSON-LD VideoObject stay in sync.
+func findVideoEmbed(pv *appbsky.FeedDefs_PostView, embedHidden bool) *appbsky.EmbedVideo_View {
+	if pv == nil || pv.Embed == nil || embedHidden {
+		return nil
+	}
+	if pv.Embed.EmbedVideo_View != nil {
+		return pv.Embed.EmbedVideo_View
+	}
+	if pv.Embed.EmbedRecordWithMedia_View != nil &&
+		pv.Embed.EmbedRecordWithMedia_View.Media != nil &&
+		pv.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View != nil {
+		return pv.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View
+	}
+	return nil
+}
+
+// buildVideoObject returns a VideoObject for the post's video embed, or
+// nil if there's no usable video. Falls back to "Video by @<handle>" when
+// alt text is empty so name is always populated (Google requires it).
+// description falls back to name for the same reason.
+func buildVideoObject(pv *appbsky.FeedDefs_PostView, embedURL, postText string, embedHidden bool) *videoObject {
+	v := findVideoEmbed(pv, embedHidden)
+	if v == nil || v.Playlist == "" {
+		return nil
+	}
+	vo := &videoObject{
+		Type:       "VideoObject",
+		ContentURL: v.Playlist,
+		EmbedURL:   embedURL,
+		// uploadDate uses IndexedAt (not record CreatedAt) for consistency
+		// with DiscussionForumPosting.datePublished on the parent post.
+		UploadDate: pv.IndexedAt,
+	}
+	if v.Thumbnail != nil {
+		vo.ThumbnailURL = *v.Thumbnail
+	}
+	switch {
+	case v.Alt != nil && *v.Alt != "":
+		vo.Name = *v.Alt
+	case pv.Author != nil && pv.Author.Handle != "" && pv.Author.Handle != "handle.invalid":
+		vo.Name = "Video by @" + pv.Author.Handle
+	default:
+		vo.Name = "Video on Bluesky"
+	}
+	if postText != "" {
+		vo.Description = postText
+	} else {
+		vo.Description = vo.Name
+	}
+	if v.AspectRatio != nil {
+		vo.Width = v.AspectRatio.Width
+		vo.Height = v.AspectRatio.Height
+	}
+	return vo
 }
 
 // extractQuotedPostURL returns the canonical URL of a quoted post, or ""
@@ -363,14 +493,18 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 		thumb = images[0]
 	}
 
+	postURL := bskyPostURLFromATURIWithDIDFallback(pv.Author.Handle, pv.Uri)
+	postText := postRecordText(pv)
+
 	node := discussionForumPosting{
 		Type:            "DiscussionForumPosting",
-		URL:             bskyPostURLFromATURI(pv.Author.Handle, pv.Uri),
+		URL:             postURL,
 		Identifier:      pv.Uri,
 		Author:          buildAuthor(pv.Author),
-		Text:            postRecordText(pv),
+		Text:            postText,
 		Image:           images,
 		ThumbnailURL:    thumb,
+		Video:           buildVideoObject(pv, postURL, postText, embedHidden),
 		DatePublished:   pv.IndexedAt,
 		InteractionStat: buildPostStats(pv),
 	}
@@ -433,14 +567,17 @@ func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) c
 	if len(images) > 0 {
 		thumb = images[0]
 	}
+	postURL := bskyPostURLFromATURIWithDIDFallback(pv.Author.Handle, pv.Uri)
+	postText := postRecordText(pv)
 	return comment{
 		Type:          "Comment",
-		URL:           bskyPostURLFromATURI(pv.Author.Handle, pv.Uri),
+		URL:           postURL,
 		Identifier:    pv.Uri,
 		Author:        buildAuthor(pv.Author),
-		Text:          postRecordText(pv),
+		Text:          postText,
 		Image:         images,
 		ThumbnailURL:  thumb,
+		Video:         buildVideoObject(pv, postURL, postText, embedHidden),
 		DatePublished: pv.IndexedAt,
 	}
 }

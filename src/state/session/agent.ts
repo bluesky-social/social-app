@@ -1,10 +1,10 @@
 import {
   Agent as BaseAgent,
   type AppBskyActorProfile,
+  AtpAgent,
   type AtprotoServiceType,
   type AtpSessionData,
   type AtpSessionEvent,
-  BskyAgent,
   type Did,
   type Un$Typed,
 } from '@atproto/api'
@@ -29,7 +29,6 @@ import {
   setCreatedAtForDid,
 } from '#/ageAssurance/data'
 import {unsafeGetAndComputeAgeAssurance} from '#/ageAssurance/state'
-import {AgeAssuranceAccess} from '#/ageAssurance/types'
 import {features} from '#/analytics'
 import {emitNetworkConfirmed, emitNetworkLost} from '../events'
 import {addSessionErrorLog} from './logging'
@@ -53,7 +52,7 @@ export function createPublicAgent() {
 export async function createAgentAndResume(
   storedAccount: SessionAccount,
   onSessionChange: (
-    agent: BskyAgent,
+    agent: AtpAgent,
     did: string,
     event: AtpSessionEvent,
   ) => void,
@@ -97,7 +96,7 @@ export async function createAgentAndLogin(
     authFactorToken?: string
   },
   onSessionChange: (
-    agent: BskyAgent,
+    agent: AtpAgent,
     did: string,
     event: AtpSessionEvent,
   ) => void,
@@ -144,7 +143,7 @@ export async function createAgentAndCreateAccount(
     verificationCode?: string
   },
   onSessionChange: (
-    agent: BskyAgent,
+    agent: AtpAgent,
     did: string,
     event: AtpSessionEvent,
   ) => void,
@@ -218,10 +217,14 @@ export async function createAgentAndCreateAccount(
         throw e
       }),
       // wait for AA data to load first, then check state
-      aa.then(async () => {
-        const {state} = unsafeGetAndComputeAgeAssurance({did: account.did})
-        if (state.access !== AgeAssuranceAccess.Full) {
-          restrictChatSettings({agent, did: account.did})
+      aa.then(() => {
+        const {flags} = unsafeGetAndComputeAgeAssurance({did: account.did})
+        if (flags?.chatDisabled || flags?.groupChatDisabled) {
+          void restrictChatSettings({
+            agent,
+            restrictIncoming: flags.chatDisabled,
+            restrictGroupInvites: flags.groupChatDisabled,
+          })
         }
       }),
     ]).then(promises => {
@@ -279,7 +282,7 @@ export async function createAgentAndCreateAccount(
   })
 }
 
-export function agentToSessionAccountOrThrow(agent: BskyAgent): SessionAccount {
+export function agentToSessionAccountOrThrow(agent: AtpAgent): SessionAccount {
   const account = agentToSessionAccount(agent)
   if (!account) {
     throw Error('Expected an active session')
@@ -288,7 +291,7 @@ export function agentToSessionAccountOrThrow(agent: BskyAgent): SessionAccount {
 }
 
 export function agentToSessionAccount(
-  agent: BskyAgent,
+  agent: AtpAgent,
 ): SessionAccount | undefined {
   if (!agent.session) {
     return undefined
@@ -347,7 +350,7 @@ export class Agent extends BaseAgent {
 // Ideally, we wouldn't be doing this. However, since there is so much logic that requires making calls to the PDS right now, it
 // feels safer to just let those run as-is and set the header afterward.
 let realFetch = globalThis.fetch
-class BskyAppAgent extends BskyAgent {
+class BskyAppAgent extends AtpAgent {
   persistSessionHandler: ((event: AtpSessionEvent) => void) | undefined =
     undefined
 
@@ -386,7 +389,7 @@ class BskyAppAgent extends BskyAgent {
     // Not awaited in the calling code so we can delay blocking on them.
     resolvers: Promise<unknown>[]
     onSessionChange: (
-      agent: BskyAgent,
+      agent: AtpAgent,
       did: string,
       event: AtpSessionEvent,
     ) => void

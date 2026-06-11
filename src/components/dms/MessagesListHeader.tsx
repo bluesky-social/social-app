@@ -42,7 +42,7 @@ export function MessagesListHeader({convo}: {convo?: ConvoWithDetails | null}) {
           convo.kind === 'direct' ? (
             <ProfileHeaderReady convo={convo} moderationOpts={moderationOpts} />
           ) : (
-            <GroupHeaderReady convo={convo} moderationOpts={moderationOpts} />
+            <GroupHeaderReady convo={convo} />
           )
         ) : (
           <>
@@ -121,7 +121,8 @@ function ProfileHeaderReady({
             <View style={[a.flex_row, a.align_center, a.flex_1, web(a.mb_2xs)]}>
               <Text
                 style={[a.text_lg, a.font_semi_bold, a.flex_shrink]}
-                numberOfLines={1}>
+                numberOfLines={1}
+                emoji>
                 {displayName}
               </Text>
               <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
@@ -151,10 +152,8 @@ function ProfileHeaderReady({
 
 function GroupHeaderReady({
   convo,
-  moderationOpts,
 }: {
   convo: Extract<ConvoWithDetails, {kind: 'group'}>
-  moderationOpts: ModerationOpts
 }) {
   const {t: l} = useLingui()
 
@@ -177,15 +176,12 @@ function GroupHeaderReady({
                   },
                 }
           }>
-          <AvatarBubbles
-            size={40}
-            profiles={convo.members}
-            moderationOpts={moderationOpts}
-          />
+          <AvatarBubbles size={40} profiles={convo.members} />
           <View style={[a.flex_row, a.flex_1, a.align_center]}>
             <Text
               style={[a.text_lg, a.font_semi_bold, a.flex_shrink]}
-              numberOfLines={1}>
+              numberOfLines={1}
+              emoji>
               {convo.details.name}
             </Text>
             <MuteStatus muted={convo.view.muted} />
