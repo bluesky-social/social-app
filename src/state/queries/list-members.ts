@@ -2,7 +2,7 @@ import {
   type AppBskyActorDefs,
   type AppBskyGraphDefs,
   type AppBskyGraphGetList,
-  type BskyAgent,
+  type AtpAgent,
 } from '@atproto/api'
 import {
   type InfiniteData,
@@ -60,7 +60,7 @@ export function useAllListMembersQuery(uri?: string) {
   })
 }
 
-export async function getAllListMembers(agent: BskyAgent, uri: string) {
+export async function getAllListMembers(agent: AtpAgent, uri: string) {
   let hasMore = true
   let cursor: string | undefined
   const listItems: AppBskyGraphDefs.ListItemView[] = []
