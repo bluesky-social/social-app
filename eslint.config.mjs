@@ -37,8 +37,8 @@ export default defineConfig(
       'bskyembed/**',
       'bskyogcard/**',
       // Eurosky fork: the OAuth client-assertion worker is a separate sub-project
-      // (Cloudflare Worker + Bunny Edge Scripting / Deno) with its own runtime,
-      // types, and URL imports - not app code. It has its own tsconfig/lint.
+      // (Bunny Edge Scripting / Deno runtime + URL imports) - not app code,
+      // same rationale as the Plausible script below.
       'oauth-worker/**',
       // Eurosky fork: the Plausible analytics proxy is a Bunny Edge Script
       // (Deno runtime + URL imports), not app code - same rationale as above.
