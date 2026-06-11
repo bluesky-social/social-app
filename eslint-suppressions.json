@@ -975,11 +975,6 @@
       "count": 4
     }
   },
-  "src/lib/hooks/useOpenLink.ts": {
-    "@typescript-eslint/require-await": {
-      "count": 1
-    }
-  },
   "src/lib/hooks/usePermissions.ts": {
     "@typescript-eslint/no-misused-promises": {
       "count": 1
