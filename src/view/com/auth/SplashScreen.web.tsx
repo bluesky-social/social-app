@@ -14,6 +14,7 @@ import {
 } from '#/screens/StarterPack/StarterPackLandingScreen'
 import {atoms as a, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
+import {BetaTag} from '#/components/BetaTag'
 import {Button, ButtonText} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as TimesIcon} from '#/components/icons/Times'
 import * as Layout from '#/components/Layout'
@@ -81,8 +82,9 @@ export const SplashScreen = ({
           <ErrorBoundary>
             <View style={[a.justify_center, a.align_center]}>
               {!kawaii && (
-                <View style={[a.pb_sm, a.pt_5xl]}>
+                <View style={[a.pt_5xl, a.pb_sm, a.align_center, a.gap_sm]}>
                   <Logo3D width={161} />
+                  <BetaTag />
                 </View>
               )}
 

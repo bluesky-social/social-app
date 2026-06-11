@@ -8,6 +8,7 @@ import {FocusGuards, FocusScope} from 'radix-ui/internal'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo3D} from '#/view/icons/Logo3D'
 import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
+import {BetaTag} from '#/components/BetaTag'
 import {Button, ButtonText} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
@@ -97,17 +98,13 @@ export function WelcomeModal({control}: WelcomeModalProps) {
           <View style={[a.flex_1, a.justify_center]}>
             <View style={[a.gap_2xl, a.align_center, a.p_4xl]}>
               <View
-                style={[
-                  a.flex_row,
-                  a.align_center,
-                  a.justify_center,
-                  a.w_full,
-                ]}>
+                style={[a.align_center, a.justify_center, a.w_full, a.gap_sm]}>
                 <Logo3D
                   width={140}
                   accessibilityLabel={EUROSKY.brand.name}
                   accessibilityHint=""
                 />
+                <BetaTag />
               </View>
               <View style={[a.gap_sm, a.align_center, a.pt_lg, a.pb_3xl]}>
                 <Text
