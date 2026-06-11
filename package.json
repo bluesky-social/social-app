@@ -106,7 +106,7 @@
     "@bsky.app/peek-menu": "^0.3.0",
     "@bsky.app/react-native-mmkv": "2.12.5",
     "@bsky.app/sift": "^0.3.8",
-    "@bsky.app/tapper": "^0.5.7",
+    "@bsky.app/tapper": "^0.6.0",
     "@bsky.app/video": "0.3.6",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
     "@emoji-mart/data": "^1.2.1",
