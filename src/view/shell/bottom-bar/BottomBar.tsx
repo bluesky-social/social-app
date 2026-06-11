@@ -1,5 +1,6 @@
-import {type JSX, useCallback} from 'react'
-import {type GestureResponderEvent, View} from 'react-native'
+import {type JSX, useCallback, useMemo} from 'react'
+import {type AccessibilityActionEvent, View} from 'react-native'
+import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, plural} from '@lingui/core/macro'
@@ -11,6 +12,7 @@ import {StackActions} from '@react-navigation/native'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {BOTTOM_BAR_AVI} from '#/lib/demo'
 import {useHaptics} from '#/lib/haptics'
+import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useHideBottomBarBorder} from '#/lib/hooks/useHideBottomBarBorder'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
@@ -23,6 +25,7 @@ import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
+import {getNextAccount} from '#/state/session/accounts'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -57,7 +60,7 @@ import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {styles} from './BottomBarStyles'
 
 export function BottomBar({navigation}: BottomTabBarProps) {
-  const {hasSession, currentAccount} = useSession()
+  const {hasSession, currentAccount, accounts} = useSession()
   const t = useTheme()
   const {_} = useLingui()
   const ax = useAnalytics()
@@ -74,6 +77,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const closeAllActiveElements = useCloseAllActiveElements()
   const dedupe = useDedupe()
   const accountSwitchControl = useDialogControl()
+  const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const playHaptic = useHaptics()
   const hideBorder = useHideBottomBarBorder()
   const iconWidth = 28
@@ -133,6 +137,35 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const onPressProfile = useCallback(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
+  const onDoublePressProfile = useCallback(() => {
+    if (pendingDid) {
+      return
+    }
+
+    const nextAccount = getNextAccount(accounts, currentAccount)
+    if (nextAccount) {
+      playHaptic()
+      void onPressSwitchAccount(nextAccount, 'SwitchAccount')
+    }
+  }, [accounts, currentAccount, onPressSwitchAccount, pendingDid, playHaptic])
+  const profileGesture = useMemo(() => {
+    const singleTap = Gesture.Tap()
+      .numberOfTaps(1)
+      .onEnd(() => {
+        onPressProfile()
+      })
+      .runOnJS(true)
+    const doubleTap = Gesture.Tap()
+      .numberOfTaps(2)
+      .onEnd(() => {
+        onDoublePressProfile()
+      })
+      .runOnJS(true)
+
+    // Order matters: the double tap must be given a chance to recognize before
+    // the single-tap tab action fires.
+    return Gesture.Exclusive(doubleTap, singleTap)
+  }, [onDoublePressProfile, onPressProfile])
   const onPressMessages = useCallback(() => {
     onPressTab('Messages')
   }, [onPressTab])
@@ -299,6 +332,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 </View>
               }
               onPress={onPressProfile}
+              gesture={profileGesture}
               onLongPress={onLongPressProfile}
               accessibilityRole="tab"
               accessibilityLabel={_(msg`Profile`)}
@@ -368,8 +402,9 @@ interface BtnProps extends Pick<
   icon: JSX.Element
   notificationCount?: string
   hasNew?: boolean
-  onPress?: (event: GestureResponderEvent) => void
-  onLongPress?: (event: GestureResponderEvent) => void
+  gesture?: React.ComponentProps<typeof GestureDetector>['gesture']
+  onPress: () => void
+  onLongPress?: () => void
 }
 
 function Btn({
@@ -379,21 +414,37 @@ function Btn({
   notificationCount,
   onPress,
   onLongPress,
+  gesture,
   accessible,
   accessibilityHint,
   accessibilityLabel,
 }: BtnProps) {
   const t = useTheme()
+  const onAccessibilityAction = useCallback(
+    (event: AccessibilityActionEvent) => {
+      if (event.nativeEvent.actionName === 'activate') {
+        onPress()
+      }
+    },
+    [onPress],
+  )
+  const pressableOnPress = gesture ? undefined : onPress
+  const accessibilityActions = gesture
+    ? [{name: 'activate', label: accessibilityLabel}]
+    : undefined
+  const gestureAccessibilityAction = gesture ? onAccessibilityAction : undefined
 
-  return (
+  const content = (
     <PressableScale
       testID={testID}
       style={[styles.ctrl, a.flex_1]}
-      onPress={onPress}
+      onPress={pressableOnPress}
       onLongPress={onLongPress}
       accessible={accessible}
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
+      accessibilityActions={accessibilityActions}
+      onAccessibilityAction={gestureAccessibilityAction}
       targetScale={0.8}
       accessibilityLargeContentTitle={accessibilityLabel}
       accessibilityShowsLargeContentViewer>
@@ -418,4 +469,10 @@ function Btn({
       ) : null}
     </PressableScale>
   )
+
+  if (!gesture) {
+    return content
+  }
+
+  return <GestureDetector gesture={gesture}>{content}</GestureDetector>
 }
