@@ -73,6 +73,10 @@ const APP_BRAND_MSGIDS = new Set<string>([
   'E8ogPW', // Your email has not yet been verified... all the features of Bluesky.
   'QfDITI', // Leaving Bluesky
   'WqbUOH', // A screenshot of the post composer... "Bluesky has drafts now!!!"
+  'dKRV7a', // Post it to Bluesky or share anywhere. (group chats announcement)
+  'pYv2lK', // ...let them scan the code to join you on Bluesky. (invite friends announcement)
+  'BZUP5P', // Bluesky needs camera access to scan QR codes from other profiles. (invite scanner)
+  'CFvtZB', // Please use the Bluesky mobile app to scan a QR code. (invite scanner, web)
   'PlEImx', // Bluesky is more fun with friends! Import your contacts...
   'KYLfP6', // An mockup of a iPhone showing the Bluesky app open to the profile...
   'GT08QB', // Bluesky will proactively verify notable and authentic accounts.
