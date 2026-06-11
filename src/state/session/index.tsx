@@ -311,6 +311,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       patch: {
         emailConfirmed: data.emailConfirmed,
         emailAuthFactor: data.emailAuthFactor,
+        handle: data.handle,
       },
     })
   }, [store, state, cancelPendingTask])

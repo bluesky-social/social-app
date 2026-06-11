@@ -27,7 +27,7 @@ import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useServiceQuery} from '#/state/queries/service'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
-import {useAgent, useSession} from '#/state/session'
+import {useSession, useSessionApi} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -63,12 +63,17 @@ export function ChangeHandleDialog({
 function ChangeHandleDialogInner() {
   const control = Dialog.useDialogContext()
   const {_} = useLingui()
-  const agent = useAgent()
+  const {currentAccount} = useSession()
+  // mu fork: OAuth sessions use a generic Agent that has no `serviceUrl` (only
+  // password sessions' BskyAppAgent does), so reading agent.serviceUrl crashed
+  // the dialog (blank page) for OAuth users. currentAccount.service is the
+  // correct describeServer target for both: the entryway for password sessions
+  // and the OAuth issuer otherwise.
   const {
     data: serviceInfo,
     error: serviceInfoError,
     refetch,
-  } = useServiceQuery(agent.serviceUrl.toString())
+  } = useServiceQuery(currentAccount?.service ?? '')
 
   const [page, setPage] = useState<'provided-handle' | 'own-handle'>(
     'provided-handle',
@@ -152,9 +157,9 @@ function ProvidedHandlePage({
 }) {
   const {_} = useLingui()
   const [subdomain, setSubdomain] = useState('')
-  const agent = useAgent()
   const control = Dialog.useDialogContext()
   const {currentAccount} = useSession()
+  const {partialRefreshSession} = useSessionApi()
   const queryClient = useQueryClient()
   const profile = useCurrentAccountProfile()
   const verification = useSimpleVerificationState({
@@ -173,7 +178,10 @@ function ProvidedHandlePage({
           queryKey: RQKEY_PROFILE(currentAccount.did),
         })
       }
-      agent.resumeSession(agent.session!).then(() => control.close())
+      // mu fork: partialRefreshSession works for both password and OAuth
+      // agents (the old agent.resumeSession is AtpAgent-only) and now refreshes
+      // the session handle too, so the new handle reflects everywhere.
+      partialRefreshSession().then(() => control.close())
     },
   })
 
@@ -311,8 +319,8 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
   const {currentAccount} = useSession()
   const [dnsPanel, setDNSPanel] = useState(true)
   const [domain, setDomain] = useState('')
-  const agent = useAgent()
   const control = Dialog.useDialogContext()
+  const {partialRefreshSession} = useSessionApi()
   const fetchDid = useFetchDid()
   const queryClient = useQueryClient()
 
@@ -328,7 +336,9 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
           queryKey: RQKEY_PROFILE(currentAccount.did),
         })
       }
-      agent.resumeSession(agent.session!).then(() => control.close())
+      // mu fork: see ProvidedHandlePage - partialRefreshSession is OAuth-safe
+      // and refreshes the session handle.
+      partialRefreshSession().then(() => control.close())
     },
   })
 
