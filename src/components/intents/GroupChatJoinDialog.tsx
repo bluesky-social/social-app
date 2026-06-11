@@ -262,7 +262,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
               style={[
                 a.mb_2xs,
                 a.text_center,
-                a.text_sm,
+                a.text_lg,
                 a.font_medium,
                 t.atoms.text_contrast_high,
               ]}>
