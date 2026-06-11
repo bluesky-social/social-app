@@ -360,6 +360,10 @@ export function HeaderStandardButtons({
               size="small"
               color="secondary"
               shape="round"
+              // expand the 33pt button toward a 44pt touch target, capped
+              // horizontally at half the 4pt row gap so the target cannot
+              // overlap the neighboring buttons' own targets
+              hitSlop={{top: 6, bottom: 6, left: 2, right: 2}}
               onPress={() => {
                 playHaptic('Light')
                 ax.metric('invite:dialog:open', {logContext: 'ProfileHeader'})

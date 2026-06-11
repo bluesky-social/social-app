@@ -4,7 +4,6 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {HITSLOP_20} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
@@ -264,7 +263,10 @@ let ProfileMenu = ({
                   {...props}
                   testID="profileHeaderDropdownBtn"
                   label={l`More options`}
-                  hitSlop={HITSLOP_20}
+                  // hitSlop reaches outside parent views on iOS, so the
+                  // left inset must stay within half of the 4pt row gap or
+                  // it steals taps from the adjacent header button
+                  hitSlop={{top: 6, bottom: 6, left: 2, right: 12}}
                   variant="solid"
                   color="secondary"
                   size="small"
