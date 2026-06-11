@@ -510,13 +510,13 @@ export function ListConvosProviderInner({
               },
             )
           } else if (ChatBskyConvoDefs.isLogMuteConvo(log)) {
-            updateConvoInAllLists(log.convoId, convo => ({
+            mutateConvoView(log.convoId, convo => ({
               ...convo,
               muted: true,
               rev: log.rev,
             }))
           } else if (ChatBskyConvoDefs.isLogUnmuteConvo(log)) {
-            updateConvoInAllLists(log.convoId, convo => ({
+            mutateConvoView(log.convoId, convo => ({
               ...convo,
               muted: false,
               rev: log.rev,
