@@ -347,6 +347,13 @@ function SettingsHeader({
 
   const groupName = convo.details.name
   const [newGroupName, setNewGroupName] = useState(groupName)
+  const [editNameInputKey, setEditNameInputKey] = useState(0)
+
+  const openEditNamePrompt = () => {
+    setNewGroupName(groupName)
+    setEditNameInputKey(k => k + 1)
+    editNamePrompt.open()
+  }
 
   const lockStatus = convo.details.lockStatus
 
@@ -485,10 +492,7 @@ function SettingsHeader({
             accessibilityRole="button"
             accessibilityHint={l`Edit this group chat’s name`}
             hitSlop={HITSLOP_10}
-            onPress={() => {
-              setNewGroupName(groupName)
-              editNamePrompt.open()
-            }}>
+            onPress={openEditNamePrompt}>
             {groupNameComponent}
           </Pressable>
         ) : (
@@ -538,10 +542,7 @@ function SettingsHeader({
               icon={EditIcon}
               label={l`Edit this group chat’s name`}
               text={l`Edit name`}
-              onPress={() => {
-                setNewGroupName(groupName)
-                editNamePrompt.open()
-              }}
+              onPress={openEditNamePrompt}
             />
           ) : null}
           {isJoinLinkEnabled ? (
@@ -597,6 +598,7 @@ function SettingsHeader({
       <EditNamePrompt
         control={editNamePrompt}
         value={newGroupName}
+        inputKey={editNameInputKey}
         onChangeText={setNewGroupName}
         onConfirm={() => editGroupName({name: newGroupName})}
       />
