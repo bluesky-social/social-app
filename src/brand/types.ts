@@ -88,8 +88,14 @@ export type Brand = BrandConfig & {
     wordmark: SvgShape
     /** Combined logomark variant used in Logomark.tsx */
     logomark: SvgShape
-    /** Optional earth logo mark */
-    earth?: SvgShape
+    /** Optional logo mark for splash screen */
+    splashMark?: SvgShape
+    /** Optional logo mark for tab bar / bottom bar */
+    tabBarMark?: SvgShape
+    /** Optional logo mark for official app account avatar in progress guide */
+    appAccountMark?: SvgShape
+    /** Optional custom width for the logotype in the home header */
+    logotypeHeaderWidth?: number
     /**
      * Optional kawaii-mode raster fallbacks. Bluesky-only easter egg; other
      * brands can omit this and the kawaii toggle will simply render the

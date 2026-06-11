@@ -147,6 +147,7 @@ function StackedAvatars({follows}: {follows?: bsky.profile.AnyProfileView[]}) {
   const overlap = avatarSize * overlapRatio
   const iconSize = avatarSize * 0.5
 
+  const brand = useBrand()
   const followedAvatars = follows?.slice(0, TOTAL_AVATARS) ?? []
   const remainingSlots = TOTAL_AVATARS - followedAvatars.length
 
@@ -156,7 +157,8 @@ function StackedAvatars({follows}: {follows?: bsky.profile.AnyProfileView[]}) {
         <>
           {/* Show followed user avatars */}
           {followedAvatars.map((follow, i) => {
-            const isAppAccount = follow.did === BSKY_APP_ACCOUNT_DID
+            const isAppAccount =
+              !!brand.logo.appAccountMark && follow.did === BSKY_APP_ACCOUNT_DID
             return (
               <View
                 key={follow.did}
@@ -175,7 +177,11 @@ function StackedAvatars({follows}: {follows?: bsky.profile.AnyProfileView[]}) {
                   },
                 ]}>
                 {isAppAccount ? (
-                  <Logo earth width={iconSize} fill={t.palette.primary_500} />
+                  <Logo
+                    context="appAccount"
+                    width={iconSize}
+                    fill={t.palette.primary_500}
+                  />
                 ) : (
                   <UserAvatar
                     type="user"

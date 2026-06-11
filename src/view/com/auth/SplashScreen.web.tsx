@@ -91,7 +91,7 @@ export const SplashScreen = ({
           <ErrorBoundary>
             <View style={[a.justify_center, a.align_center]}>
               <Logo
-                earth
+                context="splash"
                 width={kawaii ? 300 : 92}
                 fill={kawaii ? 'sky' : undefined}
               />

@@ -220,7 +220,7 @@ export function BottomBarWeb() {
                 },
               ]}>
               <View style={[a.flex_row, a.align_center, a.gap_md]}>
-                <Logo width={32} earth={true} />
+                <Logo width={32} context="tabBar" />
                 {brand.useTextJoinLabel ? (
                   <Text
                     style={[

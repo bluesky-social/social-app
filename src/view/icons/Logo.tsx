@@ -21,12 +21,12 @@ const {mark, kawaiiAssets} = brand.logo
 type Props = {
   fill?: PathProps['fill']
   style?: TextProps['style']
-  earth?: boolean
+  context?: 'splash' | 'tabBar' | 'appAccount'
 } & Omit<SvgProps, 'style'>
 
 export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
   const t = useTheme()
-  const {fill, earth, ...rest} = props
+  const {fill, context, ...rest} = props
   const gradient = fill === 'sky'
   const styles = flatten(props.style)
   const _fill = gradient
@@ -49,7 +49,14 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
     )
   }
 
-  const markToRender = earth && brand.logo.earth ? brand.logo.earth : mark
+  const markToRender =
+    (context &&
+      ({
+        splash: brand.logo.splashMark,
+        tabBar: brand.logo.tabBarMark,
+        appAccount: brand.logo.appAccountMark,
+      }[context] as typeof mark)) ||
+    mark
 
   if ('xml' in markToRender) {
     return (

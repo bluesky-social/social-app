@@ -401,11 +401,22 @@ const brand: Brand = {
       xml: ICON_SVG,
       ratio: 115.671 / 77.234,
     },
-    earth: {
+    splashMark: {
       xml: EARTH_SVG,
       ratio: 1,
       scale: 1.8,
     },
+    tabBarMark: {
+      xml: EARTH_SVG,
+      ratio: 1,
+      scale: 1.8,
+    },
+    appAccountMark: {
+      xml: EARTH_SVG,
+      ratio: 1,
+      scale: 1.8,
+    },
+    logotypeHeaderWidth: 110,
   },
 }
 

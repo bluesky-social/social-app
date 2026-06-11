@@ -33,6 +33,7 @@ export function HomeHeaderLayoutMobile({
   const {headerHeight} = useShellLayout()
   const insets = useSafeAreaInsets()
   const headerMinimalShellTransform = useMinimalShellHeaderTransform()
+  const brand = getActiveBrand()
   const {hasSession} = useSession()
   const playHaptic = useHaptics()
   const {navigate} = useNavigation<NavigationProp>()
@@ -71,7 +72,7 @@ export function HomeHeaderLayoutMobile({
               }
             }}>
             <Logotype
-              width={getActiveBrand().id === 'k4m2a' ? 110 : 140}
+              width={brand.logo.logotypeHeaderWidth || 140}
               fill={t.name === 'light' ? t.palette.primary_500 : '#ffffff'}
             />
           </PressableScale>

@@ -318,7 +318,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               }}>
               <View
                 style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
-                <Logo width={28} earth={true} />
+                <Logo width={28} context="tabBar" />
                 {brand.useTextJoinLabel ? (
                   <Text
                     style={[

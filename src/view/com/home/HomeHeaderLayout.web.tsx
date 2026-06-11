@@ -42,6 +42,7 @@ function HomeHeaderLayoutDesktopAndTablet({
   const {_} = useLingui()
   const kawaii = useKawaiiMode()
   const gutters = useGutters([0, 'base'])
+  const brand = getActiveBrand()
 
   return (
     <>
@@ -55,7 +56,7 @@ function HomeHeaderLayoutDesktopAndTablet({
                 <Logo width={60} />
               ) : (
                 <Logotype
-                  width={getActiveBrand().id === 'k4m2a' ? 110 : 140}
+                  width={brand.logo.logotypeHeaderWidth || 140}
                   fill={t.name === 'light' ? t.palette.primary_500 : '#ffffff'}
                 />
               )}
