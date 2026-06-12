@@ -315,10 +315,8 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
     <>
       <View style={[a.w_full, a.py_lg, a.align_center]}>
         <AvatarBubbles
-          profiles={[
-            joinLinkPreview.owner,
-            ...Array(joinLinkPreview.memberCount - 1).fill(undefined),
-          ]}
+          profiles={[joinLinkPreview.owner]}
+          count={joinLinkPreview.memberCount}
           self
           size={135}
         />
