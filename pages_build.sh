@@ -23,7 +23,12 @@ set -euo pipefail
 
 # Eurosky defaults for web builds. These can still be overridden by explicitly
 # exporting different values in CI or local shells.
-: "${EXPO_PUBLIC_ENABLE_GEOLOCATION:=false}"
+# Geolocation stays ON, served first-party from Bunny (see geolocation-worker/)
+# instead of Bluesky's CORS-locked ip.bsky.app. It decides which regional
+# moderation labelers are required; without it the app fail-closes and
+# subscribes ALL of them for every user.
+: "${EXPO_PUBLIC_ENABLE_GEOLOCATION:=true}"
+: "${EXPO_PUBLIC_GEOLOCATION_URL:=https://ip.mu.social}"
 : "${EXPO_PUBLIC_ENABLE_LIVE_EVENTS:=false}"
 : "${EXPO_PUBLIC_ENABLE_APP_CONFIG:=false}"
 : "${EXPO_PUBLIC_PLAUSIBLE_DOMAIN:=mu.social}"
@@ -33,6 +38,7 @@ set -euo pipefail
 # include the scheme (unlike the bare PLAUSIBLE_DOMAIN above).
 : "${EXPO_PUBLIC_PLAUSIBLE_API_HOST:=https://events.mu.social}"
 export EXPO_PUBLIC_ENABLE_GEOLOCATION
+export EXPO_PUBLIC_GEOLOCATION_URL
 export EXPO_PUBLIC_ENABLE_LIVE_EVENTS
 export EXPO_PUBLIC_ENABLE_APP_CONFIG
 export EXPO_PUBLIC_PLAUSIBLE_DOMAIN
