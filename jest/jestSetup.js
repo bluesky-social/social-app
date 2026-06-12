@@ -23,6 +23,7 @@ jest.mock('react-native-safe-area-context', () => {
     SafeAreaProvider: jest.fn().mockImplementation(({children}) => children),
     SafeAreaConsumer: jest
       .fn()
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       .mockImplementation(({children}) => children(inset)),
     useSafeAreaInsets: jest.fn().mockImplementation(() => inset),
   }
@@ -105,4 +106,20 @@ jest.mock('expo-modules-core', () => ({
 
 jest.mock('expo-localization', () => ({
   getLocales: () => [],
+}))
+
+// The bottom-sheet native component reads Platform.Version at import time,
+// which the jest-expo preset leaves undefined, crashing any test that pulls in
+// the chat/session import chain. Stub the native module so it's never
+// evaluated under jest.
+jest.mock('../modules/bottom-sheet', () => ({
+  __esModule: true,
+  BottomSheet: () => null,
+  BottomSheetNativeComponent: class {},
+  BottomSheetOutlet: () => null,
+  BottomSheetPortalProvider: jest
+    .fn()
+    .mockImplementation(({children}) => children),
+  BottomSheetProvider: jest.fn().mockImplementation(({children}) => children),
+  BottomSheetSnapPoint: {Hidden: 0, Partial: 1, Full: 2},
 }))
