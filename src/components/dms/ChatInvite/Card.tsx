@@ -57,7 +57,7 @@ export function Card({size}: {size: 'large' | 'small'}) {
             <Trans comment="The number of members in a group chat, in the format '{members}/{total} members'.">
               {preview.memberCount}/{preview.memberLimit}{' '}
               <Plural
-                value={preview.memberCount}
+                value={preview.memberLimit}
                 one="member"
                 other="members"
               />
