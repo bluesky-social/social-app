@@ -63,12 +63,8 @@ export function OutgoingRequestListItem({
               (hovered || pressed || focused) && t.atoms.bg_contrast_25,
             ]}>
             <AvatarBubbles
-              profiles={[
-                convoView?.owner ?? undefined,
-                ...Array(
-                  Math.min(3, Math.max(0, convoView.memberCount - 1)),
-                ).fill(undefined),
-              ]}
+              profiles={[convoView?.owner ?? undefined]}
+              count={convoView.memberCount}
               size={48}
             />
             <View style={[a.flex_1]}>
