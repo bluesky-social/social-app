@@ -30,11 +30,11 @@ import {
   OAUTH_ASSERTION_URL,
   OAUTH_BASE_URL,
   OAUTH_CLIENT_NAME,
-  OAUTH_HANDLE_RESOLVER,
   OAUTH_PUBLIC_JWKS,
   OAUTH_SCOPE,
   OAUTH_SIGNUP_PDS_HOST,
 } from '#/config/oauth'
+import {createIdentityResolver} from './identity-resolver'
 import {
   createEuroskyOAuthRuntime,
   createOAuthSessionStore,
@@ -121,7 +121,7 @@ function createLoopbackClient(): WebOAuthClient {
       application_type: 'web',
       dpop_bound_access_tokens: true,
     },
-    handleResolver: OAUTH_HANDLE_RESOLVER,
+    identityResolver: createIdentityResolver(),
     ...sessionHooks,
   })
   return {
@@ -190,7 +190,7 @@ function createConfidentialClient(): WebOAuthClient {
     clientMetadata,
     responseMode: 'fragment',
     keyset: [createOAuthRemoteKey(OAUTH_PUBLIC_JWKS.keys[0])],
-    handleResolver: OAUTH_HANDLE_RESOLVER,
+    identityResolver: createIdentityResolver(),
     runtimeImplementation: createEuroskyOAuthRuntime(),
     stateStore: createOAuthStateStore(),
     sessionStore: createOAuthSessionStore(),
