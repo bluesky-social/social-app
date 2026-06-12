@@ -40,7 +40,11 @@ jobs:
       - name: Build web
         run: bash ./pages_build.sh
         env:
-          EXPO_PUBLIC_ENABLE_GEOLOCATION: 'false'
+          # Geolocation decides which regional moderation labelers are required;
+          # without it the app fail-closes and subscribes ALL of them. Served
+          # first-party from Bunny (see geolocation-worker/), not ip.bsky.app.
+          EXPO_PUBLIC_ENABLE_GEOLOCATION: 'true'
+          EXPO_PUBLIC_GEOLOCATION_URL: https://ip.mu.social
           EXPO_PUBLIC_ENABLE_LIVE_EVENTS: 'false'
           EXPO_PUBLIC_ENABLE_APP_CONFIG: 'false'
           EXPO_PUBLIC_PLAUSIBLE_DOMAIN: mu.social
