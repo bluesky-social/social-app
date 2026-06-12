@@ -2,7 +2,7 @@
   "_comment": "Single source of truth for OAuth primitives. Imported by BOTH src/config/oauth.ts (the browser TS client) and scripts/gen-oauth-metadata.js (the build-time static metadata emitter), so client_id / scope / redirect_uris cannot drift. Change the domain/scope here only. defaultBaseUrl is overridable at build time via EXPO_PUBLIC_OAUTH_BASE_URL.",
   "defaultBaseUrl": "https://mu.social",
   "clientName": "mu",
-  "scope": "atproto account:email?action=manage identity:handle blob:*/* include:app.bsky.authFullApp?aud=did:web:api.bsky.app%23bsky_appview include:chat.bsky.authFullChatClient?aud=did:web:api.bsky.chat%23bsky_chat include:community.lexicon.calendar.authFull include:site.standard.authFull rpc:social.mu.age.getStatus?aud=* rpc:social.mu.age.setStatus?aud=*",
+  "scope": "atproto account:email?action=manage identity:handle blob:*/* include:app.bsky.authFullApp?aud=did:web:api.bsky.app%23bsky_appview include:chat.bsky.authFullChatClient?aud=did:web:api.bsky.chat%23bsky_chat include:community.lexicon.calendar.authFull include:site.standard.authFull rpc:social.mu.age.getStatus?aud=* rpc:social.mu.age.setStatus?aud=* repo:social.mu.newsFeedPrefs",
   "handleResolver": "https://bsky.social",
   "signupPdsHost": "https://eurosky.social"
 }
