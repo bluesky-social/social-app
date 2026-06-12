@@ -327,6 +327,7 @@ function BaseChatItem({
       const info = getMessageInfo({
         convo: convo.view,
         currentAccountDid: currentAccount?.did,
+        primaryProfile,
         i18n,
       })
       if (info) {
@@ -342,6 +343,7 @@ function BaseChatItem({
       const info = getReactionInfo({
         convo: convo.view,
         currentAccountDid: currentAccount?.did,
+        primaryProfile,
         i18n,
       })
       if (
@@ -349,7 +351,7 @@ function BaseChatItem({
         (!lastMessageSentAt ||
           new Date(lastMessageSentAt) < new Date(info.createdAt))
       ) {
-        lastMessage = info.message
+        lastMessage = info.isBlocked ? l`This message is hidden` : info.message
         lastMessageSentAt = info.createdAt
       }
     }
@@ -379,7 +381,7 @@ function BaseChatItem({
       LastMessageIcon,
       lastMessageSentAt,
     }
-  }, [l, convo, currentAccount?.did, isDeletedAccount, i18n])
+  }, [l, convo, currentAccount?.did, isDeletedAccount, primaryProfile, i18n])
 
   const [showActions, setShowActions] = useState(false)
 
