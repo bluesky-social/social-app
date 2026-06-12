@@ -58,7 +58,7 @@ Log in to the EAS CLI with `eas login` and manually set the build numbers to the
 values you found in **Step 1**.
 
 > [!NOTE]
-> If you don’t already have the EAS CLI, you can install it with `pnpm install -g eas-cli`.
+> If you don’t already have the EAS CLI, you can install it with `pnpm add -g eas-cli`.
 
 ```sh
 > npx eas build:version:set -p ios
@@ -117,7 +117,7 @@ To confirm this, as mentioned above, you must completely clear the TestFlight
 build from your device and re-install from the App Store. Then, you'll need to:
 - Launch the app (or quit and reopen) and wait ~15s for the download to complete
 - Quit and reopen the app
-- Check the `Settings > About` page and confirm the hash matches the most recent has on your OTA branch
+- Check the `Settings > About` page and confirm the hash matches the most recent hash on your OTA branch
 
 ### 9. Reset build numbers
 
