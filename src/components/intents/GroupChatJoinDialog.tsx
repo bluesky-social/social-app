@@ -6,7 +6,7 @@ import {
   ChatBskyGroupWithdrawJoinRequest,
   moderateProfile,
 } from '@atproto/api'
-import {Trans, useLingui} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -338,9 +338,13 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
           </View>
           <View style={[a.flex_row, a.align_center]}>
             <Text style={[a.text_center, a.text_xs, a.leading_snug]}>
-              <Trans comment="The number of active group chat members out of the total number allowed.">
+              <Trans comment="The number of members in a group chat, in the format '{members}/{total} members'.">
                 {joinLinkPreview.memberCount}/{joinLinkPreview.memberLimit}{' '}
-                members
+                <Plural
+                  value={joinLinkPreview.memberLimit}
+                  one="member"
+                  other="members"
+                />
               </Trans>
             </Text>
             <View style={[a.flex_row, a.ml_md]}>
