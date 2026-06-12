@@ -24,7 +24,7 @@ jobs:
         job: [lint, prettier, typecheck]
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Verify Node version pins match package.json
         run: |
           set -euo pipefail
@@ -87,7 +87,7 @@ jobs:
         shard: [1, 2, 3, 4]
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - uses: pnpm/action-setup@v6
       - name: Install node
         uses: actions/setup-node@v6

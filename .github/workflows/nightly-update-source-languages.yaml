@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ssh-key: ${{secrets.GH_ACTION_DEPLOY_KEY}}
       - uses: pnpm/action-setup@v6
