@@ -34,7 +34,7 @@ export function AvatarBubbles({
   count,
 }: {
   animate?: boolean
-  profiles: (bsky.profile.AnyProfileView | undefined)[]
+  profiles: bsky.profile.AnyProfileView[]
   /**
    * By default, when there are more than 2 profiles, the current user is
    * filtered out (so you don't see yourself among your own group's members).
@@ -54,7 +54,7 @@ export function AvatarBubbles({
   const {currentAccount} = useSession()
   const profiles =
     !self && allProfiles.length > 2
-      ? allProfiles.filter(p => !p || p.did !== currentAccount?.did)
+      ? allProfiles.filter(p => p.did !== currentAccount?.did)
       : allProfiles
 
   const bubbleCount = Math.max(profiles.length, count ?? 0)
