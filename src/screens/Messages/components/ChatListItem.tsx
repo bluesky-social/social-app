@@ -348,10 +348,11 @@ function BaseChatItem({
       })
       if (
         info &&
+        !info.isBlocked &&
         (!lastMessageSentAt ||
           new Date(lastMessageSentAt) < new Date(info.createdAt))
       ) {
-        lastMessage = info.isBlocked ? l`This message is hidden` : info.message
+        lastMessage = info.message
         lastMessageSentAt = info.createdAt
       }
     }
