@@ -399,7 +399,6 @@ let MessageItem = ({
             ) : (
               <View style={[a.relative]}>
                 <ActionsWrapper
-                  hasReactions={hasReactions}
                   isFromSelf={isFromSelf}
                   message={message}
                   senderProfile={profile}
