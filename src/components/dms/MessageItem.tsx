@@ -8,6 +8,8 @@ import {
   type ViewStyle,
 } from 'react-native'
 import Animated, {
+  FadeIn,
+  FadeOut,
   LayoutAnimationConfig,
   LinearTransition,
   useAnimatedStyle,
@@ -275,12 +277,15 @@ let MessageItem = ({
   const appliedReactions = (
     <LayoutAnimationConfig skipEntering skipExiting>
       {hasReactions ? (
-        <View
+        <Animated.View
+          entering={FadeIn}
+          exiting={FadeOut}
           style={[
-            a.relative,
-            a.bottom_0,
-            isFromSelf ? [a.align_end] : [a.ml_sm, a.align_start],
+            a.absolute,
+            {top: '100%'},
+            isFromSelf ? [a.right_0] : [a.left_0, isGroupChat && a.ml_sm],
             a.px_sm,
+            a.z_10,
           ]}>
           <Pressable
             accessible={true}
@@ -292,24 +297,22 @@ let MessageItem = ({
               a.flex_row,
               a.gap_2xs,
               isFromSelf ? a.justify_end : a.justify_start,
-              a.flex_wrap,
               a.rounded_lg,
               a.border,
               t.atoms.border_contrast_low,
               t.atoms.shadow_xs,
+              a.px_sm,
               hasSelfReacted
                 ? {backgroundColor: t.palette.primary_100}
                 : t.atoms.bg_contrast_25,
               {
                 paddingTop: platform({android: 2, default: 3}),
                 paddingBottom: platform({android: 2, default: 3}),
-                paddingLeft: 6,
-                paddingRight: 6,
-                transform: [{translateY: -8}],
+                transform: [{translateY: -6}],
               },
             ]}
             onPress={isGroupChat ? () => openReactions(message) : undefined}>
-            {groupedReactions.map(group => (
+            {groupedReactions.slice(0, 10).map(group => (
               <Animated.View
                 entering={native(ZoomIn.springify(200).delay(400))}
                 exiting={
@@ -330,7 +333,8 @@ let MessageItem = ({
                 </Text>
               </Animated.View>
             ))}
-            {groupedReactions.length !== reactions.length &&
+            {(groupedReactions.length !== reactions.length ||
+              groupedReactions.length > 10) &&
             reactions.length > 1 ? (
               <View style={[a.p_2xs, a.pl_0, a.justify_center]}>
                 <Text
@@ -347,7 +351,7 @@ let MessageItem = ({
               </View>
             ) : null}
           </Pressable>
-        </View>
+        </Animated.View>
       ) : null}
     </LayoutAnimationConfig>
   )
@@ -365,30 +369,15 @@ let MessageItem = ({
         style={[
           messageInset,
           isFirstInCluster ? a.mt_md : {marginTop: CLUSTERED_MESSAGE_GAP},
+          hasReactions && {paddingBottom: 26},
         ]}>
         <View style={[a.relative]}>
           {showAvatar ? (
-            <View
-              style={[
-                a.absolute,
-                a.bottom_0,
-                a.z_50,
-                hasReactions && {
-                  transform: [
-                    {
-                      translateY: platform({
-                        ios: -29,
-                        default: -27,
-                      }),
-                    },
-                  ],
-                },
-              ]}>
-              {avatar}
-            </View>
+            <View style={[a.absolute, a.bottom_0, a.z_50]}>{avatar}</View>
           ) : null}
           <View
             style={[
+              a.relative,
               a.flex_grow,
               !isFromSelf && isGroupChat && {paddingLeft: AVATAR_SIZE},
             ]}>
@@ -408,81 +397,87 @@ let MessageItem = ({
             {profile && isBlockedOrBlocking(profile) && isGroupChat ? (
               <BlockedPlaceholder profile={profile} style={borderRadiusStyle} />
             ) : (
-              <ActionsWrapper
-                hasReactions={hasReactions}
-                isFromSelf={isFromSelf}
-                message={message}
-                senderProfile={profile}
-                moderationOpts={moderationOpts}>
-                {AppBskyEmbedRecord.isView(message.embed) && (
-                  <MessageItemEmbed
-                    embed={message.embed}
-                    isFromSelf={isFromSelf}
-                    isGroupChat={isGroupChat}
-                    squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
-                    squaredTopCorner={squaredTopCorner}
-                  />
-                )}
-                {ChatBskyEmbedJoinLink.isView(message.embed) && (
-                  <MessageItemInviteEmbed
-                    embed={message.embed}
-                    isFromSelf={isFromSelf}
-                    isGroupChat={isGroupChat}
-                    squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
-                    squaredTopCorner={squaredTopCorner}
-                  />
-                )}
-                {rt.text.length > 0 && (
-                  <Animated.View
-                    accessibilityHint={l`Double tap or long press the message to add a reaction`}
-                    style={[
-                      !isFromSelf && isGroupChat && a.ml_sm,
-                      !isOnlyEmoji(message.text) && [
-                        a.rounded_xl,
-                        a.py_sm,
-                        a.px_md,
-                        {
-                          marginTop: hasEmbedAndText
-                            ? CLUSTERED_MESSAGE_GAP
-                            : 0,
-                          backgroundColor: isFromSelf
-                            ? isPending
-                              ? pendingColor
-                              : t.palette.primary_500
-                            : t.palette.contrast_50,
-                        },
-                        isFromSelf ? a.self_end : a.self_start,
-                        borderRadiusStyle,
-                      ],
-                    ]}>
-                    <RichText
-                      value={rt}
-                      style={[
-                        a.text_md,
-                        isFromSelf && {color: t.palette.white},
-                        // Emoji-only: add top leading to avoid clipping the
-                        // glyph, then pull the bottom up by the same amount so
-                        // the glyph bottom-aligns with the avatar instead of
-                        // sitting above its line-box baseline.
-                        isOnlyEmoji(message.text) && [
-                          a.leading_tight,
-                          // Visually align bottom of the emoji with the avatar
-                          !isFromSelf &&
-                            platform({
-                              android: {marginTop: a.mt_2xs.marginTop},
-                              default: {marginBottom: -a.mb_sm.marginBottom},
-                            }),
-                        ],
-                      ]}
-                      interactiveStyle={a.underline}
-                      enableTags
-                      emojiMultiplier={3}
-                      shouldProxyLinks={true}
+              <View style={[a.relative]}>
+                <ActionsWrapper
+                  hasReactions={hasReactions}
+                  isFromSelf={isFromSelf}
+                  message={message}
+                  senderProfile={profile}
+                  moderationOpts={moderationOpts}>
+                  {AppBskyEmbedRecord.isView(message.embed) && (
+                    <MessageItemEmbed
+                      embed={message.embed}
+                      isFromSelf={isFromSelf}
+                      isGroupChat={isGroupChat}
+                      squaredBottomCorner={
+                        squaredBottomCorner || hasEmbedAndText
+                      }
+                      squaredTopCorner={squaredTopCorner}
                     />
-                  </Animated.View>
-                )}
+                  )}
+                  {ChatBskyEmbedJoinLink.isView(message.embed) && (
+                    <MessageItemInviteEmbed
+                      embed={message.embed}
+                      isFromSelf={isFromSelf}
+                      isGroupChat={isGroupChat}
+                      squaredBottomCorner={
+                        squaredBottomCorner || hasEmbedAndText
+                      }
+                      squaredTopCorner={squaredTopCorner}
+                    />
+                  )}
+                  {rt.text.length > 0 && (
+                    <Animated.View
+                      accessibilityHint={l`Double tap or long press the message to add a reaction`}
+                      style={[
+                        !isFromSelf && isGroupChat && a.ml_sm,
+                        !isOnlyEmoji(message.text) && [
+                          a.rounded_xl,
+                          a.py_sm,
+                          a.px_md,
+                          {
+                            marginTop: hasEmbedAndText
+                              ? CLUSTERED_MESSAGE_GAP
+                              : 0,
+                            backgroundColor: isFromSelf
+                              ? isPending
+                                ? pendingColor
+                                : t.palette.primary_500
+                              : t.palette.contrast_50,
+                          },
+                          isFromSelf ? a.self_end : a.self_start,
+                          borderRadiusStyle,
+                        ],
+                      ]}>
+                      <RichText
+                        value={rt}
+                        style={[
+                          a.text_md,
+                          isFromSelf && {color: t.palette.white},
+                          // Emoji-only: add top leading to avoid clipping the
+                          // glyph, then pull the bottom up by the same amount so
+                          // the glyph bottom-aligns with the avatar instead of
+                          // sitting above its line-box baseline.
+                          isOnlyEmoji(message.text) && [
+                            a.leading_tight,
+                            // Visually align bottom of the emoji with the avatar
+                            !isFromSelf &&
+                              platform({
+                                android: {marginTop: a.mt_2xs.marginTop},
+                                default: {marginBottom: -a.mb_sm.marginBottom},
+                              }),
+                          ],
+                        ]}
+                        interactiveStyle={a.underline}
+                        enableTags
+                        emojiMultiplier={3}
+                        shouldProxyLinks={true}
+                      />
+                    </Animated.View>
+                  )}
+                </ActionsWrapper>
                 {appliedReactions}
-              </ActionsWrapper>
+              </View>
             )}
           </View>
         </View>
