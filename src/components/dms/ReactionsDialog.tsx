@@ -19,6 +19,7 @@ import {DraggableScrollView} from '#/view/com/pager/DraggableScrollView'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
+import {filterBlockedReactions} from '#/components/dms/util'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE, IS_WEB} from '#/env'
@@ -52,10 +53,13 @@ export function ReactionsDialog({
 
   const [selected, setSelected] = useState('all')
 
-  const reactions = message.reactions
+  const reactions = useMemo(
+    () => filterBlockedReactions(message.reactions, relatedProfiles),
+    [message.reactions, relatedProfiles],
+  )
   const groupedReactions = useMemo(() => groupReactions(reactions), [reactions])
 
-  const filteredReactions = reactions?.filter(
+  const filteredReactions = reactions.filter(
     r => selected === 'all' || r.value === selected,
   )
 
@@ -69,7 +73,7 @@ export function ReactionsDialog({
       <ReactionTabs
         groupedReactions={groupedReactions}
         selected={selected}
-        totalReactions={reactions?.length ?? 0}
+        totalReactions={reactions.length}
         onFilter={setSelected}
       />
       <Dialog.Close />
@@ -96,7 +100,7 @@ export function ReactionsDialog({
         header={IS_WEB ? header : null}
         style={[web({maxWidth: 400})]}>
         {filteredReactions
-          ?.sort((a, b) => {
+          .sort((a, b) => {
             if (a.sender.did === currentAccount?.did) return -1
             if (b.sender.did === currentAccount?.did) return 1
             return 0
@@ -113,7 +117,7 @@ export function ReactionsDialog({
                 message={message}
                 profile={sender}
                 reaction={reaction}
-                allReactions={reactions ?? []}
+                allReactions={reactions}
                 selected={selected}
                 setSelected={setSelected}
               />
