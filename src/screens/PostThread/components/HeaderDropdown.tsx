@@ -14,10 +14,11 @@ export function HeaderDropdown({
   view,
   setSort,
   setView,
-}: Pick<
-  ThreadPreferences,
-  'sort' | 'setSort' | 'view' | 'setView'
->): React.ReactNode {
+  showReader = true,
+}: Pick<ThreadPreferences, 'sort' | 'setSort' | 'view' | 'setView'> & {
+  /** Whether to offer reader view, matching the header toggle's gating. */
+  showReader?: boolean
+}): React.ReactNode {
   const ax = useAnalytics()
   const {_} = useLingui()
   return (
@@ -65,6 +66,22 @@ export function HeaderDropdown({
             </Menu.ItemText>
             <Menu.ItemRadio selected={view === 'tree'} />
           </Menu.Item>
+          {showReader && (
+            <Menu.Item
+              label={_(msg`Reader`)}
+              onPress={() => {
+                ax.metric('thread:click:readerToggle', {
+                  enabled: true,
+                  via: 'menu',
+                })
+                setView('reader')
+              }}>
+              <Menu.ItemText>
+                <Trans>Reader</Trans>
+              </Menu.ItemText>
+              <Menu.ItemRadio selected={view === 'reader'} />
+            </Menu.Item>
+          )}
         </Menu.Group>
         <Menu.Divider />
         <Menu.LabelText>

@@ -7,18 +7,21 @@ import {
   useState,
 } from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import Animated, {useAnimatedStyle} from 'react-native-reanimated'
-import {Trans} from '@lingui/react/macro'
+import Animated, {FadeIn, useAnimatedStyle} from 'react-native-reanimated'
+import {Trans, useLingui} from '@lingui/react/macro'
 
+import {HITSLOP_10} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {useFeedFeedback} from '#/state/feed-feedback'
-import {type ThreadViewOption} from '#/state/queries/preferences/useThreadPreferences'
+import {
+  type ThreadView,
+  type ThreadViewOption,
+} from '#/state/queries/preferences/useThreadPreferences'
 import {
   PostThreadContextProvider,
-  type ThreadItem,
   usePostThread,
 } from '#/state/queries/usePostThread'
 import {useSession} from '#/state/session'
@@ -27,6 +30,7 @@ import {useShellLayout} from '#/state/shell/shell-layout'
 import {useUnstablePostSource} from '#/state/unstable-post-source'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {HeaderDropdown} from '#/screens/PostThread/components/HeaderDropdown'
+import {HeaderReaderToggle} from '#/screens/PostThread/components/HeaderReaderToggle'
 import {ThreadComposePrompt} from '#/screens/PostThread/components/ThreadComposePrompt'
 import {ThreadError} from '#/screens/PostThread/components/ThreadError'
 import {
@@ -40,6 +44,7 @@ import {
 } from '#/screens/PostThread/components/ThreadItemPost'
 import {ThreadItemPostNoUnauthenticated} from '#/screens/PostThread/components/ThreadItemPostNoUnauthenticated'
 import {ThreadItemPostTombstone} from '#/screens/PostThread/components/ThreadItemPostTombstone'
+import {ThreadItemReaderSegment} from '#/screens/PostThread/components/ThreadItemReaderSegment'
 import {ThreadItemReadMore} from '#/screens/PostThread/components/ThreadItemReadMore'
 import {ThreadItemReadMoreUp} from '#/screens/PostThread/components/ThreadItemReadMoreUp'
 import {ThreadItemReplyComposerSkeleton} from '#/screens/PostThread/components/ThreadItemReplyComposer'
@@ -48,16 +53,34 @@ import {
   ThreadItemTreePost,
   ThreadItemTreePostSkeleton,
 } from '#/screens/PostThread/components/ThreadItemTreePost'
-import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
+import {buildReaderThread, type ReaderItem} from '#/screens/PostThread/reader'
+import {
+  atoms as a,
+  native,
+  platform,
+  tokens,
+  useBreakpoints,
+  useTheme,
+  web,
+} from '#/alf'
+import {Button} from '#/components/Button'
+import {ChevronTop_Stroke2_Corner0_Rounded as ChevronTopIcon} from '#/components/icons/Chevron'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
+import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 
 const PARENT_CHUNK_SIZE = IS_NATIVE ? 5 : 20
 const CHILDREN_CHUNK_SIZE = 50
 
-export function PostThread({uri}: {uri: string}) {
+export function PostThread({
+  uri,
+  initialView,
+}: {
+  uri: string
+  initialView?: 'reader'
+}) {
   const ax = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const {hasSession} = useSession()
@@ -70,9 +93,18 @@ export function PostThread({uri}: {uri: string}) {
   )
 
   /*
+   * Reader view always reads the full thread from the start, so while it's
+   * active the query is re-anchored at the thread root. When entering the
+   * screen directly in reader view, the anchor data isn't available yet, so
+   * the root starts as the anchor itself and the correction effect below
+   * re-anchors once data arrives.
+   */
+  const [readerRoot, setReaderRoot] = useState<string | null>(null)
+
+  /*
    * One query to rule them all
    */
-  const thread = usePostThread({anchor: uri})
+  const thread = usePostThread({anchor: readerRoot ?? uri, initialView})
   const {anchor, hasParents} = useMemo(() => {
     let hasParents = false
     for (const item of thread.data.items) {
@@ -302,8 +334,30 @@ export function PostThread({uri}: {uri: string}) {
     shouldHandleScroll.current = true
   }, [setDeferParents, setMaxChildrenCount])
 
+  /*
+   * Reader view state. At most one seam is open at a time, tracked by its post
+   * URI (null when none). Resets any time thread params change.
+   */
+  const [expandedSeamUri, setExpandedSeamUri] = useState<string | null>(null)
+  const toggleSeam = useCallback(
+    (seamUri: string) => {
+      const willExpand = expandedSeamUri !== seamUri
+      ax.metric('thread:click:readerSeamToggle', {expanded: willExpand})
+      setExpandedSeamUri(willExpand ? seamUri : null)
+    },
+    [ax, expandedSeamUri],
+  )
+  /**
+   * The view to restore when the header reader toggle is switched off. Null
+   * until a non-reader view is seen this visit (e.g. when deep-linked
+   * directly into reader view), in which case the user's saved preference is
+   * used instead.
+   */
+  const lastNonReaderView = useRef<ThreadViewOption | null>(null)
+
   const setSortWrapped = useCallback(
     (sort: string) => {
+      setExpandedSeamUri(null)
       prepareForParamsUpdate()
       thread.actions.setSort(sort)
     },
@@ -311,12 +365,73 @@ export function PostThread({uri}: {uri: string}) {
   )
 
   const setViewWrapped = useCallback(
-    (view: ThreadViewOption) => {
+    (view: ThreadView) => {
+      if (view === 'reader') {
+        if (thread.state.view !== 'reader') {
+          lastNonReaderView.current = thread.state.view
+        }
+        /*
+         * Reader always reads from the start of the thread. If the anchor
+         * data hasn't loaded yet, the effect below corrects the root once it
+         * arrives.
+         */
+        setReaderRoot(
+          anchor?.value.post.record.reply?.root?.uri ?? anchor?.uri ?? uri,
+        )
+      } else {
+        setReaderRoot(null)
+      }
+      setExpandedSeamUri(null)
       prepareForParamsUpdate()
       thread.actions.setView(view)
     },
-    [thread, prepareForParamsUpdate],
+    [thread, anchor, uri, prepareForParamsUpdate],
   )
+
+  /*
+   * If reader view was entered before the thread data was available, the
+   * root couldn't be derived at toggle time. Correct it once data arrives.
+   */
+  const readerRootCorrection =
+    thread.state.view === 'reader' && anchor?.type === 'threadPost'
+      ? (anchor.value.post.record.reply?.root?.uri ?? null)
+      : null
+  useEffect(() => {
+    if (readerRootCorrection && readerRootCorrection !== readerRoot) {
+      /*
+       * One-shot correction after async data arrival (cold deep-link into a
+       * mid-thread post). Re-anchoring requires the same scroll and
+       * pagination reset as any other params change.
+       */
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      prepareForParamsUpdate()
+      setReaderRoot(readerRootCorrection)
+    }
+  }, [readerRootCorrection, readerRoot, prepareForParamsUpdate])
+
+  const onPressReaderToggle = useCallback(() => {
+    const enabled = thread.state.view !== 'reader'
+    ax.metric('thread:click:readerToggle', {enabled, via: 'header'})
+    setViewWrapped(
+      enabled
+        ? 'reader'
+        : (lastNonReaderView.current ?? thread.state.savedView),
+    )
+  }, [ax, thread.state.view, thread.state.savedView, setViewWrapped])
+
+  /**
+   * Whether the thread contains an OP self-thread chain that reader view can
+   * collapse. Used to decide whether to surface the header toggle at all.
+   * `opThread` is only set on posts in the OP's contiguous chain from the
+   * root, so any non-anchor hit (parent or reply) means there is a chain to
+   * read.
+   */
+  const hasOpThreadChain = useMemo(() => {
+    return thread.data.items.some(
+      item =>
+        item.type === 'threadPost' && item.depth !== 0 && item.value.opThread,
+    )
+  }, [thread.data.items])
 
   const onStartReached = () => {
     if (thread.state.isFetching) return
@@ -336,18 +451,36 @@ export function PostThread({uri}: {uri: string}) {
     setMaxChildrenCount(prev => prev + CHILDREN_CHUNK_SIZE)
   }
 
-  const slices = useMemo(() => {
-    const results: ThreadItem[] = []
+  /*
+   * In reader view, the OP self-thread chain is collapsed into continuous
+   * segments separated by expandable seams before pagination slicing.
+   */
+  const reader = useMemo(() => {
+    return thread.state.view === 'reader'
+      ? buildReaderThread(thread.data.items, {expandedSeamUri})
+      : null
+  }, [thread.state.view, thread.data.items, expandedSeamUri])
+  const sourceItems = reader?.items ?? thread.data.items
 
-    if (!thread.data.items.length) return results
+  /*
+   * Show a floating collapse button when the open seam has replies, so the
+   * user can close them without scrolling back up.
+   */
+  const showHideRepliesButton =
+    !!expandedSeamUri && (reader?.expandedSeam?.hiddenReplyCount ?? 0) > 0
+
+  const slices = useMemo(() => {
+    const results: ReaderItem[] = []
+
+    if (!sourceItems.length) return results
 
     /*
      * Pagination hack, tracks the # of items below the anchor post.
      */
     let childrenCount = 0
 
-    for (let i = 0; i < thread.data.items.length; i++) {
-      const item = thread.data.items[i]
+    for (let i = 0; i < sourceItems.length; i++) {
+      const item = sourceItems[i]
       /*
        * Need to check `depth`, since not found or blocked posts are not
        * `threadPost`s, but still have `depth`.
@@ -363,7 +496,7 @@ export function PostThread({uri}: {uri: string}) {
         // Recalculate total parents current index.
         totalParentCount.current = i
         // Recalculate total children using (length - 1) - current index.
-        totalChildrenCount.current = thread.data.items.length - 1 - i
+        totalChildrenCount.current = sourceItems.length - 1 - i
 
         /*
          * Walk up the parents, limiting by `maxParentCount`
@@ -373,7 +506,7 @@ export function PostThread({uri}: {uri: string}) {
           if (start >= 0) {
             const limit = Math.max(0, start - maxParentCount)
             for (let pi = start; pi >= limit; pi--) {
-              results.unshift(thread.data.items[pi])
+              results.unshift(sourceItems[pi])
             }
           }
         }
@@ -389,7 +522,7 @@ export function PostThread({uri}: {uri: string}) {
     }
 
     return results
-  }, [thread, deferParents, maxParentCount, maxChildrenCount])
+  }, [sourceItems, deferParents, maxParentCount, maxChildrenCount])
 
   /**
    * Defer rendering reply skeletons so that the anchor post (from cache)
@@ -421,7 +554,7 @@ export function PostThread({uri}: {uri: string}) {
   }, [deferredSlices])
 
   const renderItem = useCallback(
-    ({item, index}: {item: ThreadItem; index: number}) => {
+    ({item, index}: {item: ReaderItem; index: number}) => {
       if (item.type === 'threadPost') {
         if (item.depth < 0) {
           return (
@@ -458,6 +591,15 @@ export function PostThread({uri}: {uri: string}) {
               />
               <ThreadItemAnchor
                 item={item}
+                readerSeam={
+                  reader?.anchorSeam
+                    ? {
+                        ...reader.anchorSeam,
+                        onToggle: () => toggleSeam(item.uri),
+                        sort: thread.state.sort,
+                      }
+                    : undefined
+                }
                 threadgateRecord={thread.data.threadgate?.record ?? undefined}
                 onPostSuccess={optimisticOnPostReply}
                 postSource={anchorPostSource}
@@ -489,6 +631,16 @@ export function PostThread({uri}: {uri: string}) {
             )
           }
         }
+      } else if (item.type === 'readerSegment') {
+        return (
+          <ThreadItemReaderSegment
+            item={item}
+            sort={thread.state.sort}
+            onToggleSeam={toggleSeam}
+            threadgateRecord={thread.data.threadgate?.record ?? undefined}
+            onPostSuccess={optimisticOnPostReply}
+          />
+        )
       } else if (item.type === 'threadPostNoUnauthenticated') {
         if (item.depth < 0) {
           return <ThreadItemPostNoUnauthenticated item={item} />
@@ -535,6 +687,8 @@ export function PostThread({uri}: {uri: string}) {
     },
     [
       thread,
+      reader,
+      toggleSeam,
       optimisticOnPostReply,
       onReplyToAnchor,
       gtMobile,
@@ -553,12 +707,21 @@ export function PostThread({uri}: {uri: string}) {
             <Trans context="description">Post</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
+        {(hasOpThreadChain || thread.state.view === 'reader') && (
+          <Layout.Header.Slot>
+            <HeaderReaderToggle
+              active={thread.state.view === 'reader'}
+              onPress={onPressReaderToggle}
+            />
+          </Layout.Header.Slot>
+        )}
         <Layout.Header.Slot>
           <HeaderDropdown
             sort={thread.state.sort}
             setSort={setSortWrapped}
             view={thread.state.view}
             setView={setViewWrapped}
+            showReader={hasOpThreadChain || thread.state.view === 'reader'}
           />
         </Layout.Header.Slot>
       </Layout.Header.Outer>
@@ -582,10 +745,12 @@ export function PostThread({uri}: {uri: string}) {
           onEndReached={onEndReached}
           onEndReachedThreshold={4}
           onStartReachedThreshold={1}
-          onItemSeen={item => {
+          onItemSeen={(item: ReaderItem) => {
             // Track post:view for parent posts and replies (non-anchor posts)
             if (item.type === 'threadPost' && item.depth !== 0) {
               trackThreadItemView(item.value.post)
+            } else if (item.type === 'readerSegment') {
+              trackThreadItemView(item.item.value.post)
             }
           }}
           /**
@@ -633,10 +798,67 @@ export function PostThread({uri}: {uri: string}) {
         />
       )}
 
-      {!gtMobile && canReply && hasSession && (
-        <MobileComposePrompt onPressReply={onReplyToAnchor} />
+      {!gtMobile &&
+        canReply &&
+        hasSession &&
+        thread.state.view !== 'reader' && (
+          <MobileComposePrompt onPressReply={onReplyToAnchor} />
+        )}
+
+      {showHideRepliesButton && (
+        <ReaderHideRepliesButton onPress={() => toggleSeam(expandedSeamUri)} />
       )}
     </PostThreadContextProvider>
+  )
+}
+
+/**
+ * Floating pill shown while a reader seam is expanded to show replies, so
+ * they can be collapsed from anywhere without scrolling back to the seam.
+ */
+function ReaderHideRepliesButton({onPress}: {onPress: () => void}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const {footerHeight} = useShellLayout()
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      bottom: footerHeight.get() + tokens.space.lg,
+    }
+  })
+
+  return (
+    <Animated.View
+      entering={FadeIn.duration(150)}
+      pointerEvents="box-none"
+      style={[a.fixed, a.left_0, a.right_0, a.align_center, animatedStyle]}>
+      <Button label={l`Hide replies`} onPress={onPress} hitSlop={HITSLOP_10}>
+        {({hovered, pressed}) => (
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.gap_xs,
+              a.px_lg,
+              a.py_sm,
+              a.rounded_full,
+              a.border,
+              a.shadow_md,
+              t.atoms.border_contrast_low,
+              hovered || pressed ? t.atoms.bg_contrast_25 : t.atoms.bg,
+            ]}>
+            <ChevronTopIcon
+              size="sm"
+              style={[t.atoms.text_contrast_medium]}
+              aria-hidden
+            />
+            <Text style={[a.text_sm, a.font_semi_bold]}>
+              <Trans>Hide replies</Trans>
+            </Text>
+          </View>
+        )}
+      </Button>
+    </Animated.View>
   )
 }
 
@@ -656,6 +878,6 @@ function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
   )
 }
 
-const keyExtractor = (item: ThreadItem) => {
+const keyExtractor = (item: ReaderItem) => {
   return item.key
 }
