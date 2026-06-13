@@ -21,12 +21,19 @@ export type ActiveConvoStates =
  * Checks if a `Convo` has a `status` that is "active", meaning the chat is
  * loaded and ready to be used, or its in a suspended or background state, and
  * ready for resumption.
+ *
+ * The `convo` object must also be present. The status can transition into an
+ * active state before the convo has finished loading (e.g. `Initializing`
+ * receives a `Background` event before `setup()` resolves), and every
+ * `ActiveConvoStates` member declares `convo` as non-optional, so we guard
+ * against that race here rather than crashing downstream consumers.
  */
 export function isConvoActive(convo: ConvoState): convo is ActiveConvoStates {
   return (
-    convo.status === ConvoStatus.Ready ||
-    convo.status === ConvoStatus.Backgrounded ||
-    convo.status === ConvoStatus.Suspended ||
-    convo.status === ConvoStatus.Disabled
+    convo.convo !== undefined &&
+    (convo.status === ConvoStatus.Ready ||
+      convo.status === ConvoStatus.Backgrounded ||
+      convo.status === ConvoStatus.Suspended ||
+      convo.status === ConvoStatus.Disabled)
   )
 }
