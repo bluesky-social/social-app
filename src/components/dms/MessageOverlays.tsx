@@ -29,6 +29,16 @@ type MessageDialogsContextType = {
     senderProfile: bsky.profile.AnyProfileView | undefined,
   ) => void
   openReactions: (message: ChatBskyConvoDefs.MessageView) => void
+  /**
+   * The message currently staged for reply in the composer, or null.
+   */
+  replyTo: ChatBskyConvoDefs.MessageView | null
+  openReply: (message: ChatBskyConvoDefs.MessageView) => void
+  clearReply: () => void
+  /**
+   * Scroll the list to a message, if it's currently loaded. No-op otherwise.
+   */
+  scrollToMessage: (messageId: string) => void
 }
 
 const Context = createContext<MessageDialogsContextType | null>(null)
@@ -41,7 +51,13 @@ export function useMessageDialogs() {
   return ctx
 }
 
-export function MessageOverlays({children}: {children: React.ReactNode}) {
+export function MessageOverlays({
+  children,
+  scrollToMessage,
+}: {
+  children: React.ReactNode
+  scrollToMessage: (messageId: string) => void
+}) {
   const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const convo = useConvoActive()
@@ -61,6 +77,9 @@ export function MessageOverlays({children}: {children: React.ReactNode}) {
     useState<ChatBskyConvoDefs.MessageView | null>(null)
   const [reactionsTarget, setReactionsTarget] =
     useState<ChatBskyConvoDefs.MessageView | null>(null)
+  const [replyTo, setReplyTo] = useState<ChatBskyConvoDefs.MessageView | null>(
+    null,
+  )
 
   const openDeleteMessage = useCallback(
     (message: ChatBskyConvoDefs.MessageView) => {
@@ -87,6 +106,14 @@ export function MessageOverlays({children}: {children: React.ReactNode}) {
     },
     [],
   )
+
+  const openReply = useCallback((message: ChatBskyConvoDefs.MessageView) => {
+    setReplyTo(message)
+  }, [])
+
+  const clearReply = useCallback(() => {
+    setReplyTo(null)
+  }, [])
 
   // These dialogs are conditionally mounted, so we can't open them in the same
   // tick that we set their targets - the control refs aren't attached yet. Open
@@ -121,8 +148,24 @@ export function MessageOverlays({children}: {children: React.ReactNode}) {
   }, [queryClient, reportTarget])
 
   const ctx = useMemo<MessageDialogsContextType>(
-    () => ({openDeleteMessage, openReportMessage, openReactions}),
-    [openDeleteMessage, openReportMessage, openReactions],
+    () => ({
+      openDeleteMessage,
+      openReportMessage,
+      openReactions,
+      replyTo,
+      openReply,
+      clearReply,
+      scrollToMessage,
+    }),
+    [
+      openDeleteMessage,
+      openReportMessage,
+      openReactions,
+      replyTo,
+      openReply,
+      clearReply,
+      scrollToMessage,
+    ],
   )
 
   // `reactionsTarget` is a snapshot from when the dialog was opened. Read the

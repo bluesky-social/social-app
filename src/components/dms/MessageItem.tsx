@@ -41,11 +41,12 @@ import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, native, platform, useTheme} from '#/alf'
+import {atoms as a, native, platform, useTheme, utils} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {Button} from '#/components/Button'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {useMessageDialogs} from '#/components/dms/MessageOverlays'
+import {ArrowCornerDownRight_Stroke2_Corner2_Rounded as ArrowCornerDownRightIcon} from '#/components/icons/ArrowCornerDownRight'
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Prompt from '#/components/Prompt'
@@ -127,7 +128,16 @@ let MessageItem = ({
   const {message} = item
   const profile = useMaybeProfileShadow(relatedProfiles.get(message.sender.did))
 
-  const {openReactions} = useMessageDialogs()
+  const {openReactions, scrollToMessage} = useMessageDialogs()
+
+  // `replyTo` comes back hydrated as the referenced message (or a deleted-
+  // message tombstone). Narrow away the open-union fallback so we only render
+  // shapes we understand.
+  const replyTo =
+    ChatBskyConvoDefs.isMessageView(message.replyTo) ||
+    ChatBskyConvoDefs.isDeletedMessageView(message.replyTo)
+      ? message.replyTo
+      : undefined
 
   const isPending = item.type === 'pending-message'
 
@@ -404,6 +414,14 @@ let MessageItem = ({
                 {displayName}
               </Text>
             ) : null}
+            {replyTo ? (
+              <ReplyCaption
+                replyTo={replyTo}
+                isFromSelf={isFromSelf}
+                replierDisplayName={displayName}
+                relatedProfiles={relatedProfiles}
+              />
+            ) : null}
             {profile && isBlockedOrBlocking(profile) && isGroupChat ? (
               <BlockedPlaceholder profile={profile} style={borderRadiusStyle} />
             ) : (
@@ -458,6 +476,14 @@ let MessageItem = ({
                           borderRadiusStyle,
                         ],
                       ]}>
+                      {replyTo && !isOnlyEmoji(message.text) ? (
+                        <ReplyQuote
+                          replyTo={replyTo}
+                          isFromSelf={isFromSelf}
+                          relatedProfiles={relatedProfiles}
+                          onPress={() => scrollToMessage(replyTo.id)}
+                        />
+                      ) : null}
                       <RichText
                         value={rt}
                         style={[
@@ -646,5 +672,142 @@ function BlockedPlaceholder({
         </Prompt.Content>
       </Prompt.Outer>
     </>
+  )
+}
+
+/**
+ * The "↪ X replied to Y" caption rendered above a reply message. `X` is the
+ * person sending the reply (self -> "you"), `Y` is the original sender.
+ */
+function ReplyCaption({
+  replyTo,
+  isFromSelf,
+  replierDisplayName,
+  relatedProfiles,
+}: {
+  replyTo: ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
+  isFromSelf: boolean
+  replierDisplayName: string | null
+  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
+}) {
+  const t = useTheme()
+  const {currentAccount} = useSession()
+
+  const originalSenderIsSelf = replyTo.sender.did === currentAccount?.did
+  const originalProfile = relatedProfiles.get(replyTo.sender.did)
+  const originalName = originalSenderIsSelf
+    ? null
+    : originalProfile
+      ? createSanitizedDisplayName(originalProfile)
+      : null
+
+  return (
+    <View style={[a.flex_row, a.align_center, a.gap_2xs, a.pb_2xs, a.pt_xs]}>
+      <ArrowCornerDownRightIcon
+        size="xs"
+        style={t.atoms.text_contrast_medium}
+      />
+      <Text
+        style={[a.text_xs, t.atoms.text_contrast_medium, a.flex_1]}
+        emoji
+        numberOfLines={1}>
+        {isFromSelf ? (
+          originalSenderIsSelf ? (
+            <Trans>You replied to yourself</Trans>
+          ) : originalName ? (
+            <Trans>You replied to {originalName}</Trans>
+          ) : (
+            <Trans>You replied</Trans>
+          )
+        ) : originalSenderIsSelf ? (
+          <Trans>{replierDisplayName} replied to you</Trans>
+        ) : originalName ? (
+          <Trans>
+            {replierDisplayName} replied to {originalName}
+          </Trans>
+        ) : (
+          <Trans>{replierDisplayName} replied</Trans>
+        )}
+      </Text>
+    </View>
+  )
+}
+
+/**
+ * The nested quote of the original message, rendered at the top of a reply
+ * bubble. Tapping it scrolls to the original (if loaded).
+ */
+function ReplyQuote({
+  replyTo,
+  isFromSelf,
+  relatedProfiles,
+  onPress,
+}: {
+  replyTo: ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
+  isFromSelf: boolean
+  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
+  onPress: () => void
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  const isDeleted = ChatBskyConvoDefs.isDeletedMessageView(replyTo)
+  const senderProfile = relatedProfiles.get(replyTo.sender.did)
+  const senderName = senderProfile
+    ? createSanitizedDisplayName(senderProfile)
+    : null
+
+  // On the blue self-bubble, derive the quote chrome from white; on the grey
+  // bubble, from the foreground text color. Keeps it legible against either.
+  const tintColor = isFromSelf ? t.palette.white : t.atoms.text.color
+  const subtleColor = isFromSelf
+    ? utils.alpha(t.palette.white, 0.7)
+    : t.atoms.text_contrast_medium.color
+
+  return (
+    <Button
+      label={
+        senderName
+          ? l`Replied-to message from ${senderName}, tap to scroll to it`
+          : l`Replied-to message, tap to scroll to it`
+      }
+      onPress={onPress}
+      style={[a.mb_xs]}>
+      <View
+        style={[
+          a.w_full,
+          a.gap_2xs,
+          a.rounded_sm,
+          a.px_sm,
+          a.py_xs,
+          a.border_l,
+          {
+            borderLeftWidth: 3,
+            borderLeftColor: tintColor,
+            backgroundColor: utils.alpha(tintColor, isFromSelf ? 0.15 : 0.06),
+          },
+        ]}>
+        {senderName ? (
+          <Text
+            style={[a.text_xs, a.font_bold, {color: subtleColor}]}
+            emoji
+            numberOfLines={1}>
+            {senderName}
+          </Text>
+        ) : null}
+        <Text
+          style={[a.text_sm, {color: isDeleted ? subtleColor : tintColor}]}
+          emoji
+          numberOfLines={2}>
+          {ChatBskyConvoDefs.isMessageView(replyTo) ? (
+            replyTo.text
+          ) : (
+            <Text style={[a.text_sm, a.italic, {color: subtleColor}]}>
+              <Trans>Message deleted</Trans>
+            </Text>
+          )}
+        </Text>
+      </View>
+    </Button>
   )
 }

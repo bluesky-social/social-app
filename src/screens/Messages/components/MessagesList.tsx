@@ -35,6 +35,7 @@ import {
 } from '@atproto/api'
 import {useScrollEdgeEffectRef} from '@bsky.app/expo-scroll-edge-effect'
 
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {mergeRefs} from '#/lib/merge-refs'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
@@ -61,7 +62,10 @@ import {MessageListError} from '#/screens/Messages/components/MessageListError'
 import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {DateDivider} from '#/components/dms/DateDivider'
 import {MessageItem} from '#/components/dms/MessageItem'
-import {MessageOverlays} from '#/components/dms/MessageOverlays'
+import {
+  MessageOverlays,
+  useMessageDialogs,
+} from '#/components/dms/MessageOverlays'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {SystemMessageGroup} from '#/components/dms/SystemMessageGroup'
 import {SystemMessageItem} from '#/components/dms/SystemMessageItem'
@@ -72,7 +76,12 @@ import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {groupSystemMessages, type RenderItem} from './groupSystemMessages'
 import {InviteLinkDialogProvider} from './InviteLinkDialogProvider'
-import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
+import {
+  type MessageEmbedState,
+  MessageInputEmbed,
+  useMessageEmbed,
+} from './MessageInputEmbed'
+import {MessageInputReply} from './MessageInputReply'
 import {MessagesListGroupInfoPanel} from './MessagesListGroupInfoPanel'
 import {MessagesListInfoPanel} from './MessagesListInfoPanel'
 import {KeyboardStickyView} from './vendor/KeyboardStickyView'
@@ -371,7 +380,7 @@ export function MessagesList({
 
   // -- Message sending
   const onSendMessage = useCallback(
-    async (text: string) => {
+    async (text: string, replyTo?: ChatBskyConvoDefs.MessageView) => {
       let rt = new RichText({text: text.trimEnd()}, {cleanNewlines: true})
 
       // detect facets without resolution first - this is used to see if there's
@@ -469,10 +478,20 @@ export function MessagesList({
           text: rt.text,
           facets: rt.facets,
           embed,
+          replyTo: replyTo ? {messageId: replyTo.id} : undefined,
         },
         embedView,
+        replyTo
+          ? {...replyTo, $type: 'chat.bsky.convo.defs#messageView'}
+          : undefined,
       )
 
+      if (replyTo) {
+        ax.metric('chat:message:reply:send', {
+          convoId: convoState.convo.view.id,
+          isGroup: convoState.convo.kind === 'group',
+        })
+      }
       if (convoState.convo.kind === 'group') {
         ax.metric('groupchat:message:send', {
           convoId: convoState.convo.view.id,
@@ -509,6 +528,27 @@ export function MessagesList({
       animated: true,
     })
   }, [flatListRef])
+
+  // Scroll to a message by id, if it's currently loaded in the list. Per the
+  // feature scope, we don't fetch history to find unloaded messages - tapping a
+  // reply to an out-of-window message is a no-op.
+  const scrollToMessage = useNonReactiveCallback((messageId: string) => {
+    const index = renderItems.findIndex(
+      item =>
+        (item.type === 'message' ||
+          item.type === 'pending-message' ||
+          item.type === 'deleted-message') &&
+        item.message.id === messageId,
+    )
+    if (index === -1) return
+
+    ax.metric('chat:message:reply:tap', {convoId: convoState.convo.view.id})
+    flatListRef.current?.scrollToIndex({
+      index,
+      viewPosition: 0.3,
+      animated: true,
+    })
+  })
 
   const renderItem = ({item, index}: {item: RenderItem; index: number}) => {
     if (item.type === 'message' || item.type === 'pending-message') {
@@ -561,7 +601,7 @@ export function MessagesList({
 
   return (
     <InviteLinkDialogProvider convo={convoState.convo}>
-      <MessageOverlays>
+      <MessageOverlays scrollToMessage={scrollToMessage}>
         <KeyboardGestureArea
           interpolator="ios"
           // HACKFIX: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1419
@@ -648,37 +688,18 @@ export function MessagesList({
                 <ConversationFooter
                   convoState={convoState}
                   hasAcceptOverride={hasAcceptOverride}>
-                  {({loading}) =>
-                    ax.features.enabled(
-                      ax.features.DmsNewMessageComposerEnable,
-                    ) ? (
-                      <MessageComposer
-                        textInputId={textInputId}
-                        onSendMessage={(message: string) =>
-                          void onSendMessage(message)
-                        }
-                        hasEmbed={!!messageEmbed}
-                        setEmbed={setEmbed}
-                        loading={loading}>
-                        <MessageInputEmbed
-                          embed={messageEmbed}
-                          setEmbed={setEmbed}
-                        />
-                      </MessageComposer>
-                    ) : (
-                      <MessageInput
-                        textInputId={textInputId}
-                        onSendMessage={onSendMessage}
-                        hasEmbed={!!messageEmbed}
-                        setEmbed={setEmbed}
-                        loading={loading}>
-                        <MessageInputEmbed
-                          embed={messageEmbed}
-                          setEmbed={setEmbed}
-                        />
-                      </MessageInput>
-                    )
-                  }
+                  {({loading}) => (
+                    <Composer
+                      textInputId={textInputId}
+                      onSendMessage={onSendMessage}
+                      messageEmbed={messageEmbed}
+                      setEmbed={setEmbed}
+                      loading={loading}
+                      useNewComposer={ax.features.enabled(
+                        ax.features.DmsNewMessageComposerEnable,
+                      )}
+                    />
+                  )}
                 </ConversationFooter>
               </Animated.View>
             )}
@@ -690,6 +711,65 @@ export function MessagesList({
         )}
       </MessageOverlays>
     </InviteLinkDialogProvider>
+  )
+}
+
+/**
+ * Bridges the composer to reply state. It's rendered inside `MessageOverlays`
+ * so it can read the staged reply target via `useMessageDialogs`, inject it
+ * into the send call, then clear it. The reply preview is mounted alongside the
+ * existing embed preview in the composer's children slot.
+ */
+function Composer({
+  textInputId,
+  onSendMessage,
+  messageEmbed,
+  setEmbed,
+  loading,
+  useNewComposer,
+}: {
+  textInputId: string
+  onSendMessage: (
+    message: string,
+    replyTo?: ChatBskyConvoDefs.MessageView,
+  ) => Promise<void>
+  messageEmbed: MessageEmbedState | undefined
+  setEmbed: (embedUrl: string | undefined) => void
+  loading?: boolean
+  useNewComposer: boolean
+}) {
+  const {replyTo, clearReply} = useMessageDialogs()
+
+  const handleSendMessage = useNonReactiveCallback((message: string) => {
+    void onSendMessage(message, replyTo ?? undefined)
+    clearReply()
+  })
+
+  const previews = (
+    <>
+      <MessageInputReply />
+      <MessageInputEmbed embed={messageEmbed} setEmbed={setEmbed} />
+    </>
+  )
+
+  return useNewComposer ? (
+    <MessageComposer
+      textInputId={textInputId}
+      onSendMessage={handleSendMessage}
+      hasEmbed={!!messageEmbed}
+      setEmbed={setEmbed}
+      loading={loading}>
+      {previews}
+    </MessageComposer>
+  ) : (
+    <MessageInput
+      textInputId={textInputId}
+      onSendMessage={handleSendMessage}
+      hasEmbed={!!messageEmbed}
+      setEmbed={setEmbed}
+      loading={loading}>
+      {previews}
+    </MessageInput>
   )
 }
 

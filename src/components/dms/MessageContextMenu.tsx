@@ -23,6 +23,7 @@ import {useMessageDialogs} from '#/components/dms/MessageOverlays'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
 import {Language_Stroke2_Corner2_Rounded as LanguageIcon} from '#/components/icons/Language'
+import {Reply as ReplyIcon} from '#/components/icons/Reply'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
@@ -46,7 +47,7 @@ export let MessageContextMenu = ({
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const convo = useConvoActive()
-  const {openDeleteMessage, openReportMessage} = useMessageDialogs()
+  const {openDeleteMessage, openReportMessage, openReply} = useMessageDialogs()
   const langPrefs = useLanguagePrefs()
   const translate = useGoogleTranslate()
 
@@ -151,6 +152,13 @@ export let MessageContextMenu = ({
           timeStyle: 'short',
         })}`}
         style={[isFromSelf && isGroupChatEnabled ? null : a.ml_sm]}>
+        <ContextMenu.Item
+          testID="messageDropdownReplyBtn"
+          label={l`Reply`}
+          onPress={() => openReply(message)}>
+          <ContextMenu.ItemIcon icon={ReplyIcon} position="left" />
+          <ContextMenu.ItemText>{l`Reply`}</ContextMenu.ItemText>
+        </ContextMenu.Item>
         {message.text.length > 0 && (
           <>
             <ContextMenu.Item

@@ -119,6 +119,7 @@ export class Convo {
       optimisticEmbedView?:
         | $Typed<AppBskyEmbedRecord.View>
         | $Typed<ChatBskyEmbedJoinLink.View>
+      optimisticReplyTo?: $Typed<ChatBskyConvoDefs.MessageView>
     }
   > = new Map()
   private deletedMessages: Set<string> = new Set()
@@ -999,6 +1000,7 @@ export class Convo {
     optimisticEmbedView?:
       | $Typed<AppBskyEmbedRecord.View>
       | $Typed<ChatBskyEmbedJoinLink.View>,
+    optimisticReplyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
   ) {
     // Ignore empty messages for now since they have no other purpose atm
     if (!message.text.trim() && !message.embed) return
@@ -1012,6 +1014,7 @@ export class Convo {
       id: tempId,
       message,
       optimisticEmbedView,
+      optimisticReplyTo,
     })
     if (this.convo?.view.status === 'request') {
       this.updateConvo({
@@ -1363,6 +1366,7 @@ export class Convo {
         message: {
           ...m.message,
           embed: m.optimisticEmbedView,
+          replyTo: m.optimisticReplyTo,
           $type: 'chat.bsky.convo.defs#messageView',
           id: nanoid(),
           rev: '__fake__',
