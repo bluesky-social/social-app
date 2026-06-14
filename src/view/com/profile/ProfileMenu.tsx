@@ -1,4 +1,5 @@
 import {memo, useCallback, useMemo} from 'react'
+import {setStringAsync} from 'expo-clipboard'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -130,8 +131,9 @@ let ProfileMenu = ({
   }, [profile])
 
   const onPressCopyUsername = useCallback(() => {
-    void shareText(profile.handle)
-  }, [profile.handle])
+    void setStringAsync(profile.handle)
+    Toast.show(l`Copied to clipboard`, {type: 'success'})
+  }, [profile.handle, l])
 
   const onPressAddRemoveLists = useCallback(() => {
     openModal({
