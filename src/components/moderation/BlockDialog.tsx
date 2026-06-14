@@ -244,7 +244,8 @@ function BlockDialogInner({
       scrollIndicatorInsets={{top: headerHeight, bottom: footerHeight}}
       onEndReached={() => void onEndReached()}
       onEndReachedThreshold={0.5}
-      style={[web([{maxWidth: 420}])]}
+      style={[web([{height: '100vh', maxHeight: 600}])]}
+      webInnerStyle={[{maxWidth: 420}]}
     />
   )
 }
@@ -340,11 +341,10 @@ function MutualGroupChat({
         a.py_sm,
         native(a.px_2xl),
       ]}>
-      <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+      <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
         <AvatarBubbles profiles={convo.members} size={40} />
-        <View>
-          <Text
-            style={[a.text_md, a.font_semi_bold, a.leading_snug, t.atoms.text]}>
+        <View style={[a.flex_1]}>
+          <Text style={[a.text_md, a.font_semi_bold]} emoji numberOfLines={1}>
             {convo.details.name}
           </Text>
           {isViewerOwner ? (

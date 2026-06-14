@@ -29,7 +29,12 @@ export function Card({size}: {size: 'large' | 'small'}) {
 
   return (
     <View style={[a.flex_row, a.gap_md, a.align_center]}>
-      <AvatarBubbles size={56} self profiles={avatarProfiles} />
+      <AvatarBubbles
+        size={56}
+        self
+        profiles={avatarProfiles}
+        count={preview.memberCount}
+      />
       <View style={[a.flex_1, size === 'large' ? a.gap_2xs : a.gap_xs]}>
         <Text
           emoji
@@ -57,7 +62,7 @@ export function Card({size}: {size: 'large' | 'small'}) {
             <Trans comment="The number of members in a group chat, in the format '{members}/{total} members'.">
               {preview.memberCount}/{preview.memberLimit}{' '}
               <Plural
-                value={preview.memberCount}
+                value={preview.memberLimit}
                 one="member"
                 other="members"
               />

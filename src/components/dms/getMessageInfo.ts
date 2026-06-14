@@ -1,5 +1,6 @@
 import {
   AppBskyEmbedRecord,
+  type ChatBskyActorDefs,
   ChatBskyConvoDefs,
   ChatBskyEmbedJoinLink,
 } from '@atproto/api'
@@ -13,6 +14,7 @@ import {
   toBskyAppUrl,
   toShortUrl,
 } from '#/lib/strings/url-helpers'
+import type * as bsky from '#/types/bsky'
 
 export type UserMessageInfo = {
   message: string | null
@@ -21,13 +23,39 @@ export type UserMessageInfo = {
   isBlockedMessage: boolean
 }
 
+/**
+ * Resolves whether the given did is blocked (in either direction) within a
+ * convo. Prefers the passed-in shadowed `primaryProfile` so optimistic blocks
+ * reflect immediately, before the convo list refetches - the raw `members`
+ * fetched with the convo are invisible to the profile shadow cache. Group
+ * members other than the owner fall back to the raw (potentially stale) member.
+ */
+export function isDidBlockedInConvo({
+  did,
+  members,
+  primaryProfile,
+}: {
+  did: string | undefined
+  members: ChatBskyActorDefs.ProfileViewBasic[]
+  primaryProfile?: bsky.profile.AnyProfileView
+}): boolean {
+  if (!did) return false
+  if (primaryProfile && primaryProfile.did === did) {
+    return isBlockedOrBlocking(primaryProfile)
+  }
+  const member = members.find(m => m.did === did)
+  return member ? isBlockedOrBlocking(member) : false
+}
+
 export function getMessageInfo({
   convo,
   currentAccountDid,
+  primaryProfile,
   i18n,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
   currentAccountDid: string | undefined
+  primaryProfile?: bsky.profile.AnyProfileView
   i18n: I18n
 }): UserMessageInfo | null {
   if (!ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
@@ -42,7 +70,11 @@ export function getMessageInfo({
   const isGroup = ChatBskyConvoDefs.isGroupConvo(convo.kind)
 
   const reportableMessage = isFromMe ? undefined : lastMessage
-  const isBlockedMessage = sender ? isBlockedOrBlocking(sender) : false
+  const isBlockedMessage = isDidBlockedInConvo({
+    did: senderDid,
+    members: convo.members,
+    primaryProfile,
+  })
 
   const prefix = (message: string) => {
     if (isFromMe) {

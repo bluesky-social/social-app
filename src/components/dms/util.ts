@@ -7,6 +7,7 @@ import {
 } from '@atproto/api'
 
 import {EMOJI_REACTION_LIMIT} from '#/lib/constants'
+import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/profile-shadow'
 import {type ConvoState, ConvoStatus} from '#/state/messages/convo/types'
@@ -84,6 +85,25 @@ export function hasAlreadyReacted(
   return !!message.reactions.find(
     reaction => reaction.value === emoji && reaction.sender.did === myDid,
   )
+}
+
+/**
+ * Drops reactions from accounts the viewer is blocking or blocked by, so a
+ * blocked reactor's identity is never surfaced via the reaction pills or the
+ * reactions dialog. `relatedProfiles` is shadow-synced by the convo agent, so
+ * this reflects optimistic blocks. Reactions whose sender isn't in
+ * `relatedProfiles` are kept - we can't determine their block status, and they
+ * already render anonymously ("Someone reacted").
+ */
+export function filterBlockedReactions(
+  reactions: ChatBskyConvoDefs.ReactionView[] | undefined,
+  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>,
+): ChatBskyConvoDefs.ReactionView[] {
+  if (!reactions) return []
+  return reactions.filter(reaction => {
+    const profile = relatedProfiles.get(reaction.sender.did)
+    return !profile || !isBlockedOrBlocking(profile)
+  })
 }
 
 export function hasReachedReactionLimit(
