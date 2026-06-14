@@ -250,7 +250,46 @@ class NotificationService: UNNotificationServiceExtension {
       return nil
     }
 
+    pruneOldAvatars(in: avatarsDir)
+
     return fileURL
+  }
+
+  // Best-effort, age-based cleanup of the avatar cache. We never delete files
+  // right after delivering a notification because the system reads them
+  // lazily (the Apple Watch may fetch the avatar seconds later), and the NSE
+  // gets no "notification dismissed" callback. Instead we drop files old
+  // enough that any device that needed them is long done. Notifications are
+  // ephemeral, so a one-day window is comfortably safe.
+  //
+  // This runs inside the time-limited extension, but the directory holds only
+  // a handful of small files. Every step is best-effort: multiple NSE
+  // instances may run this concurrently, so a file another instance just
+  // removed is expected and harmless (`try?`).
+  func pruneOldAvatars(
+    in directory: URL,
+    olderThan maxAge: TimeInterval = 24 * 60 * 60
+  ) {
+    let fileManager = FileManager.default
+    guard
+      let entries = try? fileManager.contentsOfDirectory(
+        at: directory,
+        includingPropertiesForKeys: [.contentModificationDateKey],
+        options: .skipsHiddenFiles
+      )
+    else {
+      return
+    }
+
+    let cutoff = Date().addingTimeInterval(-maxAge)
+    for fileURL in entries {
+      let modified = (try? fileURL.resourceValues(
+        forKeys: [.contentModificationDateKey]
+      ))?.contentModificationDate
+      if let modified, modified < cutoff {
+        try? fileManager.removeItem(at: fileURL)
+      }
+    }
   }
 
   // MARK: Mutations

@@ -55,6 +55,8 @@ The avatar is downloaded from `senderAvatarUrl` (rewritten to the `avatar_thumbn
 
 This distinction matters for paired devices: an `INImage` backed by in-memory data renders on the iPhone but is not relayed to the Apple Watch, which then falls back to drawing a monogram from the sender's initials. Backing the image with a file URL the system can resolve lazily lets the Watch render the real avatar. Avatar files are written under `notification-avatars/` in the container and named by a stable hash of the (content-addressed) source URL, so notifications from the same sender reuse one file.
 
+Because the system reads these files lazily, they cannot be deleted as soon as the handler returns, and the extension gets no "notification dismissed" callback. Instead `pruneOldAvatars` performs best-effort, age-based cleanup (files older than 24 hours) each time a new avatar is written. Notifications are ephemeral, so by then any device that needed the file is done. The cleanup tolerates concurrent NSE instances removing the same file.
+
 ## Key Files
 
 | File | Purpose |
