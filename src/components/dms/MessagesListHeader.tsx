@@ -20,10 +20,10 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {IS_LIQUID_GLASS} from '#/env'
 import {type ConvoWithDetails} from './util'
 
-const PFP_SIZE = IS_WEB ? 40 : Layout.HEADER_SLOT_SIZE
+const PFP_SIZE = 40
 
 export function MessagesListHeader({convo}: {convo?: ConvoWithDetails | null}) {
   const t = useTheme()
