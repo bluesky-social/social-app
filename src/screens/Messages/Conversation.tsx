@@ -262,6 +262,7 @@ function InnerReady({
       {IS_LIQUID_GLASS ? (
         <ScrollEdgeEffect
           edge="top"
+          effect="soft"
           style={[a.absolute, a.w_full, a.z_10, {paddingTop: topInset}]}
           onLayout={onHeaderLayout}>
           {header}
