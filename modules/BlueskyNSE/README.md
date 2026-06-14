@@ -47,6 +47,14 @@ Two sound types are supported:
 
 DM sound only plays if the user has enabled the `playSoundChat` preference in the main app's chat settings.
 
+### Communication Notifications (Avatars)
+
+Chat notifications (`reason == "chat-message"` / `"chat-reaction"`) are upgraded to iOS Communication Notifications via `INSendMessageIntent`, which lets the sender's avatar appear alongside the message.
+
+The avatar is downloaded from `senderAvatarUrl` (rewritten to the `avatar_thumbnail` variant to keep it small) and attached to the `INPerson` sender. The downloaded bytes are written to a file in the shared App Group container and the `INImage` is created with `INImage(url:)`, **not** `INImage(imageData:)`.
+
+This distinction matters for paired devices: an `INImage` backed by in-memory data renders on the iPhone but is not relayed to the Apple Watch, which then falls back to drawing a monogram from the sender's initials. Backing the image with a file URL the system can resolve lazily lets the Watch render the real avatar. Avatar files are written under `notification-avatars/` in the container and named by a stable hash of the (content-addressed) source URL, so notifications from the same sender reuse one file.
+
 ## Key Files
 
 | File | Purpose |

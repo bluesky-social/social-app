@@ -1,3 +1,4 @@
+import CryptoKit
 import Intents
 import UIKit
 import UserNotifications
@@ -190,7 +191,66 @@ class NotificationService: UNNotificationServiceExtension {
     semaphore.wait()
 
     guard let data = imageData else { return nil }
+
+    // Back the INImage with a file in the shared App Group container rather
+    // than raw image data. `INImage(imageData:)` renders fine on the iPhone
+    // itself, but the in-memory bytes are not relayed to paired devices like
+    // the Apple Watch. The Watch then receives an INPerson with no usable
+    // image and falls back to drawing a monogram from the sender's initials.
+    // Pointing the INImage at a file URL the Watch can resolve lets it render
+    // the actual avatar.
+    if let fileURL = writeAvatarToSharedContainer(data: data, urlString: thumbnailUrlString) {
+      return INImage(url: fileURL)
+    }
+
+    // Fall back to in-memory data if we could not write to the container. The
+    // avatar still shows on the iPhone in that case.
     return INImage(imageData: data)
+  }
+
+  // Writes avatar bytes to a file in the shared App Group container so the
+  // resulting INImage can be backed by a URL. The system reads this file
+  // lazily (including when relaying the notification to the Apple Watch), so
+  // it must live in the persistent shared container rather than a temporary
+  // directory. Files are named by a stable hash of the source URL, which is
+  // content-addressed (the CID changes when a user updates their avatar), so
+  // repeated notifications from the same sender reuse one file instead of
+  // accumulating duplicates.
+  func writeAvatarToSharedContainer(data: Data, urlString: String) -> URL? {
+    guard
+      let containerURL = FileManager.default.containerURL(
+        forSecurityApplicationGroupIdentifier: APP_GROUP
+      )
+    else {
+      return nil
+    }
+
+    let avatarsDir = containerURL.appendingPathComponent(
+      "notification-avatars",
+      isDirectory: true
+    )
+
+    let fileName = Insecure.MD5.hash(data: Data(urlString.utf8))
+      .map { String(format: "%02x", $0) }
+      .joined()
+    let fileURL = avatarsDir.appendingPathComponent(fileName)
+
+    // Reuse an already-downloaded avatar if present.
+    if FileManager.default.fileExists(atPath: fileURL.path) {
+      return fileURL
+    }
+
+    do {
+      try FileManager.default.createDirectory(
+        at: avatarsDir,
+        withIntermediateDirectories: true
+      )
+      try data.write(to: fileURL, options: .atomic)
+    } catch {
+      return nil
+    }
+
+    return fileURL
   }
 
   // MARK: Mutations
