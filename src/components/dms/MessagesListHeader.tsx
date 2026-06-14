@@ -176,7 +176,7 @@ function GroupHeaderReady({
                   },
                 }
           }>
-          <AvatarBubbles size={40} profiles={convo.members} />
+          <AvatarBubbles size={PFP_SIZE} profiles={convo.members} />
           <View style={[a.flex_row, a.flex_1, a.align_center]}>
             <Text
               style={[a.text_lg, a.font_semi_bold, a.flex_shrink]}
