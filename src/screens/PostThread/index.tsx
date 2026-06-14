@@ -420,18 +420,18 @@ export function PostThread({
   }, [ax, thread.state.view, thread.state.savedView, setViewWrapped])
 
   /**
-   * Whether the thread contains an OP self-thread chain that reader view can
-   * collapse. Used to decide whether to surface the header toggle at all.
-   * `opThread` is only set on posts in the OP's contiguous chain from the
-   * root, so any non-anchor hit (parent or reply) means there is a chain to
-   * read.
+   * Whether to surface the reader toggle. The anchor must itself be part of the
+   * OP self-thread - the root, or an `opThread` post mid-chain - otherwise the
+   * chain is just incidental context above a reply the user navigated into.
    */
   const hasOpThreadChain = useMemo(() => {
+    if (anchor?.type !== 'threadPost') return false
+    if (!(isRoot || anchor.value.opThread)) return false
     return thread.data.items.some(
       item =>
         item.type === 'threadPost' && item.depth !== 0 && item.value.opThread,
     )
-  }, [thread.data.items])
+  }, [thread.data.items, anchor, isRoot])
 
   const onStartReached = () => {
     if (thread.state.isFetching) return

@@ -121,11 +121,15 @@ const ThreadItemReaderSegmentInner = memo(
         <GalleryBleed>
           <View style={[{paddingHorizontal: OUTER_SPACE}]}>
             <View>
-              <LabelsOnMyPost post={post} style={[a.pb_xs]} />
-              <PostAlerts
-                modui={moderation.ui('contentList')}
-                style={[a.pb_2xs]}
-              />
+              {seam.expanded && (
+                <>
+                  <LabelsOnMyPost post={post} style={[a.pb_xs]} />
+                  <PostAlerts
+                    modui={moderation.ui('contentList')}
+                    style={[a.pb_2xs]}
+                  />
+                </>
+              )}
               {richText?.text ? (
                 <View style={[a.mb_2xs]}>
                   {/* Intentionally not line-limited: reader view is for
