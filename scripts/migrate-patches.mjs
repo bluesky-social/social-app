@@ -136,7 +136,14 @@ for (const [pkg, files] of groups) {
       try {
         execFileSync(
           'patch',
-          [`-p${stripLevel}`, '-l', '-N', '--no-backup-if-mismatch', '-i', patchPath],
+          [
+            `-p${stripLevel}`,
+            '-l',
+            '-N',
+            '--no-backup-if-mismatch',
+            '-i',
+            patchPath,
+          ],
           {cwd: tmp, stdio: 'pipe'},
         )
         console.log(`  applied  ${file}  (via GNU patch -l)`)
@@ -146,16 +153,17 @@ for (const [pkg, files] of groups) {
 
       // If reversing applies, the patch is already in upstream -- stale.
       try {
-        execFileSync(
-          'git',
-          [...gitArgs, '--reverse', '--check', patchPath],
-          {cwd: tmp, stdio: 'pipe'},
-        )
+        execFileSync('git', [...gitArgs, '--reverse', '--check', patchPath], {
+          cwd: tmp,
+          stdio: 'pipe',
+        })
         console.log(`  STALE    ${file}  (already in upstream, skipping)`)
         stale++
       } catch {
         console.error(`  FAILED   ${file}  (does not apply, not stale)`)
-        throw new Error(`patch ${file} does not apply against ${pkg}@${version}`)
+        throw new Error(
+          `patch ${file} does not apply against ${pkg}@${version}`,
+        )
       }
     }
 

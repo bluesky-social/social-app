@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out PR HEAD
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -21,12 +21,12 @@ jobs:
           BASE_REF: ${{ github.base_ref }}
         run: git fetch origin $BASE_REF --depth=1
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       - name: Install node
         uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
+          node-version-file: package.json
 
       - name: Reset pnpm-lock.yaml to base
         env:
@@ -34,12 +34,8 @@ jobs:
         run: git show "origin/$BASE_REF:pnpm-lock.yaml" > pnpm-lock.yaml
 
       - name: pnpm install
-        uses: Wandalen/wretry.action@master
-        with:
-          # Fine to skip scripts since we don't run any code
-          command: pnpm install --ignore-scripts
-          attempt_limit: 3
-          attempt_delay: 2000
+        # Fine to skip scripts since we don't run any code
+        run: pnpm clean && pnpm install --ignore-scripts --no-frozen-lockfile
 
       - name: Verify pnpm-lock.yaml
         run: |

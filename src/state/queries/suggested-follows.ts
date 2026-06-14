@@ -85,7 +85,7 @@ export function useSuggestedFollowsByActorWithDismiss({
 
   const profiles = useMemo(() => {
     return (data?.suggestions ?? []).map(profile => ({
-      actor: profile as bsky.profile.AnyProfileView,
+      actor: profile,
       recId: data?.recId,
     }))
   }, [data?.suggestions, data?.recId])

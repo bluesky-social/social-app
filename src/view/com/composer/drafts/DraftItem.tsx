@@ -326,9 +326,15 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
   }
 
   return (
-    <MediaPreview.Outer>
+    <View style={[a.flex_row, a.flex_wrap, {marginLeft: -4, marginRight: -4}]}>
       {loadedImages.map((image, i) => (
-        <MediaPreview.ImageItem key={i} thumbnail={image.url} alt={image.alt} />
+        <View key={i} style={[a.p_2xs, {width: '20%'}]}>
+          <MediaPreview.ImageItem
+            thumbnail={image.url}
+            alt={image.alt}
+            maxWidth={999}
+          />
+        </View>
       ))}
       {post.gif && (
         <MediaPreview.GifItem thumbnail={post.gif.url} alt={post.gif.alt} />
@@ -339,6 +345,6 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
           alt={post.video.altText}
         />
       )}
-    </MediaPreview.Outer>
+    </View>
   )
 }

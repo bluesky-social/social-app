@@ -45,7 +45,7 @@ export type ButtonColor =
   | 'negative'
   | 'primary_subtle'
   | 'negative_subtle'
-export type ButtonSize = 'tiny' | 'small' | 'large'
+export type ButtonSize = 'tiny' | 'small' | 'medium' | 'large'
 export type ButtonShape = 'round' | 'square' | 'rectangular' | 'default'
 export type VariantProps = {
   /**
@@ -136,7 +136,7 @@ export const Button = forwardRef<View, ButtonProps>(
   (
     {
       children,
-      variant,
+      variant: variantProp,
       color,
       size,
       shape = 'default',
@@ -160,7 +160,8 @@ export const Button = forwardRef<View, ButtonProps>(
      * If a `color` is set, then we want to use the existing codepaths for
      * "solid" buttons. This is to maintain backwards compatibility.
      */
-    if (!variant && color) {
+    let variant: VariantProps['variant'] = variantProp
+    if (!variantProp && color) {
       variant = 'solid'
     }
 
@@ -458,6 +459,12 @@ export const Button = forwardRef<View, ButtonProps>(
             paddingHorizontal: 24,
             gap: 6,
           })
+        } else if (size === 'medium') {
+          baseStyles.push(a.rounded_full, {
+            paddingVertical: 9,
+            paddingHorizontal: 28,
+            gap: 5,
+          })
         } else if (size === 'small') {
           baseStyles.push(a.rounded_full, {
             paddingVertical: 8,
@@ -477,6 +484,13 @@ export const Button = forwardRef<View, ButtonProps>(
             paddingVertical: 12,
             paddingHorizontal: 25,
             borderRadius: 10,
+            gap: 3,
+          })
+        } else if (size === 'medium') {
+          baseStyles.push({
+            paddingVertical: 9,
+            paddingHorizontal: 16,
+            borderRadius: 8,
             gap: 3,
           })
         } else if (size === 'small') {
@@ -504,6 +518,12 @@ export const Button = forwardRef<View, ButtonProps>(
             baseStyles.push({height: 44, width: 44})
           } else {
             baseStyles.push({height: 44, width: 44})
+          }
+        } else if (size === 'medium') {
+          if (shape === 'round') {
+            baseStyles.push({height: 33, width: 33})
+          } else {
+            baseStyles.push({height: 33, width: 33})
           }
         } else if (size === 'small') {
           if (shape === 'round') {
@@ -757,11 +777,13 @@ export function useSharedButtonTextStyles() {
     }
 
     if (size === 'large') {
-      baseStyles.push(a.text_md, a.leading_snug, a.font_medium)
+      baseStyles.push(a.text_md, a.font_medium)
+    } else if (size === 'medium') {
+      baseStyles.push(a.text_sm, a.font_medium)
     } else if (size === 'small') {
-      baseStyles.push(a.text_sm, a.leading_snug, a.font_medium)
+      baseStyles.push(a.text_sm, a.font_medium)
     } else if (size === 'tiny') {
-      baseStyles.push(a.text_xs, a.leading_snug, a.font_semi_bold)
+      baseStyles.push(a.text_xs, a.font_semi_bold)
     }
 
     return flatten(baseStyles)
@@ -799,6 +821,7 @@ export function ButtonIcon({
       size ??
       (({
         large: 'md',
+        medium: 'sm',
         small: 'sm',
         tiny: 'xs',
       }[buttonSize || 'small'] || 'sm') as Exclude<
@@ -828,6 +851,7 @@ export function ButtonIcon({
      */
     const iconContainerSize = {
       large: 20,
+      medium: 17,
       small: 17,
       tiny: 15,
     }[buttonSize || 'small']
@@ -841,6 +865,7 @@ export function ButtonIcon({
     if (buttonShape === 'default') {
       iconNegativeMargin = {
         large: -2,
+        medium: -2,
         small: -2,
         tiny: -1,
       }[buttonSize || 'small']

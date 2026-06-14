@@ -60,6 +60,12 @@ export function useCopyForSubject(subject: ParsedReportSubject) {
           }
         }
       }
+      case 'convo': {
+        return {
+          title: _(msg`Report this conversation`),
+          subtitle: _(msg`Why should this conversation be reviewed?`),
+        }
+      }
     }
   }, [_, subject])
 }

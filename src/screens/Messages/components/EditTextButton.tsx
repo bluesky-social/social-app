@@ -35,13 +35,14 @@ export function EditTextButton({
               a.flex_row,
               a.align_center,
               a.justify_between,
-              a.px_md,
+              a.pl_lg,
+              a.pr_sm,
               a.py_sm,
+              a.gap_sm,
             ]}>
             {typeof children === 'function' ? children(context) : children}
             <View
               style={[
-                a.ml_sm,
                 a.rounded_full,
                 t.atoms.bg_contrast_50,
                 {paddingHorizontal: 10, paddingVertical: 8},

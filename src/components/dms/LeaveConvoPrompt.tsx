@@ -1,7 +1,9 @@
+import {ChatBskyConvoLeaveConvo} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
+import {isNetworkError} from '#/lib/strings/errors'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {type DialogOuterProps} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
@@ -30,10 +32,18 @@ export function LeaveConvoPrompt({
         )
       }
     },
-    onError: () => {
-      Toast.show(l`Could not leave chat`, {
-        type: 'error',
-      })
+    onError: error => {
+      let errorMessage = l`Could not leave chat`
+      if (isNetworkError(error)) {
+        errorMessage = l`A network error occurred. Please check your internet connection.`
+      } else if (error instanceof ChatBskyConvoLeaveConvo.InvalidConvoError) {
+        errorMessage = l`Conversation not found.`
+      } else if (
+        error instanceof ChatBskyConvoLeaveConvo.OwnerCannotLeaveError
+      ) {
+        errorMessage = l`Owner must lock the group before leaving.`
+      }
+      Toast.show(errorMessage, {type: 'error'})
     },
   })
 
@@ -43,7 +53,7 @@ export function LeaveConvoPrompt({
       title={l`Leave conversation`}
       description={
         hasMessages
-          ? l`Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant.`
+          ? l`Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participants.`
           : l`Are you sure you want to leave this conversation?`
       }
       confirmButtonCta={l`Leave`}

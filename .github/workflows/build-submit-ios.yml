@@ -28,34 +28,30 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 5
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
+          node-version-file: package.json
           cache: pnpm
 
       - name: 🪛 Setup jq
         uses: dcarbone/install-jq-action@v2
 
-      - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@main
-        with:
-          expo-version: latest
-          eas-version: latest
-          packager: pnpm
-          token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: ⛏️ Setup EAS local builds
-        run: pnpm add -g eas-cli-local-build-plugin
-
       - name: ⚙️ Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: 🔨 Setup Expo CLI
+        uses: expo/expo-github-action@v9
+        with:
+          eas-version: '19.0.5'
+          packager: 'pnpm --allow-build=dtrace-provider'
+          token: ${{ secrets.EXPO_TOKEN }}
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
@@ -67,7 +63,7 @@ jobs:
           version: 1.16.2
 
       - name: 💾 Cache Pods
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: pods-cache
         with:
           path: ./ios/Pods
@@ -104,7 +100,7 @@ jobs:
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
           pnpm use-build-number-with-bump
-          eas build -p ios
+          pnpm eas build -p ios
           --profile $PROFILE
           --local --output build.tar.gz --non-interactive
 
@@ -144,7 +140,7 @@ jobs:
           fi
 
       - name: 🚀 Deploy
-        run: eas submit -p ios --non-interactive --path "$BUILD_DIR/Bluesky.ipa"
+        run: pnpm eas submit -p ios --non-interactive --path "$BUILD_DIR/Bluesky.ipa"
 
       - name: 🪲 Upload dSYM to Sentry
         run: >
@@ -159,19 +155,17 @@ jobs:
 
       - name: 🔔 Notify Slack of Production Build
         if: ${{ inputs.profile == 'production' }}
-        uses: slackapi/slack-github-action@v1.25.0
+        uses: slackapi/slack-github-action@v3.0.3
         with:
+          webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          webhook-type: incoming-webhook
+          payload-templated: true
           payload: |
-            {
-              "text": "iOS production build for App Store submission is ready!\n```Artifact: Check TestFlight to know when it is available\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_IOS_BUILD_NUMBER }}```"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+            {"text": "iOS production build for App Store submission is ready!\n```Artifact: Check TestFlight to know when it is available\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_IOS_BUILD_NUMBER }}```"}
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         if: ${{ inputs.profile == 'testflight' }}
         with:
           path: most-recent-testflight-commit.txt

@@ -1,7 +1,7 @@
 import {createServer as createHTTPServer} from 'node:http'
 import {parse} from 'node:url'
 
-import {createServer, type TestPDS} from './test-pds'
+import {createServer, type TestPDS} from './test-pds.ts'
 
 let server: TestPDS
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -97,6 +97,7 @@ createHTTPServer(async (req, res) => {
         await server.mocker.follow('alice', 'bob')
         await server.mocker.follow('alice', 'carla')
         console.log('Generating mock posts')
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let posts: Record<string, any[]> = {
           alice: [],
           bob: [],

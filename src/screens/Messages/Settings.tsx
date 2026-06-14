@@ -13,6 +13,7 @@ import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
+import {resolveAllowGroupInvites} from '#/components/dms/util'
 import * as Toggle from '#/components/forms/Toggle'
 import {Bell_Stroke2_Corner0_Rounded as BellIcon} from '#/components/icons/Bell'
 import {Car_Stroke2_Corner2_Rounded as CarIcon} from '#/components/icons/Car'
@@ -20,6 +21,7 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/compon
 import * as Layout from '#/components/Layout'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {useBackgroundNotificationPreferences} from '../../../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -45,14 +47,17 @@ export function MessagesSettingsScreenInner({}: Props) {
   const t = useTheme()
   const {t: l} = useLingui()
   const ax = useAnalytics()
+  const aa = useAgeAssurance()
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({
     did: currentAccount!.did,
   })
   const {preferences, setPref} = useBackgroundNotificationPreferences()
+
   const exportCarControl = Dialog.useDialogControl()
 
-  const isGroupChatEnabled = ax.features.enabled(ax.features.GroupChatsEnable)
+  const isGroupChatEnabled = !ax.features.enabled(ax.features.GroupChatsDisable)
+  const groupInvitesLocked = aa.flags.groupChatDisabled
 
   const allowMessagesFromOptions: {name: AllowIncoming; label: string}[] = [
     {
@@ -61,7 +66,7 @@ export function MessagesSettingsScreenInner({}: Props) {
     },
     {
       name: 'following',
-      label: l({context: 'allow messages from', message: `Users I follow`}),
+      label: l({context: 'allow messages from', message: `People I follow`}),
     },
     {
       name: 'none',
@@ -78,7 +83,7 @@ export function MessagesSettingsScreenInner({}: Props) {
       name: 'following',
       label: l({
         context: 'allow group chat invites from',
-        message: `Users I follow`,
+        message: `People I follow`,
       }),
     },
     {
@@ -190,17 +195,25 @@ export function MessagesSettingsScreenInner({}: Props) {
                     a.leading_snug,
                     t.atoms.text_contrast_high,
                   ]}>
-                  <Trans>
-                    You can continue ongoing conversations regardless of which
-                    setting you choose.
-                  </Trans>
+                  {groupInvitesLocked ? (
+                    <Trans>
+                      Group chats are only available to users 18 and over.
+                    </Trans>
+                  ) : (
+                    <Trans>
+                      You can continue ongoing conversations regardless of which
+                      setting you choose.
+                    </Trans>
+                  )}
                 </Text>
                 <Toggle.Group
+                  disabled={groupInvitesLocked}
                   label={l`Allow group chat invites from`}
                   type="radio"
                   values={[
-                    (profile?.associated?.chat
-                      ?.allowGroupInvites as AllowIncoming) ?? 'following',
+                    groupInvitesLocked
+                      ? 'none'
+                      : resolveAllowGroupInvites(profile?.associated?.chat),
                   ]}
                   onChange={onSelectGroupInvitesFrom}>
                   <View>
@@ -233,7 +246,7 @@ export function MessagesSettingsScreenInner({}: Props) {
                   value={preferences.playSoundChat}
                   style={[a.flex_row, a.align_center, a.justify_between]}
                   onChange={onSelectSoundSetting}>
-                  <BellIcon style={[a.mr_2xs, t.atoms.text]} size="md" />
+                  <BellIcon style={[a.mr_2xs, t.atoms.text]} size="lg" />
                   <Text
                     style={[
                       a.flex_1,
@@ -251,19 +264,19 @@ export function MessagesSettingsScreenInner({}: Props) {
           )}
           <View style={[a.px_xl]}>
             <Toggle.Item
-              label={l`Export chat data`}
+              label={l`Export my chat data`}
               name="playSoundChat"
               value={preferences.playSoundChat}
               style={[a.flex_row, a.align_center, a.justify_between]}
               onChange={() => {
                 exportCarControl.open()
               }}>
-              <CarIcon style={[a.mr_2xs, t.atoms.text]} size="md" />
+              <CarIcon style={[a.mr_2xs, t.atoms.text]} size="lg" />
               <Text
                 style={[a.flex_1, a.text_md, a.font_semi_bold, t.atoms.text]}>
-                <Trans>Export chat data</Trans>
+                <Trans>Export my chat data</Trans>
               </Text>
-              <ChevronRightIcon style={[a.ml_2xs, t.atoms.text]} size="md" />
+              <ChevronRightIcon style={[a.ml_2xs, t.atoms.text]} size="lg" />
             </Toggle.Item>
           </View>
           <Divider style={{marginVertical: 10}} />

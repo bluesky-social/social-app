@@ -114,6 +114,7 @@ export function SearchablePeopleList({
   const {data: convos} = useListConvosQuery({
     enabled: showRecentConvos,
     status: 'accepted',
+    lockStatus: 'unlocked',
   })
 
   const items = useMemo(() => {
@@ -662,7 +663,6 @@ function SearchInput({
       />
 
       <TextInput
-        // @ts-ignore bottom sheet input types issue — esb
         ref={inputRef}
         placeholder={l`Search`}
         value={value}

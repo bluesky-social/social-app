@@ -68,7 +68,19 @@ function MenuInner({
   return expanded ? (
     <EmojiPicker.Picker keepOpenWhenShiftHeld={false} />
   ) : (
-    <Menu.Outer style={[a.rounded_full]}>
+    <Menu.Outer
+      style={[a.rounded_full]}
+      onCloseAutoFocus={evt => {
+        // If something has already taken focus (e.g. emoji-mart's search
+        // input when swapping to the full picker), don't let Radix restore
+        // focus to the trigger and steal it back.
+        if (
+          document.activeElement &&
+          document.activeElement !== document.body
+        ) {
+          evt.preventDefault()
+        }
+      }}>
       <View style={[a.flex_row, a.gap_xs]}>
         {['❤️', '👍', '😆', '👀', '😢'].map(emoji => {
           const alreadyReacted = hasAlreadyReacted(

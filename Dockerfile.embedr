@@ -11,9 +11,13 @@ ENV NVM_DIR=/usr/share/nvm
 # Go
 ENV GODEBUG="netdns=go"
 ENV GOOS="linux"
-ENV GOARCH="amd64"
+ARG TARGETARCH
+ENV GOARCH=${TARGETARCH:-amd64}
 ENV CGO_ENABLED=1
 ENV GOEXPERIMENT="loopvar"
+
+# CI environment for pnpm
+ENV CI=true
 
 COPY . .
 
@@ -29,9 +33,9 @@ RUN mkdir --parents $NVM_DIR && \
 RUN \. "$NVM_DIR/nvm.sh" && \
   nvm install $NODE_VERSION && \
   nvm use $NODE_VERSION && \
-  npm install --global pnpm@11.1.1 yarn && \
+  npm install --global pnpm@11.5.3 && \
   pnpm install --frozen-lockfile && \
-  cd bskyembed && yarn install --frozen-lockfile && cd .. && \
+  cd bskyembed && pnpm install --frozen-lockfile && cd .. && \
   pnpm intl:build && \
   pnpm build-embed
 

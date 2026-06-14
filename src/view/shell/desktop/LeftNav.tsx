@@ -1,9 +1,8 @@
-import {type JSX, useCallback, useMemo, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {msg, plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {plural} from '@lingui/core/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
@@ -40,51 +39,62 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps} from '#/components/Dialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
 import {
-  Bell_Filled_Corner0_Rounded as BellFilled,
-  Bell_Stroke2_Corner0_Rounded as Bell,
+  Bell_Filled_Corner0_Rounded as BellFilledIcon,
+  Bell_Stroke2_Corner0_Rounded as BellIcon,
 } from '#/components/icons/Bell'
-import {Bookmark, BookmarkFilled} from '#/components/icons/Bookmark'
 import {
-  BulletList_Filled_Corner0_Rounded as ListFilled,
-  BulletList_Stroke2_Corner0_Rounded as List,
+  Bookmark as BookmarkIcon,
+  BookmarkFilled as BookmarkFilledIcon,
+} from '#/components/icons/Bookmark'
+import {
+  BulletList_Filled_Corner0_Rounded as ListFilledIcon,
+  BulletList_Stroke2_Corner0_Rounded as ListIcon,
 } from '#/components/icons/BulletList'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {
-  Hashtag_Filled_Corner0_Rounded as HashtagFilled,
-  Hashtag_Stroke2_Corner0_Rounded as Hashtag,
+  Hashtag_Filled_Corner0_Rounded as HashtagFilledIcon,
+  Hashtag_Stroke2_Corner0_Rounded as HashtagIcon,
 } from '#/components/icons/Hashtag'
 import {
-  HomeOpen_Filled_Corner0_Rounded as HomeFilled,
-  HomeOpen_Stoke2_Corner0_Rounded as Home,
+  HomeOpen_Filled_Corner0_Rounded as HomeFilledIcon,
+  HomeOpen_Stoke2_Corner0_Rounded as HomeIcon,
 } from '#/components/icons/HomeOpen'
 import {
-  MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled,
-  MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlass,
+  MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilledIcon,
+  MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon,
 } from '#/components/icons/MagnifyingGlass'
 import {
-  Message_Stroke2_Corner0_Rounded as Message,
-  Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
+  Message_Stroke2_Corner0_Rounded as MessageIcon,
+  Message_Stroke2_Corner0_Rounded_Filled as MessageFilledIcon,
 } from '#/components/icons/Message'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {
-  SettingsGear2_Filled_Corner0_Rounded as SettingsFilled,
-  SettingsGear2_Stroke2_Corner0_Rounded as Settings,
+  SettingsGear2_Filled_Corner0_Rounded as SettingsFilledIcon,
+  SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon,
 } from '#/components/icons/SettingsGear2'
 import {
-  UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
-  UserCircle_Stroke2_Corner0_Rounded as UserCircle,
+  UserCircle_Filled_Corner0_Rounded as UserCircleFilledIcon,
+  UserCircle_Stroke2_Corner0_Rounded as UserCircleIcon,
 } from '#/components/icons/UserCircle'
-import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
+import {CENTER_COLUMN_OFFSET, CENTER_COLUMN_WIDTH} from '#/components/Layout'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
+import {type Events} from '#/analytics/metrics/types'
 import {useActorStatus} from '#/features/liveNow'
 import {router} from '#/routes'
 import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
 
+const LARGE_ELEMENT_SIZE = 48
 const NAV_ICON_WIDTH = 28
+
+export const LEFT_NAV_STANDARD_WIDTH = 240
+export const LEFT_NAV_MINIMAL_WIDTH = 80
+const LEFT_NAV_PWI_WIDTH = 245
 
 function ProfileCard({minimal}: {minimal: boolean}) {
   const {currentAccount, accounts} = useSession()
@@ -94,10 +104,8 @@ function ProfileCard({minimal}: {minimal: boolean}) {
   })
   const profiles = data?.profiles
   const signOutPromptControl = Prompt.usePromptControl()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
-
-  const size = 48
 
   const profile = profiles?.find(p => p.did === currentAccount!.did)
   const otherAccounts = accounts
@@ -110,10 +118,10 @@ function ProfileCard({minimal}: {minimal: boolean}) {
   const {isActive: live} = useActorStatus(profile)
 
   return (
-    <View style={[a.my_md, !minimal && [a.w_full, a.align_start]]}>
+    <View style={[a.pb_md, !minimal && [a.w_full, a.align_start]]}>
       {!isLoading && profile ? (
         <Menu.Root>
-          <Menu.Trigger label={_(msg`Switch accounts`)}>
+          <Menu.Trigger label={l`Switch accounts`}>
             {({props, state, control}) => {
               const active = state.hovered || state.focused || control.isOpen
               return (
@@ -149,7 +157,7 @@ function ProfileCard({minimal}: {minimal: boolean}) {
                     ]}>
                     <UserAvatar
                       avatar={profile.avatar}
-                      size={size}
+                      size={LARGE_ELEMENT_SIZE}
                       type={profile?.associated?.labeler ? 'labeler' : 'user'}
                       live={live}
                     />
@@ -167,6 +175,7 @@ function ProfileCard({minimal}: {minimal: boolean}) {
                           },
                         ]}>
                         <Text
+                          emoji
                           style={[a.font_bold, a.text_sm, a.leading_snug]}
                           numberOfLines={1}>
                           {sanitizeDisplayName(
@@ -205,18 +214,18 @@ function ProfileCard({minimal}: {minimal: boolean}) {
         </Menu.Root>
       ) : (
         <LoadingPlaceholder
-          width={size}
-          height={size}
-          style={[{borderRadius: size}, !minimal && a.ml_lg]}
+          width={LARGE_ELEMENT_SIZE}
+          height={LARGE_ELEMENT_SIZE}
+          style={[a.rounded_full, !minimal && a.ml_lg]}
         />
       )}
       <Prompt.Basic
         control={signOutPromptControl}
-        title={_(msg`Sign out?`)}
-        description={_(msg`You will be signed out of all your accounts.`)}
+        title={l`Sign out?`}
+        description={l`You will be signed out of all your accounts.`}
         onConfirm={() => logoutEveryAccount('Settings')}
-        confirmButtonCta={_(msg`Sign out`)}
-        cancelButtonCta={_(msg`Cancel`)}
+        confirmButtonCta={l`Sign out`}
+        cancelButtonCta={l`Cancel`}
         confirmButtonColor="negative"
       />
     </View>
@@ -235,7 +244,7 @@ function SwitchMenuItems({
     | undefined
   signOutPromptControl: DialogControlProps
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeEverything = useCloseAllActiveElements()
 
@@ -264,15 +273,13 @@ function SwitchMenuItems({
         </>
       )}
       <SwitcherMenuProfileLink />
-      <Menu.Item
-        label={_(msg`Add another account`)}
-        onPress={onAddAnotherAccount}>
+      <Menu.Item label={l`Add another account`} onPress={onAddAnotherAccount}>
         <Menu.ItemIcon icon={PlusIcon} />
         <Menu.ItemText>
           <Trans>Add another account</Trans>
         </Menu.ItemText>
       </Menu.Item>
-      <Menu.Item label={_(msg`Sign out`)} onPress={signOutPromptControl.open}>
+      <Menu.Item label={l`Sign out`} onPress={signOutPromptControl.open}>
         <Menu.ItemIcon icon={LeaveIcon} />
         <Menu.ItemText>
           <Trans>Sign out</Trans>
@@ -283,7 +290,7 @@ function SwitchMenuItems({
 }
 
 function SwitcherMenuProfileLink() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const navigation = useNavigation()
   const context = Menu.useMenuContext()
@@ -326,11 +333,11 @@ function SwitcherMenuProfileLink() {
   )
   return (
     <Menu.Item
-      label={_(msg`Go to profile`)}
+      label={l`Go to profile`}
       // @ts-expect-error The function signature differs on web -inb
       onPress={onProfilePress}
       href={profileLink}>
-      <Menu.ItemIcon icon={UserCircle} />
+      <Menu.ItemIcon icon={UserCircleIcon} />
       <Menu.ItemText>
         <Trans>Go to profile</Trans>
       </Menu.ItemText>
@@ -345,7 +352,7 @@ function SwitchMenuItem({
   account: SessionAccount
   profile: AppBskyActorDefs.ProfileViewDetailed | undefined
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {isActive: live} = useActorStatus(profile)
 
@@ -354,12 +361,10 @@ function SwitchMenuItem({
       disabled={!!pendingDid}
       style={[a.gap_sm, {minWidth: 150}]}
       key={account.did}
-      label={_(
-        msg`Switch to ${sanitizeHandle(
-          profile?.handle ?? account.handle,
-          '@',
-        )}`,
-      )}
+      label={l`Switch to ${sanitizeHandle(
+        profile?.handle ?? account.handle,
+        '@',
+      )}`}
       onPress={() => void onPressSwitchAccount(account, 'SwitchAccount')}>
       <View>
         <UserAvatar
@@ -381,22 +386,26 @@ interface NavItemProps {
   count?: string
   hasNew?: boolean
   href: string
-  icon: JSX.Element
-  iconFilled: JSX.Element
+  icons: {
+    inactive: React.ComponentType<SVGIconProps>
+    active: React.ComponentType<SVGIconProps>
+  }
   label: string
   minimal: boolean
+  navItem: Events['nav:click']['item']
 }
 function NavItem({
   count,
   hasNew,
   href,
-  icon,
-  iconFilled,
+  icons,
   label,
   minimal,
+  navItem,
 }: NavItemProps) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
 
   const [pathName] = useMemo(() => router.matchPath(href), [href])
@@ -416,6 +425,7 @@ function NavItem({
   const navigation = useNavigation<NavigationProp>()
   const onPressWrapped = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+      ax.metric('nav:click', {item: navItem, surface: 'leftNav'})
       if (e.ctrlKey || e.metaKey || e.altKey) {
         return
       }
@@ -428,8 +438,10 @@ function NavItem({
         navigation.navigate(screen, params, {pop: true})
       }
     },
-    [navigation, href, isCurrent],
+    [navigation, href, isCurrent, ax, navItem],
   )
+
+  const Icon = isCurrent || isRelated ? icons.active : icons.inactive
 
   return (
     <PressableWithHover
@@ -458,8 +470,9 @@ function NavItem({
             width: 24,
             height: 24,
           },
+          a.z_10,
         ]}>
-        {isCurrent || isRelated ? iconFilled : icon}
+        <Icon aria-hidden={true} width={NAV_ICON_WIDTH} style={t.atoms.text} />
         {typeof count === 'string' && count ? (
           <View
             style={[
@@ -468,12 +481,10 @@ function NavItem({
               {right: -20}, // more breathing room
             ]}>
             <Text
-              accessibilityLabel={_(
-                msg`${plural(count, {
-                  one: '# unread item',
-                  other: '# unread items',
-                })}`,
-              )}
+              accessibilityLabel={l`${plural(count, {
+                one: '# unread item',
+                other: '# unread items',
+              })}`}
               accessibilityHint=""
               accessible={true}
               numberOfLines={1}
@@ -529,7 +540,7 @@ function ComposeBtn({minimal}: {minimal: boolean}) {
   const {currentAccount} = useSession()
   const {getState} = useNavigation()
   const {openComposer} = useOpenComposer()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [isFetchingHandle, setIsFetchingHandle] = useState(false)
   const fetchHandle = useFetchHandle()
 
@@ -573,11 +584,14 @@ function ComposeBtn({minimal}: {minimal: boolean}) {
     <View style={minimal ? [a.px_sm, a.pt_lg] : [a.flex_row, a.pl_md, a.pt_lg]}>
       <Button
         disabled={isFetchingHandle}
-        label={_(msg`Compose new post`)}
+        label={l`Compose new post`}
         onPress={() => void onPressCompose()}
         size="large"
         color="primary"
-        style={[a.rounded_full, minimal && {width: 48, height: 48}]}>
+        style={[
+          a.rounded_full,
+          minimal && {width: LARGE_ELEMENT_SIZE, height: LARGE_ELEMENT_SIZE},
+        ]}>
         <ButtonIcon icon={EditBigIcon} size={minimal ? 'lg' : 'sm'} />
         {!minimal && (
           <ButtonText>
@@ -589,41 +603,9 @@ function ComposeBtn({minimal}: {minimal: boolean}) {
   )
 }
 
-function ChatNavItem({minimal}: {minimal: boolean}) {
-  const t = useTheme()
-  const {_} = useLingui()
-  const numUnreadMessages = useUnreadMessageCount()
-  const aa = useAgeAssurance()
-
-  return (
-    <NavItem
-      href="/messages"
-      minimal={minimal}
-      count={aa.flags.chatDisabled ? undefined : numUnreadMessages.numUnread}
-      hasNew={aa.flags.chatDisabled ? false : numUnreadMessages.hasNew}
-      icon={
-        <Message
-          style={t.atoms.text}
-          aria-hidden={true}
-          width={NAV_ICON_WIDTH}
-        />
-      }
-      iconFilled={
-        <MessageFilled
-          style={t.atoms.text}
-          aria-hidden={true}
-          width={NAV_ICON_WIDTH}
-        />
-      }
-      label={_(msg`Chat`)}
-    />
-  )
-}
-
 export function DesktopLeftNav({routeName}: {routeName: string}) {
   const {hasSession, currentAccount} = useSession()
-  const {_} = useLingui()
-  const t = useTheme()
+  const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
 
   const aa = useAgeAssurance()
@@ -634,6 +616,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
   const {leftNavMinimal: leftNavMinimalBreakpoint, centerColumnOffset} =
     useLayoutBreakpoints()
   const numUnreadNotifications = useUnreadNotifications()
+  const numUnreadMessages = useUnreadMessageCount()
 
   const leftNavMinimal = isMessagesRelatedScreen || leftNavMinimalBreakpoint
 
@@ -645,18 +628,25 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
     <View
       role="navigation"
       style={[
-        a.px_xl,
+        a.fixed,
+        a.top_0,
+        a.p_lg,
         styles.leftNav,
-        !hasSession && !leftNavMinimal && styles.leftNavWide,
-        leftNavMinimal && styles.leftNavMinimal,
+        !hasSession && !leftNavMinimal && {width: LEFT_NAV_PWI_WIDTH},
+        leftNavMinimal && [
+          {width: LEFT_NAV_MINIMAL_WIDTH},
+          a.h_full,
+          a.align_center,
+          web(a.overflow_x_hidden),
+        ],
         {
           transform: [
             {
               translateX:
-                -300 +
+                -(CENTER_COLUMN_WIDTH / 2) +
                 (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0) +
                 (isMessagesRelatedScreen && !leftNavMinimalBreakpoint
-                  ? -153
+                  ? LEFT_NAV_MINIMAL_WIDTH - LEFT_NAV_STANDARD_WIDTH
                   : 0),
             },
             {translateX: '-100%'},
@@ -671,167 +661,105 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           <NavSignupCard />
         </View>
       ) : null}
-
       {hasSession && (
         <>
           <NavItem
+            label={l`Home`}
             href="/"
+            navItem="home"
             minimal={leftNavMinimal}
-            icon={
-              <Home
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={t.atoms.text}
-              />
-            }
-            iconFilled={
-              <HomeFilled
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={t.atoms.text}
-              />
-            }
-            label={_(msg`Home`)}
+            icons={{
+              inactive: HomeIcon,
+              active: HomeFilledIcon,
+            }}
           />
           <NavItem
+            label={l`Explore`}
             href="/search"
+            navItem="search"
             minimal={leftNavMinimal}
-            icon={
-              <MagnifyingGlass
-                style={t.atoms.text}
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-              />
-            }
-            iconFilled={
-              <MagnifyingGlassFilled
-                style={t.atoms.text}
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-              />
-            }
-            label={_(msg`Explore`)}
+            icons={{
+              inactive: MagnifyingGlassIcon,
+              active: MagnifyingGlassFilledIcon,
+            }}
           />
           <NavItem
+            label={l`Notifications`}
             href="/notifications"
+            navItem="notifications"
             minimal={leftNavMinimal}
             count={numUnreadNotifications}
-            icon={
-              <Bell
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={t.atoms.text}
-              />
-            }
-            iconFilled={
-              <BellFilled
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={t.atoms.text}
-              />
-            }
-            label={_(msg`Notifications`)}
+            icons={{
+              inactive: BellIcon,
+              active: BellFilledIcon,
+            }}
           />
-          <ChatNavItem minimal={leftNavMinimal} />
           <NavItem
+            label={l`Chat`}
+            href="/messages"
+            navItem="chat"
+            minimal={leftNavMinimal}
+            count={
+              aa.flags.chatDisabled ? undefined : numUnreadMessages.numUnread
+            }
+            hasNew={!aa.flags.chatDisabled && numUnreadMessages.hasNew}
+            icons={{
+              inactive: MessageIcon,
+              active: MessageFilledIcon,
+            }}
+          />
+          <NavItem
+            label={l`Feeds`}
             href="/feeds"
+            navItem="feeds"
             minimal={leftNavMinimal}
-            icon={
-              <Hashtag
-                style={t.atoms.text}
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-              />
-            }
-            iconFilled={
-              <HashtagFilled
-                style={t.atoms.text}
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-              />
-            }
-            label={_(msg`Feeds`)}
+            icons={{
+              inactive: HashtagIcon,
+              active: HashtagFilledIcon,
+            }}
           />
           <NavItem
+            label={l`Lists`}
             href="/lists"
+            navItem="lists"
             minimal={leftNavMinimal}
-            icon={
-              <List
-                style={t.atoms.text}
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-              />
-            }
-            iconFilled={
-              <ListFilled
-                style={t.atoms.text}
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-              />
-            }
-            label={_(msg`Lists`)}
+            icons={{
+              inactive: ListIcon,
+              active: ListFilledIcon,
+            }}
           />
           <NavItem
+            label={l({
+              message: 'Saved',
+              context: 'link to bookmarks screen',
+            })}
             href="/saved"
+            navItem="saved"
             minimal={leftNavMinimal}
-            icon={
-              <Bookmark
-                style={t.atoms.text}
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-              />
-            }
-            iconFilled={
-              <BookmarkFilled
-                style={t.atoms.text}
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-              />
-            }
-            label={_(
-              msg({
-                message: 'Saved',
-                context: 'link to bookmarks screen',
-              }),
-            )}
+            icons={{
+              inactive: BookmarkIcon,
+              active: BookmarkFilledIcon,
+            }}
           />
           <NavItem
-            href={currentAccount ? makeProfileLink(currentAccount) : '/'}
+            label={l`Profile`}
+            href={makeProfileLink(currentAccount!)}
+            navItem="profile"
             minimal={leftNavMinimal}
-            icon={
-              <UserCircle
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={t.atoms.text}
-              />
-            }
-            iconFilled={
-              <UserCircleFilled
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={t.atoms.text}
-              />
-            }
-            label={_(msg`Profile`)}
+            icons={{
+              inactive: UserCircleIcon,
+              active: UserCircleFilledIcon,
+            }}
           />
           <NavItem
+            label={l`Settings`}
             href="/settings"
+            navItem="settings"
             minimal={leftNavMinimal}
-            icon={
-              <Settings
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={t.atoms.text}
-              />
-            }
-            iconFilled={
-              <SettingsFilled
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={t.atoms.text}
-              />
-            }
-            label={_(msg`Settings`)}
+            icons={{
+              inactive: SettingsIcon,
+              active: SettingsFilledIcon,
+            }}
           />
 
           <ComposeBtn minimal={leftNavMinimal} />
@@ -843,31 +771,11 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
 
 const styles = StyleSheet.create({
   leftNav: {
-    ...a.fixed,
-    top: 0,
-    paddingTop: 10,
-    paddingBottom: 10,
     left: '50%',
-    width: 240,
+    width: LEFT_NAV_STANDARD_WIDTH,
     // @ts-expect-error web only
     maxHeight: '100vh',
     overflowY: 'auto',
     scrollbarWidth: 'thin',
-  },
-  leftNavWide: {
-    width: 245,
-  },
-  leftNavMinimal: {
-    height: '100%',
-    width: 86,
-    alignItems: 'center',
-    ...web({overflowX: 'hidden'}),
-  },
-  backBtn: {
-    position: 'absolute',
-    top: 12,
-    right: 12,
-    width: 30,
-    height: 30,
   },
 })
