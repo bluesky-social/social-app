@@ -25,7 +25,8 @@ if (process.env.NODE_ENV !== 'production') {
       thrownErrors.add(err)
       throw err
     } else if (!thrownErrors.has(msgOrError)) {
-      return realConsoleError.apply(this, arguments as any)
+      // @ts-expect-error
+      return realConsoleError.apply(this, arguments)
     }
   }
 }

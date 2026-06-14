@@ -1,7 +1,7 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
-import {ChatBskyConvoDefs, moderateProfile} from '@atproto/api'
+import {moderateProfile} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
@@ -13,6 +13,7 @@ import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {KnownFollowers} from '#/components/KnownFollowers'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {usePromptControl} from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
@@ -31,12 +32,6 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
   // either the other person, or the chat owner
   // if we ever allow someone other than the owner to invite people, this will need to change
   const otherUser = convoState.convo.primaryMember
-
-  const lastMessage = ChatBskyConvoDefs.isMessageView(
-    convoState.convo.view.lastMessage,
-  )
-    ? convoState.convo.view.lastMessage
-    : null
 
   if (!moderationOpts) {
     return null
@@ -63,9 +58,9 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
       <View style={[a.flex_row, a.gap_md, a.w_full, otherUser && a.pt_sm]}>
         {otherUser && (
           <RejectMenu
-            label={lastMessage ? l`Block or report` : l`Block`}
+            label={l`Block or report`}
             icon={true}
-            convo={convoState.convo.view}
+            convo={convoState.convo}
             profile={otherUser}
             color="negative_subtle"
             size="large"
@@ -135,9 +130,32 @@ function InviterHeader({
         size={42}
         moderation={moderation.ui('avatar')}
       />
-      <View>
-        <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-          <Trans>{displayName} added you</Trans>
+      <View style={[a.flex_1]}>
+        <Text style={[a.flex_row, a.align_center]}>
+          <Trans comment="Text identifying the person who added you to a group chat">
+            <Text
+              style={[
+                a.text_md,
+                a.leading_snug,
+                a.font_semi_bold,
+                t.atoms.text,
+              ]}
+              numberOfLines={1}>
+              {displayName}
+            </Text>
+            <ProfileBadges profile={profile} size="sm" style={[a.pl_xs]} />
+            <Text
+              style={[
+                a.text_md,
+                a.leading_snug,
+                a.font_semi_bold,
+                t.atoms.text,
+              ]}
+              numberOfLines={1}>
+              {' '}
+              added you
+            </Text>
+          </Trans>
         </Text>
         <Text style={[web(a.pt_xs), a.text_sm, t.atoms.text_contrast_high]}>
           {sanitizeHandle(profile.handle, '@')}

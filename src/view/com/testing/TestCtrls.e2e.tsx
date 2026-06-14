@@ -55,7 +55,7 @@ export function TestCtrls() {
         accessibilityLabel="Text input field"
         accessibilityHint="Enter proxy header"
         testID="e2eProxyHeaderInput"
-        onChangeText={val => setProxyHeader(val as any)}
+        onChangeText={val => setProxyHeader(val)}
         autoComplete="off"
         autoCorrect={false}
         autoCapitalize="none"

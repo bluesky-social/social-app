@@ -22,36 +22,50 @@ import {
   AppBskyEmbedRecord,
   type ChatBskyActorDefs,
   ChatBskyConvoDefs,
+  ChatBskyEmbedJoinLink,
+  moderateProfile,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
-import {makeProfileLink} from '#/lib/routes/links'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
+import {type Shadow} from '#/state/cache/types'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
+import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, platform, useTheme} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
-import {useDialogControl} from '#/components/Dialog'
+import {Button} from '#/components/Button'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
-import {InlineLinkText, Link} from '#/components/Link'
+import {useMessageDialogs} from '#/components/dms/MessageOverlays'
+import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
+import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {DateDivider} from './DateDivider'
 import {MessageItemEmbed} from './MessageItemEmbed'
-import {ReactionsDialog} from './ReactionsDialog'
-import {CLUSTERED_MESSAGE_THRESHOLD_MS, MESSAGE_GAP_THRESHOLD_MS} from './util'
+import {MessageItemInviteEmbed} from './MessageItemInviteEmbed'
+import {groupReactions} from './ReactionsDialog'
+import {
+  CLUSTERED_MESSAGE_THRESHOLD_MS,
+  filterBlockedReactions,
+  MESSAGE_GAP_THRESHOLD_MS,
+} from './util'
 
 const AVATAR_SIZE = 28
 const CLUSTERED_MESSAGE_GAP = 2
 const BORDER_RADIUS = 18
 const SQUARED_BORDER_RADIUS = 4
-const DISPLAY_NAME_INSET = 22
+const DISPLAY_NAME_INSET = 20
 
 function isWithinClusterBoundary({
   isPending,
@@ -70,7 +84,6 @@ function isWithinClusterBoundary({
   direction: 'prev' | 'next'
 }): boolean {
   if (!isFromSameSender) return true
-  if (isPending && adjacentMessage) return false
   if (ChatBskyConvoDefs.isMessageView(adjacentMessage)) {
     const thisDate = new Date(currentSentAt)
     const adjDate = new Date(adjacentMessage.sentAt)
@@ -78,7 +91,10 @@ function isWithinClusterBoundary({
       direction === 'next'
         ? adjDate.getTime() - thisDate.getTime()
         : thisDate.getTime() - adjDate.getTime()
-    return diff > CLUSTERED_MESSAGE_THRESHOLD_MS
+    const isOutsideThreshold = diff > CLUSTERED_MESSAGE_THRESHOLD_MS
+    // For pending messages, still check the time threshold
+    if (isPending) return isOutsideThreshold
+    return isOutsideThreshold
   }
   return true
 }
@@ -109,9 +125,9 @@ let MessageItem = ({
   const queryClient = useQueryClient()
 
   const {message} = item
-  const profile = relatedProfiles.get(message.sender.did)
+  const profile = useMaybeProfileShadow(relatedProfiles.get(message.sender.did))
 
-  const reactionsControl = useDialogControl()
+  const {openReactions} = useMessageDialogs()
 
   const isPending = item.type === 'pending-message'
 
@@ -158,9 +174,15 @@ let MessageItem = ({
   const isInMiddleOfCluster =
     isInCluster && !isFirstInCluster && !isLastInCluster
 
-  const hasReactions = message.reactions && message.reactions.length > 0
+  const visibleReactions = useMemo(
+    () => filterBlockedReactions(message.reactions, relatedProfiles),
+    [message.reactions, relatedProfiles],
+  )
+
+  const hasReactions = visibleReactions.length > 0
   const prevHasReactions =
-    prevIsMessage && prevMessage.reactions && prevMessage.reactions.length > 0
+    prevIsMessage &&
+    filterBlockedReactions(prevMessage.reactions, relatedProfiles).length > 0
   const isNextEmojiOnly = nextIsMessage && isOnlyEmoji(nextMessage.text)
   const isPrevEmojiOnly = prevIsMessage && isOnlyEmoji(prevMessage.text)
   const squaredBottomCorner =
@@ -178,8 +200,10 @@ let MessageItem = ({
 
   const rt = new RichTextAPI({text: message.text, facets: message.facets})
 
-  const hasEmbedAndText =
-    AppBskyEmbedRecord.isView(message.embed) && rt.text.length > 0
+  const hasEmbed =
+    AppBskyEmbedRecord.isView(message.embed) ||
+    ChatBskyEmbedJoinLink.isView(message.embed)
+  const hasEmbedAndText = hasEmbed && rt.text.length > 0
 
   const targetBottomRadius = squaredBottomCorner
     ? SQUARED_BORDER_RADIUS
@@ -216,55 +240,23 @@ let MessageItem = ({
 
   const avatar =
     profile && moderationOpts ? (
-      <Link
-        label={l`${createSanitizedDisplayName(profile)}’s avatar`}
-        accessibilityHint={l`Opens this profile`}
-        to={makeProfileLink({
-          did: profile.did,
-          handle: profile.handle,
-        })}
-        onPress={() => unstableCacheProfileView(queryClient, profile)}>
-        <ProfileCard.Avatar
-          profile={profile}
-          size={AVATAR_SIZE}
-          moderationOpts={moderationOpts}
-          disabledPreview
-        />
-      </Link>
+      <PreviewableUserAvatar
+        profile={profile}
+        size={AVATAR_SIZE}
+        type={profile.associated?.labeler ? 'labeler' : 'user'}
+        onBeforePress={() => unstableCacheProfileView(queryClient, profile)}
+        moderation={moderateProfile(profile, moderationOpts).ui('avatar')}
+      />
     ) : (
       <ProfileCard.AvatarPlaceholder size={AVATAR_SIZE} />
     )
 
-  const groupedReactions = useMemo(() => {
-    const reactions = message.reactions ?? []
-    const grouped = new Map<
-      string,
-      {
-        key: string
-        value: string
-        senders: ChatBskyConvoDefs.ReactionViewSender[]
-        count: number
-      }
-    >()
-    for (const reaction of reactions) {
-      if (!reaction) continue
-      const existing = grouped.get(reaction.value)
-      if (existing) {
-        existing.senders.push(reaction.sender)
-        existing.count++
-      } else {
-        grouped.set(reaction.value, {
-          key: reaction.value,
-          value: reaction.value,
-          senders: [reaction.sender],
-          count: 1,
-        })
-      }
-    }
-    return Array.from(grouped.values())
-  }, [message.reactions])
+  const groupedReactions = useMemo(
+    () => groupReactions(visibleReactions),
+    [visibleReactions],
+  )
 
-  const reactions = useMemo(() => message.reactions ?? [], [message.reactions])
+  const reactions = visibleReactions
 
   const hasSelfReacted = reactions.some(
     r => r.sender.did === currentAccount?.did,
@@ -295,12 +287,15 @@ let MessageItem = ({
   const appliedReactions = (
     <LayoutAnimationConfig skipEntering skipExiting>
       {hasReactions ? (
-        <View
+        <Animated.View
+          entering={FadeIn}
+          exiting={FadeOut}
           style={[
-            a.relative,
-            a.bottom_0,
-            isFromSelf ? [a.align_end] : [a.ml_sm, a.align_start],
+            a.absolute,
+            {top: '100%'},
+            isFromSelf ? [a.right_0] : [a.left_0, isGroupChat && a.ml_sm],
             a.px_sm,
+            a.z_10,
           ]}>
           <Pressable
             accessible={true}
@@ -311,24 +306,23 @@ let MessageItem = ({
             style={[
               a.flex_row,
               a.gap_2xs,
-              a.px_xs,
               isFromSelf ? a.justify_end : a.justify_start,
-              a.flex_wrap,
               a.rounded_lg,
               a.border,
               t.atoms.border_contrast_low,
               t.atoms.shadow_xs,
+              a.px_sm,
               hasSelfReacted
                 ? {backgroundColor: t.palette.primary_100}
                 : t.atoms.bg_contrast_25,
               {
                 paddingTop: platform({android: 2, default: 3}),
                 paddingBottom: platform({android: 2, default: 3}),
-                transform: [{translateY: -8}],
+                transform: [{translateY: -6}],
               },
             ]}
-            onPress={isGroupChat ? reactionsControl.open : undefined}>
-            {groupedReactions.map(group => (
+            onPress={isGroupChat ? () => openReactions(message) : undefined}>
+            {groupedReactions.slice(0, 10).map(group => (
               <Animated.View
                 entering={native(ZoomIn.springify(200).delay(400))}
                 exiting={
@@ -342,23 +336,23 @@ let MessageItem = ({
                 <Text
                   emoji
                   style={[
-                    a.text_xs,
+                    a.text_md,
                     {textAlignVertical: 'center', includeFontPadding: false},
                   ]}>
                   {group.value}
                 </Text>
               </Animated.View>
             ))}
-            {groupedReactions.length !== reactions.length &&
+            {(groupedReactions.length !== reactions.length ||
+              groupedReactions.length > 10) &&
             reactions.length > 1 ? (
               <View style={[a.p_2xs, a.pl_0, a.justify_center]}>
                 <Text
                   style={[
-                    a.text_xs,
+                    a.text_sm,
+                    a.font_medium,
                     hasSelfReacted
-                      ? {
-                          color: t.palette.primary_900,
-                        }
+                      ? {color: t.palette.primary_900}
                       : t.atoms.text_contrast_high,
                     {textAlignVertical: 'center', includeFontPadding: false},
                   ]}>
@@ -367,50 +361,33 @@ let MessageItem = ({
               </View>
             ) : null}
           </Pressable>
-        </View>
+        </Animated.View>
       ) : null}
-      <ReactionsDialog
-        control={reactionsControl}
-        relatedProfiles={relatedProfiles}
-        message={message}
-        reactions={message.reactions}
-        groupedReactions={groupedReactions}
-      />
     </LayoutAnimationConfig>
   )
 
   const messageInset = platform<ViewStyle | undefined>({
-    ios: isFromSelf ? a.mr_md : isGroupChat ? a.ml_md : a.ml_sm,
-    android: isFromSelf ? a.mr_sm : isGroupChat ? a.ml_sm : undefined,
-    web: isFromSelf ? a.mr_lg : isGroupChat ? a.ml_lg : undefined,
+    android: a.mx_sm,
+    ios: a.mx_md,
+    web: a.mx_lg,
   })
 
   return (
     <>
-      <LayoutAnimationConfig skipExiting skipEntering>
-        {hasLargeGapFromPrev && (
-          <Animated.View entering={native(FadeIn)} exiting={native(FadeOut)}>
-            <DateDivider date={message.sentAt} />
-          </Animated.View>
-        )}
-      </LayoutAnimationConfig>
-      <View style={[messageInset, isFirstInCluster && a.mt_md]}>
+      {hasLargeGapFromPrev && <DateDivider date={message.sentAt} />}
+      <View
+        style={[
+          messageInset,
+          isFirstInCluster ? a.mt_md : {marginTop: CLUSTERED_MESSAGE_GAP},
+          hasReactions && {paddingBottom: 26},
+        ]}>
         <View style={[a.relative]}>
           {showAvatar ? (
-            <View
-              style={[
-                a.absolute,
-                a.bottom_0,
-                a.z_50,
-                {
-                  transform: [{translateY: hasReactions ? -24 : 0}],
-                },
-              ]}>
-              {avatar}
-            </View>
+            <View style={[a.absolute, a.bottom_0, a.z_50]}>{avatar}</View>
           ) : null}
           <View
             style={[
+              a.relative,
               a.flex_grow,
               !isFromSelf && isGroupChat && {paddingLeft: AVATAR_SIZE},
             ]}>
@@ -427,34 +404,50 @@ let MessageItem = ({
                 {displayName}
               </Text>
             ) : null}
-            <ActionsWrapper
-              hasReactions={hasReactions}
-              isFromSelf={isFromSelf}
-              message={message}
-              senderProfile={profile}>
-              {AppBskyEmbedRecord.isView(message.embed) && (
-                <MessageItemEmbed
-                  embed={message.embed}
+            {profile && isBlockedOrBlocking(profile) && isGroupChat ? (
+              <BlockedPlaceholder profile={profile} style={borderRadiusStyle} />
+            ) : (
+              <View style={[a.relative]}>
+                <ActionsWrapper
                   isFromSelf={isFromSelf}
-                  squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
-                  squaredTopCorner={squaredTopCorner}
-                />
-              )}
-              {rt.text.length > 0 && (
-                <Animated.View
-                  accessibilityHint={l`Double tap or long press the message to add a reaction`}
-                  style={[
-                    !isFromSelf && a.ml_sm,
-                    ...(isOnlyEmoji(message.text)
-                      ? []
-                      : [
+                  message={message}
+                  senderProfile={profile}
+                  moderationOpts={moderationOpts}>
+                  {AppBskyEmbedRecord.isView(message.embed) && (
+                    <MessageItemEmbed
+                      embed={message.embed}
+                      isFromSelf={isFromSelf}
+                      isGroupChat={isGroupChat}
+                      squaredBottomCorner={
+                        squaredBottomCorner || hasEmbedAndText
+                      }
+                      squaredTopCorner={squaredTopCorner}
+                    />
+                  )}
+                  {ChatBskyEmbedJoinLink.isView(message.embed) && (
+                    <MessageItemInviteEmbed
+                      embed={message.embed}
+                      isFromSelf={isFromSelf}
+                      isGroupChat={isGroupChat}
+                      squaredBottomCorner={
+                        squaredBottomCorner || hasEmbedAndText
+                      }
+                      squaredTopCorner={squaredTopCorner}
+                    />
+                  )}
+                  {rt.text.length > 0 && (
+                    <Animated.View
+                      accessibilityHint={l`Double tap or long press the message to add a reaction`}
+                      style={[
+                        !isFromSelf && isGroupChat && a.ml_sm,
+                        !isOnlyEmoji(message.text) && [
                           a.rounded_xl,
                           a.py_sm,
                           a.px_md,
                           {
-                            marginTop: isFirstInCluster
-                              ? 0
-                              : CLUSTERED_MESSAGE_GAP,
+                            marginTop: hasEmbedAndText
+                              ? CLUSTERED_MESSAGE_GAP
+                              : 0,
                             backgroundColor: isFromSelf
                               ? isPending
                                 ? pendingColor
@@ -463,36 +456,38 @@ let MessageItem = ({
                           },
                           isFromSelf ? a.self_end : a.self_start,
                           borderRadiusStyle,
-                        ]),
-                  ]}>
-                  <RichText
-                    value={rt}
-                    style={[
-                      a.text_md,
-                      isFromSelf && {color: t.palette.white},
-                      // Emoji-only: add top leading to avoid clipping the
-                      // glyph, then pull the bottom up by the same amount so
-                      // the glyph bottom-aligns with the avatar instead of
-                      // sitting above its line-box baseline.
-                      isOnlyEmoji(message.text) && [
-                        a.leading_tight,
-                        // Visually align bottom of the emoji with the avatar
-                        !isFromSelf &&
-                          platform({
-                            android: {marginTop: a.mt_2xs.marginTop},
-                            default: {marginBottom: -a.mb_sm.marginBottom},
-                          }),
-                      ],
-                    ]}
-                    interactiveStyle={a.underline}
-                    enableTags
-                    emojiMultiplier={3}
-                    shouldProxyLinks={true}
-                  />
-                </Animated.View>
-              )}
-              {appliedReactions}
-            </ActionsWrapper>
+                        ],
+                      ]}>
+                      <RichText
+                        value={rt}
+                        style={[
+                          a.text_md,
+                          isFromSelf && {color: t.palette.white},
+                          // Emoji-only: add top leading to avoid clipping the
+                          // glyph, then pull the bottom up by the same amount so
+                          // the glyph bottom-aligns with the avatar instead of
+                          // sitting above its line-box baseline.
+                          isOnlyEmoji(message.text) && [
+                            a.leading_tight,
+                            // Visually align bottom of the emoji with the avatar
+                            !isFromSelf &&
+                              platform({
+                                android: {marginTop: a.mt_2xs.marginTop},
+                                default: {marginBottom: -a.mb_sm.marginBottom},
+                              }),
+                          ],
+                        ]}
+                        interactiveStyle={a.underline}
+                        enableTags
+                        emojiMultiplier={3}
+                        shouldProxyLinks={true}
+                      />
+                    </Animated.View>
+                  )}
+                </ActionsWrapper>
+                {appliedReactions}
+              </View>
+            )}
           </View>
         </View>
         {isLastInCluster && (
@@ -556,3 +551,100 @@ let MessageItemMetadata = ({
 }
 MessageItemMetadata = memo(MessageItemMetadata)
 export {MessageItemMetadata}
+
+function BlockedPlaceholder({
+  profile,
+  style,
+}: {
+  profile: Shadow<ChatBskyActorDefs.ProfileViewBasic>
+  style?: StyleProp<ViewStyle>
+}) {
+  const {t: l} = useLingui()
+  const t = useTheme()
+  const control = Prompt.usePromptControl()
+  const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
+
+  return (
+    <>
+      <Button
+        style={[{maxWidth: '80%'}, a.self_start]}
+        label={
+          profile.viewer?.blocking
+            ? l`This message is hidden because you are blocking this user.`
+            : l`This message is hidden because this user is blocking you.`
+        }
+        accessibilityHint={l`Tap for details`}
+        onPress={() => control.open()}>
+        <Animated.View
+          style={[
+            a.ml_sm,
+            a.rounded_xl,
+            a.py_sm,
+            a.px_md,
+            t.atoms.bg,
+            a.self_start,
+            a.border,
+            t.atoms.border_contrast_high,
+            a.flex_shrink,
+            style,
+          ]}>
+          <Text
+            style={[
+              a.text_sm,
+              a.leading_snug,
+              a.italic,
+              t.atoms.text_contrast_medium,
+            ]}>
+            {profile.viewer?.blocking ? (
+              <Trans>
+                This message is hidden because you are blocking this user.
+              </Trans>
+            ) : (
+              <Trans>
+                This message is hidden because this user is blocking you.
+              </Trans>
+            )}
+          </Text>
+        </Animated.View>
+      </Button>
+      <Prompt.Outer control={control}>
+        <Prompt.Content>
+          <Prompt.TitleText>
+            {profile.viewer?.blocking ? (
+              <Trans>
+                You are blocking {sanitizeHandle(profile.handle, '@')}
+              </Trans>
+            ) : (
+              <Trans>
+                {sanitizeHandle(profile.handle, '@')} is blocking you
+              </Trans>
+            )}
+          </Prompt.TitleText>
+          <Prompt.DescriptionText>
+            {profile.viewer?.blocking ? (
+              <Trans>
+                Messages from this person are hidden while you are blocking
+                them.
+              </Trans>
+            ) : (
+              <Trans>
+                Messages from this person are hidden while they are blocking
+                you.
+              </Trans>
+            )}
+          </Prompt.DescriptionText>
+          <Prompt.Actions>
+            <Prompt.Action onPress={() => {}} cta={l`Okay`} color="primary" />
+            {profile.viewer?.blocking && !profile.viewer.blockingByList && (
+              <Prompt.Action
+                onPress={() => void queueUnblock()}
+                cta={l`Unblock`}
+                color="secondary"
+              />
+            )}
+          </Prompt.Actions>
+        </Prompt.Content>
+      </Prompt.Outer>
+    </>
+  )
+}

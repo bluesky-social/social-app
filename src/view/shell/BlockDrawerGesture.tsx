@@ -4,6 +4,8 @@ import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 
 export function BlockDrawerGesture({children}: {children: React.ReactNode}) {
   const drawerGesture = useContext(DrawerGestureContext) ?? Gesture.Native() // noop for web
-  const scrollGesture = Gesture.Native().blocksExternalGesture(drawerGesture)
+  let scrollGesture = Gesture.Native()
+    .shouldCancelWhenOutside(false) // for some reason defaults to true on Android
+    .blocksExternalGesture(drawerGesture)
   return <GestureDetector gesture={scrollGesture}>{children}</GestureDetector>
 }

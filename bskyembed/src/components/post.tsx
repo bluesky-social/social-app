@@ -154,7 +154,9 @@ export function Post({thread}: Props) {
 }
 
 function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
-  if (!record) return null
+  // text-only check - posts with no text (e.g. gallery posts) would otherwise
+  // render an empty <p> that adds an extra flex gap above the embed
+  if (!record?.text) return null
 
   const rt = new RichText({
     text: record.text,

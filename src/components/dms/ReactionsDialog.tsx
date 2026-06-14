@@ -1,4 +1,4 @@
-import {useRef, useState} from 'react'
+import {useMemo, useRef, useState} from 'react'
 import {
   LayoutAnimation,
   Pressable,
@@ -19,6 +19,7 @@ import {DraggableScrollView} from '#/view/com/pager/DraggableScrollView'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
+import {filterBlockedReactions} from '#/components/dms/util'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE, IS_WEB} from '#/env'
@@ -37,14 +38,12 @@ export function ReactionsDialog({
   control,
   relatedProfiles,
   message,
-  reactions,
-  groupedReactions,
+  onClose,
 }: {
   control: Dialog.DialogControlProps
   relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
   message: ChatBskyConvoDefs.MessageView
-  reactions?: ChatBskyConvoDefs.ReactionView[]
-  groupedReactions?: Reaction[]
+  onClose?: () => void
 }) {
   const {t: l} = useLingui()
 
@@ -54,7 +53,13 @@ export function ReactionsDialog({
 
   const [selected, setSelected] = useState('all')
 
-  const filteredReactions = reactions?.filter(
+  const reactions = useMemo(
+    () => filterBlockedReactions(message.reactions, relatedProfiles),
+    [message.reactions, relatedProfiles],
+  )
+  const groupedReactions = useMemo(() => groupReactions(reactions), [reactions])
+
+  const filteredReactions = reactions.filter(
     r => selected === 'all' || r.value === selected,
   )
 
@@ -68,7 +73,7 @@ export function ReactionsDialog({
       <ReactionTabs
         groupedReactions={groupedReactions}
         selected={selected}
-        totalReactions={reactions?.length ?? 0}
+        totalReactions={reactions.length}
         onFilter={setSelected}
       />
       <Dialog.Close />
@@ -78,7 +83,10 @@ export function ReactionsDialog({
   return (
     <Dialog.Outer
       control={control}
-      onClose={() => setSelected('all')}
+      onClose={() => {
+        setSelected('all')
+        onClose?.()
+      }}
       nativeOptions={{
         preventExpansion: true,
         minHeight: screenHeight / 2,
@@ -92,7 +100,7 @@ export function ReactionsDialog({
         header={IS_WEB ? header : null}
         style={[web({maxWidth: 400})]}>
         {filteredReactions
-          ?.sort((a, b) => {
+          .sort((a, b) => {
             if (a.sender.did === currentAccount?.did) return -1
             if (b.sender.did === currentAccount?.did) return 1
             return 0
@@ -109,7 +117,7 @@ export function ReactionsDialog({
                 message={message}
                 profile={sender}
                 reaction={reaction}
-                allReactions={reactions ?? []}
+                allReactions={reactions}
                 selected={selected}
                 setSelected={setSelected}
               />
@@ -387,4 +395,26 @@ function ReactionTab({
       </Text>
     </Pressable>
   )
+}
+
+export function groupReactions(
+  reactions: ChatBskyConvoDefs.ReactionView[] | undefined,
+): Reaction[] {
+  const grouped = new Map<string, Reaction>()
+  for (const reaction of reactions ?? []) {
+    if (!reaction) continue
+    const existing = grouped.get(reaction.value)
+    if (existing) {
+      existing.senders.push(reaction.sender)
+      existing.count++
+    } else {
+      grouped.set(reaction.value, {
+        key: reaction.value,
+        value: reaction.value,
+        senders: [reaction.sender],
+        count: 1,
+      })
+    }
+  }
+  return Array.from(grouped.values())
 }

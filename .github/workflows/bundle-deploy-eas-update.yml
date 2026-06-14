@@ -48,7 +48,7 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -56,12 +56,12 @@ jobs:
         if: ${{ github.ref != 'refs/heads/main' }}
         run: git fetch origin main:main --depth 100
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
+          node-version-file: package.json
           cache: pnpm
 
       - name: 📷 Check fingerprint and install dependencies
@@ -71,33 +71,28 @@ jobs:
           profile: ${{ inputs.channel || 'testflight' }}
           previous-commit-tag: ${{ inputs.runtimeVersion }}
 
-      - name: Lint check
-        run: pnpm lint
-
-      - name: Prettier check
-        run: pnpm prettier --check .
-
       - name: 🔤 Compile translations
         run: pnpm intl:build 2>&1 | tee i18n.log
 
       - name: Check for i18n compilation errors
         run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
 
+      - name: Lint check
+        run: pnpm lint
+
+      - name: Prettier check
+        run: pnpm prettier --check .
+
       - name: Type check
         run: pnpm typecheck
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@main
+        uses: expo/expo-github-action@v9
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         with:
-          expo-version: latest
-          eas-version: latest
-          packager: pnpm
+          eas-version: '19.0.5'
+          packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: ⛏️ Setup Expo
-        if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        run: pnpm add -g eas-cli-local-build-plugin
 
       - name: 🪛 Setup jq
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
@@ -142,7 +137,7 @@ jobs:
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         with:
           path: most-recent-testflight-commit.txt
@@ -172,28 +167,24 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 5
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
+          node-version-file: package.json
           cache: pnpm
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@main
+        uses: expo/expo-github-action@v9
         with:
-          expo-version: latest
-          eas-version: latest
-          packager: pnpm
+          eas-version: '19.0.5'
+          packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: ⛏️ Setup EAS local builds
-        run: pnpm add -g eas-cli-local-build-plugin
 
       - name: ⚙️ Install dependencies
         run: pnpm install --frozen-lockfile
@@ -208,7 +199,7 @@ jobs:
           version: 1.16.2
 
       - name: 💾 Cache Pods
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: pods-cache
         with:
           path: ./ios/Pods
@@ -240,7 +231,7 @@ jobs:
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
           pnpm use-build-number-with-bump
-          eas build -p ios
+          pnpm eas build -p ios
           --profile testflight
           --local --output build.tar.gz --non-interactive
 
@@ -280,7 +271,7 @@ jobs:
           fi
 
       - name: 🚀 Deploy
-        run: eas submit -p ios --non-interactive --path "$BUILD_DIR/Bluesky.ipa"
+        run: pnpm eas submit -p ios --non-interactive --path "$BUILD_DIR/Bluesky.ipa"
 
       - name: 🪲 Upload dSYM to Sentry
         run: >
@@ -291,7 +282,7 @@ jobs:
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         if: ${{ inputs.channel == 'testflight' }}
         with:
           path: most-recent-testflight-commit.txt
@@ -323,30 +314,26 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 5
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
+          node-version-file: package.json
           cache: pnpm
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@main
+        uses: expo/expo-github-action@v9
         with:
-          expo-version: latest
-          eas-version: latest
-          packager: pnpm
+          eas-version: '19.0.5'
+          packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: ⛏️ Setup EAS local builds
-        run: pnpm add -g eas-cli-local-build-plugin
-
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: "temurin"
           java-version: "17"
@@ -379,7 +366,7 @@ jobs:
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
           pnpm use-build-number-with-bump
-          eas build -p android
+          pnpm eas build -p android
           --profile testflight-android
           --local --output build.apk --non-interactive
 
@@ -391,7 +378,7 @@ jobs:
 
       - name: 🚀 Upload Artifact
         id: upload-artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           retention-days: 30
           compression-level: 0
@@ -399,19 +386,17 @@ jobs:
           path: build.apk
 
       - name: 🔔 Notify Slack
-        uses: slackapi/slack-github-action@v1.25.0
+        uses: slackapi/slack-github-action@v3.0.3
         with:
+          webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          webhook-type: incoming-webhook
+          payload-templated: true
           payload: |
-            {
-              "text": "Android build is ready for testing. Download the artifact here: ${{ steps.upload-artifact.outputs.artifact-url }}"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+            {"text": "Android build is ready for testing. Download the artifact here: ${{ steps.upload-artifact.outputs.artifact-url }}"}
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         if: ${{ inputs.channel != 'testflight' && inputs.channel != 'production' }}
         with:
           path: most-recent-testflight-commit.txt

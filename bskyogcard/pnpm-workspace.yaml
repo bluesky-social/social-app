@@ -1,0 +1,11 @@
+nodeLinker: 'hoisted'
+autoInstallPeers: true # default: true
+strictPeerDependencies: false # default: false
+trustPolicy: 'no-downgrade' # default: off
+trustPolicyIgnoreAfter: 10080 # 7 days, default: undefined
+minimumReleaseAgeExclude:
+  - '@atproto/*'
+  - '@bsky.app/*'
+allowBuilds:
+  cbor-extract: true
+  esbuild: true

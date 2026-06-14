@@ -16,21 +16,17 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ssh-key: ${{secrets.GH_ACTION_DEPLOY_KEY}}
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
       - name: Install node
         uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
+          node-version-file: package.json
           cache: pnpm
       - name: pnpm install
-        uses: Wandalen/wretry.action@master
-        with:
-          command: pnpm install --frozen-lockfile
-          attempt_limit: 3
-          attempt_delay: 2000
+        run: pnpm install --frozen-lockfile
       - name: Extract language strings
         run: pnpm intl:extract
       - name: Create commit

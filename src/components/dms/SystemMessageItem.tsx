@@ -45,7 +45,8 @@ export function SystemMessageItem({
           a.text_center,
           t.atoms.text_contrast_medium,
           {includeFontPadding: false, textAlignVertical: 'center'},
-        ]}>
+        ]}
+        emoji>
         {text}
       </Text>
     </View>

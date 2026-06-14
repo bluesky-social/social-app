@@ -95,7 +95,7 @@ func (srv *Server) parseBlueskyURL(ctx context.Context, raw string) (*syntax.ATU
 	}
 	var did syntax.DID
 	if atid.IsHandle() {
-		ident, err := srv.dir.Lookup(ctx, *atid)
+		ident, err := srv.dir.Lookup(ctx, atid)
 		if err != nil {
 			return nil, err
 		}

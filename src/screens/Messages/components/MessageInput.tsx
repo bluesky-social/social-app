@@ -28,6 +28,7 @@ import {
 import {atoms as a, platform, tokens, useTheme} from '#/alf'
 import {GlassView} from '#/components/GlassView'
 import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
+import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS, IS_WEB} from '#/env'
 import {ComposerContainer} from './MessageComposer'
@@ -43,12 +44,14 @@ export function MessageInput({
   hasEmbed,
   setEmbed,
   children,
+  loading = false,
 }: {
   textInputId?: string
   onSendMessage: (message: string) => Promise<void> | void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
+  loading?: boolean
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
@@ -67,12 +70,13 @@ export function MessageInput({
   const [shouldEnforceClear, setShouldEnforceClear] = useState(false)
 
   const {needsEmailVerification} = useEmail()
+  const editable = !needsEmailVerification && !loading
 
   useSaveMessageDraft(message)
   useExtractEmbedFromFacets(message, setEmbed)
 
   const onSubmit = useCallback(() => {
-    if (needsEmailVerification) {
+    if (!editable) {
       return
     }
     if (!hasEmbed && message.trim() === '') {
@@ -103,7 +107,7 @@ export function MessageInput({
       void onSendMessage(message)
     })
   }, [
-    needsEmailVerification,
+    editable,
     hasEmbed,
     message,
     clearDraft,
@@ -139,8 +143,7 @@ export function MessageInput({
     scrollEnabled: isInputScrollable.get(),
   }))
 
-  const submitDisabled =
-    needsEmailVerification || (!hasEmbed && message.trim().length === 0)
+  const submitDisabled = !editable || (!hasEmbed && message.trim().length === 0)
 
   const blur = useCallback(() => {
     inputRef.current?.blur()
@@ -158,7 +161,6 @@ export function MessageInput({
 
   return (
     <ComposerContainer>
-      {children}
       <GlassContainer
         style={[a.flex_row, a.align_end, a.gap_sm]}
         spacing={tokens.space.xs}>
@@ -168,6 +170,7 @@ export function MessageInput({
           style={[a.flex_1, a.rounded_xl, {minHeight: MIN_HEIGHT}]}
           tintColor={t.palette.contrast_50}
           fallbackStyle={[t.atoms.bg_contrast_50]}>
+          {children}
           <AnimatedTextInput
             nativeID={textInputId}
             accessibilityLabel={l`Message input field`}
@@ -209,7 +212,7 @@ export function MessageInput({
             ref={inputRef}
             hitSlop={HITSLOP_10}
             animatedProps={animatedProps}
-            editable={!needsEmailVerification}
+            editable={editable}
           />
         </GlassView>
         <GlassView
@@ -226,7 +229,11 @@ export function MessageInput({
           }}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={l`Send message`}
+            accessibilityLabel={
+              loading
+                ? l({message: 'Loading chat…', context: 'placeholder'})
+                : l({message: 'Message', context: 'action'})
+            }
             accessibilityHint=""
             hitSlop={HITSLOP_10}
             style={[
@@ -240,11 +247,15 @@ export function MessageInput({
             ]}
             onPress={onSubmit}
             disabled={submitDisabled}>
-            <PaperPlaneIcon
-              size="md"
-              fill={t.palette.white}
-              style={[a.mb_2xs]}
-            />
+            {loading ? (
+              <Loader size="md" fill={t.palette.white} style={[a.mb_2xs]} />
+            ) : (
+              <PaperPlaneIcon
+                size="md"
+                fill={t.palette.white}
+                style={[a.mb_2xs]}
+              />
+            )}
           </Pressable>
         </GlassView>
       </GlassContainer>
