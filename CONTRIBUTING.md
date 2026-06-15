@@ -56,6 +56,19 @@ Good first tasks may include:
 - Improving profile or display-name behavior
 - Helping clean up onboarding and settings screens
 
+## Contributor Missions
+
+Some first contributions do not require code.
+
+CoSeeker needs contributors who can help with product thinking, UX review, community design, safety, documentation, and mission alignment.
+
+Look for issues labeled:
+
+- `contributor-mission`
+- `good first issue`
+- `no-code`
+- `product-thinking`
+
 ## How to Contribute
 
 1. Find an issue you want to work on.
