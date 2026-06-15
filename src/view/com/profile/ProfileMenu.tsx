@@ -1,4 +1,5 @@
 import {memo, useCallback, useMemo} from 'react'
+import {setStringAsync} from 'expo-clipboard'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -24,6 +25,7 @@ import {Button, ButtonIcon} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {StarterPackDialog} from '#/components/dialogs/StarterPackDialog'
 import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
+import {At_Stroke2_Corner2_Rounded as AtIcon} from '#/components/icons/At'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
 import {CircleX_Stroke2_Corner0_Rounded as CircleXIcon} from '#/components/icons/CircleX'
@@ -127,6 +129,11 @@ let ProfileMenu = ({
   const onPressShare = useCallback(() => {
     void shareUrl(toShareUrl(makeProfileLink(profile)))
   }, [profile])
+
+  const onPressCopyUsername = useCallback(() => {
+    void setStringAsync(profile.handle)
+    Toast.show(l`Copied to clipboard`, {type: 'success'})
+  }, [profile.handle, l])
 
   const onPressAddRemoveLists = useCallback(() => {
     openModal({
@@ -301,6 +308,15 @@ let ProfileMenu = ({
               <Menu.ItemIcon
                 icon={IS_WEB ? ChainLinkIcon : ArrowOutOfBoxIcon}
               />
+            </Menu.Item>
+            <Menu.Item
+              testID="profileHeaderDropdownCopyUsernameBtn"
+              label={l`Copy username`}
+              onPress={onPressCopyUsername}>
+              <Menu.ItemText>
+                <Trans>Copy username</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={AtIcon} />
             </Menu.Item>
             <Menu.Item
               testID="profileHeaderDropdownSearchBtn"
