@@ -1,65 +1,140 @@
-name: "Bug Report"
-description: "Create a report for an issue you have experienced in the app."
-labels: ["bug"]
-body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for taking the time to report an issue you've found in the app! Before you submit this issue, please make sure you've searched for similar issues that are already open and being tracked. If you find an open issue that seems relevant to yours, it is best to leave a response there with your information instead of opening a new issue, since it helps to consolidate the info in one place.
-  - type: textarea
-    attributes:
-      label: Steps to Reproduce
-      description: |
-        Please provide the steps that may reproduce the issue that you are experiencing. The more concise of a
-        reproduction that you provide, the easier it will be for us to identify the issue and fix it in a timely manner.
-      placeholder: |
-        1. Go to '...'
-        2. Click on '....'
-        3. Scroll down to '....'
-        4. See error
-    validations:
-      required: true
-  - type: upload
-    attributes:
-      label: Attachments
-      description: |
-        If possible, please provide any images or videos that may help us understand the issue you are experiencing.
-    validations:
-      required: false
-      accept: ".png,.jpg,.jpeg,.gif,.webp,.mp4,.mov,.webm"
-  - type: dropdown
-    attributes:
-      label: What platform(s) does this occur on?
-      multiple: true
-      options:
-        - iOS
-        - Android
-        - Web (Desktop)
-        - Web (Mobile)
-    validations:
-      required: true
-  - type: input
-    attributes:
-      label: Device Info
-      description: |
-        Please provide the device information that you are using when experiencing this issue. This can include the
-        device model, operating system version, and any other relevant information.
-    validations:
-      required: false
-  - type: input
-    attributes:
-      label: What version of the app are you using?
-      description: |
-        You can easily find this information by visting the Settings screen in the app, and tapping on the version info
-        at the bottom of the screen. All the relevant information will be copied to your clipboard, and you will be
-        able to share it here.
-    validations:
-      required: true
-  - type: textarea
-    attributes:
-      label: Additional Information
-      description: |
-        Please provide any additional information that you think may be helpful in identifying the issue you are
-        experiencing. This can include any error messages, logs, or other information that you think may be relevant.
-    validations:
-        required: false
+name: Bug Report
+description: Report something that is broken or not working correctly in K4M2A/CoSeeker
+title: "[Bug]: "
+labels:
+
+* bug
+  body:
+
+* type: markdown
+  attributes:
+  value: |
+  Use this template to report something that is broken, confusing, incorrect, or not working as expected in K4M2A/CoSeeker.
+
+  ```
+  Please include clear steps so contributors and maintainers can reproduce the issue.
+  ```
+
+* type: textarea
+  id: what-happened
+  attributes:
+  label: What happened?
+  description: Describe the bug clearly.
+  placeholder: Explain what went wrong.
+  validations:
+  required: true
+
+* type: textarea
+  id: expected-behavior
+  attributes:
+  label: Expected behavior
+  description: What did you expect to happen?
+  placeholder: Explain what should have happened instead.
+  validations:
+  required: true
+
+* type: textarea
+  id: actual-behavior
+  attributes:
+  label: Actual behavior
+  description: What actually happened?
+  placeholder: Explain the actual result, error, broken screen, or confusing behavior.
+  validations:
+  required: true
+
+* type: textarea
+  id: steps-to-reproduce
+  attributes:
+  label: Steps to reproduce
+  description: List the exact steps needed to reproduce the issue.
+  value: |
+  1.
+  2.
+  3.
+  validations:
+  required: true
+
+* type: textarea
+  id: screenshots
+  attributes:
+  label: Screenshots or screen recording
+  description: Add screenshots or a screen recording if useful.
+  placeholder: Drag and drop images or recordings here.
+  validations:
+  required: false
+
+* type: input
+  id: device
+  attributes:
+  label: Device
+  description: What device were you using?
+  placeholder: iPhone 15, Pixel 8, MacBook, Windows laptop, etc.
+  validations:
+  required: false
+
+* type: input
+  id: operating-system
+  attributes:
+  label: Operating system
+  description: What operating system were you using?
+  placeholder: iOS 18, Android 15, macOS, Windows, etc.
+  validations:
+  required: false
+
+* type: input
+  id: app-version
+  attributes:
+  label: App version or branch
+  description: What app version, branch, or commit were you using?
+  placeholder: main, latest build, commit hash, etc.
+  validations:
+  required: false
+
+* type: input
+  id: browser
+  attributes:
+  label: Browser, if relevant
+  description: Add browser details if this issue happened on web.
+  placeholder: Chrome, Safari, Firefox, Edge, etc.
+  validations:
+  required: false
+
+* type: dropdown
+  id: issue-area
+  attributes:
+  label: Area of the app
+  description: Which part of CoSeeker is affected?
+  options:
+  - Onboarding
+  - Login / signup
+  - Email verification
+  - Home feed
+  - Search
+  - Profile
+  - Settings
+  - Notifications
+  - Moderation / reporting
+  - Spam / bot accounts
+  - Branding / copy
+  - Documentation
+  - Other
+  validations:
+  required: false
+
+* type: textarea
+  id: possible-cause
+  attributes:
+  label: Possible cause
+  description: If you have an idea of what might be causing this, write it here.
+  placeholder: Optional.
+  validations:
+  required: false
+
+* type: textarea
+  id: additional-context
+  attributes:
+  label: Additional context
+  description: Add any other relevant details.
+  placeholder: Links, related issues, logs, examples, or other context.
+  validations:
+  required: false
