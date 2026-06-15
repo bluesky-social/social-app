@@ -109,7 +109,16 @@ export function CatSprite({
             top: -clip.row * size,
           },
           // Crisp pixel-art scaling on web; native ignores this.
-          web({imageRendering: 'pixelated'}),
+          web({
+            imageRendering: 'pixelated',
+            // Stop mobile Safari from opening/saving the raw spritesheet on a
+            // long press. Routing touches past the <img> to the Pressable also
+            // kills the iOS image callout, so petting still works.
+            pointerEvents: 'none',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            WebkitTouchCallout: 'none',
+          }),
         ]}
       />
     </View>
