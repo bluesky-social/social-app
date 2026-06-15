@@ -201,11 +201,13 @@ export function MessagesList({
   const isAtBottom = useSharedValue(true)
 
   // Set when the local user sends a message so we follow it to the end even
-  // from a scrolled-up position. We can't rely on onContentSizeChange here:
-  // with maintainVisibleContentPosition anchored to item 0, appending a message
-  // below the viewport does not report a content-size change on native, so that
-  // callback never fires. Instead an effect watches the rendered item count and
-  // scrolls imperatively once the pending message lands (APP-2223).
+  // from a scrolled-up position. On native, onContentSizeChange can't be relied
+  // on: with maintainVisibleContentPosition anchored to item 0, appending a
+  // message below the viewport reports no content-size change, so that callback
+  // never fires for the send. We watch the rendered item count instead and
+  // scroll imperatively once our pending message lands (APP-2223). On web,
+  // onContentSizeChange also fires for the send, so the scroll may run from both
+  // paths - both target the end, so the result is correct.
   const pendingSendScroll = useRef(false)
 
   // This will be used on web to assist in determining if we need to maintain the content offset
@@ -228,6 +230,10 @@ export function MessagesList({
     if (prevHasScrolled.current && !hasScrolled) {
       hasInitiallyScrolled.current = false
       setDidInitialScroll(false)
+      // Drop any unfired send pin: the initial-scroll path owns positioning
+      // during re-init, and the pending message it referred to belongs to the
+      // previous lifecycle.
+      pendingSendScroll.current = false
     }
     prevHasScrolled.current = hasScrolled
   }, [hasScrolled])
