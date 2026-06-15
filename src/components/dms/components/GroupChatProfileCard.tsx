@@ -48,7 +48,7 @@ export function GroupChatProfileCard({
                 size={44}
                 disabledPreview
               />
-              <View>
+              <View style={[a.flex_1]}>
                 <ProfileCard.Name
                   profile={profile}
                   moderationOpts={moderationOpts}
