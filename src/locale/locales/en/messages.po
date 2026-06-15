@@ -688,7 +688,7 @@ msgstr "{name}'s favorite feeds and people - join me!"
 msgid "{name}'s starter pack"
 msgstr "{name}'s starter pack"
 
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:337
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:345
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -3476,8 +3476,8 @@ msgstr ""
 #: src/view/com/auth/SplashScreen.web.tsx:115
 #: src/view/shell/bottom-bar/BottomBar.tsx:331
 #: src/view/shell/bottom-bar/BottomBar.tsx:336
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:243
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:248
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:251
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:256
 #: src/view/shell/NavSignupCard.tsx:49
 #: src/view/shell/NavSignupCard.tsx:54
 msgid "Create account"
@@ -11092,8 +11092,8 @@ msgstr ""
 #: src/view/com/auth/SplashScreen.web.tsx:129
 #: src/view/shell/bottom-bar/BottomBar.tsx:341
 #: src/view/shell/bottom-bar/BottomBar.tsx:346
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:253
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:258
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:261
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:266
 #: src/view/shell/NavSignupCard.tsx:59
 #: src/view/shell/NavSignupCard.tsx:64
 msgid "Sign in"
