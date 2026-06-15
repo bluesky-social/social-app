@@ -1,10 +1,20 @@
 # CoSeeker Social App
 
-CoSeeker is an open-source social app being developed as part of K4M2A.
+CoSeeker is an open-source social app being developed within the larger K4M2A ecosystem.
 
-The goal is to build digital infrastructure for seekers, teachers, philosophical communities, and people working toward inner transformation, wisdom, and human development.
+The goal of this repository is to build digital infrastructure for seekers, teachers, philosophical communities, and people working toward inner transformation, wisdom, and human development.
 
 This project is based on the Bluesky social app and the AT Protocol. We are adapting it into a CoSeeker-compatible app with a different purpose: not engagement maximization, but reflection, learning, community, and awakening.
+
+## K4M2A Ecosystem
+
+K4M2A is the larger open-source ecosystem for human awakening, inner transformation, philosophical depth, and collective harmony.
+
+CoSeeker is one current application within the K4M2A ecosystem.
+
+Over time, K4M2A may include multiple open-source apps, tools, platforms, learning systems, community infrastructure, research projects, and governance frameworks.
+
+This repository is specifically for the CoSeeker social app.
 
 ## Current Focus
 
