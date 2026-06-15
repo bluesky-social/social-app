@@ -112,6 +112,7 @@ import {ContentAndMediaSettingsScreen} from '#/screens/Settings/ContentAndMediaS
 import {ExternalMediaPreferencesScreen} from '#/screens/Settings/ExternalMediaPreferences'
 import {FindContactsSettingsScreen} from '#/screens/Settings/FindContactsSettings'
 import {FollowingFeedPreferencesScreen} from '#/screens/Settings/FollowingFeedPreferences'
+import {HiddenRepostsFromScreen} from '#/screens/Settings/HiddenRepostsFrom'
 import {InterestsSettingsScreen} from '#/screens/Settings/InterestsSettings'
 import {LanguageSettingsScreen} from '#/screens/Settings/LanguageSettings'
 import {LegacyNotificationSettingsScreen} from '#/screens/Settings/LegacyNotificationSettings'
@@ -365,6 +366,14 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => FollowingFeedPreferencesScreen}
         options={{
           title: title(msg`Following Feed Preferences`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="HiddenRepostsFrom"
+        getComponent={() => HiddenRepostsFromScreen}
+        options={{
+          title: title(msg`Hidden Reposts`),
           requireAuth: true,
         }}
       />

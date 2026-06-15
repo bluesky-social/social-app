@@ -335,6 +335,27 @@ export class FeedTuner {
     return slices
   }
 
+  static removeRepostsFrom(dids: Set<string>) {
+    return (
+      tuner: FeedTuner,
+      slices: FeedViewPostsSlice[],
+      _dryRun: boolean,
+    ): FeedViewPostsSlice[] => {
+      for (let i = 0; i < slices.length; i++) {
+        const slice = slices[i]
+        if (
+          slice.isRepost &&
+          AppBskyFeedDefs.isReasonRepost(slice._feedPost.reason) &&
+          dids.has(slice._feedPost.reason.by.did)
+        ) {
+          slices.splice(i, 1)
+          i--
+        }
+      }
+      return slices
+    }
+  }
+
   static removeQuotePosts(
     tuner: FeedTuner,
     slices: FeedViewPostsSlice[],
