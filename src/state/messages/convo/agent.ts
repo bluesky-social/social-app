@@ -237,22 +237,40 @@ export class Convo {
       removeReaction: undefined,
     }
 
+    /*
+     * Captured as a local so the `if (convo)` narrowing below survives the
+     * `this.getItems()` call - TS discards narrowing on mutable `this` members
+     * after a method call, but not on a const.
+     */
+    const convo = this.convo
+
+    /*
+     * A lifecycle event (e.g. `Background` or `Suspend`) can move us into an
+     * active status before `setup()` has resolved and populated `convo`. The
+     * active states declare `convo` as non-optional, so we can't build one
+     * without it - fall back to reporting `Initializing` until the convo lands.
+     * This keeps the snapshot's type and runtime in agreement, so consumers can
+     * trust that an active status always has a `convo`.
+     */
+    const stillInitializing = (): ConvoState => ({
+      status: ConvoStatus.Initializing,
+      items: [],
+      convo,
+      error: undefined,
+      ...shared,
+      ...emptyMethods,
+    })
+
     switch (this.status) {
       case ConvoStatus.Initializing: {
-        return {
-          status: ConvoStatus.Initializing,
-          items: [],
-          convo: this.convo,
-          error: undefined,
-          ...shared,
-          ...emptyMethods,
-        }
+        return stillInitializing()
       }
       case ConvoStatus.Disabled: {
+        if (!convo) return stillInitializing()
         return {
-          status: this.status,
+          status: ConvoStatus.Disabled,
           items: this.getItems(),
-          convo: this.convo!,
+          convo,
           relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
@@ -260,10 +278,11 @@ export class Convo {
         }
       }
       case ConvoStatus.Suspended: {
+        if (!convo) return stillInitializing()
         return {
-          status: this.status,
+          status: ConvoStatus.Suspended,
           items: this.getItems(),
-          convo: this.convo!,
+          convo,
           relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
@@ -271,10 +290,11 @@ export class Convo {
         }
       }
       case ConvoStatus.Backgrounded: {
+        if (!convo) return stillInitializing()
         return {
-          status: this.status,
+          status: ConvoStatus.Backgrounded,
           items: this.getItems(),
-          convo: this.convo!,
+          convo,
           relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
@@ -282,10 +302,11 @@ export class Convo {
         }
       }
       case ConvoStatus.Ready: {
+        if (!convo) return stillInitializing()
         return {
-          status: this.status,
+          status: ConvoStatus.Ready,
           items: this.getItems(),
-          convo: this.convo!,
+          convo,
           relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
