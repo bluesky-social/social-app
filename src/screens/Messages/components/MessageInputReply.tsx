@@ -1,4 +1,5 @@
 import {LayoutAnimation, View} from 'react-native'
+import {AppBskyEmbedRecord, ChatBskyEmbedJoinLink} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_20} from '#/lib/constants'
@@ -34,6 +35,19 @@ export function MessageInputReply() {
     ? createSanitizedDisplayName(senderProfile, false)
     : null
 
+  let text = replyTo.text
+  let subtle = false
+  if (!text.trim()) {
+    subtle = true
+    if (ChatBskyEmbedJoinLink.isView(replyTo.embed)) {
+      text = l`(chat invite link)`
+    } else if (AppBskyEmbedRecord.isView(replyTo.embed)) {
+      text = l`(contains embedded content)`
+    } else {
+      text = l`No text`
+    }
+  }
+
   return (
     <View
       style={[
@@ -58,8 +72,11 @@ export function MessageInputReply() {
             {displayName}
           </Text>
         )}
-        <Text style={[a.text_sm]} emoji numberOfLines={2}>
-          {replyTo.text}
+        <Text
+          style={[a.text_sm, subtle && [a.italic, t.atoms.text_contrast_high]]}
+          emoji
+          numberOfLines={2}>
+          {text}
         </Text>
       </View>
       <Button
