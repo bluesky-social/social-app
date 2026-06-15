@@ -20,10 +20,10 @@ import {atoms as a} from '#/alf'
 import * as ContextMenu from '#/components/ContextMenu'
 import {type TriggerProps} from '#/components/ContextMenu/types'
 import {useMessageDialogs} from '#/components/dms/MessageOverlays'
+import {ArrowCornerDownRight_Stroke2_Corner2_Rounded as ReplyIcon} from '#/components/icons/ArrowCornerDownRight'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
 import {Language_Stroke2_Corner2_Rounded as LanguageIcon} from '#/components/icons/Language'
-import {Reply as ReplyIcon} from '#/components/icons/Reply'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
@@ -180,7 +180,6 @@ export let MessageContextMenu = ({
           </>
         )}
         <ContextMenu.Item
-          destructive
           testID="messageDropdownDeleteBtn"
           label={l`Delete message for me`}
           onPress={() => openDeleteMessage(message)}>
@@ -189,7 +188,6 @@ export let MessageContextMenu = ({
         </ContextMenu.Item>
         {!isFromSelf && (
           <ContextMenu.Item
-            destructive
             testID="messageDropdownReportBtn"
             label={l`Report message`}
             onPress={() => openReportMessage(message, senderProfile)}>
