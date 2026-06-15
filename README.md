@@ -42,6 +42,16 @@ CoSeeker should be built around:
 
 CoSeeker should avoid addictive engagement mechanics, manipulative growth loops, outrage-maximizing feeds, and design patterns that undermine user dignity or well-being.
 
+## Start Contributing
+
+New contributors can begin with Contributor Missions.
+
+These are meaningful first contributions for people interested in product thinking, UX, safety, documentation, community design, and mission alignment.
+
+Start here:
+
+[Contributor Missions for CoSeeker](https://github.com/k4m2a/social-app/discussions/37))
+
 ## Development Resources
 
 This is a [React Native](https://reactnative.dev/) application written in TypeScript.
