@@ -11,7 +11,7 @@ import {DeleteAccountDialog} from '#/screens/Settings/components/DeleteAccountDi
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
-import {MuBirthdateDialog} from '#/components/ageAssurance/MuBirthdateDialog'
+import {MuAgeConfirmDialog} from '#/components/ageAssurance/MuAgeConfirmDialog'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {DeviceLocationRequestDialog} from '#/components/dialogs/DeviceLocationRequestDialog'
@@ -78,12 +78,12 @@ export function NoAccessScreen() {
     logoutCurrentAccount('AgeAssuranceNoAccessScreen')
   }, [logoutCurrentAccount])
 
-  const updateBirthdate = (
+  const updateAge = (
     <Text style={textStyles}>
       <Trans>
-        If your birthdate is wrong, you can{' '}
+        If this is wrong, you can{' '}
         <SimpleInlineLinkText
-          label={_(msg`Update your birthdate`)}
+          label={_(msg`Update your age`)}
           style={textStyles}
           {...createStaticClick(() => {
             ax.metric('ageAssurance:noAccessScreen:openBirthdateDialog', {})
@@ -130,24 +130,24 @@ export function NoAccessScreen() {
                 </Text>
                 <Text style={textStyles}>
                   <Trans>
-                    To give you an age-appropriate experience, we need to know
-                    your birthdate. This is a one-time thing, and your data
-                    stays private.
+                    To give you an age-appropriate experience, we need to
+                    confirm that you are 18 or older. This is a one-time thing,
+                    and your data stays private.
                   </Trans>
                 </Text>
                 <Button
                   color="primary"
                   size="large"
-                  label={_(msg`Add your birthdate`)}
+                  label={_(msg`Confirm your age`)}
                   onPress={() => birthdateControl.open()}>
                   <ButtonText>
-                    <Trans>Add your birthdate</Trans>
+                    <Trans>Confirm your age</Trans>
                   </ButtonText>
                 </Button>
                 <Admonition type="tip">
                   <Trans>
-                    For organizational accounts, use the birthdate of the person
-                    who is responsible for the account.
+                    For organizational accounts, confirm based on the person who
+                    is responsible for the account.
                   </Trans>
                 </Admonition>
               </View>
@@ -156,7 +156,7 @@ export function NoAccessScreen() {
                 <Text style={textStyles}>
                   <Trans>You must be at least 13 years old to use mu.</Trans>
                 </Text>
-                {updateBirthdate}
+                {updateAge}
               </View>
             ) : isAARegion && !aa.flags.isOverRegionMinAccessAge ? (
               <View style={[a.gap_lg]}>
@@ -166,7 +166,7 @@ export function NoAccessScreen() {
                     your region.
                   </Trans>
                 </Text>
-                {updateBirthdate}
+                {updateAge}
               </View>
             ) : (
               <View style={[a.gap_lg]}>
@@ -176,7 +176,7 @@ export function NoAccessScreen() {
                     verified age assurance.
                   </Trans>
                 </Text>
-                {updateBirthdate}
+                {updateAge}
                 {IS_NATIVE && <LocationCorrection />}
               </View>
             )}
@@ -221,7 +221,7 @@ export function NoAccessScreen() {
         </ScrollView>
       </View>
 
-      <MuBirthdateDialog control={birthdateControl} />
+      <MuAgeConfirmDialog control={birthdateControl} />
       <DeactivateAccountDialog control={deactivateAccountControl} />
       <DeleteAccountDialog
         control={deleteAccountControl}

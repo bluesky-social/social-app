@@ -1,6 +1,5 @@
 import {type AtpAgent} from '@atproto/api'
 
-import {getAge} from '#/lib/strings/time'
 import {logger} from '#/ageAssurance/logger'
 import {EUROSKY} from '#/config/eurosky'
 
@@ -19,11 +18,6 @@ export type MuAgeStatus = {declared: boolean} & Partial<MuAgeFlags>
 
 const GET_STATUS = 'social.mu.age.getStatus'
 const SET_STATUS = 'social.mu.age.setStatus'
-
-export function flagsFromBirthdate(birthdate: Date): MuAgeFlags {
-  const age = getAge(birthdate)
-  return {over13: age >= 13, over16: age >= 16, over18: age >= 18}
-}
 
 /**
  * Rebuild a representative birthdate string from stored flags for the region
