@@ -282,6 +282,7 @@ function BaseChatItem({
   const playHaptic = useHaptics()
   const queryClient = useQueryClient()
   const hasUnread =
+    !selected &&
     !isDeletedAccount &&
     (convo.view.unreadCount > 0 ||
       (convo.kind === 'group' &&
