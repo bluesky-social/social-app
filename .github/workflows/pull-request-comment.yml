@@ -117,7 +117,7 @@ jobs:
         with:
           ref: ${{ steps.pr-info.outputs.head-sha }}
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v6.0.8
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v6

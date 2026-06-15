@@ -65,7 +65,7 @@ jobs:
           aws-region: us-east-2
 
       - name: Claude
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@v1.0.141
         with:
           use_bedrock: 'true'
           additional_permissions: |

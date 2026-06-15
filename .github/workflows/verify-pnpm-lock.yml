@@ -21,7 +21,7 @@ jobs:
           BASE_REF: ${{ github.base_ref }}
         run: git fetch origin $BASE_REF --depth=1
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v6.0.8
 
       - name: Install node
         uses: actions/setup-node@v6
