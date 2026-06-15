@@ -1,43 +1,101 @@
-name: "Feature Request"
-description: "Suggest an idea for the Bluesky app."
-labels: ["feature-request"]
-body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for submitting a feature request! Before you submit this request, please make sure you've searched for similar requests that are already open and being tracked. If you find an open request that seems relevant to yours, it is best to leave a response there with your information instead of opening a new request, since it helps to consolidate the info in one place.
-  - type: textarea
-    attributes:
-      label: Describe the Feature
-      description: |
-        Please provide a detailed description of the feature you would like to see implemented in the app. The more
-        information you provide, the easier it will be for us to understand the feature you are requesting and to
-        implement it in a timely manner.
-    validations:
-      required: true
-  - type: upload
-    attributes:
-      label: Attachments
-      description: |
-        If helpful, provide some images or videos of similar features in other apps that you think would be helpful
-        for us to understand the feature you are requesting, or places within the app that you think the feature belongs
-        in or is missing from.
-    validations:
-      required: false
-      accept: ".png,.jpg,.jpeg,.gif,.webp,.mp4,.mov,.webm"
-  - type: textarea
-    attributes:
-      label: Describe Alternatives
-      description: |
-        If there are any alternative solutions or features that you think would be helpful to implement in place of the
-        feature you are requesting, please provide a description of those as well.
-    validations:
-      required: false
-  - type: textarea
-    attributes:
-      label: Additional Context
-      description: |
-        If there is any additional context or information that you think would be helpful for us to know about the
-        feature you are requesting, please provide that information here.
-    validations:
-      required: false
+name: Feature Request
+description: Suggest a new feature or improvement for K4M2A/CoSeeker
+title: "[Feature]: "
+labels:
+
+* enhancement
+
+* product-thinking
+  body:
+
+* type: markdown
+  attributes:
+  value: |
+  Use this template to suggest a new feature, product improvement, or user experience change for CoSeeker.
+
+  ```
+  CoSeeker is being developed as part of K4M2A. Feature requests should support reflection, learning, community, safety, inner transformation, or human development.
+  ```
+
+* type: textarea
+  id: problem
+  attributes:
+  label: Problem
+  description: What problem does this feature solve?
+  placeholder: Describe the user problem, community need, safety issue, or contributor problem.
+  validations:
+  required: true
+
+* type: textarea
+  id: proposed-solution
+  attributes:
+  label: Proposed solution
+  description: Describe the feature or improvement you want.
+  placeholder: Explain what should be added, changed, removed, or redesigned.
+  validations:
+  required: true
+
+* type: textarea
+  id: why-this-matters
+  attributes:
+  label: Why this matters for CoSeeker / K4M2A
+  description: Explain how this supports the mission of CoSeeker or K4M2A.
+  placeholder: |
+  Examples:
+  - Helps seekers find better communities
+  - Improves safety or moderation
+  - Reduces engagement-driven behavior
+  - Improves reflection, learning, or human development
+  - Makes the app easier for contributors or users
+  validations:
+  required: true
+
+* type: textarea
+  id: user-experience
+  attributes:
+  label: User experience
+  description: Describe how this should work from the user's perspective.
+  placeholder: What would the user see, click, read, or experience?
+  validations:
+  required: false
+
+* type: textarea
+  id: possible-implementation
+  attributes:
+  label: Possible implementation
+  description: If you have a technical idea, describe it here.
+  placeholder: Mention relevant files, screens, APIs, flows, or implementation ideas if known.
+  validations:
+  required: false
+
+* type: textarea
+  id: alternatives
+  attributes:
+  label: Alternatives considered
+  description: Are there other ways to solve this problem?
+  placeholder: Briefly describe any simpler, safer, or more maintainable alternatives.
+  validations:
+  required: false
+
+* type: checkboxes
+  id: mission-alignment
+  attributes:
+  label: Mission alignment
+  description: Select all that apply.
+  options:
+  - label: Supports reflection or learning
+  - label: Supports safer communities
+  - label: Reduces spam, abuse, or manipulation
+  - label: Reduces addictive or engagement-driven behavior
+  - label: Improves contributor experience
+  - label: Improves accessibility or clarity
+  - label: Supports teachers, seekers, groups, or communities
+
+* type: textarea
+  id: additional-context
+  attributes:
+  label: Additional context
+  description: Add screenshots, examples, links, related issues, or other context.
+  placeholder: Add anything else that helps explain the request.
+  validations:
+  required: false
