@@ -380,7 +380,7 @@ export function MessagesList({
 
   // -- Message sending
   const onSendMessage = useCallback(
-    async (text: string, replyTo?: ChatBskyConvoDefs.MessageView) => {
+    async (text: string, reply?: $Typed<ChatBskyConvoDefs.MessageView>) => {
       let rt = new RichText({text: text.trimEnd()}, {cleanNewlines: true})
 
       // detect facets without resolution first - this is used to see if there's
@@ -396,6 +396,7 @@ export function MessagesList({
         | $Typed<AppBskyEmbedRecord.View>
         | $Typed<ChatBskyEmbedJoinLink.View>
         | undefined
+      let replyTo: ChatBskyConvoDefs.ReplyRef | undefined
 
       // Find the embedded link facet and, if it's at the start or end of the
       // message, remove it from the text (the embed card replaces it).
@@ -464,6 +465,10 @@ export function MessagesList({
         stripLinkFacet(uri => getChatInviteCodeFromUrl(uri) === code)
       }
 
+      if (reply) {
+        replyTo = {messageId: reply.id}
+      }
+
       await rt.detectFacets(agent)
 
       rt = shortenLinks(rt)
@@ -478,12 +483,10 @@ export function MessagesList({
           text: rt.text,
           facets: rt.facets,
           embed,
-          replyTo: replyTo ? {messageId: replyTo.id} : undefined,
+          replyTo,
         },
         embedView,
-        replyTo
-          ? {...replyTo, $type: 'chat.bsky.convo.defs#messageView'}
-          : undefined,
+        reply,
       )
 
       if (replyTo) {
@@ -731,7 +734,7 @@ function Composer({
   textInputId: string
   onSendMessage: (
     message: string,
-    replyTo?: ChatBskyConvoDefs.MessageView,
+    replyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
   ) => Promise<void>
   messageEmbed: MessageEmbedState | undefined
   setEmbed: (embedUrl: string | undefined) => void
@@ -741,7 +744,12 @@ function Composer({
   const {replyTo, clearReply} = useMessageDialogs()
 
   const handleSendMessage = useNonReactiveCallback((message: string) => {
-    void onSendMessage(message, replyTo ?? undefined)
+    void onSendMessage(
+      message,
+      replyTo
+        ? {...replyTo, $type: 'chat.bsky.convo.defs#messageView'}
+        : undefined,
+    )
     clearReply()
   })
 

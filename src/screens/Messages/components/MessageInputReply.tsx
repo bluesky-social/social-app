@@ -1,10 +1,9 @@
 import {LayoutAnimation, View} from 'react-native'
-import {Trans, useLingui} from '@lingui/react/macro'
+import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {useConvoActive} from '#/state/messages/convo'
-import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useMessageDialogs} from '#/components/dms/MessageOverlays'
@@ -18,7 +17,6 @@ import {Text} from '#/components/Typography'
 export function MessageInputReply() {
   const t = useTheme()
   const {t: l} = useLingui()
-  const {currentAccount} = useSession()
   const convo = useConvoActive()
   const {replyTo, clearReply} = useMessageDialogs()
 
@@ -31,10 +29,9 @@ export function MessageInputReply() {
     clearReply()
   }
 
-  const isFromSelf = replyTo.sender.did === currentAccount?.did
   const senderProfile = convo.relatedProfiles.get(replyTo.sender.did)
   const displayName = senderProfile
-    ? createSanitizedDisplayName(senderProfile)
+    ? createSanitizedDisplayName(senderProfile, false)
     : null
 
   return (
@@ -43,31 +40,25 @@ export function MessageInputReply() {
         a.flex_1,
         a.flex_row,
         a.gap_sm,
-        a.align_center,
+        a.align_start,
         t.atoms.border_contrast_high,
         a.rounded_md,
         a.border,
         a.p_sm,
         a.mt_sm,
         a.mx_sm,
+        a.gap_2xs,
       ]}>
       <View style={[a.flex_1]}>
-        <Text
-          style={[a.text_xs, a.font_bold, t.atoms.text_contrast_medium]}
-          emoji
-          numberOfLines={1}>
-          {isFromSelf ? (
-            <Trans>Replying to yourself</Trans>
-          ) : displayName ? (
-            <Trans>Replying to {displayName}</Trans>
-          ) : (
-            <Trans>Replying to message</Trans>
-          )}
-        </Text>
-        <Text
-          style={[a.text_sm, t.atoms.text_contrast_high, a.mt_2xs]}
-          emoji
-          numberOfLines={1}>
+        {displayName && (
+          <Text
+            style={[a.text_xs, t.atoms.text_contrast_high]}
+            emoji
+            numberOfLines={1}>
+            {displayName}
+          </Text>
+        )}
+        <Text style={[a.text_sm]} emoji numberOfLines={2}>
           {replyTo.text}
         </Text>
       </View>

@@ -751,18 +751,37 @@ function ReplyQuote({
   const t = useTheme()
   const {t: l} = useLingui()
 
-  const isDeleted = ChatBskyConvoDefs.isDeletedMessageView(replyTo)
   const senderProfile = relatedProfiles.get(replyTo.sender.did)
   const senderName = senderProfile
     ? createSanitizedDisplayName(senderProfile)
     : null
 
-  // On the blue self-bubble, derive the quote chrome from white; on the grey
-  // bubble, from the foreground text color. Keeps it legible against either.
   const tintColor = isFromSelf ? t.palette.white : t.atoms.text.color
   const subtleColor = isFromSelf
-    ? utils.alpha(t.palette.white, 0.7)
-    : t.atoms.text_contrast_medium.color
+    ? t.palette.white
+    : t.atoms.text_contrast_high.color
+  const borderColor = isFromSelf
+    ? utils.alpha(t.palette.white, 0.5)
+    : t.atoms.border_contrast_high.borderColor
+
+  let text: string
+  let subtle = false
+  if (ChatBskyConvoDefs.isMessageView(replyTo)) {
+    text = replyTo.text
+    if (!text.trim()) {
+      subtle = true
+      if (ChatBskyEmbedJoinLink.isView(replyTo.embed)) {
+        text = l`(chat invite link)`
+      } else if (AppBskyEmbedRecord.isView(replyTo.embed)) {
+        text = l`(contains embedded content)`
+      } else {
+        text = l`No text`
+      }
+    }
+  } else {
+    text = l`Deleted message`
+    subtle = true
+  }
 
   return (
     <Button
@@ -772,42 +791,33 @@ function ReplyQuote({
           : l`Replied-to message, tap to scroll to it`
       }
       onPress={onPress}
-      style={[a.mb_xs]}>
-      <View
-        style={[
-          a.w_full,
-          a.gap_2xs,
-          a.rounded_sm,
-          a.px_sm,
-          a.py_xs,
-          a.border_l,
-          {
-            borderLeftWidth: 3,
-            borderLeftColor: tintColor,
-            backgroundColor: utils.alpha(tintColor, isFromSelf ? 0.15 : 0.06),
-          },
-        ]}>
-        {senderName ? (
-          <Text
-            style={[a.text_xs, a.font_bold, {color: subtleColor}]}
-            emoji
-            numberOfLines={1}>
-            {senderName}
-          </Text>
-        ) : null}
-        <Text
-          style={[a.text_sm, {color: isDeleted ? subtleColor : tintColor}]}
-          emoji
-          numberOfLines={2}>
-          {ChatBskyConvoDefs.isMessageView(replyTo) ? (
-            replyTo.text
-          ) : (
-            <Text style={[a.text_sm, a.italic, {color: subtleColor}]}>
-              <Trans>Message deleted</Trans>
-            </Text>
-          )}
+      style={[
+        a.mb_xs,
+        a.w_full,
+        a.gap_2xs,
+        a.rounded_md,
+        a.px_sm,
+        a.py_xs,
+        a.flex_col,
+        a.align_start,
+        a.border,
+        {borderColor, marginHorizontal: -4},
+      ]}>
+      {senderName ? (
+        <Text style={[a.text_xs, {color: subtleColor}]} emoji numberOfLines={1}>
+          {senderName}
         </Text>
-      </View>
+      ) : null}
+      <Text
+        style={[
+          a.text_sm,
+          {color: subtle ? subtleColor : tintColor},
+          subtle && a.italic,
+        ]}
+        emoji
+        numberOfLines={2}>
+        {text}
+      </Text>
     </Button>
   )
 }
