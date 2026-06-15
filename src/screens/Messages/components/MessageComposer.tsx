@@ -326,7 +326,7 @@ export function ComposerContainer({children}: {children: React.ReactNode}) {
 
   if (IS_LIQUID_GLASS) {
     return (
-      <ScrollEdgeEffect edge="bottom">
+      <ScrollEdgeEffect edge="bottom" effect="soft">
         <Animated.View style={[a.w_full, animatedContainerStyle, a.pb_lg]}>
           {children}
         </Animated.View>
