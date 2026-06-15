@@ -1,0 +1,98 @@
+name: Good First Issue
+description: Create a beginner-friendly task for new contributors
+title: "[Good First Issue]: "
+labels:
+
+* good first issue
+
+* help wanted
+  body:
+
+* type: markdown
+  attributes:
+  value: |
+  Use this template for small, clear, beginner-friendly tasks that new contributors can complete without deep knowledge of the codebase.
+
+* type: textarea
+  id: problem
+  attributes:
+  label: Problem
+  description: Describe the problem clearly.
+  placeholder: A part of the app still uses old Bluesky wording, links, branding, or behavior that should be reviewed for CoSeeker.
+  validations:
+  required: true
+
+* type: textarea
+  id: desired-outcome
+  attributes:
+  label: Desired outcome
+  description: Describe what should be true after this issue is completed.
+  placeholder: The affected screen, flow, or text should clearly use CoSeeker language and should not confuse users.
+  validations:
+  required: true
+
+* type: textarea
+  id: relevant-files
+  attributes:
+  label: Relevant files or areas
+  description: List likely files, folders, screens, or search terms.
+  placeholder: |
+  Search for:
+  - Bluesky
+  - bsky
+  - bsky.app
+
+  ```
+  Check:
+  - onboarding screens
+  - settings screens
+  - profile screens
+  ```
+
+  validations:
+  required: false
+
+* type: textarea
+  id: acceptance-criteria
+  attributes:
+  label: Acceptance criteria
+  description: What must be true for this issue to be considered complete?
+  value: |
+  This issue is complete when:
+
+  ```
+  - [ ] The problem described above is fixed
+  - [ ] The change is small and focused
+  - [ ] No unrelated files are changed
+  - [ ] User-facing text is clear
+  - [ ] Screenshots are added to the pull request if the change affects UI
+  ```
+
+  validations:
+  required: true
+
+* type: checkboxes
+  id: skills-needed
+  attributes:
+  label: Skills needed
+  options:
+  - label: Beginner-friendly
+  - label: React Native
+  - label: TypeScript
+  - label: UI / copy update
+  - label: Documentation
+  - label: Testing
+  - label: Other
+
+* type: markdown
+  attributes:
+  value: |
+  ## Notes for contributors
+
+  ```
+  If you want to work on this issue, comment:
+
+  `I would like to work on this.`
+
+  A maintainer will confirm before you begin.
+  ```
