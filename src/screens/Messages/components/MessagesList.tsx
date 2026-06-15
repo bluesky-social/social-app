@@ -200,6 +200,14 @@ export function MessagesList({
   // the bottom.
   const isAtBottom = useSharedValue(true)
 
+  // Set when the local user sends a message so we follow it to the end even
+  // from a scrolled-up position. We can't rely on onContentSizeChange here:
+  // with maintainVisibleContentPosition anchored to item 0, appending a message
+  // below the viewport does not report a content-size change on native, so that
+  // callback never fires. Instead an effect watches the rendered item count and
+  // scrolls imperatively once the pending message lands (APP-2223).
+  const pendingSendScroll = useRef(false)
+
   // This will be used on web to assist in determining if we need to maintain the content offset
   const isAtTop = useSharedValue(true)
 
@@ -252,6 +260,24 @@ export function MessagesList({
       didBackground.current = true
     }
   }, [convoState.status])
+
+  // Follow a just-sent message to the end. This runs when the rendered item
+  // count changes, but only fires once the tail item is our own optimistic
+  // pending message (pending-message items are local-only). That way a foreign
+  // message arriving between send and our append doesn't consume the pin or yank
+  // a scrolled-up reader down to it - the pin waits for our message to land. We
+  // defer to the next frame so the new item is laid out before scrollToEnd
+  // measures. See the pendingSendScroll declaration for why onContentSizeChange
+  // can't be used here.
+  useEffect(() => {
+    if (!pendingSendScroll.current) return
+    if (renderItems.at(-1)?.type !== 'pending-message') return
+    pendingSendScroll.current = false
+    const raf = requestAnimationFrame(() => {
+      flatListRef.current?.scrollToEnd({animated: true})
+    })
+    return () => cancelAnimationFrame(raf)
+  }, [renderItems, flatListRef])
 
   // -- Scroll handling
 
@@ -478,6 +504,11 @@ export function MessagesList({
       if (!hasScrolled) {
         setHasScrolled(true)
       }
+
+      // Sending your own message should always take you to it, regardless of
+      // current scroll position. The effect watching renderItems.length scrolls
+      // to the end once the pending message is appended.
+      pendingSendScroll.current = true
 
       convoState.sendMessage(
         {
