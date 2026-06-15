@@ -118,9 +118,16 @@ export function AutosizedTextarea({
    * directly drive the `height`.
    */
   const [nativeHeight, setNativeHeight] = useState(minInputHeight)
-  useImperativeHandle(heightApiRef, () => ({
-    resetHeight: () => setNativeHeight(minInputHeight),
-  }))
+  useImperativeHandle(
+    heightApiRef,
+    () => ({
+      resetHeight: () => {
+        setNativeHeight(minInputHeight)
+        onUpdateHeight?.(minInputHeight)
+      },
+    }),
+    [minInputHeight, onUpdateHeight],
+  )
   const onContentSizeChange = (e: TextInputContentSizeChangeEvent) => {
     const contentSize = Math.ceil(e.nativeEvent.contentSize.height)
     // ios reports the content size without padding
