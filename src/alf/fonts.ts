@@ -5,6 +5,19 @@ import {type Device, device} from '#/storage'
 
 const WEB_FONT_FAMILIES = `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`
 
+/**
+ * Monospace family for rendered code (code blocks, inline code, fenced blocks).
+ * A full cross-platform stack on web; a single system family on native, since
+ * RN `fontFamily` does not accept CSS-style fallback lists. `applyFonts`
+ * preserves this verbatim (see the guard there) so the Inter UI font does not
+ * clobber it and leave code in a proportional typeface.
+ */
+export const MONOSPACE_FONT_FAMILY = IS_WEB
+  ? 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", "Roboto Mono", monospace'
+  : IS_ANDROID
+    ? 'monospace'
+    : 'Menlo'
+
 const factor = 0.0625 // 1 - (15/16)
 const fontScaleMultipliers: Record<Device['fontScale'], number> = {
   '-2': 1 - factor * 1, // unused
@@ -38,6 +51,11 @@ export function setFontFamily(fontFamily: Device['fontFamily']) {
  * Unused fonts are commented out, but the files are there if we need them.
  */
 export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
+  // Preserve an explicitly requested monospace family (code blocks set this).
+  // The `theme` branch below would otherwise overwrite fontFamily with the
+  // Inter UI font, leaving code rendered in a proportional typeface.
+  if (style.fontFamily === MONOSPACE_FONT_FAMILY) return
+
   if (fontFamily === 'theme') {
     if (IS_ANDROID) {
       style.fontFamily =

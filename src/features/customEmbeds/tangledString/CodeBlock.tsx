@@ -72,9 +72,15 @@ export function CodeBlock({
               {line.length === 0
                 ? ' '
                 : line.map((span, i) => (
+                    // The parent Text sets MONO_FONT, but each nested Text
+                    // re-applies a font family, so repeat it here or the span
+                    // reverts to the Inter UI font.
                     <Text
                       key={i}
-                      style={{color: colorForScope(span.scope, colors)}}>
+                      style={{
+                        color: colorForScope(span.scope, colors),
+                        fontFamily: MONO_FONT,
+                      }}>
                       {span.value}
                     </Text>
                   ))}
