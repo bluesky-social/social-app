@@ -378,7 +378,11 @@ export function MessagesList({
 
   // -- Message sending
   const onSendMessage = useCallback(
-    async (text: string, reply?: $Typed<ChatBskyConvoDefs.MessageView>) => {
+    async (
+      text: string,
+      embedState?: MessageEmbedState,
+      reply?: $Typed<ChatBskyConvoDefs.MessageView>,
+    ) => {
       let rt = new RichText({text: text.trimEnd()}, {cleanNewlines: true})
 
       // detect facets without resolution first - this is used to see if there's
@@ -416,9 +420,9 @@ export function MessagesList({
         }
       }
 
-      if (messageEmbed?.type === 'post') {
+      if (embedState?.type === 'post') {
         try {
-          const post = await getPost({uri: messageEmbed.uri})
+          const post = await getPost({uri: embedState.uri})
           if (post) {
             embed = {
               $type: 'app.bsky.embed.record',
@@ -445,8 +449,8 @@ export function MessagesList({
         } catch (error) {
           logger.error('Failed to get post as quote for DM', {error})
         }
-      } else if (messageEmbed?.type === 'invite') {
-        const code = messageEmbed.code
+      } else if (embedState?.type === 'invite') {
+        const code = embedState.code
         embed = {
           $type: 'chat.bsky.embed.joinLink',
           code,
@@ -512,7 +516,6 @@ export function MessagesList({
     [
       agent,
       convoState,
-      messageEmbed,
       getPost,
       getJoinLinkPreview,
       hasSession,
@@ -737,6 +740,7 @@ function Composer({
   textInputId: string
   onSendMessage: (
     message: string,
+    embed?: MessageEmbedState,
     replyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
   ) => Promise<void>
   messageEmbed: MessageEmbedState | undefined
@@ -745,8 +749,12 @@ function Composer({
   useNewComposer: boolean
 }) {
   const handleSendMessage = useNonReactiveCallback(
-    (message: string, replyTo?: $Typed<ChatBskyConvoDefs.MessageView>) => {
-      void onSendMessage(message, replyTo)
+    (
+      message: string,
+      embed?: MessageEmbedState,
+      replyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
+    ) => {
+      void onSendMessage(message, embed, replyTo)
     },
   )
 
@@ -761,7 +769,7 @@ function Composer({
     <MessageComposer
       textInputId={textInputId}
       onSendMessage={handleSendMessage}
-      hasEmbed={!!messageEmbed}
+      messageEmbed={messageEmbed}
       setEmbed={setEmbed}
       loading={loading}>
       {previews}
@@ -770,7 +778,7 @@ function Composer({
     <MessageInput
       textInputId={textInputId}
       onSendMessage={handleSendMessage}
-      hasEmbed={!!messageEmbed}
+      messageEmbed={messageEmbed}
       setEmbed={setEmbed}
       loading={loading}>
       {previews}

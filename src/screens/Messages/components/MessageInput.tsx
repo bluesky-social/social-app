@@ -34,7 +34,10 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS, IS_WEB} from '#/env'
 import {ComposerContainer} from './MessageComposer'
-import {useExtractEmbedFromFacets} from './MessageInputEmbed'
+import {
+  type MessageEmbedState,
+  useExtractEmbedFromFacets,
+} from './MessageInputEmbed'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
@@ -43,7 +46,7 @@ const MIN_HEIGHT = 40
 export function MessageInput({
   textInputId,
   onSendMessage,
-  hasEmbed,
+  messageEmbed,
   setEmbed,
   children,
   loading = false,
@@ -51,9 +54,10 @@ export function MessageInput({
   textInputId?: string
   onSendMessage: (
     message: string,
+    embed?: MessageEmbedState,
     replyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
   ) => Promise<void> | void
-  hasEmbed: boolean
+  messageEmbed: MessageEmbedState | undefined
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
   loading?: boolean
@@ -85,7 +89,7 @@ export function MessageInput({
     if (!editable) {
       return
     }
-    if (!hasEmbed && message.trim() === '') {
+    if (!messageEmbed && message.trim() === '') {
       return
     }
     if (countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
@@ -96,6 +100,8 @@ export function MessageInput({
     }
     clearDraft()
     playHaptic()
+    // Capture the embed before clearing - the deferred send below reads it.
+    const embed = messageEmbed
     setEmbed(undefined)
     setMessage('')
     // Capture the reply before clearing - the deferred send below reads it.
@@ -115,6 +121,7 @@ export function MessageInput({
     requestAnimationFrame(() => {
       void onSendMessage(
         message,
+        embed,
         reply
           ? {...reply, $type: 'chat.bsky.convo.defs#messageView'}
           : undefined,
@@ -122,7 +129,7 @@ export function MessageInput({
     })
   }, [
     editable,
-    hasEmbed,
+    messageEmbed,
     message,
     clearDraft,
     onSendMessage,
@@ -159,7 +166,8 @@ export function MessageInput({
     scrollEnabled: isInputScrollable.get(),
   }))
 
-  const submitDisabled = !editable || (!hasEmbed && message.trim().length === 0)
+  const submitDisabled =
+    !editable || (!messageEmbed && message.trim().length === 0)
 
   const blur = useCallback(() => {
     inputRef.current?.blur()

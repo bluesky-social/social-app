@@ -37,13 +37,14 @@ import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} fro
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {type MessageEmbedState} from './MessageInputEmbed'
 
 const MIN_HEIGHT = 40
 
 export function MessageComposer({
   textInputId,
   onSendMessage,
-  hasEmbed,
+  messageEmbed,
   setEmbed,
   children,
   loading = false,
@@ -51,9 +52,10 @@ export function MessageComposer({
   textInputId?: string
   onSendMessage: (
     message: string,
+    embed?: MessageEmbedState,
     replyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
   ) => void
-  hasEmbed: boolean
+  messageEmbed: MessageEmbedState | undefined
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
   loading?: boolean
@@ -89,14 +91,16 @@ export function MessageComposer({
     },
   })
 
-  const submitDisabled = !editable || (!hasEmbed && text.trim().length === 0)
+  const submitDisabled =
+    !editable || (!messageEmbed && text.trim().length === 0)
 
   const onSubmit = (
     message: string,
+    embed: MessageEmbedState | undefined,
     replyTo: ChatBskyConvoDefs.MessageView | null,
   ) => {
     if (!editable) return
-    if (!hasEmbed && message.trim() === '') return
+    if (!embed && message.trim() === '') return
     const graphemeCount = countGraphemes(message)
     if (graphemeCount > MAX_DM_GRAPHEME_LENGTH) {
       Toast.show(
@@ -120,6 +124,7 @@ export function MessageComposer({
     requestAnimationFrame(() => {
       onSendMessage(
         message,
+        embed,
         replyTo
           ? {
               ...replyTo,
@@ -152,18 +157,18 @@ export function MessageComposer({
       setTimeout(() => {
         if (isFlushingAutocorrectSuggestion.current) {
           isFlushingAutocorrectSuggestion.current = false
-          onSubmit(text, replyTo)
+          onSubmit(text, messageEmbed, replyTo)
         }
       }, 20)
     } else {
-      onSubmit(text, replyTo)
+      onSubmit(text, messageEmbed, replyTo)
     }
   }
 
   const handleChange = (nextText: string) => {
     if (IS_IOS && isFlushingAutocorrectSuggestion.current) {
       isFlushingAutocorrectSuggestion.current = false
-      onSubmit(nextText, replyTo)
+      onSubmit(nextText, messageEmbed, replyTo)
     } else {
       setText(nextText)
     }
