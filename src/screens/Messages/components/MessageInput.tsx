@@ -15,6 +15,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {GlassContainer} from 'expo-glass-effect'
+import {type $Typed, type ChatBskyConvoDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
@@ -26,6 +27,7 @@ import {
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
 import {atoms as a, platform, tokens, useTheme} from '#/alf'
+import {useMessageReplies} from '#/components/dms/MessageReplies'
 import {GlassView} from '#/components/GlassView'
 import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import {Loader} from '#/components/Loader'
@@ -47,7 +49,10 @@ export function MessageInput({
   loading = false,
 }: {
   textInputId?: string
-  onSendMessage: (message: string) => Promise<void> | void
+  onSendMessage: (
+    message: string,
+    replyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
+  ) => Promise<void> | void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
@@ -57,6 +62,7 @@ export function MessageInput({
   const t = useTheme()
   const playHaptic = useHaptics()
   const {getDraft, clearDraft} = useMessageDraft()
+  const {replyTo, clearReply} = useMessageReplies()
 
   // Input layout
   const {top: topInset} = useSafeAreaInsets()
@@ -92,6 +98,9 @@ export function MessageInput({
     playHaptic()
     setEmbed(undefined)
     setMessage('')
+    // Capture the reply before clearing - the deferred send below reads it.
+    const reply = replyTo
+    clearReply()
     if (IS_IOS) {
       setShouldEnforceClear(true)
     }
@@ -104,7 +113,12 @@ export function MessageInput({
     }
 
     requestAnimationFrame(() => {
-      void onSendMessage(message)
+      void onSendMessage(
+        message,
+        reply
+          ? {...reply, $type: 'chat.bsky.convo.defs#messageView'}
+          : undefined,
+      )
     })
   }, [
     editable,
@@ -116,6 +130,8 @@ export function MessageInput({
     setEmbed,
     inputRef,
     l,
+    replyTo,
+    clearReply,
   ])
 
   useFocusedInputHandler(

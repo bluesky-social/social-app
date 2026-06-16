@@ -1,4 +1,4 @@
-import {useRef, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {
   useKeyboardHandler,
@@ -13,6 +13,7 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {GlassContainer} from 'expo-glass-effect'
 import {LinearGradient} from 'expo-linear-gradient'
+import {type $Typed, type ChatBskyConvoDefs} from '@atproto/api'
 import {ScrollEdgeEffect} from '@bsky.app/expo-scroll-edge-effect'
 import {useLingui} from '@lingui/react/macro'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
@@ -28,6 +29,7 @@ import {
 } from '#/state/messages/message-drafts'
 import {atoms as a, native, platform, tokens, useTheme, utils} from '#/alf'
 import {Composer, useComposerInternalApiRef} from '#/components/Composer'
+import {useMessageReplies} from '#/components/dms/MessageReplies'
 import * as EmojiPicker from '#/components/EmojiPicker'
 import {GlassView} from '#/components/GlassView'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
@@ -47,7 +49,10 @@ export function MessageComposer({
   loading = false,
 }: {
   textInputId?: string
-  onSendMessage: (message: string) => void
+  onSendMessage: (
+    message: string,
+    replyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
+  ) => void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
@@ -60,9 +65,15 @@ export function MessageComposer({
   const editable = !needsEmailVerification && !loading
   const {getDraft, clearDraft} = useMessageDraft()
   const composerInternalApiRef = useComposerInternalApiRef()
+  const {replyTo, clearReply} = useMessageReplies()
 
   const [text, setText] = useState(getDraft)
   useSaveMessageDraft(text)
+
+  useEffect(() => {
+    if (!replyTo) return
+    composerInternalApiRef.current?.input?.focus()
+  }, [replyTo, composerInternalApiRef])
 
   // Android interactive dismiss sometimes doesn't blur the input
   const blur = useNonReactiveCallback(() => {
@@ -80,7 +91,10 @@ export function MessageComposer({
 
   const submitDisabled = !editable || (!hasEmbed && text.trim().length === 0)
 
-  const onSubmit = (message: string) => {
+  const onSubmit = (
+    message: string,
+    replyTo: ChatBskyConvoDefs.MessageView | null,
+  ) => {
     if (!editable) return
     if (!hasEmbed && message.trim() === '') return
     const graphemeCount = countGraphemes(message)
@@ -95,6 +109,7 @@ export function MessageComposer({
     clearDraft()
     playHaptic()
     setEmbed(undefined)
+    clearReply()
     composerInternalApiRef.current?.clear()
 
     if (IS_WEB) {
@@ -103,7 +118,15 @@ export function MessageComposer({
 
     // defer send by a frame so that the textinput resizes before we send the message
     requestAnimationFrame(() => {
-      onSendMessage(message)
+      onSendMessage(
+        message,
+        replyTo
+          ? {
+              ...replyTo,
+              $type: 'chat.bsky.convo.defs#messageView',
+            }
+          : undefined,
+      )
     })
   }
 
@@ -129,18 +152,18 @@ export function MessageComposer({
       setTimeout(() => {
         if (isFlushingAutocorrectSuggestion.current) {
           isFlushingAutocorrectSuggestion.current = false
-          onSubmit(text)
+          onSubmit(text, replyTo)
         }
       }, 20)
     } else {
-      onSubmit(text)
+      onSubmit(text, replyTo)
     }
   }
 
   const handleChange = (nextText: string) => {
     if (IS_IOS && isFlushingAutocorrectSuggestion.current) {
       isFlushingAutocorrectSuggestion.current = false
-      onSubmit(nextText)
+      onSubmit(nextText, replyTo)
     } else {
       setText(nextText)
     }

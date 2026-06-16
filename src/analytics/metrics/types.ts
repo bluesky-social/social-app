@@ -586,6 +586,14 @@ export type Events = {
       | 'SendViaChatDialog'
       | 'ConvoSettings'
   }
+  // Message replies
+  'chat:message:reply:send': {
+    convoId: string
+    isGroup: boolean
+  }
+  'chat:message:reply:tap': {
+    convoId: string
+  }
 
   // Group chat adoption
   'groupchat:create': {

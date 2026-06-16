@@ -1,5 +1,6 @@
 import {useCallback, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
+import {type $Typed, type ChatBskyConvoDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {flushSync} from 'react-dom'
 import TextareaAutosize from 'react-textarea-autosize'
@@ -13,6 +14,7 @@ import {
 } from '#/state/messages/message-drafts'
 import {atoms as a, flatten, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
+import {useMessageReplies} from '#/components/dms/MessageReplies'
 import * as EmojiPicker from '#/components/EmojiPicker'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
@@ -28,7 +30,10 @@ export function MessageInput({
   children,
   loading = false,
 }: {
-  onSendMessage: (message: string) => void
+  onSendMessage: (
+    message: string,
+    replyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
+  ) => void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
@@ -38,6 +43,7 @@ export function MessageInput({
   const {t: l} = useLingui()
   const t = useTheme()
   const {getDraft, clearDraft} = useMessageDraft()
+  const {replyTo, clearReply} = useMessageReplies()
   const [message, setMessage] = useState(getDraft)
 
   const inputStyles = useSharedInputStyles()
@@ -58,10 +64,25 @@ export function MessageInput({
       return
     }
     clearDraft()
-    onSendMessage(message)
+    onSendMessage(
+      message,
+      replyTo
+        ? {...replyTo, $type: 'chat.bsky.convo.defs#messageView'}
+        : undefined,
+    )
+    clearReply()
     setMessage('')
     setEmbed(undefined)
-  }, [message, onSendMessage, l, clearDraft, hasEmbed, setEmbed])
+  }, [
+    message,
+    onSendMessage,
+    l,
+    clearDraft,
+    hasEmbed,
+    setEmbed,
+    replyTo,
+    clearReply,
+  ])
 
   const onKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
