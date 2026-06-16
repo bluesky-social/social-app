@@ -41,6 +41,7 @@ import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import * as Pills from '#/components/Pills'
 import {ProfileBadges} from '#/components/ProfileBadges'
+import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
@@ -488,6 +489,7 @@ export function FollowButtonInner({
     contextProfileDid,
   )
   const isRound = Boolean(rest.shape && rest.shape === 'round')
+  const unfollowPromptControl = Prompt.usePromptControl()
 
   const onPressFollow = async (e: GestureResponderEvent) => {
     e.preventDefault()
@@ -512,9 +514,7 @@ export function FollowButtonInner({
     }
   }
 
-  const onPressUnfollow = async (e: GestureResponderEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
+  const doUnfollow = async () => {
     try {
       await queueUnfollow()
       Toast.show(
@@ -523,7 +523,6 @@ export function FollowButtonInner({
           moderation.ui('displayName'),
         )}`,
       )
-      onPressProp?.(e)
     } catch (e) {
       const err = e as Error
       if (err?.name !== 'AbortError') {
@@ -566,7 +565,9 @@ export function FollowButtonInner({
           color="secondary"
           {...rest}
           onPress={(e: GestureResponderEvent) => {
-            void onPressUnfollow(e)
+            e.preventDefault()
+            e.stopPropagation()
+            unfollowPromptControl.open()
           }}>
           {withIcon && (
             <ButtonIcon icon={Check} position={isRound ? undefined : 'left'} />
@@ -589,6 +590,18 @@ export function FollowButtonInner({
           {isRound ? null : <ButtonText>{followLabel}</ButtonText>}
         </Button>
       )}
+
+      <Prompt.Basic
+        control={unfollowPromptControl}
+        title={l`Unfollow?`}
+        description={l`Are you sure you want to unfollow ${sanitizeDisplayName(
+          profile.displayName || profile.handle,
+          moderation.ui('displayName'),
+        )}?`}
+        onConfirm={() => void doUnfollow()}
+        confirmButtonCta={l`Unfollow`}
+        confirmButtonColor="negative"
+      />
     </View>
   )
 }

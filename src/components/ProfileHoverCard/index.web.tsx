@@ -37,6 +37,7 @@ import {Loader} from '#/components/Loader'
 import * as Pills from '#/components/Pills'
 import {Portal} from '#/components/Portal'
 import {ProfileBadges} from '#/components/ProfileBadges'
+import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {IS_WEB_TOUCH_DEVICE} from '#/env'
@@ -435,6 +436,7 @@ function Inner({
     profile: profileShadow,
     logContext: 'ProfileHoverCard',
   })
+  const unfollowPromptControl = Prompt.usePromptControl()
   const isBlockedUser =
     profile.viewer?.blocking ||
     profile.viewer?.blockedBy ||
@@ -495,7 +497,11 @@ function Inner({
                   : _(msg`Follow`)
               }
               style={[a.rounded_full]}
-              onPress={profileShadow.viewer?.following ? unfollow : follow}>
+              onPress={
+                profileShadow.viewer?.following
+                  ? () => unfollowPromptControl.open()
+                  : follow
+              }>
               <ButtonIcon
                 position="left"
                 icon={profileShadow.viewer?.following ? Check : Plus}
@@ -601,6 +607,20 @@ function Inner({
             )}
         </>
       )}
+
+      <Prompt.Basic
+        control={unfollowPromptControl}
+        title={_(msg`Unfollow?`)}
+        description={_(
+          msg`Are you sure you want to unfollow ${sanitizeDisplayName(
+            profile.displayName || profile.handle,
+            moderation.ui('displayName'),
+          )}?`,
+        )}
+        onConfirm={unfollow}
+        confirmButtonCta={_(msg`Unfollow`)}
+        confirmButtonColor="negative"
+      />
     </View>
   )
 }
