@@ -346,6 +346,7 @@ export function Composer({
           {...tapper.inputProps}
           {...sift.targetProps}
           ref={mergeRefs([ref, tapper.inputProps.ref, sift.targetProps.ref])}
+          rawValue={tapper.state.text}
           onBlur={e => {
             rest.onBlur?.(e)
             setActiveFacet(null)
