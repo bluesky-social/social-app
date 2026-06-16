@@ -267,30 +267,51 @@ export function MessagesList({
     }
   }, [convoState.status])
 
+  // Scroll to a saturating offset rather than scrollToEnd: when the keyboard is
+  // open, KeyboardChatScrollView lifts the content via extraContentPadding, and
+  // scrollToEnd's internal target is unaware of that lift, so it lands short by
+  // the keyboard height. An over-large offset clamps to the true bottom.
+  const scrollSendToBottom = useCallback(() => {
+    flatListRef.current?.scrollToOffset({
+      offset: Number.MAX_SAFE_INTEGER,
+      animated: true,
+    })
+  }, [flatListRef])
+
+  // When the composer collapses back to one line after a multi-line send, the
+  // content bottom shifts down by that height delta. The send scroll below
+  // happens before this collapse, so it lands short. Arming this flag makes the
+  // next inputHeight drop re-scroll exactly once, tracking the composer's
+  // settle without a time-boxed loop. Bounded to a single collapse so an
+  // unrelated later resize can't trigger a stray scroll.
+  const followComposerCollapse = useRef(false)
+  const prevInputHeightJS = useRef(inputHeightJS)
+
   // Follow a just-sent message to the end. This runs when the rendered item
   // count changes, but only fires once the tail item is our own optimistic
   // pending message (pending-message items are local-only). That way a foreign
   // message arriving between send and our append doesn't consume the pin or yank
-  // a scrolled-up reader down to it - the pin waits for our message to land. We
-  // defer to the next frame so the new item is laid out before we scroll.
-  // We scroll to a saturating offset rather than scrollToEnd: when the keyboard
-  // is open, KeyboardChatScrollView lifts the content via extraContentPadding,
-  // and scrollToEnd's internal target is unaware of that lift, so it lands short
-  // by the keyboard height. An over-large offset clamps to the true bottom.
-  // See the pendingSendScroll declaration for why onContentSizeChange can't be
-  // used here.
+  // a scrolled-up reader down to it - the pin waits for our message to land.
+  // See the pendingSendScroll declaration for why onContentSizeChange can't
+  // drive this on native.
   useEffect(() => {
     if (!pendingSendScroll.current) return
     if (renderItems.at(-1)?.type !== 'pending-message') return
     pendingSendScroll.current = false
-    const raf = requestAnimationFrame(() => {
-      flatListRef.current?.scrollToOffset({
-        offset: Number.MAX_SAFE_INTEGER,
-        animated: true,
-      })
-    })
-    return () => cancelAnimationFrame(raf)
-  }, [renderItems, flatListRef])
+    followComposerCollapse.current = true
+    scrollSendToBottom()
+  }, [renderItems, scrollSendToBottom])
+
+  // Re-scroll when the composer collapses after a send (see
+  // followComposerCollapse). Only a height *drop* counts as the collapse.
+  useEffect(() => {
+    const prev = prevInputHeightJS.current
+    prevInputHeightJS.current = inputHeightJS
+    if (!followComposerCollapse.current) return
+    if (inputHeightJS >= prev) return
+    followComposerCollapse.current = false
+    scrollSendToBottom()
+  }, [inputHeightJS, scrollSendToBottom])
 
   // -- Scroll handling
 
