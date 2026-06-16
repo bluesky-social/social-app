@@ -81,7 +81,7 @@ export function Root({
   let action: ChatInviteAction | undefined
   if (ChatBskyGroupDefs.isJoinLinkPreviewView(preview)) {
     const convoId = preview.convo?.id
-    const isFollowing = preview.owner.viewer?.following ?? false
+    const isFollowing = preview.owner.viewer?.followedBy ?? false
     const hasRequested = !convoId && preview.viewer?.requestedAt != null
 
     if (convoId && convoId === currentConvoId) {

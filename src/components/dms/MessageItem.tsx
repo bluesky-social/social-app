@@ -8,10 +8,14 @@ import {
   type ViewStyle,
 } from 'react-native'
 import Animated, {
+  FadeIn,
+  FadeOut,
   LayoutAnimationConfig,
   LinearTransition,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
+  withSequence,
   withTiming,
   ZoomIn,
   ZoomOut,
@@ -39,11 +43,13 @@ import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, native, platform, useTheme} from '#/alf'
+import {atoms as a, native, platform, useTheme, utils} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {Button} from '#/components/Button'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {useMessageDialogs} from '#/components/dms/MessageOverlays'
+import {useMessageReplies} from '#/components/dms/MessageReplies'
+import {ArrowCornerDownRight_Stroke2_Corner3_Rounded as ArrowCornerDownRightIcon} from '#/components/icons/ArrowCornerDownRight'
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Prompt from '#/components/Prompt'
@@ -53,32 +59,56 @@ import {DateDivider} from './DateDivider'
 import {MessageItemEmbed} from './MessageItemEmbed'
 import {MessageItemInviteEmbed} from './MessageItemInviteEmbed'
 import {groupReactions} from './ReactionsDialog'
-import {CLUSTERED_MESSAGE_THRESHOLD_MS, MESSAGE_GAP_THRESHOLD_MS} from './util'
+import {
+  CLUSTERED_MESSAGE_THRESHOLD_MS,
+  filterBlockedReactions,
+  MESSAGE_GAP_THRESHOLD_MS,
+} from './util'
 
 const AVATAR_SIZE = 28
 const CLUSTERED_MESSAGE_GAP = 2
-const BORDER_RADIUS = 18
+const BORDER_RADIUS = 20
 const SQUARED_BORDER_RADIUS = 4
 const DISPLAY_NAME_INSET = 20
 
+function messageIsReply(
+  message:
+    | ChatBskyConvoDefs.MessageView
+    | ChatBskyConvoDefs.DeletedMessageView
+    | null,
+): boolean {
+  return (
+    ChatBskyConvoDefs.isMessageView(message) &&
+    (ChatBskyConvoDefs.isMessageView(message.replyTo) ||
+      ChatBskyConvoDefs.isDeletedMessageView(message.replyTo))
+  )
+}
+
 function isWithinClusterBoundary({
   isPending,
+  message,
   adjacentMessage,
   isFromSameSender,
-  currentSentAt,
   direction,
 }: {
   isPending: boolean
+  message: ChatBskyConvoDefs.MessageView
   adjacentMessage:
     | ChatBskyConvoDefs.MessageView
     | ChatBskyConvoDefs.DeletedMessageView
     | null
   isFromSameSender: boolean
-  currentSentAt: string
   direction: 'prev' | 'next'
 }): boolean {
+  // A reply always starts its own cluster, breaking grouping with the message
+  // above it. Looking back, that's a boundary if this message is a reply;
+  // looking forward, it's a boundary if the next message is a reply.
+  if (messageIsReply(direction === 'prev' ? message : adjacentMessage)) {
+    return true
+  }
   if (!isFromSameSender) return true
   if (ChatBskyConvoDefs.isMessageView(adjacentMessage)) {
+    const currentSentAt = message.sentAt
     const thisDate = new Date(currentSentAt)
     const adjDate = new Date(adjacentMessage.sentAt)
     const diff =
@@ -122,6 +152,16 @@ let MessageItem = ({
   const profile = useMaybeProfileShadow(relatedProfiles.get(message.sender.did))
 
   const {openReactions} = useMessageDialogs()
+  const {scrollToMessage, highlightedMessage} = useMessageReplies()
+
+  // `replyTo` comes back hydrated as the referenced message (or a deleted-
+  // message tombstone). Narrow away the open-union fallback so we only render
+  // shapes we understand.
+  const replyTo =
+    ChatBskyConvoDefs.isMessageView(message.replyTo) ||
+    ChatBskyConvoDefs.isDeletedMessageView(message.replyTo)
+      ? message.replyTo
+      : undefined
 
   const isPending = item.type === 'pending-message'
 
@@ -144,17 +184,17 @@ let MessageItem = ({
 
   const isFirstInCluster = isWithinClusterBoundary({
     isPending,
+    message,
     adjacentMessage: prevMessage,
     isFromSameSender: isPrevFromSameSender,
-    currentSentAt: message.sentAt,
     direction: 'prev',
   })
 
   const isLastInCluster = isWithinClusterBoundary({
     isPending,
+    message,
     adjacentMessage: nextMessage,
     isFromSameSender: isNextFromSameSender,
-    currentSentAt: message.sentAt,
     direction: 'next',
   })
 
@@ -168,9 +208,15 @@ let MessageItem = ({
   const isInMiddleOfCluster =
     isInCluster && !isFirstInCluster && !isLastInCluster
 
-  const hasReactions = message.reactions && message.reactions.length > 0
+  const visibleReactions = useMemo(
+    () => filterBlockedReactions(message.reactions, relatedProfiles),
+    [message.reactions, relatedProfiles],
+  )
+
+  const hasReactions = visibleReactions.length > 0
   const prevHasReactions =
-    prevIsMessage && prevMessage.reactions && prevMessage.reactions.length > 0
+    prevIsMessage &&
+    filterBlockedReactions(prevMessage.reactions, relatedProfiles).length > 0
   const isNextEmojiOnly = nextIsMessage && isOnlyEmoji(nextMessage.text)
   const isPrevEmojiOnly = prevIsMessage && isOnlyEmoji(prevMessage.text)
   const squaredBottomCorner =
@@ -214,6 +260,26 @@ let MessageItem = ({
     topRadiusSV.set(withTiming(targetTopRadius, {duration: 300}))
   }, [targetTopRadius, topRadiusSV])
 
+  // Flash the message background when it's been scrolled to (e.g. by tapping a
+  // reply that quotes it), so it's easy to spot. Keyed on the highlight `key`
+  // so re-tapping the same message re-triggers the flash.
+  const highlightSV = useSharedValue(0)
+  const isHighlighted = highlightedMessage?.id === message.id
+  const highlightKey = isHighlighted ? highlightedMessage.key : null
+  useEffect(() => {
+    if (highlightKey === null) return
+    highlightSV.set(
+      withSequence(
+        withTiming(1, {duration: 150}),
+        withDelay(400, withTiming(0, {duration: 450})),
+      ),
+    )
+  }, [highlightKey, highlightSV])
+
+  const highlightStyle = useAnimatedStyle(() => ({
+    opacity: highlightSV.get(),
+  }))
+
   const borderRadiusStyle = useAnimatedStyle(() =>
     isFromSelf
       ? {
@@ -240,11 +306,11 @@ let MessageItem = ({
     )
 
   const groupedReactions = useMemo(
-    () => groupReactions(message.reactions),
-    [message.reactions],
+    () => groupReactions(visibleReactions),
+    [visibleReactions],
   )
 
-  const reactions = useMemo(() => message.reactions ?? [], [message.reactions])
+  const reactions = visibleReactions
 
   const hasSelfReacted = reactions.some(
     r => r.sender.did === currentAccount?.did,
@@ -275,12 +341,15 @@ let MessageItem = ({
   const appliedReactions = (
     <LayoutAnimationConfig skipEntering skipExiting>
       {hasReactions ? (
-        <View
+        <Animated.View
+          entering={FadeIn}
+          exiting={FadeOut}
           style={[
-            a.relative,
-            a.bottom_0,
-            isFromSelf ? [a.align_end] : [a.ml_sm, a.align_start],
+            a.absolute,
+            {top: '100%'},
+            isFromSelf ? [a.right_0] : [a.left_0, isGroupChat && a.ml_sm],
             a.px_sm,
+            a.z_10,
           ]}>
           <Pressable
             accessible={true}
@@ -292,24 +361,22 @@ let MessageItem = ({
               a.flex_row,
               a.gap_2xs,
               isFromSelf ? a.justify_end : a.justify_start,
-              a.flex_wrap,
               a.rounded_lg,
               a.border,
               t.atoms.border_contrast_low,
               t.atoms.shadow_xs,
+              a.px_sm,
               hasSelfReacted
                 ? {backgroundColor: t.palette.primary_100}
                 : t.atoms.bg_contrast_25,
               {
                 paddingTop: platform({android: 2, default: 3}),
                 paddingBottom: platform({android: 2, default: 3}),
-                paddingLeft: 6,
-                paddingRight: 6,
-                transform: [{translateY: -8}],
+                transform: [{translateY: -6}],
               },
             ]}
             onPress={isGroupChat ? () => openReactions(message) : undefined}>
-            {groupedReactions.map(group => (
+            {groupedReactions.slice(0, 10).map(group => (
               <Animated.View
                 entering={native(ZoomIn.springify(200).delay(400))}
                 exiting={
@@ -330,7 +397,8 @@ let MessageItem = ({
                 </Text>
               </Animated.View>
             ))}
-            {groupedReactions.length !== reactions.length &&
+            {(groupedReactions.length !== reactions.length ||
+              groupedReactions.length > 10) &&
             reactions.length > 1 ? (
               <View style={[a.p_2xs, a.pl_0, a.justify_center]}>
                 <Text
@@ -347,7 +415,7 @@ let MessageItem = ({
               </View>
             ) : null}
           </Pressable>
-        </View>
+        </Animated.View>
       ) : null}
     </LayoutAnimationConfig>
   )
@@ -358,6 +426,14 @@ let MessageItem = ({
     web: a.mx_lg,
   })
 
+  // Negative of `messageInset` so the flash bleeds past the row's horizontal
+  // margin to the screen edges.
+  const flashBleed = platform<number>({
+    android: -a.mx_sm.marginLeft,
+    ios: -a.mx_md.marginLeft,
+    web: -a.mx_lg.marginLeft,
+  })
+
   return (
     <>
       {hasLargeGapFromPrev && <DateDivider date={message.sentAt} />}
@@ -365,34 +441,42 @@ let MessageItem = ({
         style={[
           messageInset,
           isFirstInCluster ? a.mt_md : {marginTop: CLUSTERED_MESSAGE_GAP},
+          hasReactions && {paddingBottom: 26},
         ]}>
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            a.absolute,
+            {
+              top: -CLUSTERED_MESSAGE_GAP,
+              bottom: -CLUSTERED_MESSAGE_GAP,
+              left: flashBleed,
+              right: flashBleed,
+              backgroundColor: t.palette.primary_100,
+            },
+            highlightStyle,
+          ]}
+        />
         <View style={[a.relative]}>
           {showAvatar ? (
-            <View
-              style={[
-                a.absolute,
-                a.bottom_0,
-                a.z_50,
-                hasReactions && {
-                  transform: [
-                    {
-                      translateY: platform({
-                        ios: -29,
-                        default: -27,
-                      }),
-                    },
-                  ],
-                },
-              ]}>
-              {avatar}
-            </View>
+            <View style={[a.absolute, a.bottom_0, a.z_50]}>{avatar}</View>
           ) : null}
           <View
             style={[
+              a.relative,
               a.flex_grow,
               !isFromSelf && isGroupChat && {paddingLeft: AVATAR_SIZE},
             ]}>
-            {displayName && showDisplayName ? (
+            {replyTo ? (
+              <ReplyCaption
+                replyTo={replyTo}
+                isFromSelf={isFromSelf}
+                isGroupChat={isGroupChat}
+                replierDisplayName={displayName}
+                relatedProfiles={relatedProfiles}
+                onPress={() => scrollToMessage(replyTo.id)}
+              />
+            ) : displayName && showDisplayName ? (
               <Text
                 style={[
                   a.text_xs,
@@ -408,81 +492,95 @@ let MessageItem = ({
             {profile && isBlockedOrBlocking(profile) && isGroupChat ? (
               <BlockedPlaceholder profile={profile} style={borderRadiusStyle} />
             ) : (
-              <ActionsWrapper
-                hasReactions={hasReactions}
-                isFromSelf={isFromSelf}
-                message={message}
-                senderProfile={profile}
-                moderationOpts={moderationOpts}>
-                {AppBskyEmbedRecord.isView(message.embed) && (
-                  <MessageItemEmbed
-                    embed={message.embed}
-                    isFromSelf={isFromSelf}
-                    isGroupChat={isGroupChat}
-                    squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
-                    squaredTopCorner={squaredTopCorner}
-                  />
-                )}
-                {ChatBskyEmbedJoinLink.isView(message.embed) && (
-                  <MessageItemInviteEmbed
-                    embed={message.embed}
-                    isFromSelf={isFromSelf}
-                    isGroupChat={isGroupChat}
-                    squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
-                    squaredTopCorner={squaredTopCorner}
-                  />
-                )}
-                {rt.text.length > 0 && (
-                  <Animated.View
-                    accessibilityHint={l`Double tap or long press the message to add a reaction`}
-                    style={[
-                      !isFromSelf && isGroupChat && a.ml_sm,
-                      !isOnlyEmoji(message.text) && [
-                        a.rounded_xl,
-                        a.py_sm,
-                        a.px_md,
-                        {
-                          marginTop: hasEmbedAndText
-                            ? CLUSTERED_MESSAGE_GAP
-                            : 0,
-                          backgroundColor: isFromSelf
-                            ? isPending
-                              ? pendingColor
-                              : t.palette.primary_500
-                            : t.palette.contrast_50,
-                        },
-                        isFromSelf ? a.self_end : a.self_start,
-                        borderRadiusStyle,
-                      ],
-                    ]}>
-                    <RichText
-                      value={rt}
-                      style={[
-                        a.text_md,
-                        isFromSelf && {color: t.palette.white},
-                        // Emoji-only: add top leading to avoid clipping the
-                        // glyph, then pull the bottom up by the same amount so
-                        // the glyph bottom-aligns with the avatar instead of
-                        // sitting above its line-box baseline.
-                        isOnlyEmoji(message.text) && [
-                          a.leading_tight,
-                          // Visually align bottom of the emoji with the avatar
-                          !isFromSelf &&
-                            platform({
-                              android: {marginTop: a.mt_2xs.marginTop},
-                              default: {marginBottom: -a.mb_sm.marginBottom},
-                            }),
-                        ],
-                      ]}
-                      interactiveStyle={a.underline}
-                      enableTags
-                      emojiMultiplier={3}
-                      shouldProxyLinks={true}
+              <View style={[a.relative]}>
+                <ActionsWrapper
+                  isFromSelf={isFromSelf}
+                  message={message}
+                  senderProfile={profile}
+                  moderationOpts={moderationOpts}>
+                  {AppBskyEmbedRecord.isView(message.embed) && (
+                    <MessageItemEmbed
+                      embed={message.embed}
+                      isFromSelf={isFromSelf}
+                      isGroupChat={isGroupChat}
+                      squaredBottomCorner={
+                        squaredBottomCorner || hasEmbedAndText
+                      }
+                      squaredTopCorner={squaredTopCorner}
                     />
-                  </Animated.View>
-                )}
+                  )}
+                  {ChatBskyEmbedJoinLink.isView(message.embed) && (
+                    <MessageItemInviteEmbed
+                      embed={message.embed}
+                      isFromSelf={isFromSelf}
+                      isGroupChat={isGroupChat}
+                      squaredBottomCorner={
+                        squaredBottomCorner || hasEmbedAndText
+                      }
+                      squaredTopCorner={squaredTopCorner}
+                    />
+                  )}
+                  {rt.text.length > 0 && (
+                    <Animated.View
+                      accessibilityHint={l`Double tap or long press the message to add a reaction`}
+                      style={[
+                        !isFromSelf && isGroupChat && a.ml_sm,
+                        !isOnlyEmoji(message.text) && [
+                          a.rounded_xl,
+                          a.py_sm,
+                          a.px_md,
+                          a.max_w_full,
+                          {
+                            marginTop: hasEmbedAndText
+                              ? CLUSTERED_MESSAGE_GAP
+                              : 0,
+                            backgroundColor: isFromSelf
+                              ? isPending
+                                ? pendingColor
+                                : t.palette.primary_500
+                              : t.palette.contrast_50,
+                          },
+                          isFromSelf ? a.self_end : a.self_start,
+                          borderRadiusStyle,
+                        ],
+                      ]}>
+                      {replyTo && !isOnlyEmoji(message.text) ? (
+                        <ReplyQuote
+                          replyTo={replyTo}
+                          isFromSelf={isFromSelf}
+                          relatedProfiles={relatedProfiles}
+                          onPress={() => scrollToMessage(replyTo.id)}
+                        />
+                      ) : null}
+                      <RichText
+                        value={rt}
+                        style={[
+                          a.text_md,
+                          isFromSelf && {color: t.palette.white},
+                          // Emoji-only: add top leading to avoid clipping the
+                          // glyph, then pull the bottom up by the same amount so
+                          // the glyph bottom-aligns with the avatar instead of
+                          // sitting above its line-box baseline.
+                          isOnlyEmoji(message.text) && [
+                            a.leading_tight,
+                            // Visually align bottom of the emoji with the avatar
+                            !isFromSelf &&
+                              platform({
+                                android: {marginTop: a.mt_2xs.marginTop},
+                                default: {marginBottom: -a.mb_sm.marginBottom},
+                              }),
+                          ],
+                        ]}
+                        interactiveStyle={a.underline}
+                        enableTags
+                        emojiMultiplier={3}
+                        shouldProxyLinks={true}
+                      />
+                    </Animated.View>
+                  )}
+                </ActionsWrapper>
                 {appliedReactions}
-              </ActionsWrapper>
+              </View>
             )}
           </View>
         </View>
@@ -642,5 +740,183 @@ function BlockedPlaceholder({
         </Prompt.Content>
       </Prompt.Outer>
     </>
+  )
+}
+
+/**
+ * The "↪ X replied to Y" caption rendered above a reply message, in place of
+ * the display name. `X` is the person sending the reply (self -> "you"), `Y` is
+ * the original sender. Tapping it scrolls to the original (if loaded).
+ *
+ * Aligns with the sender's display name for others (left), or with the message
+ * bubble for self (right).
+ */
+function ReplyCaption({
+  replyTo,
+  isFromSelf,
+  isGroupChat,
+  replierDisplayName,
+  relatedProfiles,
+  onPress,
+}: {
+  replyTo: ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
+  isFromSelf: boolean
+  isGroupChat: boolean
+  replierDisplayName: string | null
+  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
+  onPress: () => void
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const {currentAccount} = useSession()
+
+  const originalSenderIsSelf = replyTo.sender.did === currentAccount?.did
+  const originalProfile = relatedProfiles.get(replyTo.sender.did)
+  const originalName = originalSenderIsSelf
+    ? null
+    : originalProfile
+      ? createSanitizedDisplayName(originalProfile)
+      : null
+
+  return (
+    <Button
+      label={l`Scroll to the message this is replying to`}
+      onPress={onPress}
+      style={[
+        a.w_full,
+        a.flex_row,
+        a.align_center,
+        a.gap_2xs,
+        a.pb_2xs,
+        a.pt_xs,
+        isFromSelf
+          ? [a.justify_end, a.pr_md]
+          : [
+              a.justify_start,
+              isGroupChat ? {paddingLeft: DISPLAY_NAME_INSET} : a.pl_md,
+            ],
+      ]}>
+      <ArrowCornerDownRightIcon
+        size="xs"
+        style={t.atoms.text_contrast_medium}
+      />
+      <Text
+        style={[a.text_xs, a.flex_shrink, t.atoms.text_contrast_medium]}
+        numberOfLines={1}
+        emoji>
+        {isFromSelf ? (
+          originalSenderIsSelf ? (
+            <Trans>You replied to yourself</Trans>
+          ) : originalName ? (
+            <Trans>You replied to {originalName}</Trans>
+          ) : (
+            <Trans>You replied</Trans>
+          )
+        ) : originalSenderIsSelf ? (
+          <Trans>{replierDisplayName} replied to you</Trans>
+        ) : originalName ? (
+          <Trans>
+            {replierDisplayName} replied to {originalName}
+          </Trans>
+        ) : (
+          <Trans>{replierDisplayName} replied</Trans>
+        )}
+      </Text>
+    </Button>
+  )
+}
+
+/**
+ * The nested quote of the original message, rendered at the top of a reply
+ * bubble. Tapping it scrolls to the original (if loaded).
+ */
+function ReplyQuote({
+  replyTo,
+  isFromSelf,
+  relatedProfiles,
+  onPress,
+}: {
+  replyTo: ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
+  isFromSelf: boolean
+  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
+  onPress: () => void
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  const senderProfile = useMaybeProfileShadow(
+    relatedProfiles.get(replyTo.sender.did),
+  )
+  // Hide the quoted content if we block, or are blocked by, the original
+  // sender - mirroring how the message bubble itself is hidden.
+  const isBlocked = senderProfile ? isBlockedOrBlocking(senderProfile) : false
+  const senderName =
+    senderProfile && !isBlocked
+      ? createSanitizedDisplayName(senderProfile)
+      : null
+
+  const tintColor = isFromSelf ? t.palette.white : t.atoms.text.color
+  const subtleColor = isFromSelf
+    ? t.palette.white
+    : t.atoms.text_contrast_high.color
+  const borderColor = isFromSelf
+    ? utils.alpha(t.palette.white, 0.5)
+    : t.atoms.border_contrast_high.borderColor
+
+  let text: string
+  let subtle = false
+  if (isBlocked) {
+    text = l`Blocked message hidden`
+    subtle = true
+  } else if (ChatBskyConvoDefs.isMessageView(replyTo)) {
+    text = replyTo.text
+    if (!text.trim()) {
+      subtle = true
+      if (ChatBskyEmbedJoinLink.isView(replyTo.embed)) {
+        text = l`(chat invite link)`
+      } else if (AppBskyEmbedRecord.isView(replyTo.embed)) {
+        text = l`(contains embedded content)`
+      } else {
+        text = l`No text`
+      }
+    }
+  } else {
+    text = l`Deleted message`
+    subtle = true
+  }
+
+  return (
+    <Button
+      label={
+        senderName
+          ? l`Replied-to message from ${senderName}, tap to scroll to it`
+          : l`Replied-to message, tap to scroll to it`
+      }
+      onPress={onPress}
+      style={[
+        a.mb_xs,
+        a.rounded_md,
+        a.p_sm,
+        a.flex_col,
+        a.align_start,
+        a.border,
+        {borderColor, marginHorizontal: -4},
+      ]}>
+      {senderName ? (
+        <Text style={[a.text_xs, {color: subtleColor}]} emoji numberOfLines={1}>
+          {senderName}
+        </Text>
+      ) : null}
+      <Text
+        style={[
+          a.text_sm,
+          {color: subtle ? subtleColor : tintColor},
+          subtle && a.italic,
+        ]}
+        emoji
+        numberOfLines={2}>
+        {text}
+      </Text>
+    </Button>
   )
 }

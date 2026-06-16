@@ -6,7 +6,7 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "11.1.3",
+      "version": "11.5.2",
       "onFail": "warn"
     }
   },
@@ -18,7 +18,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@atproto/api": "0.20.11",
+    "@atproto/api": "0.20.13",
     "@atproto/common": "^0.6.1",
     "@resvg/resvg-js": "^2.6.2",
     "express": "^4.19.2",

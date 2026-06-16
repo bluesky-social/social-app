@@ -31,9 +31,10 @@ export function AvatarBubbles({
   profiles: allProfiles,
   self = false,
   size = 120,
+  count,
 }: {
   animate?: boolean
-  profiles: (bsky.profile.AnyProfileView | undefined)[]
+  profiles: bsky.profile.AnyProfileView[]
   /**
    * By default, when there are more than 2 profiles, the current user is
    * filtered out (so you don't see yourself among your own group's members).
@@ -42,12 +43,21 @@ export function AvatarBubbles({
    */
   self?: boolean
   size?: number
+  /**
+   * The true number of members, used to decide how many bubbles to render when
+   * it exceeds the number of `profiles` we have on hand (e.g. an invite preview
+   * that only carries a few member profiles for a much larger group). Slots
+   * without a profile render as placeholders. Defaults to `profiles.length`.
+   */
+  count?: number
 }) {
   const {currentAccount} = useSession()
   const profiles =
     !self && allProfiles.length > 2
-      ? allProfiles.filter(p => !p || p.did !== currentAccount?.did)
+      ? allProfiles.filter(p => p.did !== currentAccount?.did)
       : allProfiles
+
+  const bubbleCount = Math.max(profiles.length, count ?? 0)
 
   const scale = size / 120
   const marginOffset = size < 120 ? -2 : 0
@@ -79,7 +89,7 @@ export function AvatarBubbles({
   }, [animate, p0, p1, p2, p3])
 
   const scales = [p0, p1, p2, p3]
-  const layouts = getLayouts(profiles.length)
+  const layouts = getLayouts(bubbleCount)
 
   return (
     <Animated.View style={[a.p_2xs, {height: size, width: size}]}>

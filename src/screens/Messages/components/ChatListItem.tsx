@@ -282,6 +282,7 @@ function BaseChatItem({
   const playHaptic = useHaptics()
   const queryClient = useQueryClient()
   const hasUnread =
+    !selected &&
     !isDeletedAccount &&
     (convo.view.unreadCount > 0 ||
       (convo.kind === 'group' &&
@@ -327,6 +328,7 @@ function BaseChatItem({
       const info = getMessageInfo({
         convo: convo.view,
         currentAccountDid: currentAccount?.did,
+        primaryProfile,
         i18n,
       })
       if (info) {
@@ -342,10 +344,12 @@ function BaseChatItem({
       const info = getReactionInfo({
         convo: convo.view,
         currentAccountDid: currentAccount?.did,
+        primaryProfile,
         i18n,
       })
       if (
         info &&
+        !info.isBlocked &&
         (!lastMessageSentAt ||
           new Date(lastMessageSentAt) < new Date(info.createdAt))
       ) {
@@ -379,7 +383,7 @@ function BaseChatItem({
       LastMessageIcon,
       lastMessageSentAt,
     }
-  }, [l, convo, currentAccount?.did, isDeletedAccount, i18n])
+  }, [l, convo, currentAccount?.did, isDeletedAccount, primaryProfile, i18n])
 
   const [showActions, setShowActions] = useState(false)
 

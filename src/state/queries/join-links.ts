@@ -77,6 +77,55 @@ export function invalidateJoinLinkPreviewsForCode(
 }
 
 /**
+ * Optimistically set whether the viewer has requested to join the link with the
+ * given code, across any cached join link preview queries. Used right after a
+ * successful join request (requested = true) or withdrawal (requested = false)
+ * so the UI ("Requested" vs "Request to join") updates immediately, without
+ * waiting on a server refetch that can lag behind the write.
+ */
+export function setJoinLinkPreviewRequestedForCode(
+  queryClient: QueryClient,
+  code: string,
+  requested: boolean,
+) {
+  queryClient.setQueriesData<ChatBskyGroupGetJoinLinkPreviews.OutputSchema>(
+    {
+      predicate: query => {
+        const [root, args] = query.queryKey as Partial<
+          StructuredQueryKey<{codes?: string[]}>
+        >
+        return (
+          root === joinLinkPreviewQueryKeyRoot &&
+          Array.isArray(args?.codes) &&
+          args.codes.includes(code)
+        )
+      },
+    },
+    old => {
+      if (!old) return old
+      return {
+        ...old,
+        joinLinkPreviews: old.joinLinkPreviews.map(preview => {
+          if (
+            ChatBskyGroupDefs.isJoinLinkPreviewView(preview) &&
+            preview.code === code
+          ) {
+            return {
+              ...preview,
+              viewer: {
+                ...preview.viewer,
+                requestedAt: requested ? new Date().toISOString() : undefined,
+              },
+            }
+          }
+          return preview
+        }),
+      }
+    },
+  )
+}
+
+/**
  * Invalidate any join link preview queries that resolved to the given convo.
  * The code isn't always known to the viewer (e.g. when they're a regular
  * member), so we match on the convoId carried by the resolved preview instead.

@@ -6,7 +6,7 @@ import {
   ChatBskyGroupWithdrawJoinRequest,
   moderateProfile,
 } from '@atproto/api'
-import {Trans, useLingui} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -20,6 +20,7 @@ import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   invalidateJoinLinkPreviewsForCode,
+  setJoinLinkPreviewRequestedForCode,
   useJoinLinkPreviewsQuery,
 } from '#/state/queries/join-links'
 import {useRequestJoinGroupChat} from '#/state/queries/messages/request-join-group-chat'
@@ -104,9 +105,14 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
   const {mutate: joinGroupChat, isPending: isJoinPending} =
     useRequestJoinGroupChat({
       onSuccess: data => {
-        if (code) void invalidateJoinLinkPreviewsForCode(queryClient, code)
         switch (data.status) {
           case 'pending':
+            // Optimistically mark the link as requested so any invite cards
+            // backed by the preview cache (e.g. the DM embed) flip to
+            // "Requested" right away, rather than waiting on a server refetch
+            // that can lag behind the write.
+            if (code)
+              setJoinLinkPreviewRequestedForCode(queryClient, code, true)
             ax.metric('groupchat:inviteLink:redeem', {})
             control.close(() => {
               Toast.show(
@@ -116,6 +122,10 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
             break
           case 'joined': {
             if (data.convo && data.convo.id) {
+              // Refetch so invite cards pick up the resolved convo and switch
+              // their action to "Open chat".
+              if (code)
+                void invalidateJoinLinkPreviewsForCode(queryClient, code)
               ax.metric('groupchat:inviteLink:redeem', {})
               control.close(() => {
                 Toast.show(l`Successfully joined the group chat!`)
@@ -172,6 +182,9 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
   const {mutate: withdrawRequest, isPending: isWithdrawPending} =
     useWithdrawJoinGroupChatRequest({
       onSuccess: () => {
+        // Optimistically clear the requested state so invite cards backed by
+        // the preview cache flip back to "Request to join" right away.
+        if (code) setJoinLinkPreviewRequestedForCode(queryClient, code, false)
         control.close(() => {
           Toast.show(l`Join request rescinded.`)
         })
@@ -249,7 +262,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
               style={[
                 a.mb_2xs,
                 a.text_center,
-                a.text_sm,
+                a.text_lg,
                 a.font_medium,
                 t.atoms.text_contrast_high,
               ]}>
@@ -271,9 +284,10 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
     )
   }
 
-  const convoId = joinLinkPreview.convo?.id
-  const isFollowing = joinLinkPreview.owner.viewer?.following ?? false
-  const hasRequested = !convoId && joinLinkPreview.viewer?.requestedAt != null
+  const convoId = joinLinkPreview.convoId
+  const isFollowing = joinLinkPreview.owner.viewer?.followedBy ?? false
+  const hasRequested =
+    !joinLinkPreview.convo && joinLinkPreview.viewer?.requestedAt != null
 
   let canJoin = true
   let ButtonIconImage = isJoinPending || isWithdrawPending ? Loader : JoinIcon
@@ -301,10 +315,8 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
     <>
       <View style={[a.w_full, a.py_lg, a.align_center]}>
         <AvatarBubbles
-          profiles={[
-            joinLinkPreview.owner,
-            ...Array(joinLinkPreview.memberCount - 1).fill(undefined),
-          ]}
+          profiles={[joinLinkPreview.owner]}
+          count={joinLinkPreview.memberCount}
           self
           size={135}
         />
@@ -326,9 +338,13 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
           </View>
           <View style={[a.flex_row, a.align_center]}>
             <Text style={[a.text_center, a.text_xs, a.leading_snug]}>
-              <Trans comment="The number of active group chat members out of the total number allowed.">
+              <Trans comment="The number of members in a group chat, in the format '{members}/{total} members'.">
                 {joinLinkPreview.memberCount}/{joinLinkPreview.memberLimit}{' '}
-                members
+                <Plural
+                  value={joinLinkPreview.memberLimit}
+                  one="member"
+                  other="members"
+                />
               </Trans>
             </Text>
             <View style={[a.flex_row, a.ml_md]}>
@@ -417,7 +433,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
           </View>
         </View>
       </View>
-      {convoId ? (
+      {joinLinkPreview.convo ? (
         <Button
           testID="openButton"
           onPress={() => {

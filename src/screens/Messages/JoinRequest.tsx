@@ -103,12 +103,8 @@ export function JoinRequest({setScreenState}: Props) {
             ChatBskyGroupDefs.isJoinLinkPreviewView(joinLinkPreview) ? (
             <Wrapper>
               <AvatarBubbles
-                profiles={[
-                  joinLinkPreview.owner,
-                  ...Array(
-                    Math.min(3, Math.max(0, joinLinkPreview.memberCount - 1)),
-                  ).fill(undefined),
-                ]}
+                profiles={[joinLinkPreview.owner]}
+                count={joinLinkPreview.memberCount}
                 size={135}
               />
               <View style={[a.gap_2xs]}>
