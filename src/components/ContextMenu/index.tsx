@@ -241,6 +241,7 @@ export function Trigger({
   contentLabel,
   style,
   onTap,
+  swipeGesture,
 }: TriggerProps) {
   const context = useContextMenuContext()
   const playHaptic = useHaptics()
@@ -364,11 +365,19 @@ export function Trigger({
   }, [open, hoverablesSV, onTouchUpMenuItem, hoveredItemSV, translationSV])
 
   // Order matters here: doubleTapGesture must come before tapGesture.
-  const composedGestures = Gesture.Exclusive(
+  const tapAndHoldGestures = Gesture.Exclusive(
     doubleTapGesture,
     tapGesture,
     pressAndHoldGesture,
   )
+
+  // An optional swipe gesture (e.g. swipe-to-reply) races against the tap/hold
+  // group: whichever activates first wins and cancels the rest, so they're
+  // mutually exclusive. Race (not Exclusive) avoids a held-but-not-yet-moved
+  // swipe Pan blocking the long-press from firing.
+  const composedGestures = swipeGesture
+    ? Gesture.Race(swipeGesture, tapAndHoldGestures)
+    : tapAndHoldGestures
 
   const measurement = context.measurement || pendingMeasurement?.measurement
 
