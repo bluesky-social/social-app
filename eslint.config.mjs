@@ -46,6 +46,9 @@ export default defineConfig(
       // Eurosky fork: the IP geolocation endpoint is a Bunny Edge Script
       // (Deno runtime + URL imports), not app code - same rationale as above.
       'geolocation-worker/**',
+      // Eurosky fork: the per-route Open Graph metadata injector is a Bunny Edge
+      // Script (Deno runtime + URL imports), not app code - same rationale as above.
+      'og-worker/**',
       'src/locale/locales/_build/**',
       'src/locale/locales/**/*.js',
       '*.e2e.ts',
