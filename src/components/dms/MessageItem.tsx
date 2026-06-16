@@ -14,6 +14,8 @@ import Animated, {
   LinearTransition,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
+  withSequence,
   withTiming,
   ZoomIn,
   ZoomOut,
@@ -46,6 +48,7 @@ import {isOnlyEmoji} from '#/alf/typography'
 import {Button} from '#/components/Button'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {useMessageDialogs} from '#/components/dms/MessageOverlays'
+import {useMessageReplies} from '#/components/dms/MessageReplies'
 import {ArrowCornerDownRight_Stroke2_Corner3_Rounded as ArrowCornerDownRightIcon} from '#/components/icons/ArrowCornerDownRight'
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -148,7 +151,8 @@ let MessageItem = ({
   const {message} = item
   const profile = useMaybeProfileShadow(relatedProfiles.get(message.sender.did))
 
-  const {openReactions, scrollToMessage} = useMessageDialogs()
+  const {openReactions} = useMessageDialogs()
+  const {scrollToMessage, highlightedMessage} = useMessageReplies()
 
   // `replyTo` comes back hydrated as the referenced message (or a deleted-
   // message tombstone). Narrow away the open-union fallback so we only render
@@ -255,6 +259,26 @@ let MessageItem = ({
   useEffect(() => {
     topRadiusSV.set(withTiming(targetTopRadius, {duration: 300}))
   }, [targetTopRadius, topRadiusSV])
+
+  // Flash the message background when it's been scrolled to (e.g. by tapping a
+  // reply that quotes it), so it's easy to spot. Keyed on the highlight `key`
+  // so re-tapping the same message re-triggers the flash.
+  const highlightSV = useSharedValue(0)
+  const isHighlighted = highlightedMessage?.id === message.id
+  const highlightKey = isHighlighted ? highlightedMessage.key : null
+  useEffect(() => {
+    if (highlightKey === null) return
+    highlightSV.set(
+      withSequence(
+        withTiming(1, {duration: 150}),
+        withDelay(400, withTiming(0, {duration: 450})),
+      ),
+    )
+  }, [highlightKey, highlightSV])
+
+  const highlightStyle = useAnimatedStyle(() => ({
+    opacity: highlightSV.get(),
+  }))
 
   const borderRadiusStyle = useAnimatedStyle(() =>
     isFromSelf
@@ -402,6 +426,14 @@ let MessageItem = ({
     web: a.mx_lg,
   })
 
+  // Negative of `messageInset` so the flash bleeds past the row's horizontal
+  // margin to the screen edges.
+  const flashBleed = platform<number>({
+    android: -a.mx_sm.marginLeft,
+    ios: -a.mx_md.marginLeft,
+    web: -a.mx_lg.marginLeft,
+  })
+
   return (
     <>
       {hasLargeGapFromPrev && <DateDivider date={message.sentAt} />}
@@ -411,6 +443,20 @@ let MessageItem = ({
           isFirstInCluster ? a.mt_md : {marginTop: CLUSTERED_MESSAGE_GAP},
           hasReactions && {paddingBottom: 26},
         ]}>
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            a.absolute,
+            {
+              top: -CLUSTERED_MESSAGE_GAP,
+              bottom: -CLUSTERED_MESSAGE_GAP,
+              left: flashBleed,
+              right: flashBleed,
+              backgroundColor: utils.alpha(t.palette.primary_500, 0.1),
+            },
+            highlightStyle,
+          ]}
+        />
         <View style={[a.relative]}>
           {showAvatar ? (
             <View style={[a.absolute, a.bottom_0, a.z_50]}>{avatar}</View>

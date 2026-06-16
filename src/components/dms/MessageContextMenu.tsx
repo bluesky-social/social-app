@@ -20,6 +20,7 @@ import {atoms as a} from '#/alf'
 import * as ContextMenu from '#/components/ContextMenu'
 import {type TriggerProps} from '#/components/ContextMenu/types'
 import {useMessageDialogs} from '#/components/dms/MessageOverlays'
+import {useMessageReplies} from '#/components/dms/MessageReplies'
 import {ArrowCornerDownRight_Stroke2_Corner2_Rounded as ReplyIcon} from '#/components/icons/ArrowCornerDownRight'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
@@ -47,7 +48,8 @@ export let MessageContextMenu = ({
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const convo = useConvoActive()
-  const {openDeleteMessage, openReportMessage, openReply} = useMessageDialogs()
+  const {openDeleteMessage, openReportMessage} = useMessageDialogs()
+  const {openReply} = useMessageReplies()
   const langPrefs = useLanguagePrefs()
   const translate = useGoogleTranslate()
 

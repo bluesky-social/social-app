@@ -7,7 +7,7 @@ import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-disp
 import {useConvoActive} from '#/state/messages/convo'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
-import {useMessageDialogs} from '#/components/dms/MessageOverlays'
+import {useMessageReplies} from '#/components/dms/MessageReplies'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
 
@@ -19,7 +19,7 @@ export function MessageInputReply() {
   const t = useTheme()
   const {t: l} = useLingui()
   const convo = useConvoActive()
-  const {replyTo, clearReply} = useMessageDialogs()
+  const {replyTo, clearReply} = useMessageReplies()
 
   if (!replyTo) {
     return null

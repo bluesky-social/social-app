@@ -29,7 +29,7 @@ import {
 } from '#/state/messages/message-drafts'
 import {atoms as a, native, platform, tokens, useTheme, utils} from '#/alf'
 import {Composer, useComposerInternalApiRef} from '#/components/Composer'
-import {useMessageDialogs} from '#/components/dms/MessageOverlays'
+import {useMessageReplies} from '#/components/dms/MessageReplies'
 import * as EmojiPicker from '#/components/EmojiPicker'
 import {GlassView} from '#/components/GlassView'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
@@ -65,7 +65,7 @@ export function MessageComposer({
   const editable = !needsEmailVerification && !loading
   const {getDraft, clearDraft} = useMessageDraft()
   const composerInternalApiRef = useComposerInternalApiRef()
-  const {replyTo, clearReply} = useMessageDialogs()
+  const {replyTo, clearReply} = useMessageReplies()
 
   const [text, setText] = useState(getDraft)
   useSaveMessageDraft(text)

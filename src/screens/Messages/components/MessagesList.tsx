@@ -63,6 +63,7 @@ import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {DateDivider} from '#/components/dms/DateDivider'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {MessageOverlays} from '#/components/dms/MessageOverlays'
+import {MessageRepliesProvider} from '#/components/dms/MessageReplies'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {SystemMessageGroup} from '#/components/dms/SystemMessageGroup'
 import {SystemMessageItem} from '#/components/dms/SystemMessageItem'
@@ -531,7 +532,8 @@ export function MessagesList({
 
   // Scroll to a message by id, if it's currently loaded in the list. Per the
   // feature scope, we don't fetch history to find unloaded messages - tapping a
-  // reply to an out-of-window message is a no-op.
+  // reply to an out-of-window message is a no-op. Returns whether the message
+  // was found, so the caller knows whether to flash it.
   const scrollToMessage = useNonReactiveCallback((messageId: string) => {
     const index = renderItems.findIndex(
       item =>
@@ -540,7 +542,7 @@ export function MessagesList({
           item.type === 'deleted-message') &&
         item.message.id === messageId,
     )
-    if (index === -1) return
+    if (index === -1) return false
 
     ax.metric('chat:message:reply:tap', {convoId: convoState.convo.view.id})
     flatListRef.current?.scrollToIndex({
@@ -548,6 +550,7 @@ export function MessagesList({
       viewPosition: 0.3,
       animated: true,
     })
+    return true
   })
 
   const renderItem = ({item, index}: {item: RenderItem; index: number}) => {
@@ -601,124 +604,127 @@ export function MessagesList({
 
   return (
     <InviteLinkDialogProvider convo={convoState.convo}>
-      <MessageOverlays scrollToMessage={scrollToMessage}>
-        <KeyboardGestureArea
-          interpolator="ios"
-          // HACKFIX: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1419
-          offset={Math.round(inputHeightJS)}
-          // slightly too buggy unfortunately, enable when possible
-          // textInputNativeID={textInputId}
-          style={[a.flex_1]}>
-          {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
-          <Animated.View style={[a.flex_1, animatedListStyle]}>
-            <ScrollProvider onScroll={onScroll}>
-              <List
-                ref={flatListRef}
-                data={renderItems}
-                renderItem={renderItem}
-                keyExtractor={keyExtractor}
-                disableFullWindowScroll={true}
-                disableVirtualization={true}
-                // The extra two items account for the header and the footer components
-                initialNumToRender={IS_NATIVE ? 32 : 62}
-                maxToRenderPerBatch={IS_WEB ? 32 : 62}
-                keyboardDismissMode="interactive"
-                keyboardShouldPersistTaps="handled"
-                maintainVisibleContentPosition={{minIndexForVisible: 0}}
-                removeClippedSubviews={false}
-                sideBorders={false}
-                onContentSizeChange={onContentSizeChange}
-                onStartReached={onStartReached}
-                onScrollToIndexFailed={onScrollToIndexFailed}
-                showsVerticalScrollIndicator={!IS_ANDROID}
-                scrollEventThrottle={100}
-                ListHeaderComponent={
-                  <>
-                    <MaybeLoader isLoading={convoState.isFetchingHistory} />
-                    {convoState.hasAllHistory ? (
-                      convoState.convo?.kind === 'group' ? (
-                        <MessagesListGroupInfoPanel convo={convoState.convo} />
-                      ) : (
-                        <MessagesListInfoPanel convo={convoState.convo} />
-                      )
-                    ) : null}
-                  </>
-                }
-                // native only (prop is not supported on web)
-                renderScrollComponent={renderScrollComponent}
-                contentContainerStyle={{
-                  paddingBottom: platform({
-                    // ios is slightly larger as the input has no top padding
-                    ios: tokens.space.lg,
-                    android: tokens.space.md,
-                    web: 0, // web uses ListFooterComponent instead for scroll reasons
-                  }),
-                }}
-                ListFooterComponent={
-                  <View
-                    style={web({height: tokens.space.md + inputHeightJS})}
-                  />
-                }
-                style={[
-                  web({
-                    scrollbarWidth: 'thin',
-                    scrollbarColor: `${t.palette.contrast_100} transparent`,
-                    scrollbarGutter: 'stable',
-                  }),
-                ]}
-                pointerEvents={!hasScrolled ? 'none' : 'auto'}
-                contentInset={{top: transparentHeaderHeight}}
-                scrollIndicatorInsets={{top: transparentHeaderHeight}}
-              />
-            </ScrollProvider>
-          </Animated.View>
-          <KeyboardStickyView
-            style={[a.absolute, a.bottom_0, a.left_0, a.right_0]}
-            onLayout={onInputLayout}
-            minimumOffset={bottomInset}
-            offset={{
-              closed: platform({
-                ios: tokens.space.lg, // hide bottom padding when closed
-                default: 0,
-              }),
-              opened: 0,
-            }}>
-            {footer ?? (
-              <Animated.View entering={FadeIn.duration(200)}>
-                <ConversationFooter
-                  convoState={convoState}
-                  hasAcceptOverride={hasAcceptOverride}>
-                  {({loading}) => (
-                    <Composer
-                      textInputId={textInputId}
-                      onSendMessage={onSendMessage}
-                      messageEmbed={messageEmbed}
-                      setEmbed={setEmbed}
-                      loading={loading}
-                      useNewComposer={ax.features.enabled(
-                        ax.features.DmsNewMessageComposerEnable,
-                      )}
+      <MessageRepliesProvider scrollToMessage={scrollToMessage}>
+        <MessageOverlays>
+          <KeyboardGestureArea
+            interpolator="ios"
+            // HACKFIX: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1419
+            offset={Math.round(inputHeightJS)}
+            // slightly too buggy unfortunately, enable when possible
+            // textInputNativeID={textInputId}
+            style={[a.flex_1]}>
+            {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
+            <Animated.View style={[a.flex_1, animatedListStyle]}>
+              <ScrollProvider onScroll={onScroll}>
+                <List
+                  ref={flatListRef}
+                  data={renderItems}
+                  renderItem={renderItem}
+                  keyExtractor={keyExtractor}
+                  disableFullWindowScroll={true}
+                  disableVirtualization={true}
+                  // The extra two items account for the header and the footer components
+                  initialNumToRender={IS_NATIVE ? 32 : 62}
+                  maxToRenderPerBatch={IS_WEB ? 32 : 62}
+                  keyboardDismissMode="interactive"
+                  keyboardShouldPersistTaps="handled"
+                  maintainVisibleContentPosition={{minIndexForVisible: 0}}
+                  removeClippedSubviews={false}
+                  sideBorders={false}
+                  onContentSizeChange={onContentSizeChange}
+                  onStartReached={onStartReached}
+                  onScrollToIndexFailed={onScrollToIndexFailed}
+                  showsVerticalScrollIndicator={!IS_ANDROID}
+                  scrollEventThrottle={100}
+                  ListHeaderComponent={
+                    <>
+                      <MaybeLoader isLoading={convoState.isFetchingHistory} />
+                      {convoState.hasAllHistory ? (
+                        convoState.convo?.kind === 'group' ? (
+                          <MessagesListGroupInfoPanel
+                            convo={convoState.convo}
+                          />
+                        ) : (
+                          <MessagesListInfoPanel convo={convoState.convo} />
+                        )
+                      ) : null}
+                    </>
+                  }
+                  // native only (prop is not supported on web)
+                  renderScrollComponent={renderScrollComponent}
+                  contentContainerStyle={{
+                    paddingBottom: platform({
+                      // ios is slightly larger as the input has no top padding
+                      ios: tokens.space.lg,
+                      android: tokens.space.md,
+                      web: 0, // web uses ListFooterComponent instead for scroll reasons
+                    }),
+                  }}
+                  ListFooterComponent={
+                    <View
+                      style={web({height: tokens.space.md + inputHeightJS})}
                     />
-                  )}
-                </ConversationFooter>
-              </Animated.View>
-            )}
-          </KeyboardStickyView>
-        </KeyboardGestureArea>
+                  }
+                  style={[
+                    web({
+                      scrollbarWidth: 'thin',
+                      scrollbarColor: `${t.palette.contrast_100} transparent`,
+                      scrollbarGutter: 'stable',
+                    }),
+                  ]}
+                  pointerEvents={!hasScrolled ? 'none' : 'auto'}
+                  contentInset={{top: transparentHeaderHeight}}
+                  scrollIndicatorInsets={{top: transparentHeaderHeight}}
+                />
+              </ScrollProvider>
+            </Animated.View>
+            <KeyboardStickyView
+              style={[a.absolute, a.bottom_0, a.left_0, a.right_0]}
+              onLayout={onInputLayout}
+              minimumOffset={bottomInset}
+              offset={{
+                closed: platform({
+                  ios: tokens.space.lg, // hide bottom padding when closed
+                  default: 0,
+                }),
+                opened: 0,
+              }}>
+              {footer ?? (
+                <Animated.View entering={FadeIn.duration(200)}>
+                  <ConversationFooter
+                    convoState={convoState}
+                    hasAcceptOverride={hasAcceptOverride}>
+                    {({loading}) => (
+                      <Composer
+                        textInputId={textInputId}
+                        onSendMessage={onSendMessage}
+                        messageEmbed={messageEmbed}
+                        setEmbed={setEmbed}
+                        loading={loading}
+                        useNewComposer={ax.features.enabled(
+                          ax.features.DmsNewMessageComposerEnable,
+                        )}
+                      />
+                    )}
+                  </ConversationFooter>
+                </Animated.View>
+              )}
+            </KeyboardStickyView>
+          </KeyboardGestureArea>
 
-        {newMessagesPill.show && (
-          <NewMessagesPill onPress={scrollToEndOnPress} />
-        )}
-      </MessageOverlays>
+          {newMessagesPill.show && (
+            <NewMessagesPill onPress={scrollToEndOnPress} />
+          )}
+        </MessageOverlays>
+      </MessageRepliesProvider>
     </InviteLinkDialogProvider>
   )
 }
 
 /**
- * Bridges the composer to reply state. It's rendered inside `MessageOverlays`
- * so it can read the staged reply target via `useMessageDialogs`, inject it
- * into the send call, then clear it. The reply preview is mounted alongside the
- * existing embed preview in the composer's children slot.
+ * Picks the new vs legacy composer and mounts the reply preview alongside the
+ * existing embed preview in the composer's children slot. The staged reply
+ * itself is read and cleared inside the composer via `useMessageReplies`.
  */
 function Composer({
   textInputId,
