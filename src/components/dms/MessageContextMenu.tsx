@@ -1,5 +1,6 @@
 import {memo, useCallback} from 'react'
 import {Platform} from 'react-native'
+import {type GestureType} from 'react-native-gesture-handler'
 import * as Clipboard from 'expo-clipboard'
 import {
   type ChatBskyConvoDefs,
@@ -38,11 +39,17 @@ export let MessageContextMenu = ({
   senderProfile,
   moderationOpts,
   children,
+  swipeGesture,
 }: {
   message: ChatBskyConvoDefs.MessageView
   senderProfile?: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts | undefined
   children: TriggerProps['children']
+  /**
+   * Native only. A swipe gesture (swipe-to-reply) composed into the trigger's
+   * gesture group so it's mutually exclusive with the tap and long-press.
+   */
+  swipeGesture?: GestureType
 }): React.ReactNode => {
   const {t: l, i18n} = useLingui()
   const ax = useAnalytics()
@@ -144,7 +151,8 @@ export let MessageContextMenu = ({
         label={l`Message options`}
         contentLabel={l`Message from @${
           sender?.handle ?? 'unknown' // should always be defined
-        }: ${message.text}`}>
+        }: ${message.text}`}
+        swipeGesture={swipeGesture}>
         {children}
       </ContextMenu.Trigger>
 
