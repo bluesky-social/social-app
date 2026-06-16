@@ -452,7 +452,7 @@ let MessageItem = ({
               bottom: -CLUSTERED_MESSAGE_GAP,
               left: flashBleed,
               right: flashBleed,
-              backgroundColor: utils.alpha(t.palette.primary_500, 0.1),
+              backgroundColor: t.palette.primary_100,
             },
             highlightStyle,
           ]}
