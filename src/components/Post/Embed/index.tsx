@@ -350,7 +350,6 @@ export function QuoteEmbed({
           style={a.text_md}
           numberOfLines={20}
           disableLinks
-          enableCode
         />
       ) : null}
       {quote.embed && (

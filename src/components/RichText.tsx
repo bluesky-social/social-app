@@ -84,8 +84,9 @@ export function RichText({
   // parts-assembly machinery entirely and render exactly as before.
   const codeActive = enableCode && hasCode(text)
   // Fenced blocks render as <View> panels only in full views. When the text is
-  // line-clamped (feed previews), keep them inline so `numberOfLines` still
-  // works - a block <View> can't be truncated by a parent <Text>.
+  // line-clamped (feed previews, quote embeds), keep them inline so
+  // `numberOfLines` still works - a block <View> can't be truncated by a parent
+  // <Text>.
   const blockMode = codeActive && !numberOfLines
 
   // Assemble parts into the final tree. With no block parts this is the single
