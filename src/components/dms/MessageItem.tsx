@@ -888,11 +888,8 @@ function ReplyQuote({
       onPress={onPress}
       style={[
         a.mb_xs,
-
-        a.gap_2xs,
         a.rounded_md,
-        a.px_sm,
-        a.py_xs,
+        a.p_sm,
         a.flex_col,
         a.align_start,
         a.border,
