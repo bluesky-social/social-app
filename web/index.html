@@ -59,14 +59,16 @@
       }
       :root {
         --text: black;
-        --background: white;
+        --bg-light: white;
+        --bg-dark: black;
+        --bg-dim: #151D28;
         --backgroundLight: #e2e7ee;
       }
       @media (prefers-color-scheme: dark) {
         :root {
           color-scheme: dark;
           --text: white;
-          --background: black;
+          --background: var(--bg-dark);
           --backgroundLight: #232e3e;
         }
       }
@@ -81,27 +83,27 @@
       html.theme--light,
       html.theme--light body,
       html.theme--light #root {
-        background-color: white;
+        background-color: var(--bg-light);
         --text: black;
-        --background: white;
+        --background: var(--bg-light);
         --backgroundLight: #DCE2EA;
       }
       html.theme--dark,
       html.theme--dark body,
       html.theme--dark #root {
         color-scheme: dark;
-        background-color: black;
+        background-color: var(--bg-dark);
         --text: white;
-        --background: black;
+        --background: var(--bg-dark);
         --backgroundLight: #232E3E;
       }
       html.theme--dim,
       html.theme--dim body,
       html.theme--dim #root {
         color-scheme: dark;
-        background-color: #151D28;
+        background-color: var(--bg-dim);
         --text: white;
-        --background: #151D28;
+        --background: var(--bg-dim);
         --backgroundLight: #2C3A4E;
       }
       #splash {
@@ -135,6 +137,29 @@
       if (theme) {
         document.documentElement.classList.add(`theme--${theme}`)
       }
+
+      // Early dynamic brand splash & body theme background color recovery from localStorage
+      try {
+        const activeTheme = localStorage.getItem('ALF_THEME') || 'light'
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        const isDark = activeTheme === 'dark' || activeTheme === 'dim' || (activeTheme === 'system' && prefersDark)
+        const brandColor = isDark 
+          ? localStorage.getItem('ACTIVE_BRAND_SPLASH_COLOR_DARK') 
+          : localStorage.getItem('ACTIVE_BRAND_SPLASH_COLOR')
+        if (brandColor) {
+          const style = document.createElement('style')
+          style.innerHTML = `#splash { background-color: ${brandColor} !important; }`
+          document.head.appendChild(style)
+        }
+
+        const bgLight = localStorage.getItem('ACTIVE_BRAND_BG_LIGHT')
+        const bgDark = localStorage.getItem('ACTIVE_BRAND_BG_DARK')
+        const bgDim = localStorage.getItem('ACTIVE_BRAND_BG_DIM')
+
+        if (bgLight) document.documentElement.style.setProperty('--bg-light', bgLight)
+        if (bgDark) document.documentElement.style.setProperty('--bg-dark', bgDark)
+        if (bgDim) document.documentElement.style.setProperty('--bg-dim', bgDim)
+      } catch (e) {}
     </script>
   </head>
 
@@ -193,6 +218,26 @@
       <!-- Bluesky SVG -->
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 57"><path fill="#006AFF" d="M13.873 3.805C21.21 9.332 29.103 20.537 32 26.55v15.882c0-.338-.13.044-.41.867-1.512 4.456-7.418 21.847-20.923 7.944-7.111-7.32-3.819-14.64 9.125-16.85-7.405 1.264-15.73-.825-18.014-9.015C1.12 23.022 0 8.51 0 6.55 0-3.268 8.579-.182 13.873 3.805ZM50.127 3.805C42.79 9.332 34.897 20.537 32 26.55v15.882c0-.338.13.044.41.867 1.512 4.456 7.418 21.847 20.923 7.944 7.111-7.32 3.819-14.64-9.125-16.85 7.405 1.264 15.73-.825 18.014-9.015C62.88 23.022 64 8.51 64 6.55c0-9.818-8.578-6.732-13.873-2.745Z"/></svg>
     </div>
+    <script>
+      try {
+        const brandLogo = localStorage.getItem('ACTIVE_BRAND_LOGO_SVG')
+        if (brandLogo) {
+          const splash = document.getElementById('splash')
+          if (splash) {
+            splash.innerHTML = brandLogo
+            const alfTheme = localStorage.getItem('ALF_THEME') || 'light'
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+            const isDark = alfTheme === 'dark' || alfTheme === 'dim' || (alfTheme === 'system' && prefersDark)
+            splash.style.color = isDark ? '#FFFFFF' : '#000000'
+            if (localStorage.getItem('ACTIVE_BRAND_SPLASH_ONLY_WORDMARK') === 'true') {
+              const style = document.createElement('style')
+              style.innerHTML = '#splash svg { width: 160px !important; }'
+              document.head.appendChild(style)
+            }
+          }
+        }
+      } catch (e) {}
+    </script>
     <div id="root">
     </div>
   </body>

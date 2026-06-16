@@ -26,4 +26,6 @@ export type BrandConfig = {
   associatedDomains: string[]
   contactsPermission: string
   appExtensions: BrandAppExtension[]
+  splashOnlyWordmark?: boolean
+  useTextJoinLabel?: boolean
 }

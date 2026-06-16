@@ -21,16 +21,17 @@ const {mark, kawaiiAssets} = brand.logo
 type Props = {
   fill?: PathProps['fill']
   style?: TextProps['style']
+  context?: 'splash' | 'tabBar' | 'appAccount'
 } & Omit<SvgProps, 'style'>
 
 export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
   const t = useTheme()
-  const {fill, ...rest} = props
+  const {fill, context, ...rest} = props
   const gradient = fill === 'sky'
   const styles = flatten(props.style)
   const _fill = gradient
     ? 'url(#sky)'
-    : fill || styles?.color || t.palette.primary_500
+    : fill || styles?.color || t.atoms.text.color
   // @ts-ignore it's fiiiiine
   const size = parseInt(rest.width || 32, 10)
 
@@ -48,12 +49,21 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
     )
   }
 
-  if ('xml' in mark) {
+  const markToRender =
+    (context &&
+      ({
+        splash: brand.logo.splashMark,
+        tabBar: brand.logo.tabBarMark,
+        appAccount: brand.logo.appAccountMark,
+      }[context] as typeof mark)) ||
+    mark
+
+  if ('xml' in markToRender) {
     return (
       <SvgXml
-        xml={mark.xml}
+        xml={markToRender.xml}
         width={size}
-        height={size * mark.ratio}
+        height={size * markToRender.ratio}
         // @ts-ignore color drives `currentColor` fills inside the xml
         color={
           typeof _fill === 'string' && _fill !== 'url(#sky)' ? _fill : undefined
@@ -67,9 +77,9 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
       fill="none"
       // @ts-ignore it's fiiiiine
       ref={ref}
-      viewBox={mark.viewBox}
+      viewBox={markToRender.viewBox}
       {...rest}
-      style={[{width: size, height: size * mark.ratio}, styles]}>
+      style={[{width: size, height: size * markToRender.ratio}, styles]}>
       {gradient && (
         <Defs>
           <LinearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
@@ -79,7 +89,7 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
         </Defs>
       )}
 
-      <Path fill={_fill} d={mark.path} />
+      <Path fill={_fill} d={markToRender.path} />
     </Svg>
   )
 })

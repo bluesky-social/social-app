@@ -21,8 +21,8 @@ const brand = {
   // Saffron primary (sampled from the icon background); splash matches the
   // logo's white-on-saffron design.
   primaryColor: '#CD7233',
-  splashColor: '#CD7233',
-  splashColorDark: '#8A4A1F',
+  splashColor: '#FFFFFF',
+  splashColorDark: '#150D0A',
   // TODO: deep-link / universal-link host
   webHost: 'TODO.mdparivaar.example',
   associatedDomains: [
@@ -38,6 +38,7 @@ const brand = {
     //   includeAppGroupEntitlement: true,
     // },
   ],
+  useTextJoinLabel: true,
 }
 
 module.exports = brand

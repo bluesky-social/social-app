@@ -44,6 +44,8 @@ const brand = {
       includeAppGroupEntitlement: true,
     },
   ],
+  splashOnlyWordmark: true,
+  useTextJoinLabel: true,
 }
 
 module.exports = brand

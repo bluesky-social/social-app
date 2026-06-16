@@ -397,7 +397,12 @@ export function Checkbox() {
         baseStyles,
         hovered ? baseHoverStyles : {},
       ]}>
-      {selected && <Checkmark width={14} fill={t.palette.white} />}
+      {selected && (
+        <Checkmark
+          width={14}
+          fill={t.atoms.bg.backgroundColor ?? t.palette.white}
+        />
+      )}
     </View>
   )
 }
@@ -500,7 +505,7 @@ export function Switch() {
         style={[
           a.rounded_full,
           {
-            backgroundColor: t.palette.white,
+            backgroundColor: t.atoms.bg.backgroundColor ?? t.palette.white,
             height: 22,
             width: 22,
           },
@@ -563,7 +568,7 @@ export function BaseRadio({
             a.absolute,
             a.rounded_full,
             {height: 12, width: 12},
-            {backgroundColor: t.palette.white},
+            {backgroundColor: t.atoms.bg.backgroundColor ?? t.palette.white},
             indicatorStyles,
           ]}
         />

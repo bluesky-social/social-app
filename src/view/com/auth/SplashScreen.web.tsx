@@ -35,7 +35,8 @@ export const SplashScreen = ({
   const t = useTheme()
   const {isTabletOrMobile: IS_WEB_MOBILE} = useWebMediaQueries()
   const [showClipOverlay, setShowClipOverlay] = useState(false)
-  const brandName = getActiveBrand().name
+  const brand = getActiveBrand()
+  const brandName = brand.name
 
   useEffect(() => {
     const getParams = new URLSearchParams(window.location.search)
@@ -89,11 +90,18 @@ export const SplashScreen = ({
           ]}>
           <ErrorBoundary>
             <View style={[a.justify_center, a.align_center]}>
-              <Logo width={kawaii ? 300 : 92} fill="sky" />
+              <Logo
+                context="splash"
+                width={kawaii ? 300 : 92}
+                fill={kawaii ? 'sky' : undefined}
+              />
 
               {!kawaii && (
                 <View style={[a.pb_sm, a.pt_5xl]}>
-                  <Logotype width={161} fill={t.atoms.text.color} />
+                  <Logotype
+                    width={161}
+                    fill={t.name === 'light' ? t.atoms.text.color : '#ffffff'}
+                  />
                 </View>
               )}
 
