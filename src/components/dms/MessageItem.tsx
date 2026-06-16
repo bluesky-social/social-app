@@ -46,7 +46,7 @@ import {isOnlyEmoji} from '#/alf/typography'
 import {Button} from '#/components/Button'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {useMessageDialogs} from '#/components/dms/MessageOverlays'
-import {ArrowCornerDownRight_Stroke2_Corner2_Rounded as ArrowCornerDownRightIcon} from '#/components/icons/ArrowCornerDownRight'
+import {ArrowCornerDownRight_Stroke2_Corner3_Rounded as ArrowCornerDownRightIcon} from '#/components/icons/ArrowCornerDownRight'
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Prompt from '#/components/Prompt'
@@ -64,28 +64,48 @@ import {
 
 const AVATAR_SIZE = 28
 const CLUSTERED_MESSAGE_GAP = 2
-const BORDER_RADIUS = 18
+const BORDER_RADIUS = 20
 const SQUARED_BORDER_RADIUS = 4
 const DISPLAY_NAME_INSET = 20
 
+function messageIsReply(
+  message:
+    | ChatBskyConvoDefs.MessageView
+    | ChatBskyConvoDefs.DeletedMessageView
+    | null,
+): boolean {
+  return (
+    ChatBskyConvoDefs.isMessageView(message) &&
+    (ChatBskyConvoDefs.isMessageView(message.replyTo) ||
+      ChatBskyConvoDefs.isDeletedMessageView(message.replyTo))
+  )
+}
+
 function isWithinClusterBoundary({
   isPending,
+  message,
   adjacentMessage,
   isFromSameSender,
-  currentSentAt,
   direction,
 }: {
   isPending: boolean
+  message: ChatBskyConvoDefs.MessageView
   adjacentMessage:
     | ChatBskyConvoDefs.MessageView
     | ChatBskyConvoDefs.DeletedMessageView
     | null
   isFromSameSender: boolean
-  currentSentAt: string
   direction: 'prev' | 'next'
 }): boolean {
+  // A reply always starts its own cluster, breaking grouping with the message
+  // above it. Looking back, that's a boundary if this message is a reply;
+  // looking forward, it's a boundary if the next message is a reply.
+  if (messageIsReply(direction === 'prev' ? message : adjacentMessage)) {
+    return true
+  }
   if (!isFromSameSender) return true
   if (ChatBskyConvoDefs.isMessageView(adjacentMessage)) {
+    const currentSentAt = message.sentAt
     const thisDate = new Date(currentSentAt)
     const adjDate = new Date(adjacentMessage.sentAt)
     const diff =
@@ -160,17 +180,17 @@ let MessageItem = ({
 
   const isFirstInCluster = isWithinClusterBoundary({
     isPending,
+    message,
     adjacentMessage: prevMessage,
     isFromSameSender: isPrevFromSameSender,
-    currentSentAt: message.sentAt,
     direction: 'prev',
   })
 
   const isLastInCluster = isWithinClusterBoundary({
     isPending,
+    message,
     adjacentMessage: nextMessage,
     isFromSameSender: isNextFromSameSender,
-    currentSentAt: message.sentAt,
     direction: 'next',
   })
 
@@ -401,7 +421,15 @@ let MessageItem = ({
               a.flex_grow,
               !isFromSelf && isGroupChat && {paddingLeft: AVATAR_SIZE},
             ]}>
-            {displayName && showDisplayName ? (
+            {replyTo ? (
+              <ReplyCaption
+                replyTo={replyTo}
+                isFromSelf={isFromSelf}
+                replierDisplayName={displayName}
+                relatedProfiles={relatedProfiles}
+                onPress={() => scrollToMessage(replyTo.id)}
+              />
+            ) : displayName && showDisplayName ? (
               <Text
                 style={[
                   a.text_xs,
@@ -413,14 +441,6 @@ let MessageItem = ({
                 emoji>
                 {displayName}
               </Text>
-            ) : null}
-            {replyTo ? (
-              <ReplyCaption
-                replyTo={replyTo}
-                isFromSelf={isFromSelf}
-                replierDisplayName={displayName}
-                relatedProfiles={relatedProfiles}
-              />
             ) : null}
             {profile && isBlockedOrBlocking(profile) && isGroupChat ? (
               <BlockedPlaceholder profile={profile} style={borderRadiusStyle} />
@@ -676,21 +696,28 @@ function BlockedPlaceholder({
 }
 
 /**
- * The "↪ X replied to Y" caption rendered above a reply message. `X` is the
- * person sending the reply (self -> "you"), `Y` is the original sender.
+ * The "↪ X replied to Y" caption rendered above a reply message, in place of
+ * the display name. `X` is the person sending the reply (self -> "you"), `Y` is
+ * the original sender. Tapping it scrolls to the original (if loaded).
+ *
+ * Aligns with the sender's display name for others (left), or with the message
+ * bubble for self (right).
  */
 function ReplyCaption({
   replyTo,
   isFromSelf,
   replierDisplayName,
   relatedProfiles,
+  onPress,
 }: {
   replyTo: ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
   isFromSelf: boolean
   replierDisplayName: string | null
   relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
+  onPress: () => void
 }) {
   const t = useTheme()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
 
   const originalSenderIsSelf = replyTo.sender.did === currentAccount?.did
@@ -702,15 +729,28 @@ function ReplyCaption({
       : null
 
   return (
-    <View style={[a.flex_row, a.align_center, a.gap_2xs, a.pb_2xs, a.pt_xs]}>
+    <Button
+      label={l`Scroll to the message this is replying to`}
+      onPress={onPress}
+      style={[
+        a.w_full,
+        a.flex_row,
+        a.align_center,
+        a.gap_2xs,
+        a.pb_2xs,
+        a.pt_xs,
+        isFromSelf
+          ? [a.justify_end, a.pr_md]
+          : [a.justify_start, {paddingLeft: DISPLAY_NAME_INSET}],
+      ]}>
       <ArrowCornerDownRightIcon
         size="xs"
         style={t.atoms.text_contrast_medium}
       />
       <Text
-        style={[a.text_xs, t.atoms.text_contrast_medium, a.flex_1]}
-        emoji
-        numberOfLines={1}>
+        style={[a.text_xs, a.flex_shrink, t.atoms.text_contrast_medium]}
+        numberOfLines={1}
+        emoji>
         {isFromSelf ? (
           originalSenderIsSelf ? (
             <Trans>You replied to yourself</Trans>
@@ -729,7 +769,7 @@ function ReplyCaption({
           <Trans>{replierDisplayName} replied</Trans>
         )}
       </Text>
-    </View>
+    </Button>
   )
 }
 
@@ -793,7 +833,7 @@ function ReplyQuote({
       onPress={onPress}
       style={[
         a.mb_xs,
-        a.w_full,
+        a.flex_1,
         a.gap_2xs,
         a.rounded_md,
         a.px_sm,
