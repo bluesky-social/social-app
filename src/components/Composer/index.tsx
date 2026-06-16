@@ -332,10 +332,10 @@ export function Composer({
             contentPaddingStyle,
             a.z_20,
             {
-              color: 'transparent',
               background: 'transparent',
             },
             web({
+              color: 'transparent',
               caretColor: textStyle.color ?? 'black',
               overscrollBehavior: 'none',
               scrollbarWidth: 'thin',
