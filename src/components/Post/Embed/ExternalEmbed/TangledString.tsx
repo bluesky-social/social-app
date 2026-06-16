@@ -6,7 +6,7 @@ import {
   View,
 } from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
-import {type AppBskyEmbedExternal} from '@atproto/api'
+import {type AppBskyEmbedExternal, type BskyAgent} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQuery} from '@tanstack/react-query'
@@ -14,6 +14,8 @@ import {useQuery} from '@tanstack/react-query'
 import {shareUrl} from '#/lib/sharing'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
+import {STALE} from '#/state/queries'
+import {useAgent} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
@@ -33,34 +35,25 @@ interface TangledStringRecord {
   createdAt: string
 }
 
-function parseTangledUrl(url: string): {user: string; rkey: string} | null {
-  try {
-    const urlp = new URL(url)
-    const [, strings, user, rkey] = urlp.pathname.split('/')
-    if (strings === 'strings' && user && rkey) {
-      return {user, rkey}
-    }
-  } catch {
-    // Invalid URL
-  }
-  return null
-}
+// Tangled string links look like https://tangled.org/strings/{user}/{rkey}
+// (also tangled.sh), where {user} is a handle or DID and {rkey} is the rkey of
+// their `sh.tangled.string` record. A DID contains colons but never a slash,
+// so the `[^/]+` group captures it intact.
+const TANGLED_STRING_RE =
+  /^https?:\/\/(?:www\.)?tangled\.(?:org|sh)\/strings\/([^/]+)\/([^/?#]+)/i
 
-async function resolveHandleToDid(handle: string): Promise<string> {
-  if (handle.startsWith('did:')) {
-    return handle
-  }
-  const res = await fetch(
-    `https://public.api.bsky.app/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(handle)}`,
-  )
-  if (!res.ok) {
-    throw new Error('Failed to resolve handle')
-  }
-  const data = await res.json()
-  return data.did
+function parseTangledUrl(url: string): {user: string; rkey: string} | null {
+  const match = TANGLED_STRING_RE.exec(url)
+  if (!match) return null
+  const [, user, rkey] = match
+  if (!user || !rkey) return null
+  return {user: decodeURIComponent(user), rkey}
 }
 
 async function getPdsUrl(did: string): Promise<string> {
+  if (did.startsWith('did:web:')) {
+    return `https://${did.slice('did:web:'.length)}`
+  }
   const res = await fetch(`https://plc.directory/${encodeURIComponent(did)}`)
   if (!res.ok) {
     throw new Error('Failed to resolve DID')
@@ -77,10 +70,13 @@ async function getPdsUrl(did: string): Promise<string> {
 }
 
 async function fetchTangledString(
+  agent: BskyAgent,
   user: string,
   rkey: string,
 ): Promise<TangledStringRecord> {
-  const did = await resolveHandleToDid(user)
+  const did = user.startsWith('did:')
+    ? user
+    : (await agent.resolveHandle({handle: user})).data.did
   const pdsUrl = await getPdsUrl(did)
 
   const res = await fetch(
@@ -109,6 +105,7 @@ export function TangledString({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const agent = useAgent()
   const {gtMobile} = useBreakpoints()
   const [footerHeight, setFooterHeight] = React.useState(97)
   const [showMore, setShowMore] = React.useState<boolean | undefined>()
@@ -118,9 +115,11 @@ export function TangledString({
   const {data, isLoading, error} = useQuery({
     queryKey: ['tangled-string', parsed?.user, parsed?.rkey],
     queryFn: () =>
-      parsed ? fetchTangledString(parsed.user, parsed.rkey) : Promise.reject(),
+      parsed
+        ? fetchTangledString(agent, parsed.user, parsed.rkey)
+        : Promise.reject(),
     enabled: !!parsed,
-    staleTime: 1000 * 60 * 5,
+    staleTime: STALE.MINUTES.FIVE,
   })
 
   const onShareExternal = React.useCallback(() => {
@@ -189,46 +188,42 @@ export function TangledString({
                     ? {maxHeight: MAX_HEIGHT}
                     : {},
                 ]}>
-                <ScrollView
-                  horizontal
+                <View
                   onLayout={onCodeLayout}
                   style={[{paddingBottom: footerHeight}]}>
-                  <View>
-                    <View
+                  <View
+                    style={[
+                      a.flex_row,
+                      a.align_center,
+                      a.gap_xs,
+                      gtMobile ? a.px_lg : a.px_md,
+                      a.pb_md,
+                    ]}>
+                    <Code
+                      size="xs"
                       style={[
-                        a.flex_row,
-                        a.align_center,
-                        a.gap_xs,
-                        gtMobile ? a.px_lg : a.px_md,
-                        a.pb_md,
-                      ]}>
-                      <Code
-                        size="xs"
-                        style={[
-                          a.transition_color,
-                          {color: t.palette.primary_500},
-                        ]}
-                      />
-                      <Text
-                        style={[
-                          a.text_sm,
-                          a.italic,
-                          t.atoms.text_contrast_low,
-                        ]}>
-                        {data.filename}
-                      </Text>
-                    </View>
-                    <RNText
-                      selectable
-                      style={[
-                        gtMobile ? a.px_lg : a.px_md,
-                        t.atoms.text,
-                        {fontFamily: 'monospace'},
-                      ]}>
-                      {data.contents.trimEnd()}
-                    </RNText>
+                        a.transition_color,
+                        {color: t.palette.primary_500},
+                      ]}
+                    />
+                    <Text
+                      style={[a.text_sm, a.italic, t.atoms.text_contrast_low]}>
+                      {data.filename}
+                    </Text>
                   </View>
-                </ScrollView>
+                  {/* Long lines wrap to the card width rather than scrolling
+                      horizontally - a nested horizontal scroll reads poorly
+                      inside the vertically-scrolling feed. */}
+                  <RNText
+                    selectable
+                    style={[
+                      gtMobile ? a.px_lg : a.px_md,
+                      t.atoms.text,
+                      {fontFamily: 'monospace'},
+                    ]}>
+                    {data.contents.trimEnd()}
+                  </RNText>
+                </View>
               </ScrollView>
 
               {showMore === false && <View style={[a.absolute, a.inset_0]} />}
@@ -354,19 +349,5 @@ export function TangledString({
 }
 
 export function isTangledStringUrl(url: string): boolean {
-  try {
-    const urlp = new URL(url)
-    if (
-      urlp.hostname === 'tangled.sh' ||
-      urlp.hostname === 'www.tangled.sh' ||
-      urlp.hostname === 'tangled.org' ||
-      urlp.hostname === 'www.tangled.org'
-    ) {
-      const [, strings, user, rkey] = urlp.pathname.split('/')
-      return strings === 'strings' && !!user && !!rkey
-    }
-  } catch {
-    // Invalid URL
-  }
-  return false
+  return parseTangledUrl(url) !== null
 }
