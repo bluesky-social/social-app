@@ -13,15 +13,18 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  pull-requests: write
-  actions: write
-  contents: read
+# Permissions are granted per-job below; anything unlisted defaults to none.
+# pull-requests: write is needed by sticky-pull-request-comment to post the
+# bundle-size and fingerprint diffs
+permissions: {}
 
 jobs:
   webpack-analyzer:
     runs-on: ubuntu-22.04
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request'}}
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
@@ -108,6 +111,9 @@ jobs:
   fingerprint-native:
     runs-on: ubuntu-22.04
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request'}}
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3

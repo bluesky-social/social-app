@@ -11,6 +11,10 @@ on:
           - testflight-android
           - production
 
+# Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
+permissions:
+  contents: read
+
 jobs:
   build:
     if: github.repository == 'bluesky-social/social-app'

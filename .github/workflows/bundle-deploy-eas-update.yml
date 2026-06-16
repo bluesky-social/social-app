@@ -18,6 +18,10 @@ on:
         description: Runtime version (in x.x.x format) that this update is for
         required: true
 
+# Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
+permissions:
+  contents: read
+
 jobs:
   bundleDeploy:
     if: github.repository == 'bluesky-social/social-app'
