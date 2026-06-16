@@ -117,7 +117,7 @@ jobs:
             {"text": "Android ${{ inputs.profile || 'testflight-android' }} build submitted to Google Play!\n```Version Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"}
 
       - name: 🔧 Setup bundletool
-        uses: amyu/setup-bundletool@v1
+        uses: amyu/setup-bundletool@cc2e1857284660bd625e43f2c8a45626f034302f # v1.1
         with:
           bundletool-version: "1.17.2"
 

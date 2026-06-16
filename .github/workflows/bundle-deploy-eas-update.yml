@@ -388,7 +388,7 @@ jobs:
           build.aab
 
       - name: 🔧 Setup bundletool
-        uses: amyu/setup-bundletool@v1
+        uses: amyu/setup-bundletool@cc2e1857284660bd625e43f2c8a45626f034302f # v1.1
         with:
           bundletool-version: "1.17.2"
 
