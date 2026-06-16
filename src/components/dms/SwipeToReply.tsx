@@ -117,9 +117,15 @@ export function SwipeToReply({
         })
         .onEnd(() => {
           'worklet'
+          // Only a clean end (finger lifted past threshold) triggers the reply.
           if (hit.get()) {
             runOnJS(onReply)()
           }
+        })
+        .onFinalize(() => {
+          'worklet'
+          // Runs on both end and cancellation, so the bubble always animates
+          // home even if the gesture is interrupted mid-swipe.
           transX.set(withTiming(0, {duration: 200}))
           hit.set(false)
         })
