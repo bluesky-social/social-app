@@ -195,7 +195,8 @@ async function main() {
       const iatPast = payload.iat <= t && payload.iat >= t - IAT_BACKDATE_S - 30
       const expFuture =
         payload.exp > t && payload.exp <= t + ASSERTION_LIFETIME_S + 30
-      const saneLifetime = payload.exp - payload.iat <= ASSERTION_LIFETIME_S + 60
+      const saneLifetime =
+        payload.exp - payload.iat <= ASSERTION_LIFETIME_S + 60
       if (iatPast && expFuture && saneLifetime) {
         ok('iat/exp re-stamped from server clock (caller values ignored)')
       } else {
@@ -208,7 +209,10 @@ async function main() {
       bad('iat/exp re-stamped from server clock', String(e))
     }
   } else {
-    bad('iat/exp re-stamped from server clock', `got ${stamp.status} ${stamp.text}`)
+    bad(
+      'iat/exp re-stamped from server clock',
+      `got ${stamp.status} ${stamp.text}`,
+    )
   }
 
   // Injected header params + extra claims must be STRIPPED by the
