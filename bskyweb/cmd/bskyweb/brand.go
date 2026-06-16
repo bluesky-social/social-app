@@ -50,6 +50,13 @@ var brands = map[string]Brand{
 		Description:   "Madhyasth Darshan community on MDParivaar.",
 		CanonicalHost: "mdparivaar.com",
 	},
+	"coseeker": {
+		ID:            "coseeker",
+		Name:          "CoSeeker",
+		SiteName:      "CoSeeker",
+		Description:   "Join the conversation on CoSeeker.",
+		CanonicalHost: "coseeker.com",
+	},
 }
 
 // hostnameToBrandID mirrors src/brand/resolve.web.ts. Add entries as
@@ -60,6 +67,8 @@ var hostnameToBrandID = map[string]string{
 	"www.k4m2a.app":      "k4m2a",
 	"mdparivaar.com":     "mdparivaar",
 	"www.mdparivaar.com": "mdparivaar",
+	"coseeker.com":       "coseeker",
+	"www.coseeker.com":   "coseeker",
 }
 
 const defaultBrandID = "bluesky"

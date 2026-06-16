@@ -14,13 +14,17 @@ the boot sequence looks like, what the constraints were), see
 # Default — bluesky (no env var needed)
 yarn web
 
-# k4m2a — monochrome black/white visual brand. Currently points at bluesky's
-# PDS / feeds for visual testing; swap services in brand.ts to make it real.
+# k4m2a — monochrome black/white visual brand. Uses the coseeker.org PDS and
+# the k4m2a community feed.
 EXPO_PUBLIC_BRAND=k4m2a yarn web
 
-# MDParivaar — saffron #CD7233 brand with the Madhyasth Darshan icon.
-# Same testing arrangement: bluesky services, mdparivaar visuals.
+# MDParivaar — saffron #CD7233 brand with the Madhyasth Darshan icon. Uses the
+# coseeker.org PDS and the mdparivaar community feed.
 EXPO_PUBLIC_BRAND=mdparivaar yarn web
+
+# CoSeeker — clone of k4m2a's monochrome visuals, served at coseeker.com. Uses
+# the coseeker.org PDS and the coseeker community feed.
+EXPO_PUBLIC_BRAND=coseeker yarn web
 ```
 
 The same env var works for native:

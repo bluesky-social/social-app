@@ -103,7 +103,7 @@ const brand: Brand = {
     {
       type: 'feed',
       value:
-        'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot',
+        'at://did:plc:ieyfjh6ystyufa3a7pi3jw5q/app.bsky.feed.generator/mdparivaar',
       pinned: true,
     },
     {
@@ -121,11 +121,10 @@ const brand: Brand = {
     gifService: 'https://gifs.bsky.app',
     videoService: 'https://video.bsky.app',
     videoServiceDid: 'did:web:video.bsky.app',
-    tos: 'https://bsky.social/about/support/tos',
-    privacy: 'https://bsky.social/about/support/privacy-policy',
-    community: 'https://bsky.social/about/support/community-guidelines',
-    communityDeprecated:
-      'https://bsky.social/about/support/community-guidelines-deprecated',
+    tos: 'https://coseeker.org/terms.html',
+    privacy: 'https://coseeker.org/privacy.html',
+    community: 'https://coseeker.org/guidelines.html',
+    communityDeprecated: 'https://coseeker.org/guidelines.html',
   },
 
   blogUrls: {

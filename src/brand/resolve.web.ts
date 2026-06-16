@@ -11,6 +11,8 @@ const HOSTNAME_TO_BRAND_ID: Record<string, string> = {
   'www.k4m2a.app': 'k4m2a',
   'mdparivaar.com': 'mdparivaar',
   'www.mdparivaar.com': 'mdparivaar',
+  'coseeker.com': 'coseeker',
+  'www.coseeker.com': 'coseeker',
 }
 
 /**

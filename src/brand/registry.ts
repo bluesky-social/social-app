@@ -1,4 +1,5 @@
 import bluesky from '../../brands/bluesky/brand'
+import coseeker from '../../brands/coseeker/brand'
 import k4m2a from '../../brands/k4m2a/brand'
 import mdparivaar from '../../brands/mdparivaar/brand'
 import {type Brand} from './types'
@@ -9,6 +10,7 @@ import {type Brand} from './types'
  */
 export const brands: Record<string, Brand> = {
   bluesky,
+  coseeker,
   k4m2a,
   mdparivaar,
 }
