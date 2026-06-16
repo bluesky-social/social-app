@@ -1,5 +1,6 @@
 import {
   AppBskyEmbedExternal,
+  AppBskyEmbedGallery,
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
@@ -41,6 +42,11 @@ export function Embed({
     // Case 1: Image
     if (AppBskyEmbedImages.isView(content)) {
       return <ImageEmbed content={content} labelInfo={labelInfo} />
+    }
+
+    // Case 1b: Gallery (Photos v2)
+    if (AppBskyEmbedGallery.isView(content)) {
+      return <GalleryEmbed content={content} labelInfo={labelInfo} />
     }
 
     // Case 2: External link
@@ -230,6 +236,8 @@ function Info({children}: {children: ComponentChildren}) {
   )
 }
 
+type GridImage = {thumb: string; alt: string}
+
 function ImageEmbed({
   content,
   labelInfo,
@@ -240,20 +248,45 @@ function ImageEmbed({
   if (labelInfo) {
     return <Info>{labelInfo}</Info>
   }
+  return (
+    <ImageGrid
+      images={content.images.map(i => ({thumb: i.thumb, alt: i.alt}))}
+    />
+  )
+}
 
-  switch (content.images.length) {
+function GalleryEmbed({
+  content,
+  labelInfo,
+}: {
+  content: AppBskyEmbedGallery.View
+  labelInfo?: string
+}) {
+  if (labelInfo) {
+    return <Info>{labelInfo}</Info>
+  }
+  const images = content.items
+    .filter(AppBskyEmbedGallery.isViewImage)
+    .map(i => ({thumb: i.thumbnail, alt: i.alt}))
+  return <ImageGrid images={images} />
+}
+
+function ImageGrid({images}: {images: GridImage[]}) {
+  switch (images.length) {
+    case 0:
+      return null
     case 1:
       return (
         <img
-          src={content.images[0].thumb}
-          alt={content.images[0].alt}
+          src={images[0].thumb}
+          alt={images[0].alt}
           className="w-full rounded-xl overflow-hidden object-cover h-auto max-h-[1000px]"
         />
       )
     case 2:
       return (
         <div className="flex gap-1 rounded-xl overflow-hidden w-full aspect-[2/1]">
-          {content.images.map((image, i) => (
+          {images.map((image, i) => (
             <img
               key={i}
               src={image.thumb}
@@ -268,13 +301,13 @@ function ImageEmbed({
         <div className="flex gap-1 rounded-xl overflow-hidden w-full aspect-[2/1]">
           <div className="flex-1 aspect-square">
             <img
-              src={content.images[0].thumb}
-              alt={content.images[0].alt}
+              src={images[0].thumb}
+              alt={images[0].alt}
               className="w-full h-full object-cover rounded-sm"
             />
           </div>
           <div className="flex flex-col gap-1 flex-1">
-            {content.images.slice(1).map((image, i) => (
+            {images.slice(1).map((image, i) => (
               <img
                 key={i}
                 src={image.thumb}
@@ -285,21 +318,36 @@ function ImageEmbed({
           </div>
         </div>
       )
-    case 4:
+    default: {
+      const remaining = images.length - 4
       return (
         <div className="grid grid-cols-2 gap-1 rounded-xl overflow-hidden">
-          {content.images.map((image, i) => (
-            <img
-              key={i}
-              src={image.thumb}
-              alt={image.alt}
-              className="aspect-[3/2] w-full object-cover rounded-sm"
-            />
-          ))}
+          {images.slice(0, 4).map((image, i) => {
+            const isOverflowCell = i === 3 && remaining > 0
+            return (
+              <div
+                key={i}
+                className="relative aspect-[3/2] rounded-sm overflow-hidden">
+                <img
+                  src={image.thumb}
+                  alt={image.alt}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                {isOverflowCell && (
+                  <div
+                    aria-label={`+${remaining} more image${remaining === 1 ? '' : 's'}, view post to see all`}
+                    className="absolute inset-0 flex items-center justify-center bg-black/50">
+                    <span className="text-white text-2xl font-semibold">
+                      +{remaining}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )
+          })}
         </div>
       )
-    default:
-      return null
+    }
   }
 }
 

@@ -40,7 +40,7 @@ import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_WEB} from '#/env'
+import {IS_ANDROID, IS_WEB} from '#/env'
 
 export * from './const'
 export * from './maybeApplyGalleryOffsetStyles'
@@ -55,6 +55,13 @@ interface GalleryProps {
   onPressIn?: (index: number) => void
   viewContext?: PostEmbedViewContext
   isWithinQuote?: boolean
+  // Post context for the in-feed carousel swipe metric. Omit for non-post
+  // contexts (no event will be emitted).
+  metricsPostContext?: {
+    postUri: string
+    postAuthorDid: string
+    feedDescriptor?: string
+  }
 }
 
 const Context = createContext<{
@@ -99,6 +106,7 @@ export function Gallery({
   onPressIn,
   viewContext,
   isWithinQuote,
+  metricsPostContext,
 }: GalleryProps) {
   const {t: l} = useLingui()
   const ax = useAnalytics()
@@ -169,13 +177,17 @@ export function Gallery({
   const emitSwipeMetric = useMemo(
     () =>
       debounce((fromIndex: number, toIndex: number) => {
-        ax.metric('post:gallery:swipe', {
+        if (!metricsPostContext) return
+        ax.metric('post:photoEmbed:carouselSwipe', {
           fromImage: fromIndex + 1, // convert to 1-based index for easier analysis
           toImage: toIndex + 1, // convert to 1-based index for easier analysis
           totalImages: images.length,
+          postUri: metricsPostContext.postUri,
+          postAuthorDid: metricsPostContext.postAuthorDid,
+          feedDescriptor: metricsPostContext.feedDescriptor,
         })
       }, 200),
-    [ax, images.length],
+    [ax, images.length, metricsPostContext],
   )
 
   const setCurrentIndex = (index: number) => {
@@ -264,6 +276,9 @@ export function Gallery({
           aria-label={l`Image gallery, ${images.length} images`}
           horizontal
           pagingEnabled={false}
+          // Disable Android's stretch overscroll, which can leave the carousel
+          // settled just off the left edge instead of aligned to x = 0
+          overScrollMode={IS_ANDROID ? 'never' : 'auto'}
           showsHorizontalScrollIndicator={false}
           directionalLockEnabled
           nestedScrollEnabled
@@ -274,10 +289,6 @@ export function Gallery({
           renderItem={({item, index}) => {
             const openLightboxAtIndex = onPress
               ? () => {
-                  ax.metric('post:gallery:openLightbox', {
-                    fromImage: index + 1, // convert to 1-based index for easier analysis
-                    totalImages: images.length,
-                  })
                   const refs: AnimatedRef<any>[] = []
                   const dims: (Dimensions | null)[] = []
                   for (let i = 0; i < images.length; i++) {
@@ -340,6 +351,11 @@ export function Gallery({
               marginLeft: -insetLeft,
               width,
             },
+            // Prevent horizontal trackpad/wheel swipes from triggering the
+            // browser's back/forward overscroll-navigation gesture. Handles
+            // Chrome and Firefox; Safari is handled via the wheel listener in
+            // usePointerHandlers.web.ts since it ignores overscroll-behavior.
+            web({overscrollBehaviorX: 'contain'}),
           ]}
           contentContainerStyle={{
             gap: ITEM_GAP,
@@ -482,6 +498,39 @@ function GalleryImage({
             }}
             useAppleWebpCodec
           />
+
+          {!hideBadges && imageCount > 1 ? (
+            <View
+              accessible={false}
+              pointerEvents="none"
+              style={[
+                a.absolute,
+                a.justify_center,
+                a.rounded_sm,
+                a.p_xs,
+                t.atoms.bg_contrast_25,
+                {
+                  top: a.p_xs.padding,
+                  right: a.p_xs.padding,
+                  opacity: 0.8,
+                },
+                largeAltBadge && {
+                  padding: 6,
+                },
+              ]}>
+              <Text
+                style={[
+                  a.font_bold,
+                  largeAltBadge ? a.text_xs : {fontSize: 8},
+                ]}>
+                <Trans
+                  context="gallery-badge-image-position-numbers"
+                  comment="Badge showing the current image position out of the total number of images in a gallery.">
+                  {index + 1}/{imageCount}
+                </Trans>
+              </Text>
+            </View>
+          ) : null}
 
           {(hasAlt || isCropped) && !hideBadges ? (
             <View

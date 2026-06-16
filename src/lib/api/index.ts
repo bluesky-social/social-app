@@ -1,13 +1,15 @@
 import {
   type $Typed,
   type AppBskyEmbedExternal,
+  type AppBskyEmbedGallery,
   type AppBskyEmbedImages,
   type AppBskyEmbedRecord,
   type AppBskyEmbedRecordWithMedia,
   type AppBskyEmbedVideo,
   AppBskyFeedPost,
+  type AtpAgent,
   BlobRef,
-  type BskyAgent,
+  ChatBskyGroupDefs,
   type ComAtprotoLabelDefs,
   type ComAtprotoRepoApplyWrites,
   type ComAtprotoRepoStrongRef,
@@ -21,6 +23,7 @@ import {sha256} from 'js-sha256'
 import {CID} from 'multiformats/cid'
 import * as Hasher from 'multiformats/hashes/hasher'
 
+import {IMAGE_SIZE_CONFIG_POSTS} from '#/lib/constants'
 import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
@@ -52,7 +55,7 @@ interface PostOpts {
 }
 
 export async function post(
-  agent: BskyAgent,
+  agent: AtpAgent,
   queryClient: QueryClient,
   opts: PostOpts,
 ) {
@@ -177,7 +180,8 @@ export async function post(
       writes: writes,
       validate: true,
     })
-  } catch (e: any) {
+  } catch (err) {
+    const e = err as Error
     logger.error(`Failed to create post`, {
       safeMessage: e.message,
     })
@@ -193,7 +197,7 @@ export async function post(
   return {uris}
 }
 
-async function resolveRT(agent: BskyAgent, richtext: RichText) {
+async function resolveRT(agent: AtpAgent, richtext: RichText) {
   const trimmedText = richtext.text
     // Trim leading whitespace-only lines (but don't break ASCII art).
     .replace(/^(\s*\n)+/, '')
@@ -213,7 +217,7 @@ export class ReplyDeletedError extends Error {
   }
 }
 
-async function resolveReply(agent: BskyAgent, replyTo: string) {
+async function resolveReply(agent: AtpAgent, replyTo: string) {
   const {data} = await agent.app.bsky.feed.getPosts({
     uris: [replyTo],
   })
@@ -246,12 +250,13 @@ async function resolveReply(agent: BskyAgent, replyTo: string) {
 }
 
 async function resolveEmbed(
-  agent: BskyAgent,
+  agent: AtpAgent,
   queryClient: QueryClient,
   draft: PostDraft,
   onStateChange: ((state: string) => void) | undefined,
 ): Promise<
   | $Typed<AppBskyEmbedImages.Main>
+  | $Typed<AppBskyEmbedGallery.Main>
   | $Typed<AppBskyEmbedVideo.Main>
   | $Typed<AppBskyEmbedExternal.Main>
   | $Typed<AppBskyEmbedRecord.Main>
@@ -304,13 +309,14 @@ async function resolveEmbed(
 }
 
 async function resolveMedia(
-  agent: BskyAgent,
+  agent: AtpAgent,
   queryClient: QueryClient,
   embedDraft: EmbedDraft,
   onStateChange: ((state: string) => void) | undefined,
 ): Promise<
   | $Typed<AppBskyEmbedExternal.Main>
   | $Typed<AppBskyEmbedImages.Main>
+  | $Typed<AppBskyEmbedGallery.Main>
   | $Typed<AppBskyEmbedVideo.Main>
   | undefined
 > {
@@ -323,7 +329,10 @@ async function resolveMedia(
     const images: AppBskyEmbedImages.Image[] = await Promise.all(
       imagesDraft.map(async (image, i) => {
         logger.debug(`Compressing image #${i}`)
-        const {path, width, height, mime} = await compressImage(image)
+        const {path, width, height, mime} = await compressImage(
+          image,
+          IMAGE_SIZE_CONFIG_POSTS,
+        )
         logger.debug(`Uploading image #${i}`)
         const res = await uploadBlob(agent, path, mime)
         return {
@@ -336,6 +345,34 @@ async function resolveMedia(
     return {
       $type: 'app.bsky.embed.images',
       images,
+    }
+  }
+  if (embedDraft.media?.type === 'gallery') {
+    const imagesDraft = embedDraft.media.images
+    logger.debug(`Uploading images`, {
+      count: imagesDraft.length,
+    })
+    onStateChange?.(t`Uploading images...`)
+    const items: $Typed<AppBskyEmbedGallery.Image>[] = await Promise.all(
+      imagesDraft.map(async (image, i) => {
+        logger.debug(`Compressing image #${i}`)
+        const {path, width, height, mime} = await compressImage(
+          image,
+          IMAGE_SIZE_CONFIG_POSTS,
+        )
+        logger.debug(`Uploading image #${i}`)
+        const res = await uploadBlob(agent, path, mime)
+        return {
+          $type: 'app.bsky.embed.gallery#image' as const,
+          image: res.data.blob,
+          alt: image.alt,
+          aspectRatio: {width, height},
+        }
+      }),
+    )
+    return {
+      $type: 'app.bsky.embed.gallery',
+      items,
     }
   }
   if (
@@ -427,12 +464,25 @@ async function resolveMedia(
         },
       }
     }
+    if (
+      resolvedLink.type === 'chat-invite' &&
+      ChatBskyGroupDefs.isJoinLinkPreviewView(resolvedLink.view)
+    ) {
+      return {
+        $type: 'app.bsky.embed.external',
+        external: {
+          uri: resolvedLink.uri,
+          title: resolvedLink.view.name,
+          description: `${resolvedLink.view.memberCount}/${resolvedLink.view.memberLimit}`,
+        },
+      }
+    }
   }
   return undefined
 }
 
 async function resolveRecord(
-  agent: BskyAgent,
+  agent: AtpAgent,
   queryClient: QueryClient,
   uri: string,
 ): Promise<ComAtprotoRepoStrongRef.Main> {
@@ -470,6 +520,7 @@ async function computeCid(record: AppBskyFeedPost.Record): Promise<string> {
 }
 
 // Returns a transformed version of the object for use in DAG-CBOR.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function prepareForHashing(v: any): any {
   // IMPORTANT: BlobRef#ipld() returns the correct object we need for hashing,
   // the API client will convert this for you but we're hashing in the client,
@@ -492,9 +543,10 @@ function prepareForHashing(v: any): any {
 
   // Walk through plain objects
   if (isPlainObject(v)) {
-    const obj: any = {}
+    const obj: Record<string, unknown> = {}
     let pure = true
     for (const key in v) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       let value = v[key]
       // `value` is undefined
       if (value === undefined) {
@@ -513,6 +565,7 @@ function prepareForHashing(v: any): any {
   return v
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isPlainObject(v: any): boolean {
   if (typeof v !== 'object' || v === null) {
     return false

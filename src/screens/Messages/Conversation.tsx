@@ -1,7 +1,7 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {type LayoutChangeEvent, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {moderateProfile} from '@atproto/api'
+import {ChatBskyConvoDefs, moderateProfile} from '@atproto/api'
 import {
   ScrollEdgeEffect,
   ScrollEdgeEffectProvider,
@@ -29,12 +29,12 @@ import {ConvoStatus} from '#/state/messages/convo/types'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useConvoQuery} from '#/state/queries/messages/conversation'
+import {useMarkJoinRequestsRead} from '#/state/queries/messages/mark-join-request-read'
 import {useSession} from '#/state/session'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, web} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
-import * as Dialog from '#/components/Dialog'
 import {
   EmailDialogScreenID,
   useEmailDialogControl,
@@ -44,13 +44,11 @@ import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
 import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {Error} from '#/components/Error'
 import * as Layout from '#/components/Layout'
-import * as Prompt from '#/components/Prompt'
-import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
-import {IS_INTERNAL, IS_LIQUID_GLASS} from '#/env'
+import {IS_LIQUID_GLASS} from '#/env'
 import {ChatDisabled} from './components/ChatDisabled'
 import {ChatEnded} from './components/ChatEnded'
 import {ChatLocked} from './components/ChatLocked'
+import {RequestStatus} from './components/RequestStatus'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -135,7 +133,6 @@ function Inner({convoId}: {convoId: string}) {
           title={l`Something went wrong`}
           message={l`We couldn't load this conversation`}
           onRetry={() => convoState.error.retry()}
-          sideBorders={false}
         />
       </>
     )
@@ -179,6 +176,12 @@ function InnerReady({
     useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>()
   const {needsEmailVerification} = useEmail()
   const emailDialogControl = useEmailDialogControl()
+
+  const unreadRequestCount =
+    convo?.kind === 'group' && ChatBskyConvoDefs.isGroupConvo(convo.view.kind)
+      ? (convo.view.kind.unreadJoinRequestCount ?? 0)
+      : 0
+  const {mutate: markJoinRequestsRead} = useMarkJoinRequestsRead(convo?.view.id)
 
   /**
    * Must be non-reactive, otherwise the update to open the global dialog will
@@ -259,13 +262,31 @@ function InnerReady({
       {IS_LIQUID_GLASS ? (
         <ScrollEdgeEffect
           edge="top"
+          effect="soft"
           style={[a.absolute, a.w_full, a.z_10, {paddingTop: topInset}]}
           onLayout={onHeaderLayout}>
           {header}
         </ScrollEdgeEffect>
       ) : (
-        header
+        <View onLayout={onHeaderLayout}>{header}</View>
       )}
+
+      {isActive && convo?.kind === 'group' && unreadRequestCount > 0 ? (
+        <RequestStatus
+          top={headerHeight}
+          count={unreadRequestCount}
+          onDismiss={() => {
+            markJoinRequestsRead()
+          }}
+          onPress={() => {
+            markJoinRequestsRead()
+            navigation.navigate('MessagesJoinRequests', {
+              conversation: convo.view.id,
+            })
+          }}
+        />
+      ) : null}
+
       {isActive && (
         <MessagesList
           hasScrolled={hasScrolled}
@@ -275,79 +296,6 @@ function InnerReady({
           footer={footer}
         />
       )}
-
-      {!IS_INTERNAL && convo?.kind === 'group' && <GroupChatGate />}
     </>
-  )
-}
-
-function GroupChatGate() {
-  const {t: l} = useLingui()
-  const ax = useAnalytics()
-  const navigation = useNavigation<NavigationProp>()
-
-  const groupChatGateDialogControl = Dialog.useDialogControl()
-
-  const isGatedGroupChat = !ax.features.enabled(ax.features.GroupChatsEnable)
-
-  useEffect(() => {
-    if (isGatedGroupChat) {
-      setTimeout(() => groupChatGateDialogControl.open())
-    }
-  }, [isGatedGroupChat, groupChatGateDialogControl])
-
-  const hasBeenReleased = ax.features.enabled(
-    ax.features.GroupChatsHasBeenReleased,
-  )
-
-  const isAlreadyGoingBackRef = useRef(false)
-  const onGoBack = () => {
-    if (isAlreadyGoingBackRef.current) return
-    isAlreadyGoingBackRef.current = true
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.replace('Messages', {animation: 'pop'})
-    }
-  }
-
-  return (
-    <Prompt.Outer
-      control={groupChatGateDialogControl}
-      onClose={onGoBack}
-      nativeOptions={{preventDismiss: true, preventExpansion: true}}
-      testID="groupChatGateDialog">
-      <Prompt.Content>
-        <View style={[a.w_full, a.align_center, a.py_3xl]}>
-          <Text style={{fontSize: 72}} emoji>
-            🐴
-          </Text>
-        </View>
-        <Prompt.TitleText style={[a.text_center]}>
-          {hasBeenReleased ? (
-            <Trans>Group chats are now available</Trans>
-          ) : (
-            <Trans>Group chats are not yet available</Trans>
-          )}
-        </Prompt.TitleText>
-        <Prompt.DescriptionText style={[a.text_center]}>
-          {hasBeenReleased ? (
-            <Trans>Update your app to the latest version to join in!</Trans>
-          ) : (
-            <Trans>
-              Hold your horses! This feature isn't available to you yet. Please
-              check back later.
-            </Trans>
-          )}
-        </Prompt.DescriptionText>
-      </Prompt.Content>
-      <Prompt.Actions>
-        <Prompt.Action
-          cta={l`Go Back`}
-          onPress={onGoBack}
-          color="primary_subtle"
-        />
-      </Prompt.Actions>
-    </Prompt.Outer>
   )
 }

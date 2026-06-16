@@ -6,6 +6,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {
   useCameraPermission,
   usePhotoLibraryPermission,
@@ -62,6 +63,7 @@ export function UserBanner({
         await openCamera({
           aspect: [3, 1],
         }),
+        IMAGE_SIZE_CONFIG_2K_1MB,
       ),
     )
   }, [onSelectNewBanner, requestCameraAccessIfNeeded])
@@ -83,6 +85,7 @@ export function UserBanner({
               imageUri: items[0].path,
               aspectRatio: 3 / 1,
             }),
+            IMAGE_SIZE_CONFIG_2K_1MB,
           ),
         )
       } else {
@@ -108,7 +111,7 @@ export function UserBanner({
 
   const onChangeEditImage = useCallback(
     async (image: ComposerImage) => {
-      const compressed = await compressImage(image)
+      const compressed = await compressImage(image, IMAGE_SIZE_CONFIG_2K_1MB)
       onSelectNewBanner?.(compressed)
     },
     [onSelectNewBanner],

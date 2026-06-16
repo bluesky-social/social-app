@@ -1,12 +1,12 @@
 import {
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
-  type BskyAgent,
+  type AtpAgent,
   type ComAtprotoRepoStrongRef,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 
-import {POST_IMG_MAX} from '#/lib/constants'
+import {DM_SERVICE_HEADERS, IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
 import {resolveShortLink} from '#/lib/link-meta/resolve-short-link'
 import {downloadAndResize} from '#/lib/media/manip'
@@ -16,6 +16,7 @@ import {
 } from '#/lib/strings/starter-pack'
 import {
   convertBskyAppUrlIfNeeded,
+  getChatInviteCodeFromUrl,
   isBskyCustomFeedUrl,
   isBskyListUrl,
   isBskyPostUrl,
@@ -26,6 +27,7 @@ import {
 } from '#/lib/strings/url-helpers'
 import {type ComposerImage} from '#/state/gallery'
 import {createComposerImage} from '#/state/gallery'
+import {type ChatInvitePreview} from '#/state/queries/join-links'
 import {type Gif} from '#/features/gifPicker/types'
 import {createGIFDescription} from '../gif-alt-text'
 
@@ -71,12 +73,20 @@ type ResolvedStarterPackRecord = {
   view: AppBskyGraphDefs.StarterPackView
 }
 
+type ResolvedChatInvite = {
+  type: 'chat-invite'
+  uri: string
+  code: string
+  view?: ChatInvitePreview
+}
+
 export type ResolvedLink =
   | ResolvedExternalLink
   | ResolvedPostRecord
   | ResolvedFeedRecord
   | ResolvedListRecord
   | ResolvedStarterPackRecord
+  | ResolvedChatInvite
 
 export class EmbeddingDisabledError extends Error {
   constructor() {
@@ -85,7 +95,7 @@ export class EmbeddingDisabledError extends Error {
 }
 
 export async function resolveLink(
-  agent: BskyAgent,
+  agent: AtpAgent,
   uri: string,
 ): Promise<ResolvedLink> {
   if (isShortLink(uri)) {
@@ -141,6 +151,19 @@ export async function resolveLink(
       view: res.data.list,
     }
   }
+  const chatInviteCode = getChatInviteCodeFromUrl(uri)
+  if (chatInviteCode) {
+    const res = await agent.chat.bsky.group.getJoinLinkPreviews(
+      {codes: [chatInviteCode]},
+      {headers: DM_SERVICE_HEADERS},
+    )
+    return {
+      type: 'chat-invite',
+      uri,
+      code: chatInviteCode,
+      view: res.data.joinLinkPreviews[0],
+    }
+  }
   if (isBskyStartUrl(uri) || isBskyStarterPackUrl(uri)) {
     const parsed = parseStarterPackUri(uri)
     if (!parsed) {
@@ -194,7 +217,7 @@ export async function resolveLink(
 }
 
 export async function resolveGif(
-  agent: BskyAgent,
+  agent: AtpAgent,
   gif: Gif,
 ): Promise<ResolvedExternalLink> {
   const gifUrl = gif.media_formats.gif.url
@@ -236,7 +259,7 @@ function getFileSlug(url: string | undefined): string | undefined {
 }
 
 async function resolveExternal(
-  agent: BskyAgent,
+  agent: AtpAgent,
   uri: string,
 ): Promise<ResolvedExternalLink> {
   const result = await getLinkMeta(agent, uri)
@@ -261,10 +284,7 @@ export async function imageToThumb(
   try {
     const img = await downloadAndResize({
       uri: imageUri,
-      width: POST_IMG_MAX.width,
-      height: POST_IMG_MAX.height,
-      mode: 'contain',
-      maxSize: POST_IMG_MAX.size,
+      ...IMAGE_SIZE_CONFIG_2K_1MB,
       timeout: 15e3,
     })
     if (img) {

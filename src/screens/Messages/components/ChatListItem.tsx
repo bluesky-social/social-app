@@ -25,6 +25,7 @@ import {
   precacheConvoQuery,
   useMarkAsReadMutation,
 } from '#/state/queries/messages/conversation'
+import {JOIN_REQUESTS_THRESHOLD} from '#/state/queries/messages/list-join-requests'
 import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
@@ -39,11 +40,11 @@ import {getReactionInfo} from '#/components/dms/getReactionInfo'
 import {getSystemMessageInfo} from '#/components/dms/getSystemMessageInfo'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
-import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
+import {Bell2Off_Filled_Corner0_Rounded as BellStrokeIcon} from '#/components/icons/Bell2'
 import {type Props as SVGIconProps} from '#/components/icons/common'
-import {Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen} from '#/components/icons/EnveopeOpen'
+import {Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpenIcon} from '#/components/icons/EnveopeOpen'
 import {Lock_Stroke2_Corner2_Rounded as LockIcon} from '#/components/icons/Lock'
-import {Trash_Stroke2_Corner0_Rounded} from '#/components/icons/Trash'
+import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -121,7 +122,7 @@ function DirectChatItem({
 }) {
   const {t: l} = useLingui()
   const profile = useProfileShadow(convo.primaryMember)
-  const {isWithinSplitView} = useIsWithinSplitView()
+  const {isWithinLeftPanel} = useIsWithinSplitView()
 
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
@@ -139,7 +140,7 @@ function DirectChatItem({
       avatar={
         <PreviewableUserAvatar
           profile={profile}
-          size={isWithinSplitView ? 48 : 52}
+          size={isWithinLeftPanel ? 48 : 52}
           moderation={moderation.ui('avatar')}
         />
       }
@@ -160,7 +161,7 @@ function DirectChatItem({
       isBlockedAccount={moderation.blocked}
       showProfileBadges
       postAlerts={
-        isWithinSplitView ? null : (
+        isWithinLeftPanel ? null : (
           <PostAlerts
             modui={moderation.ui('contentList')}
             size="sm"
@@ -188,7 +189,7 @@ function GroupChatItem({
 }) {
   const {t: l} = useLingui()
   const groupOwner = useMaybeProfileShadow(convo.primaryMember)
-  const {isWithinSplitView} = useIsWithinSplitView()
+  const {isWithinLeftPanel} = useIsWithinSplitView()
 
   const moderation = useMemo(
     () =>
@@ -204,8 +205,7 @@ function GroupChatItem({
       avatar={
         <AvatarBubbles
           profiles={convo.members}
-          size={isWithinSplitView ? 48 : 52}
-          moderationOpts={moderationOpts}
+          size={isWithinLeftPanel ? 48 : 52}
         />
       }
       title={chatName}
@@ -214,15 +214,15 @@ function GroupChatItem({
       primaryProfileModeration={moderation}
       isBlockedAccount={false}
       isDeletedAccount={false}
-      subtitle={
-        convo.details.joinRequestCount
-          ? convo.details.joinRequestCount > 20
+      requestInfo={
+        convo.details.unreadJoinRequestCount
+          ? convo.details.unreadJoinRequestCount > JOIN_REQUESTS_THRESHOLD
             ? l({
-                message: '20+ new join requests',
+                message: `${JOIN_REQUESTS_THRESHOLD}+ new join requests`,
                 context:
                   'Displayed when there are more than 20 requests to join a group chat',
               })
-            : plural(convo.details.joinRequestCount, {
+            : plural(convo.details.unreadJoinRequestCount, {
                 one: '# new join request',
                 other: '# new join requests',
               })
@@ -241,6 +241,7 @@ function BaseChatItem({
   avatar,
   title,
   subtitle,
+  requestInfo,
   accessibilityHint,
   isDeletedAccount,
   isBlockedAccount,
@@ -256,6 +257,7 @@ function BaseChatItem({
   avatar: React.ReactNode
   title: string
   subtitle?: string
+  requestInfo?: string
   accessibilityHint: string
   isDeletedAccount: boolean
   isBlockedAccount: boolean
@@ -275,13 +277,16 @@ function BaseChatItem({
   const leaveConvoControl = useDialogControl()
   const {mutate: markAsRead} = useMarkAsReadMutation()
   const {gtMobile} = useBreakpoints()
-  const {isWithinSplitView} = useIsWithinSplitView()
+  const {isWithinLeftPanel} = useIsWithinSplitView()
 
   const playHaptic = useHaptics()
   const queryClient = useQueryClient()
   const hasUnread =
-    convo.view.unreadCount > 0 &&
+    !selected &&
     !isDeletedAccount &&
+    (convo.view.unreadCount > 0 ||
+      (convo.kind === 'group' &&
+        (convo.details.unreadJoinRequestCount ?? 0) > 0)) &&
     (convo.kind !== 'group' || convo.details.lockStatus === 'unlocked')
 
   const blockInfo = useMemo(() => {
@@ -302,19 +307,12 @@ function BaseChatItem({
     isDeletedAccount ||
     (convo.kind === 'group' && convo.details.lockStatus !== 'unlocked')
 
-  const {
-    lastMessage,
-    LastMessageIcon,
-    lastMessageSentAt,
-    latestReportableMessage,
-  } = useMemo(() => {
+  const {lastMessage, LastMessageIcon, lastMessageSentAt} = useMemo(() => {
     let lastMessage = l`No messages yet`
 
     let LastMessageIcon: React.ComponentType<SVGIconProps> | null = null
 
     let lastMessageSentAt: string | null = null
-
-    let latestReportableMessage: ChatBskyConvoDefs.MessageView | undefined
 
     // Deleted message
     if (ChatBskyConvoDefs.isDeletedMessageView(convo.view.lastMessage)) {
@@ -330,12 +328,14 @@ function BaseChatItem({
       const info = getMessageInfo({
         convo: convo.view,
         currentAccountDid: currentAccount?.did,
+        primaryProfile,
         i18n,
       })
       if (info) {
-        lastMessage = info.message ?? lastMessage
+        lastMessage = info.isBlockedMessage
+          ? l`This message is hidden`
+          : (info.message ?? lastMessage)
         lastMessageSentAt = info.sentAt
-        latestReportableMessage = info.reportableMessage
       }
     }
 
@@ -344,10 +344,12 @@ function BaseChatItem({
       const info = getReactionInfo({
         convo: convo.view,
         currentAccountDid: currentAccount?.did,
+        primaryProfile,
         i18n,
       })
       if (
         info &&
+        !info.isBlocked &&
         (!lastMessageSentAt ||
           new Date(lastMessageSentAt) < new Date(info.createdAt))
       ) {
@@ -380,9 +382,8 @@ function BaseChatItem({
       lastMessage,
       LastMessageIcon,
       lastMessageSentAt,
-      latestReportableMessage,
     }
-  }, [l, convo, currentAccount?.did, isDeletedAccount, i18n])
+  }, [l, convo, currentAccount?.did, isDeletedAccount, primaryProfile, i18n])
 
   const [showActions, setShowActions] = useState(false)
 
@@ -425,7 +426,7 @@ function BaseChatItem({
   const markReadAction = {
     threshold: 120,
     color: t.palette.primary_500,
-    icon: EnvelopeOpen,
+    icon: EnvelopeOpenIcon,
     action: () => {
       markAsRead({
         convoId: convo.view.id,
@@ -436,7 +437,7 @@ function BaseChatItem({
   const deleteAction = {
     threshold: 225,
     color: t.palette.negative_500,
-    icon: Trash_Stroke2_Corner0_Rounded,
+    icon: TrashIcon,
     action: () => {
       leaveConvoControl.open()
     },
@@ -453,7 +454,7 @@ function BaseChatItem({
         leftFirst: deleteAction,
       }
 
-  const avatarSize = isWithinSplitView ? 48 : 52
+  const avatarSize = isWithinLeftPanel ? 48 : 52
 
   return (
     <ChatListItemPortal.Provider>
@@ -464,18 +465,22 @@ function BaseChatItem({
           // @ts-expect-error web only
           onFocus={onFocus}
           onBlur={onMouseLeave}
-          style={[a.relative, t.atoms.bg, isWithinSplitView && a.mx_sm]}>
+          style={[a.relative, t.atoms.bg, isWithinLeftPanel && a.mx_sm]}>
           <View
             style={[
               a.z_10,
               a.absolute,
               {top: tokens.space.md, left: tokens.space.lg},
+              isGroupConvo && a.pointer_events_none,
             ]}>
             {avatar}
           </View>
 
           <Link
             to={`/messages/${convo.view.id}`}
+            // In split view, this list stays mounted alongside the open convo,
+            // so push would stack duplicate routes on repeated clicks.
+            action={isWithinLeftPanel ? 'navigate' : 'push'}
             label={title}
             accessibilityHint={accessibilityHint}
             accessibilityActions={
@@ -507,7 +512,7 @@ function BaseChatItem({
                   a.px_lg,
                   a.py_md,
                   a.gap_md,
-                  isWithinSplitView && a.rounded_sm,
+                  isWithinLeftPanel && [a.rounded_sm, a.mt_2xs],
                   {
                     backgroundColor: hasUnread
                       ? t.palette.primary_25
@@ -572,7 +577,7 @@ function BaseChatItem({
                           web({whiteSpace: 'preserve nowrap'}),
                         ]}>
                         {' '}
-                        <BellStroke
+                        <BellStrokeIcon
                           size="xs"
                           style={[t.atoms.text_contrast_medium]}
                         />
@@ -607,6 +612,19 @@ function BaseChatItem({
 
                   {postAlerts}
 
+                  {requestInfo && (
+                    <Text
+                      numberOfLines={1}
+                      style={[
+                        hasUnread ? a.font_medium : t.atoms.text_contrast_high,
+                        isDimStyle && t.atoms.text_contrast_medium,
+                        a.pb_2xs,
+                      ]}
+                      emoji>
+                      {requestInfo}
+                    </Text>
+                  )}
+
                   <View style={[a.flex_row, a.align_center]}>
                     {LastMessageIcon && (
                       <LastMessageIcon
@@ -623,8 +641,6 @@ function BaseChatItem({
                       emoji
                       numberOfLines={2}
                       style={[
-                        a.text_sm,
-                        a.leading_snug,
                         hasUnread ? a.font_medium : t.atoms.text_contrast_high,
                         isDimStyle && t.atoms.text_contrast_medium,
                       ]}>
@@ -643,7 +659,7 @@ function BaseChatItem({
           {/* TODO: Allow showing menu for groups where the owner has left! */}
           {showMenu && primaryProfile && (
             <ConvoMenu
-              convo={convo.view}
+              convo={convo}
               profile={primaryProfile}
               control={menuControl}
               currentScreen="list"
@@ -661,7 +677,6 @@ function BaseChatItem({
                     !gtMobile || showActions || menuControl.isOpen ? 1 : 0,
                 },
               ]}
-              latestReportableMessage={latestReportableMessage}
             />
           )}
 

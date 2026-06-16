@@ -72,6 +72,60 @@ func withImages(thumbs ...string) func(*appbsky.FeedDefs_PostView) {
 	}
 }
 
+// withGallery adds an app.bsky.embed.gallery view with image items.
+func withGallery(thumbs ...string) func(*appbsky.FeedDefs_PostView) {
+	return func(pv *appbsky.FeedDefs_PostView) {
+		var items []*appbsky.EmbedGallery_View_Items_Elem
+		for _, t := range thumbs {
+			items = append(items, &appbsky.EmbedGallery_View_Items_Elem{
+				EmbedGallery_ViewImage: &appbsky.EmbedGallery_ViewImage{
+					Thumbnail: t,
+					Fullsize:  t + "_full",
+				},
+			})
+		}
+		pv.Embed = &appbsky.FeedDefs_PostView_Embed{
+			EmbedGallery_View: &appbsky.EmbedGallery_View{Items: items},
+		}
+	}
+}
+
+// withRecordWithMediaGallery adds a record-with-media embed whose media slot
+// is an app.bsky.embed.gallery view.
+func withRecordWithMediaGallery(qHandle, qDid, qRkey string, thumbs ...string) func(*appbsky.FeedDefs_PostView) {
+	return func(pv *appbsky.FeedDefs_PostView) {
+		var items []*appbsky.EmbedGallery_View_Items_Elem
+		for _, t := range thumbs {
+			items = append(items, &appbsky.EmbedGallery_View_Items_Elem{
+				EmbedGallery_ViewImage: &appbsky.EmbedGallery_ViewImage{
+					Thumbnail: t,
+					Fullsize:  t + "_full",
+				},
+			})
+		}
+		pv.Embed = &appbsky.FeedDefs_PostView_Embed{
+			EmbedRecordWithMedia_View: &appbsky.EmbedRecordWithMedia_View{
+				Record: &appbsky.EmbedRecord_View{
+					Record: &appbsky.EmbedRecord_View_Record{
+						EmbedRecord_ViewRecord: &appbsky.EmbedRecord_ViewRecord{
+							Uri: "at://" + qDid + "/app.bsky.feed.post/" + qRkey,
+							Cid: "bafy-quoted",
+							Author: &appbsky.ActorDefs_ProfileViewBasic{
+								Did:    qDid,
+								Handle: qHandle,
+							},
+							IndexedAt: "2024-01-01T00:00:00Z",
+						},
+					},
+				},
+				Media: &appbsky.EmbedRecordWithMedia_View_Media{
+					EmbedGallery_View: &appbsky.EmbedGallery_View{Items: items},
+				},
+			},
+		}
+	}
+}
+
 // withVideo adds a video embed with a thumbnail.
 func withVideo(thumb string) func(*appbsky.FeedDefs_PostView) {
 	return func(pv *appbsky.FeedDefs_PostView) {
@@ -299,6 +353,88 @@ func TestBuildPostJSONLD_WithImages(t *testing.T) {
 	}
 }
 
+func TestBuildPostJSONLD_WithGallery(t *testing.T) {
+	thumb1 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g1@jpeg"
+	thumb2 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g2@jpeg"
+	thumb3 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g3@jpeg"
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "gallery", withGallery(thumb1, thumb2, thumb3))
+	out, err := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", hideEmbedLabels, hideReplyLabels)
+	if err != nil {
+		t.Fatal(err)
+	}
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	imgs, ok := main["image"].([]any)
+	if !ok {
+		t.Fatalf("image should be array, got %T", main["image"])
+	}
+	if len(imgs) != 3 {
+		t.Errorf("expected 3 gallery images, got %d", len(imgs))
+	}
+	if imgs[0] != thumb1 || imgs[1] != thumb2 || imgs[2] != thumb3 {
+		t.Errorf("gallery image[] order wrong: %v", imgs)
+	}
+	if main["thumbnailUrl"] != thumb1 {
+		t.Errorf("thumbnailUrl should equal image[0] (Google byte-equality requirement), got %v", main["thumbnailUrl"])
+	}
+}
+
+// Gallery in the media slot of a record-with-media embed should still
+// produce og:image / JSON-LD image[]. Quote-post URL still emits
+// alongside via isBasedOn.
+func TestBuildPostJSONLD_GalleryInRecordWithMedia(t *testing.T) {
+	thumb := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g@jpeg"
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "quote+gallery",
+		withRecordWithMediaGallery("bob.example.com", "did:plc:bob", "xyz", thumb))
+	out, err := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	if err != nil {
+		t.Fatal(err)
+	}
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	imgs, ok := main["image"].([]any)
+	if !ok || len(imgs) != 1 || imgs[0] != thumb {
+		t.Errorf("expected single gallery thumb in image[], got %v", main["image"])
+	}
+	if main["thumbnailUrl"] != thumb {
+		t.Errorf("thumbnailUrl wrong: %v", main["thumbnailUrl"])
+	}
+	if main["isBasedOn"] != "https://bsky.app/profile/bob.example.com/post/xyz" {
+		t.Errorf("isBasedOn should still emit for record-with-media gallery, got %v", main["isBasedOn"])
+	}
+}
+
+// Forward-compat: nil items, unknown-variant union elements, and empty
+// Thumbnail strings must be skipped, not panic or leak as <meta
+// property="og:image" content="">. Unknown variants are dropped silently
+// so older deploys keep working when new gallery item types ship.
+func TestExtractPostMedia_GallerySkipsUnknownItems(t *testing.T) {
+	thumb := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g@jpeg"
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "gallery")
+	pv.Embed = &appbsky.FeedDefs_PostView_Embed{
+		EmbedGallery_View: &appbsky.EmbedGallery_View{
+			Items: []*appbsky.EmbedGallery_View_Items_Elem{
+				nil,
+				{}, // empty union, no variant set
+				{EmbedGallery_ViewImage: &appbsky.EmbedGallery_ViewImage{Thumbnail: ""}}, // empty Thumbnail
+				{EmbedGallery_ViewImage: &appbsky.EmbedGallery_ViewImage{Thumbnail: thumb}},
+			},
+		},
+	}
+	got := extractPostMedia(pv, false)
+	if len(got) != 1 || got[0] != thumb {
+		t.Errorf("expected single thumb, got %v", got)
+	}
+
+	// All-nil / all-unknown gallery should produce no thumbs (not [""]).
+	pv.Embed = &appbsky.FeedDefs_PostView_Embed{
+		EmbedGallery_View: &appbsky.EmbedGallery_View{
+			Items: []*appbsky.EmbedGallery_View_Items_Elem{nil, {}},
+		},
+	}
+	if got := extractPostMedia(pv, false); got != nil {
+		t.Errorf("expected nil for empty/unknown-only gallery, got %v", got)
+	}
+}
+
 func TestBuildPostJSONLD_WithVideo(t *testing.T) {
 	thumb := "https://cdn.bsky.app/img/video_thumbnail/plain/did:plc:alice/v@jpeg"
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "watch", withVideo(thumb))
@@ -358,6 +494,25 @@ func TestBuildPostJSONLD_HiddenEmbed(t *testing.T) {
 	}
 	if _, present := main["thumbnailUrl"]; present {
 		t.Errorf("hidden-embed post should not emit thumbnailUrl")
+	}
+}
+
+// Symmetric guard for the gallery extraction path. Functionally redundant
+// with the early-return at the top of extractPostMedia, but exists so the
+// hide-embed contract is asserted directly against the gallery branch -
+// catches anyone who later moves the embedHidden check inside an
+// embed-shape branch.
+func TestBuildPostJSONLD_HiddenEmbed_Gallery(t *testing.T) {
+	thumb := "https://cdn.bsky.app/img/g@jpeg"
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "nsfw",
+		withGallery(thumb), withSelfLabel("porn"))
+	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	if _, present := main["image"]; present {
+		t.Errorf("hidden-embed gallery post should not emit image")
+	}
+	if _, present := main["thumbnailUrl"]; present {
+		t.Errorf("hidden-embed gallery post should not emit thumbnailUrl")
 	}
 }
 
@@ -1047,5 +1202,341 @@ func TestBuildProfileJSONLD_HasPartAuthorReviewedBy(t *testing.T) {
 	}
 	if rb[0].(map[string]any)["identifier"] != "did:plc:verifier1" {
 		t.Errorf("verifier identifier wrong: %v", rb[0])
+	}
+}
+
+// videoEmbedOpts configures withVideoFull. Zero values mean "not set".
+type videoEmbedOpts struct {
+	thumbnail   string
+	playlist    string
+	alt         string
+	width       int64
+	height      int64
+	hasAspect   bool
+	recordMedia bool // nest under EmbedRecordWithMedia_View.Media
+}
+
+// withVideoFull installs a fully-specified video embed for VideoObject tests.
+func withVideoFull(o videoEmbedOpts) func(*appbsky.FeedDefs_PostView) {
+	return func(pv *appbsky.FeedDefs_PostView) {
+		v := &appbsky.EmbedVideo_View{Playlist: o.playlist}
+		if o.thumbnail != "" {
+			v.Thumbnail = strPtr(o.thumbnail)
+		}
+		if o.alt != "" {
+			v.Alt = strPtr(o.alt)
+		}
+		if o.hasAspect {
+			v.AspectRatio = &appbsky.EmbedDefs_AspectRatio{Width: o.width, Height: o.height}
+		}
+		if o.recordMedia {
+			pv.Embed = &appbsky.FeedDefs_PostView_Embed{
+				EmbedRecordWithMedia_View: &appbsky.EmbedRecordWithMedia_View{
+					Record: &appbsky.EmbedRecord_View{
+						Record: &appbsky.EmbedRecord_View_Record{
+							EmbedRecord_ViewRecord: &appbsky.EmbedRecord_ViewRecord{
+								Uri: "at://did:plc:quoted/app.bsky.feed.post/q",
+								Cid: "bafy-quoted",
+								Author: &appbsky.ActorDefs_ProfileViewBasic{
+									Did:    "did:plc:quoted",
+									Handle: "quoted.bsky.social",
+								},
+								IndexedAt: "2024-01-01T00:00:00Z",
+							},
+						},
+					},
+					Media: &appbsky.EmbedRecordWithMedia_View_Media{
+						EmbedVideo_View: v,
+					},
+				},
+			}
+		} else {
+			pv.Embed = &appbsky.FeedDefs_PostView_Embed{
+				EmbedVideo_View: v,
+			}
+		}
+	}
+}
+
+func TestBuildPostJSONLD_WithVideoObject(t *testing.T) {
+	thumb := "https://cdn.bsky.app/img/video_thumbnail/plain/did:plc:alice/v@jpeg"
+	playlist := "https://video.bsky.app/v/did:plc:alice/v/playlist.m3u8"
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "watch this",
+		withVideoFull(videoEmbedOpts{
+			thumbnail: thumb, playlist: playlist, alt: "A trip to the park",
+			hasAspect: true, width: 16, height: 9,
+		}))
+	canonical := "https://bsky.app/profile/alice.bsky.social/post/abc123"
+	out, err := buildPostJSONLD(pv, nil, canonical, hideEmbedLabels, hideReplyLabels)
+	if err != nil {
+		t.Fatal(err)
+	}
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	video, ok := main["video"].(map[string]any)
+	if !ok {
+		t.Fatalf("video missing from mainEntity")
+	}
+	if video["@type"] != "VideoObject" {
+		t.Errorf("@type = %v, want VideoObject", video["@type"])
+	}
+	if video["name"] != "A trip to the park" {
+		t.Errorf("name = %v, want alt text", video["name"])
+	}
+	if video["description"] != "watch this" {
+		t.Errorf("description = %v, want post text", video["description"])
+	}
+	if video["thumbnailUrl"] != thumb {
+		t.Errorf("thumbnailUrl = %v, want %v", video["thumbnailUrl"], thumb)
+	}
+	if video["uploadDate"] != pv.IndexedAt {
+		t.Errorf("uploadDate = %v, want %v", video["uploadDate"], pv.IndexedAt)
+	}
+	if video["contentUrl"] != playlist {
+		t.Errorf("contentUrl = %v, want %v", video["contentUrl"], playlist)
+	}
+	if video["embedUrl"] != canonical {
+		t.Errorf("embedUrl = %v, want %v", video["embedUrl"], canonical)
+	}
+	if w, _ := video["width"].(float64); int64(w) != 16 {
+		t.Errorf("width = %v, want 16", video["width"])
+	}
+	if h, _ := video["height"].(float64); int64(h) != 9 {
+		t.Errorf("height = %v, want 9", video["height"])
+	}
+	// post thumbnailUrl should equal the video thumb (byte-equal og:image).
+	if main["thumbnailUrl"] != thumb {
+		t.Errorf("post thumbnailUrl = %v, want %v", main["thumbnailUrl"], thumb)
+	}
+}
+
+func TestBuildPostJSONLD_VideoNameFallback(t *testing.T) {
+	// No alt text -> "Video by @<handle>".
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "no alt here",
+		withVideoFull(videoEmbedOpts{
+			playlist: "https://video.bsky.app/p.m3u8",
+		}))
+	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	video, ok := main["video"].(map[string]any)
+	if !ok {
+		t.Fatalf("video missing")
+	}
+	if video["name"] != "Video by @alice.bsky.social" {
+		t.Errorf("name fallback = %v", video["name"])
+	}
+}
+
+func TestBuildPostJSONLD_VideoNameFallbackHandleInvalid(t *testing.T) {
+	// handle.invalid + no alt -> generic fallback.
+	pv := makePostView("handle.invalid", "did:plc:alice", "abc123", "x",
+		withVideoFull(videoEmbedOpts{
+			playlist: "https://video.bsky.app/p.m3u8",
+		}))
+	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	video := main["video"].(map[string]any)
+	if video["name"] != "Video on Bluesky" {
+		t.Errorf("name fallback = %v, want generic", video["name"])
+	}
+}
+
+func TestBuildPostJSONLD_VideoDescriptionFallback(t *testing.T) {
+	// Empty post text -> description falls back to name so Google's video
+	// rich-result requirement (description present) is satisfied.
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "",
+		withVideoFull(videoEmbedOpts{
+			playlist: "https://video.bsky.app/p.m3u8", alt: "scenic clip",
+		}))
+	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	video := main["video"].(map[string]any)
+	if video["description"] != "scenic clip" {
+		t.Errorf("description fallback = %v, want name", video["description"])
+	}
+}
+
+func TestBuildPostJSONLD_VideoNoAspectRatio(t *testing.T) {
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "x",
+		withVideoFull(videoEmbedOpts{
+			playlist: "https://video.bsky.app/p.m3u8", alt: "alt",
+		}))
+	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	video := main["video"].(map[string]any)
+	if _, present := video["width"]; present {
+		t.Errorf("width should be omitted when AspectRatio missing")
+	}
+	if _, present := video["height"]; present {
+		t.Errorf("height should be omitted when AspectRatio missing")
+	}
+}
+
+func TestBuildPostJSONLD_VideoMissingPlaylist(t *testing.T) {
+	// No playlist -> VideoObject suppressed; image[]/thumbnailUrl still set
+	// from the video thumb (existing behavior).
+	thumb := "https://cdn.bsky.app/img/video_thumbnail/plain/did:plc:alice/v@jpeg"
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "x",
+		withVideo(thumb))
+	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	if _, present := main["video"]; present {
+		t.Errorf("video without playlist should not produce VideoObject")
+	}
+	if main["thumbnailUrl"] != thumb {
+		t.Errorf("thumbnailUrl should still be set from video thumb, got %v", main["thumbnailUrl"])
+	}
+}
+
+func TestBuildPostJSONLD_VideoHiddenEmbed(t *testing.T) {
+	// Self-labeled hide drops the video, parallel to the image-hide test.
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "nsfw",
+		withVideoFull(videoEmbedOpts{
+			thumbnail: "https://cdn.bsky.app/img/x@jpeg",
+			playlist:  "https://video.bsky.app/p.m3u8",
+			alt:       "should be dropped",
+		}),
+		withSelfLabel("porn"))
+	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	if _, present := main["video"]; present {
+		t.Errorf("hidden-embed post should not emit video")
+	}
+}
+
+func TestBuildPostJSONLD_VideoInRecordWithMedia(t *testing.T) {
+	thumb := "https://cdn.bsky.app/img/video_thumbnail/plain/did:plc:alice/v@jpeg"
+	playlist := "https://video.bsky.app/p.m3u8"
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "quote+video",
+		withVideoFull(videoEmbedOpts{
+			thumbnail: thumb, playlist: playlist, alt: "alt", recordMedia: true,
+			hasAspect: true, width: 4, height: 3,
+		}))
+	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	video, ok := main["video"].(map[string]any)
+	if !ok {
+		t.Fatalf("video missing on record-with-media post")
+	}
+	if video["contentUrl"] != playlist {
+		t.Errorf("contentUrl = %v, want %v", video["contentUrl"], playlist)
+	}
+	if video["thumbnailUrl"] != thumb {
+		t.Errorf("thumbnailUrl = %v, want %v", video["thumbnailUrl"], thumb)
+	}
+	// quote-post still surfaces via isBasedOn alongside the video.
+	if main["isBasedOn"] != "https://bsky.app/profile/quoted.bsky.social/post/q" {
+		t.Errorf("isBasedOn = %v", main["isBasedOn"])
+	}
+}
+
+func TestBuildPostJSONLD_VideoOnReply(t *testing.T) {
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "main")
+	*pv.ReplyCount = 1
+	thumb := "https://cdn.bsky.app/img/video_thumbnail/plain/did:plc:bob/v@jpeg"
+	playlist := "https://video.bsky.app/bob.m3u8"
+	reply := makePostView("bob.bsky.social", "did:plc:bob", "rep1", "watch",
+		withVideoFull(videoEmbedOpts{
+			thumbnail: thumb, playlist: playlist, alt: "bob's clip",
+		}))
+	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	c := main["comment"].([]any)[0].(map[string]any)
+	video, ok := c["video"].(map[string]any)
+	if !ok {
+		t.Fatalf("reply video missing")
+	}
+	if video["@type"] != "VideoObject" {
+		t.Errorf("reply video @type = %v", video["@type"])
+	}
+	if video["name"] != "bob's clip" {
+		t.Errorf("reply video name = %v", video["name"])
+	}
+	if video["contentUrl"] != playlist {
+		t.Errorf("reply video contentUrl = %v", video["contentUrl"])
+	}
+	if video["embedUrl"] != "https://bsky.app/profile/bob.bsky.social/post/rep1" {
+		t.Errorf("reply video embedUrl = %v", video["embedUrl"])
+	}
+}
+
+func TestBuildPostJSONLD_NoVideoNoField(t *testing.T) {
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "no embed")
+	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	if _, present := main["video"]; present {
+		t.Errorf("post without video should not include video field")
+	}
+}
+
+func TestBuildProfileJSONLD_HasPartVideo(t *testing.T) {
+	pv := newProfileViewDetailed()
+	playlist := "https://video.bsky.app/p.m3u8"
+	post := makePostView("alice.bsky.social", "did:plc:alice", "rp1", "see",
+		withVideoFull(videoEmbedOpts{
+			playlist: playlist, alt: "alt",
+		}))
+	out, _ := buildProfileJSONLD(pv, []*appbsky.FeedDefs_PostView{post}, hideEmbedLabels, hideReplyLabels)
+	page := unmarshalLD(t, out)
+	hp := page["hasPart"].([]any)
+	if len(hp) != 1 {
+		t.Fatalf("expected 1 hasPart entry, got %d", len(hp))
+	}
+	video, ok := hp[0].(map[string]any)["video"].(map[string]any)
+	if !ok {
+		t.Fatalf("hasPart entry should carry video, got %v", hp[0])
+	}
+	if video["contentUrl"] != playlist {
+		t.Errorf("hasPart video contentUrl = %v", video["contentUrl"])
+	}
+	if video["embedUrl"] != "https://bsky.app/profile/alice.bsky.social/post/rp1" {
+		t.Errorf("hasPart video embedUrl = %v", video["embedUrl"])
+	}
+}
+
+// handle.invalid authors must still produce a non-empty embedUrl on the
+// VideoObject. The handle-form URL is unusable, so we fall back to the
+// DID-form URL derived from the AT-URI authority. Without this fallback,
+// omitempty drops embedUrl and Google's video indexer loses the canonical
+// page reference.
+func TestBuildPostJSONLD_VideoHandleInvalidEmbedURL(t *testing.T) {
+	playlist := "https://video.bsky.app/p.m3u8"
+	pv := makePostView("handle.invalid", "did:plc:alice", "abc123", "watch",
+		withVideoFull(videoEmbedOpts{
+			playlist: playlist, alt: "scenic clip",
+		}))
+	canonical := "https://bsky.app/profile/did:plc:alice/post/abc123"
+	out, _ := buildPostJSONLD(pv, nil, canonical, hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	video, ok := main["video"].(map[string]any)
+	if !ok {
+		t.Fatalf("video missing on handle.invalid post")
+	}
+	if video["embedUrl"] != canonical {
+		t.Errorf("embedUrl = %v, want %v", video["embedUrl"], canonical)
+	}
+	if video["contentUrl"] != playlist {
+		t.Errorf("contentUrl = %v, want %v", video["contentUrl"], playlist)
+	}
+}
+
+// Same fallback applies to videos on replies whose author is handle.invalid.
+func TestBuildPostJSONLD_VideoHandleInvalidEmbedURL_Reply(t *testing.T) {
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "main")
+	*pv.ReplyCount = 1
+	playlist := "https://video.bsky.app/bob.m3u8"
+	reply := makePostView("handle.invalid", "did:plc:bob", "rep1", "watch",
+		withVideoFull(videoEmbedOpts{
+			playlist: playlist, alt: "bob's clip",
+		}))
+	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	c := main["comment"].([]any)[0].(map[string]any)
+	video, ok := c["video"].(map[string]any)
+	if !ok {
+		t.Fatalf("reply video missing")
+	}
+	want := "https://bsky.app/profile/did:plc:bob/post/rep1"
+	if video["embedUrl"] != want {
+		t.Errorf("reply video embedUrl = %v, want %v", video["embedUrl"], want)
 	}
 }
