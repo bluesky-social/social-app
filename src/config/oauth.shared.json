@@ -1,8 +1,10 @@
 {
   "_comment": "Single source of truth for OAuth primitives. Imported by BOTH src/config/oauth.ts (the browser TS client) and scripts/gen-oauth-metadata.js (the build-time static metadata emitter), so client_id / scope / redirect_uris cannot drift. Change the domain/scope here only. defaultBaseUrl is overridable at build time via EXPO_PUBLIC_OAUTH_BASE_URL.",
+  "_scopeComment": "`scope` is what NEW authorization requests ask for - keep it minimal. `declaredScope` is the (superset) scope the client METADATA advertises; it must be a superset of `scope` AND of any scope older cached web bundles still request. We declare more than we request so stale bundles (built when prod requested account:email/status) keep authorizing instead of being rejected with `invalid_scope` against the current metadata.",
   "defaultBaseUrl": "https://mu.social",
   "clientName": "mu",
   "scope": "atproto transition:generic transition:email transition:chat.bsky identity:handle",
+  "declaredScope": "atproto transition:generic transition:email transition:chat.bsky identity:handle account:email?action=manage account:status?action=manage",
   "handleResolver": "https://bsky.social",
   "signupPdsHost": "https://eurosky.social"
 }

@@ -143,6 +143,34 @@ function extractPostImages(post: any): string[] {
   return []
 }
 
+// extractPostVideo mirrors bskyweb extractVideoMeta
+// (../../bskyweb/cmd/bskyweb/embedmeta.go): the video embed's HLS playlist
+// becomes og:video, so unfurlers that support video (Discord, etc.) play it
+// inline instead of just showing the thumbnail. The thumbnail still flows
+// through extractPostImages as og:image. Same video slots as the images path:
+// a top-level video embed or the media slot of a record-with-media embed.
+function extractPostVideo(
+  post: any,
+): {url: string; type: string; width?: number; height?: number} | null {
+  const e = post?.embed
+  if (!e) return null
+  const t: string = e.$type || ''
+  let v: any = null
+  if (t.includes('app.bsky.embed.video')) {
+    v = e
+  } else if (t.includes('app.bsky.embed.recordWithMedia')) {
+    const m = e.media
+    if ((m?.$type || '').includes('app.bsky.embed.video')) v = m
+  }
+  if (!v?.playlist) return null
+  return {
+    url: v.playlist,
+    type: 'application/vnd.apple.mpegurl',
+    width: v.aspectRatio?.width,
+    height: v.aspectRatio?.height,
+  }
+}
+
 function ogTitle(displayName: string | undefined, handle: string): string {
   const dn = (displayName || '').trim()
   return dn ? `${dn} (@${handle})` : `@${handle}`
@@ -200,6 +228,15 @@ async function buildPostTags(
     tags.push(meta('property', 'og:image', thumb))
     tags.push(meta('name', 'twitter:image', thumb))
     tags.push(meta('name', 'twitter:card', 'summary'))
+  }
+  const video = extractPostVideo(post)
+  if (video) {
+    tags.push(meta('property', 'og:video', video.url))
+    tags.push(meta('property', 'og:video:type', video.type))
+    if (video.width && video.height) {
+      tags.push(meta('property', 'og:video:width', String(video.width)))
+      tags.push(meta('property', 'og:video:height', String(video.height)))
+    }
   }
   return {title, tags}
 }
