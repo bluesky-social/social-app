@@ -14,6 +14,7 @@ import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons
 import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {Link} from '#/components/Link'
 import {Span, Text} from '#/components/Typography'
+import {VerificationAnnouncementIllustration} from '#/components/verification/VerificationAnnouncementIllustration'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 
@@ -74,19 +75,7 @@ export function InitialVerificationAnnouncement() {
               t.atoms.bg_contrast_25,
               {minHeight: 100},
             ]}>
-            <Image
-              accessibilityIgnoresInvertColors
-              source={require('../../../../assets/images/initial_verification_announcement_1.png')}
-              style={[
-                {
-                  aspectRatio: 353 / 160,
-                },
-              ]}
-              alt={_(
-                msg`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`,
-              )}
-              useAppleWebpCodec
-            />
+            <VerificationAnnouncementIllustration />
           </View>
 
           <View style={[a.gap_xs]}>
