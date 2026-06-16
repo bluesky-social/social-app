@@ -351,6 +351,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                     <View style={[a.mb_2xs]}>
                       <RichText
                         enableTags
+                        enableCode
                         value={richText}
                         style={[a.flex_1, a.text_md]}
                         numberOfLines={limitLines ? MAX_POST_LINES : undefined}
