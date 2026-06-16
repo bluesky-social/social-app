@@ -1,4 +1,4 @@
-import {useRef, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {
   useKeyboardHandler,
@@ -69,6 +69,11 @@ export function MessageComposer({
 
   const [text, setText] = useState(getDraft)
   useSaveMessageDraft(text)
+
+  useEffect(() => {
+    if (!replyTo) return
+    composerInternalApiRef.current?.input?.focus()
+  }, [replyTo, composerInternalApiRef])
 
   // Android interactive dismiss sometimes doesn't blur the input
   const blur = useNonReactiveCallback(() => {
