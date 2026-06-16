@@ -9,6 +9,7 @@ import {
 } from '#/lib/strings/starter-pack'
 import {messages} from '#/locale/locales/en/messages'
 import {klipyUrlToBskyGifUrl} from '#/features/gifPicker/utils'
+import {EUROSKY} from '../../src/config/eurosky'
 import {cleanError} from '../../src/lib/strings/errors'
 import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
 import {enforceLen} from '../../src/lib/strings/helpers'
@@ -272,11 +273,13 @@ describe('toShortUrl', () => {
 })
 
 describe('toShareUrl', () => {
+  // mu fork: toShareUrl hands out our own first-party web host, not bsky.app.
+  const host = EUROSKY.web.hosts[0]
   const inputs = ['https://bsky.app', '/3jk7x4irgv52r', 'item/test/123']
   const outputs = [
     'https://bsky.app',
-    'https://bsky.app/3jk7x4irgv52r',
-    'https://bsky.app/item/test/123',
+    `https://${host}/3jk7x4irgv52r`,
+    `https://${host}/item/test/123`,
   ]
 
   it('appends https, when not present', () => {
