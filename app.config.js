@@ -231,6 +231,12 @@ module.exports = function (_config) {
         // dark browser themes. Standard Expo mechanism, same as upstream, so
         // no custom <link> wiring and minimal merge surface.
         favicon: './assets/favicon.png',
+        // mu brand pink (ACCENTS.pink primary_500 in src/config/eurosky-theme.ts).
+        // Drives the PWA manifest theme_color and the <meta name="theme-color">,
+        // i.e. the Chrome Custom Tab toolbar when opening links from the
+        // installed PWA on Android. Web-only override; native keeps primaryColor
+        // (expo-pwa: theme_color = web.themeColor ?? primaryColor).
+        themeColor: '#DB4AA6',
       },
       updates: {
         url: 'https://updates.bsky.app/manifest',
