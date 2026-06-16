@@ -19,12 +19,14 @@
     <title>%WEB_TITLE%</title>
 
     <!--
-      mu fork: default Open Graph / Twitter card metadata for link unfurls.
-      This is a static SPA (no per-route SSR), so every shared mu.social link
-      shows this default card. og:image MUST be an absolute URL; og-image.jpg is
-      copied from this web/ folder to the build root at deploy. Keep the
-      dimensions in sync with the file (assets/og-image.jpg, 2400x1600). If a
-      per-route server renderer is added later, mirror these there.
+      mu fork: DEFAULT (fallback) Open Graph / Twitter card metadata for link
+      unfurls. This is a static SPA (no per-route SSR), so this default card is
+      what shows on the homepage, unmatched routes, and any time the edge
+      injector is unavailable. Per-route cards for /profile and /post are added
+      at the Bunny edge by ../og-worker/, which strips and replaces these tags;
+      keep them here as the fallback. og:image MUST be an absolute URL;
+      og-image.jpg is copied from this web/ folder to the build root at deploy.
+      Keep the dimensions in sync with the file (assets/og-image.jpg, 2400x1600).
     -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="mu">
