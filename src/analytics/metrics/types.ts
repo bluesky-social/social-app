@@ -1080,6 +1080,8 @@ export type Events = {
   'thread:click:headerMenuOpen': {}
   'thread:click:editOwnThreadgate': {}
   'thread:click:viewSomeoneElsesThreadgate': {}
+  'thread:click:readerToggle': {enabled: boolean; via: 'header' | 'menu'}
+  'thread:click:readerSeamToggle': {expanded: boolean}
   'activitySubscription:enable': {
     setting: 'posts' | 'posts_and_replies'
   }

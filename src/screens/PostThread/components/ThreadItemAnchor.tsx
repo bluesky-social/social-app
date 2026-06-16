@@ -1,43 +1,47 @@
 import {memo, useMemo} from 'react'
-import {Text as RNText, View} from 'react-native'
+import {View} from 'react-native'
 import {
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
+  type AppBskyFeedDefs,
   type AppBskyFeedThreadgate,
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {Plural, Trans, useLingui} from '@lingui/react/macro'
+import {Trans} from '@lingui/react/macro'
 
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {niceDate} from '#/lib/strings/time'
 import {
   POST_TOMBSTONE,
   type Shadow,
   usePostShadow,
 } from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
-import {type ThreadItem} from '#/state/queries/usePostThread/types'
+import {useFeedFeedback} from '#/state/feed-feedback'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {type PostSource} from '#/state/unstable-post-source'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {ReaderSeam} from '#/screens/PostThread/components/ReaderSeam'
+import {
+  ReaderBracket,
+  ReaderSeamControls,
+} from '#/screens/PostThread/components/ReaderSeamControls'
 import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
   LINEAR_AVI_WIDTH,
   OUTER_SPACE,
+  READER_LINE_INDENT,
+  READER_SEAM_HEIGHT,
   REPLY_LINE_WIDTH,
 } from '#/screens/PostThread/const'
+import {
+  type ReaderSeam as ReaderSeamData,
+  type ThreadPostItem,
+} from '#/screens/PostThread/reader'
 import {atoms as a, useTheme} from '#/alf'
-import {Button} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
-import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {GalleryBleed} from '#/components/images/Gallery'
 import {Link} from '#/components/Link'
@@ -47,27 +51,33 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {TranslatedPost} from '#/components/Post/Translated'
-import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
-import {useFormatPostStatCount} from '#/components/PostControls/util'
-import {PostEditedIndicator} from '#/components/PostEditedIndicator'
+import {PostControlsSkeleton} from '#/components/PostControls'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
 import {Text} from '#/components/Typography'
-import {WhoCanReply} from '#/components/WhoCanReply'
 import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
-import * as bsky from '#/types/bsky'
+
+export type ThreadItemAnchorReaderSeam = ReaderSeamData & {
+  onToggle: () => void
+  sort: string
+}
 
 export function ThreadItemAnchor({
   item,
+  readerSeam,
   onPostSuccess,
   threadgateRecord,
   postSource,
 }: {
-  item: Extract<ThreadItem, {type: 'threadPost'}>
+  item: ThreadPostItem
+  /**
+   * Set in reader view: renders a bracket in the gutter and moves the anchor's
+   * controls and replies into a seam below the post body.
+   */
+  readerSeam?: ThreadItemAnchorReaderSeam
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: AppBskyFeedThreadgate.Record
   postSource?: PostSource
@@ -86,6 +96,7 @@ export function ThreadItemAnchor({
       key={postShadow.uri}
       item={item}
       isRoot={isRoot}
+      readerSeam={readerSeam}
       postShadow={postShadow}
       onPostSuccess={onPostSuccess}
       threadgateRecord={threadgateRecord}
@@ -163,25 +174,25 @@ function ThreadItemAnchorParentReplyLine({isRoot}: {isRoot: boolean}) {
 const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   item,
   isRoot,
+  readerSeam,
   postShadow,
   onPostSuccess,
   threadgateRecord,
   postSource,
 }: {
-  item: Extract<ThreadItem, {type: 'threadPost'}>
+  item: ThreadPostItem
   isRoot: boolean
+  readerSeam?: ThreadItemAnchorReaderSeam
   postShadow: Shadow<AppBskyFeedDefs.PostView>
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: AppBskyFeedThreadgate.Record
   postSource?: PostSource
 }) {
+  const inReader = !!readerSeam
   const t = useTheme()
   const ax = useAnalytics()
-  const {t: l} = useLingui()
-  const {openComposer} = useOpenComposer()
   const {currentAccount, hasSession} = useSession()
   const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession)
-  const formatPostStatCount = useFormatPostStatCount()
 
   const post = postShadow
   const record = item.value.post.record
@@ -197,23 +208,9 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     [record],
   )
 
-  const threadRootUri = record.reply?.root?.uri || post.uri
   const authorHref = makeProfileLink(post.author)
-  const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did
 
-  const likesHref = useMemo(() => {
-    const urip = new AtUri(post.uri)
-    return makeProfileLink(post.author, 'post', urip.rkey, 'liked-by')
-  }, [post.uri, post.author])
-  const repostsHref = useMemo(() => {
-    const urip = new AtUri(post.uri)
-    return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
-  }, [post.uri, post.author])
-  const quotesHref = useMemo(() => {
-    const urip = new AtUri(post.uri)
-    return makeProfileLink(post.author, 'post', urip.rkey, 'quotes')
-  }, [post.uri, post.author])
-
+  const threadRootUri = record.reply?.root?.uri || post.uri
   const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
     threadgateRecord,
   })
@@ -236,42 +233,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   )
   const showFollowButton =
     currentAccount?.did !== post.author.did && !onlyFollowersCanReply
-
-  const viaRepost = useMemo(() => {
-    const reason = postSource?.post.reason
-
-    if (AppBskyFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
-      return {
-        uri: reason.uri,
-        cid: reason.cid,
-      }
-    }
-  }, [postSource])
-
-  const onPressReply = useNonReactiveCallback(() => {
-    openComposer({
-      replyTo: {
-        uri: post.uri,
-        cid: post.cid,
-        text: record.text,
-        author: post.author,
-        embed: post.embed,
-        moderation,
-        langs: record.langs,
-      },
-      onPostSuccess: onPostSuccess,
-      logContext: 'PostReply',
-    })
-
-    if (postSource) {
-      feedFeedback.sendInteraction({
-        item: post.uri,
-        event: 'app.bsky.feed.defs#interactionReply',
-        feedContext: postSource.post.feedContext,
-        reqId: postSource.post.reqId,
-      })
-    }
-  })
 
   const onOpenAuthor = () => {
     ax.metric('post:clickthroughAuthor', {
@@ -384,311 +345,88 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               />
             </View>
           </View>
-          <View style={[a.pb_sm]}>
-            <LabelsOnMyPost post={post} style={[a.pb_sm]} />
-            <ContentHider
-              modui={moderation.ui('contentView')}
-              ignoreMute
-              childContainerStyle={[a.pt_sm]}>
-              <PostAlerts
-                modui={moderation.ui('contentView')}
-                size="lg"
-                includeMute
-                style={[a.pb_sm]}
-                additionalCauses={additionalPostAlerts}
+          {/* Bracket wrapper: spans content + expanded details + replies */}
+          <View>
+            {inReader && (
+              <ReaderBracket
+                left={-(OUTER_SPACE - READER_LINE_INDENT)}
+                bottom={
+                  readerSeam?.expanded ? OUTER_SPACE : READER_SEAM_HEIGHT / 2
+                }
               />
-              {richText?.text ? (
-                <RichText
-                  enableTags
-                  enableCode
-                  selectable
-                  value={richText}
-                  style={[a.flex_1, a.text_lg]}
-                  authorHandle={post.author.handle}
-                  shouldProxyLinks={true}
-                />
-              ) : undefined}
-              <TranslatedPost post={post} postTextStyle={[a.text_lg]} />
-              {post.embed && (
-                <View style={[richText?.text ? a.py_xs : []]}>
-                  <Embed
-                    embed={post.embed}
-                    moderation={moderation}
-                    viewContext={PostEmbedViewContext.ThreadHighlighted}
-                    onOpen={onOpenEmbed}
-                    post={post}
-                    feedDescriptor={feedFeedback.feedDescriptor}
+            )}
+            <View style={[!inReader && a.pb_sm]}>
+              <LabelsOnMyPost post={post} style={[a.pb_sm]} />
+              <View>
+                <ContentHider
+                  modui={moderation.ui('contentView')}
+                  ignoreMute
+                  childContainerStyle={[a.pt_sm]}>
+                  <PostAlerts
+                    modui={moderation.ui('contentView')}
+                    size="lg"
+                    includeMute
+                    style={[a.pb_sm]}
+                    additionalCauses={additionalPostAlerts}
                   />
-                </View>
-              )}
-            </ContentHider>
-            <ExpandedPostDetails
-              post={item.value.post}
-              isThreadAuthor={isThreadAuthor}
-            />
-            {post.repostCount !== 0 ||
-            post.likeCount !== 0 ||
-            post.quoteCount !== 0 ||
-            post.bookmarkCount !== 0 ? (
-              // Show this section unless we're *sure* it has no engagement.
-              <View
-                style={[
-                  a.flex_row,
-                  a.flex_wrap,
-                  a.align_center,
-                  {
-                    rowGap: a.gap_sm.gap,
-                    columnGap: a.gap_lg.gap,
-                  },
-                  a.border_t,
-                  a.border_b,
-                  a.mt_md,
-                  a.py_md,
-                  t.atoms.border_contrast_low,
-                ]}>
-                {post.repostCount != null && post.repostCount !== 0 ? (
-                  <Link to={repostsHref} label={l`Reposts of this post`}>
-                    <Text
-                      testID="repostCount-expanded"
-                      style={[a.text_md, t.atoms.text_contrast_medium]}>
-                      <Trans comment="Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)">
-                        <Text
-                          style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                          {formatPostStatCount(post.repostCount)}
-                        </Text>{' '}
-                        <Plural
-                          value={post.repostCount}
-                          one="repost"
-                          other="reposts"
-                        />
-                      </Trans>
-                    </Text>
-                  </Link>
-                ) : null}
-                {post.quoteCount != null &&
-                post.quoteCount !== 0 &&
-                !post.viewer?.embeddingDisabled ? (
-                  <Link to={quotesHref} label={l`Quotes of this post`}>
-                    <Text
-                      testID="quoteCount-expanded"
-                      style={[a.text_md, t.atoms.text_contrast_medium]}>
-                      <Trans comment="Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)">
-                        <Text
-                          style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                          {formatPostStatCount(post.quoteCount)}
-                        </Text>{' '}
-                        <Plural
-                          value={post.quoteCount}
-                          one="quote"
-                          other="quotes"
-                        />
-                      </Trans>
-                    </Text>
-                  </Link>
-                ) : null}
-                {post.likeCount != null && post.likeCount !== 0 ? (
-                  <Link to={likesHref} label={l`Likes on this post`}>
-                    <Text
-                      testID="likeCount-expanded"
-                      style={[a.text_md, t.atoms.text_contrast_medium]}>
-                      <Trans comment="Like count display, the <0> tags enclose the number of likes in bold (will never be 0)">
-                        <Text
-                          style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                          {formatPostStatCount(post.likeCount)}
-                        </Text>{' '}
-                        <Plural
-                          value={post.likeCount}
-                          one="like"
-                          other="likes"
-                        />
-                      </Trans>
-                    </Text>
-                  </Link>
-                ) : null}
-                {post.bookmarkCount != null && post.bookmarkCount !== 0 ? (
-                  <Text
-                    testID="bookmarkCount-expanded"
-                    style={[a.text_md, t.atoms.text_contrast_medium]}>
-                    <Trans comment="Save count display, the <0> tags enclose the number of saves in bold (will never be 0)">
-                      <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                        {formatPostStatCount(post.bookmarkCount)}
-                      </Text>{' '}
-                      <Plural
-                        value={post.bookmarkCount}
-                        one="save"
-                        other="saves"
+                  {richText?.text ? (
+                    <View>
+                      <RichText
+                        enableTags
+                        enableCode
+                        selectable
+                        value={richText}
+                        style={[a.flex_1, a.text_lg]}
+                        authorHandle={post.author.handle}
+                        shouldProxyLinks={true}
                       />
-                    </Trans>
-                  </Text>
-                ) : null}
+                    </View>
+                  ) : undefined}
+                  <TranslatedPost post={post} postTextStyle={[a.text_lg]} />
+                  {post.embed && (
+                    <View style={[richText?.text ? a.py_xs : []]}>
+                      <Embed
+                        embed={post.embed}
+                        moderation={moderation}
+                        viewContext={PostEmbedViewContext.ThreadHighlighted}
+                        onOpen={onOpenEmbed}
+                        post={post}
+                        feedDescriptor={feedFeedback.feedDescriptor}
+                      />
+                    </View>
+                  )}
+                </ContentHider>
               </View>
-            ) : null}
-            <View
-              style={[
-                a.pt_sm,
-                a.pb_2xs,
-                {
-                  marginLeft: -5,
-                },
-              ]}>
-              <FeedFeedbackProvider value={feedFeedback}>
-                <PostControls
-                  big
-                  post={postShadow}
-                  record={record}
-                  richText={richText}
-                  onPressReply={onPressReply}
-                  logContext="PostThreadItem"
+              {/* In reader view the controls move to the seam below */}
+              {!inReader && (
+                <ReaderSeamControls
+                  post={item}
+                  postSource={postSource}
+                  onPostSuccess={onPostSuccess}
                   threadgateRecord={threadgateRecord}
-                  feedContext={postSource?.post?.feedContext}
-                  reqId={postSource?.post?.reqId}
-                  viaRepost={viaRepost}
                 />
-              </FeedFeedbackProvider>
+              )}
+              <DebugFieldDisplay subject={post} />
             </View>
-            <DebugFieldDisplay subject={post} />
+            {readerSeam && (
+              <ReaderSeam
+                post={item}
+                expanded={readerSeam.expanded}
+                hiddenReplyCount={readerSeam.hiddenReplyCount}
+                continuationUri={readerSeam.continuationUri}
+                href={readerSeam.href}
+                sort={readerSeam.sort}
+                onToggle={readerSeam.onToggle}
+                onPostSuccess={onPostSuccess}
+                threadgateRecord={threadgateRecord}
+              />
+            )}
           </View>
         </View>
       </GalleryBleed>
     </>
   )
 })
-
-function ExpandedPostDetails({
-  post,
-  isThreadAuthor,
-}: {
-  post: Extract<ThreadItem, {type: 'threadPost'}>['value']['post']
-  isThreadAuthor: boolean
-}) {
-  const t = useTheme()
-  const {i18n} = useLingui()
-  const isRootPost = !('reply' in post.record)
-  const record = bsky.dangerousIsType<AppBskyFeedPost.Record>(
-    post.record,
-    AppBskyFeedPost.isRecord,
-  )
-    ? post.record
-    : undefined
-
-  return (
-    <View style={[a.gap_md, a.pt_md, a.align_start]}>
-      <BackdatedPostIndicator post={post} />
-      <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
-        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          {niceDate(i18n, post.indexedAt, 'dot separated')}
-        </Text>
-        {record && <PostEditedIndicator record={record} size="sm" />}
-        {isRootPost && (
-          <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
-        )}
-      </View>
-    </View>
-  )
-}
-
-function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
-  const t = useTheme()
-  const {t: l, i18n} = useLingui()
-  const control = Prompt.usePromptControl()
-
-  const indexedAt = new Date(post.indexedAt)
-  const createdAt = bsky.dangerousIsType<AppBskyFeedPost.Record>(
-    post.record,
-    AppBskyFeedPost.isRecord,
-  )
-    ? new Date(post.record.createdAt)
-    : new Date(post.indexedAt)
-
-  // backdated if createdAt is 24 hours or more before indexedAt
-  const isBackdated =
-    indexedAt.getTime() - createdAt.getTime() > 24 * 60 * 60 * 1000
-
-  if (!isBackdated) return null
-
-  return (
-    <>
-      <Button
-        label={l`Archived post`}
-        accessibilityHint={l`Shows information about when this post was created`}
-        onPress={e => {
-          e.preventDefault()
-          e.stopPropagation()
-          control.open()
-        }}>
-        {({hovered, pressed}) => (
-          <View
-            style={[
-              a.flex_row,
-              a.align_center,
-              a.rounded_full,
-              t.atoms.bg_contrast_25,
-              (hovered || pressed) && t.atoms.bg_contrast_50,
-              {
-                gap: 3,
-                paddingHorizontal: 6,
-                paddingVertical: 3,
-              },
-            ]}>
-            <CalendarClockIcon fill={t.palette.yellow} size="sm" aria-hidden />
-            <Text
-              style={[
-                a.text_xs,
-                a.font_semi_bold,
-                a.leading_tight,
-                t.atoms.text_contrast_medium,
-              ]}>
-              <Trans>Archived from {niceDate(i18n, createdAt, 'medium')}</Trans>
-            </Text>
-          </View>
-        )}
-      </Button>
-
-      <Prompt.Outer control={control}>
-        <Prompt.Content>
-          <Prompt.TitleText>
-            <Trans>Archived post</Trans>
-          </Prompt.TitleText>
-          <Prompt.DescriptionText>
-            <Trans>
-              This post claims to have been created on{' '}
-              <RNText style={[a.font_semi_bold]}>
-                {niceDate(i18n, createdAt)}
-              </RNText>
-              , but was first seen by Bluesky on{' '}
-              <RNText style={[a.font_semi_bold]}>
-                {niceDate(i18n, indexedAt)}
-              </RNText>
-              .
-            </Trans>
-          </Prompt.DescriptionText>
-          <Prompt.DescriptionText>
-            <Trans>
-              Bluesky cannot confirm the authenticity of the claimed date.
-            </Trans>
-          </Prompt.DescriptionText>
-        </Prompt.Content>
-        <Prompt.Actions>
-          <Prompt.Action cta={l`Okay`} onPress={() => {}} />
-        </Prompt.Actions>
-      </Prompt.Outer>
-    </>
-  )
-}
-
-function getThreadAuthor(
-  post: AppBskyFeedDefs.PostView,
-  record: AppBskyFeedPost.Record,
-): string {
-  if (!record.reply) {
-    return post.author.did
-  }
-  try {
-    return new AtUri(record.reply.root.uri).host
-  } catch {
-    return ''
-  }
-}
 
 export function ThreadItemAnchorSkeleton() {
   return (

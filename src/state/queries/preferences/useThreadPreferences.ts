@@ -17,18 +17,38 @@ export type ThreadSortOption = Literal<
   string
 >
 export type ThreadViewOption = 'linear' | 'tree'
+/**
+ * All views supported by the thread screen. `reader` is a per-visit,
+ * client-only view and is never persisted to server preferences.
+ */
+export type ThreadView = ThreadViewOption | 'reader'
 export type ThreadPreferences = {
   isLoaded: boolean
   isSaving: boolean
   sort: ThreadSortOption
   setSort: (sort: string) => void
-  view: ThreadViewOption
-  setView: (view: ThreadViewOption) => void
+  view: ThreadView
+  setView: (view: ThreadView) => void
+  /**
+   * The user's persisted view preference. Reader view is never persisted, so
+   * this is always a concrete linear/tree value, e.g. for restoring the view
+   * when exiting reader.
+   */
+  savedView: ThreadViewOption
 }
 
 export function useThreadPreferences({
   save,
-}: {save?: boolean} = {}): ThreadPreferences {
+  initialView,
+}: {
+  save?: boolean
+  /**
+   * Overrides the view for the first render, e.g. when deep-linking into
+   * reader view. Server prefs sync still applies, but never clobbers an
+   * active reader view.
+   */
+  initialView?: ThreadView
+} = {}): ThreadPreferences {
   const ax = useAnalytics()
   const {data: preferences} = usePreferencesQuery()
   const serverPrefs = preferences?.threadViewPrefs
@@ -38,10 +58,12 @@ export function useThreadPreferences({
    * Create local state representations of server state
    */
   const [sort, setSort] = useState(normalizeSort(serverPrefs?.sort || 'top'))
-  const [view, setView] = useState(
-    normalizeView({
-      treeViewEnabled: !!serverPrefs?.lab_treeViewEnabled,
-    }),
+  const [view, setView] = useState<ThreadView>(
+    () =>
+      initialView ??
+      normalizeView({
+        treeViewEnabled: !!serverPrefs?.lab_treeViewEnabled,
+      }),
   )
 
   /**
@@ -53,14 +75,17 @@ export function useThreadPreferences({
     setPrevServerPrefs(serverPrefs)
 
     /*
-     * Update
+     * Update. Reader view is client-only, so a background preferences
+     * refetch should not kick the user out of it.
      */
     setSort(normalizeSort(serverPrefs.sort))
-    setView(
-      normalizeView({
-        treeViewEnabled: !!serverPrefs.lab_treeViewEnabled,
-      }),
-    )
+    if (view !== 'reader') {
+      setView(
+        normalizeView({
+          treeViewEnabled: !!serverPrefs.lab_treeViewEnabled,
+        }),
+      )
+    }
 
     once(() => {
       ax.metric('thread:preferences:load', {
@@ -104,10 +129,14 @@ export function useThreadPreferences({
   )
 
   if (save && userUpdatedPrefs.current) {
-    savePrefs({
-      sort,
-      lab_treeViewEnabled: view === 'tree',
-    })
+    // Reader view is never persisted, and must not clobber the user's saved
+    // linear/tree preference.
+    if (view !== 'reader') {
+      savePrefs({
+        sort,
+        lab_treeViewEnabled: view === 'tree',
+      })
+    }
     userUpdatedPrefs.current = false
   }
 
@@ -119,12 +148,16 @@ export function useThreadPreferences({
     [setSort],
   )
   const setViewWrapped = useCallback(
-    (next: ThreadViewOption) => {
+    (next: ThreadView) => {
       userUpdatedPrefs.current = true
       setView(next)
     },
     [setView],
   )
+
+  const savedView = normalizeView({
+    treeViewEnabled: !!serverPrefs?.lab_treeViewEnabled,
+  })
 
   return useMemo(
     () => ({
@@ -134,8 +167,9 @@ export function useThreadPreferences({
       setSort: setSortWrapped,
       view,
       setView: setViewWrapped,
+      savedView,
     }),
-    [isLoaded, isSaving, sort, setSortWrapped, view, setViewWrapped],
+    [isLoaded, isSaving, sort, setSortWrapped, view, setViewWrapped, savedView],
   )
 }
 

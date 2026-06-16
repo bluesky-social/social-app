@@ -1376,9 +1376,6 @@
     "@typescript-eslint/no-misused-promises": {
       "count": 1
     },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 3
-    },
     "react-hooks/preserve-manual-memoization": {
       "count": 1
     },

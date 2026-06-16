@@ -28,7 +28,7 @@ export type PostThreadParams = Pick<
   'sort'
 > & {
   anchor?: string
-  view: 'tree' | 'linear'
+  view: 'tree' | 'linear' | 'reader'
 }
 
 export type UsePostThreadQueryResult = {
