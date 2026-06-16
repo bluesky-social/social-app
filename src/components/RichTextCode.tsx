@@ -53,13 +53,18 @@ function HighlightedLines({value, lang}: {value: string; lang?: string}) {
   return (
     <>
       {lines.map((line, i) => (
-        <Text key={i}>
+        // Each nested Text re-applies a font family, so set MONO_FONT on every
+        // level - otherwise the inner spans revert to the Inter UI font.
+        <Text key={i} style={{fontFamily: MONO_FONT}}>
           {line.length === 0
             ? ' '
             : line.map((span, j) => (
                 <Text
                   key={j}
-                  style={{color: colorForScope(span.scope, colors)}}>
+                  style={{
+                    color: colorForScope(span.scope, colors),
+                    fontFamily: MONO_FONT,
+                  }}>
                   {span.value}
                 </Text>
               ))}

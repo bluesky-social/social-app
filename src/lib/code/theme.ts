@@ -3,11 +3,15 @@
  * keyed by highlight.js scope, and the embed panel background. Used by the
  * tangled string embed's `CodeBlock` and by inline/fenced code in post text.
  */
-import {Platform} from 'react-native'
-
+import {MONOSPACE_FONT_FAMILY} from '#/alf/fonts'
 import {useThemeName} from '#/alf/util/useColorModeTheme'
 
-export const MONO_FONT = Platform.OS === 'android' ? 'monospace' : 'Courier New'
+/**
+ * Monospace family for rendered code. Re-exported from ALF so it stays the
+ * exact constant `applyFonts` checks against (otherwise the Inter UI font would
+ * override it). See src/alf/fonts.ts.
+ */
+export const MONO_FONT = MONOSPACE_FONT_FAMILY
 
 // Fixed per-line height for rendered code. CodeBlock also relies on it being
 // exact for its vertical viewport cap (`maxHeightLines`).
