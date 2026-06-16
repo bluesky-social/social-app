@@ -18,6 +18,9 @@ import {IS_WEB} from '#/env'
 import {type CatColor, type CatState, isLoopState} from './catalog'
 import {CatSprite} from './CatSprite'
 
+// On-screen size of the companion. This need not be a multiple of the 64px
+// sprite cell: CatSprite renders the art at an integer scale and downsamples
+// to fit, so non-integer sizes stay crisp instead of shimmering.
 const SIZE = 88
 // Horizontal padding kept clear of the screen edges while wandering.
 const EDGE_MARGIN = 6

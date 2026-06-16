@@ -79,48 +79,68 @@ export function CatSprite({
     // playToken forces a restart for repeated one-shots.
   }, [state, playToken, clip.frames, clip.fps, loop])
 
-  // The sheet is scaled so one 64px cell (FRAME) becomes `size` px on screen,
-  // and the full sheet is COLS x ROWS of those cells.
-  const scale = size / FRAME
+  // Render the sheet at an integer multiple of the 64px cell (FRAME), then
+  // uniformly downsample to `size`. `imageRendering: pixelated` does
+  // nearest-neighbour scaling, which only stays even at integer ratios; at a
+  // fractional ratio (e.g. 88/64 = 1.375) some source pixels span 1 device
+  // pixel and others 2, which reads as a shimmering, misaligned sprite on the
+  // web (notably desktop Firefox at devicePixelRatio 1). Drawing at the nearest
+  // whole multiple keeps nearest-neighbour even, and the final downscale is a
+  // single uniform transform, so every pixel shrinks by the same factor.
+  const renderScale = Math.max(1, Math.ceil(size / FRAME))
+  const renderPx = FRAME * renderScale
+  const downsample = size / renderPx
   // Drop the sprite by its transparent bottom padding so every state's feet
-  // land on the same ground line (the bottom of the view).
-  const dropY = clip.pad * scale
+  // land on the same ground line (the bottom of the view). Expressed in the
+  // render-scale space; the outer downsample brings it back to `size` space.
+  const dropY = clip.pad * renderScale
   return (
-    <View
-      style={[
-        {width: size, height: size, overflow: 'hidden'},
-        {
-          transform:
-            facing === -1
-              ? [{translateY: dropY}, {scaleX: -1}]
-              : [{translateY: dropY}],
-        },
-      ]}>
-      <Image
-        source={CAT_SHEETS[color]}
-        accessibilityIgnoresInvertColors
-        contentFit="fill"
-        style={[
-          a.absolute,
-          {
-            width: COLS * size,
-            height: ROWS * size,
-            left: -frame * size,
-            top: -clip.row * size,
-          },
-          // Crisp pixel-art scaling on web; native ignores this.
-          web({
-            imageRendering: 'pixelated',
-            // Stop mobile Safari from opening/saving the raw spritesheet on a
-            // long press. Routing touches past the <img> to the Pressable also
-            // kills the iOS image callout, so petting still works.
-            pointerEvents: 'none',
-            userSelect: 'none',
-            WebkitUserSelect: 'none',
-            WebkitTouchCallout: 'none',
-          }),
-        ]}
-      />
+    <View style={{width: size, height: size, overflow: 'hidden'}}>
+      {/* Uniformly shrink the integer-scaled sprite into the layout box. */}
+      <View
+        style={{
+          width: renderPx,
+          height: renderPx,
+          transform: [{scale: downsample}],
+          transformOrigin: 'top left',
+        }}>
+        <View
+          style={{
+            width: renderPx,
+            height: renderPx,
+            overflow: 'hidden',
+            transform:
+              facing === -1
+                ? [{translateY: dropY}, {scaleX: -1}]
+                : [{translateY: dropY}],
+          }}>
+          <Image
+            source={CAT_SHEETS[color]}
+            accessibilityIgnoresInvertColors
+            contentFit="fill"
+            style={[
+              a.absolute,
+              {
+                width: COLS * renderPx,
+                height: ROWS * renderPx,
+                left: -frame * renderPx,
+                top: -clip.row * renderPx,
+              },
+              // Crisp pixel-art scaling on web; native ignores this.
+              web({
+                imageRendering: 'pixelated',
+                // Stop mobile Safari from opening/saving the raw spritesheet on
+                // a long press. Routing touches past the <img> to the Pressable
+                // also kills the iOS image callout, so petting still works.
+                pointerEvents: 'none',
+                userSelect: 'none',
+                WebkitUserSelect: 'none',
+                WebkitTouchCallout: 'none',
+              }),
+            ]}
+          />
+        </View>
+      </View>
     </View>
   )
 }
