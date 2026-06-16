@@ -782,6 +782,12 @@ export class Convo {
       })
       const {cursor, messages, relatedProfiles} = response.data
 
+      // Trust the cursor for pagination. We can't infer "no more pages" from a
+      // short page: the server pages by raw rows but strips deleted messages
+      // from the response, so a full page containing a deleted message (e.g.
+      // from a deleted account) comes back short *with* a valid cursor. Using a
+      // count heuristic here would stop history fetching early and hide
+      // messages. The tradeoff is one extra empty fetch at the true top.
       this.oldestRev = cursor ?? null
 
       if (relatedProfiles) {
@@ -789,14 +795,6 @@ export class Convo {
           this.relatedProfiles.set(profile.did, profile)
         }
         this.applyProfileShadows()
-      }
-
-      /*
-       * If the response contained fewer messages than the limit, we know
-       * there are no more pages, regardless of whether a cursor was returned.
-       */
-      if (messages.length < (IS_NATIVE ? 30 : 60)) {
-        this.oldestRev = null
       }
 
       for (const message of messages) {
