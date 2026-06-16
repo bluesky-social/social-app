@@ -30,6 +30,7 @@ import {
   OAUTH_ASSERTION_URL,
   OAUTH_BASE_URL,
   OAUTH_CLIENT_NAME,
+  OAUTH_DECLARED_SCOPE,
   OAUTH_PUBLIC_JWKS,
   OAUTH_SCOPE,
   OAUTH_SIGNUP_PDS_HOST,
@@ -169,7 +170,10 @@ function createConfidentialClient(): WebOAuthClient {
     client_name: OAUTH_CLIENT_NAME,
     client_uri: OAUTH_BASE_URL,
     redirect_uris: [`${OAUTH_BASE_URL}/`],
-    scope: OAUTH_SCOPE,
+    // DECLARE the superset (kept in lockstep with the served
+    // oauth-client-metadata.json from gen-oauth-metadata.js). New logins
+    // REQUEST only OAUTH_SCOPE - see the explicit scope in signIn() below.
+    scope: OAUTH_DECLARED_SCOPE,
     token_endpoint_auth_method: 'private_key_jwt',
     token_endpoint_auth_signing_alg: 'ES256',
     response_types: ['code'],
@@ -210,7 +214,13 @@ function createConfidentialClient(): WebOAuthClient {
 
   return {
     async signIn(input, options) {
-      const url = await client.authorize(input, options)
+      // REQUEST only OAUTH_SCOPE even though the metadata DECLARES the broader
+      // OAUTH_DECLARED_SCOPE. Caller-supplied options may override (e.g. a
+      // future handle-scope step-up).
+      const url = await client.authorize(input, {
+        scope: OAUTH_SCOPE,
+        ...options,
+      })
       window.location.assign(url.href)
       // Navigation is underway; never resolve so callers don't act further.
       await new Promise<never>(() => {})

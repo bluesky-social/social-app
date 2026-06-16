@@ -28,7 +28,17 @@ export const OAUTH_BASE_URL: string =
   process.env.EXPO_PUBLIC_OAUTH_BASE_URL || shared.defaultBaseUrl
 
 export const OAUTH_CLIENT_NAME: string = shared.clientName
+/** Scope NEW authorization requests ask for. Kept minimal (transition + handle). */
 export const OAUTH_SCOPE: string = shared.scope
+/**
+ * Scope advertised in the client metadata document (and the confidential
+ * client's local metadata). MUST be a superset of OAUTH_SCOPE. We DECLARE more
+ * than we REQUEST so older cached web bundles - built when prod requested
+ * account:email/status - keep authorizing instead of failing with
+ * `invalid_scope` against the current metadata. New logins still request only
+ * OAUTH_SCOPE. Trim this back once those old bundles have aged out of caches.
+ */
+export const OAUTH_DECLARED_SCOPE: string = shared.declaredScope
 export const OAUTH_HANDLE_RESOLVER: string = shared.handleResolver
 /** PDS the "Create account" flow sends the user to (prompt: 'create'). */
 export const OAUTH_SIGNUP_PDS_HOST: string = shared.signupPdsHost
