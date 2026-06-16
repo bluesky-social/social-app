@@ -9,7 +9,7 @@ import {FEEDBACK_FORM_URL} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
 import {useStarterPackQuery} from '#/state/queries/starter-packs'
-import {useActiveStarterPack} from '#/state/shell/starter-pack'
+import {useActiveStarterPack} from '#/state/shell/landing'
 import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
 import {
   initialState,

@@ -6,6 +6,7 @@ import {
   ChatBskyConvoDefs,
   type ChatBskyConvoGetLog,
   type ChatBskyConvoSendMessage,
+  type ChatBskyEmbedJoinLink,
   type ChatBskyGroupDefs,
 } from '@atproto/api'
 import {XRPCError} from '@atproto/api'
@@ -19,6 +20,12 @@ import {
   isNetworkError,
 } from '#/lib/strings/errors'
 import {Logger} from '#/logger'
+import {
+  isProfileShadowApplied,
+  listenProfileShadowUpdate,
+  mergeShadow,
+  type ProfileShadow,
+} from '#/state/cache/profile-shadow'
 import {
   ACTIVE_POLL_INTERVAL,
   BACKGROUND_POLL_INTERVAL,
@@ -109,12 +116,23 @@ export class Convo {
     {
       id: string
       message: ChatBskyConvoSendMessage.InputSchema['message']
-      optimisticEmbedView?: $Typed<AppBskyEmbedRecord.View>
+      optimisticEmbedView?:
+        | $Typed<AppBskyEmbedRecord.View>
+        | $Typed<ChatBskyEmbedJoinLink.View>
     }
   > = new Map()
   private deletedMessages: Set<string> = new Set()
   private relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic> =
     new Map()
+  /**
+   * Accumulated profile shadow state, keyed by did. The profiles this agent
+   * holds come from direct service fetches, so they are invisible to the
+   * shadow cache's react-query scan. We keep our own overlay and re-apply it
+   * whenever server data overwrites `relatedProfiles` or `convo.members`,
+   * otherwise refreshes would revert optimistic state (e.g. a block) until
+   * the server catches up.
+   */
+  private profileShadows: Map<string, Partial<ProfileShadow>> = new Map()
 
   private isProcessingPendingMessages = false
 
@@ -165,15 +183,28 @@ export class Convo {
   private subscribers: (() => void)[] = []
 
   subscribe(subscriber: () => void) {
-    if (this.subscribers.length === 0) this.init()
+    if (this.subscribers.length === 0) {
+      this.cleanupProfileShadowListener = listenProfileShadowUpdate(
+        ({did, shadow}) => {
+          this.mergeProfileShadow(did, shadow)
+        },
+      )
+      this.init()
+    }
 
     this.subscribers.push(subscriber)
 
     return () => {
       this.subscribers = this.subscribers.filter(s => s !== subscriber)
-      if (this.subscribers.length === 0) this.suspend()
+      if (this.subscribers.length === 0) {
+        this.cleanupProfileShadowListener?.()
+        this.cleanupProfileShadowListener = undefined
+        this.suspend()
+      }
     }
   }
+
+  private cleanupProfileShadowListener: (() => void) | undefined
 
   getSnapshot(): ConvoState {
     if (!this.snapshot) this.snapshot = this.generateSnapshot()
@@ -206,22 +237,40 @@ export class Convo {
       removeReaction: undefined,
     }
 
+    /*
+     * Captured as a local so the `if (convo)` narrowing below survives the
+     * `this.getItems()` call - TS discards narrowing on mutable `this` members
+     * after a method call, but not on a const.
+     */
+    const convo = this.convo
+
+    /*
+     * A lifecycle event (e.g. `Background` or `Suspend`) can move us into an
+     * active status before `setup()` has resolved and populated `convo`. The
+     * active states declare `convo` as non-optional, so we can't build one
+     * without it - fall back to reporting `Initializing` until the convo lands.
+     * This keeps the snapshot's type and runtime in agreement, so consumers can
+     * trust that an active status always has a `convo`.
+     */
+    const stillInitializing = (): ConvoState => ({
+      status: ConvoStatus.Initializing,
+      items: [],
+      convo,
+      error: undefined,
+      ...shared,
+      ...emptyMethods,
+    })
+
     switch (this.status) {
       case ConvoStatus.Initializing: {
-        return {
-          status: ConvoStatus.Initializing,
-          items: [],
-          convo: this.convo,
-          error: undefined,
-          ...shared,
-          ...emptyMethods,
-        }
+        return stillInitializing()
       }
       case ConvoStatus.Disabled: {
+        if (!convo) return stillInitializing()
         return {
-          status: this.status,
+          status: ConvoStatus.Disabled,
           items: this.getItems(),
-          convo: this.convo!,
+          convo,
           relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
@@ -229,10 +278,11 @@ export class Convo {
         }
       }
       case ConvoStatus.Suspended: {
+        if (!convo) return stillInitializing()
         return {
-          status: this.status,
+          status: ConvoStatus.Suspended,
           items: this.getItems(),
-          convo: this.convo!,
+          convo,
           relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
@@ -240,10 +290,11 @@ export class Convo {
         }
       }
       case ConvoStatus.Backgrounded: {
+        if (!convo) return stillInitializing()
         return {
-          status: this.status,
+          status: ConvoStatus.Backgrounded,
           items: this.getItems(),
-          convo: this.convo!,
+          convo,
           relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
@@ -251,10 +302,11 @@ export class Convo {
         }
       }
       case ConvoStatus.Ready: {
+        if (!convo) return stillInitializing()
         return {
-          status: this.status,
+          status: ConvoStatus.Ready,
           items: this.getItems(),
-          convo: this.convo!,
+          convo,
           relatedProfiles: this.relatedProfiles,
           error: undefined,
           ...shared,
@@ -493,6 +545,9 @@ export class Convo {
     this.pendingMessages = new Map()
     this.deletedMessages = new Set()
     this.relatedProfiles = new Map()
+    // Shadow updates fired while suspended are missed, so the overlay may be
+    // stale - drop it and trust the from-scratch refetch.
+    this.profileShadows = new Map()
 
     this.pendingMessageFailure = null
     this.fetchMessageHistoryError = undefined
@@ -524,6 +579,7 @@ export class Convo {
         this.relatedProfiles.set(member.did, member)
       }
     }
+    this.applyProfileShadows()
   }
 
   private updateConvo(convo: Partial<ChatBskyConvoDefs.ConvoView>) {
@@ -534,6 +590,7 @@ export class Convo {
       for (const member of this.convo.members) {
         this.relatedProfiles.set(member.did, member)
       }
+      this.applyProfileShadows()
     }
   }
 
@@ -704,6 +761,7 @@ export class Convo {
         this.relatedProfiles.set(member.did, member)
       }
     } while (cursor)
+    this.applyProfileShadows()
   }
 
   private fetchMessageHistoryError: {retry: () => void} | undefined
@@ -750,6 +808,7 @@ export class Convo {
         for (const profile of relatedProfiles) {
           this.relatedProfiles.set(profile.did, profile)
         }
+        this.applyProfileShadows()
       }
 
       /*
@@ -872,23 +931,34 @@ export class Convo {
             for (const profile of ev.relatedProfiles) {
               this.relatedProfiles.set(profile.did, profile)
             }
+            this.applyProfileShadows()
           }
 
           if (
             ChatBskyConvoDefs.isLogCreateMessage(ev) &&
             ChatBskyConvoDefs.isMessageView(ev.message)
           ) {
-            /**
-             * If this message is already in new messages, it was added by our
-             * sending logic, and is based on client-ordering. When we receive
-             * the "committed" event from the log, we should replace this
-             * reference and re-insert in order to respect the order we received
-             * from the log.
+            /*
+             * If this message is already in past messages, the initial
+             * history fetch raced this log event and already returned it.
+             * Update in place rather than inserting a duplicate into new
+             * messages.
              */
-            if (this.newMessages.has(ev.message.id)) {
-              this.newMessages.delete(ev.message.id)
+            if (this.pastMessages.has(ev.message.id)) {
+              this.pastMessages.set(ev.message.id, ev.message)
+            } else {
+              /**
+               * If this message is already in new messages, it was added by our
+               * sending logic, and is based on client-ordering. When we receive
+               * the "committed" event from the log, we should replace this
+               * reference and re-insert in order to respect the order we received
+               * from the log.
+               */
+              if (this.newMessages.has(ev.message.id)) {
+                this.newMessages.delete(ev.message.id)
+              }
+              this.newMessages.set(ev.message.id, ev.message)
             }
-            this.newMessages.set(ev.message.id, ev.message)
             needsCommit = true
           } else if (
             ChatBskyConvoDefs.isLogDeleteMessage(ev) &&
@@ -925,7 +995,12 @@ export class Convo {
           } else {
             const systemView = toSystemMessageView(ev)
             if (systemView) {
-              this.newMessages.set(systemView.id, systemView)
+              // same as above: avoid duplicating if history fetch won the race
+              if (this.pastMessages.has(systemView.id)) {
+                this.pastMessages.set(systemView.id, systemView)
+              } else {
+                this.newMessages.set(systemView.id, systemView)
+              }
               needsCommit = true
             }
           }
@@ -942,7 +1017,9 @@ export class Convo {
 
   sendMessage(
     message: ChatBskyConvoSendMessage.InputSchema['message'],
-    optimisticEmbedView?: $Typed<AppBskyEmbedRecord.View>,
+    optimisticEmbedView?:
+      | $Typed<AppBskyEmbedRecord.View>
+      | $Typed<ChatBskyEmbedJoinLink.View>,
   ) {
     // Ignore empty messages for now since they have no other purpose atm
     if (!message.text.trim() && !message.embed) return
@@ -1031,7 +1108,10 @@ export class Convo {
     this.commit()
   }
 
-  updateLockStatus(lockStatus: ChatBskyConvoDefs.ConvoLockStatus) {
+  updateLockStatus(
+    lockStatus: ChatBskyConvoDefs.ConvoLockStatus,
+    lockStatusModerationOverride: boolean,
+  ) {
     if (this.convo?.kind !== 'group') {
       throw new Error('updateLockStatus can only be called on group convo')
     }
@@ -1040,6 +1120,7 @@ export class Convo {
       kind: {
         ...this.convo.details,
         lockStatus,
+        lockStatusModerationOverride,
       },
     })
 
@@ -1478,6 +1559,88 @@ export class Convo {
     } catch (error) {
       if (restore) restore()
       throw error
+    }
+  }
+
+  mergeProfileShadow(did: string, shadow: Partial<ProfileShadow>) {
+    // Accumulate even if the did isn't held yet - the profile may arrive
+    // later via message history or the member list, and must get the shadow.
+    this.profileShadows.set(did, {
+      ...this.profileShadows.get(did),
+      ...shadow,
+    })
+    if (this.applyProfileShadow(did, shadow)) {
+      this.commit()
+    }
+  }
+
+  /**
+   * Re-applies all accumulated shadows. Must be called after any server data
+   * lands in `relatedProfiles` or `this.convo`, since raw server profiles
+   * would otherwise clobber optimistic state.
+   */
+  private applyProfileShadows() {
+    for (const [did, shadow] of this.profileShadows) {
+      this.applyProfileShadow(did, shadow)
+    }
+  }
+
+  private applyProfileShadow(
+    did: string,
+    shadow: Partial<ProfileShadow>,
+  ): boolean {
+    let changed = false
+
+    const related = this.relatedProfiles.get(did)
+    if (related && !isProfileShadowApplied(related, shadow)) {
+      this.relatedProfiles.set(did, mergeShadow(related, shadow))
+      changed = true
+    }
+
+    if (this.convo) {
+      const next = applyShadowToConvo(this.convo, did, shadow)
+      if (next) {
+        this.convo = next
+        changed = true
+      }
+    }
+
+    return changed
+  }
+}
+
+/**
+ * Returns a new convo with the shadow merged into the matching member (and
+ * `primaryMember`, if it's the same profile), or null if nothing changed.
+ */
+function applyShadowToConvo(
+  convo: ConvoWithDetails,
+  did: string,
+  shadow: Partial<ProfileShadow>,
+): ConvoWithDetails | null {
+  const i = convo.members.findIndex(m => m.did === did)
+  if (i === -1) return null
+  if (isProfileShadowApplied(convo.members[i], shadow)) return null
+
+  // The branches are identical, but narrowing the union is what lets the
+  // member arrays keep their per-kind types.
+  if (convo.kind === 'group') {
+    const members = convo.members.slice()
+    members[i] = mergeShadow(members[i], shadow)
+    return {
+      ...convo,
+      members,
+      primaryMember:
+        convo.primaryMember?.did === did ? members[i] : convo.primaryMember,
+    }
+  } else {
+    const members = convo.members.slice()
+    members[i] = mergeShadow(members[i], shadow)
+    return {
+      ...convo,
+      members,
+      primaryMember:
+        convo.primaryMember.did === did ? members[i] : convo.primaryMember,
     }
   }
 }

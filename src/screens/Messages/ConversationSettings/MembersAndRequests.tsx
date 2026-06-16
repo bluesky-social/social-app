@@ -1,26 +1,31 @@
 import {View} from 'react-native'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {useNavigation} from '@react-navigation/native'
 
+import {type NavigationProp} from '#/lib/routes/types'
 import {atoms as a, useTheme} from '#/alf'
-import {InlineLinkText} from '#/components/Link'
+import {type ConvoWithDetails} from '#/components/dms/util'
+import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function MembersAndRequests({
-  memberCount,
-  memberLimit,
+  convo,
   requestCount,
   hasMoreRequests,
   isOwner,
 }: {
-  memberCount: number
-  memberLimit: number
+  convo: Extract<ConvoWithDetails, {kind: 'group'}>
   requestCount: number
   hasMoreRequests: boolean
   isOwner: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const navigation = useNavigation<NavigationProp>()
+
+  const memberCount = convo.details.memberCount
+  const memberLimit = convo.details.memberLimit
 
   return (
     <View style={[a.flex_row, a.justify_between, a.px_xl, a.pt_xl, a.pb_sm]}>
@@ -42,13 +47,16 @@ export function MembersAndRequests({
         <InlineLinkText
           label={l`View incoming group chat requests`}
           style={[a.text_sm, a.text_right, a.font_semi_bold]}
-          // TODO Need to implement this. -dsb
-          to="#">
+          {...createStaticClick(() => {
+            navigation.navigate('MessagesJoinRequests', {
+              conversation: convo.view.id,
+            })
+          })}>
           {hasMoreRequests
             ? l({
                 message: `${requestCount}+ requests`,
                 comment:
-                  'Displayed when there are more than 50 requests to join a group chat',
+                  'Displayed when there are more than 20 requests to join a group chat',
               })
             : l({
                 message: plural(requestCount, {

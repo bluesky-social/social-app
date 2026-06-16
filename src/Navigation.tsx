@@ -44,6 +44,7 @@ import {
   type State,
 } from '#/lib/routes/types'
 import {bskyTitle} from '#/lib/strings/headings'
+import {CHAT_INVITE_CODE_REGEX} from '#/lib/strings/url-helpers'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -81,6 +82,7 @@ import {MessagesScreen} from '#/screens/Messages/ChatList'
 import {MessagesConversationScreen} from '#/screens/Messages/Conversation'
 import {MessagesConversationSettingsScreen} from '#/screens/Messages/ConversationSettings'
 import {MessagesInboxScreen} from '#/screens/Messages/Inbox'
+import {MessagesJoinRequestsScreen} from '#/screens/Messages/JoinRequests'
 import {MessagesSettingsScreen} from '#/screens/Messages/Settings'
 import {ModerationScreen} from '#/screens/Moderation'
 import {Screen as ModerationVerificationSettings} from '#/screens/Moderation/VerificationSettings'
@@ -132,6 +134,7 @@ import {
 import {useAnalytics} from '#/analytics'
 import {setNavigationMetadata} from '#/analytics/metadata'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {InviteScannerScreen} from '#/features/inviteFriends'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import {renderMessagesSplitViewLayout} from './screens/Messages/components/splitView/MessagesSplitViewLayout'
@@ -306,6 +309,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="DebugMod"
         getComponent={() => DebugModScreen}
         options={{title: title(msg`Moderation states`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="InviteScanner"
+        getComponent={() => InviteScannerScreen}
+        options={{title: title(msg`Scan QR code`), requireAuth: true}}
       />
       <Stack.Screen
         name="SharedPreferencesTester"
@@ -486,6 +494,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
           name="MessagesConversationSettings"
           getComponent={() => MessagesConversationSettingsScreen}
           options={{title: title(msg`Group chat settings`), requireAuth: true}}
+        />
+        <Stack.Screen
+          name="MessagesJoinRequests"
+          getComponent={() => MessagesJoinRequestsScreen}
+          options={{title: title(msg`Requests to join`), requireAuth: true}}
         />
         <Stack.Screen
           name="MessagesSettings"
@@ -797,6 +810,19 @@ const LINKING = {
       return buildStateObject('Flat', 'Home', params)
     }
 
+    // Chat invite URLs (`/chat/:code`) are handled by `useIntentHandler`, which
+    // opens the GroupChatJoinDialog (or the logged-out join flow). Route the
+    // path to Home so the dialog overlays Home instead of NotFound. On native,
+    // react-navigation strips the `bluesky://` prefix and passes the path
+    // without a leading slash, so normalize before matching.
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`
+    if (CHAT_INVITE_CODE_REGEX.test(normalizedPath.split('?')[0])) {
+      if (IS_NATIVE) {
+        return buildStateObject('HomeTab', 'Home', params)
+      }
+      return buildStateObject('Flat', 'Home', params)
+    }
+
     if (IS_NATIVE) {
       if (name === 'Search') {
         return buildStateObject('SearchTab', 'Search', params)
@@ -823,6 +849,8 @@ const LINKING = {
     }
   },
 } satisfies LinkingOptions<AllNavigatorParams>
+
+let didHandlePushNotificationEntry = false
 
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const ax = useAnalytics()
@@ -883,6 +911,14 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
   function handlePushNotificationEntry() {
     if (!IS_NATIVE) return
+
+    // Only consume a launching notification once per JS runtime. Account
+    // switches remount the entire tree (see `key={currentAccount?.did}` in
+    // `App.native.tsx`), which re-fires `onNavigationReady` and would
+    // otherwise re-process whatever `getLastNotificationResponse` still has
+    // cached natively (APP-2338).
+    if (didHandlePushNotificationEntry) return
+    didHandlePushNotificationEntry = true
 
     // intent urls are handled by `useIntentHandler`
     if (linkingUrl) return

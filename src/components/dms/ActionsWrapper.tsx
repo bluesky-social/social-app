@@ -14,7 +14,6 @@ export function ActionsWrapper({
   children,
 }: {
   message: ChatBskyConvoDefs.MessageView
-  hasReactions?: boolean
   isFromSelf: boolean
   senderProfile?: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts | undefined

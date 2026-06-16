@@ -12,16 +12,19 @@ import (
 	"io"
 	"io/fs"
 	"log/slog"
+	"net"
 	"net/http"
 	"net/netip"
 	"net/url"
 	"os"
 	"os/signal"
+	"regexp"
 	"strings"
 	"syscall"
 	"time"
 
 	appbsky "github.com/bluesky-social/indigo/api/bsky"
+	chat "github.com/bluesky-social/indigo/api/chat"
 	"github.com/bluesky-social/indigo/atproto/syntax"
 	"github.com/bluesky-social/indigo/util/cliutil"
 	"github.com/bluesky-social/indigo/xrpc"
@@ -33,14 +36,17 @@ import (
 	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/urfave/cli/v2"
 )
 
 type Server struct {
-	echo  *echo.Echo
-	httpd *http.Server
-	xrpcc *xrpc.Client
-	cfg   *Config
+	echo         *echo.Echo
+	httpd        *http.Server
+	metricsHttpd *http.Server
+	xrpcc        *xrpc.Client
+	chatXrpcc    *xrpc.Client
+	cfg          *Config
 
 	ipccClient http.Client
 
@@ -54,6 +60,7 @@ type Config struct {
 	debug         bool
 	httpAddress   string
 	appviewHost   string
+	chatHost      string
 	ogcardHost    string
 	linkHost      string
 	ipccHost      string
@@ -63,7 +70,9 @@ type Config struct {
 func serve(cctx *cli.Context) error {
 	debug := cctx.Bool("debug")
 	httpAddress := cctx.String("http-address")
+	metricsAddress := cctx.String("metrics-address")
 	appviewHost := cctx.String("appview-host")
+	chatHost := cctx.String("chat-host")
 	ogcardHost := cctx.String("ogcard-host")
 	linkHost := cctx.String("link-host")
 	ipccHost := cctx.String("ipcc-host")
@@ -81,6 +90,15 @@ func serve(cctx *cli.Context) error {
 	xrpcc := &xrpc.Client{
 		Client: cliutil.NewHttpClient(),
 		Host:   appviewHost,
+	}
+
+	// optional client for the chat appview, used by /chat/<code> for OG previews.
+	var chatXrpcc *xrpc.Client
+	if chatHost != "" {
+		chatXrpcc = &xrpc.Client{
+			Client: cliutil.NewHttpClient(),
+			Host:   chatHost,
+		}
 	}
 
 	// httpd
@@ -106,12 +124,14 @@ func serve(cctx *cli.Context) error {
 	// server
 	//
 	server := &Server{
-		echo:  e,
-		xrpcc: xrpcc,
+		echo:      e,
+		xrpcc:     xrpcc,
+		chatXrpcc: chatXrpcc,
 		cfg: &Config{
 			debug:         debug,
 			httpAddress:   httpAddress,
 			appviewHost:   appviewHost,
+			chatHost:      chatHost,
 			ogcardHost:    ogcardHost,
 			linkHost:      linkHost,
 			ipccHost:      ipccHost,
@@ -280,49 +300,50 @@ func serve(cctx *cli.Context) error {
 	// generic routes
 	e.GET("/hashtag/:tag", server.WebGeneric)
 	e.GET("/topic/:topic", server.WebGeneric)
-	e.GET("/search", server.WebGeneric)
-	e.GET("/feeds", server.WebGeneric)
-	e.GET("/notifications", server.WebGeneric)
-	e.GET("/notifications/settings", server.WebGeneric)
-	e.GET("/notifications/activity", server.WebGeneric)
-	e.GET("/lists", server.WebGeneric)
-	e.GET("/moderation", server.WebGeneric)
-	e.GET("/moderation/modlists", server.WebGeneric)
-	e.GET("/moderation/muted-accounts", server.WebGeneric)
-	e.GET("/moderation/blocked-accounts", server.WebGeneric)
-	e.GET("/moderation/verification-settings", server.WebGeneric)
-	e.GET("/settings", server.WebGeneric)
-	e.GET("/settings/language", server.WebGeneric)
-	e.GET("/settings/app-passwords", server.WebGeneric)
-	e.GET("/settings/following-feed", server.WebGeneric)
-	e.GET("/settings/saved-feeds", server.WebGeneric)
-	e.GET("/settings/threads", server.WebGeneric)
-	e.GET("/settings/external-embeds", server.WebGeneric)
-	e.GET("/settings/accessibility", server.WebGeneric)
-	e.GET("/settings/appearance", server.WebGeneric)
-	e.GET("/settings/account", server.WebGeneric)
-	e.GET("/settings/automation-label", server.WebGeneric)
-	e.GET("/settings/privacy-and-security", server.WebGeneric)
-	e.GET("/settings/privacy-and-security/activity", server.WebGeneric)
-	e.GET("/settings/content-and-media", server.WebGeneric)
-	e.GET("/settings/interests", server.WebGeneric)
-	e.GET("/settings/about", server.WebGeneric)
-	e.GET("/settings/notifications", server.WebGeneric)
-	e.GET("/sys/debug", server.WebGeneric)
-	e.GET("/sys/debug-mod", server.WebGeneric)
-	e.GET("/sys/log", server.WebGeneric)
+	e.GET("/search", server.WebGenericNoindex)
+	e.GET("/feeds", server.WebGenericNoindex)
+	e.GET("/notifications", server.WebGenericNoindex)
+	e.GET("/notifications/settings", server.WebGenericNoindex)
+	e.GET("/notifications/activity", server.WebGenericNoindex)
+	e.GET("/lists", server.WebGenericNoindex)
+	e.GET("/moderation", server.WebGenericNoindex)
+	e.GET("/moderation/modlists", server.WebGenericNoindex)
+	e.GET("/moderation/muted-accounts", server.WebGenericNoindex)
+	e.GET("/moderation/blocked-accounts", server.WebGenericNoindex)
+	e.GET("/moderation/verification-settings", server.WebGenericNoindex)
+	e.GET("/settings", server.WebGenericNoindex)
+	e.GET("/settings/language", server.WebGenericNoindex)
+	e.GET("/settings/app-passwords", server.WebGenericNoindex)
+	e.GET("/settings/following-feed", server.WebGenericNoindex)
+	e.GET("/settings/saved-feeds", server.WebGenericNoindex)
+	e.GET("/settings/threads", server.WebGenericNoindex)
+	e.GET("/settings/external-embeds", server.WebGenericNoindex)
+	e.GET("/settings/accessibility", server.WebGenericNoindex)
+	e.GET("/settings/appearance", server.WebGenericNoindex)
+	e.GET("/settings/account", server.WebGenericNoindex)
+	e.GET("/settings/automation-label", server.WebGenericNoindex)
+	e.GET("/settings/privacy-and-security", server.WebGenericNoindex)
+	e.GET("/settings/privacy-and-security/activity", server.WebGenericNoindex)
+	e.GET("/settings/content-and-media", server.WebGenericNoindex)
+	e.GET("/settings/interests", server.WebGenericNoindex)
+	e.GET("/settings/about", server.WebGenericNoindex)
+	e.GET("/settings/notifications", server.WebGenericNoindex)
+	e.GET("/sys/debug", server.WebGenericNoindex)
+	e.GET("/sys/debug-mod", server.WebGenericNoindex)
+	e.GET("/sys/log", server.WebGenericNoindex)
 	e.GET("/support", server.WebGeneric)
 	e.GET("/support/privacy", server.WebGeneric)
 	e.GET("/support/tos", server.WebGeneric)
 	e.GET("/support/community-guidelines", server.WebGeneric)
 	e.GET("/support/copyright", server.WebGeneric)
-	e.GET("/intent/compose", server.WebGeneric)
-	e.GET("/intent/verify-email", server.WebGeneric)
-	e.GET("/intent/age-assurance", server.WebGeneric)
-	e.GET("/messages", server.WebGeneric)
-	e.GET("/messages/inbox", server.WebGeneric)
-	e.GET("/messages/:conversation", server.WebGeneric)
-	e.GET("/messages/:conversation/settings", server.WebGeneric)
+	e.GET("/intent/compose", server.WebGenericNoindexNofollow)
+	e.GET("/intent/verify-email", server.WebGenericNoindexNofollow)
+	e.GET("/intent/age-assurance", server.WebGenericNoindexNofollow)
+	e.GET("/messages", server.WebGenericNoindex)
+	e.GET("/messages/inbox", server.WebGenericNoindex)
+	e.GET("/messages/:conversation", server.WebGenericNoindex)
+	e.GET("/messages/:conversation/settings", server.WebGenericNoindex)
+	e.GET("/messages/:conversation/requests", server.WebGenericNoindex)
 
 	// profile endpoints; only first populates info
 	e.GET("/profile/:handleOrDID", server.WebProfile)
@@ -346,11 +367,14 @@ func serve(cctx *cli.Context) error {
 
 	// starter packs
 	e.GET("/starter-pack/:handleOrDID/:rkey", server.WebStarterPack)
-	e.GET("/starter-pack-short/:code", server.WebGeneric)
+	e.GET("/starter-pack-short/:code", server.WebGenericNoindex)
 	e.GET("/start/:handleOrDID/:rkey", server.WebStarterPack)
 
+	// chat invites
+	e.GET("/chat/:code", server.WebChatInvite)
+
 	// bookmarks
-	e.GET("/saved", server.WebGeneric)
+	e.GET("/saved", server.WebGenericNoindex)
 
 	// ipcc
 	e.GET("/ipcc", server.WebIpCC)
@@ -366,6 +390,19 @@ func serve(cctx *cli.Context) error {
 		}
 		e.Group("/:linkId", server.LinkProxyMiddleware(linkUrl))
 	}
+
+	metricsHttpd, metricsListener, err := newMetricsHTTPServer(metricsAddress)
+	if err != nil {
+		return err
+	}
+	server.metricsHttpd = metricsHttpd
+
+	log.Infof("starting metrics server address=%s", metricsAddress)
+	go func() {
+		if err := metricsHttpd.Serve(metricsListener); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Errorf("metrics HTTP server shutting down unexpectedly: %s", err)
+		}
+	}()
 
 	// Start the server.
 	log.Infof("starting server address=%s", httpAddress)
@@ -399,6 +436,24 @@ func serve(cctx *cli.Context) error {
 	return nil
 }
 
+func newMetricsHTTPServer(address string) (*http.Server, net.Listener, error) {
+	metricsMux := http.NewServeMux()
+	metricsMux.Handle("/metrics", promhttp.Handler())
+
+	metricsHttpd := &http.Server{
+		Addr:              address,
+		Handler:           metricsMux,
+		ReadHeaderTimeout: 5 * time.Second,
+	}
+
+	metricsListener, err := net.Listen("tcp", address)
+	if err != nil {
+		return nil, nil, fmt.Errorf("listen metrics address %s: %w", address, err)
+	}
+
+	return metricsHttpd, metricsListener, nil
+}
+
 func (srv *Server) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	srv.echo.ServeHTTP(rw, req)
 }
@@ -409,7 +464,18 @@ func (srv *Server) Shutdown() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	return srv.httpd.Shutdown(ctx)
+	var shutdownErr error
+	if srv.metricsHttpd != nil {
+		if err := srv.metricsHttpd.Shutdown(ctx); err != nil {
+			shutdownErr = fmt.Errorf("metrics HTTP server shutdown error: %w", err)
+		}
+	}
+
+	if err := srv.httpd.Shutdown(ctx); err != nil {
+		return errors.Join(shutdownErr, err)
+	}
+
+	return shutdownErr
 }
 
 // NewTemplateContext returns a new pongo2 context with some default values.
@@ -417,6 +483,8 @@ func (srv *Server) NewTemplateContext() pongo2.Context {
 	return pongo2.Context{
 		"staticCDNHost": srv.cfg.staticCDNHost,
 		"favicon":       fmt.Sprintf("%s/static/favicon.png", srv.cfg.staticCDNHost),
+		"noindex":       false,
+		"nofollow":      false,
 	}
 }
 
@@ -469,10 +537,38 @@ func (srv *Server) LinkProxyMiddleware(url *url.URL) echo.MiddlewareFunc {
 	)
 }
 
+// renderOptions controls per-request rendering flags for the generic web handler.
+type renderOptions struct {
+	noindex  bool
+	nofollow bool
+}
+
+// webGeneric returns a handler that renders the base SPA shell with the given
+// render options applied to the template context.
+func (srv *Server) webGeneric(c echo.Context, o renderOptions) error {
+	data := srv.NewTemplateContext()
+	data["noindex"] = o.noindex
+	data["nofollow"] = o.nofollow
+	return c.Render(http.StatusOK, "base.html", data)
+}
+
 // handler for endpoint that have no specific server-side handling
 func (srv *Server) WebGeneric(c echo.Context) error {
-	data := srv.NewTemplateContext()
-	return c.Render(http.StatusOK, "base.html", data)
+	return srv.webGeneric(c, renderOptions{})
+}
+
+// handler for routes that should not be indexed by search engines
+// (e.g. auth-only user-state surfaces, internal/debug pages, action/intent dispatch URLs, search results)
+func (srv *Server) WebGenericNoindex(c echo.Context) error {
+	return srv.webGeneric(c, renderOptions{noindex: true})
+}
+
+// handler for action/intent dispatch URLs (e.g. /intent/compose). These accept
+// arbitrary query parameters from arbitrary third-party referrers, so we treat
+// them as link-graph dead-ends in addition to noindex. Anything legitimately
+// reachable from a hydrated intent page is also reachable via its canonical URL.
+func (srv *Server) WebGenericNoindexNofollow(c echo.Context) error {
+	return srv.webGeneric(c, renderOptions{noindex: true, nofollow: true})
 }
 
 func (srv *Server) WebHome(c echo.Context) error {
@@ -547,6 +643,8 @@ func (srv *Server) WebPost(c echo.Context) error {
 			data["canonicalURL"] = canonicalURL
 		}
 		data["requiresAuth"] = true
+		data["noindex"] = true
+		data["nofollow"] = true
 		data["profileHandle"] = pv.Handle
 		if pv.DisplayName != nil {
 			data["profileDisplayName"] = *pv.DisplayName
@@ -644,6 +742,44 @@ func (srv *Server) WebStarterPack(c echo.Context) error {
 	return c.Render(http.StatusOK, "starterpack.html", data)
 }
 
+// chatInviteCodeRe is a permissive sanity check on the join code so we don't
+// proxy obviously-bad input to the chat appview. Codes are opaque per the
+// lexicon, but in practice URL-safe and short.
+var chatInviteCodeRe = regexp.MustCompile(`^[A-Za-z0-9_-]{1,64}$`)
+
+func (srv *Server) WebChatInvite(c echo.Context) error {
+	req := c.Request()
+	ctx := req.Context()
+	data := srv.NewTemplateContext()
+	data["noindex"] = true
+	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+
+	code := c.Param("code")
+	if !chatInviteCodeRe.MatchString(code) {
+		return c.Render(http.StatusOK, "chatinvite.html", data)
+	}
+	if srv.chatXrpcc == nil {
+		return c.Render(http.StatusOK, "chatinvite.html", data)
+	}
+
+	out, err := chat.GroupGetJoinLinkPreviews(ctx, srv.chatXrpcc, []string{code})
+	if err != nil {
+		log.Errorf("failed to fetch chat invite preview for code=%s: %v", code, err)
+		return c.Render(http.StatusOK, "chatinvite.html", data)
+	}
+	if len(out.JoinLinkPreviews) == 0 {
+		return c.Render(http.StatusOK, "chatinvite.html", data)
+	}
+	preview := out.JoinLinkPreviews[0]
+
+	data["title"] = preview.Name
+	if srv.cfg.ogcardHost != "" {
+		// bskyogcard registers this route as /chat-invite/:code, not /chat/:code.
+		data["imgThumbUrl"] = fmt.Sprintf("%s/chat-invite/%s", srv.cfg.ogcardHost, code)
+	}
+	return c.Render(http.StatusOK, "chatinvite.html", data)
+}
+
 func (srv *Server) WebProfile(c echo.Context) error {
 	ctx := c.Request().Context()
 	data := srv.NewTemplateContext()
@@ -703,6 +839,8 @@ func (srv *Server) WebProfile(c echo.Context) error {
 		}
 	} else {
 		data["requiresAuth"] = true
+		data["noindex"] = true
+		data["nofollow"] = true
 	}
 
 	if jsonld, err := buildProfileJSONLD(pv, recentPosts, hideEmbedLabels, hideReplyLabels); err == nil {

@@ -20,7 +20,7 @@ import {countGraphemes} from 'unicode-segmenter/grapheme'
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {isBskyPostUrl} from '#/lib/strings/url-helpers'
+import {isBskyChatInviteUrl, isBskyPostUrl} from '#/lib/strings/url-helpers'
 import {useEmail} from '#/state/email-verification'
 import {
   useMessageDraft,
@@ -233,7 +233,11 @@ export function MessageComposer({
                 }}
                 onChange={handleChange}
                 onFacetCommitted={facet => {
-                  if (facet.type === 'url' && isBskyPostUrl(facet.value)) {
+                  if (
+                    facet.type === 'url' &&
+                    (isBskyPostUrl(facet.value) ||
+                      isBskyChatInviteUrl(facet.value))
+                  ) {
                     setEmbed(facet.value)
                   }
                 }}
@@ -322,7 +326,7 @@ export function ComposerContainer({children}: {children: React.ReactNode}) {
 
   if (IS_LIQUID_GLASS) {
     return (
-      <ScrollEdgeEffect edge="bottom">
+      <ScrollEdgeEffect edge="bottom" effect="soft">
         <Animated.View style={[a.w_full, animatedContainerStyle, a.pb_lg]}>
           {children}
         </Animated.View>

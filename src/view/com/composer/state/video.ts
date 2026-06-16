@@ -1,9 +1,10 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {type AppBskyVideoDefs, type BlobRef, type BskyAgent} from '@atproto/api'
+import {type AppBskyVideoDefs, type AtpAgent, type BlobRef} from '@atproto/api'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
 import {AbortError} from '#/lib/async/cancelable'
+import {VIDEO_MAX_SIZE_MB} from '#/lib/constants'
 import {compressVideo} from '#/lib/media/video/compress'
 import {
   ServerError,
@@ -260,11 +261,10 @@ function trunc2dp(num: number) {
 export async function processVideo(
   asset: ImagePickerAsset,
   dispatch: (action: VideoAction) => void,
-  agent: BskyAgent,
+  agent: AtpAgent,
   did: string,
   signal: AbortSignal,
   i18n: I18n,
-  TEMP_enableLargeVideoUploads: boolean,
 ) {
   let video: CompressedVideo | undefined
   try {
@@ -273,14 +273,9 @@ export async function processVideo(
         dispatch({type: 'update_progress', progress: trunc2dp(num), signal})
       },
       signal,
-      TEMP_enableLargeVideoUploads,
     })
   } catch (e) {
-    const message = getCompressErrorMessage(
-      e,
-      i18n,
-      TEMP_enableLargeVideoUploads,
-    )
+    const message = getCompressErrorMessage(e, i18n)
     if (message !== null) {
       dispatch({
         type: 'to_error',
@@ -309,7 +304,7 @@ export async function processVideo(
       },
     })
   } catch (e) {
-    const message = getUploadErrorMessage(e, i18n, TEMP_enableLargeVideoUploads)
+    const message = getUploadErrorMessage(e, i18n)
     if (message !== null) {
       dispatch({
         type: 'to_error',
@@ -393,30 +388,20 @@ export async function processVideo(
   }
 }
 
-function getCompressErrorMessage(
-  e: unknown,
-  i18n: I18n,
-  TEMP_enableLargeVideoUploads: boolean,
-): string | null {
-  const videoSize = TEMP_enableLargeVideoUploads ? 300 : 100
+function getCompressErrorMessage(e: unknown, i18n: I18n): string | null {
   if (e instanceof AbortError) {
     return null
   }
   if (e instanceof VideoTooLargeError) {
     return i18n._(
-      msg`The selected video is larger than ${videoSize} MB. Please try again with a smaller file.`,
+      msg`The selected video is larger than ${VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file.`,
     )
   }
   logger.error('Error compressing video', {safeMessage: e})
   return i18n._(msg`An error occurred while compressing the video.`)
 }
 
-function getUploadErrorMessage(
-  e: unknown,
-  i18n: I18n,
-  TEMP_enableLargeVideoUploads: boolean,
-): string | null {
-  const videoSize = TEMP_enableLargeVideoUploads ? 300 : 100
+function getUploadErrorMessage(e: unknown, i18n: I18n): string | null {
   if (e instanceof AbortError) {
     return null
   }
@@ -448,7 +433,7 @@ function getUploadErrorMessage(
       case 'file size (100000001 bytes) is larger than the maximum allowed size (100000000 bytes)':
       case 'file size (300000001 bytes) is larger than the maximum allowed size (300000000 bytes)':
         return i18n._(
-          msg`The selected video is larger than ${videoSize} MB. Please try again with a smaller file.`,
+          msg`The selected video is larger than ${VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file.`,
         )
       case 'Confirm your email address to upload videos':
         return i18n._(msg`Please confirm your email address to upload videos.`)

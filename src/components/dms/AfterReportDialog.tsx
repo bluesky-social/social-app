@@ -33,14 +33,19 @@ export const AfterReportDialog = memo(function BlockOrDeleteDialogInner({
   control,
   params,
   currentScreen,
+  onClose,
 }: {
   control: Dialog.DialogControlProps
   params: ReportDialogParams
   currentScreen: 'list' | 'conversation'
+  onClose?: () => void
 }): React.ReactNode {
   const {t: l} = useLingui()
   return (
-    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
+    <Dialog.Outer
+      control={control}
+      onClose={onClose}
+      nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={l`Would you like to block this user and/or delete this conversation?`}

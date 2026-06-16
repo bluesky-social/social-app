@@ -3,8 +3,8 @@ import {
   type AppBskyGraphDefs,
   type AppBskyGraphGetList,
   type AppBskyGraphList,
+  type AtpAgent,
   AtUri,
-  type BskyAgent,
   type ComAtprotoRepoApplyWrites,
   type Facet,
   type Un$Typed,
@@ -305,7 +305,7 @@ export function useListBlockMutation() {
 }
 
 async function whenAppViewReady(
-  agent: BskyAgent,
+  agent: AtpAgent,
   uri: string,
   fn: (res: AppBskyGraphGetList.Response) => boolean,
 ) {

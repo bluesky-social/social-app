@@ -40,6 +40,8 @@ export const router = new Router<AllNavigatableRoutes>({
   Debug: '/sys/debug',
   DebugMod: '/sys/debug-mod',
   Log: '/sys/log',
+  // invite friends
+  InviteScanner: '/invite/scan',
   // settings
   LanguageSettings: '/settings/language',
   AppPasswords: '/settings/app-passwords',
@@ -74,6 +76,7 @@ export const router = new Router<AllNavigatableRoutes>({
   MessagesInbox: '/messages/inbox',
   MessagesConversation: '/messages/:conversation',
   MessagesConversationSettings: '/messages/:conversation/settings',
+  MessagesJoinRequests: '/messages/:conversation/requests',
   // starter packs
   Start: '/start/:name/:rkey',
   StarterPackEdit: '/starter-pack/edit/:rkey',
