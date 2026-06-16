@@ -34,6 +34,7 @@ import {
 } from '#/components/Autocomplete'
 import {
   AutosizedTextarea,
+  type AutosizedTextareaHeightApi,
   type AutosizedTextareaProps,
 } from '#/components/forms/AutosizedTextarea'
 import {Span, Text} from '#/components/Typography'
@@ -151,6 +152,13 @@ export function Composer({
   const inputScrollSharedValue = useSharedValue(0)
 
   /*
+   * Imperative handle on the underlying textarea, used to reset its height when
+   * the input is cleared programmatically (Android doesn't fire
+   * `onContentSizeChange` in that case).
+   */
+  const heightApiRef = useRef<AutosizedTextareaHeightApi>(null)
+
+  /*
    * Expose imperative internal API
    */
   useImperativeHandle(
@@ -160,6 +168,7 @@ export function Composer({
       clear: () => {
         tapper.inputProps.onChangeText('')
         inputScrollSharedValue.value = 0
+        heightApiRef.current?.resetHeight()
       },
       insert: tapper.insert,
       setAutocompleteAnchor: sift.refs.setAnchor,
@@ -321,6 +330,7 @@ export function Composer({
           </View>
         )}
         <AutosizedTextarea
+          heightApiRef={heightApiRef}
           placeholderTextColor={t.palette.contrast_500}
           accessibilityLabel={label}
           accessibilityHint={label}
