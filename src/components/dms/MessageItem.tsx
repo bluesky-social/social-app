@@ -791,10 +791,16 @@ function ReplyQuote({
   const t = useTheme()
   const {t: l} = useLingui()
 
-  const senderProfile = relatedProfiles.get(replyTo.sender.did)
-  const senderName = senderProfile
-    ? createSanitizedDisplayName(senderProfile)
-    : null
+  const senderProfile = useMaybeProfileShadow(
+    relatedProfiles.get(replyTo.sender.did),
+  )
+  // Hide the quoted content if we block, or are blocked by, the original
+  // sender - mirroring how the message bubble itself is hidden.
+  const isBlocked = senderProfile ? isBlockedOrBlocking(senderProfile) : false
+  const senderName =
+    senderProfile && !isBlocked
+      ? createSanitizedDisplayName(senderProfile)
+      : null
 
   const tintColor = isFromSelf ? t.palette.white : t.atoms.text.color
   const subtleColor = isFromSelf
@@ -806,7 +812,10 @@ function ReplyQuote({
 
   let text: string
   let subtle = false
-  if (ChatBskyConvoDefs.isMessageView(replyTo)) {
+  if (isBlocked) {
+    text = l`Message hidden`
+    subtle = true
+  } else if (ChatBskyConvoDefs.isMessageView(replyTo)) {
     text = replyTo.text
     if (!text.trim()) {
       subtle = true
@@ -833,7 +842,7 @@ function ReplyQuote({
       onPress={onPress}
       style={[
         a.mb_xs,
-        a.flex_1,
+
         a.gap_2xs,
         a.rounded_md,
         a.px_sm,

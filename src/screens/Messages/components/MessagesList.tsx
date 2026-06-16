@@ -62,10 +62,7 @@ import {MessageListError} from '#/screens/Messages/components/MessageListError'
 import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {DateDivider} from '#/components/dms/DateDivider'
 import {MessageItem} from '#/components/dms/MessageItem'
-import {
-  MessageOverlays,
-  useMessageDialogs,
-} from '#/components/dms/MessageOverlays'
+import {MessageOverlays} from '#/components/dms/MessageOverlays'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {SystemMessageGroup} from '#/components/dms/SystemMessageGroup'
 import {SystemMessageItem} from '#/components/dms/SystemMessageItem'
@@ -741,17 +738,11 @@ function Composer({
   loading?: boolean
   useNewComposer: boolean
 }) {
-  const {replyTo, clearReply} = useMessageDialogs()
-
-  const handleSendMessage = useNonReactiveCallback((message: string) => {
-    void onSendMessage(
-      message,
-      replyTo
-        ? {...replyTo, $type: 'chat.bsky.convo.defs#messageView'}
-        : undefined,
-    )
-    clearReply()
-  })
+  const handleSendMessage = useNonReactiveCallback(
+    (message: string, replyTo?: $Typed<ChatBskyConvoDefs.MessageView>) => {
+      void onSendMessage(message, replyTo)
+    },
+  )
 
   const previews = (
     <>
