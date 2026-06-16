@@ -210,6 +210,11 @@ export function MessagesList({
   // paths - both target the end, so the result is correct.
   const pendingSendScroll = useRef(false)
 
+  // Handle for the in-flight send-scroll burst (see startSendScrollBurst). Held
+  // here so the re-init effect below can cancel a burst that belongs to the
+  // previous convo lifecycle.
+  const sendScrollRaf = useRef(0)
+
   // This will be used on web to assist in determining if we need to maintain the content offset
   const isAtTop = useSharedValue(true)
 
@@ -230,10 +235,12 @@ export function MessagesList({
     if (prevHasScrolled.current && !hasScrolled) {
       hasInitiallyScrolled.current = false
       setDidInitialScroll(false)
-      // Drop any unfired send pin: the initial-scroll path owns positioning
-      // during re-init, and the pending message it referred to belongs to the
-      // previous lifecycle.
+      // Drop any unfired send pin and stop an in-flight scroll burst: the
+      // initial-scroll path owns positioning during re-init, and the pending
+      // message they referred to belongs to the previous lifecycle.
       pendingSendScroll.current = false
+      cancelAnimationFrame(sendScrollRaf.current)
+      sendScrollRaf.current = 0
     }
     prevHasScrolled.current = hasScrolled
   }, [hasScrolled])
@@ -278,40 +285,47 @@ export function MessagesList({
     })
   }, [flatListRef])
 
-  // When the composer collapses back to one line after a multi-line send, the
-  // content bottom shifts down by that height delta. The send scroll below
-  // happens before this collapse, so it lands short. Arming this flag makes the
-  // next inputHeight drop re-scroll exactly once, tracking the composer's
-  // settle without a time-boxed loop. Bounded to a single collapse so an
-  // unrelated later resize can't trigger a stray scroll.
-  const followComposerCollapse = useRef(false)
-  const prevInputHeightJS = useRef(inputHeightJS)
+  // A single scroll can't follow a send to the bottom: a multi-line send settles
+  // over several layout passes (the tall pending item being measured, then the
+  // composer collapsing back to one line), and the content bottom keeps moving
+  // after the scroll target was clamped. We can't drive this off the composer's
+  // height drop either - that signal is global, outlives the send, and races the
+  // pending-message append. Instead we re-assert the saturating scroll across a
+  // short window keyed to the send. Each call re-clamps to the *current* true
+  // bottom, so the last one lands settled regardless of how many passes it took.
+  // The burst is bounded and self-terminating, so it can't leak into a later
+  // unrelated resize, and it polls geometry rather than depending on
+  // onContentSizeChange (which doesn't fire for the send append on native - see
+  // the pendingSendScroll declaration).
+  const stopSendScrollBurst = useCallback(() => {
+    cancelAnimationFrame(sendScrollRaf.current)
+    sendScrollRaf.current = 0
+  }, [])
+  const startSendScrollBurst = useCallback(() => {
+    stopSendScrollBurst()
+    const deadline = Date.now() + 200
+    const tick = () => {
+      scrollSendToBottom()
+      sendScrollRaf.current =
+        Date.now() < deadline ? requestAnimationFrame(tick) : 0
+    }
+    tick()
+  }, [scrollSendToBottom, stopSendScrollBurst])
+
+  // Cancel any in-flight burst on unmount.
+  useEffect(() => stopSendScrollBurst, [stopSendScrollBurst])
 
   // Follow a just-sent message to the end. This runs when the rendered item
   // count changes, but only fires once the tail item is our own optimistic
   // pending message (pending-message items are local-only). That way a foreign
   // message arriving between send and our append doesn't consume the pin or yank
   // a scrolled-up reader down to it - the pin waits for our message to land.
-  // See the pendingSendScroll declaration for why onContentSizeChange can't
-  // drive this on native.
   useEffect(() => {
     if (!pendingSendScroll.current) return
     if (renderItems.at(-1)?.type !== 'pending-message') return
     pendingSendScroll.current = false
-    followComposerCollapse.current = true
-    scrollSendToBottom()
-  }, [renderItems, scrollSendToBottom])
-
-  // Re-scroll when the composer collapses after a send (see
-  // followComposerCollapse). Only a height *drop* counts as the collapse.
-  useEffect(() => {
-    const prev = prevInputHeightJS.current
-    prevInputHeightJS.current = inputHeightJS
-    if (!followComposerCollapse.current) return
-    if (inputHeightJS >= prev) return
-    followComposerCollapse.current = false
-    scrollSendToBottom()
-  }, [inputHeightJS, scrollSendToBottom])
+    startSendScrollBurst()
+  }, [renderItems, startSendScrollBurst])
 
   // -- Scroll handling
 
