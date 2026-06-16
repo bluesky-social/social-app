@@ -1002,12 +1002,12 @@ msgstr ""
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:439
 #: src/screens/Messages/components/RequestButtons.tsx:104
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:122
-#: src/view/com/profile/ProfileMenu.tsx:189
+#: src/view/com/profile/ProfileMenu.tsx:196
 msgctxt "toast"
 msgid "Account blocked"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:205
+#: src/view/com/profile/ProfileMenu.tsx:212
 msgctxt "toast"
 msgid "Account followed"
 msgstr ""
@@ -1026,7 +1026,7 @@ msgid "Account is deactivated"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:482
-#: src/view/com/profile/ProfileMenu.tsx:159
+#: src/view/com/profile/ProfileMenu.tsx:166
 msgctxt "toast"
 msgid "Account muted"
 msgstr ""
@@ -1055,18 +1055,18 @@ msgstr ""
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:109
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:97
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:361
-#: src/view/com/profile/ProfileMenu.tsx:176
+#: src/view/com/profile/ProfileMenu.tsx:183
 msgctxt "toast"
 msgid "Account unblocked"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:220
+#: src/view/com/profile/ProfileMenu.tsx:227
 msgctxt "toast"
 msgid "Account unfollowed"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:462
-#: src/view/com/profile/ProfileMenu.tsx:146
+#: src/view/com/profile/ProfileMenu.tsx:153
 msgctxt "toast"
 msgid "Account unmuted"
 msgstr ""
@@ -1241,8 +1241,8 @@ msgstr ""
 msgid "Add this feed to your feeds"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:356
-#: src/view/com/profile/ProfileMenu.tsx:359
+#: src/view/com/profile/ProfileMenu.tsx:372
+#: src/view/com/profile/ProfileMenu.tsx:375
 msgid "Add to lists"
 msgstr ""
 
@@ -1251,18 +1251,13 @@ msgid "Add to saved posts"
 msgstr ""
 
 #: src/components/dialogs/StarterPackDialog.tsx:184
-#: src/view/com/profile/ProfileMenu.tsx:347
-#: src/view/com/profile/ProfileMenu.tsx:350
+#: src/view/com/profile/ProfileMenu.tsx:363
+#: src/view/com/profile/ProfileMenu.tsx:366
 msgid "Add to starter packs"
 msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:166
 msgid "Add user to list"
-msgstr ""
-
-#: src/ageAssurance/components/NoAccessScreen.tsx:141
-#: src/ageAssurance/components/NoAccessScreen.tsx:144
-msgid "Add your birthdate"
 msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName( profile.kind.addedBy, true, moderateProfile(profile.kind.addedBy, moderationOpts).ui('displayName'), )
@@ -2034,7 +2029,6 @@ msgstr "beta"
 msgid "Beta Feature"
 msgstr ""
 
-#: src/components/ageAssurance/MuBirthdateDialog.tsx:100
 #: src/components/dialogs/BirthDateSettings.tsx:194
 msgid "Birthdate"
 msgstr ""
@@ -2065,8 +2059,8 @@ msgstr "Block {displayName}"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:770
 #: src/screens/Messages/components/RequestButtons.tsx:154
 #: src/screens/Messages/components/RequestButtons.tsx:156
-#: src/view/com/profile/ProfileMenu.tsx:470
-#: src/view/com/profile/ProfileMenu.tsx:477
+#: src/view/com/profile/ProfileMenu.tsx:486
+#: src/view/com/profile/ProfileMenu.tsx:493
 msgid "Block account"
 msgstr ""
 
@@ -3007,6 +3001,17 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
+#: src/components/ageAssurance/MuAgeConfirmDialog.tsx:87
+msgid "Confirm that you are 18 or older"
+msgstr "Confirm that you are 18 or older"
+
+#: src/ageAssurance/components/NoAccessScreen.tsx:141
+#: src/ageAssurance/components/NoAccessScreen.tsx:144
+#: src/components/ageAssurance/MuAgeConfirmDialog.tsx:34
+#: src/components/ageAssurance/MuAgeConfirmDialog.tsx:74
+msgid "Confirm your age"
+msgstr "Confirm your age"
+
 #: src/components/dialogs/EmailDialog/components/TokenField.tsx:37
 #: src/screens/Login/LoginForm.tsx:284
 #: src/screens/Login/PasswordSignin.tsx:254
@@ -3187,6 +3192,7 @@ msgstr ""
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:77
 #: src/lib/sharing.ts:24
 #: src/lib/sharing.ts:42
+#: src/view/com/profile/ProfileMenu.tsx:135
 msgid "Copied to clipboard"
 msgstr ""
 
@@ -3213,8 +3219,8 @@ msgstr ""
 msgid "Copy App Password"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:507
-#: src/view/com/profile/ProfileMenu.tsx:510
+#: src/view/com/profile/ProfileMenu.tsx:523
+#: src/view/com/profile/ProfileMenu.tsx:526
 msgid "Copy at:// URI"
 msgstr ""
 
@@ -3229,8 +3235,8 @@ msgid "Copy code"
 msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:514
-#: src/view/com/profile/ProfileMenu.tsx:516
-#: src/view/com/profile/ProfileMenu.tsx:519
+#: src/view/com/profile/ProfileMenu.tsx:532
+#: src/view/com/profile/ProfileMenu.tsx:535
 msgid "Copy DID"
 msgstr ""
 
@@ -3264,8 +3270,8 @@ msgstr ""
 msgid "Copy link to post"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:286
-#: src/view/com/profile/ProfileMenu.tsx:296
+#: src/view/com/profile/ProfileMenu.tsx:293
+#: src/view/com/profile/ProfileMenu.tsx:303
 msgid "Copy link to profile"
 msgstr ""
 
@@ -3295,6 +3301,11 @@ msgstr ""
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:467
 msgid "Copy TXT record value"
 msgstr ""
+
+#: src/view/com/profile/ProfileMenu.tsx:314
+#: src/view/com/profile/ProfileMenu.tsx:317
+msgid "Copy username"
+msgstr "Copy username"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:41
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:108
@@ -4251,8 +4262,8 @@ msgstr "Edit link settings"
 msgid "Edit list details"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:370
-#: src/view/com/profile/ProfileMenu.tsx:390
+#: src/view/com/profile/ProfileMenu.tsx:386
+#: src/view/com/profile/ProfileMenu.tsx:406
 msgid "Edit live status"
 msgstr ""
 
@@ -4495,7 +4506,6 @@ msgstr "Enter the handle of the account you want to sign in with"
 msgid "Enter the username or email address you used when you created your account"
 msgstr ""
 
-#: src/components/ageAssurance/MuBirthdateDialog.tsx:101
 #: src/components/dialogs/BirthDateSettings.tsx:195
 msgid "Enter your birthdate"
 msgstr ""
@@ -5272,8 +5282,8 @@ msgstr ""
 msgid "Follow 7 accounts"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:326
-#: src/view/com/profile/ProfileMenu.tsx:337
+#: src/view/com/profile/ProfileMenu.tsx:342
+#: src/view/com/profile/ProfileMenu.tsx:353
 msgid "Follow account"
 msgstr ""
 
@@ -5412,8 +5422,8 @@ msgid "Food"
 msgstr ""
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:148
-msgid "For organizational accounts, use the birthdate of the person who is responsible for the account."
-msgstr ""
+msgid "For organizational accounts, confirm based on the person who is responsible for the account."
+msgstr "For organizational accounts, confirm based on the person who is responsible for the account."
 
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:186
 msgid "For security reasons, we’ll need to send a confirmation code to your email address <0>{currentEmail}</0>."
@@ -5646,8 +5656,8 @@ msgctxt "Button to go back to the home timeline"
 msgid "Go home"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:371
-#: src/view/com/profile/ProfileMenu.tsx:392
+#: src/view/com/profile/ProfileMenu.tsx:387
+#: src/view/com/profile/ProfileMenu.tsx:408
 msgid "Go live"
 msgstr ""
 
@@ -5658,8 +5668,8 @@ msgstr ""
 msgid "Go Live"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:368
-#: src/view/com/profile/ProfileMenu.tsx:388
+#: src/view/com/profile/ProfileMenu.tsx:384
+#: src/view/com/profile/ProfileMenu.tsx:404
 msgid "Go live (disabled)"
 msgstr ""
 
@@ -6124,6 +6134,10 @@ msgstr ""
 msgid "Human trafficking"
 msgstr ""
 
+#: src/components/ageAssurance/MuAgeConfirmDialog.tsx:94
+msgid "I am 18 or older"
+msgstr "I am 18 or older"
+
 #: src/components/contacts/screens/GetContacts.tsx:267
 msgid "I consent to Bluesky using my contacts for mutual friend discovery and to retain hashed data for matching until I opt out."
 msgstr ""
@@ -6158,6 +6172,10 @@ msgstr ""
 #: src/screens/Settings/LanguageSettings.tsx:235
 msgid "If none are selected, all languages will be shown in your feeds."
 msgstr ""
+
+#: src/ageAssurance/components/NoAccessScreen.tsx:83
+msgid "If this is wrong, you can <0>update it here</0>."
+msgstr "If this is wrong, you can <0>update it here</0>."
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:121
 msgid "If you are 18 years of age or older and want to try again, click the button below and use a different verification method if one is available in your region. If you have questions or concerns, <0>our support team can help.</0>"
@@ -6206,10 +6224,6 @@ msgstr ""
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
 msgstr ""
-
-#: src/ageAssurance/components/NoAccessScreen.tsx:83
-msgid "If your birthdate is wrong, you can <0>update it here</0>."
-msgstr "If your birthdate is wrong, you can <0>update it here</0>."
 
 #: src/components/images/ImageLayoutGridItem.tsx:96
 msgid "Image"
@@ -7411,8 +7425,8 @@ msgstr ""
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:144
 #: src/view/com/composer/drafts/DraftItem.tsx:190
-#: src/view/com/profile/ProfileMenu.tsx:257
 #: src/view/com/profile/ProfileMenu.tsx:264
+#: src/view/com/profile/ProfileMenu.tsx:271
 msgid "More options"
 msgstr ""
 
@@ -7458,8 +7472,8 @@ msgstr "Mute {0}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:751
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:757
-#: src/view/com/profile/ProfileMenu.tsx:449
-#: src/view/com/profile/ProfileMenu.tsx:456
+#: src/view/com/profile/ProfileMenu.tsx:465
+#: src/view/com/profile/ProfileMenu.tsx:472
 msgid "Mute account"
 msgstr ""
 
@@ -7561,8 +7575,6 @@ msgstr ""
 msgid "Mutual group chats"
 msgstr "Mutual group chats"
 
-#: src/components/ageAssurance/MuBirthdateDialog.tsx:40
-#: src/components/ageAssurance/MuBirthdateDialog.tsx:86
 #: src/components/dialogs/BirthDateSettings.tsx:61
 #: src/components/dialogs/BirthDateSettings.tsx:65
 msgid "My birthdate"
@@ -7620,7 +7632,7 @@ msgstr ""
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:138
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:184
-#: src/view/com/profile/ProfileMenu.tsx:404
+#: src/view/com/profile/ProfileMenu.tsx:420
 msgid "New"
 msgstr ""
 
@@ -8052,7 +8064,7 @@ msgstr ""
 msgid "Not ready to hit post? Keep your best ideas in Drafts until the timing is just right."
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:546
+#: src/view/com/profile/ProfileMenu.tsx:562
 msgid "Note about sharing"
 msgstr ""
 
@@ -9690,8 +9702,8 @@ msgstr ""
 
 #: src/components/verification/VerificationRemovePrompt.tsx:48
 #: src/components/verification/VerificationsDialog.tsx:269
-#: src/view/com/profile/ProfileMenu.tsx:422
-#: src/view/com/profile/ProfileMenu.tsx:425
+#: src/view/com/profile/ProfileMenu.tsx:438
+#: src/view/com/profile/ProfileMenu.tsx:441
 msgid "Remove verification"
 msgstr ""
 
@@ -9841,8 +9853,8 @@ msgstr ""
 msgid "Report"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:489
-#: src/view/com/profile/ProfileMenu.tsx:492
+#: src/view/com/profile/ProfileMenu.tsx:505
+#: src/view/com/profile/ProfileMenu.tsx:508
 msgid "Report account"
 msgstr ""
 
@@ -10174,7 +10186,6 @@ msgstr "Review your sources"
 msgid "Sad GIFs"
 msgstr "Sad GIFs"
 
-#: src/components/ageAssurance/MuBirthdateDialog.tsx:129
 #: src/components/dialogs/BirthDateSettings.tsx:231
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:309
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:324
@@ -10198,7 +10209,6 @@ msgstr "Sad GIFs"
 msgid "Save"
 msgstr ""
 
-#: src/components/ageAssurance/MuBirthdateDialog.tsx:122
 #: src/components/dialogs/BirthDateSettings.tsx:224
 msgid "Save birthdate"
 msgstr ""
@@ -10414,8 +10424,8 @@ msgstr ""
 msgid "Search my posts"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:307
-#: src/view/com/profile/ProfileMenu.tsx:310
+#: src/view/com/profile/ProfileMenu.tsx:323
+#: src/view/com/profile/ProfileMenu.tsx:326
 msgid "Search posts"
 msgstr ""
 
@@ -10843,7 +10853,7 @@ msgstr ""
 msgid "Share"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:549
+#: src/view/com/profile/ProfileMenu.tsx:565
 msgid "Share anyway"
 msgstr ""
 
@@ -10907,8 +10917,8 @@ msgstr ""
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:166
 #: src/screens/StarterPack/StarterPackScreen.tsx:638
 #: src/screens/StarterPack/StarterPackScreen.tsx:646
-#: src/view/com/profile/ProfileMenu.tsx:286
-#: src/view/com/profile/ProfileMenu.tsx:298
+#: src/view/com/profile/ProfileMenu.tsx:293
+#: src/view/com/profile/ProfileMenu.tsx:305
 msgid "Share via..."
 msgstr ""
 
@@ -11318,10 +11328,6 @@ msgstr ""
 msgid "Something went wrong"
 msgstr ""
 
-#: src/components/ageAssurance/MuBirthdateDialog.tsx:78
-msgid "Something went wrong saving your birthdate. Please try again."
-msgstr "Something went wrong saving your birthdate. Please try again."
-
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:139
 #: src/components/moderation/ReportDialog/index.tsx:289
 #: src/screens/Deactivated.tsx:86
@@ -11343,6 +11349,7 @@ msgstr ""
 msgid "Something went wrong. Please try again in a moment."
 msgstr ""
 
+#: src/components/ageAssurance/MuAgeConfirmDialog.tsx:66
 #: src/components/moderation/ReportDialog/index.tsx:247
 msgid "Something went wrong. Please try again."
 msgstr ""
@@ -12051,12 +12058,12 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:323
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:350
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:366
-#: src/view/com/profile/ProfileMenu.tsx:151
-#: src/view/com/profile/ProfileMenu.tsx:164
-#: src/view/com/profile/ProfileMenu.tsx:181
-#: src/view/com/profile/ProfileMenu.tsx:194
-#: src/view/com/profile/ProfileMenu.tsx:210
-#: src/view/com/profile/ProfileMenu.tsx:225
+#: src/view/com/profile/ProfileMenu.tsx:158
+#: src/view/com/profile/ProfileMenu.tsx:171
+#: src/view/com/profile/ProfileMenu.tsx:188
+#: src/view/com/profile/ProfileMenu.tsx:201
+#: src/view/com/profile/ProfileMenu.tsx:217
+#: src/view/com/profile/ProfileMenu.tsx:232
 msgid "There was an issue! {0}"
 msgstr ""
 
@@ -12281,7 +12288,7 @@ msgstr "This invite link has been disabled."
 msgid "This invite link is invalid"
 msgstr "This invite link is invalid"
 
-#: src/components/ageAssurance/MuBirthdateDialog.tsx:89
+#: src/components/ageAssurance/MuAgeConfirmDialog.tsx:77
 msgid "This is a one-time thing. It's private and not shared with other users."
 msgstr "This is a one-time thing. It's private and not shared with other users."
 
@@ -12326,10 +12333,6 @@ msgstr ""
 #: src/screens/ProfileList/AboutSection.tsx:100
 msgid "This list is empty."
 msgstr ""
-
-#: src/components/ageAssurance/MuBirthdateDialog.tsx:107
-msgid "This means you are under 18. Certain content and features may be unavailable to you."
-msgstr "This means you are under 18. Certain content and features may be unavailable to you."
 
 #: src/screens/Messages/components/ChatListItem.tsx:334
 msgid "This message is hidden"
@@ -12387,7 +12390,7 @@ msgstr ""
 msgid "This post's author has disabled quote posts."
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:547
+#: src/view/com/profile/ProfileMenu.tsx:563
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
@@ -12536,8 +12539,8 @@ msgid "To disable your email 2FA method, please verify your access to <0>{0}</0>
 msgstr ""
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:132
-msgid "To give you an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data stays private."
-msgstr "To give you an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data stays private."
+msgid "To give you an age-appropriate experience, we need to confirm that you are 18 or older. This is a one-time thing, and your data stays private."
+msgstr "To give you an age-appropriate experience, we need to confirm that you are 18 or older. This is a one-time thing, and your data stays private."
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:193
 msgid "To log out, <0>click here</0>. Or if you’d prefer, you can <1>delete your account</1>."
@@ -12779,8 +12782,8 @@ msgstr "Unblock {displayName}"
 
 #: src/components/dms/ConvoMenu.tsx:284
 #: src/components/dms/ConvoMenu.tsx:288
-#: src/view/com/profile/ProfileMenu.tsx:469
-#: src/view/com/profile/ProfileMenu.tsx:475
+#: src/view/com/profile/ProfileMenu.tsx:485
+#: src/view/com/profile/ProfileMenu.tsx:491
 msgid "Unblock account"
 msgstr ""
 
@@ -12830,8 +12833,8 @@ msgstr ""
 msgid "Unfollow {0}"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:326
-#: src/view/com/profile/ProfileMenu.tsx:335
+#: src/view/com/profile/ProfileMenu.tsx:342
+#: src/view/com/profile/ProfileMenu.tsx:351
 msgid "Unfollow account"
 msgstr ""
 
@@ -12892,8 +12895,8 @@ msgstr "Unmute {0}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:750
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:756
-#: src/view/com/profile/ProfileMenu.tsx:448
-#: src/view/com/profile/ProfileMenu.tsx:454
+#: src/view/com/profile/ProfileMenu.tsx:464
+#: src/view/com/profile/ProfileMenu.tsx:470
 msgid "Unmute account"
 msgstr ""
 
@@ -13024,6 +13027,10 @@ msgstr "Update invite link"
 msgid "Update to {domain}"
 msgstr ""
 
+#: src/ageAssurance/components/NoAccessScreen.tsx:86
+msgid "Update your age"
+msgstr "Update your age"
+
 #: src/components/Post/Embed/GalleryFallbackEmbed.tsx:85
 msgid "Update your app"
 msgstr "Update your app"
@@ -13031,10 +13038,6 @@ msgstr "Update your app"
 #: src/components/Post/Embed/GalleryFallbackEmbed.tsx:76
 msgid "Update your app to see it."
 msgstr "Update your app to see it."
-
-#: src/ageAssurance/components/NoAccessScreen.tsx:86
-msgid "Update your birthdate"
-msgstr "Update your birthdate"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:202
 msgid "Update your email"
@@ -13250,8 +13253,8 @@ msgstr ""
 
 #: src/components/verification/VerificationCreatePrompt.tsx:85
 #: src/components/verification/VerificationCreatePrompt.tsx:87
-#: src/view/com/profile/ProfileMenu.tsx:432
-#: src/view/com/profile/ProfileMenu.tsx:435
+#: src/view/com/profile/ProfileMenu.tsx:448
+#: src/view/com/profile/ProfileMenu.tsx:451
 msgid "Verify account"
 msgstr ""
 
@@ -14329,7 +14332,6 @@ msgid "You must be a chat owner to remove a member."
 msgstr "You must be a chat owner to remove a member."
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:157
-#: src/components/ageAssurance/MuBirthdateDialog.tsx:115
 msgid "You must be at least 13 years old to use mu."
 msgstr "You must be at least 13 years old to use mu."
 
