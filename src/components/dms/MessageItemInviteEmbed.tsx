@@ -37,6 +37,7 @@ let MessageItemInviteEmbed = ({
     <MessageContextProvider>
       <View
         style={[
+          isFromSelf ? a.self_end : a.self_start,
           !isFromSelf && isGroupChat && a.ml_sm,
           native({
             flexBasis: 0,
