@@ -18,7 +18,6 @@ import {Breakpoints} from './Breakpoints'
 import {Buttons} from './Buttons'
 import {Dialogs} from './Dialogs'
 import {Forms} from './Forms'
-import {GalleryFallback} from './GalleryFallback'
 import {Icons} from './Icons'
 import {Links} from './Links'
 import {Menus} from './Menus'
@@ -90,13 +89,13 @@ export default function Storybook() {
             <Button
               color="primary_subtle"
               size="large"
-              onPress={() =>
-                requestDeviceGeolocation().then(req => {
+              onPress={() => {
+                void requestDeviceGeolocation().then(req => {
                   if (req.granted && req.location) {
                     setDeviceGeolocation(req.location)
                   }
                 })
-              }
+              }}
               label="crash">
               <ButtonText>Get GPS Location</ButtonText>
             </Button>
@@ -133,7 +132,6 @@ export default function Storybook() {
             <Breakpoints />
             <Dialogs />
             <Admonitions />
-            <GalleryFallback />
             <Settings />
 
             <Button

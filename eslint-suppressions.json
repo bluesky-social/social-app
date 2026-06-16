@@ -2471,11 +2471,6 @@
       "count": 2
     }
   },
-  "src/view/screens/Storybook/Storybook.tsx": {
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    }
-  },
   "src/view/shell/Drawer.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 2
