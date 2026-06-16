@@ -71,10 +71,10 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         a.pr_2xs,
         web({
           position: 'fixed',
-          left: '50%',
+          left: '25%',
           transform: [
             {
-              translateX: 300 + (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0),
+              translateX: -(300 + (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0)),
             },
             ...a.scrollbar_offset.transform,
           ],

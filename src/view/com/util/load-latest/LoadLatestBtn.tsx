@@ -53,7 +53,7 @@ export function LoadLatestBtn({
       style={[
         a.fixed,
         a.z_20,
-        {left: 18},
+        {right: 18},
         isDesktop &&
           (isTallViewport
             ? styles.loadLatestOutOfLine
@@ -102,12 +102,12 @@ export function LoadLatestBtn({
 
 const styles = StyleSheet.create({
   loadLatestInline: {
-    left: web('calc(50vw - 282px)'),
+    right: web('calc(50vw - 282px)'),
   },
   loadLatestInlineOffset: {
-    left: web(`calc(50vw - 282px + ${CENTER_COLUMN_OFFSET}px)`),
+    right: web(`calc(50vw - 282px + ${CENTER_COLUMN_OFFSET}px)`),
   },
   loadLatestOutOfLine: {
-    left: web('calc(50vw - 382px)'),
+    right: web('calc(50vw - 382px)'),
   },
 })

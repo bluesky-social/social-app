@@ -42,10 +42,10 @@ export function renderMessagesSplitViewLayout(props: LayoutProps) {
 }
 
 function MessagesSplitViewLayout({children, ...props}: LayoutProps) {
-  const {rightNavVisible} = useLayoutBreakpoints()
+  const {leftNavVisible} = useLayoutBreakpoints()
   const aa = useAgeAssurance()
 
-  if (!IS_WEB || !rightNavVisible || aa.state.access !== aa.Access.Full) {
+  if (!IS_WEB || !leftNavVisible || aa.state.access !== aa.Access.Full) {
     return children
   }
 
@@ -104,7 +104,7 @@ function MessagesSplitViewLayoutInner({
             {
               translateX: centerColumnOffset
                 ? halfLeftNavWidth
-                : halfLeftNavWidth / 2,
+                : halfLeftNavWidth / 5,
             },
             {translateX: web(SCROLLBAR_OFFSET) ?? 0},
           ],
@@ -114,7 +114,7 @@ function MessagesSplitViewLayoutInner({
       <SplitViewProvider side="left">
         <View
           style={[
-            a.border_l,
+            a.border_r,
             t.atoms.border_contrast_low,
             {width: leftColumnWidth},
           ]}>

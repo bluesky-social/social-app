@@ -92,7 +92,7 @@ import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
 const LARGE_ELEMENT_SIZE = 48
 const NAV_ICON_WIDTH = 28
 
-export const LEFT_NAV_STANDARD_WIDTH = 240
+export const LEFT_NAV_STANDARD_WIDTH = 200
 export const LEFT_NAV_MINIMAL_WIDTH = 80
 const LEFT_NAV_PWI_WIDTH = 245
 
@@ -628,7 +628,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
       role="navigation"
       style={[
         a.fixed,
-        a.top_0,
+        a.top_40,
         a.p_lg,
         styles.leftNav,
         !hasSession && !leftNavMinimal && {width: LEFT_NAV_PWI_WIDTH},
@@ -642,13 +642,13 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           transform: [
             {
               translateX:
-                -(CENTER_COLUMN_WIDTH / 2) +
+                (CENTER_COLUMN_WIDTH / 2) +
+                LEFT_NAV_STANDARD_WIDTH +
                 (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0) +
                 (isMessagesRelatedScreen && !leftNavMinimalBreakpoint
                   ? LEFT_NAV_MINIMAL_WIDTH - LEFT_NAV_STANDARD_WIDTH
                   : 0),
             },
-            {translateX: '-100%'},
             ...a.scrollbar_offset.transform,
           ],
         },
@@ -770,7 +770,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
 
 const styles = StyleSheet.create({
   leftNav: {
-    left: '50%',
+    right: '52%',
     width: LEFT_NAV_STANDARD_WIDTH,
     // @ts-expect-error web only
     maxHeight: '100vh',
