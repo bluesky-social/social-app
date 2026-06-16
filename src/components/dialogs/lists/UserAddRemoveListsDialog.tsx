@@ -19,7 +19,7 @@ import {
 } from '#/state/queries/lists-with-membership'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, native, platform, useTheme} from '#/alf'
+import {atoms as a, platform, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {BulletList_Stroke2_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
@@ -84,8 +84,10 @@ function ListsContent({
   onAdd?: (listUri: string) => void
   onRemove?: (listUri: string) => void
 }) {
+  const t = useTheme()
   const control = Dialog.useDialogContext()
   const {t: l} = useLingui()
+  const {gtMobile} = useBreakpoints()
 
   const {
     data,
@@ -128,7 +130,8 @@ function ListsContent({
         a.align_center,
         a.flex_row,
         a.pb_lg,
-        native(a.pt_lg),
+        t.atoms.bg,
+        gtMobile ? a.pt_2xl : a.pt_xl,
       ]}>
       <Text style={[a.text_lg, a.font_semi_bold]}>
         {profile ? (
@@ -172,6 +175,7 @@ function ListsContent({
       }
       onEndReached={() => void onEndReached()}
       onEndReachedThreshold={0.1}
+      stickyHeaderIndices={web([0])}
       ListHeaderComponent={listHeader}
       ListFooterComponent={
         isFetchingNextPage ? (
@@ -181,8 +185,9 @@ function ListsContent({
         ) : null
       }
       ListEmptyComponent={!isLoading && data ? <Empty /> : null}
+      webInnerContentContainerStyle={[a.py_0]}
       style={platform({
-        web: [a.px_2xl, {minHeight: 400}],
+        web: [a.px_2xl, a.pb_md],
         native: [a.px_2xl, a.pt_lg],
       })}
     />
