@@ -44,6 +44,7 @@ import {CodeBrackets_Stroke2_Corner2_Rounded as CodeBracketsIcon} from '#/compon
 import {Contacts_Stroke2_Corner2_Rounded as ContactsIcon} from '#/components/icons/Contacts'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
+import {Heart2_Stroke2_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
 import {Lock_Stroke2_Corner2_Rounded as LockIcon} from '#/components/icons/Lock'
 import {PaintRoller_Stroke2_Corner2_Rounded as PaintRollerIcon} from '#/components/icons/PaintRoller'
 import {
@@ -213,10 +214,10 @@ export function SettingsScreen({}: Props) {
             !ax.features.enabled(ax.features.ImportContactsSettingsDisable) && (
               <SettingsList.LinkItem
                 to="/settings/find-contacts"
-                label={l`Find friends from contacts`}>
+                label={l`Find and invite friends`}>
                 <SettingsList.ItemIcon icon={ContactsIcon} />
                 <SettingsList.ItemText>
-                  <Trans>Find friends from contacts</Trans>
+                  <Trans>Find and invite friends</Trans>
                 </SettingsList.ItemText>
               </SettingsList.LinkItem>
             )}
@@ -226,6 +227,14 @@ export function SettingsScreen({}: Props) {
             <SettingsList.ItemIcon icon={PaintRollerIcon} />
             <SettingsList.ItemText>
               <Trans>Appearance</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
+          <SettingsList.LinkItem
+            to="/settings/cat-companion"
+            label={l`Companion cat`}>
+            <SettingsList.ItemIcon icon={HeartIcon} />
+            <SettingsList.ItemText>
+              <Trans>Companion cat</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem

@@ -41,6 +41,8 @@ export const router = new Router<AllNavigatableRoutes>({
   Debug: '/sys/debug',
   DebugMod: '/sys/debug-mod',
   Log: '/sys/log',
+  // invite friends
+  InviteScanner: '/invite/scan',
   // settings
   LanguageSettings: '/settings/language',
   AppPasswords: '/settings/app-passwords',
@@ -49,6 +51,7 @@ export const router = new Router<AllNavigatableRoutes>({
   PreferencesExternalEmbeds: '/settings/external-embeds',
   AccessibilitySettings: '/settings/accessibility',
   AppearanceSettings: '/settings/appearance',
+  CatCompanionSettings: '/settings/cat-companion',
   SavedFeeds: '/settings/saved-feeds',
   AccountSettings: '/settings/account',
   AutomationLabelSettings: '/settings/automation-label',

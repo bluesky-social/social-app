@@ -1,12 +1,10 @@
 /**
- * Eurosky OAuth client-assertion edge script (Bunny.net Edge Scripting port).
+ * Eurosky OAuth client-assertion edge script (Bunny.net Edge Scripting).
  *
- * This is the Bunny port of ../src/index.ts (the Cloudflare Worker). Same logic,
- * same security model - only the runtime shell differs:
- *   - entry: BunnySDK.net.http.serve(handler)   (was: export default { fetch })
- *   - config: Deno.env.get(...)                 (was: the `env` param)
- * Crypto (crypto.subtle), btoa, TextEncoder, URL, JSON, Date are all standard
- * Web APIs available in Bunny's Deno runtime, so the signing code is identical.
+ * Runs on Bunny's Deno runtime: entry is BunnySDK.net.http.serve(handler) and
+ * config comes from Deno.env.get(...). Crypto (crypto.subtle), btoa,
+ * TextEncoder, URL, JSON, and Date are all standard Web APIs available there,
+ * so the signing code is plain Web Crypto.
  *
  * Config (set in the Bunny dashboard -> script -> Env Configuration):
  *   OAUTH_PRIVATE_JWK  (Environment SECRET) private ES256/P-256 JWK JSON, incl. kid
@@ -37,8 +35,16 @@
  */
 import * as BunnySDK from 'https://esm.sh/@bunny.net/edgescript-sdk@0.11.2'
 
-const MAX_ASSERTION_LIFETIME_S = 300
-const CLOCK_SKEW_S = 120
+/**
+ * `iat`/`exp` are stamped from THIS edge node's clock, not the caller's.
+ * @atproto/oauth-client builds those timestamps in the browser, so a user
+ * whose device clock runs fast produced an `iat` in the future and the
+ * authorization server rejected the assertion ("iat ... should be in the
+ * past"). The edge runtime is NTP-synced, so it is the authoritative clock.
+ * We backdate `iat` slightly to absorb any residual edge<->AS skew.
+ */
+const IAT_BACKDATE_S = 30
+const ASSERTION_LIFETIME_S = 120
 const MAX_BODY_BYTES = 8 * 1024
 
 function b64url(input: ArrayBuffer | Uint8Array | string): string {
@@ -168,15 +174,8 @@ BunnySDK.net.http.serve(async (req: Request): Promise<Response> => {
   ) {
     errors.push('jti required')
   }
-  if (typeof payload.iat !== 'number' || typeof payload.exp !== 'number') {
-    errors.push('iat/exp required')
-  } else {
-    if (payload.exp <= now) errors.push('already expired')
-    if (payload.iat > now + CLOCK_SKEW_S) errors.push('iat in the future')
-    if (payload.exp - payload.iat > MAX_ASSERTION_LIFETIME_S) {
-      errors.push('lifetime too long')
-    }
-  }
+  // Note: we deliberately do NOT validate the caller's iat/exp - they are
+  // discarded and re-stamped from this node's clock below (see IAT_BACKDATE_S).
   if (errors.length) {
     return deny(400, `invalid assertion: ${errors.join('; ')}`, allowed)
   }
@@ -190,8 +189,8 @@ BunnySDK.net.http.serve(async (req: Request): Promise<Response> => {
     sub: clientId,
     aud: payload.aud as string,
     jti: payload.jti as string,
-    iat: payload.iat as number,
-    exp: payload.exp as number,
+    iat: now - IAT_BACKDATE_S,
+    exp: now + ASSERTION_LIFETIME_S,
   }
 
   // -- Sign (ES256 = ECDSA P-256 / SHA-256; WebCrypto returns P1363 r||s,

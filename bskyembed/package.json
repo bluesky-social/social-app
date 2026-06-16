@@ -13,7 +13,7 @@
     "format": "prettier -w src"
   },
   "dependencies": {
-    "@atproto/api": "^0.15.25",
+    "@atproto/api": "0.20.11",
     "preact": "^10.4.8"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-import {useCallback} from 'react'
+import {useCallback, useEffect} from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -60,6 +60,14 @@ export function BottomBarWeb() {
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const {footerHeight} = useShellLayout()
+  // The bottom bar is only mounted on mobile/tablet web. When the viewport
+  // grows to desktop (or on first paint before breakpoints resolve) it
+  // unmounts, but onLayout never fires to clear the height it measured. Reset
+  // it so things pinned to the footer (e.g. the cat companion) drop back to the
+  // real bottom of the screen.
+  useEffect(() => {
+    return () => footerHeight.set(0)
+  }, [footerHeight])
   const hideBorder = useHideBottomBarBorder()
   const accountSwitchControl = useDialogControl()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})

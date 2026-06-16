@@ -125,6 +125,19 @@ const schema = z.object({
   disableHaptics: z.boolean().optional(),
   disableAutoplay: z.boolean().optional(),
   kawaii: z.boolean().optional(),
+  catCompanion: z
+    .object({
+      enabled: z.boolean(),
+      color: z.enum([
+        'cream',
+        'black',
+        'grey',
+        'grey-white',
+        'orange',
+        'white',
+      ]),
+    })
+    .optional(),
   hasCheckedForStarterPack: z.boolean().optional(),
   subtitlesEnabled: z.boolean().optional(),
   /** @deprecated */
@@ -174,6 +187,7 @@ export const defaults: Schema = {
   disableHaptics: false,
   disableAutoplay: PlatformInfo.getIsReducedMotionEnabled(),
   kawaii: false,
+  catCompanion: {enabled: false, color: 'orange'},
   hasCheckedForStarterPack: false,
   subtitlesEnabled: true,
   trendingDisabled: false,

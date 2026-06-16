@@ -1,0 +1,78 @@
+# Eurosky fork: build the web app and deploy it to the STAGING Bunny.net zone.
+#
+# Staging mirror of deploy-web-bunny.yml: every push to the working branch
+# (eurosky/fork) goes live at https://staging.mu.social against the production
+# AT Protocol network. Promotion to prod stays deliberate (push eurosky/deploy).
+# New file (not in upstream) -> no merge surface.
+#
+# Staging differs from prod only in build-time env (see the Build step):
+# its own OAuth client identity + assertion worker, and a throwaway Plausible
+# domain. Search noindexing is handled at the Bunny pull zone (Edge Rule adds
+# X-Robots-Tag: noindex, nofollow), not in the build.
+#
+# Required repo secrets (Settings -> Secrets and variables -> Actions):
+#   STAGING_BUNNY_STORAGE_ZONE      full base URL incl. zone, e.g.
+#                                   https://storage.bunnycdn.com/eurosky-app-staging
+#   STAGING_BUNNY_STORAGE_PASSWORD  storage zone password (AccessKey for uploads)
+#   STAGING_BUNNY_PULLZONE_ID       numeric staging pull zone id (cache purge)
+#   BUNNY_API_KEY                   account-level API key (shared with prod)
+name: Deploy web staging (Bunny)
+
+on:
+  # Manual run: Actions tab -> "Deploy web staging (Bunny)" -> Run workflow.
+  workflow_dispatch: {}
+  # Continuous staging: the working branch is always visible on staging.
+  push:
+    branches: [eurosky/fork]
+
+# Never run two staging deploys at once; a newer run supersedes an in-flight
+# one. Separate group from prod so the two never queue on each other.
+concurrency:
+  group: deploy-web-staging-bunny
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: package.json
+          cache: pnpm
+      # pages_build.sh does: frozen install (CI) -> intl:build -> build-web ->
+      # static-path rewrite -> _redirects. CI=true is set by Actions, so it
+      # uses --frozen-lockfile.
+      - name: Build web
+        run: bash ./pages_build.sh
+        env:
+          # Staging is its own atproto OAuth client: client_id derives from this
+          # base URL (gen-oauth-metadata.js emits the metadata into the build,
+          # so staging self-publishes it at /oauth-client-metadata.json), and
+          # client assertions are signed by the staging worker instance - the
+          # prod worker pins prod's CLIENT_ID/ALLOWED_ORIGIN and would reject
+          # staging's requests. Same oauth-worker/ script, second deployment.
+          EXPO_PUBLIC_OAUTH_BASE_URL: https://staging.mu.social
+          EXPO_PUBLIC_OAUTH_ASSERTION_URL: https://oauth-staging.mu.social/client-assertion
+          # Geolocation: same first-party endpoint as prod (geolocation-worker/
+          # serves any origin), drives the regional moderation labelers.
+          EXPO_PUBLIC_ENABLE_GEOLOCATION: 'true'
+          EXPO_PUBLIC_GEOLOCATION_URL: https://ip.mu.social
+          EXPO_PUBLIC_ENABLE_LIVE_EVENTS: 'false'
+          EXPO_PUBLIC_ENABLE_APP_CONFIG: 'false'
+          # Deliberately NOT the prod Plausible site: staging.mu.social is
+          # unregistered in Plausible, so events are accepted and discarded and
+          # staging traffic never pollutes prod stats. (Blanking the value is
+          # not an option: pages_build.sh's `:=` re-defaults empty to mu.social.)
+          EXPO_PUBLIC_PLAUSIBLE_DOMAIN: staging.mu.social
+          # First-party Bunny proxy for Plausible (see plausible-worker/). Needs
+          # the scheme: the tracker posts to ${API_HOST}/api/event.
+          EXPO_PUBLIC_PLAUSIBLE_API_HOST: https://events.mu.social
+      - name: Upload to Bunny + purge cache
+        run: bash ./bunny_upload.sh
+        env:
+          BUNNY_STORAGE_ZONE: ${{ secrets.STAGING_BUNNY_STORAGE_ZONE }}
+          BUNNY_STORAGE_PASSWORD: ${{ secrets.STAGING_BUNNY_STORAGE_PASSWORD }}
+          BUNNY_API_KEY: ${{ secrets.BUNNY_API_KEY }}
+          BUNNY_PULLZONE_ID: ${{ secrets.STAGING_BUNNY_PULLZONE_ID }}

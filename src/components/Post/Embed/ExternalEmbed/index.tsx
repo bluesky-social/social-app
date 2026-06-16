@@ -88,6 +88,8 @@ export const ExternalEmbed = ({
       label={link.title || _(msg`Open link to ${niceUrl}`)}
       to={link.uri}
       shouldProxy={true}
+      peek
+      style={[a.rounded_md]}
       onPress={onPress}
       onLongPress={onShareExternal}>
       {({hovered}) => (
@@ -99,6 +101,7 @@ export const ExternalEmbed = ({
             a.overflow_hidden,
             a.w_full,
             a.border,
+            t.atoms.bg,
             style,
             hovered
               ? t.atoms.border_contrast_high

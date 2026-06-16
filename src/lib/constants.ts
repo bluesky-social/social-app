@@ -245,11 +245,12 @@ export const PUBLIC_APPVIEW_DID = 'did:web:api.bsky.app'
  * TRUSTED_VERIFIER_DIDS with a query and keep the rest of the pipeline the same.
  */
 export const TRUSTED_VERIFIER_DIDS = [
-  'did:plc:257wekqxg4hyapkq6k47igmp', // flo-bit.dev
   'did:plc:durcipmx2rwgzzagbiumobs5', // france-atmosphe.re
   'did:plc:ooensn4mr5mhznzypvxelfa3', // eurosky.social
   'did:plc:u5zp7npt5kpueado77kuihyz', // npmx.dev
   'did:plc:hd564mpf6bekrwzyhvujs54b', // medsky.network
+  'did:plc:6tndl5lqrzjrx7ahjom2gjbq', // stewardshiplab.org
+  'did:plc:dwasx7iawlm63zivignwu6jr', // waag.org
 ]
 
 /**

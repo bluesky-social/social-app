@@ -50,8 +50,8 @@ import {
   AppBskyDraftCreateDraft,
   AppBskyUnspeccedDefs,
   type AppBskyUnspeccedGetPostThreadV2,
+  type AtpAgent,
   AtUri,
-  type BskyAgent,
   ChatBskyGroupDefs,
   type RichText,
 } from '@atproto/api'
@@ -1104,6 +1104,20 @@ export const ComposePost = ({
           isReply: !!replyTo,
         })
       }
+      if (postUri) {
+        for (const q of linkQueries) {
+          const resolved = q.data
+          if (
+            resolved?.type === 'chat-invite' &&
+            ChatBskyGroupDefs.isJoinLinkPreviewView(resolved.view)
+          ) {
+            ax.metric('groupchat:inviteLink:shared', {
+              convoId: resolved.view.convoId,
+              method: 'post',
+            })
+          }
+        }
+      }
     }
     if (postUri && !replyTo) {
       emitPostCreated()
@@ -1201,6 +1215,7 @@ export const ComposePost = ({
     editPostMutate,
     initEditPost,
     thread,
+    linkQueries,
   ])
 
   const handleConfirmSkipEmpty = () => {
@@ -2410,7 +2425,7 @@ function useKeyboardVerticalOffset() {
 }
 
 async function whenAppViewReady(
-  agent: BskyAgent,
+  agent: AtpAgent,
   uri: string,
   fn: (res: AppBskyUnspeccedGetPostThreadV2.Response) => boolean,
 ) {

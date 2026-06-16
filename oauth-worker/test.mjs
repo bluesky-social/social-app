@@ -1,48 +1,46 @@
 /**
- * Local sanity check for the assertion Worker (run against `wrangler dev`).
+ * Sanity check for the assertion Edge Script (bunny/index.ts).
  *
- *   1. Terminal A:  npx wrangler dev
- *   2. Terminal B:  node test.mjs
+ * Run it against any running instance of the script - a local Deno run, a
+ * Bunny preview, or staging:
  *
- * Validates the signing path (returned JWS verifies against the committed
- * PUBLIC JWK) and the minter guardrails (Origin lock, bad iss, over-long
- * lifetime, wrong alg, missing jti). No authorization server involved.
+ *   WORKER_URL=http://localhost:8000 node test.mjs
  *
- * Requires the private key for the signing tests. `wrangler dev` reads it
- * from `eurosky-oauth-worker/.dev.vars`:
+ * Validates the signing path (the returned JWS verifies against the committed
+ * PUBLIC JWK) and the minter guardrails (Origin lock, bad iss/sub, malformed
+ * aud, missing jti, wrong alg, injected-header/claim stripping). No
+ * authorization server is involved, and no private key is needed locally - the
+ * script signs server-side with its configured OAUTH_PRIVATE_JWK secret.
  *
- *   OAUTH_PRIVATE_JWK={"kty":"EC","crv":"P-256","x":"...","y":"...","d":"...","kid":"<same kid>","alg":"ES256","use":"sig"}
+ * Config (env, with mu.social defaults to match the deployed config):
+ *   WORKER_URL       target instance (default http://localhost:8000)
+ *   CLIENT_ID        expected iss/sub
+ *   ALLOWED_ORIGIN   expected browser Origin
  *
- * (the PRIVATE block printed by
- * eurosky-social-app/scripts/gen-oauth-keypair.js, on ONE line). .dev.vars is
- * gitignored. Without it the Worker returns 500 and this script tells you so.
+ * Note: the script stamps iat/exp from its own clock and ignores whatever the
+ * caller sends, so there are no iat/exp guardrail cases here - instead we
+ * assert the output timestamps are server-stamped and sane.
  */
 import {readFileSync} from 'node:fs'
 import {dirname, join} from 'node:path'
 import {fileURLToPath} from 'node:url'
 
 const here = dirname(fileURLToPath(import.meta.url))
-const WORKER_URL = process.env.WORKER_URL || 'http://localhost:8787'
+const WORKER_URL = process.env.WORKER_URL || 'http://localhost:8000'
+const CLIENT_ID =
+  process.env.CLIENT_ID || 'https://mu.social/oauth-client-metadata.json'
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'https://mu.social'
+
+// Must mirror IAT_BACKDATE_S / ASSERTION_LIFETIME_S in bunny/index.ts.
+const IAT_BACKDATE_S = 30
+const ASSERTION_LIFETIME_S = 120
 
 const subtle = globalThis.crypto.subtle
 
-// Pull CLIENT_ID / ALLOWED_ORIGIN from wrangler.toml so this stays in sync
-// with the deployed config even if the domain changes.
-const toml = readFileSync(join(here, 'wrangler.toml'), 'utf8')
-const CLIENT_ID = /CLIENT_ID\s*=\s*"([^"]+)"/.exec(toml)?.[1]
-const ALLOWED_ORIGIN = /ALLOWED_ORIGIN\s*=\s*"([^"]+)"/.exec(toml)?.[1]
-
-// The public key the Worker's private counterpart must match (shared kid).
+// The public key the script's private counterpart must match (shared kid).
 const publicJwks = JSON.parse(
   readFileSync(
-    join(
-      here,
-      '..',
-      'eurosky-social-app',
-      'src',
-      'config',
-      'oauth.public-jwks.json',
-    ),
+    join(here, '..', 'src', 'config', 'oauth.public-jwks.json'),
     'utf8',
   ),
 )
@@ -125,10 +123,6 @@ function bad(name, detail) {
 }
 
 async function main() {
-  if (!CLIENT_ID || !ALLOWED_ORIGIN) {
-    console.error('Could not read CLIENT_ID/ALLOWED_ORIGIN from wrangler.toml')
-    process.exit(2)
-  }
   console.log(`Target: ${WORKER_URL}`)
   console.log(`CLIENT_ID: ${CLIENT_ID}`)
   console.log(`kid: ${KID}\n`)
@@ -139,7 +133,7 @@ async function main() {
     reach = await call(validPayloadEnvelope(), {origin: null})
   } catch (e) {
     console.error(
-      `Cannot reach ${WORKER_URL} - is \`npx wrangler dev\` running?\n${e}`,
+      `Cannot reach ${WORKER_URL} - is the script running there?\n${e}`,
     )
     process.exit(2)
   }
@@ -162,14 +156,13 @@ async function main() {
     bad('OPTIONS preflight -> 204 + CORS', `got ${preflight.status}`)
   }
 
-  // Happy path (needs the secret).
+  // Happy path (needs the secret configured on the instance).
   const good = await call(validPayloadEnvelope())
   if (good.status === 500) {
     console.log(
-      `\n  SKIP  signing tests: Worker returned 500 (key misconfigured).\n` +
-        `        Create eurosky-oauth-worker/.dev.vars with:\n` +
-        `          OAUTH_PRIVATE_JWK={...the PRIVATE jwk on one line...}\n` +
-        `        then restart \`wrangler dev\` and re-run.\n`,
+      `\n  SKIP  signing tests: instance returned 500 (key misconfigured).\n` +
+        `        Set the OAUTH_PRIVATE_JWK secret on the target instance,\n` +
+        `        then re-run.\n`,
     )
     summarize(true)
     return
@@ -189,7 +182,36 @@ async function main() {
     bad('valid request -> 200', `got ${good.status} ${good.text}`)
   }
 
-  // HIGH-2: injected header params + extra claims must be STRIPPED by the
+  // iat/exp are stamped from the server clock and ignore caller input. Send
+  // absurd caller timestamps and assert the output is re-stamped and sane.
+  const stamp = await call({
+    header: validHeader(),
+    payload: validPayload({iat: now() + 99999, exp: now() + 999999}),
+  })
+  if (stamp.status === 200 && stamp.json?.jws) {
+    try {
+      const {payload} = await verifyJws(stamp.json.jws)
+      const t = now()
+      const iatPast = payload.iat <= t && payload.iat >= t - IAT_BACKDATE_S - 30
+      const expFuture =
+        payload.exp > t && payload.exp <= t + ASSERTION_LIFETIME_S + 30
+      const saneLifetime = payload.exp - payload.iat <= ASSERTION_LIFETIME_S + 60
+      if (iatPast && expFuture && saneLifetime) {
+        ok('iat/exp re-stamped from server clock (caller values ignored)')
+      } else {
+        bad(
+          'iat/exp re-stamped from server clock',
+          `iat=${payload.iat} exp=${payload.exp} now=${t}`,
+        )
+      }
+    } catch (e) {
+      bad('iat/exp re-stamped from server clock', String(e))
+    }
+  } else {
+    bad('iat/exp re-stamped from server clock', `got ${stamp.status} ${stamp.text}`)
+  }
+
+  // Injected header params + extra claims must be STRIPPED by the
   // reconstructing minter (and a bogus caller kid ignored, not echoed).
   const inj = await call({
     header: {
@@ -227,7 +249,6 @@ async function main() {
   const cases = [
     ['wrong iss -> 400', {payload: validPayload({iss: 'https://evil'})}],
     ['wrong sub -> 400', {payload: validPayload({sub: 'https://evil'})}],
-    ['lifetime > 300s -> 400', {payload: validPayload({exp: now() + 3600})}],
     ['non-https aud -> 400', {payload: validPayload({aud: 'http://x'})}],
     [
       'aud with path -> 400',
