@@ -86,6 +86,22 @@ function toSystemMessageView(
   return ev.message
 }
 
+/**
+ * Derive a deleted-message tombstone from a (now-deleted) message, preserving
+ * the fields the deleted view carries so a reply can render it as deleted.
+ */
+function toDeletedMessageView(
+  m: ChatBskyConvoDefs.MessageView,
+): $Typed<ChatBskyConvoDefs.DeletedMessageView> {
+  return {
+    $type: 'chat.bsky.convo.defs#deletedMessageView',
+    id: m.id,
+    rev: m.rev,
+    sender: m.sender,
+    sentAt: m.sentAt,
+  }
+}
+
 export class Convo {
   private id: string
 
@@ -943,17 +959,17 @@ export class Convo {
             ChatBskyConvoDefs.isDeletedMessageView(ev.message)
           ) {
             /*
-             * Update if we have this in state. If we don't, don't worry about it.
+             * Remove the message itself, and keep its id in `deletedMessages`
+             * so any message that quotes it keeps rendering a deleted-message
+             * tombstone (see `tombstoneDeletedReplyTo`) rather than reverting
+             * to the original hydrated text. We add here rather than relying on
+             * the optimistic entry so deletes from elsewhere (e.g. another
+             * device) are covered too.
              */
-            if (
-              this.pastMessages.has(ev.message.id) ||
-              this.newMessages.has(ev.message.id)
-            ) {
-              this.pastMessages.delete(ev.message.id)
-              this.newMessages.delete(ev.message.id)
-              this.deletedMessages.delete(ev.message.id)
-              needsCommit = true
-            }
+            this.pastMessages.delete(ev.message.id)
+            this.newMessages.delete(ev.message.id)
+            this.deletedMessages.add(ev.message.id)
+            needsCommit = true
           } else if (
             (ChatBskyConvoDefs.isLogAddReaction(ev) ||
               ChatBskyConvoDefs.isLogRemoveReaction(ev)) &&
@@ -1296,6 +1312,26 @@ export class Convo {
     }
   }
 
+  /**
+   * When a message is deleted locally, it's removed from the list, but other
+   * messages that reply to it still carry a hydrated `replyTo` with the
+   * original text until the server re-sends them. Swap that `replyTo` for a
+   * deleted-message tombstone so the quote reflects the deletion immediately,
+   * matching what the server returns on refresh.
+   */
+  private tombstoneDeletedReplyTo(
+    m: ChatBskyConvoDefs.MessageView,
+  ): ChatBskyConvoDefs.MessageView {
+    const {replyTo} = m
+    if (
+      !ChatBskyConvoDefs.isMessageView(replyTo) ||
+      !this.deletedMessages.has(replyTo.id)
+    ) {
+      return m
+    }
+    return {...m, replyTo: toDeletedMessageView(replyTo)}
+  }
+
   /*
    * Items in reverse order, since FlatList inverts
    */
@@ -1307,7 +1343,7 @@ export class Convo {
         items.unshift({
           type: 'message',
           key: m.id,
-          message: m,
+          message: this.tombstoneDeletedReplyTo(m),
         })
       } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
         items.unshift({
@@ -1340,7 +1376,7 @@ export class Convo {
         items.push({
           type: 'message',
           key: m.id,
-          message: m,
+          message: this.tombstoneDeletedReplyTo(m),
         })
       } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
         items.push({
@@ -1358,13 +1394,17 @@ export class Convo {
     })
 
     this.pendingMessages.forEach(m => {
+      const optimisticReplyTo =
+        m.optimisticReplyTo && this.deletedMessages.has(m.optimisticReplyTo.id)
+          ? toDeletedMessageView(m.optimisticReplyTo)
+          : m.optimisticReplyTo
       items.push({
         type: 'pending-message',
         key: m.id,
         message: {
           ...m.message,
           embed: m.optimisticEmbedView,
-          replyTo: m.optimisticReplyTo,
+          replyTo: optimisticReplyTo,
           $type: 'chat.bsky.convo.defs#messageView',
           id: nanoid(),
           rev: '__fake__',
