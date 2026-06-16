@@ -49,7 +49,7 @@ export let MessageContextMenu = ({
   const {currentAccount} = useSession()
   const convo = useConvoActive()
   const {openDeleteMessage, openReportMessage} = useMessageDialogs()
-  const {openReply} = useMessageReplies()
+  const {setReply} = useMessageReplies()
   const langPrefs = useLanguagePrefs()
   const translate = useGoogleTranslate()
 
@@ -157,7 +157,7 @@ export let MessageContextMenu = ({
         <ContextMenu.Item
           testID="messageDropdownReplyBtn"
           label={l`Reply`}
-          onPress={() => openReply(message)}>
+          onPress={() => setReply(message)}>
           <ContextMenu.ItemIcon icon={ReplyIcon} position="left" />
           <ContextMenu.ItemText>{l`Reply`}</ContextMenu.ItemText>
         </ContextMenu.Item>

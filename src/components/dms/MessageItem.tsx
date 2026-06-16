@@ -859,7 +859,7 @@ function ReplyQuote({
   let text: string
   let subtle = false
   if (isBlocked) {
-    text = l`Message hidden`
+    text = l`Blocked message hidden`
     subtle = true
   } else if (ChatBskyConvoDefs.isMessageView(replyTo)) {
     text = replyTo.text
