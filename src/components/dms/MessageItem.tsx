@@ -500,6 +500,7 @@ let MessageItem = ({
                         squaredBottomCorner || hasEmbedAndText
                       }
                       squaredTopCorner={squaredTopCorner}
+                      highlightSV={highlightSV}
                     />
                   )}
                   {ChatBskyEmbedJoinLink.isView(message.embed) && (
@@ -511,6 +512,7 @@ let MessageItem = ({
                         squaredBottomCorner || hasEmbedAndText
                       }
                       squaredTopCorner={squaredTopCorner}
+                      highlightSV={highlightSV}
                     />
                   )}
                   {rt.text.length > 0 && (
