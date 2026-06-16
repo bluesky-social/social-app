@@ -471,6 +471,7 @@ let MessageItem = ({
               <ReplyCaption
                 replyTo={replyTo}
                 isFromSelf={isFromSelf}
+                isGroupChat={isGroupChat}
                 replierDisplayName={displayName}
                 relatedProfiles={relatedProfiles}
                 onPress={() => scrollToMessage(replyTo.id)}
@@ -752,12 +753,14 @@ function BlockedPlaceholder({
 function ReplyCaption({
   replyTo,
   isFromSelf,
+  isGroupChat,
   replierDisplayName,
   relatedProfiles,
   onPress,
 }: {
   replyTo: ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
   isFromSelf: boolean
+  isGroupChat: boolean
   replierDisplayName: string | null
   relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
   onPress: () => void
@@ -787,7 +790,10 @@ function ReplyCaption({
         a.pt_xs,
         isFromSelf
           ? [a.justify_end, a.pr_md]
-          : [a.justify_start, {paddingLeft: DISPLAY_NAME_INSET}],
+          : [
+              a.justify_start,
+              isGroupChat ? {paddingLeft: DISPLAY_NAME_INSET} : a.pl_md,
+            ],
       ]}>
       <ArrowCornerDownRightIcon
         size="xs"
