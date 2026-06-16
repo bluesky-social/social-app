@@ -18,11 +18,11 @@ msgstr ""
 msgid "\"{interestsDisplayName}\" category (active)"
 msgstr ""
 
-#: src/components/dms/getMessageInfo.ts:91
+#: src/components/dms/getMessageInfo.ts:123
 msgid "(chat invite link)"
 msgstr "(chat invite link)"
 
-#: src/components/dms/getMessageInfo.ts:73
+#: src/components/dms/getMessageInfo.ts:105
 msgid "(contains embedded content)"
 msgstr ""
 
@@ -92,7 +92,7 @@ msgstr "{0, plural, one {# new join request} other {# new join requests}}"
 
 #. placeholder {0}: reactions.length
 #. placeholder {1}: groupedReactions.map(g => g.value).join(' ')
-#: src/components/dms/MessageItem.tsx:269
+#: src/components/dms/MessageItem.tsx:279
 msgid "{0, plural, one {# person} other {# people}} reacted – {1}"
 msgstr "{0, plural, one {# person} other {# people}} reacted – {1}"
 
@@ -210,7 +210,7 @@ msgid "{0} following"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/dms/MessageItem.tsx:614
+#: src/components/dms/MessageItem.tsx:624
 msgid "{0} is blocking you"
 msgstr "{0} is blocking you"
 
@@ -268,7 +268,7 @@ msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(memberSender)
 #. placeholder {1}: reaction.value
-#: src/components/dms/MessageItem.tsx:264
+#: src/components/dms/MessageItem.tsx:274
 msgid "{0} reacted {1}"
 msgstr ""
 
@@ -654,12 +654,12 @@ msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr ""
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/getReactionInfo.ts:45
+#: src/components/dms/getReactionInfo.ts:65
 msgid "{name} reacted {0} to {target}"
 msgstr "{name} reacted {0} to {target}"
 
 #. When the last message in a group chat came from someone other than you.
-#: src/components/dms/getMessageInfo.ts:57
+#: src/components/dms/getMessageInfo.ts:89
 msgid "{name}: {message}"
 msgstr "{name}: {message}"
 
@@ -855,7 +855,7 @@ msgid "A collection of popular feeds you can find on Bluesky, including News, Bo
 msgstr ""
 
 #. If last message does not contain text, fall back to "{user} reacted to {a message}"
-#: src/components/dms/getReactionInfo.ts:33
+#: src/components/dms/getReactionInfo.ts:53
 msgid "a message"
 msgstr ""
 
@@ -1327,7 +1327,7 @@ msgid "alice@example.com"
 msgstr ""
 
 #. the default tab in the interests tab bar
-#: src/components/dms/ReactionsDialog.tsx:288
+#: src/components/dms/ReactionsDialog.tsx:292
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:201
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
@@ -1335,7 +1335,7 @@ msgstr ""
 
 #. Tab label showing the total count of reactions on a chat message.
 #. placeholder {0}: tab.count
-#: src/components/dms/ReactionsDialog.tsx:385
+#: src/components/dms/ReactionsDialog.tsx:389
 msgid "All {0}"
 msgstr "All {0}"
 
@@ -2726,7 +2726,7 @@ msgstr "Click here to view the invite link for this group chat"
 msgid "Click to open tag menu for {0}"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:533
+#: src/components/dms/MessageItem.tsx:543
 msgid "Click to retry failed message"
 msgstr ""
 
@@ -3964,7 +3964,7 @@ msgctxt "action"
 msgid "Done"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:437
+#: src/components/dms/MessageItem.tsx:447
 msgid "Double tap or long press the message to add a reaction"
 msgstr ""
 
@@ -4780,7 +4780,7 @@ msgstr ""
 
 #: src/components/dms/ActionsWrapper.web.tsx:75
 #: src/components/dms/MessageContextMenu.tsx:101
-#: src/components/dms/ReactionsDialog.tsx:175
+#: src/components/dms/ReactionsDialog.tsx:179
 msgid "Failed to remove emoji reaction"
 msgstr ""
 
@@ -7136,7 +7136,7 @@ msgctxt "toast"
 msgid "Message deleted"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:527
+#: src/components/dms/MessageItem.tsx:537
 msgid "Message failed to send."
 msgstr "Message failed to send."
 
@@ -7173,11 +7173,11 @@ msgstr ""
 msgid "Messages"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:626
+#: src/components/dms/MessageItem.tsx:636
 msgid "Messages from this person are hidden while they are blocking you."
 msgstr "Messages from this person are hidden while they are blocking you."
 
-#: src/components/dms/MessageItem.tsx:621
+#: src/components/dms/MessageItem.tsx:631
 msgid "Messages from this person are hidden while you are blocking them."
 msgstr "Messages from this person are hidden while you are blocking them."
 
@@ -7970,7 +7970,7 @@ msgstr ""
 #: src/components/BotAccountAlert.tsx:52
 #: src/components/BotAccountAlert.tsx:57
 #: src/components/dms/InitiateChatFlow.tsx:733
-#: src/components/dms/MessageItem.tsx:633
+#: src/components/dms/MessageItem.tsx:643
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:663
 msgid "Okay"
@@ -8110,8 +8110,8 @@ msgstr "Open chat"
 msgid "Open chat member options for {displayName}"
 msgstr "Open chat member options for {displayName}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:487
-#: src/screens/Messages/components/ChatListItem.tsx:491
+#: src/screens/Messages/components/ChatListItem.tsx:490
+#: src/screens/Messages/components/ChatListItem.tsx:494
 msgid "Open conversation options"
 msgstr ""
 
@@ -9177,8 +9177,8 @@ msgstr "Re-enable link"
 msgid "React with {emoji}"
 msgstr ""
 
-#: src/components/dms/ReactionsDialog.tsx:66
-#: src/components/dms/ReactionsDialog.tsx:94
+#: src/components/dms/ReactionsDialog.tsx:70
+#: src/components/dms/ReactionsDialog.tsx:98
 msgid "Reactions"
 msgstr "Reactions"
 
@@ -10976,12 +10976,12 @@ msgid "Someone left the group"
 msgstr "Someone left the group"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:266
+#: src/components/dms/MessageItem.tsx:276
 msgid "Someone reacted {0}"
 msgstr ""
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/getReactionInfo.ts:47
+#: src/components/dms/getReactionInfo.ts:67
 msgid "Someone reacted {0} to {target}"
 msgstr "Someone reacted {0} to {target}"
 
@@ -11360,7 +11360,7 @@ msgstr "Take the conversation private."
 msgid "Tap below to allow Bluesky to access your GPS location. We will then use that data to more accurately determine the content and features available in your region."
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:572
+#: src/components/dms/MessageItem.tsx:582
 msgid "Tap for details"
 msgstr "Tap for details"
 
@@ -11403,12 +11403,12 @@ msgstr "Tap to join this group chat immediately"
 msgid "Tap to open this group chat"
 msgstr "Tap to open this group chat"
 
-#: src/components/dms/ReactionsDialog.tsx:196
+#: src/components/dms/ReactionsDialog.tsx:200
 msgid "Tap to remove"
 msgstr "Tap to remove"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/ReactionsDialog.tsx:212
+#: src/components/dms/ReactionsDialog.tsx:216
 msgid "Tap to remove your {0} reaction"
 msgstr "Tap to remove your {0} reaction"
 
@@ -11417,20 +11417,20 @@ msgstr "Tap to remove your {0} reaction"
 msgid "Tap to request access to join this group chat"
 msgstr "Tap to request access to join this group chat"
 
-#: src/components/dms/MessageItem.tsx:537
+#: src/components/dms/MessageItem.tsx:547
 msgid "Tap to retry"
 msgstr "Tap to retry"
 
 #. placeholder {0}: tab.value
-#: src/components/dms/ReactionsDialog.tsx:358
+#: src/components/dms/ReactionsDialog.tsx:362
 msgid "Tap to show {0} reactions"
 msgstr "Tap to show {0} reactions"
 
-#: src/components/dms/ReactionsDialog.tsx:357
+#: src/components/dms/ReactionsDialog.tsx:361
 msgid "Tap to show all reactions"
 msgstr "Tap to show all reactions"
 
-#: src/components/dms/MessageItem.tsx:289
+#: src/components/dms/MessageItem.tsx:299
 msgid "Tap to view reactions"
 msgstr "Tap to view reactions"
 
@@ -11842,7 +11842,7 @@ msgstr "This chat has ended"
 msgid "This chat is full"
 msgstr "This chat is full"
 
-#: src/screens/Messages/components/ChatListItem.tsx:373
+#: src/screens/Messages/components/ChatListItem.tsx:376
 #: src/screens/Messages/components/ChatLocked.tsx:69
 msgid "This chat is locked"
 msgstr "This chat is locked"
@@ -12002,17 +12002,17 @@ msgstr ""
 msgid "This list is empty."
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:334
+#: src/screens/Messages/components/ChatListItem.tsx:335
 msgid "This message is hidden"
 msgstr "This message is hidden"
 
-#: src/components/dms/MessageItem.tsx:570
-#: src/components/dms/MessageItem.tsx:599
+#: src/components/dms/MessageItem.tsx:580
+#: src/components/dms/MessageItem.tsx:609
 msgid "This message is hidden because this user is blocking you."
 msgstr "This message is hidden because this user is blocking you."
 
-#: src/components/dms/MessageItem.tsx:569
-#: src/components/dms/MessageItem.tsx:595
+#: src/components/dms/MessageItem.tsx:579
+#: src/components/dms/MessageItem.tsx:605
 msgid "This message is hidden because you are blocking this user."
 msgstr "This message is hidden because you are blocking this user."
 
@@ -12406,7 +12406,7 @@ msgstr ""
 msgid "Unavailable feed information"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:637
+#: src/components/dms/MessageItem.tsx:647
 #: src/components/dms/MessagesListBlockedFooter.tsx:97
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
 #: src/components/moderation/BlockDialog.tsx:186
@@ -13653,7 +13653,7 @@ msgid "You are accessing Bluesky from a region that legally requires us to verif
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/dms/MessageItem.tsx:610
+#: src/components/dms/MessageItem.tsx:620
 msgid "You are blocking {0}"
 msgstr "You are blocking {0}"
 
@@ -14004,12 +14004,12 @@ msgid "You probably want to restart the app now."
 msgstr ""
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:259
+#: src/components/dms/MessageItem.tsx:269
 msgid "You reacted {0}"
 msgstr ""
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/getReactionInfo.ts:43
+#: src/components/dms/getReactionInfo.ts:63
 msgid "You reacted {0} to {target}"
 msgstr "You reacted {0} to {target}"
 
@@ -14050,7 +14050,7 @@ msgid "You won’t be able to rejoin unless you’re invited."
 msgstr "You won’t be able to rejoin unless you’re invited."
 
 #. When the last message in a chat was made by you.
-#: src/components/dms/getMessageInfo.ts:50
+#: src/components/dms/getMessageInfo.ts:82
 msgid "You: {message}"
 msgstr "You: {message}"
 

@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-11 18:22\n"
+"PO-Revision-Date: 2026-06-16 19:51\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -23,11 +23,11 @@ msgstr ""
 msgid "\"{interestsDisplayName}\" category (active)"
 msgstr "\"{interestsDisplayName}\" カテゴリー (アクティブ)"
 
-#: src/components/dms/getMessageInfo.ts:91
+#: src/components/dms/getMessageInfo.ts:123
 msgid "(chat invite link)"
 msgstr "（チャット招待リンク）"
 
-#: src/components/dms/getMessageInfo.ts:73
+#: src/components/dms/getMessageInfo.ts:105
 msgid "(contains embedded content)"
 msgstr "（埋め込みコンテンツあり）"
 
@@ -97,7 +97,7 @@ msgstr "{0, plural, other {#個の新規参加リクエスト}}"
 
 #. placeholder {0}: reactions.length
 #. placeholder {1}: groupedReactions.map(g => g.value).join(' ')
-#: src/components/dms/MessageItem.tsx:269
+#: src/components/dms/MessageItem.tsx:279
 msgid "{0, plural, one {# person} other {# people}} reacted – {1}"
 msgstr "{0, plural, other {#人}}がリアクションしました – {1}"
 
@@ -215,7 +215,7 @@ msgid "{0} following"
 msgstr "{0} フォロー中"
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/dms/MessageItem.tsx:614
+#: src/components/dms/MessageItem.tsx:624
 msgid "{0} is blocking you"
 msgstr "{0}はあなたをブロックしています"
 
@@ -273,7 +273,7 @@ msgstr "{0} / 50"
 
 #. placeholder {0}: createSanitizedDisplayName(memberSender)
 #. placeholder {1}: reaction.value
-#: src/components/dms/MessageItem.tsx:264
+#: src/components/dms/MessageItem.tsx:274
 msgid "{0} reacted {1}"
 msgstr "{0}が{1}とリアクションしました"
 
@@ -344,7 +344,7 @@ msgstr "{0}/{1}{2, plural, other {人}}"
 #. placeholder {1}: joinLinkPreview.memberLimit
 #: src/components/intents/GroupChatJoinDialog.tsx:343
 msgid "{0}/{1} members"
-msgstr "{0}/{1}メンバー"
+msgstr ""
 
 #. Badge showing the current image position out of the total number of images in a gallery.
 #. placeholder {0}: index + 1
@@ -659,12 +659,12 @@ msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr "{minutes, plural, other {#分}}"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/getReactionInfo.ts:45
+#: src/components/dms/getReactionInfo.ts:65
 msgid "{name} reacted {0} to {target}"
 msgstr "{name}が{target}に{0}とリアクションしました"
 
 #. When the last message in a group chat came from someone other than you.
-#: src/components/dms/getMessageInfo.ts:57
+#: src/components/dms/getMessageInfo.ts:89
 msgid "{name}: {message}"
 msgstr "{name}: {message}"
 
@@ -860,7 +860,7 @@ msgid "A collection of popular feeds you can find on Bluesky, including News, Bo
 msgstr "News、Booksky、Game Dev、Blacksky、そしてFountain PensといったBlueskyで見つけることのできる人気のフィードのコレクション"
 
 #. If last message does not contain text, fall back to "{user} reacted to {a message}"
-#: src/components/dms/getReactionInfo.ts:33
+#: src/components/dms/getReactionInfo.ts:53
 msgid "a message"
 msgstr "メッセージ"
 
@@ -1332,7 +1332,7 @@ msgid "alice@example.com"
 msgstr "alice@example.com"
 
 #. the default tab in the interests tab bar
-#: src/components/dms/ReactionsDialog.tsx:288
+#: src/components/dms/ReactionsDialog.tsx:292
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:201
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
@@ -1340,7 +1340,7 @@ msgstr "すべて"
 
 #. Tab label showing the total count of reactions on a chat message.
 #. placeholder {0}: tab.count
-#: src/components/dms/ReactionsDialog.tsx:385
+#: src/components/dms/ReactionsDialog.tsx:389
 msgid "All {0}"
 msgstr "全{0}"
 
@@ -2731,7 +2731,7 @@ msgstr "ここをクリックしてこのグループチャットの招待リン
 msgid "Click to open tag menu for {0}"
 msgstr "クリックして {0} のタグメニューを開く"
 
-#: src/components/dms/MessageItem.tsx:533
+#: src/components/dms/MessageItem.tsx:543
 msgid "Click to retry failed message"
 msgstr "送信失敗したメッセージを再送信"
 
@@ -3969,7 +3969,7 @@ msgctxt "action"
 msgid "Done"
 msgstr "完了"
 
-#: src/components/dms/MessageItem.tsx:437
+#: src/components/dms/MessageItem.tsx:447
 msgid "Double tap or long press the message to add a reaction"
 msgstr "メッセージをダブルタップか長押しでリアクションを追加"
 
@@ -4785,7 +4785,7 @@ msgstr "データの削除に失敗しました。 {0}"
 
 #: src/components/dms/ActionsWrapper.web.tsx:75
 #: src/components/dms/MessageContextMenu.tsx:101
-#: src/components/dms/ReactionsDialog.tsx:175
+#: src/components/dms/ReactionsDialog.tsx:179
 msgid "Failed to remove emoji reaction"
 msgstr "絵文字リアクションの削除に失敗しました"
 
@@ -7141,7 +7141,7 @@ msgctxt "toast"
 msgid "Message deleted"
 msgstr "メッセージは削除されました"
 
-#: src/components/dms/MessageItem.tsx:527
+#: src/components/dms/MessageItem.tsx:537
 msgid "Message failed to send."
 msgstr "メッセージを送信できませんでした。"
 
@@ -7178,11 +7178,11 @@ msgstr "メッセージのオプション"
 msgid "Messages"
 msgstr "メッセージ"
 
-#: src/components/dms/MessageItem.tsx:626
+#: src/components/dms/MessageItem.tsx:636
 msgid "Messages from this person are hidden while they are blocking you."
 msgstr "このユーザーからのメッセージはあなたをブロック中は非表示です。"
 
-#: src/components/dms/MessageItem.tsx:621
+#: src/components/dms/MessageItem.tsx:631
 msgid "Messages from this person are hidden while you are blocking them."
 msgstr "このユーザーからのメッセージはあなたがブロック中は非表示です。"
 
@@ -7975,7 +7975,7 @@ msgstr "OK"
 #: src/components/BotAccountAlert.tsx:52
 #: src/components/BotAccountAlert.tsx:57
 #: src/components/dms/InitiateChatFlow.tsx:733
-#: src/components/dms/MessageItem.tsx:633
+#: src/components/dms/MessageItem.tsx:643
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:663
 msgid "Okay"
@@ -8115,8 +8115,8 @@ msgstr "チャットを開く"
 msgid "Open chat member options for {displayName}"
 msgstr "{displayName}のチャットメンバーオプションを開く"
 
-#: src/screens/Messages/components/ChatListItem.tsx:487
-#: src/screens/Messages/components/ChatListItem.tsx:491
+#: src/screens/Messages/components/ChatListItem.tsx:490
+#: src/screens/Messages/components/ChatListItem.tsx:494
 msgid "Open conversation options"
 msgstr "会話のオプションを開く"
 
@@ -8516,12 +8516,12 @@ msgstr "フォロー中の人"
 #: src/screens/Messages/Settings.tsx:84
 msgctxt "allow group chat invites from"
 msgid "People I follow"
-msgstr ""
+msgstr "フォロー中の人"
 
 #: src/screens/Messages/Settings.tsx:69
 msgctxt "allow messages from"
 msgid "People I follow"
-msgstr ""
+msgstr "フォロー中の人"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:163
 msgid "People I follow can join instantly"
@@ -9182,8 +9182,8 @@ msgstr "リンクを再度有効化"
 msgid "React with {emoji}"
 msgstr "{emoji}でリアクションする"
 
-#: src/components/dms/ReactionsDialog.tsx:66
-#: src/components/dms/ReactionsDialog.tsx:94
+#: src/components/dms/ReactionsDialog.tsx:70
+#: src/components/dms/ReactionsDialog.tsx:98
 msgid "Reactions"
 msgstr "反応"
 
@@ -10981,12 +10981,12 @@ msgid "Someone left the group"
 msgstr "誰かがグループから退出しました"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:266
+#: src/components/dms/MessageItem.tsx:276
 msgid "Someone reacted {0}"
 msgstr "誰かが{0}とリアクションしました"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/getReactionInfo.ts:47
+#: src/components/dms/getReactionInfo.ts:67
 msgid "Someone reacted {0} to {target}"
 msgstr "誰かが{target}に{0}とリアクションしました"
 
@@ -11365,7 +11365,7 @@ msgstr "会話をプライベートに。"
 msgid "Tap below to allow Bluesky to access your GPS location. We will then use that data to more accurately determine the content and features available in your region."
 msgstr "下をタップするとBlueskyがGPSの位置情報にアクセスできるようになります。 その後、そのデータを使用して、お住まいの地域で利用可能なコンテンツと機能をより正確に決定します。"
 
-#: src/components/dms/MessageItem.tsx:572
+#: src/components/dms/MessageItem.tsx:582
 msgid "Tap for details"
 msgstr "タップして詳細を表示"
 
@@ -11408,12 +11408,12 @@ msgstr "タップしてすぐにこのグループチャットに参加する"
 msgid "Tap to open this group chat"
 msgstr "タップしてこのグループチャットを開く"
 
-#: src/components/dms/ReactionsDialog.tsx:196
+#: src/components/dms/ReactionsDialog.tsx:200
 msgid "Tap to remove"
 msgstr "タップして削除"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/ReactionsDialog.tsx:212
+#: src/components/dms/ReactionsDialog.tsx:216
 msgid "Tap to remove your {0} reaction"
 msgstr "タップしてリアクション{0}を削除"
 
@@ -11422,20 +11422,20 @@ msgstr "タップしてリアクション{0}を削除"
 msgid "Tap to request access to join this group chat"
 msgstr "タップしてこのグループチャットへの参加をリクエストします"
 
-#: src/components/dms/MessageItem.tsx:537
+#: src/components/dms/MessageItem.tsx:547
 msgid "Tap to retry"
 msgstr "タップして再試行"
 
 #. placeholder {0}: tab.value
-#: src/components/dms/ReactionsDialog.tsx:358
+#: src/components/dms/ReactionsDialog.tsx:362
 msgid "Tap to show {0} reactions"
 msgstr "タップして{0}のリアクションを表示"
 
-#: src/components/dms/ReactionsDialog.tsx:357
+#: src/components/dms/ReactionsDialog.tsx:361
 msgid "Tap to show all reactions"
 msgstr "タップしてすべてのリアクションを表示"
 
-#: src/components/dms/MessageItem.tsx:289
+#: src/components/dms/MessageItem.tsx:299
 msgid "Tap to view reactions"
 msgstr "タップしてリアクションを表示"
 
@@ -11847,7 +11847,7 @@ msgstr "このチャットは終了しました"
 msgid "This chat is full"
 msgstr "このチャットは満員です"
 
-#: src/screens/Messages/components/ChatListItem.tsx:373
+#: src/screens/Messages/components/ChatListItem.tsx:376
 #: src/screens/Messages/components/ChatLocked.tsx:69
 msgid "This chat is locked"
 msgstr "このチャットはロックされています"
@@ -12007,17 +12007,17 @@ msgstr "あなたが作成したこのリストは名前または説明がBluesk
 msgid "This list is empty."
 msgstr "このリストは空です。"
 
-#: src/screens/Messages/components/ChatListItem.tsx:334
+#: src/screens/Messages/components/ChatListItem.tsx:335
 msgid "This message is hidden"
 msgstr "このメッセージは非表示です"
 
-#: src/components/dms/MessageItem.tsx:570
-#: src/components/dms/MessageItem.tsx:599
+#: src/components/dms/MessageItem.tsx:580
+#: src/components/dms/MessageItem.tsx:609
 msgid "This message is hidden because this user is blocking you."
 msgstr "このユーザーがあなたをブロックしているため、このメッセージは非表示です。"
 
-#: src/components/dms/MessageItem.tsx:569
-#: src/components/dms/MessageItem.tsx:595
+#: src/components/dms/MessageItem.tsx:579
+#: src/components/dms/MessageItem.tsx:605
 msgid "This message is hidden because you are blocking this user."
 msgstr "このユーザーをブロックしているため、このメッセージは非表示です。"
 
@@ -12411,7 +12411,7 @@ msgstr "利用不可"
 msgid "Unavailable feed information"
 msgstr "フィードの情報が利用できません"
 
-#: src/components/dms/MessageItem.tsx:637
+#: src/components/dms/MessageItem.tsx:647
 #: src/components/dms/MessagesListBlockedFooter.tsx:97
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
 #: src/components/moderation/BlockDialog.tsx:186
@@ -13658,7 +13658,7 @@ msgid "You are accessing Bluesky from a region that legally requires us to verif
 msgstr "お客様は、アプリにアクセスする前に年齢を確認することを法的に要求する地域からBlueskyにアクセスしています。"
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/dms/MessageItem.tsx:610
+#: src/components/dms/MessageItem.tsx:620
 msgid "You are blocking {0}"
 msgstr "{0}をブロックしています"
 
@@ -14009,12 +14009,12 @@ msgid "You probably want to restart the app now."
 msgstr "今すぐアプリを再起動したほうが良いでしょう。"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:259
+#: src/components/dms/MessageItem.tsx:269
 msgid "You reacted {0}"
 msgstr "あなたは{0}とリアクションしました"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/getReactionInfo.ts:43
+#: src/components/dms/getReactionInfo.ts:63
 msgid "You reacted {0} to {target}"
 msgstr "あなたは{target}に{0}とリアクションしました"
 
@@ -14055,7 +14055,7 @@ msgid "You won’t be able to rejoin unless you’re invited."
 msgstr "招待されない限り、再び参加することはできません。"
 
 #. When the last message in a chat was made by you.
-#: src/components/dms/getMessageInfo.ts:50
+#: src/components/dms/getMessageInfo.ts:82
 msgid "You: {message}"
 msgstr "あなた: {message}"
 

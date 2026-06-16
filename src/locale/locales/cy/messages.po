@@ -8,7 +8,7 @@ msgstr ""
 "Language: cy\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-11 18:22\n"
+"PO-Revision-Date: 2026-06-16 19:51\n"
 "Last-Translator: \n"
 "Language-Team: Welsh\n"
 "Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n == 3) ? 3 : ((n == 6) ? 4 : 5))));\n"
@@ -23,11 +23,11 @@ msgstr ""
 msgid "\"{interestsDisplayName}\" category (active)"
 msgstr "Categori \"{interestsDisplayName}\" (gweithredol)"
 
-#: src/components/dms/getMessageInfo.ts:91
+#: src/components/dms/getMessageInfo.ts:123
 msgid "(chat invite link)"
-msgstr ""
+msgstr "(dolen gwahodd i sgwrs)"
 
-#: src/components/dms/getMessageInfo.ts:73
+#: src/components/dms/getMessageInfo.ts:105
 msgid "(contains embedded content)"
 msgstr "(yn cynnwys cynnwys wedi'i fewnosod)"
 
@@ -93,11 +93,11 @@ msgstr "{0, plural, one {# mis} other {# mis}}"
 #. placeholder {0}: convo.details.unreadJoinRequestCount
 #: src/screens/Messages/components/ChatListItem.tsx:225
 msgid "{0, plural, one {# new join request} other {# new join requests}}"
-msgstr ""
+msgstr "{0, plural, zero {}one {# cais i ymuno} two {# gais i ymuno} few {# cais i ymuno} many {# cais i ymuno} other {# cais i ymuno}}"
 
 #. placeholder {0}: reactions.length
 #. placeholder {1}: groupedReactions.map(g => g.value).join(' ')
-#: src/components/dms/MessageItem.tsx:269
+#: src/components/dms/MessageItem.tsx:279
 msgid "{0, plural, one {# person} other {# people}} reacted – {1}"
 msgstr "{0, plural, zero {}one {# person} two {# berson} few {# person} many {# person} other {# person}} reacted – {1}"
 
@@ -128,7 +128,7 @@ msgstr "{0, plural, one {# eitem heb ei ddarllen} other {# eitem heb ei ddarllen
 #. placeholder {0}: view.readingTime
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:231
 msgid "{0, plural, one {#m} other {#m}}"
-msgstr ""
+msgstr "{0, plural, zero {}one {#m} two {#m} few {#m} many {#m} other {#m}}"
 
 #. How many months have passed, displayed in a narrow form
 #. placeholder {0}: diff.value
@@ -201,13 +201,13 @@ msgstr "{0} <0>yn <1>testun a thagiau</1></0>"
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:44
 msgid "{0} added to chat"
-msgstr ""
+msgstr "Mae {0} wedi'i ychwangu i'r sgwrs"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:46
 msgid "{0} and {1} added to chat"
-msgstr ""
+msgstr "Mae {0} a {1} wedi'u hychwangu i'r sgwrs"
 
 #. placeholder {0}: profile.followsCount || 0
 #: src/screens/Profile/Header/Metrics.tsx:49
@@ -215,9 +215,9 @@ msgid "{0} following"
 msgstr "Yn dilyn {0}"
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/dms/MessageItem.tsx:614
+#: src/components/dms/MessageItem.tsx:624
 msgid "{0} is blocking you"
-msgstr ""
+msgstr "Mae {0} yn eich rhwystro"
 
 #. placeholder {0}: sanitizeHandle(profile.handle)
 #: src/features/liveNow/components/LiveStatusDialog.tsx:84
@@ -237,7 +237,7 @@ msgstr "Dyw {0} ddim yn cael eu cynnal gan eich dyfais."
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:83
 msgid "{0} joined"
-msgstr ""
+msgstr "Mae {0} wedi ymuno"
 
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:84
@@ -252,7 +252,7 @@ msgstr "Ymunodd {0} yr wythnos hon"
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:96
 msgid "{0} left"
-msgstr ""
+msgstr "Mae {0} wedi gadael"
 
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:97
@@ -273,14 +273,14 @@ msgstr "{0} allan 50"
 
 #. placeholder {0}: createSanitizedDisplayName(memberSender)
 #. placeholder {1}: reaction.value
-#: src/components/dms/MessageItem.tsx:264
+#: src/components/dms/MessageItem.tsx:274
 msgid "{0} reacted {1}"
 msgstr "Ymatebodd {0} i {1}"
 
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:57
 msgid "{0} was added"
-msgstr ""
+msgstr "Mae {0} wedi'i ychwanegu"
 
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:58
@@ -290,7 +290,7 @@ msgstr "Cafodd {0} ei ychwanegu i'r grŵp"
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:70
 msgid "{0} was removed"
-msgstr ""
+msgstr "Mae {0} wedi'i dynnu"
 
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:71
@@ -301,7 +301,7 @@ msgstr "Cafodd {0} ei dynnu o'r grŵp"
 #. placeholder {1}: createSanitizedDisplayName(members[1])
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:49
 msgid "{0}, {1} and {memberCount, plural, one {# other} other {# others}} added to chat"
-msgstr ""
+msgstr "Mae {0}, {1} a {memberCount, plural, zero {}one {# arall} two {# arall} few {# arall} many {# arall} other {# arall}} wedi'u hychwanegu i'r sgwrs"
 
 #. placeholder {0}: feed.displayName
 #. placeholder {1}: sanitizeHandle(feed.creatorHandle, '@')
@@ -329,7 +329,7 @@ msgstr "afatar {0}"
 #: src/screens/Messages/JoinRequest.tsx:143
 msgctxt "group-chat-member-count"
 msgid "{0}/{1}"
-msgstr ""
+msgstr "{0}/{1}"
 
 #. The number of members in a group chat, in the format '{members}/{total} members'.
 #. placeholder {0}: preview.memberCount
@@ -337,7 +337,7 @@ msgstr ""
 #. placeholder {2}: preview.memberCount
 #: src/components/dms/ChatInvite/Card.tsx:57
 msgid "{0}/{1} {2, plural, one {member} other {members}}"
-msgstr ""
+msgstr "{0}/{1} {2, plural, zero {}one {aelod} two {aelod} few {aelod} many {aelod} other {aelod}}"
 
 #. The number of active group chat members out of the total number allowed.
 #. placeholder {0}: joinLinkPreview.memberCount
@@ -351,7 +351,7 @@ msgstr ""
 #: src/components/images/Gallery/index.tsx:526
 msgctxt "gallery-badge-image-position-numbers"
 msgid "{0}/{imageCount}"
-msgstr ""
+msgstr "{0}/{imageCount}"
 
 #. How many days have passed, displayed in a narrow form
 #. placeholder {0}: diff.value
@@ -379,15 +379,15 @@ msgstr "{0}e"
 
 #: src/screens/Messages/JoinRequests.tsx:433
 msgid "{count, plural, =0 {No requests to join} one {# request to join} other {# requests to join}}"
-msgstr ""
+msgstr "{count, plural, zero {}=0 {Dim ceisiadau i ymuno} one {# cais i ymuno} two {# cais i ymuno} few {# cais i ymuno} many {# cais i ymuno} other {# cais i ymuno}}"
 
 #: src/components/dms/SystemMessageGroup.tsx:38
 msgid "{count, plural, one {# chat update} other {# chat updates}}"
-msgstr ""
+msgstr "{count, plural, zero {}one {# diweddariad sgwrs} two {# diweddariad sgwrs} few {# diweddariad sgwrs} many {# diweddariad sgwrs} other {# diweddariad sgwrs}}"
 
 #: src/screens/Messages/components/RequestStatus.tsx:74
 msgid "{count, plural, one {# new join request} other {# new join requests}}"
-msgstr ""
+msgstr "{count, plural, zero {}one {# cais newydd i ymuno} two {# gais newydd i ymuno} few {# cais newydd i ymuno} many {# cais newydd i ymuno} other {# cais newydd i ymuno}}"
 
 #: src/screens/Messages/components/InboxRequests.tsx:35
 msgid "{count, plural, one {# request} other {# requests}}"
@@ -399,25 +399,25 @@ msgstr "{count, plural, one {# eitem heb ei ddarllen} other {# eitemau heb eu da
 
 #: src/components/Post/Embed/GalleryFallbackEmbed.tsx:67
 msgid "{count, plural, one {Refresh the page to see it.} other {Refresh the page to see them all.}}"
-msgstr ""
+msgstr "{count, plural, zero {}one {Adnewyddu'r dudalen i'w weld.} two {Adnewyddu'r dudalen i'w gweld.} few {Adnewyddu'r dudalen i'w gweld.} many {Adnewyddu'r dudalen i'w gweld.} other {Adnewyddu'r dudalen i'w gweld.}}"
 
 #: src/components/Post/Embed/GalleryFallbackEmbed.tsx:53
 msgid "{count, plural, one {This post has # photo.} other {This post has # photos.}}"
-msgstr ""
+msgstr "{count, plural, zero {}one {Mae gan y postiad hwn # ffoto.} two {Mae gan y postiad hwn # ffoto.} few {Mae gan y postiad hwn # ffoto.} many {Mae gan y postiad hwn # ffoto.} other {Mae gan y postiad hwn # ffoto.}}"
 
 #: src/components/Post/Embed/GalleryFallbackEmbed.tsx:60
 msgid "{count, plural, one {Update your app to see it.} other {Update your app to see them all.}}"
-msgstr ""
+msgstr "{count, plural, zero {}one {Diweddarwch eich ap i'w weld.} two {Diweddarwch eich ap i'w gweld.} few {Diweddarwch eich ap i'w gweld.} many {Diweddarwch eich ap i'w gweld.} other {Diweddarwch eich ap i'w gweld.}}"
 
 #. Displayed when there are more requests to join a group chat than have been loaded
 #: src/screens/Messages/JoinRequests.tsx:427
 msgid "{count, plural, other {#+ requests to join}}"
-msgstr ""
+msgstr "{count, plural, zero {} one {#+ cais i ymuno} two {#+ cais i ymuno} few {#+ cais i ymuno} many {#+ cais i ymuno}other {#+ cais i ymuno}}"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:56
 msgid "{count}+"
-msgstr ""
+msgstr "{count}+"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/InboxRequests.tsx:31
@@ -600,7 +600,7 @@ msgstr "{following} yn dilyn"
 #: src/components/dms/components/GroupChatProfileCard.tsx:62
 #: src/components/dms/InitiateChatFlow.tsx:945
 msgid "{handle} can’t be added"
-msgstr ""
+msgstr "Dim modd ychwanegu {handle}"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:459
 msgid "{handle} can't be messaged"
@@ -621,12 +621,12 @@ msgstr "{hours, plural, zero {}one {# awr} two {# awr} few {# awr} many {# hours
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/RequestStatus.tsx:69
 msgid "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
-msgstr ""
+msgstr "{JOIN_REQUESTS_THRESHOLD}+ ceisiadau ymuno newydd"
 
 #: src/screens/Messages/components/ChatListItem.tsx:220
 msgctxt "Displayed when there are more than 20 requests to join a group chat"
 msgid "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
-msgstr ""
+msgstr "{JOIN_REQUESTS_THRESHOLD}+ ceisiadau ymuno newydd"
 
 #. Number of users (always at least 50) who have joined Bluesky using a specific starter pack
 #: src/components/StarterPack/StarterPackCard.tsx:102
@@ -652,19 +652,19 @@ msgstr "{MAX_HIDDEN_REPLIES, plural, zero {} one {Gallwch guddio hyd at # ateb.}
 #. The number of group chat members out of the total number of permitted users.
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:39
 msgid "{memberCount}/{memberLimit}"
-msgstr ""
+msgstr "{memberCount}/{memberLimit}"
 
 #: src/features/liveNow/utils.ts:10
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr "{minutes, plural, zero {}one {# munud} two {# funud} few {# munud} many {# munud} other {# munud}}"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/getReactionInfo.ts:45
+#: src/components/dms/getReactionInfo.ts:65
 msgid "{name} reacted {0} to {target}"
 msgstr "Ymatebodd {name} {0} i {target}"
 
 #. When the last message in a group chat came from someone other than you.
-#: src/components/dms/getMessageInfo.ts:57
+#: src/components/dms/getMessageInfo.ts:89
 msgid "{name}: {message}"
 msgstr "{name}: {message}"
 
@@ -729,7 +729,7 @@ msgstr "Dilysiadau {userName}"
 #. placeholder {0}: totalNumber - 3
 #: src/view/com/composer/ComposerReplyTo.tsx:278
 msgid "+{0}"
-msgstr ""
+msgstr "+{0}"
 
 #. Indicates the number of additional profiles are in the Starter Pack e.g. +12
 #: src/screens/Search/components/StarterPackCard.tsx:250
@@ -813,7 +813,7 @@ msgstr "<0>{0}</0> aelod"
 #. Text identifying the person who added you to a group chat
 #: src/screens/Messages/components/ChatStatusInfo.tsx:135
 msgid "<0>{displayName}</0><1/><2> added you</2>"
-msgstr ""
+msgstr "Mae <0>{displayName}</0><1/><2> wedi'ch ychwanegu</2>"
 
 #: src/screens/Hashtag.tsx:226
 #: src/screens/Search/SearchResults.tsx:315
@@ -822,7 +822,7 @@ msgstr "<0>Mewngofnodwch</0><1> neu </1><2>grëwch cyfrif</2><3> </3><4>i chwili
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:276
 msgid "<0>Tap here to update your location with GPS.</0>"
-msgstr ""
+msgstr "<0>Tapiwch yma i ddiweddaru eich lleoliad gyda GPS.</0>"
 
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #: src/screens/StarterPack/Wizard/index.tsx:494
@@ -860,7 +860,7 @@ msgid "A collection of popular feeds you can find on Bluesky, including News, Bo
 msgstr "Casgliad o ffrydiau poblogaidd sydd i'w cael ar Bluesky, gan gynnwys Newyddion, Booksky, Game Dev, Blacksky, a Fountain Pens"
 
 #. If last message does not contain text, fall back to "{user} reacted to {a message}"
-#: src/components/dms/getReactionInfo.ts:33
+#: src/components/dms/getReactionInfo.ts:53
 msgid "a message"
 msgstr "neges"
 
@@ -909,7 +909,7 @@ msgstr "Llun sgrin o'r cyfansoddwr postiadau gyda botymau newydd nesaf at y botw
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:109
 msgid "A selected recipient is not followed by the sender."
-msgstr ""
+msgstr "Dyw'r derbynnydd penodol ddim yn cael ei ddilyn gan yr anfonwr."
 
 #: src/Navigation.tsx:465
 #: src/screens/Settings/AboutSettings.tsx:78
@@ -939,7 +939,7 @@ msgstr "Derbyn cais am sgwrs"
 
 #: src/screens/Messages/JoinRequests.tsx:458
 msgid "Accept join request"
-msgstr ""
+msgstr "Derbyn cais i ymuno"
 
 #. Accept a chat request
 #: src/screens/Messages/components/IncomingRequestListItem.tsx:51
@@ -957,7 +957,7 @@ msgstr ""
 
 #: src/components/intents/GroupChatJoinDialog.tsx:119
 msgid "Access requested! The group owner will review your request."
-msgstr ""
+msgstr "Cais am fynediad! Bydd perchennog y grŵp yn adolygu eich cais."
 
 #: src/screens/Settings/AccessibilitySettings.tsx:45
 #: src/screens/Settings/Settings.tsx:233
@@ -1188,7 +1188,7 @@ msgstr "Ychwanegu pobl at y rhestr"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:191
 msgid "Add people with a link"
-msgstr ""
+msgstr "Ychwanegu pobl gyda dolen"
 
 #: src/components/dms/EmojiPopup.android.tsx:56
 msgid "Add Reaction"
@@ -1332,7 +1332,7 @@ msgid "alice@example.com"
 msgstr "alice@example.com"
 
 #. the default tab in the interests tab bar
-#: src/components/dms/ReactionsDialog.tsx:288
+#: src/components/dms/ReactionsDialog.tsx:292
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:201
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
@@ -1340,7 +1340,7 @@ msgstr "Y Cyfan"
 
 #. Tab label showing the total count of reactions on a chat message.
 #. placeholder {0}: tab.count
-#: src/components/dms/ReactionsDialog.tsx:385
+#: src/components/dms/ReactionsDialog.tsx:389
 msgid "All {0}"
 msgstr "Y cyfan {0}"
 
@@ -1380,12 +1380,12 @@ msgstr "Caniatáu i unrhyw un ateb"
 #: src/screens/Messages/Settings.tsx:143
 #: src/screens/Messages/Settings.tsx:158
 msgid "Allow direct messages from"
-msgstr ""
+msgstr "Caniatáu negeseuon uniongyrchol oddi wrth"
 
 #: src/screens/Messages/Settings.tsx:189
 #: src/screens/Messages/Settings.tsx:211
 msgid "Allow group chat invites from"
-msgstr ""
+msgstr "Caniatáu gwahoddiadau sgwrsio gan"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:128
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:134
@@ -1558,7 +1558,7 @@ msgstr "Darlun o nifer o bostiadau Bluesky ynghyd ag eiconau ailbostio, hoffi a 
 
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:111
 msgid "An illustration of the Bluesky app with a paper airplane flying out of it, representing inviting friends"
-msgstr ""
+msgstr "Darlun o ap Bluesky gydag awyren papur yn hedfan ohono, yn cynrychioli gwahodd ffrindiau"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:86
 #: src/components/verification/VerifierDialog.tsx:88
@@ -1567,7 +1567,7 @@ msgstr "Darlun yn dangos bod Bluesky yn dewis dilyswyr dibynadwy, a dilyswyr dib
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:198
 msgid "An invite link lets people join this group chat without being added directly. You control who can join the chat. You can disable the link at any time."
-msgstr ""
+msgstr "Mae gwahoddiad yn caniatáu i bobl ymuno â'r grŵp sgwrsio hwn heb gael eu hychwanegu'n uniongyrchol. Chi sy'n rheoli pwy sy'n gallu ymuno â'r sgwrs. Gallwch analluogi'r ddolen ar unrhyw adeg."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:239
 msgid "An issue not included in these options"
@@ -1575,11 +1575,11 @@ msgstr "Mater nad yw wedi'i gynnwys yn yr opsiynau hyn"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:92
 msgid "An issue occurred creating the group chat, please try again."
-msgstr ""
+msgstr "Digwyddodd gwall wrth greu grŵp, ceisiwch eto."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:54
 msgid "An issue occurred starting the chat, please try again."
-msgstr ""
+msgstr "Digwyddodd gwall wrth gychwyn sgwrs, ceisiwch eto."
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:50
 msgid "An issue occurred while trying to open the chat"
@@ -1645,7 +1645,7 @@ msgstr "Gall unrhyw un ryngweithio"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:354
 msgid "Anyone can join"
-msgstr ""
+msgstr "Gall unrhyw un ymuno"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:153
 #: src/screens/Messages/components/InviteLinkDialog.tsx:154
@@ -1665,7 +1665,7 @@ msgstr "Unrhyw un sy'n fy nilyn"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:478
 msgid "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
-msgstr ""
+msgstr "Fydd neb sydd ganddo'n barod ddim yn gallu ymuno neu ofyn i ymuno. Gallwch bob amser greu un newydd."
 
 #: src/Navigation.tsx:473
 #: src/screens/Settings/AppIconSettings/index.tsx:65
@@ -1807,7 +1807,7 @@ msgstr "Ydych chi'n siŵr eich bod eisiau gadael y sgwrs hon?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:56
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participants."
-msgstr ""
+msgstr "Ydych chi'n siŵr eich bod am adael y sgwrs hon? Bydd eich negeseuon yn cael eu dileu i chi, ond nid ar gyfer y cyfranogwyr eraill."
 
 #: src/components/FeedCard.tsx:374
 msgid "Are you sure you want to remove this from your feeds?"
@@ -1816,7 +1816,7 @@ msgstr "Ydych chi'n siŵr eich bod am dynnu hwn o'ch ffrydiau?"
 #. placeholder {0}: convoView.name
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:120
 msgid "Are you sure you want to rescind your request to join {0}?"
-msgstr ""
+msgstr "Ydych chi'n siŵr eich bod am dynnu'n ôl eich cais i ymuno â {0}?"
 
 #: src/view/com/composer/Composer.tsx:1656
 msgid "Are you sure you'd like to discard this post?"
@@ -2025,13 +2025,13 @@ msgstr "Rhwystro cyfrifon"
 
 #: src/components/dms/AfterReportDialog.tsx:148
 msgid "Block and delete"
-msgstr ""
+msgstr "Rhwystro a dileu"
 
 #. After-report action for a conversation
 #: src/components/dms/AfterReportConversationDialog.tsx:167
 msgctxt "button"
 msgid "Block and leave"
-msgstr ""
+msgstr "Rhwystro a gadael"
 
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:119
 msgid "Block list"
@@ -2065,7 +2065,7 @@ msgstr "Rhwystro'r defnyddiwr a/neu ddileu'r sgwrs hon"
 
 #: src/components/dms/AfterReportConversationDialog.tsx:217
 msgid "Block user and/or leave this conversation"
-msgstr ""
+msgstr "Rhwystro defnyddiwr a/neu adael y sgwrs hon"
 
 #: src/components/Post/Embed/index.tsx:216
 msgid "Blocked"
@@ -2148,7 +2148,7 @@ msgstr "Mae Bluesky yn fwy hwyl gyda ffrindiau! Hoffech chi wahodd rhai o'ch rha
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:105
 msgid "Bluesky needs camera access to scan QR codes from other profiles."
-msgstr ""
+msgstr "Mae angen mynediad i'r camera ar Bluesky i sganio codau QR o broffiliau eraill."
 
 #: src/screens/Takendown.tsx:213
 msgid "Bluesky Social Terms of Service"
@@ -2196,7 +2196,7 @@ msgstr "Torri rheolau gwefan"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:200
 msgid "Bring up to 50 friends together in one chat."
-msgstr ""
+msgstr "Dewch â hyd at 50 o ffrindiau ynghyd mewn un sgwrs."
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:167
 #: src/view/com/feeds/ProfileFeedgens.tsx:168
@@ -2731,7 +2731,7 @@ msgstr "Cliciwch yma i weld y ddolen gwahodd ar gyfer y grŵp sgwrsio yma"
 msgid "Click to open tag menu for {0}"
 msgstr "Clicio i agor dewislen tagiau {0}"
 
-#: src/components/dms/MessageItem.tsx:533
+#: src/components/dms/MessageItem.tsx:543
 msgid "Click to retry failed message"
 msgstr "Cliciwch i roi cynnig arall ar y neges a fethwyd"
 
@@ -3969,7 +3969,7 @@ msgctxt "action"
 msgid "Done"
 msgstr "Gorffen"
 
-#: src/components/dms/MessageItem.tsx:437
+#: src/components/dms/MessageItem.tsx:447
 msgid "Double tap or long press the message to add a reaction"
 msgstr "Tapio dwywaith neu bwyso'n hir i ychwanegu ymateb"
 
@@ -4785,7 +4785,7 @@ msgstr "Wedi methu tynnu data. {0}"
 
 #: src/components/dms/ActionsWrapper.web.tsx:75
 #: src/components/dms/MessageContextMenu.tsx:101
-#: src/components/dms/ReactionsDialog.tsx:175
+#: src/components/dms/ReactionsDialog.tsx:179
 msgid "Failed to remove emoji reaction"
 msgstr "Wedi methu dileu emoji ymateb"
 
@@ -5429,11 +5429,11 @@ msgstr "Cael hysbysiadau pan fydd pobl yn ail bostio'ch postiadau chi."
 
 #: src/screens/Settings/NotificationSettings/index.tsx:333
 msgid "Get notifications when people repost your reposts."
-msgstr ""
+msgstr "Cael hysbysiadau pan mae pobl yn ailbostio eich alibostiadau."
 
 #: src/screens/Settings/NotificationSettings/index.tsx:311
 msgid "Get notifications when there's activity on posts you're subscribed to."
-msgstr ""
+msgstr "Cael hysbysiadau pan mae gweithgaredd ar bostiadau rydych wedi tanysgrifio iddyn nhw."
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:94
 msgid "Get notified about new posts"
@@ -5589,7 +5589,7 @@ msgstr "Ewch i broffil y defnyddiwr"
 
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:92
 msgid "Go to user’s profile"
-msgstr ""
+msgstr "Mynd i broffil y defnyddiwr"
 
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:105
 msgid "Going live is currently disabled for your account"
@@ -5605,7 +5605,7 @@ msgstr "Iawn"
 #: src/features/inviteFriends/InviteScannerScreen.tsx:108
 #: src/features/inviteFriends/InviteScannerScreen.tsx:113
 msgid "Grant access"
-msgstr ""
+msgstr "Darparu mynediad"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/lib/moderation/useGlobalLabelStrings.ts:50
@@ -5626,7 +5626,7 @@ msgstr "Ymddygiad rheibus neu ddenu"
 #: src/components/intents/GroupChatJoinDialog.tsx:335
 #: src/screens/Messages/JoinRequest.tsx:129
 msgid "Group chat"
-msgstr ""
+msgstr "Sgwrs grŵp"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:556
 msgid "Group chat invite link dialog"
@@ -5665,16 +5665,16 @@ msgstr "Wedi dad-dewi grŵp sgwrsio"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:181
 msgid "Group Chats"
-msgstr ""
+msgstr "Sgyrsiau Grŵp"
 
 #: src/screens/Messages/Settings.tsx:199
 msgid "Group chats are only available to users 18 and over."
-msgstr ""
+msgstr "Mae sgyrsiau grŵp ar gael dim ond i ddefnyddwyr 18 oed ac yn hŷn."
 
 #. placeholder {0}: convo.details.memberLimit
 #: src/screens/Messages/components/InviteLinkDialog.tsx:205
 msgid "Group chats can only have a maximum of {0, plural, other {# people}}."
-msgstr ""
+msgstr "Gall sgyrsiau grŵp gael uchafswm o {0, plural, zero {# pobl} one {# person} two {# berson} few {# pherson} many {# pherson} other {# person}} yn unig."
 
 #: src/components/dialogs/SearchablePeopleList.tsx:565
 msgid "Group is locked"
@@ -5689,7 +5689,7 @@ msgstr "Enw grŵp"
 #: src/components/dms/InitiateChatFlow.tsx:625
 #: src/screens/Messages/ConversationSettings/prompts.tsx:69
 msgid "Group name is too long. {MAX_GROUP_NAME_GRAPHEME_LENGTH, plural, other {The maximum number of characters is #.}}"
-msgstr ""
+msgstr "Mae enw'r grŵp yn rhy hir. {MAX_GROUP_NAME_GRAPHEME_LENGTH, plural, zero {Uchafswm nifer y nodau yw #.} one {Uchafswm nifer y nodau yw #.} two {Uchafswm nifer y nodau yw #.} few {Uchafswm nifer y nodau yw #.} many {Uchafswm nifer y nodau yw #.} other {Uchafswm nifer y nodau yw #.}}"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:219
 msgid "Hacking or system attacks"
@@ -5763,7 +5763,7 @@ msgstr "Oes gennych chi god? <0>Cliciwch yma.</0>"
 
 #: src/screens/Signup/StepInfo/index.tsx:320
 msgid "Have we got your location wrong? <0>Tap here to update your location with GPS.</0>"
-msgstr ""
+msgstr "Ydy eich lleoliad yn anghywir gennym ni? <0>Tapiwch yma i ddiweddaru eich lleoliad gyda GPS.</0>"
 
 #: src/screens/Signup/index.tsx:231
 msgid "Having trouble?"
@@ -5845,7 +5845,7 @@ msgstr "Cuddio dewisiadau cyfaddasu"
 
 #: src/components/dms/SystemMessageGroup.tsx:57
 msgid "Hide group chat updates"
-msgstr ""
+msgstr "Cuddio diweddariadau grŵp sgwrsio"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:533
 msgid "Hide lists"
@@ -5920,7 +5920,7 @@ msgstr "Yn cuddio'r cynnwys"
 
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:84
 msgid "Hides the invite friends promo banner"
-msgstr ""
+msgstr "Yn cuddio'r faner hyrwyddo gwahodd ffrindiau"
 
 #: src/components/dialogs/BirthDateSettings.tsx:76
 msgid "Hmm, it looks like you're signed in with an <0>App Password</0>. To set your birthdate, you'll need to sign in with your main account password, or ask whomever controls this account to do so."
@@ -6166,7 +6166,7 @@ msgstr "Mewnforio Cysylltiadau"
 
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:78
 msgid "Import contacts or invite your friends"
-msgstr ""
+msgstr "Mewnforio cysylltiadau i chwilio am eich ffrindiau"
 
 #: src/components/contacts/FindContactsBannerNUX.tsx:33
 #: src/components/contacts/FindContactsBannerNUX.tsx:72
@@ -6192,27 +6192,27 @@ msgstr "Hysbysiadau o fewn yr ap"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:370
 msgid "In-app, everyone"
-msgstr ""
+msgstr "O fewn yr ap, pawb"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:378
 msgid "In-app, people you follow"
-msgstr ""
+msgstr "O fewn yr ap, pobl rydych yn eu dilyn"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:385
 msgid "In-app, push"
-msgstr ""
+msgstr "O fewn yr ap, gwthio"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:368
 msgid "In-app, push, everyone"
-msgstr ""
+msgstr "O fewn yr ap, gwthio, pawb"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:376
 msgid "In-app, push, people you follow"
-msgstr ""
+msgstr "O fewn yr ap, gwthio, pobl rydych yn eu dilyn"
 
 #: src/screens/Messages/ChatList.tsx:420
 msgid "Inbox empty"
-msgstr ""
+msgstr "Blwch derbyn gwag"
 
 #. Title message shown in chat requests inbox when it's empty
 #: src/screens/Messages/Inbox.tsx:226
@@ -6257,7 +6257,7 @@ msgstr "Chwilio am ffrindiau drwy eich cysylltiadau"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:99
 msgid "Introducing group chats"
-msgstr ""
+msgstr "Yn cyflwyno sgyrsiau grŵp"
 
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:38
 msgid "Introducing saved posts AKA bookmarks"
@@ -6270,7 +6270,7 @@ msgstr "Cod cadarnhau 2FA annilys."
 
 #: src/components/intents/GroupChatJoinDialog.tsx:157
 msgid "Invalid group chat code."
-msgstr ""
+msgstr "Cod sgwrs grŵp annilys."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:615
 msgid "Invalid handle. Please try a different one."
@@ -6293,7 +6293,7 @@ msgstr "Pwnc adrodd annilys"
 #: src/components/intents/GroupChatJoinDialog.tsx:200
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:41
 msgid "Invalid rescind request."
-msgstr ""
+msgstr "Cais diddymu annilys."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:86
 msgid "Invalid Verification Code"
@@ -6319,7 +6319,7 @@ msgstr "Heb dderbyn y cod gwahoddiad. Gwiriwch eich bod yn ei fewnbynnu'n gywir 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:372
 #: src/view/shell/Drawer.tsx:121
 msgid "Invite friends"
-msgstr ""
+msgstr "Gwahodd ffrindiau"
 
 #: src/components/contacts/components/InviteInfo.tsx:42
 #: src/components/contacts/components/InviteInfo.tsx:44
@@ -6348,7 +6348,7 @@ msgstr "Dolen gwahodd"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:126
 msgid "Invite link copied"
-msgstr ""
+msgstr "Dolen gwahodd wedi'i chopïo"
 
 #: src/components/dms/getSystemMessageInfo.ts:120
 msgid "Invite link created"
@@ -6374,7 +6374,7 @@ msgstr "Gwahoddwch bobl i'r pecyn cychwyn hwn!"
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:91
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:144
 msgid "Invite your friends"
-msgstr ""
+msgstr "Gwahoddwch eich ffrindiau"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:37
 msgid "Invite your friends to follow your favorite feeds and people"
@@ -6422,7 +6422,7 @@ msgstr "Swyddi"
 #: src/components/dms/ChatInvite/Root.tsx:117
 #: src/components/intents/GroupChatJoinDialog.tsx:296
 msgid "Join"
-msgstr ""
+msgstr "Ymuno"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:210
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:215
@@ -6434,12 +6434,12 @@ msgstr "Ymunwch â Bluesky"
 #: src/components/intents/GroupChatJoinDialog.tsx:72
 #: src/components/intents/GroupChatJoinDialog.tsx:462
 msgid "Join group chat"
-msgstr ""
+msgstr "Ymuno â grŵp sgwrsio"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:189
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:31
 msgid "Join request rescinded."
-msgstr ""
+msgstr "Cais ymuno wedi'i dynnu'n ôl."
 
 #: src/components/StarterPack/QrCode.tsx:72
 #: src/view/shell/NavSignupCard.tsx:41
@@ -6463,7 +6463,7 @@ msgstr "Cadw fi'n gyfredol"
 #: src/components/moderation/BlockDialog.tsx:365
 #: src/components/moderation/BlockDialog.tsx:372
 msgid "Kick member"
-msgstr ""
+msgstr "Pwnio aelod"
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:200
 msgid "KWS website"
@@ -6660,11 +6660,11 @@ msgstr "Gadael Bluesky"
 
 #: src/screens/Messages/ConversationSettings/prompts.tsx:153
 msgid "Leaving this chat will lock it permanently and you won’t be able to rejoin."
-msgstr ""
+msgstr "Bydd gadael y sgwrs hon yn ei chloi'n barhaol a fyddwch chi ddim yn gallu ailymuno."
 
 #: src/components/moderation/BlockDialog.tsx:276
 msgid "Left group chat."
-msgstr ""
+msgstr "Wedi gadael y grŵp sgwrsio."
 
 #: src/screens/SignupQueued.tsx:158
 msgid "left to go."
@@ -6940,7 +6940,7 @@ msgstr "Llwytho postiadau newydd"
 #: src/screens/Messages/components/MessageInput.web.tsx:202
 msgctxt "placeholder"
 msgid "Loading chat…"
-msgstr ""
+msgstr "Yn llwytho sgwrs…"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:575
 msgid "Loading lists..."
@@ -7085,7 +7085,7 @@ msgstr "Cyfryngau a all fod yn annymunol neu'n amhriodol i rai cynulleidfaoedd."
 
 #: src/components/moderation/BlockDialog.tsx:302
 msgid "Member removed from group chat."
-msgstr ""
+msgstr "Aelod wedi'i dynnu o'r grŵp sgwrsio."
 
 #. The heading above the list of chat members.
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:34
@@ -7141,7 +7141,7 @@ msgctxt "toast"
 msgid "Message deleted"
 msgstr "Neges wedi'i dileu"
 
-#: src/components/dms/MessageItem.tsx:527
+#: src/components/dms/MessageItem.tsx:537
 msgid "Message failed to send."
 msgstr "Methodd y neges a mynd."
 
@@ -7178,13 +7178,13 @@ msgstr "Dewisiadau negeseuon"
 msgid "Messages"
 msgstr "Negeseuon"
 
-#: src/components/dms/MessageItem.tsx:626
+#: src/components/dms/MessageItem.tsx:636
 msgid "Messages from this person are hidden while they are blocking you."
-msgstr ""
+msgstr "Mae negeseuon gan y person yma wedi'u cuddio tra'u bod nhw yn eich rhwystro."
 
-#: src/components/dms/MessageItem.tsx:621
+#: src/components/dms/MessageItem.tsx:631
 msgid "Messages from this person are hidden while you are blocking them."
-msgstr ""
+msgstr "Mae negeseuon gan y person yma wedi'u cuddio tra'ch bod chi'n eu rhwystro."
 
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:101
 msgctxt "Name of app icon variant"
@@ -7387,7 +7387,7 @@ msgstr "Tewi geiriau a thagiau"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:207
 msgid "Mute, leave, or remove people anytime. It’s your chat."
-msgstr ""
+msgstr "Tewi, gadael, neu dynnu pobl unrhyw bryd. Eich sgwrs chi yw hi."
 
 #: src/screens/Messages/ConversationSettings/index.tsx:536
 msgid "Muted"
@@ -7421,7 +7421,7 @@ msgstr "Mae tewi'n breifat. Gall cyfrifon wedi'u tewi rhyngweithio â chi, ond f
 
 #: src/components/moderation/BlockDialog.tsx:174
 msgid "Mutual group chats"
-msgstr ""
+msgstr "Grwpiau sgwrsio cyffredin"
 
 #: src/components/dialogs/BirthDateSettings.tsx:54
 #: src/components/dialogs/BirthDateSettings.tsx:58
@@ -7646,7 +7646,7 @@ msgstr "Delwedd nesaf"
 
 #: src/features/inviteFriends/components/ThemePicker.tsx:31
 msgid "Night"
-msgstr ""
+msgstr "Nos"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:32
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
@@ -7875,7 +7875,7 @@ msgstr "Noethni nad yw'n rhywiol"
 
 #: src/features/inviteFriends/InviteScannerScreen.web.tsx:31
 msgid "Not available on this platform"
-msgstr ""
+msgstr "Nid yw ar gael ar y platfform yma"
 
 #: src/screens/FindContactsFlowScreen.tsx:62
 #: src/screens/Settings/FindContactsSettings.tsx:106
@@ -7884,7 +7884,7 @@ msgstr "Nid yw ar gael ar y platfform yma."
 
 #: src/components/KnownFollowers.tsx:254
 msgid "Not followed by anyone you’re following"
-msgstr ""
+msgstr "Ddim yn cael ei ddilyn gan neb rydych chi'n ei ddilyn"
 
 #: src/Navigation.tsx:167
 #: src/view/screens/Profile.tsx:132
@@ -7975,7 +7975,7 @@ msgstr "Iawn"
 #: src/components/BotAccountAlert.tsx:52
 #: src/components/BotAccountAlert.tsx:57
 #: src/components/dms/InitiateChatFlow.tsx:733
-#: src/components/dms/MessageItem.tsx:633
+#: src/components/dms/MessageItem.tsx:643
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:663
 msgid "Okay"
@@ -8002,11 +8002,11 @@ msgstr "Ailosod cyflwyno"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:117
 msgid "One of the selected recipients does not allow group chats."
-msgstr ""
+msgstr "Dyw un o'ch derbynwyr chi ddim yn caniatáu sgyrsiau grŵp."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:100
 msgid "One of the selected recipients has blocked you and cannot be messaged."
-msgstr ""
+msgstr "Mae un o'ch derbynwyr chi wedi'ch rhwystro a does dim modd anfon neges ato."
 
 #: src/view/com/composer/Composer.tsx:864
 msgid "One or more GIFs is missing alt text."
@@ -8043,19 +8043,19 @@ msgstr "Dim ond {0} all ateb."
 #. placeholder {2}: next.length
 #: src/view/com/composer/Composer.tsx:234
 msgid "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
-msgstr ""
+msgstr "Dim ond {0} o {1} {2, plural, zero {delweddau} one {ddelwedd} two {ddelwedd} few {delwedd} many {delwedd} other {delwedd}} wedi'i hychwanegu; y terfyn yw {MAX_GALLERY_IMAGES}"
 
 #: src/screens/Messages/JoinRequests.tsx:200
 msgid "Only admins can accept join requests."
-msgstr ""
+msgstr "Dim ond gweinyddwyr sy'n gallu derbyn ceisiadau ymuno."
 
 #: src/screens/Messages/JoinRequests.tsx:233
 msgid "Only admins can ignore join requests."
-msgstr ""
+msgstr "Dim ond gweinyddwyr sy'n gallu anwybyddu ceisiadau ymuno."
 
 #: src/components/intents/GroupChatJoinDialog.tsx:155
 msgid "Only followers can join this group chat."
-msgstr ""
+msgstr "Dim ond dilynwyr sy'n gallu ymuno â'r sgwrs grŵp hon."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:121
 #: src/screens/Settings/ActivityPrivacySettings.tsx:126
@@ -8070,12 +8070,12 @@ msgstr "Dim ond ffeiliau delwedd sy'n cael eu cefnogi"
 #. placeholder {0}: createSanitizedDisplayName( joinLinkPreview.owner, true, moderateProfile(joinLinkPreview.owner, moderationOpts).ui( 'displayName', ), )
 #: src/screens/Messages/JoinRequest.tsx:222
 msgid "Only people {0} follows can join."
-msgstr ""
+msgstr "Dim ond pobl mae {0} yn eu dilyn sy'n gallu ymuno."
 
 #: src/components/dms/ChatInvite/Root.tsx:127
 #: src/components/intents/GroupChatJoinDialog.tsx:306
 msgid "Only people the chat owner follows can join"
-msgstr ""
+msgstr "Dim ond pobl mae perchennog y sgwrs yn eu dilyn all ymuno"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:41
 msgid "Only WebVTT (.vtt) files are supported"
@@ -8087,7 +8087,7 @@ msgstr "Wps, aeth rhywbeth o'i le!"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:218
 msgid "Oops, this profile doesn't exist. Try scanning another one."
-msgstr ""
+msgstr "Wps, dyw'r proffil hwn ddim yn bodoli. Rhowch gynnig ar sganio un arall."
 
 #: src/components/Lists.tsx:184
 #: src/components/StarterPack/ProfileStarterPacks.tsx:363
@@ -8115,8 +8115,8 @@ msgstr ""
 msgid "Open chat member options for {displayName}"
 msgstr "Dewisiadau aelodau sgwrsio agored ar gyfer {displayName}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:487
-#: src/screens/Messages/components/ChatListItem.tsx:491
+#: src/screens/Messages/components/ChatListItem.tsx:490
+#: src/screens/Messages/components/ChatListItem.tsx:494
 msgid "Open conversation options"
 msgstr "Agor dewisiadau sgyrsiau"
 
@@ -8516,12 +8516,12 @@ msgstr "Pobl rwy'n eu dilyn"
 #: src/screens/Messages/Settings.tsx:84
 msgctxt "allow group chat invites from"
 msgid "People I follow"
-msgstr ""
+msgstr "Pobl rwy'n eu dilyn"
 
 #: src/screens/Messages/Settings.tsx:69
 msgctxt "allow messages from"
 msgid "People I follow"
-msgstr ""
+msgstr "Pobl rwy'n eu dilyn"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:163
 msgid "People I follow can join instantly"
@@ -9182,8 +9182,8 @@ msgstr "Ail alluogi'r ddolen"
 msgid "React with {emoji}"
 msgstr "Ymateb gyda {emoji}"
 
-#: src/components/dms/ReactionsDialog.tsx:66
-#: src/components/dms/ReactionsDialog.tsx:94
+#: src/components/dms/ReactionsDialog.tsx:70
+#: src/components/dms/ReactionsDialog.tsx:98
 msgid "Reactions"
 msgstr "Ymatebion"
 
@@ -10981,12 +10981,12 @@ msgid "Someone left the group"
 msgstr "Gadawodd rhywun y grŵp"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:266
+#: src/components/dms/MessageItem.tsx:276
 msgid "Someone reacted {0}"
 msgstr "Ymateb rhywun oedd {0}"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/getReactionInfo.ts:47
+#: src/components/dms/getReactionInfo.ts:67
 msgid "Someone reacted {0} to {target}"
 msgstr "Ymateb rhywun {0} i {target}"
 
@@ -11365,7 +11365,7 @@ msgstr ""
 msgid "Tap below to allow Bluesky to access your GPS location. We will then use that data to more accurately determine the content and features available in your region."
 msgstr "Tapiwch isod i ganiatáu i Bluesky gael mynediad i'ch lleolaid. Byddwn yn defnyddio'r data hwnnw i bennu'n fwy cywir y cynnwys a'r nodweddion sydd ar gael yn eich ardal chi."
 
-#: src/components/dms/MessageItem.tsx:572
+#: src/components/dms/MessageItem.tsx:582
 msgid "Tap for details"
 msgstr ""
 
@@ -11393,7 +11393,7 @@ msgstr "Tapiwch i gau'r ddewislen cyd-destun"
 
 #: src/components/dms/ChatInvite/Root.tsx:92
 msgid "Tap to copy this invite link"
-msgstr ""
+msgstr "Tapiwch i gopïo'r ddolen wahodd hon"
 
 #: src/components/ProgressGuide/Toast.tsx:163
 msgid "Tap to dismiss"
@@ -11402,40 +11402,40 @@ msgstr "Tapiwch i gau"
 #: src/components/dms/ChatInvite/Root.tsx:140
 #: src/components/intents/GroupChatJoinDialog.tsx:467
 msgid "Tap to join this group chat immediately"
-msgstr ""
+msgstr "Tapiwch i ymuno â'r sgwrs grŵp hon ar unwaith"
 
 #: src/components/dms/ChatInvite/Root.tsx:105
 msgid "Tap to open this group chat"
-msgstr ""
+msgstr "Tapiwch i agor y sgwrs grŵp hon"
 
-#: src/components/dms/ReactionsDialog.tsx:196
+#: src/components/dms/ReactionsDialog.tsx:200
 msgid "Tap to remove"
 msgstr "Tapio i dynnu"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/ReactionsDialog.tsx:212
+#: src/components/dms/ReactionsDialog.tsx:216
 msgid "Tap to remove your {0} reaction"
 msgstr "Tapio i dynnu eich {0} ymateb"
 
 #: src/components/dms/ChatInvite/Root.tsx:139
 #: src/components/intents/GroupChatJoinDialog.tsx:466
 msgid "Tap to request access to join this group chat"
-msgstr ""
+msgstr "Tapiwch i ofyn am fynediad i ymuno â'r sgwrs grŵp hon"
 
-#: src/components/dms/MessageItem.tsx:537
+#: src/components/dms/MessageItem.tsx:547
 msgid "Tap to retry"
 msgstr "Tapio i geisio eto"
 
 #. placeholder {0}: tab.value
-#: src/components/dms/ReactionsDialog.tsx:358
+#: src/components/dms/ReactionsDialog.tsx:362
 msgid "Tap to show {0} reactions"
 msgstr "Tapio i ddangos {0} ymateb"
 
-#: src/components/dms/ReactionsDialog.tsx:357
+#: src/components/dms/ReactionsDialog.tsx:361
 msgid "Tap to show all reactions"
 msgstr "Tapio i ddangos pob ymateb"
 
-#: src/components/dms/MessageItem.tsx:289
+#: src/components/dms/MessageItem.tsx:299
 msgid "Tap to view reactions"
 msgstr "Tapio i weld ymatebion"
 
@@ -11607,7 +11607,7 @@ msgstr "Mae'r gyfraith yn eich ardal yn gofyn i chi ddilysu eich bod yn oedolyn 
 #: src/components/intents/GroupChatJoinDialog.tsx:165
 #: src/screens/Messages/JoinRequests.tsx:205
 msgid "The member limit has been reached."
-msgstr ""
+msgstr "Mae'r uchafswm aelodau wedi'i gyrraedd."
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:400
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
@@ -11620,7 +11620,7 @@ msgstr "Mae'r Polisi Preifatrwydd wedi'i symud i <0/>"
 #: src/view/com/composer/state/video.ts:397
 #: src/view/com/composer/state/video.ts:436
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
-msgstr ""
+msgstr "Mae'r fideo a ddewiswyd yn fwy na {VIDEO_MAX_SIZE_MB} MB. Ceisiwch eto gyda ffeil lai."
 
 #: src/lib/hooks/useCleanError.ts:41
 #: src/lib/strings/errors.ts:19
@@ -11786,11 +11786,11 @@ msgstr "Dim ond i'r ffrwd Dilyn mae'r gosodiadau hyn yn berthnasol."
 
 #: src/components/moderation/BlockDialog.tsx:356
 msgid "They own this chat"
-msgstr ""
+msgstr "Nhw sy'n berchen ar y sgwrs hon"
 
 #: src/screens/Messages/ConversationSettings/prompts.tsx:177
 msgid "They won’t be able to rejoin unless you invite them again."
-msgstr ""
+msgstr "Fyddan nhw ddim yn gallu ail ymuno oni bai i chi eu gwahodd nhw eto."
 
 #: src/components/moderation/ScreenHider.tsx:118
 msgid "This {screenDescription} has been flagged:"
@@ -11845,9 +11845,9 @@ msgstr "Mae'r sgwrs yma wedi gorffen"
 #: src/components/dms/ChatInvite/Root.tsx:122
 #: src/components/intents/GroupChatJoinDialog.tsx:301
 msgid "This chat is full"
-msgstr ""
+msgstr "Mae'r sgwrs yma'n llawn"
 
-#: src/screens/Messages/components/ChatListItem.tsx:373
+#: src/screens/Messages/components/ChatListItem.tsx:376
 #: src/screens/Messages/components/ChatLocked.tsx:69
 msgid "This chat is locked"
 msgstr "Mae'r sgwrs yma wedi'i chloi"
@@ -11855,7 +11855,7 @@ msgstr "Mae'r sgwrs yma wedi'i chloi"
 #: src/screens/Messages/components/ChatLocked.tsx:45
 #: src/screens/Messages/ConversationSettings/index.tsx:437
 msgid "This chat is locked by a moderation action"
-msgstr ""
+msgstr "Mae'r sgwrs hon wedi'i chloi gan weithred gymedroli"
 
 #: src/screens/Messages/components/MessageListError.tsx:17
 msgid "This chat was disconnected"
@@ -11893,7 +11893,7 @@ msgstr "Dyw'r cynnwys hwn ddim yn weladwy heb gyfrif Bluesky."
 
 #: src/components/intents/GroupChatJoinDialog.tsx:151
 msgid "This conversation is locked."
-msgstr ""
+msgstr "Mae'r sgwrs hon wedi'i chloi."
 
 #: src/screens/Messages/components/ChatListItem.tsx:156
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
@@ -11943,7 +11943,7 @@ msgstr "Dyw'r ffrwd hon ddim ar-lein bellach. Rydym yn dangos <0>Discover</0> yn
 
 #: src/screens/Messages/components/ChatLocked.tsx:72
 msgid "This group is locked by a moderation action on the owner"
-msgstr ""
+msgstr "Mae'r grŵp hwn wedi'i gloi gan weithred cymedroli ar y perchennog"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:611
 msgid "This handle is reserved. Please try a different one."
@@ -11959,11 +11959,11 @@ msgstr "Mae'r wybodaeth yma'n breifat ac nid yw'n cael ei rannu gyda defnyddwyr 
 
 #: src/components/intents/GroupChatJoinDialog.tsx:161
 msgid "This invite link has been disabled."
-msgstr ""
+msgstr "Mae'r ddolen wahoddiad hon wedi'i hanalluogi."
 
 #: src/components/intents/GroupChatJoinDialog.tsx:236
 msgid "This invite link is invalid"
-msgstr ""
+msgstr "Mae'r ddolen wahodd hon yn annilys"
 
 #: src/view/screens/Debug.tsx:327
 msgid "This is an empty state"
@@ -12007,19 +12007,19 @@ msgstr "Mae'r rhestr hon - a grëwyd gennych chi - yn cynnwys achosion posibl o 
 msgid "This list is empty."
 msgstr "Mae'r rhestr hon yn wag."
 
-#: src/screens/Messages/components/ChatListItem.tsx:334
+#: src/screens/Messages/components/ChatListItem.tsx:335
 msgid "This message is hidden"
-msgstr ""
+msgstr "Mae'r neges hon wedi'i chuddio"
 
-#: src/components/dms/MessageItem.tsx:570
-#: src/components/dms/MessageItem.tsx:599
+#: src/components/dms/MessageItem.tsx:580
+#: src/components/dms/MessageItem.tsx:609
 msgid "This message is hidden because this user is blocking you."
-msgstr ""
+msgstr "Mae'r neges wedi'i chuddio gan fod y defnyddiwr yn eich rhwystro."
 
-#: src/components/dms/MessageItem.tsx:569
-#: src/components/dms/MessageItem.tsx:595
+#: src/components/dms/MessageItem.tsx:579
+#: src/components/dms/MessageItem.tsx:605
 msgid "This message is hidden because you are blocking this user."
-msgstr ""
+msgstr "Mae'r neges wedi'i chuddio gan eich bod yn rhwystro'r defnyddiwr yma."
 
 #: src/screens/Profile/ErrorState.tsx:41
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
@@ -12031,7 +12031,7 @@ msgstr "Gosodwyd y cymedroliad hwn i'r cyfrif defnyddiwr cyfan a bydd yn ymddang
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:84
 msgid "This person is blocking you"
-msgstr ""
+msgstr "Mae'r person yma'n eich rhwystro"
 
 #. placeholder {0}: niceDate(i18n, createdAt)
 #. placeholder {1}: niceDate(i18n, indexedAt)
@@ -12098,7 +12098,7 @@ msgstr "Does gan y defnyddiwr hwn ddim dilynwyr."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:64
 msgid "This user has blocked you and cannot be messaged."
-msgstr ""
+msgstr "Mae'r person yma'n eich rhwystro a does dim modd ei negesu."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:83
 #: src/lib/moderation/useModerationCauseDescription.ts:76
@@ -12107,7 +12107,7 @@ msgstr "Mae'r defnyddiwr hwn wedi eich rhwystro. Does dim modd i chi weld eu cyn
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:68
 msgid "This user has disabled chat and cannot be messaged."
-msgstr ""
+msgstr "Mae'r defnyddiwr wedi analluogi sgwrsio a does dim modd ei negesu."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:30
 msgid "This user has requested that their content only be shown to signed-in users."
@@ -12133,7 +12133,7 @@ msgstr "Dyw'r defnyddiwr hwn ddim yn dilyn unrhyw un."
 
 #: src/components/Post/Embed/VideoEmbed/index.web.tsx:236
 msgid "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
-msgstr ""
+msgstr "Does dim modd chwarae'r fideo ar eich dyfais. Efallai nad yw'r codec fideo angenrheidiol ar eich porwr neu system (H.264/AAC)."
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:157
 msgid "This will create a new list with the same name, description, and members as this starter pack."
@@ -12325,7 +12325,7 @@ msgstr "Ceisia eto"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:170
 msgid "Try again in a moment."
-msgstr ""
+msgstr "Rhowch gynnig arall arni ymhen ychydig."
 
 #: src/components/Post/Translated/index.tsx:229
 #: src/components/Post/Translated/index.tsx:242
@@ -12335,7 +12335,7 @@ msgstr "Rhowch gynnig ar Google Translate"
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:165
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:171
 msgid "Try it"
-msgstr ""
+msgstr "Rhowch gynnig arni"
 
 #: src/lib/interests.ts:74
 msgid "TV"
@@ -12381,11 +12381,11 @@ msgstr "Methu dileu"
 
 #: src/screens/Messages/JoinRequests.tsx:351
 msgid "Unable to fetch join requests."
-msgstr ""
+msgstr "Methu nôl ceisiadau i ymuno."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:113
 msgid "Unable to find a selected recipient."
-msgstr ""
+msgstr "Methu canfod derbynnydd rwyf wedi ei ddewis."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:77
 msgid "Unable to find the selected recipient."
@@ -12411,7 +12411,7 @@ msgstr "Dim ar gael"
 msgid "Unavailable feed information"
 msgstr "Manylion ffrwd anhysbys"
 
-#: src/components/dms/MessageItem.tsx:637
+#: src/components/dms/MessageItem.tsx:647
 #: src/components/dms/MessagesListBlockedFooter.tsx:97
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
 #: src/components/moderation/BlockDialog.tsx:186
@@ -12444,7 +12444,7 @@ msgstr "Dadrwystro cyfrif"
 
 #: src/components/moderation/BlockDialog.tsx:146
 msgid "Unblock account?"
-msgstr ""
+msgstr "Dadrwystro cyfrif?"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:202
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:440
@@ -12657,7 +12657,7 @@ msgstr "Math o fideo sydd ddim yn cael ei gynnal: {mimeType}"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:198
 msgid "Up to 50 people"
-msgstr ""
+msgstr "Hyd at 50 o bobl"
 
 #: src/screens/Settings/components/OTAInfo.tsx:61
 #: src/screens/Settings/components/OTAInfo.tsx:77
@@ -12670,7 +12670,7 @@ msgstr "Diweddaru <0>{displayName}</0> yn y Rhestrau"
 
 #: src/components/Post/Embed/GalleryFallbackEmbed.tsx:93
 msgid "Update app"
-msgstr ""
+msgstr "Diweddaru'r ap"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:296
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:308
@@ -12692,11 +12692,11 @@ msgstr "Diweddaru i {domain}"
 
 #: src/components/Post/Embed/GalleryFallbackEmbed.tsx:85
 msgid "Update your app"
-msgstr ""
+msgstr "Diweddarwch eich ap"
 
 #: src/components/Post/Embed/GalleryFallbackEmbed.tsx:76
 msgid "Update your app to see it."
-msgstr ""
+msgstr "Diweddarwch eich ap i'w weld."
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:202
 msgid "Update your email"
@@ -12707,7 +12707,7 @@ msgstr "Diweddaru eich e-bost"
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:41
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:106
 msgid "Update your location"
-msgstr ""
+msgstr "Diweddarwch eich lleoliad"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:356
 msgctxt "toast"
@@ -13065,7 +13065,7 @@ msgstr "Edrych"
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:318
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:640
 msgid "View {0}"
-msgstr ""
+msgstr "Gweld {0}"
 
 #. placeholder {0}: profile.handle
 #: src/screens/Profile/Header/Shell.tsx:257
@@ -13094,7 +13094,7 @@ msgstr "Gweld proffil {displayName}"
 
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:456
 msgid "View {publicationTitle}"
-msgstr ""
+msgstr "Gweld {publicationTitle}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:479
 msgid "View blocked user's profile"
@@ -13124,11 +13124,11 @@ msgstr "Gweld ceisiadau sgwrsio newydd"
 
 #: src/screens/Messages/components/RequestStatus.tsx:54
 msgid "View incoming requests"
-msgstr ""
+msgstr "Gweld ceisiadau sy'n dod i mewn"
 
 #: src/screens/Messages/components/RequestStatus.tsx:55
 msgid "View incoming requests to join this group chat"
-msgstr ""
+msgstr "Gweld ceisiadau sy'n dod i mewn i ymuno â'r sgwrs grŵp hon"
 
 #: src/components/moderation/LabelsOnMe.tsx:56
 msgid "View information about these labels"
@@ -13167,7 +13167,7 @@ msgstr "Gweld baner proffil"
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:457
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:640
 msgid "View publication"
-msgstr ""
+msgstr "Gweld cyhoeddiad"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:108
 msgid "View the avatar"
@@ -13294,7 +13294,7 @@ msgstr "Methu lwytho'r sgwrs hon"
 
 #: src/screens/Messages/JoinRequests.tsx:89
 msgid "We couldn’t load this conversation’s join requests"
-msgstr ""
+msgstr "Wedi methu lwytho ceisiadau ymuno'r sgwrs hon"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:138
 msgid "We couldn’t load this conversation’s settings"
@@ -13572,7 +13572,7 @@ msgstr "Hoffech chi rwystro'r defnyddiwr hwn a/neu ddileu'r sgwrs hon?"
 
 #: src/components/dms/AfterReportConversationDialog.tsx:47
 msgid "Would you like to block this user and/or leave this conversation?"
-msgstr ""
+msgstr "Hoffech chi rwystro'r defnyddiwr yma a/neu adael y sgwrs yma?"
 
 #: src/view/com/composer/drafts/DraftsButton.tsx:110
 msgid "Would you like to save this as a draft before viewing your drafts?"
@@ -13658,17 +13658,17 @@ msgid "You are accessing Bluesky from a region that legally requires us to verif
 msgstr "Rydych yn cael mynediad at Bluesky mewn ardal sydd â gofyniad cyfreithiol i ni wirio eich oed cyn caniatáu i chi gael mynediad at yr ap."
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/dms/MessageItem.tsx:610
+#: src/components/dms/MessageItem.tsx:620
 msgid "You are blocking {0}"
-msgstr ""
+msgstr "Rydych yn rhwystro {0}"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:81
 msgid "You are blocking the chat owner"
-msgstr ""
+msgstr "Rydych yn rhwystro perchennog y sgwrs"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:83
 msgid "You are blocking this person"
-msgstr ""
+msgstr "Rydych yn rhwystro'r person yma"
 
 #: src/components/forms/HostingProvider.tsx:46
 msgid "You are creating an account on"
@@ -13756,7 +13756,7 @@ msgstr "Gallwch nawr ddewis i gael gwybod pan fydd pobl benodol yn postio. Os oe
 
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:154
 msgid "You can now invite friends with a link or QR code. Share the link anywhere, or let them scan the code to join you on Bluesky."
-msgstr ""
+msgstr "Gallwch nawr wahodd ffrindiau gyda dolen neu god QR. Rhannwch y ddolen yn unrhyw le, neu gadewch iddyn nhw sganio'r cod i ymuno â chi ar Bluesky."
 
 #: src/screens/Login/index.tsx:203
 #: src/screens/Login/PasswordUpdatedForm.tsx:27
@@ -13766,7 +13766,7 @@ msgstr "Gallwch nawr fewngofnodi gyda'ch cyfrinair newydd."
 #. Toast shown when the user tries to add more images but the post gallery is already at the cap
 #: src/view/com/composer/Composer.tsx:221
 msgid "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
-msgstr ""
+msgstr "Dim ond hyd at {MAX_GALLERY_IMAGES, plural, zero {# delweddau} one {# ddelwedd} two {# ddelwedd} few {# delwedd} many {# delwedd} other {# delwedd}} y gallwch eu hychwanegu i bob postiad"
 
 #: src/view/com/composer/Composer.tsx:1444
 msgid "You can only save drafts up to 1000 characters."
@@ -13790,12 +13790,12 @@ msgstr "Gallwch ailagor eich cyfrif i barhau i fewngofnodi. Bydd defnyddwyr erai
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:93
 msgid "You can read chat history but can’t send new messages."
-msgstr ""
+msgstr "Gallwch ddarllen hanes sgwrs ond ddim anfon negeseuon newydd."
 
 #. Error message for maximum number of images that can be selected to add to a post.
 #: src/view/com/composer/SelectMediaButton.tsx:423
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
-msgstr ""
+msgstr "Gallwch ddewis hyd at {MAX_GALLERY_IMAGES, plural, zero {# delweddau} one {# ddelwedd} two {# ddelwedd} few {# delwedd} many {# delwedd} other {# delwedd}} i gyd."
 
 #: src/components/interstitials/Trending.tsx:132
 #: src/components/interstitials/TrendingVideos.tsx:138
@@ -13806,7 +13806,7 @@ msgstr "Gallwch ddiweddaru hwn yn ddiweddarach o'ch gosodiadau."
 #: src/components/dms/ActionsWrapper.web.tsx:79
 #: src/components/dms/MessageContextMenu.tsx:105
 msgid "You cannot add more than {EMOJI_REACTION_LIMIT, plural, one {# emoji reaction} other {# emoji reactions}}"
-msgstr ""
+msgstr "Gallwch chi ddim ychwanegu mwy na {EMOJI_REACTION_LIMIT, plural, zero {# ymatebion emoji} one {# ymateb emoji} two {# ymateb emoji} few {# ymateb emoji} many {# ymateb emoji} other {# ymateb emoji}}"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:105
 msgid "You cannot create a group chat yet."
@@ -13841,7 +13841,7 @@ msgstr "Chi sydd wedi cyrraedd yma gyntaf"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:176
 msgid "You have been previously removed from this group and can’t join it using this link."
-msgstr ""
+msgstr "Rydych chi wedi cael eich tynnu o'r grŵp hwn yn flaenorol ac allwch chi ddim ymuno ag ef gan ddefnyddio'r ddolen hon."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:77
 #: src/lib/moderation/useModerationCauseDescription.ts:58
@@ -13972,7 +13972,7 @@ msgstr "Dim ond hyd at 3 ffrwd y gallwch chi eu hychwanegu"
 
 #: src/components/moderation/BlockDialog.tsx:320
 msgid "You must be a chat owner to remove a member."
-msgstr ""
+msgstr "Rhaid i chi fod yn berchennog sgwrs i ddileu aelod."
 
 #: src/components/dialogs/BirthDateSettings.tsx:177
 msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
@@ -13997,7 +13997,7 @@ msgstr "Mae angen i chi ddilysu'ch cyfeiriad e-bost cyn y gallwch alluogi 2FA e-
 
 #: src/components/moderation/BlockDialog.tsx:352
 msgid "You own this chat"
-msgstr ""
+msgstr "Chi sy'n berchen ar y sgwrs hon"
 
 #. placeholder {0}: currentAccount?.handle
 #: src/screens/Deactivated.tsx:120
@@ -14009,12 +14009,12 @@ msgid "You probably want to restart the app now."
 msgstr "Mae'n debyg eich bod chi eisiau ailgychwyn yr ap nawr."
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:259
+#: src/components/dms/MessageItem.tsx:269
 msgid "You reacted {0}"
 msgstr "Eich ymateb yw {0}"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/getReactionInfo.ts:43
+#: src/components/dms/getReactionInfo.ts:63
 msgid "You reacted {0} to {target}"
 msgstr "Eich ymateb i {0} yw {target}"
 
@@ -14026,7 +14026,7 @@ msgstr "Rydych wedi newid eich dyddiad geni'n ddiweddar"
 #. Displayed when the user has requested to join a group chat.
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:109
 msgid "You requested to join"
-msgstr ""
+msgstr "Rydych wedi gofyn i gael ymuno"
 
 #: src/screens/Settings/Settings.tsx:297
 #: src/view/shell/desktop/LeftNav.tsx:225
@@ -14055,7 +14055,7 @@ msgid "You won’t be able to rejoin unless you’re invited."
 msgstr "Bydd dim modd ichi ail ymuno oni bai i chi gael eich gwahodd."
 
 #. When the last message in a chat was made by you.
-#: src/components/dms/getMessageInfo.ts:50
+#: src/components/dms/getMessageInfo.ts:82
 msgid "You: {message}"
 msgstr "Chi: {message}"
 

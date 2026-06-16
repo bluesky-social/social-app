@@ -8,7 +8,7 @@ msgstr ""
 "Language: eu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-11 18:22\n"
+"PO-Revision-Date: 2026-06-16 19:51\n"
 "Last-Translator: \n"
 "Language-Team: Basque\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -23,11 +23,11 @@ msgstr ""
 msgid "\"{interestsDisplayName}\" category (active)"
 msgstr "\"{interestsDisplayName}\" kategoria (aktiboa)"
 
-#: src/components/dms/getMessageInfo.ts:91
+#: src/components/dms/getMessageInfo.ts:123
 msgid "(chat invite link)"
 msgstr "(txat gonbidapen-esteka)"
 
-#: src/components/dms/getMessageInfo.ts:73
+#: src/components/dms/getMessageInfo.ts:105
 msgid "(contains embedded content)"
 msgstr "(kapsulatutako edukia dauka)"
 
@@ -97,7 +97,7 @@ msgstr "{0, plural, one {sartzeko eskaera berri #} other {# sartzeko eskaera ber
 
 #. placeholder {0}: reactions.length
 #. placeholder {1}: groupedReactions.map(g => g.value).join(' ')
-#: src/components/dms/MessageItem.tsx:269
+#: src/components/dms/MessageItem.tsx:279
 msgid "{0, plural, one {# person} other {# people}} reacted – {1}"
 msgstr "{0, plural, one {pertsona #-ek} other {# pertsonek}} erreakzionatu du/dute – {1}"
 
@@ -215,7 +215,7 @@ msgid "{0} following"
 msgstr "{0} jarraitzen"
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/dms/MessageItem.tsx:614
+#: src/components/dms/MessageItem.tsx:624
 msgid "{0} is blocking you"
 msgstr "{0}-k blokeatzen zaitu"
 
@@ -273,7 +273,7 @@ msgstr "50etik {0}"
 
 #. placeholder {0}: createSanitizedDisplayName(memberSender)
 #. placeholder {1}: reaction.value
-#: src/components/dms/MessageItem.tsx:264
+#: src/components/dms/MessageItem.tsx:274
 msgid "{0} reacted {1}"
 msgstr "{0} erreakzioantu du {1}"
 
@@ -344,7 +344,7 @@ msgstr "{0}/{1} {2, plural, one {kide} other {kide}}"
 #. placeholder {1}: joinLinkPreview.memberLimit
 #: src/components/intents/GroupChatJoinDialog.tsx:343
 msgid "{0}/{1} members"
-msgstr "{0}/{1} kide"
+msgstr ""
 
 #. Badge showing the current image position out of the total number of images in a gallery.
 #. placeholder {0}: index + 1
@@ -659,12 +659,12 @@ msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr "{minutes, plural, one {minutu #} other {# minutu}}"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/getReactionInfo.ts:45
+#: src/components/dms/getReactionInfo.ts:65
 msgid "{name} reacted {0} to {target}"
 msgstr "{name} {0} erreakzioantu du {target}-i"
 
 #. When the last message in a group chat came from someone other than you.
-#: src/components/dms/getMessageInfo.ts:57
+#: src/components/dms/getMessageInfo.ts:89
 msgid "{name}: {message}"
 msgstr "{name}: {message}"
 
@@ -729,7 +729,7 @@ msgstr "{userName}-ren egiaztapenak"
 #. placeholder {0}: totalNumber - 3
 #: src/view/com/composer/ComposerReplyTo.tsx:278
 msgid "+{0}"
-msgstr ""
+msgstr "+{0}"
 
 #. Indicates the number of additional profiles are in the Starter Pack e.g. +12
 #: src/screens/Search/components/StarterPackCard.tsx:250
@@ -860,7 +860,7 @@ msgid "A collection of popular feeds you can find on Bluesky, including News, Bo
 msgstr "Bluesky-n aurki ditzakezun feed ezagunen bilduma bat, besteak beste, News, Booksky, Game Dev, Blacksky eta Fountain Pens"
 
 #. If last message does not contain text, fall back to "{user} reacted to {a message}"
-#: src/components/dms/getReactionInfo.ts:33
+#: src/components/dms/getReactionInfo.ts:53
 msgid "a message"
 msgstr "mezu bat"
 
@@ -1188,7 +1188,7 @@ msgstr "Gehitu jendea zerrendara"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:191
 msgid "Add people with a link"
-msgstr ""
+msgstr "Gehitu jendea esteka batekin"
 
 #: src/components/dms/EmojiPopup.android.tsx:56
 msgid "Add Reaction"
@@ -1332,7 +1332,7 @@ msgid "alice@example.com"
 msgstr "ane@adibidea.com"
 
 #. the default tab in the interests tab bar
-#: src/components/dms/ReactionsDialog.tsx:288
+#: src/components/dms/ReactionsDialog.tsx:292
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:201
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
@@ -1340,7 +1340,7 @@ msgstr "Guztiak"
 
 #. Tab label showing the total count of reactions on a chat message.
 #. placeholder {0}: tab.count
-#: src/components/dms/ReactionsDialog.tsx:385
+#: src/components/dms/ReactionsDialog.tsx:389
 msgid "All {0}"
 msgstr "Dena {0}"
 
@@ -1558,7 +1558,7 @@ msgstr "Hainbat Bluesky-ren posten ilustrazioa, berposta, atsegin dut eta iruzki
 
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:111
 msgid "An illustration of the Bluesky app with a paper airplane flying out of it, representing inviting friends"
-msgstr ""
+msgstr "Bluesky aplikazioaren ilustrazioa, paperezko hegazkin bat handik ateratzen, lagunak gonbidatzea adieraziz"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:86
 #: src/components/verification/VerifierDialog.tsx:88
@@ -2148,7 +2148,7 @@ msgstr "Bluesky dibertigarriagoa da lagunekin. Zure lagunetako batzuk gonbidatu 
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:105
 msgid "Bluesky needs camera access to scan QR codes from other profiles."
-msgstr ""
+msgstr "Bluesky-k kamerarako sarbidea behar du beste profil batzuetako QR kodeak eskaneatzeko."
 
 #: src/screens/Takendown.tsx:213
 msgid "Bluesky Social Terms of Service"
@@ -2196,7 +2196,7 @@ msgstr "Guneko arauak haustea"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:200
 msgid "Bring up to 50 friends together in one chat."
-msgstr ""
+msgstr "Bildu 50 lagun arte txat berean."
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:167
 #: src/view/com/feeds/ProfileFeedgens.tsx:168
@@ -2314,7 +2314,7 @@ msgstr "Kamera"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:96
 msgid "Camera access needed"
-msgstr ""
+msgstr "Kamerarako sarbidea behar da"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:213
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:133
@@ -2731,7 +2731,7 @@ msgstr "Egin klik hemen txat talde honetarako gonbidapen-esteka ikusteko"
 msgid "Click to open tag menu for {0}"
 msgstr "Egin klik {0} etiketa-menua irekitzeko"
 
-#: src/components/dms/MessageItem.tsx:533
+#: src/components/dms/MessageItem.tsx:543
 msgid "Click to retry failed message"
 msgstr "Egin klik huts egindako mezua berriro bidaltzen saiatzeko"
 
@@ -2844,7 +2844,7 @@ msgstr "Itxi menua"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:167
 msgid "Close scanner"
-msgstr ""
+msgstr "Itxi eskanerra"
 
 #: src/screens/Messages/components/RequestStatus.tsx:83
 msgid "Close the incoming requests banner"
@@ -2880,7 +2880,7 @@ msgstr "Jakinarazpen jakin baterako erabiltzaileen zerrenda tolesten du"
 
 #: src/features/inviteFriends/components/ThemePicker.tsx:66
 msgid "Color"
-msgstr ""
+msgstr "Kolorea"
 
 #: src/components/dialogs/Embed.tsx:150
 #: src/screens/Settings/AppearanceSettings.tsx:81
@@ -3148,7 +3148,7 @@ msgstr "Eraikitze-bertsioa arbelean kopiatzen du"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:255
 msgid "Copies the canonical profile URL to the clipboard"
-msgstr ""
+msgstr "Profilaren URL kanonikoa arbelean kopiatzen du"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:198
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:265
@@ -3186,7 +3186,7 @@ msgstr "Kopiatu ostalaria"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:254
 msgid "Copy invite link"
-msgstr ""
+msgstr "Kopiatu gonbidapen-esteka"
 
 #: src/components/dms/ChatInvite/Root.tsx:91
 #: src/components/StarterPack/ShareDialog.tsx:115
@@ -3251,7 +3251,7 @@ msgstr "Copyright Politika"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:79
 msgid "Could not capture QR code"
-msgstr ""
+msgstr "Ezin izan da QR kodea atzeman"
 
 #: src/view/com/feeds/MissingFeed.tsx:42
 msgid "Could not connect to custom feed"
@@ -3263,11 +3263,11 @@ msgstr "Ezin izan da feed zerbitzura konektatu"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:120
 msgid "Could not copy – please try again"
-msgstr ""
+msgstr "Ezin izan da kopiatu – mesedez, saiatu berriro"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:74
 msgid "Could not download – please try again"
-msgstr ""
+msgstr "Ezin izan da deskargatu – mesedez, saiatu berriro"
 
 #: src/screens/Messages/components/MessageInputEmbed.tsx:200
 msgid "Could not fetch post"
@@ -3310,7 +3310,7 @@ msgstr "Ezin izan da zerrenda kargatu"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:169
 msgid "Could not load profile"
-msgstr ""
+msgstr "Ezin izan da profila kargatu"
 
 #: src/components/dms/ConvoMenu.tsx:212
 msgid "Could not mute chat"
@@ -3331,7 +3331,7 @@ msgstr "Ezin izan dira aldaketak gorde: {0}"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:60
 msgid "Could not share – please try again"
-msgstr ""
+msgstr "Ezin izan da partekatu – mesedez, saiatu berriro"
 
 #: src/state/queries/notifications/settings.ts:49
 msgid "Could not update notification settings"
@@ -3539,11 +3539,11 @@ msgstr "Jaiotze data"
 
 #: src/features/inviteFriends/components/ThemePicker.tsx:28
 msgid "Dawn"
-msgstr ""
+msgstr "Egunsentia"
 
 #: src/features/inviteFriends/components/ThemePicker.tsx:29
 msgid "Day"
-msgstr ""
+msgstr "Eguna"
 
 #: src/screens/Settings/AccountSettings.tsx:179
 #: src/screens/Settings/AccountSettings.tsx:184
@@ -3879,7 +3879,7 @@ msgstr "Baztertu iradokizun hau"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:168
 msgid "Dismisses the QR scanner"
-msgstr ""
+msgstr "QR eskanerra baztertzen du"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:70
 #: src/screens/Settings/AccessibilitySettings.tsx:75
@@ -3969,7 +3969,7 @@ msgctxt "action"
 msgid "Done"
 msgstr "Eginda"
 
-#: src/components/dms/MessageItem.tsx:437
+#: src/components/dms/MessageItem.tsx:447
 msgid "Double tap or long press the message to add a reaction"
 msgstr "Kolpetxo bikoitza edo luze sakatu erreakzio bat gehitzeko"
 
@@ -3983,7 +3983,7 @@ msgstr "Kolpetxo bikoitza gogoko emateko"
 
 #: src/features/inviteFriends/components/ActionButtons.tsx:36
 msgid "Download"
-msgstr ""
+msgstr "Deskargatu"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:329
 msgid "Download Bluesky"
@@ -4005,7 +4005,7 @@ msgstr "Deskargatu irudia"
 
 #: src/features/inviteFriends/components/ActionButtons.tsx:31
 msgid "Download invite QR code"
-msgstr ""
+msgstr "Deskargatu gonbidapen QR kodea"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:118
 msgid "Download profile data"
@@ -4041,7 +4041,7 @@ msgstr "Iraupena:"
 
 #: src/features/inviteFriends/components/ThemePicker.tsx:30
 msgid "Dusk"
-msgstr ""
+msgstr "Ilunabarra"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:237
 msgid "e.g. alice"
@@ -4785,7 +4785,7 @@ msgstr "Ezin izan dira datuak ezabatu. {0}"
 
 #: src/components/dms/ActionsWrapper.web.tsx:75
 #: src/components/dms/MessageContextMenu.tsx:101
-#: src/components/dms/ReactionsDialog.tsx:175
+#: src/components/dms/ReactionsDialog.tsx:179
 msgid "Failed to remove emoji reaction"
 msgstr "Errorea emoji errakzioa kentzerakoan"
 
@@ -5038,7 +5038,7 @@ msgstr "Aurkitu jarraitu beharreko kontuak"
 #: src/screens/Settings/Settings.tsx:216
 #: src/screens/Settings/Settings.tsx:219
 msgid "Find and invite friends"
-msgstr ""
+msgstr "Bilatu eta gonbidatu lagunak"
 
 #: src/Navigation.tsx:436
 #: src/Navigation.tsx:569
@@ -5060,7 +5060,7 @@ msgstr "Aurkitu jarraitzeko jendea"
 
 #: src/screens/Settings/FindContactsSettings.tsx:130
 msgid "Find people you know"
-msgstr ""
+msgstr "Aurkitu ezagutzen duzun jendea"
 
 #: src/screens/Search/Shell.tsx:537
 msgid "Find posts, users, and feeds on Bluesky"
@@ -5336,7 +5336,7 @@ msgstr "Ahaztuta?"
 #. This is alt text for a marketing image which transcribes English text that appears in the image
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:153
 msgid "Four message bubbles representing a group chat. First message: \"Did you hear the news? Bluesky has group chats now!\" Second message: \"omg, no way\" Third message: \"Wow, 50 people in one chat!\" Fourth message: \"You can send invite links too!\""
-msgstr ""
+msgstr "Txat talde bat irudikatzen duten lau mezu-burbuila. Lehen mezua: \"Albistea entzun duzu? Blueskyk txat taldeak ditu orain!\" Bigarren mezua: \"ene, ezinezkoa\" Hirugarren mezua: \"Bai zoragarria, 50 lagun txat berean!\" Laugarren mezua: \"Gonbidapen-estekak ere bidal ditzakezu!\""
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:12
 msgid "Free your feed"
@@ -5605,7 +5605,7 @@ msgstr "Ulertu dut"
 #: src/features/inviteFriends/InviteScannerScreen.tsx:108
 #: src/features/inviteFriends/InviteScannerScreen.tsx:113
 msgid "Grant access"
-msgstr ""
+msgstr "Eman sarbidea"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/lib/moderation/useGlobalLabelStrings.ts:50
@@ -5665,7 +5665,7 @@ msgstr "Txat taldea desmututa dago"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:181
 msgid "Group Chats"
-msgstr ""
+msgstr "Txat Taldeak"
 
 #: src/screens/Messages/Settings.tsx:199
 msgid "Group chats are only available to users 18 and over."
@@ -5920,7 +5920,7 @@ msgstr "Edukia ezkutatzen du"
 
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:84
 msgid "Hides the invite friends promo banner"
-msgstr ""
+msgstr "Lagunak gonbidatzeko promozio-bannerra ezkutatzen du"
 
 #: src/components/dialogs/BirthDateSettings.tsx:76
 msgid "Hmm, it looks like you're signed in with an <0>App Password</0>. To set your birthdate, you'll need to sign in with your main account password, or ask whomever controls this account to do so."
@@ -6166,7 +6166,7 @@ msgstr "Inportatu Kontaktuak"
 
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:78
 msgid "Import contacts or invite your friends"
-msgstr ""
+msgstr "Inportatu kontaktuak edo gonbidatu zure lagunak"
 
 #: src/components/contacts/FindContactsBannerNUX.tsx:33
 #: src/components/contacts/FindContactsBannerNUX.tsx:72
@@ -6257,7 +6257,7 @@ msgstr "Kontaktuen bidez lagunak aurkitzea aurkeztea"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:99
 msgid "Introducing group chats"
-msgstr ""
+msgstr "Txat taldeak aurkezten"
 
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:38
 msgid "Introducing saved posts AKA bookmarks"
@@ -6319,7 +6319,7 @@ msgstr "Ez da gonbidapen kodea onartu. Egiaztatu behar bezala idatzi duzula eta 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:372
 #: src/view/shell/Drawer.tsx:121
 msgid "Invite friends"
-msgstr ""
+msgstr "Gonbidatu lagunak"
 
 #: src/components/contacts/components/InviteInfo.tsx:42
 #: src/components/contacts/components/InviteInfo.tsx:44
@@ -6348,7 +6348,7 @@ msgstr "Gonbidapen-esteka"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:126
 msgid "Invite link copied"
-msgstr ""
+msgstr "Gonbidapen-esteka kopiatuta"
 
 #: src/components/dms/getSystemMessageInfo.ts:120
 msgid "Invite link created"
@@ -6374,7 +6374,7 @@ msgstr "Gonbidatu jendea abio multzo honetara!"
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:91
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:144
 msgid "Invite your friends"
-msgstr ""
+msgstr "Gonbidatu zure lagunak"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:37
 msgid "Invite your friends to follow your favorite feeds and people"
@@ -7141,7 +7141,7 @@ msgctxt "toast"
 msgid "Message deleted"
 msgstr "Mezua ezabatuta"
 
-#: src/components/dms/MessageItem.tsx:527
+#: src/components/dms/MessageItem.tsx:537
 msgid "Message failed to send."
 msgstr "Ezin izan da bidali mezua."
 
@@ -7178,11 +7178,11 @@ msgstr "Mezuaren aukerak"
 msgid "Messages"
 msgstr "Mezuak"
 
-#: src/components/dms/MessageItem.tsx:626
+#: src/components/dms/MessageItem.tsx:636
 msgid "Messages from this person are hidden while they are blocking you."
 msgstr "Pertsona honen mezuak ezkutatuta daude blokeatzen zaituzten bitartean."
 
-#: src/components/dms/MessageItem.tsx:621
+#: src/components/dms/MessageItem.tsx:631
 msgid "Messages from this person are hidden while you are blocking them."
 msgstr "Pertsona honen mezuak ezkutatuta daude blokeatzen dituzun bitartean."
 
@@ -7387,7 +7387,7 @@ msgstr "Mututu hitzak eta etiketak"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:207
 msgid "Mute, leave, or remove people anytime. It’s your chat."
-msgstr ""
+msgstr "Mututu, irten edo kendu jendea edonoiz. Zure txata da."
 
 #: src/screens/Messages/ConversationSettings/index.tsx:536
 msgid "Muted"
@@ -7646,7 +7646,7 @@ msgstr "Hurrengo irudia"
 
 #: src/features/inviteFriends/components/ThemePicker.tsx:31
 msgid "Night"
-msgstr ""
+msgstr "Gaua"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:32
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
@@ -7875,7 +7875,7 @@ msgstr "Biluztasun ez sexuala"
 
 #: src/features/inviteFriends/InviteScannerScreen.web.tsx:31
 msgid "Not available on this platform"
-msgstr ""
+msgstr "Ez dago eskuragarri plataforma honetan"
 
 #: src/screens/FindContactsFlowScreen.tsx:62
 #: src/screens/Settings/FindContactsSettings.tsx:106
@@ -7975,7 +7975,7 @@ msgstr "Ados"
 #: src/components/BotAccountAlert.tsx:52
 #: src/components/BotAccountAlert.tsx:57
 #: src/components/dms/InitiateChatFlow.tsx:733
-#: src/components/dms/MessageItem.tsx:633
+#: src/components/dms/MessageItem.tsx:643
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:663
 msgid "Okay"
@@ -8087,7 +8087,7 @@ msgstr "Arazoren bat izan da!"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:218
 msgid "Oops, this profile doesn't exist. Try scanning another one."
-msgstr ""
+msgstr "Ene, profil hau ez da existitzen. Saiatu beste bat eskaneatzen."
 
 #: src/components/Lists.tsx:184
 #: src/components/StarterPack/ProfileStarterPacks.tsx:363
@@ -8115,8 +8115,8 @@ msgstr "Ireki txata"
 msgid "Open chat member options for {displayName}"
 msgstr "Ireki {displayName}-ri txat-kide aukerak"
 
-#: src/screens/Messages/components/ChatListItem.tsx:487
-#: src/screens/Messages/components/ChatListItem.tsx:491
+#: src/screens/Messages/components/ChatListItem.tsx:490
+#: src/screens/Messages/components/ChatListItem.tsx:494
 msgid "Open conversation options"
 msgstr "Ireki elkarrizketa aukerak"
 
@@ -8163,7 +8163,7 @@ msgstr "Ireki txat taldearen ezarpenak"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:556
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:562
 msgid "Open in Google Translate"
-msgstr ""
+msgstr "Ireki Google Translate-n"
 
 #: src/components/Post/Embed/ExternalEmbed/index.tsx:88
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:141
@@ -8197,7 +8197,7 @@ msgstr "Ireki profila"
 
 #: src/features/inviteFriends/components/ActionButtons.tsx:39
 msgid "Open QR code scanner"
-msgstr ""
+msgstr "Ireki QR kode eskanerra"
 
 #: src/components/BotAccountAlert.tsx:62
 #: src/components/BotAccountAlert.tsx:71
@@ -8240,7 +8240,7 @@ msgstr "Post honekin nork elkarreragin dezakeen aukeratzeko elkarrizketa-koadro 
 
 #: src/features/inviteFriends/components/ThemePicker.tsx:38
 msgid "Opens a list of color themes for the QR card"
-msgstr ""
+msgstr "QR txartelaren kolore-gaien zerrenda irekitzen du"
 
 #: src/screens/Log.tsx:74
 msgid "Opens additional details for a debug entry"
@@ -8322,7 +8322,7 @@ msgstr "Profila irekitzen du"
 
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:50
 msgid "Opens the find and invite friends settings"
-msgstr ""
+msgstr "Lagunak bilatzeko eta gonbidatzeko ezarpenak irekitzen ditu"
 
 #. Accessibility hint announced after the GIF picker button label, describing what activating it will do.
 #: src/view/com/composer/photos/SelectGifBtn.tsx:45
@@ -8331,7 +8331,7 @@ msgstr "GIF hautatzailearen elkarrizketa-koadroa irekitzen du"
 
 #: src/view/shell/Drawer.tsx:123
 msgid "Opens the invite friends sheet to share your profile"
-msgstr ""
+msgstr "Lagunak gonbidatzeko orria irekitzen du zure profila partekatzeko"
 
 #: src/view/com/feeds/ComposerPrompt.tsx:148
 msgid "Opens the post composer"
@@ -8516,12 +8516,12 @@ msgstr "Jarraitzen ditudan pertsonak"
 #: src/screens/Messages/Settings.tsx:84
 msgctxt "allow group chat invites from"
 msgid "People I follow"
-msgstr ""
+msgstr "Jarraitzen ditudan pertsonak"
 
 #: src/screens/Messages/Settings.tsx:69
 msgctxt "allow messages from"
 msgid "People I follow"
-msgstr ""
+msgstr "Jarraitzen ditudan pertsonak"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:163
 msgid "People I follow can join instantly"
@@ -8570,7 +8570,7 @@ msgstr "Argazkia"
 
 #: src/features/inviteFriends/components/ThemePicker.tsx:37
 msgid "Pick a color theme"
-msgstr ""
+msgstr "Aukeratu kolore-gaia"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:165
 msgid "Pictures meant for adults."
@@ -8796,7 +8796,7 @@ msgstr "Hasi saioa @{0} gisa"
 
 #: src/features/inviteFriends/InviteScannerScreen.web.tsx:40
 msgid "Please use the Bluesky mobile app to scan a QR code."
-msgstr ""
+msgstr "Erabili Bluesky aplikazio mugikorra QR kodea eskaneatzeko."
 
 #: src/screens/Settings/FindContactsSettings.tsx:107
 msgid "Please use the native app to import your contacts."
@@ -8901,7 +8901,7 @@ msgstr "Postaren Interakzio-Ezarpenak"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:193
 msgid "Post it to Bluesky or share anywhere."
-msgstr ""
+msgstr "Bluesky post bat egin edo partekatu edonon."
 
 #. Accessibility label for button that opens dialog to choose post language settings
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:195
@@ -9182,8 +9182,8 @@ msgstr "Gaitu berriro esteka"
 msgid "React with {emoji}"
 msgstr "Erreakzionatu {emoji}-rekin"
 
-#: src/components/dms/ReactionsDialog.tsx:66
-#: src/components/dms/ReactionsDialog.tsx:94
+#: src/components/dms/ReactionsDialog.tsx:70
+#: src/components/dms/ReactionsDialog.tsx:98
 msgid "Reactions"
 msgstr "Erreakzioak"
 
@@ -10048,13 +10048,13 @@ msgstr "Iruzurra"
 
 #: src/features/inviteFriends/components/ActionButtons.tsx:44
 msgid "Scan"
-msgstr ""
+msgstr "Eskaneatu"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:82
 #: src/features/inviteFriends/InviteScannerScreen.web.tsx:23
 #: src/Navigation.tsx:316
 msgid "Scan QR code"
-msgstr ""
+msgstr "Eskaneatu QR kodea"
 
 #: src/lib/interests.ts:71
 msgid "Science"
@@ -10604,7 +10604,7 @@ msgstr "Partekatu irudia"
 
 #: src/features/inviteFriends/components/ActionButtons.tsx:23
 msgid "Share invite link"
-msgstr ""
+msgstr "Partekatu gonbidapen-esteka"
 
 #: src/components/dialogs/LinkWarning.tsx:112
 #: src/components/dialogs/LinkWarning.tsx:120
@@ -10621,7 +10621,7 @@ msgstr "Partekatu estekaren elkarrizketa-koadroa"
 #: src/screens/Settings/FindContactsSettings.tsx:172
 #: src/screens/Settings/FindContactsSettings.tsx:181
 msgid "Share my profile"
-msgstr ""
+msgstr "Partekatu nire profila"
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:167
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:170
@@ -10981,12 +10981,12 @@ msgid "Someone left the group"
 msgstr "Norbaitek taldea utzi du"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:266
+#: src/components/dms/MessageItem.tsx:276
 msgid "Someone reacted {0}"
 msgstr "Norbaitek erreakzionatu du {0}"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/getReactionInfo.ts:47
+#: src/components/dms/getReactionInfo.ts:67
 msgid "Someone reacted {0} to {target}"
 msgstr "Norbaitek {0} erreakzionatu du {target}-i"
 
@@ -11095,7 +11095,7 @@ msgstr "Hasi elkarrizketa bat, eta hemen agertuko da."
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:130
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:135
 msgid "Start a group chat"
-msgstr ""
+msgstr "Hasi txat talde bat"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:191
 msgid "Start a new chat"
@@ -11359,13 +11359,13 @@ msgstr "Etiketak soilik"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:184
 msgid "Take the conversation private."
-msgstr ""
+msgstr "Eraman elkarrizketa pribatura."
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:110
 msgid "Tap below to allow Bluesky to access your GPS location. We will then use that data to more accurately determine the content and features available in your region."
 msgstr "Sakatu behean Bluesky-k zure GPS kokapena atzitzeko aukera emateko. Ondoren, datu horiek erabiliko ditugu zure eskualdean eskuragarri dauden edukia eta funtzioak zehatzago zehazteko."
 
-#: src/components/dms/MessageItem.tsx:572
+#: src/components/dms/MessageItem.tsx:582
 msgid "Tap for details"
 msgstr "Sakatu xehetasunak ikusteko"
 
@@ -11408,12 +11408,12 @@ msgstr "Sakatu txat talde honetan berehala sartzeko"
 msgid "Tap to open this group chat"
 msgstr "Sakatu txat talde hau irekitzeko"
 
-#: src/components/dms/ReactionsDialog.tsx:196
+#: src/components/dms/ReactionsDialog.tsx:200
 msgid "Tap to remove"
 msgstr "Sakatu ezabatzeko"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/ReactionsDialog.tsx:212
+#: src/components/dms/ReactionsDialog.tsx:216
 msgid "Tap to remove your {0} reaction"
 msgstr "Sakatu zure {0} erreakzioa ezabatzeko"
 
@@ -11422,20 +11422,20 @@ msgstr "Sakatu zure {0} erreakzioa ezabatzeko"
 msgid "Tap to request access to join this group chat"
 msgstr "Sakatu txat talde honetan sartzeko sarbidea eskatzeko"
 
-#: src/components/dms/MessageItem.tsx:537
+#: src/components/dms/MessageItem.tsx:547
 msgid "Tap to retry"
 msgstr "Sakatu berriro saiatzeko"
 
 #. placeholder {0}: tab.value
-#: src/components/dms/ReactionsDialog.tsx:358
+#: src/components/dms/ReactionsDialog.tsx:362
 msgid "Tap to show {0} reactions"
 msgstr "Sakatu {0} erreakzio erakusteko"
 
-#: src/components/dms/ReactionsDialog.tsx:357
+#: src/components/dms/ReactionsDialog.tsx:361
 msgid "Tap to show all reactions"
 msgstr "Sakatu erreakzio guztiak erakusteko"
 
-#: src/components/dms/MessageItem.tsx:289
+#: src/components/dms/MessageItem.tsx:299
 msgid "Tap to view reactions"
 msgstr "Sakatu erreakzioak ikusteko"
 
@@ -11847,7 +11847,7 @@ msgstr "Txat hau amaitu da"
 msgid "This chat is full"
 msgstr "Txat hau beteta dago"
 
-#: src/screens/Messages/components/ChatListItem.tsx:373
+#: src/screens/Messages/components/ChatListItem.tsx:376
 #: src/screens/Messages/components/ChatLocked.tsx:69
 msgid "This chat is locked"
 msgstr "Txat hau itxita dago"
@@ -11855,7 +11855,7 @@ msgstr "Txat hau itxita dago"
 #: src/screens/Messages/components/ChatLocked.tsx:45
 #: src/screens/Messages/ConversationSettings/index.tsx:437
 msgid "This chat is locked by a moderation action"
-msgstr ""
+msgstr "Txat hau moderazio ekintza batek blokeatu du"
 
 #: src/screens/Messages/components/MessageListError.tsx:17
 msgid "This chat was disconnected"
@@ -11943,7 +11943,7 @@ msgstr "Feed hau jada ez dago sarean. <0>Ezagutu</0> erakusten ari gara horren o
 
 #: src/screens/Messages/components/ChatLocked.tsx:72
 msgid "This group is locked by a moderation action on the owner"
-msgstr ""
+msgstr "Talde hau blokeatuta dago jabearen aurkako moderazio-ekintza baten ondorioz"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:611
 msgid "This handle is reserved. Please try a different one."
@@ -12007,17 +12007,17 @@ msgstr "Zuk sortutako zerrenda honen izenak edo deskribapenak Bluesky-ren komuni
 msgid "This list is empty."
 msgstr "Zerrenda hau hutsik dago."
 
-#: src/screens/Messages/components/ChatListItem.tsx:334
+#: src/screens/Messages/components/ChatListItem.tsx:335
 msgid "This message is hidden"
 msgstr "Mezu hau ezkutatuta dago"
 
-#: src/components/dms/MessageItem.tsx:570
-#: src/components/dms/MessageItem.tsx:599
+#: src/components/dms/MessageItem.tsx:580
+#: src/components/dms/MessageItem.tsx:609
 msgid "This message is hidden because this user is blocking you."
 msgstr "Mezu hau ezkutatuta dago erabiltzaile honek blokeatzen zaituelako."
 
-#: src/components/dms/MessageItem.tsx:569
-#: src/components/dms/MessageItem.tsx:595
+#: src/components/dms/MessageItem.tsx:579
+#: src/components/dms/MessageItem.tsx:605
 msgid "This message is hidden because you are blocking this user."
 msgstr "Mezu hau ezkutatuta dago erabiltzaile hau blokeatzen ari zarelako."
 
@@ -12325,7 +12325,7 @@ msgstr "Saiatu berriro"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:170
 msgid "Try again in a moment."
-msgstr ""
+msgstr "Saiatu berriro pixka bat beranduago."
 
 #: src/components/Post/Translated/index.tsx:229
 #: src/components/Post/Translated/index.tsx:242
@@ -12335,7 +12335,7 @@ msgstr "Probatu Google Translate"
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:165
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:171
 msgid "Try it"
-msgstr ""
+msgstr "Probatu"
 
 #: src/lib/interests.ts:74
 msgid "TV"
@@ -12411,7 +12411,7 @@ msgstr "Ez dago eskuragarri"
 msgid "Unavailable feed information"
 msgstr "Feedaren informazioa ez dago erabilgarri"
 
-#: src/components/dms/MessageItem.tsx:637
+#: src/components/dms/MessageItem.tsx:647
 #: src/components/dms/MessagesListBlockedFooter.tsx:97
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
 #: src/components/moderation/BlockDialog.tsx:186
@@ -12657,7 +12657,7 @@ msgstr "Bideo mota bateraezina: {mimeType}"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:198
 msgid "Up to 50 people"
-msgstr ""
+msgstr "50 pertsona arte"
 
 #: src/screens/Settings/components/OTAInfo.tsx:61
 #: src/screens/Settings/components/OTAInfo.tsx:77
@@ -13658,7 +13658,7 @@ msgid "You are accessing Bluesky from a region that legally requires us to verif
 msgstr "Aplikazioan sartzen utzi aurretik zure adina egiaztatzea eskatzen digun eskualde batetik sartzen ari zara Bluesky-ra."
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/dms/MessageItem.tsx:610
+#: src/components/dms/MessageItem.tsx:620
 msgid "You are blocking {0}"
 msgstr "{0} blokeatzen ari zara"
 
@@ -13756,7 +13756,7 @@ msgstr "Orain pertsona zehatzek posteatzen dutenean jakinarazpenak jasotzea auke
 
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:154
 msgid "You can now invite friends with a link or QR code. Share the link anywhere, or let them scan the code to join you on Bluesky."
-msgstr ""
+msgstr "Orain lagunak gonbida ditzakezu esteka edo QR kode baten bidez. Partekatu esteka edonon, edo utzi kodea eskaneatzen Bluesky-n zurekin elkartzeko."
 
 #: src/screens/Login/index.tsx:203
 #: src/screens/Login/PasswordUpdatedForm.tsx:27
@@ -14009,12 +14009,12 @@ msgid "You probably want to restart the app now."
 msgstr "Aplikazioa orain berrabiaraztea komeni da."
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:259
+#: src/components/dms/MessageItem.tsx:269
 msgid "You reacted {0}"
 msgstr "Erreakzionatu duzu {0}"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/getReactionInfo.ts:43
+#: src/components/dms/getReactionInfo.ts:63
 msgid "You reacted {0} to {target}"
 msgstr "{0} erreakzionatu duzu {target}-i"
 
@@ -14055,7 +14055,7 @@ msgid "You won’t be able to rejoin unless you’re invited."
 msgstr "Ezin izango zara berriro sartu gonbidatuta ez bazaude."
 
 #. When the last message in a chat was made by you.
-#: src/components/dms/getMessageInfo.ts:50
+#: src/components/dms/getMessageInfo.ts:82
 msgid "You: {message}"
 msgstr "Zu: {message}"
 
@@ -14091,7 +14091,7 @@ msgstr "Feed hauekin eguneratuta egongo zara"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:205
 msgid "You’re in control"
-msgstr ""
+msgstr "Zuk duzu kontrola"
 
 #: src/screens/SignupQueued.tsx:130
 msgid "You're in line"
