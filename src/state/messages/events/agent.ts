@@ -9,10 +9,7 @@ import {
   isNetworkError,
 } from '#/lib/strings/errors'
 import {Logger} from '#/logger'
-import {
-  BACKGROUND_POLL_INTERVAL,
-  DEFAULT_POLL_INTERVAL,
-} from '#/state/messages/events/const'
+import {DEFAULT_POLL_INTERVAL} from '#/state/messages/events/const'
 import {
   type MessagesEventBusDispatch,
   MessagesEventBusDispatchEvent,
@@ -54,6 +51,17 @@ export class MessagesEventBus {
         event: MessagesEventBusDispatchEvent.UpdatePoll,
       })
     }
+  }
+
+  /**
+   * Force an immediate poll and restart the interval clock from now. Only has
+   * an effect while we're actively polling (Ready) - the dispatched UpdatePoll
+   * is a no-op in other states (init/resume will poll on their own). Used when
+   * an external signal (a chat push notification) tells us new events probably
+   * exist and we don't want to wait for the next scheduled tick.
+   */
+  pollNow() {
+    this.dispatch({event: MessagesEventBusDispatchEvent.UpdatePoll})
   }
 
   getLatestRev() {
@@ -122,7 +130,7 @@ export class MessagesEventBus {
           }
           case MessagesEventBusDispatchEvent.Background: {
             this.status = MessagesEventBusStatus.Backgrounded
-            this.resetPoll()
+            this.stopPoll()
             this.emitter.emit('event', {type: 'connect'})
             break
           }
@@ -142,7 +150,7 @@ export class MessagesEventBus {
         switch (action.event) {
           case MessagesEventBusDispatchEvent.Background: {
             this.status = MessagesEventBusStatus.Backgrounded
-            this.resetPoll()
+            this.stopPoll()
             break
           }
           case MessagesEventBusDispatchEvent.Suspend: {
@@ -181,10 +189,6 @@ export class MessagesEventBus {
             this.emitter.emit('event', {type: 'error', error: action.payload})
             break
           }
-          case MessagesEventBusDispatchEvent.UpdatePoll: {
-            this.resetPoll()
-            break
-          }
         }
         break
       }
@@ -197,7 +201,7 @@ export class MessagesEventBus {
           }
           case MessagesEventBusDispatchEvent.Background: {
             this.status = MessagesEventBusStatus.Backgrounded
-            this.resetPoll()
+            this.stopPoll()
             break
           }
           case MessagesEventBusDispatchEvent.Error: {
@@ -312,9 +316,6 @@ export class MessagesEventBus {
         const requested = Array.from(this.requestedPollIntervals.values())
         const lowest = Math.min(DEFAULT_POLL_INTERVAL, ...requested)
         return lowest
-      }
-      case MessagesEventBusStatus.Backgrounded: {
-        return BACKGROUND_POLL_INTERVAL
       }
       default:
         return DEFAULT_POLL_INTERVAL
