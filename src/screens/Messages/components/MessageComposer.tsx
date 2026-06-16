@@ -243,7 +243,7 @@ export function MessageComposer({
                 placeholder={
                   loading
                     ? l({message: 'Loading chat…', context: 'placeholder'})
-                    : l({message: 'Message', context: 'action'})
+                    : l({message: 'Message', context: 'description'})
                 }
                 autocompletePlacement="top-start"
                 internalApiRef={composerInternalApiRef}
