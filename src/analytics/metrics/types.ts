@@ -1304,7 +1304,7 @@ export type Events = {
   'invite:action:scan': {}
   // user changed the QR card color theme
   'invite:theme:change': {
-    themeKey: 'dawn' | 'day' | 'dusk' | 'night'
+    themeKey: 'dawn' | 'sunlight' | 'day' | 'dusk' | 'twilight' | 'night'
   }
   // QR scanner decoded a code; result indicates whether it resolved to a profile
   'invite:scanner:scanned': {
