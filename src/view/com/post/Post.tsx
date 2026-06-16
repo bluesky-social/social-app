@@ -229,6 +229,7 @@ function PostInner({
                 <View style={[a.mb_2xs]}>
                   <RichText
                     enableTags
+                    enableCode
                     testID="postText"
                     value={richText}
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}
