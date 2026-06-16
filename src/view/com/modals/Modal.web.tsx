@@ -6,7 +6,6 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type Modal as ModalIface} from '#/state/modals'
 import {useModalControls, useModals} from '#/state/modals'
-import * as UserAddRemoveLists from './UserAddRemoveLists'
 
 export function ModalsContainer() {
   const {isModalActive, activeModals} = useModals()
@@ -25,7 +24,7 @@ export function ModalsContainer() {
   )
 }
 
-function Modal({modal}: {modal: ModalIface}) {
+function Modal({modal: _modal}: {modal: ModalIface}) {
   const {isModalActive} = useModals()
   const {closeModal} = useModalControls()
   const pal = usePalette('default')
@@ -44,9 +43,7 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   let element
-  if (modal.name === 'user-add-remove-lists') {
-    element = <UserAddRemoveLists.Component {...modal} />
-  } else {
+  {
     return null
   }
 
