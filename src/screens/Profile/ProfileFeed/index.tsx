@@ -10,7 +10,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import {VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import {ComposeIcon2} from '#/lib/icons'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
@@ -40,6 +39,8 @@ import {
   ProfileFeedHeader,
   ProfileFeedHeaderSkeleton,
 } from '#/screens/Profile/components/ProfileFeedHeader'
+import {useTheme} from '#/alf'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {IS_NATIVE} from '#/env'
@@ -134,6 +135,7 @@ export function ProfileFeedScreenInner({
   const {hasSession} = useSession()
   const {openComposer} = useOpenComposer()
   const isScreenFocused = useIsFocused()
+  const t = useTheme()
 
   useSetTitle(feedInfo?.displayName)
 
@@ -210,13 +212,7 @@ export function ProfileFeedScreenInner({
         <FAB
           testID="composeFAB"
           onPress={() => openComposer({logContext: 'Fab'})}
-          icon={
-            <ComposeIcon2
-              strokeWidth={1.5}
-              size={29}
-              style={{color: 'white'}}
-            />
-          }
+          icon={<EditBigIcon size="lg" fill={t.palette.white} />}
           accessibilityRole="button"
           accessibilityLabel={_(msg`New post`)}
           accessibilityHint=""

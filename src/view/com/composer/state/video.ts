@@ -1,9 +1,10 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {type AppBskyVideoDefs, type BlobRef, type BskyAgent} from '@atproto/api'
+import {type AppBskyVideoDefs, type AtpAgent, type BlobRef} from '@atproto/api'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
 import {AbortError} from '#/lib/async/cancelable'
+import {VIDEO_MAX_SIZE_MB} from '#/lib/constants'
 import {compressVideo} from '#/lib/media/video/compress'
 import {
   ServerError,
@@ -260,7 +261,7 @@ function trunc2dp(num: number) {
 export async function processVideo(
   asset: ImagePickerAsset,
   dispatch: (action: VideoAction) => void,
-  agent: BskyAgent,
+  agent: AtpAgent,
   did: string,
   signal: AbortSignal,
   i18n: I18n,
@@ -393,7 +394,7 @@ function getCompressErrorMessage(e: unknown, i18n: I18n): string | null {
   }
   if (e instanceof VideoTooLargeError) {
     return i18n._(
-      msg`The selected video is larger than 100 MB. Please try again with a smaller file.`,
+      msg`The selected video is larger than ${VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file.`,
     )
   }
   logger.error('Error compressing video', {safeMessage: e})
@@ -430,8 +431,9 @@ function getUploadErrorMessage(e: unknown, i18n: I18n): string | null {
           msg`Your account is not yet old enough to upload videos. Please try again later.`,
         )
       case 'file size (100000001 bytes) is larger than the maximum allowed size (100000000 bytes)':
+      case 'file size (300000001 bytes) is larger than the maximum allowed size (300000000 bytes)':
         return i18n._(
-          msg`The selected video is larger than 100 MB. Please try again with a smaller file.`,
+          msg`The selected video is larger than ${VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file.`,
         )
       case 'Confirm your email address to upload videos':
         return i18n._(msg`Please confirm your email address to upload videos.`)

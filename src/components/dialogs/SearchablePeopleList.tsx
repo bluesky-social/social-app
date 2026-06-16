@@ -114,6 +114,7 @@ export function SearchablePeopleList({
   const {data: convos} = useListConvosQuery({
     enabled: showRecentConvos,
     status: 'accepted',
+    lockStatus: 'unlocked',
   })
 
   const items = useMemo(() => {
@@ -479,14 +480,15 @@ function ExistingChatCard({
   const {t: l} = useLingui()
   const enabled =
     convo.kind === 'group' ? convo.details.lockStatus === 'unlocked' : true
-  const moderation = moderateProfile(convo.primaryMember, moderationOpts)
   const name =
     convo.kind === 'group'
       ? convo.details.name
       : createSanitizedDisplayName(
           convo.primaryMember,
           true,
-          moderation.ui('displayName'),
+          moderateProfile(convo.primaryMember, moderationOpts).ui(
+            'displayName',
+          ),
         )
 
   const handleOnPress = useCallback(() => {
@@ -551,7 +553,7 @@ function ExistingChatCard({
                       style={[a.leading_snug, t.atoms.text_contrast_medium]}
                       numberOfLines={2}>
                       <Plural
-                        value={convo.members.length}
+                        value={convo.details.memberCount}
                         one="# member"
                         other="# members"
                       />
@@ -661,7 +663,6 @@ function SearchInput({
       />
 
       <TextInput
-        // @ts-ignore bottom sheet input types issue — esb
         ref={inputRef}
         placeholder={l`Search`}
         value={value}

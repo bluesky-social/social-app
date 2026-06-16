@@ -1,7 +1,8 @@
-import {useWindowDimensions, View} from 'react-native'
+import {View} from 'react-native'
 
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {atoms as a, useAlf, type ViewStyleProp} from '#/alf'
+import {useNativeFontScale} from '#/alf/util/dimensions'
 import {BotBadge, BotBadgeButton, isBotAccount} from '#/components/BotBadge'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
@@ -31,14 +32,16 @@ export function ProfileBadges({
   interactive = false,
   size,
   style,
+  allowFontScaling = true,
 }: ViewStyleProp & {
   profile: bsky.profile.AnyProfileView
   interactive?: boolean
   size: Size
+  allowFontScaling?: boolean
 }) {
   const shadowed = useProfileShadow(profile)
   const verification = useSimpleVerificationState({profile})
-  const {fontScale: nativeScaleMultiplier} = useWindowDimensions()
+  const nativeScaleMultiplier = useNativeFontScale()
   const {
     fonts: {scaleMultiplier: alfScaleMultiplier},
   } = useAlf()
@@ -48,10 +51,12 @@ export function ProfileBadges({
 
   const isOnTheSmallSide = size === 'xs' || size === 'sm'
 
-  const verificationIconWidth =
-    verificationIconSizes[size] * nativeScaleMultiplier * alfScaleMultiplier
-  const botIconWidth =
-    botIconSizes[size] * nativeScaleMultiplier * alfScaleMultiplier
+  const scaleMultiplier = allowFontScaling
+    ? nativeScaleMultiplier * alfScaleMultiplier
+    : 1
+
+  const verificationIconWidth = verificationIconSizes[size] * scaleMultiplier
+  const botIconWidth = botIconSizes[size] * scaleMultiplier
 
   return (
     <View

@@ -1,4 +1,4 @@
-import {AppBskyDraftCreateDraft, type AppBskyDraftDefs} from '@atproto/api'
+import {AppBskyDraftCreateDraft, AppBskyDraftDefs} from '@atproto/api'
 import {
   useInfiniteQuery,
   useMutation,
@@ -70,6 +70,21 @@ export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
           logger.error('Failed to load draft image', {
             path: img.localRef.path,
             safeMessage: e.message,
+          })
+        }
+      }
+    }
+    // Load gallery
+    if (post.embedGallery) {
+      for (const item of post.embedGallery.items) {
+        if (!AppBskyDraftDefs.isDraftEmbedImage(item)) continue
+        try {
+          const url = await storage.loadMediaFromLocal(item.localRef.path)
+          loadedMedia.set(item.localRef.path, url)
+        } catch (e) {
+          logger.error('Failed to load draft gallery image', {
+            path: item.localRef.path,
+            safeMessage: e instanceof Error ? e.message : String(e),
           })
         }
       }
@@ -224,6 +239,12 @@ export function useDeleteDraftMutation() {
         if (post.embedImages) {
           for (const img of post.embedImages) {
             await storage.deleteMediaFromLocal(img.localRef.path)
+          }
+        }
+        if (post.embedGallery) {
+          for (const item of post.embedGallery.items) {
+            if (!AppBskyDraftDefs.isDraftEmbedImage(item)) continue
+            await storage.deleteMediaFromLocal(item.localRef.path)
           }
         }
         if (post.embedVideos) {

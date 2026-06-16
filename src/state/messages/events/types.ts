@@ -1,7 +1,7 @@
-import {type BskyAgent, type ChatBskyConvoGetLog} from '@atproto/api'
+import {type AtpAgent, type ChatBskyConvoGetLog} from '@atproto/api'
 
 export type MessagesEventBusParams = {
-  agent: BskyAgent
+  agent: AtpAgent
 }
 
 export enum MessagesEventBusStatus {

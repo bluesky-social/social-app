@@ -1,5 +1,4 @@
 import '#/logger/sentry/setup' // must be near top
-import '#/view/icons'
 import './style.css'
 
 import {Fragment, useEffect, useState} from 'react'
@@ -24,7 +23,6 @@ import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
-import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
 import {Provider as ModalStateProvider} from '#/state/modals'
 import {init as initPersistedState} from '#/state/persisted'
@@ -42,18 +40,19 @@ import {
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
+import {Provider as LandingProvider} from '#/state/shell/landing'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as OnboardingProvider} from '#/state/shell/onboarding'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
-import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
 import {Shell} from '#/view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
-import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
+import {useLandingEntry} from '#/components/hooks/useLandingEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
+import {Provider as LightboxStateProvider} from '#/components/Lightbox/state'
 import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext'
@@ -93,7 +92,7 @@ function InnerApp() {
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
   const {t: l} = useLingui()
-  const hasCheckedReferrer = useStarterPackEntry()
+  const hasCheckedLanding = useLandingEntry()
 
   // init
   useEffect(() => {
@@ -126,7 +125,7 @@ function InnerApp() {
     <Alf theme={theme}>
       <ThemeProvider theme={theme}>
         <ContextMenuProvider>
-          <Splash isReady={isReady && hasCheckedReferrer}>
+          <Splash isReady={isReady && hasCheckedLanding}>
             <VideoVolumeProvider>
               <ActiveVideoProvider>
                 <Fragment
@@ -225,9 +224,9 @@ function App() {
                           <DialogStateProvider>
                             <LightboxStateProvider>
                               <PortalProvider>
-                                <StarterPackProvider>
+                                <LandingProvider>
                                   <InnerApp />
-                                </StarterPackProvider>
+                                </LandingProvider>
                               </PortalProvider>
                             </LightboxStateProvider>
                           </DialogStateProvider>

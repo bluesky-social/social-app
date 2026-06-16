@@ -12,12 +12,14 @@ import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
-import {useLightbox} from '#/state/lightbox'
 import {useTheme} from '#/alf'
+import {useLightbox} from '#/components/Lightbox/state'
 import {IS_IOS} from '#/env'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL
+// This is a generic type; we could update ~30 call sites but this approach is consistent with RN internals. -dsb
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ListProps<ItemT = any> = Omit<
   FlatListPropsWithLayout<ItemT>,
   | 'onMomentumScrollBegin' // Use ScrollContext instead.
@@ -58,7 +60,7 @@ let List = forwardRef<ListMethods, ListProps>(
       ...props
     },
     ref,
-  ): React.ReactElement<any> => {
+  ): React.ReactElement => {
     const isScrolledDown = useSharedValue(false)
     const t = useTheme()
     const dedupe = useDedupe(400)
@@ -145,12 +147,10 @@ let List = forwardRef<ListMethods, ListProps>(
       )
     }
 
-    let contentOffset
     if (headerOffset != null) {
       style = addStyle(style, {
         paddingTop: headerOffset,
       })
-      contentOffset = {x: 0, y: headerOffset * -1}
     }
 
     return (
@@ -168,7 +168,6 @@ let List = forwardRef<ListMethods, ListProps>(
           ...props.scrollIndicatorInsets,
         }}
         indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
-        contentOffset={contentOffset}
         refreshControl={refreshControl}
         onScroll={scrollHandler}
         scrollsToTop={scrollsToTop}

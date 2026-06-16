@@ -1,14 +1,14 @@
 import {useCallback} from 'react'
 import {computeAgeAssuranceRegionAccess} from '@atproto/api'
 
-import {useAgeAssuranceDataContext} from '#/ageAssurance/data'
+import {useAgeAssuranceServerDataContext} from '#/ageAssurance/data'
 import {logger} from '#/ageAssurance/logger'
 import {AgeAssuranceAccess, parseAccessFromString} from '#/ageAssurance/types'
 import {getAgeAssuranceRegionConfigWithFallback} from '#/ageAssurance/util'
 import {type Geolocation} from '#/geolocation'
 
 export function useComputeAgeAssuranceRegionAccess() {
-  const {config, data} = useAgeAssuranceDataContext()
+  const {config, metadata} = useAgeAssuranceServerDataContext()
   return useCallback(
     (geolocation: Geolocation) => {
       if (!config) {
@@ -19,11 +19,14 @@ export function useComputeAgeAssuranceRegionAccess() {
         config,
         geolocation,
       )
-      const result = computeAgeAssuranceRegionAccess(region, data)
+      const result = computeAgeAssuranceRegionAccess(region, {
+        accountCreatedAt: metadata?.accountCreatedAt,
+        declaredAge: metadata?.declaredAge,
+      })
       return result
         ? parseAccessFromString(result.access)
         : AgeAssuranceAccess.Full
     },
-    [config, data],
+    [config, metadata],
   )
 }

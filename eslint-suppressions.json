@@ -1,12 +1,173 @@
 {
-  "src/alf/util/flatten.ts": {
+  "modules/bottom-sheet/src/BottomSheetNativeComponent.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "modules/bottom-sheet/src/BottomSheetPortal.tsx": {
+    "no-restricted-imports": {
       "count": 1
     }
   },
-  "src/analytics/PassiveAnalytics.tsx": {
+  "modules/bottom-sheet/src/lib/Portal.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "modules/expo-background-notification-handler/src/ExpoBackgroundNotificationHandlerModule.web.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 4
+    }
+  },
+  "modules/expo-bluesky-gif-view/src/GifView.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    },
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "modules/expo-bluesky-gif-view/src/GifView.web.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/require-await": {
+      "count": 2
+    }
+  },
+  "modules/expo-bluesky-swiss-army/src/PlatformInfo/index.native.ts": {
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 3
+    }
+  },
+  "modules/expo-bluesky-swiss-army/src/Referrer/index.android.ts": {
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "modules/expo-bluesky-swiss-army/src/SharedPrefs/index.native.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 9
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 9
+    }
+  },
+  "modules/expo-bluesky-swiss-army/src/VisibilityView/index.native.tsx": {
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "modules/expo-bluesky-swiss-army/src/VisibilityView/index.tsx": {
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "modules/expo-bluesky-swiss-army/src/VisibilityView/types.ts": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "modules/expo-emoji-picker/src/EmojiPickerView.tsx": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "src/Navigation.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/Splash.android.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/Splash.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/ageAssurance/components/RedirectOverlay.tsx": {
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/alf/util/flatten.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 9
+    }
+  },
+  "src/alf/util/systemUI.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/alf/util/useGutters.ts": {
+    "react-hooks/immutability": {
+      "count": 5
+    }
+  },
+  "src/analytics/PassiveAnalytics.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
+  "src/analytics/features/index.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/analytics/identifiers/session.test.ts": {
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 9
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 9
     }
   },
   "src/analytics/metadata.ts": {
@@ -17,26 +178,79 @@
   "src/analytics/metrics/client.test.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 8
+    },
+    "@typescript-eslint/require-await": {
+      "count": 5
     }
   },
   "src/analytics/metrics/client.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 5
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
     }
   },
-  "src/analytics/metrics/types.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
+  "src/analytics/utils.ts": {
+    "react-hooks/immutability": {
+      "count": 1
     }
   },
-  "src/components/Button.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
+  "src/components/AppLanguageDropdown.tsx": {
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 1
+    }
+  },
+  "src/components/Autocomplete/Autocomplete.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/Autocomplete/useAutocomplete/index.ts": {
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
+  "src/components/BotAccountAlert.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
     }
   },
   "src/components/Composer/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-redundant-type-constituents": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 7
+    },
+    "react-hooks/immutability": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 1
+    }
+  },
+  "src/components/DebugFieldDisplay.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
     }
   },
   "src/components/Dialog/index.tsx": {
@@ -47,10 +261,27 @@
   "src/components/Dialog/index.web.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 4
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 3
+    },
+    "@typescript-eslint/require-await": {
+      "count": 1
     }
   },
   "src/components/DraggableList/index.web.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/components/EmojiPicker/preload.web.ts": {
+    "@typescript-eslint/no-floating-promises": {
       "count": 2
     }
   },
@@ -62,25 +293,52 @@
   "src/components/FocusScope/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 1
     }
   },
   "src/components/InternationalPhoneCodeSelect.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
     }
   },
-  "src/components/Layout/const.ts": {
-    "@typescript-eslint/no-explicit-any": {
+  "src/components/KnownFollowers.tsx": {
+    "react-hooks/refs": {
+      "count": 6
+    }
+  },
+  "src/components/Lightbox/Lightbox.web.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/Lightbox/pager/ImageItem/ImageItem.android.tsx": {
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
+  "src/components/Lightbox/pager/ImageItem/ImageItem.ios.tsx": {
+    "react-hooks/refs": {
+      "count": 1
+    }
+  },
+  "src/components/LikedByList.tsx": {
+    "@typescript-eslint/no-misused-promises": {
       "count": 2
     }
   },
   "src/components/Lists.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "src/components/Menu/index.web.tsx": {
-    "@typescript-eslint/no-explicit-any": {
+    },
+    "@typescript-eslint/no-misused-promises": {
       "count": 1
     }
   },
@@ -94,34 +352,119 @@
       "count": 1
     }
   },
+  "src/components/Post/Embed/ExternalEmbed/ExternalGif.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 3
+    }
+  },
   "src/components/Post/Embed/ImageEmbed.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "react-hooks/immutability": {
       "count": 1
     }
   },
   "src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/utils.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 3
     }
   },
   "src/components/PostControls/BookmarkButton.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "src/components/PostControls/DiscoverDebug.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/PostControls/ShareMenu/ShareMenuItems.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 3
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 3
+    }
+  },
+  "src/components/PostControls/ShareMenu/index.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
     }
   },
   "src/components/ProfileHoverCard/index.web.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 3
+    },
+    "@typescript-eslint/require-await": {
+      "count": 1
+    },
+    "react-hooks/immutability": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 2
+    }
+  },
+  "src/components/ProgressGuide/FollowDialog.tsx": {
+    "react-hooks/refs": {
+      "count": 2
+    }
+  },
+  "src/components/RichTextTag.tsx": {
+    "@typescript-eslint/no-floating-promises": {
       "count": 2
     }
   },
   "src/components/Select/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 4
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
     }
   },
   "src/components/Select/index.web.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
     }
   },
   "src/components/Select/types.ts": {
@@ -129,8 +472,43 @@
       "count": 3
     }
   },
+  "src/components/SendErrorReportDialog.tsx": {
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/components/StarterPack/Main/ProfilesList.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
   "src/components/StarterPack/ProfileStarterPacks.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "src/components/StarterPack/QrCodeDialog.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 5
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/require-await": {
+      "count": 4
+    }
+  },
+  "src/components/StarterPack/ShareDialog.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/require-await": {
       "count": 1
     }
   },
@@ -139,19 +517,104 @@
       "count": 1
     }
   },
+  "src/components/Tooltip/index.tsx": {
+    "@typescript-eslint/no-base-to-string": {
+      "count": 1
+    }
+  },
+  "src/components/Tooltip/index.web.tsx": {
+    "@typescript-eslint/no-base-to-string": {
+      "count": 1
+    }
+  },
+  "src/components/WhoCanReply.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 1
+    }
+  },
+  "src/components/ageAssurance/AgeAssuranceErrors.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/ageAssurance/AgeAssuranceInitDialog.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    },
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
+  "src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx": {
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/components/contacts/components/OTPInput.tsx": {
+    "react-hooks/refs": {
+      "count": 1
+    }
+  },
+  "src/components/contacts/screens/GetContacts.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/contacts/screens/VerifyNumber.tsx": {
+    "@typescript-eslint/require-await": {
+      "count": 1
+    },
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
+  "src/components/contacts/screens/ViewMatches.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
   "src/components/dialogs/DeviceLocationRequestDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
     }
   },
   "src/components/dialogs/EmailDialog/components/ResendEmailText.tsx": {
-    "@typescript-eslint/no-explicit-any": {
+    "@typescript-eslint/no-floating-promises": {
       "count": 1
     }
   },
-  "src/components/dialogs/GifSelect.tsx": {
-    "@typescript-eslint/no-explicit-any": {
+  "src/components/dialogs/EmailDialog/data/useAccountEmailState.ts": {
+    "react-hooks/set-state-in-effect": {
       "count": 1
+    }
+  },
+  "src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 3
+    }
+  },
+  "src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/EmailDialog/screens/Update.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 3
+    }
+  },
+  "src/components/dialogs/EmailDialog/screens/Verify.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 3
     }
   },
   "src/components/dialogs/LanguageSelectDialog.tsx": {
@@ -159,28 +622,112 @@
       "count": 1
     }
   },
+  "src/components/dialogs/LinkWarning.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
   "src/components/dialogs/MutedWords.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "@typescript-eslint/require-await": {
       "count": 1
     }
   },
   "src/components/dialogs/PostInteractionSettingsDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "react-hooks/preserve-manual-memoization": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/ServerInput.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/StarterPackDialog.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/SwitchAccount.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
     }
   },
   "src/components/dialogs/lists/CreateOrEditListDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/nuxs/FindContactsAnnouncement.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/nuxs/index.tsx": {
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "react-hooks/immutability": {
+      "count": 1
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
     }
   },
   "src/components/forms/DateField/index.web.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/components/forms/SearchInput.tsx": {
+    "react-hooks/refs": {
+      "count": 1
     }
   },
   "src/components/forms/SegmentedControl.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/forms/TextField.tsx": {
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 3
+    },
+    "react-hooks/refs": {
       "count": 1
     }
   },
@@ -192,16 +739,48 @@
   "src/components/hooks/useFollowMethods.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/components/hooks/useLandingEntry.native.ts": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/components/hooks/useLandingEntry.ts": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/components/hooks/useRefreshOnFocus.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/hooks/useRichText.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
     }
   },
   "src/components/images/AutoSizedImage.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 1
+      "count": 2
     }
   },
   "src/components/images/Gallery/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 5
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    },
+    "react-hooks/refs": {
+      "count": 1
     }
   },
   "src/components/images/Gallery/useKeyboardHandlers.ts": {
@@ -224,8 +803,43 @@
       "count": 2
     }
   },
-  "src/components/moderation/ReportDialog/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
+  "src/components/intents/VerifyEmailIntentDialog.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/interstitials/TrendingVideos.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/moderation/ContentHider.tsx": {
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
+  "src/components/moderation/LabelsOnMeDialog.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
+  "src/components/moderation/ModerationDetailsDialog.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
+  "src/components/verification/VerificationCreatePrompt.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/verification/VerificationRemovePrompt.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/features/liveEvents/preferences.ts": {
+    "@typescript-eslint/no-floating-promises": {
       "count": 1
     }
   },
@@ -237,6 +851,12 @@
   "src/geolocation/service.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
     }
   },
   "src/lib/ScrollContext.tsx": {
@@ -244,9 +864,14 @@
       "count": 3
     }
   },
-  "src/lib/api/index.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 5
+  "src/lib/api/feed/demo.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 2
+    }
+  },
+  "src/lib/api/feed/posts.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 1
     }
   },
   "src/lib/async/retry.ts": {
@@ -264,9 +889,20 @@
       "count": 1
     }
   },
+  "src/lib/custom-animations/CountWheel.web.tsx": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
   "src/lib/functions.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 6
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 25
     }
   },
   "src/lib/getUserDisplayName.ts": {
@@ -274,24 +910,72 @@
       "count": 1
     }
   },
-  "src/lib/hooks/useAccountSwitcher.ts": {
-    "@typescript-eslint/no-explicit-any": {
+  "src/lib/haptics.ts": {
+    "@typescript-eslint/no-floating-promises": {
       "count": 1
     }
   },
-  "src/lib/hooks/useCleanError.ts": {
+  "src/lib/hooks/useAccountSwitcher.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/lib/hooks/useAnimatedValue.ts": {
+    "react-hooks/refs": {
+      "count": 1
+    }
+  },
+  "src/lib/hooks/useDraggableScrollView.ts": {
+    "react-hooks/refs": {
+      "count": 1
+    }
+  },
+  "src/lib/hooks/useIntentHandler.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
     }
   },
   "src/lib/hooks/useNonReactiveCallback.ts": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    }
+  },
+  "src/lib/hooks/useNotificationHandler.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 16
+    },
+    "@typescript-eslint/require-await": {
       "count": 1
     }
   },
   "src/lib/hooks/useOTAUpdates.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 4
+    }
+  },
+  "src/lib/hooks/usePermissions.ts": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 5
+    }
+  },
+  "src/lib/hooks/usePermissions.web.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 3
     }
   },
   "src/lib/hooks/useRequireEmailVerification.tsx": {
@@ -299,14 +983,33 @@
       "count": 2
     }
   },
+  "src/lib/hooks/useTLDs.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/lib/hooks/useTabFocusEffect.ts": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
   "src/lib/hooks/useToggleMutationQueue.ts": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
       "count": 2
     }
   },
   "src/lib/hooks/useWebScrollRestoration.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "react-hooks/immutability": {
+      "count": 1
     }
   },
   "src/lib/international-telephone-codes.ts": {
@@ -314,9 +1017,30 @@
       "count": 1
     }
   },
+  "src/lib/link-meta/link-meta.ts": {
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 9
+    }
+  },
   "src/lib/media/manip.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 5
+    }
+  },
+  "src/lib/media/manip.web.ts": {
+    "@typescript-eslint/prefer-promise-reject-errors": {
+      "count": 1
+    },
+    "@typescript-eslint/require-await": {
+      "count": 3
+    }
+  },
+  "src/lib/media/picker.web.tsx": {
+    "@typescript-eslint/require-await": {
+      "count": 2
     }
   },
   "src/lib/media/save-image.ios.ts": {
@@ -334,8 +1058,33 @@
       "count": 1
     }
   },
+  "src/lib/notifications/notifications.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 5
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 2
+    },
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
   "src/lib/react-query.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 1
+    }
+  },
+  "src/lib/routes/links.ts": {
+    "@typescript-eslint/no-redundant-type-constituents": {
       "count": 1
     }
   },
@@ -349,89 +1098,298 @@
       "count": 1
     }
   },
+  "src/lib/sharing.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
   "src/lib/strings/errors.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 14
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 14
     }
   },
-  "src/locale/i18n.web.ts": {
-    "@typescript-eslint/no-explicit-any": {
+  "src/lib/translation/index.tsx": {
+    "react-hooks/set-state-in-effect": {
       "count": 1
     }
   },
-  "src/platform/polyfills.web.ts": {
-    "@typescript-eslint/no-explicit-any": {
+  "src/lib/useGetEmojis/getEmojis.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/logger/transports/sentry.ts": {
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 3
+    }
+  },
+  "src/logger/types.ts": {
+    "@typescript-eslint/no-redundant-type-constituents": {
       "count": 1
     }
   },
   "src/screens/Bookmarks/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
     }
   },
   "src/screens/Deactivated.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/screens/E2E/SharedPreferencesTesterScreen.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 6
+    },
+    "@typescript-eslint/require-await": {
+      "count": 6
+    }
+  },
+  "src/screens/Feeds/NoFollowingFeed.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Feeds/NoSavedFeedsOfAnyType.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Hashtag.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Home/NoFeedsPinned.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/List/ListHiddenScreen.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 3
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Log.tsx": {
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 2
     }
   },
   "src/screens/Login/ChooseAccountForm.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
       "count": 1
     }
   },
   "src/screens/Login/ForgotPasswordForm.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
     }
   },
   "src/screens/Login/LoginForm.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    },
+    "react-hooks/refs": {
       "count": 1
     }
   },
   "src/screens/Login/SetNewPasswordForm.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/screens/Login/index.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "react-hooks/purity": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 1
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/screens/Messages/ChatList.tsx": {
+    "react-hooks/immutability": {
+      "count": 1
     }
   },
   "src/screens/Moderation/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
       "count": 2
     }
   },
   "src/screens/ModerationInteractionSettings/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/screens/Onboarding/StepFinished/ValuePropositionPager.tsx": {
+    "react-hooks/refs": {
+      "count": 4
     }
   },
   "src/screens/Onboarding/StepFinished/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
       "count": 1
     }
   },
   "src/screens/Onboarding/StepInterests/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/screens/Onboarding/StepProfile/index.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
     }
   },
   "src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
     }
   },
   "src/screens/PostThread/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 3
+    },
+    "react-hooks/preserve-manual-memoization": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 4
     }
   },
   "src/screens/Profile/Header/EditProfileDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
     }
   },
   "src/screens/Profile/Header/ProfileHeaderLabeler.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 3
     }
   },
   "src/screens/Profile/Header/Shell.tsx": {
@@ -439,28 +1397,160 @@
       "count": 1
     }
   },
+  "src/screens/Profile/KnownFollowers.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    }
+  },
   "src/screens/Profile/Sections/Feed.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-floating-promises": {
       "count": 1
     }
   },
   "src/screens/Profile/components/GermButton.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/screens/Profile/components/ProfileFeedHeader.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 5
+    }
+  },
+  "src/screens/ProfileList/FeedSection.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/ProfileList/components/Header.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 3
+    }
+  },
+  "src/screens/ProfileList/components/MoreOptionsMenu.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 5
+    }
+  },
+  "src/screens/ProfileList/components/SubscribeMenu.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "src/screens/ProfileList/index.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/SavedFeeds.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "src/screens/Search/Shell.tsx": {
+    "react-hooks/refs": {
+      "count": 4
+    }
+  },
+  "src/screens/Search/modules/ExploreSuggestedAccounts.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Search/modules/ExploreTrendingTopics.tsx": {
+    "react-hooks/purity": {
+      "count": 2
+    }
+  },
+  "src/screens/Search/modules/ExploreTrendingVideos.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Settings/AboutSettings.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Settings/AppPasswords.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Settings/AutomationLabelSettings.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
     }
   },
   "src/screens/Settings/FindContactsSettings.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 3
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/screens/Settings/InterestsSettings.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/screens/Settings/components/ChangeHandleDialog.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 4
+    },
+    "@typescript-eslint/no-misused-promises": {
       "count": 1
     }
   },
   "src/screens/Settings/components/ChangePasswordDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/screens/Settings/components/CopyButton.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
     }
   },
   "src/screens/Settings/components/DeactivateAccountDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
       "count": 1
     }
   },
@@ -469,14 +1559,114 @@
       "count": 2
     }
   },
+  "src/screens/Settings/components/DisableEmail2FADialog.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 4
+    }
+  },
+  "src/screens/Settings/components/OTAInfo.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Signup/StepCaptcha/CaptchaWebView.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
+  "src/screens/Signup/StepHandle/index.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
   "src/screens/Signup/StepInfo/Policies.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
   },
+  "src/screens/Signup/StepInfo/index.tsx": {
+    "react-hooks/refs": {
+      "count": 3
+    }
+  },
   "src/screens/SignupQueued.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/screens/StarterPack/StarterPackLandingScreen.tsx": {
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/screens/StarterPack/StarterPackScreen.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/screens/StarterPack/Wizard/StepFeeds.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/StarterPack/Wizard/StepProfiles.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/StarterPack/Wizard/index.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/screens/Topic.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/state/a11y.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/cache/profile-shadow.ts": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/state/cache/thread-mutes.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
     }
   },
   "src/state/cache/types.ts": {
@@ -487,36 +1677,198 @@
   "src/state/feed-feedback.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
+    },
+    "react-hooks/refs": {
+      "count": 2
     }
   },
-  "src/state/messages/convo/agent.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
+  "src/state/gallery.ts": {
+    "@typescript-eslint/prefer-promise-reject-errors": {
+      "count": 1
     }
   },
   "src/state/messages/events/agent.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/state/messages/message-drafts.tsx": {
+    "react-hooks/refs": {
+      "count": 1
     }
   },
   "src/state/persisted/index.ts": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
       "count": 1
     }
   },
   "src/state/persisted/index.web.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
     }
   },
   "src/state/persisted/util.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/alt-text-required.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/autoplay.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/disable-haptics.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/external-embeds-prefs.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/hidden-posts.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/in-app-browser.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/kawaii.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/languages.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/large-alt-badge.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/subtitles.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/trending.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/used-starter-packs.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/queries/activity-subscriptions.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/queries/actor-autocomplete.ts": {
+    "react-hooks/immutability": {
+      "count": 2
+    }
+  },
+  "src/state/queries/app-passwords.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/state/queries/bookmarks/useBookmarkMutation.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/state/queries/bookmarks/useBookmarksQuery.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 2
+    }
+  },
+  "src/state/queries/explore-feed-previews.tsx": {
+    "react-hooks/refs": {
+      "count": 4
+    }
+  },
+  "src/state/queries/feed.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/queries/handle.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/queries/list.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 7
+    }
+  },
+  "src/state/queries/my-lists.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
     }
   },
   "src/state/queries/notifications/feed.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/state/queries/notifications/unread.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 4
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    },
+    "react-hooks/refs": {
+      "count": 1
     }
   },
   "src/state/queries/nuxs/definitions.ts": {
@@ -527,30 +1879,92 @@
   "src/state/queries/pinned-post.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
     }
   },
   "src/state/queries/post-feed.ts": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
       "count": 3
     }
   },
   "src/state/queries/postgate/index.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 3
+    },
+    "@typescript-eslint/require-await": {
+      "count": 2
+    }
+  },
+  "src/state/queries/preferences/index.ts": {
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
+  "src/state/queries/preferences/useThreadPreferences.ts": {
+    "react-hooks/refs": {
+      "count": 2
     }
   },
   "src/state/queries/search-posts.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/state/queries/starter-packs.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 1
+    },
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
+  "src/state/queries/suggested-follows.ts": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
     }
   },
   "src/state/queries/threadgate/index.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "@typescript-eslint/require-await": {
+      "count": 3
     }
   },
   "src/state/queries/util.ts": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
       "count": 1
     }
   },
@@ -559,84 +1973,269 @@
       "count": 1
     }
   },
+  "src/state/shell/color-mode.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/state/shell/composer/index.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/shell/onboarding.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 5
+    }
+  },
   "src/state/shell/progress-guide.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 4
+    }
+  },
+  "src/state/shell/reminders.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/shell/tick-every-minute.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
+  "src/storage/archive/index.ts": {
+    "@typescript-eslint/no-unsafe-member-access": {
       "count": 1
     }
   },
   "src/storage/index.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 8
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/view/com/auth/SplashScreen.web.tsx": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
     }
   },
   "src/view/com/composer/Composer.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "react-hooks/immutability": {
+      "count": 2
+    },
+    "react-hooks/preserve-manual-memoization": {
+      "count": 3
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/SelectMediaButton.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/drafts/DraftsButton.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
     }
   },
   "src/view/com/composer/drafts/state/queries.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/view/com/composer/drafts/state/storage.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 3
+    }
+  },
+  "src/view/com/composer/photos/EditImageDialog.web.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/photos/Gallery.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
     }
   },
   "src/view/com/composer/photos/OpenCameraBtn.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/select-language/SuggestedLanguage.tsx": {
+    "react-hooks/refs": {
+      "count": 1
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/text-input/TextInput.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/text-input/TextInput.web.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/text-input/web/Autocomplete.tsx": {
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/videos/pickVideo.web.ts": {
+    "@typescript-eslint/no-misused-promises": {
       "count": 1
     }
   },
   "src/view/com/feeds/ComposerPrompt.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/view/com/feeds/FeedPage.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
     }
   },
   "src/view/com/feeds/ProfileFeedgens.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
-    }
-  },
-  "src/view/com/lightbox/ImageViewing/@types/index.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/view/com/lightbox/ImageViewing/components/ImageItem/ImageItem.android.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/view/com/lightbox/ImageViewing/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/view/com/lists/ListMembers.tsx": {
-    "@typescript-eslint/no-explicit-any": {
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
       "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
     }
   },
   "src/view/com/lists/MyLists.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 6
     }
   },
   "src/view/com/lists/ProfileLists.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/view/com/modals/Modal.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/require-await": {
+      "count": 1
     }
   },
   "src/view/com/notifications/NotificationFeed.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 6
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
     }
   },
   "src/view/com/notifications/NotificationFeedItem.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
     }
   },
   "src/view/com/pager/Pager.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 4
+    },
+    "react-hooks/refs": {
+      "count": 1
+    }
+  },
+  "src/view/com/pager/Pager.web.tsx": {
+    "react-hooks/immutability": {
+      "count": 1
+    },
+    "react-hooks/preserve-manual-memoization": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 1
     }
   },
   "src/view/com/pager/PagerWithHeader.tsx": {
@@ -649,13 +2248,45 @@
       "count": 2
     }
   },
+  "src/view/com/pager/TabBar.tsx": {
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
   "src/view/com/pager/TabBar.web.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    }
+  },
+  "src/view/com/post-thread/PostLikedBy.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "src/view/com/post-thread/PostQuotes.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/view/com/post-thread/PostRepostedBy.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
     }
   },
   "src/view/com/posts/FeedShutdownMsg.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
       "count": 2
     }
   },
@@ -667,16 +2298,30 @@
   "src/view/com/posts/PostFeedErrorMessage.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 8
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 9
     }
   },
-  "src/view/com/profile/ProfileMenu.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 6
+  "src/view/com/profile/ProfileFollowers.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "src/view/com/profile/ProfileFollows.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 2
     }
   },
   "src/view/com/testing/TestCtrls.e2e.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 2
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 9
     }
   },
   "src/view/com/util/EmptyState.tsx": {
@@ -687,10 +2332,22 @@
   "src/view/com/util/ErrorBoundary.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
     }
   },
   "src/view/com/util/EventStopper.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
       "count": 1
     }
   },
@@ -699,14 +2356,9 @@
       "count": 2
     }
   },
-  "src/view/com/util/List.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "src/view/com/util/List.web.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 14
+  "src/view/com/util/LoadingPlaceholder.tsx": {
+    "react-hooks/purity": {
+      "count": 1
     }
   },
   "src/view/com/util/MainScrollProvider.tsx": {
@@ -714,9 +2366,22 @@
       "count": 2
     }
   },
+  "src/view/com/util/UserAvatar.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 3
+    }
+  },
+  "src/view/com/util/UserBanner.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 3
+    }
+  },
   "src/view/com/util/ViewSelector.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 6
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
     }
   },
   "src/view/com/util/Views.tsx": {
@@ -724,23 +2389,95 @@
       "count": 1
     }
   },
-  "src/view/com/util/fab/FABInner.tsx": {
-    "@typescript-eslint/no-explicit-any": {
+  "src/view/com/util/Views.web.tsx": {
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/view/com/util/forms/Button.tsx": {
+    "@typescript-eslint/no-misused-promises": {
       "count": 1
     }
   },
   "src/view/screens/Debug.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
     }
   },
-  "src/view/screens/DebugMod.tsx": {
-    "@typescript-eslint/no-explicit-any": {
+  "src/view/screens/Feeds.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 3
+    },
+    "@typescript-eslint/no-misused-promises": {
       "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/view/screens/Home.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/view/screens/ModerationBlockedAccounts.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 3
+    }
+  },
+  "src/view/screens/ModerationMutedAccounts.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/view/screens/Notifications.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 3
+    }
+  },
+  "src/view/screens/Storybook/ListContained.tsx": {
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/view/shell/Drawer.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
     }
   },
   "src/view/shell/createNativeStackNavigatorWithAuth.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 13
+    }
+  },
+  "src/view/shell/desktop/Search.tsx": {
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 3
+    },
+    "react-hooks/refs": {
+      "count": 3
+    }
+  },
+  "src/view/shell/index.web.tsx": {
+    "react-hooks/set-state-in-effect": {
       "count": 1
     }
   }

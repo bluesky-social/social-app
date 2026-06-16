@@ -2,7 +2,7 @@ import {type Insets, Platform} from 'react-native'
 import {type AppBskyActorDefs, BSKY_LABELER_DID} from '@atproto/api'
 
 import {type ProxyHeaderValue} from '#/state/session/agent'
-import {BLUESKY_PROXY_DID, CHAT_PROXY_DID} from '#/env'
+import {BLUESKY_PROXY_DID, CHAT_PROXY_DID, IS_DEV} from '#/env'
 
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
@@ -13,6 +13,7 @@ export const PUBLIC_BSKY_SERVICE = 'https://public.api.bsky.app'
 export const DEFAULT_SERVICE = BSKY_SERVICE
 const HELP_DESK_LANG = 'en-us'
 export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG}`
+export const CHAT_SERVICE = 'https://api.bsky.chat'
 export const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
@@ -66,6 +67,8 @@ export const MAX_DRAFT_GRAPHEME_LENGTH = 1000
 
 export const MAX_DM_GRAPHEME_LENGTH = 1000
 
+export const MAX_GROUP_NAME_GRAPHEME_LENGTH = 50
+
 // Recommended is 100 per: https://www.w3.org/WAI/GL/WCAG20/tests/test3.html
 // but increasing limit per user feedback
 export const MAX_ALT_TEXT = 2000
@@ -96,10 +99,14 @@ export const STAGING_FEEDS = [
   `feedgen|${STAGING_DEFAULT_FEED('thevids')}`,
 ]
 
-export const POST_IMG_MAX = {
-  width: 2000,
-  height: 2000,
-  size: 1000000,
+export const IMAGE_SIZE_CONFIG_POSTS = {
+  maxDimension: 4000,
+  maxSize: 2000000,
+}
+
+export const IMAGE_SIZE_CONFIG_2K_1MB = {
+  maxDimension: 2000,
+  maxSize: 1000000,
 }
 
 export const STAGING_LINK_META_PROXY =
@@ -107,12 +114,12 @@ export const STAGING_LINK_META_PROXY =
 
 export const PROD_LINK_META_PROXY = 'https://cardyb.bsky.app/v1/extract?url='
 
-export function LINK_META_PROXY(serviceUrl: string) {
-  if (IS_PROD_SERVICE(serviceUrl)) {
-    return PROD_LINK_META_PROXY
+export function LINK_META_PROXY(_serviceUrl: string) {
+  if (IS_DEV) {
+    return STAGING_LINK_META_PROXY
   }
 
-  return STAGING_LINK_META_PROXY
+  return PROD_LINK_META_PROXY
 }
 
 export const STATUS_PAGE_URL = 'https://status.bsky.app/'
@@ -173,11 +180,6 @@ export const KNOWN_SHUTDOWN_FEEDS = [
 
 export const GIF_SERVICE = 'https://gifs.bsky.app'
 
-export const GIF_SEARCH = (params: string) =>
-  `${GIF_SERVICE}/tenor/v2/search?${params}`
-export const GIF_FEATURED = (params: string) =>
-  `${GIF_SERVICE}/tenor/v2/featured?${params}`
-
 export const GIF_KLIPY_SEARCH = (params: string) =>
   `${GIF_SERVICE}/klipy/v2/search?${params}`
 export const GIF_KLIPY_FEATURED = (params: string) =>
@@ -193,7 +195,8 @@ export const VIDEO_MAX_DURATION_MS = 3 * 60 * 1000 // 3 minutes in milliseconds
  * Maximum size of a video in megabytes, _not_ mebibytes. Backend uses
  * ISO megabytes.
  */
-export const VIDEO_MAX_SIZE = 1000 * 1000 * 100 // 100mb
+export const VIDEO_MAX_SIZE_MB = 300
+export const VIDEO_MAX_SIZE = VIDEO_MAX_SIZE_MB * 1000 * 1000 // 300mb
 
 export const SUPPORTED_MIME_TYPES = [
   'video/mp4',

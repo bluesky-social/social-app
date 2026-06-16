@@ -1,20 +1,25 @@
-FROM node:20.11-alpine3.18 as build
+FROM node:24.15.0-alpine3.22 AS build
+
+# Tells pnpm to run non-interactively (needed for install/script steps)
+ENV CI=true
 
 # Move files into the image and install
 WORKDIR /app
 
 COPY ./bskyogcard/package.json ./
-COPY ./bskyogcard/yarn.lock ./
-RUN yarn install --frozen-lockfile
+COPY ./bskyogcard/pnpm-lock.yaml ./
+COPY ./bskyogcard/pnpm-workspace.yaml ./
+RUN npm install --global pnpm@11.5.2
+RUN pnpm install --frozen-lockfile
 
 COPY ./bskyogcard ./
 
 # build then prune dev deps
-RUN yarn install-fonts && yarn build
-RUN yarn install --production --ignore-scripts --prefer-offline
+RUN pnpm install-fonts && pnpm build
+RUN pnpm install --prod --ignore-scripts --prefer-offline
 
 # Uses assets from build stage to reduce build size
-FROM node:20.11-alpine3.18
+FROM node:24.15.0-alpine3.22
 
 RUN apk add --update dumb-init
 
@@ -30,8 +35,6 @@ EXPOSE 3000 3001
 ENV CARD_PORT=3000
 ENV CARD_METRICS_PORT=3001
 ENV NODE_ENV=production
-# potential perf issues w/ io_uring on this version of node
-ENV UV_USE_IO_URING=0
 
 # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#non-root-user
 USER node

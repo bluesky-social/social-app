@@ -1,10 +1,18 @@
-import {type ChatBskyConvoListConvos} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
-import {RQKEY as CONVO_LIST_KEY} from './list-conversations'
+import {
+  type ConvoRequestListQueryData,
+  markAllRead as markAllRequestsRead,
+  RQKEY_ROOT as REQUESTS_RQKEY_ROOT,
+} from './list-conversation-requests'
+import {
+  type ConvoListQueryData,
+  RQKEY_PARTIAL as CONVO_LIST_PARTIAL_KEY,
+  RQKEY_ROOT as CONVO_LIST_ROOT_KEY,
+} from './list-conversations'
 
 export function useUpdateAllRead(
   status: 'accepted' | 'request',
@@ -31,15 +39,19 @@ export function useUpdateAllRead(
       return data
     },
     onMutate: () => {
-      let prevPages: ChatBskyConvoListConvos.OutputSchema[] = []
-      queryClient.setQueryData(
-        CONVO_LIST_KEY(status),
-        (old?: {
-          pageParams: Array<string | undefined>
-          pages: Array<ChatBskyConvoListConvos.OutputSchema>
-        }) => {
+      // snapshot every convo-list cache up front so onError can restore them
+      // all by their exact keys
+      const prevConvoListQueries =
+        queryClient.getQueriesData<ConvoListQueryData>({
+          queryKey: [CONVO_LIST_ROOT_KEY],
+        })
+      let prevRequestsQueries: Array<
+        [readonly unknown[], ConvoRequestListQueryData | undefined]
+      > = []
+      queryClient.setQueriesData(
+        {queryKey: CONVO_LIST_PARTIAL_KEY(status)},
+        (old?: ConvoListQueryData) => {
           if (!old) return old
-          prevPages = old.pages
           return {
             ...old,
             pages: old.pages.map(page => {
@@ -56,13 +68,10 @@ export function useUpdateAllRead(
           }
         },
       )
-      // remove unread convos from the badge query
-      queryClient.setQueryData(
-        CONVO_LIST_KEY('all', 'unread'),
-        (old?: {
-          pageParams: Array<string | undefined>
-          pages: Array<ChatBskyConvoListConvos.OutputSchema>
-        }) => {
+      // remove unread convos from the badge queries
+      queryClient.setQueriesData(
+        {queryKey: CONVO_LIST_PARTIAL_KEY('all', 'unread')},
+        (old?: ConvoListQueryData) => {
           if (!old) return old
           return {
             ...old,
@@ -75,30 +84,47 @@ export function useUpdateAllRead(
           }
         },
       )
+      if (status === 'request') {
+        prevRequestsQueries =
+          queryClient.getQueriesData<ConvoRequestListQueryData>({
+            queryKey: [REQUESTS_RQKEY_ROOT],
+          })
+        queryClient.setQueriesData<ConvoRequestListQueryData>(
+          {queryKey: [REQUESTS_RQKEY_ROOT]},
+          markAllRequestsRead,
+        )
+      }
       onMutate?.()
-      return {prevPages}
+      return {prevConvoListQueries, prevRequestsQueries}
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY(status)})
+      void queryClient.invalidateQueries({
+        queryKey: CONVO_LIST_PARTIAL_KEY(status),
+      })
+      void queryClient.invalidateQueries({
+        queryKey: CONVO_LIST_PARTIAL_KEY('all', 'unread'),
+      })
+      if (status === 'request') {
+        void queryClient.invalidateQueries({queryKey: [REQUESTS_RQKEY_ROOT]})
+      }
       onSuccess?.()
     },
     onError: (error, _, context) => {
       logger.error(error)
-      queryClient.setQueryData(
-        CONVO_LIST_KEY(status),
-        (old?: {
-          pageParams: Array<string | undefined>
-          pages: Array<ChatBskyConvoListConvos.OutputSchema>
-        }) => {
-          if (!old) return old
-          return {
-            ...old,
-            pages: context?.prevPages || old.pages,
-          }
-        },
-      )
-      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY(status)})
-      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY('all', 'unread')})
+      if (context?.prevConvoListQueries) {
+        for (const [queryKey, prevData] of context.prevConvoListQueries) {
+          queryClient.setQueryData(queryKey, prevData)
+        }
+      }
+      if (context?.prevRequestsQueries) {
+        for (const [queryKey, prevData] of context.prevRequestsQueries) {
+          queryClient.setQueryData(queryKey, prevData)
+        }
+      }
+      void queryClient.invalidateQueries({queryKey: [CONVO_LIST_ROOT_KEY]})
+      if (status === 'request') {
+        void queryClient.invalidateQueries({queryKey: [REQUESTS_RQKEY_ROOT]})
+      }
       onError?.(error)
     },
   })

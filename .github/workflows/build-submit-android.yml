@@ -11,6 +11,10 @@ on:
           - testflight-android
           - production
 
+# Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
+permissions:
+  contents: read
+
 jobs:
   build:
     if: github.repository == 'bluesky-social/social-app'
@@ -28,39 +32,38 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 5
 
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version-file: .nvmrc
-          cache: yarn
+          node-version-file: package.json
+          cache: pnpm
 
       - name: 🪛 Setup jq
-        uses: dcarbone/install-jq-action@v2
+        uses: dcarbone/install-jq-action@b7ef57d46ece78760b4019dbc4080a1ba2a40b45 # v3.2.0
 
-      - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@main
+      - name: ⚙️ Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔨 Setup Expo CLI
+        uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
         with:
-          expo-version: latest
-          eas-version: latest
+          eas-version: '19.0.5'
+          packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: ⛏️ Setup EAS local builds
-        run: yarn global add eas-cli-local-build-plugin
-
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@ad2b38190b15e4d6bdf0c97fb4fca8412226d287 # v5.3.0
         with:
           distribution: "temurin"
           java-version: "17"
 
-      - name: ⚙️ Install dependencies
-        run: yarn install --frozen-lockfile
-
       - name: 🔤 Compile translations
-        run: yarn intl:build 2>&1 | tee i18n.log
+        run: pnpm intl:build 2>&1 | tee i18n.log
 
       - name: Check for i18n compilation errors
         run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation
@@ -86,10 +89,12 @@ jobs:
         env:
           PROFILE: ${{ inputs.profile || 'testflight-android' }}
         run: >
-          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_RELEASE=${{
-          steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }} SENTRY_DIST=${{
-          steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }} yarn
-          use-build-number-with-bump eas build -p android --profile $PROFILE
+          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
+          SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
+          pnpm use-build-number-with-bump
+          pnpm eas build -p android
+          --profile $PROFILE
           --local --output build.aab --non-interactive
 
       - name: 📚 Get version from package.json
@@ -99,19 +104,17 @@ jobs:
       - name: 🚀 Submit to Google Play
         env:
           PROFILE: ${{ inputs.profile || 'testflight-android' }}
-        run: eas submit -p android --profile $PROFILE --non-interactive --path build.aab
+        run: pnpm eas submit -p android --profile $PROFILE --non-interactive --path build.aab
 
       - name: 🔔 Notify Slack of Play Store Submission
         if: ${{ inputs.profile == 'production' }}
-        uses: slackapi/slack-github-action@v1.25.0
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         with:
+          webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          webhook-type: incoming-webhook
+          payload-templated: true
           payload: |
-            {
-              "text": "Android ${{ inputs.profile || 'testflight-android' }} build submitted to Google Play!\n```Version Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+            {"text": "Android ${{ inputs.profile || 'testflight-android' }} build submitted to Google Play!\n```Version Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"}
 
       - name: 🔧 Setup bundletool
         uses: amyu/setup-bundletool@v1
@@ -141,13 +144,11 @@ jobs:
 
       - name: ⏰ Get a timestamp
         id: timestamp
-        uses: nanzm/get-time-action@master
-        with:
-          format: "MM-DD-HH-mm-ss"
+        run: echo "time=$(date -u +'%m-%d-%H-%M-%S')" >> "$GITHUB_OUTPUT"
 
       - name: 🚀 Upload APK Artifact
         id: upload-artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           retention-days: 30
           compression-level: 6
@@ -155,19 +156,17 @@ jobs:
           path: build.apk
 
       - name: 🔔 Notify Slack of APK Artifact
-        uses: slackapi/slack-github-action@v1.25.0
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         with:
+          webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          webhook-type: incoming-webhook
+          payload-templated: true
           payload: |
-            {
-              "text": "Android ${{ inputs.profile || 'testflight-android' }} APK is ready for testing!\n```Artifact: ${{ steps.upload-artifact.outputs.artifact-url }}\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+            {"text": "Android ${{ inputs.profile || 'testflight-android' }} APK is ready for testing!\n```Artifact: ${{ steps.upload-artifact.outputs.artifact-url }}\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"}
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@v4
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         if: ${{ inputs.profile == 'testflight-android' }}
         with:
           path: most-recent-testflight-commit.txt

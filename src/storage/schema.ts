@@ -1,4 +1,5 @@
 import {type ID as PolicyUpdate202508} from '#/components/PolicyUpdateOverlay/updates/202508/config'
+import {type Gif} from '#/features/gifPicker/types'
 import {type Geolocation} from '#/geolocation/types'
 
 /**
@@ -60,6 +61,7 @@ export type Device = {
   demoMode: boolean
   activitySubscriptionsNudged?: boolean
   threadgateNudged?: boolean
+  inviteFriendsFollowersPromoDismissed?: boolean
 
   /**
    * Policy update overlays. New IDs are required for each new announcement.
@@ -79,4 +81,9 @@ export type Account = {
   birthdateLastUpdatedAt?: string
 
   lastSelectedHomeFeed?: string
+
+  /**
+   * Recently selected GIFs in the GIF picker. Most recent first, capped at 20.
+   */
+  recentGifs?: Gif[]
 }

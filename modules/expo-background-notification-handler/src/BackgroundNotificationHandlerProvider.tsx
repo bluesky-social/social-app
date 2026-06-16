@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {BackgroundNotificationHandlerPreferences} from './ExpoBackgroundNotificationHandler.types'
+import {type BackgroundNotificationHandlerPreferences} from './ExpoBackgroundNotificationHandler.types'
 import {BackgroundNotificationHandler} from './ExpoBackgroundNotificationHandlerModule'
 
 interface BackgroundNotificationPreferencesContext {

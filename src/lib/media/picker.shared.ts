@@ -2,6 +2,7 @@ import {
   type ImagePickerOptions,
   launchImageLibraryAsync,
   UIImagePickerPreferredAssetRepresentationMode,
+  VideoExportPreset,
 } from 'expo-image-picker'
 import {t} from '@lingui/core/macro'
 
@@ -59,6 +60,7 @@ export async function openUnifiedPicker({
     selectionLimit: IS_IOS ? selectionCountRemaining : undefined,
     preferredAssetRepresentationMode:
       UIImagePickerPreferredAssetRepresentationMode.Automatic,
+    videoExportPreset: VideoExportPreset.Passthrough,
     videoMaxDuration: VIDEO_MAX_DURATION_MS / 1000,
   })
 }

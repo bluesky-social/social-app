@@ -16,9 +16,9 @@ import {
   postUriToRelativePath,
   toBskyAppUrl,
 } from '#/lib/strings/url-helpers'
+import {logger} from '#/logger'
 import {type ComposerImage, createInitialImages} from '#/state/gallery'
 import {createPostgateRecord} from '#/state/queries/postgate/util'
-import {type Gif} from '#/state/queries/tenor'
 import {threadgateRecordToAllowUISetting} from '#/state/queries/threadgate'
 import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {type ComposerOpts} from '#/state/shell/composer'
@@ -26,6 +26,7 @@ import {
   type LinkFacetMatch,
   suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util'
+import {type Gif} from '#/features/gifPicker/types'
 import {
   createVideoState,
   type VideoAction,
@@ -35,6 +36,11 @@ import {
 
 type ImagesMedia = {
   type: 'images'
+  images: ComposerImage[]
+}
+
+type GalleryMedia = {
+  type: 'gallery'
   images: ComposerImage[]
 }
 
@@ -59,7 +65,7 @@ type Link = {
 export type EmbedDraft = {
   // We'll always submit quote and actual media (images, video, gifs) chosen by the user.
   quote: Link | undefined
-  media: ImagesMedia | VideoMedia | GifMedia | undefined
+  media: ImagesMedia | GalleryMedia | VideoMedia | GifMedia | undefined
   // This field may end up ignored if we have more important things to display than a link card:
   link: Link | undefined
 }
@@ -154,7 +160,31 @@ export type ComposerAction =
       draftId: string
     }
 
-export const MAX_IMAGES = 4
+/**
+ * Threshold for picking between embed variants. <= this count uses the
+ * legacy `app.bsky.embed.images` shape; > this count promotes to
+ * `app.bsky.embed.gallery`. Named to flag that if/when we deprecate the
+ * legacy images embed entirely, this constant (and the variant split it
+ * gates) should go away.
+ */
+export const LEGACY_IMAGES_EMBED_MAX = 4
+export const MAX_GALLERY_IMAGES = 10
+
+/**
+ * Picks the embed variant for a set of images. <=4 lands in the legacy
+ * `app.bsky.embed.images` shape; >4 promotes to `app.bsky.embed.gallery`.
+ * Anything beyond the gallery cap is dropped by the hard slice; callers
+ * should already have enforced the cap upstream (picker, paste, etc),
+ * and the reducer logs a warning when the cap is exceeded so the UI
+ * layer can surface a toast.
+ */
+function imagesToMediaVariant(
+  images: ComposerImage[],
+): ImagesMedia | GalleryMedia {
+  return images.length <= LEGACY_IMAGES_EMBED_MAX
+    ? {type: 'images', images: images.slice(0, LEGACY_IMAGES_EMBED_MAX)}
+    : {type: 'gallery', images: images.slice(0, MAX_GALLERY_IMAGES)}
+}
 
 export function composerReducer(
   state: ComposerState,
@@ -337,16 +367,28 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
       }
       const prevMedia = state.embed.media
       let nextMedia = prevMedia
+      const prevCount =
+        prevMedia?.type === 'images' || prevMedia?.type === 'gallery'
+          ? prevMedia.images.length
+          : 0
+      const incomingCount = prevCount + action.images.length
+      if (incomingCount > MAX_GALLERY_IMAGES) {
+        // Defense in depth: callers (applyGalleryCap in Composer) should have
+        // already trimmed and surfaced a toast. The hard slice in
+        // imagesToMediaVariant still drops the excess so the cap holds.
+        logger.warn('composer: image add exceeds MAX_GALLERY_IMAGES', {
+          prevCount,
+          incomingCount,
+          dropped: incomingCount - MAX_GALLERY_IMAGES,
+        })
+      }
       if (!prevMedia) {
-        nextMedia = {
-          type: 'images',
-          images: action.images.slice(0, MAX_IMAGES),
-        }
-      } else if (prevMedia.type === 'images') {
-        nextMedia = {
-          ...prevMedia,
-          images: [...prevMedia.images, ...action.images].slice(0, MAX_IMAGES),
-        }
+        nextMedia = imagesToMediaVariant(action.images)
+      } else if (prevMedia.type === 'images' || prevMedia.type === 'gallery') {
+        nextMedia = imagesToMediaVariant([
+          ...prevMedia.images,
+          ...action.images,
+        ])
       }
       return {
         ...state,
@@ -358,7 +400,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
     }
     case 'embed_update_image': {
       const prevMedia = state.embed.media
-      if (prevMedia?.type === 'images') {
+      if (prevMedia?.type === 'images' || prevMedia?.type === 'gallery') {
         const updatedImage = action.image
         const nextMedia = {
           ...prevMedia,
@@ -382,19 +424,22 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
     case 'embed_remove_image': {
       const prevMedia = state.embed.media
       let nextLabels = state.labels
-      if (prevMedia?.type === 'images') {
+      if (prevMedia?.type === 'images' || prevMedia?.type === 'gallery') {
         const removedImage = action.image
-        let nextMedia: ImagesMedia | undefined = {
-          ...prevMedia,
-          images: prevMedia.images.filter(img => {
-            return img.source.id !== removedImage.source.id
-          }),
-        }
-        if (nextMedia.images.length === 0) {
+        const remainingImages = prevMedia.images.filter(img => {
+          return img.source.id !== removedImage.source.id
+        })
+        let nextMedia: ImagesMedia | GalleryMedia | undefined
+        if (remainingImages.length === 0) {
           nextMedia = undefined
           if (!state.embed.link) {
             nextLabels = []
           }
+        } else {
+          // Re-pick the variant so a gallery that shrinks to <=4 demotes
+          // back to the legacy `app.bsky.embed.images` shape - keeps old
+          // clients rendering it when possible.
+          nextMedia = imagesToMediaVariant(remainingImages)
         }
         return {
           ...state,
@@ -581,12 +626,9 @@ export function createComposerState({
     | AppBskyActorDefs.PostInteractionSettingsPref
     | undefined
 }): ComposerState {
-  let media: ImagesMedia | undefined
+  let media: ImagesMedia | GalleryMedia | undefined
   if (initImageUris?.length) {
-    media = {
-      type: 'images',
-      images: createInitialImages(initImageUris),
-    }
+    media = imagesToMediaVariant(createInitialImages(initImageUris))
   }
   let quote: Link | undefined
   if (initQuoteUri) {
