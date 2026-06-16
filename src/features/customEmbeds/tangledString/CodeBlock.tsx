@@ -11,9 +11,16 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
-// Vertical padding of the code area (a.py_sm, top + bottom), used to size the
-// capped viewport. Approximate once lines wrap (see maxHeightLines).
-const V_PADDING = 16
+// a.py_sm padding above and below the rendered code (8px each). Used to size the
+// capped/clipped viewports so they land on a whole row boundary.
+const PADDING_Y = 8
+
+// Web: lets long unbreakable tokens (e.g. a run of dashes) break instead of
+// forcing the line wider than the card - which otherwise compresses the gutter
+// and shoves the line number left. Maps to `word-break: break-word` via the
+// global `*[data-word-wrap]` rule in src/style.css. No-op on native (RN breaks
+// long words by default).
+const WORD_WRAP = {wordWrap: 1}
 
 export function CodeBlock({
   code,
@@ -23,12 +30,17 @@ export function CodeBlock({
 }: {
   code: string
   filename?: string
-  /** Truncate the rendered code to this many lines (the card shows the rest). */
+  /**
+   * Collapsed preview: render at most this many logical lines AND clip the area
+   * to this many rows tall. The pixel clip matters because lines wrap - a single
+   * long line can wrap to many rows, so a logical-line slice alone can't bound
+   * the height. The parent's "Show more" reveals the rest.
+   */
   maxLines?: number
   /**
-   * Cap the rendered area to this many lines tall and scroll vertically within
-   * it. When unset, the block grows to fit all rendered lines. Approximate once
-   * lines wrap - a wrapped line is taller than one `LINE_HEIGHT`.
+   * Expanded: cap the area to this many rows tall and scroll vertically within
+   * it. When unset, the block grows to fit all rendered lines. Capped by pixels,
+   * so wrapped (taller) lines are bounded too.
    */
   maxHeightLines?: number
 }) {
@@ -56,6 +68,9 @@ export function CodeBlock({
               a.text_sm,
               t.atoms.text_contrast_low,
               {
+                // Fixed gutter: never let a long code line compress it (which
+                // would slide the right-aligned number left).
+                flexShrink: 0,
                 fontFamily: MONO_FONT,
                 lineHeight: LINE_HEIGHT,
                 width: gutterWidth * 9 + 12,
@@ -66,11 +81,15 @@ export function CodeBlock({
             {idx + 1}
           </Text>
           <Text
+            // @ts-ignore web only -prf
+            dataSet={WORD_WRAP}
             style={[
               a.text_sm,
               a.flex_1,
               t.atoms.text,
-              {fontFamily: MONO_FONT, lineHeight: LINE_HEIGHT},
+              // minWidth: 0 lets the flex child shrink below its content's
+              // intrinsic width so long tokens wrap instead of overflowing.
+              {fontFamily: MONO_FONT, lineHeight: LINE_HEIGHT, minWidth: 0},
             ]}>
             {line.length === 0
               ? ' '
@@ -93,14 +112,36 @@ export function CodeBlock({
     </View>
   )
 
-  if (maxHeightLines != null && lines.length > maxHeightLines) {
+  // Expanded: cap height by pixels and scroll within it. (Capping by logical
+  // line count is wrong once lines wrap.)
+  if (maxHeightLines != null) {
     return (
       <ScrollView
-        style={[codeBg, {maxHeight: maxHeightLines * LINE_HEIGHT + V_PADDING}]}
+        style={[
+          codeBg,
+          {maxHeight: maxHeightLines * LINE_HEIGHT + PADDING_Y * 2},
+        ]}
         nestedScrollEnabled
         showsVerticalScrollIndicator>
         {content}
       </ScrollView>
+    )
+  }
+
+  // Collapsed preview: clip to exactly maxLines rows. A logical-line slice can't
+  // bound the height once a line wraps, so clip by pixels - and include only the
+  // top padding (not bottom) so the clip lands on a row boundary instead of
+  // slicing the next row in half. The parent's "Show more" reveals the rest.
+  if (maxLines != null) {
+    return (
+      <View
+        style={[
+          codeBg,
+          a.overflow_hidden,
+          {maxHeight: maxLines * LINE_HEIGHT + PADDING_Y},
+        ]}>
+        {content}
+      </View>
     )
   }
 
