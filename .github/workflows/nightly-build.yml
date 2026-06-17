@@ -59,8 +59,9 @@ jobs:
           if [ -z "$notes" ]; then
             notes="Nightly build — no new commits since the last nightly."
           fi
-          # TestFlight "What to Test" is capped at 4000 characters
-          notes=$(printf '%s' "$notes" | cut -c1-3900)
+          # Cap the whole changelog (TestFlight "What to Test" is limited to 4000 characters).
+          # head -c caps the combined stream; cut -c would only cap each line independently.
+          notes=$(printf '%s' "$notes" | head -c 3900)
           {
             echo "notes<<NOTES_EOF"
             echo "$notes"
