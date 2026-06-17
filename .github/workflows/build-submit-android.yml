@@ -23,6 +23,9 @@ jobs:
     concurrency:
       group: android-build
       cancel-in-progress: false
+    outputs:
+      package-version: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
+      apk-artifact-name: build-${{ steps.timestamp.outputs.time }}.apk
     steps:
       - name: Check for EXPO_TOKEN
         run: >
@@ -66,7 +69,8 @@ jobs:
         run: pnpm intl:build 2>&1 | tee i18n.log
 
       - name: Check for i18n compilation errors
-        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
+        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation
+          errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
 
       # EXPO_PUBLIC_ENV is handled in eas.json
       - name: Env
@@ -96,27 +100,57 @@ jobs:
           --profile $PROFILE
           --local --output build.aab --non-interactive
 
-      - name: ✍️ Rename Testflight bundle
-        if: ${{ inputs.profile != 'production' }}
-        run: mv build.aab build.apk
+      - name: 📚 Get version from package.json
+        id: get-build-info
+        run: bash scripts/setGitHubOutput.sh
+
+      - name: 🚀 Submit to Google Play
+        env:
+          PROFILE: ${{ inputs.profile || 'testflight-android' }}
+        run: pnpm eas submit -p android --profile $PROFILE --non-interactive --path build.aab
+
+      - name: 🔔 Notify Slack of Play Store Submission
+        if: ${{ inputs.profile == 'production' }}
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
+        with:
+          webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          webhook-type: incoming-webhook
+          payload-templated: true
+          payload: |
+            {"text": "Android ${{ inputs.profile || 'testflight-android' }} build submitted to Google Play!\n```Version Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"}
+
+      - name: 🔧 Setup bundletool
+        uses: amyu/setup-bundletool@cc2e1857284660bd625e43f2c8a45626f034302f # v1.1
+        with:
+          bundletool-version: "1.17.2"
+
+      - name: 🔑 Decode keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode >
+          keystore.jks
+
+      - name: 📦 Build signed universal APK
+        run: |
+          bundletool build-apks \
+            --bundle=build.aab \
+            --output=universal.apks \
+            --mode=universal \
+            --ks=keystore.jks \
+            --ks-pass=pass:${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
+            --ks-key-alias=${{ secrets.ANDROID_KEY_ALIAS }} \
+            --key-pass=pass:${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: 📋 Rename to .zip for extraction
+        run: mv universal.apks universal.zip
+
+      - name: 📦 Extract universal APK
+        run: unzip -p universal.zip universal.apk > build.apk
 
       - name: ⏰ Get a timestamp
         id: timestamp
         run: echo "time=$(date -u +'%m-%d-%H-%M-%S')" >> "$GITHUB_OUTPUT"
 
-      - name: 🚀 Upload Production Artifact
-        id: upload-artifact-production
-        if: ${{ inputs.profile == 'production' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          retention-days: 30
-          compression-level: 6
-          name: build-${{ steps.timestamp.outputs.time }}.aab
-          path: build.aab
-
-      - name: 🚀 Upload Testflight Artifact
-        id: upload-artifact-testflight
-        if: ${{ inputs.profile != 'production' }}
+      - name: 🚀 Upload APK Artifact
+        id: upload-artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           retention-days: 30
@@ -124,65 +158,14 @@ jobs:
           name: build-${{ steps.timestamp.outputs.time }}.apk
           path: build.apk
 
-      - name: 📚 Get version from package.json
-        id: get-build-info
-        run: bash scripts/setGitHubOutput.sh
-
-      - name: 🔔 Notify Slack of Production Build
-        if: ${{ inputs.profile == 'production' }}
+      - name: 🔔 Notify Slack of APK Artifact
         uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         with:
           webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
           webhook-type: incoming-webhook
           payload-templated: true
           payload: |
-            {"text": "Android production build for Google Play Store submission is ready!\n```Artifact: ${{ steps.upload-artifact-production.outputs.artifact-url }}\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"}
-
-      - name: 🔔 Notify Slack of Testflight Build
-        if: ${{ inputs.profile != 'production' }}
-        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
-        with:
-          webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
-          webhook-type: incoming-webhook
-          payload-templated: true
-          payload: |
-            {"text": "Android build is ready for testing. Download the artifact here: ${{ steps.upload-artifact-testflight.outputs.artifact-url }}"}
-
-      - name: 🧹 Clear Metro cache
-        if: ${{ inputs.profile == 'production' }}
-        # https://github.com/expo/eas-cli/issues/2959#issuecomment-2749791326
-        run: rm -rf ${TMPDIR:-/tmp}/metro-cache
-
-      - name: 🏗️ Build Production APK
-        if: ${{ inputs.profile == 'production' }}
-        run: >
-          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
-          SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
-          pnpm use-build-number-with-bump
-          pnpm eas build -p android
-          --profile production-apk
-          --local --output build.apk --non-interactive
-
-      - name: 🚀 Upload Production APK Artifact
-        id: upload-artifact-production-apk
-        if: ${{ inputs.profile == 'production' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          retention-days: 30
-          compression-level: 6
-          name: build-${{ steps.timestamp.outputs.time }}.apk
-          path: build.apk
-
-      - name: 🔔 Notify Slack of Production APK Build
-        if: ${{ inputs.profile == 'production' }}
-        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
-        with:
-          webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
-          webhook-type: incoming-webhook
-          payload-templated: true
-          payload: |
-            {"text": "Android production build for GitHub/Obtanium is ready!\n```Artifact: ${{ steps.upload-artifact-production-apk.outputs.artifact-url }}\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"}
+            {"text": "Android ${{ inputs.profile || 'testflight-android' }} APK is ready for testing!\n```Artifact: ${{ steps.upload-artifact.outputs.artifact-url }}\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"}
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
@@ -197,3 +180,62 @@ jobs:
         env:
           GITHUB_SHA: ${{ github.sha }}
         run: echo $GITHUB_SHA > most-recent-testflight-commit.txt
+
+  # Releases are cut from tags named after the version (e.g. "1.124.0"), so when a production
+  # build is dispatched against such a tag we attach the APK to the matching release. This runs
+  # as a separate job so that `contents: write` is isolated here and the build job stays read-only.
+  attachToRelease:
+    name: Attach APK to GitHub Release
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: ${{ inputs.profile == 'production' && github.ref_type == 'tag' && github.repository == 'bluesky-social/social-app' }}
+    permissions:
+      contents: write
+    steps:
+      # We only attach to a release that already exists — never create one.
+      - name: 🔎 Check for matching GitHub Release
+        id: release-check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          status=$(curl -sS -o /dev/null -w '%{http_code}' \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/releases/tags/${TAG}")
+          if [ "$status" = "200" ]; then
+            echo "Found GitHub Release for tag $TAG"
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No GitHub Release found for tag $TAG (HTTP $status); skipping APK attachment."
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: ⬇️ Download APK artifact
+        if: ${{ steps.release-check.outputs.exists == 'true' }}
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          name: ${{ needs.build.outputs.apk-artifact-name }}
+
+      - name: 🏷️ Rename APK for release
+        if: ${{ steps.release-check.outputs.exists == 'true' }}
+        run: cp build.apk "Bluesky-${{ needs.build.outputs.package-version }}.apk"
+
+      - name: 📎 Attach APK to GitHub Release
+        id: attach
+        if: ${{ steps.release-check.outputs.exists == 'true' }}
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: Bluesky-${{ needs.build.outputs.package-version }}.apk
+          fail_on_unmatched_files: true
+
+      - name: 🔔 Notify Slack of Release Attachment
+        if: ${{ steps.release-check.outputs.exists == 'true' }}
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
+        with:
+          webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          webhook-type: incoming-webhook
+          payload-templated: true
+          payload: |
+            {"text": "Android APK attached to GitHub Release ${{ github.ref_name }}!\n```Asset: Bluesky-${{ needs.build.outputs.package-version }}.apk\nRelease: ${{ steps.attach.outputs.url }}```"}
