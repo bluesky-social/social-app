@@ -11,13 +11,17 @@ import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/profile-shadow'
 import {type ConvoState, ConvoStatus} from '#/state/messages/convo/types'
+import {platform} from '#/alf'
 import {type ReportSubject} from '#/components/moderation/ReportDialog/types'
 import * as bsky from '#/types/bsky'
 
 export const MESSAGE_GAP_THRESHOLD_MS = 60 * 60 * 1000
 export const CLUSTERED_MESSAGE_THRESHOLD_MS = 5 * 60 * 1000
 
-export const MESSAGE_BUBBLE_MAX_WIDTH = '85%'
+export const MESSAGE_BUBBLE_MAX_WIDTH = platform({
+  web: '80%',
+  default: '85%',
+})
 
 export function canBeMessaged(profile: bsky.profile.AnyProfileView) {
   switch (profile.associated?.chat?.allowIncoming) {
