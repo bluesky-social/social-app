@@ -187,7 +187,13 @@ function regenRegion(content, id, kind, build, optional = false) {
   }
   const indent = sm[1]
   const startEnd = sm.index + sm[0].length
-  return content.slice(0, startEnd) + '\n' + build(indent) + '\n' + content.slice(em.index)
+  return (
+    content.slice(0, startEnd) +
+    '\n' +
+    build(indent) +
+    '\n' +
+    content.slice(em.index)
+  )
 }
 
 /** @param {string} content */
