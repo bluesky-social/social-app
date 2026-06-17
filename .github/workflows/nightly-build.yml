@@ -35,10 +35,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           # Find the most recent non-expired nightly-build-commit artifact and read its SHA
+          # The artifacts API returns results newest-first, so the most recent marker is on
+          # page 1 — no --paginate needed (which would run the jq aggregation per page and
+          # could emit multiple URLs). Take the first non-expired match.
           prev=""
-          url=$(gh api --paginate \
+          url=$(gh api \
             "repos/${GITHUB_REPOSITORY}/actions/artifacts?name=nightly-build-commit&per_page=100" \
-            --jq '[.artifacts[] | select(.expired == false)] | sort_by(.created_at) | last | .archive_download_url' \
+            --jq 'first(.artifacts[] | select(.expired == false)) | .archive_download_url' \
             2>/dev/null || true)
           if [ -n "$url" ] && [ "$url" != "null" ]; then
             if curl -sSL -H "Authorization: Bearer $GH_TOKEN" -o marker.zip "$url" \
