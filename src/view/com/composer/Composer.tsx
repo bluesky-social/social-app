@@ -87,7 +87,10 @@ import {
   pasteImage,
 } from '#/state/gallery'
 import {useModalControls} from '#/state/modals'
-import {useRequireAltTextEnabled} from '#/state/preferences'
+import {
+  useLabelReminderEnabled,
+  useRequireAltTextEnabled,
+} from '#/state/preferences'
 import {
   fromPostLanguages,
   toPostLanguages,
@@ -273,12 +276,15 @@ export const ComposePost = ({
   const {closeComposer} = useComposerControls()
   const {t: l, i18n} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
+  const labelReminderEnabled = useLabelReminderEnabled()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
   const textInputRef = useRef<TextInputRef>(null)
   const discardPromptControl = Prompt.usePromptControl()
   const emptyPostsPromptControl = Prompt.usePromptControl()
+  const missingLabelsPromptControl = Prompt.usePromptControl()
   const skipEmptyConfirmedRef = useRef(false)
+  const skipMissingLabelsRef = useRef(false)
   const {mutateAsync: saveDraft, isPending: _isSavingDraft} =
     useSaveDraftMutation()
   const {mutate: cleanupPublishedDraft} = useCleanupPublishedDraftMutation()
@@ -874,6 +880,12 @@ export const ComposePost = ({
     }
   }, [thread, requireAltTextEnabled, l])
 
+  const missingLabels =
+    labelReminderEnabled &&
+    thread.posts.some(post => {
+      return post.embed.media !== undefined && post.labels.length === 0
+    })
+
   // Subscribe to the resolve-link cache for any link URIs in the thread so we
   // can detect chat invites that resolved to no preview (revoked/expired) and
   // block publishing - otherwise the post would go out without the embed.
@@ -949,6 +961,11 @@ export const ComposePost = ({
 
     if (emptyType === 'non-trailing' && !skipEmptyConfirmedRef.current) {
       emptyPostsPromptControl.open()
+      return
+    }
+
+    if (missingLabels && !skipMissingLabelsRef.current) {
+      missingLabelsPromptControl.open()
       return
     }
 
@@ -1177,12 +1194,19 @@ export const ComposePost = ({
     cleanupPublishedDraft,
     loadedDraftCreatedAt,
     emptyPostsPromptControl,
+    missingLabels,
+    missingLabelsPromptControl,
     getFilteredThread,
     linkQueries,
   ])
 
   const handleConfirmSkipEmpty = () => {
     skipEmptyConfirmedRef.current = true
+    void onPressPublish()
+  }
+
+  const handleConfirmSkipLabels = () => {
+    skipMissingLabelsRef.current = true
     void onPressPublish()
   }
 
@@ -1470,6 +1494,14 @@ export const ComposePost = ({
           confirmButtonCta={l`Post anyway`}
           cancelButtonCta={l`Keep editing`}
           onConfirm={handleConfirmSkipEmpty}
+        />
+        <Prompt.Basic
+          control={missingLabelsPromptControl}
+          title={l`Post media without labels?`}
+          description={l`Your thread has media posts without content labels. You can keep editing to add labels, or post without them.`}
+          confirmButtonCta={l`Post anyway`}
+          cancelButtonCta={l`Keep editing`}
+          onConfirm={handleConfirmSkipLabels}
         />
       </KeyboardAvoidingView>
     </BottomSheetPortalProvider>

@@ -5,6 +5,7 @@ import {Provider as ExternalEmbedsProvider} from './external-embeds-prefs'
 import {Provider as HiddenPostsProvider} from './hidden-posts'
 import {Provider as InAppBrowserProvider} from './in-app-browser'
 import {Provider as KawaiiProvider} from './kawaii'
+import {Provider as LabelReminderProvider} from './label-reminder'
 import {Provider as LanguagesProvider} from './languages'
 import {Provider as LargeAltBadgeProvider} from './large-alt-badge'
 import {Provider as SubtitlesProvider} from './subtitles'
@@ -23,6 +24,10 @@ export {
 } from './external-embeds-prefs'
 export {useHiddenPosts, useHiddenPostsApi} from './hidden-posts'
 export {useLabelDefinitions} from './label-defs'
+export {
+  useLabelReminderEnabled,
+  useSetLabelReminderEnabled,
+} from './label-reminder'
 export {useLanguagePrefs, useLanguagePrefsApi} from './languages'
 export {useSetSubtitlesEnabled, useSubtitlesEnabled} from './subtitles'
 
@@ -39,7 +44,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
                     <UsedStarterPacksProvider>
                       <SubtitlesProvider>
                         <TrendingSettingsProvider>
-                          <KawaiiProvider>{children}</KawaiiProvider>
+                          <KawaiiProvider>
+                            <LabelReminderProvider>
+                              {children}
+                            </LabelReminderProvider>
+                          </KawaiiProvider>
                         </TrendingSettingsProvider>
                       </SubtitlesProvider>
                     </UsedStarterPacksProvider>

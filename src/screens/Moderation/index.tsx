@@ -12,6 +12,10 @@ import {
 } from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
+import {
+  useLabelReminderEnabled,
+  useSetLabelReminderEnabled,
+} from '#/state/preferences'
 import {useRemoveLabelersMutation} from '#/state/queries/labeler'
 import {
   useMyLabelersQuery,
@@ -171,6 +175,8 @@ export function ModerationScreenInner({
   const aa = useAgeAssurance()
   const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
   const aaCopy = useAgeAssuranceCopy()
+  const labelReminderEnabled = useLabelReminderEnabled()
+  const setLabelReminderEnabled = useSetLabelReminderEnabled()
 
   const subscribedDids = preferences.moderationPrefs.labelers.map(l => l.did)
   const returnedDids = new Set(labelers?.map(l => l.creator.did))
@@ -349,6 +355,58 @@ export function ModerationScreenInner({
             />
           )}
         </Link>
+      </View>
+
+      <Text
+        style={[
+          a.pt_2xl,
+          a.pb_md,
+          a.text_md,
+          a.font_semi_bold,
+          t.atoms.text_contrast_high,
+        ]}>
+        <Trans>Content labeling</Trans>
+      </Text>
+
+      <View style={[a.gap_md]}>
+        <View
+          style={[
+            a.w_full,
+            a.rounded_md,
+            a.overflow_hidden,
+            t.atoms.bg_contrast_25,
+          ]}>
+          <View
+            style={[
+              a.py_lg,
+              a.px_lg,
+              a.flex_row,
+              a.align_center,
+              a.justify_between,
+            ]}>
+            <Text style={[a.font_semi_bold, t.atoms.text_contrast_high]}>
+              <Trans>Remind me to label media</Trans>
+            </Text>
+            <Toggle.Item
+              label={_(
+                msg`Toggle to enable or disable reminders for adding content labels`,
+              )}
+              name="labelReminder"
+              value={labelReminderEnabled}
+              onChange={setLabelReminderEnabled}>
+              <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                <Text style={[t.atoms.text_contrast_medium]}>
+                  {labelReminderEnabled ? (
+                    <Trans>Enabled</Trans>
+                  ) : (
+                    <Trans>Disabled</Trans>
+                  )}
+                </Text>
+                <Toggle.Switch />
+              </View>
+            </Toggle.Item>
+          </View>
+        </View>
       </View>
 
       <Text
