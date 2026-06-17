@@ -1,4 +1,4 @@
-import {useImperativeHandle, useMemo, useRef, useState} from 'react'
+import {useEffect, useMemo, useRef, useState} from 'react'
 import {
   TextInput,
   type TextInputContentSizeChangeEvent,
@@ -10,31 +10,32 @@ import {atoms as a, extractPadding, useAlf, web} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
 import {IS_ANDROID, IS_IOS, IS_WEB} from '#/env'
 
-export type AutosizedTextareaHeightApi = {
-  /**
-   * Reset the input back to its minimum height. Needed on Android, where the
-   * height is driven by state that only updates via `onContentSizeChange` -
-   * that event doesn't fire when the value is cleared programmatically.
-   */
-  resetHeight: () => void
-}
-
 export type AutosizedTextareaProps = Omit<TextInputProps, 'multiline'> & {
   ref?: React.Ref<TextInput>
-  heightApiRef?: React.Ref<AutosizedTextareaHeightApi>
   label: string
   minRows?: number
   maxRows?: number
   onUpdateHeight?: (height: number) => void
+  /**
+   * In some cases, like on native, we may not pass in an actual `value` prop.
+   * This prop allows Android to know if the field was cleared and thereby
+   * reset its height. This is a small hack required because we need to
+   * explicitly set the `{height: nativeHeight}` on Android.
+   *
+   * If you notice height calcuation issues after clearing the field on
+   * Android, check if this value is being populated and cleared properly in
+   * the parent component.
+   */
+  rawValue?: string
 }
 
 export function AutosizedTextarea({
   ref,
-  heightApiRef,
   label,
   minRows = 1,
   maxRows,
   onUpdateHeight,
+  rawValue,
 
   onChangeText: onChangeTextOuter,
   onContentSizeChange: onContentSizeChangeOuter,
@@ -118,16 +119,6 @@ export function AutosizedTextarea({
    * directly drive the `height`.
    */
   const [nativeHeight, setNativeHeight] = useState(minInputHeight)
-  useImperativeHandle(
-    heightApiRef,
-    () => ({
-      resetHeight: () => {
-        setNativeHeight(minInputHeight)
-        onUpdateHeight?.(minInputHeight)
-      },
-    }),
-    [minInputHeight, onUpdateHeight],
-  )
   const onContentSizeChange = (e: TextInputContentSizeChangeEvent) => {
     const contentSize = Math.ceil(e.nativeEvent.contentSize.height)
     // ios reports the content size without padding
@@ -144,6 +135,22 @@ export function AutosizedTextarea({
 
     onContentSizeChangeOuter?.(e)
   }
+
+  /*
+   * Manual height clearing required for Android because we're forced to set
+   * `{height: nativeHeight}` on Android, and even though `onContentSizeChange`
+   * fires, the height matches the existing height and we aren't able to reset.
+   */
+  const prevRawValue = useRef(rawValue || '')
+  useEffect(() => {
+    if (!IS_ANDROID) return // everything else is fine
+    if (rawValue === undefined) return // uncontrolled
+    if (prevRawValue.current?.length && rawValue === '') {
+      setNativeHeight(minInputHeight)
+      onUpdateHeight?.(minInputHeight)
+    }
+    prevRawValue.current = rawValue
+  }, [rawValue, minInputHeight])
 
   return (
     <TextInput
