@@ -85,6 +85,15 @@ export const BRAND = {
     gif: 'https://gifs.bsky.app',
     video: 'https://video.bsky.app',
     videoDid: 'did:web:video.bsky.app',
+    /**
+     * Image blob CDN. Used when an image URL is constructed by hand (e.g. for a
+     * third-party embed) rather than taken from an appview response. A brand
+     * that self-hosts an image CDN can point this at it; the default serves
+     * any DID's blobs via Bluesky's CDN.
+     */
+    cdn: 'https://cdn.bsky.app',
+    /** Open Graph share-card renderer for starter packs. */
+    ogCard: 'https://ogcard.cdn.bsky.app',
   },
   /**
    * mu age-assurance backend (the `mu-age-service` XRPC service). Stores

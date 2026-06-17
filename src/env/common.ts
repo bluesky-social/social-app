@@ -1,6 +1,7 @@
 import {type Did} from '@atproto/api'
 
 import packageJson from '#/../package.json'
+import {BRAND} from '#/config/brand'
 
 /**
  * The semver version of the app, as defined in `package.json.`
@@ -73,10 +74,13 @@ export const LOG_LEVEL = (process.env.EXPO_PUBLIC_LOG_LEVEL || 'info') as
 export const LOG_DEBUG: string = process.env.EXPO_PUBLIC_LOG_DEBUG || ''
 
 /**
- * The DID of the Bluesky appview to proxy to
+ * The DID of the appview to proxy authed requests to. Defaults to the brand's
+ * configured appview DID (see src/config/brand.ts -> services.appViewDid) so
+ * switching the appview is a single edit there; override per-deploy with
+ * EXPO_PUBLIC_BLUESKY_PROXY_DID if it must differ from the brand default.
  */
 export const BLUESKY_PROXY_DID: Did =
-  process.env.EXPO_PUBLIC_BLUESKY_PROXY_DID || 'did:web:api.bsky.app'
+  process.env.EXPO_PUBLIC_BLUESKY_PROXY_DID || BRAND.services.appViewDid
 
 /**
  * The DID of the chat service to proxy to
