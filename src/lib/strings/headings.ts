@@ -1,6 +1,6 @@
-import {EUROSKY} from '#/config/eurosky'
+import {BRAND} from '#/config/brand'
 
 export function bskyTitle(page: string, unreadCountLabel?: string) {
   const unreadPrefix = unreadCountLabel ? `(${unreadCountLabel}) ` : ''
-  return `${unreadPrefix}${page} — ${EUROSKY.brand.name}`
+  return `${unreadPrefix}${page} — ${BRAND.name}`
 }

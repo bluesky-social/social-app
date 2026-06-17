@@ -1,7 +1,7 @@
 import {tokens} from '@bsky.app/alf'
 
 // Eurosky fork: gradients are overridden in src/config/eurosky-theme.ts.
-import {EUROSKY_GRADIENTS} from '#/config/eurosky-theme'
+import {BRAND_GRADIENTS} from '#/config/brand-theme'
 
 export * from '@bsky.app/alf/dist/tokens'
 
@@ -88,5 +88,5 @@ const UPSTREAM_GRADIENTS = {
 // merge (not a same-literal spread) so there's no duplicate-key (TS2783).
 export const gradients = {
   ...UPSTREAM_GRADIENTS,
-  ...EUROSKY_GRADIENTS,
+  ...BRAND_GRADIENTS,
 } as const

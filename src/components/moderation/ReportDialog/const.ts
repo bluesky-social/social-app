@@ -4,9 +4,10 @@ import {
 } from '@atproto/api'
 
 import {type ParsedReportSubject} from '#/components/moderation/ReportDialog/types'
+import {BRAND} from '#/config/brand'
 
-export const DMCA_LINK = 'https://bsky.social/about/support/copyright'
-export const SUPPORT_PAGE = 'https://bsky.social/about/support'
+export const DMCA_LINK = BRAND.links.copyright
+export const SUPPORT_PAGE = BRAND.links.support
 
 export const NEW_TO_OLD_REASON_MAPPING: Record<string, string> = {}
 

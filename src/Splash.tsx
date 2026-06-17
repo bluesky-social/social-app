@@ -20,7 +20,7 @@ import {Image} from 'expo-image'
 import * as SplashScreen from 'expo-splash-screen'
 
 import {Logotype} from '#/view/icons/Logotype'
-import {EUROSKY_ICON} from '#/config/eurosky-logo'
+import {BRAND_ICON} from '#/config/brand-logo'
 // @ts-ignore
 import splashImagePointer from '../assets/splash/splash.png'
 // @ts-ignore
@@ -32,15 +32,15 @@ const darkSplashImageUri = RNImage.resolveAssetSource(
 
 export const Logo = forwardRef(function LogoImpl(props: SvgProps, ref) {
   const width = 1000
-  const height = width * EUROSKY_ICON.ratio
+  const height = width * BRAND_ICON.ratio
   return (
     <Svg
       fill="none"
       // @ts-ignore it's fiiiiine
       ref={ref}
-      viewBox={EUROSKY_ICON.viewBox}
+      viewBox={BRAND_ICON.viewBox}
       style={[{width, height}, props.style]}>
-      <Path fill={props.fill || '#fff'} d={EUROSKY_ICON.path} />
+      <Path fill={props.fill || '#fff'} d={BRAND_ICON.path} />
     </Svg>
   )
 })

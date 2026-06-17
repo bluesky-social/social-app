@@ -54,7 +54,7 @@ export const OAUTH_PUBLIC_JWKS: {keys: Record<string, unknown>[]} = publicJwks
 /**
  * Stateless edge script that signs the `private_key_jwt` client assertion
  * (confidential client; the private key never reaches the browser). Deployed
- * as a Bunny Edge Script - see ../../oauth-worker. Prod-only; loopback/dev
+ * as a Bunny Edge Script - see ../../services/oauth. Prod-only; loopback/dev
  * stays a public client and never calls this. Override per deployment with
  * EXPO_PUBLIC_OAUTH_ASSERTION_URL (Expo inlines EXPO_PUBLIC_* at build).
  * Default points at a conventional subdomain route - set it to wherever the

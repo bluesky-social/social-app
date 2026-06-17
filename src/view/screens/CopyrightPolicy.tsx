@@ -13,6 +13,7 @@ import {TextLink} from '#/view/com/util/Link'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
 import * as Layout from '#/components/Layout'
+import {BRAND} from '#/config/brand'
 import {ViewHeader} from '../com/util/ViewHeader'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CopyrightPolicy'>
@@ -30,8 +31,8 @@ export const CopyrightPolicyScreen = (_props: Props) => {
               The Copyright Policy has been moved to{' '}
               <TextLink
                 style={pal.link}
-                href="https://bsky.social/about/support/copyright"
-                text="bsky.social/about/support/copyright"
+                href={BRAND.links.copyright}
+                text={BRAND.links.copyright.replace(/^https?:\/\//, '')}
               />
             </Trans>
           </Text>

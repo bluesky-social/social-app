@@ -134,6 +134,7 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {useAnalytics} from '#/analytics'
 import {setNavigationMetadata} from '#/analytics/metadata'
+import {BRAND} from '#/config/brand'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {InviteScannerScreen} from '#/features/inviteFriends'
 import {NewsFeedScreen} from '#/features/newsFeed/NewsFeedScreen'
@@ -1013,7 +1014,11 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
     if (IS_WEB) {
       const referrerInfo = Referrer.getReferrerInfo()
-      if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
+      if (
+        referrerInfo &&
+        referrerInfo.hostname !== 'bsky.app' &&
+        !BRAND.web.hosts.includes(referrerInfo.hostname)
+      ) {
         ax.metric('deepLink:referrerReceived', {
           to: window.location.href,
           referrer: referrerInfo?.referrer,

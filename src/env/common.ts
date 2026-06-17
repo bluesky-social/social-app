@@ -155,7 +155,7 @@ export const GCP_PROJECT_ID: number =
 export const GEOLOCATION_DEV_URL = process.env.GEOLOCATION_DEV_URL
 /**
  * Eurosky: overridable so web builds can use our first-party Bunny endpoint
- * (see geolocation-worker/). Bluesky's ip.bsky.app is CORS-locked to bsky.app.
+ * (see services/geolocation/). Bluesky's ip.bsky.app is CORS-locked to bsky.app.
  */
 export const GEOLOCATION_PROD_URL =
   process.env.EXPO_PUBLIC_GEOLOCATION_URL || `https://ip.bsky.app`
@@ -192,3 +192,11 @@ export const ENABLE_LIVE_EVENTS =
   process.env.EXPO_PUBLIC_ENABLE_LIVE_EVENTS !== 'false'
 export const ENABLE_APP_CONFIG =
   process.env.EXPO_PUBLIC_ENABLE_APP_CONFIG !== 'false'
+/**
+ * Gates the product-analytics metrics client (the `ax.metric()` pipeline that
+ * POSTs to `${METRICS_API_HOST}/t`). Disabling stops all event reporting,
+ * including GrowthBook `experiment:viewed`/`feature:viewed` exposures. GrowthBook
+ * flag *fetching* is unaffected - the SDK pulls gates directly, separate from
+ * this client - so feature gating keeps working.
+ */
+export const ENABLE_METRICS = process.env.EXPO_PUBLIC_ENABLE_METRICS !== 'false'

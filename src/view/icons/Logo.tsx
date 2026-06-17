@@ -12,10 +12,10 @@ import {Image} from 'expo-image'
 
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {flatten, useTheme} from '#/alf'
-import {EUROSKY} from '#/config/eurosky'
-import {EUROSKY_ICON} from '#/config/eurosky-logo'
+import {BRAND} from '#/config/brand'
+import {BRAND_ICON} from '#/config/brand-logo'
 
-const ratio = EUROSKY_ICON.ratio
+const ratio = BRAND_ICON.ratio
 
 type Props = {
   fill?: PathProps['fill']
@@ -45,7 +45,7 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
             ? require('../../../assets/kawaii.png')
             : require('../../../assets/kawaii_smol.png')
         }
-        accessibilityLabel={EUROSKY.brand.name}
+        accessibilityLabel={BRAND.name}
         accessibilityHint=""
         accessibilityIgnoresInvertColors
         style={[{height: size, aspectRatio: 1.4}]}
@@ -58,7 +58,7 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
       fill="none"
       // @ts-ignore it's fiiiiine
       ref={ref}
-      viewBox={EUROSKY_ICON.viewBox}
+      viewBox={BRAND_ICON.viewBox}
       {...rest}
       style={[{width: size, height: size * ratio}, styles]}>
       {gradient && (
@@ -66,19 +66,19 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
           <LinearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
             <Stop
               offset="0"
-              stopColor={EUROSKY_ICON.gradient.stop0}
+              stopColor={BRAND_ICON.gradient.stop0}
               stopOpacity="1"
             />
             <Stop
               offset="1"
-              stopColor={EUROSKY_ICON.gradient.stop1}
+              stopColor={BRAND_ICON.gradient.stop1}
               stopOpacity="1"
             />
           </LinearGradient>
         </Defs>
       )}
 
-      <Path fill={_fill} d={EUROSKY_ICON.path} />
+      <Path fill={_fill} d={BRAND_ICON.path} />
     </Svg>
   )
 })
