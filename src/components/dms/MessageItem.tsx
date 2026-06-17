@@ -10,6 +10,7 @@ import {
 import Animated, {
   FadeIn,
   FadeOut,
+  interpolateColor,
   LayoutAnimationConfig,
   LinearTransition,
   useAnimatedStyle,
@@ -233,6 +234,15 @@ let MessageItem = ({
 
   const pendingColor = t.palette.primary_300
 
+  const bubbleColor = isFromSelf
+    ? isPending
+      ? pendingColor
+      : t.palette.primary_500
+    : t.palette.contrast_50
+  const highlightColor = isFromSelf
+    ? t.palette.primary_300
+    : t.palette.primary_100
+
   const rt = new RichTextAPI({text: message.text, facets: message.facets})
 
   const hasEmbed =
@@ -278,7 +288,11 @@ let MessageItem = ({
   }, [highlightKey, highlightSV])
 
   const highlightStyle = useAnimatedStyle(() => ({
-    opacity: highlightSV.get(),
+    backgroundColor: interpolateColor(
+      highlightSV.get(),
+      [0, 1],
+      [bubbleColor, highlightColor],
+    ),
   }))
 
   const borderRadiusStyle = useAnimatedStyle(() =>
@@ -427,14 +441,6 @@ let MessageItem = ({
     web: a.mx_lg,
   })
 
-  // Negative of `messageInset` so the flash bleeds past the row's horizontal
-  // margin to the screen edges.
-  const flashBleed = platform<number>({
-    android: -a.mx_sm.marginLeft,
-    ios: -a.mx_md.marginLeft,
-    web: -a.mx_lg.marginLeft,
-  })
-
   return (
     <>
       {hasLargeGapFromPrev && <DateDivider date={message.sentAt} />}
@@ -444,20 +450,6 @@ let MessageItem = ({
           isFirstInCluster ? a.mt_md : {marginTop: CLUSTERED_MESSAGE_GAP},
           hasReactions && {paddingBottom: 26},
         ]}>
-        <Animated.View
-          pointerEvents="none"
-          style={[
-            a.absolute,
-            {
-              top: -CLUSTERED_MESSAGE_GAP,
-              bottom: -CLUSTERED_MESSAGE_GAP,
-              left: flashBleed,
-              right: flashBleed,
-              backgroundColor: t.palette.primary_100,
-            },
-            highlightStyle,
-          ]}
-        />
         <View style={[a.relative]}>
           {showAvatar ? (
             <View style={[a.absolute, a.bottom_0, a.z_50]}>{avatar}</View>
@@ -508,6 +500,7 @@ let MessageItem = ({
                         squaredBottomCorner || hasEmbedAndText
                       }
                       squaredTopCorner={squaredTopCorner}
+                      highlightSV={highlightSV}
                     />
                   )}
                   {ChatBskyEmbedJoinLink.isView(message.embed) && (
@@ -519,6 +512,7 @@ let MessageItem = ({
                         squaredBottomCorner || hasEmbedAndText
                       }
                       squaredTopCorner={squaredTopCorner}
+                      highlightSV={highlightSV}
                     />
                   )}
                   {rt.text.length > 0 && (
@@ -535,14 +529,10 @@ let MessageItem = ({
                             marginTop: hasEmbedAndText
                               ? CLUSTERED_MESSAGE_GAP
                               : 0,
-                            backgroundColor: isFromSelf
-                              ? isPending
-                                ? pendingColor
-                                : t.palette.primary_500
-                              : t.palette.contrast_50,
                           },
                           isFromSelf ? a.self_end : a.self_start,
                           borderRadiusStyle,
+                          highlightStyle,
                         ],
                       ]}>
                       {replyTo && !isOnlyEmoji(message.text) ? (
