@@ -1,0 +1,331 @@
+import {View} from 'react-native'
+import {Trans, useLingui} from '@lingui/react/macro'
+import {useQueryClient} from '@tanstack/react-query'
+
+import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {isNetworkError} from '#/lib/strings/errors'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {logger} from '#/logger'
+import {
+  useListMembershipAddMutation,
+  useListMembershipRemoveMutation,
+} from '#/state/queries/list-memberships'
+import {
+  type ListWithMembership,
+  removeListMembershipOptimistically,
+  updateListMembershipOptimistically,
+  useListsWithMembershipQuery,
+} from '#/state/queries/lists-with-membership'
+import {useSession} from '#/state/session'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {atoms as a, platform, useBreakpoints, useTheme, web} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {BulletList_Stroke2_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
+import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
+import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
+import {Text} from '#/components/Typography'
+import type * as bsky from '#/types/bsky'
+
+export type UserAddRemoveListsDialogProps = {
+  control: Dialog.DialogControlProps
+  profile: bsky.profile.AnyProfileView | undefined
+  onAdd?: (listUri: string) => void
+  onRemove?: (listUri: string) => void
+}
+
+export function UserAddRemoveListsDialog({
+  control,
+  profile,
+  onAdd,
+  onRemove,
+}: UserAddRemoveListsDialogProps) {
+  return (
+    <Dialog.Outer
+      control={control}
+      testID="userAddRemoveListsDialog"
+      nativeOptions={{fullHeight: true}}>
+      <Dialog.Handle />
+      <ListsContent profile={profile} onAdd={onAdd} onRemove={onRemove} />
+    </Dialog.Outer>
+  )
+}
+
+function Empty() {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.gap_2xl,
+        platform({web: {paddingTop: 100}, native: {paddingTop: 64}}),
+      ]}>
+      <View style={[a.gap_xs, a.align_center]}>
+        <ListIcon
+          size="xl"
+          style={{color: t.atoms.border_contrast_medium.borderColor}}
+        />
+        <Text style={[a.text_center]}>
+          <Trans>You have no lists.</Trans>
+        </Text>
+      </View>
+    </View>
+  )
+}
+
+function ListsContent({
+  profile,
+  onAdd,
+  onRemove,
+}: {
+  profile: bsky.profile.AnyProfileView | undefined
+  onAdd?: (listUri: string) => void
+  onRemove?: (listUri: string) => void
+}) {
+  const t = useTheme()
+  const control = Dialog.useDialogContext()
+  const {t: l} = useLingui()
+  const {gtMobile} = useBreakpoints()
+
+  const {
+    data,
+    isError,
+    isLoading,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useListsWithMembershipQuery({actor: profile?.did})
+
+  const listItems = data?.pages.flatMap(page => page.listsWithMembership) || []
+
+  const onEndReached = async () => {
+    if (isFetchingNextPage || !hasNextPage || isError) return
+    try {
+      await fetchNextPage()
+    } catch (err) {
+      // Error handling is optional since this is just pagination
+    }
+  }
+
+  const renderItem = ({item}: {item: ListWithMembership}) =>
+    profile ? (
+      <ListItem
+        listWithMembership={item}
+        profile={profile}
+        onAdd={onAdd}
+        onRemove={onRemove}
+      />
+    ) : null
+
+  const onClose = () => {
+    control.close()
+  }
+
+  const listHeader = (
+    <View
+      style={[
+        a.justify_between,
+        a.align_center,
+        a.flex_row,
+        a.pb_lg,
+        t.atoms.bg,
+        gtMobile ? a.pt_2xl : a.pt_xl,
+      ]}>
+      <Text style={[a.text_lg, a.font_semi_bold]}>
+        {profile ? (
+          <Trans>
+            Update {createSanitizedDisplayName(profile, true)} in Lists
+          </Trans>
+        ) : (
+          <Trans>Update in Lists</Trans>
+        )}
+      </Text>
+      <Button
+        testID="doneBtn"
+        label={l`Close`}
+        onPress={onClose}
+        variant="ghost"
+        color="secondary"
+        size="small"
+        shape="round"
+        style={{margin: -8}}>
+        <ButtonIcon icon={XIcon} />
+      </Button>
+    </View>
+  )
+
+  return (
+    <Dialog.InnerFlatList
+      data={isLoading ? [{}] : listItems}
+      renderItem={
+        isLoading
+          ? () => (
+              <View style={[a.align_center, a.py_2xl]}>
+                <Loader size="xl" />
+              </View>
+            )
+          : renderItem
+      }
+      keyExtractor={
+        isLoading
+          ? () => 'lists_dialog_loader'
+          : (item: ListWithMembership) => item.list.uri
+      }
+      onEndReached={() => void onEndReached()}
+      onEndReachedThreshold={0.1}
+      stickyHeaderIndices={web([0])}
+      ListHeaderComponent={listHeader}
+      ListFooterComponent={
+        isFetchingNextPage ? (
+          <View style={[a.align_center, a.py_lg]}>
+            <Loader size="lg" />
+          </View>
+        ) : null
+      }
+      ListEmptyComponent={!isLoading && data ? <Empty /> : null}
+      webInnerContentContainerStyle={[a.py_0]}
+      style={platform({
+        web: [a.px_2xl, a.pb_md],
+        native: [a.px_2xl, a.pt_lg],
+      })}
+    />
+  )
+}
+
+function ListItem({
+  listWithMembership,
+  profile,
+  onAdd,
+  onRemove,
+}: {
+  listWithMembership: ListWithMembership
+  profile: bsky.profile.AnyProfileView
+  onAdd?: (listUri: string) => void
+  onRemove?: (listUri: string) => void
+}) {
+  const {t: l} = useLingui()
+  const t = useTheme()
+  const queryClient = useQueryClient()
+  const {currentAccount} = useSession()
+
+  const list = listWithMembership.list
+  const listItem = listWithMembership.listItem
+  const isMember = !!listItem
+
+  const {mutate: addMembership, isPending: isPendingAdd} =
+    useListMembershipAddMutation({
+      subject: profile,
+      onSuccess: data => {
+        Toast.show(l`Added to list`)
+        onAdd?.(list.uri)
+        updateListMembershipOptimistically({
+          queryClient,
+          actor: profile.did,
+          listUri: list.uri,
+          membershipUri: data.uri,
+          subject: {
+            did: profile.did,
+            handle: profile.handle,
+            displayName: profile.displayName,
+          },
+        })
+      },
+      onError: err => {
+        if (!isNetworkError(err)) {
+          logger.error('Failed to add to list', {safeMessage: err})
+        }
+        Toast.show(l`Failed to add to list`, {type: 'error'})
+      },
+    })
+
+  const {mutate: removeMembership, isPending: isPendingRemove} =
+    useListMembershipRemoveMutation({
+      onSuccess: () => {
+        Toast.show(l`Removed from list`)
+        onRemove?.(list.uri)
+        removeListMembershipOptimistically({
+          queryClient,
+          actor: profile.did,
+          listUri: list.uri,
+        })
+      },
+      onError: err => {
+        if (!isNetworkError(err)) {
+          logger.error('Failed to remove from list', {safeMessage: err})
+        }
+        Toast.show(l`Failed to remove from list`, {type: 'error'})
+      },
+    })
+
+  const isPending = isPendingAdd || isPendingRemove
+
+  const handleToggleMembership = () => {
+    if (isPending) return
+
+    if (!isMember) {
+      addMembership({
+        listUri: list.uri,
+        actorDid: profile.did,
+      })
+    } else {
+      if (!listItem?.uri) {
+        logger.error('Cannot remove: missing membership URI')
+        return
+      }
+      removeMembership({
+        listUri: list.uri,
+        actorDid: profile.did,
+        membershipUri: listItem.uri,
+      })
+    }
+  }
+
+  return (
+    <View
+      testID={`toggleBtn-${list.name}`}
+      style={[a.flex_row, a.align_center, a.py_md, a.gap_md]}>
+      <UserAvatar size={40} avatar={list.avatar} type="list" />
+      <View style={[a.flex_1]}>
+        <Text
+          style={[a.text_md, a.font_semi_bold, a.leading_snug]}
+          numberOfLines={1}>
+          {sanitizeDisplayName(list.name)}
+        </Text>
+        <Text
+          style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}
+          numberOfLines={1}>
+          {list.purpose === 'app.bsky.graph.defs#curatelist' &&
+            (list.creator.did === currentAccount?.did ? (
+              <Trans>User list by you</Trans>
+            ) : (
+              <Trans>
+                User list by {sanitizeHandle(list.creator.handle, '@')}
+              </Trans>
+            ))}
+          {list.purpose === 'app.bsky.graph.defs#modlist' &&
+            (list.creator.did === currentAccount?.did ? (
+              <Trans>Moderation list by you</Trans>
+            ) : (
+              <Trans>
+                Moderation list by {sanitizeHandle(list.creator.handle, '@')}
+              </Trans>
+            ))}
+        </Text>
+      </View>
+      <Button
+        testID={`user-${profile.handle}-addBtn`}
+        label={isMember ? l`Remove` : l`Add`}
+        onPress={handleToggleMembership}
+        disabled={isPending}
+        size="tiny"
+        color={isMember ? 'secondary' : 'primary_subtle'}>
+        {isPending && <ButtonIcon icon={Loader} />}
+        <ButtonText>
+          {isMember ? <Trans>Remove</Trans> : <Trans>Add</Trans>}
+        </ButtonText>
+      </Button>
+    </View>
+  )
+}

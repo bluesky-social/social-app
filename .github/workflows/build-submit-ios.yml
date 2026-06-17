@@ -11,6 +11,10 @@ on:
           - testflight
           - production
 
+# Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
+permissions:
+  contents: read
+
 jobs:
   build:
     if: github.repository == 'bluesky-social/social-app'
@@ -28,42 +32,48 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 5
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: package.json
           cache: pnpm
 
       - name: 🪛 Setup jq
-        uses: dcarbone/install-jq-action@v2
+        uses: dcarbone/install-jq-action@b7ef57d46ece78760b4019dbc4080a1ba2a40b45 # v3.2.0
 
       - name: ⚙️ Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: 🔨 Setup Expo CLI
-        uses: expo/expo-github-action@v9
+        uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
         with:
           eas-version: '19.0.5'
           packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - uses: maxim-lobanov/setup-xcode@v1
+      - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
         with:
           xcode-version: "26.4"
 
-      - name: ☕️ Setup Cocoapods
-        uses: maxim-lobanov/setup-cocoapods@v1
-        with:
-          version: 1.16.2
+      - name: ☕️ Assert Cocoapods version
+        run: |
+          EXPECTED=1.16.2
+          ACTUAL=$(pod --version)
+          if [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo "Expected Cocoapods $EXPECTED but runner has $ACTUAL."
+            echo "The version ships preinstalled with the macOS runner image: https://github.com/actions/runner-images/blob/main/images/macos/macos-26-Readme.md"
+            echo "If the runner image changed, update EXPECTED here or reinstall the pinned version."
+            exit 1
+          fi
 
       - name: 💾 Cache Pods
-        uses: actions/cache@v5
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         id: pods-cache
         with:
           path: ./ios/Pods
@@ -155,7 +165,7 @@ jobs:
 
       - name: 🔔 Notify Slack of Production Build
         if: ${{ inputs.profile == 'production' }}
-        uses: slackapi/slack-github-action@v3.0.3
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         with:
           webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
           webhook-type: incoming-webhook
@@ -165,7 +175,7 @@ jobs:
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@v5
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         if: ${{ inputs.profile == 'testflight' }}
         with:
           path: most-recent-testflight-commit.txt

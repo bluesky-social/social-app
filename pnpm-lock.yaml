@@ -7,52 +7,52 @@ importers:
     configDependencies: {}
     packageManagerDependencies:
       '@pnpm/exe':
-        specifier: 11.5.3
-        version: 11.5.3
+        specifier: 11.7.0
+        version: 11.7.0
       pnpm:
-        specifier: 11.5.3
-        version: 11.5.3
+        specifier: 11.7.0
+        version: 11.7.0
 
 packages:
 
-  '@pnpm/exe@11.5.3':
-    resolution: {integrity: sha512-eb8921VsrlLhIf6z/6lopFZ25MH60qgybvPBMHH17s8AAcfh5ipBAHBpxZ3PKNNpJ7v8aZZdZkccDBjwfsUjsA==}
+  '@pnpm/exe@11.7.0':
+    resolution: {integrity: sha512-3CujpSSp2PIDE0pwu7mWSdjhdDqaZa7OppVooECWWaNEoA/z66s9FZts1MhDO+2yq1XER4gBHh84DVbFN/r1rA==}
     hasBin: true
 
-  '@pnpm/linux-arm64@11.5.3':
-    resolution: {integrity: sha512-3UebCq+4osz5/p6GNfH8iEepCUchGDS778ShcIHkJioCUV/QnmLI3IT0MYOymwc+p5/+ECZlUYEfON2FH2seOg==}
+  '@pnpm/linux-arm64@11.7.0':
+    resolution: {integrity: sha512-ANTX2SlMO+d2y/4bYQhHCwHPX7gSSADJ5+pMUIiDFzIsybnFFaJdZboaFfq9NOxCbETcnDxqZ95Rz3+NHx1JIw==}
     cpu: [arm64]
     os: [linux]
 
-  '@pnpm/linux-x64@11.5.3':
-    resolution: {integrity: sha512-fqAhjHjTcu16uryQb1JSbvGThaYp32vuu52teL4FhBaXC1fsgcqWoOEQgFnGfJKXAQO8jEKDb/1BiScQFV+O9g==}
+  '@pnpm/linux-x64@11.7.0':
+    resolution: {integrity: sha512-fr75tqixXoS8cnA81HQIomjOGEPnsOsd3xCDL5pMNY5raOXbKurtgRV+RjATvjxlJxSLIVFKegABlxAiB7q72A==}
     cpu: [x64]
     os: [linux]
 
-  '@pnpm/linuxstatic-arm64@11.5.3':
-    resolution: {integrity: sha512-z+bw8dIFhFL4Ou82Emjmdd6YndIg2R/KSbx+b5quD9v44V3cZ6OBMdddshCxzq/YEWsB6lCs/86ThbmWojJ7Vw==}
+  '@pnpm/linuxstatic-arm64@11.7.0':
+    resolution: {integrity: sha512-Q++pgzvXkGeqnVRl26/uqmpMGdttQus0rGyL3XIfYGLCi8ZfajYUaCKdZID2MH7+CNOuugWDdFDup3r7BR7Rfg==}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@pnpm/linuxstatic-x64@11.5.3':
-    resolution: {integrity: sha512-05FvuSx6G1c+ZNs4j/TQldy09YFkfXkvq+MgFplEFIUguLShQi88gkvBBSt1v2RiIPdnjn/kHN7FmyL++RiXZw==}
+  '@pnpm/linuxstatic-x64@11.7.0':
+    resolution: {integrity: sha512-z1+exW6ocU/rmOvJnmU3FUBJYaryCUqFoaXN6KZW5BqTj7BPJb7HJcAyXRlirNZMJlEiUY5rXbfStGPQJhGsVA==}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@pnpm/macos-arm64@11.5.3':
-    resolution: {integrity: sha512-nyQs/0yUZAHszkEGdDvOz964aPPzrMw+PGh6yIEYNMEzZfxSLEzD4No1qHj7AOplYmSB9tRazHp7o6einjE6pA==}
+  '@pnpm/macos-arm64@11.7.0':
+    resolution: {integrity: sha512-gD34/k3JT5oab4BYaqrUor3e4VdwXvkfLNlEI+lvDtX1MHT+2Nauc9p9NsQnpn1zE8blQEflzbF8wAUQ6Dmvkw==}
     cpu: [arm64]
     os: [darwin]
 
-  '@pnpm/win-arm64@11.5.3':
-    resolution: {integrity: sha512-7DOlug2CLCuRdWTar5ljDQNpvLLphJXqb3nDw2Vx+9vUhHjbfJRFrjZ+fYj5APoUUZv1esMaiAql4dNEqYVo1Q==}
+  '@pnpm/win-arm64@11.7.0':
+    resolution: {integrity: sha512-hRTcDmm2j7KoRwbqNo0rUAu9A1kVJN98Eob7H09U0uPJbEMax85JGOmERkT3Lf6HjVJuFNBvfaJ3OTI3HmlVGg==}
     cpu: [arm64]
     os: [win32]
 
-  '@pnpm/win-x64@11.5.3':
-    resolution: {integrity: sha512-hnIv1nVlTjEr7H415bVEfNVH65sfHClvuWd35fkR1WLVut+dHBSKqQNeDd4auJCeFtiSSVvIingsNS63abAWUQ==}
+  '@pnpm/win-x64@11.7.0':
+    resolution: {integrity: sha512-r/1NuKY7Z+6ZXVIzVrUEMj6TTEBdR63geV4Rlm8HKEhgQTdxyIsJoqV3FJGqoyzbRaScObqAwRfMaK9dskPddQ==}
     cpu: [x64]
     os: [win32]
 
@@ -116,45 +116,45 @@ packages:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
 
-  pnpm@11.5.3:
-    resolution: {integrity: sha512-esHJGTQcITo03A0Cr7cUPFwmrCbujEeC3uqCG4rGTSE0oIH9iUHa5uKbu0j1jfwrf7zuzMB8svCdIZ00Kklp7Q==}
+  pnpm@11.7.0:
+    resolution: {integrity: sha512-GcyFLBIMcSV2DyRD7mvgyltA+fUFmN4aCaHxd1A+AQ5Xwjx3ZG4B52HeWb+HT7IqM5jDOrlpH8E+uUa28PTWIA==}
     engines: {node: '>=22.13'}
     hasBin: true
 
 snapshots:
 
-  '@pnpm/exe@11.5.3':
+  '@pnpm/exe@11.7.0':
     dependencies:
       '@reflink/reflink': 0.1.19
       detect-libc: 2.1.2
     optionalDependencies:
-      '@pnpm/linux-arm64': 11.5.3
-      '@pnpm/linux-x64': 11.5.3
-      '@pnpm/linuxstatic-arm64': 11.5.3
-      '@pnpm/linuxstatic-x64': 11.5.3
-      '@pnpm/macos-arm64': 11.5.3
-      '@pnpm/win-arm64': 11.5.3
-      '@pnpm/win-x64': 11.5.3
+      '@pnpm/linux-arm64': 11.7.0
+      '@pnpm/linux-x64': 11.7.0
+      '@pnpm/linuxstatic-arm64': 11.7.0
+      '@pnpm/linuxstatic-x64': 11.7.0
+      '@pnpm/macos-arm64': 11.7.0
+      '@pnpm/win-arm64': 11.7.0
+      '@pnpm/win-x64': 11.7.0
 
-  '@pnpm/linux-arm64@11.5.3':
+  '@pnpm/linux-arm64@11.7.0':
     optional: true
 
-  '@pnpm/linux-x64@11.5.3':
+  '@pnpm/linux-x64@11.7.0':
     optional: true
 
-  '@pnpm/linuxstatic-arm64@11.5.3':
+  '@pnpm/linuxstatic-arm64@11.7.0':
     optional: true
 
-  '@pnpm/linuxstatic-x64@11.5.3':
+  '@pnpm/linuxstatic-x64@11.7.0':
     optional: true
 
-  '@pnpm/macos-arm64@11.5.3':
+  '@pnpm/macos-arm64@11.7.0':
     optional: true
 
-  '@pnpm/win-arm64@11.5.3':
+  '@pnpm/win-arm64@11.7.0':
     optional: true
 
-  '@pnpm/win-x64@11.5.3':
+  '@pnpm/win-x64@11.7.0':
     optional: true
 
   '@reflink/reflink-darwin-arm64@0.1.19':
@@ -194,7 +194,7 @@ snapshots:
 
   detect-libc@2.1.2: {}
 
-  pnpm@11.5.3: {}
+  pnpm@11.7.0: {}
 
 ---
 lockfileVersion: '9.0'
@@ -215,7 +215,6 @@ overrides:
   react-native-screens: 4.24.0
 
 patchedDependencies:
-  '@discord/bottom-sheet@4.6.1': 253965341bfbc8e63630dfca511c5d0e0878900e5fe414b2278bd322fc215e2a
   '@sentry/react-native@6.20.0': 1d48e4d5178f5684eb33262299e7eed283bf9601f79b9ae1af63a7f607d3483a
   expo-glass-effect@55.0.8: 6c9fa5b104e53b87df4e17b320acb3b94d12ac90c0101190045dd620681efff0
   expo-haptics@15.0.8: b33910ba2753c4eccdc885b449e6e33aa90b9cefa75ca8639762a26013141410
@@ -242,8 +241,8 @@ importers:
   .:
     dependencies:
       '@atproto/api':
-        specifier: 0.20.12
-        version: 0.20.12
+        specifier: 0.20.15
+        version: 0.20.15
       '@atproto/syntax':
         specifier: 0.6.1
         version: 0.6.1
@@ -272,23 +271,20 @@ importers:
         specifier: ^0.2.9
         version: 0.2.9(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       '@bsky.app/peek-menu':
-        specifier: ^0.3.0
-        version: 0.3.0(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+        specifier: ^0.3.1
+        version: 0.3.1(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       '@bsky.app/react-native-mmkv':
         specifier: 2.12.5
         version: 2.12.5(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       '@bsky.app/sift':
-        specifier: ^0.3.8
-        version: 0.3.8(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+        specifier: ^0.3.9
+        version: 0.3.9(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       '@bsky.app/tapper':
-        specifier: ^0.5.7
-        version: 0.5.7(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+        specifier: ^0.6.1
+        version: 0.6.1(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)(tlds@1.261.0)
       '@bsky.app/video':
         specifier: 0.3.6
         version: 0.3.6(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-      '@discord/bottom-sheet':
-        specifier: bluesky-social/react-native-bottom-sheet
-        version: https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/28a87d1bb55e10fc355fa1455545a30734995908(patch_hash=253965341bfbc8e63630dfca511c5d0e0878900e5fe414b2278bd322fc215e2a)(@shopify/flash-list@2.3.1(@babel/runtime@7.29.2)(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(@types/react@19.1.17)(react-native-gesture-handler@2.28.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-reanimated@3.19.1(patch_hash=97a1967f37a4213fbab59e1fd59a1bf859b5efc79af5e1b528a47fe488e6c5d6)(@babel/core@7.29.0)(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       '@emoji-mart/data':
         specifier: ^1.2.1
         version: 1.2.1
@@ -877,8 +873,8 @@ packages:
       graphql:
         optional: true
 
-  '@atproto/api@0.20.12':
-    resolution: {integrity: sha512-pNCrl/BSmkjlrVu0W5A9zkOVRIWdWAdajuHX/EyhDZFxu8HExsiQi6j46H5kv85GrNRXS/QtULE+ocSuMtEJfw==}
+  '@atproto/api@0.20.15':
+    resolution: {integrity: sha512-b9TuVNY9iWIaRXAeKegNCqRsK9tSpB68DE/j/ytVTxEMK+/m43B0DycJND9tnhRiNIY+i7MhwLqNHPak9YaDJg==}
     engines: {node: '>=22'}
 
   '@atproto/common-web@0.5.0':
@@ -1659,8 +1655,8 @@ packages:
       react: '*'
       react-native: '*'
 
-  '@bsky.app/peek-menu@0.3.0':
-    resolution: {integrity: sha512-F51CT7xawnzoIOGA86E5VNYuWCItS1DnQr/J3eRE62E5+lbuCixSK/mQ4oqVsfQbKuYfAqMsBJjCgpCkdZTqTQ==}
+  '@bsky.app/peek-menu@0.3.1':
+    resolution: {integrity: sha512-ttFE7dIv1EJEmQn52WLvievzLNmPNNvPtoiz8ovl38jXLDMszL2wVPUYMnEjnZZqoq+K6HiBau9iHeCOKWwbTA==}
     peerDependencies:
       expo: '*'
       react: '*'
@@ -1672,20 +1668,21 @@ packages:
       react: '*'
       react-native: '>=0.71.0'
 
-  '@bsky.app/sift@0.3.8':
-    resolution: {integrity: sha512-41Ug2QfjWJUApHsxcm6JDTb4r8jS6Qn6uBca8ofL10ZDKzXbSxDr1vK2yhFLyIeo/yIq3GU+XgEqrd1p6YgFiA==}
+  '@bsky.app/sift@0.3.9':
+    resolution: {integrity: sha512-EmwK6EGtxl6Mz4Z96J2EFi5aeiKeGiqueVCQHVms9C6ms6wMS0/HcqC/48RgFN+nSsM7Wr8sFCg1EcNnWyOQMQ==}
     peerDependencies:
       expo: '*'
       react: '*'
       react-native: '*'
       react-native-safe-area-context: ~5.6.0
 
-  '@bsky.app/tapper@0.5.7':
-    resolution: {integrity: sha512-DWU4v+llcEdgwueittiCSMeahrwvQAz4g1S7M1gSSw3Zor987fF7WO/NTDWq7X/zFab2nOQ/lnCvQUuOgFCTRg==}
+  '@bsky.app/tapper@0.6.1':
+    resolution: {integrity: sha512-+suwTIQcZmMbFb/adzWAlAs7gzRsMmHAerzrpzZfMtt2cVrwPgOqI5IOeEEO8SmvEEImpE8IcHindG8hkCZrKA==}
     peerDependencies:
       expo: '*'
       react: '*'
       react-native: '*'
+      tlds: '*'
 
   '@bsky.app/video@0.3.6':
     resolution: {integrity: sha512-Ny7vz9v1lQOw5Llw4xejtJo/Dp/lmdRw1XdUJucOXlq6puXO93tv3mNXUIIyOEVWEwDPg8j/kSQxG/mGy+/hdQ==}
@@ -1697,23 +1694,6 @@ packages:
   '@crowdin/cli@4.14.2':
     resolution: {integrity: sha512-JRrHvitc0w+r/h6XXSOq917HxsjRoxPEtyNYSmylKirjiPNrRx84VKtqFlOIWIFCOZI5BoXg6hNpE0Zq7CwVBA==}
     hasBin: true
-
-  '@discord/bottom-sheet@https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/28a87d1bb55e10fc355fa1455545a30734995908':
-    resolution: {gitHosted: true, integrity: sha512-zsoB8sFUx8O9aO0fKAkzoWLMyaX7EBd3ooNYjzsh9vr/c9zg/a3jOAbWzWbvM86QCZIszfbW9GXeJZKZRVk/tg==, tarball: https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/28a87d1bb55e10fc355fa1455545a30734995908}
-    version: 4.6.1
-    peerDependencies:
-      '@shopify/flash-list': '*'
-      '@types/react': '*'
-      '@types/react-native': '*'
-      react: '*'
-      react-native: '*'
-      react-native-gesture-handler: '>=1.10.1'
-      react-native-reanimated: 3.19.1
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-native':
-        optional: true
 
   '@discoveryjs/json-ext@0.5.7':
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
@@ -2105,12 +2085,6 @@ packages:
 
   '@formatjs/intl-supportedvaluesof@2.3.7':
     resolution: {integrity: sha512-ZTXEKijV5H08z19odngZPsXlmGndfukHuVnjd9qyER77XSk/yJwDMiSjoJYY5C5WxFs2UN4s/EMtu75e6Tp3ug==}
-
-  '@gorhom/portal@1.0.14':
-    resolution: {integrity: sha512-MXyL4xvCjmgaORr/rtryDNFy3kU4qUbKlwtQqqsygd0xX3mhKjOLn6mQK8wfu0RkoE0pBE0nAasRoHua+/QZ7A==}
-    peerDependencies:
-      react: '*'
-      react-native: '*'
 
   '@growthbook/growthbook-react@1.6.5':
     resolution: {integrity: sha512-afi/RUbwazVNKv2acn6wDQz4BJNRAEpwIuHfggQup2/aE5PLAxy3+95gjjRMgCcPR0Pf3sFmhYGvOmxLD0ZRbQ==}
@@ -3365,13 +3339,6 @@ packages:
     engines: {node: '>= 14'}
     peerDependencies:
       webpack: '>=4.40.0'
-
-  '@shopify/flash-list@2.3.1':
-    resolution: {integrity: sha512-7oktg2NQR7KAODjFoDaWe8/OBzyYbdTE3zQTrUBMxjIbxHTHN7UXRX1hX3DHk8KvtkgQdRfZOV8Gjj2l4fGrXw==}
-    peerDependencies:
-      '@babel/runtime': '*'
-      react: '*'
-      react-native: '*'
 
   '@sinclair/typebox@0.27.10':
     resolution: {integrity: sha512-MTBk/3jGLNB2tVxv6uLlFh1iu64iYOQ2PbdOSK3NW8JZsmlaOh2q6sdtKowBhfw8QFLmYNzTW4/oK4uATIi6ZA==}
@@ -9493,7 +9460,7 @@ snapshots:
 
   '@0no-co/graphql.web@1.2.0': {}
 
-  '@atproto/api@0.20.12':
+  '@atproto/api@0.20.15':
     dependencies:
       '@atproto/common-web': 0.5.0
       '@atproto/lexicon': 0.7.1
@@ -10479,7 +10446,7 @@ snapshots:
       react: 19.1.0
       react-native: 0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
 
-  '@bsky.app/peek-menu@0.3.0(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
+  '@bsky.app/peek-menu@0.3.1(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
     dependencies:
       expo: 54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       react: 19.1.0
@@ -10490,18 +10457,19 @@ snapshots:
       react: 19.1.0
       react-native: 0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
 
-  '@bsky.app/sift@0.3.8(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
+  '@bsky.app/sift@0.3.9(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
     dependencies:
       expo: 54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       react: 19.1.0
       react-native: 0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
       react-native-safe-area-context: 5.6.2(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
 
-  '@bsky.app/tapper@0.5.7(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
+  '@bsky.app/tapper@0.6.1(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)(tlds@1.261.0)':
     dependencies:
       expo: 54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       react: 19.1.0
       react-native: 0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
+      tlds: 1.261.0
 
   '@bsky.app/video@0.3.6(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
     dependencies:
@@ -10518,18 +10486,6 @@ snapshots:
       yauzl: 3.3.0
     transitivePeerDependencies:
       - encoding
-
-  ? '@discord/bottom-sheet@https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/28a87d1bb55e10fc355fa1455545a30734995908(patch_hash=253965341bfbc8e63630dfca511c5d0e0878900e5fe414b2278bd322fc215e2a)(@shopify/flash-list@2.3.1(@babel/runtime@7.29.2)(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(@types/react@19.1.17)(react-native-gesture-handler@2.28.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-reanimated@3.19.1(patch_hash=97a1967f37a4213fbab59e1fd59a1bf859b5efc79af5e1b528a47fe488e6c5d6)(@babel/core@7.29.0)(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)'
-  : dependencies:
-      '@gorhom/portal': 1.0.14(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-      '@shopify/flash-list': 2.3.1(@babel/runtime@7.29.2)(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-      invariant: 2.2.4
-      react: 19.1.0
-      react-native: 0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
-      react-native-gesture-handler: 2.28.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-      react-native-reanimated: 3.19.1(patch_hash=97a1967f37a4213fbab59e1fd59a1bf859b5efc79af5e1b528a47fe488e6c5d6)(@babel/core@7.29.0)(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-    optionalDependencies:
-      '@types/react': 19.1.17
 
   '@discoveryjs/json-ext@0.5.7': {}
 
@@ -11100,12 +11056,6 @@ snapshots:
   '@formatjs/intl-supportedvaluesof@2.3.7':
     dependencies:
       '@formatjs/fast-memoize': 3.1.5
-
-  '@gorhom/portal@1.0.14(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      nanoid: 3.3.12
-      react: 19.1.0
-      react-native: 0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
 
   '@growthbook/growthbook-react@1.6.5(react@19.1.0)':
     dependencies:
@@ -12613,12 +12563,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
       - supports-color
-
-  '@shopify/flash-list@2.3.1(@babel/runtime@7.29.2)(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@babel/runtime': 7.29.2
-      react: 19.1.0
-      react-native: 0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
 
   '@sinclair/typebox@0.27.10': {}
 

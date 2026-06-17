@@ -1,5 +1,6 @@
 import {useCallback, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
+import {type $Typed, type ChatBskyConvoDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {flushSync} from 'react-dom'
 import TextareaAutosize from 'react-textarea-autosize'
@@ -13,23 +14,31 @@ import {
 } from '#/state/messages/message-drafts'
 import {atoms as a, flatten, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
+import {useMessageReplies} from '#/components/dms/MessageReplies'
 import * as EmojiPicker from '#/components/EmojiPicker'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 import * as Toast from '#/components/Toast'
 import {IS_WEB_SAFARI, IS_WEB_TOUCH_DEVICE} from '#/env'
-import {useExtractEmbedFromFacets} from './MessageInputEmbed'
+import {
+  type MessageEmbedState,
+  useExtractEmbedFromFacets,
+} from './MessageInputEmbed'
 
 export function MessageInput({
   onSendMessage,
-  hasEmbed,
+  messageEmbed,
   setEmbed,
   children,
   loading = false,
 }: {
-  onSendMessage: (message: string) => void
-  hasEmbed: boolean
+  onSendMessage: (
+    message: string,
+    embed?: MessageEmbedState,
+    replyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
+  ) => void
+  messageEmbed: MessageEmbedState | undefined
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
   loading?: boolean
@@ -38,6 +47,7 @@ export function MessageInput({
   const {t: l} = useLingui()
   const t = useTheme()
   const {getDraft, clearDraft} = useMessageDraft()
+  const {replyTo, clearReply} = useMessageReplies()
   const [message, setMessage] = useState(getDraft)
 
   const inputStyles = useSharedInputStyles()
@@ -48,7 +58,7 @@ export function MessageInput({
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
   const onSubmit = useCallback(() => {
-    if (!hasEmbed && message.trim() === '') {
+    if (!messageEmbed && message.trim() === '') {
       return
     }
     if (countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
@@ -58,10 +68,26 @@ export function MessageInput({
       return
     }
     clearDraft()
-    onSendMessage(message)
+    onSendMessage(
+      message,
+      messageEmbed,
+      replyTo
+        ? {...replyTo, $type: 'chat.bsky.convo.defs#messageView'}
+        : undefined,
+    )
+    clearReply()
     setMessage('')
     setEmbed(undefined)
-  }, [message, onSendMessage, l, clearDraft, hasEmbed, setEmbed])
+  }, [
+    message,
+    onSendMessage,
+    l,
+    clearDraft,
+    messageEmbed,
+    setEmbed,
+    replyTo,
+    clearReply,
+  ])
 
   const onKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
