@@ -85,6 +85,7 @@
     "intl:push": "crowdin push translations --verbose -b main",
     "intl:push-sources": "crowdin push sources --verbose -b main",
     "intl:release": "pnpm intl:pull && pnpm intl:extract:all",
+    "intl:resync": "bash scripts/intl-resync.sh",
     "nuke": "rm -rf ./node_modules && rm -rf ./ios && rm -rf ./android",
     "update-extensions": "bash scripts/updateExtensions.sh",
     "export": "expo export --dump-sourcemap && pnpm upload-native-sourcemaps",
