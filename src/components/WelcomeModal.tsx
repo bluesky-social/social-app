@@ -13,7 +13,7 @@ import {Button, ButtonText} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {EUROSKY} from '#/config/eurosky'
+import {BRAND} from '#/config/brand'
 
 interface WelcomeModalProps {
   control: {
@@ -101,7 +101,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                 style={[a.align_center, a.justify_center, a.w_full, a.gap_sm]}>
                 <Logo3D
                   width={140}
-                  accessibilityLabel={EUROSKY.brand.name}
+                  accessibilityLabel={BRAND.name}
                   accessibilityHint=""
                 />
                 <BetaTag />

@@ -15,7 +15,7 @@ import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {EUROSKY} from '#/config/eurosky'
+import {BRAND} from '#/config/brand'
 import {FormContainer} from './FormContainer'
 import {PasswordSignin} from './PasswordSignin'
 
@@ -147,7 +147,7 @@ export function OAuthSignin(props: Props) {
         <Button
           testID="loginCreateAccountButton"
           label={_(msg`Create a new account`)}
-          accessibilityHint={_(msg`Create a new ${EUROSKY.brand.name} account`)}
+          accessibilityHint={_(msg`Create a new ${BRAND.name} account`)}
           variant="solid"
           color="secondary"
           size="large"

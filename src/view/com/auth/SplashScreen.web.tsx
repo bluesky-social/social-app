@@ -20,6 +20,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as TimesIcon} from '#/components/icon
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {BRAND} from '#/config/brand'
 
 export const SplashScreen = ({
   onDismiss,
@@ -162,14 +163,10 @@ function Footer() {
         a.flex_1,
         t.atoms.border_contrast_medium,
       ]}>
-      <InlineLinkText
-        label={_(msg`Terms of Service`)}
-        to="https://hello.mu.social/terms">
+      <InlineLinkText label={_(msg`Terms of Service`)} to={BRAND.links.tos}>
         <Trans>Terms of Service</Trans>
       </InlineLinkText>
-      <InlineLinkText
-        label={_(msg`Privacy Policy`)}
-        to="https://hello.mu.social/privacy">
+      <InlineLinkText label={_(msg`Privacy Policy`)} to={BRAND.links.privacy}>
         <Trans>Privacy Policy</Trans>
       </InlineLinkText>
 

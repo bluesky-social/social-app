@@ -1,7 +1,7 @@
 import Svg, {Path, type PathProps, type SvgProps} from 'react-native-svg'
 
 import {useTheme} from '#/alf'
-import {MU_LOGO_3D} from '#/config/eurosky-logo'
+import {BRAND_LOGO_3D} from '#/config/brand-logo'
 
 /**
  * 3D / extruded mu wordmark for hero + marketing surfaces (the welcome modal).
@@ -9,7 +9,7 @@ import {MU_LOGO_3D} from '#/config/eurosky-logo'
  * up-and-left, for the drop-shadow look. Both tones default to the active
  * accent ramp so the mark follows the brand colour and reads on any theme bg.
  */
-const ratio = MU_LOGO_3D.ratio
+const ratio = BRAND_LOGO_3D.ratio
 
 export function Logo3D({
   faceFill,
@@ -28,12 +28,12 @@ export function Logo3D({
   return (
     <Svg
       fill="none"
-      viewBox={MU_LOGO_3D.viewBox}
+      viewBox={BRAND_LOGO_3D.viewBox}
       {...rest}
       width={size}
       height={Number(size) * ratio}>
-      <Path fill={_shadow} d={MU_LOGO_3D.shadowPath} />
-      <Path fill={_face} d={MU_LOGO_3D.facePath} />
+      <Path fill={_shadow} d={BRAND_LOGO_3D.shadowPath} />
+      <Path fill={_face} d={BRAND_LOGO_3D.facePath} />
     </Svg>
   )
 }

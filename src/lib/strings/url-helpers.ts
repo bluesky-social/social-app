@@ -6,7 +6,7 @@ import {BSKY_SERVICE} from '#/lib/constants'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {startUriToStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
-import {EUROSKY} from '#/config/eurosky'
+import {BRAND} from '#/config/brand'
 
 export const BSKY_APP_HOST = 'https://bsky.app'
 
@@ -15,9 +15,9 @@ export const BSKY_APP_HOST = 'https://bsky.app'
  * these into the composer or a DM resolves it to an in-app record embed (quote
  * post, feed, list, starter pack) instead of a plain external link card.
  * Upstream only knows about bsky.app; the fork adds its own web host(s) via
- * EUROSKY.web.hosts. See isBskyAppUrl().
+ * BRAND.web.hosts. See isBskyAppUrl().
  */
-const APP_URL_HOSTS = ['bsky.app', ...EUROSKY.web.hosts]
+const APP_URL_HOSTS = ['bsky.app', ...BRAND.web.hosts]
 
 const BSKY_TRUSTED_HOSTS = [
   'bsky\\.app',
@@ -26,7 +26,7 @@ const BSKY_TRUSTED_HOSTS = [
   'blueskyweb\\.zendesk\\.com',
   // Fork web host(s) are first-party too, so links to them are not treated as
   // untrusted/external (e.g. no phishing warning interstitial).
-  ...EUROSKY.web.hosts.map(host => host.replace(/\./g, '\\.')),
+  ...BRAND.web.hosts.map(host => host.replace(/\./g, '\\.')),
   ...(__DEV__ ? ['localhost:19006', 'localhost:8100'] : []),
 ]
 
@@ -124,8 +124,8 @@ export function sanitizeWebsiteUrl(raw?: string): string {
 export function toShareUrl(url: string): string {
   if (!url.startsWith('https')) {
     // mu fork: share/copy-link actions hand out our own web host, not bsky.app.
-    // Uses the primary first-party host (see EUROSKY.web.hosts).
-    const urlp = new URL(`https://${EUROSKY.web.hosts[0]}`)
+    // Uses the primary first-party host (see BRAND.web.hosts).
+    const urlp = new URL(`https://${BRAND.web.hosts[0]}`)
     urlp.pathname = url
     url = urlp.toString()
   }

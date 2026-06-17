@@ -30,7 +30,7 @@
 
 import {type I18n, type Messages as LinguiMessages} from '@lingui/core'
 
-import {EUROSKY} from '#/config/eurosky'
+import {BRAND} from '#/config/brand'
 
 /**
  * Curated app-brand message IDs. Each comment is the English source so the
@@ -155,9 +155,7 @@ const BLUESKY = /\bBluesky\b/g
 function rebrandString(s: string): string {
   if (s.indexOf('Bluesky') === -1) return s
   // "Bluesky Social" first so the brand never becomes "<name> Social".
-  return s
-    .replace(BLUESKY_SOCIAL, EUROSKY.brand.name)
-    .replace(BLUESKY, EUROSKY.brand.name)
+  return s.replace(BLUESKY_SOCIAL, BRAND.name).replace(BLUESKY, BRAND.name)
 }
 
 /**

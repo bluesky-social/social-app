@@ -2,11 +2,11 @@ import {createThemes} from '@bsky.app/alf'
 
 // Eurosky fork: palette is overridden in src/config/eurosky-theme.ts. This is
 // one of only two upstream files that redirect into that module.
-import {EUROSKY_PALETTE, EUROSKY_SUBDUED_PALETTE} from '#/config/eurosky-theme'
+import {BRAND_PALETTE, BRAND_SUBDUED_PALETTE} from '#/config/brand-theme'
 
 const DEFAULT_THEMES = createThemes({
-  defaultPalette: EUROSKY_PALETTE,
-  subduedPalette: EUROSKY_SUBDUED_PALETTE,
+  defaultPalette: BRAND_PALETTE,
+  subduedPalette: BRAND_SUBDUED_PALETTE,
 })
 
 export const themes = {

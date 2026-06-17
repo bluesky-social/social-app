@@ -14,7 +14,7 @@
  * The `gradient` stops are the one carve-out (splash / marketing treatments),
  * matching the pink hero used throughout the brand guide.
  *
- * Export name kept generic (`MU_LOGO`) and re-exported as `EUROSKY_ICON` for
+ * Export name kept generic (`BRAND_LOGO`) and re-exported as `BRAND_ICON` for
  * the two upstream-adjacent importers that read `.ratio`/`.viewBox`/`.path`,
  * so the redirect surface stays small.
  */
@@ -23,7 +23,7 @@
 const WORDMARK_PATH =
   'M584.2062,303.3777v198.5049l-119.4809,21.0622v-219.5671c0-17.6445-14.3654-32.0098-32.0098-32.0098s-32.0097,14.3653-32.0097,32.0098v230.8485l-119.4809,21.0615v-220.4836c0-17.6445-14.3378-32.0098-32.0098-32.0098-17.6442,0-31.982,14.3653-31.982,32.0098v231.7928l-119.4809,21.0622v-252.855c0-60.4073,35.5109-112.6456,86.7488-136.9586,19.6449-9.3087,41.5681-14.5322,64.7141-14.5322,4.7515,0,9.4196.2222,14.0598.639,20.673,1.9171,40.1512,8.0021,57.5732,17.3942,14.0598-15.3937,31.2039-27.8697,50.4876-36.4559,18.7557-8.3359,39.5398-13.0038,61.3798-13.0038,3.4733,0,6.9189.1113,10.3366.3612,78.7185,5.3073,141.1542,71.0771,141.1542,151.1295Z M902.2478,71.279v251.1879c0,62.7691-38.3728,116.7579-92.9173,139.7091h-.0278c-18.0054,7.5859-37.7892,11.7817-58.5457,11.7817-2.3896,0-4.7792-.0556-7.1411-.1665h-.0833c-80.1913-3.7792-144.2664-70.2159-144.2664-151.3242V124.7119l119.4809-21.0897v218.8446c0,17.6442,14.3656,32.0098,32.0098,32.0098s32.0098-14.3656,32.0098-32.0098V92.3412l119.4809-21.0622Z'
 
-export const MU_LOGO = {
+export const BRAND_LOGO = {
   viewBox: '0 0 1000 658.9381',
   /** height / width - the wordmark is wider than it is tall. */
   ratio: 658.9381 / 1000,
@@ -36,7 +36,7 @@ export const MU_LOGO = {
 } as const
 
 /** Back-compat alias for upstream-adjacent importers (Logo.tsx, Splash.tsx). */
-export const EUROSKY_ICON = MU_LOGO
+export const BRAND_ICON = BRAND_LOGO
 
 /**
  * 3D / extruded wordmark for marketing + hero surfaces (e.g. the welcome
@@ -46,7 +46,7 @@ export const EUROSKY_ICON = MU_LOGO
  * drop-shadow look. The two fills are left to the renderer so they can be
  * driven from the active accent ramp (deep tone behind, bright tone in front).
  */
-export const MU_LOGO_3D = {
+export const BRAND_LOGO_3D = {
   viewBox: '0 0 1000 712.872',
   /** height / width. */
   ratio: 712.872 / 1000,

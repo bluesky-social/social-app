@@ -8,10 +8,10 @@ import {useEffect, useRef, useState} from 'react'
 import Svg, {Path} from 'react-native-svg'
 
 import {atoms as a, flatten} from '#/alf'
-import {MU_LOGO_3D} from '#/config/eurosky-logo'
+import {BRAND_LOGO_3D} from '#/config/brand-logo'
 
 const size = 100
-const ratio = MU_LOGO_3D.ratio
+const ratio = BRAND_LOGO_3D.ratio
 
 export function Splash({
   isReady,
@@ -84,12 +84,12 @@ export function Splash({
           ])}>
           <Svg
             fill="none"
-            viewBox={MU_LOGO_3D.viewBox}
+            viewBox={BRAND_LOGO_3D.viewBox}
             style={[a.relative, {width: size, height: size * ratio, top: -50}]}>
             {/* 3D pink wordmark - matches the pre-JS #splash mark in
                 web/index.html so the handoff is seamless. */}
-            <Path fill="#75295E" d={MU_LOGO_3D.shadowPath} />
-            <Path fill="#E66AB9" d={MU_LOGO_3D.facePath} />
+            <Path fill="#75295E" d={BRAND_LOGO_3D.shadowPath} />
+            <Path fill="#E66AB9" d={BRAND_LOGO_3D.facePath} />
           </Svg>
         </div>
       )}

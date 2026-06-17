@@ -2,7 +2,7 @@
  * mu theme configuration.
  *
  * Single source of truth for the palette + gradients. Sibling to
- * `src/config/eurosky.ts` (service / brand-string config). Strategy: keep
+ * `src/config/brand.ts` (service / brand-string config). Strategy: keep
  * every ALF *atom* (spacing, radius, type scale, button shape) on
  * `@bsky.app/alf` and override only the colour palette + gradients. That is
  * enough for a distinct identity without forking the design system, and it
@@ -10,9 +10,9 @@
  * (`src/alf/themes.ts`, `src/alf/tokens.ts`) - every other file upstream
  * touches stays untouched, so it can never conflict on merge.
  *
- * Export symbol names (EUROSKY_PALETTE etc.) are kept verbatim purely so
- * those two redirect files don't have to change - the *contents* are the mu
- * brand.
+ * Export symbol names (BRAND_PALETTE etc.) are brand-agnostic, so a rebrand
+ * only changes the *contents* here - the two redirect files import the same
+ * names regardless of brand.
  *
  * ---------------------------------------------------------------------------
  * HOW THE LOOK IS CHOSEN
@@ -218,8 +218,8 @@ function compose(base: Palette, neutral: ContrastRamp): Palette {
   }
 }
 
-export const EUROSKY_PALETTE: Palette = compose(DEFAULT_PALETTE, muNeutral)
-export const EUROSKY_SUBDUED_PALETTE: Palette = compose(
+export const BRAND_PALETTE: Palette = compose(DEFAULT_PALETTE, muNeutral)
+export const BRAND_SUBDUED_PALETTE: Palette = compose(
   DEFAULT_SUBDUED_PALETTE,
   muNeutralSubdued,
 )
@@ -231,7 +231,7 @@ export const EUROSKY_SUBDUED_PALETTE: Palette = compose(
  * brand family (pink / blue / orange) per the "don't mix colours" rule, while
  * giving default avatars some variety across the palette.
  */
-export const EUROSKY_GRADIENTS = {
+export const BRAND_GRADIENTS = {
   primary: {
     values: [
       [0, '#FFBDF2'],

@@ -12,7 +12,7 @@ import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {EUROSKY} from '#/config/eurosky'
+import {BRAND} from '#/config/brand'
 
 let NavSignupCard = ({}: {}): React.ReactNode => {
   const {_} = useLingui()
@@ -32,7 +32,7 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
 
   return (
     <View style={[{maxWidth: 245}]}>
-      <Link to="/" label={`${EUROSKY.brand.name} - Home`}>
+      <Link to="/" label={`${BRAND.name} - Home`}>
         <Logo3D width={56} />
       </Link>
 

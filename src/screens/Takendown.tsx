@@ -23,6 +23,7 @@ import * as TextField from '#/components/forms/TextField'
 import {SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
+import {BRAND} from '#/config/brand'
 import {IS_WEB} from '#/env'
 
 const COL_WIDTH = 400
@@ -211,7 +212,7 @@ export function Takendown() {
                   Your account was found to be in violation of the{' '}
                   <SimpleInlineLinkText
                     label={_(msg`mu Terms of Service`)}
-                    to="https://hello.mu.social/terms"
+                    to={BRAND.links.tos}
                     style={[a.text_md, a.leading_snug]}>
                     mu Terms of Service
                   </SimpleInlineLinkText>

@@ -12,6 +12,7 @@ import {Badge} from '#/components/PolicyUpdateOverlay/Badge'
 import {Overlay} from '#/components/PolicyUpdateOverlay/Overlay'
 import {type PolicyUpdateState} from '#/components/PolicyUpdateOverlay/usePolicyUpdateState'
 import {Text} from '#/components/Typography'
+import {BRAND} from '#/config/brand'
 import {IS_ANDROID} from '#/env'
 
 export function Content({state}: {state: PolicyUpdateState}) {
@@ -27,22 +28,22 @@ export function Content({state}: {state: PolicyUpdateState}) {
   const links = {
     terms: {
       overridePresentation: false,
-      to: `https://bsky.social/about/support/tos`,
+      to: BRAND.links.tos,
       label: _(msg`Terms of Service`),
     },
     privacy: {
       overridePresentation: false,
-      to: `https://bsky.social/about/support/privacy-policy`,
+      to: BRAND.links.privacy,
       label: _(msg`Privacy Policy`),
     },
     copyright: {
       overridePresentation: false,
-      to: `https://bsky.social/about/support/copyright`,
+      to: BRAND.links.copyright,
       label: _(msg`Copyright Policy`),
     },
     guidelines: {
       overridePresentation: false,
-      to: `https://bsky.social/about/support/community-guidelines`,
+      to: BRAND.links.community,
       label: _(msg`Community Guidelines`),
     },
     blog: {
