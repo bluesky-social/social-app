@@ -6,7 +6,7 @@ values.
 Install dependencies in `/dev-env`
 
 ```
-cd dev-env && yarn
+cd dev-env && pnpm i
 ```
 
 ## Using Maestro
@@ -27,7 +27,7 @@ adb reverse tcp:3000 tcp:3000
 
 - In one tab, run `pnpm e2e:mock-server`
 - In a second tab, run `pnpm e2e:build`
-- In a third tab, run `pnpm e2e:run`
+- In a third tab, run `pnpm e2e:run __e2e__`
 
 ## Using Flashlight for Performance Testing
 1. Make sure Maestro is installed (optional: only for automated testing) by following the instructions above
