@@ -31,6 +31,11 @@ concurrency:
   group: deploy-web-staging-bunny
   cancel-in-progress: true
 
+# Least privilege: only checks out + uploads to Bunny via Bunny secrets; never
+# uses GITHUB_TOKEN to write to the repo.
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
