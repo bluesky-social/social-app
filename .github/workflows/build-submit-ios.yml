@@ -270,6 +270,34 @@ jobs:
           path: nightly-build-commit.txt
           retention-days: 90
 
+      # Build the Slack payload with jq so the multi-line changelog is safely JSON-encoded.
+      - name: 📝 Build nightly Slack payload
+        id: nightly-slack
+        if: ${{ inputs.assignTestFlightGroup }}
+        env:
+          RELEASE_NOTES: ${{ steps.notes.outputs.notes }}
+          APP_VERSION: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
+          BUILD_NUMBER: ${{ steps.get-build-info.outputs.BSKY_IOS_BUILD_NUMBER }}
+        run: |
+          text="*Nightly iOS build available in TestFlight (QA Team)*
+          Version ${APP_VERSION} (${BUILD_NUMBER})
+
+          ${RELEASE_NOTES}"
+          payload=$(jq -n --arg text "$text" '{text: $text}')
+          {
+            echo "payload<<PAYLOAD_EOF"
+            echo "$payload"
+            echo "PAYLOAD_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: 🔔 Notify Slack of Nightly Build
+        if: ${{ inputs.assignTestFlightGroup }}
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
+        with:
+          webhook: ${{ secrets.NIGHTLY_BUILDS_SLACK_WEBHOOK }}
+          webhook-type: incoming-webhook
+          payload: ${{ steps.nightly-slack.outputs.payload }}
+
       - name: 🔔 Notify Slack of Production Build
         if: ${{ inputs.profile == 'production' }}
         uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
