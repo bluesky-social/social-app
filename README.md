@@ -1,8 +1,8 @@
 # Mu Social
 
-Mu ([mu.social](https://mu.social)) is a web-app-only social application operated by Eurosky ([eurosky.tech](https://eurosky.tech)). 
+Mu ([mu.social](https://mu.social)) is a web-app-only (for now, mobile apps work in progress) social application operated by Eurosky ([eurosky.tech](https://eurosky.tech)). 
 
-This repository is a downstream fork of the [Bluesky social application](https://github.com/bluesky-social/social-app). While it maintains compatibility with the AT Protocol, it is specifically optimized and branded for the Mu web experience.
+This repository is a downstream fork of the [Bluesky social application](https://github.com/bluesky-social/social-app). While it maintains compatibility with the AT Protocol, it is specifically optimized and branded for the Mu experience.
 
 ## Relationship with Upstream
 
@@ -10,11 +10,11 @@ Mu is maintained by Eurosky and is not affiliated with Bluesky Social, PBC. This
 
 ## Development Resources
 
-This is a [React Native](https://reactnative.dev/) application, written in the TypeScript programming language, utilizing React Native Web for the Mu platform. It builds on the `atproto` TypeScript packages (like [`@atproto/api`](https://www.npmjs.com/package/@atproto/api)), which are also open source, but in [a different git repository](https://github.com/bluesky-social/atproto).
-
-There is a small amount of Go language source code (in `./bskyweb/`), for the web service that serves the application.
+This is a [React Native](https://reactnative.dev/) application, written in TypeScript, utilizing React Native Web. It builds on the `atproto` TypeScript packages (like [`@atproto/api`](https://www.npmjs.com/package/@atproto/api)), which are also open source, but in [a different git repository](https://github.com/bluesky-social/atproto).
 
 The [Build Instructions](./docs/build.md) are a good place to get started with the app itself.
+
+Mu is deployed on bunny.net as a SPA with some edge functions for different services (see `services/`).
 
 The Authenticated Transfer Protocol ("AT Protocol" or "atproto") is a decentralized social media protocol. Learn more at:
 
@@ -28,6 +28,8 @@ Eurosky accepts contributions that improve the Mu web experience. Please follow 
 - **Focus:** We prioritize high-quality issues and pull requests that align with our web-only focus.
 - **Discussion:** Open an issue to discuss significant changes before submitting a PR.
 - **Branding:** Ensure all contributions respect the Mu branding guidelines.
+
+branch `main` tracks upstream, our default branch is `eurosky/fork`, please open PRs to that branch (will also run a deploy to https://staging.mu.social), for prod deployment merge `eurosky/fork` into `eurosky/deploy`. 
 
 ## Security Disclosures
 

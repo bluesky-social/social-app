@@ -8,7 +8,11 @@
  */
 import * as persisted from '#/state/persisted'
 import {type SessionApiContext} from '#/state/session/types'
-import {getWebOAuthClient, OAUTH_SIGNUP_STATE} from './oauth-web-client'
+import {
+  getWebOAuthClient,
+  OAUTH_HANDLE_STEPUP_STATE,
+  OAUTH_SIGNUP_STATE,
+} from './oauth-web-client'
 
 /**
  * The OAuth loopback spec requires an IP-based origin (127.0.0.1), not
@@ -53,6 +57,8 @@ export async function tryFinishWebOAuthSignIn(
     if (result.state === OAUTH_SIGNUP_STATE) {
       await persisted.write('onboarding', {step: 'Welcome'})
     }
+    // For a handle step-up the DID is unchanged, so login() replaces the
+    // existing session in place with the upgraded (identity:handle) tokens.
     await login(
       {
         service: '',
@@ -62,8 +68,15 @@ export async function tryFinishWebOAuthSignIn(
       },
       'LoginForm',
     )
-    // Drop the callback params from the URL.
-    window.history.replaceState(null, '', window.location.pathname)
+    if (result.state === OAUTH_HANDLE_STEPUP_STATE) {
+      // The redirect lands at the site root; rewrite the path before the
+      // navigator reads it so web linking resolves to account settings, where
+      // the reopen flag reopens the change-handle dialog.
+      window.history.replaceState(null, '', '/settings/account')
+    } else {
+      // Drop the callback params from the URL.
+      window.history.replaceState(null, '', window.location.pathname)
+    }
     return true
   }
   return false
