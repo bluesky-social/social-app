@@ -51,7 +51,7 @@ jobs:
       cancel-in-progress: false
     outputs:
       package-version: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
-      build-number: ${{ steps.get-build-info.outputs.BSKY_IOS_BUILD_NUMBER }}
+      build-number: ${{ steps.ipa-build-number.outputs.build-number }}
     steps:
       - name: Check for EXPO_TOKEN
         run: >
@@ -193,6 +193,26 @@ jobs:
         id: get-build-info
         run: bash scripts/setGitHubOutput.sh
 
+      # Read the build number straight from the IPA's CFBundleVersion. This is the value
+      # baked in at build time by use-build-number-with-bump (remote counter + 1) and the
+      # number that actually lands in App Store Connect. `eas build:version:get` reads the
+      # remote counter, which a --local build does not advance, so it can be off by one —
+      # using it here would make distribute_only poll for a nonexistent build.
+      - name: 🔢 Read build number from IPA
+        id: ipa-build-number
+        run: |
+          plist_dir="$(mktemp -d)"
+          unzip -o -q "$BUILD_DIR/Bluesky.ipa" 'Payload/*.app/Info.plist' -d "$plist_dir"
+          plist="$(find "$plist_dir" -name Info.plist -print -quit)"
+          build_number="$(/usr/libexec/PlistBuddy -c 'Print CFBundleVersion' "$plist")"
+          rm -rf "$plist_dir"
+          if [ -z "$build_number" ]; then
+            echo "ERROR: could not read CFBundleVersion from IPA"
+            exit 1
+          fi
+          echo "IPA build number: $build_number"
+          echo "build-number=$build_number" >> "$GITHUB_OUTPUT"
+
       # eas submit only uploads to App Store Connect; it can't assign a build to a
       # TestFlight group. fastlane's distribute_only mode skips the upload and assigns the
       # already-submitted build to the group, polling until Apple finishes processing it.
@@ -204,7 +224,7 @@ jobs:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
           APP_VERSION: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
-          BUILD_NUMBER: ${{ steps.get-build-info.outputs.BSKY_IOS_BUILD_NUMBER }}
+          BUILD_NUMBER: ${{ steps.ipa-build-number.outputs.build-number }}
           RELEASE_NOTES: ${{ inputs.releaseNotes }}
         run: |
           # Ensure the API key material is removed even if fastlane exits non-zero
@@ -234,7 +254,7 @@ jobs:
           webhook-type: incoming-webhook
           payload-templated: true
           payload: |
-            {"text": "iOS production build for App Store submission is ready!\n```Artifact: Check TestFlight to know when it is available\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_IOS_BUILD_NUMBER }}```"}
+            {"text": "iOS production build for App Store submission is ready!\n```Artifact: Check TestFlight to know when it is available\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.ipa-build-number.outputs.build-number }}```"}
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
