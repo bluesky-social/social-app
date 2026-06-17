@@ -161,17 +161,6 @@ export function buildReaderThread(
     result.push(chainReadMore)
   }
 
-  /*
-   * Pull the reply composer (inserted directly after the anchor by
-   * `buildThread`) down to just after the chain so it doesn't interrupt the
-   * read, but only once the last seam is open.
-   */
-  const lastSeamExpanded = expandedSeamUri === chain[chain.length - 1].uri
-  if (lastSeamExpanded) {
-    const composer = items.find(item => item.type === 'replyComposer')
-    if (composer) result.push(composer)
-  }
-
   return {items: result, anchorSeam, expandedSeam}
 }
 
