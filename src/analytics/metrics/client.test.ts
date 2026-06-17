@@ -23,6 +23,7 @@ jest.mock('#/logger', () => ({
 jest.mock('#/env', () => ({
   METRICS_API_HOST: 'https://test.metrics.api',
   IS_WEB: false,
+  ENABLE_METRICS: true,
 }))
 
 type TestEvents = {

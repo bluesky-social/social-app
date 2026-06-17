@@ -61,6 +61,9 @@ jobs:
           EXPO_PUBLIC_GEOLOCATION_URL: https://ip.mu.social
           EXPO_PUBLIC_ENABLE_LIVE_EVENTS: 'false'
           EXPO_PUBLIC_ENABLE_APP_CONFIG: 'false'
+          # Product-analytics events otherwise POST to events.bsky.app. Disabled;
+          # GrowthBook flag fetching is unaffected (separate from this client).
+          EXPO_PUBLIC_ENABLE_METRICS: 'false'
           # Deliberately NOT the prod Plausible site: staging.mu.social is
           # unregistered in Plausible, so events are accepted and discarded and
           # staging traffic never pollutes prod stats. (Blanking the value is
