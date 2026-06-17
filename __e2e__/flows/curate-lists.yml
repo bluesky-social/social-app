@@ -145,21 +145,21 @@ appId: xyz.blueskyweb.app
     id: "profileHeaderDropdownBtn"
 - tapOn: "Add to Lists"
 - assertVisible:
-    id: "userAddRemoveListsModal"
+    id: "userAddRemoveListsDialog"
 - tapOn:
     id: "user-bob.test-addBtn"
 - tapOn:
     id: "doneBtn"
 - assertNotVisible:
-    id: "userAddRemoveListsModal"
+    id: "userAddRemoveListsDialog"
 - tapOn:
     id: "profileHeaderDropdownBtn"
 - tapOn: "Add to Lists"
 - assertVisible:
-    id: "userAddRemoveListsModal"
+    id: "userAddRemoveListsDialog"
 - tapOn:
     id: "user-bob.test-addBtn"
 - tapOn:
     id: "doneBtn"
 - assertNotVisible:
-    id: "userAddRemoveListsModal"
+    id: "userAddRemoveListsDialog"
