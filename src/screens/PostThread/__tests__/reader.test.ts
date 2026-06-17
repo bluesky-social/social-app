@@ -112,7 +112,7 @@ describe('buildReaderThread', () => {
     expect(items).toBe(input)
   })
 
-  it('re-inserts the composer when the last seam is expanded', () => {
+  it('drops the standalone composer even when the last seam is expanded', () => {
     const anchor = post({rkey: 'a', depth: 0})
     const one = post({rkey: 'b', depth: 1, opThread: true})
     const two = post({rkey: 'c', depth: 2, opThread: true})
@@ -124,7 +124,6 @@ describe('buildReaderThread', () => {
       'threadPost',
       'readerSegment',
       'readerSegment',
-      'replyComposer',
     ])
   })
 
