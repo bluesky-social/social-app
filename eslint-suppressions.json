@@ -1511,9 +1511,6 @@
   "src/screens/Settings/components/ChangeHandleDialog.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 4
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
     }
   },
   "src/screens/Settings/components/ChangePasswordDialog.tsx": {
@@ -1963,11 +1960,6 @@
   "src/state/session/agent.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "src/state/shell/color-mode.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
     }
   },
   "src/state/shell/composer/index.tsx": {

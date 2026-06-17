@@ -40,19 +40,19 @@
       "primary_975": "#471A3D"
     },
     "blue": {
-      "primary_25": "#D1F2FA",
-      "primary_50": "#B9E7F4",
-      "primary_100": "#A1DCEE",
+      "primary_25": "#D6F2FA",
+      "primary_50": "#BCE8F6",
+      "primary_100": "#A3DEF0",
       "primary_200": "#87D1E8",
-      "primary_300": "#72BDDD",
-      "primary_400": "#5CA9D2",
-      "primary_500": "#4796C7",
-      "primary_600": "#3E88B5",
-      "primary_700": "#357BA3",
-      "primary_800": "#2C6E92",
-      "primary_900": "#236181",
-      "primary_950": "#1A5470",
-      "primary_975": "#123D50"
+      "primary_300": "#56BEE1",
+      "primary_400": "#28ACDC",
+      "primary_500": "#1C8DBA",
+      "primary_600": "#197EA9",
+      "primary_700": "#176E97",
+      "primary_800": "#155F84",
+      "primary_900": "#145271",
+      "primary_950": "#12455E",
+      "primary_975": "#0F3548"
     },
     "orange": {
       "primary_25": "#FFE8D6",

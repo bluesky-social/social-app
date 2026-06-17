@@ -39,6 +39,16 @@ export const OAUTH_SCOPE: string = shared.scope
  * OAUTH_SCOPE. Trim this back once those old bundles have aged out of caches.
  */
 export const OAUTH_DECLARED_SCOPE: string = shared.declaredScope
+
+/**
+ * Granular scope that authorizes `com.atproto.identity.updateHandle`. Not in
+ * OAUTH_SCOPE (initial logins stay transitional-only); acquired on demand by
+ * the handle step-up. Must remain within OAUTH_DECLARED_SCOPE.
+ */
+export const OAUTH_HANDLE_GRANT_SCOPE = 'identity:handle'
+/** Scope a handle step-up requests: the transitional base plus the handle grant. */
+export const OAUTH_HANDLE_SCOPE = `${OAUTH_SCOPE} ${OAUTH_HANDLE_GRANT_SCOPE}`
+
 export const OAUTH_HANDLE_RESOLVER: string = shared.handleResolver
 /** PDS the "Create account" flow sends the user to (prompt: 'create'). */
 export const OAUTH_SIGNUP_PDS_HOST: string = shared.signupPdsHost

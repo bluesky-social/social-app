@@ -53,6 +53,7 @@ import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-repli
 import {Shell} from '#/view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
+import {useThemesOverride} from '#/alf/util/useThemesOverride'
 import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
 import {useLandingEntry} from '#/components/hooks/useLandingEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
@@ -98,6 +99,7 @@ function InnerApp() {
   const {currentAccount} = useSession()
   const {resumeSession, login} = useSessionApi()
   const theme = useColorModeTheme()
+  const themesOverride = useThemesOverride() // Eurosky: per-user accent
   const {t: l} = useLingui()
   const hasCheckedLanding = useLandingEntry()
 
@@ -134,7 +136,7 @@ function InnerApp() {
   }, [l])
 
   return (
-    <Alf theme={theme}>
+    <Alf theme={theme} themesOverride={themesOverride}>
       <ThemeProvider theme={theme}>
         <ContextMenuProvider>
           <Splash isReady={isReady && hasCheckedLanding}>
