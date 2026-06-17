@@ -21,7 +21,6 @@ allowBuilds:
 patchedDependencies:
   '@sentry/expo-upload-sourcemaps@8.18.0': patches/@sentry__expo-upload-sourcemaps@8.18.0.patch
   expo-age-range@0.2.18: patches/expo-age-range@0.2.18.patch
-  'expo-glass-effect@55.0.8': patches/expo-glass-effect@55.0.8.patch
   'expo-haptics@15.0.8': patches/expo-haptics@15.0.8.patch
   'expo-image-picker@17.0.11': patches/expo-image-picker@17.0.11.patch
   'expo-image@3.0.11': patches/expo-image@3.0.11.patch
