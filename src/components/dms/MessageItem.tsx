@@ -62,6 +62,7 @@ import {groupReactions} from './ReactionsDialog'
 import {
   CLUSTERED_MESSAGE_THRESHOLD_MS,
   filterBlockedReactions,
+  MESSAGE_BUBBLE_MAX_WIDTH,
   MESSAGE_GAP_THRESHOLD_MS,
 } from './util'
 
@@ -661,7 +662,7 @@ function BlockedPlaceholder({
   return (
     <>
       <Button
-        style={[{maxWidth: '80%'}, a.self_start]}
+        style={[{maxWidth: MESSAGE_BUBBLE_MAX_WIDTH}, a.self_start]}
         label={
           profile.viewer?.blocking
             ? l`This message is hidden because you are blocking this user.`
