@@ -25,7 +25,7 @@ fi
 : "${BUNNY_STORAGE_PASSWORD:?set BUNNY_STORAGE_PASSWORD}"
 
 BASE="${BUNNY_STORAGE_ZONE%/}" # strip any trailing slash
-[[ -d "$DIR" ]] || { echo "no $DIR/ - build first (./pages_build.sh)"; exit 1; }
+[[ -d "$DIR" ]] || { echo "no $DIR/ - build first (./scripts/bunny_build.sh)"; exit 1; }
 
 total=$(find "$DIR" -type f | wc -l | tr -d ' ')
 echo "Uploading $total files from $DIR/ -> $BASE ..."

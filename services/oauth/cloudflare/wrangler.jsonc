@@ -1,0 +1,13 @@
+{
+  // Per-brand: rename, and set the two vars to the brand's domain. The private
+  // key is a secret, NOT a var: `wrangler secret put OAUTH_PRIVATE_JWK`.
+  // Deploy: `cd services/oauth/cloudflare && wrangler deploy`.
+  // Point the app at it with EXPO_PUBLIC_OAUTH_ASSERTION_URL=<worker url>.
+  "name": "mu-oauth-assertion",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-01"
+  // CLIENT_ID + ALLOWED_ORIGIN are derived from src/config/brand-meta.json
+  // (bundled at build). Add a "vars" block here ONLY to override per deployment
+  // (e.g. staging). The private key is a SECRET, never a var:
+  //   wrangler secret put OAUTH_PRIVATE_JWK   (or .dev.vars for `wrangler dev`)
+}

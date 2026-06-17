@@ -7,7 +7,7 @@ post's text and image instead of the one generic default card.
 ## Why it matters
 
 The web app is a static SPA (uploaded to Bunny Edge Storage by
-`../bunny_upload.sh`, served from the `mu.social` pull zone). A static SPA has
+`../../scripts/bunny_upload.sh`, served from the `mu.social` pull zone). A static SPA has
 no per-route server rendering, so every link - a post, a profile, the homepage -
 unfurls with the single default card baked into `../web/index.html`.
 
@@ -75,7 +75,7 @@ explicitly point you to Middleware Scripts for response transformation).
 1. Create an Edge Script in the Bunny dashboard, choose the **Middleware** type
    (not Standalone), and paste `bunny/index.ts`.
 2. Set that script's pull zone **origin to the existing Edge Storage static
-   build** - the same storage zone `../bunny_upload.sh` uploads to and that the
+   build** - the same storage zone `../../scripts/bunny_upload.sh` uploads to and that the
    current `mu.social` pull zone already serves.
 3. Point the **`mu.social` hostname at the middleware script's pull zone** (move
    it off the current static-only pull zone). If your dashboard instead offers

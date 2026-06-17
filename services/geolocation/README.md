@@ -43,7 +43,7 @@ it for US state-level age-assurance logic.
 ## Wire the app to it
 
 Set both at build time (see `.github/workflows/deploy-web-bunny.yml` and
-`pages_build.sh`):
+`scripts/bunny_build.sh`):
 
 ```
 EXPO_PUBLIC_ENABLE_GEOLOCATION=true

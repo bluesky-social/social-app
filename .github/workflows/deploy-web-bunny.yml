@@ -39,11 +39,11 @@ jobs:
         with:
           node-version-file: package.json
           cache: pnpm
-      # pages_build.sh does: frozen install (CI) -> intl:build -> build-web ->
+      # bunny_build.sh does: frozen install (CI) -> intl:build -> build-web ->
       # static-path rewrite -> _redirects. CI=true is set by Actions, so it
       # uses --frozen-lockfile.
       - name: Build web
-        run: bash ./pages_build.sh
+        run: bash ./scripts/bunny_build.sh
         env:
           # Geolocation decides which regional moderation labelers are required;
           # without it the app fail-closes and subscribes ALL of them. Served
@@ -60,7 +60,7 @@ jobs:
           # the scheme: the tracker posts to ${API_HOST}/api/event.
           EXPO_PUBLIC_PLAUSIBLE_API_HOST: https://events.mu.social
       - name: Upload to Bunny + purge cache
-        run: bash ./bunny_upload.sh
+        run: bash ./scripts/bunny_upload.sh
         env:
           BUNNY_STORAGE_ZONE: ${{ secrets.BUNNY_STORAGE_ZONE }}
           BUNNY_STORAGE_PASSWORD: ${{ secrets.BUNNY_STORAGE_PASSWORD }}

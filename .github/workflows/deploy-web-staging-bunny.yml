@@ -46,11 +46,11 @@ jobs:
         with:
           node-version-file: package.json
           cache: pnpm
-      # pages_build.sh does: frozen install (CI) -> intl:build -> build-web ->
+      # bunny_build.sh does: frozen install (CI) -> intl:build -> build-web ->
       # static-path rewrite -> _redirects. CI=true is set by Actions, so it
       # uses --frozen-lockfile.
       - name: Build web
-        run: bash ./pages_build.sh
+        run: bash ./scripts/bunny_build.sh
         env:
           # Staging is its own atproto OAuth client: client_id derives from this
           # base URL (gen-oauth-metadata.js emits the metadata into the build,
@@ -72,13 +72,13 @@ jobs:
           # Deliberately NOT the prod Plausible site: staging.mu.social is
           # unregistered in Plausible, so events are accepted and discarded and
           # staging traffic never pollutes prod stats. (Blanking the value is
-          # not an option: pages_build.sh's `:=` re-defaults empty to mu.social.)
+          # not an option: bunny_build.sh's `:=` re-defaults empty to mu.social.)
           EXPO_PUBLIC_PLAUSIBLE_DOMAIN: staging.mu.social
           # First-party Bunny proxy for Plausible (see services/plausible/). Needs
           # the scheme: the tracker posts to ${API_HOST}/api/event.
           EXPO_PUBLIC_PLAUSIBLE_API_HOST: https://events.mu.social
       - name: Upload to Bunny + purge cache
-        run: bash ./bunny_upload.sh
+        run: bash ./scripts/bunny_upload.sh
         env:
           BUNNY_STORAGE_ZONE: ${{ secrets.STAGING_BUNNY_STORAGE_ZONE }}
           BUNNY_STORAGE_PASSWORD: ${{ secrets.STAGING_BUNNY_STORAGE_PASSWORD }}

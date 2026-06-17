@@ -48,6 +48,7 @@
     "use-build-number": "./scripts/useBuildNumberEnv.sh",
     "use-build-number-with-bump": "./scripts/useBuildNumberEnvWithBump.sh",
     "build-web": "expo export:web && node ./scripts/post-web-build.js && node ./scripts/gen-oauth-metadata.js",
+    "deploy:cloudflare": "bash scripts/deploy-cloudflare.sh",
     "build-all": "pnpm intl:build && pnpm use-build-number-with-bump eas build --platform all",
     "build-ios": "pnpm use-build-number-with-bump eas build -p ios",
     "build-android": "pnpm use-build-number-with-bump eas build -p android",
