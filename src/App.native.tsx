@@ -31,7 +31,6 @@ import {listenSessionDropped} from '#/state/events'
 import {GlobalGestureEventsProvider} from '#/state/global-gesture-events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
 import {MessagesProvider} from '#/state/messages'
-import {Provider as ModalStateProvider} from '#/state/modals'
 import {init as initPersistedState} from '#/state/persisted'
 import {Provider as PrefsStateProvider} from '#/state/preferences'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
@@ -241,22 +240,20 @@ function App() {
                   <PrefsStateProvider>
                     <I18nProvider>
                       <ShellStateProvider>
-                        <ModalStateProvider>
-                          <DialogStateProvider>
-                            <LightboxStateProvider>
-                              <PortalProvider>
-                                <BottomSheetProvider>
-                                  <LandingProvider>
-                                    <SafeAreaProvider
-                                      initialMetrics={initialWindowMetrics}>
-                                      <InnerApp />
-                                    </SafeAreaProvider>
-                                  </LandingProvider>
-                                </BottomSheetProvider>
-                              </PortalProvider>
-                            </LightboxStateProvider>
-                          </DialogStateProvider>
-                        </ModalStateProvider>
+                        <DialogStateProvider>
+                          <LightboxStateProvider>
+                            <PortalProvider>
+                              <BottomSheetProvider>
+                                <LandingProvider>
+                                  <SafeAreaProvider
+                                    initialMetrics={initialWindowMetrics}>
+                                    <InnerApp />
+                                  </SafeAreaProvider>
+                                </LandingProvider>
+                              </BottomSheetProvider>
+                            </PortalProvider>
+                          </LightboxStateProvider>
+                        </DialogStateProvider>
                       </ShellStateProvider>
                     </I18nProvider>
                   </PrefsStateProvider>

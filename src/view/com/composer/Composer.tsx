@@ -86,7 +86,6 @@ import {
   createComposerImage,
   pasteImage,
 } from '#/state/gallery'
-import {useModalControls} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
   fromPostLanguages,
@@ -283,7 +282,6 @@ export const ComposePost = ({
     useSaveDraftMutation()
   const {mutate: cleanupPublishedDraft} = useCleanupPublishedDraftMutation()
   const {closeAllDialogs} = useDialogStateControlContext()
-  const {closeAllModals} = useModalControls()
   const {data: preferences} = usePreferencesQuery()
   const navigation = useNavigation<NavigationProp>()
 
@@ -835,7 +833,7 @@ export const ComposePost = ({
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       () => {
-        if (closeAllDialogs() || closeAllModals()) {
+        if (closeAllDialogs()) {
           return true
         }
         onPressCancel()
@@ -845,7 +843,7 @@ export const ComposePost = ({
     return () => {
       backHandler.remove()
     }
-  }, [onPressCancel, closeAllDialogs, closeAllModals])
+  }, [onPressCancel, closeAllDialogs])
 
   const missingAltError = useMemo(() => {
     if (!requireAltTextEnabled) {
