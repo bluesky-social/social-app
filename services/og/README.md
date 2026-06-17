@@ -22,8 +22,8 @@ matching what `bskyweb` does for posts and profiles.
 
 ## How it works
 
-Unlike the other workers (`geolocation-worker`, `plausible-worker`,
-`oauth-worker`), which are standalone services on their own subdomains, this one
+Unlike the other services (`services/geolocation`, `services/plausible`,
+`services/oauth`), which are standalone services on their own subdomains, this one
 runs as **middleware on the existing `mu.social` pull zone**. It uses
 `BunnySDK.net.http.servePullZone(...).onOriginResponse(...)`: the origin (the
 static build) is served as normal, and this script inspects the response on the

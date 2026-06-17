@@ -25,7 +25,7 @@
       unfurls. This is a static SPA (no per-route SSR), so this default card is
       what shows on the homepage, unmatched routes, and any time the edge
       injector is unavailable. Per-route cards for /profile and /post are added
-      at the Bunny edge by ../og-worker/, which strips and replaces these tags;
+      at the Bunny edge by ../services/og/, which strips and replaces these tags;
       keep them here as the fallback. og:image MUST be an absolute URL;
       og-image.jpg is copied from this web/ folder to the build root at deploy.
       Keep the dimensions in sync with the file (assets/og-image.jpg, 2400x1600).

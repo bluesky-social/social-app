@@ -155,7 +155,7 @@ export const GCP_PROJECT_ID: number =
 export const GEOLOCATION_DEV_URL = process.env.GEOLOCATION_DEV_URL
 /**
  * Eurosky: overridable so web builds can use our first-party Bunny endpoint
- * (see geolocation-worker/). Bluesky's ip.bsky.app is CORS-locked to bsky.app.
+ * (see services/geolocation/). Bluesky's ip.bsky.app is CORS-locked to bsky.app.
  */
 export const GEOLOCATION_PROD_URL =
   process.env.EXPO_PUBLIC_GEOLOCATION_URL || `https://ip.bsky.app`

@@ -52,10 +52,10 @@ jobs:
           # so staging self-publishes it at /oauth-client-metadata.json), and
           # client assertions are signed by the staging worker instance - the
           # prod worker pins prod's CLIENT_ID/ALLOWED_ORIGIN and would reject
-          # staging's requests. Same oauth-worker/ script, second deployment.
+          # staging's requests. Same services/oauth/ script, second deployment.
           EXPO_PUBLIC_OAUTH_BASE_URL: https://staging.mu.social
           EXPO_PUBLIC_OAUTH_ASSERTION_URL: https://oauth-staging.mu.social/client-assertion
-          # Geolocation: same first-party endpoint as prod (geolocation-worker/
+          # Geolocation: same first-party endpoint as prod (services/geolocation/
           # serves any origin), drives the regional moderation labelers.
           EXPO_PUBLIC_ENABLE_GEOLOCATION: 'true'
           EXPO_PUBLIC_GEOLOCATION_URL: https://ip.mu.social
@@ -69,7 +69,7 @@ jobs:
           # staging traffic never pollutes prod stats. (Blanking the value is
           # not an option: pages_build.sh's `:=` re-defaults empty to mu.social.)
           EXPO_PUBLIC_PLAUSIBLE_DOMAIN: staging.mu.social
-          # First-party Bunny proxy for Plausible (see plausible-worker/). Needs
+          # First-party Bunny proxy for Plausible (see services/plausible/). Needs
           # the scheme: the tracker posts to ${API_HOST}/api/event.
           EXPO_PUBLIC_PLAUSIBLE_API_HOST: https://events.mu.social
       - name: Upload to Bunny + purge cache

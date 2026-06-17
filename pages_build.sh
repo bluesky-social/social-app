@@ -23,7 +23,7 @@ set -euo pipefail
 
 # Eurosky defaults for web builds. These can still be overridden by explicitly
 # exporting different values in CI or local shells.
-# Geolocation stays ON, served first-party from Bunny (see geolocation-worker/)
+# Geolocation stays ON, served first-party from Bunny (see services/geolocation/)
 # instead of Bluesky's CORS-locked ip.bsky.app. It decides which regional
 # moderation labelers are required; without it the app fail-closes and
 # subscribes ALL of them for every user.
@@ -32,7 +32,7 @@ set -euo pipefail
 : "${EXPO_PUBLIC_ENABLE_LIVE_EVENTS:=false}"
 : "${EXPO_PUBLIC_ENABLE_APP_CONFIG:=false}"
 : "${EXPO_PUBLIC_PLAUSIBLE_DOMAIN:=mu.social}"
-# Route analytics through the first-party Bunny proxy (see plausible-worker/)
+# Route analytics through the first-party Bunny proxy (see services/plausible/)
 # so ad/content blockers that blocklist plausible.io stop dropping events. The
 # tracker posts to ${EXPO_PUBLIC_PLAUSIBLE_API_HOST}/api/event, so this must
 # include the scheme (unlike the bare PLAUSIBLE_DOMAIN above).
