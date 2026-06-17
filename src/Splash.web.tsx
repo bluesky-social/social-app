@@ -8,10 +8,17 @@ import {useEffect, useRef, useState} from 'react'
 import Svg, {Path} from 'react-native-svg'
 
 import {atoms as a, flatten} from '#/alf'
-import {BRAND_LOGO_3D} from '#/config/brand-logo'
+import brandColors from '#/config/brand-colors.json'
+import {BRAND_LOGO, BRAND_LOGO_3D} from '#/config/brand-logo'
 
 const size = 100
-const ratio = BRAND_LOGO_3D.ratio
+const ratio = (BRAND_LOGO_3D ?? BRAND_LOGO).ratio
+// Pre-boot splash: derive fills from the default accent (same source the HTML
+// codegen uses) so the React handoff matches the static #splash mark exactly.
+const accent =
+  brandColors.accents[
+    brandColors.defaultAccent as keyof typeof brandColors.accents
+  ]
 
 export function Splash({
   isReady,
@@ -84,12 +91,19 @@ export function Splash({
           ])}>
           <Svg
             fill="none"
-            viewBox={BRAND_LOGO_3D.viewBox}
+            viewBox={(BRAND_LOGO_3D ?? BRAND_LOGO).viewBox}
             style={[a.relative, {width: size, height: size * ratio, top: -50}]}>
-            {/* 3D pink wordmark - matches the pre-JS #splash mark in
-                web/index.html so the handoff is seamless. */}
-            <Path fill="#75295E" d={BRAND_LOGO_3D.shadowPath} />
-            <Path fill="#E66AB9" d={BRAND_LOGO_3D.facePath} />
+            {/* Brand wordmark - matches the pre-JS #splash mark in
+                web/index.html so the handoff is seamless. 3D when the brand
+                ships it, else the flat wordmark in the accent colour. */}
+            {BRAND_LOGO_3D ? (
+              <>
+                <Path fill={accent.primary_900} d={BRAND_LOGO_3D.shadowPath} />
+                <Path fill={accent.primary_400} d={BRAND_LOGO_3D.facePath} />
+              </>
+            ) : (
+              <Path fill={accent.primary_500} d={BRAND_LOGO.path} />
+            )}
           </Svg>
         </div>
       )}

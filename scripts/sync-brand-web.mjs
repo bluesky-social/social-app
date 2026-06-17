@@ -21,8 +21,10 @@ import {fileURLToPath} from 'node:url'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const COLORS_PATH = path.join(ROOT, 'src/config/brand-colors.json')
+const LOGO_PATH = path.join(ROOT, 'src/config/brand-logo.json')
 
 const colors = JSON.parse(fs.readFileSync(COLORS_PATH, 'utf8'))
+const logo = JSON.parse(fs.readFileSync(LOGO_PATH, 'utf8'))
 const N = colors.neutral
 const S = {...colors.neutral, ...colors.neutralSubduedOverrides}
 const A = colors.accents[colors.defaultAccent]
@@ -102,6 +104,24 @@ function themeColorMeta(i) {
 }
 
 /**
+ * Pre-boot splash glyph, generated from the logo geometry (brand-logo.json) +
+ * the default accent. Single line, matching the static #splash mark the React
+ * splash (src/Splash*.tsx) hands off to. When the brand ships a dimensional
+ * logo it is the 3D wordmark (shadow primary_900 behind face primary_400);
+ * otherwise the flat wordmark filled with primary_500.
+ * @param {string} i
+ */
+function splashSvg(i) {
+  const d = logo.dimensional
+  const paths = d
+    ? `<path fill="${A.primary_900}" d="${d.shadowPath}"/>` +
+      `<path fill="${A.primary_400}" d="${d.facePath}"/>`
+    : `<path fill="${A.primary_500}" d="${logo.flat.path}"/>`
+  const viewBox = (d ?? logo.flat).viewBox
+  return `${i}<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}">${paths}</svg>`
+}
+
+/**
  * Replace the lines between `<!-- BRAND-GEN:<id> start ... -->` and
  * `<!-- BRAND-GEN:<id> end -->` (or the `/* ... *\/` CSS-comment form) with the
  * output of build(indent), where indent is the leading whitespace of the start
@@ -138,20 +158,7 @@ function renderFile(content) {
     /(<link rel="mask-icon"[^>]*\scolor=")#[0-9A-Fa-f]{6}(")/,
     `$1${A.primary_500}$2`,
   )
-  // Pre-boot splash glyph: first <path fill> = shadow (primary_900), second =
-  // face (primary_400). Path geometry is left untouched (it comes from the
-  // logo source, not this colour pass).
-  out = out.replace(
-    /(<svg\b[^>]*\bviewBox="0 0 1000 712\.872"[^>]*>)([\s\S]*?)(<\/svg>)/,
-    (_m, openTag, inner, closeTag) => {
-      let n = 0
-      const recoloured = inner.replace(
-        /fill="#[0-9A-Fa-f]{6}"/g,
-        () => `fill="${n++ === 0 ? A.primary_900 : A.primary_400}"`,
-      )
-      return openTag + recoloured + closeTag
-    },
-  )
+  out = regenRegion(out, 'splash', 'html', splashSvg)
   return out
 }
 

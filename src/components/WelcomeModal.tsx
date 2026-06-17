@@ -6,7 +6,7 @@ import {Trans} from '@lingui/react/macro'
 import {FocusGuards, FocusScope} from 'radix-ui/internal'
 
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {Logo3D} from '#/view/icons/Logo3D'
+import {LogoHero} from '#/view/icons/LogoHero'
 import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
 import {BetaTag} from '#/components/BetaTag'
 import {Button, ButtonText} from '#/components/Button'
@@ -99,7 +99,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
             <View style={[a.gap_2xl, a.align_center, a.p_4xl]}>
               <View
                 style={[a.align_center, a.justify_center, a.w_full, a.gap_sm]}>
-                <Logo3D
+                <LogoHero
                   width={140}
                   accessibilityLabel={BRAND.name}
                   accessibilityHint=""
