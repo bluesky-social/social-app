@@ -84,6 +84,11 @@ jobs:
   android:
     name: Nightly Android Build
     needs: [prepare]
+    # build-submit-android.yml contains an attachToRelease job that requests contents: write.
+    # That job is skipped for nightly (it needs a production tag build), but GitHub statically
+    # validates the reusable-workflow permission ceiling, so the caller must grant it here.
+    permissions:
+      contents: write
     uses: ./.github/workflows/build-submit-android.yml
     with:
       profile: testflight-android
