@@ -56,6 +56,12 @@ function Inner({state}: {state: ComposerOpts}) {
           if (!isModalActive) {
             ref.current?.onPressCancel()
           }
+        }}
+        onPointerDown={evt => {
+          // Dismiss when clicking the backdrop (not the inner composer)
+          if (evt.target === evt.currentTarget && !isModalActive) {
+            ref.current?.onPressCancel()
+          }
         }}>
         <View
           style={[
