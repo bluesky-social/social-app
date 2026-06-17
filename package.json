@@ -63,6 +63,8 @@
     "lint-native": "swiftlint ./modules && ktlint ./modules",
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
     "typecheck": "tsgo --project ./tsconfig.check.json",
+    "brand:sync-web": "node scripts/sync-brand-web.mjs",
+    "brand:check-web": "node scripts/sync-brand-web.mjs --check",
     "e2e:mock-server": "cd dev-env && pnpm start",
     "e2e:build": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
     "e2e:build-android": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:android",

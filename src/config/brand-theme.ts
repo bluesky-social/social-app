@@ -1,37 +1,34 @@
 /**
- * mu theme configuration.
+ * Brand theme configuration - palette + gradients.
  *
- * Single source of truth for the palette + gradients. Sibling to
- * `src/config/brand.ts` (service / brand-string config). Strategy: keep
- * every ALF *atom* (spacing, radius, type scale, button shape) on
+ * Sibling to `src/config/brand.ts` (service / brand-string config). Strategy:
+ * keep every ALF *atom* (spacing, radius, type scale, button shape) on
  * `@bsky.app/alf` and override only the colour palette + gradients. That is
  * enough for a distinct identity without forking the design system, and it
  * means exactly two upstream files carry a 2-line redirect to this module
- * (`src/alf/themes.ts`, `src/alf/tokens.ts`) - every other file upstream
- * touches stays untouched, so it can never conflict on merge.
+ * (`src/alf/themes.ts`, `src/alf/tokens.ts`) - every other upstream file stays
+ * untouched, so it can never conflict on merge.
  *
- * Export symbol names (BRAND_PALETTE etc.) are brand-agnostic, so a rebrand
- * only changes the *contents* here - the two redirect files import the same
- * names regardless of brand.
+ * Raw colour values live in `src/config/brand-colors.json` (the one source
+ * shared with the native build in app.config.js and the web pre-boot codegen).
+ * This module composes them into ALF `Palette`s. Export symbol names
+ * (BRAND_PALETTE etc.) are brand-agnostic, so a rebrand only changes the JSON.
  *
  * ---------------------------------------------------------------------------
  * HOW THE LOOK IS CHOSEN
  *
- * The mu brand kit (`mu-brand-package/mu-brandguidelines.pdf`) ships a neutral
- * base ramp plus THREE interchangeable accent families - pink, blue, orange -
- * and instructs picking one primary per design ("Try not to mix colours
- * together"). The identity is therefore built from two swappable axes:
- *
- *   NEUTRAL  - the contrast_ (background -> text) ramp. mu's near-white base
- *              (#f7f7f2) up to ink (#212121); carries the clean monochrome UI.
+ * Two swappable axes (from the mu brand kit, `mu-brandguidelines.pdf`):
+ *   NEUTRAL  - the contrast_ (background -> text) ramp. Near-white base
+ *              (#f7f7f2) up to ink (#212121); the clean monochrome UI.
  *   ACCENT   - the primary_ ramp. Every themed affordance (buttons, links,
- *              toggles, focus rings, spinners) derives from this. All three
- *              brand families are defined below; the SELECTOR picks one.
+ *              toggles, focus rings, spinners) derives from this. The kit
+ *              ships three interchangeable families (pink / blue / orange);
+ *              `brand-colors.json#accents` holds them and `#defaultAccent`
+ *              picks the one this build ships.
  *
- * To switch mu's primary colour (e.g. pink -> blue), edit the one line in the
- * SELECTOR block and reload - nothing else. All three ramps are kept here
- * permanently so the alternatives are self-documenting and the swap stays a
- * one-word edit.
+ * `buildPalettes(accentKey)` composes neutral + a chosen accent at runtime,
+ * which is what a per-user accent picker uses; the module-level
+ * BRAND_PALETTE / BRAND_SUBDUED_PALETTE are just `buildPalettes(DEFAULT_ACCENT)`.
  * ---------------------------------------------------------------------------
  */
 
@@ -40,6 +37,8 @@ import {
   DEFAULT_SUBDUED_PALETTE,
   type Palette,
 } from '@bsky.app/alf'
+
+import brandColors from '#/config/brand-colors.json'
 
 type ContrastRamp = Pick<
   Palette,
@@ -77,152 +76,72 @@ type PrimaryRamp = Pick<
   | 'primary_975'
 >
 
-// ---------------------------------------------------------------------------
-// NEUTRAL preset (the contrast_ ramp) - mu base colours
-// ---------------------------------------------------------------------------
-
 /**
- * mu base ramp, verbatim from the brand kit's neutral tonal scale. Near-white
- * #f7f7f2 page surface up to ink #212121 for heading text. contrast_0 stays
- * pure white (components that need a true white surface); contrast_25 is the
- * mu base background; contrast_950 = ink.
+ * NEUTRAL (contrast_ ramp). contrast_0 stays pure white; contrast_25 is the mu
+ * base off-white; contrast_950 = ink.
  *
- * !! SYNC: ALF derives the page background from this ramp - light bg =
- * contrast_0 (#FFFFFF), dark bg = this.contrast_1000 (#000000), dim bg =
- * muNeutralSubdued.contrast_1000 (#1A1A1A). `web/index.html`'s static <style>
- * hardcodes those same body backgrounds (it can't import TS); if you change
- * contrast_0 / contrast_1000 here (or the subdued deep end), update the
- * html.theme--{light,dark,dim} background-color + --background in
- * web/index.html too, or a scroll/header seam reappears.
+ * !! SYNC: ALF derives the page background from this ramp (light = contrast_0,
+ * dark = contrast_1000, dim = subdued contrast_1000). The static <style> blocks
+ * in web/index.html + bskyweb/templates/base.html hardcode the same body
+ * backgrounds (they can't import TS) - they are regenerated from the same JSON
+ * by `pnpm brand:sync-web`, so edit brand-colors.json and re-run that, never
+ * the HTML by hand.
  */
-const muNeutral: ContrastRamp = {
-  contrast_0: '#FFFFFF',
-  contrast_25: '#F7F7F2', // mu base off-white
-  contrast_50: '#EDEBE5',
-  contrast_100: '#E0DED9',
-  contrast_200: '#C5C4BF',
-  contrast_300: '#ABAAA6',
-  contrast_400: '#92918E',
-  contrast_500: '#797876',
-  contrast_600: '#62615F',
-  contrast_700: '#4B4A49',
-  contrast_800: '#353535',
-  contrast_900: '#2A2A2A',
-  contrast_950: '#212121', // mu ink
-  contrast_975: '#141414',
-  contrast_1000: '#000000',
-}
+const muNeutral = brandColors.neutral
 
 /**
  * Subdued variant for the `dim` theme. ALF builds `dim` from
  * invertPalette(SUBDUED), so its background is this ramp's contrast_1000. The
  * deep end is lifted to a soft-black (#1A1A1A) instead of pure #000000 - that
- * lift is the entire reason `dim` looks softer than `dark` (mirrors how
- * upstream's DEFAULT_SUBDUED lifts contrast_1000). Light steps stay equal to
- * muNeutral so only the darkness of dark surfaces changes.
- *
- * !! SYNC: contrast_1000 here = the dim body background hardcoded in
- * web/index.html + bskyweb/templates/base.html (html.theme--dim). Change one,
- * change the others.
+ * lift is the entire reason `dim` looks softer than `dark`.
  */
 const muNeutralSubdued: ContrastRamp = {
   ...muNeutral,
-  contrast_900: '#242424',
-  contrast_950: '#1F1F1F',
-  contrast_975: '#1C1C1C',
-  contrast_1000: '#1A1A1A', // dim background - soft black, not pure black
+  ...brandColors.neutralSubduedOverrides,
 }
-
-// ---------------------------------------------------------------------------
-// ACCENT presets (the primary_ ramp) - mu's three brand families
-// ---------------------------------------------------------------------------
 
 /**
- * ALF pins *_500 across its light/dark inversion (see invertPalette in
- * @bsky.app/alf), and uses primary_500 as the solid-button fill / link
- * colour. So each ramp anchors _500 on the brand family's designated
- * link/accent tone (~60-65% lightness) - readable on both the near-white base
- * and the inverted near-black one - with the bright brand tint sitting higher
- * on the ramp. Steps are the brand tonal scales verbatim; the few endpoints
- * the kit does not provide are interpolated.
+ * ACCENT families (the primary_ ramp). ALF pins *_500 across its light/dark
+ * inversion and uses primary_500 as the solid-button fill / link colour, so
+ * each ramp anchors _500 on the family's link/accent tone with the bright tint
+ * higher on the ramp. This is the curated set a per-user accent picker chooses
+ * from; `DEFAULT_ACCENT` is what this build ships.
  */
-const pinkAccent: PrimaryRamp = {
-  primary_25: '#FFEDFC',
-  primary_50: '#FFD9F6',
-  primary_100: '#FFBDF2', // brand pink primary tint
-  primary_200: '#F8A2DF',
-  primary_300: '#EF86CB',
-  primary_400: '#E66AB9',
-  primary_500: '#DB4AA6', // brand pink link/anchor
-  primary_600: '#C04293',
-  primary_700: '#A73981',
-  primary_800: '#8D316F',
-  primary_900: '#75295E',
-  primary_950: '#5E224D',
-  primary_975: '#471A3D', // brand pink deep
-}
+export const ACCENTS = brandColors.accents as Record<string, PrimaryRamp>
+export type AccentKey = keyof typeof brandColors.accents
+export const DEFAULT_ACCENT = brandColors.defaultAccent as AccentKey
 
-const blueAccent: PrimaryRamp = {
-  primary_25: '#D1F2FA',
-  primary_50: '#B9E7F4',
-  primary_100: '#A1DCEE',
-  primary_200: '#87D1E8', // brand blue primary tint
-  primary_300: '#72BDDD',
-  primary_400: '#5CA9D2',
-  primary_500: '#4796C7', // brand blue link/anchor
-  primary_600: '#3E88B5',
-  primary_700: '#357BA3',
-  primary_800: '#2C6E92',
-  primary_900: '#236181',
-  primary_950: '#1A5470', // brand blue deep
-  primary_975: '#123D50',
-}
-
-const orangeAccent: PrimaryRamp = {
-  primary_25: '#FFE8D6',
-  primary_50: '#FFD3B5',
-  primary_100: '#FFBE92',
-  primary_200: '#FFA86A',
-  primary_300: '#FF8F36', // brand orange primary tint
-  primary_400: '#F9742B',
-  primary_500: '#F2571F', // brand orange link/anchor
-  primary_600: '#DB5019',
-  primary_700: '#C54A12',
-  primary_800: '#AF430B',
-  primary_900: '#9A3D05',
-  primary_950: '#853600', // brand orange deep
-  primary_975: '#6E2C00',
-}
-
-const ACCENTS = {
-  pink: pinkAccent,
-  blue: blueAccent,
-  orange: orangeAccent,
-} as const
-
-// ===========================================================================
-//  ▼▼▼  SELECTOR - this is the entire "which colour" decision.  Edit, reload.
-// ===========================================================================
-
-const ACCENT: PrimaryRamp = ACCENTS.pink // ACCENTS.blue | ACCENTS.orange
-
-// ===========================================================================
-//  ▲▲▲  Everything below is mechanical composition - no decisions here.
-// ===========================================================================
-
-function compose(base: Palette, neutral: ContrastRamp): Palette {
+function composeWith(
+  base: Palette,
+  neutral: ContrastRamp,
+  accent: PrimaryRamp,
+): Palette {
   return {
     ...base,
     ...neutral,
-    ...ACCENT,
+    ...accent,
   }
 }
 
-export const BRAND_PALETTE: Palette = compose(DEFAULT_PALETTE, muNeutral)
-export const BRAND_SUBDUED_PALETTE: Palette = compose(
-  DEFAULT_SUBDUED_PALETTE,
-  muNeutralSubdued,
-)
+/**
+ * Compose the default + subdued palettes for a given accent family. The
+ * module-level palettes below use DEFAULT_ACCENT; a runtime accent picker calls
+ * this with the user's choice and feeds the result to ALF via `themesOverride`.
+ */
+export function buildPalettes(accentKey: AccentKey): {
+  default: Palette
+  subdued: Palette
+} {
+  const accent = ACCENTS[accentKey]
+  return {
+    default: composeWith(DEFAULT_PALETTE, muNeutral, accent),
+    subdued: composeWith(DEFAULT_SUBDUED_PALETTE, muNeutralSubdued, accent),
+  }
+}
+
+const defaultPalettes = buildPalettes(DEFAULT_ACCENT)
+export const BRAND_PALETTE: Palette = defaultPalettes.default
+export const BRAND_SUBDUED_PALETTE: Palette = defaultPalettes.subdued
 
 /**
  * Gradient overrides for `src/alf/tokens.ts`. Mostly decorative (avatar

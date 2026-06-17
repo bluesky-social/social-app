@@ -1,5 +1,14 @@
 // @ts-check
 const pkg = require('./package.json')
+/**
+ * Brand colours, shared with the in-app theme (src/config/brand-theme.ts) and
+ * the web pre-boot codegen (scripts/sync-brand-web.mjs). Native chrome renders
+ * before any per-user accent preference is known, so it always uses the org's
+ * shipped default accent.
+ * @type {{accents: Record<string, Record<string, string>>, defaultAccent: string}}
+ */
+const brandColors = require('./src/config/brand-colors.json')
+const BRAND_ACCENT = brandColors.accents[brandColors.defaultAccent]
 
 /**
  * @param {import('@expo/config-types').ExpoConfig} _config
@@ -58,7 +67,7 @@ module.exports = function (_config) {
       // that rebrand is a separate pass.
       icon: './assets/app-icons/ios_icon_default_next.png',
       userInterfaceStyle: 'automatic',
-      primaryColor: '#006AFF',
+      primaryColor: BRAND_ACCENT.primary_500,
       newArchEnabled: false,
       ios: {
         supportsTablet: false,
@@ -195,7 +204,7 @@ module.exports = function (_config) {
         adaptiveIcon: {
           foregroundImage: './assets/icon-android-foreground.png',
           monochromeImage: './assets/icon-android-monochrome.png',
-          backgroundColor: '#006AFF',
+          backgroundColor: BRAND_ACCENT.primary_500,
         },
         googleServicesFile: './google-services.json',
         package: 'xyz.blueskyweb.app',
@@ -231,12 +240,12 @@ module.exports = function (_config) {
         // dark browser themes. Standard Expo mechanism, same as upstream, so
         // no custom <link> wiring and minimal merge surface.
         favicon: './assets/favicon.png',
-        // mu brand pink (ACCENTS.pink primary_500 in src/config/eurosky-theme.ts).
+        // Brand default-accent primary_500 (from src/config/brand-colors.json).
         // Drives the PWA manifest theme_color and the <meta name="theme-color">,
         // i.e. the Chrome Custom Tab toolbar when opening links from the
         // installed PWA on Android. Web-only override; native keeps primaryColor
         // (expo-pwa: theme_color = web.themeColor ?? primaryColor).
-        themeColor: '#DB4AA6',
+        themeColor: BRAND_ACCENT.primary_500,
       },
       updates: {
         url: 'https://updates.bsky.app/manifest',
@@ -301,7 +310,7 @@ module.exports = function (_config) {
           'expo-notifications',
           {
             icon: './assets/icon-android-notification.png',
-            color: '#1185fe',
+            color: BRAND_ACCENT.primary_500,
             sounds: PLATFORM === 'ios' ? ['assets/dm.aiff'] : ['assets/dm.mp3'],
           },
         ],
@@ -344,22 +353,22 @@ module.exports = function (_config) {
           {
             ios: {
               enableFullScreenImage_legacy: true, // iOS only
-              backgroundColor: '#006AFF', // primary_500
+              backgroundColor: BRAND_ACCENT.primary_500,
               image: './assets/splash/splash.png',
               resizeMode: 'cover',
               dark: {
                 enableFullScreenImage_legacy: true, // iOS only
-                backgroundColor: '#002861', // primary_900
+                backgroundColor: BRAND_ACCENT.primary_900,
                 image: './assets/splash/splash-dark.png',
                 resizeMode: 'cover',
               },
             },
             android: {
-              backgroundColor: '#006AFF', // primary_500
+              backgroundColor: BRAND_ACCENT.primary_500,
               image: './assets/splash/android-splash-logo-white.png',
               imageWidth: 102, // even division of 306px
               dark: {
-                backgroundColor: '#002861', // primary_900
+                backgroundColor: BRAND_ACCENT.primary_900,
                 image: './assets/splash/android-splash-logo-white.png',
                 imageWidth: 102,
               },
