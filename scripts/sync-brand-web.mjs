@@ -22,9 +22,15 @@ import {fileURLToPath} from 'node:url'
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const COLORS_PATH = path.join(ROOT, 'src/config/brand-colors.json')
 const LOGO_PATH = path.join(ROOT, 'src/config/brand-logo.json')
+const META_PATH = path.join(ROOT, 'src/config/brand-meta.json')
 
 const colors = JSON.parse(fs.readFileSync(COLORS_PATH, 'utf8'))
 const logo = JSON.parse(fs.readFileSync(LOGO_PATH, 'utf8'))
+const meta = JSON.parse(fs.readFileSync(META_PATH, 'utf8'))
+const BRAND_NAME = meta.name
+const BRAND_HOST = meta.hosts[0]
+const SOCIAL_HANDLE = meta.socialHandle
+const OG_IMAGE = `https://${BRAND_HOST}/og-image.jpg`
 const N = colors.neutral
 const S = {...colors.neutral, ...colors.neutralSubduedOverrides}
 const A = colors.accents[colors.defaultAccent]
@@ -122,6 +128,39 @@ function splashSvg(i) {
 }
 
 /**
+ * og:/twitter: share-card block (web/index.html). Name + host come from
+ * brand-meta.json; type / image dimensions / card kind stay static. The
+ * og-image.jpg file ships at the brand host root.
+ * @param {string} i
+ */
+function metaBlock(i) {
+  return [
+    `${i}<meta property="og:type" content="website">`,
+    `${i}<meta property="og:site_name" content="${BRAND_NAME}">`,
+    `${i}<meta property="og:title" content="${BRAND_NAME}">`,
+    `${i}<meta property="og:url" content="https://${BRAND_HOST}">`,
+    `${i}<meta property="og:image" content="${OG_IMAGE}">`,
+    `${i}<meta property="og:image:width" content="2400">`,
+    `${i}<meta property="og:image:height" content="1600">`,
+    `${i}<meta property="og:image:alt" content="${BRAND_NAME}">`,
+    `${i}<meta name="twitter:card" content="summary_large_image">`,
+    `${i}<meta name="twitter:title" content="${BRAND_NAME}">`,
+    `${i}<meta name="twitter:image" content="${OG_IMAGE}">`,
+  ].join('\n')
+}
+
+/**
+ * twitter:site handle (base.html). Omitted entirely when the brand has no
+ * X/Twitter handle, rather than emitting one it does not own.
+ * @param {string} i
+ */
+function twitterSite(i) {
+  return SOCIAL_HANDLE
+    ? `${i}<meta name="twitter:site" content="${SOCIAL_HANDLE}" />`
+    : ''
+}
+
+/**
  * Replace the lines between `<!-- BRAND-GEN:<id> start ... -->` and
  * `<!-- BRAND-GEN:<id> end -->` (or the `/* ... *\/` CSS-comment form) with the
  * output of build(indent), where indent is the leading whitespace of the start
@@ -130,8 +169,10 @@ function splashSvg(i) {
  * @param {string} id
  * @param {'css' | 'html'} kind
  * @param {(indent: string) => string} build
+ * @param {boolean} [optional] when true, return content unchanged if the
+ *   markers are absent (for regions that live in only one of the two files)
  */
-function regenRegion(content, id, kind, build) {
+function regenRegion(content, id, kind, build, optional = false) {
   const open = kind === 'css' ? '/\\*' : '<!--'
   const close = kind === 'css' ? '\\*/' : '-->'
   const startRe = new RegExp(
@@ -141,6 +182,7 @@ function regenRegion(content, id, kind, build) {
   const sm = content.match(startRe)
   const em = content.match(endRe)
   if (!sm || !em || sm.index === undefined || em.index === undefined) {
+    if (optional) return content
     throw new Error(`BRAND-GEN:${id} markers not found`)
   }
   const indent = sm[1]
@@ -159,6 +201,30 @@ function renderFile(content) {
     `$1${A.primary_500}$2`,
   )
   out = regenRegion(out, 'splash', 'html', splashSvg)
+
+  // Brand text identity (brand-meta.json). The og/twitter block lives only in
+  // web/index.html; the twitter:site tag only in base.html - both optional so
+  // the other file passes through untouched.
+  out = regenRegion(out, 'meta', 'html', metaBlock, true)
+  out = regenRegion(out, 'twitter-site', 'html', twitterSite, true)
+
+  // base.html scattered brand text (no-ops on files that lack each pattern).
+  out = out.replace(
+    /(<title>\{%- block head_title -%\})[^<]*?(\{%- endblock -%\}<\/title>)/,
+    `$1${BRAND_NAME}$2`,
+  )
+  out = out.replace(
+    /(<meta name="application-name" content=")[^"]*(">)/,
+    `$1${BRAND_NAME}$2`,
+  )
+  out = out.replace(
+    /(<meta property="og:site_name" content=")[^"]*(">)/,
+    `$1${BRAND_NAME}$2`,
+  )
+  out = out.replace(
+    /Learn more about .+? at <a href="https:\/\/[^"]+">[^<]+<\/a>/,
+    `Learn more about ${BRAND_NAME} at <a href="https://${BRAND_HOST}">${BRAND_HOST}</a>`,
+  )
   return out
 }
 

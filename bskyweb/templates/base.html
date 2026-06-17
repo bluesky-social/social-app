@@ -9,7 +9,7 @@
   -->
   <link rel="preconnect" href="https://bsky.social">
   <link rel="preconnect" href="https://go.bsky.app">
-  <title>{%- block head_title -%}Bluesky{%- endblock -%}</title>
+  <title>{%- block head_title -%}mu{%- endblock -%}</title>
 
   <!-- Hello Humans! API docs at https://atproto.com -->
 
@@ -145,12 +145,14 @@
   <!-- BRAND-GEN:theme-color start - brand-colors.json defaultAccent primary_500 (run `pnpm brand:sync-web`) -->
   <meta name="theme-color" content="#DB4AA6">
   <!-- BRAND-GEN:theme-color end -->
-  <meta name="application-name" content="Bluesky">
+  <meta name="application-name" content="mu">
   <meta name="generator" content="bskyweb">
   {% if noindex %}<meta name="robots" content="noindex{% if nofollow %}, nofollow{% endif %}">{% endif %}
-  <meta property="og:site_name" content="Bluesky Social">
+  <meta property="og:site_name" content="mu">
   <meta property="og:logo" content="{{ favicon }}">
-  <meta name="twitter:site" content="@bluesky" />
+  <!-- BRAND-GEN:twitter-site start - brand-meta.json socialHandle, omitted when empty (run `pnpm brand:sync-web`) -->
+
+  <!-- BRAND-GEN:twitter-site end -->
   <link type="application/activity+json" href="" />
 
   {% block html_head_extra -%}{%- endblock %}
@@ -169,7 +171,7 @@
   <noscript>
     <h1 lang="en">JavaScript Required</h1>
     <p lang="en">This is a heavily interactive web application, and JavaScript is required. Simple HTML interfaces are possible, but that is not what this is.
-    <p lang="en">Learn more about Bluesky at <a href="https://bsky.social">bsky.social</a> and <a href="https://atproto.com">atproto.com</a>.
+    <p lang="en">Learn more about mu at <a href="https://mu.social">mu.social</a> and <a href="https://atproto.com">atproto.com</a>.
     {% block noscript_extra %}{% endblock %}
   </noscript>
 {% endblock -%}

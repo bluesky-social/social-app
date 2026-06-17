@@ -9,6 +9,12 @@ const pkg = require('./package.json')
  */
 const brandColors = require('./src/config/brand-colors.json')
 const BRAND_ACCENT = brandColors.accents[brandColors.defaultAccent]
+/**
+ * Brand text identity, shared with brand.ts (BRAND.name / web.hosts) and the
+ * web codegen, so the display name / host never drift across runtimes.
+ * @type {{name: string, hosts: string[], socialHandle: string}}
+ */
+const brandMeta = require('./src/config/brand-meta.json')
 
 /**
  * @param {import('@expo/config-types').ExpoConfig} _config
@@ -234,7 +240,7 @@ module.exports = function (_config) {
         // Eurosky fork: web-only display name -> drives the static
         // %WEB_TITLE% pre-boot tab title (@expo/webpack-config uses
         // web.name ?? name). Native app name stays a later pass.
-        name: 'mu',
+        name: brandMeta.name,
         // mu favicon: the brand pink app-icon tile (rounded square, "mu"
         // wordmark) from the brand kit. The pink fill reads on both light and
         // dark browser themes. Standard Expo mechanism, same as upstream, so

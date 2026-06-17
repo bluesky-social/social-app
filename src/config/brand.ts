@@ -19,10 +19,15 @@
  *   live in app.config.js, which runs in Node at Expo config time and
  *   cannot import this TS. That rebrand is a separate, later pass; this
  *   file currently only covers what the running app reads.
+ *
+ * `name` + `web.hosts` come from `brand-meta.json` (shared with app.config.js
+ * and the web codegen so the brand name/host never drift); the rest is inline.
  */
+import brandMeta from '#/config/brand-meta.json'
+
 export const BRAND = {
   /** Display name used in page/tab titles and in-app brand text. */
-  name: 'mu',
+  name: brandMeta.name,
   web: {
     /**
      * Web hostnames this app serves its own UI on. A link pasted to one of
@@ -34,7 +39,7 @@ export const BRAND = {
      * (matching is exact). bsky.app is always treated as first-party in
      * addition to these.
      */
-    hosts: ['mu.social'],
+    hosts: brandMeta.hosts,
   },
   /**
    * Brand-owned web pages linked from the UI. A new brand should host its own
