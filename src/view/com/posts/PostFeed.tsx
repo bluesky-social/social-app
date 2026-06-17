@@ -1,4 +1,12 @@
-import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   ActivityIndicator,
   AppState,
@@ -183,6 +191,10 @@ export function getItemsForFeedback(feedRow: FeedRow): {
   }
 }
 
+export type PostFeedRef = {
+  refreshFeed: () => Promise<void>
+}
+
 // DISABLED need to check if this is causing random feed refreshes -prf
 // const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
@@ -209,6 +221,7 @@ let PostFeed = ({
   savedFeedConfig,
   initialNumToRender: initialNumToRenderOverride,
   isVideoFeed = false,
+  ref,
 }: {
   feed: FeedDescriptor
   feedParams?: FeedParams
@@ -232,6 +245,7 @@ let PostFeed = ({
   initialNumToRender?: number
   isVideoFeed?: boolean
   lastFetchDate?: () => number
+  ref?: React.Ref<PostFeedRef>
 }): React.ReactNode => {
   const ax = useAnalytics()
   const {t: l} = useLingui()
@@ -695,8 +709,9 @@ let PostFeed = ({
 
   // events
   // =
+  //
 
-  const onRefresh = useCallback(async () => {
+  const refreshFeed = async () => {
     if (!enabled) return
 
     ax.metric('feed:refresh', {
@@ -704,24 +719,23 @@ let PostFeed = ({
       feedUrl: feed,
       reason: 'pull-to-refresh',
     })
-    setIsPTRing(true)
     try {
       await truncateAndInvalidate(queryClient, RQKEY(feed, feedParams))
       onHasNew?.(false)
     } catch (err) {
       logger.error('Failed to refresh posts feed', {message: err})
     }
+  }
+
+  const onRefresh = async () => {
+    setIsPTRing(true)
+    await refreshFeed()
     setIsPTRing(false)
-  }, [
-    ax,
-    queryClient,
-    setIsPTRing,
-    onHasNew,
-    feed,
-    feedParams,
-    feedType,
-    enabled,
-  ])
+  }
+
+  useImperativeHandle(ref, () => ({
+    refreshFeed,
+  }))
 
   const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
