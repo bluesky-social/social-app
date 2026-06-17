@@ -11,7 +11,7 @@ import {
   RQKEY as FEED_RQKEY,
 } from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {PostFeed} from '#/view/com/posts/PostFeed'
+import {PostFeed, type PostFeedRef} from '#/view/com/posts/PostFeed'
 import {
   EmptyState,
   type EmptyStateButtonProps,
@@ -35,6 +35,7 @@ interface FeedSectionProps {
   emptyStateMessage?: string
   emptyStateButton?: EmptyStateButtonProps
   emptyStateIcon?: React.ComponentType<any> | React.ReactElement
+  postFeedRef?: React.Ref<PostFeedRef>
 }
 
 export function ProfileFeedSection({
@@ -48,6 +49,7 @@ export function ProfileFeedSection({
   emptyStateMessage,
   emptyStateButton,
   emptyStateIcon,
+  postFeedRef,
 }: FeedSectionProps) {
   const {_} = useLingui()
   const queryClient = useQueryClient()
@@ -110,6 +112,7 @@ export function ProfileFeedSection({
           shouldUseAdjustedNumToRender ? adjustedInitialNumToRender : undefined
         }
         isVideoFeed={isVideoFeed}
+        ref={postFeedRef}
       />
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
