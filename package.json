@@ -65,6 +65,7 @@
     "typecheck": "tsgo --project ./tsconfig.check.json",
     "brand:sync-web": "node scripts/sync-brand-web.mjs",
     "brand:check-web": "node scripts/sync-brand-web.mjs --check",
+    "brand:gen-favicons": "node scripts/gen-brand-favicons.mjs",
     "e2e:mock-server": "cd dev-env && pnpm start",
     "e2e:build": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
     "e2e:build-android": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:android",
