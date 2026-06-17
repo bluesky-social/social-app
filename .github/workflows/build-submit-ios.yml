@@ -10,6 +10,20 @@ on:
         options:
           - testflight
           - production
+      assignTestFlightGroup:
+        type: boolean
+        description: Assign the build to the "QA Team" TestFlight group after submitting
+        default: false
+  workflow_call:
+    inputs:
+      profile:
+        type: string
+        description: Build profile to use
+        required: true
+      assignTestFlightGroup:
+        type: boolean
+        description: Assign the build to the "QA Team" TestFlight group after submitting
+        default: false
 
 # Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
 permissions:
@@ -163,6 +177,30 @@ jobs:
       - name: 📚 Get version from package.json
         id: get-build-info
         run: bash scripts/setGitHubOutput.sh
+
+      # eas submit only uploads to App Store Connect; it can't assign a build to a
+      # TestFlight group. fastlane's distribute_only mode skips the upload and assigns the
+      # already-submitted build to the group, polling until Apple finishes processing it.
+      - name: 🧪 Assign build to TestFlight group
+        if: ${{ inputs.assignTestFlightGroup }}
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
+          APP_VERSION: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
+          BUILD_NUMBER: ${{ steps.get-build-info.outputs.BSKY_IOS_BUILD_NUMBER }}
+        run: |
+          echo "$ASC_KEY_P8_BASE64" | base64 --decode > asc_api_key.p8
+          printf '{"key_id":"%s","issuer_id":"%s","key_filepath":"%s","in_house":false}' \
+            "$ASC_KEY_ID" "$ASC_ISSUER_ID" "$PWD/asc_api_key.p8" > asc_api_key.json
+          fastlane run upload_to_testflight \
+            api_key_path:"$PWD/asc_api_key.json" \
+            distribute_only:true \
+            app_identifier:"xyz.blueskyweb.app" \
+            app_version:"$APP_VERSION" \
+            build_number:"$BUILD_NUMBER" \
+            groups:"QA Team"
+          rm -f asc_api_key.p8 asc_api_key.json
 
       - name: 🔔 Notify Slack of Production Build
         if: ${{ inputs.profile == 'production' }}

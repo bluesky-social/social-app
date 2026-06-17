@@ -10,6 +10,12 @@ on:
         options:
           - testflight-android
           - production
+  workflow_call:
+    inputs:
+      profile:
+        type: string
+        description: Build profile to use
+        required: true
 
 # Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
 permissions:

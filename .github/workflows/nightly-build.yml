@@ -1,0 +1,29 @@
+---
+name: Nightly Build
+
+on:
+  schedule:
+    - cron: "10 2 * * *" # run at 2:10 AM UTC, after the nightly i18n job
+  workflow_dispatch:
+
+# Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
+permissions:
+  contents: read
+
+jobs:
+  ios:
+    name: Nightly iOS Build
+    if: github.repository == 'bluesky-social/social-app'
+    uses: ./.github/workflows/build-submit-ios.yml
+    with:
+      profile: testflight
+      assignTestFlightGroup: true
+    secrets: inherit
+
+  android:
+    name: Nightly Android Build
+    if: github.repository == 'bluesky-social/social-app'
+    uses: ./.github/workflows/build-submit-android.yml
+    with:
+      profile: testflight-android
+    secrets: inherit
