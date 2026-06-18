@@ -78,7 +78,6 @@ jobs:
     with:
       profile: testflight
       assignTestFlightGroup: true
-      releaseNotes: ${{ needs.prepare.outputs.notes }}
     secrets: inherit
 
   android:
