@@ -215,9 +215,14 @@ type ExploreScreenItems =
 
 export function Explore({
   focusSearchInput,
+  feedsOnly = false,
 }: {
   focusSearchInput: (tab: 'user' | 'profile' | 'feed') => void
   headerHeight: number
+  // When true, only show the "Discover new feeds" section, omitting interests,
+  // trending, and suggested accounts. Used to embed feed discovery inline
+  // (e.g. from the home tab bar).
+  feedsOnly?: boolean
 }) {
   const ax = useAnalytics()
   const {_} = useLingui()
@@ -722,6 +727,13 @@ export function Explore({
     // Dynamic module ordering
 
     i.push(topBorder)
+
+    if (feedsOnly) {
+      // Only the "Discover new feeds" section (header + suggested feeds list).
+      i.push(...suggestedFeedsModule)
+      return i
+    }
+
     i.push(...interestsNuxModule)
 
     i.push({type: 'liveEventFeedsBanner', key: 'liveEventFeedsBanner'})
@@ -746,6 +758,7 @@ export function Explore({
     feedPreviewsModule,
     interestsNuxModule,
     useFullExperience,
+    feedsOnly,
   ])
 
   const renderItem = useCallback(

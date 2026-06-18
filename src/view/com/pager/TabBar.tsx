@@ -16,10 +16,12 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
+import {useLingui} from '@lingui/react/macro'
 
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, useTheme} from '#/alf'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {Text} from '#/components/Typography'
 
 export interface TabBarProps {
@@ -31,6 +33,11 @@ export interface TabBarProps {
   dragProgress: SharedValue<number>
   dragState: SharedValue<'idle' | 'dragging' | 'settling'>
   transparent?: boolean
+  // When provided, an "add" button is shown at the right end of the tab bar.
+  onPressAdd?: () => void
+  // When true, the add button is shown as selected and the feed tabs are
+  // shown as unselected.
+  addActive?: boolean
 }
 
 const ITEM_PADDING = 10
@@ -48,8 +55,11 @@ export function TabBar({
   dragProgress,
   dragState,
   transparent,
+  onPressAdd,
+  addActive,
 }: TabBarProps) {
   const t = useTheme()
+  const {t: l} = useLingui()
   const scrollElRef = useAnimatedRef<ScrollView>()
   const syncScrollState = useSharedValue<'synced' | 'unsynced' | 'needs-sync'>(
     'synced',
@@ -235,6 +245,10 @@ export function TabBar({
     if (!_WORKLET) {
       return {opacity: 0}
     }
+    if (addActive) {
+      // The add button is selected, so hide the feed selection indicator.
+      return {opacity: 0}
+    }
     const layoutsValue = layouts.get()
     const textLayoutsValue = textLayouts.get()
     if (
@@ -323,6 +337,7 @@ export function TabBar({
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           ref={scrollElRef}
+          style={a.flex_1}
           contentContainerStyle={styles.contentContainer}
           onLayout={e => {
             containerSize.set(e.nativeEvent.layout.width)
@@ -370,6 +385,28 @@ export function TabBar({
           </Animated.View>
         </ScrollView>
       </BlockDrawerGesture>
+      {onPressAdd && (
+        <PressableWithHover
+          testID={`${testID}-add`}
+          style={styles.addButton}
+          hoverStyle={t.atoms.bg_contrast_25}
+          onPress={onPressAdd}
+          accessibilityRole="button"
+          accessibilityState={{selected: addActive}}
+          accessibilityLabel={l`Discover new feeds`}
+          accessibilityHint="">
+          <PlusIcon
+            size="md"
+            fill={addActive ? t.palette.primary_500 : t.atoms.text.color}
+          />
+          <View
+            style={[
+              styles.addIndicator,
+              addActive && {borderColor: t.palette.primary_500},
+            ]}
+          />
+        </PressableWithHover>
+      )}
       <View style={[t.atoms.border_contrast_low, styles.outerBottomBorder]} />
     </View>
   )
@@ -454,6 +491,21 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: ITEM_PADDING,
     justifyContent: 'center',
+  },
+  addButton: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingHorizontal: ITEM_PADDING,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  addIndicator: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderBottomWidth: 2,
+    borderColor: 'transparent',
   },
   itemInner: {
     alignItems: 'center',

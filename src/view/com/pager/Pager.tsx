@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {DrawerGestureContext} from 'react-native-drawer-layout'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import PagerView, {
@@ -48,6 +48,10 @@ interface Props {
   ref?: React.Ref<PagerRef>
   initialPage?: number
   renderTabBar: RenderTabBarFn
+  // Optional content rendered as an overlay on top of the pages, filling the
+  // area below the tab bar. Used to show inline content (e.g. Explore) without
+  // changing the selected page.
+  renderContentOverlay?: () => JSX.Element | null
   // tab pressed, yet to scroll to page
   onTabPressed?: (index: number) => void
   // scroll settled
@@ -66,6 +70,7 @@ export function Pager({
   children,
   initialPage = 0,
   renderTabBar,
+  renderContentOverlay,
   onPageSelected: parentOnPageSelected,
   onTabPressed: parentOnTabPressed,
   onPageScrollStateChanged: parentOnPageScrollStateChanged,
@@ -151,15 +156,20 @@ export function Pager({
         dragProgress,
         dragState,
       })}
-      <DrawerGestureRequireFail>
-        <MemoizedAnimatedPagerView
-          ref={pagerView}
-          style={a.flex_1}
-          initialPage={initialPage}
-          onPageScroll={handlePageScroll}>
-          {children}
-        </MemoizedAnimatedPagerView>
-      </DrawerGestureRequireFail>
+      <View style={a.flex_1}>
+        <DrawerGestureRequireFail>
+          <MemoizedAnimatedPagerView
+            ref={pagerView}
+            style={a.flex_1}
+            initialPage={initialPage}
+            onPageScroll={handlePageScroll}>
+            {children}
+          </MemoizedAnimatedPagerView>
+        </DrawerGestureRequireFail>
+        {renderContentOverlay && (
+          <View style={StyleSheet.absoluteFill}>{renderContentOverlay()}</View>
+        )}
+      </View>
     </View>
   )
 }
