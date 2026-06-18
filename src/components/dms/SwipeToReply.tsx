@@ -15,6 +15,7 @@ import Animated, {
 import {useHaptics} from '#/lib/haptics'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {ArrowCornerDownRight_Stroke2_Corner3_Rounded as ReplyIcon} from '#/components/icons/ArrowCornerDownRight'
+import {MESSAGE_BUBBLE_MAX_WIDTH} from './util'
 
 // Distance the bubble must travel before releasing fires a reply.
 const ACTIVATION_THRESHOLD = 56
@@ -184,7 +185,7 @@ export function SwipeToReply({
           leaving the gutter free for the back/scroll gestures. */}
       <Animated.View
         style={[
-          {maxWidth: '80%'},
+          {maxWidth: MESSAGE_BUBBLE_MAX_WIDTH},
           isFromSelf ? a.self_end : a.self_start,
           contentStyle,
         ]}>
