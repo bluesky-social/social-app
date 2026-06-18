@@ -880,10 +880,12 @@ function ReplyQuote({
         a.mb_xs,
         a.rounded_md,
         a.p_sm,
+        // The padding above is a little loose, so we tighten it up here.
+        {paddingTop: tokens.space.sm - 2},
         a.flex_col,
         a.align_start,
         a.border,
-        {borderColor, marginHorizontal: -4, paddingTop: tokens.space.sm - 2},
+        {borderColor, marginHorizontal: -4},
       ]}>
       {senderName ? (
         <Text style={[a.text_xs, {color: subtleColor}]} emoji numberOfLines={1}>
