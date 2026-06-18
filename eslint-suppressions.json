@@ -1626,7 +1626,7 @@
   },
   "src/screens/StarterPack/Wizard/index.tsx": {
     "@typescript-eslint/no-floating-promises": {
-      "count": 2
+      "count": 1
     },
     "@typescript-eslint/require-await": {
       "count": 1
@@ -2162,14 +2162,6 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 2
-    }
-  },
-  "src/view/com/modals/Modal.tsx": {
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/require-await": {
-      "count": 1
     }
   },
   "src/view/com/notifications/NotificationFeed.tsx": {

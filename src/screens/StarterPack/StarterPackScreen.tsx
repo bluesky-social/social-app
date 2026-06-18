@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
-import {Image} from 'expo-image'
 import {
   AppBskyGraphDefs,
   AppBskyGraphStarterpack,
@@ -24,7 +23,6 @@ import {
   type NavigationProp,
 } from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
-import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -206,7 +204,6 @@ function StarterPackScreenLoaded({
     starterPack.creator.did,
     new AtUri(starterPack.uri).rkey,
   )
-  const [imageLoaded, setImageLoaded] = useState(false)
 
   useEffect(() => {
     ax.metric('starterPack:opened', {
@@ -215,15 +212,10 @@ function StarterPackScreenLoaded({
   }, [ax, starterPack.uri])
 
   const onOpenShareDialog = useCallback(() => {
-    Image.prefetch(getStarterPackOgCard(starterPack))
-      .then(() => {
-        setImageLoaded(true)
-      })
-      .catch(() => {
-        setImageLoaded(true)
-      })
+    // The share/QR dialogs now render the card natively (no remote OG image to
+    // prefetch).
     shareDialogControl.open()
-  }, [shareDialogControl, starterPack])
+  }, [shareDialogControl])
 
   useEffect(() => {
     if (routeParams.new) {
@@ -290,7 +282,6 @@ function StarterPackScreenLoaded({
         qrDialogControl={qrCodeDialogControl}
         starterPack={starterPack}
         link={link}
-        imageLoaded={imageLoaded}
       />
     </>
   )
