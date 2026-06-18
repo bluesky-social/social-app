@@ -4,7 +4,7 @@ import {VIDEO_MAX_SIZE} from '#/lib/constants'
 import {VideoTooLargeError} from '#/lib/media/video/errors'
 import {type CompressedVideo} from './types'
 
-// doesn't actually compress, converts to ArrayBuffer
+// doesn't actually compress, just reads the File bytes
 export async function compressVideo(
   asset: ImagePickerAsset,
   _opts?: {
@@ -12,45 +12,24 @@ export async function compressVideo(
     onProgress?: (progress: number) => void
   },
 ): Promise<CompressedVideo> {
-  const {mimeType, base64} = parseDataUrl(asset.uri)
-  const blob = base64ToBlob(base64, mimeType)
-  const uri = URL.createObjectURL(blob)
+  let bytes: ArrayBuffer
+  if (asset.file) {
+    bytes = await asset.file.arrayBuffer()
+  } else {
+    // fallback: fetch from blob/object URL
+    bytes = await fetch(asset.uri).then(res => res.arrayBuffer())
+  }
 
-  if (blob.size > VIDEO_MAX_SIZE) {
+  if (bytes.byteLength > VIDEO_MAX_SIZE) {
     throw new VideoTooLargeError()
   }
 
+  const mimeType = asset.mimeType ?? asset.file?.type ?? 'video/mp4'
+
   return {
-    size: blob.size,
-    uri,
-    bytes: await blob.arrayBuffer(),
+    size: bytes.byteLength,
+    uri: asset.uri,
+    bytes,
     mimeType,
   }
-}
-
-function parseDataUrl(dataUrl: string) {
-  const [mimeType, base64] = dataUrl.slice('data:'.length).split(';base64,')
-  if (!mimeType || !base64) {
-    throw new Error('Invalid data URL')
-  }
-  return {mimeType, base64}
-}
-
-function base64ToBlob(base64: string, mimeType: string) {
-  const byteCharacters = atob(base64)
-  const byteArrays = []
-
-  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-    const slice = byteCharacters.slice(offset, offset + 512)
-    const byteNumbers = new Array(slice.length)
-
-    for (let i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i)
-    }
-
-    const byteArray = new Uint8Array(byteNumbers)
-    byteArrays.push(byteArray)
-  }
-
-  return new Blob(byteArrays, {type: mimeType})
 }

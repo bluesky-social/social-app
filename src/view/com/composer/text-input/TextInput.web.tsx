@@ -113,8 +113,8 @@ export function TextInput({
       if (transfer) {
         const items = transfer.items
 
-        getImageOrVideoFromUri(items, (uri: string) => {
-          textInputWebEmitter.emit('media-pasted', uri)
+        getImageOrVideoFromUri(items, (uriOrFile: string | File) => {
+          textInputWebEmitter.emit('media-pasted', uriOrFile)
         })
       }
 
@@ -190,9 +190,12 @@ export function TextInput({
               view.pasteText(text)
               preventDefault = true
             }
-            getImageOrVideoFromUri(clipboardData.items, (uri: string) => {
-              textInputWebEmitter.emit('media-pasted', uri)
-            })
+            getImageOrVideoFromUri(
+              clipboardData.items,
+              (uriOrFile: string | File) => {
+                textInputWebEmitter.emit('media-pasted', uriOrFile)
+              },
+            )
             if (preventDefault) {
               // Return `true` to prevent ProseMirror's default paste behavior.
               return true
@@ -478,7 +481,7 @@ const styles = StyleSheet.create({
 
 function getImageOrVideoFromUri(
   items: DataTransferItemList,
-  callback: (uri: string) => void,
+  callback: (uri: string | File) => void,
 ) {
   for (let index = 0; index < items.length; index++) {
     const item = items[index]
@@ -495,21 +498,21 @@ function getImageOrVideoFromUri(
           }
 
           if (blob.type.startsWith('video/')) {
-            blobToDataUri(blob).then(callback, err => console.error(err))
+            callback(new File([blob], 'dropped', {type: blob.type}))
           }
         }
       })
-    } else if (type.startsWith('image/')) {
+    } else if (type.startsWith('image/') && !type.startsWith('image/gif')) {
       const file = item.getAsFile()
 
       if (file) {
         blobToDataUri(file).then(callback, err => console.error(err))
       }
-    } else if (type.startsWith('video/')) {
+    } else if (type.startsWith('video/') || type.startsWith('image/gif')) {
       const file = item.getAsFile()
 
       if (file) {
-        blobToDataUri(file).then(callback, err => console.error(err))
+        callback(file)
       }
     }
   }

@@ -28,7 +28,6 @@ patchedDependencies:
   'expo-modules-core@3.0.30': patches/expo-modules-core@3.0.30.patch
   'expo-notifications@0.32.17': patches/expo-notifications@0.32.17.patch
   'expo-updates@29.0.17': patches/expo-updates@29.0.17.patch
-  'react-native-compressor@1.13.0': patches/react-native-compressor@1.13.0.patch
   'react-native-date-picker@5.0.13': patches/react-native-date-picker@5.0.13.patch
   'react-native-drawer-layout@4.2.3': patches/react-native-drawer-layout@4.2.3.patch
   'react-native-keyboard-controller@1.21.8': patches/react-native-keyboard-controller@1.21.8.patch
