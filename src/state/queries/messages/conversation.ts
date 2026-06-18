@@ -2,6 +2,7 @@ import {
   type ChatBskyActorDefs,
   type ChatBskyConvoDefs,
   type ChatBskyConvoGetConvo,
+  type ChatBskyConvoGetUnreadCounts,
 } from '@atproto/api'
 import {
   type QueryClient,
@@ -14,6 +15,7 @@ import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {STALE} from '#/state/queries'
 import {useOnMarkAsRead} from '#/state/queries/messages/list-conversations'
 import {useAgent} from '#/state/session'
+import {RQKEY_PARTIAL as UNREAD_COUNTS_PARTIAL_KEY} from './get-unread-counts'
 import {
   type ConvoListQueryData,
   getConvoFromQueryData,
@@ -74,7 +76,61 @@ export function useMarkAsReadMutation() {
     },
     onMutate({convoId}) {
       if (!convoId) throw new Error('No convoId provided')
+
+      // find the convo so we know which badge counter (if any) to decrement
+      let unreadStatus: ChatBskyConvoDefs.ConvoView['status'] | undefined
+      const listQueries = queryClient.getQueriesData<ConvoListQueryData>({
+        queryKey: [LIST_CONVOS_KEY],
+      })
+      for (const [, data] of listQueries) {
+        if (!data) continue
+        const convo = getConvoFromQueryData(convoId, data)
+        if (convo) {
+          if (convo.unreadCount > 0) unreadStatus = convo.status
+          break
+        }
+      }
+
       optimisticUpdate(convoId)
+
+      // the badge count query is a separate server query that the list caches
+      // don't feed, so decrement it here to keep the badge in sync
+      const prevUnreadCountsQueries =
+        queryClient.getQueriesData<ChatBskyConvoGetUnreadCounts.OutputSchema>({
+          queryKey: UNREAD_COUNTS_PARTIAL_KEY,
+        })
+      if (unreadStatus) {
+        queryClient.setQueriesData<ChatBskyConvoGetUnreadCounts.OutputSchema>(
+          {queryKey: UNREAD_COUNTS_PARTIAL_KEY},
+          old => {
+            if (!old) return old
+            return {
+              ...old,
+              ...(unreadStatus === 'request'
+                ? {
+                    unreadRequestConvos: Math.max(
+                      0,
+                      old.unreadRequestConvos - 1,
+                    ),
+                  }
+                : {
+                    unreadAcceptedConvos: Math.max(
+                      0,
+                      old.unreadAcceptedConvos - 1,
+                    ),
+                  }),
+            }
+          },
+        )
+      }
+      return {prevUnreadCountsQueries}
+    },
+    onError(_, __, context) {
+      if (context?.prevUnreadCountsQueries) {
+        for (const [queryKey, prevData] of context.prevUnreadCountsQueries) {
+          queryClient.setQueryData(queryKey, prevData)
+        }
+      }
     },
     onSuccess(_, {convoId}) {
       if (!convoId) return
