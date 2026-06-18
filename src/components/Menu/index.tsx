@@ -6,12 +6,10 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -31,6 +29,8 @@ import {
 } from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID, IS_IOS, IS_NATIVE} from '#/env'
+
+const NATIVE_MENU_MIN_HEIGHT = 128
 
 export {
   type DialogControlProps as MenuControlProps,
@@ -101,7 +101,7 @@ export function Outer({
   onCloseAutoFocus?: (event: Event) => void
 }>) {
   const context = useMenuContext()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Dialog.Outer
@@ -110,7 +110,9 @@ export function Outer({
       <Dialog.Handle />
       {/* Re-wrap with context since Dialogs are portal-ed to root */}
       <Context.Provider value={context}>
-        <Dialog.ScrollableInner label={_(msg`Menu`)}>
+        <Dialog.ScrollableInner
+          label={l`Menu`}
+          contentContainerStyle={native({minHeight: NATIVE_MENU_MIN_HEIGHT})}>
           <View style={[a.gap_lg]}>
             {children}
             {IS_NATIVE && showCancel && <Cancel />}
@@ -353,12 +355,12 @@ export function Group({children, style}: GroupProps) {
 }
 
 function Cancel() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const context = useMenuContext()
 
   return (
     <Button
-      label={_(msg`Close this dialog`)}
+      label={l`Close this dialog`}
       size="small"
       variant="ghost"
       color="secondary"
