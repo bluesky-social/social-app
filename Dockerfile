@@ -1,23 +1,21 @@
-FROM golang:1.26-bookworm AS build-env
+#
+# Stage 1: build the web bundle with pnpm.
+#
+# Uses the official pnpm image. Node is auto-downloaded by pnpm using the
+# `devEngines.runtime` field in package.json (onFail: "download").
+#
+FROM ghcr.io/pnpm/pnpm:11 AS web-build
 
-WORKDIR /usr/src/blacksky.community
+WORKDIR /app
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 #
-# Node
+# pnpm config
 #
-ENV NODE_VERSION=24.15.0
-ENV NVM_DIR=/usr/share/nvm
-
-#
-# Go
-#
-ENV GODEBUG="netdns=go"
-ENV GOOS="linux"
-ENV GOARCH="amd64"
-ENV CGO_ENABLED=1
-ENV GOEXPERIMENT="loopvar"
+ENV CI=1
+# use the pnpm version specified in package.json
+ENV pnpm_config_pm_on_fail=download
 
 # The latest git hash of the preview branch on render.com
 # https://render.com/docs/docker-secrets#environment-variables-in-docker-builds
@@ -68,24 +66,9 @@ ENV EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY=$EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY
 ARG EXPO_PUBLIC_STRIPE_API_URL
 ENV EXPO_PUBLIC_STRIPE_API_URL=$EXPO_PUBLIC_STRIPE_API_URL
 
-#
-# Copy everything into the container
-#
 COPY . .
 
-#
-# Generate the JavaScript webpack.
-#
-RUN mkdir --parents $NVM_DIR && \
-  wget \
-    --output-document=/tmp/nvm-install.sh \
-    https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh && \
-  bash /tmp/nvm-install.sh
-
-RUN \. "$NVM_DIR/nvm.sh" && \
-  nvm install $NODE_VERSION && \
-  nvm use $NODE_VERSION && \
-  echo "Using bundle identifier: $EXPO_PUBLIC_BUNDLE_IDENTIFIER" && \
+RUN echo "Using bundle identifier: $EXPO_PUBLIC_BUNDLE_IDENTIFIER" && \
   echo "EXPO_PUBLIC_ENV=$EXPO_PUBLIC_ENV" >> .env && \
   echo "EXPO_PUBLIC_RELEASE_VERSION=$EXPO_PUBLIC_RELEASE_VERSION" >> .env && \
   echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER" >> .env && \
@@ -97,19 +80,36 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   echo "EXPO_PUBLIC_GROWTHBOOK_API_HOST=$EXPO_PUBLIC_GROWTHBOOK_API_HOST" >> .env && \
   echo "EXPO_PUBLIC_GROWTHBOOK_CLIENT_KEY=$EXPO_PUBLIC_GROWTHBOOK_CLIENT_KEY" >> .env && \
   echo "EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY=$EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY" >> .env && \
-  echo "EXPO_PUBLIC_STRIPE_API_URL=$EXPO_PUBLIC_STRIPE_API_URL" >> .env && \
-  npm install --global yarn && \
-  yarn && \
-  yarn intl:build 2>&1 | tee i18n.log && \
-  if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compile errors!\n\n"; fi && \
-  SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN SENTRY_RELEASE=$EXPO_PUBLIC_RELEASE_VERSION SENTRY_DIST=$EXPO_PUBLIC_BUNDLE_IDENTIFIER yarn build-web
+  echo "EXPO_PUBLIC_STRIPE_API_URL=$EXPO_PUBLIC_STRIPE_API_URL" >> .env
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+RUN pnpm intl:build 2>&1 | tee i18n.log && \
+  if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compile errors!\n\n"; fi
+
+RUN SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN \
+    SENTRY_RELEASE=$EXPO_PUBLIC_RELEASE_VERSION \
+    SENTRY_DIST=$EXPO_PUBLIC_BUNDLE_IDENTIFIER \
+    pnpm build-web
+
+#
+# Stage 2: build the bskyweb Go binary, embedding the assets from stage 1.
+#
+FROM golang:1.26-bookworm AS go-build
+
+WORKDIR /usr/src/social-app
+
+ENV GODEBUG="netdns=go"
+ENV GOOS="linux"
+ENV GOARCH="amd64"
+ENV CGO_ENABLED=1
+ENV GOEXPERIMENT="loopvar"
+
+COPY --from=web-build /app/bskyweb ./bskyweb
 
 # DEBUG
-RUN find ./bskyweb/static && find ./web-build/static
+RUN find ./bskyweb/static
 
-#
-# Generate the bskyweb Go binary.
-#
 RUN cd bskyweb/ && \
   go mod download && \
   go mod verify
@@ -122,6 +122,9 @@ RUN cd bskyweb/ && \
     -o /bskyweb \
     ./cmd/bskyweb
 
+#
+# Stage 3: runtime image.
+#
 FROM debian:bookworm-slim
 
 ENV GODEBUG=netdns=go
@@ -135,7 +138,7 @@ RUN apt-get update && apt-get install --yes \
 ENTRYPOINT ["dumb-init", "--"]
 
 WORKDIR /bskyweb
-COPY --from=build-env /bskyweb /usr/bin/bskyweb
+COPY --from=go-build /bskyweb /usr/bin/bskyweb
 
 CMD ["/usr/bin/bskyweb", "serve"]
 

@@ -1,0 +1,28 @@
+diff --git a/src/index.js b/src/index.js
+index fa76d7e1272e7fbe4bbd153104db127f1f6eecad..018b6860b7fa02d498d73b5fd06028bae99abedb 100644
+--- a/src/index.js
++++ b/src/index.js
+@@ -125,13 +125,17 @@ export function captureRef<T: React$ElementType>(
+     }
+   }
+   if (typeof view !== "number") {
+-    const node = findNodeHandle(view);
+-    if (!node) {
+-      return Promise.reject(
+-        new Error("findNodeHandle failed to resolve view=" + String(view))
+-      );
++    if (Platform.OS == 'web') {
++      view = view;
++    } else {
++      const node = findNodeHandle(view);
++      if (!node) {
++        return Promise.reject(
++          new Error("findNodeHandle failed to resolve view=" + String(view))
++        );
++      }
++      view = node;
+     }
+-    view = node;
+   }
+   const { options, errors } = validateOptions(optionsObject);
+   if (__DEV__ && errors.length > 0) {

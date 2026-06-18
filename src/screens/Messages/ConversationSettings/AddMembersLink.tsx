@@ -1,6 +1,8 @@
 import {View} from 'react-native'
+import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {logger} from '#/logger'
 import {useAddGroupMembers} from '#/state/queries/messages/add-group-members'
 import {atoms as a, useTheme} from '#/alf'
@@ -13,14 +15,18 @@ import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 export function AddMembersLink({
   convo,
+  disabled,
 }: {
   convo: Extract<ConvoWithDetails, {kind: 'group'}>
+  disabled?: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const ax = useAnalytics()
 
   const addMembersControl = Dialog.useDialogControl()
 
@@ -28,8 +34,29 @@ export function AddMembersLink({
   const {mutate: addGroupMembers, isPending: isAddPending} = useAddGroupMembers(
     convoId,
     {
-      onSuccess: () => {
-        addMembersControl.close()
+      onSuccess: data => {
+        ax.metric('groupchat:owner:inviteMember', {convoId})
+        addMembersControl.close(() => {
+          const members = data.addedMembers ?? []
+
+          let names = null
+          if (members.length === 1) {
+            names = l`${createSanitizedDisplayName(members[0])} added to chat`
+          } else if (members.length === 2) {
+            names = l`${createSanitizedDisplayName(members[0])} and ${createSanitizedDisplayName(members[1])} added to chat`
+          } else if (members.length > 2) {
+            const memberCount = convo.details.memberCount - 2
+            names = l`${createSanitizedDisplayName(members[0])}, ${createSanitizedDisplayName(members[1])} and ${plural(
+              memberCount,
+              {
+                one: '# other',
+                other: '# others',
+              },
+            )} added to chat`
+          }
+
+          if (names) Toast.show(names)
+        })
       },
       onError: e => {
         logger.error('Failed to add group chat members', {message: e})
@@ -41,7 +68,7 @@ export function AddMembersLink({
   return (
     <>
       <Button
-        disabled={isAddPending}
+        disabled={disabled || isAddPending}
         label={l`Add members`}
         onPress={addMembersControl.open}>
         {({interacting}) => (

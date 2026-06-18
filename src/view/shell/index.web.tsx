@@ -10,7 +10,6 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {useSession} from '#/state/session'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useCloseAllActiveElements} from '#/state/util'
-import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Deactivated} from '#/screens/Deactivated'
 import {Takendown} from '#/screens/Takendown'
@@ -51,8 +50,7 @@ function ShellInner() {
       <ErrorBoundary>
         <FlatNavigator layout={drawerLayout} />
       </ErrorBoundary>
-      <Composer winHeight={0} />
-      <ModalsContainer />
+      <Composer />
       <MutedWordsDialog />
       <SigninDialog />
       <EmailDialog />

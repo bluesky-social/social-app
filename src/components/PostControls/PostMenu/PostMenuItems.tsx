@@ -84,6 +84,7 @@ import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
+import {BlockDialog} from '#/components/moderation/BlockDialog'
 import {
   ReportDialog,
   useReportDialogControl,
@@ -535,9 +536,17 @@ let PostMenuItems = ({
               ) : (
                 <Menu.Item
                   testID="postDropdownTranslateBtn"
-                  label={l`Translate`}
+                  label={
+                    forceGoogleTranslate
+                      ? l`Open in Google Translate`
+                      : l`Translate`
+                  }
                   onPress={onPressTranslate}>
-                  <Menu.ItemText>{l`Translate`}</Menu.ItemText>
+                  <Menu.ItemText>
+                    {forceGoogleTranslate
+                      ? l`Open in Google Translate`
+                      : l`Translate`}
+                  </Menu.ItemText>
                   <Menu.ItemIcon icon={Translate} position="right" />
                 </Menu.Item>
               )}
@@ -811,13 +820,10 @@ let PostMenuItems = ({
         onConfirm={() => void onToggleReplyVisibility()}
         confirmButtonCta={l`Yes, hide`}
       />
-      <Prompt.Basic
+      <BlockDialog
         control={blockPromptControl}
-        title={l`Block Account?`}
-        description={l`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`}
-        onConfirm={() => void onBlockAuthor()}
-        confirmButtonCta={l`Block`}
-        confirmButtonColor="negative"
+        profile={postAuthor}
+        onBlock={onBlockAuthor}
       />
     </>
   )

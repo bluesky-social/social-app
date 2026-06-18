@@ -1,7 +1,7 @@
 import {
   type AppBskyFeedDefs,
   type AppBskyFeedGetTimeline,
-  type BskyAgent,
+  type AtpAgent,
 } from '@atproto/api'
 import shuffle from 'lodash.shuffle'
 
@@ -28,7 +28,7 @@ const POST_AGE_CUTOFF = 60e3 * 60 * 24 // 24hours
 
 export class MergeFeedAPI implements FeedAPI {
   userInterests?: string
-  agent: BskyAgent
+  agent: AtpAgent
   params: FeedParams
   feedTuners: FeedTunerFn[]
   following: MergeFeedSource_Following
@@ -43,7 +43,7 @@ export class MergeFeedAPI implements FeedAPI {
     feedTuners,
     userInterests,
   }: {
-    agent: BskyAgent
+    agent: AtpAgent
     feedParams: FeedParams
     feedTuners: FeedTunerFn[]
     userInterests?: string
@@ -179,7 +179,7 @@ export class MergeFeedAPI implements FeedAPI {
 }
 
 class MergeFeedSource {
-  agent: BskyAgent
+  agent: AtpAgent
   feedTuners: FeedTunerFn[]
   sourceInfo: ReasonFeedSource | undefined
   cursor: string | undefined = undefined
@@ -190,7 +190,7 @@ class MergeFeedSource {
     agent,
     feedTuners,
   }: {
-    agent: BskyAgent
+    agent: AtpAgent
     feedTuners: FeedTunerFn[]
   }) {
     this.agent = agent
@@ -257,7 +257,7 @@ class MergeFeedSource_Following extends MergeFeedSource {
 }
 
 class MergeFeedSource_Custom extends MergeFeedSource {
-  agent: BskyAgent
+  agent: AtpAgent
   minDate: Date
   feedUri: string
   userInterests?: string
@@ -268,7 +268,7 @@ class MergeFeedSource_Custom extends MergeFeedSource {
     feedTuners,
     userInterests,
   }: {
-    agent: BskyAgent
+    agent: AtpAgent
     feedUri: string
     feedTuners: FeedTunerFn[]
     userInterests?: string

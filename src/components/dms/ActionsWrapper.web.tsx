@@ -1,8 +1,11 @@
 import {useCallback, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {type ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatBskyConvoDefs, type ModerationOpts} from '@atproto/api'
+import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
+import {EMOJI_REACTION_LIMIT} from '#/lib/constants'
+import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
 import {useConvoActive} from '#/state/messages/convo'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
@@ -12,28 +15,36 @@ import {EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components
 import * as Toast from '#/components/Toast'
 import type * as bsky from '#/types/bsky'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
-import {hasReachedReactionLimit} from './util'
+import {
+  canReact,
+  hasReachedReactionLimit,
+  MESSAGE_BUBBLE_MAX_WIDTH,
+} from './util'
 
 export function ActionsWrapper({
   message,
-  hasReactions,
   isFromSelf,
   senderProfile,
+  moderationOpts,
   children,
-  onTap,
 }: {
   message: ChatBskyConvoDefs.MessageView
-  hasReactions?: boolean
   isFromSelf: boolean
   senderProfile?: bsky.profile.AnyProfileView
+  moderationOpts: ModerationOpts | undefined
   children: React.ReactNode
-  onTap?: () => void
 }) {
   const viewRef = useRef(null)
   const t = useTheme()
   const {t: l} = useLingui()
   const convo = useConvoActive()
   const {currentAccount} = useSession()
+  const primaryMember = useMaybeProfileShadow(convo.convo.primaryMember)
+  const reactionsAvailable = canReact({
+    convoState: convo,
+    primaryMember,
+    moderationOpts,
+  })
 
   const [showActions, setShowActions] = useState(false)
 
@@ -65,7 +76,18 @@ export function ActionsWrapper({
           .removeReaction(message.id, emoji)
           .catch(() => Toast.show(l`Failed to remove emoji reaction`))
       } else {
-        if (hasReachedReactionLimit(message, currentAccount?.did)) return
+        if (hasReachedReactionLimit(message, currentAccount?.did)) {
+          Toast.show(
+            l`You cannot add more than ${plural(EMOJI_REACTION_LIMIT, {
+              one: '# emoji reaction',
+              other: '# emoji reactions',
+            })}`,
+            {
+              type: 'info',
+            },
+          )
+          return
+        }
         convo.addReaction(message.id, emoji).catch(() =>
           Toast.show(l`Failed to add emoji reaction`, {
             type: 'error',
@@ -93,31 +115,35 @@ export function ActionsWrapper({
           isFromSelf
             ? [a.mr_xs, {marginLeft: 'auto'}, a.flex_row_reverse]
             : [a.ml_xs, {marginRight: 'auto'}],
-          hasReactions ? [a.mb_2xl] : undefined,
         ]}>
-        <EmojiReactionPicker message={message} onEmojiSelect={onEmojiSelect}>
-          {({props, state, IS_NATIVE, control}) => {
-            // always false, file is platform split
-            if (IS_NATIVE) return null
-            const showMenuTrigger = showActions || control.isOpen ? 1 : 0
-            return (
-              <Pressable
-                {...props}
-                style={[
-                  {opacity: showMenuTrigger},
-                  a.p_xs,
-                  a.rounded_full,
-                  (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
-                ]}>
-                <EmojiSmileIcon
-                  size="md"
-                  style={t.atoms.text_contrast_medium}
-                />
-              </Pressable>
-            )
-          }}
-        </EmojiReactionPicker>
-        <MessageContextMenu message={message} senderProfile={senderProfile}>
+        {reactionsAvailable && (
+          <EmojiReactionPicker message={message} onEmojiSelect={onEmojiSelect}>
+            {({props, state, IS_NATIVE, control}) => {
+              // always false, file is platform split
+              if (IS_NATIVE) return null
+              const showMenuTrigger = showActions || control.isOpen ? 1 : 0
+              return (
+                <Pressable
+                  {...props}
+                  style={[
+                    {opacity: showMenuTrigger},
+                    a.p_xs,
+                    a.rounded_full,
+                    (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
+                  ]}>
+                  <EmojiSmileIcon
+                    size="md"
+                    style={t.atoms.text_contrast_medium}
+                  />
+                </Pressable>
+              )
+            }}
+          </EmojiReactionPicker>
+        )}
+        <MessageContextMenu
+          message={message}
+          senderProfile={senderProfile}
+          moderationOpts={moderationOpts}>
           {({props, state, IS_NATIVE, control}) => {
             // always false, file is platform split
             if (IS_NATIVE) return null
@@ -140,13 +166,13 @@ export function ActionsWrapper({
           }}
         </MessageContextMenu>
       </View>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityHint={l`Click to view the date and time`}
-        onPress={onTap}
-        style={[{maxWidth: '80%'}, isFromSelf ? a.align_end : a.align_start]}>
+      <View
+        style={[
+          {maxWidth: MESSAGE_BUBBLE_MAX_WIDTH},
+          isFromSelf ? a.align_end : a.align_start,
+        ]}>
         {children}
-      </Pressable>
+      </View>
     </View>
   )
 }

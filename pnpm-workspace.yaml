@@ -1,0 +1,44 @@
+nodeLinker: 'hoisted'
+autoInstallPeers: true # default: true
+strictPeerDependencies: false # default: false
+trustPolicy: 'no-downgrade' # default: off
+trustPolicyIgnoreAfter: 10080 # 7 days, default: undefined
+overrides:
+  '@react-native/babel-preset': '0.81.5'
+  '@react-native/normalize-colors': '0.81.5'
+  '@expo/image-utils': '0.8.12'
+  '@types/estree': '1.0.6'
+  'react-native-compressor': '1.13.0'
+  'react-native-reanimated': '3.19.1'
+  'psl': '1.9.0'
+  '@types/psl': '1.1.1'
+  'react-native-screens': '4.24.0'
+allowBuilds:
+  '@sentry/cli': true
+  'core-js-pure': true
+  'esbuild': true
+  'unrs-resolver': true
+patchedDependencies:
+  '@sentry/react-native@6.20.0': patches/@sentry__react-native@6.20.0.patch
+  'expo-glass-effect@55.0.8': patches/expo-glass-effect@55.0.8.patch
+  'expo-haptics@15.0.8': patches/expo-haptics@15.0.8.patch
+  'expo-image-picker@17.0.11': patches/expo-image-picker@17.0.11.patch
+  'expo-image@3.0.11': patches/expo-image@3.0.11.patch
+  'expo-media-library@18.2.1': patches/expo-media-library@18.2.1.patch
+  'expo-modules-core@3.0.30': patches/expo-modules-core@3.0.30.patch
+  'expo-notifications@0.32.17': patches/expo-notifications@0.32.17.patch
+  'expo-updates@29.0.17': patches/expo-updates@29.0.17.patch
+  'react-native-compressor@1.13.0': patches/react-native-compressor@1.13.0.patch
+  'react-native-date-picker@5.0.13': patches/react-native-date-picker@5.0.13.patch
+  'react-native-drawer-layout@4.2.3': patches/react-native-drawer-layout@4.2.3.patch
+  'react-native-keyboard-controller@1.21.8': patches/react-native-keyboard-controller@1.21.8.patch
+  'react-native-pager-view@6.8.0': patches/react-native-pager-view@6.8.0.patch
+  'react-native-reanimated@3.19.1': patches/react-native-reanimated@3.19.1.patch
+  'react-native-svg@15.12.1': patches/react-native-svg@15.12.1.patch
+  'react-native-uitextview@1.4.0': patches/react-native-uitextview@1.4.0.patch
+  'react-native-view-shot@4.0.3': patches/react-native-view-shot@4.0.3.patch
+  'react-native@0.81.5': patches/react-native@0.81.5.patch
+  'sonner-native@0.21.0': patches/sonner-native@0.21.0.patch
+minimumReleaseAgeExclude:
+  - '@atproto/*'
+  - '@bsky.app/*'

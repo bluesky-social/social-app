@@ -1,55 +1,62 @@
 import {View} from 'react-native'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {useNavigation} from '@react-navigation/native'
 
+import {type NavigationProp} from '#/lib/routes/types'
 import {atoms as a, useTheme} from '#/alf'
-import {InlineLinkText} from '#/components/Link'
+import {type ConvoWithDetails} from '#/components/dms/util'
+import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {MEMBER_LIMIT} from './constants'
 
 export function MembersAndRequests({
-  memberCount,
+  convo,
   requestCount,
   hasMoreRequests,
   isOwner,
 }: {
-  memberCount: number
+  convo: Extract<ConvoWithDetails, {kind: 'group'}>
   requestCount: number
   hasMoreRequests: boolean
   isOwner: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const navigation = useNavigation<NavigationProp>()
+
+  const memberCount = convo.details.memberCount
+  const memberLimit = convo.details.memberLimit
 
   return (
     <View style={[a.flex_row, a.justify_between, a.px_xl, a.pt_xl, a.pb_sm]}>
-      <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
         <Text style={[a.text_lg, a.font_semi_bold, t.atoms.text]}>
-          <Trans>Members</Trans>
+          <Trans comment="The heading above the list of chat members.">
+            Members
+          </Trans>
         </Text>
-        <View
-          style={[a.px_xs, a.py_2xs, t.atoms.bg_contrast_50, a.rounded_full]}>
-          <Text
-            style={[a.text_xs, a.font_medium, {color: t.palette.contrast_500}]}>
-            {l({
-              message: `${memberCount}/${MEMBER_LIMIT}`,
-              comment:
-                'The number of group chat members out of the total number of permitted users.',
-            })}
-          </Text>
-        </View>
+        <Text style={[a.text_xs, a.font_medium, t.atoms.text_contrast_medium]}>
+          {l({
+            message: `${memberCount}/${memberLimit}`,
+            comment:
+              'The number of group chat members out of the total number of permitted users.',
+          })}
+        </Text>
       </View>
       {isOwner && requestCount > 0 ? (
         <InlineLinkText
           label={l`View incoming group chat requests`}
           style={[a.text_sm, a.text_right, a.font_semi_bold]}
-          // TODO Need to implement this. -dsb
-          to="#">
+          {...createStaticClick(() => {
+            navigation.navigate('MessagesJoinRequests', {
+              conversation: convo.view.id,
+            })
+          })}>
           {hasMoreRequests
             ? l({
                 message: `${requestCount}+ requests`,
                 comment:
-                  'Displayed when there are more than 50 requests to join a group chat',
+                  'Displayed when there are more than 20 requests to join a group chat',
               })
             : l({
                 message: plural(requestCount, {

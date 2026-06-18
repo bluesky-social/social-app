@@ -2,22 +2,27 @@ import {View} from 'react-native'
 import {moderateProfile} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {logger} from '#/logger'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useRemoveFromGroupChat} from '#/state/queries/messages/remove-from-group'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useRequireAuth, useSession} from '#/state/session'
 import {atoms as a, native, useTheme, web} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {
   type ConvoWithDetails,
   type GroupConvoMember,
 } from '#/components/dms/util'
 import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
+import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {MemberMenu} from './MemberMenu'
+import {RemoveMemberPrompt} from './prompts'
 import {StatusBadge} from './StatusBadge'
 import {SubtleHoverWrapper} from './SubtleHoverWrapper'
 
@@ -31,7 +36,7 @@ export function Member({
 }: {
   convo: ConvoWithDetails
   profile: GroupConvoMember
-  status: 'owner' | 'standard' | 'invited'
+  status: 'owner' | 'standard'
   isOwner: boolean
 }) {
   const t = useTheme()
@@ -44,15 +49,21 @@ export function Member({
   const [queueFollow] = useProfileFollowMutationQueue(profile, 'GroupChat')
   const requireAuth = useRequireAuth()
 
+  const removeMemberPrompt = Prompt.usePromptControl()
+  const {mutate: removeMembers} = useRemoveFromGroupChat(convo.view.id, {
+    onError: e => {
+      logger.error('Failed to remove group chat member', {message: e})
+      Toast.show(l`Failed to remove group chat member`, {type: 'error'})
+    },
+  })
+
   const isFollowing = !!profile.viewer?.following
 
   const handleFollow = () => {
     requireAuth(async () => {
       try {
         await queueFollow()
-        Toast.show(l`Following ${displayName}`, {
-          type: 'info',
-        })
+        Toast.show(l`Following ${displayName}`)
       } catch (err) {
         const e = err as Error
         if (e?.name !== 'AbortError') {
@@ -102,6 +113,9 @@ export function Member({
       )}`
     : l`Added by invite link`
 
+  // Surface a prominent remove button to the owner for blocked members.
+  const showRemoveButton = isOwner && !isSelf && !!isBlockedOrBlocking(profile)
+
   return (
     <SubtleHoverWrapper>
       <View style={outerStyles}>
@@ -138,7 +152,17 @@ export function Member({
             </ProfileCard.Header>
           </ProfileCard.Outer>
         </ProfileCard.Link>
-        {isSelf || isFollowing ? null : (
+        {showRemoveButton ? (
+          <Button
+            label={l`Remove ${displayName} from this group chat`}
+            size="tiny"
+            color="negative_subtle"
+            onPress={() => removeMemberPrompt.open()}>
+            <ButtonText>
+              <Trans>Remove</Trans>
+            </ButtonText>
+          </Button>
+        ) : isSelf || isFollowing || isBlockedOrBlocking(profile) ? null : (
           <SimpleInlineLinkText
             label={l`Follow ${displayName}`}
             {...createStaticClick(handleFollow)}
@@ -148,6 +172,14 @@ export function Member({
         )}
         {statusBadge}
       </View>
+      {/* Mounted outside the showRemoveButton conditional: confirming the
+          prompt optimistically drops this row, so gating the prompt on the
+          button would unmount it mid-close and race the dismiss animation. */}
+      <RemoveMemberPrompt
+        control={removeMemberPrompt}
+        displayName={displayName}
+        onConfirm={() => removeMembers({members: [profile.did]})}
+      />
     </SubtleHoverWrapper>
   )
 }

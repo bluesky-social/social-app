@@ -1,5 +1,5 @@
 import {AtUri} from '@atproto/api'
-import psl from 'psl'
+import {parse} from 'psl'
 import TLDs from 'tlds'
 
 import {BSKY_SERVICE} from '#/lib/constants'
@@ -7,16 +7,8 @@ import {isInvalidHandle} from '#/lib/strings/handles'
 import {startUriToStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 
-export const BSKY_APP_HOST = 'https://blacksky.community'
+export const BSKY_APP_HOST = 'https://bsky.app'
 const BSKY_TRUSTED_HOSTS = [
-  'blacksky\\.community',
-  'staging\\.blacksky\\.community',
-  'blacksky\\.app',
-  'blackskyweb\\.xyz',
-  'rsky\\.dev',
-  'tektite\\.cc',
-  'opencollective\\.com',
-  'github\\.com',
   'bsky\\.app',
   'bsky\\.social',
   'blueskyweb\\.xyz',
@@ -61,7 +53,7 @@ export function toNiceDomain(url: string): string {
   try {
     const urlp = new URL(url)
     if (`https://${urlp.host}` === BSKY_SERVICE) {
-      return 'Blacksky Algorithms'
+      return 'Bluesky Social'
     }
     return urlp.host ? urlp.host : url
   } catch (e) {
@@ -88,7 +80,7 @@ export function toShortUrl(url: string): string {
 
 export function toShareUrl(url: string): string {
   if (!url.startsWith('https')) {
-    const urlp = new URL('https://blacksky.community')
+    const urlp = new URL('https://bsky.app')
     urlp.pathname = url
     url = urlp.toString()
   }
@@ -100,11 +92,7 @@ export function toBskyAppUrl(url: string): string {
 }
 
 export function isBskyAppUrl(url: string): boolean {
-  return (
-    url.startsWith('https://bsky.app/') ||
-    url.startsWith('https://blacksky.community/') ||
-    url.startsWith('https://staging.blacksky.community/')
-  )
+  return url.startsWith('https://bsky.app/')
 }
 
 export function isRelativeUrl(url: string): boolean {
@@ -113,10 +101,7 @@ export function isRelativeUrl(url: string): boolean {
 
 export function isBskyRSSUrl(url: string): boolean {
   return (
-    (url.startsWith('https://bsky.app/') ||
-      url.startsWith('https://blacksky.community/') ||
-      url.startsWith('https://staging.blacksky.community/') ||
-      isRelativeUrl(url)) &&
+    (url.startsWith('https://bsky.app/') || isRelativeUrl(url)) &&
     /\/rss\/?$/.test(url)
   )
 }
@@ -191,6 +176,29 @@ export function isBskyStarterPackUrl(url: string): boolean {
     }
   }
   return false
+}
+
+// Invite codes are 7 alphanumeric characters long, supporting up to 10 here to future-proof.
+export const CHAT_INVITE_CODE_REGEX = /^\/chat\/([a-zA-Z0-9]{7,10})$/
+
+export function getChatInviteCodeFromUrl(url: string): string | undefined {
+  let pathname: string
+  if (isBskyAppUrl(url)) {
+    try {
+      pathname = new URL(url).pathname
+    } catch {
+      return undefined
+    }
+  } else if (url.startsWith('/')) {
+    pathname = url.split('?')[0].split('#')[0]
+  } else {
+    return undefined
+  }
+  return pathname.match(CHAT_INVITE_CODE_REGEX)?.[1]
+}
+
+export function isBskyChatInviteUrl(url: string): boolean {
+  return getChatInviteCodeFromUrl(url) !== undefined
 }
 
 export function isBskyDownloadUrl(url: string): boolean {
@@ -321,8 +329,8 @@ export function isPossiblyAUrl(str: string): boolean {
 }
 
 export function splitApexDomain(hostname: string): [string, string] {
-  const hostnamep = psl.parse(hostname)
-  if ('error' in hostnamep || !hostnamep.listed || !hostnamep.domain) {
+  const hostnamep = parse(hostname)
+  if (hostnamep.error || !hostnamep.listed || !hostnamep.domain) {
     return ['', hostname]
   }
   return [
@@ -348,11 +356,11 @@ export function createProxiedUrl(url: string): string {
     return url
   }
 
-  return `https://go.blacksky.community/redirect?u=${encodeURIComponent(url)}`
+  return `https://go.bsky.app/redirect?u=${encodeURIComponent(url)}`
 }
 
 export function isShortLink(url: string): boolean {
-  return url.startsWith('https://go.blacksky.community/')
+  return url.startsWith('https://go.bsky.app/')
 }
 
 export function shortLinkToHref(url: string): string {
