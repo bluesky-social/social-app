@@ -200,7 +200,7 @@ function FeedItem({
           style={[
             a.align_center,
             a.justify_center,
-            a.rounded_xs,
+            a.rounded_full,
             {
               width: 20,
               height: 20,
@@ -213,12 +213,15 @@ function FeedItem({
           />
         </View>
       ) : (
-        <UserAvatar
-          type={feedInfo.type === 'list' ? 'list' : 'algo'}
-          size={20}
-          avatar={feedInfo.avatar}
-          noBorder
-        />
+        <View
+          style={[a.rounded_full, a.overflow_hidden, {width: 20, height: 20}]}>
+          <UserAvatar
+            type={feedInfo.type === 'list' ? 'list' : 'algo'}
+            size={20}
+            avatar={feedInfo.avatar}
+            noBorder
+          />
+        </View>
       )}
       <Text
         style={[
