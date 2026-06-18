@@ -31,7 +31,6 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {getAllListMembers} from '#/state/queries/list-members'
 import {useResolvedStarterPackShortLink} from '#/state/queries/resolve-short-link'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
-import {useShortenLink} from '#/state/queries/shorten-link'
 import {
   useDeleteStarterPackMutation,
   useStarterPackQuery,
@@ -200,8 +199,13 @@ function StarterPackScreenLoaded({
   const qrCodeDialogControl = useDialogControl()
   const shareDialogControl = useDialogControl()
 
-  const shortenLink = useShortenLink()
-  const [link, setLink] = useState<string>()
+  // Eurosky fork: the share link is the full first-party URL
+  // (mu.social/start/...), a pure function of the starter pack - no async
+  // go.bsky.app shortener - so derive it rather than holding it in state.
+  const link = makeStarterPackLink(
+    starterPack.creator.did,
+    new AtUri(starterPack.uri).rkey,
+  )
   const [imageLoaded, setImageLoaded] = useState(false)
 
   useEffect(() => {
@@ -211,12 +215,6 @@ function StarterPackScreenLoaded({
   }, [ax, starterPack.uri])
 
   const onOpenShareDialog = useCallback(() => {
-    const rkey = new AtUri(starterPack.uri).rkey
-    shortenLink(makeStarterPackLink(starterPack.creator.did, rkey)).then(
-      res => {
-        setLink(res.url)
-      },
-    )
     Image.prefetch(getStarterPackOgCard(starterPack))
       .then(() => {
         setImageLoaded(true)
@@ -225,7 +223,7 @@ function StarterPackScreenLoaded({
         setImageLoaded(true)
       })
     shareDialogControl.open()
-  }, [shareDialogControl, shortenLink, starterPack])
+  }, [shareDialogControl, starterPack])
 
   useEffect(() => {
     if (routeParams.new) {
