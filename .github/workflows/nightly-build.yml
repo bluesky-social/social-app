@@ -62,7 +62,7 @@ jobs:
           if [ -z "$notes" ]; then
             notes="Nightly build — no new commits since the last nightly."
           fi
-          # Cap the whole changelog (TestFlight "What to Test" is limited to 4000 characters).
+          # Cap the whole changelog to keep the Slack message a reasonable size.
           # head -c caps the combined stream; cut -c would only cap each line independently.
           notes=$(printf '%s' "$notes" | head -c 3900)
           {
@@ -78,12 +78,16 @@ jobs:
     with:
       profile: testflight
       assignTestFlightGroup: true
-      releaseNotes: ${{ needs.prepare.outputs.notes }}
     secrets: inherit
 
   android:
     name: Nightly Android Build
     needs: [prepare]
+    # build-submit-android.yml contains an attachToRelease job that requests contents: write.
+    # That job is skipped for nightly (it needs a production tag build), but GitHub statically
+    # validates the reusable-workflow permission ceiling, so the caller must grant it here.
+    permissions:
+      contents: write
     uses: ./.github/workflows/build-submit-android.yml
     with:
       profile: testflight-android
