@@ -1,20 +1,11 @@
 import {type AppBskyActorDefs} from '@atproto/api'
-import {useQuery} from '@tanstack/react-query'
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {TRUSTED_VERIFIER_DIDS} from '#/lib/constants'
 import {getVerificationBacklinks} from '#/lib/verification/constellation'
 import {STALE} from '#/state/queries'
 import {createQueryKey} from '#/state/queries/util'
-
-const TRUSTED = new Set(TRUSTED_VERIFIER_DIDS)
-
-/**
- * Whether a DID is one of our trusted verifiers. The trust root is hardcoded
- * for now - see TRUSTED_VERIFIER_DIDS in constants for the migration path.
- */
-export function isTrustedVerifier(did?: string): boolean {
-  return !!did && TRUSTED.has(did)
-}
+import {ensureTrustedVerifierDids} from '#/state/queries/verification/useTrustedVerifiersQuery'
+import {useAgent} from '#/state/session'
 
 export type MuVerification = {
   /**
@@ -33,14 +24,17 @@ export const createMuVerificationQueryKey = (did: string) =>
   createQueryKey(muVerificationQueryKeyRoot, {did})
 
 export function useMuVerificationQuery({did}: {did?: string}) {
+  const qc = useQueryClient()
+  const agent = useAgent()
   return useQuery<MuVerification>({
     queryKey: createMuVerificationQueryKey(did ?? ''),
     enabled: !!did,
     staleTime: STALE.MINUTES.FIVE,
     queryFn: async () => {
+      const trusted = await ensureTrustedVerifierDids(qc, agent)
       const backlinks = did ? await getVerificationBacklinks(did) : []
       const verifications = backlinks
-        .filter(b => isTrustedVerifier(b.issuer))
+        .filter(b => trusted.has(b.issuer))
         .map(b => ({
           issuer: b.issuer,
           uri: b.uri,
@@ -49,7 +43,7 @@ export function useMuVerificationQuery({did}: {did?: string}) {
         }))
       return {
         verifications,
-        isVerifier: isTrustedVerifier(did),
+        isVerifier: !!did && trusted.has(did),
       }
     },
   })
