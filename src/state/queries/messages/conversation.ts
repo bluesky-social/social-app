@@ -77,16 +77,21 @@ export function useMarkAsReadMutation() {
     onMutate({convoId}) {
       if (!convoId) throw new Error('No convoId provided')
 
-      // find the convo so we know which badge counter (if any) to decrement
-      let unreadStatus: ChatBskyConvoDefs.ConvoView['status'] | undefined
-      const listQueries = queryClient.getQueriesData<ConvoListQueryData>({
+      // snapshot the list caches before the optimistic update so onError can
+      // restore the convo rows alongside the badge count
+      const prevListQueries = queryClient.getQueriesData<ConvoListQueryData>({
         queryKey: [LIST_CONVOS_KEY],
       })
-      for (const [, data] of listQueries) {
+
+      // find the convo so we know which badge counter (if any) to decrement.
+      // keep scanning past a stale unreadCount === 0 cache so another cache
+      // holding the true unread state still drives the decrement
+      let unreadStatus: ChatBskyConvoDefs.ConvoView['status'] | undefined
+      for (const [, data] of prevListQueries) {
         if (!data) continue
         const convo = getConvoFromQueryData(convoId, data)
-        if (convo) {
-          if (convo.unreadCount > 0) unreadStatus = convo.status
+        if (convo?.unreadCount) {
+          unreadStatus = convo.status
           break
         }
       }
@@ -123,9 +128,14 @@ export function useMarkAsReadMutation() {
           },
         )
       }
-      return {prevUnreadCountsQueries}
+      return {prevListQueries, prevUnreadCountsQueries}
     },
     onError(_, __, context) {
+      if (context?.prevListQueries) {
+        for (const [queryKey, prevData] of context.prevListQueries) {
+          queryClient.setQueryData(queryKey, prevData)
+        }
+      }
       if (context?.prevUnreadCountsQueries) {
         for (const [queryKey, prevData] of context.prevUnreadCountsQueries) {
           queryClient.setQueryData(queryKey, prevData)
