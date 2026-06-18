@@ -241,7 +241,8 @@ jobs:
             app_identifier:"xyz.blueskyweb.app" \
             app_version:"$APP_VERSION" \
             build_number:"$BUILD_NUMBER" \
-            groups:"QA Team"
+            groups:"QA Team" \
+            notify_external_testers:true
 
       - name: 🔔 Notify Slack of Production Build
         if: ${{ inputs.profile == 'production' }}
