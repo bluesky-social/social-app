@@ -183,6 +183,19 @@ func withQuotePostBlocked() func(*appbsky.FeedDefs_PostView) {
 	}
 }
 
+// withReplyRoot marks the post as a reply by setting its record's Reply.Root
+// strong-ref to the given thread-root post.
+func withReplyRoot(rootDid, rootRkey string) func(*appbsky.FeedDefs_PostView) {
+	return func(pv *appbsky.FeedDefs_PostView) {
+		rec, _ := pv.Record.Val.(*appbsky.FeedPost)
+		uri := "at://" + rootDid + "/app.bsky.feed.post/" + rootRkey
+		rec.Reply = &appbsky.FeedPost_ReplyRef{
+			Root:   &comatprototypes.RepoStrongRef{Uri: uri, Cid: "bafy-root"},
+			Parent: &comatprototypes.RepoStrongRef{Uri: uri, Cid: "bafy-root"},
+		}
+	}
+}
+
 // withSelfLabel adds a self-label that should hide embeds.
 func withSelfLabel(val string) func(*appbsky.FeedDefs_PostView) {
 	return func(pv *appbsky.FeedDefs_PostView) {
@@ -263,7 +276,7 @@ func unmarshalLD(t *testing.T, s string) map[string]any {
 func TestBuildPostJSONLD_Bare(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "hello")
 	canonical := "https://bsky.app/profile/alice.bsky.social/post/abc123"
-	out, err := buildPostJSONLD(pv, nil, canonical, hideEmbedLabels, hideReplyLabels)
+	out, err := buildPostJSONLD(pv, nil, canonical, "", hideEmbedLabels, hideReplyLabels)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -333,7 +346,7 @@ func TestBuildPostJSONLD_WithImages(t *testing.T) {
 	thumb1 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/abc@jpeg"
 	thumb2 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/def@jpeg"
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "look", withImages(thumb1, thumb2))
-	out, err := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", hideEmbedLabels, hideReplyLabels)
+	out, err := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", "", hideEmbedLabels, hideReplyLabels)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -358,7 +371,7 @@ func TestBuildPostJSONLD_WithGallery(t *testing.T) {
 	thumb2 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g2@jpeg"
 	thumb3 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g3@jpeg"
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "gallery", withGallery(thumb1, thumb2, thumb3))
-	out, err := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", hideEmbedLabels, hideReplyLabels)
+	out, err := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", "", hideEmbedLabels, hideReplyLabels)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -385,7 +398,7 @@ func TestBuildPostJSONLD_GalleryInRecordWithMedia(t *testing.T) {
 	thumb := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g@jpeg"
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "quote+gallery",
 		withRecordWithMediaGallery("bob.example.com", "did:plc:bob", "xyz", thumb))
-	out, err := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	out, err := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -438,7 +451,7 @@ func TestExtractPostMedia_GallerySkipsUnknownItems(t *testing.T) {
 func TestBuildPostJSONLD_WithVideo(t *testing.T) {
 	thumb := "https://cdn.bsky.app/img/video_thumbnail/plain/did:plc:alice/v@jpeg"
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "watch", withVideo(thumb))
-	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	if main["thumbnailUrl"] != thumb {
 		t.Errorf("video thumbnailUrl wrong: %v", main["thumbnailUrl"])
@@ -451,7 +464,7 @@ func TestBuildPostJSONLD_WithVideo(t *testing.T) {
 
 func TestBuildPostJSONLD_QuotePost(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "quoting!", withQuotePost("bob.example.com", "did:plc:bob", "xyz"))
-	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	if main["isBasedOn"] != "https://bsky.app/profile/bob.example.com/post/xyz" {
 		t.Errorf("isBasedOn wrong: %v", main["isBasedOn"])
@@ -460,16 +473,63 @@ func TestBuildPostJSONLD_QuotePost(t *testing.T) {
 
 func TestBuildPostJSONLD_QuoteBlocked(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "quoting blocked", withQuotePostBlocked())
-	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	if _, present := main["isBasedOn"]; present {
 		t.Errorf("blocked quote should not produce isBasedOn")
 	}
 }
 
+func TestBuildPostJSONLD_IsPartOf(t *testing.T) {
+	// isPartOf is sourced solely from the handler-resolved URL. When supplied,
+	// it is emitted on the main post; when empty, no isPartOf is present.
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "a reply")
+	isPartOf := "https://bsky.app/profile/root.bsky.social/post/rootrkey"
+	out, _ := buildPostJSONLD(pv, nil, "u", isPartOf, hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	if main["isPartOf"] != isPartOf {
+		t.Errorf("isPartOf = %v, want %v", main["isPartOf"], isPartOf)
+	}
+
+	out, _ = buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
+	main = unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	if _, present := main["isPartOf"]; present {
+		t.Errorf("empty isPartOfURL should omit isPartOf, got %v", main["isPartOf"])
+	}
+}
+
+func TestThreadRootURI(t *testing.T) {
+	// A reply returns its root AT-URI; a non-reply returns "".
+	reply := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "a reply",
+		withReplyRoot("did:plc:root", "rootrkey"))
+	want := "at://did:plc:root/app.bsky.feed.post/rootrkey"
+	if got := threadRootURI(reply); got != want {
+		t.Errorf("threadRootURI = %q, want %q", got, want)
+	}
+
+	post := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "not a reply")
+	if got := threadRootURI(post); got != "" {
+		t.Errorf("threadRootURI on non-reply = %q, want empty", got)
+	}
+}
+
+func TestBuildPostJSONLD_ReplyCommentsNoIsPartOf(t *testing.T) {
+	// Replies surfaced under the main post as comment[] are Comment nodes and
+	// never carry isPartOf, even when the main post has one.
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "main")
+	reply := makePostView("bob.bsky.social", "did:plc:bob", "rep1", "a reply")
+	isPartOf := "https://bsky.app/profile/root.bsky.social/post/rootrkey"
+	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", isPartOf, hideEmbedLabels, hideReplyLabels)
+	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+	c := main["comment"].([]any)[0].(map[string]any)
+	if _, present := c["isPartOf"]; present {
+		t.Errorf("comment entries should not carry isPartOf, got %v", c["isPartOf"])
+	}
+}
+
 func TestBuildPostJSONLD_ExternalEmbed(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "check this out", withExternalEmbed("https://www.spiegel.de/article", "Title"))
-	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	sc, ok := main["sharedContent"].(map[string]any)
 	if !ok {
@@ -487,7 +547,7 @@ func TestBuildPostJSONLD_HiddenEmbed(t *testing.T) {
 	thumb := "https://cdn.bsky.app/img/x@jpeg"
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "nsfw",
 		withImages(thumb), withSelfLabel("porn"))
-	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	if _, present := main["image"]; present {
 		t.Errorf("hidden-embed post should not emit image")
@@ -506,7 +566,7 @@ func TestBuildPostJSONLD_HiddenEmbed_Gallery(t *testing.T) {
 	thumb := "https://cdn.bsky.app/img/g@jpeg"
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "nsfw",
 		withGallery(thumb), withSelfLabel("porn"))
-	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	if _, present := main["image"]; present {
 		t.Errorf("hidden-embed gallery post should not emit image")
@@ -520,7 +580,7 @@ func TestBuildPostJSONLD_TextEscaping(t *testing.T) {
 	// Includes ", \, newline, </script>, and a unicode char.
 	tricky := "hello \"world\" \\ <\\>\n</script> 🎉"
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", tricky)
-	out, err := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	out, err := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -556,7 +616,7 @@ func TestBuildPostJSONLD_Comments(t *testing.T) {
 		FeedDefs_BlockedPost: &appbsky.FeedDefs_BlockedPost{Uri: "at://x/y/z"},
 	})
 
-	out, _ := buildPostJSONLD(pv, replies, "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, replies, "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 
 	if cc := main["commentCount"].(float64); int64(cc) != 14 {
@@ -598,7 +658,7 @@ func TestBuildPostJSONLD_Comments(t *testing.T) {
 func TestBuildPostJSONLD_HandleInvalidAuthor(t *testing.T) {
 	pv := makePostView("handle.invalid", "did:plc:alice", "abc123", "hello")
 	fallback := "https://bsky.app/profile/did:plc:alice/post/abc123"
-	out, _ := buildPostJSONLD(pv, nil, fallback, hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, nil, fallback, "", hideEmbedLabels, hideReplyLabels)
 	envelope := unmarshalLD(t, out)
 	main := envelope["mainEntity"].(map[string]any)
 	// mainEntity.url falls back to the caller's canonical URL so envelope
@@ -647,7 +707,7 @@ func TestBuildPostJSONLD_EnvelopeURLMatchesMainEntity(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			pv := makePostView(tc.handle, tc.did, tc.rkey, "hi")
-			out, _ := buildPostJSONLD(pv, nil, tc.canonical, hideEmbedLabels, hideReplyLabels)
+			out, _ := buildPostJSONLD(pv, nil, tc.canonical, "", hideEmbedLabels, hideReplyLabels)
 			env := unmarshalLD(t, out)
 			main := env["mainEntity"].(map[string]any)
 			if env["url"] != tc.canonical {
@@ -664,7 +724,7 @@ func TestBuildPostJSONLD_NilAuthor(t *testing.T) {
 	// Defensive: don't panic if Author is nil.
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "hi")
 	pv.Author = nil
-	if _, err := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels); err == nil {
+	if _, err := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels); err == nil {
 		t.Errorf("expected error for nil-author post, got nil")
 	}
 }
@@ -682,7 +742,7 @@ func TestBuildPostJSONLD_NilAuthorReply(t *testing.T) {
 		{FeedDefs_ThreadViewPost: &appbsky.FeedDefs_ThreadViewPost{Post: goodReply}},
 		{FeedDefs_ThreadViewPost: &appbsky.FeedDefs_ThreadViewPost{Post: badReply}},
 	}
-	out, err := buildPostJSONLD(pv, replies, "u", hideEmbedLabels, hideReplyLabels)
+	out, err := buildPostJSONLD(pv, replies, "u", "", hideEmbedLabels, hideReplyLabels)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -703,7 +763,7 @@ func TestBuildPostJSONLD_CommentMedia(t *testing.T) {
 	replies := []*appbsky.FeedDefs_ThreadViewPost_Replies_Elem{
 		{FeedDefs_ThreadViewPost: &appbsky.FeedDefs_ThreadViewPost{Post: reply}},
 	}
-	out, _ := buildPostJSONLD(pv, replies, "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, replies, "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	c := main["comment"].([]any)[0].(map[string]any)
 	imgs, ok := c["image"].([]any)
@@ -910,7 +970,7 @@ func TestBuildPostJSONLD_HiddenReplyDropped_PostViewLabel(t *testing.T) {
 	good := makePostView("bob.bsky.social", "did:plc:bob", "rep1", "good reply")
 	bad := makePostView("eve.bsky.social", "did:plc:eve", "rep2", "spam reply",
 		withPostLabel("!hide", false))
-	out, _ := buildPostJSONLD(pv, buildReplies(good, bad), "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, buildReplies(good, bad), "u", "", hideEmbedLabels, hideReplyLabels)
 	ids := commentIdentifiers(t, out)
 	if len(ids) != 1 || ids[0] != good.Uri {
 		t.Errorf("expected only the unlabeled reply to remain, got %v", ids)
@@ -923,7 +983,7 @@ func TestBuildPostJSONLD_HiddenReplyDropped_SelfLabel(t *testing.T) {
 	good := makePostView("bob.bsky.social", "did:plc:bob", "rep1", "good reply")
 	bad := makePostView("eve.bsky.social", "did:plc:eve", "rep2", "spam reply",
 		withSelfLabel("spam"))
-	out, _ := buildPostJSONLD(pv, buildReplies(good, bad), "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, buildReplies(good, bad), "u", "", hideEmbedLabels, hideReplyLabels)
 	ids := commentIdentifiers(t, out)
 	if len(ids) != 1 || ids[0] != good.Uri {
 		t.Errorf("expected self-labeled reply dropped, got %v", ids)
@@ -939,7 +999,7 @@ func TestBuildPostJSONLD_HiddenReplyDropped_EmbedLabel(t *testing.T) {
 	// union behavior.
 	bad := makePostView("eve.bsky.social", "did:plc:eve", "rep2", "concerning reply",
 		withPostLabel("self-harm", false))
-	out, _ := buildPostJSONLD(pv, buildReplies(good, bad), "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, buildReplies(good, bad), "u", "", hideEmbedLabels, hideReplyLabels)
 	ids := commentIdentifiers(t, out)
 	if len(ids) != 1 || ids[0] != good.Uri {
 		t.Errorf("expected embed-labeled reply dropped, got %v", ids)
@@ -951,7 +1011,7 @@ func TestBuildPostJSONLD_NegatedHideLabelKept(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "main")
 	reply := makePostView("bob.bsky.social", "did:plc:bob", "rep1", "fine reply",
 		withPostLabel("!hide", true))
-	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", "", hideEmbedLabels, hideReplyLabels)
 	ids := commentIdentifiers(t, out)
 	if len(ids) != 1 || ids[0] != reply.Uri {
 		t.Errorf("expected negated-label reply to be kept, got %v", ids)
@@ -962,7 +1022,7 @@ func TestBuildPostJSONLD_ReplyAuthorHasIdentifier(t *testing.T) {
 	// Reply author should also carry a DID identifier.
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "main")
 	reply := makePostView("bob.bsky.social", "did:plc:bob", "rep1", "hi")
-	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	c := main["comment"].([]any)[0].(map[string]any)
 	auth, ok := c["author"].(map[string]any)
@@ -1103,7 +1163,7 @@ func TestBuildPostJSONLD_AuthorReviewedBy(t *testing.T) {
 	})
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "hi",
 		withVerifications(state))
-	out, err := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	out, err := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1143,7 +1203,7 @@ func TestBuildPostJSONLD_ReplyAuthorNoReviewedBy(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "main")
 	reply := makePostView("bob.bsky.social", "did:plc:bob", "rep1", "hi",
 		withVerifications(state))
-	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	c := main["comment"].([]any)[0].(map[string]any)
 	auth := c["author"].(map[string]any)
@@ -1267,7 +1327,7 @@ func TestBuildPostJSONLD_WithVideoObject(t *testing.T) {
 			hasAspect: true, width: 16, height: 9,
 		}))
 	canonical := "https://bsky.app/profile/alice.bsky.social/post/abc123"
-	out, err := buildPostJSONLD(pv, nil, canonical, hideEmbedLabels, hideReplyLabels)
+	out, err := buildPostJSONLD(pv, nil, canonical, "", hideEmbedLabels, hideReplyLabels)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1315,7 +1375,7 @@ func TestBuildPostJSONLD_VideoNameFallback(t *testing.T) {
 		withVideoFull(videoEmbedOpts{
 			playlist: "https://video.bsky.app/p.m3u8",
 		}))
-	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	video, ok := main["video"].(map[string]any)
 	if !ok {
@@ -1332,7 +1392,7 @@ func TestBuildPostJSONLD_VideoNameFallbackHandleInvalid(t *testing.T) {
 		withVideoFull(videoEmbedOpts{
 			playlist: "https://video.bsky.app/p.m3u8",
 		}))
-	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	video := main["video"].(map[string]any)
 	if video["name"] != "Video on Bluesky" {
@@ -1347,7 +1407,7 @@ func TestBuildPostJSONLD_VideoDescriptionFallback(t *testing.T) {
 		withVideoFull(videoEmbedOpts{
 			playlist: "https://video.bsky.app/p.m3u8", alt: "scenic clip",
 		}))
-	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	video := main["video"].(map[string]any)
 	if video["description"] != "scenic clip" {
@@ -1360,7 +1420,7 @@ func TestBuildPostJSONLD_VideoNoAspectRatio(t *testing.T) {
 		withVideoFull(videoEmbedOpts{
 			playlist: "https://video.bsky.app/p.m3u8", alt: "alt",
 		}))
-	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	video := main["video"].(map[string]any)
 	if _, present := video["width"]; present {
@@ -1377,7 +1437,7 @@ func TestBuildPostJSONLD_VideoMissingPlaylist(t *testing.T) {
 	thumb := "https://cdn.bsky.app/img/video_thumbnail/plain/did:plc:alice/v@jpeg"
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "x",
 		withVideo(thumb))
-	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	if _, present := main["video"]; present {
 		t.Errorf("video without playlist should not produce VideoObject")
@@ -1396,7 +1456,7 @@ func TestBuildPostJSONLD_VideoHiddenEmbed(t *testing.T) {
 			alt:       "should be dropped",
 		}),
 		withSelfLabel("porn"))
-	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	if _, present := main["video"]; present {
 		t.Errorf("hidden-embed post should not emit video")
@@ -1411,7 +1471,7 @@ func TestBuildPostJSONLD_VideoInRecordWithMedia(t *testing.T) {
 			thumbnail: thumb, playlist: playlist, alt: "alt", recordMedia: true,
 			hasAspect: true, width: 4, height: 3,
 		}))
-	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	video, ok := main["video"].(map[string]any)
 	if !ok {
@@ -1438,7 +1498,7 @@ func TestBuildPostJSONLD_VideoOnReply(t *testing.T) {
 		withVideoFull(videoEmbedOpts{
 			thumbnail: thumb, playlist: playlist, alt: "bob's clip",
 		}))
-	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	c := main["comment"].([]any)[0].(map[string]any)
 	video, ok := c["video"].(map[string]any)
@@ -1461,7 +1521,7 @@ func TestBuildPostJSONLD_VideoOnReply(t *testing.T) {
 
 func TestBuildPostJSONLD_NoVideoNoField(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "no embed")
-	out, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	if _, present := main["video"]; present {
 		t.Errorf("post without video should not include video field")
@@ -1505,7 +1565,7 @@ func TestBuildPostJSONLD_VideoHandleInvalidEmbedURL(t *testing.T) {
 			playlist: playlist, alt: "scenic clip",
 		}))
 	canonical := "https://bsky.app/profile/did:plc:alice/post/abc123"
-	out, _ := buildPostJSONLD(pv, nil, canonical, hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, nil, canonical, "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	video, ok := main["video"].(map[string]any)
 	if !ok {
@@ -1528,7 +1588,7 @@ func TestBuildPostJSONLD_VideoHandleInvalidEmbedURL_Reply(t *testing.T) {
 		withVideoFull(videoEmbedOpts{
 			playlist: playlist, alt: "bob's clip",
 		}))
-	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	c := main["comment"].([]any)[0].(map[string]any)
 	video, ok := c["video"].(map[string]any)

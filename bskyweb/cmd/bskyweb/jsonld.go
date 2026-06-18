@@ -65,6 +65,7 @@ type discussionForumPosting struct {
 	CommentCount    *int64            `json:"commentCount,omitempty"`
 	Comment         []comment         `json:"comment,omitempty"`
 	IsBasedOn       string            `json:"isBasedOn,omitempty"`
+	IsPartOf        string            `json:"isPartOf,omitempty"`
 	SharedContent   *sharedContent    `json:"sharedContent,omitempty"`
 }
 
@@ -344,6 +345,19 @@ func extractSharedContentURL(pv *appbsky.FeedDefs_PostView) string {
 	return ""
 }
 
+// threadRootURI returns the AT-URI of the root post of the thread a reply
+// belongs to, or "" if the post is not a reply or the record is malformed.
+func threadRootURI(pv *appbsky.FeedDefs_PostView) string {
+	if pv == nil || pv.Record == nil {
+		return ""
+	}
+	rec, ok := pv.Record.Val.(*appbsky.FeedPost)
+	if !ok || rec.Reply == nil || rec.Reply.Root == nil {
+		return ""
+	}
+	return rec.Reply.Root.Uri
+}
+
 // buildAuthor constructs a Person. Organization classification for
 // custom-domain accounts is a future enhancement.
 func buildAuthor(author *appbsky.ActorDefs_ProfileViewBasic) *personOrOrg {
@@ -584,12 +598,20 @@ func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) c
 
 // buildPostJSONLD marshals the WebPage envelope wrapping a
 // DiscussionForumPosting. canonicalURL is used for both envelope.url and
-// (as a fallback) mainEntity.url so they always agree.
-func buildPostJSONLD(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_ThreadViewPost_Replies_Elem, canonicalURL string, hideLabels, hideReplyLabels map[string]bool) (string, error) {
+// (as a fallback) mainEntity.url so they always agree. isPartOfURL, when
+// non-empty, is the handle-form canonical URL of the thread root the handler
+// resolved for a reply; pass "" to omit isPartOf (non-reply, or the root could
+// not be resolved). We never emit a DID-form isPartOf because it would not
+// match the root page's handle-form canonical.
+func buildPostJSONLD(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_ThreadViewPost_Replies_Elem, canonicalURL string, isPartOfURL string, hideLabels, hideReplyLabels map[string]bool) (string, error) {
 	if pv == nil || pv.Author == nil {
 		return "", fmt.Errorf("nil post view or author")
 	}
 	node := buildPostNode(pv, replies, hideLabels, hideReplyLabels)
+
+	if isPartOfURL != "" {
+		node.IsPartOf = isPartOfURL
+	}
 
 	// mainEntity.url is empty when the author handle is unusable; fall back
 	// to canonicalURL so it agrees with envelope.url.

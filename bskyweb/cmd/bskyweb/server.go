@@ -694,7 +694,23 @@ func (srv *Server) WebPost(c echo.Context) error {
 	if jsonldURL == "" {
 		jsonldURL = requestURI
 	}
-	if jsonld, err := buildPostJSONLD(postView, threadView.Replies, jsonldURL, hideEmbedLabels, hideReplyLabels); err == nil {
+
+	// Best-effort: resolve a reply's thread root to its handle-form canonical
+	// URL for isPartOf. Non-critical and bounded by a short timeout - on
+	// timeout, error, or an unresolvable root (deleted/taken-down) we omit
+	// isPartOf rather than point at a non-indexable page.
+	isPartOfURL := ""
+	if rootURI := threadRootURI(postView); rootURI != "" {
+		pctx, cancel := context.WithTimeout(ctx, 1*time.Second)
+		if posts, perr := appbsky.FeedGetPosts(pctx, srv.xrpcc, []string{rootURI}); perr != nil {
+			log.Warnf("failed to resolve thread root post for isPartOf: %s\t%v", rootURI, perr)
+		} else if len(posts.Posts) > 0 && posts.Posts[0].Author != nil {
+			isPartOfURL = bskyPostURLFromATURIWithDIDFallback(posts.Posts[0].Author.Handle, rootURI)
+		}
+		cancel()
+	}
+
+	if jsonld, err := buildPostJSONLD(postView, threadView.Replies, jsonldURL, isPartOfURL, hideEmbedLabels, hideReplyLabels); err == nil {
 		data["postJSONLD"] = jsonld
 	} else {
 		log.Warnf("failed to build post JSON-LD for %s: %v", uri, err)
