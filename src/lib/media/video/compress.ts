@@ -1,11 +1,13 @@
-import {getVideoMetaData, Video} from 'react-native-compressor'
 import {type ImagePickerAsset} from 'expo-image-picker'
 
 import {SUPPORTED_MIME_TYPES, type SupportedMimeTypes} from '#/lib/constants'
+import {logger} from '#/logger'
+import {compress, probe} from '../../../../modules/expo-bluesky-video-compress'
 import {type CompressedVideo} from './types'
-import {extToMime} from './util'
 
-const MIN_SIZE_FOR_COMPRESSION = 25 // 25mb
+const PASSTHROUGH_BITRATE = 5_000_000
+const PASSTHROUGH_MAX_DIMENSION = 1920
+const MAX_UPLOAD_SIZE = 100 * 1000 * 1000
 
 export async function compressVideo(
   file: ImagePickerAsset,
@@ -14,43 +16,76 @@ export async function compressVideo(
     onProgress?: (progress: number) => void
   },
 ): Promise<CompressedVideo> {
-  const {onProgress, signal} = opts || {}
+  if (file.mimeType === 'image/gif') {
+    return {uri: file.uri, size: file.fileSize ?? -1, mimeType: 'image/gif'}
+  }
 
   const isAcceptableFormat = SUPPORTED_MIME_TYPES.includes(
     file.mimeType as SupportedMimeTypes,
   )
 
-  if (file.mimeType === 'image/gif') {
-    // let's hope they're small enough that they don't need compression!
-    // this compression library doesn't support gifs
-    // worst case - server rejects them. I think that's fine -sfn
-    return {uri: file.uri, size: file.fileSize ?? -1, mimeType: 'image/gif'}
+  const metadata = await probe(file.uri)
+
+  if (!shouldCompress(metadata, isAcceptableFormat)) {
+    return {
+      uri: file.uri,
+      size: metadata.fileSize,
+      mimeType: file.mimeType ?? 'video/mp4',
+    }
   }
 
-  const minimumFileSizeForCompress = isAcceptableFormat
-    ? MIN_SIZE_FOR_COMPRESSION
-    : 0
-
-  const compressed = await Video.compress(
+  const result = await compress(
     file.uri,
     {
-      compressionMethod: 'manual',
-      bitrate: 3_000_000, // 3mbps
-      maxSize: 1920,
-      // WARNING: this ONE SPECIFIC ARG is in MB -sfn
-      minimumFileSizeForCompress,
-      getCancellationId: id => {
-        if (signal) {
-          signal.addEventListener('abort', () => {
-            Video.cancelCompression(id)
-          })
-        }
-      },
+      targetBitrate: 3_000_000,
+      maxSize: PASSTHROUGH_MAX_DIMENSION,
+      codec: 'h264',
     },
-    onProgress,
+    {
+      onProgress: opts?.onProgress,
+      signal: opts?.signal,
+    },
   )
 
-  const info = await getVideoMetaData(compressed)
+  return {
+    uri: result.uri,
+    size: result.size,
+    mimeType: result.mimeType,
+  }
+}
 
-  return {uri: compressed, size: info.size, mimeType: extToMime(info.extension)}
+function shouldCompress(
+  metadata: {bitrate: number; width: number; height: number; fileSize: number},
+  isAcceptableFormat: boolean,
+): boolean {
+  const maxDimension = Math.max(metadata.width, metadata.height)
+  const bitrateKbps = Math.round(metadata.bitrate / 1000)
+  const sizeMB = (metadata.fileSize / 1_000_000).toFixed(1)
+
+  if (!isAcceptableFormat) {
+    logger.debug('shouldCompress: yes (unsupported format)')
+    return true
+  }
+
+  if (metadata.fileSize > MAX_UPLOAD_SIZE) {
+    logger.debug(`shouldCompress: yes (file too large: ${sizeMB}MB)`)
+    return true
+  }
+
+  if (
+    metadata.bitrate <= PASSTHROUGH_BITRATE &&
+    maxDimension <= PASSTHROUGH_MAX_DIMENSION
+  ) {
+    logger.debug(
+      `shouldCompress: no (${bitrateKbps}kbps, ${maxDimension}px, ${sizeMB}MB)`,
+    )
+    return false
+  }
+
+  if (metadata.bitrate > PASSTHROUGH_BITRATE) {
+    logger.debug(`shouldCompress: yes (bitrate ${bitrateKbps}kbps)`)
+  } else {
+    logger.debug(`shouldCompress: yes (dimension ${maxDimension}px)`)
+  }
+  return true
 }
