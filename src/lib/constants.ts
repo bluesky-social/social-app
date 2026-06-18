@@ -256,6 +256,14 @@ export const TRUSTED_VERIFIER_LIST_URIS =
   BRAND.verification.trustedVerifierListUris
 
 /**
+ * Whether to also honor Bluesky's own server-computed verification (the
+ * `verification` field on appview profile responses). When false, only our
+ * trusted-verifier verifications are shown; ours always count regardless.
+ */
+export const INCLUDE_BLUESKY_VERIFICATIONS =
+  BRAND.verification.includeBlueskyVerifications
+
+/**
  * Accounts that must never be shown as verified in our app, regardless of any
  * verification issued by Bluesky or by one of our trusted verifiers. Keyed by
  * DID (stable across handle changes). This is a client-side display block only:

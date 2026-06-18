@@ -100,6 +100,14 @@ export const BRAND = {
     trustedVerifierListUris: [
       'at://did:plc:ooensn4mr5mhznzypvxelfa3/app.bsky.graph.list/3mogaw2g4an23',
     ],
+    /**
+     * Whether to also surface Bluesky's own server-computed verification (the
+     * `verification` field on appview profile responses - both Bluesky's
+     * verifications and those by verifiers Bluesky trusts). When false, only our
+     * own trusted-verifier verifications count. Our verifications always count
+     * regardless of this flag.
+     */
+    includeBlueskyVerifications: true,
   },
   /**
    * mu age-assurance backend (the `mu-age-service` XRPC service). Stores
