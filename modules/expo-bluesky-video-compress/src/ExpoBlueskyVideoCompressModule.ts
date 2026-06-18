@@ -11,7 +11,7 @@ type ProgressEvent = {id: number; progress: number}
 interface ExpoBlueskyVideoCompressModule {
   probe(uri: string): Promise<VideoMetadata>
   compress(uri: string, options: NativeCompressOptions): Promise<CompressResult>
-  cancel(): void
+  cancel(jobId: number): void
   addListener(
     eventName: 'onProgress',
     listener: (event: ProgressEvent) => void,

@@ -2,9 +2,10 @@ package expo.modules.blueskyvideocompress
 
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
+import java.util.concurrent.ConcurrentHashMap
 
 class ExpoBlueskyVideoCompressModule : Module() {
-  private var currentCompressor: VideoCompressor? = null
+  private val activeCompressors = ConcurrentHashMap<Int, VideoCompressor>()
 
   override fun definition() = ModuleDefinition {
     Name("ExpoBlueskyVideoCompress")
@@ -23,7 +24,7 @@ class ExpoBlueskyVideoCompressModule : Module() {
       val targetBitrate = (options["targetBitrate"] as? Number)?.toInt() ?: 0
       val maxSize = (options["maxSize"] as? Number)?.toInt() ?: 1920
       val codecPref = (options["codec"] as? String) ?: "auto"
-      val frameRateCap = (options["frameRateCap"] as? Number)?.toInt() ?: 30
+      val frameRateCap = ((options["frameRateCap"] as? Number)?.toInt() ?: 30).coerceAtLeast(1)
       val jobId = (options["jobId"] as? Number)?.toInt() ?: 0
 
       val compressor = VideoCompressor(
@@ -42,21 +43,20 @@ class ExpoBlueskyVideoCompressModule : Module() {
         }
       )
 
-      currentCompressor = compressor
+      activeCompressors[jobId] = compressor
 
       try {
         val result = compressor.compress()
-        currentCompressor = null
+        activeCompressors.remove(jobId)
         return@AsyncFunction result
       } catch (e: Exception) {
-        currentCompressor = null
+        activeCompressors.remove(jobId)
         throw e
       }
     }
 
-    Function("cancel") {
-      currentCompressor?.cancel()
-      currentCompressor = null
+    Function("cancel") { jobId: Int ->
+      activeCompressors.remove(jobId)?.cancel()
     }
   }
 }

@@ -2,7 +2,8 @@ import AVFoundation
 import ExpoModulesCore
 
 public class ExpoBlueskyVideoCompressModule: Module {
-  private var currentCompressor: VideoCompressor?
+  private var activeCompressors: [Int: VideoCompressor] = [:]
+  private let activeCompressorsLock = NSLock()
 
   public func definition() -> ModuleDefinition {
     Name("ExpoBlueskyVideoCompress")
@@ -19,7 +20,7 @@ public class ExpoBlueskyVideoCompressModule: Module {
       let targetBitrate = options["targetBitrate"] as? Int ?? 0
       let maxSize = options["maxSize"] as? Int ?? 1920
       let codecPref = options["codec"] as? String ?? "auto"
-      let frameRateCap = options["frameRateCap"] as? Int ?? 30
+      let frameRateCap = max(1, options["frameRateCap"] as? Int ?? 30)
       let jobId = options["jobId"] as? Int ?? 0
 
       let compressor = VideoCompressor(
@@ -37,21 +38,37 @@ public class ExpoBlueskyVideoCompressModule: Module {
         }
       )
 
-      self.currentCompressor = compressor
+      self.setCompressor(jobId, compressor)
 
       do {
         let result = try await compressor.compress()
-        self.currentCompressor = nil
+        self.setCompressor(jobId, nil)
         return result
       } catch {
-        self.currentCompressor = nil
+        self.setCompressor(jobId, nil)
         throw error
       }
     }
 
-    Function("cancel") {
-      self.currentCompressor?.cancel()
-      self.currentCompressor = nil
+    Function("cancel") { (jobId: Int) in
+      self.cancelCompressor(jobId)
     }
+  }
+
+  private func setCompressor(_ jobId: Int, _ compressor: VideoCompressor?) {
+    activeCompressorsLock.lock()
+    defer { activeCompressorsLock.unlock() }
+    if let compressor = compressor {
+      activeCompressors[jobId] = compressor
+    } else {
+      activeCompressors.removeValue(forKey: jobId)
+    }
+  }
+
+  private func cancelCompressor(_ jobId: Int) {
+    activeCompressorsLock.lock()
+    let compressor = activeCompressors.removeValue(forKey: jobId)
+    activeCompressorsLock.unlock()
+    compressor?.cancel()
   }
 }

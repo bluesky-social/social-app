@@ -63,7 +63,7 @@ export function compress(
     }
 
     const abortHandler = () => {
-      NativeModule.cancel()
+      NativeModule.cancel(jobId)
       subscription?.remove()
       reject(new AbortError())
     }

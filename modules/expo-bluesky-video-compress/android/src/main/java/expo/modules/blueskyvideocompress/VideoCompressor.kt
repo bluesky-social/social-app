@@ -148,6 +148,11 @@ class VideoCompressor(
         )
         setInteger(MediaFormat.KEY_FRAME_RATE, frameRateCap)
         setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, I_FRAME_INTERVAL)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+          setInteger(MediaFormat.KEY_COLOR_STANDARD, MediaFormat.COLOR_STANDARD_BT709)
+          setInteger(MediaFormat.KEY_COLOR_TRANSFER, MediaFormat.COLOR_TRANSFER_SDR_VIDEO)
+          setInteger(MediaFormat.KEY_COLOR_RANGE, MediaFormat.COLOR_RANGE_LIMITED)
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
           setInteger(MediaFormat.KEY_PRIORITY, 0)
           setInteger(MediaFormat.KEY_OPERATING_RATE, frameRateCap)
