@@ -113,7 +113,7 @@ class VideoCompressor {
     ]
     let peakBytesPerSecond = Int(Double(effectiveBitrate) / 8.0 * 1.5)
     compressionProps[kVTCompressionPropertyKey_DataRateLimits as String] = [
-      peakBytesPerSecond, 1
+      peakBytesPerSecond, 1.0
     ] as CFArray
 
     let videoColorProps: [String: Any] = [
@@ -259,20 +259,27 @@ class VideoCompressor {
   ) async {
     var lastProgressTime: CFAbsoluteTime = 0
     var lastAppendedPTS: CMTime?
+    var finished = false
 
     await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
       writerInput.requestMediaDataWhenReady(
         on: DispatchQueue(label: "com.bsky.videocompress.video")
       ) {
-        while writerInput.isReadyForMoreMediaData {
-          if self.isCancelled {
+        let finish = {
+          if !finished {
+            finished = true
             writerInput.markAsFinished()
             continuation.resume()
+          }
+        }
+        while writerInput.isReadyForMoreMediaData {
+          if finished { return }
+          if self.isCancelled {
+            finish()
             return
           }
           guard let sampleBuffer = readerOutput.copyNextSampleBuffer() else {
-            writerInput.markAsFinished()
-            continuation.resume()
+            finish()
             return
           }
 
@@ -286,8 +293,7 @@ class VideoCompressor {
           lastAppendedPTS = pts
 
           if !writerInput.append(sampleBuffer) {
-            writerInput.markAsFinished()
-            continuation.resume()
+            finish()
             return
           }
 
@@ -306,24 +312,31 @@ class VideoCompressor {
     readerOutput: AVAssetReaderOutput,
     writerInput: AVAssetWriterInput
   ) async {
+    var finished = false
+
     await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
       writerInput.requestMediaDataWhenReady(
         on: DispatchQueue(label: "com.bsky.videocompress.audio")
       ) {
-        while writerInput.isReadyForMoreMediaData {
-          if self.isCancelled {
+        let finish = {
+          if !finished {
+            finished = true
             writerInput.markAsFinished()
             continuation.resume()
+          }
+        }
+        while writerInput.isReadyForMoreMediaData {
+          if finished { return }
+          if self.isCancelled {
+            finish()
             return
           }
           guard let sampleBuffer = readerOutput.copyNextSampleBuffer() else {
-            writerInput.markAsFinished()
-            continuation.resume()
+            finish()
             return
           }
           if !writerInput.append(sampleBuffer) {
-            writerInput.markAsFinished()
-            continuation.resume()
+            finish()
             return
           }
         }

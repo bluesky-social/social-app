@@ -11,6 +11,7 @@ import android.os.Build
 import android.util.Log
 import java.io.File
 import java.nio.ByteBuffer
+import java.util.UUID
 
 class VideoCompressor(
   private val context: Context,
@@ -72,7 +73,7 @@ class VideoCompressor(
     encoderInfo: CodecSelector.EncoderInfo,
     useHevc: Boolean
   ): Map<String, Any> {
-    val outputFile = File(context.cacheDir, "${System.currentTimeMillis()}.mp4")
+    val outputFile = File(context.cacheDir, "${UUID.randomUUID()}.mp4")
 
     var extractor: MediaExtractor? = null
     var muxer: MediaMuxer? = null

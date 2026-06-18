@@ -23,15 +23,6 @@ object CodecSelector {
     val isHardware: Boolean
   )
 
-  fun selectEncoder(preferHevc: Boolean): EncoderInfo? {
-    if (preferHevc) {
-      val hevc = findEncoder(MediaFormat.MIMETYPE_VIDEO_HEVC, requireHardware = true)
-      if (hevc != null) return hevc
-    }
-    findEncoder(MediaFormat.MIMETYPE_VIDEO_AVC, requireHardware = true)?.let { return it }
-    return findEncoder(MediaFormat.MIMETYPE_VIDEO_AVC, requireHardware = false)
-  }
-
   fun findEncoder(mime: String, requireHardware: Boolean): EncoderInfo? {
     val codecList = MediaCodecList(MediaCodecList.REGULAR_CODECS)
     val candidates = codecList.codecInfos
