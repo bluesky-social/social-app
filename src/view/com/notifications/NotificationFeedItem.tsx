@@ -432,7 +432,7 @@ let NotificationFeedItem = ({
     )
     icon = (
       <View style={{height: 30, width: 30}}>
-        <StarterPack width={30} gradient="sky" />
+        <StarterPack width={30} />
       </View>
     )
   } else if (item.type === 'verified') {

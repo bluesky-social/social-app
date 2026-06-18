@@ -20,8 +20,11 @@
  * profiles.
  *
  * Routes handled (mirrors ../../bskyweb/cmd/bskyweb/server.go):
- *   /profile/<actor>                -> profile card
- *   /profile/<actor>/post/<rkey>    -> post card
+ *   /profile/<actor>                  -> profile card
+ *   /profile/<actor>/post/<rkey>      -> post card
+ *   /start|starter-pack/<actor>/<rkey> -> starter pack card (text-only, no
+ *                                        og:image; the in-app card is rendered
+ *                                        natively, so nothing is generated here)
  * <actor> is a handle or DID. Everything else (assets, other routes, the
  * homepage) passes through untouched and keeps the static default card from
  * index.html, which also serves as the fallback if this script ever fails:
@@ -77,6 +80,9 @@ const CACHE_CONTROL =
 
 const POST_RE = /^\/profile\/([^/]+)\/post\/([^/]+)\/?$/
 const PROFILE_RE = /^\/profile\/([^/]+)\/?$/
+// Starter packs unfurl from two URL shapes: the share link (/start/...) and the
+// in-app canonical (/starter-pack/...). Both map to the same card.
+const STARTERPACK_RE = /^\/(?:start|starter-pack)\/([^/]+)\/([^/]+)\/?$/
 
 // A request is from a link-preview crawler or search bot. Only consulted when
 // BOTS_ONLY is set.
@@ -289,6 +295,60 @@ async function buildProfileTags(
   return {title, tags}
 }
 
+// Build the per-starter-pack tag set, or null to fall through to the default
+// card. Text-only card (no og:image): the in-app share card is rendered
+// natively, and we deliberately do not run an image generator here - same
+// no-generation stance as posts/profiles, which only reuse existing media.
+// getStarterPack needs a DID-form AT-URI, but share links use the creator's
+// handle, so resolve the handle to a DID first when needed.
+async function buildStarterPackTags(
+  actor: string,
+  rkey: string,
+): Promise<{title: string; tags: Tag[]} | null> {
+  let did = actor
+  if (!actor.startsWith('did:')) {
+    const prof = await fetchJson(
+      `${APPVIEW_URL}/xrpc/app.bsky.actor.getProfile?actor=${encodeURIComponent(
+        actor,
+      )}`,
+    )
+    if (!prof?.did) return null
+    did = prof.did
+  }
+
+  const uri = `at://${did}/app.bsky.graph.starterpack/${rkey}`
+  const data = await fetchJson(
+    `${APPVIEW_URL}/xrpc/app.bsky.graph.getStarterPack?starterPack=${encodeURIComponent(
+      uri,
+    )}`,
+  )
+  const sp = data?.starterPack
+  const name: string | undefined = sp?.record?.name
+  if (!name) return null
+
+  const handle: string | undefined = sp.creator?.handle
+  const canonical = `${SITE_URL}/starter-pack/${handle || did}/${rkey}`
+  const desc = sp.record?.description
+    ? truncate(sp.record.description, MAX_DESC)
+    : handle
+      ? `A starter pack by @${handle} on ${SITE_NAME}.`
+      : `A starter pack on ${SITE_NAME}.`
+
+  const tags: Tag[] = [
+    meta('property', 'og:type', 'website'),
+    meta('property', 'og:site_name', SITE_NAME),
+    meta('property', 'og:logo', SITE_LOGO),
+    meta('property', 'og:url', canonical),
+    meta('property', 'og:title', name),
+    meta('name', 'twitter:title', name),
+    meta('name', 'description', desc),
+    meta('property', 'og:description', desc),
+    meta('name', 'twitter:description', desc),
+    meta('name', 'twitter:card', 'summary'),
+  ]
+  return {title: name, tags}
+}
+
 // Remove the tags we are about to replace from the document <head> only, so the
 // crawler does not see duplicate og:* (it would honor the first, i.e. the stale
 // default) and we stay idempotent if the script somehow runs twice.
@@ -318,6 +378,13 @@ async function tagsFor(
   if (m) {
     return buildProfileTags(decodeURIComponent(m[1]))
   }
+  m = STARTERPACK_RE.exec(pathname)
+  if (m) {
+    return buildStarterPackTags(
+      decodeURIComponent(m[1]),
+      decodeURIComponent(m[2]),
+    )
+  }
   return null
 }
 
@@ -346,9 +413,12 @@ BunnySDK.net.http
       const spaFallback = response.status === 404
       const isPost = POST_RE.test(url.pathname)
       const isProfile = !isPost && PROFILE_RE.test(url.pathname)
+      const isStarterPack =
+        !isPost && !isProfile && STARTERPACK_RE.test(url.pathname)
 
-      // A normal (200) page that is not a post/profile route needs nothing.
-      if (!spaFallback && !isPost && !isProfile) return response
+      // A normal (200) page that is not an enriched route needs nothing.
+      if (!spaFallback && !isPost && !isProfile && !isStarterPack)
+        return response
 
       // Reading the body decodes any gzip, so the original content-encoding /
       // -length headers no longer match - drop them and let the runtime
@@ -365,7 +435,7 @@ BunnySDK.net.http
       // </head> - leaves the default card untouched.
       let out = html
       const enrich =
-        (isPost || isProfile) &&
+        (isPost || isProfile || isStarterPack) &&
         (!BOTS_ONLY || BOT_RE.test(req.headers.get('user-agent') || ''))
       if (enrich) {
         const built = await tagsFor(url.pathname)
