@@ -96,6 +96,29 @@ export const BRAND = {
     ogCard: 'https://ogcard.cdn.bsky.app',
   },
   /**
+   * Verification trust root. The set of "trusted verifiers" whose
+   * `app.bsky.graph.verification` records this app honors is the union, across
+   * these `app.bsky.graph.list`s, of each list's members plus its creator. A
+   * rebrand points these at its own lists; the app reads the members at runtime
+   * rather than shipping a hardcoded set. If the lists cannot be fetched, the
+   * app trusts the list creators alone (no hardcoded fallback). One list today,
+   * but an array so more can be added without a code change. See
+   * src/lib/constants.ts.
+   */
+  verification: {
+    trustedVerifierListUris: [
+      'at://did:plc:ooensn4mr5mhznzypvxelfa3/app.bsky.graph.list/3mogaw2g4an23',
+    ],
+    /**
+     * Whether to also surface Bluesky's own server-computed verification (the
+     * `verification` field on appview profile responses - both Bluesky's
+     * verifications and those by verifiers Bluesky trusts). When false, only our
+     * own trusted-verifier verifications count. Our verifications always count
+     * regardless of this flag.
+     */
+    includeBlueskyVerifications: true,
+  },
+  /**
    * mu age-assurance backend (the `mu-age-service` XRPC service). Stores
    * self-declared age threshold flags per DID so age gating works over OAuth
    * AND password sessions uniformly - without touching app.bsky preferences.

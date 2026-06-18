@@ -238,22 +238,32 @@ export const PUBLIC_APPVIEW_DID = BRAND.services.appViewDid
  * We run our own on-protocol verification on top of Bluesky's. Verifications
  * themselves reuse the standard `app.bsky.graph.verification` lexicon, so they
  * are normal records issued by a verifier into their own repo. The trust root
- * is the set of "trusted verifier" DIDs below: a verification only counts if
- * its issuer is in this set.
+ * is the set of "trusted verifier" DIDs: a verification only counts if its
+ * issuer is in this set.
  *
- * For now this set is hardcoded. The intended migration path is to read it from
- * `social.mu.trustedVerifier` records held in a root account, so the trust root
- * itself becomes public, auditable, on-protocol data. When that lands, replace
- * TRUSTED_VERIFIER_DIDS with a query and keep the rest of the pipeline the same.
+ * The trust root is the union, across every configured `app.bsky.graph.list`
+ * (`BRAND.verification.trustedVerifierListUris`), of each list's members plus
+ * its creator, fetched at runtime, so it is public, auditable, on-protocol data
+ * that can change without an app release. The array shape is also what lets us
+ * ship more brand lists, or merge in user-subscribed lists, later. See
+ * `useTrustedVerifiersQuery`.
+ *
+ * We deliberately keep no hardcoded fallback list: it would drift from the real
+ * lists and, worse, could silently re-trust a verifier we removed for cause
+ * during a fetch outage. If the lists cannot be fetched we fall back to their
+ * creators alone (derivable from the URIs, always correct), accepting that other
+ * verifiers' badges are briefly absent until the lists load.
  */
-export const TRUSTED_VERIFIER_DIDS = [
-  'did:plc:durcipmx2rwgzzagbiumobs5', // france-atmosphe.re
-  'did:plc:ooensn4mr5mhznzypvxelfa3', // eurosky.social
-  'did:plc:u5zp7npt5kpueado77kuihyz', // npmx.dev
-  'did:plc:hd564mpf6bekrwzyhvujs54b', // medsky.network
-  'did:plc:6tndl5lqrzjrx7ahjom2gjbq', // stewardshiplab.org
-  'did:plc:dwasx7iawlm63zivignwu6jr', // waag.org
-]
+export const TRUSTED_VERIFIER_LIST_URIS =
+  BRAND.verification.trustedVerifierListUris
+
+/**
+ * Whether to also honor Bluesky's own server-computed verification (the
+ * `verification` field on appview profile responses). When false, only our
+ * trusted-verifier verifications are shown; ours always count regardless.
+ */
+export const INCLUDE_BLUESKY_VERIFICATIONS =
+  BRAND.verification.includeBlueskyVerifications
 
 /**
  * Accounts that must never be shown as verified in our app, regardless of any
