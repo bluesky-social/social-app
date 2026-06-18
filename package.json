@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.125.0",
+  "version": "1.126.0",
   "private": true,
   "engines": {
     "node": ">=24.15.0"
@@ -119,7 +119,6 @@
     "@bsky.app/sift": "^0.3.9",
     "@bsky.app/tapper": "^0.6.1",
     "@bsky.app/video": "0.3.6",
-    "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",
     "@expo/html-elements": "^0.12.5",
@@ -344,7 +343,7 @@
       "^await-lock$": "<rootDir>/node_modules/await-lock/build/AwaitLock.js"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|@discord|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|multiformats|uint8arrays|@ipld/.*|cborg|await-lock|lowlight|devlop)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|multiformats|uint8arrays|@ipld/.*|cborg|await-lock|lowlight|devlop)"
     ],
     "modulePathIgnorePatterns": [
       "__tests__/.*/__mocks__",
