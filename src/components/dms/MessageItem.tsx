@@ -22,11 +22,7 @@ import Animated, {
   ZoomOut,
 } from 'react-native-reanimated'
 import {
-  AppBskyEmbedExternal,
   AppBskyEmbedRecord,
-  AppBskyFeedDefs,
-  AppBskyGraphDefs,
-  AppBskyLabelerDefs,
   type ChatBskyActorDefs,
   ChatBskyConvoDefs,
   ChatBskyEmbedJoinLink,
@@ -40,12 +36,10 @@ import {useQueryClient} from '@tanstack/react-query'
 import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {BSKY_APP_HOST} from '#/lib/strings/url-helpers'
 import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
 import {type Shadow} from '#/state/cache/types'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {isKnownJoinLinkPreview} from '#/state/queries/join-links'
 import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
@@ -56,6 +50,7 @@ import {Button} from '#/components/Button'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {useMessageDialogs} from '#/components/dms/MessageOverlays'
 import {useMessageReplies} from '#/components/dms/MessageReplies'
+import {useReplyPreviewText} from '#/components/dms/replyPreview'
 import {ArrowCornerDownRight_Stroke2_Corner3_Rounded as ArrowCornerDownRightIcon} from '#/components/icons/ArrowCornerDownRight'
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -824,42 +819,6 @@ function ReplyCaption({
 }
 
 /**
- * Describes the embed of a quoted message that has no text of its own, so the
- * reply preview can show what was shared instead of a generic placeholder. For
- * a link card we surface the URI directly; otherwise we classify the quoted
- * record (post/feed/list/etc.) so the caller can render a translated label.
- */
-type ReplyEmbedSummary =
-  | {type: 'external'; uri: string}
-  | {type: 'post'}
-  | {type: 'feed'}
-  | {type: 'list'}
-  | {type: 'starterPack'}
-  | {type: 'labeler'}
-  | {type: 'unknown'}
-
-function summarizeReplyEmbed(
-  embed: ChatBskyConvoDefs.MessageView['embed'],
-): ReplyEmbedSummary {
-  if (!AppBskyEmbedRecord.isView(embed)) return {type: 'unknown'}
-  const {record} = embed
-  if (AppBskyEmbedRecord.isViewRecord(record)) {
-    const inner = record.embeds?.[0]
-    if (AppBskyEmbedExternal.isView(inner)) {
-      return {type: 'external', uri: inner.external.uri}
-    }
-    return {type: 'post'}
-  }
-  if (AppBskyFeedDefs.isGeneratorView(record)) return {type: 'feed'}
-  if (AppBskyGraphDefs.isListView(record)) return {type: 'list'}
-  if (AppBskyGraphDefs.isStarterPackViewBasic(record)) {
-    return {type: 'starterPack'}
-  }
-  if (AppBskyLabelerDefs.isLabelerView(record)) return {type: 'labeler'}
-  return {type: 'unknown'}
-}
-
-/**
  * The nested quote of the original message, rendered at the top of a reply
  * bubble. Tapping it scrolls to the original (if loaded).
  */
@@ -876,6 +835,7 @@ function ReplyQuote({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const getReplyPreviewText = useReplyPreviewText()
 
   const senderProfile = useMaybeProfileShadow(
     relatedProfiles.get(replyTo.sender.did),
@@ -902,61 +862,7 @@ function ReplyQuote({
     text = l`Blocked message hidden`
     subtle = true
   } else if (ChatBskyConvoDefs.isMessageView(replyTo)) {
-    text = replyTo.text
-    if (!text.trim()) {
-      subtle = true
-      if (ChatBskyEmbedJoinLink.isView(replyTo.embed)) {
-        const {joinLinkPreview} = replyTo.embed
-        text = isKnownJoinLinkPreview(joinLinkPreview)
-          ? `${BSKY_APP_HOST}/chat/${joinLinkPreview.code}`
-          : l({
-              message: '(chat invite link)',
-              comment: 'A reply summary in chat',
-            })
-      } else {
-        const summary = summarizeReplyEmbed(replyTo.embed)
-        switch (summary.type) {
-          case 'external':
-            text = summary.uri
-            break
-          case 'post':
-            text = l({
-              message: '(quoted post)',
-              comment: 'A reply summary in chat',
-            })
-            break
-          case 'feed':
-            text = l({
-              message: '(feed)',
-              comment: 'A reply summary in chat',
-            })
-            break
-          case 'list':
-            text = l({
-              message: '(list)',
-              comment: 'A reply summary in chat',
-            })
-            break
-          case 'starterPack':
-            text = l({
-              message: '(starter pack)',
-              comment: 'A reply summary in chat',
-            })
-            break
-          case 'labeler':
-            text = l({
-              message: '(labeler)',
-              comment: 'A reply summary in chat',
-            })
-            break
-          default:
-            text = l({
-              message: '(no text)',
-              comment: 'A reply summary in chat',
-            })
-        }
-      }
-    }
+    ;({text, subtle} = getReplyPreviewText(replyTo))
   } else {
     text = l`Deleted message`
     subtle = true
