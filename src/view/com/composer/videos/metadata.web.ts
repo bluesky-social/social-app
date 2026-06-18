@@ -9,7 +9,13 @@ export function hasWebCodecs(): boolean {
   )
 }
 
-export async function getVideoMetadata(file: File): Promise<ImagePickerAsset> {
+export async function getVideoMetadata(
+  file: File | string,
+): Promise<ImagePickerAsset> {
+  if (typeof file === 'string')
+    throw new Error(
+      'getVideoMetadata was passed a uri, when on web it should be a File',
+    )
   const blobUrl = URL.createObjectURL(file)
 
   logger.debug('metadata: starting', {

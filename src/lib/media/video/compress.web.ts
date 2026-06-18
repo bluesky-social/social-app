@@ -249,7 +249,7 @@ async function doCompression(
       'abort',
       () => {
         logger.debug('compress: cancelled')
-        conversion.cancel()
+        void conversion.cancel()
       },
       {once: true},
     )
