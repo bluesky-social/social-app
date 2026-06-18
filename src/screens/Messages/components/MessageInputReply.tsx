@@ -82,7 +82,7 @@ export function MessageInputReply() {
       <Button
         label={l`Cancel reply`}
         onPress={onRemove}
-        style={[a.px_2xs]}
+        style={[a.px_2xs, {transform: [{translateX: 2}]}]}
         hitSlop={HITSLOP_20}>
         <XIcon size="xs" style={t.atoms.text_contrast_high} />
       </Button>
