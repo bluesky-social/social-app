@@ -62,7 +62,7 @@ jobs:
           if [ -z "$notes" ]; then
             notes="Nightly build — no new commits since the last nightly."
           fi
-          # Cap the whole changelog (TestFlight "What to Test" is limited to 4000 characters).
+          # Cap the whole changelog to keep the Slack message a reasonable size.
           # head -c caps the combined stream; cut -c would only cap each line independently.
           notes=$(printf '%s' "$notes" | head -c 3900)
           {
