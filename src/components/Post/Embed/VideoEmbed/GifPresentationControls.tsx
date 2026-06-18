@@ -74,7 +74,7 @@ export function GifPresentationControls({
   )
 }
 
-function AltBadge({text}: {text: string}) {
+export function AltBadge({text}: {text: string}) {
   const control = Prompt.usePromptControl()
   const {_} = useLingui()
 
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     position: 'absolute',
     right: 6,
-    bottom: 6,
+    top: 6,
     zIndex: 2,
   },
 })

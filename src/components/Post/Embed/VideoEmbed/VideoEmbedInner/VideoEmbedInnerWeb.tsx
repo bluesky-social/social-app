@@ -7,6 +7,8 @@ import type * as HlsTypes from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
+import {useFullscreen} from '#/components/hooks/useFullscreen'
+import {AltBadge} from '../GifPresentationControls'
 import * as BandwidthEstimate from './bandwidth-estimate'
 import {Controls} from './web-controls/VideoControls'
 
@@ -30,6 +32,7 @@ export function VideoEmbedInnerWeb({
   const [hlsLoading, setHlsLoading] = useState(false)
   const figId = useId()
   const {_} = useLingui()
+  const [isFullscreen] = useFullscreen(containerRef)
 
   // send error up to error boundary
   const [error, setError] = useState<Error | null>(null)
@@ -77,6 +80,7 @@ export function VideoEmbedInnerWeb({
             </figcaption>
           )}
         </figure>
+        {!isFullscreen && embed.alt && <AltBadge text={embed.alt} />}
         <Controls
           videoRef={videoRef}
           hlsRef={hlsRef}
