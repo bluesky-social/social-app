@@ -10,7 +10,6 @@ export enum Features {
   ImportContactsSettingsDisable = 'import_contacts:settings:disable',
   LiveNowBetaDisable = 'live_now_beta:disable',
   GroupChatsDisable = 'group_chats:disable',
-  DmsNewMessageComposerEnable = 'dms:new_message_composer:enable',
   ComposerLanguageDetectionEnable = 'composer:language_detection:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
   NotificationsExpandedProfileCardEnable = 'notifications:expanded_profile_card:enable',
