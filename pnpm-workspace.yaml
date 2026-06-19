@@ -26,6 +26,7 @@ patchedDependencies:
   'expo-media-library@18.2.1': patches/expo-media-library@18.2.1.patch
   'expo-modules-core@3.0.30': patches/expo-modules-core@3.0.30.patch
   'expo-notifications@0.32.17': patches/expo-notifications@0.32.17.patch
+  'expo-privacy-sensitive@0.1.0': patches/expo-privacy-sensitive@0.1.0.patch
   'expo-updates@29.0.17': patches/expo-updates@29.0.17.patch
   'react-native-compressor@1.13.0': patches/react-native-compressor@1.13.0.patch
   'react-native-date-picker@5.0.13': patches/react-native-date-picker@5.0.13.patch
