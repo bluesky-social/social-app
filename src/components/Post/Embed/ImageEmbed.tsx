@@ -142,7 +142,10 @@ export function ImageEmbed({
                 onPress(0, [containerRef], [dims])
               }
               onPressIn={() => onPressIn(0)}
-              hideBadge={rest.isWithinQuote}
+              hideBadge={
+                rest.viewContext ===
+                PostEmbedViewContext.FeedEmbedRecordWithMedia
+              }
             />
           </ImageContextMenu>
         </View>
