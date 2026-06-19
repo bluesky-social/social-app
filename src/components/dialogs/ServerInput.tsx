@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {BSKY_SERVICE} from '#/lib/constants'
+import {enforceLen} from '#/lib/strings/helpers'
 import * as persisted from '#/state/persisted'
 import {useSession} from '#/state/session'
 import {atoms as a, platform, useBreakpoints, useTheme, web} from '#/alf'
@@ -19,6 +20,40 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
 type SegmentedControlOptions = typeof BSKY_SERVICE | 'custom'
+
+// Max recent-server shortcuts to keep/show, and the max label length before a
+// chip is middle-truncated so it can't overflow the dialog.
+const MAX_PDS_HISTORY = 5
+const MAX_PDS_LABEL_LEN = 28
+
+/**
+ * Adds a scheme if the user omitted one. `localhost` defaults to http, anything
+ * else to https.
+ */
+function normalizeServerUrl(raw: string): string {
+  const url = raw.trim().toLowerCase()
+  if (!url || url.startsWith('http://') || url.startsWith('https://')) {
+    return url
+  }
+  if (url === 'localhost' || url.startsWith('localhost:')) {
+    return `http://${url}`
+  }
+  return `https://${url}`
+}
+
+/**
+ * A custom server address is valid if it parses as a URL with a hostname that
+ * is either `localhost` or a dotted domain. This rejects garbage like
+ * `localhost:2583asd` (invalid port) or a bare word with no TLD.
+ */
+function isValidServerUrl(raw: string): boolean {
+  try {
+    const {hostname} = new URL(normalizeServerUrl(raw))
+    return hostname === 'localhost' || hostname.includes('.')
+  } catch {
+    return false
+  }
+}
 
 export function ServerInputDialog({
   control,
@@ -100,6 +135,7 @@ function DialogInner({
   const {accounts} = useSession()
   const {gtMobile} = useBreakpoints()
   const [customAddress, setCustomAddress] = useState(initialCustomAddress)
+  const [validationError, setValidationError] = useState('')
   const [pdsAddressHistory, setPdsAddressHistory] = useState<string[]>(
     persisted.get('pdsAddressHistory') || [],
   )
@@ -108,31 +144,24 @@ function DialogInner({
     formRef,
     () => ({
       getFormState: () => {
-        let url
-        if (fixedOption === 'custom') {
-          url = customAddress.trim().toLowerCase()
-          if (!url) {
-            return null
-          }
-        } else {
-          url = fixedOption
+        if (fixedOption !== 'custom') {
+          return fixedOption
         }
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-          if (url === 'localhost' || url.startsWith('localhost:')) {
-            url = `http://${url}`
-          } else {
-            url = `https://${url}`
-          }
+        // Guard against the dialog being dismissed (backdrop, escape, drag)
+        // with an empty or invalid address - don't propagate garbage.
+        if (!customAddress.trim() || !isValidServerUrl(customAddress)) {
+          return null
         }
-
-        if (fixedOption === 'custom') {
-          if (!pdsAddressHistory.includes(url)) {
-            const newHistory = [url, ...pdsAddressHistory.slice(0, 4)]
-            setPdsAddressHistory(newHistory)
-            persisted.write('pdsAddressHistory', newHistory)
-          }
+        const url = normalizeServerUrl(customAddress)
+        if (!pdsAddressHistory.includes(url)) {
+          const newHistory = [
+            url,
+            // Prune any legacy invalid entries while we're writing.
+            ...pdsAddressHistory.filter(isValidServerUrl),
+          ].slice(0, MAX_PDS_HISTORY)
+          setPdsAddressHistory(newHistory)
+          persisted.write('pdsAddressHistory', newHistory)
         }
-
         return url
       },
     }),
@@ -140,6 +169,12 @@ function DialogInner({
   )
 
   const isFirstTimeUser = accounts.length === 0
+
+  // Drop legacy/invalid entries (history predates input validation) and cap the
+  // count so the shortcuts can't overflow the dialog.
+  const recentServers = pdsAddressHistory
+    .filter(isValidServerUrl)
+    .slice(0, MAX_PDS_HISTORY)
 
   return (
     <Dialog.ScrollableInner
@@ -196,21 +231,29 @@ function DialogInner({
             <TextField.LabelText nativeID="address-input-label">
               <Trans>Server address</Trans>
             </TextField.LabelText>
-            <TextField.Root>
+            <TextField.Root isInvalid={!!validationError}>
               <TextField.Icon icon={Globe} />
               <Dialog.Input
                 testID="customServerTextInput"
                 value={customAddress}
-                onChangeText={setCustomAddress}
+                onChangeText={v => {
+                  setCustomAddress(v)
+                  if (validationError) setValidationError('')
+                }}
                 label="my-server.com"
                 accessibilityLabelledBy="address-input-label"
                 autoCapitalize="none"
                 keyboardType="url"
               />
             </TextField.Root>
-            {pdsAddressHistory.length > 0 && (
+            {validationError ? (
+              <View style={[a.mt_xs]}>
+                <Admonition type="error">{validationError}</Admonition>
+              </View>
+            ) : null}
+            {recentServers.length > 0 && (
               <View style={[a.flex_row, a.flex_wrap, a.mt_xs]}>
-                {pdsAddressHistory.map(uri => (
+                {recentServers.map(uri => (
                   <Button
                     key={uri}
                     variant="ghost"
@@ -218,7 +261,9 @@ function DialogInner({
                     label={uri}
                     style={[a.px_sm, a.py_xs, a.rounded_sm, a.gap_sm]}
                     onPress={() => setCustomAddress(uri)}>
-                    <ButtonText>{uri}</ButtonText>
+                    <ButtonText numberOfLines={1}>
+                      {enforceLen(uri, MAX_PDS_LABEL_LEN, true, 'middle')}
+                    </ButtonText>
                   </Button>
                 ))}
               </View>
@@ -257,7 +302,21 @@ function DialogInner({
               native: 'large',
               web: 'small',
             })}
-            onPress={() => control.close()}
+            onPress={() => {
+              // Block closing with an invalid custom address. An empty address
+              // is allowed - it clears the override / keeps the default.
+              if (
+                fixedOption === 'custom' &&
+                customAddress.trim() &&
+                !isValidServerUrl(customAddress)
+              ) {
+                setValidationError(
+                  _(msg`Enter a valid server address, e.g. example.com`),
+                )
+                return
+              }
+              control.close()
+            }}
             label={_(msg`Done`)}>
             <ButtonText>
               <Trans>Done</Trans>

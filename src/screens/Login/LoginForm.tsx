@@ -8,16 +8,22 @@ import {
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
+import {type QueryClient, useQueryClient} from '@tanstack/react-query'
 
 import {isBlueskyHostedPds, ResolvePdsError} from '#/lib/api/resolve-pds'
 import {BSKY_SERVICE, DEFAULT_SERVICE} from '#/lib/constants'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
+import {enforceLen} from '#/lib/strings/helpers'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
-import {useResolvePdsQuery} from '#/state/queries/resolve-pds'
+import {
+  looksResolvable,
+  resolvePdsQueryOptions,
+  useResolvePdsQuery,
+} from '#/state/queries/resolve-pds'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {atoms as a, ios, native, useTheme, web} from '#/alf'
@@ -37,6 +43,51 @@ import {IS_IOS, IS_WEB} from '#/env'
 import {FormContainer} from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
+
+/**
+ * Truncate a host for display so an unexpectedly long (or unparseable, e.g. a
+ * pasted blob) server string can't blow out the layout. Middle-truncation
+ * keeps the recognizable start and the TLD/port.
+ */
+function niceHostLabel(url: string): string {
+  return enforceLen(toNiceDomain(url), 32, true, 'middle')
+}
+
+// Upper bound on how long a submit will wait for host resolution before
+// falling back to the default service, so a slow lookup can never trap the
+// Sign in button.
+const RESOLVE_ON_SUBMIT_TIMEOUT_MS = 2e3
+
+/**
+ * Best-effort host resolution at submit time. Reuses any in-flight or cached
+ * resolution (same query key as the background hook) and only fires a request
+ * if none exists. Returns the resolved PDS, or undefined on timeout/failure so
+ * the caller falls back to the default service.
+ */
+async function resolvePdsOnSubmit(
+  queryClient: QueryClient,
+  handle: string,
+): Promise<string | undefined> {
+  let timer: ReturnType<typeof setTimeout> | undefined
+  try {
+    const result = await Promise.race([
+      queryClient.fetchQuery(resolvePdsQueryOptions(handle)),
+      new Promise<undefined>(resolve => {
+        timer = setTimeout(
+          () => resolve(undefined),
+          RESOLVE_ON_SUBMIT_TIMEOUT_MS,
+        )
+      }),
+    ])
+    return result?.pds
+  } catch {
+    // Bad handle, network error, or no PDS in the DID doc. Fall back to the
+    // default service - login will surface any genuine auth error.
+    return undefined
+  } finally {
+    if (timer) clearTimeout(timer)
+  }
+}
 
 export const LoginForm = ({
   error,
@@ -80,6 +131,7 @@ export const LoginForm = ({
   const passwordRef = useRef<TextInput>(null)
   const hasFocusedOnce = useRef<boolean>(false)
   const {_} = useLingui()
+  const queryClient = useQueryClient()
   const {login} = useSessionApi()
   const requestNotificationsPermission = useRequestNotificationsPermission()
   const {setShowLoggedOut} = useLoggedOutViewControls()
@@ -198,13 +250,20 @@ export const LoginForm = ({
         }
       }
 
-      // Make sure the resolved-PDS state is in sync with the current input
-      // before deciding which service to use.
+      // Keep the status message in sync with the submitted handle.
       if (handleForResolve !== fullIdent) {
         setHandleForResolve(fullIdent)
       }
-      const service =
-        customServerOverride ?? resolveQuery.data?.pds ?? serviceUrl
+
+      // Pick the service to sign in to. A custom server override always wins.
+      // Otherwise ensure host resolution has finished first: a fast submit
+      // (e.g. password-manager autofill) can beat the background lookup and
+      // wrongly default to the main service.
+      let service = customServerOverride ?? serviceUrl
+      if (!customServerOverride && looksResolvable(fullIdent)) {
+        const resolvedPds = await resolvePdsOnSubmit(queryClient, fullIdent)
+        if (resolvedPds) service = resolvedPds
+      }
 
       // TODO remove double login
       await login(
@@ -499,7 +558,7 @@ function PdsResolveStatus({
     content = (
       <Text
         style={[a.text_sm, t.atoms.text_contrast_medium, web(a.text_right)]}>
-        <Trans>You're signing in to {toNiceDomain(override)}.</Trans>{' '}
+        <Trans>You're signing in to {niceHostLabel(override)}.</Trans>{' '}
         <InlineLinkText
           label={_(msg`Change server`)}
           {...createStaticClick(onPressUseCustomServer)}
@@ -519,10 +578,12 @@ function PdsResolveStatus({
     }
     contentKey = 'loading'
     content = (
-      <Text
-        style={[a.text_sm, t.atoms.text_contrast_medium, web(a.text_right)]}>
-        <Trans>Resolving your server…</Trans>
-      </Text>
+      <View
+        accessibilityLabel={_(msg`Resolving your server`)}
+        accessibilityHint=""
+        style={[web(a.align_end)]}>
+        <Loader size="md" />
+      </View>
     )
   } else if (query.isError) {
     contentKey = 'error'
@@ -557,7 +618,7 @@ function PdsResolveStatus({
     content = (
       <Text
         style={[a.text_sm, t.atoms.text_contrast_medium, web(a.text_right)]}>
-        <Trans>You're signing in to {toNiceDomain(query.data.pds)}</Trans>
+        <Trans>You're signing in to {niceHostLabel(query.data.pds)}</Trans>
       </Text>
     )
   }
