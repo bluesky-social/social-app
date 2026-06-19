@@ -62,7 +62,7 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
       patch({birthdate})
       control.close()
     } catch (e) {
-      logger.error('MuAgeConfirmDialog: save failed', {message: String(e)})
+      logger.error('MuAgeConfirmDialog: save failed', {safeMessage: String(e)})
       setError(l`Something went wrong. Please try again.`)
       setIsPending(false)
     }

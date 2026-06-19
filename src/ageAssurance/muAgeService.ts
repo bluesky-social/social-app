@@ -36,11 +36,23 @@ export function birthdateFromFlags(flags: MuAgeFlags): string {
   ).toISOString()
 }
 
+/**
+ * How far in the future to set the service-auth token expiry. The PDS validates
+ * `exp` against its own clock with no skew tolerance (rejecting a past `exp`
+ * outright and capping it at an hour out), and we derive it from the local
+ * clock - so a desktop whose clock drifts behind real time would mint an
+ * already-expired token and fail age verification, while phones (auto-synced)
+ * work. Targeting the middle of the allowed [now, now+1h] window lets the call
+ * tolerate roughly +/-30 min of client clock skew. The token stays short-lived
+ * and single-use against the age service.
+ */
+const TOKEN_EXP_SECONDS = 30 * 60
+
 async function bearer(agent: AtpAgent, lxm: string): Promise<string> {
   const {data} = await agent.com.atproto.server.getServiceAuth({
     aud: BRAND.ageAssurance.serviceDid,
     lxm,
-    exp: Math.floor(Date.now() / 1000) + 60,
+    exp: Math.floor(Date.now() / 1000) + TOKEN_EXP_SECONDS,
   })
   return `Bearer ${data.token}`
 }
