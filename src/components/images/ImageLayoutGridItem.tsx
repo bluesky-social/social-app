@@ -43,7 +43,6 @@ export function GalleryItem({
   onPressIn,
   onLongPress,
   viewContext,
-  isWithinQuote,
   insetBorderStyle,
   containerRefs,
   thumbDimsRef,
@@ -53,9 +52,7 @@ export function GalleryItem({
   const largeAltBadge = useLargeAltBadgeEnabled()
   const image = images[index]
   const hasAlt = !!image.alt
-  const hideBadges =
-    isWithinQuote ??
-    viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
+  const hideBadges = viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
 
   const aspect =
     image.aspectRatio && image.aspectRatio.height > 0
