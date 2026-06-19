@@ -5,6 +5,7 @@
 import {type Platform} from 'react-native'
 
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
+import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
 
@@ -53,12 +54,30 @@ export type Events = {
     context: 'StartOnboarding' | 'AfterOnboarding' | 'Login' | 'Home'
     status: 'granted' | 'denied' | 'undetermined'
   }
+  'notifications:bundleExpand': {
+    notificationType: NotificationType
+    authorCount: number
+  }
   'state:background': {
     secondsActive: number
   }
   'state:foreground': {}
   'router:navigate': {
     from?: string
+  }
+  'nav:click': {
+    item:
+      | 'home'
+      | 'search'
+      | 'chat'
+      | 'notifications'
+      | 'profile'
+      | 'feeds'
+      | 'lists'
+      | 'saved'
+      | 'settings'
+      | 'menu'
+    surface: 'bottomBar' | 'drawer' | 'drawerHeader' | 'topBar' | 'leftNav'
   }
   'deepLink:referrerReceived': {
     to: string
@@ -463,6 +482,7 @@ export type Events = {
       | 'OnboardingSuggestedAccounts'
       | 'FindContacts'
       | 'GroupChat'
+      | 'NotificationExpandedProfileCard'
   }
   'profile:followers:view': {
     contextProfileDid: string
@@ -569,6 +589,7 @@ export type Events = {
       | 'OnboardingSuggestedAccounts'
       | 'FindContacts'
       | 'GroupChat'
+      | 'NotificationExpandedProfileCard'
   }
   'chat:create': {
     logContext:
@@ -585,9 +606,86 @@ export type Events = {
       | 'SendViaChatDialog'
       | 'ConvoSettings'
   }
+  // Message replies
+  'chat:message:reply:send': {
+    convoId: string
+    isGroup: boolean
+  }
+  'chat:message:reply:tap': {
+    convoId: string
+  }
+
+  // Group chat adoption
   'groupchat:create': {
     logContext: 'NewChatDialog'
   }
+  'groupchat:landingPage:view': {
+    hasSession: boolean
+  }
+  'groupchat:inviteLink:redeem': {}
+
+  // Group chat user interactions
+  'groupchat:message:send': {
+    convoId: string
+    isOwner: boolean
+  }
+  'groupchat:mute': {
+    convoId: string
+  }
+  'groupchat:unmute': {
+    convoId: string
+  }
+  'groupchat:leave': {
+    convoId: string
+    isOwner: boolean
+  }
+  'groupchat:settings:view': {
+    convoId: string
+    isOwner: boolean
+  }
+  'groupchat:inviteLink:shareButton:press': {
+    convoId: string
+    method: 'post' | 'copy' | 'native'
+  }
+  'groupchat:inviteLink:shared': {
+    convoId: string
+    method: 'post' | 'dm'
+  }
+
+  // Group chat owner actions
+  'groupchat:owner:editName': {
+    convoId: string
+  }
+  'groupchat:owner:lock': {
+    convoId: string
+  }
+  'groupchat:owner:unlock': {
+    convoId: string
+  }
+  'groupchat:owner:kickMember': {
+    convoId: string
+  }
+  'groupchat:owner:inviteMember': {
+    convoId: string
+  }
+  'groupchat:owner:joinRequest:accept': {
+    convoId: string
+  }
+  'groupchat:owner:joinRequest:reject': {
+    convoId: string
+  }
+  'groupchat:owner:inviteLink:create': {
+    convoId: string
+  }
+  'groupchat:owner:inviteLink:disable': {
+    convoId: string
+  }
+
+  // Group chat problems
+  'groupchat:join:memberLimitReached': {
+    convoId: string
+  }
+
   'starterPack:addUser': {
     starterPack?: string
   }
@@ -986,6 +1084,17 @@ export type Events = {
   'share:press:recentDm': {}
   'share:press:embed': {}
 
+  'embed:standardSite:view': {url: string}
+  'embed:standardSite:article:press': {url: string}
+  'embed:standardSite:article:longPress': {url: string}
+  'embed:standardSite:publication:press': {url: string}
+  'embed:standardSite:publication:longPress': {url: string}
+  'embed:standardSite:publicationCta:press': {url: string}
+  'embed:standardSite:publicationCta:longPress': {url: string}
+  'embed:standardSite:subscribe:press': {url: string}
+  'embed:standardSite:subscribe:longPress': {url: string}
+  'embed:standardSite:authorHandle:press': {handle: string}
+
   'thread:click:showOtherReplies': {}
   'thread:click:hideReplyForMe': {}
   'thread:click:hideReplyForEveryone': {}
@@ -1005,7 +1114,7 @@ export type Events = {
   'activityPreference:changeChannels': {
     name: string
     push: boolean
-    list: boolean
+    list?: boolean
   }
   'activityPreference:changeFilter': {
     name: string
@@ -1163,18 +1272,76 @@ export type Events = {
   'profile:associated:germ:self-disconnect': {}
   'profile:associated:germ:self-reconnect': {}
 
-  // Gallery carousel events
-  'post:gallery:swipe': {
+  // Post photo embed events
+  'post:photoEmbed:impression': {
+    layout: 'single' | 'grid' | 'carousel'
+    totalImages: number
+    postUri: string
+    postAuthorDid: string
+    feedDescriptor?: string
+  }
+  'post:photoEmbed:open': {
+    layout: 'single' | 'grid' | 'carousel'
+    fromImage: number
+    totalImages: number
+    postUri: string
+    postAuthorDid: string
+    feedDescriptor?: string
+  }
+  'post:photoEmbed:carouselSwipe': {
     fromImage: number
     toImage: number
     totalImages: number
+    postUri: string
+    postAuthorDid: string
+    feedDescriptor?: string
   }
-  'post:gallery:openLightbox': {
+  'post:photoEmbed:lightboxSwipe': {
+    layout: 'single' | 'grid' | 'carousel'
     fromImage: number
-    totalImages: number
-  }
-  'post:gallery:impression': {
+    toImage: number
     totalImages: number
     postUri: string
+    postAuthorDid: string
+    feedDescriptor?: string
   }
+
+  /*
+   * Invite friends (profile QR share sheet)
+   */
+
+  // NUX announcement dialog was shown to the user
+  'invite:nux:presented': {}
+  // user pressed "Try it" on the NUX announcement
+  'invite:nux:tryItPressed': {}
+  // invite friends dialog opened, with the surface that triggered it
+  'invite:dialog:open': {
+    logContext:
+      | 'ProfileHeader'
+      | 'Drawer'
+      | 'FindContactsSettings'
+      | 'NuxAnnouncement'
+  }
+  // user copied the invite link to clipboard
+  'invite:action:copy': {}
+  // user invoked the native share sheet with the invite link
+  'invite:action:share': {}
+  // user saved the QR code image to their camera roll (success only)
+  'invite:action:download': {}
+  // user pressed the scan button to open the QR scanner
+  'invite:action:scan': {}
+  // user changed the QR card color theme
+  'invite:theme:change': {
+    themeKey: 'dawn' | 'day' | 'dusk' | 'night'
+  }
+  // QR scanner decoded a code; result indicates whether it resolved to a profile
+  'invite:scanner:scanned': {
+    result: 'profileFound' | 'invalidQr'
+  }
+  // empty-followers banner promoting invite/find friends was shown
+  'invite:followersPromo:seen': {}
+  // user pressed the empty-followers promo banner
+  'invite:followersPromo:press': {}
+  // user dismissed the empty-followers promo banner
+  'invite:followersPromo:dismiss': {}
 }

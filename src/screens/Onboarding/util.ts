@@ -2,7 +2,7 @@ import {
   type $Typed,
   type AppBskyGraphFollow,
   type AppBskyGraphGetFollows,
-  type BskyAgent,
+  type AtpAgent,
   type ComAtprotoRepoApplyWrites,
   type ComAtprotoRepoStrongRef,
 } from '@atproto/api'
@@ -12,7 +12,7 @@ import chunk from 'lodash.chunk'
 import {until} from '#/lib/async/until'
 
 export async function bulkWriteFollows(
-  agent: BskyAgent,
+  agent: AtpAgent,
   dids: string[],
   via?: ComAtprotoRepoStrongRef.Main,
 ) {
@@ -59,7 +59,7 @@ export async function bulkWriteFollows(
 }
 
 async function whenFollowsIndexed(
-  agent: BskyAgent,
+  agent: AtpAgent,
   actor: string,
   fn: (res: AppBskyGraphGetFollows.Response) => boolean,
 ) {

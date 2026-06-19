@@ -1,8 +1,8 @@
 allowBuilds:
-  "@sentry/cli": true
-  "core-js": true
-  "esbuild": true
-  "unrs-resolver": true
+  '@sentry/cli': true
+  'core-js': true
+  'esbuild': true
+  'unrs-resolver': true
 minimumReleaseAgeExclude:
   - '@atproto/*'
   - '@bsky.app/*'

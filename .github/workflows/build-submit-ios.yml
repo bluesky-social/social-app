@@ -10,6 +10,31 @@ on:
         options:
           - testflight
           - production
+      assignTestFlightGroup:
+        type: boolean
+        description: Assign the build to the "QA Team" TestFlight group after submitting
+        default: false
+  workflow_call:
+    inputs:
+      profile:
+        type: string
+        description: Build profile to use
+        required: true
+      assignTestFlightGroup:
+        type: boolean
+        description: Assign the build to the "QA Team" TestFlight group after submitting
+        default: false
+    outputs:
+      package-version:
+        description: Version from package.json
+        value: ${{ jobs.build.outputs.package-version }}
+      build-number:
+        description: iOS build number
+        value: ${{ jobs.build.outputs.build-number }}
+
+# Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -19,6 +44,9 @@ jobs:
     concurrency:
       group: ios-build
       cancel-in-progress: false
+    outputs:
+      package-version: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
+      build-number: ${{ steps.ipa-build-number.outputs.build-number }}
     steps:
       - name: Check for EXPO_TOKEN
         run: >
@@ -28,41 +56,48 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 5
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version-file: .nvmrc
+          node-version-file: package.json
           cache: pnpm
 
       - name: 🪛 Setup jq
-        uses: dcarbone/install-jq-action@v2
+        uses: dcarbone/install-jq-action@b7ef57d46ece78760b4019dbc4080a1ba2a40b45 # v3.2.0
 
       - name: ⚙️ Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: 🔨 Setup Expo CLI
-        uses: expo/expo-github-action@main
+        uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
         with:
-          expo-version: latest
+          eas-version: '19.0.5'
+          packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - uses: maxim-lobanov/setup-xcode@v1
+      - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
         with:
           xcode-version: "26.4"
 
-      - name: ☕️ Setup Cocoapods
-        uses: maxim-lobanov/setup-cocoapods@v1
-        with:
-          version: 1.16.2
+      - name: ☕️ Assert Cocoapods version
+        run: |
+          EXPECTED=1.16.2
+          ACTUAL=$(pod --version)
+          if [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo "Expected Cocoapods $EXPECTED but runner has $ACTUAL."
+            echo "The version ships preinstalled with the macOS runner image: https://github.com/actions/runner-images/blob/main/images/macos/macos-26-Readme.md"
+            echo "If the runner image changed, update EXPECTED here or reinstall the pinned version."
+            exit 1
+          fi
 
       - name: 💾 Cache Pods
-        uses: actions/cache@v5
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         id: pods-cache
         with:
           path: ./ios/Pods
@@ -74,7 +109,8 @@ jobs:
         run: pnpm intl:build 2>&1 | tee i18n.log
 
       - name: Check for i18n compilation errors
-        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
+        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation
+          errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
 
       # EXPO_PUBLIC_ENV is handled in eas.json
       - name: ✏️ Write environment variables
@@ -152,19 +188,75 @@ jobs:
         id: get-build-info
         run: bash scripts/setGitHubOutput.sh
 
+      # Read the build number straight from the IPA's CFBundleVersion. This is the value
+      # baked in at build time by use-build-number-with-bump (remote counter + 1) and the
+      # number that actually lands in App Store Connect. `eas build:version:get` reads the
+      # remote counter, which a --local build does not advance, so it can be off by one —
+      # using it here would make distribute_only poll for a nonexistent build.
+      - name: 🔢 Read build number from IPA
+        id: ipa-build-number
+        run: |
+          plist_dir="$(mktemp -d)"
+          unzip -o -q "$BUILD_DIR/Bluesky.ipa" 'Payload/*.app/Info.plist' -d "$plist_dir"
+          plist="$(find "$plist_dir" -name Info.plist -print -quit)"
+          build_number="$(/usr/libexec/PlistBuddy -c 'Print CFBundleVersion' "$plist")"
+          rm -rf "$plist_dir"
+          if [ -z "$build_number" ]; then
+            echo "ERROR: could not read CFBundleVersion from IPA"
+            exit 1
+          fi
+          echo "IPA build number: $build_number"
+          echo "build-number=$build_number" >> "$GITHUB_OUTPUT"
+
+      # eas submit only uploads to App Store Connect; it can't assign a build to a
+      # TestFlight group. fastlane's distribute_only mode skips the upload and assigns the
+      # already-submitted build to the group, polling until Apple finishes processing it.
+      - name: 🧪 Assign build to TestFlight group
+        if: ${{ inputs.assignTestFlightGroup }}
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
+          APP_VERSION: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
+          BUILD_NUMBER: ${{ steps.ipa-build-number.outputs.build-number }}
+        run: |
+          # Ensure the API key material is removed even if fastlane exits non-zero
+          # (the step runs under `bash -e`, which would otherwise abort before cleanup).
+          trap 'rm -f asc_api_key.json' EXIT
+          # fastlane's Token.from_json_file expects the .p8 contents inline under "key"
+          # (PEM with embedded newlines), not a path. jq handles the newline escaping.
+          key_content="$(echo "$ASC_KEY_P8_BASE64" | base64 --decode)"
+          jq -n \
+            --arg key_id "$ASC_KEY_ID" \
+            --arg issuer_id "$ASC_ISSUER_ID" \
+            --arg key "$key_content" \
+            '{key_id: $key_id, issuer_id: $issuer_id, key: $key, in_house: false}' \
+            > asc_api_key.json
+          # app_platform is required in non-interactive mode: distribute_only otherwise
+          # calls fetch_app_platform, which prompts for input and crashes without a TTY.
+          fastlane run upload_to_testflight \
+            api_key_path:"$PWD/asc_api_key.json" \
+            distribute_only:true \
+            app_platform:"ios" \
+            app_identifier:"xyz.blueskyweb.app" \
+            app_version:"$APP_VERSION" \
+            build_number:"$BUILD_NUMBER" \
+            groups:"QA Team" \
+            notify_external_testers:true
+
       - name: 🔔 Notify Slack of Production Build
         if: ${{ inputs.profile == 'production' }}
-        uses: slackapi/slack-github-action@v2.1.1
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         with:
           webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
           webhook-type: incoming-webhook
           payload-templated: true
           payload: |
-            text: iOS production build for App Store submission is ready!\n```Artifact: Check TestFlight to know when it is available\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_IOS_BUILD_NUMBER }}```
+            {"text": "iOS production build for App Store submission is ready!\n```Artifact: Check TestFlight to know when it is available\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.ipa-build-number.outputs.build-number }}```"}
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@v5
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         if: ${{ inputs.profile == 'testflight' }}
         with:
           path: most-recent-testflight-commit.txt

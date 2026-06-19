@@ -1,13 +1,14 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
-import {type ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatBskyActorGetStatus, type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useAppState} from '#/lib/appState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {type MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
@@ -15,7 +16,8 @@ import {logger} from '#/logger'
 import {listenSoftReset} from '#/state/events'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
-import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
+import {useChatActorStatusQuery} from '#/state/queries/messages/get-status'
+import {useUnreadCountsQuery} from '#/state/queries/messages/get-unread-counts'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
@@ -41,11 +43,14 @@ import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
-import {IS_NATIVE} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
+import {ChatDisabled} from './components/ChatDisabled'
 import {ChatListItem} from './components/ChatListItem'
 import {InboxRequests} from './components/InboxRequests'
 import {useIsWithinSplitView} from './components/splitView/context'
 import {splitViewLeftScroll} from './components/splitView/leftColumnScroll'
+
+type ChatStatus = ChatBskyActorGetStatus.OutputSchema
 
 type ListItem = {
   type: 'CONVERSATION'
@@ -95,7 +100,14 @@ export function MessagesScreenInner({navigation, route}: Props) {
   const {t: l} = useLingui()
   const t = useTheme()
   const newChatControl = useDialogControl()
+  const {data: chatStatus} = useChatActorStatusQuery()
   const pushToConversation = route.params?.pushToConversation
+  const pushToNewGroupChat = route.params?.pushToNewGroupChat
+  // Tracks whether the next new-chat dialog open should start directly on the
+  // group-chat creation step. Set when deep-linked via `pushToNewGroupChat`,
+  // and reset to `false` whenever the dialog is opened through the normal FAB/
+  // button path so it never gets stuck in group mode.
+  const [startNewChatInGroupChat, setStartNewChatInGroupChat] = useState(false)
 
   // Whenever we have `pushToConversation` set, it means we pressed a notification for a chat without being on
   // this tab. We should immediately push to the conversation after pressing the notification.
@@ -132,6 +144,64 @@ export function MessagesScreenInner({navigation, route}: Props) {
     [navigation],
   )
 
+  const openChatControl = useCallback(() => {
+    setStartNewChatInGroupChat(false)
+    newChatControl.open()
+  }, [newChatControl])
+
+  const requireEmailVerification = useRequireEmailVerification()
+  const wrappedOpenChatControl = requireEmailVerification(openChatControl, {
+    instructions: [
+      <Trans key="new-chat">
+        Before you can message another user, you must first verify your email.
+      </Trans>,
+    ],
+  })
+
+  // Deep link into the group-chat creation step of the new-chat dialog. Mirrors
+  // the `pushToConversation` pattern: open the dialog (respecting the same
+  // email-verification gating as the normal new-chat button) starting directly
+  // in group mode, then clear the param so it can fire again later.
+  const openGroupChatControl = useCallback(() => {
+    setStartNewChatInGroupChat(true)
+    newChatControl.open()
+  }, [newChatControl])
+  const wrappedOpenGroupChatControl = requireEmailVerification(
+    openGroupChatControl,
+    {
+      instructions: [
+        <Trans key="new-group-chat">
+          Before you can message another user, you must first verify your email.
+        </Trans>,
+      ],
+    },
+  )
+  // Stable reference to the (otherwise per-render) opener so the effect below
+  // doesn't list it as a dependency - if it did, clearing the param would
+  // re-run the effect and its cleanup would cancel the pending open.
+  const openGroupChat = useNonReactiveCallback(wrappedOpenGroupChatControl)
+  // Deep link into the group-chat creation step of the new-chat dialog. The
+  // dialog control isn't attached synchronously when navigating onto this
+  // screen, so defer the open by a tick. We clear the param *after* opening
+  // (inside the timeout) so clearing doesn't cancel the pending open.
+  useEffect(() => {
+    if (!pushToNewGroupChat) return
+    const timeout = setTimeout(() => {
+      openGroupChat()
+      if (IS_WEB) {
+        // `navigation.setParams({pushToNewGroupChat: undefined})` serializes the
+        // literal string "undefined" into the query on web (see router build()),
+        // so strip the param with the history API instead.
+        const url = new URL(window.location.href)
+        url.searchParams.delete('pushToNewGroupChat')
+        history.replaceState(null, '', url.pathname + url.search + url.hash)
+      } else {
+        navigation.setParams({pushToNewGroupChat: undefined})
+      }
+    }, 100)
+    return () => clearTimeout(timeout)
+  }, [navigation, pushToNewGroupChat, openGroupChat])
+
   if (isWithinSplitView) {
     return (
       <>
@@ -141,26 +211,40 @@ export function MessagesScreenInner({navigation, route}: Props) {
           textStyle={t.atoms.text}
           iconColor={t.atoms.text.color}
           iconSize="4xl"
-          button={{
-            label: l`New chat`,
-            text: l`New chat`,
-            onPress: newChatControl.open,
-            size: 'small',
-            color: 'primary',
-            icon: MessagePlusIcon,
-          }}
+          button={
+            chatStatus?.chatDisabled
+              ? undefined
+              : {
+                  label: l`New chat`,
+                  text: l`New chat`,
+                  onPress: wrappedOpenChatControl,
+                  size: 'small',
+                  color: 'primary',
+                  icon: MessagePlusIcon,
+                }
+          }
           style={[a.h_full, a.justify_center, a.pb_5xl]}
         />
-        <NewChat onNewChat={onNewChat} control={newChatControl} />
+        <NewChat
+          onNewChat={onNewChat}
+          control={newChatControl}
+          startInGroupChat={startNewChatInGroupChat}
+          onClose={() => setStartNewChatInGroupChat(false)}
+        />
       </>
     )
   }
 
   return (
     <Layout.Screen testID="messagesScreen">
-      <Header newChatControl={newChatControl} />
-      <ChatList newChatControl={newChatControl} />
-      <NewChat onNewChat={onNewChat} control={newChatControl} />
+      <Header newChatControl={newChatControl} chatStatus={chatStatus} />
+      <ChatList newChatControl={newChatControl} chatStatus={chatStatus} />
+      <NewChat
+        onNewChat={onNewChat}
+        control={newChatControl}
+        startInGroupChat={startNewChatInGroupChat}
+        onClose={() => setStartNewChatInGroupChat(false)}
+      />
     </Layout.Screen>
   )
 }
@@ -168,12 +252,15 @@ export function MessagesScreenInner({navigation, route}: Props) {
 export function ChatList({
   selectedChat,
   newChatControl,
+  chatStatus,
 }: {
   selectedChat?: string
   newChatControl: DialogControlProps
+  chatStatus: ChatStatus | undefined
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const aa = useAgeAssurance()
   const scrollElRef: ListRef = useAnimatedRef()
   const {isWithinSplitView} = useIsWithinSplitView()
 
@@ -206,19 +293,15 @@ export function ChatList({
 
   const {refetch: refetchInbox} = useListConvosQuery({
     status: 'request',
+    kind: aa.flags.groupChatDisabled ? 'direct' : 'all',
   })
 
   useRefreshOnFocus(refetch)
   useRefreshOnFocus(refetchInbox)
 
-  const leftConvos = useLeftConvos()
-
   const conversations = useMemo(() => {
     if (data?.pages) {
-      const conversations = data.pages
-        .flatMap(page => page.convos)
-        // filter out convos that are actively being left
-        .filter(convo => !leftConvos.includes(convo.id))
+      const conversations = data.pages.flatMap(page => page.convos)
 
       return conversations.map(
         convo =>
@@ -230,7 +313,7 @@ export function ChatList({
       ) satisfies ListItem[]
     }
     return []
-  }, [data, leftConvos, selectedChat])
+  }, [data, selectedChat])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
@@ -344,20 +427,24 @@ export function ChatList({
               />
             ) : (
               <EmptyState
-                message={l`No chats yet`}
-                icon={InboxLargeIcon}
-                iconSize="4xl"
+                message={l`Say hi to someone`}
+                icon={BubbleSmileIcon}
                 textStyle={t.atoms.text}
                 iconColor={t.atoms.text.color}
-                button={{
-                  label: l`New chat`,
-                  text: l`New chat`,
-                  onPress: wrappedOpenChatControl,
-                  size: 'small',
-                  color: 'primary',
-                  icon: MessagePlusIcon,
-                }}
-                style={web([a.h_full, a.justify_center, {paddingBottom: 120}])}
+                iconSize="4xl"
+                button={
+                  chatStatus?.chatDisabled
+                    ? undefined
+                    : {
+                        label: l`New chat`,
+                        text: l`New chat`,
+                        onPress: wrappedOpenChatControl,
+                        size: 'small',
+                        color: 'primary',
+                        icon: MessagePlusIcon,
+                      }
+                }
+                style={[a.h_full, {paddingTop: '20%'}]}
               />
             )}
           </>
@@ -375,6 +462,11 @@ export function ChatList({
       refreshing={isPTRing}
       onRefresh={() => void onRefresh()}
       onEndReached={() => void onEndReached()}
+      ListHeaderComponent={
+        chatStatus?.chatDisabled ? (
+          <ChatDisabled shape="banner" style={[isWithinSplitView && a.mb_sm]} />
+        ) : undefined
+      }
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}
@@ -400,32 +492,32 @@ export function ChatList({
           }),
         ]
       }
-      contentContainerStyle={isWithinSplitView && a.py_sm}
+      contentContainerStyle={
+        isWithinSplitView && !chatStatus?.chatDisabled && a.py_sm
+      }
     />
   )
 }
 
-export function Header({newChatControl}: {newChatControl: DialogControlProps}) {
+export function Header({
+  newChatControl,
+  chatStatus,
+}: {
+  newChatControl: DialogControlProps
+  chatStatus: ChatStatus | undefined
+}) {
   const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
   const requireEmailVerification = useRequireEmailVerification()
-  const leftConvos = useLeftConvos()
+  const {isWithinSplitView} = useIsWithinSplitView()
 
-  const {data: unreadInboxData, hasNextPage: hasMoreRequests} =
-    useListConvosQuery({
-      status: 'request',
-      readState: 'unread',
-    })
+  // In split view, the left column (and this header) stays mounted while the
+  // right column shows the selected route. Pushing would stack duplicate routes
+  // on repeated clicks, so navigate instead to dedupe by route + params.
+  const action = isWithinSplitView ? 'navigate' : 'push'
 
-  const inboxAllConvos =
-    unreadInboxData?.pages
-      .flatMap(page => page.convos)
-      .filter(
-        convo =>
-          !leftConvos.includes(convo.id) &&
-          !convo.muted &&
-          convo.members.every(member => member.handle !== 'missing.invalid'),
-      ) ?? []
+  const {data: unreadCounts} = useUnreadCountsQuery()
+  const requestCount = unreadCounts?.unreadRequestConvos ?? 0
 
   const openChatControl = useCallback(() => {
     newChatControl.open()
@@ -450,12 +542,13 @@ export function Header({newChatControl}: {newChatControl: DialogControlProps}) {
 
           <View style={[a.flex_row, a.align_center, a.gap_sm]}>
             <InboxRequests
-              count={inboxAllConvos.length}
-              more={hasMoreRequests}
+              count={requestCount}
               variant="solid"
+              action={action}
             />
             <Link
               to="/messages/settings"
+              action={action}
               label={l`Chat settings`}
               size="small"
               color="secondary"
@@ -463,14 +556,16 @@ export function Header({newChatControl}: {newChatControl: DialogControlProps}) {
               style={[a.justify_center]}>
               <ButtonIcon icon={SettingsIcon} />
             </Link>
-            <Button
-              label={l`New chat`}
-              color="primary"
-              size="small"
-              shape="round"
-              onPress={wrappedOpenChatControl}>
-              <ButtonIcon icon={NewChatIcon} />
-            </Button>
+            {!chatStatus?.chatDisabled && (
+              <Button
+                label={l`New chat`}
+                color="primary"
+                size="small"
+                shape="round"
+                onPress={wrappedOpenChatControl}>
+                <ButtonIcon icon={NewChatIcon} />
+              </Button>
+            )}
           </View>
         </>
       ) : (
@@ -481,11 +576,7 @@ export function Header({newChatControl}: {newChatControl: DialogControlProps}) {
               <Trans>Chats</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
-          <InboxRequests
-            count={inboxAllConvos.length}
-            more={hasMoreRequests}
-            variant="ghost"
-          />
+          <InboxRequests count={requestCount} variant="ghost" />
           <Layout.Header.Slot>
             <Link
               to="/messages/settings"

@@ -1,34 +1,37 @@
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
-import {UNREAD_LIMIT} from '#/state/queries/messages/list-conversations'
 import {atoms as a} from '#/alf'
 import {ButtonIcon, ButtonText} from '#/components/Button'
 import {Inbox_Stroke2_Corner2_Rounded as InboxIcon} from '#/components/icons/Inbox'
 import {Link} from '#/components/Link'
 
+// The server caps unreadRequestConvos at 11, where 11 means "any more than 10".
+const REQUEST_COUNT_CAP = 11
+
 export function InboxRequests({
   count,
-  more,
   variant,
+  action,
 }: {
   count: number
-  more: boolean
   variant?: 'ghost' | 'solid'
+  action?: 'push' | 'navigate'
 }) {
   const {t: l} = useLingui()
 
   const unread = count > 0
+  const overflow = count >= REQUEST_COUNT_CAP
 
   const label = !unread
     ? l({
         message: `Requests`,
         comment: 'Incoming message requests',
       })
-    : count >= UNREAD_LIMIT && more
+    : overflow
       ? l({
-          message: `${count}+ requests`,
-          comment: 'Displayed when the number of requests is greater than 20',
+          message: `10+ requests`,
+          comment: 'Displayed when the number of requests is greater than 10',
         })
       : plural(count, {
           one: '# request',
@@ -41,6 +44,7 @@ export function InboxRequests({
         <Link
           label={label}
           to="/messages/inbox"
+          action={action}
           size="small"
           variant={unread ? 'solid' : 'ghost'}
           color={unread ? 'primary_subtle' : 'secondary'}
@@ -49,11 +53,11 @@ export function InboxRequests({
           <ButtonIcon icon={InboxIcon} size="lg" />
           {unread && (
             <ButtonText style={[a.text_md, a.font_bold]}>
-              {count >= UNREAD_LIMIT && more
+              {overflow
                 ? l({
-                    message: `${count}+`,
+                    message: `10+`,
                     comment:
-                      'Displayed when the number of requests is greater than 20',
+                      'Displayed when the number of requests is greater than 10',
                   })
                 : count}
             </ButtonText>
@@ -66,6 +70,7 @@ export function InboxRequests({
         <Link
           label={label}
           to="/messages/inbox"
+          action={action}
           color={unread ? 'primary_subtle' : 'secondary'}
           size="small">
           <ButtonIcon icon={InboxIcon} />

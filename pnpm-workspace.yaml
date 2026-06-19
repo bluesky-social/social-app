@@ -1,11 +1,12 @@
 nodeLinker: 'hoisted'
 autoInstallPeers: true # default: true
 strictPeerDependencies: false # default: false
+trustPolicy: 'no-downgrade' # default: off
+trustPolicyIgnoreAfter: 10080 # 7 days, default: undefined
 overrides:
   '@react-native/babel-preset': '0.81.5'
   '@react-native/normalize-colors': '0.81.5'
   '@expo/image-utils': '0.8.12'
-  'multiformats': '9.9.0'
   '@types/estree': '1.0.6'
   'react-native-compressor': '1.13.0'
   'react-native-reanimated': '3.19.1'
@@ -15,11 +16,9 @@ overrides:
 allowBuilds:
   '@sentry/cli': true
   'core-js-pure': true
-  'dtrace-provider': true
   'esbuild': true
   'unrs-resolver': true
 patchedDependencies:
-  '@discord/bottom-sheet@4.6.1': patches/@discord__bottom-sheet@4.6.1.patch
   '@sentry/react-native@6.20.0': patches/@sentry__react-native@6.20.0.patch
   'expo-glass-effect@55.0.8': patches/expo-glass-effect@55.0.8.patch
   'expo-haptics@15.0.8': patches/expo-haptics@15.0.8.patch
@@ -32,7 +31,7 @@ patchedDependencies:
   'react-native-compressor@1.13.0': patches/react-native-compressor@1.13.0.patch
   'react-native-date-picker@5.0.13': patches/react-native-date-picker@5.0.13.patch
   'react-native-drawer-layout@4.2.3': patches/react-native-drawer-layout@4.2.3.patch
-  'react-native-keyboard-controller@1.21.7': patches/react-native-keyboard-controller@1.21.7.patch
+  'react-native-keyboard-controller@1.21.8': patches/react-native-keyboard-controller@1.21.8.patch
   'react-native-pager-view@6.8.0': patches/react-native-pager-view@6.8.0.patch
   'react-native-reanimated@3.19.1': patches/react-native-reanimated@3.19.1.patch
   'react-native-svg@15.12.1': patches/react-native-svg@15.12.1.patch

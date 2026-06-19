@@ -19,6 +19,7 @@ import {ButtonIcon} from '#/components/Button'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
+import {useAnalytics} from '#/analytics'
 import {IS_DEV, IS_LIQUID_GLASS} from '#/env'
 
 export function HomeHeaderLayoutMobile({
@@ -29,6 +30,7 @@ export function HomeHeaderLayoutMobile({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {headerHeight} = useShellLayout()
   const insets = useSafeAreaInsets()
   const headerMinimalShellTransform = useHomeHeaderTransform()
@@ -84,6 +86,9 @@ export function HomeHeaderLayoutMobile({
               variant="ghost"
               color="secondary"
               shape="square"
+              onPress={() => {
+                ax.metric('nav:click', {item: 'feeds', surface: 'topBar'})
+              }}
               style={[
                 a.justify_center,
                 {marginRight: -Layout.BUTTON_VISUAL_ALIGNMENT_OFFSET},

@@ -39,6 +39,7 @@ import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ContactsHeroImage} from '#/components/contacts/components/HeroImage'
+import {useDialogControl} from '#/components/Dialog'
 import {ArrowRotateClockwise_Stroke2_Corner0_Rounded as ResyncIcon} from '#/components/icons/ArrowRotate'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
@@ -50,6 +51,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {InviteFriendsDialog} from '#/features/inviteFriends'
 import type * as bsky from '#/types/bsky'
 import {bulkWriteFollows} from '../Onboarding/util'
 
@@ -76,7 +78,7 @@ export function FindContactsSettingsScreen({}: Props) {
         <Layout.Header.BackButton />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
-            <Trans>Find Friends</Trans>
+            <Trans>Find and invite friends</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot />
@@ -113,6 +115,8 @@ function Intro() {
   const gutter = useGutters(['base'])
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
+  const inviteFriendsControl = useDialogControl()
 
   const {data: isAvailable, isSuccess} = useQuery({
     queryKey: ['contacts-available'],
@@ -122,6 +126,9 @@ function Intro() {
   return (
     <Layout.Content contentContainerStyle={[gutter, a.gap_lg]}>
       <ContactsHeroImage />
+      <Text style={[a.text_xl, a.font_bold]}>
+        <Trans>Find people you know</Trans>
+      </Text>
       <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
         <Trans>
           Find your friends on Bluesky by verifying your phone number and
@@ -161,6 +168,20 @@ function Intro() {
           </Admonition>
         )
       )}
+      <Button
+        label={_(msg`Share my profile`)}
+        size="large"
+        color="secondary"
+        onPress={() => {
+          ax.metric('invite:dialog:open', {logContext: 'FindContactsSettings'})
+          inviteFriendsControl.open()
+        }}
+        style={[a.flex_1, a.justify_center]}>
+        <ButtonText>
+          <Trans>Share my profile</Trans>
+        </ButtonText>
+      </Button>
+      <InviteFriendsDialog control={inviteFriendsControl} />
     </Layout.Content>
   )
 }
