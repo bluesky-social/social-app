@@ -29,8 +29,6 @@ import {EmptyState} from '#/view/com/util/EmptyState'
 import {List} from '#/view/com/util/List'
 import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, useTheme, web} from '#/alf'
-import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
-import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
@@ -54,15 +52,7 @@ type RequestItem =
   | {type: 'outgoing'; view: ChatBskyGroupDefs.JoinRequestConvoView}
 
 export function MessagesInboxScreen(props: Props) {
-  const {t: l} = useLingui()
-  const aaCopy = useAgeAssuranceCopy()
-  return (
-    <AgeRestrictedScreen
-      screenTitle={l`Chat requests`}
-      infoText={aaCopy.chatsInfoText}>
-      <MessagesInboxScreenInner {...props} />
-    </AgeRestrictedScreen>
-  )
+  return <MessagesInboxScreenInner {...props} />
 }
 
 export function MessagesInboxScreenInner({}: Props) {

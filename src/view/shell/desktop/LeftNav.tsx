@@ -82,7 +82,6 @@ import {CENTER_COLUMN_OFFSET, CENTER_COLUMN_WIDTH} from '#/components/Layout'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
-import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {type Events} from '#/analytics/metrics/types'
 import {useActorStatus} from '#/features/liveNow'
@@ -608,11 +607,9 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
   const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
 
-  const aa = useAgeAssurance()
   // splitview uses the minimal variant of the leftnav. unfortunately there's no easy
   // way to thread this data through because of the view hierarchy, so just check the route name
-  const isMessagesRelatedScreen =
-    routeName.startsWith('Messages') && aa.state.access === aa.Access.Full
+  const isMessagesRelatedScreen = routeName.startsWith('Messages')
   const {leftNavMinimal: leftNavMinimalBreakpoint, centerColumnOffset} =
     useLayoutBreakpoints()
   const numUnreadNotifications = useUnreadNotifications()
@@ -699,10 +696,8 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
             href="/messages"
             navItem="chat"
             minimal={leftNavMinimal}
-            count={
-              aa.flags.chatDisabled ? undefined : numUnreadMessages.numUnread
-            }
-            hasNew={!aa.flags.chatDisabled && numUnreadMessages.hasNew}
+            count={numUnreadMessages.numUnread}
+            hasNew={numUnreadMessages.hasNew}
             icons={{
               inactive: MessageIcon,
               active: MessageFilledIcon,

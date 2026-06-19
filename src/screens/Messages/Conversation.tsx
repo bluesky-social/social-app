@@ -33,8 +33,6 @@ import {useMarkJoinRequestsRead} from '#/state/queries/messages/mark-join-reques
 import {useSession} from '#/state/session'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, web} from '#/alf'
-import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
-import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {
   EmailDialogScreenID,
   useEmailDialogControl,
@@ -56,15 +54,7 @@ type Props = NativeStackScreenProps<
 >
 
 export function MessagesConversationScreen(props: Props) {
-  const {t: l} = useLingui()
-  const aaCopy = useAgeAssuranceCopy()
-  return (
-    <AgeRestrictedScreen
-      screenTitle={l`Conversation`}
-      infoText={aaCopy.chatsInfoText}>
-      <MessagesConversationScreenInner {...props} />
-    </AgeRestrictedScreen>
-  )
+  return <MessagesConversationScreenInner {...props} />
 }
 
 export function MessagesConversationScreenInner({route}: Props) {

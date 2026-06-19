@@ -23,8 +23,6 @@ import {EmptyState} from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
 import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
-import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
-import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps, useDialogControl} from '#/components/Dialog'
 import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
@@ -42,7 +40,6 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {Text} from '#/components/Typography'
-import {useAgeAssurance} from '#/ageAssurance'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {ChatDisabled} from './components/ChatDisabled'
 import {ChatListItem} from './components/ChatListItem'
@@ -69,30 +66,7 @@ function keyExtractor(item: ListItem) {
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
 
 export function MessagesScreen(props: Props) {
-  const {t: l} = useLingui()
-  const aaCopy = useAgeAssuranceCopy()
-  const aa = useAgeAssurance()
-
-  return (
-    <AgeRestrictedScreen
-      screenTitle={l`Chats`}
-      infoText={aaCopy.chatsInfoText}
-      rightHeaderSlot={
-        aa.flags.chatDisabled ? null : (
-          <Link
-            to="/messages/settings"
-            label={l`Chat settings`}
-            size="small"
-            color="secondary">
-            <ButtonText>
-              <Trans>Chat settings</Trans>
-            </ButtonText>
-          </Link>
-        )
-      }>
-      <MessagesScreenInner {...props} />
-    </AgeRestrictedScreen>
-  )
+  return <MessagesScreenInner {...props} />
 }
 
 export function MessagesScreenInner({navigation, route}: Props) {
@@ -260,7 +234,6 @@ export function ChatList({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const aa = useAgeAssurance()
   const scrollElRef: ListRef = useAnimatedRef()
   const {isWithinSplitView} = useIsWithinSplitView()
 
@@ -293,7 +266,7 @@ export function ChatList({
 
   const {refetch: refetchInbox} = useListConvosQuery({
     status: 'request',
-    kind: aa.flags.groupChatDisabled ? 'direct' : 'all',
+    kind: 'all',
   })
 
   useRefreshOnFocus(refetch)

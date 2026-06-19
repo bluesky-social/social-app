@@ -17,11 +17,6 @@ export enum Nux {
   DraftsAnnouncement = 'DraftsAnnouncement',
   GroupChatsAnnouncement = 'GroupChatsAnnouncement',
   InviteFriendsAnnouncement = 'InviteFriendsAnnouncement',
-
-  /*
-   * Blocking announcements. New IDs are required for each new announcement.
-   */
-  PolicyUpdate202508 = 'PolicyUpdate202508',
 }
 
 export const nuxNames = new Set(Object.values(Nux))
@@ -49,10 +44,6 @@ export type AppNux = BaseNux<
     }
   | {
       id: Nux.AgeAssuranceDismissibleFeedBanner
-      data: undefined
-    }
-  | {
-      id: Nux.PolicyUpdate202508
       data: undefined
     }
   | {
@@ -96,7 +87,6 @@ export const NuxSchemas: Record<Nux, zod.ZodObject<any> | undefined> = {
   [Nux.ActivitySubscriptions]: undefined,
   [Nux.AgeAssuranceDismissibleNotice]: undefined,
   [Nux.AgeAssuranceDismissibleFeedBanner]: undefined,
-  [Nux.PolicyUpdate202508]: undefined,
   [Nux.BookmarksAnnouncement]: undefined,
   [Nux.FindContactsAnnouncement]: undefined,
   [Nux.FindContactsDismissibleBanner]: undefined,

@@ -1,4 +1,4 @@
-import {AtpAgent, BSKY_LABELER_DID} from '@atproto/api'
+import {Agent, AtpAgent, BSKY_LABELER_DID} from '@atproto/api'
 
 import {IS_TEST_USER} from '#/lib/constants'
 import {getNoAppLabelers} from '../preferences/no-app-labelers'
@@ -17,7 +17,7 @@ export function configureModerationForGuest() {
 }
 
 export async function configureModerationForAccount(
-  agent: AtpAgent,
+  agent: Agent,
   account: SessionAccount,
 ) {
   // This global mutation is *only* OK because this code is only relevant for testing.
@@ -49,7 +49,7 @@ function switchToBskyAppLabeler() {
   })
 }
 
-async function trySwitchToTestAppLabeler(agent: AtpAgent) {
+async function trySwitchToTestAppLabeler(agent: Agent) {
   const did = (
     await agent
       .resolveHandle({handle: 'mod-authority.test'})

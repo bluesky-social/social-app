@@ -9,8 +9,6 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {ExportCarDialog} from '#/screens/Settings/components/ExportCarDialog'
 import {atoms as a, useTheme} from '#/alf'
-import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
-import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import {resolveAllowGroupInvites} from '#/components/dms/util'
@@ -21,7 +19,6 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/compon
 import * as Layout from '#/components/Layout'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {useBackgroundNotificationPreferences} from '../../../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -31,23 +28,13 @@ type AllowIncoming = 'all' | 'none' | 'following'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesSettings'>
 
 export function MessagesSettingsScreen(props: Props) {
-  const {t: l} = useLingui()
-  const aaCopy = useAgeAssuranceCopy()
-
-  return (
-    <AgeRestrictedScreen
-      screenTitle={l`Chat settings`}
-      infoText={aaCopy.chatsInfoText}>
-      <MessagesSettingsScreenInner {...props} />
-    </AgeRestrictedScreen>
-  )
+  return <MessagesSettingsScreenInner {...props} />
 }
 
 export function MessagesSettingsScreenInner({}: Props) {
   const t = useTheme()
   const {t: l} = useLingui()
   const ax = useAnalytics()
-  const aa = useAgeAssurance()
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({
     did: currentAccount!.did,
@@ -57,7 +44,7 @@ export function MessagesSettingsScreenInner({}: Props) {
   const exportCarControl = Dialog.useDialogControl()
 
   const isGroupChatEnabled = !ax.features.enabled(ax.features.GroupChatsDisable)
-  const groupInvitesLocked = aa.flags.groupChatDisabled
+  const groupInvitesLocked = false
 
   const allowMessagesFromOptions: {name: AllowIncoming; label: string}[] = [
     {

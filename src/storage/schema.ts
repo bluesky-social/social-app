@@ -1,9 +1,12 @@
 import {type Gif} from '#/features/gifPicker/types'
+import {type InviteThemeKey} from '#/features/inviteFriends/themes'
 
 /**
  * Data that's specific to the device and does not vary based account
  */
 export type Device = {
+  inviteFriendsFollowersPromoDismissed?: boolean
+  inviteFriendsThemeKey?: InviteThemeKey
   /**
    * Formerly managed by StatSig, this is the migrated stable ID for the
    * device, used with our logging and metrics tracking.

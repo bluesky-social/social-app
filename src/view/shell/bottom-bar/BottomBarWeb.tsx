@@ -43,7 +43,6 @@ import {
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message'
 import {Text} from '#/components/Typography'
-import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {styles} from './BottomBarStyles'
 
@@ -64,7 +63,6 @@ export function BottomBarWeb() {
 
   const unreadMessageCount = useUnreadMessageCount()
   const notificationCountStr = useUnreadNotifications()
-  const aa = useAgeAssurance()
   const isLabeler = profile?.associated?.labeler
 
   const showSignIn = useCallback(() => {
@@ -131,14 +129,8 @@ export function BottomBarWeb() {
                   routeName="Messages"
                   href="/messages"
                   navItem="chat"
-                  notificationCount={
-                    aa.flags.chatDisabled
-                      ? undefined
-                      : unreadMessageCount.numUnread
-                  }
-                  hasNew={
-                    aa.flags.chatDisabled ? false : unreadMessageCount.hasNew
-                  }>
+                  notificationCount={unreadMessageCount.numUnread}
+                  hasNew={unreadMessageCount.hasNew}>
                   {({isActive}) => {
                     const Icon = isActive ? MessageFilled : Message
                     return (

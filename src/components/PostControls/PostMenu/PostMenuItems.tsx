@@ -536,17 +536,9 @@ let PostMenuItems = ({
               ) : (
                 <Menu.Item
                   testID="postDropdownTranslateBtn"
-                  label={
-                    forceGoogleTranslate
-                      ? l`Open in Google Translate`
-                      : l`Translate`
-                  }
+                  label={l`Translate`}
                   onPress={onPressTranslate}>
-                  <Menu.ItemText>
-                    {forceGoogleTranslate
-                      ? l`Open in Google Translate`
-                      : l`Translate`}
-                  </Menu.ItemText>
+                  <Menu.ItemText>{l`Translate`}</Menu.ItemText>
                   <Menu.ItemIcon icon={Translate} position="right" />
                 </Menu.Item>
               )}

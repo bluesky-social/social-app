@@ -443,6 +443,10 @@ export function createThemes({
         ...atoms.shadow_lg,
         shadowColor: lightPalette.black,
       },
+      shadow_xl: {
+        ...atoms.shadow_xl,
+        shadowColor: lightPalette.black,
+      },
     },
   }
 
@@ -534,6 +538,11 @@ export function createThemes({
       },
       shadow_lg: {
         ...atoms.shadow_lg,
+        shadowOpacity: 0.7,
+        shadowColor: color.trueBlack,
+      },
+      shadow_xl: {
+        ...atoms.shadow_xl,
         shadowOpacity: 0.7,
         shadowColor: color.trueBlack,
       },
@@ -630,6 +639,11 @@ export function createThemes({
       },
       shadow_lg: {
         ...atoms.shadow_lg,
+        shadowOpacity: 0.7,
+        shadowColor: `hsl(${hues.primary}, 28%, 6%)`,
+      },
+      shadow_xl: {
+        ...atoms.shadow_xl,
         shadowOpacity: 0.7,
         shadowColor: `hsl(${hues.primary}, 28%, 6%)`,
       },

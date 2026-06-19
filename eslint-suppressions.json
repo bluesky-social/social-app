@@ -123,11 +123,6 @@
       "count": 1
     }
   },
-  "src/ageAssurance/components/RedirectOverlay.tsx": {
-    "@typescript-eslint/require-await": {
-      "count": 1
-    }
-  },
   "src/alf/util/flatten.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -153,9 +148,6 @@
   },
   "src/analytics/features/index.ts": {
     "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/no-misused-promises": {
       "count": 1
     },
     "@typescript-eslint/require-await": {
@@ -535,24 +527,6 @@
       "count": 1
     }
   },
-  "src/components/ageAssurance/AgeAssuranceErrors.tsx": {
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    }
-  },
-  "src/components/ageAssurance/AgeAssuranceInitDialog.tsx": {
-    "@typescript-eslint/no-misused-promises": {
-      "count": 2
-    },
-    "react-hooks/purity": {
-      "count": 1
-    }
-  },
-  "src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx": {
-    "@typescript-eslint/require-await": {
-      "count": 1
-    }
-  },
   "src/components/contacts/components/OTPInput.tsx": {
     "react-hooks/refs": {
       "count": 1
@@ -574,17 +548,6 @@
   "src/components/contacts/screens/ViewMatches.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 1
-    }
-  },
-  "src/components/dialogs/DeviceLocationRequestDialog.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 2
     }
   },
   "src/components/dialogs/EmailDialog/components/ResendEmailText.tsx": {
@@ -683,22 +646,6 @@
       "count": 2
     },
     "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    }
-  },
-  "src/components/dialogs/nuxs/FindContactsAnnouncement.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    }
-  },
-  "src/components/dialogs/nuxs/index.tsx": {
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
-    },
-    "react-hooks/immutability": {
-      "count": 1
-    },
-    "react-hooks/set-state-in-effect": {
       "count": 1
     }
   },
@@ -846,17 +793,6 @@
   "src/features/liveNow/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
-    }
-  },
-  "src/geolocation/service.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 2
     }
   },
   "src/lib/ScrollContext.tsx": {
@@ -1027,7 +963,7 @@
       "count": 1
     },
     "@typescript-eslint/no-floating-promises": {
-      "count": 5
+      "count": 6
     }
   },
   "src/lib/media/manip.web.ts": {
@@ -1108,10 +1044,10 @@
       "count": 1
     },
     "@typescript-eslint/no-unsafe-call": {
-      "count": 14
+      "count": 30
     },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 14
+      "count": 30
     }
   },
   "src/lib/translation/index.tsx": {
@@ -1146,17 +1082,14 @@
     }
   },
   "src/screens/Deactivated.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
     "@typescript-eslint/no-floating-promises": {
       "count": 1
     },
     "@typescript-eslint/no-misused-promises": {
-      "count": 1
+      "count": 3
     },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 2
     }
   },
   "src/screens/E2E/SharedPreferencesTesterScreen.tsx": {
@@ -1203,12 +1136,26 @@
       "count": 2
     }
   },
+  "src/screens/Login/AuthCallback.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
   "src/screens/Login/ChooseAccountForm.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     },
     "@typescript-eslint/no-misused-promises": {
       "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
     }
   },
   "src/screens/Login/ForgotPasswordForm.tsx": {
@@ -1229,19 +1176,13 @@
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     },
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
     "@typescript-eslint/no-misused-promises": {
-      "count": 3
+      "count": 2
     },
     "@typescript-eslint/no-unsafe-call": {
-      "count": 4
+      "count": 1
     },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
-    },
-    "react-hooks/refs": {
       "count": 1
     }
   },
@@ -1260,12 +1201,6 @@
     }
   },
   "src/screens/Login/index.tsx": {
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "react-hooks/purity": {
-      "count": 1
-    },
     "react-hooks/refs": {
       "count": 1
     },
@@ -1423,6 +1358,11 @@
       "count": 5
     }
   },
+  "src/screens/Profile/components/ProfileStatusError.tsx": {
+    "simple-import-sort/imports": {
+      "count": 1
+    }
+  },
   "src/screens/ProfileList/FeedSection.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
@@ -1456,6 +1396,11 @@
       "count": 2
     }
   },
+  "src/screens/Search/Explore.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
   "src/screens/Search/Shell.tsx": {
     "react-hooks/refs": {
       "count": 4
@@ -1481,8 +1426,8 @@
       "count": 1
     }
   },
-  "src/screens/Settings/AppPasswords.tsx": {
-    "@typescript-eslint/no-misused-promises": {
+  "src/screens/Settings/AccountSettings.tsx": {
+    "@typescript-eslint/no-unused-vars": {
       "count": 1
     }
   },
@@ -1589,6 +1534,17 @@
       "count": 3
     }
   },
+  "src/screens/Signup/index.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
   "src/screens/SignupQueued.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -1648,10 +1604,10 @@
   },
   "src/screens/Topic.tsx": {
     "@typescript-eslint/no-floating-promises": {
-      "count": 2
+      "count": 3
     },
     "@typescript-eslint/no-misused-promises": {
-      "count": 1
+      "count": 2
     }
   },
   "src/state/a11y.tsx": {
@@ -1753,7 +1709,17 @@
       "count": 1
     }
   },
+  "src/state/preferences/go-links-enabled.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
   "src/state/preferences/hidden-posts.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/hide-follow-notifications.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
     }
@@ -1777,6 +1743,26 @@
     }
   },
   "src/state/preferences/large-alt-badge.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/no-app-labelers.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/no-discover-fallback.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/repost-carousel-enabled.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/show-link-in-handle.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
     }
@@ -1806,11 +1792,6 @@
       "count": 2
     }
   },
-  "src/state/queries/app-passwords.ts": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    }
-  },
   "src/state/queries/bookmarks/useBookmarkMutation.ts": {
     "@typescript-eslint/no-floating-promises": {
       "count": 2
@@ -1818,6 +1799,14 @@
   },
   "src/state/queries/bookmarks/useBookmarksQuery.ts": {
     "@typescript-eslint/require-await": {
+      "count": 2
+    }
+  },
+  "src/state/queries/direct-fetch-record.ts": {
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
       "count": 2
     }
   },
@@ -1839,6 +1828,17 @@
   "src/state/queries/list.ts": {
     "@typescript-eslint/no-floating-promises": {
       "count": 7
+    }
+  },
+  "src/state/queries/microcosm-fallback.ts": {
+    "@typescript-eslint/no-redundant-type-constituents": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 41
     }
   },
   "src/state/queries/my-lists.ts": {
@@ -1922,6 +1922,30 @@
       "count": 2
     }
   },
+  "src/state/queries/profile-enrichment.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 38
+    },
+    "react-hooks/refs": {
+      "count": 1
+    }
+  },
+  "src/state/queries/profile-status.ts": {
+    "@typescript-eslint/no-base-to-string": {
+      "count": 1
+    }
+  },
+  "src/state/queries/profile.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 6
+    }
+  },
   "src/state/queries/search-posts.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -1970,6 +1994,16 @@
   },
   "src/state/session/agent.ts": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/state/session/oauth-telemetry.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 2
+    }
+  },
+  "src/state/session/resolveForLogin.ts": {
+    "@typescript-eslint/no-unsafe-enum-comparison": {
       "count": 1
     }
   },
@@ -2181,14 +2215,6 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 2
-    }
-  },
-  "src/view/com/modals/Modal.tsx": {
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/require-await": {
-      "count": 1
     }
   },
   "src/view/com/notifications/NotificationFeed.tsx": {
@@ -2443,6 +2469,22 @@
   },
   "src/view/screens/Storybook/ListContained.tsx": {
     "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/view/screens/SupportReturn.tsx": {
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/view/screens/SupportStripeCheckout.web.tsx": {
+    "@typescript-eslint/no-misused-promises": {
       "count": 1
     },
     "@typescript-eslint/no-unsafe-member-access": {

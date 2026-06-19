@@ -54,7 +54,6 @@ import {
 import * as Menu from '#/components/Menu'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
@@ -71,7 +70,6 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     useNavigationTabState()
   const numUnreadNotifications = useUnreadNotifications()
   const numUnreadMessages = useUnreadMessageCount()
-  const aa = useAgeAssurance()
   const footerMinimalShellTransform = useMinimalShellFooterTransform()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const {requestSwitchToAccount} = useLoggedOutViewControls()
@@ -148,10 +146,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   }, [accountSwitchControl, playHaptic])
 
   const onLongPressMessages = useCallback(() => {
-    if (aa.flags.chatDisabled) return
     playHaptic()
     messagesMenuControl.open()
-  }, [aa.flags.chatDisabled, messagesMenuControl, playHaptic])
+  }, [messagesMenuControl, playHaptic])
 
   const [demoMode] = useDemoMode()
   const {isActive: live} = useActorStatus(profile)
@@ -233,15 +230,13 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               }
               onPress={onPressMessages}
               onLongPress={onLongPressMessages}
-              notificationCount={
-                aa.flags.chatDisabled ? undefined : numUnreadMessages.numUnread
-              }
-              hasNew={aa.flags.chatDisabled ? false : numUnreadMessages.hasNew}
+              notificationCount={numUnreadMessages.numUnread}
+              hasNew={numUnreadMessages.hasNew}
               accessible={true}
               accessibilityRole="tab"
               accessibilityLabel={l`Chat`}
               accessibilityHint={
-                !aa.flags.chatDisabled && numUnreadMessages.count > 0
+                numUnreadMessages.count > 0
                   ? l({
                       message: plural(numUnreadMessages.numUnread ?? 0, {
                         one: '# unread item',
