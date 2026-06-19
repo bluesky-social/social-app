@@ -1,4 +1,4 @@
-import {useCallback, useRef, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {Keyboard, type TextInput, View} from 'react-native'
 import {
   ComAtprotoServerCreateSession,
@@ -8,11 +8,18 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {DEFAULT_SERVICE} from '#/lib/constants'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
+import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
+import {
+  looksLikeHandle,
+  resolvePdsFromHandle,
+  usePdsFromHandleQuery,
+} from '#/state/queries/pds-from-handle'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {atoms as a, ios, useTheme, web} from '#/alf'
@@ -73,6 +80,51 @@ export const LoginForm = ({
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
 
+  // Auto-detect PDS from a typed handle. Only runs if the user hasn't
+  // manually picked a hosting provider via the picker; once they do, we
+  // stop overriding for the rest of the session.
+  const [userOverrodeService, setUserOverrodeService] = useState(false)
+  const [handleForLookup, setHandleForLookup] = useState<string>(() =>
+    looksLikeHandle(initialHandle) ? initialHandle.toLowerCase().trim() : '',
+  )
+  const {data: detectedPds} = usePdsFromHandleQuery(handleForLookup)
+
+  // Side-effect only: when a new PDS is detected and the user hasn't
+  // overridden the picker, push it up to the parent so the service-description
+  // query refetches against the right host.
+  useEffect(() => {
+    if (!detectedPds) return
+    if (userOverrodeService) return
+    if (detectedPds === serviceUrl) return
+    setServiceUrl(detectedPds)
+  }, [detectedPds, serviceUrl, setServiceUrl, userOverrodeService])
+
+  // Render-derived hint. Shows once the auto-detected host actually became
+  // the active serviceUrl, and disappears the moment the user opens the
+  // picker to override it.
+  const autoDetectedPds =
+    detectedPds &&
+    !userOverrodeService &&
+    detectedPds === serviceUrl &&
+    detectedPds !== DEFAULT_SERVICE
+      ? detectedPds
+      : null
+
+  const onIdentifierBlur = useCallback(() => {
+    const candidate = identifierValueRef.current.toLowerCase().trim()
+    if (looksLikeHandle(candidate)) {
+      setHandleForLookup(candidate)
+    }
+  }, [])
+
+  const onSelectServiceUrl = useCallback(
+    (url: string) => {
+      setUserOverrodeService(true)
+      setServiceUrl(url)
+    },
+    [setServiceUrl],
+  )
+
   const onPressSelectService = useCallback(() => {
     Keyboard.dismiss()
   }, [])
@@ -123,10 +175,35 @@ export const LoginForm = ({
         }
       }
 
+      // Auto-detect the user's hosting provider from their handle if the
+      // user hasn't manually picked one. Catches the case where the user
+      // submitted without ever blurring the identifier field (autofill +
+      // click submit) so the background query never fired.
+      let loginServiceUrl = serviceUrl
+      if (
+        !userOverrodeService &&
+        looksLikeHandle(fullIdent) &&
+        loginServiceUrl === DEFAULT_SERVICE
+      ) {
+        try {
+          const detected = await resolvePdsFromHandle(fullIdent)
+          if (detected && detected !== loginServiceUrl) {
+            loginServiceUrl = detected
+            setServiceUrl(detected)
+          }
+        } catch (resolveErr) {
+          // Best-effort. Fall back to the default service; login will
+          // surface a helpful error if the account isn't there.
+          logger.debug('PDS auto-detect failed at submit', {
+            error: String(resolveErr),
+          })
+        }
+      }
+
       // TODO remove double login
       await login(
         {
-          service: serviceUrl,
+          service: loginServiceUrl,
           identifier: fullIdent,
           password,
           authFactorToken: authFactorToken.trim(),
@@ -183,9 +260,18 @@ export const LoginForm = ({
         </TextField.LabelText>
         <HostingProvider
           serviceUrl={serviceUrl}
-          onSelectServiceUrl={setServiceUrl}
+          onSelectServiceUrl={onSelectServiceUrl}
           onOpenDialog={onPressSelectService}
         />
+        {autoDetectedPds && (
+          <Text
+            style={[a.text_sm, t.atoms.text_contrast_medium, a.mt_xs]}
+            testID="autoDetectedPdsHint">
+            <Trans>
+              Hosting provider auto-detected: {toNiceDomain(autoDetectedPds)}
+            </Trans>
+          </Text>
+        )}
       </View>
       <View>
         <TextField.LabelText>
@@ -209,7 +295,9 @@ export const LoginForm = ({
                 identifierValueRef.current = v
                 if (errorField) setErrorField('none')
               }}
+              onBlur={onIdentifierBlur}
               onSubmitEditing={() => {
+                onIdentifierBlur()
                 passwordRef.current?.focus()
               }}
               blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
