@@ -1,6 +1,9 @@
 import {BSKY_SERVICE} from '#/lib/constants'
 import {Agent} from '#/state/session/agent'
 
+// Cap the DID-doc fetch so a slow/hanging host can't keep a resolution pending.
+const DID_DOC_FETCH_TIMEOUT_MS = 5e3
+
 /**
  * Resolves an atproto handle (or DID) to the user's PDS service URL.
  *
@@ -65,8 +68,13 @@ async function fetchDidDoc(did: string): Promise<DidDoc> {
       `Unsupported DID method: ${did}`,
     )
   }
+  // Bound the fetch - the background query has no other timeout, so a did:web
+  // (or plc.directory) host that hangs would otherwise keep the resolution
+  // pending indefinitely.
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), DID_DOC_FETCH_TIMEOUT_MS)
   try {
-    const res = await fetch(url)
+    const res = await fetch(url, {signal: controller.signal})
     if (!res.ok) {
       throw new Error(`HTTP ${res.status}`)
     }
@@ -77,6 +85,8 @@ async function fetchDidDoc(did: string): Promise<DidDoc> {
       `Failed to fetch DID doc from ${url}`,
       e,
     )
+  } finally {
+    clearTimeout(timer)
   }
 }
 

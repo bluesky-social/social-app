@@ -162,8 +162,12 @@ export const LoginForm = ({
   // Fire analytics on resolve success/failure.
   useEffect(() => {
     if (resolveQuery.isSuccess && resolveQuery.data) {
+      // Only count duration when a fetch actually ran (a cache hit leaves the
+      // ref at 0); reset after so a re-render can't re-emit a stale delta.
+      const start = resolveStartRef.current
+      resolveStartRef.current = 0
       ax.metric('signin:pdsResolve:success', {
-        durationMs: Date.now() - resolveStartRef.current,
+        durationMs: start ? Date.now() - start : 0,
         isBlueskySocial: isBlueskyHostedPds(resolveQuery.data.pds),
       })
     }
@@ -262,7 +266,15 @@ export const LoginForm = ({
       let service = customServerOverride ?? serviceUrl
       if (!customServerOverride && looksResolvable(fullIdent)) {
         const resolvedPds = await resolvePdsOnSubmit(queryClient, fullIdent)
-        if (resolvedPds) service = resolvedPds
+        // Only reroute to the resolved PDS for non-Bluesky hosts. A normal
+        // Bluesky account resolves to a sharded *.host.bsky.network endpoint,
+        // but must keep signing in through the bsky.social entryway
+        // (serviceUrl) - using the shard as account.service would flip
+        // downstream isSelfHosted / isBskyPds checks and suppress email
+        // verification. The resolution still drives the status UI either way.
+        if (resolvedPds && !isBlueskyHostedPds(resolvedPds)) {
+          service = resolvedPds
+        }
       }
 
       // TODO remove double login
