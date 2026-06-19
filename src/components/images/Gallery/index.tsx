@@ -115,7 +115,7 @@ export function Gallery({
   const bps = useBreakpoints()
   const window = useWindowDimensions()
   const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage
-  const hideBadges = isWithinQuote
+  const hideBadges = viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
   const contentHeight = useMemo(() => {
     if (isWithinChat) {
       return 120
@@ -250,7 +250,7 @@ export function Gallery({
               onPress?.(index, [containerRef], [dims])
             }
             onPressIn={() => onPressIn?.(index)}
-            hideBadge={isWithinQuote}
+            hideBadge={hideBadges}
           />
         ))}
       </View>
