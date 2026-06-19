@@ -8,7 +8,7 @@
 # (matching the Bunny edge feature set). It is distinct from scripts/bunny_build.sh,
 # the pre-existing Cloudflare *Pages* build (static only, no OG/geolocation).
 #
-# Brand name + host come from src/config/brand-meta.json (the same source the
+# Brand name + host come from src/config/brand.json (the same source the
 # app and Workers read). This script only wires the deployment-specific bits:
 # build env, Worker names, and the OAuth assertion URL.
 #
@@ -45,8 +45,8 @@ done
 
 # Brand identity from the single source. Slugify the display name for the CF
 # Worker resource names (lowercase, alphanumeric + hyphens).
-BRAND_SLUG="$(node -p 'require("./src/config/brand-meta.json").name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"")')"
-PRIMARY_HOST="$(node -p 'require("./src/config/brand-meta.json").hosts[0]')"
+BRAND_SLUG="$(node -p 'require("./src/config/brand.json").name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"")')"
+PRIMARY_HOST="$(node -p 'require("./src/config/brand.json").hosts[0]')"
 SITE_URL="${SITE_URL:-https://${PRIMARY_HOST}}"
 WEB_WORKER="${BRAND_SLUG}-web"
 OAUTH_WORKER="${BRAND_SLUG}-oauth-assertion"

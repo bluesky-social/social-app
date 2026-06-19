@@ -5,19 +5,17 @@
  */
 
 import {useEffect, useRef, useState} from 'react'
-import Svg, {Path} from 'react-native-svg'
 
 import {atoms as a, flatten} from '#/alf'
-import brandColors from '#/config/brand-colors.json'
-import {BRAND_LOGO, BRAND_LOGO_3D} from '#/config/brand-logo'
+import {BrandLogo} from '#/components/icons/BrandLogo'
+import brand from '#/config/brand.json'
 
 const size = 100
-const ratio = (BRAND_LOGO_3D ?? BRAND_LOGO).ratio
 // Pre-boot splash: derive fills from the default accent (same source the HTML
 // codegen uses) so the React handoff matches the static #splash mark exactly.
 const accent =
-  brandColors.accents[
-    brandColors.defaultAccent as keyof typeof brandColors.accents
+  brand.colors.accents[
+    brand.colors.defaultAccent as keyof typeof brand.colors.accents
   ]
 
 export function Splash({
@@ -89,22 +87,16 @@ export function Splash({
             // to compensate for the `top: -50px` below
             {transformOrigin: 'center calc(50% - 50px)'},
           ])}>
-          <Svg
-            fill="none"
-            viewBox={(BRAND_LOGO_3D ?? BRAND_LOGO).viewBox}
-            style={[a.relative, {width: size, height: size * ratio, top: -50}]}>
-            {/* Brand wordmark - matches the pre-JS #splash mark in
-                web/index.html so the handoff is seamless. 3D when the brand
-                ships it, else the flat wordmark in the accent colour. */}
-            {BRAND_LOGO_3D ? (
-              <>
-                <Path fill={accent.primary_900} d={BRAND_LOGO_3D.shadowPath} />
-                <Path fill={accent.primary_400} d={BRAND_LOGO_3D.facePath} />
-              </>
-            ) : (
-              <Path fill={accent.primary_500} d={BRAND_LOGO.path} />
-            )}
-          </Svg>
+          {/* Brand logo - matches the pre-JS #splash mark in web/index.html so
+              the handoff is seamless. Renders with the default accent (no
+              per-user theme yet); the logo's theme: tokens resolve from it. */}
+          <BrandLogo
+            variant="hero"
+            size={size}
+            fill={accent.primary_500}
+            palette={accent}
+            style={[a.relative, {top: -50}]}
+          />
         </div>
       )}
     </>

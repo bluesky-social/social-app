@@ -18,7 +18,8 @@
  * own squircle mask and wants a full-bleed opaque square - so it is left square.
  *
  * The Safari pinned-tab is a monochrome silhouette of the wordmark, generated
- * from src/config/brand-logo.json (no raster step); Safari tints it via the
+ * from the brand logo (brand-logo.generated.json / assets/brand/mark.svg, no
+ * raster step); Safari tints it via the
  * <link rel="mask-icon" color="..."> attribute that the web codegen sets from
  * the brand accent.
  */
@@ -105,9 +106,11 @@ async function main() {
   }
 
   const logo = JSON.parse(
-    readFileSync(join(root, 'src/config/brand-logo.json'), 'utf8'),
+    readFileSync(join(root, 'src/config/brand-logo.generated.json'), 'utf8'),
   )
-  const safari = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${logo.flat.viewBox}"><path d="${logo.flat.path}"/></svg>\n`
+  // Monochrome silhouette: the mark SVG with its fills stripped (paths default
+  // to black), which Safari then tints via the <link rel="mask-icon"> colour.
+  const safari = logo.mark.xml.replace(/\sfill="[^"]*"/g, '') + '\n'
   const safariPath = 'bskyweb/static/safari-pinned-tab.svg'
   writeFileSync(join(root, safariPath), safari)
   console.log(`  ${safariPath}  (monochrome wordmark mask)`)

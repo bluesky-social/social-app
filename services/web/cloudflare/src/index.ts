@@ -27,12 +27,12 @@
  *   BOTS_ONLY      "1"/"true" to only enrich known crawler UAs (default: all)
  */
 
-import brandMeta from '../../../../src/config/brand-meta.json'
+import brandMeta from '../../../../src/config/brand.json'
 
 // The brand's primary web origin - the single source for the SITE_URL /
-// SITE_NAME / ALLOWED_ORIGIN defaults (from src/config/brand-meta.json, bundled
+// SITE_NAME / ALLOWED_ORIGIN defaults (from src/config/brand.json, bundled
 // into the Worker at build). The env vars below only OVERRIDE it per deployment
-// (e.g. a staging host), so a rebrand is one edit in brand-meta.json.
+// (e.g. a staging host), so a rebrand is one edit in brand.json.
 const BRAND_ORIGIN = `https://${brandMeta.hosts[0]}`
 
 interface Env {

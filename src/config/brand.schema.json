@@ -1,0 +1,127 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Brand configuration",
+  "description": "Single source of truth for brand identity. Edit brand.json; the app adapters (brand.ts / brand-theme.ts / oauth.ts), build scripts, app.config.js and the Cloudflare Workers read it. Logo SVGs (assets/brand/) and the OAuth keypair (oauth.public-jwks.json) live elsewhere.",
+  "type": "object",
+  "required": ["name", "hosts", "colors", "oauth", "links", "services"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {"type": "string"},
+    "$comment": {"type": "string"},
+    "name": {
+      "type": "string",
+      "description": "Display name, used in titles and in-app brand text."
+    },
+    "hosts": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1,
+      "description": "First-party web hostnames (bare host, no scheme). hosts[0] is primary (og:url base, Worker origin). Links to these render as rich embeds."
+    },
+    "socialHandle": {
+      "type": "string",
+      "description": "X/Twitter @handle for twitter:site. Empty omits the tag."
+    },
+    "colors": {
+      "type": "object",
+      "required": ["neutral", "accents", "defaultAccent"],
+      "additionalProperties": false,
+      "description": "Palette. neutral = the contrast_ ramp; accents = swappable primary_ families; defaultAccent = the shipped family.",
+      "properties": {
+        "neutral": {"$ref": "#/$defs/contrastRamp"},
+        "neutralSubduedOverrides": {
+          "type": "object",
+          "description": "Per-key overrides for the dim theme's deep end (softer than pure black).",
+          "patternProperties": {"^contrast_\\d+$": {"$ref": "#/$defs/hex"}},
+          "additionalProperties": false
+        },
+        "accents": {
+          "type": "object",
+          "minProperties": 1,
+          "description": "Selectable accent families (keys are the accent ids used by defaultAccent and the in-app picker).",
+          "additionalProperties": {"$ref": "#/$defs/primaryRamp"}
+        },
+        "defaultAccent": {
+          "type": "string",
+          "description": "Which accents key this build ships and uses as the per-user default. Must be a key in accents."
+        }
+      }
+    },
+    "oauth": {
+      "type": "object",
+      "required": [
+        "defaultBaseUrl",
+        "clientName",
+        "scope",
+        "declaredScope",
+        "handleResolver",
+        "signupPdsHost"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "defaultBaseUrl": {
+          "type": "string",
+          "description": "App origin; client_id is <defaultBaseUrl>/oauth-client-metadata.json. Override per build with EXPO_PUBLIC_OAUTH_BASE_URL."
+        },
+        "clientName": {"type": "string"},
+        "scope": {
+          "type": "string",
+          "description": "Scope NEW logins request. Keep transitional-only (atproto + transition:*) so every PDS accepts it."
+        },
+        "declaredScope": {
+          "type": "string",
+          "description": "Superset advertised in client metadata; must cover step-ups (identity:handle) and any scope older cached bundles still request."
+        },
+        "handleResolver": {"type": "string"},
+        "signupPdsHost": {
+          "type": "string",
+          "description": "PDS the create-account flow targets."
+        }
+      }
+    },
+    "links": {
+      "type": "object",
+      "description": "Brand-owned web pages linked from the UI (legal/support/download). Point these at your own pages.",
+      "additionalProperties": {"type": "string"}
+    },
+    "services": {
+      "type": "object",
+      "description": "atproto network endpoints. Default to the public Bluesky network; override only what you self-host.",
+      "additionalProperties": {"type": "string"}
+    },
+    "verification": {
+      "type": "object",
+      "description": "Verification trust root: the app honors verifications from members + creators of these lists.",
+      "properties": {
+        "trustedVerifierListUris": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "includeBlueskyVerifications": {"type": "boolean"}
+      }
+    },
+    "ageAssurance": {
+      "type": "object",
+      "description": "Age-assurance backend defaults. Overridable at build with EXPO_PUBLIC_AGE_SERVICE_URL / _DID.",
+      "properties": {
+        "serviceUrl": {"type": "string"},
+        "serviceDid": {"type": "string"}
+      }
+    }
+  },
+  "$defs": {
+    "hex": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+    "contrastRamp": {
+      "type": "object",
+      "description": "Neutral background->text ramp (contrast_0 = white .. contrast_1000 = black).",
+      "patternProperties": {"^contrast_\\d+$": {"$ref": "#/$defs/hex"}},
+      "additionalProperties": false
+    },
+    "primaryRamp": {
+      "type": "object",
+      "description": "An accent family: primary_25 (lightest) .. primary_975 (darkest); primary_500 is the core interactive tone.",
+      "patternProperties": {"^primary_\\d+$": {"$ref": "#/$defs/hex"}},
+      "additionalProperties": false
+    }
+  }
+}

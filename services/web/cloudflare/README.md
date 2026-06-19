@@ -25,7 +25,7 @@ region code (Bunny had no region), so US state-level age logic works.
    ```
 
 2. Edit `wrangler.jsonc`: just the worker `name`. `SITE_URL` / `SITE_NAME` /
-   `ALLOWED_ORIGIN` are derived from `src/config/brand-meta.json` at build (a
+   `ALLOWED_ORIGIN` are derived from `src/config/brand.json` at build (a
    rebrand is one edit there); add a `vars` block only to override per
    deployment - e.g. a staging `SITE_URL`, or a self-hosted `APPVIEW_URL`.
 3. Deploy:

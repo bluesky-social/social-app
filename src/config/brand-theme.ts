@@ -9,7 +9,7 @@
  * (`src/alf/themes.ts`, `src/alf/tokens.ts`) - every other upstream file stays
  * untouched, so it can never conflict on merge.
  *
- * Raw colour values live in `src/config/brand-colors.json` (the one source
+ * Raw colour values live in `src/config/brand.json` (the one source
  * shared with the native build in app.config.js and the web pre-boot codegen).
  * This module composes them into ALF `Palette`s. Export symbol names
  * (BRAND_PALETTE etc.) are brand-agnostic, so a rebrand only changes the JSON.
@@ -23,7 +23,7 @@
  *   ACCENT   - the primary_ ramp. Every themed affordance (buttons, links,
  *              toggles, focus rings, spinners) derives from this. The kit
  *              ships three interchangeable families (pink / blue / orange);
- *              `brand-colors.json#accents` holds them and `#defaultAccent`
+ *              `brand.json#accents` holds them and `#defaultAccent`
  *              picks the one this build ships.
  *
  * `buildPalettes(accentKey)` composes neutral + a chosen accent at runtime,
@@ -38,7 +38,10 @@ import {
   type Palette,
 } from '@bsky.app/alf'
 
-import brandColors from '#/config/brand-colors.json'
+import brand from '#/config/brand.json'
+
+// Colours live under `colors` in the single brand.json (see brand.schema.json).
+const brandColors = brand.colors
 
 type ContrastRamp = Pick<
   Palette,
@@ -84,7 +87,7 @@ type PrimaryRamp = Pick<
  * dark = contrast_1000, dim = subdued contrast_1000). The static <style> blocks
  * in web/index.html + bskyweb/templates/base.html hardcode the same body
  * backgrounds (they can't import TS) - they are regenerated from the same JSON
- * by `pnpm brand:sync-web`, so edit brand-colors.json and re-run that, never
+ * by `pnpm brand:sync-web`, so edit brand.json and re-run that, never
  * the HTML by hand.
  */
 const muNeutral = brandColors.neutral

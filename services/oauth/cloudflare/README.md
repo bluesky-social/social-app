@@ -8,7 +8,7 @@ on Cloudflare instead of Bunny.
 ## Deploy
 
 1. Edit `wrangler.jsonc`: just the worker `name`. `CLIENT_ID` / `ALLOWED_ORIGIN`
-   are derived from `src/config/brand-meta.json` at build; add a `vars` block
+   are derived from `src/config/brand.json` at build; add a `vars` block
    only to override per deployment (e.g. staging). For local `wrangler dev`, put
    the key in `.dev.vars` (see `.dev.vars.example`) instead of `secret put`.
 2. Set the private signing key as a secret (never a var):
