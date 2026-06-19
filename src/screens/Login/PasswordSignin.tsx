@@ -13,7 +13,10 @@ import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {useSessionApi} from '#/state/session'
-import {resolvePdsFromIdentifier} from '#/state/session/resolve-pds'
+import {
+  ResolvePdsError,
+  resolvePdsFromIdentifier,
+} from '#/state/session/resolve-pds'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -123,6 +126,30 @@ export const PasswordSignin = ({
         e instanceof ComAtprotoServerCreateSession.AuthFactorTokenRequiredError
       ) {
         setIsAuthFactorTokenNeeded(true)
+      } else if (e instanceof ResolvePdsError) {
+        // Resolution failed before we could even reach a PDS - surface a
+        // friendly message and flag the handle field rather than the raw
+        // resolver error.
+        onAttemptFailed()
+        setErrorField('identifier')
+        if (e.reason === 'timeout') {
+          logger.warn('Failed to resolve PDS due to timeout', {error: errMsg})
+          setError(
+            _(
+              msg`Couldn't reach the server for that account. Check your Internet connection and try again.`,
+            ),
+          )
+        } else {
+          logger.debug('Failed to resolve PDS from handle', {
+            error: errMsg,
+            reason: e.reason,
+          })
+          setError(
+            _(
+              msg`We couldn't find an account with that handle. Double-check it and try again.`,
+            ),
+          )
+        }
       } else {
         onAttemptFailed()
         if (errMsg.includes('Token is invalid')) {
