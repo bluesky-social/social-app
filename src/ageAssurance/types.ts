@@ -26,7 +26,7 @@ export type AgeAssuranceState = {
   lastInitiatedAt?: string
   status: AgeAssuranceStatus
   access: AgeAssuranceAccess
-  error?: 'config' // maybe other specific cases in the future
+  error?: 'config' | 'metadata' // maybe other specific cases in the future
 }
 
 export type AgeAssuranceFlags = {
