@@ -49,6 +49,9 @@ export default defineConfig(
       // Eurosky fork: the per-route Open Graph metadata injector is a Bunny Edge
       // Script (Deno runtime + URL imports), not app code - same rationale as above.
       'og-worker/**',
+      // Eurosky fork: the football-data.org proxy for the live sports widget is a
+      // Bunny Edge Script (Deno runtime + URL imports), not app code - same rationale.
+      'football-data-worker/**',
       'src/locale/locales/_build/**',
       'src/locale/locales/**/*.js',
       '*.e2e.ts',
