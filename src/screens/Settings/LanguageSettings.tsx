@@ -10,12 +10,20 @@ import {
 } from '#/lib/routes/types'
 import {languageName, sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {APP_LANGUAGES, LANGUAGES} from '#/locale/languages'
-import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
+import {
+  useLanguagePrefs,
+  useLanguagePrefsApi,
+  useLibreTranslateInstance,
+  useSetLibreTranslateInstance,
+  useSetTranslationProvider,
+  useTranslationProvider,
+} from '#/state/preferences'
 import {atoms as a, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {LanguageSelectDialog} from '#/components/dialogs/LanguageSelectDialog'
+import * as TextField from '#/components/forms/TextField'
 import * as Toggle from '#/components/forms/Toggle'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Layout from '#/components/Layout'
@@ -27,6 +35,12 @@ const DEDUPED_LANGUAGES = LANGUAGES.filter(
   (lang, i, arr) =>
     lang.code2 && arr.findIndex(l => l.code2 === lang.code2) === i,
 )
+
+const TRANSLATION_PROVIDERS = [
+  {label: 'DeepL', value: 'deepl'},
+  {label: 'Google Translate', value: 'google'},
+  {label: 'LibreTranslate', value: 'libreTranslate'},
+]
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
 export function LanguageSettingsScreen({}: Props) {
@@ -52,6 +66,19 @@ export function LanguageSettingsScreen({}: Props) {
   )
 
   const contentLanguagePrefsControl = useDialogControl()
+
+  const translationProvider = useTranslationProvider()
+  const setTranslationProvider = useSetTranslationProvider()
+  const libreTranslateInstance = useLibreTranslateInstance()
+  const setLibreTranslateInstance = useSetLibreTranslateInstance()
+
+  const onChangeTranslationProvider = useCallback(
+    (value: string) => {
+      if (!value) return
+      setTranslationProvider(value as 'deepl' | 'google' | 'libreTranslate')
+    },
+    [setTranslationProvider],
+  )
 
   const onChangePrimaryLanguage = useCallback(
     (value: string) => {
@@ -169,6 +196,55 @@ export function LanguageSettingsScreen({}: Props) {
                   )}
                 />
               </Select.Root>
+            </View>
+          </SettingsList.Group>
+          <SettingsList.Divider />
+          <SettingsList.Group iconInset={false}>
+            <SettingsList.ItemText>
+              <Trans>Translation provider</Trans>
+            </SettingsList.ItemText>
+            <View style={[a.gap_md, a.w_full]}>
+              <Text style={[a.leading_snug]}>
+                <Trans>
+                  Choose which service the “Translate” button opens. DeepL and
+                  LibreTranslate are privacy-friendly alternatives to Google.
+                </Trans>
+              </Text>
+              <Select.Root
+                value={translationProvider}
+                onValueChange={onChangeTranslationProvider}>
+                <Select.Trigger label={_(msg`Select translation provider`)}>
+                  <Select.ValueText />
+                  <Select.Icon />
+                </Select.Trigger>
+                <Select.Content
+                  label={_(msg`Translation provider`)}
+                  renderItem={({label, value}) => (
+                    <Select.Item value={value} label={label}>
+                      <Select.ItemIndicator />
+                      <Select.ItemText>{label}</Select.ItemText>
+                    </Select.Item>
+                  )}
+                  items={TRANSLATION_PROVIDERS}
+                />
+              </Select.Root>
+              {translationProvider === 'libreTranslate' && (
+                <View style={[a.gap_xs, a.w_full]}>
+                  <TextField.LabelText>
+                    <Trans>LibreTranslate instance</Trans>
+                  </TextField.LabelText>
+                  <TextField.Root>
+                    <TextField.Input
+                      label={_(msg`LibreTranslate instance URL`)}
+                      placeholder="https://libretranslate.com/"
+                      defaultValue={libreTranslateInstance}
+                      onChangeText={setLibreTranslateInstance}
+                      autoCapitalize="none"
+                      keyboardType="url"
+                    />
+                  </TextField.Root>
+                </View>
+              )}
             </View>
           </SettingsList.Group>
           <SettingsList.Divider />
