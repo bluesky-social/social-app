@@ -52,6 +52,12 @@ export interface WebOAuthClient {
   signIn(input: string, options?: AuthorizeOptions): Promise<void>
   init(): Promise<{session: OAuthSession; state?: string | null} | undefined>
   restore(sub: string, refresh?: boolean): Promise<OAuthSession>
+  /**
+   * Revoke the session's tokens at the authorization server and delete the
+   * locally stored session. The local delete happens even if the server call
+   * fails, so a plain sign-out always clears credentials from this device.
+   */
+  revoke(sub: string): Promise<void>
 }
 
 function isLoopback(): boolean {
@@ -137,6 +143,7 @@ function createLoopbackClient(): WebOAuthClient {
     },
     init: () => client.init(),
     restore: (sub, refresh) => client.restore(sub, refresh),
+    revoke: sub => client.revoke(sub),
   }
 }
 
@@ -238,6 +245,7 @@ function createConfidentialClient(): WebOAuthClient {
       return {session, state}
     },
     restore: (sub, refresh) => client.restore(sub, refresh),
+    revoke: sub => client.revoke(sub),
   }
 }
 
@@ -273,6 +281,23 @@ export function getWebOAuthClient(): WebOAuthClient {
  */
 export async function oauthSignIn(handle: string): Promise<void> {
   await getWebOAuthClient().signIn(handle.trim())
+}
+
+/**
+ * Revoke an OAuth session as part of signing out. Best-effort: the underlying
+ * client deletes the locally stored session even if the server-side revocation
+ * call fails, so credentials are always cleared from this device. Never throws,
+ * so it can be fired off during logout without blocking it.
+ */
+export async function oauthRevoke(sub: string): Promise<void> {
+  try {
+    await getWebOAuthClient().revoke(sub)
+  } catch (e) {
+    // No `sub` (DID) in the log - this reaches the live Sentry transport.
+    logger.warn('oauth: revoke on sign-out failed', {
+      safeMessage: e instanceof Error ? e.message : 'unknown',
+    })
+  }
 }
 
 /**
