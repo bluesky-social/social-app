@@ -25,8 +25,15 @@ export function FeedEmbed({
             title={embed.view.displayName}
             creator={embed.view.creator}
             uri={embed.view.uri}
+            contentMode={embed.view.contentMode}
           />
+          <FeedCard.SaveButton view={embed.view} pin />
         </FeedCard.Header>
+        <FeedCard.Description
+          description={embed.view.description}
+          numberOfLines={3}
+        />
+        <FeedCard.Likes count={embed.view.likeCount || 0} />
       </FeedCard.Outer>
     </FeedCard.Link>
   )

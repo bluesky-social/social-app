@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {
-  type AppBskyFeedDefs,
+  AppBskyFeedDefs,
   type AppBskyGraphDefs,
   AtUri,
   RichText as RichTextApi,
@@ -28,6 +28,7 @@ import {
 } from '#/components/Button'
 import {Live_Stroke2_Corner0_Rounded as LiveIcon} from '#/components/icons/Live'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
+import {VideoClip_Stroke2_Corner0_Rounded as VideoClipIcon} from '#/components/icons/VideoClip'
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
@@ -54,6 +55,7 @@ export function Default(props: Props) {
             title={view.displayName}
             creator={view.creator}
             uri={view.uri}
+            contentMode={view.contentMode}
           />
           <SaveButton view={view} pin />
         </Header>
@@ -124,13 +126,16 @@ export function TitleAndByline({
   title,
   creator,
   uri,
+  contentMode,
 }: {
   title: string
   creator?: bsky.profile.AnyProfileView
   uri?: string
+  contentMode?: AppBskyFeedDefs.GeneratorView['contentMode']
 }) {
   const t = useTheme()
   const activeLiveEvents = useActiveLiveEventFeedUris()
+  const isVideoFeed = contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
   const liveColor = useMemo(
     () =>
       select(t.name, {
@@ -169,6 +174,20 @@ export function TitleAndByline({
           numberOfLines={1}>
           <Trans>Feed by {sanitizeHandle(creator.handle, '@')}</Trans>
         </Text>
+      )}
+      {isVideoFeed && (
+        <View style={[a.flex_row, a.align_center, a.gap_2xs, a.pt_2xs]}>
+          <VideoClipIcon size="xs" fill={t.atoms.text_contrast_medium.color} />
+          <Text
+            style={[
+              a.text_2xs,
+              a.font_medium,
+              a.leading_snug,
+              t.atoms.text_contrast_medium,
+            ]}>
+            <Trans>Video feed</Trans>
+          </Text>
+        </View>
       )}
     </View>
   )
