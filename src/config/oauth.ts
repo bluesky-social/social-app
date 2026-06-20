@@ -1,7 +1,7 @@
 /**
  * Eurosky OAuth configuration - single source of truth.
  *
- * Primitive values live in `oauth.shared.json` so this module (the browser
+ * Primitive values live in `brand.json` so this module (the browser
  * client) and `scripts/gen-oauth-metadata.js` (the build-time static
  * `oauth-client-metadata.json` emitter) read identical `scope` /
  * `client_id` / `redirect_uris`. They cannot drift: change the domain or
@@ -16,8 +16,13 @@
  * actual client-metadata objects are built inline in oauth-web-client.ts
  * so their literal types match the library's expected input.
  */
+import brand from '#/config/brand.json'
 import publicJwks from '#/config/oauth.public-jwks.json'
-import shared from '#/config/oauth.shared.json'
+
+// OAuth primitives live under `oauth` in the single brand.json (see oauth.shared
+// semantics in brand.schema.json). Kept as `shared` so the rest of this file is
+// unchanged.
+const shared = brand.oauth
 
 /**
  * Prod base URL. Defaults to the app's hosting domain (mu.social); override at

@@ -20,9 +20,9 @@
  * Response: { jws: "<compact JWS>" }
  */
 
-import brandMeta from '../../../../src/config/brand-meta.json'
+import brandMeta from '../../../../src/config/brand.json'
 
-// Defaults derived from the brand's primary host (src/config/brand-meta.json,
+// Defaults derived from the brand's primary host (src/config/brand.json,
 // bundled at build); the env vars below override per deployment (e.g. staging).
 const BRAND_ORIGIN = `https://${brandMeta.hosts[0]}`
 

@@ -1,0 +1,126 @@
+{
+  "$schema": "./brand.schema.json",
+  "$comment": "Single source of truth for brand identity (everything a rebrand edits, except the logo SVGs in assets/brand/ and the OAuth signing keypair in oauth.public-jwks.json). Consumed by the app via the typed adapters src/config/brand.ts (identity/links/services), brand-theme.ts (colors) and oauth.ts (oauth), and directly by the Node build scripts, app.config.js and the Cloudflare Workers. Field docs live in brand.schema.json.",
+  "name": "mu",
+  "hosts": ["mu.social"],
+  "socialHandle": "",
+  "colors": {
+    "neutral": {
+      "contrast_0": "#FFFFFF",
+      "contrast_25": "#F7F7F2",
+      "contrast_50": "#EDEBE5",
+      "contrast_100": "#E0DED9",
+      "contrast_200": "#C5C4BF",
+      "contrast_300": "#ABAAA6",
+      "contrast_400": "#92918E",
+      "contrast_500": "#797876",
+      "contrast_600": "#62615F",
+      "contrast_700": "#4B4A49",
+      "contrast_800": "#353535",
+      "contrast_900": "#2A2A2A",
+      "contrast_950": "#212121",
+      "contrast_975": "#141414",
+      "contrast_1000": "#000000"
+    },
+    "neutralSubduedOverrides": {
+      "contrast_900": "#242424",
+      "contrast_950": "#1F1F1F",
+      "contrast_975": "#1C1C1C",
+      "contrast_1000": "#1A1A1A"
+    },
+    "accents": {
+      "pink": {
+        "primary_25": "#FFEDFC",
+        "primary_50": "#FFD9F6",
+        "primary_100": "#FFBDF2",
+        "primary_200": "#F8A2DF",
+        "primary_300": "#EF86CB",
+        "primary_400": "#E66AB9",
+        "primary_500": "#DB4AA6",
+        "primary_600": "#C04293",
+        "primary_700": "#A73981",
+        "primary_800": "#8D316F",
+        "primary_900": "#75295E",
+        "primary_950": "#5E224D",
+        "primary_975": "#471A3D"
+      },
+      "blue": {
+        "primary_25": "#D6F2FA",
+        "primary_50": "#BCE8F6",
+        "primary_100": "#A3DEF0",
+        "primary_200": "#87D1E8",
+        "primary_300": "#56BEE1",
+        "primary_400": "#28ACDC",
+        "primary_500": "#1C8DBA",
+        "primary_600": "#197EA9",
+        "primary_700": "#176E97",
+        "primary_800": "#155F84",
+        "primary_900": "#145271",
+        "primary_950": "#12455E",
+        "primary_975": "#0F3548"
+      },
+      "orange": {
+        "primary_25": "#FFE8D6",
+        "primary_50": "#FFD3B5",
+        "primary_100": "#FFBE92",
+        "primary_200": "#FFA86A",
+        "primary_300": "#FF8F36",
+        "primary_400": "#F9742B",
+        "primary_500": "#F2571F",
+        "primary_600": "#DB5019",
+        "primary_700": "#C54A12",
+        "primary_800": "#AF430B",
+        "primary_900": "#9A3D05",
+        "primary_950": "#853600",
+        "primary_975": "#6E2C00"
+      }
+    },
+    "defaultAccent": "pink"
+  },
+  "oauth": {
+    "$comment": "scope = what NEW logins request (keep transitional-only so every PDS accepts it). declaredScope = superset advertised in client metadata (must cover step-ups like identity:handle AND any scope older cached bundles still request). See src/config/oauth.ts.",
+    "defaultBaseUrl": "https://mu.social",
+    "clientName": "mu",
+    "scope": "atproto transition:generic transition:email transition:chat.bsky",
+    "declaredScope": "atproto transition:generic transition:email transition:chat.bsky identity:handle account:email?action=manage account:status?action=manage",
+    "handleResolver": "https://bsky.social",
+    "signupPdsHost": "https://eurosky.social"
+  },
+  "links": {
+    "tos": "https://hello.mu.social/terms",
+    "privacy": "https://hello.mu.social/privacy",
+    "community": "https://hello.mu.social/guidelines",
+    "copyright": "https://bsky.social/about/support/copyright",
+    "support": "https://bsky.social/about/support",
+    "faq": "https://bsky.social/about/faq",
+    "dataPrivacy": "https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy",
+    "helpDesk": "https://blueskyweb.zendesk.com/hc/en-us",
+    "supportRequest": "https://blueskyweb.zendesk.com/hc/requests/new",
+    "download": "https://bsky.app/download",
+    "statusPage": "https://status.bsky.app/"
+  },
+  "services": {
+    "pds": "https://bsky.social",
+    "pdsDid": "did:web:bsky.social",
+    "publicApi": "https://public.api.bsky.app",
+    "appView": "https://api.bsky.app",
+    "appViewDid": "did:web:api.bsky.app",
+    "chat": "https://api.bsky.chat",
+    "embed": "https://embed.bsky.app",
+    "gif": "https://gifs.bsky.app",
+    "video": "https://video.bsky.app",
+    "videoDid": "did:web:video.bsky.app",
+    "cdn": "https://cdn.bsky.app",
+    "ogCard": "https://ogcard.cdn.bsky.app"
+  },
+  "verification": {
+    "trustedVerifierListUris": [
+      "at://did:plc:ooensn4mr5mhznzypvxelfa3/app.bsky.graph.list/3mogaw2g4an23"
+    ],
+    "includeBlueskyVerifications": true
+  },
+  "ageAssurance": {
+    "serviceUrl": "https://age.mu.social",
+    "serviceDid": "did:web:age.mu.social"
+  }
+}

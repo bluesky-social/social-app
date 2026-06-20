@@ -2,7 +2,7 @@
 /**
  * Regenerate the hardcoded brand colours in the web pre-boot files
  * (web/index.html, bskyweb/templates/base.html) from the single source
- * src/config/brand-colors.json, so they never drift from the in-app ALF theme.
+ * src/config/brand.json, so they never drift from the in-app ALF theme.
  *
  * These files render before any JS / per-user accent preference loads (and
  * base.html is served by the Go server, not the Expo web build), so they use
@@ -11,7 +11,7 @@
  *   node scripts/sync-brand-web.mjs           write the files
  *   node scripts/sync-brand-web.mjs --check   exit non-zero if out of sync (CI)
  *
- * Edit colours in brand-colors.json, then run `pnpm brand:sync-web`. The
+ * Edit colours in brand.json, then run `pnpm brand:sync-web`. The
  * colour values between the BRAND-GEN markers are machine-generated; do not
  * hand-edit them.
  */
@@ -20,13 +20,13 @@ import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const COLORS_PATH = path.join(ROOT, 'src/config/brand-colors.json')
-const LOGO_PATH = path.join(ROOT, 'src/config/brand-logo.json')
-const META_PATH = path.join(ROOT, 'src/config/brand-meta.json')
+const BRAND_PATH = path.join(ROOT, 'src/config/brand.json')
+const LOGO_PATH = path.join(ROOT, 'src/config/brand-logo.generated.json')
 
-const colors = JSON.parse(fs.readFileSync(COLORS_PATH, 'utf8'))
+const brand = JSON.parse(fs.readFileSync(BRAND_PATH, 'utf8'))
+const colors = brand.colors
 const logo = JSON.parse(fs.readFileSync(LOGO_PATH, 'utf8'))
-const meta = JSON.parse(fs.readFileSync(META_PATH, 'utf8'))
+const meta = brand
 const BRAND_NAME = meta.name
 const BRAND_HOST = meta.hosts[0]
 const SOCIAL_HANDLE = meta.socialHandle
@@ -36,7 +36,7 @@ const S = {...colors.neutral, ...colors.neutralSubduedOverrides}
 const A = colors.accents[colors.defaultAccent]
 if (!A) {
   throw new Error(
-    `brand-colors.json: defaultAccent "${colors.defaultAccent}" is not in accents`,
+    `brand.json#colors: defaultAccent "${colors.defaultAccent}" is not in accents`,
   )
 }
 
@@ -110,26 +110,25 @@ function themeColorMeta(i) {
 }
 
 /**
- * Pre-boot splash glyph, generated from the logo geometry (brand-logo.json) +
- * the default accent. Single line, matching the static #splash mark the React
- * splash (src/Splash*.tsx) hands off to. When the brand ships a dimensional
- * logo it is the 3D wordmark (shadow primary_900 behind face primary_400);
- * otherwise the flat wordmark filled with primary_500.
+ * Pre-boot splash mark - the generated brand logo SVG (brand-logo.generated.json,
+ * from assets/brand/*.svg) inlined verbatim, matching the static #splash mark the
+ * React splash (src/Splash*.tsx) hands off to. Uses the `hero` role when present
+ * (mu's dimensional wordmark), else `mark`. Logo `theme:<key>` tokens and
+ * `currentColor` are resolved here from the default accent, mirroring how
+ * <BrandLogo> resolves them from the active theme in-app.
  * @param {string} i
  */
 function splashSvg(i) {
-  const d = logo.dimensional
-  const paths = d
-    ? `<path fill="${A.primary_900}" d="${d.shadowPath}"/>` +
-      `<path fill="${A.primary_400}" d="${d.facePath}"/>`
-    : `<path fill="${A.primary_500}" d="${logo.flat.path}"/>`
-  const viewBox = (d ?? logo.flat).viewBox
-  return `${i}<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}">${paths}</svg>`
+  const role = logo.hero ?? logo.mark
+  const xml = role.xml
+    .replace(/theme:([A-Za-z0-9_]+)/g, (_, k) => A[k] ?? 'currentColor')
+    .replace(/currentColor/g, A.primary_500)
+  return `${i}${xml}`
 }
 
 /**
  * og:/twitter: share-card block (web/index.html). Name + host come from
- * brand-meta.json; type / image dimensions / card kind stay static. The
+ * brand.json; type / image dimensions / card kind stay static. The
  * og-image.jpg file ships at the brand host root.
  * @param {string} i
  */
@@ -208,7 +207,7 @@ function renderFile(content) {
   )
   out = regenRegion(out, 'splash', 'html', splashSvg)
 
-  // Brand text identity (brand-meta.json). The og/twitter block lives only in
+  // Brand text identity (brand.json). The og/twitter block lives only in
   // web/index.html; the twitter:site tag only in base.html - both optional so
   // the other file passes through untouched.
   out = regenRegion(out, 'meta', 'html', metaBlock, true)

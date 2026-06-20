@@ -18,7 +18,7 @@
     "run_worker_first": true
   }
   // SITE_URL / SITE_NAME / ALLOWED_ORIGIN are derived from
-  // src/config/brand-meta.json (bundled into the Worker at build), so a rebrand
+  // src/config/brand.json (bundled into the Worker at build), so a rebrand
   // is one edit there. Add a "vars" block here ONLY to override per deployment,
   // e.g. staging: { "vars": { "SITE_URL": "https://staging.mu.social" } }, a
   // self-hosted appview ("APPVIEW_URL"), or to flip "BOTS_ONLY".

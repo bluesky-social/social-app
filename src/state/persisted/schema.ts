@@ -50,7 +50,7 @@ export type PersistedCurrentAccount = z.infer<typeof currentAccountSchema>
 const schema = z.object({
   colorMode: z.enum(['system', 'light', 'dark']),
   darkTheme: z.enum(['dim', 'dark']).optional(),
-  // Eurosky: per-user accent family (a key in brand-colors.json#accents).
+  // Eurosky: per-user accent family (a key in brand.json#colors.accents).
   // String (not enum) so it stays brand-agnostic; unknown/undefined falls back
   // to the brand's defaultAccent at read time.
   accentColor: z.string().optional(),

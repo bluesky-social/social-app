@@ -2,7 +2,7 @@
  * Emits the static `oauth-client-metadata.json` into the web build output.
  *
  * Runs at build time (chained off `build-web`). Reads the SAME
- * `src/config/oauth.shared.json` the browser client reads, so the hosted
+ * `src/config/brand.json` the browser client reads, so the hosted
  * client_id / scope / redirect_uris cannot drift from what the running app
  * registers. Mirrors getProdClientMetadata() in src/config/oauth.ts - keep
  * the two in lockstep (both are trivial templates over the shared JSON).
@@ -15,9 +15,10 @@ const fs = require('node:fs')
 const path = require('node:path')
 
 const projectRoot = path.join(__dirname, '..')
+// OAuth primitives live under `oauth` in the single brand.json.
 const shared = require(
-  path.join(projectRoot, 'src', 'config', 'oauth.shared.json'),
-)
+  path.join(projectRoot, 'src', 'config', 'brand.json'),
+).oauth
 // Inlined public JWKS - same file the running confidential client reads
 // (src/config/oauth.ts -> OAUTH_PUBLIC_JWKS), so the advertised keys cannot
 // drift from what the client authenticates with. Public key only (no `d`).

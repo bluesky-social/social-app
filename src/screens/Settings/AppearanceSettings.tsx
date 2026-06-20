@@ -241,7 +241,7 @@ export function AppearanceToggleButtonGroup<T extends string>({
 }
 
 // Eurosky: per-user accent picker. Swatches are the curated brand accent
-// families (brand-colors.json#accents); selecting one persists `accentColor`,
+// families (brand.json#colors.accents); selecting one persists `accentColor`,
 // which ThemeProvider applies live via `themesOverride`. undefined = the
 // brand's defaultAccent.
 const ACCENT_KEYS = Object.keys(ACCENTS)
