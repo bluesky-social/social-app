@@ -3,7 +3,7 @@
  *
  * football-data.org requires an X-Auth-Token header. Sending it from the client
  * exposes it, so production should point FOOTBALLDATA_API_URL at the proxy in
- * football-data-worker/, which injects the token server-side. Direct mode sends
+ * services/footballData/, which injects the token server-side. Direct mode sends
  * FOOTBALLDATA_TOKEN from the client and is fine for local dev.
  */
 

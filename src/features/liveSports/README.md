@@ -53,5 +53,5 @@ Presentation constants (lookback, row count, group line) live at the bottom of
 
 football-data.org needs an `X-Auth-Token` header. In dev, send it from the
 client via `EXPO_PUBLIC_FOOTBALLDATA_TOKEN`. In production, point
-`EXPO_PUBLIC_FOOTBALLDATA_API_URL` at the `football-data-worker/` proxy, which
+`EXPO_PUBLIC_FOOTBALLDATA_API_URL` at the `services/footballData/` proxy, which
 holds the token server-side. The widget renders only with a token or proxy URL.

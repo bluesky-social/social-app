@@ -8,7 +8,7 @@
  * the production Bunny edge script (bunny/index.ts) does.
  *
  * Usage:
- *   FOOTBALLDATA_TOKEN=<token> node football-data-worker/dev-proxy.mjs
+ *   FOOTBALLDATA_TOKEN=<token> node services/footballData/dev-proxy.mjs
  *
  * Then point the app at it:
  *   EXPO_PUBLIC_FOOTBALLDATA_API_URL=http://localhost:8787/v4

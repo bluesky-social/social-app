@@ -20,7 +20,7 @@ token.
 ## Local development
 
 ```bash
-FOOTBALLDATA_TOKEN=<token> node football-data-worker/dev-proxy.mjs
+FOOTBALLDATA_TOKEN=<token> node services/footballData/dev-proxy.mjs
 ```
 
 Then in `.env`:
