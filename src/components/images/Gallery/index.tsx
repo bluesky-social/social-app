@@ -35,6 +35,7 @@ import {
 import {useKeyboardHandlers} from '#/components/images/Gallery/useKeyboardHandlers'
 import {usePointerHandlers} from '#/components/images/Gallery/usePointerHandlers'
 import {getAspectRatio} from '#/components/images/Gallery/utils'
+import {shouldHideImageBadges} from '#/components/images/shouldHideImageBadges'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
@@ -115,7 +116,7 @@ export function Gallery({
   const bps = useBreakpoints()
   const window = useWindowDimensions()
   const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage
-  const hideBadges = viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
+  const hideBadges = shouldHideImageBadges(viewContext)
   const contentHeight = useMemo(() => {
     if (isWithinChat) {
       return 120
