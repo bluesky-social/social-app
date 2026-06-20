@@ -2,23 +2,57 @@ import {useCallback} from 'react'
 import * as IntentLauncher from 'expo-intent-launcher'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {getTranslatorLink} from '#/locale/helpers'
+import {guessLanguage} from '#/lib/translation/utils'
+import {
+  getTranslatorLink,
+  getTranslatorLinkDeepL,
+  getTranslatorLinkLibreTranslate,
+} from '#/locale/helpers'
+import {
+  useLibreTranslateInstance,
+  useTranslationProvider,
+} from '#/state/preferences'
 import {IS_ANDROID} from '#/env'
 
 /**
- * @deprecated Will always link out to Google Translate. Prefer `useTranslate`.
+ * Links out to the user's chosen translation provider (DeepL, Google, or a
+ * LibreTranslate instance). On Android with Google selected, tries the native
+ * Translate app first and falls back to the web link.
  */
 export function useGoogleTranslate() {
   const openLink = useOpenLink()
+  const provider = useTranslationProvider()
+  const libreTranslateInstance = useLibreTranslateInstance()
 
   return useCallback(
     async (text: string, targetLangCode: string, sourceLanguage?: string) => {
-      const translateUrl = getTranslatorLink(
-        text,
-        targetLangCode,
-        sourceLanguage,
-      )
-      if (IS_ANDROID) {
+      let translateUrl
+      if (provider === 'deepl') {
+        // DeepL's deep-link only prefills with an explicit source language, so
+        // use the caller's if given, otherwise detect it from the text. If we
+        // still can't determine one, fall back to Google so the text is at
+        // least prefilled.
+        const deeplSource = sourceLanguage ?? guessLanguage(text)
+        if (deeplSource) {
+          translateUrl = getTranslatorLinkDeepL(
+            text,
+            targetLangCode,
+            deeplSource,
+          )
+        } else {
+          translateUrl = getTranslatorLink(text, targetLangCode, sourceLanguage)
+        }
+      } else if (provider === 'libreTranslate') {
+        translateUrl = getTranslatorLinkLibreTranslate(
+          text,
+          targetLangCode,
+          sourceLanguage,
+          libreTranslateInstance,
+        )
+      } else {
+        translateUrl = getTranslatorLink(text, targetLangCode, sourceLanguage)
+      }
+      if (IS_ANDROID && provider === 'google') {
         try {
           // use `getApplicationIconAsync` to determine if the translate app is installed
           if (
@@ -56,6 +90,6 @@ export function useGoogleTranslate() {
         openLink(translateUrl)
       }
     },
-    [openLink],
+    [openLink, provider, libreTranslateInstance],
   )
 }

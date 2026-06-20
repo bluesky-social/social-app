@@ -148,6 +148,9 @@ const schema = z.object({
   mutedThreads: z.array(z.string()),
   trendingDisabled: z.boolean().optional(),
   trendingVideoDisabled: z.boolean().optional(),
+  // Eurosky: which external service the "Translate" action links out to.
+  translationProvider: z.enum(['deepl', 'google', 'libreTranslate']).optional(),
+  libreTranslateInstance: z.string().optional(),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -196,6 +199,8 @@ export const defaults: Schema = {
   subtitlesEnabled: true,
   trendingDisabled: false,
   trendingVideoDisabled: false,
+  translationProvider: 'deepl',
+  libreTranslateInstance: 'https://libretranslate.com/',
 }
 
 export function tryParse(rawData: string): Schema | undefined {
