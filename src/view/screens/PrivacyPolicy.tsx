@@ -13,6 +13,7 @@ import {TextLink} from '#/view/com/util/Link'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
 import * as Layout from '#/components/Layout'
+import {BRAND} from '#/config/brand'
 import {ViewHeader} from '../com/util/ViewHeader'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PrivacyPolicy'>
@@ -30,8 +31,8 @@ export const PrivacyPolicyScreen = (_props: Props) => {
               The Privacy Policy has been moved to{' '}
               <TextLink
                 style={pal.link}
-                href="https://hello.mu.social/privacy"
-                text="hello.mu.social/privacy"
+                href={BRAND.links.privacy}
+                text={BRAND.links.privacy.replace(/^https?:\/\//, '')}
               />
             </Trans>
           </Text>

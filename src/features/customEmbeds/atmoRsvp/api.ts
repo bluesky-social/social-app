@@ -1,3 +1,4 @@
+import {CDN_SERVICE} from '#/lib/constants'
 import {RSVP_STATUS} from '#/features/customEmbeds/atmoRsvp/lexicon'
 
 const ATMO_HOST = 'https://atmo.rsvp'
@@ -103,14 +104,14 @@ export async function listViewerRsvps(
   )
 }
 
-/** Builds a bsky CDN image URL for a blob, the same way atmo.rsvp serves them. */
+/** Builds a CDN image URL for a blob, the same way atmo.rsvp serves them. */
 export function bskyCdnImage(
   preset: 'avatar_thumbnail' | 'feed_thumbnail',
   did: string,
   blobCid?: string,
 ): string | undefined {
   if (!blobCid) return undefined
-  return `https://cdn.bsky.app/img/${preset}/plain/${did}/${blobCid}@jpeg`
+  return `${CDN_SERVICE}/img/${preset}/plain/${did}/${blobCid}@jpeg`
 }
 
 /** Extracts going attendees (with resolved avatar URLs) from an event response. */

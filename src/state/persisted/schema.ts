@@ -50,6 +50,10 @@ export type PersistedCurrentAccount = z.infer<typeof currentAccountSchema>
 const schema = z.object({
   colorMode: z.enum(['system', 'light', 'dark']),
   darkTheme: z.enum(['dim', 'dark']).optional(),
+  // Eurosky: per-user accent family (a key in brand.json#colors.accents).
+  // String (not enum) so it stays brand-agnostic; unknown/undefined falls back
+  // to the brand's defaultAccent at read time.
+  accentColor: z.string().optional(),
   session: z.object({
     accounts: z.array(accountSchema),
     currentAccount: currentAccountSchema.optional(),
@@ -144,6 +148,9 @@ const schema = z.object({
   mutedThreads: z.array(z.string()),
   trendingDisabled: z.boolean().optional(),
   trendingVideoDisabled: z.boolean().optional(),
+  // Eurosky: which external service the "Translate" action links out to.
+  translationProvider: z.enum(['deepl', 'google', 'libreTranslate']).optional(),
+  libreTranslateInstance: z.string().optional(),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -192,6 +199,8 @@ export const defaults: Schema = {
   subtitlesEnabled: true,
   trendingDisabled: false,
   trendingVideoDisabled: false,
+  translationProvider: 'deepl',
+  libreTranslateInstance: 'https://libretranslate.com/',
 }
 
 export function tryParse(rawData: string): Schema | undefined {

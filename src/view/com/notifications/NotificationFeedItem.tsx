@@ -147,14 +147,6 @@ let NotificationFeedItem = ({
     return ''
   }, [item])
 
-  const onToggleAuthorsExpanded = (e?: GestureResponderEvent) => {
-    if (e) {
-      e.preventDefault()
-      e.stopPropagation()
-    }
-    setIsAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
-  }
-
   const onBeforePress = useCallback(() => {
     unstableCacheProfileView(queryClient, item.notification.author)
   }, [queryClient, item.notification.author])
@@ -176,6 +168,20 @@ let NotificationFeedItem = ({
         arr.findIndex(au => au.profile.did === author.profile.did) === index,
     )
   }, [item, moderationOpts])
+
+  const onToggleAuthorsExpanded = (e?: GestureResponderEvent) => {
+    if (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+    if (!isAuthorsExpanded) {
+      ax.metric('notifications:bundleExpand', {
+        notificationType: item.type,
+        authorCount: authors.length,
+      })
+    }
+    setIsAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
+  }
 
   const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
   const firstAuthor = authors[0]
@@ -426,7 +432,7 @@ let NotificationFeedItem = ({
     )
     icon = (
       <View style={{height: 30, width: 30}}>
-        <StarterPack width={30} gradient="sky" />
+        <StarterPack width={30} />
       </View>
     )
   } else if (item.type === 'verified') {
@@ -1097,6 +1103,8 @@ function ExpandedAuthorProfileCard({
   moderationOpts: ModerationOpts
   isLast: boolean
 }) {
+  const profile = useProfileShadow(author.profile)
+  const isFollowing = !!profile.viewer?.following
   return (
     <ProfileCard.Link
       profile={author.profile}
@@ -1114,7 +1122,11 @@ function ExpandedAuthorProfileCard({
           <ProfileCard.FollowButton
             profile={author.profile}
             moderationOpts={moderationOpts}
-            logContext="ProfileCard"
+            logContext="NotificationExpandedProfileCard"
+            size="tiny"
+            variant={isFollowing ? 'ghost' : 'solid'}
+            color={isFollowing ? 'secondary' : 'primary_subtle'}
+            withIcon={isFollowing}
           />
         </ProfileCard.Header>
       </ProfileCard.Outer>

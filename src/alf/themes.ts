@@ -1,12 +1,17 @@
 import {createThemes} from '@bsky.app/alf'
 
-// Eurosky fork: palette is overridden in src/config/eurosky-theme.ts. This is
+// Eurosky fork: palette is overridden in src/config/brand-theme.ts. This is
 // one of only two upstream files that redirect into that module.
-import {EUROSKY_PALETTE, EUROSKY_SUBDUED_PALETTE} from '#/config/eurosky-theme'
+import {
+  type AccentKey,
+  BRAND_PALETTE,
+  BRAND_SUBDUED_PALETTE,
+  buildPalettes,
+} from '#/config/brand-theme'
 
 const DEFAULT_THEMES = createThemes({
-  defaultPalette: EUROSKY_PALETTE,
-  subduedPalette: EUROSKY_SUBDUED_PALETTE,
+  defaultPalette: BRAND_PALETTE,
+  subduedPalette: BRAND_SUBDUED_PALETTE,
 })
 
 export const themes = {
@@ -16,6 +21,26 @@ export const themes = {
   light: DEFAULT_THEMES.light,
   dark: DEFAULT_THEMES.dark,
   dim: DEFAULT_THEMES.dim,
+}
+
+/**
+ * Eurosky: build the {light, dark, dim} theme set for a given accent family, in
+ * the same shape as `themes`. Used at runtime by the per-user accent picker
+ * (fed to ALF via ThemeProvider `themesOverride`); the module-level `themes`
+ * above is the DEFAULT_ACCENT build.
+ */
+export function buildThemes(accent: AccentKey): typeof themes {
+  const {default: defaultPalette, subdued: subduedPalette} =
+    buildPalettes(accent)
+  const t = createThemes({defaultPalette, subduedPalette})
+  return {
+    lightPalette: t.light.palette,
+    darkPalette: t.dark.palette,
+    dimPalette: t.dim.palette,
+    light: t.light,
+    dark: t.dark,
+    dim: t.dim,
+  }
 }
 
 /**

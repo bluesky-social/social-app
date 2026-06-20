@@ -1,6 +1,9 @@
 import {type AppBskyActorDefs} from '@atproto/api'
 
-import {VERIFICATION_DENYLIST_DIDS} from '#/lib/constants'
+import {
+  INCLUDE_BLUESKY_VERIFICATIONS,
+  VERIFICATION_DENYLIST_DIDS,
+} from '#/lib/constants'
 import {useMuVerificationQuery} from '#/state/queries/verification/useMuVerificationQuery'
 import type * as bsky from '#/types/bsky'
 
@@ -10,7 +13,8 @@ import type * as bsky from '#/types/bsky'
  *
  * Ours takes precedence: if a trusted verifier in our set has verified the
  * account it counts as verified regardless of Bluesky, and our verifiers head
- * the list. Bluesky's verifications are still shown, additively.
+ * the list. Bluesky's verifications are shown additively, unless disabled via
+ * `INCLUDE_BLUESKY_VERIFICATIONS`, in which case only ours count.
  *
  * Returns the same `VerificationState` shape the rest of the app already
  * consumes, so every badge/dialog keeps working unchanged. Returns undefined
@@ -32,7 +36,12 @@ export function useMergedVerificationState({
     return undefined
   }
 
-  const bskyState = profile?.verification
+  // Optionally ignore Bluesky's own server-computed verification entirely. With
+  // it undefined, every computation below collapses to our trusted-verifier
+  // verifications alone.
+  const bskyState = INCLUDE_BLUESKY_VERIFICATIONS
+    ? profile?.verification
+    : undefined
   const ours = mu?.verifications ?? []
   const isVerifier = mu?.isVerifier ?? false
 

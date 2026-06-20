@@ -7,7 +7,7 @@ import {Trans} from '@lingui/react/macro'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {Logo3D} from '#/view/icons/Logo3D'
+import {LogoHero} from '#/view/icons/LogoHero'
 import {
   AppClipOverlay,
   postAppClipMessage,
@@ -20,6 +20,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as TimesIcon} from '#/components/icon
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {BRAND} from '#/config/brand'
 
 export const SplashScreen = ({
   onDismiss,
@@ -83,7 +84,7 @@ export const SplashScreen = ({
             <View style={[a.justify_center, a.align_center]}>
               {!kawaii && (
                 <View style={[a.pt_5xl, a.pb_sm, a.align_center, a.gap_sm]}>
-                  <Logo3D width={161} />
+                  <LogoHero width={161} />
                   <BetaTag />
                 </View>
               )}
@@ -162,14 +163,10 @@ function Footer() {
         a.flex_1,
         t.atoms.border_contrast_medium,
       ]}>
-      <InlineLinkText
-        label={_(msg`Terms of Service`)}
-        to="https://hello.mu.social/terms">
+      <InlineLinkText label={_(msg`Terms of Service`)} to={BRAND.links.tos}>
         <Trans>Terms of Service</Trans>
       </InlineLinkText>
-      <InlineLinkText
-        label={_(msg`Privacy Policy`)}
-        to="https://hello.mu.social/privacy">
+      <InlineLinkText label={_(msg`Privacy Policy`)} to={BRAND.links.privacy}>
         <Trans>Privacy Policy</Trans>
       </InlineLinkText>
 

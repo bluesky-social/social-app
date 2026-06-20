@@ -24,6 +24,7 @@ import {DateField} from '#/components/forms/DateField'
 import {SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Span, Text} from '#/components/Typography'
+import {BRAND} from '#/config/brand'
 import {IS_IOS, IS_WEB} from '#/env'
 
 export function BirthDateSettingsDialog({
@@ -208,7 +209,7 @@ function BirthdayInner({
           <Trans>
             You must be at least 13 years old to use mu. Read our{' '}
             <SimpleInlineLinkText
-              to="https://hello.mu.social/terms"
+              to={BRAND.links.tos}
               label={l`Terms of Service`}>
               Terms of Service
             </SimpleInlineLinkText>{' '}

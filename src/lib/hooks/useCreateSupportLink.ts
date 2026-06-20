@@ -3,9 +3,9 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useSession} from '#/state/session'
+import {BRAND} from '#/config/brand'
 
-export const ZENDESK_SUPPORT_URL =
-  'https://blueskyweb.zendesk.com/hc/requests/new'
+export const ZENDESK_SUPPORT_URL = BRAND.links.supportRequest
 
 export enum SupportCode {
   AA_DID = 'AA_DID',

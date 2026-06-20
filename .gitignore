@@ -101,6 +101,10 @@ stats.json
 # environment variables
 .env
 .env.*
+# Cloudflare Worker local dev secrets (services/*/cloudflare/.dev.vars)
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
 
 # Firebase (Android) Google services
 google-services.json

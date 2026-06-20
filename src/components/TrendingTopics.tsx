@@ -50,7 +50,6 @@ export function TrendingTopic({
       ]}>
       {hasIcon && topic.type === 'starter-pack' && (
         <StarterPackIcon
-          gradient="sky"
           width={iconSize}
           style={{marginLeft: -3, marginVertical: -1}}
         />

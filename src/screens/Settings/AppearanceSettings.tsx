@@ -1,4 +1,5 @@
 import {useCallback} from 'react'
+import {Pressable, View} from 'react-native'
 import Animated, {
   FadeInUp,
   FadeOutUp,
@@ -17,6 +18,7 @@ import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
 import {SettingsListItem as AppIconSettingsListItem} from '#/screens/Settings/AppIconSettings/SettingsListItem'
 import {type Alf, atoms as a, native, useAlf, useTheme} from '#/alf'
 import * as SegmentedControl from '#/components/forms/SegmentedControl'
+import {ColorPalette_Stroke2_Corner0_Rounded as ColorPaletteIcon} from '#/components/icons/ColorPalette'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Moon_Stroke2_Corner0_Rounded as MoonIcon} from '#/components/icons/Moon'
 import {Phone_Stroke2_Corner0_Rounded as PhoneIcon} from '#/components/icons/Phone'
@@ -24,6 +26,7 @@ import {TextSize_Stroke2_Corner0_Rounded as TextSize} from '#/components/icons/T
 import {TitleCase_Stroke2_Corner0_Rounded as Aa} from '#/components/icons/TitleCase'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {ACCENTS, DEFAULT_ACCENT} from '#/config/brand-theme'
 import {IS_INTERNAL, IS_NATIVE} from '#/env'
 import * as SettingsList from './components/SettingsList'
 
@@ -120,6 +123,8 @@ export function AppearanceSettingsScreen({}: Props) {
                 />
               </Animated.View>
             )}
+
+            <AccentColorPicker />
 
             <Animated.View layout={native(LinearTransition)}>
               <SettingsList.Divider />
@@ -232,5 +237,67 @@ export function AppearanceToggleButtonGroup<T extends string>({
         </SegmentedControl.Root>
       </SettingsList.Group>
     </>
+  )
+}
+
+// Eurosky: per-user accent picker. Swatches are the curated brand accent
+// families (brand.json#colors.accents); selecting one persists `accentColor`,
+// which ThemeProvider applies live via `themesOverride`. undefined = the
+// brand's defaultAccent.
+const ACCENT_KEYS = Object.keys(ACCENTS)
+
+function accentLabel(key: string): string {
+  return key.charAt(0).toUpperCase() + key.slice(1)
+}
+
+function AccentColorPicker() {
+  const t = useTheme()
+  const {_} = useLingui()
+  const {accentColor} = useThemePrefs()
+  const {setAccentColor} = useSetThemePrefs()
+  const selected = accentColor ?? DEFAULT_ACCENT
+  return (
+    <SettingsList.Group contentContainerStyle={[a.gap_sm]} iconInset={false}>
+      <SettingsList.ItemIcon icon={ColorPaletteIcon} />
+      <SettingsList.ItemText>{_(msg`Accent color`)}</SettingsList.ItemText>
+      <View style={[a.flex_row, a.gap_lg, a.flex_wrap, a.w_full, a.pt_xs]}>
+        {ACCENT_KEYS.map(key => {
+          const isSelected = selected === key
+          return (
+            <Pressable
+              key={key}
+              accessibilityRole="button"
+              accessibilityLabel={accentLabel(key)}
+              accessibilityHint={_(msg`Sets the app accent color`)}
+              accessibilityState={{selected: isSelected}}
+              onPress={() => setAccentColor(key)}
+              style={[a.align_center, a.gap_xs]}>
+              <View
+                style={[
+                  a.rounded_full,
+                  {
+                    width: 40,
+                    height: 40,
+                    backgroundColor: ACCENTS[key].primary_500,
+                    borderWidth: 3,
+                    borderColor: isSelected
+                      ? t.atoms.text.color
+                      : 'transparent',
+                  },
+                ]}
+              />
+              <Text
+                style={[
+                  a.text_xs,
+                  isSelected ? a.font_bold : undefined,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                {accentLabel(key)}
+              </Text>
+            </Pressable>
+          )
+        })}
+      </View>
+    </SettingsList.Group>
   )
 }

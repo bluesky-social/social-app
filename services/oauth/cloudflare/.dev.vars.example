@@ -1,0 +1,9 @@
+# Local-dev secrets for `wrangler dev` (services/oauth/cloudflare).
+#
+# Copy this to `.dev.vars` (gitignored) and paste the brand's PRIVATE signing
+# JWK. Never commit the real key. In production the key is set instead with
+#   wrangler secret put OAUTH_PRIVATE_JWK
+#
+# Generate a fresh keypair (writes the public JWKS, prints the private):
+#   node scripts/gen-oauth-keypair.js
+OAUTH_PRIVATE_JWK={"kty":"EC","crv":"P-256","x":"...","y":"...","d":"...","kid":"...","alg":"ES256","use":"sig"}

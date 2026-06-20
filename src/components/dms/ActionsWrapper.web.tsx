@@ -15,7 +15,11 @@ import {EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components
 import * as Toast from '#/components/Toast'
 import type * as bsky from '#/types/bsky'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
-import {canReact, hasReachedReactionLimit} from './util'
+import {
+  canReact,
+  hasReachedReactionLimit,
+  MESSAGE_BUBBLE_MAX_WIDTH,
+} from './util'
 
 export function ActionsWrapper({
   message,
@@ -163,7 +167,10 @@ export function ActionsWrapper({
         </MessageContextMenu>
       </View>
       <View
-        style={[{maxWidth: '80%'}, isFromSelf ? a.align_end : a.align_start]}>
+        style={[
+          {maxWidth: MESSAGE_BUBBLE_MAX_WIDTH},
+          isFromSelf ? a.align_end : a.align_start,
+        ]}>
         {children}
       </View>
     </View>

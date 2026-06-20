@@ -31,49 +31,57 @@ concurrency:
   group: deploy-web-staging-bunny
   cancel-in-progress: true
 
+# Least privilege: only checks out + uploads to Bunny via Bunny secrets; never
+# uses GITHUB_TOKEN to write to the repo.
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: package.json
           cache: pnpm
-      # pages_build.sh does: frozen install (CI) -> intl:build -> build-web ->
+      # bunny_build.sh does: frozen install (CI) -> intl:build -> build-web ->
       # static-path rewrite -> _redirects. CI=true is set by Actions, so it
       # uses --frozen-lockfile.
       - name: Build web
-        run: bash ./pages_build.sh
+        run: bash ./scripts/bunny_build.sh
         env:
           # Staging is its own atproto OAuth client: client_id derives from this
           # base URL (gen-oauth-metadata.js emits the metadata into the build,
           # so staging self-publishes it at /oauth-client-metadata.json), and
           # client assertions are signed by the staging worker instance - the
           # prod worker pins prod's CLIENT_ID/ALLOWED_ORIGIN and would reject
-          # staging's requests. Same oauth-worker/ script, second deployment.
+          # staging's requests. Same services/oauth/ script, second deployment.
           EXPO_PUBLIC_OAUTH_BASE_URL: https://staging.mu.social
           EXPO_PUBLIC_OAUTH_ASSERTION_URL: https://oauth-staging.mu.social/client-assertion
-          # Geolocation: same first-party endpoint as prod (geolocation-worker/
+          # Geolocation: same first-party endpoint as prod (services/geolocation/
           # serves any origin), drives the regional moderation labelers.
           EXPO_PUBLIC_ENABLE_GEOLOCATION: 'true'
           EXPO_PUBLIC_GEOLOCATION_URL: https://ip.mu.social
           EXPO_PUBLIC_ENABLE_LIVE_EVENTS: 'false'
           EXPO_PUBLIC_ENABLE_APP_CONFIG: 'false'
+          # Product-analytics events otherwise POST to events.bsky.app. Disabled;
+          # GrowthBook flag fetching is unaffected (separate from this client).
+          EXPO_PUBLIC_ENABLE_METRICS: 'false'
           # Deliberately NOT the prod Plausible site: staging.mu.social is
           # unregistered in Plausible, so events are accepted and discarded and
           # staging traffic never pollutes prod stats. (Blanking the value is
-          # not an option: pages_build.sh's `:=` re-defaults empty to mu.social.)
+          # not an option: bunny_build.sh's `:=` re-defaults empty to mu.social.)
           EXPO_PUBLIC_PLAUSIBLE_DOMAIN: staging.mu.social
-          # First-party Bunny proxy for Plausible (see plausible-worker/). Needs
+          # First-party Bunny proxy for Plausible (see services/plausible/). Needs
           # the scheme: the tracker posts to ${API_HOST}/api/event.
           EXPO_PUBLIC_PLAUSIBLE_API_HOST: https://events.mu.social
           # Shares the prod live-sports proxy (see football-data-worker/); the
           # endpoint is read-only and cached, so staging can reuse it.
           EXPO_PUBLIC_FOOTBALLDATA_API_URL: https://sports.mu.social/v4
       - name: Upload to Bunny + purge cache
-        run: bash ./bunny_upload.sh
+        run: bash ./scripts/bunny_upload.sh
         env:
           BUNNY_STORAGE_ZONE: ${{ secrets.STAGING_BUNNY_STORAGE_ZONE }}
           BUNNY_STORAGE_PASSWORD: ${{ secrets.STAGING_BUNNY_STORAGE_PASSWORD }}

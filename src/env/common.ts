@@ -1,6 +1,7 @@
 import {type Did} from '@atproto/api'
 
 import packageJson from '#/../package.json'
+import {BRAND} from '#/config/brand'
 
 /**
  * The semver version of the app, as defined in `package.json.`
@@ -73,10 +74,13 @@ export const LOG_LEVEL = (process.env.EXPO_PUBLIC_LOG_LEVEL || 'info') as
 export const LOG_DEBUG: string = process.env.EXPO_PUBLIC_LOG_DEBUG || ''
 
 /**
- * The DID of the Bluesky appview to proxy to
+ * The DID of the appview to proxy authed requests to. Defaults to the brand's
+ * configured appview DID (see src/config/brand.ts -> services.appViewDid) so
+ * switching the appview is a single edit there; override per-deploy with
+ * EXPO_PUBLIC_BLUESKY_PROXY_DID if it must differ from the brand default.
  */
 export const BLUESKY_PROXY_DID: Did =
-  process.env.EXPO_PUBLIC_BLUESKY_PROXY_DID || 'did:web:api.bsky.app'
+  process.env.EXPO_PUBLIC_BLUESKY_PROXY_DID || BRAND.services.appViewDid
 
 /**
  * The DID of the chat service to proxy to
@@ -155,7 +159,7 @@ export const GCP_PROJECT_ID: number =
 export const GEOLOCATION_DEV_URL = process.env.GEOLOCATION_DEV_URL
 /**
  * Eurosky: overridable so web builds can use our first-party Bunny endpoint
- * (see geolocation-worker/). Bluesky's ip.bsky.app is CORS-locked to bsky.app.
+ * (see services/geolocation/). Bluesky's ip.bsky.app is CORS-locked to bsky.app.
  */
 export const GEOLOCATION_PROD_URL =
   process.env.EXPO_PUBLIC_GEOLOCATION_URL || `https://ip.bsky.app`
@@ -192,3 +196,11 @@ export const ENABLE_LIVE_EVENTS =
   process.env.EXPO_PUBLIC_ENABLE_LIVE_EVENTS !== 'false'
 export const ENABLE_APP_CONFIG =
   process.env.EXPO_PUBLIC_ENABLE_APP_CONFIG !== 'false'
+/**
+ * Gates the product-analytics metrics client (the `ax.metric()` pipeline that
+ * POSTs to `${METRICS_API_HOST}/t`). Disabling stops all event reporting,
+ * including GrowthBook `experiment:viewed`/`feature:viewed` exposures. GrowthBook
+ * flag *fetching* is unaffected - the SDK pulls gates directly, separate from
+ * this client - so feature gating keeps working.
+ */
+export const ENABLE_METRICS = process.env.EXPO_PUBLIC_ENABLE_METRICS !== 'false'

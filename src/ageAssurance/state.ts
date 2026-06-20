@@ -41,6 +41,7 @@ function computeAgeAssuranceState({
   state,
   metadata,
   metadataLoading = false,
+  metadataError = false,
 }: {
   hasSession: boolean
   geolocation: Geolocation
@@ -48,6 +49,7 @@ function computeAgeAssuranceState({
   state?: AppBskyAgeassuranceDefs.State
   metadata?: AgeAssuranceMetadata
   metadataLoading?: boolean
+  metadataError?: boolean
 }) {
   /**
    * This is where we control logged-out moderation prefs. It's all
@@ -95,6 +97,25 @@ function computeAgeAssuranceState({
       return {
         status: AgeAssuranceStatus.Unknown,
         access: AgeAssuranceAccess.Safe,
+      }
+    }
+    /**
+     * mu fork: the declared-age query settled in an error state (e.g. the
+     * mu-age-service call failed), so we genuinely don't know whether the user
+     * has declared. Gating with None here would trap them: the NoAccessScreen
+     * prompt writes back through the same failing backend, so they can never
+     * clear it and just re-prompt in a loop. Fail open to Safe instead (same
+     * policy as a missing config above); the query keeps retrying, and once it
+     * succeeds the real declared age takes over.
+     */
+    if (metadataError) {
+      logger.warn(
+        'useAgeAssuranceState: declared-age query failed, failing open',
+      )
+      return {
+        status: AgeAssuranceStatus.Unknown,
+        access: AgeAssuranceAccess.Safe,
+        error: 'metadata' as const,
       }
     }
     return {
@@ -208,7 +229,7 @@ export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
 export function useAgeAssuranceState(): AgeAssuranceState {
   const {hasSession} = useSession()
   const geolocation = useGeolocation()
-  const {config, state, metadata, metadataLoading} =
+  const {config, state, metadata, metadataLoading, metadataError} =
     useAgeAssuranceServerDataContext()
 
   return useMemo(
@@ -220,8 +241,17 @@ export function useAgeAssuranceState(): AgeAssuranceState {
         state,
         metadata,
         metadataLoading,
+        metadataError,
       }),
-    [hasSession, geolocation, config, state, metadata, metadataLoading],
+    [
+      hasSession,
+      geolocation,
+      config,
+      state,
+      metadata,
+      metadataLoading,
+      metadataError,
+    ],
   )
 }
 

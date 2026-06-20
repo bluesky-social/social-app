@@ -1,4 +1,4 @@
-import {forwardRef, useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {
   AccessibilityInfo,
   Image as RNImage,
@@ -15,12 +15,12 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import Svg, {Path, type SvgProps} from 'react-native-svg'
+import {type SvgProps} from 'react-native-svg'
 import {Image} from 'expo-image'
 import * as SplashScreen from 'expo-splash-screen'
 
 import {Logotype} from '#/view/icons/Logotype'
-import {EUROSKY_ICON} from '#/config/eurosky-logo'
+import {BrandLogo} from '#/components/icons/BrandLogo'
 // @ts-ignore
 import splashImagePointer from '../assets/splash/splash.png'
 // @ts-ignore
@@ -30,20 +30,11 @@ const darkSplashImageUri = RNImage.resolveAssetSource(
   darkSplashImagePointer,
 ).uri
 
-export const Logo = forwardRef(function LogoImpl(props: SvgProps, ref) {
-  const width = 1000
-  const height = width * EUROSKY_ICON.ratio
+export function Logo(props: SvgProps) {
   return (
-    <Svg
-      fill="none"
-      // @ts-ignore it's fiiiiine
-      ref={ref}
-      viewBox={EUROSKY_ICON.viewBox}
-      style={[{width, height}, props.style]}>
-      <Path fill={props.fill || '#fff'} d={EUROSKY_ICON.path} />
-    </Svg>
+    <BrandLogo size={1000} fill={props.fill || '#fff'} style={props.style} />
   )
-})
+}
 
 type Props = {
   isReady: boolean

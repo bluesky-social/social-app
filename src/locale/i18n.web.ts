@@ -6,7 +6,7 @@ import {enUS as defaultLocale} from 'date-fns/locale/en-US'
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {AppLanguage} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
-import {installRebrand} from '#/config/euroskyStrings'
+import {installRebrand} from '#/config/brandStrings'
 
 // Eurosky fork: single chokepoint for the "Bluesky" -> "mu" brand swap.
 installRebrand(i18n)

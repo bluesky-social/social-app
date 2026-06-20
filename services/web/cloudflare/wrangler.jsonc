@@ -1,0 +1,25 @@
+{
+  // The web surface on Cloudflare: serves the static SPA + /geolocation + OG
+  // enrichment in one Worker. Per-brand: rename + set the vars to your domain.
+  //
+  // Deploy: build the web bundle first (../../../pages_build.sh -> web-build/),
+  // then `cd services/web/cloudflare && wrangler deploy`.
+  "name": "mu-web",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-01",
+  "assets": {
+    // Relative to this file: repo-root/web-build (the Expo web output).
+    "directory": "../../../web-build",
+    "binding": "ASSETS",
+    // Unmatched routes serve index.html (200) so client-side routing works.
+    "not_found_handling": "single-page-application",
+    // Run the Worker on every request so it can own /geolocation + OG routes
+    // and delegate everything else to ASSETS.
+    "run_worker_first": true
+  }
+  // SITE_URL / SITE_NAME / ALLOWED_ORIGIN are derived from
+  // src/config/brand.json (bundled into the Worker at build), so a rebrand
+  // is one edit there. Add a "vars" block here ONLY to override per deployment,
+  // e.g. staging: { "vars": { "SITE_URL": "https://staging.mu.social" } }, a
+  // self-hosted appview ("APPVIEW_URL"), or to flip "BOTS_ONLY".
+}

@@ -518,6 +518,14 @@ export type AgeAssuranceServerData = {
    * before the declared age has loaded. See computeAgeAssuranceState.
    */
   metadataLoading: boolean
+  /**
+   * mu fork: true when the declared-age query (otherRequiredData) settled in an
+   * error state (e.g. the mu-age-service call failed) rather than returning a
+   * result. Lets consumers tell "we couldn't determine the declared age" apart
+   * from "the user has not declared", so a backend hiccup fails open instead of
+   * trapping the user in the gate. See computeAgeAssuranceState.
+   */
+  metadataError: boolean
 }
 const AgeAssuranceServerDataContext = createContext<AgeAssuranceServerData>({
   config: undefined,
@@ -528,6 +536,7 @@ const AgeAssuranceServerDataContext = createContext<AgeAssuranceServerData>({
     birthdate: undefined,
   },
   metadataLoading: false,
+  metadataError: false,
 })
 export function useAgeAssuranceServerDataContext() {
   return useContext(AgeAssuranceServerDataContext)
@@ -567,6 +576,13 @@ export function AgeAssuranceServerDataProvider({
        */
       metadataLoading:
         otherRequiredData.isPending || otherRequiredData.isFetching,
+      /**
+       * Only an error once we're no longer fetching: during retries/refetch we
+       * stay in the loading state, and a stale cached birthdate (if any) still
+       * resolves declaredAge. This flips true only when the query has given up
+       * with no usable result.
+       */
+      metadataError: otherRequiredData.isError && !otherRequiredData.isFetching,
     }),
     [
       config,
@@ -575,6 +591,7 @@ export function AgeAssuranceServerDataProvider({
       metadata,
       otherRequiredData.isPending,
       otherRequiredData.isFetching,
+      otherRequiredData.isError,
     ],
   )
   return (

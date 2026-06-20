@@ -1,7 +1,7 @@
 import {type AtpAgent} from '@atproto/api'
 
 import {logger} from '#/ageAssurance/logger'
-import {EUROSKY} from '#/config/eurosky'
+import {BRAND} from '#/config/brand'
 
 /**
  * Client for the mu age-assurance backend (`mu-age-service`).
@@ -36,11 +36,20 @@ export function birthdateFromFlags(flags: MuAgeFlags): string {
   ).toISOString()
 }
 
+/**
+ * We intentionally do NOT pass `exp`. The PDS then derives both `iat` and `exp`
+ * from its own clock (a short default lifetime), so the token is immune to
+ * client clock skew. Deriving `exp` from the local clock was fragile in both
+ * directions: a client running behind real time minted an already-expired
+ * token (rejected by the PDS as a past `exp`), while a client running ahead
+ * minted a long-lived token that the age service rejected with "jwt exceeds
+ * maximum age (300s)". A PDS-clock-relative short token avoids both, since
+ * `bearer` is called immediately before each request.
+ */
 async function bearer(agent: AtpAgent, lxm: string): Promise<string> {
   const {data} = await agent.com.atproto.server.getServiceAuth({
-    aud: EUROSKY.ageAssurance.serviceDid,
+    aud: BRAND.ageAssurance.serviceDid,
     lxm,
-    exp: Math.floor(Date.now() / 1000) + 60,
   })
   return `Bearer ${data.token}`
 }
@@ -55,7 +64,7 @@ const REQUEST_TIMEOUT = 8000
 export async function getMuAgeStatus(agent: AtpAgent): Promise<MuAgeStatus> {
   const authorization = await bearer(agent, GET_STATUS)
   const res = await fetch(
-    `${EUROSKY.ageAssurance.serviceUrl}/xrpc/${GET_STATUS}`,
+    `${BRAND.ageAssurance.serviceUrl}/xrpc/${GET_STATUS}`,
     {headers: {authorization}, signal: AbortSignal.timeout(REQUEST_TIMEOUT)},
   )
   if (!res.ok) {
@@ -70,7 +79,7 @@ export async function setMuAgeStatus(
 ): Promise<void> {
   const authorization = await bearer(agent, SET_STATUS)
   const res = await fetch(
-    `${EUROSKY.ageAssurance.serviceUrl}/xrpc/${SET_STATUS}`,
+    `${BRAND.ageAssurance.serviceUrl}/xrpc/${SET_STATUS}`,
     {
       method: 'POST',
       headers: {authorization, 'content-type': 'application/json'},

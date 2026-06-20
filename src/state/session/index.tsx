@@ -29,6 +29,7 @@ import {
   oauthCreateAgent,
   oauthResumeSession,
 } from './oauth-agent'
+import {oauthRevoke} from './oauth-web-client'
 import {type Action, getInitialState, reducer, type State} from './reducer'
 export {isSignupQueued} from './util'
 import {addSessionDebugLog} from './logging'
@@ -199,6 +200,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       addSessionDebugLog({type: 'method:start', method: 'logout'})
       cancelPendingTask()
       const prevState = store.getState()
+      const loggedOutAccount = prevState.accounts.find(
+        a => a.did === prevState.currentAgentState.did,
+      )
+      // Revoke the OAuth session at the authorization server before we drop the
+      // local tokens, otherwise the refresh token stays valid (up to 180 days
+      // for the confidential client) even though the user signed out.
+      if (IS_WEB && loggedOutAccount?.isOauthSession) {
+        void oauthRevoke(loggedOutAccount.did)
+      }
       store.dispatch({
         type: 'logged-out-current-account',
       })
@@ -206,11 +216,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         'account:loggedOut',
         {logContext, scope: 'current'},
         {
-          session: utils.accountToSessionMetadata(
-            prevState.accounts.find(
-              a => a.did === prevState.currentAgentState.did,
-            ),
-          ),
+          session: utils.accountToSessionMetadata(loggedOutAccount),
         },
       )
       addSessionDebugLog({type: 'method:end', method: 'logout'})
@@ -233,6 +239,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       addSessionDebugLog({type: 'method:start', method: 'logout'})
       cancelPendingTask()
       const prevState = store.getState()
+      // Revoke each OAuth session at the authorization server before dropping
+      // the local tokens (see logoutCurrentAccount for why).
+      if (IS_WEB) {
+        for (const account of prevState.accounts) {
+          if (account.isOauthSession) {
+            void oauthRevoke(account.did)
+          }
+        }
+      }
       store.dispatch({
         type: 'logged-out-every-account',
       })
@@ -324,6 +339,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         account,
       })
       cancelPendingTask()
+      // Removing an account forgets it on this device, so revoke its OAuth
+      // session at the authorization server too (see logoutCurrentAccount).
+      if (IS_WEB && account.isOauthSession) {
+        void oauthRevoke(account.did)
+      }
       store.dispatch({
         type: 'removed-account',
         accountDid: account.did,

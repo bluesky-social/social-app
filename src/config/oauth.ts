@@ -1,7 +1,7 @@
 /**
  * Eurosky OAuth configuration - single source of truth.
  *
- * Primitive values live in `oauth.shared.json` so this module (the browser
+ * Primitive values live in `brand.json` so this module (the browser
  * client) and `scripts/gen-oauth-metadata.js` (the build-time static
  * `oauth-client-metadata.json` emitter) read identical `scope` /
  * `client_id` / `redirect_uris`. They cannot drift: change the domain or
@@ -16,8 +16,13 @@
  * actual client-metadata objects are built inline in oauth-web-client.ts
  * so their literal types match the library's expected input.
  */
+import brand from '#/config/brand.json'
 import publicJwks from '#/config/oauth.public-jwks.json'
-import shared from '#/config/oauth.shared.json'
+
+// OAuth primitives live under `oauth` in the single brand.json (see oauth.shared
+// semantics in brand.schema.json). Kept as `shared` so the rest of this file is
+// unchanged.
+const shared = brand.oauth
 
 /**
  * Prod base URL. Defaults to the app's hosting domain (mu.social); override at
@@ -39,6 +44,16 @@ export const OAUTH_SCOPE: string = shared.scope
  * OAUTH_SCOPE. Trim this back once those old bundles have aged out of caches.
  */
 export const OAUTH_DECLARED_SCOPE: string = shared.declaredScope
+
+/**
+ * Granular scope that authorizes `com.atproto.identity.updateHandle`. Not in
+ * OAUTH_SCOPE (initial logins stay transitional-only); acquired on demand by
+ * the handle step-up. Must remain within OAUTH_DECLARED_SCOPE.
+ */
+export const OAUTH_HANDLE_GRANT_SCOPE = 'identity:handle'
+/** Scope a handle step-up requests: the transitional base plus the handle grant. */
+export const OAUTH_HANDLE_SCOPE = `${OAUTH_SCOPE} ${OAUTH_HANDLE_GRANT_SCOPE}`
+
 export const OAUTH_HANDLE_RESOLVER: string = shared.handleResolver
 /** PDS the "Create account" flow sends the user to (prompt: 'create'). */
 export const OAUTH_SIGNUP_PDS_HOST: string = shared.signupPdsHost
@@ -54,7 +69,7 @@ export const OAUTH_PUBLIC_JWKS: {keys: Record<string, unknown>[]} = publicJwks
 /**
  * Stateless edge script that signs the `private_key_jwt` client assertion
  * (confidential client; the private key never reaches the browser). Deployed
- * as a Bunny Edge Script - see ../../oauth-worker. Prod-only; loopback/dev
+ * as a Bunny Edge Script - see ../../services/oauth. Prod-only; loopback/dev
  * stays a public client and never calls this. Override per deployment with
  * EXPO_PUBLIC_OAUTH_ASSERTION_URL (Expo inlines EXPO_PUBLIC_* at build).
  * Default points at a conventional subdomain route - set it to wherever the

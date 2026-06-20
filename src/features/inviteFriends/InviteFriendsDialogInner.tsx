@@ -1,4 +1,4 @@
-import {Suspense, useRef, useState} from 'react'
+import {Suspense, useRef} from 'react'
 import {Pressable, View} from 'react-native'
 import type ViewShot from 'react-native-view-shot'
 import {setStringAsync} from 'expo-clipboard'
@@ -25,6 +25,7 @@ import {IS_NATIVE} from '#/env'
 import {ActionButtons} from './components/ActionButtons'
 import {ThemedQrCard} from './components/ThemedQrCard'
 import {ThemePicker} from './components/ThemePicker'
+import {useInviteThemeKey} from './hooks/useInviteThemeKey'
 import {getInviteTheme, type InviteThemeKey} from './themes'
 import {getInviteDisplayUrl, getInviteShareUrl} from './urls'
 
@@ -39,7 +40,7 @@ export function InviteFriendsDialogInner({
   const navigation = useNavigation<NavigationProp>()
   const {currentAccount} = useSession()
   const profileQuery = useProfileQuery({did: currentAccount?.did})
-  const [themeKey, setThemeKey] = useState<InviteThemeKey>('day')
+  const [themeKey, setThemeKey] = useInviteThemeKey()
   const captureRef = useRef<ViewShot>(null)
 
   const theme = getInviteTheme(themeKey)

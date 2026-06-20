@@ -31,6 +31,7 @@ import {
   OAUTH_BASE_URL,
   OAUTH_CLIENT_NAME,
   OAUTH_DECLARED_SCOPE,
+  OAUTH_HANDLE_SCOPE,
   OAUTH_PUBLIC_JWKS,
   OAUTH_SCOPE,
   OAUTH_SIGNUP_PDS_HOST,
@@ -51,6 +52,12 @@ export interface WebOAuthClient {
   signIn(input: string, options?: AuthorizeOptions): Promise<void>
   init(): Promise<{session: OAuthSession; state?: string | null} | undefined>
   restore(sub: string, refresh?: boolean): Promise<OAuthSession>
+  /**
+   * Revoke the session's tokens at the authorization server and delete the
+   * locally stored session. The local delete happens even if the server call
+   * fails, so a plain sign-out always clears credentials from this device.
+   */
+  revoke(sub: string): Promise<void>
 }
 
 function isLoopback(): boolean {
@@ -107,15 +114,18 @@ function createLoopbackClient(): WebOAuthClient {
       ? `:${window.location.port}`
       : ''
   const redirectUri = `http://127.0.0.1${port}/`
+  // DECLARE the handle-step-up superset so a step-up can request
+  // identity:handle in dev; new logins still REQUEST only OAUTH_SCOPE (see
+  // signIn below). Mirrors the prod declared-vs-requested split.
   const clientId =
     `http://localhost` +
     `?redirect_uri=${encodeURIComponent(redirectUri)}` +
-    `&scope=${encodeURIComponent(OAUTH_SCOPE)}`
+    `&scope=${encodeURIComponent(OAUTH_HANDLE_SCOPE)}`
   const client = new BrowserOAuthClient({
     clientMetadata: {
       client_id: clientId,
       redirect_uris: [redirectUri],
-      scope: OAUTH_SCOPE,
+      scope: OAUTH_HANDLE_SCOPE,
       token_endpoint_auth_method: 'none',
       response_types: ['code'],
       grant_types: ['authorization_code', 'refresh_token'],
@@ -127,10 +137,13 @@ function createLoopbackClient(): WebOAuthClient {
   })
   return {
     async signIn(input, options) {
-      await client.signIn(input, options)
+      // REQUEST only OAUTH_SCOPE by default even though the metadata DECLARES
+      // the wider OAUTH_HANDLE_SCOPE; the step-up overrides via options.scope.
+      await client.signIn(input, {scope: OAUTH_SCOPE, ...options})
     },
     init: () => client.init(),
     restore: (sub, refresh) => client.restore(sub, refresh),
+    revoke: sub => client.revoke(sub),
   }
 }
 
@@ -232,6 +245,7 @@ function createConfidentialClient(): WebOAuthClient {
       return {session, state}
     },
     restore: (sub, refresh) => client.restore(sub, refresh),
+    revoke: sub => client.revoke(sub),
   }
 }
 
@@ -270,6 +284,23 @@ export async function oauthSignIn(handle: string): Promise<void> {
 }
 
 /**
+ * Revoke an OAuth session as part of signing out. Best-effort: the underlying
+ * client deletes the locally stored session even if the server-side revocation
+ * call fails, so credentials are always cleared from this device. Never throws,
+ * so it can be fired off during logout without blocking it.
+ */
+export async function oauthRevoke(sub: string): Promise<void> {
+  try {
+    await getWebOAuthClient().revoke(sub)
+  } catch (e) {
+    // No `sub` (DID) in the log - this reaches the live Sentry transport.
+    logger.warn('oauth: revoke on sign-out failed', {
+      safeMessage: e instanceof Error ? e.message : 'unknown',
+    })
+  }
+}
+
+/**
  * OAuth `state` marker we set on the create-account flow so the callback can
  * tell a fresh signup apart from a plain sign-in (and kick off onboarding,
  * which the external PDS signup page can't do for us).
@@ -285,4 +316,62 @@ export async function oauthCreateAccount(): Promise<void> {
     prompt: 'create',
     state: OAUTH_SIGNUP_STATE,
   })
+}
+
+/**
+ * OAuth `state` marker the handle step-up sets so the callback can tell it
+ * apart from a fresh sign-in (replace the session in place, reopen the
+ * change-handle UI) rather than treating it as a new login/signup.
+ */
+export const OAUTH_HANDLE_STEPUP_STATE = 'handle-stepup'
+
+/**
+ * localStorage flag set right before a handle step-up redirect and consumed on
+ * return, so account settings can reopen the change-handle dialog. Web-only
+ * (localStorage); the consumer no-ops elsewhere.
+ */
+const HANDLE_STEPUP_REOPEN_KEY = '@eurosky/reopen-change-handle'
+
+/**
+ * Re-authorize the CURRENT account with the wider handle scope so the user can
+ * change their handle. Initial logins request transitional scope only (some
+ * PDSes reject transitional + granular together), so this re-runs the
+ * authorize flow to add `identity:handle` on demand. The DID is unchanged, so
+ * the callback's `login()` replaces the existing session in place with the
+ * upgraded tokens.
+ *
+ * Redirects on success and never resolves (the page is navigating away).
+ * Rejects synchronously if the PDS refuses the granular scope (e.g. a PAR
+ * `invalid_scope`), so the caller can explain that this server can't do it.
+ */
+export async function oauthUpgradeForHandle(did: string): Promise<void> {
+  try {
+    window.localStorage.setItem(HANDLE_STEPUP_REOPEN_KEY, '1')
+  } catch {}
+  try {
+    await getWebOAuthClient().signIn(did, {
+      scope: OAUTH_HANDLE_SCOPE,
+      state: OAUTH_HANDLE_STEPUP_STATE,
+    })
+  } catch (e) {
+    // No redirect happened; don't leave the reopen flag set.
+    try {
+      window.localStorage.removeItem(HANDLE_STEPUP_REOPEN_KEY)
+    } catch {}
+    throw e
+  }
+}
+
+/**
+ * Read-and-clear the "reopen change-handle after step-up" flag. Returns true
+ * once, on the first call after a successful step-up return. No-op on native.
+ */
+export function consumePendingHandleStepUp(): boolean {
+  try {
+    if (window.localStorage.getItem(HANDLE_STEPUP_REOPEN_KEY) === '1') {
+      window.localStorage.removeItem(HANDLE_STEPUP_REOPEN_KEY)
+      return true
+    }
+  } catch {}
+  return false
 }

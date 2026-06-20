@@ -1,3 +1,4 @@
+import {useEffect} from 'react'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -6,6 +7,7 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
+import {consumePendingHandleStepUp} from '#/state/session/oauth-web-client'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import {AgeAssuranceAccountCard} from '#/components/ageAssurance/AgeAssuranceAccountCard'
@@ -27,6 +29,7 @@ import {PencilLine_Stroke2_Corner2_Rounded as PencilIcon} from '#/components/ico
 import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
 import {Trash_Stroke2_Corner2_Rounded} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
+import * as toast from '#/components/Toast'
 import {ChangeHandleDialog} from './components/ChangeHandleDialog'
 import {ChangePasswordDialog} from './components/ChangePasswordDialog'
 import {DeactivateAccountDialog} from './components/DeactivateAccountDialog'
@@ -52,6 +55,21 @@ export function AccountSettingsScreen({}: Props) {
   const exportCarControl = useDialogControl()
   const deactivateAccountControl = useDialogControl()
   const deleteAccountControl = useDialogControl()
+
+  // mu fork: returning from a handle-scope step-up lands here (the callback
+  // rewrites the path to /settings/account). Reopen the change-handle dialog so
+  // the user can finish what they started, now that the session can do it.
+  // The flag is read-and-cleared, so even if this re-runs (e.g. on locale
+  // change) it only fires once after a step-up return.
+  useEffect(() => {
+    if (consumePendingHandleStepUp()) {
+      changeHandleControl.open()
+      toast.show(
+        _(msg`Your session is upgraded. You can now change your handle.`),
+        {type: 'success'},
+      )
+    }
+  }, [changeHandleControl, _])
 
   return (
     <Layout.Screen>

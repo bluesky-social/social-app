@@ -36,19 +36,11 @@ export default defineConfig(
       'bskyweb/**',
       'bskyembed/**',
       'bskyogcard/**',
-      // Eurosky fork: the OAuth client-assertion worker is a separate sub-project
-      // (Bunny Edge Scripting / Deno runtime + URL imports) - not app code,
-      // same rationale as the Plausible script below.
-      'oauth-worker/**',
-      // Eurosky fork: the Plausible analytics proxy is a Bunny Edge Script
-      // (Deno runtime + URL imports), not app code - same rationale as above.
-      'plausible-worker/**',
-      // Eurosky fork: the IP geolocation endpoint is a Bunny Edge Script
-      // (Deno runtime + URL imports), not app code - same rationale as above.
-      'geolocation-worker/**',
-      // Eurosky fork: the per-route Open Graph metadata injector is a Bunny Edge
-      // Script (Deno runtime + URL imports), not app code - same rationale as above.
-      'og-worker/**',
+      // Eurosky fork: first-party edge services (OAuth client-assertion,
+      // Plausible proxy, IP geolocation, per-route Open Graph injector) live
+      // under services/. They are Bunny/Cloudflare Edge Scripts (Deno runtime +
+      // URL imports), not app code, so the whole tree is excluded.
+      'services/**',
       // Eurosky fork: the football-data.org proxy for the live sports widget is a
       // Bunny Edge Script (Deno runtime + URL imports), not app code - same rationale.
       'football-data-worker/**',

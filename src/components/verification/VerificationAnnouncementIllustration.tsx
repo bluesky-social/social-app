@@ -8,7 +8,7 @@ import {Full as Logo} from '#/components/icons/Logo'
 import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
 import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {Text} from '#/components/Typography'
-import {EUROSKY} from '#/config/eurosky'
+import {BRAND} from '#/config/brand'
 
 const ICON_SIZE = 56
 
@@ -35,7 +35,7 @@ export function VerificationAnnouncementIllustration() {
         a.py_2xl,
         a.px_md,
       ]}>
-      <Step labelText={EUROSKY.brand.name}>
+      <Step labelText={BRAND.name}>
         <View
           style={[
             a.align_center,

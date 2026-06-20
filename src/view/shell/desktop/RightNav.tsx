@@ -19,6 +19,7 @@ import {ButtonText} from '#/components/Button'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {BRAND} from '#/config/brand'
 
 export function DesktopRightNav({routeName}: {routeName: string}) {
   const t = useTheme()
@@ -77,14 +78,14 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
 
       <Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
         <InlineLinkText
-          to="https://hello.mu.social/privacy"
+          to={BRAND.links.privacy}
           style={[t.atoms.text_contrast_medium]}
           label={_(msg`Privacy`)}>
           {_(msg`Privacy`)}
         </InlineLinkText>
         <Text style={[t.atoms.text_contrast_low]}>{' ∙ '}</Text>
         <InlineLinkText
-          to="https://hello.mu.social/terms"
+          to={BRAND.links.tos}
           style={[t.atoms.text_contrast_medium]}
           label={_(msg`Terms`)}>
           {_(msg`Terms`)}

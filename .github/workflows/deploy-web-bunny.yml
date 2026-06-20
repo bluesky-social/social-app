@@ -24,31 +24,39 @@ concurrency:
   group: deploy-web-bunny
   cancel-in-progress: true
 
+# Least privilege: only checks out + uploads to Bunny via Bunny secrets; never
+# uses GITHUB_TOKEN to write to the repo.
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: package.json
           cache: pnpm
-      # pages_build.sh does: frozen install (CI) -> intl:build -> build-web ->
+      # bunny_build.sh does: frozen install (CI) -> intl:build -> build-web ->
       # static-path rewrite -> _redirects. CI=true is set by Actions, so it
       # uses --frozen-lockfile.
       - name: Build web
-        run: bash ./pages_build.sh
+        run: bash ./scripts/bunny_build.sh
         env:
           # Geolocation decides which regional moderation labelers are required;
           # without it the app fail-closes and subscribes ALL of them. Served
-          # first-party from Bunny (see geolocation-worker/), not ip.bsky.app.
+          # first-party from Bunny (see services/geolocation/), not ip.bsky.app.
           EXPO_PUBLIC_ENABLE_GEOLOCATION: 'true'
           EXPO_PUBLIC_GEOLOCATION_URL: https://ip.mu.social
           EXPO_PUBLIC_ENABLE_LIVE_EVENTS: 'false'
           EXPO_PUBLIC_ENABLE_APP_CONFIG: 'false'
+          # Product-analytics events otherwise POST to events.bsky.app. Disabled;
+          # GrowthBook flag fetching is unaffected (separate from this client).
+          EXPO_PUBLIC_ENABLE_METRICS: 'false'
           EXPO_PUBLIC_PLAUSIBLE_DOMAIN: mu.social
-          # First-party Bunny proxy for Plausible (see plausible-worker/). Needs
+          # First-party Bunny proxy for Plausible (see services/plausible/). Needs
           # the scheme: the tracker posts to ${API_HOST}/api/event.
           EXPO_PUBLIC_PLAUSIBLE_API_HOST: https://events.mu.social
           # First-party Bunny proxy for the live sports widget (see
@@ -57,7 +65,7 @@ jobs:
           # deployed, so it is safe to set ahead of time.
           EXPO_PUBLIC_FOOTBALLDATA_API_URL: https://sports.mu.social/v4
       - name: Upload to Bunny + purge cache
-        run: bash ./bunny_upload.sh
+        run: bash ./scripts/bunny_upload.sh
         env:
           BUNNY_STORAGE_ZONE: ${{ secrets.BUNNY_STORAGE_ZONE }}
           BUNNY_STORAGE_PASSWORD: ${{ secrets.BUNNY_STORAGE_PASSWORD }}
