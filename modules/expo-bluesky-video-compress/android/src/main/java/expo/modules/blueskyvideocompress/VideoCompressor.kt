@@ -129,6 +129,11 @@ class VideoCompressor(
 
       outputDims = calculateOutputDims(sourceWidth, sourceHeight, rotation, maxSize)
       val shouldPassthroughAudio = audioFormat != null && canPassthroughAudio(audioFormat)
+      val transcodedAudio: TranscodedAudio? = if (
+        audioTrackIndex >= 0 && audioFormat != null && !shouldPassthroughAudio
+      ) {
+        transcodeAudioToAAC(audioTrackIndex, audioFormat)
+      } else null
       muxer = MediaMuxer(outputFile.absolutePath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
 
       val effectiveBitrate = if (targetBitrate > 0) {
@@ -186,6 +191,15 @@ class VideoCompressor(
       decoder = MediaCodec.createDecoderByType(
         videoFormat.getString(MediaFormat.KEY_MIME) ?: "video/avc"
       )
+      // Ask the decoder to tone-map HDR (HLG/PQ) sources to SDR. Vendors may
+      // ignore the hint, but where supported it produces correct BT.709 pixels
+      // for the encoder rather than HDR pixels mislabeled as SDR.
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        videoFormat.setInteger(
+          MediaFormat.KEY_COLOR_TRANSFER_REQUEST,
+          MediaFormat.COLOR_TRANSFER_SDR_VIDEO
+        )
+      }
       decoder.configure(videoFormat, outputSurface.surface, null, 0)
       decoder.start()
       extractor.selectTrack(videoTrackIndex)
@@ -257,8 +271,12 @@ class VideoCompressor(
             encIdx == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
               if (!muxerStarted) {
                 muxerVideoTrack = muxer.addTrack(encoder.outputFormat)
-                if (audioTrackIndex >= 0 && shouldPassthroughAudio && audioFormat != null) {
-                  muxerAudioTrack = muxer.addTrack(audioFormat)
+                if (audioTrackIndex >= 0 && audioFormat != null) {
+                  if (shouldPassthroughAudio) {
+                    muxerAudioTrack = muxer.addTrack(audioFormat)
+                  } else if (transcodedAudio != null) {
+                    muxerAudioTrack = muxer.addTrack(transcodedAudio.outputFormat)
+                  }
                 }
                 muxer.start()
                 muxerStarted = true
@@ -291,7 +309,11 @@ class VideoCompressor(
       }
 
       if (audioTrackIndex >= 0 && muxerAudioTrack >= 0 && muxerStarted && !isCancelled) {
-        passthroughAudio(audioTrackIndex, muxer, muxerAudioTrack)
+        if (shouldPassthroughAudio) {
+          passthroughAudio(audioTrackIndex, muxer, muxerAudioTrack)
+        } else if (transcodedAudio != null) {
+          writeTranscodedAudio(transcodedAudio.samples, muxer, muxerAudioTrack)
+        }
       }
     } finally {
       try { decoder?.stop() } catch (_: Exception) {}
@@ -357,6 +379,188 @@ class VideoCompressor(
   private fun canPassthroughAudio(format: MediaFormat): Boolean {
     val mime = format.getString(MediaFormat.KEY_MIME) ?: return false
     return mime == MediaFormat.MIMETYPE_AUDIO_AAC
+  }
+
+  private data class TranscodedAudio(
+    val outputFormat: MediaFormat,
+    val samples: List<Sample>
+  ) {
+    data class Sample(
+      val bytes: ByteArray,
+      val presentationTimeUs: Long,
+      val flags: Int
+    )
+  }
+
+  // Re-encode non-AAC source audio (Opus, Vorbis, etc.) to AAC so the mp4 muxer
+  // can take it. iOS always re-encodes to AAC; without this Android would drop
+  // the audio track entirely.
+  private fun transcodeAudioToAAC(
+    audioTrackIndex: Int,
+    sourceFormat: MediaFormat
+  ): TranscodedAudio? {
+    val sourceMime = sourceFormat.getString(MediaFormat.KEY_MIME) ?: return null
+    val sampleRate = if (sourceFormat.containsKey(MediaFormat.KEY_SAMPLE_RATE))
+      sourceFormat.getInteger(MediaFormat.KEY_SAMPLE_RATE) else 44100
+    val channelCount = if (sourceFormat.containsKey(MediaFormat.KEY_CHANNEL_COUNT))
+      sourceFormat.getInteger(MediaFormat.KEY_CHANNEL_COUNT).coerceIn(1, 2) else 2
+
+    val audioExtractor = MediaExtractor()
+    if (uriString.startsWith("content://") || uriString.startsWith("file://")) {
+      audioExtractor.setDataSource(context, Uri.parse(uriString), null)
+    } else {
+      audioExtractor.setDataSource(uriString)
+    }
+    audioExtractor.selectTrack(audioTrackIndex)
+
+    var decoder: MediaCodec? = null
+    var encoder: MediaCodec? = null
+    try {
+      decoder = MediaCodec.createDecoderByType(sourceMime)
+      decoder.configure(sourceFormat, null, null, 0)
+      decoder.start()
+
+      val encoderFormat = MediaFormat.createAudioFormat(
+        MediaFormat.MIMETYPE_AUDIO_AAC, sampleRate, channelCount
+      ).apply {
+        setInteger(
+          MediaFormat.KEY_AAC_PROFILE,
+          MediaCodecInfo.CodecProfileLevel.AACObjectLC
+        )
+        setInteger(MediaFormat.KEY_BIT_RATE, 128_000)
+        setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 256 * 1024)
+      }
+      encoder = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_AUDIO_AAC)
+      encoder.configure(encoderFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
+      encoder.start()
+
+      val samples = mutableListOf<TranscodedAudio.Sample>()
+      var outputFormat: MediaFormat? = null
+      var inputDone = false
+      var decoderDone = false
+      var encoderInputSignalled = false
+      var encoderDone = false
+      val info = MediaCodec.BufferInfo()
+
+      while (!encoderDone && !isCancelled) {
+        if (!inputDone) {
+          val idx = decoder.dequeueInputBuffer(TIMEOUT_DEQUEUE)
+          if (idx >= 0) {
+            val buf = decoder.getInputBuffer(idx)
+            if (buf != null) {
+              val sz = audioExtractor.readSampleData(buf, 0)
+              if (sz < 0) {
+                decoder.queueInputBuffer(
+                  idx, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM
+                )
+                inputDone = true
+              } else {
+                decoder.queueInputBuffer(
+                  idx, 0, sz, audioExtractor.sampleTime, audioExtractor.sampleFlags
+                )
+                audioExtractor.advance()
+              }
+            }
+          }
+        }
+
+        if (!decoderDone) {
+          val status = decoder.dequeueOutputBuffer(info, TIMEOUT_DEQUEUE)
+          when {
+            status == MediaCodec.INFO_TRY_AGAIN_LATER -> {}
+            status == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {}
+            status >= 0 -> {
+              val isEos = info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0
+              val data = decoder.getOutputBuffer(status)
+              if (data != null && info.size > 0) {
+                val encInIdx = encoder.dequeueInputBuffer(TIMEOUT_DEQUEUE)
+                if (encInIdx >= 0) {
+                  val encInBuf = encoder.getInputBuffer(encInIdx)
+                  if (encInBuf != null) {
+                    encInBuf.clear()
+                    data.position(info.offset)
+                    data.limit(info.offset + info.size)
+                    encInBuf.put(data)
+                    encoder.queueInputBuffer(
+                      encInIdx, 0, info.size, info.presentationTimeUs, 0
+                    )
+                  }
+                }
+              }
+              decoder.releaseOutputBuffer(status, false)
+              if (isEos) {
+                if (!encoderInputSignalled) {
+                  val encInIdx = encoder.dequeueInputBuffer(TIMEOUT_DEQUEUE * 10)
+                  if (encInIdx >= 0) {
+                    encoder.queueInputBuffer(
+                      encInIdx, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM
+                    )
+                    encoderInputSignalled = true
+                  }
+                }
+                decoderDone = true
+              }
+            }
+          }
+        }
+
+        val encOutIdx = encoder.dequeueOutputBuffer(info, TIMEOUT_DEQUEUE)
+        when {
+          encOutIdx == MediaCodec.INFO_TRY_AGAIN_LATER -> {}
+          encOutIdx == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
+            outputFormat = encoder.outputFormat
+          }
+          encOutIdx >= 0 -> {
+            val data = encoder.getOutputBuffer(encOutIdx)
+            val isEos = info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0
+            val isConfig = info.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG != 0
+            if (data != null && info.size > 0 && !isConfig) {
+              val bytes = ByteArray(info.size)
+              data.position(info.offset)
+              data.get(bytes, 0, info.size)
+              samples.add(
+                TranscodedAudio.Sample(
+                  bytes = bytes,
+                  presentationTimeUs = info.presentationTimeUs,
+                  flags = info.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG.inv()
+                )
+              )
+            }
+            encoder.releaseOutputBuffer(encOutIdx, false)
+            if (isEos) encoderDone = true
+          }
+        }
+      }
+
+      val fmt = outputFormat ?: return null
+      return TranscodedAudio(fmt, samples)
+    } catch (e: Exception) {
+      Log.w(TAG, "Audio transcode failed; dropping audio", e)
+      return null
+    } finally {
+      try { decoder?.stop() } catch (_: Exception) {}
+      try { decoder?.release() } catch (_: Exception) {}
+      try { encoder?.stop() } catch (_: Exception) {}
+      try { encoder?.release() } catch (_: Exception) {}
+      audioExtractor.release()
+    }
+  }
+
+  private fun writeTranscodedAudio(
+    samples: List<TranscodedAudio.Sample>,
+    muxer: MediaMuxer,
+    muxerAudioTrack: Int
+  ) {
+    val info = MediaCodec.BufferInfo()
+    for (sample in samples) {
+      if (isCancelled) break
+      val buffer = ByteBuffer.wrap(sample.bytes)
+      info.offset = 0
+      info.size = sample.bytes.size
+      info.presentationTimeUs = sample.presentationTimeUs
+      info.flags = sample.flags
+      muxer.writeSampleData(muxerAudioTrack, buffer, info)
+    }
   }
 
   private fun calculateOutputDims(srcW: Int, srcH: Int, rotation: Int, maxSize: Int): Pair<Int, Int> {

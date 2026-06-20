@@ -11,6 +11,7 @@ export type VideoMetadata = {
   hasAudio: boolean
   frameRate: number
   rotation: number
+  isHDR: boolean
 }
 
 export type CompressOptions = {

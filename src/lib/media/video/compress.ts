@@ -24,7 +24,19 @@ export async function compressVideo(
     file.mimeType as SupportedMimeTypes,
   )
 
-  const metadata = await probe(file.uri)
+  let metadata
+  try {
+    metadata = await probe(file.uri)
+  } catch (e) {
+    logger.debug('probe failed, falling through to passthrough', {
+      safeMessage: e,
+    })
+    return {
+      uri: file.uri,
+      size: file.fileSize ?? -1,
+      mimeType: file.mimeType ?? 'video/mp4',
+    }
+  }
 
   if (!shouldCompress(metadata, isAcceptableFormat)) {
     return {
@@ -55,7 +67,13 @@ export async function compressVideo(
 }
 
 function shouldCompress(
-  metadata: {bitrate: number; width: number; height: number; fileSize: number},
+  metadata: {
+    bitrate: number
+    width: number
+    height: number
+    fileSize: number
+    isHDR: boolean
+  },
   isAcceptableFormat: boolean,
 ): boolean {
   const maxDimension = Math.max(metadata.width, metadata.height)
@@ -64,6 +82,13 @@ function shouldCompress(
 
   if (!isAcceptableFormat) {
     logger.debug('shouldCompress: yes (unsupported format)')
+    return true
+  }
+
+  // HDR sources need the SDR BT.709 tone-map in the compress path; otherwise we
+  // would upload HLG/PQ/Dolby Vision untouched.
+  if (metadata.isHDR) {
+    logger.debug('shouldCompress: yes (HDR source)')
     return true
   }
 

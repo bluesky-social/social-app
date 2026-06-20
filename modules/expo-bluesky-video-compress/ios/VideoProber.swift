@@ -23,8 +23,24 @@ struct VideoProber {
     let formatDescriptions = try await videoTrack.load(.formatDescriptions)
 
     var codec = "unknown"
+    var isHDR = false
     if let formatDescription = formatDescriptions.first {
-      codec = fourCCToString(CMFormatDescriptionGetMediaSubType(formatDescription))
+      let subType = CMFormatDescriptionGetMediaSubType(formatDescription)
+      codec = fourCCToString(subType)
+      // Dolby Vision codecs are HDR by definition.
+      let dolbyVisionSubtypes: Set<String> = ["dvhe", "dvh1", "dvav", "dva1"]
+      if dolbyVisionSubtypes.contains(codec) {
+        isHDR = true
+      } else if let extensions = CMFormatDescriptionGetExtensions(formatDescription)
+        as? [String: Any]
+      {
+        let transferKey = kCMFormatDescriptionExtension_TransferFunction as String
+        if let transfer = extensions[transferKey] as? String {
+          let hlg = kCMFormatDescriptionTransferFunction_ITU_R_2100_HLG as String
+          let pq = kCMFormatDescriptionTransferFunction_SMPTE_ST_2084_PQ as String
+          isHDR = transfer == hlg || transfer == pq
+        }
+      }
     }
 
     let rotation = rotationFromTransform(preferredTransform)
@@ -66,7 +82,8 @@ struct VideoProber {
       "codec": codec,
       "hasAudio": hasAudio,
       "frameRate": nominalFrameRate,
-      "rotation": rotation
+      "rotation": rotation,
+      "isHDR": isHDR
     ]
   }
 

@@ -5,6 +5,7 @@ import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.media.MediaMetadataRetriever
 import android.net.Uri
+import android.os.Build
 
 object VideoProber {
   fun probe(context: Context, uriString: String): Map<String, Any> {
@@ -39,6 +40,7 @@ object VideoProber {
       var codec = "unknown"
       var mimeType = "video/mp4"
       var extractedFrameRate = frameRate
+      var isHDR = false
 
       try {
         if (uriString.startsWith("content://") || uriString.startsWith("file://")) {
@@ -55,6 +57,18 @@ object VideoProber {
             codec = mime.removePrefix("video/")
             if (format.containsKey(MediaFormat.KEY_FRAME_RATE)) {
               extractedFrameRate = format.getInteger(MediaFormat.KEY_FRAME_RATE).toFloat()
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&
+              format.containsKey(MediaFormat.KEY_COLOR_TRANSFER)
+            ) {
+              val transfer = format.getInteger(MediaFormat.KEY_COLOR_TRANSFER)
+              isHDR = transfer == MediaFormat.COLOR_TRANSFER_HLG ||
+                transfer == MediaFormat.COLOR_TRANSFER_ST2084
+            }
+            // Dolby Vision tracks use codec-specific mimes that aren't covered by
+            // KEY_COLOR_TRANSFER on every device.
+            if (mime.contains("dolby-vision", ignoreCase = true)) {
+              isHDR = true
             }
             break
           }
@@ -82,7 +96,8 @@ object VideoProber {
         "codec" to codec,
         "hasAudio" to hasAudio,
         "frameRate" to extractedFrameRate.toDouble(),
-        "rotation" to rotation
+        "rotation" to rotation,
+        "isHDR" to isHDR
       )
     } finally {
       retriever.release()
