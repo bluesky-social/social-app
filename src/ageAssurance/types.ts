@@ -1,3 +1,4 @@
+import type * as AgeRange from 'expo-age-range'
 import {
   type AppBskyAgeassuranceDefs,
   type computeAgeAssuranceRegionAccess,
@@ -25,6 +26,23 @@ export type AgeAssuranceVerificationMethod = 'device' | 'kws'
  */
 export type AgeAssuranceConfigRegion = AppBskyAgeassuranceDefs.ConfigRegion & {
   verificationMethods?: AgeAssuranceVerificationMethod[]
+}
+
+/**
+ * The on-device age signals plus the region they were captured in.
+ *
+ * Device assurance can't be verified server-side (the OS gives us no signed
+ * attestation, only age bounds), so we persist it client-side only and bind it
+ * to its origin region. The signals are only honored when the user's current
+ * region matches `originRegion` — a grant captured in TX must not silently
+ * unlock another region. See `getAssuredAgeFromDeviceSignals`.
+ */
+export type AgeAssuranceDeviceSignals = {
+  signals: AgeRange.AgeRangeResponse
+  originRegion: {
+    countryCode: string
+    regionCode?: string
+  }
 }
 
 export enum AgeAssuranceAccess {

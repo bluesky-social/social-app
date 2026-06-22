@@ -1,5 +1,4 @@
 import {useEffect, useMemo, useState} from 'react'
-import type * as AgeRange from 'expo-age-range'
 import {
   type AppBskyAgeassuranceDefs,
   computeAgeAssuranceRegionAccess,
@@ -17,6 +16,7 @@ import {
 import {logger} from '#/ageAssurance/logger'
 import {
   AgeAssuranceAccess,
+  type AgeAssuranceDeviceSignals,
   type AgeAssuranceMetadata,
   type AgeAssuranceState,
   AgeAssuranceStatus,
@@ -49,7 +49,7 @@ function computeAgeAssuranceState({
   config?: AppBskyAgeassuranceDefs.Config
   state?: AppBskyAgeassuranceDefs.State
   metadata?: AgeAssuranceMetadata
-  deviceSignals?: AgeRange.AgeRangeResponse
+  deviceSignals?: AgeAssuranceDeviceSignals
 }) {
   /**
    * This is where we control logged-out moderation prefs. It's all

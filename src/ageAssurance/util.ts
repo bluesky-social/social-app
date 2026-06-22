@@ -1,5 +1,4 @@
 import {useMemo} from 'react'
-import type * as AgeRange from 'expo-age-range'
 import {
   type AppBskyAgeassuranceDefs,
   getAgeAssuranceRegionConfig,
@@ -13,6 +12,7 @@ import {useAgeAssuranceServerDataContext} from '#/ageAssurance/data'
 import {
   AgeAssuranceAccess,
   type AgeAssuranceConfigRegion,
+  type AgeAssuranceDeviceSignals,
   type AgeAssuranceFlags,
   type AgeAssuranceMetadata,
   type AgeAssuranceState,
@@ -64,20 +64,46 @@ export function regionAllowsDeviceVerification(
 }
 
 /**
- * Derives an assured age from native device signals, but only for regions that
- * permit device verification. The OS-provided `lowerBound` is the minimum age
- * the platform will attest to, which maps directly onto the `assuredAge` input
- * of the rule engine (i.e. `IfAssuredOverAge`/`IfAssuredUnderAge` rules).
+ * Whether two regions refer to the same country + region. Used to ensure device
+ * signals are only applied within the region they were captured in.
+ */
+function isSameRegion(
+  a: {countryCode: string; regionCode?: string},
+  b: {countryCode: string; regionCode?: string},
+): boolean {
+  return a.countryCode === b.countryCode && a.regionCode === b.regionCode
+}
+
+/**
+ * Derives an assured age from native device signals, but only when:
  *
- * Returns undefined when the region doesn't allow device verification or when
- * the OS didn't provide a usable lower bound.
+ * 1. the current region permits device verification, and
+ * 2. the signals were captured in this same region.
+ *
+ * Device assurance is region-bound (see {@link AgeAssuranceDeviceSignals}): a
+ * grant captured in TX must not unlock another region. The OS-provided
+ * `lowerBound` is the minimum age the platform will attest to, which maps
+ * directly onto the `assuredAge` input of the rule engine (i.e.
+ * `IfAssuredOverAge`/`IfAssuredUnderAge` rules).
+ *
+ * Returns undefined when device verification doesn't apply or the OS didn't
+ * provide a usable lower bound.
  */
 export function getAssuredAgeFromDeviceSignals(
   region: AppBskyAgeassuranceDefs.ConfigRegion,
-  deviceSignals: AgeRange.AgeRangeResponse | undefined,
+  deviceSignals: AgeAssuranceDeviceSignals | undefined,
 ): number | undefined {
   if (!regionAllowsDeviceVerification(region)) return undefined
-  const lowerBound = deviceSignals?.lowerBound
+  if (!deviceSignals) return undefined
+  if (
+    !isSameRegion(deviceSignals.originRegion, {
+      countryCode: region.countryCode,
+      regionCode: region.regionCode,
+    })
+  ) {
+    return undefined
+  }
+  const lowerBound = deviceSignals.signals.lowerBound
   return typeof lowerBound === 'number' ? lowerBound : undefined
 }
 

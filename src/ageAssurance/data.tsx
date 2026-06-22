@@ -25,12 +25,15 @@ import {fetchActorDeclarationRecord} from '#/state/queries/messages/actor-declar
 import {useAgent, useSession} from '#/state/session'
 import * as debug from '#/ageAssurance/debug'
 import {logger} from '#/ageAssurance/logger'
-import {type AgeAssuranceMetadata} from '#/ageAssurance/types'
+import {
+  type AgeAssuranceDeviceSignals,
+  type AgeAssuranceMetadata,
+} from '#/ageAssurance/types'
 import {
   getBirthdateStringFromAge,
   isLegacyBirthdateBug,
 } from '#/ageAssurance/util'
-import {IS_DEV} from '#/env'
+import {IS_DEV, IS_NATIVE} from '#/env'
 import {device} from '#/storage'
 
 /**
@@ -489,10 +492,18 @@ export function useOtherRequiredDataQuery() {
 export function createDeviceSignalsQueryKey({did}: {did: string}) {
   return ['device-signals', did]
 }
+/**
+ * Prompts the native OS age API. Returns the raw response, or undefined if the
+ * platform can't provide one.
+ *
+ * Native-only: on web `expo-age-range` returns a misleading default (e.g.
+ * `{lowerBound: 18}`), so we never call it there — web users fall back to KWS.
+ */
 export async function getDeviceSignals(): Promise<
   AgeRange.AgeRangeResponse | undefined
 > {
   if (debug.enabled) return debug.resolve(debug.deviceSignals)
+  if (!IS_NATIVE) return undefined
   try {
     return await AgeRange.requestAgeRangeAsync({
       threshold1: 13,
@@ -511,25 +522,29 @@ export function getDeviceSignalsFromCache({
   did,
 }: {
   did: string
-}): AgeRange.AgeRangeResponse | undefined {
-  return qc.getQueryData<AgeRange.AgeRangeResponse>(
+}): AgeAssuranceDeviceSignals | undefined {
+  return qc.getQueryData<AgeAssuranceDeviceSignals>(
     createDeviceSignalsQueryKey({did}),
   )
 }
 /**
- * Writes freshly granted device signals into the (persisted) cache. Notifies
- * the disabled `useDeviceSignalsQuery` observer so the AA state recomputes.
+ * Writes freshly granted device signals into the (persisted) cache, tagged with
+ * the region they were captured in. Notifies the disabled
+ * `useDeviceSignalsQuery` observer so the AA state recomputes.
+ *
+ * Device assurance is client-side only (it can't be verified server-side) and
+ * region-bound — see {@link AgeAssuranceDeviceSignals}.
  */
 export function setDeviceSignalsForDid({
   did,
-  signals,
+  deviceSignals,
 }: {
   did: string
-  signals: AgeRange.AgeRangeResponse | undefined
+  deviceSignals: AgeAssuranceDeviceSignals | undefined
 }) {
-  qc.setQueryData<AgeRange.AgeRangeResponse | undefined>(
+  qc.setQueryData<AgeAssuranceDeviceSignals | undefined>(
     createDeviceSignalsQueryKey({did}),
-    signals,
+    deviceSignals,
   )
 }
 export async function prefetchDeviceSignals({agent}: {agent: AtpAgent}) {
@@ -558,8 +573,8 @@ export function useDeviceSignalsQuery() {
        * Disabled so we never auto-call the native age API on load — that would
        * prompt the OS for every logged-in user. We restore from the persisted
        * cache (via `initialData`) and otherwise only update reactively when the
-       * user explicitly verifies (see `getDeviceSignals` + `setQueryData` in
-       * the NoAccessScreen verify flow).
+       * user explicitly verifies (see `getDeviceSignals` + `setDeviceSignalsForDid`
+       * in the NoAccessScreen verify flow).
        *
        * A future enhancement could silently refresh here when already cached,
        * since the OS returns the granted result without re-prompting.
@@ -567,9 +582,10 @@ export function useDeviceSignalsQuery() {
       enabled: false,
       initialData: getDeviceSignalsFromCache({did: did!}),
       queryKey: createDeviceSignalsQueryKey({did: did!}),
-      async queryFn() {
-        logger.debug(`useDeviceSignalsQuery: fetching device signals`)
-        return getDeviceSignals()
+      queryFn() {
+        // Never auto-fetches (see `enabled: false`); the verify flow writes the
+        // region-tagged record directly via `setDeviceSignalsForDid`.
+        return getDeviceSignalsFromCache({did: did!})
       },
     },
     qc,
@@ -618,10 +634,11 @@ export type AgeAssuranceServerData = {
   state: AppBskyAgeassuranceDefs.State | undefined
   metadata: AgeAssuranceMetadata | undefined
   /**
-   * The native on-device age signals, if the user has granted access. Only
-   * consumed for regions that permit device verification.
+   * The native on-device age signals, if the user has granted access, tagged
+   * with the region they were captured in. Only consumed for regions that
+   * permit device verification and that match the capture region.
    */
-  deviceSignals: AgeRange.AgeRangeResponse | undefined
+  deviceSignals: AgeAssuranceDeviceSignals | undefined
 }
 const AgeAssuranceServerDataContext = createContext<AgeAssuranceServerData>({
   config: undefined,

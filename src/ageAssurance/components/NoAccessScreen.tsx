@@ -38,6 +38,7 @@ import {
   useAgeAssuranceServerDataContext,
 } from '#/ageAssurance/data'
 import {logger} from '#/ageAssurance/logger'
+import {type AgeAssuranceDeviceSignals} from '#/ageAssurance/types'
 import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
 import {
   getAssuredAgeFromDeviceSignals,
@@ -338,25 +339,34 @@ function AccessSection() {
   const onPressVerify = useCallback(async () => {
     /*
      * In regions that permit on-device verification, try the native age API
-     * first. If it returns a sufficient age, the cached signals flow into the
-     * AA state recompute and lift the gate. Otherwise we fall back to the KWS
-     * flow below. `getDeviceSignals` handles its own errors and returns
-     * undefined on failure, which also routes us to the fallback.
+     * first. We tag the result with the current region (device assurance is
+     * region-bound — a TX grant only counts in TX) and, if it's sufficient,
+     * persist it client-side so the AA state recompute lifts the gate.
+     * Otherwise we fall back to the KWS flow below. `getDeviceSignals` handles
+     * its own errors and returns undefined (e.g. on web or failure), which also
+     * routes us to the fallback.
      */
     if (region && regionAllowsDeviceVerification(region)) {
       const did = currentAccount?.did
       const signals = await getDeviceSignals()
-      if (did) {
-        setDeviceSignalsForDid({did, signals})
-      }
-      const assuredAge = getAssuredAgeFromDeviceSignals(region, signals)
-      if (assuredAge !== undefined) {
-        // Sufficient device signals: AA state recomputes from the cache
-        // write above and unlocks access. Nothing else to do here.
-        return
+      if (signals && did) {
+        const deviceSignals: AgeAssuranceDeviceSignals = {
+          signals,
+          originRegion: {
+            countryCode: region.countryCode,
+            regionCode: region.regionCode,
+          },
+        }
+        const assuredAge = getAssuredAgeFromDeviceSignals(region, deviceSignals)
+        if (assuredAge !== undefined) {
+          // Sufficient device signals: persist and let the AA state recompute
+          // from the cache write unlock access. Nothing else to do here.
+          setDeviceSignalsForDid({did, deviceSignals})
+          return
+        }
       }
       logger.debug(
-        `onPressVerify: device signals insufficient, falling back to KWS`,
+        `onPressVerify: device signals unavailable or insufficient, falling back to KWS`,
       )
     }
 

@@ -71,10 +71,12 @@ export const config: DebugConfig = {
     {
       // On-device verification region (e.g. Texas). Set debug.geolocation to
       // {countryCode: 'US', regionCode: 'TX'} to exercise the device flow.
+      // KWS is included as a fallback for platforms without the native age API
+      // (e.g. web) or when the device result is insufficient.
       countryCode: 'US',
       regionCode: 'TX',
       minAccessAge: 18,
-      verificationMethods: ['device'],
+      verificationMethods: ['device', 'kws'],
       rules: [
         {
           age: 18,
