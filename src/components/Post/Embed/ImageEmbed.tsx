@@ -8,7 +8,6 @@ import {atoms as a, tokens} from '#/alf'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
 import {Gallery} from '#/components/images/Gallery'
 import {ImageLayoutGrid} from '#/components/images/ImageLayoutGrid'
-import {shouldHideImageBadges} from '#/components/images/shouldHideImageBadges'
 import {
   type LightboxMetricsContext,
   useLightboxControls,
@@ -143,7 +142,6 @@ export function ImageEmbed({
                 onPress(0, [containerRef], [dims])
               }
               onPressIn={() => onPressIn(0)}
-              hideBadge={shouldHideImageBadges(rest.viewContext)}
             />
           </ImageContextMenu>
         </View>
