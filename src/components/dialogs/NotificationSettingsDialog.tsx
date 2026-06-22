@@ -2,7 +2,9 @@ import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {
+  isChatPreferenceName,
   type NotificationSettingsPreferenceName,
+  useChatNotificationSettingsQuery,
   useNotificationSettingsQuery,
 } from '#/state/queries/notifications/settings'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
@@ -57,7 +59,13 @@ function NotificationSettingsDialogInner({
 }: Omit<NotificationSettingsDialogProps, 'icon'>) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const {data: preferences, isError} = useNotificationSettingsQuery()
+  const isChat = isChatPreferenceName(name)
+  const appQuery = useNotificationSettingsQuery({enabled: !isChat})
+  const chatQuery = useChatNotificationSettingsQuery({enabled: isChat})
+  const isError = isChat ? chatQuery.isError : appQuery.isError
+  const preference = isChatPreferenceName(name)
+    ? chatQuery.data?.[name]
+    : appQuery.data?.[name]
 
   return (
     <>
@@ -83,7 +91,7 @@ function NotificationSettingsDialogInner({
             <PreferenceControls
               name={name}
               syncOthers={syncOthers}
-              preference={preferences?.[name]}
+              preference={preference}
               allowDisableInApp={allowDisableInApp}
             />
           )}

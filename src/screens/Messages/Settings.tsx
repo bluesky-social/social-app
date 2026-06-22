@@ -7,7 +7,7 @@ import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useUpdateActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {
   type NotificationSettingsPreference,
-  useNotificationSettingsQuery,
+  useChatNotificationSettingsQuery,
 } from '#/state/queries/notifications/settings'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -61,8 +61,8 @@ export function MessagesSettingsScreenInner({}: Props) {
   const {data: profile} = useProfileQuery({
     did: currentAccount!.did,
   })
-  const {data: notificationSettings, isError: notificationSettingsError} =
-    useNotificationSettingsQuery()
+  const {data: chatNotificationSettings, isError: chatSettingsError} =
+    useChatNotificationSettingsQuery()
   const {preferences, setPref} = useBackgroundNotificationPreferences()
 
   const chatDialogControl = Dialog.useDialogControl()
@@ -268,9 +268,9 @@ export function MessagesSettingsScreenInner({}: Props) {
                   <Trans>New messages</Trans>
                 </Text>
                 <NotificationPreferenceSubtitle
-                  preference={notificationSettings?.chat}
-                  isLoading={!notificationSettings}
-                  isError={notificationSettingsError}
+                  preference={chatNotificationSettings?.chat}
+                  isLoading={!chatNotificationSettings}
+                  isError={chatSettingsError}
                 />
               </View>
               <ChevronRightIcon style={[a.ml_2xs, t.atoms.text]} size="lg" />
@@ -289,9 +289,9 @@ export function MessagesSettingsScreenInner({}: Props) {
                   <Trans>New message requests</Trans>
                 </Text>
                 <NotificationPreferenceSubtitle
-                  preference={notificationSettings?.chatRequest}
-                  isLoading={!notificationSettings}
-                  isError={notificationSettingsError}
+                  preference={chatNotificationSettings?.chatRequest}
+                  isLoading={!chatNotificationSettings}
+                  isError={chatSettingsError}
                 />
               </View>
               <ChevronRightIcon style={[a.ml_2xs, t.atoms.text]} size="lg" />

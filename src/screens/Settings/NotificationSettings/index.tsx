@@ -9,7 +9,10 @@ import {
   type AllNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
-import {useNotificationSettingsQuery} from '#/state/queries/notifications/settings'
+import {
+  useChatNotificationSettingsQuery,
+  useNotificationSettingsQuery,
+} from '#/state/queries/notifications/settings'
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import * as Dialog from '#/components/Dialog'
@@ -45,6 +48,8 @@ export function NotificationSettingsScreen({}: Props) {
   const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const {data: settings, isError} = useNotificationSettingsQuery()
+  const {data: chatSettings, isError: chatError} =
+    useChatNotificationSettingsQuery()
 
   const likeDialogControl = Dialog.useDialogControl()
   const followDialogControl = Dialog.useDialogControl()
@@ -246,8 +251,14 @@ export function NotificationSettingsScreen({}: Props) {
               <SettingsList.ItemIcon icon={MessageIcon} />
               <ItemTextWithSubtitle
                 titleText={<Trans>New messages</Trans>}
-                subtitleText={<SettingPreview preference={settings?.chat} />}
-                showSkeleton={!settings}
+                subtitleText={
+                  chatError ? (
+                    <Trans>Failed to load notification settings.</Trans>
+                  ) : (
+                    <SettingPreview preference={chatSettings?.chat} />
+                  )
+                }
+                showSkeleton={!chatSettings && !chatError}
               />
             </SettingsList.PressableItem>
             <SettingsList.PressableItem
@@ -258,9 +269,13 @@ export function NotificationSettingsScreen({}: Props) {
               <ItemTextWithSubtitle
                 titleText={<Trans>New message requests</Trans>}
                 subtitleText={
-                  <SettingPreview preference={settings?.chatRequest} />
+                  chatError ? (
+                    <Trans>Failed to load notification settings.</Trans>
+                  ) : (
+                    <SettingPreview preference={chatSettings?.chatRequest} />
+                  )
                 }
-                showSkeleton={!settings}
+                showSkeleton={!chatSettings && !chatError}
               />
             </SettingsList.PressableItem>
             <SettingsList.PressableItem
