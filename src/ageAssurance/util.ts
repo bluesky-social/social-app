@@ -1,4 +1,5 @@
 import {useMemo} from 'react'
+import type * as AgeRange from 'expo-age-range'
 import {
   type AppBskyAgeassuranceDefs,
   getAgeAssuranceRegionConfig,
@@ -11,9 +12,11 @@ import {FALLBACK_REGION_CONFIG, MIN_ACCESS_AGE} from '#/ageAssurance/const'
 import {useAgeAssuranceServerDataContext} from '#/ageAssurance/data'
 import {
   AgeAssuranceAccess,
+  type AgeAssuranceConfigRegion,
   type AgeAssuranceFlags,
   type AgeAssuranceMetadata,
   type AgeAssuranceState,
+  type AgeAssuranceVerificationMethod,
 } from '#/ageAssurance/types'
 import {type Geolocation, useGeolocation} from '#/geolocation'
 
@@ -34,6 +37,48 @@ export function getAgeAssuranceRegionConfigWithFallback(
   })
 
   return region || FALLBACK_REGION_CONFIG
+}
+
+/**
+ * Returns the verification methods permitted for a region, defaulting to
+ * `['kws']` when the region doesn't specify any (the historical behavior).
+ *
+ * NOTE: `verificationMethods` is not yet part of the lexicon, so we read it via
+ * {@link AgeAssuranceConfigRegion}. See that type for the migration note.
+ */
+export function getRegionVerificationMethods(
+  region: AppBskyAgeassuranceDefs.ConfigRegion,
+): AgeAssuranceVerificationMethod[] {
+  const methods = (region as AgeAssuranceConfigRegion).verificationMethods
+  return methods && methods.length > 0 ? methods : ['kws']
+}
+
+/**
+ * Whether a region permits satisfying age assurance via the native on-device
+ * age APIs (Apple Declared Age Range / Google Play Age Signals).
+ */
+export function regionAllowsDeviceVerification(
+  region: AppBskyAgeassuranceDefs.ConfigRegion,
+): boolean {
+  return getRegionVerificationMethods(region).includes('device')
+}
+
+/**
+ * Derives an assured age from native device signals, but only for regions that
+ * permit device verification. The OS-provided `lowerBound` is the minimum age
+ * the platform will attest to, which maps directly onto the `assuredAge` input
+ * of the rule engine (i.e. `IfAssuredOverAge`/`IfAssuredUnderAge` rules).
+ *
+ * Returns undefined when the region doesn't allow device verification or when
+ * the OS didn't provide a usable lower bound.
+ */
+export function getAssuredAgeFromDeviceSignals(
+  region: AppBskyAgeassuranceDefs.ConfigRegion,
+  deviceSignals: AgeRange.AgeRangeResponse | undefined,
+): number | undefined {
+  if (!regionAllowsDeviceVerification(region)) return undefined
+  const lowerBound = deviceSignals?.lowerBound
+  return typeof lowerBound === 'number' ? lowerBound : undefined
 }
 
 /**

@@ -1,4 +1,5 @@
 import {useEffect, useMemo, useState} from 'react'
+import type * as AgeRange from 'expo-age-range'
 import {
   type AppBskyAgeassuranceDefs,
   computeAgeAssuranceRegionAccess,
@@ -8,6 +9,7 @@ import {getAge} from '#/lib/strings/time'
 import {useSession} from '#/state/session'
 import {
   getConfigFromCache,
+  getDeviceSignalsFromCache,
   getOtherRequiredDataFromCache,
   getServerStateFromCache,
   useAgeAssuranceServerDataContext,
@@ -24,6 +26,7 @@ import {
 import {
   computeAgeAssuranceFlags,
   getAgeAssuranceRegionConfigWithFallback,
+  getAssuredAgeFromDeviceSignals,
 } from '#/ageAssurance/util'
 import {type Geolocation, useGeolocation} from '#/geolocation'
 import {device} from '#/storage'
@@ -39,12 +42,14 @@ function computeAgeAssuranceState({
   config,
   state,
   metadata,
+  deviceSignals,
 }: {
   hasSession: boolean
   geolocation: Geolocation
   config?: AppBskyAgeassuranceDefs.Config
   state?: AppBskyAgeassuranceDefs.State
   metadata?: AgeAssuranceMetadata
+  deviceSignals?: AgeRange.AgeRangeResponse
 }) {
   /**
    * This is where we control logged-out moderation prefs. It's all
@@ -93,10 +98,16 @@ function computeAgeAssuranceState({
    * Otherwise, we need to compute the access based on the latest data. For
    * accounts with an accurate birthdate, our default fallback rules should
    * ensure correct access.
+   *
+   * In regions that permit on-device verification, the OS-provided age range
+   * is treated as an assured age and fed into the rule engine, where it
+   * matches `IfAssuredOverAge`/`IfAssuredUnderAge` rules.
    */
+  const assuredAge = getAssuredAgeFromDeviceSignals(region, deviceSignals)
   const result = computeAgeAssuranceRegionAccess(region, {
     accountCreatedAt: metadata?.accountCreatedAt,
     declaredAge: metadata?.declaredAge,
+    assuredAge,
   })
   const computed = {
     lastInitiatedAt: state?.lastInitiatedAt,
@@ -126,6 +137,7 @@ export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
   const config = getConfigFromCache()
   const state = getServerStateFromCache({did})
   const requiredData = getOtherRequiredDataFromCache({did})
+  const deviceSignals = getDeviceSignalsFromCache({did})
   const geolocation = device.get(['mergedGeolocation'])
 
   if (!geolocation || !config || !state || !requiredData) {
@@ -151,6 +163,7 @@ export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
     geolocation,
     state: state.state,
     metadata,
+    deviceSignals,
   })
 
   return {
@@ -166,7 +179,8 @@ export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
 export function useAgeAssuranceState(): AgeAssuranceState {
   const {hasSession} = useSession()
   const geolocation = useGeolocation()
-  const {config, state, metadata} = useAgeAssuranceServerDataContext()
+  const {config, state, metadata, deviceSignals} =
+    useAgeAssuranceServerDataContext()
 
   return useMemo(
     () =>
@@ -176,8 +190,9 @@ export function useAgeAssuranceState(): AgeAssuranceState {
         geolocation,
         state,
         metadata,
+        deviceSignals,
       }),
-    [hasSession, geolocation, config, state, metadata],
+    [hasSession, geolocation, config, state, metadata, deviceSignals],
   )
 }
 

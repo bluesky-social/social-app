@@ -1,13 +1,22 @@
 import type * as AgeRange from 'expo-age-range'
 import {
   ageAssuranceRuleIDs as ids,
-  type AppBskyAgeassuranceDefs,
   type AppBskyAgeassuranceGetState,
 } from '@atproto/api'
 
 import {type OtherRequiredData} from '#/ageAssurance/data'
+import {type AgeAssuranceConfigRegion} from '#/ageAssurance/types'
 import {IS_DEV, IS_E2E} from '#/env'
 import {type Geolocation} from '#/geolocation'
+
+/**
+ * Debug-only config shape. Mirrors {@link AppBskyAgeassuranceDefs.Config} but
+ * uses {@link AgeAssuranceConfigRegion}, which carries the not-yet-in-lexicon
+ * `verificationMethods` field so we can prototype on-device verification.
+ */
+export type DebugConfig = {
+  regions: AgeAssuranceConfigRegion[]
+}
 
 export const enabled = (IS_DEV && true) || IS_E2E
 
@@ -46,7 +55,7 @@ export const serverState: AppBskyAgeassuranceGetState.OutputSchema | undefined =
       }
     : undefined
 
-export const config: AppBskyAgeassuranceDefs.Config = {
+export const config: DebugConfig = {
   regions: [
     {
       countryCode: 'AA',
@@ -56,6 +65,25 @@ export const config: AppBskyAgeassuranceDefs.Config = {
         {
           $type: ids.Default,
           access: 'full',
+        },
+      ],
+    },
+    {
+      // On-device verification region (e.g. Texas). Set debug.geolocation to
+      // {countryCode: 'US', regionCode: 'TX'} to exercise the device flow.
+      countryCode: 'US',
+      regionCode: 'TX',
+      minAccessAge: 18,
+      verificationMethods: ['device'],
+      rules: [
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
         },
       ],
     },
@@ -262,7 +290,9 @@ const deviceSignalsEnabled = true
 export const deviceSignals: AgeRange.AgeRangeResponse | undefined =
   deviceSignalsEnabled
     ? {
-        lowerBound: null,
+        // Simulates the OS reporting the user is at least 18. Lower this below
+        // a region's IfAssuredOverAge threshold to exercise the KWS fallback.
+        lowerBound: 18,
         upperBound: null,
       }
     : undefined

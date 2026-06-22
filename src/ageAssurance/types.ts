@@ -1,6 +1,31 @@
-import {type computeAgeAssuranceRegionAccess} from '@atproto/api'
+import {
+  type AppBskyAgeassuranceDefs,
+  type computeAgeAssuranceRegionAccess,
+} from '@atproto/api'
 
 import {logger} from '#/ageAssurance/logger'
+
+/**
+ * The ways a user can satisfy age assurance within a given region.
+ *
+ * - `kws`: the third-party (KWS) verification flow.
+ * - `device`: native on-device age APIs (Apple Declared Age Range / Google
+ *   Play Age Signals), surfaced via `expo-age-range`.
+ *
+ * NOTE: this is not yet part of the `app.bsky.ageassurance` lexicon. It's
+ * modeled client-side (see {@link AgeAssuranceConfigRegion}) while we prototype
+ * the shape. Once the lexicon adds `verificationMethods`, this can be removed in
+ * favor of the generated type.
+ */
+export type AgeAssuranceVerificationMethod = 'device' | 'kws'
+
+/**
+ * A region config extended with the (not-yet-in-lexicon) `verificationMethods`
+ * field. Regions without the field are treated as KWS-only.
+ */
+export type AgeAssuranceConfigRegion = AppBskyAgeassuranceDefs.ConfigRegion & {
+  verificationMethods?: AgeAssuranceVerificationMethod[]
+}
 
 export enum AgeAssuranceAccess {
   Unknown = 'unknown',

@@ -4,7 +4,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import * as AgeRange from 'expo-age-range'
 
 import {
   SupportCode,
@@ -12,7 +11,7 @@ import {
 } from '#/lib/hooks/useCreateSupportLink'
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
-import {useSessionApi} from '#/state/session'
+import {useSession, useSessionApi} from '#/state/session'
 import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
 import {DeleteAccountDialog} from '#/screens/Settings/components/DeleteAccountDialog'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
@@ -33,10 +32,17 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {BottomSheetOutlet} from '#/../modules/bottom-sheet'
 import {useAgeAssurance} from '#/ageAssurance'
-import {useAgeAssuranceServerDataContext} from '#/ageAssurance/data'
+import {
+  getDeviceSignals,
+  setDeviceSignalsForDid,
+  useAgeAssuranceServerDataContext,
+} from '#/ageAssurance/data'
+import {logger} from '#/ageAssurance/logger'
 import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
 import {
+  getAssuredAgeFromDeviceSignals,
   isLegacyBirthdateBug,
+  regionAllowsDeviceVerification,
   useAgeAssuranceRegionConfig,
 } from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'
@@ -308,6 +314,8 @@ function AccessSection() {
   const getTimeAgo = useGetTimeAgo()
   const {setDeviceGeolocation} = useDeviceGeolocationApi()
   const computeAgeAssuranceRegionAccess = useComputeAgeAssuranceRegionAccess()
+  const {currentAccount} = useSession()
+  const region = useAgeAssuranceRegionConfig()
 
   const aa = useAgeAssurance()
   const {status, lastInitiatedAt} = aa.state
@@ -319,6 +327,41 @@ function AccessSection() {
   const diff = lastInitiatedAt
     ? dateDiff(lastInitiatedAt, new Date(), 'down')
     : null
+
+  const openKwsDialog = useCallback(() => {
+    control.open()
+    ax.metric('ageAssurance:initDialogOpen', {
+      hasInitiatedPreviously: hasInitiated,
+    })
+  }, [control, ax, hasInitiated])
+
+  const onPressVerify = useCallback(async () => {
+    /*
+     * In regions that permit on-device verification, try the native age API
+     * first. If it returns a sufficient age, the cached signals flow into the
+     * AA state recompute and lift the gate. Otherwise we fall back to the KWS
+     * flow below. `getDeviceSignals` handles its own errors and returns
+     * undefined on failure, which also routes us to the fallback.
+     */
+    if (region && regionAllowsDeviceVerification(region)) {
+      const did = currentAccount?.did
+      const signals = await getDeviceSignals()
+      if (did) {
+        setDeviceSignalsForDid({did, signals})
+      }
+      const assuredAge = getAssuredAgeFromDeviceSignals(region, signals)
+      if (assuredAge !== undefined) {
+        // Sufficient device signals: AA state recomputes from the cache
+        // write above and unlocks access. Nothing else to do here.
+        return
+      }
+      logger.debug(
+        `onPressVerify: device signals insufficient, falling back to KWS`,
+      )
+    }
+
+    openKwsDialog()
+  }, [region, currentAccount?.did, openKwsDialog])
 
   return (
     <>
@@ -349,23 +392,7 @@ function AccessSection() {
                 label={_(msg`Verify now`)}
                 size="large"
                 color={hasInitiated ? 'secondary' : 'primary'}
-                onPress={async () => {
-                  try {
-                    const ageRange = await AgeRange.requestAgeRangeAsync({
-                      threshold1: 10,
-                      threshold2: 13,
-                      threshold3: 18,
-                    });
-                    console.log(ageRange)
-                  } catch (e) {
-                    console.error(e)
-                  }
-                  return
-                  control.open()
-                  ax.metric('ageAssurance:initDialogOpen', {
-                    hasInitiatedPreviously: hasInitiated,
-                  })
-                }}>
+                onPress={() => void onPressVerify()}>
                 <ButtonIcon icon={ShieldIcon} />
                 <ButtonText>
                   {hasInitiated ? (

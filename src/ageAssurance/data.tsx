@@ -1,4 +1,5 @@
 import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
+import * as AgeRange from 'expo-age-range'
 import {
   type AppBskyAgeassuranceDefs,
   type AppBskyAgeassuranceGetConfig,
@@ -11,7 +12,6 @@ import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persist
 import {focusManager, QueryClient, useQuery} from '@tanstack/react-query'
 import {persistQueryClient} from '@tanstack/react-query-persist-client'
 import debounce from 'lodash.debounce'
-import * as AgeRange from 'expo-age-range';
 
 import {networkRetry} from '#/lib/async/retry'
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
@@ -489,15 +489,18 @@ export function useOtherRequiredDataQuery() {
 export function createDeviceSignalsQueryKey({did}: {did: string}) {
   return ['device-signals', did]
 }
-export async function getDeviceSignals(): Promise<AgeRange.AgeRangeResponse | undefined> {
+export async function getDeviceSignals(): Promise<
+  AgeRange.AgeRangeResponse | undefined
+> {
   if (debug.enabled) return debug.resolve(debug.deviceSignals)
   try {
-    return AgeRange.requestAgeRangeAsync({
+    return await AgeRange.requestAgeRangeAsync({
       threshold1: 13,
       threshold2: 16,
       threshold3: 18,
-    });
-  } catch (e: any) {
+    })
+  } catch (err) {
+    const e = err as Error
     logger.error(`getDeviceSignals: failed to get device signals`, {
       safeMessage: e.message,
     })
@@ -508,66 +511,60 @@ export function getDeviceSignalsFromCache({
   did,
 }: {
   did: string
-}):
-  | AgeRange.AgeRangeResponse
-  | undefined {
+}): AgeRange.AgeRangeResponse | undefined {
   return qc.getQueryData<AgeRange.AgeRangeResponse>(
     createDeviceSignalsQueryKey({did}),
   )
 }
-let deviceSignalsPrefetchPromise: Promise<void> | undefined
-export async function prefetchDeviceSignals({
-  agent,
+/**
+ * Writes freshly granted device signals into the (persisted) cache. Notifies
+ * the disabled `useDeviceSignalsQuery` observer so the AA state recomputes.
+ */
+export function setDeviceSignalsForDid({
+  did,
+  signals,
 }: {
-  agent: AtpAgent
+  did: string
+  signals: AgeRange.AgeRangeResponse | undefined
 }) {
+  qc.setQueryData<AgeRange.AgeRangeResponse | undefined>(
+    createDeviceSignalsQueryKey({did}),
+    signals,
+  )
+}
+export async function prefetchDeviceSignals({agent}: {agent: AtpAgent}) {
   const did = getDidFromAgentSession(agent)
   if (!did) return
 
   /**
-   * If we don't have a cache, it's possible the user hasn't granted access.
-   * We don't want to do this during the prefetch phase, so just exit early,
-   * the user can potentially enable it later.
+   * Device signals are restored from the persisted cache only — we never call
+   * the native age API during prefetch, since that would prompt the OS for
+   * users who haven't opted in. Awaiting cache hydration ensures any previously
+   * granted signals are available before the AA state is first computed. The
+   * user can (re)grant access later via the NoAccessScreen verify flow.
    */
+  await cacheHydrationPromise
   const cached = getDeviceSignalsFromCache({did})
-  if (!cached) return
-
-  if (deviceSignalsPrefetchPromise) {
-    logger.debug(`prefetchDeviceSignals: already in progress`)
-    return
-  }
-
-  deviceSignalsPrefetchPromise = new Promise(async resolve => {
-    await cacheHydrationPromise
-    const cached = getDeviceSignalsFromCache({did})
-
-    if (cached) {
-      logger.debug(`prefetchDeviceSignals: using cache`)
-      resolve()
-    } else {
-      try {
-        logger.debug(`prefetchDeviceSignals: resolving...`)
-        const res = await getDeviceSignals()
-        qc.setQueryData<AgeRange.AgeRangeResponse>(
-          createDeviceSignalsQueryKey({did}),
-          res,
-        )
-      } catch (e: any) {
-        logger.warn(`prefetchDeviceSignals: failed`, {
-          safeMessage: e.message,
-        })
-      } finally {
-        resolve()
-      }
-    }
-  })
+  logger.debug(
+    `prefetchDeviceSignals: ${cached ? 'restored from cache' : 'no cache'}`,
+  )
 }
 export function useDeviceSignalsQuery() {
   const agent = useAgent()
   const did = getDidFromAgentSession(agent)
   return useQuery(
     {
-      enabled: !!did,
+      /**
+       * Disabled so we never auto-call the native age API on load — that would
+       * prompt the OS for every logged-in user. We restore from the persisted
+       * cache (via `initialData`) and otherwise only update reactively when the
+       * user explicitly verifies (see `getDeviceSignals` + `setQueryData` in
+       * the NoAccessScreen verify flow).
+       *
+       * A future enhancement could silently refresh here when already cached,
+       * since the OS returns the granted result without re-prompting.
+       */
+      enabled: false,
       initialData: getDeviceSignalsFromCache({did: did!}),
       queryKey: createDeviceSignalsQueryKey({did: did!}),
       async queryFn() {
@@ -620,6 +617,11 @@ export type AgeAssuranceServerData = {
    */
   state: AppBskyAgeassuranceDefs.State | undefined
   metadata: AgeAssuranceMetadata | undefined
+  /**
+   * The native on-device age signals, if the user has granted access. Only
+   * consumed for regions that permit device verification.
+   */
+  deviceSignals: AgeRange.AgeRangeResponse | undefined
 }
 const AgeAssuranceServerDataContext = createContext<AgeAssuranceServerData>({
   config: undefined,
@@ -629,6 +631,7 @@ const AgeAssuranceServerDataContext = createContext<AgeAssuranceServerData>({
     declaredAge: undefined,
     birthdate: undefined,
   },
+  deviceSignals: undefined,
 })
 export function useAgeAssuranceServerDataContext() {
   return useContext(AgeAssuranceServerDataContext)
@@ -642,6 +645,7 @@ export function AgeAssuranceServerDataProvider({
   const serverState = useServerStateQuery()
   const {state, metadata} = serverState.data || {}
   const {data} = useOtherRequiredDataQuery()
+  const {data: deviceSignals} = useDeviceSignalsQuery()
   const ctx = useMemo(
     () => ({
       config,
@@ -654,8 +658,9 @@ export function AgeAssuranceServerDataProvider({
           : undefined,
         birthdate: data?.birthdate,
       },
+      deviceSignals,
     }),
-    [config, state, data, metadata],
+    [config, state, data, metadata, deviceSignals],
   )
   return (
     <AgeAssuranceServerDataContext.Provider value={ctx}>
