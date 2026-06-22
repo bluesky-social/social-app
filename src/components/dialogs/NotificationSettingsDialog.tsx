@@ -1,8 +1,10 @@
 import {View} from 'react-native'
-import {type AppBskyNotificationDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {useNotificationSettingsQuery} from '#/state/queries/notifications/settings'
+import {
+  type NotificationSettingsPreferenceName,
+  useNotificationSettingsQuery,
+} from '#/state/queries/notifications/settings'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {PreferenceControls} from '#/screens/Settings/NotificationSettings/components/PreferenceControls'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -15,8 +17,8 @@ import {IS_NATIVE} from '#/env'
 
 type NotificationSettingsDialogProps = {
   control: Dialog.DialogControlProps
-  name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>
-  syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[]
+  name: NotificationSettingsPreferenceName
+  syncOthers?: NotificationSettingsPreferenceName[]
   icon: React.ComponentType<SVGIconProps>
   titleText: React.ReactNode
   subtitleText: React.ReactNode
@@ -89,7 +91,7 @@ function NotificationSettingsDialogInner({
         <Dialog.Close />
         {IS_NATIVE && (
           <Button
-            color="secondary"
+            color="primary"
             size="large"
             label={l`Close dialog`}
             onPress={() => control.close()}

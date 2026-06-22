@@ -5,9 +5,15 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useUpdateActorDeclaration} from '#/state/queries/messages/actor-declaration'
+import {
+  type NotificationSettingsPreference,
+  useNotificationSettingsQuery,
+} from '#/state/queries/notifications/settings'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {ExportCarDialog} from '#/screens/Settings/components/ExportCarDialog'
+import {ChatNotificationDialogs} from '#/screens/Settings/NotificationSettings/components/ChatNotificationDialogs'
+import {SettingPreview} from '#/screens/Settings/NotificationSettings/components/SettingPreview'
 import {atoms as a, useTheme} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
@@ -18,7 +24,10 @@ import * as Toggle from '#/components/forms/Toggle'
 import {Bell_Stroke2_Corner0_Rounded as BellIcon} from '#/components/icons/Bell'
 import {Car_Stroke2_Corner2_Rounded as CarIcon} from '#/components/icons/Car'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
+import {Envelope_Stroke2_Corner2_Rounded as EnvelopeIcon} from '#/components/icons/Envelope'
+import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons/Message'
 import * as Layout from '#/components/Layout'
+import * as Skele from '#/components/Skeleton'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
@@ -52,8 +61,12 @@ export function MessagesSettingsScreenInner({}: Props) {
   const {data: profile} = useProfileQuery({
     did: currentAccount!.did,
   })
+  const {data: notificationSettings, isError: notificationSettingsError} =
+    useNotificationSettingsQuery()
   const {preferences, setPref} = useBackgroundNotificationPreferences()
 
+  const chatDialogControl = Dialog.useDialogControl()
+  const chatRequestDialogControl = Dialog.useDialogControl()
   const exportCarControl = Dialog.useDialogControl()
 
   const isGroupChatEnabled = !ax.features.enabled(ax.features.GroupChatsDisable)
@@ -237,6 +250,54 @@ export function MessagesSettingsScreenInner({}: Props) {
               <Divider style={{marginVertical: 10}} />
             </>
           ) : null}
+          <View style={[a.px_xl, a.gap_lg]}>
+            <Text style={[a.pb_xs, a.text_md, a.font_semi_bold, t.atoms.text]}>
+              <Trans>Notifications</Trans>
+            </Text>
+            <Toggle.Item
+              label={l`Settings for notifications for new messages`}
+              name="notificationsChat"
+              value={true}
+              style={[a.flex_row, a.align_start, a.justify_between]}
+              onChange={() => {
+                chatDialogControl.open()
+              }}>
+              <MessageIcon style={[a.mr_2xs, t.atoms.text]} size="lg" />
+              <View style={[a.flex_1, a.flex_grow]}>
+                <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                  <Trans>New messages</Trans>
+                </Text>
+                <NotificationPreferenceSubtitle
+                  preference={notificationSettings?.chat}
+                  isLoading={!notificationSettings}
+                  isError={notificationSettingsError}
+                />
+              </View>
+              <ChevronRightIcon style={[a.ml_2xs, t.atoms.text]} size="lg" />
+            </Toggle.Item>
+            <Toggle.Item
+              label={l`Settings for notifications for new message requests`}
+              name="notificationsChatRequest"
+              value={true}
+              style={[a.flex_row, a.align_start, a.justify_between]}
+              onChange={() => {
+                chatRequestDialogControl.open()
+              }}>
+              <EnvelopeIcon style={[a.mr_2xs, t.atoms.text]} size="lg" />
+              <View style={[a.flex_1, a.flex_grow]}>
+                <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                  <Trans>New message requests</Trans>
+                </Text>
+                <NotificationPreferenceSubtitle
+                  preference={notificationSettings?.chatRequest}
+                  isLoading={!notificationSettings}
+                  isError={notificationSettingsError}
+                />
+              </View>
+              <ChevronRightIcon style={[a.ml_2xs, t.atoms.text]} size="lg" />
+            </Toggle.Item>
+          </View>
+          <Divider style={{marginVertical: 10}} />
           {IS_NATIVE && (
             <>
               <View style={[a.px_xl]}>
@@ -265,8 +326,8 @@ export function MessagesSettingsScreenInner({}: Props) {
           <View style={[a.px_xl]}>
             <Toggle.Item
               label={l`Export my chat data`}
-              name="playSoundChat"
-              value={preferences.playSoundChat}
+              name="exportChat"
+              value={true}
               style={[a.flex_row, a.align_center, a.justify_between]}
               onChange={() => {
                 exportCarControl.open()
@@ -282,7 +343,41 @@ export function MessagesSettingsScreenInner({}: Props) {
           <Divider style={{marginVertical: 10}} />
         </View>
       </Layout.Content>
+      <ChatNotificationDialogs
+        chatControl={chatDialogControl}
+        chatRequestControl={chatRequestDialogControl}
+      />
       <ExportCarDialog control={exportCarControl} />
     </Layout.Screen>
+  )
+}
+
+function NotificationPreferenceSubtitle({
+  preference,
+  isLoading,
+  isError,
+}: {
+  preference?: NotificationSettingsPreference
+  isLoading: boolean
+  isError: boolean
+}) {
+  const t = useTheme()
+
+  if (isError) {
+    return (
+      <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]}>
+        <Trans>Failed to load notification settings.</Trans>
+      </Text>
+    )
+  }
+
+  if (isLoading) {
+    return <Skele.Text style={[a.text_sm, {width: 120}]} />
+  }
+
+  return (
+    <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]}>
+      <SettingPreview preference={preference} />
+    </Text>
   )
 }
