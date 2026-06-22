@@ -115,7 +115,6 @@ export function Gallery({
   const bps = useBreakpoints()
   const window = useWindowDimensions()
   const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage
-  const hideBadges = isWithinQuote
   const contentHeight = useMemo(() => {
     if (isWithinChat) {
       return 120
@@ -250,7 +249,6 @@ export function Gallery({
               onPress?.(index, [containerRef], [dims])
             }
             onPressIn={() => onPressIn?.(index)}
-            hideBadge={isWithinQuote}
           />
         ))}
       </View>
@@ -300,7 +298,6 @@ export function Gallery({
               : undefined
             return (
               <GalleryImage
-                hideBadges={hideBadges}
                 largeAltBadge={largeAltBadge}
                 image={item}
                 contentHeight={contentHeight}
@@ -396,7 +393,6 @@ function GalleryImage({
   imageCount,
   onWidthChange,
   itemRef,
-  hideBadges,
   largeAltBadge,
   onContainerRef,
   onThumbDims,
@@ -410,7 +406,6 @@ function GalleryImage({
   imageCount: number
   onWidthChange: (index: number, width: number) => void
   itemRef: (node: View | null) => void
-  hideBadges?: boolean
   largeAltBadge?: boolean
   onContainerRef: (index: number, ref: AnimatedRef<any>) => void
   onThumbDims: (index: number, dims: Dimensions) => void
@@ -499,7 +494,7 @@ function GalleryImage({
             useAppleWebpCodec
           />
 
-          {!hideBadges && imageCount > 1 ? (
+          {imageCount > 1 ? (
             <View
               accessible={false}
               pointerEvents="none"
@@ -532,7 +527,7 @@ function GalleryImage({
             </View>
           ) : null}
 
-          {(hasAlt || isCropped) && !hideBadges ? (
+          {hasAlt || isCropped ? (
             <View
               accessible={false}
               style={[
@@ -549,6 +544,7 @@ function GalleryImage({
               ]}>
               {isCropped && (
                 <View
+                  accessible={false}
                   style={[
                     a.rounded_sm,
                     a.p_xs,
@@ -568,6 +564,7 @@ function GalleryImage({
               )}
               {hasAlt && (
                 <View
+                  accessible={false}
                   style={[
                     a.justify_center,
                     a.rounded_sm,
