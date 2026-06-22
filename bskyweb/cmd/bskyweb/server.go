@@ -705,7 +705,10 @@ func (srv *Server) WebPost(c echo.Context) error {
 		if posts, perr := appbsky.FeedGetPosts(pctx, srv.xrpcc, []string{rootURI}); perr != nil {
 			log.Warnf("failed to resolve thread root post for isPartOf: %s\t%v", rootURI, perr)
 		} else if len(posts.Posts) > 0 && posts.Posts[0].Author != nil {
-			isPartOfURL = bskyPostURLFromATURIWithDIDFallback(posts.Posts[0].Author.Handle, rootURI)
+			// Handle-form only (no DID fallback): isPartOf must match the
+			// root page's handle-form canonical, so an unusable handle omits
+			// isPartOf rather than point at a non-canonical DID-form URL.
+			isPartOfURL = bskyPostURLFromATURI(posts.Posts[0].Author.Handle, rootURI)
 		}
 		cancel()
 	}
