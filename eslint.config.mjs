@@ -37,9 +37,10 @@ export default defineConfig(
       'bskyembed/**',
       'bskyogcard/**',
       // Eurosky fork: first-party edge services (OAuth client-assertion,
-      // Plausible proxy, IP geolocation, per-route Open Graph injector) live
-      // under services/. They are Bunny/Cloudflare Edge Scripts (Deno runtime +
-      // URL imports), not app code, so the whole tree is excluded.
+      // Plausible proxy, IP geolocation, per-route Open Graph injector,
+      // football-data.org proxy for the live sports widget) live under
+      // services/. They are Bunny/Cloudflare Edge Scripts (Deno runtime + URL
+      // imports), not app code, so the whole tree is excluded.
       'services/**',
       'src/locale/locales/_build/**',
       'src/locale/locales/**/*.js',

@@ -71,6 +71,7 @@ import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import {type Metrics, useAnalytics} from '#/analytics'
 import {ExploreScreenLiveEventFeedsBanner} from '#/features/liveEvents/components/ExploreScreenLiveEventFeedsBanner'
+import {ExploreLiveSportsWidget} from '#/features/liveSports/components/ExploreLiveSportsWidget'
 import * as ModuleHeader from './components/ModuleHeader'
 import {
   SuggestedAccountsTabBar,
@@ -210,6 +211,10 @@ type ExploreScreenItems =
     }
   | {
       type: 'liveEventFeedsBanner'
+      key: string
+    }
+  | {
+      type: 'liveSportsWidget'
       key: string
     }
 
@@ -725,6 +730,7 @@ export function Explore({
     i.push(...interestsNuxModule)
 
     i.push({type: 'liveEventFeedsBanner', key: 'liveEventFeedsBanner'})
+    i.push({type: 'liveSportsWidget', key: 'liveSportsWidget'})
 
     if (useFullExperience) {
       i.push(trendingTopicsModule)
@@ -1035,6 +1041,9 @@ export function Explore({
         }
         case 'liveEventFeedsBanner': {
           return <ExploreScreenLiveEventFeedsBanner />
+        }
+        case 'liveSportsWidget': {
+          return <ExploreLiveSportsWidget />
         }
       }
     },

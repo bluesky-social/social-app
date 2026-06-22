@@ -59,6 +59,11 @@ jobs:
           # First-party Bunny proxy for Plausible (see services/plausible/). Needs
           # the scheme: the tracker posts to ${API_HOST}/api/event.
           EXPO_PUBLIC_PLAUSIBLE_API_HOST: https://events.mu.social
+          # First-party Bunny proxy for the live sports widget (see
+          # services/footballData/). Holds the football-data.org token
+          # server-side; the app sends none. Renders null until the worker is
+          # deployed, so it is safe to set ahead of time.
+          EXPO_PUBLIC_FOOTBALLDATA_API_URL: https://sports.mu.social/v4
       - name: Upload to Bunny + purge cache
         run: bash ./scripts/bunny_upload.sh
         env:
