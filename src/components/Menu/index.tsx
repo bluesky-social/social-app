@@ -9,7 +9,7 @@ import {
 import {Trans, useLingui} from '@lingui/react/macro'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
-import {atoms as a, native, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -30,7 +30,10 @@ import {
 import {Text} from '#/components/Typography'
 import {IS_ANDROID, IS_IOS, IS_NATIVE} from '#/env'
 
-const NATIVE_MENU_MIN_HEIGHT = 128
+// iOS 26's floaty sheet presentation subtracts the bottom safe-area inset from
+// the requested detent, which eats the visible bottom padding of short (e.g.
+// single-item) menus. Flooring the native sheet height restores that padding.
+const IOS_MENU_MIN_HEIGHT = 128
 
 export {
   type DialogControlProps as MenuControlProps,
@@ -106,13 +109,14 @@ export function Outer({
   return (
     <Dialog.Outer
       control={context.control}
-      nativeOptions={{preventExpansion: true}}>
+      nativeOptions={{
+        preventExpansion: true,
+        minHeight: IS_IOS ? IOS_MENU_MIN_HEIGHT : undefined,
+      }}>
       <Dialog.Handle />
       {/* Re-wrap with context since Dialogs are portal-ed to root */}
       <Context.Provider value={context}>
-        <Dialog.ScrollableInner
-          label={l`Menu`}
-          contentContainerStyle={native({minHeight: NATIVE_MENU_MIN_HEIGHT})}>
+        <Dialog.ScrollableInner label={l`Menu`}>
           <View style={[a.gap_lg]}>
             {children}
             {IS_NATIVE && showCancel && <Cancel />}
