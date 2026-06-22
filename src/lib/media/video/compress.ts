@@ -1,13 +1,18 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
 
-import {SUPPORTED_MIME_TYPES, type SupportedMimeTypes} from '#/lib/constants'
+import {
+  SUPPORTED_MIME_TYPES,
+  type SupportedMimeTypes,
+  VIDEO_MAX_SIZE,
+} from '#/lib/constants'
 import {logger} from '#/logger'
 import {compress, probe} from '../../../../modules/expo-bluesky-video-compress'
+import {
+  COMPRESSION_MAX_DIMENSION,
+  COMPRESSION_PASSTHROUGH_BITRATE,
+  COMPRESSION_TARGET_BITRATE,
+} from './constants'
 import {type CompressedVideo} from './types'
-
-const PASSTHROUGH_BITRATE = 5_000_000
-const PASSTHROUGH_MAX_DIMENSION = 1920
-const MAX_UPLOAD_SIZE = 100 * 1000 * 1000
 
 export async function compressVideo(
   file: ImagePickerAsset,
@@ -49,8 +54,8 @@ export async function compressVideo(
   const result = await compress(
     file.uri,
     {
-      targetBitrate: 3_000_000,
-      maxSize: PASSTHROUGH_MAX_DIMENSION,
+      targetBitrate: COMPRESSION_TARGET_BITRATE,
+      maxSize: COMPRESSION_MAX_DIMENSION,
       codec: 'h264',
     },
     {
@@ -92,14 +97,14 @@ function shouldCompress(
     return true
   }
 
-  if (metadata.fileSize > MAX_UPLOAD_SIZE) {
+  if (metadata.fileSize > VIDEO_MAX_SIZE) {
     logger.debug(`shouldCompress: yes (file too large: ${sizeMB}MB)`)
     return true
   }
 
   if (
-    metadata.bitrate <= PASSTHROUGH_BITRATE &&
-    maxDimension <= PASSTHROUGH_MAX_DIMENSION
+    metadata.bitrate <= COMPRESSION_PASSTHROUGH_BITRATE &&
+    maxDimension <= COMPRESSION_MAX_DIMENSION
   ) {
     logger.debug(
       `shouldCompress: no (${bitrateKbps}kbps, ${maxDimension}px, ${sizeMB}MB)`,
@@ -107,7 +112,7 @@ function shouldCompress(
     return false
   }
 
-  if (metadata.bitrate > PASSTHROUGH_BITRATE) {
+  if (metadata.bitrate > COMPRESSION_PASSTHROUGH_BITRATE) {
     logger.debug(`shouldCompress: yes (bitrate ${bitrateKbps}kbps)`)
   } else {
     logger.debug(`shouldCompress: yes (dimension ${maxDimension}px)`)
