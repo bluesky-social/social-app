@@ -21,6 +21,7 @@ import {
   CompactVideoPostCardPlaceholder,
 } from '#/components/VideoPostCard'
 import {useAnalytics} from '#/analytics'
+import {useBrand} from '#/brand/context'
 
 const CARD_WIDTH = 100
 
@@ -32,6 +33,7 @@ const FEED_PARAMS: {
 }
 
 export function ExploreTrendingVideos() {
+  const brand = useBrand()
   const gutters = useGutters([0, 'base'])
   const {data, isLoading, error} = usePostFeedQuery(FEED_DESC, FEED_PARAMS)
 
@@ -72,6 +74,10 @@ export function ExploreTrendingVideos() {
   //   },
   //   [addSavedFeeds],
   // )
+
+  if (!brand.features.showTrending) {
+    return null
+  }
 
   if (error) {
     return null

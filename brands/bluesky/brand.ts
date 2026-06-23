@@ -70,6 +70,7 @@ const brand: Brand = {
     allowForeignPdsSignup: true,
     showStarterPacks: true,
     showLiveNow: true,
+    showTrending: true,
   },
 
   palette: {

@@ -61,6 +61,7 @@ export type Brand = BrandConfig & {
     allowForeignPdsSignup: boolean
     showStarterPacks: boolean
     showLiveNow: boolean
+    showTrending: boolean
   }
 
   /**
@@ -73,6 +74,15 @@ export type Brand = BrandConfig & {
   palette: {
     default: Palette
     subdued: Palette
+    /**
+     * Optional pre-inversion source palettes for the dark / dim themes. When
+     * provided, `src/alf/themes.ts` runs these through `invertPalette` instead
+     * of the light `default` / `subdued` ramps. Use this when a brand's dark
+     * theme needs hand-tuned values that a naive inversion of the light ramp
+     * does not produce. Omit to derive dark / dim from the light ramps.
+     */
+    defaultDark?: Palette
+    subduedDark?: Palette
   }
 
   /**
@@ -82,6 +92,12 @@ export type Brand = BrandConfig & {
    * re-implement the wrapper.
    */
   logo: {
+    /**
+     * Default fill for fill-less `<Logo>` renders. `'primary'` (the default)
+     * uses the brand primary color; `'text'` follows the theme text color, for
+     * marks that read as a wordmark / use `currentColor`.
+     */
+    defaultTint?: 'primary' | 'text'
     /** Primary mark used in Logo.tsx (supports gradient fill + kawaii mode) */
     mark: SvgShape
     /** Wordmark / typeface used in Logotype.tsx */

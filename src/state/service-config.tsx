@@ -2,6 +2,7 @@ import {createContext, useContext, useMemo} from 'react'
 
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useServiceConfigQuery} from '#/state/queries/service-config'
+import {getActiveBrand} from '#/brand/activeBrand'
 import {device} from '#/storage'
 
 type TrendingContext = {
@@ -19,6 +20,14 @@ export function Provider({children}: {children: React.ReactNode}) {
   const langPrefs = useLanguagePrefs()
   const {data: config, isLoading: isInitialLoad} = useServiceConfigQuery()
   const trending = useMemo<TrendingContext>(() => {
+    /*
+     * Brands can opt out of all trending surfaces (topics + videos). This
+     * gates every consumer of useTrendingConfig().enabled at once.
+     */
+    if (!getActiveBrand().features.showTrending) {
+      return {enabled: false}
+    }
+
     if (__DEV__) {
       return {enabled: true}
     }

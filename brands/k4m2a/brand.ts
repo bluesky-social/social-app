@@ -312,6 +312,7 @@ const brand: Brand = {
     allowForeignPdsSignup: false,
     showStarterPacks: true,
     showLiveNow: true,
+    showTrending: false,
   },
 
   palette: {
