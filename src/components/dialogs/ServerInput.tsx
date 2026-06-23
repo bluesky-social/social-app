@@ -19,7 +19,10 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {getActiveBrand} from '#/brand/activeBrand'
 
-type SegmentedControlOptions = typeof BSKY_SERVICE | 'custom'
+// Either the brand's PDS service URL (BSKY_SERVICE, a runtime string from brand
+// config) or the 'custom' sentinel. BSKY_SERVICE is no longer a string literal,
+// so the union collapses to `string`.
+type SegmentedControlOptions = string
 
 export function ServerInputDialog({
   control,

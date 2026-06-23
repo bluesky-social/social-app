@@ -298,7 +298,7 @@ export function* findAllPostsInQueryData(
         if (AppBskyFeedDefs.isPostView(item.subject)) {
           const quotedPost = getEmbeddedPost(item.subject?.embed)
           if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
-            yield embedViewRecordToPostView(quotedPost!)
+            yield embedViewRecordToPostView(quotedPost)
           }
         }
       }
@@ -319,12 +319,15 @@ export function* findAllProfilesInQueryData(
     }
     for (const page of queryData?.pages) {
       for (const item of page.items) {
-        if (
-          (item.type === 'follow' || item.type === 'contact-match') &&
-          item.notification.author.did === did
-        ) {
+        if (item.notification.author.did === did) {
           yield item.notification.author
-        } else if (
+        }
+        for (const notification of item.additional ?? []) {
+          if (notification.author.did === did) {
+            yield notification.author
+          }
+        }
+        if (
           item.type !== 'starterpack-joined' &&
           item.subject?.author.did === did
         ) {

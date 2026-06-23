@@ -23,6 +23,7 @@ export function Text({
   title,
   dataSet,
   numberOfLines,
+  allowFontScaling = true,
   ...rest
 }: TextProps) {
   const {fonts, flags} = useAlf()
@@ -31,11 +32,12 @@ export function Text({
     [
       a.text_sm,
       t.atoms.text,
+      a.leading_snug,
       web(numberOfLines === 1 && numberOfLinesClippingFix),
       style,
     ],
     {
-      fontScale: fonts.scaleMultiplier,
+      fontScale: allowFontScaling ? fonts.scaleMultiplier : 1,
       fontFamily: fonts.family,
       flags,
     },
@@ -56,6 +58,7 @@ export function Text({
     numberOfLines,
     style: s,
     dataSet: Object.assign({tooltip: title}, dataSet || {}),
+    allowFontScaling,
     ...rest,
   }
 

@@ -1,5 +1,5 @@
 import {NotImplementedError} from '../NotImplemented'
-import {GooglePlayReferrerInfo, ReferrerInfo} from './types'
+import {type GooglePlayReferrerInfo, type ReferrerInfo} from './types'
 
 export function getGooglePlayReferrerInfoAsync(): Promise<GooglePlayReferrerInfo> {
   throw new NotImplementedError()

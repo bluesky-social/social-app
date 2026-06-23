@@ -7,31 +7,15 @@ import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import {localDateString} from './util'
 
-const timeFormatter = new Intl.DateTimeFormat(undefined, {
-  hour: 'numeric',
-  minute: 'numeric',
-})
-const weekdayFormatter = new Intl.DateTimeFormat(undefined, {
-  weekday: 'long',
-})
-const longDateFormatter = new Intl.DateTimeFormat(undefined, {
-  weekday: 'short',
-  month: 'long',
-  day: 'numeric',
-})
-const longDateFormatterWithYear = new Intl.DateTimeFormat(undefined, {
-  weekday: 'short',
-  month: 'long',
-  day: 'numeric',
-  year: 'numeric',
-})
-
 let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
   const t = useTheme()
-  const {t: l} = useLingui()
+  const {t: l, i18n} = useLingui()
 
   let date: string
-  const time = timeFormatter.format(new Date(dateStr))
+  const time = i18n.date(new Date(dateStr), {
+    hour: 'numeric',
+    minute: 'numeric',
+  })
 
   const timestamp = new Date(dateStr)
 
@@ -46,12 +30,21 @@ let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
   } else {
     if (timestamp < oneWeekAgo) {
       if (timestamp.getFullYear() === today.getFullYear()) {
-        date = longDateFormatter.format(timestamp)
+        date = i18n.date(timestamp, {
+          weekday: 'short',
+          month: 'long',
+          day: 'numeric',
+        })
       } else {
-        date = longDateFormatterWithYear.format(timestamp)
+        date = i18n.date(timestamp, {
+          weekday: 'short',
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+        })
       }
     } else {
-      date = weekdayFormatter.format(timestamp)
+      date = i18n.date(timestamp, {weekday: 'long'})
     }
   }
 

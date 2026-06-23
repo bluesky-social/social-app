@@ -46,14 +46,19 @@ function getProfileAction(
 export function getSystemMessageInfo(
   data: ChatBskyConvoDefs.SystemMessageView['data'],
   relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>,
+  opts = {short: false},
 ): SystemMessageInfo | null {
   if (ChatBskyConvoDefs.isSystemMessageDataAddMember(data)) {
     const action = getProfileAction(data.member, relatedProfiles)
     return {
       Icon: JoinIcon,
       message: action
-        ? msg`${action.displayName} was added to the group`
-        : msg`Someone was added to the group`,
+        ? opts.short
+          ? msg`${action.displayName} was added`
+          : msg`${action.displayName} was added to the group`
+        : opts.short
+          ? msg`Someone was added`
+          : msg`Someone was added to the group`,
       action: action ?? undefined,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataRemoveMember(data)) {
@@ -61,8 +66,12 @@ export function getSystemMessageInfo(
     return {
       Icon: LeaveIcon,
       message: action
-        ? msg`${action.displayName} was removed from the group`
-        : msg`Someone was removed from the group`,
+        ? opts.short
+          ? msg`${action.displayName} was removed`
+          : msg`${action.displayName} was removed from the group`
+        : opts.short
+          ? msg`Someone was removed`
+          : msg`Someone was removed from the group`,
       action: action ?? undefined,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataMemberJoin(data)) {
@@ -70,8 +79,12 @@ export function getSystemMessageInfo(
     return {
       Icon: JoinIcon,
       message: action
-        ? msg`${action.displayName} joined the group`
-        : msg`Someone joined the group`,
+        ? opts.short
+          ? msg`${action.displayName} joined`
+          : msg`${action.displayName} joined the group`
+        : opts.short
+          ? msg`Someone joined`
+          : msg`Someone joined the group`,
       action: action ?? undefined,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataMemberLeave(data)) {
@@ -79,8 +92,12 @@ export function getSystemMessageInfo(
     return {
       Icon: LeaveIcon,
       message: action
-        ? msg`${action.displayName} left the group`
-        : msg`Someone left the group`,
+        ? opts.short
+          ? msg`${action.displayName} left`
+          : msg`${action.displayName} left the group`
+        : opts.short
+          ? msg`Someone left`
+          : msg`Someone left the group`,
       action: action ?? undefined,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvo(data)) {
@@ -92,9 +109,10 @@ export function getSystemMessageInfo(
   } else if (ChatBskyConvoDefs.isSystemMessageDataEditGroup(data)) {
     return {
       Icon: PencilIcon,
-      message: data.newName
-        ? msg`Chat title changed to ${data.newName}`
-        : msg`Chat title changed`,
+      message:
+        data.newName && !opts.short
+          ? msg`Chat title changed to ${data.newName}`
+          : msg`Chat title changed`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataCreateJoinLink(data)) {
     return {

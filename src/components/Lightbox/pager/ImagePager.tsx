@@ -32,12 +32,14 @@ import Animated, {
   withSpring,
   type WithSpringConfig,
 } from 'react-native-reanimated'
+import {Image} from 'expo-image'
 import * as ScreenOrientation from 'expo-screen-orientation'
 
 import {type Dimensions} from '#/lib/media/types'
 import {useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {type Lightbox} from '#/components/Lightbox/state'
+import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
 import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
 import {Footer} from '../chrome/Footer'
@@ -89,6 +91,9 @@ export default function ImageViewRoot({
   'use no memo'
   const ref = useAnimatedRef<View>()
   const [activeLightbox, setActiveLightbox] = useState(nextLightbox)
+  // Lives here rather than in ImageView so it survives the remount
+  // when the orientation-based key below changes on rotation.
+  const [imageIndex, setImageIndex] = useState(nextLightbox?.index ?? 0)
   const [orientation, setOrientation] = useState<'portrait' | 'landscape'>(
     'portrait',
   )
@@ -99,6 +104,7 @@ export default function ImageViewRoot({
 
   if (!activeLightbox && nextLightbox) {
     setActiveLightbox(nextLightbox)
+    setImageIndex(nextLightbox.index)
   }
 
   useEffect(() => {
@@ -136,6 +142,9 @@ export default function ImageViewRoot({
       'worklet'
       thumbRects.set({})
     })()
+    requestIdleCallback(() => {
+      void Image.clearMemoryCache()
+    })
   }, [thumbRects])
 
   useAnimatedReaction(
@@ -188,6 +197,8 @@ export default function ImageViewRoot({
           <ImageView
             key={activeLightbox.id + '-' + orientation}
             lightbox={activeLightbox}
+            imageIndex={imageIndex}
+            setImageIndex={setImageIndex}
             orientation={orientation}
             onRequestClose={onRequestClose}
             onPressSave={onPressSave}
@@ -205,6 +216,8 @@ export default function ImageViewRoot({
 
 function ImageView({
   lightbox,
+  imageIndex,
+  setImageIndex,
   orientation,
   onRequestClose,
   onPressSave,
@@ -215,6 +228,8 @@ function ImageView({
   thumbRects,
 }: {
   lightbox: Lightbox
+  imageIndex: number
+  setImageIndex: React.Dispatch<React.SetStateAction<number>>
   orientation: 'portrait' | 'landscape'
   onRequestClose: () => void
   onPressSave: (uri: string) => void
@@ -224,11 +239,14 @@ function ImageView({
   openProgress: SharedValue<number>
   thumbRects: SharedValue<Record<number, MeasuredDimensions | null>>
 }) {
-  const {images, index: initialImageIndex} = lightbox
+  const {images, metricsContext} = lightbox
+  // Capture at mount: after a rotation remount this is the preserved
+  // current index, so the pager re-opens on the same image.
+  const [initialImageIndex] = useState(imageIndex)
+  const ax = useAnalytics()
   const isAnimated = useMemo(() => canAnimate(lightbox), [lightbox])
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
-  const [imageIndex, setImageIndex] = useState(initialImageIndex)
   const [showControls, setShowControls] = useState(true)
   const [isAltExpanded, setIsAltExpanded] = useState(false)
   const dismissSwipeTranslateY = useSharedValue(0)
@@ -373,7 +391,21 @@ function ImageView({
         scrollEnabled={!isScaled}
         initialPage={initialImageIndex}
         onPageSelected={e => {
-          setImageIndex(e.nativeEvent.position)
+          const next = e.nativeEvent.position
+          setImageIndex(prev => {
+            if (metricsContext && prev !== next) {
+              ax.metric('post:photoEmbed:lightboxSwipe', {
+                layout: metricsContext.layout,
+                fromImage: prev + 1,
+                toImage: next + 1,
+                totalImages: images.length,
+                postUri: metricsContext.postUri,
+                postAuthorDid: metricsContext.postAuthorDid,
+                feedDescriptor: metricsContext.feedDescriptor,
+              })
+            }
+            return next
+          })
           setIsScaled(false)
         }}
         onPageScrollStateChanged={e => {

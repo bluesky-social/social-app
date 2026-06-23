@@ -8,6 +8,8 @@ import {createQueryKey} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
 import {STALE} from '..'
 
+export const JOIN_REQUESTS_THRESHOLD = 20
+
 const listJoinRequestsQueryKeyRoot = 'list-join-requests'
 
 export const createListJoinRequestsQueryKey = (args: {convoId: string}) =>
@@ -53,7 +55,7 @@ export function useListJoinRequestsQuery({
     queryKey: createListJoinRequestsQueryKey({convoId: convoId ?? ''}),
     queryFn: async ({pageParam}) => {
       const {data} = await agent.chat.bsky.group.listJoinRequests(
-        {convoId: convoId!, cursor: pageParam, limit: 50},
+        {convoId: convoId!, cursor: pageParam, limit: JOIN_REQUESTS_THRESHOLD},
         {headers: DM_SERVICE_HEADERS},
       )
       return data

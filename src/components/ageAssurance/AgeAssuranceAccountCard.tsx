@@ -275,11 +275,11 @@ function RegionNotice() {
         <Text style={[a.text_sm, a.leading_snug]}>
           <Trans>
             <InlineLinkText
-              label={l`Confirm your location`}
+              label={l`Update your location`}
               {...createStaticClick(() => {
                 locationControl.open()
               })}>
-              Tap here to confirm your location.
+              Tap here to update your location with GPS.
             </InlineLinkText>
           </Trans>
         </Text>

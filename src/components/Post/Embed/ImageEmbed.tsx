@@ -1,28 +1,66 @@
+import {useRef} from 'react'
 import {InteractionManager, View} from 'react-native'
 import {type AnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
+import {AppBskyEmbedGallery, type AppBskyEmbedImages} from '@atproto/api'
 
 import {atoms as a, tokens} from '#/alf'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
 import {Gallery} from '#/components/images/Gallery'
 import {ImageLayoutGrid} from '#/components/images/ImageLayoutGrid'
-import {useLightboxControls} from '#/components/Lightbox/state'
+import {
+  type LightboxMetricsContext,
+  useLightboxControls,
+} from '#/components/Lightbox/state'
 import {type Dimensions} from '#/components/Lightbox/types'
+import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {useAnalytics} from '#/analytics'
 import {type EmbedType} from '#/types/bsky/post'
 import {type CommonProps} from './types'
 
+const MAX_GRID_IMAGES = 4
+
 export function ImageEmbed({
   embed,
   ...rest
 }: CommonProps & {
-  embed: EmbedType<'images'>
+  embed: EmbedType<'images'> | EmbedType<'gallery'>
 }) {
   const ax = useAnalytics()
   const {openLightbox} = useLightboxControls()
-  const {images} = embed.view
-  const galleryEnabled = ax.features.enabled(ax.features.PostGalleryEmbedEnable)
+  const images: AppBskyEmbedImages.ViewImage[] =
+    embed.type === 'gallery'
+      ? embed.view.items.filter(AppBskyEmbedGallery.isViewImage).map(item => ({
+          thumb: item.thumbnail,
+          fullsize: item.fullsize,
+          alt: item.alt,
+          aspectRatio: item.aspectRatio,
+        }))
+      : embed.view.images
+  const useExpandedLayout =
+    embed.type === 'gallery'
+      ? images.length > MAX_GRID_IMAGES
+      : ax.features.enabled(ax.features.PostGalleryEmbedEnable)
+
+  const layout: 'single' | 'grid' | 'carousel' =
+    images.length === 1 ? 'single' : useExpandedLayout ? 'carousel' : 'grid'
+
+  const postContext = rest.post
+    ? {
+        postUri: rest.post.uri,
+        postAuthorDid: rest.post.author.did,
+        feedDescriptor: rest.feedDescriptor,
+      }
+    : undefined
+  const metricsContext: LightboxMetricsContext | undefined = postContext
+    ? {layout, ...postContext}
+    : undefined
+
+  // Captured from AutoSizedImage so the peek-commit handler can reuse the same
+  // ref + dims that a tap would — keeps the lightbox's return animation intact.
+  const singleContainerRef = useRef<AnimatedRef<any> | null>(null)
+  const singleDimsRef = useRef<Dimensions | null>(null)
 
   if (images.length > 0) {
     const items = images.map(img => ({
@@ -36,6 +74,14 @@ export function ImageEmbed({
       refs: AnimatedRef<any>[],
       fetchedDims: (Dimensions | null)[],
     ) => {
+      if (postContext) {
+        ax.metric('post:photoEmbed:open', {
+          layout,
+          fromImage: index + 1,
+          totalImages: images.length,
+          ...postContext,
+        })
+      }
       openLightbox({
         images: items.map((item, i) => ({
           ...item,
@@ -46,6 +92,7 @@ export function ImageEmbed({
           type: 'image',
         })),
         index,
+        metricsContext,
       })
     }
     const onPressIn = (_: number) => {
@@ -59,29 +106,49 @@ export function ImageEmbed({
 
     if (images.length === 1) {
       const image = images[0]
+      const aspect =
+        image.aspectRatio && image.aspectRatio.height > 0
+          ? image.aspectRatio.width / image.aspectRatio.height
+          : undefined
+      const openFromSingle = () => {
+        if (singleContainerRef.current) {
+          onPress(0, [singleContainerRef.current], [singleDimsRef.current])
+        }
+      }
       return (
         <View style={[a.mt_sm, rest.style]}>
-          <AutoSizedImage
-            crop={
-              rest.viewContext === PostEmbedViewContext.ThreadHighlighted
-                ? 'none'
-                : rest.viewContext ===
-                    PostEmbedViewContext.FeedEmbedRecordWithMedia
-                  ? 'square'
-                  : 'constrained'
-            }
-            image={image}
-            onPress={(containerRef, dims) => onPress(0, [containerRef], [dims])}
-            onPressIn={() => onPressIn(0)}
-            hideBadge={
-              rest.viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
-            }
-          />
+          <ImageContextMenu
+            fullsizeUri={image.fullsize}
+            thumbUri={image.thumb}
+            aspectRatio={aspect}
+            borderRadius={tokens.borderRadius.md}
+            onPreviewPress={openFromSingle}>
+            <AutoSizedImage
+              crop={
+                rest.viewContext === PostEmbedViewContext.ThreadHighlighted
+                  ? 'none'
+                  : rest.isWithinQuote
+                    ? 'square'
+                    : 'constrained'
+              }
+              image={image}
+              onContainerRef={ref => {
+                singleContainerRef.current = ref
+              }}
+              onDimsChange={dims => {
+                singleDimsRef.current = dims
+              }}
+              onPress={(containerRef, dims) =>
+                onPress(0, [containerRef], [dims])
+              }
+              onPressIn={() => onPressIn(0)}
+            />
+          </ImageContextMenu>
         </View>
       )
     }
 
-    if (galleryEnabled) {
+    if (useExpandedLayout) {
       return (
         <View style={[a.mt_sm, rest.style]}>
           <Gallery
@@ -89,6 +156,8 @@ export function ImageEmbed({
             onPress={onPress}
             onPressIn={onPressIn}
             viewContext={rest.viewContext}
+            isWithinQuote={rest.isWithinQuote}
+            metricsPostContext={postContext}
           />
         </View>
       )
@@ -101,6 +170,7 @@ export function ImageEmbed({
           onPress={onPress}
           onPressIn={onPressIn}
           viewContext={rest.viewContext}
+          isWithinQuote={rest.isWithinQuote}
         />
       </View>
     )

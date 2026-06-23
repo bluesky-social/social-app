@@ -1,24 +1,30 @@
 import {useEffect, useMemo, useState} from 'react'
-import {computeAgeAssuranceRegionAccess} from '@atproto/api'
+import {
+  type AppBskyAgeassuranceDefs,
+  computeAgeAssuranceRegionAccess,
+} from '@atproto/api'
 
 import {getAge} from '#/lib/strings/time'
 import {useSession} from '#/state/session'
 import {
-  type AgeAssuranceData,
   getConfigFromCache,
   getOtherRequiredDataFromCache,
   getServerStateFromCache,
-  useAgeAssuranceDataContext,
+  useAgeAssuranceServerDataContext,
 } from '#/ageAssurance/data'
 import {logger} from '#/ageAssurance/logger'
 import {
   AgeAssuranceAccess,
+  type AgeAssuranceMetadata,
   type AgeAssuranceState,
   AgeAssuranceStatus,
   parseAccessFromString,
   parseStatusFromString,
 } from '#/ageAssurance/types'
-import {getAgeAssuranceRegionConfigWithFallback} from '#/ageAssurance/util'
+import {
+  computeAgeAssuranceFlags,
+  getAgeAssuranceRegionConfigWithFallback,
+} from '#/ageAssurance/util'
 import {type Geolocation, useGeolocation} from '#/geolocation'
 import {device} from '#/storage'
 
@@ -27,18 +33,18 @@ import {device} from '#/storage'
  * server state before computing access based on AA config from the server +
  * geolocation and other data.
  */
-export function computeAgeAssuranceState({
+function computeAgeAssuranceState({
   hasSession,
-  config,
   geolocation,
+  config,
   state,
-  data,
+  metadata,
 }: {
   hasSession: boolean
-  config: AgeAssuranceData['config']
   geolocation: Geolocation
-  state: AgeAssuranceData['state']
-  data: AgeAssuranceData['data']
+  config?: AppBskyAgeassuranceDefs.Config
+  state?: AppBskyAgeassuranceDefs.State
+  metadata?: AgeAssuranceMetadata
 }) {
   /**
    * This is where we control logged-out moderation prefs. It's all
@@ -88,7 +94,10 @@ export function computeAgeAssuranceState({
    * accounts with an accurate birthdate, our default fallback rules should
    * ensure correct access.
    */
-  const result = computeAgeAssuranceRegionAccess(region, data)
+  const result = computeAgeAssuranceRegionAccess(region, {
+    accountCreatedAt: metadata?.accountCreatedAt,
+    declaredAge: metadata?.declaredAge,
+  })
   const computed = {
     lastInitiatedAt: state?.lastInitiatedAt,
     // prefer server state
@@ -100,10 +109,10 @@ export function computeAgeAssuranceState({
       ? parseAccessFromString(result.access)
       : AgeAssuranceAccess.Full,
   }
-  logger.debug('debug useAgeAssuranceState', {
+  logger.debug('computeAgeAssuranceState', {
     region,
     state,
-    data,
+    metadata,
     computed,
   })
   return computed
@@ -113,38 +122,51 @@ export function computeAgeAssuranceState({
  * This is a last-ditch helper for out-of-band reads of the AA state, such as
  * during account creation. Don't use it for anything else.
  */
-export function getAndComputeAgeAssuranceState({did}: {did: string}) {
+export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
   const config = getConfigFromCache()
   const state = getServerStateFromCache({did})
-  const data = getOtherRequiredDataFromCache({did})
+  const requiredData = getOtherRequiredDataFromCache({did})
   const geolocation = device.get(['mergedGeolocation'])
 
-  if (!geolocation || !config || !state || !data) {
+  if (!geolocation || !config || !state || !requiredData) {
     return {
-      status: AgeAssuranceStatus.Unknown,
-      access: AgeAssuranceAccess.Safe,
+      state: {
+        status: AgeAssuranceStatus.Unknown,
+        access: AgeAssuranceAccess.Safe,
+      },
     }
   }
 
-  return computeAgeAssuranceState({
+  const region = getAgeAssuranceRegionConfigWithFallback(config, geolocation)
+  const metadata: AgeAssuranceMetadata = {
+    accountCreatedAt: state.metadata?.accountCreatedAt,
+    declaredAge: requiredData?.birthdate
+      ? getAge(new Date(requiredData.birthdate))
+      : undefined,
+    birthdate: requiredData?.birthdate,
+  }
+  const computed = computeAgeAssuranceState({
     hasSession: true,
     config,
     geolocation,
     state: state.state,
-    data: {
-      accountCreatedAt: state.metadata?.accountCreatedAt,
-      declaredAge: data?.birthdate
-        ? getAge(new Date(data.birthdate))
-        : undefined,
-      birthdate: data?.birthdate,
-    },
+    metadata,
   })
+
+  return {
+    state: computed,
+    flags: computeAgeAssuranceFlags({
+      state: computed,
+      regionConfig: region,
+      metadata,
+    }),
+  }
 }
 
 export function useAgeAssuranceState(): AgeAssuranceState {
   const {hasSession} = useSession()
   const geolocation = useGeolocation()
-  const {config, state, data} = useAgeAssuranceDataContext()
+  const {config, state, metadata} = useAgeAssuranceServerDataContext()
 
   return useMemo(
     () =>
@@ -153,9 +175,9 @@ export function useAgeAssuranceState(): AgeAssuranceState {
         config,
         geolocation,
         state,
-        data,
+        metadata,
       }),
-    [hasSession, geolocation, config, state, data],
+    [hasSession, geolocation, config, state, metadata],
   )
 }
 

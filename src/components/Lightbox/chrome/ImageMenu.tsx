@@ -8,8 +8,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
 import {ArrowShareRight_Stroke2_Corner2_Rounded as ShareIcon} from '#/components/icons/ArrowShareRight'
@@ -26,7 +25,6 @@ type Props = {
 
 type Anchor = {x: number; y: number; width: number; height: number}
 
-const MENU_WIDTH = 160
 const GAP = 6
 const CARD_BG = '#000000'
 const CARD_BORDER = '#232e3e'
@@ -36,7 +34,7 @@ const SPRING_IN = {damping: 18, mass: 0.6, stiffness: 240}
 const TIMING_OUT = {duration: 150}
 
 export function ImageMenu({onPressShare, onPressSave}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const triggerRef = useRef<View>(null)
   const [isMounted, setIsMounted] = useState(false)
   const [anchor, setAnchor] = useState<Anchor | null>(null)
@@ -71,7 +69,7 @@ export function ImageMenu({onPressShare, onPressSave}: Props) {
         <CircleChromeButton
           icon={DotsIcon}
           iconStyle={{transform: [{rotate: '90deg'}]}}
-          label={_(msg`Image options`)}
+          label={l`Image options`}
           onPress={open}
         />
       </View>
@@ -83,21 +81,21 @@ export function ImageMenu({onPressShare, onPressSave}: Props) {
         statusBarTranslucent>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={_(msg`Close menu`)}
+          accessibilityLabel={l`Close menu`}
           accessibilityHint=""
-          style={StyleSheet.absoluteFill}
+          style={[a.absolute, a.inset_0]}
           onPress={close}
         />
         {anchor && (
           <MenuCard anchor={anchor} progress={progress}>
             <MenuItem
               icon={ShareIcon}
-              label={_(msg`Share image`)}
+              label={l`Share image`}
               onPress={() => runAction(onPressShare)}
             />
             <MenuItem
               icon={DownloadIcon}
-              label={_(msg`Save image`)}
+              label={l`Save image`}
               onPress={() => runAction(onPressSave)}
             />
           </MenuCard>
@@ -125,6 +123,7 @@ function MenuCard({
     <Animated.View
       style={[
         a.absolute,
+        a.self_start,
         styles.card,
         {
           top: anchor.y + anchor.height + GAP,
@@ -162,7 +161,6 @@ function MenuItem({
 
 const styles = StyleSheet.create({
   card: {
-    width: MENU_WIDTH,
     padding: 8,
     borderRadius: 16,
     borderWidth: 0.5,
@@ -186,7 +184,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
   },
   itemText: {
-    flex: 1,
     fontSize: 15,
     fontWeight: '500',
     lineHeight: 19.5,

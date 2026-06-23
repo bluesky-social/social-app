@@ -8,6 +8,7 @@ import ExpoImageCropTool, {
   type OpenCropperOptions,
 } from '@bsky.app/expo-image-crop-tool'
 
+import {IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {compressIfNeeded} from './manip'
 import {type PickerImage} from './picker.shared'
 
@@ -28,13 +29,16 @@ async function getFile() {
     throw new Error('Failed to get file info')
   }
 
-  return await compressIfNeeded({
-    path: file,
-    mime: 'image/jpeg',
-    size: fileInfo.size,
-    width: 4288,
-    height: 2848,
-  })
+  return await compressIfNeeded(
+    {
+      path: file,
+      mime: 'image/jpeg',
+      size: fileInfo.size,
+      width: 4288,
+      height: 2848,
+    },
+    IMAGE_SIZE_CONFIG_2K_1MB,
+  )
 }
 
 export async function openPicker(): Promise<PickerImage[]> {

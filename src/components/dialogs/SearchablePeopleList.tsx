@@ -114,6 +114,7 @@ export function SearchablePeopleList({
   const {data: convos} = useListConvosQuery({
     enabled: showRecentConvos,
     status: 'accepted',
+    lockStatus: 'unlocked',
   })
 
   const items = useMemo(() => {
@@ -552,7 +553,7 @@ function ExistingChatCard({
                       style={[a.leading_snug, t.atoms.text_contrast_medium]}
                       numberOfLines={2}>
                       <Plural
-                        value={convo.members.length}
+                        value={convo.details.memberCount}
                         one="# member"
                         other="# members"
                       />
@@ -662,7 +663,6 @@ function SearchInput({
       />
 
       <TextInput
-        // @ts-ignore bottom sheet input types issue — esb
         ref={inputRef}
         placeholder={l`Search`}
         value={value}
