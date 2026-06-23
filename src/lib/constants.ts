@@ -145,8 +145,11 @@ export const BSKY_FEED_OWNER_DIDS = [
   'did:plc:q6gjnaw2blty4crticxkmujt',
 ]
 
-export const DISCOVER_FEED_URI =
-  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
+// The brand's primary feed doubles as its "discover" feed: it backs the
+// signed-out home and drives discover-specific UI (fresh-content polling,
+// composer prompt, etc.). For the Bluesky brand this resolves to whats-hot,
+// so upstream behavior is unchanged.
+export const DISCOVER_FEED_URI = brand.defaultFeeds[0].value
 export const VIDEO_FEED_URI =
   'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/thevids'
 export const STAGING_VIDEO_FEED_URI =
@@ -158,11 +161,6 @@ export const VIDEO_FEED_URIS = [VIDEO_FEED_URI, STAGING_VIDEO_FEED_URI]
 // `src/brand/boot.ts` and the type assertion below.
 export const DISCOVER_SAVED_FEED = brand.defaultFeeds[0]
 export const TIMELINE_SAVED_FEED = brand.defaultFeeds[1]
-export const VIDEO_SAVED_FEED = {
-  type: 'feed',
-  value: VIDEO_FEED_URI,
-  pinned: true,
-}
 
 export const RECOMMENDED_SAVED_FEEDS: Pick<
   AppBskyActorDefs.SavedFeed,
