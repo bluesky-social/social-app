@@ -1,4 +1,5 @@
 import {useEffect, useMemo, useState} from 'react'
+import type * as AgeRange from 'expo-age-range'
 import {
   type AppBskyAgeassuranceDefs,
   computeAgeAssuranceRegionAccess,
@@ -8,7 +9,7 @@ import {getAge} from '#/lib/strings/time'
 import {useSession} from '#/state/session'
 import {
   getConfigFromCache,
-  getDeviceSignalsFromCache,
+  getDeviceSignalsFromCacheForCurrentRegion,
   getOtherRequiredDataFromCache,
   getServerStateFromCache,
   useAgeAssuranceServerDataContext,
@@ -16,7 +17,6 @@ import {
 import {logger} from '#/ageAssurance/logger'
 import {
   AgeAssuranceAccess,
-  type AgeAssuranceDeviceSignals,
   type AgeAssuranceMetadata,
   type AgeAssuranceState,
   AgeAssuranceStatus,
@@ -49,7 +49,7 @@ function computeAgeAssuranceState({
   config?: AppBskyAgeassuranceDefs.Config
   state?: AppBskyAgeassuranceDefs.State
   metadata?: AgeAssuranceMetadata
-  deviceSignals?: AgeAssuranceDeviceSignals
+  deviceSignals?: AgeRange.AgeRangeResponse
 }) {
   /**
    * This is where we control logged-out moderation prefs. It's all
@@ -137,7 +137,7 @@ export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
   const config = getConfigFromCache()
   const state = getServerStateFromCache({did})
   const requiredData = getOtherRequiredDataFromCache({did})
-  const deviceSignals = getDeviceSignalsFromCache({did})
+  const deviceSignals = getDeviceSignalsFromCacheForCurrentRegion({did})
   const geolocation = device.get(['mergedGeolocation'])
 
   if (!geolocation || !config || !state || !requiredData) {

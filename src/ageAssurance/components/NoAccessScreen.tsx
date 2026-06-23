@@ -34,11 +34,10 @@ import {BottomSheetOutlet} from '#/../modules/bottom-sheet'
 import {useAgeAssurance} from '#/ageAssurance'
 import {
   getDeviceSignals,
-  setDeviceSignalsForDid,
+  setDeviceSignalsForRegion,
   useAgeAssuranceServerDataContext,
 } from '#/ageAssurance/data'
 import {logger} from '#/ageAssurance/logger'
-import {type AgeAssuranceDeviceSignals} from '#/ageAssurance/types'
 import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
 import {
   getAssuredAgeFromDeviceSignals,
@@ -350,18 +349,12 @@ function AccessSection() {
       const did = currentAccount?.did
       const signals = await getDeviceSignals()
       if (signals && did) {
-        const deviceSignals: AgeAssuranceDeviceSignals = {
-          signals,
-          originRegion: {
-            countryCode: region.countryCode,
-            regionCode: region.regionCode,
-          },
-        }
-        const assuredAge = getAssuredAgeFromDeviceSignals(region, deviceSignals)
+        const assuredAge = getAssuredAgeFromDeviceSignals(region, signals)
         if (assuredAge !== undefined) {
-          // Sufficient device signals: persist and let the AA state recompute
-          // from the cache write unlock access. Nothing else to do here.
-          setDeviceSignalsForDid({did, deviceSignals})
+          // Sufficient device signals: persist (keyed by this region) and let
+          // the AA state recompute from the cache write unlock access. Nothing
+          // else to do here.
+          setDeviceSignalsForRegion({did, region, signals})
           return
         }
       }

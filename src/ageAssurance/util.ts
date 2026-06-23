@@ -1,4 +1,5 @@
 import {useMemo} from 'react'
+import type * as AgeRange from 'expo-age-range'
 import {
   type AppBskyAgeassuranceDefs,
   getAgeAssuranceRegionConfig,
@@ -12,7 +13,6 @@ import {useAgeAssuranceServerDataContext} from '#/ageAssurance/data'
 import {
   AgeAssuranceAccess,
   type AgeAssuranceConfigRegion,
-  type AgeAssuranceDeviceSignals,
   type AgeAssuranceFlags,
   type AgeAssuranceMetadata,
   type AgeAssuranceState,
@@ -64,26 +64,29 @@ export function regionAllowsDeviceVerification(
 }
 
 /**
- * Whether two regions refer to the same country + region. Used to ensure device
- * signals are only applied within the region they were captured in.
+ * Builds the cache key for a region's device signals — a `country[-region]`
+ * string (e.g. `US-TX` or `GB`). This is the key under which on-device
+ * assurance is stored and read back, which is what binds a grant to its capture
+ * region.
  */
-function isSameRegion(
-  a: {countryCode: string; regionCode?: string},
-  b: {countryCode: string; regionCode?: string},
-): boolean {
-  return a.countryCode === b.countryCode && a.regionCode === b.regionCode
+export function createRegionKey(region: {
+  countryCode: string
+  regionCode?: string
+}): string {
+  return region.regionCode
+    ? `${region.countryCode}-${region.regionCode}`
+    : region.countryCode
 }
 
 /**
- * Derives an assured age from native device signals, but only when:
+ * Derives an assured age from native device signals for the given region, but
+ * only when the region permits device verification. The signals are expected to
+ * already be resolved to the user's current region (see
+ * `getDeviceSignalsFromCacheForCurrentRegion`), so a grant captured in another
+ * region won't reach here.
  *
- * 1. the current region permits device verification, and
- * 2. the signals were captured in this same region.
- *
- * Device assurance is region-bound (see {@link AgeAssuranceDeviceSignals}): a
- * grant captured in TX must not unlock another region. The OS-provided
- * `lowerBound` is the minimum age the platform will attest to, which maps
- * directly onto the `assuredAge` input of the rule engine (i.e.
+ * The OS-provided `lowerBound` is the minimum age the platform will attest to,
+ * which maps directly onto the `assuredAge` input of the rule engine (i.e.
  * `IfAssuredOverAge`/`IfAssuredUnderAge` rules).
  *
  * Returns undefined when device verification doesn't apply or the OS didn't
@@ -91,19 +94,10 @@ function isSameRegion(
  */
 export function getAssuredAgeFromDeviceSignals(
   region: AppBskyAgeassuranceDefs.ConfigRegion,
-  deviceSignals: AgeAssuranceDeviceSignals | undefined,
+  deviceSignals: AgeRange.AgeRangeResponse | undefined,
 ): number | undefined {
   if (!regionAllowsDeviceVerification(region)) return undefined
-  if (!deviceSignals) return undefined
-  if (
-    !isSameRegion(deviceSignals.originRegion, {
-      countryCode: region.countryCode,
-      regionCode: region.regionCode,
-    })
-  ) {
-    return undefined
-  }
-  const lowerBound = deviceSignals.signals.lowerBound
+  const lowerBound = deviceSignals?.lowerBound
   return typeof lowerBound === 'number' ? lowerBound : undefined
 }
 

@@ -29,20 +29,19 @@ export type AgeAssuranceConfigRegion = AppBskyAgeassuranceDefs.ConfigRegion & {
 }
 
 /**
- * The on-device age signals plus the region they were captured in.
+ * Native on-device age signals, keyed by the region (a `country[-region]`
+ * string, see `createRegionKey`) they were captured in. We keep one entry per
+ * region so multiple regions with differing criteria can each retain their own
+ * grant.
  *
  * Device assurance can't be verified server-side (the OS gives us no signed
  * attestation, only age bounds), so we persist it client-side only and bind it
- * to its origin region. The signals are only honored when the user's current
- * region matches `originRegion` — a grant captured in TX must not silently
- * unlock another region. See `getAssuredAgeFromDeviceSignals`.
+ * to its capture region via the key. A grant captured in TX is only ever read
+ * back for TX — it can't silently unlock another region. See
+ * `getAssuredAgeFromDeviceSignals`.
  */
 export type AgeAssuranceDeviceSignals = {
-  signals: AgeRange.AgeRangeResponse
-  originRegion: {
-    countryCode: string
-    regionCode?: string
-  }
+  [regionKey: string]: AgeRange.AgeRangeResponse
 }
 
 export enum AgeAssuranceAccess {
