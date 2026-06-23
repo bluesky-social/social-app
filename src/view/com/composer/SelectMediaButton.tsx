@@ -24,6 +24,7 @@ import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Ima
 import * as toast from '#/components/Toast'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {isAnimatedGif} from './videos/isAnimatedGif'
+import {hasWebCodecs} from './videos/metadata'
 
 export type SelectMediaButtonProps = {
   disabled?: boolean
@@ -291,9 +292,15 @@ async function processImagePickerAssets(
       /*
        * Filesize appears to be stable across all platforms, so we can use it
        * to filter out large files on web. On native, we compress these anyway,
-       * so we only check on web.
+       * so we only check on web. On web, we can reject early if the browser
+       * doesn't support WebCodecs.
        */
-      if (IS_WEB && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
+      if (
+        IS_WEB &&
+        !hasWebCodecs() &&
+        asset.fileSize &&
+        asset.fileSize > VIDEO_MAX_SIZE
+      ) {
         errors.add(SelectedAssetError.FileTooBig)
         continue
       }
@@ -309,8 +316,7 @@ async function processImagePickerAssets(
     if (type === 'gif') {
       /*
        * Filesize appears to be stable across all platforms, so we can use it
-       * to filter out large files on web. On native, we compress GIFs as
-       * videos anyway, so we only check on web.
+       * to filter out large files. We can't compress GIFs on either platform.
        */
       if (IS_WEB && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
         errors.add(SelectedAssetError.FileTooBig)
