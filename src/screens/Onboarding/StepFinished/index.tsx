@@ -18,7 +18,6 @@ import {
   BSKY_APP_ACCOUNT_DID,
   DISCOVER_SAVED_FEED,
   TIMELINE_SAVED_FEED,
-  VIDEO_SAVED_FEED,
 } from '#/lib/constants'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {logger} from '#/logger'
@@ -108,7 +107,9 @@ export function StepFinished() {
           // Interests need to get saved first, then we can write the feeds to prefs
           await agent.setInterestsPref({tags: selectedInterests})
 
-          // Default feeds that every user should have pinned when landing in the app
+          // Default feeds that every user should have pinned when landing in
+          // the app: the brand's primary feed and the following timeline. This
+          // matches the brand defaults seeded at account creation.
           const feedsToSave: AppBskyActorDefs.SavedFeed[] = [
             {
               ...DISCOVER_SAVED_FEED,
@@ -116,10 +117,6 @@ export function StepFinished() {
             },
             {
               ...TIMELINE_SAVED_FEED,
-              id: TID.nextStr(),
-            },
-            {
-              ...VIDEO_SAVED_FEED,
               id: TID.nextStr(),
             },
           ]

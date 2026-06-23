@@ -103,7 +103,7 @@ const brand: Brand = {
     {
       type: 'feed',
       value:
-        'at://did:plc:ieyfjh6ystyufa3a7pi3jw5q/app.bsky.feed.generator/mdparivaar',
+        'at://did:plc:ieyfjh6ystyufa3a7pi3jw5q/app.bsky.feed.generator/md-parivaar',
       pinned: true,
     },
     {
