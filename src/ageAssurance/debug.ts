@@ -18,7 +18,7 @@ export type DebugConfig = {
   regions: AgeAssuranceConfigRegion[]
 }
 
-export const enabled = (IS_DEV && true) || IS_E2E
+export const enabled = (IS_DEV && false) || IS_E2E
 
 export const geolocation: Geolocation | undefined = enabled
   ? {
@@ -26,6 +26,13 @@ export const geolocation: Geolocation | undefined = enabled
       regionCode: undefined,
     }
   : undefined
+
+/**
+ * When debug is enabled we normally fake `deviceSignals` too. Flip this to hit
+ * the real native age API (`expo-age-range`) so the OS age prompt actually
+ * shows — useful for testing the device flow on a physical device.
+ */
+export const useRealDeviceSignalsAPI = false
 
 const deviceGeolocationEnabled = false || IS_E2E
 export const deviceGeolocation: Geolocation | undefined =
@@ -69,10 +76,9 @@ export const config: DebugConfig = {
       ],
     },
     {
-      // On-device verification region (e.g. Texas). Set debug.geolocation to
-      // {countryCode: 'US', regionCode: 'TX'} to exercise the device flow.
-      // KWS is included as a fallback for platforms without the native age API
-      // (e.g. web) or when the device result is insufficient.
+      // On-device verification region. KWS is included as a fallback for
+      // platforms without the native age API (e.g. web) or when the device
+      // result is insufficient.
       countryCode: 'US',
       regionCode: 'TX',
       minAccessAge: 18,
