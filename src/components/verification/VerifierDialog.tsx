@@ -15,6 +15,7 @@ import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type FullVerificationState} from '#/components/verification'
 import {useAnalytics} from '#/analytics'
+import {getActiveBrand} from '#/brand/activeBrand'
 import type * as bsky from '#/types/bsky'
 
 export {useDialogControl} from '#/components/Dialog'
@@ -114,27 +115,29 @@ function Inner({
             a.justify_end,
             gtMobile ? [a.flex_row, a.justify_end] : [a.flex_col],
           ]}>
-          <Link
-            overridePresentation
-            to={urls.website.blog.initialVerificationAnnouncement}
-            label={_(
-              msg({
-                message: `Learn more about verification on Bluesky`,
-                context: `english-only-resource`,
-              }),
-            )}
-            size="small"
-            color="primary"
-            style={[a.justify_center]}
-            onPress={() => {
-              ax.metric('verification:learn-more', {
-                location: 'verifierDialog',
-              })
-            }}>
-            <ButtonText>
-              <Trans context="english-only-resource">Learn more</Trans>
-            </ButtonText>
-          </Link>
+          {getActiveBrand().id === 'bluesky' && (
+            <Link
+              overridePresentation
+              to={urls.website.blog.initialVerificationAnnouncement}
+              label={_(
+                msg({
+                  message: `Learn more about verification on Bluesky`,
+                  context: `english-only-resource`,
+                }),
+              )}
+              size="small"
+              color="primary"
+              style={[a.justify_center]}
+              onPress={() => {
+                ax.metric('verification:learn-more', {
+                  location: 'verifierDialog',
+                })
+              }}>
+              <ButtonText>
+                <Trans context="english-only-resource">Learn more</Trans>
+              </ButtonText>
+            </Link>
+          )}
           <Button
             label={_(msg`Close dialog`)}
             size="small"

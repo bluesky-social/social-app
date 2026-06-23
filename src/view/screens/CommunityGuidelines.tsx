@@ -3,6 +3,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {webLinks} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {
   type CommonNavigatorParams,
@@ -33,8 +34,8 @@ export const CommunityGuidelinesScreen = (_props: Props) => {
               The Community Guidelines have been moved to{' '}
               <TextLink
                 style={pal.link}
-                href="https://bsky.social/about/support/community-guidelines"
-                text="bsky.social/about/support/community-guidelines"
+                href={webLinks.community}
+                text={webLinks.community.replace(/^https?:\/\//, '')}
               />
             </Trans>
           </Text>

@@ -8,12 +8,33 @@ import {startUriToStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 import {getActiveBrand} from '#/brand/activeBrand'
 
-export const BSKY_APP_HOST = 'https://bsky.app'
+const activeBrand = getActiveBrand()
+
+/** Web host for the active brand, e.g. `coseeker.com` (Bluesky: `bsky.app`). */
+const BRAND_WEB_HOST = activeBrand.webHost
+/** PDS host for the active brand, e.g. `coseeker.org` (Bluesky: `bsky.social`). */
+const BRAND_PDS_HOST = (() => {
+  try {
+    return new URL(activeBrand.pds.serviceUrl).host
+  } catch {
+    return ''
+  }
+})()
+
+export const BSKY_APP_HOST = `https://${BRAND_WEB_HOST}`
+
+function escapeForRegex(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
 const BSKY_TRUSTED_HOSTS = [
   'bsky\\.app',
   'bsky\\.social',
   'blueskyweb\\.xyz',
   'blueskyweb\\.zendesk\\.com',
+  // Trust the active brand's own web + PDS hosts (deduped against the literals
+  // above by the regex alternation; harmless if they overlap).
+  ...[BRAND_WEB_HOST, BRAND_PDS_HOST].filter(Boolean).map(escapeForRegex),
   ...(__DEV__ ? ['localhost:19006', 'localhost:8100'] : []),
 ]
 
@@ -81,7 +102,7 @@ export function toShortUrl(url: string): string {
 
 export function toShareUrl(url: string): string {
   if (!url.startsWith('https')) {
-    const urlp = new URL('https://bsky.app')
+    const urlp = new URL(BSKY_APP_HOST)
     urlp.pathname = url
     url = urlp.toString()
   }
@@ -93,7 +114,11 @@ export function toBskyAppUrl(url: string): string {
 }
 
 export function isBskyAppUrl(url: string): boolean {
-  return url.startsWith('https://bsky.app/')
+  // Treat both the active brand's host and bsky.app as internal: posts on the
+  // shared atproto network commonly carry bsky.app links regardless of brand.
+  return (
+    url.startsWith(`${BSKY_APP_HOST}/`) || url.startsWith('https://bsky.app/')
+  )
 }
 
 export function isRelativeUrl(url: string): boolean {
@@ -102,7 +127,9 @@ export function isRelativeUrl(url: string): boolean {
 
 export function isBskyRSSUrl(url: string): boolean {
   return (
-    (url.startsWith('https://bsky.app/') || isRelativeUrl(url)) &&
+    (url.startsWith(`${BSKY_APP_HOST}/`) ||
+      url.startsWith('https://bsky.app/') ||
+      isRelativeUrl(url)) &&
     /\/rss\/?$/.test(url)
   )
 }

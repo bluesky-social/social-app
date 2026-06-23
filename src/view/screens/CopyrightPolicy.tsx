@@ -3,6 +3,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {webLinks} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {
   type CommonNavigatorParams,
@@ -30,8 +31,8 @@ export const CopyrightPolicyScreen = (_props: Props) => {
               The Copyright Policy has been moved to{' '}
               <TextLink
                 style={pal.link}
-                href="https://bsky.social/about/support/copyright"
-                text="bsky.social/about/support/copyright"
+                href={webLinks.copyright}
+                text={webLinks.copyright.replace(/^https?:\/\//, '')}
               />
             </Trans>
           </Text>

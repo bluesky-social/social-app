@@ -26,8 +26,8 @@ const brand = {
   primaryColor: '#000000',
   splashColor: '#FFFFFF',
   splashColorDark: '#000000',
-  // TODO: deep-link / universal-link host (no scheme prefix)
-  webHost: 'TODO.example.com',
+  // Deep-link / universal-link host (no scheme prefix)
+  webHost: 'k4m2a.app',
   associatedDomains: [
     // TODO: applinks for Universal Links + appclips entries if used
     // 'applinks:TODO.example.com',

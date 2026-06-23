@@ -10,6 +10,7 @@ import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
+import {BSKY_APP_HOST} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
 import {useRemoveLabelersMutation} from '#/state/queries/labeler'
@@ -45,6 +46,7 @@ import {GlobalLabelPreference} from '#/components/moderation/LabelPreference'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
+import {useBrand} from '#/brand/context'
 import {IS_IOS} from '#/env'
 
 function ErrorState({error}: {error: string}) {
@@ -159,6 +161,7 @@ export function ModerationScreenInner({
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const brand = useBrand()
   const {gtMobile} = useBreakpoints()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const {
@@ -412,14 +415,14 @@ export function ModerationScreenInner({
                     <Trans>
                       Adult content can only be enabled via the Web at{' '}
                       <InlineLinkText
-                        label={_(msg`The Bluesky web application`)}
+                        label={_(msg`The ${brand.name} web application`)}
                         to=""
                         onPress={evt => {
                           evt.preventDefault()
-                          Linking.openURL('https://bsky.app/')
+                          Linking.openURL(`${BSKY_APP_HOST}/`)
                           return false
                         }}>
-                        bsky.app
+                        {brand.webHost}
                       </InlineLinkText>
                       .
                     </Trans>

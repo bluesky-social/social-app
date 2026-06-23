@@ -2,6 +2,7 @@ import {type Palette} from '@bsky.app/alf'
 
 import {type Brand} from '#/brand/types'
 import {EARTH_MARK_SVG} from '../shared/earthMark.svg'
+import {DEFAULT_BRAND_PAGE_LINKS} from '../shared/links'
 import nativeConfig from './brand.js'
 import {COSEEKER_WORDMARK_SVG} from './wordmark.svg'
 
@@ -232,17 +233,17 @@ const brand: Brand = {
   ],
 
   links: {
-    helpDesk: 'https://blueskyweb.zendesk.com/hc/en-us',
+    // Brand-page links (help, feedback, tos, privacy, community, copyright)
+    // default to coseeker.org via DEFAULT_BRAND_PAGE_LINKS. Infra links below
+    // intentionally still point at the shared Bluesky AppView services that
+    // CoSeeker's PDS relies on.
+    ...DEFAULT_BRAND_PAGE_LINKS,
     statusPage: 'https://status.bsky.app/',
     download: 'https://bsky.app/download',
     embedService: 'https://embed.bsky.app',
     gifService: 'https://gifs.bsky.app',
     videoService: 'https://video.bsky.app',
     videoServiceDid: 'did:web:video.bsky.app',
-    tos: 'https://coseeker.org/terms.html',
-    privacy: 'https://coseeker.org/privacy.html',
-    community: 'https://coseeker.org/guidelines.html',
-    communityDeprecated: 'https://coseeker.org/guidelines.html',
   },
 
   blogUrls: {

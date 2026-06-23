@@ -1,6 +1,7 @@
 import {DEFAULT_PALETTE, DEFAULT_SUBDUED_PALETTE} from '@bsky.app/alf'
 
 import {type Brand} from '#/brand/types'
+import {DEFAULT_BRAND_PAGE_LINKS} from '../shared/links'
 import nativeConfig from './brand.js'
 
 /**
@@ -42,7 +43,11 @@ const brand: Brand = {
   ],
 
   links: {
+    // Spread the coseeker.org defaults, then override every brand-page link
+    // back to Bluesky's own URLs so the Bluesky brand is unchanged from upstream.
+    ...DEFAULT_BRAND_PAGE_LINKS,
     helpDesk: 'https://blueskyweb.zendesk.com/hc/en-us',
+    feedbackForm: 'https://blueskyweb.zendesk.com/hc/en-us/requests/new',
     statusPage: 'https://status.bsky.app/',
     download: 'https://bsky.app/download',
     embedService: 'https://embed.bsky.app',
@@ -54,6 +59,7 @@ const brand: Brand = {
     community: 'https://bsky.social/about/support/community-guidelines',
     communityDeprecated:
       'https://bsky.social/about/support/community-guidelines-deprecated',
+    copyright: 'https://bsky.social/about/support/copyright',
   },
 
   blogUrls: {

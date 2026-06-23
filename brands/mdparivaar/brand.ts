@@ -1,6 +1,7 @@
 import {DEFAULT_PALETTE, DEFAULT_SUBDUED_PALETTE} from '@bsky.app/alf'
 
 import {type Brand} from '#/brand/types'
+import {DEFAULT_BRAND_PAGE_LINKS} from '../shared/links'
 import nativeConfig from './brand.js'
 import {MD_ICON_SVG} from './logoIcon.svg'
 
@@ -114,17 +115,15 @@ const brand: Brand = {
   ],
 
   links: {
-    helpDesk: 'https://blueskyweb.zendesk.com/hc/en-us',
+    // Brand-page links default to coseeker.org (mdparivaar accounts live on the
+    // coseeker.org PDS). Infra links stay on the shared Bluesky AppView.
+    ...DEFAULT_BRAND_PAGE_LINKS,
     statusPage: 'https://status.bsky.app/',
     download: 'https://bsky.app/download',
     embedService: 'https://embed.bsky.app',
     gifService: 'https://gifs.bsky.app',
     videoService: 'https://video.bsky.app',
     videoServiceDid: 'did:web:video.bsky.app',
-    tos: 'https://coseeker.org/terms.html',
-    privacy: 'https://coseeker.org/privacy.html',
-    community: 'https://coseeker.org/guidelines.html',
-    communityDeprecated: 'https://coseeker.org/guidelines.html',
   },
 
   blogUrls: {

@@ -2,6 +2,7 @@ import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {webLinks} from '#/lib/constants'
 import {useCleanError} from '#/lib/hooks/useCleanError'
 import {isAppPassword} from '#/lib/jwt'
 import {getAge, getDateAgo} from '#/lib/strings/time'
@@ -172,9 +173,7 @@ function BirthdayInner({
         <Admonition type="error">
           <Trans>
             You must be at least 13 years old to use Bluesky. Read our{' '}
-            <SimpleInlineLinkText
-              to="https://bsky.social/about/support/tos"
-              label={l`Terms of Service`}>
+            <SimpleInlineLinkText to={webLinks.tos} label={l`Terms of Service`}>
               Terms of Service
             </SimpleInlineLinkText>{' '}
             for more information.
