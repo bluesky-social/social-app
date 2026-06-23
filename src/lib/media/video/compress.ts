@@ -22,7 +22,12 @@ export async function compressVideo(
   },
 ): Promise<CompressedVideo> {
   if (file.mimeType === 'image/gif') {
-    return {uri: file.uri, size: file.fileSize ?? -1, mimeType: 'image/gif'}
+    return {
+      uri: file.uri,
+      size: file.fileSize ?? -1,
+      mimeType: 'image/gif',
+      passthroughReason: 'gif',
+    }
   }
 
   const isAcceptableFormat = SUPPORTED_MIME_TYPES.includes(
@@ -40,6 +45,7 @@ export async function compressVideo(
       uri: file.uri,
       size: file.fileSize ?? -1,
       mimeType: file.mimeType ?? 'video/mp4',
+      passthroughReason: 'probe-failed',
     }
   }
 
@@ -48,6 +54,7 @@ export async function compressVideo(
       uri: file.uri,
       size: metadata.fileSize,
       mimeType: file.mimeType ?? 'video/mp4',
+      passthroughReason: 'below-threshold',
     }
   }
 
