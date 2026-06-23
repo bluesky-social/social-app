@@ -1,0 +1,108 @@
+name: deploy-bskyweb-lightsail
+
+# Build the bskyweb Docker image, push it to GHCR, then roll out a new
+# deployment on the Lightsail container service. Runs on every push to the
+# tracked branches (or manually) — Lightsail does a zero-downtime swap
+# once the new container's health check passes.
+on:
+  push:
+    branches:
+      - main
+      - 4-brand-config-system
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-push-deploy:
+    # Don't run upstream's gated workflows in our fork by accident, and
+    # don't run this fork-specific deploy if someone pulls the workflow
+    # file into a different fork.
+    if: github.repository == 'k4m2a/social-app'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write # required for AWS OIDC
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compute short SHA
+        id: vars
+        run: echo "short_sha=${GITHUB_SHA::9}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.short_sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/${{ vars.AWS_DEPLOY_ROLE_NAME }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Deploy to Lightsail
+        env:
+          IMAGE_REF: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.short_sha }}
+          SERVICE: ${{ vars.LIGHTSAIL_SERVICE_NAME }}
+        run: |
+          aws lightsail create-container-service-deployment \
+            --service-name "$SERVICE" \
+            --containers "{
+              \"social-app\": {
+                \"image\": \"$IMAGE_REF\",
+                \"command\": [\"/usr/bin/bskyweb\", \"serve\"],
+                \"environment\": {
+                  \"ATP_APPVIEW_HOST\": \"https://public.api.bsky.app\",
+                  \"HTTP_ADDRESS\": \":8100\"
+                },
+                \"ports\": {\"8100\": \"HTTP\"}
+              }
+            }" \
+            --public-endpoint '{
+              "containerName": "social-app",
+              "containerPort": 8100,
+              "healthCheck": {"path": "/", "successCodes": "200-499"}
+            }'
+
+      - name: Wait for deployment to become active
+        env:
+          SERVICE: ${{ vars.LIGHTSAIL_SERVICE_NAME }}
+        run: |
+          for i in $(seq 1 60); do
+            state=$(aws lightsail get-container-services \
+              --service-name "$SERVICE" \
+              --query 'containerServices[0].currentDeployment.state' \
+              --output text)
+            echo "deployment state: $state"
+            case "$state" in
+              ACTIVE) echo "deployment active"; exit 0 ;;
+              FAILED) echo "deployment failed"; exit 1 ;;
+            esac
+            sleep 10
+          done
+          echo "timed out waiting for deployment"
+          exit 1

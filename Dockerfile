@@ -52,8 +52,8 @@ COPY . .
 #
 RUN mkdir --parents $NVM_DIR && \
   wget \
-    --output-document=/tmp/nvm-install.sh \
-    https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh && \
+  --output-document=/tmp/nvm-install.sh \
+  https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh && \
   bash /tmp/nvm-install.sh
 
 RUN \. "$NVM_DIR/nvm.sh" && \
@@ -83,11 +83,11 @@ RUN cd bskyweb/ && \
 
 RUN cd bskyweb/ && \
   go build \
-    -v  \
-    -trimpath \
-    -tags timetzdata \
-    -o /bskyweb \
-    ./cmd/bskyweb
+  -v  \
+  -trimpath \
+  -tags timetzdata \
+  -o /bskyweb \
+  ./cmd/bskyweb
 
 FROM debian:bookworm-slim
 
@@ -106,8 +106,8 @@ COPY --from=build-env /bskyweb /usr/bin/bskyweb
 
 CMD ["/usr/bin/bskyweb"]
 
-LABEL org.opencontainers.image.source=https://github.com/bluesky-social/social-app
-LABEL org.opencontainers.image.description="bsky.app Web App"
+LABEL org.opencontainers.image.source=https://github.com/k4m2a/social-app
+LABEL org.opencontainers.image.description="K4M2A Web App"
 LABEL org.opencontainers.image.licenses=MIT
 
 # NOOP

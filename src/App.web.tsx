@@ -70,6 +70,8 @@ import {
   features,
   setupDeviceId,
 } from '#/analytics'
+import {getActiveBrand} from '#/brand/activeBrand'
+import {BrandProvider} from '#/brand/context'
 import {
   prefetchLiveEvents,
   Provider as LiveEventsProvider,
@@ -211,37 +213,39 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <Geo.Provider>
-      <AppConfigProvider>
-        <A11yProvider>
-          <KeyboardControllerProvider>
-            <OnboardingProvider>
-              <AnalyticsContext>
-                <SessionProvider>
-                  <PrefsStateProvider>
-                    <I18nProvider>
-                      <ShellStateProvider>
-                        <ModalStateProvider>
-                          <DialogStateProvider>
-                            <LightboxStateProvider>
-                              <PortalProvider>
-                                <StarterPackProvider>
-                                  <InnerApp />
-                                </StarterPackProvider>
-                              </PortalProvider>
-                            </LightboxStateProvider>
-                          </DialogStateProvider>
-                        </ModalStateProvider>
-                      </ShellStateProvider>
-                    </I18nProvider>
-                  </PrefsStateProvider>
-                </SessionProvider>
-              </AnalyticsContext>
-            </OnboardingProvider>
-          </KeyboardControllerProvider>
-        </A11yProvider>
-      </AppConfigProvider>
-    </Geo.Provider>
+    <BrandProvider brand={getActiveBrand()}>
+      <Geo.Provider>
+        <AppConfigProvider>
+          <A11yProvider>
+            <KeyboardControllerProvider>
+              <OnboardingProvider>
+                <AnalyticsContext>
+                  <SessionProvider>
+                    <PrefsStateProvider>
+                      <I18nProvider>
+                        <ShellStateProvider>
+                          <ModalStateProvider>
+                            <DialogStateProvider>
+                              <LightboxStateProvider>
+                                <PortalProvider>
+                                  <StarterPackProvider>
+                                    <InnerApp />
+                                  </StarterPackProvider>
+                                </PortalProvider>
+                              </LightboxStateProvider>
+                            </DialogStateProvider>
+                          </ModalStateProvider>
+                        </ShellStateProvider>
+                      </I18nProvider>
+                    </PrefsStateProvider>
+                  </SessionProvider>
+                </AnalyticsContext>
+              </OnboardingProvider>
+            </KeyboardControllerProvider>
+          </A11yProvider>
+        </AppConfigProvider>
+      </Geo.Provider>
+    </BrandProvider>
   )
 }
 

@@ -18,11 +18,19 @@ export function HostingProvider({
   onSelectServiceUrl,
   onOpenDialog,
   minimal,
+  locked,
 }: {
   serviceUrl: string
   onSelectServiceUrl: (provider: string) => void
   onOpenDialog?: () => void
   minimal?: boolean
+  /**
+   * When true, the user cannot change the provider: the dialog never opens
+   * and the edit affordance is hidden. Used by signup on brands that
+   * restrict foreign-PDS signup. Sign-in always allows the picker so
+   * existing accounts on other PDSs remain reachable.
+   */
+  locked?: boolean
 }) {
   const serverInputControl = useDialogControl()
   const t = useTheme()
@@ -33,6 +41,17 @@ export function HostingProvider({
     serverInputControl.open()
     onOpenDialog?.()
   }, [onOpenDialog, serverInputControl])
+
+  if (locked) {
+    return (
+      <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_xs]}>
+        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+          <Trans>You are creating an account on</Trans>
+        </Text>
+        <Text style={[a.text_sm, a.font_bold]}>{toNiceDomain(serviceUrl)}</Text>
+      </View>
+    )
+  }
 
   return (
     <>

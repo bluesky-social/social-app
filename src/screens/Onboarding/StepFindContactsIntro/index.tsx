@@ -13,6 +13,7 @@ import {Button, ButtonText} from '#/components/Button'
 import {ContactsHeroImage} from '#/components/contacts/components/HeroImage'
 import {InlineLinkText} from '#/components/Link'
 import {useAnalytics} from '#/analytics'
+import {useBrand} from '#/brand/context'
 import {
   OnboardingControls,
   OnboardingDescriptionText,
@@ -24,6 +25,7 @@ import {useOnboardingInternalState} from '../state'
 export function StepFindContactsIntro() {
   const ax = useAnalytics()
   const {_} = useLingui()
+  const brand = useBrand()
   const {dispatch} = useOnboardingInternalState()
 
   useCallOnce(() => {
@@ -40,11 +42,11 @@ export function StepFindContactsIntro() {
       <OnboardingPosition />
       <ContactsHeroImage />
       <OnboardingTitleText style={[a.mt_sm]}>
-        <Trans>Bluesky is more fun with friends</Trans>
+        <Trans>{brand.name} is more fun with friends</Trans>
       </OnboardingTitleText>
       <OnboardingDescriptionText>
         <Trans>
-          Find your friends on Bluesky by verifying your phone number and
+          Find your friends on {brand.name} by verifying your phone number and
           matching with your contacts. We protect your information and you
           control what happens next.{' '}
           <InlineLinkText

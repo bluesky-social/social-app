@@ -28,7 +28,7 @@ import {useCloseAllActiveElements} from '#/state/util'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
@@ -50,6 +50,7 @@ import {
 } from '#/components/icons/Message'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
+import {getActiveBrand} from '#/brand/activeBrand'
 import {useActorStatus} from '#/features/liveNow'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {styles} from './BottomBarStyles'
@@ -60,6 +61,8 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const {hasSession, currentAccount} = useSession()
   const t = useTheme()
   const {_} = useLingui()
+  const {gtPhone} = useBreakpoints()
+  const brand = getActiveBrand()
   const safeAreaInsets = useSafeAreaInsets()
   const {footerHeight} = useShellLayout()
   const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile, isAtMessages} =
@@ -315,10 +318,21 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               }}>
               <View
                 style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
-                <Logo width={28} />
-                <View style={{paddingTop: 4}}>
-                  <Logotype width={80} fill={t.atoms.text.color} />
-                </View>
+                <Logo width={28} context="tabBar" />
+                {brand.useTextJoinLabel ? (
+                  <Text
+                    style={[
+                      a.font_bold,
+                      gtPhone ? a.text_lg : a.text_md,
+                      t.atoms.text,
+                    ]}>
+                    <Trans>Join now</Trans>
+                  </Text>
+                ) : (
+                  <View style={{paddingTop: 4}}>
+                    <Logotype width={80} fill={t.atoms.text.color} />
+                  </View>
+                )}
               </View>
 
               <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>

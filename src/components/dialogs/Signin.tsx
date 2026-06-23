@@ -13,6 +13,7 @@ import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {Text} from '#/components/Typography'
+import {getActiveBrand} from '#/brand/activeBrand'
 import {IS_NATIVE} from '#/env'
 
 export function SigninDialog() {
@@ -44,7 +45,9 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Sign in to Bluesky or create a new account`)}
+      label={_(
+        msg`Sign in to ${getActiveBrand().name} or create a new account`,
+      )}
       style={[gtMobile ? {width: 'auto', maxWidth: 420} : a.w_full]}>
       <View style={[!IS_NATIVE && a.p_2xl]}>
         <View

@@ -13,12 +13,13 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {Logo} from '#/view/icons/Logo'
+import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
 import {ButtonIcon} from '#/components/Button'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
+import {getActiveBrand} from '#/brand/activeBrand'
 import {IS_DEV, IS_LIQUID_GLASS} from '#/env'
 
 export function HomeHeaderLayoutMobile({
@@ -32,6 +33,7 @@ export function HomeHeaderLayoutMobile({
   const {headerHeight} = useShellLayout()
   const insets = useSafeAreaInsets()
   const headerMinimalShellTransform = useMinimalShellHeaderTransform()
+  const brand = getActiveBrand()
   const {hasSession} = useSession()
   const playHaptic = useHaptics()
   const {navigate} = useNavigation<NavigationProp>()
@@ -69,7 +71,10 @@ export function HomeHeaderLayoutMobile({
                 emitSoftReset()
               }
             }}>
-            <Logo width={30} />
+            <Logotype
+              width={brand.logo.logotypeHeaderWidth || 140}
+              fill={t.name === 'light' ? t.palette.primary_500 : '#ffffff'}
+            />
           </PressableScale>
         </View>
 

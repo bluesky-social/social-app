@@ -17,10 +17,8 @@ import {networkRetry} from '#/lib/async/retry'
 import {
   BLUESKY_PROXY_HEADER,
   BSKY_SERVICE,
-  DISCOVER_SAVED_FEED,
   IS_PROD_SERVICE,
   PUBLIC_BSKY_SERVICE,
-  TIMELINE_SAVED_FEED,
 } from '#/lib/constants'
 import {logger} from '#/logger'
 import {snoozeBirthdateUpdateAllowedForDid} from '#/state/birthdate'
@@ -34,6 +32,7 @@ import {
 import {getAndComputeAgeAssuranceState} from '#/ageAssurance/state'
 import {AgeAssuranceAccess} from '#/ageAssurance/types'
 import {features} from '#/analytics'
+import {getActiveBrand} from '#/brand/activeBrand'
 import {emitNetworkConfirmed, emitNetworkLost} from '../events'
 import {addSessionErrorLog} from './logging'
 import {
@@ -206,16 +205,12 @@ export async function createAgentAndCreateAccount(
         throw e
       }),
       networkRetry(1, () => {
-        return agent.overwriteSavedFeeds([
-          {
-            ...DISCOVER_SAVED_FEED,
+        return agent.overwriteSavedFeeds(
+          getActiveBrand().defaultFeeds.map(feed => ({
+            ...feed,
             id: TID.nextStr(),
-          },
-          {
-            ...TIMELINE_SAVED_FEED,
-            id: TID.nextStr(),
-          },
-        ])
+          })),
+        )
       }).catch(e => {
         logger.info(`createAgentAndCreateAccount: failed to set initial feeds`)
         throw e

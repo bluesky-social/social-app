@@ -3,7 +3,30 @@
     "allow": [
       "Bash(yarn typecheck *)",
       "Bash(yarn lint *)",
-      "Bash(yarn test *)"
+      "Bash(yarn test *)",
+      "Bash(node -e \"const c = require\\('./app.config.js'\\)\\(\\); console.log\\(JSON.stringify\\(c, null, 2\\)\\)\")",
+      "Read(//tmp/**)",
+      "Bash(diff /tmp/brand-config.main.json /tmp/brand-config.json | head -40)",
+      "Bash(git worktree *)",
+      "Bash(BRAND=bluesky node -e \"const c = require\\('./app.config.js'\\)\\(\\); console.log\\(JSON.stringify\\(c, null, 2\\)\\)\" > /tmp/brand-config.brand.json && diff /tmp/brand-config.main.json /tmp/brand-config.brand.json && echo \"BYTE-IDENTICAL\")",
+      "Bash(yarn --ignore-engines typecheck)",
+      "Bash(awk '/\"jest\": \\\\{/,/^  \\\\},?$/' /Users/achal/Code/k4m2a/social-app/package.json)",
+      "Bash(grep -E \"Trans|<Text|msg\\\\\\\\\\\\`|l\\\\\\\\\\\\`|message:|placeholder:|comment:|context:\")",
+      "Bash(awk 'NR==478 {p=1} p && /^function|^export function|^let / {print NR\": \"$0; exit}' /Users/achal/Code/k4m2a/social-app/src/screens/StarterPack/StarterPackScreen.tsx)",
+      "Bash(awk '/^function|^export function|^let / && NR < 478 {f=NR\": \"$0} END{print f}' /Users/achal/Code/k4m2a/social-app/src/screens/StarterPack/StarterPackScreen.tsx)",
+      "Bash(npx eslint *)",
+      "Bash(file /Users/achal/Code/k4m2a-old/k4m2a-style-pallete/*)",
+      "Bash(awk 'NR>=1 && NR<=1' /Users/achal/Downloads/MD_icon.svg)",
+      "Bash(awk 'NR>=44 && NR<=45' /Users/achal/Downloads/MD_icon.svg)",
+      "Bash(grep -c '`' /Users/achal/Downloads/MD_icon.svg)",
+      "Bash(grep -c '\\\\${' /Users/achal/Downloads/MD_icon.svg)",
+      "Bash(go build *)",
+      "Bash(mkdir -p static/css static/js static/media)",
+      "Bash(touch static/css/.keep static/js/.keep static/media/.keep)",
+      "Bash(mkdir -p embedr-static)",
+      "Bash(touch embedr-static/.keep)",
+      "Bash(go vet *)",
+      "Bash(grep -iE \"Trans>.*Bluesky|msg\\\\`.*Bluesky|l\\\\`.*Bluesky|>Bluesky<|'Bluesky|\\\\\"Bluesky\")"
     ]
   }
 }

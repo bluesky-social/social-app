@@ -18,6 +18,7 @@ import {useDialogControl} from '#/components/Dialog'
 import {Newskie} from '#/components/icons/Newskie'
 import * as StarterPackCard from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
+import {useBrand} from '#/brand/context'
 import {IS_NATIVE} from '#/env'
 
 export function NewskieDialog({
@@ -81,6 +82,7 @@ function DialogInner({
   const control = Dialog.useDialogContext()
   const {_} = useLingui()
   const t = useTheme()
+  const brand = useBrand()
   const moderationOpts = useModerationOpts()
   const {currentAccount} = useSession()
   const timeAgo = useGetTimeAgo()
@@ -101,18 +103,18 @@ function DialogInner({
     if (isMe) {
       if (profile.joinedViaStarterPack) {
         return _(
-          msg`You joined Bluesky using a starter pack ${timeAgoString} ago`,
+          msg`You joined ${brand.name} using a starter pack ${timeAgoString} ago`,
         )
       } else {
-        return _(msg`You joined Bluesky ${timeAgoString} ago`)
+        return _(msg`You joined ${brand.name} ${timeAgoString} ago`)
       }
     } else {
       if (profile.joinedViaStarterPack) {
         return _(
-          msg`${profileName} joined Bluesky using a starter pack ${timeAgoString} ago`,
+          msg`${profileName} joined ${brand.name} using a starter pack ${timeAgoString} ago`,
         )
       } else {
-        return _(msg`${profileName} joined Bluesky ${timeAgoString} ago`)
+        return _(msg`${profileName} joined ${brand.name} ${timeAgoString} ago`)
       }
     }
   }

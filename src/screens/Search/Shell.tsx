@@ -38,6 +38,7 @@ import {SearchInput} from '#/components/forms/SearchInput'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {useBrand} from '#/brand/context'
 import {IS_WEB} from '#/env'
 import {account, useStorage} from '#/storage'
 import type * as bsky from '#/types/bsky'
@@ -493,6 +494,7 @@ let SearchScreenInner = ({
   const t = useTheme()
   const {hasSession} = useSession()
   const {gtTablet} = useBreakpoints()
+  const brand = useBrand()
 
   const onPageSelected = (index: number) => {
     setActiveTab(index)
@@ -534,7 +536,7 @@ let SearchScreenInner = ({
             style={t.atoms.text_contrast_medium as StyleProp<ViewStyle>}
           />
           <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
-            <Trans>Find posts, users, and feeds on Bluesky</Trans>
+            <Trans>Find posts, users, and feeds on {brand.name}</Trans>
           </Text>
         </View>
       </View>

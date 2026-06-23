@@ -7,16 +7,20 @@ import {Trans} from '@lingui/react/macro'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Logo} from '#/view/icons/Logo'
-import {atoms as a} from '#/alf'
+import {Logotype} from '#/view/icons/Logotype'
+import {atoms as a, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {getActiveBrand} from '#/brand/activeBrand'
 
 let NavSignupCard = ({}: {}): React.ReactNode => {
   const {_} = useLingui()
+  const t = useTheme()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
+  const brand = getActiveBrand()
 
   const showSignIn = useCallback(() => {
     closeAllActiveElements()
@@ -31,8 +35,12 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
 
   return (
     <View style={[{maxWidth: 245}]}>
-      <Link to="/" label="Bluesky - Home">
-        <Logo width={32} />
+      <Link to="/" label={_(msg`${brand.name} - Home`)}>
+        {brand.splashOnlyWordmark ? (
+          <Logotype width={90} fill={t.atoms.text.color} />
+        ) : (
+          <Logo width={32} />
+        )}
       </Link>
 
       <View style={[a.pt_lg]}>

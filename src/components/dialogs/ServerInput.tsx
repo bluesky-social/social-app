@@ -17,6 +17,7 @@ import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {getActiveBrand} from '#/brand/activeBrand'
 
 type SegmentedControlOptions = typeof BSKY_SERVICE | 'custom'
 
@@ -81,6 +82,7 @@ function DialogInner({
   const {_} = useLingui()
   const t = useTheme()
   const {accounts} = useSession()
+  const pdsName = getActiveBrand().pds.name
   const {gtMobile} = useBreakpoints()
   const [customAddress, setCustomAddress] = useState(initialCustomAddress)
   const [pdsAddressHistory, setPdsAddressHistory] = useState<string[]>(
@@ -141,10 +143,8 @@ function DialogInner({
           <SegmentedControl.Item
             testID="bskyServiceSelectBtn"
             value={BSKY_SERVICE}
-            label={_(msg`Bluesky`)}>
-            <SegmentedControl.ItemText>
-              {_(msg`Bluesky`)}
-            </SegmentedControl.ItemText>
+            label={pdsName}>
+            <SegmentedControl.ItemText>{pdsName}</SegmentedControl.ItemText>
           </SegmentedControl.Item>
           <SegmentedControl.Item
             testID="customSelectBtn"

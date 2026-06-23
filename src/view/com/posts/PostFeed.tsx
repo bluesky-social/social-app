@@ -59,6 +59,7 @@ import {
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
 import {useAnalytics} from '#/analytics'
+import {useBrand} from '#/brand/context'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
 import {
@@ -372,6 +373,7 @@ let PostFeed = ({
     (followProgressGuide || followAndLikeProgressGuide) && !rightNavVisible
 
   const {trendingVideoDisabled} = useTrendingSettings()
+  const brand = useBrand()
 
   const ageAssuranceBannerState = useAgeAssuranceBannerState()
   const selectedFeed = useSelectedFeed()
@@ -536,7 +538,11 @@ let PostFeed = ({
                       })
                     }
                   } else if (sliceIndex === 15) {
-                    if (areVideoFeedsEnabled && !trendingVideoDisabled) {
+                    if (
+                      areVideoFeedsEnabled &&
+                      !trendingVideoDisabled &&
+                      brand.features.showTrending
+                    ) {
                       arr.push({
                         type: 'interstitialTrendingVideos',
                         key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
@@ -679,6 +685,7 @@ let PostFeed = ({
     hasSession,
     showProgressInterstitial,
     trendingVideoDisabled,
+    brand,
     gtMobile,
     isVideoFeed,
     areVideoFeedsEnabled,

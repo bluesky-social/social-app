@@ -20,6 +20,7 @@ import {Image} from 'expo-image'
 import * as SplashScreen from 'expo-splash-screen'
 
 import {Logotype} from '#/view/icons/Logotype'
+import {getActiveBrand} from '#/brand/activeBrand'
 // @ts-ignore
 import splashImagePointer from '../assets/splash/splash.png'
 // @ts-ignore
@@ -196,21 +197,23 @@ export function Splash(props: React.PropsWithChildren<Props>) {
             style={StyleSheet.absoluteFillObject}
           />
 
-          <Animated.View
-            style={[
-              bottomLogoAnimation,
-              {
-                position: 'absolute',
-                bottom: insets.bottom + 40,
-                left: 0,
-                right: 0,
-                alignItems: 'center',
-                justifyContent: 'center',
-                opacity: 0,
-              },
-            ]}>
-            <Logotype fill="#fff" width={90} />
-          </Animated.View>
+          {!getActiveBrand().splashOnlyWordmark && (
+            <Animated.View
+              style={[
+                bottomLogoAnimation,
+                {
+                  position: 'absolute',
+                  bottom: insets.bottom + 40,
+                  left: 0,
+                  right: 0,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  opacity: 0,
+                },
+              ]}>
+              <Logotype fill="#fff" width={90} />
+            </Animated.View>
+          )}
         </View>
       )}
 
@@ -233,7 +236,11 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                 },
               ]}>
               <Animated.View style={[logoAnimations]}>
-                <Logo fill={logoBg} />
+                {getActiveBrand().splashOnlyWordmark ? (
+                  <Logotype fill={logoBg} width={1000} />
+                ) : (
+                  <Logo fill={logoBg} />
+                )}
               </Animated.View>
             </Animated.View>
           )}

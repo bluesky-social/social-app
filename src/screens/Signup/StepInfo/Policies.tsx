@@ -9,6 +9,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {useBrand} from '#/brand/context'
 
 export const Policies = ({
   serviceDescription,
@@ -17,6 +18,7 @@ export const Policies = ({
 }) => {
   const t = useTheme()
   const {_} = useLingui()
+  const brand = useBrand()
 
   if (!serviceDescription) {
     return <View />
@@ -43,14 +45,14 @@ export const Policies = ({
       <Trans>
         By creating an account you agree to the{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Terms of Service`)}
+          label={_(msg`Read the ${brand.name} Terms of Service`)}
           key="tos"
           to={tos}>
           Terms of Service
         </InlineLinkText>{' '}
         and{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Privacy Policy`)}
+          label={_(msg`Read the ${brand.name} Privacy Policy`)}
           key="pp"
           to={pp}>
           Privacy Policy
@@ -63,7 +65,7 @@ export const Policies = ({
       <Trans>
         By creating an account you agree to the{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Terms of Service`)}
+          label={_(msg`Read the ${brand.name} Terms of Service`)}
           key="tos"
           to={tos}>
           Terms of Service
@@ -76,7 +78,7 @@ export const Policies = ({
       <Trans>
         By creating an account you agree to the{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Privacy Policy`)}
+          label={_(msg`Read the ${brand.name} Privacy Policy`)}
           key="pp"
           to={pp}>
           Privacy Policy

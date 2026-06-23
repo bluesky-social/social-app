@@ -216,6 +216,10 @@ func serve(cctx *cli.Context) error {
 		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodOptions},
 	}))
 
+	// Resolve the active brand from the Host header on every request,
+	// so handlers and templates can read it via brandFromContext().
+	e.Use(BrandMiddleware())
+
 	//
 	// configure routes
 	//
@@ -421,10 +425,13 @@ func (srv *Server) Shutdown() error {
 }
 
 // NewTemplateContext returns a new pongo2 context with some default values.
-func (srv *Server) NewTemplateContext() pongo2.Context {
+// The brand resolved from the request Host header is exposed as `brand` so
+// templates can substitute brand-aware OG/Twitter metadata.
+func (srv *Server) NewTemplateContext(c echo.Context) pongo2.Context {
 	return pongo2.Context{
 		"staticCDNHost": srv.cfg.staticCDNHost,
 		"favicon":       fmt.Sprintf("%s/static/favicon.png", srv.cfg.staticCDNHost),
+		"brand":         brandFromContext(c),
 	}
 }
 
@@ -434,7 +441,7 @@ func (srv *Server) errorHandler(err error, c echo.Context) {
 		code = he.Code
 	}
 	c.Logger().Error(err)
-	data := srv.NewTemplateContext()
+	data := srv.NewTemplateContext(c)
 	data["statusCode"] = code
 	c.Render(code, "error.html", data)
 }
@@ -479,12 +486,12 @@ func (srv *Server) LinkProxyMiddleware(url *url.URL) echo.MiddlewareFunc {
 
 // handler for endpoint that have no specific server-side handling
 func (srv *Server) WebGeneric(c echo.Context) error {
-	data := srv.NewTemplateContext()
+	data := srv.NewTemplateContext(c)
 	return c.Render(http.StatusOK, "base.html", data)
 }
 
 func (srv *Server) WebHome(c echo.Context) error {
-	data := srv.NewTemplateContext()
+	data := srv.NewTemplateContext(c)
 	return c.Render(http.StatusOK, "home.html", data)
 }
 
@@ -502,7 +509,7 @@ var hideEmbedLabels = map[string]bool{
 
 func (srv *Server) WebPost(c echo.Context) error {
 	ctx := c.Request().Context()
-	data := srv.NewTemplateContext()
+	data := srv.NewTemplateContext(c)
 
 	// sanity check arguments. don't 4xx, just let app handle if not expected format
 	rkeyParam := c.Param("rkey")
@@ -634,7 +641,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 func (srv *Server) WebStarterPack(c echo.Context) error {
 	req := c.Request()
 	ctx := req.Context()
-	data := srv.NewTemplateContext()
+	data := srv.NewTemplateContext(c)
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 	// sanity check arguments. don't 4xx, just let app handle if not expected format
 	rkeyParam := c.Param("rkey")
@@ -672,7 +679,7 @@ func (srv *Server) WebStarterPack(c echo.Context) error {
 
 func (srv *Server) WebProfile(c echo.Context) error {
 	ctx := c.Request().Context()
-	data := srv.NewTemplateContext()
+	data := srv.NewTemplateContext(c)
 
 	// sanity check arguments. don't 4xx, just let app handle if not expected format
 	handleOrDIDParam := c.Param("handleOrDID")
@@ -708,7 +715,7 @@ func (srv *Server) WebProfile(c echo.Context) error {
 
 func (srv *Server) WebFeed(c echo.Context) error {
 	ctx := c.Request().Context()
-	data := srv.NewTemplateContext()
+	data := srv.NewTemplateContext(c)
 
 	// sanity check arguments. don't 4xx, just let app handle if not expected format
 	rkeyParam := c.Param("rkey")

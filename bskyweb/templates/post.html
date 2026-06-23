@@ -2,11 +2,11 @@
 
 {% block head_title %}
 {%- if postView -%}
-  @{{ postView.Author.Handle }} on Bluesky
+  @{{ postView.Author.Handle }} on {{ brand.Name }}
 {%- elif requiresAuth and profileHandle -%}
-  @{{ profileHandle }} on Bluesky
+  @{{ profileHandle }} on {{ brand.Name }}
 {%- else -%}
-  Bluesky
+  {{ brand.Name }}
 {%- endif -%}
 {% endblock %}
 

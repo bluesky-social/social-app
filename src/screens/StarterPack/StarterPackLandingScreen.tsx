@@ -37,6 +37,7 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {useBrand} from '#/brand/context'
 import {IS_WEB, IS_WEB_MOBILE_ANDROID} from '#/env'
 import * as bsky from '#/types/bsky'
 
@@ -122,6 +123,7 @@ function LandingScreenLoaded({
   const {_, i18n} = useLingui()
   const ax = useAnalytics()
   const t = useTheme()
+  const brand = useBrand()
   const activeStarterPack = useActiveStarterPack()
   const setActiveStarterPack = useSetActiveStarterPack()
   const {isTabletOrDesktop} = useWebMediaQueries()
@@ -207,13 +209,13 @@ function LandingScreenLoaded({
           ) : null}
           <View style={[a.gap_sm]}>
             <Button
-              label={_(msg`Join Bluesky`)}
+              label={_(msg`Join ${brand.name}`)}
               onPress={onJoinPress}
               variant="solid"
               color="primary"
               size="large">
               <ButtonText style={[a.text_lg]}>
-                <Trans>Join Bluesky</Trans>
+                <Trans>Join {brand.name}</Trans>
               </ButtonText>
             </Button>
             <View style={[a.flex_row, a.align_center, a.gap_sm]}>
@@ -328,11 +330,11 @@ function LandingScreenLoaded({
       <Prompt.Outer control={androidDialogControl}>
         <Prompt.Content>
           <Prompt.TitleText>
-            <Trans>Download Bluesky</Trans>
+            <Trans>Download {brand.name}</Trans>
           </Prompt.TitleText>
           <Prompt.DescriptionText>
             <Trans>
-              The experience is better in the app. Download Bluesky now and
+              The experience is better in the app. Download {brand.name} now and
               we'll pick back up where you left off.
             </Trans>
           </Prompt.DescriptionText>
