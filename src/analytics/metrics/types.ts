@@ -1331,4 +1331,99 @@ export type Events = {
   'invite:followersPromo:press': {}
   // user dismissed the empty-followers promo banner
   'invite:followersPromo:dismiss': {}
+
+  // === Video upload funnel (APP-2458, Frontend Spec §D) ===
+  // Every event carries uploadId (client-generated UUID, ties one upload
+  // session end-to-end) + engine (compression engine id, e.g. native:rnc@1.13.0).
+  // jobId is added once the server returns it. Sizes / codecs / dimensions /
+  // timings only — never content.
+  'video:upload:picked': {
+    uploadId: string
+    engine: string
+    sourceMimeType?: string
+    sourceBytes?: number
+    sourceDurationMs?: number
+    sourceWidth?: number
+    sourceHeight?: number
+  }
+  'video:upload:compressStarted': {
+    uploadId: string
+    engine: string
+    sourceBytes?: number
+  }
+  'video:upload:compressCompleted': {
+    uploadId: string
+    engine: string
+    bytesIn?: number
+    bytesOut: number
+    outputMimeType: string
+    elapsedMs: number
+  }
+  'video:upload:compressSkipped': {
+    uploadId: string
+    engine: string
+    reason: 'gif' | 'web-passthrough' | 'below-threshold' | 'probe-failed'
+    bytes: number
+    mimeType: string
+    elapsedMs: number
+  }
+  'video:upload:compressFailed': {
+    uploadId: string
+    engine: string
+    errorClass: string
+    elapsedMs: number
+  }
+  'video:upload:uploadStarted': {
+    uploadId: string
+    engine: string
+    bytes: number
+  }
+  'video:upload:uploadCompleted': {
+    uploadId: string
+    engine: string
+    jobId: string
+    bytes: number
+    elapsedMs: number
+    throughputBytesPerSec: number
+  }
+  'video:upload:uploadFailed': {
+    uploadId: string
+    engine: string
+    bytes: number
+    errorClass: string
+    elapsedMs: number
+  }
+  'video:upload:processingStarted': {
+    uploadId: string
+    engine: string
+    jobId: string
+  }
+  'video:upload:processingCompleted': {
+    uploadId: string
+    engine: string
+    jobId: string
+    elapsedMs: number
+  }
+  'video:upload:processingFailed': {
+    uploadId: string
+    engine: string
+    jobId: string
+    errorClass: string
+    elapsedMs: number
+  }
+  'video:upload:published': {
+    uploadId: string
+    engine: string
+    jobId: string
+    // wall-clock from picked to published
+    totalElapsedMs: number
+  }
+  // The event that measures the actual problem: users giving up mid-wait.
+  'video:upload:abandoned': {
+    uploadId: string
+    engine: string
+    phase: 'compress' | 'upload' | 'processing'
+    jobId?: string
+    elapsedInPhaseMs: number
+  }
 }

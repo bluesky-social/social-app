@@ -25,6 +25,8 @@ export async function compressVideo(
     uri,
     bytes: await blob.arrayBuffer(),
     mimeType,
+    // web today is pure pass-through (no WebCodecs); see frontend spec §A1.
+    passthroughReason: 'web-passthrough',
   }
 }
 
