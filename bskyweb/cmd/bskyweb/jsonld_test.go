@@ -513,6 +513,65 @@ func TestThreadRootURI(t *testing.T) {
 	}
 }
 
+func TestFindRootPostInParents(t *testing.T) {
+	rootPost := makePostView("root.bsky.social", "did:plc:root", "rootrkey", "root")
+	rootURI := rootPost.Uri
+
+	// tvp wraps a PostView, optionally chaining to a parent thread node.
+	tvp := func(pv *appbsky.FeedDefs_PostView, parent *appbsky.FeedDefs_ThreadViewPost) *appbsky.FeedDefs_ThreadViewPost {
+		node := &appbsky.FeedDefs_ThreadViewPost{Post: pv}
+		if parent != nil {
+			node.Parent = &appbsky.FeedDefs_ThreadViewPost_Parent{FeedDefs_ThreadViewPost: parent}
+		}
+		return node
+	}
+
+	t.Run("direct reply, parent is root", func(t *testing.T) {
+		leaf := tvp(makePostView("alice.bsky.social", "did:plc:alice", "leaf", "reply"), tvp(rootPost, nil))
+		if got := findRootPostInParents(leaf, rootURI); got != rootPost {
+			t.Errorf("expected root post, got %v", got)
+		}
+	})
+
+	t.Run("multi-level chain", func(t *testing.T) {
+		mid := tvp(makePostView("bob.bsky.social", "did:plc:bob", "mid", "mid"), tvp(rootPost, nil))
+		leaf := tvp(makePostView("alice.bsky.social", "did:plc:alice", "leaf", "reply"), mid)
+		if got := findRootPostInParents(leaf, rootURI); got != rootPost {
+			t.Errorf("expected root post in chain, got %v", got)
+		}
+	})
+
+	t.Run("root absent, chain truncated", func(t *testing.T) {
+		// Topmost parent is not the root (e.g. parentHeight cut off the chain).
+		topmost := makePostView("bob.bsky.social", "did:plc:bob", "mid", "mid")
+		leaf := tvp(makePostView("alice.bsky.social", "did:plc:alice", "leaf", "reply"), tvp(topmost, nil))
+		if got := findRootPostInParents(leaf, rootURI); got != nil {
+			t.Errorf("expected nil when root absent, got %v", got)
+		}
+	})
+
+	t.Run("chain broken by blocked parent", func(t *testing.T) {
+		// A blocked/not-found parent yields a nil FeedDefs_ThreadViewPost,
+		// breaking the walk before the root.
+		leaf := &appbsky.FeedDefs_ThreadViewPost{
+			Post: makePostView("alice.bsky.social", "did:plc:alice", "leaf", "reply"),
+			Parent: &appbsky.FeedDefs_ThreadViewPost_Parent{
+				FeedDefs_BlockedPost: &appbsky.FeedDefs_BlockedPost{Uri: rootURI},
+			},
+		}
+		if got := findRootPostInParents(leaf, rootURI); got != nil {
+			t.Errorf("expected nil when chain broken by blocked parent, got %v", got)
+		}
+	})
+
+	t.Run("empty rootURI", func(t *testing.T) {
+		leaf := tvp(makePostView("alice.bsky.social", "did:plc:alice", "leaf", "reply"), tvp(rootPost, nil))
+		if got := findRootPostInParents(leaf, ""); got != nil {
+			t.Errorf("expected nil for empty rootURI, got %v", got)
+		}
+	})
+}
+
 func TestBuildPostJSONLD_ReplyCommentsNoIsPartOf(t *testing.T) {
 	// Replies surfaced under the main post as comment[] are Comment nodes and
 	// never carry isPartOf, even when the main post has one.

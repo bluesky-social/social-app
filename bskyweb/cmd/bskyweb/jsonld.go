@@ -358,6 +358,30 @@ func threadRootURI(pv *appbsky.FeedDefs_PostView) string {
 	return rec.Reply.Root.Uri
 }
 
+// findRootPostInParents walks tv's parent chain upward and returns the
+// PostView whose URI matches rootURI, or nil if the root is not present.
+// The root is absent when the chain is truncated by parentHeight (reply
+// deeper than the fetched height) or broken by a blocked/not-found parent.
+// Avoids a separate FeedGetPosts call when the thread response already
+// contains the root.
+func findRootPostInParents(tv *appbsky.FeedDefs_ThreadViewPost, rootURI string) *appbsky.FeedDefs_PostView {
+	if rootURI == "" {
+		return nil
+	}
+	for node := tv; node != nil; {
+		if node.Post != nil && node.Post.Uri == rootURI {
+			return node.Post
+		}
+		if node.Parent == nil {
+			return nil
+		}
+		// Only threadViewPost parents continue the chain; a blocked or
+		// not-found parent breaks it before reaching the root.
+		node = node.Parent.FeedDefs_ThreadViewPost
+	}
+	return nil
+}
+
 // buildAuthor constructs a Person. Organization classification for
 // custom-domain accounts is a future enhancement.
 func buildAuthor(author *appbsky.ActorDefs_ProfileViewBasic) *personOrOrg {
