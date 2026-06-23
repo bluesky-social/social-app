@@ -1,0 +1,18 @@
+# zizmor configuration
+# https://docs.zizmor.sh/configuration/
+
+rules:
+  # nightly-build.yml passes `secrets: inherit` to same-repo reusable
+  # workflows (build-submit-ios.yml / build-submit-android.yml). This is an
+  # upstream pattern for trusted first-party reusable workflows and is
+  # intentional, so the finding is not actionable here.
+  secrets-inherit:
+    ignore:
+      - nightly-build.yml
+
+  # build-submit-android.yml uses softprops/action-gh-release to attach the
+  # APK to a release. zizmor suggests `gh release` in a script step instead;
+  # this is an upstream choice and only an informational suggestion.
+  superfluous-actions:
+    ignore:
+      - build-submit-android.yml
