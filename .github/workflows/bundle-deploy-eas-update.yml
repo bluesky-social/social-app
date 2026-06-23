@@ -79,7 +79,8 @@ jobs:
         run: pnpm intl:build 2>&1 | tee i18n.log
 
       - name: Check for i18n compilation errors
-        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
+        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation
+          errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
 
       - name: Lint check
         run: pnpm lint
@@ -161,7 +162,9 @@ jobs:
     needs: [bundleDeploy]
     # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
     # available here
-    if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.changes-detected && github.repository == 'bluesky-social/social-app' }}
+    if: ${{ inputs.channel != 'production' &&
+      needs.bundleDeploy.outputs.changes-detected && github.repository ==
+      'bluesky-social/social-app' }}
     steps:
       - name: Check for EXPO_TOKEN
         run: >
@@ -313,7 +316,9 @@ jobs:
     needs: [bundleDeploy]
     # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
     # available here
-    if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.changes-detected && github.repository == 'bluesky-social/social-app'}}
+    if: ${{ inputs.channel != 'production' &&
+      needs.bundleDeploy.outputs.changes-detected && github.repository ==
+      'bluesky-social/social-app'}}
 
     steps:
       - name: Check for EXPO_TOKEN
@@ -378,7 +383,41 @@ jobs:
           pnpm use-build-number-with-bump
           pnpm eas build -p android
           --profile testflight-android
-          --local --output build.apk --non-interactive
+          --local --output build.aab --non-interactive
+
+      - name: 📚 Get version from package.json
+        id: get-build-info
+        run: bash scripts/setGitHubOutput.sh
+
+      - name: 🚀 Submit to Google Play
+        run: pnpm eas submit -p android --profile testflight-android --non-interactive --path
+          build.aab
+
+      - name: 🔧 Setup bundletool
+        uses: amyu/setup-bundletool@cc2e1857284660bd625e43f2c8a45626f034302f # v1.1
+        with:
+          bundletool-version: "1.17.2"
+
+      - name: 🔑 Decode keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode >
+          keystore.jks
+
+      - name: 📦 Build signed universal APK
+        run: |
+          bundletool build-apks \
+            --bundle=build.aab \
+            --output=universal.apks \
+            --mode=universal \
+            --ks=keystore.jks \
+            --ks-pass=pass:${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
+            --ks-key-alias=${{ secrets.ANDROID_KEY_ALIAS }} \
+            --key-pass=pass:${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: 📋 Rename to .zip for extraction
+        run: mv universal.apks universal.zip
+
+      - name: 📦 Extract universal APK
+        run: unzip -p universal.zip universal.apk > build.apk
 
       - name: ⏰ Get a timestamp
         id: timestamp
