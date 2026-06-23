@@ -21,6 +21,17 @@ type Brand struct {
 	DefaultOGImage string
 	AppleItunesApp string
 	CanonicalHost  string
+
+	// Pre-hydration splash styling. These let the SSR shell paint the
+	// correct brand background before the JS bundle loads, so a first-time
+	// visitor to a branded host does not see the default-brand background.
+	// The values mirror the brand palettes consumed by src/alf/themes.ts:
+	// BgLight is palette.default.contrast_0, BgDark/BgDim are the inverted
+	// contrast_1000 of the (dark) default/subdued ramps (see src/brand/boot.ts).
+	BgLight      string
+	BgDark       string
+	BgDim        string
+	PrimaryColor string
 }
 
 const brandContextKey = "brand"
@@ -35,6 +46,10 @@ var brands = map[string]Brand{
 		DefaultOGImage: "https://bsky.app/static/social-card-default-gradient.png",
 		AppleItunesApp: "app-id=xyz.blueskyweb.app, app-clip-bundle-id=xyz.blueskyweb.app.AppClip, app-clip-display=card",
 		CanonicalHost:  "bsky.app",
+		BgLight:        "#FFFFFF",
+		BgDark:         "#000000",
+		BgDim:          "#151D28",
+		PrimaryColor:   "#006AFF",
 	},
 	"k4m2a": {
 		ID:            "k4m2a",
@@ -42,6 +57,10 @@ var brands = map[string]Brand{
 		SiteName:      "k4m2a",
 		Description:   "Join the conversation on k4m2a.",
 		CanonicalHost: "k4m2a.app",
+		BgLight:       "#FFFFFF",
+		BgDark:        "#0D0D0D",
+		BgDim:         "#121212",
+		PrimaryColor:  "#000000",
 	},
 	"mdparivaar": {
 		ID:            "mdparivaar",
@@ -49,6 +68,10 @@ var brands = map[string]Brand{
 		SiteName:      "MDParivaar",
 		Description:   "Madhyasth Darshan community on MDParivaar.",
 		CanonicalHost: "mdparivaar.com",
+		BgLight:       "#FFFFFF",
+		BgDark:        "#150D0A",
+		BgDim:         "#1E1410",
+		PrimaryColor:  "#CD7233",
 	},
 	"coseeker": {
 		ID:            "coseeker",
@@ -56,6 +79,10 @@ var brands = map[string]Brand{
 		SiteName:      "CoSeeker",
 		Description:   "Join the conversation on CoSeeker.",
 		CanonicalHost: "coseeker.com",
+		BgLight:       "#FFFFFF",
+		BgDark:        "#0D0D0D",
+		BgDim:         "#121212",
+		PrimaryColor:  "#000000",
 	},
 }
 

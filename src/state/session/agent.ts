@@ -14,7 +14,6 @@ import {TID} from '@atproto/common-web'
 import {type FetchHandlerOptions} from '@atproto/xrpc'
 
 import {networkRetry} from '#/lib/async/retry'
-import {writeMembershipRecord} from '#/lib/community'
 import {
   BLUESKY_PROXY_HEADER,
   BSKY_SERVICE,
@@ -216,14 +215,6 @@ export async function createAgentAndCreateAccount(
         logger.info(`createAgentAndCreateAccount: failed to set initial feeds`)
         throw e
       }),
-      networkRetry(1, () => {
-        return writeMembershipRecord(agent, getActiveBrand().id)
-      }).catch(e => {
-        logger.info(
-          `createAgentAndCreateAccount: failed to write community membership`,
-        )
-        throw e
-      }),
       // wait for AA data to load first, then check state
       aa.then(async () => {
         const state = getAndComputeAgeAssuranceState({did: account.did})
@@ -258,14 +249,6 @@ export async function createAgentAndCreateAccount(
       }).catch(e => {
         logger.info(
           `createAgentAndCreateAccount: failed to set initial profile`,
-        )
-        throw e
-      }),
-      networkRetry(1, () => {
-        return writeMembershipRecord(agent, getActiveBrand().id)
-      }).catch(e => {
-        logger.info(
-          `createAgentAndCreateAccount: failed to write community membership`,
         )
         throw e
       }),
