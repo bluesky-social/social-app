@@ -15,6 +15,7 @@ import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {Link} from '#/components/Link'
 import {Span, Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {getActiveBrand} from '#/brand/activeBrand'
 import {IS_NATIVE} from '#/env'
 
 export function InitialVerificationAnnouncement() {
@@ -154,23 +155,25 @@ export function InitialVerificationAnnouncement() {
           </View>
 
           <View style={[a.w_full, a.gap_md]}>
-            <Link
-              overridePresentation
-              to={urls.website.blog.initialVerificationAnnouncement}
-              label={_(msg`Read blog post`)}
-              size="small"
-              variant="solid"
-              color="primary"
-              style={[a.justify_center, a.w_full]}
-              onPress={() => {
-                ax.metric('verification:learn-more', {
-                  location: 'initialAnnouncementeNux',
-                })
-              }}>
-              <ButtonText>
-                <Trans>Read blog post</Trans>
-              </ButtonText>
-            </Link>
+            {getActiveBrand().id === 'bluesky' && (
+              <Link
+                overridePresentation
+                to={urls.website.blog.initialVerificationAnnouncement}
+                label={_(msg`Read blog post`)}
+                size="small"
+                variant="solid"
+                color="primary"
+                style={[a.justify_center, a.w_full]}
+                onPress={() => {
+                  ax.metric('verification:learn-more', {
+                    location: 'initialAnnouncementeNux',
+                  })
+                }}>
+                <ButtonText>
+                  <Trans>Read blog post</Trans>
+                </ButtonText>
+              </Link>
+            )}
             {IS_NATIVE && (
               <Button
                 label={_(msg`Close`)}

@@ -21,6 +21,7 @@ import {Text} from '#/components/Typography'
 import {type FullVerificationState} from '#/components/verification'
 import {VerificationRemovePrompt} from '#/components/verification/VerificationRemovePrompt'
 import {useAnalytics} from '#/analytics'
+import {getActiveBrand} from '#/brand/activeBrand'
 import type * as bsky from '#/types/bsky'
 
 export {useDialogControl} from '#/components/Dialog'
@@ -146,28 +147,30 @@ function Inner({
             <Trans>Close</Trans>
           </ButtonText>
         </Button>
-        <Link
-          overridePresentation
-          to={urls.website.blog.initialVerificationAnnouncement}
-          label={_(
-            msg({
-              message: `Learn more about verification on Bluesky`,
-              context: `english-only-resource`,
-            }),
-          )}
-          size="small"
-          variant="solid"
-          color="secondary"
-          style={[a.justify_center]}
-          onPress={() => {
-            ax.metric('verification:learn-more', {
-              location: 'verificationsDialog',
-            })
-          }}>
-          <ButtonText>
-            <Trans context="english-only-resource">Learn more</Trans>
-          </ButtonText>
-        </Link>
+        {getActiveBrand().id === 'bluesky' && (
+          <Link
+            overridePresentation
+            to={urls.website.blog.initialVerificationAnnouncement}
+            label={_(
+              msg({
+                message: `Learn more about verification on Bluesky`,
+                context: `english-only-resource`,
+              }),
+            )}
+            size="small"
+            variant="solid"
+            color="secondary"
+            style={[a.justify_center]}
+            onPress={() => {
+              ax.metric('verification:learn-more', {
+                location: 'verificationsDialog',
+              })
+            }}>
+            <ButtonText>
+              <Trans context="english-only-resource">Learn more</Trans>
+            </ButtonText>
+          </Link>
+        )}
       </View>
 
       <Dialog.Close />

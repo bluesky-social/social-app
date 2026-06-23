@@ -23,8 +23,8 @@ const brand = {
   primaryColor: '#CD7233',
   splashColor: '#FFFFFF',
   splashColorDark: '#150D0A',
-  // TODO: deep-link / universal-link host
-  webHost: 'TODO.mdparivaar.example',
+  // Deep-link / universal-link host
+  webHost: 'mdparivaar.com',
   associatedDomains: [
     // TODO: 'applinks:TODO.mdparivaar.example',
   ],

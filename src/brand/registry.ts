@@ -15,7 +15,7 @@ export const brands: Record<string, Brand> = {
   mdparivaar,
 }
 
-export const DEFAULT_BRAND_ID = 'bluesky'
+export const DEFAULT_BRAND_ID = 'coseeker'
 
 export function getBrandById(id: string | undefined): Brand {
   if (id && brands[id]) return brands[id]

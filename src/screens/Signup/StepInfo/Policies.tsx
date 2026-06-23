@@ -24,8 +24,17 @@ export const Policies = ({
     return <View />
   }
 
-  const tos = validWebLink(serviceDescription.links?.termsOfService)
-  const pp = validWebLink(serviceDescription.links?.privacyPolicy)
+  // When the brand only allows signups on its own PDS, the brand's legal pages
+  // are the source of truth - the PDS `describeServer` response may still carry
+  // upstream (e.g. Bluesky) links, which would otherwise leak through here.
+  // Brands that allow foreign-PDS signup keep showing the chosen PDS's links.
+  const preferBrandLinks = !brand.features.allowForeignPdsSignup
+  const tos = preferBrandLinks
+    ? brand.links.tos
+    : validWebLink(serviceDescription.links?.termsOfService)
+  const pp = preferBrandLinks
+    ? brand.links.privacy
+    : validWebLink(serviceDescription.links?.privacyPolicy)
 
   if (!tos && !pp) {
     return (

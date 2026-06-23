@@ -43,7 +43,6 @@ export const DISCOVER_DEBUG_DIDS: Record<string, true> = {
   'did:plc:2dzyut5lxna5ljiaasgeuffz': true, // darrin.bsky.team
 }
 
-const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
 export function FEEDBACK_FORM_URL({
   email,
   handle,
@@ -51,8 +50,11 @@ export function FEEDBACK_FORM_URL({
   email?: string
   handle?: string
 }): string {
-  let str = BASE_FEEDBACK_FORM_URL
-  if (email) {
+  let str = brand.links.feedbackForm
+  // The email/handle prefill query params are specific to the Zendesk request
+  // form. Brands with a non-Zendesk feedback destination (e.g. a Google Form)
+  // are used as-is.
+  if (email && str.includes('zendesk')) {
     str += `?tf_anonymous_requester_email=${encodeURIComponent(email)}`
     if (handle) {
       str += `&tf_17205412673421=${encodeURIComponent(handle)}`
@@ -251,4 +253,5 @@ export const webLinks = {
   privacy: brand.links.privacy,
   community: brand.links.community,
   communityDeprecated: brand.links.communityDeprecated,
+  copyright: brand.links.copyright,
 }

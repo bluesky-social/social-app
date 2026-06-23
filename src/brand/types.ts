@@ -38,6 +38,12 @@ export type Brand = BrandConfig & {
 
   links: {
     helpDesk: string
+    /**
+     * Where the "Feedback" / "Contact support" affordances point. Zendesk
+     * forms (e.g. Bluesky) get the email/handle prefill query params appended
+     * by `FEEDBACK_FORM_URL`; other brands (e.g. a Google Form) are used as-is.
+     */
+    feedbackForm: string
     statusPage: string
     download: string
     embedService: string
@@ -48,6 +54,7 @@ export type Brand = BrandConfig & {
     privacy: string
     community: string
     communityDeprecated: string
+    copyright: string
   }
 
   blogUrls: {

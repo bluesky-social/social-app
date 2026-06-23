@@ -12,6 +12,7 @@ import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {cleanError} from '#/lib/strings/errors'
 import {enforceLen} from '#/lib/strings/helpers'
+import {BSKY_APP_HOST} from '#/lib/strings/url-helpers'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
@@ -42,7 +43,7 @@ export default function TopicScreen({
   }, [topic])
 
   const onShare = useCallback(() => {
-    const url = new URL('https://bsky.app')
+    const url = new URL(BSKY_APP_HOST)
     url.pathname = `/topic/${topic}`
     shareUrl(url.toString())
   }, [topic])

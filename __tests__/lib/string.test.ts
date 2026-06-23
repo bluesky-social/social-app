@@ -9,12 +9,15 @@ import {
 } from '#/lib/strings/starter-pack'
 import {messages} from '#/locale/locales/en/messages'
 import {klipyUrlToBskyGifUrl} from '#/features/gifPicker/utils'
+import {getActiveBrand} from '../../src/brand/activeBrand'
+import {BSKY_SERVICE} from '../../src/lib/constants'
 import {cleanError} from '../../src/lib/strings/errors'
 import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
 import {enforceLen} from '../../src/lib/strings/helpers'
 import {detectLinkables} from '../../src/lib/strings/rich-text-detection'
 import {shortenLinks} from '../../src/lib/strings/rich-text-manip'
 import {
+  BSKY_APP_HOST,
   makeRecordUri,
   toNiceDomain,
   toShareUrl,
@@ -234,10 +237,16 @@ describe('toNiceDomain', () => {
   const inputs = [
     'https://example.com/index.html',
     'https://bsky.app',
-    'https://bsky.social',
+    // The active brand's PDS host resolves to its friendly name.
+    BSKY_SERVICE,
     '#123123123',
   ]
-  const outputs = ['example.com', 'bsky.app', 'Bluesky Social', '#123123123']
+  const outputs = [
+    'example.com',
+    'bsky.app',
+    getActiveBrand().pds.name,
+    '#123123123',
+  ]
 
   it("displays the url's host in a easily readable manner", () => {
     for (let i = 0; i < inputs.length; i++) {
@@ -275,8 +284,8 @@ describe('toShareUrl', () => {
   const inputs = ['https://bsky.app', '/3jk7x4irgv52r', 'item/test/123']
   const outputs = [
     'https://bsky.app',
-    'https://bsky.app/3jk7x4irgv52r',
-    'https://bsky.app/item/test/123',
+    `${BSKY_APP_HOST}/3jk7x4irgv52r`,
+    `${BSKY_APP_HOST}/item/test/123`,
   ]
 
   it('appends https, when not present', () => {
