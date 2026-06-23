@@ -1,16 +1,12 @@
-import {useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
 
-import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
 import {DesktopSearch} from '#/view/shell/desktop/Search'
-import {SidebarTrendingTopics} from '#/view/shell/desktop/SidebarTrendingTopics'
 import {
   atoms as a,
   useGutters,
@@ -19,41 +15,20 @@ import {
   web,
 } from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
+import {ButtonText} from '#/components/Button'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
-import {InlineLinkText} from '#/components/Link'
-import {ProgressGuideList} from '#/components/ProgressGuide/List'
+import {InlineLinkText, Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {SidebarLiveEventFeedsBanner} from '#/features/liveEvents/components/SidebarLiveEventFeedsBanner'
-
-function useWebQueryParams() {
-  const navigation = useNavigation()
-  const [params, setParams] = useState<Record<string, string>>({})
-
-  useEffect(() => {
-    return navigation.addListener('state', e => {
-      try {
-        const {state} = e.data
-        const lastRoute = state.routes[state.routes.length - 1]
-        setParams(lastRoute.params)
-      } catch (err) {}
-    })
-  }, [navigation, setParams])
-
-  return params
-}
+import {BRAND} from '#/config/brand'
 
 export function DesktopRightNav({routeName}: {routeName: string}) {
   const t = useTheme()
   const {_} = useLingui()
-  const {hasSession, currentAccount} = useSession()
+  const {hasSession} = useSession()
   const kawaii = useKawaiiMode()
   const gutters = useGutters(['base', 0, 'base', 'wide'])
   const isSearchScreen = routeName === 'Search'
   const isMessagesRelatedScreen = routeName.startsWith('Messages')
-  const webqueryParams = useWebQueryParams()
-  const searchQuery = webqueryParams?.q
-  const showExploreScreenDuplicatedContent =
-    !isSearchScreen || (isSearchScreen && !!searchQuery)
   const {rightNavVisible, centerColumnOffset, leftNavMinimal} =
     useLayoutBreakpoints()
 
@@ -87,50 +62,33 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
       ]}>
       {!isSearchScreen && <DesktopSearch />}
 
-      {hasSession && (
-        <>
-          <DesktopFeeds />
-          <ProgressGuideList />
-        </>
-      )}
+      {hasSession && <DesktopFeeds />}
 
-      {showExploreScreenDuplicatedContent && <SidebarLiveEventFeedsBanner />}
-      {showExploreScreenDuplicatedContent && <SidebarTrendingTopics />}
+      <Link
+        to="https://whydonate.com/fundraising/the-next-era-of-social-media"
+        label={_(msg`Donate`)}
+        color="secondary"
+        size="small"
+        variant="solid"
+        style={[a.self_start]}>
+        <ButtonText>
+          <Trans>Donate</Trans>
+        </ButtonText>
+      </Link>
 
       <Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
-        {hasSession && (
-          <>
-            <InlineLinkText
-              to={FEEDBACK_FORM_URL({
-                email: currentAccount?.email,
-                handle: currentAccount?.handle,
-              })}
-              style={[t.atoms.text_contrast_medium]}
-              label={_(msg`Feedback`)}>
-              {_(msg`Feedback`)}
-            </InlineLinkText>
-            <Text style={[t.atoms.text_contrast_low]}>{' ∙ '}</Text>
-          </>
-        )}
         <InlineLinkText
-          to="https://bsky.social/about/support/privacy-policy"
+          to={BRAND.links.privacy}
           style={[t.atoms.text_contrast_medium]}
           label={_(msg`Privacy`)}>
           {_(msg`Privacy`)}
         </InlineLinkText>
         <Text style={[t.atoms.text_contrast_low]}>{' ∙ '}</Text>
         <InlineLinkText
-          to="https://bsky.social/about/support/tos"
+          to={BRAND.links.tos}
           style={[t.atoms.text_contrast_medium]}
           label={_(msg`Terms`)}>
           {_(msg`Terms`)}
-        </InlineLinkText>
-        <Text style={[t.atoms.text_contrast_low]}>{' ∙ '}</Text>
-        <InlineLinkText
-          label={_(msg`Help`)}
-          to={HELP_DESK_URL}
-          style={[t.atoms.text_contrast_medium]}>
-          {_(msg`Help`)}
         </InlineLinkText>
       </Text>
 

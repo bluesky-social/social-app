@@ -1,4 +1,4 @@
-import {lazy, useState} from 'react'
+import {lazy} from 'react'
 import {View} from 'react-native'
 // @ts-expect-error missing types
 import QRCode from 'react-native-qrcode-styled'
@@ -28,6 +28,7 @@ export function QrCode({
   link: string
   ref: React.Ref<ViewShot>
 }) {
+  const t = useTheme()
   const {record} = starterPack
 
   if (
@@ -42,6 +43,9 @@ export function QrCode({
   return (
     <LazyViewShot ref={ref}>
       <LinearGradientBackground
+        // Follow the active accent (the named `primary` gradient is fixed pink)
+        // by deriving stops from the current theme's primary ramp.
+        colors={[t.palette.primary_300, t.palette.primary_600]}
         style={[
           {width: 300, minHeight: 390},
           a.align_center,
@@ -86,7 +90,6 @@ export function QrCode({
             <Trans>
               on
               <View style={[a.flex_row, a.align_center, {gap: 6}]}>
-                <Logo width={25} fill="white" />
                 <View style={[{marginTop: 3.5}]}>
                   <Logotype width={72} fill="white" />
                 </View>
@@ -99,44 +102,22 @@ export function QrCode({
   )
 }
 
+// QR background, also used behind the center mark so it blends into the code.
+const QR_BG = '#f3f3f3'
+
 export function QrCodeInner({link}: {link: string}) {
   const t = useTheme()
-  const [logoArea, setLogoArea] = useState<{
-    x: number
-    y: number
-    width: number
-    height: number
-  } | null>(null)
-
-  const onLogoAreaChange = (area: {
-    x: number
-    y: number
-    width: number
-    height: number
-  }) => {
-    setLogoArea(area)
-  }
 
   return (
     <View style={{position: 'relative'}}>
-      {/* An SVG version of the logo is placed on top of normal `QRCode` `logo` prop, since the PNG fails to load before the export completes on web. */}
-      {IS_WEB && logoArea && (
-        <View
-          style={{
-            position: 'absolute',
-            left: logoArea.x,
-            top: logoArea.y + 1,
-            zIndex: 1,
-            padding: 4,
-          }}>
-          <Logo width={logoArea.width - 14} height={logoArea.height - 14} />
-        </View>
-      )}
       <QRCode
         data={link}
+        // Raise error correction so the QR stays scannable under the center
+        // brand mark that overlays it below.
+        errorCorrectionLevel="H"
         style={[
           a.rounded_sm,
-          {height: 225, width: 225, backgroundColor: '#f3f3f3'},
+          {height: 225, width: 225, backgroundColor: QR_BG},
         ]}
         pieceSize={IS_WEB ? 8 : 6}
         padding={20}
@@ -156,19 +137,28 @@ export function QrCodeInner({link}: {link: string}) {
           },
         }}
         innerEyesOptions={{borderRadius: 3}}
-        logo={{
-          href: require('../../../assets/logo.png'),
-          ...(IS_WEB && {
-            onChange: onLogoAreaChange,
-            padding: 28,
-          }),
-          ...(!IS_WEB && {
-            padding: 2,
-            scale: 0.95,
-          }),
-          hidePieces: true,
-        }}
       />
+      {/*
+       * Center brand mark. Rendered as a vector overlay (the brand wordmark)
+       * rather than the QR lib's raster `logo` prop, for two reasons: it derives
+       * from the single brand wordmark (no separate square logo asset to
+       * maintain per brand), and a vector rasterizes reliably into the web
+       * ViewShot capture - the raster `logo` does not always load before the
+       * export completes. Centered on both platforms.
+       */}
+      <View
+        style={[a.absolute, a.inset_0, a.align_center, a.justify_center]}
+        pointerEvents="none">
+        <View
+          style={[
+            a.align_center,
+            a.justify_center,
+            a.rounded_sm,
+            {paddingHorizontal: 8, paddingVertical: 10, backgroundColor: QR_BG},
+          ]}>
+          <Logo width={44} fill="#1a1a1a" />
+        </View>
+      </View>
     </View>
   )
 }

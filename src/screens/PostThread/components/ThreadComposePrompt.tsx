@@ -1,8 +1,6 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
@@ -22,17 +20,8 @@ export function ThreadComposePrompt({
   onPressCompose: () => void
   style?: StyleProp<ViewStyle>
 }) {
-  const {currentAccount} = useSession()
-  const {data: profile} = useProfileQuery({did: currentAccount?.did})
-  const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const t = useTheme()
-  const playHaptic = useHaptics()
-  const {
-    state: hovered,
-    onIn: onHoverIn,
-    onOut: onHoverOut,
-  } = useInteractionState()
 
   useHideBottomBarBorderForScreen()
 
@@ -58,39 +47,61 @@ export function ThreadComposePrompt({
           style={[a.absolute, a.inset_0]}
         />
       )}
-      <PressableScale
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`Compose reply`)}
-        accessibilityHint={_(msg`Opens composer`)}
-        onPress={() => {
-          onPressCompose()
-          playHaptic('Light')
-        }}
-        onLongPress={ios(() => {
-          onPressCompose()
-          playHaptic('Heavy')
-        })}
-        onHoverIn={onHoverIn}
-        onHoverOut={onHoverOut}
-        style={[
-          a.flex_row,
-          a.align_center,
-          a.p_sm,
-          a.gap_sm,
-          a.rounded_full,
-          (!gtMobile || hovered) && t.atoms.bg_contrast_25,
-          native([a.border, t.atoms.border_contrast_low]),
-          a.transition_color,
-        ]}>
-        <UserAvatar
-          size={24}
-          avatar={profile?.avatar}
-          type={profile?.associated?.labeler ? 'labeler' : 'user'}
-        />
-        <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-          <Trans>Write your reply</Trans>
-        </Text>
-      </PressableScale>
+      <ThreadComposePromptPill onPress={onPressCompose} />
     </View>
+  )
+}
+
+/**
+ * The "Write your reply" pill. Shared by the sticky thread prompt and the
+ * inline reader-seam prompt so the two stay visually identical.
+ */
+export function ThreadComposePromptPill({onPress}: {onPress: () => void}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const {gtMobile} = useBreakpoints()
+  const {currentAccount} = useSession()
+  const {data: profile} = useProfileQuery({did: currentAccount?.did})
+  const playHaptic = useHaptics()
+  const {
+    state: hovered,
+    onIn: onHoverIn,
+    onOut: onHoverOut,
+  } = useInteractionState()
+
+  return (
+    <PressableScale
+      accessibilityRole="button"
+      accessibilityLabel={l`Compose reply`}
+      accessibilityHint={l`Opens composer`}
+      onPress={() => {
+        onPress()
+        playHaptic('Light')
+      }}
+      onLongPress={ios(() => {
+        onPress()
+        playHaptic('Heavy')
+      })}
+      onHoverIn={onHoverIn}
+      onHoverOut={onHoverOut}
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.p_sm,
+        a.gap_sm,
+        a.rounded_full,
+        (!gtMobile || hovered) && t.atoms.bg_contrast_25,
+        native([a.border, t.atoms.border_contrast_low]),
+        a.transition_color,
+      ]}>
+      <UserAvatar
+        size={24}
+        avatar={profile?.avatar}
+        type={profile?.associated?.labeler ? 'labeler' : 'user'}
+      />
+      <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+        <Trans>Write your reply</Trans>
+      </Text>
+    </PressableScale>
   )
 }

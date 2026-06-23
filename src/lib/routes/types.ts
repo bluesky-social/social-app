@@ -8,6 +8,7 @@ export type {NativeStackScreenProps} from '@react-navigation/native-stack'
 export type CommonNavigatorParams = {
   NotFound: undefined
   Lists: undefined
+  NewsFeed: undefined
   Moderation: undefined
   ModerationModlists: undefined
   ModerationMutedAccounts: undefined
@@ -21,7 +22,7 @@ export type CommonNavigatorParams = {
   ProfileKnownFollowers: {name: string}
   ProfileSearch: {name: string; q?: string}
   ProfileList: {name: string; rkey: string}
-  PostThread: {name: string; rkey: string}
+  PostThread: {name: string; rkey: string; view?: 'reader'}
   PostLikedBy: {name: string; rkey: string}
   PostRepostedBy: {name: string; rkey: string}
   PostQuotes: {name: string; rkey: string}
@@ -49,6 +50,7 @@ export type CommonNavigatorParams = {
   PreferencesExternalEmbeds: undefined
   AccessibilitySettings: undefined
   AppearanceSettings: undefined
+  CatCompanionSettings: undefined
   AccountSettings: undefined
   AutomationLabelSettings: undefined
   PrivacyAndSecuritySettings: undefined

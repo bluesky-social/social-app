@@ -8,6 +8,7 @@ import {urls} from '#/lib/constants'
 import {getUserDisplayName} from '#/lib/getUserDisplayName'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
+import {useVerificationRecordQuery} from '#/state/queries/verification/useVerificationRecordQuery'
 import {useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -99,14 +100,14 @@ function Inner({
         </Text>
       </View>
 
-      {profile.verification ? (
+      {state.verifications.length > 0 ? (
         <View style={[a.pb_xl, a.gap_md]}>
           <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
             <Trans>Verified by:</Trans>
           </Text>
 
           <View style={[a.gap_lg]}>
-            {profile.verification.verifications.map(v => (
+            {state.verifications.map(v => (
               <VerifierCard
                 key={v.uri}
                 verification={v}
@@ -116,7 +117,7 @@ function Inner({
             ))}
           </View>
 
-          {profile.verification.verifications.some(v => !v.isValid) &&
+          {state.verifications.some(v => !v.isValid) &&
             state.profile.isViewer && (
               <Admonition type="warning" style={[a.mt_xs]}>
                 <Trans>Some of your verifications are invalid.</Trans>
@@ -192,10 +193,26 @@ function VerifierCard({
   const verificationRemovePromptControl = useDialogControl()
   const canAdminister = verification.issuer === currentAccount?.did
 
+  // Our verifications arrive from the backlink index without a body (empty
+  // createdAt), so fetch the record here to recover the date and compute strict
+  // validity: the frozen handle/displayName must still match the subject's.
+  const needsEnrichment = !verification.createdAt
+  const {data: record} = useVerificationRecordQuery({
+    uri: verification.uri,
+    enabled: needsEnrichment,
+  })
+  const createdAt = verification.createdAt || record?.createdAt
+  const isValid = needsEnrichment
+    ? record
+      ? record.handle === subject.handle &&
+        record.displayName === (subject.displayName ?? '')
+      : verification.isValid
+    : verification.isValid
+
   return (
     <View
       style={{
-        opacity: verification.isValid ? 1 : 0.5,
+        opacity: isValid ? 1 : 0.5,
       }}>
       <ProfileCard.Outer>
         <ProfileCard.Header>
@@ -238,9 +255,11 @@ function VerifierCard({
                     emoji
                     style={[a.leading_snug, t.atoms.text_contrast_medium]}
                     numberOfLines={1}>
-                    {i18n.date(new Date(verification.createdAt), {
-                      dateStyle: 'long',
-                    })}
+                    {createdAt
+                      ? i18n.date(new Date(createdAt), {
+                          dateStyle: 'long',
+                        })
+                      : null}
                   </Text>
                 </View>
               </ProfileCard.Link>

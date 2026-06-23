@@ -8,9 +8,17 @@ import {useEffect, useRef, useState} from 'react'
 import Svg, {Path} from 'react-native-svg'
 
 import {atoms as a, flatten} from '#/alf'
+import brandColors from '#/config/brand-colors.json'
+import {BRAND_LOGO, BRAND_LOGO_3D} from '#/config/brand-logo'
 
 const size = 100
-const ratio = 57 / 64
+const ratio = (BRAND_LOGO_3D ?? BRAND_LOGO).ratio
+// Pre-boot splash: derive fills from the default accent (same source the HTML
+// codegen uses) so the React handoff matches the static #splash mark exactly.
+const accent =
+  brandColors.accents[
+    brandColors.defaultAccent as keyof typeof brandColors.accents
+  ]
 
 export function Splash({
   isReady,
@@ -83,12 +91,19 @@ export function Splash({
           ])}>
           <Svg
             fill="none"
-            viewBox="0 0 64 57"
+            viewBox={(BRAND_LOGO_3D ?? BRAND_LOGO).viewBox}
             style={[a.relative, {width: size, height: size * ratio, top: -50}]}>
-            <Path
-              fill="#006AFF"
-              d="M13.873 3.805C21.21 9.332 29.103 20.537 32 26.55v15.882c0-.338-.13.044-.41.867-1.512 4.456-7.418 21.847-20.923 7.944-7.111-7.32-3.819-14.64 9.125-16.85-7.405 1.264-15.73-.825-18.014-9.015C1.12 23.022 0 8.51 0 6.55 0-3.268 8.579-.182 13.873 3.805ZM50.127 3.805C42.79 9.332 34.897 20.537 32 26.55v15.882c0-.338.13.044.41.867 1.512 4.456 7.418 21.847 20.923 7.944 7.111-7.32 3.819-14.64-9.125-16.85 7.405 1.264 15.73-.825 18.014-9.015C62.88 23.022 64 8.51 64 6.55c0-9.818-8.578-6.732-13.873-2.745Z"
-            />
+            {/* Brand wordmark - matches the pre-JS #splash mark in
+                web/index.html so the handoff is seamless. 3D when the brand
+                ships it, else the flat wordmark in the accent colour. */}
+            {BRAND_LOGO_3D ? (
+              <>
+                <Path fill={accent.primary_900} d={BRAND_LOGO_3D.shadowPath} />
+                <Path fill={accent.primary_400} d={BRAND_LOGO_3D.facePath} />
+              </>
+            ) : (
+              <Path fill={accent.primary_500} d={BRAND_LOGO.path} />
+            )}
           </Svg>
         </div>
       )}

@@ -24,6 +24,11 @@ import {
   createAgentAndResume,
   sessionAccountToSession,
 } from './agent'
+import {
+  type OauthBskyAppAgent,
+  oauthCreateAgent,
+  oauthResumeSession,
+} from './oauth-agent'
 import {type Action, getInitialState, reducer, type State} from './reducer'
 export {isSignupQueued} from './util'
 import {addSessionDebugLog} from './logging'
@@ -157,10 +162,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     async (params, logContext) => {
       addSessionDebugLog({type: 'method:start', method: 'login'})
       const signal = cancelPendingTask()
-      const {agent, account} = await createAgentAndLogin(
-        params,
-        onAgentSessionChange,
-      )
+
+      let agentAccount: {
+        agent: BskyAppAgent | OauthBskyAppAgent
+        account: persisted.PersistedAccount
+      }
+      if (params.oauthSession) {
+        agentAccount = await oauthCreateAgent(params.oauthSession)
+      } else {
+        agentAccount = await createAgentAndLogin(params, onAgentSessionChange)
+      }
+      const {agent, account} = agentAccount
 
       if (signal.aborted) {
         return
@@ -172,7 +184,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       })
       ax.metric(
         'account:loggedIn',
-        {logContext, withPassword: true},
+        {logContext, withPassword: !params.oauthSession},
         {session: utils.accountToSessionMetadata(account)},
       )
       addSessionDebugLog({type: 'method:end', method: 'login', account})
@@ -254,10 +266,20 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         account: storedAccount,
       })
       const signal = cancelPendingTask()
-      const {agent, account} = await createAgentAndResume(
-        storedAccount,
-        onAgentSessionChange,
-      )
+
+      let agentAccount: {
+        agent: BskyAppAgent | OauthBskyAppAgent
+        account: persisted.PersistedAccount
+      }
+      if (storedAccount.isOauthSession) {
+        agentAccount = await oauthResumeSession(storedAccount)
+      } else {
+        agentAccount = await createAgentAndResume(
+          storedAccount,
+          onAgentSessionChange,
+        )
+      }
+      const {agent, account} = agentAccount
 
       if (signal.aborted) {
         return
@@ -289,6 +311,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       patch: {
         emailConfirmed: data.emailConfirmed,
         emailAuthFactor: data.emailAuthFactor,
+        handle: data.handle,
       },
     })
   }, [store, state, cancelPendingTask])
@@ -322,7 +345,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const syncedAccount = synced.accounts.find(
         a => a.did === synced.currentAccount?.did,
       )
-      if (syncedAccount && syncedAccount.refreshJwt) {
+      if (
+        syncedAccount &&
+        (syncedAccount.isOauthSession || syncedAccount.refreshJwt)
+      ) {
         if (syncedAccount.did !== state.currentAgentState.did) {
           /*
            * Web handling: if leader tab has switched to a diff account that is
@@ -393,7 +419,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       addSessionDebugLog({type: 'agent:switch', prevAgent, nextAgent: agent})
       // We never reuse agents so let's fully neutralize the previous one.
       // This ensures it won't try to consume any refresh tokens.
-      prevAgent.dispose()
+      // Optional-chain: the OAuth agent's dispose is a no-op but may be
+      // absent on some agent unions.
+      prevAgent.dispose?.()
     }
   }, [agent])
 

@@ -108,6 +108,7 @@ import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
 import {AppIconSettingsScreen} from '#/screens/Settings/AppIconSettings'
 import {AppPasswordsScreen} from '#/screens/Settings/AppPasswords'
 import {AutomationLabelSettingsScreen} from '#/screens/Settings/AutomationLabelSettings'
+import {CatCompanionSettingsScreen} from '#/screens/Settings/CatCompanionSettings'
 import {ContentAndMediaSettingsScreen} from '#/screens/Settings/ContentAndMediaSettings'
 import {ExternalMediaPreferencesScreen} from '#/screens/Settings/ExternalMediaPreferences'
 import {FindContactsSettingsScreen} from '#/screens/Settings/FindContactsSettings'
@@ -133,8 +134,10 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {useAnalytics} from '#/analytics'
 import {setNavigationMetadata} from '#/analytics/metadata'
+import {BRAND} from '#/config/brand'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {InviteScannerScreen} from '#/features/inviteFriends'
+import {NewsFeedScreen} from '#/features/newsFeed/NewsFeedScreen'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import {renderMessagesSplitViewLayout} from './screens/Messages/components/splitView/MessagesSplitViewLayout'
@@ -170,6 +173,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="Lists"
         component={ListsScreen}
         options={{title: title(msg`Lists`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="NewsFeed"
+        getComponent={() => NewsFeedScreen}
+        options={{title: title(msg`News`), requireAuth: true}}
       />
       <Stack.Screen
         name="Moderation"
@@ -394,6 +402,14 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => AppearanceSettingsScreen}
         options={{
           title: title(msg`Appearance`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="CatCompanionSettings"
+        getComponent={() => CatCompanionSettingsScreen}
+        options={{
+          title: title(msg`Companion Cat`),
           requireAuth: true,
         }}
       />
@@ -998,7 +1014,11 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
     if (IS_WEB) {
       const referrerInfo = Referrer.getReferrerInfo()
-      if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
+      if (
+        referrerInfo &&
+        referrerInfo.hostname !== 'bsky.app' &&
+        !BRAND.web.hosts.includes(referrerInfo.hostname)
+      ) {
         ax.metric('deepLink:referrerReceived', {
           to: window.location.href,
           referrer: referrerInfo?.referrer,

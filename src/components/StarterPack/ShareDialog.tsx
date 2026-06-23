@@ -1,13 +1,14 @@
+import {lazy, Suspense, useRef} from 'react'
 import {View} from 'react-native'
-import {Image} from 'expo-image'
+import type ViewShot from 'react-native-view-shot'
+import {requestPermissionsAsync, saveToLibraryAsync} from 'expo-media-library'
 import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {useSaveImageToMediaLibrary} from '#/lib/media/save-image'
 import {shareUrl} from '#/lib/sharing'
-import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
+import {logger} from '#/logger'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -16,14 +17,20 @@ import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/i
 import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/icons/Download'
 import {QrCode_Stroke2_Corner0_Rounded as QrCodeIcon} from '#/components/icons/QrCode'
 import {Loader} from '#/components/Loader'
+import {StarterPackHero} from '#/components/StarterPack/StarterPackHero'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
 
+const LazyViewShot = lazy(
+  // @ts-expect-error dynamic import
+  () => import('react-native-view-shot/src/index'),
+)
+
 interface Props {
   starterPack: AppBskyGraphDefs.StarterPackView
   link?: string
-  imageLoaded?: boolean
   qrDialogControl: DialogControlProps
   control: DialogControlProps
 }
@@ -42,7 +49,6 @@ export function ShareDialog(props: Props) {
 function ShareDialogInner({
   starterPack,
   link,
-  imageLoaded,
   qrDialogControl,
   control,
 }: Props) {
@@ -51,7 +57,7 @@ function ShareDialogInner({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
 
-  const imageUrl = getStarterPackOgCard(starterPack)
+  const ref = useRef<ViewShot>(null)
 
   const onShareLink = async () => {
     if (!link) return
@@ -63,16 +69,39 @@ function ShareDialogInner({
     control.close()
   }
 
-  const saveImageToAlbum = useSaveImageToMediaLibrary()
-
+  // Native-only: capture the rendered card (no remote image service) and save
+  // it to the photo library.
   const onSave = async () => {
-    await saveImageToAlbum(imageUrl)
+    const uri = await ref.current?.capture?.()
+    if (!uri) return
+
+    // Write-only permission - saving does not require read access.
+    const res = await requestPermissionsAsync(true)
+    if (!res.granted) {
+      Toast.show(
+        _(msg`You must grant access to your photo library to save the image`),
+      )
+      return
+    }
+
+    try {
+      await saveToLibraryAsync(`file://${uri}`)
+    } catch (e: unknown) {
+      Toast.show(_(msg`An error occurred while saving the image!`), {
+        type: 'error',
+      })
+      logger.error('Failed to save starter pack image', {error: e})
+      return
+    }
+
+    Toast.show(_(msg`Image saved to your camera roll!`))
+    control.close()
   }
 
   return (
     <>
       <Dialog.ScrollableInner label={_(msg`Share link dialog`)}>
-        {!imageLoaded || !link ? (
+        {!link ? (
           <View style={[a.align_center, a.justify_center, {minHeight: 350}]}>
             <Loader size="xl" />
           </View>
@@ -89,18 +118,32 @@ function ShareDialogInner({
                 </Trans>
               </Text>
             </View>
-            <Image
-              source={{uri: imageUrl}}
+            <View
               style={[
                 a.rounded_sm,
-                a.aspect_card,
+                a.overflow_hidden,
                 {
                   transform: [{scale: gtMobile ? 0.85 : 1}],
                   marginTop: gtMobile ? -20 : 0,
                 },
-              ]}
-              accessibilityIgnoresInvertColors={true}
-            />
+              ]}>
+              <Suspense
+                fallback={
+                  <View
+                    style={[
+                      a.w_full,
+                      a.aspect_card,
+                      a.align_center,
+                      a.justify_center,
+                    ]}>
+                    <Loader size="xl" />
+                  </View>
+                }>
+                <LazyViewShot ref={ref}>
+                  <StarterPackHero starterPack={starterPack} />
+                </LazyViewShot>
+              </Suspense>
+            </View>
             <View
               style={[
                 a.gap_md,

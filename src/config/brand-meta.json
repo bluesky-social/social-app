@@ -1,0 +1,6 @@
+{
+  "$comment": "Brand text identity, shared across runtimes that can't import TS: brand.ts (BRAND.name / web.hosts), app.config.js (web.name), and the web codegen scripts/sync-brand-web.mjs (HTML title, application-name, og:site_name / og:url / og:image, twitter). `hosts` are the first-party web hostnames (hosts[0] is primary, used for og:url + og:image base). `socialHandle` is the X/Twitter @handle for twitter:site - leave empty to omit the tag. Edit here, then run `pnpm brand:sync-web`.",
+  "name": "mu",
+  "hosts": ["mu.social"],
+  "socialHandle": ""
+}

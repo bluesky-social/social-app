@@ -1,20 +1,19 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {ImageBackground} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {FocusGuards, FocusScope} from 'radix-ui/internal'
 
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {Logo} from '#/view/icons/Logo'
-import {atoms as a, flatten, useBreakpoints, web} from '#/alf'
+import {LogoHero} from '#/view/icons/LogoHero'
+import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
+import {BetaTag} from '#/components/BetaTag'
 import {Button, ButtonText} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-
-const welcomeModalBg = require('../../assets/images/welcome-modal-bg.jpg')
+import {BRAND} from '#/config/brand'
 
 interface WelcomeModalProps {
   control: {
@@ -26,11 +25,14 @@ interface WelcomeModalProps {
 
 export function WelcomeModal({control}: WelcomeModalProps) {
   const {_} = useLingui()
+  const t = useTheme()
   const ax = useAnalytics()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const {gtMobile} = useBreakpoints()
   const [isExiting, setIsExiting] = useState(false)
   const [signInLinkHovered, setSignInLinkHovered] = useState(false)
+
+  const linkColor = t.palette.primary_500
 
   const fadeOutAndClose = (callback?: () => void) => {
     setIsExiting(true)
@@ -87,62 +89,31 @@ export function WelcomeModal({control}: WelcomeModalProps) {
               maxHeight: 600,
               width: '90%',
               height: '90%',
-              backgroundColor: '#C0DCF0',
             },
+            t.atoms.bg,
             a.rounded_lg,
             a.overflow_hidden,
             a.zoom_in,
           ])}>
-          <ImageBackground
-            source={welcomeModalBg}
-            style={[a.flex_1, a.justify_center]}
-            contentFit="cover">
+          <View style={[a.flex_1, a.justify_center]}>
             <View style={[a.gap_2xl, a.align_center, a.p_4xl]}>
               <View
-                style={[
-                  a.flex_row,
-                  a.align_center,
-                  a.justify_center,
-                  a.w_full,
-                  a.p_0,
-                ]}>
-                <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-                  <Logo width={26} />
-                  <Text
-                    style={[
-                      a.text_2xl,
-                      a.font_semi_bold,
-                      a.user_select_none,
-                      {color: '#354358', letterSpacing: -0.5},
-                    ]}>
-                    Bluesky
-                  </Text>
-                </View>
+                style={[a.align_center, a.justify_center, a.w_full, a.gap_sm]}>
+                <LogoHero
+                  width={140}
+                  accessibilityLabel={BRAND.name}
+                  accessibilityHint=""
+                />
+                <BetaTag />
               </View>
-              <View
-                style={[
-                  a.gap_sm,
-                  a.align_center,
-                  a.pt_5xl,
-                  a.pb_3xl,
-                  a.mt_2xl,
-                ]}>
+              <View style={[a.gap_sm, a.align_center, a.pt_lg, a.pb_3xl]}>
                 <Text
                   style={[
                     gtMobile ? a.text_4xl : a.text_3xl,
                     a.font_semi_bold,
                     a.text_center,
-                    {color: '#354358'},
-                    web({
-                      backgroundImage:
-                        'linear-gradient(180deg, #313F54 0%, #667B99 83.65%, rgba(102, 123, 153, 0.50) 100%)',
-                      backgroundClip: 'text',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      color: 'transparent',
-                      lineHeight: 1.2,
-                      letterSpacing: -0.5,
-                    }),
+                    t.atoms.text,
+                    web({lineHeight: 1.2, letterSpacing: -0.5}),
                   ]}>
                   <Trans>Real people.</Trans>
                   {'\n'}
@@ -160,7 +131,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                     color="primary"
                     style={{
                       width: 200,
-                      backgroundColor: '#006AFF',
+                      backgroundColor: t.palette.primary_500,
                     }}>
                     <ButtonText>
                       <Trans>Create account</Trans>
@@ -176,7 +147,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                     hoverStyle={[a.bg_transparent]}>
                     {({hovered}) => (
                       <ButtonText
-                        style={[hovered && [a.underline], {color: '#006AFF'}]}>
+                        style={[hovered && [a.underline], {color: linkColor}]}>
                         <Trans>Explore the app</Trans>
                       </ButtonText>
                     )}
@@ -187,7 +158,8 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                     style={[
                       a.text_md,
                       a.text_center,
-                      {color: '#405168', lineHeight: 24},
+                      t.atoms.text_contrast_medium,
+                      {lineHeight: 24},
                     ]}>
                     <Trans>Already have an account?</Trans>{' '}
                     <Pressable
@@ -199,10 +171,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                       <Text
                         style={[
                           a.font_medium,
-                          {
-                            color: '#006AFF',
-                            fontSize: undefined,
-                          },
+                          {color: linkColor, fontSize: undefined},
                           signInLinkHovered && a.underline,
                         ]}
                         onPress={onPressSignIn}>
@@ -235,14 +204,14 @@ export function WelcomeModal({control}: WelcomeModalProps) {
               {({hovered, pressed, focused}) => (
                 <XIcon
                   size="md"
-                  style={{
-                    color: '#354358',
-                    opacity: hovered || pressed || focused ? 1 : 0.7,
-                  }}
+                  style={[
+                    t.atoms.text_contrast_medium,
+                    {opacity: hovered || pressed || focused ? 1 : 0.7},
+                  ]}
                 />
               )}
             </Button>
-          </ImageBackground>
+          </View>
         </View>
       </FocusScope.FocusScope>
     </View>

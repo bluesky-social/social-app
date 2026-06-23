@@ -10,7 +10,9 @@ import {createTemporaryAgentsAndResume} from './util'
 // A hack so that the reducer can't read anything from the agent.
 // From the reducer's point of view, it should be a completely opaque object.
 type OpaqueBskyAgent = {
-  readonly service: URL
+  // Optional: the OAuth agent extends the plain @atproto/api Agent, which
+  // has no `service: URL` (only the legacy AtpAgent/BskyAgent does).
+  readonly service?: URL | undefined
   readonly api: unknown
   readonly app: unknown
   readonly com: unknown
@@ -58,7 +60,10 @@ export type Action =
   | {
       type: 'partial-refresh-session'
       accountDid: string
-      patch: Pick<SessionAccount, 'emailConfirmed' | 'emailAuthFactor'>
+      patch: Pick<
+        SessionAccount,
+        'emailConfirmed' | 'emailAuthFactor' | 'handle'
+      >
     }
 
 function createPublicAgentState(): AgentState {
@@ -243,6 +248,7 @@ let reducer = (state: State, action: Action): State => {
           patch.emailConfirmed ?? agent.session.emailConfirmed
         agent.session.emailAuthFactor =
           patch.emailAuthFactor ?? agent.session.emailAuthFactor
+        agent.session.handle = patch.handle ?? agent.session.handle
       }
 
       return {
@@ -257,6 +263,7 @@ let reducer = (state: State, action: Action): State => {
               ...a,
               emailConfirmed: patch.emailConfirmed ?? a.emailConfirmed,
               emailAuthFactor: patch.emailAuthFactor ?? a.emailAuthFactor,
+              handle: patch.handle ?? a.handle,
             }
           }
           return a

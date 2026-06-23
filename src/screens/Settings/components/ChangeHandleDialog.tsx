@@ -23,11 +23,13 @@ import {
   sanitizeHandle,
   validateServiceHandle,
 } from '#/lib/strings/handles'
+import {logger} from '#/logger'
 import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useServiceQuery} from '#/state/queries/service'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
-import {useAgent, useSession} from '#/state/session'
+import {useSession, useSessionApi} from '#/state/session'
+import {oauthUpgradeForHandle} from '#/state/session/oauth-web-client'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -63,12 +65,17 @@ export function ChangeHandleDialog({
 function ChangeHandleDialogInner() {
   const control = Dialog.useDialogContext()
   const {_} = useLingui()
-  const agent = useAgent()
+  const {currentAccount} = useSession()
+  // mu fork: OAuth sessions use a generic Agent that has no `serviceUrl` (only
+  // password sessions' BskyAppAgent does), so reading agent.serviceUrl crashed
+  // the dialog (blank page) for OAuth users. currentAccount.service is the
+  // correct describeServer target for both: the entryway for password sessions
+  // and the OAuth issuer otherwise.
   const {
     data: serviceInfo,
     error: serviceInfoError,
     refetch,
-  } = useServiceQuery(agent.serviceUrl.toString())
+  } = useServiceQuery(currentAccount?.service ?? '')
 
   const [page, setPage] = useState<'provided-handle' | 'own-handle'>(
     'provided-handle',
@@ -108,7 +115,7 @@ function ChangeHandleDialogInner() {
             title={_(msg`Oops!`)}
             message={_(msg`There was an issue fetching your service info`)}
             details={cleanError(serviceInfoError)}
-            onPressTryAgain={refetch}
+            onPressTryAgain={() => void refetch()}
           />
         ) : serviceInfo ? (
           <LayoutAnimationConfig skipEntering skipExiting>
@@ -143,6 +150,94 @@ function ChangeHandleDialogInner() {
   )
 }
 
+/**
+ * Re-authorization prompt shown when a handle change fails in a way that looks
+ * like missing permission. Initial logins request transitional scope only (some
+ * PDSes reject transitional + granular together), so updateHandle's
+ * `identity:handle` grant is acquired on demand via a re-authorization step-up.
+ */
+function ChangeHandleScopeUpgrade() {
+  const {_} = useLingui()
+  const {currentAccount} = useSession()
+  const [isRedirecting, setIsRedirecting] = useState(false)
+  const [redirectError, setRedirectError] = useState<string | undefined>(
+    undefined,
+  )
+
+  const onUpgrade = async () => {
+    if (!currentAccount?.did) return
+    setRedirectError(undefined)
+    setIsRedirecting(true)
+    try {
+      // On success the page redirects away and this never resolves; it only
+      // settles by rejecting when the server refuses the granular scope.
+      await oauthUpgradeForHandle(currentAccount.did)
+    } catch (e) {
+      setIsRedirecting(false)
+      setRedirectError(
+        _(
+          msg`Your server does not support changing your handle from this app.`,
+        ),
+      )
+      logger.error('handle step-up: authorize failed', {
+        safeMessage: e instanceof Error ? e.message : String(e),
+      })
+    }
+  }
+
+  return (
+    <View style={[a.gap_md]}>
+      {redirectError ? (
+        <Admonition type="error">{redirectError}</Admonition>
+      ) : (
+        <Admonition type="warning">
+          <Trans>
+            Couldn’t change your handle. Your session may need an extra
+            permission from your server to do this.
+          </Trans>
+        </Admonition>
+      )}
+      <Text style={[a.text_md, a.leading_snug]}>
+        <Trans>
+          You’ll be sent to your server to approve the permission, then brought
+          back here to try again.
+        </Trans>
+      </Text>
+      <Button
+        label={_(msg`Continue`)}
+        variant="solid"
+        color="primary"
+        size="large"
+        disabled={isRedirecting}
+        onPress={() => void onUpgrade()}>
+        {isRedirecting ? (
+          <ButtonIcon icon={Loader} />
+        ) : (
+          <ButtonText>
+            <Trans>Continue</Trans>
+          </ButtonText>
+        )}
+      </Button>
+    </View>
+  )
+}
+
+/**
+ * Handle-change errors that are normal validation failures (not a permission
+ * problem). Used to decide whether a failure should offer the scope upgrade.
+ */
+function isBenignHandleValidationError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false
+  const m = error.message
+  return (
+    m.startsWith('Handle already taken') ||
+    m === 'Reserved handle' ||
+    m === 'Handle too long' ||
+    m === 'Input/handle must be a valid handle' ||
+    m === 'Rate Limit Exceeded'
+  )
+}
+
 function ProvidedHandlePage({
   serviceInfo,
   goToOwnHandle,
@@ -152,9 +247,9 @@ function ProvidedHandlePage({
 }) {
   const {_} = useLingui()
   const [subdomain, setSubdomain] = useState('')
-  const agent = useAgent()
   const control = Dialog.useDialogContext()
   const {currentAccount} = useSession()
+  const {partialRefreshSession} = useSessionApi()
   const queryClient = useQueryClient()
   const profile = useCurrentAccountProfile()
   const verification = useSimpleVerificationState({
@@ -173,7 +268,10 @@ function ProvidedHandlePage({
           queryKey: RQKEY_PROFILE(currentAccount.did),
         })
       }
-      agent.resumeSession(agent.session!).then(() => control.close())
+      // mu fork: partialRefreshSession works for both password and OAuth
+      // agents (the old agent.resumeSession is AtpAgent-only) and now refreshes
+      // the session handle too, so the new handle reflects everywhere.
+      partialRefreshSession().then(() => control.close())
     },
   })
 
@@ -188,6 +286,16 @@ function ProvidedHandlePage({
     !validation.handleChars ||
     !validation.hyphenStartOrEnd ||
     !validation.totalLength
+
+  // A failure that looks like missing permission replaces the whole form with
+  // the scope-upgrade prompt - retrying the form would just fail again.
+  if (
+    error &&
+    currentAccount?.isOauthSession &&
+    !isBenignHandleValidationError(error)
+  ) {
+    return <ChangeHandleScopeUpgrade />
+  }
 
   return (
     <LayoutAnimationConfig skipEntering>
@@ -311,8 +419,8 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
   const {currentAccount} = useSession()
   const [dnsPanel, setDNSPanel] = useState(true)
   const [domain, setDomain] = useState('')
-  const agent = useAgent()
   const control = Dialog.useDialogContext()
+  const {partialRefreshSession} = useSessionApi()
   const fetchDid = useFetchDid()
   const queryClient = useQueryClient()
 
@@ -328,7 +436,9 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
           queryKey: RQKEY_PROFILE(currentAccount.did),
         })
       }
-      agent.resumeSession(agent.session!).then(() => control.close())
+      // mu fork: see ProvidedHandlePage - partialRefreshSession is OAuth-safe
+      // and refreshes the session handle.
+      partialRefreshSession().then(() => control.close())
     },
   })
 
@@ -348,6 +458,16 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
       return true
     },
   })
+
+  // A failure that looks like missing permission replaces the whole form with
+  // the scope-upgrade prompt - retrying the form would just fail again.
+  if (
+    error &&
+    currentAccount?.isOauthSession &&
+    !isBenignHandleValidationError(error)
+  ) {
+    return <ChangeHandleScopeUpgrade />
+  }
 
   return (
     <View style={[a.flex_1, a.gap_lg]}>

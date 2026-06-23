@@ -2,6 +2,7 @@ import {type StyleProp, type ViewStyle} from 'react-native'
 import {atoms as baseAtoms} from '@bsky.app/alf'
 
 import {CARD_ASPECT_RATIO} from '#/lib/constants'
+import * as tokens from '#/alf/tokens'
 import {native, platform, web} from '#/alf/util/platform'
 import * as Layout from '#/components/Layout'
 
@@ -9,6 +10,14 @@ const EXP_CURVE = 'cubic-bezier(0.16, 1, 0.3, 1)'
 
 export const atoms = {
   ...baseAtoms,
+
+  // Eurosky fork: text size for inputs
+  // A 16px minimum keeps mobile browsers from
+  // auto-zooming when an input is focused.
+  text_input: {
+    fontSize: tokens.inputMinFontSize,
+    letterSpacing: tokens.TRACKING,
+  },
 
   h_full_vh: web({
     height: '100vh',

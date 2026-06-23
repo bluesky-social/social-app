@@ -1,4 +1,3 @@
-import {useMemo} from 'react'
 import {Image as RNImage, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {Image} from 'expo-image'
@@ -7,9 +6,9 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
-import {Logo} from '#/view/icons/Logo'
-import {Logotype} from '#/view/icons/Logotype'
+import {LogoHero} from '#/view/icons/LogoHero'
 import {atoms as a, useTheme} from '#/alf'
+import {BetaTag} from '#/components/BetaTag'
 import {Button, ButtonText} from '#/components/Button'
 // @ts-ignore
 import splashImagePointer from '../../../../assets/splash/illustration-mobile.png'
@@ -33,26 +32,6 @@ export const SplashScreen = ({
 
   const playHaptic = useHaptics()
 
-  const styles = useMemo(() => {
-    const logoFill = isDarkMode ? 'white' : t.palette.primary_500
-    return {
-      logoFill,
-      logoShadow: isDarkMode
-        ? [
-            t.atoms.shadow_md,
-            {
-              shadowColor: logoFill,
-              shadowOpacity: 0.5,
-              shadowOffset: {
-                width: 0,
-                height: 0,
-              },
-            },
-          ]
-        : [],
-    }
-  }, [t, isDarkMode])
-
   return (
     <>
       <Image
@@ -67,12 +46,8 @@ export const SplashScreen = ({
         style={[a.flex_1]}>
         <View
           style={[a.justify_center, a.align_center, {gap: 6, paddingTop: 46}]}>
-          <Logo width={76} fill={styles.logoFill} style={styles.logoShadow} />
-          <Logotype
-            width={91}
-            fill={styles.logoFill}
-            style={styles.logoShadow}
-          />
+          <LogoHero width={120} />
+          <BetaTag />
         </View>
 
         <View style={[a.flex_1]} />

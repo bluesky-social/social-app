@@ -24,6 +24,7 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import * as toast from '#/components/Toast'
 import {Span, Text} from '#/components/Typography'
+import {BRAND} from '#/config/brand'
 import {resetToTab} from '#/Navigation'
 
 const WHITESPACE_RE = /\s/gu
@@ -334,7 +335,7 @@ function DeleteAccountDialogInner({
                 </Span>{' '}
                 and all associated data. Note that this will affect any other{' '}
                 <SimpleInlineLinkText
-                  to="https://bsky.social/about/faq"
+                  to={BRAND.links.faq}
                   label={_(msg`AT Protocol FAQ`)}>
                   AT Protocol
                 </SimpleInlineLinkText>{' '}

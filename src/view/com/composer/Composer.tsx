@@ -93,6 +93,7 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
+import {useEditPostMutation} from '#/state/queries/post'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {resolveLinkQueryOptions} from '#/state/queries/resolve-link'
@@ -259,6 +260,7 @@ export const ComposePost = ({
   videoUri: initVideoUri,
   openGallery,
   logContext,
+  editPost: initEditPost,
   cancelRef,
 }: Props & {
   cancelRef?: React.RefObject<CancelRef | null>
@@ -280,6 +282,7 @@ export const ComposePost = ({
   const skipEmptyConfirmedRef = useRef(false)
   const {mutateAsync: saveDraft, isPending: _isSavingDraft} =
     useSaveDraftMutation()
+  const {mutateAsync: editPostMutate} = useEditPostMutation()
   const {mutate: cleanupPublishedDraft} = useCleanupPublishedDraftMutation()
   const {closeAllDialogs} = useDialogStateControlContext()
   const {data: preferences} = usePreferencesQuery()
@@ -358,10 +361,12 @@ export const ComposePost = ({
       initText,
       initMention,
       initInteractionSettings: preferences?.postInteractionSettings,
+      initEditPost,
     },
     createComposerState,
   )
 
+  const isEditMode = !!composerState.editPost
   const thread = composerState.thread
 
   // Clear error when composer content changes, but only if all posts are
@@ -943,6 +948,34 @@ export const ComposePost = ({
       return
     }
 
+    if (composerState.editPost) {
+      const richtext = thread.posts[0].richtext
+      // Nothing changed - don't spend the one edit on a no-op.
+      if (initEditPost && richtext.text === initEditPost.text) {
+        onClose()
+        return
+      }
+      setError('')
+      setIsPublishing(true)
+      try {
+        await editPostMutate({uri: composerState.editPost.uri, richtext})
+      } catch (e) {
+        setIsPublishing(false)
+        setError(
+          e instanceof apilib.AlreadyEditedError
+            ? l`This post has already been edited.`
+            : cleanError(e instanceof Error ? e.message : e),
+        )
+        return
+      }
+      setIsPublishing(false)
+      onClose()
+      setTimeout(() => {
+        Toast.show(l`Your post was updated`, {type: 'success'})
+      }, 500)
+      return
+    }
+
     const {type: emptyType, filteredThread} = getFilteredThread()
 
     if (emptyType === 'non-trailing' && !skipEmptyConfirmedRef.current) {
@@ -1176,6 +1209,10 @@ export const ComposePost = ({
     loadedDraftCreatedAt,
     emptyPostsPromptControl,
     getFilteredThread,
+    composerState.editPost,
+    editPostMutate,
+    initEditPost,
+    thread,
     linkQueries,
   ])
 
@@ -1283,18 +1320,29 @@ export const ComposePost = ({
         onAcceptSuggestedLanguage={setAcceptedLanguageSuggestion}
         onNudge={onLanguageNudge}
       />
-      <ComposerPills
-        isReply={!!replyTo}
-        post={activePost}
-        thread={composerState.thread}
-        dispatch={composerDispatch}
-        bottomBarAnimatedStyle={bottomBarAnimatedStyle}
-      />
+      {isEditMode ? (
+        <View style={[a.flex_row, a.align_center, a.p_sm, t.atoms.bg]}>
+          <Text style={[a.text_xs, t.atoms.text_contrast_low]}>
+            <Trans>Post metrics will be reset</Trans>
+          </Text>
+        </View>
+      ) : (
+        <ComposerPills
+          isReply={!!replyTo}
+          post={activePost}
+          thread={composerState.thread}
+          dispatch={composerDispatch}
+          bottomBarAnimatedStyle={bottomBarAnimatedStyle}
+        />
+      )}
       <ComposerFooter
         post={activePost}
         dispatch={dispatch}
+        isEditMode={isEditMode}
         showAddButton={
-          !isEmptyPost(activePost) && (!nextPost || !isEmptyPost(nextPost))
+          !isEditMode &&
+          !isEmptyPost(activePost) &&
+          (!nextPost || !isEmptyPost(nextPost))
         }
         onError={setError}
         onSelectVideo={selectVideo}
@@ -1327,6 +1375,7 @@ export const ComposePost = ({
           <ComposerTopBar
             canPost={canPost}
             isReply={!!replyTo}
+            isEditMode={isEditMode}
             isPublishQueued={publishOnUpload}
             isPublishing={isPublishing}
             isThread={thread.posts.length > 1}
@@ -1678,6 +1727,7 @@ let ComposerPost = memo(function ComposerPost({
 function ComposerTopBar({
   canPost,
   isReply,
+  isEditMode,
   isPublishQueued,
   isPublishing,
   isThread,
@@ -1699,6 +1749,7 @@ function ComposerTopBar({
   publishingStage: string
   canPost: boolean
   isReply: boolean
+  isEditMode: boolean
   isPublishQueued: boolean
   isThread: boolean
   onCancel: () => void
@@ -1754,7 +1805,7 @@ function ComposerTopBar({
           </>
         ) : (
           <>
-            {!isReply && (
+            {!isReply && !isEditMode && (
               <DraftsButton
                 onSelectDraft={onSelectDraft}
                 onSaveDraft={onSaveDraft}
@@ -1769,36 +1820,44 @@ function ComposerTopBar({
             <Button
               testID="composerPublishBtn"
               label={
-                isReply
-                  ? isThread
-                    ? l({
-                        message: 'Publish replies',
-                        comment:
-                          'Accessibility label for button to publish multiple replies in a thread',
-                      })
-                    : l({
-                        message: 'Publish reply',
-                        comment:
-                          'Accessibility label for button to publish a single reply',
-                      })
-                  : isThread
-                    ? l({
-                        message: 'Publish posts',
-                        comment:
-                          'Accessibility label for button to publish multiple posts in a thread',
-                      })
-                    : l({
-                        message: 'Publish post',
-                        comment:
-                          'Accessibility label for button to publish a single post',
-                      })
+                isEditMode
+                  ? l({
+                      message: 'Save edit',
+                      comment:
+                        'Accessibility label for button to save an edited post',
+                    })
+                  : isReply
+                    ? isThread
+                      ? l({
+                          message: 'Publish replies',
+                          comment:
+                            'Accessibility label for button to publish multiple replies in a thread',
+                        })
+                      : l({
+                          message: 'Publish reply',
+                          comment:
+                            'Accessibility label for button to publish a single reply',
+                        })
+                    : isThread
+                      ? l({
+                          message: 'Publish posts',
+                          comment:
+                            'Accessibility label for button to publish multiple posts in a thread',
+                        })
+                      : l({
+                          message: 'Publish post',
+                          comment:
+                            'Accessibility label for button to publish a single post',
+                        })
               }
               color="primary"
               size="small"
               onPress={onPublish}
               disabled={!canPost || isPublishQueued}>
               <ButtonText style={[a.text_md]} maxFontSizeMultiplier={2}>
-                {isReply ? (
+                {isEditMode ? (
+                  <Trans context="action">Save Edit</Trans>
+                ) : isReply ? (
                   <Trans context="action">Reply</Trans>
                 ) : isThread ? (
                   <Trans context="action">Post All</Trans>
@@ -2010,6 +2069,7 @@ function ComposerPills({
 function ComposerFooter({
   post,
   dispatch,
+  isEditMode,
   showAddButton,
   onSelectVideo,
   onAddPost,
@@ -2021,6 +2081,7 @@ function ComposerFooter({
 }: {
   post: PostDraft
   dispatch: (action: PostAction) => void
+  isEditMode: boolean
   showAddButton: boolean
   onError: (error: string) => void
   onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
@@ -2137,22 +2198,26 @@ function ComposerFooter({
             <VideoUploadToolbar state={video} />
           ) : (
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <SelectMediaButton
-                disabled={isMediaSelectionDisabled}
-                allowedAssetTypes={selectedAssetsType}
-                selectedAssetsCount={selectedAssetsCount}
-                onSelectAssets={onSelectAssets}
-                autoOpen={openGallery}
-              />
-              <OpenCameraBtn
-                disabled={
-                  media?.type === 'images' || media?.type === 'gallery'
-                    ? isMaxImages
-                    : !!media
-                }
-                onAdd={onImageAdd}
-              />
-              <SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
+              {!isEditMode && (
+                <>
+                  <SelectMediaButton
+                    disabled={isMediaSelectionDisabled}
+                    allowedAssetTypes={selectedAssetsType}
+                    selectedAssetsCount={selectedAssetsCount}
+                    onSelectAssets={onSelectAssets}
+                    autoOpen={openGallery}
+                  />
+                  <OpenCameraBtn
+                    disabled={
+                      media?.type === 'images' || media?.type === 'gallery'
+                        ? isMaxImages
+                        : !!media
+                    }
+                    onAdd={onImageAdd}
+                  />
+                  <SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
+                </>
+              )}
               {IS_WEB && gtPhone ? (
                 <EmojiPicker.Root nextFocusRef={textInputRef}>
                   <EmojiPicker.Trigger label={l`Open emoji picker`}>
@@ -2187,11 +2252,13 @@ function ComposerFooter({
             <PlusIcon size="lg" />
           </Button>
         )}
-        <PostLanguageSelect
-          currentLanguages={currentLanguages}
-          onSelectLanguage={onSelectLanguage}
-          nudgeAt={languageNudgeAt}
-        />
+        {!isEditMode && (
+          <PostLanguageSelect
+            currentLanguages={currentLanguages}
+            onSelectLanguage={onSelectLanguage}
+            nudgeAt={languageNudgeAt}
+          />
+        )}
         <CharProgress
           count={post.shortenedGraphemeLength}
           style={{width: 65}}

@@ -1,25 +1,26 @@
-import {
-  type AppBskyActorDefs,
-  type AppBskyActorGetProfile,
-  AtUri,
-} from '@atproto/api'
-import {useMutation} from '@tanstack/react-query'
+import {type AppBskyActorDefs, AtUri} from '@atproto/api'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {until} from '#/lib/async/until'
-import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
+import {
+  createMuVerificationQueryKey,
+  type MuVerification,
+} from '#/state/queries/verification/useMuVerificationQuery'
 import {useAgent, useSession} from '#/state/session'
 import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
+// See useVerificationCreateMutation: optimistic update + delayed reconcile to
+// cover Constellation's firehose indexing lag.
+const CONSTELLATION_INDEX_DELAY = 8e3
+
 export function useVerificationsRemoveMutation() {
   const ax = useAnalytics()
   const agent = useAgent()
+  const qc = useQueryClient()
   const {currentAccount} = useSession()
-  const updateProfileVerificationCache = useUpdateProfileVerificationCache()
 
   return useMutation({
     async mutationFn({
-      profile,
       verifications,
     }: {
       profile: bsky.profile.AnyProfileView
@@ -40,25 +41,22 @@ export function useVerificationsRemoveMutation() {
         }),
       )
 
-      await until(
-        5,
-        1e3,
-        ({data: profile}: AppBskyActorGetProfile.Response) => {
-          if (
-            !profile.verification?.verifications.some(v => uris.includes(v.uri))
-          ) {
-            return true
-          }
-          return false
-        },
-        () => {
-          return agent.getProfile({actor: profile.did ?? ''})
-        },
-      )
+      return {uris}
     },
-    async onSuccess(_, {profile}) {
+    onSuccess({uris}, {profile}) {
       ax.metric('verification:revoke', {})
-      await updateProfileVerificationCache({profile})
+
+      const key = createMuVerificationQueryKey(profile.did)
+      qc.setQueryData<MuVerification>(key, prev => {
+        if (!prev) return prev
+        return {
+          ...prev,
+          verifications: prev.verifications.filter(v => !uris.includes(v.uri)),
+        }
+      })
+      setTimeout(() => {
+        void qc.invalidateQueries({queryKey: key})
+      }, CONSTELLATION_INDEX_DELAY)
     },
   })
 }

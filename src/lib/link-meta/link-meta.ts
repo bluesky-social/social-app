@@ -79,8 +79,13 @@ export async function getLinkMeta(
   const to = setTimeout(() => controller.abort(), timeout || 5e3)
 
   try {
+    // mu fork: OAuth sessions use a generic Agent with no `serviceUrl` (only
+    // password sessions' AtpAgent has it). Reading it unguarded threw, and the
+    // throw was swallowed below - leaving every link card with no title, image,
+    // or description for OAuth users. LINK_META_PROXY ignores this argument
+    // anyway (it picks prod/staging off IS_DEV), so guarding it is enough.
     const response = await fetch(
-      `${LINK_META_PROXY(agent.serviceUrl.toString() || '')}${encodeURIComponent(
+      `${LINK_META_PROXY(agent.serviceUrl?.toString() || '')}${encodeURIComponent(
         url,
       )}`,
       {signal: controller.signal},

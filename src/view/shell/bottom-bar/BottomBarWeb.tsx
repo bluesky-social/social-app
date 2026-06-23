@@ -1,6 +1,7 @@
-import {useCallback} from 'react'
+import {useCallback, useEffect} from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -20,7 +21,6 @@ import {useShellLayout} from '#/state/shell/shell-layout'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Link} from '#/view/com/util/Link'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -53,10 +53,21 @@ export function BottomBarWeb() {
   const {_} = useLingui()
   const {hasSession, currentAccount} = useSession()
   const t = useTheme()
+  // Eurosky fork: pad the bottom bar past the iOS home indicator when running
+  // as a standalone PWA (env(safe-area-inset-bottom)); 0 in a browser tab.
+  const insets = useSafeAreaInsets()
   const footerMinimalShellTransform = useMinimalShellFooterTransform()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const {footerHeight} = useShellLayout()
+  // The bottom bar is only mounted on mobile/tablet web. When the viewport
+  // grows to desktop (or on first paint before breakpoints resolve) it
+  // unmounts, but onLayout never fires to clear the height it measured. Reset
+  // it so things pinned to the footer (e.g. the cat companion) drop back to the
+  // real bottom of the screen.
+  useEffect(() => {
+    return () => footerHeight.set(0)
+  }, [footerHeight])
   const hideBorder = useHideBottomBarBorder()
   const accountSwitchControl = useDialogControl()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
@@ -92,6 +103,7 @@ export function BottomBarWeb() {
           styles.bottomBar,
           styles.bottomBarWeb,
           t.atoms.bg,
+          {paddingBottom: insets.bottom},
           hideBorder
             ? {borderColor: t.atoms.bg.backgroundColor}
             : t.atoms.border_contrast_low,
@@ -228,9 +240,8 @@ export function BottomBarWeb() {
                 },
               ]}>
               <View style={[a.flex_row, a.align_center, a.gap_md]}>
-                <Logo width={32} />
                 <View style={{paddingTop: 4}}>
-                  <Logotype width={80} fill={t.atoms.text.color} />
+                  <Logotype width={44} fill={t.atoms.text.color} />
                 </View>
               </View>
 

@@ -1,0 +1,6 @@
+# Lingui message catalogs are generated (msgids from `pnpm intl:extract`,
+# translations from upstream/Crowdin). The compiled `messages.ts` is gitignored.
+# Don't hand-merge a .po conflict on an upstream merge - run `pnpm intl:resync`,
+# which takes upstream's catalog then regenerates so fork strings are re-added.
+# `linguist-generated` collapses the large catalog diffs in GitHub PRs.
+src/locale/locales/*/messages.po linguist-generated=true

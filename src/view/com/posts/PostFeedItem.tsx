@@ -409,6 +409,7 @@ let FeedItemInner = ({
               author={post.author}
               moderation={moderation}
               timestamp={post.indexedAt}
+              record={record}
               postHref={href}
               onOpenAuthor={onOpenAuthor}
             />
@@ -503,6 +504,7 @@ let PostContent = ({
         <View style={[a.mb_2xs]}>
           <RichText
             enableTags
+            enableCode
             testID="postText"
             value={richText}
             numberOfLines={limitLines ? MAX_POST_LINES : undefined}

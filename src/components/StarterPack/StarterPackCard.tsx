@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {Image} from 'expo-image'
 import {AppBskyGraphStarterpack, AtUri} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -8,7 +7,6 @@ import {Plural, Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {precacheResolvedUri} from '#/state/queries/resolve-uri'
 import {precacheStarterPack} from '#/state/queries/starter-packs'
 import {useSession} from '#/state/session'
@@ -18,6 +16,7 @@ import {
   Link as BaseLink,
   type LinkProps as BaseLinkProps,
 } from '#/components/Link'
+import {StarterPackHero} from '#/components/StarterPack/StarterPackHero'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
 
@@ -74,7 +73,8 @@ export function Card({
   return (
     <View style={[a.w_full, a.gap_md]}>
       <View style={[a.flex_row, a.gap_sm, a.w_full]}>
-        {!noIcon ? <StarterPackIcon width={40} gradient="sky" /> : null}
+        {/* No `gradient`/`fill`: the icon defaults to the accent (primary_500). */}
+        {!noIcon ? <StarterPackIcon width={40} /> : null}
         <View style={[a.flex_1]}>
           <Text
             emoji
@@ -187,7 +187,6 @@ export function Embed({
   starterPack: bsky.starterPack.AnyStarterPackView
 }) {
   const t = useTheme()
-  const imageUri = getStarterPackOgCard(starterPack)
 
   return (
     <View
@@ -198,11 +197,7 @@ export function Embed({
         t.atoms.border_contrast_low,
       ]}>
       <Link starterPack={starterPack}>
-        <Image
-          source={imageUri}
-          style={[a.w_full, a.aspect_card]}
-          accessibilityIgnoresInvertColors={true}
-        />
+        <StarterPackHero starterPack={starterPack} />
         <View style={[a.px_sm, a.py_md]}>
           <Card starterPack={starterPack} />
         </View>

@@ -1,5 +1,5 @@
 import {memo, type ReactNode, useCallback, useMemo, useState} from 'react'
-import {View} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
   type AppBskyFeedDefs,
   type AppBskyFeedThreadgate,
@@ -56,6 +56,10 @@ export type ThreadItemPostProps = {
     moderation?: boolean
     topBorder?: boolean
   }
+  /**
+   * Adjusts the hover overlay, e.g. to start at the reader bracket edge.
+   */
+  hoverStyle?: StyleProp<ViewStyle>
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }
@@ -63,6 +67,7 @@ export type ThreadItemPostProps = {
 export function ThreadItemPost({
   item,
   overrides,
+  hoverStyle,
   onPostSuccess,
   threadgateRecord,
 }: ThreadItemPostProps) {
@@ -78,6 +83,7 @@ export function ThreadItemPost({
       postShadow={postShadow}
       threadgateRecord={threadgateRecord}
       overrides={overrides}
+      hoverStyle={hoverStyle}
       onPostSuccess={onPostSuccess}
     />
   )
@@ -186,6 +192,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
   item,
   postShadow,
   overrides,
+  hoverStyle,
   onPostSuccess,
   threadgateRecord,
 }: ThreadItemPostProps & {
@@ -255,7 +262,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
   const {isActive: live} = useActorStatus(post.author)
 
   return (
-    <SubtleHoverWrapper>
+    <SubtleHoverWrapper hoverStyle={hoverStyle}>
       <ThreadItemPostOuterWrapper item={item} overrides={overrides}>
         <PostHider
           testID={`postThreadItem-by-${post.author.handle}`}
@@ -300,6 +307,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                 author={post.author}
                 moderation={moderation}
                 timestamp={post.indexedAt}
+                record={record}
                 postHref={postHref}
                 style={[
                   a.pb_xs,
@@ -320,6 +328,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                 <View style={[a.mb_2xs]}>
                   <RichText
                     enableTags
+                    enableCode
                     value={richText}
                     style={[a.flex_1, a.text_md]}
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}
@@ -370,7 +379,15 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
   )
 })
 
-function SubtleHoverWrapper({children}: {children: ReactNode}) {
+export function SubtleHoverWrapper({
+  hoverStyle,
+  pointer = true,
+  children,
+}: {
+  hoverStyle?: StyleProp<ViewStyle>
+  pointer?: boolean
+  children: ReactNode
+}) {
   const {
     state: hover,
     onIn: onHoverIn,
@@ -380,8 +397,8 @@ function SubtleHoverWrapper({children}: {children: ReactNode}) {
     <View
       onPointerEnter={onHoverIn}
       onPointerLeave={onHoverOut}
-      style={a.pointer}>
-      <SubtleHover hover={hover} />
+      style={pointer && a.pointer}>
+      <SubtleHover hover={hover} style={hoverStyle} />
       {children}
     </View>
   )

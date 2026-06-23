@@ -1,8 +1,6 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {Image} from 'expo-image'
-import {type ThemeName} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -37,17 +35,6 @@ export const enabled = createIsEnabledCheck(props => {
     )
   )
 })
-
-function getHero(theme: ThemeName) {
-  switch (theme) {
-    case 'light':
-      return require('../../../../assets/images/groupchats_announcement_light.webp')
-    case 'dark':
-      return require('../../../../assets/images/groupchats_announcement_dark.webp')
-    case 'dim':
-      return require('../../../../assets/images/groupchats_announcement_dim.webp')
-  }
-}
 
 export function GroupChatsAnnouncement() {
   const t = useTheme()
@@ -138,26 +125,6 @@ export function GroupChatsAnnouncement() {
             </View>
           </Dialog.FlatListFooter>
         }>
-        <View
-          style={[
-            a.w_full,
-            platform({
-              web: [a.pt_xl, a.px_4xl],
-              native: [a.pt_xl, a.pb_md, a.px_sm],
-            }),
-          ]}>
-          <Image
-            accessibilityIgnoresInvertColors
-            source={getHero(t.name)}
-            style={[a.w_full, {aspectRatio: 343 / 230}]}
-            alt={l({
-              message: `Four message bubbles representing a group chat. First message: "Did you hear the news? Bluesky has group chats now!" Second message: "omg, no way" Third message: "Wow, 50 people in one chat!" Fourth message: "You can send invite links too!"`,
-              comment:
-                'This is alt text for a marketing image which transcribes English text that appears in the image',
-            })}
-            useAppleWebpCodec
-          />
-        </View>
         <View style={[a.px_xl, a.pt_2xl, a.gap_2xl]}>
           <View style={[a.align_center, a.gap_sm]}>
             <View style={[a.flex_row, a.align_center, a.gap_xs, {left: -6}]}>

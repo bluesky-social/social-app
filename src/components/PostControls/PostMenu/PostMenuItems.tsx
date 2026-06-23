@@ -18,6 +18,8 @@ import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
+import {canEditPost} from '#/lib/edit-post'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -55,6 +57,7 @@ import {
   MaxHiddenRepliesError,
   useToggleReplyVisibilityMutation,
 } from '#/state/queries/threadgate'
+import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {useRequireAuth, useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {useDialogControl} from '#/components/Dialog'
@@ -77,6 +80,7 @@ import {
   Mute_Stroke2_Corner0_Rounded as Mute,
   Mute_Stroke2_Corner0_Rounded as MuteIcon,
 } from '#/components/icons/Mute'
+import {PencilLine_Stroke2_Corner0_Rounded as PencilLine} from '#/components/icons/Pencil'
 import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/Person'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
@@ -171,6 +175,14 @@ let PostMenuItems = ({
   )
   const isPostHidden = hiddenPosts && hiddenPosts.includes(postUri)
   const isAuthor = postAuthor.did === currentAccount?.did
+  const {openComposer} = useOpenComposer()
+  const currentProfile = useCurrentAccountProfile()
+  const canEdit = canEditPost({
+    isAuthor,
+    createdAt: record.createdAt,
+    updatedAt: record.updatedAt,
+    accountCreatedAt: currentProfile?.createdAt,
+  })
   const isRootPostAuthor = new AtUri(rootUri).host === currentAccount?.did
   const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
     threadgateRecord,
@@ -772,6 +784,22 @@ let PostMenuItems = ({
 
               {isAuthor && (
                 <>
+                  {canEdit && (
+                    <Menu.Item
+                      testID="postDropdownEditBtn"
+                      label={l`Edit post`}
+                      onPress={() =>
+                        openComposer({
+                          editPost: {
+                            uri: postUri,
+                            text: record.text,
+                          },
+                        })
+                      }>
+                      <Menu.ItemText>{l`Edit post`}</Menu.ItemText>
+                      <Menu.ItemIcon icon={PencilLine} position="right" />
+                    </Menu.Item>
+                  )}
                   <Menu.Item
                     testID="postDropdownEditPostInteractions"
                     label={l`Edit interaction settings`}

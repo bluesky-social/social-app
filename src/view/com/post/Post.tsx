@@ -210,6 +210,7 @@ function PostInner({
               author={post.author}
               moderation={moderation}
               timestamp={post.indexedAt}
+              record={record}
               postHref={itemHref}
             />
             {replyAuthorDid !== '' && (
@@ -228,6 +229,7 @@ function PostInner({
                 <View style={[a.mb_2xs]}>
                   <RichText
                     enableTags
+                    enableCode
                     testID="postText"
                     value={richText}
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}

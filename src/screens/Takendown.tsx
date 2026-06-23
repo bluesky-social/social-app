@@ -23,6 +23,7 @@ import * as TextField from '#/components/forms/TextField'
 import {SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
+import {BRAND} from '#/config/brand'
 import {IS_WEB} from '#/env'
 
 const COL_WIDTH = 400
@@ -210,10 +211,10 @@ export function Takendown() {
                 <Trans>
                   Your account was found to be in violation of the{' '}
                   <SimpleInlineLinkText
-                    label={_(msg`Bluesky Social Terms of Service`)}
-                    to="https://bsky.social/about/support/tos"
+                    label={_(msg`mu Terms of Service`)}
+                    to={BRAND.links.tos}
                     style={[a.text_md, a.leading_snug]}>
-                    Bluesky Social Terms of Service
+                    mu Terms of Service
                   </SimpleInlineLinkText>
                   . You have been sent an email outlining the specific violation
                   and suspension period, if applicable. You can appeal this

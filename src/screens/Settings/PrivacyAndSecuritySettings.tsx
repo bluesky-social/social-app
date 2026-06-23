@@ -17,6 +17,7 @@ import {Key_Stroke2_Corner2_Rounded as KeyIcon} from '#/components/icons/Key'
 import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
+import {BRAND} from '#/config/brand'
 import {Email2FAToggle} from './components/Email2FAToggle'
 import {PwiOptOut} from './components/PwiOptOut'
 import {ItemTextWithSubtitle} from './NotificationSettings/components/ItemTextWithSubtitle'
@@ -127,7 +128,7 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
                       label={_(
                         msg`Learn more about what is public on Bluesky.`,
                       )}
-                      to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy">
+                      to={BRAND.links.dataPrivacy}>
                       <Trans>Learn more about what is public on Bluesky.</Trans>
                     </InlineLinkText>
                   </Admonition.Text>

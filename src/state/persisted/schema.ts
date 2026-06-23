@@ -29,6 +29,7 @@ const accountSchema = z.object({
   status: z.string().optional(),
   pdsUrl: z.string().optional(),
   isSelfHosted: z.boolean().optional(),
+  isOauthSession: z.boolean().optional(),
 })
 export type PersistedAccount = z.infer<typeof accountSchema>
 
@@ -49,6 +50,10 @@ export type PersistedCurrentAccount = z.infer<typeof currentAccountSchema>
 const schema = z.object({
   colorMode: z.enum(['system', 'light', 'dark']),
   darkTheme: z.enum(['dim', 'dark']).optional(),
+  // Eurosky: per-user accent family (a key in brand-colors.json#accents).
+  // String (not enum) so it stays brand-agnostic; unknown/undefined falls back
+  // to the brand's defaultAccent at read time.
+  accentColor: z.string().optional(),
   session: z.object({
     accounts: z.array(accountSchema),
     currentAccount: currentAccountSchema.optional(),
@@ -108,6 +113,7 @@ const schema = z.object({
       soundcloud: z.enum(externalEmbedOptions).optional(),
       flickr: z.enum(externalEmbedOptions).optional(),
       bandcamp: z.enum(externalEmbedOptions).optional(),
+      plyr: z.enum(externalEmbedOptions).optional(),
     })
     .optional(),
   invites: z.object({
@@ -124,6 +130,19 @@ const schema = z.object({
   disableHaptics: z.boolean().optional(),
   disableAutoplay: z.boolean().optional(),
   kawaii: z.boolean().optional(),
+  catCompanion: z
+    .object({
+      enabled: z.boolean(),
+      color: z.enum([
+        'cream',
+        'black',
+        'grey',
+        'grey-white',
+        'orange',
+        'white',
+      ]),
+    })
+    .optional(),
   hasCheckedForStarterPack: z.boolean().optional(),
   subtitlesEnabled: z.boolean().optional(),
   /** @deprecated */
@@ -173,6 +192,7 @@ export const defaults: Schema = {
   disableHaptics: false,
   disableAutoplay: PlatformInfo.getIsReducedMotionEnabled(),
   kawaii: false,
+  catCompanion: {enabled: false, color: 'orange'},
   hasCheckedForStarterPack: false,
   subtitlesEnabled: true,
   trendingDisabled: false,

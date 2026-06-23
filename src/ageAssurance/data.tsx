@@ -16,19 +16,12 @@ import {networkRetry} from '#/lib/async/retry'
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
 import {getAge} from '#/lib/strings/time'
-import {
-  hasSnoozedBirthdateUpdateForDid,
-  snoozeBirthdateUpdateAllowedForDid,
-} from '#/state/birthdate'
 import {fetchActorDeclarationRecord} from '#/state/queries/messages/actor-declaration'
 import {useAgent, useSession} from '#/state/session'
 import * as debug from '#/ageAssurance/debug'
 import {logger} from '#/ageAssurance/logger'
+import {birthdateFromFlags, getMuAgeStatus} from '#/ageAssurance/muAgeService'
 import {type AgeAssuranceMetadata} from '#/ageAssurance/types'
-import {
-  getBirthdateStringFromAge,
-  isLegacyBirthdateBug,
-} from '#/ageAssurance/util'
 import {IS_DEV} from '#/env'
 import {device} from '#/storage'
 
@@ -344,51 +337,36 @@ async function getOtherRequiredData({
 }): Promise<OtherRequiredData> {
   if (debug.enabled) return debug.resolve(debug.otherRequiredData)
   const did = getDidFromAgentSession(agent)
-  const [prefs, actorDeclaration] = await Promise.all([
-    agent.getPreferences(),
+
+  /**
+   * mu fork: the declared age comes from our own backend (mu-age-service),
+   * uniformly across OAuth and app-password sessions. It stores only boolean
+   * threshold flags, so we rebuild a representative birthdate for the region
+   * rule engine. `birthdate` undefined === the user has not declared yet, which
+   * gates them into the one-time birthdate prompt (see computeAgeAssuranceState
+   * + NoAccessScreen). We no longer read app.bsky preferences here.
+   */
+  const [status, actorDeclaration] = await Promise.all([
+    getMuAgeStatus(agent),
     fetchActorDeclarationRecord({did, agent}),
   ])
   const data: OtherRequiredData = {
-    birthdate: prefs.birthDate ? prefs.birthDate.toISOString() : undefined,
+    birthdate: status.declared
+      ? birthdateFromFlags({
+          over13: !!status.over13,
+          over16: !!status.over16,
+          over18: !!status.over18,
+        })
+      : undefined,
     actorDeclaration,
   }
 
-  /**
-   * If we can't read a birthdate, it may be due to the user accessing the
-   * account via an app password. In that case, fall-back to declared age
-   * flags.
-   */
-  if (!data.birthdate) {
-    if (prefs.declaredAge?.isOverAge18) {
-      data.birthdate = getBirthdateStringFromAge(18)
-    } else if (prefs.declaredAge?.isOverAge16) {
-      data.birthdate = getBirthdateStringFromAge(16)
-    } else if (prefs.declaredAge?.isOverAge13) {
-      data.birthdate = getBirthdateStringFromAge(13)
-    }
-  }
-
-  if (data && did && birthdateCache.has(did)) {
+  if (did && birthdateCache.has(did)) {
     /*
-     * If birthdate was just set, use the local cache value. On subsequent
-     * reloads, the server should have the correct value.
+     * If a declaration was just set, use the local cache value. On subsequent
+     * reloads, the backend returns the correct value.
      */
     data.birthdate = birthdateCache.get(did)
-  }
-
-  /**
-   * If the user is under the minimum age, and the birthdate is not due to the
-   * legacy bug, AND we've not already snoozed their birthdate update, snooze
-   * further birthdate updates for this user.
-   *
-   * This is basically a migration step for this initial rollout.
-   */
-  if (
-    data.birthdate &&
-    !isLegacyBirthdateBug(data.birthdate) &&
-    !hasSnoozedBirthdateUpdateForDid(did!)
-  ) {
-    snoozeBirthdateUpdateAllowedForDid(did!)
   }
 
   return data
@@ -472,6 +450,15 @@ export function useOtherRequiredDataQuery() {
   return useQuery(
     {
       enabled: !!did,
+      /**
+       * mu fork: the declared age comes from our own backend and changes ~never,
+       * so treat it as fresh for 7 days (5s in dev for easy testing). Avoids
+       * re-minting a service-auth token + hitting the backend on every window
+       * focus; the persisted cache still serves it instantly on cold start, and
+       * a declaration optimistically patches the cache so the gate lifts without
+       * waiting for a refetch.
+       */
+      staleTime: IS_DEV ? 5e3 : 1000 * 60 * 60 * 24 * 7,
       initialData: () => {
         if (!did) return
         return getOtherRequiredDataFromCache({did})
@@ -525,6 +512,12 @@ export type AgeAssuranceServerData = {
    */
   state: AppBskyAgeassuranceDefs.State | undefined
   metadata: AgeAssuranceMetadata | undefined
+  /**
+   * mu fork: true while the declared-age query (otherRequiredData) has not yet
+   * produced a result. Consumers use this to avoid flashing the age gate
+   * before the declared age has loaded. See computeAgeAssuranceState.
+   */
+  metadataLoading: boolean
 }
 const AgeAssuranceServerDataContext = createContext<AgeAssuranceServerData>({
   config: undefined,
@@ -534,6 +527,7 @@ const AgeAssuranceServerDataContext = createContext<AgeAssuranceServerData>({
     declaredAge: undefined,
     birthdate: undefined,
   },
+  metadataLoading: false,
 })
 export function useAgeAssuranceServerDataContext() {
   return useContext(AgeAssuranceServerDataContext)
@@ -546,7 +540,8 @@ export function AgeAssuranceServerDataProvider({
   const {data: config} = useConfigQuery()
   const serverState = useServerStateQuery()
   const {state, metadata} = serverState.data || {}
-  const {data} = useOtherRequiredDataQuery()
+  const otherRequiredData = useOtherRequiredDataQuery()
+  const {data} = otherRequiredData
   const ctx = useMemo(
     () => ({
       config,
@@ -559,8 +554,28 @@ export function AgeAssuranceServerDataProvider({
           : undefined,
         birthdate: data?.birthdate,
       },
+      /**
+       * Treat the declared age as "not yet known" while the query is pending OR
+       * fetching. `isPending` covers the cold start with no cached data. But the
+       * AA query cache is persisted (see createPersistedQueryStorage) and
+       * restored async: a stale `{birthdate: undefined}` snapshot can hydrate
+       * (flipping isPending to false) while a fresh fetch to mu-age-service is
+       * still in flight. Gating on isPending alone flashes the gate in that
+       * window for users who have actually declared. `isFetching` keeps us in
+       * the loading state until the revalidation settles, after which a genuine
+       * "no declaration" correctly gates with None.
+       */
+      metadataLoading:
+        otherRequiredData.isPending || otherRequiredData.isFetching,
     }),
-    [config, state, data, metadata],
+    [
+      config,
+      state,
+      data,
+      metadata,
+      otherRequiredData.isPending,
+      otherRequiredData.isFetching,
+    ],
   )
   return (
     <AgeAssuranceServerDataContext.Provider value={ctx}>

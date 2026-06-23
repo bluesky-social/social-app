@@ -179,6 +179,12 @@ export function useProfileUpdateMutation() {
         } else {
           next.displayName = updates.displayName || undefined
           next.description = updates.description || undefined
+          if ('pronouns' in updates) {
+            next.pronouns = updates.pronouns || undefined
+          }
+          if ('website' in updates) {
+            next.website = updates.website || undefined
+          }
           if ('pinnedPost' in updates) {
             next.pinnedPost = updates.pinnedPost
           }
@@ -225,7 +231,13 @@ export function useProfileUpdateMutation() {
             }
             return (
               res.data.displayName === updates.displayName &&
-              res.data.description === updates.description
+              res.data.description === updates.description &&
+              ('pronouns' in updates
+                ? res.data.pronouns === (updates.pronouns || undefined)
+                : true) &&
+              ('website' in updates
+                ? res.data.website === (updates.website || undefined)
+                : true)
             )
           }),
       )

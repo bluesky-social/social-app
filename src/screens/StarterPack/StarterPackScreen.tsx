@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
-import {Image} from 'expo-image'
 import {
   AppBskyGraphDefs,
   AppBskyGraphStarterpack,
@@ -24,14 +23,12 @@ import {
   type NavigationProp,
 } from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
-import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {getAllListMembers} from '#/state/queries/list-members'
 import {useResolvedStarterPackShortLink} from '#/state/queries/resolve-short-link'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
-import {useShortenLink} from '#/state/queries/shorten-link'
 import {
   useDeleteStarterPackMutation,
   useStarterPackQuery,
@@ -200,9 +197,13 @@ function StarterPackScreenLoaded({
   const qrCodeDialogControl = useDialogControl()
   const shareDialogControl = useDialogControl()
 
-  const shortenLink = useShortenLink()
-  const [link, setLink] = useState<string>()
-  const [imageLoaded, setImageLoaded] = useState(false)
+  // Eurosky fork: the share link is the full first-party URL
+  // (mu.social/start/...), a pure function of the starter pack - no async
+  // go.bsky.app shortener - so derive it rather than holding it in state.
+  const link = makeStarterPackLink(
+    starterPack.creator.did,
+    new AtUri(starterPack.uri).rkey,
+  )
 
   useEffect(() => {
     ax.metric('starterPack:opened', {
@@ -211,21 +212,10 @@ function StarterPackScreenLoaded({
   }, [ax, starterPack.uri])
 
   const onOpenShareDialog = useCallback(() => {
-    const rkey = new AtUri(starterPack.uri).rkey
-    shortenLink(makeStarterPackLink(starterPack.creator.did, rkey)).then(
-      res => {
-        setLink(res.url)
-      },
-    )
-    Image.prefetch(getStarterPackOgCard(starterPack))
-      .then(() => {
-        setImageLoaded(true)
-      })
-      .catch(() => {
-        setImageLoaded(true)
-      })
+    // The share/QR dialogs now render the card natively (no remote OG image to
+    // prefetch).
     shareDialogControl.open()
-  }, [shareDialogControl, shortenLink, starterPack])
+  }, [shareDialogControl])
 
   useEffect(() => {
     if (routeParams.new) {
@@ -292,7 +282,6 @@ function StarterPackScreenLoaded({
         qrDialogControl={qrCodeDialogControl}
         starterPack={starterPack}
         link={link}
-        imageLoaded={imageLoaded}
       />
     </>
   )

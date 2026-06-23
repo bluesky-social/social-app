@@ -2,10 +2,14 @@ import {useCallback, useMemo, useState} from 'react'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useThreadPreferences} from '#/state/queries/preferences/useThreadPreferences'
+import {
+  type ThreadView,
+  useThreadPreferences,
+} from '#/state/queries/preferences/useThreadPreferences'
 import {
   LINEAR_VIEW_BELOW,
   LINEAR_VIEW_BF,
+  READER_VIEW_BELOW,
   TREE_VIEW_BELOW,
   TREE_VIEW_BELOW_DESKTOP,
   TREE_VIEW_BF,
@@ -36,7 +40,13 @@ export * from '#/state/queries/usePostThread/context'
 export {useUpdatePostThreadThreadgateQueryCache} from '#/state/queries/usePostThread/queryCache'
 export * from '#/state/queries/usePostThread/types'
 
-export function usePostThread({anchor}: {anchor?: string}) {
+export function usePostThread({
+  anchor,
+  initialView,
+}: {
+  anchor?: string
+  initialView?: ThreadView
+}) {
   const qc = useQueryClient()
   const agent = useAgent()
   const {hasSession} = useSession()
@@ -49,8 +59,16 @@ export function usePostThread({anchor}: {anchor?: string}) {
     setSort: baseSetSort,
     view,
     setView: baseSetView,
-  } = useThreadPreferences()
+    savedView,
+  } = useThreadPreferences({initialView})
+  /*
+   * Reader view is a client-side presentation of linear-shaped data, fetched
+   * deeper since it reads the OP chain from the root straight down. The
+   * data is annotated and cache-mutated as linear via `apiView`.
+   */
+  const apiView: 'linear' | 'tree' = view === 'reader' ? 'linear' : view
   const below = useMemo(() => {
+    if (view === 'reader') return READER_VIEW_BELOW
     return view === 'linear'
       ? LINEAR_VIEW_BELOW
       : IS_WEB && gtPhone
@@ -73,7 +91,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     async queryFn(ctx) {
       const {data} = await agent.app.bsky.unspecced.getPostThreadV2({
         anchor: anchor!,
-        branchingFactor: view === 'linear' ? LINEAR_VIEW_BF : TREE_VIEW_BF,
+        branchingFactor: apiView === 'linear' ? LINEAR_VIEW_BF : TREE_VIEW_BF,
         below,
         sort: sort,
       })
@@ -144,12 +162,12 @@ export function usePostThread({anchor}: {anchor?: string}) {
   const mutator = useMemo(
     () =>
       createCacheMutator({
-        params: {view, below},
+        params: {view: apiView, below},
         postThreadQueryKey,
         postThreadOtherQueryKey,
         queryClient: qc,
       }),
-    [qc, view, below, postThreadQueryKey, postThreadOtherQueryKey],
+    [qc, apiView, below, postThreadQueryKey, postThreadOtherQueryKey],
   )
 
   /**
@@ -187,7 +205,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
       const {threadItems} = sortAndAnnotateThreadItems(
         additionalItemsQuery.data.thread,
         {
-          view,
+          view: apiView,
           skipModerationHandling: true,
           threadgateHiddenReplies: mergeThreadgateHiddenReplies(
             threadgate?.record,
@@ -200,7 +218,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
       return []
     }
   }, [
-    view,
+    apiView,
     additionalQueryEnabled,
     additionalItemsQuery,
     mergeThreadgateHiddenReplies,
@@ -236,7 +254,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
    */
   const {threadItems, otherThreadItems} = useMemo(() => {
     return sortAndAnnotateThreadItems(thread, {
-      view: view,
+      view: apiView,
       threadgateHiddenReplies: mergeThreadgateHiddenReplies(threadgate?.record),
       moderationOpts: moderationOpts!,
     })
@@ -245,7 +263,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     threadgate?.record,
     mergeThreadgateHiddenReplies,
     moderationOpts,
-    view,
+    apiView,
   ])
 
   /*
@@ -294,6 +312,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
          */
         sort,
         view,
+        savedView,
         otherItemsVisible,
       },
       data: {
@@ -319,6 +338,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     otherItemsVisible,
     sort,
     view,
+    savedView,
     setSort,
     setView,
     threadgate,

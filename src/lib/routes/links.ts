@@ -1,6 +1,7 @@
 import {type AppBskyGraphDefs, AtUri} from '@atproto/api'
 
 import {isInvalidHandle} from '#/lib/strings/handles'
+import {BRAND} from '#/config/brand'
 
 export function makeProfileLink(
   info: {
@@ -49,10 +50,15 @@ export function makeStarterPackLink(
     | string,
   rkey?: string,
 ) {
+  // Eurosky fork: share links point at our own web host (mu.social) rather
+  // than bsky.app, and we no longer route them through Bluesky's go.bsky.app
+  // shortener - the full first-party URL is shared verbatim (see
+  // StarterPackScreen). hosts[0] is the primary brand host.
+  const host = BRAND.web.hosts[0]
   if (typeof starterPackOrName === 'string') {
-    return `https://bsky.app/start/${starterPackOrName}/${rkey}`
+    return `https://${host}/start/${starterPackOrName}/${rkey}`
   } else {
     const uriRkey = new AtUri(starterPackOrName.uri).rkey
-    return `https://bsky.app/start/${starterPackOrName.creator.handle}/${uriRkey}`
+    return `https://${host}/start/${starterPackOrName.creator.handle}/${uriRkey}`
   }
 }

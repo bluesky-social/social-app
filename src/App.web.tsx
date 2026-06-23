@@ -36,6 +36,10 @@ import {
   useSession,
   useSessionApi,
 } from '#/state/session'
+import {
+  maybeRedirectLoopbackHost,
+  tryFinishWebOAuthSignIn,
+} from '#/state/session/oauth-web-callback'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
@@ -48,6 +52,7 @@ import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-repli
 import {Shell} from '#/view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
+import {useThemesOverride} from '#/alf/util/useThemesOverride'
 import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
 import {useLandingEntry} from '#/components/hooks/useLandingEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
@@ -77,6 +82,9 @@ import {Splash} from '#/Splash'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
 
+// OAuth loopback dev fix - run before anything reads the origin.
+maybeRedirectLoopbackHost()
+
 /**
  * Begin geolocation ASAP
  */
@@ -88,8 +96,9 @@ void prefetchAppConfig()
 function InnerApp() {
   const [isReady, setIsReady] = useState(false)
   const {currentAccount} = useSession()
-  const {resumeSession} = useSessionApi()
+  const {resumeSession, login} = useSessionApi()
   const theme = useColorModeTheme()
+  const themesOverride = useThemesOverride() // Eurosky: per-user accent
   const {t: l} = useLingui()
   const hasCheckedLanding = useLandingEntry()
 
@@ -97,6 +106,11 @@ function InnerApp() {
   useEffect(() => {
     async function onLaunch(account?: SessionAccount) {
       try {
+        // Finish an OAuth sign-in if we returned to the site root with
+        // callback params; otherwise resume the stored session as usual.
+        if (await tryFinishWebOAuthSignIn(login)) {
+          return
+        }
         if (account) {
           await resumeSession(account)
         } else {
@@ -110,7 +124,7 @@ function InnerApp() {
     }
     const account = readLastActiveAccount()
     void onLaunch(account)
-  }, [resumeSession])
+  }, [resumeSession, login])
 
   useEffect(() => {
     return listenSessionDropped(() => {
@@ -121,7 +135,7 @@ function InnerApp() {
   }, [l])
 
   return (
-    <Alf theme={theme}>
+    <Alf theme={theme} themesOverride={themesOverride}>
       <ThemeProvider theme={theme}>
         <ContextMenuProvider>
           <Splash isReady={isReady && hasCheckedLanding}>

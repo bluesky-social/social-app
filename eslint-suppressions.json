@@ -1340,11 +1340,6 @@
       "count": 1
     }
   },
-  "src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx": {
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    }
-  },
   "src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -1362,9 +1357,6 @@
     },
     "@typescript-eslint/no-misused-promises": {
       "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 3
     },
     "react-hooks/preserve-manual-memoization": {
       "count": 1
@@ -1519,9 +1511,6 @@
   "src/screens/Settings/components/ChangeHandleDialog.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 4
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
     }
   },
   "src/screens/Settings/components/ChangePasswordDialog.tsx": {
@@ -1618,9 +1607,6 @@
     }
   },
   "src/screens/StarterPack/StarterPackScreen.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
     "@typescript-eslint/no-misused-promises": {
       "count": 2
     },
@@ -1640,7 +1626,7 @@
   },
   "src/screens/StarterPack/Wizard/index.tsx": {
     "@typescript-eslint/no-floating-promises": {
-      "count": 2
+      "count": 1
     },
     "@typescript-eslint/require-await": {
       "count": 1
@@ -1973,11 +1959,6 @@
       "count": 1
     }
   },
-  "src/state/shell/color-mode.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    }
-  },
   "src/state/shell/composer/index.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
@@ -2181,14 +2162,6 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 2
-    }
-  },
-  "src/view/com/modals/Modal.tsx": {
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/require-await": {
-      "count": 1
     }
   },
   "src/view/com/notifications/NotificationFeed.tsx": {

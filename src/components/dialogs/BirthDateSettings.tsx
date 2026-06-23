@@ -14,7 +14,7 @@ import {
   usePreferencesQuery,
   type UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
-import {useSession} from '#/state/session'
+import {useSession, useSessionApi} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -24,6 +24,7 @@ import {DateField} from '#/components/forms/DateField'
 import {SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Span, Text} from '#/components/Typography'
+import {BRAND} from '#/config/brand'
 import {IS_IOS, IS_WEB} from '#/env'
 
 export function BirthDateSettingsDialog({
@@ -37,6 +38,13 @@ export function BirthDateSettingsDialog({
   const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
   const {currentAccount} = useSession()
   const isUsingAppPassword = isAppPassword(currentAccount?.accessJwt || '')
+  // Eurosky: OAuth sessions are non-privileged for the personalDetailsPref
+  // write (atproto PDS restriction), so the birthdate cannot be set from
+  // here. Show an honest message instead of the doomed editable form / the
+  // misleading "app password" server error. Age-assurance enforcement is
+  // unaffected - this only changes this dialog's UI.
+  const isOauthSession = currentAccount?.isOauthSession === true
+  const {logoutCurrentAccount} = useSessionApi()
   const cleanError = useCleanError()
   const defaultErrorMessage = l`We were unable to load your birthdate preferences. Please try again.`
   const fetchErrorMessage = useMemo(() => {
@@ -80,6 +88,30 @@ export function BirthDateSettingsDialog({
                   password, or ask whomever controls this account to do so.
                 </Trans>
               </Admonition>
+            ) : isOauthSession ? (
+              <View style={[a.gap_md]}>
+                <Admonition type="info">
+                  <Trans>
+                    You're signed in via your hosting provider (OAuth). Setting
+                    your birthdate isn't supported for OAuth sign-ins. To set
+                    it, log out and sign in again with your account password
+                    (use "Sign in with password" on the sign-in screen), set
+                    your birthdate, then continue.
+                  </Trans>
+                </Admonition>
+                <Button
+                  testID="oauthBirthdateLogoutButton"
+                  label={l`Log out`}
+                  accessibilityHint={l`Logs out so you can sign in with your password`}
+                  variant="solid"
+                  color="primary"
+                  size="large"
+                  onPress={() => logoutCurrentAccount('Settings')}>
+                  <ButtonText>
+                    <Trans>Log out</Trans>
+                  </ButtonText>
+                </Button>
+              </View>
             ) : (
               <BirthdayInner control={control} preferences={preferences} />
             )}
@@ -175,9 +207,9 @@ function BirthdayInner({
       {isUnder13 && (
         <Admonition type="error">
           <Trans>
-            You must be at least 13 years old to use Bluesky. Read our{' '}
+            You must be at least 13 years old to use mu. Read our{' '}
             <SimpleInlineLinkText
-              to="https://bsky.social/about/support/tos"
+              to={BRAND.links.tos}
               label={l`Terms of Service`}>
               Terms of Service
             </SimpleInlineLinkText>{' '}
