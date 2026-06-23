@@ -141,6 +141,16 @@
       "count": 2
     }
   },
+  "src/alf/util/useGutters.ts": {
+    "react-hooks/immutability": {
+      "count": 5
+    }
+  },
+  "src/analytics/PassiveAnalytics.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
   "src/analytics/features/index.ts": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
@@ -190,6 +200,11 @@
       "count": 1
     }
   },
+  "src/analytics/utils.ts": {
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
   "src/components/AppLanguageDropdown.tsx": {
     "@typescript-eslint/no-unsafe-enum-comparison": {
       "count": 1
@@ -197,6 +212,11 @@
   },
   "src/components/Autocomplete/Autocomplete.tsx": {
     "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/Autocomplete/useAutocomplete/index.ts": {
+    "react-hooks/immutability": {
       "count": 1
     }
   },
@@ -220,6 +240,12 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 7
+    },
+    "react-hooks/immutability": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 1
     }
   },
   "src/components/DebugFieldDisplay.tsx": {
@@ -270,6 +296,9 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 1
     }
   },
   "src/components/InternationalPhoneCodeSelect.tsx": {
@@ -280,8 +309,23 @@
       "count": 1
     }
   },
+  "src/components/KnownFollowers.tsx": {
+    "react-hooks/refs": {
+      "count": 6
+    }
+  },
   "src/components/Lightbox/Lightbox.web.tsx": {
     "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/Lightbox/pager/ImageItem/ImageItem.android.tsx": {
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
+  "src/components/Lightbox/pager/ImageItem/ImageItem.ios.tsx": {
+    "react-hooks/refs": {
       "count": 1
     }
   },
@@ -329,6 +373,9 @@
       "count": 1
     },
     "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "react-hooks/immutability": {
       "count": 1
     }
   },
@@ -386,6 +433,17 @@
     },
     "@typescript-eslint/require-await": {
       "count": 1
+    },
+    "react-hooks/immutability": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 2
+    }
+  },
+  "src/components/ProgressGuide/FollowDialog.tsx": {
+    "react-hooks/refs": {
+      "count": 2
     }
   },
   "src/components/RichTextTag.tsx": {
@@ -472,6 +530,9 @@
   "src/components/WhoCanReply.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 1
     }
   },
   "src/components/ageAssurance/AgeAssuranceErrors.tsx": {
@@ -482,10 +543,18 @@
   "src/components/ageAssurance/AgeAssuranceInitDialog.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 2
+    },
+    "react-hooks/purity": {
+      "count": 1
     }
   },
   "src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx": {
     "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/components/contacts/components/OTPInput.tsx": {
+    "react-hooks/refs": {
       "count": 1
     }
   },
@@ -496,6 +565,9 @@
   },
   "src/components/contacts/screens/VerifyNumber.tsx": {
     "@typescript-eslint/require-await": {
+      "count": 1
+    },
+    "react-hooks/purity": {
       "count": 1
     }
   },
@@ -517,6 +589,11 @@
   },
   "src/components/dialogs/EmailDialog/components/ResendEmailText.tsx": {
     "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/EmailDialog/data/useAccountEmailState.ts": {
+    "react-hooks/set-state-in-effect": {
       "count": 1
     }
   },
@@ -576,6 +653,9 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 2
+    },
+    "react-hooks/preserve-manual-memoization": {
+      "count": 1
     }
   },
   "src/components/dialogs/ServerInput.tsx": {
@@ -614,6 +694,12 @@
   "src/components/dialogs/nuxs/index.tsx": {
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 1
+    },
+    "react-hooks/immutability": {
+      "count": 1
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
     }
   },
   "src/components/forms/DateField/index.web.tsx": {
@@ -627,6 +713,11 @@
       "count": 2
     }
   },
+  "src/components/forms/SearchInput.tsx": {
+    "react-hooks/refs": {
+      "count": 1
+    }
+  },
   "src/components/forms/SegmentedControl.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -635,6 +726,9 @@
   "src/components/forms/TextField.tsx": {
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 3
+    },
+    "react-hooks/refs": {
+      "count": 1
     }
   },
   "src/components/forms/ToggleButton.tsx": {
@@ -648,6 +742,16 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 2
+    }
+  },
+  "src/components/hooks/useLandingEntry.native.ts": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/components/hooks/useLandingEntry.ts": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
     }
   },
   "src/components/hooks/useRefreshOnFocus.ts": {
@@ -674,6 +778,9 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 4
+    },
+    "react-hooks/refs": {
+      "count": 1
     }
   },
   "src/components/images/Gallery/useKeyboardHandlers.ts": {
@@ -703,6 +810,21 @@
   },
   "src/components/interstitials/TrendingVideos.tsx": {
     "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/moderation/ContentHider.tsx": {
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
+  "src/components/moderation/LabelsOnMeDialog.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
+  "src/components/moderation/ModerationDetailsDialog.tsx": {
+    "react-hooks/purity": {
       "count": 1
     }
   },
@@ -767,6 +889,11 @@
       "count": 1
     }
   },
+  "src/lib/custom-animations/CountWheel.web.tsx": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
   "src/lib/functions.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 6
@@ -793,6 +920,16 @@
       "count": 1
     },
     "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/lib/hooks/useAnimatedValue.ts": {
+    "react-hooks/refs": {
+      "count": 1
+    }
+  },
+  "src/lib/hooks/useDraggableScrollView.ts": {
+    "react-hooks/refs": {
       "count": 1
     }
   },
@@ -851,6 +988,11 @@
       "count": 1
     }
   },
+  "src/lib/hooks/useTabFocusEffect.ts": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
   "src/lib/hooks/useToggleMutationQueue.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -865,6 +1007,9 @@
   "src/lib/hooks/useWebScrollRestoration.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "react-hooks/immutability": {
+      "count": 1
     }
   },
   "src/lib/international-telephone-codes.ts": {
@@ -933,6 +1078,9 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 1
     }
   },
   "src/lib/routes/links.ts": {
@@ -964,6 +1112,11 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 14
+    }
+  },
+  "src/lib/translation/index.tsx": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
     }
   },
   "src/lib/useGetEmojis/getEmojis.ts": {
@@ -1087,6 +1240,9 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 4
+    },
+    "react-hooks/refs": {
+      "count": 1
     }
   },
   "src/screens/Login/SetNewPasswordForm.tsx": {
@@ -1105,6 +1261,20 @@
   },
   "src/screens/Login/index.tsx": {
     "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "react-hooks/purity": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 1
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/screens/Messages/ChatList.tsx": {
+    "react-hooks/immutability": {
       "count": 1
     }
   },
@@ -1131,6 +1301,11 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 1
+    }
+  },
+  "src/screens/Onboarding/StepFinished/ValuePropositionPager.tsx": {
+    "react-hooks/refs": {
+      "count": 4
     }
   },
   "src/screens/Onboarding/StepFinished/index.tsx": {
@@ -1190,6 +1365,12 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 3
+    },
+    "react-hooks/preserve-manual-memoization": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 4
     }
   },
   "src/screens/Profile/Header/EditProfileDialog.tsx": {
@@ -1275,9 +1456,19 @@
       "count": 2
     }
   },
+  "src/screens/Search/Shell.tsx": {
+    "react-hooks/refs": {
+      "count": 4
+    }
+  },
   "src/screens/Search/modules/ExploreSuggestedAccounts.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
+    }
+  },
+  "src/screens/Search/modules/ExploreTrendingTopics.tsx": {
+    "react-hooks/purity": {
+      "count": 2
     }
   },
   "src/screens/Search/modules/ExploreTrendingVideos.tsx": {
@@ -1378,6 +1569,11 @@
       "count": 1
     }
   },
+  "src/screens/Signup/StepCaptcha/CaptchaWebView.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
   "src/screens/Signup/StepHandle/index.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 1
@@ -1386,6 +1582,11 @@
   "src/screens/Signup/StepInfo/Policies.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    }
+  },
+  "src/screens/Signup/StepInfo/index.tsx": {
+    "react-hooks/refs": {
+      "count": 3
     }
   },
   "src/screens/SignupQueued.tsx": {
@@ -1402,6 +1603,9 @@
       "count": 1
     },
     "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "react-hooks/set-state-in-effect": {
       "count": 1
     }
   },
@@ -1455,6 +1659,11 @@
       "count": 1
     }
   },
+  "src/state/cache/profile-shadow.ts": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
   "src/state/cache/thread-mutes.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 2
@@ -1468,6 +1677,9 @@
   "src/state/feed-feedback.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
+    },
+    "react-hooks/refs": {
+      "count": 2
     }
   },
   "src/state/gallery.ts": {
@@ -1484,6 +1696,11 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 2
+    }
+  },
+  "src/state/messages/message-drafts.tsx": {
+    "react-hooks/refs": {
+      "count": 1
     }
   },
   "src/state/persisted/index.ts": {
@@ -1549,6 +1766,9 @@
   "src/state/preferences/kawaii.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
     }
   },
   "src/state/preferences/languages.tsx": {
@@ -1581,6 +1801,11 @@
       "count": 1
     }
   },
+  "src/state/queries/actor-autocomplete.ts": {
+    "react-hooks/immutability": {
+      "count": 2
+    }
+  },
   "src/state/queries/app-passwords.ts": {
     "@typescript-eslint/no-floating-promises": {
       "count": 2
@@ -1594,6 +1819,11 @@
   "src/state/queries/bookmarks/useBookmarksQuery.ts": {
     "@typescript-eslint/require-await": {
       "count": 2
+    }
+  },
+  "src/state/queries/explore-feed-previews.tsx": {
+    "react-hooks/refs": {
+      "count": 4
     }
   },
   "src/state/queries/feed.ts": {
@@ -1636,6 +1866,9 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 4
+    },
+    "react-hooks/refs": {
+      "count": 1
     }
   },
   "src/state/queries/nuxs/definitions.ts": {
@@ -1679,6 +1912,16 @@
       "count": 2
     }
   },
+  "src/state/queries/preferences/index.ts": {
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
+  "src/state/queries/preferences/useThreadPreferences.ts": {
+    "react-hooks/refs": {
+      "count": 2
+    }
+  },
   "src/state/queries/search-posts.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -1689,6 +1932,9 @@
   },
   "src/state/queries/starter-packs.ts": {
     "@typescript-eslint/require-await": {
+      "count": 1
+    },
+    "react-hooks/immutability": {
       "count": 1
     }
   },
@@ -1755,6 +2001,11 @@
       "count": 1
     }
   },
+  "src/state/shell/tick-every-minute.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
   "src/storage/archive/index.ts": {
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 1
@@ -1765,6 +2016,11 @@
       "count": 8
     },
     "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/view/com/auth/SplashScreen.web.tsx": {
+    "react-hooks/set-state-in-effect": {
       "count": 1
     }
   },
@@ -1780,6 +2036,15 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 2
+    },
+    "react-hooks/immutability": {
+      "count": 2
+    },
+    "react-hooks/preserve-manual-memoization": {
+      "count": 3
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
     }
   },
   "src/view/com/composer/SelectMediaButton.tsx": {
@@ -1829,6 +2094,14 @@
       "count": 1
     }
   },
+  "src/view/com/composer/select-language/SuggestedLanguage.tsx": {
+    "react-hooks/refs": {
+      "count": 1
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
   "src/view/com/composer/text-input/TextInput.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
@@ -1840,11 +2113,17 @@
   "src/view/com/composer/text-input/TextInput.web.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 1
     }
   },
   "src/view/com/composer/text-input/web/Autocomplete.tsx": {
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 2
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
     }
   },
   "src/view/com/composer/videos/pickVideo.web.ts": {
@@ -1904,6 +2183,14 @@
       "count": 2
     }
   },
+  "src/view/com/modals/Modal.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
   "src/view/com/notifications/NotificationFeed.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -1916,6 +2203,9 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 6
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
     }
   },
   "src/view/com/notifications/NotificationFeedItem.tsx": {
@@ -1932,6 +2222,20 @@
   "src/view/com/pager/Pager.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 4
+    },
+    "react-hooks/refs": {
+      "count": 1
+    }
+  },
+  "src/view/com/pager/Pager.web.tsx": {
+    "react-hooks/immutability": {
+      "count": 1
+    },
+    "react-hooks/preserve-manual-memoization": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 1
     }
   },
   "src/view/com/pager/PagerWithHeader.tsx": {
@@ -1942,6 +2246,11 @@
   "src/view/com/pager/PagerWithHeader.web.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    }
+  },
+  "src/view/com/pager/TabBar.tsx": {
+    "react-hooks/immutability": {
+      "count": 1
     }
   },
   "src/view/com/pager/TabBar.web.tsx": {
@@ -2047,6 +2356,11 @@
       "count": 2
     }
   },
+  "src/view/com/util/LoadingPlaceholder.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
   "src/view/com/util/MainScrollProvider.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -2146,6 +2460,9 @@
     },
     "@typescript-eslint/no-unsafe-call": {
       "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 13
     }
   },
   "src/view/shell/desktop/Search.tsx": {
@@ -2154,6 +2471,14 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 3
+    },
+    "react-hooks/refs": {
+      "count": 3
+    }
+  },
+  "src/view/shell/index.web.tsx": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
     }
   }
 }
