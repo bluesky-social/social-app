@@ -55,13 +55,19 @@ if (typeof window !== 'undefined') {
       'ACTIVE_BRAND_BG_LIGHT',
       brand.palette.default.contrast_0,
     )
+    // Derive the early html/body background from the same dark sources the
+    // ALF dark/dim themes use (see src/alf/themes.ts), so the static
+    // pre-hydration background matches the app's rendered background exactly
+    // and there is no visible seam.
     localStorage.setItem(
       'ACTIVE_BRAND_BG_DARK',
-      invertPalette(brand.palette.default).contrast_0,
+      invertPalette(brand.palette.defaultDark ?? brand.palette.default)
+        .contrast_0,
     )
     localStorage.setItem(
       'ACTIVE_BRAND_BG_DIM',
-      invertPalette(brand.palette.subdued).contrast_0,
+      invertPalette(brand.palette.subduedDark ?? brand.palette.subdued)
+        .contrast_0,
     )
 
     // Dynamically apply tab title and favicon link
