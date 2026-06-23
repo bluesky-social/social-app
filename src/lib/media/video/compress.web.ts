@@ -18,11 +18,12 @@ import {VIDEO_MAX_SIZE} from '#/lib/constants'
 import {VideoTooLargeError} from '#/lib/media/video/errors'
 import {logger} from '#/logger'
 import {hasWebCodecs} from '#/view/com/composer/videos/metadata'
+import {
+  COMPRESSION_MAX_DIMENSION,
+  COMPRESSION_MIN_SIZE_BYTES,
+  COMPRESSION_TARGET_BITRATE,
+} from './constants'
 import {type CompressedVideo} from './types'
-
-const TARGET_BITRATE = 3_000_000 // 3mbps, matches native
-const MAX_DIMENSION = 1920 // matches native
-const MIN_SIZE_FOR_COMPRESSION = 25 * 1000 * 1000 // 25mb, matches native
 
 // Codecs to try in order of preference
 // avc (H.264) is most compatible, vp9/vp8 are fallbacks for WebM
@@ -51,12 +52,12 @@ export async function compressVideo(
     size: blob.size,
     mimeType: blob.type,
     isGif,
-    minSizeForCompression: MIN_SIZE_FOR_COMPRESSION,
+    minSizeForCompression: COMPRESSION_MIN_SIZE_BYTES,
   })
 
   // Try MediaBunny compression if WebCodecs is available and file is large enough
   // Skip GIFs - MediaBunny doesn't support them
-  if (hasWebCodecs() && blob.size >= MIN_SIZE_FOR_COMPRESSION && !isGif) {
+  if (hasWebCodecs() && blob.size >= COMPRESSION_MIN_SIZE_BYTES && !isGif) {
     try {
       return await doCompression(blob, asset.uri, {onProgress, signal})
     } catch (e) {
@@ -68,7 +69,7 @@ export async function compressVideo(
     logger.debug('compress: skipping compression', {
       hasWebCodecs: hasWebCodecs(),
       blobSize: blob.size,
-      minSize: MIN_SIZE_FOR_COMPRESSION,
+      minSize: COMPRESSION_MIN_SIZE_BYTES,
     })
   }
 
@@ -93,7 +94,7 @@ async function findEncodableVideoCodec(
     const canEncode = await canEncodeVideo(codec, {
       width,
       height,
-      bitrate: TARGET_BITRATE,
+      bitrate: COMPRESSION_TARGET_BITRATE,
     })
     logger.debug('compress: checking video codec', {
       codec,
@@ -182,7 +183,7 @@ async function doCompression(
   const {width, height} = calculateDimensions(
     videoTrack.displayWidth,
     videoTrack.displayHeight,
-    MAX_DIMENSION,
+    COMPRESSION_MAX_DIMENSION,
   )
 
   logger.debug('compress: video dimensions', {
@@ -232,7 +233,7 @@ async function doCompression(
     output,
     video: {
       codec: codecInfo.codec,
-      bitrate: TARGET_BITRATE,
+      bitrate: COMPRESSION_TARGET_BITRATE,
       width,
       height,
       fit: 'contain',
@@ -268,7 +269,13 @@ async function doCompression(
   const bytes = target.buffer
 
   if (!bytes) {
-    throw new Error('MediaBunny compression produced no output')
+    // mediabunny's BufferTarget reports a null buffer after a successful
+    // execute(). Should not happen in normal use; recoverable here because
+    // the outer compressVideo() catches and falls back to the original blob,
+    // but worth flagging in Sentry so we can chase the root cause.
+    const err = new Error('Compression produced empty output')
+    logger.error(err, {})
+    throw err
   }
 
   const mimeType = codecInfo.useWebM ? 'video/webm' : 'video/mp4'
