@@ -572,7 +572,7 @@ importers:
         version: 4.1.1
       mediabunny:
         specifier: ^1.25.3
-        version: 1.48.1
+        version: 1.49.0
       multiformats:
         specifier: ^13.4.2
         version: 13.4.2
@@ -6858,8 +6858,8 @@ packages:
     resolution: {integrity: sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==}
     engines: {node: '>= 0.6'}
 
-  mediabunny@1.48.1:
-    resolution: {integrity: sha512-a0pSUTFXgk72yHrQ4ydWavWPtCDw6dnKc6XIFmyE96JOdcA/Xlrgp/C0qVus4Csbw8927hCxNTNZZHa7SUrYVA==}
+  mediabunny@1.49.0:
+    resolution: {integrity: sha512-hDMtS/q22GFjyB3Yum+a6NHhDtVnye6hgaYTjx3DPUfnckRjzxFmXmCc3UQXdvo7d6PUCl7KM6Y9MRWzlvnAJQ==}
 
   memfs@3.5.3:
     resolution: {integrity: sha512-UERzLsxzllchadvbPs5aolHh65ISpKpM+ccLbOJ8/vvpBKmAWf+la7dXFy7Mr0ySHbdHrFv5kGFCUHHe6GFEmw==}
@@ -16682,7 +16682,7 @@ snapshots:
 
   media-typer@0.3.0: {}
 
-  mediabunny@1.48.1:
+  mediabunny@1.49.0:
     dependencies:
       '@types/dom-mediacapture-transform': 0.1.11
       '@types/dom-webcodecs': 0.1.13
