@@ -79,26 +79,31 @@ export function createRegionKey(region: {
 }
 
 /**
- * Derives an assured age from native device signals for the given region, but
- * only when the region permits device verification. The signals are expected to
- * already be resolved to the user's current region (see
+ * Derives age assurance data from native device signals for the given region,
+ * but only when the region permits device verification. The signals are
+ * expected to already be resolved to the user's current region (see
  * `getDeviceSignalsFromCacheForCurrentRegion`), so a grant captured in another
  * region won't reach here.
  *
  * The OS-provided `lowerBound` is the minimum age the platform will attest to,
- * which maps directly onto the `assuredAge` input of the rule engine (i.e.
+ * which maps onto the `assuredAge` input of the rule engine (i.e.
  * `IfAssuredOverAge`/`IfAssuredUnderAge` rules).
  *
- * Returns undefined when device verification doesn't apply or the OS didn't
- * provide a usable lower bound.
+ * Always returns an object (so callers can spread it unconditionally); fields
+ * are populated only when device verification applies and the OS provided
+ * usable data.
  */
-export function getAssuredAgeFromDeviceSignals(
+export function getAgeAssuranceDataFromDeviceSignals(
   region: AppBskyAgeassuranceDefs.ConfigRegion,
   deviceSignals: AgeRange.AgeRangeResponse | undefined,
-): number | undefined {
-  if (!regionAllowsDeviceVerification(region)) return undefined
+): {
+  assuredAge?: number
+} {
+  if (!regionAllowsDeviceVerification(region)) return {}
   const lowerBound = deviceSignals?.lowerBound
-  return typeof lowerBound === 'number' ? lowerBound : undefined
+  return {
+    assuredAge: typeof lowerBound === 'number' ? lowerBound : undefined,
+  }
 }
 
 /**

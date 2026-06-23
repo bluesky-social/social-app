@@ -25,8 +25,8 @@ import {
 } from '#/ageAssurance/types'
 import {
   computeAgeAssuranceFlags,
+  getAgeAssuranceDataFromDeviceSignals,
   getAgeAssuranceRegionConfigWithFallback,
-  getAssuredAgeFromDeviceSignals,
 } from '#/ageAssurance/util'
 import {type Geolocation, useGeolocation} from '#/geolocation'
 import {device} from '#/storage'
@@ -103,7 +103,10 @@ function computeAgeAssuranceState({
    * is treated as an assured age and fed into the rule engine, where it
    * matches `IfAssuredOverAge`/`IfAssuredUnderAge` rules.
    */
-  const assuredAge = getAssuredAgeFromDeviceSignals(region, deviceSignals)
+  const {assuredAge} = getAgeAssuranceDataFromDeviceSignals(
+    region,
+    deviceSignals,
+  )
   const result = computeAgeAssuranceRegionAccess(region, {
     accountCreatedAt: metadata?.accountCreatedAt,
     declaredAge: metadata?.declaredAge,

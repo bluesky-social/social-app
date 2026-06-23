@@ -38,7 +38,7 @@ export type AgeAssuranceConfigRegion = AppBskyAgeassuranceDefs.ConfigRegion & {
  * attestation, only age bounds), so we persist it client-side only and bind it
  * to its capture region via the key. A grant captured in TX is only ever read
  * back for TX — it can't silently unlock another region. See
- * `getAssuredAgeFromDeviceSignals`.
+ * `getAgeAssuranceDataFromDeviceSignals`.
  */
 export type AgeAssuranceDeviceSignals = {
   [regionKey: string]: AgeRange.AgeRangeResponse

@@ -42,7 +42,7 @@ import {
 import {logger} from '#/ageAssurance/logger'
 import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
 import {
-  getAssuredAgeFromDeviceSignals,
+  getAgeAssuranceDataFromDeviceSignals,
   isLegacyBirthdateBug,
   regionAllowsDeviceVerification,
   useAgeAssuranceRegionConfig,
@@ -360,7 +360,10 @@ function AccessSection() {
         setIsVerifyingDevice(false)
       }
       if (signals && did) {
-        const assuredAge = getAssuredAgeFromDeviceSignals(region, signals)
+        const {assuredAge} = getAgeAssuranceDataFromDeviceSignals(
+          region,
+          signals,
+        )
         if (assuredAge !== undefined) {
           // Sufficient device signals: persist (keyed by this region) and let
           // the AA state recompute from the cache write unlock access. Nothing
