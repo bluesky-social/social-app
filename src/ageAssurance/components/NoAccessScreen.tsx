@@ -1,6 +1,7 @@
-import {useCallback, useEffect} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import type * as AgeRange from 'expo-age-range'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -27,6 +28,7 @@ import {DeviceLocationRequestDialog} from '#/components/dialogs/DeviceLocationRe
 import {Full as Logo} from '#/components/icons/Logo'
 import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
 import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
+import {Loader} from '#/components/Loader'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
@@ -328,6 +330,8 @@ function AccessSection() {
     ? dateDiff(lastInitiatedAt, new Date(), 'down')
     : null
 
+  const [isVerifyingDevice, setIsVerifyingDevice] = useState(false)
+
   const openKwsDialog = useCallback(() => {
     control.open()
     ax.metric('ageAssurance:initDialogOpen', {
@@ -347,7 +351,14 @@ function AccessSection() {
      */
     if (region && regionAllowsDeviceVerification(region)) {
       const did = currentAccount?.did
-      const signals = await getDeviceSignals()
+      // Show a loading state while the OS age prompt is up.
+      setIsVerifyingDevice(true)
+      let signals: AgeRange.AgeRangeResponse | undefined
+      try {
+        signals = await getDeviceSignals()
+      } finally {
+        setIsVerifyingDevice(false)
+      }
       if (signals && did) {
         const assuredAge = getAssuredAgeFromDeviceSignals(region, signals)
         if (assuredAge !== undefined) {
@@ -395,8 +406,9 @@ function AccessSection() {
                 label={_(msg`Verify now`)}
                 size="large"
                 color={hasInitiated ? 'secondary' : 'primary'}
+                disabled={isVerifyingDevice}
                 onPress={() => void onPressVerify()}>
-                <ButtonIcon icon={ShieldIcon} />
+                <ButtonIcon icon={isVerifyingDevice ? Loader : ShieldIcon} />
                 <ButtonText>
                   {hasInitiated ? (
                     <Trans>Verify again</Trans>
