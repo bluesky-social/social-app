@@ -204,6 +204,7 @@ export const LoginForm = ({
               autoComplete="username"
               returnKeyType="next"
               textContentType="username"
+              keyboardType="email-address"
               defaultValue={initialHandle || ''}
               onChangeText={v => {
                 identifierValueRef.current = v
