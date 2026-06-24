@@ -334,8 +334,7 @@ function SubmitButton({
   )
 }
 
-// TODO: remove export when MessageInput is deleted
-export function ComposerContainer({children}: {children: React.ReactNode}) {
+function ComposerContainer({children}: {children: React.ReactNode}) {
   const {bottom: bottomInset} = useSafeAreaInsets()
   const {progress} = useReanimatedKeyboardAnimation()
   const t = useTheme()
