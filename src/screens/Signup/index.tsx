@@ -3,6 +3,7 @@ import {AppState, type AppStateStatus, View} from 'react-native'
 import ReactNativeDeviceAttest from 'react-native-device-attest'
 import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import {AppBskyGraphStarterpack} from '@atproto/api'
+import {tokens} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
@@ -233,6 +234,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                           a.flex_shrink,
                           t.atoms.text_contrast_medium,
                           !gtMobile && a.text_md,
+                          {paddingInline: tokens.space.sm},
                         ]}>
                         <Trans>Having trouble?</Trans>{' '}
                         <InlineLinkText
