@@ -1,4 +1,4 @@
-import {memo, useCallback, useRef} from 'react'
+import {memo, useCallback} from 'react'
 import {Platform} from 'react-native'
 import {type GestureType} from 'react-native-gesture-handler'
 import * as Clipboard from 'expo-clipboard'
@@ -60,17 +60,16 @@ export let MessageContextMenu = ({
   const langPrefs = useLanguagePrefs()
   const translate = useGoogleTranslate()
 
-  // On web, the menu is a Radix dropdown that restores focus to the trigger on
-  // close. When Reply is chosen we want focus to land in the composer instead
-  // (handled by the reply effect there), so we suppress the trigger refocus.
-  const didReply = useRef(false)
   const onReply = useCallback(() => {
-    didReply.current = true
     setReply(message)
   }, [setReply, message])
+  // On web, the menu is a Radix dropdown that restores focus to the trigger on
+  // close. When Reply moves focus to the composer, don't let Radix steal it
+  // back. Checking activeElement (rather than tracking reply intent) also
+  // handles re-replying to the same message, where the composer's focus effect
+  // bails on an unchanged reply target and focus should stay on the trigger.
   const onCloseAutoFocus = useCallback((event: Event) => {
-    if (didReply.current) {
-      didReply.current = false
+    if (document.activeElement && document.activeElement !== document.body) {
       event.preventDefault()
     }
   }, [])
