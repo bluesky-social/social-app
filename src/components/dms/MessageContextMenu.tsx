@@ -60,6 +60,20 @@ export let MessageContextMenu = ({
   const langPrefs = useLanguagePrefs()
   const translate = useGoogleTranslate()
 
+  const onReply = useCallback(() => {
+    setReply(message)
+  }, [setReply, message])
+  // On web, the menu is a Radix dropdown that restores focus to the trigger on
+  // close. When Reply moves focus to the composer, don't let Radix steal it
+  // back. Checking activeElement (rather than tracking reply intent) also
+  // handles re-replying to the same message, where the composer's focus effect
+  // bails on an unchanged reply target and focus should stay on the trigger.
+  const onCloseAutoFocus = useCallback((event: Event) => {
+    if (document.activeElement && document.activeElement !== document.body) {
+      event.preventDefault()
+    }
+  }, [])
+
   const isFromSelf = message.sender?.did === currentAccount?.did
   const isGroupChatEnabled = !ax.features.enabled(ax.features.GroupChatsDisable)
 
@@ -161,11 +175,12 @@ export let MessageContextMenu = ({
         label={l`Sent at ${i18n.date(new Date(message.sentAt), {
           timeStyle: 'short',
         })}`}
-        style={[isFromSelf && isGroupChatEnabled ? null : a.ml_sm]}>
+        style={[isFromSelf && isGroupChatEnabled ? null : a.ml_sm]}
+        onCloseAutoFocus={onCloseAutoFocus}>
         <ContextMenu.Item
           testID="messageDropdownReplyBtn"
           label={l`Reply`}
-          onPress={() => setReply(message)}>
+          onPress={onReply}>
           <ContextMenu.ItemIcon icon={ReplyIcon} position="left" />
           <ContextMenu.ItemText>{l`Reply`}</ContextMenu.ItemText>
         </ContextMenu.Item>
