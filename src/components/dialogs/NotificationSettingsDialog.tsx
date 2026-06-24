@@ -63,9 +63,7 @@ function NotificationSettingsDialogInner({
   const appQuery = useNotificationSettingsQuery({enabled: !isChat})
   const chatQuery = useChatNotificationSettingsQuery({enabled: isChat})
   const isError = isChat ? chatQuery.isError : appQuery.isError
-  const preference = isChatPreferenceName(name)
-    ? chatQuery.data?.[name]
-    : appQuery.data?.[name]
+  const preference = isChat ? chatQuery.data?.[name] : appQuery.data?.[name]
 
   return (
     <>

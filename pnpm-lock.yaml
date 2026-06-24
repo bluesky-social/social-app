@@ -241,8 +241,8 @@ importers:
   .:
     dependencies:
       '@atproto/api':
-        specifier: 0.20.17
-        version: 0.20.17
+        specifier: 0.20.20
+        version: 0.20.20
       '@atproto/syntax':
         specifier: 0.6.1
         version: 0.6.1
@@ -876,8 +876,8 @@ packages:
       graphql:
         optional: true
 
-  '@atproto/api@0.20.17':
-    resolution: {integrity: sha512-eRatEhcQealoDhf+PyE4retLjBm2iNDStcJlBHL/6DnB14W7KdMoNYOAt5T/sezA2E8/2ixnRdeOzBu3wvNQSQ==}
+  '@atproto/api@0.20.20':
+    resolution: {integrity: sha512-+yqxLCvMu36xRxwc8/x0mhptZBC+/cbfPwdzeOtlBUeVi4ZB/5RWg2L4lWWdhBSiQBZw0AgaPg/2zsx4lDFgjg==}
     engines: {node: '>=22'}
 
   '@atproto/common-web@0.5.1':
@@ -9476,7 +9476,7 @@ snapshots:
 
   '@0no-co/graphql.web@1.2.0': {}
 
-  '@atproto/api@0.20.17':
+  '@atproto/api@0.20.20':
     dependencies:
       '@atproto/common-web': 0.5.1
       '@atproto/lexicon': 0.7.2

@@ -1,5 +1,5 @@
 import {useCallback} from 'react'
-import {View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -254,12 +254,12 @@ export function MessagesSettingsScreenInner({}: Props) {
             <Text style={[a.pb_xs, a.text_md, a.font_semi_bold, t.atoms.text]}>
               <Trans>Notifications</Trans>
             </Text>
-            <Toggle.Item
-              label={l`Settings for notifications for new messages`}
-              name="notificationsChat"
-              value={true}
-              style={[a.flex_row, a.align_start, a.justify_between]}
-              onChange={() => {
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={l`Settings for notifications for new messages`}
+              accessibilityHint={undefined}
+              style={[a.flex_row, a.align_start, a.justify_between, a.gap_sm]}
+              onPress={() => {
                 chatDialogControl.open()
               }}>
               <MessageIcon style={[a.mr_2xs, t.atoms.text]} size="lg" />
@@ -274,13 +274,13 @@ export function MessagesSettingsScreenInner({}: Props) {
                 />
               </View>
               <ChevronRightIcon style={[a.ml_2xs, t.atoms.text]} size="lg" />
-            </Toggle.Item>
-            <Toggle.Item
-              label={l`Settings for notifications for new message requests`}
-              name="notificationsChatRequest"
-              value={true}
-              style={[a.flex_row, a.align_start, a.justify_between]}
-              onChange={() => {
+            </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={l`Settings for notifications for new message requests`}
+              accessibilityHint={undefined}
+              style={[a.flex_row, a.align_start, a.justify_between, a.gap_sm]}
+              onPress={() => {
                 chatRequestDialogControl.open()
               }}>
               <EnvelopeIcon style={[a.mr_2xs, t.atoms.text]} size="lg" />
@@ -295,7 +295,7 @@ export function MessagesSettingsScreenInner({}: Props) {
                 />
               </View>
               <ChevronRightIcon style={[a.ml_2xs, t.atoms.text]} size="lg" />
-            </Toggle.Item>
+            </Pressable>
           </View>
           <Divider style={{marginVertical: 10}} />
           {IS_NATIVE && (
@@ -324,12 +324,12 @@ export function MessagesSettingsScreenInner({}: Props) {
             </>
           )}
           <View style={[a.px_xl]}>
-            <Toggle.Item
-              label={l`Export my chat data`}
-              name="exportChat"
-              value={true}
-              style={[a.flex_row, a.align_center, a.justify_between]}
-              onChange={() => {
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={l`Export my chat data`}
+              accessibilityHint={undefined}
+              style={[a.flex_row, a.align_center, a.justify_between, a.gap_sm]}
+              onPress={() => {
                 exportCarControl.open()
               }}>
               <CarIcon style={[a.mr_2xs, t.atoms.text]} size="lg" />
@@ -338,7 +338,7 @@ export function MessagesSettingsScreenInner({}: Props) {
                 <Trans>Export my chat data</Trans>
               </Text>
               <ChevronRightIcon style={[a.ml_2xs, t.atoms.text]} size="lg" />
-            </Toggle.Item>
+            </Pressable>
           </View>
           <Divider style={{marginVertical: 10}} />
         </View>
