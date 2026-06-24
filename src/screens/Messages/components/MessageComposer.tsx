@@ -77,6 +77,15 @@ export function MessageComposer({
     composerInternalApiRef.current?.input?.focus()
   }, [replyTo, composerInternalApiRef])
 
+  // On web, focus the input once the conversation is ready. The composer also
+  // mounts during the loading state (when it isn't editable), so a mount-time
+  // autoFocus would fire too early to land focus.
+  useEffect(() => {
+    if (IS_WEB && editable) {
+      composerInternalApiRef.current?.input?.focus()
+    }
+  }, [editable, composerInternalApiRef])
+
   // Android interactive dismiss sometimes doesn't blur the input
   const blur = useNonReactiveCallback(() => {
     composerInternalApiRef.current?.input?.blur()
@@ -249,7 +258,6 @@ export function MessageComposer({
                 internalApiRef={composerInternalApiRef}
                 defaultValue={text}
                 editable={editable}
-                autoFocus={IS_WEB}
                 maxRows={12}
                 outerStyle={[a.flex_1]}
                 contentTextStyle={[a.text_md, a.leading_snug]}
