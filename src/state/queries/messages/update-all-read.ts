@@ -122,6 +122,10 @@ export function useUpdateAllRead(
       }
     },
     onSuccess: () => {
+      // the optimistic badge zeroing can drift from the server, so invalidate
+      // the count query to let it self-correct on next access rather than
+      // waiting for a log event
+      void queryClient.invalidateQueries({queryKey: UNREAD_COUNTS_PARTIAL_KEY})
       void queryClient.invalidateQueries({
         queryKey: CONVO_LIST_PARTIAL_KEY(status),
       })

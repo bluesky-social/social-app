@@ -25,6 +25,14 @@ import {
 export const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
 
+// the badge counts are sentinel-capped by the server: unreadAcceptedConvos
+// maxes at 31 (meaning "more than 30") and unreadRequestConvos at 11 (meaning
+// "more than 10"). at the cap the value is no longer an exact count, so a naive
+// -1 decrement is wrong - skip the optimistic decrement and let onSuccess
+// invalidation reconcile with the server instead.
+const UNREAD_ACCEPTED_CAP = 31
+const UNREAD_REQUEST_CAP = 11
+
 export function useConvoQuery({convoId}: {convoId: string}) {
   const agent = useAgent()
 
@@ -113,16 +121,16 @@ export function useMarkAsReadMutation() {
               ...old,
               ...(unreadStatus === 'request'
                 ? {
-                    unreadRequestConvos: Math.max(
-                      0,
-                      old.unreadRequestConvos - 1,
-                    ),
+                    unreadRequestConvos:
+                      old.unreadRequestConvos >= UNREAD_REQUEST_CAP
+                        ? old.unreadRequestConvos
+                        : Math.max(0, old.unreadRequestConvos - 1),
                   }
                 : {
-                    unreadAcceptedConvos: Math.max(
-                      0,
-                      old.unreadAcceptedConvos - 1,
-                    ),
+                    unreadAcceptedConvos:
+                      old.unreadAcceptedConvos >= UNREAD_ACCEPTED_CAP
+                        ? old.unreadAcceptedConvos
+                        : Math.max(0, old.unreadAcceptedConvos - 1),
                   }),
             }
           },
@@ -144,6 +152,12 @@ export function useMarkAsReadMutation() {
     },
     onSuccess(_, {convoId}) {
       if (!convoId) return
+
+      // the optimistic badge arithmetic can drift from the server (e.g. a convo
+      // whose status differs between caches, or a sentinel-capped count). invalidate
+      // so the 15s-stale count query self-corrects on next access rather than
+      // waiting for a log event
+      void queryClient.invalidateQueries({queryKey: UNREAD_COUNTS_PARTIAL_KEY})
 
       queryClient.setQueriesData(
         {queryKey: [LIST_CONVOS_KEY]},
