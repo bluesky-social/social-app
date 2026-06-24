@@ -503,7 +503,7 @@ export function createDeviceSignalsQueryKey({did}: {did: string}) {
 export async function getDeviceSignals(): Promise<
   AgeRange.AgeRangeResponse | undefined
 > {
-  if (debug.enabled && !debug.useRealDeviceSignalsAPI)
+  if (debug.enabled && debug.useMockDeviceSignalsAPIResponse)
     return debug.resolve(debug.deviceSignals)
   if (!IS_NATIVE) return undefined
   try {

@@ -28,11 +28,12 @@ export const geolocation: Geolocation | undefined = enabled
   : undefined
 
 /**
- * When debug is enabled we normally fake `deviceSignals` too. Flip this to hit
- * the real native age API (`expo-age-range`) so the OS age prompt actually
- * shows — useful for testing the device flow on a physical device.
+ * When debug is enabled we mock the `deviceSignals` response by default. Set
+ * this to `false` to hit the real native age API (`expo-age-range`) so the OS
+ * age prompt actually shows — useful for testing the device flow on a physical
+ * device.
  */
-export const useRealDeviceSignalsAPI = false
+export const useMockDeviceSignalsAPIResponse = true
 
 const deviceGeolocationEnabled = false || IS_E2E
 export const deviceGeolocation: Geolocation | undefined =
