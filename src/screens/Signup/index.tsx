@@ -231,7 +231,6 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                       }>
                       <Text
                         style={[
-                          a.flex_shrink,
                           t.atoms.text_contrast_medium,
                           !gtMobile && a.text_md,
                           {paddingInline: tokens.space.sm},
