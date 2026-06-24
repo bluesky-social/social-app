@@ -10,20 +10,24 @@ on:
         options:
           - testflight
           - production
-      assignTestFlightGroup:
-        type: boolean
-        description: Assign the build to the "QA Team" TestFlight group after submitting
-        default: false
+      testFlightGroup:
+        type: choice
+        description: TestFlight group to assign the build to after submitting
+        options:
+          - none
+          - QA Team
+          - Software Mansion
+        default: none
   workflow_call:
     inputs:
       profile:
         type: string
         description: Build profile to use
         required: true
-      assignTestFlightGroup:
-        type: boolean
-        description: Assign the build to the "QA Team" TestFlight group after submitting
-        default: false
+      testFlightGroup:
+        type: string
+        description: TestFlight group to assign the build to after submitting ("none" to skip)
+        default: none
     outputs:
       package-version:
         description: Version from package.json
@@ -212,8 +216,9 @@ jobs:
       # TestFlight group. fastlane's distribute_only mode skips the upload and assigns the
       # already-submitted build to the group, polling until Apple finishes processing it.
       - name: 🧪 Assign build to TestFlight group
-        if: ${{ inputs.assignTestFlightGroup }}
+        if: ${{ inputs.testFlightGroup != 'none' }}
         env:
+          TESTFLIGHT_GROUP: ${{ inputs.testFlightGroup }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
@@ -241,7 +246,7 @@ jobs:
             app_identifier:"xyz.blueskyweb.app" \
             app_version:"$APP_VERSION" \
             build_number:"$BUILD_NUMBER" \
-            groups:"QA Team" \
+            groups:"$TESTFLIGHT_GROUP" \
             notify_external_testers:true
 
       - name: 🔔 Notify Slack of Production Build
