@@ -30,7 +30,7 @@ export function InboxRequests({
       })
     : overflow
       ? l({
-          message: `${REQUEST_COUNT_CAP}+ requests`,
+          message: `${REQUEST_COUNT_CAP - 1}+ requests`,
           comment: 'Displayed when the number of requests is greater than 10',
         })
       : plural(count, {
