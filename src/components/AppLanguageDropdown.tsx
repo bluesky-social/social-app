@@ -7,7 +7,7 @@ import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {APP_LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 import {resetPostsFeedQueries} from '#/state/queries/post-feed'
-import {atoms as a, platform, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme, web} from '#/alf'
 import * as Select from '#/components/Select'
 import {Button} from './Button'
 
@@ -68,7 +68,7 @@ export function AppLanguageDropdown() {
       <Select.Content
         label={_(msg`Select language`)}
         renderItem={({label, value}) => (
-          <Select.Item value={value} label={label}>
+          <Select.Item value={value} label={label} style={web([a.pointer])}>
             <Select.ItemIndicator />
             <Select.ItemText>{label}</Select.ItemText>
           </Select.Item>
