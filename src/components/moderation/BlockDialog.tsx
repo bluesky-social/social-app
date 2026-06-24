@@ -362,14 +362,14 @@ function MutualGroupChat({
         <Button
           color="negative_subtle"
           disabled={isRemovePending}
-          label={l`Kick member`}
+          label={l`Remove member`}
           size="small"
           onPress={() => {
             onOptimisticallyRemoveConvo(view.id)
             removeMembers({members: [profileDid]})
           }}>
           <ButtonText>
-            <Trans>Kick member</Trans>
+            <Trans>Remove member</Trans>
           </ButtonText>
           {isRemovePending ? <ButtonIcon icon={Loader} /> : null}
         </Button>

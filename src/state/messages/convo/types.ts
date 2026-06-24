@@ -113,6 +113,7 @@ type SendMessage = (
     | $Typed<AppBskyEmbedRecord.View>
     | $Typed<ChatBskyEmbedJoinLink.View>
     | undefined,
+  optimisticReplyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
 ) => void
 type FetchMessageHistory = () => Promise<void>
 type MarkConvoAccepted = () => void

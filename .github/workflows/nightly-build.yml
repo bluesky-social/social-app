@@ -1,0 +1,173 @@
+---
+name: Nightly Build
+
+on:
+  schedule:
+    - cron: "10 2 * * *" # run at 2:10 AM UTC, after the nightly i18n job
+  workflow_dispatch:
+
+# Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
+permissions:
+  contents: read
+
+jobs:
+  # Generate the changelog once, shared by both platforms. The range covers commits since
+  # the previous nightly, whose commit SHA is stored as a "nightly-build-commit" artifact
+  # (advanced by the record job below, only after both builds succeed).
+  prepare:
+    name: Prepare release notes
+    if: github.repository == 'bluesky-social/social-app'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      notes: ${{ steps.notes.outputs.notes }}
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          fetch-depth: 0
+
+      - name: 📝 Generate release notes
+        id: notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Find the most recent non-expired nightly-build-commit artifact and read its SHA
+          # The artifacts API returns results newest-first, so the most recent marker is on
+          # page 1 — no --paginate needed (which would run the jq aggregation per page and
+          # could emit multiple URLs). Take the first non-expired match.
+          prev=""
+          url=$(gh api \
+            "repos/${GITHUB_REPOSITORY}/actions/artifacts?name=nightly-build-commit&per_page=100" \
+            --jq 'first(.artifacts[] | select(.expired == false)) | .archive_download_url' \
+            2>/dev/null || true)
+          if [ -n "$url" ] && [ "$url" != "null" ]; then
+            if curl -sSL -H "Authorization: Bearer $GH_TOKEN" -o marker.zip "$url" \
+              && unzip -o -q marker.zip; then
+              prev=$(cat nightly-build-commit.txt 2>/dev/null | tr -d '[:space:]')
+            fi
+            rm -f marker.zip nightly-build-commit.txt
+          fi
+
+          if [ -n "$prev" ] && git cat-file -e "${prev}^{commit}" 2>/dev/null; then
+            echo "Generating notes since previous nightly: $prev"
+            range="${prev}..HEAD"
+          else
+            echo "No reachable previous nightly commit; falling back to last 30 commits."
+            range="HEAD~30..HEAD"
+          fi
+          notes=$(git log --no-merges --pretty=format:'- %s' "$range" 2>/dev/null | head -n 50)
+          if [ -z "$notes" ]; then
+            notes="Nightly build — no new commits since the last nightly."
+          fi
+          # Cap the whole changelog to keep the Slack message a reasonable size.
+          # head -c caps the combined stream; cut -c would only cap each line independently.
+          notes=$(printf '%s' "$notes" | head -c 3900)
+          {
+            echo "notes<<NOTES_EOF"
+            echo "$notes"
+            echo "NOTES_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+  ios:
+    name: Nightly iOS Build
+    needs: [prepare]
+    uses: ./.github/workflows/build-submit-ios.yml
+    with:
+      profile: testflight
+      testFlightGroup: "QA Team"
+    secrets: inherit
+
+  android:
+    name: Nightly Android Build
+    needs: [prepare]
+    # build-submit-android.yml contains an attachToRelease job that requests contents: write.
+    # That job is skipped for nightly (it needs a production tag build), but GitHub statically
+    # validates the reusable-workflow permission ceiling, so the caller must grant it here.
+    permissions:
+      contents: write
+    uses: ./.github/workflows/build-submit-android.yml
+    with:
+      profile: testflight-android
+    secrets: inherit
+
+  notify-ios:
+    name: Notify Slack of iOS nightly
+    needs: [prepare, ios]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📝 Build Slack payload
+        id: payload
+        env:
+          NOTES: ${{ needs.prepare.outputs.notes }}
+          VERSION: ${{ needs.ios.outputs.package-version }}
+          BUILD_NUMBER: ${{ needs.ios.outputs.build-number }}
+        run: |
+          text="*Nightly iOS build available in TestFlight (QA Team)*
+          Version ${VERSION} (${BUILD_NUMBER})
+
+          ${NOTES}"
+          payload=$(jq -n --arg text "$text" '{text: $text}')
+          {
+            echo "payload<<PAYLOAD_EOF"
+            echo "$payload"
+            echo "PAYLOAD_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: 🔔 Notify Slack
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
+        with:
+          webhook: ${{ secrets.NIGHTLY_BUILDS_SLACK_WEBHOOK }}
+          webhook-type: incoming-webhook
+          payload: ${{ steps.payload.outputs.payload }}
+
+  notify-android:
+    name: Notify Slack of Android nightly
+    needs: [prepare, android]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📝 Build Slack payload
+        id: payload
+        env:
+          NOTES: ${{ needs.prepare.outputs.notes }}
+          VERSION: ${{ needs.android.outputs.package-version }}
+          VERSION_CODE: ${{ needs.android.outputs.version-code }}
+        run: |
+          text="*Nightly Android build available (Internal track)*
+          Version ${VERSION} (${VERSION_CODE})
+
+          ${NOTES}"
+          payload=$(jq -n --arg text "$text" '{text: $text}')
+          {
+            echo "payload<<PAYLOAD_EOF"
+            echo "$payload"
+            echo "PAYLOAD_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: 🔔 Notify Slack
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
+        with:
+          webhook: ${{ secrets.NIGHTLY_BUILDS_SLACK_WEBHOOK }}
+          webhook-type: incoming-webhook
+          payload: ${{ steps.payload.outputs.payload }}
+
+  # Advance the nightly marker only after both builds succeed, so a failed night's commits
+  # roll into the next successful nightly's notes rather than being silently dropped.
+  record:
+    name: Record nightly commit
+    needs: [ios, android]
+    runs-on: ubuntu-latest
+    steps:
+      - name: ✏️ Write nightly commit marker
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: echo "$GITHUB_SHA" > nightly-build-commit.txt
+
+      - name: 🚀 Upload nightly commit marker
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: nightly-build-commit
+          path: nightly-build-commit.txt
+          retention-days: 90

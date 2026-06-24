@@ -1,5 +1,6 @@
 import {memo, useCallback} from 'react'
 import {Platform} from 'react-native'
+import {type GestureType} from 'react-native-gesture-handler'
 import * as Clipboard from 'expo-clipboard'
 import {
   type ChatBskyConvoDefs,
@@ -20,6 +21,8 @@ import {atoms as a} from '#/alf'
 import * as ContextMenu from '#/components/ContextMenu'
 import {type TriggerProps} from '#/components/ContextMenu/types'
 import {useMessageDialogs} from '#/components/dms/MessageOverlays'
+import {useMessageReplies} from '#/components/dms/MessageReplies'
+import {ArrowCornerDownRight_Stroke2_Corner2_Rounded as ReplyIcon} from '#/components/icons/ArrowCornerDownRight'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
 import {Language_Stroke2_Corner2_Rounded as LanguageIcon} from '#/components/icons/Language'
@@ -36,17 +39,24 @@ export let MessageContextMenu = ({
   senderProfile,
   moderationOpts,
   children,
+  swipeGesture,
 }: {
   message: ChatBskyConvoDefs.MessageView
   senderProfile?: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts | undefined
   children: TriggerProps['children']
+  /**
+   * Native only. A swipe gesture (swipe-to-reply) composed into the trigger's
+   * gesture group so it's mutually exclusive with the tap and long-press.
+   */
+  swipeGesture?: GestureType
 }): React.ReactNode => {
   const {t: l, i18n} = useLingui()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const convo = useConvoActive()
   const {openDeleteMessage, openReportMessage} = useMessageDialogs()
+  const {setReply} = useMessageReplies()
   const langPrefs = useLanguagePrefs()
   const translate = useGoogleTranslate()
 
@@ -141,7 +151,8 @@ export let MessageContextMenu = ({
         label={l`Message options`}
         contentLabel={l`Message from @${
           sender?.handle ?? 'unknown' // should always be defined
-        }: ${message.text}`}>
+        }: ${message.text}`}
+        swipeGesture={swipeGesture}>
         {children}
       </ContextMenu.Trigger>
 
@@ -151,6 +162,13 @@ export let MessageContextMenu = ({
           timeStyle: 'short',
         })}`}
         style={[isFromSelf && isGroupChatEnabled ? null : a.ml_sm]}>
+        <ContextMenu.Item
+          testID="messageDropdownReplyBtn"
+          label={l`Reply`}
+          onPress={() => setReply(message)}>
+          <ContextMenu.ItemIcon icon={ReplyIcon} position="left" />
+          <ContextMenu.ItemText>{l`Reply`}</ContextMenu.ItemText>
+        </ContextMenu.Item>
         {message.text.length > 0 && (
           <>
             <ContextMenu.Item
@@ -172,7 +190,6 @@ export let MessageContextMenu = ({
           </>
         )}
         <ContextMenu.Item
-          destructive
           testID="messageDropdownDeleteBtn"
           label={l`Delete message for me`}
           onPress={() => openDeleteMessage(message)}>
@@ -181,7 +198,6 @@ export let MessageContextMenu = ({
         </ContextMenu.Item>
         {!isFromSelf && (
           <ContextMenu.Item
-            destructive
             testID="messageDropdownReportBtn"
             label={l`Report message`}
             onPress={() => openReportMessage(message, senderProfile)}>

@@ -4,6 +4,7 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native'
+import {type GestureType} from 'react-native-gesture-handler'
 import {type SharedValue} from 'react-native-reanimated'
 
 import type * as Dialog from '#/components/Dialog'
@@ -94,6 +95,14 @@ export type TriggerProps = {
    * @platform ios, android
    */
   onTap?: () => void
+  /**
+   * An optional gesture (e.g. swipe-to-reply) composed into the same
+   * arbitration group as the tap and press-and-hold gestures via `Gesture.Race`,
+   * making it mutually exclusive with them - only one can win a given touch.
+   *
+   * @platform ios, android
+   */
+  swipeGesture?: GestureType
 }
 export type TriggerChildProps =
   | {
