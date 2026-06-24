@@ -860,9 +860,8 @@ export function useUnreadMessageCount(): {
       count: accepted,
       // accepted is sentinel-capped at UNREAD_ACCEPTED_CAP (meaning "more than
       // cap - 1"). show the "+" overflow label only when accepted is actually
-      // capped - the +1 request nudge must not trip it at exactly cap - 1
-      // accepted convos. otherwise clamp the number to cap - 1 so the nudge
-      // never surfaces the sentinel value (100) itself
+      // capped, otherwise clamp the number to cap - 1 so we never surface the
+      // sentinel value (100) itself
       numUnread:
         accepted >= UNREAD_ACCEPTED_CAP
           ? `${UNREAD_ACCEPTED_CAP - 1}+`
