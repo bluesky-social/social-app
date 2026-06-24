@@ -20,6 +20,7 @@ import {useSharedInputStyles} from '#/components/forms/TextField'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 import * as Toast from '#/components/Toast'
+import {Text} from '#/components/Typography'
 import {IS_WEB_SAFARI, IS_WEB_TOUCH_DEVICE} from '#/env'
 import {
   type MessageEmbedState,
@@ -266,6 +267,15 @@ export function MessageInput({
           <PaperPlane fill={t.palette.white} style={[a.relative, {left: 1}]} />
         </Pressable>
       </View>
+      {countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH ? (
+        <Text
+          style={[
+            a.py_sm,
+            {
+              color: t.palette.negative_500,
+            },
+          ]}>{`Message is too long by ${countGraphemes(message) - MAX_DM_GRAPHEME_LENGTH} characters`}</Text>
+      ) : null}
     </View>
   )
 }

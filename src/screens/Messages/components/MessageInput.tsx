@@ -32,6 +32,7 @@ import {GlassView} from '#/components/GlassView'
 import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
+import {Text} from '#/components/Typography'
 import {IS_ANDROID, IS_IOS, IS_WEB} from '#/env'
 import {ComposerContainer} from './MessageComposer'
 import {
@@ -78,6 +79,7 @@ export function MessageInput({
   const [message, setMessage] = useState(getDraft)
   const inputRef = useAnimatedRef<TextInput>()
   const [shouldEnforceClear, setShouldEnforceClear] = useState(false)
+  const graphemeCount = new Graphemer().countGraphemes(message)
 
   const {needsEmailVerification} = useEmail()
   const editable = !needsEmailVerification && !loading
@@ -281,6 +283,15 @@ export function MessageInput({
               />
             )}
           </Pressable>
+          {countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH ? (
+            <Text
+              style={[
+                a.py_sm,
+                {
+                  color: t.palette.negative_500,
+                },
+              ]}>{`Message is too long by ${countGraphemes(message) - MAX_DM_GRAPHEME_LENGTH} characters`}</Text>
+          ) : null}
         </GlassView>
       </GlassContainer>
     </ComposerContainer>
