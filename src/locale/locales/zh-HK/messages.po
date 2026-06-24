@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-17 12:23\n"
+"PO-Revision-Date: 2026-06-24 16:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -679,15 +679,15 @@ msgstr "{rank}."
 
 #: src/components/dms/MessageItem.tsx:813
 msgid "{replierDisplayName} replied"
-msgstr ""
+msgstr "{replierDisplayName} 覆咗"
 
 #: src/components/dms/MessageItem.tsx:809
 msgid "{replierDisplayName} replied to {originalName}"
-msgstr ""
+msgstr "{replierDisplayName} 覆咗 {originalName}"
 
 #: src/components/dms/MessageItem.tsx:807
 msgid "{replierDisplayName} replied to you"
-msgstr ""
+msgstr "{replierDisplayName} 覆咗你"
 
 #. The number of requests to join a group chat.
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:61
@@ -828,12 +828,12 @@ msgstr "⚠無效嘅帳號代碼"
 #. Displayed when the number of requests is greater than 10
 #: src/screens/Messages/components/InboxRequests.tsx:57
 msgid "10+"
-msgstr ""
+msgstr "10+"
 
 #. Displayed when the number of requests is greater than 10
 #: src/screens/Messages/components/InboxRequests.tsx:32
 msgid "10+ requests"
-msgstr ""
+msgstr "10+ 請求"
 
 #: src/components/dialogs/MutedWords.tsx:202
 #: src/components/dialogs/MutedWords.tsx:551
@@ -1961,10 +1961,10 @@ msgstr "喺你接收 {name} 帖文通知之前，你必須驗證你嘅電郵。"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:155
 #: src/components/dms/MessageProfileButton.tsx:60
-#: src/screens/Messages/ChatList.tsx:155
-#: src/screens/Messages/ChatList.tsx:173
-#: src/screens/Messages/ChatList.tsx:274
-#: src/screens/Messages/ChatList.tsx:527
+#: src/screens/Messages/ChatList.tsx:166
+#: src/screens/Messages/ChatList.tsx:184
+#: src/screens/Messages/ChatList.tsx:285
+#: src/screens/Messages/ChatList.tsx:538
 #: src/screens/Messages/Conversation.tsx:203
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
 msgid "Before you can message another user, you must first verify your email."
@@ -2070,18 +2070,18 @@ msgstr "封鎖呢個用戶或刪除呢個對話（複選）"
 msgid "Block user and/or leave this conversation"
 msgstr "封鎖此用戶或離開對話（複選）"
 
-#: src/components/Post/Embed/index.tsx:216
+#: src/components/Post/Embed/index.tsx:212
 msgid "Blocked"
 msgstr "已被封鎖"
 
 #: src/screens/Moderation/index.tsx:329
 msgid "Blocked accounts"
-msgstr "被封鎖嘅帳號"
+msgstr "已封鎖帳號"
 
 #: src/Navigation.tsx:192
 #: src/view/screens/ModerationBlockedAccounts.tsx:95
 msgid "Blocked Accounts"
-msgstr "封鎖咗嘅帳號"
+msgstr "已封鎖嘅帳號"
 
 #: src/components/moderation/BlockDialog.tsx:163
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
@@ -2093,7 +2093,7 @@ msgstr "被封鎖嘅帳號唔得喺你嘅討論串度回覆、提及你或用其
 
 #: src/components/dms/MessageItem.tsx:860
 msgid "Blocked message hidden"
-msgstr ""
+msgstr "已隱藏封鎖嘅訊息"
 
 #: src/screens/Profile/Sections/Labels.tsx:203
 msgid "Blocking does not prevent this labeler from placing labels on your account."
@@ -2340,7 +2340,7 @@ msgstr "需要取用相機權限"
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:299
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:175
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:181
-#: src/components/Menu/index.tsx:367
+#: src/components/Menu/index.tsx:373
 #: src/components/moderation/BlockDialog.tsx:202
 #: src/components/PostControls/RepostButton.tsx:210
 #: src/components/Prompt.tsx:152
@@ -2389,7 +2389,7 @@ msgstr "取消重新啓動兼登出"
 
 #: src/screens/Messages/components/MessageInputReply.tsx:83
 msgid "Cancel reply"
-msgstr ""
+msgstr "唔再覆佢"
 
 #: src/screens/Search/Shell.tsx:396
 msgid "Cancel search"
@@ -2536,6 +2536,12 @@ msgstr "已靜音傾偈"
 msgid "Chat not found."
 msgstr "搵唔到個傾偈。"
 
+#: src/screens/Messages/ChatList.tsx:564
+#: src/screens/Messages/ChatList.tsx:599
+#: src/screens/Messages/ChatList.tsx:637
+msgid "Chat options"
+msgstr ""
+
 #: src/components/moderation/BlockDialog.tsx:293
 msgid "Chat owners cannot leave a group chat."
 msgstr "傾偈擁有者唔可以離開羣組傾偈。"
@@ -2555,10 +2561,10 @@ msgstr "傾偈邀請"
 
 #: src/components/dms/ConvoMenu.tsx:88
 #: src/Navigation.tsx:506
-#: src/screens/Messages/ChatList.tsx:84
-#: src/screens/Messages/ChatList.tsx:88
-#: src/screens/Messages/ChatList.tsx:552
-#: src/screens/Messages/ChatList.tsx:583
+#: src/screens/Messages/ChatList.tsx:95
+#: src/screens/Messages/ChatList.tsx:99
+#: src/screens/Messages/ChatList.tsx:649
+#: src/screens/Messages/ChatList.tsx:659
 #: src/screens/Messages/Settings.tsx:39
 msgid "Chat settings"
 msgstr "傾偈設定"
@@ -2585,9 +2591,9 @@ msgctxt "toast"
 msgid "Chat unmuted"
 msgstr "已唔再靜音傾偈"
 
-#: src/screens/Messages/ChatList.tsx:78
-#: src/screens/Messages/ChatList.tsx:539
-#: src/screens/Messages/ChatList.tsx:576
+#: src/screens/Messages/ChatList.tsx:89
+#: src/screens/Messages/ChatList.tsx:550
+#: src/screens/Messages/ChatList.tsx:590
 msgid "Chats"
 msgstr "傾偈"
 
@@ -2862,7 +2868,7 @@ msgstr "閂咗加入申請通知橫額"
 #: src/components/intents/GroupChatJoinDialog.tsx:240
 #: src/components/intents/GroupChatJoinDialog.tsx:276
 #: src/components/intents/GroupChatJoinDialog.tsx:277
-#: src/components/Menu/index.tsx:361
+#: src/components/Menu/index.tsx:367
 msgid "Close this dialog"
 msgstr "閂呢個對話框"
 
@@ -3031,7 +3037,7 @@ msgstr "內容同媒體"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:18
 msgid "Content Blocked"
-msgstr "封鎖咗嘅內容"
+msgstr "已封鎖內容"
 
 #: src/screens/Moderation/index.tsx:362
 msgid "Content filters"
@@ -3156,7 +3162,7 @@ msgstr "已複製構建版本到剪貼簿"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:256
 msgid "Copies the canonical profile URL to the clipboard"
-msgstr ""
+msgstr "複製個人檔案連結落剪貼簿"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:198
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:266
@@ -3676,7 +3682,7 @@ msgstr "係咪要刪咗呢份清單？"
 msgid "Delete this post?"
 msgstr "係咪要刪咗呢條帖文？"
 
-#: src/components/Post/Embed/index.tsx:209
+#: src/components/Post/Embed/index.tsx:205
 msgid "Deleted"
 msgstr "已刪除"
 
@@ -3699,7 +3705,7 @@ msgstr "刪除咗嘅清單"
 
 #: src/components/dms/MessageItem.tsx:875
 msgid "Deleted message"
-msgstr ""
+msgstr "已刪除訊息"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:453
 #: src/components/SendErrorReportDialog.tsx:78
@@ -4614,7 +4620,7 @@ msgstr "加唔到成員"
 
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:239
 msgid "Failed to add to list"
-msgstr ""
+msgstr "加唔到落清單"
 
 #: src/components/dialogs/StarterPackDialog.tsx:280
 msgid "Failed to add to starter pack"
@@ -4717,7 +4723,7 @@ msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "離開唔到羣組傾偈"
 
-#: src/screens/Messages/ChatList.tsx:404
+#: src/screens/Messages/ChatList.tsx:415
 #: src/screens/Messages/Inbox.tsx:209
 msgid "Failed to load conversations"
 msgstr "撈唔到對話"
@@ -4767,6 +4773,7 @@ msgstr "撈唔到建議你跟嘅人"
 msgid "Failed to lock group chat"
 msgstr "鎖定唔到邀請連結"
 
+#: src/screens/Messages/ChatList.tsx:631
 #: src/view/shell/bottom-bar/BottomBar.tsx:441
 msgid "Failed to mark all chats as read"
 msgstr "標記唔到所有傾偈做已讀"
@@ -4806,7 +4813,7 @@ msgstr "刪唔到 Emoji 反應"
 
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:258
 msgid "Failed to remove from list"
-msgstr ""
+msgstr "未能從清單移除"
 
 #: src/components/dialogs/StarterPackDialog.tsx:293
 msgid "Failed to remove from starter pack"
@@ -5355,7 +5362,7 @@ msgstr "唔記得？"
 #. This is alt text for a marketing image which transcribes English text that appears in the image
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:153
 msgid "Four message bubbles representing a group chat. First message: \"Did you hear the news? Bluesky has group chats now!\" Second message: \"omg, no way\" Third message: \"Wow, 50 people in one chat!\" Fourth message: \"You can send invite links too!\""
-msgstr ""
+msgstr "四個代表羣組傾偈嘅訊息氣泡。第一條訊息：「收到風未呀？家陣 Bluesky 都可以開 Group 傾偈喇！」，第二條訊息：「Omg，唔係啩」，第三條訊息：「嘩，一個 Group 可以有 50 人咁多」，第四條訊息：「你仲可以 send 條邀請 Link 畀人添！」"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:12
 msgid "Free your feed"
@@ -5416,7 +5423,7 @@ msgstr "尋求協助"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:343
 msgid "Get notifications for starter pack joins, verification, and other activity."
-msgstr ""
+msgstr "接收新手包加入、驗證及其他活動動態通知。"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:269
 msgid "Get notifications when people follow you."
@@ -6229,7 +6236,7 @@ msgstr "應用程式內、推播、所有人"
 msgid "In-app, push, people you follow"
 msgstr "應用程式內、推播、你跟嘅人"
 
-#: src/screens/Messages/ChatList.tsx:421
+#: src/screens/Messages/ChatList.tsx:432
 msgid "Inbox empty"
 msgstr "收件箱得個吉"
 
@@ -6955,8 +6962,6 @@ msgid "Load new posts"
 msgstr "撈吓新嘅帖文"
 
 #: src/screens/Messages/components/MessageComposer.tsx:245
-#: src/screens/Messages/components/MessageInput.tsx:258
-#: src/screens/Messages/components/MessageInput.web.tsx:228
 msgctxt "placeholder"
 msgid "Loading chat…"
 msgstr "撈緊傾偈……"
@@ -7070,6 +7075,8 @@ msgstr "管理你嘅靜音字詞同標籤"
 msgid "Mark all as read"
 msgstr "標記晒做已讀"
 
+#: src/screens/Messages/ChatList.tsx:641
+#: src/screens/Messages/ChatList.tsx:645
 #: src/view/shell/bottom-bar/BottomBar.tsx:459
 #: src/view/shell/bottom-bar/BottomBar.tsx:463
 msgid "Mark all chats as read"
@@ -7089,6 +7096,7 @@ msgstr "標記做已讀"
 msgid "Marked all as read"
 msgstr "已標記晒做已讀"
 
+#: src/screens/Messages/ChatList.tsx:628
 #: src/view/shell/bottom-bar/BottomBar.tsx:438
 msgid "Marked all chats as read"
 msgstr "已標記晒所有傾偈做已讀"
@@ -7122,7 +7130,7 @@ msgstr "可能會令某啲受眾感到不安或造成不適嘅媒體內容。"
 
 #: src/components/moderation/BlockDialog.tsx:303
 msgid "Member removed from group chat."
-msgstr ""
+msgstr "已從羣組傾偈移除成員。"
 
 #. The heading above the list of chat members.
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:34
@@ -7144,17 +7152,11 @@ msgstr "提到嘅用戶"
 msgid "Mentions"
 msgstr "提及"
 
-#: src/components/Menu/index.tsx:113
+#: src/components/Menu/index.tsx:119
 msgid "Menu"
 msgstr "選單"
 
-#: src/screens/Messages/components/MessageInput.tsx:202
-msgid "Message"
-msgstr "訊息"
-
 #: src/screens/Messages/components/MessageComposer.tsx:246
-#: src/screens/Messages/components/MessageInput.tsx:259
-#: src/screens/Messages/components/MessageInput.web.tsx:229
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:203
 msgctxt "action"
 msgid "Message"
@@ -7194,14 +7196,8 @@ msgid "Message from server: {0}"
 msgstr "嚟自伺服器嘅訊息：{0}"
 
 #: src/screens/Messages/components/MessageComposer.tsx:242
-#: src/screens/Messages/components/MessageInput.tsx:200
 msgid "Message input field"
 msgstr "訊息輸入欄位"
-
-#: src/screens/Messages/components/MessageInput.tsx:96
-#: src/screens/Messages/components/MessageInput.web.tsx:65
-msgid "Message is too long"
-msgstr "訊息太長"
 
 #: src/screens/Messages/components/MessageComposer.tsx:107
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
@@ -7217,11 +7213,11 @@ msgstr "傾偈"
 
 #: src/components/dms/MessageItem.tsx:715
 msgid "Messages from this person are hidden while they are blocking you."
-msgstr ""
+msgstr "當對方封鎖咗你，佢嘅訊息將會隱藏。"
 
 #: src/components/dms/MessageItem.tsx:710
 msgid "Messages from this person are hidden while you are blocking them."
-msgstr ""
+msgstr "當你封鎖咗對方，佢嘅訊息將會隱藏。"
 
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:101
 msgctxt "Name of app icon variant"
@@ -7424,7 +7420,7 @@ msgstr "靜音字詞同標籤"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:207
 msgid "Mute, leave, or remove people anytime. It’s your chat."
-msgstr ""
+msgstr "隨時靜音、離開抑或踢人都得。呢度傾偈由你話事。"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:536
 msgid "Muted"
@@ -7537,11 +7533,11 @@ msgstr "嚟自 {firstAuthorName} 嘅新{postsCount, plural, one {帖文} other {
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:169
 #: src/components/dms/dialogs/NewChatDialog.tsx:184
-#: src/screens/Messages/ChatList.tsx:218
-#: src/screens/Messages/ChatList.tsx:219
-#: src/screens/Messages/ChatList.tsx:439
-#: src/screens/Messages/ChatList.tsx:440
-#: src/screens/Messages/ChatList.tsx:561
+#: src/screens/Messages/ChatList.tsx:229
+#: src/screens/Messages/ChatList.tsx:230
+#: src/screens/Messages/ChatList.tsx:450
+#: src/screens/Messages/ChatList.tsx:451
+#: src/screens/Messages/ChatList.tsx:575
 msgid "New chat"
 msgstr "同人傾偈"
 
@@ -7560,7 +7556,7 @@ msgstr "{0} 同 {1} 嘅新傾偈"
 #. placeholder {1}: createSanitizedDisplayName(members[1])
 #: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:73
 msgid "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} more} other {{memberCount} more}}."
-msgstr ""
+msgstr "與 {0}、{1} 同{memberCount, plural, other {其他 {memberCount} 人}}嘅新傾偈。"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:219
 msgid "New email address"
@@ -7871,7 +7867,7 @@ msgstr "而家仲未有新手包"
 #: src/components/dms/MessageItem.tsx:871
 #: src/screens/Messages/components/MessageInputReply.tsx:47
 msgid "No text"
-msgstr ""
+msgstr "冇文字"
 
 #: src/components/dialogs/EmbedConsent.tsx:100
 #: src/components/dialogs/EmbedConsent.tsx:107
@@ -7917,12 +7913,12 @@ msgstr "非性裸體"
 
 #: src/features/inviteFriends/InviteScannerScreen.web.tsx:31
 msgid "Not available on this platform"
-msgstr ""
+msgstr "喺呢個平臺用唔到"
 
 #: src/screens/FindContactsFlowScreen.tsx:62
 #: src/screens/Settings/FindContactsSettings.tsx:106
 msgid "Not available on this platform."
-msgstr "此功能喺呢個平臺用唔到。"
+msgstr "喺呢個平臺用唔到。"
 
 #: src/components/KnownFollowers.tsx:254
 msgid "Not followed by anyone you’re following"
@@ -8044,11 +8040,11 @@ msgstr "重新開始引導流程"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:117
 msgid "One of the selected recipients does not allow group chats."
-msgstr ""
+msgstr "揀中嘅人入邊有個人唔接受羣組傾偈。"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:100
 msgid "One of the selected recipients has blocked you and cannot be messaged."
-msgstr ""
+msgstr "揀中嘅人入邊有個人封鎖你，所以傳送唔到訊息。"
 
 #: src/view/com/composer/Composer.tsx:862
 msgid "One or more GIFs is missing alt text."
@@ -8064,7 +8060,7 @@ msgstr "你所揀選嘅部分檔案格式唔支援。"
 
 #: src/view/com/composer/SelectMediaButton.tsx:440
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
-msgstr ""
+msgstr "你揀中嘅部分檔案太大，最大檔案大細係 {VIDEO_MAX_SIZE_MB} MB。"
 
 #: src/view/com/composer/Composer.tsx:657
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
@@ -8085,15 +8081,15 @@ msgstr "淨係得{0}可以回覆。"
 #. placeholder {2}: next.length
 #: src/view/com/composer/Composer.tsx:233
 msgid "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
-msgstr ""
+msgstr "只保留前 {0} {2, plural, other {張圖片}}（共 {1} 張）；最多加入 {MAX_GALLERY_IMAGES} 張圖片"
 
 #: src/screens/Messages/JoinRequests.tsx:200
 msgid "Only admins can accept join requests."
-msgstr ""
+msgstr "只有管理員可以接受加入申請。"
 
 #: src/screens/Messages/JoinRequests.tsx:233
 msgid "Only admins can ignore join requests."
-msgstr ""
+msgstr "只有管理員可以忽略加入申請。"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:155
 msgid "Only followers can join this group chat."
@@ -8129,7 +8125,7 @@ msgstr "弊，出咗問題！"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:218
 msgid "Oops, this profile doesn't exist. Try scanning another one."
-msgstr ""
+msgstr "弊，搵唔到呢份個人檔案，試吓掃第個。"
 
 #: src/components/Lists.tsx:184
 #: src/components/StarterPack/ProfileStarterPacks.tsx:363
@@ -8151,7 +8147,7 @@ msgstr "打開相機"
 #: src/components/dms/ChatInvite/Root.tsx:104
 #: src/components/intents/GroupChatJoinDialog.tsx:453
 msgid "Open chat"
-msgstr ""
+msgstr "開啓傾偈"
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:142
 msgid "Open chat member options for {displayName}"
@@ -8171,7 +8167,6 @@ msgid "Open drawer menu"
 msgstr "打開櫃桶選單"
 
 #: src/screens/Messages/components/MessageComposer.tsx:204
-#: src/screens/Messages/components/MessageInput.web.tsx:174
 #: src/view/com/composer/Composer.tsx:2158
 msgid "Open emoji picker"
 msgstr "打開 Emoji 選擇器"
@@ -8195,7 +8190,7 @@ msgstr "打開 Germ DM"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:446
 msgid "Open group chat"
-msgstr ""
+msgstr "開啓羣組傾偈"
 
 #: src/components/dms/MessagesListHeader.tsx:167
 #: src/components/dms/MessagesListHeader.tsx:203
@@ -8205,7 +8200,7 @@ msgstr "打開羣組傾偈設定"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:556
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:562
 msgid "Open in Google Translate"
-msgstr ""
+msgstr "用 Google 翻譯打開"
 
 #: src/components/Post/Embed/ExternalEmbed/index.tsx:88
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:147
@@ -8265,7 +8260,7 @@ msgstr "打開系統日誌"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:447
 msgid "Open this group chat"
-msgstr ""
+msgstr "開啓此羣組傾偈"
 
 #. placeholder {0}: feedInfo.displayName
 #: src/view/shell/desktop/Feeds.tsx:185
@@ -8282,7 +8277,7 @@ msgstr "打開對話框畀你揀邊啲人可以同呢條帖文互動"
 
 #: src/features/inviteFriends/components/ThemePicker.tsx:38
 msgid "Opens a list of color themes for the QR card"
-msgstr ""
+msgstr "打開 QR Code 卡片顏色主題清單"
 
 #: src/screens/Log.tsx:74
 msgid "Opens additional details for a debug entry"
@@ -8315,7 +8310,7 @@ msgstr "打開裝置相機"
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post.
 #: src/view/com/composer/SelectMediaButton.tsx:511
 msgid "Opens device gallery to select up to {MAX_GALLERY_IMAGES, plural, other {# images}}, or a single video or GIF."
-msgstr ""
+msgstr "打開裝置相片圖庫去揀選最多 {MAX_GALLERY_IMAGES, plural, other {# 張圖片}}、一條影片或一張 GIF。"
 
 #: src/screens/Messages/JoinRequest.tsx:305
 #: src/view/com/auth/SplashScreen.tsx:102
@@ -8369,11 +8364,11 @@ msgstr "打開尋找同邀請朋友設定"
 #. Accessibility hint announced after the GIF picker button label, describing what activating it will do.
 #: src/view/com/composer/photos/SelectGifBtn.tsx:45
 msgid "Opens the GIF picker dialog"
-msgstr ""
+msgstr "打開 GIF 揀選對話框"
 
 #: src/view/shell/Drawer.tsx:123
 msgid "Opens the invite friends sheet to share your profile"
-msgstr ""
+msgstr "打開邀請朋友面板去分享你嘅個人檔案"
 
 #: src/view/com/feeds/ComposerPrompt.tsx:148
 msgid "Opens the post composer"
@@ -8475,7 +8470,7 @@ msgstr "擁有者"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:44
 msgid "Owner must lock the group before leaving."
-msgstr ""
+msgstr "擁有者必須喺離開前鎖定羣組。"
 
 #: src/components/Lists.tsx:204
 #: src/components/Lists.tsx:219
@@ -8896,7 +8891,7 @@ msgstr "點都要發布"
 
 #: src/screens/PostThread/components/ThreadItemPostTombstone.tsx:22
 msgid "Post blocked"
-msgstr "帖文經已封鎖"
+msgstr "已封鎖帖文"
 
 #. placeholder {0}: route.params.name
 #: src/Navigation.tsx:264
@@ -8943,7 +8938,7 @@ msgstr "帖文互動設定"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:193
 msgid "Post it to Bluesky or share anywhere."
-msgstr ""
+msgstr "發布到 Bluesky 或分享到任意地方。"
 
 #. Accessibility label for button that opens dialog to choose post language settings
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:195
@@ -9339,7 +9334,7 @@ msgstr "拒絕傾偈邀請"
 msgid "Reject join request"
 msgstr "拒絕加入申請"
 
-#: src/screens/Messages/ChatList.tsx:408
+#: src/screens/Messages/ChatList.tsx:419
 #: src/screens/Messages/Inbox.tsx:213
 msgid "Reload conversations"
 msgstr "撈多次對話"
@@ -9507,11 +9502,11 @@ msgstr "撤回驗證"
 msgid "Remove your verification for this account?"
 msgstr "係咪要撤回你對呢個帳號嘅驗證？"
 
-#: src/components/Post/Embed/index.tsx:244
+#: src/components/Post/Embed/index.tsx:240
 msgid "Removed by author"
 msgstr "俾發布者刪咗"
 
-#: src/components/Post/Embed/index.tsx:242
+#: src/components/Post/Embed/index.tsx:238
 msgid "Removed by you"
 msgstr "俾你刪咗"
 
@@ -9586,11 +9581,11 @@ msgstr "覆你"
 
 #: src/components/dms/MessageItem.tsx:883
 msgid "Replied-to message from {senderName}, tap to scroll to it"
-msgstr ""
+msgstr "{senderName} 覆咗訊息，撳吓轆到嗰度"
 
 #: src/components/dms/MessageItem.tsx:884
 msgid "Replied-to message, tap to scroll to it"
-msgstr ""
+msgstr "有人覆咗訊息，撳吓轆到嗰度"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:274
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:286
@@ -9934,7 +9929,7 @@ msgstr "試多次執行上一個出錯誤嘅動作"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:377
 #: src/screens/Login/LoginForm.tsx:329
 #: src/screens/Login/LoginForm.tsx:335
-#: src/screens/Messages/ChatList.tsx:413
+#: src/screens/Messages/ChatList.tsx:424
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:218
 #: src/screens/Messages/JoinRequests.tsx:361
@@ -10089,8 +10084,8 @@ msgstr "已儲存到你嘅動態源度"
 msgid "Say hello!"
 msgstr "Say 哈嘍！"
 
-#: src/screens/Messages/ChatList.tsx:209
-#: src/screens/Messages/ChatList.tsx:430
+#: src/screens/Messages/ChatList.tsx:220
+#: src/screens/Messages/ChatList.tsx:441
 msgid "Say hi to someone"
 msgstr "試吓同其他人 say 哈佬啦"
 
@@ -10122,7 +10117,7 @@ msgstr "向右捲動"
 
 #: src/components/dms/MessageItem.tsx:774
 msgid "Scroll to the message this is replying to"
-msgstr ""
+msgstr "轆到回覆嘅訊息度"
 
 #: src/screens/ProfileList/AboutSection.tsx:132
 msgid "Scroll to top"
@@ -10492,7 +10487,6 @@ msgid "Send feedback"
 msgstr "提交意見"
 
 #: src/screens/Messages/components/MessageComposer.tsx:316
-#: src/screens/Messages/components/MessageInput.web.tsx:251
 msgid "Send message"
 msgstr "傳送訊息"
 
@@ -11367,11 +11361,11 @@ msgstr "您所在國家而家未支援呢個功能！唔該遲啲過嚟睇睇。
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:98
 msgid "Suspended accounts cannot participate in a group chat."
-msgstr ""
+msgstr "已停權嘅帳號唔得參與羣組傾偈。"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:60
 msgid "Suspended accounts cannot participate in chat."
-msgstr ""
+msgstr "已停權嘅帳號唔得參與傾偈。"
 
 #: src/components/dialogs/SwitchAccount.tsx:47
 #: src/components/dialogs/SwitchAccount.tsx:50
@@ -11411,7 +11405,7 @@ msgstr "只限標籤"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:184
 msgid "Take the conversation private."
-msgstr ""
+msgstr "轉做私密對話。"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:110
 msgid "Tap below to allow Bluesky to access your GPS location. We will then use that data to more accurately determine the content and features available in your region."
@@ -11441,11 +11435,11 @@ msgstr "撳吓即表示你瞭解同同意呢啲更新，兼繼續使用 Bluesky"
 #: src/components/ContextMenu/Backdrop.ios.tsx:80
 #: src/components/ContextMenu/Backdrop.tsx:46
 msgid "Tap to close context menu"
-msgstr "撳吓即閂咗內容選單"
+msgstr "撳吓閂咗內容選單"
 
 #: src/components/dms/ChatInvite/Root.tsx:92
 msgid "Tap to copy this invite link"
-msgstr ""
+msgstr "撳吓複製此邀請連結"
 
 #: src/components/ProgressGuide/Toast.tsx:163
 msgid "Tap to dismiss"
@@ -11454,11 +11448,11 @@ msgstr "撳吓即跳過"
 #: src/components/dms/ChatInvite/Root.tsx:140
 #: src/components/intents/GroupChatJoinDialog.tsx:469
 msgid "Tap to join this group chat immediately"
-msgstr ""
+msgstr "撳吓即刻加入羣組傾偈"
 
 #: src/components/dms/ChatInvite/Root.tsx:105
 msgid "Tap to open this group chat"
-msgstr ""
+msgstr "撳吓打開此羣組傾偈"
 
 #: src/components/dms/ReactionsDialog.tsx:200
 msgid "Tap to remove"
@@ -11472,7 +11466,7 @@ msgstr "撳吓移除你嘅 {0} 反應"
 #: src/components/dms/ChatInvite/Root.tsx:139
 #: src/components/intents/GroupChatJoinDialog.tsx:468
 msgid "Tap to request access to join this group chat"
-msgstr ""
+msgstr "撳吓申請加入此羣組傾偈"
 
 #: src/components/dms/MessageItem.tsx:626
 msgid "Tap to retry"
@@ -11659,7 +11653,7 @@ msgstr "你所在地區嘅法例需要先驗證你係成年人，先至可以喺
 #: src/components/intents/GroupChatJoinDialog.tsx:165
 #: src/screens/Messages/JoinRequests.tsx:205
 msgid "The member limit has been reached."
-msgstr ""
+msgstr "已達到羣組成員上限。"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:400
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
@@ -11672,7 +11666,7 @@ msgstr "私隱政策擺咗去 <0/>"
 #: src/view/com/composer/state/video.ts:397
 #: src/view/com/composer/state/video.ts:436
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
-msgstr ""
+msgstr "你揀中嘅影片大過 {VIDEO_MAX_SIZE_MB} MB，請用細啲嘅檔案試多次。"
 
 #: src/lib/hooks/useCleanError.ts:41
 #: src/lib/strings/errors.ts:19
@@ -11715,7 +11709,7 @@ msgstr "受變更出世日期次數限制，你可能需要等一兩日先可以
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:519
 msgid "There is no invite link for this group chat."
-msgstr ""
+msgstr "此羣組傾偈冇任何邀請連結。"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
@@ -11724,7 +11718,7 @@ msgstr "帳號停用冇時間限制，幾時用返你話事。"
 #. Body message of the error screen shown when the GIF provider request fails. Encourages the user to retry.
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:56
 msgid "There was a problem loading GIFs. Check your connection and try again."
-msgstr ""
+msgstr "載入 GIF 嗰陣出咗問題。請檢查網絡連線狀態，跟住試多次。"
 
 #: src/components/contacts/screens/GetContacts.tsx:147
 #: src/components/intents/GroupChatJoinDialog.tsx:149
@@ -11838,11 +11832,11 @@ msgstr "呢啲設定淨係俾「Following」動態源用。"
 
 #: src/components/moderation/BlockDialog.tsx:356
 msgid "They own this chat"
-msgstr ""
+msgstr "佢哋此傾偈嘅擁有者"
 
 #: src/screens/Messages/ConversationSettings/prompts.tsx:177
 msgid "They won’t be able to rejoin unless you invite them again."
-msgstr ""
+msgstr "除非你再次邀請，否則佢哋加唔返入嚟。"
 
 #: src/components/moderation/ScreenHider.tsx:118
 msgid "This {screenDescription} has been flagged:"
@@ -11892,22 +11886,22 @@ msgstr "呢粒掣方便其他人打開 Germ DM 向你傳送訊息。你可以喺
 
 #: src/screens/Messages/components/ChatEnded.tsx:48
 msgid "This chat has ended"
-msgstr ""
+msgstr "此傾偈已經傾完"
 
 #: src/components/dms/ChatInvite/Root.tsx:122
 #: src/components/intents/GroupChatJoinDialog.tsx:301
 msgid "This chat is full"
-msgstr ""
+msgstr "此傾偈已經滿人"
 
 #: src/screens/Messages/components/ChatListItem.tsx:377
 #: src/screens/Messages/components/ChatLocked.tsx:69
 msgid "This chat is locked"
-msgstr ""
+msgstr "此傾偈已鎖定"
 
 #: src/screens/Messages/components/ChatLocked.tsx:45
 #: src/screens/Messages/ConversationSettings/index.tsx:437
 msgid "This chat is locked by a moderation action"
-msgstr ""
+msgstr "此傾偈已被系統審覈鎖定"
 
 #: src/screens/Messages/components/MessageListError.tsx:17
 msgid "This chat was disconnected"
@@ -11945,7 +11939,7 @@ msgstr "呢個內容要你有 Bluesky 帳號先至睇到。"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:151
 msgid "This conversation is locked."
-msgstr ""
+msgstr "此對話已鎖定。"
 
 #: src/screens/Messages/components/ChatListItem.tsx:156
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
@@ -11995,7 +11989,7 @@ msgstr "呢個動態源唔再用到，我哋改成顯示 <0>Discover</0>。"
 
 #: src/screens/Messages/components/ChatLocked.tsx:72
 msgid "This group is locked by a moderation action on the owner"
-msgstr ""
+msgstr "基於擁有者被系統審核鎖定原因，此羣組已鎖定"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:611
 msgid "This handle is reserved. Please try a different one."
@@ -12079,7 +12073,7 @@ msgstr "呢個內容審覈服務用唔到，留意下低瞭解更多資訊。若
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:161
 msgid "This moderation was applied to the entire user account and will appear on all posts."
-msgstr ""
+msgstr "此內容審覈規則已套用於成個用戶帳號，並會顯示於所有帖文度。"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:84
 msgid "This person is blocking you"
@@ -12122,7 +12116,7 @@ msgstr "呢個回覆會摺疊到你討論串下底嘅隱藏部分，兼且會爲
 #: src/screens/Messages/ConversationSettings/index.tsx:156
 #: src/screens/Messages/JoinRequests.tsx:111
 msgid "This screen is only available for group conversations."
-msgstr ""
+msgstr "此畫面只適用於羣組對話。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:32
 msgid "This service has not provided terms of service or a privacy policy."
@@ -12150,7 +12144,7 @@ msgstr "呢個用戶仲未有人跟佢。"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:64
 msgid "This user has blocked you and cannot be messaged."
-msgstr ""
+msgstr "呢個用戶封鎖咗你，唔得傳送訊息。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:83
 #: src/lib/moderation/useModerationCauseDescription.ts:76
@@ -12159,7 +12153,7 @@ msgstr "呢個用戶封鎖咗你，你冇得睇佢發嘅內容。"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:68
 msgid "This user has disabled chat and cannot be messaged."
-msgstr ""
+msgstr "呢個用戶停用咗傾偈功能，唔得傳送訊息。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:30
 msgid "This user has requested that their content only be shown to signed-in users."
@@ -12185,7 +12179,7 @@ msgstr "呢個用戶未有跟過任何人。"
 
 #: src/components/Post/Embed/VideoEmbed/index.web.tsx:236
 msgid "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
-msgstr ""
+msgstr "你嘅裝置播放唔到呢條影片，瀏覽器或系統可能唔支援影片解碼器（H.264/AAC）。"
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:157
 msgid "This will create a new list with the same name, description, and members as this starter pack."
@@ -12396,10 +12390,6 @@ msgstr "電視節目"
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:65
 msgid "Two-factor authentication (2FA)"
 msgstr "雙重驗證（2FA）"
-
-#: src/screens/Messages/components/MessageInput.tsx:201
-msgid "Type your message here"
-msgstr "喺呢度輸入你嘅訊息"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:445
 msgid "Type:"
@@ -12719,7 +12709,7 @@ msgstr "更新"
 #. placeholder {0}: createSanitizedDisplayName(profile, true)
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:138
 msgid "Update {0} in Lists"
-msgstr ""
+msgstr "更新清單中嘅 {0}"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:296
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:308
@@ -12730,7 +12720,7 @@ msgstr "更新電郵"
 
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:142
 msgid "Update in Lists"
-msgstr ""
+msgstr "更新清單"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:239
 #: src/screens/Messages/components/InviteLinkDialog.tsx:275
@@ -12852,12 +12842,12 @@ msgstr "用戶"
 #: src/components/dms/AfterReportDialog.tsx:155
 msgctxt "toast"
 msgid "User blocked"
-msgstr "用戶經已封鎖"
+msgstr "已封鎖用戶"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:75
 #: src/lib/moderation/useModerationCauseDescription.ts:64
 msgid "User Blocked"
-msgstr "用戶經已封鎖"
+msgstr "已封鎖用戶"
 
 #. placeholder {0}: cause.source.list.name
 #: src/lib/moderation/useModerationCauseDescription.ts:56
@@ -13143,7 +13133,7 @@ msgstr "睇吓 {publicationTitle}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:479
 msgid "View blocked user's profile"
-msgstr "睇吓被封鎖用戶嘅個人檔案"
+msgstr "睇吓已封鎖用戶嘅個人檔案"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:170
 msgid "View blogpost for more details"
@@ -13564,7 +13554,7 @@ msgid "Who can verify?"
 msgstr "邊啲人可以授權認證？"
 
 #: src/screens/Home/NoFeedsPinned.tsx:80
-#: src/screens/Messages/ChatList.tsx:393
+#: src/screens/Messages/ChatList.tsx:404
 #: src/screens/Messages/Inbox.tsx:198
 msgid "Whoops!"
 msgstr "大鑊！"
@@ -13840,7 +13830,7 @@ msgstr "你仍然可以睇到傾偈記錄，但係傳送唔到新訊息。"
 #. Error message for maximum number of images that can be selected to add to a post.
 #: src/view/com/composer/SelectMediaButton.tsx:423
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
-msgstr ""
+msgstr "你最多可以揀 {MAX_GALLERY_IMAGES, plural, other {# 張圖片}}。"
 
 #: src/components/interstitials/Trending.tsx:132
 #: src/components/interstitials/TrendingVideos.tsx:138
@@ -13851,7 +13841,7 @@ msgstr "你可以遲啲喺設定度改返。"
 #: src/components/dms/ActionsWrapper.web.tsx:81
 #: src/components/dms/MessageContextMenu.tsx:115
 msgid "You cannot add more than {EMOJI_REACTION_LIMIT, plural, one {# emoji reaction} other {# emoji reactions}}"
-msgstr ""
+msgstr "你唔得加入超過 {EMOJI_REACTION_LIMIT, plural, other {# 個 emoji 反應}}"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:105
 msgid "You cannot create a group chat yet."
@@ -13886,7 +13876,7 @@ msgstr "你係第一個抵達呢度嘅人"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:176
 msgid "You have been previously removed from this group and can’t join it using this link."
-msgstr ""
+msgstr "事緣你之前俾人移出咗羣組，唔得再用此邀請連結加入。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:77
 #: src/lib/moderation/useModerationCauseDescription.ts:58
@@ -14071,15 +14061,15 @@ msgstr "你近排變更咗出世日期"
 
 #: src/components/dms/MessageItem.tsx:804
 msgid "You replied"
-msgstr ""
+msgstr "你覆咗"
 
 #: src/components/dms/MessageItem.tsx:802
 msgid "You replied to {originalName}"
-msgstr ""
+msgstr "你覆咗 {originalName}"
 
 #: src/components/dms/MessageItem.tsx:800
 msgid "You replied to yourself"
-msgstr ""
+msgstr "你覆咗自己"
 
 #. Displayed when the user has requested to join a group chat.
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:105
@@ -14231,7 +14221,7 @@ msgstr "你嘅帳號建立時間太短"
 
 #: src/components/dms/InitiateChatFlow.tsx:732
 msgid "Your account must be at least 7 days old to create a new group chat."
-msgstr ""
+msgstr "你嘅帳號必須建立 7 日以上先可以建立新嘅羣組傾偈。"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:107
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
@@ -14343,7 +14333,7 @@ msgstr "你設定咗嘅靜音字"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:211
 msgid "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone."
-msgstr ""
+msgstr "你嘅名稱、頭像、羣組傾偈嘅名稱同埋成員數目所有人都可以睇到。"
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:72
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."

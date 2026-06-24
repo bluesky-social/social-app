@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-17 12:23\n"
+"PO-Revision-Date: 2026-06-24 16:58\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese, Brazilian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -143,7 +143,7 @@ msgstr "{0, plural, one {#me} other {#me}}"
 #. placeholder {0}: draft.meta.replyCount
 #: src/view/com/composer/drafts/DraftItem.tsx:143
 msgid "{0, plural, one {1 more post} other {# more posts}}"
-msgstr "{0, plural, one {mais 1 resposta} other {mais # respostas}}"
+msgstr "{0, plural,one {mais 1 postagem} other {mais # postagens}}"
 
 #. placeholder {0}: profile.followersCount || 0
 #: src/components/ProfileHoverCard/index.web.tsx:444
@@ -256,7 +256,7 @@ msgstr "{0} se juntou esta semana"
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:96
 msgid "{0} left"
-msgstr "{0} restantes"
+msgstr "{0} saiu"
 
 #. placeholder {0}: action.displayName
 #: src/components/dms/getSystemMessageInfo.ts:97
@@ -423,7 +423,7 @@ msgstr "{estimatedTimeMins, plural, one {minuto} other {minutos}}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:361
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
-msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {outros {formattedAuthorsCount}}}</0> te seguiram"
+msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {outros {formattedAuthorsCount}}}</0> seguiram você"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:395
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
@@ -679,7 +679,7 @@ msgstr "{rank}."
 
 #: src/components/dms/MessageItem.tsx:813
 msgid "{replierDisplayName} replied"
-msgstr ""
+msgstr "{replierDisplayName} respondeu"
 
 #: src/components/dms/MessageItem.tsx:809
 msgid "{replierDisplayName} replied to {originalName}"
@@ -1961,10 +1961,10 @@ msgstr "Para que possa receber notificações das postagens de {name}, você dev
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:155
 #: src/components/dms/MessageProfileButton.tsx:60
-#: src/screens/Messages/ChatList.tsx:155
-#: src/screens/Messages/ChatList.tsx:173
-#: src/screens/Messages/ChatList.tsx:274
-#: src/screens/Messages/ChatList.tsx:527
+#: src/screens/Messages/ChatList.tsx:166
+#: src/screens/Messages/ChatList.tsx:184
+#: src/screens/Messages/ChatList.tsx:285
+#: src/screens/Messages/ChatList.tsx:538
 #: src/screens/Messages/Conversation.tsx:203
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
 msgid "Before you can message another user, you must first verify your email."
@@ -2070,7 +2070,7 @@ msgstr "Bloquear usuário e/ou excluir esta conversa"
 msgid "Block user and/or leave this conversation"
 msgstr "Bloquear usuário e/ou sair desta conversa"
 
-#: src/components/Post/Embed/index.tsx:216
+#: src/components/Post/Embed/index.tsx:212
 msgid "Blocked"
 msgstr "Bloqueado"
 
@@ -2155,7 +2155,7 @@ msgstr "O Bluesky é mais divertido com amigos. Você quer convidar alguns dos s
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:105
 msgid "Bluesky needs camera access to scan QR codes from other profiles."
-msgstr "O Bluesky precisa de acesso à câmera para escanear códigos QR em outros perfis."
+msgstr "O Bluesky precisa de acesso à câmera para escanear QR codes de outros perfis."
 
 #: src/screens/Takendown.tsx:213
 msgid "Bluesky Social Terms of Service"
@@ -2340,7 +2340,7 @@ msgstr "Acesso à câmera necessário"
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:299
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:175
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:181
-#: src/components/Menu/index.tsx:367
+#: src/components/Menu/index.tsx:373
 #: src/components/moderation/BlockDialog.tsx:202
 #: src/components/PostControls/RepostButton.tsx:210
 #: src/components/Prompt.tsx:152
@@ -2389,7 +2389,7 @@ msgstr "Cancelar reativação e desconectar"
 
 #: src/screens/Messages/components/MessageInputReply.tsx:83
 msgid "Cancel reply"
-msgstr ""
+msgstr "Cancelar resposta"
 
 #: src/screens/Search/Shell.tsx:396
 msgid "Cancel search"
@@ -2455,7 +2455,7 @@ msgstr "Alterar senha"
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:165
 msgid "Change password dialog"
-msgstr "Janela de troca de senha"
+msgstr "Janela de alteração de senha"
 
 #: src/components/moderation/ReportDialog/index.tsx:312
 msgid "Change report category"
@@ -2536,6 +2536,12 @@ msgstr "Conversa silenciada"
 msgid "Chat not found."
 msgstr "Conversa não encontrada."
 
+#: src/screens/Messages/ChatList.tsx:564
+#: src/screens/Messages/ChatList.tsx:599
+#: src/screens/Messages/ChatList.tsx:637
+msgid "Chat options"
+msgstr ""
+
 #: src/components/moderation/BlockDialog.tsx:293
 msgid "Chat owners cannot leave a group chat."
 msgstr "Donos de conversas não podem sair da conversa em grupo."
@@ -2555,10 +2561,10 @@ msgstr "Pedidos de conversa"
 
 #: src/components/dms/ConvoMenu.tsx:88
 #: src/Navigation.tsx:506
-#: src/screens/Messages/ChatList.tsx:84
-#: src/screens/Messages/ChatList.tsx:88
-#: src/screens/Messages/ChatList.tsx:552
-#: src/screens/Messages/ChatList.tsx:583
+#: src/screens/Messages/ChatList.tsx:95
+#: src/screens/Messages/ChatList.tsx:99
+#: src/screens/Messages/ChatList.tsx:649
+#: src/screens/Messages/ChatList.tsx:659
 #: src/screens/Messages/Settings.tsx:39
 msgid "Chat settings"
 msgstr "Configurações de conversa"
@@ -2585,9 +2591,9 @@ msgctxt "toast"
 msgid "Chat unmuted"
 msgstr "Conversa dessilenciada"
 
-#: src/screens/Messages/ChatList.tsx:78
-#: src/screens/Messages/ChatList.tsx:539
-#: src/screens/Messages/ChatList.tsx:576
+#: src/screens/Messages/ChatList.tsx:89
+#: src/screens/Messages/ChatList.tsx:550
+#: src/screens/Messages/ChatList.tsx:590
 msgid "Chats"
 msgstr "Conversas"
 
@@ -2602,7 +2608,7 @@ msgstr "Verificar meu estado"
 
 #: src/screens/Login/LoginForm.tsx:307
 msgid "Check your email for a sign in code and enter it here."
-msgstr "Verifique seu e-mail para um código de registro e insira-o aqui."
+msgstr "Verifique seu e-mail por um código de registro e insira-o aqui."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:161
 msgid "Child safety"
@@ -2635,7 +2641,7 @@ msgstr "Escolher pessoas"
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:75
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:136
 msgid "Choose post languages"
-msgstr "Selecionar idiomas da postagem"
+msgstr "Escolher idiomas da postagem"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:108
 msgid "Choose this color as your avatar"
@@ -2862,7 +2868,7 @@ msgstr "Fechar o banner de solicitações recebidas"
 #: src/components/intents/GroupChatJoinDialog.tsx:240
 #: src/components/intents/GroupChatJoinDialog.tsx:276
 #: src/components/intents/GroupChatJoinDialog.tsx:277
-#: src/components/Menu/index.tsx:361
+#: src/components/Menu/index.tsx:367
 msgid "Close this dialog"
 msgstr "Fechar esta janela"
 
@@ -2872,7 +2878,7 @@ msgstr "Fechar janela de boas-vindas"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:33
 msgid "Closes password update alert"
-msgstr "Fecha o alerta de mudança de senha"
+msgstr "Fecha o alerta de alteração de senha"
 
 #: src/view/com/composer/Composer.tsx:1740
 msgid "Closes post composer and discards post draft"
@@ -2884,7 +2890,7 @@ msgstr "Esconder lista de usuários"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:959
 msgid "Collapses list of users for a given notification"
-msgstr "Fecha a lista de usuários de uma notificação"
+msgstr "Esconde a lista de usuários para uma notificação"
 
 #: src/features/inviteFriends/components/ThemePicker.tsx:66
 msgid "Color"
@@ -2954,7 +2960,7 @@ msgstr "Configurar banner de eventos ao vivo"
 
 #: src/components/moderation/LabelPreference.tsx:254
 msgid "Configured in <0>moderation settings</0>."
-msgstr "Configurável no <0>painel de moderação</0>."
+msgstr "Configurado nas <0>opções de moderação</0>."
 
 #: src/components/Prompt.tsx:211
 #: src/components/Prompt.tsx:214
@@ -3676,7 +3682,7 @@ msgstr "Excluir esta lista?"
 msgid "Delete this post?"
 msgstr "Excluir esta postagem?"
 
-#: src/components/Post/Embed/index.tsx:209
+#: src/components/Post/Embed/index.tsx:205
 msgid "Deleted"
 msgstr "Excluído"
 
@@ -3699,7 +3705,7 @@ msgstr "Lista excluída"
 
 #: src/components/dms/MessageItem.tsx:875
 msgid "Deleted message"
-msgstr ""
+msgstr "Mensagem excluída"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:453
 #: src/components/SendErrorReportDialog.tsx:78
@@ -4717,7 +4723,7 @@ msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "Falha ao sair da conversa em grupo"
 
-#: src/screens/Messages/ChatList.tsx:404
+#: src/screens/Messages/ChatList.tsx:415
 #: src/screens/Messages/Inbox.tsx:209
 msgid "Failed to load conversations"
 msgstr "Falha ao carregar conversas"
@@ -4767,6 +4773,7 @@ msgstr "Falha ao carregar sugestões a seguir"
 msgid "Failed to lock group chat"
 msgstr "Falha ao trancar conversa em grupo"
 
+#: src/screens/Messages/ChatList.tsx:631
 #: src/view/shell/bottom-bar/BottomBar.tsx:441
 msgid "Failed to mark all chats as read"
 msgstr ""
@@ -6229,7 +6236,7 @@ msgstr "No app, no dispositivo, todos"
 msgid "In-app, push, people you follow"
 msgstr "No app, no dispositivo, pessoas que você segue"
 
-#: src/screens/Messages/ChatList.tsx:421
+#: src/screens/Messages/ChatList.tsx:432
 msgid "Inbox empty"
 msgstr "Caixa de entrada vazia"
 
@@ -6955,8 +6962,6 @@ msgid "Load new posts"
 msgstr "Carregar novas postagens"
 
 #: src/screens/Messages/components/MessageComposer.tsx:245
-#: src/screens/Messages/components/MessageInput.tsx:258
-#: src/screens/Messages/components/MessageInput.web.tsx:228
 msgctxt "placeholder"
 msgid "Loading chat…"
 msgstr "Carregando chat…"
@@ -7070,15 +7075,17 @@ msgstr "Gerencie suas palavras/tags silenciadas"
 msgid "Mark all as read"
 msgstr "Marcar todas como lidas"
 
+#: src/screens/Messages/ChatList.tsx:641
+#: src/screens/Messages/ChatList.tsx:645
 #: src/view/shell/bottom-bar/BottomBar.tsx:459
 #: src/view/shell/bottom-bar/BottomBar.tsx:463
 msgid "Mark all chats as read"
-msgstr ""
+msgstr "Marcar todas as conversas como lidas"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:467
 #: src/view/shell/bottom-bar/BottomBar.tsx:471
 msgid "Mark all requests as read"
-msgstr ""
+msgstr "Marcar todas as solicitações como lidas"
 
 #: src/components/dms/ConvoMenu.tsx:248
 #: src/components/dms/ConvoMenu.tsx:252
@@ -7089,9 +7096,10 @@ msgstr "Marcar como lida"
 msgid "Marked all as read"
 msgstr "Todas foram marcadas como lidas"
 
+#: src/screens/Messages/ChatList.tsx:628
 #: src/view/shell/bottom-bar/BottomBar.tsx:438
 msgid "Marked all chats as read"
-msgstr ""
+msgstr "Todas as conversas foram marcadas como lidas"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:447
 msgid "Marked all requests as read"
@@ -7144,17 +7152,11 @@ msgstr "usuários mencionados"
 msgid "Mentions"
 msgstr "Menções"
 
-#: src/components/Menu/index.tsx:113
+#: src/components/Menu/index.tsx:119
 msgid "Menu"
 msgstr "Menu"
 
-#: src/screens/Messages/components/MessageInput.tsx:202
-msgid "Message"
-msgstr "Mensagem"
-
 #: src/screens/Messages/components/MessageComposer.tsx:246
-#: src/screens/Messages/components/MessageInput.tsx:259
-#: src/screens/Messages/components/MessageInput.web.tsx:229
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:203
 msgctxt "action"
 msgid "Message"
@@ -7194,14 +7196,8 @@ msgid "Message from server: {0}"
 msgstr "Mensagem do servidor: {0}"
 
 #: src/screens/Messages/components/MessageComposer.tsx:242
-#: src/screens/Messages/components/MessageInput.tsx:200
 msgid "Message input field"
 msgstr "Caixa de texto da mensagem"
-
-#: src/screens/Messages/components/MessageInput.tsx:96
-#: src/screens/Messages/components/MessageInput.web.tsx:65
-msgid "Message is too long"
-msgstr "Mensagem longa demais"
 
 #: src/screens/Messages/components/MessageComposer.tsx:107
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
@@ -7537,11 +7533,11 @@ msgstr "{postsCount, plural, one {Nova postagem} other {Novas postagens}} de {fi
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:169
 #: src/components/dms/dialogs/NewChatDialog.tsx:184
-#: src/screens/Messages/ChatList.tsx:218
-#: src/screens/Messages/ChatList.tsx:219
-#: src/screens/Messages/ChatList.tsx:439
-#: src/screens/Messages/ChatList.tsx:440
-#: src/screens/Messages/ChatList.tsx:561
+#: src/screens/Messages/ChatList.tsx:229
+#: src/screens/Messages/ChatList.tsx:230
+#: src/screens/Messages/ChatList.tsx:450
+#: src/screens/Messages/ChatList.tsx:451
+#: src/screens/Messages/ChatList.tsx:575
 msgid "New chat"
 msgstr "Nova conversa"
 
@@ -7871,7 +7867,7 @@ msgstr "Ainda não há Pacotes Iniciais"
 #: src/components/dms/MessageItem.tsx:871
 #: src/screens/Messages/components/MessageInputReply.tsx:47
 msgid "No text"
-msgstr ""
+msgstr "Sem texto"
 
 #: src/components/dialogs/EmbedConsent.tsx:100
 #: src/components/dialogs/EmbedConsent.tsx:107
@@ -8171,7 +8167,6 @@ msgid "Open drawer menu"
 msgstr "Abrir menu"
 
 #: src/screens/Messages/components/MessageComposer.tsx:204
-#: src/screens/Messages/components/MessageInput.web.tsx:174
 #: src/view/com/composer/Composer.tsx:2158
 msgid "Open emoji picker"
 msgstr "Abrir seletor de emoji"
@@ -9339,7 +9334,7 @@ msgstr "Recusar pedido de conversa"
 msgid "Reject join request"
 msgstr "Recusar solicitação para entrar"
 
-#: src/screens/Messages/ChatList.tsx:408
+#: src/screens/Messages/ChatList.tsx:419
 #: src/screens/Messages/Inbox.tsx:213
 msgid "Reload conversations"
 msgstr "Recarregar conversas"
@@ -9507,11 +9502,11 @@ msgstr "Remover verificação"
 msgid "Remove your verification for this account?"
 msgstr "Remover a sua verificação para essa conta?"
 
-#: src/components/Post/Embed/index.tsx:244
+#: src/components/Post/Embed/index.tsx:240
 msgid "Removed by author"
 msgstr "Removido pelo autor"
 
-#: src/components/Post/Embed/index.tsx:242
+#: src/components/Post/Embed/index.tsx:238
 msgid "Removed by you"
 msgstr "Removido por você"
 
@@ -9934,7 +9929,7 @@ msgstr "Tenta a última ação, que deu erro"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:377
 #: src/screens/Login/LoginForm.tsx:329
 #: src/screens/Login/LoginForm.tsx:335
-#: src/screens/Messages/ChatList.tsx:413
+#: src/screens/Messages/ChatList.tsx:424
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:218
 #: src/screens/Messages/JoinRequests.tsx:361
@@ -10089,8 +10084,8 @@ msgstr "Adicionado aos seus feeds"
 msgid "Say hello!"
 msgstr "Diga olá!"
 
-#: src/screens/Messages/ChatList.tsx:209
-#: src/screens/Messages/ChatList.tsx:430
+#: src/screens/Messages/ChatList.tsx:220
+#: src/screens/Messages/ChatList.tsx:441
 msgid "Say hi to someone"
 msgstr "Diga olá para alguém"
 
@@ -10122,7 +10117,7 @@ msgstr "Rolar à direita"
 
 #: src/components/dms/MessageItem.tsx:774
 msgid "Scroll to the message this is replying to"
-msgstr ""
+msgstr "Rolar até a mensagem respondida"
 
 #: src/screens/ProfileList/AboutSection.tsx:132
 msgid "Scroll to top"
@@ -10492,7 +10487,6 @@ msgid "Send feedback"
 msgstr "Enviar comentários"
 
 #: src/screens/Messages/components/MessageComposer.tsx:316
-#: src/screens/Messages/components/MessageInput.web.tsx:251
 msgid "Send message"
 msgstr "Enviar mensagem"
 
@@ -12397,10 +12391,6 @@ msgstr "TV"
 msgid "Two-factor authentication (2FA)"
 msgstr "Autenticação em duas etapas (2FA)"
 
-#: src/screens/Messages/components/MessageInput.tsx:201
-msgid "Type your message here"
-msgstr "Digite sua mensagem aqui"
-
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:445
 msgid "Type:"
 msgstr "Tipo:"
@@ -12719,7 +12709,7 @@ msgstr "Atualizar"
 #. placeholder {0}: createSanitizedDisplayName(profile, true)
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:138
 msgid "Update {0} in Lists"
-msgstr ""
+msgstr "Atualizar {0} nas Listas"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:296
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:308
@@ -12730,7 +12720,7 @@ msgstr "Atualizar email"
 
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:142
 msgid "Update in Lists"
-msgstr ""
+msgstr "Atualizar nas Listas"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:239
 #: src/screens/Messages/components/InviteLinkDialog.tsx:275
@@ -13564,7 +13554,7 @@ msgid "Who can verify?"
 msgstr "Quem pode verificar?"
 
 #: src/screens/Home/NoFeedsPinned.tsx:80
-#: src/screens/Messages/ChatList.tsx:393
+#: src/screens/Messages/ChatList.tsx:404
 #: src/screens/Messages/Inbox.tsx:198
 msgid "Whoops!"
 msgstr "Ops!"
@@ -14071,15 +14061,15 @@ msgstr "Você alterou sua data de nascimento recentemente"
 
 #: src/components/dms/MessageItem.tsx:804
 msgid "You replied"
-msgstr ""
+msgstr "Você respondeu"
 
 #: src/components/dms/MessageItem.tsx:802
 msgid "You replied to {originalName}"
-msgstr ""
+msgstr "Você respondeu a {originalName}"
 
 #: src/components/dms/MessageItem.tsx:800
 msgid "You replied to yourself"
-msgstr ""
+msgstr "Você respondeu a si mesmo"
 
 #. Displayed when the user has requested to join a group chat.
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:105

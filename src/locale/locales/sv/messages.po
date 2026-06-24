@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-17 12:23\n"
+"PO-Revision-Date: 2026-06-24 16:58\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -985,12 +985,12 @@ msgstr "Konto"
 #: src/view/com/profile/ProfileMenu.tsx:182
 msgctxt "toast"
 msgid "Account blocked"
-msgstr "Konto blockerat"
+msgstr "Kontot blockerades"
 
 #: src/view/com/profile/ProfileMenu.tsx:198
 msgctxt "toast"
 msgid "Account followed"
-msgstr "Konto följt"
+msgstr "Du följer kontot"
 
 #: src/lib/strings/errors.ts:34
 msgid "Account has been suspended"
@@ -1004,7 +1004,7 @@ msgstr "Kontot är inaktiverat"
 #: src/view/com/profile/ProfileMenu.tsx:152
 msgctxt "toast"
 msgid "Account muted"
-msgstr "Konto ignorerat"
+msgstr "Kontot ignorerades"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:107
 #: src/lib/moderation/useModerationCauseDescription.ts:99
@@ -1033,18 +1033,18 @@ msgstr "Konto borttaget från snabbåtkomst"
 #: src/view/com/profile/ProfileMenu.tsx:169
 msgctxt "toast"
 msgid "Account unblocked"
-msgstr "Konto avblockerat"
+msgstr "Kontot avblockerades"
 
 #: src/view/com/profile/ProfileMenu.tsx:213
 msgctxt "toast"
 msgid "Account unfollowed"
-msgstr "Konto avföljt"
+msgstr "Du följer inte längre kontot"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:450
 #: src/view/com/profile/ProfileMenu.tsx:139
 msgctxt "toast"
 msgid "Account unmuted"
-msgstr "Konto inte längre ignorerat"
+msgstr "Kontot ignoreras inte längre"
 
 #: src/components/verification/VerifierDialog.tsx:100
 msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Bluesky."
@@ -1732,7 +1732,7 @@ msgstr "Begär omprövning av avstängning från livesändning"
 #: src/screens/Messages/components/ChatDisabled.tsx:125
 msgctxt "toast"
 msgid "Appeal submitted"
-msgstr "Omprövningsbegäran skickad"
+msgstr "Omprövningsbegäran skickades"
 
 #: src/screens/Takendown.tsx:114
 #: src/screens/Takendown.tsx:140
@@ -1961,10 +1961,10 @@ msgstr "Innan du kan få notiser om {name}s inlägg måste du först verifiera d
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:155
 #: src/components/dms/MessageProfileButton.tsx:60
-#: src/screens/Messages/ChatList.tsx:155
-#: src/screens/Messages/ChatList.tsx:173
-#: src/screens/Messages/ChatList.tsx:274
-#: src/screens/Messages/ChatList.tsx:527
+#: src/screens/Messages/ChatList.tsx:166
+#: src/screens/Messages/ChatList.tsx:184
+#: src/screens/Messages/ChatList.tsx:285
+#: src/screens/Messages/ChatList.tsx:538
 #: src/screens/Messages/Conversation.tsx:203
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
 msgid "Before you can message another user, you must first verify your email."
@@ -2070,7 +2070,7 @@ msgstr "Blockera användare och/eller radera den här konversationen"
 msgid "Block user and/or leave this conversation"
 msgstr "Blockera användare och/eller lämna den här konversationen"
 
-#: src/components/Post/Embed/index.tsx:216
+#: src/components/Post/Embed/index.tsx:212
 msgid "Blocked"
 msgstr "Blockerat"
 
@@ -2340,7 +2340,7 @@ msgstr "Kameraåtkomst krävs"
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:299
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:175
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:181
-#: src/components/Menu/index.tsx:367
+#: src/components/Menu/index.tsx:373
 #: src/components/moderation/BlockDialog.tsx:202
 #: src/components/PostControls/RepostButton.tsx:210
 #: src/components/Prompt.tsx:152
@@ -2502,7 +2502,7 @@ msgstr "Chatt"
 #: src/screens/Messages/components/RequestButtons.tsx:331
 msgctxt "toast"
 msgid "Chat deleted"
-msgstr "Chatt raderad"
+msgstr "Chatten raderades"
 
 #: src/components/dms/getSystemMessageInfo.ts:108
 msgid "Chat ended"
@@ -2529,12 +2529,18 @@ msgstr "Chattmeddelanden – ljud på"
 #: src/components/dms/ConvoMenu.tsx:206
 msgctxt "toast"
 msgid "Chat muted"
-msgstr "Chatt ignorerad"
+msgstr "Chatten ignorerades"
 
 #: src/components/moderation/BlockDialog.tsx:289
 #: src/components/moderation/BlockDialog.tsx:317
 msgid "Chat not found."
 msgstr "Chatten hittades inte."
+
+#: src/screens/Messages/ChatList.tsx:564
+#: src/screens/Messages/ChatList.tsx:599
+#: src/screens/Messages/ChatList.tsx:637
+msgid "Chat options"
+msgstr ""
 
 #: src/components/moderation/BlockDialog.tsx:293
 msgid "Chat owners cannot leave a group chat."
@@ -2555,10 +2561,10 @@ msgstr "Chattförfrågningar"
 
 #: src/components/dms/ConvoMenu.tsx:88
 #: src/Navigation.tsx:506
-#: src/screens/Messages/ChatList.tsx:84
-#: src/screens/Messages/ChatList.tsx:88
-#: src/screens/Messages/ChatList.tsx:552
-#: src/screens/Messages/ChatList.tsx:583
+#: src/screens/Messages/ChatList.tsx:95
+#: src/screens/Messages/ChatList.tsx:99
+#: src/screens/Messages/ChatList.tsx:649
+#: src/screens/Messages/ChatList.tsx:659
 #: src/screens/Messages/Settings.tsx:39
 msgid "Chat settings"
 msgstr "Chattinställningar"
@@ -2583,11 +2589,11 @@ msgstr "Chatt upplåst"
 #: src/components/dms/ConvoMenu.tsx:208
 msgctxt "toast"
 msgid "Chat unmuted"
-msgstr "Chatt inte längre ignorerad"
+msgstr "Chatten ignoreras inte längre"
 
-#: src/screens/Messages/ChatList.tsx:78
-#: src/screens/Messages/ChatList.tsx:539
-#: src/screens/Messages/ChatList.tsx:576
+#: src/screens/Messages/ChatList.tsx:89
+#: src/screens/Messages/ChatList.tsx:550
+#: src/screens/Messages/ChatList.tsx:590
 msgid "Chats"
 msgstr "Chattar"
 
@@ -2862,7 +2868,7 @@ msgstr "Stäng banderollen för väntande förfrågningar"
 #: src/components/intents/GroupChatJoinDialog.tsx:240
 #: src/components/intents/GroupChatJoinDialog.tsx:276
 #: src/components/intents/GroupChatJoinDialog.tsx:277
-#: src/components/Menu/index.tsx:361
+#: src/components/Menu/index.tsx:367
 msgid "Close this dialog"
 msgstr "Stäng den här dialogrutan"
 
@@ -3116,13 +3122,13 @@ msgstr "Konversation raderad"
 #: src/components/dms/AfterReportDialog.tsx:152
 msgctxt "toast"
 msgid "Conversation deleted"
-msgstr "Konversation raderad"
+msgstr "Konversationen raderades"
 
 #: src/components/dms/AfterReportConversationDialog.tsx:172
 #: src/components/dms/AfterReportConversationDialog.tsx:179
 msgctxt "toast"
 msgid "Conversation left"
-msgstr "Konversation lämnad"
+msgstr "Du lämnade konversationen"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:40
 #: src/screens/Messages/JoinRequests.tsx:196
@@ -3676,7 +3682,7 @@ msgstr "Radera den här listan?"
 msgid "Delete this post?"
 msgstr "Radera det här inlägget?"
 
-#: src/components/Post/Embed/index.tsx:209
+#: src/components/Post/Embed/index.tsx:205
 msgid "Deleted"
 msgstr "Raderat"
 
@@ -3729,12 +3735,12 @@ msgstr "Avskilj citatinlägg?"
 #: src/screens/Settings/AboutSettings.tsx:151
 msgctxt "toast"
 msgid "Developer mode disabled"
-msgstr "Utvecklarläge inaktiverat"
+msgstr "Utvecklarläget inaktiverades"
 
 #: src/screens/Settings/AboutSettings.tsx:145
 msgctxt "toast"
 msgid "Developer mode enabled"
-msgstr "Utvecklarläge aktiverat"
+msgstr "Utvecklarläget aktiverades"
 
 #: src/screens/Settings/Settings.tsx:282
 #: src/screens/Settings/Settings.tsx:285
@@ -4223,7 +4229,7 @@ msgstr "E-post"
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:65
 msgctxt "toast"
 msgid "Email 2FA disabled"
-msgstr "2FA via e-post inaktiverat"
+msgstr "2FA via e-post inaktiverades"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:63
 msgid "Email 2FA enabled"
@@ -4596,7 +4602,7 @@ msgstr "Extremistiskt innehåll"
 #: src/screens/Messages/components/RequestButtons.tsx:244
 msgctxt "toast"
 msgid "Failed to accept chat"
-msgstr "Det gick inte att acceptera chatt"
+msgstr "Det gick inte att acceptera chatten"
 
 #: src/screens/Messages/JoinRequests.tsx:190
 msgid "Failed to accept join request"
@@ -4715,9 +4721,9 @@ msgstr "Det gick inte att starta SMS-app"
 #: src/screens/Messages/ConversationSettings/index.tsx:408
 msgctxt "toast"
 msgid "Failed to leave group chat"
-msgstr "Det gick inte att lämna gruppchatt"
+msgstr "Det gick inte att lämna gruppchatten"
 
-#: src/screens/Messages/ChatList.tsx:404
+#: src/screens/Messages/ChatList.tsx:415
 #: src/screens/Messages/Inbox.tsx:209
 msgid "Failed to load conversations"
 msgstr "Det gick inte att läsa in konversationer"
@@ -4767,6 +4773,7 @@ msgstr "Det gick inte att läsa in föreslagna konton att följa"
 msgid "Failed to lock group chat"
 msgstr "Det gick inte att låsa gruppchatt"
 
+#: src/screens/Messages/ChatList.tsx:631
 #: src/view/shell/bottom-bar/BottomBar.tsx:441
 msgid "Failed to mark all chats as read"
 msgstr "Det gick inte att markera chattarna som lästa"
@@ -5654,17 +5661,17 @@ msgstr "Dialogruta för inbjudningslänk för gruppchatt"
 #: src/screens/Messages/ConversationSettings/index.tsx:424
 msgctxt "toast"
 msgid "Group chat locked"
-msgstr "Gruppchatt låst"
+msgstr "Gruppchatten låstes"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:389
 msgctxt "toast"
 msgid "Group chat muted"
-msgstr "Gruppchatt ignorerad"
+msgstr "Gruppchatten ignorerades"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:376
 msgctxt "toast"
 msgid "Group chat name updated"
-msgstr "Namn på gruppchatt uppdaterat"
+msgstr "Gruppchattens namn uppdaterades"
 
 #: src/Navigation.tsx:496
 #: src/screens/Messages/ConversationSettings/index.tsx:113
@@ -5675,12 +5682,12 @@ msgstr "Inställningar för gruppchatt"
 #: src/screens/Messages/ConversationSettings/index.tsx:427
 msgctxt "toast"
 msgid "Group chat unlocked"
-msgstr "Gruppchatt upplåst"
+msgstr "Gruppchatten låstes upp"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:392
 msgctxt "toast"
 msgid "Group chat unmuted"
-msgstr "Gruppchatt inte längre ignorerad"
+msgstr "Gruppchatten ignoreras inte längre"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:181
 msgid "Group Chats"
@@ -6130,7 +6137,7 @@ msgstr "Bild-cache rensad"
 #. placeholder {0}: i18n.number( Math.abs(sizeDiffBytes / 1024 / 1024), { notation: 'compact', style: 'unit', unit: 'megabyte', }, )
 #: src/screens/Settings/AboutSettings.tsx:53
 msgid "Image cache cleared, freed {0}"
-msgstr "Bild-cache rensad, frigjorde {0}"
+msgstr "Bild-cachen rensades, frigjorde {0}"
 
 #. placeholder {0}: images.length
 #: src/components/images/Gallery/index.tsx:276
@@ -6229,7 +6236,7 @@ msgstr "I appen, Push, Från personer du följer"
 msgid "In-app, push, people you follow"
 msgstr "I appen, Push, Från personer du följer"
 
-#: src/screens/Messages/ChatList.tsx:421
+#: src/screens/Messages/ChatList.tsx:432
 msgid "Inbox empty"
 msgstr "Inkorgen är tom"
 
@@ -6802,7 +6809,7 @@ msgstr "Listavatar"
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:48
 msgctxt "toast"
 msgid "List blocked"
-msgstr "Lista blockerad"
+msgstr "Listan blockerades"
 
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #. placeholder {0}: sanitizeHandle(feed.creatorHandle, '@')
@@ -6830,7 +6837,7 @@ msgstr "Listans skapare"
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:93
 msgctxt "toast"
 msgid "List deleted"
-msgstr "Lista raderad"
+msgstr "Listan raderades"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:446
 msgid "List description"
@@ -6855,7 +6862,7 @@ msgstr "Listan måste ha ett namn."
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:33
 msgctxt "toast"
 msgid "List muted"
-msgstr "Lista ignorerad"
+msgstr "Listan ignorerades"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:410
 msgid "List name"
@@ -6869,13 +6876,13 @@ msgstr "Listnamnet är för långt. {DISPLAY_NAME_MAX_GRAPHEMES, plural, other {
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:130
 msgctxt "toast"
 msgid "List unblocked"
-msgstr "Lista avblockerad"
+msgstr "Listan avblockerades"
 
 #: src/screens/ProfileList/components/Header.tsx:101
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:116
 msgctxt "toast"
 msgid "List unmuted"
-msgstr "Lista inte längre ignorerad"
+msgstr "Listan ignoreras inte längre"
 
 #: src/Navigation.tsx:172
 #: src/view/screens/Lists.tsx:60
@@ -6955,8 +6962,6 @@ msgid "Load new posts"
 msgstr "Läs in nya inlägg"
 
 #: src/screens/Messages/components/MessageComposer.tsx:245
-#: src/screens/Messages/components/MessageInput.tsx:258
-#: src/screens/Messages/components/MessageInput.web.tsx:228
 msgctxt "placeholder"
 msgid "Loading chat…"
 msgstr "Läser in chatt…"
@@ -7070,6 +7075,8 @@ msgstr "Hantera dina ignorerade ord och taggar"
 msgid "Mark all as read"
 msgstr "Markera alla som lästa"
 
+#: src/screens/Messages/ChatList.tsx:641
+#: src/screens/Messages/ChatList.tsx:645
 #: src/view/shell/bottom-bar/BottomBar.tsx:459
 #: src/view/shell/bottom-bar/BottomBar.tsx:463
 msgid "Mark all chats as read"
@@ -7089,6 +7096,7 @@ msgstr "Markera som läst"
 msgid "Marked all as read"
 msgstr "Markerade alla som lästa"
 
+#: src/screens/Messages/ChatList.tsx:628
 #: src/view/shell/bottom-bar/BottomBar.tsx:438
 msgid "Marked all chats as read"
 msgstr "Markerade alla chattar som lästa"
@@ -7144,17 +7152,11 @@ msgstr "omnämnda användare"
 msgid "Mentions"
 msgstr "Omnämnanden"
 
-#: src/components/Menu/index.tsx:113
+#: src/components/Menu/index.tsx:119
 msgid "Menu"
 msgstr "Meny"
 
-#: src/screens/Messages/components/MessageInput.tsx:202
-msgid "Message"
-msgstr "Meddelande"
-
 #: src/screens/Messages/components/MessageComposer.tsx:246
-#: src/screens/Messages/components/MessageInput.tsx:259
-#: src/screens/Messages/components/MessageInput.web.tsx:229
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:203
 msgctxt "action"
 msgid "Message"
@@ -7176,7 +7178,7 @@ msgstr "Meddelande raderat"
 #: src/components/dms/MessageOverlays.tsx:111
 msgctxt "toast"
 msgid "Message deleted"
-msgstr "Meddelande raderat"
+msgstr "Meddelandet raderades"
 
 #: src/components/dms/MessageItem.tsx:616
 msgid "Message failed to send."
@@ -7194,14 +7196,8 @@ msgid "Message from server: {0}"
 msgstr "Meddelande från servern: {0}"
 
 #: src/screens/Messages/components/MessageComposer.tsx:242
-#: src/screens/Messages/components/MessageInput.tsx:200
 msgid "Message input field"
 msgstr "Inmatningsfält för meddelande"
-
-#: src/screens/Messages/components/MessageInput.tsx:96
-#: src/screens/Messages/components/MessageInput.web.tsx:65
-msgid "Message is too long"
-msgstr "Meddelandet är för långt"
 
 #: src/screens/Messages/components/MessageComposer.tsx:107
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
@@ -7273,12 +7269,12 @@ msgstr "Modereringslista av dig"
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:256
 msgctxt "toast"
 msgid "Moderation list created"
-msgstr "Modereringslista skapad"
+msgstr "Modereringslistan skapades"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:242
 msgctxt "toast"
 msgid "Moderation list updated"
-msgstr "Modereringslista uppdaterad"
+msgstr "Modereringslistan uppdaterades"
 
 #: src/screens/Moderation/index.tsx:299
 msgid "Moderation lists"
@@ -7537,11 +7533,11 @@ msgstr "{postsCount, plural, one {Nytt} other {Nya}} inlägg från {firstAuthorN
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:169
 #: src/components/dms/dialogs/NewChatDialog.tsx:184
-#: src/screens/Messages/ChatList.tsx:218
-#: src/screens/Messages/ChatList.tsx:219
-#: src/screens/Messages/ChatList.tsx:439
-#: src/screens/Messages/ChatList.tsx:440
-#: src/screens/Messages/ChatList.tsx:561
+#: src/screens/Messages/ChatList.tsx:229
+#: src/screens/Messages/ChatList.tsx:230
+#: src/screens/Messages/ChatList.tsx:450
+#: src/screens/Messages/ChatList.tsx:451
+#: src/screens/Messages/ChatList.tsx:575
 msgid "New chat"
 msgstr "Ny chatt"
 
@@ -8171,7 +8167,6 @@ msgid "Open drawer menu"
 msgstr "Öppna sidpanel"
 
 #: src/screens/Messages/components/MessageComposer.tsx:204
-#: src/screens/Messages/components/MessageInput.web.tsx:174
 #: src/view/com/composer/Composer.tsx:2158
 msgid "Open emoji picker"
 msgstr "Öppna emoji-väljaren"
@@ -8909,7 +8904,7 @@ msgstr "Inlägg av @{0}"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:200
 msgctxt "toast"
 msgid "Post deleted"
-msgstr "Inlägg raderat"
+msgstr "Inlägget raderades"
 
 #: src/lib/api/index.ts:190
 msgid "Post failed to upload. Please check your Internet connection and try again."
@@ -8963,7 +8958,7 @@ msgstr "Inlägget hittades inte"
 #: src/state/queries/pinned-post.ts:59
 msgctxt "toast"
 msgid "Post pinned"
-msgstr "Inlägg fäst"
+msgstr "Inlägget fästes"
 
 #: src/components/PostControls/BookmarkButton.tsx:67
 msgid "Post saved"
@@ -8972,7 +8967,7 @@ msgstr "Inlägg sparat"
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
 msgid "Post unpinned"
-msgstr "Inlägg lossat"
+msgstr "Inlägget lossades"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:257
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:269
@@ -9102,7 +9097,7 @@ msgstr "Profilen hittades inte"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:186
 msgctxt "toast"
 msgid "Profile updated"
-msgstr "Profil uppdaterad"
+msgstr "Profilen uppdaterades"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:223
 msgid "Promoting or selling prohibited items or services"
@@ -9339,7 +9334,7 @@ msgstr "Avvisa chattförfrågan"
 msgid "Reject join request"
 msgstr "Avvisa medlemsförfrågan"
 
-#: src/screens/Messages/ChatList.tsx:408
+#: src/screens/Messages/ChatList.tsx:419
 #: src/screens/Messages/Inbox.tsx:213
 msgid "Reload conversations"
 msgstr "Ladda om konversationer"
@@ -9507,11 +9502,11 @@ msgstr "Ta bort verifiering"
 msgid "Remove your verification for this account?"
 msgstr "Ta bort din verifiering av det här kontot?"
 
-#: src/components/Post/Embed/index.tsx:244
+#: src/components/Post/Embed/index.tsx:240
 msgid "Removed by author"
 msgstr "Borttaget av författaren"
 
-#: src/components/Post/Embed/index.tsx:242
+#: src/components/Post/Embed/index.tsx:238
 msgid "Removed by you"
 msgstr "Borttaget av dig"
 
@@ -9934,7 +9929,7 @@ msgstr "Försöker igen med den senaste misslyckade åtgärden"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:377
 #: src/screens/Login/LoginForm.tsx:329
 #: src/screens/Login/LoginForm.tsx:335
-#: src/screens/Messages/ChatList.tsx:413
+#: src/screens/Messages/ChatList.tsx:424
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:218
 #: src/screens/Messages/JoinRequests.tsx:361
@@ -10089,8 +10084,8 @@ msgstr "Sparat i dina flöden"
 msgid "Say hello!"
 msgstr "Säg hej!"
 
-#: src/screens/Messages/ChatList.tsx:209
-#: src/screens/Messages/ChatList.tsx:430
+#: src/screens/Messages/ChatList.tsx:220
+#: src/screens/Messages/ChatList.tsx:441
 msgid "Say hi to someone"
 msgstr "Säg hej till någon"
 
@@ -10492,7 +10487,6 @@ msgid "Send feedback"
 msgstr "Skicka feedback"
 
 #: src/screens/Messages/components/MessageComposer.tsx:316
-#: src/screens/Messages/components/MessageInput.web.tsx:251
 msgid "Send message"
 msgstr "Skicka meddelande"
 
@@ -10621,7 +10615,7 @@ msgstr "Notisinställningar för återpubliceringar"
 #: src/screens/ModerationInteractionSettings/index.tsx:103
 msgctxt "toast"
 msgid "Settings saved"
-msgstr "Inställningar sparade"
+msgstr "Inställningarna sparades"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:169
 msgid "Sexual activity or erotic nudity."
@@ -12397,10 +12391,6 @@ msgstr "TV"
 msgid "Two-factor authentication (2FA)"
 msgstr "Tvåfaktorsautentisering (2FA)"
 
-#: src/screens/Messages/components/MessageInput.tsx:201
-msgid "Type your message here"
-msgstr "Skriv ditt meddelande här"
-
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:445
 msgid "Type:"
 msgstr "Typ:"
@@ -12719,7 +12709,7 @@ msgstr "Uppdatera"
 #. placeholder {0}: createSanitizedDisplayName(profile, true)
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:138
 msgid "Update {0} in Lists"
-msgstr ""
+msgstr "Uppdatera {0} i listor"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:296
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:308
@@ -12730,7 +12720,7 @@ msgstr "Uppdatera e-post"
 
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:142
 msgid "Update in Lists"
-msgstr ""
+msgstr "Uppdatera i listor"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:239
 #: src/screens/Messages/components/InviteLinkDialog.tsx:275
@@ -12852,7 +12842,7 @@ msgstr "användare"
 #: src/components/dms/AfterReportDialog.tsx:155
 msgctxt "toast"
 msgid "User blocked"
-msgstr "Användare blockerad"
+msgstr "Användaren blockerades"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:75
 #: src/lib/moderation/useModerationCauseDescription.ts:64
@@ -13564,7 +13554,7 @@ msgid "Who can verify?"
 msgstr "Vem kan verifiera?"
 
 #: src/screens/Home/NoFeedsPinned.tsx:80
-#: src/screens/Messages/ChatList.tsx:393
+#: src/screens/Messages/ChatList.tsx:404
 #: src/screens/Messages/Inbox.tsx:198
 msgid "Whoops!"
 msgstr "Hoppsan!"

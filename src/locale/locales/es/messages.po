@@ -8,7 +8,7 @@ msgstr ""
 "Language: es\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-17 12:23\n"
+"PO-Revision-Date: 2026-06-24 16:58\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1961,10 +1961,10 @@ msgstr "Antes de que puedas recibir notificaciones de los posts de {name}, debes
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:155
 #: src/components/dms/MessageProfileButton.tsx:60
-#: src/screens/Messages/ChatList.tsx:155
-#: src/screens/Messages/ChatList.tsx:173
-#: src/screens/Messages/ChatList.tsx:274
-#: src/screens/Messages/ChatList.tsx:527
+#: src/screens/Messages/ChatList.tsx:166
+#: src/screens/Messages/ChatList.tsx:184
+#: src/screens/Messages/ChatList.tsx:285
+#: src/screens/Messages/ChatList.tsx:538
 #: src/screens/Messages/Conversation.tsx:203
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
 msgid "Before you can message another user, you must first verify your email."
@@ -2070,7 +2070,7 @@ msgstr "Bloquear al usuario o eliminar esta conversación"
 msgid "Block user and/or leave this conversation"
 msgstr "Bloquear al usuario o salir de esta conversación"
 
-#: src/components/Post/Embed/index.tsx:216
+#: src/components/Post/Embed/index.tsx:212
 msgid "Blocked"
 msgstr "Bloqueado"
 
@@ -2340,7 +2340,7 @@ msgstr "Se necesita acceso a la cámara"
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:299
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:175
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:181
-#: src/components/Menu/index.tsx:367
+#: src/components/Menu/index.tsx:373
 #: src/components/moderation/BlockDialog.tsx:202
 #: src/components/PostControls/RepostButton.tsx:210
 #: src/components/Prompt.tsx:152
@@ -2536,6 +2536,12 @@ msgstr "Chat silenciado"
 msgid "Chat not found."
 msgstr "Chat no encontrado."
 
+#: src/screens/Messages/ChatList.tsx:564
+#: src/screens/Messages/ChatList.tsx:599
+#: src/screens/Messages/ChatList.tsx:637
+msgid "Chat options"
+msgstr ""
+
 #: src/components/moderation/BlockDialog.tsx:293
 msgid "Chat owners cannot leave a group chat."
 msgstr "Los propietarios de un chat no pueden salir de un chat de grupo."
@@ -2555,10 +2561,10 @@ msgstr "Solicitudes de chat"
 
 #: src/components/dms/ConvoMenu.tsx:88
 #: src/Navigation.tsx:506
-#: src/screens/Messages/ChatList.tsx:84
-#: src/screens/Messages/ChatList.tsx:88
-#: src/screens/Messages/ChatList.tsx:552
-#: src/screens/Messages/ChatList.tsx:583
+#: src/screens/Messages/ChatList.tsx:95
+#: src/screens/Messages/ChatList.tsx:99
+#: src/screens/Messages/ChatList.tsx:649
+#: src/screens/Messages/ChatList.tsx:659
 #: src/screens/Messages/Settings.tsx:39
 msgid "Chat settings"
 msgstr "Ajustes de chat"
@@ -2585,9 +2591,9 @@ msgctxt "toast"
 msgid "Chat unmuted"
 msgstr "Chat no silenciado"
 
-#: src/screens/Messages/ChatList.tsx:78
-#: src/screens/Messages/ChatList.tsx:539
-#: src/screens/Messages/ChatList.tsx:576
+#: src/screens/Messages/ChatList.tsx:89
+#: src/screens/Messages/ChatList.tsx:550
+#: src/screens/Messages/ChatList.tsx:590
 msgid "Chats"
 msgstr "Chats"
 
@@ -2862,7 +2868,7 @@ msgstr "Cerrar el banner de solicitudes entrantes"
 #: src/components/intents/GroupChatJoinDialog.tsx:240
 #: src/components/intents/GroupChatJoinDialog.tsx:276
 #: src/components/intents/GroupChatJoinDialog.tsx:277
-#: src/components/Menu/index.tsx:361
+#: src/components/Menu/index.tsx:367
 msgid "Close this dialog"
 msgstr "Cierra este diálogo"
 
@@ -3676,7 +3682,7 @@ msgstr "¿Borrar esta lista?"
 msgid "Delete this post?"
 msgstr "¿Borrar esta publicación?"
 
-#: src/components/Post/Embed/index.tsx:209
+#: src/components/Post/Embed/index.tsx:205
 msgid "Deleted"
 msgstr "Eliminado"
 
@@ -4717,7 +4723,7 @@ msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "Error al salir del chat de grupo"
 
-#: src/screens/Messages/ChatList.tsx:404
+#: src/screens/Messages/ChatList.tsx:415
 #: src/screens/Messages/Inbox.tsx:209
 msgid "Failed to load conversations"
 msgstr "Error al cargar las conversaciones"
@@ -4767,6 +4773,7 @@ msgstr "Error al cargar las sugerencias de seguimiento"
 msgid "Failed to lock group chat"
 msgstr "Error al bloquear el chat de grupo"
 
+#: src/screens/Messages/ChatList.tsx:631
 #: src/view/shell/bottom-bar/BottomBar.tsx:441
 msgid "Failed to mark all chats as read"
 msgstr ""
@@ -6229,7 +6236,7 @@ msgstr "En la aplicación, push, todos"
 msgid "In-app, push, people you follow"
 msgstr "En la aplicación, push, personas a las que sigues"
 
-#: src/screens/Messages/ChatList.tsx:421
+#: src/screens/Messages/ChatList.tsx:432
 msgid "Inbox empty"
 msgstr "Bandeja de entrada vacía"
 
@@ -6955,8 +6962,6 @@ msgid "Load new posts"
 msgstr "Cargar publicaciones nuevas"
 
 #: src/screens/Messages/components/MessageComposer.tsx:245
-#: src/screens/Messages/components/MessageInput.tsx:258
-#: src/screens/Messages/components/MessageInput.web.tsx:228
 msgctxt "placeholder"
 msgid "Loading chat…"
 msgstr "Cargando chat…"
@@ -7070,6 +7075,8 @@ msgstr "Gestiona tus palabras y etiquetas silenciadas"
 msgid "Mark all as read"
 msgstr "Marcar todo como leído"
 
+#: src/screens/Messages/ChatList.tsx:641
+#: src/screens/Messages/ChatList.tsx:645
 #: src/view/shell/bottom-bar/BottomBar.tsx:459
 #: src/view/shell/bottom-bar/BottomBar.tsx:463
 msgid "Mark all chats as read"
@@ -7089,6 +7096,7 @@ msgstr "Marcar como leído"
 msgid "Marked all as read"
 msgstr "Se ha marcado todo como leído"
 
+#: src/screens/Messages/ChatList.tsx:628
 #: src/view/shell/bottom-bar/BottomBar.tsx:438
 msgid "Marked all chats as read"
 msgstr ""
@@ -7144,17 +7152,11 @@ msgstr "usuarios mencionados"
 msgid "Mentions"
 msgstr "Menciones"
 
-#: src/components/Menu/index.tsx:113
+#: src/components/Menu/index.tsx:119
 msgid "Menu"
 msgstr "Menú"
 
-#: src/screens/Messages/components/MessageInput.tsx:202
-msgid "Message"
-msgstr "Mensaje"
-
 #: src/screens/Messages/components/MessageComposer.tsx:246
-#: src/screens/Messages/components/MessageInput.tsx:259
-#: src/screens/Messages/components/MessageInput.web.tsx:229
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:203
 msgctxt "action"
 msgid "Message"
@@ -7194,14 +7196,8 @@ msgid "Message from server: {0}"
 msgstr "Mensaje del servidor: {0}"
 
 #: src/screens/Messages/components/MessageComposer.tsx:242
-#: src/screens/Messages/components/MessageInput.tsx:200
 msgid "Message input field"
 msgstr "Campo de entrada de mensaje"
-
-#: src/screens/Messages/components/MessageInput.tsx:96
-#: src/screens/Messages/components/MessageInput.web.tsx:65
-msgid "Message is too long"
-msgstr "El mensaje es muy largo"
 
 #: src/screens/Messages/components/MessageComposer.tsx:107
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
@@ -7537,11 +7533,11 @@ msgstr "{postsCount, plural, one {nueva publicación} other {nuevas publicacione
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:169
 #: src/components/dms/dialogs/NewChatDialog.tsx:184
-#: src/screens/Messages/ChatList.tsx:218
-#: src/screens/Messages/ChatList.tsx:219
-#: src/screens/Messages/ChatList.tsx:439
-#: src/screens/Messages/ChatList.tsx:440
-#: src/screens/Messages/ChatList.tsx:561
+#: src/screens/Messages/ChatList.tsx:229
+#: src/screens/Messages/ChatList.tsx:230
+#: src/screens/Messages/ChatList.tsx:450
+#: src/screens/Messages/ChatList.tsx:451
+#: src/screens/Messages/ChatList.tsx:575
 msgid "New chat"
 msgstr "Nuevo chat"
 
@@ -8171,7 +8167,6 @@ msgid "Open drawer menu"
 msgstr "Abrir el menú lateral"
 
 #: src/screens/Messages/components/MessageComposer.tsx:204
-#: src/screens/Messages/components/MessageInput.web.tsx:174
 #: src/view/com/composer/Composer.tsx:2158
 msgid "Open emoji picker"
 msgstr "Abrir el selector de emojis"
@@ -9339,7 +9334,7 @@ msgstr "Rechazar la solicitud de chat"
 msgid "Reject join request"
 msgstr "Rechazar solicitud para unirse"
 
-#: src/screens/Messages/ChatList.tsx:408
+#: src/screens/Messages/ChatList.tsx:419
 #: src/screens/Messages/Inbox.tsx:213
 msgid "Reload conversations"
 msgstr "Recargar conversaciones"
@@ -9507,11 +9502,11 @@ msgstr "Eliminar la verificación"
 msgid "Remove your verification for this account?"
 msgstr "¿Eliminar tu verificación para esta cuenta?"
 
-#: src/components/Post/Embed/index.tsx:244
+#: src/components/Post/Embed/index.tsx:240
 msgid "Removed by author"
 msgstr "Eliminado por el autor"
 
-#: src/components/Post/Embed/index.tsx:242
+#: src/components/Post/Embed/index.tsx:238
 msgid "Removed by you"
 msgstr "Eliminado por ti"
 
@@ -9934,7 +9929,7 @@ msgstr "Reintenta la última acción, que presentó un error"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:377
 #: src/screens/Login/LoginForm.tsx:329
 #: src/screens/Login/LoginForm.tsx:335
-#: src/screens/Messages/ChatList.tsx:413
+#: src/screens/Messages/ChatList.tsx:424
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:218
 #: src/screens/Messages/JoinRequests.tsx:361
@@ -10089,8 +10084,8 @@ msgstr "Guardado en tus feeds"
 msgid "Say hello!"
 msgstr "¡Di hola!"
 
-#: src/screens/Messages/ChatList.tsx:209
-#: src/screens/Messages/ChatList.tsx:430
+#: src/screens/Messages/ChatList.tsx:220
+#: src/screens/Messages/ChatList.tsx:441
 msgid "Say hi to someone"
 msgstr "Saluda a alguien"
 
@@ -10492,7 +10487,6 @@ msgid "Send feedback"
 msgstr "Enviar comentarios"
 
 #: src/screens/Messages/components/MessageComposer.tsx:316
-#: src/screens/Messages/components/MessageInput.web.tsx:251
 msgid "Send message"
 msgstr "Enviar mensaje"
 
@@ -12397,10 +12391,6 @@ msgstr "Televisión"
 msgid "Two-factor authentication (2FA)"
 msgstr "Autenticación de doble factor (2FA)"
 
-#: src/screens/Messages/components/MessageInput.tsx:201
-msgid "Type your message here"
-msgstr "Escribe tu mensaje aquí"
-
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:445
 msgid "Type:"
 msgstr "Tipo:"
@@ -13564,7 +13554,7 @@ msgid "Who can verify?"
 msgstr "¿Quién puede verificar?"
 
 #: src/screens/Home/NoFeedsPinned.tsx:80
-#: src/screens/Messages/ChatList.tsx:393
+#: src/screens/Messages/ChatList.tsx:404
 #: src/screens/Messages/Inbox.tsx:198
 msgid "Whoops!"
 msgstr "¡Vaya!"

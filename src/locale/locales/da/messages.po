@@ -8,7 +8,7 @@ msgstr ""
 "Language: da\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-17 12:23\n"
+"PO-Revision-Date: 2026-06-24 16:58\n"
 "Last-Translator: \n"
 "Language-Team: Danish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -411,7 +411,7 @@ msgstr "{date} kl. {time}"
 #: src/lib/generate-starterpack.ts:104
 #: src/screens/StarterPack/Wizard/index.tsx:189
 msgid "{displayName}'s Starter Pack"
-msgstr "displayName}s Starter Pack"
+msgstr "{displayName}s Starter Pack"
 
 #: src/screens/SignupQueued.tsx:219
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -679,15 +679,15 @@ msgstr "{rank}."
 
 #: src/components/dms/MessageItem.tsx:813
 msgid "{replierDisplayName} replied"
-msgstr ""
+msgstr "{replierDisplayName} svarede"
 
 #: src/components/dms/MessageItem.tsx:809
 msgid "{replierDisplayName} replied to {originalName}"
-msgstr ""
+msgstr "{replierDisplayName} svarede {originalName}"
 
 #: src/components/dms/MessageItem.tsx:807
 msgid "{replierDisplayName} replied to you"
-msgstr ""
+msgstr "{replierDisplayName} svarede dig"
 
 #. The number of requests to join a group chat.
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:61
@@ -828,12 +828,12 @@ msgstr "⚠Ugyldigt handle"
 #. Displayed when the number of requests is greater than 10
 #: src/screens/Messages/components/InboxRequests.tsx:57
 msgid "10+"
-msgstr ""
+msgstr "10+"
 
 #. Displayed when the number of requests is greater than 10
 #: src/screens/Messages/components/InboxRequests.tsx:32
 msgid "10+ requests"
-msgstr ""
+msgstr "10+ anmodninger"
 
 #: src/components/dialogs/MutedWords.tsx:202
 #: src/components/dialogs/MutedWords.tsx:551
@@ -1961,10 +1961,10 @@ msgstr "Før du kan modtage notifikationer om opslag fra {name}, skal du først 
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:155
 #: src/components/dms/MessageProfileButton.tsx:60
-#: src/screens/Messages/ChatList.tsx:155
-#: src/screens/Messages/ChatList.tsx:173
-#: src/screens/Messages/ChatList.tsx:274
-#: src/screens/Messages/ChatList.tsx:527
+#: src/screens/Messages/ChatList.tsx:166
+#: src/screens/Messages/ChatList.tsx:184
+#: src/screens/Messages/ChatList.tsx:285
+#: src/screens/Messages/ChatList.tsx:538
 #: src/screens/Messages/Conversation.tsx:203
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
 msgid "Before you can message another user, you must first verify your email."
@@ -2070,7 +2070,7 @@ msgstr "Bloker bruger og/eller slet denne samtale"
 msgid "Block user and/or leave this conversation"
 msgstr "Bloker bruger og/eller forlad denne samtale"
 
-#: src/components/Post/Embed/index.tsx:216
+#: src/components/Post/Embed/index.tsx:212
 msgid "Blocked"
 msgstr "Blokeret"
 
@@ -2093,7 +2093,7 @@ msgstr "Blokerede konti kan ikke svare i dine tråde, omtale dig eller på anden
 
 #: src/components/dms/MessageItem.tsx:860
 msgid "Blocked message hidden"
-msgstr ""
+msgstr "Blokeret besked skjult"
 
 #: src/screens/Profile/Sections/Labels.tsx:203
 msgid "Blocking does not prevent this labeler from placing labels on your account."
@@ -2340,7 +2340,7 @@ msgstr "Kameraadgang krævet"
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:299
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:175
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:181
-#: src/components/Menu/index.tsx:367
+#: src/components/Menu/index.tsx:373
 #: src/components/moderation/BlockDialog.tsx:202
 #: src/components/PostControls/RepostButton.tsx:210
 #: src/components/Prompt.tsx:152
@@ -2389,7 +2389,7 @@ msgstr "Annuller genaktivering og log ud"
 
 #: src/screens/Messages/components/MessageInputReply.tsx:83
 msgid "Cancel reply"
-msgstr ""
+msgstr "Annuller svar"
 
 #: src/screens/Search/Shell.tsx:396
 msgid "Cancel search"
@@ -2536,6 +2536,12 @@ msgstr "Chat skjult"
 msgid "Chat not found."
 msgstr "Chat ikke fundet."
 
+#: src/screens/Messages/ChatList.tsx:564
+#: src/screens/Messages/ChatList.tsx:599
+#: src/screens/Messages/ChatList.tsx:637
+msgid "Chat options"
+msgstr ""
+
 #: src/components/moderation/BlockDialog.tsx:293
 msgid "Chat owners cannot leave a group chat."
 msgstr "Chatejere kan ikke forlade en gruppechat."
@@ -2555,10 +2561,10 @@ msgstr "Chatanmodninger"
 
 #: src/components/dms/ConvoMenu.tsx:88
 #: src/Navigation.tsx:506
-#: src/screens/Messages/ChatList.tsx:84
-#: src/screens/Messages/ChatList.tsx:88
-#: src/screens/Messages/ChatList.tsx:552
-#: src/screens/Messages/ChatList.tsx:583
+#: src/screens/Messages/ChatList.tsx:95
+#: src/screens/Messages/ChatList.tsx:99
+#: src/screens/Messages/ChatList.tsx:649
+#: src/screens/Messages/ChatList.tsx:659
 #: src/screens/Messages/Settings.tsx:39
 msgid "Chat settings"
 msgstr "Chatindstillinger"
@@ -2585,9 +2591,9 @@ msgctxt "toast"
 msgid "Chat unmuted"
 msgstr "Chat ikke længere skjult"
 
-#: src/screens/Messages/ChatList.tsx:78
-#: src/screens/Messages/ChatList.tsx:539
-#: src/screens/Messages/ChatList.tsx:576
+#: src/screens/Messages/ChatList.tsx:89
+#: src/screens/Messages/ChatList.tsx:550
+#: src/screens/Messages/ChatList.tsx:590
 msgid "Chats"
 msgstr "Chats"
 
@@ -2862,7 +2868,7 @@ msgstr "Luk banner for indkommende anmodninger"
 #: src/components/intents/GroupChatJoinDialog.tsx:240
 #: src/components/intents/GroupChatJoinDialog.tsx:276
 #: src/components/intents/GroupChatJoinDialog.tsx:277
-#: src/components/Menu/index.tsx:361
+#: src/components/Menu/index.tsx:367
 msgid "Close this dialog"
 msgstr "Luk dialog"
 
@@ -3676,7 +3682,7 @@ msgstr "Slet denne liste?"
 msgid "Delete this post?"
 msgstr "Slet dette opslag?"
 
-#: src/components/Post/Embed/index.tsx:209
+#: src/components/Post/Embed/index.tsx:205
 msgid "Deleted"
 msgstr "Slettet"
 
@@ -3699,7 +3705,7 @@ msgstr "Slettet liste"
 
 #: src/components/dms/MessageItem.tsx:875
 msgid "Deleted message"
-msgstr ""
+msgstr "Slettet besked"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:453
 #: src/components/SendErrorReportDialog.tsx:78
@@ -4614,7 +4620,7 @@ msgstr "Kunne ikke tilføje medlemmer"
 
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:239
 msgid "Failed to add to list"
-msgstr ""
+msgstr "Kunne ikke føje til liste"
 
 #: src/components/dialogs/StarterPackDialog.tsx:280
 msgid "Failed to add to starter pack"
@@ -4717,7 +4723,7 @@ msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "Kunne ikke forlade gruppechat"
 
-#: src/screens/Messages/ChatList.tsx:404
+#: src/screens/Messages/ChatList.tsx:415
 #: src/screens/Messages/Inbox.tsx:209
 msgid "Failed to load conversations"
 msgstr "Kunne ikke indlæse samtaler"
@@ -4767,6 +4773,7 @@ msgstr "Indlæsning af foreslåede konti fejlede"
 msgid "Failed to lock group chat"
 msgstr "Kunne ikke låse gruppechat"
 
+#: src/screens/Messages/ChatList.tsx:631
 #: src/view/shell/bottom-bar/BottomBar.tsx:441
 msgid "Failed to mark all chats as read"
 msgstr "Kunne ikke markere alle chats som læst"
@@ -4806,7 +4813,7 @@ msgstr "Kunne ikke fjerne emojireaktion"
 
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:258
 msgid "Failed to remove from list"
-msgstr ""
+msgstr "Kunne ikke fjerne fra liste"
 
 #: src/components/dialogs/StarterPackDialog.tsx:293
 msgid "Failed to remove from starter pack"
@@ -5786,7 +5793,7 @@ msgstr "Er din lokalitet forkert? <0>Tryk her for at opdatere din lokalitet med 
 
 #: src/screens/Signup/index.tsx:231
 msgid "Having trouble?"
-msgstr "Har du problemer?"
+msgstr "Oplever du problemer?"
 
 #: src/components/contacts/screens/PhoneInput.tsx:290
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
@@ -6229,7 +6236,7 @@ msgstr "I appen, push, alle"
 msgid "In-app, push, people you follow"
 msgstr "I appen, push, personer du følger"
 
-#: src/screens/Messages/ChatList.tsx:421
+#: src/screens/Messages/ChatList.tsx:432
 msgid "Inbox empty"
 msgstr "Indbakke er tom"
 
@@ -6955,8 +6962,6 @@ msgid "Load new posts"
 msgstr "Indlæs nye opslag"
 
 #: src/screens/Messages/components/MessageComposer.tsx:245
-#: src/screens/Messages/components/MessageInput.tsx:258
-#: src/screens/Messages/components/MessageInput.web.tsx:228
 msgctxt "placeholder"
 msgid "Loading chat…"
 msgstr "Indlæser chat…"
@@ -7070,6 +7075,8 @@ msgstr "Administrer dine skjulte ord og tags"
 msgid "Mark all as read"
 msgstr "Marker alle læst"
 
+#: src/screens/Messages/ChatList.tsx:641
+#: src/screens/Messages/ChatList.tsx:645
 #: src/view/shell/bottom-bar/BottomBar.tsx:459
 #: src/view/shell/bottom-bar/BottomBar.tsx:463
 msgid "Mark all chats as read"
@@ -7089,6 +7096,7 @@ msgstr "Marker som læst"
 msgid "Marked all as read"
 msgstr "Marker alle som læst"
 
+#: src/screens/Messages/ChatList.tsx:628
 #: src/view/shell/bottom-bar/BottomBar.tsx:438
 msgid "Marked all chats as read"
 msgstr "Markerede alle chats som læst"
@@ -7144,17 +7152,11 @@ msgstr "omtalte brugere"
 msgid "Mentions"
 msgstr "Omtaler"
 
-#: src/components/Menu/index.tsx:113
+#: src/components/Menu/index.tsx:119
 msgid "Menu"
 msgstr "Menu"
 
-#: src/screens/Messages/components/MessageInput.tsx:202
-msgid "Message"
-msgstr "Besked"
-
 #: src/screens/Messages/components/MessageComposer.tsx:246
-#: src/screens/Messages/components/MessageInput.tsx:259
-#: src/screens/Messages/components/MessageInput.web.tsx:229
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:203
 msgctxt "action"
 msgid "Message"
@@ -7194,14 +7196,8 @@ msgid "Message from server: {0}"
 msgstr "Besked fra server: {0}"
 
 #: src/screens/Messages/components/MessageComposer.tsx:242
-#: src/screens/Messages/components/MessageInput.tsx:200
 msgid "Message input field"
 msgstr "Beskedfelt"
-
-#: src/screens/Messages/components/MessageInput.tsx:96
-#: src/screens/Messages/components/MessageInput.web.tsx:65
-msgid "Message is too long"
-msgstr "Beskeden er for lang"
 
 #: src/screens/Messages/components/MessageComposer.tsx:107
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
@@ -7537,11 +7533,11 @@ msgstr "{postsCount, plural, one {Nyt} other {Nye}} opslag fra {firstAuthorName}
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:169
 #: src/components/dms/dialogs/NewChatDialog.tsx:184
-#: src/screens/Messages/ChatList.tsx:218
-#: src/screens/Messages/ChatList.tsx:219
-#: src/screens/Messages/ChatList.tsx:439
-#: src/screens/Messages/ChatList.tsx:440
-#: src/screens/Messages/ChatList.tsx:561
+#: src/screens/Messages/ChatList.tsx:229
+#: src/screens/Messages/ChatList.tsx:230
+#: src/screens/Messages/ChatList.tsx:450
+#: src/screens/Messages/ChatList.tsx:451
+#: src/screens/Messages/ChatList.tsx:575
 msgid "New chat"
 msgstr "Ny chat"
 
@@ -7871,7 +7867,7 @@ msgstr "Ingen startpakker endnu"
 #: src/components/dms/MessageItem.tsx:871
 #: src/screens/Messages/components/MessageInputReply.tsx:47
 msgid "No text"
-msgstr ""
+msgstr "Ingen tekst"
 
 #: src/components/dialogs/EmbedConsent.tsx:100
 #: src/components/dialogs/EmbedConsent.tsx:107
@@ -8171,7 +8167,6 @@ msgid "Open drawer menu"
 msgstr "Åbn navigation"
 
 #: src/screens/Messages/components/MessageComposer.tsx:204
-#: src/screens/Messages/components/MessageInput.web.tsx:174
 #: src/view/com/composer/Composer.tsx:2158
 msgid "Open emoji picker"
 msgstr "Åbn emojivælger"
@@ -8373,7 +8368,7 @@ msgstr "Åbner GIF-vælgerdialogboksen"
 
 #: src/view/shell/Drawer.tsx:123
 msgid "Opens the invite friends sheet to share your profile"
-msgstr ""
+msgstr "Åbner venneinvitationsfanen for deling af din profil"
 
 #: src/view/com/feeds/ComposerPrompt.tsx:148
 msgid "Opens the post composer"
@@ -8475,7 +8470,7 @@ msgstr "Ejer"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:44
 msgid "Owner must lock the group before leaving."
-msgstr ""
+msgstr "Ejer skal låse gruppen, før den forlades."
 
 #: src/components/Lists.tsx:204
 #: src/components/Lists.tsx:219
@@ -9339,7 +9334,7 @@ msgstr "Afvis chatanmodning"
 msgid "Reject join request"
 msgstr "Afvis anmodning om deltagelse"
 
-#: src/screens/Messages/ChatList.tsx:408
+#: src/screens/Messages/ChatList.tsx:419
 #: src/screens/Messages/Inbox.tsx:213
 msgid "Reload conversations"
 msgstr "Genindlæs samtaler"
@@ -9507,11 +9502,11 @@ msgstr "Fjern verifikation"
 msgid "Remove your verification for this account?"
 msgstr "Fjern verifikation fra denne konto?"
 
-#: src/components/Post/Embed/index.tsx:244
+#: src/components/Post/Embed/index.tsx:240
 msgid "Removed by author"
 msgstr "Fjernet af forfatter"
 
-#: src/components/Post/Embed/index.tsx:242
+#: src/components/Post/Embed/index.tsx:238
 msgid "Removed by you"
 msgstr "Fjernet af dig"
 
@@ -9586,11 +9581,11 @@ msgstr "Svarede dig"
 
 #: src/components/dms/MessageItem.tsx:883
 msgid "Replied-to message from {senderName}, tap to scroll to it"
-msgstr ""
+msgstr "Besvaret besked fra {senderName}, tryk for at rulle til hen den"
 
 #: src/components/dms/MessageItem.tsx:884
 msgid "Replied-to message, tap to scroll to it"
-msgstr ""
+msgstr "Besvaret besked, tryk for at rulle hen til den"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:274
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:286
@@ -9934,7 +9929,7 @@ msgstr "Prøver at gentage den seneste handling, der fejlede"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:377
 #: src/screens/Login/LoginForm.tsx:329
 #: src/screens/Login/LoginForm.tsx:335
-#: src/screens/Messages/ChatList.tsx:413
+#: src/screens/Messages/ChatList.tsx:424
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:218
 #: src/screens/Messages/JoinRequests.tsx:361
@@ -10089,8 +10084,8 @@ msgstr "Tilføjet dine feeds"
 msgid "Say hello!"
 msgstr "Sig hej!"
 
-#: src/screens/Messages/ChatList.tsx:209
-#: src/screens/Messages/ChatList.tsx:430
+#: src/screens/Messages/ChatList.tsx:220
+#: src/screens/Messages/ChatList.tsx:441
 msgid "Say hi to someone"
 msgstr "Sig hej til nogen"
 
@@ -10122,7 +10117,7 @@ msgstr "Rul til højre"
 
 #: src/components/dms/MessageItem.tsx:774
 msgid "Scroll to the message this is replying to"
-msgstr ""
+msgstr "Rul til den besked, der svares på"
 
 #: src/screens/ProfileList/AboutSection.tsx:132
 msgid "Scroll to top"
@@ -10492,7 +10487,6 @@ msgid "Send feedback"
 msgstr "Send feedback"
 
 #: src/screens/Messages/components/MessageComposer.tsx:316
-#: src/screens/Messages/components/MessageInput.web.tsx:251
 msgid "Send message"
 msgstr "Send besked"
 
@@ -12079,7 +12073,7 @@ msgstr "Denne moderationstjeneste er utilgængelig. Se herunder for flere oplysn
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:161
 msgid "This moderation was applied to the entire user account and will appear on all posts."
-msgstr ""
+msgstr "Denne moderation gælder hele brugerkontoen og vil fremgå af alle opslag."
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:84
 msgid "This person is blocking you"
@@ -12396,10 +12390,6 @@ msgstr "Tv"
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:65
 msgid "Two-factor authentication (2FA)"
 msgstr "Tofaktorgodkendelse (2FA)"
-
-#: src/screens/Messages/components/MessageInput.tsx:201
-msgid "Type your message here"
-msgstr "Indtast din besked her"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:445
 msgid "Type:"
@@ -12719,7 +12709,7 @@ msgstr "Opdater"
 #. placeholder {0}: createSanitizedDisplayName(profile, true)
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:138
 msgid "Update {0} in Lists"
-msgstr ""
+msgstr "Opdater {0} i Lister"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:296
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:308
@@ -12730,7 +12720,7 @@ msgstr "Opdater e-mail"
 
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:142
 msgid "Update in Lists"
-msgstr ""
+msgstr "Opdater i Lister"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:239
 #: src/screens/Messages/components/InviteLinkDialog.tsx:275
@@ -13564,7 +13554,7 @@ msgid "Who can verify?"
 msgstr "Hvem kan verificere?"
 
 #: src/screens/Home/NoFeedsPinned.tsx:80
-#: src/screens/Messages/ChatList.tsx:393
+#: src/screens/Messages/ChatList.tsx:404
 #: src/screens/Messages/Inbox.tsx:198
 msgid "Whoops!"
 msgstr "Ups!"
@@ -14071,15 +14061,15 @@ msgstr "Du har for nylig opdateret din fødselsdato"
 
 #: src/components/dms/MessageItem.tsx:804
 msgid "You replied"
-msgstr ""
+msgstr "Du svarede"
 
 #: src/components/dms/MessageItem.tsx:802
 msgid "You replied to {originalName}"
-msgstr ""
+msgstr "Du svarede {originalName}"
 
 #: src/components/dms/MessageItem.tsx:800
 msgid "You replied to yourself"
-msgstr ""
+msgstr "Du svarede dig selv"
 
 #. Displayed when the user has requested to join a group chat.
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:105
@@ -14128,7 +14118,7 @@ msgstr "Du kommer til at følge de foreslåede brugere, når du har afsluttet op
 #. placeholder {0}: listItemsCount - 8
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:243
 msgid "You'll follow these people and {0} others"
-msgstr "Du følger disse konti og {0} andre"
+msgstr "Du vil komme til at følge disse konti og {0} andre"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:241
 msgid "You'll follow these people right away"
