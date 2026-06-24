@@ -14,11 +14,12 @@ import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {type Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {useIsImpressionHidden} from '#/state/preferences/impression-visibility'
 import {
   usePostLikeMutationQueue,
   usePostRepostMutationQueue,
 } from '#/state/queries/post'
-import {useRequireAuth} from '#/state/session'
+import {useRequireAuth, useSession} from '#/state/session'
 import {
   ProgressGuideAction,
   useProgressGuideControls,
@@ -90,6 +91,7 @@ let PostControls = ({
     logContext,
   )
   const requireAuth = useRequireAuth()
+  const {currentAccount} = useSession()
   const {sendInteraction} = useFeedFeedbackContext()
   const {captureAction} = useProgressGuideControls()
   const isBlocked = Boolean(
@@ -102,6 +104,13 @@ let PostControls = ({
   const formatPostStatCount = useFormatPostStatCount()
 
   const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] = useState(false)
+
+  const isMe = post.author.did === currentAccount?.did
+
+  const hideLikes = useIsImpressionHidden('likes', isMe)
+  const hideReposts = useIsImpressionHidden('reposts', isMe)
+  const hideReplies = useIsImpressionHidden('replies', isMe)
+  const hideQuotes = useIsImpressionHidden('quotes', isMe)
 
   const onPressToggleLike = async () => {
     if (isBlocked) {
@@ -249,7 +258,11 @@ let PostControls = ({
             <PostControlButtonIcon icon={Bubble} />
             {typeof post.replyCount !== 'undefined' && post.replyCount > 0 && (
               <PostControlButtonText>
-                {formatPostStatCount(post.replyCount)}
+                {!hideReplies
+                  ? formatPostStatCount(post.replyCount)
+                  : post.replyCount == 1
+                    ? '1'
+                    : '1+'}
               </PostControlButtonText>
             )}
           </PostControlButton>
@@ -257,7 +270,10 @@ let PostControls = ({
         <View style={[a.flex_1, a.align_start]}>
           <RepostButton
             isReposted={!!post.viewer?.repost}
-            repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
+            repostCount={
+              (!hideReposts ? (post.repostCount ?? 0) : 0) +
+              (!hideQuotes ? (post.quoteCount ?? 0) : 0)
+            }
             onRepost={() => void onRepost()}
             onQuote={onQuote}
             big={big}
@@ -296,7 +312,7 @@ let PostControls = ({
               hasBeenToggled={hasLikeIconBeenToggled}
             />
             <CountWheel
-              count={post.likeCount ?? 0}
+              count={!hideLikes ? (post.likeCount ?? 0) : 0}
               isToggled={Boolean(post.viewer?.like)}
               hasBeenToggled={hasLikeIconBeenToggled}
               renderCount={({count}) => (

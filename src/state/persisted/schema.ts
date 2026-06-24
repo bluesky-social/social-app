@@ -6,6 +6,12 @@ import {logger} from '#/logger'
 import {PlatformInfo} from '../../../modules/expo-bluesky-swiss-army'
 
 const externalEmbedOptions = ['show', 'hide'] as const
+const impressionVisibilityOptions = [
+  'show',
+  'hideOwn',
+  'hideOthers',
+  'hideAll',
+] as const
 
 /**
  * A account persisted to storage. Stored in the `accounts[]` array. Contains
@@ -130,6 +136,15 @@ const schema = z.object({
   mutedThreads: z.array(z.string()),
   trendingDisabled: z.boolean().optional(),
   trendingVideoDisabled: z.boolean().optional(),
+  impressionVisibility: z
+    .object({
+      likes: z.enum(impressionVisibilityOptions).optional(),
+      reposts: z.enum(impressionVisibilityOptions).optional(),
+      replies: z.enum(impressionVisibilityOptions).optional(),
+      quotes: z.enum(impressionVisibilityOptions).optional(),
+      bookmarks: z.enum(impressionVisibilityOptions).optional(),
+    })
+    .optional(),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -177,6 +192,7 @@ export const defaults: Schema = {
   subtitlesEnabled: true,
   trendingDisabled: false,
   trendingVideoDisabled: false,
+  impressionVisibility: {},
 }
 
 export function tryParse(rawData: string): Schema | undefined {

@@ -56,6 +56,7 @@ export type CommonNavigatorParams = {
   ContentAndMediaSettings: undefined
   NotificationSettings: undefined
   InterestsSettings: undefined
+  ImpressionVisibilitySettings: undefined
   AboutSettings: undefined
   AppIconSettings: undefined
   FindContactsSettings: undefined

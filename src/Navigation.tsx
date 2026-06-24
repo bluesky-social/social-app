@@ -112,6 +112,7 @@ import {ContentAndMediaSettingsScreen} from '#/screens/Settings/ContentAndMediaS
 import {ExternalMediaPreferencesScreen} from '#/screens/Settings/ExternalMediaPreferences'
 import {FindContactsSettingsScreen} from '#/screens/Settings/FindContactsSettings'
 import {FollowingFeedPreferencesScreen} from '#/screens/Settings/FollowingFeedPreferences'
+import {ImpressionVisibilitySettingsScreen} from '#/screens/Settings/ImpressionVisibilityPreferences'
 import {InterestsSettingsScreen} from '#/screens/Settings/InterestsSettings'
 import {LanguageSettingsScreen} from '#/screens/Settings/LanguageSettings'
 import {LegacyNotificationSettingsScreen} from '#/screens/Settings/LegacyNotificationSettings'
@@ -455,6 +456,14 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => InterestsSettingsScreen}
         options={{
           title: title(msg`Your interests`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="ImpressionVisibilitySettings"
+        getComponent={() => ImpressionVisibilitySettingsScreen}
+        options={{
+          title: title(msg`Impression Visibility`),
           requireAuth: true,
         }}
       />
