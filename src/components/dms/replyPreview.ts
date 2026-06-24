@@ -1,9 +1,6 @@
 import {
   AppBskyEmbedExternal,
   AppBskyEmbedRecord,
-  AppBskyFeedDefs,
-  AppBskyGraphDefs,
-  AppBskyLabelerDefs,
   type ChatBskyConvoDefs,
   ChatBskyEmbedJoinLink,
   ChatBskyGroupDefs,
@@ -21,10 +18,6 @@ import {BSKY_APP_HOST, toShortUrl} from '#/lib/strings/url-helpers'
 type ReplyEmbedSummary =
   | {type: 'external'; uri: string}
   | {type: 'post'}
-  | {type: 'feed'}
-  | {type: 'list'}
-  | {type: 'starterPack'}
-  | {type: 'labeler'}
   | {type: 'unknown'}
 
 function summarizeReplyEmbed(
@@ -39,12 +32,6 @@ function summarizeReplyEmbed(
     }
     return {type: 'post'}
   }
-  if (AppBskyFeedDefs.isGeneratorView(record)) return {type: 'feed'}
-  if (AppBskyGraphDefs.isListView(record)) return {type: 'list'}
-  if (AppBskyGraphDefs.isStarterPackViewBasic(record)) {
-    return {type: 'starterPack'}
-  }
-  if (AppBskyLabelerDefs.isLabelerView(record)) return {type: 'labeler'}
   return {type: 'unknown'}
 }
 
@@ -76,13 +63,19 @@ export function useReplyPreviewText(): (
           subtle: true,
         }
       }
-      if (
-        ChatBskyGroupDefs.isDisabledJoinLinkPreviewView(joinLinkPreview) ||
-        ChatBskyGroupDefs.isInvalidJoinLinkPreviewView(joinLinkPreview)
-      ) {
+      if (ChatBskyGroupDefs.isDisabledJoinLinkPreviewView(joinLinkPreview)) {
         return {
           text: l({
-            message: '(expired chat invite link)',
+            message: '(disabled chat invite link)',
+            comment: 'A reply summary in chat',
+          }),
+          subtle: true,
+        }
+      }
+      if (ChatBskyGroupDefs.isInvalidJoinLinkPreviewView(joinLinkPreview)) {
+        return {
+          text: l({
+            message: '(invalid chat invite link)',
             comment: 'A reply summary in chat',
           }),
           subtle: true,
@@ -111,7 +104,7 @@ export function useReplyPreviewText(): (
         }
       default:
         return {
-          text: l({message: '(no text)', comment: 'A reply summary in chat'}),
+          text: l({message: 'No text', comment: 'A reply summary in chat'}),
           subtle: true,
         }
     }
