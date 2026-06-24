@@ -222,21 +222,27 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                       a.align_center,
                     ]}>
                     <AppLanguageDropdown />
-                    <Text
-                      style={[
-                        a.flex_1,
-                        a.text_right,
-                        t.atoms.text_contrast_medium,
-                        !gtMobile && a.text_md,
-                      ]}>
-                      <Trans>Having trouble?</Trans>{' '}
-                      <InlineLinkText
-                        label={l`Contact support`}
-                        to={FEEDBACK_FORM_URL({email: state.email})}
-                        style={[!gtMobile && a.text_md]}>
-                        <Trans>Contact support</Trans>
-                      </InlineLinkText>
-                    </Text>
+                    <View
+                      style={
+                        gtMobile
+                          ? [a.flex_1, a.flex, a.flex_row, a.justify_end]
+                          : []
+                      }>
+                      <Text
+                        style={[
+                          a.flex_shrink,
+                          t.atoms.text_contrast_medium,
+                          !gtMobile && a.text_md,
+                        ]}>
+                        <Trans>Having trouble?</Trans>{' '}
+                        <InlineLinkText
+                          label={l`Contact support`}
+                          to={FEEDBACK_FORM_URL({email: state.email})}
+                          style={[!gtMobile && a.text_md]}>
+                          <Trans>Contact support</Trans>
+                        </InlineLinkText>
+                      </Text>
+                    </View>
                   </View>
                 </View>
               </ScreenTransition>
