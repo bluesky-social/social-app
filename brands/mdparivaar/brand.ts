@@ -1,7 +1,10 @@
 import {DEFAULT_PALETTE, DEFAULT_SUBDUED_PALETTE} from '@bsky.app/alf'
 
 import {type Brand} from '#/brand/types'
-import {DEFAULT_BRAND_PAGE_LINKS} from '../shared/links'
+import {
+  BRAND_INVITE_REQUEST_URL,
+  DEFAULT_BRAND_PAGE_LINKS,
+} from '../shared/links'
 import nativeConfig from './brand.js'
 import {MD_ICON_SVG} from './logoIcon.svg'
 
@@ -152,6 +155,15 @@ const brand: Brand = {
     mark: MD_ICON_SHAPE,
     wordmark: MD_WORDMARK_SHAPE,
     logomark: MD_ICON_SHAPE,
+  },
+
+  welcomeModal: {
+    headline: 'व्यक्ति सार्थक संवाद से, बोध तक सार्थक होना संभव है।',
+    attribution: '- श्री ए. नागराज',
+    subtitle: 'संवाद और अध्ययन के आधार पर ही निष्ठा निकलती है।',
+    primaryLabel: 'I Have an Invite Code',
+    secondaryLabel: 'Request Invite Code',
+    requestInviteUrl: BRAND_INVITE_REQUEST_URL,
   },
 }
 

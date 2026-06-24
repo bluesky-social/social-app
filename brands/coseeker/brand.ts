@@ -2,7 +2,10 @@ import {type Palette} from '@bsky.app/alf'
 
 import {type Brand} from '#/brand/types'
 import {EARTH_MARK_SVG} from '../shared/earthMark.svg'
-import {DEFAULT_BRAND_PAGE_LINKS} from '../shared/links'
+import {
+  BRAND_INVITE_REQUEST_URL,
+  DEFAULT_BRAND_PAGE_LINKS,
+} from '../shared/links'
 import nativeConfig from './brand.js'
 import {COSEEKER_WORDMARK_SVG} from './wordmark.svg'
 
@@ -306,6 +309,14 @@ const brand: Brand = {
       scale: 1.8,
     },
     logotypeHeaderWidth: 150,
+  },
+
+  welcomeModal: {
+    headline: 'Conversations to understand consciousness',
+    subtitle: 'CoSeeker is invite-only for sincere seekers.',
+    primaryLabel: 'I Have an Invite Code',
+    secondaryLabel: 'Request Invite Code',
+    requestInviteUrl: BRAND_INVITE_REQUEST_URL,
   },
 }
 
