@@ -23,6 +23,7 @@ import * as bsky from '#/types/bsky'
 import {RQKEY as CONVO_KEY} from './conversation'
 import {
   RQKEY_PARTIAL as UNREAD_COUNTS_RQKEY_PARTIAL,
+  UNREAD_ACCEPTED_CAP,
   useUnreadCountsQuery,
 } from './get-unread-counts'
 import {
@@ -858,7 +859,12 @@ export function useUnreadMessageCount(): {
     const total = accepted + Math.min(request, 1)
     return {
       count: total,
-      numUnread: total > 10 ? '10+' : String(total),
+      // accepted is sentinel-capped at UNREAD_ACCEPTED_CAP (meaning "more than
+      // cap - 1"), so show that as the overflow label rather than an exact count
+      numUnread:
+        total >= UNREAD_ACCEPTED_CAP
+          ? `${UNREAD_ACCEPTED_CAP - 1}+`
+          : String(total),
       // only needed when numUnread is undefined
       hasNew: false,
     }

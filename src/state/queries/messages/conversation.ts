@@ -15,7 +15,11 @@ import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {STALE} from '#/state/queries'
 import {useOnMarkAsRead} from '#/state/queries/messages/list-conversations'
 import {useAgent} from '#/state/session'
-import {RQKEY_PARTIAL as UNREAD_COUNTS_PARTIAL_KEY} from './get-unread-counts'
+import {
+  RQKEY_PARTIAL as UNREAD_COUNTS_PARTIAL_KEY,
+  UNREAD_ACCEPTED_CAP,
+  UNREAD_REQUEST_CAP,
+} from './get-unread-counts'
 import {
   type ConvoListQueryData,
   getConvoFromQueryData,
@@ -24,14 +28,6 @@ import {
 
 export const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
-
-// the badge counts are sentinel-capped by the server: unreadAcceptedConvos
-// maxes at 31 (meaning "more than 30") and unreadRequestConvos at 11 (meaning
-// "more than 10"). at the cap the value is no longer an exact count, so a naive
-// -1 decrement is wrong - skip the optimistic decrement and let onSuccess
-// invalidation reconcile with the server instead.
-const UNREAD_ACCEPTED_CAP = 31
-const UNREAD_REQUEST_CAP = 11
 
 export function useConvoQuery({convoId}: {convoId: string}) {
   const agent = useAgent()
