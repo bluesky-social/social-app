@@ -6,11 +6,11 @@ import {
   AppBskyLabelerDefs,
   type ChatBskyConvoDefs,
   ChatBskyEmbedJoinLink,
+  ChatBskyGroupDefs,
 } from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
 import {BSKY_APP_HOST, toShortUrl} from '#/lib/strings/url-helpers'
-import {isKnownJoinLinkPreview} from '#/state/queries/join-links'
 
 /**
  * Describes the embed of a quoted message that has no text of its own, so the
@@ -70,13 +70,29 @@ export function useReplyPreviewText(): (
 
     if (ChatBskyEmbedJoinLink.isView(message.embed)) {
       const {joinLinkPreview} = message.embed
+      if (ChatBskyGroupDefs.isJoinLinkPreviewView(joinLinkPreview)) {
+        return {
+          text: `${BSKY_APP_HOST}/chat/${joinLinkPreview.code}`,
+          subtle: true,
+        }
+      }
+      if (
+        ChatBskyGroupDefs.isDisabledJoinLinkPreviewView(joinLinkPreview) ||
+        ChatBskyGroupDefs.isInvalidJoinLinkPreviewView(joinLinkPreview)
+      ) {
+        return {
+          text: l({
+            message: '(expired chat invite link)',
+            comment: 'A reply summary in chat',
+          }),
+          subtle: true,
+        }
+      }
       return {
-        text: isKnownJoinLinkPreview(joinLinkPreview)
-          ? `${BSKY_APP_HOST}/chat/${joinLinkPreview.code}`
-          : l({
-              message: '(chat invite link)',
-              comment: 'A reply summary in chat',
-            }),
+        text: l({
+          message: '(chat invite link)',
+          comment: 'A reply summary in chat',
+        }),
         subtle: true,
       }
     }
@@ -91,29 +107,6 @@ export function useReplyPreviewText(): (
             message: '(quoted post)',
             comment: 'A reply summary in chat',
           }),
-          subtle: true,
-        }
-      case 'feed':
-        return {
-          text: l({message: '(feed)', comment: 'A reply summary in chat'}),
-          subtle: true,
-        }
-      case 'list':
-        return {
-          text: l({message: '(list)', comment: 'A reply summary in chat'}),
-          subtle: true,
-        }
-      case 'starterPack':
-        return {
-          text: l({
-            message: '(starter pack)',
-            comment: 'A reply summary in chat',
-          }),
-          subtle: true,
-        }
-      case 'labeler':
-        return {
-          text: l({message: '(labeler)', comment: 'A reply summary in chat'}),
           subtle: true,
         }
       default:
