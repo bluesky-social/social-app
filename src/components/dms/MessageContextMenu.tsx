@@ -1,4 +1,4 @@
-import {memo, useCallback} from 'react'
+import {memo, useCallback, useRef} from 'react'
 import {Platform} from 'react-native'
 import {type GestureType} from 'react-native-gesture-handler'
 import * as Clipboard from 'expo-clipboard'
@@ -59,6 +59,21 @@ export let MessageContextMenu = ({
   const {setReply} = useMessageReplies()
   const langPrefs = useLanguagePrefs()
   const translate = useGoogleTranslate()
+
+  // On web, the menu is a Radix dropdown that restores focus to the trigger on
+  // close. When Reply is chosen we want focus to land in the composer instead
+  // (handled by the reply effect there), so we suppress the trigger refocus.
+  const didReply = useRef(false)
+  const onReply = useCallback(() => {
+    didReply.current = true
+    setReply(message)
+  }, [setReply, message])
+  const onCloseAutoFocus = useCallback((event: Event) => {
+    if (didReply.current) {
+      didReply.current = false
+      event.preventDefault()
+    }
+  }, [])
 
   const isFromSelf = message.sender?.did === currentAccount?.did
   const isGroupChatEnabled = !ax.features.enabled(ax.features.GroupChatsDisable)
@@ -161,11 +176,12 @@ export let MessageContextMenu = ({
         label={l`Sent at ${i18n.date(new Date(message.sentAt), {
           timeStyle: 'short',
         })}`}
-        style={[isFromSelf && isGroupChatEnabled ? null : a.ml_sm]}>
+        style={[isFromSelf && isGroupChatEnabled ? null : a.ml_sm]}
+        onCloseAutoFocus={onCloseAutoFocus}>
         <ContextMenu.Item
           testID="messageDropdownReplyBtn"
           label={l`Reply`}
-          onPress={() => setReply(message)}>
+          onPress={onReply}>
           <ContextMenu.ItemIcon icon={ReplyIcon} position="left" />
           <ContextMenu.ItemText>{l`Reply`}</ContextMenu.ItemText>
         </ContextMenu.Item>
