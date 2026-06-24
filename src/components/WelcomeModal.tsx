@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {FocusGuards, FocusScope} from 'radix-ui/internal'
 
-import {getActiveBrand} from '#/brand/activeBrand'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
@@ -13,6 +12,7 @@ import {Button, ButtonText} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {getActiveBrand} from '#/brand/activeBrand'
 
 interface WelcomeModalProps {
   control: {
