@@ -225,6 +225,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                     <Text
                       style={[
                         a.flex_1,
+                        a.text_right,
                         t.atoms.text_contrast_medium,
                         !gtMobile && a.text_md,
                       ]}>
