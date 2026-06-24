@@ -104,7 +104,7 @@ export function useReplyPreviewText(): (
         }
       default:
         return {
-          text: l({message: 'No text', comment: 'A reply summary in chat'}),
+          text: l({message: '(no text)', comment: 'A reply summary in chat'}),
           subtle: true,
         }
     }
