@@ -105,6 +105,13 @@ const brand: Brand = {
       small: require('../../assets/kawaii_smol.png'),
     },
   },
+
+  welcomeModal: {
+    headline: 'Real people.\nReal conversations.\nSocial media you control.',
+    primaryLabel: 'Create account',
+    // Open signup, no invite required; the secondary CTA just dismisses.
+    secondaryLabel: 'Explore the app',
+  },
 }
 
 export default brand

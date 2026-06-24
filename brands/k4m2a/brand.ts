@@ -2,7 +2,10 @@ import {type Palette} from '@bsky.app/alf'
 
 import {type Brand} from '#/brand/types'
 import {EARTH_MARK_SVG} from '../shared/earthMark.svg'
-import {DEFAULT_BRAND_PAGE_LINKS} from '../shared/links'
+import {
+  BRAND_INVITE_REQUEST_URL,
+  DEFAULT_BRAND_PAGE_LINKS,
+} from '../shared/links'
 import nativeConfig from './brand.js'
 
 /**
@@ -353,6 +356,14 @@ const brand: Brand = {
       scale: 1.8,
     },
     logotypeHeaderWidth: 110,
+  },
+
+  welcomeModal: {
+    headline: 'Together, pave the way for humanity to awaken.',
+    subtitle: 'Join the team building the infrastructure for human awakening.',
+    primaryLabel: 'I Have an Invite Code',
+    secondaryLabel: 'Request Invite Code',
+    requestInviteUrl: BRAND_INVITE_REQUEST_URL,
   },
 }
 
