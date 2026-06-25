@@ -155,6 +155,11 @@ export function SearchScreenShell({
     [accountHistory, setAccountHistory],
   )
 
+  const clearAllHistory = useCallback(() => {
+    setTermHistory([])
+    setAccountHistory([])
+  }, [setTermHistory, setAccountHistory])
+
   const {params, query, queryWithParams} = useQueryManager({
     initialQuery: queryParam,
     fixedParams,
@@ -453,6 +458,7 @@ export function SearchScreenShell({
             onProfileClick={handleProfileClick}
             onRemoveItemClick={deleteSearchHistoryItem}
             onRemoveProfileClick={deleteProfileHistoryItem}
+            onClearAll={clearAllHistory}
           />
         )}
       </View>
