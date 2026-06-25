@@ -1914,14 +1914,6 @@
       "count": 2
     }
   },
-  "src/state/queries/search-posts.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 2
-    }
-  },
   "src/state/queries/starter-packs.ts": {
     "@typescript-eslint/require-await": {
       "count": 1
