@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "passTypeIdentifier": "pass.app.bsky.invite",
+  "passTypeIdentifier": "pass.xyz.blueskyweb.app",
   "serialNumber": "did:plc:abc123-night-v1",
   "teamIdentifier": "TEAMID00",
   "organizationName": "Bluesky",

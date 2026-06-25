@@ -62,7 +62,7 @@ type pkPass struct {
 	Barcodes            []barcode       `json:"barcodes"`
 }
 
-const passTypeIdentifier = "pass.app.bsky.invite"
+const passTypeIdentifier = "pass.xyz.blueskyweb.app"
 
 func BuildPassJSON(did, handle, theme, teamID string) ([]byte, error) {
 	theme = CoerceTheme(theme)
