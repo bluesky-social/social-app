@@ -191,8 +191,9 @@ function DialogInner({
       dateUntilActive,
       filters,
     })
-    onSubmit(nextQ, nextFilters)
-    control.close()
+    // Run the submit (navigation + state updates) inside the close callback so
+    // it doesn't race the sheet's close animation on native.
+    control.close(() => onSubmit(nextQ, nextFilters))
   }
 
   function cancelButton() {

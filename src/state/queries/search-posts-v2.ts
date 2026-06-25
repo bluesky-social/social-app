@@ -69,16 +69,22 @@ export function useSearchPostsV2Query({
       // merged with the explicit structured filters from the advanced search
       // dialog; see buildSearchPostsV2Filters for how the two sources combine.
       const {q, ...embedded} = extractSearchPostsParams(query)
+      const builtFilters = buildSearchPostsV2Filters(embedded, filters)
+      // v2 defaults to a recent-post window; the Latest tab keeps that, while
+      // Top searches the full index. But an explicit since/until date filter
+      // must search the full index too, otherwise the recent window would
+      // silently override the user's date range and return nothing for older
+      // dates.
+      const hasDateFilter = !!(builtFilters.since || builtFilters.until)
       const res = await agent.app.bsky.feed.searchPostsV2({
-        ...buildSearchPostsV2Filters(embedded, filters),
+        ...builtFilters,
         query: q,
         limit: 25,
         cursor: pageParam,
         // v2 calls the recency sort 'recent'; the rest of the app still uses the
         // v1 'latest' label.
         sort: sort === 'latest' ? 'recent' : sort,
-        // v2 defaults to the last 30 days.
-        allTime: sort !== 'latest',
+        allTime: sort !== 'latest' || hasDateFilter,
       })
       return res.data
     },
