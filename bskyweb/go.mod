@@ -12,6 +12,7 @@ require (
 	github.com/labstack/echo/v4 v4.13.4
 	github.com/prometheus/client_golang v1.22.0
 	github.com/urfave/cli/v2 v2.25.7
+	go.mozilla.org/pkcs7 v0.9.0
 	golang.org/x/image v0.43.0
 )
 
