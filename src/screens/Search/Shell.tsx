@@ -1,6 +1,7 @@
 import {
   memo,
   useCallback,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -12,6 +13,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {setStringAsync} from 'expo-clipboard'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -19,7 +21,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {HITSLOP_10, HITSLOP_20} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {MagnifyingGlassIcon} from '#/lib/icons'
-import {type NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp, type SearchParams} from '#/lib/routes/types'
 import {listenSoftReset} from '#/state/events'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {
@@ -28,26 +30,39 @@ import {
 } from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {
-  makeSearchQuery,
-  type Params,
-  parseSearchQuery,
-} from '#/screens/Search/utils'
+  definedFilterParams,
+  filtersToLegacyParams,
+  filtersToRouteParams,
+  hasActiveFilters,
+  readSearchFilters,
+  type SearchFilters,
+  withoutFilterParams,
+} from '#/screens/Search/searchParams'
+import {makeSearchQuery} from '#/screens/Search/utils'
 import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {SearchInput} from '#/components/forms/SearchInput'
+import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
+import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import * as Layout from '#/components/Layout'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_WEB} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {account, useStorage} from '#/storage'
 import type * as bsky from '#/types/bsky'
+import {AdvancedSearchDialog} from './components/AdvancedSearchDialog'
 import {AutocompleteResults} from './components/AutocompleteResults'
+import {DetectedLanguagesAdmonition} from './components/DetectedLanguagesAdmonition'
 import {SearchHistory} from './components/SearchHistory'
 import {SearchLanguageDropdown} from './components/SearchLanguageDropdown'
 import {Explore} from './Explore'
 import {SearchResults} from './SearchResults'
 
-type TabParam = 'user' | 'profile' | 'feed' | 'latest'
+// Derived from the route param so the two can't drift. NonNullable because the
+// tab param is optional on the route but the handlers below always work with a
+// concrete value.
+type TabParam = NonNullable<SearchParams['tab']>
 
 // Map tab parameter to tab index
 function getTabIndex(tabParam?: TabParam) {
@@ -74,7 +89,7 @@ export function SearchScreenShell({
 }: {
   queryParam: string
   testID: string
-  fixedParams?: Params
+  fixedParams?: SearchFilters
   navButton?: 'back' | 'menu'
   inputPlaceholder?: string
   isExplore?: boolean
@@ -89,6 +104,10 @@ export function SearchScreenShell({
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
 
+  const searchV2Enabled = ax.features.enabled(ax.features.SearchV2Enable)
+  const advancedSearchV2Enabled =
+    searchV2Enabled && ax.features.enabled(ax.features.AdvancedSearchV2Enable)
+
   // Get tab parameter from route params
   const tabParam = (route.params as {q?: string; tab?: TabParam})?.tab
   const [activeTab, setActiveTab] = useState(() => getTabIndex(tabParam))
@@ -100,6 +119,7 @@ export function SearchScreenShell({
     searchTextRef.current = text
     setSearchText(text)
   }, [])
+
   const {data: autocompleteData, isFetching: isAutocompleteFetching} =
     useActorAutocompleteQuery(searchText, true)
 
@@ -155,11 +175,19 @@ export function SearchScreenShell({
     [accountHistory, setAccountHistory],
   )
 
-  const {params, query, queryWithParams} = useQueryManager({
-    initialQuery: queryParam,
-    fixedParams,
-  })
-  const showFilters = Boolean(queryWithParams && !showAutocomplete)
+  const {query, queryWithParams, filters, setFilters, hasFilters} =
+    useQueryManager({
+      initialQuery: queryParam,
+      fixedParams,
+    })
+  const showFilters = Boolean((query || hasFilters) && !showAutocomplete)
+
+  const onChangeLang = useCallback(
+    (lang: string) => {
+      setFilters({...filters, lang: lang || undefined})
+    },
+    [filters, setFilters],
+  )
 
   // web only - measure header height for sticky positioning
   const [headerHeight, setHeaderHeight] = useState(0)
@@ -172,6 +200,16 @@ export function SearchScreenShell({
     }
   }, [])
 
+  // On native, navigating to an already-mounted Search screen with a new `q`
+  // (e.g. from a post hashtag/search link) updates the route param without
+  // remounting, so re-sync the input. Web handles this via the focus effect
+  // below, which fires on back/forward navigation.
+  useEffect(() => {
+    if (IS_NATIVE) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      updateSearchText(queryParam)
+    }
+  }, [queryParam, updateSearchText])
   useFocusEffect(
     useNonReactiveCallback(() => {
       if (IS_WEB) {
@@ -182,9 +220,23 @@ export function SearchScreenShell({
 
   const onPressClearQuery = useCallback(() => {
     scrollToTopWeb()
-    updateSearchText('')
+    // Clearing the query also resets any advanced-search filters, then keeps the
+    // input focused so the user can immediately type a new search.
+    if (IS_WEB) {
+      // Replace the param set so q/tab/filters drop out of the URL instead of
+      // serializing as the literal string "undefined". fixedParams live on the
+      // route already and are preserved by withoutSearchParams.
+      const parameters = withoutSearchParams(
+        route.params as Record<string, unknown>,
+      )
+      // @ts-expect-error route is not typesafe
+      navigation.replace(route.name, parameters)
+    } else {
+      updateSearchText('')
+      navigation.setParams({...filtersToRouteParams({}), q: ''})
+    }
     textInput.current?.focus()
-  }, [updateSearchText])
+  }, [updateSearchText, navigation, route])
 
   const onChangeText = useCallback(
     (text: string) => {
@@ -217,19 +269,19 @@ export function SearchScreenShell({
     setShowAutocomplete(false)
     if (IS_WEB) {
       // Empty params resets the URL to be /search rather than /search?q=
-      // Also clear the tab parameter
-      const {
-        q: _q,
-        tab: _tab,
-        ...parameters
-      } = (route.params ?? {}) as {
-        [key: string]: string
-      }
+      // Also clear tab and advanced-search filter parameters.
+      const parameters = withoutSearchParams(
+        route.params as Record<string, unknown>,
+      )
       // @ts-expect-error route is not typesafe
       navigation.replace(route.name, parameters)
     } else {
       updateSearchText('')
-      navigation.setParams({q: '', tab: undefined})
+      navigation.setParams({
+        ...filtersToRouteParams({}),
+        q: '',
+        tab: undefined,
+      })
     }
   }, [
     setShowAutocomplete,
@@ -245,6 +297,35 @@ export function SearchScreenShell({
     })
     navigateToItem(searchTextRef.current)
   }
+
+  const onSubmitAdvanced = useCallback(
+    (text: string, nextFilters: SearchFilters) => {
+      scrollToTopWeb()
+      setShowAutocomplete(false)
+      updateSearchText(text)
+      updateSearchHistory(text)
+      ax.metric('search:query', {
+        source: 'typed',
+      })
+      if (IS_WEB) {
+        // Build a fresh param set so removed filters drop out of the URL.
+        // Only defined filters are included - undefined values would serialize
+        // as the literal string "undefined".
+        const nextParams = {
+          ...withoutFilterParams(route.params as Record<string, unknown>),
+          ...definedFilterParams(nextFilters),
+          q: text,
+        }
+        // @ts-expect-error route is not typesafe
+        navigation.push(route.name, nextParams)
+      } else {
+        textInput.current?.blur()
+        // setParams merges, so pass undefined for absent keys to clear them.
+        navigation.setParams({...filtersToRouteParams(nextFilters), q: text})
+      }
+    },
+    [ax, navigation, route, updateSearchText, updateSearchHistory],
+  )
 
   const onAutocompleteResultPress = useCallback(() => {
     if (IS_WEB) {
@@ -276,19 +357,19 @@ export function SearchScreenShell({
   const onSoftReset = useCallback(() => {
     if (IS_WEB) {
       // Empty params resets the URL to be /search rather than /search?q=
-      // Also clear the tab parameter when soft resetting
-      const {
-        q: _q,
-        tab: _tab,
-        ...parameters
-      } = (route.params ?? {}) as {
-        [key: string]: string
-      }
+      // Also clear tab and advanced-search filter parameters.
+      const parameters = withoutSearchParams(
+        route.params as Record<string, unknown>,
+      )
       // @ts-expect-error route is not typesafe
       navigation.replace(route.name, parameters)
     } else {
       updateSearchText('')
-      navigation.setParams({q: '', tab: undefined})
+      navigation.setParams({
+        ...filtersToRouteParams({}),
+        q: '',
+        tab: undefined,
+      })
       textInput.current?.focus()
     }
   }, [navigation, route.name, route.params, updateSearchText])
@@ -327,6 +408,19 @@ export function SearchScreenShell({
     [navigation, route],
   )
 
+  const onShareSearch = useCallback(() => {
+    const url = new URL('https://bsky.app')
+    url.pathname = '/search'
+    if (query) url.searchParams.set('q', query)
+    for (const [key, value] of Object.entries(definedFilterParams(filters))) {
+      url.searchParams.set(key, value)
+    }
+    setStringAsync(url.toString()).then(
+      () => Toast.show(l`Copied to clipboard`, {type: 'success'}),
+      () => Toast.show(l`Failed to copy link`, {type: 'error'}),
+    )
+  }, [query, filters, l])
+
   const showHeader = !gtMobile || navButton !== 'menu'
 
   return (
@@ -363,10 +457,29 @@ export function SearchScreenShell({
                   </Layout.Header.TitleText>
                 </Layout.Header.Content>
                 {showFilters ? (
-                  <SearchLanguageDropdown
-                    value={params.lang}
-                    onChange={params.setLang}
-                  />
+                  advancedSearchV2Enabled ? (
+                    <>
+                      <Button
+                        accessibilityRole="button"
+                        size="small"
+                        color="secondary"
+                        shape="round"
+                        label={l`Share this search`}
+                        onPress={onShareSearch}>
+                        <ButtonIcon icon={ChainLinkIcon} />
+                      </Button>
+                      <AdvancedSearchDialog
+                        q={searchText}
+                        filters={filters}
+                        onSubmit={onSubmitAdvanced}
+                      />
+                    </>
+                  ) : (
+                    <SearchLanguageDropdown
+                      value={filters.lang ?? ''}
+                      onChange={onChangeLang}
+                    />
+                  )
                 ) : (
                   <Layout.Header.Slot />
                 )}
@@ -375,51 +488,74 @@ export function SearchScreenShell({
           )}
           <View style={[a.px_lg, a.pt_sm, a.pb_sm, a.overflow_hidden]}>
             <View style={[a.gap_sm]}>
+              {searchV2Enabled && query && !showAutocomplete && (
+                <DetectedLanguagesAdmonition
+                  query={query}
+                  filters={filters}
+                  sort={activeTab === 1 ? 'latest' : 'top'}
+                  enabled={activeTab === 0 || activeTab === 1}
+                  onPressLanguage={onChangeLang}
+                />
+              )}
+
               <View style={[a.w_full, a.flex_row, a.align_stretch, a.gap_xs]}>
-                <View style={[a.flex_1]}>
-                  <SearchInput
-                    ref={textInput}
-                    value={searchText}
-                    onFocus={onSearchInputFocus}
-                    onChangeText={onChangeText}
-                    onClearText={onPressClearQuery}
-                    onSubmitEditing={onSubmit('typed')}
-                    placeholder={
-                      inputPlaceholder ?? l`Search for posts, users, or feeds`
-                    }
-                    hitSlop={{...HITSLOP_20, top: 0}}
-                    hotkey={true}
-                  />
+                <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
+                  {showAutocomplete && (
+                    <Button
+                      label={l`Cancel search`}
+                      size="large"
+                      variant="ghost"
+                      color="secondary"
+                      shape="rectangular"
+                      style={[a.px_sm]}
+                      onPress={onPressCancelSearch}
+                      hitSlop={HITSLOP_10}>
+                      <ButtonIcon icon={ArrowLeftIcon} />
+                    </Button>
+                  )}
+                  <View style={[a.flex_1]}>
+                    <SearchInput
+                      ref={textInput}
+                      value={searchText}
+                      onFocus={onSearchInputFocus}
+                      onChangeText={onChangeText}
+                      onClearText={onPressClearQuery}
+                      onSubmitEditing={onSubmit('typed')}
+                      placeholder={inputPlaceholder ?? l`Search`}
+                      hitSlop={{...HITSLOP_20, top: 0}}
+                      hotkey={true}
+                    />
+                  </View>
                 </View>
-                {showAutocomplete && (
-                  <Button
-                    label={l`Cancel search`}
-                    size="large"
-                    variant="ghost"
-                    color="secondary"
-                    shape="rectangular"
-                    style={[a.px_sm]}
-                    onPress={onPressCancelSearch}
-                    hitSlop={HITSLOP_10}>
-                    <ButtonText>
-                      <Trans>Cancel</Trans>
-                    </ButtonText>
-                  </Button>
-                )}
               </View>
 
               {showFilters && !showHeader && (
-                <View
-                  style={[
-                    a.flex_row,
-                    a.align_center,
-                    a.justify_between,
-                    a.gap_sm,
-                  ]}>
-                  <SearchLanguageDropdown
-                    value={params.lang}
-                    onChange={params.setLang}
-                  />
+                <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                  {advancedSearchV2Enabled ? (
+                    <>
+                      <AdvancedSearchDialog
+                        q={searchText}
+                        filters={filters}
+                        onSubmit={onSubmitAdvanced}
+                      />
+                      <Button
+                        accessibilityRole="button"
+                        size="small"
+                        color="secondary"
+                        label={l`Share this search`}
+                        onPress={onShareSearch}>
+                        <ButtonIcon icon={ChainLinkIcon} />
+                        <ButtonText>
+                          <Trans>Copy link</Trans>
+                        </ButtonText>
+                      </Button>
+                    </>
+                  ) : (
+                    <SearchLanguageDropdown
+                      value={filters.lang ?? ''}
+                      onChange={onChangeLang}
+                    />
+                  )}
                 </View>
               )}
             </View>
@@ -462,11 +598,13 @@ export function SearchScreenShell({
           flex: 1,
         }}>
         <SearchScreenInner
-          key={params.lang}
+          key={filters.lang ?? ''}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           query={query}
           queryWithParams={queryWithParams}
+          filters={filters}
+          hasFilters={hasFilters}
           headerHeight={headerHeight}
           focusSearchInput={focusSearchInput}
         />
@@ -480,6 +618,8 @@ let SearchScreenInner = ({
   setActiveTab,
   query,
   queryWithParams,
+  filters,
+  hasFilters,
   headerHeight,
   focusSearchInput,
 }: {
@@ -487,6 +627,8 @@ let SearchScreenInner = ({
   setActiveTab: React.Dispatch<React.SetStateAction<number>>
   query: string
   queryWithParams: string
+  filters: SearchFilters
+  hasFilters: boolean
   headerHeight: number
   focusSearchInput: (tab?: TabParam) => void
 }): React.ReactNode => {
@@ -498,14 +640,15 @@ let SearchScreenInner = ({
     setActiveTab(index)
   }
 
-  return queryWithParams ? (
+  return query || hasFilters ? (
     <SearchResults
       query={query}
       queryWithParams={queryWithParams}
+      filters={filters}
+      hasFilters={hasFilters}
       activeTab={activeTab}
       headerHeight={headerHeight}
       onPageSelected={onPageSelected}
-      initialPage={activeTab}
     />
   ) : hasSession ? (
     <Explore focusSearchInput={focusSearchInput} headerHeight={headerHeight} />
@@ -548,51 +691,62 @@ function useQueryManager({
   fixedParams,
 }: {
   initialQuery: string
-  fixedParams?: Params
+  fixedParams?: SearchFilters
 }) {
-  const {query, params: initialParams} = useMemo(() => {
-    return parseSearchQuery(initialQuery || '')
-  }, [initialQuery])
-  const [prevInitialQuery, setPrevInitialQuery] = useState(initialQuery)
-  const [lang, setLang] = useState(initialParams.lang || '')
+  const navigation = useNavigation<NavigationProp>()
+  const route = useRoute()
 
-  if (initialQuery !== prevInitialQuery) {
-    // handle new queryParam change (from manual search entry)
-    setPrevInitialQuery(initialQuery)
-    setLang(initialParams.lang || '')
-  }
+  // Free text only - structured filters live in sibling route params now.
+  const query = initialQuery
 
-  const params = useMemo(
-    () => ({
-      // default stuff
-      ...initialParams,
-      // managed stuff
-      lang,
-      ...fixedParams,
-    }),
-    [lang, initialParams, fixedParams],
+  const filters = useMemo(() => {
+    const fromRoute = readSearchFilters(route.params as Record<string, unknown>)
+    // fixedParams (e.g. ProfileSearch's author) always win and can't be cleared.
+    return {...fromRoute, ...fixedParams}
+  }, [route.params, fixedParams])
+
+  const setFilters = useCallback(
+    (next: SearchFilters) => {
+      const merged = {...next, ...fixedParams}
+      if (IS_WEB) {
+        // Replace the param set so removed filters drop out of the URL instead
+        // of serializing as the literal string "undefined".
+        const nextParams = {
+          ...withoutFilterParams(route.params as Record<string, unknown>),
+          ...definedFilterParams(merged),
+        }
+        // @ts-expect-error route is not typesafe
+        navigation.replace(route.name, nextParams)
+      } else {
+        navigation.setParams(filtersToRouteParams(merged))
+      }
+    },
+    [navigation, route, fixedParams],
   )
-  const handlers = useMemo(
-    () => ({
-      setLang,
-    }),
-    [setLang],
-  )
 
-  return useMemo(() => {
-    return {
+  return useMemo(
+    () => ({
       query,
-      queryWithParams: makeSearchQuery(query, params),
-      params: {
-        ...params,
-        ...handlers,
-      },
-    }
-  }, [query, params, handlers])
+      queryWithParams: makeSearchQuery(query, filtersToLegacyParams(filters)),
+      filters,
+      setFilters,
+      hasFilters: hasActiveFilters(filters),
+    }),
+    [query, filters, setFilters],
+  )
 }
 
 function scrollToTopWeb() {
   if (IS_WEB) {
     window.scrollTo(0, 0)
   }
+}
+
+function withoutSearchParams(
+  routeParams: Record<string, unknown> | undefined,
+): Record<string, unknown> {
+  const parameters = withoutFilterParams(routeParams)
+  delete parameters.q
+  delete parameters.tab
+  return parameters
 }
