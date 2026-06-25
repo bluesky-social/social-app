@@ -291,6 +291,7 @@ jobs:
           ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
           APP_VERSION: ${{ needs.build.outputs.package-version }}
           BUILD_NUMBER: ${{ needs.build.outputs.build-number }}
+          BRANCH_NAME: ${{ github.ref_name }}
         run: |
           # Ensure the API key material is removed even if fastlane exits non-zero
           # (the step runs under `bash -e`, which would otherwise abort before cleanup).
@@ -306,6 +307,7 @@ jobs:
             > asc_api_key.json
           # app_platform is required in non-interactive mode: distribute_only otherwise
           # calls fetch_app_platform, which prompts for input and crashes without a TTY.
+          SHORT_SHA="$(git rev-parse --short HEAD)"
           fastlane run upload_to_testflight \
             api_key_path:"$PWD/asc_api_key.json" \
             distribute_only:true \
@@ -313,5 +315,6 @@ jobs:
             app_identifier:"xyz.blueskyweb.app" \
             app_version:"$APP_VERSION" \
             build_number:"$BUILD_NUMBER" \
+            changelog:"swm-new-arch: $BRANCH_NAME @ $SHORT_SHA" \
             groups:"$TESTFLIGHT_GROUP" \
             notify_external_testers:true
