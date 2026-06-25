@@ -43,7 +43,7 @@ export async function compressVideo(
       uri: file.uri,
       size: file.fileSize,
       mimeType: file.mimeType ?? 'video/mp4',
-      passthroughReason: 'below-threshold',
+      passthroughReason: 'below-byte-threshold',
     }
   }
 
@@ -53,6 +53,13 @@ export async function compressVideo(
       compressionMethod: 'manual',
       bitrate: 3_000_000, // 3mbps
       maxSize: 1920,
+      // Force a transcode for unacceptable-format files regardless of size.
+      // rnc's default minimumFileSizeForCompress would otherwise pass small
+      // unacceptable-format files through unchanged and the server would
+      // reject them. Acceptable formats are already short-circuited above so
+      // they never reach this call.
+      // WARNING: this ONE SPECIFIC ARG is in MB -sfn
+      minimumFileSizeForCompress: 0,
       getCancellationId: id => {
         if (signal) {
           signal.addEventListener('abort', () => {

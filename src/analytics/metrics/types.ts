@@ -5,6 +5,7 @@
 import {type Platform} from 'react-native'
 
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
+import {type VideoCompressSkipReason} from '#/lib/media/video/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
@@ -1362,11 +1363,7 @@ export type Events = {
   'video:upload:compressSkipped': {
     uploadId: string
     engine: string
-    reason:
-      | 'gif'
-      | 'below-threshold'
-      | 'no-webcodecs'
-      | 'compress-error-fallback'
+    skipReason: VideoCompressSkipReason
     bytes: number
     mimeType: string
     elapsedMs: number

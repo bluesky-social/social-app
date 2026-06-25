@@ -65,7 +65,7 @@ export async function compressVideo(
   } else if (!hasCodecs) {
     fallbackReason = 'no-webcodecs'
   } else if (blob.size < COMPRESSION_MIN_SIZE_BYTES) {
-    fallbackReason = 'below-threshold'
+    fallbackReason = 'below-byte-threshold'
   } else {
     try {
       return await doCompression(blob, asset.uri, {onProgress, signal})

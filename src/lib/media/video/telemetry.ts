@@ -1,6 +1,8 @@
 import {Platform} from 'react-native'
 import {type ImagePickerAsset} from 'expo-image-picker'
+import {nanoid} from 'nanoid/non-secure'
 
+import {type VideoCompressSkipReason} from '#/lib/media/video/types'
 import {Sentry} from '#/logger/sentry/lib'
 import {type Metrics} from '#/analytics/metrics'
 
@@ -16,20 +18,6 @@ const COMPRESS_ENGINE =
 
 type Phase = 'compress' | 'upload' | 'processing'
 
-type SkipReason =
-  | 'gif'
-  | 'below-threshold'
-  | 'no-webcodecs'
-  | 'compress-error-fallback'
-
-function makeUploadId(): string {
-  const c = (globalThis as {crypto?: {randomUUID?: () => string}}).crypto
-  if (c?.randomUUID) return c.randomUUID()
-  return `up_${Date.now().toString(36)}_${Math.random()
-    .toString(36)
-    .slice(2, 10)}`
-}
-
 function errorClass(e: unknown): string {
   if (e instanceof Error) return e.name || 'Error'
   return 'Unknown'
@@ -43,7 +31,7 @@ export type VideoTelemetry = {
   compressSkipped: (video: {
     size: number
     mimeType: string
-    reason: SkipReason
+    skipReason: VideoCompressSkipReason
   }) => void
   compressCompleted: (video: {size: number; mimeType: string}) => void
   compressFailed: (e: unknown) => void
@@ -65,7 +53,7 @@ export function createVideoTelemetry({
   signal: AbortSignal
   metric: MetricFn
 }): VideoTelemetry {
-  const uploadId = makeUploadId()
+  const uploadId = nanoid()
   const engine = COMPRESS_ENGINE
   const startedAt = Date.now()
 
@@ -167,11 +155,11 @@ export function createVideoTelemetry({
       })
     },
 
-    compressSkipped({size, mimeType, reason}) {
+    compressSkipped({size, mimeType, skipReason}) {
       metric('video:upload:compressSkipped', {
         uploadId,
         engine,
-        reason,
+        skipReason,
         bytes: size,
         mimeType,
         elapsedMs: Date.now() - phaseStartedAt,

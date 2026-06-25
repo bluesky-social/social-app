@@ -305,7 +305,7 @@ export async function processVideo(
     telemetry.compressSkipped({
       size: video.size,
       mimeType: video.mimeType,
-      reason: video.passthroughReason,
+      skipReason: video.passthroughReason,
     })
   } else {
     telemetry.compressCompleted({size: video.size, mimeType: video.mimeType})
