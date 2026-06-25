@@ -7,6 +7,7 @@ import (
 	"encoding/pem"
 	"errors"
 	"net/url"
+	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -63,7 +64,7 @@ func BuildSaveJWT(cfg *WalletConfig, did, handle, theme string) (string, error) 
 	heroURL := cfg.HeroBaseURL + "?" + heroQuery.Encode()
 
 	obj := map[string]any{
-		"id":      cfg.IssuerID + ".bsky-" + did + "-" + theme,
+		"id":      cfg.IssuerID + ".bsky-" + strings.ReplaceAll(did, ":", "_") + "-" + theme,
 		"classId": cfg.IssuerID + ".bsky_invite_v1",
 		"logo": map[string]any{
 			"sourceUri": map[string]any{"uri": cfg.LogoURL},
