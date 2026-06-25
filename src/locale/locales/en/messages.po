@@ -117,8 +117,8 @@ msgstr ""
 
 #. placeholder {0}: numUnreadMessages.numUnread ?? 0
 #. placeholder {0}: numUnreadNotifications ?? 0
-#: src/view/shell/bottom-bar/BottomBar.tsx:242
-#: src/view/shell/bottom-bar/BottomBar.tsx:274
+#: src/view/shell/bottom-bar/BottomBar.tsx:240
+#: src/view/shell/bottom-bar/BottomBar.tsx:272
 #: src/view/shell/Drawer.tsx:564
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr ""
@@ -1293,7 +1293,7 @@ msgstr ""
 msgid "Adult Content"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:377
+#: src/screens/Moderation/index.tsx:376
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
 msgstr ""
 
@@ -1310,7 +1310,7 @@ msgstr ""
 msgid "Adult sexual abuse content"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:420
+#: src/screens/Moderation/index.tsx:419
 msgid "Advanced"
 msgstr ""
 
@@ -2070,7 +2070,7 @@ msgstr "Block user and/or leave this conversation"
 msgid "Blocked"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:300
+#: src/screens/Moderation/index.tsx:299
 msgid "Blocked accounts"
 msgstr ""
 
@@ -2416,7 +2416,7 @@ msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:133
 #: src/Navigation.tsx:512
-#: src/view/shell/bottom-bar/BottomBar.tsx:239
+#: src/view/shell/bottom-bar/BottomBar.tsx:237
 #: src/view/shell/desktop/LeftNav.tsx:695
 #: src/view/shell/Drawer.tsx:532
 msgid "Chat"
@@ -2902,7 +2902,7 @@ msgstr ""
 msgid "Content Blocked"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:333
+#: src/screens/Moderation/index.tsx:332
 msgid "Content filters"
 msgstr ""
 
@@ -3272,8 +3272,8 @@ msgstr ""
 #: src/screens/Messages/JoinRequest.tsx:310
 #: src/view/com/auth/SplashScreen.tsx:107
 #: src/view/com/auth/SplashScreen.web.tsx:116
-#: src/view/shell/bottom-bar/BottomBar.tsx:342
-#: src/view/shell/bottom-bar/BottomBar.tsx:346
+#: src/view/shell/bottom-bar/BottomBar.tsx:340
+#: src/view/shell/bottom-bar/BottomBar.tsx:344
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:232
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:237
 #: src/view/shell/NavSignupCard.tsx:48
@@ -3688,7 +3688,7 @@ msgstr "Disable this invite link?"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:35
 #: src/lib/moderation/useLabelBehaviorDescription.ts:45
 #: src/lib/moderation/useLabelBehaviorDescription.ts:71
-#: src/screens/Moderation/index.tsx:367
+#: src/screens/Moderation/index.tsx:366
 msgid "Disabled"
 msgstr ""
 
@@ -4168,7 +4168,7 @@ msgstr ""
 msgid "Enable {0} only"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:354
+#: src/screens/Moderation/index.tsx:353
 msgid "Enable adult content"
 msgstr ""
 
@@ -4216,7 +4216,7 @@ msgstr ""
 msgid "Enable trending videos in your Discover feed"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:365
+#: src/screens/Moderation/index.tsx:364
 msgid "Enabled"
 msgstr ""
 
@@ -4629,12 +4629,12 @@ msgstr "Failed to load profiles"
 msgid "Failed to lock group chat"
 msgstr "Failed to lock group chat"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:438
+#: src/view/shell/bottom-bar/BottomBar.tsx:436
 msgid "Failed to mark all chats as read"
 msgstr "Failed to mark all chats as read"
 
 #: src/screens/Messages/Inbox.tsx:301
-#: src/view/shell/bottom-bar/BottomBar.tsx:447
+#: src/view/shell/bottom-bar/BottomBar.tsx:445
 msgid "Failed to mark all requests as read"
 msgstr ""
 
@@ -4833,7 +4833,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:196
 #: src/view/screens/Feeds.tsx:504
 #: src/view/screens/Profile.tsx:264
-#: src/view/shell/desktop/LeftNav.tsx:709
+#: src/view/shell/desktop/LeftNav.tsx:707
 #: src/view/shell/Drawer.tsx:596
 msgid "Feeds"
 msgstr ""
@@ -6014,7 +6014,7 @@ msgstr ""
 msgid "Interaction limited"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:240
+#: src/screens/Moderation/index.tsx:239
 msgid "Interaction settings"
 msgstr ""
 
@@ -6583,7 +6583,7 @@ msgstr ""
 #: src/view/screens/Lists.tsx:60
 #: src/view/screens/Profile.tsx:258
 #: src/view/screens/Profile.tsx:266
-#: src/view/shell/desktop/LeftNav.tsx:719
+#: src/view/shell/desktop/LeftNav.tsx:717
 #: src/view/shell/Drawer.tsx:611
 msgid "Lists"
 msgstr ""
@@ -6761,7 +6761,7 @@ msgstr ""
 msgid "Manage saved feeds"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:310
+#: src/screens/Moderation/index.tsx:309
 msgid "Manage verification settings"
 msgstr ""
 
@@ -6774,13 +6774,13 @@ msgstr ""
 msgid "Mark all as read"
 msgstr ""
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:456
-#: src/view/shell/bottom-bar/BottomBar.tsx:460
+#: src/view/shell/bottom-bar/BottomBar.tsx:454
+#: src/view/shell/bottom-bar/BottomBar.tsx:458
 msgid "Mark all chats as read"
 msgstr "Mark all chats as read"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:464
-#: src/view/shell/bottom-bar/BottomBar.tsx:468
+#: src/view/shell/bottom-bar/BottomBar.tsx:462
+#: src/view/shell/bottom-bar/BottomBar.tsx:466
 msgid "Mark all requests as read"
 msgstr "Mark all requests as read"
 
@@ -6793,11 +6793,11 @@ msgstr ""
 msgid "Marked all as read"
 msgstr ""
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:435
+#: src/view/shell/bottom-bar/BottomBar.tsx:433
 msgid "Marked all chats as read"
 msgstr "Marked all chats as read"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:444
+#: src/view/shell/bottom-bar/BottomBar.tsx:442
 msgid "Marked all requests as read"
 msgstr "Marked all requests as read"
 
@@ -6991,7 +6991,7 @@ msgctxt "toast"
 msgid "Moderation list updated"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:270
+#: src/screens/Moderation/index.tsx:269
 msgid "Moderation lists"
 msgstr ""
 
@@ -7008,7 +7008,7 @@ msgstr ""
 msgid "Moderation states"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:224
+#: src/screens/Moderation/index.tsx:223
 msgid "Moderation tools"
 msgstr ""
 
@@ -7147,7 +7147,7 @@ msgstr ""
 msgid "Muted"
 msgstr "Muted"
 
-#: src/screens/Moderation/index.tsx:285
+#: src/screens/Moderation/index.tsx:284
 msgid "Muted accounts"
 msgstr ""
 
@@ -7165,7 +7165,7 @@ msgstr ""
 msgid "Muted by \"{0}\""
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:255
+#: src/screens/Moderation/index.tsx:254
 msgid "Muted words & tags"
 msgstr ""
 
@@ -7669,7 +7669,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:199
 #: src/screens/Settings/Settings.tsx:202
 #: src/view/screens/Notifications.tsx:128
-#: src/view/shell/bottom-bar/BottomBar.tsx:270
+#: src/view/shell/bottom-bar/BottomBar.tsx:268
 #: src/view/shell/desktop/LeftNav.tsx:684
 #: src/view/shell/Drawer.tsx:559
 msgid "Notifications"
@@ -7916,7 +7916,7 @@ msgstr ""
 msgid "Open moderation debug page"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:251
+#: src/screens/Moderation/index.tsx:250
 msgid "Open muted words and tags settings"
 msgstr ""
 
@@ -8778,8 +8778,8 @@ msgid "profile"
 msgstr ""
 
 #: src/screens/Profile/components/ProfileStatusError.tsx:144
-#: src/view/shell/bottom-bar/BottomBar.tsx:313
-#: src/view/shell/desktop/LeftNav.tsx:742
+#: src/view/shell/bottom-bar/BottomBar.tsx:311
+#: src/view/shell/desktop/LeftNav.tsx:740
 #: src/view/shell/Drawer.tsx:92
 #: src/view/shell/Drawer.tsx:662
 msgid "Profile"
@@ -9051,7 +9051,7 @@ msgstr ""
 #: src/screens/Bookmarks/index.tsx:265
 #: src/screens/Messages/ConversationSettings/Member.tsx:162
 #: src/screens/Messages/ConversationSettings/prompts.tsx:178
-#: src/screens/Moderation/index.tsx:440
+#: src/screens/Moderation/index.tsx:439
 #: src/screens/Settings/Settings.tsx:635
 #: src/view/com/posts/PostFeedErrorMessage.tsx:221
 msgid "Remove"
@@ -9183,7 +9183,7 @@ msgstr ""
 msgid "Remove this feed from your saved feeds"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:436
+#: src/screens/Moderation/index.tsx:435
 msgid "Remove unavailable moderation services"
 msgstr ""
 
@@ -9746,7 +9746,7 @@ msgstr ""
 msgid "Save to my feeds"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:729
+#: src/view/shell/desktop/LeftNav.tsx:727
 #: src/view/shell/Drawer.tsx:637
 msgctxt "link to bookmarks screen"
 msgid "Saved"
@@ -10249,7 +10249,7 @@ msgstr ""
 
 #: src/Navigation.tsx:221
 #: src/screens/Settings/Settings.tsx:94
-#: src/view/shell/desktop/LeftNav.tsx:752
+#: src/view/shell/desktop/LeftNav.tsx:750
 #: src/view/shell/Drawer.tsx:675
 msgid "Settings"
 msgstr ""
@@ -10543,8 +10543,8 @@ msgstr ""
 #: src/view/com/auth/SplashScreen.tsx:124
 #: src/view/com/auth/SplashScreen.web.tsx:122
 #: src/view/com/auth/SplashScreen.web.tsx:130
-#: src/view/shell/bottom-bar/BottomBar.tsx:351
-#: src/view/shell/bottom-bar/BottomBar.tsx:355
+#: src/view/shell/bottom-bar/BottomBar.tsx:349
+#: src/view/shell/bottom-bar/BottomBar.tsx:353
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:242
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:247
 #: src/view/shell/NavSignupCard.tsx:58
@@ -10690,7 +10690,7 @@ msgstr ""
 msgid "Software Dev"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:429
+#: src/screens/Moderation/index.tsx:428
 msgid "Some moderation services in your list are no longer available."
 msgstr ""
 
@@ -10792,7 +10792,7 @@ msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr ""
 
 #: src/App.native.tsx:127
-#: src/App.web.tsx:106
+#: src/App.web.tsx:123
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr ""
 
@@ -11280,7 +11280,7 @@ msgstr ""
 msgid "The Blacksky Trending"
 msgstr "The Blacksky Trending"
 
-#: src/screens/Moderation/index.tsx:380
+#: src/screens/Moderation/index.tsx:379
 msgid "The Bluesky web application"
 msgstr ""
 
@@ -11927,7 +11927,7 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:357
+#: src/screens/Moderation/index.tsx:356
 msgid "Toggle to enable or disable adult content"
 msgstr ""
 
@@ -12581,7 +12581,7 @@ msgstr ""
 msgid "Verification failed, please try again."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:315
+#: src/screens/Moderation/index.tsx:314
 msgid "Verification settings"
 msgstr ""
 
@@ -12856,11 +12856,11 @@ msgstr ""
 msgid "View video"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:295
+#: src/screens/Moderation/index.tsx:294
 msgid "View your blocked accounts"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:235
+#: src/screens/Moderation/index.tsx:234
 msgid "View your default post interaction settings"
 msgstr ""
 
@@ -12869,11 +12869,11 @@ msgstr ""
 msgid "View your feeds and explore more"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:265
+#: src/screens/Moderation/index.tsx:264
 msgid "View your moderation lists"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:280
+#: src/screens/Moderation/index.tsx:279
 msgid "View your muted accounts"
 msgstr ""
 
@@ -13013,7 +13013,7 @@ msgstr ""
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:455
+#: src/screens/Moderation/index.tsx:454
 msgid "We were unable to load your configured labelers at this time."
 msgstr ""
 
