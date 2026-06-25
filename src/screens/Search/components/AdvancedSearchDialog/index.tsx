@@ -294,15 +294,15 @@ function DialogInner({
 
           <View style={[a.flex_1]}>
             <TextField.LabelText>
-              <Trans>Exclude these words</Trans>
+              <Trans>None of these words</Trans>
             </TextField.LabelText>
             <ClearableInput
-              label={l`Exclude these words`}
+              label={l`None of these words`}
               defaultValue={negatedWords}
               placeholder={l({
                 message: 'cows pigs',
                 comment:
-                  'Advanced search: Example of an “exclude these words” search',
+                  'Advanced search: Example of an “none of these words” search',
               })}
               onChangeText={setNegatedWords}
               onSubmitEditing={handlePressSearch}
