@@ -1,4 +1,4 @@
-import {useMemo, useRef} from 'react'
+import {useEffect, useMemo, useRef} from 'react'
 import {type DimensionValue, Pressable, View} from 'react-native'
 import Animated, {
   type AnimatedRef,
@@ -69,6 +69,8 @@ export function AutoSizedImage({
   onPress,
   onLongPress,
   onPressIn,
+  onContainerRef,
+  onDimsChange,
 }: {
   image: AppBskyEmbedImages.ViewImage
   crop?: 'none' | 'square' | 'constrained'
@@ -79,12 +81,21 @@ export function AutoSizedImage({
   ) => void
   onLongPress?: () => void
   onPressIn?: () => void
+  /** Fires once with the internal container ref so a parent can drive its
+   *  own lightbox-return animation without waiting for an `onPress`. */
+  onContainerRef?: (ref: AnimatedRef<any>) => void
+  /** Fires when the underlying image reports its natural dimensions. */
+  onDimsChange?: (dims: Dimensions) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const largeAlt = useLargeAltBadgeEnabled()
   const containerRef = useAnimatedRef()
   const fetchedDimsRef = useRef<{width: number; height: number} | null>(null)
+
+  useEffect(() => {
+    onContainerRef?.(containerRef)
+  }, [containerRef, onContainerRef])
 
   let aspectRatio: number | undefined
   const dims = image.aspectRatio
@@ -122,12 +133,16 @@ export function AutoSizedImage({
         accessibilityHint=""
         onLoad={e => {
           if (!isContain) {
-            fetchedDimsRef.current = {
+            const dims = {
               width: e.source.width,
               height: e.source.height,
             }
+            fetchedDimsRef.current = dims
+            onDimsChange?.(dims)
           }
         }}
+        loading="lazy"
+        useAppleWebpCodec
       />
       <MediaInsetBorder />
 

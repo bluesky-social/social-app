@@ -1,4 +1,4 @@
-import {useCallback, useEffect} from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {msg, plural} from '@lingui/core/macro'
@@ -43,7 +43,10 @@ import {
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {styles} from './BottomBarStyles'
+
+type NavItemValue = 'home' | 'search' | 'chat' | 'notifications' | 'profile'
 
 export function BottomBarWeb() {
   const {_} = useLingui()
@@ -58,17 +61,9 @@ export function BottomBarWeb() {
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const iconWidth = 26
 
-  // Reset footerHeight when the bottom bar unmounts (e.g. window expands past
-  // mobile breakpoint). Without this, stale footerHeight causes the message
-  // input translateY to pull it over the message list on wider screens.
-  useEffect(() => {
-    return () => {
-      footerHeight.set(0)
-    }
-  }, [footerHeight])
-
   const unreadMessageCount = useUnreadMessageCount()
   const notificationCountStr = useUnreadNotifications()
+  const isLabeler = profile?.associated?.labeler
 
   const showSignIn = useCallback(() => {
     closeAllActiveElements()
@@ -103,7 +98,7 @@ export function BottomBarWeb() {
         onLayout={event => footerHeight.set(event.nativeEvent.layout.height)}>
         {hasSession ? (
           <>
-            <NavItem routeName="Home" href="/">
+            <NavItem routeName="Home" href="/" navItem="home">
               {({isActive}) => {
                 const Icon = isActive ? HomeFilled : Home
                 return (
@@ -115,7 +110,7 @@ export function BottomBarWeb() {
                 )
               }}
             </NavItem>
-            <NavItem routeName="Search" href="/search">
+            <NavItem routeName="Search" href="/search" navItem="search">
               {({isActive}) => {
                 const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass
                 return (
@@ -133,6 +128,7 @@ export function BottomBarWeb() {
                 <NavItem
                   routeName="Messages"
                   href="/messages"
+                  navItem="chat"
                   notificationCount={unreadMessageCount.numUnread}
                   hasNew={unreadMessageCount.hasNew}>
                   {({isActive}) => {
@@ -153,6 +149,7 @@ export function BottomBarWeb() {
                 <NavItem
                   routeName="Notifications"
                   href="/notifications"
+                  navItem="notifications"
                   notificationCount={notificationCountStr}>
                   {({isActive}) => {
                     const Icon = isActive ? BellFilled : Bell
@@ -175,15 +172,20 @@ export function BottomBarWeb() {
                         })
                       : '/'
                   }
+                  navItem="profile"
                   onLongPress={onLongPressProfile}>
                   {({isActive}) => (
                     <View style={styles.ctrlIconSizingWrapper}>
                       <View
                         style={[
                           styles.ctrlIcon,
-                          styles.profileIcon,
+                          isLabeler
+                            ? styles.profileIconSquare
+                            : styles.profileIcon,
                           isActive && [
-                            styles.onProfile,
+                            isLabeler
+                              ? styles.onProfileSquare
+                              : styles.onProfile,
                             {borderColor: t.atoms.text.color},
                           ],
                         ]}>
@@ -258,12 +260,22 @@ const NavItem: React.FC<{
   children: (props: {isActive: boolean}) => React.ReactNode
   href: string
   routeName: string
+  navItem: NavItemValue
   hasNew?: boolean
   notificationCount?: string
   onLongPress?: () => void
-}> = ({children, href, routeName, hasNew, notificationCount, onLongPress}) => {
+}> = ({
+  children,
+  href,
+  routeName,
+  navItem,
+  hasNew,
+  notificationCount,
+  onLongPress,
+}) => {
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const currentRoute = useNavigationState(state => {
     if (!state) {
@@ -271,6 +283,10 @@ const NavItem: React.FC<{
     }
     return getCurrentRoute(state)
   })
+
+  const onBeforePress = useCallback(() => {
+    ax.metric('nav:click', {item: navItem, surface: 'bottomBar'})
+  }, [ax, navItem])
 
   // Checks whether we're on someone else's profile
   const isOnDifferentProfile =
@@ -296,6 +312,7 @@ const NavItem: React.FC<{
       aria-role="link"
       aria-label={routeName}
       accessible={true}
+      onBeforePress={onBeforePress}
       onLongPress={onLongPress}>
       {children({isActive})}
       {notificationCount ? (

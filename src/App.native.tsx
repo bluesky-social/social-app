@@ -1,5 +1,4 @@
 import '#/logger/sentry/setup'
-import '#/view/icons'
 
 import {Fragment, useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
@@ -21,6 +20,10 @@ import {Provider as TranslateOnDeviceProvider} from '#/lib/translation'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
 import {Provider as A11yProvider} from '#/state/a11y'
+import {
+  prefetchAppConfig,
+  Provider as AppConfigProvider,
+} from '#/state/appConfig'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {Provider as EmailVerificationProvider} from '#/state/email-verification'
@@ -28,7 +31,6 @@ import {listenSessionDropped} from '#/state/events'
 import {GlobalGestureEventsProvider} from '#/state/global-gesture-events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
 import {MessagesProvider} from '#/state/messages'
-import {Provider as ModalStateProvider} from '#/state/modals'
 import {init as initPersistedState} from '#/state/persisted'
 import {Provider as PrefsStateProvider} from '#/state/preferences'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
@@ -44,18 +46,18 @@ import {
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
+import {Provider as LandingProvider} from '#/state/shell/landing'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as OnboardingProvider} from '#/state/shell/onboarding'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
-import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
 import {TestCtrls} from '#/view/com/testing/TestCtrls'
 import {Shell} from '#/view/shell'
 import {atoms as a, ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
-import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
+import {useLandingEntry} from '#/components/hooks/useLandingEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as LightboxStateProvider} from '#/components/Lightbox/state'
 import {Provider as PortalProvider} from '#/components/Portal'
@@ -90,7 +92,8 @@ if (IS_ANDROID) {
   )
 }
 
-prefetchLiveEvents()
+void prefetchLiveEvents()
+void prefetchAppConfig()
 
 function InnerApp() {
   const [isReady, setIsReady] = useState(false)
@@ -98,7 +101,7 @@ function InnerApp() {
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
   const {t: l} = useLingui()
-  const hasCheckedReferrer = useStarterPackEntry()
+  const hasCheckedLanding = useLandingEntry()
 
   // init
   useEffect(() => {
@@ -131,7 +134,7 @@ function InnerApp() {
     <Alf theme={theme}>
       <ThemeProvider theme={theme}>
         <ContextMenuProvider>
-          <Splash isReady={isReady && hasCheckedReferrer}>
+          <Splash isReady={isReady && hasCheckedLanding}>
             <VideoVolumeProvider>
               <Fragment
                 // Resets the entire tree below when it changes:
@@ -212,38 +215,38 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <A11yProvider>
-      <KeyboardControllerProvider>
-        <OnboardingProvider>
-          <AnalyticsContext>
-            <SessionProvider>
-              <PrefsStateProvider>
-                <I18nProvider>
-                  <ShellStateProvider>
-                    <ModalStateProvider>
+    <AppConfigProvider>
+      <A11yProvider>
+        <KeyboardControllerProvider preload={false}>
+          <OnboardingProvider>
+            <AnalyticsContext>
+              <SessionProvider>
+                <PrefsStateProvider>
+                  <I18nProvider>
+                    <ShellStateProvider>
                       <DialogStateProvider>
                         <LightboxStateProvider>
                           <PortalProvider>
                             <BottomSheetProvider>
-                              <StarterPackProvider>
+                              <LandingProvider>
                                 <SafeAreaProvider
                                   initialMetrics={initialWindowMetrics}>
                                   <InnerApp />
                                 </SafeAreaProvider>
-                              </StarterPackProvider>
+                              </LandingProvider>
                             </BottomSheetProvider>
                           </PortalProvider>
                         </LightboxStateProvider>
                       </DialogStateProvider>
-                    </ModalStateProvider>
-                  </ShellStateProvider>
-                </I18nProvider>
-              </PrefsStateProvider>
-            </SessionProvider>
-          </AnalyticsContext>
-        </OnboardingProvider>
-      </KeyboardControllerProvider>
-    </A11yProvider>
+                    </ShellStateProvider>
+                  </I18nProvider>
+                </PrefsStateProvider>
+              </SessionProvider>
+            </AnalyticsContext>
+          </OnboardingProvider>
+        </KeyboardControllerProvider>
+      </A11yProvider>
+    </AppConfigProvider>
   )
 }
 

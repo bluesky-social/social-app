@@ -74,7 +74,7 @@ export function RichTextTag({
         return word.value === tag
       }) || []
     )
-  }, [tag, preferences?.moderationPrefs?.mutedWords])
+  }, [tag, preferences?.moderationPrefs.mutedWords])
 
   return (
     <Menu.Root>

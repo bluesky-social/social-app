@@ -7,6 +7,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
+import {resolveAllowGroupInvites} from '#/components/dms/util'
 import {RQKEY as PROFILE_RKEY} from '../profile'
 
 export function useUpdateActorDeclaration({
@@ -21,8 +22,25 @@ export function useUpdateActorDeclaration({
   const agent = useAgent()
 
   return useMutation({
-    mutationFn: async (allowIncoming: 'all' | 'none' | 'following') => {
+    mutationFn: async (update: {
+      allowIncoming?: 'all' | 'none' | 'following'
+      allowGroupInvites?: 'all' | 'none' | 'following'
+    }) => {
       if (!currentAccount) throw new Error('Not signed in')
+      const current =
+        queryClient.getQueryData<AppBskyActorDefs.ProfileViewDetailed>(
+          PROFILE_RKEY(currentAccount.did),
+        )
+      const allowIncoming =
+        update.allowIncoming ??
+        current?.associated?.chat?.allowIncoming ??
+        'following'
+      const allowGroupInvites = resolveAllowGroupInvites({
+        allowIncoming,
+        allowGroupInvites:
+          update.allowGroupInvites ??
+          current?.associated?.chat?.allowGroupInvites,
+      })
       const result = await agent.com.atproto.repo.putRecord({
         repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
@@ -30,22 +48,37 @@ export function useUpdateActorDeclaration({
         record: {
           $type: 'chat.bsky.actor.declaration',
           allowIncoming,
+          allowGroupInvites,
         },
       })
       return result
     },
-    onMutate: allowIncoming => {
+    onMutate: update => {
       if (!currentAccount) return
       queryClient.setQueryData(
         PROFILE_RKEY(currentAccount?.did),
         (old?: AppBskyActorDefs.ProfileViewDetailed) => {
           if (!old) return old
+          const allowIncoming =
+            update.allowIncoming ??
+            old.associated?.chat?.allowIncoming ??
+            'following'
+          // resolve the same concrete value the server will receive, so
+          // optimistic cache and persisted record stay aligned
+          const allowGroupInvites = resolveAllowGroupInvites({
+            allowIncoming,
+            allowGroupInvites:
+              update.allowGroupInvites ??
+              old.associated?.chat?.allowGroupInvites,
+          })
           return {
             ...old,
             associated: {
               ...old.associated,
               chat: {
+                ...old.associated?.chat,
                 allowIncoming,
+                allowGroupInvites,
               },
             },
           } satisfies AppBskyActorDefs.ProfileViewDetailed

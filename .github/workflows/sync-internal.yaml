@@ -4,22 +4,29 @@ on:
   push:
     branches: [main]
 
+# The push to the internal repo uses the app token below, not the GITHUB_TOKEN
+permissions:
+  contents: read
+
 jobs:
   sync:
     runs-on: ubuntu-latest
     if: github.repository == 'bluesky-social/social-app'
     steps:
       - name: Checkout public repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 0
       - name: Generate GitHub App Token
         id: app-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
           app-id: ${{ vars.SYNC_INTERNAL_APP_ID }}
           private-key: ${{ secrets.SYNC_INTERNAL_PK }}
           repositories: social-app-internal
+          # Scope the token down from the app's full installation permissions;
+          # pushing is the only thing this token is used for
+          permission-contents: write
       - name: Push to internal repo
         env:
           TOKEN: ${{ steps.app-token.outputs.token }}

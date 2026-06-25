@@ -1,6 +1,5 @@
 import {StyleSheet, View} from 'react-native'
-
-import {atoms as a} from '#/alf'
+import {BlurView} from 'expo-blur'
 
 type Props = {
   count: number
@@ -14,26 +13,38 @@ const GAP = 5
 export function PagerDots({count, activeIndex}: Props) {
   if (count <= 1) return null
   return (
-    <View style={[a.flex_row, a.align_center, a.justify_center, styles.row]}>
-      {Array.from({length: count}).map((_, i) => {
-        const isActive = i === activeIndex
-        return (
-          <View
-            key={i}
-            style={[
-              isActive ? styles.active : styles.inactive,
-              isActive ? styles.activeDot : styles.inactiveDot,
-            ]}
-          />
-        )
-      })}
+    <View style={styles.root}>
+      <BlurView intensity={20} tint="dark" style={styles.inner}>
+        {Array.from({length: count}).map((_, i) => {
+          const isActive = i === activeIndex
+          return (
+            <View
+              key={i}
+              style={[
+                isActive ? styles.active : styles.inactive,
+                isActive ? styles.activeDot : styles.inactiveDot,
+              ]}
+            />
+          )
+        })}
+      </BlurView>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  row: {
+  root: {
+    borderRadius: 999,
+    overflow: 'hidden',
+  },
+  inner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     gap: GAP,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   activeDot: {
     width: ACTIVE,

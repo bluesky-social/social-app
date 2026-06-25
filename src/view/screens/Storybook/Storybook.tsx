@@ -7,6 +7,8 @@ import {useSetThemePrefs} from '#/state/shell'
 import {ListContained} from '#/view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {Admonitions} from './Admonitions'
 import {Breakpoints} from './Breakpoints'
 import {Buttons} from './Buttons'
@@ -26,6 +28,8 @@ export default function Storybook() {
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
   const [showContainedList, setShowContainedList] = useState(false)
   const navigation = useNavigation<NavigationProp>()
+  const inviteFriendsControl = Dialog.useDialogControl()
+
   return (
     <>
       <View style={[a.p_xl, a.gap_5xl, {paddingBottom: 100}]}>
@@ -76,6 +80,15 @@ export default function Storybook() {
               testID="sharedPrefsTestOpenBtn">
               <ButtonText>Open Shared Prefs Tester</ButtonText>
             </Button>
+            <Button
+              color="primary"
+              size="large"
+              onPress={() => inviteFriendsControl.open()}
+              label="Open invite friends sheet (APP-2142)">
+              <ButtonText>Open invite friends sheet (APP-2142)</ButtonText>
+            </Button>
+            <InviteFriendsDialog control={inviteFriendsControl} />
+
             <ThemeProvider theme="light">
               <Theming />
             </ThemeProvider>

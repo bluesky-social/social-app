@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Agent, type AtpSessionData} from '@atproto/api'
-import {type OutputSchema} from '@atproto/api/dist/client/types/com/atproto/server/getSession'
+import {
+  Agent,
+  type AtpSessionData,
+  type ComAtprotoServerGetSession,
+} from '@atproto/api'
 import {type OAuthSession} from '@atproto/oauth-client-browser'
+
+type OutputSchema = ComAtprotoServerGetSession.OutputSchema
 
 import {BLUESKY_PROXY_HEADER, BSKY_SERVICE} from '#/lib/constants'
 import {logger} from '#/logger'

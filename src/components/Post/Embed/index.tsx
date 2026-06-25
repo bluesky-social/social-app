@@ -12,6 +12,7 @@ import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {makeProfileLink} from '#/lib/routes/links'
+import {getChatInviteCodeFromUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useEmbedFallback} from '#/state/queries/embed-fallback'
 import {unstableCacheProfileView} from '#/state/queries/profile'
@@ -23,6 +24,8 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {GalleryBleed} from '#/components/images/Gallery'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
+import {StandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed'
+import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {RichText} from '#/components/RichText'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
@@ -32,6 +35,7 @@ import {
   type EmbedType,
   parseEmbed,
 } from '#/types/bsky/post'
+import {ChatInviteEmbed} from './ChatInviteEmbed'
 import {ExternalEmbed} from './ExternalEmbed'
 import {ModeratedFeedEmbed} from './FeedEmbed'
 import {ImageEmbed} from './ImageEmbed'
@@ -47,6 +51,7 @@ export function Embed({embed: rawEmbed, ...rest}: EmbedProps) {
 
   switch (embed.type) {
     case 'images':
+    case 'gallery':
     case 'link':
     case 'video': {
       return <MediaEmbed embed={embed} {...rest} />
@@ -82,7 +87,8 @@ function MediaEmbed({
   embed: TEmbed
 }) {
   switch (embed.type) {
-    case 'images': {
+    case 'images':
+    case 'gallery': {
       return (
         <ContentHider
           modui={rest.moderation?.ui('contentMedia')}
@@ -92,6 +98,34 @@ function MediaEmbed({
       )
     }
     case 'link': {
+      if (isStandardSiteEmbed(embed.view.external)) {
+        return (
+          <ContentHider
+            modui={rest.moderation?.ui('contentMedia')}
+            activeStyle={[a.mt_sm]}>
+            <StandardSiteEmbed
+              view={embed.view.external}
+              onEmbedInteractionCallback={rest.onOpen}
+              style={[a.mt_sm, rest.style]}
+            />
+          </ContentHider>
+        )
+      }
+      const chatInviteCode = getChatInviteCodeFromUrl(embed.view.external.uri)
+      if (chatInviteCode) {
+        return (
+          <ContentHider
+            modui={rest.moderation?.ui('contentMedia')}
+            activeStyle={[a.mt_sm]}>
+            <ChatInviteEmbed
+              code={chatInviteCode}
+              link={embed.view.external}
+              onOpen={rest.onOpen}
+              style={rest.style}
+            />
+          </ContentHider>
+        )
+      }
       return (
         <ContentHider
           modui={rest.moderation?.ui('contentMedia')}
@@ -357,6 +391,9 @@ export function QuoteEmbed({
           allowNestedQuotes={
             parentIsWithinQuote ? false : parentAllowNestedQuotes
           }
+          // The photo embed belongs to the quoted post, so attribute its
+          // analytics to the quoted post rather than the parent.
+          post={quote}
         />
       )}
     </>

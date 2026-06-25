@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  type AppBskyActorDefs,
   type AppBskyEmbedRecord,
   type AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
   type BskyAgent,
 } from '@atproto/api'
-import {type ProfileViewBasic} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
+
+type ProfileViewBasic = AppBskyActorDefs.ProfileViewBasic
 import {useQuery} from '@tanstack/react-query'
 
 import {retry} from '#/lib/async/retry'

@@ -12,7 +12,6 @@ import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import {isBotAccount} from '#/components/BotBadge'
 import {useDialogControl} from '#/components/Dialog'
-import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {
   EmailDialogScreenID,
   useEmailDialogControl,
@@ -41,7 +40,6 @@ export function AccountSettingsScreen({}: Props) {
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const emailDialogControl = useEmailDialogControl()
-  const birthdayControl = useDialogControl()
   const changeHandleControl = useDialogControl()
   const changePasswordControl = useDialogControl()
   const exportCarControl = useDialogControl()
@@ -156,20 +154,6 @@ export function AccountSettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
-          <SettingsList.Item>
-            <SettingsList.ItemIcon icon={BirthdayCakeIcon} />
-            <SettingsList.ItemText>
-              <Trans>Birthday</Trans>
-            </SettingsList.ItemText>
-            <SettingsList.BadgeButton
-              label={_(msg`Edit`)}
-              onPress={() =>
-                isOauth && !isBskyPds
-                  ? openPdsAccountPage()
-                  : birthdayControl.open()
-              }
-            />
-          </SettingsList.Item>
           <SettingsList.LinkItem
             to="/settings/automation-label"
             label={_(msg`Automation label`)}>
@@ -224,7 +208,6 @@ export function AccountSettingsScreen({}: Props) {
         </SettingsList.Container>
       </Layout.Content>
 
-      <BirthDateSettingsDialog control={birthdayControl} />
       <ChangeHandleDialog control={changeHandleControl} />
       <ChangePasswordDialog control={changePasswordControl} />
       <ExportCarDialog control={exportCarControl} />

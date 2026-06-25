@@ -1,13 +1,9 @@
 import {View} from 'react-native'
-import {
-  FontAwesomeIcon,
-  type FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {usePalette} from '#/lib/hooks/usePalette'
+import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import {
   type ProfileErrorKind,
   type ProfileStatusSource,
@@ -139,7 +135,6 @@ function ProfileStatusErrorShell({
   children: React.ReactNode
 }) {
   const t = useTheme()
-  const pal = usePalette('default')
   return (
     <Layout.Center testID="profileStatusErrorScreen">
       <Layout.Header.Outer>
@@ -161,11 +156,7 @@ function ProfileStatusErrorShell({
               a.justify_center,
               {backgroundColor: t.palette.contrast_950},
             ]}>
-            <FontAwesomeIcon
-              icon="exclamation"
-              style={pal.textInverted as FontAwesomeIconStyle}
-              size={24}
-            />
+            <Warning size="lg" fill={t.palette.white} />
           </View>
         </View>
         <Text style={[a.text_center, a.font_bold, a.text_2xl, a.mb_md]}>

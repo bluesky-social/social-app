@@ -215,10 +215,10 @@ export function SettingsScreen({}: Props) {
             !ax.features.enabled(ax.features.ImportContactsSettingsDisable) && (
               <SettingsList.LinkItem
                 to="/settings/find-contacts"
-                label={l`Find friends from contacts`}>
+                label={l`Find and invite friends`}>
                 <SettingsList.ItemIcon icon={ContactsIcon} />
                 <SettingsList.ItemText>
-                  <Trans>Find friends from contacts</Trans>
+                  <Trans>Find and invite friends</Trans>
                 </SettingsList.ItemText>
               </SettingsList.LinkItem>
             )}

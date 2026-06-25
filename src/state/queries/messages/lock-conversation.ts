@@ -14,15 +14,21 @@ export function useLockConvo(
     onSuccess,
     onError,
   }: {
-    onSuccess?: (data: ChatBskyConvoLockConvo.OutputSchema) => void
-    onError?: (error: Error, variables: {lock: boolean}) => void
+    onSuccess?: (
+      data: ChatBskyConvoLockConvo.OutputSchema,
+      variables: {lock: boolean; silent?: boolean},
+    ) => void
+    onError?: (
+      error: Error,
+      variables: {lock: boolean; silent?: boolean},
+    ) => void
   },
 ) {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
   return useMutation({
-    mutationFn: async ({lock}: {lock: boolean}) => {
+    mutationFn: async ({lock}: {lock: boolean; silent?: boolean}) => {
       if (!convoId) throw new Error('No convoId provided')
       if (lock) {
         const {data} = await agent.chat.bsky.convo.lockConvo(
@@ -51,8 +57,8 @@ export function useLockConvo(
         }
       })
     },
-    onSuccess: data => {
-      onSuccess?.(data)
+    onSuccess: (data, variables) => {
+      onSuccess?.(data, variables)
     },
     onError: (e, variables, context) => {
       if (convoId && context) {

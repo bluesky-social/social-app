@@ -1,4 +1,8 @@
-#!/usr/bin/env bash
+#!/bin/bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
 outputIos=$(eas build:version:get -p ios)
 outputAndroid=$(eas build:version:get -p android)
 BSKY_IOS_BUILD_NUMBER=${outputIos#*buildNumber - }

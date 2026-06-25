@@ -1,27 +1,28 @@
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
-import {blobToDataUri, convertCdnPreset, getDataUriSize} from './util'
+import {
+  blobToDataUri,
+  convertCdnPreset,
+  getDataUriSize,
+  getResizedDimensions,
+} from './util'
 
 export async function compressIfNeeded(
   img: PickerImage,
-  maxSize: number,
+  {maxDimension, maxSize}: {maxDimension: number; maxSize: number},
 ): Promise<PickerImage> {
   if (img.size < maxSize) {
     return img
   }
   return await doResize(img.path, {
-    width: img.width,
-    height: img.height,
-    mode: 'stretch',
+    maxDimension,
     maxSize,
   })
 }
 
 export interface DownloadAndResizeOpts {
   uri: string
-  width: number
-  height: number
-  mode: 'contain' | 'cover' | 'stretch'
+  maxDimension: number
   maxSize: number
   timeout: number
 }
@@ -29,14 +30,15 @@ export interface DownloadAndResizeOpts {
 export async function downloadAndResize(opts: DownloadAndResizeOpts) {
   const controller = new AbortController()
   const to = setTimeout(() => controller.abort(), opts.timeout || 5e3)
-  try {
-    const res = await fetch(opts.uri, {signal: controller.signal})
-    const resBody = await res.blob()
-    const dataUri = await blobToDataUri(resBody)
-    return await doResize(dataUri, opts)
-  } finally {
-    clearTimeout(to)
-  }
+  const res = await fetch(opts.uri)
+  const resBody = await res.blob()
+  clearTimeout(to)
+
+  const dataUri = await blobToDataUri(resBody)
+  return await doResize(dataUri, {
+    maxDimension: opts.maxDimension,
+    maxSize: opts.maxSize,
+  })
 }
 
 export async function shareImageModal(_opts: {uri: string}) {
@@ -72,9 +74,7 @@ export async function getImageDim(path: string): Promise<Dimensions> {
 // =
 
 interface DoResizeOpts {
-  width: number
-  height: number
-  mode: 'contain' | 'cover' | 'stretch'
+  maxDimension: number
   maxSize: number
 }
 
@@ -82,6 +82,9 @@ async function doResize(
   dataUri: string,
   opts: DoResizeOpts,
 ): Promise<PickerImage> {
+  const sourceDims = await getImageDim(dataUri)
+  const newDimensions = getResizedDimensions(sourceDims, opts.maxDimension)
+
   let newDataUri
 
   let minQualityPercentage = 0
@@ -92,10 +95,10 @@ async function doResize(
       (maxQualityPercentage + minQualityPercentage) / 2,
     )
     const tempDataUri = await createResizedImage(dataUri, {
-      width: opts.width,
-      height: opts.height,
+      width: newDimensions.width,
+      height: newDimensions.height,
       quality: qualityPercentage / 100,
-      mode: opts.mode,
+      mode: 'contain',
     })
 
     if (getDataUriSize(tempDataUri) < opts.maxSize) {
@@ -113,8 +116,8 @@ async function doResize(
     path: newDataUri,
     mime: 'image/jpeg',
     size: getDataUriSize(newDataUri),
-    width: opts.width,
-    height: opts.height,
+    width: newDimensions.width,
+    height: newDimensions.height,
   }
 }
 

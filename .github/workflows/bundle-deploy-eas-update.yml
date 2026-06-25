@@ -18,6 +18,10 @@ on:
         description: Runtime version (in x.x.x format) that this update is for
         required: true
 
+# Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
+permissions:
+  contents: read
+
 jobs:
   bundleDeploy:
     if: github.repository == 'bluesky-social/social-app'
@@ -48,7 +52,7 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 0
 
@@ -56,52 +60,48 @@ jobs:
         if: ${{ github.ref != 'refs/heads/main' }}
         run: git fetch origin main:main --depth 100
 
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version-file: .nvmrc
-          cache: yarn
+          node-version-file: package.json
+          cache: pnpm
 
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
-        uses: bluesky-social/github-actions/fingerprint-native@main
+        uses: bluesky-social/github-actions/fingerprint-native@ebc6aa6d7466dc1e78b1e832041b7b81f6f95030 # v0.1.0
         with:
           profile: ${{ inputs.channel || 'testflight' }}
           previous-commit-tag: ${{ inputs.runtimeVersion }}
 
-      - name: Lint check
-        run: yarn lint
-
-      - name: Lint lockfile
-        run: yarn lockfile-lint
-
-      - name: Prettier check
-        run: yarn prettier --check .
-
       - name: 🔤 Compile translations
-        run: yarn intl:build 2>&1 | tee i18n.log
+        run: pnpm intl:build 2>&1 | tee i18n.log
 
       - name: Check for i18n compilation errors
-        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
+        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation
+          errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
+
+      - name: Lint check
+        run: pnpm lint
+
+      - name: Prettier check
+        run: pnpm prettier --check .
 
       - name: Type check
-        run: yarn typecheck
+        run: pnpm typecheck
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@main
+        uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         with:
-          expo-version: latest
-          eas-version: latest
+          eas-version: '19.0.5'
+          packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: ⛏️ Setup Expo
-        if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        run: yarn global add eas-cli-local-build-plugin
 
       - name: 🪛 Setup jq
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        uses: dcarbone/install-jq-action@v2
+        uses: dcarbone/install-jq-action@b7ef57d46ece78760b4019dbc4080a1ba2a40b45 # v3.2.0
 
       # eas.json not used here, set EXPO_PUBLIC_ENV
       - name: Env
@@ -130,11 +130,11 @@ jobs:
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
-          yarn export
+          pnpm export
 
       - name: 📦 Package Bundle and 🚀 Deploy
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        run: yarn use-build-number bash scripts/bundleUpdate.sh
+        run: pnpm use-build-number bash scripts/bundleUpdate.sh
         env:
           DENIS_API_KEY: ${{ secrets.DENIS_API_KEY }}
           RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
@@ -142,7 +142,7 @@ jobs:
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@v4
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         with:
           path: most-recent-testflight-commit.txt
@@ -162,7 +162,9 @@ jobs:
     needs: [bundleDeploy]
     # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
     # available here
-    if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.changes-detected && github.repository == 'bluesky-social/social-app' }}
+    if: ${{ inputs.channel != 'production' &&
+      needs.bundleDeploy.outputs.changes-detected && github.repository ==
+      'bluesky-social/social-app' }}
     steps:
       - name: Check for EXPO_TOKEN
         run: >
@@ -172,49 +174,54 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 5
 
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version-file: .nvmrc
-          cache: yarn
+          node-version-file: package.json
+          cache: pnpm
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@main
+        uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
         with:
-          expo-version: latest
-          eas-version: latest
+          eas-version: '19.0.5'
+          packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: ⛏️ Setup EAS local builds
-        run: yarn global add eas-cli-local-build-plugin
-
       - name: ⚙️ Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
-      - uses: maxim-lobanov/setup-xcode@v1
+      - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
         with:
-          xcode-version: "26.0"
+          xcode-version: "26.4"
 
-      - name: ☕️ Setup Cocoapods
-        uses: maxim-lobanov/setup-cocoapods@v1
-        with:
-          version: 1.16.2
+      - name: ☕️ Assert Cocoapods version
+        run: |
+          EXPECTED=1.16.2
+          ACTUAL=$(pod --version)
+          if [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo "Expected Cocoapods $EXPECTED but runner has $ACTUAL."
+            echo "The version ships preinstalled with the macOS runner image: https://github.com/actions/runner-images/blob/main/images/macos/macos-26-Readme.md"
+            echo "If the runner image changed, update EXPECTED here or reinstall the pinned version."
+            exit 1
+          fi
 
       - name: 💾 Cache Pods
-        uses: actions/cache@v4
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         id: pods-cache
         with:
           path: ./ios/Pods
-          # We'll use the yarn.lock for our hash since we don't yet have a Podfile.lock. Pod versions will not
-          # change unless the yarn version changes as well.
-          key: ${{ runner.os }}-pods-${{ hashFiles('yarn.lock') }}
+          # We'll use the pnpm-lock.yaml for our hash since we don't yet have a Podfile.lock. Pod versions will not
+          # change unless the pnpm version changes as well.
+          key: ${{ runner.os }}-pods-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: 🔤 Compile translations
-        run: yarn intl:build
+        run: pnpm intl:build
 
       # EXPO_PUBLIC_ENV is handled in eas.json
       - name: Env
@@ -236,17 +243,59 @@ jobs:
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
-          yarn use-build-number-with-bump
-          eas build -p ios
+          pnpm use-build-number-with-bump
+          pnpm eas build -p ios
           --profile testflight
-          --local --output build.ipa --non-interactive
+          --local --output build.tar.gz --non-interactive
+
+      - name: 📂 Extract build artifact
+        run: |
+          if [ -f "build.tar.gz" ]; then
+            echo "Extracting build.tar.gz..."
+            rm -rf ios-build
+            mkdir -p ios-build
+            tar -xzf build.tar.gz -C ios-build
+            echo "Extraction completed successfully"
+
+            echo ""
+            echo "Top-level extracted files:"
+            find ios-build -maxdepth 3 -print
+
+            echo ""
+            echo "Searching for IPA..."
+            IPA_PATH="$(find ios-build -type f -name '*.ipa' -print -quit)"
+            if [ -z "$IPA_PATH" ]; then
+              echo "ERROR: No .ipa found anywhere under ios-build."
+              echo "Archive contents:"
+              tar -tzf build.tar.gz | sed -n '1,200p'
+              exit 1
+            fi
+
+            BUILD_DIR="$(dirname "$IPA_PATH")"
+            echo "Found IPA at: $IPA_PATH"
+            echo "Build dir: $BUILD_DIR"
+            echo ""
+            echo "Build dir contents:"
+            ls -la "$BUILD_DIR"
+            echo "BUILD_DIR=$BUILD_DIR" >> $GITHUB_ENV
+          else
+            echo "Archive file not found!"
+            exit 1
+          fi
 
       - name: 🚀 Deploy
-        run: eas submit -p ios --non-interactive --path build.ipa --what-to-test "TestFlight build"
+        run: pnpm eas submit -p ios --non-interactive --path "$BUILD_DIR/Bluesky.ipa"
+
+      - name: 🪲 Upload dSYM to Sentry
+        run: >
+          SENTRY_ORG=blueskyweb
+          SENTRY_PROJECT=app
+          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+          pnpm sentry-cli debug-files upload "$BUILD_DIR/Bluesky.app.dSYM.zip" --include-sources
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@v4
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         if: ${{ inputs.channel == 'testflight' }}
         with:
           path: most-recent-testflight-commit.txt
@@ -267,7 +316,9 @@ jobs:
     needs: [bundleDeploy]
     # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
     # available here
-    if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.changes-detected && github.repository == 'bluesky-social/social-app'}}
+    if: ${{ inputs.channel != 'production' &&
+      needs.bundleDeploy.outputs.changes-detected && github.repository ==
+      'bluesky-social/social-app'}}
 
     steps:
       - name: Check for EXPO_TOKEN
@@ -278,36 +329,35 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 5
 
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version-file: .nvmrc
-          cache: yarn
+          node-version-file: package.json
+          cache: pnpm
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@main
+        uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
         with:
-          expo-version: latest
-          eas-version: latest
+          eas-version: '19.0.5'
+          packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: ⛏️ Setup EAS local builds
-        run: yarn global add eas-cli-local-build-plugin
-
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@ad2b38190b15e4d6bdf0c97fb4fca8412226d287 # v5.3.0
         with:
           distribution: "temurin"
           java-version: "17"
 
       - name: ⚙️ Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: 🔤 Compile translations
-        run: yarn intl:build
+        run: pnpm intl:build
 
       # EXPO_PUBLIC_ENV is handled in eas.json
       - name: Env
@@ -330,20 +380,52 @@ jobs:
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
-          yarn use-build-number-with-bump
-          eas build -p android
+          pnpm use-build-number-with-bump
+          pnpm eas build -p android
           --profile testflight-android
-          --local --output build.apk --non-interactive
+          --local --output build.aab --non-interactive
+
+      - name: 📚 Get version from package.json
+        id: get-build-info
+        run: bash scripts/setGitHubOutput.sh
+
+      - name: 🚀 Submit to Google Play
+        run: pnpm eas submit -p android --profile testflight-android --non-interactive --path
+          build.aab
+
+      - name: 🔧 Setup bundletool
+        uses: amyu/setup-bundletool@cc2e1857284660bd625e43f2c8a45626f034302f # v1.1
+        with:
+          bundletool-version: "1.17.2"
+
+      - name: 🔑 Decode keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode >
+          keystore.jks
+
+      - name: 📦 Build signed universal APK
+        run: |
+          bundletool build-apks \
+            --bundle=build.aab \
+            --output=universal.apks \
+            --mode=universal \
+            --ks=keystore.jks \
+            --ks-pass=pass:${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
+            --ks-key-alias=${{ secrets.ANDROID_KEY_ALIAS }} \
+            --key-pass=pass:${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: 📋 Rename to .zip for extraction
+        run: mv universal.apks universal.zip
+
+      - name: 📦 Extract universal APK
+        run: unzip -p universal.zip universal.apk > build.apk
 
       - name: ⏰ Get a timestamp
         id: timestamp
-        uses: nanzm/get-time-action@master
-        with:
-          format: "MM-DD-HH-mm-ss"
+        run: echo "time=$(date -u +'%m-%d-%H-%M-%S')" >> "$GITHUB_OUTPUT"
 
       - name: 🚀 Upload Artifact
         id: upload-artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           retention-days: 30
           compression-level: 0
@@ -351,19 +433,17 @@ jobs:
           path: build.apk
 
       - name: 🔔 Notify Slack
-        uses: slackapi/slack-github-action@v1.25.0
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         with:
+          webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          webhook-type: incoming-webhook
+          payload-templated: true
           payload: |
-            {
-              "text": "Android build is ready for testing. Download the artifact here: ${{ steps.upload-artifact.outputs.artifact-url }}"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+            {"text": "Android build is ready for testing. Download the artifact here: ${{ steps.upload-artifact.outputs.artifact-url }}"}
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@v4
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         if: ${{ inputs.channel != 'testflight' && inputs.channel != 'production' }}
         with:
           path: most-recent-testflight-commit.txt

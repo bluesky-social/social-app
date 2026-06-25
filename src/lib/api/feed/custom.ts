@@ -1,7 +1,7 @@
 import {
   type AppBskyFeedDefs,
   type AppBskyFeedGetFeed as GetCustomFeed,
-  BskyAgent,
+  AtpAgent,
   jsonStringToLex,
 } from '@atproto/api'
 
@@ -17,7 +17,7 @@ import {
 } from './utils'
 
 export class CustomFeedAPI implements FeedAPI {
-  agent: BskyAgent
+  agent: AtpAgent
   params: GetCustomFeed.QueryParams
   userInterests?: string
 
@@ -26,7 +26,7 @@ export class CustomFeedAPI implements FeedAPI {
     feedParams,
     userInterests,
   }: {
-    agent: BskyAgent
+    agent: AtpAgent
     feedParams: GetCustomFeed.QueryParams
     userInterests?: string
   }) {
@@ -123,7 +123,7 @@ async function loggedOutFetch({
    * @see https://github.com/bluesky-social/atproto/blob/60df3fc652b00cdff71dd9235d98a7a4bb828f05/packages/api/src/agent.ts#L120
    */
   const labelersHeader = {
-    'atproto-accept-labelers': BskyAgent.appLabelers
+    'atproto-accept-labelers': AtpAgent.appLabelers
       .map(l => `${l};redact`)
       .join(', '),
   }

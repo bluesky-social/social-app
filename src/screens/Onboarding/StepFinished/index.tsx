@@ -3,6 +3,8 @@ import {View} from 'react-native'
 import {
   type AppBskyActorDefs,
   type AppBskyActorProfile,
+  type AppBskyGraphDefs,
+  AppBskyGraphStarterpack,
   type Un$Typed,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
@@ -13,7 +15,6 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'
 import {
-  BLACKSKY_COMMUNITY_DID,
   BSKY_APP_ACCOUNT_DID,
   DISCOVER_SAVED_FEED,
   TIMELINE_SAVED_FEED,
@@ -21,10 +22,16 @@ import {
 } from '#/lib/constants'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {logger} from '#/logger'
+import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
+import {getAllListMembers} from '#/state/queries/list-members'
 import {preferencesQueryKey} from '#/state/queries/preferences'
 import {RQKEY as profileRQKey} from '#/state/queries/profile'
 import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
+import {
+  useActiveStarterPack,
+  useSetActiveStarterPack,
+} from '#/state/shell/landing'
 import {useProgressGuideControls} from '#/state/shell/progress-guide'
 import {
   OnboardingControls,
@@ -41,6 +48,7 @@ import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/ico
 import {Loader} from '#/components/Loader'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import * as bsky from '#/types/bsky'
 import {ValuePropositionPager} from './ValuePropositionPager'
 
 export function StepFinished() {
@@ -51,17 +59,51 @@ export function StepFinished() {
   const queryClient = useQueryClient()
   const agent = useAgent()
   const requestNotificationsPermission = useRequestNotificationsPermission()
+  const activeStarterPack = useActiveStarterPack()
+  const setActiveStarterPack = useSetActiveStarterPack()
+  const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
   const {startProgressGuide} = useProgressGuideControls()
 
   const finishOnboarding = useCallback(async () => {
     setSaving(true)
+
+    let starterPack: AppBskyGraphDefs.StarterPackView | undefined
+    let listItems: AppBskyGraphDefs.ListItemView[] | undefined
+
+    if (activeStarterPack?.uri) {
+      try {
+        const spRes = await agent.app.bsky.graph.getStarterPack({
+          starterPack: activeStarterPack.uri,
+        })
+        starterPack = spRes.data.starterPack
+      } catch (e) {
+        logger.error('Failed to fetch starter pack', {safeMessage: e})
+        // don't tell the user, just get them through onboarding.
+      }
+      try {
+        if (starterPack?.list) {
+          listItems = await getAllListMembers(agent, starterPack.list.uri)
+        }
+      } catch (e) {
+        logger.error('Failed to fetch starter pack list items', {
+          safeMessage: e,
+        })
+        // don't tell the user, just get them through onboarding.
+      }
+    }
 
     try {
       const {interestsStepResults, profileStepResults} = state
       const {selectedInterests} = interestsStepResults
 
       await Promise.all([
-        bulkWriteFollows(agent, [BSKY_APP_ACCOUNT_DID, BLACKSKY_COMMUNITY_DID]),
+        bulkWriteFollows(
+          agent,
+          [BSKY_APP_ACCOUNT_DID, ...(listItems?.map(i => i.subject.did) ?? [])],
+          starterPack
+            ? {uri: starterPack.uri, cid: starterPack.cid}
+            : undefined,
+        ),
         (async () => {
           // Interests need to get saved first, then we can write the feeds to prefs
           await agent.setInterestsPref({tags: selectedInterests})
@@ -82,6 +124,18 @@ export function StepFinished() {
             },
           ]
 
+          // Any starter pack feeds will be pinned _after_ the defaults
+          if (starterPack && starterPack.feeds?.length) {
+            feedsToSave.push(
+              ...starterPack.feeds.map(f => ({
+                type: 'feed',
+                value: f.uri,
+                pinned: true,
+                id: TID.nextStr(),
+              })),
+            )
+          }
+
           await agent.overwriteSavedFeeds(feedsToSave)
         })(),
         (async () => {
@@ -98,6 +152,13 @@ export function StepFinished() {
               const res = await blobPromise
               if (res.data.blob) {
                 next.avatar = res.data.blob
+              }
+            }
+
+            if (starterPack) {
+              next.joinedViaStarterPack = {
+                uri: starterPack.uri,
+                cid: starterPack.cid,
               }
             }
 
@@ -139,22 +200,44 @@ export function StepFinished() {
     })
 
     setSaving(false)
+    setActiveStarterPack(undefined)
+    setHasCheckedForStarterPack(true)
     startProgressGuide('follow-10')
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
     ax.metric('onboarding:finished:nextPressed', {
-      usedStarterPack: false,
-      profilesFollowed: 0,
-      feedsPinned: 0,
+      usedStarterPack: Boolean(starterPack),
+      starterPackName:
+        starterPack &&
+        bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+          starterPack.record,
+          AppBskyGraphStarterpack.isRecord,
+        )
+          ? starterPack.record.name
+          : undefined,
+      starterPackCreator: starterPack?.creator.did,
+      starterPackUri: starterPack?.uri,
+      profilesFollowed: listItems?.length ?? 0,
+      feedsPinned: starterPack?.feeds?.length ?? 0,
     })
+    if (starterPack && listItems?.length) {
+      ax.metric('starterPack:followAll', {
+        logContext: 'Onboarding',
+        starterPack: starterPack.uri,
+        count: listItems?.length,
+      })
+    }
   }, [
     ax,
     queryClient,
     agent,
     dispatch,
     onboardDispatch,
+    activeStarterPack,
     state,
     requestNotificationsPermission,
+    setActiveStarterPack,
+    setHasCheckedForStarterPack,
     startProgressGuide,
   ])
 

@@ -1,4 +1,4 @@
-import {AtUri, type BskyAgent} from '@atproto/api'
+import {type AtpAgent, AtUri} from '@atproto/api'
 import {type QueryClient, queryOptions, useQuery} from '@tanstack/react-query'
 
 import {PUBLIC_APPVIEW} from '#/lib/constants'
@@ -10,7 +10,7 @@ const RQKEY_ROOT = 'resolved-did'
 export const RQKEY = (didOrHandle: string) => [RQKEY_ROOT, didOrHandle]
 
 const resolvedDidQueryOptions = (
-  agent: BskyAgent,
+  agent: AtpAgent,
   getUnstableProfile: (did: string) => {did: string} | undefined,
   didOrHandle: string | undefined,
 ) =>

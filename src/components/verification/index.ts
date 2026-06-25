@@ -46,7 +46,7 @@ export function useFullVerificationState({
     const hasIssuedVerification = Boolean(
       viewerState &&
       viewerState.role === 'verifier' &&
-      // profileState.role === 'default' &&
+      profileState.role === 'default' &&
       verifications.find(v => v.issuer === currentAccount?.did),
     )
 
@@ -79,7 +79,7 @@ export type SimpleVerificationState = {
 }
 
 export function useSimpleVerificationState({
-  profile: baseProfile,
+  profile,
 }: {
   profile?: bsky.profile.AnyProfileView
 }): SimpleVerificationState {
@@ -88,8 +88,6 @@ export function useSimpleVerificationState({
     () => preferences.data?.verificationPrefs || {hideBadges: false},
     [preferences.data?.verificationPrefs],
   )
-  const profile = baseProfile
-
   return useMemo(() => {
     if (!profile || !profile.verification) {
       return {

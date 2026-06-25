@@ -6,6 +6,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
+import {invalidateJoinLinkPreviewsForCode} from '#/state/queries/join-links'
 import {useAgent} from '#/state/session'
 import {
   rollbackConvoOptimistic,
@@ -59,6 +60,7 @@ export function useDisableJoinLink(
           }
         })
       }
+      void invalidateJoinLinkPreviewsForCode(queryClient, data.joinLink.code)
       onSuccess?.(data)
     },
     onError: (e, _variables, context) => {

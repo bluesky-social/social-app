@@ -11,7 +11,6 @@ import {useLingui} from '@lingui/react/macro'
 
 import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
-import {useHaptics} from '#/lib/haptics'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {type Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
@@ -94,7 +93,6 @@ let PostControls = ({
   const requireAuth = useRequireAuth()
   const {sendInteraction} = useFeedFeedbackContext()
   const {captureAction} = useProgressGuideControls()
-  const playHaptic = useHaptics()
   const isBlocked = Boolean(
     post.author.viewer?.blocking ||
     post.author.viewer?.blockedBy ||
@@ -117,7 +115,6 @@ let PostControls = ({
     try {
       setHasLikeIconBeenToggled(true)
       if (!post.viewer?.like) {
-        playHaptic('Light')
         sendInteraction({
           item: post.uri,
           event: 'app.bsky.feed.defs#interactionLike',

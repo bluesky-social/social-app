@@ -1,9 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, ScrollView, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
@@ -67,12 +65,12 @@ function LightboxContainer({
   children: React.ReactNode
   handleBackgroundPress: () => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   FocusGuards.useFocusGuards()
   return (
     <Pressable
       accessibilityHint={undefined}
-      accessibilityLabel={_(msg`Close image viewer`)}
+      accessibilityLabel={l`Close image viewer`}
       onPress={handleBackgroundPress}
       style={[a.fixed, a.inset_0, a.z_10]}>
       <Backdrop />
@@ -81,7 +79,7 @@ function LightboxContainer({
         <div
           role="dialog"
           aria-modal="true"
-          aria-label={_(msg`Image viewer`)}
+          aria-label={l`Image viewer`}
           style={{position: 'absolute', inset: 0}}>
           {children}
         </div>
@@ -100,7 +98,7 @@ function LightboxGallery({
   onClose: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {reduceMotionEnabled} = useA11y()
   const [index, setIndex] = useState(initialIndex)
   const [hasAnyLoaded, setAnyHasLoaded] = useState(false)
@@ -196,7 +194,7 @@ function LightboxGallery({
             ]}
             hoverStyle={styles.blurredBackdropHover}
             color="secondary"
-            label={_(msg`Previous image`)}
+            label={l`Previous image`}
             shape="round"
             size={gtPhone ? 'large' : 'small'}>
             <ChevronLeftIcon
@@ -217,7 +215,7 @@ function LightboxGallery({
             ]}
             hoverStyle={styles.blurredBackdropHover}
             color="secondary"
-            label={_(msg`Next image`)}
+            label={l`Next image`}
             shape="round"
             size={gtPhone ? 'large' : 'small'}>
             <ChevronRightIcon
@@ -228,18 +226,24 @@ function LightboxGallery({
         )}
       </View>
       {img.alt ? (
-        <View
+        <ScrollView
+          // Cap the overlay height so long alt text scrolls within the overlay
+          // instead of growing past the top of the screen and pushing the image
+          // out of view. Only scrollable once expanded.
           style={[
-            a.px_4xl,
-            a.py_2xl,
-            {backgroundColor: 'rgba(0, 0, 0, 0.45)'},
+            styles.altScroll,
+            {
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              // @ts-expect-error web only
+              backdropFilter: 'blur(16px)',
+            },
             delayedFadeInAnim,
-          ]}>
+          ]}
+          scrollEnabled={isAltExpanded}
+          contentContainerStyle={[a.px_4xl, a.py_2xl]}>
           <Pressable
-            accessibilityLabel={_(msg`Expand alt text`)}
-            accessibilityHint={_(
-              msg`If alt text is long, toggles alt text expanded state`,
-            )}
+            accessibilityLabel={l`Expand alt text`}
+            accessibilityHint={l`If alt text is long, toggles alt text expanded state`}
             onPress={() => {
               setAltExpanded(!isAltExpanded)
             }}>
@@ -250,32 +254,31 @@ function LightboxGallery({
               {img.alt}
             </Text>
           </Pressable>
-        </View>
+        </ScrollView>
       ) : null}
       {imgs.length > 1 && (
         <div aria-live="polite" aria-atomic="true" style={a.sr_only}>
-          <Text>{_(msg`Image ${index + 1} of ${imgs.length}`)}</Text>
+          <Text>{l`Image ${index + 1} of ${imgs.length}`}</Text>
         </div>
       )}
       <Menu.Root>
-        <Menu.Trigger label={_(msg`Image options`)}>
+        <Menu.Trigger label={l`Image options`}>
           {({props}) => (
-            <Pressable
-              {...props}
-              accessible={false}
-              style={[a.absolute, styles.menuBtn, delayedFadeInAnim]}>
+            <View style={[a.absolute, styles.menuBtn, delayedFadeInAnim]}>
               <CircleChromeButton
+                {...props}
+                accessible={false}
                 icon={EllipsisIcon}
                 iconStyle={{transform: [{rotate: '90deg'}]}}
-                label={_(msg`Image options`)}
+                label={l`Image options`}
               />
-            </Pressable>
+            </View>
           )}
         </Menu.Trigger>
         <Menu.Outer>
           <Menu.Group>
             <Menu.Item
-              label={_(msg`Share image`)}
+              label={l`Share image`}
               onPress={async () => {
                 const url = img.uri
                 if (
@@ -294,9 +297,9 @@ function LightboxGallery({
                 ) {
                   try {
                     await navigator.clipboard.writeText(url)
-                    Toast.show(_(msg`Link copied to clipboard`))
+                    Toast.show(l`Link copied to clipboard`)
                   } catch {
-                    Toast.show(_(msg`Failed to copy link`), {type: 'error'})
+                    Toast.show(l`Failed to copy link`, {type: 'error'})
                   }
                 }
               }}>
@@ -306,14 +309,14 @@ function LightboxGallery({
               <Menu.ItemIcon icon={ShareIcon} position="right" />
             </Menu.Item>
             <Menu.Item
-              label={_(msg`Download image`)}
+              label={l`Download image`}
               onPress={() => {
                 saveImageToMediaLibrary({uri: img.uri}).then(
                   () => {
-                    Toast.show(_(msg`Image saved`))
+                    Toast.show(l`Image saved`)
                   },
                   () => {
-                    Toast.show(_(msg`Failed to save image`), {type: 'error'})
+                    Toast.show(l`Failed to save image`, {type: 'error'})
                   },
                 )
               }}>
@@ -328,7 +331,7 @@ function LightboxGallery({
       <View style={[a.absolute, styles.closeBtn, delayedFadeInAnim]}>
         <CircleChromeButton
           icon={XIcon}
-          label={_(msg`Close image viewer`)}
+          label={l`Close image viewer`}
           onPress={onClose}
         />
       </View>
@@ -449,6 +452,14 @@ const styles = StyleSheet.create({
     maxHeight: `calc(min(400px, 100vh))`,
     padding: 16,
     boxSizing: 'border-box',
+  },
+  altScroll: {
+    // Size to content like the View it replaced, rather than filling the
+    // column via ScrollView's default flexGrow.
+    flexGrow: 0,
+    flexShrink: 0,
+    // @ts-ignore web-only -sfn
+    maxHeight: '50vh',
   },
   menuBtn: {
     top: 20,

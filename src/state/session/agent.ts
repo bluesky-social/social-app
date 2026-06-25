@@ -8,10 +8,16 @@ import {
   type Did,
   type Un$Typed,
 } from '@atproto/api'
-import {type FetchHandler} from '@atproto/api/dist/agent'
-import {type SessionManager} from '@atproto/api/dist/session-manager'
 import {TID} from '@atproto/common-web'
-import {type FetchHandlerOptions} from '@atproto/xrpc'
+import {
+  type FetchHandler,
+  type FetchHandlerObject,
+  type FetchHandlerOptions,
+} from '@atproto/xrpc'
+
+// @atproto/api 0.20.x stopped exporting SessionManager from a top-level path,
+// but its only contract is FetchHandlerObject — use that here.
+type SessionManager = FetchHandlerObject
 
 import {networkRetry} from '#/lib/async/retry'
 import {

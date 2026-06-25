@@ -212,9 +212,12 @@ export function Item({
   )
 
   const highlightStyle = highlightRow
-    ? selected
-      ? [a.rounded_full, a.p_md, {backgroundColor: t.palette.primary_50}]
-      : [a.rounded_full, a.p_md]
+    ? [
+        a.rounded_full,
+        a.p_md,
+        hovered && t.atoms.bg_contrast_25,
+        selected && {backgroundColor: t.palette.primary_50},
+      ]
     : null
 
   return (
@@ -568,6 +571,32 @@ export function BaseRadio({
           ]}
         />
       )}
+    </View>
+  )
+}
+
+export function RadioWithLabel({
+  label,
+  selected,
+}: {
+  label: string
+  selected: boolean
+}) {
+  const t = useTheme()
+
+  return (
+    <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
+      <Radio />
+      <LabelText
+        style={[
+          a.font_medium,
+          a.flex_1,
+          a.text_md,
+          a.leading_tight,
+          selected ? t.atoms.text : t.atoms.text_contrast_high,
+        ]}>
+        {label}
+      </LabelText>
     </View>
   )
 }

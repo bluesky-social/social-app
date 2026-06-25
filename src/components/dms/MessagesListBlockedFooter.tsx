@@ -1,41 +1,40 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {type ModerationDecision} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileBlockMutationQueue} from '#/state/queries/profile'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {Divider} from '#/components/Divider'
 import {BlockedByListDialog} from '#/components/dms/BlockedByListDialog'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
-import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
+import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
+import {
+  PersonCheck_Stroke2_Corner0_Rounded as PersonCheckIcon,
+  PersonX_Stroke2_Corner0_Rounded as PersonXIcon,
+} from '#/components/icons/Person'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
 
 export function MessagesListBlockedFooter({
   recipient: initialRecipient,
   convoId,
-  hasMessages,
   moderation,
+  isGroup,
 }: {
   recipient: bsky.profile.AnyProfileView
   convoId: string
-  hasMessages: boolean
   moderation: ModerationDecision
+  isGroup: boolean
 }) {
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const recipient = useProfileShadow(initialRecipient)
-  const [__, queueUnblock] = useProfileBlockMutationQueue(recipient)
+  const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(recipient)
 
   const leaveConvoControl = useDialogControl()
-  const reportControl = useDialogControl()
   const blockedByListControl = useDialogControl()
 
   const {listBlocks, userBlock} = useMemo(() => {
@@ -55,86 +54,78 @@ export function MessagesListBlockedFooter({
     if (listBlocks.length) {
       blockedByListControl.open()
     } else {
-      queueUnblock()
+      void queueUnblock()
     }
   }, [blockedByListControl, listBlocks, queueUnblock])
 
   return (
-    <View style={[hasMessages && a.pt_md, a.pb_xl, a.gap_lg]}>
-      <Divider />
-      <Text style={[a.text_md, a.font_semi_bold, a.text_center]}>
+    <View style={[a.p_md]}>
+      <View
+        style={[
+          a.align_center,
+          a.justify_center,
+          a.p_lg,
+          t.atoms.bg_contrast_50,
+          {borderRadius: 40},
+        ]}>
+        <PersonXIcon fill={t.atoms.text.color} size="lg" style={[a.mb_xs]} />
+        <Text
+          style={[
+            a.mb_xs,
+            a.text_center,
+            a.text_md,
+            a.font_semi_bold,
+            t.atoms.text,
+          ]}>
+          {isGroup
+            ? l`You are blocking the chat owner`
+            : isBlocking
+              ? l`You are blocking this person`
+              : l`This person is blocking you`}
+        </Text>
+        <Text
+          style={[
+            a.text_center,
+            a.text_sm,
+            a.leading_snug,
+            t.atoms.text_contrast_high,
+          ]}>
+          <Trans>You can read chat history but can’t send new messages.</Trans>
+        </Text>
         {isBlocking ? (
-          <Trans>You have blocked this user</Trans>
-        ) : (
-          <Trans>This user has blocked you</Trans>
-        )}
-      </Text>
-
-      <View style={[a.flex_row, a.justify_between, a.gap_lg, a.px_md]}>
+          <Button
+            label={l`Unblock`}
+            color="secondary_inverted"
+            size="large"
+            style={[a.mt_lg, a.w_full]}
+            onPress={onUnblockPress}>
+            <ButtonIcon icon={PersonCheckIcon} />
+            <ButtonText>
+              <Trans>Unblock</Trans>
+            </ButtonText>
+          </Button>
+        ) : null}
         <Button
-          label={_(msg`Leave chat`)}
-          color="secondary"
-          variant="solid"
-          size="small"
-          style={[a.flex_1]}
+          label={l`Leave chat`}
+          color="secondary_inverted"
+          size="large"
+          style={[a.mt_lg, a.w_full]}
           onPress={leaveConvoControl.open}>
-          <ButtonText style={{color: t.palette.negative_500}}>
+          <ButtonIcon icon={LeaveIcon} />
+          <ButtonText>
             <Trans>Leave chat</Trans>
           </ButtonText>
         </Button>
-        <Button
-          label={_(msg`Report`)}
-          color="secondary"
-          variant="solid"
-          size="small"
-          style={[a.flex_1]}
-          onPress={reportControl.open}>
-          <ButtonText style={{color: t.palette.negative_500}}>
-            <Trans>Report</Trans>
-          </ButtonText>
-        </Button>
-        {isBlocking && gtMobile && (
-          <Button
-            label={_(msg`Unblock`)}
-            color="secondary"
-            variant="solid"
-            size="small"
-            style={[a.flex_1]}
-            onPress={onUnblockPress}>
-            <ButtonText style={{color: t.palette.primary_500}}>
-              <Trans>Unblock</Trans>
-            </ButtonText>
-          </Button>
-        )}
+        <LeaveConvoPrompt
+          control={leaveConvoControl}
+          currentScreen="conversation"
+          convoId={convoId}
+        />
+        <BlockedByListDialog
+          control={blockedByListControl}
+          listBlocks={listBlocks}
+        />
       </View>
-      {isBlocking && !gtMobile && (
-        <View style={[a.flex_row, a.justify_center, a.px_md]}>
-          <Button
-            label={_(msg`Unblock`)}
-            color="secondary"
-            variant="solid"
-            size="small"
-            style={[a.flex_1]}
-            onPress={onUnblockPress}>
-            <ButtonText style={{color: t.palette.primary_500}}>
-              <Trans>Unblock</Trans>
-            </ButtonText>
-          </Button>
-        </View>
-      )}
-
-      <LeaveConvoPrompt
-        control={leaveConvoControl}
-        currentScreen="conversation"
-        convoId={convoId}
-      />
-
-      <ReportConversationPrompt control={reportControl} />
-
-      <BlockedByListDialog
-        control={blockedByListControl}
-        listBlocks={listBlocks}
-      />
     </View>
   )
 }

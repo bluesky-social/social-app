@@ -15,11 +15,8 @@ export enum Nux {
   LiveNowBetaDialog = 'LiveNowBetaDialog',
   LiveNowBetaNudge = 'LiveNowBetaNudge',
   DraftsAnnouncement = 'DraftsAnnouncement',
-
-  /*
-   * Blocking announcements. New IDs are required for each new announcement.
-   */
-  PolicyUpdate202508 = 'PolicyUpdate202508',
+  GroupChatsAnnouncement = 'GroupChatsAnnouncement',
+  InviteFriendsAnnouncement = 'InviteFriendsAnnouncement',
 }
 
 export const nuxNames = new Set(Object.values(Nux))
@@ -50,10 +47,6 @@ export type AppNux = BaseNux<
       data: undefined
     }
   | {
-      id: Nux.PolicyUpdate202508
-      data: undefined
-    }
-  | {
       id: Nux.BookmarksAnnouncement
       data: undefined
     }
@@ -77,6 +70,14 @@ export type AppNux = BaseNux<
       id: Nux.DraftsAnnouncement
       data: undefined
     }
+  | {
+      id: Nux.GroupChatsAnnouncement
+      data: undefined
+    }
+  | {
+      id: Nux.InviteFriendsAnnouncement
+      data: undefined
+    }
 >
 
 export const NuxSchemas: Record<Nux, zod.ZodObject<any> | undefined> = {
@@ -86,11 +87,12 @@ export const NuxSchemas: Record<Nux, zod.ZodObject<any> | undefined> = {
   [Nux.ActivitySubscriptions]: undefined,
   [Nux.AgeAssuranceDismissibleNotice]: undefined,
   [Nux.AgeAssuranceDismissibleFeedBanner]: undefined,
-  [Nux.PolicyUpdate202508]: undefined,
   [Nux.BookmarksAnnouncement]: undefined,
   [Nux.FindContactsAnnouncement]: undefined,
   [Nux.FindContactsDismissibleBanner]: undefined,
   [Nux.LiveNowBetaDialog]: undefined,
   [Nux.LiveNowBetaNudge]: undefined,
   [Nux.DraftsAnnouncement]: undefined,
+  [Nux.GroupChatsAnnouncement]: undefined,
+  [Nux.InviteFriendsAnnouncement]: undefined,
 }

@@ -135,7 +135,11 @@ function createWebOAuthClient() {
     // client_ids. Without explicit scope, only "atproto" is granted, which
     // lacks the transition:* scopes needed for appview/chat APIs.
     const port = window.location.port ? `:${window.location.port}` : ''
-    const redirectUri = `http://127.0.0.1${port}/`
+    // The AuthCallback route at /auth/web/callback is what calls
+    // client.init() to exchange the auth code. Land there in the loopback
+    // flow too — otherwise the fragment params on `/` are never read and
+    // the user appears unauthenticated after the redirect.
+    const redirectUri = `http://127.0.0.1${port}/auth/web/callback`
     const clientId =
       `http://localhost` +
       `?redirect_uri=${encodeURIComponent(redirectUri)}` +
