@@ -53,8 +53,12 @@ func TestBuildPassJSON_Golden(t *testing.T) {
 				t.Fatalf("read golden: %v", err)
 			}
 			var gotMap, wantMap map[string]any
-			_ = json.Unmarshal(got, &gotMap)
-			_ = json.Unmarshal(want, &wantMap)
+			if err := json.Unmarshal(got, &gotMap); err != nil {
+				t.Fatalf("unmarshal got: %v", err)
+			}
+			if err := json.Unmarshal(want, &wantMap); err != nil {
+				t.Fatalf("unmarshal want: %v", err)
+			}
 			if !mapsEqual(gotMap, wantMap) {
 				t.Errorf("pass.json drift; rerun with UPDATE_GOLDEN=1 to update.\n--- got ---\n%s\n--- want ---\n%s", got, want)
 			}
