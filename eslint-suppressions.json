@@ -946,14 +946,6 @@
       "count": 1
     }
   },
-  "src/lib/hooks/useNotificationHandler.ts": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 16
-    },
-    "@typescript-eslint/require-await": {
-      "count": 1
-    }
-  },
   "src/lib/hooks/useOTAUpdates.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -2181,14 +2173,6 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 2
-    }
-  },
-  "src/view/com/modals/Modal.tsx": {
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/require-await": {
-      "count": 1
     }
   },
   "src/view/com/notifications/NotificationFeed.tsx": {
