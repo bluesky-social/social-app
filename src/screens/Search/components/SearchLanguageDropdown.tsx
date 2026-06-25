@@ -17,7 +17,7 @@ import * as Menu from '#/components/Menu'
 import {useAnalytics} from '#/analytics'
 
 export function SearchLanguageDropdown({
-  showIcon = false,
+  showIcon = true,
   value,
   onChange,
 }: {
