@@ -5,7 +5,6 @@
 export type VideoCompressSkipReason =
   | 'gif'
   | 'below-byte-threshold'
-  | 'below-thresholds'
   | 'no-webcodecs'
   | 'compress-error-fallback'
 

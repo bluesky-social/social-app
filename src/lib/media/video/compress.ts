@@ -1,32 +1,25 @@
+import {getVideoMetaData, Video} from 'react-native-compressor'
 import {type ImagePickerAsset} from 'expo-image-picker'
 
-import {
-  SUPPORTED_MIME_TYPES,
-  type SupportedMimeTypes,
-  VIDEO_MAX_SIZE,
-} from '#/lib/constants'
-import {logger} from '#/logger'
-import {
-  compress,
-  probe,
-  type VideoMetadata,
-} from '../../../../modules/expo-bluesky-video-compress'
-import {
-  COMPRESSION_MAX_DIMENSION,
-  COMPRESSION_PASSTHROUGH_BITRATE,
-  COMPRESSION_TARGET_BITRATE,
-} from './constants'
+import {SUPPORTED_MIME_TYPES, type SupportedMimeTypes} from '#/lib/constants'
 import {type CompressedVideo} from './types'
+import {extToMime} from './util'
+
+const MIN_SIZE_FOR_COMPRESSION_BYTES = 25 * 1024 * 1024 // 25mb
 
 export async function compressVideo(
   file: ImagePickerAsset,
   opts?: {
     signal?: AbortSignal
     onProgress?: (progress: number) => void
-    onProbe?: (metadata: VideoMetadata) => void
   },
 ): Promise<CompressedVideo> {
+  const {onProgress, signal} = opts || {}
+
   if (file.mimeType === 'image/gif') {
+    // let's hope they're small enough that they don't need compression!
+    // this compression library doesn't support gifs
+    // worst case - server rejects them. I think that's fine -sfn
     return {
       uri: file.uri,
       size: file.fileSize ?? -1,
@@ -35,101 +28,50 @@ export async function compressVideo(
     }
   }
 
+  // Pre-check the threshold ourselves so we can label the skip in telemetry.
+  // rnc would do the same skip internally via minimumFileSizeForCompress, but
+  // that path is invisible to us.
   const isAcceptableFormat = SUPPORTED_MIME_TYPES.includes(
     file.mimeType as SupportedMimeTypes,
   )
-
-  let metadata
-  try {
-    metadata = await probe(file.uri)
-  } catch (e) {
-    logger.debug('probe failed, falling through to passthrough', {
-      safeMessage: e,
-    })
+  if (
+    isAcceptableFormat &&
+    file.fileSize != null &&
+    file.fileSize < MIN_SIZE_FOR_COMPRESSION_BYTES
+  ) {
     return {
       uri: file.uri,
-      size: file.fileSize ?? -1,
+      size: file.fileSize,
       mimeType: file.mimeType ?? 'video/mp4',
-      passthroughReason: 'compress-error-fallback',
+      passthroughReason: 'below-byte-threshold',
     }
   }
 
-  opts?.onProbe?.(metadata)
-
-  if (!shouldCompress(metadata, isAcceptableFormat)) {
-    return {
-      uri: file.uri,
-      size: metadata.fileSize,
-      mimeType: file.mimeType ?? 'video/mp4',
-      passthroughReason: 'below-thresholds',
-    }
-  }
-
-  const result = await compress(
+  const compressed = await Video.compress(
     file.uri,
     {
-      targetBitrate: COMPRESSION_TARGET_BITRATE,
-      maxSize: COMPRESSION_MAX_DIMENSION,
-      codec: 'h264',
+      compressionMethod: 'manual',
+      bitrate: 3_000_000, // 3mbps
+      maxSize: 1920,
+      // Force a transcode for unacceptable-format files regardless of size.
+      // rnc's default minimumFileSizeForCompress would otherwise pass small
+      // unacceptable-format files through unchanged and the server would
+      // reject them. Acceptable formats are already short-circuited above so
+      // they never reach this call.
+      // WARNING: this ONE SPECIFIC ARG is in MB -sfn
+      minimumFileSizeForCompress: 0,
+      getCancellationId: id => {
+        if (signal) {
+          signal.addEventListener('abort', () => {
+            Video.cancelCompression(id)
+          })
+        }
+      },
     },
-    {
-      onProgress: opts?.onProgress,
-      signal: opts?.signal,
-    },
+    onProgress,
   )
 
-  return {
-    uri: result.uri,
-    size: result.size,
-    mimeType: result.mimeType,
-  }
-}
+  const info = await getVideoMetaData(compressed)
 
-function shouldCompress(
-  metadata: {
-    bitrate: number
-    width: number
-    height: number
-    fileSize: number
-    isHDR: boolean
-  },
-  isAcceptableFormat: boolean,
-): boolean {
-  const maxDimension = Math.max(metadata.width, metadata.height)
-  const bitrateKbps = Math.round(metadata.bitrate / 1000)
-  const sizeMB = (metadata.fileSize / 1_000_000).toFixed(1)
-
-  if (!isAcceptableFormat) {
-    logger.debug('shouldCompress: yes (unsupported format)')
-    return true
-  }
-
-  // HDR sources need the SDR BT.709 tone-map in the compress path; otherwise we
-  // would upload HLG/PQ/Dolby Vision untouched.
-  if (metadata.isHDR) {
-    logger.debug('shouldCompress: yes (HDR source)')
-    return true
-  }
-
-  if (metadata.fileSize > VIDEO_MAX_SIZE) {
-    logger.debug(`shouldCompress: yes (file too large: ${sizeMB}MB)`)
-    return true
-  }
-
-  if (
-    metadata.bitrate <= COMPRESSION_PASSTHROUGH_BITRATE &&
-    maxDimension <= COMPRESSION_MAX_DIMENSION
-  ) {
-    logger.debug(
-      `shouldCompress: no (${bitrateKbps}kbps, ${maxDimension}px, ${sizeMB}MB)`,
-    )
-    return false
-  }
-
-  if (metadata.bitrate > COMPRESSION_PASSTHROUGH_BITRATE) {
-    logger.debug(`shouldCompress: yes (bitrate ${bitrateKbps}kbps)`)
-  } else {
-    logger.debug(`shouldCompress: yes (dimension ${maxDimension}px)`)
-  }
-  return true
+  return {uri: compressed, size: info.size, mimeType: extToMime(info.extension)}
 }
