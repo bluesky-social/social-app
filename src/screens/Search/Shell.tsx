@@ -40,7 +40,7 @@ import {
 } from '#/screens/Search/searchParams'
 import {makeSearchQuery} from '#/screens/Search/utils'
 import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon} from '#/components/Button'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
@@ -416,7 +416,7 @@ export function SearchScreenShell({
       url.searchParams.set(key, value)
     }
     setStringAsync(url.toString()).then(
-      () => Toast.show(l`Copied to clipboard`, {type: 'success'}),
+      () => Toast.show(l`Copied link to clipboard`, {type: 'success'}),
       () => Toast.show(l`Failed to copy link`, {type: 'error'}),
     )
   }, [query, filters, l])
@@ -457,24 +457,7 @@ export function SearchScreenShell({
                   </Layout.Header.TitleText>
                 </Layout.Header.Content>
                 {showFilters ? (
-                  advancedSearchV2Enabled ? (
-                    <>
-                      <Button
-                        accessibilityRole="button"
-                        size="small"
-                        color="secondary"
-                        shape="round"
-                        label={l`Share this search`}
-                        onPress={onShareSearch}>
-                        <ButtonIcon icon={ChainLinkIcon} />
-                      </Button>
-                      <AdvancedSearchDialog
-                        q={searchText}
-                        filters={filters}
-                        onSubmit={onSubmitAdvanced}
-                      />
-                    </>
-                  ) : (
+                  advancedSearchV2Enabled ? null : (
                     <SearchLanguageDropdown
                       value={filters.lang ?? ''}
                       onChange={onChangeLang}
@@ -529,35 +512,31 @@ export function SearchScreenShell({
                 </View>
               </View>
 
-              {showFilters && !showHeader && (
-                <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-                  {advancedSearchV2Enabled ? (
-                    <>
-                      <AdvancedSearchDialog
-                        q={searchText}
-                        filters={filters}
-                        onSubmit={onSubmitAdvanced}
-                      />
-                      <Button
-                        accessibilityRole="button"
-                        size="small"
-                        color="secondary"
-                        label={l`Share this search`}
-                        onPress={onShareSearch}>
-                        <ButtonIcon icon={ChainLinkIcon} />
-                        <ButtonText>
-                          <Trans>Copy link</Trans>
-                        </ButtonText>
-                      </Button>
-                    </>
-                  ) : (
-                    <SearchLanguageDropdown
-                      value={filters.lang ?? ''}
-                      onChange={onChangeLang}
-                    />
-                  )}
-                </View>
+              {showFilters && !showHeader && !advancedSearchV2Enabled && (
+                <SearchLanguageDropdown
+                  value={filters.lang ?? ''}
+                  onChange={onChangeLang}
+                />
               )}
+
+              {showFilters && advancedSearchV2Enabled ? (
+                <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                  <AdvancedSearchDialog
+                    q={searchText}
+                    filters={filters}
+                    onSubmit={onSubmitAdvanced}
+                  />
+                  <Button
+                    accessibilityRole="button"
+                    size="small"
+                    color="secondary"
+                    shape="round"
+                    label={l`Share this search`}
+                    onPress={onShareSearch}>
+                    <ButtonIcon icon={ChainLinkIcon} />
+                  </Button>
+                </View>
+              ) : null}
             </View>
           </View>
         </Layout.Center>
