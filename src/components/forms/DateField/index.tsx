@@ -121,6 +121,14 @@ export function DateField({
             <Button
               label={_(msg`Done`)}
               onPress={() => {
+                /*
+                 * Commit the currently shown date even if the user never
+                 * scrolled (onDateChange only fires on scroll). This keeps
+                 * onChangeDate firing alongside onConfirm, matching Android and
+                 * web, so an empty field confirmed without scrolling does not
+                 * report a date via onConfirm while onChangeDate stays silent.
+                 */
+                onChangeDate(draft)
                 onConfirm?.(draft)
                 control.close()
               }}
