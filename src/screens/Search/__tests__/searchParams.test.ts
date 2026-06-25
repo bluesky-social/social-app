@@ -1,11 +1,14 @@
 import {describe, expect, it} from '@jest/globals'
 
 import {
+  countActiveFilters,
   definedFilterParams,
   filtersToApiParams,
   filtersToLegacyParams,
   hasPostOnlyFilters,
+  parseHistoryEntry,
   readSearchFilters,
+  serializeHistoryEntry,
   withoutFilterParams,
 } from '#/screens/Search/searchParams'
 
@@ -152,6 +155,59 @@ describe(`searchParams`, () => {
         excludeUrls: ['spam.com/x'],
         excludeHashtags: ['nsfw', 'promo'],
       })
+    })
+  })
+
+  describe(`countActiveFilters`, () => {
+    it(`counts each set filter key once`, () => {
+      expect(countActiveFilters({})).toBe(0)
+      expect(
+        countActiveFilters({author: 'alice bob', domain: 'bsky.app'}),
+      ).toBe(2)
+    })
+  })
+
+  describe(`search history serialize/parse`, () => {
+    it(`stores a filter-less search as a plain string`, () => {
+      expect(serializeHistoryEntry('cats', {})).toBe('cats')
+    })
+
+    it(`stores a filtered search as JSON`, () => {
+      const stored = serializeHistoryEntry('cats', {author: 'alice'})
+      expect(stored).not.toBe('cats')
+      expect(parseHistoryEntry(stored)).toEqual({
+        q: 'cats',
+        filters: {author: 'alice'},
+      })
+    })
+
+    it(`round-trips query + filters`, () => {
+      const filters = {
+        author: 'alice',
+        tag: 'black orange',
+        since: '2024-01-01',
+      }
+      const stored = serializeHistoryEntry('cats', filters)
+      expect(parseHistoryEntry(stored)).toEqual({q: 'cats', filters})
+    })
+
+    it(`reads a legacy plain-string entry as a query with no filters`, () => {
+      expect(parseHistoryEntry('plain old search')).toEqual({
+        q: 'plain old search',
+        filters: {},
+      })
+    })
+
+    it(`treats malformed JSON as a plain query without throwing`, () => {
+      expect(parseHistoryEntry('{not valid json')).toEqual({
+        q: '{not valid json',
+        filters: {},
+      })
+    })
+
+    it(`treats a JSON value lacking a string q as a plain query`, () => {
+      const weird = JSON.stringify({foo: 'bar'})
+      expect(parseHistoryEntry(weird)).toEqual({q: weird, filters: {}})
     })
   })
 })

@@ -34,8 +34,10 @@ import {
   filtersToLegacyParams,
   filtersToRouteParams,
   hasActiveFilters,
+  parseHistoryEntry,
   readSearchFilters,
   type SearchFilters,
+  serializeHistoryEntry,
   withoutFilterParams,
 } from '#/screens/Search/searchParams'
 import {makeSearchQuery} from '#/screens/Search/utils'
@@ -140,8 +142,12 @@ export function SearchScreenShell({
   })
 
   const updateSearchHistory = useCallback(
-    (item: string) => {
-      if (!item) return
+    (q: string, searchFilters: SearchFilters = {}) => {
+      if (!q) return
+      // Store the query plus any advanced-search filters. Term-only searches
+      // serialize to a plain string (back-compatible with existing history);
+      // filtered searches serialize to JSON. Dedupe on the serialized form.
+      const item = serializeHistoryEntry(q, searchFilters)
       const newSearchHistory = [
         item,
         ...termHistory.filter(search => search !== item),
@@ -247,20 +253,25 @@ export function SearchScreenShell({
   )
 
   const navigateToItem = useCallback(
-    (item: string) => {
+    (item: string, itemFilters: SearchFilters = filters) => {
       scrollToTopWeb()
       setShowAutocomplete(false)
-      updateSearchHistory(item)
+      updateSearchHistory(item, itemFilters)
 
       if (IS_WEB) {
+        const nextParams = {
+          ...withoutFilterParams(route.params as Record<string, unknown>),
+          ...definedFilterParams(itemFilters),
+          q: item,
+        }
         // @ts-expect-error route is not typesafe
-        navigation.push(route.name, {...route.params, q: item})
+        navigation.push(route.name, nextParams)
       } else {
         textInput.current?.blur()
-        navigation.setParams({q: item})
+        navigation.setParams({...filtersToRouteParams(itemFilters), q: item})
       }
     },
-    [updateSearchHistory, navigation, route],
+    [updateSearchHistory, navigation, route, filters],
   )
 
   const onPressCancelSearch = useCallback(() => {
@@ -303,7 +314,7 @@ export function SearchScreenShell({
       scrollToTopWeb()
       setShowAutocomplete(false)
       updateSearchText(text)
-      updateSearchHistory(text)
+      updateSearchHistory(text, nextFilters)
       ax.metric('search:query', {
         source: 'typed',
       })
@@ -337,8 +348,11 @@ export function SearchScreenShell({
 
   const handleHistoryItemClick = useCallback(
     (item: string) => {
-      updateSearchText(item)
-      navigateToItem(item)
+      // History entries may carry advanced-search filters (JSON-encoded);
+      // term-only entries are plain strings. Restore both the query and filters.
+      const {q, filters: itemFilters} = parseHistoryEntry(item)
+      updateSearchText(q)
+      navigateToItem(q, itemFilters)
     },
     [navigateToItem, updateSearchText],
   )

@@ -68,6 +68,51 @@ export function hasActiveFilters(filters: SearchFilters): boolean {
   return FILTER_PARAM_KEYS.some(key => filters[key])
 }
 
+// Number of active filter params, used for the "[+N filters]" pill in search
+// history. Each set key counts once (a multi-value field like author counts as
+// one filter regardless of how many handles it holds).
+export function countActiveFilters(filters: SearchFilters): number {
+  return FILTER_PARAM_KEYS.filter(key => filters[key]).length
+}
+
+export type SearchHistoryEntry = {
+  q: string
+  filters: SearchFilters
+}
+
+// Serializes a search (query text + filters) for term-history storage. Searches
+// with no filters are stored as plain strings - both for readability and so
+// pre-existing term-only history (also plain strings) stays valid. Only
+// filtered searches are JSON-encoded.
+export function serializeHistoryEntry(
+  q: string,
+  filters: SearchFilters,
+): string {
+  if (!hasActiveFilters(filters)) return q
+  return JSON.stringify({q, filters})
+}
+
+// Parses a stored term-history entry. Legacy/term-only entries are plain
+// strings; filtered entries are JSON objects. Anything that isn't a
+// well-formed {q, filters} object is treated as a plain query string, so a bad
+// or pre-existing value never throws.
+export function parseHistoryEntry(stored: string): SearchHistoryEntry {
+  try {
+    const parsed: unknown = JSON.parse(stored)
+    if (
+      parsed &&
+      typeof parsed === 'object' &&
+      typeof (parsed as {q?: unknown}).q === 'string'
+    ) {
+      const obj = parsed as {q: string; filters?: Record<string, unknown>}
+      return {q: obj.q, filters: readSearchFilters(obj.filters)}
+    }
+  } catch {
+    // Not JSON - a plain term-only entry.
+  }
+  return {q: stored, filters: {}}
+}
+
 // Filter keys that restrict posts specifically, as opposed to `lang`, which
 // applies equally to posts, people, and feeds. Used to decide whether the
 // People/Feeds search tabs still make sense: a language alone should not hide
