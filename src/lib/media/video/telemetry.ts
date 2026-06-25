@@ -5,6 +5,7 @@ import {nanoid} from 'nanoid/non-secure'
 import {type VideoCompressSkipReason} from '#/lib/media/video/types'
 import {Sentry} from '#/logger/sentry/lib'
 import {type Metrics} from '#/analytics/metrics'
+import {type VideoMetadata} from '../../../../modules/expo-bluesky-video-compress'
 
 type MetricFn = <E extends keyof Metrics>(event: E, payload: Metrics[E]) => void
 
@@ -14,7 +15,7 @@ type MetricFn = <E extends keyof Metrics>(event: E, payload: Metrics[E]) => void
 const COMPRESS_ENGINE =
   Platform.OS === 'web'
     ? 'web:mediabunny@1.25.3'
-    : 'native:react-native-compressor@1.13.0'
+    : 'native:expo-bluesky-video-compress@1'
 
 type Phase = 'compress' | 'upload' | 'processing'
 
@@ -28,6 +29,7 @@ export type VideoTelemetry = {
   readonly engine: string
   picked: () => void
   compressStarted: () => void
+  probed: (metadata: VideoMetadata) => void
   compressSkipped: (video: {
     size: number
     mimeType: string
@@ -152,6 +154,24 @@ export function createVideoTelemetry({
         uploadId,
         engine,
         sourceBytes: asset.fileSize,
+      })
+    },
+
+    probed(metadata) {
+      metric('video:upload:probed', {
+        uploadId,
+        engine,
+        mimeType: metadata.mimeType,
+        codec: metadata.codec,
+        width: metadata.width,
+        height: metadata.height,
+        duration: metadata.duration,
+        bitrate: metadata.bitrate,
+        fileSize: metadata.fileSize,
+        hasAudio: metadata.hasAudio,
+        frameRate: metadata.frameRate,
+        rotation: metadata.rotation,
+        isHDR: metadata.isHDR,
       })
     },
 

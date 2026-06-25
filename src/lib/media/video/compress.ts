@@ -6,7 +6,11 @@ import {
   VIDEO_MAX_SIZE,
 } from '#/lib/constants'
 import {logger} from '#/logger'
-import {compress, probe} from '../../../../modules/expo-bluesky-video-compress'
+import {
+  compress,
+  probe,
+  type VideoMetadata,
+} from '../../../../modules/expo-bluesky-video-compress'
 import {
   COMPRESSION_MAX_DIMENSION,
   COMPRESSION_PASSTHROUGH_BITRATE,
@@ -19,6 +23,7 @@ export async function compressVideo(
   opts?: {
     signal?: AbortSignal
     onProgress?: (progress: number) => void
+    onProbe?: (metadata: VideoMetadata) => void
   },
 ): Promise<CompressedVideo> {
   if (file.mimeType === 'image/gif') {
@@ -48,6 +53,8 @@ export async function compressVideo(
       passthroughReason: 'compress-error-fallback',
     }
   }
+
+  opts?.onProbe?.(metadata)
 
   if (!shouldCompress(metadata, isAcceptableFormat)) {
     return {
