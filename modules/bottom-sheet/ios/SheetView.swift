@@ -102,6 +102,8 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     index: Int
   ) {
     touchHandler?.detach(from: childComponentView)
+
+    childComponentView.removeFromSuperview()
     if self.innerView === childComponentView {
       self.innerView = nil
     }
