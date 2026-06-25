@@ -16,7 +16,7 @@ import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/compone
 import {KeepAwake} from '#/components/KeepAwake'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {useVideoMuteState} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
-import {GifPresentationControls} from '../GifPresentationControls'
+import {AltBadge, GifPresentationControls} from '../GifPresentationControls'
 import {TimeIndicator} from './TimeIndicator'
 
 export function VideoEmbedInnerNative({
@@ -112,6 +112,7 @@ export function VideoEmbedInnerNative({
           timeRemaining={timeRemaining}
         />
       )}
+      {!isGif && embed.alt && <AltBadge text={embed.alt} />}
       <MediaInsetBorder />
       <KeepAwake enabled={isPlaying} />
     </View>
