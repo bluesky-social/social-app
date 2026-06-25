@@ -1,0 +1,48 @@
+{
+  "formatVersion": 1,
+  "passTypeIdentifier": "pass.app.bsky.invite",
+  "serialNumber": "did:plc:abc123-night-v1",
+  "teamIdentifier": "TEAMID00",
+  "organizationName": "Bluesky",
+  "description": "Bluesky invite - @alice.bsky.social",
+  "logoText": "Bluesky",
+  "foregroundColor": "rgb(255, 255, 255)",
+  "labelColor": "rgb(255, 255, 255)",
+  "backgroundColor": "rgb(0, 21, 51)",
+  "storeCard": {
+    "primaryFields": [
+      {
+        "key": "handle",
+        "label": "Handle",
+        "value": "@alice.bsky.social"
+      }
+    ],
+    "secondaryFields": [
+      {
+        "key": "url",
+        "label": "Profile",
+        "value": "bsky.app/profile/alice.bsky.social"
+      }
+    ],
+    "backFields": [
+      {
+        "key": "about",
+        "label": "About",
+        "value": "Scan the QR to open this profile in any browser, or share the URL below."
+      },
+      {
+        "key": "url2",
+        "label": "Profile URL",
+        "value": "https://bsky.app/profile/alice.bsky.social"
+      }
+    ]
+  },
+  "barcodes": [
+    {
+      "format": "PKBarcodeFormatQR",
+      "message": "https://bsky.app/profile/alice.bsky.social",
+      "messageEncoding": "iso-8859-1",
+      "altText": "@alice.bsky.social"
+    }
+  ]
+}
