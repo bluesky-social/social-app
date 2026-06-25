@@ -1,4 +1,3 @@
-import {Platform} from 'react-native'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {type AppBskyVideoDefs, type AtpAgent, type BlobRef} from '@atproto/api'
 import {type I18n} from '@lingui/core'
@@ -18,7 +17,6 @@ import {uploadVideo} from '#/lib/media/video/upload'
 import {createVideoAgent} from '#/lib/media/video/util'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {probe} from '../../../../../modules/expo-bluesky-video-compress'
 
 type CaptionsTrack = {lang: string; file: File}
 
@@ -282,19 +280,6 @@ export async function processVideo(
   i18n: I18n,
   telemetry: VideoTelemetry,
 ) {
-  // Native-only side channel: fire telemetry.probed with raw container
-  // metadata (bitrate, codec, isHDR, frame rate, etc.) that rn-compressor
-  // does not surface. The compress path itself is unchanged - probe data is
-  // purely for analytics to validate future smart-skip thresholds.
-  if (Platform.OS !== 'web') {
-    try {
-      const metadata = await probe(asset.uri)
-      telemetry.probed(metadata)
-    } catch (e) {
-      logger.debug('video probe failed', {safeMessage: e})
-    }
-  }
-
   let video: CompressedVideo | undefined
   try {
     telemetry.compressStarted()
@@ -303,6 +288,7 @@ export async function processVideo(
         dispatch({type: 'update_progress', progress: trunc2dp(num), signal})
       },
       signal,
+      onProbe: metadata => telemetry.probed(metadata),
     })
   } catch (e) {
     const message = getCompressErrorMessage(e, i18n)
