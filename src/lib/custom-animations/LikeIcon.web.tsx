@@ -41,7 +41,7 @@ const circle2Keyframe = [
   {opacity: 0, transform: 'scale(0)'},
   {opacity: 1, transform: 'scale(1.0)'},
   {opacity: 1},
-  {opacity: 0, transform: 'scale(2.0)'},
+  {opacity: 0, transform: 'scale(1.8)'},
 ]
 
 export function AnimatedLikeIcon({
