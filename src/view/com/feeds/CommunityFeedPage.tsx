@@ -1,11 +1,12 @@
 import {useCallback, useMemo, useRef} from 'react'
 import {ActivityIndicator, type ListRenderItemInfo, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {ComposeIcon2} from '#/lib/icons'
 import {s} from '#/lib/styles'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {
   type HydratedCommunityPost,
   useCommunityFeedHydrated,
@@ -14,7 +15,7 @@ import {
 import {useSession} from '#/state/session'
 import {PostFeedItem} from '#/view/com/posts/PostFeedItem'
 import {FAB} from '#/view/com/util/fab/FAB'
-import {List} from '#/view/com/util/List'
+import {List, type ListMethods} from '#/view/com/util/List'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
 import {atoms as a, useTheme} from '#/alf'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
@@ -26,7 +27,7 @@ export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
   const t = useTheme()
   const {hasSession} = useSession()
   const headerOffset = useHeaderOffset()
-  const scrollElRef = useRef<any>(null)
+  const scrollElRef = useRef<ListMethods>(null)
   const {openComposer} = useOpenComposer()
 
   const onPressCompose = useCallback(() => {
@@ -162,7 +163,7 @@ export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
         <FAB
           testID="composeFAB"
           onPress={onPressCompose}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+          icon={<EditBigIcon size="lg" style={s.white} />}
           accessibilityRole="button"
           accessibilityLabel={_(msg`New post`)}
           accessibilityHint=""

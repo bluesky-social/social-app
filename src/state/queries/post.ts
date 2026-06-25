@@ -17,12 +17,6 @@ import {useAnalytics} from '#/analytics'
 import {type Metrics, toClout} from '#/analytics/metrics'
 import {useIsThreadMuted, useSetThreadMute} from '../cache/thread-mutes'
 import {findProfileQueryData} from './profile'
-import {
-  fetchQueryWithFallback,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from './useQueryWithFallback'
 
 const RQKEY_ROOT = 'post'
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]

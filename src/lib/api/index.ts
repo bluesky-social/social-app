@@ -8,6 +8,7 @@ import {
   type AppBskyEmbedVideo,
   AppBskyFeedPost,
   type AtpAgent,
+  AtUri,
   BlobRef,
   ChatBskyGroupDefs,
   type ComAtprotoLabelDefs,

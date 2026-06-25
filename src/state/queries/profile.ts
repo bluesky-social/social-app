@@ -48,15 +48,6 @@ import {
 import {RQKEY_ROOT as RQKEY_LIST_CONVOS} from './messages/list-conversations'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
-import {
-  type InfiniteData,
-  keepPreviousData,
-  prefetchQueryWithFallback,
-  type QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from './useQueryWithFallback'
 
 export * from '#/state/queries/unstable-profile-cache'
 /**

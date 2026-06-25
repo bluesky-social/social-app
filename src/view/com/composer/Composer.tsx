@@ -1961,7 +1961,7 @@ function ComposerPills({
   bottomBarAnimatedStyle: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const media = post.embed.media
   const hasMedia =
     media?.type === 'images' ||
@@ -2004,7 +2004,7 @@ function ComposerPills({
         {isReply ? null : (
           <Toggle.Item
             name="blacksky_only"
-            label={_(msg`Blacksky Only`)}
+            label={l`Blacksky Only`}
             value={thread.blackskyOnly}
             onChange={() => {
               dispatch({type: 'toggle_blacksky_only'})

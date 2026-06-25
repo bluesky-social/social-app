@@ -1,11 +1,11 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {useCommunityFeedQuery} from '#/state/queries/community-feed'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
@@ -42,7 +42,7 @@ export function CommunityFeed({actor}: {actor: string}) {
     )
   }
 
-  const feedItems = data?.pages.flatMap(page => page.feed) || []
+  const feedItems = data?.pages.flatMap(page => page.feed ?? []) || []
 
   if (feedItems.length === 0) {
     return (
@@ -88,7 +88,7 @@ export function CommunityPostItem({
 }) {
   const t = useTheme()
   const record = postView.record as AppBskyFeedPost.Record
-  const rt = React.useMemo(() => {
+  const rt = useMemo(() => {
     const richText = new RichTextAPI({
       text: record.text,
       facets: record.facets,
