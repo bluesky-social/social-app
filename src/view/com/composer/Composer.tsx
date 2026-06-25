@@ -412,9 +412,10 @@ export const ComposePost = ({
         currentDid,
         abortController.signal,
         i18n,
+        ax.metric,
       )
     },
-    [i18n, agent, currentDid, composerDispatch],
+    [i18n, agent, currentDid, composerDispatch, ax.metric],
   )
 
   const onInitVideo = useNonReactiveCallback(() => {
@@ -559,6 +560,7 @@ export const ComposePost = ({
           currentDid,
           abortController.signal,
           i18n,
+          ax.metric,
         )
       } catch (e) {
         logger.error('Failed to restore video from draft', {
@@ -567,7 +569,7 @@ export const ComposePost = ({
         })
       }
     },
-    [i18n, agent, currentDid, composerDispatch],
+    [i18n, agent, currentDid, composerDispatch, ax.metric],
   )
 
   const handleSelectDraft = useCallback(

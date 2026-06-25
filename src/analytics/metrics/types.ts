@@ -252,6 +252,23 @@ export type Events = {
   'composer:image:edit': {
     platform: Platform['OS']
   }
+  'composer:video:probe': {
+    mimeType: string
+    codec: string
+    width: number
+    height: number
+    duration: number
+    bitrate: number
+    fileSize: number
+    hasAudio: boolean
+    frameRate: number
+    rotation: number
+    isHDR: boolean
+    wouldCompress: boolean
+  }
+  'composer:video:probeFailed': {
+    safeMessage: string
+  }
   'composerPrompt:press': {}
   'composerPrompt:camera:press': {}
   'composerPrompt:gallery:press': {}

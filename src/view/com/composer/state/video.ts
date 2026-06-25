@@ -16,6 +16,7 @@ import {uploadVideo} from '#/lib/media/video/upload'
 import {createVideoAgent} from '#/lib/media/video/util'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {type AnalyticsContextType} from '#/analytics'
 
 type CaptionsTrack = {lang: string; file: File}
 
@@ -265,6 +266,7 @@ export async function processVideo(
   did: string,
   signal: AbortSignal,
   i18n: I18n,
+  metric: AnalyticsContextType['metric'],
 ) {
   let video: CompressedVideo | undefined
   try {
@@ -273,6 +275,27 @@ export async function processVideo(
         dispatch({type: 'update_progress', progress: trunc2dp(num), signal})
       },
       signal,
+      onProbe: (metadata, wouldCompress) => {
+        metric('composer:video:probe', {
+          mimeType: metadata.mimeType,
+          codec: metadata.codec,
+          width: metadata.width,
+          height: metadata.height,
+          duration: metadata.duration,
+          bitrate: metadata.bitrate,
+          fileSize: metadata.fileSize,
+          hasAudio: metadata.hasAudio,
+          frameRate: metadata.frameRate,
+          rotation: metadata.rotation,
+          isHDR: metadata.isHDR,
+          wouldCompress,
+        })
+      },
+      onProbeFailed: e => {
+        metric('composer:video:probeFailed', {
+          safeMessage: e instanceof Error ? e.message : String(e),
+        })
+      },
     })
   } catch (e) {
     const message = getCompressErrorMessage(e, i18n)
