@@ -13,6 +13,12 @@ overrides:
   'psl': '1.9.0'
   '@types/psl': '1.1.1'
   'react-native-screens': '4.24.0'
+  # zod 3.25 ships a dual ESM/CJS build whose `module` field is ESM with
+  # `export { z }` + `export *`; Expo 54's webpack ESM->CJS interop drops the
+  # named `z` namespace and @atproto/jwk crashes with "zod_1.z is undefined"
+  # at runtime. 3.23.8 is the last pre-dual build. Once we move off webpack
+  # this can come back to ^3.25.
+  'zod': '3.23.8'
 allowBuilds:
   '@sentry/cli': true
   'core-js': true

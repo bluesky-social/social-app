@@ -1,6 +1,23 @@
 import '#/logger/sentry/setup' // must be near top
 import './style.css'
 
+// OAuth dev-host normalization. The atproto OAuth loopback profile mandates
+// 127.0.0.1 (or [::1]) as the redirect_uri, but Expo's dev server is reachable
+// on both `localhost` and `127.0.0.1` — different browser origins with
+// separate IndexedDB/localStorage. If the user lands on `localhost`, the
+// OAuth client persists request state there, then the callback redirects to
+// `127.0.0.1` and the new origin can't read that state, so the flow
+// silently restarts without a session. Normalize to 127.0.0.1 on entry,
+// before any OAuth state is read or written.
+if (
+  typeof window !== 'undefined' &&
+  window.location.hostname === 'localhost'
+) {
+  const url = new URL(window.location.href)
+  url.hostname = '127.0.0.1'
+  window.location.replace(url.toString())
+}
+
 import {Fragment, useEffect, useState} from 'react'
 import {KeyboardProvider as KeyboardControllerProvider} from 'react-native-keyboard-controller'
 import {SafeAreaProvider} from 'react-native-safe-area-context'

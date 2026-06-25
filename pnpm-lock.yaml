@@ -213,6 +213,7 @@ overrides:
   psl: 1.9.0
   '@types/psl': 1.1.1
   react-native-screens: 4.24.0
+  zod: 3.23.8
 
 patchedDependencies:
   '@sentry/react-native@6.20.0': 1d48e4d5178f5684eb33262299e7eed283bf9601f79b9ae1af63a7f607d3483a
@@ -712,8 +713,8 @@ importers:
         specifier: 0.14.5
         version: 0.14.5
       zod:
-        specifier: ^3.25.76
-        version: 3.25.76
+        specifier: 3.23.8
+        version: 3.23.8
     devDependencies:
       '@babel/core':
         specifier: ^7.26.0
@@ -9537,16 +9538,16 @@ packages:
     resolution: {integrity: sha512-+hEiRIiPobgyuFlEojnqjJnhFvg4r/i3cqgcm67eehZf/WBaK3g6cD02YU9mtdVxZjv8CzCA9n/Rhrs3yAAvAw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      zod: ^3.24.4
+      zod: 3.23.8
 
   zod-validation-error@4.0.2:
     resolution: {integrity: sha512-Q6/nZLe6jxuU80qb/4uJ4t5v2VEZ44lzQjPDhYJNztRQ4wyWc6VF3D3Kb/fAuPetZQnhS3hnajCf9CsWesghLQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      zod: ^3.25.0 || ^4.0.0
+      zod: 3.23.8
 
-  zod@3.25.76:
-    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+  zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
 snapshots:
 
@@ -9559,7 +9560,7 @@ snapshots:
       '@atproto-labs/simple-store': 0.3.0
       '@atproto-labs/simple-store-memory': 0.1.4
       '@atproto/did': 0.3.0
-      zod: 3.25.76
+      zod: 3.23.8
 
   '@atproto-labs/fetch@0.2.3':
     dependencies:
@@ -9570,7 +9571,7 @@ snapshots:
       '@atproto-labs/simple-store': 0.3.0
       '@atproto-labs/simple-store-memory': 0.1.4
       '@atproto/did': 0.3.0
-      zod: 3.25.76
+      zod: 3.23.8
 
   '@atproto-labs/identity-resolver@0.3.6':
     dependencies:
@@ -9595,25 +9596,25 @@ snapshots:
       await-lock: 3.0.0
       multiformats: 13.4.2
       tlds: 1.261.0
-      zod: 3.25.76
+      zod: 3.23.8
 
   '@atproto/common-web@0.4.21':
     dependencies:
       '@atproto/lex-data': 0.0.15
       '@atproto/lex-json': 0.0.16
       '@atproto/syntax': 0.5.4
-      zod: 3.25.76
+      zod: 3.23.8
 
   '@atproto/common-web@0.5.0':
     dependencies:
       '@atproto/lex-data': 0.1.1
       '@atproto/lex-json': 0.1.0
       '@atproto/syntax': 0.6.1
-      zod: 3.25.76
+      zod: 3.23.8
 
   '@atproto/did@0.3.0':
     dependencies:
-      zod: 3.25.76
+      zod: 3.23.8
 
   '@atproto/jwk-jose@0.1.11':
     dependencies:
@@ -9624,12 +9625,12 @@ snapshots:
     dependencies:
       '@atproto/jwk': 0.6.0
       '@atproto/jwk-jose': 0.1.11
-      zod: 3.25.76
+      zod: 3.23.8
 
   '@atproto/jwk@0.6.0':
     dependencies:
       multiformats: 9.9.0
-      zod: 3.25.76
+      zod: 3.23.8
 
   '@atproto/lex-data@0.0.15':
     dependencies:
@@ -9661,14 +9662,14 @@ snapshots:
       '@atproto/syntax': 0.5.4
       iso-datestring-validator: 2.2.2
       multiformats: 9.9.0
-      zod: 3.25.76
+      zod: 3.23.8
 
   '@atproto/lexicon@0.7.1':
     dependencies:
       '@atproto/common-web': 0.5.0
       '@atproto/syntax': 0.6.1
       multiformats: 13.4.2
-      zod: 3.25.76
+      zod: 3.23.8
 
   '@atproto/oauth-client-browser@0.3.40':
     dependencies:
@@ -9696,13 +9697,13 @@ snapshots:
       '@atproto/xrpc': 0.7.7
       core-js: 3.49.0
       multiformats: 9.9.0
-      zod: 3.25.76
+      zod: 3.23.8
 
   '@atproto/oauth-types@0.6.2':
     dependencies:
       '@atproto/did': 0.3.0
       '@atproto/jwk': 0.6.0
-      zod: 3.25.76
+      zod: 3.23.8
 
   '@atproto/syntax@0.5.4':
     dependencies:
@@ -9716,12 +9717,12 @@ snapshots:
   '@atproto/xrpc@0.7.7':
     dependencies:
       '@atproto/lexicon': 0.6.2
-      zod: 3.25.76
+      zod: 3.23.8
 
   '@atproto/xrpc@0.8.0':
     dependencies:
       '@atproto/lexicon': 0.7.1
-      zod: 3.25.76
+      zod: 3.23.8
 
   '@babel/code-frame@7.10.4':
     dependencies:
@@ -14807,8 +14808,8 @@ snapshots:
       '@babel/plugin-proposal-private-methods': 7.18.6(@babel/core@7.29.0)
       eslint: 9.39.4(jiti@2.7.0)
       hermes-parser: 0.25.1
-      zod: 3.25.76
-      zod-validation-error: 3.5.4(zod@3.25.76)
+      zod: 3.23.8
+      zod-validation-error: 3.5.4(zod@3.23.8)
     transitivePeerDependencies:
       - supports-color
 
@@ -14818,8 +14819,8 @@ snapshots:
       '@babel/parser': 7.29.3
       eslint: 9.39.4(jiti@2.7.0)
       hermes-parser: 0.25.1
-      zod: 3.25.76
-      zod-validation-error: 4.0.2(zod@3.25.76)
+      zod: 3.23.8
+      zod-validation-error: 4.0.2(zod@3.23.8)
     transitivePeerDependencies:
       - supports-color
 
@@ -19677,12 +19678,12 @@ snapshots:
       css-what: 6.2.2
       entities: 5.0.0
 
-  zod-validation-error@3.5.4(zod@3.25.76):
+  zod-validation-error@3.5.4(zod@3.23.8):
     dependencies:
-      zod: 3.25.76
+      zod: 3.23.8
 
-  zod-validation-error@4.0.2(zod@3.25.76):
+  zod-validation-error@4.0.2(zod@3.23.8):
     dependencies:
-      zod: 3.25.76
+      zod: 3.23.8
 
-  zod@3.25.76: {}
+  zod@3.23.8: {}
