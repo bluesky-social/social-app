@@ -147,6 +147,10 @@ func (srv *Server) WebInviteWalletJWT(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{"jwt": jwt})
 }
 
+// WebInviteWalletHero renders a hero image for Google Wallet. Unauthenticated by
+// design - Google fetches this image from their renderer. The DID + theme combo
+// is unguessable and the data exposed (avatar + handle, both public) is already
+// on the user's profile.
 func (srv *Server) WebInviteWalletHero(c echo.Context) error {
 	did := c.QueryParam("did")
 	theme := CoerceTheme(c.QueryParam("theme"))
@@ -252,8 +256,13 @@ func (srv *Server) fetchProfile(ctx context.Context, did string) (handle string,
 	}
 	handle = pv.Handle
 	if pv.Avatar != nil {
+		// SSRF defense: only fetch https:// URLs
+		if !strings.HasPrefix(*pv.Avatar, "https://") {
+			return handle, nil, nil
+		}
 		req, _ := http.NewRequestWithContext(ctx, http.MethodGet, *pv.Avatar, nil)
-		resp, herr := http.DefaultClient.Do(req)
+		client := &http.Client{Timeout: 5 * time.Second}
+		resp, herr := client.Do(req)
 		if herr == nil {
 			defer resp.Body.Close()
 			if resp.StatusCode == 200 {
