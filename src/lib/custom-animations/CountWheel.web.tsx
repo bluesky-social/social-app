@@ -10,24 +10,27 @@ const animationConfig = {
   fill: 'forwards' as FillMode,
 }
 
+const FILTER_BLUR_MAX = 'blur(0.1em)'
+const FILTER_BLUR_NONE = 'blur(0)'
+
 const enteringUpKeyframe = [
-  {opacity: 0, transform: 'translateY(18px)'},
-  {opacity: 1, transform: 'translateY(0)'},
+  {opacity: 0, transform: 'translateY(18px)', filter: FILTER_BLUR_MAX},
+  {opacity: 1, transform: 'translateY(0)', filter: FILTER_BLUR_NONE},
 ]
 
 const enteringDownKeyframe = [
-  {opacity: 0, transform: 'translateY(-18px)'},
-  {opacity: 1, transform: 'translateY(0)'},
+  {opacity: 0, transform: 'translateY(-18px)', filter: FILTER_BLUR_MAX},
+  {opacity: 1, transform: 'translateY(0)', filter: FILTER_BLUR_NONE},
 ]
 
 const exitingUpKeyframe = [
-  {opacity: 1, transform: 'translateY(0)'},
-  {opacity: 0, transform: 'translateY(-18px)'},
+  {opacity: 1, transform: 'translateY(0)', filter: FILTER_BLUR_NONE},
+  {opacity: 0, transform: 'translateY(-18px)', filter: FILTER_BLUR_MAX},
 ]
 
 const exitingDownKeyframe = [
-  {opacity: 1, transform: 'translateY(0)'},
-  {opacity: 0, transform: 'translateY(18px)'},
+  {opacity: 1, transform: 'translateY(0)', filter: FILTER_BLUR_NONE},
+  {opacity: 0, transform: 'translateY(18px)', filter: FILTER_BLUR_MAX},
 ]
 
 export function CountWheel({
