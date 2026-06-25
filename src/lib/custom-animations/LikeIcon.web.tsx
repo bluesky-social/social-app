@@ -8,10 +8,16 @@ import {
   Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
 } from '#/components/icons/Heart2'
 
-const animationConfig = {
+const animationConfigSmall = {
   duration: 450,
   easing: 'cubic-bezier(0.25, 0.5, 0.25, 1)',
   fill: 'forwards' as FillMode,
+}
+
+// slower animation for big buttons to match the perceived "weight"
+const animationConfigBig = {
+  ...animationConfigSmall,
+  duration: 600,
 }
 
 const keyframe = [
@@ -54,6 +60,8 @@ export function AnimatedLikeIcon({
   const circle1Ref = useRef<HTMLDivElement>(null)
   const circle2Ref = useRef<HTMLDivElement>(null)
 
+  const animationConfig = big ? animationConfigBig : animationConfigSmall
+
   useEffect(() => {
     if (prevIsLiked.current === isLiked) {
       return
@@ -65,7 +73,7 @@ export function AnimatedLikeIcon({
       circle2Ref.current?.animate?.(circle2Keyframe, animationConfig)
     }
     prevIsLiked.current = isLiked
-  }, [shouldAnimate, isLiked])
+  }, [shouldAnimate, isLiked, animationConfig])
 
   return (
     <View>
