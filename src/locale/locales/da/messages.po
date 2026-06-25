@@ -8,7 +8,7 @@ msgstr ""
 "Language: da\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-24 16:58\n"
+"PO-Revision-Date: 2026-06-25 18:50\n"
 "Last-Translator: \n"
 "Language-Team: Danish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -350,7 +350,7 @@ msgstr "{0}/{1} {2, plural, one {medlem} other {medlemmer}}"
 
 #. Badge showing the current image position out of the total number of images in a gallery.
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:526
+#: src/components/images/Gallery/index.tsx:521
 msgctxt "gallery-badge-image-position-numbers"
 msgid "{0}/{imageCount}"
 msgstr "{0}/{imageCount}"
@@ -1440,9 +1440,9 @@ msgstr "Har du allerede en konto?"
 msgid "Already signed in as @{0}"
 msgstr "Allerede logget ind som @{0}"
 
-#: src/components/images/AutoSizedImage.tsx:204
-#: src/components/images/Gallery/index.tsx:588
-#: src/components/images/ImageLayoutGridItem.tsx:142
+#: src/components/images/AutoSizedImage.tsx:205
+#: src/components/images/Gallery/index.tsx:585
+#: src/components/images/ImageLayoutGridItem.tsx:135
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:211
@@ -1964,7 +1964,7 @@ msgstr "Før du kan modtage notifikationer om opslag fra {name}, skal du først 
 #: src/screens/Messages/ChatList.tsx:166
 #: src/screens/Messages/ChatList.tsx:184
 #: src/screens/Messages/ChatList.tsx:285
-#: src/screens/Messages/ChatList.tsx:538
+#: src/screens/Messages/ChatList.tsx:541
 #: src/screens/Messages/Conversation.tsx:203
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
 msgid "Before you can message another user, you must first verify your email."
@@ -2411,7 +2411,7 @@ msgstr "Undertekster (.vtt)"
 msgid "Captions & alt text"
 msgstr "Undertekster og alt-tekst"
 
-#: src/components/images/Gallery/index.tsx:275
+#: src/components/images/Gallery/index.tsx:273
 msgid "carousel"
 msgstr "karrusel"
 
@@ -2536,9 +2536,9 @@ msgstr "Chat skjult"
 msgid "Chat not found."
 msgstr "Chat ikke fundet."
 
-#: src/screens/Messages/ChatList.tsx:564
-#: src/screens/Messages/ChatList.tsx:599
-#: src/screens/Messages/ChatList.tsx:637
+#: src/screens/Messages/ChatList.tsx:567
+#: src/screens/Messages/ChatList.tsx:602
+#: src/screens/Messages/ChatList.tsx:640
 msgid "Chat options"
 msgstr ""
 
@@ -2563,8 +2563,8 @@ msgstr "Chatanmodninger"
 #: src/Navigation.tsx:506
 #: src/screens/Messages/ChatList.tsx:95
 #: src/screens/Messages/ChatList.tsx:99
-#: src/screens/Messages/ChatList.tsx:649
-#: src/screens/Messages/ChatList.tsx:659
+#: src/screens/Messages/ChatList.tsx:652
+#: src/screens/Messages/ChatList.tsx:662
 #: src/screens/Messages/Settings.tsx:39
 msgid "Chat settings"
 msgstr "Chatindstillinger"
@@ -2592,8 +2592,8 @@ msgid "Chat unmuted"
 msgstr "Chat ikke længere skjult"
 
 #: src/screens/Messages/ChatList.tsx:89
-#: src/screens/Messages/ChatList.tsx:550
-#: src/screens/Messages/ChatList.tsx:590
+#: src/screens/Messages/ChatList.tsx:553
+#: src/screens/Messages/ChatList.tsx:593
 msgid "Chats"
 msgstr "Chats"
 
@@ -3141,7 +3141,7 @@ msgid "Copied build version to clipboard"
 msgstr "Kopieret versionsnummer til udklipsholder"
 
 #: src/components/dms/ChatInvite/Root.tsx:99
-#: src/components/dms/MessageContextMenu.tsx:83
+#: src/components/dms/MessageContextMenu.tsx:97
 #: src/components/PostControls/DiscoverDebug.tsx:36
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:273
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:77
@@ -3233,8 +3233,8 @@ msgstr "Kopier link til profil"
 msgid "Copy link to starter pack"
 msgstr "Kopier link til startpakke"
 
-#: src/components/dms/MessageContextMenu.tsx:183
-#: src/components/dms/MessageContextMenu.tsx:187
+#: src/components/dms/MessageContextMenu.tsx:198
+#: src/components/dms/MessageContextMenu.tsx:202
 msgid "Copy message text"
 msgstr "Kopier beskedtekst"
 
@@ -3638,7 +3638,7 @@ msgstr "Slet kontakter"
 msgid "Delete conversation"
 msgstr "Slet samtale"
 
-#: src/components/dms/MessageContextMenu.tsx:197
+#: src/components/dms/MessageContextMenu.tsx:212
 msgid "Delete for me"
 msgstr "Slet for mig"
 
@@ -3651,7 +3651,7 @@ msgstr "Slet liste"
 msgid "Delete message"
 msgstr "Slet besked"
 
-#: src/components/dms/MessageContextMenu.tsx:194
+#: src/components/dms/MessageContextMenu.tsx:209
 msgid "Delete message for me"
 msgstr "Slet besked for mig"
 
@@ -4609,7 +4609,7 @@ msgid "Failed to accept join request"
 msgstr "Kunne ikke acceptere anmodning om deltagelse"
 
 #: src/components/dms/ActionsWrapper.web.tsx:92
-#: src/components/dms/MessageContextMenu.tsx:126
+#: src/components/dms/MessageContextMenu.tsx:140
 msgid "Failed to add emoji reaction"
 msgstr "Kunne ikke tilføje emojireaktion"
 
@@ -4706,7 +4706,7 @@ msgstr "Kunne ikke skjule forslag, tjek din internetforbindelse"
 
 #: src/screens/Messages/JoinRequests.tsx:223
 msgid "Failed to ignore join request"
-msgstr "Kunne ikke ignorere anmodning om deltagelse"
+msgstr ""
 
 #: src/components/intents/GroupChatJoinDialog.tsx:147
 msgid "Failed to join the group chat. Please try again."
@@ -4723,7 +4723,7 @@ msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "Kunne ikke forlade gruppechat"
 
-#: src/screens/Messages/ChatList.tsx:415
+#: src/screens/Messages/ChatList.tsx:418
 #: src/screens/Messages/Inbox.tsx:209
 msgid "Failed to load conversations"
 msgstr "Kunne ikke indlæse samtaler"
@@ -4773,7 +4773,7 @@ msgstr "Indlæsning af foreslåede konti fejlede"
 msgid "Failed to lock group chat"
 msgstr "Kunne ikke låse gruppechat"
 
-#: src/screens/Messages/ChatList.tsx:631
+#: src/screens/Messages/ChatList.tsx:634
 #: src/view/shell/bottom-bar/BottomBar.tsx:441
 msgid "Failed to mark all chats as read"
 msgstr "Kunne ikke markere alle chats som læst"
@@ -4806,7 +4806,7 @@ msgid "Failed to remove data. {0}"
 msgstr "Kunne ikke fjerne data. {0}"
 
 #: src/components/dms/ActionsWrapper.web.tsx:77
-#: src/components/dms/MessageContextMenu.tsx:111
+#: src/components/dms/MessageContextMenu.tsx:125
 #: src/components/dms/ReactionsDialog.tsx:179
 msgid "Failed to remove emoji reaction"
 msgstr "Kunne ikke fjerne emojireaktion"
@@ -6109,12 +6109,12 @@ msgstr "Hvis du er udvikler, kan du køre din egen server."
 msgid "If you're trying to change your handle or email, do so before you deactivate."
 msgstr "Hvis du vil skifte dit handle eller din e-mail, skal du gøre det, før du deaktiverer kontoen."
 
-#: src/components/images/ImageLayoutGridItem.tsx:96
+#: src/components/images/ImageLayoutGridItem.tsx:91
 msgid "Image"
 msgstr "Billede"
 
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:459
+#: src/components/images/Gallery/index.tsx:454
 msgid "Image {0}"
 msgstr "Billede {0}"
 
@@ -6125,7 +6125,7 @@ msgid "Image {0} of {1}"
 msgstr "Billede {0} af {1}"
 
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:444
+#: src/components/images/Gallery/index.tsx:439
 msgid "Image {0} of {imageCount}"
 msgstr "Billede {0} af {imageCount}"
 
@@ -6140,7 +6140,7 @@ msgid "Image cache cleared, freed {0}"
 msgstr "Billedcache tømt, frigjorde {0}"
 
 #. placeholder {0}: images.length
-#: src/components/images/Gallery/index.tsx:276
+#: src/components/images/Gallery/index.tsx:274
 msgid "Image gallery, {0} images"
 msgstr "Billedgalleri, {0} billeder"
 
@@ -6236,7 +6236,7 @@ msgstr "I appen, push, alle"
 msgid "In-app, push, people you follow"
 msgstr "I appen, push, personer du følger"
 
-#: src/screens/Messages/ChatList.tsx:432
+#: src/screens/Messages/ChatList.tsx:435
 msgid "Inbox empty"
 msgstr "Indbakke er tom"
 
@@ -6416,7 +6416,7 @@ msgstr "Invitationer, men personlige"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:394
 msgid "Is your location not accurate? <0>Tap here to update your location with GPS.</0> "
-msgstr "Er din lokalitet ikke præcis? <0>Tryk her for at opdatere din lokalitet med GPS.</0> "
+msgstr ""
 
 #: src/components/contacts/components/InviteInfo.tsx:47
 msgid "It looks like some of your contacts have not tried to find you here yet. You can personally invite them by customizing a draft message we will provide."
@@ -6489,7 +6489,7 @@ msgstr "Hold mig opdateret"
 #: src/components/moderation/BlockDialog.tsx:365
 #: src/components/moderation/BlockDialog.tsx:372
 msgid "Kick member"
-msgstr "Smid medlem ud"
+msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:200
 msgid "KWS website"
@@ -6961,7 +6961,7 @@ msgstr "Indlæs nye notifikationer"
 msgid "Load new posts"
 msgstr "Indlæs nye opslag"
 
-#: src/screens/Messages/components/MessageComposer.tsx:245
+#: src/screens/Messages/components/MessageComposer.tsx:254
 msgctxt "placeholder"
 msgid "Loading chat…"
 msgstr "Indlæser chat…"
@@ -7075,8 +7075,8 @@ msgstr "Administrer dine skjulte ord og tags"
 msgid "Mark all as read"
 msgstr "Marker alle læst"
 
-#: src/screens/Messages/ChatList.tsx:641
-#: src/screens/Messages/ChatList.tsx:645
+#: src/screens/Messages/ChatList.tsx:644
+#: src/screens/Messages/ChatList.tsx:648
 #: src/view/shell/bottom-bar/BottomBar.tsx:459
 #: src/view/shell/bottom-bar/BottomBar.tsx:463
 msgid "Mark all chats as read"
@@ -7096,7 +7096,7 @@ msgstr "Marker som læst"
 msgid "Marked all as read"
 msgstr "Marker alle som læst"
 
-#: src/screens/Messages/ChatList.tsx:628
+#: src/screens/Messages/ChatList.tsx:631
 #: src/view/shell/bottom-bar/BottomBar.tsx:438
 msgid "Marked all chats as read"
 msgstr "Markerede alle chats som læst"
@@ -7156,7 +7156,7 @@ msgstr "Omtaler"
 msgid "Menu"
 msgstr "Menu"
 
-#: src/screens/Messages/components/MessageComposer.tsx:246
+#: src/screens/Messages/components/MessageComposer.tsx:255
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:203
 msgctxt "action"
 msgid "Message"
@@ -7186,7 +7186,7 @@ msgstr "Besked kunne ikke sendes."
 
 #. placeholder {0}: sender?.handle ?? 'unknown'
 #. placeholder {1}: message.text
-#: src/components/dms/MessageContextMenu.tsx:152
+#: src/components/dms/MessageContextMenu.tsx:166
 msgid "Message from @{0}: {1}"
 msgstr "Besked fra @{0}: {1}"
 
@@ -7195,15 +7195,15 @@ msgstr "Besked fra @{0}: {1}"
 msgid "Message from server: {0}"
 msgstr "Besked fra server: {0}"
 
-#: src/screens/Messages/components/MessageComposer.tsx:242
+#: src/screens/Messages/components/MessageComposer.tsx:251
 msgid "Message input field"
 msgstr "Beskedfelt"
 
-#: src/screens/Messages/components/MessageComposer.tsx:107
+#: src/screens/Messages/components/MessageComposer.tsx:116
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgstr "Besked for lang ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 
-#: src/components/dms/MessageContextMenu.tsx:151
+#: src/components/dms/MessageContextMenu.tsx:165
 msgid "Message options"
 msgstr "Beskedindstillinger"
 
@@ -7535,9 +7535,9 @@ msgstr "{postsCount, plural, one {Nyt} other {Nye}} opslag fra {firstAuthorName}
 #: src/components/dms/dialogs/NewChatDialog.tsx:184
 #: src/screens/Messages/ChatList.tsx:229
 #: src/screens/Messages/ChatList.tsx:230
-#: src/screens/Messages/ChatList.tsx:450
-#: src/screens/Messages/ChatList.tsx:451
-#: src/screens/Messages/ChatList.tsx:575
+#: src/screens/Messages/ChatList.tsx:453
+#: src/screens/Messages/ChatList.tsx:454
+#: src/screens/Messages/ChatList.tsx:578
 msgid "New chat"
 msgstr "Ny chat"
 
@@ -8089,7 +8089,7 @@ msgstr "Kun administratorer kan acceptere anmodninger om deltagelse."
 
 #: src/screens/Messages/JoinRequests.tsx:233
 msgid "Only admins can ignore join requests."
-msgstr "Kun administratorer kan ignorere anmodninger om deltagelse."
+msgstr ""
 
 #: src/components/intents/GroupChatJoinDialog.tsx:155
 msgid "Only followers can join this group chat."
@@ -8166,7 +8166,7 @@ msgstr "Åbn kladde"
 msgid "Open drawer menu"
 msgstr "Åbn navigation"
 
-#: src/screens/Messages/components/MessageComposer.tsx:204
+#: src/screens/Messages/components/MessageComposer.tsx:213
 #: src/view/com/composer/Composer.tsx:2158
 msgid "Open emoji picker"
 msgstr "Åbn emojivælger"
@@ -8324,7 +8324,7 @@ msgstr "Åbner formular til oprettelse af en ny Bluesky-konto"
 msgid "Opens flow to sign in to your existing Bluesky account"
 msgstr "Åbner formular til at logge ind på din eksisterende Bluesky-konto"
 
-#: src/components/images/Gallery/index.tsx:460
+#: src/components/images/Gallery/index.tsx:455
 msgid "Opens full image"
 msgstr "Viser hele billedet"
 
@@ -9334,7 +9334,7 @@ msgstr "Afvis chatanmodning"
 msgid "Reject join request"
 msgstr "Afvis anmodning om deltagelse"
 
-#: src/screens/Messages/ChatList.tsx:419
+#: src/screens/Messages/ChatList.tsx:422
 #: src/screens/Messages/Inbox.tsx:213
 msgid "Reload conversations"
 msgstr "Genindlæs samtaler"
@@ -9604,8 +9604,8 @@ msgstr "Svar ikke tilladt"
 msgid "Replies to this post are disabled."
 msgstr "Svar til dette opslag er ikke tilladt."
 
-#: src/components/dms/MessageContextMenu.tsx:167
-#: src/components/dms/MessageContextMenu.tsx:170
+#: src/components/dms/MessageContextMenu.tsx:182
+#: src/components/dms/MessageContextMenu.tsx:185
 msgid "Reply"
 msgstr "Besvar"
 
@@ -9647,7 +9647,7 @@ msgstr "Svarets synlighed blev opdateret"
 msgid "Reply was successfully hidden"
 msgstr "Svar blev skjult"
 
-#: src/components/dms/MessageContextMenu.tsx:205
+#: src/components/dms/MessageContextMenu.tsx:220
 #: src/features/liveNow/components/LiveStatusDialog.tsx:267
 #: src/screens/Messages/ConversationSettings/index.tsx:583
 msgid "Report"
@@ -9680,7 +9680,7 @@ msgstr "Anmeld feed"
 msgid "Report list"
 msgstr "Anmeld liste"
 
-#: src/components/dms/MessageContextMenu.tsx:202
+#: src/components/dms/MessageContextMenu.tsx:217
 msgid "Report message"
 msgstr "Anmeld besked"
 
@@ -9809,7 +9809,7 @@ msgstr "Anmod om kode"
 
 #: src/screens/Messages/JoinRequests.tsx:215
 msgid "Request ignored."
-msgstr "Anmodning ignoreret."
+msgstr ""
 
 #: src/components/dms/ChatInvite/Root.tsx:117
 #: src/components/intents/GroupChatJoinDialog.tsx:295
@@ -9929,7 +9929,7 @@ msgstr "Prøver at gentage den seneste handling, der fejlede"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:377
 #: src/screens/Login/LoginForm.tsx:329
 #: src/screens/Login/LoginForm.tsx:335
-#: src/screens/Messages/ChatList.tsx:424
+#: src/screens/Messages/ChatList.tsx:427
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:218
 #: src/screens/Messages/JoinRequests.tsx:361
@@ -10085,7 +10085,7 @@ msgid "Say hello!"
 msgstr "Sig hej!"
 
 #: src/screens/Messages/ChatList.tsx:220
-#: src/screens/Messages/ChatList.tsx:441
+#: src/screens/Messages/ChatList.tsx:444
 msgid "Say hi to someone"
 msgstr "Sig hej til nogen"
 
@@ -10486,7 +10486,7 @@ msgstr "Send fejlmelding"
 msgid "Send feedback"
 msgstr "Send feedback"
 
-#: src/screens/Messages/components/MessageComposer.tsx:316
+#: src/screens/Messages/components/MessageComposer.tsx:324
 msgid "Send message"
 msgstr "Send besked"
 
@@ -10520,7 +10520,7 @@ msgid "Send via direct message"
 msgstr "Send som direkte besked"
 
 #. placeholder {0}: i18n.date(new Date(message.sentAt), { timeStyle: 'short', })
-#: src/components/dms/MessageContextMenu.tsx:161
+#: src/components/dms/MessageContextMenu.tsx:175
 msgid "Sent at {0}"
 msgstr "Sendt kl. {0}"
 
@@ -10974,7 +10974,7 @@ msgstr "Spring introduktionen over og kom i gang med din konto"
 msgid "Skip to next step"
 msgstr "Spring til næste trin"
 
-#: src/components/images/Gallery/index.tsx:443
+#: src/components/images/Gallery/index.tsx:438
 msgid "slide"
 msgstr "swipe"
 
@@ -12298,8 +12298,8 @@ msgstr "Mest populære svar først"
 msgid "Topic"
 msgstr "Emne"
 
-#: src/components/dms/MessageContextMenu.tsx:176
-#: src/components/dms/MessageContextMenu.tsx:179
+#: src/components/dms/MessageContextMenu.tsx:191
+#: src/components/dms/MessageContextMenu.tsx:194
 #: src/components/Post/Translated/index.tsx:150
 #: src/components/Post/Translated/index.tsx:157
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:557
@@ -13254,8 +13254,8 @@ msgstr "Vis dine skjulte konti"
 msgid "View your verifications"
 msgstr "Se dine verifikationer"
 
-#: src/components/images/AutoSizedImage.tsx:221
-#: src/components/images/AutoSizedImage.tsx:253
+#: src/components/images/AutoSizedImage.tsx:222
+#: src/components/images/AutoSizedImage.tsx:254
 msgid "Views full image"
 msgstr "Viser hele billedet"
 
@@ -13554,7 +13554,7 @@ msgid "Who can verify?"
 msgstr "Hvem kan verificere?"
 
 #: src/screens/Home/NoFeedsPinned.tsx:80
-#: src/screens/Messages/ChatList.tsx:404
+#: src/screens/Messages/ChatList.tsx:407
 #: src/screens/Messages/Inbox.tsx:198
 msgid "Whoops!"
 msgstr "Ups!"
@@ -13839,7 +13839,7 @@ msgid "You can update this later from your settings."
 msgstr "Du kan opdatere dette senere under Indstillinger."
 
 #: src/components/dms/ActionsWrapper.web.tsx:81
-#: src/components/dms/MessageContextMenu.tsx:115
+#: src/components/dms/MessageContextMenu.tsx:129
 msgid "You cannot add more than {EMOJI_REACTION_LIMIT, plural, one {# emoji reaction} other {# emoji reactions}}"
 msgstr "Du kan ikke tilføje flere end {EMOJI_REACTION_LIMIT, plural, one {# emojireaktion} other {# emojireaktioner}}"
 

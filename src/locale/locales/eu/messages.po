@@ -8,7 +8,7 @@ msgstr ""
 "Language: eu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-24 16:58\n"
+"PO-Revision-Date: 2026-06-25 18:50\n"
 "Last-Translator: \n"
 "Language-Team: Basque\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -350,7 +350,7 @@ msgstr "{0}/{1} {2, plural, one {kide} other {kide}}"
 
 #. Badge showing the current image position out of the total number of images in a gallery.
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:526
+#: src/components/images/Gallery/index.tsx:521
 msgctxt "gallery-badge-image-position-numbers"
 msgid "{0}/{imageCount}"
 msgstr "{0}/{imageCount}"
@@ -1440,9 +1440,9 @@ msgstr "Dagoeneko kontu bat daukazu?"
 msgid "Already signed in as @{0}"
 msgstr "Dagoeneko izena emanda @{0} bezala"
 
-#: src/components/images/AutoSizedImage.tsx:204
-#: src/components/images/Gallery/index.tsx:588
-#: src/components/images/ImageLayoutGridItem.tsx:142
+#: src/components/images/AutoSizedImage.tsx:205
+#: src/components/images/Gallery/index.tsx:585
+#: src/components/images/ImageLayoutGridItem.tsx:135
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:211
@@ -1964,7 +1964,7 @@ msgstr "{name}-ren posten jakinarazpenak jaso aurretik, zure helbide elektroniko
 #: src/screens/Messages/ChatList.tsx:166
 #: src/screens/Messages/ChatList.tsx:184
 #: src/screens/Messages/ChatList.tsx:285
-#: src/screens/Messages/ChatList.tsx:538
+#: src/screens/Messages/ChatList.tsx:541
 #: src/screens/Messages/Conversation.tsx:203
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
 msgid "Before you can message another user, you must first verify your email."
@@ -2411,7 +2411,7 @@ msgstr "Epigrafeak (.vtt)"
 msgid "Captions & alt text"
 msgstr "Epigrafeak eta aukerazko testua"
 
-#: src/components/images/Gallery/index.tsx:275
+#: src/components/images/Gallery/index.tsx:273
 msgid "carousel"
 msgstr "karrusela"
 
@@ -2536,9 +2536,9 @@ msgstr "Txata mutututa"
 msgid "Chat not found."
 msgstr "Txata ez da aurkitu."
 
-#: src/screens/Messages/ChatList.tsx:564
-#: src/screens/Messages/ChatList.tsx:599
-#: src/screens/Messages/ChatList.tsx:637
+#: src/screens/Messages/ChatList.tsx:567
+#: src/screens/Messages/ChatList.tsx:602
+#: src/screens/Messages/ChatList.tsx:640
 msgid "Chat options"
 msgstr ""
 
@@ -2563,8 +2563,8 @@ msgstr "Txateatzeko eskaerak"
 #: src/Navigation.tsx:506
 #: src/screens/Messages/ChatList.tsx:95
 #: src/screens/Messages/ChatList.tsx:99
-#: src/screens/Messages/ChatList.tsx:649
-#: src/screens/Messages/ChatList.tsx:659
+#: src/screens/Messages/ChatList.tsx:652
+#: src/screens/Messages/ChatList.tsx:662
 #: src/screens/Messages/Settings.tsx:39
 msgid "Chat settings"
 msgstr "Txataren ezarpenak"
@@ -2592,8 +2592,8 @@ msgid "Chat unmuted"
 msgstr "Txata desmutututa"
 
 #: src/screens/Messages/ChatList.tsx:89
-#: src/screens/Messages/ChatList.tsx:550
-#: src/screens/Messages/ChatList.tsx:590
+#: src/screens/Messages/ChatList.tsx:553
+#: src/screens/Messages/ChatList.tsx:593
 msgid "Chats"
 msgstr "Txatak"
 
@@ -3141,7 +3141,7 @@ msgid "Copied build version to clipboard"
 msgstr "Konpilazio bertsioa arbelean kopiatu da"
 
 #: src/components/dms/ChatInvite/Root.tsx:99
-#: src/components/dms/MessageContextMenu.tsx:83
+#: src/components/dms/MessageContextMenu.tsx:97
 #: src/components/PostControls/DiscoverDebug.tsx:36
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:273
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:77
@@ -3233,8 +3233,8 @@ msgstr "Kopiatu esteka profilera"
 msgid "Copy link to starter pack"
 msgstr "Kopiatu abio multzoaren esteka"
 
-#: src/components/dms/MessageContextMenu.tsx:183
-#: src/components/dms/MessageContextMenu.tsx:187
+#: src/components/dms/MessageContextMenu.tsx:198
+#: src/components/dms/MessageContextMenu.tsx:202
 msgid "Copy message text"
 msgstr "Kopiatu mezuaren testua"
 
@@ -3638,7 +3638,7 @@ msgstr "Kontaktuak ezabatu"
 msgid "Delete conversation"
 msgstr "Ezabatu elkarrizketa"
 
-#: src/components/dms/MessageContextMenu.tsx:197
+#: src/components/dms/MessageContextMenu.tsx:212
 msgid "Delete for me"
 msgstr "Ezabatu niretzat"
 
@@ -3651,7 +3651,7 @@ msgstr "Ezabatu zerrenda"
 msgid "Delete message"
 msgstr "Ezabatu mezua"
 
-#: src/components/dms/MessageContextMenu.tsx:194
+#: src/components/dms/MessageContextMenu.tsx:209
 msgid "Delete message for me"
 msgstr "Ezabatu mezua niretzat"
 
@@ -4609,7 +4609,7 @@ msgid "Failed to accept join request"
 msgstr "Ezin izan da onartu sartzeko eskaera"
 
 #: src/components/dms/ActionsWrapper.web.tsx:92
-#: src/components/dms/MessageContextMenu.tsx:126
+#: src/components/dms/MessageContextMenu.tsx:140
 msgid "Failed to add emoji reaction"
 msgstr "Errorea emoji erreakzioa gehitzean"
 
@@ -4706,7 +4706,7 @@ msgstr "Ezin izan da iradokizuna ezkutatu, egiaztatu zure Interneteko konexioa"
 
 #: src/screens/Messages/JoinRequests.tsx:223
 msgid "Failed to ignore join request"
-msgstr "Ezin izan da baztertu batzeko eskaera"
+msgstr ""
 
 #: src/components/intents/GroupChatJoinDialog.tsx:147
 msgid "Failed to join the group chat. Please try again."
@@ -4723,7 +4723,7 @@ msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "Ezin izan da txat taldea utzi"
 
-#: src/screens/Messages/ChatList.tsx:415
+#: src/screens/Messages/ChatList.tsx:418
 #: src/screens/Messages/Inbox.tsx:209
 msgid "Failed to load conversations"
 msgstr "Ezin izan dira elkarrizketak kargatu"
@@ -4773,7 +4773,7 @@ msgstr "Ezin izan dira kargatu iradokitako jarraipenak"
 msgid "Failed to lock group chat"
 msgstr "Ezin izan da txat taldea itxi"
 
-#: src/screens/Messages/ChatList.tsx:631
+#: src/screens/Messages/ChatList.tsx:634
 #: src/view/shell/bottom-bar/BottomBar.tsx:441
 msgid "Failed to mark all chats as read"
 msgstr "Ezin izan dira txat guztiak irakurri gisa markatu"
@@ -4806,7 +4806,7 @@ msgid "Failed to remove data. {0}"
 msgstr "Ezin izan dira datuak ezabatu. {0}"
 
 #: src/components/dms/ActionsWrapper.web.tsx:77
-#: src/components/dms/MessageContextMenu.tsx:111
+#: src/components/dms/MessageContextMenu.tsx:125
 #: src/components/dms/ReactionsDialog.tsx:179
 msgid "Failed to remove emoji reaction"
 msgstr "Errorea emoji errakzioa kentzerakoan"
@@ -6109,12 +6109,12 @@ msgstr "Garatzailea bazara, zure zerbitzari propioa osta dezakezu."
 msgid "If you're trying to change your handle or email, do so before you deactivate."
 msgstr "Zure handle edo posta elektronikoa aldatzen saiatzen ari bazara, egin hori desaktibatu aurretik."
 
-#: src/components/images/ImageLayoutGridItem.tsx:96
+#: src/components/images/ImageLayoutGridItem.tsx:91
 msgid "Image"
 msgstr "Irudia"
 
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:459
+#: src/components/images/Gallery/index.tsx:454
 msgid "Image {0}"
 msgstr "Irudia {0}"
 
@@ -6125,7 +6125,7 @@ msgid "Image {0} of {1}"
 msgstr "Irudia {0} / {1}"
 
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:444
+#: src/components/images/Gallery/index.tsx:439
 msgid "Image {0} of {imageCount}"
 msgstr "Irudia {0} / {imageCount}"
 
@@ -6140,7 +6140,7 @@ msgid "Image cache cleared, freed {0}"
 msgstr "Irudien cachea garbituta, {0} askatuta"
 
 #. placeholder {0}: images.length
-#: src/components/images/Gallery/index.tsx:276
+#: src/components/images/Gallery/index.tsx:274
 msgid "Image gallery, {0} images"
 msgstr "Irudi galeria, {0} irudi"
 
@@ -6236,7 +6236,7 @@ msgstr "Aplikazioan, push, guztiontzat"
 msgid "In-app, push, people you follow"
 msgstr "Aplikazioan, push, jarraitzen duzun jendea"
 
-#: src/screens/Messages/ChatList.tsx:432
+#: src/screens/Messages/ChatList.tsx:435
 msgid "Inbox empty"
 msgstr "Sarrerako ontzia hutsik"
 
@@ -6416,7 +6416,7 @@ msgstr "Gonbidapenak, baina pertsonalak"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:394
 msgid "Is your location not accurate? <0>Tap here to update your location with GPS.</0> "
-msgstr "Zure kokapena ez al da zehatza? <0>Sakatu hemen zure kokapena GPSarekin eguneratzeko.</0> "
+msgstr ""
 
 #: src/components/contacts/components/InviteInfo.tsx:47
 msgid "It looks like some of your contacts have not tried to find you here yet. You can personally invite them by customizing a draft message we will provide."
@@ -6489,7 +6489,7 @@ msgstr "Mantendu nazazu informatuta"
 #: src/components/moderation/BlockDialog.tsx:365
 #: src/components/moderation/BlockDialog.tsx:372
 msgid "Kick member"
-msgstr "Kidea bota"
+msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:200
 msgid "KWS website"
@@ -6961,7 +6961,7 @@ msgstr "Kargatu jakinarazpen berriak"
 msgid "Load new posts"
 msgstr "Kargatu post berriak"
 
-#: src/screens/Messages/components/MessageComposer.tsx:245
+#: src/screens/Messages/components/MessageComposer.tsx:254
 msgctxt "placeholder"
 msgid "Loading chat…"
 msgstr "Txata kargatzen…"
@@ -7075,8 +7075,8 @@ msgstr "Kudeatu mutututa dauden hitzak eta etiketak"
 msgid "Mark all as read"
 msgstr "Markatu denak irakurri gisa"
 
-#: src/screens/Messages/ChatList.tsx:641
-#: src/screens/Messages/ChatList.tsx:645
+#: src/screens/Messages/ChatList.tsx:644
+#: src/screens/Messages/ChatList.tsx:648
 #: src/view/shell/bottom-bar/BottomBar.tsx:459
 #: src/view/shell/bottom-bar/BottomBar.tsx:463
 msgid "Mark all chats as read"
@@ -7096,7 +7096,7 @@ msgstr "Markatu irakurri gisa"
 msgid "Marked all as read"
 msgstr "Denak irakurri gisa markatuta"
 
-#: src/screens/Messages/ChatList.tsx:628
+#: src/screens/Messages/ChatList.tsx:631
 #: src/view/shell/bottom-bar/BottomBar.tsx:438
 msgid "Marked all chats as read"
 msgstr "Txat guztiak irakurri gisa markatuta"
@@ -7156,11 +7156,11 @@ msgstr "Aipamenak"
 msgid "Menu"
 msgstr "Menua"
 
-#: src/screens/Messages/components/MessageComposer.tsx:246
+#: src/screens/Messages/components/MessageComposer.tsx:255
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:203
 msgctxt "action"
 msgid "Message"
-msgstr "Mezua"
+msgstr ""
 
 #. placeholder {0}: profile.handle
 #: src/components/dms/MessageProfileButton.tsx:99
@@ -7186,7 +7186,7 @@ msgstr "Ezin izan da bidali mezua."
 
 #. placeholder {0}: sender?.handle ?? 'unknown'
 #. placeholder {1}: message.text
-#: src/components/dms/MessageContextMenu.tsx:152
+#: src/components/dms/MessageContextMenu.tsx:166
 msgid "Message from @{0}: {1}"
 msgstr "@{0}-ren mezua: {1}"
 
@@ -7195,15 +7195,15 @@ msgstr "@{0}-ren mezua: {1}"
 msgid "Message from server: {0}"
 msgstr "Zerbitzariaren mezua: {0}"
 
-#: src/screens/Messages/components/MessageComposer.tsx:242
+#: src/screens/Messages/components/MessageComposer.tsx:251
 msgid "Message input field"
 msgstr "Mezua sartzeko eremua"
 
-#: src/screens/Messages/components/MessageComposer.tsx:107
+#: src/screens/Messages/components/MessageComposer.tsx:116
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgstr "Mezua luzeegia da ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 
-#: src/components/dms/MessageContextMenu.tsx:151
+#: src/components/dms/MessageContextMenu.tsx:165
 msgid "Message options"
 msgstr "Mezuaren aukerak"
 
@@ -7535,9 +7535,9 @@ msgstr "{firstAuthorName}-ren {postsCount, plural, one {post berria} other {post
 #: src/components/dms/dialogs/NewChatDialog.tsx:184
 #: src/screens/Messages/ChatList.tsx:229
 #: src/screens/Messages/ChatList.tsx:230
-#: src/screens/Messages/ChatList.tsx:450
-#: src/screens/Messages/ChatList.tsx:451
-#: src/screens/Messages/ChatList.tsx:575
+#: src/screens/Messages/ChatList.tsx:453
+#: src/screens/Messages/ChatList.tsx:454
+#: src/screens/Messages/ChatList.tsx:578
 msgid "New chat"
 msgstr "Txat berria"
 
@@ -8089,7 +8089,7 @@ msgstr "Administratzaileek soilik onartu ditzakete sartzeko eskaerak."
 
 #: src/screens/Messages/JoinRequests.tsx:233
 msgid "Only admins can ignore join requests."
-msgstr "Administratzaileek soilik baztertu ditzakete sartzeko eskaerak."
+msgstr ""
 
 #: src/components/intents/GroupChatJoinDialog.tsx:155
 msgid "Only followers can join this group chat."
@@ -8166,7 +8166,7 @@ msgstr "Ireki zirriborroa"
 msgid "Open drawer menu"
 msgstr "Ireki marrazki menua"
 
-#: src/screens/Messages/components/MessageComposer.tsx:204
+#: src/screens/Messages/components/MessageComposer.tsx:213
 #: src/view/com/composer/Composer.tsx:2158
 msgid "Open emoji picker"
 msgstr "Ireki emoji-hautatzailea"
@@ -8324,7 +8324,7 @@ msgstr "Fluxua irekitzen du Bluesky kontu berri bat sortzeko"
 msgid "Opens flow to sign in to your existing Bluesky account"
 msgstr "Fluxua irekitzen du lehendik duzun Bluesky kontuan saioa hasteko"
 
-#: src/components/images/Gallery/index.tsx:460
+#: src/components/images/Gallery/index.tsx:455
 msgid "Opens full image"
 msgstr "Irudi osoa irekitzen du"
 
@@ -9334,7 +9334,7 @@ msgstr "Baztertu txateatzeko eskaera"
 msgid "Reject join request"
 msgstr "Baztertu sartzeko eskaera"
 
-#: src/screens/Messages/ChatList.tsx:419
+#: src/screens/Messages/ChatList.tsx:422
 #: src/screens/Messages/Inbox.tsx:213
 msgid "Reload conversations"
 msgstr "Berriz kargatu elkarrizketak"
@@ -9604,8 +9604,8 @@ msgstr "Erantzunak desgaituta daude"
 msgid "Replies to this post are disabled."
 msgstr "Mezu honen erantzunak desgaituta daude."
 
-#: src/components/dms/MessageContextMenu.tsx:167
-#: src/components/dms/MessageContextMenu.tsx:170
+#: src/components/dms/MessageContextMenu.tsx:182
+#: src/components/dms/MessageContextMenu.tsx:185
 msgid "Reply"
 msgstr "Erantzun"
 
@@ -9647,7 +9647,7 @@ msgstr "Erantzunen ikusgarritasuna eguneratu da"
 msgid "Reply was successfully hidden"
 msgstr "Erantzuna behar bezala ezkutatu da"
 
-#: src/components/dms/MessageContextMenu.tsx:205
+#: src/components/dms/MessageContextMenu.tsx:220
 #: src/features/liveNow/components/LiveStatusDialog.tsx:267
 #: src/screens/Messages/ConversationSettings/index.tsx:583
 msgid "Report"
@@ -9680,7 +9680,7 @@ msgstr "Salatu feeda"
 msgid "Report list"
 msgstr "Salatu zerrenda"
 
-#: src/components/dms/MessageContextMenu.tsx:202
+#: src/components/dms/MessageContextMenu.tsx:217
 msgid "Report message"
 msgstr "Salatu mezua"
 
@@ -9809,7 +9809,7 @@ msgstr "Eskaera kodea"
 
 #: src/screens/Messages/JoinRequests.tsx:215
 msgid "Request ignored."
-msgstr "Eskaera baztertua."
+msgstr ""
 
 #: src/components/dms/ChatInvite/Root.tsx:117
 #: src/components/intents/GroupChatJoinDialog.tsx:295
@@ -9929,7 +9929,7 @@ msgstr "Azken ekintza berriro saiatzen da, errorea izan duena"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:377
 #: src/screens/Login/LoginForm.tsx:329
 #: src/screens/Login/LoginForm.tsx:335
-#: src/screens/Messages/ChatList.tsx:424
+#: src/screens/Messages/ChatList.tsx:427
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:218
 #: src/screens/Messages/JoinRequests.tsx:361
@@ -10085,7 +10085,7 @@ msgid "Say hello!"
 msgstr "Esan kaixo!"
 
 #: src/screens/Messages/ChatList.tsx:220
-#: src/screens/Messages/ChatList.tsx:441
+#: src/screens/Messages/ChatList.tsx:444
 msgid "Say hi to someone"
 msgstr "Esan kaixo norbaiti"
 
@@ -10486,7 +10486,7 @@ msgstr "Bidali errore salaketa"
 msgid "Send feedback"
 msgstr "Bidali iritzia"
 
-#: src/screens/Messages/components/MessageComposer.tsx:316
+#: src/screens/Messages/components/MessageComposer.tsx:324
 msgid "Send message"
 msgstr "Bidali mezua"
 
@@ -10520,7 +10520,7 @@ msgid "Send via direct message"
 msgstr "Bidali mezu zuzenaren bidez"
 
 #. placeholder {0}: i18n.date(new Date(message.sentAt), { timeStyle: 'short', })
-#: src/components/dms/MessageContextMenu.tsx:161
+#: src/components/dms/MessageContextMenu.tsx:175
 msgid "Sent at {0}"
 msgstr "Bidalia hemen: {0}"
 
@@ -10974,7 +10974,7 @@ msgstr "Saltatu sarrera eta hasi zure kontua erabiltzen"
 msgid "Skip to next step"
 msgstr "Hurrengo urratsera joan"
 
-#: src/components/images/Gallery/index.tsx:443
+#: src/components/images/Gallery/index.tsx:438
 msgid "slide"
 msgstr "diapositiba"
 
@@ -12298,8 +12298,8 @@ msgstr "Goiko erantzunak lehenik"
 msgid "Topic"
 msgstr "Gaia"
 
-#: src/components/dms/MessageContextMenu.tsx:176
-#: src/components/dms/MessageContextMenu.tsx:179
+#: src/components/dms/MessageContextMenu.tsx:191
+#: src/components/dms/MessageContextMenu.tsx:194
 #: src/components/Post/Translated/index.tsx:150
 #: src/components/Post/Translated/index.tsx:157
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:557
@@ -13254,8 +13254,8 @@ msgstr "Ikusi zuk mutututako kontuak"
 msgid "View your verifications"
 msgstr "Ikusi zure egiaztapenak"
 
-#: src/components/images/AutoSizedImage.tsx:221
-#: src/components/images/AutoSizedImage.tsx:253
+#: src/components/images/AutoSizedImage.tsx:222
+#: src/components/images/AutoSizedImage.tsx:254
 msgid "Views full image"
 msgstr "Irudi osoa ikusten du"
 
@@ -13554,7 +13554,7 @@ msgid "Who can verify?"
 msgstr "Nork egiaztatu dezake?"
 
 #: src/screens/Home/NoFeedsPinned.tsx:80
-#: src/screens/Messages/ChatList.tsx:404
+#: src/screens/Messages/ChatList.tsx:407
 #: src/screens/Messages/Inbox.tsx:198
 msgid "Whoops!"
 msgstr "Aiba!"
@@ -13839,7 +13839,7 @@ msgid "You can update this later from your settings."
 msgstr "Geroago eguneratu dezakezu hau zure ezarpenetan."
 
 #: src/components/dms/ActionsWrapper.web.tsx:81
-#: src/components/dms/MessageContextMenu.tsx:115
+#: src/components/dms/MessageContextMenu.tsx:129
 msgid "You cannot add more than {EMOJI_REACTION_LIMIT, plural, one {# emoji reaction} other {# emoji reactions}}"
 msgstr "Ezin duzu {EMOJI_REACTION_LIMIT, plural, one {emoji erreakzio #} other {# emoji erreakzio}} baino gehiago gehitu"
 

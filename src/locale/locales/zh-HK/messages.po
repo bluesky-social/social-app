@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-24 16:58\n"
+"PO-Revision-Date: 2026-06-25 18:50\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -350,7 +350,7 @@ msgstr "{0}/{1} {2, plural, other {成員}}"
 
 #. Badge showing the current image position out of the total number of images in a gallery.
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:526
+#: src/components/images/Gallery/index.tsx:521
 msgctxt "gallery-badge-image-position-numbers"
 msgid "{0}/{imageCount}"
 msgstr "{0}/{imageCount}"
@@ -1440,9 +1440,9 @@ msgstr "有咗帳號？"
 msgid "Already signed in as @{0}"
 msgstr "用咗 @{0} 身分登入"
 
-#: src/components/images/AutoSizedImage.tsx:204
-#: src/components/images/Gallery/index.tsx:588
-#: src/components/images/ImageLayoutGridItem.tsx:142
+#: src/components/images/AutoSizedImage.tsx:205
+#: src/components/images/Gallery/index.tsx:585
+#: src/components/images/ImageLayoutGridItem.tsx:135
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:211
@@ -1964,7 +1964,7 @@ msgstr "喺你接收 {name} 帖文通知之前，你必須驗證你嘅電郵。"
 #: src/screens/Messages/ChatList.tsx:166
 #: src/screens/Messages/ChatList.tsx:184
 #: src/screens/Messages/ChatList.tsx:285
-#: src/screens/Messages/ChatList.tsx:538
+#: src/screens/Messages/ChatList.tsx:541
 #: src/screens/Messages/Conversation.tsx:203
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
 msgid "Before you can message another user, you must first verify your email."
@@ -2411,7 +2411,7 @@ msgstr "字幕（.vtt）"
 msgid "Captions & alt text"
 msgstr "字幕同替代文字"
 
-#: src/components/images/Gallery/index.tsx:275
+#: src/components/images/Gallery/index.tsx:273
 msgid "carousel"
 msgstr "輪播"
 
@@ -2536,9 +2536,9 @@ msgstr "已靜音傾偈"
 msgid "Chat not found."
 msgstr "搵唔到個傾偈。"
 
-#: src/screens/Messages/ChatList.tsx:564
-#: src/screens/Messages/ChatList.tsx:599
-#: src/screens/Messages/ChatList.tsx:637
+#: src/screens/Messages/ChatList.tsx:567
+#: src/screens/Messages/ChatList.tsx:602
+#: src/screens/Messages/ChatList.tsx:640
 msgid "Chat options"
 msgstr ""
 
@@ -2563,8 +2563,8 @@ msgstr "傾偈邀請"
 #: src/Navigation.tsx:506
 #: src/screens/Messages/ChatList.tsx:95
 #: src/screens/Messages/ChatList.tsx:99
-#: src/screens/Messages/ChatList.tsx:649
-#: src/screens/Messages/ChatList.tsx:659
+#: src/screens/Messages/ChatList.tsx:652
+#: src/screens/Messages/ChatList.tsx:662
 #: src/screens/Messages/Settings.tsx:39
 msgid "Chat settings"
 msgstr "傾偈設定"
@@ -2592,8 +2592,8 @@ msgid "Chat unmuted"
 msgstr "已唔再靜音傾偈"
 
 #: src/screens/Messages/ChatList.tsx:89
-#: src/screens/Messages/ChatList.tsx:550
-#: src/screens/Messages/ChatList.tsx:590
+#: src/screens/Messages/ChatList.tsx:553
+#: src/screens/Messages/ChatList.tsx:593
 msgid "Chats"
 msgstr "傾偈"
 
@@ -3141,7 +3141,7 @@ msgid "Copied build version to clipboard"
 msgstr "複製咗組建版本去剪貼簿喇"
 
 #: src/components/dms/ChatInvite/Root.tsx:99
-#: src/components/dms/MessageContextMenu.tsx:83
+#: src/components/dms/MessageContextMenu.tsx:97
 #: src/components/PostControls/DiscoverDebug.tsx:36
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:273
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:77
@@ -3233,8 +3233,8 @@ msgstr "複製個人檔案連結"
 msgid "Copy link to starter pack"
 msgstr "複製新手包連結"
 
-#: src/components/dms/MessageContextMenu.tsx:183
-#: src/components/dms/MessageContextMenu.tsx:187
+#: src/components/dms/MessageContextMenu.tsx:198
+#: src/components/dms/MessageContextMenu.tsx:202
 msgid "Copy message text"
 msgstr "複製訊息文字"
 
@@ -3638,7 +3638,7 @@ msgstr "刪除聯絡人"
 msgid "Delete conversation"
 msgstr "刪除對話"
 
-#: src/components/dms/MessageContextMenu.tsx:197
+#: src/components/dms/MessageContextMenu.tsx:212
 msgid "Delete for me"
 msgstr "幫我刪除"
 
@@ -3651,7 +3651,7 @@ msgstr "刪除清單"
 msgid "Delete message"
 msgstr "刪除訊息"
 
-#: src/components/dms/MessageContextMenu.tsx:194
+#: src/components/dms/MessageContextMenu.tsx:209
 msgid "Delete message for me"
 msgstr "淨係刪我嗰度嘅訊息"
 
@@ -4609,7 +4609,7 @@ msgid "Failed to accept join request"
 msgstr "接受唔到加入申請"
 
 #: src/components/dms/ActionsWrapper.web.tsx:92
-#: src/components/dms/MessageContextMenu.tsx:126
+#: src/components/dms/MessageContextMenu.tsx:140
 msgid "Failed to add emoji reaction"
 msgstr "加唔到 Emoji 反應"
 
@@ -4706,7 +4706,7 @@ msgstr "隱藏唔到建議，請檢查你嘅網絡連線狀態"
 
 #: src/screens/Messages/JoinRequests.tsx:223
 msgid "Failed to ignore join request"
-msgstr "忽略唔到加入申請"
+msgstr ""
 
 #: src/components/intents/GroupChatJoinDialog.tsx:147
 msgid "Failed to join the group chat. Please try again."
@@ -4723,7 +4723,7 @@ msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "離開唔到羣組傾偈"
 
-#: src/screens/Messages/ChatList.tsx:415
+#: src/screens/Messages/ChatList.tsx:418
 #: src/screens/Messages/Inbox.tsx:209
 msgid "Failed to load conversations"
 msgstr "撈唔到對話"
@@ -4773,7 +4773,7 @@ msgstr "撈唔到建議你跟嘅人"
 msgid "Failed to lock group chat"
 msgstr "鎖定唔到邀請連結"
 
-#: src/screens/Messages/ChatList.tsx:631
+#: src/screens/Messages/ChatList.tsx:634
 #: src/view/shell/bottom-bar/BottomBar.tsx:441
 msgid "Failed to mark all chats as read"
 msgstr "標記唔到所有傾偈做已讀"
@@ -4806,7 +4806,7 @@ msgid "Failed to remove data. {0}"
 msgstr "刪唔到資料。{0}"
 
 #: src/components/dms/ActionsWrapper.web.tsx:77
-#: src/components/dms/MessageContextMenu.tsx:111
+#: src/components/dms/MessageContextMenu.tsx:125
 #: src/components/dms/ReactionsDialog.tsx:179
 msgid "Failed to remove emoji reaction"
 msgstr "刪唔到 Emoji 反應"
@@ -6109,12 +6109,12 @@ msgstr "若然你係開發人員，你可以自己托管伺服器。"
 msgid "If you're trying to change your handle or email, do so before you deactivate."
 msgstr "喺停用帳號前，記得確認你係咪需要變更你嘅帳號代碼或電郵。"
 
-#: src/components/images/ImageLayoutGridItem.tsx:96
+#: src/components/images/ImageLayoutGridItem.tsx:91
 msgid "Image"
 msgstr "圖片"
 
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:459
+#: src/components/images/Gallery/index.tsx:454
 msgid "Image {0}"
 msgstr "圖片 {0}"
 
@@ -6125,7 +6125,7 @@ msgid "Image {0} of {1}"
 msgstr "第 {0} 張圖片（共 {1} 張）"
 
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:444
+#: src/components/images/Gallery/index.tsx:439
 msgid "Image {0} of {imageCount}"
 msgstr "第 {0} 張圖片（共 {imageCount} 張）"
 
@@ -6140,7 +6140,7 @@ msgid "Image cache cleared, freed {0}"
 msgstr "已剷走圖片快取，釋放咗 {0}"
 
 #. placeholder {0}: images.length
-#: src/components/images/Gallery/index.tsx:276
+#: src/components/images/Gallery/index.tsx:274
 msgid "Image gallery, {0} images"
 msgstr "相冊，{0} 張圖片"
 
@@ -6236,7 +6236,7 @@ msgstr "應用程式內、推播、所有人"
 msgid "In-app, push, people you follow"
 msgstr "應用程式內、推播、你跟嘅人"
 
-#: src/screens/Messages/ChatList.tsx:432
+#: src/screens/Messages/ChatList.tsx:435
 msgid "Inbox empty"
 msgstr "收件箱得個吉"
 
@@ -6416,7 +6416,7 @@ msgstr "邀請朋友加入，同時保持個人化"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:394
 msgid "Is your location not accurate? <0>Tap here to update your location with GPS.</0> "
-msgstr "你嘅位置資訊未夠準？<0>撳呢度用 GPS 更新你嘅位置。</0> "
+msgstr ""
 
 #: src/components/contacts/components/InviteInfo.tsx:47
 msgid "It looks like some of your contacts have not tried to find you here yet. You can personally invite them by customizing a draft message we will provide."
@@ -6489,7 +6489,7 @@ msgstr "有新動態嗰陣通知我"
 #: src/components/moderation/BlockDialog.tsx:365
 #: src/components/moderation/BlockDialog.tsx:372
 msgid "Kick member"
-msgstr "踢除成員"
+msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:200
 msgid "KWS website"
@@ -6961,7 +6961,7 @@ msgstr "撈吓新嘅通知"
 msgid "Load new posts"
 msgstr "撈吓新嘅帖文"
 
-#: src/screens/Messages/components/MessageComposer.tsx:245
+#: src/screens/Messages/components/MessageComposer.tsx:254
 msgctxt "placeholder"
 msgid "Loading chat…"
 msgstr "撈緊傾偈……"
@@ -7075,8 +7075,8 @@ msgstr "管理你嘅靜音字詞同標籤"
 msgid "Mark all as read"
 msgstr "標記晒做已讀"
 
-#: src/screens/Messages/ChatList.tsx:641
-#: src/screens/Messages/ChatList.tsx:645
+#: src/screens/Messages/ChatList.tsx:644
+#: src/screens/Messages/ChatList.tsx:648
 #: src/view/shell/bottom-bar/BottomBar.tsx:459
 #: src/view/shell/bottom-bar/BottomBar.tsx:463
 msgid "Mark all chats as read"
@@ -7096,7 +7096,7 @@ msgstr "標記做已讀"
 msgid "Marked all as read"
 msgstr "已標記晒做已讀"
 
-#: src/screens/Messages/ChatList.tsx:628
+#: src/screens/Messages/ChatList.tsx:631
 #: src/view/shell/bottom-bar/BottomBar.tsx:438
 msgid "Marked all chats as read"
 msgstr "已標記晒所有傾偈做已讀"
@@ -7156,11 +7156,11 @@ msgstr "提及"
 msgid "Menu"
 msgstr "選單"
 
-#: src/screens/Messages/components/MessageComposer.tsx:246
+#: src/screens/Messages/components/MessageComposer.tsx:255
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:203
 msgctxt "action"
 msgid "Message"
-msgstr "訊息"
+msgstr ""
 
 #. placeholder {0}: profile.handle
 #: src/components/dms/MessageProfileButton.tsx:99
@@ -7186,7 +7186,7 @@ msgstr "傳送唔到訊息。"
 
 #. placeholder {0}: sender?.handle ?? 'unknown'
 #. placeholder {1}: message.text
-#: src/components/dms/MessageContextMenu.tsx:152
+#: src/components/dms/MessageContextMenu.tsx:166
 msgid "Message from @{0}: {1}"
 msgstr "嚟自 @{0} 嘅訊息：{1}"
 
@@ -7195,15 +7195,15 @@ msgstr "嚟自 @{0} 嘅訊息：{1}"
 msgid "Message from server: {0}"
 msgstr "嚟自伺服器嘅訊息：{0}"
 
-#: src/screens/Messages/components/MessageComposer.tsx:242
+#: src/screens/Messages/components/MessageComposer.tsx:251
 msgid "Message input field"
 msgstr "訊息輸入欄位"
 
-#: src/screens/Messages/components/MessageComposer.tsx:107
+#: src/screens/Messages/components/MessageComposer.tsx:116
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgstr "訊息內容太長（{graphemeCount}/{MAX_DM_GRAPHEME_LENGTH}）"
 
-#: src/components/dms/MessageContextMenu.tsx:151
+#: src/components/dms/MessageContextMenu.tsx:165
 msgid "Message options"
 msgstr "訊息選項"
 
@@ -7535,9 +7535,9 @@ msgstr "嚟自 {firstAuthorName} 嘅新{postsCount, plural, one {帖文} other {
 #: src/components/dms/dialogs/NewChatDialog.tsx:184
 #: src/screens/Messages/ChatList.tsx:229
 #: src/screens/Messages/ChatList.tsx:230
-#: src/screens/Messages/ChatList.tsx:450
-#: src/screens/Messages/ChatList.tsx:451
-#: src/screens/Messages/ChatList.tsx:575
+#: src/screens/Messages/ChatList.tsx:453
+#: src/screens/Messages/ChatList.tsx:454
+#: src/screens/Messages/ChatList.tsx:578
 msgid "New chat"
 msgstr "同人傾偈"
 
@@ -8089,7 +8089,7 @@ msgstr "只有管理員可以接受加入申請。"
 
 #: src/screens/Messages/JoinRequests.tsx:233
 msgid "Only admins can ignore join requests."
-msgstr "只有管理員可以忽略加入申請。"
+msgstr ""
 
 #: src/components/intents/GroupChatJoinDialog.tsx:155
 msgid "Only followers can join this group chat."
@@ -8166,7 +8166,7 @@ msgstr "打開草稿"
 msgid "Open drawer menu"
 msgstr "打開櫃桶選單"
 
-#: src/screens/Messages/components/MessageComposer.tsx:204
+#: src/screens/Messages/components/MessageComposer.tsx:213
 #: src/view/com/composer/Composer.tsx:2158
 msgid "Open emoji picker"
 msgstr "打開 Emoji 選擇器"
@@ -8324,7 +8324,7 @@ msgstr "打開流程去建立一個新嘅 Bluesky 帳號"
 msgid "Opens flow to sign in to your existing Bluesky account"
 msgstr "打開流程去登入你現有嘅 Bluesky 帳號"
 
-#: src/components/images/Gallery/index.tsx:460
+#: src/components/images/Gallery/index.tsx:455
 msgid "Opens full image"
 msgstr "打開完整圖片"
 
@@ -9334,7 +9334,7 @@ msgstr "拒絕傾偈邀請"
 msgid "Reject join request"
 msgstr "拒絕加入申請"
 
-#: src/screens/Messages/ChatList.tsx:419
+#: src/screens/Messages/ChatList.tsx:422
 #: src/screens/Messages/Inbox.tsx:213
 msgid "Reload conversations"
 msgstr "撈多次對話"
@@ -9604,8 +9604,8 @@ msgstr "已關閉回覆"
 msgid "Replies to this post are disabled."
 msgstr "呢條帖文嘅回覆經已關閉。"
 
-#: src/components/dms/MessageContextMenu.tsx:167
-#: src/components/dms/MessageContextMenu.tsx:170
+#: src/components/dms/MessageContextMenu.tsx:182
+#: src/components/dms/MessageContextMenu.tsx:185
 msgid "Reply"
 msgstr "回覆"
 
@@ -9647,7 +9647,7 @@ msgstr "已更新回覆可見度"
 msgid "Reply was successfully hidden"
 msgstr "成功隱藏回覆"
 
-#: src/components/dms/MessageContextMenu.tsx:205
+#: src/components/dms/MessageContextMenu.tsx:220
 #: src/features/liveNow/components/LiveStatusDialog.tsx:267
 #: src/screens/Messages/ConversationSettings/index.tsx:583
 msgid "Report"
@@ -9680,7 +9680,7 @@ msgstr "擧報動態源"
 msgid "Report list"
 msgstr "擧報清單"
 
-#: src/components/dms/MessageContextMenu.tsx:202
+#: src/components/dms/MessageContextMenu.tsx:217
 msgid "Report message"
 msgstr "擧報訊息"
 
@@ -9809,7 +9809,7 @@ msgstr "取得驗證碼"
 
 #: src/screens/Messages/JoinRequests.tsx:215
 msgid "Request ignored."
-msgstr "已忽略申請。"
+msgstr ""
 
 #: src/components/dms/ChatInvite/Root.tsx:117
 #: src/components/intents/GroupChatJoinDialog.tsx:295
@@ -9929,7 +9929,7 @@ msgstr "試多次執行上一個出錯誤嘅動作"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:377
 #: src/screens/Login/LoginForm.tsx:329
 #: src/screens/Login/LoginForm.tsx:335
-#: src/screens/Messages/ChatList.tsx:424
+#: src/screens/Messages/ChatList.tsx:427
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:218
 #: src/screens/Messages/JoinRequests.tsx:361
@@ -10085,7 +10085,7 @@ msgid "Say hello!"
 msgstr "Say 哈嘍！"
 
 #: src/screens/Messages/ChatList.tsx:220
-#: src/screens/Messages/ChatList.tsx:441
+#: src/screens/Messages/ChatList.tsx:444
 msgid "Say hi to someone"
 msgstr "試吓同其他人 say 哈佬啦"
 
@@ -10486,7 +10486,7 @@ msgstr "提交錯誤報告"
 msgid "Send feedback"
 msgstr "提交意見"
 
-#: src/screens/Messages/components/MessageComposer.tsx:316
+#: src/screens/Messages/components/MessageComposer.tsx:324
 msgid "Send message"
 msgstr "傳送訊息"
 
@@ -10520,7 +10520,7 @@ msgid "Send via direct message"
 msgstr "透過私訊傳送"
 
 #. placeholder {0}: i18n.date(new Date(message.sentAt), { timeStyle: 'short', })
-#: src/components/dms/MessageContextMenu.tsx:161
+#: src/components/dms/MessageContextMenu.tsx:175
 msgid "Sent at {0}"
 msgstr "傳送於 {0}"
 
@@ -10974,7 +10974,7 @@ msgstr "跳過介紹直接開始使用你嘅帳號"
 msgid "Skip to next step"
 msgstr "跳到下一步"
 
-#: src/components/images/Gallery/index.tsx:443
+#: src/components/images/Gallery/index.tsx:438
 msgid "slide"
 msgstr "幻燈片"
 
@@ -12298,8 +12298,8 @@ msgstr "熱門回覆行先"
 msgid "Topic"
 msgstr "話題"
 
-#: src/components/dms/MessageContextMenu.tsx:176
-#: src/components/dms/MessageContextMenu.tsx:179
+#: src/components/dms/MessageContextMenu.tsx:191
+#: src/components/dms/MessageContextMenu.tsx:194
 #: src/components/Post/Translated/index.tsx:150
 #: src/components/Post/Translated/index.tsx:157
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:557
@@ -13254,8 +13254,8 @@ msgstr "睇吓你靜音咗嘅帳號"
 msgid "View your verifications"
 msgstr "睇吓你嘅認證"
 
-#: src/components/images/AutoSizedImage.tsx:221
-#: src/components/images/AutoSizedImage.tsx:253
+#: src/components/images/AutoSizedImage.tsx:222
+#: src/components/images/AutoSizedImage.tsx:254
 msgid "Views full image"
 msgstr "睇吓完整圖片"
 
@@ -13554,7 +13554,7 @@ msgid "Who can verify?"
 msgstr "邊啲人可以授權認證？"
 
 #: src/screens/Home/NoFeedsPinned.tsx:80
-#: src/screens/Messages/ChatList.tsx:404
+#: src/screens/Messages/ChatList.tsx:407
 #: src/screens/Messages/Inbox.tsx:198
 msgid "Whoops!"
 msgstr "大鑊！"
@@ -13839,7 +13839,7 @@ msgid "You can update this later from your settings."
 msgstr "你可以遲啲喺設定度改返。"
 
 #: src/components/dms/ActionsWrapper.web.tsx:81
-#: src/components/dms/MessageContextMenu.tsx:115
+#: src/components/dms/MessageContextMenu.tsx:129
 msgid "You cannot add more than {EMOJI_REACTION_LIMIT, plural, one {# emoji reaction} other {# emoji reactions}}"
 msgstr "你唔得加入超過 {EMOJI_REACTION_LIMIT, plural, other {# 個 emoji 反應}}"
 
