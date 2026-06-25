@@ -47,6 +47,7 @@ export async function compressVideo(
   const blob = await response.blob()
 
   const isGif = blob.type === 'image/gif'
+  const hasCodecs = hasWebCodecs()
 
   logger.debug('compress: fetched blob', {
     size: blob.size,
@@ -57,21 +58,31 @@ export async function compressVideo(
 
   // Try MediaBunny compression if WebCodecs is available and file is large enough
   // Skip GIFs - MediaBunny doesn't support them
-  if (hasWebCodecs() && blob.size >= COMPRESSION_MIN_SIZE_BYTES && !isGif) {
+  let fallbackReason: NonNullable<CompressedVideo['passthroughReason']> | null =
+    null
+  if (isGif) {
+    fallbackReason = 'gif'
+  } else if (!hasCodecs) {
+    fallbackReason = 'no-webcodecs'
+  } else if (blob.size < COMPRESSION_MIN_SIZE_BYTES) {
+    fallbackReason = 'below-threshold'
+  } else {
     try {
       return await doCompression(blob, asset.uri, {onProgress, signal})
     } catch (e) {
       logger.warn('compress: MediaBunny compression failed, using original', {
         safeMessage: e,
       })
+      fallbackReason = 'compress-error-fallback'
     }
-  } else {
-    logger.debug('compress: skipping compression', {
-      hasWebCodecs: hasWebCodecs(),
-      blobSize: blob.size,
-      minSize: COMPRESSION_MIN_SIZE_BYTES,
-    })
   }
+
+  logger.debug('compress: skipping compression', {
+    hasWebCodecs: hasCodecs,
+    blobSize: blob.size,
+    minSize: COMPRESSION_MIN_SIZE_BYTES,
+    reason: fallbackReason,
+  })
 
   // No compression path - just return the blob as-is
   if (blob.size > VIDEO_MAX_SIZE) {
@@ -83,6 +94,7 @@ export async function compressVideo(
     size: blob.size,
     bytes: await blob.arrayBuffer(),
     mimeType: blob.type || 'video/mp4',
+    passthroughReason: fallbackReason,
   }
 }
 
