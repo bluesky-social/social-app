@@ -83,7 +83,6 @@ export function PostControlButton({
       style={style}
       hoverStyle={t.atoms.bg_contrast_25}
       shape="round"
-      variant="ghost"
       color="secondary"
       {...props}
       hitSlop={{
