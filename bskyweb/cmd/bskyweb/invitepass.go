@@ -12,7 +12,6 @@ import (
 	_ "image/png"
 	"io"
 	"io/fs"
-	"log/slog"
 	"net/http"
 	"strings"
 	"time"
@@ -199,19 +198,17 @@ func (srv *Server) buildPassAssets(theme, handle string, avatarBytes []byte) ([]
 	logo2, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/logo@2x.png")
 	logo3, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/logo@3x.png")
 
-	avatarImg, _ := decodeImage(avatarBytes)
-	strip1Bytes, err := buildStripAtDensity(srv.cfg.InvitePass.StripFS, theme, 1, avatarImg, handle, srv.cfg.InvitePass.FontFace)
+	// Strip is just the per-theme gradient PNG, served as-is. The pass's
+	// storeCard primaryFields render the handle below the strip, so painting
+	// it again on the image would be redundant. avatarBytes is currently
+	// unused; reserved for a future composite that draws the user's avatar.
+	_ = avatarBytes
+	strip1Bytes, err := readFS(srv.cfg.InvitePass.StripFS, "passes/strip-"+theme+".png")
 	if err != nil {
 		return nil, fmt.Errorf("strip@1x: %w", err)
 	}
-	strip2Bytes, err := buildStripAtDensity(srv.cfg.InvitePass.StripFS, theme, 2, avatarImg, handle, srv.cfg.InvitePass.FontFace)
-	if err != nil {
-		slog.Debug("invite pass: strip composite failed", "scale", 2, "err", err)
-	}
-	strip3Bytes, err := buildStripAtDensity(srv.cfg.InvitePass.StripFS, theme, 3, avatarImg, handle, srv.cfg.InvitePass.FontFace)
-	if err != nil {
-		slog.Debug("invite pass: strip composite failed", "scale", 3, "err", err)
-	}
+	strip2Bytes, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/strip-"+theme+"@2x.png")
+	strip3Bytes, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/strip-"+theme+"@3x.png")
 
 	assets := []PassAsset{
 		{Name: "icon.png", Data: icon1},
