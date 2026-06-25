@@ -5,6 +5,7 @@ go 1.26
 require (
 	github.com/bluesky-social/indigo v0.0.0-20260605210604-af2fec94f34c
 	github.com/flosch/pongo2/v6 v6.0.0
+	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/ipfs/go-log v1.0.5
 	github.com/joho/godotenv v1.5.1
 	github.com/klauspost/compress v1.18.0
