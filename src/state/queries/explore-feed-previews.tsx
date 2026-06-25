@@ -2,6 +2,7 @@ import {useMemo, useRef} from 'react'
 import {
   type AppBskyActorDefs,
   AppBskyFeedDefs,
+  type AppBskyFeedPost,
   AtUri,
   moderatePost,
 } from '@atproto/api'
@@ -16,6 +17,12 @@ import {
 import {CustomFeedAPI} from '#/lib/api/feed/custom'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {FeedTuner} from '#/lib/api/feed-manip'
+import {
+  hasMutedWordInAuthorName,
+  hasMutedWordInEmbeddedPost,
+  hasMutedWordInPostAltText,
+  hasMutedWordInText,
+} from '#/lib/moderation'
 import {cleanError} from '#/lib/strings/errors'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
@@ -211,8 +218,35 @@ export function useFeedPreviews(
               )
 
               // apply moderation filters
-              item.items = item.items.filter((_, i) => {
-                return !moderations[i]?.ui('contentList').filter
+              const mutedWords = moderationOpts!.prefs.mutedWords
+              item.items = item.items.filter((sliceItem, i) => {
+                if (moderations[i]?.ui('contentList').filter) return false
+                if (
+                  hasMutedWordInAuthorName({
+                    mutedWords,
+                    author: sliceItem.post.author,
+                  })
+                )
+                  return false
+                if (
+                  hasMutedWordInText({
+                    mutedWords,
+                    text:
+                      (sliceItem.post.record as AppBskyFeedPost.Record)?.text ??
+                      '',
+                    author: sliceItem.post.author,
+                  })
+                )
+                  return false
+                if (
+                  hasMutedWordInPostAltText({mutedWords, post: sliceItem.post})
+                )
+                  return false
+                if (
+                  hasMutedWordInEmbeddedPost({mutedWords, post: sliceItem.post})
+                )
+                  return false
+                return true
               })
 
               const slice = {

@@ -30,6 +30,12 @@ import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {FeedTuner, type FeedTunerFn} from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
+import {
+  hasMutedWordInAuthorName,
+  hasMutedWordInEmbeddedPost,
+  hasMutedWordInPostAltText,
+  hasMutedWordInText,
+} from '#/lib/moderation'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
@@ -292,6 +298,7 @@ export function usePostFeedQuery(
                   )
 
                   // apply moderation filter
+                  const mutedWords = moderationOpts!.prefs.mutedWords
                   for (let i = 0; i < slice.items.length; i++) {
                     const ignoreFilter =
                       slice.items[i].post.author.did === ignoreFilterFor
@@ -304,6 +311,45 @@ export function usePostFeedQuery(
                     if (
                       !ignoreFilter &&
                       moderations[i]?.ui('contentList').filter
+                    ) {
+                      return undefined
+                    }
+                    if (
+                      !ignoreFilter &&
+                      hasMutedWordInAuthorName({
+                        mutedWords,
+                        author: slice.items[i].post.author,
+                      })
+                    ) {
+                      return undefined
+                    }
+                    if (
+                      !ignoreFilter &&
+                      hasMutedWordInText({
+                        mutedWords,
+                        text:
+                          (slice.items[i].post.record as AppBskyFeedPost.Record)
+                            ?.text ?? '',
+                        author: slice.items[i].post.author,
+                      })
+                    ) {
+                      return undefined
+                    }
+                    if (
+                      !ignoreFilter &&
+                      hasMutedWordInPostAltText({
+                        mutedWords,
+                        post: slice.items[i].post,
+                      })
+                    ) {
+                      return undefined
+                    }
+                    if (
+                      !ignoreFilter &&
+                      hasMutedWordInEmbeddedPost({
+                        mutedWords,
+                        post: slice.items[i].post,
+                      })
                     ) {
                       return undefined
                     }

@@ -20,6 +20,7 @@ import {
 } from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
+import {hasMutedWordInAuthorName} from '#/lib/moderation'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {GCTIME, STALE} from '#/state/queries'
@@ -388,9 +389,21 @@ export function usePopularFeedsSearch({
     },
     placeholderData: keepPreviousData,
     select(data) {
+      const mutedWords = moderationOpts!.prefs.mutedWords
       return data.filter(feed => {
         const decision = moderateFeedGenerator(feed, moderationOpts!)
-        return !decision.ui('contentMedia').blur
+        if (decision.ui('contentMedia').blur) return false
+        if (
+          hasMutedWordInAuthorName({
+            mutedWords,
+            author: {
+              displayName: feed.displayName,
+              description: feed.description,
+            },
+          })
+        )
+          return false
+        return true
       })
     },
   })
