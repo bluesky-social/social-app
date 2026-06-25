@@ -91,3 +91,44 @@ func TestWebInvitePassPkpass_ThemeMismatchInToken(t *testing.T) {
 		t.Fatalf("status = %d", rec.Code)
 	}
 }
+
+func TestWebInvitePassURL_NoTokenSecret(t *testing.T) {
+	authStub := &stubAuth{did: "did:plc:abc", handle: "alice.bsky.social"}
+	srv := &Server{
+		echo: echo.New(),
+		cfg: &Config{
+			InvitePass: InvitePassConfig{
+				TokenSecret: nil,
+			},
+		},
+		authenticator: authStub,
+	}
+	srv.RegisterInvitePassRoutes()
+	req := httptest.NewRequest(http.MethodPost, "/invite/pass.url", bytes.NewReader([]byte(`{"theme":"dusk"}`)))
+	req.Header.Set("Authorization", "Bearer fake")
+	req.Header.Set("Content-Type", "application/json")
+	rec := httptest.NewRecorder()
+	srv.echo.ServeHTTP(rec, req)
+	if rec.Code != http.StatusServiceUnavailable {
+		t.Fatalf("status = %d, want 503", rec.Code)
+	}
+}
+
+func TestWebInvitePassPkpass_NoTokenSecret(t *testing.T) {
+	srv := &Server{
+		echo: echo.New(),
+		cfg: &Config{
+			InvitePass: InvitePassConfig{
+				TokenSecret: nil,
+			},
+		},
+		authenticator: &stubAuth{},
+	}
+	srv.RegisterInvitePassRoutes()
+	req := httptest.NewRequest(http.MethodGet, "/invite/pass.pkpass?theme=dusk&t=anytoken", nil)
+	rec := httptest.NewRecorder()
+	srv.echo.ServeHTTP(rec, req)
+	if rec.Code != http.StatusServiceUnavailable {
+		t.Fatalf("status = %d, want 503", rec.Code)
+	}
+}

@@ -7,9 +7,12 @@ import (
 	"errors"
 	"fmt"
 	"image"
+	_ "image/gif"
+	_ "image/jpeg"
 	_ "image/png"
 	"io"
 	"io/fs"
+	"log/slog"
 	"net/http"
 	"strings"
 	"time"
@@ -73,6 +76,9 @@ func (srv *Server) RegisterInvitePassRoutes() {
 }
 
 func (srv *Server) WebInvitePassURL(c echo.Context) error {
+	if len(srv.cfg.InvitePass.TokenSecret) == 0 {
+		return c.JSON(http.StatusServiceUnavailable, echo.Map{"error": "InvitePassDisabled"})
+	}
 	did, _, err := srv.authenticator.Authenticate(c)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, echo.Map{"error": "AuthMissing"})
@@ -91,6 +97,9 @@ func (srv *Server) WebInvitePassURL(c echo.Context) error {
 }
 
 func (srv *Server) WebInvitePassPkpass(c echo.Context) error {
+	if len(srv.cfg.InvitePass.TokenSecret) == 0 {
+		return c.JSON(http.StatusServiceUnavailable, echo.Map{"error": "InvitePassDisabled"})
+	}
 	theme := CoerceTheme(c.QueryParam("theme"))
 	tok := c.QueryParam("t")
 	did, tokTheme, err := VerifyPassToken(srv.cfg.InvitePass.TokenSecret, tok, time.Now())
@@ -165,7 +174,7 @@ func (srv *Server) WebInviteWalletHero(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "StripLoadFailed"})
 	}
-	avatarImg, _ := decodePNG(avatarBytes)
+	avatarImg, _ := decodeImage(avatarBytes)
 	out, err := CompositeStrip(base, avatarImg, handle, srv.cfg.InvitePass.FontFace)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "StripBuildFailed"})
@@ -190,13 +199,19 @@ func (srv *Server) buildPassAssets(theme, handle string, avatarBytes []byte) ([]
 	logo2, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/logo@2x.png")
 	logo3, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/logo@3x.png")
 
-	avatarImg, _ := decodePNG(avatarBytes)
+	avatarImg, _ := decodeImage(avatarBytes)
 	strip1Bytes, err := buildStripAtDensity(srv.cfg.InvitePass.StripFS, theme, 1, avatarImg, handle, srv.cfg.InvitePass.FontFace)
 	if err != nil {
 		return nil, fmt.Errorf("strip@1x: %w", err)
 	}
-	strip2Bytes, _ := buildStripAtDensity(srv.cfg.InvitePass.StripFS, theme, 2, avatarImg, handle, srv.cfg.InvitePass.FontFace)
-	strip3Bytes, _ := buildStripAtDensity(srv.cfg.InvitePass.StripFS, theme, 3, avatarImg, handle, srv.cfg.InvitePass.FontFace)
+	strip2Bytes, err := buildStripAtDensity(srv.cfg.InvitePass.StripFS, theme, 2, avatarImg, handle, srv.cfg.InvitePass.FontFace)
+	if err != nil {
+		slog.Debug("invite pass: strip composite failed", "scale", 2, "err", err)
+	}
+	strip3Bytes, err := buildStripAtDensity(srv.cfg.InvitePass.StripFS, theme, 3, avatarImg, handle, srv.cfg.InvitePass.FontFace)
+	if err != nil {
+		slog.Debug("invite pass: strip composite failed", "scale", 3, "err", err)
+	}
 
 	assets := []PassAsset{
 		{Name: "icon.png", Data: icon1},
@@ -241,7 +256,7 @@ func readFS(staticFS fs.FS, name string) ([]byte, error) {
 	return io.ReadAll(f)
 }
 
-func decodePNG(data []byte) (image.Image, error) {
+func decodeImage(data []byte) (image.Image, error) {
 	if len(data) == 0 {
 		return nil, errors.New("empty")
 	}

@@ -138,7 +138,11 @@ func serve(cctx *cli.Context) error {
 		}
 	}
 	if saJSON, issuer := os.Getenv("GOOGLE_WALLET_SA_JSON"), os.Getenv("GOOGLE_WALLET_ISSUER_ID"); saJSON != "" && issuer != "" {
-		wcfg, werr := LoadWalletConfig([]byte(saJSON), issuer,
+		saBytes := []byte(saJSON)
+		if decoded, err := base64.StdEncoding.DecodeString(saJSON); err == nil {
+			saBytes = decoded
+		}
+		wcfg, werr := LoadWalletConfig(saBytes, issuer,
 			os.Getenv("GOOGLE_WALLET_HERO_BASE_URL"),
 			os.Getenv("GOOGLE_WALLET_LOGO_URL"))
 		if werr != nil {
@@ -154,6 +158,9 @@ func serve(cctx *cli.Context) error {
 	invitePass.StripFS = stripFS
 	invitePass.FontFace = basicfont.Face7x13
 	invitePass.BaseURL = "https://bsky.app"
+	if invitePass.Signer != nil && len(invitePass.TokenSecret) == 0 {
+		slog.Warn("invite pass: Apple cert loaded but INVITE_PASS_TOKEN_SECRET is empty; pass endpoints disabled")
+	}
 
 	//
 	// server
