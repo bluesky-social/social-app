@@ -5,7 +5,7 @@ import {useReducedMotion} from 'react-native-reanimated'
 import {decideShouldRoll} from '#/lib/custom-animations/util'
 
 const animationConfig = {
-  duration: 400,
+  duration: 250,
   easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
   fill: 'forwards' as FillMode,
 }
