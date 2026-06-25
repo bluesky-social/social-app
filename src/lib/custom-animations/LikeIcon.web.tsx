@@ -9,15 +9,14 @@ import {
 } from '#/components/icons/Heart2'
 
 const animationConfig = {
-  duration: 600,
-  easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+  duration: 450,
+  easing: 'cubic-bezier(0.25, 0.5, 0.25, 1)',
   fill: 'forwards' as FillMode,
 }
 
 const keyframe = [
   {transform: 'scale(1)'},
-  {transform: 'scale(0.7)'},
-  {transform: 'scale(1.2)'},
+  {transform: 'scale(1.5)'},
   {transform: 'scale(1)'},
 ]
 
@@ -25,8 +24,8 @@ const circle1Keyframe = [
   {opacity: 0, transform: 'scale(0)'},
   {opacity: 0.4},
   {transform: 'scale(1.5)'},
-  {opacity: 0.4},
-  {opacity: 0, transform: 'scale(1.5)'},
+  {opacity: 0.2},
+  {opacity: 0, transform: 'scale(2)'},
 ]
 
 const circle2Keyframe = [

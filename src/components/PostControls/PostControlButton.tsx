@@ -3,7 +3,7 @@ import {type GestureResponderEvent, type Insets, type View} from 'react-native'
 
 import {useHaptics} from '#/lib/haptics'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, type ButtonProps} from '#/components/Button'
+import {Button, type ButtonProps, useButtonContext} from '#/components/Button'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text, type TextProps} from '#/components/Typography'
 
@@ -82,7 +82,7 @@ export function PostControlButton({
       onLongPress={handleLongPress}
       style={style}
       hoverStyle={t.atoms.bg_contrast_25}
-      pressStyle={[{transform: [{scale: 0.9}]}, t.atoms.bg_contrast_50]}
+      pressStyle={t.atoms.bg_contrast_50}
       shape="round"
       color="secondary"
       {...props}
@@ -112,11 +112,17 @@ export function PostControlButtonIcon({
 }: SVGIconProps & {
   icon: React.ComponentType<SVGIconProps>
 }) {
+  const {pressed} = useButtonContext()
   const {big, color} = useContext(PostControlContext)
 
   return (
     <Comp
-      style={[color, a.pointer_events_none, style]}
+      style={[
+        color,
+        a.pointer_events_none,
+        pressed ? [{transform: [{scale: 0.9}]}] : [],
+        style,
+      ]}
       {...rest}
       width={big ? 22 : 18}
     />
