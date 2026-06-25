@@ -8,16 +8,17 @@ import {
   Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
 } from '#/components/icons/Heart2'
 
+// slower animation for small buttons
+// I cannot explain why it feels better this way, 25ms makes a big difference
 const animationConfigSmall = {
-  duration: 450,
+  duration: 575,
   easing: 'cubic-bezier(0.25, 0.5, 0.25, 1)',
   fill: 'forwards' as FillMode,
 }
 
-// slower animation for big buttons to match the perceived "weight"
 const animationConfigBig = {
   ...animationConfigSmall,
-  duration: 600,
+  duration: 550,
 }
 
 const keyframe = [
@@ -60,6 +61,7 @@ export function AnimatedLikeIcon({
   const circle1Ref = useRef<HTMLDivElement>(null)
   const circle2Ref = useRef<HTMLDivElement>(null)
 
+  // TODO: consolidate if i do truly end up keeping them identical
   const animationConfig = big ? animationConfigBig : animationConfigSmall
 
   useEffect(() => {
