@@ -16,6 +16,8 @@ export function DateField({
   value,
   inputRef,
   onChangeDate,
+  onConfirm,
+  placeholder,
   label,
   isInvalid,
   testID,
@@ -26,14 +28,28 @@ export function DateField({
   const t = useTheme()
   const [open, setOpen] = useState(false)
 
+  /*
+   * The picker requires a valid date, so when value is empty we open at
+   * maximumDate (if set) or today. Normalize through toSimpleDateString so a
+   * date-only value is parsed as UTC midnight, consistent with the picker's
+   * timeZoneOffsetInMinutes={0} and the maximumDate below.
+   */
+  const initialDate =
+    value === ''
+      ? maximumDate
+        ? new Date(toSimpleDateString(maximumDate))
+        : new Date()
+      : new Date(toSimpleDateString(value))
+
   const onChangeInternal = useCallback(
     (date: Date) => {
       setOpen(false)
 
       const formatted = toSimpleDateString(date)
       onChangeDate(formatted)
+      onConfirm?.(formatted)
     },
-    [onChangeDate, setOpen],
+    [onChangeDate, onConfirm, setOpen],
   )
 
   useImperativeHandle(
@@ -63,6 +79,7 @@ export function DateField({
       <DateFieldButton
         label={label}
         value={value}
+        placeholder={placeholder}
         onPress={onPress}
         isInvalid={isInvalid}
         accessibilityHint={accessibilityHint}
@@ -77,7 +94,7 @@ export function DateField({
           theme={t.scheme}
           // @ts-ignore TODO
           buttonColor={t.name === 'light' ? '#000000' : '#ffffff'}
-          date={new Date(value)}
+          date={initialDate}
           onConfirm={onChangeInternal}
           onCancel={onCancel}
           mode="date"
