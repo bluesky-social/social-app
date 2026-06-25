@@ -62,7 +62,6 @@ export function AnimatedLikeIcon({
   const circle1Ref = useRef<HTMLDivElement>(null)
   const circle2Ref = useRef<HTMLDivElement>(null)
 
-  // TODO: consolidate if i do truly end up keeping them identical
   const animationConfig = big ? animationConfigBig : animationConfigSmall
 
   useEffect(() => {
