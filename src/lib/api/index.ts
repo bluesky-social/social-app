@@ -346,6 +346,13 @@ async function postCommunity(
       createdAt,
       cid, // Client's own CID - source of truth for integrity verification
     }
+    // The PDS only protects blobs that are referenced from a record on the
+    // repo (enumBlobRefs walks the record tree). Mirror the embed onto the
+    // stub so external-thumb / image / video / gallery blobs stay alive for
+    // the post's lifetime. Text / facets / langs / reply remain appview-only.
+    if (embed) {
+      stubRecord.embed = embed
+    }
 
     writes.push({
       $type: 'com.atproto.repo.applyWrites#create',
