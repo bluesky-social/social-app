@@ -10,7 +10,7 @@ const animationConfig = {
   fill: 'forwards' as FillMode,
 }
 
-const FILTER_BLUR_MAX = 'blur(0.1em)'
+const FILTER_BLUR_MAX = 'blur(0.15em)'
 const FILTER_BLUR_NONE = 'blur(0)'
 
 const enteringUpKeyframe = [
