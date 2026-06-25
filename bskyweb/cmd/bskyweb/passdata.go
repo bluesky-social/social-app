@@ -80,11 +80,13 @@ func BuildPassJSON(did, handle, theme, teamID string) ([]byte, error) {
 		LabelColor:         "rgb(255, 255, 255)",
 		BackgroundColor:    ThemeBackgroundRGB(theme),
 		StoreCard: storeCardFields{
-			PrimaryFields:   []passField{{Key: "handle", Label: "Handle", Value: atHandle}},
-			SecondaryFields: []passField{{Key: "url", Label: "Profile", Value: "bsky.app/profile/" + handle}},
+			PrimaryFields:   []passField{},
+			SecondaryFields: []passField{
+				{Key: "handle", Label: "", Value: atHandle},
+			},
 			BackFields: []passField{
-				{Key: "about", Label: "About", Value: "Scan the QR to open this profile in any browser, or share the URL below."},
-				{Key: "url2", Label: "Profile URL", Value: profileURL},
+				{Key: "about", Label: "About", Value: "Scan the QR code to view this Bluesky profile."},
+				{Key: "url", Label: "Profile URL", Value: profileURL},
 			},
 		},
 		Barcodes: []barcode{{

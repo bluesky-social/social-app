@@ -10,28 +10,22 @@
   "labelColor": "rgb(255, 255, 255)",
   "backgroundColor": "rgb(177, 90, 162)",
   "storeCard": {
-    "primaryFields": [
-      {
-        "key": "handle",
-        "label": "Handle",
-        "value": "@alice.bsky.social"
-      }
-    ],
+    "primaryFields": [],
     "secondaryFields": [
       {
-        "key": "url",
-        "label": "Profile",
-        "value": "bsky.app/profile/alice.bsky.social"
+        "key": "handle",
+        "label": "",
+        "value": "@alice.bsky.social"
       }
     ],
     "backFields": [
       {
         "key": "about",
         "label": "About",
-        "value": "Scan the QR to open this profile in any browser, or share the URL below."
+        "value": "Scan the QR code to view this Bluesky profile."
       },
       {
-        "key": "url2",
+        "key": "url",
         "label": "Profile URL",
         "value": "https://bsky.app/profile/alice.bsky.social"
       }
