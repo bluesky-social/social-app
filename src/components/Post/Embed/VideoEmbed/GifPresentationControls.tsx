@@ -1,18 +1,13 @@
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {ActivityIndicator, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {HITSLOP_20} from '#/lib/constants'
+import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useTheme} from '#/alf'
+import {AltBadgeWithDialog} from '#/components/AltBadgeWithDialog'
 import {Button} from '#/components/Button'
 import {Fill} from '#/components/Fill'
-import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 
@@ -29,6 +24,7 @@ export function GifPresentationControls({
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const largeBadge = useLargeAltBadgeEnabled()
 
   return (
     <>
@@ -64,74 +60,41 @@ export function GifPresentationControls({
           ]}
         />
       )}
-      <View style={styles.gifBadgeContainer}>
-        <Text style={[{color: 'white'}, a.font_bold, a.text_xs]}>
-          <Trans>GIF</Trans>
-        </Text>
+      <View
+        style={[
+          a.absolute,
+          a.flex_row,
+          a.z_10,
+          {
+            bottom: a.p_xs.padding,
+            right: a.p_xs.padding,
+            gap: 3,
+          },
+          largeBadge && {
+            gap: 4,
+          },
+        ]}>
+        <View
+          accessible={false}
+          style={[
+            a.justify_center,
+            a.rounded_sm,
+            a.p_xs,
+            a.z_10,
+            t.atoms.bg_contrast_25,
+            largeBadge && {
+              padding: 6,
+            },
+            {
+              opacity: 0.8,
+            },
+          ]}>
+          <Text style={[a.font_bold, largeBadge ? a.text_xs : {fontSize: 8}]}>
+            <Trans>GIF</Trans>
+          </Text>
+        </View>
+        {altText && <AltBadgeWithDialog text={altText} />}
       </View>
-      {altText && <AltBadge text={altText} />}
     </>
   )
 }
-
-export function AltBadge({text}: {text: string}) {
-  const control = Prompt.usePromptControl()
-  const {_} = useLingui()
-
-  return (
-    <>
-      <TouchableOpacity
-        testID="altTextButton"
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`Show alt text`)}
-        accessibilityHint=""
-        hitSlop={HITSLOP_20}
-        onPress={control.open}
-        style={styles.altBadgeContainer}>
-        <Text
-          style={[{color: 'white'}, a.font_bold, a.text_xs]}
-          accessible={false}>
-          <Trans>ALT</Trans>
-        </Text>
-      </TouchableOpacity>
-      <Prompt.Outer control={control}>
-        <Prompt.Content>
-          <Prompt.TitleText>
-            <Trans>Alt Text</Trans>
-          </Prompt.TitleText>
-          <Prompt.DescriptionText selectable>{text}</Prompt.DescriptionText>
-        </Prompt.Content>
-        <Prompt.Actions>
-          <Prompt.Action
-            onPress={() => control.close()}
-            cta={_(msg`Close`)}
-            color="secondary"
-          />
-        </Prompt.Actions>
-      </Prompt.Outer>
-    </>
-  )
-}
-
-const styles = StyleSheet.create({
-  gifBadgeContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    borderRadius: 6,
-    paddingHorizontal: 4,
-    paddingVertical: 3,
-    position: 'absolute',
-    left: 6,
-    bottom: 6,
-    zIndex: 2,
-  },
-  altBadgeContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    borderRadius: 6,
-    paddingHorizontal: 4,
-    paddingVertical: 3,
-    position: 'absolute',
-    right: 6,
-    top: 6,
-    zIndex: 2,
-  },
-})

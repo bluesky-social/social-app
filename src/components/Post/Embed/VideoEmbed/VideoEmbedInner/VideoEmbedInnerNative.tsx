@@ -8,6 +8,7 @@ import {useLingui} from '@lingui/react'
 import {HITSLOP_30} from '#/lib/constants'
 import {useAutoplayDisabled} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
+import {AltBadgeWithDialog} from '#/components/AltBadgeWithDialog'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {Pause_Filled_Corner0_Rounded as PauseIcon} from '#/components/icons/Pause'
@@ -16,7 +17,7 @@ import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/compone
 import {KeepAwake} from '#/components/KeepAwake'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {useVideoMuteState} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
-import {AltBadge, GifPresentationControls} from '../GifPresentationControls'
+import {GifPresentationControls} from '../GifPresentationControls'
 import {TimeIndicator} from './TimeIndicator'
 
 export function VideoEmbedInnerNative({
@@ -112,7 +113,9 @@ export function VideoEmbedInnerNative({
           timeRemaining={timeRemaining}
         />
       )}
-      {!isGif && embed.alt && <AltBadge text={embed.alt} />}
+      {!isGif && embed.alt && (
+        <AltBadgeWithDialog text={embed.alt} position="top-right" />
+      )}
       <MediaInsetBorder />
       <KeepAwake enabled={isPlaying} />
     </View>

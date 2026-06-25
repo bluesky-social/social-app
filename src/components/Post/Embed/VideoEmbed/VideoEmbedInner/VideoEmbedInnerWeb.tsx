@@ -7,8 +7,8 @@ import type * as HlsTypes from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
+import {AltBadgeWithDialog} from '#/components/AltBadgeWithDialog'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
-import {AltBadge} from '../GifPresentationControls'
 import * as BandwidthEstimate from './bandwidth-estimate'
 import {Controls} from './web-controls/VideoControls'
 
@@ -80,7 +80,9 @@ export function VideoEmbedInnerWeb({
             </figcaption>
           )}
         </figure>
-        {!isFullscreen && embed.alt && <AltBadge text={embed.alt} />}
+        {!isFullscreen && embed.alt && (
+          <AltBadgeWithDialog text={embed.alt} position="top-right" />
+        )}
         <Controls
           videoRef={videoRef}
           hlsRef={hlsRef}
