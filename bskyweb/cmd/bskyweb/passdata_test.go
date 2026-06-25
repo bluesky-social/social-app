@@ -38,7 +38,7 @@ func TestThemeBackgroundRGB(t *testing.T) {
 func TestBuildPassJSON_Golden(t *testing.T) {
 	for _, theme := range []string{"dawn", "day", "dusk", "night"} {
 		t.Run(theme, func(t *testing.T) {
-			got, err := BuildPassJSON("did:plc:abc123", "alice.bsky.social", theme, "TEAMID00")
+			got, err := BuildPassJSON("did:plc:abc123", "alice.bsky.social", "Alice", theme, "TEAMID00")
 			if err != nil {
 				t.Fatalf("build: %v", err)
 			}

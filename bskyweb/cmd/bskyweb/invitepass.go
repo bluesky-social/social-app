@@ -112,12 +112,12 @@ func (srv *Server) WebInvitePassPkpass(c echo.Context) error {
 		return c.JSON(http.StatusServiceUnavailable, echo.Map{"error": "SignerDisabled"})
 	}
 
-	handle, avatarBytes, err := srv.fetchProfile(c.Request().Context(), did)
+	handle, displayName, avatarBytes, err := srv.fetchProfile(c.Request().Context(), did)
 	if err != nil {
 		return c.JSON(http.StatusBadGateway, echo.Map{"error": "ProfileFetchFailed"})
 	}
 
-	passJSON, err := BuildPassJSON(did, handle, theme, srv.cfg.InvitePass.TeamID)
+	passJSON, err := BuildPassJSON(did, handle, displayName, theme, srv.cfg.InvitePass.TeamID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "PassBuildFailed"})
 	}
@@ -165,7 +165,7 @@ func (srv *Server) WebInviteWalletHero(c echo.Context) error {
 	if did == "" {
 		return c.NoContent(http.StatusBadRequest)
 	}
-	handle, avatarBytes, err := srv.fetchProfile(c.Request().Context(), did)
+	handle, _, avatarBytes, err := srv.fetchProfile(c.Request().Context(), did)
 	if err != nil {
 		return c.JSON(http.StatusBadGateway, echo.Map{"error": "ProfileFetchFailed"})
 	}
@@ -261,16 +261,19 @@ func decodeImage(data []byte) (image.Image, error) {
 	return img, err
 }
 
-func (srv *Server) fetchProfile(ctx context.Context, did string) (handle string, avatarBytes []byte, err error) {
+func (srv *Server) fetchProfile(ctx context.Context, did string) (handle, displayName string, avatarBytes []byte, err error) {
 	pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, did)
 	if err != nil {
-		return "", nil, err
+		return "", "", nil, err
 	}
 	handle = pv.Handle
+	if pv.DisplayName != nil {
+		displayName = *pv.DisplayName
+	}
 	if pv.Avatar != nil {
 		// SSRF defense: only fetch https:// URLs
 		if !strings.HasPrefix(*pv.Avatar, "https://") {
-			return handle, nil, nil
+			return handle, displayName, nil, nil
 		}
 		req, _ := http.NewRequestWithContext(ctx, http.MethodGet, *pv.Avatar, nil)
 		client := &http.Client{Timeout: 5 * time.Second}
@@ -282,5 +285,5 @@ func (srv *Server) fetchProfile(ctx context.Context, did string) (handle string,
 			}
 		}
 	}
-	return handle, avatarBytes, nil
+	return handle, displayName, avatarBytes, nil
 }

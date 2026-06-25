@@ -35,6 +35,7 @@ type passField struct {
 }
 
 type storeCardFields struct {
+	HeaderFields    []passField `json:"headerFields"`
 	PrimaryFields   []passField `json:"primaryFields"`
 	SecondaryFields []passField `json:"secondaryFields"`
 	BackFields      []passField `json:"backFields"`
@@ -64,10 +65,14 @@ type pkPass struct {
 
 const passTypeIdentifier = "pass.xyz.blueskyweb.app"
 
-func BuildPassJSON(did, handle, theme, teamID string) ([]byte, error) {
+func BuildPassJSON(did, handle, displayName, theme, teamID string) ([]byte, error) {
 	theme = CoerceTheme(theme)
 	profileURL := "https://bsky.app/profile/" + handle
 	atHandle := "@" + handle
+	memberName := displayName
+	if memberName == "" {
+		memberName = atHandle
+	}
 	p := pkPass{
 		FormatVersion:      1,
 		PassTypeIdentifier: passTypeIdentifier,
@@ -80,9 +85,12 @@ func BuildPassJSON(did, handle, theme, teamID string) ([]byte, error) {
 		LabelColor:         "rgb(255, 255, 255)",
 		BackgroundColor:    ThemeBackgroundRGB(theme),
 		StoreCard: storeCardFields{
-			PrimaryFields:   []passField{},
+			HeaderFields: []passField{
+				{Key: "username", Label: "USERNAME", Value: atHandle},
+			},
+			PrimaryFields: []passField{},
 			SecondaryFields: []passField{
-				{Key: "handle", Label: "", Value: atHandle},
+				{Key: "name", Label: "Member Name", Value: memberName},
 			},
 			BackFields: []passField{
 				{Key: "about", Label: "About", Value: "Scan the QR code to view this Bluesky profile."},

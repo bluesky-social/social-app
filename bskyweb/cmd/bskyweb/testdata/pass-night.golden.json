@@ -10,12 +10,19 @@
   "labelColor": "rgb(255, 255, 255)",
   "backgroundColor": "rgb(0, 21, 51)",
   "storeCard": {
+    "headerFields": [
+      {
+        "key": "username",
+        "label": "USERNAME",
+        "value": "@alice.bsky.social"
+      }
+    ],
     "primaryFields": [],
     "secondaryFields": [
       {
-        "key": "handle",
-        "label": "",
-        "value": "@alice.bsky.social"
+        "key": "name",
+        "label": "Member Name",
+        "value": "Alice"
       }
     ],
     "backFields": [
