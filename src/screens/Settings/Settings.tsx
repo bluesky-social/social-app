@@ -27,6 +27,7 @@ import {useOnboardingDispatch} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {GrowthbookDialog} from '#/screens/Settings/components/GrowthbookDialog'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, platform, tokens, useBreakpoints, useTheme} from '#/alf'
 import {AgeAssuranceDismissibleNotice} from '#/components/ageAssurance/AgeAssuranceDismissibleNotice'
@@ -398,6 +399,7 @@ function DevOptions() {
     currentChannel,
   } = useApplyPullRequestOTAUpdate()
   const [actyNotifNudged, setActyNotifNudged] = useActivitySubscriptionsNudged()
+  const growthbookControl = useDialogControl()
 
   const resetOnboarding = () => {
     navigation.navigate('Home')
@@ -459,6 +461,14 @@ function DevOptions() {
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
       <SettingsList.PressableItem
+        onPress={() => growthbookControl.open()}
+        label={l`View Growthbook information`}>
+        <SettingsList.ItemText>
+          <Trans>Growthbook</Trans>
+        </SettingsList.ItemText>
+      </SettingsList.PressableItem>
+      <GrowthbookDialog control={growthbookControl} />
+      <SettingsList.PressableItem
         onPress={() => navigation.navigate('Debug')}
         label={l`Open storybook page`}>
         <SettingsList.ItemText>
@@ -474,7 +484,7 @@ function DevOptions() {
       </SettingsList.PressableItem>
       <SettingsList.PressableItem
         onPress={() => deleteChatDeclarationRecord()}
-        label={l`Open storybook page`}>
+        label={l`Delete chat declaration record`}>
         <SettingsList.ItemText>
           <Trans>Delete chat declaration record</Trans>
         </SettingsList.ItemText>
