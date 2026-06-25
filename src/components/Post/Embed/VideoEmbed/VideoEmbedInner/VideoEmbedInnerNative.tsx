@@ -99,22 +99,24 @@ export function VideoEmbedInnerNative({
           altText={embed.alt}
         />
       ) : (
-        <VideoPresentationControls
-          enterFullscreen={() => {
-            videoRef.current?.enterFullscreen(true)
-          }}
-          toggleMuted={() => {
-            videoRef.current?.toggleMuted()
-          }}
-          togglePlayback={() => {
-            videoRef.current?.togglePlayback()
-          }}
-          isPlaying={isPlaying}
-          timeRemaining={timeRemaining}
-        />
-      )}
-      {!isGif && embed.alt && (
-        <AltBadgeWithDialog text={embed.alt} position="top-right" />
+        <>
+          <VideoPresentationControls
+            enterFullscreen={() => {
+              videoRef.current?.enterFullscreen(true)
+            }}
+            toggleMuted={() => {
+              videoRef.current?.toggleMuted()
+            }}
+            togglePlayback={() => {
+              videoRef.current?.togglePlayback()
+            }}
+            isPlaying={isPlaying}
+            timeRemaining={timeRemaining}
+          />
+          {embed.alt && (
+            <AltBadgeWithDialog text={embed.alt} position="top-right" />
+          )}
+        </>
       )}
       <MediaInsetBorder />
       <KeepAwake enabled={isPlaying} />

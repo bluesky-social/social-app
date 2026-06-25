@@ -33,6 +33,7 @@ export function VideoEmbedInnerWeb({
   const figId = useId()
   const {_} = useLingui()
   const [isFullscreen] = useFullscreen(containerRef)
+  const isGif = embed.presentation === 'gif'
 
   // send error up to error boundary
   const [error, setError] = useState<Error | null>(null)
@@ -80,7 +81,7 @@ export function VideoEmbedInnerWeb({
             </figcaption>
           )}
         </figure>
-        {!isFullscreen && embed.alt && (
+        {!isFullscreen && !isGif && embed.alt && (
           <AltBadgeWithDialog text={embed.alt} position="top-right" />
         )}
         <Controls
@@ -94,7 +95,7 @@ export function VideoEmbedInnerWeb({
           onScreen={onScreen}
           fullscreenRef={containerRef}
           hasSubtitleTrack={hasSubtitleTrack}
-          isGif={embed.presentation === 'gif'}
+          isGif={isGif}
           altText={embed.alt}
           updateCuePositions={updateCuePositions}
         />
