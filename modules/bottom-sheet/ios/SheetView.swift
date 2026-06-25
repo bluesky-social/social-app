@@ -118,6 +118,10 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     self.isClosing = false
     self.isOpen = false
     self.sheetVc = nil
+
+    if let innerView = self.innerView {
+      self.touchHandler?.detach(from: innerView)
+    }
     self.touchHandler = nil
     self.innerView = nil
     SheetManager.shared.remove(self)
