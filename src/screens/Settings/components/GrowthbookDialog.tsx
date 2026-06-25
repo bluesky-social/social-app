@@ -1,6 +1,5 @@
 import {Pressable, View} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
-import {useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -59,19 +58,18 @@ function GrowthbookDialogInner() {
 
 function FeatureRow({name, featureKey}: {name: string; featureKey: string}) {
   const t = useTheme()
-  const {t: l} = useLingui()
   const value = features.evalFeature(featureKey).value
 
   const onPress = () => {
     void Clipboard.setStringAsync(featureKey)
-    Toast.show(l`Copied feature flag key to clipboard`, {type: 'success'})
+    Toast.show('Copied feature flag key to clipboard', {type: 'success'})
   }
 
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={l`Copy feature flag key`}
-      accessibilityHint={l`Copies the feature flag key to the clipboard`}
+      accessibilityLabel="Copy feature flag key"
+      accessibilityHint="Copies the feature flag key to the clipboard"
       onPress={onPress}
       style={[
         a.flex_row,
@@ -95,7 +93,6 @@ function FeatureRow({name, featureKey}: {name: string; featureKey: string}) {
 
 function CurrentProfile() {
   const t = useTheme()
-  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
@@ -110,33 +107,31 @@ function CurrentProfile() {
 
   const onPressDid = () => {
     void Clipboard.setStringAsync(currentAccount.did)
-    Toast.show(l`Copied did to clipboard`, {type: 'success'})
+    Toast.show('Copied did to clipboard', {type: 'success'})
   }
 
   return (
-    <>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={l`Copy DID`}
-        accessibilityHint={l`Copies your DID to the clipboard`}
-        onPress={onPressDid}
-        hitSlop={native({top: 8, bottom: 8, left: 8, right: 8})}
-        style={[a.gap_sm]}>
-        {profile && moderationOpts ? (
-          <ProfileCard.Header>
-            <ProfileCard.Avatar
-              profile={profile}
-              moderationOpts={moderationOpts}
-              disabledPreview
-            />
-            <ProfileCard.NameAndHandle
-              profile={profile}
-              moderationOpts={moderationOpts}
-            />
-          </ProfileCard.Header>
-        ) : null}
-      </Pressable>
-    </>
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel="Copy DID"
+      accessibilityHint="Copies your DID to the clipboard"
+      onPress={onPressDid}
+      hitSlop={native({top: 8, bottom: 8, left: 8, right: 8})}
+      style={[a.gap_sm]}>
+      {profile && moderationOpts ? (
+        <ProfileCard.Header>
+          <ProfileCard.Avatar
+            profile={profile}
+            moderationOpts={moderationOpts}
+            disabledPreview
+          />
+          <ProfileCard.NameAndHandle
+            profile={profile}
+            moderationOpts={moderationOpts}
+          />
+        </ProfileCard.Header>
+      ) : null}
+    </Pressable>
   )
 }
 
