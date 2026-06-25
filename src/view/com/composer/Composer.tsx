@@ -73,6 +73,7 @@ import {
 } from '#/lib/constants'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {createVideoTelemetry} from '#/lib/media/video/telemetry'
 import {mimeToExt} from '#/lib/media/video/util'
 import {useCallOnce} from '#/lib/once'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -387,6 +388,12 @@ export const ComposePost = ({
   const selectVideo = useCallback(
     (postId: string, asset: ImagePickerAsset) => {
       const abortController = new AbortController()
+      const telemetry = createVideoTelemetry({
+        asset,
+        signal: abortController.signal,
+        metric: ax.metric,
+      })
+      telemetry.picked()
       composerDispatch({
         type: 'update_post',
         postId: postId,
@@ -394,6 +401,7 @@ export const ComposePost = ({
           type: 'embed_add_video',
           asset,
           abortController,
+          telemetry,
         },
       })
       void processVideo(
@@ -412,7 +420,7 @@ export const ComposePost = ({
         currentDid,
         abortController.signal,
         i18n,
-        ax.metric,
+        telemetry,
       )
     },
     [i18n, agent, currentDid, composerDispatch, ax.metric],
@@ -495,6 +503,12 @@ export const ComposePost = ({
 
         // Start video processing using existing flow
         const abortController = new AbortController()
+        const telemetry = createVideoTelemetry({
+          asset,
+          signal: abortController.signal,
+          metric: ax.metric,
+        })
+        telemetry.picked()
         composerDispatch({
           type: 'update_post',
           postId,
@@ -502,6 +516,7 @@ export const ComposePost = ({
             type: 'embed_add_video',
             asset,
             abortController,
+            telemetry,
           },
         })
 
@@ -560,7 +575,7 @@ export const ComposePost = ({
           currentDid,
           abortController.signal,
           i18n,
-          ax.metric,
+          telemetry,
         )
       } catch (e) {
         logger.error('Failed to restore video from draft', {
@@ -980,6 +995,15 @@ export const ComposePost = ({
           langs: currentLanguages,
         })
       ).uris[0]
+
+      // Fire published event for every video that made it into the post.
+      // The status guard upstream ensures each video.telemetry is present and
+      // processing has completed by this point.
+      for (const post of filteredThread.posts) {
+        if (post.embed.media?.type === 'video') {
+          post.embed.media.video.telemetry?.published()
+        }
+      }
 
       /*
        * Wait for app view to have received the post(s). If this fails, it's

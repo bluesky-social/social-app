@@ -2,7 +2,7 @@ import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AppBskyFeedDefs, type ComAtprotoLabelDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural} from '@lingui/react/macro'
 
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
@@ -60,23 +60,17 @@ export function LabelsOnMe({
         <ButtonIcon position="left" icon={CircleInfo} />
         <ButtonText style={[a.leading_snug]}>
           {type === 'account' ? (
-            <Trans>
-              <Plural
-                value={labels.length}
-                one="# label has"
-                other="# labels have"
-              />{' '}
-              been placed on this account
-            </Trans>
+            <Plural
+              value={labels.length}
+              one="# account label"
+              other="# account labels"
+            />
           ) : (
-            <Trans>
-              <Plural
-                value={labels.length}
-                one="# label has"
-                other="# labels have"
-              />{' '}
-              been placed on this content
-            </Trans>
+            <Plural
+              value={labels.length}
+              one="# content label"
+              other="# content labels"
+            />
           )}
         </ButtonText>
       </Button>

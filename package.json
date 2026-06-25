@@ -8,7 +8,7 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "11.7.0",
+      "version": "11.9.0",
       "onFail": "warn"
     },
     "runtime": {
@@ -94,7 +94,7 @@
     "update-actions": "pnpm dlx actions-up --min-age 7"
   },
   "dependencies": {
-    "@atproto/api": "0.20.15",
+    "@atproto/api": "0.20.20",
     "@atproto/syntax": "0.6.1",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",

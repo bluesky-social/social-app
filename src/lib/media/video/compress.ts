@@ -6,11 +6,7 @@ import {
   VIDEO_MAX_SIZE,
 } from '#/lib/constants'
 import {logger} from '#/logger'
-import {
-  compress,
-  probe,
-  type VideoMetadata,
-} from '../../../../modules/expo-bluesky-video-compress'
+import {compress, probe} from '../../../../modules/expo-bluesky-video-compress'
 import {
   COMPRESSION_MAX_DIMENSION,
   COMPRESSION_PASSTHROUGH_BITRATE,
@@ -23,12 +19,15 @@ export async function compressVideo(
   opts?: {
     signal?: AbortSignal
     onProgress?: (progress: number) => void
-    onProbe?: (metadata: VideoMetadata, wouldCompress: boolean) => void
-    onProbeFailed?: (error: unknown) => void
   },
 ): Promise<CompressedVideo> {
   if (file.mimeType === 'image/gif') {
-    return {uri: file.uri, size: file.fileSize ?? -1, mimeType: 'image/gif'}
+    return {
+      uri: file.uri,
+      size: file.fileSize ?? -1,
+      mimeType: 'image/gif',
+      passthroughReason: 'gif',
+    }
   }
 
   const isAcceptableFormat = SUPPORTED_MIME_TYPES.includes(
@@ -42,22 +41,20 @@ export async function compressVideo(
     logger.debug('probe failed, falling through to passthrough', {
       safeMessage: e,
     })
-    opts?.onProbeFailed?.(e)
     return {
       uri: file.uri,
       size: file.fileSize ?? -1,
       mimeType: file.mimeType ?? 'video/mp4',
+      passthroughReason: 'compress-error-fallback',
     }
   }
 
-  const willCompress = shouldCompress(metadata, isAcceptableFormat)
-  opts?.onProbe?.(metadata, willCompress)
-
-  if (!willCompress) {
+  if (!shouldCompress(metadata, isAcceptableFormat)) {
     return {
       uri: file.uri,
       size: metadata.fileSize,
       mimeType: file.mimeType ?? 'video/mp4',
+      passthroughReason: 'below-thresholds',
     }
   }
 
