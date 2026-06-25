@@ -19,7 +19,6 @@ import {useNavigation} from '@react-navigation/native'
 
 import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {ISPEERMOD} from '#/lib/peerMod'
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {
@@ -46,6 +45,7 @@ import {
   useProfileBlockMutationQueue,
   useProfileMuteMutationQueue,
 } from '#/state/queries/profile'
+import {useMyPeerModPermissions} from '#/state/queries/peer-mod-permissions'
 import {
   InvalidInteractionSettingsError,
   MAX_HIDDEN_REPLIES,
@@ -167,7 +167,8 @@ let PostMenuItems = ({
     () => new AtUri(postUri).collection === 'community.blacksky.feed.post',
     [postUri],
   )
-  const canLabelPost = ISPEERMOD && isCommunityPost
+  const {data: peerModPerms} = useMyPeerModPermissions()
+  const canLabelPost = !!peerModPerms?.isPeerMod && isCommunityPost
   const [isThreadMuted, muteThread, unmuteThread] = useThreadMuteMutationQueue(
     post,
     rootUri,
