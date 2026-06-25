@@ -55,7 +55,7 @@ export function InboxRequests({
                 ? l({
                     message: `${UNREAD_REQUEST_CAP - 1}+`,
                     comment:
-                      'Displayed when the number of requests exceeds the cap',
+                      'Displayed when the number of requests exceeds the cap – for example, 99+ requests',
                   })
                 : count}
             </ButtonText>
