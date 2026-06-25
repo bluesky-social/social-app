@@ -23,6 +23,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {ActionButtons} from './components/ActionButtons'
+import {AddToWalletButton} from './components/AddToWalletButton'
 import {ThemedQrCard} from './components/ThemedQrCard'
 import {ThemePicker} from './components/ThemePicker'
 import {useInviteThemeKey} from './hooks/useInviteThemeKey'
@@ -199,6 +200,12 @@ export function InviteFriendsDialogInner({
             onScan={onScan}
           />
         </View>
+
+        {isHandleValid && handle ? (
+          <View style={[a.w_full, a.align_center, {marginTop: 24}]}>
+            <AddToWalletButton themeKey={themeKey} handle={handle} />
+          </View>
+        ) : null}
 
         <View
           style={[
