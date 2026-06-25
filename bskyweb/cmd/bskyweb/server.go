@@ -29,6 +29,7 @@ import (
 	"github.com/bluesky-social/indigo/util/cliutil"
 	"github.com/bluesky-social/indigo/xrpc"
 	"github.com/bluesky-social/social-app/bskyweb"
+	"golang.org/x/image/font/basicfont"
 
 	"github.com/flosch/pongo2/v6"
 	"github.com/klauspost/compress/gzhttp"
@@ -46,7 +47,8 @@ type Server struct {
 	metricsHttpd *http.Server
 	xrpcc        *xrpc.Client
 	chatXrpcc    *xrpc.Client
-	cfg          *Config
+	cfg           *Config
+	authenticator Authenticator
 
 	ipccClient http.Client
 
@@ -65,6 +67,7 @@ type Config struct {
 	linkHost      string
 	ipccHost      string
 	staticCDNHost string
+	InvitePass    InvitePassConfig
 }
 
 func serve(cctx *cli.Context) error {
@@ -120,6 +123,38 @@ func serve(cctx *cli.Context) error {
 		return err
 	}
 
+	// invite pass config
+	var invitePass InvitePassConfig
+	if v := os.Getenv("INVITE_PASS_TOKEN_SECRET"); v != "" {
+		invitePass.TokenSecret = []byte(v)
+	}
+	if cert, key, wwdr := os.Getenv("APPLE_PASS_CERT_PEM"), os.Getenv("APPLE_PASS_KEY_PEM"), os.Getenv("APPLE_PASS_WWDR_PEM"); cert != "" && key != "" && wwdr != "" {
+		signer, serr := LoadPassSigner([]byte(cert), []byte(key), []byte(wwdr))
+		if serr != nil {
+			slog.Warn("invite pass signer disabled", "err", serr)
+		} else {
+			invitePass.Signer = signer
+			invitePass.TeamID = os.Getenv("APPLE_PASS_TEAM_ID")
+		}
+	}
+	if saJSON, issuer := os.Getenv("GOOGLE_WALLET_SA_JSON"), os.Getenv("GOOGLE_WALLET_ISSUER_ID"); saJSON != "" && issuer != "" {
+		wcfg, werr := LoadWalletConfig([]byte(saJSON), issuer,
+			os.Getenv("GOOGLE_WALLET_HERO_BASE_URL"),
+			os.Getenv("GOOGLE_WALLET_LOGO_URL"))
+		if werr != nil {
+			slog.Warn("google wallet disabled", "err", werr)
+		} else {
+			invitePass.Wallet = wcfg
+		}
+	}
+	stripFS, err := fs.Sub(bskyweb.StaticFS, "static")
+	if err != nil {
+		return fmt.Errorf("static fs sub: %w", err)
+	}
+	invitePass.StripFS = stripFS
+	invitePass.FontFace = basicfont.Face7x13
+	invitePass.BaseURL = "https://bsky.app"
+
 	//
 	// server
 	//
@@ -136,6 +171,7 @@ func serve(cctx *cli.Context) error {
 			linkHost:      linkHost,
 			ipccHost:      ipccHost,
 			staticCDNHost: staticCDNHost,
+			InvitePass:    invitePass,
 		},
 		ipccClient: http.Client{
 			Transport: &http.Transport{
@@ -155,6 +191,7 @@ func serve(cctx *cli.Context) error {
 			},
 		},
 	}
+	server.authenticator = XrpcAuthenticator{BaseHost: appviewHost}
 
 	// Create the HTTP server.
 	server.httpd = &http.Server{
@@ -378,6 +415,9 @@ func serve(cctx *cli.Context) error {
 
 	// ipcc
 	e.GET("/ipcc", server.WebIpCC)
+
+	// invite passes
+	server.RegisterInvitePassRoutes()
 
 	// sitemap handlers
 	e.GET("/sitemap/users.xml.gz", server.handleSitemapUsersIndex)
