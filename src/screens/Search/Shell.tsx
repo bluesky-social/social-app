@@ -198,7 +198,7 @@ export function SearchScreenShell({
     (item: string) => {
       scrollToTopWeb()
       setShowAutocomplete(false)
-      updateSearchHistory(item)
+      updateSearchHistory(makeSearchQuery(item, fixedParams ?? {}))
 
       if (IS_WEB) {
         // @ts-expect-error route is not typesafe
@@ -208,7 +208,7 @@ export function SearchScreenShell({
         navigation.setParams({q: item})
       }
     },
-    [updateSearchHistory, navigation, route],
+    [updateSearchHistory, fixedParams, navigation, route],
   )
 
   const onPressCancelSearch = useCallback(() => {
