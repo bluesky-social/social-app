@@ -15,6 +15,8 @@ export function ClearableDateField({
   value,
   active,
   accessibilityHint,
+  maximumDate = DEFAULT_DATE,
+  minimumDate,
   onConfirm,
   onClear,
 }: {
@@ -22,6 +24,8 @@ export function ClearableDateField({
   value: string
   active: boolean
   accessibilityHint?: string
+  maximumDate?: string
+  minimumDate?: string
   onConfirm: (value: string) => void
   onClear: () => void
 }) {
@@ -39,7 +43,8 @@ export function ClearableDateField({
           comment: 'Placeholder text for a date picker',
         })}
         accessibilityHint={accessibilityHint}
-        maximumDate={DEFAULT_DATE}
+        maximumDate={maximumDate}
+        minimumDate={minimumDate}
         // onChangeDate is required, but activation is driven by onConfirm so
         // that iOS scroll ticks don't mark the field active.
         onChangeDate={() => {}}

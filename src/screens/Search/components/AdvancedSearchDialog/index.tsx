@@ -325,6 +325,8 @@ function DialogInner({
                   message: 'Include posts made since this date',
                   comment: 'Advanced search filter',
                 })}
+                // Can't choose a Since later than an active Until.
+                maximumDate={dateUntilActive ? dateUntil : DEFAULT_DATE}
                 onConfirm={(value: string) => {
                   setDateSince(value)
                   setDateSinceActive(true)
@@ -347,6 +349,8 @@ function DialogInner({
                   message: 'Include posts made until this date',
                   comment: 'Advanced search filter',
                 })}
+                // Can't choose an Until earlier than an active Since.
+                minimumDate={dateSinceActive ? dateSince : undefined}
                 onConfirm={(value: string) => {
                   setDateUntil(value)
                   setDateUntilActive(true)
