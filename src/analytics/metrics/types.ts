@@ -1331,4 +1331,8 @@ export type Events = {
   'invite:followersPromo:press': {}
   // user dismissed the empty-followers promo banner
   'invite:followersPromo:dismiss': {}
+  // user pressed the Add to Wallet button
+  'invite:action:wallet': {
+    platform: Platform['OS']
+  }
 }
