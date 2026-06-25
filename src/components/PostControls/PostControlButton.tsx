@@ -82,6 +82,7 @@ export function PostControlButton({
       onLongPress={handleLongPress}
       style={style}
       hoverStyle={t.atoms.bg_contrast_25}
+      pressStyle={{transform: [{scale: 0.9}]}}
       shape="round"
       color="secondary"
       {...props}
