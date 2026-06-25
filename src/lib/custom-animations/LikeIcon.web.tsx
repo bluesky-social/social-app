@@ -7,6 +7,7 @@ import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
   Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
 } from '#/components/icons/Heart2'
+import {PostControlButtonIcon} from '#/components/PostControls/PostControlButton'
 
 // slower animation for small buttons
 // I cannot explain why it feels better this way, 25ms makes a big difference
@@ -82,12 +83,19 @@ export function AnimatedLikeIcon({
       {isLiked ? (
         // @ts-expect-error is div
         <View ref={likeIconRef}>
-          <HeartIconFilled style={{color: t.palette.pink}} width={size} />
+          <PostControlButtonIcon
+            icon={HeartIconFilled}
+            style={{color: t.palette.pink}}
+          />
         </View>
       ) : (
-        <HeartIconOutline
-          style={[{color: t.palette.contrast_500}, {pointerEvents: 'none'}]}
-          width={size}
+        <PostControlButtonIcon
+          icon={HeartIconOutline}
+          style={[
+            {color: t.palette.contrast_500},
+            // TODO(iLynxcat): why is this here?
+            {pointerEvents: 'none'},
+          ]}
         />
       )}
       <View
