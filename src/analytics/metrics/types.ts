@@ -133,6 +133,7 @@ export type Events = {
       | 'lists'
       | 'saved'
       | 'settings'
+      | 'support'
       | 'menu'
     surface: 'bottomBar' | 'drawer' | 'drawerHeader' | 'topBar' | 'leftNav'
   }

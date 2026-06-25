@@ -58,6 +58,10 @@ import {
   Hashtag_Stroke2_Corner0_Rounded as HashtagIcon,
 } from '#/components/icons/Hashtag'
 import {
+  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilledIcon,
+  Heart2_Stroke2_Corner0_Rounded as HeartIcon,
+} from '#/components/icons/Heart2'
+import {
   HomeOpen_Filled_Corner0_Rounded as HomeFilledIcon,
   HomeOpen_Stoke2_Corner0_Rounded as HomeIcon,
 } from '#/components/icons/HomeOpen'
@@ -754,6 +758,16 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
             icons={{
               inactive: SettingsIcon,
               active: SettingsFilledIcon,
+            }}
+          />
+          <NavItem
+            label={l`Support`}
+            href="/support"
+            navItem="support"
+            minimal={leftNavMinimal}
+            icons={{
+              inactive: HeartIcon,
+              active: HeartFilledIcon,
             }}
           />
 
