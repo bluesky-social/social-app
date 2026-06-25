@@ -34,7 +34,7 @@ type passField struct {
 	Value string `json:"value"`
 }
 
-type storeCardFields struct {
+type passFields struct {
 	HeaderFields    []passField `json:"headerFields"`
 	PrimaryFields   []passField `json:"primaryFields"`
 	SecondaryFields []passField `json:"secondaryFields"`
@@ -59,7 +59,7 @@ type pkPass struct {
 	ForegroundColor     string          `json:"foregroundColor"`
 	LabelColor          string          `json:"labelColor"`
 	BackgroundColor     string          `json:"backgroundColor"`
-	StoreCard           storeCardFields `json:"storeCard"`
+	Generic             passFields      `json:"generic"`
 	Barcodes            []barcode       `json:"barcodes"`
 }
 
@@ -80,18 +80,18 @@ func BuildPassJSON(did, handle, displayName, theme, teamID string) ([]byte, erro
 		TeamIdentifier:     teamID,
 		OrganizationName:   "Bluesky",
 		Description:        "Bluesky invite - " + atHandle,
-		LogoText:           "Bluesky",
+		LogoText:           "",
 		ForegroundColor:    "rgb(255, 255, 255)",
 		LabelColor:         "rgb(255, 255, 255)",
 		BackgroundColor:    ThemeBackgroundRGB(theme),
-		StoreCard: storeCardFields{
+		Generic: passFields{
 			HeaderFields: []passField{
 				{Key: "username", Label: "USERNAME", Value: atHandle},
 			},
-			PrimaryFields: []passField{},
-			SecondaryFields: []passField{
-				{Key: "name", Label: "Member Name", Value: memberName},
+			PrimaryFields: []passField{
+				{Key: "name", Label: "MEMBER NAME", Value: memberName},
 			},
+			SecondaryFields: []passField{},
 			BackFields: []passField{
 				{Key: "about", Label: "About", Value: "Scan the QR code to view this Bluesky profile."},
 				{Key: "url", Label: "Profile URL", Value: profileURL},

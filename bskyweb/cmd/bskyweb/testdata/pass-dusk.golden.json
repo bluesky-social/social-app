@@ -5,11 +5,11 @@
   "teamIdentifier": "TEAMID00",
   "organizationName": "Bluesky",
   "description": "Bluesky invite - @alice.bsky.social",
-  "logoText": "Bluesky",
+  "logoText": "",
   "foregroundColor": "rgb(255, 255, 255)",
   "labelColor": "rgb(255, 255, 255)",
   "backgroundColor": "rgb(177, 90, 162)",
-  "storeCard": {
+  "generic": {
     "headerFields": [
       {
         "key": "username",
@@ -17,14 +17,14 @@
         "value": "@alice.bsky.social"
       }
     ],
-    "primaryFields": [],
-    "secondaryFields": [
+    "primaryFields": [
       {
         "key": "name",
-        "label": "Member Name",
+        "label": "MEMBER NAME",
         "value": "Alice"
       }
     ],
+    "secondaryFields": [],
     "backFields": [
       {
         "key": "about",

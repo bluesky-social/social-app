@@ -198,22 +198,14 @@ func (srv *Server) buildPassAssets(theme, handle string, avatarBytes []byte) ([]
 	logo2, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/logo@2x.png")
 	logo3, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/logo@3x.png")
 
-	// Strip is just the per-theme gradient PNG, served as-is. The pass's
-	// storeCard primaryFields render the handle below the strip, so painting
-	// it again on the image would be redundant. avatarBytes is currently
-	// unused; reserved for a future composite that draws the user's avatar.
+	// Generic passes do not use a strip image. The whole pass renders as
+	// backgroundColor. avatarBytes is currently unused; reserved for a future
+	// design that adds a thumbnail.
 	_ = avatarBytes
-	strip1Bytes, err := readFS(srv.cfg.InvitePass.StripFS, "passes/strip-"+theme+".png")
-	if err != nil {
-		return nil, fmt.Errorf("strip@1x: %w", err)
-	}
-	strip2Bytes, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/strip-"+theme+"@2x.png")
-	strip3Bytes, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/strip-"+theme+"@3x.png")
 
 	assets := []PassAsset{
 		{Name: "icon.png", Data: icon1},
 		{Name: "logo.png", Data: logo1},
-		{Name: "strip.png", Data: strip1Bytes},
 	}
 	if len(icon2) > 0 {
 		assets = append(assets, PassAsset{Name: "icon@2x.png", Data: icon2})
@@ -226,12 +218,6 @@ func (srv *Server) buildPassAssets(theme, handle string, avatarBytes []byte) ([]
 	}
 	if len(logo3) > 0 {
 		assets = append(assets, PassAsset{Name: "logo@3x.png", Data: logo3})
-	}
-	if len(strip2Bytes) > 0 {
-		assets = append(assets, PassAsset{Name: "strip@2x.png", Data: strip2Bytes})
-	}
-	if len(strip3Bytes) > 0 {
-		assets = append(assets, PassAsset{Name: "strip@3x.png", Data: strip3Bytes})
 	}
 	return assets, nil
 }
