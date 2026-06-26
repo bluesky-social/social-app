@@ -214,7 +214,6 @@ function PostInner({
               moderation={moderation}
               timestamp={post.indexedAt}
               postHref={itemHref}
-              postUri={post.uri}
             />
             {replyAuthorDid !== '' && (
               <PostRepliedTo parentAuthor={replyAuthorDid} />

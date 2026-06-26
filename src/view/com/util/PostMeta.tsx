@@ -14,10 +14,6 @@ import {niceDate} from '#/lib/strings/time'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {unstableCacheProfileView} from '#/state/queries/profile'
 import {atoms as a, useTheme, web} from '#/alf'
-import {
-  CommunityOnlyBadge,
-  isCommunityPostUri,
-} from '#/components/CommunityOnlyBadge'
 import {WebOnlyInlineLinkText} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -31,7 +27,6 @@ interface PostMetaOpts {
   author: AppBskyActorDefs.ProfileViewBasic
   moderation: ModerationDecision | undefined
   postHref: string
-  postUri?: string
   timestamp: string
   linkDisabled?: boolean
   showAvatar?: boolean
@@ -172,11 +167,6 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           )}
         </TimeElapsed>
       </View>
-      {isCommunityPostUri(opts.postUri) && (
-        <View style={[a.ml_auto, a.self_center]}>
-          <CommunityOnlyBadge />
-        </View>
-      )}
     </View>
   )
 }

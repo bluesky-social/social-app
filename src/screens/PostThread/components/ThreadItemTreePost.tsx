@@ -335,7 +335,6 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                 moderation={moderation}
                 timestamp={post.indexedAt}
                 postHref={postHref}
-                postUri={post.uri}
                 avatarSize={TREE_AVI_WIDTH}
                 style={[a.pb_0]}
                 showAvatar
