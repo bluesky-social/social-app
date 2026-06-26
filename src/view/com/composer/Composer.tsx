@@ -1315,6 +1315,8 @@ export const ComposePost = ({
         thread={composerState.thread}
         dispatch={composerDispatch}
         bottomBarAnimatedStyle={bottomBarAnimatedStyle}
+        isForcedBlackskyOnly={isForcedBlackskyOnly}
+        setBlackskyOnlyDefault={setBlackskyOnlyDefault}
       />
       <ComposerFooter
         post={activePost}
@@ -1967,12 +1969,16 @@ function ComposerPills({
   post,
   dispatch,
   bottomBarAnimatedStyle,
+  isForcedBlackskyOnly,
+  setBlackskyOnlyDefault,
 }: {
   isReply: boolean
   thread: ThreadDraft
   post: PostDraft
   dispatch: (action: ComposerAction) => void
   bottomBarAnimatedStyle: StyleProp<ViewStyle>
+  isForcedBlackskyOnly: boolean
+  setBlackskyOnlyDefault: (v: boolean) => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -2030,6 +2036,16 @@ function ComposerPills({
             <Toggle.LabelText>
               <Trans>Blacksky Only</Trans>
             </Toggle.LabelText>
+            {isForcedBlackskyOnly && (
+              <Text
+                style={[
+                  a.text_xs,
+                  a.italic,
+                  {color: t.atoms.text_contrast_low.color},
+                ]}>
+                <Trans>Required</Trans>
+              </Text>
+            )}
             <Toggle.Switch />
           </Toggle.Item>
         )}
