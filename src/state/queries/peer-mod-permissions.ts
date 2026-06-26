@@ -42,9 +42,7 @@ export function useMyPeerModPermissions() {
   })
 }
 
-// Subject-side peer-mod check used to render a badge on any profile.
-// Mirrors the appview's PEER_MOD_DIDS env; replace with a public list endpoint
-// once we ship one.
+// Mirrors the appview's PEER_MOD_DIDS env; flip to a public list endpoint when one exists.
 export function isPeerModDid(did: string | undefined): boolean {
   return !!did && did in PEER_MOD_DIDS
 }
