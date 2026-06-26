@@ -799,6 +799,12 @@ export type Events = {
     position: number
   }
 
+  'search:advanced:press': {}
+
+  'search:shareLink:press': {}
+
+  'search:addFilter:press': {}
+
   'progressGuide:hide': {}
   'progressGuide:followDialog:open': {}
 

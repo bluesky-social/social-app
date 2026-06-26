@@ -15,6 +15,7 @@ import * as TextField from '#/components/forms/TextField'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSliderIcon} from '#/components/icons/SettingsSlider'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {SearchLanguageDropdown} from '../SearchLanguageDropdown'
 import {ClearableDateField, DEFAULT_DATE} from './ClearableDateField'
@@ -44,6 +45,7 @@ export function AdvancedSearchDialog({
   filters: SearchFilters
   onSubmit: (q: string, filters: SearchFilters) => void
 }) {
+  const ax = useAnalytics()
   const {t: l} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogControl()
@@ -62,7 +64,10 @@ export function AdvancedSearchDialog({
           size="small"
           color="secondary"
           style={native([a.py_sm, a.px_sm])}
-          onPress={control.open}>
+          onPress={() => {
+            ax.metric('search:advanced:press', {})
+            control.open()
+          }}>
           <ButtonIcon icon={SettingsSliderIcon} />
           <ButtonText>
             <Trans>Advanced search</Trans>
@@ -111,6 +116,7 @@ function DialogInner({
   filters: SearchFilters
   onSubmit: (q: string, filters: SearchFilters) => void
 }) {
+  const ax = useAnalytics()
   const t = useTheme()
   const {t: l} = useLingui()
   const {gtTablet} = useBreakpoints()
@@ -147,6 +153,7 @@ function DialogInner({
   function addFilter() {
     if (filters.length >= MAX_FILTERS) return
     setFilters(prev => [makeFilter('authors'), ...prev])
+    ax.metric('search:addFilter:press', {})
     // Wait for the new block to render, then bring the section into view.
     requestAnimationFrame(() => {
       if (IS_WEB) {

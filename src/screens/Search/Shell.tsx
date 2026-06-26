@@ -429,11 +429,12 @@ export function SearchScreenShell({
     for (const [key, value] of Object.entries(definedFilterParams(filters))) {
       url.searchParams.set(key, value)
     }
+    ax.metric('search:shareLink:press', {})
     setStringAsync(url.toString()).then(
       () => Toast.show(l`Copied link to clipboard`, {type: 'success'}),
       () => Toast.show(l`Failed to copy link`, {type: 'error'}),
     )
-  }, [query, filters, l])
+  }, [ax, query, filters, l])
 
   const showHeader = !gtMobile || navButton !== 'menu'
 
