@@ -394,6 +394,9 @@ async function postCommunity(
     }
   }
 
+  void queryClient.invalidateQueries({queryKey: ['community-timeline']})
+  void queryClient.invalidateQueries({queryKey: ['community-feed']})
+
   return {uris}
 }
 

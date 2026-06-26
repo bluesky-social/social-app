@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useRef} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {ActivityIndicator, type ListRenderItemInfo, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -51,12 +51,32 @@ export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
 
   const hydratedPosts = useCommunityFeedHydrated(feedItems)
 
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const onRefresh = useCallback(async () => {
+    setIsRefreshing(true)
+    try {
+      await refetch()
+    } finally {
+      setIsRefreshing(false)
+    }
+  }, [refetch])
+
+  useEffect(() => {
+    if (isPageFocused) void refetch()
+  }, [isPageFocused, refetch])
+
+  useEffect(() => {
+    if (!isPageFocused) return
+    const id = setInterval(() => void refetch(), 60_000)
+    return () => clearInterval(id)
+  }, [isPageFocused, refetch])
+
   const _onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
       animated: IS_NATIVE,
       offset: -headerOffset,
     })
-    refetch()
+    void refetch()
   }, [scrollElRef, headerOffset, refetch])
 
   const renderItem = useCallback(
@@ -157,6 +177,8 @@ export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
           onEndReachedThreshold={0.6}
           headerOffset={headerOffset}
           contentContainerStyle={{paddingBottom: 100}}
+          refreshing={isRefreshing}
+          onRefresh={onRefresh}
         />
       </MainScrollProvider>
       {hasSession && (

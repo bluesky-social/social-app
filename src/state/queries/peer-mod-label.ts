@@ -2,6 +2,11 @@ import {useCallback} from 'react'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {communityXrpc} from '#/lib/api/community'
+import {
+  COMMUNITY_POST_RQKEY,
+  RQKEY_ROOT as COMMUNITY_FEED_RQKEY_ROOT,
+  TIMELINE_RQKEY,
+} from '#/state/queries/community-feed'
 import {useAgent} from '#/state/session'
 import {BLACKSKY_LABELER} from '#/state/session/additional-moderation-authorities'
 
@@ -123,6 +128,13 @@ function useInvalidateLabelState() {
     (subjectUri: string) => {
       void queryClient.invalidateQueries({queryKey: myLabelsRQKey(subjectUri)})
       void queryClient.invalidateQueries({queryKey: postLabelsRQKey(subjectUri)})
+      void queryClient.invalidateQueries({
+        queryKey: COMMUNITY_POST_RQKEY(subjectUri),
+      })
+      void queryClient.invalidateQueries({queryKey: TIMELINE_RQKEY()})
+      void queryClient.invalidateQueries({
+        queryKey: [COMMUNITY_FEED_RQKEY_ROOT],
+      })
     },
     [queryClient],
   )
