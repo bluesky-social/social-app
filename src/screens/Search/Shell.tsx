@@ -45,7 +45,7 @@ import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
-import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
+import {ArrowShareRight_Stroke2_Corner2_Rounded as ShareIcon} from '#/components/icons/ArrowShareRight'
 import * as Layout from '#/components/Layout'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
@@ -550,7 +550,7 @@ export function SearchScreenShell({
                     shape="round"
                     label={l`Share this search`}
                     onPress={onShareSearch}>
-                    <ButtonIcon icon={ChainLinkIcon} />
+                    <ButtonIcon icon={ShareIcon} />
                   </Button>
                 </View>
               ) : null}
