@@ -125,24 +125,30 @@ function SearchHistoryItem({
   const filterCount = countActiveFilters(filters)
 
   return (
-    <View style={[a.flex_row, a.align_center]}>
+    <View style={[a.flex_row, a.gap_sm, a.align_center]}>
       <Pressable
         accessibilityRole="button"
         onPress={onPress}
         hitSlop={HITSLOP_10}
         style={[a.flex_1, a.py_sm, a.flex_row, a.align_center, a.gap_sm]}>
-        <Text style={[a.text_md]} numberOfLines={1}>
+        <Text style={[a.text_md, a.flex_shrink]} numberOfLines={1}>
           {q}
         </Text>
-        {filterCount > 0 && (
+        {filterCount > 0 ? (
           <View
-            style={[a.rounded_sm, a.px_sm, a.py_2xs, t.atoms.bg_contrast_25]}>
+            style={[
+              a.flex_shrink_0,
+              a.rounded_sm,
+              a.px_sm,
+              a.py_2xs,
+              t.atoms.bg_contrast_25,
+            ]}>
             <Text
               style={[a.text_xs, a.font_medium, t.atoms.text_contrast_medium]}>
               <Plural value={filterCount} one="+# filter" other="+# filters" />
             </Text>
           </View>
-        )}
+        ) : null}
       </Pressable>
       <Button
         label={l`Remove ${q}`}
