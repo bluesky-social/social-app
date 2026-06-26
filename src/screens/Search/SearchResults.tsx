@@ -200,8 +200,13 @@ function NoResultsText({
   hasFilters?: boolean
   query: string
 }) {
+  const ax = useAnalytics()
   const t = useTheme()
   const {t: l} = useLingui()
+
+  const searchV2Enabled = ax.features.enabled(ax.features.SearchV2Enable)
+  const advancedSearchV2Enabled =
+    searchV2Enabled && ax.features.enabled(ax.features.AdvancedSearchV2Enable)
 
   return (
     <>
@@ -248,19 +253,35 @@ function NoResultsText({
           a.leading_snug,
           t.atoms.text_contrast_high,
         ]}>
-        <Trans context="english-only-resource">
-          Learn more about{' '}
-          <InlineLinkText
-            label={l({
-              message: 'Read about how to use advanced search filters',
-              context: 'english-only-resource',
-            })}
-            to={urls.website.blog.searchTipsAndTricks}
-            style={[a.text_md, a.leading_snug]}>
-            how to use advanced search
-          </InlineLinkText>
-          .
-        </Trans>
+        {advancedSearchV2Enabled ? (
+          <Trans context="english-only-resource">
+            Learn more about{' '}
+            <InlineLinkText
+              label={l({
+                message: 'Read about how to use advanced search filters',
+                context: 'english-only-resource',
+              })}
+              to={urls.website.blog.searchTipsAndTricks}
+              style={[a.text_md, a.leading_snug]}>
+              how to use advanced search
+            </InlineLinkText>
+            .
+          </Trans>
+        ) : (
+          <Trans context="english-only-resource">
+            Learn more about{' '}
+            <InlineLinkText
+              label={l({
+                message: 'Read about how to use search filters',
+                context: 'english-only-resource',
+              })}
+              to={urls.website.blog.searchTipsAndTricks}
+              style={[a.text_md, a.leading_snug]}>
+              how to use search filters
+            </InlineLinkText>
+            .
+          </Trans>
+        )}
       </Text>
     </>
   )
