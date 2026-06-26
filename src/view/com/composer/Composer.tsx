@@ -1999,6 +1999,7 @@ function ComposerPills({
     <Animated.View
       style={[a.flex_row, a.p_sm, t.atoms.bg, bottomBarAnimatedStyle]}>
       <ScrollView
+        style={[a.flex_1]}
         contentContainerStyle={[a.gap_sm]}
         horizontal={true}
         bounces={false}
@@ -2038,7 +2039,6 @@ function ComposerPills({
             <Toggle.Switch />
           </Toggle.Item>
         )}
-        {thread.blackskyOnly && <CommunityOnlyBadge />}
         {hasMedia || hasLink ? (
           <LabelsBtn
             labels={post.labels}
@@ -2055,6 +2055,11 @@ function ComposerPills({
           />
         ) : null}
       </ScrollView>
+      {thread.blackskyOnly && (
+        <View style={[a.justify_end, a.pl_sm, a.align_end]}>
+          <CommunityOnlyBadge />
+        </View>
+      )}
     </Animated.View>
   )
 }
