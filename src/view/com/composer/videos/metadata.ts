@@ -16,7 +16,11 @@ export async function getVideoMetadata(
     mimeType: extToMime(metadata.extension),
     width: metadata.width,
     height: metadata.height,
-    duration: metadata.duration,
+    /*
+     * react-native-compressor reports seconds; the rest of the app treats
+     * `ImagePickerAsset.duration` as milliseconds (matching expo-image-picker).
+     */
+    duration: metadata.duration * 1000,
   }
 }
 
