@@ -6,6 +6,15 @@ import {type SearchFilters} from '#/screens/Search/searchParams'
 
 export type RepliesFilter = 'all' | 'none' | 'only'
 
+// Media filter is mutually exclusive: a post matches at most one of these. It
+// serializes into the separate media/video sibling params (only one is ever
+// set at a time).
+export type MediaFilter = 'all' | 'media' | 'video'
+
+// Whether to limit results to authors the user follows. Serializes into the
+// `following` sibling param ('following' -> following:true, everyone -> unset).
+export type FollowingFilter = 'everyone' | 'following'
+
 export type FilterField = 'authors' | 'mentions' | 'domains' | 'urls' | 'tags'
 
 export const FILTER_FIELDS: FilterField[] = [
@@ -72,9 +81,8 @@ export type DialogState = {
   negatedWords: string
   language: string
   replies: RepliesFilter
-  hasMedia: boolean
-  hasVideo: boolean
-  following: boolean
+  media: MediaFilter
+  following: FollowingFilter
   since: string
   until: string
   filters: AdvancedFilter[]
@@ -230,6 +238,10 @@ export function parseAdvancedSearch(
   if (filters.replies === 'none') replies = 'none'
   else if (filters.replies === 'only') replies = 'only'
 
+  let media: MediaFilter = 'all'
+  if (filters.media === 'true') media = 'media'
+  else if (filters.video === 'true') media = 'video'
+
   const lang = filters.lang ?? lifted.lang ?? ''
   const since = filters.since ?? lifted.since
   const until = filters.until ?? lifted.until
@@ -238,9 +250,8 @@ export function parseAdvancedSearch(
     ...freeText,
     language: lang,
     replies,
-    hasMedia: filters.media === 'true',
-    hasVideo: filters.video === 'true',
-    following: filters.following === 'true',
+    media,
+    following: filters.following === 'true' ? 'following' : 'everyone',
     since: since && isValidDate(since) ? since : '',
     until: until && isValidDate(until) ? until : '',
     filters: filterRows,
@@ -257,9 +268,8 @@ export function serializeAdvancedSearch(state: {
   negatedWords: string
   language: string
   replies: RepliesFilter
-  hasMedia: boolean
-  hasVideo: boolean
-  following: boolean
+  media: MediaFilter
+  following: FollowingFilter
   dateSince: string
   dateSinceActive: boolean
   dateUntil: string
@@ -336,9 +346,9 @@ export function serializeAdvancedSearch(state: {
   if (state.dateUntilActive && state.dateUntil) filters.until = state.dateUntil
   if (state.replies === 'none') filters.replies = 'none'
   if (state.replies === 'only') filters.replies = 'only'
-  if (state.hasMedia) filters.media = 'true'
-  if (state.hasVideo) filters.video = 'true'
-  if (state.following) filters.following = 'true'
+  if (state.media === 'media') filters.media = 'true'
+  else if (state.media === 'video') filters.video = 'true'
+  if (state.following === 'following') filters.following = 'true'
 
   return {q: parts.join(' '), filters}
 }

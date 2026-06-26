@@ -14,9 +14,8 @@ const emptySerializeState = {
   negatedWords: '',
   language: '',
   replies: 'all' as const,
-  hasMedia: false,
-  hasVideo: false,
-  following: false,
+  media: 'all' as const,
+  following: 'everyone' as const,
   dateSince: '',
   dateSinceActive: false,
   dateUntil: '',
@@ -45,7 +44,7 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
     expect(state.negatedWords).toBe('spam')
     expect(state.language).toBe('en')
     expect(state.since).toBe('2024-01-01')
-    expect(state.hasMedia).toBe(true)
+    expect(state.media).toBe('media')
     expect(state.replies).toBe('none')
     // Handle fields (authors/mentions) get a trailing space on parse so the
     // typeahead stays closed until the user types; it's trimmed on serialize.
@@ -99,7 +98,6 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
       since: '2024-01-01',
       until: '2024-02-01',
       media: 'true',
-      video: 'true',
       following: 'true',
       replies: 'only',
     }
@@ -112,8 +110,7 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
       negatedWords: state.negatedWords,
       language: state.language,
       replies: state.replies,
-      hasMedia: state.hasMedia,
-      hasVideo: state.hasVideo,
+      media: state.media,
       following: state.following,
       dateSince: state.since,
       dateSinceActive: !!state.since,
@@ -124,6 +121,43 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
 
     expect(out.q).toBe(q)
     expect(out.filters).toEqual(filters)
+  })
+
+  it(`maps the video media filter to the video param on serialize`, () => {
+    const out = serializeAdvancedSearch({
+      ...emptySerializeState,
+      media: 'video',
+    })
+    expect(out.filters.video).toBe('true')
+    expect(out.filters.media).toBeUndefined()
+  })
+
+  it(`parses the video param into the video media filter`, () => {
+    const state = parseAdvancedSearch('', {video: 'true'})
+    expect(state.media).toBe('video')
+  })
+
+  it(`maps the following filter to the following param on serialize`, () => {
+    const out = serializeAdvancedSearch({
+      ...emptySerializeState,
+      following: 'following',
+    })
+    expect(out.filters.following).toBe('true')
+  })
+
+  it(`leaves the following param unset for everyone`, () => {
+    const out = serializeAdvancedSearch({
+      ...emptySerializeState,
+      following: 'everyone',
+    })
+    expect(out.filters.following).toBeUndefined()
+  })
+
+  it(`parses the following param into the following filter`, () => {
+    expect(parseAdvancedSearch('', {following: 'true'}).following).toBe(
+      'following',
+    )
+    expect(parseAdvancedSearch('', {}).following).toBe('everyone')
   })
 
   it(`strips redundant markers from filter values on serialize`, () => {
@@ -143,9 +177,8 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
       negatedWords: '',
       language: '',
       replies: 'all',
-      hasMedia: false,
-      hasVideo: false,
-      following: false,
+      media: 'all',
+      following: 'everyone',
       dateSince: '',
       dateSinceActive: false,
       dateUntil: '',

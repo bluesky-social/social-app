@@ -20,11 +20,14 @@ import {SearchLanguageDropdown} from '../SearchLanguageDropdown'
 import {ClearableDateField, DEFAULT_DATE} from './ClearableDateField'
 import {ClearableInput} from './ClearableInput'
 import {FilterBlock} from './FilterBlock'
+import {FollowingDropdown} from './FollowingDropdown'
+import {MediaDropdown} from './MediaDropdown'
 import {RepliesDropdown} from './RepliesDropdown'
-import {ToggleRow} from './ToggleRow'
 import {
   type AdvancedFilter,
+  type FollowingFilter,
   makeFilter,
+  type MediaFilter,
   parseAdvancedSearch,
   type RepliesFilter,
   serializeAdvancedSearch,
@@ -125,10 +128,9 @@ function DialogInner({
   const [negatedWords, setNegatedWords] = useState(parsed.negatedWords)
   const [language, setLanguage] = useState(parsed.language)
 
-  const [hasMedia, setHasMedia] = useState(parsed.hasMedia)
-  const [hasVideo, setHasVideo] = useState(parsed.hasVideo)
+  const [media, setMedia] = useState<MediaFilter>(parsed.media)
   const [replies, setReplies] = useState<RepliesFilter>(parsed.replies)
-  const [following, setFollowing] = useState(parsed.following)
+  const [following, setFollowing] = useState<FollowingFilter>(parsed.following)
 
   // The date picker requires a valid date, so these always hold one. The
   // accompanying `active` flags track whether the date is actually part of the
@@ -182,8 +184,7 @@ function DialogInner({
       negatedWords,
       language,
       replies,
-      hasMedia,
-      hasVideo,
+      media,
       following,
       dateSince,
       dateSinceActive,
@@ -391,45 +392,46 @@ function DialogInner({
                 t.atoms.text_contrast_medium,
                 a.mb_sm,
               ]}>
+              <Trans>Media</Trans>
+            </Text>
+            <View style={[a.flex_row]}>
+              <MediaDropdown value={media} onChange={setMedia} />
+            </View>
+          </View>
+        </View>
+
+        <View style={[a.flex_row, a.gap_lg]}>
+          <View style={[a.flex_1]}>
+            <Text
+              style={[
+                a.text_sm,
+                a.font_medium,
+                t.atoms.text_contrast_medium,
+                a.mb_sm,
+              ]}>
               <Trans>Include</Trans>
             </Text>
             <View style={[a.flex_row]}>
               <RepliesDropdown value={replies} onChange={setReplies} />
             </View>
           </View>
+          <View style={[a.flex_1]}>
+            <Text
+              style={[
+                a.text_sm,
+                a.font_medium,
+                t.atoms.text_contrast_medium,
+                a.mb_sm,
+              ]}>
+              <Trans>From</Trans>
+            </Text>
+            <View style={[a.flex_row]}>
+              <FollowingDropdown value={following} onChange={setFollowing} />
+            </View>
+          </View>
         </View>
 
         <View ref={filtersSectionRef} style={[a.gap_md]}>
-          <Text style={[a.font_bold, a.text_md]}>
-            <Trans>Additional filters</Trans>
-          </Text>
-          <ToggleRow
-            name="has_media"
-            label={l({
-              message: 'Only posts with images',
-              comment: 'Advanced search filter',
-            })}
-            value={hasMedia}
-            onChange={setHasMedia}
-          />
-          <ToggleRow
-            name="has_video"
-            label={l({
-              message: 'Only posts with video',
-              comment: 'Advanced search filter',
-            })}
-            value={hasVideo}
-            onChange={setHasVideo}
-          />
-          <ToggleRow
-            name="following"
-            label={l({
-              message: 'Only posts from people you follow',
-              comment: 'Advanced search filter',
-            })}
-            value={following}
-            onChange={setFollowing}
-          />
           <Button
             label={l`Add an additional search filter`}
             size="small"
