@@ -2015,11 +2015,12 @@ function ComposerPills({
             style={bottomBarAnimatedStyle}
           />
         )}
-        {isReply || isForcedBlackskyOnly ? null : (
+        {isReply && !isForcedBlackskyOnly ? null : (
           <Toggle.Item
             name="blacksky_only"
             label={l`Blacksky Only`}
             value={thread.blackskyOnly}
+            disabled={isForcedBlackskyOnly}
             onChange={() => {
               const next = !thread.blackskyOnly
               dispatch({type: 'toggle_blacksky_only'})
