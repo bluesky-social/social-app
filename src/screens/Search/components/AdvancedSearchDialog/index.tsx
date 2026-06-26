@@ -372,7 +372,7 @@ function DialogInner({
           </View>
         </View>
 
-        <View style={[a.flex_row, a.gap_lg]}>
+        <View style={[twoColumn ? a.flex_row : a.flex_col, a.gap_lg]}>
           <View style={[a.flex_1]}>
             <Text
               style={[
@@ -407,7 +407,7 @@ function DialogInner({
           </View>
         </View>
 
-        <View style={[a.flex_row, a.gap_lg]}>
+        <View style={[twoColumn ? a.flex_row : a.flex_col, a.gap_lg]}>
           <View style={[a.flex_1]}>
             <Text
               style={[
