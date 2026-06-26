@@ -4,19 +4,12 @@
   "serialNumber": "did:plc:abc123-day-v1",
   "teamIdentifier": "TEAMID00",
   "organizationName": "Bluesky",
-  "description": "Bluesky profile - @alice.bsky.social",
-  "logoText": "",
-  "foregroundColor": "rgb(255, 255, 255)",
-  "labelColor": "rgb(255, 255, 255)",
-  "backgroundColor": "rgb(117, 175, 255)",
+  "description": "Atmosphere Account",
+  "foregroundColor": "rgb(255,255,255)",
+  "labelColor": "rgb(255,255,255)",
+  "backgroundColor": "rgb(44,103,244)",
   "generic": {
-    "headerFields": [
-      {
-        "key": "pds",
-        "label": "PDS",
-        "value": "alice.host.bsky.network"
-      }
-    ],
+    "headerFields": [],
     "primaryFields": [
       {
         "key": "handle",
@@ -31,28 +24,20 @@
         "value": "2026-01-25T23:59:05Z",
         "dateStyle": "PKDateStyleShort"
       }
-    ],
-    "backFields": [
-      {
-        "key": "about",
-        "label": "About",
-        "value": "Scan the QR code to view this Bluesky profile."
-      },
-      {
-        "key": "url",
-        "label": "Profile URL",
-        "value": "https://bsky.app/profile/alice.bsky.social"
-      }
     ]
   },
   "posterGeneric": {
-    "headerFields": [
+    "auxiliaryFields": [],
+    "backFields": [],
+    "footerFields": [
       {
-        "key": "pds",
-        "label": "PDS",
-        "value": "alice.host.bsky.network"
+        "key": "did",
+        "label": "DID",
+        "value": "did:plc:abc123",
+        "textAlignment": "PKTextAlignmentNatural"
       }
     ],
+    "headerFields": [],
     "primaryFields": [
       {
         "key": "handle",
@@ -66,21 +51,7 @@
         "dateStyle": "PKDateStyleShort"
       }
     ],
-    "secondaryFields": [],
-    "auxiliaryFields": [],
-    "footerFields": [],
-    "backFields": [
-      {
-        "key": "about",
-        "label": "About",
-        "value": "Scan the QR code to view this Bluesky profile."
-      },
-      {
-        "key": "url",
-        "label": "Profile URL",
-        "value": "https://bsky.app/profile/alice.bsky.social"
-      }
-    ]
+    "secondaryFields": []
   },
   "suppressHeaderDarkening": false,
   "useAutomaticColors": false,

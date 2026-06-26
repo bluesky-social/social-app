@@ -30,30 +30,32 @@ func ThemeBackgroundRGB(theme string) string {
 }
 
 type passField struct {
-	Key       string `json:"key"`
-	Label     string `json:"label"`
-	Value     string `json:"value"`
-	DateStyle string `json:"dateStyle,omitempty"`
+	Key           string `json:"key"`
+	Label         string `json:"label"`
+	Value         string `json:"value"`
+	DateStyle     string `json:"dateStyle,omitempty"`
+	TextAlignment string `json:"textAlignment,omitempty"`
 }
 
-// passFields is the iOS <= 26 storeCard/generic layout: header, primary,
-// secondary, back.
-type passFields struct {
+// genericFields is the iOS <= 26 fallback layout that Pass Designer produces
+// in the `generic` block. Notably no backFields - Pass Designer omits that
+// key in this block.
+type genericFields struct {
 	HeaderFields    []passField `json:"headerFields"`
 	PrimaryFields   []passField `json:"primaryFields"`
 	SecondaryFields []passField `json:"secondaryFields"`
-	BackFields      []passField `json:"backFields"`
 }
 
-// posterFields is the iOS 27 layout used by Pass Designer. Adds auxiliary
-// and footer field slots that the classic layout does not have.
+// posterFields is the iOS 27+ layout in the `posterGeneric` block. All six
+// field slots present, empty arrays where not used (matches Pass Designer's
+// output literally).
 type posterFields struct {
+	AuxiliaryFields []passField `json:"auxiliaryFields"`
+	BackFields      []passField `json:"backFields"`
+	FooterFields    []passField `json:"footerFields"`
 	HeaderFields    []passField `json:"headerFields"`
 	PrimaryFields   []passField `json:"primaryFields"`
 	SecondaryFields []passField `json:"secondaryFields"`
-	AuxiliaryFields []passField `json:"auxiliaryFields"`
-	FooterFields    []passField `json:"footerFields"`
-	BackFields      []passField `json:"backFields"`
 }
 
 type barcode struct {
@@ -64,62 +66,46 @@ type barcode struct {
 }
 
 type pkPass struct {
-	FormatVersion           int          `json:"formatVersion"`
-	PassTypeIdentifier      string       `json:"passTypeIdentifier"`
-	SerialNumber            string       `json:"serialNumber"`
-	TeamIdentifier          string       `json:"teamIdentifier"`
-	OrganizationName        string       `json:"organizationName"`
-	Description             string       `json:"description"`
-	LogoText                string       `json:"logoText"`
-	ForegroundColor         string       `json:"foregroundColor"`
-	LabelColor              string       `json:"labelColor"`
-	BackgroundColor         string       `json:"backgroundColor"`
-	Generic                 passFields   `json:"generic"`
-	PosterGeneric           posterFields `json:"posterGeneric"`
-	SuppressHeaderDarkening bool         `json:"suppressHeaderDarkening"`
-	UseAutomaticColors      bool         `json:"useAutomaticColors"`
-	Barcodes                []barcode    `json:"barcodes"`
+	FormatVersion           int           `json:"formatVersion"`
+	PassTypeIdentifier      string        `json:"passTypeIdentifier"`
+	SerialNumber            string        `json:"serialNumber"`
+	TeamIdentifier          string        `json:"teamIdentifier"`
+	OrganizationName        string        `json:"organizationName"`
+	Description             string        `json:"description"`
+	ForegroundColor         string        `json:"foregroundColor"`
+	LabelColor              string        `json:"labelColor"`
+	BackgroundColor         string        `json:"backgroundColor"`
+	Generic                 genericFields `json:"generic"`
+	PosterGeneric           posterFields  `json:"posterGeneric"`
+	SuppressHeaderDarkening bool          `json:"suppressHeaderDarkening"`
+	UseAutomaticColors      bool          `json:"useAutomaticColors"`
+	Barcodes                []barcode     `json:"barcodes"`
 }
 
 const passTypeIdentifier = "pass.xyz.blueskyweb.app"
 
-// BuildPassJSON builds the pkpass JSON for both the iOS <= 26 fallback layout
-// (`generic` block) and the iOS 27 layout (`posterGeneric` block). The two
-// blocks describe the same fields in the layouts each iOS version expects:
-// the user sees the poster layout on iOS 27+ and the legacy layout below that.
+// BuildPassJSON builds the pkpass JSON matching the Pass Designer-exported
+// layout literally: `generic` has handle (primary) + member-since (secondary);
+// `posterGeneric` adds DID as a footer field and stacks handle + member-since
+// in primaryFields.
 //
-// pdsHost is the hostname extracted from the user's DID document
-// serviceEndpoint (e.g. "suillus.us-west.host.bsky.network").
-// createdAt is the user's profile record creation time, used as a rough
-// stand-in for account creation.
+// pdsHost and displayName are currently unused - the design landed without
+// them - but their plumbing is retained in callers for a possible future
+// design. The token still carries pdsHost.
 func BuildPassJSON(did, handle, displayName, pdsHost, theme, teamID string, createdAt time.Time) ([]byte, error) {
+	_ = displayName
+	_ = pdsHost
+	_ = theme
 	theme = CoerceTheme(theme)
 	profileURL := "https://bsky.app/profile/" + handle
-	atHandle := "@" + handle
-	memberName := displayName
-	if memberName == "" {
-		memberName = atHandle
-	}
-	if pdsHost == "" {
-		pdsHost = "bsky.social"
-	}
 	createdAtISO := ""
 	if !createdAt.IsZero() {
 		createdAtISO = createdAt.UTC().Format(time.RFC3339)
 	}
 
-	// avoid an unused variable when displayName is empty - we keep memberName
-	// computed for a possible future design, but the current layout uses
-	// handle directly.
-	_ = memberName
-
-	pdsField := passField{Key: "pds", Label: "PDS", Value: pdsHost}
 	handleField := passField{Key: "handle", Label: "Handle", Value: handle}
 	sinceField := passField{Key: "since", Label: "Member Since", Value: createdAtISO, DateStyle: "PKDateStyleShort"}
-	backFields := []passField{
-		{Key: "about", Label: "About", Value: "Scan the QR code to view this Bluesky profile."},
-		{Key: "url", Label: "Profile URL", Value: profileURL},
-	}
+	didField := passField{Key: "did", Label: "DID", Value: did, TextAlignment: "PKTextAlignmentNatural"}
 
 	p := pkPass{
 		FormatVersion:      1,
@@ -127,29 +113,24 @@ func BuildPassJSON(did, handle, displayName, pdsHost, theme, teamID string, crea
 		SerialNumber:       did + "-" + theme + "-v1",
 		TeamIdentifier:     teamID,
 		OrganizationName:   "Bluesky",
-		Description:        "Bluesky profile - " + atHandle,
-		// logoText omitted - the logo image already carries the "Bluesky"
-		// wordmark; setting both would render the brand name twice.
-		LogoText:        "",
-		ForegroundColor: "rgb(255, 255, 255)",
-		LabelColor:      "rgb(255, 255, 255)",
-		BackgroundColor: ThemeBackgroundRGB(theme),
-		// iOS <= 26 fallback: handle as primary, since as secondary (stacked).
-		Generic: passFields{
-			HeaderFields:    []passField{pdsField},
+		Description:        "Atmosphere Account",
+		ForegroundColor:    "rgb(255,255,255)",
+		LabelColor:         "rgb(255,255,255)",
+		// Matches Pass Designer's exported backgroundColor. Theme parameter
+		// kept in the signature for the URL/serial but no longer affects color.
+		BackgroundColor: "rgb(44,103,244)",
+		Generic: genericFields{
+			HeaderFields:    []passField{},
 			PrimaryFields:   []passField{handleField},
 			SecondaryFields: []passField{sinceField},
-			BackFields:      backFields,
 		},
-		// iOS 27+: handle and since side-by-side in primaryFields, matching
-		// what Pass Designer exports.
 		PosterGeneric: posterFields{
-			HeaderFields:    []passField{pdsField},
+			AuxiliaryFields: []passField{},
+			BackFields:      []passField{},
+			FooterFields:    []passField{didField},
+			HeaderFields:    []passField{},
 			PrimaryFields:   []passField{handleField, sinceField},
 			SecondaryFields: []passField{},
-			AuxiliaryFields: []passField{},
-			FooterFields:    []passField{},
-			BackFields:      backFields,
 		},
 		SuppressHeaderDarkening: false,
 		UseAutomaticColors:      false,
