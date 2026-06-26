@@ -70,6 +70,7 @@ import {
   MAX_GRAPHEME_LENGTH,
   SUPPORTED_MIME_TYPES,
   type SupportedMimeTypes,
+  VIDEO_MAX_DURATION_MS,
 } from '#/lib/constants'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -386,7 +387,27 @@ export const ComposePost = ({
   )
 
   const selectVideo = useCallback(
-    (postId: string, asset: ImagePickerAsset) => {
+    async (postId: string, asset: ImagePickerAsset) => {
+      /*
+       * Share-extension deeplinks deliver a video URI without duration, so
+       * probe before we decide whether to compress. The picker and web paste
+       * paths already populate duration upstream.
+       */
+      if (asset.duration == null && IS_NATIVE) {
+        try {
+          const probed = await getVideoMetadata(asset.uri)
+          asset = {
+            ...asset,
+            mimeType: probed.mimeType ?? asset.mimeType,
+            width: probed.width ?? asset.width,
+            height: probed.height ?? asset.height,
+            duration: probed.duration,
+          }
+        } catch (e) {
+          logger.warn('selectVideo: duration probe failed', {safeMessage: e})
+        }
+      }
+
       const abortController = new AbortController()
       const telemetry = createVideoTelemetry({
         asset,
@@ -404,6 +425,27 @@ export const ComposePost = ({
           telemetry,
         },
       })
+
+      /*
+       * Fail early on duration so we don't spend time compressing a video the
+       * server would reject anyway.
+       */
+      if (asset.duration != null && asset.duration > VIDEO_MAX_DURATION_MS) {
+        composerDispatch({
+          type: 'update_post',
+          postId: postId,
+          postAction: {
+            type: 'embed_update_video',
+            videoAction: {
+              type: 'to_error',
+              error: l`Videos must be less than 3 minutes long.`,
+              signal: abortController.signal,
+            },
+          },
+        })
+        return
+      }
+
       void processVideo(
         asset,
         videoAction => {
@@ -423,12 +465,12 @@ export const ComposePost = ({
         telemetry,
       )
     },
-    [i18n, agent, currentDid, composerDispatch, ax.metric],
+    [l, i18n, agent, currentDid, composerDispatch, ax.metric],
   )
 
   const onInitVideo = useNonReactiveCallback(() => {
     if (initVideoUri) {
-      selectVideo(activePost.id, initVideoUri)
+      void selectVideo(activePost.id, initVideoUri)
     }
   })
 
@@ -520,6 +562,22 @@ export const ComposePost = ({
           },
         })
 
+        if (asset.duration != null && asset.duration > VIDEO_MAX_DURATION_MS) {
+          composerDispatch({
+            type: 'update_post',
+            postId,
+            postAction: {
+              type: 'embed_update_video',
+              videoAction: {
+                type: 'to_error',
+                error: l`Videos must be less than 3 minutes long.`,
+                signal: abortController.signal,
+              },
+            },
+          })
+          return
+        }
+
         // Restore alt text immediately
         if (videoInfo.altText) {
           composerDispatch({
@@ -584,7 +642,7 @@ export const ComposePost = ({
         })
       }
     },
-    [i18n, agent, currentDid, composerDispatch, ax.metric],
+    [l, i18n, agent, currentDid, composerDispatch, ax.metric],
   )
 
   const handleSelectDraft = useCallback(
@@ -641,7 +699,7 @@ export const ComposePost = ({
       // This is async but we don't await - videos process in the background
       for (const [postIndex, videoInfo] of restoredVideos) {
         const postId = posts[postIndex].id
-        restoreVideo(postId, videoInfo)
+        void restoreVideo(postId, videoInfo)
       }
     },
     [composerDispatch, restoreVideo, ax],
@@ -1527,7 +1585,10 @@ let ComposerPost = memo(function ComposerPost({
   canRemovePost: boolean
   canRemoveQuote: boolean
   onClearVideo: (postId: string) => void
-  onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
+  onSelectVideo: (
+    postId: string,
+    asset: ImagePickerAsset,
+  ) => void | Promise<void>
   onError: (error: string) => void
   onPublish: (richtext: RichText) => void
 }) {
@@ -1587,7 +1648,7 @@ let ComposerPost = memo(function ComposerPost({
         const file = await fetch(uri)
           .then(res => res.blob())
           .then(blob => new File([blob], name, {type: mimeType}))
-        onSelectVideo(post.id, await getVideoMetadata(file))
+        void onSelectVideo(post.id, await getVideoMetadata(file))
       } else {
         const res = await pasteImage(uri)
         onImageAdd([res])
@@ -2049,7 +2110,10 @@ function ComposerFooter({
   dispatch: (action: PostAction) => void
   showAddButton: boolean
   onError: (error: string) => void
-  onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
+  onSelectVideo: (
+    postId: string,
+    asset: ImagePickerAsset,
+  ) => void | Promise<void>
   onAddPost: () => void
   currentLanguages: string[]
   onSelectLanguage?: (language: string) => void
@@ -2130,9 +2194,9 @@ function ComposerFooter({
 
           onImageAdd(selectedImages)
         } else if (type === 'video') {
-          onSelectVideo(post.id, assets[0])
+          void onSelectVideo(post.id, assets[0])
         } else if (type === 'gif') {
-          onSelectVideo(post.id, assets[0])
+          void onSelectVideo(post.id, assets[0])
         }
       }
 
