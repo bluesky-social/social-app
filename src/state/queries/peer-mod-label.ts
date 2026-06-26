@@ -2,7 +2,6 @@ import {useCallback} from 'react'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {communityXrpc} from '#/lib/api/community'
-import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
 import {BLACKSKY_LABELER} from '#/state/session/additional-moderation-authorities'
 
@@ -91,10 +90,6 @@ export function useApplyLabelMutation() {
   const invalidate = useInvalidateLabelState()
   return useMutation<void, Error, ApplyLabelInput>({
     mutationFn: async input => {
-      if (__DEV__) {
-        logger.info('Applying peer-mod label (dry run)', {input})
-        return
-      }
       const res = await communityXrpc(agent, APPLY_METHOD, {body: input})
       if (!res.ok) {
         throw new Error(await readError(res))
@@ -111,10 +106,6 @@ export function useRemoveLabelMutation() {
   const invalidate = useInvalidateLabelState()
   return useMutation<void, Error, RemoveLabelInput>({
     mutationFn: async input => {
-      if (__DEV__) {
-        logger.info('Removing peer-mod label (dry run)', {input})
-        return
-      }
       const res = await communityXrpc(agent, REMOVE_METHOD, {body: input})
       if (!res.ok) {
         throw new Error(await readError(res))
