@@ -326,15 +326,17 @@ let PostControls = ({
             right: secondaryControlSpacingStyles.gap / 2,
           }}
         />
-        <BookmarkButton
-          post={post}
-          big={big}
-          logContext={logContext}
-          hitSlop={{
-            left: secondaryControlSpacingStyles.gap / 2,
-            right: secondaryControlSpacingStyles.gap / 2,
-          }}
-        />
+        {isCommunityPostUri(post.uri) ? null : (
+          <BookmarkButton
+            post={post}
+            big={big}
+            logContext={logContext}
+            hitSlop={{
+              left: secondaryControlSpacingStyles.gap / 2,
+              right: secondaryControlSpacingStyles.gap / 2,
+            }}
+          />
+        )}
         <ShareMenuButton
           testID="postShareBtn"
           post={post}
