@@ -528,10 +528,12 @@ export function SearchScreenShell({
               </View>
 
               {showFilters && !showHeader && !advancedSearchV2Enabled && (
-                <SearchLanguageDropdown
-                  value={filters.lang ?? ''}
-                  onChange={onChangeLang}
-                />
+                <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                  <SearchLanguageDropdown
+                    value={filters.lang ?? ''}
+                    onChange={onChangeLang}
+                  />
+                </View>
               )}
 
               {showFilters && advancedSearchV2Enabled ? (
