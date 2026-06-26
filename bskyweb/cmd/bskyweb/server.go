@@ -116,13 +116,7 @@ func serve(cctx *cli.Context) error {
 			ipccHost:      ipccHost,
 			staticCDNHost: staticCDNHost,
 		},
-		ipccClient: http.Client{
-			Transport: &http.Transport{
-				TLSClientConfig: &tls.Config{
-					InsecureSkipVerify: true,
-				},
-			},
-		},
+		ipccClient: http.Client{},
 		sitemapClient: http.Client{
 			Transport: &http.Transport{
 				MaxIdleConns:        100,

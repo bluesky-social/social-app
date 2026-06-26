@@ -1,0 +1,4785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React Native Security Report - 09/04/2026</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Roboto', sans-serif;
+      background: #0a0e1a;
+      min-height: 100vh;
+      color: #e4e6eb;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .scan-status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px 24px;
+      margin-bottom: 24px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 12px;
+      color: #22c55e;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .scan-status svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .scan-status-text {
+      color: #e4e6eb;
+    }
+
+    .scan-status .divider {
+      color: #6b7280;
+      margin: 0 4px;
+    }
+
+    .ignored-rules {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px 24px;
+      margin-bottom: 24px;
+      background: rgba(251, 191, 36, 0.1);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      border-radius: 12px;
+      color: #fbbf24;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .ignored-rules svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      padding: 32px;
+      background: #141824;
+      border: 1px solid #1f2937;
+      border-radius: 16px;
+    }
+    
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+    }
+
+    .header-icon svg {
+      width: 28px;
+      height: 28px;
+      color: #ffffff;
+    }
+    
+    .header h1 {
+      font-size: 32px;
+      font-weight: 600;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+    }
+
+    .header-subtitle {
+      font-size: 14px;
+      color: #9ca3af;
+      margin-top: 4px;
+      font-weight: 400;
+    }
+
+    .header-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #9ca3af;
+      font-size: 14px;
+    }
+
+    .info-divider {
+      opacity: 0.5;
+    }
+    
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: #1a1f2e;
+      border: 1px solid #1a1f2e;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+    
+    .summary-card {
+      background: #141824;
+      padding: 48px 32px;
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-right: 1px solid #1a1f2e;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .summary-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: transparent;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .summary-card:last-child {
+      border-right: none;
+    }
+    
+    .summary-card:hover {
+      background: #1a1f2e;
+      transform: translateY(-2px);
+    }
+
+    .summary-card.active {
+      background: linear-gradient(180deg, rgba(34, 197, 94, 0.08) 0%, #141824 100%);
+      border-color: rgba(34, 197, 94, 0.2);
+    }
+
+    .summary-card.active::before {
+      background: linear-gradient(90deg, #22c55e 0%, #4ade80 50%, #22c55e 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% {
+        background-position: 0% 0%;
+      }
+      50% {
+        background-position: 100% 0%;
+      }
+    }
+
+    .summary-card.active .number {
+      text-shadow: 0 0 20px rgba(74, 222, 128, 0.3);
+    }
+    
+    .summary-card .number {
+      font-size: 64px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -2px;
+      margin-bottom: 12px;
+    }
+    
+    .summary-card.high .number { color: #ef4444; }
+    .summary-card.medium .number { color: #f97316; }
+    .summary-card.low .number { color: #eab308; }
+    .summary-card.total .number { color: #60a5fa; }
+    
+    .summary-card h3 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #9ca3af;
+      font-weight: 500;
+    }
+    
+    .findings {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .finding-group {
+      background: #141824;
+      border: 1px solid #1f2937;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      margin-bottom: 12px;
+    }
+    
+    .finding-group:hover {
+      border-color: #374151;
+      background: #1a1f2e;
+    }
+
+    .finding {
+      background: #0d1117;
+      border: 1px solid #1f2937;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+
+    .finding:last-child {
+      margin-bottom: 0;
+    }
+    
+    .finding:hover {
+      border-color: #374151;
+      background: #161b22;
+    }
+    
+    .group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 28px;
+      gap: 20px;
+      cursor: pointer;
+    }
+
+    .finding-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px;
+      gap: 20px;
+      cursor: pointer;
+    }
+    
+    .finding-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .severity-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .severity-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .severity-icon svg {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .severity-badge.high {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .severity-badge.high .severity-icon {
+      background: #ef4444;
+      color: #ffffff;
+    }
+    
+    .severity-badge.medium {
+      background: rgba(249, 115, 22, 0.15);
+      color: #f97316;
+      border: 1px solid rgba(249, 115, 22, 0.3);
+    }
+
+    .severity-badge.medium .severity-icon {
+      background: #f97316;
+      color: #ffffff;
+    }
+    
+    .severity-badge.low {
+      background: rgba(234, 179, 8, 0.15);
+      color: #eab308;
+      border: 1px solid rgba(234, 179, 8, 0.3);
+    }
+
+    .severity-badge.low .severity-icon {
+      background: #eab308;
+      color: #ffffff;
+    }
+    
+    .finding-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #f3f4f6;
+      letter-spacing: -0.2px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .occurrence-count {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      background: rgba(96, 165, 250, 0.15);
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #60a5fa;
+      margin-left: 12px;
+      white-space: nowrap;
+    }
+
+    .debug-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #a855f7;
+      margin-left: 8px;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .debug-badge svg {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+    }
+
+    .npm-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #ef4444;
+      margin-left: 8px;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .npm-badge svg {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+    }
+
+    .instances-container {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      border-top: 1px solid transparent;
+    }
+
+    .finding-group.expanded .instances-container {
+      max-height: 5000px;
+      border-top-color: #1f2937;
+    }
+
+    .instances-list {
+      padding: 20px 24px;
+    }
+    
+    .expand-icon {
+      color: #6b7280;
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+    }
+    
+    .finding-group.expanded > .group-header .expand-icon,
+    .finding.expanded .expand-icon {
+      transform: rotate(90deg);
+    }
+    
+    .finding-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      border-top: 1px solid transparent;
+    }
+    
+    .finding.expanded .finding-content {
+      max-height: 2000px;
+      border-top-color: #1f2937;
+    }
+    
+    .finding-content-inner {
+      padding: 24px 28px;
+    }
+    
+    .finding-description {
+      color: #9ca3af;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    
+    .finding-location {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #6b7280;
+      font-size: 13px;
+      margin-bottom: 20px;
+      font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
+    }
+    
+    .finding-location svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .line-number-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
+      margin-left: 8px;
+      white-space: nowrap;
+    }
+
+    .file-path {
+      color: #9ca3af;
+      word-break: break-all;
+    }
+    
+    .code-snippet {
+      background: #0d1117;
+      border: 1px solid #1f2937;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+    
+    .code-snippet pre {
+      font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      color: #e4e6eb;
+      margin: 0;
+      padding: 0;
+    }
+
+    .code-line {
+      display: flex;
+      padding: 3px 16px;
+      min-height: 22px;
+    }
+
+    .code-line:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .code-line.highlighted {
+      background: rgba(239, 68, 68, 0.15);
+      border-left: 3px solid #ef4444;
+      padding-left: 17px;
+    }
+
+    .code-line.highlighted.medium {
+      background: rgba(249, 115, 22, 0.15);
+      border-left-color: #f97316;
+    }
+
+    .code-line.highlighted.low {
+      background: rgba(234, 179, 8, 0.15);
+      border-left-color: #eab308;
+    }
+
+    .line-number {
+      flex-shrink: 0;
+      width: 40px;
+      text-align: right;
+      color: #6b7280;
+      user-select: none;
+      padding-right: 12px;
+      font-weight: 500;
+      font-size: 11px;
+    }
+
+    .code-line.highlighted .line-number {
+      color: #ef4444;
+      font-weight: 700;
+    }
+
+    .code-line.highlighted.medium .line-number {
+      color: #f97316;
+    }
+
+    .code-line.highlighted.low .line-number {
+      color: #eab308;
+    }
+
+    .line-content {
+      flex: 1;
+      white-space: pre;
+      overflow-x: auto;
+    }
+    
+    .reason-box {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-left: 3px solid #ef4444;
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    
+    .reason-title {
+      font-weight: 600;
+      color: #ef4444;
+      margin-bottom: 8px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .reason-text {
+      color: #e4e6eb;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+    
+    .suggestion {
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      border-left: 3px solid #22c55e;
+      padding: 16px 20px;
+      border-radius: 8px;
+    }
+    
+    .suggestion-title {
+      font-weight: 600;
+      color: #22c55e;
+      margin-bottom: 8px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .suggestion-text {
+      color: #9ca3af;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+    
+    .no-findings {
+      text-align: center;
+      padding: 120px 40px;
+      background: #141824;
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+    }
+    
+    .no-findings svg {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 20px;
+      color: #22c55e;
+    }
+    
+    .no-findings h2 {
+      font-size: 28px;
+      margin-bottom: 12px;
+      font-weight: 600;
+      color: #f3f4f6;
+    }
+    
+    .no-findings p {
+      font-size: 16px;
+      color: #9ca3af;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 64px;
+      padding: 32px 24px;
+      border-top: 1px solid #1f2937;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .footer-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .footer-logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: #f3f4f6;
+      letter-spacing: -0.5px;
+    }
+
+    .footer-version {
+      display: inline-block;
+      padding: 2px 8px;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 6px;
+      font-size: 11px;
+      color: #60a5fa;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+    
+    @media (max-width: 1024px) {
+      .summary {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .summary {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-card {
+        border-right: none;
+        border-bottom: 1px solid #1a1f2e;
+        padding: 36px 24px;
+      }
+
+      .summary-card:last-child {
+        border-bottom: none;
+      }
+
+      .summary-card .number {
+        font-size: 48px;
+      }
+      
+      .finding-header {
+        padding: 20px;
+      }
+
+      .finding-content-inner {
+        padding: 20px;
+      }
+      
+      .finding-title {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="scan-status">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <span>Scan completed in <span class="scan-status-text">23.9s</span> <span class="divider">•</span> <span class="scan-status-text">1570 files analyzed</span></span>
+    </div>
+
+    <div class="header">
+      <div class="header-left">
+        <div class="header-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+          </svg>
+        </div>
+        <div>
+          <h1>Static Analysis Report</h1>
+          <div class="header-subtitle">RNSEC - React Native & Expo Security Scanner</div>
+        </div>
+      </div>
+      <div class="header-info">
+        <div class="info-item">Apr 9, 2026 • 1:19 AM</div>
+      </div>
+    </div>
+    
+    <div class="summary">
+      <div class="summary-card total active" onclick="filterBySeverity('all')" data-filter="all">
+        <div class="number">64</div>
+        <h3>Total</h3>
+      </div>
+      <div class="summary-card high" onclick="filterBySeverity('high')" data-filter="high">
+        <div class="number">6</div>
+        <h3>High</h3>
+      </div>
+      <div class="summary-card medium" onclick="filterBySeverity('medium')" data-filter="medium">
+        <div class="number">34</div>
+        <h3>Medium</h3>
+      </div>
+      <div class="summary-card low" onclick="filterBySeverity('low')" data-filter="low">
+        <div class="number">24</div>
+        <h3>Low</h3>
+      </div>
+    </div>
+    
+    
+    <div class="findings">
+      
+      <div class="finding-group high" data-severity="high">
+        
+        <div class="group-header">
+          <div class="finding-left">
+            <span class="severity-badge high">
+              <span class="severity-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </span>
+              HIGH
+            </span>
+            <div class="finding-title">
+              Weak hash algorithm specified: &quot;md5&quot;
+              
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="instances-container">
+          <div class="instances-list">
+            
+      <div class="finding-content-inner">
+        
+            
+        
+            <div class="finding-location">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/scripts/bundleUpdate.js</span>
+            <span class="line-number-badge">Line 20</span>
+            </div>
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">18</span>
+  <span class="line-content">const getMd5 = async path =&gt; {</span>
+</div><div class="code-line ">
+  <span class="line-number">19</span>
+  <span class="line-content">  return new Promise(res =&gt; {</span>
+</div><div class="code-line highlighted high">
+  <span class="line-number">20</span>
+  <span class="line-content">    const hash = crypto.createHash(&#039;md5&#039;)</span>
+</div><div class="code-line ">
+  <span class="line-number">21</span>
+  <span class="line-content">    const rStream = fs.createReadStream(path)</span>
+</div><div class="code-line ">
+  <span class="line-number">22</span>
+  <span class="line-content">    rStream.on(&#039;data&#039;, data =&gt; {</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Use SHA-256 or stronger algorithms instead of MD5 or SHA-1</div>
+          </div>
+        
+      </div>
+    
+          </div>
+        </div>
+      
+      </div>
+    
+      <div class="finding-group high" data-severity="high">
+        <div class="group-header">
+          <div class="finding-left">
+            <span class="severity-badge high">
+              <span class="severity-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </span>
+              HIGH
+            </span>
+            <div class="finding-title">
+              Potential hardcoded secret in property &quot;cid&quot;
+              <span class="occurrence-count">3 occurrences</span>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="instances-container">
+          <div class="instances-list">
+            
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/demo.ts</span>
+                <span class="line-number-badge">Line 15</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Potential hardcoded secret in property &quot;cid&quot;</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">13</span>
+  <span class="line-content">      post: {</span>
+</div><div class="code-line ">
+  <span class="line-number">14</span>
+  <span class="line-content">        uri: &#039;at://did:plc:pvooorihapc2lf2pijehgrdf/app.bsky.feed.post/3lniysofyll2d&#039;,</span>
+</div><div class="code-line highlighted high">
+  <span class="line-number">15</span>
+  <span class="line-content">        cid: &#039;bafyreihwh3wxxme732ylbylhhdyz7ex6t4jtu6s3gjxxvnnh4feddhg3ku&#039;,</span>
+</div><div class="code-line ">
+  <span class="line-number">16</span>
+  <span class="line-content">        author: {</span>
+</div><div class="code-line ">
+  <span class="line-number">17</span>
+  <span class="line-content">          did: &#039;did:plc:pvooorihapc2lf2pijehgrdf&#039;,</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Move secrets to environment variables or secure config management</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/screens/DebugMod.tsx</span>
+                <span class="line-number-badge">Line 205</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Potential hardcoded secret in property &quot;cid&quot;</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">203</span>
+  <span class="line-content">          parent: {</span>
+</div><div class="code-line ">
+  <span class="line-number">204</span>
+  <span class="line-content">            uri: `at://${did}/app.bsky.feed.post/fake-parent`,</span>
+</div><div class="code-line highlighted high">
+  <span class="line-number">205</span>
+  <span class="line-content">            cid: &#039;bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq&#039;,</span>
+</div><div class="code-line ">
+  <span class="line-number">206</span>
+  <span class="line-content">          },</span>
+</div><div class="code-line ">
+  <span class="line-number">207</span>
+  <span class="line-content">          root: {</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Move secrets to environment variables or secure config management</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/screens/DebugMod.tsx</span>
+                <span class="line-number-badge">Line 209</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Potential hardcoded secret in property &quot;cid&quot;</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">207</span>
+  <span class="line-content">          root: {</span>
+</div><div class="code-line ">
+  <span class="line-number">208</span>
+  <span class="line-content">            uri: `at://${did}/app.bsky.feed.post/fake-parent`,</span>
+</div><div class="code-line highlighted high">
+  <span class="line-number">209</span>
+  <span class="line-content">            cid: &#039;bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq&#039;,</span>
+</div><div class="code-line ">
+  <span class="line-number">210</span>
+  <span class="line-content">          },</span>
+</div><div class="code-line ">
+  <span class="line-number">211</span>
+  <span class="line-content">        },</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Move secrets to environment variables or secure config management</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+          </div>
+        </div>
+      </div>
+      
+      <div class="finding-group high" data-severity="high">
+        <div class="group-header">
+          <div class="finding-left">
+            <span class="severity-badge high">
+              <span class="severity-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </span>
+              HIGH
+            </span>
+            <div class="finding-title">
+              Sensitive app (banking/fintech/healthcare) without root/jailbreak detection
+              <span class="occurrence-count">2 occurrences</span>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="instances-container">
+          <div class="instances-list">
+            
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/bskyogcard/src/routes/index.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Sensitive app (banking/fintech/healthcare) without root/jailbreak detection</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement root/jailbreak detection using jail-monkey or similar library. Warn users or restrict functionality on compromised devices.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/bskylink/src/routes/index.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Sensitive app (banking/fintech/healthcare) without root/jailbreak detection</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement root/jailbreak detection using jail-monkey or similar library. Warn users or restrict functionality on compromised devices.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+          </div>
+        </div>
+      </div>
+      
+      
+      <div class="finding-group medium" data-severity="medium">
+        <div class="group-header">
+          <div class="finding-left">
+            <span class="severity-badge medium">
+              <span class="severity-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </span>
+              MEDIUM
+            </span>
+            <div class="finding-title">
+              fetch() without timeout - vulnerable to slowloris DoS
+              <span class="occurrence-count">16 occurrences</span>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="instances-container">
+          <div class="instances-list">
+            
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/bskyogcard/scripts/install-fonts.ts</span>
+                <span class="line-number-badge">Line 22</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout - vulnerable to slowloris DoS</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">20</span>
+  <span class="line-content">    FONTS.map(async urlStr =&gt; {</span>
+</div><div class="code-line ">
+  <span class="line-number">21</span>
+  <span class="line-content">      const url = new URL(urlStr)</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">22</span>
+  <span class="line-content">      const res = await fetch(url)</span>
+</div><div class="code-line ">
+  <span class="line-number">23</span>
+  <span class="line-content">      const font = await res.arrayBuffer()</span>
+</div><div class="code-line ">
+  <span class="line-number">24</span>
+  <span class="line-content">      const filename = url.pathname</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/bskyogcard/src/util.ts</span>
+                <span class="line-number-badge">Line 14</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout - vulnerable to slowloris DoS</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">12</span>
+  <span class="line-content">    chars.indexOf(U200D) &lt; 0 ? chars.replace(UFE0F_REGEXP, &#039;&#039;) : chars,</span>
+</div><div class="code-line ">
+  <span class="line-number">13</span>
+  <span class="line-content">  )</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">14</span>
+  <span class="line-content">  const res = await fetch(getEmojiUrl(iconCode))</span>
+</div><div class="code-line ">
+  <span class="line-number">15</span>
+  <span class="line-content">  const body = await res.arrayBuffer()</span>
+</div><div class="code-line ">
+  <span class="line-number">16</span>
+  <span class="line-content">  if (!res.ok) {</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/state/appConfig.tsx</span>
+                <span class="line-number-badge">Line 35</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout - vulnerable to slowloris DoS</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">33</span>
+  <span class="line-content">    if (!fetchAppConfigPromise) {</span>
+</div><div class="code-line ">
+  <span class="line-number">34</span>
+  <span class="line-content">      fetchAppConfigPromise = (async () =&gt; {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">35</span>
+  <span class="line-content">        const r = await fetch(`${APP_CONFIG_URL}/config`)</span>
+</div><div class="code-line ">
+  <span class="line-number">36</span>
+  <span class="line-content">        if (!r.ok) throw new Error(await r.text())</span>
+</div><div class="code-line ">
+  <span class="line-number">37</span>
+  <span class="line-content">        const data = await r.json()</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/state/gallery.ts</span>
+                <span class="line-number-badge">Line 282</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout - vulnerable to slowloris DoS</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">280</span>
+  <span class="line-content">    if (from.startsWith(&#039;blob:&#039;)) {</span>
+</div><div class="code-line ">
+  <span class="line-number">281</span>
+  <span class="line-content">      try {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">282</span>
+  <span class="line-content">        const response = await fetch(from)</span>
+</div><div class="code-line ">
+  <span class="line-number">283</span>
+  <span class="line-content">        const blob = await response.blob()</span>
+</div><div class="code-line ">
+  <span class="line-number">284</span>
+  <span class="line-content">        return await blobToDataUri(blob)</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/bskyogcard/src/routes/starter-pack.tsx</span>
+                <span class="line-number-badge">Line 86</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout - vulnerable to slowloris DoS</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">84</span>
+  <span class="line-content"></span>
+</div><div class="code-line ">
+  <span class="line-number">85</span>
+  <span class="line-content">async function getImage(url: string) {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">86</span>
+  <span class="line-content">  const response = await fetch(ensureJpeg(url))</span>
+</div><div class="code-line ">
+  <span class="line-number">87</span>
+  <span class="line-content">  const arrayBuf = await response.arrayBuffer() // must drain body even if it will be discarded</span>
+</div><div class="code-line ">
+  <span class="line-number">88</span>
+  <span class="line-content">  if (response.status !== 200) return null</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/features/liveEvents/context.tsx</span>
+                <span class="line-number-badge">Line 27</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout - vulnerable to slowloris DoS</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">25</span>
+  <span class="line-content">async function fetchLiveEvents(): Promise&lt;LiveEventsWorkerResponse | null&gt; {</span>
+</div><div class="code-line ">
+  <span class="line-number">26</span>
+  <span class="line-content">  try {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">27</span>
+  <span class="line-content">    const res = await fetch(`${LIVE_EVENTS_URL}/config`)</span>
+</div><div class="code-line ">
+  <span class="line-number">28</span>
+  <span class="line-content">    if (!res.ok) return null</span>
+</div><div class="code-line ">
+  <span class="line-number">29</span>
+  <span class="line-content">    const data = await res.json()</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/api/upload-blob.ts</span>
+                <span class="line-number-badge">Line 25</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout - vulnerable to slowloris DoS</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">23</span>
+  <span class="line-content"></span>
+</div><div class="code-line ">
+  <span class="line-number">24</span>
+  <span class="line-content">  if (typeof input === &#039;string&#039; &amp;&amp; input.startsWith(&#039;data:&#039;)) {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">25</span>
+  <span class="line-content">    const blob = await fetch(input).then(r =&gt; r.blob())</span>
+</div><div class="code-line ">
+  <span class="line-number">26</span>
+  <span class="line-content">    return agent.uploadBlob(blob, {encoding})</span>
+</div><div class="code-line ">
+  <span class="line-number">27</span>
+  <span class="line-content">  }</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/api/upload-blob.web.ts</span>
+                <span class="line-number-badge">Line 18</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout - vulnerable to slowloris DoS</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">16</span>
+  <span class="line-content">    (input.startsWith(&#039;data:&#039;) || input.startsWith(&#039;blob:&#039;))</span>
+</div><div class="code-line ">
+  <span class="line-number">17</span>
+  <span class="line-content">  ) {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">18</span>
+  <span class="line-content">    const blob = await fetch(input).then(r =&gt; r.blob())</span>
+</div><div class="code-line ">
+  <span class="line-number">19</span>
+  <span class="line-content">    return agent.uploadBlob(blob, {encoding})</span>
+</div><div class="code-line ">
+  <span class="line-number">20</span>
+  <span class="line-content">  }</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/media/manip.web.ts</span>
+                <span class="line-number-badge">Line 32</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout - vulnerable to slowloris DoS</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">30</span>
+  <span class="line-content">  const controller = new AbortController()</span>
+</div><div class="code-line ">
+  <span class="line-number">31</span>
+  <span class="line-content">  const to = setTimeout(() =&gt; controller.abort(), opts.timeout || 5e3)</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">32</span>
+  <span class="line-content">  const res = await fetch(opts.uri)</span>
+</div><div class="code-line ">
+  <span class="line-number">33</span>
+  <span class="line-content">  const resBody = await res.blob()</span>
+</div><div class="code-line ">
+  <span class="line-number">34</span>
+  <span class="line-content">  clearTimeout(to)</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/media/video/upload.web.ts</span>
+                <span class="line-number-badge">Line 42</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout - vulnerable to slowloris DoS</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">40</span>
+  <span class="line-content">      throw new AbortError()</span>
+</div><div class="code-line ">
+  <span class="line-number">41</span>
+  <span class="line-content">    }</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">42</span>
+  <span class="line-content">    bytes = await fetch(video.uri).then(res =&gt; res.arrayBuffer())</span>
+</div><div class="code-line ">
+  <span class="line-number">43</span>
+  <span class="line-content">  }</span>
+</div><div class="code-line ">
+  <span class="line-number">44</span>
+  <span class="line-content"></span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/Composer.tsx</span>
+                <span class="line-number-badge">Line 384</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout - vulnerable to slowloris DoS</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">382</span>
+  <span class="line-content">        if (IS_WEB) {</span>
+</div><div class="code-line ">
+  <span class="line-number">383</span>
+  <span class="line-content">          // Web: Convert blob URL to a File, then get video metadata (returns data URL)</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">384</span>
+  <span class="line-content">          const response = await fetch(videoInfo.uri)</span>
+</div><div class="code-line ">
+  <span class="line-number">385</span>
+  <span class="line-content">          const blob = await response.blob()</span>
+</div><div class="code-line ">
+  <span class="line-number">386</span>
+  <span class="line-content">          const file = new File([blob], &#039;restored-video&#039;, {</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/Composer.tsx</span>
+                <span class="line-number-badge">Line 1366</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout - vulnerable to slowloris DoS</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">1364</span>
+  <span class="line-content">        }</span>
+</div><div class="code-line ">
+  <span class="line-number">1365</span>
+  <span class="line-content">        const name = `pasted.${mimeToExt(mimeType)}`</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">1366</span>
+  <span class="line-content">        const file = await fetch(uri)</span>
+</div><div class="code-line ">
+  <span class="line-number">1367</span>
+  <span class="line-content">          .then(res =&gt; res.blob())</span>
+</div><div class="code-line ">
+  <span class="line-number">1368</span>
+  <span class="line-content">          .then(blob =&gt; new File([blob], name, {type: mimeType}))</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/text-input/TextInput.web.tsx</span>
+                <span class="line-number-badge">Line 490</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout - vulnerable to slowloris DoS</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">488</span>
+  <span class="line-content">      item.getAsString(async itemString =&gt; {</span>
+</div><div class="code-line ">
+  <span class="line-number">489</span>
+  <span class="line-content">        if (isUriImage(itemString)) {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">490</span>
+  <span class="line-content">          const response = await fetch(itemString)</span>
+</div><div class="code-line ">
+  <span class="line-number">491</span>
+  <span class="line-content">          const blob = await response.blob()</span>
+</div><div class="code-line ">
+  <span class="line-number">492</span>
+  <span class="line-content"></span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/drafts/state/storage.web.ts</span>
+                <span class="line-number-badge">Line 25</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout - vulnerable to slowloris DoS</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">23</span>
+  <span class="line-content">  // Handle data URIs directly</span>
+</div><div class="code-line ">
+  <span class="line-number">24</span>
+  <span class="line-content">  if (sourcePath.startsWith(&#039;data:&#039;)) {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">25</span>
+  <span class="line-content">    const response = await fetch(sourcePath)</span>
+</div><div class="code-line ">
+  <span class="line-number">26</span>
+  <span class="line-content">    return response.blob()</span>
+</div><div class="code-line ">
+  <span class="line-number">27</span>
+  <span class="line-content">  }</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/drafts/state/storage.web.ts</span>
+                <span class="line-number-badge">Line 32</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout - vulnerable to slowloris DoS</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">30</span>
+  <span class="line-content">  if (sourcePath.startsWith(&#039;blob:&#039;)) {</span>
+</div><div class="code-line ">
+  <span class="line-number">31</span>
+  <span class="line-content">    try {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">32</span>
+  <span class="line-content">      const response = await fetch(sourcePath)</span>
+</div><div class="code-line ">
+  <span class="line-number">33</span>
+  <span class="line-content">      return response.blob()</span>
+</div><div class="code-line ">
+  <span class="line-number">34</span>
+  <span class="line-content">    } catch (e) {</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/drafts/state/storage.web.ts</span>
+                <span class="line-number-badge">Line 44</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout - vulnerable to slowloris DoS</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">42</span>
+  <span class="line-content"></span>
+</div><div class="code-line ">
+  <span class="line-number">43</span>
+  <span class="line-content">  // Handle regular URLs</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">44</span>
+  <span class="line-content">  const response = await fetch(sourcePath)</span>
+</div><div class="code-line ">
+  <span class="line-number">45</span>
+  <span class="line-content">  if (!response.ok) {</span>
+</div><div class="code-line ">
+  <span class="line-number">46</span>
+  <span class="line-content">    throw new Error(`Failed to fetch media: ${response.status}`)</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+          </div>
+        </div>
+      </div>
+      
+      <div class="finding-group medium" data-severity="medium">
+        <div class="group-header">
+          <div class="finding-left">
+            <span class="severity-badge medium">
+              <span class="severity-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </span>
+              MEDIUM
+            </span>
+            <div class="finding-title">
+              Error object logged directly - may contain sensitive data or stack traces
+              <span class="occurrence-count">9 occurrences</span>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="instances-container">
+          <div class="instances-list">
+            
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/bskylink/src/bin.ts</span>
+                <span class="line-number-badge">Line 60</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Error object logged directly - may contain sensitive data or stack traces</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">58</span>
+  <span class="line-content"></span>
+</div><div class="code-line ">
+  <span class="line-number">59</span>
+  <span class="line-content">main().catch(error =&gt; {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">60</span>
+  <span class="line-content">  console.error(&#039;Unhandled startup error:&#039;, error)</span>
+</div><div class="code-line ">
+  <span class="line-number">61</span>
+  <span class="line-content">  process.exit(1)</span>
+</div><div class="code-line ">
+  <span class="line-number">62</span>
+  <span class="line-content">})</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Log only safe error properties (message, code). Sanitize error messages before displaying to users. Never expose stack traces in production.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/helpers.ts</span>
+                <span class="line-number-badge">Line 337</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Error object logged directly - may contain sensitive data or stack traces</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">335</span>
+  <span class="line-content">    return getRegionNames(appLang).of(countryCode)</span>
+</div><div class="code-line ">
+  <span class="line-number">336</span>
+  <span class="line-content">  } catch (err) {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">337</span>
+  <span class="line-content">    console.warn(&#039;Error getting localized region name:&#039;, err)</span>
+</div><div class="code-line ">
+  <span class="line-number">338</span>
+  <span class="line-content">    return undefined</span>
+</div><div class="code-line ">
+  <span class="line-number">339</span>
+  <span class="line-content">  }</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Log only safe error properties (message, code). Sanitize error messages before displaying to users. Never expose stack traces in production.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/bskyembed/src/screens/landing.tsx</span>
+                <span class="line-number-badge">Line 112</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Error object logged directly - may contain sensitive data or stack traces</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">110</span>
+  <span class="line-content">        setThread(data.thread)</span>
+</div><div class="code-line ">
+  <span class="line-number">111</span>
+  <span class="line-content">      } catch (err) {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">112</span>
+  <span class="line-content">        console.error(err)</span>
+</div><div class="code-line ">
+  <span class="line-number">113</span>
+  <span class="line-content">        setError(err instanceof Error ? err.message : &#039;Invalid Bluesky URL&#039;)</span>
+</div><div class="code-line ">
+  <span class="line-number">114</span>
+  <span class="line-content">      } finally {</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Log only safe error properties (message, code). Sanitize error messages before displaying to users. Never expose stack traces in production.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/bskyembed/src/screens/post.tsx</span>
+                <span class="line-number-badge">Line 63</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Error object logged directly - may contain sensitive data or stack traces</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">61</span>
+  <span class="line-content">  })</span>
+</div><div class="code-line ">
+  <span class="line-number">62</span>
+  <span class="line-content">  .catch(err =&gt; {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">63</span>
+  <span class="line-content">    console.error(err)</span>
+</div><div class="code-line ">
+  <span class="line-number">64</span>
+  <span class="line-content">    render(&lt;ErrorMessage /&gt;, root)</span>
+</div><div class="code-line ">
+  <span class="line-number">65</span>
+  <span class="line-content">  })</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Log only safe error properties (message, code). Sanitize error messages before displaying to users. Never expose stack traces in production.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/text-input/TextInput.web.tsx</span>
+                <span class="line-number-badge">Line 494</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Error object logged directly - may contain sensitive data or stack traces</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">492</span>
+  <span class="line-content"></span>
+</div><div class="code-line ">
+  <span class="line-number">493</span>
+  <span class="line-content">          if (blob.type.startsWith(&#039;image/&#039;)) {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">494</span>
+  <span class="line-content">            blobToDataUri(blob).then(callback, err =&gt; console.error(err))</span>
+</div><div class="code-line ">
+  <span class="line-number">495</span>
+  <span class="line-content">          }</span>
+</div><div class="code-line ">
+  <span class="line-number">496</span>
+  <span class="line-content"></span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Log only safe error properties (message, code). Sanitize error messages before displaying to users. Never expose stack traces in production.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/text-input/TextInput.web.tsx</span>
+                <span class="line-number-badge">Line 498</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Error object logged directly - may contain sensitive data or stack traces</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">496</span>
+  <span class="line-content"></span>
+</div><div class="code-line ">
+  <span class="line-number">497</span>
+  <span class="line-content">          if (blob.type.startsWith(&#039;video/&#039;)) {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">498</span>
+  <span class="line-content">            blobToDataUri(blob).then(callback, err =&gt; console.error(err))</span>
+</div><div class="code-line ">
+  <span class="line-number">499</span>
+  <span class="line-content">          }</span>
+</div><div class="code-line ">
+  <span class="line-number">500</span>
+  <span class="line-content">        }</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Log only safe error properties (message, code). Sanitize error messages before displaying to users. Never expose stack traces in production.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/text-input/TextInput.web.tsx</span>
+                <span class="line-number-badge">Line 506</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Error object logged directly - may contain sensitive data or stack traces</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">504</span>
+  <span class="line-content"></span>
+</div><div class="code-line ">
+  <span class="line-number">505</span>
+  <span class="line-content">      if (file) {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">506</span>
+  <span class="line-content">        blobToDataUri(file).then(callback, err =&gt; console.error(err))</span>
+</div><div class="code-line ">
+  <span class="line-number">507</span>
+  <span class="line-content">      }</span>
+</div><div class="code-line ">
+  <span class="line-number">508</span>
+  <span class="line-content">    } else if (type.startsWith(&#039;video/&#039;)) {</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Log only safe error properties (message, code). Sanitize error messages before displaying to users. Never expose stack traces in production.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/text-input/TextInput.web.tsx</span>
+                <span class="line-number-badge">Line 512</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Error object logged directly - may contain sensitive data or stack traces</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">510</span>
+  <span class="line-content"></span>
+</div><div class="code-line ">
+  <span class="line-number">511</span>
+  <span class="line-content">      if (file) {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">512</span>
+  <span class="line-content">        blobToDataUri(file).then(callback, err =&gt; console.error(err))</span>
+</div><div class="code-line ">
+  <span class="line-number">513</span>
+  <span class="line-content">      }</span>
+</div><div class="code-line ">
+  <span class="line-number">514</span>
+  <span class="line-content">    }</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Log only safe error properties (message, code). Sanitize error messages before displaying to users. Never expose stack traces in production.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/videos/VideoPreview.web.tsx</span>
+                <span class="line-number-badge">Line 65</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Error object logged directly - may contain sensitive data or stack traces</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">63</span>
+  <span class="line-content">            playsInline</span>
+</div><div class="code-line ">
+  <span class="line-number">64</span>
+  <span class="line-content">            onError={err =&gt; {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">65</span>
+  <span class="line-content">              console.error(&#039;Error loading video&#039;, err)</span>
+</div><div class="code-line ">
+  <span class="line-number">66</span>
+  <span class="line-content">              Toast.show(_(msg`Could not process your video`), {</span>
+</div><div class="code-line ">
+  <span class="line-number">67</span>
+  <span class="line-content">                type: &#039;error&#039;,</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Log only safe error properties (message, code). Sanitize error messages before displaying to users. Never expose stack traces in production.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+          </div>
+        </div>
+      </div>
+      
+      <div class="finding-group medium" data-severity="medium">
+        
+        <div class="group-header">
+          <div class="finding-left">
+            <span class="severity-badge medium">
+              <span class="severity-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </span>
+              MEDIUM
+            </span>
+            <div class="finding-title">
+              Sensitive app without runtime integrity or tamper detection
+              
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="instances-container">
+          <div class="instances-list">
+            
+      <div class="finding-content-inner">
+        
+            
+        
+            <div class="finding-location">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/bskylink/src/db/index.ts</span>
+            <span class="line-number-badge">Line 1</span>
+            </div>
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement runtime integrity checks: Play Integrity API (Android), App Attest (iOS), or signature verification to detect tampering.</div>
+          </div>
+        
+      </div>
+    
+          </div>
+        </div>
+      
+      </div>
+    
+      <div class="finding-group medium" data-severity="medium">
+        <div class="group-header">
+          <div class="finding-left">
+            <span class="severity-badge medium">
+              <span class="severity-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </span>
+              MEDIUM
+            </span>
+            <div class="finding-title">
+              fetch() without timeout configuration
+              <span class="occurrence-count">5 occurrences</span>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="instances-container">
+          <div class="instances-list">
+            
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/analytics/metrics/client.ts</span>
+                <span class="line-number-badge">Line 86</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout configuration</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">84</span>
+  <span class="line-content">        }</span>
+</div><div class="code-line ">
+  <span class="line-number">85</span>
+  <span class="line-content">      } else {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">86</span>
+  <span class="line-content">        const res = await fetch(TRACKING_ENDPOINT, {</span>
+</div><div class="code-line ">
+  <span class="line-number">87</span>
+  <span class="line-content">          method: &#039;POST&#039;,</span>
+</div><div class="code-line ">
+  <span class="line-number">88</span>
+  <span class="line-content">          headers: {</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout using AbortSignal: const controller = new AbortController(); setTimeout(() =&gt; controller.abort(), 30000);</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/state/queries/shorten-link.ts</span>
+                <span class="line-number-badge">Line 6</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout configuration</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">4</span>
+  <span class="line-content">  return async (inputUrl: string): Promise&lt;{url: string}&gt; =&gt; {</span>
+</div><div class="code-line ">
+  <span class="line-number">5</span>
+  <span class="line-content">    const url = new URL(inputUrl)</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">6</span>
+  <span class="line-content">    const res = await fetch(&#039;https://go.bsky.app/link&#039;, {</span>
+</div><div class="code-line ">
+  <span class="line-number">7</span>
+  <span class="line-content">      method: &#039;POST&#039;,</span>
+</div><div class="code-line ">
+  <span class="line-number">8</span>
+  <span class="line-content">      body: JSON.stringify({</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout using AbortSignal: const controller = new AbortController(); setTimeout(() =&gt; controller.abort(), 30000);</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/state/queries/tenor.ts</span>
+                <span class="line-number-badge">Line 77</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout configuration</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">75</span>
+  <span class="line-content">    }</span>
+</div><div class="code-line ">
+  <span class="line-number">76</span>
+  <span class="line-content"></span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">77</span>
+  <span class="line-content">    const res = await fetch(urlFn(params.toString()), {</span>
+</div><div class="code-line ">
+  <span class="line-number">78</span>
+  <span class="line-content">      method: &#039;GET&#039;,</span>
+</div><div class="code-line ">
+  <span class="line-number">79</span>
+  <span class="line-content">      headers: {</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout using AbortSignal: const controller = new AbortController(); setTimeout(() =&gt; controller.abort(), 30000);</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/api/feed/custom.ts</span>
+                <span class="line-number-badge">Line 122</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout configuration</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">120</span>
+  <span class="line-content"></span>
+</div><div class="code-line ">
+  <span class="line-number">121</span>
+  <span class="line-content">  // manually construct fetch call so we can add the `lang` cache-busting param</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">122</span>
+  <span class="line-content">  let res = await fetch(</span>
+</div><div class="code-line ">
+  <span class="line-number">123</span>
+  <span class="line-content">    `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${</span>
+</div><div class="code-line ">
+  <span class="line-number">124</span>
+  <span class="line-content">      cursor ? `&amp;cursor=${cursor}` : &#039;&#039;</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout using AbortSignal: const controller = new AbortController(); setTimeout(() =&gt; controller.abort(), 30000);</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/api/feed/custom.ts</span>
+                <span class="line-number-badge">Line 142</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">fetch() without timeout configuration</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">140</span>
+  <span class="line-content"></span>
+</div><div class="code-line ">
+  <span class="line-number">141</span>
+  <span class="line-content">  // no data, try again with language headers removed</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">142</span>
+  <span class="line-content">  res = await fetch(</span>
+</div><div class="code-line ">
+  <span class="line-number">143</span>
+  <span class="line-content">    `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${</span>
+</div><div class="code-line ">
+  <span class="line-number">144</span>
+  <span class="line-content">      cursor ? `&amp;cursor=${cursor}` : &#039;&#039;</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add timeout using AbortSignal: const controller = new AbortController(); setTimeout(() =&gt; controller.abort(), 30000);</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+          </div>
+        </div>
+      </div>
+      
+      <div class="finding-group medium" data-severity="medium">
+        
+        <div class="group-header">
+          <div class="finding-left">
+            <span class="severity-badge medium">
+              <span class="severity-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </span>
+              MEDIUM
+            </span>
+            <div class="finding-title">
+              Basic Authentication credentials detected: Basic
+  interpretFil...[REDACTED]
+              
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="instances-container">
+          <div class="instances-list">
+            
+      <div class="finding-content-inner">
+        
+            
+        
+            <div class="finding-location">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/components/moderation/PostHider.tsx</span>
+            <span class="line-number-badge">Line 37</span>
+            </div>
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">35</span>
+  <span class="line-content">  iconStyles: StyleProp&lt;ViewStyle&gt;</span>
+</div><div class="code-line ">
+  <span class="line-number">36</span>
+  <span class="line-content">  modui: ModerationUI</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">37</span>
+  <span class="line-content">  profile: AppBskyActorDefs.ProfileViewBasic</span>
+</div><div class="code-line ">
+  <span class="line-number">38</span>
+  <span class="line-content">  interpretFilterAsBlur?: boolean</span>
+</div><div class="code-line ">
+  <span class="line-number">39</span>
+  <span class="line-content">  hiderStyle?: StyleProp&lt;ViewStyle&gt;</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Move Basic Auth to environment variables or secure config management. Never commit secrets to version control.</div>
+          </div>
+        
+      </div>
+    
+          </div>
+        </div>
+      
+      </div>
+    
+      <div class="finding-group medium" data-severity="medium">
+        <div class="group-header">
+          <div class="finding-left">
+            <span class="severity-badge medium">
+              <span class="severity-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </span>
+              MEDIUM
+            </span>
+            <div class="finding-title">
+              JSON.parse() on potentially untrusted data without validation
+              <span class="occurrence-count">2 occurrences</span>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="instances-container">
+          <div class="instances-list">
+            
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/media/video/upload.ts</span>
+                <span class="line-number-badge">Line 69</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">JSON.parse() on potentially untrusted data without validation</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">67</span>
+  <span class="line-content">  }</span>
+</div><div class="code-line ">
+  <span class="line-number">68</span>
+  <span class="line-content"></span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">69</span>
+  <span class="line-content">  const responseBody = JSON.parse(res.body) as AppBskyVideoDefs.JobStatus</span>
+</div><div class="code-line ">
+  <span class="line-number">70</span>
+  <span class="line-content"></span>
+</div><div class="code-line ">
+  <span class="line-number">71</span>
+  <span class="line-content">  if (!responseBody.jobId) {</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Validate JSON structure and data types before parsing untrusted input. Use schema validation libraries like Zod or Yup.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/media/video/upload.web.ts</span>
+                <span class="line-number-badge">Line 68</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">JSON.parse() on potentially untrusted data without validation</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">66</span>
+  <span class="line-content">          reject(new AbortError())</span>
+</div><div class="code-line ">
+  <span class="line-number">67</span>
+  <span class="line-content">        } else if (xhr.readyState === 4) {</span>
+</div><div class="code-line highlighted medium">
+  <span class="line-number">68</span>
+  <span class="line-content">          const uploadRes = JSON.parse(</span>
+</div><div class="code-line ">
+  <span class="line-number">69</span>
+  <span class="line-content">            xhr.responseText,</span>
+</div><div class="code-line ">
+  <span class="line-number">70</span>
+  <span class="line-content">          ) as AppBskyVideoDefs.JobStatus</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Validate JSON structure and data types before parsing untrusted input. Use schema validation libraries like Zod or Yup.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+          </div>
+        </div>
+      </div>
+      
+      
+      <div class="finding-group low" data-severity="low">
+        <div class="group-header">
+          <div class="finding-left">
+            <span class="severity-badge low">
+              <span class="severity-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </span>
+              LOW
+            </span>
+            <div class="finding-title">
+              Risky SDK detected in sensitive app: segment - Analytics aggregator - forwards data to multiple services
+              <span class="occurrence-count">2 occurrences</span>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="instances-container">
+          <div class="instances-list">
+            
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/link-meta/link-meta.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Risky SDK detected in sensitive app: segment - Analytics aggregator - forwards data to multiple services</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Review segment usage in sensitive app. Ensure it doesn&#039;t capture/transmit sensitive user data. Consider alternatives or strict configuration.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/package.json</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Risky SDK detected in sensitive app: segment - Analytics aggregator - forwards data to multiple services</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Review segment usage in sensitive app. Ensure it doesn&#039;t capture/transmit sensitive user data. Consider alternatives or strict configuration.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+          </div>
+        </div>
+      </div>
+      
+      <div class="finding-group low" data-severity="low">
+        <div class="group-header">
+          <div class="finding-left">
+            <span class="severity-badge low">
+              <span class="severity-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </span>
+              LOW
+            </span>
+            <div class="finding-title">
+              Biometric authentication without proper fallback mechanism
+              <span class="occurrence-count">20 occurrences</span>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="instances-container">
+          <div class="instances-list">
+            
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/an/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/ast/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/en/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/en-GB/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/es/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/fi/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/fy/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/ga/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/gl/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/hi/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/ia/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/id/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/km/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/ne/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/nl/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/pl/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/ru/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/th/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/uk/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/vi/messages.ts</span>
+                <span class="line-number-badge">Line 1</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">Biometric authentication without proper fallback mechanism</div>
+        
+            
+        
+            
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+          </div>
+        </div>
+      </div>
+      
+      <div class="finding-group low" data-severity="low">
+        <div class="group-header">
+          <div class="finding-left">
+            <span class="severity-badge low">
+              <span class="severity-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </span>
+              LOW
+            </span>
+            <div class="finding-title">
+              WebView loading external content without security headers
+              <span class="occurrence-count">2 occurrences</span>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="instances-container">
+          <div class="instances-list">
+            
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/screens/Signup/StepCaptcha/CaptchaWebView.tsx</span>
+                <span class="line-number-badge">Line 89</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">WebView loading external content without security headers</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">87</span>
+  <span class="line-content"></span>
+</div><div class="code-line ">
+  <span class="line-number">88</span>
+  <span class="line-content">  return (</span>
+</div><div class="code-line highlighted low">
+  <span class="line-number">89</span>
+  <span class="line-content">    &lt;WebView</span>
+</div><div class="code-line ">
+  <span class="line-number">90</span>
+  <span class="line-content">      source={{uri: url}}</span>
+</div><div class="code-line ">
+  <span class="line-number">91</span>
+  <span class="line-content">      javaScriptEnabled</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add security headers to WebView source: X-Frame-Options, Content-Security-Policy. Validate origin of loaded content.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+      <div class="finding">
+        <div class="finding-header">
+          <div class="finding-left">
+            <div class="finding-location" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="file-path">/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/components/Post/Embed/ExternalEmbed/ExternalPlayer.tsx</span>
+                <span class="line-number-badge">Line 100</span>
+              </div>
+              
+            </div>
+          </div>
+          <svg class="expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+        
+        <div class="finding-content">
+          
+      <div class="finding-content-inner">
+        
+          <div class="finding-description">WebView loading external content without security headers</div>
+        
+            
+        
+            
+        
+            <div class="code-snippet">
+            <div class="code-line ">
+  <span class="line-number">98</span>
+  <span class="line-content">  return (</span>
+</div><div class="code-line ">
+  <span class="line-number">99</span>
+  <span class="line-content">    &lt;EventStopper style={[a.absolute, a.inset_0, styles.playerLayer]}&gt;</span>
+</div><div class="code-line highlighted low">
+  <span class="line-number">100</span>
+  <span class="line-content">      &lt;WebView</span>
+</div><div class="code-line ">
+  <span class="line-number">101</span>
+  <span class="line-content">        javaScriptEnabled={true}</span>
+</div><div class="code-line ">
+  <span class="line-number">102</span>
+  <span class="line-content">        onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}</span>
+</div>
+          </div>
+        
+        
+        
+            
+        
+            <div class="suggestion">
+              <div class="suggestion-title">
+                💡 Recommendation
+              </div>
+            <div class="suggestion-text">Add security headers to WebView source: X-Frame-Options, Content-Security-Policy. Validate origin of loaded content.</div>
+          </div>
+        
+      </div>
+    
+        </div>
+      </div>
+    
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <div class="footer">
+      <div class="footer-content">
+        <span class="footer-logo">rnsec</span>
+        <span class="footer-version">v1.2.0</span>
+      </div>
+      <p>React Native & Expo Security Scanner</p>
+      <p style="margin-top: 8px; opacity: 0.6; font-size: 12px;">
+        Professional-grade static analysis for mobile security
+      </p>
+    </div>
+  </div>
+  
+  <script>
+    let currentFilter = 'all';
+
+    function toggleGroup(element) {
+      element.classList.toggle('expanded');
+    }
+
+    function toggleFinding(element) {
+      element.classList.toggle('expanded');
+    }
+
+    function filterBySeverity(severity) {
+      currentFilter = severity;
+      const groups = document.querySelectorAll('.finding-group');
+      const cards = document.querySelectorAll('.summary-card');
+      
+      cards.forEach(card => {
+        if (card.dataset.filter === severity) {
+          card.classList.add('active');
+        } else {
+          card.classList.remove('active');
+        }
+      });
+      
+      groups.forEach(group => {
+        if (severity === 'all') {
+          group.style.display = 'block';
+        } else if (group.classList.contains(severity)) {
+          group.style.display = 'block';
+        } else {
+          group.style.display = 'none';
+        }
+      });
+    }
+
+    document.querySelectorAll('.group-header').forEach(header => {
+      header.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleGroup(this.parentElement);
+      });
+    });
+
+    document.querySelectorAll('.finding').forEach(finding => {
+      finding.addEventListener('click', function(e) {
+        if (e.target.closest('.code-snippet') || e.target.tagName === 'A') {
+          return;
+        }
+        e.stopPropagation();
+        toggleFinding(this);
+      });
+    });
+  </script>
+</body>
+</html>
+

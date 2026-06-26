@@ -1,0 +1,559 @@
+{
+  "findings": [
+    {
+      "ruleId": "WEAK_HASH_ALGORITHM",
+      "description": "Weak hash algorithm specified: \"md5\"",
+      "severity": "HIGH",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/scripts/bundleUpdate.js",
+      "line": 20,
+      "snippet": "const getMd5 = async path => {\n  return new Promise(res => {\n    const hash = crypto.createHash('md5')\n    const rStream = fs.createReadStream(path)\n    rStream.on('data', data => {",
+      "suggestion": "Use SHA-256 or stronger algorithms instead of MD5 or SHA-1"
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout - vulnerable to slowloris DoS",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/bskyogcard/scripts/install-fonts.ts",
+      "line": 22,
+      "snippet": "    FONTS.map(async urlStr => {\n      const url = new URL(urlStr)\n      const res = await fetch(url)\n      const font = await res.arrayBuffer()\n      const filename = url.pathname",
+      "suggestion": "Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config."
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout - vulnerable to slowloris DoS",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/bskyogcard/src/util.ts",
+      "line": 14,
+      "snippet": "    chars.indexOf(U200D) < 0 ? chars.replace(UFE0F_REGEXP, '') : chars,\n  )\n  const res = await fetch(getEmojiUrl(iconCode))\n  const body = await res.arrayBuffer()\n  if (!res.ok) {",
+      "suggestion": "Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config."
+    },
+    {
+      "ruleId": "SENSITIVE_DATA_IN_ERROR_MESSAGES",
+      "description": "Error object logged directly - may contain sensitive data or stack traces",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/bskylink/src/bin.ts",
+      "line": 60,
+      "snippet": "\nmain().catch(error => {\n  console.error('Unhandled startup error:', error)\n  process.exit(1)\n})",
+      "suggestion": "Log only safe error properties (message, code). Sanitize error messages before displaying to users. Never expose stack traces in production."
+    },
+    {
+      "ruleId": "HARDCODED_SECRETS",
+      "description": "Potential hardcoded secret in property \"cid\"",
+      "severity": "HIGH",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/demo.ts",
+      "line": 15,
+      "snippet": "      post: {\n        uri: 'at://did:plc:pvooorihapc2lf2pijehgrdf/app.bsky.feed.post/3lniysofyll2d',\n        cid: 'bafyreihwh3wxxme732ylbylhhdyz7ex6t4jtu6s3gjxxvnnh4feddhg3ku',\n        author: {\n          did: 'did:plc:pvooorihapc2lf2pijehgrdf',",
+      "suggestion": "Move secrets to environment variables or secure config management"
+    },
+    {
+      "ruleId": "SENSITIVE_DATA_IN_ERROR_MESSAGES",
+      "description": "Error object logged directly - may contain sensitive data or stack traces",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/helpers.ts",
+      "line": 337,
+      "snippet": "    return getRegionNames(appLang).of(countryCode)\n  } catch (err) {\n    console.warn('Error getting localized region name:', err)\n    return undefined\n  }",
+      "suggestion": "Log only safe error properties (message, code). Sanitize error messages before displaying to users. Never expose stack traces in production."
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout - vulnerable to slowloris DoS",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/state/appConfig.tsx",
+      "line": 35,
+      "snippet": "    if (!fetchAppConfigPromise) {\n      fetchAppConfigPromise = (async () => {\n        const r = await fetch(`${APP_CONFIG_URL}/config`)\n        if (!r.ok) throw new Error(await r.text())\n        const data = await r.json()",
+      "suggestion": "Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config."
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout - vulnerable to slowloris DoS",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/state/gallery.ts",
+      "line": 282,
+      "snippet": "    if (from.startsWith('blob:')) {\n      try {\n        const response = await fetch(from)\n        const blob = await response.blob()\n        return await blobToDataUri(blob)",
+      "suggestion": "Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config."
+    },
+    {
+      "ruleId": "ROOT_JAILBREAK_DETECTION_ABSENT",
+      "description": "Sensitive app (banking/fintech/healthcare) without root/jailbreak detection",
+      "severity": "HIGH",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/bskyogcard/src/routes/index.ts",
+      "line": 1,
+      "suggestion": "Implement root/jailbreak detection using jail-monkey or similar library. Warn users or restrict functionality on compromised devices."
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout - vulnerable to slowloris DoS",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/bskyogcard/src/routes/starter-pack.tsx",
+      "line": 86,
+      "snippet": "\nasync function getImage(url: string) {\n  const response = await fetch(ensureJpeg(url))\n  const arrayBuf = await response.arrayBuffer() // must drain body even if it will be discarded\n  if (response.status !== 200) return null",
+      "suggestion": "Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config."
+    },
+    {
+      "ruleId": "MISSING_RUNTIME_INTEGRITY_CHECKS",
+      "description": "Sensitive app without runtime integrity or tamper detection",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/bskylink/src/db/index.ts",
+      "line": 1,
+      "suggestion": "Implement runtime integrity checks: Play Integrity API (Android), App Attest (iOS), or signature verification to detect tampering."
+    },
+    {
+      "ruleId": "ROOT_JAILBREAK_DETECTION_ABSENT",
+      "description": "Sensitive app (banking/fintech/healthcare) without root/jailbreak detection",
+      "severity": "HIGH",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/bskylink/src/routes/index.ts",
+      "line": 1,
+      "suggestion": "Implement root/jailbreak detection using jail-monkey or similar library. Warn users or restrict functionality on compromised devices."
+    },
+    {
+      "ruleId": "SENSITIVE_DATA_IN_ERROR_MESSAGES",
+      "description": "Error object logged directly - may contain sensitive data or stack traces",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/bskyembed/src/screens/landing.tsx",
+      "line": 112,
+      "snippet": "        setThread(data.thread)\n      } catch (err) {\n        console.error(err)\n        setError(err instanceof Error ? err.message : 'Invalid Bluesky URL')\n      } finally {",
+      "suggestion": "Log only safe error properties (message, code). Sanitize error messages before displaying to users. Never expose stack traces in production."
+    },
+    {
+      "ruleId": "SENSITIVE_DATA_IN_ERROR_MESSAGES",
+      "description": "Error object logged directly - may contain sensitive data or stack traces",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/bskyembed/src/screens/post.tsx",
+      "line": 63,
+      "snippet": "  })\n  .catch(err => {\n    console.error(err)\n    render(<ErrorMessage />, root)\n  })",
+      "suggestion": "Log only safe error properties (message, code). Sanitize error messages before displaying to users. Never expose stack traces in production."
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout configuration",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/analytics/metrics/client.ts",
+      "line": 86,
+      "snippet": "        }\n      } else {\n        const res = await fetch(TRACKING_ENDPOINT, {\n          method: 'POST',\n          headers: {",
+      "suggestion": "Add timeout using AbortSignal: const controller = new AbortController(); setTimeout(() => controller.abort(), 30000);"
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout - vulnerable to slowloris DoS",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/features/liveEvents/context.tsx",
+      "line": 27,
+      "snippet": "async function fetchLiveEvents(): Promise<LiveEventsWorkerResponse | null> {\n  try {\n    const res = await fetch(`${LIVE_EVENTS_URL}/config`)\n    if (!res.ok) return null\n    const data = await res.json()",
+      "suggestion": "Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config."
+    },
+    {
+      "ruleId": "API_KEY_EXPOSED",
+      "description": "Basic Authentication credentials detected: Basic\n  interpretFil...[REDACTED]",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/components/moderation/PostHider.tsx",
+      "line": 37,
+      "snippet": "  iconStyles: StyleProp<ViewStyle>\n  modui: ModerationUI\n  profile: AppBskyActorDefs.ProfileViewBasic\n  interpretFilterAsBlur?: boolean\n  hiderStyle?: StyleProp<ViewStyle>",
+      "suggestion": "Move Basic Auth to environment variables or secure config management. Never commit secrets to version control."
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout - vulnerable to slowloris DoS",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/api/upload-blob.ts",
+      "line": 25,
+      "snippet": "\n  if (typeof input === 'string' && input.startsWith('data:')) {\n    const blob = await fetch(input).then(r => r.blob())\n    return agent.uploadBlob(blob, {encoding})\n  }",
+      "suggestion": "Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config."
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout - vulnerable to slowloris DoS",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/api/upload-blob.web.ts",
+      "line": 18,
+      "snippet": "    (input.startsWith('data:') || input.startsWith('blob:'))\n  ) {\n    const blob = await fetch(input).then(r => r.blob())\n    return agent.uploadBlob(blob, {encoding})\n  }",
+      "suggestion": "Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config."
+    },
+    {
+      "ruleId": "THIRD_PARTY_SDK_RISK",
+      "description": "Risky SDK detected in sensitive app: segment - Analytics aggregator - forwards data to multiple services",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/link-meta/link-meta.ts",
+      "line": 1,
+      "suggestion": "Review segment usage in sensitive app. Ensure it doesn't capture/transmit sensitive user data. Consider alternatives or strict configuration."
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout - vulnerable to slowloris DoS",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/media/manip.web.ts",
+      "line": 32,
+      "snippet": "  const controller = new AbortController()\n  const to = setTimeout(() => controller.abort(), opts.timeout || 5e3)\n  const res = await fetch(opts.uri)\n  const resBody = await res.blob()\n  clearTimeout(to)",
+      "suggestion": "Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config."
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout configuration",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/state/queries/shorten-link.ts",
+      "line": 6,
+      "snippet": "  return async (inputUrl: string): Promise<{url: string}> => {\n    const url = new URL(inputUrl)\n    const res = await fetch('https://go.bsky.app/link', {\n      method: 'POST',\n      body: JSON.stringify({",
+      "suggestion": "Add timeout using AbortSignal: const controller = new AbortController(); setTimeout(() => controller.abort(), 30000);"
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout configuration",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/state/queries/tenor.ts",
+      "line": 77,
+      "snippet": "    }\n\n    const res = await fetch(urlFn(params.toString()), {\n      method: 'GET',\n      headers: {",
+      "suggestion": "Add timeout using AbortSignal: const controller = new AbortController(); setTimeout(() => controller.abort(), 30000);"
+    },
+    {
+      "ruleId": "HARDCODED_SECRETS",
+      "description": "Potential hardcoded secret in property \"cid\"",
+      "severity": "HIGH",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/screens/DebugMod.tsx",
+      "line": 205,
+      "snippet": "          parent: {\n            uri: `at://${did}/app.bsky.feed.post/fake-parent`,\n            cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',\n          },\n          root: {",
+      "suggestion": "Move secrets to environment variables or secure config management"
+    },
+    {
+      "ruleId": "HARDCODED_SECRETS",
+      "description": "Potential hardcoded secret in property \"cid\"",
+      "severity": "HIGH",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/screens/DebugMod.tsx",
+      "line": 209,
+      "snippet": "          root: {\n            uri: `at://${did}/app.bsky.feed.post/fake-parent`,\n            cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',\n          },\n        },",
+      "suggestion": "Move secrets to environment variables or secure config management"
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout configuration",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/api/feed/custom.ts",
+      "line": 122,
+      "snippet": "\n  // manually construct fetch call so we can add the `lang` cache-busting param\n  let res = await fetch(\n    `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${\n      cursor ? `&cursor=${cursor}` : ''",
+      "suggestion": "Add timeout using AbortSignal: const controller = new AbortController(); setTimeout(() => controller.abort(), 30000);"
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout configuration",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/api/feed/custom.ts",
+      "line": 142,
+      "snippet": "\n  // no data, try again with language headers removed\n  res = await fetch(\n    `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${\n      cursor ? `&cursor=${cursor}` : ''",
+      "suggestion": "Add timeout using AbortSignal: const controller = new AbortController(); setTimeout(() => controller.abort(), 30000);"
+    },
+    {
+      "ruleId": "INSECURE_DESERIALIZATION",
+      "description": "JSON.parse() on potentially untrusted data without validation",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/media/video/upload.ts",
+      "line": 69,
+      "snippet": "  }\n\n  const responseBody = JSON.parse(res.body) as AppBskyVideoDefs.JobStatus\n\n  if (!responseBody.jobId) {",
+      "suggestion": "Validate JSON structure and data types before parsing untrusted input. Use schema validation libraries like Zod or Yup."
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout - vulnerable to slowloris DoS",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/media/video/upload.web.ts",
+      "line": 42,
+      "snippet": "      throw new AbortError()\n    }\n    bytes = await fetch(video.uri).then(res => res.arrayBuffer())\n  }\n",
+      "suggestion": "Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config."
+    },
+    {
+      "ruleId": "INSECURE_DESERIALIZATION",
+      "description": "JSON.parse() on potentially untrusted data without validation",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/lib/media/video/upload.web.ts",
+      "line": 68,
+      "snippet": "          reject(new AbortError())\n        } else if (xhr.readyState === 4) {\n          const uploadRes = JSON.parse(\n            xhr.responseText,\n          ) as AppBskyVideoDefs.JobStatus",
+      "suggestion": "Validate JSON structure and data types before parsing untrusted input. Use schema validation libraries like Zod or Yup."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/an/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/ast/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/en/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/en-GB/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/es/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/fi/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/fy/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/ga/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/gl/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/hi/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/ia/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/id/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/km/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/ne/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/nl/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/pl/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/ru/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/th/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/uk/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "IMPROPER_BIOMETRIC_FALLBACK",
+      "description": "Biometric authentication without proper fallback mechanism",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/locale/locales/vi/messages.ts",
+      "line": 1,
+      "suggestion": "Implement secure fallback when biometrics fail: device passcode, secure keychain, or re-authentication."
+    },
+    {
+      "ruleId": "MISSING_SECURITY_HEADERS",
+      "description": "WebView loading external content without security headers",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/screens/Signup/StepCaptcha/CaptchaWebView.tsx",
+      "line": 89,
+      "snippet": "\n  return (\n    <WebView\n      source={{uri: url}}\n      javaScriptEnabled",
+      "suggestion": "Add security headers to WebView source: X-Frame-Options, Content-Security-Policy. Validate origin of loaded content."
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout - vulnerable to slowloris DoS",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/Composer.tsx",
+      "line": 384,
+      "snippet": "        if (IS_WEB) {\n          // Web: Convert blob URL to a File, then get video metadata (returns data URL)\n          const response = await fetch(videoInfo.uri)\n          const blob = await response.blob()\n          const file = new File([blob], 'restored-video', {",
+      "suggestion": "Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config."
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout - vulnerable to slowloris DoS",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/Composer.tsx",
+      "line": 1366,
+      "snippet": "        }\n        const name = `pasted.${mimeToExt(mimeType)}`\n        const file = await fetch(uri)\n          .then(res => res.blob())\n          .then(blob => new File([blob], name, {type: mimeType}))",
+      "suggestion": "Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config."
+    },
+    {
+      "ruleId": "MISSING_SECURITY_HEADERS",
+      "description": "WebView loading external content without security headers",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/components/Post/Embed/ExternalEmbed/ExternalPlayer.tsx",
+      "line": 100,
+      "snippet": "  return (\n    <EventStopper style={[a.absolute, a.inset_0, styles.playerLayer]}>\n      <WebView\n        javaScriptEnabled={true}\n        onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}",
+      "suggestion": "Add security headers to WebView source: X-Frame-Options, Content-Security-Policy. Validate origin of loaded content."
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout - vulnerable to slowloris DoS",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/text-input/TextInput.web.tsx",
+      "line": 490,
+      "snippet": "      item.getAsString(async itemString => {\n        if (isUriImage(itemString)) {\n          const response = await fetch(itemString)\n          const blob = await response.blob()\n",
+      "suggestion": "Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config."
+    },
+    {
+      "ruleId": "SENSITIVE_DATA_IN_ERROR_MESSAGES",
+      "description": "Error object logged directly - may contain sensitive data or stack traces",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/text-input/TextInput.web.tsx",
+      "line": 494,
+      "snippet": "\n          if (blob.type.startsWith('image/')) {\n            blobToDataUri(blob).then(callback, err => console.error(err))\n          }\n",
+      "suggestion": "Log only safe error properties (message, code). Sanitize error messages before displaying to users. Never expose stack traces in production."
+    },
+    {
+      "ruleId": "SENSITIVE_DATA_IN_ERROR_MESSAGES",
+      "description": "Error object logged directly - may contain sensitive data or stack traces",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/text-input/TextInput.web.tsx",
+      "line": 498,
+      "snippet": "\n          if (blob.type.startsWith('video/')) {\n            blobToDataUri(blob).then(callback, err => console.error(err))\n          }\n        }",
+      "suggestion": "Log only safe error properties (message, code). Sanitize error messages before displaying to users. Never expose stack traces in production."
+    },
+    {
+      "ruleId": "SENSITIVE_DATA_IN_ERROR_MESSAGES",
+      "description": "Error object logged directly - may contain sensitive data or stack traces",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/text-input/TextInput.web.tsx",
+      "line": 506,
+      "snippet": "\n      if (file) {\n        blobToDataUri(file).then(callback, err => console.error(err))\n      }\n    } else if (type.startsWith('video/')) {",
+      "suggestion": "Log only safe error properties (message, code). Sanitize error messages before displaying to users. Never expose stack traces in production."
+    },
+    {
+      "ruleId": "SENSITIVE_DATA_IN_ERROR_MESSAGES",
+      "description": "Error object logged directly - may contain sensitive data or stack traces",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/text-input/TextInput.web.tsx",
+      "line": 512,
+      "snippet": "\n      if (file) {\n        blobToDataUri(file).then(callback, err => console.error(err))\n      }\n    }",
+      "suggestion": "Log only safe error properties (message, code). Sanitize error messages before displaying to users. Never expose stack traces in production."
+    },
+    {
+      "ruleId": "SENSITIVE_DATA_IN_ERROR_MESSAGES",
+      "description": "Error object logged directly - may contain sensitive data or stack traces",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/videos/VideoPreview.web.tsx",
+      "line": 65,
+      "snippet": "            playsInline\n            onError={err => {\n              console.error('Error loading video', err)\n              Toast.show(_(msg`Could not process your video`), {\n                type: 'error',",
+      "suggestion": "Log only safe error properties (message, code). Sanitize error messages before displaying to users. Never expose stack traces in production."
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout - vulnerable to slowloris DoS",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/drafts/state/storage.web.ts",
+      "line": 25,
+      "snippet": "  // Handle data URIs directly\n  if (sourcePath.startsWith('data:')) {\n    const response = await fetch(sourcePath)\n    return response.blob()\n  }",
+      "suggestion": "Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config."
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout - vulnerable to slowloris DoS",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/drafts/state/storage.web.ts",
+      "line": 32,
+      "snippet": "  if (sourcePath.startsWith('blob:')) {\n    try {\n      const response = await fetch(sourcePath)\n      return response.blob()\n    } catch (e) {",
+      "suggestion": "Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config."
+    },
+    {
+      "ruleId": "NO_REQUEST_TIMEOUT",
+      "description": "fetch() without timeout - vulnerable to slowloris DoS",
+      "severity": "MEDIUM",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/src/view/com/composer/drafts/state/storage.web.ts",
+      "line": 44,
+      "snippet": "\n  // Handle regular URLs\n  const response = await fetch(sourcePath)\n  if (!response.ok) {\n    throw new Error(`Failed to fetch media: ${response.status}`)",
+      "suggestion": "Add timeout to fetch using AbortSignal with setTimeout, or use a library like axios with timeout config."
+    },
+    {
+      "ruleId": "THIRD_PARTY_SDK_RISK",
+      "description": "Risky SDK detected in sensitive app: segment - Analytics aggregator - forwards data to multiple services",
+      "severity": "LOW",
+      "filePath": "/media/enzolda/Arquivos/VSCode/bluesky-webapp/package.json",
+      "line": 1,
+      "suggestion": "Review segment usage in sensitive app. Ensure it doesn't capture/transmit sensitive user data. Consider alternatives or strict configuration."
+    }
+  ],
+  "scannedFiles": 1570,
+  "duration": 23910,
+  "timestamp": "2026-04-09T04:19:17.266Z",
+  "ignoredRules": []
+}
