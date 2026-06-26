@@ -156,33 +156,13 @@ test('iOS: mints token then calls addPass with the returned URL', async () => {
   )
 })
 
-// Test 6: Android press flow
-test('Android: fetches JWT then calls addPassWithSignedJwt', async () => {
+// Test 6: Android is gated out for iOS-only launch (Google Wallet backend not provisioned)
+test('Android: renders null until Google Wallet backend is wired', () => {
   ;(Platform as {OS: string}).OS = 'android'
-  global.fetch = jest.fn().mockResolvedValue({
-    ok: true,
-    json: () => Promise.resolve({jwt: 'signed-jwt'}),
-  })
-  const {UNSAFE_getByType} = render(
+  const {toJSON} = render(
     <AddToWalletButton themeKey="day" handle="bob.bsky.social" />,
   )
-  await waitFor(() =>
-    UNSAFE_getByType('RNWalletView' as unknown as ComponentType),
-  )
-  const view = UNSAFE_getByType(
-    'RNWalletView' as unknown as ComponentType,
-  ) as unknown as {
-    props: {onPress: () => Promise<void>}
-  }
-  const {onPress} = view.props
-  await act(async () => {
-    await onPress()
-  })
-  expect(global.fetch).toHaveBeenCalledWith(
-    'https://bsky.app/invite/wallet/jwt?theme=day',
-    expect.objectContaining({headers: expect.any(Object)}),
-  )
-  expect(RNWallet.addPassWithSignedJwt).toHaveBeenCalledWith('signed-jwt')
+  expect(toJSON()).toBeNull()
 })
 
 // Test 7: error path

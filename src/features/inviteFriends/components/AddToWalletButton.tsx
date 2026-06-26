@@ -43,6 +43,9 @@ export function AddToWalletButton({
   }, [handle])
 
   if (IS_WEB) return null
+  // iOS-only launch: Google Wallet backend is not yet provisioned. Once
+  // the Google Wallet API issuer + service account land, drop this gate.
+  if (Platform.OS !== 'ios') return null
   if (!handle || handle === 'handle.invalid') return null
   if (canAdd !== true) return null
 
