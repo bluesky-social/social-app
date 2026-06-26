@@ -215,6 +215,7 @@ overrides:
   react-native-screens: 4.24.0
 
 patchedDependencies:
+  '@bsky.app/expo-scroll-edge-effect': b745392cadb2a707a0b6fcd12de9dc3313765aaf6de089a4a69e6b910a19d724
   '@sentry/react-native@6.20.0': 1d48e4d5178f5684eb33262299e7eed283bf9601f79b9ae1af63a7f607d3483a
   expo-age-range@0.2.18: c325225749993424461eeece1d97a99b19c00da2ebc958a73c12e4eca0c39306
   expo-glass-effect@55.0.8: 6c9fa5b104e53b87df4e17b320acb3b94d12ac90c0101190045dd620681efff0

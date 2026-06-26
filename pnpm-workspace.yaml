@@ -19,6 +19,7 @@ allowBuilds:
   'esbuild': true
   'unrs-resolver': true
 patchedDependencies:
+  '@bsky.app/expo-scroll-edge-effect': patches/@bsky.app__expo-scroll-edge-effect.patch
   '@sentry/react-native@6.20.0': patches/@sentry__react-native@6.20.0.patch
   expo-age-range@0.2.18: patches/expo-age-range@0.2.18.patch
   'expo-haptics@15.0.8': patches/expo-haptics@15.0.8.patch
