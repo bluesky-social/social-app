@@ -371,6 +371,7 @@ export function QuoteEmbed({
         moderation={moderation}
         showAvatar
         postHref={itemHref}
+        postUri={quote.uri}
         timestamp={quote.indexedAt}
         linkDisabled
       />

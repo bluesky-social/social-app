@@ -232,6 +232,7 @@ function MessageInputPostEmbed({
               moderation={moderation}
               timestamp={post.indexedAt}
               postHref={itemHref}
+              postUri={post.uri}
               linkDisabled
             />
             <Button

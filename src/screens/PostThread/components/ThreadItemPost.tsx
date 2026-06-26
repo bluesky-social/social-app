@@ -303,6 +303,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                 moderation={moderation}
                 timestamp={post.indexedAt}
                 postHref={postHref}
+                postUri={post.uri}
                 style={[
                   a.pb_xs,
                   maybeApplyGalleryOffsetStyles('meta', {

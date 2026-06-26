@@ -415,6 +415,7 @@ let FeedItemInner = ({
               moderation={moderation}
               timestamp={post.indexedAt}
               postHref={href}
+              postUri={post.uri}
               onOpenAuthor={onOpenAuthor}
             />
             {showReplyTo &&
