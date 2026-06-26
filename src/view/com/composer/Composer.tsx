@@ -112,6 +112,7 @@ import {
 } from '#/view/com/composer/ExternalEmbed'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {GifAltTextDialog} from '#/view/com/composer/GifAltText'
+import {CommunityOnlyBadge} from '#/components/CommunityOnlyBadge'
 import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
 import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
@@ -2037,6 +2038,7 @@ function ComposerPills({
             <Toggle.Switch />
           </Toggle.Item>
         )}
+        {thread.blackskyOnly && <CommunityOnlyBadge />}
         {hasMedia || hasLink ? (
           <LabelsBtn
             labels={post.labels}
