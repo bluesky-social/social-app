@@ -44,7 +44,7 @@ export function Autocomplete({
   const t = useTheme()
 
   const updatePosition = useCallback(() => {
-    sift.updatePosition()
+    void sift.updatePosition()
   }, [sift])
 
   useOnKeyboard('keyboardDidShow', updatePosition)

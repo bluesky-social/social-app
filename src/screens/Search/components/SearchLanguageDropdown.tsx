@@ -93,13 +93,17 @@ export function SearchLanguageDropdown({
                 ? 'solid'
                 : platform({native: 'ghost', default: 'solid'})
             }
-            style={native([
-              a.py_sm,
-              a.px_sm,
-              advancedSearchV2Enabled
-                ? null
-                : {marginRight: tokens.space.sm * -1},
-            ])}>
+            style={
+              showIcon
+                ? native([
+                    a.py_sm,
+                    a.px_sm,
+                    advancedSearchV2Enabled
+                      ? null
+                      : {marginRight: tokens.space.sm * -1},
+                  ])
+                : null
+            }>
             {showIcon ? <ButtonIcon icon={EarthIcon} /> : null}
             <ButtonText>{currentLanguageLabel}</ButtonText>
             <ButtonIcon

@@ -1,5 +1,5 @@
 import {useMemo, useRef, useState} from 'react'
-import {findNodeHandle, type ScrollView, View} from 'react-native'
+import {type ScrollView, View} from 'react-native'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {
@@ -152,23 +152,18 @@ function DialogInner({
 
   function addFilter() {
     if (filters.length >= MAX_FILTERS) return
-    setFilters(prev => [makeFilter('authors'), ...prev])
+    // New blocks append to the end so the newest sits directly above the
+    // "Add filter" button, which renders below the list.
+    setFilters(prev => [...prev, makeFilter('authors')])
     ax.metric('search:addFilter:press', {})
-    // Wait for the new block to render, then bring the section into view.
+    // Wait for the new block to render, then scroll the bottom of the dialog
+    // (the new block plus the button beneath it) into view.
     requestAnimationFrame(() => {
       if (IS_WEB) {
         const node = filtersSectionRef.current as unknown as HTMLElement | null
-        node?.scrollIntoView?.({behavior: 'smooth', block: 'start'})
+        node?.scrollIntoView?.({behavior: 'smooth', block: 'end'})
       } else {
-        const scrollNode = findNodeHandle(scrollRef.current)
-        if (!scrollNode) return
-        filtersSectionRef.current?.measureLayout(
-          scrollNode,
-          (_x, y) => {
-            scrollRef.current?.scrollTo({y, animated: true})
-          },
-          () => {},
-        )
+        scrollRef.current?.scrollToEnd({animated: true})
       }
     })
   }
@@ -439,6 +434,25 @@ function DialogInner({
         </View>
 
         <View ref={filtersSectionRef} style={[a.gap_md]}>
+          {filters.map(filter => (
+            <FilterBlock
+              key={filter.id}
+              filter={filter}
+              onChange={patch => updateFilter(filter.id, patch)}
+              onSubmitEditing={handlePressSearch}
+              onRemove={() => removeFilter(filter.id)}
+            />
+          ))}
+          {filters.length >= MAX_FILTERS && (
+            <Admonition type="info">
+              <Trans>
+                You’ve reached the maximum of{' '}
+                <Plural value={MAX_FILTERS} one="# filter" other="# filters" />.
+                Add more values to an existing filter instead of creating new
+                ones.
+              </Trans>
+            </Admonition>
+          )}
           <Button
             label={l`Add an additional search filter`}
             size="small"
@@ -451,25 +465,6 @@ function DialogInner({
               <Trans>Add filter</Trans>
             </ButtonText>
           </Button>
-          {filters.length >= MAX_FILTERS && (
-            <Admonition type="info">
-              <Trans>
-                You’ve reached the maximum of{' '}
-                <Plural value={MAX_FILTERS} one="# filter" other="# filters" />.
-                Add more values to an existing filter instead of creating new
-                ones.
-              </Trans>
-            </Admonition>
-          )}
-          {filters.map(filter => (
-            <FilterBlock
-              key={filter.id}
-              filter={filter}
-              onChange={patch => updateFilter(filter.id, patch)}
-              onSubmitEditing={handlePressSearch}
-              onRemove={() => removeFilter(filter.id)}
-            />
-          ))}
         </View>
       </View>
     </Dialog.ScrollableInner>

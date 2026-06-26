@@ -16,11 +16,13 @@ import {
   lastTokenOf,
 } from './shared'
 
-// Native: Sift's popover positioning doesn't anchor, so the result list renders
-// inline below the input rather than floating. See index.tsx for the web
-// (floating) variant. The typeahead matches the last space-delimited token;
-// selecting a result completes that token and leaves a trailing space so the
-// next value can be typed.
+// Native: Sift's popover positioning doesn't anchor, so the result list is drawn
+// as an absolutely-positioned overlay directly above the input. Anchoring above
+// (rather than below) keeps it clear of the on-screen keyboard, and overlaying
+// (rather than rendering inline) means it doesn't push the focused input down
+// under the keyboard. See index.tsx for the web (floating) variant. The
+// typeahead matches the last space-delimited token; selecting a result completes
+// that token and leaves a trailing space so the next value can be typed.
 export function AutocompleteInput({
   label,
   value,
@@ -75,12 +77,12 @@ export function AutocompleteInput({
         </View>
       )}
 
-      {showDropdown && <InlineList items={items} onSelect={selectItem} />}
+      {showDropdown && <OverlayList items={items} onSelect={selectItem} />}
     </View>
   )
 }
 
-function InlineList({
+function OverlayList({
   items,
   onSelect,
 }: {
@@ -92,17 +94,26 @@ function InlineList({
 
   if (!moderationOpts) return null
 
+  // The list sits above the input, so reverse it to put the most relevant
+  // result (first) at the bottom, nearest the text the user is typing.
+  const ordered = [...items].reverse()
+
   return (
     <View
       style={[
-        a.mt_xs,
+        // Drawn as an overlay anchored just above the input so it doesn't push
+        // the input down under the keyboard. z_10 keeps it above sibling rows.
+        a.absolute,
+        a.z_10,
+        a.mb_xs,
+        {left: 0, right: 0, bottom: '100%'},
         a.border,
         a.rounded_sm,
         a.overflow_hidden,
         t.atoms.border_contrast_low,
         t.atoms.bg,
       ]}>
-      {items.map((item, index) => {
+      {ordered.map((item, index) => {
         if (item.type !== 'profile') return null
         return (
           <Pressable
