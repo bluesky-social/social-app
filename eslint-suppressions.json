@@ -33,28 +33,6 @@
       "count": 4
     }
   },
-  "modules/expo-bluesky-gif-view/src/GifView.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
-    },
-    "no-restricted-imports": {
-      "count": 1
-    }
-  },
-  "modules/expo-bluesky-gif-view/src/GifView.web.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    },
-    "@typescript-eslint/require-await": {
-      "count": 2
-    }
-  },
   "modules/expo-bluesky-swiss-army/src/PlatformInfo/index.native.ts": {
     "@typescript-eslint/no-unsafe-call": {
       "count": 3
@@ -2115,11 +2093,6 @@
       "count": 2
     },
     "react-hooks/set-state-in-effect": {
-      "count": 1
-    }
-  },
-  "src/view/com/composer/videos/pickVideo.web.ts": {
-    "@typescript-eslint/no-misused-promises": {
       "count": 1
     }
   },
