@@ -23,6 +23,7 @@ export function DateField({
   testID,
   accessibilityHint,
   maximumDate,
+  minimumDate,
 }: DateFieldProps) {
   const {i18n} = useLingui()
   const t = useTheme()
@@ -106,6 +107,9 @@ export function DateField({
           accessibilityHint={accessibilityHint}
           maximumDate={
             maximumDate ? new Date(toSimpleDateString(maximumDate)) : undefined
+          }
+          minimumDate={
+            minimumDate ? new Date(toSimpleDateString(minimumDate)) : undefined
           }
         />
       )}

@@ -94,8 +94,8 @@
     "update-actions": "pnpm dlx actions-up --min-age 7"
   },
   "dependencies": {
-    "@atproto/api": "0.20.20",
-    "@atproto/syntax": "0.6.1",
+    "@atproto/api": "0.20.22",
+    "@atproto/syntax": "0.6.3",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.14",

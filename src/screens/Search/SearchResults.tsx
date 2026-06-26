@@ -11,6 +11,7 @@ import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
+import {useSearchPostsV2Query} from '#/state/queries/search-posts-v2'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -19,6 +20,10 @@ import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
+import {
+  hasPostOnlyFilters,
+  type SearchFilters,
+} from '#/screens/Search/searchParams'
 import {atoms as a, useTheme, web} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import * as Layout from '#/components/Layout'
@@ -32,31 +37,48 @@ import type * as bsky from '#/types/bsky'
 let SearchResults = ({
   query,
   queryWithParams,
+  filters,
+  hasFilters,
   activeTab,
   onPageSelected,
   headerHeight,
-  initialPage = 0,
 }: {
   query: string
   queryWithParams: string
+  filters: SearchFilters
+  hasFilters: boolean
   activeTab: number
   onPageSelected: (page: number) => void
   headerHeight: number
-  initialPage?: number
 }): React.ReactNode => {
   const {t: l} = useLingui()
+  /*
+   * People/Feeds visibility keys off post-only filters: a `lang` filter applies
+   * to people and feeds too, so it must not hide those tabs (which would also
+   * regress the non-v2 legacy language dropdown). Other filters are post-only.
+   */
+  const hasPostFilters = hasPostOnlyFilters(filters)
+  const activePage = hasPostFilters && activeTab > 1 ? 0 : activeTab
+  const tabShape = hasPostFilters ? 'filtered' : 'plain'
 
   const sections = useMemo(() => {
-    if (!queryWithParams) return []
-    const noParams = queryWithParams === query
+    if (!query && !hasFilters) return []
+    /*
+     * People and Feeds tabs only make sense without post-restricting filters -
+     * those filters don't apply to actors or feeds.
+     */
+    const noFilters = !hasPostFilters
     return [
       {
         title: l`Top`,
         component: (
           <SearchScreenPostResults
-            query={queryWithParams}
+            hasFilters={hasFilters}
+            query={query}
+            queryWithParams={queryWithParams}
+            filters={filters}
             sort="top"
-            active={activeTab === 0}
+            active={activePage === 0}
           />
         ),
       },
@@ -64,35 +86,47 @@ let SearchResults = ({
         title: l`Latest`,
         component: (
           <SearchScreenPostResults
-            query={queryWithParams}
+            hasFilters={hasFilters}
+            query={query}
+            queryWithParams={queryWithParams}
+            filters={filters}
             sort="latest"
-            active={activeTab === 1}
+            active={activePage === 1}
           />
         ),
       },
-      noParams && {
+      noFilters && {
         title: l`People`,
         component: (
-          <SearchScreenUserResults query={query} active={activeTab === 2} />
+          <SearchScreenUserResults query={query} active={activePage === 2} />
         ),
       },
-      noParams && {
+      noFilters && {
         title: l`Feeds`,
         component: (
-          <SearchScreenFeedsResults query={query} active={activeTab === 3} />
+          <SearchScreenFeedsResults query={query} active={activePage === 3} />
         ),
       },
     ].filter(Boolean) as {
       title: string
       component: React.ReactNode
     }[]
-  }, [l, query, queryWithParams, activeTab])
+  }, [
+    l,
+    query,
+    queryWithParams,
+    filters,
+    hasFilters,
+    hasPostFilters,
+    activePage,
+  ])
 
   // There may be fewer tabs after changing the search options.
-  const selectedPage = initialPage > sections.length - 1 ? 0 : initialPage
+  const selectedPage = activePage > sections.length - 1 ? 0 : activePage
 
   return (
     <Pager
+      key={tabShape}
       onPageSelected={onPageSelected}
       renderTabBar={props => (
         <Layout.Center style={[a.z_10, web([a.sticky, {top: headerHeight}])]}>
@@ -164,38 +198,94 @@ function EmptyState({
 }
 
 function NoResultsText({
+  hasFilters = false,
   query,
 }: {
-  sort?: 'top' | 'latest' | 'people' | 'feeds'
+  hasFilters?: boolean
   query: string
 }) {
+  const ax = useAnalytics()
   const t = useTheme()
   const {t: l} = useLingui()
+
+  const searchV2Enabled = ax.features.enabled(ax.features.SearchV2Enable)
+  const advancedSearchV2Enabled =
+    searchV2Enabled && ax.features.enabled(ax.features.AdvancedSearchV2Enable)
 
   return (
     <>
       <Text style={[a.text_lg, t.atoms.text_contrast_high]}>
-        <Trans>
-          No results found for “
-          <Text style={[a.text_lg, t.atoms.text, a.font_medium]}>{query}</Text>
-          ”.
-        </Trans>
+        {hasFilters ? (
+          query ? (
+            <Trans>
+              No results found for “
+              <Text style={[a.text_lg, a.font_medium]}>{query}</Text>” with
+              advanced search filters applied.
+            </Trans>
+          ) : (
+            <Trans>
+              No results found for your query with advanced search filters
+              applied.
+            </Trans>
+          )
+        ) : (
+          <Trans>
+            No results found for “
+            <Text style={[a.text_lg, a.font_medium]}>{query}</Text>”.
+          </Trans>
+        )}
       </Text>
       {'\n\n'}
-      <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
-        <Trans context="english-only-resource">
-          Try a different search term, or{' '}
-          <InlineLinkText
-            label={l({
-              message: 'read about how to use search filters',
-              context: 'english-only-resource',
-            })}
-            to={urls.website.blog.searchTipsAndTricks}
-            style={[a.text_md, a.leading_snug]}>
-            read about how to use search filters
-          </InlineLinkText>
-          .
-        </Trans>
+      <Text
+        style={[
+          a.mt_lg,
+          a.text_md,
+          a.leading_snug,
+          t.atoms.text_contrast_high,
+        ]}>
+        {hasFilters ? (
+          <Trans>Try a different search term or remove some filters.</Trans>
+        ) : (
+          <Trans>Try a different search term.</Trans>
+        )}
+      </Text>
+      {'\n\n'}
+      <Text
+        style={[
+          a.mt_lg,
+          a.text_md,
+          a.leading_snug,
+          t.atoms.text_contrast_high,
+        ]}>
+        {advancedSearchV2Enabled ? (
+          <Trans context="english-only-resource">
+            Learn more about{' '}
+            <InlineLinkText
+              label={l({
+                message: 'Read about how to use advanced search filters',
+                context: 'english-only-resource',
+              })}
+              to={urls.website.blog.searchTipsAndTricks}
+              style={[a.text_md, a.leading_snug]}>
+              how to use advanced search
+            </InlineLinkText>
+            .
+          </Trans>
+        ) : (
+          <Trans context="english-only-resource">
+            Learn more about{' '}
+            <InlineLinkText
+              label={l({
+                message: 'Read about how to use search filters',
+                context: 'english-only-resource',
+              })}
+              to={urls.website.blog.searchTipsAndTricks}
+              style={[a.text_md, a.leading_snug]}>
+              how to use search filters
+            </InlineLinkText>
+            .
+          </Trans>
+        )}
       </Text>
     </>
   )
@@ -213,11 +303,17 @@ type SearchResultSlice =
     }
 
 let SearchScreenPostResults = ({
+  hasFilters = false,
   query,
+  queryWithParams,
+  filters,
   sort,
   active,
 }: {
+  hasFilters: boolean
   query: string
+  queryWithParams: string
+  filters?: SearchFilters
   sort?: 'top' | 'latest'
   active: boolean
 }): React.ReactNode => {
@@ -227,10 +323,31 @@ let SearchScreenPostResults = ({
   const [isPTR, setIsPTR] = useState(false)
   const trackPostView = usePostViewTracking('SearchResults')
 
-  const augmentedQuery = useMemo(() => {
+  const searchV2Enabled = ax.features.enabled(ax.features.SearchV2Enable)
+
+  const augmentedV2Query = useMemo(() => {
     return augmentSearchQuery(query || '', {did: currentAccount?.did})
   }, [query, currentAccount])
+  const augmentedV1Query = useMemo(() => {
+    return augmentSearchQuery(queryWithParams || '', {did: currentAccount?.did})
+  }, [queryWithParams, currentAccount])
 
+  /*
+   * Both hooks are called to keep hook order stable; `enabled` ensures only the
+   * gated one actually fetches. V2 sends structured `filters` as separate
+   * params, V1 keeps the existing single-`q` behavior.
+   */
+  const v1 = useSearchPostsQuery({
+    query: augmentedV1Query,
+    sort,
+    enabled: active && !searchV2Enabled,
+  })
+  const v2 = useSearchPostsV2Query({
+    query: augmentedV2Query,
+    filters,
+    sort,
+    enabled: active && searchV2Enabled,
+  })
   const {
     isFetched,
     data: results,
@@ -240,7 +357,7 @@ let SearchScreenPostResults = ({
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useSearchPostsQuery({query: augmentedQuery, sort, enabled: active})
+  } = searchV2Enabled ? v2 : v1
 
   const t = useTheme()
   const onPullToRefresh = useCallback(async () => {
@@ -381,7 +498,11 @@ let SearchScreenPostResults = ({
               }
             />
           ) : (
-            <EmptyState messageText={<NoResultsText query={query} />} />
+            <EmptyState
+              messageText={
+                <NoResultsText hasFilters={hasFilters} query={query} />
+              }
+            />
           )}
         </>
       ) : (
