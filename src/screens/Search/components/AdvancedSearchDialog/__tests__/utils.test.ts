@@ -10,7 +10,6 @@ import {type SearchFilters} from '#/screens/Search/searchParams'
 const emptySerializeState = {
   query: '',
   exactPhrase: '',
-  anyWords: '',
   negatedWords: '',
   language: '',
   replies: 'all' as const,
@@ -25,22 +24,18 @@ const emptySerializeState = {
 
 describe(`AdvancedSearchDialog serialize/parse`, () => {
   it(`splits free text into q and structured fields into filters`, () => {
-    const state = parseAdvancedSearch(
-      'hello "exact phrase" (cats OR dogs) -spam',
-      {
-        author: 'alice',
-        domain: 'bsky.app',
-        tag: 'atproto bluesky',
-        lang: 'en',
-        since: '2024-01-01',
-        media: 'true',
-        replies: 'none',
-      },
-    )
+    const state = parseAdvancedSearch('hello "exact phrase" -spam', {
+      author: 'alice',
+      domain: 'bsky.app',
+      tag: 'atproto bluesky',
+      lang: 'en',
+      since: '2024-01-01',
+      media: 'true',
+      replies: 'none',
+    })
 
     expect(state.query).toBe('hello')
     expect(state.exactPhrase).toBe('exact phrase')
-    expect(state.anyWords).toBe('cats dogs')
     expect(state.negatedWords).toBe('spam')
     expect(state.language).toBe('en')
     expect(state.since).toBe('2024-01-01')
@@ -88,7 +83,7 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
   })
 
   it(`round-trips state -> {q, filters} -> state`, () => {
-    const q = 'hello "exact phrase" (cats OR dogs) -spam'
+    const q = 'hello "exact phrase" -spam'
     const filters: SearchFilters = {
       author: 'alice',
       domain: 'bsky.app',
@@ -106,7 +101,6 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
     const out = serializeAdvancedSearch({
       query: state.query,
       exactPhrase: state.exactPhrase,
-      anyWords: state.anyWords,
       negatedWords: state.negatedWords,
       language: state.language,
       replies: state.replies,
@@ -173,7 +167,6 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
     const out = serializeAdvancedSearch({
       query: '',
       exactPhrase: '',
-      anyWords: '',
       negatedWords: '',
       language: '',
       replies: 'all',
@@ -308,11 +301,8 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
     expect(out.q).toBe('cats "foo" -bar')
   })
 
-  it(`moves anyWords with unexpected input to the query verbatim`, () => {
-    const out = serializeAdvancedSearch({
-      ...emptySerializeState,
-      anyWords: 'cats "dogs"',
-    })
-    expect(out.q).toBe('cats "dogs"')
+  it(`leaves an OR group in the query instead of parsing it`, () => {
+    const state = parseAdvancedSearch('hello (cats OR dogs)', {})
+    expect(state.query).toBe('hello (cats OR dogs)')
   })
 })

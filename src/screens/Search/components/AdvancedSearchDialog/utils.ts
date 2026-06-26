@@ -72,12 +72,11 @@ function isValidDate(value: string): boolean {
 }
 
 // The dialog's full internal state. Free-text fields (query/exactPhrase/
-// anyWords/negatedWords) are derived from `q`; everything else comes from the
-// structured filter params.
+// negatedWords) are derived from `q`; everything else comes from the structured
+// filter params.
 export type DialogState = {
   query: string
   exactPhrase: string
-  anyWords: string
   negatedWords: string
   language: string
   replies: RepliesFilter
@@ -112,45 +111,30 @@ const FIELD_TO_PARAM: Record<
   },
 }
 
-// A "simple" free-text word - no quotes or parens, and not the OR keyword. Only
-// simple words round-trip cleanly through the exact/any/none fields, so anything
-// else is left in (or moved to) the main query rather than coerced into an
-// operator it can't represent.
-const UNSAFE_FREE_TEXT_RE = /["()]/
+// A "simple" free-text word - no quotes. Only simple words round-trip cleanly
+// through the negated-words field, so anything else is left in (or moved to) the
+// main query rather than coerced into a `-word` token it can't represent.
 function isSimpleWord(word: string): boolean {
-  return word.length > 0 && !UNSAFE_FREE_TEXT_RE.test(word) && word !== 'OR'
+  return word.length > 0 && !word.includes('"')
 }
 
 // Parses the free-text portion of a query (`q`) into the dialog's text fields.
 // `q` no longer carries structured operators - those arrive separately via
-// `filters`. A quoted phrase populates "exact phrase", an (a OR b) group
-// populates "any of these words", and -negated terms populate "none of these
-// words" - but only when their contents are simple words. Anything that
-// wouldn't round-trip (embedded quotes, a negated phrase like -"a b", etc.) is
-// left verbatim in the main "all of these words" query text instead of parsed.
+// `filters`. A quoted phrase populates "exact phrase" and -negated terms
+// populate "none of these words" - but only when their contents are simple
+// words. Anything that wouldn't round-trip (embedded quotes, a negated phrase
+// like -"a b", etc.) is left verbatim in the main "all of these words" query
+// text instead of parsed.
 function parseFreeText(raw: string): {
   query: string
   exactPhrase: string
-  anyWords: string
   negatedWords: string
 } {
   const queryParts: string[] = []
-  const anyWords: string[] = []
   const negatedWords: string[] = []
   let exactPhrase = ''
 
   for (const token of tokenizeQuery(raw)) {
-    // (a OR b) group -> "any of these words", only if every member is simple.
-    if (token.startsWith('(') && token.endsWith(')') && token.length > 2) {
-      const words = token
-        .slice(1, -1)
-        .split(/\s+OR\s+/)
-        .map(w => w.trim())
-      if (words.length > 0 && words.every(isSimpleWord)) {
-        anyWords.push(...words)
-        continue
-      }
-    }
     // "phrase" -> "exact phrase", only if it has no inner quote.
     if (token.startsWith('"') && token.endsWith('"') && token.length > 1) {
       const inner = token.slice(1, -1)
@@ -173,7 +157,6 @@ function parseFreeText(raw: string): {
   return {
     query: queryParts.join(' '),
     exactPhrase,
-    anyWords: anyWords.join(' '),
     negatedWords: negatedWords.join(' '),
   }
 }
@@ -259,12 +242,11 @@ export function parseAdvancedSearch(
 }
 
 // Serializes the dialog state into the free-text `q` string plus the structured
-// filter params. Free text (all/exact/any/none words) goes into `q`; everything
+// filter params. Free text (all/exact/none words) goes into `q`; everything
 // else becomes a sibling param.
 export function serializeAdvancedSearch(state: {
   query: string
   exactPhrase: string
-  anyWords: string
   negatedWords: string
   language: string
   replies: RepliesFilter
@@ -288,18 +270,6 @@ export function serializeAdvancedSearch(state: {
   const exactPhrase = state.exactPhrase.trim()
   if (exactPhrase) {
     parts.push(exactPhrase.includes('"') ? exactPhrase : `"${exactPhrase}"`)
-  }
-
-  // "any of these words" -> an (a OR b) group, but only if every word is simple.
-  // If any word is unexpected (quotes, parens, ...), pass the field through to
-  // the query verbatim rather than building a malformed group.
-  const anyWords = state.anyWords.trim().split(WHITESPACE_RE).filter(Boolean)
-  if (anyWords.length > 0) {
-    if (anyWords.every(isSimpleWord)) {
-      parts.push(`(${anyWords.join(' OR ')})`)
-    } else {
-      parts.push(state.anyWords.trim())
-    }
   }
 
   // "none of these words" -> -negated tokens, but only simple words get the `-`

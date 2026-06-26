@@ -130,7 +130,6 @@ function DialogInner({
 
   const [query, setQuery] = useState(parsed.query)
   const [exactPhrase, setExactPhrase] = useState(parsed.exactPhrase)
-  const [anyWords, setAnyWords] = useState(parsed.anyWords)
   const [negatedWords, setNegatedWords] = useState(parsed.negatedWords)
   const [language, setLanguage] = useState(parsed.language)
 
@@ -182,7 +181,6 @@ function DialogInner({
     const {q: nextQ, filters: nextFilters} = serializeAdvancedSearch({
       query,
       exactPhrase,
-      anyWords,
       negatedWords,
       language,
       replies,
@@ -243,24 +241,24 @@ function DialogInner({
         </Dialog.Header>
       }>
       <View style={[a.mt_xl, a.px_xl, a.gap_xl]}>
-        <View style={[twoColumn ? a.flex_row : a.flex_col, a.gap_xl]}>
-          <View style={[a.flex_1]}>
-            <TextField.LabelText>
-              <Trans>All of these words</Trans>
-            </TextField.LabelText>
-            <ClearableInput
-              label={l`Search query`}
-              defaultValue={query}
-              placeholder={l({
-                message: 'bluesky atproto',
-                comment:
-                  'Advanced search: Example of an “all of these words” search',
-              })}
-              onChangeText={setQuery}
-              onSubmitEditing={handlePressSearch}
-            />
-          </View>
+        <View style={[a.flex_1]}>
+          <TextField.LabelText>
+            <Trans>All of these words</Trans>
+          </TextField.LabelText>
+          <ClearableInput
+            label={l`Search query`}
+            defaultValue={query}
+            placeholder={l({
+              message: 'bluesky atproto',
+              comment:
+                'Advanced search: Example of an “all of these words” search',
+            })}
+            onChangeText={setQuery}
+            onSubmitEditing={handlePressSearch}
+          />
+        </View>
 
+        <View style={[twoColumn ? a.flex_row : a.flex_col, a.gap_xl]}>
           <View style={[a.flex_1]}>
             <TextField.LabelText>
               <Trans>This exact phrase</Trans>
@@ -273,25 +271,6 @@ function DialogInner({
                 comment: 'Advanced search: Example of an “exact phrase” search',
               })}
               onChangeText={setExactPhrase}
-              onSubmitEditing={handlePressSearch}
-            />
-          </View>
-        </View>
-
-        <View style={[twoColumn ? a.flex_row : a.flex_col, a.gap_xl]}>
-          <View style={[a.flex_1]}>
-            <TextField.LabelText>
-              <Trans>Any of these words</Trans>
-            </TextField.LabelText>
-            <ClearableInput
-              label={l`Any of these words`}
-              defaultValue={anyWords}
-              placeholder={l({
-                message: 'cats dogs',
-                comment:
-                  'Advanced search: Example of an “any of these words” search',
-              })}
-              onChangeText={setAnyWords}
               onSubmitEditing={handlePressSearch}
             />
           </View>
