@@ -1,0 +1,65 @@
+name: build-and-push-bskyweb-docr-staging
+on:
+  workflow_dispatch:
+
+jobs:
+  bskyweb-container-docr-staging:
+    if: github.repository == 'blacksky-algorithms/blacksky.community'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Log into DOCR
+        run: doctl registry login --expiry-seconds 600
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            registry.digitalocean.com/blacksky/blacksky-community
+          tags: |
+            type=raw,value=staging
+            type=sha,enable=true,priority=100,prefix=staging-,suffix=,format=long
+
+      - name: Env
+        id: env
+        run: |
+          echo "EXPO_PUBLIC_RELEASE_VERSION=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
+          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          file: ./Dockerfile
+          platforms: linux/amd64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            EXPO_PUBLIC_ENV=production
+            EXPO_PUBLIC_RELEASE_VERSION=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
+            EXPO_PUBLIC_BUNDLE_IDENTIFIER=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
+            EXPO_PUBLIC_OAUTH_BASE_URL=https://staging.blacksky.community
+            EXPO_PUBLIC_OAUTH_CLIENT_NAME=Blacksky Community (Staging)
+            EXPO_PUBLIC_METRICS_API_HOST=${{ secrets.EXPO_PUBLIC_METRICS_API_HOST }}
+            EXPO_PUBLIC_GROWTHBOOK_API_HOST=${{ secrets.EXPO_PUBLIC_GROWTHBOOK_API_HOST }}
+            EXPO_PUBLIC_GROWTHBOOK_CLIENT_KEY=${{ secrets.EXPO_PUBLIC_GROWTHBOOK_CLIENT_KEY }}
+            EXPO_PUBLIC_STRIPE_API_URL=${{ secrets.EXPO_PUBLIC_STRIPE_API_URL }}
+            EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY=${{ secrets.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
