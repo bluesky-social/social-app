@@ -108,10 +108,14 @@ func BuildPassJSON(did, handle, displayName, pdsHost, theme, teamID string, crea
 		createdAtISO = createdAt.UTC().Format(time.RFC3339)
 	}
 
+	// avoid an unused variable when displayName is empty - we keep memberName
+	// computed for a possible future design, but the current layout uses
+	// handle directly.
+	_ = memberName
+
 	pdsField := passField{Key: "pds", Label: "PDS", Value: pdsHost}
-	nameField := passField{Key: "name", Label: "NAME", Value: memberName}
-	didField := passField{Key: "did", Label: "DID", Value: did}
-	sinceField := passField{Key: "since", Label: "MEMBER SINCE", Value: createdAtISO, DateStyle: "PKDateStyleShort"}
+	handleField := passField{Key: "handle", Label: "Handle", Value: handle}
+	sinceField := passField{Key: "since", Label: "Member Since", Value: createdAtISO, DateStyle: "PKDateStyleShort"}
 	backFields := []passField{
 		{Key: "about", Label: "About", Value: "Scan the QR code to view this Bluesky profile."},
 		{Key: "url", Label: "Profile URL", Value: profileURL},
@@ -124,20 +128,25 @@ func BuildPassJSON(did, handle, displayName, pdsHost, theme, teamID string, crea
 		TeamIdentifier:     teamID,
 		OrganizationName:   "Bluesky",
 		Description:        "Bluesky profile - " + atHandle,
-		LogoText:           "Bluesky",
-		ForegroundColor:    "rgb(255, 255, 255)",
-		LabelColor:         "rgb(255, 255, 255)",
-		BackgroundColor:    ThemeBackgroundRGB(theme),
+		// logoText omitted - the logo image already carries the "Bluesky"
+		// wordmark; setting both would render the brand name twice.
+		LogoText:        "",
+		ForegroundColor: "rgb(255, 255, 255)",
+		LabelColor:      "rgb(255, 255, 255)",
+		BackgroundColor: ThemeBackgroundRGB(theme),
+		// iOS <= 26 fallback: handle as primary, since as secondary (stacked).
 		Generic: passFields{
 			HeaderFields:    []passField{pdsField},
-			PrimaryFields:   []passField{nameField},
-			SecondaryFields: []passField{didField, sinceField},
+			PrimaryFields:   []passField{handleField},
+			SecondaryFields: []passField{sinceField},
 			BackFields:      backFields,
 		},
+		// iOS 27+: handle and since side-by-side in primaryFields, matching
+		// what Pass Designer exports.
 		PosterGeneric: posterFields{
 			HeaderFields:    []passField{pdsField},
-			PrimaryFields:   []passField{nameField},
-			SecondaryFields: []passField{didField, sinceField},
+			PrimaryFields:   []passField{handleField, sinceField},
+			SecondaryFields: []passField{},
 			AuxiliaryFields: []passField{},
 			FooterFields:    []passField{},
 			BackFields:      backFields,

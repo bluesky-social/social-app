@@ -5,7 +5,7 @@
   "teamIdentifier": "TEAMID00",
   "organizationName": "Bluesky",
   "description": "Bluesky profile - @alice.bsky.social",
-  "logoText": "Bluesky",
+  "logoText": "",
   "foregroundColor": "rgb(255, 255, 255)",
   "labelColor": "rgb(255, 255, 255)",
   "backgroundColor": "rgb(117, 175, 255)",
@@ -19,20 +19,15 @@
     ],
     "primaryFields": [
       {
-        "key": "name",
-        "label": "NAME",
-        "value": "Alice"
+        "key": "handle",
+        "label": "Handle",
+        "value": "alice.bsky.social"
       }
     ],
     "secondaryFields": [
       {
-        "key": "did",
-        "label": "DID",
-        "value": "did:plc:abc123"
-      },
-      {
         "key": "since",
-        "label": "MEMBER SINCE",
+        "label": "Member Since",
         "value": "2026-01-25T23:59:05Z",
         "dateStyle": "PKDateStyleShort"
       }
@@ -60,24 +55,18 @@
     ],
     "primaryFields": [
       {
-        "key": "name",
-        "label": "NAME",
-        "value": "Alice"
-      }
-    ],
-    "secondaryFields": [
-      {
-        "key": "did",
-        "label": "DID",
-        "value": "did:plc:abc123"
+        "key": "handle",
+        "label": "Handle",
+        "value": "alice.bsky.social"
       },
       {
         "key": "since",
-        "label": "MEMBER SINCE",
+        "label": "Member Since",
         "value": "2026-01-25T23:59:05Z",
         "dateStyle": "PKDateStyleShort"
       }
     ],
+    "secondaryFields": [],
     "auxiliaryFields": [],
     "footerFields": [],
     "backFields": [
