@@ -256,16 +256,15 @@ let PostControls = ({
           </PostControlButton>
         </View>
         <View style={[a.flex_1, a.align_start]}>
-          {post.uri.includes('community.blacksky.feed.post') ? null : (
-            <RepostButton
-              isReposted={!!post.viewer?.repost}
-              repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
-              onRepost={() => void onRepost()}
-              onQuote={onQuote}
-              big={big}
-              embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
-            />
-          )}
+          <RepostButton
+            isReposted={!!post.viewer?.repost}
+            repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
+            onRepost={() => void onRepost()}
+            onQuote={onQuote}
+            big={big}
+            embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
+            repostDisabled={post.uri.includes('community.blacksky.feed.post')}
+          />
         </View>
         <View style={[a.flex_1, a.align_start]}>
           <PostControlButton

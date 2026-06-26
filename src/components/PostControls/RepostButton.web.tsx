@@ -21,6 +21,7 @@ interface Props {
   onQuote: () => void
   big?: boolean
   embeddingDisabled: boolean
+  repostDisabled?: boolean
 }
 
 export const RepostButton = ({
@@ -30,6 +31,7 @@ export const RepostButton = ({
   onQuote,
   big,
   embeddingDisabled,
+  repostDisabled,
 }: Props) => {
   const t = useTheme()
   const {_} = useLingui()
@@ -62,17 +64,22 @@ export const RepostButton = ({
         </Menu.Trigger>
         <Menu.Outer style={{minWidth: 170}}>
           <Menu.Item
+            disabled={repostDisabled}
             label={
-              isReposted
-                ? _(msg`Undo repost`)
-                : _(msg({message: `Repost`, context: `action`}))
+              repostDisabled
+                ? _(msg`Reposts disabled`)
+                : isReposted
+                  ? _(msg`Undo repost`)
+                  : _(msg({message: `Repost`, context: `action`}))
             }
             testID="repostDropdownRepostBtn"
             onPress={onRepost}>
             <Menu.ItemText>
-              {isReposted
-                ? _(msg`Undo repost`)
-                : _(msg({message: `Repost`, context: `action`}))}
+              {repostDisabled
+                ? _(msg`Reposts disabled`)
+                : isReposted
+                  ? _(msg`Undo repost`)
+                  : _(msg({message: `Repost`, context: `action`}))}
             </Menu.ItemText>
             <Menu.ItemIcon icon={Repost} position="right" />
           </Menu.Item>
