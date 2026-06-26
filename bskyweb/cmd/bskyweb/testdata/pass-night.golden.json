@@ -4,27 +4,39 @@
   "serialNumber": "did:plc:abc123-night-v1",
   "teamIdentifier": "TEAMID00",
   "organizationName": "Bluesky",
-  "description": "Bluesky invite - @alice.bsky.social",
-  "logoText": "",
+  "description": "Bluesky profile - @alice.bsky.social",
+  "logoText": "Bluesky",
   "foregroundColor": "rgb(255, 255, 255)",
   "labelColor": "rgb(255, 255, 255)",
   "backgroundColor": "rgb(0, 21, 51)",
   "generic": {
     "headerFields": [
       {
-        "key": "username",
-        "label": "USERNAME",
-        "value": "@alice.bsky.social"
+        "key": "pds",
+        "label": "PDS",
+        "value": "alice.host.bsky.network"
       }
     ],
     "primaryFields": [
       {
         "key": "name",
-        "label": "MEMBER NAME",
+        "label": "NAME",
         "value": "Alice"
       }
     ],
-    "secondaryFields": [],
+    "secondaryFields": [
+      {
+        "key": "did",
+        "label": "DID",
+        "value": "did:plc:abc123"
+      },
+      {
+        "key": "since",
+        "label": "MEMBER SINCE",
+        "value": "2026-01-25T23:59:05Z",
+        "dateStyle": "PKDateStyleShort"
+      }
+    ],
     "backFields": [
       {
         "key": "about",
@@ -38,12 +50,57 @@
       }
     ]
   },
+  "posterGeneric": {
+    "headerFields": [
+      {
+        "key": "pds",
+        "label": "PDS",
+        "value": "alice.host.bsky.network"
+      }
+    ],
+    "primaryFields": [
+      {
+        "key": "name",
+        "label": "NAME",
+        "value": "Alice"
+      }
+    ],
+    "secondaryFields": [
+      {
+        "key": "did",
+        "label": "DID",
+        "value": "did:plc:abc123"
+      },
+      {
+        "key": "since",
+        "label": "MEMBER SINCE",
+        "value": "2026-01-25T23:59:05Z",
+        "dateStyle": "PKDateStyleShort"
+      }
+    ],
+    "auxiliaryFields": [],
+    "footerFields": [],
+    "backFields": [
+      {
+        "key": "about",
+        "label": "About",
+        "value": "Scan the QR code to view this Bluesky profile."
+      },
+      {
+        "key": "url",
+        "label": "Profile URL",
+        "value": "https://bsky.app/profile/alice.bsky.social"
+      }
+    ]
+  },
+  "suppressHeaderDarkening": false,
+  "useAutomaticColors": false,
   "barcodes": [
     {
       "format": "PKBarcodeFormatQR",
       "message": "https://bsky.app/profile/alice.bsky.social",
       "messageEncoding": "iso-8859-1",
-      "altText": "@alice.bsky.social"
+      "altText": "alice.bsky.social"
     }
   ]
 }

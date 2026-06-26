@@ -13,6 +13,7 @@ import (
 	"io"
 	"io/fs"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 
@@ -29,21 +30,22 @@ const inviteHeroPath = "/invite/wallet/hero"
 var errAuthMissing = errors.New("auth missing")
 
 // Authenticator is satisfied by the production session checker and by stub
-// auth in tests.
+// auth in tests. pdsHost is the user's home PDS hostname extracted from the
+// DID document service endpoint.
 type Authenticator interface {
-	Authenticate(c echo.Context) (did, handle string, err error)
+	Authenticate(c echo.Context) (did, handle, pdsHost string, err error)
 }
 
 // XrpcAuthenticator calls com.atproto.server.getSession with the incoming bearer
-// token, verifying the session and returning the (did, handle).
+// token, verifying the session and returning (did, handle, pdsHost).
 type XrpcAuthenticator struct {
-	BaseHost string // e.g. "https://public.api.bsky.app"
+	BaseHost string // e.g. "https://bsky.social"
 }
 
-func (a XrpcAuthenticator) Authenticate(c echo.Context) (string, string, error) {
+func (a XrpcAuthenticator) Authenticate(c echo.Context) (string, string, string, error) {
 	hdr := c.Request().Header.Get("Authorization")
 	if hdr == "" || !strings.HasPrefix(hdr, "Bearer ") {
-		return "", "", errAuthMissing
+		return "", "", "", errAuthMissing
 	}
 	jwt := strings.TrimPrefix(hdr, "Bearer ")
 	client := &xrpc.Client{
@@ -52,9 +54,42 @@ func (a XrpcAuthenticator) Authenticate(c echo.Context) (string, string, error) 
 	}
 	resp, err := comatproto.ServerGetSession(c.Request().Context(), client)
 	if err != nil {
-		return "", "", errAuthMissing
+		return "", "", "", errAuthMissing
 	}
-	return resp.Did, resp.Handle, nil
+	return resp.Did, resp.Handle, extractPDSHost(resp.DidDoc), nil
+}
+
+// extractPDSHost parses the AtprotoPersonalDataServer service entry from the
+// DID document returned by getSession and returns just the hostname (no scheme
+// or path). Returns "" if absent or unparseable - the caller can fall back to
+// a default.
+func extractPDSHost(didDoc any) string {
+	if didDoc == nil {
+		return ""
+	}
+	raw, err := json.Marshal(didDoc)
+	if err != nil {
+		return ""
+	}
+	var doc struct {
+		Service []struct {
+			Type            string `json:"type"`
+			ServiceEndpoint string `json:"serviceEndpoint"`
+		} `json:"service"`
+	}
+	if err := json.Unmarshal(raw, &doc); err != nil {
+		return ""
+	}
+	for _, s := range doc.Service {
+		if s.Type != "AtprotoPersonalDataServer" {
+			continue
+		}
+		u, err := url.Parse(s.ServiceEndpoint)
+		if err == nil && u.Hostname() != "" {
+			return u.Hostname()
+		}
+	}
+	return ""
 }
 
 type InvitePassConfig struct {
@@ -78,7 +113,7 @@ func (srv *Server) WebInvitePassURL(c echo.Context) error {
 	if len(srv.cfg.InvitePass.TokenSecret) == 0 {
 		return c.JSON(http.StatusServiceUnavailable, echo.Map{"error": "InvitePassDisabled"})
 	}
-	did, _, err := srv.authenticator.Authenticate(c)
+	did, _, pdsHost, err := srv.authenticator.Authenticate(c)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, echo.Map{"error": "AuthMissing"})
 	}
@@ -87,7 +122,7 @@ func (srv *Server) WebInvitePassURL(c echo.Context) error {
 	}
 	_ = json.NewDecoder(c.Request().Body).Decode(&body)
 	theme := CoerceTheme(body.Theme)
-	tok, err := MintPassToken(srv.cfg.InvitePass.TokenSecret, did, theme, time.Now(), passTokenTTL)
+	tok, err := MintPassToken(srv.cfg.InvitePass.TokenSecret, did, theme, pdsHost, time.Now(), passTokenTTL)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "TokenMintFailed"})
 	}
@@ -101,7 +136,7 @@ func (srv *Server) WebInvitePassPkpass(c echo.Context) error {
 	}
 	theme := CoerceTheme(c.QueryParam("theme"))
 	tok := c.QueryParam("t")
-	did, tokTheme, err := VerifyPassToken(srv.cfg.InvitePass.TokenSecret, tok, time.Now())
+	did, tokTheme, pdsHost, err := VerifyPassToken(srv.cfg.InvitePass.TokenSecret, tok, time.Now())
 	if err != nil {
 		return c.JSON(http.StatusGone, echo.Map{"error": "TokenInvalid"})
 	}
@@ -112,12 +147,12 @@ func (srv *Server) WebInvitePassPkpass(c echo.Context) error {
 		return c.JSON(http.StatusServiceUnavailable, echo.Map{"error": "SignerDisabled"})
 	}
 
-	handle, displayName, avatarBytes, err := srv.fetchProfile(c.Request().Context(), did)
+	handle, displayName, createdAt, avatarBytes, err := srv.fetchProfile(c.Request().Context(), did)
 	if err != nil {
 		return c.JSON(http.StatusBadGateway, echo.Map{"error": "ProfileFetchFailed"})
 	}
 
-	passJSON, err := BuildPassJSON(did, handle, displayName, theme, srv.cfg.InvitePass.TeamID)
+	passJSON, err := BuildPassJSON(did, handle, displayName, pdsHost, theme, srv.cfg.InvitePass.TeamID, createdAt)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "PassBuildFailed"})
 	}
@@ -140,7 +175,7 @@ func (srv *Server) WebInvitePassPkpass(c echo.Context) error {
 }
 
 func (srv *Server) WebInviteWalletJWT(c echo.Context) error {
-	did, handle, err := srv.authenticator.Authenticate(c)
+	did, handle, _, err := srv.authenticator.Authenticate(c)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, echo.Map{"error": "AuthMissing"})
 	}
@@ -165,7 +200,7 @@ func (srv *Server) WebInviteWalletHero(c echo.Context) error {
 	if did == "" {
 		return c.NoContent(http.StatusBadRequest)
 	}
-	handle, _, avatarBytes, err := srv.fetchProfile(c.Request().Context(), did)
+	handle, _, _, avatarBytes, err := srv.fetchProfile(c.Request().Context(), did)
 	if err != nil {
 		return c.JSON(http.StatusBadGateway, echo.Map{"error": "ProfileFetchFailed"})
 	}
@@ -198,9 +233,17 @@ func (srv *Server) buildPassAssets(theme, handle string, avatarBytes []byte) ([]
 	logo2, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/logo@2x.png")
 	logo3, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/logo@3x.png")
 
-	// Generic passes do not use a strip image. The whole pass renders as
-	// backgroundColor. avatarBytes is currently unused; reserved for a future
-	// design that adds a thumbnail.
+	// iOS 27 posterGeneric assets - shared across themes (no theme-specific
+	// variants yet). primaryLogo is the big butterfly to the right; background
+	// is the full-bleed dark navy. Optional - if missing, Wallet falls back to
+	// the iOS <= 26 generic layout that doesn't reference them.
+	primaryLogo2, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/primaryLogo@2x.png")
+	primaryLogo3, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/primaryLogo@3x.png")
+	background2, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/background@2x.png")
+	background3, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/background@3x.png")
+
+	// avatarBytes is currently unused on this pass design; reserved for a
+	// future thumbnail composite.
 	_ = avatarBytes
 
 	assets := []PassAsset{
@@ -218,6 +261,18 @@ func (srv *Server) buildPassAssets(theme, handle string, avatarBytes []byte) ([]
 	}
 	if len(logo3) > 0 {
 		assets = append(assets, PassAsset{Name: "logo@3x.png", Data: logo3})
+	}
+	if len(primaryLogo2) > 0 {
+		assets = append(assets, PassAsset{Name: "primaryLogo@2x.png", Data: primaryLogo2})
+	}
+	if len(primaryLogo3) > 0 {
+		assets = append(assets, PassAsset{Name: "primaryLogo@3x.png", Data: primaryLogo3})
+	}
+	if len(background2) > 0 {
+		assets = append(assets, PassAsset{Name: "background@2x.png", Data: background2})
+	}
+	if len(background3) > 0 {
+		assets = append(assets, PassAsset{Name: "background@3x.png", Data: background3})
 	}
 	return assets, nil
 }
@@ -247,19 +302,32 @@ func decodeImage(data []byte) (image.Image, error) {
 	return img, err
 }
 
-func (srv *Server) fetchProfile(ctx context.Context, did string) (handle, displayName string, avatarBytes []byte, err error) {
+func (srv *Server) fetchProfile(ctx context.Context, did string) (handle, displayName string, createdAt time.Time, avatarBytes []byte, err error) {
 	pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, did)
 	if err != nil {
-		return "", "", nil, err
+		return "", "", time.Time{}, nil, err
 	}
 	handle = pv.Handle
 	if pv.DisplayName != nil {
 		displayName = *pv.DisplayName
 	}
+	// CreatedAt is when the profile record was written, which is usually within
+	// seconds of account creation - close enough for a "member since" display.
+	// Fall back to IndexedAt if CreatedAt is missing (older profiles).
+	if pv.CreatedAt != nil {
+		if t, terr := time.Parse(time.RFC3339, *pv.CreatedAt); terr == nil {
+			createdAt = t
+		}
+	}
+	if createdAt.IsZero() && pv.IndexedAt != nil {
+		if t, terr := time.Parse(time.RFC3339, *pv.IndexedAt); terr == nil {
+			createdAt = t
+		}
+	}
 	if pv.Avatar != nil {
 		// SSRF defense: only fetch https:// URLs
 		if !strings.HasPrefix(*pv.Avatar, "https://") {
-			return handle, displayName, nil, nil
+			return handle, displayName, createdAt, nil, nil
 		}
 		req, _ := http.NewRequestWithContext(ctx, http.MethodGet, *pv.Avatar, nil)
 		client := &http.Client{Timeout: 5 * time.Second}
@@ -271,5 +339,5 @@ func (srv *Server) fetchProfile(ctx context.Context, did string) (handle, displa
 			}
 		}
 	}
-	return handle, displayName, avatarBytes, nil
+	return handle, displayName, createdAt, avatarBytes, nil
 }

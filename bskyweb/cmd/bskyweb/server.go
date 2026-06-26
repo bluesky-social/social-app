@@ -198,7 +198,10 @@ func serve(cctx *cli.Context) error {
 			},
 		},
 	}
-	server.authenticator = XrpcAuthenticator{BaseHost: appviewHost}
+	// Auth check (`com.atproto.server.getSession`) must go to a PDS, not the
+	// appview - the appview doesn't validate user accessJwts. bsky.social
+	// proxies getSession to each user's actual home PDS.
+	server.authenticator = XrpcAuthenticator{BaseHost: "https://bsky.social"}
 
 	// Create the HTTP server.
 	server.httpd = &http.Server{

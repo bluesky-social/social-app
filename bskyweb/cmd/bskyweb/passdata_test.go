@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 )
 
 func TestCoerceTheme(t *testing.T) {
@@ -38,7 +39,8 @@ func TestThemeBackgroundRGB(t *testing.T) {
 func TestBuildPassJSON_Golden(t *testing.T) {
 	for _, theme := range []string{"dawn", "day", "dusk", "night"} {
 		t.Run(theme, func(t *testing.T) {
-			got, err := BuildPassJSON("did:plc:abc123", "alice.bsky.social", "Alice", theme, "TEAMID00")
+			createdAt := time.Date(2026, 1, 25, 23, 59, 5, 0, time.UTC)
+			got, err := BuildPassJSON("did:plc:abc123", "alice.bsky.social", "Alice", "alice.host.bsky.network", theme, "TEAMID00", createdAt)
 			if err != nil {
 				t.Fatalf("build: %v", err)
 			}

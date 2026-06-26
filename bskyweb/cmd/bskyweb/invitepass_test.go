@@ -12,14 +12,15 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// stubAuth replaces the real ServerGetSession check; bound DID is returned to the handler.
-type stubAuth struct{ did, handle string }
+// stubAuth replaces the real ServerGetSession check; bound DID/handle/PDS are
+// returned to the handler.
+type stubAuth struct{ did, handle, pds string }
 
-func (s stubAuth) Authenticate(c echo.Context) (did, handle string, err error) {
+func (s stubAuth) Authenticate(c echo.Context) (did, handle, pdsHost string, err error) {
 	if c.Request().Header.Get("Authorization") == "" {
-		return "", "", errAuthMissing
+		return "", "", "", errAuthMissing
 	}
-	return s.did, s.handle, nil
+	return s.did, s.handle, s.pds, nil
 }
 
 func newTestServer(t *testing.T) (*Server, *stubAuth) {
@@ -71,7 +72,7 @@ func TestWebInvitePassURL_OK(t *testing.T) {
 
 func TestWebInvitePassPkpass_TokenExpired(t *testing.T) {
 	srv, _ := newTestServer(t)
-	expiredTok, _ := MintPassToken(srv.cfg.InvitePass.TokenSecret, "did:plc:abc", "dusk",
+	expiredTok, _ := MintPassToken(srv.cfg.InvitePass.TokenSecret, "did:plc:abc", "dusk", "",
 		time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC), 60*time.Second)
 	req := httptest.NewRequest(http.MethodGet, "/invite/pass.pkpass?theme=dusk&t="+expiredTok, nil)
 	rec := httptest.NewRecorder()
@@ -83,7 +84,7 @@ func TestWebInvitePassPkpass_TokenExpired(t *testing.T) {
 
 func TestWebInvitePassPkpass_ThemeMismatchInToken(t *testing.T) {
 	srv, _ := newTestServer(t)
-	tok, _ := MintPassToken(srv.cfg.InvitePass.TokenSecret, "did:plc:abc", "day", time.Now(), 60*time.Second)
+	tok, _ := MintPassToken(srv.cfg.InvitePass.TokenSecret, "did:plc:abc", "day", "", time.Now(), 60*time.Second)
 	req := httptest.NewRequest(http.MethodGet, "/invite/pass.pkpass?theme=dusk&t="+tok, nil)
 	rec := httptest.NewRecorder()
 	srv.echo.ServeHTTP(rec, req)
