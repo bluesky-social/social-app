@@ -2034,16 +2034,6 @@ function ComposerPills({
             <Toggle.LabelText>
               <Trans>Blacksky Only</Trans>
             </Toggle.LabelText>
-            {isForcedBlackskyOnly && (
-              <Text
-                style={[
-                  a.text_xs,
-                  a.italic,
-                  {color: t.atoms.text_contrast_low.color},
-                ]}>
-                <Trans>Required</Trans>
-              </Text>
-            )}
             <Toggle.Switch />
           </Toggle.Item>
         )}
