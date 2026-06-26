@@ -203,7 +203,7 @@ export function InviteFriendsDialogInner({
 
         {isHandleValid && handle ? (
           <View style={[a.w_full, a.align_center, {marginTop: 24}]}>
-            <AddToWalletButton themeKey={themeKey} handle={handle} />
+            <AddToWalletButton handle={handle} />
           </View>
         ) : null}
 

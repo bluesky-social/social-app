@@ -85,9 +85,7 @@ afterEach(async () => {
 // Test 1: IS_WEB gate
 test('renders null on web', async () => {
   mockIsWeb = true
-  const {toJSON} = render(
-    <AddToWalletButton themeKey="dusk" handle="alice.bsky.social" />,
-  )
+  const {toJSON} = render(<AddToWalletButton handle="alice.bsky.social" />)
   // Flush effects - with IS_WEB=true the canAddPasses effect exits early,
   // so the flush is just a guard.
   await act(async () => {})
@@ -97,9 +95,7 @@ test('renders null on web', async () => {
 // Test 2: canAddPasses gate
 test('renders null when canAddPasses() resolves false', async () => {
   RNWallet.canAddPasses.mockResolvedValue(false)
-  const {toJSON} = render(
-    <AddToWalletButton themeKey="dusk" handle="alice.bsky.social" />,
-  )
+  const {toJSON} = render(<AddToWalletButton handle="alice.bsky.social" />)
   await waitFor(() => expect(RNWallet.canAddPasses).toHaveBeenCalled())
   // Flush promise resolution so setCanAdd(false) runs inside act
   await act(async () => {})
@@ -108,9 +104,7 @@ test('renders null when canAddPasses() resolves false', async () => {
 
 // Test 3: handle sentinel gate
 test('renders null when handle is invalid', async () => {
-  const {toJSON} = render(
-    <AddToWalletButton themeKey="dusk" handle="handle.invalid" />,
-  )
+  const {toJSON} = render(<AddToWalletButton handle="handle.invalid" />)
   // handle is invalid so canAddPasses is not called; flush anyway for safety
   await act(async () => {})
   expect(toJSON()).toBeNull()
@@ -118,7 +112,7 @@ test('renders null when handle is invalid', async () => {
 
 // Test 4: empty handle gate
 test('renders null when handle is empty', async () => {
-  const {toJSON} = render(<AddToWalletButton themeKey="dusk" handle="" />)
+  const {toJSON} = render(<AddToWalletButton handle="" />)
   await act(async () => {})
   expect(toJSON()).toBeNull()
 })
@@ -133,7 +127,7 @@ test('iOS: mints token then calls addPass with the returned URL', async () => {
       }),
   })
   const {UNSAFE_getByType} = render(
-    <AddToWalletButton themeKey="dusk" handle="alice.bsky.social" />,
+    <AddToWalletButton handle="alice.bsky.social" />,
   )
   await waitFor(() =>
     UNSAFE_getByType('RNWalletView' as unknown as ComponentType),
@@ -159,9 +153,7 @@ test('iOS: mints token then calls addPass with the returned URL', async () => {
 // Test 6: Android is gated out for iOS-only launch (Google Wallet backend not provisioned)
 test('Android: renders null until Google Wallet backend is wired', () => {
   ;(Platform as {OS: string}).OS = 'android'
-  const {toJSON} = render(
-    <AddToWalletButton themeKey="day" handle="bob.bsky.social" />,
-  )
+  const {toJSON} = render(<AddToWalletButton handle="bob.bsky.social" />)
   expect(toJSON()).toBeNull()
 })
 
@@ -178,7 +170,7 @@ test('addPass throws – error toast and logger.error are called', async () => {
   const {logger} = require('#/logger')
   const loggerSpy = jest.spyOn(logger, 'error')
   const {UNSAFE_getByType} = render(
-    <AddToWalletButton themeKey="day" handle="alice.bsky.social" />,
+    <AddToWalletButton handle="alice.bsky.social" />,
   )
   await waitFor(() =>
     UNSAFE_getByType('RNWalletView' as unknown as ComponentType),

@@ -220,12 +220,15 @@ func (srv *Server) WebInviteWalletHero(c echo.Context) error {
 }
 
 func (srv *Server) buildPassAssets(theme, handle string, avatarBytes []byte) ([]PassAsset, error) {
-	icon1, err := readFS(srv.cfg.InvitePass.StripFS, "passes/"+theme+"/icon.png")
-	if err != nil {
-		return nil, fmt.Errorf("icon: %w", err)
+	_ = theme
+	// Icons are shared across themes (matches the Pass Designer layout - the
+	// pass.json hardcodes one backgroundColor + one background image).
+	icon1, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/icon.png")
+	icon2, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/icon@2x.png")
+	icon3, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/icon@3x.png")
+	if len(icon1) == 0 && len(icon2) == 0 && len(icon3) == 0 {
+		return nil, fmt.Errorf("icon: no icon asset found at any density")
 	}
-	icon2, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/"+theme+"/icon@2x.png")
-	icon3, _ := readFS(srv.cfg.InvitePass.StripFS, "passes/"+theme+"/icon@3x.png")
 	logo1, err := readFS(srv.cfg.InvitePass.StripFS, "passes/logo.png")
 	if err != nil {
 		return nil, fmt.Errorf("logo: %w", err)
@@ -247,8 +250,10 @@ func (srv *Server) buildPassAssets(theme, handle string, avatarBytes []byte) ([]
 	_ = avatarBytes
 
 	assets := []PassAsset{
-		{Name: "icon.png", Data: icon1},
 		{Name: "logo.png", Data: logo1},
+	}
+	if len(icon1) > 0 {
+		assets = append(assets, PassAsset{Name: "icon.png", Data: icon1})
 	}
 	if len(icon2) > 0 {
 		assets = append(assets, PassAsset{Name: "icon@2x.png", Data: icon2})

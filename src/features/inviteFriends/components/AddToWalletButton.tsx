@@ -8,17 +8,10 @@ import {useAgent} from '#/state/session'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
-import {type InviteThemeKey} from '../themes'
 
 const BSKY_WEB = 'https://bsky.app'
 
-export function AddToWalletButton({
-  themeKey,
-  handle,
-}: {
-  themeKey: InviteThemeKey
-  handle: string
-}) {
+export function AddToWalletButton({handle}: {handle: string}) {
   const {t: l} = useLingui()
   const ax = useAnalytics()
   const agent = useAgent()
@@ -64,16 +57,15 @@ export function AddToWalletButton({
             Authorization: `Bearer ${accessJwt}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({theme: themeKey}),
+          body: JSON.stringify({}),
         })
         if (!res.ok) throw new Error(`pass.url ${res.status}`)
         const {url} = (await res.json()) as {url: string}
         added = await RNWallet.addPass(url)
       } else {
-        const res = await fetch(
-          `${BSKY_WEB}/invite/wallet/jwt?theme=${themeKey}`,
-          {headers: {Authorization: `Bearer ${accessJwt}`}},
-        )
+        const res = await fetch(`${BSKY_WEB}/invite/wallet/jwt`, {
+          headers: {Authorization: `Bearer ${accessJwt}`},
+        })
         if (!res.ok) throw new Error(`wallet/jwt ${res.status}`)
         const {jwt} = (await res.json()) as {jwt: string}
         added = await RNWallet.addPassWithSignedJwt(jwt)
