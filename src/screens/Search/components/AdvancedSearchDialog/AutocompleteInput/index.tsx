@@ -24,11 +24,13 @@ function renderItem(props: AutocompleteItemProps) {
   return <AutocompleteItemProfile {...props} />
 }
 
-// Web: the result list floats above content via the shared Autocomplete/Sift
-// primitives (the same stack the composer/DM mention typeahead uses). See
-// index.native.tsx for the inline variant. The typeahead matches the last
-// space-delimited token; selecting a result completes that token and leaves a
-// trailing space so the next value can be typed.
+/**
+ * Web: the result list floats above content via the shared Autocomplete/Sift
+ * primitives (the same stack the composer/DM mention typeahead uses). See
+ * index.native.tsx for the inline variant. The typeahead matches the last
+ * space-delimited token; selecting a result completes that token and leaves a
+ * trailing space so the next value can be typed.
+ */
 export function AutocompleteInput({
   label,
   value,
@@ -39,8 +41,10 @@ export function AutocompleteInput({
   const t = useTheme()
   const {t: l} = useLingui()
   const [focused, setFocused] = useState(false)
-  // The popover is portaled and doesn't follow the page as it scrolls, so hide
-  // it on scroll. Reset when the user edits or refocuses the input.
+  /*
+   * The popover is portaled and doesn't follow the page as it scrolls, so hide
+   * it on scroll. Reset when the user edits or refocuses the input.
+   */
   const [dismissedByScroll, setDismissedByScroll] = useState(false)
 
   const sift = useSift({
@@ -58,14 +62,18 @@ export function AutocompleteInput({
   useEffect(() => {
     if (!showDropdown) return
     const onScroll = () => setDismissedByScroll(true)
-    // Capture phase so scrolls inside the dialog's scroll container (not just
-    // the window) trigger dismissal.
+    /*
+     * Capture phase so scrolls inside the dialog's scroll container (not just
+     * the window) trigger dismissal.
+     */
     window.addEventListener('scroll', onScroll, true)
     return () => window.removeEventListener('scroll', onScroll, true)
   }, [showDropdown])
 
-  // The anchor ref is applied via inputRef (lands on the inner TextInput); the
-  // remaining combobox a11y props are spread onto the input.
+  /*
+   * The anchor ref is applied via inputRef (lands on the inner TextInput); the
+   * remaining combobox a11y props are spread onto the input.
+   */
   const {ref: anchorRef, ...comboboxProps} = sift.targetProps
 
   return (

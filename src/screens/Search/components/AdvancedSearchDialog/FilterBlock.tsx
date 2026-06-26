@@ -122,10 +122,12 @@ export function FilterBlock({
                 <Menu.Item
                   key={field}
                   label={labels[field].title}
-                  // Switching the field type clears any text entered for the
-                  // previous type, since values rarely carry over meaningfully
-                  // (e.g. a handle is not a domain). Changing include/exclude
-                  // mode leaves the text intact - it's the same field.
+                  /*
+                   * Switching the field type clears any text entered for the
+                   * previous type, since values rarely carry over meaningfully
+                   * (e.g. a handle is not a domain). Changing include/exclude
+                   * mode leaves the text intact - it's the same field.
+                   */
                   onPress={() => onChange({field, value: ''})}>
                   <Menu.ItemText>{labels[field].title}</Menu.ItemText>
                   <Menu.ItemRadio selected={filter.field === field} />
@@ -152,8 +154,10 @@ export function FilterBlock({
 
       {HANDLE_FIELDS.has(filter.field) ? (
         <AutocompleteInput
-          // Remount on field-type change so the input resets to the cleared
-          // value; mode changes keep the same field and so preserve the text.
+          /*
+           * Remount on field-type change so the input resets to the cleared
+           * value; mode changes keep the same field and so preserve the text.
+           */
           key={filter.field}
           label={labels[filter.field].label}
           value={filter.value}
@@ -162,8 +166,10 @@ export function FilterBlock({
         />
       ) : (
         <ClearableInput
-          // The input is uncontrolled (defaultValue), so remount on field-type
-          // change to reset it; mode changes keep the same field and text.
+          /*
+           * The input is uncontrolled (defaultValue), so remount on field-type
+           * change to reset it; mode changes keep the same field and text.
+           */
           key={filter.field}
           label={labels[filter.field].label}
           defaultValue={filter.value}

@@ -1,17 +1,20 @@
-// Structured advanced-search filters that live as sibling URL query params
-// alongside `q` (e.g. /search?q=test&domain=bsky.app). `q` itself holds only
-// free text; these params hold everything configured in the advanced search
-// dialog. All values are strings so they map cleanly to route params; `tag` is
-// space-joined here and split into the lexicon's string[] at the API boundary.
-
+/**
+ * Structured advanced-search filters that live as sibling URL query params
+ * alongside `q` (e.g. /search?q=test&domain=bsky.app). `q` itself holds only
+ * free text; these params hold everything configured in the advanced search
+ * dialog. All values are strings so they map cleanly to route params; `tag` is
+ * space-joined here and split into the lexicon's string[] at the API boundary.
+ */
 export type SearchFilters = {
   author?: string
   mentions?: string
   domain?: string
   url?: string
   tag?: string
-  // Exclude variants of the list fields above. v2-only; v1 has no structured
-  // exclude operators so these are dropped on the legacy path.
+  /**
+   * Exclude variants of the list fields above. v2-only; v1 has no structured
+   * exclude operators so these are dropped on the legacy path.
+   */
   excludeAuthor?: string
   excludeMentions?: string
   excludeDomain?: string
@@ -20,10 +23,14 @@ export type SearchFilters = {
   lang?: string
   since?: string
   until?: string
-  replies?: string // 'none' | 'only'
-  media?: string // 'true'
-  video?: string // 'true'
-  following?: string // 'true'
+  /** 'none' | 'only' */
+  replies?: string
+  /** 'true' */
+  media?: string
+  /** 'true' */
+  video?: string
+  /** 'true' */
+  following?: string
 }
 
 export const FILTER_PARAM_KEYS = [
@@ -46,8 +53,10 @@ export const FILTER_PARAM_KEYS = [
   'following',
 ] as const
 
-// Reads filter params out of a route's params object, keeping only non-empty
-// string values.
+/**
+ * Reads filter params out of a route's params object, keeping only non-empty
+ * string values.
+ */
 export function readSearchFilters(
   routeParams: Record<string, unknown> | undefined,
 ): SearchFilters {
@@ -55,8 +64,10 @@ export function readSearchFilters(
   if (!routeParams) return filters
   for (const key of FILTER_PARAM_KEYS) {
     const value = routeParams[key]
-    // Guard against the literal string "undefined", which can leak into the
-    // URL if an undefined param value gets serialized.
+    /*
+     * Guard against the literal string "undefined", which can leak into the
+     * URL if an undefined param value gets serialized.
+     */
     if (typeof value === 'string' && value && value !== 'undefined') {
       filters[key] = value
     }
@@ -68,9 +79,11 @@ export function hasActiveFilters(filters: SearchFilters): boolean {
   return FILTER_PARAM_KEYS.some(key => filters[key])
 }
 
-// Number of active filter params, used for the "[+N filters]" pill in search
-// history. Each set key counts once (a multi-value field like author counts as
-// one filter regardless of how many handles it holds).
+/**
+ * Number of active filter params, used for the "[+N filters]" pill in search
+ * history. Each set key counts once (a multi-value field like author counts as
+ * one filter regardless of how many handles it holds).
+ */
 export function countActiveFilters(filters: SearchFilters): number {
   return FILTER_PARAM_KEYS.filter(key => filters[key]).length
 }
@@ -80,10 +93,12 @@ export type SearchHistoryEntry = {
   filters: SearchFilters
 }
 
-// Serializes a search (query text + filters) for term-history storage. Searches
-// with no filters are stored as plain strings - both for readability and so
-// pre-existing term-only history (also plain strings) stays valid. Only
-// filtered searches are JSON-encoded.
+/**
+ * Serializes a search (query text + filters) for term-history storage. Searches
+ * with no filters are stored as plain strings - both for readability and so
+ * pre-existing term-only history (also plain strings) stays valid. Only
+ * filtered searches are JSON-encoded.
+ */
 export function serializeHistoryEntry(
   q: string,
   filters: SearchFilters,
@@ -92,10 +107,12 @@ export function serializeHistoryEntry(
   return JSON.stringify({q, filters})
 }
 
-// Parses a stored term-history entry. Legacy/term-only entries are plain
-// strings; filtered entries are JSON objects. Anything that isn't a
-// well-formed {q, filters} object is treated as a plain query string, so a bad
-// or pre-existing value never throws.
+/**
+ * Parses a stored term-history entry. Legacy/term-only entries are plain
+ * strings; filtered entries are JSON objects. Anything that isn't a
+ * well-formed {q, filters} object is treated as a plain query string, so a bad
+ * or pre-existing value never throws.
+ */
 export function parseHistoryEntry(stored: string): SearchHistoryEntry {
   try {
     const parsed: unknown = JSON.parse(stored)
@@ -113,21 +130,25 @@ export function parseHistoryEntry(stored: string): SearchHistoryEntry {
   return {q: stored, filters: {}}
 }
 
-// Filter keys that restrict posts specifically, as opposed to `lang`, which
-// applies equally to posts, people, and feeds. Used to decide whether the
-// People/Feeds search tabs still make sense: a language alone should not hide
-// them, but any post-only filter (author, domain, media, etc.) should.
+/**
+ * Filter keys that restrict posts specifically, as opposed to `lang`, which
+ * applies equally to posts, people, and feeds. Used to decide whether the
+ * People/Feeds search tabs still make sense: a language alone should not hide
+ * them, but any post-only filter (author, domain, media, etc.) should.
+ */
 const POST_ONLY_FILTER_KEYS = FILTER_PARAM_KEYS.filter(key => key !== 'lang')
 
 export function hasPostOnlyFilters(filters: SearchFilters): boolean {
   return POST_ONLY_FILTER_KEYS.some(key => filters[key])
 }
 
-// Expands filters to a route-params object covering every filter key, with
-// absent keys set to undefined. Used with navigation.setParams (which merges)
-// so filters the user removed are cleared. NOTE: only safe on native - on web,
-// undefined values serialize into the URL as the literal string "undefined".
-// Use definedFilterParams + a fresh navigation (push/replace) on web instead.
+/**
+ * Expands filters to a route-params object covering every filter key, with
+ * absent keys set to undefined. Used with navigation.setParams (which merges)
+ * so filters the user removed are cleared. NOTE: only safe on native - on web,
+ * undefined values serialize into the URL as the literal string "undefined".
+ * Use definedFilterParams + a fresh navigation (push/replace) on web instead.
+ */
 export function filtersToRouteParams(
   filters: SearchFilters,
 ): Record<string, string | undefined> {
@@ -138,8 +159,10 @@ export function filtersToRouteParams(
   return params
 }
 
-// Returns only the filter keys that have a value, omitting the rest entirely.
-// Safe for building a fresh URL on web - absent filters never appear.
+/**
+ * Returns only the filter keys that have a value, omitting the rest entirely.
+ * Safe for building a fresh URL on web - absent filters never appear.
+ */
 export function definedFilterParams(
   filters: SearchFilters,
 ): Record<string, string> {
@@ -151,9 +174,11 @@ export function definedFilterParams(
   return params
 }
 
-// Strips all filter keys from a route-params object, leaving non-filter params
-// (q, tab, name) intact. Use as the base when rebuilding a fresh param set so
-// removed filters - and any stale "undefined" strings - drop out.
+/**
+ * Strips all filter keys from a route-params object, leaving non-filter params
+ * (q, tab, name) intact. Use as the base when rebuilding a fresh param set so
+ * removed filters - and any stale "undefined" strings - drop out.
+ */
 export function withoutFilterParams(
   routeParams: Record<string, unknown> | undefined,
 ): Record<string, unknown> {
@@ -164,9 +189,11 @@ export function withoutFilterParams(
   return base
 }
 
-// Converts structured filters back into the legacy free-text operators used by
-// search v1. UI-only filters are intentionally dropped because the old path
-// could not apply them.
+/**
+ * Converts structured filters back into the legacy free-text operators used by
+ * search v1. UI-only filters are intentionally dropped because the old path
+ * could not apply them.
+ */
 export function filtersToLegacyParams(
   filters: SearchFilters,
 ): Record<string, string> {
@@ -182,11 +209,13 @@ export function filtersToLegacyParams(
   return params
 }
 
-// Maps each multi-value SearchFilters key to its `app.bsky.feed.searchPostsV2`
-// param name. Search v1 only honored the first value for the singular lexicon
-// params (author/domain/url); v2 accepts every value and renames them to the
-// plural forms here. `tag` becomes `hashtags`; `mentions` keeps its name. The
-// exclude* keys map to v2's matching exclude* params.
+/**
+ * Maps each multi-value SearchFilters key to its `app.bsky.feed.searchPostsV2`
+ * param name. Search v1 only honored the first value for the singular lexicon
+ * params (author/domain/url); v2 accepts every value and renames them to the
+ * plural forms here. `tag` becomes `hashtags`; `mentions` keeps its name. The
+ * exclude* keys map to v2's matching exclude* params.
+ */
 const MULTI_VALUE_KEY_MAP = {
   author: 'authors',
   mentions: 'mentions',
@@ -200,11 +229,13 @@ const MULTI_VALUE_KEY_MAP = {
   excludeTag: 'excludeHashtags',
 } as const
 
-// Converts filters into structured params for `app.bsky.feed.searchPostsV2`.
-// Output property names match the v2 lexicon. List fields are split into arrays
-// of values; scalar fields (language/since/until) pass through. The
-// boolean/replies filters (media/video/following/replies) are v2-only - v1 had
-// no equivalent and dropped them.
+/**
+ * Converts filters into structured params for `app.bsky.feed.searchPostsV2`.
+ * Output property names match the v2 lexicon. List fields are split into arrays
+ * of values; scalar fields (language/since/until) pass through. The
+ * boolean/replies filters (media/video/following/replies) are v2-only - v1 had
+ * no equivalent and dropped them.
+ */
 export function filtersToApiParams(filters: SearchFilters): {
   authors?: string[]
   mentions?: string[]

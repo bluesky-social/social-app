@@ -52,17 +52,21 @@ let SearchResults = ({
   headerHeight: number
 }): React.ReactNode => {
   const {t: l} = useLingui()
-  // People/Feeds visibility keys off post-only filters: a `lang` filter applies
-  // to people and feeds too, so it must not hide those tabs (which would also
-  // regress the non-v2 legacy language dropdown). Other filters are post-only.
+  /*
+   * People/Feeds visibility keys off post-only filters: a `lang` filter applies
+   * to people and feeds too, so it must not hide those tabs (which would also
+   * regress the non-v2 legacy language dropdown). Other filters are post-only.
+   */
   const hasPostFilters = hasPostOnlyFilters(filters)
   const activePage = hasPostFilters && activeTab > 1 ? 0 : activeTab
   const tabShape = hasPostFilters ? 'filtered' : 'plain'
 
   const sections = useMemo(() => {
     if (!query && !hasFilters) return []
-    // People and Feeds tabs only make sense without post-restricting filters -
-    // those filters don't apply to actors or feeds.
+    /*
+     * People and Feeds tabs only make sense without post-restricting filters -
+     * those filters don't apply to actors or feeds.
+     */
     const noFilters = !hasPostFilters
     return [
       {
@@ -328,9 +332,11 @@ let SearchScreenPostResults = ({
     return augmentSearchQuery(queryWithParams || '', {did: currentAccount?.did})
   }, [queryWithParams, currentAccount])
 
-  // Both hooks are called to keep hook order stable; `enabled` ensures only the
-  // gated one actually fetches. V2 sends structured `filters` as separate
-  // params, V1 keeps the existing single-`q` behavior.
+  /*
+   * Both hooks are called to keep hook order stable; `enabled` ensures only the
+   * gated one actually fetches. V2 sends structured `filters` as separate
+   * params, V1 keeps the existing single-`q` behavior.
+   */
   const v1 = useSearchPostsQuery({
     query: augmentedV1Query,
     sort,

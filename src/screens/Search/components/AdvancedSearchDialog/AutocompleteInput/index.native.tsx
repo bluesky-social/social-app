@@ -16,13 +16,16 @@ import {
   lastTokenOf,
 } from './shared'
 
-// Native: Sift's popover positioning doesn't anchor, so the result list is drawn
-// as an absolutely-positioned overlay directly above the input. Anchoring above
-// (rather than below) keeps it clear of the on-screen keyboard, and overlaying
-// (rather than rendering inline) means it doesn't push the focused input down
-// under the keyboard. See index.tsx for the web (floating) variant. The
-// typeahead matches the last space-delimited token; selecting a result completes
-// that token and leaves a trailing space so the next value can be typed.
+/**
+ * Native: Sift's popover positioning doesn't anchor, so the result list is
+ * drawn as an absolutely-positioned overlay directly above the input. Anchoring
+ * above (rather than below) keeps it clear of the on-screen keyboard, and
+ * overlaying (rather than rendering inline) means it doesn't push the focused
+ * input down under the keyboard. See index.tsx for the web (floating) variant.
+ * The typeahead matches the last space-delimited token; selecting a result
+ * completes that token and leaves a trailing space so the next value can be
+ * typed.
+ */
 export function AutocompleteInput({
   label,
   value,
@@ -94,15 +97,19 @@ function OverlayList({
 
   if (!moderationOpts) return null
 
-  // The list sits above the input, so reverse it to put the most relevant
-  // result (first) at the bottom, nearest the text the user is typing.
+  /*
+   * The list sits above the input, so reverse it to put the most relevant
+   * result (first) at the bottom, nearest the text the user is typing.
+   */
   const ordered = [...items].reverse()
 
   return (
     <View
       style={[
-        // Drawn as an overlay anchored just above the input so it doesn't push
-        // the input down under the keyboard. z_10 keeps it above sibling rows.
+        /*
+         * Drawn as an overlay anchored just above the input so it doesn't push
+         * the input down under the keyboard. z_10 keeps it above sibling rows.
+         */
         a.absolute,
         a.z_10,
         a.mb_xs,

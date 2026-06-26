@@ -14,11 +14,13 @@ import {
   extractSearchPostsParams,
 } from './search-posts-params'
 
-// V2 search shares the `'search-posts'` query-key root with the original hook
-// (src/state/queries/search-posts.ts) so the shadow-cache generators there -
-// findAllPostsInQueryData / findAllProfilesInQueryData - discover V2 results
-// too. This module is only used behind the AdvancedSearchV2Enable gate; the
-// original hook is unchanged.
+/**
+ * V2 search shares the `'search-posts'` query-key root with the original hook
+ * (src/state/queries/search-posts.ts) so the shadow-cache generators there -
+ * findAllPostsInQueryData / findAllProfilesInQueryData - discover V2 results
+ * too. This module is only used behind the AdvancedSearchV2Enable gate; the
+ * original hook is unchanged.
+ */
 const searchPostsQueryKeyRoot = 'search-posts'
 const searchPostsV2QueryKey = ({
   query,
@@ -65,24 +67,30 @@ export function useSearchPostsV2Query({
   >({
     queryKey: searchPostsV2QueryKey({query, sort, filters}),
     queryFn: async ({pageParam}) => {
-      // Operators embedded in the query string (e.g. for back-compat links) are
-      // merged with the explicit structured filters from the advanced search
-      // dialog; see buildSearchPostsV2Filters for how the two sources combine.
+      /*
+       * Operators embedded in the query string (e.g. for back-compat links) are
+       * merged with the explicit structured filters from the advanced search
+       * dialog; see buildSearchPostsV2Filters for how the two sources combine.
+       */
       const {q, ...embedded} = extractSearchPostsParams(query)
       const builtFilters = buildSearchPostsV2Filters(embedded, filters)
-      // v2 defaults to a recent-post window; the Latest tab keeps that, while
-      // Top searches the full index. But an explicit since/until date filter
-      // must search the full index too, otherwise the recent window would
-      // silently override the user's date range and return nothing for older
-      // dates.
+      /*
+       * v2 defaults to a recent-post window; the Latest tab keeps that, while
+       * Top searches the full index. But an explicit since/until date filter
+       * must search the full index too, otherwise the recent window would
+       * silently override the user's date range and return nothing for older
+       * dates.
+       */
       const hasDateFilter = !!(builtFilters.since || builtFilters.until)
       const res = await agent.app.bsky.feed.searchPostsV2({
         ...builtFilters,
         query: q,
         limit: 25,
         cursor: pageParam,
-        // v2 calls the recency sort 'recent'; the rest of the app still uses the
-        // v1 'latest' label.
+        /*
+         * v2 calls the recency sort 'recent'; the rest of the app still uses
+         * the v1 'latest' label.
+         */
         sort: sort === 'latest' ? 'recent' : sort,
         allTime: sort !== 'latest' || hasDateFilter,
       })
@@ -104,8 +112,10 @@ export function useSearchPostsV2Query({
           return data
         }
 
-        // Keep track of the last run and whether we can reuse
-        // some already selected pages from there.
+        /*
+         * Keep track of the last run and whether we can reuse some already
+         * selected pages from there.
+         */
         let reusedPages = []
         if (lastRun.current) {
           const {

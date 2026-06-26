@@ -7,7 +7,7 @@ import {DateField} from '#/components/forms/DateField'
 import {toSimpleDateString} from '#/components/forms/DateField/utils'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 
-// The date picker requires a valid date, so default to today.
+/** The date picker requires a valid date, so default to today. */
 export const DEFAULT_DATE = toSimpleDateString(new Date())
 
 export function ClearableDateField({
@@ -35,8 +35,10 @@ export function ClearableDateField({
     <View style={[a.w_full, a.relative]}>
       <DateField
         label={label}
-        // An empty value renders the placeholder and leaves the field inactive
-        // until the user confirms a date.
+        /*
+         * An empty value renders the placeholder and leaves the field inactive
+         * until the user confirms a date.
+         */
         value={active ? value : ''}
         placeholder={l({
           message: 'Any time',
@@ -45,15 +47,19 @@ export function ClearableDateField({
         accessibilityHint={accessibilityHint}
         maximumDate={maximumDate}
         minimumDate={minimumDate}
-        // onChangeDate is required, but activation is driven by onConfirm so
-        // that iOS scroll ticks don't mark the field active.
+        /*
+         * onChangeDate is required, but activation is driven by onConfirm so
+         * that iOS scroll ticks don't mark the field active.
+         */
         onChangeDate={() => {}}
         onConfirm={onConfirm}
       />
 
       {active && (
-        // Nudged left of the browser's native date-picker icon, which (in
-        // Firefox especially) can't be hidden via CSS.
+        /*
+         * Nudged left of the browser's native date-picker icon, which (in
+         * Firefox especially) can't be hidden via CSS.
+         */
         <View
           style={[
             a.absolute,

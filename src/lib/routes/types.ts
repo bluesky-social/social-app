@@ -6,10 +6,12 @@ import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 
 export type {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-// The advanced-search filter params are owned by searchParams.ts (the param
-// model, serialization, and helpers all live there). Re-export the type so the
-// route params stay in sync with it automatically rather than being a second
-// hand-maintained copy.
+/**
+ * The advanced-search filter params are owned by searchParams.ts (the param
+ * model, serialization, and helpers all live there). Re-export the type so the
+ * route params stay in sync with it automatically rather than being a second
+ * hand-maintained copy.
+ */
 export type SearchFilterParams = SearchFilters
 
 export type SearchParams = {

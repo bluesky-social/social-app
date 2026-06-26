@@ -137,9 +137,11 @@ function DialogInner({
   const [replies, setReplies] = useState<RepliesFilter>(parsed.replies)
   const [following, setFollowing] = useState<FollowingFilter>(parsed.following)
 
-  // The date picker requires a valid date, so these always hold one. The
-  // accompanying `active` flags track whether the date is actually part of the
-  // query, so that a date equal to today (the default) can still be applied.
+  /*
+   * The date picker requires a valid date, so these always hold one. The
+   * accompanying `active` flags track whether the date is actually part of the
+   * query, so that a date equal to today (the default) can still be applied.
+   */
   const [dateSince, setDateSince] = useState(parsed.since || DEFAULT_DATE)
   const [dateSinceActive, setDateSinceActive] = useState(!!parsed.since)
   const [dateUntil, setDateUntil] = useState(parsed.until || DEFAULT_DATE)
@@ -151,12 +153,16 @@ function DialogInner({
 
   function addFilter() {
     if (filters.length >= MAX_FILTERS) return
-    // New blocks append to the end so the newest sits directly above the
-    // "Add filter" button, which renders below the list.
+    /*
+     * New blocks append to the end so the newest sits directly above the
+     * "Add filter" button, which renders below the list.
+     */
     setFilters(prev => [...prev, makeFilter('authors')])
     ax.metric('search:addFilter:press', {})
-    // Wait for the new block to render, then scroll the bottom of the dialog
-    // (the new block plus the button beneath it) into view.
+    /*
+     * Wait for the new block to render, then scroll the bottom of the dialog
+     * (the new block plus the button beneath it) into view.
+     */
     requestAnimationFrame(() => {
       if (IS_WEB) {
         const node = filtersSectionRef.current as unknown as HTMLElement | null
@@ -192,8 +198,10 @@ function DialogInner({
       dateUntilActive,
       filters,
     })
-    // Run the submit (navigation + state updates) inside the close callback so
-    // it doesn't race the sheet's close animation on native.
+    /*
+     * Run the submit (navigation + state updates) inside the close callback so
+     * it doesn't race the sheet's close animation on native.
+     */
     control.close(() => onSubmit(nextQ, nextFilters))
   }
 

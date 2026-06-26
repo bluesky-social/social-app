@@ -12,12 +12,14 @@ import {createStaticClick, InlineLinkText} from '#/components/Link'
 
 type DetectedLanguage = {code: string; name: string}
 
-// Shows a tip naming the languages v2 detected in the query text (for
-// CJK/Thai/Arabic scripts), so the user can confirm we parsed the query as they
-// intended. Each name is a link that adds its code to the `language` filter and
-// re-runs the search. It runs the same v2 query as the active post-results tab;
-// react query dedupes on the shared cache key, so this reads the existing
-// result rather than triggering a second fetch.
+/**
+ * Shows a tip naming the languages v2 detected in the query text (for
+ * CJK/Thai/Arabic scripts), so the user can confirm we parsed the query as they
+ * intended. Each name is a link that adds its code to the `language` filter and
+ * re-runs the search. It runs the same v2 query as the active post-results tab;
+ * react query dedupes on the shared cache key, so this reads the existing
+ * result rather than triggering a second fetch.
+ */
 export function DetectedLanguagesAdmonition({
   query,
   filters,
@@ -72,9 +74,11 @@ export function DetectedLanguagesAdmonition({
   )
 }
 
-// Per-count templates so the sentence and list conjunction stay translatable
-// while each language name remains an individually pressable link. v2 only
-// detects 1-5 languages; 3+ all use the comma-list variant.
+/**
+ * Per-count templates so the sentence and list conjunction stay translatable
+ * while each language name remains an individually pressable link. v2 only
+ * detects 1-5 languages; 3+ all use the comma-list variant.
+ */
 function DetectedLanguagesPrompt({
   languages,
   onPressLanguage,
