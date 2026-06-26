@@ -373,7 +373,7 @@ msgstr "{count, plural, one {# new join request} other {# new join requests}}"
 msgid "{count, plural, one {# request} other {# requests}}"
 msgstr "{count, plural, one {# request} other {# requests}}"
 
-#: src/view/shell/desktop/LeftNav.tsx:483
+#: src/view/shell/desktop/LeftNav.tsx:487
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -1124,8 +1124,8 @@ msgstr ""
 
 #: src/screens/Settings/Settings.tsx:537
 #: src/screens/Settings/Settings.tsx:540
-#: src/view/shell/desktop/LeftNav.tsx:275
-#: src/view/shell/desktop/LeftNav.tsx:278
+#: src/view/shell/desktop/LeftNav.tsx:279
+#: src/view/shell/desktop/LeftNav.tsx:282
 msgid "Add another account"
 msgstr ""
 
@@ -2299,7 +2299,7 @@ msgstr "Camera access needed"
 #: src/view/com/composer/Composer.tsx:1742
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
-#: src/view/shell/desktop/LeftNav.tsx:227
+#: src/view/shell/desktop/LeftNav.tsx:231
 msgid "Cancel"
 msgstr ""
 
@@ -2417,7 +2417,7 @@ msgstr ""
 #: src/lib/hooks/useNotificationHandler.ts:133
 #: src/Navigation.tsx:512
 #: src/view/shell/bottom-bar/BottomBar.tsx:237
-#: src/view/shell/desktop/LeftNav.tsx:695
+#: src/view/shell/desktop/LeftNav.tsx:699
 #: src/view/shell/Drawer.tsx:532
 msgid "Chat"
 msgstr ""
@@ -2805,7 +2805,7 @@ msgstr ""
 
 #: src/lib/hotkeys/index.tsx:66
 #: src/view/com/feeds/ComposerPrompt.tsx:147
-#: src/view/shell/desktop/LeftNav.tsx:586
+#: src/view/shell/desktop/LeftNav.tsx:590
 msgid "Compose new post"
 msgstr ""
 
@@ -4430,7 +4430,7 @@ msgstr ""
 
 #: src/Navigation.tsx:772
 #: src/screens/Search/Shell.tsx:362
-#: src/view/shell/desktop/LeftNav.tsx:674
+#: src/view/shell/desktop/LeftNav.tsx:678
 #: src/view/shell/Drawer.tsx:480
 msgid "Explore"
 msgstr ""
@@ -4833,7 +4833,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:196
 #: src/view/screens/Feeds.tsx:504
 #: src/view/screens/Profile.tsx:264
-#: src/view/shell/desktop/LeftNav.tsx:707
+#: src/view/shell/desktop/LeftNav.tsx:711
 #: src/view/shell/Drawer.tsx:596
 msgid "Feeds"
 msgstr ""
@@ -5405,8 +5405,8 @@ msgstr ""
 #: src/components/dms/ConvoMenu.tsx:262
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:98
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:194
-#: src/view/shell/desktop/LeftNav.tsx:335
-#: src/view/shell/desktop/LeftNav.tsx:341
+#: src/view/shell/desktop/LeftNav.tsx:339
+#: src/view/shell/desktop/LeftNav.tsx:345
 msgid "Go to profile"
 msgstr ""
 
@@ -5758,7 +5758,7 @@ msgstr ""
 #: src/Navigation.tsx:767
 #: src/Navigation.tsx:788
 #: src/view/shell/bottom-bar/BottomBar.tsx:193
-#: src/view/shell/desktop/LeftNav.tsx:664
+#: src/view/shell/desktop/LeftNav.tsx:668
 #: src/view/shell/Drawer.tsx:506
 msgid "Home"
 msgstr ""
@@ -6583,7 +6583,7 @@ msgstr ""
 #: src/view/screens/Lists.tsx:60
 #: src/view/screens/Profile.tsx:258
 #: src/view/screens/Profile.tsx:266
-#: src/view/shell/desktop/LeftNav.tsx:717
+#: src/view/shell/desktop/LeftNav.tsx:721
 #: src/view/shell/Drawer.tsx:611
 msgid "Lists"
 msgstr ""
@@ -7325,7 +7325,7 @@ msgid "New post"
 msgstr ""
 
 #: src/view/com/feeds/FeedPage.tsx:179
-#: src/view/shell/desktop/LeftNav.tsx:597
+#: src/view/shell/desktop/LeftNav.tsx:601
 msgctxt "action"
 msgid "New post"
 msgstr ""
@@ -7670,7 +7670,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:202
 #: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:268
-#: src/view/shell/desktop/LeftNav.tsx:684
+#: src/view/shell/desktop/LeftNav.tsx:688
 #: src/view/shell/Drawer.tsx:559
 msgid "Notifications"
 msgstr ""
@@ -8779,7 +8779,7 @@ msgstr ""
 
 #: src/screens/Profile/components/ProfileStatusError.tsx:144
 #: src/view/shell/bottom-bar/BottomBar.tsx:311
-#: src/view/shell/desktop/LeftNav.tsx:740
+#: src/view/shell/desktop/LeftNav.tsx:744
 #: src/view/shell/Drawer.tsx:92
 #: src/view/shell/Drawer.tsx:662
 msgid "Profile"
@@ -9746,7 +9746,7 @@ msgstr ""
 msgid "Save to my feeds"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:727
+#: src/view/shell/desktop/LeftNav.tsx:731
 #: src/view/shell/Drawer.tsx:637
 msgctxt "link to bookmarks screen"
 msgid "Saved"
@@ -10249,7 +10249,7 @@ msgstr ""
 
 #: src/Navigation.tsx:221
 #: src/screens/Settings/Settings.tsx:94
-#: src/view/shell/desktop/LeftNav.tsx:750
+#: src/view/shell/desktop/LeftNav.tsx:754
 #: src/view/shell/Drawer.tsx:675
 msgid "Settings"
 msgstr ""
@@ -10605,9 +10605,9 @@ msgstr ""
 #: src/screens/SignupQueued.tsx:94
 #: src/screens/SignupQueued.tsx:97
 #: src/screens/Takendown.tsx:88
-#: src/view/shell/desktop/LeftNav.tsx:226
-#: src/view/shell/desktop/LeftNav.tsx:281
-#: src/view/shell/desktop/LeftNav.tsx:284
+#: src/view/shell/desktop/LeftNav.tsx:230
+#: src/view/shell/desktop/LeftNav.tsx:285
+#: src/view/shell/desktop/LeftNav.tsx:288
 msgid "Sign out"
 msgstr ""
 
@@ -10616,7 +10616,7 @@ msgid "Sign Out"
 msgstr ""
 
 #: src/screens/Settings/Settings.tsx:298
-#: src/view/shell/desktop/LeftNav.tsx:223
+#: src/view/shell/desktop/LeftNav.tsx:227
 msgid "Sign out?"
 msgstr ""
 
@@ -11012,6 +11012,7 @@ msgstr ""
 #: src/Navigation.tsx:344
 #: src/view/screens/Support.tsx:31
 #: src/view/screens/SupportReturn.tsx:64
+#: src/view/shell/desktop/LeftNav.tsx:764
 msgid "Support"
 msgstr ""
 
@@ -11065,16 +11066,16 @@ msgstr "Suspended accounts cannot participate in chat."
 #: src/screens/Settings/Settings.tsx:116
 #: src/screens/Settings/Settings.tsx:128
 #: src/screens/Settings/Settings.tsx:577
-#: src/view/shell/desktop/LeftNav.tsx:261
+#: src/view/shell/desktop/LeftNav.tsx:265
 msgid "Switch account"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:123
+#: src/view/shell/desktop/LeftNav.tsx:127
 msgid "Switch accounts"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle( profile?.handle ?? account.handle, '@', )
-#: src/view/shell/desktop/LeftNav.tsx:363
+#: src/view/shell/desktop/LeftNav.tsx:367
 msgid "Switch to {0}"
 msgstr ""
 
@@ -13091,13 +13092,10 @@ msgid "What do you want to call your starter pack?"
 msgstr ""
 
 #: src/view/com/auth/SplashScreen.web.tsx:98
+#: src/view/com/composer/Composer.tsx:1519
 #: src/view/com/feeds/ComposerPrompt.tsx:193
 msgid "What's poppin'?"
 msgstr "What's poppin'?"
-
-#: src/view/com/composer/Composer.tsx:1519
-msgid "What's up?"
-msgstr ""
 
 #: src/components/WhoCanReply.tsx:226
 msgid "Who can interact with this post?"
@@ -13596,7 +13594,7 @@ msgid "You requested to join"
 msgstr "You requested to join"
 
 #: src/screens/Settings/Settings.tsx:299
-#: src/view/shell/desktop/LeftNav.tsx:224
+#: src/view/shell/desktop/LeftNav.tsx:228
 msgid "You will be signed out of all your accounts."
 msgstr ""
 
