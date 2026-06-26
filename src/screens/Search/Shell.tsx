@@ -30,6 +30,7 @@ import {
 } from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {
+  countActiveFilters,
   definedFilterParams,
   filtersToLegacyParams,
   filtersToRouteParams,
@@ -317,6 +318,7 @@ export function SearchScreenShell({
   const onSubmit = (source: 'typed' | 'autocomplete') => () => {
     ax.metric('search:query', {
       source,
+      filterCount: countActiveFilters(filters),
     })
     navigateToItem(searchTextRef.current)
   }
@@ -329,6 +331,7 @@ export function SearchScreenShell({
       updateSearchHistory(text, nextFilters)
       ax.metric('search:query', {
         source: 'typed',
+        filterCount: countActiveFilters(nextFilters),
       })
       if (IS_WEB) {
         /*
@@ -448,7 +451,9 @@ export function SearchScreenShell({
     for (const [key, value] of Object.entries(definedFilterParams(filters))) {
       url.searchParams.set(key, value)
     }
-    ax.metric('search:shareLink:press', {})
+    ax.metric('search:shareLink:press', {
+      filterCount: countActiveFilters(filters),
+    })
     setStringAsync(url.toString()).then(
       () => Toast.show(l`Copied link to clipboard`, {type: 'success'}),
       () => Toast.show(l`Failed to copy link`, {type: 'error'}),

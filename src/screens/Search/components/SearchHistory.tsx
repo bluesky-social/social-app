@@ -90,19 +90,26 @@ export function SearchHistory({
 
         {searchHistory.length > 0 && (
           <View style={[a.px_lg, a.pt_sm]}>
-            {searchHistory.slice(0, 5).map((historyItem, index) => (
-              <SearchHistoryItem
-                key={index}
-                historyItem={historyItem}
-                onPress={() => {
-                  ax.metric('search:query', {
-                    source: 'history',
-                  })
-                  onItemClick(historyItem)
-                }}
-                onRemove={() => onRemoveItemClick(historyItem)}
-              />
-            ))}
+            {searchHistory.slice(0, 5).map((historyItem, index) => {
+              const {q, filters} = parseHistoryEntry(historyItem)
+              const filterCount = countActiveFilters(filters)
+
+              return (
+                <SearchHistoryItem
+                  key={index}
+                  q={q}
+                  filterCount={filterCount}
+                  onPress={() => {
+                    ax.metric('search:query', {
+                      source: 'history',
+                      filterCount,
+                    })
+                    onItemClick(historyItem)
+                  }}
+                  onRemove={() => onRemoveItemClick(historyItem)}
+                />
+              )
+            })}
           </View>
         )}
       </View>
@@ -111,18 +118,18 @@ export function SearchHistory({
 }
 
 function SearchHistoryItem({
-  historyItem,
+  q,
+  filterCount,
   onPress,
   onRemove,
 }: {
-  historyItem: string
+  q: string
+  filterCount: number
   onPress: () => void
   onRemove: () => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const {q, filters} = parseHistoryEntry(historyItem)
-  const filterCount = countActiveFilters(filters)
 
   return (
     <View style={[a.flex_row, a.gap_sm, a.align_center]}>

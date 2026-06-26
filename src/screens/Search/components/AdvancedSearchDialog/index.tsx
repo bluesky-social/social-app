@@ -3,6 +3,7 @@ import {type ScrollView, View} from 'react-native'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {
+  countActiveFilters,
   FILTER_PARAM_KEYS,
   hasActiveFilters,
   type SearchFilters,
@@ -65,7 +66,9 @@ export function AdvancedSearchDialog({
           color="secondary"
           style={native([a.py_sm, a.px_sm])}
           onPress={() => {
-            ax.metric('search:advanced:press', {})
+            ax.metric('search:advanced:press', {
+              filterCount: countActiveFilters(filters),
+            })
             control.open()
           }}>
           <ButtonIcon icon={SettingsSliderIcon} />
@@ -158,7 +161,9 @@ function DialogInner({
      * "Add filter" button, which renders below the list.
      */
     setFilters(prev => [...prev, makeFilter('authors')])
-    ax.metric('search:addFilter:press', {})
+    ax.metric('search:addFilter:press', {
+      filterCount: filters.length + 1,
+    })
     /*
      * Wait for the new block to render, then scroll the bottom of the dialog
      * (the new block plus the button beneath it) into view.

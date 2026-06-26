@@ -775,6 +775,7 @@ export type Events = {
 
   'search:query': {
     source: 'typed' | 'history' | 'autocomplete'
+    filterCount: number
   }
 
   'search:results:loaded': {
@@ -799,11 +800,17 @@ export type Events = {
     position: number
   }
 
-  'search:advanced:press': {}
+  'search:advanced:press': {
+    filterCount: number
+  }
 
-  'search:shareLink:press': {}
+  'search:shareLink:press': {
+    filterCount: number
+  }
 
-  'search:addFilter:press': {}
+  'search:addFilter:press': {
+    filterCount: number
+  }
 
   'progressGuide:hide': {}
   'progressGuide:followDialog:open': {}
