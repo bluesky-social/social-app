@@ -1990,9 +1990,7 @@ function ComposerPills({
     media?.type === 'video'
   const hasLink = !!post.embed.link
 
-  // Don't render anything if no pills are going to be displayed
-  // Always show for non-replies (Blacksky Only toggle is available)
-  if (isReply && !hasMedia && !hasLink) {
+  if (isReply && !hasMedia && !hasLink && !isForcedBlackskyOnly) {
     return null
   }
 
