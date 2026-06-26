@@ -20,6 +20,7 @@ import {ButtonIcon} from '#/components/Button'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
+import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_DEV, IS_LIQUID_GLASS} from '#/env'
 
@@ -74,6 +75,29 @@ export function HomeHeaderLayoutMobile({
               }
             }}>
             <Logo width={logoVariant === 'japan' ? 34 : 30} />
+
+            {/* TODO: remove this after new arch is fully released */}
+            <View
+              pointerEvents="none"
+              style={[
+                a.absolute,
+                a.rounded_full,
+                {
+                  top: 4,
+                  left: -10,
+                  padding: 4,
+                  backgroundColor: t.palette.primary_300,
+                },
+              ]}>
+              <Text
+                style={[
+                  a.font_bold,
+                  {color: 'white', fontSize: 10, lineHeight: 10},
+                ]}>
+                new arch
+              </Text>
+            </View>
+            {/* TODO: remove this after new arch is fully released */}
           </PressableScale>
         </View>
 
