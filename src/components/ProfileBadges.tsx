@@ -4,6 +4,8 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {atoms as a, useAlf, type ViewStyleProp} from '#/alf'
 import {useNativeFontScale} from '#/alf/util/dimensions'
 import {BotBadge, BotBadgeButton, isBotAccount} from '#/components/BotBadge'
+import {PeerModBadge, PeerModBadgeButton} from '#/components/PeerModBadge'
+import {isPeerModDid} from '#/state/queries/peer-mod-permissions'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
@@ -27,6 +29,14 @@ const botIconSizes: Record<Size, number> = {
   xl: 23,
 } as const
 
+const peerModIconSizes: Record<Size, number> = {
+  xs: 12,
+  sm: 14,
+  md: 16,
+  lg: 20,
+  xl: 24,
+} as const
+
 export function ProfileBadges({
   profile,
   interactive = false,
@@ -46,8 +56,10 @@ export function ProfileBadges({
     fonts: {scaleMultiplier: alfScaleMultiplier},
   } = useAlf()
 
-  // if nothing to show, don't render the container at all
-  if (!verification.showBadge && !isBotAccount(shadowed)) return null
+  const isPeerMod = isPeerModDid(shadowed.did)
+
+  if (!verification.showBadge && !isBotAccount(shadowed) && !isPeerMod)
+    return null
 
   const isOnTheSmallSide = size === 'xs' || size === 'sm'
 
@@ -57,6 +69,7 @@ export function ProfileBadges({
 
   const verificationIconWidth = verificationIconSizes[size] * scaleMultiplier
   const botIconWidth = botIconSizes[size] * scaleMultiplier
+  const peerModIconWidth = peerModIconSizes[size] * scaleMultiplier
 
   return (
     <View
@@ -72,6 +85,7 @@ export function ProfileBadges({
             profile={shadowed}
             width={verificationIconWidth}
           />
+          <PeerModBadgeButton profile={shadowed} width={peerModIconWidth} />
           <BotBadgeButton profile={shadowed} width={botIconWidth} />
         </>
       ) : (
@@ -82,6 +96,7 @@ export function ProfileBadges({
               width={verificationIconWidth}
             />
           )}
+          <PeerModBadge profile={shadowed} width={peerModIconWidth} />
           <BotBadge profile={shadowed} width={botIconWidth} />
         </>
       )}

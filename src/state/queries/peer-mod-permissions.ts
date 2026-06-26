@@ -1,6 +1,7 @@
 import {useQuery} from '@tanstack/react-query'
 
 import {communityXrpc} from '#/lib/api/community'
+import {PEER_MOD_DIDS} from '#/lib/constants'
 import {useAgent, useSession} from '#/state/session'
 
 const GET_MY_PERMISSIONS_METHOD = 'community.blacksky.moderation.getMyPermissions'
@@ -39,4 +40,11 @@ export function useMyPeerModPermissions() {
       }
     },
   })
+}
+
+// Subject-side peer-mod check used to render a badge on any profile.
+// Mirrors the appview's PEER_MOD_DIDS env; replace with a public list endpoint
+// once we ship one.
+export function isPeerModDid(did: string | undefined): boolean {
+  return !!did && did in PEER_MOD_DIDS
 }
