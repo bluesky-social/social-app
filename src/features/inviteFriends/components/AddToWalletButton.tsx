@@ -23,9 +23,12 @@ export function AddToWalletButton({handle}: {handle: string}) {
     // Skip the native check if the handle is already known to be unusable.
     if (!handle || handle === 'handle.invalid') return
     let cancelled = false
-    ;(RNWallet.canAddPasses() as Promise<boolean>)
-      .then((ok: boolean) => {
-        if (!cancelled) setCanAdd(ok)
+    // The native module's TS signature is Promise<boolean>, but on the iOS
+    // simulator PassKit isn't fully wired and canAddPasses() can return
+    // undefined synchronously - Promise.resolve normalizes both shapes.
+    Promise.resolve(RNWallet.canAddPasses() as Promise<boolean> | undefined)
+      .then(ok => {
+        if (!cancelled) setCanAdd(ok === true)
       })
       .catch(() => {
         if (!cancelled) setCanAdd(false)
