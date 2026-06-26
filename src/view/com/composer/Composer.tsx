@@ -86,7 +86,11 @@ import {
   createComposerImage,
   pasteImage,
 } from '#/state/gallery'
-import {useRequireAltTextEnabled} from '#/state/preferences'
+import {
+  useBlackskyOnlyDefault,
+  useRequireAltTextEnabled,
+  useSetBlackskyOnlyDefault,
+} from '#/state/preferences'
 import {
   fromPostLanguages,
   toPostLanguages,
@@ -351,6 +355,15 @@ export const ComposePost = ({
     setLanguageNudgeAt(prev => (now - prev > 10_000 ? now : prev))
   }
 
+  const blackskyOnlyDefault = useBlackskyOnlyDefault()
+  const setBlackskyOnlyDefault = useSetBlackskyOnlyDefault()
+
+  // Force Blacksky-Only when the thread targets a community post — replies
+  // and quotes of a community post can only land in the community.
+  const isForcedBlackskyOnly =
+    (!!replyTo?.uri && replyTo.uri.includes('community.blacksky.feed.post')) ||
+    (!!initQuote?.uri && initQuote.uri.includes('community.blacksky.feed.post'))
+
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
     {
@@ -359,6 +372,7 @@ export const ComposePost = ({
       initText,
       initMention,
       initInteractionSettings: preferences?.postInteractionSettings,
+      initBlackskyOnly: isForcedBlackskyOnly || blackskyOnlyDefault,
     },
     createComposerState,
   )
@@ -2001,13 +2015,15 @@ function ComposerPills({
             style={bottomBarAnimatedStyle}
           />
         )}
-        {isReply ? null : (
+        {isReply || isForcedBlackskyOnly ? null : (
           <Toggle.Item
             name="blacksky_only"
             label={l`Blacksky Only`}
             value={thread.blackskyOnly}
             onChange={() => {
+              const next = !thread.blackskyOnly
               dispatch({type: 'toggle_blacksky_only'})
+              setBlackskyOnlyDefault(next)
             }}
             style={[a.flex_row, a.align_center, a.gap_xs]}>
             <Toggle.LabelText>

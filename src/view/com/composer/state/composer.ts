@@ -630,6 +630,7 @@ export function createComposerState({
   initImageUris,
   initQuoteUri,
   initInteractionSettings,
+  initBlackskyOnly,
 }: {
   initText: string | undefined
   initMention: string | undefined
@@ -638,6 +639,7 @@ export function createComposerState({
   initInteractionSettings:
     | AppBskyActorDefs.PostInteractionSettingsPref
     | undefined
+  initBlackskyOnly?: boolean
 }): ComposerState {
   let media: ImagesMedia | GalleryMedia | undefined
   if (initImageUris?.length) {
@@ -758,7 +760,7 @@ export function createComposerState({
         createdAt: new Date().toString(),
         allow: initInteractionSettings?.threadgateAllowRules,
       }),
-      blackskyOnly: false,
+      blackskyOnly: !!initBlackskyOnly,
     },
   }
 }

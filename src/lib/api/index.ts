@@ -66,13 +66,15 @@ export async function post(
   const thread = opts.thread
   opts.onStateChange?.(t`Processing...`)
 
-  // Route to community post endpoint if:
-  // 1. User explicitly selected "Blacksky Only"
-  // 2. Replying to a community post (replies must stay in the community)
+  // Route to community post endpoint if the user explicitly toggled
+  // Blacksky-Only, is replying to a community post, or is quoting one.
   const isReplyToCommunityPost =
     opts.replyTo && opts.replyTo.includes(COMMUNITY_POST_COLLECTION)
+  const isQuoteOfCommunityPost = thread.posts.some(p =>
+    p.embed.quote?.uri?.includes(COMMUNITY_POST_COLLECTION),
+  )
 
-  if (thread.blackskyOnly || isReplyToCommunityPost) {
+  if (thread.blackskyOnly || isReplyToCommunityPost || isQuoteOfCommunityPost) {
     return postCommunity(agent, queryClient, opts)
   }
 
