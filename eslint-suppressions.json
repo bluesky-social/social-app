@@ -10,21 +10,8 @@
       "count": 2
     }
   },
-  "modules/bottom-sheet/src/BottomSheetPortal.tsx": {
-    "no-restricted-imports": {
-      "count": 1
-    }
-  },
-  "modules/bottom-sheet/src/lib/Portal.tsx": {
-    "no-restricted-imports": {
-      "count": 1
-    }
-  },
   "modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider.tsx": {
     "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
-    "no-restricted-imports": {
       "count": 1
     }
   },
@@ -66,23 +53,10 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 1
-    },
-    "no-restricted-imports": {
-      "count": 1
     }
   },
   "modules/expo-bluesky-swiss-army/src/VisibilityView/index.tsx": {
     "@typescript-eslint/require-await": {
-      "count": 1
-    }
-  },
-  "modules/expo-bluesky-swiss-army/src/VisibilityView/types.ts": {
-    "no-restricted-imports": {
-      "count": 1
-    }
-  },
-  "modules/expo-emoji-picker/src/EmojiPickerView.tsx": {
-    "no-restricted-imports": {
       "count": 1
     }
   },
