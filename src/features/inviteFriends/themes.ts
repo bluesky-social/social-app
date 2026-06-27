@@ -5,7 +5,13 @@
  * matching primary color; the QR data uses qrPrimary; the avatar handle text
  * follows handleColor.
  */
-export type InviteThemeKey = 'dawn' | 'day' | 'dusk' | 'night'
+export type InviteThemeKey =
+  | 'dawn'
+  | 'sunlight'
+  | 'day'
+  | 'dusk'
+  | 'twilight'
+  | 'night'
 
 export type InviteThemeVariant = {
   /** QR data + eye color */
@@ -30,8 +36,10 @@ export type InviteTheme = {
 
 export const INVITE_THEME_KEYS: readonly InviteThemeKey[] = [
   'dawn',
+  'sunlight',
   'day',
   'dusk',
+  'twilight',
   'night',
 ] as const
 
@@ -51,6 +59,24 @@ export const INVITE_THEMES: Record<InviteThemeKey, InviteTheme> = {
       gradientFrom: '#a8ccff',
       gradientTo: '#ff6dbe',
       shadowColor: '#ff6dbe',
+      handleColor: '#ffffff',
+    },
+  },
+  sunlight: {
+    key: 'sunlight',
+    swatch: '#ff8159',
+    light: {
+      qrPrimary: '#ff8159',
+      gradientFrom: '#ffc785',
+      gradientTo: '#ff8159',
+      shadowColor: '#ff8159',
+      handleColor: '#ffffff',
+    },
+    dark: {
+      qrPrimary: '#ff8159',
+      gradientFrom: '#ffc785',
+      gradientTo: '#ff8159',
+      shadowColor: '#ff8159',
       handleColor: '#ffffff',
     },
   },
@@ -87,6 +113,24 @@ export const INVITE_THEMES: Record<InviteThemeKey, InviteTheme> = {
       gradientFrom: '#f88f47',
       gradientTo: '#b15aa2',
       shadowColor: '#f88f47',
+      handleColor: '#ffffff',
+    },
+  },
+  twilight: {
+    key: 'twilight',
+    swatch: '#8b60f7',
+    light: {
+      qrPrimary: '#8b60f7',
+      gradientFrom: '#8ec1ff',
+      gradientTo: '#8b60f7',
+      shadowColor: '#8b60f7',
+      handleColor: '#ffffff',
+    },
+    dark: {
+      qrPrimary: '#8b60f7',
+      gradientFrom: '#8ec1ff',
+      gradientTo: '#8b60f7',
+      shadowColor: '#8b60f7',
       handleColor: '#ffffff',
     },
   },

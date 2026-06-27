@@ -164,11 +164,44 @@ related code together and gives us a better visual cue that there are probably
 other files contained within this "macro" feature, whereas `Component.tsx` on
 its own looks more like a single component file.
 
-### Documentation and Tests Within Features
+### Comments
 
 Comment code when necessary to explain the “why” behind something; avoid
 comments that simply describe the code. Avoid Unicode characters in comments,
 e.g., use `-` not `—`.
+
+Always use docblock (`/** */`) syntax for comments that document a type, type
+member, method, function, or variable. These are the comments a reader expects
+to find attached to a named declaration, and the docblock form makes that intent
+clear and surfaces nicely in editor tooltips.
+
+```tsx
+type DateFieldProps = {
+  /**
+   * An empty string renders the placeholder and opens the picker at today (or
+   * maximumDate, if earlier).
+   */
+  value: string | Date
+}
+
+/**
+ * Date-only input. Accepts a string in the format YYYY-MM-DD, or a Date object.
+ */
+export function DateField() {}
+```
+
+More generally, any multiline comment should use the `/* */` block syntax rather
+than stacked `//` lines. Reserve `//` for short, single-line comments.
+
+```tsx
+/*
+ * The picker requires a valid date, so when value is empty we fall back to
+ * maximumDate (if set) or today.
+ */
+const fallbackDate = maximumDate ? toSimpleDateString(maximumDate) : today
+```
+
+### Documentation and Tests Within Features
 
 For larger features or components, it's helpful to include a README.md file
 within the directory that explains the purpose of the feature, how it works, and

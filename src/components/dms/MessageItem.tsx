@@ -44,12 +44,13 @@ import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, native, platform, useTheme, utils} from '#/alf'
+import {atoms as a, native, platform, tokens, useTheme, utils} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {Button} from '#/components/Button'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {useMessageDialogs} from '#/components/dms/MessageOverlays'
 import {useMessageReplies} from '#/components/dms/MessageReplies'
+import {useReplyPreviewText} from '#/components/dms/replyPreview'
 import {ArrowCornerDownRight_Stroke2_Corner3_Rounded as ArrowCornerDownRightIcon} from '#/components/icons/ArrowCornerDownRight'
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -834,6 +835,7 @@ function ReplyQuote({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const getReplyPreviewText = useReplyPreviewText()
 
   const senderProfile = useMaybeProfileShadow(
     relatedProfiles.get(replyTo.sender.did),
@@ -857,22 +859,15 @@ function ReplyQuote({
   let text: string
   let subtle = false
   if (isBlocked) {
-    text = l`Blocked message hidden`
+    text = l({
+      message: '(blocked message hidden)',
+      comment: 'A reply summary in chat',
+    })
     subtle = true
   } else if (ChatBskyConvoDefs.isMessageView(replyTo)) {
-    text = replyTo.text
-    if (!text.trim()) {
-      subtle = true
-      if (ChatBskyEmbedJoinLink.isView(replyTo.embed)) {
-        text = l`(chat invite link)`
-      } else if (AppBskyEmbedRecord.isView(replyTo.embed)) {
-        text = l`(contains embedded content)`
-      } else {
-        text = l`No text`
-      }
-    }
+    ;({text, subtle} = getReplyPreviewText(replyTo))
   } else {
-    text = l`Deleted message`
+    text = l({message: '(deleted message)', comment: 'A reply summary in chat'})
     subtle = true
   }
 
@@ -888,6 +883,8 @@ function ReplyQuote({
         a.mb_xs,
         a.rounded_md,
         a.p_sm,
+        // The padding above is a little loose, so we tighten it up here.
+        {paddingTop: tokens.space.sm - 2},
         a.flex_col,
         a.align_start,
         a.border,

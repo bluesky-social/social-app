@@ -3,14 +3,21 @@ import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
 import {type ChatBskyActorGetStatus, type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useFocusEffect, useIsFocused} from '@react-navigation/native'
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useAppState} from '#/lib/appState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
-import {type MessagesTabNavigatorParams} from '#/lib/routes/types'
+import {
+  type MessagesTabNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {listenSoftReset} from '#/state/events'
@@ -19,6 +26,7 @@ import {useMessagesEventBus} from '#/state/messages/events'
 import {useChatActorStatusQuery} from '#/state/queries/messages/get-status'
 import {useUnreadCountsQuery} from '#/state/queries/messages/get-unread-counts'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
+import {useUpdateAllRead} from '#/state/queries/messages/update-all-read'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
 import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
@@ -31,6 +39,7 @@ import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotate'
 import {BubbleSmile_Stroke2_Corner2_Rounded_Large as BubbleSmileIcon} from '#/components/icons/Bubble'
+import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {Inbox_Stroke2_Corner2_Rounded_Large as InboxLargeIcon} from '#/components/icons/Inbox'
 import {
@@ -41,6 +50,8 @@ import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/component
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
+import * as Menu from '#/components/Menu'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {IS_NATIVE, IS_WEB} from '#/env'
@@ -289,7 +300,10 @@ export function ChatList({
     isError,
     error,
     refetch,
-  } = useListConvosQuery({status: 'accepted'})
+  } = useListConvosQuery({
+    status: 'accepted',
+    kind: aa.flags.groupChatDisabled ? 'direct' : 'all',
+  })
 
   const {refetch: refetchInbox} = useListConvosQuery({
     status: 'request',
@@ -546,16 +560,19 @@ export function Header({
               variant="solid"
               action={action}
             />
-            <Link
-              to="/messages/settings"
-              action={action}
-              label={l`Chat settings`}
-              size="small"
-              color="secondary"
-              shape="round"
-              style={[a.justify_center]}>
-              <ButtonIcon icon={SettingsIcon} />
-            </Link>
+            <ChatSettingsMenu action={action}>
+              {({props}) => (
+                <Button
+                  {...props}
+                  label={l`Chat options`}
+                  size="small"
+                  color="secondary"
+                  shape="round"
+                  style={[a.justify_center]}>
+                  <ButtonIcon icon={SettingsIcon} />
+                </Button>
+              )}
+            </ChatSettingsMenu>
             {!chatStatus?.chatDisabled && (
               <Button
                 label={l`New chat`}
@@ -578,19 +595,75 @@ export function Header({
           </Layout.Header.Content>
           <InboxRequests count={requestCount} variant="ghost" />
           <Layout.Header.Slot>
-            <Link
-              to="/messages/settings"
-              label={l`Chat settings`}
-              size="small"
-              variant="ghost"
-              color="secondary"
-              shape="round"
-              style={[a.justify_center]}>
-              <ButtonIcon icon={SettingsIcon} size="lg" />
-            </Link>
+            <ChatSettingsMenu action={action}>
+              {({props}) => (
+                <Button
+                  {...props}
+                  label={l`Chat options`}
+                  size="small"
+                  variant="ghost"
+                  color="secondary"
+                  shape="round"
+                  style={[a.justify_center]}>
+                  <ButtonIcon icon={SettingsIcon} size="lg" />
+                </Button>
+              )}
+            </ChatSettingsMenu>
           </Layout.Header.Slot>
         </>
       )}
     </Layout.Header.Outer>
+  )
+}
+
+function ChatSettingsMenu({
+  action,
+  children,
+}: {
+  action: 'navigate' | 'push'
+  children: React.ComponentProps<typeof Menu.Trigger>['children']
+}) {
+  const {t: l} = useLingui()
+  const navigation = useNavigation<NavigationProp>()
+
+  const {mutate: markAllChatsRead} = useUpdateAllRead('accepted', {
+    onMutate: () => {
+      Toast.show(l`Marked all chats as read`, {type: 'success'})
+    },
+    onError: () => {
+      Toast.show(l`Failed to mark all chats as read`, {type: 'error'})
+    },
+  })
+
+  return (
+    <Menu.Root>
+      <Menu.Trigger label={l`Chat options`}>{children}</Menu.Trigger>
+      <Menu.Outer>
+        <Menu.Group>
+          <Menu.Item
+            label={l`Mark all chats as read`}
+            onPress={() => markAllChatsRead()}>
+            <Menu.ItemIcon icon={CircleCheckIcon} />
+            <Menu.ItemText>
+              <Trans>Mark all chats as read</Trans>
+            </Menu.ItemText>
+          </Menu.Item>
+          <Menu.Item
+            label={l`Chat settings`}
+            onPress={() => {
+              if (action === 'navigate') {
+                navigation.navigate('MessagesSettings')
+              } else {
+                navigation.push('MessagesSettings')
+              }
+            }}>
+            <Menu.ItemIcon icon={SettingsIcon} />
+            <Menu.ItemText>
+              <Trans>Chat settings</Trans>
+            </Menu.ItemText>
+          </Menu.Item>
+        </Menu.Group>
+      </Menu.Outer>
+    </Menu.Root>
   )
 }

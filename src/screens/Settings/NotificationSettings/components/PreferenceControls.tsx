@@ -1,9 +1,12 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {type AppBskyNotificationDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {useNotificationSettingsUpdateMutation} from '#/state/queries/notifications/settings'
+import {
+  type NotificationSettingsPreference,
+  type NotificationSettingsPreferenceName,
+  useNotificationSettingsUpdateMutation,
+} from '#/state/queries/notifications/settings'
 import {atoms as a, platform, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
@@ -17,16 +20,13 @@ export function PreferenceControls({
   preference,
   allowDisableInApp = true,
 }: {
-  name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>
+  name: NotificationSettingsPreferenceName
   /**
    * Keep other prefs in sync with `name`. For use in the "everything else" category
    * which groups starterpack joins + verified + unverified notifications into a single toggle.
    */
-  syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[]
-  preference?:
-    | AppBskyNotificationDefs.Preference
-    | AppBskyNotificationDefs.FilterablePreference
-    | AppBskyNotificationDefs.ChatPreference
+  syncOthers?: NotificationSettingsPreferenceName[]
+  preference?: NotificationSettingsPreference
   allowDisableInApp?: boolean
 }) {
   if (!preference)
@@ -52,12 +52,9 @@ export function Inner({
   preference,
   allowDisableInApp,
 }: {
-  name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>
-  syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[]
-  preference:
-    | AppBskyNotificationDefs.Preference
-    | AppBskyNotificationDefs.FilterablePreference
-    | AppBskyNotificationDefs.ChatPreference
+  name: NotificationSettingsPreferenceName
+  syncOthers?: NotificationSettingsPreferenceName[]
+  preference: NotificationSettingsPreference
   allowDisableInApp: boolean
 }) {
   const t = useTheme()
@@ -95,7 +92,7 @@ export function Inner({
   }
 
   const onChangeFilter = ([change]: string[]) => {
-    if (change !== 'all' && change !== 'follows' && change !== 'accepted')
+    if (change !== 'all' && change !== 'follows')
       throw new Error('Invalid filter')
 
     const newPreference = {
@@ -135,7 +132,7 @@ export function Inner({
             </Toggle.LabelText>
             <Toggle.Platform />
           </Toggle.Item>
-          {allowDisableInApp && (
+          {allowDisableInApp && 'list' in preference && (
             <Toggle.Item
               label={l`Receive in-app notifications`}
               name="list"
@@ -176,31 +173,17 @@ export function Inner({
                   />
                 )}
               </Toggle.Item>
-              {name === 'chat' ? (
-                <Toggle.Item
-                  highlightRow
-                  label={l`Accepted conversations`}
-                  name="accepted">
-                  {({selected}) => (
-                    <Toggle.RadioWithLabel
-                      label={l`Accepted conversations`}
-                      selected={selected}
-                    />
-                  )}
-                </Toggle.Item>
-              ) : (
-                <Toggle.Item
-                  highlightRow
-                  label={l`People I follow`}
-                  name="follows">
-                  {({selected}) => (
-                    <Toggle.RadioWithLabel
-                      label={l`People I follow`}
-                      selected={selected}
-                    />
-                  )}
-                </Toggle.Item>
-              )}
+              <Toggle.Item
+                highlightRow
+                label={l`People I follow`}
+                name="follows">
+                {({selected}) => (
+                  <Toggle.RadioWithLabel
+                    label={l`People I follow`}
+                    selected={selected}
+                  />
+                )}
+              </Toggle.Item>
             </View>
           </Toggle.Group>
         </>
