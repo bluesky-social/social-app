@@ -249,7 +249,26 @@ export function useRequestNotificationsPermission() {
       return
     }
 
-    const res = await Notifications.requestPermissionsAsync()
+    const res = await Notifications.requestPermissionsAsync({
+      ios: {
+        /*
+         * These three default to true when no argument is passed to
+         * `requestPermissionsAsync`, but passing an options object opts out of
+         * that default, so we have to set them explicitly to preserve the
+         * existing behavior.
+         */
+        allowAlert: true,
+        allowBadge: true,
+        allowSound: true,
+        /*
+         * Adds an in-app notification settings button to the system Settings
+         * screen for Bluesky. When tapped, iOS calls back into the app, which
+         * we route to the in-app notification settings (see the
+         * NotificationSettings module in expo-bluesky-swiss-army).
+         */
+        provideAppNotificationSettings: true,
+      },
+    })
 
     ax.metric(`notifications:request`, {
       context: context,
