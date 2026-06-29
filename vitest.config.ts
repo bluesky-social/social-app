@@ -121,6 +121,15 @@ export default defineConfig({
       {find: /^expo$/, replacement: r('./vitest/expo-stub.ts')},
 
       /*
+       * async-storage references `window` at module load, undefined under
+       * node. Stubbed with an in-memory implementation.
+       */
+      {
+        find: /^@react-native-async-storage\/async-storage$/,
+        replacement: r('./vitest/async-storage-stub.ts'),
+      },
+
+      /*
        * Former Jest moduleNameMapper entries. Vite's ESM resolution may make
        * some of these unnecessary, but they're harmless and proven, so keep
        * them for now and prune opportunistically.
