@@ -128,7 +128,10 @@ export function SearchScreenShell({
   const {items: autocompleteItems, isFetching: isAutocompleteFetching} =
     useAutocomplete({
       type: 'profile',
-      query: searchText,
+      // On web the dropdown (SearchAutocompleteInput) owns its own autocomplete
+      // query; only the native inline list consumes this one, so pass an empty
+      // query on web to keep the hook a no-op instead of doing wasted work.
+      query: IS_NATIVE ? searchText : '',
     })
 
   const [showAutocomplete, setShowAutocomplete] = useState(false)
