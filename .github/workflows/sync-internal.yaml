@@ -28,8 +28,11 @@ jobs:
           private-key: ${{ secrets.SYNC_INTERNAL_PK }}
           repositories: social-app-internal
           # Scope the token down from the app's full installation permissions;
-          # pushing is the only thing this token is used for
+          # pushing is the only thing this token is used for. The workflows
+          # permission is required because the sync includes files under
+          # .github/workflows/, which GitHub refuses to push without it.
           permission-contents: write
+          permission-workflows: write
       - name: Push to internal repo
         env:
           TOKEN: ${{ steps.app-token.outputs.token }}
