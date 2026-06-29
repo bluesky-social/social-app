@@ -329,6 +329,8 @@ function AccessSection() {
   const diff = lastInitiatedAt
     ? dateDiff(lastInitiatedAt, new Date(), 'down')
     : null
+  const allowsDeviceVerification =
+    region && regionAllowsDeviceVerification(region)
 
   const [isVerifyingDevice, setIsVerifyingDevice] = useState(false)
 
@@ -349,7 +351,7 @@ function AccessSection() {
      * its own errors and returns undefined (e.g. on web or failure), which also
      * routes us to the fallback.
      */
-    if (region && regionAllowsDeviceVerification(region)) {
+    if (allowsDeviceVerification) {
       const did = currentAccount?.did
       // Show a loading state while the OS age prompt is up.
       setIsVerifyingDevice(true)
@@ -406,7 +408,13 @@ function AccessSection() {
           <>
             <View style={[a.gap_md]}>
               <Button
-                label={_(msg`Verify now`)}
+                label={
+                  hasInitiated
+                    ? _(msg`Verify again`)
+                    : allowsDeviceVerification
+                      ? _(msg`Share age data`)
+                      : _(msg`Verify now`)
+                }
                 size="large"
                 color={hasInitiated ? 'secondary' : 'primary'}
                 disabled={isVerifyingDevice}
@@ -415,11 +423,33 @@ function AccessSection() {
                 <ButtonText>
                   {hasInitiated ? (
                     <Trans>Verify again</Trans>
+                  ) : allowsDeviceVerification ? (
+                    <Trans>Share age data</Trans>
                   ) : (
                     <Trans>Verify now</Trans>
                   )}
                 </ButtonText>
               </Button>
+
+              {allowsDeviceVerification && (
+                <Text
+                  style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
+                  <Trans>
+                    Sharing your age data uses information stored on your
+                    device, and will therefore only work on this device.
+                    Alternatively,{' '}
+                    <SimpleInlineLinkText
+                      label={_(msg`Verify now using KWS`)}
+                      {...createStaticClick(() => {
+                        openKwsDialog()
+                      })}>
+                      you can use our trusted partner, KWS
+                    </SimpleInlineLinkText>
+                    , to complete your verification and enable access on all
+                    platforms.
+                  </Trans>
+                </Text>
+              )}
 
               {lastInitiatedAt && timeAgo && diff ? (
                 <Text
@@ -437,7 +467,7 @@ function AccessSection() {
               ) : (
                 <Text
                   style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
-                  <Trans>Age assurance only takes a few minutes</Trans>
+                  <Trans>Age assurance only takes a few minutes.</Trans>
                 </Text>
               )}
             </View>
