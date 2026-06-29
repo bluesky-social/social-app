@@ -234,7 +234,7 @@
     "react-native-screens": "4.24.0",
     "react-native-scroll-forwarder": "link:./modules/react-native-scroll-forwarder",
     "react-native-svg": "15.12.1",
-    "react-native-uitextview": "^1.4.0",
+    "react-native-uitextview": "^2.2.0",
     "react-native-uuid": "^2.0.3",
     "react-native-view-shot": "^4.0.3",
     "react-native-web": "^0.21.0",

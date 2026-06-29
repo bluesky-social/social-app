@@ -234,7 +234,6 @@ patchedDependencies:
   react-native-pager-view@6.8.0: 0979d6fe1e2fa43b2784cc0b5e0ff0117d53b53423e85ee5855eefdc41a00108
   react-native-reanimated@3.19.1: 97a1967f37a4213fbab59e1fd59a1bf859b5efc79af5e1b528a47fe488e6c5d6
   react-native-svg@15.12.1: 31401fa6ff01498773afb51a7b066821c471eb3e71b0764a10017938beed49e9
-  react-native-uitextview@1.4.0: 62de26caadfc39d1bdff204cdc03a705c0cd343999825e06d8c0c120de06cc99
   react-native-view-shot@4.0.3: a2457dc30a82cc8c21f371a6f860d9396d450a2a1b4265b1a4ee13bdb24d3268
   react-native@0.81.5: 2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194
   sonner-native@0.21.0: 4bcd0da0fec32e943460e6e788a9e4adf601b507d2dfd0c8246a6c8c74d8f638
@@ -664,8 +663,8 @@ importers:
         specifier: 15.12.1
         version: 15.12.1(patch_hash=31401fa6ff01498773afb51a7b066821c471eb3e71b0764a10017938beed49e9)(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       react-native-uitextview:
-        specifier: ^1.4.0
-        version: 1.4.0(patch_hash=62de26caadfc39d1bdff204cdc03a705c0cd343999825e06d8c0c120de06cc99)(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+        specifier: ^2.2.0
+        version: 2.2.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       react-native-uuid:
         specifier: ^2.0.3
         version: 2.0.4
@@ -8102,8 +8101,8 @@ packages:
       react: '*'
       react-native: '*'
 
-  react-native-uitextview@1.4.0:
-    resolution: {integrity: sha512-itm/frzkn/ma3+lwmKn2CkBOXPNo4bL8iVwQwjlzix5gVO59T2+axdfoj/Wi+Ra6F76KzNKxSah+7Y8dYmCHbQ==}
+  react-native-uitextview@2.2.0:
+    resolution: {integrity: sha512-Vbv3cTAuyfkYrfsR2YKFsOd9OYgfys+IX5yvvYY7Wd6TrOd6FSGrX93xtQHjeLXV1ds6fDJcFJsuLi3S4Ypr8A==}
     peerDependencies:
       react: '*'
       react-native: '*'
@@ -17958,7 +17957,7 @@ snapshots:
       react-native: 0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
       warn-once: 0.1.1
 
-  react-native-uitextview@1.4.0(patch_hash=62de26caadfc39d1bdff204cdc03a705c0cd343999825e06d8c0c120de06cc99)(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0):
+  react-native-uitextview@2.2.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0):
     dependencies:
       react: 19.1.0
       react-native: 0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
