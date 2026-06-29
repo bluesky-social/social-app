@@ -141,7 +141,12 @@ export default defineConfig({
      * sibling packages (bskyembed, bskyogcard, dev-env, bskylink) have their
      * own runners and must not be swept up.
      */
-    include: ['__tests__/**/*.test.{ts,tsx}', 'src/**/*.test.{ts,tsx}'],
+    include: [
+      '__tests__/**/*.test.{ts,tsx}',
+      'src/**/*.test.{ts,tsx}',
+      // Tests for the internal ESLint plugin (CJS, .js, use RuleTester).
+      'eslint/**/*.test.{js,ts}',
+    ],
     exclude: [
       '**/node_modules/**',
       // Stale duplicate test trees live here - must not be picked up.
