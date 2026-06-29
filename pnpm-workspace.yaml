@@ -36,7 +36,6 @@ patchedDependencies:
   'react-native-pager-view@6.8.0': patches/react-native-pager-view@6.8.0.patch
   'react-native-reanimated@3.19.1': patches/react-native-reanimated@3.19.1.patch
   'react-native-svg@15.12.1': patches/react-native-svg@15.12.1.patch
-  'react-native-uitextview@1.4.0': patches/react-native-uitextview@1.4.0.patch
   'react-native-view-shot@4.0.3': patches/react-native-view-shot@4.0.3.patch
   'react-native@0.81.5': patches/react-native@0.81.5.patch
   'sonner-native@0.21.0': patches/sonner-native@0.21.0.patch
