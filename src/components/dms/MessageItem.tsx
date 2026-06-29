@@ -171,6 +171,13 @@ let MessageItem = ({
     ChatBskyConvoDefs.isMessageBeforeUserJoinedGroupView(message.replyTo)
       ? message.replyTo
       : undefined
+  const replyToMessageId =
+    replyTo && !ChatBskyConvoDefs.isMessageBeforeUserJoinedGroupView(replyTo)
+      ? replyTo.id
+      : undefined
+  const onPressReplyTo = replyToMessageId
+    ? () => scrollToMessage(replyToMessageId)
+    : undefined
 
   const isPending = item.type === 'pending-message'
 
@@ -474,7 +481,7 @@ let MessageItem = ({
                 isGroupChat={isGroupChat}
                 replierDisplayName={displayName}
                 relatedProfiles={relatedProfiles}
-                onPress={() => scrollToMessage(replyTo.id)}
+                onPress={onPressReplyTo}
               />
             ) : displayName && showDisplayName ? (
               <Text
@@ -547,7 +554,7 @@ let MessageItem = ({
                           replyTo={replyTo}
                           isFromSelf={isFromSelf}
                           relatedProfiles={relatedProfiles}
-                          onPress={() => scrollToMessage(replyTo.id)}
+                          onPress={onPressReplyTo}
                         />
                       ) : null}
                       <RichText
@@ -765,7 +772,7 @@ function ReplyCaption({
   isGroupChat: boolean
   replierDisplayName: string | null
   relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
-  onPress: () => void
+  onPress?: () => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -801,7 +808,12 @@ function ReplyCaption({
 
   return (
     <Button
-      label={l`Scroll to the message this is replying to`}
+      label={
+        onPress
+          ? l`Scroll to the message this is replying to`
+          : l`Reply to a message sent before you joined`
+      }
+      disabled={!onPress}
       onPress={onPress}
       style={[
         a.w_full,
@@ -847,7 +859,7 @@ function ReplyQuote({
     | ChatBskyConvoDefs.MessageBeforeUserJoinedGroupView
   isFromSelf: boolean
   relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
-  onPress: () => void
+  onPress?: () => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -901,10 +913,13 @@ function ReplyQuote({
   return (
     <Button
       label={
-        senderName
-          ? l`Replied-to message from ${senderName}, tap to scroll to it`
-          : l`Replied-to message, tap to scroll to it`
+        !onPress
+          ? l`Replied-to message was sent before you joined`
+          : senderName
+            ? l`Replied-to message from ${senderName}, tap to scroll to it`
+            : l`Replied-to message, tap to scroll to it`
       }
+      disabled={!onPress}
       onPress={onPress}
       style={[
         a.mb_xs,
