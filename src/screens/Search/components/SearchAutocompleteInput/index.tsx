@@ -25,10 +25,18 @@ export function SearchAutocompleteInput({
   value = '',
   onFocus,
   onBlur,
+  onChangeText,
   ref,
   ...rest
 }: SearchAutocompleteInputProps) {
   const [focused, setFocused] = useState(false)
+  /*
+   * Sift dismisses on Escape without blurring the input, so `focused` stays
+   * true. Track that dismissal separately (reset on type or refocus) rather
+   * than clearing `focused`, otherwise the dropdown wouldn't reopen on the next
+   * keystroke while the input is still focused.
+   */
+  const [dismissed, setDismissed] = useState(false)
   const inputRef = useRef<TextInput>(null)
 
   const sift = useSift({
@@ -36,17 +44,19 @@ export function SearchAutocompleteInput({
     placement: 'bottom',
   })
 
+  const active = focused && !dismissed
+
   const {items} = useAutocomplete({
     type: 'profile',
-    // The dropdown only shows while focused, so don't fetch until then. This
+    // The dropdown only shows while active, so don't fetch otherwise. This
     // avoids a typeahead request on mount when arriving with text already
     // present (e.g. /search?q=foo).
-    query: focused ? value : '',
+    query: active ? value : '',
     showSearchFallback: true,
   })
 
   const showDropdown =
-    focused && !fixedParams && value.length > 0 && items.length > 0
+    active && !fixedParams && value.length > 0 && items.length > 0
 
   function onSelect(item: AutocompleteItem) {
     if (item.type === 'profile') {
@@ -84,7 +94,12 @@ export function SearchAutocompleteInput({
         {...comboboxProps}
         ref={mergeRefs([ref, inputAnchorRef, inputRef])}
         value={value}
+        onChangeText={text => {
+          setDismissed(false)
+          onChangeText?.(text)
+        }}
         onFocus={e => {
+          setDismissed(false)
           setFocused(true)
           onFocus?.(e)
         }}
@@ -98,7 +113,7 @@ export function SearchAutocompleteInput({
           sift={sift}
           data={items}
           onSelect={onSelect}
-          onDismiss={() => setFocused(false)}
+          onDismiss={() => setDismissed(true)}
           fullWidth
         />
       )}

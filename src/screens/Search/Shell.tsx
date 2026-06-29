@@ -413,12 +413,13 @@ export function SearchScreenShell({
 
   /**
    * Web only. Selecting the "Search for X" row from the anchored autocomplete
-   * dropdown.
+   * dropdown. This runs the typed query as-is (not a suggested profile), so it
+   * is attributed to `typed` rather than `autocomplete`.
    */
   const onSelectSearch = useCallback(
     (value: string) => {
       ax.metric('search:query', {
-        source: 'autocomplete',
+        source: 'typed',
         filterCount: countActiveFilters(filters),
       })
       updateSearchText(value)
