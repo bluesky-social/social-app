@@ -1,5 +1,3 @@
-import {describe, it} from '@jest/globals'
-
 describe(`#/state/messages/convo`, () => {
   describe(`init`, () => {
     it.todo(`fails if sender and recipients aren't found`)

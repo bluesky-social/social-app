@@ -1,5 +1,3 @@
-import {expect, test} from '@jest/globals'
-
 import {add, type ConsoleTransportEntry, getEntries} from '#/logger/logDump'
 import {LogContext, LogLevel} from '#/logger/types'
 

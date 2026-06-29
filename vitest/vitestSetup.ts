@@ -1,16 +1,36 @@
 import {vi} from 'vitest'
 
 /*
- * The only place `react-native` enters the test module graph is a single
- * transitive import in src/lib/media/manip.ts (`import {Image} from
- * 'react-native'`). react-native's entry is Flow-typed, which esbuild cannot
- * parse, so we stub it. manip.ts only touches RNImage.getSize; Platform is
- * included for any other incidental use.
+ * Note: `react-native` itself is stubbed via resolve.alias in
+ * vitest.config.ts (-> vitest/react-native-stub.ts), not here.
  */
-vi.mock('react-native', () => ({
-  Image: {getSize: vi.fn()},
+
+/*
+ * expo-modules-core reads its native EventEmitter / NativeModule classes off
+ * globalThis.expo, which only exists in a real Expo runtime. Several utility
+ * modules pull it in transitively (via expo-application, expo-localization,
+ * etc). We only need the handful of helpers tests actually touch.
+ */
+vi.mock('expo-modules-core', () => ({
+  requireNativeModule: vi.fn((moduleName: string) => {
+    if (moduleName === 'ExpoPlatformInfo') {
+      return {getIsReducedMotionEnabled: () => false}
+    }
+    if (moduleName === 'BottomSheet') {
+      return {dismissAll: () => {}}
+    }
+    return {}
+  }),
+  requireNativeViewManager: vi.fn(() => () => null),
+  requireOptionalNativeModule: vi.fn(() => null),
+  createPermissionHook: () => () => [true],
+  NativeModule: class {},
+  SharedObject: class {},
+  SharedRef: class {},
+  EventEmitter: class {},
   Platform: {
     OS: 'ios',
-    select: (o: Record<string, unknown>) => o.ios ?? o.default,
+    isDOMAvailable: false,
+    select: (o: Record<string, unknown>) => o.ios,
   },
 }))

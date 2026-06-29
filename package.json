@@ -307,6 +307,7 @@
     "ts-plugin-sort-import-suggestions": "^1.0.4",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.58.0",
+    "vite-plugin-babel": "^1.7.3",
     "vitest": "^4.1.9",
     "webpack-bundle-analyzer": "^4.10.1"
   },
