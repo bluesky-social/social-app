@@ -10,6 +10,7 @@ import {useMutation} from '@tanstack/react-query'
 
 import {STATUS_PAGE_URL} from '#/lib/constants'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
+import {purgeTemporaryImageFiles} from '#/state/gallery'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
 import {BroomSparkle_Stroke2_Corner2_Rounded as BroomSparkleIcon} from '#/components/icons/BroomSparkle'
@@ -41,7 +42,13 @@ export function AboutSettingsScreen({}: Props) {
     useMutation({
       mutationFn: async () => {
         const freeSpaceBefore = await FileSystem.getFreeDiskStorageAsync()
-        await Image.clearDiskCache()
+        await Promise.all([
+          // expo-image's disk cache
+          Image.clearDiskCache(),
+          // full-resolution media-upload leftovers (picker/manipulator copies);
+          // the only in-app way for iOS users to reclaim this space
+          purgeTemporaryImageFiles(),
+        ])
         const freeSpaceAfter = await FileSystem.getFreeDiskStorageAsync()
         const spaceDiff = freeSpaceBefore - freeSpaceAfter
         return spaceDiff * -1
@@ -51,7 +58,7 @@ export function AboutSettingsScreen({}: Props) {
           Toast.show(
             _(
               msg({
-                message: `Image cache cleared, freed ${i18n.number(
+                message: `Cache cleared, freed ${i18n.number(
                   Math.abs(sizeDiffBytes / 1024 / 1024),
                   {
                     notation: 'compact',
@@ -64,7 +71,7 @@ export function AboutSettingsScreen({}: Props) {
             ),
           )
         } else {
-          Toast.show(_(msg`Image cache cleared`))
+          Toast.show(_(msg`Cache cleared`))
         }
       },
     })
@@ -124,11 +131,11 @@ export function AboutSettingsScreen({}: Props) {
           {IS_NATIVE && (
             <SettingsList.PressableItem
               onPress={() => onClearImageCache()}
-              label={_(msg`Clear image cache`)}
+              label={_(msg`Clear cache`)}
               disabled={isClearingImageCache}>
               <SettingsList.ItemIcon icon={BroomSparkleIcon} />
               <SettingsList.ItemText>
-                <Trans>Clear image cache</Trans>
+                <Trans>Clear cache</Trans>
               </SettingsList.ItemText>
               {isClearingImageCache && <SettingsList.ItemIcon icon={Loader} />}
             </SettingsList.PressableItem>
