@@ -12,7 +12,8 @@ import {type Geolocation} from '#/geolocation'
 /**
  * Debug-only config shape. Mirrors {@link AppBskyAgeassuranceDefs.Config} but
  * uses {@link AgeAssuranceConfigRegion}, which carries the not-yet-in-lexicon
- * `verificationMethods` field so we can prototype on-device verification.
+ * `additionalVerificationMethods` field so we can prototype on-device
+ * verification.
  */
 export type DebugConfig = {
   regions: AgeAssuranceConfigRegion[]
@@ -76,7 +77,7 @@ export const config: DebugConfig = {
       countryCode: 'US',
       regionCode: 'TX',
       minAccessAge: 18,
-      verificationMethods: ['device', 'kws'],
+      additionalVerificationMethods: ['device'],
       rules: [
         {
           age: 18,

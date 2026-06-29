@@ -7,25 +7,28 @@ import {
 import {logger} from '#/ageAssurance/logger'
 
 /**
- * The ways a user can satisfy age assurance within a given region.
+ * Verification methods permitted in a region *in addition to* the third-party
+ * (KWS) flow, which is always supported. We deliberately don't model `kws` here
+ * so a region can never be configured as device-only (which would lock out web
+ * and any platform without the native age API).
  *
- * - `kws`: the third-party (KWS) verification flow.
  * - `device`: native on-device age APIs (Apple Declared Age Range / Google
  *   Play Age Signals), surfaced via `expo-age-range`.
  *
  * NOTE: this is not yet part of the `app.bsky.ageassurance` lexicon. It's
  * modeled client-side (see {@link AgeAssuranceConfigRegion}) while we prototype
- * the shape. Once the lexicon adds `verificationMethods`, this can be removed in
- * favor of the generated type.
+ * the shape. Once the lexicon adds `additionalVerificationMethods`, this can be
+ * removed in favor of the generated type.
  */
-export type AgeAssuranceVerificationMethod = 'device' | 'kws'
+export type AgeAssuranceVerificationMethod = 'device'
 
 /**
- * A region config extended with the (not-yet-in-lexicon) `verificationMethods`
- * field. Regions without the field are treated as KWS-only.
+ * A region config extended with the (not-yet-in-lexicon)
+ * `additionalVerificationMethods` field. Regions without the field support only
+ * the always-available KWS flow.
  */
 export type AgeAssuranceConfigRegion = AppBskyAgeassuranceDefs.ConfigRegion & {
-  verificationMethods?: AgeAssuranceVerificationMethod[]
+  additionalVerificationMethods?: AgeAssuranceVerificationMethod[]
 }
 
 /**

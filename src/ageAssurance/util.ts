@@ -40,17 +40,20 @@ export function getAgeAssuranceRegionConfigWithFallback(
 }
 
 /**
- * Returns the verification methods permitted for a region, defaulting to
- * `['kws']` when the region doesn't specify any (the historical behavior).
+ * Returns the verification methods permitted for a region *in addition to* the
+ * always-supported KWS flow. Empty when the region doesn't specify any (the
+ * historical KWS-only behavior).
  *
- * NOTE: `verificationMethods` is not yet part of the lexicon, so we read it via
- * {@link AgeAssuranceConfigRegion}. See that type for the migration note.
+ * NOTE: `additionalVerificationMethods` is not yet part of the lexicon, so we
+ * read it via {@link AgeAssuranceConfigRegion}. See that type for the migration
+ * note.
  */
-export function getRegionVerificationMethods(
+export function getRegionAdditionalVerificationMethods(
   region: AppBskyAgeassuranceDefs.ConfigRegion,
 ): AgeAssuranceVerificationMethod[] {
-  const methods = (region as AgeAssuranceConfigRegion).verificationMethods
-  return methods && methods.length > 0 ? methods : ['kws']
+  return (
+    (region as AgeAssuranceConfigRegion).additionalVerificationMethods ?? []
+  )
 }
 
 /**
@@ -60,7 +63,7 @@ export function getRegionVerificationMethods(
 export function regionAllowsDeviceVerification(
   region: AppBskyAgeassuranceDefs.ConfigRegion,
 ): boolean {
-  return getRegionVerificationMethods(region).includes('device')
+  return getRegionAdditionalVerificationMethods(region).includes('device')
 }
 
 /**
