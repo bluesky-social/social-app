@@ -78,6 +78,7 @@ function messageIsReply(
   message:
     | ChatBskyConvoDefs.MessageView
     | ChatBskyConvoDefs.DeletedMessageView
+    | ChatBskyConvoDefs.MessageBeforeUserJoinedGroupView
     | null,
 ): boolean {
   return (
@@ -99,6 +100,7 @@ function isWithinClusterBoundary({
   adjacentMessage:
     | ChatBskyConvoDefs.MessageView
     | ChatBskyConvoDefs.DeletedMessageView
+    | ChatBskyConvoDefs.MessageBeforeUserJoinedGroupView
     | null
   isFromSameSender: boolean
   direction: 'prev' | 'next'
@@ -138,10 +140,12 @@ let MessageItem = ({
   prevMessage:
     | ChatBskyConvoDefs.MessageView
     | ChatBskyConvoDefs.DeletedMessageView
+    | ChatBskyConvoDefs.MessageBeforeUserJoinedGroupView
     | null
   nextMessage:
     | ChatBskyConvoDefs.MessageView
     | ChatBskyConvoDefs.DeletedMessageView
+    | ChatBskyConvoDefs.MessageBeforeUserJoinedGroupView
     | null
   relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
 }): React.ReactNode => {
@@ -751,7 +755,10 @@ function ReplyCaption({
   relatedProfiles,
   onPress,
 }: {
-  replyTo: ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
+  replyTo:
+    | ChatBskyConvoDefs.MessageView
+    | ChatBskyConvoDefs.DeletedMessageView
+    | ChatBskyConvoDefs.MessageBeforeUserJoinedGroupView
   isFromSelf: boolean
   isGroupChat: boolean
   replierDisplayName: string | null
@@ -762,13 +769,33 @@ function ReplyCaption({
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
 
-  const originalSenderIsSelf = replyTo.sender.did === currentAccount?.did
-  const originalProfile = relatedProfiles.get(replyTo.sender.did)
-  const originalName = originalSenderIsSelf
-    ? null
-    : originalProfile
-      ? createSanitizedDisplayName(originalProfile)
-      : null
+  let caption: string = ''
+  if (
+    ChatBskyConvoDefs.isMessageView(replyTo) ||
+    ChatBskyConvoDefs.isDeletedMessageView(replyTo)
+  ) {
+    const originalSenderIsSelf = replyTo.sender.did === currentAccount?.did
+    const originalProfile = relatedProfiles.get(replyTo.sender.did)
+    const originalName = originalSenderIsSelf
+      ? null
+      : originalProfile
+        ? createSanitizedDisplayName(originalProfile)
+        : null
+
+    caption = isFromSelf
+      ? originalSenderIsSelf
+        ? l`You replied to yourself`
+        : originalName
+          ? l`You replied to ${originalName}`
+          : l`You replied`
+      : originalSenderIsSelf
+        ? l`${replierDisplayName} replied to you`
+        : originalName
+          ? l`${replierDisplayName} replied to ${originalName}`
+          : l`${replierDisplayName} replied`
+  } else {
+    caption = l`Someone replied`
+  }
 
   return (
     <Button
@@ -796,23 +823,7 @@ function ReplyCaption({
         style={[a.text_xs, a.flex_shrink, t.atoms.text_contrast_medium]}
         numberOfLines={1}
         emoji>
-        {isFromSelf ? (
-          originalSenderIsSelf ? (
-            <Trans>You replied to yourself</Trans>
-          ) : originalName ? (
-            <Trans>You replied to {originalName}</Trans>
-          ) : (
-            <Trans>You replied</Trans>
-          )
-        ) : originalSenderIsSelf ? (
-          <Trans>{replierDisplayName} replied to you</Trans>
-        ) : originalName ? (
-          <Trans>
-            {replierDisplayName} replied to {originalName}
-          </Trans>
-        ) : (
-          <Trans>{replierDisplayName} replied</Trans>
-        )}
+        {caption}
       </Text>
     </Button>
   )
@@ -828,7 +839,10 @@ function ReplyQuote({
   relatedProfiles,
   onPress,
 }: {
-  replyTo: ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
+  replyTo:
+    | ChatBskyConvoDefs.MessageView
+    | ChatBskyConvoDefs.DeletedMessageView
+    | ChatBskyConvoDefs.MessageBeforeUserJoinedGroupView
   isFromSelf: boolean
   relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
   onPress: () => void
@@ -837,8 +851,13 @@ function ReplyQuote({
   const {t: l} = useLingui()
   const getReplyPreviewText = useReplyPreviewText()
 
+  const senderDid =
+    ChatBskyConvoDefs.isMessageView(replyTo) ||
+    ChatBskyConvoDefs.isDeletedMessageView(replyTo)
+      ? replyTo.sender.did
+      : undefined
   const senderProfile = useMaybeProfileShadow(
-    relatedProfiles.get(replyTo.sender.did),
+    senderDid ? relatedProfiles.get(senderDid) : undefined,
   )
   // Hide the quoted content if we block, or are blocked by, the original
   // sender - mirroring how the message bubble itself is hidden.
@@ -866,6 +885,12 @@ function ReplyQuote({
     subtle = true
   } else if (ChatBskyConvoDefs.isMessageView(replyTo)) {
     ;({text, subtle} = getReplyPreviewText(replyTo))
+  } else if (ChatBskyConvoDefs.isMessageBeforeUserJoinedGroupView(replyTo)) {
+    text = l({
+      message: `(message sent before you joined)`,
+      comment: 'A reply summary in chat',
+    })
+    subtle = true
   } else {
     text = l({message: '(deleted message)', comment: 'A reply summary in chat'})
     subtle = true
