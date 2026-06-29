@@ -1,6 +1,5 @@
 import {memo} from 'react'
 import {TouchableOpacity, View, type ViewStyle} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -61,7 +60,7 @@ let AutocompleteResults = ({
             return (
               <SearchProfileCard
                 key={item.key}
-                profile={item.profile as AppBskyActorDefs.ProfileViewBasic}
+                profile={item.profile}
                 moderationOpts={moderationOpts}
                 onPress={() => {
                   ax.metric('search:autocomplete:press', {
@@ -96,18 +95,12 @@ let SearchLinkCard = ({
 }): React.ReactNode => {
   const t = useTheme()
 
-  const outerStyle = [
-    a.flex_1,
-    a.py_lg,
-    a.px_md,
-    t.atoms.border_contrast_low,
-    style,
-  ]
-  const innerStyle = [a.text_md, t.atoms.text]
-
   const inner = (
-    <View style={outerStyle}>
-      <Text style={innerStyle}>{label}</Text>
+    <View
+      style={[a.flex_1, a.py_lg, a.px_md, t.atoms.border_contrast_low, style]}>
+      <Text emoji style={[a.text_md, t.atoms.text]}>
+        {label}
+      </Text>
     </View>
   )
 
@@ -125,9 +118,7 @@ let SearchLinkCard = ({
   if (to) {
     return (
       <Link label={label} to={to}>
-        <View style={outerStyle}>
-          <Text style={innerStyle}>{label}</Text>
-        </View>
+        {inner}
       </Link>
     )
   }
