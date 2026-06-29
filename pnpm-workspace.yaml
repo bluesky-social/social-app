@@ -9,7 +9,8 @@ overrides:
   '@expo/image-utils': '0.8.12'
   '@types/estree': '1.0.6'
   'react-native-compressor': '1.13.0'
-  'react-native-reanimated': '3.19.1'
+  'react-native-reanimated': '4.3.1'
+  'react-native-worklets': '0.8.3'
   'psl': '1.9.0'
   '@types/psl': '1.1.1'
   'react-native-screens': '4.24.0'
@@ -34,7 +35,6 @@ patchedDependencies:
   'react-native-drawer-layout@4.2.3': patches/react-native-drawer-layout@4.2.3.patch
   'react-native-keyboard-controller@1.21.8': patches/react-native-keyboard-controller@1.21.8.patch
   'react-native-pager-view@6.8.0': patches/react-native-pager-view@6.8.0.patch
-  'react-native-reanimated@3.19.1': patches/react-native-reanimated@3.19.1.patch
   'react-native-svg@15.12.1': patches/react-native-svg@15.12.1.patch
   'react-native-view-shot@4.0.3': patches/react-native-view-shot@4.0.3.patch
   'react-native@0.81.5': patches/react-native@0.81.5.patch
