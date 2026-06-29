@@ -332,6 +332,11 @@ function AccessSection() {
     : null
   const allowsDeviceVerification =
     region && regionAllowsDeviceVerification(region)
+  const verifyCta = hasInitiated
+    ? _(msg`Verify again`)
+    : allowsDeviceVerification
+      ? _(msg`Share age data`)
+      : _(msg`Verify now`)
 
   const [isVerifyingDevice, setIsVerifyingDevice] = useState(false)
 
@@ -444,27 +449,13 @@ function AccessSection() {
           <>
             <View style={[a.gap_md]}>
               <Button
-                label={
-                  hasInitiated
-                    ? _(msg`Verify again`)
-                    : allowsDeviceVerification
-                      ? _(msg`Share age data`)
-                      : _(msg`Verify now`)
-                }
+                label={verifyCta}
                 size="large"
                 color={hasInitiated ? 'secondary' : 'primary'}
                 disabled={isVerifyingDevice}
                 onPress={() => void onPressVerify()}>
                 <ButtonIcon icon={isVerifyingDevice ? Loader : ShieldIcon} />
-                <ButtonText>
-                  {hasInitiated ? (
-                    <Trans>Verify again</Trans>
-                  ) : allowsDeviceVerification ? (
-                    <Trans>Share age data</Trans>
-                  ) : (
-                    <Trans>Verify now</Trans>
-                  )}
-                </ButtonText>
+                <ButtonText>{verifyCta}</ButtonText>
               </Button>
 
               {allowsDeviceVerification && (
