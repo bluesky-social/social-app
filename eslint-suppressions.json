@@ -429,9 +429,6 @@
       "count": 2
     },
     "@typescript-eslint/no-floating-promises": {
-      "count": 3
-    },
-    "@typescript-eslint/require-await": {
       "count": 1
     },
     "react-hooks/immutability": {
@@ -2183,14 +2180,6 @@
       "count": 2
     }
   },
-  "src/view/com/modals/Modal.tsx": {
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/require-await": {
-      "count": 1
-    }
-  },
   "src/view/com/notifications/NotificationFeed.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -2213,7 +2202,7 @@
       "count": 3
     },
     "@typescript-eslint/no-misused-promises": {
-      "count": 3
+      "count": 2
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 2

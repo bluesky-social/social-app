@@ -1,7 +1,9 @@
 import {useCallback} from 'react'
+import {type ModerationDecision} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/types'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
@@ -13,10 +15,12 @@ import type * as bsky from '#/types/bsky'
 export function useFollowMethods({
   profile,
   logContext,
+  moderation,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
   logContext: Metrics['profile:follow']['logContext'] &
     Metrics['profile:unfollow']['logContext']
+  moderation: ModerationDecision
 }) {
   const {_} = useLingui()
   const requireAuth = useRequireAuth()
@@ -44,6 +48,15 @@ export function useFollowMethods({
     requireAuth(async () => {
       try {
         await queueUnfollow()
+        Toast.show(
+          _(
+            msg`No longer following ${sanitizeDisplayName(
+              profile.displayName || profile.handle,
+              moderation.ui('displayName'),
+            )}`,
+          ),
+          {type: 'default'},
+        )
       } catch (e: any) {
         logger.error(`useFollowMethods: failed to unfollow`, {
           message: String(e),
@@ -55,7 +68,14 @@ export function useFollowMethods({
         }
       }
     })
-  }, [_, queueUnfollow, requireAuth])
+  }, [
+    _,
+    moderation,
+    profile.displayName,
+    profile.handle,
+    queueUnfollow,
+    requireAuth,
+  ])
 
   return {
     follow,
