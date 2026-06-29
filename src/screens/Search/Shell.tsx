@@ -23,7 +23,6 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {type NavigationProp, type SearchParams} from '#/lib/routes/types'
 import {listenSoftReset} from '#/state/events'
-import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {
   unstableCacheProfileView,
   useProfilesQuery,
@@ -43,6 +42,7 @@ import {
 } from '#/screens/Search/searchParams'
 import {makeSearchQuery} from '#/screens/Search/utils'
 import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
+import {useAutocomplete} from '#/components/Autocomplete'
 import {Button, ButtonIcon} from '#/components/Button'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
@@ -125,8 +125,11 @@ export function SearchScreenShell({
     setSearchText(text)
   }, [])
 
-  const {data: autocompleteData, isFetching: isAutocompleteFetching} =
-    useActorAutocompleteQuery(searchText, true)
+  const {items: autocompleteItems, isFetching: isAutocompleteFetching} =
+    useAutocomplete({
+      type: 'profile',
+      query: searchText,
+    })
 
   const [showAutocomplete, setShowAutocomplete] = useState(false)
 
@@ -495,13 +498,11 @@ export function SearchScreenShell({
                     {isExplore ? <Trans>Explore</Trans> : <Trans>Search</Trans>}
                   </Layout.Header.TitleText>
                 </Layout.Header.Content>
-                {showFilters ? (
-                  advancedSearchV2Enabled ? null : (
-                    <SearchLanguageDropdown
-                      value={filters.lang ?? ''}
-                      onChange={onChangeLang}
-                    />
-                  )
+                {showFilters && !advancedSearchV2Enabled ? (
+                  <SearchLanguageDropdown
+                    value={filters.lang ?? ''}
+                    onChange={onChangeLang}
+                  />
                 ) : (
                   <Layout.Header.Slot />
                 )}
@@ -528,7 +529,7 @@ export function SearchScreenShell({
                       size="large"
                       variant="ghost"
                       color="secondary"
-                      shape="rectangular"
+                      shape="round"
                       style={[a.px_sm]}
                       onPress={onPressCancelSearch}
                       hitSlop={HITSLOP_10}>
@@ -591,8 +592,8 @@ export function SearchScreenShell({
         }}>
         {searchText.length > 0 ? (
           <AutocompleteResults
-            isAutocompleteFetching={isAutocompleteFetching}
-            autocompleteData={autocompleteData}
+            items={autocompleteItems}
+            isFetching={isAutocompleteFetching}
             searchText={searchText}
             onSubmit={onSubmit('autocomplete')}
             onResultPress={onAutocompleteResultPress}
