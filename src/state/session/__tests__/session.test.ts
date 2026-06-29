@@ -1,21 +1,21 @@
 import {AtpAgent} from '@atproto/api'
-import {describe, expect, it, jest} from '@jest/globals'
+import {vi} from 'vitest'
 
 import {agentToSessionAccountOrThrow} from '../agent'
 import {type Action, getInitialState, reducer, type State} from '../reducer'
 
-jest.mock('jwt-decode', () => ({
+vi.mock('jwt-decode', () => ({
   jwtDecode(_token: string) {
     return {}
   },
 }))
 
-jest.mock('../../birthdate')
-jest.mock('../../../ageAssurance/data')
-jest.mock('../../../ageAssurance/state', () => ({
+vi.mock('../../birthdate')
+vi.mock('../../../ageAssurance/data')
+vi.mock('../../../ageAssurance/state', () => ({
   unsafeGetAndComputeAgeAssurance: () => ({state: {}}),
 }))
-jest.mock('#/lib/notifications/notifications', () => ({
+vi.mock('#/lib/notifications/notifications', () => ({
   unregisterPushToken(_agents: AtpAgent[]) {
     return Promise.resolve()
   },

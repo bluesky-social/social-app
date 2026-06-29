@@ -63,6 +63,7 @@ Gemfile.lock
 # Testing
 coverage/
 junit.xml
+junit-*.xml
 artifacts
 
 # Web bundle outputs
