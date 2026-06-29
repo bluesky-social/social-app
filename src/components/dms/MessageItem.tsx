@@ -80,11 +80,7 @@ export type MessageItemNeighbor =
   | null
 
 function messageIsReply(
-  message:
-    | ChatBskyConvoDefs.MessageView
-    | ChatBskyConvoDefs.DeletedMessageView
-    | ChatBskyConvoDefs.MessageBeforeUserJoinedGroupView
-    | null,
+  message: MessageItemNeighbor | ChatBskyConvoDefs.MessageView,
 ): boolean {
   return (
     ChatBskyConvoDefs.isMessageView(message) &&
