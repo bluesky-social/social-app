@@ -282,7 +282,7 @@ function Rules({
           </Trans>
         ) : settings[0].type === 'everybody' ? (
           post.uri.includes('community.blacksky.feed.post') ? (
-            <Trans>Every Blacksky community member can reply to this post.</Trans>
+            <Trans>Every community member can reply to this post.</Trans>
           ) : (
             <Trans>Everybody can reply to this post.</Trans>
           )
