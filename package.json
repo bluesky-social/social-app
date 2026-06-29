@@ -59,6 +59,9 @@
     "test-watch": "NODE_ENV=test jest --watchAll",
     "test-ci": "NODE_ENV=test jest --ci --forceExit --reporters=default --reporters=jest-junit",
     "test-coverage": "NODE_ENV=test jest --coverage",
+    "vitest": "vitest run",
+    "vitest-watch": "vitest",
+    "vitest-coverage": "vitest run --coverage",
     "lint": "eslint --cache --quiet src modules",
     "lint-native": "swiftlint ./modules && ktlint ./modules",
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
@@ -272,6 +275,8 @@
     "@types/react": "^19.1.17",
     "@types/react-dom": "^19.1.11",
     "@typescript/native-preview": "^7.0.0-dev.20260428.1",
+    "@vitejs/plugin-react": "^6.0.3",
+    "@vitest/coverage-v8": "^4.1.9",
     "babel-jest": "^29.7.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-plugin-react-compiler": "19.1.0-rc.3",
@@ -302,6 +307,7 @@
     "ts-plugin-sort-import-suggestions": "^1.0.4",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.58.0",
+    "vitest": "^4.1.9",
     "webpack-bundle-analyzer": "^4.10.1"
   },
   "jest": {

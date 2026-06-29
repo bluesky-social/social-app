@@ -304,6 +304,16 @@ export default defineConfig(
   },
 
   /**
+   * Root config files - Node.js imports are fine
+   */
+  {
+    files: ['vitest.config.ts', 'vitest/**/*.{js,ts}'],
+    rules: {
+      'import-x/no-nodejs-modules': 'off',
+    },
+  },
+
+  /**
    * Test files configuration
    */
   {
@@ -311,6 +321,7 @@ export default defineConfig(
     languageOptions: {
       globals: {
         ...globals.jest,
+        ...globals.vitest,
       },
     },
   },
