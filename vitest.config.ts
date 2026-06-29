@@ -40,6 +40,7 @@ export default defineConfig({
     }),
   ],
   resolve: {
+    tsconfigPaths: true,
     /*
      * Mirror Metro's platform-specific resolution so Component.native.ts /
      * Component.ios.ts win over Component.ts (matching the jest-expo/ios
@@ -64,12 +65,6 @@ export default defineConfig({
       '.json',
     ],
     alias: [
-      /*
-       * Mirror the babel module-resolver aliases (also in tsconfig.json).
-       */
-      {find: /^#\/(.*)$/, replacement: r('./src/$1')},
-      {find: /^crypto$/, replacement: r('./src/platform/crypto.ts')},
-
       /*
        * react-native's real entry is Flow-typed and boots a native runtime.
        * Redirect it (and deep Libraries/* subpaths some packages import) to a
@@ -127,48 +122,6 @@ export default defineConfig({
       {
         find: /^@react-native-async-storage\/async-storage$/,
         replacement: r('./vitest/async-storage-stub.ts'),
-      },
-
-      /*
-       * Former Jest moduleNameMapper entries. Vite's ESM resolution may make
-       * some of these unnecessary, but they're harmless and proven, so keep
-       * them for now and prune opportunistically.
-       */
-      {
-        find: /^multiformats$/,
-        replacement: r('./node_modules/multiformats/dist/src/index.js'),
-      },
-      {
-        find: /^multiformats\/cid$/,
-        replacement: r('./node_modules/multiformats/dist/src/cid.js'),
-      },
-      {
-        find: /^multiformats\/bases\/base32$/,
-        replacement: r('./node_modules/multiformats/dist/src/bases/base32.js'),
-      },
-      {
-        find: /^multiformats\/hashes\/digest$/,
-        replacement: r('./node_modules/multiformats/dist/src/hashes/digest.js'),
-      },
-      {
-        find: /^multiformats\/hashes\/sha2$/,
-        replacement: r('./node_modules/multiformats/dist/src/hashes/sha2.js'),
-      },
-      {
-        find: /^uint8arrays\/from-string$/,
-        replacement: r('./node_modules/uint8arrays/dist/src/from-string.js'),
-      },
-      {
-        find: /^uint8arrays\/to-string$/,
-        replacement: r('./node_modules/uint8arrays/dist/src/to-string.js'),
-      },
-      {
-        find: /^unicode-segmenter\/grapheme$/,
-        replacement: r('./node_modules/unicode-segmenter/grapheme.cjs'),
-      },
-      {
-        find: /^await-lock$/,
-        replacement: r('./node_modules/await-lock/build/AwaitLock.js'),
       },
     ],
   },
