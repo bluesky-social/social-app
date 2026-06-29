@@ -74,6 +74,11 @@ const BORDER_RADIUS = 20
 const SQUARED_BORDER_RADIUS = 4
 const DISPLAY_NAME_INSET = 20
 
+export type MessageItemNeighbor =
+  | ChatBskyConvoDefs.MessageView
+  | ChatBskyConvoDefs.DeletedMessageView
+  | null
+
 function messageIsReply(
   message:
     | ChatBskyConvoDefs.MessageView
@@ -98,11 +103,7 @@ function isWithinClusterBoundary({
 }: {
   isPending: boolean
   message: ChatBskyConvoDefs.MessageView
-  adjacentMessage:
-    | ChatBskyConvoDefs.MessageView
-    | ChatBskyConvoDefs.DeletedMessageView
-    | ChatBskyConvoDefs.MessageBeforeUserJoinedGroupView
-    | null
+  adjacentMessage: MessageItemNeighbor
   isFromSameSender: boolean
   direction: 'prev' | 'next'
 }): boolean {
@@ -138,16 +139,8 @@ let MessageItem = ({
 }: {
   item: ConvoItem & {type: 'message' | 'pending-message'}
   isGroupChat?: boolean
-  prevMessage:
-    | ChatBskyConvoDefs.MessageView
-    | ChatBskyConvoDefs.DeletedMessageView
-    | ChatBskyConvoDefs.MessageBeforeUserJoinedGroupView
-    | null
-  nextMessage:
-    | ChatBskyConvoDefs.MessageView
-    | ChatBskyConvoDefs.DeletedMessageView
-    | ChatBskyConvoDefs.MessageBeforeUserJoinedGroupView
-    | null
+  prevMessage: MessageItemNeighbor
+  nextMessage: MessageItemNeighbor
   relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
 }): React.ReactNode => {
   const t = useTheme()

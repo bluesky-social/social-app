@@ -60,7 +60,10 @@ import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
 import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {DateDivider} from '#/components/dms/DateDivider'
-import {MessageItem} from '#/components/dms/MessageItem'
+import {
+  MessageItem,
+  type MessageItemNeighbor,
+} from '#/components/dms/MessageItem'
 import {MessageOverlays} from '#/components/dms/MessageOverlays'
 import {MessageRepliesProvider} from '#/components/dms/MessageReplies'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
@@ -104,7 +107,7 @@ function keyExtractor(item: RenderItem) {
 function getNeighborMessage(
   items: RenderItem[],
   index: number,
-): ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView | null {
+): MessageItemNeighbor {
   const neighbor = items[index]
   if (!neighbor) return null
   if (
