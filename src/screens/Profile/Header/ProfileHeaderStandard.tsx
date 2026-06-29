@@ -169,7 +169,7 @@ let ProfileHeaderStandard = ({
                     testID="profileHeaderDescription"
                     style={[a.text_md]}
                     numberOfLines={15}
-                    selectable
+                    selectable={platform({android: false, default: true})}
                     value={descriptionRT}
                     enableTags
                     authorHandle={profile.handle}
