@@ -5238,7 +5238,7 @@ msgstr "Finde Leute zum Folgen"
 msgid "Find people you know"
 msgstr "Personen finden, die du kennst"
 
-#: src/screens/Search/Shell.tsx:700
+#: src/screens/Search/Shell.tsx:701
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Finde Posts, Nutzer und Feeds auf Bluesky"
 
@@ -10409,8 +10409,8 @@ msgstr "Nach oben scrollen"
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:232
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:238
 #: src/screens/Search/Shell.tsx:495
-#: src/screens/Search/Shell.tsx:546
-#: src/screens/Search/Shell.tsx:688
+#: src/screens/Search/Shell.tsx:547
+#: src/screens/Search/Shell.tsx:689
 #: src/view/shell/bottom-bar/BottomBar.tsx:216
 msgid "Search"
 msgstr "Suche"
@@ -10990,7 +10990,7 @@ msgstr "QR-Code teilen"
 msgid "Share this feed"
 msgstr "Diesen Feed teilen"
 
-#: src/screens/Search/Shell.tsx:575
+#: src/screens/Search/Shell.tsx:576
 msgid "Share this search"
 msgstr "Diese Suche teilen"
 

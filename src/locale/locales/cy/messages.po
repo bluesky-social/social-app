@@ -5238,7 +5238,7 @@ msgstr "Chwilio am bobl i'w dilyn"
 msgid "Find people you know"
 msgstr "Dewch o hyd i bobl rydych yn eu hadnabod"
 
-#: src/screens/Search/Shell.tsx:700
+#: src/screens/Search/Shell.tsx:701
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Canfod postiadau, defnyddwyr a ffrydiau ar Bluesky"
 
@@ -10409,8 +10409,8 @@ msgstr "Sgrolio i'r brig"
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:232
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:238
 #: src/screens/Search/Shell.tsx:495
-#: src/screens/Search/Shell.tsx:546
-#: src/screens/Search/Shell.tsx:688
+#: src/screens/Search/Shell.tsx:547
+#: src/screens/Search/Shell.tsx:689
 #: src/view/shell/bottom-bar/BottomBar.tsx:216
 msgid "Search"
 msgstr "Chwilio"
@@ -10990,7 +10990,7 @@ msgstr "Rhannwch god QR"
 msgid "Share this feed"
 msgstr "Rhannwch y ffrwd hon"
 
-#: src/screens/Search/Shell.tsx:575
+#: src/screens/Search/Shell.tsx:576
 msgid "Share this search"
 msgstr ""
 

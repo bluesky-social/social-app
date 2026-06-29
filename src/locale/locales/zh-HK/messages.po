@@ -5238,7 +5238,7 @@ msgstr "睇吓跟啲乜人好"
 msgid "Find people you know"
 msgstr "搵返你識嘅人"
 
-#: src/screens/Search/Shell.tsx:700
+#: src/screens/Search/Shell.tsx:701
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "喺 Bluesky 度搵帖文、用戶同埋動態源"
 
@@ -10409,8 +10409,8 @@ msgstr "轆到去頂部"
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:232
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:238
 #: src/screens/Search/Shell.tsx:495
-#: src/screens/Search/Shell.tsx:546
-#: src/screens/Search/Shell.tsx:688
+#: src/screens/Search/Shell.tsx:547
+#: src/screens/Search/Shell.tsx:689
 #: src/view/shell/bottom-bar/BottomBar.tsx:216
 msgid "Search"
 msgstr "搵嘢"
@@ -10990,7 +10990,7 @@ msgstr "分享 QR code"
 msgid "Share this feed"
 msgstr "分享呢個動態源"
 
-#: src/screens/Search/Shell.tsx:575
+#: src/screens/Search/Shell.tsx:576
 msgid "Share this search"
 msgstr "分享此搵嘢結果"
 

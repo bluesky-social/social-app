@@ -5238,7 +5238,7 @@ msgstr "Hitta personer att följa"
 msgid "Find people you know"
 msgstr "Hitta personer du känner"
 
-#: src/screens/Search/Shell.tsx:700
+#: src/screens/Search/Shell.tsx:701
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Hitta inlägg, användare och flöden på Bluesky"
 
@@ -10409,8 +10409,8 @@ msgstr "Gå till toppen"
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:232
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:238
 #: src/screens/Search/Shell.tsx:495
-#: src/screens/Search/Shell.tsx:546
-#: src/screens/Search/Shell.tsx:688
+#: src/screens/Search/Shell.tsx:547
+#: src/screens/Search/Shell.tsx:689
 #: src/view/shell/bottom-bar/BottomBar.tsx:216
 msgid "Search"
 msgstr "Sök"
@@ -10990,7 +10990,7 @@ msgstr "Dela QR-kod"
 msgid "Share this feed"
 msgstr "Dela det här flödet"
 
-#: src/screens/Search/Shell.tsx:575
+#: src/screens/Search/Shell.tsx:576
 msgid "Share this search"
 msgstr "Dela den här sökningen"
 

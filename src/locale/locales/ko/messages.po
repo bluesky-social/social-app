@@ -5238,7 +5238,7 @@ msgstr "팔로우할 사용자 찾아보기"
 msgid "Find people you know"
 msgstr "아는 사람 찾아보기"
 
-#: src/screens/Search/Shell.tsx:700
+#: src/screens/Search/Shell.tsx:701
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Bluesky에서 게시물, 사용자, 피드 찾기"
 
@@ -10409,8 +10409,8 @@ msgstr "맨 위로 스크롤"
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:232
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:238
 #: src/screens/Search/Shell.tsx:495
-#: src/screens/Search/Shell.tsx:546
-#: src/screens/Search/Shell.tsx:688
+#: src/screens/Search/Shell.tsx:547
+#: src/screens/Search/Shell.tsx:689
 #: src/view/shell/bottom-bar/BottomBar.tsx:216
 msgid "Search"
 msgstr "검색"
@@ -10990,7 +10990,7 @@ msgstr "QR 코드 공유"
 msgid "Share this feed"
 msgstr "이 피드 공유하기"
 
-#: src/screens/Search/Shell.tsx:575
+#: src/screens/Search/Shell.tsx:576
 msgid "Share this search"
 msgstr "이 검색 공유하기"
 
