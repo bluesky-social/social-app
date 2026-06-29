@@ -611,6 +611,23 @@ export async function prefetchDeviceSignals({agent}: {agent: AtpAgent}) {
     `prefetchDeviceSignals: ${cached ? 'restored from cache' : 'no cache'}`,
     cached,
   )
+
+  /*
+   * Future silent-refresh path (intentionally left commented out). The OS
+   * returns a previously granted age range without re-prompting, so once a
+   * region is already cached we could refresh it on load instead of waiting for
+   * the user to re-verify. We don't do this yet because the native call can
+   * still surface a prompt for users who never opted in, so it must stay gated
+   * behind an explicit grant for now.
+   *
+   * const geolocation = device.get(['mergedGeolocation'])
+   * if (cached && geolocation?.countryCode) {
+   *   const signals = await getDeviceSignals()
+   *   if (signals) {
+   *     setDeviceSignalsForRegion({did, region: geolocation, signals})
+   *   }
+   * }
+   */
 }
 export function useDeviceSignalsQuery() {
   const agent = useAgent()
