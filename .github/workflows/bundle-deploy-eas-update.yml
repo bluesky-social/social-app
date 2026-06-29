@@ -396,7 +396,7 @@ jobs:
       - name: 🔧 Setup bundletool
         uses: amyu/setup-bundletool@cc2e1857284660bd625e43f2c8a45626f034302f # v1.1
         with:
-          version: "1.17.2"
+          version: "1.18.3"
 
       - name: 🔑 Decode keystore
         run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode >
