@@ -40,6 +40,7 @@ import {
   useAgeAssuranceServerDataContext,
 } from '#/ageAssurance/data'
 import {logger} from '#/ageAssurance/logger'
+import {unsafeGetAndComputeAgeAssurance} from '#/ageAssurance/state'
 import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
 import {
   getAgeAssuranceDataFromDeviceSignals,
@@ -367,12 +368,35 @@ function AccessSection() {
           signals,
         )
         if (assuredAge !== undefined) {
-          // Sufficient device signals: persist (keyed by this region) and let
-          // the AA state recompute from the cache write unlock access. Nothing
-          // else to do here.
+          // Persist (keyed by this region) so the AA state recomputes from the
+          // cache write. Recompute here too so we can react to the outcome: a
+          // sufficient age lifts the gate (nothing more to do), but the device
+          // may report an age below the region's threshold, in which case
+          // access stays `none` and we tell the user.
           setDeviceSignalsForRegion({did, region, signals})
+          const {state} = unsafeGetAndComputeAgeAssurance({did})
+          if (state.access === aa.Access.None) {
+            Toast.show(
+              _(
+                msg`We're sorry, but based on the data shared by your device, you are not old enough to access Bluesky.`,
+              ),
+              {type: 'info'},
+            )
+          } else {
+            Toast.show(_(msg`Thanks! You're all set.`), {
+              type: 'success',
+            })
+          }
           return
         }
+        // We got a device response but it carried no usable age information.
+        Toast.show(
+          _(
+            msg`Hmm, it seems your device was unable to share age information with us.`,
+          ),
+          {type: 'warning'},
+        )
+        return
       }
       logger.debug(
         `onPressVerify: device signals unavailable or insufficient, falling back to KWS`,
@@ -380,7 +404,14 @@ function AccessSection() {
     }
 
     openKwsDialog()
-  }, [region, currentAccount?.did, openKwsDialog])
+  }, [
+    region,
+    currentAccount?.did,
+    openKwsDialog,
+    allowsDeviceVerification,
+    aa,
+    _,
+  ])
 
   return (
     <>
