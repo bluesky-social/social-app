@@ -1,26 +1,28 @@
+import {type Mock, vi} from 'vitest'
+
 import {MetricsClient} from './client'
 
 let appStateCallback: (state: string) => void
 
-jest.mock('#/lib/appState', () => ({
-  onAppStateChange: jest.fn(cb => {
+vi.mock('#/lib/appState', () => ({
+  onAppStateChange: vi.fn(cb => {
     appStateCallback = cb
-    return {remove: jest.fn()}
+    return {remove: vi.fn()}
   }),
 }))
 
-jest.mock('#/logger', () => ({
+vi.mock('#/logger', () => ({
   Logger: {
     create: () => ({
-      info: jest.fn(),
-      debug: jest.fn(),
-      error: jest.fn(),
+      info: vi.fn(),
+      debug: vi.fn(),
+      error: vi.fn(),
     }),
     Context: {Metric: 'metric'},
   },
 }))
 
-jest.mock('#/env', () => ({
+vi.mock('#/env', () => ({
   METRICS_API_HOST: 'https://test.metrics.api',
   IS_WEB: false,
 }))
@@ -31,13 +33,13 @@ type TestEvents = {
 }
 
 describe('MetricsClient', () => {
-  let fetchMock: jest.Mock
+  let fetchMock: Mock
   let fetchRequests: {body: any}[]
 
   beforeEach(() => {
-    jest.useFakeTimers({advanceTimers: true})
+    vi.useFakeTimers({shouldAdvanceTime: true})
     fetchRequests = []
-    fetchMock = jest.fn().mockImplementation(async (_url, options) => {
+    fetchMock = vi.fn().mockImplementation(async (_url, options) => {
       const body = JSON.parse(options.body)
       fetchRequests.push({body})
       return {ok: true, status: 200}
@@ -46,8 +48,8 @@ describe('MetricsClient', () => {
   })
 
   afterEach(() => {
-    jest.useRealTimers()
-    jest.clearAllMocks()
+    vi.useRealTimers()
+    vi.clearAllMocks()
   })
 
   it('flushes events on interval', async () => {
@@ -58,7 +60,7 @@ describe('MetricsClient', () => {
     expect(fetchRequests).toHaveLength(0)
 
     // Advance past the 10 second interval
-    await jest.advanceTimersByTimeAsync(10_000)
+    await vi.advanceTimersByTimeAsync(10_000)
 
     expect(fetchRequests).toHaveLength(1)
     expect(fetchRequests[0].body.events).toHaveLength(2)
@@ -81,7 +83,7 @@ describe('MetricsClient', () => {
     client.track('click', {button: 'btn-trigger'})
 
     // Allow microtasks to run
-    await jest.advanceTimersByTimeAsync(0)
+    await vi.advanceTimersByTimeAsync(0)
 
     expect(fetchRequests).toHaveLength(1)
     expect(fetchRequests[0].body.events).toHaveLength(6)
@@ -112,14 +114,14 @@ describe('MetricsClient', () => {
     client.track('click', {button: 'submit'})
 
     // Trigger flush via interval
-    await jest.advanceTimersByTimeAsync(10_000)
+    await vi.advanceTimersByTimeAsync(10_000)
 
     expect(requestCount).toBe(1)
     expect(fetchRequests).toHaveLength(0)
 
     // Simulate app coming to foreground to trigger retry
     appStateCallback('active')
-    await jest.advanceTimersByTimeAsync(0)
+    await vi.advanceTimersByTimeAsync(0)
 
     expect(requestCount).toBe(2)
     expect(fetchRequests).toHaveLength(1)
@@ -144,19 +146,19 @@ describe('MetricsClient', () => {
     client.track('click', {button: 'submit'})
 
     // First flush fails
-    await jest.advanceTimersByTimeAsync(10_000)
+    await vi.advanceTimersByTimeAsync(10_000)
 
     expect(requestCount).toBe(1)
 
     // Retry also fails
     appStateCallback('active')
-    await jest.advanceTimersByTimeAsync(0)
+    await vi.advanceTimersByTimeAsync(0)
 
     expect(requestCount).toBe(2)
 
     // Another foreground event should not retry again (events are dropped)
     appStateCallback('active')
-    await jest.advanceTimersByTimeAsync(0)
+    await vi.advanceTimersByTimeAsync(0)
 
     expect(requestCount).toBe(2) // No additional requests
   })
@@ -169,7 +171,7 @@ describe('MetricsClient', () => {
 
     // Simulate app going to background
     appStateCallback('background')
-    await jest.advanceTimersByTimeAsync(0)
+    await vi.advanceTimersByTimeAsync(0)
 
     expect(fetchRequests).toHaveLength(1)
   })

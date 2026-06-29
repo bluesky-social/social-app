@@ -1,5 +1,6 @@
 import {createDownloadResumable, deleteAsync} from 'expo-file-system/legacy'
 import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
+import {type Mock, vi} from 'vitest'
 
 import {IMAGE_SIZE_CONFIG_2K_1MB} from '../../src/lib/constants'
 import {
@@ -7,6 +8,27 @@ import {
   type DownloadAndResizeOpts,
 } from '../../src/lib/media/manip'
 import {getResizedDimensions} from '../../src/lib/media/util'
+
+vi.mock('expo-file-system/legacy', () => ({
+  cacheDirectory: 'file://cache/',
+  EncodingType: {UTF8: 'utf8', Base64: 'base64'},
+  StorageAccessFramework: {},
+  getInfoAsync: vi.fn().mockResolvedValue({exists: true, size: 100}),
+  deleteAsync: vi.fn(),
+  moveAsync: vi.fn().mockResolvedValue(undefined),
+  makeDirectoryAsync: vi.fn().mockResolvedValue(undefined),
+  writeAsStringAsync: vi.fn().mockResolvedValue(undefined),
+  createDownloadResumable: vi.fn(),
+}))
+
+vi.mock('expo-media-library', () => ({
+  usePermissions: vi.fn(() => [true]),
+}))
+
+vi.mock('expo-image-manipulator', () => ({
+  manipulateAsync: vi.fn().mockResolvedValue({uri: 'file://resized-image'}),
+  SaveFormat: {JPEG: 'jpeg', WEBP: 'webp'},
+}))
 
 const mockResizedImage = {
   path: 'file://resized-image.jpg',
@@ -17,10 +39,10 @@ const mockResizedImage = {
 }
 
 describe('downloadAndResize', () => {
-  const errorSpy = jest.spyOn(global.console, 'error')
+  const errorSpy = vi.spyOn(global.console, 'error')
 
   beforeEach(() => {
-    const mockedCreateResizedImage = manipulateAsync as jest.Mock
+    const mockedCreateResizedImage = manipulateAsync as Mock
     mockedCreateResizedImage.mockResolvedValue({
       uri: 'file://resized-image.jpg',
       ...mockResizedImage,
@@ -28,14 +50,14 @@ describe('downloadAndResize', () => {
   })
 
   afterEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('should return resized image for valid URI and options', async () => {
-    const mockedFetch = createDownloadResumable as jest.Mock
+    const mockedFetch = createDownloadResumable as Mock
     mockedFetch.mockReturnValue({
-      cancelAsync: jest.fn(),
-      downloadAsync: jest
+      cancelAsync: vi.fn(),
+      downloadAsync: vi
         .fn()
         .mockResolvedValue({uri: 'file://resized-image.jpg'}),
     })

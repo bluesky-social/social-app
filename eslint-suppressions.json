@@ -114,14 +114,6 @@
       "count": 1
     }
   },
-  "src/analytics/identifiers/session.test.ts": {
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 9
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 9
-    }
-  },
   "src/analytics/metadata.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
