@@ -16,7 +16,7 @@ import {type SearchAutocompleteInputProps} from './shared'
  * Web: typed results float in a Sift dropdown anchored to the search input
  * (matching the desktop nav-bar search). Search history continues to render
  * full-page underneath the input in Shell.tsx, so it is not shown here. See
- * index.tsx for the native (inline list) variant.
+ * index.native.tsx for the native (inline list) variant.
  */
 export function SearchAutocompleteInput({
   fixedParams,
@@ -38,7 +38,10 @@ export function SearchAutocompleteInput({
 
   const {items} = useAutocomplete({
     type: 'profile',
-    query: value,
+    // The dropdown only shows while focused, so don't fetch until then. This
+    // avoids a typeahead request on mount when arriving with text already
+    // present (e.g. /search?q=foo).
+    query: focused ? value : '',
     showSearchFallback: true,
   })
 
