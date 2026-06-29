@@ -44,7 +44,6 @@ import {makeSearchQuery} from '#/screens/Search/utils'
 import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
 import {useAutocomplete} from '#/components/Autocomplete'
 import {Button, ButtonIcon} from '#/components/Button'
-import {SearchInput} from '#/components/forms/SearchInput'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
 import {ArrowShareRight_Stroke2_Corner2_Rounded as ShareIcon} from '#/components/icons/ArrowShareRight'
 import * as Layout from '#/components/Layout'
@@ -57,6 +56,7 @@ import type * as bsky from '#/types/bsky'
 import {AdvancedSearchDialog} from './components/AdvancedSearchDialog'
 import {AutocompleteResults} from './components/AutocompleteResults'
 import {DetectedLanguagesAdmonition} from './components/DetectedLanguagesAdmonition'
+import {SearchAutocompleteInput} from './components/SearchAutocompleteInput'
 import {SearchHistory} from './components/SearchHistory'
 import {SearchLanguageDropdown} from './components/SearchLanguageDropdown'
 import {Explore} from './Explore'
@@ -391,6 +391,37 @@ export function SearchScreenShell({
     [updateProfileHistory, queryClient],
   )
 
+  /**
+   * Web only. Selecting a profile from the anchored autocomplete dropdown.
+   */
+  const onSelectProfile = useCallback(
+    (profile: bsky.profile.AnyProfileView, position: number) => {
+      ax.metric('search:autocomplete:press', {
+        profileDid: profile.did,
+        position,
+      })
+      handleProfileClick(profile)
+      navigation.navigate('Profile', {name: profile.handle})
+    },
+    [ax, handleProfileClick, navigation],
+  )
+
+  /**
+   * Web only. Selecting the "Search for X" row from the anchored autocomplete
+   * dropdown.
+   */
+  const onSelectSearch = useCallback(
+    (value: string) => {
+      ax.metric('search:query', {
+        source: 'autocomplete',
+        filterCount: countActiveFilters(filters),
+      })
+      updateSearchText(value)
+      navigateToItem(value)
+    },
+    [ax, filters, navigateToItem, updateSearchText],
+  )
+
   const onSoftReset = useCallback(() => {
     if (IS_WEB) {
       /*
@@ -537,7 +568,7 @@ export function SearchScreenShell({
                     </Button>
                   )}
                   <View style={[a.flex_1]}>
-                    <SearchInput
+                    <SearchAutocompleteInput
                       testID="searchScreenInput"
                       ref={textInput}
                       value={searchText}
@@ -548,6 +579,9 @@ export function SearchScreenShell({
                       placeholder={inputPlaceholder ?? l`Search`}
                       hitSlop={{...HITSLOP_20, top: 0}}
                       hotkey={true}
+                      fixedParams={Boolean(fixedParams)}
+                      onSelectProfile={onSelectProfile}
+                      onSelectSearch={onSelectSearch}
                     />
                   </View>
                 </View>
@@ -590,7 +624,7 @@ export function SearchScreenShell({
           display: showAutocomplete && !fixedParams ? 'flex' : 'none',
           flex: 1,
         }}>
-        {searchText.length > 0 ? (
+        {searchText.length > 0 && IS_NATIVE ? (
           <AutocompleteResults
             items={autocompleteItems}
             isFetching={isAutocompleteFetching}
