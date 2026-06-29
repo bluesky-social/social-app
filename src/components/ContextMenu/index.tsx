@@ -89,14 +89,12 @@ const SPRING_IN: WithSpringConfig = {
   mass: 0.75,
   damping: 300,
   stiffness: 1200,
-  restDisplacementThreshold: 0.01,
 }
 
 const SPRING_OUT: WithSpringConfig = {
   mass: IS_IOS ? 1.25 : 0.75,
   damping: 150,
   stiffness: 1000,
-  restDisplacementThreshold: 0.01,
 }
 
 /**

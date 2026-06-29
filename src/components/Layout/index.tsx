@@ -1,4 +1,4 @@
-import {forwardRef, memo, useContext, useMemo} from 'react'
+import {memo, useContext, useMemo} from 'react'
 import {
   type StyleProp,
   View,
@@ -6,6 +6,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import Animated, {
+  type AnimatedRef,
   type AnimatedScrollViewProps,
   useAnimatedStyle,
 } from 'react-native-reanimated'
@@ -73,67 +74,64 @@ export type ContentProps = AnimatedScrollViewProps & {
   style?: StyleProp<ViewStyle>
   contentContainerStyle?: StyleProp<ViewStyle>
   ignoreTabletLayoutOffset?: boolean
+  ref?: AnimatedRef<Animated.ScrollView>
 }
 
 /**
  * Default scroll view for simple pages
  */
-export const Content = memo(
-  forwardRef<Animated.ScrollView, ContentProps>(function Content(
-    {
-      children,
-      style,
-      contentContainerStyle,
-      ignoreTabletLayoutOffset,
-      ...props
-    },
-    ref,
-  ) {
-    const t = useTheme()
-    const {footerHeight} = useShellLayout()
-    const {isWithinSplitView} = useIsWithinSplitView()
+export const Content = memo(function Content({
+  children,
+  style,
+  contentContainerStyle,
+  ignoreTabletLayoutOffset,
+  ref,
+  ...props
+}: ContentProps) {
+  const t = useTheme()
+  const {footerHeight} = useShellLayout()
+  const {isWithinSplitView} = useIsWithinSplitView()
 
-    // note - if we ever make the footer transparent in any way,
-    // we'll need to change this to use contentInsets/scrollIndicatorInsets
-    // on iOS and contentContainerStyle padding on Android -sfn
-    const animatedStyle = useAnimatedStyle(() => {
-      return {
-        marginBottom: footerHeight.get(),
-      }
-    })
+  // note - if we ever make the footer transparent in any way,
+  // we'll need to change this to use contentInsets/scrollIndicatorInsets
+  // on iOS and contentContainerStyle padding on Android -sfn
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      marginBottom: footerHeight.get(),
+    }
+  })
 
-    return (
-      <Animated.ScrollView
-        ref={ref}
-        id="content"
-        automaticallyAdjustsScrollIndicatorInsets={false}
-        indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
-        style={[
-          a.w_full,
-          animatedStyle,
-          isWithinSplitView &&
-            web({
-              flex: 1,
-              overflowY: 'scroll',
-              scrollbarWidth: 'thin',
-              scrollbarColor: `${t.palette.contrast_100} transparent`,
-            }),
-          style,
-        ]}
-        contentContainerStyle={[contentContainerStyle]}
-        {...props}>
-        {IS_WEB ? (
-          <Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>
-            {/* @ts-expect-error web only -esb */}
-            {children}
-          </Center>
-        ) : (
-          children
-        )}
-      </Animated.ScrollView>
-    )
-  }),
-)
+  return (
+    <Animated.ScrollView
+      ref={ref}
+      id="content"
+      automaticallyAdjustsScrollIndicatorInsets={false}
+      indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
+      style={[
+        a.w_full,
+        animatedStyle,
+        isWithinSplitView &&
+          web({
+            flex: 1,
+            overflowY: 'scroll',
+            scrollbarWidth: 'thin',
+            scrollbarColor: `${t.palette.contrast_100} transparent`,
+          }),
+        style,
+      ]}
+      contentContainerStyle={[contentContainerStyle]}
+      {...props}>
+      {IS_WEB ? (
+        <Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>
+          {/* @ts-expect-error web only -esb */}
+          {children}
+        </Center>
+      ) : (
+        children
+      )}
+    </Animated.ScrollView>
+  )
+})
 
 /**
  * Utility component to center content within the screen
