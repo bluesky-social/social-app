@@ -84,7 +84,8 @@ function messageIsReply(
   return (
     ChatBskyConvoDefs.isMessageView(message) &&
     (ChatBskyConvoDefs.isMessageView(message.replyTo) ||
-      ChatBskyConvoDefs.isDeletedMessageView(message.replyTo))
+      ChatBskyConvoDefs.isDeletedMessageView(message.replyTo) ||
+      ChatBskyConvoDefs.isMessageBeforeUserJoinedGroupView(message.replyTo))
   )
 }
 
@@ -161,12 +162,13 @@ let MessageItem = ({
   const {openReactions} = useMessageDialogs()
   const {scrollToMessage, highlightedMessage} = useMessageReplies()
 
-  // `replyTo` comes back hydrated as the referenced message (or a deleted-
-  // message tombstone). Narrow away the open-union fallback so we only render
-  // shapes we understand.
+  // `replyTo` comes back hydrated as the referenced message, a deleted-message
+  // tombstone, or a before-joined placeholder. Narrow away the open-union
+  // fallback so we only render shapes we understand.
   const replyTo =
     ChatBskyConvoDefs.isMessageView(message.replyTo) ||
-    ChatBskyConvoDefs.isDeletedMessageView(message.replyTo)
+    ChatBskyConvoDefs.isDeletedMessageView(message.replyTo) ||
+    ChatBskyConvoDefs.isMessageBeforeUserJoinedGroupView(message.replyTo)
       ? message.replyTo
       : undefined
 
