@@ -27,25 +27,18 @@ export const geolocation: Geolocation | undefined = enabled
     }
   : undefined
 
-/**
- * When debug is enabled we mock the `deviceSignals` response by default. Set
- * this to `false` to hit the real native age API (`expo-age-range`) so the OS
- * age prompt actually shows — useful for testing the device flow on a physical
- * device.
- */
-export const useMockDeviceSignalsAPIResponse = true
-
 const deviceGeolocationEnabled = false || IS_E2E
 export const deviceGeolocation: Geolocation | undefined =
   enabled && deviceGeolocationEnabled
     ? {
         countryCode: 'AA',
         regionCode: undefined,
+        ...geolocation,
       }
     : undefined
 
 export const otherRequiredData: OtherRequiredData = {
-  birthdate: new Date(2010, 12, 1).toISOString(),
+  birthdate: new Date(2000, 12, 1).toISOString(),
 }
 
 const serverStateEnabled = false || IS_E2E
@@ -295,13 +288,19 @@ export const config: DebugConfig = {
   ],
 }
 
-const deviceSignalsEnabled = true
+/**
+ * When debug is enabled we mock the `deviceSignals` response by default. Set
+ * this to `false` to hit the real native age API (`expo-age-range`) so the OS
+ * age prompt actually shows — useful for testing the device flow on a physical
+ * device.
+ */
+export const useMockDeviceSignalsAPIResponse = true
 export const deviceSignals: AgeRange.AgeRangeResponse | undefined =
-  deviceSignalsEnabled
+  useMockDeviceSignalsAPIResponse
     ? {
         // Simulates the OS reporting the user is at least 18. Lower this below
         // a region's IfAssuredOverAge threshold to exercise the KWS fallback.
-        lowerBound: 18,
+        lowerBound: 16,
         upperBound: null,
       }
     : undefined
