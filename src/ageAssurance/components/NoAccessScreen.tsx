@@ -348,9 +348,14 @@ function AccessSection() {
      * first. We tag the result with the current region (device assurance is
      * region-bound — a TX grant only counts in TX) and, if it's sufficient,
      * persist it client-side so the AA state recompute lifts the gate.
-     * Otherwise we fall back to the KWS flow below. `getDeviceSignals` handles
-     * its own errors and returns undefined (e.g. on web or failure), which also
-     * routes us to the fallback.
+     *
+     * Once the OS returns a response we stay on the device path and report the
+     * outcome via a toast (sufficient, under-age, or no usable data) rather than
+     * silently falling back — users can still opt into KWS via the inline link.
+     * We only fall through to the KWS dialog below when the device can't give us
+     * a response at all: `getDeviceSignals` handles its own errors and returns
+     * undefined (e.g. on web or failure), and there's nothing to act on without
+     * a session DID.
      */
     if (allowsDeviceVerification) {
       const did = currentAccount?.did
@@ -399,7 +404,7 @@ function AccessSection() {
         return
       }
       logger.debug(
-        `onPressVerify: device signals unavailable or insufficient, falling back to KWS`,
+        `onPressVerify: no device signals available (web/error/no DID), falling back to KWS`,
       )
     }
 
