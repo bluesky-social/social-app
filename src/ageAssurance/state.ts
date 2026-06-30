@@ -3,13 +3,14 @@ import type * as AgeRange from 'expo-age-range'
 import {
   type AppBskyAgeassuranceDefs,
   computeAgeAssuranceRegionAccess,
+  getAgeAssuranceRegionConfig,
 } from '@atproto/api'
 
 import {getAge} from '#/lib/strings/time'
 import {useSession} from '#/state/session'
 import {
   getConfigFromCache,
-  getDeviceSignalsFromCacheForCurrentRegion,
+  getDeviceSignalsFromCacheForRegion,
   getOtherRequiredDataFromCache,
   getServerStateFromCache,
   useAgeAssuranceServerDataContext,
@@ -140,7 +141,6 @@ export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
   const config = getConfigFromCache()
   const state = getServerStateFromCache({did})
   const requiredData = getOtherRequiredDataFromCache({did})
-  const deviceSignals = getDeviceSignalsFromCacheForCurrentRegion({did})
   const geolocation = device.get(['mergedGeolocation'])
 
   if (!geolocation || !config || !state || !requiredData) {
@@ -153,6 +153,19 @@ export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
   }
 
   const region = getAgeAssuranceRegionConfigWithFallback(config, geolocation)
+  /*
+   * Device signals are keyed off the matched config region (no fallback): if
+   * geolocation matches no AA region there's no device grant to read, so we
+   * skip the lookup rather than keying off FALLBACK_REGION_CONFIG. This keeps
+   * the read key symmetric with the write (see `setDeviceSignalsForRegion`).
+   */
+  const deviceRegion = getAgeAssuranceRegionConfig(config, {
+    countryCode: geolocation.countryCode ?? '',
+    regionCode: geolocation.regionCode,
+  })
+  const deviceSignals = deviceRegion
+    ? getDeviceSignalsFromCacheForRegion({did, region: deviceRegion})
+    : undefined
   const metadata: AgeAssuranceMetadata = {
     accountCreatedAt: state.metadata?.accountCreatedAt,
     declaredAge: requiredData?.birthdate

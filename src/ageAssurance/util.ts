@@ -79,8 +79,8 @@ export function createRegionKey(region: {
  * Derives age assurance data from native device signals for the given region,
  * but only when the region permits device verification. The signals are
  * expected to already be resolved to the user's current region (see
- * `getDeviceSignalsFromCacheForCurrentRegion`), so a grant captured in another
- * region won't reach here.
+ * `getDeviceSignalsFromCacheForRegion`), so a grant captured in another region
+ * won't reach here.
  *
  * The OS-provided `lowerBound` is the minimum age the platform will attest to,
  * which maps onto the `assuredAge` input of the rule engine (i.e.

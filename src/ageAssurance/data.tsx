@@ -35,6 +35,7 @@ import {
   isLegacyBirthdateBug,
 } from '#/ageAssurance/util'
 import {IS_DEV, IS_NATIVE} from '#/env'
+import {useGeolocation} from '#/geolocation'
 import {device} from '#/storage'
 
 /**
@@ -523,7 +524,7 @@ export async function getDeviceSignals(): Promise<
 /**
  * The raw region-keyed map of device signals (all regions). Used internally by
  * the query + writer, which operate on the full map. Most consumers want
- * {@link getDeviceSignalsFromCacheForCurrentRegion}, which resolves to the
+ * {@link getDeviceSignalsFromCacheForRegion}, which resolves to the
  * current region.
  */
 export function getDeviceSignalsMapFromCache({
@@ -536,38 +537,18 @@ export function getDeviceSignalsMapFromCache({
   )
 }
 /**
- * Resolves a region-keyed signals map down to the signals for the region the
- * user is currently in (per `mergedGeolocation`). Returns undefined when we
- * have no map, no geolocation, or no stored signals for that region.
- *
- * Device assurance is region-bound, so we only ever surface the signals
- * captured in the user's current region.
- */
-function selectDeviceSignalsForCurrentRegion(
-  map: AgeAssuranceDeviceSignals | undefined,
-): AgeRange.AgeRangeResponse | undefined {
-  if (!map) return undefined
-  const geolocation = device.get(['mergedGeolocation'])
-  if (!geolocation?.countryCode) return undefined
-  return map[
-    createRegionKey({
-      countryCode: geolocation.countryCode,
-      regionCode: geolocation.regionCode,
-    })
-  ]
-}
-/**
  * Returns the device signals for the region the user is currently in, or
- * undefined. See {@link selectDeviceSignalsForCurrentRegion}.
+ * undefined.
  */
-export function getDeviceSignalsFromCacheForCurrentRegion({
+export function getDeviceSignalsFromCacheForRegion({
   did,
+  region,
 }: {
   did: string
+  region: AppBskyAgeassuranceDefs.ConfigRegion
 }): AgeRange.AgeRangeResponse | undefined {
-  return selectDeviceSignalsForCurrentRegion(
-    getDeviceSignalsMapFromCache({did}),
-  )
+  const regionKey = createRegionKey(region)
+  return getDeviceSignalsMapFromCache({did})?.[regionKey]
 }
 /**
  * Stores freshly granted device signals into the (persisted) cache under the
@@ -632,6 +613,21 @@ export async function prefetchDeviceSignals({agent}: {agent: AtpAgent}) {
 export function useDeviceSignalsQuery() {
   const agent = useAgent()
   const did = getDidFromAgentSession(agent)
+  const {data: config} = useConfigQuery()
+  const geolocation = useGeolocation()
+  /*
+   * Resolve the matched config region (no fallback) and key off it, so the read
+   * stays symmetric with the write (see `setDeviceSignalsForRegion`). When
+   * geolocation matches no AA region there's no device grant to surface.
+   */
+  const regionConfig = config
+    ? getAgeAssuranceRegionConfig(config, {
+        countryCode: geolocation.countryCode ?? '',
+        regionCode: geolocation.regionCode,
+      })
+    : undefined
+  const regionKey = regionConfig ? createRegionKey(regionConfig) : undefined
+
   return useQuery(
     {
       /**
@@ -655,7 +651,7 @@ export function useDeviceSignalsQuery() {
       // The cache holds the full region-keyed map (the writer merges into it);
       // `select` resolves it to the current region for consumers without
       // mutating the cached value.
-      select: selectDeviceSignalsForCurrentRegion,
+      select: map => (map && regionKey ? map[regionKey] : undefined),
     },
     qc,
   )
@@ -705,7 +701,7 @@ export type AgeAssuranceServerData = {
   /**
    * The native on-device age signals for the region the user is currently in,
    * if they've granted access there. Already resolved from the region-keyed
-   * cache (see `getDeviceSignalsFromCacheForCurrentRegion`), so a grant from
+   * cache (see `getDeviceSignalsFromCacheForRegion`), so a grant from
    * another region won't appear here. Only consumed for regions that permit
    * device verification.
    */
