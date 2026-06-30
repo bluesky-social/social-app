@@ -83,9 +83,18 @@ export function useMessageEmbed() {
         }
 
         if (isBskyPostUrl(embedUrl)) {
-          const url = convertBskyAppUrlIfNeeded(embedUrl)
-          const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
-          const uri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
+          const stripped = convertBskyAppUrlIfNeeded(embedUrl)
+          let path = stripped
+          let collection = 'app.bsky.feed.post'
+          try {
+            const u = new URL(stripped, 'http://_')
+            path = u.pathname
+            collection = u.searchParams.get('collection') || collection
+          } catch {
+            path = stripped.split('?')[0]
+          }
+          const [_0, user, _1, rkey] = path.split('/').filter(Boolean)
+          const uri = makeRecordUri(user, collection, rkey)
           setEmbed({type: 'post', uri})
         }
       },

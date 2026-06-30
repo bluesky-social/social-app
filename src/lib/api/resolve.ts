@@ -25,6 +25,7 @@ import {
   isShortLink,
   makeRecordUri,
 } from '#/lib/strings/url-helpers'
+import {communityXrpc} from '#/lib/api/community'
 import {type ComposerImage} from '#/state/gallery'
 import {createComposerImage} from '#/state/gallery'
 import {type ChatInvitePreview} from '#/state/queries/join-links'
@@ -94,6 +95,44 @@ export class EmbeddingDisabledError extends Error {
   }
 }
 
+const COMMUNITY_POST_COLLECTION = 'community.blacksky.feed.post'
+
+// Pull the path portion (without ?query) and the collection from a bsky-style
+// post URL. Community posts share the /profile/<x>/post/<rkey> shape with a
+// ?collection=community.blacksky.feed.post tail.
+function splitPostUrl(url: string): {path: string; collection: string} {
+  const stripped = convertBskyAppUrlIfNeeded(url)
+  try {
+    const u = new URL(stripped, 'http://_')
+    const collection =
+      u.searchParams.get('collection') || 'app.bsky.feed.post'
+    return {path: u.pathname, collection}
+  } catch {
+    const [path] = stripped.split('?')
+    return {path, collection: 'app.bsky.feed.post'}
+  }
+}
+
+async function getCommunityPost(agent: AtpAgent, uri: string) {
+  const urip = new AtUri(uri)
+  if (!urip.host.startsWith('did:')) {
+    const res = await agent.resolveHandle({handle: urip.host})
+    // @ts-expect-error TODO new-sdk-migration
+    urip.host = res.data.did
+  }
+  const res = await communityXrpc(
+    agent,
+    'community.blacksky.feed.getCommunityPost',
+    {params: {uri: urip.toString()}},
+  )
+  if (!res.ok) {
+    throw new Error(`getCommunityPost ${res.status}`)
+  }
+  const data = (await res.json()) as {post?: any}
+  if (!data.post) throw new Error('getCommunityPost: post not found')
+  return data.post
+}
+
 export async function resolveLink(
   agent: AtpAgent,
   uri: string,
@@ -102,10 +141,13 @@ export async function resolveLink(
     uri = await resolveShortLink(uri)
   }
   if (isBskyPostUrl(uri)) {
-    uri = convertBskyAppUrlIfNeeded(uri)
-    const [_0, user, _1, rkey] = uri.split('/').filter(Boolean)
-    const recordUri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
-    const post = await getPost({uri: recordUri})
+    const {path, collection} = splitPostUrl(uri)
+    const [_0, user, _1, rkey] = path.split('/').filter(Boolean)
+    const recordUri = makeRecordUri(user, collection, rkey)
+    const post =
+      collection === COMMUNITY_POST_COLLECTION
+        ? await getCommunityPost(agent, recordUri)
+        : await getPost({uri: recordUri})
     if (post.viewer?.embeddingDisabled) {
       throw new EmbeddingDisabledError()
     }
