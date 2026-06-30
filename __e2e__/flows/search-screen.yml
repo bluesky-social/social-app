@@ -15,8 +15,10 @@ appId: xyz.blueskyweb.app
       id: "bottomBarSearchBtn"
 - tapOn:
     id: "bottomBarSearchBtn"
-- assertVisible: "Search for posts, users[,]? or feeds"
-- tapOn: "Search for posts, users[,]? or feeds"
+- assertVisible:
+    id: "searchScreenInput"
+- tapOn:
+    id: "searchScreenInput"
 - inputText: "b"
 - tapOn:
     id: "searchAutoCompleteResult-bob.test"

@@ -14,13 +14,13 @@ import {
   useNavigation,
 } from '@react-navigation/native'
 
-import {useCleanError} from '#/lib/hooks/useCleanError'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
+import {cleanError} from '#/lib/strings/errors'
 import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation'
 import {useBookmarksQuery} from '#/state/queries/bookmarks/useBookmarksQuery'
 import {Post} from '#/view/com/post/Post'
@@ -92,7 +92,6 @@ type ListItem =
 
 function BookmarksInner() {
   const initialNumToRender = useInitialNumToRender()
-  const cleanError = useCleanError()
   const [isPTRing, setIsPTRing] = useState(false)
   const trackPostView = usePostViewTracking('Bookmarks')
   const {
@@ -104,10 +103,6 @@ function BookmarksInner() {
     error,
     refetch,
   } = useBookmarksQuery()
-  const cleanedError = useMemo(() => {
-    const {raw, clean} = cleanError(error)
-    return clean || raw
-  }, [error, cleanError])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
@@ -174,10 +169,10 @@ function BookmarksInner() {
       renderItem={renderItem}
       keyExtractor={keyExtractor}
       refreshing={isPTRing}
-      onRefresh={onRefresh}
-      onEndReached={onEndReached}
+      onRefresh={() => void onRefresh()}
+      onEndReached={() => void onEndReached()}
       onEndReachedThreshold={4}
-      onItemSeen={item => {
+      onItemSeen={(item: ListItem) => {
         if (item.type === 'bookmark') {
           trackPostView(item.bookmark.item)
         }
@@ -185,7 +180,7 @@ function BookmarksInner() {
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}
-          error={cleanedError}
+          error={cleanError(error)}
           onRetry={fetchNextPage}
           style={[isEmpty && a.border_t_0]}
         />
@@ -209,7 +204,6 @@ function BookmarkNotFound({
   const t = useTheme()
   const {_} = useLingui()
   const {mutateAsync: bookmark} = useBookmarkMutation()
-  const cleanError = useCleanError()
 
   const remove = async () => {
     try {
@@ -217,9 +211,8 @@ function BookmarkNotFound({
       toast.show(_(msg`Removed from saved posts`), {
         type: 'info',
       })
-    } catch (e: any) {
-      const {raw, clean} = cleanError(e)
-      toast.show(clean || raw || e, {
+    } catch (err) {
+      toast.show(cleanError(err), {
         type: 'error',
       })
     }
@@ -259,7 +252,7 @@ function BookmarkNotFound({
         label={_(msg`Remove from saved posts`)}
         size="tiny"
         color="secondary"
-        onPress={remove}>
+        onPress={() => void remove()}>
         <ButtonIcon icon={BookmarkFilled} />
         <ButtonText>
           <Trans>Remove</Trans>

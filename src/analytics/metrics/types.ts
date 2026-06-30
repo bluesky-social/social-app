@@ -1365,6 +1365,25 @@ export type Events = {
     engine: string
     sourceBytes?: number
   }
+  // Native-only. Raw container metadata returned by the new module's probe()
+  // (bitrate, codec, HDR, frame rate, rotation, etc.). Fires once per upload
+  // between compressStarted and the compressSkipped/compressCompleted decision.
+  // The web (mediabunny) and legacy rn-compressor engines do not surface this.
+  'video:upload:probed': {
+    uploadId: string
+    engine: string
+    mimeType: string
+    codec: string
+    width: number
+    height: number
+    duration: number
+    bitrate: number
+    fileSize: number
+    hasAudio: boolean
+    frameRate: number
+    rotation: number
+    isHDR: boolean
+  }
   'video:upload:compressCompleted': {
     uploadId: string
     engine: string

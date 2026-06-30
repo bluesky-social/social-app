@@ -60,7 +60,10 @@ import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
 import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {DateDivider} from '#/components/dms/DateDivider'
-import {MessageItem} from '#/components/dms/MessageItem'
+import {
+  MessageItem,
+  type MessageItemNeighbor,
+} from '#/components/dms/MessageItem'
 import {MessageOverlays} from '#/components/dms/MessageOverlays'
 import {MessageRepliesProvider} from '#/components/dms/MessageReplies'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
@@ -104,7 +107,7 @@ function keyExtractor(item: RenderItem) {
 function getNeighborMessage(
   items: RenderItem[],
   index: number,
-): ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView | null {
+): MessageItemNeighbor {
   const neighbor = items[index]
   if (!neighbor) return null
   if (
@@ -200,6 +203,21 @@ export function MessagesList({
   // the bottom.
   const isAtBottom = useSharedValue(true)
 
+  // Set when the local user sends a message so we follow it to the end even
+  // from a scrolled-up position. On native, onContentSizeChange can't be relied
+  // on: with maintainVisibleContentPosition anchored to item 0, appending a
+  // message below the viewport reports no content-size change, so that callback
+  // never fires for the send. We watch the rendered item count instead and
+  // scroll imperatively once our pending message lands (APP-2223). On web,
+  // onContentSizeChange also fires for the send, so the scroll may run from both
+  // paths - both target the end, so the result is correct.
+  const pendingSendScroll = useRef(false)
+
+  // Handle for the in-flight send-scroll burst (see startSendScrollBurst). Held
+  // here so the re-init effect below can cancel a burst that belongs to the
+  // previous convo lifecycle.
+  const sendScrollRaf = useRef(0)
+
   // This will be used on web to assist in determining if we need to maintain the content offset
   const isAtTop = useSharedValue(true)
 
@@ -220,6 +238,12 @@ export function MessagesList({
     if (prevHasScrolled.current && !hasScrolled) {
       hasInitiallyScrolled.current = false
       setDidInitialScroll(false)
+      // Drop any unfired send pin and stop an in-flight scroll burst: the
+      // initial-scroll path owns positioning during re-init, and the pending
+      // message they referred to belongs to the previous lifecycle.
+      pendingSendScroll.current = false
+      cancelAnimationFrame(sendScrollRaf.current)
+      sendScrollRaf.current = 0
     }
     prevHasScrolled.current = hasScrolled
   }, [hasScrolled])
@@ -252,6 +276,59 @@ export function MessagesList({
       didBackground.current = true
     }
   }, [convoState.status])
+
+  // Scroll to a saturating offset rather than scrollToEnd: when the keyboard is
+  // open, KeyboardChatScrollView lifts the content via extraContentPadding, and
+  // scrollToEnd's internal target is unaware of that lift, so it lands short by
+  // the keyboard height. An over-large offset clamps to the true bottom.
+  const scrollSendToBottom = useCallback(() => {
+    flatListRef.current?.scrollToOffset({
+      offset: Number.MAX_SAFE_INTEGER,
+      animated: true,
+    })
+  }, [flatListRef])
+
+  // A single scroll can't follow a send to the bottom: a multi-line send settles
+  // over several layout passes (the tall pending item being measured, then the
+  // composer collapsing back to one line), and the content bottom keeps moving
+  // after the scroll target was clamped. We can't drive this off the composer's
+  // height drop either - that signal is global, outlives the send, and races the
+  // pending-message append. Instead we re-assert the saturating scroll across a
+  // short window keyed to the send. Each call re-clamps to the *current* true
+  // bottom, so the last one lands settled regardless of how many passes it took.
+  // The burst is bounded and self-terminating, so it can't leak into a later
+  // unrelated resize, and it polls geometry rather than depending on
+  // onContentSizeChange (which doesn't fire for the send append on native - see
+  // the pendingSendScroll declaration).
+  const stopSendScrollBurst = useCallback(() => {
+    cancelAnimationFrame(sendScrollRaf.current)
+    sendScrollRaf.current = 0
+  }, [])
+  const startSendScrollBurst = useCallback(() => {
+    stopSendScrollBurst()
+    const deadline = Date.now() + 200
+    const tick = () => {
+      scrollSendToBottom()
+      sendScrollRaf.current =
+        Date.now() < deadline ? requestAnimationFrame(tick) : 0
+    }
+    tick()
+  }, [scrollSendToBottom, stopSendScrollBurst])
+
+  // Cancel any in-flight burst on unmount.
+  useEffect(() => stopSendScrollBurst, [stopSendScrollBurst])
+
+  // Follow a just-sent message to the end. This runs when the rendered item
+  // count changes, but only fires once the tail item is our own optimistic
+  // pending message (pending-message items are local-only). That way a foreign
+  // message arriving between send and our append doesn't consume the pin or yank
+  // a scrolled-up reader down to it - the pin waits for our message to land.
+  useEffect(() => {
+    if (!pendingSendScroll.current) return
+    if (renderItems.at(-1)?.type !== 'pending-message') return
+    pendingSendScroll.current = false
+    startSendScrollBurst()
+  }, [renderItems, startSendScrollBurst])
 
   // -- Scroll handling
 
@@ -479,6 +556,11 @@ export function MessagesList({
         setHasScrolled(true)
       }
 
+      // Sending your own message should always take you to it, regardless of
+      // current scroll position. The effect watching renderItems.length scrolls
+      // to the end once the pending message is appended.
+      pendingSendScroll.current = true
+
       convoState.sendMessage(
         {
           text: rt.text,
@@ -683,7 +765,7 @@ export function MessagesList({
             <KeyboardStickyView
               style={[a.absolute, a.bottom_0, a.left_0, a.right_0]}
               onLayout={onInputLayout}
-              minimumOffset={bottomInset}
+              minimumOffset={IS_WEB ? 0 : bottomInset}
               offset={{
                 closed: platform({
                   ios: tokens.space.lg, // hide bottom padding when closed

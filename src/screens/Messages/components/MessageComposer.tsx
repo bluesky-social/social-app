@@ -376,7 +376,7 @@ function ComposerContainer({children}: {children: React.ReactNode}) {
             web: [
               a.pt_xs,
               a.pl_lg,
-              a.pb_lg,
+              {paddingBottom: tokens.space.lg + bottomInset},
               // prevent overlap with the scrollbar, which looks ugly
               a.pr_sm, // sm + sm = lg
               {width: `calc(100% - ${tokens.space.sm}px)` as '100%'},

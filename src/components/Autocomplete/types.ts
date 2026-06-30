@@ -45,4 +45,5 @@ export type AutocompleteItemProps = Parameters<
 export type AutocompleteApi = {
   query: string
   items: AutocompleteItem[]
+  isFetching: boolean
 }
