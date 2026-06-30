@@ -15,3 +15,11 @@ export function useHotkeysContext() {
     [],
   )
 }
+
+export function useFeedKeyboardNav() {
+  return {
+    focusedIndex: -1,
+    setFocusedIndex: () => -1,
+    itemRef: () => () => {},
+  }
+}

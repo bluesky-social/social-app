@@ -2322,17 +2322,6 @@
       "count": 4
     }
   },
-  "src/view/screens/Feeds.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 3
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
   "src/view/screens/Home.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1

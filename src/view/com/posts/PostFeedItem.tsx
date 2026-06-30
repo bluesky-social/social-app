@@ -94,10 +94,16 @@ export function PostFeedItem({
   isParentNotFound,
   rootPost,
   onShowLess,
+  feedItemIndex,
+  feedItemRef,
+  isFocused,
 }: FeedItemProps & {
   post: AppBskyFeedDefs.PostView
   rootPost: AppBskyFeedDefs.PostView
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
+  feedItemIndex?: number
+  feedItemRef?: React.Ref<View>
+  isFocused?: boolean
 }): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -133,6 +139,9 @@ export function PostFeedItem({
         isParentNotFound={isParentNotFound}
         rootPost={rootPost}
         onShowLess={onShowLess}
+        feedItemIndex={feedItemIndex}
+        feedItemRef={feedItemRef}
+        isFocused={isFocused}
       />
     )
   }
@@ -157,11 +166,17 @@ let FeedItemInner = ({
   isParentNotFound,
   rootPost,
   onShowLess,
+  feedItemIndex,
+  feedItemRef,
+  isFocused,
 }: FeedItemProps & {
   richText: RichTextAPI
   post: Shadow<AppBskyFeedDefs.PostView>
   rootPost: AppBskyFeedDefs.PostView
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
+  feedItemIndex?: number
+  feedItemRef?: React.Ref<View>
+  isFocused?: boolean
 }): React.ReactNode => {
   const ax = useAnalytics()
   const queryClient = useQueryClient()
@@ -326,20 +341,21 @@ let FeedItemInner = ({
   return (
     <GalleryBleed>
       <Link
+        ref={feedItemRef}
         testID={`feedItem-by-${post.author.handle}`}
         style={outerStyles}
         href={href}
         noFeedback
         accessible={false}
         onBeforePress={onBeforePress}
-        dataSet={{feedContext}}
+        dataSet={{feedContext, feedItemIndex: feedItemIndex?.toString()}}
         onPointerEnter={() => {
           setHover(true)
         }}
         onPointerLeave={() => {
           setHover(false)
         }}>
-        <SubtleHover hover={hover} />
+        <SubtleHover hover={hover || !!isFocused} />
         <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
           <View style={{width: 42}}>
             {isThreadChild && (
