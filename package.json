@@ -90,8 +90,7 @@
     "generate-webpack-stats-file": "EXPO_PUBLIC_GENERATE_STATS=1 pnpm build-web",
     "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 pnpm build-web",
     "icons:optimize": "svgo -f ./assets/icons",
-    "prettier": "prettier --check .",
-    "update-actions": "pnpm dlx actions-up --min-age 7"
+    "prettier": "prettier --check ."
   },
   "dependencies": {
     "@atproto/api": "0.20.22",
