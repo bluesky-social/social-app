@@ -330,6 +330,12 @@ msgstr "{0} was removed"
 msgid "{0} was removed from the group"
 msgstr "{0} was removed from the group"
 
+#. List formatting: {0}, {1}, {2}
+#. placeholder {0}: link(lang)
+#: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:118
+msgid "{0}, "
+msgstr "{0}, "
+
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:49
@@ -461,6 +467,10 @@ msgstr ""
 #: src/screens/SignupQueued.tsx:225
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:155
+msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
+msgstr "{filterCount, plural, one {+# filter} other {+# filters}}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:361
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
@@ -849,7 +859,7 @@ msgid "<0>{displayName}</0><1/><2> added you</2>"
 msgstr "<0>{displayName}</0><1/><2> added you</2>"
 
 #: src/screens/Hashtag.tsx:226
-#: src/screens/Search/SearchResults.tsx:315
+#: src/screens/Search/SearchResults.tsx:432
 msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
 msgstr ""
 
@@ -1134,6 +1144,10 @@ msgstr ""
 msgid "Add alt text (optional)"
 msgstr ""
 
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:449
+msgid "Add an additional search filter"
+msgstr "Add an additional search filter"
+
 #: src/screens/Settings/Settings.tsx:575
 #: src/screens/Settings/Settings.tsx:578
 #: src/view/shell/desktop/LeftNav.tsx:276
@@ -1141,11 +1155,11 @@ msgstr ""
 msgid "Add another account"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1544
+#: src/view/com/composer/Composer.tsx:1605
 msgid "Add another post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2207
+#: src/view/com/composer/Composer.tsx:2271
 msgid "Add another post to thread"
 msgstr ""
 
@@ -1166,6 +1180,10 @@ msgstr "Add automation label to account"
 #: src/components/dms/EmojiReactionPicker.web.tsx:31
 msgid "Add emoji reaction"
 msgstr ""
+
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:457
+msgid "Add filter"
+msgstr "Add filter"
 
 #: src/components/dms/AddMembersFlow.tsx:492
 msgid "Add group chat members"
@@ -1338,6 +1356,11 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:76
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:252
+msgid "Advanced search"
+msgstr "Advanced search"
+
 #: src/components/ageAssurance/AgeAssuranceBadge.tsx:42
 msgid "Age Assurance"
 msgstr ""
@@ -1363,6 +1386,7 @@ msgstr ""
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:292
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:201
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:26
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
 msgstr ""
@@ -1383,15 +1407,24 @@ msgid "All friends followed!"
 msgstr ""
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:255
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:65
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:100
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:102
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:73
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:122
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:124
 msgid "All languages"
 msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:189
 msgid "All languages will be shown in your feeds."
 msgstr ""
+
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:259
+msgid "All of these words"
+msgstr "All of these words"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
+msgid "All posts"
+msgstr "All posts"
 
 #: src/view/screens/Feeds.tsx:700
 msgid "All the feeds you've saved, right in one place."
@@ -1664,6 +1697,11 @@ msgstr ""
 msgid "Announcing verification on Bluesky"
 msgstr ""
 
+#. Placeholder text for a date picker
+#: src/screens/Search/components/AdvancedSearchDialog/ClearableDateField.tsx:43
+msgid "Any time"
+msgstr "Any time"
+
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:457
 msgid "Anyone"
 msgstr ""
@@ -1807,6 +1845,24 @@ msgstr ""
 msgid "Are you really, really sure?"
 msgstr ""
 
+#. placeholder {0}: link(languages[0])
+#. placeholder {1}: link(languages[1])
+#: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:105
+msgid "Are you searching for posts in {0} or {1}?"
+msgstr "Are you searching for posts in {0} or {1}?"
+
+#. placeholder {0}: link(languages[0])
+#: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:100
+msgid "Are you searching for posts in {0}?"
+msgstr "Are you searching for posts in {0}?"
+
+#. List formatting: {0}, {1}, or {2}
+#. placeholder {0}: head.map(lang => ( <Trans key={lang.code} comment="List formatting: {0}, {1}, {2}"> {link(lang)},{' '} </Trans> ))
+#. placeholder {1}: link(last)
+#: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:115
+msgid "Are you searching for posts in {0}or {1}?"
+msgstr "Are you searching for posts in {0}or {1}?"
+
 #. placeholder {0}: appPassword.name
 #: src/screens/Settings/AppPasswords.tsx:210
 msgid "Are you sure you want to delete the app password \"{0}\"?"
@@ -1847,7 +1903,7 @@ msgstr ""
 msgid "Are you sure you want to rescind your request to join {0}?"
 msgstr "Are you sure you want to rescind your request to join {0}?"
 
-#: src/view/com/composer/Composer.tsx:1680
+#: src/view/com/composer/Composer.tsx:1741
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
@@ -2133,10 +2189,20 @@ msgstr ""
 msgid "Blog"
 msgstr ""
 
+#. Advanced search: Examples of hashtags
+#: src/screens/Search/components/AdvancedSearchDialog/hooks.tsx:17
+msgid "bloomscrolling booksky"
+msgstr "bloomscrolling booksky"
+
 #: src/components/dialogs/ServerInput.tsx:144
 #: src/components/dialogs/ServerInput.tsx:146
 msgid "Bluesky"
 msgstr ""
+
+#. Advanced search: Example of an “all of these words” search
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:264
+msgid "bluesky atproto"
+msgstr "bluesky atproto"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:657
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
@@ -2383,7 +2449,8 @@ msgstr "Camera access needed"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:180
 #: src/screens/Profile/Header/EditProfileDialog.tsx:215
 #: src/screens/Profile/Header/EditProfileDialog.tsx:223
-#: src/screens/Search/Shell.tsx:405
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:216
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:223
 #: src/screens/Settings/AppIconSettings/index.tsx:42
 #: src/screens/Settings/AppIconSettings/index.tsx:228
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:80
@@ -2393,8 +2460,8 @@ msgstr "Camera access needed"
 #: src/screens/Settings/Settings.tsx:300
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
-#: src/view/com/composer/Composer.tsx:1758
-#: src/view/com/composer/Composer.tsx:1768
+#: src/view/com/composer/Composer.tsx:1819
+#: src/view/com/composer/Composer.tsx:1829
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:228
@@ -2413,7 +2480,7 @@ msgstr ""
 msgid "Cancel reply"
 msgstr "Cancel reply"
 
-#: src/screens/Search/Shell.tsx:396
+#: src/screens/Search/Shell.tsx:527
 msgid "Cancel search"
 msgstr ""
 
@@ -2693,6 +2760,12 @@ msgstr ""
 msgid "Choose your username"
 msgstr ""
 
+#: src/screens/Search/components/AdvancedSearchDialog/AutocompleteInput/index.native.tsx:73
+#: src/screens/Search/components/AdvancedSearchDialog/AutocompleteInput/index.tsx:110
+#: src/screens/Search/components/AdvancedSearchDialog/ClearableInput.tsx:59
+msgid "Clear"
+msgstr "Clear"
+
 #: src/screens/Settings/Settings.tsx:498
 msgid "Clear all storage data"
 msgstr ""
@@ -2700,6 +2773,10 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:500
 msgid "Clear all storage data (restart after this)"
 msgstr ""
+
+#: src/screens/Search/components/AdvancedSearchDialog/ClearableDateField.tsx:70
+msgid "Clear date"
+msgstr "Clear date"
 
 #. Accessibility label for the X button inside the search input that clears the typed query and returns to the trending feed.
 #: src/features/gifPicker/components/GifPickerHeader.tsx:67
@@ -2902,7 +2979,7 @@ msgstr ""
 msgid "Closes password update alert"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1766
+#: src/view/com/composer/Composer.tsx:1827
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -2956,7 +3033,7 @@ msgid "Compose new post"
 msgstr ""
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1642
+#: src/view/com/composer/Composer.tsx:1703
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -2964,11 +3041,11 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2604
+#: src/view/com/composer/Composer.tsx:2668
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2606
+#: src/view/com/composer/Composer.tsx:2670
 msgid "Compressing video..."
 msgstr ""
 
@@ -3161,6 +3238,10 @@ msgstr "Conversation not found."
 #: src/screens/Settings/AboutSettings.tsx:162
 msgid "Copied build version to clipboard"
 msgstr ""
+
+#: src/screens/Search/Shell.tsx:458
+msgid "Copied link to clipboard"
+msgstr "Copied link to clipboard"
 
 #: src/components/dms/ChatInvite/Root.tsx:99
 #: src/components/dms/MessageContextMenu.tsx:97
@@ -3391,6 +3472,11 @@ msgstr "Couldn’t load GIFs"
 msgid "Country code"
 msgstr ""
 
+#. Advanced search: Example of an “none of these words” search
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:298
+msgid "cows pigs"
+msgstr "cows pigs"
+
 #. Text on button to create a new starter pack
 #. Text on button to create a new starter pack
 #: src/components/dialogs/StarterPackDialog.tsx:113
@@ -3446,7 +3532,7 @@ msgstr ""
 #: src/components/dialogs/Signin.tsx:87
 #: src/components/dialogs/Signin.tsx:89
 #: src/screens/Hashtag.tsx:235
-#: src/screens/Search/SearchResults.tsx:321
+#: src/screens/Search/SearchResults.tsx:438
 msgid "Create an account"
 msgstr ""
 
@@ -3683,7 +3769,7 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:796
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:798
-#: src/view/com/composer/Composer.tsx:1654
+#: src/view/com/composer/Composer.tsx:1715
 msgid "Delete post"
 msgstr ""
 
@@ -3773,6 +3859,10 @@ msgstr "Device failed to translate :("
 msgid "Dialog: adjust who can interact with this post"
 msgstr ""
 
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:247
+msgid "Dialog: Set advanced search options"
+msgstr "Dialog: Set advanced search options"
+
 #: src/screens/Settings/AppearanceSettings.tsx:110
 msgid "Dim"
 msgstr ""
@@ -3830,9 +3920,9 @@ msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:101
 #: src/screens/Profile/Header/EditProfileDialog.tsx:79
-#: src/view/com/composer/Composer.tsx:1437
-#: src/view/com/composer/Composer.tsx:1481
-#: src/view/com/composer/Composer.tsx:1687
+#: src/view/com/composer/Composer.tsx:1495
+#: src/view/com/composer/Composer.tsx:1539
+#: src/view/com/composer/Composer.tsx:1748
 #: src/view/com/composer/drafts/DraftItem.tsx:242
 #: src/view/com/composer/drafts/DraftsButton.tsx:131
 msgid "Discard"
@@ -3843,14 +3933,14 @@ msgstr ""
 msgid "Discard changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1435
+#: src/view/com/composer/Composer.tsx:1493
 #: src/view/com/composer/drafts/DraftItem.tsx:239
 #: src/view/com/composer/drafts/DraftsButton.tsx:98
 msgid "Discard draft?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1452
-#: src/view/com/composer/Composer.tsx:1679
+#: src/view/com/composer/Composer.tsx:1510
+#: src/view/com/composer/Composer.tsx:1740
 msgid "Discard post?"
 msgstr ""
 
@@ -3888,7 +3978,7 @@ msgstr ""
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2525
+#: src/view/com/composer/Composer.tsx:2589
 msgid "Dismiss error"
 msgstr ""
 
@@ -3983,8 +4073,8 @@ msgstr ""
 #: src/components/dialogs/ServerInput.tsx:239
 #: src/components/dms/AfterReportConversationDialog.tsx:164
 #: src/components/dms/AfterReportDialog.tsx:145
-#: src/components/forms/DateField/index.tsx:122
-#: src/components/forms/DateField/index.tsx:139
+#: src/components/forms/DateField/index.tsx:128
+#: src/components/forms/DateField/index.tsx:145
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:147
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:153
 #: src/lib/media/picker.tsx:37
@@ -4432,7 +4522,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2624
+#: src/view/com/composer/Composer.tsx:2688
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr ""
@@ -4462,7 +4552,7 @@ msgstr ""
 msgid "Error receiving captcha response."
 msgstr ""
 
-#: src/screens/Search/SearchResults.tsx:154
+#: src/screens/Search/SearchResults.tsx:188
 msgid "Error: {error}"
 msgstr ""
 
@@ -4474,6 +4564,8 @@ msgstr ""
 msgid "Everybody can reply to this post."
 msgstr ""
 
+#: src/screens/Search/components/AdvancedSearchDialog/FollowingDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/FollowingDropdown.tsx:26
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:168
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:171
 msgid "Everyone"
@@ -4493,6 +4585,16 @@ msgstr "Everyone"
 #: src/screens/Settings/NotificationSettings/index.tsx:389
 msgid "Everything else"
 msgstr ""
+
+#. Advanced search filter
+#. Advanced search filter
+#. Advanced search filter
+#: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:46
+#: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:57
+#: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:86
+#: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:92
+msgid "Exclude"
+msgstr "Exclude"
 
 #: src/components/dialogs/MutedWords.tsx:320
 msgid "Exclude users you follow"
@@ -4567,7 +4669,7 @@ msgid "Explicit sexual images."
 msgstr ""
 
 #: src/Navigation.tsx:751
-#: src/screens/Search/Shell.tsx:362
+#: src/screens/Search/Shell.tsx:495
 #: src/view/shell/desktop/LeftNav.tsx:677
 #: src/view/shell/Drawer.tsx:473
 msgid "Explore"
@@ -4650,6 +4752,7 @@ msgstr ""
 
 #: src/components/Lightbox/Lightbox.web.tsx:302
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:130
+#: src/screens/Search/Shell.tsx:459
 msgid "Failed to copy link"
 msgstr "Failed to copy link"
 
@@ -4858,7 +4961,7 @@ msgstr "Failed to rescind your request. Please try again."
 msgid "Failed to resolve location. Please try again."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:663
+#: src/view/com/composer/Composer.tsx:721
 msgid "Failed to save draft"
 msgstr ""
 
@@ -5001,7 +5104,7 @@ msgstr ""
 #: src/Navigation.tsx:527
 #: src/screens/SavedFeeds.tsx:112
 #: src/screens/SavedFeeds.tsx:303
-#: src/screens/Search/SearchResults.tsx:80
+#: src/screens/Search/SearchResults.tsx:105
 #: src/screens/StarterPack/StarterPackScreen.tsx:196
 #: src/view/screens/Feeds.tsx:504
 #: src/view/screens/Profile.tsx:239
@@ -5035,17 +5138,38 @@ msgstr ""
 msgid "File saved successfully!"
 msgstr ""
 
+#: src/screens/Search/components/AdvancedSearchDialog/FollowingDropdown.tsx:49
+msgid "Filter by author"
+msgstr "Filter by author"
+
+#: src/screens/Search/components/AdvancedSearchDialog/FollowingDropdown.tsx:30
+msgid "Filter by author (currently: {currentLabel})"
+msgstr "Filter by author (currently: {currentLabel})"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:50
+msgid "Filter by media"
+msgstr "Filter by media"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:31
+msgid "Filter by media (currently: {currentLabel})"
+msgstr "Filter by media (currently: {currentLabel})"
+
 #: src/lib/moderation/useLabelBehaviorDescription.ts:69
 msgid "Filter from feeds"
 msgstr ""
 
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:98
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:120
 msgid "Filter search by language"
 msgstr ""
 
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:71
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:79
 msgid "Filter search by language (currently: {currentLanguageLabel})"
 msgstr ""
+
+#. placeholder {0}: lang.name
+#: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:93
+msgid "Filter this search by {0}"
+msgstr "Filter this search by {0}"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:106
 msgid "Filter who can opt to receive notifications for your activity"
@@ -5109,7 +5233,7 @@ msgstr ""
 msgid "Find people you know"
 msgstr "Find people you know"
 
-#: src/screens/Search/Shell.tsx:537
+#: src/screens/Search/Shell.tsx:701
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr ""
 
@@ -5389,6 +5513,7 @@ msgstr "Four message bubbles representing a group chat. First message: \"Did you
 msgid "Free your feed"
 msgstr ""
 
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:420
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:159
 msgid "From"
 msgstr ""
@@ -5401,6 +5526,11 @@ msgstr ""
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr ""
+
+#. Advanced search filter
+#: src/screens/Search/components/AdvancedSearchDialog/hooks.tsx:30
+msgid "From these people"
+msgstr "From these people"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:337
 msgid "Generate a starter pack"
@@ -5522,7 +5652,7 @@ msgstr ""
 msgid "GIF"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2629
+#: src/view/com/composer/Composer.tsx:2693
 msgid "GIF uploaded"
 msgstr ""
 
@@ -6274,6 +6404,40 @@ msgstr "Inbox empty"
 msgid "Inbox zero!"
 msgstr ""
 
+#. Advanced search filter
+#. Advanced search filter
+#. Advanced search filter
+#: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:47
+#: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:58
+#: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:75
+#: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:81
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:406
+msgid "Include"
+msgstr "Include"
+
+#. placeholder {0}: filter.mode === 'exclude' ? l({message: 'Exclude', comment: 'Advanced search filter'}) : l({message: 'Include', comment: 'Advanced search filter'})
+#: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:44
+msgid "Include or exclude matching posts (currently: {0})"
+msgstr "Include or exclude matching posts (currently: {0})"
+
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:31
+msgid "Include posts and/or replies (currently: {currentLabel})"
+msgstr "Include posts and/or replies (currently: {currentLabel})"
+
+#. Advanced search filter
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:319
+msgid "Include posts made since this date"
+msgstr "Include posts made since this date"
+
+#. Advanced search filter
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:343
+msgid "Include posts made until this date"
+msgstr "Include posts made until this date"
+
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:50
+msgid "Include these results"
+msgstr "Include these results"
+
 #: src/screens/Login/LoginForm.tsx:162
 msgid "Incorrect username or password"
 msgstr ""
@@ -6463,7 +6627,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr ""
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2544
+#: src/view/com/composer/Composer.tsx:2608
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -6503,8 +6667,8 @@ msgstr ""
 msgid "Journalism"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1485
-#: src/view/com/composer/Composer.tsx:1495
+#: src/view/com/composer/Composer.tsx:1543
+#: src/view/com/composer/Composer.tsx:1553
 #: src/view/com/composer/drafts/DraftsButton.tsx:135
 msgid "Keep editing"
 msgstr ""
@@ -6547,6 +6711,10 @@ msgstr ""
 msgid "Labels on your content"
 msgstr ""
 
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:371
+msgid "Language"
+msgstr "Language"
+
 #: src/Navigation.tsx:218
 msgid "Language Settings"
 msgstr ""
@@ -6572,7 +6740,7 @@ msgid "Last initiated just now"
 msgstr ""
 
 #: src/screens/Hashtag.tsx:99
-#: src/screens/Search/SearchResults.tsx:64
+#: src/screens/Search/SearchResults.tsx:86
 #: src/screens/Topic.tsx:65
 msgid "Latest"
 msgstr ""
@@ -6590,6 +6758,16 @@ msgstr ""
 #: src/components/moderation/ScreenHider.tsx:147
 msgid "Learn More"
 msgstr ""
+
+#: src/screens/Search/SearchResults.tsx:261
+msgctxt "english-only-resource"
+msgid "Learn more about <0>how to use advanced search</0>."
+msgstr "Learn more about <0>how to use advanced search</0>."
+
+#: src/screens/Search/SearchResults.tsx:275
+msgctxt "english-only-resource"
+msgid "Learn more about <0>how to use search filters</0>."
+msgstr "Learn more about <0>how to use search filters</0>."
 
 #: src/components/ageAssurance/AgeAssuranceDismissibleFeedBanner.tsx:66
 msgid "Learn more about age assurance"
@@ -7132,6 +7310,7 @@ msgstr "Marked all requests as read"
 msgid "Maybe later"
 msgstr ""
 
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:389
 #: src/view/screens/Profile.tsx:236
 msgid "Media"
 msgstr ""
@@ -7173,6 +7352,11 @@ msgstr ""
 #: src/view/screens/Notifications.tsx:99
 msgid "Mentions"
 msgstr ""
+
+#. Advanced search filter
+#: src/screens/Search/components/AdvancedSearchDialog/hooks.tsx:37
+msgid "Mentions of these people"
+msgstr "Mentions of these people"
 
 #: src/components/Menu/index.tsx:119
 msgid "Menu"
@@ -7860,6 +8044,10 @@ msgstr ""
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "No recent GIFs yet. Pick one to see it here."
 
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:23
+msgid "No replies"
+msgstr "No replies"
+
 #: src/view/screens/Profile.tsx:456
 msgid "No replies yet"
 msgstr ""
@@ -7894,9 +8082,17 @@ msgstr ""
 msgid "No results found for \"{query}\""
 msgstr ""
 
-#: src/screens/Search/SearchResults.tsx:178
+#: src/screens/Search/SearchResults.tsx:220
+msgid "No results found for “<0>{query}</0>” with advanced search filters applied."
+msgstr "No results found for “<0>{query}</0>” with advanced search filters applied."
+
+#: src/screens/Search/SearchResults.tsx:232
 msgid "No results found for “<0>{query}</0>”."
 msgstr "No results found for “<0>{query}</0>”."
+
+#: src/screens/Search/SearchResults.tsx:226
+msgid "No results found for your query with advanced search filters applied."
+msgstr "No results found for your query with advanced search filters applied."
 
 #: src/screens/Search/Explore.tsx:832
 msgid "No results."
@@ -7947,6 +8143,11 @@ msgstr ""
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
 msgstr ""
+
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:293
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:296
+msgid "None of these words"
+msgstr "None of these words"
 
 #: src/features/inviteFriends/InviteScannerScreen.web.tsx:31
 msgid "Not available on this platform"
@@ -8084,11 +8285,11 @@ msgstr "One of the selected recipients does not allow group chats."
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr "One of the selected recipients has blocked you and cannot be messaged."
 
-#: src/view/com/composer/Composer.tsx:879
+#: src/view/com/composer/Composer.tsx:937
 msgid "One or more GIFs is missing alt text."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:876
+#: src/view/com/composer/Composer.tsx:934
 msgid "One or more images is missing alt text."
 msgstr ""
 
@@ -8100,11 +8301,11 @@ msgstr ""
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 msgstr "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 
-#: src/view/com/composer/Composer.tsx:674
+#: src/view/com/composer/Composer.tsx:732
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:886
+#: src/view/com/composer/Composer.tsx:944
 msgid "One or more videos is missing alt text."
 msgstr ""
 
@@ -8117,7 +8318,7 @@ msgstr ""
 #. placeholder {0}: result.accepted.length
 #. placeholder {1}: next.length
 #. placeholder {2}: next.length
-#: src/view/com/composer/Composer.tsx:234
+#: src/view/com/composer/Composer.tsx:235
 msgid "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
 msgstr "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
 
@@ -8153,6 +8354,18 @@ msgstr "Only people {0} follows can join."
 msgid "Only people the chat owner follows can join"
 msgstr "Only people the chat owner follows can join"
 
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:23
+msgid "Only posts with media"
+msgstr "Only posts with media"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:24
+msgid "Only posts with videos"
+msgstr "Only posts with videos"
+
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:24
+msgid "Only replies"
+msgstr "Only replies"
+
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:41
 msgid "Only WebVTT (.vtt) files are supported"
 msgstr ""
@@ -8173,6 +8386,10 @@ msgstr "Oops, this profile doesn't exist. Try scanning another one."
 #: src/view/screens/Profile.tsx:132
 msgid "Oops!"
 msgstr ""
+
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:64
+msgid "Open advanced search options"
+msgstr "Open advanced search options"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:311
 msgid "Open avatar creator"
@@ -8205,7 +8422,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageComposer.tsx:213
-#: src/view/com/composer/Composer.tsx:2184
+#: src/view/com/composer/Composer.tsx:2248
 msgid "Open emoji picker"
 msgstr ""
 
@@ -8560,7 +8777,7 @@ msgid "Pause video"
 msgstr ""
 
 #: src/screens/ProfileList/index.tsx:167
-#: src/screens/Search/SearchResults.tsx:74
+#: src/screens/Search/SearchResults.tsx:99
 #: src/screens/StarterPack/StarterPackScreen.tsx:195
 msgid "People"
 msgstr ""
@@ -8607,6 +8824,7 @@ msgid "People I follow can request to join"
 msgstr "People I follow can request to join"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:510
+#: src/screens/Search/components/AdvancedSearchDialog/FollowingDropdown.tsx:23
 msgid "People you follow"
 msgstr ""
 
@@ -8898,7 +9116,7 @@ msgstr ""
 msgid "Porn"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1832
+#: src/view/com/composer/Composer.tsx:1893
 msgctxt "action"
 msgid "Post"
 msgstr ""
@@ -8918,12 +9136,12 @@ msgstr ""
 msgid "Post a video"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1830
+#: src/view/com/composer/Composer.tsx:1891
 msgctxt "action"
 msgid "Post All"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1494
+#: src/view/com/composer/Composer.tsx:1552
 msgid "Post anyway"
 msgstr "Post anyway"
 
@@ -9015,6 +9233,10 @@ msgstr ""
 msgid "Posts"
 msgstr ""
 
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:22
+msgid "Posts and replies"
+msgstr "Posts and replies"
+
 #: src/components/dialogs/MutedWords.tsx:123
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
 msgstr ""
@@ -9100,11 +9322,11 @@ msgstr ""
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2618
+#: src/view/com/composer/Composer.tsx:2682
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2620
+#: src/view/com/composer/Composer.tsx:2684
 msgid "Processing video..."
 msgstr ""
 
@@ -9150,22 +9372,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr ""
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1816
+#: src/view/com/composer/Composer.tsx:1877
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1811
+#: src/view/com/composer/Composer.tsx:1872
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1800
+#: src/view/com/composer/Composer.tsx:1861
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1805
+#: src/view/com/composer/Composer.tsx:1866
 msgid "Publish reply"
 msgstr ""
 
@@ -9271,10 +9493,15 @@ msgstr ""
 msgid "Read {0, plural, one {# more reply} other {# more replies}}"
 msgstr ""
 
-#: src/screens/Search/SearchResults.tsx:189
+#: src/screens/Search/SearchResults.tsx:264
 msgctxt "english-only-resource"
-msgid "read about how to use search filters"
-msgstr ""
+msgid "Read about how to use advanced search filters"
+msgstr "Read about how to use advanced search filters"
+
+#: src/screens/Search/SearchResults.tsx:278
+msgctxt "english-only-resource"
+msgid "Read about how to use search filters"
+msgstr "Read about how to use search filters"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:162
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:173
@@ -9337,7 +9564,7 @@ msgstr ""
 msgid "Recent GIFs"
 msgstr "Recent GIFs"
 
-#: src/screens/Search/components/SearchHistory.tsx:49
+#: src/screens/Search/components/SearchHistory.tsx:52
 msgid "Recent searches"
 msgstr "Recent searches"
 
@@ -9412,9 +9639,9 @@ msgstr "Remove {displayName} from this group chat"
 msgid "Remove {displayName}?"
 msgstr "Remove {displayName}?"
 
-#: src/screens/Search/components/SearchHistory.tsx:105
-msgid "Remove {historyItem}"
-msgstr ""
+#: src/screens/Search/components/SearchHistory.tsx:161
+msgid "Remove {q}"
+msgstr "Remove {q}"
 
 #: src/screens/Settings/Settings.tsx:654
 #: src/screens/Settings/Settings.tsx:657
@@ -9459,6 +9686,11 @@ msgstr ""
 #: src/view/com/posts/PostFeedErrorMessage.tsx:218
 msgid "Remove feed?"
 msgstr ""
+
+#. Advanced search filter
+#: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:143
+msgid "Remove filter"
+msgstr "Remove filter"
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:238
 msgid "Remove from chat"
@@ -9508,7 +9740,7 @@ msgstr "Remove member"
 msgid "Remove mute word from your list"
 msgstr ""
 
-#: src/screens/Search/components/SearchHistory.tsx:170
+#: src/screens/Search/components/SearchHistory.tsx:221
 msgid "Remove profile"
 msgstr ""
 
@@ -9652,7 +9884,7 @@ msgstr ""
 msgid "Reply"
 msgstr "Reply"
 
-#: src/view/com/composer/Composer.tsx:1828
+#: src/view/com/composer/Composer.tsx:1889
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -10053,22 +10285,22 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
 #: src/screens/SavedFeeds.tsx:315
-#: src/view/com/composer/Composer.tsx:1475
+#: src/view/com/composer/Composer.tsx:1533
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save changes"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1447
+#: src/view/com/composer/Composer.tsx:1505
 #: src/view/com/composer/drafts/DraftsButton.tsx:93
 msgid "Save changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1475
+#: src/view/com/composer/Composer.tsx:1533
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save draft"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1449
+#: src/view/com/composer/Composer.tsx:1507
 #: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Save draft?"
 msgstr ""
@@ -10169,8 +10401,11 @@ msgstr ""
 #: src/components/dialogs/SearchablePeopleList.tsx:667
 #: src/components/forms/SearchInput.tsx:51
 #: src/components/forms/SearchInput.tsx:53
-#: src/screens/Search/Shell.tsx:362
-#: src/screens/Search/Shell.tsx:525
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:232
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:238
+#: src/screens/Search/Shell.tsx:495
+#: src/screens/Search/Shell.tsx:547
+#: src/screens/Search/Shell.tsx:689
 #: src/view/shell/bottom-bar/BottomBar.tsx:216
 msgid "Search"
 msgstr ""
@@ -10224,17 +10459,13 @@ msgstr ""
 msgid "Search for people"
 msgstr "Search for people"
 
-#: src/screens/Search/Shell.tsx:388
-msgid "Search for posts, users, or feeds"
-msgstr ""
-
 #. Accessibility label for the GIF search input inside the GIF picker dialog.
 #: src/features/gifPicker/components/GifPickerHeader.tsx:40
 msgid "Search GIFs"
 msgstr ""
 
 #: src/screens/Hashtag.tsx:224
-#: src/screens/Search/SearchResults.tsx:313
+#: src/screens/Search/SearchResults.tsx:430
 msgid "Search is currently unavailable when logged out"
 msgstr ""
 
@@ -10262,6 +10493,10 @@ msgstr ""
 #: src/components/ProgressGuide/FollowDialog.tsx:727
 msgid "Search profiles"
 msgstr ""
+
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:262
+msgid "Search query"
+msgstr "Search query"
 
 #: src/screens/Profile/ProfileSearch.tsx:38
 msgid "Search..."
@@ -10394,6 +10629,11 @@ msgstr ""
 #: src/features/liveNow/components/GoLiveDialog.tsx:180
 msgid "Select duration"
 msgstr ""
+
+#. placeholder {0}: labels[filter.field].title
+#: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:102
+msgid "Select filter type (currently: {0})"
+msgstr "Select filter type (currently: {0})"
 
 #: src/screens/Login/index.tsx:162
 msgid "Select from an existing account"
@@ -10745,6 +10985,10 @@ msgstr ""
 msgid "Share this feed"
 msgstr ""
 
+#: src/screens/Search/Shell.tsx:576
+msgid "Share this search"
+msgstr "Share this search"
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:440
 msgid "Share this starter pack"
 msgstr ""
@@ -10916,7 +11160,7 @@ msgstr ""
 #: src/screens/Login/LoginForm.tsx:356
 #: src/screens/Messages/JoinRequest.tsx:290
 #: src/screens/Messages/JoinRequest.tsx:296
-#: src/screens/Search/SearchResults.tsx:316
+#: src/screens/Search/SearchResults.tsx:433
 #: src/view/com/auth/SplashScreen.tsx:118
 #: src/view/com/auth/SplashScreen.tsx:124
 #: src/view/com/auth/SplashScreen.web.tsx:122
@@ -11001,6 +11245,11 @@ msgstr ""
 msgid "Signed in as @{0}"
 msgstr ""
 
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:313
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:316
+msgid "Since"
+msgstr "Since"
+
 #: src/components/contacts/screens/PhoneInput.tsx:163
 #: src/components/contacts/screens/VerifyNumber.tsx:205
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:86
@@ -11018,7 +11267,7 @@ msgstr ""
 msgid "Skip contact sharing and continue to the app"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1492
+#: src/view/com/composer/Composer.tsx:1550
 msgid "Skip empty posts?"
 msgstr "Skip empty posts?"
 
@@ -11888,9 +12137,24 @@ msgstr ""
 msgid "These are your default settings"
 msgstr ""
 
+#. Advanced search filter
+#: src/screens/Search/components/AdvancedSearchDialog/hooks.tsx:51
+msgid "These domains"
+msgstr "These domains"
+
+#. Advanced search filter
+#: src/screens/Search/components/AdvancedSearchDialog/hooks.tsx:44
+msgid "These hashtags"
+msgstr "These hashtags"
+
 #: src/screens/Settings/FollowingFeedPreferences.tsx:66
 msgid "These settings only apply to the Following feed."
 msgstr ""
+
+#. Advanced search filter
+#: src/screens/Search/components/AdvancedSearchDialog/hooks.tsx:58
+msgid "These URLs"
+msgstr "These URLs"
 
 #: src/components/moderation/BlockDialog.tsx:356
 msgid "They own this chat"
@@ -12014,6 +12278,11 @@ msgstr ""
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:155
 msgid "This email is already associated with your account."
 msgstr ""
+
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:277
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:280
+msgid "This exact phrase"
+msgstr "This exact phrase"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:56
 msgid "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
@@ -12163,7 +12432,7 @@ msgstr ""
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1067
+#: src/view/com/composer/Composer.tsx:1125
 msgid "This post's author has disabled quote posts."
 msgstr ""
 
@@ -12344,7 +12613,7 @@ msgid "Too many contacts - you've exceeded the number of contacts you can import
 msgstr ""
 
 #: src/screens/Hashtag.tsx:88
-#: src/screens/Search/SearchResults.tsx:54
+#: src/screens/Search/SearchResults.tsx:73
 #: src/screens/Topic.tsx:59
 msgid "Top"
 msgstr ""
@@ -12416,10 +12685,13 @@ msgstr ""
 msgid "Trust emerges from relationships, communities, and shared context, so we’re also enabling <0>trusted verifiers</0>: organizations that can directly issue verification."
 msgstr ""
 
-#: src/screens/Search/SearchResults.tsx:186
-msgctxt "english-only-resource"
-msgid "Try a different search term, or <0>read about how to use search filters</0>."
-msgstr "Try a different search term, or <0>read about how to use search filters</0>."
+#: src/screens/Search/SearchResults.tsx:247
+msgid "Try a different search term or remove some filters."
+msgstr "Try a different search term or remove some filters."
+
+#: src/screens/Search/SearchResults.tsx:249
+msgid "Try a different search term."
+msgstr "Try a different search term."
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:221
 #: src/features/inviteFriends/InviteScannerScreen.tsx:226
@@ -12759,9 +13031,14 @@ msgstr ""
 msgid "Unsupported clipboard content"
 msgstr "Unsupported clipboard content"
 
-#: src/view/com/composer/Composer.tsx:1581
+#: src/view/com/composer/Composer.tsx:1642
 msgid "Unsupported video type: {mimeType}"
 msgstr ""
+
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:337
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:340
+msgid "Until"
+msgstr "Until"
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:198
 msgid "Up to 50 people"
@@ -12847,7 +13124,7 @@ msgstr ""
 msgid "Upload from Library"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2611
+#: src/view/com/composer/Composer.tsx:2675
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -12861,7 +13138,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2613
+#: src/view/com/composer/Composer.tsx:2677
 msgid "Uploading video..."
 msgstr ""
 
@@ -13140,7 +13417,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2631
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Video uploaded"
 msgstr ""
 
@@ -13153,11 +13430,13 @@ msgstr ""
 msgid "Videos"
 msgstr ""
 
+#: src/view/com/composer/Composer.tsx:441
+#: src/view/com/composer/Composer.tsx:573
 #: src/view/com/composer/SelectMediaButton.tsx:440
 msgid "Videos must be less than 3 minutes long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1174
+#: src/view/com/composer/Composer.tsx:1232
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr ""
@@ -13246,7 +13525,7 @@ msgstr ""
 msgid "View more trending videos"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1169
+#: src/view/com/composer/Composer.tsx:1227
 msgid "View post"
 msgstr ""
 
@@ -13533,8 +13812,8 @@ msgstr ""
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr ""
 
-#: src/screens/Search/SearchResults.tsx:339
-#: src/screens/Search/SearchResults.tsx:472
+#: src/screens/Search/SearchResults.tsx:456
+#: src/screens/Search/SearchResults.tsx:593
 msgid "We’re sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "We’re sorry, but your search could not be completed. Please try again in a few minutes."
 
@@ -13542,7 +13821,7 @@ msgstr "We’re sorry, but your search could not be completed. Please try again 
 msgid "We're sorry, you cannot access this screen at this time."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1065
+#: src/view/com/composer/Composer.tsx:1123
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr ""
 
@@ -13592,8 +13871,13 @@ msgstr ""
 msgid "What do you want to call your starter pack?"
 msgstr ""
 
+#. Advanced search: Example of an “exact phrase” search
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:282
+msgid "what’s up"
+msgstr "what’s up"
+
 #: src/view/com/auth/SplashScreen.web.tsx:98
-#: src/view/com/composer/Composer.tsx:1545
+#: src/view/com/composer/Composer.tsx:1606
 #: src/view/com/feeds/ComposerPrompt.tsx:193
 msgid "What's up?"
 msgstr ""
@@ -13679,7 +13963,7 @@ msgstr "Would you like to block this user and/or leave this conversation?"
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1463
+#: src/view/com/composer/Composer.tsx:1521
 msgid "Would you like to save this as a draft to edit later?"
 msgstr ""
 
@@ -13688,12 +13972,12 @@ msgstr ""
 msgid "Write a post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1641
+#: src/view/com/composer/Composer.tsx:1702
 msgid "Write post"
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:91
-#: src/view/com/composer/Composer.tsx:1543
+#: src/view/com/composer/Composer.tsx:1604
 msgid "Write your reply"
 msgstr ""
 
@@ -13865,11 +14149,11 @@ msgid "You can now sign in with your new password."
 msgstr ""
 
 #. Toast shown when the user tries to add more images but the post gallery is already at the cap
-#: src/view/com/composer/Composer.tsx:221
+#: src/view/com/composer/Composer.tsx:222
 msgid "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 msgstr "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 
-#: src/view/com/composer/Composer.tsx:1468
+#: src/view/com/composer/Composer.tsx:1526
 msgid "You can only save drafts up to 1000 characters."
 msgstr ""
 
@@ -14014,7 +14298,7 @@ msgstr ""
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1458
+#: src/view/com/composer/Composer.tsx:1516
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr ""
 
@@ -14241,13 +14525,17 @@ msgstr ""
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:661
+#: src/view/com/composer/Composer.tsx:719
 msgid "You've reached the maximum number of drafts"
 msgstr ""
 
 #: src/lib/hooks/useCleanError.ts:68
 msgid "You've reached the maximum number of requests allowed. Please try again later."
 msgstr ""
+
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:440
+msgid "You’ve reached the maximum of {MAX_FILTERS, plural, one {# filter} other {# filters}}. Add more values to an existing filter instead of creating new ones."
+msgstr "You’ve reached the maximum of {MAX_FILTERS, plural, one {# filter} other {# filters}}. Add more values to an existing filter instead of creating new ones."
 
 #: src/components/FocusScope/index.tsx:88
 msgid "You've reached the start of the active content."
@@ -14409,11 +14697,11 @@ msgstr ""
 msgid "Your password must be at least 8 characters long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1165
+#: src/view/com/composer/Composer.tsx:1223
 msgid "Your post was sent"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1162
+#: src/view/com/composer/Composer.tsx:1220
 msgid "Your posts were sent"
 msgstr ""
 
@@ -14434,7 +14722,7 @@ msgstr ""
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1164
+#: src/view/com/composer/Composer.tsx:1222
 msgid "Your reply was sent"
 msgstr ""
 
@@ -14447,7 +14735,7 @@ msgstr ""
 msgid "Your selected interests help us serve you content you care about."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1493
+#: src/view/com/composer/Composer.tsx:1551
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 

@@ -42,6 +42,7 @@ export function DateField({
   testID,
   accessibilityHint,
   maximumDate,
+  minimumDate,
 }: DateFieldProps) {
   const handleOnChange = useCallback(
     (e: any) => {
@@ -68,6 +69,7 @@ export function DateField({
         accessibilityHint={accessibilityHint}
         // @ts-expect-error not typed as <input type="date"> even though it is one
         max={maximumDate ? toSimpleDateString(maximumDate) : undefined}
+        min={minimumDate ? toSimpleDateString(minimumDate) : undefined}
       />
     </TextField.Root>
   )

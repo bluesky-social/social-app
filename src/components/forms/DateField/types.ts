@@ -26,4 +26,5 @@ export type DateFieldProps = {
   testID?: string
   accessibilityHint?: string
   maximumDate?: string | Date
+  minimumDate?: string | Date
 }

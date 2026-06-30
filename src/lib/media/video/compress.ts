@@ -2,7 +2,9 @@ import {getVideoMetaData, Video} from 'react-native-compressor'
 import {type ImagePickerAsset} from 'expo-image-picker'
 
 import {SUPPORTED_MIME_TYPES, type SupportedMimeTypes} from '#/lib/constants'
-import {type CompressedVideo} from './types'
+import {logger} from '#/logger'
+import {probe} from '../../../../modules/expo-bluesky-video-compress'
+import {type CompressedVideo, type ProbedMetadata} from './types'
 import {extToMime} from './util'
 
 const MIN_SIZE_FOR_COMPRESSION_BYTES = 25 * 1024 * 1024 // 25mb
@@ -12,9 +14,20 @@ export async function compressVideo(
   opts?: {
     signal?: AbortSignal
     onProgress?: (progress: number) => void
+    onProbe?: (metadata: ProbedMetadata) => void
   },
 ): Promise<CompressedVideo> {
-  const {onProgress, signal} = opts || {}
+  const {onProgress, signal, onProbe} = opts || {}
+
+  // Probe data is purely informational - fired into telemetry to validate
+  // future smart-skip thresholds. Failures must not block the upload.
+  if (onProbe && file.mimeType !== 'image/gif') {
+    try {
+      onProbe(await probe(file.uri))
+    } catch (e) {
+      logger.debug('video probe failed', {safeMessage: e})
+    }
+  }
 
   if (file.mimeType === 'image/gif') {
     // let's hope they're small enough that they don't need compression!
