@@ -14,7 +14,11 @@ import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
-import {useFeedFeedback} from '#/state/feed-feedback'
+import {
+  FeedFeedbackProvider,
+  type StateContext as FeedFeedbackStateContext,
+  useFeedFeedback,
+} from '#/state/feed-feedback'
 import {type ThreadViewOption} from '#/state/queries/preferences/useThreadPreferences'
 import {
   PostThreadContextProvider,
@@ -68,6 +72,24 @@ export function PostThread({uri}: {uri: string}) {
     anchorPostSource?.feedSourceInfo,
     hasSession,
   )
+
+  /*
+   * Non-anchor posts (parents and replies) are not the post the user tapped
+   * from a feed, so they should not report feed interactions. But they should
+   * still carry the originating feedDescriptor for analytics, so events like
+   * post:clickQuotePost can be attributed to the feed the thread was opened
+   * from. This inert context value provides feedDescriptor while keeping
+   * interaction reporting disabled (enabled: false makes sendInteraction and
+   * onItemSeen no-ops). The anchor renders its own full provider that nests
+   * inside and overrides this for its subtree.
+   */
+  const analyticsOnlyFeedFeedback: FeedFeedbackStateContext = {
+    enabled: false,
+    onItemSeen: () => {},
+    sendInteraction: () => {},
+    feedDescriptor: feedFeedback.feedDescriptor,
+    feedSourceInfo: undefined,
+  }
 
   /*
    * One query to rule them all
@@ -569,68 +591,70 @@ export function PostThread({uri}: {uri: string}) {
           onRetry={thread.actions.refetch}
         />
       ) : (
-        <List
-          ref={listRef}
-          data={deferredSlices}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          onContentSizeChange={platform({
-            web: onContentSizeChangeWebOnly,
-            default: onContentSizeChangeNativeOnly,
-          })}
-          onStartReached={onStartReached}
-          onEndReached={onEndReached}
-          onEndReachedThreshold={4}
-          onStartReachedThreshold={1}
-          onItemSeen={item => {
-            // Track post:view for parent posts and replies (non-anchor posts)
-            if (item.type === 'threadPost' && item.depth !== 0) {
-              trackThreadItemView(item.value.post)
+        <FeedFeedbackProvider value={analyticsOnlyFeedFeedback}>
+          <List
+            ref={listRef}
+            data={deferredSlices}
+            renderItem={renderItem}
+            keyExtractor={keyExtractor}
+            onContentSizeChange={platform({
+              web: onContentSizeChangeWebOnly,
+              default: onContentSizeChangeNativeOnly,
+            })}
+            onStartReached={onStartReached}
+            onEndReached={onEndReached}
+            onEndReachedThreshold={4}
+            onStartReachedThreshold={1}
+            onItemSeen={item => {
+              // Track post:view for parent posts and replies (non-anchor posts)
+              if (item.type === 'threadPost' && item.depth !== 0) {
+                trackThreadItemView(item.value.post)
+              }
+            }}
+            /**
+             * NATIVE ONLY
+             * {@link https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition}
+             */
+            maintainVisibleContentPosition={{minIndexForVisible: 0}}
+            desktopFixedHeight
+            sideBorders={false}
+            ListFooterComponent={
+              <ListFooter
+                /*
+                 * On native, if `deferParents` is true, we need some extra buffer to
+                 * account for the `on*ReachedThreshold` values.
+                 *
+                 * Otherwise, and on web, this value needs to be the height of
+                 * the viewport _minus_ a sensible min-post height e.g. 200, so
+                 * that there's enough scroll remaining to get the anchor post
+                 * back to the top of the screen when handling scroll.
+                 */
+                height={platform({
+                  web: defaultListFooterHeight,
+                  default: deferParents
+                    ? windowHeight * 2
+                    : defaultListFooterHeight,
+                })}
+                style={isTombstoneView ? {borderTopWidth: 0} : undefined}
+              />
             }
-          }}
-          /**
-           * NATIVE ONLY
-           * {@link https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition}
-           */
-          maintainVisibleContentPosition={{minIndexForVisible: 0}}
-          desktopFixedHeight
-          sideBorders={false}
-          ListFooterComponent={
-            <ListFooter
-              /*
-               * On native, if `deferParents` is true, we need some extra buffer to
-               * account for the `on*ReachedThreshold` values.
-               *
-               * Otherwise, and on web, this value needs to be the height of
-               * the viewport _minus_ a sensible min-post height e.g. 200, so
-               * that there's enough scroll remaining to get the anchor post
-               * back to the top of the screen when handling scroll.
-               */
-              height={platform({
-                web: defaultListFooterHeight,
-                default: deferParents
-                  ? windowHeight * 2
-                  : defaultListFooterHeight,
-              })}
-              style={isTombstoneView ? {borderTopWidth: 0} : undefined}
-            />
-          }
-          initialNumToRender={initialNumToRender}
-          /**
-           * Default: 21
-           *
-           * Smaller for placeholder data so we don't waste time rendering skeletons
-           */
-          windowSize={thread.state.isPlaceholderData ? 1 : 7}
-          /**
-           * Default: 10
-           */
-          maxToRenderPerBatch={5}
-          /**
-           * Default: 50
-           */
-          updateCellsBatchingPeriod={100}
-        />
+            initialNumToRender={initialNumToRender}
+            /**
+             * Default: 21
+             *
+             * Smaller for placeholder data so we don't waste time rendering skeletons
+             */
+            windowSize={thread.state.isPlaceholderData ? 1 : 7}
+            /**
+             * Default: 10
+             */
+            maxToRenderPerBatch={5}
+            /**
+             * Default: 50
+             */
+            updateCellsBatchingPeriod={100}
+          />
+        </FeedFeedbackProvider>
       )}
 
       {!gtMobile && canReply && hasSession && (
