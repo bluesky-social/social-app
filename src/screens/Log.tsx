@@ -78,11 +78,7 @@ export function LogScreen({}: NativeStackScreenProps<
                   ) : (
                     <CircleInfoIcon size="sm" />
                   )}
-                  <View
-                    style={[
-                      a.flex_1,
-                      a.gap_sm,
-                    ]}>
+                  <View style={[a.flex_1, a.gap_sm]}>
                     {entry.context && (
                       <Text style={[t.atoms.text_contrast_medium]}>
                         ({String(entry.context)})
