@@ -1,6 +1,5 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {AppBskyActorStatus, AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -21,6 +20,7 @@ import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import {
   displayDuration,
+  getLiveLinkFromStatusRecord,
   getLiveServiceNames,
   useActorStatus,
   useLiveLinkMetaQuery,
@@ -29,14 +29,6 @@ import {
 } from '#/features/liveNow'
 import type * as bsky from '#/types/bsky'
 import {LinkPreview} from './LinkPreview'
-
-function getInitialLiveLink(statusRecord: unknown) {
-  if (!AppBskyActorStatus.isRecord(statusRecord)) return ''
-  const validation = AppBskyActorStatus.validateRecord(statusRecord)
-  if (!validation.success) return ''
-  if (!AppBskyEmbedExternal.isMain(validation.value.embed)) return ''
-  return validation.value.embed.external.uri
-}
 
 export function GoLiveDialog({
   control,
@@ -71,7 +63,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   )
 
   const [liveLink, setLiveLink] = useState(() =>
-    getInitialLiveLink(status.record),
+    getLiveLinkFromStatusRecord(status.record),
   )
 
   const time = useCallback(
