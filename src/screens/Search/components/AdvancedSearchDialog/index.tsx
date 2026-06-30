@@ -162,7 +162,7 @@ function DialogInner({
       }),
       none: l({
         message: 'cows pigs',
-        comment: 'Advanced search: Example of an “none of these words” search',
+        comment: 'Advanced search: Example of a “none of these words” search',
       }),
     },
   ]
