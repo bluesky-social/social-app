@@ -435,15 +435,6 @@ export function usePinnedFeedsInfos() {
   const agent = useAgent()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
   const pinnedItems = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
-  const queryClient = useQueryClient()
-  const hasInvalidatedRef = useRef(false)
-
-  useEffect(() => {
-    if (!isLoadingPrefs && !hasInvalidatedRef.current) {
-      hasInvalidatedRef.current = true
-      queryClient.invalidateQueries({queryKey: [FEED_INFO_RQKEY_ROOT]})
-    }
-  }, [isLoadingPrefs, queryClient])
 
   return useQuery({
     queryKey: createPinnedFeedInfosQueryKey(
@@ -451,7 +442,7 @@ export function usePinnedFeedsInfos() {
       pinnedItems.map(f => f.value),
     ),
     gcTime: GCTIME.INFINITY,
-    staleTime: STALE.HOURS.ONE,
+    staleTime: STALE.MINUTES.FIFTEEN,
     enabled: !isLoadingPrefs,
     queryFn: async () => {
       if (!hasSession) {
