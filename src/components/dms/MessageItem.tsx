@@ -79,9 +79,7 @@ export type MessageItemNeighbor =
   | ChatBskyConvoDefs.DeletedMessageView
   | null
 
-function messageIsReply(
-  message: MessageItemNeighbor | ChatBskyConvoDefs.MessageView,
-): boolean {
+function messageIsReply(message: MessageItemNeighbor): boolean {
   return (
     ChatBskyConvoDefs.isMessageView(message) &&
     (ChatBskyConvoDefs.isMessageView(message.replyTo) ||
@@ -800,7 +798,7 @@ function ReplyCaption({
       label={
         onPress
           ? l`Scroll to the message this is replying to`
-          : l`Reply to a message sent before you joined`
+          : l`A reply to a message sent before you joined`
       }
       disabled={!onPress}
       onPress={onPress}
