@@ -60,6 +60,9 @@ import {IS_NATIVE} from '#/env'
 
 const PARENT_CHUNK_SIZE = IS_NATIVE ? 5 : 20
 const CHILDREN_CHUNK_SIZE = 50
+const analyticsOnlyOnItemSeen: FeedFeedbackStateContext['onItemSeen'] = () => {}
+const analyticsOnlySendInteraction: FeedFeedbackStateContext['sendInteraction'] =
+  () => {}
 
 export function PostThread({uri}: {uri: string}) {
   const ax = useAnalytics()
@@ -72,24 +75,6 @@ export function PostThread({uri}: {uri: string}) {
     anchorPostSource?.feedSourceInfo,
     hasSession,
   )
-
-  /*
-   * Non-anchor posts (parents and replies) are not the post the user tapped
-   * from a feed, so they should not report feed interactions. But they should
-   * still carry the originating feedDescriptor for analytics, so events like
-   * post:clickQuotePost can be attributed to the feed the thread was opened
-   * from. This inert context value provides feedDescriptor while keeping
-   * interaction reporting disabled (enabled: false makes sendInteraction and
-   * onItemSeen no-ops). The anchor renders its own full provider that nests
-   * inside and overrides this for its subtree.
-   */
-  const analyticsOnlyFeedFeedback: FeedFeedbackStateContext = {
-    enabled: false,
-    onItemSeen: () => {},
-    sendInteraction: () => {},
-    feedDescriptor: feedFeedback.feedDescriptor,
-    feedSourceInfo: undefined,
-  }
 
   /*
    * One query to rule them all
@@ -591,7 +576,8 @@ export function PostThread({uri}: {uri: string}) {
           onRetry={thread.actions.refetch}
         />
       ) : (
-        <FeedFeedbackProvider value={analyticsOnlyFeedFeedback}>
+        <AnalyticsOnlyFeedFeedbackProvider
+          feedDescriptor={feedFeedback.feedDescriptor}>
           <List
             ref={listRef}
             data={deferredSlices}
@@ -654,7 +640,7 @@ export function PostThread({uri}: {uri: string}) {
              */
             updateCellsBatchingPeriod={100}
           />
-        </FeedFeedbackProvider>
+        </AnalyticsOnlyFeedFeedbackProvider>
       )}
 
       {!gtMobile && canReply && hasSession && (
@@ -662,6 +648,36 @@ export function PostThread({uri}: {uri: string}) {
       )}
     </PostThreadContextProvider>
   )
+}
+
+function AnalyticsOnlyFeedFeedbackProvider({
+  children,
+  feedDescriptor,
+}: React.PropsWithChildren<{
+  feedDescriptor: FeedFeedbackStateContext['feedDescriptor']
+}>) {
+  /*
+   * Non-anchor posts (parents and replies) are not the post the user tapped
+   * from a feed, so they should not report feed interactions. But they should
+   * still carry the originating feedDescriptor for analytics, so events like
+   * post:clickQuotePost can be attributed to the feed the thread was opened
+   * from. This inert context value provides feedDescriptor while keeping
+   * interaction reporting disabled (enabled: false makes sendInteraction and
+   * onItemSeen no-ops). The anchor renders its own full provider that nests
+   * inside and overrides this for its subtree.
+   */
+  const value = useMemo<FeedFeedbackStateContext>(
+    () => ({
+      enabled: false,
+      onItemSeen: analyticsOnlyOnItemSeen,
+      sendInteraction: analyticsOnlySendInteraction,
+      feedDescriptor,
+      feedSourceInfo: undefined,
+    }),
+    [feedDescriptor],
+  )
+
+  return <FeedFeedbackProvider value={value}>{children}</FeedFeedbackProvider>
 }
 
 function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
