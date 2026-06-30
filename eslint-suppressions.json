@@ -927,11 +927,6 @@
       "count": 1
     }
   },
-  "src/lib/hooks/useTabFocusEffect.ts": {
-    "react-hooks/set-state-in-effect": {
-      "count": 1
-    }
-  },
   "src/lib/hooks/useToggleMutationQueue.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -1071,17 +1066,6 @@
   "src/logger/types.ts": {
     "@typescript-eslint/no-redundant-type-constituents": {
       "count": 1
-    }
-  },
-  "src/screens/Bookmarks/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 2
     }
   },
   "src/screens/Deactivated.tsx": {
@@ -2291,14 +2275,6 @@
       "count": 3
     }
   },
-  "src/view/com/util/ViewSelector.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 6
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
   "src/view/com/util/Views.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -2312,14 +2288,6 @@
   "src/view/com/util/forms/Button.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 1
-    }
-  },
-  "src/view/screens/Debug.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
     }
   },
   "src/view/screens/Feeds.tsx": {
