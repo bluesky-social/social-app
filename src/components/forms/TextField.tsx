@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react'
+import {createContext, useContext, useMemo, useRef} from 'react'
 import {
   type AccessibilityProps,
   StyleSheet,
@@ -29,10 +22,10 @@ import {
   useTheme,
   web,
 } from '#/alf'
+import {AutosizedTextarea} from '#/components/forms/AutosizedTextarea'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 
 const Context = createContext<{
   inputRef: React.RefObject<TextInput | null> | null
@@ -171,6 +164,8 @@ export type InputProps = Omit<
    * behaviour, but for now just pass `null` if you want no placeholder -sfn
    */
   placeholder?: string | null | undefined
+  minRows?: number
+  maxRows?: number
 }
 
 export function createInput(Component: typeof TextInput) {
@@ -184,6 +179,8 @@ export function createInput(Component: typeof TextInput) {
     isInvalid,
     inputRef,
     style,
+    minRows = 3,
+    maxRows = 15,
     ...rest
   }: InputProps) {
     const t = useTheme()
@@ -194,35 +191,7 @@ export function createInput(Component: typeof TextInput) {
     const {chromeHover, chromeFocus, chromeError, chromeErrorHover} =
       useSharedInputStyles()
 
-    const scrollContainerRef = useRef<Element | null>(null)
-
-    const resizeIfMultiline = useCallback(() => {
-      if (!IS_WEB || !rest.multiline || !ctx.inputRef?.current) return
-
-      const el = ctx.inputRef.current as unknown as HTMLTextAreaElement
-
-      if (!scrollContainerRef.current) {
-        let node: Element | null = el.parentElement
-        while (node) {
-          if (getComputedStyle(node).overflowY === 'auto') {
-            scrollContainerRef.current = node
-            break
-          }
-          node = node.parentElement
-        }
-      }
-
-      const scrollTop = scrollContainerRef.current?.scrollTop ?? 0
-      el.style.height = 'auto'
-      el.style.height = `${Math.min(280, Math.max(80, el.scrollHeight))}px`
-      if (scrollContainerRef.current) {
-        scrollContainerRef.current.scrollTop = scrollTop
-      }
-    }, [rest.multiline, ctx.inputRef])
-
-    useEffect(() => {
-      resizeIfMultiline()
-    }, [resizeIfMultiline])
+    const {multiline, ...inputRest} = rest
 
     if (!withinRoot) {
       return (
@@ -233,6 +202,8 @@ export function createInput(Component: typeof TextInput) {
             value={value}
             onChangeText={onChangeText}
             isInvalid={isInvalid}
+            minRows={minRows}
+            maxRows={maxRows}
             {...rest}
           />
         </Root>
@@ -251,8 +222,8 @@ export function createInput(Component: typeof TextInput) {
       {
         // paddingVertical doesn't work w/multiline - esb
         lineHeight: a.text_md.fontSize * 1.2,
-        textAlignVertical: rest.multiline ? 'top' : undefined,
-        minHeight: rest.multiline ? 80 : undefined,
+        textAlignVertical: multiline ? 'top' : undefined,
+        minHeight: multiline ? 80 : undefined,
         minWidth: 0,
         paddingTop: 13,
         paddingBottom: 13,
@@ -286,32 +257,48 @@ export function createInput(Component: typeof TextInput) {
       )
     }
 
+    const handleFocus: TextInputProps['onFocus'] = e => {
+      ctx.onFocus()
+      onFocus?.(e)
+    }
+    const handleBlur: TextInputProps['onBlur'] = e => {
+      ctx.onBlur()
+      onBlur?.(e)
+    }
+
+    const sharedProps = {
+      accessibilityLabel: label,
+      value,
+      onChangeText,
+      onFocus: handleFocus,
+      onBlur: handleBlur,
+      placeholder: placeholder === null ? undefined : placeholder || label,
+      placeholderTextColor: t.palette.contrast_500,
+      keyboardAppearance:
+        t.name === 'light' ? ('light' as const) : ('dark' as const),
+      style: flattened,
+    }
+
     return (
       <>
-        <Component
-          accessibilityHint={undefined}
-          hitSlop={HITSLOP_20}
-          {...rest}
-          accessibilityLabel={label}
-          ref={refs}
-          value={value}
-          onChangeText={text => {
-            onChangeText?.(text)
-            resizeIfMultiline()
-          }}
-          onFocus={e => {
-            ctx.onFocus()
-            onFocus?.(e)
-          }}
-          onBlur={e => {
-            ctx.onBlur()
-            onBlur?.(e)
-          }}
-          placeholder={placeholder === null ? undefined : placeholder || label}
-          placeholderTextColor={t.palette.contrast_500}
-          keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
-          style={flattened}
-        />
+        {multiline ? (
+          <AutosizedTextarea
+            {...inputRest}
+            {...sharedProps}
+            label={label}
+            minRows={minRows}
+            maxRows={maxRows}
+            ref={refs}
+          />
+        ) : (
+          <Component
+            accessibilityHint={undefined}
+            hitSlop={HITSLOP_20}
+            {...rest}
+            {...sharedProps}
+            ref={refs}
+          />
+        )}
 
         <View
           style={[
