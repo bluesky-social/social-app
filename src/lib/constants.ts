@@ -61,9 +61,9 @@ export function FEEDBACK_FORM_URL({
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256
 
-export const MAX_GRAPHEME_LENGTH = 300
+export const MAX_GRAPHEME_LENGTH = 2000
 
-export const MAX_DRAFT_GRAPHEME_LENGTH = 1000
+export const MAX_DRAFT_GRAPHEME_LENGTH = 2000
 
 export const MAX_DM_GRAPHEME_LENGTH = 1000
 

@@ -1,4 +1,4 @@
-import {msg} from '@lingui/core/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
@@ -6,6 +6,7 @@ import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
+import {MAX_DRAFT_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useAnalytics} from '#/analytics'
 import {DraftsListDialog} from './DraftsListDialog'
 import {useSaveDraftMutation} from './state/queries'
@@ -114,8 +115,12 @@ export function DraftsButton({
             )
           ) : (
             <Trans>
-              You can only save drafts up to 1000 characters. Would you like to
-              discard this post before viewing your drafts?
+              You can only save drafts up to{' '}
+              {plural(MAX_DRAFT_GRAPHEME_LENGTH, {
+                one: '# character',
+                other: '# characters',
+              })}
+              . Would you like to discard this post before viewing your drafts?
             </Trans>
           )}
         </Prompt.DescriptionText>

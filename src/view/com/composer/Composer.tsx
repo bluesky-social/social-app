@@ -1375,7 +1375,14 @@ export const ComposePost = ({
                     </Trans>
                   )
                 ) : (
-                  <Trans>You can only save drafts up to 1000 characters.</Trans>
+                  <Trans>
+                    You can only save drafts up to{' '}
+                    {plural(MAX_DRAFT_GRAPHEME_LENGTH, {
+                      one: '# character',
+                      other: '# characters',
+                    })}
+                    .
+                  </Trans>
                 )}
               </Prompt.DescriptionText>
             </Prompt.Content>
