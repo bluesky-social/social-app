@@ -14,6 +14,7 @@ import {
   type ComAtprotoLabelDefs,
   type ComAtprotoRepoApplyWrites,
   type ComAtprotoRepoStrongRef,
+  jsonToLex,
   RichText,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
@@ -436,7 +437,7 @@ async function resolveReply(agent: AtpAgent, replyTo: string) {
       })
       return undefined
     }
-    const data = (await res.json()) as {
+    const data = jsonToLex(await res.json()) as {
       post?: {
         uri: string
         cid: string

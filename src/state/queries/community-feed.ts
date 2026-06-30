@@ -3,6 +3,7 @@ import {
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
   AtUri,
+  jsonToLex,
   moderatePost,
   type ModerationDecision,
 } from '@atproto/api'
@@ -75,7 +76,7 @@ export function useCommunityFeedQuery(actor: string | undefined) {
       if (!res.ok) {
         throw new Error(`getCommunityFeed failed: ${res.status}`)
       }
-      return (await res.json()) as CommunityFeedPage
+      return jsonToLex(await res.json()) as CommunityFeedPage
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
@@ -112,7 +113,7 @@ export function useCommunityTimelineQuery(enabled: boolean) {
       if (!res.ok) {
         throw new Error(`getCommunityTimeline failed: ${res.status}`)
       }
-      return (await res.json()) as CommunityFeedPage
+      return jsonToLex(await res.json()) as CommunityFeedPage
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
@@ -139,7 +140,9 @@ export function useCommunityPostQuery(uri: string | undefined) {
       if (!res.ok) {
         throw new Error(`getCommunityPost failed: ${res.status}`)
       }
-      const data = (await res.json()) as {post: AppBskyFeedDefs.PostView}
+      const data = jsonToLex(await res.json()) as {
+        post: AppBskyFeedDefs.PostView
+      }
       return data.post
     },
     enabled: !!uri,

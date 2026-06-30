@@ -8,6 +8,7 @@ import {
   type AppBskyNotificationListNotifications,
   type AtpAgent,
   hasMutedWord,
+  jsonToLex,
   moderateNotification,
   type ModerationOpts,
 } from '@atproto/api'
@@ -248,7 +249,9 @@ async function fetchSubjects(
       })
         .then(async res => {
           if (!res.ok) return undefined
-          const data = (await res.json()) as {post?: AppBskyFeedDefs.PostView}
+          const data = jsonToLex(await res.json()) as {
+            post?: AppBskyFeedDefs.PostView
+          }
           return data.post
         })
         .catch(() => undefined),

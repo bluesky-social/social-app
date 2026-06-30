@@ -4,7 +4,7 @@ import {
   type AtpAgent,
   type ComAtprotoRepoStrongRef,
 } from '@atproto/api'
-import {AtUri} from '@atproto/api'
+import {AtUri, jsonToLex} from '@atproto/api'
 
 import {DM_SERVICE_HEADERS, IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
@@ -128,7 +128,7 @@ async function getCommunityPost(agent: AtpAgent, uri: string) {
   if (!res.ok) {
     throw new Error(`getCommunityPost ${res.status}`)
   }
-  const data = (await res.json()) as {post?: any}
+  const data = jsonToLex(await res.json()) as {post?: any}
   if (!data.post) throw new Error('getCommunityPost: post not found')
   return data.post
 }
