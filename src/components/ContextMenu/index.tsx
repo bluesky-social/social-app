@@ -615,6 +615,8 @@ export function Outer({
   label?: string
   style?: StyleProp<ViewStyle>
   align?: 'left' | 'right'
+  /** Web only. Native restores focus differently. */
+  onCloseAutoFocus?: (event: Event) => void
 }) {
   const t = useTheme()
   const context = useContextMenuContext()

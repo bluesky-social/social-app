@@ -513,7 +513,7 @@ function AccessSection() {
                       locationControl.open()
                     })}>
                     Tap here to update your location with GPS.
-                  </SimpleInlineLinkText>{' '}
+                  </SimpleInlineLinkText>
                 </Trans>
               </Admonition>
 
