@@ -31,8 +31,8 @@ export const JOINED_THIS_WEEK = 560000 // estimate as of 12/18/24
 // Client-side mirror of the appview's PEER_MOD_DIDS allowlist; bump on roster change.
 export const PEER_MOD_DIDS: Record<string, true> = {
   'did:plc:w4xbfzo7kqfes5zb7r6qv3rw': true,
-  'did:plc:kta7dqcqoamo5ixlajxbtjps': true,
   'did:plc:v2zokqmhtb4trssgokog5342': true,
+  'did:plc:b3ethzamzumrezs4y7pibj6b': true,
 }
 
 export const DISCOVER_DEBUG_DIDS: Record<string, true> = {
