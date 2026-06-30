@@ -246,6 +246,7 @@ const ImageItem = ({
                     }
               }
               cachePolicy="memory"
+              useAppleWebpCodec
             />
           </Animated.View>
         </Animated.View>

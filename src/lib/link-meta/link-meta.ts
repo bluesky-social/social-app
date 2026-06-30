@@ -1,4 +1,4 @@
-import {type AppBskyEmbedExternal, type BskyAgent} from '@atproto/api'
+import {type AppBskyEmbedExternal, type AtpAgent} from '@atproto/api'
 
 import {LINK_META_PROXY} from '#/lib/constants'
 import {getGiphyMetaUri} from '#/lib/strings/embed-player'
@@ -31,7 +31,7 @@ export interface LinkMeta {
 }
 
 export async function getLinkMeta(
-  agent: BskyAgent,
+  agent: AtpAgent,
   url: string,
   timeout = 15e3,
 ): Promise<LinkMeta> {

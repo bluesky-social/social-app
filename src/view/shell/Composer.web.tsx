@@ -3,19 +3,15 @@ import {DismissableLayer, FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {useA11y} from '#/state/a11y'
-import {useModals} from '#/state/modals'
 import {type ComposerOpts, useComposerState} from '#/state/shell/composer'
+import {ComposePost, useComposerCancelRef} from '#/view/com/composer/Composer'
 import {atoms as a, flatten, useBreakpoints, useTheme} from '#/alf'
-import {ComposePost, useComposerCancelRef} from '../com/composer/Composer'
 
 const BOTTOM_BAR_HEIGHT = 61
 
-export function Composer({}: {winHeight: number}) {
+export function Composer() {
   const state = useComposerState()
   const isActive = !!state
-
-  // rendering
-  // =
 
   if (!isActive) {
     return null
@@ -31,7 +27,6 @@ export function Composer({}: {winHeight: number}) {
 
 function Inner({state}: {state: ComposerOpts}) {
   const ref = useComposerCancelRef()
-  const {isModalActive} = useModals()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {reduceMotionEnabled} = useA11y()
@@ -54,12 +49,7 @@ function Inner({state}: {state: ComposerOpts}) {
         ])}
         onFocusOutside={evt => evt.preventDefault()}
         onInteractOutside={evt => evt.preventDefault()}
-        onDismiss={() => {
-          // TEMP: remove when all modals are ALF'd -sfn
-          if (!isModalActive) {
-            ref.current?.onPressCancel()
-          }
-        }}>
+        onDismiss={() => ref.current?.onPressCancel()}>
         <View
           style={[
             styles.container,

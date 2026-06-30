@@ -2,9 +2,8 @@ import {type JSX, useCallback} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {plural} from '@lingui/core/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {type BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {StackActions} from '@react-navigation/native'
 
@@ -20,6 +19,7 @@ import {getTabState, TabState} from '#/lib/routes/helpers'
 import {type SharedNavTab, TAB_TO_NAV_ITEM} from '#/lib/routes/tab-to-nav-item'
 import {emitSoftReset} from '#/state/events'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
+import {useUpdateAllRead} from '#/state/queries/messages/update-all-read'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -37,10 +37,12 @@ import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
+import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
 import {
   HomeOpen_Filled_Corner0_Rounded as HomeFilled,
   HomeOpen_Stoke2_Corner0_Rounded as Home,
 } from '#/components/icons/HomeOpen'
+import {Inbox_Stroke2_Corner2_Rounded as InboxIcon} from '#/components/icons/Inbox'
 import {
   MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled,
   MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlass,
@@ -49,6 +51,8 @@ import {
   Message_Stroke2_Corner0_Rounded as Message,
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message'
+import * as Menu from '#/components/Menu'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
@@ -59,7 +63,7 @@ import {styles} from './BottomBarStyles'
 export function BottomBar({navigation}: BottomTabBarProps) {
   const {hasSession, currentAccount} = useSession()
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const safeAreaInsets = useSafeAreaInsets()
   const {footerHeight} = useShellLayout()
@@ -74,6 +78,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const closeAllActiveElements = useCloseAllActiveElements()
   const dedupe = useDedupe()
   const accountSwitchControl = useDialogControl()
+  const messagesMenuControl = Menu.useMenuControl()
   const playHaptic = useHaptics()
   const hideBorder = useHideBottomBarBorder()
   const iconWidth = 28
@@ -142,13 +147,20 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     accountSwitchControl.open()
   }, [accountSwitchControl, playHaptic])
 
+  const onLongPressMessages = useCallback(() => {
+    if (aa.flags.chatDisabled) return
+    playHaptic()
+    messagesMenuControl.open()
+  }, [aa.flags.chatDisabled, messagesMenuControl, playHaptic])
+
   const [demoMode] = useDemoMode()
   const {isActive: live} = useActorStatus(profile)
+  const isLabeler = profile?.associated?.labeler
 
   return (
     <>
       <SwitchAccountDialog control={accountSwitchControl} />
-
+      <MessagesTabMenu control={messagesMenuControl} />
       <Animated.View
         style={[
           styles.bottomBar,
@@ -181,7 +193,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               }
               onPress={onPressHome}
               accessibilityRole="tab"
-              accessibilityLabel={_(msg`Home`)}
+              accessibilityLabel={l`Home`}
               accessibilityHint=""
             />
             <Btn
@@ -201,7 +213,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               }
               onPress={onPressSearch}
               accessibilityRole="search"
-              accessibilityLabel={_(msg`Search`)}
+              accessibilityLabel={l`Search`}
               accessibilityHint=""
             />
             <Btn
@@ -220,21 +232,28 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 )
               }
               onPress={onPressMessages}
+              onLongPress={onLongPressMessages}
               notificationCount={
                 aa.flags.chatDisabled ? undefined : numUnreadMessages.numUnread
               }
               hasNew={aa.flags.chatDisabled ? false : numUnreadMessages.hasNew}
               accessible={true}
               accessibilityRole="tab"
-              accessibilityLabel={_(msg`Chat`)}
+              accessibilityLabel={l`Chat`}
               accessibilityHint={
                 !aa.flags.chatDisabled && numUnreadMessages.count > 0
-                  ? _(
-                      plural(numUnreadMessages.numUnread ?? 0, {
-                        one: '# unread item',
-                        other: '# unread items',
-                      }),
-                    )
+                  ? numUnreadMessages.numUnread?.includes('+')
+                    ? l({
+                        message: `${numUnreadMessages.numUnread} unread items`,
+                        comment:
+                          'Accessibility hint for the bottom bar chat icon when the number of unread messages exceeds the cap, with the + symbol already included – for example, 99+ unread items',
+                      })
+                    : l({
+                        message: plural(numUnreadMessages.numUnread ?? 0, {
+                          one: '# unread item',
+                          other: '# unread items',
+                        }),
+                      })
                   : ''
               }
             />
@@ -257,16 +276,16 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               notificationCount={numUnreadNotifications}
               accessible={true}
               accessibilityRole="tab"
-              accessibilityLabel={_(msg`Notifications`)}
+              accessibilityLabel={l`Notifications`}
               accessibilityHint={
                 numUnreadNotifications === ''
                   ? ''
-                  : _(
-                      plural(numUnreadNotifications ?? 0, {
+                  : l({
+                      message: plural(numUnreadNotifications ?? 0, {
                         one: '# unread item',
                         other: '# unread items',
                       }),
-                    )
+                    })
               }
             />
             <Btn
@@ -276,9 +295,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   <View
                     style={[
                       styles.ctrlIcon,
-                      styles.profileIcon,
+                      isLabeler ? styles.profileIconSquare : styles.profileIcon,
                       isAtMyProfile && [
-                        styles.onProfile,
+                        isLabeler ? styles.onProfileSquare : styles.onProfile,
                         {
                           borderColor: t.atoms.text.color,
                           borderWidth: live ? 0 : 1,
@@ -300,7 +319,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               onPress={onPressProfile}
               onLongPress={onLongPressProfile}
               accessibilityRole="tab"
-              accessibilityLabel={_(msg`Profile`)}
+              accessibilityLabel={l`Profile`}
               accessibilityHint=""
             />
           </>
@@ -329,9 +348,8 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
                 <Button
                   onPress={showCreateAccount}
-                  label={_(msg`Create account`)}
+                  label={l`Create account`}
                   size="small"
-                  variant="solid"
                   color="primary">
                   <ButtonText>
                     <Trans>Create account</Trans>
@@ -339,9 +357,8 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 </Button>
                 <Button
                   onPress={showSignIn}
-                  label={_(msg`Sign in`)}
+                  label={l`Sign in`}
                   size="small"
-                  variant="solid"
                   color="secondary">
                   <ButtonText>
                     <Trans>Sign in</Trans>
@@ -416,5 +433,52 @@ function Btn({
         />
       ) : null}
     </PressableScale>
+  )
+}
+
+function MessagesTabMenu({control}: {control: Menu.MenuControlProps}) {
+  const {t: l} = useLingui()
+
+  const {mutate: markAllChatsRead} = useUpdateAllRead('accepted', {
+    onMutate: () => {
+      Toast.show(l`Marked all chats as read`, {type: 'success'})
+    },
+    onError: () => {
+      Toast.show(l`Failed to mark all chats as read`, {type: 'error'})
+    },
+  })
+
+  const {mutate: markAllRequestsRead} = useUpdateAllRead('request', {
+    onMutate: () => {
+      Toast.show(l`Marked all requests as read`, {type: 'success'})
+    },
+    onError: () => {
+      Toast.show(l`Failed to mark all requests as read`, {type: 'error'})
+    },
+  })
+
+  return (
+    <Menu.Root control={control}>
+      <Menu.Outer showCancel>
+        <Menu.Group>
+          <Menu.Item
+            label={l`Mark all chats as read`}
+            onPress={() => markAllChatsRead()}>
+            <Menu.ItemIcon icon={CircleCheckIcon} />
+            <Menu.ItemText>
+              <Trans>Mark all chats as read</Trans>
+            </Menu.ItemText>
+          </Menu.Item>
+          <Menu.Item
+            label={l`Mark all requests as read`}
+            onPress={() => markAllRequestsRead()}>
+            <Menu.ItemIcon icon={InboxIcon} />
+            <Menu.ItemText>
+              <Trans>Mark all requests as read</Trans>
+            </Menu.ItemText>
+          </Menu.Item>
+        </Menu.Group>
+      </Menu.Outer>
+    </Menu.Root>
   )
 }

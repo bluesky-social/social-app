@@ -1,11 +1,20 @@
 import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {type AppBskyFeedDefs} from '@atproto/api'
-import {Trans} from '@lingui/react/macro'
+import {
+  AppBskyEmbedGallery,
+  type AppBskyEmbedImages,
+  type AppBskyFeedDefs,
+} from '@atproto/api'
+import {Trans, useLingui} from '@lingui/react/macro'
 
+import {shareImageModal} from '#/lib/media/manip'
+import {useSaveImageToMediaLibrary} from '#/lib/media/save-image'
 import {isGifEmbed} from '#/lib/strings/embed-player'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
+import {ArrowShareRight_Stroke2_Corner2_Rounded as ShareIcon} from '#/components/icons/ArrowShareRight'
+import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/icons/Download'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import * as PeekMenu from '#/components/PeekMenu'
 import {Text} from '#/components/Typography'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import * as bsky from '#/types/bsky'
@@ -16,9 +25,11 @@ import * as bsky from '#/types/bsky'
 export function Embed({
   embed,
   style,
+  peekable = false,
 }: {
   embed: AppBskyFeedDefs.PostView['embed']
   style?: StyleProp<ViewStyle>
+  peekable?: boolean
 }) {
   const e = bsky.post.parseEmbed(embed)
 
@@ -27,15 +38,47 @@ export function Embed({
   if (e.type === 'images') {
     return (
       <Outer style={style}>
-        {e.view.images.map(image => (
-          <ImageItem
-            key={image.thumb}
-            thumbnail={image.thumb}
-            alt={image.alt}
-          />
-        ))}
+        {e.view.images.map(image =>
+          peekable ? (
+            <PeekableImageItem key={image.thumb} image={image} />
+          ) : (
+            <ImageItem
+              key={image.thumb}
+              thumbnail={image.thumb}
+              alt={image.alt}
+            />
+          ),
+        )}
       </Outer>
     )
+  } else if (e.type === 'gallery') {
+    // Notification/DM preview is a narrow inline strip; cap at 4 tiles so
+    // a 10-image gallery doesn't blow out the row width. Single pass instead
+    // of filter().slice().map() so we stop at 4 viewable items rather than
+    // walking every item in a 10-image gallery.
+    const tiles: React.ReactNode[] = []
+    for (const item of e.view.items) {
+      if (tiles.length >= 4) break
+      if (!AppBskyEmbedGallery.isViewImage(item)) continue
+      if (peekable) {
+        const image: AppBskyEmbedImages.ViewImage = {
+          thumb: item.thumbnail,
+          fullsize: item.fullsize,
+          alt: item.alt,
+          aspectRatio: item.aspectRatio,
+        }
+        tiles.push(<PeekableImageItem key={item.thumbnail} image={image} />)
+      } else {
+        tiles.push(
+          <ImageItem
+            key={item.thumbnail}
+            thumbnail={item.thumbnail}
+            alt={item.alt}
+          />,
+        )
+      }
+    }
+    return <Outer style={style}>{tiles}</Outer>
   } else if (e.type === 'link') {
     if (!e.view.external.thumb) return null
     if (!isGifEmbed(e.view.external.uri)) return null
@@ -84,10 +127,12 @@ export function ImageItem({
   thumbnail,
   alt,
   children,
+  maxWidth = 100,
 }: {
   thumbnail?: string
   alt?: string
   children?: React.ReactNode
+  maxWidth?: number
 }) {
   const t = useTheme()
 
@@ -98,7 +143,7 @@ export function ImageItem({
           {backgroundColor: 'black'},
           a.flex_1,
           a.aspect_square,
-          {maxWidth: 100},
+          {maxWidth},
           a.rounded_xs,
         ]}
         accessibilityLabel={alt}
@@ -109,7 +154,7 @@ export function ImageItem({
   }
 
   return (
-    <View style={[a.relative, a.flex_1, a.aspect_square, {maxWidth: 100}]}>
+    <View style={[a.flex_grow, a.relative, a.aspect_square, {maxWidth}]}>
       <Image
         key={thumbnail}
         source={{uri: thumbnail}}
@@ -118,6 +163,7 @@ export function ImageItem({
         contentFit="cover"
         accessible={true}
         accessibilityIgnoresInvertColors
+        useAppleWebpCodec
       />
       <MediaInsetBorder style={[a.rounded_xs]} />
       {children}
@@ -153,6 +199,45 @@ export function VideoItem({
         <PlayButtonIcon size={24} />
       </View>
     </ImageItem>
+  )
+}
+
+function PeekableImageItem({image}: {image: AppBskyEmbedImages.ViewImage}) {
+  const {t: l} = useLingui()
+  const saveImage = useSaveImageToMediaLibrary()
+
+  const aspect =
+    image.aspectRatio && image.aspectRatio.height > 0
+      ? image.aspectRatio.width / image.aspectRatio.height
+      : undefined
+
+  return (
+    <PeekMenu.Root style={[a.flex_1, {maxWidth: 100}]}>
+      <PeekMenu.Trigger
+        preview={{
+          type: 'image',
+          uri: image.fullsize,
+          thumbUri: image.thumb,
+          aspectRatio: aspect && aspect > 0 ? aspect : 1,
+        }}
+        borderRadius={tokens.borderRadius.xs}>
+        <ImageItem thumbnail={image.thumb} alt={image.alt} />
+      </PeekMenu.Trigger>
+      <PeekMenu.Menu>
+        <PeekMenu.MenuItem
+          id="save"
+          onSelect={() => void saveImage(image.fullsize)}>
+          <PeekMenu.MenuItemIcon icon={DownloadIcon} />
+          <PeekMenu.MenuItemText>{l`Save image`}</PeekMenu.MenuItemText>
+        </PeekMenu.MenuItem>
+        <PeekMenu.MenuItem
+          id="share"
+          onSelect={() => void shareImageModal({uri: image.fullsize})}>
+          <PeekMenu.MenuItemIcon icon={ShareIcon} />
+          <PeekMenu.MenuItemText>{l`Share`}</PeekMenu.MenuItemText>
+        </PeekMenu.MenuItem>
+      </PeekMenu.Menu>
+    </PeekMenu.Root>
   )
 }
 

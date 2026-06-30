@@ -1,4 +1,4 @@
-import {type BskyAgent} from '@atproto/api'
+import {type AtpAgent} from '@atproto/api'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
@@ -13,7 +13,7 @@ export async function getServiceAuthToken({
   lxm,
   exp,
 }: {
-  agent: BskyAgent
+  agent: AtpAgent
   aud?: string
   lxm: string
   exp?: number
@@ -30,7 +30,7 @@ export async function getServiceAuthToken({
   return serviceAuth.token
 }
 
-export async function getVideoUploadLimits(agent: BskyAgent, i18n: I18n) {
+export async function getVideoUploadLimits(agent: AtpAgent, i18n: I18n) {
   const token = await getServiceAuthToken({
     agent,
     lxm: 'app.bsky.video.getUploadLimits',

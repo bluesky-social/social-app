@@ -11,6 +11,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
 import {ModeratedFeedEmbed} from '#/components/Post/Embed/FeedEmbed'
+import {JoinRequestEmbed} from '#/components/Post/Embed/JoinRequestEmbed'
 import {ModeratedListEmbed} from '#/components/Post/Embed/ListEmbed'
 import {StandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed'
 import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
@@ -98,7 +99,8 @@ export const ExternalEmbedLink = ({
                 uri,
                 description:
                   data.view?.external?.description || data.description,
-                thumb: data.view?.external?.thumb || data.thumb?.source.path,
+                // prefer opengraph data to atproto record-derived image
+                thumb: data.thumb?.source.path || data.view?.external?.thumb,
               }}
             />
           )
@@ -114,6 +116,8 @@ export const ExternalEmbedLink = ({
             hideAlt
           />
         )
+      } else if (data.type === 'chat-invite') {
+        return <JoinRequestEmbed code={data.code} preview={data.view} />
       } else if (data.kind === 'feed') {
         return (
           <ModeratedFeedEmbed

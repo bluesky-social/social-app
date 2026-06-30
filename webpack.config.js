@@ -43,7 +43,7 @@ function patchSourceMapFilter(rules, pathPattern) {
 
 module.exports = async function (env, argv) {
   env.babel = {
-    dangerouslyAddModulePathsToTranspile: ['@bsky.app/expo'],
+    dangerouslyAddModulePathsToTranspile: ['@bsky.app/expo', '@atproto/api'],
   }
   let config = await createExpoWebpackConfigAsync(env, argv)
   config = withAlias(config, {

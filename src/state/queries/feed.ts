@@ -101,6 +101,15 @@ export function hydrateFeedGenerator(
   const href = `/profile/${urip.hostname}/${collection}/${urip.rkey}`
   const route = router.matchPath(href)
 
+  const description = new RichText({
+    text: view.description || '',
+    facets: (view.descriptionFacets || [])?.slice(),
+  })
+
+  if (!view.descriptionFacets) {
+    description.detectFacetsWithoutResolution()
+  }
+
   return {
     type: 'feed',
     view,
@@ -116,10 +125,7 @@ export function hydrateFeedGenerator(
     displayName: view.displayName
       ? sanitizeDisplayName(view.displayName)
       : t`Feed by ${sanitizeHandle(view.creator.handle, '@')}`,
-    description: new RichText({
-      text: view.description || '',
-      facets: (view.descriptionFacets || [])?.slice(),
-    }),
+    description,
     creatorDid: view.creator.did,
     creatorHandle: view.creator.handle,
     likeCount: view.likeCount,
@@ -136,6 +142,15 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
   const href = `/profile/${urip.hostname}/${collection}/${urip.rkey}`
   const route = router.matchPath(href)
 
+  const description = new RichText({
+    text: view.description || '',
+    facets: (view.descriptionFacets || [])?.slice(),
+  })
+
+  if (!view.descriptionFacets) {
+    description.detectFacetsWithoutResolution()
+  }
+
   return {
     type: 'list',
     view,
@@ -148,10 +163,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
     },
     cid: view.cid,
     avatar: view.avatar,
-    description: new RichText({
-      text: view.description || '',
-      facets: (view.descriptionFacets || [])?.slice(),
-    }),
+    description,
     creatorDid: view.creator.did,
     creatorHandle: view.creator.handle,
     displayName: view.name
