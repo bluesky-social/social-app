@@ -8,12 +8,13 @@ import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {s} from '#/lib/styles'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {
-  type HydratedCommunityPost,
-  useCommunityFeedHydrated,
+  type CommunityFeedSlice,
+  useCommunityFeedSlices,
   useCommunityTimelineQuery,
 } from '#/state/queries/community-feed'
 import {useSession} from '#/state/session'
 import {PostFeedItem} from '#/view/com/posts/PostFeedItem'
+import {isThreadChildAt, isThreadParentAt} from '#/view/com/posts/PostFeed'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
@@ -49,7 +50,20 @@ export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
     [data],
   )
 
-  const hydratedPosts = useCommunityFeedHydrated(feedItems)
+  const slices = useCommunityFeedSlices(feedItems)
+  const rows = useMemo(() => {
+    const out: Array<{
+      slice: CommunityFeedSlice
+      indexInSlice: number
+      reactKey: string
+    }> = []
+    slices.forEach(slice => {
+      slice.items.forEach((item, i) => {
+        out.push({slice, indexInSlice: i, reactKey: item._reactKey})
+      })
+    })
+    return out
+  }, [slices])
 
   const [isRefreshing, setIsRefreshing] = useState(false)
   const onRefresh = useCallback(async () => {
@@ -80,19 +94,34 @@ export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
   }, [scrollElRef, headerOffset, refetch])
 
   const renderItem = useCallback(
-    ({item, index}: ListRenderItemInfo<HydratedCommunityPost>) => {
+    ({
+      item,
+      index,
+    }: ListRenderItemInfo<{
+      slice: CommunityFeedSlice
+      indexInSlice: number
+      reactKey: string
+    }>) => {
+      const {slice, indexInSlice} = item
+      const sliceItem = slice.items[indexInSlice]
       return (
         <PostFeedItem
-          post={item.post}
-          record={item.record}
+          post={sliceItem.post}
+          record={sliceItem.record}
           reason={undefined}
           feedContext={undefined}
           reqId={undefined}
-          moderation={item.moderation}
-          parentAuthor={undefined}
-          showReplyTo={false}
-          hideTopBorder={index === 0}
-          rootPost={item.post}
+          moderation={sliceItem.moderation}
+          parentAuthor={sliceItem.parentAuthor}
+          showReplyTo={indexInSlice === 0}
+          isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
+          isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
+          isThreadLastChild={
+            isThreadChildAt(slice.items, indexInSlice) &&
+            slice.items.length === indexInSlice + 1
+          }
+          hideTopBorder={index === 0 && indexInSlice === 0}
+          rootPost={slice.items[0].post}
         />
       )
     },
@@ -100,7 +129,7 @@ export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
   )
 
   const keyExtractor = useCallback(
-    (item: HydratedCommunityPost) => item.post.uri,
+    (item: {reactKey: string}) => item.reactKey,
     [],
   )
 
@@ -144,7 +173,7 @@ export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
         </View>
       )
     }
-    if (!hasNextPage && hydratedPosts.length > 0) {
+    if (!hasNextPage && rows.length > 0) {
       return (
         <View
           style={[
@@ -160,7 +189,7 @@ export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
       )
     }
     return null
-  }, [isFetchingNextPage, hasNextPage, hydratedPosts.length, t])
+  }, [isFetchingNextPage, hasNextPage, rows.length, t])
 
   return (
     <View>
@@ -168,7 +197,7 @@ export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
         <List
           testID="communityFeedPage"
           ref={scrollElRef}
-          data={hydratedPosts}
+          data={rows}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           ListEmptyComponent={renderEmpty}

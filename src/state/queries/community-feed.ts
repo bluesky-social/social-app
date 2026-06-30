@@ -15,6 +15,7 @@ import {
 } from '@tanstack/react-query'
 
 import {communityXrpc} from '#/lib/api/community'
+import {FeedTuner} from '#/lib/api/feed-manip'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   didOrHandleUriMatches,
@@ -151,6 +152,17 @@ export interface HydratedCommunityPost {
   moderation: ModerationDecision
 }
 
+export interface CommunityFeedSliceItem extends HydratedCommunityPost {
+  _reactKey: string
+  uri: string
+  parentAuthor?: AppBskyFeedDefs.PostView['author']
+}
+
+export interface CommunityFeedSlice {
+  _reactKey: string
+  items: CommunityFeedSliceItem[]
+}
+
 /**
  * Takes pre-hydrated feed items from the server and adds moderation decisions.
  * The server now returns properly hydrated PostViews with author info and counts.
@@ -171,6 +183,40 @@ export function useCommunityFeedHydrated(
         const moderation = moderatePost(postView, moderationOpts)
         return {post: postView, record, moderation}
       })
+  }, [feedItems, moderationOpts])
+}
+
+// Group feed items into slices so a self-reply (parent + reply by same author)
+// renders as one visually-connected card instead of two flat ones.
+export function useCommunityFeedSlices(
+  feedItems: AppBskyFeedDefs.FeedViewPost[],
+): CommunityFeedSlice[] {
+  const moderationOpts = useModerationOpts()
+
+  return useMemo(() => {
+    if (!moderationOpts) return []
+    const tuner = new FeedTuner([])
+    const raw = tuner.tune(feedItems)
+
+    return raw
+      .map((slice, sliceIdx) => {
+        const items: CommunityFeedSliceItem[] = slice.items.map((item, i) => {
+          const record = item.post.record as AppBskyFeedPost.Record
+          return {
+            _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
+            uri: item.post.uri,
+            post: item.post,
+            record,
+            moderation: moderatePost(item.post, moderationOpts),
+            parentAuthor: item.parentAuthor as any,
+          }
+        })
+        return {
+          _reactKey: slice._reactKey || `slice-${sliceIdx}`,
+          items,
+        }
+      })
+      .filter(slice => slice.items.length > 0)
   }, [feedItems, moderationOpts])
 }
 
