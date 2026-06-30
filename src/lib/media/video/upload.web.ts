@@ -34,19 +34,21 @@ export async function uploadVideo({
     name: `${nanoid(12)}.${mimeToExt(video.mimeType)}`,
   })
 
-  let bytes = video.bytes
-  if (!bytes) {
+  // Stream the Blob directly; loading the whole file as ArrayBuffer OOMs mobile Safari.
+  let body: Blob | ArrayBuffer
+  if (video.bytes) {
+    body = video.bytes
+  } else {
     if (signal.aborted) {
       throw new AbortError()
     }
-    bytes = await fetch(video.uri).then(res => res.arrayBuffer())
+    body = await fetch(video.uri).then(res => res.blob())
   }
 
   if (signal.aborted) {
     throw new AbortError()
   }
-  // Token audience should be user's PDS DID since we forward it to the PDS
-  // for blob upload. Don't pass aud to let it default to pdsAud.
+  // Token aud defaults to the user's PDS DID; the video service forwards uploadBlob there.
   const token = await getServiceAuthToken({
     agent,
     lxm: 'com.atproto.repo.uploadBlob',
@@ -59,11 +61,22 @@ export async function uploadVideo({
   const xhr = new XMLHttpRequest()
   const res = await new Promise<AppBskyVideoDefs.JobStatus>(
     (resolve, reject) => {
+      const onAbort = () => {
+        try {
+          xhr.abort()
+        } catch {}
+        reject(new AbortError())
+      }
+      if (signal.aborted) {
+        return onAbort()
+      }
+      signal.addEventListener('abort', onAbort, {once: true})
       xhr.upload.addEventListener('progress', e => {
         const progress = e.loaded / e.total
         setProgress(progress)
       })
       xhr.onloadend = () => {
+        signal.removeEventListener('abort', onAbort)
         if (signal.aborted) {
           reject(new AbortError())
         } else if (xhr.readyState === 4) {
@@ -76,12 +89,13 @@ export async function uploadVideo({
         }
       }
       xhr.onerror = () => {
+        signal.removeEventListener('abort', onAbort)
         reject(new ServerError(i18n._(msg`Failed to upload video`)))
       }
       xhr.open('POST', uri)
       xhr.setRequestHeader('Content-Type', video.mimeType)
       xhr.setRequestHeader('Authorization', `Bearer ${token}`)
-      xhr.send(bytes)
+      xhr.send(body)
     },
   )
 

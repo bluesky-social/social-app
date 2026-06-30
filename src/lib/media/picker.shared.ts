@@ -56,7 +56,8 @@ export async function openUnifiedPicker({
     quality: 1,
     allowsMultipleSelection: true,
     legacy: true,
-    base64: IS_WEB,
+    // Forcing base64 on web preloads the whole video, killing mobile Safari tabs.
+    base64: false,
     selectionLimit: IS_IOS ? selectionCountRemaining : undefined,
     preferredAssetRepresentationMode:
       UIImagePickerPreferredAssetRepresentationMode.Automatic,

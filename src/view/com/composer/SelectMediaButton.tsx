@@ -318,17 +318,9 @@ async function processImagePickerAssets(
       }
     }
 
-    /*
-     * All validations passed, we have an asset!
-     */
     supportedAssets.push({
       mimeType,
       ...asset,
-      /*
-       * In `expo-image-picker` >= v17, `uri` is now a `blob:` URL, not a
-       * data-uri. Our handling elsewhere in the app (for web) relies on the
-       * base64 data-uri, so we construct it here for web only.
-       */
       uri:
         IS_WEB && asset.base64
           ? `data:${mimeType};base64,${asset.base64}`
