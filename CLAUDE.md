@@ -10,7 +10,7 @@ Bluesky Social is a cross-platform social media application built with React Nat
 
 - React 19.1
 - React Native 0.81 with Expo 54
-- TypeScript 6
+- TypeScript 7
 - React Navigation 7 for routing
 - TanStack Query (React Query) for data fetching
 - Lingui 5 for internationalization
@@ -32,6 +32,7 @@ pnpm ios                # Run on iOS
 pnpm test               # Run Jest tests
 pnpm lint               # Run ESLint
 pnpm typecheck          # Run TypeScript type checking
+pnpm prettier           # Run Prettier for code formatting
 
 # Internationalization
 # DO NOT run these commands - extraction and compilation are handled by CI
