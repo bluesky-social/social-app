@@ -1,23 +1,13 @@
 import type * as AgeRange from 'expo-age-range'
 import {
   ageAssuranceRuleIDs as ids,
+  type AppBskyAgeassuranceDefs,
   type AppBskyAgeassuranceGetState,
 } from '@atproto/api'
 
 import {type OtherRequiredData} from '#/ageAssurance/data'
-import {type AgeAssuranceConfigRegion} from '#/ageAssurance/types'
 import {IS_DEV, IS_E2E} from '#/env'
 import {type Geolocation} from '#/geolocation'
-
-/**
- * Debug-only config shape. Mirrors {@link AppBskyAgeassuranceDefs.Config} but
- * uses {@link AgeAssuranceConfigRegion}, which carries the not-yet-in-lexicon
- * `additionalVerificationMethods` field so we can prototype on-device
- * verification.
- */
-export type DebugConfig = {
-  regions: AgeAssuranceConfigRegion[]
-}
 
 export const enabled = (IS_DEV && false) || IS_E2E
 
@@ -57,7 +47,7 @@ export const serverState: AppBskyAgeassuranceGetState.OutputSchema | undefined =
       }
     : undefined
 
-export const config: DebugConfig = {
+export const config: AppBskyAgeassuranceDefs.Config = {
   regions: [
     {
       countryCode: 'AA',

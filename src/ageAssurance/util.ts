@@ -12,11 +12,9 @@ import {FALLBACK_REGION_CONFIG, MIN_ACCESS_AGE} from '#/ageAssurance/const'
 import {useAgeAssuranceServerDataContext} from '#/ageAssurance/data'
 import {
   AgeAssuranceAccess,
-  type AgeAssuranceConfigRegion,
   type AgeAssuranceFlags,
   type AgeAssuranceMetadata,
   type AgeAssuranceState,
-  type AgeAssuranceVerificationMethod,
 } from '#/ageAssurance/types'
 import {type Geolocation, useGeolocation} from '#/geolocation'
 
@@ -43,17 +41,13 @@ export function getAgeAssuranceRegionConfigWithFallback(
  * Returns the verification methods permitted for a region *in addition to* the
  * always-supported KWS flow. Empty when the region doesn't specify any (the
  * historical KWS-only behavior).
- *
- * NOTE: `additionalVerificationMethods` is not yet part of the lexicon, so we
- * read it via {@link AgeAssuranceConfigRegion}. See that type for the migration
- * note.
  */
 export function getRegionAdditionalVerificationMethods(
   region: AppBskyAgeassuranceDefs.ConfigRegion,
-): AgeAssuranceVerificationMethod[] {
-  return (
-    (region as AgeAssuranceConfigRegion).additionalVerificationMethods ?? []
-  )
+): NonNullable<
+  AppBskyAgeassuranceDefs.ConfigRegion['additionalVerificationMethods']
+> {
+  return region.additionalVerificationMethods ?? []
 }
 
 /**
