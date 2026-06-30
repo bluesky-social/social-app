@@ -392,6 +392,13 @@ function AccessSection() {
               ),
               {type: 'info'},
             )
+          } else if (state.access === aa.Access.Unknown) {
+            Toast.show(
+              _(
+                msg`Hmm, it seems we weren't able to compute your level of access. Please try again.`,
+              ),
+              {type: 'warning'},
+            )
           } else {
             Toast.show(_(msg`Thanks! You're all set.`), {
               type: 'success',
