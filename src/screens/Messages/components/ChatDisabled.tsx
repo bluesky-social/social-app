@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react'
-import {View} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {ToolsOzoneReportDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
@@ -15,19 +15,23 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 
-export function ChatDisabled() {
+export function ChatDisabled({
+  shape = 'pill',
+  style,
+}: {
+  shape?: 'pill' | 'banner'
+  style?: StyleProp<ViewStyle>
+}) {
   const t = useTheme()
   return (
-    <View style={[a.p_md]}>
+    <View style={[shape === 'pill' && a.p_md, style]}>
       <View
         style={[
           a.align_center,
           a.justify_center,
           a.p_lg,
           t.atoms.bg_contrast_50,
-          {
-            borderRadius: 40,
-          },
+          shape === 'pill' && {borderRadius: 40},
         ]}>
         <WarningIcon fill={t.atoms.text.color} size="lg" style={[a.mb_xs]} />
         <Text

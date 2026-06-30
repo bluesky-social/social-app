@@ -7,13 +7,21 @@ import {
 } from '@atproto/api'
 
 import {EMOJI_REACTION_LIMIT} from '#/lib/constants'
+import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/profile-shadow'
 import {type ConvoState, ConvoStatus} from '#/state/messages/convo/types'
+import {platform} from '#/alf'
+import {type ReportSubject} from '#/components/moderation/ReportDialog/types'
 import * as bsky from '#/types/bsky'
 
 export const MESSAGE_GAP_THRESHOLD_MS = 60 * 60 * 1000
 export const CLUSTERED_MESSAGE_THRESHOLD_MS = 5 * 60 * 1000
+
+export const MESSAGE_BUBBLE_MAX_WIDTH = platform({
+  web: '80%' as const,
+  default: '85%' as const,
+})
 
 export function canBeMessaged(profile: bsky.profile.AnyProfileView) {
   switch (profile.associated?.chat?.allowIncoming) {
@@ -47,6 +55,22 @@ export function canBeAddedToGroup(profile: bsky.profile.AnyProfileView) {
   }
 }
 
+/**
+ * Resolves the effective `allowGroupInvites` value for a chat declaration.
+ * When unset, group invites follow the general DM preference
+ * (`allowIncoming`), which itself defaults to `following`. This mirrors the
+ * `undefined` fallthrough in canBeAddedToGroup, and is the single source of
+ * truth for both displaying and persisting the setting.
+ */
+export function resolveAllowGroupInvites(
+  chat: {allowIncoming?: string; allowGroupInvites?: string} | undefined,
+): 'all' | 'none' | 'following' {
+  return (chat?.allowGroupInvites ?? chat?.allowIncoming ?? 'following') as
+    | 'all'
+    | 'none'
+    | 'following'
+}
+
 export function localDateString(date: Date) {
   // can't use toISOString because it should be in local time
   const mm = date.getMonth()
@@ -67,6 +91,25 @@ export function hasAlreadyReacted(
   return !!message.reactions.find(
     reaction => reaction.value === emoji && reaction.sender.did === myDid,
   )
+}
+
+/**
+ * Drops reactions from accounts the viewer is blocking or blocked by, so a
+ * blocked reactor's identity is never surfaced via the reaction pills or the
+ * reactions dialog. `relatedProfiles` is shadow-synced by the convo agent, so
+ * this reflects optimistic blocks. Reactions whose sender isn't in
+ * `relatedProfiles` are kept - we can't determine their block status, and they
+ * already render anonymously ("Someone reacted").
+ */
+export function filterBlockedReactions(
+  reactions: ChatBskyConvoDefs.ReactionView[] | undefined,
+  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>,
+): ChatBskyConvoDefs.ReactionView[] {
+  if (!reactions) return []
+  return reactions.filter(reaction => {
+    const profile = relatedProfiles.get(reaction.sender.did)
+    return !profile || !isBlockedOrBlocking(profile)
+  })
 }
 
 export function hasReachedReactionLimit(
@@ -223,4 +266,42 @@ export function parseConvoView(
     logger.warn('Unknown convo kind: ' + JSON.stringify(convoView.kind))
     return null
   }
+}
+
+/**
+ * Resolves the report subject for a conversation-level "Report conversation"
+ * action (as opposed to reporting an individual message, which always reports
+ * that message + its sender).
+ *
+ * - group: always report the whole convo, targeting the owner. Returns null if
+ *   the owner has left, in which case there is nothing to report against.
+ * - direct: report the last reportable message if there is one (i.e. the last
+ *   message exists and wasn't sent by us), otherwise report the whole convo
+ *   targeting the other user.
+ */
+export function getConvoReportSubject(
+  convo: ConvoWithDetails,
+  ownDid: string | undefined,
+): ReportSubject | null {
+  if (convo.kind === 'group') {
+    if (!convo.primaryMember) return null
+    return {convoId: convo.view.id, did: convo.primaryMember.did}
+  }
+
+  const lastMessage = convo.view.lastMessage
+  const reportableMessage =
+    ChatBskyConvoDefs.isMessageView(lastMessage) &&
+    lastMessage.sender?.did !== ownDid
+      ? lastMessage
+      : null
+
+  if (reportableMessage) {
+    return {
+      view: 'convo',
+      convoId: convo.view.id,
+      message: reportableMessage,
+    }
+  }
+
+  return {convoId: convo.view.id, did: convo.primaryMember.did}
 }

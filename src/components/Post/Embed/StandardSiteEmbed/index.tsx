@@ -5,7 +5,6 @@ import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
-import {useCallOnce} from '#/lib/once'
 import {shareUrl} from '#/lib/sharing'
 import {niceDate} from '#/lib/strings/time'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
@@ -16,6 +15,7 @@ import {Divider} from '#/components/Divider'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon} from '#/components/icons/Arrow'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
+import {StandardSite} from '#/components/icons/community/StandardSite'
 import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {matchStandardSitePublisher} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
@@ -80,13 +80,15 @@ export const StandardSiteEmbed = ({
     onEmbedInteractionCallback?.()
     ax.metric('embed:standardSite:article:press', {url: view.uri})
   }
-  const onLongPress = () => {
-    if (view.uri && IS_NATIVE) {
-      playHaptic('Heavy')
-      shareUrl(view.uri)
-      ax.metric('embed:standardSite:article:longPress', {url: view.uri})
-    }
-  }
+  const onLongPress = IS_NATIVE
+    ? () => {
+        if (view.uri) {
+          playHaptic('Heavy')
+          void shareUrl(view.uri)
+          ax.metric('embed:standardSite:article:longPress', {url: view.uri})
+        }
+      }
+    : undefined
   const onPressPublication = () => {
     playHaptic('Light')
     onEmbedInteractionCallback?.()
@@ -94,21 +96,17 @@ export const StandardSiteEmbed = ({
       url: view.source?.uri || '',
     })
   }
-  const onLongPressPublication = () => {
-    if (view.source?.uri && IS_NATIVE) {
-      playHaptic('Heavy')
-      shareUrl(view.source.uri)
-      ax.metric('embed:standardSite:publication:longPress', {
-        url: view.source.uri,
-      })
-    }
-  }
-
-  useCallOnce(() => {
-    if (!preview) {
-      ax.metric('embed:standardSite:view', {url: view.uri})
-    }
-  })()
+  const onLongPressPublication = IS_NATIVE
+    ? () => {
+        if (view.source?.uri) {
+          playHaptic('Heavy')
+          void shareUrl(view.source.uri)
+          ax.metric('embed:standardSite:publication:longPress', {
+            url: view.source.uri,
+          })
+        }
+      }
+    : undefined
 
   if (isStandardPublication) {
     return (
@@ -129,7 +127,6 @@ export const StandardSiteEmbed = ({
       style={[
         a.flex_col,
         a.rounded_lg,
-        a.overflow_hidden,
         a.w_full,
         a.border,
         t.atoms.bg,
@@ -137,125 +134,149 @@ export const StandardSiteEmbed = ({
         preview && a.pointer_events_none,
         style,
       ]}>
+      {/*
+       * The article is an in-flow `Link` wrapping the content so the iOS peek
+       * menu has something to lift. The publication footer below lives outside
+       * it - it has its own link (to the publication) and Subscribe button, so
+       * it can't be nested inside the article's peek.
+       */}
       <Link
+        peek
         shouldProxy
         to={view.uri}
         label={view.title || l`Open link to ${niceUrl}`}
         onPress={onPress}
         onLongPress={onLongPress}
-        style={[a.absolute, a.inset_0, a.z_10]}
+        style={[a.rounded_lg]}
         {...web({
           onMouseEnter: onInteract,
           onMouseLeave: onInteractOut,
         })}
         onFocus={onInteract}
         onBlur={onInteractOut}>
-        <></>
-      </Link>
-
-      <View
-        style={[
-          a.w_full,
-          a.z_10,
-          a.pointer_events_none,
-          interacted && [t.atoms.bg_contrast_25],
-        ]}>
-        {imageUri ? (
-          <Image
-            style={[a.aspect_card]}
-            source={{uri: imageUri}}
-            accessibilityIgnoresInvertColors
-            loading="lazy"
-          />
-        ) : undefined}
-
-        <View
-          style={[
-            a.flex_1,
-            a.pt_sm,
-            hasMedia && a.border_t,
-            interacted
-              ? t.atoms.border_contrast_high
-              : t.atoms.border_contrast_low,
-            {gap: 3},
-            isStandard && a.pt_md,
-          ]}>
+        {() => (
           <View
             style={[
-              a.pb_xs,
-              a.px_md,
-              {gap: 3},
-              isStandard && [{gap: 5}, a.pb_sm],
+              a.w_full,
+              a.overflow_hidden,
+              // The container can't clip (overflow_hidden there breaks the peek
+              // lift animation), so each half rounds its own outer corners to
+              // match the container border. The article rounds the top, plus the
+              // bottom when there's no footer beneath it.
+              {
+                borderTopLeftRadius: a.rounded_lg.borderRadius,
+                borderTopRightRadius: a.rounded_lg.borderRadius,
+              },
+              !view.source && {
+                borderBottomLeftRadius: a.rounded_lg.borderRadius,
+                borderBottomRightRadius: a.rounded_lg.borderRadius,
+              },
+              interacted ? t.atoms.bg_contrast_25 : t.atoms.bg,
             ]}>
-            <Text
-              emoji
-              numberOfLines={3}
-              style={[
-                a.text_md,
-                a.font_semi_bold,
-                a.leading_snug,
-                isStandard && [a.text_lg, a.font_bold],
-              ]}>
-              {view.title}
-            </Text>
-            {view.description ? (
-              <Text
-                emoji
-                numberOfLines={view.thumb ? 2 : 4}
-                style={[a.text_sm, a.leading_snug]}>
-                {view.description}
-              </Text>
+            {imageUri ? (
+              <Image
+                style={[a.aspect_card]}
+                source={{uri: imageUri}}
+                accessibilityIgnoresInvertColors
+                loading="lazy"
+                useAppleWebpCodec
+              />
             ) : undefined}
 
-            {isStandard && (view.createdAt || view.readingTime) && (
+            <View
+              style={[
+                a.flex_1,
+                a.pt_sm,
+                hasMedia && a.border_t,
+                interacted
+                  ? t.atoms.border_contrast_high
+                  : t.atoms.border_contrast_low,
+                {gap: 3},
+                isStandard && a.pt_md,
+              ]}>
               <View
-                style={[a.flex_row, a.align_center, a.gap_md, {paddingTop: 2}]}>
-                {view.createdAt && (
+                style={[
+                  a.pb_xs,
+                  a.px_md,
+                  {gap: 3},
+                  isStandard && [{gap: 5}, a.pb_sm],
+                ]}>
+                <Text
+                  emoji
+                  numberOfLines={3}
+                  style={[
+                    a.text_md,
+                    a.font_semi_bold,
+                    a.leading_snug,
+                    isStandard && [a.text_lg, a.font_bold],
+                  ]}>
+                  {view.title}
+                </Text>
+                {view.description ? (
                   <Text
-                    style={[
-                      a.text_xs,
-                      a.leading_snug,
-                      t.atoms.text_contrast_medium,
-                    ]}>
-                    {niceDate(i18n, view.createdAt, 'long', 'none')}
+                    emoji
+                    numberOfLines={view.thumb ? 2 : 4}
+                    style={[a.text_sm, a.leading_snug]}>
+                    {view.description}
                   </Text>
-                )}
-                {view.readingTime && (
-                  <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
-                    <Clock size="xs" style={t.atoms.text_contrast_medium} />
-                    <Text
-                      style={[
-                        a.text_xs,
-                        a.leading_snug,
-                        t.atoms.text_contrast_medium,
-                      ]}>
-                      {l({
-                        message: plural(view.readingTime, {
-                          one: '#m',
-                          other: '#m',
-                        }),
-                        comment: `How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.`,
-                      })}
-                    </Text>
+                ) : undefined}
+
+                {isStandard && (view.createdAt || view.readingTime) && (
+                  <View
+                    style={[
+                      a.flex_row,
+                      a.align_center,
+                      a.gap_md,
+                      {paddingTop: 2},
+                    ]}>
+                    {view.createdAt && (
+                      <Text
+                        style={[
+                          a.text_xs,
+                          a.leading_snug,
+                          t.atoms.text_contrast_medium,
+                        ]}>
+                        {niceDate(i18n, view.createdAt, 'long', 'none')}
+                      </Text>
+                    )}
+                    {view.readingTime && (
+                      <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
+                        <Clock size="xs" style={t.atoms.text_contrast_medium} />
+                        <Text
+                          style={[
+                            a.text_xs,
+                            a.leading_snug,
+                            t.atoms.text_contrast_medium,
+                          ]}>
+                          {l({
+                            message: plural(view.readingTime, {
+                              one: '#m',
+                              other: '#m',
+                            }),
+                            comment: `How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.`,
+                          })}
+                        </Text>
+                      </View>
+                    )}
                   </View>
                 )}
               </View>
+            </View>
+
+            {!view.source && (
+              <View style={[a.px_md]}>
+                <Divider />
+                <View style={[a.py_sm]}>
+                  <StandardSiteMetaRow preview={preview} view={view} />
+                </View>
+              </View>
             )}
           </View>
-        </View>
-
-        {!view.source && (
-          <View style={[a.px_md]}>
-            <Divider />
-            <View style={[a.py_sm]}>
-              <StandardSiteMetaRow preview={preview} view={view} />
-            </View>
-          </View>
         )}
-      </View>
+      </Link>
 
       {view.source && (
-        <View style={[a.z_20]}>
+        <View>
           <Divider />
           <PublicationFooter
             preview={preview}
@@ -355,8 +376,14 @@ export function PublicationCard({
           />
           <View style={[a.flex_1, a.gap_2xs]}>
             <Text
+              emoji
               numberOfLines={1}
-              style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+              style={[
+                a.text_md,
+                a.font_semi_bold,
+                t.atoms.text,
+                a.leading_snug,
+              ]}>
               {view.source?.title}
             </Text>
             <StandardSiteMetaRow
@@ -380,14 +407,14 @@ export function PublicationCard({
       <View style={[a.pointer_events_none]}>
         {view.description && (
           <View style={[a.pt_sm]}>
-            <Text style={[a.text_sm, a.leading_snug]} numberOfLines={3}>
+            <Text emoji style={[a.text_sm, a.leading_snug]} numberOfLines={3}>
               {view.description}
             </Text>
           </View>
         )}
 
         {!gtPhone && (
-          <View style={[view.description && a.pt_sm]}>
+          <View style={[a.pt_sm]}>
             <SubscribeButton
               preview={preview}
               view={view}
@@ -420,6 +447,26 @@ export function SubscribeButton({
     ? l`Subscribe on ${highlightedPublisher.name}`
     : l`View publication`
 
+  /*
+   * The custom site theme paints the button background with `accent` and the
+   * text with `accentForeground`. Only honor it when that pairing clears WCAG
+   * AAA (4.5:1) for large text, which the button's bold label qualifies as.
+   * Otherwise we fall through to the default `secondary_inverted` styling,
+   * which is guaranteed to be legible.
+   */
+  const {accentRGB, accentForegroundRGB} = view.source?.theme || {}
+  let useCustomTheme = false
+  if (accentRGB && accentForegroundRGB) {
+    const accent = utils.rgbToHex(accentRGB.r, accentRGB.g, accentRGB.b)
+    const accentForeground = utils.rgbToHex(
+      accentForegroundRGB.r,
+      accentForegroundRGB.g,
+      accentForegroundRGB.b,
+    )
+    const ratio = utils.contrastRatio(accent, accentForeground)
+    useCustomTheme = ratio !== null && ratio >= 4.5
+  }
+
   if (!view.source) return null
 
   const publicationTitle = view.source.title
@@ -445,52 +492,60 @@ export function SubscribeButton({
     }
   }
 
-  const onLongPress = () => {
-    if (view.source?.uri && IS_NATIVE) {
-      playHaptic('Heavy')
-      shareUrl(view.source.uri)
-      if (highlightedPublisher) {
-        ax.metric('embed:standardSite:subscribe:longPress', {
-          url: view.source?.uri || '',
-        })
-      } else {
-        ax.metric('embed:standardSite:publicationCta:longPress', {
-          url: view.source?.uri || '',
-        })
+  const onLongPress = IS_NATIVE
+    ? () => {
+        if (view.source?.uri) {
+          playHaptic('Heavy')
+          void shareUrl(view.source.uri)
+          if (highlightedPublisher) {
+            ax.metric('embed:standardSite:subscribe:longPress', {
+              url: view.source?.uri || '',
+            })
+          } else {
+            ax.metric('embed:standardSite:publicationCta:longPress', {
+              url: view.source?.uri || '',
+            })
+          }
+        }
       }
-    }
+    : undefined
+
+  const button = (
+    <Link
+      shouldProxy
+      to={view.source.uri}
+      label={label}
+      size="small"
+      color="secondary_inverted"
+      style={[
+        style,
+        a.gap_sm,
+        preview ? a.pointer_events_none : a.pointer_events_auto,
+      ]}
+      onPress={onPress}
+      onLongPress={onLongPress}>
+      {highlightedPublisher ? (
+        <>
+          <View style={[a.flex_row, a.align_center, {gap: 7}]}>
+            <ButtonIcon icon={highlightedPublisher.Icon} size="md" />
+          </View>
+          <ButtonText>{cta}</ButtonText>
+        </>
+      ) : (
+        <>
+          <ButtonText>{cta}</ButtonText>
+          <ButtonIcon icon={ArrowTopRightIcon} />
+        </>
+      )}
+    </Link>
+  )
+
+  if (!useCustomTheme) {
+    return button
   }
 
   return (
-    <StandardSiteThemeProvider view={view}>
-      <Link
-        shouldProxy
-        to={view.source.uri}
-        label={label}
-        size="small"
-        color="secondary_inverted"
-        style={[
-          style,
-          a.gap_sm,
-          preview ? a.pointer_events_none : a.pointer_events_auto,
-        ]}
-        onPress={onPress}
-        onLongPress={onLongPress}>
-        {highlightedPublisher ? (
-          <>
-            <View style={[a.flex_row, a.align_center, {gap: 7}]}>
-              <ButtonIcon icon={highlightedPublisher.Icon} size="md" />
-            </View>
-            <ButtonText>{cta}</ButtonText>
-          </>
-        ) : (
-          <>
-            <ButtonText>{cta}</ButtonText>
-            <ButtonIcon icon={ArrowTopRightIcon} />
-          </>
-        )}
-      </Link>
-    </StandardSiteThemeProvider>
+    <StandardSiteThemeProvider view={view}>{button}</StandardSiteThemeProvider>
   )
 }
 
@@ -503,8 +558,9 @@ function PublicationIcon({
   interacted?: boolean
   themeColors: ssTypes.ThemeColors
 }) {
+  const t = useTheme()
   if (!view.source) return null
-  return view.source?.icon ? (
+  const icon = view.source?.icon ? (
     <View>
       <UserAvatar
         noBorder
@@ -533,6 +589,29 @@ function PublicationIcon({
         {[...view.source.title][0] ?? ''}
       </Text>
       <MediaInsetBorder opaque style={[a.rounded_sm]} />
+    </View>
+  )
+  return (
+    <View style={[a.relative]}>
+      <View
+        style={[
+          a.absolute,
+          a.rounded_full,
+          a.z_10,
+          a.justify_center,
+          a.align_center,
+          t.atoms.bg,
+          {
+            width: 16,
+            height: 16,
+            top: -6,
+            left: -6,
+          },
+        ]}>
+        <StandardSite size="xs" fill={t.atoms.text_contrast_medium.color} />
+        <MediaInsetBorder />
+      </View>
+      {icon}
     </View>
   )
 }
@@ -572,6 +651,14 @@ export function PublicationFooter({
         a.justify_between,
         a.p_md,
         a.gap_md,
+        a.overflow_hidden,
+        // Rounds the bottom corners to match the container border, since the
+        // container itself can't clip (overflow_hidden there breaks the peek
+        // lift animation on the article above).
+        {
+          borderBottomLeftRadius: a.rounded_lg.borderRadius,
+          borderBottomRightRadius: a.rounded_lg.borderRadius,
+        },
         gtPhone && [a.flex_row, a.gap_sm],
         interactedOuter && t.atoms.bg_contrast_25,
         preview && a.pointer_events_none,
@@ -611,10 +698,12 @@ export function PublicationFooter({
         />
         <View style={[a.flex_1, a.gap_2xs]}>
           <Text
+            emoji
             numberOfLines={1}
             style={[
               a.text_sm,
               a.font_medium,
+              a.leading_tight,
               t.atoms.text,
               interacted && a.underline,
             ]}>

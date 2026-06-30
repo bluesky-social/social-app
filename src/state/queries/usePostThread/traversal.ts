@@ -196,7 +196,7 @@ export function sortAndAnnotateThreadItems(
                    * `repliesSeenCounter` later on, since `repliesSeenCounter`
                    * is 1-indexed and `replyIndex` is 0-indexed.
                    */
-                  childMetadata!.replyIndex =
+                  childMetadata.replyIndex =
                     childParentMetadata.repliesSeenCounter
                 }
 

@@ -24,9 +24,9 @@ import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {usePreemptivelyCompleteActivePolicyUpdate} from '#/components/PolicyUpdateOverlay/usePreemptivelyCompleteActivePolicyUpdate'
 import * as Toast from '#/components/Toast'
+import {MIN_ACCESS_AGE} from '#/ageAssurance/const'
 import {
   isUnderAge,
-  MIN_ACCESS_AGE,
   useAgeAssuranceRegionConfigWithFallback,
 } from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'

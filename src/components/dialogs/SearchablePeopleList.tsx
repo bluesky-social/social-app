@@ -514,11 +514,7 @@ function ExistingChatCard({
           ]}>
           <ProfileCard.Header>
             {convo.kind === 'group' ? (
-              <AvatarBubbles
-                profiles={convo.members}
-                size={40}
-                moderationOpts={moderationOpts}
-              />
+              <AvatarBubbles profiles={convo.members} size={40} />
             ) : (
               <ProfileCard.Avatar
                 profile={convo.primaryMember}
@@ -557,7 +553,7 @@ function ExistingChatCard({
                       style={[a.leading_snug, t.atoms.text_contrast_medium]}
                       numberOfLines={2}>
                       <Plural
-                        value={convo.members.length}
+                        value={convo.details.memberCount}
                         one="# member"
                         other="# members"
                       />
@@ -667,7 +663,6 @@ function SearchInput({
       />
 
       <TextInput
-        // @ts-ignore bottom sheet input types issue — esb
         ref={inputRef}
         placeholder={l`Search`}
         value={value}

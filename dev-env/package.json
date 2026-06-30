@@ -6,8 +6,8 @@
     "start": "NODE_ENV=development ./dev-infra/with-test-redis-and-db.sh node ./mock-server.ts"
   },
   "dependencies": {
-    "@atproto/api": "^0.20.0",
-    "@atproto/dev-env": "^0.5.0",
+    "@atproto/api": "^0.20.22",
+    "@atproto/dev-env": "^0.5.3",
     "typescript": "^6.0.3"
   },
   "devDependencies": {

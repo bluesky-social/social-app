@@ -1,11 +1,12 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {type AppBskyNotificationDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
-import {useNotificationSettingsUpdateMutation} from '#/state/queries/notifications/settings'
+import {
+  type NotificationSettingsPreference,
+  type NotificationSettingsPreferenceName,
+  useNotificationSettingsUpdateMutation,
+} from '#/state/queries/notifications/settings'
 import {atoms as a, platform, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
@@ -19,15 +20,13 @@ export function PreferenceControls({
   preference,
   allowDisableInApp = true,
 }: {
-  name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>
+  name: NotificationSettingsPreferenceName
   /**
    * Keep other prefs in sync with `name`. For use in the "everything else" category
    * which groups starterpack joins + verified + unverified notifications into a single toggle.
    */
-  syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[]
-  preference?:
-    | AppBskyNotificationDefs.Preference
-    | AppBskyNotificationDefs.FilterablePreference
+  syncOthers?: NotificationSettingsPreferenceName[]
+  preference?: NotificationSettingsPreference
   allowDisableInApp?: boolean
 }) {
   if (!preference)
@@ -53,21 +52,19 @@ export function Inner({
   preference,
   allowDisableInApp,
 }: {
-  name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>
-  syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[]
-  preference:
-    | AppBskyNotificationDefs.Preference
-    | AppBskyNotificationDefs.FilterablePreference
+  name: NotificationSettingsPreferenceName
+  syncOthers?: NotificationSettingsPreferenceName[]
+  preference: NotificationSettingsPreference
   allowDisableInApp: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {mutate} = useNotificationSettingsUpdateMutation()
 
   const channels = useMemo(() => {
     const arr = []
-    if (preference.list) arr.push('list')
+    if ('list' in preference && preference.list) arr.push('list')
     if (preference.push) arr.push('push')
     return arr
   }, [preference])
@@ -75,15 +72,18 @@ export function Inner({
   const onChangeChannels = (change: string[]) => {
     const newPreference = {
       ...preference,
-      list: change.includes('list'),
+      ...('list' in preference ? {list: change.includes('list')} : {}),
       push: change.includes('push'),
-    } satisfies typeof preference
+    } as typeof preference
 
-    ax.metric('activityPreference:changeChannels', {
+    const metrics: {name: string; push: boolean; list?: boolean} = {
       name,
       push: newPreference.push,
-      list: newPreference.list,
-    })
+    }
+    if ('list' in newPreference) {
+      metrics.list = newPreference.list
+    }
+    ax.metric('activityPreference:changeChannels', metrics)
 
     mutate({
       [name]: newPreference,
@@ -109,15 +109,15 @@ export function Inner({
   }
 
   return (
-    <View style={[a.px_xl, a.pt_md, a.gap_sm]}>
+    <View style={[a.gap_sm]}>
       <Toggle.Group
         type="checkbox"
-        label={_(msg`Select your preferred notification channels`)}
+        label={l`Select your preferred notification channels`}
         values={channels}
         onChange={onChangeChannels}>
         <View style={[a.gap_sm]}>
           <Toggle.Item
-            label={_(msg`Receive push notifications`)}
+            label={l`Receive push notifications`}
             name="push"
             style={[
               a.py_xs,
@@ -132,9 +132,9 @@ export function Inner({
             </Toggle.LabelText>
             <Toggle.Platform />
           </Toggle.Item>
-          {allowDisableInApp && (
+          {allowDisableInApp && 'list' in preference && (
             <Toggle.Item
-              label={_(msg`Receive in-app notifications`)}
+              label={l`Receive in-app notifications`}
               name="list"
               style={[
                 a.py_xs,
@@ -160,38 +160,29 @@ export function Inner({
           </Text>
           <Toggle.Group
             type="radio"
-            label={_(msg`Filter who you receive notifications from`)}
+            label={l`Filter who you receive notifications from`}
             values={[preference.include]}
             onChange={onChangeFilter}
             disabled={channels.length === 0}>
             <View style={[a.gap_sm]}>
-              <Toggle.Item
-                label={_(msg`Everyone`)}
-                name="all"
-                style={[a.flex_row, a.py_xs, a.gap_sm]}>
-                <Toggle.Radio />
-                <Toggle.LabelText
-                  style={[
-                    channels.length > 0 && t.atoms.text,
-                    a.font_normal,
-                    a.text_md,
-                  ]}>
-                  <Trans>Everyone</Trans>
-                </Toggle.LabelText>
+              <Toggle.Item highlightRow label={l`Everyone`} name="all">
+                {({selected}) => (
+                  <Toggle.RadioWithLabel
+                    label={l`Everyone`}
+                    selected={selected}
+                  />
+                )}
               </Toggle.Item>
               <Toggle.Item
-                label={_(msg`People I follow`)}
-                name="follows"
-                style={[a.flex_row, a.py_xs, a.gap_sm]}>
-                <Toggle.Radio />
-                <Toggle.LabelText
-                  style={[
-                    channels.length > 0 && t.atoms.text,
-                    a.font_normal,
-                    a.text_md,
-                  ]}>
-                  <Trans>People I follow</Trans>
-                </Toggle.LabelText>
+                highlightRow
+                label={l`People I follow`}
+                name="follows">
+                {({selected}) => (
+                  <Toggle.RadioWithLabel
+                    label={l`People I follow`}
+                    selected={selected}
+                  />
+                )}
               </Toggle.Item>
             </View>
           </Toggle.Group>

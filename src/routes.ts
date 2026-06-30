@@ -40,6 +40,8 @@ export const router = new Router<AllNavigatableRoutes>({
   Debug: '/sys/debug',
   DebugMod: '/sys/debug-mod',
   Log: '/sys/log',
+  // invite friends
+  InviteScanner: '/invite/scan',
   // settings
   LanguageSettings: '/settings/language',
   AppPasswords: '/settings/app-passwords',
@@ -58,18 +60,6 @@ export const router = new Router<AllNavigatableRoutes>({
   AboutSettings: '/settings/about',
   AppIconSettings: '/settings/app-icon',
   NotificationSettings: '/settings/notifications',
-  ReplyNotificationSettings: '/settings/notifications/replies',
-  MentionNotificationSettings: '/settings/notifications/mentions',
-  QuoteNotificationSettings: '/settings/notifications/quotes',
-  LikeNotificationSettings: '/settings/notifications/likes',
-  RepostNotificationSettings: '/settings/notifications/reposts',
-  NewFollowerNotificationSettings: '/settings/notifications/new-followers',
-  LikesOnRepostsNotificationSettings:
-    '/settings/notifications/likes-on-reposts',
-  RepostsOnRepostsNotificationSettings:
-    '/settings/notifications/reposts-on-reposts',
-  ActivityNotificationSettings: '/settings/notifications/activity',
-  MiscellaneousNotificationSettings: '/settings/notifications/miscellaneous',
   FindContactsSettings: '/settings/find-contacts',
   // support
   Support: '/support',
@@ -86,6 +76,7 @@ export const router = new Router<AllNavigatableRoutes>({
   MessagesInbox: '/messages/inbox',
   MessagesConversation: '/messages/:conversation',
   MessagesConversationSettings: '/messages/:conversation/settings',
+  MessagesJoinRequests: '/messages/:conversation/requests',
   // starter packs
   Start: '/start/:name/:rkey',
   StarterPackEdit: '/starter-pack/edit/:rkey',
