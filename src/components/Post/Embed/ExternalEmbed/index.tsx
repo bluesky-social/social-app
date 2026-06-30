@@ -23,6 +23,7 @@ import {IS_NATIVE} from '#/env'
 import {ExternalGif} from './ExternalGif'
 import {ExternalPlayer} from './ExternalPlayer'
 import {GifEmbed} from './Gif'
+import {isTangledStringUrl, TangledString} from './TangledString'
 
 export const ExternalEmbed = ({
   link,
@@ -79,6 +80,14 @@ export const ExternalEmbed = ({
           isPreferredAltText={parsedAlt.isPreferred}
           hideAlt={hideAlt}
         />
+      </View>
+    )
+  }
+
+  if (isTangledStringUrl(link.uri)) {
+    return (
+      <View style={style}>
+        <TangledString link={link} />
       </View>
     )
   }
