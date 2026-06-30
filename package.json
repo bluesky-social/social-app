@@ -157,7 +157,7 @@
     "emoji-regex": "^10.4.0",
     "eventemitter3": "^5.0.1",
     "expo": "54.0.34",
-    "expo-age-range": "^0.2.17",
+    "expo-age-range": "0.2.18",
     "expo-application": "~7.0.8",
     "expo-blur": "~15.0.8",
     "expo-build-properties": "~1.0.10",
